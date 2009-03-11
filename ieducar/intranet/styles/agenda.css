@@ -1,0 +1,161 @@
+TABLE, BODY
+{
+	font-family: arial, heveltica, sans, verdana;
+	font-size: 12px;
+	color: #000000;
+}
+TD.claro
+{
+	background-color: #FFFFFF;
+	padding: 5px;
+}
+TD.escuro
+{
+	background-color: #e4e9ed;
+	padding: 5px;
+}
+.titulo
+{
+	font-family: arial, heveltica, sans, verdana;
+	font-size: 16px;
+	font-weight: bold;
+	color: #708694;
+}
+.data1
+{
+	font-family: arial, heveltica, sans, verdana;
+	font-size: 22px;
+	font-weight: bold;
+	color: #e4e9ed;
+}
+.data2
+{
+	font-family: arial, heveltica, sans, verdana;
+	font-size: 16px;
+	font-weight: bold;
+	color: #e4e9ed;
+}
+.data3
+{
+	font-family: arial, heveltica, sans, verdana;
+	font-size: 13px;
+	font-weight: bold;
+	color: #e4e9ed;
+}
+.comp_tit
+{
+	font-family: arial, heveltica, sans, verdana;
+	font-size: 15px;
+	color: #000000;
+	font-weight: bolder;
+}
+.comp_tit_antigo
+{
+	font-family: arial, heveltica, sans, verdana;
+	font-size: 15px;
+	color: #708694;
+	font-weight: bolder;
+}
+.comp_antigo
+{
+	color: #708694;
+}
+.alerta
+{
+	background-color: #e8816c;
+}
+INPUT.notas
+{
+	height: 17px;
+	width: 132px;
+	font-family: arial, heveltica, sans, verdana;
+	font-size: 9px;
+	color: #000000;
+	background-color: #e4e9ed;
+}
+INPUT.agenda_hora
+{
+	width: 40px;
+}
+INPUT.agenda_data
+{
+	width: 75px;
+}
+INPUT.agenda_titulo
+{
+	width: 310px;
+}
+INPUT.small
+{
+	width: 19px;
+}
+INPUT, TEXTAREA
+{
+	border-style: solid;
+	border-color: #708694;
+	border-width: 1px;
+}
+TEXTAREA.agenda_conteudo
+{
+	width: 354px;
+	height: 100px;
+}
+INPUT.agenda_rap_botao
+{
+	font-family: arial, heveltica, sans, verdana;
+	font-size: 12px;
+	color: #000000;
+	width: 175px;
+	border-style: solid;
+	border-color: #708694;
+	border-width: 1px;
+}
+.DOM_expansivel
+{
+	display:none;
+	position:absolute;
+	left:7px;
+	top:30px;
+	overflow:auto;
+	width:250px;
+}
+
+/* 
+	CALENDARIO
+*/
+SELECT.calendario{
+	font-size: 9px;
+}
+TABLE.calendario{
+	font-size: 9px;
+	border: 2px solid;
+	border-color: black;
+	text-align: center;
+}
+.calendario_dias{
+	border: 1px solid;
+}
+.calendario_dia_sel{
+	border: 1px solid;
+	border-color: #FF2211;
+	background-color: #FFFFFF;
+}
+.calendario_dias_t{
+	border: 1px solid;
+	font-weight: bold;
+	color: white;
+	background-color: black;
+}
+a.calendario, a.calendario:hover, a.calendario:visited{
+	color: black;
+	text-decoration: none;
+}
+.calendario_outromes{
+	border: 1px solid;
+	background-color: #BABABA;
+}
+.calendario_dias_sobre{
+	border: 1px solid;
+	background-color: #22AAFF;
+	
+}
