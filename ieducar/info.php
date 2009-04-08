@@ -1,10 +1,11 @@
 <?php
 
-// Show all information, defaults to INFO_ALL
+/**
+ * Visualização da configuração do PHP.
+ *
+ * Apague este arquivo uma vez que seu i-Educar estiver em produção por razões de segurança.
+ * Utilize para verificar se os módulos necessários foram instalados.
+ *
+ */
+
 phpinfo();
-
-// Show just the module information.
-// phpinfo(8) yields identical results.
-phpinfo(INFO_MODULES);
-
-?>
