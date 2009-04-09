@@ -1,29 +1,31 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
-*	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-*																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-*						ctima@itajai.sc.gov.br					    	 *
-*																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-*																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-*																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-*	02111-1307, USA.													 *
-*																		 *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/**
+ *
+ * @version SVN: $Id$
+ * @author  Prefeitura Municipal de Itajaí
+ * @updated 29/03/2007
+ * Pacote: i-PLB Software Público Livre e Brasileiro
+ *
+ * Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí
+ *					ctima@itajai.sc.gov.br
+ *
+ * Este  programa  é  software livre, você pode redistribuí-lo e/ou
+ * modificá-lo sob os termos da Licença Pública Geral GNU, conforme
+ * publicada pela Free  Software  Foundation,  tanto  a versão 2 da
+ * Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.
+ *
+ * Este programa  é distribuído na expectativa de ser útil, mas SEM
+ * QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-
+ * ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-
+ * sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.
+ *
+ * Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU
+ * junto  com  este  programa. Se não, escreva para a Free Software
+ * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
+ * 02111-1307, USA.
+ *
+ */
+ 
 	/**
 	 * Adiciona zeros a esquerda de um numero
 	 *
@@ -794,18 +796,22 @@
 		return strtotime( $data_original );
 	}
 
-	/**
-	* Formata uma data vinda do postgre no formato brasileiro
-	*
-	* @param string $data_original data que será transformada
-	* @param string $format formatacao da data (identico a da funcao date() )
-	*
-	* @return string
-	*/
-	function dataFromPgToBr( $data_original, $formatacao = "d/m/Y" )
-	{
-		return date( $formatacao, dataFromPgToTime( $data_original ) );
-	}
+/**
+ * Formata uma data ISO-8601 no formato do locale pt_BR.
+ *
+ * O formato ISO-8601 geralmente é utilizado pelos DBMS atuais nos tipos de campos datetime/timestamp.
+ * O PostgreSQL utiliza este padrão.
+ *
+ * @param string $data_original Data que será formatada
+ * @param string $formatacao    String de formatação no padrão aceito pela função date() do PHP
+ * @link  http://www.php.net/date Documentação da função PHP date()
+ *
+ * @return string 
+ */
+function dataFromPgToBr($data_original, $formatacao = "d/m/Y")
+{
+	return date($formatacao, dataFromPgToTime($data_original));
+}
 
 
 	/**

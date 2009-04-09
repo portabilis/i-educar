@@ -1,34 +1,33 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
-*	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-*																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-*						ctima@itajai.sc.gov.br					    	 *
-*																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-*																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-*																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-*	02111-1307, USA.													 *
-*																		 *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /**
-* @author Prefeitura Municipal de Itajaí
-*
-* Criado em 17/07/2006 09:18 pelo gerador automatico de classes
-*/
+ *
+ *	@author Prefeitura Municipal de Itajaí
+ *	@updated 29/03/2007
+ *   Pacote: i-PLB Software Público Livre e Brasileiro
+ *
+ *	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí
+ *						ctima@itajai.sc.gov.br
+ *
+ *	Este  programa  é  software livre, você pode redistribuí-lo e/ou
+ *	modificá-lo sob os termos da Licença Pública Geral GNU, conforme
+ *	publicada pela Free  Software  Foundation,  tanto  a versão 2 da
+ *	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.
+ *
+ *	Este programa  é distribuído na expectativa de ser útil, mas SEM
+ *	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-
+ *	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-
+ *	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.
+ *
+ *	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU
+ *	junto  com  este  programa. Se não, escreva para a Free Software
+ *	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
+ *	02111-1307, USA.
+ *
+ */
+
+/*
+ * Criado em 17/07/2006 09:18 pelo gerador automatico de classes
+ */
 
 require_once( "include/pmieducar/geral.inc.php" );
 
@@ -488,11 +487,19 @@ class clsPmieducarCliente
 	function listaCompleta( $int_cod_cliente = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_idpes = null, $int_login = null, $str_senha = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = 1, $str_nm_cliente = null, $str_suspenso = null, $int_cod_cliente_tipo = null, $int_cod_escola = null, $int_cod_biblioteca = null, $int_cod_instituicao = null )
 	{
 		$tab_adicional  = '';
-		$condicao	    = '';
+		$condicao	      = '';
 		$camp_adicional = '';
-		if( is_string( $str_suspenso ) ) {
+		
+		// Se suspenso não for nulo, seleciona clientes suspensos
+		if (!is_null($str_suspenso)) 
+		{
 			$camp_adicional .= ", pmieducar.cliente_suspensao cs ";
 			$condicao       .= " AND c.cod_cliente = cs.ref_cod_cliente";
+		}
+		else
+		{
+      $camp_adicional .= ", pmieducar.cliente_suspensao cs ";
+			$condicao       .= " AND c.cod_cliente <> cs.ref_cod_cliente";		
 		}
 
 		$sql1      = "SELECT c.cod_cliente,

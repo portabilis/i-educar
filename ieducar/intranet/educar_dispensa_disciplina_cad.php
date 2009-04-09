@@ -1,33 +1,35 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+/**
+ *
+ * @version SVN: $Id$
+ * @author  Prefeitura Municipal de Itajaí
+ * @updated 29/03/2007
+ * Pacote: i-PLB Software Público Livre e Brasileiro
+ *
+ * Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí
+ *					ctima@itajai.sc.gov.br
+ *
+ * Este  programa  é  software livre, você pode redistribuí-lo e/ou
+ * modificá-lo sob os termos da Licença Pública Geral GNU, conforme
+ * publicada pela Free  Software  Foundation,  tanto  a versão 2 da
+ * Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.
+ *
+ * Este programa  é distribuído na expectativa de ser útil, mas SEM
+ * QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-
+ * ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-
+ * sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.
+ *
+ * Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU
+ * junto  com  este  programa. Se não, escreva para a Free Software
+ * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
+ * 02111-1307, USA.
+ *
+ */
+
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
@@ -78,13 +80,13 @@ class indice extends clsCadastro
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-		$this->ref_cod_disciplina=$_GET["ref_cod_disciplina"];
-		$this->ref_cod_matricula = $_GET['ref_cod_matricula'];
+		$this->ref_cod_disciplina = $_GET["ref_cod_disciplina"];
+		$this->ref_cod_matricula  = $_GET['ref_cod_matricula'];
 
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_dispensa_disciplina_lst.php?ref_ref_cod_matricula={$this->ref_cod_matricula}" );
 
-		if(is_numeric($this->ref_cod_matricula))
+		if (is_numeric($this->ref_cod_matricula))
 		{
 			$obj_matricula = new clsPmieducarMatricula($this->ref_cod_matricula,null,null,null,null,null,null,null,null,null,1);
 			$det_matricula = $obj_matricula->detalhe();
@@ -92,35 +94,38 @@ class indice extends clsCadastro
 			{
 				header("location: educar_matricula_lst.php");
 				die;
-
 			}
 
 			$this->ref_cod_escola = $det_matricula['ref_ref_cod_escola'];
 			$this->ref_cod_serie = $det_matricula['ref_ref_cod_serie'];
-		}else
+		}
+		else
 		{
 			header("location: educar_matricula_lst.php");
 			die;
 		}
-		if( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_disciplina ) )
+		
+		if (is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_disciplina ) )
 		{
-
 			$obj = new clsPmieducarDispensaDisciplina( $this->ref_cod_matricula, $this->ref_cod_serie, $this->ref_cod_escola, $this->ref_cod_disciplina );
 			$registro  = $obj->detalhe();
-			if( $registro )
+			if ($registro)
 			{
-				foreach( $registro AS $campo => $val )	// passa todos os valores obtidos no registro para atributos do objeto
-					$this->$campo = $val;
+				foreach ($registro as $campo => $val)	// passa todos os valores obtidos no registro para atributos do objeto
+				{
+          $this->$campo = $val;
+        }
 
-			$obj_permissoes = new clsPermissoes();
-			if( $obj_permissoes->permissao_excluir( 578, $this->pessoa_logada, 7 ) )
-			{
-				$this->fexcluir = true;
-			}
+			  $obj_permissoes = new clsPermissoes();
+			  if ($obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7))
+			  {
+				  $this->fexcluir = true;
+			  }
 
 				$retorno = "Editar";
 			}
 		}
+		
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_dispensa_disciplina_det.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_serie={$registro["ref_cod_serie"]}&ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_disciplina={$registro["ref_cod_disciplina"]}" : "educar_dispensa_disciplina_lst.php?ref_cod_matricula={$this->ref_cod_matricula}";
 		$this->nome_url_cancelar = "Cancelar";
 		return $retorno;
@@ -251,6 +256,9 @@ class indice extends clsCadastro
 		$db = new clsBanco();
 		$max_cod_dispensa = $db->CampoUnico($sql);
 		
+		// Caso não exista nenhuma dispensa, atribui o código 1, tabela não utiliza sequences
+		$max_cod_dispensa = $max_cod_dispensa > 0 ? $max_cod_dispensa : 1;
+
 		$obj = new clsPmieducarDispensaDisciplina( $this->ref_cod_matricula, $this->ref_cod_serie, $this->ref_cod_escola, $this->ref_cod_disciplina, null, $this->pessoa_logada, $this->ref_cod_tipo_dispensa, null, null, 1, $this->observacao, $max_cod_dispensa );
 		if($obj->existe())
 		{
@@ -283,7 +291,7 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_dispensa_disciplina_lst.php?ref_cod_matricula={$this->ref_cod_matricula}" );
 
-		$obj = new clsPmieducarDispensaDisciplina( $this->ref_cod_matricula, $this->ref_cod_serie, $this->ref_cod_escola, $this->ref_cod_disciplina, $this->pessoa_logada, null, $this->ref_cod_tipo_dispensa, null, null, 1, $this->observacao );
+		$obj = new clsPmieducarDispensaDisciplina( $this->ref_cod_matricula, $this->ref_cod_serie, $this->ref_cod_escola, $this->ref_cod_disciplina, $this->pessoa_logada, null, $this->ref_cod_tipo_dispensa, null, null, 1, $this->observacao);
 		$editou = $obj->edita();
 		if( $editou )
 		{

@@ -91,25 +91,25 @@ class indice extends clsCadastro
 		$this->ref_cod_matricula=$_GET["ref_cod_matricula"];
 		$this->ref_cod_tipo_ocorrencia_disciplinar=$_GET["ref_cod_tipo_ocorrencia_disciplinar"];
 
-		if( is_numeric( $this->ref_cod_matricula ) && is_numeric($this->ref_cod_tipo_ocorrencia_disciplinar) && is_numeric($this->sequencial))
+		if (is_numeric($this->ref_cod_matricula) && 
+		    is_numeric($this->ref_cod_tipo_ocorrencia_disciplinar) && 
+		    is_numeric($this->sequencial))
 		{
-
-			$obj = new clsPmieducarMatriculaOcorrenciaDisciplinar( $this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, $this->sequencial );
-			$registro  = $obj->detalhe();
-			if( $registro )
+			$obj = new clsPmieducarMatriculaOcorrenciaDisciplinar($this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, $this->sequencial);
+			$registro = $obj->detalhe();
+			if ($registro)
 			{
 				foreach( $registro AS $campo => $val )	// passa todos os valores obtidos no registro para atributos do objeto
 					$this->$campo = $val;
 
-				$this->hora_cadastro = dataFromPgToBr($this->data_cadastro,'h:i');
+				$this->hora_cadastro = dataFromPgToBr($this->data_cadastro,'H:i');
 				$this->data_cadastro = dataFromPgToBr($this->data_cadastro);
 
-
-			$obj_permissoes = new clsPermissoes();
-			if( $obj_permissoes->permissao_excluir( 578, $this->pessoa_logada, 7 ) )
-			{
-				$this->fexcluir = true;
-			}
+			  $obj_permissoes = new clsPermissoes();
+			  if( $obj_permissoes->permissao_excluir( 578, $this->pessoa_logada, 7 ) )
+			  {
+				  $this->fexcluir = true;
+			  }
 
 				$retorno = "Editar";
 			}
@@ -265,7 +265,8 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_matricula_ocorrencia_disciplinar_lst.php" );
 
-
+    $this->data_cadastro = "{$this->data_cadastro} {$this->hora_cadastro}";
+    
 		$obj = new clsPmieducarMatriculaOcorrenciaDisciplinar($this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, $this->sequencial, $this->pessoa_logada, $this->pessoa_logada, $this->observacao, $this->data_cadastro, $this->data_exclusao, $this->ativo);
 		$editou = $obj->edita();
 		if( $editou )
