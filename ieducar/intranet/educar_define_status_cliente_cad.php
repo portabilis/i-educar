@@ -1,29 +1,30 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/**
+ *
+ *	@author Prefeitura Municipal de Itajaí
+ *	@updated 29/03/2007
+ *   Pacote: i-PLB Software Público Livre e Brasileiro
+ *
+ *	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí
+ *						ctima@itajai.sc.gov.br
+ *
+ *	Este  programa  é  software livre, você pode redistribuí-lo e/ou
+ *	modificá-lo sob os termos da Licença Pública Geral GNU, conforme
+ *	publicada pela Free  Software  Foundation,  tanto  a versão 2 da
+ *	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.
+ *
+ *	Este programa  é distribuído na expectativa de ser útil, mas SEM
+ *	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-
+ *	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-
+ *	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.
+ *
+ *	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU
+ *	junto  com  este  programa. Se não, escreva para a Free Software
+ *	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
+ *	02111-1307, USA.
+ *
+ */
+ 
 /**
  * @author Adriano Erik Weiguert Nagasava
  */
@@ -70,7 +71,7 @@ class indice extends clsCadastro
 	var $descricao;
 	var $dias;
 	var $sequencial;
-
+	
 	function Inicializar()
 	{
 		$retorno = "Novo";
@@ -78,8 +79,9 @@ class indice extends clsCadastro
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-		$this->cod_cliente	 = $_GET["cod_cliente"];
-		$this->acao_status	 = $_GET["status"];
+		$this->cod_cliente	      = $_GET["cod_cliente"];
+		$this->acao_status	      = $_GET["status"];
+		$this->ref_cod_biblioteca = $_GET["ref_cod_biblioteca"];
 
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 603, $this->pessoa_logada, 11,  "educar_cliente_det.php" );
@@ -106,8 +108,9 @@ class indice extends clsCadastro
 	{
 		if ( $this->acao_status == "suspender" ) {
 
-			$this->campoOculto( "cod_cliente", $this->cod_cliente );
-
+			$this->campoOculto("cod_cliente", $this->cod_cliente);
+			$this->campoOculto("ref_cod_biblioteca", $this->ref_cod_biblioteca);
+			
 			if ( $this->ref_idpes ) {
 
 				$objTemp = new clsPessoaFisica( $this->ref_idpes );
@@ -169,28 +172,32 @@ class indice extends clsCadastro
 		elseif ( $this->acao_status == "liberar" ) {
 			$db 	   		  = new clsBanco();
 			$this->sequencial = $db->CampoUnico( "SELECT MAX( sequencial ) FROM pmieducar.cliente_suspensao WHERE ref_cod_cliente = {$this->cod_cliente} AND data_liberacao IS NULL" );
-			$this->campoOculto( "sequencial", $this->sequencial );
-			$this->campoOculto( "cod_cliente", $this->cod_cliente );
+			$this->campoOculto("sequencial", $this->sequencial );
+
 			$this->Editar();
 		}
 	}
 
 	function Novo()
 	{
-		@session_start();
-		 $this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
+		session_start();
+		$this->pessoa_logada = $_SESSION['id_pessoa'];
+		session_write_close();
 
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
 
 		$obj = new clsPmieducarClienteSuspensao( null, $this->cod_cliente, $this->cod_motivo_suspensao, null, $this->pessoa_logada, $this->dias, null, null );
-		if( $obj->cadastra() ) {
+		
+		// Caso suspensão tenha sido efetuada, envia para página de detalhes
+		if ($obj->cadastra()) 
+		{
 			$this->mensagem .= "Suspens&atilde;o efetuada com sucesso.<br>";
-			header( "Location: educar_cliente_det.php?cod_cliente={$this->cod_cliente}" );
+			header("Location: educar_cliente_det.php?cod_cliente={$this->cod_cliente}&ref_cod_biblioteca={$this->ref_cod_biblioteca}");
 			die();
 			return true;
 		}
+		
 		$this->mensagem = "Suspens&atilde;o n&atilde;o realizada.<br>";
 		echo "<!--\nErro ao cadastrar clsPmieducarClienteSuspensao\nvalores obrigatorios\nis_numeric( $this->ref_cod_cliente_tipo ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_idpes ) && is_numeric( $this->login )\n-->";
 		return false;

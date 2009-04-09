@@ -1,36 +1,32 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
-*	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-*																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-*						ctima@itajai.sc.gov.br					    	 *
-*																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-*																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-*																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-*	02111-1307, USA.													 *
-*																		 *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /**
-* @author Prefeitura Municipal de Itajaí
-*
-* Criado em 10/08/2006 17:10 pelo gerador automatico de classes
-*/
+ *
+ * @version SVN: $Id$
+ * @author  Prefeitura Municipal de Itajaí
+ * @updated 29/03/2007
+ * Pacote: i-PLB Software Público Livre e Brasileiro
+ *
+ * Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí
+ *					ctima@itajai.sc.gov.br
+ *
+ * Este  programa  é  software livre, você pode redistribuí-lo e/ou
+ * modificá-lo sob os termos da Licença Pública Geral GNU, conforme
+ * publicada pela Free  Software  Foundation,  tanto  a versão 2 da
+ * Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.
+ *
+ * Este programa  é distribuído na expectativa de ser útil, mas SEM
+ * QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-
+ * ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-
+ * sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.
+ *
+ * Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU
+ * junto  com  este  programa. Se não, escreva para a Free Software
+ * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
+ * 02111-1307, USA.
+ *
+ */
 
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/pmieducar/geral.inc.php');
 
 class clsPmieducarDispensaDisciplina
 {
@@ -296,7 +292,10 @@ class clsPmieducarDispensaDisciplina
 	 */
 	function cadastra()
 	{
-		if( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_disciplina ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_cod_tipo_dispensa ) && is_numeric($this->cod_dispensa) )
+		if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_serie) && 
+		    is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_disciplina) && 
+		    is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_tipo_dispensa) &&
+		    is_numeric($this->cod_dispensa))
 		{
 			$db = new clsBanco();
 
@@ -361,7 +360,8 @@ class clsPmieducarDispensaDisciplina
 				$gruda = ", ";
 			}
 
-			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
+      $sql = "INSERT INTO {$this->_tabela} ($campos) VALUES($valores)";
+			$db->Consulta($sql);
 			return true;
 		}
 		return false;
