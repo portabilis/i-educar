@@ -1,47 +1,44 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
-*	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-*																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-*						ctima@itajai.sc.gov.br					    	 *
-*																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-*																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-*																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-*	02111-1307, USA.													 *
-*																		 *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /**
-* @author Prefeitura Municipal de Itajaí
-*
-* Criado em 20/07/2006 11:49 pelo gerador automatico de classes
-*/
+ *
+ * @author  Prefeitura Municipal de Itajaí
+ * @version SVN: $Id$
+ *
+ * Pacote: i-PLB Software Público Livre e Brasileiro
+ *
+ * Copyright (C) 2006 PMI - Prefeitura Municipal de Itajaí
+ *            ctima@itajai.sc.gov.br
+ *
+ * Este  programa  é  software livre, você pode redistribuí-lo e/ou
+ * modificá-lo sob os termos da Licença Pública Geral GNU, conforme
+ * publicada pela Free  Software  Foundation,  tanto  a versão 2 da
+ * Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.
+ *
+ * Este programa  é distribuído na expectativa de ser útil, mas SEM
+ * QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-
+ * ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-
+ * sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.
+ *
+ * Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU
+ * junto  com  este  programa. Se não, escreva para a Free Software
+ * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
+ * 02111-1307, USA.
+ *
+ */
 
-require_once( "include/pmieducar/geral.inc.php" );
+require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarClienteTipoCliente
 {
-	var $ref_cod_cliente_tipo;
-	var $ref_cod_cliente;
-	var $data_cadastro;
-	var $data_exclusao;
-	var $ref_usuario_cad;
-	var $ref_usuario_exc;
-	var $ativo;
-	var $ref_cod_biblioteca;
+  // Campos da tabela
+  var $ref_cod_cliente_tipo;
+  var $ref_cod_cliente;
+  var $data_cadastro;
+  var $data_exclusao;
+  var $ref_usuario_cad;
+  var $ref_usuario_exc;
+  var $ativo;
+  var $ref_cod_biblioteca;
 
 	// propriedades padrao
 
@@ -105,99 +102,81 @@ class clsPmieducarClienteTipoCliente
 	/**
 	 * Construtor (PHP 4)
 	 *
-	 * @return object
+	 * @return clsPmieducarClienteTipoCliente
 	 */
-	function clsPmieducarClienteTipoCliente( $ref_cod_cliente_tipo = null, $ref_cod_cliente = null, $data_cadastro = null, $data_exclusao = null, $ref_usuario_cad = null, $ref_usuario_exc = null, $ativo = 1, $ref_cod_biblioteca = null )
-	{
-		$db = new clsBanco();
-		$this->_schema = "pmieducar.";
-		$this->_tabela = "{$this->_schema}cliente_tipo_cliente";
+	function clsPmieducarClienteTipoCliente($ref_cod_cliente_tipo = NULL, $ref_cod_cliente = NULL,
+	  $data_cadastro = NULL, $data_exclusao = NULL, $ref_usuario_cad = NULL, $ref_usuario_exc = NULL,
+	  $ativo = 1, $ref_cod_biblioteca = NULL) {
 
-		$this->_campos_lista = $this->_todos_campos = "ctc.ref_cod_cliente_tipo, ctc.ref_cod_cliente, ctc.data_cadastro, ctc.data_exclusao, ctc.ref_usuario_cad, ctc.ref_usuario_exc, ctc.ativo";
+    $db = new clsBanco();
+    $this->_schema = 'pmieducar.';
+    $this->_tabela = "{$this->_schema}cliente_tipo_cliente";
 
-		if( is_numeric( $ref_cod_cliente_tipo ) )
-		{
-			if( class_exists( "clsPmieducarClienteTipo" ) )
-			{
-				$tmp_obj = new clsPmieducarClienteTipo( $ref_cod_cliente_tipo );
-				if( method_exists( $tmp_obj, "existe") )
-				{
-					if( $tmp_obj->existe() )
-					{
-						$this->ref_cod_cliente_tipo = $ref_cod_cliente_tipo;
+		$this->_campos_lista = $this->_todos_campos = 'ctc.ref_cod_cliente_tipo, ctc.ref_cod_cliente, ctc.data_cadastro, ctc.data_exclusao, ctc.ref_usuario_cad, ctc.ref_usuario_exc, ctc.ativo';
+
+		if (is_numeric( $ref_cod_cliente_tipo)) {
+      if (class_exists('clsPmieducarClienteTipo')) {
+        $tmp_obj = new clsPmieducarClienteTipo($ref_cod_cliente_tipo);
+        if (method_exists($tmp_obj, 'existe')) {
+          if ($tmp_obj->existe()) {
+            $this->ref_cod_cliente_tipo = $ref_cod_cliente_tipo;
 					}
 				}
-				else if( method_exists( $tmp_obj, "detalhe") )
-				{
-					if( $tmp_obj->detalhe() )
-					{
-						$this->ref_cod_cliente_tipo = $ref_cod_cliente_tipo;
+        elseif (method_exists($tmp_obj, 'detalhe')) {
+          if ($tmp_obj->detalhe()) {
+            $this->ref_cod_cliente_tipo = $ref_cod_cliente_tipo;
 					}
+        }
+      }
+      else {
+        if ($db->CampoUnico("SELECT 1 FROM pmieducar.cliente_tipo WHERE cod_cliente_tipo = '{$ref_cod_cliente_tipo}'")) {
+          $this->ref_cod_cliente_tipo = $ref_cod_cliente_tipo;
+        }
+      }
+    }
+
+		if (is_numeric($ref_cod_cliente)) {
+      if (class_exists('clsPmieducarCliente')) {
+        $tmp_obj = new clsPmieducarCliente($ref_cod_cliente);
+        if (method_exists($tmp_obj, 'existe')) {
+					if ($tmp_obj->existe()) {
+            $this->ref_cod_cliente = $ref_cod_cliente;
+          }
 				}
-			}
-			else
-			{
-				if( $db->CampoUnico( "SELECT 1 FROM pmieducar.cliente_tipo WHERE cod_cliente_tipo = '{$ref_cod_cliente_tipo}'" ) )
-				{
-					$this->ref_cod_cliente_tipo = $ref_cod_cliente_tipo;
-				}
-			}
-		}
-		if( is_numeric( $ref_cod_cliente ) )
-		{
-			if( class_exists( "clsPmieducarCliente" ) )
-			{
-				$tmp_obj = new clsPmieducarCliente( $ref_cod_cliente );
-				if( method_exists( $tmp_obj, "existe") )
-				{
-					if( $tmp_obj->existe() )
-					{
-						$this->ref_cod_cliente = $ref_cod_cliente;
-					}
-				}
-				else if( method_exists( $tmp_obj, "detalhe") )
-				{
-					if( $tmp_obj->detalhe() )
-					{
-						$this->ref_cod_cliente = $ref_cod_cliente;
-					}
-				}
-			}
-			else
-			{
-				if( $db->CampoUnico( "SELECT 1 FROM pmieducar.cliente WHERE cod_cliente = '{$ref_cod_cliente}'" ) )
-				{
-					$this->ref_cod_cliente = $ref_cod_cliente;
-				}
-			}
-		}
+				elseif (method_exists( $tmp_obj, 'detalhe')) {
+					if ($tmp_obj->detalhe()) {
+            $this->ref_cod_cliente = $ref_cod_cliente;
+          }
+        }
+      }
+			else {
+        if ($db->CampoUnico("SELECT 1 FROM pmieducar.cliente WHERE cod_cliente = '{$ref_cod_cliente}'")) {
+          $this->ref_cod_cliente = $ref_cod_cliente;
+        }
+      }
+    }
+
+		if (is_string($data_cadastro)) {
+      $this->data_cadastro = $data_cadastro;
+    }
+    if (is_string($data_exclusao)) {
+      $this->data_exclusao = $data_exclusao;
+    }
+		if (is_numeric($ref_usuario_cad)) {
+      $this->ref_usuario_cad = $ref_usuario_cad;
+    }
+    if (is_numeric($ref_usuario_exc)) {
+      $this->ref_usuario_exc = $ref_usuario_exc;
+    }
+    if (is_numeric($ativo)) {
+      $this->ativo = $ativo;
+    }
+    if (is_numeric($ref_cod_biblioteca)) {
+      $this->ref_cod_biblioteca = $ref_cod_biblioteca;
+    }
+  }
 
 
-		if( is_string( $data_cadastro ) )
-		{
-			$this->data_cadastro = $data_cadastro;
-		}
-		if( is_string( $data_exclusao ) )
-		{
-			$this->data_exclusao = $data_exclusao;
-		}
-		if( is_numeric( $ref_usuario_cad ) )
-		{
-			$this->ref_usuario_cad = $ref_usuario_cad;
-		}
-		if( is_numeric( $ref_usuario_exc ) )
-		{
-			$this->ref_usuario_exc = $ref_usuario_exc;
-		}
-		if( is_numeric( $ativo ) )
-		{
-			$this->ativo = $ativo;
-		}
-		if (is_numeric($ref_cod_biblioteca))
-		{
-			$this->ref_cod_biblioteca = $ref_cod_biblioteca;
-		}
-	}
 
 	/**
 	 * Cria um novo registro
@@ -323,7 +302,13 @@ class clsPmieducarClienteTipoCliente
 		}
 		return false;
 	}
-	
+
+
+
+  /**
+   * Recebe valor antigo para utilizar na cláusula WHERE e atualiza o registro com os novos dados,
+   * vindos dos atributos.
+   */
 	function trocaTipoBiblioteca($ref_cod_biblioteca_atual)
 	{
 		if( is_numeric( $this->ref_cod_cliente_tipo ) && is_numeric( $this->ref_cod_cliente ) && is_numeric( $this->ref_usuario_exc ) && is_numeric( $this->ativo ) && is_numeric($this->ref_cod_biblioteca) && $ref_cod_biblioteca_atual )
@@ -362,7 +347,7 @@ class clsPmieducarClienteTipoCliente
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Retorna uma lista filtrados de acordo com os parametros
 	 *
@@ -514,24 +499,26 @@ class clsPmieducarClienteTipoCliente
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Retorna um array com os dados de um registro
 	 *
 	 * @return array
 	 */
-	function existeClienteBiblioteca($ref_cod_biblioteca_atual)
-	{
-		if( is_numeric( $this->ref_cod_cliente ) && is_numeric($ref_cod_biblioteca_atual) )
-		{
+	function existeClienteBiblioteca($ref_cod_biblioteca_atual) {
+		if (is_numeric($this->ref_cod_cliente) && is_numeric($ref_cod_biblioteca_atual)) {
+      $db = new clsBanco();
+      $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_cliente = '{$this->ref_cod_cliente}' AND ref_cod_biblioteca = {$ref_cod_biblioteca_atual}");
+  		$db->ProximoRegistro();
 
-		$db = new clsBanco();
-		$db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE ref_cod_cliente = '{$this->ref_cod_cliente}' AND ref_cod_biblioteca = {$ref_cod_biblioteca_atual}" );
-		$db->ProximoRegistro();
-		return $db->Tupla();
+  		return $db->Tupla();
 		}
-		return false;
+
+    return FALSE;
 	}
+
+
+
 	/**
 	 * Exclui um registro
 	 *
@@ -629,4 +616,3 @@ class clsPmieducarClienteTipoCliente
 	}
 
 }
-?>
