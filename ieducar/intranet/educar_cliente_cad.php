@@ -1,36 +1,35 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /**
- * @author Adriano Erik Weiguert Nagasava
+ *
+ * @author  Prefeitura Municipal de Itajaí
+ * @version SVN: $Id$
+ *
+ * Pacote: i-PLB Software Público Livre e Brasileiro
+ *
+ * Copyright (C) 2006 PMI - Prefeitura Municipal de Itajaí
+ *            ctima@itajai.sc.gov.br
+ *
+ * Este  programa  é  software livre, você pode redistribuí-lo e/ou
+ * modificá-lo sob os termos da Licença Pública Geral GNU, conforme
+ * publicada pela Free  Software  Foundation,  tanto  a versão 2 da
+ * Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.
+ *
+ * Este programa  é distribuído na expectativa de ser útil, mas SEM
+ * QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-
+ * ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-
+ * sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.
+ *
+ * Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU
+ * junto  com  este  programa. Se não, escreva para a Free Software
+ * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
+ * 02111-1307, USA.
+ *
  */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -66,9 +65,9 @@ class indice extends clsCadastro
 	var $ativo;
 	var $del_cod_cliente;
 	var $del_cod_cliente_tipo;
-	
 
-	function Inicializar()
+
+  function Inicializar()
 	{
 		$retorno = "Novo";
 		@session_start();
@@ -93,7 +92,7 @@ class indice extends clsCadastro
 
 				$this->login_ = $this->login;
 				$this->senha_ = $this->senha;
-				
+
 				$obj_permissoes = new clsPermissoes();
 				if( $obj_permissoes->permissao_excluir( 603, $this->pessoa_logada, 11 ) )
 				{
@@ -105,7 +104,8 @@ class indice extends clsCadastro
 		}
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_cliente_det.php?cod_cliente={$registro["cod_cliente"]}&ref_cod_biblioteca={$this->ref_cod_biblioteca}" : "educar_cliente_lst.php";
 		$this->nome_url_cancelar = "Cancelar";
-		return $retorno;
+
+    return $retorno;
 	}
 
 	function Gerar()
@@ -120,22 +120,24 @@ class indice extends clsCadastro
 			$detalhe = $objTemp->detalhe();
 			$opcoes["{$detalhe["idpes"]}"] = $detalhe["nome"];
 		}
-		if ( !$this->cod_cliente ) {
-			$parametros = new clsParametrosPesquisas();
-			$parametros->setSubmit( 0 );
-			$parametros->adicionaCampoSelect( "ref_idpes", "idpes", "nome" );
-			$parametros->setPessoa( 'F' );
-			$parametros->setPessoaCPF( 'N' );
-			$parametros->setCodSistema( 1 );
-			$parametros->setPessoaNovo( 'S' );
-			$parametros->setPessoaTela( 'frame' );
-      
-			$this->campoListaPesq( "ref_idpes", "Cliente", $opcoes, $this->ref_idpes, "pesquisa_pessoa_lst.php", "", false, "", "", null, null, "", false, $parametros->serializaCampos() );
+
+    // Caso o cliente não exista, exibe um campo de pesquisa, senão, mostra um rótulo
+    if (!$this->cod_cliente) {
+      $parametros = new clsParametrosPesquisas();
+      $parametros->setSubmit(0);
+      $parametros->adicionaCampoSelect('ref_idpes', 'idpes', 'nome');
+      $parametros->setPessoa('F');
+      $parametros->setPessoaCPF('N');
+      $parametros->setCodSistema(1);
+      $parametros->setPessoaNovo('S');
+      $parametros->setPessoaTela('frame');
+
+      $this->campoListaPesq('ref_idpes', 'Cliente', $opcoes, $this->ref_idpes, 'pesquisa_pessoa_lst.php', '', FALSE, '', '', NULL, NULL, '', FALSE, $parametros->serializaCampos());
 		}
-		else {
-			$this->campoOculto( "ref_idpes", $this->ref_idpes );
-			$this->campoRotulo( "nm_cliente", "Cliente", $detalhe["nome"] );
-		}
+    else {
+      $this->campoOculto('ref_idpes', $this->ref_idpes);
+      $this->campoRotulo('nm_cliente', 'Cliente', $detalhe['nome']);
+    }
 
 
 		// text
@@ -160,155 +162,177 @@ class indice extends clsCadastro
 
 		if($this->cod_cliente && $this->ref_cod_biblioteca)
 		{
-			//$instituicao_desabilitado = true;
-			//$escola_desabilitado = true;
-			//$biblioteca_desabilitado = false;
-
 			$db = new clsBanco();
+
+      // Cria campo oculto com o ID da biblioteca atual ao qual usuário está cadastrado
+			$this->ref_cod_biblioteca_atual = $this->ref_cod_biblioteca;
+			$this->campoOculto("ref_cod_biblioteca_atual", $this->ref_cod_biblioteca_atual);
+
 			$this->ref_cod_instituicao  = $db->CampoUnico("SELECT ref_cod_instituicao  FROM pmieducar.biblioteca, pmieducar.cliente_tipo_cliente ctc, pmieducar.cliente_tipo ct WHERE ref_cod_cliente = '$this->cod_cliente' AND ref_cod_cliente_tipo = cod_cliente_tipo AND ct.ref_cod_biblioteca = cod_biblioteca AND ctc.ref_cod_biblioteca = {$this->ref_cod_biblioteca}");
 			$this->ref_cod_escola       = $db->CampoUnico("SELECT ref_cod_escola  FROM pmieducar.biblioteca, pmieducar.cliente_tipo_cliente ctc, pmieducar.cliente_tipo ct WHERE ref_cod_cliente = '$this->cod_cliente' AND ref_cod_cliente_tipo = cod_cliente_tipo AND ct.ref_cod_biblioteca = cod_biblioteca AND ctc.ref_cod_biblioteca = {$this->ref_cod_biblioteca}");
 			$this->ref_cod_biblioteca   = $db->CampoUnico("SELECT cod_biblioteca  FROM pmieducar.biblioteca, pmieducar.cliente_tipo_cliente ctc, pmieducar.cliente_tipo ct WHERE ref_cod_cliente = '$this->cod_cliente' AND ref_cod_cliente_tipo = cod_cliente_tipo AND ct.ref_cod_biblioteca = cod_biblioteca AND ctc.ref_cod_biblioteca = {$this->ref_cod_biblioteca}");
 			$this->ref_cod_cliente_tipo = $db->CampoUnico("SELECT ref_cod_cliente_tipo FROM pmieducar.cliente_tipo_cliente WHERE ref_cod_cliente = '$this->cod_cliente'");// AND ref_cod_cliente_tipo IN (SELECT cod_cliente_tipo FROM pmieducar.cliente_tipo WHERE ref_cod_biblioteca = )");//IN (SELECT ref_cod_biblioteca FROM pmieducar.biblioteca_usuario WHERE ref_cod_usuario = '$this->pessoa_logada'))");
-			$this->ref_cod_biblioteca_atual = $this->ref_cod_biblioteca;
-			$this->campoOculto("ref_cod_biblioteca_atual", $this->ref_cod_biblioteca_atual);
 		}
 		include( "include/pmieducar/educar_campo_lista.php" );
 	}
 
-	function Novo()
-	{
-		@session_start();
-		 $this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
-		$senha = md5( $this->senha_."asnk@#*&(23" );
-		$obj_permissoes = new clsPermissoes();
-		$obj_permissoes->permissao_cadastra( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
-		$obj 	 = new clsPmieducarCliente( null, null, null, $this->ref_idpes );
-		$detalhe = $obj->detalhe();
-		if ( !$detalhe )
-		{
-			$obj_cliente = new clsPmieducarCliente();
-			$lst_cliente = $obj_cliente->lista( null, null, null, null, $this->login_ );
-			if ( $lst_cliente && $this->login_ != "") {
-				$this->mensagem = "Este login já está sendo utilizado por outra pessoa!<br>";
-				echo "<!--\nErro ao cadastrar clsPmieducarCliente\nvalores obrigatorios\nis_numeric( $this->ref_cod_cliente_tipo ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_idpes ) && is_numeric( $this->login_ )\n-->";
-			}
+
+
+  /**
+   * Sobrescrita do método clsCadastro::Novo.
+   *
+   * Insere novo registro nas tabelas pmieducar.cliente e pmieducar.cliente_tipo_cliente.
+   */
+  public function Novo() {
+    session_start();
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
+    session_write_close();
+
+    $senha = md5($this->senha . 'asnk@#*&(23');
+
+    $obj_permissoes = new clsPermissoes();
+    $obj_permissoes->permissao_cadastra(603, $this->pessoa_logada, 11,  'educar_cliente_lst.php');
+
+    $obj = new clsPmieducarCliente(NULL, NULL, NULL, $this->ref_idpes);
+    $detalhe = $obj->detalhe();
+
+    if (!$detalhe) {
+      $obj_cliente = new clsPmieducarCliente();
+      $lst_cliente = $obj_cliente->lista(NULL, NULL, NULL, NULL, $this->login);
+
+      if ($lst_cliente && $this->login != '') {
+        $this->mensagem = "Este login já está sendo utilizado por outra pessoa!<br>";
+      }
+      else {
+        $obj = new clsPmieducarCliente($this->cod_cliente, NULL, $this->pessoa_logada,
+				  $this->ref_idpes, $this->login, $senha, $this->data_cadastro, $this->data_exclusao, 1);
+
+        $cadastrou = $obj->cadastra();
+        if ($cadastrou) {
+          $this->cod_cliente = $cadastrou;
+          $obj_cliente_tipo = new clsPmieducarClienteTipoCliente($this->ref_cod_cliente_tipo,
+            $this->cod_cliente, NULL, NULL, $this->pessoa_logada, $this->pessoa_logada, 1);
+
+          if ($obj_cliente_tipo->existeCliente()) {
+            if ($obj_cliente_tipo->trocaTipo()) {
+              $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+              header('Location: educar_definir_cliente_tipo_lst.php');
+              die();
+            }
+          }
+          else {
+            $obj_cliente_tipo = new clsPmieducarClienteTipoCliente($this->ref_cod_cliente_tipo,
+              $this->cod_cliente, NULL, NULL, $this->pessoa_logada, NULL, 1, $this->ref_cod_biblioteca);
+
+            if ($obj_cliente_tipo->cadastra()) {
+              $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+              header('Location: educar_cliente_lst.php');
+              die();
+						}
+          }
+        }
+
+        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+
+        return FALSE;
+      }
+    }
+    else {
+      $obj = new clsPmieducarCliente(NULL, NULL, NULL, $this->ref_idpes);
+      $registro = $obj->detalhe();
+
+      if ($registro) {
+        $this->cod_cliente = $registro['cod_cliente'];
+      }
+
+      $this->ativo = 1;
+
+      $sql = "SELECT COUNT(0) FROM pmieducar.cliente_tipo_cliente WHERE ref_cod_cliente_tipo = {$this->cod_cliente}
+        AND ref_cod_biblioteca = {$this->ref_cod_biblioteca} AND ativo = 1";
+
+      $db = new clsBanco();
+      $possui_biblio = $db->CampoUnico($sql);
+      if ($possui_biblio == 0) {
+        $obj_cliente_tipo_cliente = new clsPmieducarClienteTipoCliente($this->ref_cod_cliente_tipo,
+          $this->cod_cliente, NULL, NULL, $this->pessoa_logada, NULL, NULL, $this->ref_cod_biblioteca);
+
+        if (!$obj_cliente_tipo_cliente->cadastra()) {
+          $this->mensagem = "Não cadastrou";
+
+          return FALSE;
+				}
+        else {
+          header('Location: educar_cliente_lst.php');
+
+          return TRUE;
+          die();
+				}
+      }
 			else {
-				$obj = new clsPmieducarCliente( $this->cod_cliente, null, $this->pessoa_logada, $this->ref_idpes, $this->login_, $senha, $this->data_cadastro, $this->data_exclusao, 1 );
-				$cadastrou = $obj->cadastra();
-				if( $cadastrou )
-				{
-					$this->cod_cliente  = $cadastrou;
-					$obj_cliente_tipo = new clsPmieducarClienteTipoCliente( $this->ref_cod_cliente_tipo, $this->cod_cliente, null, null, $this->pessoa_logada, $this->pessoa_logada, 1 );
-					if ( $obj_cliente_tipo->existeCliente() )
-					{
-						if ( $obj_cliente_tipo->trocaTipo() )
-						{
-							$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-							header( "Location: educar_definir_cliente_tipo_lst.php" );
-							die();
-							return true;
-						}
-					}
-					else
-					{
-						$obj_cliente_tipo = new clsPmieducarClienteTipoCliente( $this->ref_cod_cliente_tipo, $this->cod_cliente, null, null, $this->pessoa_logada, null, 1 );
-						if ( $obj_cliente_tipo->cadastra() )
-						{
-							$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-							header( "Location: educar_cliente_lst.php" );
-							die();
-							return true;
-						}
+        $this->Editar();
+        $this->mensagem = "O cliente já está cadastrado!<br>";
+      }
+    }
+  }
 
-					}
 
-				}
 
-				$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-				echo "<!--\nErro ao cadastrar clsPmieducarCliente\nvalores obrigatorios\nis_numeric( $this->ref_cod_cliente_tipo ) && is_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_idpes ) && is_numeric( $this->login_ )\n-->";
-				return false;
-			}
-		}
-		else {
-			$obj = new clsPmieducarCliente( null, null, null, $this->ref_idpes );
-			$registro  = $obj->detalhe();
+  /**
+   * Sobrescrita do método clsCadastro::Editar.
+   *
+   * Verifica:
+   * - Se usuário tem permissão de edição
+   * - Se usuário existe na biblioteca atual
+   *   - Se existir, troca pela biblioteca escolhida na interface
+   *   - Senão, cadastra como cliente da biblioteca
+   */
+  public function Editar() {
+    session_start();
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
+    session_write_close();
 
-			if( $registro )
-				$this->cod_cliente = $registro["cod_cliente"];
-			$this->ativo = 1;
+    $senha = md5($this->senha . 'asnk@#*&(23');
+    $obj_permissoes = new clsPermissoes();
+    $obj_permissoes->permissao_cadastra(603, $this->pessoa_logada, 11, 'educar_cliente_lst.php');
 
-			$sql = "SELECT COUNT(0) FROM pmieducar.cliente_tipo_cliente WHERE ref_cod_cliente_tipo = {$this->cod_cliente}
-					AND ref_cod_biblioteca = {$this->ref_cod_biblioteca} AND ativo = 1";
-			$db = new clsBanco();
-			$possui_biblio = $db->CampoUnico($sql);
-			if ($possui_biblio == 0)
-			{
-				$obj_cliente_tipo_cliente = new clsPmieducarClienteTipoCliente($this->ref_cod_cliente_tipo, $this->cod_cliente, null, null, $this->pessoa_logada, null, null, $this->ref_cod_biblioteca);
-				if (!$obj_cliente_tipo_cliente->cadastra())
-				{
-					$this->mensagem = "Não cadastrou";
-					return false;
-				}
-				else 
-				{
-					header( "Location: educar_cliente_lst.php" );
-					return true;
-					die();
-				}
-			}
-			else 
-			{
-				$this->Editar();
-				$this->mensagem = "O cliente já está cadastrado!<br>";
-				echo "<!--\nErro ao cadastrar clsPmieducarCliente\nvalores obrigatorios\nis_numeric( $this->ref_cod_cliente_tipo ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_idpes ) && is_numeric( $this->login_ )\n-->";
-			}
-		}
-	}
+    $obj = new clsPmieducarCliente($this->cod_cliente, $this->pessoa_logada, $this->pessoa_logada,
+      $this->ref_idpes, $this->login, $senha, $this->data_cadastro, $this->data_exclusao, $this->ativo);
 
-	function Editar()
-	{
-		@session_start();
-		 $this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
+    $editou = $obj->edita();
 
-		$senha = md5( $this->senha_."asnk@#*&(23" );
-		$obj_permissoes = new clsPermissoes();
-		$obj_permissoes->permissao_cadastra( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
+    if ($editou) {
+      // Cria objeto clsPemieducarClienteTipoCliente configurando atributos usados nas queries
+      $obj_cliente_tipo = new clsPmieducarClienteTipoCliente(
+        $this->ref_cod_cliente_tipo, $this->cod_cliente, NULL, NULL,
+        $this->pessoa_logada, $this->pessoa_logada, 1, $this->ref_cod_biblioteca);
 
-		$obj = new clsPmieducarCliente( $this->cod_cliente, $this->pessoa_logada, $this->pessoa_logada, $this->ref_idpes, $this->login_, $senha, $this->data_cadastro, $this->data_exclusao, $this->ativo );
-		$editou = $obj->edita();
-		if( $editou )
-		{
-			$obj_cliente_tipo = new clsPmieducarClienteTipoCliente( $this->ref_cod_cliente_tipo, $this->cod_cliente, null, null, $this->pessoa_logada, $this->pessoa_logada, 1, $this->ref_cod_biblioteca );
-			if ( $obj_cliente_tipo->existeClienteBiblioteca($_POST['ref_cod_biblioteca_atual']) )
-			{
-				if ( $obj_cliente_tipo->trocaTipoBiblioteca($_POST['ref_cod_biblioteca_atual']) )
-				{
-					$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-					header( "Location: educar_cliente_lst.php" );
-					die();
-					return true;
-				}
-			}
-			else
-			{
-				$obj_cliente_tipo = new clsPmieducarClienteTipoCliente( $this->ref_cod_cliente_tipo, $this->cod_cliente, null, null, $this->pessoa_logada, null, 1, $this->ref_cod_biblioteca );
-				if ( $obj_cliente_tipo->cadastra() )
-				{
-					$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-					header( "Location: educar_cliente_lst.php" );
-					die();
-					return true;
-				}
-			}
-		}
+      // clsPmieducarClienteTipoCliente::trocaTipoBiblioteca recebe o valor antigo para usar
+      // na cláusula WHERE
+      if ($obj_cliente_tipo->existeClienteBiblioteca($_POST['ref_cod_biblioteca_atual'])) {
+        if ($obj_cliente_tipo->trocaTipoBiblioteca($_POST['ref_cod_biblioteca_atual'])) {
+          $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+          header('Location: educar_cliente_lst.php');
+          die();
+        }
+      }
+      else {
+        $obj_cliente_tipo = new clsPmieducarClienteTipoCliente(
+          $this->ref_cod_cliente_tipo, $this->cod_cliente, NULL, NULL,
+          $this->pessoa_logada, NULL, 1, $this->ref_cod_biblioteca);
 
-		$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-		echo "<!--\nErro ao editar clsPmieducarCliente\nvalores obrigatorios\nif( is_numeric( $this->cod_cliente ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+        if ($obj_cliente_tipo->cadastra()) {
+          $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+          header('Location: educar_cliente_lst.php');
+          die();
+        }
+      }
+    }
+
+    $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
 		die();
-		return false;
 	}
+
+
 
 	function Excluir()
 	{
