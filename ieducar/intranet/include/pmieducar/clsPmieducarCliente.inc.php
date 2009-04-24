@@ -1,35 +1,32 @@
 <?php
 /**
  *
- *	@author Prefeitura Municipal de Itajaí
- *	@updated 29/03/2007
- *   Pacote: i-PLB Software Público Livre e Brasileiro
+ * @author  Prefeitura Municipal de Itajaí
+ * @version SVN: $Id$
  *
- *	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí
- *						ctima@itajai.sc.gov.br
+ * Pacote: i-PLB Software Público Livre e Brasileiro
  *
- *	Este  programa  é  software livre, você pode redistribuí-lo e/ou
- *	modificá-lo sob os termos da Licença Pública Geral GNU, conforme
- *	publicada pela Free  Software  Foundation,  tanto  a versão 2 da
- *	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.
+ * Copyright (C) 2006 PMI - Prefeitura Municipal de Itajaí
+ *            ctima@itajai.sc.gov.br
  *
- *	Este programa  é distribuído na expectativa de ser útil, mas SEM
- *	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-
- *	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-
- *	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.
+ * Este  programa  é  software livre, você pode redistribuí-lo e/ou
+ * modificá-lo sob os termos da Licença Pública Geral GNU, conforme
+ * publicada pela Free  Software  Foundation,  tanto  a versão 2 da
+ * Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.
  *
- *	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU
- *	junto  com  este  programa. Se não, escreva para a Free Software
- *	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
- *	02111-1307, USA.
+ * Este programa  é distribuído na expectativa de ser útil, mas SEM
+ * QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-
+ * ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-
+ * sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.
+ *
+ * Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU
+ * junto  com  este  programa. Se não, escreva para a Free Software
+ * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
+ * 02111-1307, USA.
  *
  */
 
-/*
- * Criado em 17/07/2006 09:18 pelo gerador automatico de classes
- */
-
-require_once( "include/pmieducar/geral.inc.php" );
+require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarCliente
 {
@@ -102,13 +99,16 @@ class clsPmieducarCliente
 	var $_campo_order_by;
 
 
+
 	/**
 	 * Construtor (PHP 4)
 	 *
 	 * @return object
 	 */
-	function clsPmieducarCliente( $cod_cliente = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_idpes = null, $login = null, $senha = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
-	{
+	function clsPmieducarCliente($cod_cliente = NULL, $ref_usuario_exc = NULL,
+	  $ref_usuario_cad = NULL, $ref_idpes = NULL, $login = NULL, $senha = NULL, $data_cadastro = NULL,
+	  $data_exclusao = NULL, $ativo = NULL) {
+
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}cliente";
@@ -479,228 +479,249 @@ class clsPmieducarCliente
 		return false;
 	}
 
-	/**
-	 * Retorna uma lista filtrados de acordo com os parametros
-	 *
-	 * @return array
-	 */
-	function listaCompleta( $int_cod_cliente = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_idpes = null, $int_login = null, $str_senha = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = 1, $str_nm_cliente = null, $str_suspenso = null, $int_cod_cliente_tipo = null, $int_cod_escola = null, $int_cod_biblioteca = null, $int_cod_instituicao = null )
-	{
-		$tab_adicional  = '';
-		$condicao	      = '';
-		$camp_adicional = '';
-		
-		// Se suspenso não for nulo, seleciona clientes suspensos
-		if (!is_null($str_suspenso)) 
-		{
-			$camp_adicional .= ", pmieducar.cliente_suspensao cs ";
-			$condicao       .= " AND c.cod_cliente = cs.ref_cod_cliente";
-		}
-		else
-		{
-      $camp_adicional .= ", pmieducar.cliente_suspensao cs ";
-			$condicao       .= " AND c.cod_cliente <> cs.ref_cod_cliente";		
-		}
 
-		$sql1      = "SELECT c.cod_cliente,
-						     c.ref_idpes,
-						     c.ref_usuario_cad,
-						     c.login,
-						     p.nome,
-						     ct.nm_tipo,
-						     ct.cod_cliente_tipo,
-						     b.nm_biblioteca,
-						     b.cod_biblioteca,
-						     e.cod_escola as cod_escola,
-						     i.cod_instituicao,
-						     (SELECT 'S'::text
-						        FROM pmieducar.cliente_suspensao cs 
-						       WHERE cs.ref_cod_cliente = c.cod_cliente
-						         AND cs.data_liberacao IS NULL) AS id_suspensao
-				        FROM pmieducar.cliente                c,
-					 	     pmieducar.cliente_tipo_cliente ctc,
-				 		     pmieducar.cliente_tipo          ct,
-				 		     pmieducar.biblioteca             b,
-						     pmieducar.escola                 e,
-						     pmieducar.instituicao            i,
-						     cadastro.pessoa                  p{$camp_adicional}
-					   WHERE c.cod_cliente         = ctc.ref_cod_cliente
-				 	 	 AND ct.cod_cliente_tipo   = ctc.ref_cod_cliente_tipo
-				 		 AND b.cod_biblioteca      = ct.ref_cod_biblioteca
-				 		 AND e.cod_escola          = b.ref_cod_escola
-				 		 AND i.cod_instituicao     = b.ref_cod_instituicao
-				 		 AND e.ref_cod_instituicao = i.cod_instituicao{$condicao}
-						 AND p.idpes               = c.ref_idpes
-						 AND c.ativo               = '{$int_ativo}'
-						 AND ctc.ativo			   = '{$int_ativo}'";
 
-		$sql2      = "SELECT c.cod_cliente,
-					         c.ref_idpes,
-						     c.ref_usuario_cad,
-						     c.login,
-						     p.nome,
-						     ct.nm_tipo,
-						     ct.cod_cliente_tipo,
-						     b.nm_biblioteca,
-						     b.cod_biblioteca,
-						     null as cod_escola,
-						     i.cod_instituicao,
-						     (SELECT 'S'::text
-						        FROM pmieducar.cliente_suspensao cs
-						       WHERE cs.ref_cod_cliente = c.cod_cliente
-						         AND cs.data_liberacao IS NULL) AS id_suspensao
-					    FROM pmieducar.cliente                c,
-						     pmieducar.cliente_tipo_cliente ctc,
-						     pmieducar.cliente_tipo          ct,
-						     pmieducar.biblioteca             b,
-						     pmieducar.instituicao            i,
-						     cadastro.pessoa                  p{$camp_adicional}
-					   WHERE c.cod_cliente         = ctc.ref_cod_cliente
-						 AND ct.cod_cliente_tipo   = ctc.ref_cod_cliente_tipo
-						 AND b.cod_biblioteca      = ct.ref_cod_biblioteca
-						 AND i.cod_instituicao     = b.ref_cod_instituicao
-						 AND b.ref_cod_escola      IS NULL
-						 AND ct.ref_cod_biblioteca = b.cod_biblioteca{$condicao}
-						 AND p.idpes               = c.ref_idpes
-						 AND c.ativo               = '{$int_ativo}'
-						 AND ctc.ativo			   = '{$int_ativo}'";
+  /**
+   * Retorna uma lista filtrada de acordo com os argumentos.
+   *
+   * @return Array
+   */
+  public function listaCompleta($int_cod_cliente = NULL, $int_ref_usuario_exc = NULL,
+    $int_ref_usuario_cad = NULL, $int_ref_idpes = NULL, $int_login = NULL, $str_senha = NULL,
+    $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL, $date_data_exclusao_ini = NULL,
+    $date_data_exclusao_fim = NULL, $int_ativo = 1, $str_nm_cliente = NULL, $str_suspenso = NULL,
+    $int_cod_cliente_tipo = NULL, $int_cod_escola = NULL, $int_cod_biblioteca = NULL,
+    $int_cod_instituicao = NULL) {
 
-		$filtros = "";
-		$whereAnd = " AND ";
+    $tab_adicional  = '';
+    $condicao       = '';
+    $camp_adicional = '';
 
-		if( is_numeric( $int_cod_cliente ) )
-		{
-			$filtros .= "{$whereAnd} c.cod_cliente = '{$int_cod_cliente}'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_ref_usuario_exc ) )
-		{
-			$filtros .= "{$whereAnd} c.ref_usuario_exc = '{$int_ref_usuario_exc}'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_ref_usuario_cad ) )
-		{
-			$filtros .= "{$whereAnd} c.ref_usuario_cad = '{$int_ref_usuario_cad}'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_ref_idpes ) )
-		{
-			$filtros .= "{$whereAnd} c.ref_idpes = '{$int_ref_idpes}'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_login ) )
-		{
-			$filtros .= "{$whereAnd} c.login = '{$int_login}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $str_senha ) )
-		{
-			$filtros .= "{$whereAnd} c.senha = '{$str_senha}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $date_data_cadastro_ini ) )
-		{
-			$filtros .= "{$whereAnd} c.data_cadastro >= '{$date_data_cadastro_ini}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $date_data_cadastro_fim ) )
-		{
-			$filtros .= "{$whereAnd} c.data_cadastro <= '{$date_data_cadastro_fim}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $date_data_exclusao_ini ) )
-		{
-			$filtros .= "{$whereAnd} c.data_exclusao >= '{$date_data_exclusao_ini}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $date_data_exclusao_fim ) )
-		{
-			$filtros .= "{$whereAnd} c.data_exclusao <= '{$date_data_exclusao_fim}'";
-			$whereAnd = " AND ";
-		}
-		if( is_null( $int_ativo ) || $int_ativo )
-		{
-			$filtros .= "{$whereAnd} c.ativo = '1'";
-			$whereAnd = " AND ";
-		}
-		else
-		{
-			$filtros .= "{$whereAnd} c.ativo = '0'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $str_nm_cliente ) )
-		{
-			$filtros .= "{$whereAnd} p.nome LIKE '%{$str_nm_cliente}%'";
-			$whereAnd = " AND ";
-		}
-		if ( is_numeric( $int_cod_cliente_tipo ) )
-		{
-			$filtros .= "{$whereAnd} ct.cod_cliente_tipo = '{$int_cod_cliente_tipo}'";
-			$whereAnd = " AND ";
-		}
-		if ( is_array( $int_cod_biblioteca ) )
-		{
-			$array_biblioteca = implode(", ", $int_cod_biblioteca);				
-			$filtros .= "{$whereAnd} b.cod_biblioteca IN ({$array_biblioteca})";
-			$whereAnd = " AND ";
-		}
-		if ( is_numeric( $int_cod_biblioteca ) )
-		{
-			$filtros .= "{$whereAnd} b.cod_biblioteca = '{$int_cod_biblioteca}'";
-			$whereAnd = " AND ";
-		}
-		if ( is_numeric( $int_cod_escola ) )
-		{
-			$filtros .= "{$whereAnd} e.cod_escola = '{$int_cod_escola}'";
-			$whereAnd = " AND ";
-		}
-		if ( is_numeric( $int_cod_instituicao ) )
-		{
-			$filtros .= "{$whereAnd} i.cod_instituicao = '{$int_cod_instituicao}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $str_suspenso ) ) {
-			$filtros .= "{$whereAnd} cs.data_liberacao IS NULL";
-			$whereAnd = " AND ";
-		}
+    // Executa filtragem por clientes suspensos somente quando houver registros na tabela
+    $clienteSuspenso = new clsPmieducarClienteSuspensao();
+    $db = new clsBanco();
 
-		$db = new clsBanco();
-		$resultado = array();
+    // Se suspenso não for nulo e existirem cliente suspensos, seleciona-os
+    // quando ainda estiverem no prazo de suspensão
+    if (!is_null($str_suspenso) && $db->doCountFromObj($clienteSuspenso) > 0) {
+      $camp_adicional .= ', pmieducar.cliente_suspensao cs ';
+      $condicao       .= ' AND c.cod_cliente = cs.ref_cod_cliente AND
+                           (cs.data_suspensao < current_date - cs.dias)';
+    }
+    else {
+      $camp_adicional .= ', pmieducar.cliente_suspensao cs ';
+      $condicao       .= ' AND (c.cod_cliente <> cs.ref_cod_cliente OR
+                           (cs.data_suspensao > current_date - cs.dias))';
+    }
 
-		$sql1 .= $filtros; /*. $this->getOrderby() . $this->getLimite();*/
-		$sql2 .= $filtros;
+    $sql1 = "
+            SELECT
+              c.cod_cliente,
+              c.ref_idpes,
+              c.ref_usuario_cad,
+              c.login,
+              p.nome,
+              ct.nm_tipo,
+              ct.cod_cliente_tipo,
+              b.nm_biblioteca,
+              b.cod_biblioteca,
+              e.cod_escola as cod_escola,
+              i.cod_instituicao,
+              (SELECT 'S'::text
+                FROM pmieducar.cliente_suspensao cs
+                WHERE cs.ref_cod_cliente = c.cod_cliente
+                AND cs.data_liberacao IS NULL) AS id_suspensao
+            FROM
+              pmieducar.cliente                c,
+              pmieducar.cliente_tipo_cliente ctc,
+              pmieducar.cliente_tipo          ct,
+              pmieducar.biblioteca             b,
+              pmieducar.escola                 e,
+              pmieducar.instituicao            i,
+              cadastro.pessoa                  p{$camp_adicional}
+            WHERE
+              c.cod_cliente             = ctc.ref_cod_cliente
+              AND ct.cod_cliente_tipo   = ctc.ref_cod_cliente_tipo
+              AND b.cod_biblioteca      = ct.ref_cod_biblioteca
+              AND e.cod_escola          = b.ref_cod_escola
+              AND i.cod_instituicao     = b.ref_cod_instituicao
+              AND e.ref_cod_instituicao = i.cod_instituicao{$condicao}
+              AND p.idpes               = c.ref_idpes
+              AND c.ativo               = '{$int_ativo}'
+              AND ctc.ativo             = '{$int_ativo}'";
 
-		if(is_numeric($int_cod_escola))
-		{
-			$this->_total = $db->CampoUnico( "SELECT count(0) FROM ( {$sql1} ) AS SUBQUERY" );
-		}
-		else 
-		{
-			$this->_total = $db->CampoUnico( "SELECT count(0) FROM ( ".$sql1." UNION ".$sql2." ) AS SUBQUERY" );
-		}
-		
-		$sql2 .= $this->getOrderby() . $this->getLimite();
+    $sql2 = "
+            SELECT
+              c.cod_cliente,
+              c.ref_idpes,
+              c.ref_usuario_cad,
+              c.login,
+              p.nome,
+              ct.nm_tipo,
+              ct.cod_cliente_tipo,
+              b.nm_biblioteca,
+              b.cod_biblioteca,
+              null as cod_escola,
+              i.cod_instituicao,
+              (SELECT 'S'::text
+                FROM pmieducar.cliente_suspensao cs
+                WHERE cs.ref_cod_cliente = c.cod_cliente
+                AND cs.data_liberacao IS NULL) AS id_suspensao
+            FROM
+              pmieducar.cliente                c,
+              pmieducar.cliente_tipo_cliente ctc,
+              pmieducar.cliente_tipo          ct,
+              pmieducar.biblioteca             b,
+              pmieducar.instituicao            i,
+              cadastro.pessoa                  p{$camp_adicional}
+            WHERE c.cod_cliente         = ctc.ref_cod_cliente
+              AND ct.cod_cliente_tipo   = ctc.ref_cod_cliente_tipo
+              AND b.cod_biblioteca      = ct.ref_cod_biblioteca
+              AND i.cod_instituicao     = b.ref_cod_instituicao
+              AND b.ref_cod_escola      IS NULL
+              AND ct.ref_cod_biblioteca = b.cod_biblioteca{$condicao}
+              AND p.idpes               = c.ref_idpes
+              AND c.ativo               = '{$int_ativo}'
+              AND ctc.ativo             = '{$int_ativo}'";
 
-		if ( is_numeric( $int_cod_escola ) )
-			$sql = $sql1;
-		else
-			$sql = $sql1." UNION ".$sql2;
+    $filtros  = '';
+    $whereAnd = ' AND ';
 
-		$db->Consulta( $sql );
+    if (is_numeric($int_cod_cliente)) {
+      $filtros .= "{$whereAnd} c.cod_cliente = '{$int_cod_cliente}'";
+      $whereAnd = " AND ";
+    }
 
-		while ( $db->ProximoRegistro() )
-		{
-			$tupla = $db->Tupla();
+    if (is_numeric($int_ref_usuario_exc)) {
+      $filtros .= "{$whereAnd} c.ref_usuario_exc = '{$int_ref_usuario_exc}'";
+      $whereAnd = " AND ";
+    }
 
-			$tupla["_total"] = $this->_total;
-			$resultado[] = $tupla;
-		}
-		if( count( $resultado ) )
-		{
-			return $resultado;
-		}
-		return false;
-	}
+    if (is_numeric($int_ref_usuario_cad)) {
+      $filtros .= "{$whereAnd} c.ref_usuario_cad = '{$int_ref_usuario_cad}'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_numeric($int_ref_idpes)) {
+      $filtros .= "{$whereAnd} c.ref_idpes = '{$int_ref_idpes}'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_numeric($int_login)) {
+      $filtros .= "{$whereAnd} c.login = '{$int_login}'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_string($str_senha)) {
+      $filtros .= "{$whereAnd} c.senha = '{$str_senha}'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_string($date_data_cadastro_ini)) {
+      $filtros .= "{$whereAnd} c.data_cadastro >= '{$date_data_cadastro_ini}'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_string($date_data_cadastro_fim)) {
+      $filtros .= "{$whereAnd} c.data_cadastro <= '{$date_data_cadastro_fim}'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_string($date_data_exclusao_ini)) {
+      $filtros .= "{$whereAnd} c.data_exclusao >= '{$date_data_exclusao_ini}'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_string($date_data_exclusao_fim)) {
+      $filtros .= "{$whereAnd} c.data_exclusao <= '{$date_data_exclusao_fim}'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_null($int_ativo) || $int_ativo) {
+      $filtros .= "{$whereAnd} c.ativo = '1'";
+      $whereAnd = " AND ";
+    }
+    else {
+      $filtros .= "{$whereAnd} c.ativo = '0'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_string($str_nm_cliente)) {
+      $filtros .= "{$whereAnd} p.nome LIKE '%{$str_nm_cliente}%'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_numeric($int_cod_cliente_tipo)) {
+      $filtros .= "{$whereAnd} ct.cod_cliente_tipo = '{$int_cod_cliente_tipo}'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_array($int_cod_biblioteca)) {
+      $array_biblioteca = implode(", ", $int_cod_biblioteca);
+      $filtros .= "{$whereAnd} b.cod_biblioteca IN ({$array_biblioteca})";
+      $whereAnd = " AND ";
+    }
+
+    if (is_numeric($int_cod_biblioteca)) {
+      $filtros .= "{$whereAnd} b.cod_biblioteca = '{$int_cod_biblioteca}'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_numeric($int_cod_escola)) {
+      $filtros .= "{$whereAnd} e.cod_escola = '{$int_cod_escola}'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_numeric($int_cod_instituicao)) {
+      $filtros .= "{$whereAnd} i.cod_instituicao = '{$int_cod_instituicao}'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_string($str_suspenso)) {
+      $filtros .= "{$whereAnd} cs.data_liberacao IS NULL";
+      $whereAnd = " AND ";
+    }
+
+    $db = new clsBanco();
+    $resultado = array();
+
+    $sql1 .= $filtros;
+    $sql2 .= $filtros;
+
+    if (is_numeric($int_cod_escola)) {
+      $this->_total = $db->CampoUnico("SELECT count(0) FROM ({$sql1}) AS SUBQUERY");
+    }
+    else {
+      $this->_total = $db->CampoUnico("SELECT count(0) FROM (" . $sql1 . " UNION " . $sql2 . ") AS SUBQUERY");
+    }
+
+    // Aplica ordenação e limite
+    $sql2 .= $this->getOrderby() . $this->getLimite();
+
+    if (is_numeric($int_cod_escola)) {
+      $sql = $sql1;
+    }
+    else {
+      $sql = $sql1 . ' UNION ' . $sql2;
+    }
+
+    $db->Consulta($sql);
+
+    while ($db->ProximoRegistro()) {
+      $tupla = $db->Tupla();
+
+      $tupla["_total"] = $this->_total;
+      $resultado[] = $tupla;
+    }
+
+    if (count($resultado) > 0) {
+      return $resultado;
+    }
+
+    return FALSE;
+  }
+
+
 
 	/**
 	 * Retorna uma lista filtrados de acordo com os parametros
@@ -992,4 +1013,3 @@ class clsPmieducarCliente
 	}
 
 }
-?>
