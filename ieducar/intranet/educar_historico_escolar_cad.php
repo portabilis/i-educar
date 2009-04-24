@@ -1,33 +1,35 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+/**
+ *
+ * @author  Prefeitura Municipal de Itajaí
+ * @version SVN: $Id$
+ *
+ * Pacote: i-PLB Software Público Livre e Brasileiro
+ *
+ * Copyright (C) 2006 PMI - Prefeitura Municipal de Itajaí
+ *            ctima@itajai.sc.gov.br
+ *
+ * Este  programa  é  software livre, você pode redistribuí-lo e/ou
+ * modificá-lo sob os termos da Licença Pública Geral GNU, conforme
+ * publicada pela Free  Software  Foundation,  tanto  a versão 2 da
+ * Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.
+ *
+ * Este programa  é distribuído na expectativa de ser útil, mas SEM
+ * QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-
+ * ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-
+ * sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.
+ *
+ * Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU
+ * junto  com  este  programa. Se não, escreva para a Free Software
+ * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
+ * 02111-1307, USA.
+ *
+ */
+
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -142,11 +144,11 @@ class indice extends clsCadastro
 		//$obj_permissoes = new clsPermissoes();
 		//$this->ref_cod_instituicao = $obj_permissoes->getInstituicao( $this->pessoa_logada );
 		//$this->campoOculto( 'ref_cod_instituicao', $this->ref_cod_instituicao );
-		
+
 		$obj_nivel = new clsPmieducarUsuario($this->pessoa_logada);
 		$nivel_usuario = $obj_nivel->detalhe();
-		
-		if ($nivel_usuario['ref_cod_tipo_usuario'] == 1) 
+
+		if ($nivel_usuario['ref_cod_tipo_usuario'] == 1)
 		{
 			$obj_instituicao = new clsPmieducarInstituicao();
 			$lista = $obj_instituicao->lista(null,null,null,null,null,null,null,null,null,null,null,null,null,1);
@@ -167,7 +169,7 @@ class indice extends clsCadastro
 			$this->campoOculto("ref_cod_instituicao", $inst['cod_instituicao']);
 			$this->campoTexto("instituicao", "Instiui&ccedil;&atilde;o", $inst['nm_instituicao'], 30, 255, false, false, false, "", "", "", "", true);
 		}
-		
+
 		// text
 		$this->campoTexto( "escola", "Escola", $this->escola, 30, 255, true );
 		$this->campoTexto( "escola_cidade", "Cidade da Escola", $this->escola_cidade, 30, 255, true );
@@ -456,7 +458,7 @@ document.getElementById('idpais').onchange = function()
 	campoEstado.options[0] = new Option( 'Carregando estados', '', false, false );
 
 	var xml1 = new ajax(getEstado_XML);
-	strURL = "xml_estado.php?pais="+campoPais;
+	strURL = "public_uf_xml.php?pais="+campoPais;
 	xml1.envia(strURL);
 }
 
