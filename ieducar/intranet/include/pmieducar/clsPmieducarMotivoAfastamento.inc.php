@@ -1,232 +1,212 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
-*	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-*																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-*						ctima@itajai.sc.gov.br					    	 *
-*																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-*																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-*																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-*	02111-1307, USA.													 *
-*																		 *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /**
-* @author Prefeitura Municipal de Itajaí
-*
-* Criado em 26/06/2006 16:19 pelo gerador automatico de classes
-*/
+ *
+ * @author  Prefeitura Municipal de Itajaí
+ * @version SVN: $Id$
+ *
+ * Pacote: i-PLB Software Público Livre e Brasileiro
+ *
+ * Copyright (C) 2006 PMI - Prefeitura Municipal de Itajaí
+ *            ctima@itajai.sc.gov.br
+ *
+ * Este  programa  é  software livre, você pode redistribuí-lo e/ou
+ * modificá-lo sob os termos da Licença Pública Geral GNU, conforme
+ * publicada pela Free  Software  Foundation,  tanto  a versão 2 da
+ * Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.
+ *
+ * Este programa  é distribuído na expectativa de ser útil, mas SEM
+ * QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-
+ * ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-
+ * sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.
+ *
+ * Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU
+ * junto  com  este  programa. Se não, escreva para a Free Software
+ * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
+ * 02111-1307, USA.
+ *
+ */
 
-require_once( "include/pmieducar/geral.inc.php" );
+require_once 'include/pmieducar/geral.inc.php';
 
-class clsPmieducarMotivoAfastamento
-{
-	var $cod_motivo_afastamento;
-	var $ref_usuario_exc;
-	var $ref_usuario_cad;
-	var $nm_motivo;
-	var $descricao;
-	var $data_cadastro;
-	var $data_exclusao;
-	var $ativo;
-	var $ref_cod_instituicao;
+class clsPmieducarMotivoAfastamento {
 
-	// propriedades padrao
+  public
+    $cod_motivo_afastamento = NULL,
+    $ref_usuario_exc        = NULL,
+    $ref_usuario_cad        = NULL,
+    $nm_motivo              = NULL,
+    $descricao              = NULL,
+    $data_cadastro          = NULL,
+    $data_exclusao          = NULL,
+    $ativo                  = NULL,
+    $ref_cod_instituicao    = NULL;
 
-	/**
-	 * Armazena o total de resultados obtidos na ultima chamada ao metodo lista
-	 *
-	 * @var int
-	 */
-	var $_total;
+  /**
+   * Armazena o total de resultados obtidos na ultima chamada ao metodo lista
+   *
+   * @var int
+   */
+  public $_total;
 
-	/**
-	 * Nome do schema
-	 *
-	 * @var string
-	 */
-	var $_schema;
+  /**
+   * Nome do schema
+   *
+   * @var string
+   */
+  public $_schema;
 
-	/**
-	 * Nome da tabela
-	 *
-	 * @var string
-	 */
-	var $_tabela;
+  /**
+   * Nome da tabela
+   *
+   * @var string
+   */
+  public $_tabela;
 
-	/**
-	 * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
-	 *
-	 * @var string
-	 */
-	var $_campos_lista;
+  /**
+   * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
+   *
+   * @var string
+   */
+  public $_campos_lista;
 
-	/**
-	 * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
-	 *
-	 * @var string
-	 */
-	var $_todos_campos;
+  /**
+   * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
+   *
+   * @var string
+   */
+  public $_todos_campos;
 
-	/**
-	 * Valor que define a quantidade de registros a ser retornada pelo metodo lista
-	 *
-	 * @var int
-	 */
-	var $_limite_quantidade;
+  /**
+   * Valor que define a quantidade de registros a ser retornada pelo metodo lista
+   *
+   * @var int
+   */
+  public $_limite_quantidade;
 
 	/**
 	 * Define o valor de offset no retorno dos registros no metodo lista
 	 *
 	 * @var int
 	 */
-	var $_limite_offset;
+	public $_limite_offset;
 
-	/**
-	 * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
-	 *
-	 * @var string
-	 */
-	var $_campo_order_by;
-
-
-	/**
-	 * Construtor (PHP 4)
-	 *
-	 * @return object
-	 */
-	function clsPmieducarMotivoAfastamento( $cod_motivo_afastamento = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_motivo = null, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_instituicao = null )
-	{
-		$db = new clsBanco();
-		$this->_schema = "pmieducar.";
-		$this->_tabela = "{$this->_schema}motivo_afastamento";
-
-		$this->_campos_lista = $this->_todos_campos = "cod_motivo_afastamento, ref_usuario_exc, ref_usuario_cad, nm_motivo, descricao, data_cadastro, data_exclusao, ativo, ref_cod_instituicao";
-
-		if( is_numeric( $ref_usuario_cad ) )
-		{
-			if( class_exists( "clsPmieducarUsuario" ) )
-			{
-				$tmp_obj = new clsPmieducarUsuario( $ref_usuario_cad );
-				if( method_exists( $tmp_obj, "existe") )
-				{
-					if( $tmp_obj->existe() )
-					{
-						$this->ref_usuario_cad = $ref_usuario_cad;
-					}
-				}
-				else if( method_exists( $tmp_obj, "detalhe") )
-				{
-					if( $tmp_obj->detalhe() )
-					{
-						$this->ref_usuario_cad = $ref_usuario_cad;
-					}
-				}
-			}
-			else
-			{
-				if( $db->CampoUnico( "SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_cad}'" ) )
-				{
-					$this->ref_usuario_cad = $ref_usuario_cad;
-				}
-			}
-		}
-		if( is_numeric( $ref_usuario_exc ) )
-		{
-			if( class_exists( "clsPmieducarUsuario" ) )
-			{
-				$tmp_obj = new clsPmieducarUsuario( $ref_usuario_exc );
-				if( method_exists( $tmp_obj, "existe") )
-				{
-					if( $tmp_obj->existe() )
-					{
-						$this->ref_usuario_exc = $ref_usuario_exc;
-					}
-				}
-				else if( method_exists( $tmp_obj, "detalhe") )
-				{
-					if( $tmp_obj->detalhe() )
-					{
-						$this->ref_usuario_exc = $ref_usuario_exc;
-					}
-				}
-			}
-			else
-			{
-				if( $db->CampoUnico( "SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_exc}'" ) )
-				{
-					$this->ref_usuario_exc = $ref_usuario_exc;
-				}
-			}
-		}
+  /**
+   * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
+   *
+   * @var string
+   */
+  public $_campo_order_by;
 
 
-		if( is_numeric( $cod_motivo_afastamento ) )
-		{
-			$this->cod_motivo_afastamento = $cod_motivo_afastamento;
-		}
-		if( is_string( $nm_motivo ) )
-		{
-			$this->nm_motivo = $nm_motivo;
-		}
-		if( is_string( $descricao ) )
-		{
-			$this->descricao = $descricao;
-		}
-		if( is_string( $data_cadastro ) )
-		{
-			$this->data_cadastro = $data_cadastro;
-		}
-		if( is_string( $data_exclusao ) )
-		{
-			$this->data_exclusao = $data_exclusao;
-		}
-		if( is_numeric( $ativo ) )
-		{
-			$this->ativo = $ativo;
-		}
-		if( is_numeric( $ref_cod_instituicao ) )
-		{
-			if( class_exists( "clsPmieducarInstituicao" ) )
-			{
-				$tmp_obj = new clsPmieducarInstituicao( $ref_cod_instituicao );
-				if( method_exists( $tmp_obj, "existe") )
-				{
-					if( $tmp_obj->existe() )
-					{
-						$this->ref_cod_instituicao = $ref_cod_instituicao;
-					}
-				}
-				else if( method_exists( $tmp_obj, "detalhe") )
-				{
-					if( $tmp_obj->detalhe() )
-					{
-						$this->ref_cod_instituicao = $ref_cod_instituicao;
-					}
-				}
-			}
-			else
-			{
-				if( $db->CampoUnico( "SELECT 1 FROM pmieducar.instituicao WHERE cod_instituicao = '{$ref_cod_instituicao}'" ) )
-				{
-					$this->ref_cod_instituicao = $ref_cod_instituicao;
-				}
-			}
-		}
-	}
+
+  /**
+   * Construtor (PHP 4).
+   *
+   * @return clsPmieducarMotivoAfastamento
+   */
+  public function clsPmieducarMotivoAfastamento($cod_motivo_afastamento = NULL,
+    $ref_usuario_exc = NULL, $ref_usuario_cad = NULL, $nm_motivo = NULL,
+    $descricao = NULL, $data_cadastro = NULL, $data_exclusao = NULL,
+    $ativo = NULL, $ref_cod_instituicao = NULL) {
+
+    $db = new clsBanco();
+    $this->_schema = 'pmieducar.';
+    $this->_tabela = "{$this->_schema}motivo_afastamento";
+
+    $this->_campos_lista = $this->_todos_campos = 'cod_motivo_afastamento, ref_usuario_exc, ref_usuario_cad, nm_motivo, descricao, data_cadastro, data_exclusao, ativo, ref_cod_instituicao';
+
+    if (is_numeric($ref_usuario_cad)) {
+
+      if (class_exists('clsPmieducarUsuario')) {
+        $tmp_obj = new clsPmieducarUsuario( $ref_usuario_cad );
+        if (method_exists($tmp_obj, 'existe')) {
+          if ($tmp_obj->existe()) {
+            $this->ref_usuario_cad = $ref_usuario_cad;
+          }
+        }
+        elseif (method_exists($tmp_obj, 'detalhe')) {
+          if ($tmp_obj->detalhe()) {
+            $this->ref_usuario_cad = $ref_usuario_cad;
+          }
+        }
+      }
+      else {
+        if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_cad}'")) {
+          $this->ref_usuario_cad = $ref_usuario_cad;
+        }
+      }
+
+    }
+
+    if (is_numeric($ref_usuario_exc)) {
+      if (class_exists('clsPmieducarUsuario')) {
+        $tmp_obj = new clsPmieducarUsuario($ref_usuario_exc);
+        if (method_exists($tmp_obj, 'existe')) {
+          if ($tmp_obj->existe()) {
+            $this->ref_usuario_exc = $ref_usuario_exc;
+          }
+        }
+        elseif (method_exists($tmp_obj, 'detalhe')) {
+          if ($tmp_obj->detalhe()) {
+            $this->ref_usuario_exc = $ref_usuario_exc;
+          }
+        }
+      }
+      else {
+        if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_exc}'")) {
+          $this->ref_usuario_exc = $ref_usuario_exc;
+        }
+      }
+    }
+
+    if (is_numeric($cod_motivo_afastamento)) {
+      $this->cod_motivo_afastamento = $cod_motivo_afastamento;
+    }
+
+    if (is_string($nm_motivo)) {
+      $this->nm_motivo = $nm_motivo;
+    }
+
+    if (is_string( $descricao)) {
+      $this->descricao = $descricao;
+    }
+
+    if (is_string($data_cadastro)) {
+      $this->data_cadastro = $data_cadastro;
+    }
+
+    if (is_string($data_exclusao)) {
+      $this->data_exclusao = $data_exclusao;
+    }
+
+    if (is_numeric($ativo)) {
+      $this->ativo = $ativo;
+    }
+
+    if (is_numeric($ref_cod_instituicao)) {
+      if (class_exists('clsPmieducarInstituicao')) {
+        $tmp_obj = new clsPmieducarInstituicao( $ref_cod_instituicao );
+        if (method_exists($tmp_obj, 'existe')) {
+          if ($tmp_obj->existe()) {
+            $this->ref_cod_instituicao = $ref_cod_instituicao;
+          }
+        }
+        elseif (method_exists($tmp_obj, 'detalhe')) {
+          if ($tmp_obj->detalhe()) {
+            $this->ref_cod_instituicao = $ref_cod_instituicao;
+          }
+        }
+      }
+      else {
+        if ($db->CampoUnico("SELECT 1 FROM pmieducar.instituicao WHERE cod_instituicao = '{$ref_cod_instituicao}'")) {
+          $this->ref_cod_instituicao = $ref_cod_instituicao;
+        }
+      }
+    }
+
+  }
+
+
 
 	/**
 	 * Cria um novo registro
@@ -280,66 +260,73 @@ class clsPmieducarMotivoAfastamento
 		return false;
 	}
 
-	/**
-	 * Edita os dados de um registro
-	 *
-	 * @return bool
-	 */
-	function edita()
-	{
-		if( is_numeric( $this->cod_motivo_afastamento ) && is_numeric( $this->ref_usuario_exc ) && is_numeric( $this->ref_cod_instituicao ) )
-		{
-
-			$db = new clsBanco();
-			$set = "";
-
-			if( is_numeric( $this->ref_usuario_exc ) )
-			{
-				$set .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";
-				$gruda = ", ";
-			}
-			if( is_numeric( $this->ref_usuario_cad ) )
-			{
-				$set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
-				$gruda = ", ";
-			}
-			if( is_string( $this->nm_motivo ) )
-			{
-				$set .= "{$gruda}nm_motivo = '{$this->nm_motivo}'";
-				$gruda = ", ";
-			}
-			if( is_string( $this->descricao ) )
-			{
-				$set .= "{$gruda}descricao = '{$this->descricao}'";
-				$gruda = ", ";
-			}
-			if( is_string( $this->data_cadastro ) )
-			{
-				$set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
-				$gruda = ", ";
-			}
-			$set .= "{$gruda}data_exclusao = NOW()";
-			$gruda = ", ";
-			if( is_numeric( $this->ativo ) )
-			{
-				$set .= "{$gruda}ativo = '{$this->ativo}'";
-				$gruda = ", ";
-			}
-			if( is_numeric( $this->ref_cod_instituicao ) )
-			{
-				$set .= "{$gruda}ref_cod_instituicao = '{$this->ref_cod_instituicao}'";
-				$gruda = ", ";
-			}
 
 
-			if( $set )
-			{
-				$db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cod_motivo_afastamento = '{$this->cod_motivo_afastamento}'" );
-				return true;
-			}
-		}
-		return false;
-	}
+  /**
+   * Atualiza um registro.
+   *
+   * @param  bool TRUE para que seja gravado a data atual no campo
+   *                 data_exclusao
+   * @return bool
+   */
+  public function edita($setDataExclusao = FALSE) {
+
+    if (is_numeric($this->cod_motivo_afastamento) && is_numeric($this->ref_usuario_exc)
+        && is_numeric($this->ref_cod_instituicao)) {
+
+      $db  = new clsBanco();
+      $set = '';
+
+      if (is_numeric($this->ref_usuario_exc)) {
+        $set .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->ref_usuario_cad)) {
+        $set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->nm_motivo)) {
+        $set .= "{$gruda}nm_motivo = '{$this->nm_motivo}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->descricao)) {
+        $set .= "{$gruda}descricao = '{$this->descricao}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->data_cadastro)) {
+        $set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->ativo)) {
+        $set .= "{$gruda}ativo = '{$this->ativo}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->ref_cod_instituicao)) {
+        $set .= "{$gruda}ref_cod_instituicao = '{$this->ref_cod_instituicao}'";
+        $gruda = ", ";
+      }
+
+      // Configura a data de exclusão para a data da execução do comando SQL
+      if ($setDataExclusao == TRUE) {
+        $set .= $gruda . ' data_exclusao = NOW()';
+      }
+
+      if ($set) {
+        $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE
+          cod_motivo_afastamento = '{$this->cod_motivo_afastamento}'");
+
+        return TRUE;
+      }
+    }
+
+    return FALSE;
+  }
 
 	/**
 	 * Retorna uma lista filtrados de acordo com os parametros
@@ -486,28 +473,29 @@ class clsPmieducarMotivoAfastamento
 		return false;
 	}
 
-	/**
-	 * Exclui um registro
-	 *
-	 * @return bool
-	 */
-	function excluir()
-	{
-		if( is_numeric( $this->cod_motivo_afastamento ) && is_numeric( $this->ref_usuario_exc ) )
-		{
 
-		/*
-			delete
-		$db = new clsBanco();
-		$db->Consulta( "DELETE FROM {$this->_tabela} WHERE cod_motivo_afastamento = '{$this->cod_motivo_afastamento}'" );
-		return true;
-		*/
 
-		$this->ativo = 0;
-			return $this->edita();
-		}
-		return false;
-	}
+
+  /**
+   * Marca um registro como inativo.
+   *
+   * O registro é marcado como inativo para que outros registros que usam
+   * esta tabela em um relacionamento possam recuperar a informação
+   * complementar, nesse caso, um motivo de afastamento.
+   *
+   * @return bool
+   */
+  public function excluir() {
+    if (is_numeric($this->cod_motivo_afastamento) && is_numeric($this->ref_usuario_exc)) {
+      $this->ativo = 0;
+
+      return $this->edita(TRUE);
+    }
+
+    return FALSE;
+  }
+
+
 
 	/**
 	 * Define quais campos da tabela serao selecionados na invocacao do metodo lista
@@ -590,4 +578,3 @@ class clsPmieducarMotivoAfastamento
 	}
 
 }
-?>
