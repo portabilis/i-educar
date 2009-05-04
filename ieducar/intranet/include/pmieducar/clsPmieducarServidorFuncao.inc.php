@@ -291,11 +291,21 @@ class clsPmieducarServidorFuncao
 	 */
 	function detalhe()
 	{
-		if( is_numeric( $this->ref_ref_cod_instituicao ) && is_numeric( $this->ref_cod_servidor ) && is_numeric( $this->ref_cod_funcao ) )
+		if( is_numeric( $this->ref_ref_cod_instituicao ) && is_numeric( $this->ref_cod_servidor ) ) #&& is_numeric( $this->ref_cod_funcao ) )
 		{
+      $sql = sprintf(
+        "SELECT %s FROM %s WHERE ref_ref_cod_instituicao = '%d' AND ref_cod_servidor = '%d'",
+        $this->_todos_campos, $this->_tabela, $this->ref_ref_cod_instituicao,
+        $this->ref_cod_servidor
+      );
+
+      if (is_numeric($this->ref_cod_funcao)) {
+        $sql .= sprintf(" AND ref_cod_funcao = '%d'", $this->ref_cod_funcao);
+      }
 
 			$db = new clsBanco();
-			$db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}' AND ref_cod_servidor = '{$this->ref_cod_servidor}' AND ref_cod_funcao = '{$this->ref_cod_funcao}'" );
+			#$db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}' AND ref_cod_servidor = '{$this->ref_cod_servidor}' AND ref_cod_funcao = '{$this->ref_cod_funcao}'" );
+			$db->Consulta($sql);
 			$db->ProximoRegistro();
 			return $db->Tupla();
 		}
