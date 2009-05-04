@@ -1,0 +1,35 @@
+// $Id$
+
+i-Educar 1.0.1, 2009-05-04
+--------------------------
+
+- #6 e #27 by Eriksen: Adicionado arquivos CHANGELOG, README e LICENSE-pt_BR na
+  distribuição do i-Educar
+- Corrigido uma variedade de pequenos bugs:
+   * #27 by Eriksen: Adicionado arquivo de erro de conexão com o banco de dados,
+     incluindo sugestões para solução do problema
+   * #23 by Eriksen: Corrigido bug que não permitia afastar servidor
+   * #22 by Eriksen: Corrigido erro na listagem de faltas e atrasos de um
+     servidor que listava as ocorrências de todos quando deveria mostrar
+     apenas do servidor especificado. Melhorias no display de dados da escola,
+     horas/minutos de um atraso e o tipo da entrada
+   * #21 by Eriksen: Corrigido bug de exclusão de categoria de nível de servidor
+   * #20 by Eriksen: Corrigido bug de atualização/exclusão de cadastro de 
+     motivo de afastamento de servidor
+   * #18 by Eriksen: Corrigido bug na biblioteca de cadastramento do mesmo
+     cliente quando na verdade era para atualizar seus dados
+   * #17 by Eriksen: Corrigido bug da lista de clientes de biblioteca quando não
+     havia no mínimo um cliente suspenso
+   * #16 by Eriksen: Corrigido bug da lista de UFs vazia no histórico de aluno
+   * #13 by Eriksen: Corrigido erro no login quando usuário tinha múltiplos 
+     endereços IPs
+   * #12 Dispensa de disciplina não funcionava
+   * #11 Hora da ocorrência não gravava quando a mesma era editada
+   * #8 Opções do select de tipo de cliente estavam duplicadas
+   * #7 Ação de suspender cliente estava com SQL inválido
+   * #5 Página inicial usa caminho relativo e é script PHP; bug do logout
+     corrigido
+
+i-Educar 1.0.0, 2009-03-20
+--------------------------
+- Release inicial
