@@ -1,13 +1,13 @@
 <?php
 /**
  *
- * @version SVN: $Id$
  * @author  Prefeitura Municipal de Itajaí
- * @updated 29/03/2007
+ * @version $Id$
+ *
  * Pacote: i-PLB Software Público Livre e Brasileiro
  *
- * Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí
- *					ctima@itajai.sc.gov.br
+ * Copyright (C) 2006 PMI - Prefeitura Municipal de Itajaí
+ *            ctima@itajai.sc.gov.br
  *
  * Este  programa  é  software livre, você pode redistribuí-lo e/ou
  * modificá-lo sob os termos da Licença Pública Geral GNU, conforme
@@ -498,13 +498,13 @@ class clsBase extends clsConfig
 					$days_left = $tempo_senha - (int)((time() - strtotime( $data_senha )) / 86400);
 					$mensagem_expirar = "Sua senha expirará em $days_left dias, atualize sua senha em 'Meus dados' no menu 'Principal' !";
 					$mensagem_expirar .= "<script>showExpansivelIframe(800, 270, 'troca_senha_pop.php', 1);</script>";
-					
+
 				}
 			}
 		}
 		/***********************/
-		
-		
+
+
 		// somente para programadores
 //		$this->prog_alert = "teste";
 		if( ( $id_usuario == 49659 || $id_usuario == 2151 ||  $id_usuario == 4637 || $id_usuario == 21330|| $id_usuario == 21317|| $id_usuario == 25109|| $id_usuario == 4702 ) )
@@ -547,16 +547,19 @@ class clsBase extends clsConfig
 		$saida = str_replace("<!-- #&USERLOGADO&# -->", $nome_user, $saida);
 		$saida = str_replace("<!-- #&CORPO&# -->", $corpo, $saida);
 		$saida = str_replace("<!-- #&ANUNCIO&# -->", $menu_dinamico, $saida);
-		
-		
-		//verificação do ip da máquina
-		if ( isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '' )
-		{
-			$ip_maquina = $_SERVER['HTTP_X_FORWARDED_FOR'];
-		}
-		else 
-			$ip_maquina = $_SERVER['REMOTE_ADDR'];
-		
+
+
+    // Pega o endereço IP do host, primeiro com HTTP_X_FORWARDED_FOR (para pegar o IP real
+    // caso o host esteja atrás de um proxy)
+    if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '') {
+      // No caso de múltiplos IPs, pega o último da lista
+      $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+      $ip_maquina = trim(array_pop($ip));
+    }
+    else {
+      $ip_maquina = $_SERVER['REMOTE_ADDR'];
+    }
+
 		$sql = "UPDATE funcionario SET ip_logado = '$ip_maquina' , data_login = NOW() WHERE ref_cod_pessoa_fj = {$id_usuario}";
 		$db2 = new clsBanco();
 		$db2->Consulta($sql);
