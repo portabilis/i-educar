@@ -458,25 +458,30 @@ class clsPmieducarEscola
 	 *
 	 * @return array
 	 */
-	function lista( $int_cod_escola = null, $int_ref_usuario_cad = null, $int_ref_usuario_exc = null, $int_ref_cod_instituicao = null, $int_ref_cod_escola_localizacao = null, $int_ref_cod_escola_rede_ensino = null, $int_ref_idpes = null, $str_sigla = null, $date_data_cadastro = null, $date_data_exclusao = null, $int_ativo = null, $str_nome = null, $escola_sem_avaliacao = null )
-	{
-		$sql = "
-		SELECT * FROM
-		(
-			SELECT j.fantasia AS nome, {$this->_campos_lista}, 1 AS tipo_cadastro
-			FROM {$this->_tabela} e, cadastro.juridica j
-			WHERE e.ref_idpes = j.idpes
-		UNION
-			SELECT c.nm_escola AS nome, {$this->_campos_lista}, 2 AS tipo_cadastro
-			FROM {$this->_tabela} e, pmieducar.escola_complemento c
-			WHERE e.cod_escola = c.ref_cod_escola
-		) AS sub";
-		$filtros = "";
+  public function lista($int_cod_escola = NULL, $int_ref_usuario_cad = NULL,
+    $int_ref_usuario_exc = NULL, $int_ref_cod_instituicao = NULL,
+    $int_ref_cod_escola_localizacao = NULL, $int_ref_cod_escola_rede_ensino = NULL,
+    $int_ref_idpes = NULL, $str_sigla = NULL, $date_data_cadastro = NULL,
+    $date_data_exclusao = NULL, $int_ativo = NULL, $str_nome = NULL,
+    $escola_sem_avaliacao = NULL)
+  {
 
-		$whereAnd = " WHERE ";
+    $sql = "
+      SELECT * FROM
+      (
+        SELECT j.fantasia AS nome, {$this->_campos_lista}, 1 AS tipo_cadastro
+          FROM {$this->_tabela} e, cadastro.juridica j
+          WHERE e.ref_idpes = j.idpes
+        UNION
+        SELECT c.nm_escola AS nome, {$this->_campos_lista}, 2 AS tipo_cadastro
+          FROM {$this->_tabela} e, pmieducar.escola_complemento c
+          WHERE e.cod_escola = c.ref_cod_escola
+      ) AS sub";
+    $filtros = "";
 
-		if( is_numeric( $int_cod_escola ) )
-		{
+    $whereAnd = " WHERE ";
+
+    if (is_numeric($int_cod_escola)) {
 			$filtros .= "{$whereAnd} cod_escola = '{$int_cod_escola}'";
 			$whereAnd = " AND ";
 		}
@@ -549,27 +554,27 @@ class clsPmieducarEscola
 		{
 			if (dbBool($escola_sem_avaliacao))
 			{
-				$filtros .= "{$whereAnd} NOT EXISTS (SELECT 1 FROM pmieducar.escola_curso ec, pmieducar.curso c WHERE 
+				$filtros .= "{$whereAnd} NOT EXISTS (SELECT 1 FROM pmieducar.escola_curso ec, pmieducar.curso c WHERE
 												ec.ref_cod_escola = cod_escola
 												AND ec.ref_cod_curso = c.cod_curso
 												AND ec.ativo = 1 AND c.ativo = 1
 												AND c.ref_cod_tipo_avaliacao IS NOT NULL)";
 			}
-			else 
+			else
 			{
-				$filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM pmieducar.escola_curso ec, pmieducar.curso c WHERE 
+				$filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM pmieducar.escola_curso ec, pmieducar.curso c WHERE
 												ec.ref_cod_escola = cod_escola
 												AND ec.ref_cod_curso = c.cod_curso
 												AND ec.ativo = 1 AND c.ativo = 1
 												AND c.ref_cod_tipo_avaliacao IS NOT NULL)";
 			}
-		}		
+		}
 
 		$db = new clsBanco();
 		$countCampos = count( explode( ",", $this->_campos_lista ) );
 		$resultado = array();
-		$sql .= $filtros . $this->getOrderby() . $this->getLimite();		
-	
+		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
 		$db->Consulta("
 				SELECT COUNT(0) FROM
 				(
