@@ -1,36 +1,32 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
-*	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-*																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-*						ctima@itajai.sc.gov.br					    	 *
-*																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-*																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-*																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-*	02111-1307, USA.													 *
-*																		 *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /**
-* @author Prefeitura Municipal de Itajaí
-*
-* Criado em 26/06/2006 16:19 pelo gerador automatico de classes
-*/
+ *
+ * @author  Prefeitura Municipal de Itajaí
+ * @version $Id$
+ *
+ * Pacote: i-PLB Software Público Livre e Brasileiro
+ *
+ * Copyright (C) 2006 PMI - Prefeitura Municipal de Itajaí
+ *            ctima@itajai.sc.gov.br
+ *
+ * Este  programa  é  software livre, você pode redistribuí-lo e/ou
+ * modificá-lo sob os termos da Licença Pública Geral GNU, conforme
+ * publicada pela Free  Software  Foundation,  tanto  a versão 2 da
+ * Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.
+ *
+ * Este programa  é distribuído na expectativa de ser útil, mas SEM
+ * QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-
+ * ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-
+ * sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.
+ *
+ * Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU
+ * junto  com  este  programa. Se não, escreva para a Free Software
+ * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
+ * 02111-1307, USA.
+ *
+ */
 
-require_once( "include/pmieducar/geral.inc.php" );
+require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarServidor
 {
@@ -110,9 +106,12 @@ class clsPmieducarServidor
 	 *
 	 * @return object
 	 */
-	function clsPmieducarServidor( $cod_servidor = null, $ref_cod_deficiencia = null, $ref_idesco = null, $carga_horaria = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_instituicao = null, $ref_cod_subnivel = null )
-	{
-		$db = new clsBanco();
+  public function clsPmieducarServidor(
+    $cod_servidor = NULL, $ref_cod_deficiencia = NULL, $ref_idesco = NULL,
+    $carga_horaria = NULL, $data_cadastro = NULL, $data_exclusao = NULL,
+    $ativo = NULL, $ref_cod_instituicao = NULL, $ref_cod_subnivel = NULL) {
+
+    $db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}servidor";
 
@@ -409,8 +408,19 @@ class clsPmieducarServidor
 	 *
 	 * @return array
 	 */
-	function lista( $int_cod_servidor = null, $int_ref_cod_deficiencia = null, $int_ref_idesco = null, $int_carga_horaria = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_instituicao = null, $str_tipo = null, $array_horario = null, $str_not_in_servidor = null, $str_nome_servidor = null, $boo_professor = false, $str_horario = null, $bool_ordena_por_nome = false, $lst_matriculas = null, $matutino = false, $vespertino = false, $noturno = false, $int_ref_cod_escola = null, $str_hr_mat = nul, $str_hr_ves = null, $str_hr_not = null, $int_dia_semana = null,$alocacao_escola_instituicao = null, $int_identificador = null, $int_ref_cod_curso = null, $int_ref_cod_disciplina = null, $int_ref_cod_subnivel = null )
-	{
+  public function lista($int_cod_servidor = NULL, $int_ref_cod_deficiencia = NULL,
+    $int_ref_idesco = null, $int_carga_horaria = NULL, $date_data_cadastro_ini = NULL,
+    $date_data_cadastro_fim = NULL, $date_data_exclusao_ini = NULL,
+    $date_data_exclusao_fim = NULL, $int_ativo = NULL,
+    $int_ref_cod_instituicao = NULL, $str_tipo = NULL, $array_horario = NULL,
+    $str_not_in_servidor = NULL, $str_nome_servidor = NULL, $boo_professor = FALSE,
+    $str_horario = NULL, $bool_ordena_por_nome = FALSE, $lst_matriculas = NULL,
+    $matutino = FALSE, $vespertino = FALSE, $noturno = FALSE,
+    $int_ref_cod_escola = NULL, $str_hr_mat = NULL, $str_hr_ves = NULL,
+    $str_hr_not = NULL, $int_dia_semana = NULL,
+    $alocacao_escola_instituicao = NULL, $int_identificador = NULL,
+    $int_ref_cod_curso = NULL, $int_ref_cod_disciplina = NULL,
+    $int_ref_cod_subnivel = NULL) {
 
 		$whereAnd 	  = " WHERE ";
 		$filtros 	  = "";
@@ -425,7 +435,7 @@ class clsPmieducarServidor
 		{
 			$tabela_compl 		  .= ", cadastro.pessoa p";
 			$this->_campos_lista2 .= ",p.nome";
-			$filtros 			  .= "{$whereAnd} cod_servidor = idpes ";
+			$filtros 			  .= "{$whereAnd} s.cod_servidor = p.idpes ";
 			$whereAnd 			   = " AND ";
 			$this->setOrderby( "nome" );
 		}
@@ -540,9 +550,14 @@ class clsPmieducarServidor
 		{
 			$filtros .= "{$whereAnd} s.cod_servidor IN ( SELECT a.ref_cod_servidor
 															   FROM pmieducar.servidor_alocacao a
-														      WHERE a.ref_ref_cod_instituicao = '{$int_ref_cod_instituicao}'
-														        and ref_cod_escola = '{$int_ref_cod_escola}' )";
-
+														      WHERE ";
+			if (is_numeric($int_ref_cod_instituicao)) {
+			  $filtros .=  " a.ref_ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
+			}
+			if (is_numeric($int_ref_cod_escola)) {
+				$filtros .=  " and ref_cod_escola = '{$int_ref_cod_escola}' ";
+			}
+      $filtros .= ') ';
 		}
 
 		if ( is_array( $array_horario ) )
@@ -791,7 +806,7 @@ class clsPmieducarServidor
 	 	$sql = "SELECT {$this->_campos_lista2} FROM {$this->_schema}servidor s{$tabela_compl} {$filtros}".$this->getOrderby().$this->getLimite();
 
 		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_schema}servidor s{$tabela_compl} {$filtros}" );
-
+print '<pre>'.$sql.'</pre>';
 		$db->Consulta( $sql );
 
 		if( $countCampos > 1 )
@@ -977,4 +992,3 @@ class clsPmieducarServidor
 	}
 
 }
-?>
