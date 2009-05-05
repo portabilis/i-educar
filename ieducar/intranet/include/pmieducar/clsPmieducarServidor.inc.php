@@ -806,7 +806,7 @@ class clsPmieducarServidor
 	 	$sql = "SELECT {$this->_campos_lista2} FROM {$this->_schema}servidor s{$tabela_compl} {$filtros}".$this->getOrderby().$this->getLimite();
 
 		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_schema}servidor s{$tabela_compl} {$filtros}" );
-print '<pre>'.$sql.'</pre>';
+
 		$db->Consulta( $sql );
 
 		if( $countCampos > 1 )
