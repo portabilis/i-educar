@@ -1,83 +1,143 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
-*	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-*																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-*						ctima@itajai.sc.gov.br					    	 *
-*																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-*																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-*																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-*	02111-1307, USA.													 *
-*																		 *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once( "clsConfigItajai.inc.php" );
-require_once( "include/clsCronometro.inc.php" );
-require_once( "include/clsEmail.inc.php" );
-class clsBancoSQL_
-{
 
-	/*protected*/var $strHost			=	"";	// Nome ou ip do servidor de dados
-	/*protected*/var $strBanco			=	"";	// Nome do Banco de Dados
-	/*protected*/var $strUsuario		=	"";	// Usu&aacute;rio devidamente autorizado a acessar o Banco
-	/*protected*/var $strSenha			=	"";	// Senha do Usu&aacute;rio do Banco
-	/*private*/  var $strFraseConexao 	= "";
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
 
-	/*protected*/var $bLink_ID			=	0;	// Identificador de Conex&atilde;o
-	/*protected*/var $bConsulta_ID		=	0;		// Identificador de Resultado de Consulta
-	/*protected*/var $arrayStrRegistro	=	array();	// Tupla resultante de uma consulta
-	/*protected*/var $iLinha			=	0;	// Ponteiro interno para a Tupla atual da consulta
+/**
+ * clsBancoSQL_ class.
+ *
+ * @author   Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package  Core
+ * @since    Classe disponível desde a versão 1.0.0
+ * @version  $Id$
+ */
 
-	/*protected*/var $bErro_no			=	0;	// Se ocorreu erro na consulta, retorna Falso
-	/*protected*/var $strErro			=	"";	// Frase de descri&ccedil;&atilde;o do Erro Retornado
-	/*protected*/var $bDepurar			=	false;	// Ativa ou desativa fun&ccedil;oes de depura&ccedil;&atilde;o
+require_once 'clsConfigItajai.inc.php';
+require_once 'include/clsCronometro.inc.php';
+require_once 'include/clsEmail.inc.php';
 
-	/*protected*/var $bAuto_Limpa		=	false;	//" 1" para limpar o resultado assim que chegar ao &uacute;ltimo registro
+class clsBancoSQL_ {
 
-	/*private*/var $strStringSQL			=	"";
-	/*protected*/var $transactionBlock		=	false;
-	/*protected*/var $savePoints			=	array();
-	/*protected*/var $showReportarErro		=	true;
+  protected $strHost       = NULL;     // Nome ou endereço IP do servidor do banco de dados
+  protected $strBanco      = NULL;     // Nome do banco de dados
+  protected $strUsuario    = NULL;     // Usuário devidamente autorizado a acessar o banco
+  protected $strSenha      = NULL;     // Senha do usuário do banco
+  protected $strPort       = NULL;     // Porta do servidor de banco de dados
 
-	/*public*/ 	var $executandoEcho = false;
+  public $bLink_ID         = 0;        // Identificador da conexão
+  public $bConsulta_ID     = 0;        // Identificador do resultado da consulta
+  public $arrayStrRegistro = array();  // Tupla resultante de uma consulta
+  public $iLinha           = 0;        // Ponteiro interno para a tupla atual da consulta
+
+  public $bErro_no         = 0;        // Se ocorreu erro na consulta, retorna FALSE
+  public $strErro          = '';       // Frase de descrição do erro retornado
+  public $bDepurar         = FALSE;    // Ativa ou desativa funções de depuração
+
+  public $bAuto_Limpa      = FALSE;    // '1' para limpar o resultado assim que chegar ao último registro
+
+  public $strStringSQL     = '';
+
+  /*protected*/var $transactionBlock = FALSE;
+  /*protected*/var $savePoints       = array();
+  /*protected*/var $showReportarErro = TRUE;
+
+  /*public*/   var $executandoEcho   = FALSE;
 
 
-	/*
-	Monta frase de conexão
-	*/
-	/*private*/ function FraseConexao()
-	{
-		$this->strFraseConexao = "";
-		if (!empty($this->strHost))
-		{
-			$this->strFraseConexao .= "host={$this->strHost} ";
-		}
-		if (!empty($this->strBanco))
-		{
-			$this->strFraseConexao .= "dbname={$this->strBanco} ";
-		}
-		if (!empty($this->strUsuario))
-		{
-			$this->strFraseConexao .= "user={$this->strUsuario} ";
-		}
-		if (!empty($this->strSenha))
-		{
-			$this->strFraseConexao .= "password={$this->strSenha} ";
-		}
-	}
+  /*
+   * Setters
+   */
+  public function setHost($v) {
+    $this->strHost = (string) $v;
+  }
+
+  public function setDbname($v) {
+    $this->strBanco = (string) $v;
+  }
+
+  public function setUser($v) {
+    $this->strUsuario = (string) $v;
+  }
+
+  public function setPassword($v) {
+    $this->strSenha = (string) $v;
+  }
+
+  public function setPort($v) {
+    $this->strPort = (string) $v;
+  }
+
+
+  /*
+   * Getters
+   */
+  public function getHost() {
+    return $this->strHost;
+  }
+
+  public function getDbname() {
+    return $this->strBanco;
+  }
+
+  public function getUser() {
+    return $this->strUsuario;
+  }
+
+  public function getPassword() {
+    return $this->strSenha;
+  }
+
+  public function getPort() {
+    return $this->strPort;
+  }
+
+  public function getFraseConexao() {
+    return $this->strFraseConexao;
+  }
+
+
+
+  /**
+   * Constrói a string de conexão de banco de dados
+   */
+  public function FraseConexao() {
+    $this->strFraseConexao = "";
+    if (!empty($this->strHost)) {
+      $this->strFraseConexao .= "host={$this->strHost}";
+    }
+    if (!empty($this->strBanco)) {
+      $this->strFraseConexao .= " dbname={$this->strBanco}";
+    }
+    if (!empty($this->strUsuario)) {
+      $this->strFraseConexao .= " user={$this->strUsuario}";
+    }
+    if (!empty($this->strSenha)) {
+      $this->strFraseConexao .= " password={$this->strSenha}";
+    }
+    if (!is_null($this->strPort)) {
+      $this->strFraseConexao .= " port={$this->strPort}";
+    }
+  }
+
 
 	/*
 	Conecta-se em Banco, com Usuario e Senha, na Porta do Host

@@ -1,29 +1,34 @@
 <?php
+
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
+
 /**
+ * clsBanco class.
  *
- * @author  Prefeitura Municipal de Itajaí
- * @version SVN: $Id$
- *
- * Pacote: i-PLB Software Público Livre e Brasileiro
- *
- * Copyright (C) 2006 PMI - Prefeitura Municipal de Itajaí
- *            ctima@itajai.sc.gov.br
- *
- * Este  programa  é  software livre, você pode redistribuí-lo e/ou
- * modificá-lo sob os termos da Licença Pública Geral GNU, conforme
- * publicada pela Free  Software  Foundation,  tanto  a versão 2 da
- * Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.
- *
- * Este programa  é distribuído na expectativa de ser útil, mas SEM
- * QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-
- * ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-
- * sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.
- *
- * Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU
- * junto  com  este  programa. Se não, escreva para a Free Software
- * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
- * 02111-1307, USA.
- *
+ * @author   Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package  Core
+ * @since    Classe disponível desde a versão 1.0.0
+ * @version  $Id$
  */
 
 if (!class_exists('clsBancoSql_')) {
@@ -32,10 +37,11 @@ if (!class_exists('clsBancoSql_')) {
 
 class clsBanco extends clsBancoSQL_ {
 
-  public $strHost          = "localhost";    // Nome ou endereço IP do servidor do banco de dados
-  public $strBanco         = "ieducardb";    // Nome do banco de dados
-  public $strUsuario       = "ieducaruser";  // Usuário devidamente autorizado a acessar o banco
-  public $strSenha         = "ieducar";      // Senha do usuário do banco
+  protected $strHost       = 'localhost';    // Nome ou endereço IP do servidor do banco de dados
+  protected $strBanco      = 'ieducardb';    // Nome do banco de dados
+  protected $strUsuario    = 'ieducaruser';  // Usuário devidamente autorizado a acessar o banco
+  protected $strSenha      = 'ieducar';      // Senha do usuário do banco
+  protected $strPort       = NULL;           // Porta do servidor de banco de dados
 
   public $bLink_ID         = 0;              // Identificador da conexão
   public $bConsulta_ID     = 0;              // Identificador do resultado da consulta
@@ -48,9 +54,9 @@ class clsBanco extends clsBancoSQL_ {
 
   public $bAuto_Limpa      = FALSE;          // '1' para limpar o resultado assim que chegar ao último registro
 
-  public $strStringSQL     = "";
+  public $strStringSQL     = '';
 
-  var $strType         = "";
+  var $strType         = '';
   var $arrayStrFields  = array();
   var $arrayStrFrom    = array();
   var $arrayStrWhere   = array();
@@ -58,7 +64,7 @@ class clsBanco extends clsBancoSQL_ {
   var $arrayStrGroupBy = array();
   var $iLimitInicio;
   var $iLimitQtd;
-  var $arrayStrArquivo = "";
+  var $arrayStrArquivo = '';
 
 
 
@@ -73,9 +79,9 @@ class clsBanco extends clsBancoSQL_ {
    * Retorna a quantidade de registros de uma tabela baseado no objeto que a
    * abstrai. Este deve ter um atributo público Object->_tabela.
    *
-   * @param  object Objeto que abstrai a tabela
-   * @param  string Nome da coluna para cálculo COUNT()
-   * @return int    Quantidade de registros da tabela
+   * @param   mixed   Objeto que abstrai a tabela
+   * @param   string  Nome da coluna para cálculo COUNT()
+   * @return  int     Quantidade de registros da tabela
    */
   public function doCountFromObj($obj, $column = '*') {
     if ($obj->_tabela == NULL) {
