@@ -1,42 +1,40 @@
 <?php
-/**
+
+/*
+ * i-Educar - Sistema de gestão escolar
  *
- * @version SVN: $Id$
- * @author  Prefeitura Municipal de Itajaí
- * @updated 29/03/2007
- * Pacote: i-PLB Software Público Livre e Brasileiro
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
  *
- * Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí
- *					ctima@itajai.sc.gov.br
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
  *
- * Este  programa  é  software livre, você pode redistribuí-lo e/ou
- * modificá-lo sob os termos da Licença Pública Geral GNU, conforme
- * publicada pela Free  Software  Foundation,  tanto  a versão 2 da
- * Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
  *
- * Este programa  é distribuído na expectativa de ser útil, mas SEM
- * QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-
- * ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-
- * sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.
- *
- * Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU
- * junto  com  este  programa. Se não, escreva para a Free Software
- * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
- * 02111-1307, USA.
- *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  */
+
 ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-<title>Sistema de gestão escolar | i-Educar</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title>Sistema de gestão escolar | i-Educar</title>
 </head>
-<FRAMESET ROWS="20%,*%" FRAMEBORDER="1" FRAMESPACING="2" border="0">
-  <FRAME SRC="intranet/topo.php" NAME="superior" NORESIZE SCROLLING="NO"> 
-  <FRAME SRC="intranet/index.php" NAME="central" MARGINWIDTH="2" MARGINHEIGHT="3" NORESIZE SCROLLING="YES">-->
-</FRAMESET>
-  <noframes>
-  <body>
-  </body>
-  </noframes>
+<frameset rows="20%,*%" frameborder="1" framespacing="2" border="0">
+  <frame src="intranet/topo.php"  name="superior" noresize scrolling="no">
+  <frame src="intranet/index.php" name="central" marginwidth="2" marginheight="3" noresize scrolling="yes">
 </frameset>
+<noframes>
+  <body>
+    <p>Para utilizar este sistema, um navegador com suporte a quadros (frames) é necessário.</p>
+  </body>
+</noframes>
 </html>
