@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+
+<!-- 
+  - Configurações para o processo de build Phing
+  -
+  - Este arquivo de build precisa de alguns ajustes antes da criação de uma
+  - release. Mude a propriedade project.conf.version para o número de versão
+  - desejado e a propriedade project.conf.buildin para apontar para o diretório
+  - de build desejado (o padrão é /tmp).
+  -
+  - Dois pacotes compactados serão criados, um Gzip e outro Zip.
+  -
+  - Este build não executa os testes unitários e funcionais.
+  -
+  - Arquivo codificado em UTF-8 para maior compatibilidade com o utilitário
+  - CLI phing.
+  -
+  - @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+  - @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+  - @link     http://phing.info/docs/guide/current/  Phing Documentation
+  - @version  $Id$
+  -->
+
+<project name="i-Educar" description="Sistema de gestão de escolas" default="release" basedir="../">
+  <property name="project.conf.version"   value="1.0.1" />
+  <property name="project.conf.buildin"   value="/tmp" />
+  <property name="project.conf.builddir"  value="${project.conf.buildin}/release-${project.conf.version}" />
+  <property name="project.conf.buildgzip" value="${project.conf.buildin}/ieducar-${project.conf.version}.tar.gz" />
+  <property name="project.conf.buildzip"  value="${project.conf.buildin}/ieducar-${project.conf.version}.zip" />
+
+  <fileset dir="${project.basedir}" id="allfiles">
+    <include name="**" />
+    <exclude name=".svn/" />
+    <exclude name="**/build.xml" />
+    <exclude name="tests/" />
+  </fileset>
+
+  <target name="prepare">
+    <echo msg="Preparando o build para a release ${project.conf.version}" />
+
+    <echo msg="Apagando diretório alvo ${project.conf.builddir}" />
+    <delete dir="${project.conf.builddir}" verbose="on" includeemptydirs="on" failonerror="on" />
+    
+    <echo msg="Apagando pacotes gzip e zip ${project.conf.buildgzip} e  ${project.conf.buildzip}" />
+    <delete file="${project.conf.buildgzip}" verbose="on" failonerror="on" />
+    <delete file="${project.conf.buildzip}"  verbose="on" failonerror="on" />
+
+    <echo msg="Criando diretório do build ${project.conf.builddir}" />
+    <delete dir="${project.conf.builddir}" verbose="on" includeemptydirs="on" failonerror="on" />
+  </target>
+
+  <target name="build" depends="prepare">
+    <echo msg="Criando o build" />
+    <mkdir dir="${project.conf.builddir}" />
+    <copy todir="${project.conf.builddir}">
+      <fileset refid="allfiles" />
+    </copy>
+  </target>
+
+  <target name="gzip" depends="build">
+    <echo msg="Gzipping ${project.conf.builddir}" />
+    <tar destfile="${project.conf.buildgzip}" compression="gzip">
+      <fileset dir="${project.conf.builddir}">
+        <include name="**" />
+      </fileset>
+    </tar>
+  </target>
+
+  <target name="zip" depends="build">
+    <echo msg="Zipping ${project.conf.builddir}" />
+    <zip destfile="${project.conf.buildzip}">
+      <fileset dir="${project.conf.builddir}">
+        <include name="**" />
+      </fileset>
+    </zip>
+  </target>
+
+  <target name="release" depends="build, gzip, zip">
+    <echo msg="OK! Build construído com sucesso." />
+  </target>
+</project>
