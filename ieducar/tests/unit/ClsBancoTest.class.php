@@ -45,4 +45,22 @@ class ClsBancoTest extends UnitBaseTest {
     $this->assertNotEquals(TRUE, is_null($db->doCountFromObj($obj)));
   }
 
+  public function testConexao() {
+    $string = 'host=localhost dbname=ieducardb user=ieducaruser password=password port=5432';
+
+    $db = new clsBanco();
+    $db->setHost('localhost');
+    $db->setDbname('ieducardb');
+    $db->setUser('ieducaruser');
+    $db->setPassword('password');
+    $db->setPort('5432');
+
+    $db->FraseConexao();
+    $stringCompare = $db->getFraseConexao();
+    $this->assertEquals($string, $stringCompare);
+
+    $db->Conecta();
+    $this->assertTrue((bool)$db->bLink_ID);
+  }
+
 }
