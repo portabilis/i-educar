@@ -139,38 +139,31 @@ class clsBancoSQL_ {
   }
 
 
-	/*
-	Conecta-se em Banco, com Usuario e Senha, na Porta do Host
-	e guarda o indentificador da conex&atilde;o em Link_ID.
-	Se a conex&atilde;o falhar ele interrompe a execu&ccedil;&atilde;o do script.
-	*/
-	/*private*/ function Conecta()
-	{
-		/*
-		Testa se o link est&aacute; ativo
-		Se estiver inativo,
-		junta as propriedades que tiveram valores atribuidos
-		para formar a Frase de conex&atilde;o
-		*/
-		if ( 0 == $this->bLink_ID )
-		{
-			$this->FraseConexao();
 
-			/* Fun&ccedil;&atilde;o para depura&ccedil;&atilde;o */
-			if ($this->bDepurar)
-			{
-				printf("<br>Depurar: Frase de Conex&atilde;o : %s, %s, %s<br>\n", $this->strFraseConexao);
-			}
+  /**
+   * Conecta com o banco de dados
+   *
+   * Verifica se o link está inativo e conecta. Se a conexão não obtiver
+   * sucesso, interrompe o script
+   */
+  public function Conecta() {
+    // Verifica se o link de conexão está inativo e conecta
+    if (0 == $this->bLink_ID) {
+      $this->FraseConexao();
 
-			$this->bLink_ID=pg_connect($this->strFraseConexao);
+      if ($this->bDepurar) {
+        printf("<br>Depurar: Frase de Conex&atilde;o : %s<br>\n", $this->strFraseConexao);
+      }
 
-			if (!$this->bLink_ID)
-			{
-				$this->Interrompe("Link inv&aacute;lido, conex&atilde;o falhou!");
-			}
-			//$this->Consulta( "SET TIMEZONE TO gmt2" );
-		}
-	}
+      $this->bLink_ID = pg_connect($this->strFraseConexao);
+
+      if (!$this->bLink_ID) {
+        $this->Interrompe("Link inv&aacute;lido, conex&atilde;o falhou!");
+      }
+    }
+  }
+
+
 
 	/*
 	Executa uma instru&ccedil;&atilde;o SQL e retorna um identificador para o resultado
