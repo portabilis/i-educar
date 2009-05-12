@@ -22,7 +22,7 @@
  */
 
 /**
- * ClsPmieducarServidorTest class.
+ * ClsPmieducarServidorTest class
  *
  * @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
@@ -40,6 +40,10 @@ class ClsPmieducarServidorTest extends UnitBaseTest {
     $codServidor    = NULL,
     $codInstituicao = NULL;
 
+  /**
+   * @todo  Testes dependentes de dados existentes. Refatorar o teste para usar
+   *        mock objects ou dbunit
+   */
   protected function setUp() {
     $db = new clsBanco();
     $sql = 'SELECT cod_servidor, ref_cod_instituicao FROM pmieducar.servidor WHERE ativo = 1 LIMIT 1';
@@ -49,6 +53,10 @@ class ClsPmieducarServidorTest extends UnitBaseTest {
     list($this->codServidor, $this->codInstituicao) = $db->Tupla();
   }
 
+
+  /**
+   * Testa se o servidor criado no método setUp() existe
+   */
   public function testPmieducarServidorExists() {
     $codServidor    = $this->codServidor;
     $codInstituicao = $this->codInstituicao;
@@ -57,6 +65,67 @@ class ClsPmieducarServidorTest extends UnitBaseTest {
       $codServidor, NULL, NULL, NULL, NULL, NULL, 1, $codInstituicao);
 
     $this->assertTrue((boolean) $servidor->existe());
+  }
+
+
+  /**
+   * Testa o método getServidorFuncoes() da classe
+   */
+  public function testGetServidorFuncoes() {
+    $codServidor    = $this->codServidor;
+    $codInstituicao = $this->codInstituicao;
+
+    $servidor = new clsPmieducarServidor(
+      $codServidor, NULL, NULL, NULL, NULL, NULL, 1, $codInstituicao);
+
+    $funcoes = $servidor->getServidorFuncoes();
+    $this->assertTrue(is_array($funcoes));
+  }
+
+
+  /**
+   * Testa o método isProfessor()
+   */
+  public function testIsProfessor() {
+    $codServidor    = $this->codServidor;
+    $codInstituicao = $this->codInstituicao;
+
+    $servidor = new clsPmieducarServidor(
+      $codServidor, NULL, NULL, NULL, NULL, NULL, 1, $codInstituicao);
+
+    $professor = $servidor->isProfessor();
+
+    $this->assertTrue($professor);
+  }
+
+
+  /**
+   * Stub test para o método getServidorDisciplinasQuadroHorarioHorarios()
+   */
+  public function testGetServidorDisciplinasQuadroHorarioHorarios() {
+    $stub = $this->getMock('clsPmieducarServidor');
+
+    $stub->expects($this->any())
+         ->method('getServidorDisciplinasQuadroHorarioHorarios')
+         ->will($this->returnValue(array(2, 6)));
+
+    $this->assertEquals(array(2, 6),
+      $stub->getServidorDisciplinasQuadroHorarioHorarios(62, 2));
+  }
+
+
+  /**
+   * Stub test para o método getServidorDisciplinas()
+   */
+  public function testGetServidorDisciplinas() {
+    $stub = $this->getMock('clsPmieducarServidor');
+
+    $stub->expects($this->any())
+         ->method('getServidorDisciplinas')
+         ->will($this->returnValue(array(6)));
+
+    $this->assertEquals(array(6),
+      $stub->getServidorDisciplinas(57, 2));
   }
 
 }

@@ -1,47 +1,57 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
 
-class clsIndexBase extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Servidor" );
-		$this->processoAp = "0";
-		$this->renderMenu = false;
-		$this->renderMenuSuspenso = false;
-	}
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
+
+/**
+ * Pesquisa de servidores
+ *
+ * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package     Core
+ * @subpackage  Servidor
+ * @since       Disponível desde a versão 1.0.0
+ * @version     $Id$
+ */
+
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsListagem.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
+
+
+class clsIndexBase extends clsBase {
+
+  public function Formular() {
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor');
+    $this->processoAp = '0';
+    $this->renderMenu = FALSE;
+    $this->renderMenuSuspenso = FALSE;
+  }
+
 }
 
-class indice extends clsListagem
-{
+
+class indice extends clsListagem {
+
 	/**
 	 * Referencia pega da session para o idpes do usuario atual
 	 *
@@ -109,7 +119,7 @@ class indice extends clsListagem
 		$_SESSION["dia_semana"] 	= isset($_GET["dia_semana"]) ? $_GET["dia_semana"] : $_SESSION["dia_semana"];
 		$_SESSION["hora_inicial"] 	= $_GET["hora_inicial"] ? $_GET["hora_inicial"] : $_SESSION["hora_inicial"];
 		$_SESSION["hora_final"] 	= $_GET["hora_final"] ? $_GET["hora_final"] : $_SESSION["hora_final"];
-		$_SESSION["professor"] 		= $_GET["professor"] ? $_GET["professor"] : $_SESSION["professor"];
+		$_SESSION["professor"] = ($_GET["professor"] ? $_GET["professor"] : $_SESSION["professor"]);
 		$_SESSION["horario"] 		= $_GET["horario"] ? $_GET["horario"] : $_SESSION["horario"];
 		$_SESSION["ref_cod_escola"] = $_GET["ref_cod_escola"] ? $_GET["ref_cod_escola"] : $_SESSION["ref_cod_escola"];
 		$_SESSION["min_mat"]		= $_GET["min_mat"] ? $_GET["min_mat"] : $_SESSION["min_mat"];
@@ -148,7 +158,6 @@ class indice extends clsListagem
 		$this->min_not			   = $_SESSION["min_not"] 			  = $_GET["min_not"] ? $_GET["min_not"] : $_SESSION["min_not"];
 		$this->ref_cod_disciplina  = $_SESSION["ref_cod_disciplina"]  = $_GET["ref_cod_disciplina"] ? $_GET["ref_cod_disciplina"] : $_SESSION["ref_cod_disciplina"];
 		$this->ref_cod_curso       = $_SESSION["ref_cod_curso"]       = $_GET["ref_cod_curso"] ? $_GET["ref_cod_curso"] : $_SESSION["ref_cod_curso"];
-
 		$this->identificador	   = $_SESSION["identificador"] 	  = $_GET["identificador"] ? $_GET["identificador"] : $_SESSION["identificador"];
 
 		if ( isset( $_GET["lst_matriculas"] ) && isset( $_SESSION["lst_matriculas"] ) )
@@ -330,45 +339,56 @@ class indice extends clsListagem
 			$array_hora = array( $_SESSION["dia_semana"], $_SESSION["hora_inicial"], $_SESSION["hora_final"] );
 		}
 
-		/**
-		 * marca a disciplina como NULL se nao estiver selecionada
-		 * para poder restringir na busca dos professores
-		 * e nao trazer um professor caso o curso nao seja globalizado e esteja sem materia
-		 */
-		$this->ref_cod_disciplina = $this->ref_cod_disciplina ? $this->ref_cod_disciplina : "NULL";
+    // Marca a disciplina como NULL se não for informada, restringindo a busca
+    // aos professores e não selecionar aqueles em que o curso não seja
+    // globalizado e sem disciplinas cadastradas
+    $this->ref_cod_disciplina = $this->ref_cod_disciplina ?
+      $this->ref_cod_disciplina : "NULL";
 
-		$lista = $obj_servidor->lista(
-			null,
-			$this->ref_cod_deficiencia,
-			$this->ref_idesco,
-			$this->carga_horaria,
-			null,
-			null,
-			null,
-			null,
-			1,
-			$this->ref_cod_instituicao,
-			$_SESSION["tipo"],
-			$array_hora,
-			$this->ref_cod_servidor,
-			$this->nome_servidor,
-			$this->professor,
-			$this->horario,
-			false,
-			$this->lst_matriculas,
-			$this->matutino,
-			$this->vespertino,
-			$this->noturno,
-			$this->ref_cod_escola,
-			$hr_mat,
-			$hr_ves,
-			$hr_not,
-			$_SESSION["dia_semana"],
-			$this->ref_cod_instituicao
-			,$this->identificador
-			,$this->ref_cod_curso
-			,$this->ref_cod_disciplina
-		);
+    // Passa NULL para $alocacao_escola_instituicao senão o seu filtro anula
+    // um anterior (referente a selecionar somente servidores não alocados),
+    // selecionando apenas servidores alocados na instituição
+    $lista = $obj_servidor->lista(
+      NULL,
+      $this->ref_cod_deficiencia,
+      $this->ref_idesco,
+      $this->carga_horaria,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      1,
+      $this->ref_cod_instituicao,
+      $_SESSION['tipo'],
+      $array_hora,
+      $this->ref_cod_servidor,
+      $this->nome_servidor,
+      $this->professor,
+      $this->horario,
+      FALSE,
+      $this->lst_matriculas,
+      $this->matutino,
+      $this->vespertino,
+      $this->noturno,
+      $this->ref_cod_escola,
+      $hr_mat,
+      $hr_ves,
+      $hr_not,
+      $_SESSION['dia_semana'],
+      NULL,
+      $this->identificador,
+      $this->ref_cod_curso,
+      $this->ref_cod_disciplina
+    );
+
+    // Se for uma listagem de professores, recupera as disciplinas dadas para
+    // comparação com a de outros professores (somente quando a busca é para
+    // substituição de servidores)
+    $disciplinas = array();
+    if ('true' == $this->professor) {
+      $disciplinas = $obj_servidor->getServidorDisciplinasQuadroHorarioHorarios(
+        $this->ref_cod_servidor, $this->ref_cod_instituicao);
+    }
 
 		$total = $obj_servidor->_total;
 
@@ -400,6 +420,19 @@ class indice extends clsListagem
 					$registro["matricula"] = $det_cod_servidor['matricula'];
 					//$det_cod_servidor 	   = $det_cod_servidor["idpes"]->detalhe();
 					//$registro["nome"] 	   = $det_cod_servidor["nome"];
+
+          // Se servidor for professor, verifica se possui as mesmas
+          // disciplinas do servidor a ser substituido (este passo somente é
+          // executado ao buscar um servidor substituto)
+          if ($this->professor == 'true') {
+            $disciplinasSubstituto = clsPmieducarServidor::getServidorDisciplinas(
+              $registro['cod_servidor'], $this->ref_cod_instituicao);
+
+            // Se os arrays diferirem, passa para o próximo resultado
+            if ($disciplinasSubstituto != $disciplinas) {
+              continue;
+            }
+          }
 
 				}
 				else

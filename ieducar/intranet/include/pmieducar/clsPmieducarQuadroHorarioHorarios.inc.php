@@ -1,36 +1,40 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
-*	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-*																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-*						ctima@itajai.sc.gov.br					    	 *
-*																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-*																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-*																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-*	02111-1307, USA.													 *
-*																		 *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/**
-* @author Prefeitura Municipal de Itajaí
-*
-* Criado em 10/08/2006 11:25 pelo gerador automatico de classes
-*/
 
-require_once( "include/pmieducar/geral.inc.php" );
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
+
+/**
+ * clsPmieducarQuadroHorarioHorarios class
+ *
+ * Implementa o mapeamento com a tabela pmieducar.quadro_horario_horarios
+ *
+ * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package     Core
+ * @subpackage  Servidor
+ * @since       Classe disponível desde a versão 1.0.0
+ * @version     $Id$
+ */
+
+require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarQuadroHorarioHorarios
 {
@@ -640,7 +644,7 @@ class clsPmieducarQuadroHorarioHorarios
 		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
 		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} qhh {$filtros}" );
-	
+
 		$db->Consulta( $sql );
 
 		if( $countCampos > 1 )
@@ -813,58 +817,50 @@ class clsPmieducarQuadroHorarioHorarios
 		return "";
 	}
 
-	/**
-	 * Realiza a substituicao de um servidor
-	 *
-	 * @return bool
-	 */
-	function substituir_servidor($int_ref_cod_servidor_substituto)
-	{
-		if( is_numeric( $int_ref_cod_servidor_substituto ) && is_numeric( $this->ref_cod_instituicao_servidor ) )
-		{
-			if( class_exists( "clsPmieducarServidor" ) )
-			{
-				$tmp_obj = new clsPmieducarServidor( $int_ref_cod_servidor_substituto,null,null,null,null,null,null,null, $this->ref_cod_instituicao_servidor );
-				if( method_exists( $tmp_obj, "existe") )
-				{
-					if( !$tmp_obj->existe() )
-					{
-						return false;
-					}
-				}
-				else if( method_exists( $tmp_obj, "detalhe") )
-				{
-					if( !$tmp_obj->detalhe() )
-					{
-						return false;
-					}
-				}
-			}
-			else
-			{
-				if( !$db->CampoUnico( "SELECT 1 FROM pmieducar.servidor WHERE cod_servidor = '{$int_ref_cod_servidor_substituto}' AND ref_cod_instituicao = '{$ref_ref_cod_instituicao}'" ) )
-				{
-					return false;
-				}
-			}
-		}
 
 
-		if( is_numeric( $this->ref_servidor ) && is_numeric( $this->ref_cod_instituicao_servidor ) )
-		{
+  /**
+   * Substitui a alocação entre servidores no quadro de horários
+   *
+   * Substitui a alocação entre servidores, atualizando a tabela
+   * pmieducar.servidor_quadro_horario_horarios. O servidor nesse caso é
+   * de alguma função do tipo professor. Esse método não valida esse dado,
+   * sendo de responsabilidade do código cliente
+   *
+   * @param   int   $int_ref_cod_servidor_substituto  Código do servidor que substituirá o atual
+   * @return  bool  TRUE em caso de sucesso, FALSE caso contrário
+   */
+  public function substituir_servidor($int_ref_cod_servidor_substituto) {
+    if (is_numeric($int_ref_cod_servidor_substituto) &&
+        is_numeric( $this->ref_cod_instituicao_servidor)) {
+
+      $servidor = new clsPmieducarServidor($int_ref_cod_servidor_substituto,
+        NULL, NULL, NULL, NULL, NULL, NULL, $this->ref_cod_instituicao_servidor);
+
+      if (!$servidor->existe()) {
+        return FALSE;
+      }
+    }
+
+    if (is_numeric($this->ref_servidor) &&
+        is_numeric($this->ref_cod_instituicao_servidor)) {
+
+      $sql  = "UPDATE %s SET ref_servidor='%d', data_exclusao = NOW() ";
+      $sql .= "WHERE ref_servidor = '%d' AND ref_cod_instituicao_servidor = '%d'";
+
+      $sql = sprintf($sql, $this->_tabela, $int_ref_cod_servidor_substituto,
+        $this->ref_servidor, $this->ref_cod_instituicao_servidor);
+
+      $db = new clsBanco();
+      $db->Consulta($sql);
+
+      return TRUE;
+    }
+
+    return FALSE;
+  }
 
 
-			//delete
-			$db = new clsBanco();
-			$db->Consulta( "UPDATE {$this->_tabela} SET ref_servidor='$int_ref_cod_servidor_substituto' , data_exclusao = NOW() WHERE ref_servidor = '{$this->ref_servidor}' AND ref_cod_instituicao_servidor = '{$this->ref_cod_instituicao_servidor}' " );
-			return true;
-
-
-		//$this->ativo = 0;
-		//	return $this->edita();
-		}
-		return false;
-	}
 
 	/**
 	 * Retorna um array com as turmas e horarios
