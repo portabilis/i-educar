@@ -1,3 +1,5 @@
+// $Id$
+
 Licença Pública Geral do GNU (GPL) [General Public License]
 
 This is an unofficial translation of the GNU General Public License into
