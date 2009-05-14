@@ -33,7 +33,6 @@ require_once 'include/pmieducar/geral.inc.php';
 
 
 class clsIndexBase extends clsBase {
-
   public function Formular() {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Afastamento');
     $this->processoAp = '635';
@@ -46,11 +45,13 @@ class indice extends clsCadastro {
 
   /**
    * Referência a usuário da sessão
-   *
    * @var int
    */
   public $pessoa_logada = NULL;
 
+  /**
+   * Atributos de mapeamento dos campos de banco de dados
+   */
   public
     $ref_cod_servidor           = NULL,
     $sequencial                 = NULL,
@@ -68,9 +69,8 @@ class indice extends clsCadastro {
     $parametros                 = NULL;
 
   /**
-   * Array dos dias da semana
-   *
-   * @var Array
+   * Dias da semana
+   * @var array
    */
   public $dias_da_semana = array(
     '' => 'Selecione',
@@ -85,6 +85,10 @@ class indice extends clsCadastro {
 
 
 
+  /**
+   * Implementação do método clsCadastro::Inicializar()
+   * @see ieducar/intranet/include/clsCadastro#Inicializar()
+   */
   public function Inicializar() {
     session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -113,8 +117,7 @@ class indice extends clsCadastro {
       $registro = $obj->detalhe();
 
       if ($registro) {
-
-        // passa todos os valores obtidos no registro para atributos do objeto
+        // Passa todos os valores obtidos no registro para atributos do objeto
         foreach ($registro as $campo => $val) {
           $this->$campo = $val;
         }
@@ -143,6 +146,10 @@ class indice extends clsCadastro {
 
 
 
+  /**
+   * Implementação do método clsCadastro::Gerar()
+   * @see ieducar/intranet/include/clsCadastro#Gerar()
+   */
   public function Gerar() {
     $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
     $this->campoOculto('sequencial', $this->sequencial);
@@ -153,13 +160,13 @@ class indice extends clsCadastro {
     $objTemp = new clsPmieducarMotivoAfastamento();
     $lista = $objTemp->lista();
 
-    if (is_array($lista) && count($lista)) {
+    if (is_array($lista) && count($lista) > 0) {
       foreach ($lista as $registro) {
         $opcoes[$registro['cod_motivo_afastamento']] = $registro['nm_motivo'];
       }
     }
     else {
-      $opcoes = array('' => 'Erro na geracao');
+      $opcoes = array('' => 'Nenhum motivo de afastamento cadastrado');
     }
 
     if ($this->status == 'N') {
@@ -171,123 +178,140 @@ class indice extends clsCadastro {
         $opcoes, $this->ref_cod_motivo_afastamento, '', FALSE, '', '', TRUE);
     }
 
-    // data
+    // Datas para registro
+    // Se novo registro
     if ($this->status == 'N') {
       $this->campoData('data_saida', 'Data de Afastamento', $this->data_saida, TRUE);
     }
+    // Se edição, mostra a data de afastamento
     elseif ($this->status == 'E') {
       $this->campoRotulo('data_saida', 'Data de Afastamento', $this->data_saida);
     }
 
+    // Se edição, mostra campo para entrar com data de retorno
     if ($this->status == 'E') {
       $this->campoData('data_retorno', 'Data de Retorno', $this->data_retorno, FALSE);
     }
 
-    if (class_exists('clsPmieducarServidor')) {
-      $obj_servidor = new clsPmieducarServidor($this->ref_cod_servidor,
-        NULL, NULL, NULL, NULL, NULL, 1, $this->ref_cod_instituicao);
+    $obj_servidor = new clsPmieducarServidor($this->ref_cod_servidor,
+      NULL, NULL, NULL, NULL, NULL, 1, $this->ref_cod_instituicao);
 
-      $det_servidor = $obj_servidor->detalhe();
+    $det_servidor = $obj_servidor->detalhe();
 
-      if ($det_servidor) {
 
-        if (class_exists('clsPmieducarFuncao')) {
-          $obj_funcao = new clsPmieducarFuncao($det_servidor['ref_cod_funcao'],
-            NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, $this->ref_cod_instituicao);
+    if ($det_servidor) {
+      $obj_funcao = new clsPmieducarFuncao($det_servidor['ref_cod_funcao'],
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, $this->ref_cod_instituicao);
 
-          $det_funcao = $obj_funcao->detalhe();
+      // Se for professor
+      if (TRUE == $obj_servidor->isProfessor()) {
+        $obj = new clsPmieducarQuadroHorarioHorarios();
 
-          if ($det_funcao['professor'] == 1) {
-            $obj = new clsPmieducarQuadroHorarioHorarios();
-            $lista = $obj->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-              $this->ref_cod_instituicao, NULL, $this->ref_cod_servidor, NULL,
-              NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL);
+        // Pega a lista de aulas alocadas para este servidor
+        $lista = $obj->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+          $this->ref_cod_instituicao, NULL, $this->ref_cod_servidor, NULL,
+          NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL);
 
-            if ($lista) {
+        if ($lista) {
+          // Passa todos os valores obtidos no registro para atributos do objeto
+          foreach ($lista as $campo => $val) {
+            $temp = array();
+            $temp['hora_inicial']       = $val['hora_inicial'];
+            $temp['hora_final']         = $val['hora_final'];
+            $temp['dia_semana']         = $val['dia_semana'];
+            $temp['ref_cod_escola']     = $val['ref_cod_escola'];
+            $temp['ref_cod_disciplina'] = $val['ref_cod_disciplina'];
+            $temp['ref_cod_substituto'] = $val['ref_servidor_substituto'];
+            $this->alocacao_array[]     = $temp;
+          }
 
-              // Passa todos os valores obtidos no registro para atributos do objeto
-              foreach ($lista as $campo => $val) {
-                $temp = array();
-                $temp['hora_inicial']       = $val['hora_inicial'];
-                $temp['hora_final']         = $val['hora_final'];
-                $temp['dia_semana']         = $val['dia_semana'];
-                $temp['ref_cod_escola']     = $val['ref_cod_escola'];
-                $temp['ref_cod_substituto'] = $val['ref_servidor_substituto'];
-                $this->alocacao_array[]     = $temp;
+          if ($this->alocacao_array) {
+            $tamanho = sizeof($alocacao);
+            $script  = "<script>\nvar num_alocacao = {$tamanho};\n";
+            $script .= "var array_servidores = Array();\n";
+
+            foreach ($this->alocacao_array as $key => $alocacao) {
+              $script .= "array_servidores[{$key}] = new Array();\n";
+
+              $hora_ini = explode(":", $alocacao['hora_inicial']);
+              $hora_fim = explode(":", $alocacao['hora_final']);
+
+              $horas_utilizadas   = ($hora_fim[0] - $hora_ini[0]);
+              $minutos_utilizados = ($hora_fim[1] - $hora_ini[1]);
+
+              $horas   = sprintf('%02d', (int) $horas_utilizadas);
+              $minutos = sprintf('%02d', (int) $minutos_utilizados);
+
+              $str_horas_utilizadas = "{$horas}:{$minutos}";
+
+              $script .= "array_servidores[{$key}][0] = '{$str_horas_utilizadas}';\n";
+              $script .= "array_servidores[{$key}][1] = '';\n\n";
+
+              $obj_escola    = new clsPmieducarEscola($alocacao['ref_cod_escola']);
+              $det_escola    = $obj_escola->detalhe();
+              $det_escola    = $det_escola['nome'];
+              $nm_dia_semana = $this->dias_da_semana[$alocacao['dia_semana']];
+
+              $obj_subst = new clsPessoa_($alocacao['ref_cod_substituto']);
+              $det_subst = $obj_subst->detalhe();
+
+              if ($this->status == 'N') {
+                $this->campoTextoInv("dia_semana_{$key}_", '', $nm_dia_semana,
+                  8, 8, FALSE, FALSE, TRUE, '', '', '', '', 'dia_semana');
+
+                $this->campoTextoInv("hora_inicial_{$key}_", '', $alocacao['hora_inicial'],
+                  5, 5, FALSE, FALSE, TRUE, '', '', '', '', 'ds_hora_inicial_');
+
+                $this->campoTextoInv("hora_final_{$key}_", '', $alocacao['hora_final'],
+                  5, 5, FALSE, FALSE, TRUE, '', '', '', '', 'ds_hora_final_');
+
+                $this->campoTextoInv("ref_cod_escola_{$key}", '', $det_escola,
+                  30, 255, FALSE, FALSE, TRUE, '', '', '', '', 'ref_cod_escola_');
+
+                $this->campoTextoInv("ref_cod_servidor_substituto_{$key}_",
+                  '', $det_subst['nome'], 30, 255, FALSE, FALSE, FALSE, '',
+                  "<span name=\"ref_cod_servidor_substituto\" id=\"ref_cod_servidor_substituicao_{$key}\"><img border='0'  onclick=\"pesquisa_valores_popless('educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor_substituto[{$key}]&campo2=ref_cod_servidor_substituto_{$key}_&ref_cod_instituicao={$this->ref_cod_instituicao}&dia_semana={$alocacao["dia_semana"]}&hora_inicial={$alocacao["hora_inicial"]}&hora_final={$alocacao["hora_final"]}&ref_cod_servidor={$this->ref_cod_servidor}&professor=1&ref_cod_escola={$alocacao['ref_cod_escola']}&horario=S&ref_cod_disciplina={$alocacao['ref_cod_disciplina']}', 'nome')\" src=\"imagens/lupa.png\" ></span>",
+                  '', '', 'ref_cod_servidor_substituto');
               }
 
-              if ($this->alocacao_array) {
-                $tamanho = sizeof($alocacao);
-                $script  = "<script>\nvar num_alocacao = {$tamanho};\n";
-                $script .= "var array_servidores = Array();\n";
-
-                foreach ($this->alocacao_array as $key => $alocacao) {
-                  $script .= "array_servidores[{$key}] = new Array();\n";
-
-                  $hora_ini = explode(":", $alocacao['hora_inicial']);
-                  $hora_fim = explode(":", $alocacao['hora_final']);
-
-                  $horas_utilizadas   = ($hora_fim[0] - $hora_ini[0]);
-                  $minutos_utilizados = ($hora_fim[1] - $hora_ini[1]);
-
-                  $horas   = sprintf('%02d', (int) $horas_utilizadas);
-                  $minutos = sprintf('%02d', (int) $minutos_utilizados);
-
-                  $str_horas_utilizadas = "{$horas}:{$minutos}";
-
-                  $script .= "array_servidores[{$key}][0] = '{$str_horas_utilizadas}';\n";
-                  $script .= "array_servidores[{$key}][1] = '';\n\n";
-
-                  $obj_escola    = new clsPmieducarEscola($alocacao['ref_cod_escola']);
-                  $det_escola    = $obj_escola->detalhe();
-                  $det_escola    = $det_escola['nome'];
-                  $nm_dia_semana = $this->dias_da_semana[$alocacao['dia_semana']];
-
-                  $obj_subst = new clsPessoa_($alocacao['ref_cod_substituto']);
-                  $det_subst = $obj_subst->detalhe();
-
-                  if ($this->status == 'N') {
-                    $this->campoTextoInv("dia_semana_{$key}_", '', $nm_dia_semana,
-                      8, 8, FALSE, FALSE, TRUE, '', '', '', '', 'dia_semana');
-
-                    $this->campoTextoInv("hora_inicial_{$key}_", '', $alocacao['hora_inicial'],
-                      5, 5, FALSE, FALSE, TRUE, '', '', '', '', 'ds_hora_inicial_');
-
-                    $this->campoTextoInv("hora_final_{$key}_", '', $alocacao['hora_final'],
-                      5, 5, FALSE, FALSE, TRUE, '', '', '', '', 'ds_hora_final_');
-
-                    $this->campoTextoInv("ref_cod_escola_{$key}", '', $det_escola,
-                      30, 255, FALSE, FALSE, TRUE, '', '', '', '', 'ref_cod_escola_');
-
-                    $this->campoTextoInv("ref_cod_servidor_substituto_{$key}_",
-                      '', $det_subst['nome'], 30, 255, FALSE, FALSE, FALSE, '',
-                      "<span name=\"ref_cod_servidor_substituto\" id=\"ref_cod_servidor_substituicao_{$key}\"><img border='0'  onclick=\"pesquisa_valores_popless('educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor_substituto[{$key}]&campo2=ref_cod_servidor_substituto_{$key}_&ref_cod_instituicao={$this->ref_cod_instituicao}&dia_semana={$alocacao["dia_semana"]}&hora_inicial={$alocacao["hora_inicial"]}&hora_final={$alocacao["hora_final"]}&ref_cod_servidor={$this->ref_cod_servidor}&professor=1&ref_cod_escola={$alocacao['ref_cod_escola']}&horario=S', 'nome')\" src=\"imagens/lupa.png\" ></span>",
-                      '', '', 'ref_cod_servidor_substituto');
-                  }
-
-                  $this->campoOculto("dia_semana_{$key}", $alocacao['dia_semana']);
-                  $this->campoOculto("hora_inicial_{$key}", $alocacao['hora_inicial']);
-                  $this->campoOculto("hora_final_{$key}", $alocacao['hora_final']);
-                  $this->campoOculto("ref_cod_escola_{$key}", $alocacao['ref_cod_escola']);
-                  $this->campoOculto("ref_cod_servidor_substituto[{$key}]", $alocacao['ref_cod_substituto']);
-
-                }
-
-                $script .= "\n</script>";
-
-                // Print do Javascript
-                print $script;
-              }
+              $this->campoOculto("dia_semana_{$key}", $alocacao['dia_semana']);
+              $this->campoOculto("hora_inicial_{$key}", $alocacao['hora_inicial']);
+              $this->campoOculto("hora_final_{$key}", $alocacao['hora_final']);
+              $this->campoOculto("ref_cod_escola_{$key}", $alocacao['ref_cod_escola']);
+              $this->campoOculto("ref_cod_servidor_substituto[{$key}]", $alocacao['ref_cod_substituto']);
             }
+
+            $script .= "\n</script>";
+
+            // Print do Javascript
+            print $script;
           }
         }
-
       }
+
     }
   }
 
 
 
+  /**
+   * Implementação do método clsCadastro::Novo()
+   *
+   * Recebe os valores com códigos de servidor e instituição atual, junto com
+   * a data. Casos de uso:
+   * - Servidor sem função de professor: apenas é marcado que o servidor está
+   *   afastado
+   * - Servidor com função de professor:
+   *   - Verifica-se quais professores estão aptos a substituir o servidor,
+   *     baseado em critérios como horário de aula, alocação na escola,
+   *     disciplinas que ministra. Esse passo é realizado no método
+   *     {@see $this->Novo()}, ao possibilitar a escolha do substituto ao
+   *     usuário
+   *
+   * @see  clsPmieducarServidorAfastamento
+   * @see  ieducar/intranet/include/clsCadastro#Novo()
+   * @return  bool  FALSE em caso de falha
+   */
   public function Novo() {
     session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -296,187 +320,233 @@ class indice extends clsCadastro {
     $this->ref_cod_servidor = isset($_POST['ref_cod_servidor']) ?
       $_POST['ref_cod_servidor'] : NULL;
 
+    $urlPermite = sprintf(
+      "educar_servidor_det.php?cod_servidor=%d&ref_cod_instituicao=%d",
+      $this->ref_cod_servidor, $this->ref_cod_instituicao
+      );
+
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7,
-      "educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
+    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $urlPermite);
 
     $obj = new clsPmieducarServidorAfastamento($this->ref_cod_servidor, NULL,
       $this->ref_cod_motivo_afastamento, NULL, $this->pessoa_logada, NULL, NULL,
       $this->data_retorno, $this->data_saida, 1, $this->ref_cod_instituicao);
 
     $cadastrou = $obj->cadastra();
+
     if ($cadastrou) {
+      if (is_array($_POST['ref_cod_servidor_substituto'])) {
+        /*
+         * Itera cada substituto e atualiza o quadro de horário com o código
+         * do servidor substituto, campos:
+         * - ref_cod_instituicao_substituto
+         * - ref_cod_servidor_substituto
+         */
+        foreach ($_POST['ref_cod_servidor_substituto'] as $key => $valor) {
+          $ref_cod_servidor_substituto = $valor;
+          $ref_cod_escola = $_POST["ref_cod_escola_{$key}"];
+          $dia_semana = $_POST["dia_semana_{$key}"];
+          $hora_inicial = urldecode($_POST["hora_inicial_{$key}"]);
+          $hora_final = urldecode($_POST["hora_final_{$key}"]);
 
-      if(is_array($_POST['ref_cod_servidor_substituto']))
-      foreach ( $_POST['ref_cod_servidor_substituto'] as $key => $valor )
-      {
-        //if ( substr( $campo, 0, 28 ) == 'ref_cod_servidor_substituto_' )
-        //	{
-        $ref_cod_servidor_substituto = $valor;
-        //	}
-        //if ( substr( $campo, 0, 15 ) == 'ref_cod_escola_' )
-        $ref_cod_escola = $_POST["ref_cod_escola_{$key}"];
-        //if ( substr( $campo, 0, 11 ) == 'dia_semana_' )
-        $dia_semana = $_POST["dia_semana_{$key}"];
-        //if ( substr( $campo, 0, 13 ) == 'hora_inicial_' )
-        $hora_inicial = urldecode( $_POST["hora_inicial_{$key}"] );
-        //	if ( substr( $campo, 0, 11 ) == 'hora_final_' )
-        $hora_final = urldecode( $_POST["hora_final_{$key}"] );
+          if (is_numeric($ref_cod_servidor_substituto) && is_numeric($ref_cod_escola) &&
+              is_numeric($dia_semana) && is_string($hora_inicial) &&
+              is_string($hora_final)) {
 
-        if ( is_numeric( $ref_cod_servidor_substituto ) && is_numeric( $ref_cod_escola ) && is_numeric( $dia_semana ) && is_string( $hora_inicial ) && is_string( $hora_final ) )
-        {
+            $obj_horarios = new clsPmieducarQuadroHorarioHorarios(NULL, NULL,
+              $ref_cod_escola, NULL, NULL, NULL, $this->ref_cod_instituicao,
+              $ref_cod_servidor_substituto, $this->ref_cod_servidor,
+              $hora_inicial, $hora_final, NULL, NULL, 1, $dia_semana);
 
-          //if ( substr( $campo, 0, 28 ) == 'ref_cod_servidor_substituto_' )
-          //{die;
-          $obj_horarios = new clsPmieducarQuadroHorarioHorarios( null, null, $ref_cod_escola,null, null,null, $this->ref_cod_instituicao,$ref_cod_servidor_substituto, $this->ref_cod_servidor, $hora_inicial, $hora_final, null, null, 1, $dia_semana );
-          $det_horarios = $obj_horarios->detalhe($ref_cod_escola);
-          //echo " = new clsPmieducarQuadroHorarioHorarios( {$det_horarios["ref_cod_quadro_horario"]}, {$det_horarios["ref_cod_serie"]}, {$det_horarios["ref_cod_escola"]}, {$det_horarios["ref_cod_disciplina"]}, {$det_horarios["ref_ref_cod_turma"]}, {$det_horarios["sequencial"]}, {$det_horarios["ref_cod_instituicao_servidor"]}, null, {$ref_cod_servidor_substituto}, null, null, null, null, null, null, null );";die;
-          $obj_horario = new clsPmieducarQuadroHorarioHorarios( $det_horarios["ref_cod_quadro_horario"], $det_horarios["ref_cod_serie"], $det_horarios["ref_cod_escola"], $det_horarios["ref_cod_disciplina"], $det_horarios["sequencial"], $det_horarios["ref_cod_instituicao_servidor"],$det_horarios["ref_cod_instituicao_servidor"], $ref_cod_servidor_substituto, $this->ref_cod_servidor, null, null, null, null, null, null );
-          if( !$obj_horario->edita() )
-          {
-            $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-            return false;
-          }
-          //}
+            $det_horarios = $obj_horarios->detalhe($ref_cod_escola);
+
+            $obj_horario = new clsPmieducarQuadroHorarioHorarios(
+              $det_horarios['ref_cod_quadro_horario'], $det_horarios['ref_cod_serie'],
+              $det_horarios['ref_cod_escola'], $det_horarios['ref_cod_disciplina'],
+              $det_horarios['sequencial'], $det_horarios['ref_cod_instituicao_servidor'],
+              $det_horarios['ref_cod_instituicao_servidor'], $ref_cod_servidor_substituto,
+              $this->ref_cod_servidor, NULL, NULL, NULL, NULL, NULL, NULL);
+
+            // Caso a atualização não tenha sucesso
+            if (!$obj_horario->edita()) {
+              $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+
+              return FALSE;
+            }
           }
         }
+
         $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-        header( "Location: educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}" );
+        header("Location: educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
         die();
-        return true;
-        }
-        else
-        {
-          $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-          return false;
-        }
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarServidorAfastamento\nvalores obrigatorios\nis_numeric( $this->ref_cod_servidor ) && is_numeric( $this->sequencial ) && is_numeric( $this->ref_ref_cod_instituicao ) && is_numeric( $this->ref_cod_motivo_afastamento ) && is_numeric( $this->ref_usuario_cad ) && is_string( $this->data_saida )\n-->";
-        return false;
+      }
+    }
+    else {
+      $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+      return FALSE;
+    }
+
+    $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+    return FALSE;
   }
 
-  function Editar()
-  {
-    @session_start();
+
+
+  /**
+   * Implementação do método clsCadastro::Editar()
+   *
+   * Esse método é chamado quando o usuário "Retorna um servidor". Dessa forma,
+   * caso seja professor, precisa atualizar a sua alocação na tabela
+   * pmieducar.quadro_horario_horarios, apagando os valores dos campos
+   * ref_cod_instituicao_ e ref_cod_servidor_ -substituto
+   *
+   * @see ieducar/intranet/include/clsCadastro#Editar()
+   */
+  public function Editar() {
+    session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    session_write_close();
+
+    $urlPermite = sprintf(
+      'educar_servidor_det.php?cod_servidor=%d&ref_cod_instituicao=%d',
+      $this->ref_cod_servidor, $this->ref_cod_instituicao);
 
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra( 635, $this->pessoa_logada, 7,  "educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}" );
+    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $urlPermite);
 
-    $obj = new clsPmieducarServidorAfastamento( $this->ref_cod_servidor, $this->sequencial, $this->ref_cod_motivo_afastamento, $this->pessoa_logada, null, null, null, $this->data_retorno, unserialize( $this->data_saida ), 1, $this->ref_cod_instituicao );
+    $obj = new clsPmieducarServidorAfastamento($this->ref_cod_servidor,
+      $this->sequencial, $this->ref_cod_motivo_afastamento, $this->pessoa_logada,
+      NULL, NULL, NULL, $this->data_retorno, unserialize($this->data_saida), 1,
+      $this->ref_cod_instituicao );
+
     $editou = $obj->edita();
-    if( $editou )
-    {
-      if(is_array($_POST['ref_cod_servidor_substituto']))
-      foreach ( $_POST['ref_cod_servidor_substituto'] as $key => $valor )
-      {
-        $ref_cod_servidor_substituto = $valor;
+    if ($editou) {
+      if (is_array($_POST['ref_cod_servidor_substituto'])) {
+        foreach ($_POST['ref_cod_servidor_substituto'] as $key => $valor) {
+          $ref_cod_servidor_substituto = $valor;
+          $ref_cod_escola = $_POST["ref_cod_escola_{$key}"];
+          $dia_semana     = $_POST["dia_semana_{$key}"];
+          $hora_inicial   = urldecode($_POST["hora_inicial_{$key}"]);
+          $hora_final     = urldecode($_POST["hora_final_{$key}"]);
 
-        //if ( substr( $campo, 0, 15 ) == 'ref_cod_escola_' )
-        $ref_cod_escola = $_POST["ref_cod_escola_{$key}"];
-        //if ( substr( $campo, 0, 11 ) == 'dia_semana_' )
-        $dia_semana = $_POST["dia_semana_{$key}"];
-        //if ( substr( $campo, 0, 13 ) == 'hora_inicial_' )
-        $hora_inicial = urldecode( $_POST["hora_inicial_{$key}"] );
-        //	if ( substr( $campo, 0, 11 ) == 'hora_final_' )
-        $hora_final = urldecode( $_POST["hora_final_{$key}"] );
+          if (is_numeric($ref_cod_servidor_substituto) && is_numeric($ref_cod_escola) &&
+              is_numeric($dia_semana) && is_string($hora_inicial) &&
+              is_string($hora_final)) {
 
-        if ( is_numeric( $ref_cod_servidor_substituto ) && is_numeric( $ref_cod_escola ) && is_numeric( $dia_semana ) && is_string( $hora_inicial ) && is_string( $hora_final ) )
-        {
-          //if ( substr( $campo, 0, 28 ) == 'ref_cod_servidor_substituto_' )
-          //{
-          $obj_horarios = new clsPmieducarQuadroHorarioHorarios( null, null, $ref_cod_escola,null, null,null, $this->ref_cod_instituicao,$ref_cod_servidor_substituto, $this->ref_cod_servidor, $hora_inicial, $hora_final, null, null, 1, $dia_semana );
-          $det_horarios = $obj_horarios->detalhe($ref_cod_escola);
-          //if ( is_string( $this->data_retorno ) && $this->data_retorno != '' )
-          //{
-          //$obj_horario = new clsPmieducarQuadroHorarioHorarios( $det_horarios["ref_cod_quadro_horario"], $det_horarios["ref_ref_cod_serie"], $det_horarios["ref_ref_cod_escola"], $det_horarios["ref_ref_cod_disciplina"], $det_horarios["ref_ref_cod_turma"], $det_horarios["sequencial"], null, null, null, null, null, null, null, null, null, null );
-            $obj_horario = new clsPmieducarQuadroHorarioHorarios( $det_horarios["ref_cod_quadro_horario"], $det_horarios["ref_cod_serie"], $det_horarios["ref_cod_escola"], $det_horarios["ref_cod_disciplina"], $det_horarios["sequencial"], null,$det_horarios["ref_cod_instituicao_servidor"], null, $this->ref_cod_servidor, null, null, null, null, null, null );
-            //}
-            /*	else
-            {
-            //							$obj_horario = new clsPmieducarQuadroHorarioHorarios( $det_horarios["ref_cod_quadro_horario"], $det_horarios["ref_ref_cod_serie"], $det_horarios["ref_ref_cod_escola"], $det_horarios["ref_ref_cod_disciplina"], $det_horarios["ref_ref_cod_turma"], $det_horarios["sequencial"], $det_horarios["ref_cod_instituicao_servidor"], null, $ref_cod_servidor_substituto, null, null, null, null, null, null, null );
-            $obj_horario = new clsPmieducarQuadroHorarioHorarios( $det_horarios["ref_cod_quadro_horario"], $det_horarios["ref_cod_serie"], $det_horarios["ref_cod_escola"], $det_horarios["ref_cod_disciplina"], $det_horarios["sequencial"], $det_horarios["ref_cod_instituicao_servidor"],$det_horarios["ref_cod_instituicao_servidor"], $ref_cod_servidor_substituto, $this->ref_cod_servidor, null, null, null, null, null, null );
-            }*/
-            if( !$obj_horario->edita() )
-            {
+            $obj_horarios = new clsPmieducarQuadroHorarioHorarios(NULL, NULL,
+              $ref_cod_escola, NULL, NULL, NULL, $this->ref_cod_instituicao,
+              $ref_cod_servidor_substituto, $this->ref_cod_servidor, $hora_inicial,
+              $hora_final, NULL, NULL, 1, $dia_semana);
+
+            $det_horarios = $obj_horarios->detalhe($ref_cod_escola);
+
+            // Os valores NULL apagam os campos ref_cod_instituicao_ e
+            // ref_cod_servidor_ -substituto da tabela pmieducar.
+            // quadro_horario_horarios
+            $obj_horario = new clsPmieducarQuadroHorarioHorarios(
+              $det_horarios["ref_cod_quadro_horario"],
+              $det_horarios["ref_cod_serie"],
+              $det_horarios["ref_cod_escola"],
+              $det_horarios["ref_cod_disciplina"],
+              $det_horarios["sequencial"],
+              NULL,
+              $det_horarios["ref_cod_instituicao_servidor"],
+              NULL,
+              $this->ref_cod_servidor);
+
+            if (!$obj_horario->edita()) {
               $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-              return false;
+              return FALSE;
             }
-            //}
+
+          }
         }
       }
+
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-      header( "Location: educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}" );
+      header("Location: educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
       die();
-      return true;
     }
 
     $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-    echo "<!--\nErro ao editar clsPmieducarServidorAfastamento\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_servidor ) && is_numeric( $this->sequencial ) && is_numeric( $this->ref_ref_cod_instituicao ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
-    return false;
+    return FALSE;
   }
 
-  function Excluir()
-  {
-    @session_start();
+
+
+  /**
+   * Implementação do método clsCadastro::Excluir()
+   * @see ieducar/intranet/include/clsCadastro#Excluir()
+   */
+  public function Excluir() {
+    session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    session_write_close();
+
+    $urlPermite = sprintf(
+      "educar_servidor_det.php?cod_servidor=%d&ref_cod_instituicao=%d",
+      $this->ref_cod_servidor, $this->ref_cod_instituicao);
 
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_excluir( 635, $this->pessoa_logada, 7,  "educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}" );
+    $obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7, $urlPermite);
 
+    $obj = new clsPmieducarServidorAfastamento($this->ref_cod_servidor,
+      $this->sequencial, $this->ref_ref_cod_instituicao,
+      $this->ref_cod_motivo_afastamento, $this->pessoa_logada,
+      $this->pessoa_logada, $this->data_cadastro, $this->data_exclusao,
+      $this->data_retorno, $this->data_saida, 0);
 
-    $obj = new clsPmieducarServidorAfastamento($this->ref_cod_servidor, $this->sequencial, $this->ref_ref_cod_instituicao, $this->ref_cod_motivo_afastamento, $this->pessoa_logada, $this->pessoa_logada, $this->data_cadastro, $this->data_exclusao, $this->data_retorno, $this->data_saida, 0);
     $excluiu = $obj->excluir();
-    if( $excluiu )
-    {
+
+    if ($excluiu) {
       $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-      header( "Location: educar_servidor_afastamento_lst.php" );
+      header("Location: educar_servidor_afastamento_lst.php");
+
       die();
-      return true;
     }
 
     $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-    echo "<!--\nErro ao excluir clsPmieducarServidorAfastamento\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_servidor ) && is_numeric( $this->sequencial ) && is_numeric( $this->ref_ref_cod_instituicao ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
-    return false;
+    return FALSE;
   }
 }
 
-// cria uma extensao da classe base
+// Instancia objeto de página
 $pagina = new clsIndexBase();
-// cria o conteudo
+
+// Instancia objeto de conteúdo
 $miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
-// gera o html
+
+// Atribui o conteúdo à página
+$pagina->addForm($miolo);
+
+// Gera o código HTML
 $pagina->MakeAll();
 ?>
-<script>
-	if ( document.getElementById( 'btn_enviar' ) )
-	{
-		document.getElementById( 'btn_enviar' ).onclick = function() { validaFormulario(); }
-	}
-	function validaFormulario()
-	{
-		var c    = 0;
-		var loop = true;
-		do
-		{
-			if ( document.getElementById( 'ref_cod_servidor_substituto_' + c + '_' ) && document.getElementById( 'ref_cod_servidor_substituto_' + c ) )
-			{
-				if ( document.getElementById( 'ref_cod_servidor_substituto_' + c + '_' ).value == '' && document.getElementById( 'ref_cod_servidor_substituto_' + c ).value == '' )
-				{
-					alert( 'Você deve informar um substituto para cada horário.' );
-					return;
-				}
-			}
-			else
-			{
-				loop = false;
-			}
-			c++;
-		} while ( loop );
-		acao();
-	}
+
+<script type="text/javascript">
+if (document.getElementById('btn_enviar')) {
+  document.getElementById('btn_enviar').onclick = function() { validaFormulario(); }
+}
+
+function validaFormulario() {
+  var c    = 0;
+  var loop = true;
+
+  do {
+    if (document.getElementById('ref_cod_servidor_substituto_' + c + '_')) {
+      if (document.getElementById('ref_cod_servidor_substituto_' + c + '_').value == '') {
+        alert('Você deve informar um substituto para cada horário.');
+
+        return;
+      }
+    }
+    else {
+      loop = false;
+    }
+
+    c++;
+  } while (loop);
+
+  acao();
+}
 </script>

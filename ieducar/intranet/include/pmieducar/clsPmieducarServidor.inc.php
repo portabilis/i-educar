@@ -670,7 +670,7 @@ class clsPmieducarServidor {
       AND qhh.ativo = '1'
       AND qhh.dia_semana <> '$int_dia_semana'
       AND qhh.ref_servidor = a.ref_cod_servidor
-      GROUP BY qhh.ref_servidor ) ,'00:00')  + '$str_hr_mat' + COALESCE(
+      GROUP BY qhh.ref_servidor) ,'00:00')  + '$str_hr_mat' + COALESCE(
       (SELECT SUM( qhha.hora_final - qhha.hora_inicial )
         FROM pmieducar.quadro_horario_horarios_aux qhha
         WHERE qhha.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
@@ -678,7 +678,7 @@ class clsPmieducarServidor {
         AND hora_inicial >= '08:00'
         AND hora_inicial <= '12:00'
         AND qhha.ref_servidor = a.ref_cod_servidor
-        AND identificador     = $int_identificador
+        AND identificador = '$int_identificador'
         GROUP BY qhha.ref_servidor),'00:00'))";
         }
         else {
@@ -716,7 +716,7 @@ class clsPmieducarServidor {
             AND qhha.ref_servidor = a.ref_cod_servidor
             AND hora_inicial >= '12:00'
             AND hora_inicial <= '18:00'
-            AND identificador     = $int_identificador
+            AND identificador = '$int_identificador'
             GROUP BY qhha.ref_servidor),'00:00') )";
         }
         else {
@@ -752,7 +752,7 @@ class clsPmieducarServidor {
           AND qhha.ref_servidor = a.ref_cod_servidor
           AND hora_inicial >= '18:00'
           AND hora_inicial <= '23:00'
-          AND identificador     = $int_identificador
+          AND identificador = '$int_identificador'
           GROUP BY qhha.ref_servidor),'00:00') )";
         }
         else {
@@ -788,14 +788,26 @@ class clsPmieducarServidor {
     if ($det_curso['falta_ch_globalizada']) {
       // Busca professores independentemente da disciplina, somente verifica
       // se é professor e se ministra a disciplina para o curso
-      $filtros .= "{$whereAnd} EXISTS ( SELECT 1 FROM pmieducar.servidor_curso_ministra scm WHERE scm.ref_cod_curso = $int_ref_cod_curso AND scm.ref_ref_cod_instituicao = s.ref_cod_instituicao AND s.cod_servidor = scm.ref_cod_servidor)";
+      $filtros .= "
+    {$whereAnd} EXISTS
+      (SELECT 1
+        FROM pmieducar.servidor_curso_ministra scm
+        WHERE scm.ref_cod_curso = $int_ref_cod_curso AND
+        scm.ref_ref_cod_instituicao = s.ref_cod_instituicao AND
+        s.cod_servidor = scm.ref_cod_servidor)";
       $whereAnd = " AND ";
     }
     else {
       // Verifica se o professor está habilitado para ministrar a disciplina
-      if(is_numeric($int_ref_cod_disciplina)) {
-        $filtros .= "{$whereAnd} EXISTS ( SELECT 1 FROM pmieducar.servidor_disciplina sd WHERE sd.ref_cod_disciplina = $int_ref_cod_disciplina AND sd.ref_ref_cod_instituicao = s.ref_cod_instituicao AND s.cod_servidor = sd.ref_cod_servidor)";
-        $whereAnd = " AND ";
+      if (is_numeric($int_ref_cod_disciplina)) {
+        $filtros .= "
+    {$whereAnd} EXISTS
+      (SELECT 1
+        FROM pmieducar.servidor_disciplina sd
+        WHERE sd.ref_cod_disciplina = $int_ref_cod_disciplina AND
+        sd.ref_ref_cod_instituicao = s.ref_cod_instituicao AND
+        s.cod_servidor = sd.ref_cod_servidor)";
+      $whereAnd = " AND ";
       }
     }
 

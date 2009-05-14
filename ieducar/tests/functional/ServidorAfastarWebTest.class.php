@@ -21,6 +21,9 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  */
 
+require_once realpath(dirname(__FILE__) . '/../') . '/FunctionalBaseTest.class.php';
+
+
 /**
  * ServidorAfastarWebTest class.
  *
@@ -34,9 +37,6 @@
  * @since       Classe disponível desde a versão 1.0.1
  * @version     $Id$
  */
-
-require_once realpath(dirname(__FILE__) . '/../') . '/FunctionalBaseTest.class.php';
-
 class ServidorAfastarWebTest extends FunctionalBaseTest {
 
   private
@@ -144,6 +144,9 @@ class ServidorAfastarWebTest extends FunctionalBaseTest {
   public function testServidorAfastar() {
     $this->doLogin();
 
+    // ID da pessoa/servidor
+    $id = $this->slPessoaID;
+
     $this->open('/intranet/educar_servidor_lst.php');
     $this->clickAndWait('link=' . $this->slPessoaNome);
     $this->clickAndWait("//input[@value='Afastar Servidor']");
@@ -154,9 +157,20 @@ class ServidorAfastarWebTest extends FunctionalBaseTest {
     $data = date('d/m/Y', (time() + (60 * 60 * 24 * 10)));
     $this->type('data_saida', $data);
 
-    $this->clickAndWait('btn_enviar');
-    $this->assertTrue($this->isTextPresent($this->slPessoaMatricula));
+    // Verifica se a opção de busca de substituinte está presente, já que este
+    // servidor é professor e tem aulas alocadas no quadro de horários.
+    $searchButton = "//img[@onclick=\"pesquisa_valores_popless('educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor_substituto[0]&campo2=ref_cod_servidor_substituto_0_&ref_cod_instituicao=2&dia_semana=3&hora_inicial=09:00:00&hora_final=10:00:00&ref_cod_servidor=". $id ."&professor=1&ref_cod_escola=1&horario=S&ref_cod_disciplina=6', 'nome')\"]";
+    $this->assertTrue($this->isElementPresent($searchButton));
 
+    // Clica no botão, seleciona o frame e verifica se existem resultados
+    // (válido apenas para o estado atual do banco de dados)
+    $this->click($searchButton);
+    sleep(10);
+    $this->selectFrame('temp_win_popless');
+    $this->assertTrue(!$this->isTextPresent('Não há informação para ser apresentada'));
+
+    // Retorna ao frame principal
+    $this->selectFrame('relative=up');
     $this->doLogout();
   }
 
