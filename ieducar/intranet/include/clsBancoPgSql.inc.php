@@ -21,6 +21,11 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  */
 
+require_once 'clsConfigItajai.inc.php';
+require_once 'include/clsCronometro.inc.php';
+require_once 'include/clsEmail.inc.php';
+
+
 /**
  * clsBancoSQL_ class.
  *
@@ -30,11 +35,6 @@
  * @since    Classe disponível desde a versão 1.0.0
  * @version  $Id$
  */
-
-require_once 'clsConfigItajai.inc.php';
-require_once 'include/clsCronometro.inc.php';
-require_once 'include/clsEmail.inc.php';
-
 class clsBancoSQL_ {
 
   protected $strHost       = NULL;     // Nome ou endereço IP do servidor do banco de dados
@@ -209,14 +209,6 @@ class clsBancoSQL_ {
 
 		$this->strStringSQL = eregi_replace( "([a-z_0-9.]+) +ILIKE +'([^']+)'", "to_ascii(\\1) ILIKE to_ascii('\\2')", $this->strStringSQL );
 		$this->strStringSQL = eregi_replace( "fcn_upper_nrm", "to_ascii", $this->strStringSQL );
-		/*
-			Verificacoes de Injection
-		*/
-		if($_GET['depurar'] == 'mostraasquerypramim')
-		{
-			echo $this->strStringSQL."<br><br>";
-		}
-
 
 		$temp = explode( "'", $this->strStringSQL );
 		for ( $i = 0; $i < count( $temp ); $i++ )
