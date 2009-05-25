@@ -1,5 +1,22 @@
 // $Id$
 
+i-Educar 1.0.2, 2009-05-25
+--------------------------
+
+- Pequenos refactorings nas classes de unit e functional tests
+- Corrigido bug de segurança (Exposição de informação), veja SA-CORE-2009-001
+- #30 by Eriksen, José Rogério Santos: Adicionado parâmetro porta na 
+  configuração de conexão com o servidor
+- Corrigido uma variedade de pequenos bugs:
+   * #33 by Eriksen: Corrigido bug que ocultava nome de aluno na listagem de 
+     Reserva de Vaga
+   * #32 by Eriksen: Corrigido execução de regra de negócio ao afastar servidor
+   * #31 by Eriksen, José Rogério Santos: Corrigido erro em função printf de 
+     debugging
+   * #26 by Eriksen: Corrigido bug na substituição de horário de servidor
+   * #25 by Eriksen: Corrigido bug em select de funções durante cadastro de novo
+     servidor
+
 i-Educar 1.0.1, 2009-05-04
 --------------------------
 
