@@ -43,7 +43,7 @@
 # Protege arquivos e diretórios de serem listados ou servidos. Arquivo info.php
 # e arquivos SQL são protegidos assim como os diretórios misc, test e
 # diretórios comuns a SCMs como CVS e SVN (para proteger deployments desse tipo).
-<FilesMatch "\.(.*sql|svn-base)$|^(misc|tests|spikes|Entries.*|Repository|Root|Tag|Template|all-wcprops|entries|format)$|^info\.php$">
+<FilesMatch "\.(.*sql|ini|svn-base)$|^(misc|tests|configuration|spikes|Entries.*|Repository|Root|Tag|Template|all-wcprops|entries|format)$|^info\.php$">
   Order allow,deny
 </FilesMatch>
 
@@ -59,7 +59,7 @@ Options +FollowSymLinks
 # Força mensagem de erro 404 simples para requisições a favicon.ico inexistente.
 <Files favicon.ico>
   # Não há fecha-aspa para compatibilidade com Apache 1.3
-  ErrorDocument 404 "The requested file favicon.ico was not found.
+  ErrorDocument 404 "O arquivo favicon.ico não foi encontrado.
 </Files>
 
 # Configura o handler DirectoryIndex padrão.
@@ -83,6 +83,12 @@ DirectoryIndex index.php index.html index.htm
   php_flag  register_globals            off
   php_flag  session.auto_start          off
   php_flag  short_open_tag              on
+</IfModule>
+
+# Desabilita acesso para qualquer arquivo caso o 
+<IfModule !mod_php5.c>
+  Order allow,deny
+  Deny from all
 </IfModule>
 
 # Configura o ambiente de execução do i-Educar (production|development|testing).
