@@ -66,6 +66,3 @@ $coreExt = array();
 
 // Instancia objeto CoreExt_Configuration
 $coreExt['Config'] = new CoreExt_Config_Ini($configFile, CORE_EXT_CONFIGURATION_ENV);
-
-// Instancia objeto CoreExt_Configuration_PHP e configura o PHP
-#$coreExt['Configuration_PHP'] = new CoreExt_Configuration_PHP($coreExt['Configuration']);
