@@ -55,8 +55,8 @@ abstract class FunctionalBaseTest extends PHPUnit_Extensions_SeleniumTestCase {
 
   // Conta de usuário para testes funcionais
   protected
-    $slUsuarioLogin = 'ieducar',
-    $slUsuarioSenha = '12345678';
+    $slUsuarioLogin = 'admin',
+    $slUsuarioSenha = 'admin';
 
   protected function setUp() {
     $this->setBrowser(self::$slBrowser);

@@ -50,7 +50,7 @@ class ServidorMotivoAfastamentoWebTest extends FunctionalBaseTest {
   public function createNewEntry() {
     $this->open("/intranet/educar_motivo_afastamento_lst.php");
     $this->clickAndWait("//input[@value=' Novo ']");
-    $this->select("ref_cod_instituicao", "label=COBRA Tecnologia");
+    $this->select("ref_cod_instituicao", "label=i-Educar");
     $this->type("nm_motivo", "Motivo teste");
     $this->clickAndWait("btn_enviar");
   }
@@ -60,7 +60,7 @@ class ServidorMotivoAfastamentoWebTest extends FunctionalBaseTest {
     $this->createNewEntry();
 
     $this->open("/intranet/educar_motivo_afastamento_cad.php?cod_motivo_afastamento=1");
-    $this->select("ref_cod_instituicao", "label=COBRA Tecnologia");
+    $this->select("ref_cod_instituicao", "label=i-Educar");
     $this->type("nm_motivo", "Motivo teste");
     $this->clickAndWait("btn_enviar");
 
