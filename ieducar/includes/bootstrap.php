@@ -49,8 +49,12 @@ set_include_path($coreExt . PATH_SEPARATOR . get_include_path());
  * Define o ambiente de configuração desejado. Verifica se existe uma variável
  * de ambiente configurada ou define 'production' como padrão.
  */
-defined('CORE_EXT_CONFIGURATION_ENV') ||
-  define('CORE_EXT_CONFIGURATION_ENV', 'development');
+if (getenv('CORE_EXT_CONFIGURATION_ENV')) {
+  define('CORE_EXT_CONFIGURATION_ENV', getenv('CORE_EXT_CONFIGURATION_ENV'));
+}
+else {
+  define('CORE_EXT_CONFIGURATION_ENV', 'production');
+}
 
 // Arquivo de configuração INI
 $configFile = realpath(dirname(__FILE__) . '/../') . '/configuration/ieducar.ini';
