@@ -1,39 +1,46 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
-*	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-*																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-*						ctima@itajai.sc.gov.br					    	 *
-*																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-*																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-*																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-*	02111-1307, USA.													 *
-*																		 *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBanco.inc.php");
-require_once ("include/Geral.inc.php");
 
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
+
+require_once 'include/clsBanco.inc.php';
+require_once 'include/Geral.inc.php';
+
+/**
+ * clsOrgaoEmissorRgclass.
+ *
+ * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package     Core
+ * @subpackage  pessoa
+ * @since       Classe disponível desde a versão 1.0.0
+ * @version     $Id$
+ */
 class clsOrgaoEmissorRg
 {
 	var $idorg_rg;
 	var $sigla;
 	var $descricao;
 	var $situacao;
-	
+
 	var $tabela;
 	var $schema = "cadastro";
 
@@ -48,10 +55,10 @@ class clsOrgaoEmissorRg
 		$this->sigla= $str_sigla;
 		$this->descricao = $str_descricao;
 		$this->situacao= $str_situacao;
-		
+
 		$this->tabela = "orgao_emissor_rg";
 	}
-	
+
 	/**
 	 * Funcao que cadastra um novo registro com os valores atuais
 	 *
@@ -65,14 +72,15 @@ class clsOrgaoEmissorRg
 		{
 			$campos = "";
 			$values = "";
-			
-			$db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} ( sigla, descricao, situacao$campos ) VALUES ( '{$this->sigla}', '{$this->descricao}', '{$this->situacao}'$values " );
+
+			$db->Consulta("INSERT INTO {$this->schema}.{$this->tabela} ( sigla, descricao, situacao$campos ) VALUES ( '{$this->sigla}', '{$this->descricao}', '{$this->situacao}'$values )" );
+      return $db->InsertId("{$this->tabela}_idorg_rg_seq");
 
 			return true;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Edita o registro atual
 	 *
@@ -84,7 +92,7 @@ class clsOrgaoEmissorRg
 		if( is_string($this->sigla) && is_string($this->descricao) && is_string($this->situacao) )
 		{
 			$set = "SET sigla = '{$this->sigla}', descricao = '{$this->descricao}', idnum = '{$this->situacao}' ";
-			
+
 			$db = new clsBanco();
 			$db->Consulta( "UPDATE {$this->schema}.{$this->tabela} $set WHERE idorg_rg = '$this->idorg_rg'" );
 
@@ -92,7 +100,7 @@ class clsOrgaoEmissorRg
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Remove o registro atual
 	 *
@@ -107,12 +115,12 @@ class clsOrgaoEmissorRg
 			{
 				$db = new clsBanco();
 				//$db->Consulta( "DELETE FROM {$this->schema}.{$this->tabela} WHERE idorg_br = '$this->idorg_rg'" );
-			
+
 				return true;
 			}
 		}
 	}
-	
+
 	/**
 	 * Exibe uma lista baseada nos parametros de filtragem passados
 	 *
@@ -137,25 +145,25 @@ class clsOrgaoEmissorRg
 			$where .= "{$whereAnd}situacao LIKE '%$str_situacao%'";
 			$whereAnd = " AND ";
 		}
-		
+
 		if($str_orderBy)
 		{
 			$orderBy = "ORDER BY $str_orderBy";
 		}
-		
+
 		$limit = "";
 		if( is_numeric( $int_limite_ini ) && is_numeric( $int_limite_qtd ) )
 		{
 			$limit = " LIMIT $int_limite_ini,$int_limite_qtd";
 		}
-		
+
 		$db = new clsBanco();
 		$db->Consulta( "SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where" );
 		$db->ProximoRegistro();
 		$total = $db->Campo( "total" );
 		$db->Consulta( "SELECT idorg_rg, sigla, descricao, situacao FROM {$this->schema}.{$this->tabela} $where $orderBy $limit" );
 		$resultado = array();
-		while ( $db->ProximoRegistro() ) 
+		while ( $db->ProximoRegistro() )
 		{
 			$tupla = $db->Tupla();
 
@@ -167,8 +175,8 @@ class clsOrgaoEmissorRg
 			return $resultado;
 		}
 		return false;
-	} 
-	
+	}
+
 	/**
 	 * Retorna um array com os detalhes do objeto
 	 *
@@ -187,7 +195,7 @@ class clsOrgaoEmissorRg
 				$this->sigla = $tupla["sigla"];
 				$this->descricao = $tupla["descricao"];
 				$this->situacao = $tupla["situacao"];
-				
+
 				return $tupla;
 			}
 		}
