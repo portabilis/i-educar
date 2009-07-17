@@ -81,37 +81,28 @@
 class Mimetype
 {
 
-  function getType($filename)
+  public function getType($filename)
   {
-    // get base name of the filename provided by user
     $filename = basename($filename);
-
-    // break file into parts seperated by .
     $filename = explode('.', $filename);
-
-    // take the last part of the file to get the file extension
     $filename = $filename[count($filename)-1];
 
-    // find mime type
     return $this->privFindType($filename);
   }
 
-  function privFindType($ext)
+  protected function privFindType($ext)
   {
-    // create mimetypes array
     $mimetypes = $this->privBuildMimeArray();
 
-    // return mime type for extension
     if (isset($mimetypes[$ext])) {
       return $mimetypes[$ext];
     }
-    // if the extension wasn't found return FALSE
     else {
       return FALSE;
     }
   }
 
-  function privBuildMimeArray() {
+  protected function privBuildMimeArray() {
     return array(
       'doc' => 'application/msword',
       'odt' => 'application/vnd.oasis.opendocument.text',

@@ -28,10 +28,11 @@ require_once 'Utils/Mimetype.class.php';
 
 
 /**
- * DownloadTest class.
+ * FileStreamTest class.
  *
  * @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @link     http://code.google.com/p/bovigo/wiki/vfsStream  vfsStream project
  * @package  Test
  * @since    Classe disponível desde a versão 1.1.0
  * @version  $Id$
