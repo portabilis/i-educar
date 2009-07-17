@@ -242,7 +242,7 @@ class indice extends clsCadastro
 		$corTexto = '#000000';
 
 		$obj_escola = new clsPmieducarEscola($this->ref_cod_escola);
-		
+
 		$det_escola = $obj_escola->detalhe();
 		$this->nm_escola = $det_escola["nome"];
 		if ($det_escola) {
@@ -263,9 +263,9 @@ class indice extends clsCadastro
 			$inicio_escrita = 125 + $altura;
 			$fonte = 'arial';
 			$corTexto = '#000000';
-			
+
 			$flag_defasado = 1;
-			
+
 			$total_geral_masc_serie = 0;
 			$total_geral_fem_serie = 0;
 			$total_geral_anee = 0;
@@ -284,7 +284,7 @@ class indice extends clsCadastro
 				$total_curso_nao_anee = 0;
 				$total_curso_alf = 0;
 				$total_curso_nao_alf = 0;
-				
+
 				if($lista_serie_curso) {
 
 					foreach ($lista_serie_curso as $serie)
@@ -292,7 +292,7 @@ class indice extends clsCadastro
 						$defasados = array();
 						$flagTurmas = 0;
 						$flagAlunos = 0;
-						
+
 						$obj_matricula = new clsPmieducarMatricula();
 						$lista_matricula_serie = $obj_matricula->lista(null,null,$this->ref_cod_escola,$serie['cod_serie'],null,null,null,array(1,2,3),null,null,null,null,1,$this->ano,$curso,$this->ref_cod_instituicao,null,null,null,$ct_analfabeto,null,null,null,null,null,null,null,$this->mes,true);
 						if($lista_matricula_serie)
@@ -309,7 +309,7 @@ class indice extends clsCadastro
 									if(strpos($value['idade'],"-") && is_numeric($idade_aluno))
 									{
 										$idade = explode("-",$value['idade'] );
-											
+
 										if( ( $idade_aluno > $serie['idade_final'] + $flag_defasado
 											&& $idade_aluno >= $idade[0]
 											&& $idade_aluno <= $idade[1])
@@ -372,7 +372,7 @@ class indice extends clsCadastro
 						$total_alf = 0;
 						$total_nao_alf = 0;
 						$esquerda = 30;
-						foreach ($defasados as $alunos) {							
+						foreach ($defasados as $alunos) {
 							if ($inicio_escrita > $this->pdf->altura - 50) {
 						  		$inicio_escrita = 125 + $altura;
 						  		$this->pdf->ClosePage();
@@ -380,7 +380,7 @@ class indice extends clsCadastro
 						  		$this->addCabecalho();
 						  		$this->novaPagina();
 						  	}
-													
+
 							$this->pdf->quadrado_relativo( $esquerda, $inicio_escrita, $direita, $altura_aux);
 						    $this->pdf->escreve_relativo( $serie["nm_serie"], $esquerda += 5 , $inicio_escrita, 40, 50, $fonte, 9, $corTexto, 'center' );
 						    $this->pdf->linha_relativa($esquerda += 40, $inicio_escrita, 0, $altura_aux);
@@ -389,7 +389,7 @@ class indice extends clsCadastro
 						    $this->pdf->escreve_relativo( dataFromPgToBr($alunos["mat"]["data_nasc"]), $esquerda += 5 , $inicio_escrita, 70, 50, $fonte, 9, $corTexto, 'center' );
 						  	$espaco = 50;
 						  	$altura_aux = 12;
-						    $this->pdf->linha_relativa($esquerda += $espaco + 20, $inicio_escrita, 0, $altura_aux);						    
+						    $this->pdf->linha_relativa($esquerda += $espaco + 20, $inicio_escrita, 0, $altura_aux);
 						    if ($alunos["sexo"] == "M") {
 						    	$this->pdf->escreve_relativo( "X", $esquerda, $inicio_escrita, $espaco / 2, 50, $fonte, 9, $corTexto, 'center' );
 						    	$total_masc_serie++;
@@ -399,22 +399,22 @@ class indice extends clsCadastro
 						    }
 						    $this->pdf->linha_relativa($esquerda + $espaco / 2, $inicio_escrita, 0, $altura_aux);
 						    $this->pdf->linha_relativa($esquerda += $espaco, $inicio_escrita, 0, $altura_aux);
-						    
-						    $this->pdf->linha_relativa($esquerda, $inicio_escrita, 0, $altura_aux);  
+
+						    $this->pdf->linha_relativa($esquerda, $inicio_escrita, 0, $altura_aux);
 							if ($alunos["anee"]) {
 						    	$this->pdf->escreve_relativo( "X", $esquerda, $inicio_escrita, $espaco / 2, 50, $fonte, 9, $corTexto, 'center' );
-						    	$total_anee++;			    
+						    	$total_anee++;
 							} else {
 								$this->pdf->escreve_relativo( "X", $esquerda + $espaco / 2, $inicio_escrita, $espaco / 2, 50, $fonte, 9, $corTexto, 'center' );
 								$total_nao_anee++;
 							}
 						    $this->pdf->linha_relativa($esquerda + $espaco / 2, $inicio_escrita, 0, $altura_aux);
 						    $this->pdf->linha_relativa($esquerda += $espaco, $inicio_escrita, 0, $altura_aux);
-						    
-						    $this->pdf->linha_relativa($esquerda, $inicio_escrita, 0, $altura_aux);  
+
+						    $this->pdf->linha_relativa($esquerda, $inicio_escrita, 0, $altura_aux);
 							if (!$alunos["analfabeto"]) {
 						    	$this->pdf->escreve_relativo( "X", $esquerda, $inicio_escrita, $espaco / 2, 50, $fonte, 9, $corTexto, 'center' );
-						    	$total_alf++;				    
+						    	$total_alf++;
 							} else {
 								$this->pdf->escreve_relativo( "X", $esquerda + $espaco / 2, $inicio_escrita, $espaco / 2, 50, $fonte, 9, $corTexto, 'center' );
 								$total_nao_alf++;
@@ -422,7 +422,7 @@ class indice extends clsCadastro
 							$this->pdf->linha_relativa($esquerda + $espaco / 2, $inicio_escrita, 0, $altura_aux);
 						    $this->pdf->linha_relativa($esquerda += $espaco, $inicio_escrita, 0, $altura_aux);
 							$inicio_escrita += $altura_aux;
-							$esquerda = 30;				  	
+							$esquerda = 30;
 						}
 						if ($inicio_escrita > $this->pdf->altura - 50) {
 							$inicio_escrita = 125 + $altura;
@@ -430,10 +430,10 @@ class indice extends clsCadastro
 							$this->pdf->OpenPage();
 							$this->addCabecalho();
 							$this->novaPagina();
-						}						
+						}
 						if ($total_masc_serie || $total_fem_serie || $total_anee || $total_curso_anee || $total_nao_alf || $total_nao_alf) {
 							$this->pdf->quadrado_relativo( $esquerda, $inicio_escrita, $direita, $altura_aux);
-							$esquerda = 30;						
+							$esquerda = 30;
 							$esquerda = 345;
 							$espaco = 50;
 							$altura_aux = 12;
@@ -460,8 +460,8 @@ class indice extends clsCadastro
 						$total_curso_anee += $total_anee;
 						$total_nao_anee += $total_curso_anee;
 						$total_curso_alf += $total_alf;
-						$total_curso_nao_alf += $total_nao_alf;						
-						$esquerda = 30;						
+						$total_curso_nao_alf += $total_nao_alf;
+						$esquerda = 30;
 					}
 				}
 				if ($inicio_escrita > $this->pdf->altura - 50) {
@@ -478,7 +478,7 @@ class indice extends clsCadastro
 				$obj_curso = new clsPmieducarCurso($curso);
 				$det_curso = $obj_curso->detalhe();
 				$this->pdf->escreve_relativo( "Totais Curso {$det_curso["nm_curso"]}", $esquerda - 150, $inicio_escrita, 300, 50, $fonte, 9, $corTexto, 'left' );
-				
+
 				$this->pdf->linha_relativa($esquerda += $espaco + 20, $inicio_escrita, 0, $altura_aux);
 				$this->pdf->escreve_relativo( $total_curso_masc_serie, $esquerda, $inicio_escrita, $espaco / 2, 50, $fonte, 9, $corTexto, 'center' );
 				$this->pdf->escreve_relativo( $total_curso_fem_serie, $esquerda + $espaco / 2, $inicio_escrita, $espaco / 2, 50, $fonte, 9, $corTexto, 'center' );
@@ -528,7 +528,7 @@ class indice extends clsCadastro
 			$altura_linha = 23;
 			$inicio_escrita_y = 175;
 		}
-		
+
 		$this->get_link = $this->pdf->GetLink();
 		//header( "location: " . $this->pdf->GetLink() );
 		$this->pdf->CloseFile();
@@ -545,35 +545,53 @@ class indice extends clsCadastro
 
 	}
 
-	function addCabecalho()
-	{
-		// variavel que controla a altura atual das caixas
-		$altura = 30;
-		$fonte = 'arial';
-		$corTexto = '#000000';
-		$direita = $this->pdf->largura - 30 * 2;
+  public function addCabecalho()
+  {
+    /**
+     * Variável global com objetos do CoreExt.
+     * @see includes/bootstrap.php
+     */
+    global $coreExt;
 
-		// cabecalho
-		$this->pdf->quadrado_relativo( 30, $altura, $direita, 85 );
-		$this->pdf->InsertJpng( "gif", "imagens/brasao.gif", 50, 95, 0.30 );
+    // Namespace de configuração do template PDF
+    $config = $coreExt['Config']->app->template->pdf;
 
-		//paginador
-		$this->pdf->escreve_relativo( date("d/m/Y"), 25, 30, $direita, 80, $fonte, 10, $corTexto, 'right' );
+    // Variável que controla a altura atual das caixas
+    $altura   = 30;
+    $fonte    = 'arial';
+    $corTexto = '#000000';
+    $direita  = $this->pdf->largura - 30 * 2;
 
-		//titulo principal
-		$this->pdf->escreve_relativo( "PREFEITURA DE ITAJAÍ", 30, 30, $direita, 80, $fonte, 18, $corTexto, 'center' );
+    // Cabeçalho
+    $logo = $config->get($config->logo, 'imagens/brasao.gif');
 
-		//dados escola
-		$this->pdf->escreve_relativo( "Instituição: $this->nm_instituicao", 120, 58, 300, 80, $fonte, 10, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "Escola: {$this->nm_escola}",136, 70, 300, 80, $fonte, 10, $corTexto, 'left' );
+    $this->pdf->quadrado_relativo(30, $altura, $direita, 85);
+    $this->pdf->insertImageScaled('gif', $logo, 50, 95, 41);
 
-		//titulo
-		$this->pdf->escreve_relativo( "Demonstrativo de Alunos Defasados Nominal Idade/Série - {$this->ano}", 30, 85, $direita, 80, $fonte, 12, $corTexto, 'center' );
+    // Paginador
+    $this->pdf->escreve_relativo(date("d/m/Y"), 25, 30, $direita, 80, $fonte,
+      10, $corTexto, 'right');
 
-		//Data
-		$this->pdf->escreve_relativo( "{$this->meses_do_ano[$this->mes]}/{$this->ano}", 45, 100, $direita, 80, $fonte, 10, $corTexto, 'left' );
+    // Título principal
+    $titulo = $config->get($config->titulo, "i-Educar");
+    $this->pdf->escreve_relativo($titulo, 30, 30, $direita, 80,
+      $fonte, 18, $corTexto, 'center');
 
-	}
+    // Dados escola
+    $this->pdf->escreve_relativo("Instituição: $this->nm_instituicao", 120, 58,
+      300, 80, $fonte, 10, $corTexto, 'left');
+    $this->pdf->escreve_relativo("Escola: {$this->nm_escola}",136, 70, 300, 80,
+      $fonte, 10, $corTexto, 'left');
+
+    // Título
+    $this->pdf->escreve_relativo("Demonstrativo de Alunos Defasados Nominal Idade/Série - {$this->ano}",
+      30, 85, $direita, 80, $fonte, 12, $corTexto, 'center');
+
+    // Data
+    $this->pdf->escreve_relativo("{$this->meses_do_ano[$this->mes]}/{$this->ano}",
+      45, 100, $direita, 80, $fonte, 10, $corTexto, 'left');
+  }
+
 
 	function novaPagina()
 	{
@@ -585,7 +603,7 @@ class indice extends clsCadastro
 		$inicio_escrita = 125;
 		$fonte = 'arial';
 		$corTexto = '#000000';
-		
+
 	    $this->pdf->quadrado_relativo( $esquerda, $inicio_escrita, $direita, $altura);
 	    $this->pdf->escreve_relativo( "Série", $esquerda += 5 , $inicio_escrita + $altura / 2, 35, 50, $fonte, 9, $corTexto, 'center' );
 	    $this->pdf->linha_relativa($esquerda += 40, $inicio_escrita, 0, $altura);
@@ -594,30 +612,30 @@ class indice extends clsCadastro
 	    $this->pdf->escreve_relativo( "Data Nascimento", $esquerda += 5 , $inicio_escrita + $espaco / 2, 70, 50, $fonte, 9, $corTexto, 'center' );
 	  	$espaco = 50;
 	  	$altura_aux = 14;
-	    $this->pdf->linha_relativa($esquerda += $espaco + 20, $inicio_escrita, 0, $altura);  
+	    $this->pdf->linha_relativa($esquerda += $espaco + 20, $inicio_escrita, 0, $altura);
 	    $this->pdf->escreve_relativo( "Sexo", $esquerda, $inicio_escrita, $espaco, 50, $fonte, 9, $corTexto, 'center' );
 	    $this->pdf->linha_relativa($esquerda, $inicio_escrita + $altura_aux, $espaco, 0);
 	    $this->pdf->escreve_relativo( "M", $esquerda, $inicio_escrita + $altura_aux + 2, $espaco / 2, 50, $fonte, 9, $corTexto, 'center' );
 	    $this->pdf->linha_relativa($esquerda + $espaco / 2, $inicio_escrita + $altura_aux, 0, $altura - $altura_aux);
 	    $this->pdf->escreve_relativo( "F", $esquerda + $espaco / 2, $inicio_escrita + $altura_aux + 2, $espaco / 2, 50, $fonte, 9, $corTexto, 'center' );
 	    $this->pdf->linha_relativa($esquerda += $espaco, $inicio_escrita, 0, $altura);
-	    
-	    $this->pdf->linha_relativa($esquerda, $inicio_escrita, 0, $altura);  
+
+	    $this->pdf->linha_relativa($esquerda, $inicio_escrita, 0, $altura);
 	    $this->pdf->escreve_relativo( "ANEE", $esquerda, $inicio_escrita + 2, $espaco, 50, $fonte, 9, $corTexto, 'center' );
 	    $this->pdf->linha_relativa($esquerda, $inicio_escrita + $altura_aux, $espaco, 0);
 	    $this->pdf->escreve_relativo( "S", $esquerda, $inicio_escrita + $altura_aux + 2, $espaco / 2, 50, $fonte, 9, $corTexto, 'center' );
 	    $this->pdf->linha_relativa($esquerda + $espaco / 2, $inicio_escrita + $altura_aux, 0, $altura - $altura_aux);
 	    $this->pdf->escreve_relativo( "N", $esquerda + $espaco / 2, $inicio_escrita + $altura_aux + 2, $espaco / 2, 50, $fonte, 9, $corTexto, 'center' );
 	    $this->pdf->linha_relativa($esquerda += $espaco, $inicio_escrita, 0, $altura);
-	    
-	    $this->pdf->linha_relativa($esquerda, $inicio_escrita, 0, $altura);  
+
+	    $this->pdf->linha_relativa($esquerda, $inicio_escrita, 0, $altura);
 	    $this->pdf->escreve_relativo( "Alfab.", $esquerda, $inicio_escrita, $espaco, 50, $fonte, 9, $corTexto, 'center' );
 	    $this->pdf->linha_relativa($esquerda, $inicio_escrita + $altura_aux, $espaco, 0);
 	    $this->pdf->escreve_relativo( "S", $esquerda, $inicio_escrita + $altura_aux + 2, $espaco / 2, 50, $fonte, 9, $corTexto, 'center' );
 	    $this->pdf->linha_relativa($esquerda + $espaco / 2, $inicio_escrita + $altura_aux, 0, $altura - $altura_aux);
 	    $this->pdf->escreve_relativo( "N", $esquerda + $espaco / 2, $inicio_escrita + $altura_aux + 2, $espaco / 2, 50, $fonte, 9, $corTexto, 'center' );
 	    $this->pdf->linha_relativa($esquerda += $espaco, $inicio_escrita, 0, $altura);
-	    
+
 	}
 
 	function rodape()

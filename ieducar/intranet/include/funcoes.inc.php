@@ -25,7 +25,7 @@
  * 02111-1307, USA.
  *
  */
- 
+
 	/**
 	 * Adiciona zeros a esquerda de um numero
 	 *
@@ -806,7 +806,7 @@
  * @param string $formatacao    String de formatação no padrão aceito pela função date() do PHP
  * @link  http://www.php.net/date Documentação da função PHP date()
  *
- * @return string 
+ * @return string
  */
 function dataFromPgToBr($data_original, $formatacao = "d/m/Y")
 {
@@ -1313,13 +1313,13 @@ function Code39 ($Asc)
 		//fundo branco
 		imagefilledrectangle ( $imagem, 0, 0, ($largura), ($altura), imagecolorallocate($imagem, 255, 255, 255) );
 
-		$y_espaco = imagettftext($imagem, $tamanho, 90, $horizontal,$vertical, $cor, 'arquivos/fontes/arial.ttf',  " ");
+		$y_espaco = imagettftext($imagem, $tamanho, 90, $horizontal,$vertical, $cor, 'arquivos/fontes/Vera.ttf',  " ");
 		$y_espaco = $y_espaco[2];
 
 		for ($i = 0; $i < sizeof($palavras); $i++)
 		{
 
-			$y = imagettfbbox ( $tamanho, 0, 'arquivos/fontes/arial.ttf', $palavras[$i]);
+			$y = imagettfbbox ( $tamanho, 0, 'arquivos/fontes/Vera.ttf', $palavras[$i]);
 			$y = $y[2];
 
 			if($vertical-$y/*(strlen($palavras[$i])*$tamanho)*/ < 0)
@@ -1331,7 +1331,7 @@ function Code39 ($Asc)
 			{
 
 			}
-			imagettftext($imagem, $tamanho, 90, $horizontal,$vertical, $cor, 'arquivos/fontes/arial.ttf',  $palavras[$i]);
+			imagettftext($imagem, $tamanho, 90, $horizontal,$vertical, $cor, 'arquivos/fontes/Vera.ttf',  $palavras[$i]);
 
 
 			$vertical -= ($y + $y_espaco);// strlen($palavras[$i])*$tamanho;

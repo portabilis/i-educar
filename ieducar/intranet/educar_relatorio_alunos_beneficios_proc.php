@@ -1,34 +1,43 @@
 <?php
-	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-require_once ("include/clsPDF.inc.php");
+
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
+
+/**
+ * Relatório de benefícios de alunos.
+ *
+ * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package     Core
+ * @subpackage  Relatório
+ * @since       Arquivo disponível desde a versão 1.0.0
+ * @version     $Id$
+ */
+
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/clsPDF.inc.php';
+
 
 class clsIndexBase extends clsBase
 {
@@ -60,7 +69,7 @@ class indice extends clsCadastro
 	var $ref_ref_cod_serie;
 	var $ref_cod_turma;
 	var $ref_cod_matricula;
-	
+
 	var $ano;
 
 	var $nm_escola;
@@ -74,7 +83,7 @@ class indice extends clsCadastro
 	var $get_link;
 
 	var $campo_assinatura;
-	
+
 	var $total = 0;
 
 	var $meses_do_ano = array(
@@ -91,7 +100,7 @@ class indice extends clsCadastro
 							,"11" => "NOVEMBRO"
 							,"12" => "DEZEMBRO"
 						);
-						
+
 	var $is_padrao;
 	var $semestre;
 
@@ -105,7 +114,7 @@ class indice extends clsCadastro
 		}
 		if ($this->is_padrao || $this->ano == 2007)
 			$this->semestre = null;
-		
+
 		$fonte = 'arial';
 		$corTexto = '#000000';
 		$where = "";
@@ -121,7 +130,7 @@ class indice extends clsCadastro
 			$where .= " AND m.cod_matricula = {$this->ref_cod_matricula} ";
 		if (is_numeric($this->semestre))
 			$where .= " AND m.semestre = {$this->semestre} ";
-			
+
 		$sql = "SELECT
 			   	 p.nome
 			   	 ,s.nm_serie
@@ -162,7 +171,7 @@ class indice extends clsCadastro
 		$db->Consulta($sql);
 
 		$this->total = $db->Num_Linhas();
-		if ($this->total > 0) 
+		if ($this->total > 0)
 		{
 			$obj_instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
 			$det_instituicao = $obj_instituicao->detalhe();
@@ -226,72 +235,92 @@ class indice extends clsCadastro
 
 		 	echo "<html><center>Se o download não iniciar automaticamente <br /><a target='_blank' href='" . $this->get_link  . "' style='font-size: 16px; color: #000000; text-decoration: underline;'>clique aqui!</a><br><br>
 					<span style='font-size: 10px;'>Para visualizar os arquivos PDF, é necessário instalar o Adobe Acrobat Reader.<br>
-		
+
 					Clique na Imagem para Baixar o instalador<br><br>
 					<a href=\"http://www.adobe.com.br/products/acrobat/readstep2.html\" target=\"new\"><br><img src=\"imagens/acrobat.gif\" width=\"88\" height=\"31\" border=\"0\"></a>
 					</span>
 					</center>";
 		}
-		else 
+		else
 		{
 			echo '<script>
 	     					alert("No momento nenhum aluno possui benefício");
 	     					window.parent.fechaExpansivel(\'div_dinamico_\'+(window.parent.DOM_divs.length-1));
 			     		  </script>';
 			     	return true;
-		}	
+		}
 	}
 
-	function addCabecalho()
-	{
-		// variavel que controla a altura atual das caixas
-		$altura = 30;
-		$fonte = 'arial';
-		$corTexto = '#000000';
+  public function addCabecalho()
+  {
+    /**
+     * Variável global com objetos do CoreExt.
+     * @see includes/bootstrap.php
+     */
+    global $coreExt;
 
-		// cabecalho
-		$this->pdf->quadrado_relativo( 30, $altura, 782, 85 );
-		$this->pdf->InsertJpng( "gif", "imagens/brasao.gif", 50, 95, 0.30 );
+    // Namespace de configuração do template PDF
+    $config = $coreExt['Config']->app->template->pdf;
 
-		//titulo principal
-		$this->pdf->escreve_relativo( "PREFEITURA COBRA TECNOLOGIA", 30, 30, 782, 80, $fonte, 18, $corTexto, 'center' );
-		$this->pdf->escreve_relativo( date("d/m/Y"), 745, 30, 100, 80, $fonte, 12, $corTexto, 'left' );
+    // Variável que controla a altura atual das caixas
+    $altura   = 30;
+    $fonte    = 'arial';
+    $corTexto = '#000000';
 
-		//dados escola
-		$this->pdf->escreve_relativo( "Instituição: $this->nm_instituicao", 120, 52, 300, 80, $fonte, 9, $corTexto, 'left' );
+    // Cabeçalho
+    $logo = $config->get($config->logo, 'imagens/brasao.gif');
 
-		$this->pdf->escreve_relativo( "Relação dos Alunos Beneficiados - {$this->ano}", 30, 78, 782, 80, $fonte, 12, $corTexto, 'center' );
+    $this->pdf->quadrado_relativo(30, $altura, 782, 85);
+    $this->pdf->insertImageScaled('gif', $logo, 50, 95, 41);
 
-		$this->pdf->escreve_relativo( "Total de Benefícios: {$this->total}", 30, 95, 782, 80, $fonte, 10, $corTexto, 'center' );
-		
-		$this->pdf->linha_relativa(30, $altura += 100, 782, 0);
-		
-		$esquerda = 30;
-		$altura = 30;
-		$direita = 782;
-		$tam_texto = 10;
-		$altura = 130;
+    // Título principal
+    $titulo = $config->get($config->titulo, "i-Educar");
+    $this->pdf->escreve_relativo($titulo, 30, 30, 782, 80, $fonte, 18, $corTexto, 'center');
+    $this->pdf->escreve_relativo(date("d/m/Y"), 745, 30, 100, 80, $fonte, 12, $corTexto, 'left');
 
-		$this->pdf->linha_relativa($esquerda, $altura, 0, 18);
-		$this->pdf->escreve_relativo("Nome do Aluno", $esquerda + 3, $altura+3, 150, 30, $fonte, $tam_texto);
-		$this->pdf->linha_relativa($esquerda += 200, $altura, 0, 18);
+    // Dados escola
+    $this->pdf->escreve_relativo("Instituição: $this->nm_instituicao", 120, 52,
+      300, 80, $fonte, 9, $corTexto, 'left');
 
-		$this->pdf->escreve_relativo("Série", $esquerda + 1, $altura+3, 70, 30, $fonte, $tam_texto, $corTexto, 'center');
-		$this->pdf->linha_relativa($esquerda += 70, $altura, 0, 18);
+    $this->pdf->escreve_relativo("Relação dos Alunos Beneficiados - {$this->ano}",
+      30, 78, 782, 80, $fonte, 12, $corTexto, 'center');
 
-		$this->pdf->escreve_relativo("Turma", $esquerda + 1, $altura+3, 80, 30, $fonte, $tam_texto, $corTexto, 'center');
-		$this->pdf->linha_relativa($esquerda += 80, $altura, 0, 18);
+    $this->pdf->escreve_relativo( "Total de Benefícios: {$this->total}", 30, 95,
+      782, 80, $fonte, 10, $corTexto, 'center');
 
-		$this->pdf->escreve_relativo("Escola", $esquerda + 3, $altura+3, 70, 30, $fonte, $tam_texto, $corTexto);
-		$this->pdf->linha_relativa($esquerda += 250, $altura, 0, 18);
+    $this->pdf->linha_relativa(30, $altura += 100, 782, 0);
 
-		$this->pdf->escreve_relativo("Benefício", $esquerda + 3, $altura + 3, 150, 30, $fonte, $tam_texto);
-		$this->pdf->linha_relativa($esquerda += 182, $altura, 0, 18);
+    $esquerda  = 30;
+    $altura    = 30;
+    $direita   = 782;
+    $tam_texto = 10;
+    $altura    = 130;
 
-		$this->page_y +=19;
+    $this->pdf->linha_relativa($esquerda, $altura, 0, 18);
+    $this->pdf->escreve_relativo("Nome do Aluno", $esquerda + 3, $altura + 3,
+      150, 30, $fonte, $tam_texto);
+    $this->pdf->linha_relativa($esquerda += 200, $altura, 0, 18);
 
-	}
-	
+    $this->pdf->escreve_relativo("Série", $esquerda + 1, $altura + 3, 70, 30,
+      $fonte, $tam_texto, $corTexto, 'center');
+    $this->pdf->linha_relativa($esquerda += 70, $altura, 0, 18);
+
+    $this->pdf->escreve_relativo("Turma", $esquerda + 1, $altura+3, 80, 30,
+      $fonte, $tam_texto, $corTexto, 'center');
+    $this->pdf->linha_relativa($esquerda += 80, $altura, 0, 18);
+
+    $this->pdf->escreve_relativo("Escola", $esquerda + 3, $altura + 3, 70, 30,
+      $fonte, $tam_texto, $corTexto);
+    $this->pdf->linha_relativa($esquerda += 250, $altura, 0, 18);
+
+    $this->pdf->escreve_relativo("Benefício", $esquerda + 3, $altura + 3, 150,
+      30, $fonte, $tam_texto);
+    $this->pdf->linha_relativa($esquerda += 182, $altura, 0, 18);
+
+    $this->page_y +=19;
+  }
+
+
 	function Editar()
 	{
 		return false;

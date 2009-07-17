@@ -1,34 +1,44 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
-*	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-*																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-*						ctima@itajai.sc.gov.br					    	 *
-*																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-*																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-*																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-*	02111-1307, USA.													 *
-*																		 *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-require_once ("include/clsPDF.inc.php");
+
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
+
+/**
+ * Relatório de quantidade de alunos ANEEs.
+ *
+ * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package     Core
+ * @subpackage  Relatório
+ * @since       Arquivo disponível desde a versão 1.0.0
+ * @version     $Id$
+ */
+
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/clsPDF.inc.php';
+
+
 
 class clsIndexBase extends clsBase
 {
@@ -36,7 +46,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Rela&ccedil;&atilde;o de Alunos ANEEs" );
 		$this->processoAp = "900";
- 
+
 		$this->renderMenu = false;
 		$this->renderMenuSuspenso = false;
 
@@ -121,7 +131,7 @@ class indice extends clsCadastro
 			{
 		     	echo '<script>
 		     			alert("Escola não possui calendário definido para este ano");
-		     			window.parent.fechaExpansivel(\'div_dinamico_\'+(window.parent.DOM_divs.length-1));	
+		     			window.parent.fechaExpansivel(\'div_dinamico_\'+(window.parent.DOM_divs.length-1));
 		     		</script>';
 		     	die();
 			}
@@ -133,10 +143,10 @@ class indice extends clsCadastro
 			$fonte = 'arial';
 			$corTexto = '#000000';
 			$tamTexto = 8;
-			
+
 			$sql = "SELECT cod_deficiencia, count(0) as quantidade,
 							(SELECT fantasia WHERE es.ref_idpes = idpes
-								UNION 
+								UNION
 							 SELECT nm_escola FROM pmieducar.escola_complemento ec
 							 	WHERE cod_escola = ref_cod_escola) as nome_escola
 						FROM pmieducar.matricula m, pmieducar.aluno a,
@@ -144,10 +154,10 @@ class indice extends clsCadastro
 						WHERE a.cod_aluno = m.ref_cod_aluno AND a.ref_idpes = fd.ref_idpes
 						AND cod_deficiencia = ref_cod_deficiencia AND ano = {$this->ano}
 						AND m.ativo = 1 AND m.aprovado IN (1, 2, 3) AND a.ativo = 1
-						AND es.cod_escola = ref_ref_cod_escola 
+						AND es.cod_escola = ref_ref_cod_escola
 						AND ref_cod_instituicao = {$this->ref_cod_instituicao}
 						AND ref_ref_cod_escola = {$this->ref_cod_escola}
-						AND j.idpes = es.ref_idpes 
+						AND j.idpes = es.ref_idpes
 						GROUP BY cod_deficiencia, nome_escola ORDER BY cod_deficiencia";
 			$db = new clsBanco();
 			$db->Consulta($sql);
@@ -172,7 +182,7 @@ class indice extends clsCadastro
 					$this->qtd_alunos_def[$cod_deficiencia] += $quantidade;
 					if ($quantidade < 100)
 						$this->pdf->escreve_relativo($quantidade < 10 ? "0{$quantidade}" : $quantidade, $this->necessidades[$cod_deficiencia] + 45, $controle_pox_Y, 0, 0, $fonte, $tamTexto, $corTexto);
-					else 
+					else
 						$this->pdf->escreve_relativo($quantidade, $this->necessidades[$cod_deficiencia] + 43, $controle_pox_Y, 0, 0, $fonte, $tamTexto, $corTexto);
 				}
 				if ($qtd_mostrar < 100)
@@ -187,7 +197,7 @@ class indice extends clsCadastro
 					$qtd_mostrar += $total;
 					if ($total < 100)
 						$this->pdf->escreve_relativo($total < 10 ? "0{$total}" : $total, $this->necessidades[$cod_deficiencia] + 45, $controle_pox_Y, 0, 0, $fonte, $tamTexto, $corTexto);
-					else 
+					else
 						$this->pdf->escreve_relativo( $total, $this->necessidades[$cod_deficiencia] + 43, $controle_pox_Y, 0, 0, $fonte, $tamTexto, $corTexto);
 				}
 				if ($qtd_mostrar < 100)
@@ -205,13 +215,13 @@ class indice extends clsCadastro
 
 				echo "<html><center>Se o download não iniciar automaticamente <br /><a target='blank' href='" . $this->get_link  . "' style='font-size: 16px; color: #000000; text-decoration: underline;'>clique aqui!</a><br><br>
 						<span style='font-size: 10px;'>Para visualizar os arquivos PDF, é necessário instalar o Adobe Acrobat Reader.<br>
-			
+
 						Clique na Imagem para Baixar o instalador<br><br>
 						<a href=\"http://www.adobe.com.br/products/acrobat/readstep2.html\" target=\"new\"><br><img src=\"imagens/acrobat.gif\" width=\"88\" height=\"31\" border=\"0\"></a>
 						</span>
 						</center>";
 			}
-			else 
+			else
 			{
 				echo '<script>
 	     			alert("A escola não possui nenhum aluno com deficiência!");
@@ -274,13 +284,13 @@ class indice extends clsCadastro
 							$fonte = 'arial';
 							$corTexto = '#000000';
 							$tamTexto = 8;
-							$sql = "SELECT cod_deficiencia, count(0) as quantidade									
+							$sql = "SELECT cod_deficiencia, count(0) as quantidade
 										FROM pmieducar.matricula m, pmieducar.aluno a,
 										cadastro.fisica_deficiencia fd, cadastro.deficiencia d, pmieducar.escola es
 										WHERE a.cod_aluno = m.ref_cod_aluno AND a.ref_idpes = fd.ref_idpes
 										AND cod_deficiencia = ref_cod_deficiencia AND ano = {$this->ano}
 										AND m.ativo = 1 AND m.aprovado IN (1, 2, 3) AND a.ativo = 1
-										AND es.cod_escola = ref_ref_cod_escola 
+										AND es.cod_escola = ref_ref_cod_escola
 										AND ref_cod_instituicao = {$this->ref_cod_instituicao}
 										AND ref_ref_cod_escola = {$ref_cod_escola}
 										GROUP BY cod_deficiencia ORDER BY cod_deficiencia";
@@ -299,7 +309,7 @@ class indice extends clsCadastro
 									$this->qtd_alunos_def[$cod_deficiencia] += $quantidade;
 									if ($quantidade < 100)
 										$this->pdf->escreve_relativo($quantidade < 10 ? "0{$quantidade}" : $quantidade, $this->necessidades[$cod_deficiencia] + 45, $controle_pox_Y, 0, 0, $fonte, $tamTexto, $corTexto);
-									else 
+									else
 										$this->pdf->escreve_relativo($quantidade, $this->necessidades[$cod_deficiencia] + 43, $controle_pox_Y, 0, 0, $fonte, $tamTexto, $corTexto);
 								}
 								if ($qtd_mostrar < 100)
@@ -336,7 +346,7 @@ class indice extends clsCadastro
 					}
 					if ($qtd_mostrar < 100)
 						$this->pdf->escreve_relativo($qtd_mostrar < 10 ? "0{$qtd_mostrar}" : $qtd_mostrar, max($this->necessidades) + 45 + 15, $controle_pox_Y, 0, 0, $fonte, $tamTexto, $corTexto);
-					else 
+					else
 						$this->pdf->escreve_relativo($qtd_mostrar, max($this->necessidades) + 43 + 15, $controle_pox_Y, 0, 0, $fonte, $tamTexto, $corTexto);
 					$this->pdf->linha_relativa($esquerda, $controle_pox_Y + 4, $direita, 0);
 					$this->rodape();
@@ -349,13 +359,13 @@ class indice extends clsCadastro
 
 					echo "<html><center>Se o download não iniciar automaticamente <br /><a target='blank' href='" . $this->get_link  . "' style='font-size: 16px; color: #000000; text-decoration: underline;'>clique aqui!</a><br><br>
 						<span style='font-size: 10px;'>Para visualizar os arquivos PDF, é necessário instalar o Adobe Acrobat Reader.<br>
-		
+
 						Clique na Imagem para Baixar o instalador<br><br>
 						<a href=\"http://www.adobe.com.br/products/acrobat/readstep2.html\" target=\"new\"><br><img src=\"imagens/acrobat.gif\" width=\"88\" height=\"31\" border=\"0\"></a>
 						</span>
 						</center>";
 				}
-				else 
+				else
 				{
 					echo '<script>
 		     				alert("Nenhum aluno com deficiência está matriculado em alguma escola!");
@@ -369,30 +379,48 @@ class indice extends clsCadastro
 
 	}
 
-	function addCabecalho()
-	{
-		// variavel que controla a altura atual das caixas
-		$altura = 30;
-		$fonte = 'arial';
-		$corTexto = '#000000';
+  public function addCabecalho()
+  {
+    /**
+     * Variável global com objetos do CoreExt.
+     * @see includes/bootstrap.php
+     */
+    global $coreExt;
 
-		// cabecalho
-		$this->pdf->quadrado_relativo( 30, $altura, 535, 85 );
-		$this->pdf->InsertJpng( "gif", "imagens/brasao.gif", 50, 95, 0.30 );
+    // Namespace de configuração do template PDF
+    $config = $coreExt['Config']->app->template->pdf;
 
-		//titulo principal
-		$this->pdf->escreve_relativo( "PREFEITURA COBRA TECNOLOGIA", 30, 30, 535, 80, $fonte, 18, $corTexto, 'center' );
-		$this->pdf->escreve_relativo( date("d/m/Y"), 500, 30, 100, 80, $fonte, 12, $corTexto, 'left' );
+    // Variável que controla a altura atual das caixas
+    $altura   = 30;
+    $fonte    = 'arial';
+    $corTexto = '#000000';
 
-		//dados escola
-		$this->pdf->escreve_relativo( "Instituição: $this->nm_instituicao", 120, 58, 300, 80, $fonte, 10, $corTexto, 'left' );
+    // Cabeçalho
+    $logo = $config->get($config->logo, 'imagens/brasao.gif');
 
-		//titulo
-		$this->pdf->escreve_relativo( "Relação de Alunos ANEEs por Escola", 30, 85, 535, 80, $fonte, 14, $corTexto, 'center' );
+    $this->pdf->quadrado_relativo(30, $altura, 535, 85);
+    $this->pdf->insertImageScaled('gif', $logo, 50, 95, 41);
 
-		//Data
-		$this->pdf->escreve_relativo( "Ano: {$this->ano}", 45, 100, 535, 80, $fonte, 10, $corTexto, 'left' );
-	}
+    // Título principal
+    $titulo = $config->get($config->titulo, 'i-Educar');
+    $this->pdf->escreve_relativo($titulo, 30, 30, 535, 80, $fonte, 18,
+      $corTexto, 'center');
+    $this->pdf->escreve_relativo(date("d/m/Y"), 500, 30, 100, 80, $fonte, 12,
+      $corTexto, 'left');
+
+    // Dados escola
+    $this->pdf->escreve_relativo("Instituição: $this->nm_instituicao", 120, 58,
+      300, 80, $fonte, 10, $corTexto, 'left');
+
+    // Título
+    $this->pdf->escreve_relativo("Relação de Alunos ANEEs por Escola", 30, 85,
+      535, 80, $fonte, 14, $corTexto, 'center');
+
+    // Data
+    $this->pdf->escreve_relativo("Ano: {$this->ano}", 45, 100, 535, 80, $fonte,
+      10, $corTexto, 'left');
+  }
+
 
 	function novaPagina()
 	{
@@ -421,7 +449,7 @@ class indice extends clsCadastro
 		$db2 = new clsBanco();
 		$db2->Consulta($sql);
 		$controle_def = $esquerda + 253;
-		
+
 		while ($db2->ProximoRegistro())
 		{
 			list($cod_deficiencia, $nm_deficiencia) = $db2->Tupla();
@@ -461,5 +489,3 @@ $miolo = new indice();
 $pagina->addForm( $miolo );
 // gera o html
 $pagina->MakeAll();
-
-?>

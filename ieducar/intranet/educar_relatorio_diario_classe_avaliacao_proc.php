@@ -1,34 +1,43 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-require_once ("include/clsPDF.inc.php");
+
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
+
+/**
+ * Diário de classe - avaliação padrão.
+ *
+ * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package     Core
+ * @subpackage  Relatório
+ * @since       Arquivo disponível desde a versão 1.0.0
+ * @version     $Id$
+ */
+
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/clsPDF.inc.php';
+
 
 class clsIndexBase extends clsBase
 {
@@ -274,7 +283,7 @@ class indice extends clsCadastro
 			 * CARGA HORARIA NAO GLOBALIZADA
 			 * GERAR UMA PAGINA PARA CADA DISICIPLINA
 			 */
-			
+
 			//$obj_turma_disc = new clsPmieducarTurmaDisciplina();
 			$obj_turma_disc = new clsPmieducarDisciplinaSerie();
 			$obj_turma_disc->setCamposLista("ref_cod_disciplina");
@@ -345,7 +354,7 @@ class indice extends clsCadastro
 
 					    	//$obj_aluno = new clsPmieducarAluno();
 					    	//$det_aluno = array_shift($obj_aluno->lista($det_matricula['ref_cod_aluno']));
-							
+
 					    	$this->pdf->quadrado_relativo( 30, $this->page_y , 540, $altura_linha);
 					    	$this->pdf->escreve_relativo($num_aluno , 38 ,$this->page_y + 4,30, 15, $fonte, 7, $corTexto, 'left' );
 					    	$this->pdf->escreve_relativo($matricula['nome_aluno'] , 55 ,$this->page_y + 4,160, 15, $fonte, 7, $corTexto, 'left' );
@@ -392,7 +401,7 @@ class indice extends clsCadastro
 
 
 			//header( "location: " . $this->pdf->GetLink() );
-			
+
 		}
 
 		echo "<script>window.onload=function(){parent.EscondeDiv('LoadImprimir');window.location='download.php?filename=".$this->get_link."'}</script>";
@@ -406,60 +415,80 @@ class indice extends clsCadastro
 			</center>";
 	}
 
-	function addCabecalho()
-	{
-		// variavel que controla a altura atual das caixas
-		$altura = 30;
-		$fonte = 'arial';
-		$corTexto = '#000000';
+  public function addCabecalho()
+  {
+    /**
+     * Variável global com objetos do CoreExt.
+     * @see includes/bootstrap.php
+     */
+    global $coreExt;
 
+    // Namespace de configuração do template PDF
+    $config = $coreExt['Config']->app->template->pdf;
 
-		// cabecalho
-		$this->pdf->quadrado_relativo( 30, $altura, 540, 85 );
-		$this->pdf->InsertJpng( "gif", "imagens/brasao.gif", 50, 95, 0.30 );
+    // Variável que controla a altura atual das caixas
+    $altura   = 30;
+    $fonte    = 'arial';
+    $corTexto = '#000000';
 
-		//titulo principal
-		$this->pdf->escreve_relativo( "PREFEITURA COBRA TECNOLOGIA", 30, 30, 782, 80, $fonte, 18, $corTexto, 'center' );
+    // Cabeçalho
+    $logo = $config->get($config->logo, 'imagens/brasao.gif');
 
-		//dados escola
-		$this->pdf->escreve_relativo( "Instituição:$this->nm_instituicao", 120, 52, 300, 80, $fonte, 7, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "Escola:{$this->nm_escola}",132, 64, 300, 80, $fonte, 7, $corTexto, 'left' );
-		$dif = 0;
-		if($this->nm_professor)
-			$this->pdf->escreve_relativo( "Prof.Regente:{$this->nm_professor}",111, 76, 300, 80, $fonte, 7, $corTexto, 'left' );
-		else
-			$dif = 12;
+    $this->pdf->quadrado_relativo( 30, $altura, 540, 85 );
+    $this->pdf->insertImageScaled('gif', $logo, 50, 95, 41);
 
-		$this->pdf->escreve_relativo( "Série:{$this->nm_serie}",138, 88  - $dif, 300, 80, $fonte, 7, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "Turma:{$this->nm_turma}",134, 100 - $dif, 300, 80, $fonte, 7, $corTexto, 'left' );
+    // Título principal
+    $titulo = $config->get($config->titulo, 'i-Educar');
+    $this->pdf->escreve_relativo($titulo, 30, 30, 782, 80, $fonte, 18,
+      $corTexto, 'center');
 
-		//titulo
-		//if($this->nm_disciplina)
-		//	$this->nm_disciplina = "$this->nm_disciplina";
-		$this->pdf->escreve_relativo( "Diário de Classe - {$this->nm_disciplina}", 30, 75, 782, 80, $fonte, 12, $corTexto, 'center' );
+    // Dados escola
+    $this->pdf->escreve_relativo("Instituição:$this->nm_instituicao", 120, 52,
+      300, 80, $fonte, 7, $corTexto, 'left' );
+    $this->pdf->escreve_relativo("Escola:{$this->nm_escola}",132, 64, 300, 80,
+      $fonte, 7, $corTexto, 'left');
+    $dif = 0;
 
-		$obj_modulo = new clsPmieducarModulo($this->ref_cod_modulo);
-		$det_modulo = $obj_modulo->detalhe();
-		//Data
-		//$mes2 = $this->mes + 1;
-		//$this->pdf->escreve_relativo( (($this->meses_do_ano[$this->mes]))." e ".(($this->meses_do_ano[$mes2]))." de {$this->ano}", 45, 100, 782, 80, $fonte, 10, $corTexto, 'center' );
-		//$this->pdf->escreve_relativo( (($this->meses_do_ano[$this->mes]))." e ".(($this->meses_do_ano[$mes2]))." de {$this->ano}", 45, 100, 782, 80, $fonte, 10, $corTexto, 'center' );
+    if($this->nm_professor) {
+      $this->pdf->escreve_relativo( "Prof.Regente:{$this->nm_professor}",111, 76, 300, 80, $fonte, 7, $corTexto, 'left' );
+    }
+    else {
+      $dif = 12;
+    }
 
-		$this->pdf->linha_relativa(201,125,0,14);
-		$this->pdf->linha_relativa(201,125,369,0);
-		$this->pdf->escreve_relativo( "Avaliações", 195, 128, 350, 80, $fonte, 7, $corTexto, 'center' );
-		$this->pdf->linha_relativa(543,125,0,14);
-		$this->pdf->linha_relativa(30,139,0,20);
-		//$this->pdf->linha_relativa(50,139,0,20);
-		$this->pdf->linha_relativa(30,139,513,0);
-		$this->pdf->escreve_relativo( "Média", 538, 137, 35, 80, $fonte, 7, $corTexto, 'center' );
+    $this->pdf->escreve_relativo("Série:{$this->nm_serie}",138, 88  - $dif, 300,
+      80, $fonte, 7, $corTexto, 'left' );
+    $this->pdf->escreve_relativo("Turma:{$this->nm_turma}",134, 100 - $dif, 300,
+      80, $fonte, 7, $corTexto, 'left' );
 
-		$this->pdf->escreve_relativo( "Nº",36, 145, 100, 80, $fonte, 7, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "Nome",110, 145, 100, 80, $fonte, 7, $corTexto, 'left' );
+    $this->pdf->escreve_relativo("Diário de Classe - {$this->nm_disciplina}",
+      30, 75, 782, 80, $fonte, 12, $corTexto, 'center');
 
-    	$this->page_y +=19;
-	    $this->pdf->escreve_relativo( "Dias de aula: {$this->total}", 715, 100, 535, 80, $fonte, 10, $corTexto, 'left' );
-	}
+    $obj_modulo = new clsPmieducarModulo($this->ref_cod_modulo);
+    $det_modulo = $obj_modulo->detalhe();
+
+    $this->pdf->linha_relativa(201, 125, 0, 14);
+    $this->pdf->linha_relativa(201, 125, 369, 0);
+    $this->pdf->escreve_relativo("Avaliações", 195, 128, 350, 80, $fonte, 7,
+      $corTexto, 'center');
+
+    $this->pdf->linha_relativa(543, 125, 0, 14);
+    $this->pdf->linha_relativa(30, 139, 0, 20);
+
+    $this->pdf->linha_relativa(30, 139, 513, 0);
+    $this->pdf->escreve_relativo("Média", 538, 137, 35, 80, $fonte, 7,
+      $corTexto, 'center');
+
+    $this->pdf->escreve_relativo("Nº", 36, 145, 100, 80, $fonte, 7,
+      $corTexto, 'left');
+    $this->pdf->escreve_relativo("Nome",110, 145, 100, 80, $fonte, 7, $corTexto,
+      'left');
+
+    $this->page_y +=19;
+    $this->pdf->escreve_relativo("Dias de aula: {$this->total}", 715, 100, 535,
+      80, $fonte, 10, $corTexto, 'left');
+  }
+
 
 	function desenhaLinhasVertical()
 	{

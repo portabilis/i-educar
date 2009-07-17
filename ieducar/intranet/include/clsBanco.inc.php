@@ -31,17 +31,19 @@
  * @version  $Id$
  */
 
+require_once '../includes/bootstrap.php';
+
 if (!class_exists('clsBancoSql_')) {
   require_once 'include/clsBancoPgSql.inc.php';
 }
 
 class clsBanco extends clsBancoSQL_ {
 
-  protected $strHost       = 'localhost';    // Nome ou endereço IP do servidor do banco de dados
-  protected $strBanco      = 'ieducardb';    // Nome do banco de dados
-  protected $strUsuario    = 'ieducaruser';  // Usuário devidamente autorizado a acessar o banco
-  protected $strSenha      = 'ieducar';      // Senha do usuário do banco
-  protected $strPort       = NULL;           // Porta do servidor de banco de dados
+  protected $strHost       = NULL;  // Nome ou endereço IP do servidor do banco de dados
+  protected $strBanco      = NULL;  // Nome do banco de dados
+  protected $strUsuario    = NULL;  // Usuário devidamente autorizado a acessar o banco
+  protected $strSenha      = NULL;  // Senha do usuário do banco
+  protected $strPort       = NULL;  // Porta do servidor de banco de dados
 
   public $bLink_ID         = 0;              // Identificador da conexão
   public $bConsulta_ID     = 0;              // Identificador do resultado da consulta
@@ -71,7 +73,17 @@ class clsBanco extends clsBancoSQL_ {
   /**
    * Construtor (PHP 4).
    */
-  public function clsBanco($strDataBase = FALSE) {}
+  public function clsBanco($strDataBase = FALSE)
+  {
+    global $coreExt;
+    $config = $coreExt['Config']->app->database;
+
+    $this->setHost($config->hostname);
+    $this->setDbname($config->dbname);
+    $this->setPassword($config->password);
+    $this->setUser($config->username);
+    $this->setPort($config->port);
+  }
 
 
 

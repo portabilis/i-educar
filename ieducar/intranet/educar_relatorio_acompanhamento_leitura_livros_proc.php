@@ -133,12 +133,12 @@ class indice extends clsCadastro
 
 			}
 		}
-		
+
 		if ($this->is_padrao || $this->ano == 2007)
 		{
-			$this->semestre = null;	
+			$this->semestre = null;
 		}
-		
+
 		if($this->ref_ref_cod_serie)
 			$this->ref_cod_serie = $this->ref_ref_cod_serie;
 
@@ -342,37 +342,50 @@ class indice extends clsCadastro
 			</center>";
 	}
 
-	function addCabecalho()
-	{
-		// variavel que controla a altura atual das caixas
-		$altura = 30;
-		$fonte = 'arial';
-		$corTexto = '#000000';
+  public function addCabecalho()
+  {
+    /**
+     * Variável global com objetos do CoreExt.
+     * @see includes/bootstrap.php
+     */
+    global $coreExt;
 
+    // Namespace de configuração do template PDF
+    $config = $coreExt['Config']->app->template->pdf;
 
-		// cabecalho
-		$this->pdf->quadrado_relativo( 30, $altura, 782, 85 );
-		$this->pdf->InsertJpng( "gif", "imagens/brasao.gif", 50, 95, 0.30 );
+    // Variável que controla a altura atual das caixas
+    $altura = 30;
+    $fonte = 'arial';
+    $corTexto = '#000000';
 
-		//titulo principal
-		$this->pdf->escreve_relativo( "PREFEITURA COBRA TECNOLOGIA", 30, 30, 782, 80, $fonte, 18, $corTexto, 'center' );
-		$this->pdf->escreve_relativo( date("d/m/Y"), 25, 30, 782, 80, $fonte, 10, $corTexto, 'right' );
+    // Cabeçalho
+    $logo = $config->get($config->logo, 'imagens/brasao.gif');
 
-		//dados escola
-		$this->pdf->escreve_relativo( "Instituição:$this->nm_instituicao", 119, 52, 300, 80, $fonte, 7, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "Escola:{$this->nm_escola}",132, 64, 300, 80, $fonte, 7, $corTexto, 'left' );
+    $this->pdf->quadrado_relativo( 30, $altura, 782, 85 );
+    $this->pdf->insertImageScaled('gif', $logo, 50, 95, 41);
 
+    // Título principal
+    $titulo = $config->get($config->titulo, "i-Educar");
+    $this->pdf->escreve_relativo($titulo, 30, 30, 782, 80, $fonte, 18, $corTexto, 'center');
+    $this->pdf->escreve_relativo(date("d/m/Y"), 25, 30, 782, 80, $fonte, 10, $corTexto, 'right');
 
-		$this->pdf->escreve_relativo( "Série:{$this->nm_serie}",136, 76, 300, 80, $fonte, 7, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "Turma:{$this->nm_turma}",132, 88, 300, 80, $fonte, 7, $corTexto, 'left' );
+    // Dados escola
+    $this->pdf->escreve_relativo("Instituição:$this->nm_instituicao", 119, 52,
+      300, 80, $fonte, 7, $corTexto, 'left');
+    $this->pdf->escreve_relativo("Escola:{$this->nm_escola}",132, 64, 300, 80,
+      $fonte, 7, $corTexto, 'left');
 
-		//titulo
-		$this->pdf->escreve_relativo( "ACOMPANHAMENTO DE LEITURA", 30, 75, 782, 80, $fonte, 12, $corTexto, 'center' );
+    $this->pdf->escreve_relativo("Série:{$this->nm_serie}",136, 76, 300, 80, $fonte, 7, $corTexto, 'left');
+    $this->pdf->escreve_relativo("Turma:{$this->nm_turma}",132, 88, 300, 80, $fonte, 7, $corTexto, 'left');
 
-		//Data
-		$this->pdf->escreve_relativo( "{$this->meses_do_ano[$this->mes]} DE $this->ano", 45, 100, 782, 80, $fonte, 10, $corTexto, 'center' );
+    // Título
+    $this->pdf->escreve_relativo("ACOMPANHAMENTO DE LEITURA", 30, 75, 782, 80,
+      $fonte, 12, $corTexto, 'center');
 
-	}
+    // Data
+    $this->pdf->escreve_relativo("{$this->meses_do_ano[$this->mes]} DE $this->ano",
+      45, 100, 782, 80, $fonte, 10, $corTexto, 'center');
+  }
 
 
 	function Editar()

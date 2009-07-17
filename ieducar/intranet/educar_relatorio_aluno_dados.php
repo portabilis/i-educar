@@ -1,29 +1,37 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
+
+/**
+ * Ficha com os dados do aluno.
+ *
+ * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package     Core
+ * @subpackage  Aluno
+ * @since       Arquivo disponível desde a versão 1.0.0
+ * @version     $Id$
+ */
+
 ?>
 <!doctype HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html lang="pt">
@@ -398,17 +406,34 @@
 		$largura_titulo = 500;
 		$altura_titulo = 15;
 
-		// cabecalho
-		$pdf->quadrado_relativo( 30, 30, 536, 85 );
-		$pdf->InsertJpng( "gif", "imagens/brasao.gif", 50, 95, 0.30 );
+    /**
+     * Variável global com objetos do CoreExt.
+     * @see includes/bootstrap.php
+     */
+    global $coreExt;
 
-		//titulo principal
-		$pdf->escreve_relativo( "PREFEITURA DE ITAJAÍ", 30, 50, 536, 80, $fonte, 18, $corTexto, 'center' );
-		$pdf->escreve_relativo( "Secretaria da Educação", 30, 75, 536, 80, $fonte, 14, $corTexto, 'center' );
+    // Namespace de configuração do template PDF
+    $config = $coreExt['Config']->app->template->pdf;
 
-		$pdf->quadrado_relativo( $X_quadrado, $Y_quadrado, $largura_quadrado, $altura_quadrado, $espessura_linha );
-		$pdf->escreve_relativo( "DADOS PESSOAIS DO ALUNO", $X_quadrado+4, $Y_quadrado+3, $largura_titulo, $altura_titulo, $fonte, $tam_titulo );
-		$pdf->linha_relativa( $X_quadrado, $Y_quadrado + 20, $largura_quadrado, 0, $espessura_linha );
+    // Cabeçalho
+    $logo = $config->get($config->logo, 'imagens/brasao.gif');
+
+    $pdf->quadrado_relativo(30, 30, 536, 85);
+    $pdf->insertImageScaled('gif', $logo, 50, 95, 41);
+
+    // Título principal
+    $titulo = $config->get($config->titulo, "i-Educar");
+    $pdf->escreve_relativo($titulo, 30, 50, 536, 80, $fonte,
+      18, $corTexto, 'center');
+    $pdf->escreve_relativo("Secretaria da Educação", 30, 75, 536, 80, $fonte,
+      14, $corTexto, 'center');
+
+    $pdf->quadrado_relativo($X_quadrado, $Y_quadrado, $largura_quadrado,
+      $altura_quadrado, $espessura_linha );
+    $pdf->escreve_relativo("DADOS PESSOAIS DO ALUNO", $X_quadrado + 4,
+      $Y_quadrado + 3, $largura_titulo, $altura_titulo, $fonte, $tam_titulo );
+    $pdf->linha_relativa($X_quadrado, $Y_quadrado + 20, $largura_quadrado, 0,
+      $espessura_linha );
 
 		$X_coluna = 34;
 		$largura = 285;
@@ -989,7 +1014,7 @@
 		$pdf->linha_relativa(52,587,130,0);
 		$pdf->linha_relativa(384,587,130,0);
 	//****************************************************************************************//
-	
+
 	if (is_numeric($cod_aluno))
 	{
 		$sql = "SELECT MAX(cod_matricula) FROM pmieducar.matricula WHERE ref_cod_aluno = {$cod_aluno} AND ativo = 1";
@@ -1002,15 +1027,15 @@
 			$lst_matricula = $obj_matricula->lista( $ref_cod_matricula );
 			if($lst_matricula)
 				$registro = array_shift($lst_matricula);
-	
+
 			$obj_ref_cod_curso = new clsPmieducarCurso( $registro["ref_cod_curso"] );
 			$det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
 			$nm_curso = $det_ref_cod_curso["nm_curso"];
-			
+
 			$obj_serie = new clsPmieducarSerie( $registro["ref_ref_cod_serie"] );
 			$det_serie = $obj_serie->detalhe();
 			$nm_serie = $det_serie["nm_serie"];
-			
+
 			$ano = $registro["ano"];
 		}
 	}
@@ -1027,49 +1052,49 @@
 			$espessura_linha = 0.5;
 			$pdf->quadrado_relativo( 30, 30, 536, 350, $espessura_linha );
 //			$pdf->quadrado_relativo( $esquerda, $altura, 535, $pdf->altura - 150, $espessura_linha );
-			
+
 			$pdf->escreve_relativo("DADOS DE MATRÍCULA", $esquerda+5, $altura+5, 350, 100, $fonte, $tam_titulo);
 			$pdf->linha_relativa($esquerda, $altura += 20, 535, 0, $espessura_linha);
-				
+
 			$pdf->escreve_relativo("ANO: {$ano}", $esquerda + 5, $altura+=5, 500, 100, $fonte, $tam_letra);
 			$pdf->escreve_relativo("SEMESTRE: ", $esquerda + 120, $altura, 350, 100, $fonte, $tam_letra);
 			$pdf->escreve_relativo("CURSO: {$nm_curso}", $esquerda + 290, $altura, 350, 100, $fonte, $tam_letra);
-			
+
 			$pdf->escreve_relativo("ANO/SÉRIE: {$nm_serie}", $esquerda + 5, $altura += 25, 350, 100, $fonte, $tam_letra);
 			$pdf->escreve_relativo("TURNO: ", $esquerda + 290, $altura, 200, 200, $fonte, $tam_letra);
 //			$pdf->escreve_relativo("Cor/Raça: {$nm_raca}", $esquerda + 235, $altura, 200, 200, $fonte, $tam_letra);
 //			$pdf->escreve_relativo("Religião: {$religiao}", $esquerda + 350, $altura, 200, 200, $fonte, $tam_letra);
-			
+
 			$pdf->linha_relativa($esquerda, $altura += 20, 535, 0, $espessura_linha);
 			$pdf->escreve_relativo("PROCEDÊNCIA DO ALUNO", $esquerda + 5, $altura +=2, 500, 100, $fonte, $tam_titulo);
 			$pdf->linha_relativa($esquerda, $altura += 20, 535, 0, $espessura_linha);
-//			
-			$texto = "ESTABELECIMENTO DE ENSINO DE ORIGEM: ____________________________________________________";	
+//
+			$texto = "ESTABELECIMENTO DE ENSINO DE ORIGEM: ____________________________________________________";
 			$pdf->escreve_relativo($texto, $esquerda + 5, $altura+=5, 700, 100, $fonte, $tam_letra);
-			
+
 			$texto = "MUNICÍPIO: ___________________________________________________    ESTADO: _____________________";
 			$pdf->escreve_relativo($texto, $esquerda + 5, $altura += 25, 700, 100, $fonte, $tam_letra);
-			
+
 			$texto = "ANO/SÉRIE CURSADO NO ANO ANTERIOR: ________________________________________________";
 			$pdf->escreve_relativo($texto, $esquerda + 5, $altura += 25, 700, 100, $fonte, $tam_letra);
-			
+
 			$pdf->escreve_relativo("SITUAÇÃO DO ALUNO NO ANO ANTERIOR", $esquerda + 5, $altura += 25, 700, 100, $fonte, $tam_letra);
-			
+
 			$pdf->escreve_relativo("(  ) FOI APROVADO", $esquerda + 5, $altura += 25, 700, 100, $fonte, $tam_letra);
 
 			$pdf->escreve_relativo("(  ) FOI REPROVADO", $esquerda + 5, $altura += 25, 700, 100, $fonte, $tam_letra);
 
 			$pdf->escreve_relativo("(  ) ABANDONOU", $esquerda + 5, $altura += 25, 700, 100, $fonte, $tam_letra);
-			
+
 			$texto = "(  ) NÃO FREQUENTOU: ___________________________________________________________________";
 			$pdf->escreve_relativo($texto, $esquerda + 5, $altura += 25, 700, 100, $fonte, $tam_letra);
-			
+
 			$pdf->escreve_relativo("DATA: ".date("d/m/Y"), $esquerda + 5, $altura += 25, 700, 100, $fonte, $tam_letra);
-			
-	
-	
-	
-	
+
+
+
+
+
 		$pdf->CloseFile();
 		$link = $pdf->GetLink();
 

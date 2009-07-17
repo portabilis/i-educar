@@ -21,6 +21,19 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  */
 
+
+/*
+ * Faz require do bootstrap para que as mesmas configurações do ambiente
+ * (conexão com o banco de dados, títulos, configurações do PHP), sejam
+ * utilizadas pelos unit test para evitar discrepâncias no comportamento.
+ */
+require_once realpath(dirname(__FILE__) . '/../') . '/includes/bootstrap.php';
+
+chdir(realpath(dirname(__FILE__) . '/../') . '/intranet');
+require_once 'PHPUnit/Framework.php';
+require_once 'include/clsBanco.inc.php';
+
+
 /**
  * UnitBaseTest abstract class.
  *
@@ -35,9 +48,4 @@
  * @since    Classe disponível desde a versão 1.0.1
  * @version  $Id$
  */
-
-chdir(realpath(dirname(__FILE__) . '/../') . '/intranet');
-require_once 'PHPUnit/Framework.php';
-require_once 'include/clsBanco.inc.php';
-
 abstract class UnitBaseTest extends PHPUnit_Framework_TestCase {}

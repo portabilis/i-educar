@@ -1,34 +1,43 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-require_once ("include/clsPDF.inc.php");
+
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
+
+/**
+ * Relatório de alunos ANEEs.
+ *
+ * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package     Core
+ * @subpackage  Relatório
+ * @since       Arquivo disponível desde a versão 1.0.0
+ * @version     $Id$
+ */
+
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/clsPDF.inc.php';
+
 
 class clsIndexBase extends clsBase
 {
@@ -95,7 +104,7 @@ class indice extends clsCadastro
 
 			}
 		}
-		
+
 		@session_start();
 		$pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
@@ -338,9 +347,9 @@ class indice extends clsCadastro
 
 
 			$obj = new clsPmieducarSerie();
-			
+
 			$obj->setOrderby("s.nm_serie");
-			
+
 			$lista_serie_curso = $obj->lista(null,null,null,$curso,null,null,null,null,null,null,null,null,1,$this->ref_cod_instituicao);
 
 			//$obj_curso = new clsPmieducarCurso($serie['ref_cod_curso']);
@@ -348,15 +357,15 @@ class indice extends clsCadastro
 			$det_curso = $obj_curso->detalhe();
 
 			$alunos=array();
-			
-			
+
+
 			if($lista_serie_curso){
 				foreach ($lista_serie_curso as $serie) {
 					/**
 					 * busca todas as matriculas de cada curso
 					 */
 					$subtotal_serie = 0;
-				
+
 					$obj_matricula = new clsPmieducarMatricula();
 					$lista_matricula_serie = $obj_matricula->lista(null,null,$this->ref_cod_escola,$serie['cod_serie'],null,null,null,array(1,2,3),null,null,null,null,1,$this->ano,$curso,$this->ref_cod_instituicao,null,null,null,null,null,null,null,true);
 
@@ -364,7 +373,7 @@ class indice extends clsCadastro
 
 //					$subtotal_serie = count($lista_matricula_serie);
 //					$total_curso = $total_curso + $subtotal_serie;
-					/*				
+					/*
 					$total_geral_alunos += $obj_matricula->_total;
 
 					$subtotal_serie = $obj_matricula->_total;
@@ -378,7 +387,7 @@ class indice extends clsCadastro
 						/**
 						 * busca dados da matricula de um aluno de uma turma de uma serie =p
 						 */
-						
+
 						foreach ($lista_matricula_serie as $matricula) {
 							$total_curso++;
 							$contador_registros++;
@@ -673,35 +682,51 @@ class indice extends clsCadastro
 
 	}
 
-	function addCabecalho()
-	{
-		// variavel que controla a altura atual das caixas
-		$altura = 30;
-		$fonte = 'arial';
-		$corTexto = '#000000';
+  public function addCabecalho()
+  {
+    /**
+     * Variável global com objetos do CoreExt.
+     * @see includes/bootstrap.php
+     */
+    global $coreExt;
 
-		// cabecalho
-		$this->pdf->quadrado_relativo( 30, $altura, 535, 85 );
-		$this->pdf->InsertJpng( "gif", "imagens/brasao.gif", 50, 95, 0.30 );
+    // Namespace de configuração do template PDF
+    $config = $coreExt['Config']->app->template->pdf;
 
-		//paginador
-		//$this->pdf->escreve_relativo( "Página $this->pagina_atual de $this->total_paginas", 25, 30, 535, 80, $fonte, 10, $corTexto, 'right' );
+    // Variável que controla a altura atual das caixas
+    $altura   = 30;
+    $fonte    = 'arial';
+    $corTexto = '#000000';
 
-		//titulo principal
-		$this->pdf->escreve_relativo( "PREFEITURA COBRA TECNOLOGIA", 30, 30, 535, 80, $fonte, 18, $corTexto, 'center' );
-		$this->pdf->escreve_relativo( date("d/m/Y"), 500, 30, 100, 80, $fonte, 12, $corTexto, 'left' );
+    // Cabeçalho
+    $logo = $config->get($config->logo, 'imagens/brasao.gif');
 
-		//dados escola
-		$this->pdf->escreve_relativo( "Instituição:$this->nm_instituicao", 120, 58, 300, 80, $fonte, 10, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "Escola:{$this->nm_escola}",136, 70, 300, 80, $fonte, 10, $corTexto, 'left' );
+    $this->pdf->quadrado_relativo(30, $altura, 535, 85);
+    $this->pdf->insertImageScaled('gif', $logo, 50, 95, 41);
 
-		//titulo
-		$this->pdf->escreve_relativo( "Relação de Alunos ANEEs", 30, 85, 535, 80, $fonte, 14, $corTexto, 'center' );
+    // Título principal
+    $titulo = $config->get($config->titulo, 'i-Educar');
+    $this->pdf->escreve_relativo($titulo, 30, 30, 535, 80,
+      $fonte, 18, $corTexto, 'center');
+    $this->pdf->escreve_relativo(date("d/m/Y"), 500, 30, 100, 80, $fonte, 12,
+      $corTexto, 'left');
 
-		//Data
-		$this->pdf->escreve_relativo( "{$this->meses_do_ano[$this->mes]}/{$this->ano}", 45, 100, 535, 80, $fonte, 10, $corTexto, 'left' );
-	    $this->pdf->escreve_relativo( "Dias previstos: {$this->totalDiasUteis}", 220, 100, 535, 80, $fonte, 10, $corTexto, 'center' );
-	}
+    // Dados escola
+    $this->pdf->escreve_relativo("Instituição:$this->nm_instituicao", 120, 58,
+      300, 80, $fonte, 10, $corTexto, 'left');
+    $this->pdf->escreve_relativo("Escola:{$this->nm_escola}",136, 70, 300, 80,
+      $fonte, 10, $corTexto, 'left');
+
+    // Título
+    $this->pdf->escreve_relativo("Relação de Alunos ANEEs", 30, 85, 535, 80,
+      $fonte, 14, $corTexto, 'center');
+
+    // Data
+    $this->pdf->escreve_relativo("{$this->meses_do_ano[$this->mes]}/{$this->ano}",
+      45, 100, 535, 80, $fonte, 10, $corTexto, 'left');
+    $this->pdf->escreve_relativo("Dias previstos: {$this->totalDiasUteis}", 220,
+      100, 535, 80, $fonte, 10, $corTexto, 'center' );
+  }
 
 	function novaPagina()
 	{
@@ -825,7 +850,3 @@ $miolo = new indice();
 $pagina->addForm( $miolo );
 // gera o html
 $pagina->MakeAll();
-
-
-
-?>

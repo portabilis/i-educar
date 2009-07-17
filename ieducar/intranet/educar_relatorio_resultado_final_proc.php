@@ -1,34 +1,43 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-require_once ("include/clsPDF.inc.php");
+
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
+
+/**
+ * Relatório de Resultado final de turma.
+ *
+ * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package     Core
+ * @subpackage  Relatório
+ * @since       Arquivo disponível desde a versão 1.0.0
+ * @version     $Id$
+ */
+
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/clsPDF.inc.php';
+
 
 class clsIndexBase extends clsBase
 {
@@ -70,10 +79,10 @@ class indice extends clsCadastro
 	var $nm_cidade;
 
 	var $array_modulos;
-	
+
 	var $is_padrao;
 	var $semestre;
-	
+
 	var $get_link;
 
 	function renderHTML()
@@ -103,7 +112,7 @@ class indice extends clsCadastro
 		$obj_escola = new clsPmieducarEscola($this->ref_cod_escola);
 		$det_escola = $obj_escola->detalhe();
 		$this->nm_escola = $det_escola['nome'];
- 
+
 		$obj_instituicao = new clsPmieducarInstituicao($det_escola['ref_cod_instituicao']);
 		$det_instituicao = $obj_instituicao->detalhe();
 		$this->nm_instituicao = $det_instituicao['nm_instituicao'];
@@ -115,9 +124,9 @@ class indice extends clsCadastro
 		$obj_serie = new clsPmieducarSerie($this->ref_cod_serie);
 		$det_serie = $obj_serie->detalhe();
 		$this->nm_serie = $det_serie['nm_serie'];
-		
+
 		$eh_multi_seriado = false;
-		
+
 		if (is_numeric($det_turma["ref_ref_cod_serie_mult"]))
 		{
 			$series = array();
@@ -128,7 +137,7 @@ class indice extends clsCadastro
 			$series[$det_serie["cod_serie"]] = $det_serie["nm_serie"];
 			$eh_multi_seriado = true;
 		}
-		
+
 		$obj_curso = new clsPmieducarCurso($this->ref_cod_curso);
 		$det_curso = $obj_curso->detalhe();
 		$frequencia_minima = $det_curso["frequencia_minima"];
@@ -136,7 +145,7 @@ class indice extends clsCadastro
 		//ref_cod_tipo_avaliacao
 		$obj_tipo_avaliacao = new clsPmieducarTipoAvaliacao($det_curso["ref_cod_tipo_avaliacao"]);
 		$det_tipo_avaliacao = $obj_tipo_avaliacao->detalhe();
-		
+
 		$eh_conceitual = $det_tipo_avaliacao["conceitual"];
 
 		if($det_curso['padrao_ano_escolar'])
@@ -153,7 +162,7 @@ class indice extends clsCadastro
 				}
 			}
 		}
-		
+
 		$obj_disc_serie = new clsPmieducarEscolaSerieDisciplina();
 		$lst_disc_serie = $obj_disc_serie->lista($this->ref_cod_serie, $this->ref_cod_escola, null, 1);
 
@@ -190,24 +199,24 @@ class indice extends clsCadastro
 
 		$obj_matricula = new clsPmieducarMatriculaTurma();
 		$obj_matricula->setOrderby('m.ref_ref_cod_serie, nome_ascii');
-		
+
 		if ($this->is_padrao || $this->ano == 2007) {
 			$this->semestre = null;
 		}
-		
+
 		$lst_matricula = $obj_matricula->lista(null,$this->ref_cod_turma,null,null,null,null,null,null,1,$this->ref_cod_serie,$this->ref_cod_curso,$this->ref_cod_escola,$this->ref_cod_instituicao,null,null,array(1,2,3),null,null,$this->ano,null,true,null,null,true,
 												null,null, null, $det_turma["ref_ref_cod_serie_mult"], $this->semestre);
 		//$total_alunos = 42;
 		$qtd_quebra = 43;
 		$base = 155;
 		$linha = 1;
-			
+
 		$total_aprovados = 0;
 		$total_reprovados_desempenho = 0;
 		$total_reprovados_nota = 0;
 		$total_analfabetos = 0;
 		$total_nao_analfabetos = 0;
-		$ordem_mostra = 0;		
+		$ordem_mostra = 0;
 		if(is_array($lst_matricula))
 		{
 			foreach ($lst_matricula as $ordem => $matricula)
@@ -233,11 +242,11 @@ class indice extends clsCadastro
 					$this->pdf->linha_relativa(30, ($base+15)+($linha*15), 540, 0);
 					$this->pdf->linha_relativa(570, $base+($linha*15), 0, 15);//fim
 					$this->pdf->escreve_relativo($ordem_mostra, 40, ($base+3)+($linha*15), 15, 15, null, 8);
-					if ($eh_multi_seriado)	
+					if ($eh_multi_seriado)
 						$this->pdf->escreve_relativo($matricula['nome']." ({$series[$det_matricula["ref_ref_cod_serie"]]})", 65, ($base+3)+($linha*15), 250, 15, null, 8);
-					else 
+					else
 						$this->pdf->escreve_relativo($matricula['nome'], 65, ($base+3)+($linha*15), 250, 15, null, 8);
-					
+
 					if (!$eh_conceitual)
 					{
 						if ($det_matricula["aprovado"] == 1)
@@ -245,7 +254,7 @@ class indice extends clsCadastro
 							$this->pdf->escreve_relativo("X", 345, ($base+3)+($linha*15), 250, 15, null, 8);//aprovado
 							$total_aprovados++;
 						}
-						else 
+						else
 						{
 							$reprovou_por_falta = false;
 							$reprovou_por_nota  = false;
@@ -257,7 +266,7 @@ class indice extends clsCadastro
 										$obj_falta = new clsPmieducarFaltaAluno();
 										if ($det_curso["padrao_ano_escolar"] == 1)
 											$lst_falta = $obj_falta->lista(null, null, null, $this->ref_cod_serie, $this->ref_cod_escola, $disciplina["ref_cod_disciplina"], $matricula["ref_cod_matricula"], null, null, null, null, null, 1);
-										else 
+										else
 											$lst_falta = $obj_falta->lista(null, null, null, $this->ref_cod_serie, $this->ref_cod_escola, null, $matricula["ref_cod_matricula"], null, null, null, null, null, 1, null, $disciplina["ref_cod_disciplina"]);
 										$total_faltas = 0;
 										if(is_array($lst_falta))
@@ -288,17 +297,17 @@ class indice extends clsCadastro
 											$det_nota = $obj_nota->lista(null,nul,null,$this->ref_cod_serie,$this->ref_cod_escola,$disciplina['ref_cod_disciplina'],$matricula['ref_cod_matricula'],null,null,null,null,null,null,1,null);
 										else
 											$det_nota = $obj_nota->lista(null,nul,null,$this->ref_cod_serie,$this->ref_cod_escola,null,$matricula['ref_cod_matricula'],null,null,null,null,null,null,1,null,$disciplina['ref_cod_disciplina']);
-	
+
 										if (is_array($det_nota))
 										{
 	//										usort($det_nota, "cmp");
-	
+
 											$soma_notas = 0;
 											foreach ($det_nota as $key => $nota) {
-	
+
 												$obj_tipo_av_val = new clsPmieducarTipoAvaliacaoValores($nota['ref_ref_cod_tipo_avaliacao'],$nota['ref_sequencial'],null,null,null,null);
 												$det_tipo_av_val = $obj_tipo_av_val->detalhe();
-	
+
 												if ( count($this->array_modulos) == count($det_nota) )
 												{
 													$frequencia_minima = $det_curso["frequencia_minima"];
@@ -319,7 +328,7 @@ class indice extends clsCadastro
 														$exame_nota = $det_nota[$key]["nota"];
 													}
 												}
-												else 
+												else
 												{
 													$media_sem_exame = true;
 													$soma_notas = $det_tipo_av_val["valor"];
@@ -338,11 +347,11 @@ class indice extends clsCadastro
 												$media = ($soma_notas + $exame_nota * 2) / (count($det_nota)+1);
 											}
 										}
-										else 
+										else
 										{
 											$media = $soma_notas;
 										}
-	
+
 										$obj_media = new clsPmieducarTipoAvaliacaoValores();
 										$det_media = $obj_media->lista($det_curso['ref_cod_tipo_avaliacao'],$det_curso['ref_sequencial'],null,null,$media,$media);
 										if($det_media)
@@ -369,14 +378,14 @@ class indice extends clsCadastro
 							}
 						}
 					}
-					else 
+					else
 					{
 						if ($det_matricula["aprovado"] == 1)
 						{
 							$this->pdf->escreve_relativo("X", 345, ($base+3)+($linha*15), 250, 15, null, 8);//aprovado
 							$total_aprovados++;
 						}
-						else 
+						else
 						{
 							$this->pdf->escreve_relativo("X", 410, ($base+3)+($linha*15), 250, 15, null, 8);//desempenho
 							$reprovou_por_nota = true;
@@ -400,8 +409,8 @@ class indice extends clsCadastro
 					$this->pdf->linha_relativa(490, $base+($linha*15), 0, 15);
 					$this->pdf->linha_relativa(530, $base+($linha*15), 0, 15);
 					$this->pdf->linha_relativa(450, $base+($linha*15), 0, 15);
-	
-	
+
+
 					$linha++;
 				}
 			}
@@ -413,10 +422,10 @@ class indice extends clsCadastro
 
 		$this->pdf->escreve_relativo($total_aprovados, 345, ($base+3)+($linha*15), 250, 15, null, 8);//aprovado
 		$this->pdf->escreve_relativo($total_reprovados_desempenho, 465, ($base+3)+($linha*15), 250, 15, null, 8);//desempenho
-		$this->pdf->escreve_relativo($total_reprovados_nota, 410, ($base+3)+($linha*15), 250, 15, null, 8);//faltas	
+		$this->pdf->escreve_relativo($total_reprovados_nota, 410, ($base+3)+($linha*15), 250, 15, null, 8);//faltas
 		$this->pdf->escreve_relativo($total_analfabetos, 507, ($base+3)+($linha*15), 250, 15, null, 8);//nao alfabetizado
 		$this->pdf->escreve_relativo($total_nao_analfabetos, 545, ($base+3)+($linha*15), 250, 15, null, 8);//alfabetizado
-		
+
 		$this->pdf->linha_relativa(60, $base+($linha*15), 0, 15);
 		$this->pdf->linha_relativa(320, $base+($linha*15), 0, 15);
 		$this->pdf->linha_relativa(380, $base+($linha*15), 0, 15);
@@ -445,32 +454,50 @@ class indice extends clsCadastro
 			</center>";
 	}
 
-	function addCabecalho()
-	{
-		// variavel que controla a altura atual das caixas
-		$altura = 30;
-		$fonte = 'arial';
-		$corTexto = '#000000';
+  public function addCabecalho()
+  {
+    /**
+     * Variável global com objetos do CoreExt.
+     * @see includes/bootstrap.php
+     */
+    global $coreExt;
 
-		// cabecalho
-		$this->pdf->quadrado_relativo( 30, $altura, 535, 85 );
-		$this->pdf->InsertJpng( "gif", "imagens/brasao.gif", 50, 95, 0.30 );
+    // Namespace de configuração do template PDF
+    $config = $coreExt['Config']->app->template->pdf;
 
-		//titulo principal
-		$this->pdf->escreve_relativo( "PREFEITURA COBRA TECNOLOGIA", 30, 30, 535, 80, $fonte, 18, $corTexto, 'center' );
-		$this->pdf->escreve_relativo( date("d/m/Y"), 500, 30, 100, 80, $fonte, 12, $corTexto, 'left' );
+    // Variável que controla a altura atual das caixas
+    $altura   = 30;
+    $fonte    = 'arial';
+    $corTexto = '#000000';
 
-		//dados escola
-		$this->pdf->escreve_relativo( "Instituição: {$this->nm_instituicao}", 120, 58, 300, 80, $fonte, 10, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "Escola: {$this->nm_escola}",138, 70, 300, 80, $fonte, 10, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "Turma/Série: {$this->nm_turma} - {$this->nm_serie}",112, 82, 300, 80, $fonte, 10, $corTexto, 'left' );
+    // Cabeçalho
+    $logo = $config->get($config->logo, 'imagens/brasao.gif');
 
-		//titulo
-		$this->pdf->escreve_relativo( "RESULTADO FINAL I", 30, 95, 535, 80, $fonte, 14, $corTexto, 'center' );
+    $this->pdf->quadrado_relativo(30, $altura, 535, 85);
+    $this->pdf->insertImageScaled('gif', $logo, 50, 95, 41);
 
-		$this->pdf->escreve_relativo( "Ano Referência: {$this->ano}", 45, 100, 535, 80, $fonte, 10, $corTexto, 'left' );
+    // Título principal
+    $titulo = $config->get($config->titulo, 'i-Educar');
+    $this->pdf->escreve_relativo($titulo, 30, 30, 535, 80, $fonte, 18,
+      $corTexto, 'center');
+    $this->pdf->escreve_relativo(date("d/m/Y"), 500, 30, 100, 80, $fonte, 12,
+      $corTexto, 'left');
 
-	}
+    // Dados escola
+    $this->pdf->escreve_relativo("Instituição: {$this->nm_instituicao}", 120,
+      58, 300, 80, $fonte, 10, $corTexto, 'left');
+    $this->pdf->escreve_relativo("Escola: {$this->nm_escola}",138, 70, 300, 80,
+      $fonte, 10, $corTexto, 'left');
+    $this->pdf->escreve_relativo("Turma/Série: {$this->nm_turma} - {$this->nm_serie}",
+      112, 82, 300, 80, $fonte, 10, $corTexto, 'left');
+
+    // Título
+    $this->pdf->escreve_relativo("RESULTADO FINAL I", 30, 95, 535, 80, $fonte,
+      14, $corTexto, 'center');
+
+    $this->pdf->escreve_relativo("Ano Referência: {$this->ano}", 45, 100, 535,
+      80, $fonte, 10, $corTexto, 'left' );
+  }
 
 	function Editar()
 	{
@@ -497,6 +524,3 @@ $miolo = new indice();
 $pagina->addForm( $miolo );
 // gera o html
 $pagina->MakeAll();
-
-
-?>

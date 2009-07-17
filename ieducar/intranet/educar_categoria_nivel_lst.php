@@ -1,29 +1,34 @@
 <?php
+
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
+
 /**
+ * Listagem de níveis de categoria.
  *
- * @author  Prefeitura Municipal de Itajaí
- * @version SVN: $Id$
- *
- * Pacote: i-PLB Software Público Livre e Brasileiro
- *
- * Copyright (C) 2006 PMI - Prefeitura Municipal de Itajaí
- *            ctima@itajai.sc.gov.br
- *
- * Este  programa  é  software livre, você pode redistribuí-lo e/ou
- * modificá-lo sob os termos da Licença Pública Geral GNU, conforme
- * publicada pela Free  Software  Foundation,  tanto  a versão 2 da
- * Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.
- *
- * Este programa  é distribuído na expectativa de ser útil, mas SEM
- * QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-
- * ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-
- * sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.
- *
- * Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU
- * junto  com  este  programa. Se não, escreva para a Free Software
- * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
- * 02111-1307, USA.
- *
+ * @author   Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package  Core
+ * @since    Arquivo disponível desde a versão 1.0.0
+ * @version  $Id$
  */
 
 require_once 'include/clsBase.inc.php';
@@ -32,14 +37,13 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
 
-
-class clsIndexBase extends clsBase {
+class clsIndexBase extends clsBase
+{
   public function Formular() {
-    $this->SetTitulo("Prefeitura de Itaja&iacute; - Listagem Categoria N&iacute;vel");
-    $this->processoAp = "829";
+    $this->SetTitulo($this->_instituicao . 'Listagem Categoria N&iacute;vel');
+    $this->processoAp = '829';
   }
 }
-
 
 
 class indice extends clsListagem {
@@ -91,7 +95,7 @@ class indice extends clsListagem {
       $this->$var = ($val === "") ? NULL : $val;
     }
 
-    $this->addBanner('http://ieducar.dccobra.com.br/intranet/imagens/nvp_top_intranet.jpg", "http://ieducar.dccobra.com.br/intranet/imagens/nvp_vert_intranet.jpg', 'Intranet');
+    $this->addBanner('imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg', 'Intranet');
 
     $this->addCabecalhos(array(
       'Nome Categoria Nivel'

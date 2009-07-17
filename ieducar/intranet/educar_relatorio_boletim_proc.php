@@ -1,34 +1,43 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php"); 
-require_once( "include/pmieducar/geral.inc.php" );
-require_once ("include/clsPDF.inc.php");
+
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
+
+/**
+ * Boletim de aluno.
+ *
+ * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package     Core
+ * @subpackage  Aluno
+ * @since       Arquivo disponível desde a versão 1.0.0
+ * @version     $Id$
+ */
+
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/clsPDF.inc.php';
+
 
 class clsIndexBase extends clsBase
 {
@@ -108,7 +117,7 @@ class indice extends clsCadastro
 							,"11" => "NOVEMBRO"
 							,"12" => "DEZEMBRO"
 						);
-	
+
 	/****************COLOCADO********************************/
 	var $segue_padrao_escolar = true;
 	var $mostra_cabecalho_modulo = array();
@@ -117,7 +126,7 @@ class indice extends clsCadastro
 
 	function renderHTML()
 	{
-		
+
 		if($_POST){
 			foreach ($_POST as $key => $value) {
 				$this->$key = $value;
@@ -125,12 +134,12 @@ class indice extends clsCadastro
 			}
 		}
 
-		
+
 		@session_start();
 			$this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
-		
-		
+
+
 		if($this->ref_ref_cod_serie)
 			$this->ref_cod_serie = $this->ref_ref_cod_serie;
 
@@ -246,29 +255,29 @@ class indice extends clsCadastro
 
 				if($lst_turma_modulo)
 				{
-					
-					
+
+
 					/****************COLOCADO********************************/
 					$this->segue_padrao_escolar = false;
 					/****************COLOCADO********************************/
-					
+
 					foreach ($lst_turma_modulo as $modulo) {
 
 						$obj_modulo = new clsPmieducarModulo($modulo['ref_cod_modulo']);
 						$det_modulo = $obj_modulo->detalhe();
 						$this->array_modulos[] = $det_modulo;
-						
+
 						/****************COLOCADO********************************/
 						$nm_modulo = substr(strtoupper($det_modulo["nm_tipo"]), 0, 1);
 						/****************COLOCADO********************************/
 					}
-					
+
 					/****************COLOCADO********************************/
 					for ($i = 0; $i < count($this->array_modulos); $i++) {
 						$this->mostra_cabecalho_modulo[$i] = ($i+1)."º".$nm_modulo;
 					}
 					/****************COLOCADO********************************/
-					
+
 				}
 
 				//$obj_disc_serie = new clsPmieducarDisciplinaSerie();
@@ -420,10 +429,10 @@ class indice extends clsCadastro
 							else
 								$det_nota = $obj_nota->lista(null,nul,null,$this->ref_cod_serie,$this->ref_cod_escola,null,$matricula['ref_cod_matricula'],null,null,null,null,null,null,1,null,$disciplina['ref_cod_disciplina']);
 
-								if (is_array($det_nota))						
+								if (is_array($det_nota))
 								usort($det_nota, "cmp");
-								
-							
+
+
 							$obj_dispensa = new clsPmieducarDispensaDisciplina();
 							$matricula_dispensa_disciplina = $obj_dispensa->lista($matricula['ref_cod_matricula'],$this->ref_cod_serie,$this->ref_cod_escola,$disciplina['ref_cod_disciplina'],null,null,null,null,null,null,null,1);
 				    	}
@@ -433,7 +442,7 @@ class indice extends clsCadastro
 						{
 							if(!$det_nota)
 								$det_nota = array();
-							
+
 							for ($ct = count($det_nota);$ct <= count($this->array_modulos);$ct++)
 							{
 								if ($matricula_dispensa_disciplina)
@@ -504,11 +513,11 @@ class indice extends clsCadastro
 
 						if($det_nota){
 							$soma_notas = 0;
-							
+
 							/*********************COLOCADO*****************/
 							$notas_primeiro_regular = array();
 							/*********************COLOCADO*****************/
-							
+
 							foreach ($det_nota as $key => $nota) {
 
 								$obj_tipo_av_val = new clsPmieducarTipoAvaliacaoValores($nota['ref_ref_cod_tipo_avaliacao'],$nota['ref_sequencial'],null,null,null,null);
@@ -556,7 +565,7 @@ class indice extends clsCadastro
 										$nota = "";
 
 									$nota = $dispensas[$key] ? "D" : str_replace(".",",",$nota);
-									
+
 									$this->pdf->escreve_relativo( $nota, $anos_x + 10,$this->page_y + 2, ($incremental/3), $altura, $fonte, 9, $corTexto, 'center' );
 									if($det_curso['falta_ch_globalizada'])
 									{//
@@ -580,7 +589,7 @@ class indice extends clsCadastro
 
 										$this->pdf->escreve_relativo( $this->em_branco?"":"-", $anos_x +$incremental/3+$incremental,$this->page_y + 2, ($incremental/3), $altura, $fonte, 9, $corTexto, 'center' );
 									}
-									
+
 								}
 								else
 								{
@@ -594,12 +603,12 @@ class indice extends clsCadastro
 										$nota = str_replace(".",",",$nota);
 										$nota = $dispensas[$key] ? "D" : $nota;
 										$this->pdf->escreve_relativo($nota/*$det_tipo_av_val['nome']*/, $anos_x +$incremental/3,$this->page_y + 2, ($incremental/3), $altura, $fonte, 9, $corTexto, 'center' );
-								
+
 										/****************COLOCADO*********************/
 										$nota_exame = true;
 										$exame_nota = $det_nota[$key]["nota"];
 										/****************COLOCADO*********************/
-									
+
 									}
 								}
 
@@ -613,23 +622,23 @@ class indice extends clsCadastro
 							/****************COLOCADO*********************/
 							if (!dbBool($det_serie["ultima_nota_define"]))
 							{
-								if (!$nota_exame) 
+								if (!$nota_exame)
 								{
 									$media = $soma_notas / count($det_nota); //soh esta parte eh do codigo original
 									$media_ = $media;
 								}
-								else 
+								else
 								{
 									$media = ($soma_notas + $exame_nota * 2) / (count($det_nota)+1);
 								}
 							}
-							else 
+							else
 							{
 								$media = $soma_notas;
 							}
 //							$nota_exame = false;
 							/****************COLOCADO*********************/
-							
+
 							/****************COLOCADO*********************/
 							$det_media = array();
 							if ($media >= $det_curso['media'] || $nota_exame) {
@@ -644,7 +653,7 @@ class indice extends clsCadastro
 								$media = sprintf("%01.1f",$media);
 								$media = str_replace(".",",",$media);
 							}
-							elseif (dbBool($det_serie["ultima_nota_define"])) 
+							elseif (dbBool($det_serie["ultima_nota_define"]))
 							{
 								$media = sprintf("%01.1f",$media);
 								$media = str_replace(".",",",$media);
@@ -663,7 +672,7 @@ class indice extends clsCadastro
 								else
 									$this->pdf->escreve_relativo( $media, $anos_x +5,$this->page_y + 2, ($incremental/3), $altura, $fonte, 9, $corTexto, 'center' );
 							}
-							else 
+							else
 							{
 								$this->pdf->escreve_relativo( "-", $anos_x +5,$this->page_y + 2, ($incremental/3), $altura, $fonte, 9, $corTexto, 'center' );
 							}
@@ -697,13 +706,13 @@ class indice extends clsCadastro
 							$media_curso_ = $det_curso['media'];
 						else
 							$media_curso_ = $det_curso['media_exame'];
-							
+
 
 //						$sit = (str_replace(",",".",$media_) >= $media_curso_)? "APROVADO" : "REPROVADO";
-						
+
 						$sit = (str_replace(",",".",$media) >= $media_curso_)? "APROVADO" : "REPROVADO";
 						$sit = ($det_matricula['aprovado'] == 3 && str_replace(",",".",$media) >= $media_curso_)? "APROVADO" : $sit;
-						
+
 //						$sit = ($det_matricula['aprovado'] == 3)? "EM ANDAMENTO" : $sit; //original
 						/********COLOCADO****************/
 						if ($det_matricula["aprovado"] != 1 && $det_matricula["aprovado"] != 2)
@@ -771,7 +780,7 @@ class indice extends clsCadastro
 
 			    	$this->desenhaLinhasVertical();
 			    	$sit = "";
-			    	
+
 			    	if($completo)
 			    	{
 			    		if($det_matricula['aprovado'] == 1 )
@@ -990,57 +999,76 @@ class indice extends clsCadastro
 			</center>";
 	}
 
-	function addCabecalho()
-	{
-		// variavel que controla a altura atual das caixas
-		$altura = 10;
-		$fonte = 'arial';
-		$corTexto = '#000000';
-		$espessura_linha = 0.5;
+  function addCabecalho()
+  {
+    /**
+     * Variável global com objetos do CoreExt.
+     * @see includes/bootstrap.php
+     */
+    global $coreExt;
 
-		// cabecalho
-		$this->pdf->quadrado_relativo( 30, $this->page_y, 782, 65,$espessura_linha );
-		$this->pdf->InsertJpng( "gif", "imagens/brasao.gif", 50, $this->page_y + 62, 0.30 );
+    // Namespace de configuração do template PDF
+    $config = $coreExt['Config']->app->template->pdf;
 
-		//titulo principal
-		$this->pdf->escreve_relativo( "PREFEITURA COBRA TECNOLOGIA", 30, $this->page_y + 2, 782, 80, $fonte, 18, $corTexto, 'center' );
+    // Variável que controla a altura atual das caixas
+    $altura          = 10;
+    $fonte           = 'arial';
+    $corTexto        = '#000000';
+    $espessura_linha = 0.5;
 
-		//dados escola
-		$this->pdf->escreve_relativo( "Instituição:  $this->nm_instituicao", 110, $this->page_y + 27, 400, 80, $fonte, 10, $corTexto, 'left' );
-		$this->nm_escola || $this->em_branco? $this->pdf->escreve_relativo( "Escola:  {$this->nm_escola}",127, $this->page_y + 43, 300, 80, $fonte, 10, $corTexto, 'left' ) : NULL;
-		$dif = 0;
-		if($this->nm_professor)
-			$this->pdf->escreve_relativo( "Prof.Regente:  {$this->nm_professor}",111, $this->page_y + 36, 300, 80, $fonte, 7, $corTexto, 'left' );
-		else
-			$dif = 15;
+    // Cabeçalho
+    $logo = $config->get($config->logo, 'imagens/brasao.gif');
 
-		$this->pdf->quadrado_relativo( 30, $this->page_y + 68, 782, 12,$espessura_linha );
-		$this->pdf->quadrado_relativo( 30, $this->page_y + 83, 782, 12,$espessura_linha );
-		$this->pdf->escreve_relativo( "Aluno:  ".$this->nm_aluno,37, $this->page_y + 70, 200, 80, $fonte, 7, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "Matricula:   ".str2upper($this->ref_cod_matricula),222, $this->page_y + 70, 300, 80, $fonte, 7, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "Turma:   ".str2upper($this->nm_turma),300, $this->page_y + 70, 300, 80, $fonte, 7, $corTexto, 'left' );
+    $this->pdf->quadrado_relativo(30, $this->page_y, 782, 65, $espessura_linha);
+    $this->pdf->insertImageScaled('gif', $logo, 50, $this->page_y + 52, 41);
 
+    // Título principal
+    $titulo = $config->get($config->titulo, "i-Educar");
+    $this->pdf->escreve_relativo($titulo, 30,
+      $this->page_y + 2, 782, 80, $fonte, 18, $corTexto, 'center');
 
-		$this->pdf->escreve_relativo( "Curso:  $this->nm_curso",37, $this->page_y + 85, 300, 80, $fonte, 7, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "Ano/Série/Etapa:   ".($this->nm_serie?str2upper($this->nm_serie):$this->ano),200, $this->page_y + 85, 300, 80, $fonte, 7, $corTexto, 'left' );
+    // Dados escola
+    $this->pdf->escreve_relativo("Instituição:  $this->nm_instituicao", 110,
+      $this->page_y + 27, 400, 80, $fonte, 10, $corTexto, 'left');
+    $this->nm_escola || $this->em_branco? $this->pdf->escreve_relativo( "Escola:  {$this->nm_escola}",127, $this->page_y + 43, 300, 80, $fonte, 10, $corTexto, 'left' ) : NULL;
+    $dif = 0;
 
+    if ($this->nm_professor) {
+      $this->pdf->escreve_relativo("Prof.Regente:  {$this->nm_professor}",
+        111, $this->page_y + 36, 300, 80, $fonte, 7, $corTexto, 'left');
+    }
+    else {
+      $dif = 15;
+    }
 
-		//titulo
-		$this->pdf->escreve_relativo( "Boletim Escolar - $this->ano", 30, $this->page_y + 30, 782, 80, $fonte, 12, $corTexto, 'center' );
+    $this->pdf->quadrado_relativo(30, $this->page_y + 68, 782, 12,$espessura_linha);
+    $this->pdf->quadrado_relativo(30, $this->page_y + 83, 782, 12,$espessura_linha);
+    $this->pdf->escreve_relativo("Aluno:  ".$this->nm_aluno,37, $this->page_y + 70,
+      200, 80, $fonte, 7, $corTexto, 'left');
+    $this->pdf->escreve_relativo("Matricula:   ".str2upper($this->ref_cod_matricula),
+      222, $this->page_y + 70, 300, 80, $fonte, 7, $corTexto, 'left');
+    $this->pdf->escreve_relativo("Turma:   ".str2upper($this->nm_turma),300,
+      $this->page_y + 70, 300, 80, $fonte, 7, $corTexto, 'left');
 
-		$obj_modulo = new clsPmieducarModulo($this->ref_cod_modulo);
-		$det_modulo = $obj_modulo->detalhe();
-		//Data
+    $this->pdf->escreve_relativo("Curso:  $this->nm_curso",37, $this->page_y + 85,
+      300, 80, $fonte, 7, $corTexto, 'left');
+    $this->pdf->escreve_relativo("Ano/Série/Etapa:   " . ($this->nm_serie ? str2upper($this->nm_serie) : $this->ano),
+      200, $this->page_y + 85, 300, 80, $fonte, 7, $corTexto, 'left');
 
+    // Título
+    $this->pdf->escreve_relativo("Boletim Escolar - $this->ano", 30,
+      $this->page_y + 30, 782, 80, $fonte, 12, $corTexto, 'center');
 
+    $obj_modulo = new clsPmieducarModulo($this->ref_cod_modulo);
+    $det_modulo = $obj_modulo->detalhe();
 
+    // Data
+    $this->pdf->escreve_relativo("Data de Emissão: " . date("d/m/Y"), 700,
+      $this->page_y + 50, 535, 80, $fonte, 8, $corTexto, 'left');
+    $this->page_y +=100;
+    $this->novoCabecalho();
+  }
 
-
-	    $this->pdf->escreve_relativo( "Data de Emissão: ".date("d/m/Y"), 700, $this->page_y + 50, 535, 80, $fonte, 8, $corTexto, 'left' );
-    	$this->page_y +=100;
-	    $this->novoCabecalho();
-
-	}
 
 	function desenhaLinhasVertical()
 	{
@@ -1102,7 +1130,7 @@ class indice extends clsCadastro
 		$this->pdf->linha_relativa(660,$this->page_y+18,130,0,0.4);
 	}
 
-	function Editar() 
+	function Editar()
 	{
 		return false;
 	}
@@ -1112,107 +1140,128 @@ class indice extends clsCadastro
 		return false;
 	}
 
-	function novoCabecalho()
-	{
-		$altura2 = 300;
-		$altura = 50;
-		$espessura_linha = 0.5;
-		$expande = 24;
-
-		$fonte = 'arial';
-		$corTexto = '#000000';
-
-		$inicio_escrita_y = $this->page_y;
-
-		$this->pdf->linha_relativa(30,$this->page_y ,782,0,$espessura_linha);
-		$this->pdf->escreve_relativo( 'Disciplina', 110,$this->page_y , 50, $altura, $fonte, 9, $corTexto, 'left' );
-
-		$this->pdf->linha_relativa(30,$this->page_y,0,25,$espessura_linha);
-
-		//$this->pdf->linha_relativa(209,$this->page_y + 12,604,0,$espessura_linha);
-		//$this->pdf->linha_relativa(209,$this->page_y - 29,604,0,$espessura_linha);
-
-		$largura_anos = 605;
+  public function novoCabecalho()
+  {
 
 
-		if(sizeof($this->array_modulos)  + $this->curso_com_exame + 2 /*situacao*/ >= 1)
-		{
+    $altura2         = 300;
+    $altura          = 50;
+    $espessura_linha = 0.5;
+    $expande         = 24;
 
-			$incremental = (int)ceil($largura_anos/ (sizeof($this->array_modulos) + $this->curso_com_exame + 2 /*situacao*/));
+    $fonte    = 'arial';
+    $corTexto = '#000000';
 
-		}else {
+    $inicio_escrita_y = $this->page_y;
 
-			$incremental = 1;
-		}
+    $this->pdf->linha_relativa(30,$this->page_y ,782,0,$espessura_linha);
+    $this->pdf->escreve_relativo( 'Disciplina', 110,$this->page_y , 50, $altura, $fonte, 9, $corTexto, 'left' );
 
-		$reta_ano_x = 209 ;
-		$anos_x = 209;
+    $this->pdf->linha_relativa(30,$this->page_y,0,25,$espessura_linha);
 
-		$ct = 0;
-
-		$num_modulo = 1;
-		foreach ($this->array_modulos as $key => $modulo)
-		{
-			$this->pdf->escreve_relativo($num_modulo++."º ".$modulo['nm_tipo'], $anos_x ,$inicio_escrita_y + 1, $incremental, $altura, $fonte, 9, $corTexto, 'center' );
-
-			//medias
-			$this->pdf->escreve_relativo( 'Nota', $anos_x + 8,$inicio_escrita_y + 12, ($incremental/3), $altura, $fonte, 9, $corTexto, 'center' );
-			$this->pdf->escreve_relativo( 'Faltas', $anos_x +($incremental/2)+ 8,$inicio_escrita_y + 12, ($incremental/3), $altura, $fonte, 9, $corTexto, 'center' );
-
-			$anos_x += $incremental;
-			$reta_ano_x += $incremental;
-
-			$ct++;
-		}
-		if($this->curso_com_exame)
-		{
-			$this->pdf->escreve_relativo("Exame Final", $anos_x + 5,$inicio_escrita_y + 4, $incremental, $altura, $fonte, 9, $corTexto, 'center' );
-			$anos_x += $incremental;
-			$reta_ano_x += $incremental;
-			//medias
-
-		}
-		$this->pdf->escreve_relativo("Resultado Final", $anos_x +2,$inicio_escrita_y +1, $incremental, $altura, $fonte, 9, $corTexto, 'center' );
-		//medias
-		$this->pdf->escreve_relativo( 'Nota', $anos_x + 15,$inicio_escrita_y + 12, ($incremental/3), $altura, $fonte, 9, $corTexto, 'center' );
-
-		$this->pdf->escreve_relativo( 'Faltas', $anos_x +($incremental/2)+ 15,$inicio_escrita_y + 12, ($incremental/3), $altura, $fonte, 9, $corTexto, 'center' );
-
-		$this->pdf->escreve_relativo("Situação", $anos_x + $incremental+5,$inicio_escrita_y + 4, $incremental, $altura, $fonte, 9, $corTexto, 'center' );
-
-		$this->page_y +=25;
-
-	}
-
-	function addCabecalhoc()
-	{
-		// variavel que controla a altura atual das caixas
-		$altura = 30;
-		$fonte = 'arial';
-		$corTexto = '#000000';
-
-		// cabecalho
-		$this->pdf->quadrado_relativo( 30, $altura, 535, 85 );
-		$this->pdf->InsertJpng( "gif", "imagens/brasao.gif", 50, 95, 0.30 );
-
-		//titulo principal
-		$this->pdf->escreve_relativo( "PREFEITURA COBRA TECNOLOGIA", 30, 30, 535, 80, $fonte, 18, $corTexto, 'center' );
-
-		//dados escola
-		$this->pdf->escreve_relativo( "Instituição:".str2upper($this->nm_instituicao), 120, 50, 300, 80, $fonte, 10, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "Escola:".str2upper($this->nm_escola),136, 62, 380, 80, $fonte, 10, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "Curso:".str2upper($this->nm_curso)."                     Turma:".str2upper($this->nm_turma),136, 74, 500, 80, $fonte, 10, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "Aluno:".str2upper($this->nm_aluno),136, 86, 300, 80, $fonte, 10, $corTexto, 'left' );
-
-		//titulo
-		$this->pdf->escreve_relativo( "B O L E T I M  E S C O L A R", 30, 98, 535, 80, $fonte, 14, $corTexto, 'center' );
-
-		//Data
-		$mes = date('n');
-		//$this->pdf->escreve_relativo( "{$this->meses_do_ano[$mes]}", 45, 100, 535, 80, $fonte, 10, $corTexto, 'left' );
+    $largura_anos = 605;
 
 
-	}
+    if (sizeof($this->array_modulos)  + $this->curso_com_exame + 2 >= 1) {
+      $incremental = (int) ceil($largura_anos / (sizeof($this->array_modulos) + $this->curso_com_exame + 2));
+    }
+    else {
+      $incremental = 1;
+    }
+
+    $reta_ano_x = 209 ;
+    $anos_x = 209;
+
+    $ct = 0;
+
+    $num_modulo = 1;
+
+    foreach ($this->array_modulos as $key => $modulo) {
+      $this->pdf->escreve_relativo($num_modulo++."º ".$modulo['nm_tipo'], $anos_x ,$inicio_escrita_y + 1, $incremental, $altura, $fonte, 9, $corTexto, 'center' );
+
+      // Médias
+      $this->pdf->escreve_relativo('Nota', $anos_x + 8, $inicio_escrita_y + 12,
+        ($incremental / 3), $altura, $fonte, 9, $corTexto, 'center');
+      $this->pdf->escreve_relativo('Faltas', $anos_x +($incremental / 2) + 8,
+        $inicio_escrita_y + 12, ($incremental / 3), $altura, $fonte, 9,
+        $corTexto, 'center');
+
+      $anos_x     += $incremental;
+      $reta_ano_x += $incremental;
+
+      $ct++;
+    }
+
+    if ($this->curso_com_exame) {
+      $this->pdf->escreve_relativo('Exame Final', $anos_x + 5,
+        $inicio_escrita_y + 4, $incremental, $altura, $fonte, 9, $corTexto, 'center');
+      $anos_x     += $incremental;
+      $reta_ano_x += $incremental;
+    }
+
+    $this->pdf->escreve_relativo('Resultado Final', $anos_x + 2,
+      $inicio_escrita_y + 1, $incremental, $altura, $fonte, 9, $corTexto, 'center');
+
+    // Médias
+    $this->pdf->escreve_relativo('Nota', $anos_x + 15, $inicio_escrita_y + 12,
+      ($incremental / 3), $altura, $fonte, 9, $corTexto, 'center');
+
+    $this->pdf->escreve_relativo('Faltas', $anos_x + ($incremental / 2) + 15,
+      $inicio_escrita_y + 12, ($incremental / 3), $altura, $fonte, 9,
+      $corTexto, 'center');
+
+    $this->pdf->escreve_relativo('Situação', $anos_x + $incremental + 5,
+      $inicio_escrita_y + 4, $incremental, $altura, $fonte, 9, $corTexto, 'center');
+
+    $this->page_y +=25;
+  }
+
+
+  public function addCabecalhoc()
+  {
+    /**
+     * Variável global com objetos do CoreExt.
+     * @see includes/bootstrap.php
+     */
+    global $coreExt;
+
+    // Namespace de configuração do template PDF
+    $config = $coreExt['Config']->app->template->pdf;
+
+    // Variável que controla a altura atual das caixas
+    $altura = 30;
+    $fonte = 'arial';
+    $corTexto = '#000000';
+
+    // Cabeçalho
+    $logo = $config->get($config->logo, 'imagens/brasao.gif');
+
+    $this->pdf->quadrado_relativo( 30, $altura, 535, 85 );
+    $this->pdf->insertImageScaled('gif', $logo, 50, 95, 41);
+
+    // Título principal
+    $titulo = $config->get($config->titulo, "i-Educar");
+    $this->pdf->escreve_relativo($titulo, 30, 30, 535, 80, $fonte, 18,
+      $corTexto, 'center');
+
+    // Dados escola
+    $this->pdf->escreve_relativo("Instituição:".str2upper($this->nm_instituicao),
+      120, 50, 300, 80, $fonte, 10, $corTexto, 'left');
+    $this->pdf->escreve_relativo("Escola:".str2upper($this->nm_escola),136, 62,
+      380, 80, $fonte, 10, $corTexto, 'left');
+    $this->pdf->escreve_relativo("Curso:".str2upper($this->nm_curso)."                     Turma:" . str2upper($this->nm_turma),
+      136, 74, 500, 80, $fonte, 10, $corTexto, 'left');
+    $this->pdf->escreve_relativo("Aluno:".str2upper($this->nm_aluno), 136, 86,
+      300, 80, $fonte, 10, $corTexto, 'left');
+
+    // Título
+    $this->pdf->escreve_relativo("B O L E T I M  E S C O L A R", 30, 98, 535,
+      80, $fonte, 14, $corTexto, 'center');
+
+    // Data
+    $mes = date('n');
+  }
+
 
 	function addCabecalhoc2()
 	{

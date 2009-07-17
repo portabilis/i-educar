@@ -1,35 +1,43 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-require_once ("include/clsPDF.inc.php");
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
+
+/**
+ * Relatório sintético de alunos matriculados.
+ *
+ * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package     Core
+ * @subpackage  Relatório
+ * @since       Arquivo disponível desde a versão 1.0.0
+ * @version     $Id$
+ */
+
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/clsPDF.inc.php';
+
 
 class clsIndexBase extends clsBase
 {
@@ -94,7 +102,7 @@ class indice extends clsCadastro
 							,"11" => "NOVEMBRO"
 							,"12" => "DEZEMBRO"
 						);
-						
+
 	var $is_padrao;
 	var $semestre;
 	var $escola_sem_avaliacao;
@@ -108,11 +116,11 @@ class indice extends clsCadastro
 
 			}
 		}
-		
+
 		@session_start();
 			$this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
-		
+
 		if($this->ref_ref_cod_serie)
 			$this->ref_cod_serie = $this->ref_ref_cod_serie;
 
@@ -126,12 +134,12 @@ class indice extends clsCadastro
 		} else {
 			$this->escola_sem_avaliacao = null;
 		}
-		
+
 		$obj_escola_instituicao = new clsPmieducarEscola();
 		$lst_escola_instituicao = $obj_escola_instituicao->lista($this->ref_cod_escola, null, null, $this->ref_cod_instituicao, null, null, null, null, null, null,1, null, $this->escola_sem_avaliacao);
 
 		$this->pdf = new clsPDF("Alunos Matriculados - Sintético - {$this->ano}", "Alunos Matriculados - Sintético", "A4", "", false, false);
-		
+
 		if ($this->is_padrao || $this->ano == 2007)
 		{
 			$this->semestre = null;
@@ -140,36 +148,36 @@ class indice extends clsCadastro
 		{
 			foreach ($lst_escola_instituicao as $escola)
 			{
-	
+
 				$page_open = false;
-	
+
 				$this->ref_cod_escola = $escola['cod_escola'];
-	
+
 				if($this->ref_cod_escola){
-	
+
 					$obj_escola = new clsPmieducarEscola($this->ref_cod_escola);
 					$det_escola = $obj_escola->detalhe();
 					$this->nm_escola = $det_escola['nome'];
-	
+
 					$obj_instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
 					$det_instituicao = $obj_instituicao->detalhe();
 					$this->nm_instituicao = $det_instituicao['nm_instituicao'];
-	
+
 					if($det_escola['ref_idpes'])
 					{
 						$obj_endereco_escola = new clsEndereco($det_escola['ref_idpes']);
 						$det_enderedo_escola = $obj_endereco_escola->detalhe();
-	
+
 						$this->nm_localidade = $this->nm_municipio = $det_enderedo_escola['cidade'];
-	
+
 						if(!$det_enderedo_escola)
 						{
 							$obj_endereco_externo_escola = new clsEnderecoExterno($det_escola['ref_idpes']);
 							$det_enderedo_externo_escola = $obj_endereco_externo_escola->detalhe();
-	
+
 							$this->nm_localidade = $this->nm_municipio = $det_enderedo_externo_escola['cidade'];
 						}
-	
+
 					}
 					else
 					{
@@ -177,51 +185,51 @@ class indice extends clsCadastro
 						$det_escola_complemento = $obj_escola_complemento->detalhe();
 						$this->nm_localidade	= $this->nm_municipio = $det_escola_complemento['municipio'];
 					}
-	
+
 				}
-	
+
 				$total_geral_escola_nao_enturmado_feminino  = 0;
 				$total_geral_escola_nao_enturmado_masculino = 0;
-	
+
 				$total_geral_escola_enturmado_feminino  = 0;
 				$total_geral_escola_enturmado_masculino = 0;
-	
+
 				$obj_cursos = new clsPmieducarCurso();
 				$obj_cursos->setOrderby("cod_curso asc");
 				$lst_cursos = $obj_cursos->lista($this->ref_cod_curso, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, $this->ref_cod_instituicao );
-				
+
 				if($lst_cursos)
 				{
-	
+
 					foreach ($lst_cursos as $curso)
 					{
-	
+
 						$obj_serie_curso = new clsPmieducarSerie();
 						$obj_serie_curso->setOrderby('etapa_curso asc');
 						$lst_serie_curso = $obj_serie_curso->lista($this->ref_cod_serie, null, null, $curso['cod_curso'], null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao, null, null, null, $this->ref_cod_escola );
-	
+
 						$existe_matriculas = false;
-	
+
 						if($lst_serie_curso)
 						{
-	
+
 							$total = 0;
 							foreach ($lst_serie_curso as $key_serie => $serie)
 							{
-	
+
 								$obj_turmas = new clsPmieducarTurma();
 								$lst_turmas = $obj_turmas->lista(null, null, null, $serie['cod_serie'], $escola['cod_escola'], null, null, null, null, null, null, null, null, null, 1, null,      null, null, null, null,
 																 null, null, null, null, null, null, null, null, null, null, null, true);
-								
+
 								if (!$lst_turmas)
 								{
 									$obj_turmas = new clsPmieducarTurma();
 									$lst_turmas = $obj_turmas->lista(null, null, null, null,null, null, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null, null, null, null ,null, null, null, $escola['cod_escola'], $serie['cod_serie']);
 								}
-								
+
 								if($lst_turmas)
 								{
-	
+
 									if(!$page_open)
 									{
 										$x_quadrado = 30;
@@ -230,22 +238,22 @@ class indice extends clsCadastro
 										$this->pdf->OpenPage();
 										$this->addCabecalho();
 										$this->addCabecalho2();
-	
+
 										$page_open = true;
 									}
-	
-	
+
+
 									$existe_matriculas = true;
-	
+
 									$total_enturmados_turma_masculino = 0;
 									$total_enturmados_turma_feminino  = 0;
-	
+
 									$total_nao_enturmados_turma_masculino = 0;
 									$total_nao_enturmados_turma_feminino  = 0;
-	
+
 									foreach ($lst_turmas as $key_turma => $turma)
 									{
-	
+
 										if($turma['hora_inicial'])
 										{
 											if($turma['hora_inicial'] <= '12:00')
@@ -255,9 +263,9 @@ class indice extends clsCadastro
 											else
 												$turno = 'Noturno';
 										}
-	
+
 										$this->pdf->quadrado_relativo( $x_quadrado, $this->page_y, 535, $altura_caixa );
-	
+
 										$this->pdf->escreve_relativo( "{$escola['cod_escola']}", 25, $this->page_y + 5, 45, $altura_caixa, $fonte, 8, $corTexto, 'center' );
 										$this->pdf->linha_relativa( 60, $this->page_y , 0, $altura_caixa, '0.1');
 										$this->pdf->escreve_relativo( "{$curso['nm_curso']}", 67, $this->page_y + 5, 258, $altura_caixa, $fonte, 8, $corTexto, 'left' );
@@ -266,55 +274,55 @@ class indice extends clsCadastro
 										$this->pdf->linha_relativa( 320, $this->page_y , 0, $altura_caixa, '0.1');
 										$this->pdf->escreve_relativo( "{$turno}", 323, $this->page_y + 5, 258, $altura_caixa, $fonte, 8, $corTexto, 'left' );
 										$this->pdf->linha_relativa( 360, $this->page_y , 0, $altura_caixa, '0.1');
-	
-																			
+
+
 										$obj_matriculas_turma = new clsPmieducarMatriculaTurma();
 										$lst_matriculas_turma = $obj_matriculas_turma->lista(null, $turma['cod_turma'], null, null, null, null, null, null, 1, $serie['cod_serie'], $curso['cod_curso'], $escola['cod_escola'], $this->ref_cod_instituicao, null, null, array(1,2,3), null, null, $this->ano, null, null, null, 1, true, null, null, null, null, $this->semestre);
-	
+
 										$enturmados_turma_masculino = 0;
 										$enturmados_turma_feminino  = 0;
-	
+
 										if($lst_matriculas_turma)
 										{
 											$total_enturmados_turma_geral =  count($lst_matriculas_turma);
-											
+
 											//aqui verificar aluno que estao na multiseriada
-											
+
 											foreach ($lst_matriculas_turma as $matricula)
 											{
 												$obj_matricula = new clsPmieducarMatricula($matricula['ref_cod_matricula']);
 												$det_matricula = $obj_matricula->detalhe();
-	
+
 												$obj_aluno = new clsPmieducarAluno($det_matricula['ref_cod_aluno']);
 												$det_aluno = $obj_aluno->detalhe();
-	
+
 												$obj_pessoa = new clsFisica($det_aluno['ref_idpes']);
 												$det_pessoa = $obj_pessoa->detalhe();
-	
+
 												/**
 												 * verifica se o aluno possui transferencia
 												 * e nao exibe na enturmacao
 												 */
 												//$obj_transf = new clsPmieducarTransferenciaSolicitacao();
 												//$lst_transf = $obj_transf->lista(null,null,null,null,null,$matricula['ref_cod_matricula'],null,null,null,null,null,null,null,null,null,null,$this->ref_cod_escola,$this->ref_ref_cod_serie);
-	
+
 												//if($lst_transf)
 												//	continue;
-	
+
 												if( strtoupper($det_pessoa['sexo']) == 'M')
 													$enturmados_turma_masculino++;
 												else
 													$enturmados_turma_feminino++;
 											}
-	
+
 										}
-	
+
 										$total_enturmados_turma_masculino += $enturmados_turma_masculino;
 										$total_enturmados_turma_feminino  += $enturmados_turma_feminino;
-	
+
 										$total_geral_escola_enturmado_masculino += $enturmados_turma_masculino;
 										$total_geral_escola_enturmado_feminino  += $enturmados_turma_feminino;
-	
+
 										/***************************INVERTIDO ABAIXO*******************************************************/
 										//enturmados
 										/*$this->pdf->escreve_relativo( "{$enturmados_turma_feminino}", 355, $this->page_y + 5 , 40, $altura_caixa, $fonte, 8, $corTexto, 'center' );
@@ -322,15 +330,15 @@ class indice extends clsCadastro
 										$this->pdf->escreve_relativo( "{$enturmados_turma_masculino}", 355, $this->page_y + 5 , 40, $altura_caixa, $fonte, 8, $corTexto, 'center' );
 										$this->pdf->escreve_relativo( "{$enturmados_turma_feminino}", 385, $this->page_y + 5 , 40, $altura_caixa, $fonte, 8, $corTexto, 'center' );
 										/**************************************************************************************************/
-										
+
 										$this->pdf->escreve_relativo($enturmados_turma_masculino + $enturmados_turma_feminino, 425, $this->page_y + 5, 30, $altura_caixa, $fonte, 8, $corTexto, 'center' );
 										$this->pdf->linha_relativa( 460, $this->page_y , 0, $altura_caixa, '0.1');
-	
+
 										$this->pdf->linha_relativa( 390, $this->page_y, 0, $altura_caixa, '0.1');
-	
+
 										$this->pdf->linha_relativa( 420, $this->page_y , 0, $altura_caixa, '0.1');
-	
-	
+
+
 										//$obj_matriculas = new clsPmieducarMatricula();
 	//									$lst_matriculas = $obj_matriculas->lista(null, null, $escola['cod_escola'], $serie['cod_serie'], null, null, null, null, null, null, null, null, 1, $this->ano, $curso['cod_curso'], $this->ref_cod_instituicao );
 										if(!$executou)
@@ -343,52 +351,52 @@ class indice extends clsCadastro
 											{
 												foreach ($lst_nao_enturmados as $matricula)
 												{
-	
+
 													////$obj_aluno = new clsPmieducarAluno($matricula['ref_cod_aluno']);
 													//$det_aluno = $obj_aluno->detalhe();
-	
+
 													//$obj_pessoa = new clsFisica($det_aluno['ref_idpes']);
 													//$det_pessoa = $obj_pessoa->detalhe();
-	
+
 													if( strtoupper($matricula['sexo']) == 'M')
 														$total_nao_enturmados_turma_masculino++;
 													else
 														$total_nao_enturmados_turma_feminino++;
-	
+
 												}
-	
+
 											}
 										}
-	
+
 										if($this->page_y + $altura_caixa >= 800)
 										{
-	
+
 											$this->page_y = 80;
-	
+
 											$this->pdf->ClosePage();
 											$this->pdf->OpenPage();
-	
+
 											$page_open = true;
-	
+
 											$this->addCabecalho();
-	
+
 											$this->addCabecalho2();
-	
-	
+
+
 										}
-	
+
 										$this->page_y += $altura_caixa;
 									}
-	
+
 									if($key_serie < count($lst_serie_curso) )
 									{
 										$mult = count($lst_turmas);
-	
+
 										$centraliza = ($altura_caixa * ($mult + 1)) / 2;
-	
+
 										$this->pdf->quadrado_relativo( 460, $this->page_y - $altura_caixa * $mult , 105, $altura_caixa * $mult );
 										$this->pdf->linha_relativa( 498, $this->page_y - $altura_caixa * $mult, 0, $altura_caixa * ($mult ), '0.1');
-	
+
 										//nao enturmados
 										$total_geral_escola_nao_enturmado_feminino += $tot_fem = $total_nao_enturmados_turma_feminino ;
 										$total_geral_escola_nao_enturmado_masculino += $tot_masc = $total_nao_enturmados_turma_masculino ;
@@ -398,28 +406,28 @@ class indice extends clsCadastro
 										$this->pdf->escreve_relativo( $tot_masc , 463, $this->page_y + 5 - $centraliza , 35, $altura_caixa, $fonte, 8, $corTexto, 'center' );
 										$this->pdf->escreve_relativo( $tot_fem, 500, $this->page_y + 5 - $centraliza, 35, $altura_caixa, $fonte, 8, $corTexto, 'center' );
 										/***************************************************************************************/
-										
+
 										$this->pdf->linha_relativa( 538, $this->page_y - $altura_caixa * $mult, 0, $altura_caixa * $mult, '0.1');
 										$this->pdf->escreve_relativo( $tot_fem + $tot_masc, 530, $this->page_y + 5 - $centraliza , 40, $altura_caixa, $fonte, 8, $corTexto, 'center' );
 									}
-	
+
 								}
-	
+
 							}
 						}
 					}
-						
+
 				}
-	
-				
+
+
 				if($page_open)
-				{		
-					
+				{
+
 					//total geral
 					$this->pdf->quadrado_relativo( 320, $this->page_y , 40, $altura_caixa);
 					$this->pdf->escreve_relativo( "TOTAL", 327, $this->page_y + 5, 258, $altura_caixa, $fonte, 9, $corTexto, 'left' );
 					$this->pdf->quadrado_relativo( 360, $this->page_y , 205, $altura_caixa);
-					
+
 					/***************************************INVERTIDO******************************************/
 					//enturmados
 					/*$this->pdf->escreve_relativo( "{$total_geral_escola_enturmado_feminino}", 355, $this->page_y + 5 , 40, $altura_caixa, $fonte, 8, $corTexto, 'center' );
@@ -427,16 +435,16 @@ class indice extends clsCadastro
 					$this->pdf->escreve_relativo( "{$total_geral_escola_enturmado_masculino}", 355, $this->page_y + 5 , 40, $altura_caixa, $fonte, 8, $corTexto, 'center' );
 					$this->pdf->escreve_relativo( "{$total_geral_escola_enturmado_feminino}", 385, $this->page_y + 5 , 40, $altura_caixa, $fonte, 8, $corTexto, 'center' );
 					/******************************************************************************************/
-					
+
 					$this->pdf->escreve_relativo($total_geral_escola_enturmado_feminino + $total_geral_escola_enturmado_masculino, 425, $this->page_y + 5, 30, $altura_caixa, $fonte, 8, $corTexto, 'center' );
 					$this->pdf->linha_relativa( 460, $this->page_y , 0, $altura_caixa, '0.1');
-	
+
 					$this->pdf->linha_relativa( 390, $this->page_y, 0, $altura_caixa, '0.1');
-	
+
 					$this->pdf->linha_relativa( 420, $this->page_y , 0, $altura_caixa, '0.1');
-	
+
 					$this->pdf->linha_relativa( 498, $this->page_y , 0, $altura_caixa , '0.1');
-	
+
 					/***************************************INVERTIDO******************************************/
 					//nao enturmados
 					/*$this->pdf->escreve_relativo( "$total_geral_escola_nao_enturmado_feminino", 463, $this->page_y + 5 , 35, $altura_caixa, $fonte, 8, $corTexto, 'center' );
@@ -444,33 +452,33 @@ class indice extends clsCadastro
 					$this->pdf->escreve_relativo( "$total_geral_escola_nao_enturmado_masculino", 463, $this->page_y + 5 , 35, $altura_caixa, $fonte, 8, $corTexto, 'center' );
 					$this->pdf->escreve_relativo( "$total_geral_escola_nao_enturmado_feminino", 500, $this->page_y + 5, 35, $altura_caixa, $fonte, 8, $corTexto, 'center' );
 					/******************************************************************************************/
-					
+
 					$this->pdf->linha_relativa( 538, $this->page_y , 0, $altura_caixa , '0.1');
 					$this->pdf->escreve_relativo( $total_geral_escola_nao_enturmado_masculino + $total_geral_escola_nao_enturmado_feminino, 530, $this->page_y + 5 , 40, $altura_caixa, $fonte, 8, $corTexto, 'center' );
-	
+
 					if($page_open && $existe_matriculas)
 					{
 						$this->pdf->ClosePage();
 						$page_open = false;
 					}
 				}
-				
+
 			}
-			
+
 			$this->pdf->CloseFile();
 			$this->get_link = $this->pdf->GetLink();
-	
+
 			echo "<script>window.onload=function(){parent.EscondeDiv('LoadImprimir');window.location='download.php?filename=".$this->get_link."'}</script>";
-	
+
 			echo "<html><center>Se o download não iniciar automaticamente <br /><a target='_blank' href='" . $this->get_link  . "' style='font-size: 16px; color: #000000; text-decoration: underline;'>clique aqui!</a><br><br>
 				<span style='font-size: 10px;'>Para visualizar os arquivos PDF, é necessário instalar o Adobe Acrobat Reader.<br>
-	
+
 				Clique na Imagem para Baixar o instalador<br><br>
 				<a href=\"http://www.adobe.com.br/products/acrobat/readstep2.html\" target=\"new\"><br><img src=\"imagens/acrobat.gif\" width=\"88\" height=\"31\" border=\"0\"></a>
 				</span>
 				</center>";
 		}
-		else 
+		else
 		{
 				echo "<script>window.onload=function(){parent.EscondeDiv('LoadImprimir');}</script>";
 				echo "<script>
@@ -480,36 +488,52 @@ class indice extends clsCadastro
 		}
 	}
 
-	function addCabecalho()
-	{
-		// variavel que controla a altura atual das caixas
-		$altura = 30;
-		$fonte = 'arial';
-		$corTexto = '#000000';
+  public function addCabecalho()
+  {
+    /**
+     * Variável global com objetos do CoreExt.
+     * @see includes/bootstrap.php
+     */
+    global $coreExt;
 
-		// cabecalho
-		$this->pdf->quadrado_relativo( 30, $altura, 535, 85 );
-		$this->pdf->InsertJpng( "gif", "imagens/brasao.gif", 50, 95, 0.30 );
+    // Namespace de configuração do template PDF
+    $config = $coreExt['Config']->app->template->pdf;
 
-		//titulo principal
-		$this->pdf->escreve_relativo( "PREFEITURA COBRA TECNOLOGIA", 30, 30, 535, 80, $fonte, 18, $corTexto, 'center' );
+    // Variável que controla a altura atual das caixas
+    $altura   = 30;
+    $fonte    = 'arial';
+    $corTexto = '#000000';
 
+    // Cabeçalho
+    $logo = $config->get($config->logo, 'imagens/brasao.gif');
 
-		$this->pdf->escreve_relativo( date("d/m/Y"), 500, 30, 100, 80, $fonte, 12, $corTexto, 'left' );
+    $this->pdf->quadrado_relativo(30, $altura, 535, 85);
+    $this->pdf->insertImageScaled('gif', $logo, 50, 95, 41);
 
-		//dados escola
-		$this->pdf->escreve_relativo( "Instituição:$this->nm_instituicao", 120, 58, 300, 80, $fonte, 10, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "Escola:{$this->nm_escola}",136, 70, 300, 80, $fonte, 10, $corTexto, 'left' );
+    // Título principal
+    $titulo = $config->get($config->titulo, "i-Educar");
+    $this->pdf->escreve_relativo($titulo, 30, 30, 535, 80,
+      $fonte, 18, $corTexto, 'center');
 
-		//titulo
-		$this->pdf->escreve_relativo( "Alunos Matriculados - Sintético", 30, 85, 535, 80, $fonte, 14, $corTexto, 'center' );
+    $this->pdf->escreve_relativo(date("d/m/Y"), 500, 30, 100, 80, $fonte, 12,
+      $corTexto, 'left');
 
-		//Data
-		$mes = date('n');
-		$this->pdf->escreve_relativo( "{$this->meses_do_ano[$mes]}/{$this->ano}", 45, 100, 535, 80, $fonte, 10, $corTexto, 'left' );
+    // Dados escola
+    $this->pdf->escreve_relativo("Instituição:$this->nm_instituicao", 120, 58,
+      300, 80, $fonte, 10, $corTexto, 'left');
+    $this->pdf->escreve_relativo("Escola:{$this->nm_escola}",136, 70, 300, 80,
+      $fonte, 10, $corTexto, 'left' );
 
+    // Título
+    $this->pdf->escreve_relativo("Alunos Matriculados - Sintético", 30, 85, 535,
+      80, $fonte, 14, $corTexto, 'center');
 
-	}
+    // Data
+    $mes = date('n');
+    $this->pdf->escreve_relativo("{$this->meses_do_ano[$mes]}/{$this->ano}",
+      45, 100, 535, 80, $fonte, 10, $corTexto, 'left');
+  }
+
 
 	function addCabecalho2()
 	{

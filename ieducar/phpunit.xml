@@ -1,0 +1,8 @@
+<?xml version='1.0'?>
+
+<!--
+  - Configurações do PHPUnit.
+  -->
+
+<phpunit colors='true'>
+</phpunit>

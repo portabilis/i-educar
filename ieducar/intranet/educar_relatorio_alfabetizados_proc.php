@@ -1,45 +1,54 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-require_once ("include/clsPDF.inc.php");
+
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
+
+/**
+ * Relatório de alfabetizados.
+ *
+ * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package     Core
+ * @subpackage  Relatório
+ * @since       Arquivo disponível desde a versão 1.0.0
+ * @version     $Id$
+ */
+
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/clsPDF.inc.php';
+
 
 class clsIndexBase extends clsBase
 {
-	function Formular()
-	{
-		$this->SetTitulo( "Prefeitura de Itaja&iacute; - i-Educar - Movimentação Mensal de Alunos" );
-		$this->processoAp = "930";
-		$this->renderMenu = false;
-		$this->renderMenuSuspenso = false;
-	}
+  public function Formular() {
+    $this->SetTitulo($this->_instituicao . 'Movimentação Mensal de Alunos');
+    $this->processoAp = '930';
+    $this->renderMenu = FALSE;
+    $this->renderMenuSuspenso = FALSE;
+  }
 }
+
 
 class indice extends clsCadastro
 {
@@ -91,7 +100,7 @@ class indice extends clsCadastro
 						);
 
 	var $total_dias_uteis;
-	
+
 	var $ref_ref_cod_serie;
 	var $ref_cod_turma;
 
@@ -151,9 +160,9 @@ class indice extends clsCadastro
 						(SELECT to_char(data_nasc,'DD/MM/YYYY') FROM cadastro.fisica f
 							WHERE a.cod_aluno = m.ref_cod_aluno AND a.ref_idpes = f.idpes) as dt_nasc,
 						a.cod_aluno, a.analfabeto, s.nm_serie,c.nm_curso,t.nm_turma
-						FROM pmieducar.matricula m, pmieducar.curso c, 
+						FROM pmieducar.matricula m, pmieducar.curso c,
 							pmieducar.matricula_turma mt, pmieducar.aluno a,
-							pmieducar.serie s, pmieducar.turma t WHERE 
+							pmieducar.serie s, pmieducar.turma t WHERE
 							m.ano = {$this->ano}
 							AND s.cod_serie = m.ref_ref_cod_serie
 							AND a.cod_aluno = m.ref_cod_aluno
@@ -162,16 +171,16 @@ class indice extends clsCadastro
 							AND m.ref_cod_curso = c.cod_curso
 							AND c.ref_cod_instituicao = 1
 							AND mt.ref_cod_matricula = m.cod_matricula
-							AND mt.ativo = 1 
+							AND mt.ativo = 1
 							AND mt.ref_cod_turma = t.cod_turma
 							AND m.aprovado IN (1,2,3)
 							AND (m.data_cadastro <= '{$ultimoDiaMes}' OR (
-									a.data_exclusao >= '{$primeiroDiaDoMes}' AND 
+									a.data_exclusao >= '{$primeiroDiaDoMes}' AND
 									a.data_exclusao <= '{$ultimoDiaMes}')
 								)
 							{$sql}
 						ORDER BY m.ref_cod_curso, m.ref_ref_cod_serie, mt.ref_cod_turma, nome";
-			
+
 //			AND (m.data_cadastro <= '2008-02-29 23:59:59' OR (
 //a.data_exclusao >= '2008-02-01 23:59:59' AND a.data_exclusao <= '2008-02-29 23:59:59')
 //)
@@ -434,19 +443,19 @@ class indice extends clsCadastro
 
 				$this->pdf->CloseFile();
 				$this->get_link = $this->pdf->GetLink();
-		
-		
+
+
 				echo "<script>window.onload=function(){parent.EscondeDiv('LoadImprimir');window.location='download.php?filename=".$this->get_link."'}</script>";
-		
+
 				echo "<html><center>Se o download não iniciar automaticamente <br /><a target='blank' href='" . $this->get_link  . "' style='font-size: 16px; color: #000000; text-decoration: underline;'>clique aqui!</a><br><br>
 					<span style='font-size: 10px;'>Para visualizar os arquivos PDF, é necessário instalar o Adobe Acrobat Reader.<br>
-		
+
 					Clique na Imagem para Baixar o instalador<br><br>
 					<a href=\"http://www.adobe.com.br/products/acrobat/readstep2.html\" target=\"new\"><br><img src=\"imagens/acrobat.gif\" width=\"88\" height=\"31\" border=\"0\"></a>
 					</span>
 					</center>";
 			}
-			else 
+			else
 			{
 				echo '<script>
 	     			alert("Erro ao gerar relatório!\nNão dados a serem apresentados!");
@@ -455,7 +464,7 @@ class indice extends clsCadastro
 	     		return true;
 			}
 		}
-		else 
+		else
 		{
 			echo '<script>
 	     			alert("Erro ao gerar relatório!\nFalta dados!");
@@ -463,39 +472,59 @@ class indice extends clsCadastro
 	     		</script>';
 	     		return true;
 		}
-		
+
 	}
 
-	function addCabecalho()
-	{
-		// variavel que controla a altura atual das caixas
-		$altura = 30;
-		$fonte = 'arial';
-		$corTexto = '#000000';
+  public function addCabecalho()
+  {
+    /**
+     * Variável global com objetos do CoreExt.
+     * @see includes/bootstrap.php
+     */
+    global $coreExt;
 
-		$this->page_y = 125;
-		// cabecalho
-		$this->pdf->quadrado_relativo( 30, $altura, 535, 85 );
-		$this->pdf->InsertJpng( "gif", "imagens/brasao.gif", 50, 95, 0.30 );
+    // Namespace de configuração do template PDF
+    $config = $coreExt['Config']->app->template->pdf;
 
-		//titulo principal
-		$this->pdf->escreve_relativo( "PREFEITURA COBRA TECNOLOGIA", 30, 30, 535, 80, $fonte, 18, $corTexto, 'center' );
 
-		//dados escola
-		$this->pdf->escreve_relativo( "Instituição:$this->nm_instituicao", 120, 58, 300, 80, $fonte, 10, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "Escola:{$this->nm_escola}",136, 70, 300, 80, $fonte, 10, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( date("d/m/Y"), 25, 30, 782, 80, $fonte, 10, $corTexto, 'right' );
+    // Variável que controla a altura atual das caixas
+    $altura   = 30;
+    $fonte    = 'arial';
+    $corTexto = '#000000';
 
-		//titulo
-		$this->pdf->escreve_relativo( "Levantamento Alfabetizados e Não Albetizados \n {$this->nm_escola} ", 120, 85, 530, 80, $fonte, 12, $corTexto, 'left' );
-//		$this->pdf->escreve_relativo( "Levantamento Alfabetizados e Não Albetizados \n {$this->nm_escola} ", 120, 85, 530, 80, $fonte, 12, $corTexto, 'left' );
+    $this->page_y = 125;
 
-		$obj_modulo = new clsPmieducarModulo($this->ref_cod_modulo);
-		$det_modulo = $obj_modulo->detalhe();
-		//Data
-		$this->pdf->escreve_relativo( "{$this->meses_do_ano[$this->mes]}/{$this->ano}", 45, 100, 535, 80, $fonte, 10, $corTexto, 'left' );
-	}
-	
+    // Cabeçalho
+    $logo = $config->get($config->logo, 'imagens/brasao.gif');
+
+    $this->pdf->quadrado_relativo( 30, $altura, 535, 85 );
+    $this->pdf->insertImageScaled('gif', $logo, 50, 95, 41);
+
+    // Título principal
+    $titulo = $config->get($config->titulo, "i-Educar");
+    $this->pdf->escreve_relativo($titulo, 30, 30, 535, 80, $fonte, 18, $corTexto, 'center');
+
+    // Dados escola
+    $this->pdf->escreve_relativo("Instituição:$this->nm_instituicao", 120, 58,
+      300, 80, $fonte, 10, $corTexto, 'left' );
+    $this->pdf->escreve_relativo("Escola:{$this->nm_escola}",136, 70, 300, 80,
+      $fonte, 10, $corTexto, 'left' );
+    $this->pdf->escreve_relativo(date("d/m/Y"), 25, 30, 782, 80, $fonte, 10,
+      $corTexto, 'right' );
+
+    // Título
+    $this->pdf->escreve_relativo("Levantamento Alfabetizados e Não Albetizados \n {$this->nm_escola} ",
+      120, 85, 530, 80, $fonte, 12, $corTexto, 'left' );
+
+    $obj_modulo = new clsPmieducarModulo($this->ref_cod_modulo);
+    $det_modulo = $obj_modulo->detalhe();
+
+    // Data
+    $this->pdf->escreve_relativo( "{$this->meses_do_ano[$this->mes]}/{$this->ano}",
+      45, 100, 535, 80, $fonte, 10, $corTexto, 'left' );
+  }
+
+
 	function novoCabecalho() {
 		$altura = 51;
 		$fonte = 'arial';
