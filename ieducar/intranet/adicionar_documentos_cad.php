@@ -1,37 +1,35 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/Geral.inc.php");
+
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
+
+$desvio_diretorio = '';
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/Geral.inc.php';
+
 
 class clsIndex extends clsBase
 {
-	
+
 	function Formular()
 	{
 		$this->SetTitulo( "{$this->_instituicao} Adicionar Documentos" );
@@ -66,7 +64,7 @@ class indice extends clsCadastro
 	function Inicializar()
 	{
 		$retorno = "Novo";
-		
+
 		$this->idpes = ($_GET['id_pessoa']) ? $_GET['id_pessoa'] : $_SESSION['id_pessoa'];
 		$ObjDocumento = new clsDocumento($this->idpes);
 		$detalheDocumento = $ObjDocumento->detalhe();
@@ -85,8 +83,8 @@ class indice extends clsCadastro
 		{
 			$this->data_emissao_cert_civil = date( "d/m/Y", strtotime( substr($detalheDocumento['data_emissao_cert_civil'],0,19) ) );
 		}
-		$this->sigla_uf_cert_civil = $detalheDocumento['sigla_uf_cert_civil'];	
-		
+		$this->sigla_uf_cert_civil = $detalheDocumento['sigla_uf_cert_civil'];
+
 		$this->cartorio_cert_civil = $detalheDocumento['cartorio_cert_civil'];
 		$this->num_cart_trabalho = $detalheDocumento['num_cart_trabalho'];
 		$this->serie_cart_trabalho = $detalheDocumento['serie_cart_trabalho'];
@@ -102,24 +100,24 @@ class indice extends clsCadastro
 
 
 
-		
+
 		$ObjDocumento = new clsDocumento($this->idpes);
-		
+
 		if ($ObjDocumento->detalhe())
-		{		
+		{
 			$retorno = "Editar";
 		}
 		else
 		{
 			$retorno = "Novo";
 		}
-		
+
 		return $retorno;
 	}
 
 	function Gerar()
 	{
-		
+
 
 
 		$objUf = new clsUf();
@@ -131,7 +129,7 @@ class indice extends clsCadastro
 				$listaEstado[$uf['sigla_uf']] = $uf['sigla_uf'];
 			}
 		}
-		
+
 		$objOrgaoEmissorRg = new clsOrgaoEmissorRg();
 		$listaOrgaoEmissorRg = $objOrgaoEmissorRg->lista();
 		$listaOrgao = array("0"=>"Selecione");
@@ -141,12 +139,12 @@ class indice extends clsCadastro
 				$listaOrgao[$orgaoemissor['idorg_rg']] = $orgaoemissor['sigla'];
 			}
 		}
-		
+
 		$this->campoOculto( "idpes", $this->idpes);
 
 		$this->campoTexto("rg", "Rg", $this->rg, "10", "10", false);
-		$this->campoData("data_exp_rg", "Data Expediï¿½ï¿½o RG", $this->data_exp_rg, false);
-		$this->campoLista("sigla_uf_exp_rg", "ï¿½rgï¿½o Expedidor", $listaEstado, $this->sigla_uf_exp_rg, false, false, false, false, false);
+		$this->campoData("data_exp_rg", "Data Expedição RG", $this->data_exp_rg, false);
+		$this->campoLista("sigla_uf_exp_rg", "Órgão Expedidor", $listaEstado, $this->sigla_uf_exp_rg, false, false, false, false, false);
 
 		$lista_tipo_cert_civil = array();
 		$lista_tipo_cert_civil["0"] = "Selecione";
@@ -157,21 +155,21 @@ class indice extends clsCadastro
 		$this->campoTexto("num_termo", "Termo", $this->num_termo, "8", "8", false);
 		$this->campoTexto("num_livro", "Livro", $this->num_livro, "8", "8", false);
 		$this->campoTexto("num_folha", "Folha", $this->num_folha, "4", "4", false);
-		$this->campoData("data_emissao_cert_civil", "Emissï¿½o Certidï¿½o Civil", $this->data_emissao_cert_civil, false);
-		$this->campoLista("sigla_uf_cert_civil", "Sigla Certidï¿½o Civil", $listaEstado, $this->sigla_uf_cert_civil, false, false, false, false, false);
-		$this->campoMemo("cartorio_cert_civil", "Cartï¿½rio", $this->cartorio_cert_civil, "35", "4", false);
+		$this->campoData("data_emissao_cert_civil", "Emissão Certidão Civil", $this->data_emissao_cert_civil, false);
+		$this->campoLista("sigla_uf_cert_civil", "Sigla Certidão Civil", $listaEstado, $this->sigla_uf_cert_civil, false, false, false, false, false);
+		$this->campoMemo("cartorio_cert_civil", "Cartório", $this->cartorio_cert_civil, "35", "4", false);
 		$this->campoTexto("num_cart_trabalho", "Carteira de Trabalho", $this->num_cart_trabalho, "7", "7", false);
-		$this->campoTexto("serie_cart_trabalho", "Sï¿½rie", $this->serie_cart_trabalho, "5", "5", false);
-		$this->campoData("data_emissao_cart_trabalho", "Emissï¿½o Carteira", $this->data_emissao_cart_trabalho, false);
+		$this->campoTexto("serie_cart_trabalho", "Série", $this->serie_cart_trabalho, "5", "5", false);
+		$this->campoData("data_emissao_cart_trabalho", "Emissão Carteira", $this->data_emissao_cart_trabalho, false);
 		$this->campoLista("sigla_uf_cart_trabalho", "Sigla Carteira de Trabalho", $listaEstado, $this->sigla_uf_cart_trabalho, false, false, false, false, false);
-		$this->campoTexto("num_tit_eleitor", "Tï¿½tulo de Eleitor", $this->num_tit_eleitor, "13", "13", false);
+		$this->campoTexto("num_tit_eleitor", "Título de Eleitor", $this->num_tit_eleitor, "13", "13", false);
 		$this->campoTexto("zona_tit_eleitor", "Zona", $this->zona_tit_eleitor, "4", "4", false);
-		$this->campoTexto("secao_tit_eleitor", "Seï¿½ï¿½o", $this->secao_tit_eleitor, "10", "10", false);
-		$this->campoLista("idorg_exp_rg", "ï¿½rgï¿½o Expediï¿½ï¿½o RG", $listaOrgao, $this->idorg_exp_rg, false, false, false, false, false);
+		$this->campoTexto("secao_tit_eleitor", "Seção", $this->secao_tit_eleitor, "10", "10", false);
+		$this->campoLista("idorg_exp_rg", "Órgão Expedição RG", $listaOrgao, $this->idorg_exp_rg, false, false, false, false, false);
 
 	}
 
-	function Novo() 
+	function Novo()
 	{
 		if($this->data_emissao_cart_trabalho)
 		{
@@ -188,7 +186,7 @@ class indice extends clsCadastro
 			$this->data_exp_rg = explode("/",$this->data_exp_rg);
 			$this->data_exp_rg = "{$this->data_exp_rg[2]}/{$this->data_exp_rg[1]}/{$this->data_exp_rg[0]}";
 
-		}		
+		}
 		$ObjDocumento = new clsDocumento($this->idpes, $this->rg, $this->data_exp_rg, $this->sigla_uf_exp_rg, $this->tipo_cert_civil, $this->num_termo, $this->num_livro, $this->num_folha, $this->data_emissao_cert_civil, $this->sigla_uf_cert_civil, $this->cartorio_cert_civil, $this->num_cart_trabalho, $this->serie_cart_trabalho, $this->data_emissao_cart_trabalho, $this->sigla_uf_cart_trabalho, $this->num_tit_eleitor, $this->zona_tit_eleitor, $this->secao_tit_eleitor, $this->idorg_exp_rg );
 		if( $ObjDocumento->cadastra() )
 		{
@@ -200,7 +198,7 @@ class indice extends clsCadastro
 	}
 
 	function Editar()
-	{	
+	{
 		if($this->data_emissao_cart_trabalho)
 		{
 			$this->data_emissao_cart_trabalho = explode("/",$this->data_emissao_cart_trabalho);
@@ -219,15 +217,13 @@ class indice extends clsCadastro
 		}
 		$ObjDocumento = new clsDocumento($this->idpes, $this->rg, $this->data_exp_rg, $this->sigla_uf_exp_rg, $this->tipo_cert_civil, $this->num_termo, $this->num_livro, $this->num_folha, $this->data_emissao_cert_civil, $this->sigla_uf_cert_civil, $this->cartorio_cert_civil, $this->num_cart_trabalho, $this->serie_cart_trabalho, $this->data_emissao_cart_trabalho, $this->sigla_uf_cart_trabalho, $this->num_tit_eleitor, $this->zona_tit_eleitor, $this->secao_tit_eleitor, $this->idorg_exp_rg );
 
-		if( $ObjDocumento->edita() )
-		{
-			echo "window.close()</script>";
+    if ($ObjDocumento->edita()) {
+      echo '<script>window.close()</script>';
+      return TRUE;
+    }
 
-			return true;
-		}
-
-		return false;
-	}
+    return FALSE;
+  }
 
 	function Excluir()
 	{
