@@ -1,5 +1,44 @@
 // $Id$
 
+i-Educar 1.1.0-beta1 2009-07-17
+-------------------------------
+
+- #37 by Eriksen, Walter Marinho: Grande limpeza no banco de dados. Apenas dados
+  essenciais estão sendo distribuídos como países, estados e municípios
+  brasileiros seguindo a documentação do INEP/Educacenso/CEF
+- Nova tabela no banco de dados, schema public, tabela changelog, para permitir
+  versionamento do schema
+- Campo num_livro da tabela public.documento alterado para character varying,
+  devido a livros poderem conter caracteres alfa-numéricos. Trigger de validação
+  e arquivo PHP relacionado corrigidos
+- Arquivo .htaccess para servidores web Apache, com configuração para garantir
+  uma melhor segurança além de configuração mínima do PHP necessária para o
+  i-Educar
+- Arquivo robots.txt, indicando para os crawlers web a evitarem o processo de
+  indexação dos diretórios e arquivos do i-Educar.
+- Novo modelo de configuração da aplicação. Configurações básicas estão
+  localizadas no arquivo ieducar.ini
+- Título e logo dos relatórios configuráveis através do arquivo ieducar.ini
+- Fontes MS Core Fonts substituídas por FreeMonoBold e VeraSans
+- Corrigido bug de segurança (Exposição de informação), veja SA-CORE-2009-002
+- Corrigido uma variedade de pequenos bugs:
+   * #34 by Eriksen: Corrigido bug no uso de fontes TTF na geração de PDF
+   * #35 by Eriksen: Corrigido bug na geração de PDF para plataformas Windows e
+     Mac
+   * #36 by Eriksen: Corrigido bug ao carregar listagem de estados de um dado
+     país via XMLHttpRequest
+   * by Eriksen: Corrigido codificação de caracteres em intranet/meusdados.php e
+     em intranet/adicionar_documentos_cad.php
+   * by Eriksen: Corrigido referência a imagens no arquivo calendario.css que
+     afetava layout do quadro de horários
+   * by Eriksen: Corrigido bug em alocação de cursos e disciplinas para servidor
+     que impossibilitava o cadastro ou edição dos mesmos
+   * by Eriksen: Corrigido bug que gerava erro de SQL na edição de pessoa física
+   * by Eriksen: Corrigido bug que não listava clientes do módulo Biblioteca até
+     que um cliente estivesse suspenso
+   * #17 by Eriksen: Corrigido bug que não listava tipos de clientes de uma
+     Biblioteca na listagem de clientes do módulo Biblioteca
+
 i-Educar 1.0.2, 2009-05-25
 --------------------------
 
