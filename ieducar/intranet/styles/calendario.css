@@ -9,7 +9,7 @@
 			.cal_esq
 			{
 				height: 38px;
-				background-image: url(intranet/imagens/i-educar/cal_topo.gif);
+				background-image: url(/intranet/imagens/i-educar/cal_topo.gif);
 				background-repeat: no-repeat;
 				padding-left: 94px;
 			}
@@ -84,7 +84,7 @@
 
 			.cal_dir
 			{
-				background-image: url(intranet/imagens/i-educar/cal_dir.gif);
+				background-image: url(/intranet/imagens/i-educar/cal_dir.gif);
 				background-repeat: no-repeat;
 				padding-right: 20px;
 				background-position: 0px 0px;
