@@ -210,42 +210,37 @@ class indice extends clsCadastro
 
 	}
 
-	function Novo()
-	{
+  public function Novo()
+  {
+    $cursos_disciplina = array();
 
+    @session_start();
+    $curso_servidor = $_SESSION['cursos_servidor'];
 
-		$cursos_disciplina = array();
-		@session_start();
-		$curso_servidor = $_SESSION['cursos_servidor'];
+    if ($this->ref_cod_curso) {
+      for ($i = 0, $loop = count($this->ref_cod_curso); $i < $loop; $i++) {
+        $curso = $this->ref_cod_curso[$i];
+        $curso_servidor[$curso] = $curso;
 
-		if ($this->ref_cod_curso)
-		{
-			foreach ($this->ref_cod_curso as $key => $curso)
-			{
-				$curso_servidor[$curso] = $curso;
-				foreach ($this->ref_cod_disciplina as $disciplina)
-				{
-					$cursos_disciplina[$curso][$disciplina] = $disciplina;
-				}
-			}
-		}
+        $disciplina = $this->ref_cod_disciplina[$i];
+        $cursos_disciplina[$curso][$disciplina] = $disciplina;
+      }
+    }
 
-		$_SESSION['cursos_disciplina'] = $cursos_disciplina;
-		$_SESSION['cod_servidor']      = $this->cod_servidor;
-		$_SESSION['cursos_servidor']   = $curso_servidor;
-		@session_write_close();
+    $_SESSION['cursos_disciplina'] = $cursos_disciplina;
+    $_SESSION['cod_servidor']      = $this->cod_servidor;
+    $_SESSION['cursos_servidor']   = $curso_servidor;
+    @session_write_close();
 
-		echo "<script>parent.fechaExpansivel( '{$_GET['div']}');</script>";
-		die;
+    echo "<script>parent.fechaExpansivel( '{$_GET['div']}');</script>";
+    die;
 
+    return true;
+  }
 
-		return true;
-	}
-
-	function Editar()
-	{
-		return false;
-	}
+  public function Editar() {
+    return $this->Novo();
+  }
 
 	function Excluir()
 	{
