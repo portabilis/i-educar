@@ -71,7 +71,7 @@
  	$obj_permissoes = new clsPermissoes();
  	$nivel_usuario = $obj_permissoes->nivel_acesso($pessoa_logada);
 
- 	//Se administrador 
+ 	//Se administrador
 	if( $nivel_usuario == 1 || $cad_usuario )
 	{
 		$opcoes = array( "" => "Selecione" );
@@ -176,7 +176,7 @@
 		{
 			$this->campoLista( "ref_cod_escola", "Escola", $opcoes_escola, $this->ref_cod_escola,null,null,null,null,$escola_desabilitado,$escola_obrigatorio );
 		}
-	}	
+	}
 	if ($get_curso)
 	{
 		$opcoes_curso = array( "" => "Selecione" );
@@ -217,8 +217,8 @@
 
 		}
 		$this->campoLista( "ref_cod_curso", "Curso", $opcoes_curso, $this->ref_cod_curso,null,null,null,null,$curso_desabilitado,$curso_obrigatorio );
-		
-		if ($get_semestre)		
+
+		if ($get_semestre)
 		{
 			$this->campoRotulo("semestres", "Semestre", "<div id='div_semestre'>Selecione um Curso</div>");
 			$this->campoOculto("is_padrao", 1);
@@ -295,7 +295,11 @@
 						$opcoes_biblioteca["{$biblioteca["ref_cod_biblioteca"]}"] = "{$det_biblioteca['nm_biblioteca']}";
 					}
 				}
-				$this->campoLista( "ref_cod_biblioteca", "Biblioteca", $opcoes_biblioteca, $this->ref_cod_biblioteca,null,null,null,null,$biblioteca_desabilitado,$biblioteca_obrigatorio );
+				$getCliente = '';
+				if ($get_cliente_tipo) {
+		      $getCliente = "getClienteTipo()";
+				}
+				$this->campoLista( "ref_cod_biblioteca", "Biblioteca", $opcoes_biblioteca, $this->ref_cod_biblioteca,$getCliente,null,null,null,$biblioteca_desabilitado,$biblioteca_obrigatorio );
 			}
 			else
 			{
@@ -315,7 +319,11 @@
 						}
 					}
 				}
-				$this->campoLista( "ref_cod_biblioteca", "Biblioteca", $opcoes_biblioteca, $this->ref_cod_biblioteca,null,null,null,null,$biblioteca_desabilitado,$biblioteca_obrigatorio );
+			  $getCliente = '';
+        if ($get_cliente_tipo) {
+          $getCliente = "getClienteTipo()";
+        }
+				$this->campoLista( "ref_cod_biblioteca", "Biblioteca", $opcoes_biblioteca, $this->ref_cod_biblioteca,$getCliente,null,null,null,$biblioteca_desabilitado,$biblioteca_obrigatorio );
 			}
 		}
 
@@ -390,7 +398,7 @@
 ?>
 <script type='text/javascript'>
 <?
-//   administrador          institucional = cpd  
+//   administrador          institucional = cpd
 if ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario )
 {
 ?>
@@ -1090,7 +1098,7 @@ function limpaCampos(nivel)
 <?
 if ($get_semestre)
 {?>
-	
+
 	function verifica_curso()
 	{
 		var ref_cod_curso = document.getElementById('ref_cod_curso').value;
