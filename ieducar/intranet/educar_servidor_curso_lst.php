@@ -79,7 +79,7 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 
 		$obj_permissoes->permissao_cadastra( 635, $this->pessoa_logada, 3,  "educar_servidor_lst.php" );
-		
+
 		if( is_numeric( $this->cod_servidor ) && is_numeric( $this->ref_cod_instituicao ) )
 		{
 
@@ -194,14 +194,12 @@ class indice extends clsCadastro
 		return true;
 	}
 
-	function Editar()
-	{
-		return false;
-	}
+  public function Editar() {
+    return $this->Novo();
+  }
 
 	function Excluir()
 	{
-
 		return false;
 	}
 }
