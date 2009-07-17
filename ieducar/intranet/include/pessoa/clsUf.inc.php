@@ -154,67 +154,67 @@ class clsUf
 		return false;
 	}
 
-	/**
-	 * Exibe uma lista baseada nos parametros de filtragem passados
-	 *
-	 * @return Array
-	 */
-	function lista( $str_nome=false, $str_geom=false, $int_idpais=false, $int_limite_ini=false, $int_limite_qtd=false, $str_orderBy = false )
-	{
-		// verificacoes de filtros a serem usados
-		$whereAnd = "WHERE ";
+  /**
+   * Retorna um array com os registros da tabela public.uf
+   * @return array
+   */
+  public function lista($str_nome = FALSE, $str_geom = FALSE, $int_idpais = FALSE,
+    $int_limite_ini = FALSE, $int_limite_qtd = FALSE, $str_orderBy = 'sigla_uf ASC')
+  {
+    $whereAnd = 'WHERE ';
 
-		if( is_string( $str_nome ) )
-		{
-			$where .= "{$whereAnd}nome LIKE '%$str_nome%'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $str_geom ) )
-		{
-			$where .= "{$whereAnd}geom LIKE '%$str_geom%'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_idpais ) )
-		{
-			$where .= "{$whereAnd}idpais = '$int_idpais'";
-			$whereAnd = " AND ";
-		}
-		else
-		{	//brasil
-			$idpais = $this->config->app->locale->country;
-			$where .= "{$whereAnd}idpais = '$idpais'";
-			$whereAnd = " AND ";
-		}
+    if (is_string($str_nome)) {
+      $where   .= "{$whereAnd}nome LIKE '%$str_nome%'";
+      $whereAnd = ' AND ';
+    }
 
-		if($str_orderBy)
-		{
-			$orderBy = "ORDER BY $str_orderBy";
-		}
+    if (is_string($str_geom)) {
+      $where   .= "{$whereAnd}geom LIKE '%$str_geom%'";
+      $whereAnd = ' AND ';
+    }
 
-		$limit = "";
-		if( is_numeric( $int_limite_ini ) && is_numeric( $int_limite_qtd ) )
-		{
-			$limit = " LIMIT $int_limite_ini,$int_limite_qtd";
-		}
-		$db = new clsBanco();
-		$db->Consulta( "SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where" );
-		$db->ProximoRegistro();
-		$total = $db->Campo( "total" );
-		$db->Consulta( "SELECT sigla_uf, nome, geom, idpais FROM {$this->schema}.{$this->tabela} $where $orderBy $limit" );
-		$resultado = array();
-		while ( $db->ProximoRegistro() )
-		{
-			$tupla = $db->Tupla();
-			$tupla["idpais"] = new clsPais(  $tupla["idpais"] );
-			$tupla["total"] = $total;
-			$resultado[] = $tupla;
-		}
-		if( count( $resultado ) )
-		{
-			return $resultado;
-		}
-		return false;
-	}
+    if (is_numeric($int_idpais)) {
+      $where   .= "{$whereAnd}idpais = '$int_idpais'";
+      $whereAnd = ' AND ';
+    }
+    else {
+      $idpais = $this->config->app->locale->country;
+      $where .= "{$whereAnd}idpais = '$idpais'";
+      $whereAnd = ' AND ';
+    }
+
+    if ($str_orderBy) {
+      $orderBy = "ORDER BY $str_orderBy";
+    }
+
+    $limit = '';
+    if (is_numeric($int_limite_ini) && is_numeric($int_limite_qtd)) {
+      $limit = " LIMIT $int_limite_ini,$int_limite_qtd";
+    }
+
+    $db = new clsBanco();
+    $db->Consulta("SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where");
+    $db->ProximoRegistro();
+
+    $total = $db->Campo('total');
+
+    $db->Consulta("SELECT sigla_uf, nome, geom, idpais FROM {$this->schema}.{$this->tabela} $where $orderBy $limit");
+    $resultado = array();
+
+    while ($db->ProximoRegistro())
+    {
+      $tupla = $db->Tupla();
+      $tupla['idpais'] = new clsPais($tupla['idpais']);
+      $tupla['total']  = $total;
+      $resultado[] = $tupla;
+    }
+
+    if (count($resultado)) {
+      return $resultado;
+    }
+
+    return FALSE;
+  }
 
 	/**
 	 * Retorna um array com os detalhes do objeto
