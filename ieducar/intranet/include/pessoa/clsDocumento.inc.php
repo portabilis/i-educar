@@ -1,32 +1,40 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
-*	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-*																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-*						ctima@itajai.sc.gov.br					    	 *
-*																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-*																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-*																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-*	02111-1307, USA.													 *
-*																		 *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
+
 require_once ("include/clsBanco.inc.php");
 require_once ("include/Geral.inc.php");
 
+
+/**
+ * clsDocumento class.
+ *
+ * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package     Core
+ * @subpackage  pessoa
+ * @since       Classe disponível desde a versão 1.0.0
+ * @version     $Id$
+ */
 class clsDocumento
 {
 	var $idpes;
@@ -59,7 +67,6 @@ class clsDocumento
 	 */
 	function clsDocumento( $int_idpes = false, $int_rg = false, $str_data_exp_rg = false, $str_sigla_uf_exp_rg = false, $int_tipo_cert_civil = false, $int_num_termo = false, $int_num_livro = false, $int_num_folha = false, $str_data_emissao_cert_civil = false, $str_sigla_uf_cert_civil = false, $str_cartorio_cert_civil = false, $int_num_cart_trabalho = false, $int_serie_cart_trabalho = false, $str_data_emissao_cart_trabalho = false, $str_sigla_uf_cart_trabalho = false, $int_num_tit_eleitor = false, $int_zona_tit_eleitor = false, $int_secao_tit_eleitor = false, $int_idorg_exp_rg = false )
 	{
-
 		$objPessoa = new clsFisica($int_idpes);
 		if($objPessoa->detalhe())
 		{
@@ -147,7 +154,7 @@ class clsDocumento
 				$campos .= ", num_termo";
 				$values .= ", '{$this->num_termo}'";
 			}
-			if( is_numeric( $this->num_livro ) and (!empty($this->num_livro)))
+			if( is_string( $this->num_livro ) and (!empty($this->num_livro)))
 			{
 				$campos .= ", num_livro";
 				$values .= ", '{$this->num_livro}'";
@@ -212,6 +219,7 @@ class clsDocumento
 				$campos .= ", idorg_exp_rg";
 				$values .= ", '{$this->idorg_exp_rg}'";
 			}
+
 			$db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} ( idpes , origem_gravacao, idsis_cad, data_cad, operacao $campos ) VALUES ( '{$this->idpes}', 'M', 17, NOW(), 'I' $values )" );
 
 			return true;
@@ -283,7 +291,7 @@ class clsDocumento
 			$gruda = ", ";
 		}
 
-		if( is_numeric( $this->num_livro ) and (!empty($this->num_livro)))
+		if( is_string( $this->num_livro ) and (!empty($this->num_livro)))
 		{
 			$set .= $gruda."num_livro = '{$this->num_livro}'";
 			$gruda = ", ";
@@ -494,7 +502,7 @@ class clsDocumento
 			$where .= "{$whereAnd}num_termo = '$int_num_termo'";
 			$whereAnd = " AND ";
 		}
-		if( is_numeric( $this->num_livro ) )
+		if( is_string( $this->num_livro ) )
 		{
 			$where .= "{$whereAnd}num_livro = '$int_num_livro'";
 			$whereAnd = " AND ";
@@ -604,7 +612,7 @@ class clsDocumento
 	 */
 	function detalhe()
 	{
-		
+
 		$objPessoa = new clsFisica($this->idpes);
 		if($objPessoa->detalhe())
 		{
