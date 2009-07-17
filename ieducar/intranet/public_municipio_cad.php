@@ -65,7 +65,7 @@ class indice extends clsCadastro
 	var $operacao;
 	var $idsis_rev;
 	var $idsis_cad;
-	
+
 	var $idpais;
 
 	function Inicializar()
@@ -110,9 +110,9 @@ class indice extends clsCadastro
 		{
 			$objTemp = new clsPais();
 			$lista = $objTemp->lista( false, false, false, false, false, "nome ASC" );
-			if ( is_array( $lista ) && count( $lista ) ) 
+			if ( is_array( $lista ) && count( $lista ) )
 			{
-				foreach ( $lista as $registro ) 
+				foreach ( $lista as $registro )
 				{
 					$opcoes["{$registro['idpais']}"] = "{$registro['nome']}";
 				}
@@ -128,13 +128,13 @@ class indice extends clsCadastro
 		$opcoes = array( "" => "Selecione" );
 		if( class_exists( "clsUf" ) )
 		{
-			if( $this->idpais ) 
+			if( $this->idpais )
 			{
 				$objTemp = new clsUf();
 				$lista = $objTemp->lista( false, false, $this->idpais, false, false, "nome ASC" );
-				if ( is_array( $lista ) && count( $lista ) ) 
+				if ( is_array( $lista ) && count( $lista ) )
 				{
-					foreach ( $lista as $registro ) 
+					foreach ( $lista as $registro )
 					{
 						$opcoes["{$registro['sigla_uf']}"] = "{$registro['nome']}";
 					}
@@ -148,7 +148,7 @@ class indice extends clsCadastro
 		}
 		$this->campoLista( "sigla_uf", "Estado", $opcoes, $this->sigla_uf );
 
-		
+
 		// text
 		$this->campoTexto( "nome", "Nome", $this->nome, 30, 60, true );
 //		$this->campoNumero( "area_km2", "Area Km2", $this->area_km2, 6, 6, false );
@@ -228,39 +228,39 @@ $pagina->addForm( $miolo );
 // gera o html
 $pagina->MakeAll();
 ?>
-<script>
-
+<script type="text/javascript">
 document.getElementById('idpais').onchange = function()
 {
-	var campoPais = document.getElementById('idpais').value;
+  var campoPais = document.getElementById('idpais').value;
 
-	var campoUf= document.getElementById('sigla_uf');
-	campoUf.length = 1;
-	campoUf.disabled = true;
-	campoUf.options[0].text = 'Carregando estado...';
+  var campoUf= document.getElementById('sigla_uf');
+  campoUf.length = 1;
+  campoUf.disabled = true;
+  campoUf.options[0].text = 'Carregando estado...';
 
-	var xml_uf = new ajax( getUf );
-	xml_uf.envia( "public_uf_xml.php?pais="+campoPais );
+  var xml_uf = new ajax(getUf);
+  xml_uf.envia('public_uf_xml.php?pais=' + campoPais);
 }
 
-function getUf( xml_uf )
+function getUf(xml_uf)
 {
-	var campoUf = document.getElementById('sigla_uf');
-	var DOM_array = xml_uf.getElementsByTagName( "uf" );
+  var campoUf   = document.getElementById('sigla_uf');
+  var DOM_array = xml_uf.getElementsByTagName('estado');
 
-	if(DOM_array.length)
-	{
-		campoUf.length = 1;
-		campoUf.options[0].text = 'Selecione um estado';
-		campoUf.disabled = false;
+  if (DOM_array.length)
+  {
+    campoUf.length = 1;
+    campoUf.options[0].text = 'Selecione um estado';
+    campoUf.disabled = false;
 
-		for( var i = 0; i < DOM_array.length; i++ )
-		{
-			campoUf.options[campoUf.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("sigla_uf"),false,false);
-		}
-	}
-	else
-		campoUf.options[0].text = 'O pais não possui nenhum estado';
+    for (var i = 0; i < DOM_array.length; i++) {
+      campoUf.options[campoUf.options.length] = new Option(
+        DOM_array[i].firstChild.data, DOM_array[i].getAttribute('sigla_uf'),
+        false, false);
+    }
+  }
+  else {
+    campoUf.options[0].text = 'O pais não possui nenhum estado';
+  }
 }
-
 </script>
