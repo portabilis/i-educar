@@ -62,11 +62,11 @@ class miolo1 extends clsListagem
 		$_SESSION["campo12"] = $_GET["campo12"] ? $_GET["campo12"] : $_SESSION["campo12"];
 		$_SESSION["campo13"] = $_GET["campo13"] ? $_GET["campo13"] : $_SESSION["campo13"];
 		$this->nome = "form1";
-		
+
 		$this->funcao_js = "cv_libera_campos('{$_SESSION["campo10"]}', '{$_SESSION["campo11"]}', '{$_SESSION["campo7"]}', '{$_SESSION["campo1"]}', '{$_SESSION["campo12"]}', '{$_SESSION["campo4"]}', '{$_SESSION["campo9"]}')";
 
 		$this->titulo = "Endere&ccedil;o";
-		
+
 		// Paginador
 		$limite = 7;
 		$iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
@@ -78,7 +78,7 @@ class miolo1 extends clsListagem
 		$this->campoTexto("nm_logradouro", "Logradouro", $_GET["nm_logradouro"], 50, 255);
 		$this->campoTexto("cidade", "Cidade", $_GET["cidade"], 60, 60);
 		$obj_uf = new clsUf(false, false, 1);
-		$lst_uf = $obj_uf->lista(false, false, 1, false, false, "sigla_uf");
+		$lst_uf = $obj_uf->lista(false, false, false, false, false, "sigla_uf");
 		$array_uf;
 		foreach ($lst_uf as $uf)
 		{
@@ -147,8 +147,8 @@ class miolo1 extends clsListagem
 
 			if($_GET["param"])
 			{
-		
-	
+
+
 			$this->addLinhas(array("<a href='javascript:void(0);' onclick=\"setaCamposOuvidoria('{$cep}', '{$cep2}', '{$uf}', '{$uf}', '{$id_mun}', '{$cidade}', '{$detalhe_bairro["idbai"]}', '{$detalhe_bairro["nome"]}', '{$descricao}', '{$descricao}', '{$detalhe_logradouro["idlog"]}', '{$detalhe_logradouro["nome"]}')\">{$detalhe_bairro["nome"]}</a>",
 			 					   "<a href='javascript:void(0);' onclick=\"setaCamposOuvidoria('{$cep}', '{$cep2}', '{$uf}', '{$uf}', '{$id_mun}', '{$cidade}', '{$detalhe_bairro["idbai"]}', '{$detalhe_bairro["nome"]}', '{$descricao}', '{$descricao}', '{$detalhe_logradouro["idlog"]}', '{$detalhe_logradouro["nome"]}')\">{$cep2}</a>",
 			 					   "<a href='javascript:void(0);' onclick=\"setaCamposOuvidoria('{$cep}', '{$cep2}', '{$uf}', '{$uf}', '{$id_mun}', '{$cidade}', '{$detalhe_bairro["idbai"]}', '{$detalhe_bairro["nome"]}', '{$descricao}', '{$descricao}', '{$detalhe_logradouro["idlog"]}', '{$detalhe_logradouro["nome"]}')\">{$detalhe_logradouro["nome"]}</a>",
@@ -180,9 +180,9 @@ class miolo1 extends clsListagem
 						</td>
 						</tr>
 						</table>";
-			
+
 		} else {
-		
+
         $this->rodape = "
 						<table border='0' cellspacing='0' cellpadding='0' width=\"100%\" align=\"center\">
 						<tr width='100%'>
@@ -229,18 +229,18 @@ function setFiltro()
 }
 
 /*
-	Função especifica para Ouvidoria Atendimento Completo Cad	
+	Função especifica para Ouvidoria Atendimento Completo Cad
 */
 function setaCamposOuvidoria(valor1, valor2, valor3, valor4, valor5, valor6, valor7, valor8, valor9, valor10, valor11, valor12)
 {
 	// Campo Oculto flag atualiza
-	parent.document.getElementById("atualiza").value = "false";	
-	parent.document.getElementById("nendereco").value = "false";	
-	
+	parent.document.getElementById("atualiza").value = "false";
+	parent.document.getElementById("nendereco").value = "false";
+
 	// Campo Oculto Cep
 	obj1 = parent.document.getElementById("cep");
  	obj1.value = valor1;
- 	
+
  	// Campo Visivel Cep
 	obj2 = parent.document.getElementById("cep_");
  	obj2.value = valor2;
@@ -249,55 +249,55 @@ function setaCamposOuvidoria(valor1, valor2, valor3, valor4, valor5, valor6, val
 	// Campo Oculto Sigla_uf
 	obj3 = parent.document.getElementById("sigla_uf");
  	obj3.value = valor3;
- 	
+
  	// Campo Visivel Sigla_uf
 	obj4 = parent.document.getElementById("sigla_uf_");
  	obj4.value = valor4;
 	obj4.disabled = true;
-	
+
 	// Campo Oculto Cidade
 	obj5 = parent.document.getElementById("cidade");
  	obj5.value = valor5;
-	
+
  	// Campo Visivel Cidade
 	obj6 = parent.document.getElementById("cidade_");
  	obj6.value = valor6;
-	obj6.disabled = true;	
-	
+	obj6.disabled = true;
+
 	// Campo Oculto NMCidade
 	obj14 = parent.document.getElementById("nmCidade");
  	obj14.value = valor6;
-		
+
 	// Campo Oculto Bairro
 	obj7 = parent.document.getElementById("idbai");
  	obj7.value = valor7;
- 	
+
  	// Campo Visivel Bairro
 	obj8 = parent.document.getElementById("bairro_");
  	obj8.value = valor8;
-	obj8.disabled = true;	
-	
+	obj8.disabled = true;
+
 	obj13 = parent.document.getElementById("bairro");
  	obj13.value = valor8;
-	
+
 	// Campo Oculto Tipo Logradouro
 	obj9 = parent.document.getElementById("idtlog");
  	obj9.value = valor9;
- 	
+
  	// Campo Visivel Tipo Logradouro
 	obj10 = parent.document.getElementById("idtlog_");
  	obj10.value = valor10;
-	obj10.disabled = true;	
-	
+	obj10.disabled = true;
+
 	// Campo Oculto Logradouro
 	obj11 = parent.document.getElementById("idlog");
  	obj11.value = valor11;
- 	
+
  	// Campo Visivel Logradouro
 	obj12 = parent.document.getElementById("logradouro_");
  	obj12.value = valor12;
-	obj12.disabled = true;	
-	
+	obj12.disabled = true;
+
 	obj14 = parent.document.getElementById("logradouro");
  	obj14.value = valor12;
 
@@ -306,12 +306,12 @@ function setaCamposOuvidoria(valor1, valor2, valor3, valor4, valor5, valor6, val
 
 function liberaCamposOuvidoria()
 {
-	parent.document.getElementById("atualiza").value = "false";	
-	parent.document.getElementById("nendereco").value = "true";	
+	parent.document.getElementById("atualiza").value = "false";
+	parent.document.getElementById("nendereco").value = "true";
 	// Campo Oculto Cep
 	obj1 = parent.document.getElementById("cep");
  	obj1.value = null;
- 	
+
  	// Campo Visivel Cep
 	obj2 = parent.document.getElementById("cep_");
  	obj2.value = null;
@@ -320,54 +320,54 @@ function liberaCamposOuvidoria()
 	// Campo Oculto Sigla_uf
 	obj3 = parent.document.getElementById("sigla_uf");
  	obj3.value = null;
- 	
+
  	// Campo Visivel Sigla_uf
 	obj4 = parent.document.getElementById("sigla_uf_");
  	obj4.value = null;
 	obj4.disabled = false;
-	
+
 	// Campo Oculto Cidade
 	obj5 = parent.document.getElementById("cidade");
  	obj5.value = null;
- 	
+
  	// Campo Visivel Cidade
 	obj6 = parent.document.getElementById("cidade_");
  	obj6.value = null;
-	obj6.disabled = false;	
-	
+	obj6.disabled = false;
+
 	// Campo Oculto Bairro
 	obj7 = parent.document.getElementById("idbai");
  	obj7.value = null;
- 	
+
  	// Campo Visivel Bairro
 	obj8 = parent.document.getElementById("bairro_");
  	obj8.value = null;
-	obj8.disabled = false;	
-	
+	obj8.disabled = false;
+
 	obj13 = parent.document.getElementById("bairro");
  	obj13.value = null;
-	
+
 	// Campo Oculto Tipo Logradouro
 	obj9 = parent.document.getElementById("idtlog");
  	obj9.value = null;
- 	
+
  	// Campo Visivel Tipo Logradouro
 	obj10 = parent.document.getElementById("idtlog_");
  	obj10.value = null;
-	obj10.disabled = false;	
-	
+	obj10.disabled = false;
+
 	// Campo Oculto Logradouro
 	obj11 = parent.document.getElementById("idlog");
  	obj11.value = null;
- 	
+
  	// Campo Visivel Logradouro
 	obj12 = parent.document.getElementById("logradouro_");
  	obj12.value = null;
-	obj12.disabled = false;	
-	
+	obj12.disabled = false;
+
 	obj14 = parent.document.getElementById("logradouro");
- 	obj14.value = null;	
-	
+ 	obj14.value = null;
+
 	window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length*1-1));
 }
 </script>
