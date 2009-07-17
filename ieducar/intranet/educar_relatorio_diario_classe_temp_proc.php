@@ -1,34 +1,43 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-require_once ("include/clsPDF.inc.php");
+
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
+
+/**
+ * Diário de classe temporário.
+ *
+ * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package     Core
+ * @subpackage  Relatório
+ * @since       Arquivo disponível desde a versão 1.0.0
+ * @version     $Id$
+ */
+
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/clsPDF.inc.php';
+
 
 class clsIndexBase extends clsBase
 {
@@ -90,7 +99,7 @@ class indice extends clsCadastro
 
 	var $ref_cod_modulo;
 	var $data_ini,$data_fim;
-	
+
 	var $z=0;
 
 	var $meses_do_ano = array(
@@ -238,7 +247,7 @@ class indice extends clsCadastro
 						$dia = 1;
 
 				$total_semanas += $this->getNumeroDiasMes($dia,$mes,$this->ano,$mes_final);//,$lista_quadro_horarios[count($lista_quadro_horarios)-1]);
-				
+
 //				echo $total_semanas;
 //				die("###");
 				}
@@ -296,7 +305,7 @@ class indice extends clsCadastro
 
 
 			}
-			
+
 			$this->pdf = new clsPDF("Diário de Classe - {$this->ano}", "Diário de Classe - {$data[0]} até {$data[1]} de {$this->ano}", "A4", "", false, false);
 			$this->mes_inicial = (int)$meses[0];
 			$this->mes_final = (int)$meses[1];
@@ -304,8 +313,8 @@ class indice extends clsCadastro
 	  		$this->pdf->altura = 595.0;
 
 		    $this->total = $total_semanas;//$total_semanas * count($lista_quadro_horarios);
-		    
-			    
+
+
 		    if(!$this->em_branco)
 		    {
 			    $obj_matricula_turma = new clsPmieducarMatriculaTurma();
@@ -388,7 +397,7 @@ class indice extends clsCadastro
 			$obj_turma_disc->setCamposLista("ref_cod_disciplina");
 			$lst_turma_disc = $obj_turma_disc->lista(null,$this->ref_cod_serie,1);
 			if($lst_turma_disc)
-			{   
+			{
 				$this->indefinido = false;
 				$this->pdf = new clsPDF("Diário de Classe - {$this->ano}", "Diário de Classe - {$this->data_ini} até {$this->data_fim}  de {$this->ano}", "A4", "", false, false);
 				foreach ($lst_turma_disc as $disciplina)
@@ -417,7 +426,7 @@ class indice extends clsCadastro
 //					$lista_quadro_horarios = $obj_quadro_horarios->lista($quadro_horario[0],$this->ref_cod_serie,$this->ref_cod_escola,$disciplina,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1);
 
 //					die("<br><br><br>{$quadro_horario[0]},$this->ref_cod_serie,$this->ref_cod_escola,$disciplina");
-					
+
 //					if(!$lista_quadro_horarios)
 //					{
 						//echo '<script>alert(\'Turma não possui quadro de horário\');
@@ -447,7 +456,7 @@ class indice extends clsCadastro
 					data_inicio,data_fim ASC
 				");
 				$data = explode("-",$meses);
-				
+
 				if(!$this->data_ini)
 					$this->data_ini = $data[0];
 
@@ -503,10 +512,10 @@ class indice extends clsCadastro
 					//$total_semanas = $this->getNumeroSemanasMes($this->mes,$this->ano,$lista_quadro_horarios[0],$lista_quadro_horarios[count($lista_quadro_horarios)-1]);
 				    //$total_semanas = $this->getNumeroSemanasMes($this->mes + 1,$this->ano,$lista_quadro_horarios[0],$lista_quadro_horarios[count($lista_quadro_horarios)-1]);
 					if($lista_quadro_horarios) {
-					
+
 						for($mes_ = $meses[0];$mes_<=$meses[1];$mes_++)
-					    {				    	
-				    	
+					    {
+
 					    	$mes_final = false;
 
 						    foreach ($lista_quadro_horarios as $dia_semana)
@@ -515,7 +524,7 @@ class indice extends clsCadastro
 									$dia = $dias[0];
 								elseif ($mes == $meses[1])
 								{
-									$dia = 1;//$dias[1];		
+									$dia = 1;//$dias[1];
 									$mes_final = true;
 								}
 								else
@@ -632,7 +641,7 @@ class indice extends clsCadastro
 			}
 		}
 		echo "<script>window.onload=function(){parent.EscondeDiv('LoadImprimir');window.location='download.php?filename=".$this->get_link."'}</script>";
-		
+
 
 		echo "<html><center>Se o download não iniciar automaticamente <br /><a target='blank' href='" . $this->get_link  . "' style='font-size: 16px; color: #000000; text-decoration: underline;'>clique aqui!</a><br><br>
 			<span style='font-size: 10px;'>Para visualizar os arquivos PDF, é necessário instalar o Adobe Acrobat Reader.<br>
@@ -643,56 +652,82 @@ class indice extends clsCadastro
 			</center>";
 	}
 
-	function addCabecalho()
-	{
-		// variavel que controla a altura atual das caixas
-		$altura = 30;
-		$fonte = 'arial';
-		$corTexto = '#000000';
+  public function addCabecalho()
+  {
+    /**
+     * Variável global com objetos do CoreExt.
+     * @see includes/bootstrap.php
+     */
+    global $coreExt;
 
+    // Namespace de configuração do template PDF
+    $config = $coreExt['Config']->app->template->pdf;
 
-		// cabecalho
-		$this->pdf->quadrado_relativo( 30, $altura, 782, 85 );
-		$this->pdf->InsertJpng( "gif", "imagens/brasao.gif", 50, 95, 0.30 );
+    // Variável que controla a altura atual das caixas
+    $altura = 30;
+    $fonte = 'arial';
+    $corTexto = '#000000';
 
-		//titulo principal
-		$this->pdf->escreve_relativo( "PREFEITURA COBRA TECNOLOGIA", 30, 30, 782, 80, $fonte, 18, $corTexto, 'center' );
-		$this->pdf->escreve_relativo( date("d/m/Y"), 25, 30, 782, 80, $fonte, 10, $corTexto, 'right' );
+    // Cabeçalho
+    $logo = $config->get($config->logo, 'imagens/brasao.gif');
 
-		//dados escola
-		$this->pdf->escreve_relativo( "Instituição:$this->nm_instituicao", 120, 52, 300, 80, $fonte, 7, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "Escola:{$this->nm_escola}",132, 64, 300, 80, $fonte, 7, $corTexto, 'left' );
-		$dif = 0;
-		if($this->nm_professor)
-			$this->pdf->escreve_relativo( "Prof.Regente:{$this->nm_professor}",111, 76, 300, 80, $fonte, 7, $corTexto, 'left' );
-		else
-			$dif = 12;
+    $this->pdf->quadrado_relativo(30, $altura, 782, 85);
+    $this->pdf->insertImageScaled('gif', $logo, 50, 95, 41);
 
-		$this->pdf->escreve_relativo( "Série:{$this->nm_serie}",138, 88  - $dif, 300, 80, $fonte, 7, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "Turma:{$this->nm_turma}",134, 100 - $dif, 300, 80, $fonte, 7, $corTexto, 'left' );
+    // Título principal
+    $titulo = $config->get($config->titulo, 'i-Educar');
+    $this->pdf->escreve_relativo($titulo, 30, 30, 782, 80, $fonte, 18,
+      $corTexto, 'center' );
+    $this->pdf->escreve_relativo(date("d/m/Y"), 25, 30, 782, 80, $fonte, 10,
+      $corTexto, 'right');
 
-		//titulo
-		$nm_disciplina = "";
-		if($this->nm_disciplina)
-			$nm_disciplina = " - $this->nm_disciplina";
-		$this->pdf->escreve_relativo( "Diário de Frequência {$nm_disciplina}", 30, 75, 782, 80, $fonte, 12, $corTexto, 'center' );
+    // Dados escola
+    $this->pdf->escreve_relativo("Instituição:$this->nm_instituicao", 120, 52,
+      300, 80, $fonte, 7, $corTexto, 'left' );
+    $this->pdf->escreve_relativo("Escola:{$this->nm_escola}",132, 64, 300, 80,
+      $fonte, 7, $corTexto, 'left' );
 
-		$obj_modulo = new clsPmieducarModulo($this->ref_cod_modulo);
-		$det_modulo = $obj_modulo->detalhe();
-		//Data
-		//$mes2 = $this->mes_inicial + 1;
-		$this->pdf->escreve_relativo( "{$this->data_ini} até {$this->data_fim} de {$this->ano}", 45, 100, 782, 80, $fonte, 10, $corTexto, 'center' );
+    $dif = 0;
+    if ($this->nm_professor) {
+      $this->pdf->escreve_relativo("Prof.Regente:{$this->nm_professor}",111, 76, 300, 80, $fonte, 7, $corTexto, 'left' );
+    }
+    else {
+      $dif = 12;
+    }
 
-		$this->pdf->linha_relativa(201,125,612,0);
-		
-    	$this->page_y +=19;
-    	if ($this->indefinido) {
-    		$this->pdf->escreve_relativo( "Dias de aula: Indefinido", 680, 100, 535, 80, $fonte, 10, $corTexto, 'left' );
-    	} else {
-	    	$this->pdf->escreve_relativo( "Dias de aula: {$this->total}", 715, 100, 535, 80, $fonte, 10, $corTexto, 'left' );
-    	}
-	}
-	
+    $this->pdf->escreve_relativo("Série:{$this->nm_serie}",138, 88  - $dif, 300,
+      80, $fonte, 7, $corTexto, 'left');
+    $this->pdf->escreve_relativo("Turma:{$this->nm_turma}",134, 100 - $dif, 300,
+      80, $fonte, 7, $corTexto, 'left');
+
+    // Título
+    $nm_disciplina = "";
+    if ($this->nm_disciplina) {
+      $nm_disciplina = " - $this->nm_disciplina";
+    }
+
+    $this->pdf->escreve_relativo("Diário de Frequência {$nm_disciplina}", 30,
+      75, 782, 80, $fonte, 12, $corTexto, 'center');
+
+    $obj_modulo = new clsPmieducarModulo($this->ref_cod_modulo);
+    $det_modulo = $obj_modulo->detalhe();
+
+    // Data
+    $this->pdf->escreve_relativo( "{$this->data_ini} até {$this->data_fim} de {$this->ano}",
+      45, 100, 782, 80, $fonte, 10, $corTexto, 'center');
+
+    $this->pdf->linha_relativa(201,125,612,0);
+    $this->page_y +=19;
+
+    if ($this->indefinido) {
+      $this->pdf->escreve_relativo("Dias de aula: Indefinido", 680, 100, 535,
+        80, $fonte, 10, $corTexto, 'left' );
+    }
+    else {
+      $this->pdf->escreve_relativo("Dias de aula: {$this->total}", 715, 100,
+        535, 80, $fonte, 10, $corTexto, 'left');
+    }
+  }
 
 
 	function desenhaLinhasVertical()
@@ -832,12 +867,12 @@ class indice extends clsCadastro
 	}
 
 	function getDiasSemanaMes($dia,$mes,$ano,$dia_semana,$mes_final = false)
-	{		
+	{
 		$year = $ano;
 		$month = $mes;
-		
+
 		$date = mktime(1, 1, 1, $month, $dia/*date("d")*/, $year);
-		
+
 		$first_day_of_month = strtotime("-" . (date("d", $date)-1) . " days", $date);
 		$last_day_of_month = strtotime("+" . (date("t", $first_day_of_month)-1) . " days", $first_day_of_month);
 
@@ -870,13 +905,13 @@ class indice extends clsCadastro
 			$date = mktime(1, 1, 1, $month, $day, $year);
 			$dia_semana_corrente = getdate($date);
 			$dia_semana_corrente = $dia_semana_corrente['wday'] + 1;
-			
+
 			$data_atual = "{$day}/{$mes}/{$ano}";
 			$data_final = "{$this->data_fim}/{$ano}";
-			
+
 			if(($dia_semana ==  $dia_semana_corrente) && (array_search($day,$dias_nao_letivo) === false) && data_maior($data_final, $data_atual))
 				$numero_dias++;
-		}	
+		}
 		return $numero_dias;
 	}
 }

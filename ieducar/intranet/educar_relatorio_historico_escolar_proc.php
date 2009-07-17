@@ -1,35 +1,43 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-require_once ("include/clsPDF.inc.php");
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
+
+/**
+ * Histórico escolar.
+ *
+ * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package     Core
+ * @subpackage  Aluno
+ * @since       Arquivo disponível desde a versão 1.0.0
+ * @version     $Id$
+ */
+
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/clsPDF.inc.php';
+
 
 class clsIndexBase extends clsBase
 {
@@ -92,7 +100,7 @@ class indice extends clsCadastro
 		@session_start();
 			$pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
-		
+
 		if($_GET){
 			foreach ($_GET as $key => $value) {
 				$this->$key = $value;
@@ -452,7 +460,7 @@ class indice extends clsCadastro
 							  AND nota IS NOT NULL
 							  AND nota != ''
 							 ORDER BY 1";
-				
+
 				$db->Consulta($consulta);
 				if($db->Num_Linhas())
 				{
@@ -502,7 +510,7 @@ class indice extends clsCadastro
 									   AND nota IS NOT NULL
 									   AND nota != ''
 									ORDER BY 1";
-					
+
 						$db->Consulta($consulta);
 
 						if($db->Num_Linhas())
@@ -604,9 +612,9 @@ class indice extends clsCadastro
 		}
 		if ($qtd_observacoes < 3)
 			$this->observacao($observacao);
-		else 
+		else
 			$this->observacao($observacao, 100);
-		
+
 		if ($possui_eja)
 		{
 			$tabela_conversao = "\nConversão de Valores das Notas";
@@ -645,15 +653,15 @@ class indice extends clsCadastro
 
 		}*/
 	}
-	
+
 	function verificaHistorico () {
 		if (is_numeric($this->ref_cod_aluno)) {
 			@session_start();
 			$pessoa_logada = $_SESSION['id_pessoa'];
 			@session_write_close();
-			$sql_existe_historico = "select sequencial from pmieducar.historico_escolar where ref_cod_aluno={$this->ref_cod_aluno} 
-										and ativo=1 and ano=2007";			
-			
+			$sql_existe_historico = "select sequencial from pmieducar.historico_escolar where ref_cod_aluno={$this->ref_cod_aluno}
+										and ativo=1 and ano=2007";
+
 			$sql = "SELECT ref_ref_cod_serie from pmieducar.matricula where cod_matricula in (
 							SELECT MAX(cod_matricula) as max_matricula
 										from pmieducar.matricula WHERE ref_cod_aluno = {$this->ref_cod_aluno}
@@ -684,7 +692,7 @@ class indice extends clsCadastro
 				$aprovado_aux = $db->CampoUnico($sql_aprovado);
 				if (is_numeric($existe_historico) && !$existe_historico_sequencial) {
 					$sql_historico_aprovado = "SELECT aprovado from pmieducar.historico_escolar
-											where ref_cod_aluno={$this->ref_cod_aluno} 
+											where ref_cod_aluno={$this->ref_cod_aluno}
 											and sequencial={$existe_historico} and ano=2007 and ativo=1";
 					$aprovado_historico = $db->CampoUnico($sql_historico_aprovado);
 					/*if ($aprovado_aux != $aprovado_historico) {
@@ -704,7 +712,7 @@ class indice extends clsCadastro
 				$aprovado_aux = $db->CampoUnico($sql_aprovado);
 				if (is_numeric($existe_historico) && !$existe_historico_sequencial) {
 					$sql_historico_aprovado = "SELECT aprovado from pmieducar.historico_escolar
-											where ref_cod_aluno={$this->ref_cod_aluno} 
+											where ref_cod_aluno={$this->ref_cod_aluno}
 											and sequencial={$existe_historico} and ano=2007 and ativo=1";
 					$aprovado_historico = $db->CampoUnico($sql_historico_aprovado);
 					/*if ($aprovado_aux != $aprovado_historico) {
@@ -1075,10 +1083,10 @@ class indice extends clsCadastro
 						}
 					}
 				}
-			}			
+			}
 		}
 	}
-	
+
 	function verificaReclassificacao($cod_matricula = false) {
 		if (is_numeric($cod_matricula)) {
 			$sql_reclassificacao = " AND {$cod_matricula} > cod_matricula ";
@@ -1095,47 +1103,47 @@ class indice extends clsCadastro
 		}
 		return null;
 	}
-	
+
 	function buscaDiasLetivos($ref_cod_escola)
 	{
 		if (is_numeric($ref_cod_escola)) {
 			$obj_calendario = new clsPmieducarEscolaAnoLetivo();
 			$lista_calendario = $obj_calendario->lista($ref_cod_escola,2007,null,null,null,null,null,null,null,1,null);
-	
+
 			$totalDiasUteis = 0;
 			$total_semanas = 0;
-	
-	
+
+
 			$obj_ano_letivo_modulo = new clsPmieducarAnoLetivoModulo();
 			$obj_ano_letivo_modulo->setOrderby("data_inicio asc");
-	
+
 			$lst_ano_letivo_modulo = $obj_ano_letivo_modulo->lista(2007, $ref_cod_escola, null, null);
-	
+
 			if($lst_ano_letivo_modulo)
 			{
 				$inicio = $lst_ano_letivo_modulo['0'];
 				$fim	= $lst_ano_letivo_modulo[count($lst_ano_letivo_modulo) - 1];
-	
+
 				$mes_inicial = explode("-",$inicio['data_inicio']);
 				$mes_inicial = $mes_inicial[1];
-	
+
 				$dia_inicial = $mes_inicial[2];
-	
+
 				$mes_final	 = explode("-",$fim['data_fim']);
 				$mes_final	 = $mes_final[1];
-	
+
 				$dia_final   = $mes_final[2];
 			}
-	
-	
-	
+
+
+
 			for ($mes = $mes_inicial;$mes <= $mes_final;$mes++)
 			{
 				$obj_calendario_dia = new clsPmieducarCalendarioDia();
 				$lista_dias = $obj_calendario_dia->lista($calendario['cod_calendario_ano_letivo'],$mes,null,null,null,null,null,null,null,1);
-	
+
 				$dias_mes = array();
-	
+
 				if($lista_dias)
 				{
 					foreach ($lista_dias as $dia) {
@@ -1145,26 +1153,26 @@ class indice extends clsCadastro
 					}
 				}
 				//Dias previstos do mes
-	
+
 				 // Qual o primeiro dia do mes
 				 $primeiroDiaDoMes = mktime(0,0,0,$mes,1,2007);
-	
+
 				 // Quantos dias tem o mes
 				 $NumeroDiasMes = date('t',$primeiroDiaDoMes);
-	
+
 				 //informacoes primeiro dia do mes
 				 $dateComponents = getdate($primeiroDiaDoMes);
-	
+
 				 // What is the name of the month in question?
 				 $NomeMes = $mesesDoAno[$dateComponents['mon']];
-	
+
 				 // What is the index value (0-6) of the first day of the
 				 // month in question.
 				 $DiaSemana = $dateComponents['wday'];
-	
+
 				 //total de dias uteis + dias extra-letivos - dia nao letivo - fim de semana
 				$DiaSemana = 0;
-	
+
 				 if($mes == $mes_inicial)
 				 {
 				 	$dia_ini = $dia_inicial;
@@ -1177,7 +1185,7 @@ class indice extends clsCadastro
 				 {
 				 	$dia_ini = 1;
 				 }
-	
+
 				 for($dia = $dia_ini; $dia <= $NumeroDiasMes; $dia++)
 				 {
 				 	if($DiaSemana >= 7)
@@ -1185,58 +1193,75 @@ class indice extends clsCadastro
 				 		$DiaSemana = 0;
 				 		$total_semanas++;
 				 	}
-	
+
 				 	if($DiaSemana != 0 && $DiaSemana != 6){
 				 		if(!(key_exists($dia,$dias_mes) && $dias_mes[$dia] == strtolower('n')))
 				 			$totalDiasUteis++;
 				 	}elseif(key_exists($dia,$dias_mes) && $dias_mes[$dia] == strtolower('e'))
 						$totalDiasUteis++;
-	
+
 				 	$DiaSemana++;
-	
+
 				 }
-	
-	
+
+
 			}
 			return $totalDiasUteis;
 		}
 		return null;
 	}
-	
-	function addCabecalho($nm_aluno, $cod_matricula, $naturalidade, $sexo,$nascimento, $pais, $serie_concluido)
-	{
-		// variavel que controla a altura atual das caixas
 
-		$y = 25;
-		$fonte = 'arial';
-		$corTexto = '#000000';
+  function addCabecalho($nm_aluno, $cod_matricula, $naturalidade, $sexo,
+    $nascimento, $pais, $serie_concluido)
+  {
+    /**
+     * Variável global com objetos do CoreExt.
+     * @see includes/bootstrap.php
+     */
+    global $coreExt;
 
-		// cabecalho
-		$this->pdf->quadrado_relativo( 20, $y, 555, 85 );
-		$this->pdf->InsertJpng( "gif", "imagens/brasao.gif", 40, 85, 0.30 );
+    // Namespace de configuração do template PDF
+    $config = $coreExt['Config']->app->template->pdf;
 
-		//titulo principal
-		$this->pdf->escreve_relativo( "PREFEITURA COBRA TECNOLOGIA", 25, 29, 400, 80, $fonte, 18, $corTexto, 'center' );
+    // Variável que controla a altura atual das caixas
+    $y        = 25;
+    $fonte    = 'arial';
+    $corTexto = '#000000';
 
-		//dados escola
-		$this->pdf->escreve_relativo( "SECRETARIA DA EDUCAÇÃO", 100, 55, 300, 80, $fonte, 9, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "ESCOLA:{$this->nm_escola}",100, 70, 300, 80, $fonte, 9, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "ENDEREÇO:{$this->endereco}",100, 85, 252, 80, $fonte, 9, $corTexto, 'left' );
+    // Cabeçalho
+    $logo = $config->get($config->logo, 'imagens/brasao.gif');
 
-		//carimbo
-		$this->pdf->linha_relativa(380,$y,0,85);
+    $this->pdf->quadrado_relativo(20, $y, 555, 85);
+    $this->pdf->insertImageScaled('gif', $logo, 40, 85, 41);
 
-		$this->pdf->escreve_relativo( "CERTIFICADO DE CONCLUSÃO DE SÉRIE E/OU CURSO DO ENSINO FUNDAMENTAL",20, 115, 540, 80, $fonte, 9, $corTexto, 'center' );
+    // Título principal
+    $titulo = $config->get($config->titulo, 'i-Educar');
+    $this->pdf->escreve_relativo($titulo, 25, 29, 400, 80, $fonte, 18,
+      $corTexto, 'center');
 
-		$this->pdf->quadrado_relativo( 20, 130, 555, 43 );
+    // Dados escola
+    $this->pdf->escreve_relativo("SECRETARIA DA EDUCAÇÃO", 100, 55, 300, 80,
+      $fonte, 9, $corTexto, 'left');
+    $this->pdf->escreve_relativo("ESCOLA:{$this->nm_escola}",100, 70, 300,
+      80, $fonte, 9, $corTexto, 'left');
+    $this->pdf->escreve_relativo("ENDEREÇO:{$this->endereco}",100, 85, 252, 80,
+      $fonte, 9, $corTexto, 'left');
 
-		//$pdf->escreve_relativo( "Certificamos que {$nm_aluno},{$natural}{$natural_uf}{$nacional} do sexo {$sexo},{$nascimento} filho(a) de {$nm_pai} e de {$nm_mae},{$identidade}{$titulo} concluiu em {$lst_historico_escolar[$ultima_mat]['ano']} o(a) {$lst_historico_escolar[$ultima_mat]['nm_serie']}, conforme Histórico Escolar.", $X_quadrado+10, $Y_linha, 515, $altura+30, $fonte, 8, "#000000", 'justify' );
-		$this->pdf->escreve_relativo( "Certificamos que {$nm_aluno}{$naturalidade}{$sexo}{$cod_matricula}{$nascimento}{$pais}{$serie_concluido}, conforme Histórico Escolar.",30, 135, 525, 100, $fonte, 9, $corTexto, 'justify' );
+    // Carimbo
+    $this->pdf->linha_relativa(380,$y,0,85);
 
-		$this->pdf->escreve_relativo( "HISTÓRICO ESCOLAR DO ENSINO FUNDAMENTAL",20, 175, 555, 80, $fonte, 9, $corTexto, 'center' );
+    $this->pdf->escreve_relativo("CERTIFICADO DE CONCLUSÃO DE SÉRIE E/OU CURSO DO ENSINO FUNDAMENTAL",
+      20, 115, 540, 80, $fonte, 9, $corTexto, 'center' );
 
+    $this->pdf->quadrado_relativo(20, 130, 555, 43);
 
-	}
+    $this->pdf->escreve_relativo("Certificamos que {$nm_aluno}{$naturalidade}{$sexo}{$cod_matricula}{$nascimento}{$pais}{$serie_concluido}, conforme Histórico Escolar.",
+      30, 135, 525, 100, $fonte, 9, $corTexto, 'justify');
+
+    $this->pdf->escreve_relativo("HISTÓRICO ESCOLAR DO ENSINO FUNDAMENTAL", 20,
+      175, 555, 80, $fonte, 9, $corTexto, 'center' );
+  }
+
 
 	function novaLinha($array_valores, $tipo_linha = false)
 	{
@@ -1418,7 +1443,7 @@ class indice extends clsCadastro
 	{
 		$fonte = 'arial';
 		$corTexto = '#000000';
-		
+
 		if ($tam_obs)
 			$altura_obs = $tam_obs;
 		else

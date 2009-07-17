@@ -1,35 +1,43 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-require_once ("include/clsPDF.inc.php");
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
+
+/**
+ * Relatório de quadro curricular.
+ *
+ * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package     Core
+ * @subpackage  Relatório
+ * @since       Arquivo disponível desde a versão 1.0.0
+ * @version     $Id$
+ */
+
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/clsPDF.inc.php';
+
 
 class clsIndexBase extends clsBase
 {
@@ -253,7 +261,7 @@ class indice extends clsCadastro
 										//disciplinas que estâo sendo cursadas, eliminando as não cursadas
 										$sql = "SELECT distinct(ref_cod_disciplina) FROM pmieducar.quadro_horario_horarios
 												WHERE ref_cod_quadro_horario = {$lst_quadro_horario["cod_quadro_horario"]}";
-										
+
 										$disciplinas_cursadas = array();
 										$db = new clsBanco();
 										$db->Consulta($sql);
@@ -263,8 +271,8 @@ class indice extends clsCadastro
 											$disciplinas_cursadas[$ref_disciplina_cursada] = $ref_disciplina_cursada;
 										}
 										/*********************************************************************/
-										
-										
+
+
 										$inicio_quadro = $this->page_y;
 										foreach ($lst_disc_serie as $key => $disciplina)
 										{
@@ -272,73 +280,73 @@ class indice extends clsCadastro
 											{
 												$obj_disc = new clsPmieducarDisciplina($disciplina['ref_cod_disciplina']);
 												$det_disc = $obj_disc->detalhe();
-	
+
 												$this->pdf->quadrado_relativo( $x_quadrado, $this->page_y, 465, $altura_caixa );
 												$this->pdf->escreve_relativo( "{$det_disc['nm_disciplina']}", $x_quadrado + 4, $this->page_y + 4, 350, $altura_caixa, $fonte, 10, $corTexto, 'left' );
-	
+
 												//-------
-	
+
 												unset($lst_disc_semana);
-	
+
 												if($lst_quadro_horario)
-	
+
 													$lst_disc_semana = $obj_disc_semana->lista($lst_quadro_horario['cod_quadro_horario'],$serie['cod_serie'], $this->ref_cod_escola, $disciplina['ref_cod_disciplina'], null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1);
-	
+
 												$total_dias_semana = 0;
-	
+
 												/**
 												 * Calcula o total de horas da semana
 												 */
 												if($lst_disc_semana)
 												{
-	
+
 													$total_semanas = $this->total_semanas;
-	
+
 													$total_dias_semana = count($lst_disc_semana);
-	
-	
+
+
 												}
-	
+
 												$total_geral_horas += $det_disc['carga_horaria'];
 												$total_geral_aulas_semana += $total_dias_semana;
-	
+
 												$total_horas =  sprintf("%02d:%02d",$det_disc['carga_horaria'],0);
-	
-	
+
+
 												$this->pdf->escreve_relativo( sprintf("%02d","{$total_dias_semana}"), 451, $this->page_y + 10, 52, $altura_caixa, $fonte, 10, $corTexto, 'center' );
 												$this->pdf->escreve_relativo( "{$total_horas}", 506, $this->page_y + 10, 65, $altura_caixa, $fonte, 10, $corTexto, 'center' );
-	
+
 												$fim_quadro = $this->page_y += $altura_caixa;
-	
+
 												if($this->page_y + $altura_caixa >= 800 && $key < count($lst_disc_serie)-1)
 												{
 													$x_quadrado = 30;
-	
+
 													$this->pdf->quadrado_relativo( 30, $inicio_quadro, 70, $fim_quadro - $inicio_quadro );
 													$this->pdf->escreve_relativo( "Núcleo Comum \ne Artigo 7º\n(Lei 5692/71)", 30 + 4, $inicio_quadro + ($fim_quadro - $inicio_quadro) / 3 - ($key == 0 ? 8:0), 80, $altura_caixa, $fonte, 8, $corTexto, 'left' );
-	
+
 													$this->pdf->linha_relativa( 450, $inicio_quadro - $altura_caixa, 0, $fim_quadro - $inicio_quadro + $altura_caixa, '0.1');
 													$this->pdf->linha_relativa( 505, $inicio_quadro - $altura_caixa, 0, $fim_quadro - $inicio_quadro + $altura_caixa, '0.1');
-	
+
 													$this->page_y = 170;
-	
+
 													$inicio_quadro = $this->page_y + $altura_caixa;
-	
+
 													$this->pdf->ClosePage();
 													$this->pdf->OpenPage();
-	
+
 													$page_open = true;
-	
+
 													$this->addCabecalho();
-	
+
 													$this->pdf->quadrado_relativo( $x_quadrado, $this->page_y, 535, $altura_caixa );
 													$this->pdf->escreve_relativo( "Conteúdos Curriculares", 40, $this->page_y + 10, 258, $altura_caixa, $fonte, 10, $corTexto, 'left' );
 													$this->pdf->escreve_relativo( "A.S", 470, $this->page_y + 10, 258, $altura_caixa, $fonte, 10, $corTexto, 'left' );
 													$this->pdf->escreve_relativo( "H.R.", 525, $this->page_y + 10, 258, $altura_caixa, $fonte, 10, $corTexto, 'left' );
 													$this->page_y += $altura_caixa;
-	
+
 													$x_quadrado = 100;
-	
+
 												}
 											}
 										}
@@ -399,93 +407,121 @@ class indice extends clsCadastro
 			</center>";
 	}
 
-	function addCabecalho()
-	{
-		// variavel que controla a altura atual das caixas
-		$altura = 30;
-		$fonte = 'arial';
-		$corTexto = '#000000';
+  public function addCabecalho()
+  {
+    /**
+     * Variável global com objetos do CoreExt.
+     * @see includes/bootstrap.php
+     */
+    global $coreExt;
 
-		// cabecalho
-		$this->pdf->quadrado_relativo( 30, $altura, 535, 90 );
+    // Namespace de configuração do template PDF
+    $config = $coreExt['Config']->app->template->pdf;
 
-		$y_quadrado = 30;
-		$x_quadrado = 100;
-		$y_escrita  = $y_quadrado + 5;
-		$altura_caixa = 30;
+    // Variável que controla a altura atual das caixas
+    $altura   = 30;
+    $fonte    = 'arial';
+    $corTexto = '#000000';
 
-		//1 linha
-		$this->pdf->quadrado_relativo( $x_quadrado, $y_quadrado, 465, $altura_caixa );
-		$this->pdf->quadrado_relativo( $x_quadrado, $y_quadrado, 258, $altura_caixa );
-		$y_quadrado += $altura_caixa;
+    // Cabeçalho
+    $this->pdf->quadrado_relativo( 30, $altura, 535, 90 );
 
-		//2 linha
-		$this->pdf->quadrado_relativo( $x_quadrado, $y_quadrado, 465, $altura_caixa );
-		$this->pdf->quadrado_relativo( $x_quadrado, $y_quadrado, 258, $altura_caixa );
-		$this->pdf->quadrado_relativo( $x_quadrado + 258, $y_quadrado, 110, $altura_caixa );
-		$y_quadrado += $altura_caixa;
+    $y_quadrado = 30;
+    $x_quadrado = 100;
+    $y_escrita  = $y_quadrado + 5;
+    $altura_caixa = 30;
 
-		//3 linha
-		$this->pdf->quadrado_relativo( $x_quadrado, $y_quadrado, 465, $altura_caixa );
-		$this->pdf->quadrado_relativo( $x_quadrado, $y_quadrado, 70, $altura_caixa );
-		$this->pdf->quadrado_relativo( $x_quadrado + 70, $y_quadrado, 298, $altura_caixa );
-		$y_quadrado += $altura_caixa;
+    // 1 linha
+    $this->pdf->quadrado_relativo($x_quadrado, $y_quadrado, 465, $altura_caixa);
+    $this->pdf->quadrado_relativo($x_quadrado, $y_quadrado, 258, $altura_caixa);
+    $y_quadrado += $altura_caixa;
 
-		$this->pdf->InsertJpng( "gif", "imagens/brasao.gif", 45, 100, 0.30 );
+    // 2 linha
+    $this->pdf->quadrado_relativo($x_quadrado, $y_quadrado, 465, $altura_caixa);
+    $this->pdf->quadrado_relativo($x_quadrado, $y_quadrado, 258, $altura_caixa);
+    $this->pdf->quadrado_relativo($x_quadrado + 258, $y_quadrado, 110, $altura_caixa);
+    $y_quadrado += $altura_caixa;
 
-		$y_quadrado = 30;
-		$y_escrita  = $y_quadrado + 13;
+    // 3 linha
+    $this->pdf->quadrado_relativo( $x_quadrado, $y_quadrado, 465, $altura_caixa);
+    $this->pdf->quadrado_relativo( $x_quadrado, $y_quadrado, 70, $altura_caixa);
+    $this->pdf->quadrado_relativo( $x_quadrado + 70, $y_quadrado, 298, $altura_caixa);
+    $y_quadrado += $altura_caixa;
 
-		//1 linha
-		$this->pdf->escreve_relativo( "QUADRO CURRICULAR", 100, $y_escrita - 8, 268, $altura_caixa, $fonte, 17, $corTexto, 'center' );
-		$this->pdf->escreve_relativo( "Curso", 355 + 5, $y_escrita - 13, 258, $altura_caixa, $fonte, 10, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "{$this->nm_curso}", 360 + 10, $y_escrita, 356, $altura_caixa, $fonte, 12, $corTexto, 'left' );
+    // Logo
+    $logo = $config->get($config->logo, 'imagens/brasao.gif');
+    $this->pdf->insertImageScaled('gif', $logo, 40, 100, 41);
 
-		$y_quadrado += $altura_caixa;
-		$y_escrita  = $y_quadrado + 15;
+    $y_quadrado = 30;
+    $y_escrita  = $y_quadrado + 13;
 
-		//2 linha
-		$this->pdf->escreve_relativo( "SRE", 100 + 5, $y_escrita - 14, 258, $altura_caixa, $fonte, 10, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "{$this->nm_instituicao}", 100 + 10,  $y_escrita, 258, $altura_caixa, $fonte, 12, $corTexto, 'left' );
+    // 1 linha
+    $this->pdf->escreve_relativo("QUADRO CURRICULAR", 100, $y_escrita - 8, 268,
+      $altura_caixa, $fonte, 17, $corTexto, 'center');
+    $this->pdf->escreve_relativo("Curso", 355 + 5, $y_escrita - 13, 258,
+      $altura_caixa, $fonte, 10, $corTexto, 'left');
+    $this->pdf->escreve_relativo("{$this->nm_curso}", 360 + 10, $y_escrita,
+      356, $altura_caixa, $fonte, 12, $corTexto, 'left');
 
-		$this->pdf->escreve_relativo( "Município", 355 + 5, $y_escrita - 14, 100, $altura_caixa, $fonte, 10, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "{$this->nm_municipio}", 355 + 10, $y_escrita, 80, $altura_caixa, $fonte, 12, $corTexto, 'left' );
+    $y_quadrado += $altura_caixa;
+    $y_escrita   = $y_quadrado + 15;
 
-		$this->pdf->escreve_relativo( "Distrito/Localidade", 465 + 5, $y_escrita - 14, 100, $altura_caixa, $fonte, 10, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "{$this->nm_localidade}", 465 + 10, $y_escrita, 80, $altura_caixa, $fonte, 12, $corTexto, 'left' );
+    // 2 linha
+    $this->pdf->escreve_relativo("SRE", 100 + 5, $y_escrita - 14, 258,
+      $altura_caixa, $fonte, 10, $corTexto, 'left');
+    $this->pdf->escreve_relativo("{$this->nm_instituicao}", 100 + 10,
+      $y_escrita, 258, $altura_caixa, $fonte, 12, $corTexto, 'left');
 
-		$y_quadrado += $altura_caixa;
-		$y_escrita  = $y_quadrado + 13;
+    $this->pdf->escreve_relativo("Município", 355 + 5, $y_escrita - 14, 100,
+      $altura_caixa, $fonte, 10, $corTexto, 'left' );
+    $this->pdf->escreve_relativo("{$this->nm_municipio}", 355 + 10, $y_escrita,
+      80, $altura_caixa, $fonte, 12, $corTexto, 'left' );
 
-		//3 linha
-		$this->pdf->escreve_relativo( "Escola", 100 + 5, $y_escrita - 13, 100, $altura_caixa, $fonte, 10, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "$this->ref_cod_escola", 80, $y_escrita, 100, $altura_caixa, $fonte, 12, $corTexto, 'center' );
+    $this->pdf->escreve_relativo("Distrito/Localidade", 465 + 5, $y_escrita - 14,
+      100, $altura_caixa, $fonte, 10, $corTexto, 'left');
+    $this->pdf->escreve_relativo("{$this->nm_localidade}", 465 + 10, $y_escrita,
+      80, $altura_caixa, $fonte, 12, $corTexto, 'left');
 
-		$this->pdf->escreve_relativo( "Denominação", 170 + 5, $y_escrita - 13, 300, $altura_caixa, $fonte, 10, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "{$this->nm_escola}", 170 + 10, $y_escrita, 300, $altura_caixa, $fonte, 12, $corTexto, 'left' );
+    $y_quadrado += $altura_caixa;
+    $y_escrita   = $y_quadrado + 13;
 
-		$this->pdf->escreve_relativo( "Ano de Referência", 465 + 5, $y_escrita - 13, 140, $altura_caixa, $fonte, 10, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "{$this->ano}", 465 + 10, $y_escrita, 220, $altura_caixa, $fonte, 12, $corTexto, 'left' );
+    // 3 linha
+    $this->pdf->escreve_relativo("Escola", 100 + 5, $y_escrita - 13, 100,
+      $altura_caixa, $fonte, 10, $corTexto, 'left');
+    $this->pdf->escreve_relativo("$this->ref_cod_escola", 80, $y_escrita, 100,
+      $altura_caixa, $fonte, 12, $corTexto, 'center');
 
-		$y_quadrado += $altura_caixa;
-		$y_escrita  = $y_quadrado + 2;
-		$altura_caixa = 20;
+    $this->pdf->escreve_relativo("Denominação", 170 + 5, $y_escrita - 13, 300,
+      $altura_caixa, $fonte, 10, $corTexto, 'left');
+    $this->pdf->escreve_relativo("{$this->nm_escola}", 170 + 10, $y_escrita,
+      300, $altura_caixa, $fonte, 12, $corTexto, 'left');
 
-		//indicadores fixos
-		$this->pdf->quadrado_relativo( 30, $y_quadrado, 535, $altura_caixa );
-		$this->pdf->escreve_relativo( "Indicadores Fixos", 30, $y_escrita, 535, $altura_caixa, $fonte, 12, $corTexto, 'center' );
+    $this->pdf->escreve_relativo("Ano de Referência", 465 + 5, $y_escrita - 13,
+      140, $altura_caixa, $fonte, 10, $corTexto, 'left');
+    $this->pdf->escreve_relativo("{$this->ano}", 465 + 10, $y_escrita, 220,
+      $altura_caixa, $fonte, 12, $corTexto, 'left');
 
-		$y_quadrado += $altura_caixa;
-		$y_escrita  = $y_quadrado + 3;
+    $y_quadrado  += $altura_caixa;
+    $y_escrita    = $y_quadrado + 2;
+    $altura_caixa = 20;
 
-		$this->pdf->quadrado_relativo( 30, $y_quadrado, 535, $altura_caixa );
-		$this->pdf->escreve_relativo( "Número de Dias Letivos Anuais: ".$this->total_dias_uteis, 50, $y_escrita, 300, $altura_caixa, $fonte, 12, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "Número de Semanas Letivas: ".$this->total_semanas, 350, $y_escrita, 382, $altura_caixa, $fonte, 12, $corTexto, 'left' );
+    // Indicadores fixos
+    $this->pdf->quadrado_relativo(30, $y_quadrado, 535, $altura_caixa);
+    $this->pdf->escreve_relativo("Indicadores Fixos", 30, $y_escrita, 535,
+      $altura_caixa, $fonte, 12, $corTexto, 'center');
 
-		$this->pdf->escreve_relativo( date('d/m/Y'), 42, 105,100, 20, $fonte, 10, $corTexto, 'left' );
+    $y_quadrado += $altura_caixa;
+    $y_escrita   = $y_quadrado + 3;
 
+    $this->pdf->quadrado_relativo(30, $y_quadrado, 535, $altura_caixa);
+    $this->pdf->escreve_relativo("Número de Dias Letivos Anuais: " . $this->total_dias_uteis,
+      50, $y_escrita, 300, $altura_caixa, $fonte, 12, $corTexto, 'left');
+    $this->pdf->escreve_relativo("Número de Semanas Letivas: " . $this->total_semanas,
+      350, $y_escrita, 382, $altura_caixa, $fonte, 12, $corTexto, 'left' );
 
-	}
+    $this->pdf->escreve_relativo(date('d/m/Y'), 42, 105, 100, 20, $fonte, 10,
+      $corTexto, 'left');
+  }
 
 
 	function buscaDiasLetivos()
@@ -614,6 +650,3 @@ $miolo = new indice();
 $pagina->addForm( $miolo );
 // gera o html
 $pagina->MakeAll();
-
-
-?>

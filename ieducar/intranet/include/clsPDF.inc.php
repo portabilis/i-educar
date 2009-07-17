@@ -88,7 +88,7 @@ class clsPDF
 		$this->LinkArquivo = $caminho;
 
 		$this->pdf = PDF_new();
-		pdf_set_parameter($this->pdf,"FontOutline","monospaced=/home/pagina/public_html/intranet/arquivos/FreeMonoBold.ttf");
+		pdf_set_parameter($this->pdf, "FontOutline", "monospaced=arquivos/fontes/FreeMonoBold.ttf");
 		PDF_open_file($this->pdf, $this->caminho);
 
 		PDF_set_info			($this->pdf, "Creator", $this->owner);
@@ -299,16 +299,48 @@ class clsPDF
 		}
 	}
 
-	function InsertJpng($tipo, $image, $x, $y, $tamanho)
-	{
-		$y = $this->altura-$y;
-		$im = pdf_open_image_file($this->pdf, $tipo, $image, "", 0);
+  public function InsertJpng($tipo, $image, $x, $y, $tamanho)
+  {
+    $y = $this->altura - $y;
 
-		PDF_place_image($this->pdf, $im, $x, $y, $tamanho);
-		$x = PDF_get_value($this->pdf, "imagewidth", $im);
-		$y = PDF_get_value($this->pdf, "imageheight", $im);
-		PDF_close_image	($this->pdf, $im);
-	}
+    $im = pdf_open_image_file($this->pdf, $tipo, $image, "", 0);
+
+    PDF_place_image($this->pdf, $im, $x, $y, $tamanho);
+    $x = PDF_get_value($this->pdf, "imagewidth", $im);
+    $y = PDF_get_value($this->pdf, "imageheight", $im);
+    PDF_close_image($this->pdf, $im);
+  }
+
+
+  /**
+   * Adiciona uma imagem no documento PDF escalonando-a até a largura desejada.
+   *
+   * @param   string     $tipo      Tipo de imagem a ser incorporada
+   * @param   string     $image     Caminho para o arquivo da imagem
+   * @param   int|float  $x         Posição x (eixo horizontal)
+   * @param   int|float  $y         Posição y (eixo vertical)
+   * @param   int|float  $maxWidth  Largura máxima da imagem (usado para o cálculo de redução proporcional)
+   */
+  public function insertImageScaled($tipo, $image, $x, $y, $maxWidth)
+  {
+    $y = $this->altura - $y;
+    $im = pdf_open_image_file($this->pdf, $tipo, $image, '', 0);
+
+    /**
+     * Reduz em dois pixels. Algum bug da função da PDFLib necessita essa
+     * compensação no cálculo para redução proporcional.
+     */
+    $maxWidth -= 2;
+
+    $scale = 1;
+    $width = PDF_get_value($this->pdf, 'imagewidth', $im);
+    if ($width > $maxWidth) {
+      $scale = $maxWidth / $width;
+    }
+
+    PDF_place_image($this->pdf, $im, $x, $y, $scale);
+    PDF_close_image($this->pdf, $im);
+  }
 
 	function LinkFor($type, $stringlink, $destino, $xo, $yo, $x, $y)
 	{
@@ -333,7 +365,7 @@ class clsPDF
 	}
 
 	function Shape($tipo, $x, $y, $largura=0, $altura=0, $linha=0.001, $color="#000000", $color2="#FFFFFF")
-	{		
+	{
 		$this->SetLine( $linha );
 		$this->SetBoth( $color );
 		$this->SetFill( $color2 );

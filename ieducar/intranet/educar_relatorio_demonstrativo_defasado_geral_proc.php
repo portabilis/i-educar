@@ -1,34 +1,42 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-require_once ("include/clsPDF.inc.php");
+
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
+
+/**
+ * Demonstrativo de defasagem geral.
+ *
+ * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package     Core
+ * @subpackage  Relatório
+ * @since       Arquivo disponível desde a versão 1.0.0
+ * @version     $Id$
+ */
+
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/clsPDF.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -242,7 +250,7 @@ class indice extends clsCadastro
 		$corTexto = '#000000';
 
 		$obj_lst_escola = new clsPmieducarEscola();
-		
+
 		$lst_escola = $obj_lst_escola->lista($this->ref_cod_escola,null,null,$this->ref_cod_instituicao,null,null,null,null,null,null,1);
 		if($lst_escola)
 		{
@@ -264,7 +272,7 @@ class indice extends clsCadastro
 
 //				$total_turmas_serie = 0;
 //				$total_alunos_serie = 0;
-				
+
 
 				$this->pdf->OpenPage();
 				$this->addCabecalho();
@@ -293,7 +301,7 @@ class indice extends clsCadastro
 
 					//$obj_curso = new clsPmieducarCurso($curso);
 					//$det_curso = $obj_curso->detalhe();
-					
+
 					if($lista_serie_curso){
 
 
@@ -308,13 +316,13 @@ class indice extends clsCadastro
 							$total_turmas_serie = 0;
 
 							//$total_alunos_serie = 0;
-							
+
 							$flagTurmas = 0;
 							$flagAlunos = 0;
 							foreach ($lst_escola as $escola)
 							{
-								
-								
+
+
 								$this->ref_cod_escola = $escola['cod_escola'];
 
 							    $obj_calendario = new clsPmieducarEscolaAnoLetivo();
@@ -334,48 +342,48 @@ class indice extends clsCadastro
 									//$subtotal_serie = 0;
 
 								$total_turmas_serie = 0;
-		
+
 							//	$total_alunos_serie = 0;
 
 								if($ct_analfabeto <= 1)
 								{
-									$obj_turma = new clsPmieducarTurma();																		
-									
+									$obj_turma = new clsPmieducarTurma();
+
 									if(!empty($_POST["ref_cod_escola"]))
 									{
-										$turmas = count($obj_turma->lista(null,null,null,$serie['cod_serie'],$this->ref_cod_escola,null,null,null,null,null,null,null,null,null,1));								
+										$turmas = count($obj_turma->lista(null,null,null,$serie['cod_serie'],$this->ref_cod_escola,null,null,null,null,null,null,null,null,null,1));
 										$total_geral_turmas = $total_geral_turmas +  $turmas;
 									} else {
 										if($flagTurmas == 0)
 										{
 											$turmas = count($obj_turma->lista(null,null,null,$serie['cod_serie'],null,null,null,null,null,null,null,null,null,null,1));
-											$total_geral_turmas = $total_geral_turmas +  $turmas;		
+											$total_geral_turmas = $total_geral_turmas +  $turmas;
 										}
 										$flagTurmas++;
-									}									
-									
+									}
+
 									//$total_geral_turmas = $total_geral_turmas +  $turmas;
-									$total_turmas_serie = $turmas;														
+									$total_turmas_serie = $turmas;
 
 									$total_geral_turmas_ambos = $total_geral_turmas;
 
 									$obj_matricula = new clsPmieducarMatricula();
-									
+
 									$lista_matricula_serie = $obj_matricula->lista(null,null,$this->ref_cod_escola,$serie['cod_serie'],null,null,null,array(1,2,3),null,null,null,null,1,$this->ano,$curso,$this->ref_cod_instituicao,null,null,null,$ct_analfabeto,null,null,null,null,null,null,null,$this->mes,true);
 									$total_geral_alunos += $obj_matricula->_total;
 									$total_alunos_serie = $obj_matricula->_total;
 									$total_geral_alunos_ambos = (int)$total_geral_alunos_ambos + $obj_matricula->_total;
-													
+
 									if($ct_analfabeto == 1)
 									{
 										$analfabetos[$serie['cod_serie']] = $analfabetos[$serie['cod_serie']] + $total_alunos_serie;
 									}
-												
+
 									$total_alunos_serie_ambos[$serie['cod_serie']] = (int)$total_alunos_serie_ambos[$serie['cod_serie']] + $obj_matricula->_total;
-									$total_turmas_serie_ambos[$serie['cod_serie']] = $turmas;										
-									
+									$total_turmas_serie_ambos[$serie['cod_serie']] = $turmas;
+
 								}
-								
+
 
 								if($lista_matricula_serie && $ct_analfabeto <= 1)
 								{
@@ -393,7 +401,7 @@ class indice extends clsCadastro
 										//$obj_fisica = new clsFisica($det_aluno['ref_idpes']);
 										//$det_fisica = $obj_fisica->detalhe();
 
-										
+
 										if($matricula['data_nasc'])
 										{
 											$ano_nasc = explode("-",$matricula['data_nasc']);
@@ -411,7 +419,7 @@ class indice extends clsCadastro
 											if(strpos($value['idade'],"-") && is_numeric($idade_aluno))
 											{
 												$idade = explode("-",$value['idade'] );
-												
+
 												if(    ( $idade_aluno > $serie['idade_final'] + $flag_defasado
 														&& $idade_aluno >= $idade[0]
 														&& $idade_aluno <= $idade[1])
@@ -445,7 +453,7 @@ class indice extends clsCadastro
 									}
 								}
 							}
-																	
+
 
 							/**
 							 *  linha
@@ -472,15 +480,15 @@ class indice extends clsCadastro
 							$this->pdf->escreve_relativo( $serie['nm_serie'], $serie_x,$inicio_escrita_y + 5, 50, 50, $fonte, 6, $corTexto, 'left' );
 							//posicao numero turmas
 							$turma_x = 30 + $expande;
-							
+
 							$total = $ct_analfabeto <= 1 ? $total_turmas_serie : $total_turmas_serie_ambos[$serie['cod_serie']];
-							
-																				
+
+
 							$this->pdf->escreve_relativo( $total, $turma_x -5,$inicio_escrita_y + 5, 100, 50, $fonte, 10, $corTexto, 'center' );
 							//posicao numero alunos
 							$alunos_x = 40 + $expande;
-							
-							
+
+
 							if(empty($_POST["ref_cod_escola"]))
 							{
 								$total              = $total_alunos_serie_ambos[$serie['cod_serie']];
@@ -489,12 +497,12 @@ class indice extends clsCadastro
 								{
 									$total = $analfabetos[$serie['cod_serie']];
 								}
-								
+
 							} else {
 								$total = $ct_analfabeto <= 1 ? $total_alunos_serie : $total_alunos_serie_ambos[$serie['cod_serie']];
 							}
 							$this->pdf->escreve_relativo( $total, $alunos_x + 15,$inicio_escrita_y + 5, 100, 40, $fonte, 10, $corTexto, 'center' );
-							
+
 						//	$largura_quadrado = $incremental-5;
 							//$this->qt_anos = 1;
 							$largura_anos = 615;
@@ -570,16 +578,16 @@ class indice extends clsCadastro
 									$total_alunos_serie = $analfabetos[$serie['cod_serie']];
 									$this->pdf->escreve_relativo( round(($total_defasado_serie / $total_alunos_serie) * 100) . "%", 780 ,$inicio_escrita_y + 5, 30, $altura, $fonte, 10, $corTexto, 'center' );
 								} else {
-									$this->pdf->escreve_relativo( round(($total_serie_ano["{$serie['cod_serie']}"]["total_defasado_serie"] / $total_alunos_serie_ambos[$serie['cod_serie']]) * 100) . "%", 780 ,$inicio_escrita_y + 5, 30, $altura, $fonte, 10, $corTexto, 'center' );							 	
+									$this->pdf->escreve_relativo( round(($total_serie_ano["{$serie['cod_serie']}"]["total_defasado_serie"] / $total_alunos_serie_ambos[$serie['cod_serie']]) * 100) . "%", 780 ,$inicio_escrita_y + 5, 30, $altura, $fonte, 10, $corTexto, 'center' );
 								}
 							} else {
-							
+
 								//escreve porcentagem
 								if($ct_analfabeto <= 1)
 								{
 									if ($total_alunos_serie)
 										$this->pdf->escreve_relativo( round(($total_defasado_serie / $total_alunos_serie) * 100) . "%", 780 ,$inicio_escrita_y + 5, 30, $altura, $fonte, 10, $corTexto, 'center' );
-									else 
+									else
 										$this->pdf->escreve_relativo( 0 . "%", 780 ,$inicio_escrita_y + 5, 30, $altura, $fonte, 10, $corTexto, 'center' );
 								}
 								else
@@ -605,7 +613,7 @@ class indice extends clsCadastro
 
 					/**
 					 *  TOTAL
-					 */								
+					 */
 
 					$this->pdf->quadrado_relativo( 30, $inicio_escrita_y, 782, $altura_linha);
 
@@ -632,8 +640,8 @@ class indice extends clsCadastro
 						$texto = "Total Geral";
 					$this->pdf->escreve_relativo( $texto, $serie_x,$inicio_escrita_y + 5, 50, 50, $fonte, 6, $corTexto, 'left' );
 					//posicao numero turmas
-					$turma_x = 25 + $expande;					
-					
+					$turma_x = 25 + $expande;
+
 					$this->pdf->escreve_relativo( $total_geral_turmas, $turma_x ,$inicio_escrita_y + 5, 100, 50, $fonte, 10, $corTexto, 'center' );
 					//posicao numero alunos
 					$alunos_x = 40 + $expande;
@@ -716,7 +724,7 @@ class indice extends clsCadastro
 				 */
 			}
 		}
-		
+
 		$this->get_link = $this->pdf->GetLink();
 		//header( "location: " . $this->pdf->GetLink() );
 		$this->pdf->CloseFile();
@@ -733,34 +741,50 @@ class indice extends clsCadastro
 
 	}
 
-	function addCabecalho()
-	{
-		// variavel que controla a altura atual das caixas
-		$altura = 30;
-		$fonte = 'arial';
-		$corTexto = '#000000';
+  public function addCabecalho()
+  {
+    /**
+     * Variável global com objetos do CoreExt.
+     * @see includes/bootstrap.php
+     */
+    global $coreExt;
 
-		// cabecalho
-		$this->pdf->quadrado_relativo( 30, $altura, 782, 85 );
-		$this->pdf->InsertJpng( "gif", "imagens/brasao.gif", 50, 95, 0.30 );
+    // Namespace de configuração do template PDF
+    $config = $coreExt['Config']->app->template->pdf;
 
-		//paginador
-		$this->pdf->escreve_relativo( date("d/m/Y"), 25, 30, 782, 80, $fonte, 10, $corTexto, 'right' );
+    // Variável que controla a altura atual das caixas
+    $altura   = 30;
+    $fonte    = 'arial';
+    $corTexto = '#000000';
 
-		//titulo principal
-		$this->pdf->escreve_relativo( "PREFEITURA COBRA TECNOLOGIA", 30, 30, 782, 80, $fonte, 18, $corTexto, 'center' );
+    // Cabeçalho
+    $logo = $config->get($config->logo, 'imagens/brasao.gif');
 
-		//dados escola
-		$this->pdf->escreve_relativo( "Instituição:$this->nm_instituicao", 120, 58, 300, 80, $fonte, 10, $corTexto, 'left' );
-		//$this->pdf->escreve_relativo( "Escola:{$this->nm_escola}",136, 70, 300, 80, $fonte, 10, $corTexto, 'left' );
+    $this->pdf->quadrado_relativo( 30, $altura, 782, 85 );
+    $this->pdf->insertImageScaled('gif', $logo, 50, 95, 41);
 
-		//titulo
-		$this->pdf->escreve_relativo( "Demonstrativo de Alunos Defasados Idade/Série - {$this->ano}", 30, 85, 782, 80, $fonte, 12, $corTexto, 'center' );
+    // Paginador
+    $this->pdf->escreve_relativo(date("d/m/Y"), 25, 30, 782, 80, $fonte, 10,
+      $corTexto, 'right');
 
-		//Data
-		$this->pdf->escreve_relativo( "{$this->meses_do_ano[$this->mes]}/{$this->ano}", 45, 100, 535, 80, $fonte, 10, $corTexto, 'left' );
+    // Título principal
+    $titulo = $config->get($config->titulo, 'i-Educar');
+    $this->pdf->escreve_relativo($titulo, 30, 30, 782, 80, $fonte, 18,
+      $corTexto, 'center');
 
-	}
+    // Dados escola
+    $this->pdf->escreve_relativo("Instituição:$this->nm_instituicao", 120, 58,
+      300, 80, $fonte, 10, $corTexto, 'left');
+
+    // Título
+    $this->pdf->escreve_relativo("Demonstrativo de Alunos Defasados Idade/Série - {$this->ano}",
+      30, 85, 782, 80, $fonte, 12, $corTexto, 'center');
+
+    // Data
+    $this->pdf->escreve_relativo("{$this->meses_do_ano[$this->mes]}/{$this->ano}",
+      45, 100, 535, 80, $fonte, 10, $corTexto, 'left');
+  }
+
 
 	function novaPagina($analfabeto = 1)
 	{

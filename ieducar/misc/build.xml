@@ -22,19 +22,50 @@
   -->
 
 <project name="i-Educar" description="Sistema de gestão de escolas" default="release" basedir="../">
-  <property name="project.conf.version"   value="1.0.1" />
+  <property name="project.conf.version"   value="1.1.0alpha1" />
+  <property name="project.conf.curdir"    value="" />
   <property name="project.conf.buildin"   value="/tmp" />
   <property name="project.conf.builddir"  value="${project.conf.buildin}/release-${project.conf.version}" />
   <property name="project.conf.buildgzip" value="${project.conf.buildin}/ieducar-${project.conf.version}.tar.gz" />
   <property name="project.conf.buildzip"  value="${project.conf.buildin}/ieducar-${project.conf.version}.zip" />
 
+  <!-- Apenas para saber quanta memória o build consome -->
+  <property name="build.report.memory_peak" value="" />
+
+  <!-- Pega o diretório atual como workaround ao chdir das classes de teste base -->
+  <php function="getcwd" returnProperty="project.conf.curdir" />
+
+  <!-- Inclui todos os arquivos do projeto, ignorando arquivos e diretórios -->
   <fileset dir="${project.basedir}" id="allfiles">
     <include name="**" />
     <exclude name=".svn/" />
     <exclude name="**/build.xml" />
+    <exclude name="**/coverage.db" />
     <exclude name="tests/" />
+    <exclude name="spikes/" />
   </fileset>
 
+  <!-- Inclui todos os arquivos de testes -->
+  <fileset dir="${project.conf.curdir}/tests" id="alltests">
+    <include name="**" />
+    <exclude name="selenese/*" />
+  </fileset>
+
+  <!-- Inclui apenas os arquivos de unit test -->
+  <fileset dir="${project.conf.curdir}/tests" id="unittests">
+    <include name="**" />
+    <exclude name="functional/*" /> 
+    <exclude name="selenese/*" />
+  </fileset>
+
+  <!-- Inclui apenas os arquivos de functional test -->
+  <fileset dir="${project.conf.curdir}/tests" id="functests">
+    <include name="**" />
+    <exclude name="unit/*" /> 
+    <exclude name="selenese/*" />
+  </fileset>
+
+  <!-- Prepara o ambiente para a o processo de build -->
   <target name="prepare">
     <echo msg="Preparando o build para a release ${project.conf.version}" />
 
@@ -49,6 +80,38 @@
     <delete dir="${project.conf.builddir}" verbose="on" includeemptydirs="on" failonerror="on" />
   </target>
 
+  <!-- Executa todos os testes disponíveis -->
+  <target name="tests">
+    <echo msg="Executando todos os testes em ${project.conf.curdir}/tests" />
+    <phpunit printsummary="true" haltonfailure="true" haltonerror="on" >
+      <formatter todir="${project.conf.buildin}" type="xml"/>
+      <batchtest>
+        <fileset refid="alltests" />
+      </batchtest>
+    </phpunit>
+  </target>
+
+  <!-- Executa apenas os unit tests -->
+  <target name="unittest">
+    <echo msg="Executando todos os unit tests em ${project.conf.curdir}/tests/unit" />
+    <phpunit printsummary="true" haltonfailure="true" haltonerror="on" >
+      <batchtest>
+        <fileset refid="unittests" />
+      </batchtest>
+    </phpunit>
+  </target>
+
+  <!-- Executa apenas os functional tests -->
+  <target name="functest">
+    <echo msg="Executando todos os functional tests em ${project.conf.curdir}/tests/functional" />
+    <phpunit printsummary="true" haltonfailure="true" haltonerror="on" >
+      <batchtest>
+        <fileset refid="functests" />
+      </batchtest>
+    </phpunit>
+  </target>
+
+  <!-- Copia os arquivos do projeto para o diretório de build -->
   <target name="build" depends="prepare">
     <echo msg="Criando o build" />
     <mkdir dir="${project.conf.builddir}" />
@@ -57,6 +120,7 @@
     </copy>
   </target>
 
+  <!-- Empacota o build com Gzip -->
   <target name="gzip" depends="build">
     <echo msg="Gzipping ${project.conf.builddir}" />
     <tar destfile="${project.conf.buildgzip}" compression="gzip">
@@ -66,6 +130,7 @@
     </tar>
   </target>
 
+  <!-- Empacota o build com Zip -->
   <target name="zip" depends="build">
     <echo msg="Zipping ${project.conf.builddir}" />
     <zip destfile="${project.conf.buildzip}">
@@ -75,7 +140,10 @@
     </zip>
   </target>
 
-  <target name="release" depends="build, gzip, zip">
+  <!-- Cria uma nova release -->
+  <target name="release" depends="build, tests, gzip, zip">
     <echo msg="OK! Build construído com sucesso." />
+    <php function="memory_get_peak_usage" returnProperty="build.report.memory_peak" />
+    <echo msg="Pico de memória: ${build.report.memory_peak}." />
   </target>
 </project>

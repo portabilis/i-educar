@@ -1,30 +1,7 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
-*	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-*																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-*						ctima@itajai.sc.gov.br					    	 *
-*																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-*																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-*																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-*	02111-1307, USA.													 *
-*																		 *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsPDF.inc.php");
+
+require_once 'include/clsPDF.inc.php';
+
 
 class relatorios
 {
@@ -109,50 +86,71 @@ class relatorios
 		$this->margem_fundo = $fundo;
 	}
 
-	function novaPagina($altura_titulo=12, $tamanho_titulo=14)
-	{
-		$this->altura_titulo = $altura_titulo;
-		$this->tamanho_titulo = $tamanho_titulo;
-		$this->numeroPagina++;
-		$this->pdf->OpenPage();
-		// desenha as barras cinza do topo
-		$this->pdf->Shape('ret', $this->margem_esquerda - 10, 765, 5, 50, 1, $this->cor_fundo_cabecalho, $this->cor_fundo_cabecalho);
-		$this->pdf->Shape('ret', $this->margem_esquerda + 56, 765, $this->largura - $this->margem_esquerda - $this->margem_direita - 106, 50, 1, $this->cor_fundo_cabecalho, $this->cor_fundo_cabecalho);
-		$this->pdf->Shape('ret', $this->largura - $this->margem_direita - 40, 765, ( $this->largura - $this->margem_direita ) - ( $this->largura - $this->margem_direita - 40 ) + 10, 50, 1, $this->cor_fundo_cabecalho, $this->cor_fundo_cabecalho);
-		// desenha as duas caixas do fim (repete o de cima com altura diferente)
-		$this->pdf->Shape('ret', $this->margem_esquerda - 10, 40, 5, 50, 1, $this->cor_fundo_rodape, $this->cor_fundo_rodape);
-		$this->pdf->Shape('ret', $this->margem_esquerda + 56, 40, $this->largura - $this->margem_esquerda - $this->margem_direita - 106, 50, 1, $this->cor_fundo_rodape, $this->cor_fundo_rodape);
-		$this->pdf->Shape('ret', $this->largura - $this->margem_direita - 40, 40, ( $this->largura - $this->margem_direita ) - ( $this->largura - $this->margem_direita - 40 ) + 10, 50, 1, $this->cor_fundo_rodape, $this->cor_fundo_rodape);
-		// escreve a numeracao da pagina
-		$this->pdf->Write( $this->numeroPagina, $this->pdf->largura - $this->margem_direita - 25, 125, 15, 80, $this->fonte_titulo, 10, "#000000", "center" );
-		// insere o brasao da prefeitura
-		$this->pdf->InsertJpng( "gif", "imagens/brasao.gif", $this->margem_esquerda, 85, 0.35  );
-		$this->pdf->Write( $this->cabecalho, 120, 110, 500, 80, $this->fonte_titulo, 10, "#000000", "left" );
+  public function novaPagina($altura_titulo = 12, $tamanho_titulo = 14)
+  {
+    // Recupera objeto no escopo global
+    global $coreExt;
+    $config = $coreExt['Config']->app->template;
 
-		if($this->exibe_titulo_relatorio)
-		{
-			// desenha a caixa para o titulo do relatorio
-			$this->pdf->Shape('ret', $this->margem_esquerda - 1, $this->pdf->altura-129, $this->largura - $this->margem_esquerda - $this->margem_direita + 2, $this->altura_titulo, 1, $this->cor_fundo_titulo, $this->cor_fundo_titulo);
-			// escreve o titulo do relatorio
-			$this->pdf->Write( $this->titulo_relatorio, $this->margem_esquerda + $this->txt_padding_left, 130, 500, $this->tamanho_titulo, $fonte ,'10',$this->cor_texto_titulo,'left');
-			// escreve o texto de rodape
-		}
+    $this->altura_titulo = $altura_titulo;
+    $this->tamanho_titulo = $tamanho_titulo;
+    $this->numeroPagina++;
+    $this->pdf->OpenPage();
 
-		$this->pdf->Write( $this->rodape, $this->margem_esquerda + 70, 848, 500, 80, $this->fonte_titulo, 15, "#000000", "left" );
-		if($this->exibe_produzido_por)
-			$this->pdf->Write( "produzido por CTIMA", $this->margem_esquerda + 350, 870, 500, 80, $this->fonte_titulo, 7, "#000000", "left" );
+    // Desenha as barras cinza do topo
+    $this->pdf->Shape('ret', $this->margem_esquerda - 10, 765, 5, 50, 1,
+      $this->cor_fundo_cabecalho, $this->cor_fundo_cabecalho);
+    $this->pdf->Shape('ret', $this->margem_esquerda + 56, 765,
+      $this->largura - $this->margem_esquerda - $this->margem_direita - 106,
+      50, 1, $this->cor_fundo_cabecalho, $this->cor_fundo_cabecalho);
+    $this->pdf->Shape('ret', $this->largura - $this->margem_direita - 40, 765,
+      ($this->largura - $this->margem_direita) - ($this->largura - $this->margem_direita - 40) + 10,
+      50, 1, $this->cor_fundo_cabecalho, $this->cor_fundo_cabecalho);
 
+    // Desenha as duas caixas do fim (repete o de cima com altura diferente)
+    $this->pdf->Shape('ret', $this->margem_esquerda - 10, 40, 5, 50, 1,
+      $this->cor_fundo_rodape, $this->cor_fundo_rodape);
+    $this->pdf->Shape('ret', $this->margem_esquerda + 56, 40,
+      $this->largura - $this->margem_esquerda - $this->margem_direita - 106,
+      50, 1, $this->cor_fundo_rodape, $this->cor_fundo_rodape);
+    $this->pdf->Shape('ret', $this->largura - $this->margem_direita - 40, 40,
+      ($this->largura - $this->margem_direita) - ($this->largura - $this->margem_direita - 40) + 10,
+      50, 1, $this->cor_fundo_rodape, $this->cor_fundo_rodape);
 
-		if($this->exibe_titulo_relatorio)
-			$this->altura = 140;
-		else
-			$this->altura = 100;
+    // Escreve a numeracao da pagina
+    $this->pdf->Write( $this->numeroPagina, $this->pdf->largura - $this->margem_direita - 25, 125, 15, 80, $this->fonte_titulo, 10, "#000000", "center" );
 
-		if($this->valor_titulo)
-		{
-			$this->novalinha($this->valor_titulo[0],$this->valor_titulo[1],$this->valor_titulo[2],$this->valor_titulo[3],$this->valor_titulo[4],$this->valor_titulo[5],$this->valor_titulo[6],$this->valor_titulo[7],$this->valor_titulo[8],$this->valor_titulo[9]);
-		}
-	}
+    // Insere o brasao da prefeitura
+    $image = $config->get($config->pdf->logo, 'imagens/brasao.gif');
+    $this->pdf->insertImageScaled("gif", $image, $this->margem_esquerda + 4,
+      74, 45);
+
+    $this->pdf->Write($this->cabecalho, 120, 110, 500, 80, $this->fonte_titulo,
+      10, "#000000", "left");
+
+    if ($this->exibe_titulo_relatorio) {
+      // desenha a caixa para o titulo do relatorio
+      $this->pdf->Shape('ret', $this->margem_esquerda - 1, $this->pdf->altura-129, $this->largura - $this->margem_esquerda - $this->margem_direita + 2, $this->altura_titulo, 1, $this->cor_fundo_titulo, $this->cor_fundo_titulo);
+      // escreve o titulo do relatorio
+      $this->pdf->Write( $this->titulo_relatorio, $this->margem_esquerda + $this->txt_padding_left, 130, 500, $this->tamanho_titulo, $fonte ,'10',$this->cor_texto_titulo,'left');
+    }
+
+    // escreve o texto de rodape
+    $this->pdf->Write( $this->rodape, $this->margem_esquerda + 70, 848, 500, 80, $this->fonte_titulo, 15, "#000000", "left" );
+    if($this->exibe_produzido_por) {
+      $this->pdf->Write( "produzido por CTIMA", $this->margem_esquerda + 350, 870, 500, 80, $this->fonte_titulo, 7, "#000000", "left" );
+    }
+
+    if($this->exibe_titulo_relatorio)
+      $this->altura = 140;
+    else
+      $this->altura = 100;
+
+    if($this->valor_titulo) {
+      $this->novalinha($this->valor_titulo[0],$this->valor_titulo[1],$this->valor_titulo[2],$this->valor_titulo[3],$this->valor_titulo[4],$this->valor_titulo[5],$this->valor_titulo[6],$this->valor_titulo[7],$this->valor_titulo[8],$this->valor_titulo[9]);
+    }
+  }
+
 
 	function fechaPagina()
 	{

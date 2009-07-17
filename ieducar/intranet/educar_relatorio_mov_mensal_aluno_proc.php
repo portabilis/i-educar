@@ -1,45 +1,54 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-require_once ("include/clsPDF.inc.php");
+
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
+
+/**
+ * Relatório de movimentação mensal de alunos.
+ *
+ * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package     Core
+ * @subpackage  Relatório
+ * @since       Arquivo disponível desde a versão 1.0.0
+ * @version     $Id$
+ */
+
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/clsPDF.inc.php';
+
 
 class clsIndexBase extends clsBase
 {
-	function Formular()
-	{
-		$this->SetTitulo( "Prefeitura de Itaja&iacute; - i-Educar - Movimentação Mensal de Alunos" );
-		$this->processoAp = "661";
-		$this->renderMenu = false;
-		$this->renderMenuSuspenso = false;
-	}
+  public function Formular() {
+    $this->SetTitulo($this->_instituicao . 'Movimentação Mensal de Alunos');
+    $this->processoAp = '661';
+    $this->renderMenu = FALSE;
+    $this->renderMenuSuspenso = FALSE;
+  }
 }
+
 
 class indice extends clsCadastro
 {
@@ -181,11 +190,11 @@ class indice extends clsCadastro
 
 	     //total de dias uteis + dias extra-letivos - dia nao letivo - fim de semana
 	     $this->totalDiasUteis = 0;
-	     
+
 	     $obj_ano_letivo_modulo = new clsPmieducarAnoLetivoModulo();
 		 $inicio_ano = $obj_ano_letivo_modulo->menorData( $this->ano, $this->ref_cod_escola );
 	     $inicio_ano = explode("-", $inicio_ano);
-	     
+
 	     for($dia = 1; $dia <= $NumeroDiasMes; $dia++)
 	     {
 	     	if($DiaSemana >= 7) {
@@ -238,9 +247,9 @@ class indice extends clsCadastro
 		$this->pdf->OpenPage();
 		$this->addCabecalho();
 		$this->novoCabecalho();
-		
+
 		$quantidade_total = array();
-		
+
 		foreach ($this->cursos as $curso)
 		{
 
@@ -313,7 +322,7 @@ class indice extends clsCadastro
 
 							$total_matriculas_turma_masculino = 0;
 							$total_matriculas_turma_feminino = 0;
-							
+
 							if($lista_matriculas)
 							{
 								foreach ($lista_matriculas as $matricula)
@@ -333,7 +342,7 @@ class indice extends clsCadastro
 										$total_matriculas_turma_feminino++;
 								}
 							}
-							
+
 							//quantidades matricula inicial
 //							M
 							$quantidades[0] = $total_matriculas_turma_masculino;
@@ -341,9 +350,9 @@ class indice extends clsCadastro
 							$quantidades[1] = $total_matriculas_turma_feminino;
 //							T
 							$quantidades[2] = $total_matriculas_turma;
-							
+
 							$db3 = new clsBanco();
-							
+
 							if (trim($turma["nm_turma"]) == "304") {
 //								echo "<pre>"; print_r($quantidades);// die();
 							}
@@ -361,54 +370,54 @@ AD ENTURMACAO 54962       4
 AD ENTURMACAO 55101       4
 AD TRANSFERENCIA 57059          3
 AD TRANSFERENCIA 57070          3*/
-							
+
 //							echo $turma["cod_turma"]."<br>";
-							
-							//sql para pegar o numero de alunos que 
+
+							//sql para pegar o numero de alunos que
 							// abandonaram e diminuir da soma final
 							/*$sql = "SELECT COUNT(0) FROM
-										pmieducar.matricula m, 
+										pmieducar.matricula m,
 										pmieducar.matricula_turma mt,
 										pmieducar.aluno a,
 										cadastro.fisica f
-									WHERE 
-										mt.ref_cod_turma = {$turma["cod_turma"]} 
-										AND mt.ativo = 1 
+									WHERE
+										mt.ref_cod_turma = {$turma["cod_turma"]}
+										AND mt.ativo = 1
 										AND mt.ref_cod_matricula = m.cod_matricula
-										AND m.ref_cod_aluno = a.cod_aluno 
-										AND a.ref_idpes = f.idpes 
-										AND sexo = 'M' 
+										AND m.ref_cod_aluno = a.cod_aluno
+										AND a.ref_idpes = f.idpes
+										AND sexo = 'M'
 										AND ano = {$this->ano}
-										AND m.aprovado not in(1,2,3)  
-										AND ( to_char(mt.data_cadastro,'MM')::int = '{$this->mes}' 
+										AND m.aprovado not in(1,2,3)
+										AND ( to_char(mt.data_cadastro,'MM')::int = '{$this->mes}'
 											  OR to_char(mt.data_exclusao,'MM')::int = '{$this->mes}')";
 							$diminui_masc = (int)$db3->CampoUnico($sql);
 							if ($depurar) {
 								echo $sql."<br>";
 							}
-							$sql = "SELECT COUNT(0) FROM 
-										pmieducar.matricula m, 
-										pmieducar.matricula_turma mt, 
+							$sql = "SELECT COUNT(0) FROM
+										pmieducar.matricula m,
+										pmieducar.matricula_turma mt,
 										pmieducar.aluno a,
 										cadastro.fisica f
-									WHERE 
-										mt.ref_cod_turma = {$turma["cod_turma"]} 
-										AND mt.ativo = 1 
+									WHERE
+										mt.ref_cod_turma = {$turma["cod_turma"]}
+										AND mt.ativo = 1
 										AND mt.ref_cod_matricula = m.cod_matricula
-										AND m.ref_cod_aluno = a.cod_aluno 
-										AND a.ref_idpes = f.idpes 
+										AND m.ref_cod_aluno = a.cod_aluno
+										AND a.ref_idpes = f.idpes
 										AND sexo = 'F'
 										AND ano = {$this->ano}
 										AND m.aprovado not in(1,2,3)
-										AND ( to_char(mt.data_cadastro,'MM')::int = '{$this->mes}' 
+										AND ( to_char(mt.data_cadastro,'MM')::int = '{$this->mes}'
 												OR to_char(mt.data_exclusao,'MM')::int = '{$this->mes}')";
 							$diminui_fem = (int)$db3->CampoUnico($sql);			*/
-//							$depurar = false;		
+//							$depurar = false;
 							if ($depurar || $turma["nm_turma"] == "304") {
 //								die($sql);
 //								$depurar = true;
 							}
-							
+
 //							$diminui_fem = $diminui_masc = 0;
 //							ENTURMACAO
 							/**
@@ -416,9 +425,9 @@ AD TRANSFERENCIA 57070          3*/
 							 */
 							$sql_complemento = "OR (
 														EXISTS (
-															SELECT 1 FROM pmieducar.transferencia_solicitacao ts WHERE ts.ativo = 1 AND 
-															 to_char(ts.data_transferencia,'MM')::int = {$this->mes} AND 
-															 ts.ref_cod_matricula_saida = m.cod_matricula 
+															SELECT 1 FROM pmieducar.transferencia_solicitacao ts WHERE ts.ativo = 1 AND
+															 to_char(ts.data_transferencia,'MM')::int = {$this->mes} AND
+															 ts.ref_cod_matricula_saida = m.cod_matricula
 															)
 													)";
 							$sql_complemento = "";
@@ -426,11 +435,11 @@ AD TRANSFERENCIA 57070          3*/
 //								$sql_complemento1 = "AND m.cod_matricula NOT IN (48743, 48775, 48816, 54097, 54962, 55101, 57059, 57070)";
 //								$sql_complemento1 = "AND m.cod_matricula NOT IN (48743, 48775, 48816, 54097, 54962, 55101, 57059)";
 							}
-													
+
 							$db = new clsBanco();
-							$consulta = "SELECT 
+							$consulta = "SELECT
 											DISTINCT mt.ref_cod_matricula, mt.sequencial, mt.ativo
-										 FROM 
+										 FROM
 										 	pmieducar.matricula_turma mt
 										 	,pmieducar.matricula m
 										 WHERE
@@ -441,7 +450,7 @@ AD TRANSFERENCIA 57070          3*/
 										 	AND (	to_char(mt.data_cadastro,'MM')::int = {$this->mes}
 										 		OR
 										 			to_char(mt.data_exclusao,'MM')::int = {$this->mes}
-										 			{$sql_complemento}	
+										 			{$sql_complemento}
 										 		)
 										 	ORDER BY
 										 		1, 2, ativo";
@@ -477,7 +486,7 @@ AD TRANSFERENCIA 57070          3*/
 							$total_abandono = 0;//$diminui_fem + $diminui_masc;
 							$total_abandono_masc = 0;//$diminui_masc;
 							$total_abandono_fem = 0;//$diminui_fem;
-							
+
 							$diminui_fem = $diminui_masc = 0;
 
 							$total_aprovado = 0;
@@ -490,8 +499,8 @@ AD TRANSFERENCIA 57070          3*/
 								$db2 = new clsBanco();
 								while ($db->ProximoRegistro())
 								{
-									list( $cod_matricula, $sequencial,$ativo ) = $db->Tupla();									
-									
+									list( $cod_matricula, $sequencial,$ativo ) = $db->Tupla();
+
 //									$depurar=false;
 									if ($cod_matricula==48743) {
 //										die("<br><br><br><br><br><br>".$ativo." ,______");
@@ -507,7 +516,7 @@ AD TRANSFERENCIA 57070          3*/
 									$det_pessoa = $obj_pessoa->detalhe();
 
 									$sexo = strtoupper($det_pessoa['sexo']);
-									
+
 									$consulta = "SELECT ativo
 												   FROM pmieducar.matricula_turma mt1
 												  WHERE ref_cod_matricula = '{$cod_matricula}'
@@ -528,15 +537,15 @@ AD TRANSFERENCIA 57070          3*/
 												ORDER BY data_cadastro desc,data_exclusao desc,ativo ";
 													/*OR to_char( data_exclusao,'MM')::int = '{$this->mes}'*/
 
-																														
+
 									$eh_ultima_matricula = $db2->CampoUnico($consulta);
 									/**
 									 * nao eh a ultima matricula
 									 */
-																		
+
 									//02-07-07
 									//f(!is_numeric($eh_ultima_matricula) || $eh_ultima_matricula == 0 /*&& $eh_ultima_matricula != 0 && $eh_ultima_matricula != 1*/)
-									
+
 									if(!is_numeric($eh_ultima_matricula)  /*&& $eh_ultima_matricula != 0 && $eh_ultima_matricula != 1*/)
 									{
 										$foi_admitido_transferencia = false;
@@ -567,7 +576,7 @@ AD TRANSFERENCIA 57070          3*/
 													ORDER BY data_cadastro asc,data_exclusao asc,ativo ";
 												/*OR to_char( data_exclusao,'MM')::int = '{$this->mes}' */
 										$eh_primeira_enturmacao_desta_matricula = $db2->CampoUnico($consulta);
-									
+
 										$consulta = "SELECT matricula_reclassificacao
 										               FROM pmieducar.matricula
 										              WHERE cod_matricula = {$cod_matricula}";
@@ -581,7 +590,7 @@ AD TRANSFERENCIA 57070          3*/
 													    AND ativo = 1
 														AND ( to_char(data_cadastro,'MM')::int = '{$this->mes}'
 														      OR to_char( data_exclusao,'MM')::int = '{$this->mes}' )";
-									
+
 										$existe_transferencia = $db2->CampoUnico($consulta);
 
 										/**
@@ -590,14 +599,14 @@ AD TRANSFERENCIA 57070          3*/
 										$obj_matricula_aluno = new clsPmieducarMatricula();
 										$lst_matricula_aluno = $obj_matricula_aluno->lista(null, null, null, null, null, null, $det_aluno['cod_aluno'], null, null, null, null, null, $this->ano);
 										$eh_primeira_matricula_do_aluno = count($lst_matricula_aluno) == 1 ? 1 : 0;
-										
+
 										$consulta = "SELECT 1
 													   FROM pmieducar.matricula
 													  WHERE cod_matricula = {$cod_matricula}
 													    AND matricula_transferencia = true AND to_char(data_cadastro,'MM')::int = {$this->mes}";
-									
+
 										$primeira_matricula_eh_transferencia = $db2->CampoUnico($consulta);
-																			
+
 										$consulta = "SELECT max(sequencial)
 													   FROM pmieducar.matricula_turma
 													  WHERE ref_cod_matricula = {$cod_matricula}";
@@ -614,12 +623,12 @@ AD TRANSFERENCIA 57070          3*/
 												}
 											if ($sexo == 'M')
 												$total_admitido_transferencia_masc++;
-											else 
+											else
 												$total_admitido_transferencia_fem++;
-										
-												
+
+
 										}
-										
+
 										if($eh_primeira_enturmacao_desta_matricula && $matricula_reclassificacao )
 										{
 											if ($depurar) {
@@ -646,9 +655,9 @@ AD TRANSFERENCIA 57070          3*/
 														$total_admitido_transferencia_masc++;
 													else
 														$total_admitido_transferencia_fem++;
-														
+
 													$foi_admitido_transferencia = true;
-														
+
 												}
 											}
 
@@ -657,13 +666,13 @@ AD TRANSFERENCIA 57070          3*/
 										{
 
 											if (!is_numeric($primeira_matricula_eh_transferencia) && $ativo == 1) {
-												
+
 												if ($depurar) {
 													echo("AD ENTURMACAO $cod_matricula             1<br>");
 													$matriculas[]=$cod_matricula;
 												}
 												$total_admitido_enturmacao++;
-												
+
 												if( $sexo == 'M' )
 													$total_admitido_enturmacao_masc++;
 												else
@@ -686,7 +695,7 @@ AD TRANSFERENCIA 57070          3*/
 																							order by data_cadastro desc limit 1)";
 
 										$ultima_turma_enturmacao = $db2->CampoUnico($consulta);
-										
+
 										if($ultima_turma_enturmacao == $turma['cod_turma'])
 										{
 											$consulta = "SELECT aprovado
@@ -786,17 +795,17 @@ AD TRANSFERENCIA 57070          3*/
 														$matriculas[]=$cod_matricula;
 													}
 													$total_admitido_enturmacao++;
-													
+
 													if($sexo == 'M' )
 														$total_admitido_enturmacao_masc++;
-													else 													
+													else
 														$total_admitido_enturmacao_fem++;
 												}
 											}
 										}
 										else
 										{
-											
+
 											if($ativo == 0)
 											{
 												if($sequencial <= $max_sequencial)
@@ -811,22 +820,22 @@ AD TRANSFERENCIA 57070          3*/
 														$total_eliminado_enturmacao_masc++;
 													else
 														$total_eliminado_enturmacao_fem++;
-														
+
 													if(is_numeric($eh_primeira_enturmacao_desta_matricula) && !$existe_transferencia && !$matricula_reclassificacao)
 													{
 														if ($depurar) {
-															echo("AD ENTURMACAO $cod_matricula       3<br>");	
-															$matriculas[]=$cod_matricula;	
-														}	
-														
+															echo("AD ENTURMACAO $cod_matricula       3<br>");
+															$matriculas[]=$cod_matricula;
+														}
+
 														$total_admitido_enturmacao++;
-														
+
 														if( $sexo == 'M' )
 															$total_admitido_enturmacao_masc++;
 														else
 															$total_admitido_enturmacao_fem++;
 													}
-													
+
 												}
 												/**
 												 * se a matricula foi eliminada mas
@@ -853,16 +862,16 @@ AD TRANSFERENCIA 57070          3*/
 													{
 
 														if ($depurar) {
-															echo("AD ENTURMACAO $cod_matricula       3<br>");	
-															$matriculas[]=$cod_matricula;	
-														}	
-														
+															echo("AD ENTURMACAO $cod_matricula       3<br>");
+															$matriculas[]=$cod_matricula;
+														}
+
 														$total_admitido_enturmacao++;
-														
+
 														if( $sexo == 'M' )
 															$total_admitido_enturmacao_masc++;
 														else
-															$total_admitido_enturmacao_fem++;														
+															$total_admitido_enturmacao_fem++;
 													}
 												}
 											}
@@ -873,7 +882,7 @@ AD TRANSFERENCIA 57070          3*/
 									{
 //echo "ref_cod_matricula = $cod_matricula
 													    //AND sequencial = $sequencial";
-										
+
 										$consulta = "SELECT 1
 													   FROM pmieducar.matricula_turma mt1
 													  WHERE ref_cod_matricula = $cod_matricula
@@ -909,17 +918,17 @@ AD TRANSFERENCIA 57070          3*/
 													    AND matricula_transferencia = true";
 
 										$primeira_matricula_eh_transferencia = $db2->CampoUnico($consulta);
-											
+
 										if (is_numeric($primeira_matricula_eh_transferencia))
 										{
 											$matriculas_transferencia[$cod_matricula] = $cod_matricula;
 											$total_admitido_transferencia++;
 											if ($sexo == 'M')
 												$total_admitido_transferencia_masc++;
-											else 
+											else
 												$total_admitido_transferencia_fem++;
 										}
-										
+
 										if($eh_primeira_enturmacao_desta_matricula && $matricula_reclassificacao)
 										{
 											$total_admitido_reclassificao++;
@@ -973,7 +982,7 @@ AD TRANSFERENCIA 57070          3*/
 													}
 													if( $sexo == 'M' )
 														$total_admitido_enturmacao_masc++;
-													else 
+													else
 														$total_admitido_enturmacao_fem++;
 												}
 											}
@@ -1005,9 +1014,9 @@ AD TRANSFERENCIA 57070          3*/
 												if($ativo == 0)
 												{//if($turma['cod_turma'] == 757)
 														//echo "3-$cod_matricula-$matricula_reclassificacao<br>";
-													
+
 													$total_eliminado_enturmacao++;
-														
+
 													if( $sexo == 'M' )
 														$total_eliminado_enturmacao_masc++;
 													else
@@ -1102,18 +1111,18 @@ AD TRANSFERENCIA 57070          3*/
 
 
 											}
-										}										
+										}
 
 									}
 								}
 							}
-							
+
 
 							//							die(implode(",",$matriculas));
 							//ADMITIDOS ativo = 1
 							//admitido por enturmacao no mes atual
 
-							
+
 							//QUANTIDADES ENTURMACAO ADMITIDOS
 							//M
 							$quantidades[3] = $total_admitido_enturmacao_masc;
@@ -1324,7 +1333,7 @@ AD TRANSFERENCIA 57070          3*/
 								$this->addCabecalho();
 								$this->novoCabecalho();
 							}
-													
+
 						}
 					}
 
@@ -1427,11 +1436,11 @@ AD TRANSFERENCIA 57070          3*/
 
 						$this->page_y +=18;
 					}
-					
+
 					foreach ($total_curso as $key => $valor) {
 						$quantidade_total[$key] += $valor;
 					}
-					
+
 						/**
 						 *
 						 */
@@ -1444,7 +1453,7 @@ AD TRANSFERENCIA 57070          3*/
 					}
 			}
 		}
-		
+
 		$altura_linha = 18;
 
 		$this->pdf->quadrado_relativo( 30, $this->page_y, 782, $altura_linha);
@@ -1503,36 +1512,54 @@ AD TRANSFERENCIA 57070          3*/
 			</center>";
 	}
 
-	function addCabecalho()
-	{
-		// variavel que controla a altura atual das caixas
-		$altura = 30;
-		$fonte = 'arial';
-		$corTexto = '#000000';
+  public function addCabecalho()
+  {
+    /**
+     * Variável global com objetos do CoreExt.
+     * @see includes/bootstrap.php
+     */
+    global $coreExt;
 
-		$this->page_y = 125;
+    // Namespace de configuração do template PDF
+    $config = $coreExt['Config']->app->template->pdf;
 
-		// cabecalho
-		$this->pdf->quadrado_relativo( 30, $altura, 782, 85 );
-		$this->pdf->InsertJpng( "gif", "imagens/brasao.gif", 50, 95, 0.30 );
+    // Variável que controla a altura atual das caixas
+    $altura   = 30;
+    $fonte    = 'arial';
+    $corTexto = '#000000';
 
-		//titulo principal
-		$this->pdf->escreve_relativo( "PREFEITURA COBRA TECNOLOGIA", 30, 30, 782, 80, $fonte, 18, $corTexto, 'center' );
+    $this->page_y = 125;
 
-		//dados escola
-		$this->pdf->escreve_relativo( "Instituição:$this->nm_instituicao", 120, 58, 300, 80, $fonte, 10, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "Escola:{$this->nm_escola}",136, 70, 300, 80, $fonte, 10, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( date("d/m/Y"), 25, 30, 782, 80, $fonte, 10, $corTexto, 'right' );
+    // Cabeçalho
+    $logo = $config->get($config->logo, 'imagens/brasao.gif');
 
-		//titulo
-		$this->pdf->escreve_relativo( "Movimentação Mensal de Alunos - {$this->nm_escola} ", 30, 85, 782, 80, $fonte, 12, $corTexto, 'center' );
+    $this->pdf->quadrado_relativo(30, $altura, 782, 85);
+    $this->pdf->insertImageScaled('gif', $logo, 50, 95, 41);
 
-		$obj_modulo = new clsPmieducarModulo($this->ref_cod_modulo);
-		$det_modulo = $obj_modulo->detalhe();
-		//Data
-		$this->pdf->escreve_relativo( "{$this->meses_do_ano[$this->mes]}/{$this->ano}", 45, 100, 535, 80, $fonte, 10, $corTexto, 'left' );
-	    $this->pdf->escreve_relativo( "Dias Efetivos:{$this->totalDiasUteis}", 220, 100, 535, 80, $fonte, 10, $corTexto, 'center' );
-	}
+    // Título principal
+    $titulo = $config->get($config->titulo, 'i-Educar');
+    $this->pdf->escreve_relativo($titulo, 30, 30, 782, 80, $fonte, 18,
+      $corTexto, 'center');
+
+    // Dados escola
+    $this->pdf->escreve_relativo("Instituição:$this->nm_instituicao", 120, 58,
+      300, 80, $fonte, 10, $corTexto, 'left');
+    $this->pdf->escreve_relativo("Escola:{$this->nm_escola}",136, 70, 300, 80,
+      $fonte, 10, $corTexto, 'left');
+    $this->pdf->escreve_relativo(date("d/m/Y"), 25, 30, 782, 80, $fonte, 10,
+      $corTexto, 'right');
+
+    // Título
+    $this->pdf->escreve_relativo( "Movimentação Mensal de Alunos - {$this->nm_escola} ", 30, 85, 782, 80, $fonte, 12, $corTexto, 'center' );
+
+    $obj_modulo = new clsPmieducarModulo($this->ref_cod_modulo);
+    $det_modulo = $obj_modulo->detalhe();
+
+    // Data
+    $this->pdf->escreve_relativo( "{$this->meses_do_ano[$this->mes]}/{$this->ano}", 45, 100, 535, 80, $fonte, 10, $corTexto, 'left' );
+    $this->pdf->escreve_relativo( "Dias Efetivos:{$this->totalDiasUteis}", 220, 100, 535, 80, $fonte, 10, $corTexto, 'center' );
+  }
+
 
 	function novoCabecalho()
 	{
@@ -1717,6 +1744,3 @@ $miolo = new indice();
 $pagina->addForm( $miolo );
 // gera o html
 $pagina->MakeAll();
-
-
-?>

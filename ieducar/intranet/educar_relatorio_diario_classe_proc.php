@@ -90,7 +90,7 @@ class indice extends clsCadastro
 
 	var $ref_cod_modulo;
 	var $data_ini,$data_fim;
-	
+
 	var $z=0;
 
 
@@ -188,6 +188,7 @@ class indice extends clsCadastro
 
 		if($det_curso['falta_ch_globalizada'])
 		{
+
 			/**
 			 * numero de semanas dos meses
 			 */
@@ -240,7 +241,7 @@ class indice extends clsCadastro
 						$dia = 1;
 
 				$total_semanas += $this->getNumeroDiasMes($dia,$mes,$this->ano,$mes_final);//,$lista_quadro_horarios[count($lista_quadro_horarios)-1]);
-				
+
 //				echo $total_semanas;
 //				die("###");
 				}
@@ -298,7 +299,7 @@ class indice extends clsCadastro
 
 
 			}
-			
+
 			$this->pdf = new clsPDF("Diário de Classe - {$this->ano}", "Diário de Classe - {$data[0]} até {$data[1]} de {$this->ano}", "A4", "", false, false);
 			$this->mes_inicial = (int)$meses[0];
 			$this->mes_final = (int)$meses[1];
@@ -306,8 +307,8 @@ class indice extends clsCadastro
 	  		$this->pdf->altura = 595.0;
 
 		    $this->total = $total_semanas;//$total_semanas * count($lista_quadro_horarios);
-		    
-			    
+
+
 		    if(!$this->em_branco)
 		    {
 			    $obj_matricula_turma = new clsPmieducarMatriculaTurma();
@@ -379,315 +380,303 @@ class indice extends clsCadastro
 			$this->pdf->CloseFile();
 			$this->get_link = $this->pdf->GetLink();
 		}
-		else
-		{
-			/**
-			 * CARGA HORARIA NAO GLOBALIZADA
-			 * GERAR UMA PAGINA PARA CADA DISICIPLINA
-			 */
-			//$obj_turma_disc = new clsPmieducarTurmaDisciplina();
-			$obj_turma_disc = new clsPmieducarDisciplinaSerie();
-			$obj_turma_disc->setCamposLista("ref_cod_disciplina");
-			$lst_turma_disc = $obj_turma_disc->lista(null,$this->ref_cod_serie,1);
-			if($lst_turma_disc)
-			{   //comecar a olhar daqui
-				$this->pdf = new clsPDF("Diário de Classe - {$this->ano}", "Diário de Classe - {$this->data_ini} até {$this->data_fim}  de {$this->ano}", "A4", "", false, false);
-				foreach ($lst_turma_disc as $disciplina)
-				{
-					$obj_disc = new clsPmieducarDisciplina($disciplina);
-					$det_disc = $obj_disc->detalhe();
-					$this->nm_disciplina = $det_disc['nm_disciplina'];
-					$this->page_y = 125;
-
-					/**
-					 * numero de semanas dos meses
-					 */
-					$obj_quadro = new clsPmieducarQuadroHorario();
-					$obj_quadro->setCamposLista("cod_quadro_horario");
-					$quadro_horario = $obj_quadro->lista(null,null,null,$this->ref_cod_turma, null, null, null, null,1);
-					if(!$quadro_horario)
-					{
-						echo '<script>alert(\'Turma não possui quadro de horários\');
-						window.parent.fechaExpansivel(\'div_dinamico_\'+(window.parent.DOM_divs.length-1));</script>';
-						die();
-					}
-					$obj_quadro_horarios = new clsPmieducarQuadroHorarioHorarios();
-					$obj_quadro_horarios->setCamposLista("dia_semana");
-					$obj_quadro_horarios->setOrderby("1 asc");
-
-					$lista_quadro_horarios = $obj_quadro_horarios->lista($quadro_horario[0],$this->ref_cod_serie,$this->ref_cod_escola,$disciplina,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1);
-
-//					die("<br><br><br>{$quadro_horario[0]},$this->ref_cod_serie,$this->ref_cod_escola,$disciplina");
-					
-//					if(!$lista_quadro_horarios)
-//					{
-						//echo '<script>alert(\'Turma não possui quadro de horário\');
-						//window.parent.fechaExpansivel(\'div_dinamico_\'+(window.parent.DOM_divs.length-1));</script>';
-						//die();
-//						continue;
-//					}
-			$db = new clsBanco();
-			$consulta = "SELECT padrao_ano_escolar FROM pmieducar.curso WHERE cod_curso = {$this->ref_cod_curso}";
-			$padrao_ano_escolar = $db->CampoUnico($consulta);
-
-			$total_semanas = 0;
-			if($padrao_ano_escolar)
-			{
-				$meses = $db->CampoUnico( "
-				SELECT to_char(data_inicio,'dd/mm') || '-' || to_char(data_fim,'dd/mm')
-				FROM
-					pmieducar.ano_letivo_modulo
-					,pmieducar.modulo
-				WHERE modulo.cod_modulo = ano_letivo_modulo.ref_cod_modulo
-					AND modulo.ativo = 1
-					AND ano_letivo_modulo.ref_cod_modulo = $this->ref_cod_modulo
-					AND ano_letivo_modulo.sequencial = $this->sequencial
-					AND ref_ano = $this->ano
-					AND ref_ref_cod_escola = '{$this->ref_cod_escola}'
-				ORDER BY
-					data_inicio,data_fim ASC
-				");
-				$data = explode("-",$meses);
-				
-				if(!$this->data_ini)
-					$this->data_ini = $data[0];
-
-				if(!$this->data_fim)
-					$this->data_fim = $data[1];
-
-				$data_ini = explode("/",$data[0]);
-				$data_fim = explode("/",$data[1]);
-
-				$meses = array($data_ini[1],$data_fim[1]);
-				$dias = array($data_ini[0],$data_fim[0]);
-				//for($mes = $meses[0];$mes<=$meses[1];$mes++)
-				//	$total_semanas = $this->getNumeroDiasMes($mes,$this->ano);//,$lista_quadro_horarios[count($lista_quadro_horarios)-1]);
-			    //$total_semanas += $this->getNumeroDiasMes($this->mes + 1,$this->ano);//,$lista_quadro_horarios[count($lista_quadro_horarios)-1]);
-			}
-			else
-			{
-				$meses = $db->CampoUnico( "
-				SELECT to_char(data_inicio,'mm') || '-' || to_char(data_fim,'mm')
-					FROM
-						pmieducar.turma_modulo
-						,pmieducar.modulo
-					WHERE modulo.cod_modulo = turma_modulo.ref_cod_modulo
-						AND ref_cod_turma = '{$this->ref_cod_turma}'
-					AND turma_modulo.ref_cod_modulo = $this->ref_cod_modulo
-					AND turma_modulo.sequencial = $this->sequencial
-					AND to_char(data_inicio,'yyyy') = $this->ano
-					ORDER BY
-						data_inicio,data_fim ASC
-
-				");
-
-				$data = explode("-",$meses);
-
-				if(!$this->data_ini)
-					$this->data_ini = $data[0];
-
-				if(!$this->data_fim)
-					$this->data_fim = $data[1];
-
-				$data_ini = explode("/",$data[0]);
-				$data_fim = explode("/",$data[1]);
+    else
+    {
+      /*
+       * Carga horária nã globalizada gera relatório com uma disciplina por
+       * página.
+       */
+      $obj_turma_disc = new clsPmieducarDisciplinaSerie();
+      $obj_turma_disc->setCamposLista("ref_cod_disciplina");
+      $lst_turma_disc = $obj_turma_disc->lista(null,$this->ref_cod_serie,1);
 
 
-				$meses = array($data_ini[1],$data_fim[1]);
-				$dias = array($data_ini[0],$data_fim[0]);
+      #######
+      if ($lst_turma_disc)
+      {
+        $this->pdf = new clsPDF("Diário de Classe - {$this->ano}", "Diário de Classe - {$this->data_ini} até {$this->data_fim}  de {$this->ano}", "A4", "", false, false);
 
-				//for($mes = $meses[0];$mes<=$meses[1];$mes++)
-				//	$total_semanas = $this->getNumeroDiasMes($mes,$this->ano);
-			}
+        foreach ($lst_turma_disc as $disciplina)
+        {
+          $obj_disc = new clsPmieducarDisciplina($disciplina);
+          $det_disc = $obj_disc->detalhe();
+          $this->nm_disciplina = $det_disc['nm_disciplina'];
+          $this->page_y = 125;
 
-					$total_dias_semanas = 0;
-					//$total_semanas = $this->getNumeroSemanasMes($this->mes,$this->ano,$lista_quadro_horarios[0],$lista_quadro_horarios[count($lista_quadro_horarios)-1]);
-				    //$total_semanas = $this->getNumeroSemanasMes($this->mes + 1,$this->ano,$lista_quadro_horarios[0],$lista_quadro_horarios[count($lista_quadro_horarios)-1]);
-					if($lista_quadro_horarios)
-					
-						for($mes_ = $meses[0];$mes_<=$meses[1];$mes_++)
-					    {				    	
-				    	
-					    	$mes_final = false;
+          // numero de semanas dos meses
+          $obj_quadro = new clsPmieducarQuadroHorario();
+          $obj_quadro->setCamposLista("cod_quadro_horario");
+          $quadro_horario = $obj_quadro->lista(null,null,null,$this->ref_cod_turma, null, null, null, null,1);
 
-						    foreach ($lista_quadro_horarios as $dia_semana)
-						    {
-							    if($mes_ == $meses[0]) // Last Change -> $mes to $mes_
-									$dia = $dias[0];
-								elseif ($mes == $meses[1])
-								{
-									$dia = 1;//$dias[1];		
-									$mes_final = true;
-								}
-								else
-									$dia = 1;
-								$total_dias_semanas += $this->getDiasSemanaMes($dia, $mes_,$this->ano,$dia_semana,$mes_final);
-						    }
-					    }
+          if(!$quadro_horario) {
+            echo '<script>alert(\'Turma não possui quadro de horários\');
+            window.parent.fechaExpansivel(\'div_dinamico_\'+(window.parent.DOM_divs.length-1));</script>';
+            die();
+          }
 
-					$this->mes_inicial = (int)$meses[0];
-					$this->mes_final = (int)$meses[1];
-					$this->pdf->largura  = 842.0;
-			  		$this->pdf->altura = 595.0;
+          $obj_quadro_horarios = new clsPmieducarQuadroHorarioHorarios();
+          $obj_quadro_horarios->setCamposLista("dia_semana");
+          $obj_quadro_horarios->setOrderby("1 asc");
 
-					
-				    $this->total = $total_dias_semanas;
+          $lista_quadro_horarios = $obj_quadro_horarios->lista($quadro_horario[0],$this->ref_cod_serie,$this->ref_cod_escola,$disciplina,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1);
 
-				    if(!$this->total)
-						break;
+          $db = new clsBanco();
+          $consulta = "SELECT padrao_ano_escolar FROM pmieducar.curso WHERE cod_curso = {$this->ref_cod_curso}";
+          $padrao_ano_escolar = $db->CampoUnico($consulta);
 
-					if(!$this->em_branco)
-					{
-					    $obj_matricula_turma = new clsPmieducarMatriculaTurma();
-					    $obj_matricula_turma->setOrderby("nome_ascii");
-					    $lista_matricula = $obj_matricula_turma->lista(null,$this->ref_cod_turma,null,null,null,null,null,null,1,$this->ref_cod_serie,$this->ref_cod_curso,$this->ref_cod_escola,$this->ref_cod_instituicao,null,null,array( 1, 2, 3 ),null,null,$this->ano,null,true,null,null,true);
-					}
+          $total_semanas = 0;
+          if ($padrao_ano_escolar)
+          {
+            $meses = $db->CampoUnico("
+              SELECT to_char(data_inicio,'dd/mm') || '-' || to_char(data_fim,'dd/mm')
+                FROM
+                  pmieducar.ano_letivo_modulo,
+                  pmieducar.modulo
+                WHERE
+                  modulo.cod_modulo = ano_letivo_modulo.ref_cod_modulo
+                  AND modulo.ativo = 1
+                  AND ano_letivo_modulo.ref_cod_modulo = $this->ref_cod_modulo
+                  AND ano_letivo_modulo.sequencial = $this->sequencial
+                  AND ref_ano = $this->ano
+                  AND ref_ref_cod_escola = '{$this->ref_cod_escola}'
+                ORDER BY
+                  data_inicio,data_fim ASC
+            ");
+            $data = explode("-",$meses);
+
+            if (!$this->data_ini) {
+              $this->data_ini = $data[0];
+            }
+
+            if (!$this->data_fim) {
+              $this->data_fim = $data[1];
+            }
+
+            $data_ini = explode("/",$data[0]);
+            $data_fim = explode("/",$data[1]);
+
+            $meses = array($data_ini[1],$data_fim[1]);
+            $dias = array($data_ini[0],$data_fim[0]);
+          }
+          else
+          {
+            $meses = $db->CampoUnico( "
+              SELECT to_char(data_inicio,'mm') || '-' || to_char(data_fim,'mm')
+                FROM
+                  pmieducar.turma_modulo,
+                  pmieducar.modulo
+                WHERE
+                  modulo.cod_modulo = turma_modulo.ref_cod_modulo
+                  AND ref_cod_turma = '{$this->ref_cod_turma}'
+                  AND turma_modulo.ref_cod_modulo = $this->ref_cod_modulo
+                  AND turma_modulo.sequencial = $this->sequencial
+                  AND to_char(data_inicio,'yyyy') = $this->ano
+                ORDER BY
+                  data_inicio, data_fim ASC
+            ");
+
+            $data = explode("-",$meses);
+
+            if (!$this->data_ini) {
+              $this->data_ini = $data[0];
+            }
+
+            if (!$this->data_fim) {
+              $this->data_fim = $data[1];
+            }
+
+            $data_ini = explode("/",$data[0]);
+            $data_fim = explode("/",$data[1]);
+
+            $meses = array($data_ini[1],$data_fim[1]);
+            $dias  = array($data_ini[0],$data_fim[0]);
+          }
+
+          $total_dias_semanas = 0;
+
+          if($lista_quadro_horarios) {
+
+            for($mes_ = $meses[0];$mes_<=$meses[1];$mes_++)
+            {
+              $mes_final = false;
+
+              foreach ($lista_quadro_horarios as $dia_semana)
+              {
+                if($mes_ == $meses[0]) // Last Change -> $mes to $mes_
+                  $dia = $dias[0];
+                elseif ($mes == $meses[1]) {
+                  $dia = 1;//$dias[1];
+                  $mes_final = true;
+                }
+                else {
+                  $dia = 1;
+                }
+                $total_dias_semanas += $this->getDiasSemanaMes($dia, $mes_,$this->ano,$dia_semana,$mes_final);
+              }
+            }
+
+            $this->mes_inicial  = (int) $meses[0];
+            $this->mes_final    = (int) $meses[1];
+            $this->pdf->largura = 842.0;
+            $this->pdf->altura  = 595.0;
+
+            $this->total = $total_dias_semanas;
+
+            if (!$this->total)
+              break;
+
+          }
+
+          if(!$this->em_branco)
+          {
+            $obj_matricula_turma = new clsPmieducarMatriculaTurma();
+            $obj_matricula_turma->setOrderby("nome_ascii");
+            $lista_matricula = $obj_matricula_turma->lista(null,$this->ref_cod_turma,null,null,null,null,null,null,1,$this->ref_cod_serie,$this->ref_cod_curso,$this->ref_cod_escola,$this->ref_cod_instituicao,null,null,array( 1, 2, 3 ),null,null,$this->ano,null,true,null,null,true);
+          }
+
+          if($lista_matricula || $this->em_branco)
+          {
+            $this->pdf->OpenPage();
+            $this->addCabecalho();
+
+            if($this->em_branco)
+            {
+              $lista_matricula = array();
+              $this->numero_registros = $this->numero_registros? $this->numero_registros : 20;
+              for ($i = 0 ; $i < $this->numero_registros; $i++) {
+                $lista_matricula[] = '';
+              }
+            }
+
+            $num = 0;
+            foreach ($lista_matricula as $matricula)
+            {
+              $num++;
+
+              if($this->page_y > 500)
+              {
+                $this->desenhaLinhasVertical();
+                $this->pdf->ClosePage();
+                $this->pdf->OpenPage();
+                $this->page_y = 125;
+                $this->addCabecalho();
+              }
+
+              $this->pdf->quadrado_relativo( 30, $this->page_y , 782, 19);
+              $this->pdf->escreve_relativo($matricula['nome_aluno'] , 33 ,$this->page_y + 4,160, 15, $fonte, 7, $corTexto, 'left' );
+              $this->pdf->escreve_relativo( sprintf("%02d",$num),757, $this->page_y + 4, 30, 30, $fonte, 7, $corTexto, 'left' );
+              $this->page_y +=19;
+            }
+
+            $this->desenhaLinhasVertical();
+            $this->pdf->ClosePage();
+          }
+          else {
+            echo '
+              <script>
+                alert("Turma não possui matriculas");
+                window.parent.fechaExpansivel(\'div_dinamico_\'+(window.parent.DOM_divs.length-1));
+              </script>';
+
+            return;
+          }
+        }
+      }
+
+      if ($this->total)
+      {
+        $this->pdf->CloseFile();
+        $this->get_link = $this->pdf->GetLink();
+      }
+      else
+      {
+        $this->mensagem = "Não existem dias letivos cadastrados para esta turma";
+      }
+    }
+
+    echo "<script>window.onload=function(){parent.EscondeDiv('LoadImprimir');window.location='download.php?filename=".$this->get_link."'}</script>";
+
+    echo "<html><center>Se o download não iniciar automaticamente <br /><a target='blank' href='" . $this->get_link  . "' style='font-size: 16px; color: #000000; text-decoration: underline;'>clique aqui!</a><br><br>
+      <span style='font-size: 10px;'>Para visualizar os arquivos PDF, é necessário instalar o Adobe Acrobat Reader.<br>
+
+      Clique na Imagem para Baixar o instalador<br><br>
+      <a href=\"http://www.adobe.com.br/products/acrobat/readstep2.html\" target=\"new\"><br><img src=\"imagens/acrobat.gif\" width=\"88\" height=\"31\" border=\"0\"></a>
+      </span>
+      </center>";
+  }
 
 
-					if($lista_matricula || $this->em_branco)
-					{
-						$this->pdf->OpenPage();
-						$this->addCabecalho();
+  public function addCabecalho()
+  {
+    /**
+     * Variável global com objetos do CoreExt.
+     * @see includes/bootstrap.php
+     */
+    global $coreExt;
 
-						if($this->em_branco)
-						{
-							$lista_matricula = array();
-							$this->numero_registros = $this->numero_registros? $this->numero_registros : 20;
-							for ($i = 0 ; $i < $this->numero_registros; $i++)
-							{
-								$lista_matricula[] = '';
-							}
-						}
+    // Namespace de configuração do template PDF
+    $config = $coreExt['Config']->app->template->pdf;
 
+    // Variável que controla a altura atual das caixas
+    $altura   = 30;
+    $fonte    = 'arial';
+    $corTexto = '#000000';
 
-						$num = 0;
-					    foreach ($lista_matricula as $matricula)
-					    {
-					    	$num++;
+    // Cabeçalho
+    $logo = $config->get($config->logo, 'imagens/brasao.gif');
 
-							if($this->page_y > 500)
-							{
-								$this->desenhaLinhasVertical();
-								$this->pdf->ClosePage();
-								$this->pdf->OpenPage();
-								$this->page_y = 125;
-								$this->addCabecalho();
+    $this->pdf->quadrado_relativo( 30, $altura, 782, 85 );
+    $this->pdf->insertImageScaled('gif', $logo, 50, 95, 41);
 
+    // Título principal
+    $titulo = $config->get($config->titulo, 'i-Educar');
+    $this->pdf->escreve_relativo($titulo, 30, 30, 782, 80,
+      $fonte, 18, $corTexto, 'center' );
+    $this->pdf->escreve_relativo(date("d/m/Y"), 25, 30, 782, 80, $fonte, 10,
+      $corTexto, 'right' );
 
-							}
+    // Dados escola
+    $this->pdf->escreve_relativo("Instituição:$this->nm_instituicao", 120, 52,
+      300, 80, $fonte, 7, $corTexto, 'left');
+    $this->pdf->escreve_relativo("Escola:{$this->nm_escola}",132, 64, 300, 80,
+      $fonte, 7, $corTexto, 'left');
+    $dif = 0;
 
-					    	//$obj_matricula = new clsPmieducarMatricula($matricula['ref_cod_matricula']);
-					    	//$det_matricula = $obj_matricula->detalhe();
+    if($this->nm_professor) {
+      $this->pdf->escreve_relativo("Prof.Regente:{$this->nm_professor}",111, 76,
+        300, 80, $fonte, 7, $corTexto, 'left');
+    }
+    else {
+      $dif = 12;
+    }
 
+    $this->pdf->escreve_relativo("Série:{$this->nm_serie}",138, 88  - $dif,
+      300, 80, $fonte, 7, $corTexto, 'left');
+    $this->pdf->escreve_relativo("Turma:{$this->nm_turma}",134, 100 - $dif, 300,
+      80, $fonte, 7, $corTexto, 'left');
 
-					    	//$obj_aluno = new clsPmieducarAluno();
-					    	//$det_aluno = array_shift($obj_aluno->lista($matricula['ref_cod_aluno']));
+    // Título
+    $nm_disciplina = "";
+    if ($this->nm_disciplina) {
+      $nm_disciplina = " - $this->nm_disciplina";
+    }
 
-					    	$this->pdf->quadrado_relativo( 30, $this->page_y , 782, 19);
-					    	$this->pdf->escreve_relativo($matricula['nome_aluno'] , 33 ,$this->page_y + 4,160, 15, $fonte, 7, $corTexto, 'left' );
-					    	$this->pdf->escreve_relativo( sprintf("%02d",$num),757, $this->page_y + 4, 30, 30, $fonte, 7, $corTexto, 'left' );
+    $this->pdf->escreve_relativo( "Diário de Frequência {$nm_disciplina}", 30,
+      75, 782, 80, $fonte, 12, $corTexto, 'center');
 
-					    	$this->page_y +=19;
+    $obj_modulo = new clsPmieducarModulo($this->ref_cod_modulo);
+    $det_modulo = $obj_modulo->detalhe();
 
+    // Data
+    $this->pdf->escreve_relativo("{$this->data_ini} até {$this->data_fim} de {$this->ano}",
+      45, 100, 782, 80, $fonte, 10, $corTexto, 'center');
 
+    $this->pdf->linha_relativa(201, 125, 612, 0);
 
-					    }
-						$this->desenhaLinhasVertical();
-						//$this->rodape();
-						$this->pdf->ClosePage();
-					}
-					else
-					{
-
-
-				     	echo '<script>
-				     			alert("Turma não possui matriculas");
-				     			window.parent.fechaExpansivel(\'div_dinamico_\'+(window.parent.DOM_divs.length-1));
-				     		</script>';
-
-				     		return;
-					}
-
-
-				}
-				/**
-				 * gera diario de clase de avaliacoes
-				 */
-
-			}
-
-
-			//header( "location: " . $this->pdf->GetLink() );
-//			$this->pdf->CloseFile();
-//			$this->get_link = $this->pdf->GetLink();
-			if($this->total)
-			{
-				$this->pdf->CloseFile();
-				$this->get_link = $this->pdf->GetLink();
-			}
-			else
-			{
-				$this->mensagem = "Não existem dias letivos cadastrados para esta turma";
-			}
-		}
-		echo "<script>window.onload=function(){parent.EscondeDiv('LoadImprimir');window.location='download.php?filename=".$this->get_link."'}</script>";
-		
-
-		echo "<html><center>Se o download não iniciar automaticamente <br /><a target='blank' href='" . $this->get_link  . "' style='font-size: 16px; color: #000000; text-decoration: underline;'>clique aqui!</a><br><br>
-			<span style='font-size: 10px;'>Para visualizar os arquivos PDF, é necessário instalar o Adobe Acrobat Reader.<br>
-
-			Clique na Imagem para Baixar o instalador<br><br>
-			<a href=\"http://www.adobe.com.br/products/acrobat/readstep2.html\" target=\"new\"><br><img src=\"imagens/acrobat.gif\" width=\"88\" height=\"31\" border=\"0\"></a>
-			</span>
-			</center>";
-	}
-
-	function addCabecalho()
-	{
-		// variavel que controla a altura atual das caixas
-		$altura = 30;
-		$fonte = 'arial';
-		$corTexto = '#000000';
-
-
-		// cabecalho
-		$this->pdf->quadrado_relativo( 30, $altura, 782, 85 );
-		$this->pdf->InsertJpng( "gif", "imagens/brasao.gif", 50, 95, 0.30 );
-
-		//titulo principal
-		$this->pdf->escreve_relativo( "PREFEITURA COBRA TECNOLOGIA", 30, 30, 782, 80, $fonte, 18, $corTexto, 'center' );
-		$this->pdf->escreve_relativo( date("d/m/Y"), 25, 30, 782, 80, $fonte, 10, $corTexto, 'right' );
-
-		//dados escola
-		$this->pdf->escreve_relativo( "Instituição:$this->nm_instituicao", 120, 52, 300, 80, $fonte, 7, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "Escola:{$this->nm_escola}",132, 64, 300, 80, $fonte, 7, $corTexto, 'left' );
-		$dif = 0;
-		if($this->nm_professor)
-			$this->pdf->escreve_relativo( "Prof.Regente:{$this->nm_professor}",111, 76, 300, 80, $fonte, 7, $corTexto, 'left' );
-		else
-			$dif = 12;
-
-		$this->pdf->escreve_relativo( "Série:{$this->nm_serie}",138, 88  - $dif, 300, 80, $fonte, 7, $corTexto, 'left' );
-		$this->pdf->escreve_relativo( "Turma:{$this->nm_turma}",134, 100 - $dif, 300, 80, $fonte, 7, $corTexto, 'left' );
-
-		//titulo
-		$nm_disciplina = "";
-		if($this->nm_disciplina)
-			$nm_disciplina = " - $this->nm_disciplina";
-		$this->pdf->escreve_relativo( "Diário de Frequência {$nm_disciplina}", 30, 75, 782, 80, $fonte, 12, $corTexto, 'center' );
-
-		$obj_modulo = new clsPmieducarModulo($this->ref_cod_modulo);
-		$det_modulo = $obj_modulo->detalhe();
-		//Data
-		//$mes2 = $this->mes_inicial + 1;
-		$this->pdf->escreve_relativo( "{$this->data_ini} até {$this->data_fim} de {$this->ano}", 45, 100, 782, 80, $fonte, 10, $corTexto, 'center' );
-
-		$this->pdf->linha_relativa(201,125,612,0);
-		
-    	$this->page_y +=19;
-	    $this->pdf->escreve_relativo( "Dias de aula: {$this->total}", 715, 100, 535, 80, $fonte, 10, $corTexto, 'left' );
-	}
-	
+    $this->page_y +=19;
+    $this->pdf->escreve_relativo("Dias de aula: {$this->total}", 715, 100, 535,
+      80, $fonte, 10, $corTexto, 'left');
+  }
 
 
 	function desenhaLinhasVertical()
@@ -827,12 +816,12 @@ class indice extends clsCadastro
 	}
 
 	function getDiasSemanaMes($dia,$mes,$ano,$dia_semana,$mes_final = false)
-	{		
+	{
 		$year = $ano;
 		$month = $mes;
-		
+
 		$date = mktime(1, 1, 1, $month, $dia/*date("d")*/, $year);
-		
+
 		$first_day_of_month = strtotime("-" . (date("d", $date)-1) . " days", $date);
 		$last_day_of_month = strtotime("+" . (date("t", $first_day_of_month)-1) . " days", $first_day_of_month);
 
@@ -865,13 +854,13 @@ class indice extends clsCadastro
 			$date = mktime(1, 1, 1, $month, $day, $year);
 			$dia_semana_corrente = getdate($date);
 			$dia_semana_corrente = $dia_semana_corrente['wday'] + 1;
-			
+
 			$data_atual = "{$day}/{$mes}/{$ano}";
 			$data_final = "{$this->data_fim}/{$ano}";
-			
+
 			if(($dia_semana ==  $dia_semana_corrente) && (array_search($day,$dias_nao_letivo) === false) && data_maior($data_final, $data_atual))
 				$numero_dias++;
-		}	
+		}
 		return $numero_dias;
 	}
 }
