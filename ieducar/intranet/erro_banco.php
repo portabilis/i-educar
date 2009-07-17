@@ -1,11 +1,34 @@
 <?php
 
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
+
 /**
  * Mostra mensagem de erro de conexão com o banco de dados.
  *
- * @author  Eriksen Costa <eriksen.paixao_bs@cobra.com.br>
- * @since   1.0.1
- * @version $Id$
+ * @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package  Core
+ * @since    Arquivo disponível desde a versão 1.0.1
+ * @version  $Id$
  */
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -55,8 +78,8 @@
         <h1>Erro</h1>
         <p>Ocorreu um erro de conexão com o banco de dados.</p>
         <ul>Sugestões:
-          <li>Verifique se o seu banco de dados está corretamente configurado e se o serviço está rodando</li>
-          <li>Verifique se configurou o i-Educar com os parâmetros corretos de conexão com o banco de dados no arquivo <code>include/clsBanco.inc.php</code></li>
+          <li>Verifique se o seu banco de dados está corretamente configurado e se o serviço relacionado está executando</li>
+          <li>Verifique se configurou o i-Educar com os parâmetros corretos de conexão com o banco de dados no arquivo <code>configuration/ieducar.ini</code></li>
           <li><a href="http://svn.softwarepublico.gov.br/trac/ieducar#FAQsetutoriais">Consulte a documentação do i-Educar</a> sobre os procedimentos de instalação da versão desejada</li>
         </ul>
       </div>
