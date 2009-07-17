@@ -1,33 +1,39 @@
 <?php
-/**
+
+/*
+ * i-Educar - Sistema de gestão escolar
  *
- * @author  Prefeitura Municipal de Itajaí
- * @version SVN: $Id$
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
  *
- * Pacote: i-PLB Software Público Livre e Brasileiro
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
  *
- * Copyright (C) 2006 PMI - Prefeitura Municipal de Itajaí
- *            ctima@itajai.sc.gov.br
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
  *
- * Este  programa  é  software livre, você pode redistribuí-lo e/ou
- * modificá-lo sob os termos da Licença Pública Geral GNU, conforme
- * publicada pela Free  Software  Foundation,  tanto  a versão 2 da
- * Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.
- *
- * Este programa  é distribuído na expectativa de ser útil, mas SEM
- * QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-
- * ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-
- * sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.
- *
- * Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU
- * junto  com  este  programa. Se não, escreva para a Free Software
- * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
- * 02111-1307, USA.
- *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  */
 
 require_once 'include/pmieducar/geral.inc.php';
 
+
+/**
+ * clsPmieducarCliente class.
+ *
+ * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package     Core
+ * @subpackage  pmieducar
+ * @since       Classe disponível desde a versão 1.0.0
+ * @version     $Id$
+ */
 class clsPmieducarCliente
 {
 	var $cod_cliente;
@@ -503,15 +509,17 @@ class clsPmieducarCliente
 
     // Se suspenso não for nulo e existirem cliente suspensos, seleciona-os
     // quando ainda estiverem no prazo de suspensão
-    if (!is_null($str_suspenso) && $db->doCountFromObj($clienteSuspenso) > 0) {
-      $camp_adicional .= ', pmieducar.cliente_suspensao cs ';
-      $condicao       .= ' AND c.cod_cliente = cs.ref_cod_cliente AND
+    if ($db->doCountFromObj($clienteSuspenso) > 0) {
+      if (!is_null($str_suspenso)) {
+        $camp_adicional .= ', pmieducar.cliente_suspensao cs ';
+        $condicao       .= ' AND c.cod_cliente = cs.ref_cod_cliente AND
                            (cs.data_suspensao < current_date - cs.dias)';
-    }
-    else {
-      $camp_adicional .= ', pmieducar.cliente_suspensao cs ';
-      $condicao       .= ' AND (c.cod_cliente <> cs.ref_cod_cliente OR
-                           (cs.data_suspensao > current_date - cs.dias))';
+      }
+      else {
+        $camp_adicional .= ', pmieducar.cliente_suspensao cs ';
+        $condicao       .= ' AND (c.cod_cliente <> cs.ref_cod_cliente OR
+                             (cs.data_suspensao > current_date - cs.dias))';
+      }
     }
 
     $sql1 = "
