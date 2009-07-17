@@ -79,7 +79,7 @@ class indice extends clsCadastro
 		$obj_permissoes->permissao_cadastra( 559, $this->pessoa_logada, 1, "educar_instituicao_lst.php" );
 
 		$this->cod_instituicao=$_GET["cod_instituicao"];
-		
+
 		if( is_numeric( $this->cod_instituicao ) )
 		{
 
@@ -142,6 +142,7 @@ class indice extends clsCadastro
 			$lista = $objTemp->lista();
 			if ( is_array( $lista ) && count( $lista ) )
 			{
+				asort($lista);
 				foreach ( $lista as $registro )
 				{
 					$opcoes["{$registro['sigla_uf']}"] = "{$registro['sigla_uf']}";

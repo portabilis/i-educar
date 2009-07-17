@@ -77,6 +77,9 @@ class indice extends clsListagem
 
 	function Gerar()
 	{
+		global $coreExt;
+		$config = $coreExt['Config']->app->locale;
+
 		@session_start();
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		$_SESSION["campo1"] = $_GET["campo1"] ? $_GET["campo1"] : $_SESSION["campo1"];
@@ -97,7 +100,7 @@ class indice extends clsListagem
 
 
 		$obj_uf = new clsUf(false, false, 1);
-		$lst_uf = $obj_uf->lista(false, false, 1, false, false, "sigla_uf");
+		$lst_uf = $obj_uf->lista(false, false, false, false, false, "sigla_uf");
 		$array_uf = array('' => 'Todos');
 		foreach ($lst_uf as $uf)
 		{
@@ -105,7 +108,7 @@ class indice extends clsListagem
 		}
 		if(!isset($this->sigla_uf))
 		{
-			$this->sigla_uf = "SC";
+			$this->sigla_uf = $config->province ? $config->province : '';
 		}
 
 
