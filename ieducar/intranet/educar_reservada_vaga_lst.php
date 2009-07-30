@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * i-Educar - Sistema de gestão escolar
  *
  * Copyright (C) 2006  Prefeitura Municipal de Itajaí
@@ -19,12 +19,8 @@
  * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- */
-
-/**
- * Listagem de reserva de vagas.
  *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     Core
  * @subpackage  ReservaVaga
@@ -37,7 +33,6 @@ require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
-
 class clsIndexBase extends clsBase {
   public function Formular() {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Vagas Reservadas');
@@ -45,38 +40,34 @@ class clsIndexBase extends clsBase {
   }
 }
 
-
-class indice extends clsListagem {
-
+class indice extends clsListagem
+{
   /**
    * Referência a usuário da sessão
    * @var int
    */
-  public $pessoa_logada = NULL;
+  var $pessoa_logada = NULL;
 
   /**
-   * Título no topo da paágina
+   * Título no topo da página
    * @var string
    */
-  public $titulo = '';
+  var $titulo = '';
 
   /**
    * Limite de registros por página
    * @var int
    */
-  public $limite = 0;
+  var $limite = 0;
 
   /**
    * Início dos registros a serem exibidos (limit)
    * @var int
    */
-  public $offset = 0;
+  var $offset = 0;
 
-  /**
-   * Atributos de mapeamento da tabela pmieducar.reserva_vaga
-   * @var mixed
-   */
-  public
+  // Atributos de mapeamento da tabela pmieducar.reserva_vaga
+  var
     $cod_reserva_vaga   = NULL,
     $ref_ref_cod_escola = NULL,
     $ref_ref_cod_serie  = NULL,
@@ -91,19 +82,18 @@ class indice extends clsListagem {
    * Atributos para apresentação
    * @var mixed
    */
-  public
+  var
     $ref_cod_escola      = NULL,
     $ref_cod_curso       = NULL,
     $ref_cod_instituicao = NULL,
     $nm_aluno            = NULL;
 
-
-
   /**
-   * Implementação de clsListagem::Gerar()
-   * @see ieducar/intranet/include/clsListagem#Gerar()
+   * Sobrescreve clsListagem::Gerar().
+   * @see clsListagem::Gerar()
    */
-  public function Gerar() {
+  function Gerar()
+  {
     session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
@@ -138,13 +128,24 @@ class indice extends clsListagem {
 
     // Lista de opçõees para o formulário de pesquisa rápida
     $get_escola = TRUE;
-    $get_curso = TRUE;
+    $get_curso  = TRUE;
     $get_escola_curso_serie = TRUE;
     include 'include/pmieducar/educar_campo_lista.php';
 
     // Referência de escola
     if ($this->ref_cod_escola) {
       $this->ref_ref_cod_escola = $this->ref_cod_escola;
+    }
+    elseif (isset($_GET['ref_cod_escola'])) {
+      $this->ref_ref_cod_escola = intval($_GET['ref_cod_escola']);
+    }
+
+    // Referência de série
+    if ($this->ref_cod_serie) {
+      $this->ref_ref_cod_serie = $this->ref_cod_serie;
+    }
+    elseif (isset($_GET['ref_cod_serie'])) {
+      $this->ref_ref_cod_serie = intval($_GET['ref_cod_serie']);
     }
 
     // Campos do formulário
@@ -225,7 +226,7 @@ class indice extends clsListagem {
           $registro['ref_cod_aluno'] = $det_pessoa['nome'];
         }
         else {
-          $registro['ref_cod_aluno'] = $registro['nm_aluno'];
+          $registro['ref_cod_aluno'] = $registro['nm_aluno'] . ' (aluno externo)';
         }
 
         // Array de dados formatados para apresentação
