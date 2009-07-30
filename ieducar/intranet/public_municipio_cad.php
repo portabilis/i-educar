@@ -23,6 +23,7 @@
  * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     Core
+ * @subpackage  public
  * @subpackage  Enderecamento
  * @subpackage  Municipio
  * @since       Arquivo disponível desde a versão 1.0.0
