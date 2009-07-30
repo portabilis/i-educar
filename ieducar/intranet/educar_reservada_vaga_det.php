@@ -105,21 +105,6 @@ class indice extends clsDetalhe
 
     $this->cod_reserva_vaga = $_GET['cod_reserva_vaga'];
 
-    if ($_GET['desativa'] == true) {
-      $obj = new clsPmieducarReservaVaga($this->cod_reserva_vaga, NULL, NULL,
-        $this->pessoa_logada, NULL, NULL, NULL, NULL, 0);
-      $excluiu = $obj->excluir();
-
-      if ($excluiu) {
-        $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
-        header('Location: educar_reservada_vaga_lst.php');
-        die();
-      }
-
-      $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
-      return FALSE;
-    }
-
     $obj_reserva_vaga = new clsPmieducarReservaVaga();
     $lst_reserva_vaga = $obj_reserva_vaga->lista($this->cod_reserva_vaga);
 
@@ -137,6 +122,11 @@ class indice extends clsDetalhe
     $this->ref_cod_curso  = $registro['ref_cod_curso'];
     $this->ref_cod_serie  = $registro['ref_ref_cod_serie'];
     $this->ref_cod_instituicao = $registro['ref_cod_instituicao'];
+
+    // Desativa o pedido de reserva de vaga
+    if ($_GET['desativa'] == true) {
+      $this->_desativar();
+    }
 
     // Instituição
     $obj_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
@@ -209,6 +199,28 @@ class indice extends clsDetalhe
       $this->ref_cod_escola . '&ref_cod_serie=' . $this->ref_cod_serie;
     $this->largura = '100%';
   }
+
+  /**
+   * Desativa o pedido de reserva de vaga.
+   * @return bool Retorna FALSE em caso de erro
+   */
+  private function _desativar()
+  {
+    $obj = new clsPmieducarReservaVaga($this->cod_reserva_vaga, NULL, NULL,
+        $this->pessoa_logada, NULL, NULL, NULL, NULL, 0);
+    $excluiu = $obj->excluir();
+
+    if ($excluiu) {
+      $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+      header('Location: educar_reservada_vaga_lst.php?ref_cod_escola=' .
+        $this->ref_cod_escola . '&ref_cod_serie=' . $this->ref_cod_serie);
+      die();
+    }
+
+    $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+    return FALSE;
+  }
+
 }
 
 // Instancia objeto de página
