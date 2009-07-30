@@ -23,6 +23,7 @@
  * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     Core
+ * @subpackage  public
  * @subpackage  Enderecamento
  * @subpackage  Bairro
  * @since       Arquivo disponível desde a versão 1.0.0
@@ -261,7 +262,7 @@ document.getElementById('idpais').onchange = function() {
 
 function getUf(xml_uf) {
   var campoUf = document.getElementById('sigla_uf');
-  var DOM_array = xml_uf.getElementsByTagName('uf');
+  var DOM_array = xml_uf.getElementsByTagName('estado');
 
   if (DOM_array.length) {
     campoUf.length = 1;

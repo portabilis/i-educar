@@ -222,39 +222,6 @@ class indice extends clsCadastro
   function Novo()
   {
     $this->Editar();
-    /*
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
-    if (($this->idbai[0] != "") && ($this->cep[0] != "")) {
-      foreach ($this->cep as $id => $cep) {
-        $cep = idFederal2int($cep);
-
-        $obj = new clsUrbanoCepLogradouro($cep, $this->idlog, NULL, NULL, NULL,
-          NULL, 'U', $this->pessoa_logada, NULL, 'I', NULL, 9);
-        if ($obj->cadastra()) {
-          $obj_cep_log_bairro = new clsUrbanoCepLogradouroBairro($this->idlog,
-            $cep, $this->idbai[$id], NULL, NULL, 'U', $this->pessoa_logada, NULL,
-            'I', NULL, 9);
-
-          if (!$obj_cep_log_bairro->cadastra()) {
-            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-            echo '<!--\nErro ao editar clsUrbanoCepLogradouro\nvalores obrigatorios\nif( is_numeric( $cep ) && is_numeric( $this->idlog ) && is_numeric( {$this->idbai[$id]} ) && is_numeric( $this->pessoa_logada ) )\n-->';
-            return FALSE;
-          }
-        }
-      }
-
-      $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
-      header('Location: urbano_cep_logradouro_lst.php');
-      die();
-    }
-    else {
-      $this->mensagem = 'É necessario adicionar pelo menos um CEP e bairro.<br>';
-      return FALSE;
-    }
-    */
   }
 
   function Editar()
@@ -356,12 +323,12 @@ document.getElementById('idpais').onchange = function() {
 
 function getUf(xml_uf) {
   var campoUf = document.getElementById('sigla_uf');
-  var DOM_array = xml_uf.getElementsByTagName('uf');
+  var DOM_array = xml_uf.getElementsByTagName('estado');
 
   if (DOM_array.length) {
     campoUf.length = 1;
     campoUf.options[0].text = 'Selecione um estado';
-    campoUf.disabled = NULL;
+    campoUf.disabled = false;
 
     for (var i = 0; i < DOM_array.length; i++) {
       campoUf.options[campoUf.options.length] = new Option( DOM_array[i].firstChild.data,
