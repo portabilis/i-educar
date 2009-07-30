@@ -1,320 +1,312 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/public/geral.inc.php" );
+
+/**
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package     Core
+ * @subpackage  Enderecamento
+ * @subpackage  Bairro
+ * @since       Arquivo disponível desde a versão 1.0.0
+ * @version     $Id$
+ */
+
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/public/geral.inc.php';
 
 class clsIndexBase extends clsBase
 {
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} Bairro" );
-		$this->processoAp = "756";
-	}
+  function Formular()
+  {
+    $this->SetTitulo($this->_instituicao . ' Bairro');
+    $this->processoAp = '756';
+  }
 }
 
 class indice extends clsCadastro
 {
-	/**
-	 * Referencia pega da session para o idpes do usuario atual
-	 *
-	 * @var int
-	 */
-	var $pessoa_logada;
+  /**
+   * Referência a usuário da sessão.
+   * @var int
+   */
+  var $pessoa_logada;
 
-	var $idmun;
-	var $geom;
-	var $idbai;
-	var $nome;
-	var $idpes_rev;
-	var $data_rev;
-	var $origem_gravacao;
-	var $idpes_cad;
-	var $data_cad;
-	var $operacao;
-	var $idsis_rev;
-	var $idsis_cad;
+  var $idmun;
+  var $geom;
+  var $idbai;
+  var $nome;
+  var $idpes_rev;
+  var $data_rev;
+  var $origem_gravacao;
+  var $idpes_cad;
+  var $data_cad;
+  var $operacao;
+  var $idsis_rev;
+  var $idsis_cad;
 
-	var $idpais;
-	var $sigla_uf;
-	
-	function Inicializar()
-	{
-		$retorno = "Novo";
-		@session_start();
-		$this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
+  var $idpais;
+  var $sigla_uf;
 
-		$this->idbai=$_GET["idbai"];
+  function Inicializar()
+  {
+    $retorno = 'Novo';
+    session_start();
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
+    session_write_close();
 
-		if( is_numeric( $this->idbai ) )
-		{
-			$obj_bairro = new clsPublicBairro();
-			$lst_bairro = $obj_bairro->lista( null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $this->idbai );
-			if( $lst_bairro )
-			{
-				$registro = $lst_bairro[0];
-			}
-			if( $registro )
-			{
-				foreach( $registro AS $campo => $val )	// passa todos os valores obtidos no registro para atributos do objeto
-					$this->$campo = $val;
+    $this->idbai = $_GET['idbai'];
 
-					
-//				$this->fexcluir = true;
+    if (is_numeric($this->idbai)) {
+      $obj_bairro = new clsPublicBairro();
+      $lst_bairro = $obj_bairro->lista( NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->idbai);
+      if ($lst_bairro) {
+        $registro = $lst_bairro[0];
+      }
 
-				$retorno = "Editar";
-			}
-		}
-		$this->url_cancelar = ($retorno == "Editar") ? "public_bairro_det.php?idbai={$registro["idbai"]}" : "public_bairro_lst.php";
-		$this->nome_url_cancelar = "Cancelar";
-		return $retorno;
-	}
+      if ($registro) {
+        foreach ($registro as $campo => $val) {
+          $this->$campo = $val;
+        }
 
-	function Gerar()
-	{
-		// primary keys
-		$this->campoOculto( "idbai", $this->idbai );
+        $retorno = 'Editar';
+      }
+    }
 
-		// foreign keys
-		$opcoes = array( "" => "Selecione" );
-		if( class_exists( "clsPais" ) )
-		{
-			$objTemp = new clsPais();
-			$lista = $objTemp->lista( false, false, false, false, false, "nome ASC" );
-			if ( is_array( $lista ) && count( $lista ) ) 
-			{
-				foreach ( $lista as $registro ) 
-				{
-					$opcoes["{$registro['idpais']}"] = "{$registro['nome']}";
-				}
-			}
-		}
-		else
-		{
-			echo "<!--\nErro\nClasse clsPais nao encontrada\n-->";
-			$opcoes = array( "" => "Erro na geracao" );
-		}
-		$this->campoLista( "idpais", "Pais", $opcoes, $this->idpais );
+    $this->url_cancelar = ($retorno == 'Editar') ?
+      'public_bairro_det.php?idbai=' . $registro['idbai'] :
+      'public_bairro_lst.php';
 
-		$opcoes = array( "" => "Selecione" );
-		if( class_exists( "clsUf" ) )
-		{
-			if( $this->idpais ) 
-			{
-				$objTemp = new clsUf();
-				$lista = $objTemp->lista( false, false, $this->idpais, false, false, "nome ASC" );
-				if ( is_array( $lista ) && count( $lista ) ) 
-				{
-					foreach ( $lista as $registro ) 
-					{
-						$opcoes["{$registro['sigla_uf']}"] = "{$registro['nome']}";
-					}
-				}
-			}
-		}
-		else
-		{
-			echo "<!--\nErro\nClasse clsUf nao encontrada\n-->";
-			$opcoes = array( "" => "Erro na geracao" );
-		}
-		$this->campoLista( "sigla_uf", "Estado", $opcoes, $this->sigla_uf );
+    $this->nome_url_cancelar = 'Cancelar';
 
-		$opcoes = array( "" => "Selecione" );
-		if( class_exists( "clsMunicipio" ) )
-		{
-			if( $this->sigla_uf ) 
-			{
-				$objTemp = new clsMunicipio();
-				$lista = $objTemp->lista( false, $this->sigla_uf, false, false, false, false, false, false, false, false, false, "nome ASC" );
-				if ( is_array( $lista ) && count( $lista ) ) 
-				{
-					foreach ( $lista as $registro ) 
-					{
-						$opcoes["{$registro['idmun']}"] = "{$registro['nome']}";
-					}
-				}
-			}
-		}
-		else
-		{
-			echo "<!--\nErro\nClasse clsMunicipio nao encontrada\n-->";
-			$opcoes = array( "" => "Erro na geracao" );
-		}
-		$this->campoLista( "idmun", "Munic&iacute;pio", $opcoes, $this->idmun );
+    return $retorno;
+  }
 
-		// text
-		$this->campoTexto( "nome", "Nome", $this->nome, 30, 255, true );
-	}
+  function Gerar()
+  {
+    // primary keys
+    $this->campoOculto('idbai', $this->idbai);
 
-	function Novo()
-	{
-		@session_start();
-		 $this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
+    // foreign keys
+    $opcoes = array('' => 'Selecione');
+    if (class_exists('clsPais')) {
+      $objTemp = new clsPais();
+      $lista = $objTemp->lista(FALSE, FALSE, FALSE, FALSE, FALSE, 'nome ASC');
 
-		$obj = new clsPublicBairro( $this->idmun, null, null, $this->nome, null, null, 'U', $this->pessoa_logada, null, 'I', null, 9 );
-		$cadastrou = $obj->cadastra();
-		if( $cadastrou )
-		{
-			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-			header( "Location: public_bairro_lst.php" );
-			die();
-			return true;
-		}
+      if (is_array($lista) && count($lista)) {
+        foreach ($lista as $registro) {
+          $opcoes[$registro['idpais']] = $registro['nome'];
+        }
+      }
+    }
+    else {
+      echo '<!--\nErro\nClasse clsPais nao encontrada\n-->';
+      $opcoes = array('' => 'Erro na geracao');
+    }
+    $this->campoLista('idpais', 'Pais', $opcoes, $this->idpais);
 
-		$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-		echo "<!--\nErro ao cadastrar clsPublicBairro\nvalores obrigatorios\nis_numeric( $this->idmun ) && is_string( $this->nome ) && is_string( $this->origem_gravacao ) && is_string( $this->operacao ) && is_numeric( $this->idsis_cad )\n-->";
-		return false;
-	}
+    $opcoes = array('' => 'Selecione');
+    if (class_exists('clsUf')) {
+      if ($this->idpais) {
+        $objTemp = new clsUf();
 
-	function Editar()
-	{
-		@session_start();
-		 $this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
+        $lista = $objTemp->lista(FALSE, FALSE, $this->idpais, FALSE, FALSE, 'nome ASC');
 
-		$obj = new clsPublicBairro( $this->idmun, null, $this->idbai, $this->nome, $this->pessoa_logada, null, 'U', null, null, 'I', null, 9 );
-		$editou = $obj->edita();
-		if( $editou )
-		{
-			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-			header( "Location: public_bairro_lst.php" );
-			die();
-			return true;
-		}
+        if (is_array($lista) && count($lista)) {
+          foreach ($lista as $registro) {
+            $opcoes[$registro['sigla_uf']] = $registro['nome'];
+          }
+        }
+      }
+    }
+    else {
+      echo '<!--\nErro\nClasse clsUf nao encontrada\n-->';
+      $opcoes = array('' => 'Erro na geracao');
+    }
 
-		$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-		echo "<!--\nErro ao editar clsPublicBairro\nvalores obrigatorios\nif( is_numeric( $this->idbai ) )\n-->";
-		return false;
-	}
+    $this->campoLista('sigla_uf', 'Estado', $opcoes, $this->sigla_uf);
 
-	function Excluir()
-	{
-		@session_start();
-		 $this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
+    $opcoes = array('' => 'Selecione');
+    if (class_exists('clsMunicipio')) {
+      if ($this->sigla_uf) {
+        $objTemp = new clsMunicipio();
+        $lista = $objTemp->lista(FALSE, $this->sigla_uf, FALSE, FALSE, FALSE,
+          FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, 'nome ASC');
 
-		$obj = new clsPublicBairro( null, null, $this->idbai, null, $this->pessoa_logada );
-		$excluiu = $obj->excluir();
-		if( $excluiu )
-		{
-			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-			header( "Location: public_bairro_lst.php" );
-			die();
-			return true;
-		}
+        if (is_array($lista) && count($lista)) {
+          foreach ($lista as $registro) {
+            $opcoes[$registro['idmun']] = $registro['nome'];
+          }
+        }
+      }
+    }
+    else {
+      echo '<!--\nErro\nClasse clsMunicipio nao encontrada\n-->';
+      $opcoes = array("" => "Erro na geracao");
+    }
+    $this->campoLista('idmun', 'Munic&iacute;pio', $opcoes, $this->idmun);
 
-		$this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-		echo "<!--\nErro ao excluir clsPublicBairro\nvalores obrigatorios\nif( is_numeric( $this->idbai ) )\n-->";
-		return false;
-	}
+    $this->campoTexto('nome', 'Nome', $this->nome, 30, 255, TRUE);
+  }
+
+  function Novo()
+  {
+    session_start();
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
+    session_write_close();
+
+    $obj = new clsPublicBairro( $this->idmun, NULL, NULL, $this->nome, NULL,
+      NULL, 'U', $this->pessoa_logada, NULL, 'I', NULL, 9);
+
+    $cadastrou = $obj->cadastra();
+    if ($cadastrou) {
+      $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+      header('Location: public_bairro_lst.php');
+      die();
+    }
+
+    $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+    echo "<!--\nErro ao cadastrar clsPublicBairro\nvalores obrigatorios\nis_numeric( $this->idmun ) && is_string( $this->nome ) && is_string( $this->origem_gravacao ) && is_string( $this->operacao ) && is_numeric( $this->idsis_cad )\n-->";
+
+    return FALSE;
+  }
+
+  function Editar()
+  {
+    session_start();
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
+    session_write_close();
+
+    $obj = new clsPublicBairro($this->idmun, NULL, $this->idbai, $this->nome,
+      $this->pessoa_logada, NULL, 'U', NULL, NULL, 'I', NULL, 9);
+    $editou = $obj->edita();
+    if ($editou) {
+      $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
+      header('Location: public_bairro_lst.php');
+      die();
+    }
+
+    $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+    echo "<!--\nErro ao editar clsPublicBairro\nvalores obrigatorios\nif( is_numeric( $this->idbai ) )\n-->";
+
+    return FALSE;
+  }
+
+  function Excluir()
+  {
+    session_start();
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
+    session_write_close();
+
+    $obj = new clsPublicBairro(NULL, NULL, $this->idbai, NULL, $this->pessoa_logada);
+    $excluiu = $obj->excluir();
+    if ($excluiu) {
+      $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+      header('Location: public_bairro_lst.php');
+      die();
+    }
+
+    $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+    echo "<!--\nErro ao excluir clsPublicBairro\nvalores obrigatorios\nif( is_numeric( $this->idbai ) )\n-->";
+
+    return FALSE;
+  }
 }
 
-// cria uma extensao da classe base
+// Instancia objeto de página
 $pagina = new clsIndexBase();
-// cria o conteudo
+
+// Instancia objeto de conteúdo
 $miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
-// gera o html
+
+// Atribui o conteúdo à  página
+$pagina->addForm($miolo);
+
+// Gera o código HTML
 $pagina->MakeAll();
 ?>
-<script>
 
-document.getElementById('idpais').onchange = function()
-{
-	var campoPais = document.getElementById('idpais').value;
+<script type='text/javascript'>
+document.getElementById('idpais').onchange = function() {
+  var campoPais = document.getElementById('idpais').value;
 
-	var campoUf= document.getElementById('sigla_uf');
-	campoUf.length = 1;
-	campoUf.disabled = true;
-	campoUf.options[0].text = 'Carregando estado...';
+  var campoUf= document.getElementById('sigla_uf');
+  campoUf.length = 1;
+  campoUf.disabled = true;
+  campoUf.options[0].text = 'Carregando estado...';
 
-	var xml_uf = new ajax( getUf );
-	xml_uf.envia( "public_uf_xml.php?pais="+campoPais );
+  var xml_uf = new ajax( getUf );
+  xml_uf.envia('public_uf_xml.php?pais=' + campoPais);
 }
 
-function getUf( xml_uf )
-{
-	var campoUf = document.getElementById('sigla_uf');
-	var DOM_array = xml_uf.getElementsByTagName( "uf" );
+function getUf(xml_uf) {
+  var campoUf = document.getElementById('sigla_uf');
+  var DOM_array = xml_uf.getElementsByTagName('uf');
 
-	if(DOM_array.length)
-	{
-		campoUf.length = 1;
-		campoUf.options[0].text = 'Selecione um estado';
-		campoUf.disabled = false;
+  if (DOM_array.length) {
+    campoUf.length = 1;
+    campoUf.options[0].text = 'Selecione um estado';
+    campoUf.disabled = false;
 
-		for( var i = 0; i < DOM_array.length; i++ )
-		{
-			campoUf.options[campoUf.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("sigla_uf"),false,false);
-		}
-	}
-	else
-	{
-		campoUf.options[0].text = 'O pais não possui nenhum estado';
-	}
+    for (var i = 0; i < DOM_array.length; i++) {
+      campoUf.options[campoUf.options.length] = new Option(DOM_array[i].firstChild.data,
+        DOM_array[i].getAttribute('sigla_uf'), false, false);
+    }
+  }
+  else {
+    campoUf.options[0].text = 'O pais não possui nenhum estado';
+  }
 }
 
-document.getElementById('sigla_uf').onchange = function()
-{
-	var campoUf = document.getElementById('sigla_uf').value;
+document.getElementById('sigla_uf').onchange = function() {
+  var campoUf = document.getElementById('sigla_uf').value;
 
-	var campoMunicipio= document.getElementById('idmun');
-	campoMunicipio.length = 1;
-	campoMunicipio.disabled = true;
-	campoMunicipio.options[0].text = 'Carregando município...';
+  var campoMunicipio= document.getElementById('idmun');
+  campoMunicipio.length = 1;
+  campoMunicipio.disabled = true;
+  campoMunicipio.options[0].text = 'Carregando município...';
 
-	var xml_municipio = new ajax( getMunicipio );
-	xml_municipio.envia( "public_municipio_xml.php?uf="+campoUf );
+  var xml_municipio = new ajax(getMunicipio);
+  xml_municipio.envia('public_municipio_xml.php?uf=' + campoUf);
 }
 
-function getMunicipio( xml_municipio )
-{
-	var campoMunicipio = document.getElementById('idmun');
-	var DOM_array = xml_municipio.getElementsByTagName( "municipio" );
+function getMunicipio(xml_municipio) {
+  var campoMunicipio = document.getElementById('idmun');
+  var DOM_array = xml_municipio.getElementsByTagName('municipio');
 
-	if(DOM_array.length)
-	{
-		campoMunicipio.length = 1;
-		campoMunicipio.options[0].text = 'Selecione um município';
-		campoMunicipio.disabled = false;
+  if(DOM_array.length) {
+    campoMunicipio.length = 1;
+    campoMunicipio.options[0].text = 'Selecione um município';
+    campoMunicipio.disabled = false;
 
-		for( var i = 0; i < DOM_array.length; i++ )
-		{
-			campoMunicipio.options[campoMunicipio.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("idmun"),false,false);
-		}
-	}
-	else
-	{
-		campoMunicipio.options[0].text = 'O estado não possui nenhum município';
-	}
+    for (var i = 0; i < DOM_array.length; i++) {
+      campoMunicipio.options[campoMunicipio.options.length] = new Option(DOM_array[i].firstChild.data,
+        DOM_array[i].getAttribute('idmun'), false, false);
+    }
+  }
+  else {
+    campoMunicipio.options[0].text = 'O estado não possui nenhum município';
+  }
 }
 
 </script>
