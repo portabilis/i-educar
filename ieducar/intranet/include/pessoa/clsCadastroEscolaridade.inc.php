@@ -24,6 +24,7 @@
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     Core
  * @subpackage  pessoa
+ * @subpackage  Escolaridade
  * @since       Arquivo disponível desde a versão 1.0.0
  * @version     $Id$
  */
@@ -35,6 +36,7 @@
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     Core
  * @subpackage  pessoa
+ * @subpackage  Escolaridade
  * @since       Classe disponível desde a versão 1.0.0
  * @version     $Id$
  */
@@ -92,28 +94,9 @@ class clsCadastroEscolaridade
   var $_campo_order_by;
 
   /**
-   * Construtor (PHP 5).
-   */
-  function __construct($idesco = NULL, $descricao = NULL)
-  {
-    $db = new clsBanco();
-    $this->_schema = "cadastro.";
-    $this->_tabela = "{$this->_schema}escolaridade";
-
-    $this->_campos_lista = $this->_todos_campos = "idesco, descricao";
-
-    if (is_numeric($idesco)) {
-      $this->idesco = $idesco;
-    }
-    if (is_string($descricao)) {
-      $this->descricao = $descricao;
-    }
-  }
-
-  /**
    * Construtor (PHP 4).
    */
-  function clsCadastroEscolaridade( $idesco = null, $descricao = null )
+  function clsCadastroEscolaridade($idesco = NULL, $descricao = NULL)
   {
     $db = new clsBanco();
     $this->_schema = "cadastro.";
@@ -146,6 +129,11 @@ class clsCadastroEscolaridade
       $this->idesco = $db->CampoUnico('SELECT MAX(idesco) + 1
                       FROM cadastro.escolaridade');
 
+      // Se for nulo, é o primeiro registro da tabela
+      if (is_null($this->idesco)) {
+        $this->idesco = 1;
+      }
+
       if (is_numeric($this->idesco)) {
         $campos  .= "{$gruda}idesco";
         $valores .= "{$gruda}'{$this->idesco}'";
@@ -157,7 +145,7 @@ class clsCadastroEscolaridade
         $gruda = ", ";
       }
 
-      $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES($valores)");
+      $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
       return $this->idesco;
     }
 
