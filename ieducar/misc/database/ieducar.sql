@@ -86,13 +86,6 @@ CREATE SCHEMA portal;
 
 
 --
--- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON SCHEMA public IS 'Standard public schema';
-
-
---
 -- Name: urbano; Type: SCHEMA; Schema: -; Owner: -
 --
 
@@ -7343,7 +7336,7 @@ CREATE TABLE grupo_sistema (
 --
 
 CREATE TABLE historico_senha (
-    "login" character varying(16) NOT NULL,
+    login character varying(16) NOT NULL,
     senha character varying(60) NOT NULL,
     data_cad timestamp without time zone NOT NULL
 );
@@ -7506,7 +7499,6 @@ CREATE TABLE pessoa_instituicao (
 --
 
 CREATE SEQUENCE sistema_idsis_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     MINVALUE 0
@@ -7517,7 +7509,7 @@ CREATE SEQUENCE sistema_idsis_seq
 -- Name: sistema_idsis_seq; Type: SEQUENCE SET; Schema: acesso; Owner: -
 --
 
-SELECT pg_catalog.setval('sistema_idsis_seq', 1, false);
+SELECT pg_catalog.setval('sistema_idsis_seq', 17, true);
 
 
 --
@@ -7539,7 +7531,7 @@ CREATE TABLE sistema (
 --
 
 CREATE TABLE usuario (
-    "login" character varying(16) NOT NULL,
+    login character varying(16) NOT NULL,
     idpes numeric(8,0) NOT NULL,
     idpes_sga numeric(8,0),
     senha character varying(60) NOT NULL,
@@ -7566,7 +7558,7 @@ CREATE TABLE usuario (
 
 CREATE TABLE usuario_grupo (
     idgrp integer NOT NULL,
-    "login" character varying(16) NOT NULL
+    login character varying(16) NOT NULL
 );
 
 
@@ -7848,7 +7840,7 @@ CREATE TABLE contrato (
     idcon integer DEFAULT nextval('contrato_idcon_seq'::regclass) NOT NULL,
     codigo character varying(20) NOT NULL,
     idcli character varying(10) NOT NULL,
-    "login" character varying(80) NOT NULL,
+    login character varying(80) NOT NULL,
     num_aditivo integer NOT NULL,
     idfor integer NOT NULL,
     dt_vigencia date NOT NULL,
@@ -8231,7 +8223,7 @@ SELECT pg_catalog.setval('log_guia_remessa_idlogguia_seq', 1, false);
 
 CREATE TABLE log_guia_remessa (
     idlogguia integer DEFAULT nextval('log_guia_remessa_idlogguia_seq'::regclass) NOT NULL,
-    "login" character varying(80) NOT NULL,
+    login character varying(80) NOT NULL,
     idcli character varying(10) NOT NULL,
     dt_inicial date NOT NULL,
     dt_final date NOT NULL,
@@ -10471,7 +10463,7 @@ CREATE TABLE acontecimento (
     data_cadastro timestamp without time zone NOT NULL,
     data_exclusao timestamp without time zone,
     ativo smallint DEFAULT (1)::smallint,
-    "local" character varying,
+    local character varying,
     contato character varying,
     link character varying
 );
@@ -10623,7 +10615,6 @@ CREATE TABLE itinerario (
 --
 
 CREATE SEQUENCE menu_cod_menu_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     MINVALUE 0
@@ -10634,7 +10625,7 @@ CREATE SEQUENCE menu_cod_menu_seq
 -- Name: menu_cod_menu_seq; Type: SEQUENCE SET; Schema: pmicontrolesis; Owner: -
 --
 
-SELECT pg_catalog.setval('menu_cod_menu_seq', 1, false);
+SELECT pg_catalog.setval('menu_cod_menu_seq', 20709, true);
 
 
 --
@@ -10954,7 +10945,6 @@ CREATE TABLE topo_portal (
 --
 
 CREATE SEQUENCE tutormenu_cod_tutormenu_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     MINVALUE 0
@@ -10965,7 +10955,7 @@ CREATE SEQUENCE tutormenu_cod_tutormenu_seq
 -- Name: tutormenu_cod_tutormenu_seq; Type: SEQUENCE SET; Schema: pmicontrolesis; Owner: -
 --
 
-SELECT pg_catalog.setval('tutormenu_cod_tutormenu_seq', 1, false);
+SELECT pg_catalog.setval('tutormenu_cod_tutormenu_seq', 16, true);
 
 
 --
@@ -11800,7 +11790,7 @@ CREATE TABLE cliente (
     ref_usuario_exc integer,
     ref_usuario_cad integer NOT NULL,
     ref_idpes integer NOT NULL,
-    "login" integer,
+    login integer,
     senha character varying(255),
     data_cadastro timestamp without time zone NOT NULL,
     data_exclusao timestamp without time zone,
@@ -12861,7 +12851,6 @@ CREATE TABLE infra_predio_comodo (
 --
 
 CREATE SEQUENCE instituicao_cod_instituicao_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     MINVALUE 0
@@ -12872,7 +12861,7 @@ CREATE SEQUENCE instituicao_cod_instituicao_seq
 -- Name: instituicao_cod_instituicao_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
 --
 
-SELECT pg_catalog.setval('instituicao_cod_instituicao_seq', 1, false);
+SELECT pg_catalog.setval('instituicao_cod_instituicao_seq', 1, true);
 
 
 --
@@ -14241,7 +14230,6 @@ CREATE TABLE tipo_regime (
 --
 
 CREATE SEQUENCE tipo_usuario_cod_tipo_usuario_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     MINVALUE 0
@@ -14252,7 +14240,7 @@ CREATE SEQUENCE tipo_usuario_cod_tipo_usuario_seq
 -- Name: tipo_usuario_cod_tipo_usuario_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
 --
 
-SELECT pg_catalog.setval('tipo_usuario_cod_tipo_usuario_seq', 1, false);
+SELECT pg_catalog.setval('tipo_usuario_cod_tipo_usuario_seq', 3, true);
 
 
 --
@@ -15224,7 +15212,7 @@ CREATE SEQUENCE imagem_cod_imagem_seq
 -- Name: imagem_cod_imagem_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
 --
 
-SELECT pg_catalog.setval('imagem_cod_imagem_seq', 180, true);
+SELECT pg_catalog.setval('imagem_cod_imagem_seq', 186, true);
 
 
 --
@@ -15251,7 +15239,6 @@ CREATE TABLE imagem (
 --
 
 CREATE SEQUENCE imagem_tipo_cod_imagem_tipo_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     MINVALUE 0
@@ -15262,7 +15249,7 @@ CREATE SEQUENCE imagem_tipo_cod_imagem_tipo_seq
 -- Name: imagem_tipo_cod_imagem_tipo_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
 --
 
-SELECT pg_catalog.setval('imagem_tipo_cod_imagem_tipo_seq', 1, false);
+SELECT pg_catalog.setval('imagem_tipo_cod_imagem_tipo_seq', 6, true);
 
 
 --
@@ -15538,7 +15525,6 @@ CREATE TABLE menu_funcionario (
 --
 
 CREATE SEQUENCE menu_menu_cod_menu_menu_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     MINVALUE 0
@@ -15549,7 +15535,7 @@ CREATE SEQUENCE menu_menu_cod_menu_menu_seq
 -- Name: menu_menu_cod_menu_menu_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
 --
 
-SELECT pg_catalog.setval('menu_menu_cod_menu_menu_seq', 1, false);
+SELECT pg_catalog.setval('menu_menu_cod_menu_menu_seq', 68, true);
 
 
 --
@@ -15569,7 +15555,6 @@ CREATE TABLE menu_menu (
 --
 
 CREATE SEQUENCE menu_submenu_cod_menu_submenu_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     MINVALUE 0
@@ -15580,7 +15565,7 @@ CREATE SEQUENCE menu_submenu_cod_menu_submenu_seq
 -- Name: menu_submenu_cod_menu_submenu_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
 --
 
-SELECT pg_catalog.setval('menu_submenu_cod_menu_submenu_seq', 1, false);
+SELECT pg_catalog.setval('menu_submenu_cod_menu_submenu_seq', 944, true);
 
 
 --
@@ -15934,7 +15919,7 @@ CREATE TABLE sistema (
     cod_sistema integer DEFAULT nextval('sistema_cod_sistema_seq'::regclass) NOT NULL,
     nome character varying(255),
     versao smallint NOT NULL,
-    "release" smallint NOT NULL,
+    release smallint NOT NULL,
     patch smallint NOT NULL,
     tipo character varying(255)
 );
@@ -19129,6 +19114,7 @@ SET search_path = public, pg_catalog;
 
 INSERT INTO changelog VALUES (2, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '2_popula_dados_basicos.sql');
 INSERT INTO changelog VALUES (1, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '1_cria_schema_inicial.sql');
+INSERT INTO changelog VALUES (3, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '3_corrige_sequences.sql');
 
 
 --
@@ -25323,7 +25309,7 @@ ALTER TABLE ONLY grupo_sistema
 --
 
 ALTER TABLE ONLY historico_senha
-    ADD CONSTRAINT pk_historico_senha PRIMARY KEY ("login", senha);
+    ADD CONSTRAINT pk_historico_senha PRIMARY KEY (login, senha);
 
 
 --
@@ -25379,7 +25365,7 @@ ALTER TABLE ONLY sistema
 --
 
 ALTER TABLE ONLY usuario
-    ADD CONSTRAINT pk_usuario PRIMARY KEY ("login");
+    ADD CONSTRAINT pk_usuario PRIMARY KEY (login);
 
 
 --
@@ -25387,7 +25373,7 @@ ALTER TABLE ONLY usuario
 --
 
 ALTER TABLE ONLY usuario_grupo
-    ADD CONSTRAINT pk_usuario_grupo PRIMARY KEY (idgrp, "login");
+    ADD CONSTRAINT pk_usuario_grupo PRIMARY KEY (idgrp, login);
 
 
 SET search_path = alimentos, pg_catalog;
@@ -26417,7 +26403,7 @@ ALTER TABLE ONLY categoria_nivel
 --
 
 ALTER TABLE ONLY cliente
-    ADD CONSTRAINT cliente_login_ukey UNIQUE ("login");
+    ADD CONSTRAINT cliente_login_ukey UNIQUE (login);
 
 
 --
