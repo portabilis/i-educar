@@ -27,6 +27,7 @@
  * @subpackage  Matricula
  * @subpackage  Rematricula
  * @since       Arquivo disponível desde a versão 1.0.0
+ * @todo        Refatorar a lógica de indice::Novo() para uma classe na camada de domínio
  * @version     $Id$
  */
 
@@ -60,20 +61,23 @@ class indice extends clsCadastro
 
   function Gerar()
   {
-    $instituicao_obrigatorio        = true;
-    $escola_obrigatorio             = true;
-    $curso_obrigatorio              = true;
-    $escola_curso_serie_obrigatorio = true;
-    $turma_obrigatorio              = true;
-    $get_escola                     = true;
-    $get_curso                      = true;
-    $get_escola_curso_serie         = true;
-    $get_turma                      = true;
-    $get_cursos_nao_padrao          = true;
+    $instituicao_obrigatorio        = TRUE;
+    $escola_obrigatorio             = TRUE;
+    $curso_obrigatorio              = TRUE;
+    $escola_curso_serie_obrigatorio = TRUE;
+    $turma_obrigatorio              = TRUE;
+    $get_escola                     = TRUE;
+    $get_curso                      = TRUE;
+    $get_escola_curso_serie         = TRUE;
+    $get_turma                      = TRUE;
+    $get_cursos_nao_padrao          = FALSE;
 
     include 'include/pmieducar/educar_campo_lista.php';
   }
 
+  /**
+   * @todo Refatorar a lógica para uma classe na camada de domínio.
+   */
   function Novo()
   {
     session_start();
@@ -83,51 +87,86 @@ class indice extends clsCadastro
     $db  = new clsBanco();
     $db2 = new clsBanco();
 
-    $ano = $db2->CampoUnico("SELECT MAX(ano) FROM pmieducar.escola_ano_letivo
-      WHERE ref_cod_escola = {$this->ref_cod_escola} AND andamento = 1");
+    // Seleciona o maior ano letivo da escola em andamento
+    $ano = $db2->CampoUnico(sprintf("
+      SELECT MAX(ano) FROM pmieducar.escola_ano_letivo
+      WHERE ref_cod_escola = '%d' AND andamento = 1", $this->ref_cod_escola)
+    );
 
+    // Caso a escola não tenha um ano letivo, usa o ano da data do servidor web
     if (! is_numeric($ano)) {
-      $ano = date("Y");
+      $ano = date('Y');
     }
 
-    // Aprovados
-    $db->Consulta("SELECT cod_matricula, ref_cod_aluno
-      FROM pmieducar.matricula m, pmieducar.matricula_turma
-      WHERE aprovado = '1' AND m.ativo = '1' AND ref_ref_cod_escola = '{$this->ref_cod_escola}' AND ref_ref_cod_serie='{$this->ref_ref_cod_serie}' AND ref_cod_curso = '$this->ref_cod_curso' AND cod_matricula = ref_cod_matricula AND ref_cod_turma = '$this->ref_cod_turma' ");
+    // Seleciona todos os alunos que foram aprovados na turma/série/curso/escola informados
+    $db->Consulta(sprintf("
+      SELECT
+        cod_matricula, ref_cod_aluno
+      FROM
+        pmieducar.matricula m, pmieducar.matricula_turma
+      WHERE
+        aprovado = '1' AND m.ativo = '1' AND ref_ref_cod_escola = '%d' AND
+        ref_ref_cod_serie='%d' AND ref_cod_curso = '%d' AND
+        cod_matricula = ref_cod_matricula AND ref_cod_turma = '%d'",
+      $this->ref_cod_escola, $this->ref_ref_cod_serie, $this->ref_cod_curso, $this->ref_cod_turma)
+    );
 
     while ($db->ProximoRegistro()) {
       list($cod_matricula, $ref_cod_aluno) = $db->Tupla();
-      $prox_mod = $db2->campoUnico("SELECT ref_serie_destino FROM pmieducar.sequencia_serie WHERE ref_serie_origem = '{$this->ref_ref_cod_serie}' AND ativo = '1' ");
+
+      // Seleciona a série da sequência de séries
+      $prox_mod = $db2->campoUnico(sprintf(
+        "SELECT
+          ref_serie_destino
+        FROM
+          pmieducar.sequencia_serie
+        WHERE
+          ref_serie_origem = '%d' AND ativo = '1'", $this->ref_ref_cod_serie)
+      );
+
+      // Seleciona o código do curso da série de sequência
+      $ref_cod_curso = $db2->CampoUnico(sprintf("SELECT ref_cod_curso FROM pmieducar.serie WHERE cod_serie = %d", $prox_mod));
 
       if (is_numeric($prox_mod)) {
-        // Aqui localizar o próximo curso
-        $ref_cod_curso = $db2->CampoUnico("SELECT ref_cod_curso FROM pmieducar.serie WHERE cod_serie = {$prox_mod}");
-        $db2->Consulta("UPDATE pmieducar.matricula SET ultima_matricula = '0' WHERE cod_matricula = '$cod_matricula'");
+        // Atualiza a matrícula atual do aluno, para evitar que seja listada no cadastro deste
+        $db2->Consulta(sprintf("UPDATE pmieducar.matricula SET ultima_matricula = '0' WHERE cod_matricula = '%d'", $cod_matricula));
 
-        $db2->Consulta("
+        // Cria uma nova matrícula
+        $db2->Consulta(sprintf("
           INSERT INTO pmieducar.matricula
             (ref_ref_cod_escola, ref_ref_cod_serie, ref_usuario_cad, ref_cod_aluno, aprovado, data_cadastro, ano, ref_cod_curso, ultima_matricula)
           VALUES
-            ('{$this->ref_cod_escola}', '$prox_mod', '{$this->pessoa_logada}', '$ref_cod_aluno', '3', 'NOW()', '$ano', '{$ref_cod_curso}', '1')
-        ");
+            ('%d', '%d', '%d', '%d', '3', 'NOW()', '%d', '%d', '1')",
+          $this->ref_cod_escola, $prox_mod, $this->pessoa_logada, $ref_cod_aluno, $ano, $ref_cod_curso)
+        );
       }
     }
 
-    // Reprovados
-    $db->Consulta("SELECT cod_matricula, ref_cod_aluno, ref_ref_cod_serie FROM pmieducar.matricula, pmieducar.matricula_turma WHERE aprovado = '2' AND ref_ref_cod_escola = '{$this->ref_cod_escola}' AND ref_ref_cod_serie='{$this->ref_ref_cod_serie}' AND cod_matricula = ref_cod_matricula AND ref_cod_turma = '$this->ref_cod_turma'");
+    // Seleciona todos os alunos que foram reprovados na turma/série/curso/escola informados
+    $db->Consulta(sprintf("
+      SELECT
+        cod_matricula, ref_cod_aluno, ref_ref_cod_serie
+      FROM
+        pmieducar.matricula, pmieducar.matricula_turma
+      WHERE
+        aprovado = '2' AND ref_ref_cod_escola = '%d' AND ref_ref_cod_serie='%d' AND cod_matricula = ref_cod_matricula AND ref_cod_turma = '%d'",
+      $this->ref_cod_escola, $this->ref_ref_cod_serie, $this->ref_cod_turma)
+    );
 
+    // Cria uma nova matrícula para cada aluno reprovado na mesma série/curso/escola informados
     while ($db->ProximoRegistro()) {
       list($cod_matricula, $ref_cod_aluno, $ref_cod_serie) = $db->Tupla();
 
-      $db2->Consulta("UPDATE pmieducar.matricula SET ultima_matricula = '0'
-        WHERE cod_matricula = '$cod_matricula'");
+      $db2->Consulta(sprintf("UPDATE pmieducar.matricula SET ultima_matricula = '0'
+        WHERE cod_matricula = '%d'", $cod_matricula));
 
-      $db2->Consulta("
-        INSERT INTO pmieducar.matricula
+      $db2->Consulta(
+        sprintf("INSERT INTO pmieducar.matricula
           (ref_ref_cod_escola, ref_ref_cod_serie, ref_usuario_cad, ref_cod_aluno, aprovado, data_cadastro, ano, ref_cod_curso, ultima_matricula)
         VALUES
-          ('{$this->ref_cod_escola}', '$ref_cod_serie', '{$this->pessoa_logada}', '$ref_cod_aluno', '3', 'NOW()', '$ano', '{$this->ref_cod_curso}', '1')
-      ");
+          ('%d', '%d', '%d', '%d', '3', 'NOW()', '%d', '%d', '1')",
+        $this->ref_cod_escola, $ref_cod_serie, $this->pessoa_logada, $ref_cod_aluno, $ano, $this->ref_cod_curso)
+      );
     }
 
     $this->mensagem = "Rematrícula efetuada com sucesso!";
