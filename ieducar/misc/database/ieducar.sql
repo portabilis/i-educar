@@ -17787,6 +17787,27 @@ INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(2,586,1,1,1)', 'NOW(
 INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(2,570,1,1,1)', 'NOW()', 1);
 INSERT INTO historico_educar VALUES ('usuario', '(1,,,1,,1,"NOW()",,1)', 'NOW()', 1);
 INSERT INTO historico_educar VALUES ('instituicao', '(1,,1,RUA,SP,9000000,"São Paulo",Centro,"Rua Nossa Senhora da Sé",1,"",i-Educar,,,"NOW()",,1,i-Educar)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,625,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,592,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,594,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,591,0,1,0)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,603,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,593,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,629,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,628,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,622,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,595,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,610,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,606,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,608,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,590,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,600,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,607,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,598,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,609,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,602,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,596,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,597,1,1,1)', 'NOW()', 1);
 
 
 --
@@ -18010,6 +18031,27 @@ INSERT INTO menu_tipo_usuario VALUES (2, 568, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 575, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 586, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 570, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (3, 625, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (3, 592, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (3, 594, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (3, 591, 0, 1, 0);
+INSERT INTO menu_tipo_usuario VALUES (3, 603, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (3, 593, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (3, 629, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (3, 628, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (3, 622, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (3, 595, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (3, 610, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (3, 606, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (3, 608, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (3, 590, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (3, 600, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (3, 607, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (3, 598, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (3, 609, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (3, 602, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (3, 596, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (3, 597, 1, 1, 1);
 
 
 --
@@ -19115,6 +19157,7 @@ SET search_path = public, pg_catalog;
 INSERT INTO changelog VALUES (2, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '2_popula_dados_basicos.sql');
 INSERT INTO changelog VALUES (1, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '1_cria_schema_inicial.sql');
 INSERT INTO changelog VALUES (3, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '3_corrige_sequences.sql');
+INSERT INTO changelog VALUES (4, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '4_permissoes_usuario_tipo_biblioteca.sql');
 
 
 --
