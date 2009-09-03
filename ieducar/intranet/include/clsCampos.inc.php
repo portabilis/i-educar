@@ -73,8 +73,6 @@ class clsCampos
   var $__sequencia_default = TRUE;
   var $__acao_enviar_abas  = 'acao()';
 
-  var $has_tiny = FALSE;
-
   function campoTabInicio($nome ,$largura = '', $segue_fluxo = FALSE, $array_sequencia = NULL)
   {
     $this->__id_tab      = 1;
@@ -856,11 +854,6 @@ class clsCampos
     $this->campoFoco = $campo;
   }
 
-  function campoTiny($id, $valor, $obrigatorio = FALSE)
-  {
-    $this->campos['0'] = array('tiny', '', FALSE, $valor, $obrigatorio);
-  }
-
   function MakeCampos($array_campos = NULL, $adicionador_indice = NULL, $todos_inline = FALSE,
     $todos_disabled = FALSE, $junta_linhas = FALSE, $start_md = NULL)
   {
@@ -1557,11 +1550,6 @@ class clsCampos
         }
 
         switch ($tipo) {
-          case 'tiny':
-            $retorno .= "<div id='elm1' style='width:450px; height:250px'>{$componente[3]}</div>";
-            $this->has_tiny = TRUE;
-            break;
-
           case 'anexarListaPesquisa':
             $inicio     = 0;
             $javascript = '';
@@ -2519,64 +2507,6 @@ class clsCampos
       if ($todos_inline) {
         $foiDuplo = TRUE;
       }
-    }
-
-    if ($this->has_tiny) {
-      $retorno .= '
-      <script language="javascript" type="text/javascript">
-        tinyMCE.init({
-          mode : "exact",
-          theme : "advanced",
-          width : 500,
-          elements : "elm1",
-          plugins : "spellchecker,style,layer,table,advhr,advimage,advlink,zoom,contextmenu,paste,directionality,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
-          theme_advanced_buttons1_add_before : "save,separator",
-          theme_advanced_disable : "formatselect,styleselect,date,timehelp",
-          theme_advanced_buttons1_add : "fontselect,fontsizeselect",
-          theme_advanced_buttons2_add : "separator,insertdate,inserttime,preview,separator,forecolor,backcolor",
-          theme_advanced_buttons2_add_before: "cut,copy,paste,pastetext,pasteword,separator,search,replace,separator",
-          theme_advanced_buttons3_add_before : "tablecontrols,separator",
-          theme_advanced_buttons3_add : "emotions,iespell,media,advhr,separator,print,separator,ltr,rtl,separator,fullscreen",
-          theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,spellchecker,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,template",
-          theme_advanced_toolbar_location : "top",
-          theme_advanced_toolbar_align : "left",
-          theme_advanced_path_location : "bottom",
-          content_css : "/example_data/example_full.css",
-
-          extended_valid_elements : "hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style],p[lang]",
-          file_browser_callback : "fileBrowserCallBack",
-          theme_advanced_resize_horizontal : false,
-          theme_advanced_resizing : true,
-          apply_source_formatting : true
-        });
-
-        function fileBrowserCallBack(field_name, url, type, win)
-        {
-          var connector = "../../filemanager/browser.html?Connector=connectors/php/connector.php";
-          var enableAutoTypeSelection = false;
-
-          var cType;
-          tinyfck_field = field_name;
-          tinyfck = win;
-
-          switch (type) {
-            case "image":
-            cType = "Image";
-            break;
-          case "flash":
-            cType = "Flash";
-            break;
-          case "file":
-            cType = "File";
-            break;
-          }
-
-          connector += "&Type=Image";
-
-          window.open(connector, "tinyfck", "modal,width=600,height=400");
-        }
-    </script>
-      ';
     }
 
     return $retorno;
