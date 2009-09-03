@@ -96,17 +96,22 @@
 		return substr( $str, 0, 2 ) . "." . substr( $str, 2, 3 ). "." . substr( $str, 5, 3 ) . "/" . substr( $str, 8, 4 ) . "-" . substr( $str, 12, 2 );
 	}
 
-	function int2CEP( $int )
-	{
-		if( $int )
-		{
-			return substr( $int, 0, 5 ) . "-" . substr( $int, 5, 3 );
-		}
-		else
-		{
-			return "";
-		}
-	}
+  /**
+   * Formata um valor numérico em uma representação string de CEP.
+   *
+   * @param  string|int  $int
+   * @return string
+   */
+  function int2CEP($int)
+  {
+    if ($int) {
+      $int = (string) str_pad($int, 8, '0', STR_PAD_LEFT);
+      return substr($int, 0, 5) . '-' . substr($int, 5, 3);
+    }
+    else {
+      return '';
+    }
+  }
 
 	function limpa_acentos( $str_nome )
 	{
