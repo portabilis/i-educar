@@ -28,6 +28,7 @@
  * @subpackage  SolicitacaoTransferencia
  * @subpackage  Relatorio
  * @since       Arquivo disponível desde a versão 1.0.0
+ * @todo        Refatorar o uso do objeto CoreExt_Config, talvez criando um {@link http://martinfowler.com/eaaCatalog/layerSupertype.html Layer Supertype}
  * @version     $Id$
  */
 
@@ -89,6 +90,15 @@ class indice extends clsCadastro
 
   function renderHTML()
   {
+    /**
+     * Variável global com objetos do CoreExt.
+     * @see includes/bootstrap.php
+     */
+    global $coreExt;
+
+    // Namespace de configuração para localização de interface
+    $uf = $coreExt['Config']->app->locale->province;
+
     $this->ref_cod_instituicao = $_POST['ref_cod_instituicao'];
     $this->ref_cod_escola      = $_POST['ref_cod_escola'];
     $this->ano                 = $_POST['ano'];
@@ -171,7 +181,8 @@ class indice extends clsCadastro
           $this->total++;
         }
 
-        $this->pdf = new clsPDF("Registro de Matrículas - {$this->ano}", "Registro de Matrículas", "A4", "", false, false);
+        $this->pdf = new clsPDF('Registro de Matrículas - '  . $this->ano,
+          'Registro de Matrículas', 'A4', '', FALSE, FALSE);
         $obj_instituicao = new clsPmieducarInstituicao();
 
         $this->pdf->largura  = 842.0;
@@ -233,7 +244,10 @@ class indice extends clsCadastro
 
           $this->pdf->linha_relativa($esquerda + 757, $altura, 0, 18);
 
-          $this->pdf->escreve_relativo(empty($estabelecimento_destino) ? '' : 'SC',
+          // Coloca o UF configurado em ieducar.ini caso exista um estabelecimento destino,
+          // supondo que todos os estabelecimentos estejam no mesmo estado.
+          // @todo Para suportar multi-instituições, deve pegar a informação dos dados da escola destino.
+          $this->pdf->escreve_relativo(empty($estabelecimento_destino) ? '' : $uf,
             $esquerda + 763, $altura + $altura_escrita, 50, 30, $fonte, $tam_texto);
 
           $this->pdf->linha_relativa($esquerda + 782, $altura, 0, 18);
@@ -288,7 +302,7 @@ class indice extends clsCadastro
       }
       else {
         echo '
-          <script type="text/javscript">
+          <script>
             alert("A escola nesse ano não possui nenhuma expedição de transferência");
             window.parent.fechaExpansivel(\'div_dinamico_\'+(window.parent.DOM_divs.length - 1));
           </script>';
@@ -298,7 +312,7 @@ class indice extends clsCadastro
     }
     else {
       echo '
-        <script  type="text/javscript">
+        <script>
           alert("A escola nesse ano não possui nenhuma expedição de transferência");
           window.parent.fechaExpansivel(\'div_dinamico_\'+(window.parent.DOM_divs.length-1));
         </script>';
