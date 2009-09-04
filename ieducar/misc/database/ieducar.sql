@@ -19158,6 +19158,7 @@ INSERT INTO changelog VALUES (2, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '2_popula
 INSERT INTO changelog VALUES (1, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '1_cria_schema_inicial.sql');
 INSERT INTO changelog VALUES (3, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '3_corrige_sequences.sql');
 INSERT INTO changelog VALUES (4, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '4_permissoes_usuario_tipo_biblioteca.sql');
+INSERT INTO changelog VALUES (5, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '5_corrige_triggers_constrainst.sql');
 
 
 --
@@ -30055,6 +30056,16 @@ CREATE TRIGGER trg_bef_logradouro_historico
 
 
 --
+-- Name: trg_bef_municipio_historico; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER trg_bef_municipio_historico
+    BEFORE UPDATE ON municipio
+    FOR EACH ROW
+    EXECUTE PROCEDURE historico.fcn_grava_historico_municipio();
+
+
+--
 -- Name: trg_delete_bairro_historico; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -30072,6 +30083,16 @@ CREATE TRIGGER trg_delete_logradouro_historico
     AFTER DELETE ON logradouro
     FOR EACH ROW
     EXECUTE PROCEDURE historico.fcn_delete_grava_historico_logradouro();
+
+
+--
+-- Name: trg_delete_municipio_historico; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER trg_delete_municipio_historico
+    AFTER DELETE ON municipio
+    FOR EACH ROW
+    EXECUTE PROCEDURE historico.fcn_delete_grava_historico_municipio();
 
 
 SET search_path = urbano, pg_catalog;
@@ -35539,6 +35560,14 @@ ALTER TABLE ONLY logradouro_fonetico
 
 
 --
+-- Name: fk_logradouro_municipio; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY municipio
+    ADD CONSTRAINT fk_logradouro_municipio FOREIGN KEY (idmun) REFERENCES municipio(idmun);
+
+
+--
 -- Name: fk_logradouro_sistema_idpes_cad; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -35579,6 +35608,54 @@ ALTER TABLE ONLY logradouro
 
 
 --
+-- Name: fk_municipio_municipiopai; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY municipio
+    ADD CONSTRAINT fk_municipio_municipiopai FOREIGN KEY (idmun_pai) REFERENCES municipio(idmun);
+
+
+--
+-- Name: fk_municipio_sistema_idpes_cad; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY municipio
+    ADD CONSTRAINT fk_municipio_sistema_idpes_cad FOREIGN KEY (idpes_cad) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
+
+
+--
+-- Name: fk_municipio_sistema_idpes_rev; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY municipio
+    ADD CONSTRAINT fk_municipio_sistema_idpes_rev FOREIGN KEY (idpes_rev) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
+
+
+--
+-- Name: fk_municipio_sistema_idsis_cad; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY municipio
+    ADD CONSTRAINT fk_municipio_sistema_idsis_cad FOREIGN KEY (idsis_cad) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
+
+
+--
+-- Name: fk_municipio_sistema_idsis_rev; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY municipio
+    ADD CONSTRAINT fk_municipio_sistema_idsis_rev FOREIGN KEY (idsis_rev) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
+
+
+--
+-- Name: fk_municipio_uf; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY municipio
+    ADD CONSTRAINT fk_municipio_uf FOREIGN KEY (sigla_uf) REFERENCES uf(sigla_uf);
+
+
+--
 -- Name: fk_setor_idsetredir; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -35592,6 +35669,14 @@ ALTER TABLE ONLY setor
 
 ALTER TABLE ONLY setor
     ADD CONSTRAINT fk_setor_idsetsub FOREIGN KEY (idsetsub) REFERENCES setor(idset) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_uf_pais; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY uf
+    ADD CONSTRAINT fk_uf_pais FOREIGN KEY (idpais) REFERENCES pais(idpais);
 
 
 --
