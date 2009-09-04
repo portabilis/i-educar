@@ -19,7 +19,18 @@
  * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package     Test
+ * @subpackage  UnitTest
+ * @since       Arquivo disponível desde a versão 1.0.1
+ * @version     $Id$
  */
+
+require_once realpath(dirname(__FILE__) . '/../') . '/UnitBaseTest.class.php';
+require_once 'include/pmieducar/clsPmieducarClienteSuspensao.inc.php';
+
 
 /**
  * clsBancoTest class.
@@ -31,13 +42,11 @@
  * @since       Classe disponível desde a versão 1.0.1
  * @version     $Id$
  */
+class ClsBancoTest extends UnitBaseTest
+{
 
-require_once realpath(dirname(__FILE__) . '/../') . '/UnitBaseTest.class.php';
-require_once 'include/pmieducar/clsPmieducarClienteSuspensao.inc.php';
-
-class ClsBancoTest extends UnitBaseTest {
-
-  public function testDoCountFromObj() {
+  public function testDoCountFromObj()
+  {
     $db = new clsBanco();
     $db->Conecta();
 
@@ -45,22 +54,12 @@ class ClsBancoTest extends UnitBaseTest {
     $this->assertNotEquals(TRUE, is_null($db->doCountFromObj($obj)));
   }
 
-  public function testConexao() {
-    $string = 'host=localhost dbname=ieducardb user=ieducaruser password=password port=5432';
-
+  public function testConexao()
+  {
     $db = new clsBanco();
-    $db->setHost('localhost');
-    $db->setDbname('ieducardb');
-    $db->setUser('ieducaruser');
-    $db->setPassword('password');
-    $db->setPort('5432');
-
-    $db->FraseConexao();
-    $stringCompare = $db->getFraseConexao();
-    $this->assertEquals($string, $stringCompare);
-
     $db->Conecta();
-    $this->assertTrue((bool)$db->bLink_ID);
+
+    $this->assertTrue((bool) $db->bLink_ID);
   }
 
 }
