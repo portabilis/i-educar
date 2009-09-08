@@ -37,6 +37,12 @@ if (! version_compare('5.2.0', PHP_VERSION, '<=')) {
   die('O i-Educar requer o PHP na versão 5.2. A versão instalada de seu PHP (' . PHP_VERSION . ') não é suportada.');
 }
 
+define('DS', DIRECTORY_SEPARATOR);
+
+/**
+ * Diretório raiz da aplicação (intranet/).
+ */
+define('APP_ROOT', realpath(dirname(__FILE__) . '/../intranet/'));
 
 /*
  * Altera o include_path, adicionando o caminho a CoreExt, tornando mais

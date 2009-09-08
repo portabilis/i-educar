@@ -1,7 +1,43 @@
 <?php
 
+/**
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package  Core
+ * @since    Arquivo disponível desde a versão 1.0.0
+ * @version  $Id$
+ */
 
-
+/**
+ * clsPDF class.
+ *
+ * @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package  Core
+ * @since    Classe disponível desde a versão 1.0.0
+ * @todo     Verificar o método PagAgenda() pois este insere a imagem 'imagens/brasao.gif',
+ *           inutilizando a customização do arquivo ieducar.ini
+ * @version  $Id$
+ */
 class clsPDF
 {
 
@@ -49,38 +85,37 @@ class clsPDF
 
   function OpenFile()
   {
-    $caminho  = "tmp/";
-    $lim_dir = opendir("tmp/");
-    while ($lim_file = readdir($lim_dir))
-    {
-      if ($lim_file != '.' && $lim_file != '..')
-      {
-        if (!(substr_count($lim_file, date('Y-m-d'))))
-        {
-          @unlink("tmp/".$lim_file);
+    $caminho = 'tmp/';
+    $lim_dir = opendir('tmp/');
+    $fonte   = APP_ROOT . DS . 'arquivos/fontes/FreeMonoBold.ttf';
+
+    while ($lim_file = readdir($lim_dir)) {
+      if ($lim_file != '.' && $lim_file != '..') {
+        if (! (substr_count($lim_file, date('Y-m-d')))) {
+          @unlink('tmp/' . $lim_file);
         }
       }
     }
-    $caminho .= date("Y-m-d")."-";
-    list($usec, $sec) = explode(" ", microtime());
-    $caminho .= substr(md5("{$usec}{$sec}"), 0, 8);
-    $caminho .= ".pdf";
 
-    $this->caminho = $caminho;
+    $caminho .= date('Y-m-d') . '-';
+    list($usec, $sec) = explode(' ', microtime());
+    $caminho .= substr(md5($usec . $sec), 0, 8);
+    $caminho .= '.pdf';
+
+    $this->caminho     = APP_ROOT . DS . $caminho;
     $this->LinkArquivo = $caminho;
 
     $this->pdf = PDF_new();
-    pdf_set_parameter($this->pdf, "FontOutline", "monospaced=arquivos/fontes/FreeMonoBold.ttf");
+    pdf_set_parameter($this->pdf, 'FontOutline', 'monospaced=' . $fonte);
     PDF_open_file($this->pdf, $this->caminho);
 
-    PDF_set_info      ($this->pdf, "Creator", $this->owner);
-    PDF_set_info      ($this->pdf, "Author", $this->owner);
-    PDF_set_info      ($this->pdf, "Title", $this->titulo);
+    PDF_set_info($this->pdf, 'Creator', $this->owner);
+    PDF_set_info($this->pdf, 'Author', $this->owner);
+    PDF_set_info($this->pdf, 'Title', $this->titulo);
 
-    if ($this->depurar)
-    {
-      echo "<b>PDF:</b> Objeto criado!<br>";
-      echo "<b>PDF:</b> O objeto foi criado no seguinte local -> ".$this->LinkArquivo."<br>";
+    if ($this->depurar) {
+      echo '<b>PDF:</b> Objeto criado!<br>';
+      echo '<b>PDF:</b> O objeto foi criado no seguinte local -> ' . $this->LinkArquivo . '<br>';
     }
 
     $this->OpenPage();
@@ -337,6 +372,11 @@ class clsPDF
    */
   public function insertImageScaled($tipo, $image, $x, $y, $maxWidth)
   {
+    $image = realpath($image);
+    if (! is_readable($image)) {
+      throw new Exception('Caminho para arquivo de imagem inválido: "' . $image . '"');
+    }
+
     $y = $this->altura - $y;
     $im = pdf_open_image_file($this->pdf, $tipo, $image, '', 0);
 
