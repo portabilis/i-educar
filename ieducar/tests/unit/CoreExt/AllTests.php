@@ -20,26 +20,36 @@
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   UnitTests
- * @since     Arquivo disponível desde a versão 1.0.1
- * @version   $Id$
+ * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @category    i-Educar
+ * @license     @@license@@
+ * @package     CoreExt
+ * @subpackage  UnitTests
+ * @since       Arquivo disponível desde a versão 1.1.0
+ * @version     $Id$
  */
 
 /**
- * UnitBaseTest abstract class.
+ * CoreExt_AllTests class.
  *
- * Abstrai o PHPUnit, diminuindo a dependência de seu uso.
+ * Arquivo de definição de suíte para o pacote CoreExt (nova API).
  *
- * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   UnitTests
- * @since     Classe disponível desde a versão 1.0.1
- * @version   @@package_version@@
+ * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @category    i-Educar
+ * @license     @@license@@
+ * @package     CoreExt
+ * @subpackage  UnitTests
+ * @since       Classe disponível desde a versão 1.1.0
+ * @version     @@package_version@@
  */
-abstract class UnitBaseTest extends PHPUnit_Framework_TestCase
+class CoreExt_AllTests extends TestCollector
 {
+  protected $_name = 'Suíte de testes unitários de CoreExt';
+  protected $_file = __FILE__;
+
+  public static function suite()
+  {
+    $instance = new self;
+    return $instance->addDirectoryTests();
+  }
 }

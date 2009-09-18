@@ -4,5 +4,5 @@
   - Configurações do PHPUnit.
   -->
 
-<phpunit colors='true'>
+<phpunit colors='true' bootstrap='tests/bootstrap.php'>
 </phpunit>

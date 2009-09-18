@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * i-Educar - Sistema de gestão escolar
  *
  * Copyright (C) 2006  Prefeitura Municipal de Itajaí
@@ -21,30 +21,30 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package     Test
- * @subpackage  UnitTest
+ * @category    i-Educar
+ * @license     @@license@@
+ * @package     Core
+ * @subpackage  UnitTests
  * @since       Arquivo disponível desde a versão 1.0.1
  * @version     $Id$
  */
 
-require_once realpath(dirname(__FILE__) . '/../') . '/UnitBaseTest.class.php';
 require_once 'include/pmieducar/clsPmieducarClienteSuspensao.inc.php';
-
 
 /**
  * clsBancoTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package     Test
- * @subpackage  UnitTest
+ * @category    i-Educar
+ * @license     @@license@@
+ * @package     Core
+ * @subpackage  UnitTests
  * @since       Classe disponível desde a versão 1.0.1
- * @version     $Id$
+ * @todo        Mover método testConexao() para o pacote FunctionalTests
+ * @version     @@package_version@@
  */
 class ClsBancoTest extends UnitBaseTest
 {
-
   public function testDoCountFromObj()
   {
     $db = new clsBanco();
@@ -61,5 +61,4 @@ class ClsBancoTest extends UnitBaseTest
 
     $this->assertTrue((bool) $db->bLink_ID);
   }
-
 }

@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * i-Educar - Sistema de gestão escolar
  *
  * Copyright (C) 2006  Prefeitura Municipal de Itajaí
@@ -19,9 +19,16 @@
  * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @category    i-Educar
+ * @license     @@license@@
+ * @package     Core
+ * @subpackage  UnitTests
+ * @since       Arquivo disponível desde a versão 1.1.0
+ * @version     $Id$
  */
 
-require_once realpath(dirname(__FILE__) . '/../') . '/UnitBaseTest.class.php';
 require_once 'clsConfigItajai.inc.php';
 
 
@@ -29,47 +36,50 @@ require_once 'clsConfigItajai.inc.php';
  * clsConfigItajaiTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package     Test
- * @subpackage  UnitTest
- * @since       Classe disponível desde a versão 1.1.0
- * @version     $Id$
+ * @category    i-Educar
+ * @license     @@license@@
+ * @package     Core
+ * @subpackage  UnitTests
+ * @since       Classe disponível desde a versão 1.0.1
+ * @version     @@package_version@@
  */
 class ClsConfigItajai extends UnitBaseTest
 {
-
-  /**
-   * @var  clsConfig
-   */
   protected $config = NULL;
 
-  protected function setUp() {
+  protected function setUp()
+  {
     $this->config = new clsConfig();
   }
 
-  public function testConfigInstituicao() {
+  public function testConfigInstituicao()
+  {
     $this->assertEquals('i-Educar - ', $this->config->_instituicao);
   }
 
-  public function testArrayConfigHasEmailsAdministradores() {
+  public function testArrayConfigHasEmailsAdministradores()
+  {
     $this->assertTrue((bool) count($this->config->arrayConfig['ArrStrEmailsAdministradores']));
   }
 
-  public function testArrayCheckEmailAdministradores() {
+  public function testArrayCheckEmailAdministradores()
+  {
     $this->assertEquals('seu.email@example.com',
       $this->config->arrayConfig['ArrStrEmailsAdministradores'][0]);
   }
 
-  public function testArrayConfigDirectoryTemplates() {
+  public function testArrayConfigDirectoryTemplates()
+  {
     $this->assertEquals('templates/', $this->config->arrayConfig['strDirTemplates']);
   }
 
-  public function testArrayConfigIntSegundosQuerySql() {
+  public function testArrayConfigIntSegundosQuerySql()
+  {
     $this->assertEquals(3, $this->config->arrayConfig['intSegundosQuerySQL']);
   }
 
-  public function testArrayConfigIntSegundosPagina() {
+  public function testArrayConfigIntSegundosPagina()
+  {
     $this->assertEquals(5, $this->config->arrayConfig['intSegundosProcessaPagina']);
   }
-
 }

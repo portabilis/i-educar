@@ -19,9 +19,17 @@
  * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @category    i-Educar
+ * @license     @@license@@
+ * @package     Utils
+ * @subpackage  UnitTests
+ * @since       Arquivo disponível desde a versão 1.1.0
+ * @version     $Id$
  */
 
-require_once realpath(dirname(__FILE__) . '/../') . '/UnitBaseTest.class.php';
+require_once 'UnitBaseTest.class.php';
 require_once 'vfsStream/vfsStream.php';
 require_once 'Utils/FileStream.class.php';
 require_once 'Utils/Mimetype.class.php';
@@ -30,23 +38,25 @@ require_once 'Utils/Mimetype.class.php';
 /**
  * FileStreamTest class.
  *
- * @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @link     http://code.google.com/p/bovigo/wiki/vfsStream  vfsStream project
- * @package  Test
- * @since    Classe disponível desde a versão 1.1.0
- * @version  $Id$
+ * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @category    i-Educar
+ * @license     @@license@@
+ * @package     Utils
+ * @subpackage  UnitTests
+ * @since       Classe disponível desde a versão 1.1.0
+ * @version     @@package_version@@
  */
 class FileStreamTest extends UnitBaseTest
 {
-
   protected $Mimetype = NULL;
 
-  protected function setUp() {
+  protected function setUp()
+  {
     $this->Mimetype = new Mimetype();
   }
 
-  protected function configVfs() {
+  protected function configVfs()
+  {
     vfsStreamWrapper::register();
     vfsStreamWrapper::setRoot(new vfsStreamDirectory('tmp'));
   }
@@ -72,7 +82,6 @@ class FileStreamTest extends UnitBaseTest
   {
     $filename = 'pdf/example.pdf';
     $fileStream = new FileStream($this->Mimetype, array('tmp'));
-
     $fileStream->setFilepath($filename);
   }
 
@@ -83,7 +92,6 @@ class FileStreamTest extends UnitBaseTest
   {
     $filename = 'tmp/example.pdf';
     $fileStream = new FileStream($this->Mimetype, array('tmp'));
-
     $fileStream->setFilepath($filename);
   }
 
@@ -153,5 +161,4 @@ class FileStreamTest extends UnitBaseTest
     $fileStream->setFilepath($filepath);
     @$fileStream->streamFile();
   }
-
 }

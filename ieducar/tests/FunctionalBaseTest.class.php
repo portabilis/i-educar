@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * i-Educar - Sistema de gestão escolar
  *
  * Copyright (C) 2006  Prefeitura Municipal de Itajaí
@@ -19,7 +19,16 @@
  * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   FunctionalTests
+ * @since     Arquivo disponível desde a versão 1.0.1
+ * @version   $Id$
  */
+
+require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
 
 /**
  * FunctionBaseTest class.
@@ -27,53 +36,48 @@
  * Contém as configurações de acesso ao servidor Selenium RC, a conta de usuário
  * a ser utilizada no teste e alguns métodos auxiliares.
  *
- * Muda o diretório atual para que os testes possam ser facilmente invocados
- * em qualquer subdiretório do sistema.
- *
  * Abstrai o PHPUnit, diminuindo a dependência de seu uso. Inclui a classe
  * de banco de dados para facilitar no tearDown de dados de teste.
  *
- * @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package  Test
- * @since    Classe disponível desde a versão 1.0.1
- * @version  $Id$
+ * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @category  i-Educar
+ * @license   http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package   FunctionalTests
+ * @since     Classe disponível desde a versão 1.0.1
+ * @version   @@package_version@@
  */
-
-chdir(realpath(dirname(__FILE__) . '/../') . '/intranet');
-require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
-require_once 'include/clsBanco.inc.php';
-
-abstract class FunctionalBaseTest extends PHPUnit_Extensions_SeleniumTestCase {
-
-  // Configurações do Selenium RC
+abstract class FunctionalBaseTest extends PHPUnit_Extensions_SeleniumTestCase
+{
+  // Configurações do Selenium RC.
   static protected
     $slBrowserUrl = 'http://ieducar.local',
     $slBrowser    = '*firefox',
     $slPort       = 4444,
     $slHost       = 'localhost';
 
-  // Conta de usuário para testes funcionais
+  // Conta de usuário para testes funcionais.
   protected
     $slUsuarioLogin = 'admin',
     $slUsuarioSenha = 'admin';
 
-  protected function setUp() {
+  protected function setUp()
+  {
     $this->setBrowser(self::$slBrowser);
     $this->setHost(self::$slHost);
     $this->setPort(self::$slPort);
     $this->setBrowserUrl(self::$slBrowserUrl);
   }
 
-  protected function doLogin() {
+  protected function doLogin()
+  {
     $this->open('/intranet');
     $this->type('login', $this->slUsuarioLogin);
     $this->type('senha', $this->slUsuarioSenha);
     $this->clickAndWait("//input[@value='Entrar']");
   }
 
-  protected function doLogout() {
+  protected function doLogout()
+  {
     $this->click("//img[@alt='Logout']");
   }
-
 }
