@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * i-Educar - Sistema de gestão escolar
  *
  * Copyright (C) 2006  Prefeitura Municipal de Itajaí
@@ -19,25 +19,33 @@
  * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @category    i-Educar
+ * @license     @@license@@
+ * @package     CoreExt
+ * @subpackage  UnitTests
+ * @since       Arquivo disponível desde a versão 1.1.0
+ * @version     $Id$
  */
 
-require_once realpath(dirname(__FILE__) . '/../') . '/UnitBaseTest.class.php';
-require_once '../lib/CoreExt/Config/Ini.class.php';
-
+require_once 'CoreExt/Config/Ini.class.php';
 
 /**
- * CoreExt_Config_IniTest class
+ * CoreExt_Config_IniTest class.
  *
- * @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package  Test
- * @since    Classe disponível desde a versão 1.1.0
- * @version  $Id$
+ * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @category    i-Educar
+ * @license     @@license@@
+ * @package     CoreExt
+ * @subpackage  UnitTests
+ * @since       Classe disponível desde a versão 1.1.0
+ * @version     @@package_version@@
  */
 class CoreExt_Config_IniTest extends UnitBaseTest
 {
-
-  public function testParsedIni() {
+  public function testParsedIni()
+  {
     $ini = new CoreExt_Config_Ini('../tests/fixtures/configuration/ieducar.ini');
     $this->assertNotNull($ini->app);
   }
@@ -60,7 +68,8 @@ class CoreExt_Config_IniTest extends UnitBaseTest
   /**
    * @expectedException Exception
    */
-  public function testInvalidIniFile() {
+  public function testInvalidIniFile()
+  {
     // Tentando carregar configuração do blackhole!
     $ini = new CoreExt_Config_Ini('/dev/null');
   }
@@ -68,22 +77,24 @@ class CoreExt_Config_IniTest extends UnitBaseTest
   /**
    * @expectedException Exception
    */
-  public function testSectionExtendsMoreThanOne() {
+  public function testSectionExtendsMoreThanOne()
+  {
     $ini = new CoreExt_Config_Ini('../tests/fixtures/configuration/ieducar-extends-broken.ini');
   }
 
   /**
    * @expectedException Exception
    */
-  public function testIniSyntaxError() {
+  public function testIniSyntaxError()
+  {
     $ini = new CoreExt_Config_Ini('../tests/fixtures/configuration/ieducar-syntax-broken.ini');
   }
 
   /**
    * @expectedException Exception
    */
-  public function testSectionInheritanceNotExist() {
+  public function testSectionInheritanceNotExist()
+  {
     $ini = new CoreExt_Config_Ini('../tests/fixtures/configuration/ieducar-inheritance-broken.ini');
   }
-
 }

@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * i-Educar - Sistema de gestão escolar
  *
  * Copyright (C) 2006  Prefeitura Municipal de Itajaí
@@ -19,24 +19,31 @@
  * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @category    i-Educar
+ * @license     @@license@@
+ * @package     CoreExt
+ * @subpackage  UnitTests
+ * @since       Arquivo disponível desde a versão 1.1.0
+ * @version     $Id$
  */
 
-require_once realpath(dirname(__FILE__) . '/../') . '/UnitBaseTest.class.php';
-require_once '../lib/CoreExt/Config.class.php';
-
+require_once 'CoreExt/Config.class.php';
 
 /**
- * CoreExt_ConfigTest class
+ * CoreExt_ConfigTest class.
  *
- * @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package  Test
- * @since    Classe disponível desde a versão 1.1.0
- * @version  $Id$
+ * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @category    i-Educar
+ * @license     @@license@@
+ * @package     CoreExt
+ * @subpackage  UnitTests
+ * @since       Classe disponível desde a versão 1.1.0
+ * @version     @@package_version@@
  */
 class CoreExt_ConfigTest extends UnitBaseTest
 {
-
   public function testConfigHasValueFromArray()
   {
     $arr = array(
@@ -65,7 +72,8 @@ class CoreExt_ConfigTest extends UnitBaseTest
     $this->assertEquals(1, $config->count());
   }
 
-  public function testHasTwoItems() {
+  public function testHasTwoItems()
+  {
     $arr = array(
       'app' => array('database' => '', 'template' => ''),
       'php' => ''
@@ -126,12 +134,12 @@ class CoreExt_ConfigTest extends UnitBaseTest
     $this->assertEquals(1, $config->current());
   }
 
-  public function testTransformObjectInArray() {
+  public function testTransformObjectInArray()
+  {
     $arr = array(6, 3, 3);
 
     $config = new CoreExt_Config($arr);
 
     $this->assertEquals($arr, $config->toArray());
   }
-
 }

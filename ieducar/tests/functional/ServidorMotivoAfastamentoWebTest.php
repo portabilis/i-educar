@@ -19,6 +19,13 @@
  * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   FunctionalTests
+ * @since     Classe disponível desde a versão 1.0.1
+ * @version   $Id$
  */
 
 /**
@@ -30,24 +37,18 @@
  * Esse teste precisa ser executado com o banco de dados distribuído na
  * versão 1.0.0.
  *
- * @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package  Test
- * @since    Classe disponível desde a versão 1.0.1
- * @version  $Id$
+ * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @link      http://svn.softwarepublico.gov.br/trac/ieducar/ticket/20
+ * @package   FunctionalTests
+ * @since     Classe disponível desde a versão 1.0.1
+ * @version   @@package_version@@
  */
-
-require_once realpath(dirname(__FILE__) . '/../') . '/FunctionalBaseTest.class.php';
-
-class ServidorMotivoAfastamentoWebTest extends FunctionalBaseTest {
-
-  /**
-   * Os testes a seguir cobrem o bug report #20.
-   *
-   * @link http://svn.softwarepublico.gov.br/trac/ieducar/ticket/20 Bug report #20
-   * @{
-   */
-  public function createNewEntry() {
+class ServidorMotivoAfastamentoWebTest extends FunctionalBaseTest
+{
+  public function createNewEntry()
+  {
     $this->open("/intranet/educar_motivo_afastamento_lst.php");
     $this->clickAndWait("//input[@value=' Novo ']");
     $this->select("ref_cod_instituicao", "label=i-Educar");
@@ -55,7 +56,8 @@ class ServidorMotivoAfastamentoWebTest extends FunctionalBaseTest {
     $this->clickAndWait("btn_enviar");
   }
 
-  public function testMotivoAfastamentoUpdate() {
+  public function testMotivoAfastamentoUpdate()
+  {
     $this->doLogin();
     $this->createNewEntry();
 
@@ -69,7 +71,8 @@ class ServidorMotivoAfastamentoWebTest extends FunctionalBaseTest {
     $this->doLogout();
   }
 
-  public function testMotivoAfastamentoDelete() {
+  public function testMotivoAfastamentoDelete()
+  {
     $this->doLogin();
 
     $this->open("/intranet/educar_motivo_afastamento_lst.php");
@@ -82,8 +85,4 @@ class ServidorMotivoAfastamentoWebTest extends FunctionalBaseTest {
 
     $this->doLogout();
   }
-  /**
-   * }@
-   */
-
 }

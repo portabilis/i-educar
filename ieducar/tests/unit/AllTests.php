@@ -24,22 +24,36 @@
  * @category  i-Educar
  * @license   @@license@@
  * @package   UnitTests
- * @since     Arquivo disponível desde a versão 1.0.1
+ * @since     Arquivo disponível desde a versão 1.1.0
  * @version   $Id$
  */
 
+require_once 'App/AllTests.php';
+require_once 'Core/AllTests.php';
+require_once 'CoreExt/AllTests.php';
+require_once 'Utils/AllTests.php';
+
 /**
- * UnitBaseTest abstract class.
+ * Unit_AllTests class.
  *
- * Abstrai o PHPUnit, diminuindo a dependência de seu uso.
+ * Arquivo de definição de suíte de testes unitários.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   UnitTests
- * @since     Classe disponível desde a versão 1.0.1
+ * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-abstract class UnitBaseTest extends PHPUnit_Framework_TestCase
+class Unit_AllTests
 {
+  public static function suite()
+  {
+    $suite = new PHPUnit_Framework_TestSuite('Suíte de testes unitários do projeto');
+    $suite->addTest(App_AllTests::suite());
+    $suite->addTest(Core_AllTests::suite());
+    $suite->addTest(CoreExt_AllTests::suite());
+    $suite->addTest(Utils_AllTests::suite());
+    return $suite;
+  }
 }
