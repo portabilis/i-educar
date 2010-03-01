@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * i-Educar - Sistema de gestão escolar
  *
  * Copyright (C) 2006  Prefeitura Municipal de Itajaí
@@ -19,62 +19,37 @@
  * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd
+ * @since     Arquivo disponível desde a versão 1.0.0
+ * @version   $Id$
  */
+
+require_once '../includes/bootstrap.php';
+require_once 'include/clsBancoPgSql.inc.php';
 
 /**
  * clsBanco class.
  *
- * @author   Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package  Core
- * @since    Classe disponível desde a versão 1.0.0
- * @version  $Id$
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
  */
-
-require_once '../includes/bootstrap.php';
-
-if (!class_exists('clsBancoSql_')) {
-  require_once 'include/clsBancoPgSql.inc.php';
-}
-
-class clsBanco extends clsBancoSQL_ {
-
-  protected $strHost       = NULL;  // Nome ou endereço IP do servidor do banco de dados
-  protected $strBanco      = NULL;  // Nome do banco de dados
-  protected $strUsuario    = NULL;  // Usuário devidamente autorizado a acessar o banco
-  protected $strSenha      = NULL;  // Senha do usuário do banco
-  protected $strPort       = NULL;  // Porta do servidor de banco de dados
-
-  public $bLink_ID         = 0;              // Identificador da conexão
-  public $bConsulta_ID     = 0;              // Identificador do resultado da consulta
-  public $arrayStrRegistro = array();        // Tupla resultante de uma consulta
-  public $iLinha           = 0;              // Ponteiro interno para a tupla atual da consulta
-
-  public $bErro_no         = 0;              // Se ocorreu erro na consulta, retorna FALSE
-  public $strErro          = "";             // Frase de descrição do erro retornado
-  public $bDepurar         = FALSE;          // Ativa ou desativa funções de depuração
-
-  public $bAuto_Limpa      = FALSE;          // '1' para limpar o resultado assim que chegar ao último registro
-
-  public $strStringSQL     = '';
-
-  var $strType         = '';
-  var $arrayStrFields  = array();
-  var $arrayStrFrom    = array();
-  var $arrayStrWhere   = array();
-  var $arrayStrOrderBy = array();
-  var $arrayStrGroupBy = array();
-  var $iLimitInicio;
-  var $iLimitQtd;
-  var $arrayStrArquivo = '';
-
-
-
+class clsBanco extends clsBancoSQL_
+{
   /**
    * Construtor (PHP 4).
    */
   public function clsBanco($strDataBase = FALSE)
   {
+    parent::__construct($strDataBase);
+
     global $coreExt;
     $config = $coreExt['Config']->app->database;
 
@@ -85,8 +60,6 @@ class clsBanco extends clsBancoSQL_ {
     $this->setPort($config->port);
   }
 
-
-
   /**
    * Retorna a quantidade de registros de uma tabela baseado no objeto que a
    * abstrai. Este deve ter um atributo público Object->_tabela.
@@ -95,7 +68,8 @@ class clsBanco extends clsBancoSQL_ {
    * @param   string  Nome da coluna para cálculo COUNT()
    * @return  int     Quantidade de registros da tabela
    */
-  public function doCountFromObj($obj, $column = '*') {
+  public function doCountFromObj($obj, $column = '*')
+  {
     if ($obj->_tabela == NULL) {
       return FALSE;
     }
@@ -106,4 +80,52 @@ class clsBanco extends clsBancoSQL_ {
     return (int)$this->UnicoCampo($sql);
   }
 
+  /**
+   * Retorna os dados convertidos para a sintaxe SQL aceita por ext/pgsql.
+   *
+   * <code>
+   * <?php
+   * $data = array(
+   *   'id' => 1,
+   *   'hasChild' = FALSE
+   * );
+   *
+   * $clsBanco->getDbValuesFromArray($data);
+   * // array(
+   * //   'id' => 1,
+   * //   'hasChild' => 'f'
+   * // );
+   * </code>
+   *
+   * Apenas o tipo booleano é convertido.
+   *
+   * @param array $data Array associativo com os valores a serem convertidos.
+   * @return array
+   */
+  public function formatValues(array $data)
+  {
+    $db = array();
+    foreach ($data as $key => $val) {
+      if (is_bool($val)) {
+        $db[$key] = $this->_formatBool($val);
+        continue;
+      }
+      $db[$key] = $val;
+    }
+    return $db;
+  }
+
+  /**
+   * Retorna um valor formatado de acordo com o tipo output do tipo booleano
+   * no PostgreSQL.
+   *
+   * @link   http://www.postgresql.org/docs/8.2/interactive/datatype-boolean.html
+   * @link   http://www.php.net/manual/en/function.pg-query-params.php#78072
+   * @param  mixed $val
+   * @return string "t" para TRUE e "f" para false
+   */
+  protected function _formatBool($val)
+  {
+    return ($val == TRUE ? 't' : 'f');
+  }
 }

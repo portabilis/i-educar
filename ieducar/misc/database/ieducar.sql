@@ -44,6 +44,13 @@ CREATE SCHEMA historico;
 
 
 --
+-- Name: modules; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA modules;
+
+
+--
 -- Name: pmiacoes; Type: SCHEMA; Schema: -; Owner: -
 --
 
@@ -10224,6 +10231,464 @@ CREATE TABLE socio (
 );
 
 
+SET search_path = modules, pg_catalog;
+
+SET default_with_oids = false;
+
+--
+-- Name: area_conhecimento; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+--
+
+CREATE TABLE area_conhecimento (
+    id integer NOT NULL,
+    instituicao_id integer NOT NULL,
+    nome character varying(40) NOT NULL
+);
+
+
+--
+-- Name: area_conhecimento_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
+--
+
+CREATE SEQUENCE area_conhecimento_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: area_conhecimento_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
+--
+
+ALTER SEQUENCE area_conhecimento_id_seq OWNED BY area_conhecimento.id;
+
+
+--
+-- Name: area_conhecimento_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
+--
+
+SELECT pg_catalog.setval('area_conhecimento_id_seq', 1, false);
+
+
+--
+-- Name: componente_curricular; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+--
+
+CREATE TABLE componente_curricular (
+    id integer NOT NULL,
+    instituicao_id integer NOT NULL,
+    area_conhecimento_id integer NOT NULL,
+    nome character varying(100) NOT NULL,
+    abreviatura character varying(15) NOT NULL,
+    tipo_base smallint NOT NULL
+);
+
+
+--
+-- Name: componente_curricular_ano_escolar; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+--
+
+CREATE TABLE componente_curricular_ano_escolar (
+    componente_curricular_id integer NOT NULL,
+    ano_escolar_id integer NOT NULL,
+    carga_horaria numeric(6,3)
+);
+
+
+--
+-- Name: componente_curricular_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
+--
+
+CREATE SEQUENCE componente_curricular_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: componente_curricular_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
+--
+
+ALTER SEQUENCE componente_curricular_id_seq OWNED BY componente_curricular.id;
+
+
+--
+-- Name: componente_curricular_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
+--
+
+SELECT pg_catalog.setval('componente_curricular_id_seq', 1, false);
+
+
+--
+-- Name: falta_aluno; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+--
+
+CREATE TABLE falta_aluno (
+    id integer NOT NULL,
+    matricula_id integer NOT NULL,
+    tipo_falta smallint NOT NULL
+);
+
+
+--
+-- Name: falta_aluno_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
+--
+
+CREATE SEQUENCE falta_aluno_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: falta_aluno_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
+--
+
+ALTER SEQUENCE falta_aluno_id_seq OWNED BY falta_aluno.id;
+
+
+--
+-- Name: falta_aluno_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
+--
+
+SELECT pg_catalog.setval('falta_aluno_id_seq', 1, false);
+
+
+--
+-- Name: falta_componente_curricular; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+--
+
+CREATE TABLE falta_componente_curricular (
+    id integer NOT NULL,
+    falta_aluno_id integer NOT NULL,
+    componente_curricular_id integer NOT NULL,
+    quantidade integer DEFAULT 0,
+    etapa character varying(2) NOT NULL
+);
+
+
+--
+-- Name: falta_componente_curricular_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
+--
+
+CREATE SEQUENCE falta_componente_curricular_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: falta_componente_curricular_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
+--
+
+ALTER SEQUENCE falta_componente_curricular_id_seq OWNED BY falta_componente_curricular.id;
+
+
+--
+-- Name: falta_componente_curricular_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
+--
+
+SELECT pg_catalog.setval('falta_componente_curricular_id_seq', 1, false);
+
+
+--
+-- Name: falta_geral; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+--
+
+CREATE TABLE falta_geral (
+    id integer NOT NULL,
+    falta_aluno_id integer NOT NULL,
+    quantidade integer DEFAULT 0,
+    etapa character varying(2) NOT NULL
+);
+
+
+--
+-- Name: falta_geral_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
+--
+
+CREATE SEQUENCE falta_geral_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: falta_geral_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
+--
+
+ALTER SEQUENCE falta_geral_id_seq OWNED BY falta_geral.id;
+
+
+--
+-- Name: falta_geral_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
+--
+
+SELECT pg_catalog.setval('falta_geral_id_seq', 1, false);
+
+
+--
+-- Name: formula_media; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+--
+
+CREATE TABLE formula_media (
+    id integer NOT NULL,
+    instituicao_id integer NOT NULL,
+    nome character varying(50) NOT NULL,
+    formula_media character varying(50) NOT NULL,
+    tipo_formula smallint DEFAULT 1
+);
+
+
+--
+-- Name: formula_media_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
+--
+
+CREATE SEQUENCE formula_media_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: formula_media_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
+--
+
+ALTER SEQUENCE formula_media_id_seq OWNED BY formula_media.id;
+
+
+--
+-- Name: formula_media_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
+--
+
+SELECT pg_catalog.setval('formula_media_id_seq', 1, false);
+
+
+--
+-- Name: nota_aluno; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+--
+
+CREATE TABLE nota_aluno (
+    id integer NOT NULL,
+    matricula_id integer NOT NULL
+);
+
+
+--
+-- Name: nota_aluno_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
+--
+
+CREATE SEQUENCE nota_aluno_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: nota_aluno_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
+--
+
+ALTER SEQUENCE nota_aluno_id_seq OWNED BY nota_aluno.id;
+
+
+--
+-- Name: nota_aluno_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
+--
+
+SELECT pg_catalog.setval('nota_aluno_id_seq', 1, false);
+
+
+--
+-- Name: nota_componente_curricular; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+--
+
+CREATE TABLE nota_componente_curricular (
+    id integer NOT NULL,
+    nota_aluno_id integer NOT NULL,
+    componente_curricular_id integer NOT NULL,
+    nota numeric(5,3) DEFAULT 0,
+    nota_arredondada character varying(5) DEFAULT 0,
+    etapa character varying(2) NOT NULL
+);
+
+
+--
+-- Name: nota_componente_curricular_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
+--
+
+CREATE SEQUENCE nota_componente_curricular_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: nota_componente_curricular_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
+--
+
+ALTER SEQUENCE nota_componente_curricular_id_seq OWNED BY nota_componente_curricular.id;
+
+
+--
+-- Name: nota_componente_curricular_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
+--
+
+SELECT pg_catalog.setval('nota_componente_curricular_id_seq', 1, false);
+
+
+--
+-- Name: nota_componente_curricular_media; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+--
+
+CREATE TABLE nota_componente_curricular_media (
+    nota_aluno_id integer NOT NULL,
+    componente_curricular_id integer NOT NULL,
+    media numeric(5,3) DEFAULT 0,
+    media_arredondada character varying(5) DEFAULT 0,
+    etapa character varying(2) NOT NULL
+);
+
+
+--
+-- Name: regra_avaliacao; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+--
+
+CREATE TABLE regra_avaliacao (
+    id integer NOT NULL,
+    instituicao_id integer NOT NULL,
+    formula_media_id integer NOT NULL,
+    formula_recuperacao_id integer DEFAULT 0,
+    tabela_arredondamento_id integer,
+    nome character varying(50) NOT NULL,
+    tipo_nota smallint NOT NULL,
+    tipo_progressao smallint NOT NULL,
+    media numeric(5,3) DEFAULT 0.000,
+    porcentagem_presenca numeric(6,3) DEFAULT 0.000,
+    parecer_descritivo smallint DEFAULT 0,
+    tipo_presenca smallint NOT NULL
+);
+
+
+--
+-- Name: regra_avaliacao_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
+--
+
+CREATE SEQUENCE regra_avaliacao_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: regra_avaliacao_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
+--
+
+ALTER SEQUENCE regra_avaliacao_id_seq OWNED BY regra_avaliacao.id;
+
+
+--
+-- Name: regra_avaliacao_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
+--
+
+SELECT pg_catalog.setval('regra_avaliacao_id_seq', 1, false);
+
+
+--
+-- Name: tabela_arredondamento; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+--
+
+CREATE TABLE tabela_arredondamento (
+    id integer NOT NULL,
+    instituicao_id integer NOT NULL,
+    nome character varying(50) NOT NULL,
+    tipo_nota smallint DEFAULT 1 NOT NULL
+);
+
+
+--
+-- Name: tabela_arredondamento_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
+--
+
+CREATE SEQUENCE tabela_arredondamento_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: tabela_arredondamento_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
+--
+
+ALTER SEQUENCE tabela_arredondamento_id_seq OWNED BY tabela_arredondamento.id;
+
+
+--
+-- Name: tabela_arredondamento_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
+--
+
+SELECT pg_catalog.setval('tabela_arredondamento_id_seq', 1, false);
+
+
+--
+-- Name: tabela_arredondamento_valor; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+--
+
+CREATE TABLE tabela_arredondamento_valor (
+    id integer NOT NULL,
+    tabela_arredondamento_id integer NOT NULL,
+    nome character varying(5) NOT NULL,
+    descricao character varying(25),
+    valor_minimo numeric(5,3) NOT NULL,
+    valor_maximo numeric(5,3) NOT NULL
+);
+
+
+--
+-- Name: tabela_arredondamento_valor_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
+--
+
+CREATE SEQUENCE tabela_arredondamento_valor_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: tabela_arredondamento_valor_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
+--
+
+ALTER SEQUENCE tabela_arredondamento_valor_id_seq OWNED BY tabela_arredondamento_valor.id;
+
+
+--
+-- Name: tabela_arredondamento_valor_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
+--
+
+SELECT pg_catalog.setval('tabela_arredondamento_valor_id_seq', 1, false);
+
+
 SET search_path = pmiacoes, pg_catalog;
 
 --
@@ -10244,6 +10709,8 @@ CREATE SEQUENCE acao_governo_cod_acao_governo_seq
 
 SELECT pg_catalog.setval('acao_governo_cod_acao_governo_seq', 1, false);
 
+
+SET default_with_oids = true;
 
 --
 -- Name: acao_governo; Type: TABLE; Schema: pmiacoes; Owner: -; Tablespace: 
@@ -11946,17 +12413,11 @@ CREATE TABLE curso (
     ref_cod_tipo_regime integer,
     ref_cod_nivel_ensino integer NOT NULL,
     ref_cod_tipo_ensino integer NOT NULL,
-    ref_cod_tipo_avaliacao integer,
     nm_curso character varying(255) NOT NULL,
     sgl_curso character varying(15) NOT NULL,
     qtd_etapas smallint NOT NULL,
-    frequencia_minima double precision DEFAULT 0.00 NOT NULL,
-    media double precision DEFAULT 0.00 NOT NULL,
-    media_exame double precision,
-    falta_ch_globalizada smallint DEFAULT (0)::smallint NOT NULL,
     carga_horaria double precision NOT NULL,
     ato_poder_publico character varying(255),
-    edicao_final smallint DEFAULT (0)::smallint NOT NULL,
     objetivo_curso text,
     publico_alvo text,
     data_cadastro timestamp without time zone NOT NULL,
@@ -11965,8 +12426,7 @@ CREATE TABLE curso (
     ref_usuario_exc integer,
     ref_cod_instituicao integer NOT NULL,
     padrao_ano_escolar smallint DEFAULT (0)::smallint NOT NULL,
-    hora_falta double precision DEFAULT 0.00 NOT NULL,
-    avaliacao_globalizada boolean DEFAULT false NOT NULL
+    hora_falta double precision DEFAULT 0.00 NOT NULL
 );
 
 
@@ -12278,7 +12738,8 @@ CREATE TABLE escola_serie_disciplina (
     ref_ref_cod_serie integer NOT NULL,
     ref_ref_cod_escola integer NOT NULL,
     ref_cod_disciplina integer NOT NULL,
-    ativo smallint DEFAULT (1)::smallint NOT NULL
+    ativo smallint DEFAULT (1)::smallint NOT NULL,
+    carga_horaria numeric(6,3)
 );
 
 
@@ -13715,8 +14176,7 @@ CREATE TABLE serie (
     intervalo integer NOT NULL,
     idade_inicial numeric(3,0),
     idade_final numeric(3,0),
-    media_especial boolean,
-    ultima_nota_define boolean
+    regra_avaliacao_id integer
 );
 
 
@@ -16186,6 +16646,85 @@ CREATE TABLE tipo_logradouro (
 );
 
 
+SET search_path = modules, pg_catalog;
+
+--
+-- Name: id; Type: DEFAULT; Schema: modules; Owner: -
+--
+
+ALTER TABLE area_conhecimento ALTER COLUMN id SET DEFAULT nextval('area_conhecimento_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: modules; Owner: -
+--
+
+ALTER TABLE componente_curricular ALTER COLUMN id SET DEFAULT nextval('componente_curricular_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: modules; Owner: -
+--
+
+ALTER TABLE falta_aluno ALTER COLUMN id SET DEFAULT nextval('falta_aluno_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: modules; Owner: -
+--
+
+ALTER TABLE falta_componente_curricular ALTER COLUMN id SET DEFAULT nextval('falta_componente_curricular_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: modules; Owner: -
+--
+
+ALTER TABLE falta_geral ALTER COLUMN id SET DEFAULT nextval('falta_geral_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: modules; Owner: -
+--
+
+ALTER TABLE formula_media ALTER COLUMN id SET DEFAULT nextval('formula_media_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: modules; Owner: -
+--
+
+ALTER TABLE nota_aluno ALTER COLUMN id SET DEFAULT nextval('nota_aluno_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: modules; Owner: -
+--
+
+ALTER TABLE nota_componente_curricular ALTER COLUMN id SET DEFAULT nextval('nota_componente_curricular_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: modules; Owner: -
+--
+
+ALTER TABLE regra_avaliacao ALTER COLUMN id SET DEFAULT nextval('regra_avaliacao_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: modules; Owner: -
+--
+
+ALTER TABLE tabela_arredondamento ALTER COLUMN id SET DEFAULT nextval('tabela_arredondamento_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: modules; Owner: -
+--
+
+ALTER TABLE tabela_arredondamento_valor ALTER COLUMN id SET DEFAULT nextval('tabela_arredondamento_valor_id_seq'::regclass);
+
+
 SET search_path = acesso, pg_catalog;
 
 --
@@ -17003,6 +17542,86 @@ SET search_path = historico, pg_catalog;
 
 
 
+SET search_path = modules, pg_catalog;
+
+--
+-- Data for Name: area_conhecimento; Type: TABLE DATA; Schema: modules; Owner: -
+--
+
+
+
+--
+-- Data for Name: componente_curricular; Type: TABLE DATA; Schema: modules; Owner: -
+--
+
+
+
+--
+-- Data for Name: componente_curricular_ano_escolar; Type: TABLE DATA; Schema: modules; Owner: -
+--
+
+
+
+--
+-- Data for Name: falta_aluno; Type: TABLE DATA; Schema: modules; Owner: -
+--
+
+
+
+--
+-- Data for Name: falta_componente_curricular; Type: TABLE DATA; Schema: modules; Owner: -
+--
+
+
+
+--
+-- Data for Name: falta_geral; Type: TABLE DATA; Schema: modules; Owner: -
+--
+
+
+
+--
+-- Data for Name: formula_media; Type: TABLE DATA; Schema: modules; Owner: -
+--
+
+
+
+--
+-- Data for Name: nota_aluno; Type: TABLE DATA; Schema: modules; Owner: -
+--
+
+
+
+--
+-- Data for Name: nota_componente_curricular; Type: TABLE DATA; Schema: modules; Owner: -
+--
+
+
+
+--
+-- Data for Name: nota_componente_curricular_media; Type: TABLE DATA; Schema: modules; Owner: -
+--
+
+
+
+--
+-- Data for Name: regra_avaliacao; Type: TABLE DATA; Schema: modules; Owner: -
+--
+
+
+
+--
+-- Data for Name: tabela_arredondamento; Type: TABLE DATA; Schema: modules; Owner: -
+--
+
+
+
+--
+-- Data for Name: tabela_arredondamento_valor; Type: TABLE DATA; Schema: modules; Owner: -
+--
+
+
+
 SET search_path = pmiacoes, pg_catalog;
 
 --
@@ -17095,134 +17714,118 @@ SET search_path = pmicontrolesis, pg_catalog;
 -- Data for Name: menu; Type: TABLE DATA; Schema: pmicontrolesis; Owner: -
 --
 
-INSERT INTO menu VALUES (4616, 294, NULL, 'Meus Grupos', 1, 'otopic_meus_grupos_lst.php', '_self', 1, 7, 1);
-INSERT INTO menu VALUES (4617, NULL, NULL, 'Cadastro', 2, NULL, '_self', 1, 7, 1);
-INSERT INTO menu VALUES (4621, 296, 4617, 'Grupos', 2, 'otopic_grupos_lst.php', '_self', 1, 7, 111);
-INSERT INTO menu VALUES (15862, 594, 15858, 'Autores', 2, 'educar_acervo_autor_lst.php', '_self', 1, 16, 141);
-INSERT INTO menu VALUES (15865, 593, 15858, 'Coleção', 3, 'educar_acervo_colecao_lst.php', '_self', 1, 16, 119);
-INSERT INTO menu VALUES (15866, 595, 15858, 'Editora', 4, 'educar_acervo_editora_lst.php', '_self', 1, 16, 176);
-INSERT INTO menu VALUES (15868, 590, 15858, 'Idioma', 5, 'educar_acervo_idioma_lst.php', '_self', 1, 16, 26);
-INSERT INTO menu VALUES (15870, 597, 15858, 'Tipo de Exemplar', 6, 'educar_exemplar_tipo_lst.php', '_self', 1, 16, 177);
-INSERT INTO menu VALUES (15871, 596, 15858, 'Tipo de Cliente', 7, 'educar_cliente_tipo_lst.php', '_self', 1, 16, 62);
-INSERT INTO menu VALUES (15875, 629, 15858, 'Dados Biblioteca', 12, 'educar_biblioteca_dados_lst.php', '_self', 1, 16, 143);
-INSERT INTO menu VALUES (20609, 639, 20605, 'Reserva de Vaga', 1, 'educar_reserva_vaga_lst.php', '_self', 1, 15, 36);
-INSERT INTO menu VALUES (20610, 559, 20603, 'Instituição', 1, 'educar_instituicao_lst.php', '_self', 1, 15, 26);
-INSERT INTO menu VALUES (20611, 772, 20607, 'Quadro Sintético Alunos', 1, 'educar_relatorio_quadro_alunos_sintetico.php', '_self', 1, 15, 115);
-INSERT INTO menu VALUES (20613, 554, 20606, 'Tipo de Usuário', 1, 'educar_tipo_usuario_lst.php', '_self', 1, 15, 111);
-INSERT INTO menu VALUES (20614, 652, 20607, 'Relação de Alunos ANEEs', 1, 'educar_relatorio_relacao_aluno_pnee_escola.php', '_self', 1, 15, 142);
-INSERT INTO menu VALUES (20615, 674, 20608, 'Boletim Escolar', 1, 'educar_relatorio_boletim.php', '_self', 1, 15, 110);
-INSERT INTO menu VALUES (20617, 664, 20608, 'Diário de Frequência', 2, 'educar_relatorio_diario_classe.php', '_self', 1, 15, 122);
-INSERT INTO menu VALUES (20618, 641, 20605, 'Quadro de Horário', 2, 'educar_quadro_horario_lst.php', '_self', 1, 15, 105);
-INSERT INTO menu VALUES (20619, 653, 20607, 'Demonstrativo Alunos Defasados', 2, 'educar_relatorio_demonstrativo_defasado.php', '_self', 1, 15, 82);
-INSERT INTO menu VALUES (20620, 555, 20606, 'Usuários', 2, 'educar_usuario_lst.php', '_self', 1, 15, 141);
-INSERT INTO menu VALUES (20621, NULL, 20603, 'Curso', 2, NULL, '_self', 1, 15, 20);
-INSERT INTO menu VALUES (20622, 786, 20607, 'Demonst. Aluno Defasado Geral', 3, 'educar_relatorio_demonstrativo_defasado_geral.php', '_self', 1, 15, 84);
-INSERT INTO menu VALUES (20623, 654, 20607, 'Controle Desempenho de Alunos', 3, 'educar_relatorio_controle_bim_desempenho.php', '_self', 1, 15, 111);
-INSERT INTO menu VALUES (20625, 659, 20605, 'Enturmação', 3, 'educar_matriculas_turma_lst.php', '_self', 1, 15, 145);
-INSERT INTO menu VALUES (20628, 661, 20607, 'Relatório Mov, Mensal Alunos', 4, 'educar_relatorio_mov_mensal_aluno.php', '_self', 1, 15, 104);
-INSERT INTO menu VALUES (20630, NULL, 20603, 'Série', 4, NULL, '_self', 1, 15, 37);
-INSERT INTO menu VALUES (20633, 829, 20604, 'Categoria Níveis', 5, 'educar_categoria_nivel_lst.php', '_self', 1, 15, 20);
-INSERT INTO menu VALUES (20634, 587, 20603, 'Sequência de Enturmação', 5, 'educar_sequencia_serie_lst.php', '_self', 1, 15, 145);
-INSERT INTO menu VALUES (20640, NULL, 20604, 'Relatórios Servidores', 6, NULL, '_self', 1, 15, 176);
-INSERT INTO menu VALUES (20641, NULL, 20603, 'Escola', 7, NULL, '_self', 1, 15, 91);
-INSERT INTO menu VALUES (20642, NULL, 20603, 'Infra Estrutura', 8, NULL, '_self', 1, 15, 108);
-INSERT INTO menu VALUES (20643, 684, 20607, 'Relação dos Alunos Enturmados', 8, 'educar_relatorio_alunos_enturmados.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20644, NULL, 20603, 'Turma', 9, NULL, '_self', 1, 15, 141);
-INSERT INTO menu VALUES (20645, 696, 20607, 'Quadro Curricular', 9, 'educar_relatorio_quadro_curricular.php', '_self', 1, 15, 105);
-INSERT INTO menu VALUES (20646, 685, 20607, 'Relação dos Alunos NEnturmados', 9, 'educar_relatorio_alunos_nao_enturmados.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20649, NULL, 20603, 'Calendário Letivo', 10, NULL, '_self', 1, 15, 104);
-INSERT INTO menu VALUES (20650, 631, 20603, 'Deficiências', 11, 'educar_deficiencia_lst.php', '_self', 1, 15, 142);
-INSERT INTO menu VALUES (20651, NULL, 20603, 'Aluno', 12, NULL, '_self', 1, 15, 62);
-INSERT INTO menu VALUES (20652, NULL, 20603, 'Material Didático', 13, NULL, '_self', 1, 15, 126);
-INSERT INTO menu VALUES (20654, 707, 20607, 'Alunos Matriculados Sintético', 15, 'educar_relatorio_alunos_matriculados_sintetico.php', '_self', 1, 15, 62);
-INSERT INTO menu VALUES (20655, 693, 20607, 'Registro de Matrículas', 15, 'educar_relatorio_registro_matriculas.php', '_self', 1, 15, 176);
-INSERT INTO menu VALUES (20658, 711, 20607, 'Documentos Pendentes', 17, 'educar_relatorio_documentos_pendentes.php', '_self', 1, 15, 153);
-INSERT INTO menu VALUES (20661, 835, 20605, 'Relatório Quadros de Horário', 25, 'educar_relatorio_quadro_horario.php', '_self', 1, 15, 105);
-INSERT INTO menu VALUES (20674, 557, 20624, 'Cadastrar', 1, 'educar_disciplina_lst.php', '_self', 1, 15, 124);
-INSERT INTO menu VALUES (20679, 567, 20642, 'Prédios', 1, 'educar_infra_predio_lst.php', '_self', 1, 15, 147);
-INSERT INTO menu VALUES (20706, 558, 20621, 'Tipo de Ensino', 4, 'educar_tipo_ensino_lst.php', '_self', 1, 15, 124);
-INSERT INTO menu VALUES (20708, 560, 20621, 'Tipo de Avaliação', 6, 'educar_tipo_avaliacao_lst.php', '_self', 1, 15, 17);
-INSERT INTO menu VALUES (15860, 591, 15858, 'Biblioteca', 1, 'educar_biblioteca_lst.php', '_self', 1, 16, 1);
-INSERT INTO menu VALUES (15858, NULL, NULL, 'Cadastro', 1, NULL, '_self', 1, 16, 1);
-INSERT INTO menu VALUES (15861, 603, 15859, 'Cliente', 1, 'educar_cliente_lst.php', '_self', 1, 16, 1);
 INSERT INTO menu VALUES (4624, 335, NULL, 'Super Usuário', 4, 'otopic_su_lst.php', '_self', 1, 7, 1);
-INSERT INTO menu VALUES (15863, 622, 15859, 'Dívidas', 2, 'educar_pagamento_multa_lst.php', '_self', 1, 16, 1);
-INSERT INTO menu VALUES (20663, 916, 20607, 'Registro de Trans. Expedidas', 25, 'educar_relatorio_registro_transferencias.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20662, 774, 20607, 'Relatório Alunos Idade x Sexo', 25, 'educar_relatorio_quadro_idade_sexo_serie.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20660, 911, 20607, 'Ficha de Rematrícula', 22, 'educar_relatorio_ficha_rematricula.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20647, 811, 20607, 'Espelho de Notas Bimestral', 10, 'educar_relatorio_alunos_nota_semestre_disc.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20639, 845, 20605, 'Rematrícula Automática', 6, 'educar_avancar_mod_cad.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20638, 584, 20603, 'Módulos', 6, 'educar_modulo_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20637, 927, 20608, 'Diário de Frequência Temp.', 5, 'educar_relatorio_diario_classe_temp.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20631, 633, 20604, 'Motivo de Afastamento', 4, 'educar_motivo_afastamento_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20632, 642, 20605, 'Faltas/Notas', 4, 'educar_falta_nota_aluno_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20629, 746, 20608, 'Histórico Escolar', 4, 'educar_relatorio_historico_escolar.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20627, 632, 20604, 'Escolaridade', 3, 'educar_escolaridade_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20624, NULL, 20603, 'Disciplina', 3, NULL, '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20612, 635, 20604, 'Cadastrar', 1, 'educar_servidor_lst.php', '_self', 1, 15, 168);
-INSERT INTO menu VALUES (20605, NULL, NULL, 'Movimentação', 3, NULL, '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20607, NULL, NULL, 'Relatórios', 5, NULL, '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20606, NULL, NULL, 'Administrativo', 4, NULL, '_self', 1, 15, 1);
-INSERT INTO menu VALUES (15864, 610, 15859, 'Empréstimo', 3, 'educar_exemplar_emprestimo_lst.php', '_self', 1, 16, 1);
-INSERT INTO menu VALUES (15867, 628, 15859, 'Devolução', 4, 'educar_exemplar_devolucao_lst.php', '_self', 1, 16, 1);
+INSERT INTO menu VALUES (15858, NULL, NULL, 'Cadastro', 1, NULL, '_self', 1, 16, 1);
 INSERT INTO menu VALUES (15869, 609, 15858, 'Reservas', 6, 'educar_reservas_lst.php', '_self', 1, 16, 1);
-INSERT INTO menu VALUES (15872, 600, 15858, 'Motivo Baixa', 8, 'educar_motivo_baixa_lst.php', '_self', 1, 16, 1);
-INSERT INTO menu VALUES (15873, 607, 15858, 'Motivo Suspensão', 9, 'educar_motivo_suspensao_lst.php', '_self', 1, 16, 1);
-INSERT INTO menu VALUES (15874, 608, 15858, 'Fonte', 10, 'educar_fonte_lst.php', '_self', 1, 16, 1);
-INSERT INTO menu VALUES (15876, 602, 15858, 'Situação Exemplar', 13, 'educar_situacao_lst.php', '_self', 1, 16, 1);
 INSERT INTO menu VALUES (15877, 592, 15858, 'Assunto', 14, 'educar_acervo_assunto_lst.php', '_self', 1, 16, 1);
 INSERT INTO menu VALUES (15878, 598, 15858, 'Obras', 15, 'educar_acervo_lst.php', '_self', 1, 16, 1);
 INSERT INTO menu VALUES (15879, 606, 15858, 'Exemplares', 16, 'educar_exemplar_lst.php', '_self', 1, 16, 1);
-INSERT INTO menu VALUES (20603, NULL, NULL, 'Cadastros', 1, NULL, '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20604, NULL, NULL, 'Servidores', 2, NULL, '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20635, 634, 20604, 'Função', 5, 'educar_funcao_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20664, 917, 20607, 'Alunos 5ª Avaliação', 26, 'educar_relatorio_alunos_quinta_avaliacao.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20665, 918, 20607, 'Ata Resultado Final', 28, 'educar_relatorio_ata_resultado_final.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20666, 836, 20607, 'Relatório de alunos por idade', 30, 'educar_relatorio_alunos_idade.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20667, 930, 20607, 'Levantamento Alfab. e não Alf.', 30, 'educar_relatorio_alfabetizados.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20668, 823, 20607, 'Resultado Final', 30, 'educar_relatorio_resultado_final.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20669, 830, 20607, 'Alunos Benefícios', 30, 'educar_relatorio_alunos_beneficios.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20670, 824, 20607, 'Acompanhamento Mensal', 31, 'educar_relatorio_acompanhamento_mensal.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20671, 933, 20607, 'Levantamento Turma Período', 31, 'educar_relatorio_levantamento_turma_periodo_aluno.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20672, 825, 20607, 'Ficha de Leitura Escrita', 33, 'educar_relatorio_ficha_leitura.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20673, 826, 20607, 'Acompanhamento Leitura', 35, 'educar_relatorio_acompanhamento_leitura_livros.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20677, 561, 20641, 'Cadastrar', 1, 'educar_escola_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20678, 620, 20649, 'Calendários', 1, 'educar_calendario_ano_letivo_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20680, 583, 20630, 'Cadastrar', 1, 'educar_serie_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20681, 586, 20644, 'Cadastrar', 1, 'educar_turma_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20682, 566, 20621, 'Cadastrar', 1, 'educar_curso_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20683, 690, 20640, 'Relatórios Professores', 1, 'educar_relatorio_quadro_professores.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20684, 569, 20652, 'Materiais', 1, 'educar_material_didatico_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20685, 578, 20651, 'Alunos', 1, 'educar_aluno_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20687, 576, 20649, 'Motivos', 2, 'educar_calendario_dia_motivo_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20688, 581, 20651, 'Benefícios', 2, 'educar_aluno_beneficio_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20689, 563, 20652, 'Tipo Material', 2, 'educar_material_tipo_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20690, 577, 20624, 'Tipo de Dispensa', 2, 'educar_tipo_dispensa_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20691, 562, 20641, 'Localização', 2, 'educar_escola_localizacao_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20692, 827, 20640, 'Professores por Disciplina', 2, 'educar_relatorio_professor_disciplina.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20693, 570, 20644, 'Tipo', 2, 'educar_turma_tipo_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20694, 574, 20642, 'Comodo Prédio', 2, 'educar_infra_predio_comodo_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20695, 573, 20621, 'Habilitação', 2, 'educar_habilitacao_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20697, 585, 20630, 'Escola-Série', 3, 'educar_escola_serie_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20698, 580, 20624, 'Tipo de Ocorrência', 3, 'educar_tipo_ocorrencia_disciplinar_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20699, 831, 20640, 'Servidores por Nível', 3, 'educar_relatorio_servidor_nivel.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20700, 647, 20641, 'Rede de Ensino', 3, 'educar_escola_rede_ensino_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20701, 579, 20651, 'Religião', 3, 'educar_religiao_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20702, 568, 20621, 'Tipo de Regime', 3, 'educar_tipo_regime_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20703, 572, 20642, 'Função Cômodo', 3, 'educar_infra_comodo_funcao_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20705, 678, 20651, 'Raça', 4, 'educar_raca_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20707, 571, 20621, 'Nível Ensino', 5, 'educar_nivel_ensino_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20709, 944, 20607, 'Demons. Alu. Defasados Nominal', 31, 'educar_alunos_defasados_nominal.php', '_self', 1, 15, 1);
 INSERT INTO menu VALUES (15859, NULL, NULL, 'Movimentação', 2, NULL, '_self', 1, 16, 1);
-INSERT INTO menu VALUES (20659, NULL, 20607, 'Relação de Alunos ANNEs - qtd', 22, NULL, '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20657, NULL, 20603, 'Pré-Requisito', 16, NULL, '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20656, NULL, 20603, 'Tipos', 15, NULL, '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20653, 575, 20603, 'Tipo de Transferência', 14, 'educar_transferencia_tipo_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20648, 807, 20607, 'Espelho de Notas', 10, 'educar_relatorio_alunos_nota_semestre.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20636, 650, 20605, 'Nota Turma', 5, 'educar_turma_mvto_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20626, 670, 20608, 'Diário de Avaliações', 3, 'educar_relatorio_diario_classe_avaliacao.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20616, 900, 20607, 'Alunos ANEEs Instituição', 2, 'educar_relatorio_relacao_qtd_aluno_pnee_escola.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (20608, NULL, NULL, 'Documentos', 6, NULL, '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21122, NULL, NULL, 'Cadastros', 1, NULL, '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21123, NULL, NULL, 'Servidores', 2, NULL, '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21124, NULL, NULL, 'Movimentação', 3, NULL, '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21125, NULL, NULL, 'Administrativo', 4, NULL, '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21126, NULL, NULL, 'Relatórios', 5, NULL, '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21127, NULL, NULL, 'Documentos', 6, NULL, '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21128, 559, 21122, 'Instituição', 1, 'educar_instituicao_lst.php', '_self', 1, 15, 26);
+INSERT INTO menu VALUES (21129, 772, 21126, 'Quadro Sintético Alunos', 1, 'educar_relatorio_quadro_alunos_sintetico.php', '_self', 1, 15, 115);
+INSERT INTO menu VALUES (21130, 635, 21123, 'Cadastrar', 1, 'educar_servidor_lst.php', '_self', 1, 15, 168);
+INSERT INTO menu VALUES (21131, 554, 21125, 'Tipo de Usuário', 1, 'educar_tipo_usuario_lst.php', '_self', 1, 15, 111);
+INSERT INTO menu VALUES (21132, 652, 21126, 'Relação de Alunos ANEEs', 1, 'educar_relatorio_relacao_aluno_pnee_escola.php', '_self', 1, 15, 142);
+INSERT INTO menu VALUES (21133, 674, 21127, 'Boletim Escolar', 1, 'educar_relatorio_boletim.php', '_self', 1, 15, 110);
+INSERT INTO menu VALUES (21134, 639, 21124, 'Reserva de Vaga', 1, 'educar_reserva_vaga_lst.php', '_self', 1, 15, 36);
+INSERT INTO menu VALUES (21135, 900, 21126, 'Alunos ANEEs Instituição', 2, 'educar_relatorio_relacao_qtd_aluno_pnee_escola.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21136, 664, 21127, 'Diário de Frequência', 2, 'educar_relatorio_diario_classe.php', '_self', 1, 15, 122);
+INSERT INTO menu VALUES (21137, 641, 21124, 'Quadro de Horário', 2, 'educar_quadro_horario_lst.php', '_self', 1, 15, 105);
+INSERT INTO menu VALUES (21138, 653, 21126, 'Demonstrativo Alunos Defasados', 2, 'educar_relatorio_demonstrativo_defasado.php', '_self', 1, 15, 82);
+INSERT INTO menu VALUES (21139, 555, 21125, 'Usuários', 2, 'educar_usuario_lst.php', '_self', 1, 15, 141);
+INSERT INTO menu VALUES (21140, NULL, 21122, 'Curso', 2, NULL, '_self', 1, 15, 20);
+INSERT INTO menu VALUES (21141, 786, 21126, 'Demonst. Aluno Defasado Geral', 3, 'educar_relatorio_demonstrativo_defasado_geral.php', '_self', 1, 15, 84);
+INSERT INTO menu VALUES (21142, 654, 21126, 'Controle Desempenho de Alunos', 3, 'educar_relatorio_controle_bim_desempenho.php', '_self', 1, 15, 111);
+INSERT INTO menu VALUES (21144, 659, 21124, 'Enturmação', 3, 'educar_matriculas_turma_lst.php', '_self', 1, 15, 145);
+INSERT INTO menu VALUES (21145, 670, 21127, 'Diário de Avaliações', 3, 'educar_relatorio_diario_classe_avaliacao.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21146, 632, 21123, 'Escolaridade', 3, 'educar_escolaridade_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21147, NULL, 21122, 'Componentes Curriculares', 3, NULL, '_self', 1, 15, 190);
+INSERT INTO menu VALUES (21148, 746, 21127, 'Histórico Escolar', 4, 'educar_relatorio_historico_escolar.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21149, 661, 21126, 'Relatório Mov, Mensal Alunos', 4, 'educar_relatorio_mov_mensal_aluno.php', '_self', 1, 15, 104);
+INSERT INTO menu VALUES (21150, NULL, 21122, 'Série', 4, NULL, '_self', 1, 15, 37);
+INSERT INTO menu VALUES (21151, 633, 21123, 'Motivo de Afastamento', 4, 'educar_motivo_afastamento_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21152, 642, 21124, 'Faltas/Notas', 4, 'educar_falta_nota_aluno_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21153, 634, 21123, 'Função', 5, 'educar_funcao_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21155, 927, 21127, 'Diário de Frequência Temp.', 5, 'educar_relatorio_diario_classe_temp.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21156, 829, 21123, 'Categoria Níveis', 5, 'educar_categoria_nivel_lst.php', '_self', 1, 15, 20);
+INSERT INTO menu VALUES (21157, 587, 21122, 'Sequência de Enturmação', 5, 'educar_sequencia_serie_lst.php', '_self', 1, 15, 145);
+INSERT INTO menu VALUES (21158, NULL, 21123, 'Relatórios Servidores', 6, NULL, '_self', 1, 15, 176);
+INSERT INTO menu VALUES (21159, 584, 21122, 'Módulos', 6, 'educar_modulo_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21160, 845, 21124, 'Rematrícula Automática', 6, 'educar_avancar_mod_cad.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21161, NULL, 21122, 'Escola', 7, NULL, '_self', 1, 15, 91);
+INSERT INTO menu VALUES (21162, NULL, 21122, 'Infra Estrutura', 8, NULL, '_self', 1, 15, 108);
+INSERT INTO menu VALUES (21163, 684, 21126, 'Relação dos Alunos Enturmados', 8, 'educar_relatorio_alunos_enturmados.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21164, 685, 21126, 'Relação dos Alunos NEnturmados', 9, 'educar_relatorio_alunos_nao_enturmados.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21165, NULL, 21122, 'Turma', 9, NULL, '_self', 1, 15, 141);
+INSERT INTO menu VALUES (21166, 696, 21126, 'Quadro Curricular', 9, 'educar_relatorio_quadro_curricular.php', '_self', 1, 15, 105);
+INSERT INTO menu VALUES (21167, 807, 21126, 'Espelho de Notas', 10, 'educar_relatorio_alunos_nota_semestre.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21168, 811, 21126, 'Espelho de Notas Bimestral', 10, 'educar_relatorio_alunos_nota_semestre_disc.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21169, NULL, 21122, 'Calendário Letivo', 10, NULL, '_self', 1, 15, 104);
+INSERT INTO menu VALUES (21170, 631, 21122, 'Deficiências', 11, 'educar_deficiencia_lst.php', '_self', 1, 15, 142);
+INSERT INTO menu VALUES (21171, NULL, 21122, 'Aluno', 12, NULL, '_self', 1, 15, 62);
+INSERT INTO menu VALUES (21172, NULL, 21122, 'Material Didático', 13, NULL, '_self', 1, 15, 126);
+INSERT INTO menu VALUES (21173, 580, 21122, 'Tipos de Ocorrências', 13, 'educar_tipo_ocorrencia_disciplinar_lst.php', '_self', 1, 15, 194);
+INSERT INTO menu VALUES (21174, 575, 21122, 'Tipo de Transferência', 14, 'educar_transferencia_tipo_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21175, 707, 21126, 'Alunos Matriculados Sintético', 15, 'educar_relatorio_alunos_matriculados_sintetico.php', '_self', 1, 15, 62);
+INSERT INTO menu VALUES (21176, NULL, 21122, 'Tipos', 15, NULL, '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21177, NULL, 21122, 'Pré-Requisito', 16, NULL, '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21178, 711, 21126, 'Documentos Pendentes', 17, 'educar_relatorio_documentos_pendentes.php', '_self', 1, 15, 153);
+INSERT INTO menu VALUES (21179, NULL, 21126, 'Relação de Alunos ANNEs - qtd', 22, NULL, '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21180, 911, 21126, 'Ficha de Rematrícula', 22, 'educar_relatorio_ficha_rematricula.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21181, 835, 21124, 'Relatório Quadros de Horário', 25, 'educar_relatorio_quadro_horario.php', '_self', 1, 15, 105);
+INSERT INTO menu VALUES (21182, 916, 21126, 'Registro de Trans. Expedidas', 25, 'educar_relatorio_registro_transferencias.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21183, 774, 21126, 'Relatório Alunos Idade x Sexo', 25, 'educar_relatorio_quadro_idade_sexo_serie.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21184, 917, 21126, 'Alunos 5ª Avaliação', 26, 'educar_relatorio_alunos_quinta_avaliacao.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21185, 918, 21126, 'Ata Resultado Final', 28, 'educar_relatorio_ata_resultado_final.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21186, 836, 21126, 'Relatório de alunos por idade', 30, 'educar_relatorio_alunos_idade.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21187, 823, 21126, 'Resultado Final', 30, 'educar_relatorio_resultado_final.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21188, 930, 21126, 'Levantamento Alfab. e não Alf.', 30, 'educar_relatorio_alfabetizados.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21189, 830, 21126, 'Alunos Benefícios', 30, 'educar_relatorio_alunos_beneficios.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21190, 824, 21126, 'Acompanhamento Mensal', 31, 'educar_relatorio_acompanhamento_mensal.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21191, 933, 21126, 'Levantamento Turma Período', 31, 'educar_relatorio_levantamento_turma_periodo_aluno.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21192, 944, 21126, 'Demons. Alu. Defasados Nominal', 31, 'educar_alunos_defasados_nominal.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21193, 825, 21126, 'Ficha de Leitura Escrita', 33, 'educar_relatorio_ficha_leitura.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21194, 826, 21126, 'Acompanhamento Leitura', 35, 'educar_relatorio_acompanhamento_leitura_livros.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21195, 946, 21147, 'Listar Componentes', 0, 'module/ComponenteCurricular/index', '_self', 1, 15, 192);
+INSERT INTO menu VALUES (21197, 586, 21165, 'Cadastrar', 1, 'educar_turma_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21198, 561, 21161, 'Cadastrar', 1, 'educar_escola_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21199, 620, 21169, 'Calendários', 1, 'educar_calendario_ano_letivo_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21200, 567, 21162, 'Prédios', 1, 'educar_infra_predio_lst.php', '_self', 1, 15, 147);
+INSERT INTO menu VALUES (21201, 583, 21150, 'Cadastrar', 1, 'educar_serie_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21202, 566, 21140, 'Cadastrar', 1, 'educar_curso_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21203, 690, 21158, 'Relatórios Professores', 1, 'educar_relatorio_quadro_professores.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21204, 569, 21172, 'Materiais', 1, 'educar_material_didatico_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21205, 578, 21171, 'Alunos', 1, 'educar_aluno_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21206, 945, 21147, 'Áreas de Conhecimento', 1, 'module/AreaConhecimento/index', '_self', 1, 15, 189);
+INSERT INTO menu VALUES (21207, 574, 21162, 'Comodo Prédio', 2, 'educar_infra_predio_comodo_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21208, 573, 21140, 'Habilitação', 2, 'educar_habilitacao_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21209, 576, 21169, 'Motivos', 2, 'educar_calendario_dia_motivo_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21210, 581, 21171, 'Benefícios', 2, 'educar_aluno_beneficio_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21211, 562, 21161, 'Localização', 2, 'educar_escola_localizacao_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21212, 563, 21172, 'Tipo Material', 2, 'educar_material_tipo_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21213, 577, 21147, 'Tipos de Dispensa', 2, 'educar_tipo_dispensa_lst.php', '_self', 1, 15, 193);
+INSERT INTO menu VALUES (21214, 827, 21158, 'Professores por Disciplina', 2, 'educar_relatorio_professor_disciplina.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21215, 570, 21165, 'Tipo', 2, 'educar_turma_tipo_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21216, 585, 21150, 'Escola-Série', 3, 'educar_escola_serie_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21217, 831, 21158, 'Servidores por Nível', 3, 'educar_relatorio_servidor_nivel.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21218, 647, 21161, 'Rede de Ensino', 3, 'educar_escola_rede_ensino_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21219, 579, 21171, 'Religião', 3, 'educar_religiao_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21220, 568, 21140, 'Tipo de Regime', 3, 'educar_tipo_regime_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21221, 572, 21162, 'Função Cômodo', 3, 'educar_infra_comodo_funcao_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21222, 558, 21140, 'Tipo de Ensino', 4, 'educar_tipo_ensino_lst.php', '_self', 1, 15, 124);
+INSERT INTO menu VALUES (21223, 678, 21171, 'Raça', 4, 'educar_raca_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21224, 571, 21140, 'Nível Ensino', 5, 'educar_nivel_ensino_lst.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21226, NULL, 21122, 'Regras de Avaliação', 2, NULL, '_self', 1, 15, 195);
+INSERT INTO menu VALUES (21227, 947, 21226, 'Listar Regras', 0, 'module/RegraAvaliacao/index', '_self', 1, 15, 197);
+INSERT INTO menu VALUES (21228, 948, 21226, 'Fórmulas de Cálculo de Média', 1, 'module/FormulaMedia/index', '_self', 1, 15, 198);
+INSERT INTO menu VALUES (21229, 949, 21226, 'Tabelas de Arredondamento', 2, 'module/TabelaArredondamento/index', '_self', 1, 15, 199);
+INSERT INTO menu VALUES (21230, 693, 21126, 'Registro de Matrículas', 30, 'educar_relatorio_registro_matriculas.php', '_self', 1, 15, 1);
 
 
 --
@@ -17808,6 +18411,116 @@ INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,609,1,1,1)', 'NOW(
 INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,602,1,1,1)', 'NOW()', 1);
 INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,596,1,1,1)', 'NOW()', 1);
 INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(3,597,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,826,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,824,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,578,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,917,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,707,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,624,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,918,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,581,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,674,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,620,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,576,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,829,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,946,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,654,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,566,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,574,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,631,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,653,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,786,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,944,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,664,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,670,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,927,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,711,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,659,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,561,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,562,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,585,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,632,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,807,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,811,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,642,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,825,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,911,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,572,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,634,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,948,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,573,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,746,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,559,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,930,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,933,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,569,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,633,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,584,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,571,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,827,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,567,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,696,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,641,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,772,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,678,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,647,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,693,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,916,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,947,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,836,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,830,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,774,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,684,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,685,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,661,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,835,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,690,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,652,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,900,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,579,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,845,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,639,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,823,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,587,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,635,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,831,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,583,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,949,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,577,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,558,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,563,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,580,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,568,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,575,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,586,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,570,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,945,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,625,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,592,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,594,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,591,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,603,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,593,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,629,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,628,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,622,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,595,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,610,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,606,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,608,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,590,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,600,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,607,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,598,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,609,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,602,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,596,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(1,597,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(2,946,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(2,948,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(2,947,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(2,949,1,1,1)', 'NOW()', 1);
+INSERT INTO historico_educar VALUES ('menu_tipo_usuario', '(2,945,1,1,1)', 'NOW()', 1);
 
 
 --
@@ -17881,74 +18594,6 @@ INSERT INTO instituicao VALUES (1, NULL, 1, 'RUA', 'SP', 9000000, 'São Paulo', '
 -- Data for Name: menu_tipo_usuario; Type: TABLE DATA; Schema: pmieducar; Owner: -
 --
 
-INSERT INTO menu_tipo_usuario VALUES (1, 826, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 824, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 578, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 917, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 707, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 624, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 918, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 581, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 674, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 620, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 576, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 829, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 654, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 566, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 574, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 631, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 653, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 786, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 944, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 557, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 664, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 670, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 711, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 659, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 561, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 562, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 585, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 632, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 807, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 811, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 642, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 825, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 911, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 572, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 634, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 573, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 746, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 559, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 930, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 933, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 569, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 633, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 584, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 650, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 571, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 827, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 567, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 696, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 641, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 772, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 678, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 647, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 693, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 916, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 836, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 830, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 774, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 684, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 685, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 661, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 835, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 690, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 652, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 900, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 579, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 845, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 639, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 823, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 826, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 824, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 578, 1, 1, 1);
@@ -17968,7 +18613,6 @@ INSERT INTO menu_tipo_usuario VALUES (2, 631, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 653, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 786, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 944, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (2, 557, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 664, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 670, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 927, 1, 1, 1);
@@ -17993,7 +18637,6 @@ INSERT INTO menu_tipo_usuario VALUES (2, 933, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 569, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 633, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 584, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (2, 650, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 571, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 827, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 567, 1, 1, 1);
@@ -18022,7 +18665,6 @@ INSERT INTO menu_tipo_usuario VALUES (2, 587, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 635, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 831, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 583, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (2, 560, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 577, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 558, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 563, 1, 1, 1);
@@ -18052,6 +18694,116 @@ INSERT INTO menu_tipo_usuario VALUES (3, 609, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (3, 602, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (3, 596, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (3, 597, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 826, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 824, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 578, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 917, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 707, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 624, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 918, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 581, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 674, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 620, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 576, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 829, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 946, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 654, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 566, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 574, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 631, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 653, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 786, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 944, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 664, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 670, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 927, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 711, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 659, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 561, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 562, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 585, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 632, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 807, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 811, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 642, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 825, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 911, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 572, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 634, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 948, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 573, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 746, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 559, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 930, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 933, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 569, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 633, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 584, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 571, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 827, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 567, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 696, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 641, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 772, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 678, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 647, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 693, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 916, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 947, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 836, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 830, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 774, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 684, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 685, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 661, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 835, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 690, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 652, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 900, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 579, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 845, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 639, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 823, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 587, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 635, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 831, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 583, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 949, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 577, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 558, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 563, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 580, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 568, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 575, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 586, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 570, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 945, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 625, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 592, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 594, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 591, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 603, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 593, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 629, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 628, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 622, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 595, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 610, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 606, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 608, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 590, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 600, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 607, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 598, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 609, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 602, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 596, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (1, 597, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (2, 946, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (2, 948, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (2, 947, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (2, 949, 1, 1, 1);
+INSERT INTO menu_tipo_usuario VALUES (2, 945, 1, 1, 1);
 
 
 --
@@ -18607,6 +19359,19 @@ INSERT INTO imagem VALUES (182, 1, 'money.gif', 'money', 'gif', NULL, NULL, 'NOW
 INSERT INTO imagem VALUES (183, 1, 'reload.jpg', 'reload', 'jpg', NULL, NULL, 'NOW()', 1, NULL, NULL);
 INSERT INTO imagem VALUES (185, 1, 'porca2.jpg', 'porca2', 'jpg', NULL, NULL, 'NOW()', 1, NULL, NULL);
 INSERT INTO imagem VALUES (186, 1, 'agua.gif', 'agua', 'gif', NULL, NULL, 'NOW()', 1, NULL, NULL);
+INSERT INTO imagem VALUES (187, 1, 'book.png', 'FAMFAMFAM iconset: book.png', 'png', 16, 16, 'NOW()', 1, NULL, NULL);
+INSERT INTO imagem VALUES (188, 1, 'book_add.png', 'FAMFAMFAM iconset: book_add.png', 'png', 16, 16, 'NOW()', 1, NULL, NULL);
+INSERT INTO imagem VALUES (189, 1, 'book_go.png', 'FAMFAMFAM iconset: book_go.png', 'png', 16, 16, 'NOW()', 1, NULL, NULL);
+INSERT INTO imagem VALUES (190, 1, 'layout.png', 'FAMFAMFAM iconset: layout.png', 'png', 16, 16, 'NOW()', 1, NULL, NULL);
+INSERT INTO imagem VALUES (191, 1, 'layout_add.png', 'FAMFAMFAM iconset: layout_add.png', 'png', 16, 16, 'NOW()', 1, NULL, NULL);
+INSERT INTO imagem VALUES (192, 1, 'layout_content.png', 'FAMFAMFAM iconset: layout_content.png', 'png', 16, 16, 'NOW()', 1, NULL, NULL);
+INSERT INTO imagem VALUES (193, 1, 'book_previous.png', 'FAMFAMFAM iconset: book_previous.png', 'png', 16, 16, 'NOW()', 1, NULL, NULL);
+INSERT INTO imagem VALUES (194, 1, 'book_error.png', 'FAMFAMFAM iconset: book_error.png', 'png', 16, 16, 'NOW()', 1, NULL, NULL);
+INSERT INTO imagem VALUES (195, 1, 'cog.png', 'FAMFAMFAM iconset: cog.png', 'png', 16, 16, 'NOW()', 1, NULL, NULL);
+INSERT INTO imagem VALUES (196, 1, 'cog_add.png', 'FAMFAMFAM iconset: cog_add.png', 'png', 16, 16, 'NOW()', 1, NULL, NULL);
+INSERT INTO imagem VALUES (197, 1, 'cog_go.png', 'FAMFAMFAM iconset: cog_go.png', 'png', 16, 16, 'NOW()', 1, NULL, NULL);
+INSERT INTO imagem VALUES (198, 1, 'calculator.png', 'FAMFAMFAM iconset: calculator.png', 'png', 16, 16, 'NOW()', 1, NULL, NULL);
+INSERT INTO imagem VALUES (199, 1, 'calendar_link.png', 'FAMFAMFAM iconset: calendar_link.png', 'png', 16, 16, 'NOW()', 1, NULL, NULL);
 
 
 --
@@ -18675,6 +19440,7 @@ INSERT INTO imagem_tipo VALUES (6, 'Acervo');
 -- Data for Name: menu_funcionario; Type: TABLE DATA; Schema: portal; Owner: -
 --
 
+INSERT INTO menu_funcionario VALUES (1, 0, 0, 0);
 INSERT INTO menu_funcionario VALUES (1, 0, 0, 104);
 INSERT INTO menu_funcionario VALUES (1, 0, 0, 109);
 INSERT INTO menu_funcionario VALUES (1, 0, 0, 114);
@@ -18748,108 +19514,111 @@ INSERT INTO menu_funcionario VALUES (1, 0, 0, 87);
 INSERT INTO menu_funcionario VALUES (1, 0, 0, 89);
 INSERT INTO menu_funcionario VALUES (1, 1, 1, 554);
 INSERT INTO menu_funcionario VALUES (1, 1, 1, 555);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 557);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 558);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 559);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 560);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 561);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 562);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 563);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 566);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 567);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 568);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 569);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 570);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 571);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 572);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 573);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 574);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 575);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 576);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 577);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 826);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 824);
 INSERT INTO menu_funcionario VALUES (1, 1, 1, 578);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 579);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 580);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 581);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 583);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 584);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 585);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 586);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 587);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 590);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 591);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 592);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 593);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 594);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 595);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 596);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 597);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 598);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 600);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 602);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 603);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 606);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 607);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 608);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 609);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 610);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 620);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 622);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 917);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 707);
 INSERT INTO menu_funcionario VALUES (1, 1, 1, 624);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 625);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 628);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 629);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 631);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 632);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 633);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 634);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 635);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 639);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 641);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 642);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 647);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 650);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 652);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 653);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 918);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 581);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 674);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 620);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 576);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 829);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 946);
 INSERT INTO menu_funcionario VALUES (1, 1, 1, 654);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 659);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 661);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 566);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 574);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 631);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 653);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 786);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 944);
 INSERT INTO menu_funcionario VALUES (1, 1, 1, 664);
 INSERT INTO menu_funcionario VALUES (1, 1, 1, 670);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 674);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 678);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 684);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 685);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 690);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 696);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 707);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 927);
 INSERT INTO menu_funcionario VALUES (1, 1, 1, 711);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 746);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 772);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 774);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 786);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 659);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 561);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 562);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 585);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 632);
 INSERT INTO menu_funcionario VALUES (1, 1, 1, 807);
 INSERT INTO menu_funcionario VALUES (1, 1, 1, 811);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 823);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 824);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 642);
 INSERT INTO menu_funcionario VALUES (1, 1, 1, 825);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 826);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 827);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 829);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 830);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 831);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 835);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 836);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 845);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 900);
 INSERT INTO menu_funcionario VALUES (1, 1, 1, 911);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 916);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 917);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 918);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 927);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 572);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 634);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 948);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 573);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 746);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 559);
 INSERT INTO menu_funcionario VALUES (1, 1, 1, 930);
 INSERT INTO menu_funcionario VALUES (1, 1, 1, 933);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 944);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 569);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 633);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 584);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 571);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 827);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 567);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 696);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 641);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 772);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 678);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 647);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 693);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 916);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 947);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 836);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 830);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 774);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 684);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 685);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 661);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 835);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 690);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 652);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 900);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 579);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 845);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 639);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 823);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 587);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 635);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 831);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 583);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 949);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 577);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 558);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 563);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 580);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 568);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 575);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 586);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 570);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 945);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 625);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 592);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 594);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 591);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 603);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 593);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 629);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 628);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 622);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 595);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 610);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 606);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 608);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 590);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 600);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 607);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 598);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 609);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 602);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 596);
+INSERT INTO menu_funcionario VALUES (1, 1, 1, 597);
 
 
 --
@@ -18965,10 +19734,8 @@ INSERT INTO menu_submenu VALUES (746, 55, 2, 'Histórico Escolar', 'educar_relato
 INSERT INTO menu_submenu VALUES (568, 55, 2, 'Tipo Regime', 'educar_tipo_regime_lst.php', '', 3);
 INSERT INTO menu_submenu VALUES (569, 55, 2, 'Material Didático', 'educar_material_didatico_lst.php', '', 3);
 INSERT INTO menu_submenu VALUES (561, 55, 2, 'Escola', 'educar_escola_lst.php', '', 3);
-INSERT INTO menu_submenu VALUES (557, 55, 2, 'Disciplina', 'educar_disciplina_lst.php', '', 3);
 INSERT INTO menu_submenu VALUES (570, 55, 2, 'Turma Tipo', 'educar_turma_tipo_lst.php', '', 3);
 INSERT INTO menu_submenu VALUES (558, 55, 2, 'Tipo Ensino', 'educar_tipo_ensino_lst.php', '', 3);
-INSERT INTO menu_submenu VALUES (560, 55, 2, 'Tipo de Avaliação', 'educar_tipo_avaliacao_lst.php', '', 3);
 INSERT INTO menu_submenu VALUES (562, 55, 2, 'Escola Localização', 'educar_escola_localizacao_lst.php', '', 3);
 INSERT INTO menu_submenu VALUES (571, 55, 2, 'Nível Ensino', 'educar_nivel_ensino_lst.php', '', 3);
 INSERT INTO menu_submenu VALUES (563, 55, 2, 'Tipo Material Didático', 'educar_material_tipo_lst.php', '', 3);
@@ -19001,7 +19768,6 @@ INSERT INTO menu_submenu VALUES (639, 55, 2, 'Reserva Vaga', 'educar_reserva_vag
 INSERT INTO menu_submenu VALUES (641, 55, 2, 'Quadro de Horário', 'educar_quadro_horario_lst.php', '', 3);
 INSERT INTO menu_submenu VALUES (642, 55, 2, 'Faltas/Notas Aluno', 'educar_falta_nota_aluno_lst.php', '', 3);
 INSERT INTO menu_submenu VALUES (647, 55, 2, 'Rede Ensino', 'educar_escola_rede_ensino_lst.php', '', 3);
-INSERT INTO menu_submenu VALUES (650, 55, 2, 'Nota Turma', 'educar_turma_mvto_lst.php', '', 3);
 INSERT INTO menu_submenu VALUES (654, 55, 2, 'Controle Desempenho de Alunos', 'educar_relatorio_controle_bim_desempenho.php', '', 3);
 INSERT INTO menu_submenu VALUES (653, 55, 2, 'Demonstrativo Alunos Defasados', 'educar_relatorio_demonstrativo_defasado.php', '', 3);
 INSERT INTO menu_submenu VALUES (659, 55, 2, 'Enturmação', 'educar_matriculas_turma_lst.php', '', 3);
@@ -19062,6 +19828,11 @@ INSERT INTO menu_submenu VALUES (628, 57, 2, 'Devolução', 'educar_exemplar_devol
 INSERT INTO menu_submenu VALUES (629, 57, 2, 'Dados Biblioteca', 'educar_biblioteca_dados_lst.php', '', 3);
 INSERT INTO menu_submenu VALUES (696, 55, 2, 'Quadro Curricular', 'educar_relatorio_quadro_curricular.php', '', 3);
 INSERT INTO menu_submenu VALUES (693, 55, 2, 'Registro de Matrículas', 'educar_relatorio_registro_matriculas.php', '', 3);
+INSERT INTO menu_submenu VALUES (945, 55, 2, 'Áreas de Conhecimento', 'module/AreaConhecimento/index', '', 3);
+INSERT INTO menu_submenu VALUES (946, 55, 2, 'Componentes Curriculares', 'module/ComponenteCurricular/index', '', 3);
+INSERT INTO menu_submenu VALUES (947, 55, 2, 'Regras de Avaliação', 'module/RegraAvaliacao/index', '', 3);
+INSERT INTO menu_submenu VALUES (948, 55, 2, 'Fórmula de Cálculo de Média', 'module/FormulaMedia/index', '', 3);
+INSERT INTO menu_submenu VALUES (949, 55, 2, 'Tabelas de Arredondamento de Nota', 'module/TabelaArredondamento/index', '', 3);
 
 
 --
@@ -19159,6 +19930,17 @@ INSERT INTO changelog VALUES (1, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '1_cria_s
 INSERT INTO changelog VALUES (3, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '3_corrige_sequences.sql');
 INSERT INTO changelog VALUES (4, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '4_permissoes_usuario_tipo_biblioteca.sql');
 INSERT INTO changelog VALUES (5, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '5_corrige_triggers_constrainst.sql');
+INSERT INTO changelog VALUES (6, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '6_cria_schema_modules.sql');
+INSERT INTO changelog VALUES (7, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '7_cria_tabelas_modulo_regra_avaliacao.sql');
+INSERT INTO changelog VALUES (8, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '8_remove_campos_pmieducar_serie.sql');
+INSERT INTO changelog VALUES (9, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '9_atualiza_foreign_key_de_pmieducar_escola_serie_disciplina.sql');
+INSERT INTO changelog VALUES (10, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '10_remove_campos_pmieducar_curso.sql');
+INSERT INTO changelog VALUES (11, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '11_adiciona_foreign_key_entre_pmieducar_serie_e_modules_regra_avaliacao.sql');
+INSERT INTO changelog VALUES (12, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '12_cria_tabelas_modulo_avaliacao.sql');
+INSERT INTO changelog VALUES (13, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '13_adiciona_campo_carga_horaria_pmieducar_escola_serie_disciplina_modules_componente_curricular_ano_escolar');
+INSERT INTO changelog VALUES (14, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '14_adiciona_campo_etapa_modules_nota_componente_curricular_media.sql');
+INSERT INTO changelog VALUES (15, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '15_atualiza_foreign_key_modules_falta_geral.sql');
+INSERT INTO changelog VALUES (16, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '16_permissoes_para_modules_e_correcao_menus.sql');
 
 
 --
@@ -26026,6 +26808,112 @@ ALTER TABLE ONLY tipo_incoerencia
     ADD CONSTRAINT pk_tipo_incoerencia PRIMARY KEY (id_tipo_inc);
 
 
+SET search_path = modules, pg_catalog;
+
+--
+-- Name: area_conhecimento_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY area_conhecimento
+    ADD CONSTRAINT area_conhecimento_pkey PRIMARY KEY (id, instituicao_id);
+
+
+--
+-- Name: componente_curricular_ano_escolar_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY componente_curricular_ano_escolar
+    ADD CONSTRAINT componente_curricular_ano_escolar_pkey PRIMARY KEY (componente_curricular_id, ano_escolar_id);
+
+
+--
+-- Name: componente_curricular_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY componente_curricular
+    ADD CONSTRAINT componente_curricular_pkey PRIMARY KEY (id, instituicao_id);
+
+
+--
+-- Name: falta_aluno_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY falta_aluno
+    ADD CONSTRAINT falta_aluno_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: falta_componente_curricular_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY falta_componente_curricular
+    ADD CONSTRAINT falta_componente_curricular_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: falta_geral_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY falta_geral
+    ADD CONSTRAINT falta_geral_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: formula_media_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY formula_media
+    ADD CONSTRAINT formula_media_pkey PRIMARY KEY (id, instituicao_id);
+
+
+--
+-- Name: nota_aluno_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY nota_aluno
+    ADD CONSTRAINT nota_aluno_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: nota_componente_curricular_media_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY nota_componente_curricular_media
+    ADD CONSTRAINT nota_componente_curricular_media_pkey PRIMARY KEY (nota_aluno_id, componente_curricular_id);
+
+
+--
+-- Name: nota_componente_curricular_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY nota_componente_curricular
+    ADD CONSTRAINT nota_componente_curricular_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: regra_avaliacao_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY regra_avaliacao
+    ADD CONSTRAINT regra_avaliacao_pkey PRIMARY KEY (id, instituicao_id);
+
+
+--
+-- Name: tabela_arredondamento_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY tabela_arredondamento
+    ADD CONSTRAINT tabela_arredondamento_pkey PRIMARY KEY (id, instituicao_id);
+
+
+--
+-- Name: tabela_arredondamento_valor_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY tabela_arredondamento_valor
+    ADD CONSTRAINT tabela_arredondamento_valor_pkey PRIMARY KEY (id);
+
+
 SET search_path = pmiacoes, pg_catalog;
 
 --
@@ -27842,6 +28730,43 @@ CREATE UNIQUE INDEX un_fisica_cpf ON fisica_cpf USING btree (cpf);
 CREATE UNIQUE INDEX un_juridica_cnpj ON juridica USING btree (cnpj);
 
 
+SET search_path = modules, pg_catalog;
+
+--
+-- Name: area_conhecimento_nome_key; Type: INDEX; Schema: modules; Owner: -; Tablespace: 
+--
+
+CREATE INDEX area_conhecimento_nome_key ON area_conhecimento USING btree (nome);
+
+
+--
+-- Name: componente_curricular_area_conhecimento_key; Type: INDEX; Schema: modules; Owner: -; Tablespace: 
+--
+
+CREATE INDEX componente_curricular_area_conhecimento_key ON componente_curricular USING btree (area_conhecimento_id);
+
+
+--
+-- Name: componente_curricular_id_key; Type: INDEX; Schema: modules; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX componente_curricular_id_key ON componente_curricular USING btree (id);
+
+
+--
+-- Name: regra_avaliacao_id_key; Type: INDEX; Schema: modules; Owner: -; Tablespace:
+--
+
+CREATE UNIQUE INDEX regra_avaliacao_id_key ON regra_avaliacao USING btree (id);
+
+
+--
+-- Name: tabela_arredondamento_id_key; Type: INDEX; Schema: modules; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX tabela_arredondamento_id_key ON tabela_arredondamento USING btree (id);
+
+
 SET search_path = pmieducar, pg_catalog;
 
 --
@@ -28090,20 +29015,6 @@ CREATE INDEX i_curso_carga_horaria ON curso USING btree (carga_horaria);
 
 
 --
--- Name: i_curso_edicao_final; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
---
-
-CREATE INDEX i_curso_edicao_final ON curso USING btree (edicao_final);
-
-
---
--- Name: i_curso_falta_ch_globalizada; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
---
-
-CREATE INDEX i_curso_falta_ch_globalizada ON curso USING btree (falta_ch_globalizada);
-
-
---
 -- Name: i_curso_nm_curso; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
@@ -28143,13 +29054,6 @@ CREATE INDEX i_curso_qtd_etapas ON curso USING btree (qtd_etapas);
 --
 
 CREATE INDEX i_curso_ref_cod_nivel_ensino ON curso USING btree (ref_cod_nivel_ensino);
-
-
---
--- Name: i_curso_ref_cod_tipo_avaliacao; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
---
-
-CREATE INDEX i_curso_ref_cod_tipo_avaliacao ON curso USING btree (ref_cod_tipo_avaliacao);
 
 
 --
@@ -31673,6 +32577,88 @@ ALTER TABLE ONLY tipo_incoerencia
     ADD CONSTRAINT fk_tipo_incoerencia_campo_consis FOREIGN KEY (idcam) REFERENCES campo_consistenciacao(idcam);
 
 
+SET search_path = modules, pg_catalog;
+
+--
+-- Name: componente_curricular_ano_escolar_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
+--
+
+ALTER TABLE ONLY componente_curricular_ano_escolar
+    ADD CONSTRAINT componente_curricular_ano_escolar_fk FOREIGN KEY (componente_curricular_id) REFERENCES componente_curricular(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: componente_curricular_area_conhecimento_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
+--
+
+ALTER TABLE ONLY componente_curricular
+    ADD CONSTRAINT componente_curricular_area_conhecimento_fk FOREIGN KEY (area_conhecimento_id, instituicao_id) REFERENCES area_conhecimento(id, instituicao_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: falta_componente_curricular_falta_aluno_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
+--
+
+ALTER TABLE ONLY falta_componente_curricular
+    ADD CONSTRAINT falta_componente_curricular_falta_aluno_fk FOREIGN KEY (falta_aluno_id) REFERENCES falta_aluno(id) ON DELETE CASCADE;
+
+
+--
+-- Name: falta_geral_falta_aluno_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
+--
+
+ALTER TABLE ONLY falta_geral
+    ADD CONSTRAINT falta_geral_falta_aluno_fk FOREIGN KEY (falta_aluno_id) REFERENCES falta_aluno(id) ON DELETE CASCADE;
+
+
+--
+-- Name: nota_componente_curricular_media_nota_aluno_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
+--
+
+ALTER TABLE ONLY nota_componente_curricular_media
+    ADD CONSTRAINT nota_componente_curricular_media_nota_aluno_fk FOREIGN KEY (nota_aluno_id) REFERENCES nota_aluno(id) ON DELETE CASCADE;
+
+
+--
+-- Name: nota_componente_curricular_nota_aluno_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
+--
+
+ALTER TABLE ONLY nota_componente_curricular
+    ADD CONSTRAINT nota_componente_curricular_nota_aluno_fk FOREIGN KEY (nota_aluno_id) REFERENCES nota_aluno(id) ON DELETE CASCADE;
+
+
+--
+-- Name: regra_avaliacao_formula_media_formula_media_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
+--
+
+ALTER TABLE ONLY regra_avaliacao
+    ADD CONSTRAINT regra_avaliacao_formula_media_formula_media_fk FOREIGN KEY (formula_media_id, instituicao_id) REFERENCES formula_media(id, instituicao_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: regra_avaliacao_formula_media_formula_recuperacao_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
+--
+
+ALTER TABLE ONLY regra_avaliacao
+    ADD CONSTRAINT regra_avaliacao_formula_media_formula_recuperacao_fk FOREIGN KEY (formula_recuperacao_id, instituicao_id) REFERENCES formula_media(id, instituicao_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: regra_avaliacao_tabela_arredondamento_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
+--
+
+ALTER TABLE ONLY regra_avaliacao
+    ADD CONSTRAINT regra_avaliacao_tabela_arredondamento_fk FOREIGN KEY (tabela_arredondamento_id, instituicao_id) REFERENCES tabela_arredondamento(id, instituicao_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: tabela_arredondamento_tabela_arredondamento_valor_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
+--
+
+ALTER TABLE ONLY tabela_arredondamento_valor
+    ADD CONSTRAINT tabela_arredondamento_tabela_arredondamento_valor_fk FOREIGN KEY (tabela_arredondamento_id) REFERENCES tabela_arredondamento(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
 SET search_path = pmiacoes, pg_catalog;
 
 --
@@ -32802,14 +33788,6 @@ ALTER TABLE ONLY curso
 
 
 --
--- Name: curso_ref_cod_tipo_avaliacao_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
-ALTER TABLE ONLY curso
-    ADD CONSTRAINT curso_ref_cod_tipo_avaliacao_fkey FOREIGN KEY (ref_cod_tipo_avaliacao) REFERENCES tipo_avaliacao(cod_tipo_avaliacao) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
 -- Name: curso_ref_cod_tipo_ensino_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
 --
 
@@ -33102,7 +34080,7 @@ ALTER TABLE ONLY escola
 --
 
 ALTER TABLE ONLY escola_serie_disciplina
-    ADD CONSTRAINT escola_serie_disciplina_ref_cod_disciplina_fkey FOREIGN KEY (ref_cod_disciplina) REFERENCES disciplina(cod_disciplina) ON UPDATE RESTRICT ON DELETE RESTRICT;
+    ADD CONSTRAINT escola_serie_disciplina_ref_cod_disciplina_fkey FOREIGN KEY (ref_cod_disciplina) REFERENCES modules.componente_curricular(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
 --
@@ -34279,6 +35257,14 @@ ALTER TABLE ONLY serie
 
 ALTER TABLE ONLY serie
     ADD CONSTRAINT serie_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: serie_regra_avaliacao_fk; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
+--
+
+ALTER TABLE ONLY serie
+    ADD CONSTRAINT serie_regra_avaliacao_fk FOREIGN KEY (regra_avaliacao_id) REFERENCES modules.regra_avaliacao(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
 --

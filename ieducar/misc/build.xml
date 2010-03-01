@@ -33,9 +33,9 @@
 
   <!-- Configuração de acesso ao banco de dados para o DbDeployTask -->
   <property name="project.conf.dbdeploy.hostname"  value="localhost" />
-  <property name="project.conf.dbdeploy.username"  value="ieducar" />
+  <property name="project.conf.dbdeploy.username"  value="ieducaruser" />
   <property name="project.conf.dbdeploy.password"  value="ieducar" />
-  <property name="project.conf.dbdeploy.dbname"    value="ieducar" />
+  <property name="project.conf.dbdeploy.dbname"    value="merge2" />
   <property name="project.conf.dbdeploy.psql_path" value="" />
 
   <!-- Variáveis para substituição de tokens -->
@@ -65,7 +65,7 @@
 
   <!-- Pega o diretório atual como workaround ao chdir das classes de teste base -->
   <php function="getcwd" returnProperty="project.conf.curdir" />
-  
+
   <!-- project.conf.release_hash -->
   <!--
   Gera um hash único no momento do build para uso como chave de geração de
@@ -91,7 +91,7 @@
     <exclude name=".svn/" />
     <exclude name="**/build.xml" />
     <exclude name="**/coverage.db" />
-    <exclude name="tests/" />
+    <!--<exclude name="tests/" />-->
     <exclude name="spikes/" />
     <exclude name="deploy/" />
     <exclude name="misc/database/deltas/**" />
@@ -175,7 +175,7 @@
       </fileset>
     </zip>
   </target>
-  
+
   <!-- Cria uma nova release -->
   <target name="release" depends="migrate, build, gzip, zip">
     <echo msg="OK! Build construído com sucesso." />

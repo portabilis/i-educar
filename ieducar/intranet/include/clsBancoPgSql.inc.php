@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * i-Educar - Sistema de gestão escolar
  *
  * Copyright (C) 2006  Prefeitura Municipal de Itajaí
@@ -19,105 +19,319 @@
  * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd
+ * @since     Arquivo disponível desde a versão 1.0.0
+ * @version   $Id$
  */
 
 require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsCronometro.inc.php';
 require_once 'include/clsEmail.inc.php';
 
-
 /**
- * clsBancoSQL_ class.
+ * clsBancoSQL_ abstract class.
  *
- * @author   Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package  Core
- * @since    Classe disponível desde a versão 1.0.0
- * @version  $Id$
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
  */
-class clsBancoSQL_ {
+abstract class clsBancoSQL_
+{
+  /**
+   * Opções de fetch de uma consulta pgsql.
+   * @var int
+   */
+  const FETCH_ARRAY = 1;
+  const FETCH_ASSOC = 2;
 
-  protected $strHost       = NULL;     // Nome ou endereço IP do servidor do banco de dados
-  protected $strBanco      = NULL;     // Nome do banco de dados
-  protected $strUsuario    = NULL;     // Usuário devidamente autorizado a acessar o banco
-  protected $strSenha      = NULL;     // Senha do usuário do banco
-  protected $strPort       = NULL;     // Porta do servidor de banco de dados
+  /**
+   * Nome ou endereço IP do servidor do banco de dados.
+   * @var string
+   */
+  protected $strHost       = NULL;
 
-  public $bLink_ID         = 0;        // Identificador da conexão
-  public $bConsulta_ID     = 0;        // Identificador do resultado da consulta
-  public $arrayStrRegistro = array();  // Tupla resultante de uma consulta
-  public $iLinha           = 0;        // Ponteiro interno para a tupla atual da consulta
+  /**
+   * Nome do banco de dados.
+   * @var string
+   */
+  protected $strBanco      = NULL;
 
-  public $bErro_no         = 0;        // Se ocorreu erro na consulta, retorna FALSE
-  public $strErro          = '';       // Frase de descrição do erro retornado
-  public $bDepurar         = FALSE;    // Ativa ou desativa funções de depuração
+  /**
+   * Usuário devidamente autorizado a acessar o banco.
+   * @var string
+   */
+  protected $strUsuario    = NULL;
 
-  public $bAuto_Limpa      = FALSE;    // '1' para limpar o resultado assim que chegar ao último registro
+  /**
+   * Senha do usuário do banco
+   * @var string
+   */
+  protected $strSenha      = NULL;
 
+  /**
+   * Porta do servidor de banco de dados.
+   * @var string
+   */
+  protected $strPort       = NULL;
+
+  /**
+   * Identificador da conexão.
+   * @var int
+   */
+  public $bLink_ID         = 0;
+
+  /**
+   * Identificador do resultado da consulta.
+   * @var int
+   */
+  public $bConsulta_ID     = 0;
+
+  /**
+   * Tupla resultante de uma consulta.
+   * @var array
+   */
+  public $arrayStrRegistro = array();
+
+  /**
+   * Ponteiro interno para a tupla atual da consulta.
+   * @var int
+   */
+  public $iLinha           = 0;
+
+  /**
+   * Se ocorreu erro na consulta, retorna FALSE.
+   * @var int
+   */
+  public $bErro_no         = 0;
+
+  /**
+   * Frase de descrição do erro retornado
+   * @var string
+   */
+  public $strErro          = '';
+
+  /**
+   * Ativa ou desativa funções de depuração
+   * @var bool
+   */
+  public $bDepurar         = FALSE;
+
+  /**
+   * '1' para limpar o resultado assim que chegar ao último registro.
+   * @var bool
+   */
+  public $bAuto_Limpa      = FALSE;
+
+  /**
+   * Query SQL.
+   * @var string
+   */
   public $strStringSQL     = '';
 
-  /*protected*/var $transactionBlock = FALSE;
-  /*protected*/var $savePoints       = array();
-  /*protected*/var $showReportarErro = TRUE;
+  /**
+   * @var mixed
+   */
+  var $transactionBlock    = FALSE;
 
-  /*public*/   var $executandoEcho   = FALSE;
+  /**
+   * @var array
+   */
+  var $savePoints          = array();
+
+  /**
+   * @var bool
+   */
+  var $showReportarErro    = TRUE;
+
+  /**
+   * @var bool
+   */
+  var $executandoEcho      = FALSE;
+
+  /**
+   * Define se serão lançadas exceções como respostas a erros da extensão
+   * ext/pgsql. Implementado no método Consulta().
+   * @see clsBancoSQL_#Consulta()
+   * @var bool
+   */
+  protected $_throwException = FALSE;
+
+  /**
+   * Opções de fetch de resultado de pg_query() disponíveis.
+   * @var array
+   */
+  protected $_fetchOptions = array(
+    self::FETCH_ARRAY,
+    self::FETCH_ASSOC
+  );
+
+  /**
+   * Modo de fetch a ser utilizado.
+   * @var int
+   */
+  protected $_fetchMode    = self::FETCH_ARRAY;
 
 
-  /*
-   * Setters
+  /**
+   * Construtor.
+   * @link http://svn.softwarepublico.gov.br/trac/ieducar/ticket/58 Remover parâmetro não utilizado do construtor de clsBanco (ticket 58)
+   */
+  public function __construct($options)
+  {
+    // Verifica se o parâmetro é do tipo array, para evitar problemas enquanto
+    // o ticket 58 não é resolvido.
+    if (is_array($options)) {
+      if (0 < count($options)) {
+        // Verifica por fetchMode
+        if (isset($options['fetchMode'])) {
+          $this->setFetchMode($options['fetchMode']);
+        }
+      }
+    }
+  }
+
+  /**
+   * Setter.
+   * @param string $v O nome do host onde está o banco de dados.
    */
   public function setHost($v) {
     $this->strHost = (string) $v;
   }
 
+  /**
+   * Setter.
+   * @param string $v O nome do banco de dados a conectar.
+   */
   public function setDbname($v) {
     $this->strBanco = (string) $v;
   }
 
+  /**
+   * Setter.
+   * @param string $v O nome do usuário do banco de dados.
+   */
   public function setUser($v) {
     $this->strUsuario = (string) $v;
   }
 
+  /**
+   * Setter.
+   * @param string $v A senha de acesso para o usuário do banco de dados.
+   */
   public function setPassword($v) {
     $this->strSenha = (string) $v;
   }
 
+  /**
+   * Setter.
+   * @param string $v A porta em que o banco de dados está escutando.
+   */
   public function setPort($v) {
     $this->strPort = (string) $v;
   }
 
-
-  /*
-   * Getters
+  /**
+   * Getter.
+   * @return string
    */
   public function getHost() {
     return $this->strHost;
   }
 
+  /**
+   * Getter.
+   * @return string
+   */
   public function getDbname() {
     return $this->strBanco;
   }
 
+  /**
+   * Getter.
+   * @return string
+   */
   public function getUser() {
     return $this->strUsuario;
   }
 
+  /**
+   * Getter.
+   * @return string
+   */
   public function getPassword() {
     return $this->strSenha;
   }
 
+  /**
+   * Getter.
+   * @return string
+   */
   public function getPort() {
     return $this->strPort;
   }
 
+  /**
+   * Setter para o modo de fetch de resultados do banco de dados.
+   * @param int $fetchMode
+   * @return clsBancoSQL_ Provê interface fluída
+   */
+  public function setFetchMode($fetchMode = self::FETCH_ARRAY)
+  {
+    if (in_array($fetchMode, $this->_fetchOptions)) {
+      $this->_fetchMode = $fetchMode;
+    }
+    else {
+      $this->_fetchMode = self::FETCH_ARRAY;
+    }
+    return $this;
+  }
+
+  /**
+   * Getter.
+   * @return int
+   */
+  public function getFetchMode()
+  {
+    return $this->_fetchMode;
+  }
+
+  /**
+   * Setter.
+   * @param bool $throw
+   * @return clsBancoSQL_ Provê interface fluída
+   */
+  public function setThrowException($throw = FALSE)
+  {
+    $this->_throwException = (bool) $throw;
+    return $this;
+  }
+
+  /**
+   * Getter.
+   * @return bool
+   */
+  public function getThrowException()
+  {
+    return $this->_throwException;
+  }
+
+  /**
+   * Getter.
+   * @return string
+   */
   public function getFraseConexao() {
     return $this->strFraseConexao;
   }
 
-
-
   /**
-   * Constrói a string de conexão de banco de dados
+   * Constrói a string de conexão de banco de dados.
    */
   public function FraseConexao() {
     $this->strFraseConexao = "";
@@ -137,8 +351,6 @@ class clsBancoSQL_ {
       $this->strFraseConexao .= " port={$this->strPort}";
     }
   }
-
-
 
   /**
    * Conecta com o banco de dados
@@ -163,495 +375,490 @@ class clsBancoSQL_ {
     }
   }
 
+  /**
+   * Executa uma consulta SQL.
+   *
+   * @param string $consulta
+   * @return bool|resource FALSE em caso de erro ou o identificador da consulta
+   *   em caso de sucesso.
+   */
+  public function Consulta($consulta)
+  {
+    $cronometro = new clsCronometro();
+    $cronometro->marca('inicio');
+
+    if (empty($consulta)) {
+      return FALSE;
+    }
+    else {
+      $this->strStringSQL = $consulta;
+    }
+
+    $this->strStringSQLOriginal = $this->strStringSQL;
+
+    $this->Conecta();
+
+    if ($this->bDepurar) {
+      printf("<br>Depurar: Frase de Consulta = %s<br>\n", $this->strStringSQL);
+    }
+
+    // Alterações de padrão MySQL para PostgreSQL
+
+    // Altera o Limit
+    $this->strStringSQL = eregi_replace( "LIMIT[ ]{0,3}([0-9]+)[ ]{0,3},[ ]{0,3}([0-9]+)", "LIMIT \\2 OFFSET \\1", $this->strStringSQL );
+
+    // Altera selects com YEAR( campo ) ou MONTH ou DAY
+    $this->strStringSQL = eregi_replace( "(YEAR|MONTH|DAY)[(][ ]{0,3}(([a-z]|_|[0-9])+)[ ]{0,3}[)]", "EXTRACT( \\1 FROM \\2 )", $this->strStringSQL );
+
+    // Remove os ORDER BY das querys COUNT()
+    // Altera os LIKE para ILIKE (ignore case)
+    $this->strStringSQL = eregi_replace(" LIKE ", " ILIKE ", $this->strStringSQL);
+
+    $this->strStringSQL = eregi_replace("([a-z_0-9.]+) +ILIKE +'([^']+)'", "to_ascii(\\1) ILIKE to_ascii('\\2')", $this->strStringSQL);
+
+    $this->strStringSQL = eregi_replace("fcn_upper_nrm", "to_ascii", $this->strStringSQL);
+
+    $temp = explode("'", $this->strStringSQL);
+
+    for ($i = 0; $i < count($temp); $i++) {
+      // Ignora o que está entre aspas
+      if (! ($i % 2)) {
+        // Fora das aspas, verifica se há algo errado no SQL
+        if (eregi("(--|#|/\*)", $temp[$i])) {
+          $erroMsg = 'Proteção contra injection: ' . date( "Y-m-d H:i:s" );
+          echo "<!-- {$this->strStringSQL} -->";
+          $this->Interrompe($erroMsg);
+        }
+      }
+    }
+
+    // Executa a Consulta
+    if ($this->executandoEcho) {
+      echo $this->strStringSQL."\n<br>";
+    }
+
+    $this->bConsulta_ID = pg_query($this->bLink_ID, $this->strStringSQL);
+    $this->strErro = pg_result_error($this->bConsulta_ID);
+    $this->bErro_no = ($this->strErro == '') ? FALSE : TRUE;
+    $this->iLinha   = 0;
+
+    if (!$this->bConsulta_ID) {
+      if ($this->getThrowException()) {
+        $message = $this->bErro_no ? "($this->bErro_no) " . $this->strErro :
+          pg_last_error($this->bLink_ID);
+
+        $message .= PHP_EOL . $this->strStringSQL;
+
+        throw new Exception($message);
+      }
+      else {
+        $erroMsg = "SQL invalido: {$this->strStringSQL}<br>\n";
+        die($erroMsg);
+
+        if ($this->transactionBlock) {
+          // Nada.
+        }
+
+        $this->Interrompe($erroMsg);
+        return FALSE;
+      }
+    }
 
 
-	/*
-	Executa uma instru&ccedil;&atilde;o SQL e retorna um identificador para o resultado
-	Se a frase SQL for inv&aacute;lida ele interrompe a execu&ccedil;&atilde;o do script.
-	*/
+    $cronometro->marca('fim');
 
-	/*private*/ function Consulta( $consulta )
-	{
-		$cronometro = new clsCronometro();
-		$cronometro->marca( "inicio" );
-		/* Testa se a consulta é vazia */
-		if (empty($consulta))
-		{
-			return false;
-		}
-		else
-		{
-			$this->strStringSQL = $consulta;
-		}
+    $tempoTotal = $cronometro->getTempoTotal();
 
-		$this->strStringSQLOriginal = $this->strStringSQL;
+    $objConfig = new clsConfig();
+    if ($tempoTotal > $objConfig->arrayConfig['intSegundosQuerySQL']) {
+      $conteudo = "<table border=\"1\" width=\"100%\">";
+      $conteudo .= "<tr><td><b>Data</b>:</td><td>" . date( "d/m/Y H:i:s", time() ) . "</td></tr>";
+      $conteudo .= "<tr><td><b>Script</b>:</td><td>{$_SERVER["PHP_SELF"]}</td></tr>";
+      $conteudo .= "<tr><td><b>Tempo da query</b>:</td><td>{$tempoTotal} segundos</td></tr>";
+      $conteudo .= "<tr><td><b>Tempo max permitido</b>:</td><td>{$objConfig->arrayConfig["intSegundosQuerySQL"]} segundos</td></tr>";
+      $conteudo .= "<tr><td><b>SQL Query Original</b>:</td><td>{$this->strStringSQLOriginal}</td></tr>";
+      $conteudo .= "<tr><td><b>SQL Query Executado</b>:</td><td>{$this->strStringSQL}</td></tr>";
+      $conteudo .= "<tr><td><b>URL get</b>:</td><td>{$_SERVER['QUERY_STRING']}</td></tr>";
+      $conteudo .= "<tr><td><b>Metodo</b>:</td><td>{$_SERVER["REQUEST_METHOD"]}</td></tr>";
 
-		$this->Conecta();
+      if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $conteudo .= "<tr><td><b>POST vars</b>:</td><td>";
 
-		/* Funcao para depuracao */
-		if ($this->bDepurar)
-		{
-			printf("<br>Depurar: Frase de Consulta = %s<br>\n", $this->strStringSQL);
-		}
+        foreach ($_POST as $var => $val) {
+          $conteudo .= "{$var} => {$val}<br>";
+        }
+        $conteudo .= "</td></tr>";
+      }
+      elseif ($_SERVER['REQUEST_METHOD'] == 'GET') {
+        $conteudo .= "<tr><td><b>GET vars</b>:</td><td>";
 
-		/*
-			Alteracoes de padrao MySQL para PostgreSQL
-		*/
+        foreach ($_GET as $var => $val) {
+          $conteudo .= "{$var} => {$val}<br>";
+        }
+        $conteudo .= "</td></tr>";
+      }
 
-		// Altera o Limit
-		$this->strStringSQL = eregi_replace( "LIMIT[ ]{0,3}([0-9]+)[ ]{0,3},[ ]{0,3}([0-9]+)", "LIMIT \\2 OFFSET \\1", $this->strStringSQL );
-		// Altera selects com YEAR( campo ) ou MONTH ou DAY
-		$this->strStringSQL = eregi_replace( "(YEAR|MONTH|DAY)[(][ ]{0,3}(([a-z]|_|[0-9])+)[ ]{0,3}[)]", "EXTRACT( \\1 FROM \\2 )", $this->strStringSQL );
-		// Remove os ORDER BY das querys COUNT()
-		//$this->strStringSQL = eregi_replace( "(SELECT.*COUNT[(][0|\*][)].*FROM.*)(ORDER BY.*)", "\\1", $this->strStringSQL );
-		// Altera os LIKE para ILIKE (ignore case)
-		$this->strStringSQL = eregi_replace( " LIKE ", " ILIKE ", $this->strStringSQL );
+      if ($_SERVER['HTTP_REFERER']) {
+        $conteudo .= "<tr><td><b>Referrer</b>:</td><td>{$_SERVER["HTTP_REFERER"]}</td></tr>";
+      }
 
-		$this->strStringSQL = eregi_replace( "([a-z_0-9.]+) +ILIKE +'([^']+)'", "to_ascii(\\1) ILIKE to_ascii('\\2')", $this->strStringSQL );
-		$this->strStringSQL = eregi_replace( "fcn_upper_nrm", "to_ascii", $this->strStringSQL );
+      $conteudo .= "</table>";
 
-		$temp = explode( "'", $this->strStringSQL );
-		for ( $i = 0; $i < count( $temp ); $i++ )
-		{
-			// ignora o que esta entre aspas
-			if( ! ( $i % 2 ) )
-			{
-				// fora das aspas, verifica se há algo errado no SQL
-				if( eregi( "(--|#|/\*)", $temp[$i] ) )
-				{
-					$erroMsg = "Protecao contra injection: " . date( "Y-m-d H:i:s" );
-					echo "<!-- {$this->strStringSQL} -->";
-					$this->Interrompe( $erroMsg );
-				}
-			}
-		}
+      $objEmail = new clsEmail($objConfig->arrayConfig['ArrStrEmailsAdministradores'],
+        "[INTRANET - PMI] Desempenho de query", $conteudo);
+      $objEmail->envia();
+    }
 
-		/* Executa a Consulta */
-		if ($this->executandoEcho)
-		{
-			echo $this->strStringSQL."\n<br>";
-			//return true;
-		}
+    return $this->bConsulta_ID;
+  }
 
-		$this->bConsulta_ID = pg_query($this->bLink_ID, $this->strStringSQL);// or $this->Interrompe( "Ocorreu um erro ao consultar o banco de dados.", true );
-		$this->strErro = pg_result_error($this->bConsulta_ID);
-		$this->bErro_no = ($this->strErro == "") ? false : true;
+  /**
+   * Inicia um bloco de transação (transaction block).
+   * @return bool
+   */
+  function begin()
+  {
+    if (!$this->transactionBlock) {
+      $this->Consulta( "BEGIN" );
+      $this->transactionBlock = TRUE;
 
+      // Reseta os savePoints.
+      $this->savePoints = array();
+      return TRUE;
+    }
 
-		$this->iLinha   = 0;
+    // Tratamento de erro informando que está dentro de um transaction block
+    return FALSE;
+  }
 
-		/* Testa se a consulta foi v&aacute;lida */
-		if ( !$this->bConsulta_ID )
-		{
-			$erroMsg = "SQL invalido: {$this->strStringSQL}<br>\n";
-			die( $erroMsg );
-			if( $this->transactionBlock )
-			{
-				/*
-				if( count( $this->savePoints ) )
-				{
-					$this->rollBack();
-					$erroMsg .= "<!-- retornando ao ultimo SavePoint -->\n";
-				}
-				*/
-			}
-			$this->Interrompe( $erroMsg );
-			return false;
-			//$this->Interrompe("SQL invalido: ".$this->strStringSQL);
-		}
+  /**
+   * Processa umbloco de transacao (transaction block)
+   *
+    * @return bool
+   */
+  function commit()
+  {
+    if ($this->transactionBlock) {
+      $this->Consulta('COMMIT');
+      $this->transactionBlock = FALSE;
 
-		$cronometro->marca( "fim" );
-		$tempoTotal = $cronometro->getTempoTotal();
+      // Reseta os savePoints
+      $this->savePoints = array();
+      return TRUE;
+    }
 
-		$objConfig = new clsConfig();
-		if( $tempoTotal > $objConfig->arrayConfig["intSegundosQuerySQL"] )
-		{
-			$conteudo = "<table border=\"1\" width=\"100%\">";
-			$conteudo .= "<tr><td><b>Data</b>:</td><td>" . date( "d/m/Y H:i:s", time() ) . "</td></tr>";
-			$conteudo .= "<tr><td><b>Script</b>:</td><td>{$_SERVER["PHP_SELF"]}</td></tr>";
-			$conteudo .= "<tr><td><b>Tempo da query</b>:</td><td>{$tempoTotal} segundos</td></tr>";
-			$conteudo .= "<tr><td><b>Tempo max permitido</b>:</td><td>{$objConfig->arrayConfig["intSegundosQuerySQL"]} segundos</td></tr>";
-			$conteudo .= "<tr><td><b>SQL Query Original</b>:</td><td>{$this->strStringSQLOriginal}</td></tr>";
-			$conteudo .= "<tr><td><b>SQL Query Executado</b>:</td><td>{$this->strStringSQL}</td></tr>";
-			$conteudo .= "<tr><td><b>URL get</b>:</td><td>{$_SERVER['QUERY_STRING']}</td></tr>";
-			$conteudo .= "<tr><td><b>Metodo</b>:</td><td>{$_SERVER["REQUEST_METHOD"]}</td></tr>";
-			if ( $_SERVER["REQUEST_METHOD"] == "POST" )
-			{
-				$conteudo .= "<tr><td><b>POST vars</b>:</td><td>";
-				foreach ( $_POST AS $var => $val )
-				{
-					$conteudo .= "{$var} => {$val}<br>";
-				}
-				$conteudo .= "</td></tr>";
-			} else if ( $_SERVER["REQUEST_METHOD"] == "GET" )
-			{
-				$conteudo .= "<tr><td><b>GET vars</b>:</td><td>";
-				foreach ( $_GET AS $var => $val )
-				{
-					$conteudo .= "{$var} => {$val}<br>";
-				}
-				$conteudo .= "</td></tr>";
-			}
-			if( $_SERVER["HTTP_REFERER"] )
-			{
-				$conteudo .= "<tr><td><b>Referrer</b>:</td><td>{$_SERVER["HTTP_REFERER"]}</td></tr>";
-			}
-			$conteudo .= "</table>";
+    // Tratamento de erro informando que está dentro de um transaction block
+    return FALSE;
+  }
 
-			$objEmail = new clsEmail( $objConfig->arrayConfig['ArrStrEmailsAdministradores'], "[INTRANET - PMI] Desempenho de query", $conteudo );
-			$objEmail->envia();
-		}
+  /**
+   * Cria um novo savePoint.
+   * @param  string $strSavePointName Nome do savePoint a ser criado.
+   * @return bool
+   */
+  function savePoint($strSavePointName = FALSE)
+  {
+    if ($this->transactionBlock) {
+      if ($strSavePointName) {
+        foreach ($this->savePoints as $key => $nome) {
+          // Não podemos ter dois savepoints com o mesmo nome
+          if ($nome == $strSavePointName) {
+            return FALSE;
+          }
+        }
 
-		return $this->bConsulta_ID;
-	}
+        $this->savePoints[] = $strSavePointName;
+        $this->Consulta("SAVEPOINT $strSavePointName");
+        return TRUE;
+      }
+      else {
+        $nome = 'save_' . count($this->savePoints);
+        $this->savePoints[] = $nome;
+        $this->Consulta("SAVEPOINT $nome");
+        return TRUE;
+      }
+    }
 
-	/**
-	 * Inicia umbloco de transacao (transaction block)
-	 *
-	 * @return bool
-	 */
-	function begin()
-	{
-		if( ! $this->transactionBlock )
-		{
-			$this->Consulta( "BEGIN" );
-			$this->transactionBlock = true;
-			// reseta os savePoints
-			$this->savePoints = array();
-			return true;
-		}
-		// tratamento de erro informando que ja esta dentro de um transaction block
-		return false;
-	}
+    return FALSE;
+  }
 
-	/**
-	 * Processa umbloco de transacao (transaction block)
-	 *
-	  * @return bool
-	 */
-	function commit()
-	{
-		if( $this->transactionBlock )
-		{
-			$this->Consulta( "COMMIT" );
-			$this->transactionBlock = false;
-			// reseta os savePoints
-			$this->savePoints = array();
-			return true;
-		}
-		// tratamento de erro informando que nao esta dentro de um transaction block
-		return false;
-	}
+  /**
+   * Cria um novo savePoint.
+   * @param  string $strSavePointName Nome do savePoint onde se deseja voltar,
+   *   se não for definido volta ao último savepoint criado
+   * @return bool
+   */
+  function rollBack($strSavePointName = FALSE)
+  {
+    if ($this->transactionBlock) {
+      if (count($this->savePoints)) {
+        if ($strSavePointName) {
+          foreach ($this->savePoints as $key => $nome) {
+            // Se achar é porque tem o savePoint
+            if ($nome == $strSavePointName) {
+              $this->savePoints = array_slice($this->savePoints, 0, $key);
+              $this->Consulta("ROLLBACK TO {$strSavePointName}");
+              return TRUE;
+            }
+          }
+        }
+        else {
+          // Se não tem um nome definido ele volta ao último savePoint
+          $lastPos = count($this->savePoints) - 1;
+          $strSavePointName = $this->savePoints[$lastPos];
+          $this->savePoints = array_slice($this->savePoints, 0, ($lastPos - 1));
+          $this->Consulta("ROLLBACK TO {$strSavePointName}");
+        }
+      }
+    }
 
-	/**
-	 * Cria um novo savePoint
-	 *
-	  * @param string  $strSavePointName [Opcional] nome do savePoint a ser criado
-	 *  @return bool
-	 */
-	function savePoint( $strSavePointName=false )
-	{
-		if( $this->transactionBlock )
-		{
-			if( $strSavePointName )
-			{
-				foreach ( $this->savePoints AS $key => $nome )
-				{
-					// nao podemos ter dois savepoints com o mesmo nome
-					if( $nome == $strSavePointName )
-					{
-						return false;
-					}
-				}
-				$this->savePoints[] = $strSavePointName;
-				$this->Consulta( "SAVEPOINT $strSavePointName" );
-				return true;
-			}
-			else
-			{
-				$nome = "save_" . count( $this->savePoints );
-				$this->savePoints[] = $nome;
-				$this->Consulta( "SAVEPOINT $nome" );
-				return true;
-			}
-		}
-		return false;
-	}
+    return FALSE;
+  }
 
-	/**
-	 * Cria um novo savePoint
-	 *
-	  * @param string  $strSavePointName nome do savePoint onde se deseja voltar, se nao for definido volta ao ultimo savepoint criado
-	 *  @return bool
-	 */
-	function rollBack( $strSavePointName=false )
-	{
-		if( $this->transactionBlock )
-		{
-			if( count( $this->savePoints ) )
-			{
-				if( $strSavePointName )
-				{
-					foreach ( $this->savePoints AS $key => $nome )
-					{
-						// se achar eh porque tem o savePoint
-						if( $nome == $strSavePointName )
-						{
-							$this->savePoints = array_slice( $this->savePoints, 0, $key );
-							$this->Consulta( "ROLLBACK TO {$strSavePointName}" );
-							return true;
-						}
-					}
-				}
-				else
-				{
-					// se nao tem um nome definido ele volta ao ultimo savePoint
-					$lastPos = count( $this->savePoints ) - 1;
-					$strSavePointName = $this->savePoints[$lastPos];
-					$this->savePoints = array_slice( $this->savePoints, 0, ( $lastPos - 1 ) );
-					$this->Consulta( "ROLLBACK TO {$strSavePointName}" );
-				}
-			}
-		}
-		return false;
-	}
+  /**
+   * Retorna o último ID gerado por uma sequence.
+   * @param  string $str_sequencia
+   * @return bool|string
+   */
+  function InsertId($str_sequencia = FALSE)
+  {
+    if ($str_sequencia) {
+      $this->Consulta("SELECT currval('{$str_sequencia}'::text)");
+      $this->ProximoRegistro();
+      list($valor) = $this->Tupla();
+      return $valor;
+    }
+    return FALSE;
+  }
 
-	/*
-	* metodo que retorna o valor do ultimo ID inserido em uma query
-	*/
-	/*private*/ function InsertId( $str_sequencia = false )
-	{
-		// return pg_last_oid($this->bConsulta_ID);
-		if( $str_sequencia )
-		{
-			$this->Consulta( "SELECT currval('{$str_sequencia}'::text)" );
-			$this->ProximoRegistro();
-			list( $valor ) = $this->Tupla();
-			return $valor;
-		}
-		return false;
-	}
+  /**
+   * @see clsBancoSQL_#InsertId($str_sequencia = FALSE)
+   */
+  function UltimoID($str_sequencia = FALSE)
+  {
+    return $this->InsertId($str_sequencia);
+  }
 
-	function UltimoID( $str_sequencia = false )
-	{
-		return $this->InsertId( $str_sequencia );
-	}
+  /**
+   * Avança um registro no resultado da consulta corrente, retorna FALSE quando
+   * exaure a lista de resultados. É necessário chamar essa função antes de
+   * tentar acessar o primeiro registro com uma chamada a Tupla(), para mover
+   * o ponteiro interno do array de resultados.
+   *
+   * @return bool|mixed
+   */
+  function ProximoRegistro()
+  {
+    // Fetch do resultado
+    if ($this->getFetchMode() == self::FETCH_ARRAY) {
+      $this->arrayStrRegistro = @pg_fetch_array($this->bConsulta_ID);
+    }
+    elseif ($this->getFetchMode() == self::FETCH_ASSOC) {
+      $this->arrayStrRegistro = @pg_fetch_assoc($this->bConsulta_ID);
+    }
 
-	/*
-	Avan&ccedil;a um resgistro no resultado da consulta corrente,
-	retorna Falso se chegar ao fim do resultado.
-	É necess&aacute;rio se fazer uma chamada a essa fun&ccedil;&atilde;o
-	antes de se acessar o primeiro registro do resultado,
-	se o resultado for vazio, ele reotrna Falso,
-	sen&atilde;o posiciona para leitura o primeiro registro.
-	*/
-	/*public*/ function ProximoRegistro()
-	{
-		/*
-		Carrega Registro com o resultado da Tupla indexada por Linha
-		e incrementa Linha
-		*/
-		$this->arrayStrRegistro = @pg_fetch_array($this->bConsulta_ID);
+    // Verifica se houve erros
+    $this->strErro = @pg_result_error($this->bConsulta_ID);
+    $this->bErro_no = ($this->strErro == '') ? FALSE : TRUE;
 
-		/* Testa por erros */
-		$this->strErro = pg_result_error($this->bConsulta_ID);
-		$this->bErro_no = ($this->strErro == "")? false : true ;
+    // Testa se está vazio e verifica se Auto_Limpa é TRUE
+    $stat = is_array($this->arrayStrRegistro);
+    if ($this->bDepurar && $stat) {
+      printf("<br>Depurar: Registro : %s <br>\n", implode($this->arrayStrRegistro));
+    }
 
-		/*
-		Testa se Registro est&aacute; vazio,
-		sinal que se chegou ao fim da Consulta.
-		Verifica ent&atilde;o de Auto_Limpa é Verdade,
-		se for, limpa o resultado da consulta.
-		*/
-		$stat = is_array($this->arrayStrRegistro);
-		if ($this->bDepurar && $stat)
-			printf("<br>Depurar: Registro : %s <br>\n", implode($this->arrayStrRegistro));
-		if (!$stat && $this->bAuto_Limpa)
-		{
-			$this->Libera();
-		}
-		return $stat;
-	}
+    if (!$stat && $this->bAuto_Limpa)
+    {
+      $this->Libera();
+    }
 
-	/*public*/ function Procura($Pos)
-	{
-		$this->iLinha = $Pos;
-	}
+    return $stat;
+  }
 
-	/*
-	Retorna as linhas afetadas em Consultas com instru&ccedil;&otilde;es
-	INSERT, UPDATE e DELETE
-	*/
-	/*public*/ function Linhas_Afetadas()
-	{
-		return @pg_affected_rows($this->bConsulta_ID);
-	}
+  /**
+   * Setter para índice de um registro do array de resultados retornado por
+   * Consulta().
+   * @param int $Pos
+   */
+  function Procura($Pos)
+  {
+    $this->iLinha = $Pos;
+  }
 
-	/*
-	Retorna as linhas afetadas em Consultas com instru&ccedil;&otilde;es
-	INSERT, UPDATE e DELETE
-	*/
-	/*public*/ function Libera()
-	{
-		pg_free_result($this->bConsulta_ID);
-		$this->bConsulta_ID = 0;
-		$this->strStringSQL = "";
-	}
+  /**
+   * Retorna a quantidade de linhas afetadas por queries INSERT, UPDATE e DELETE.
+   */
+  function Linhas_Afetadas()
+  {
+    return @pg_affected_rows($this->bConsulta_ID);
+  }
 
-	/**
-	 * Alias para numLinhas mantido para compatibilidade com versões anteriores
-	 */
-	/*public*/ function Num_Linhas()
-	{
-		return $this->numLinhas();
-	}
+  /**
+   * Libera os resultados da memória.
+   */
+  function Libera()
+  {
+    pg_free_result($this->bConsulta_ID);
+    $this->bConsulta_ID = 0;
+    $this->strStringSQL = '';
+  }
 
-	/**
-	 * Retorna o número de linhas do resultado de um Consulta
-	 */
-	/*public*/ function numLinhas()
-	{
-		return pg_num_rows($this->bConsulta_ID);
-	}
+  /**
+   * @see clsBancoSQL_#numLinhas()
+   */
+  function Num_Linhas()
+  {
+    return $this->numLinhas();
+  }
 
-	/**
-	 * Alias para numCampos mantido para compatibilidade com versões anteriores
-	 */
-	/*public*/ function Num_Campos()
-	{
-		return $this->numCampos();
-	}
+  /**
+   * Retorna o número de linhas do resultado de uma chamada a Consulta().
+   * @return int
+   */
+  function numLinhas()
+  {
+    return pg_num_rows($this->bConsulta_ID);
+  }
 
-	/**
-	 * Retorna o número de campo do resultado de um Consulta
-	 */
-	/*public*/ function numCampos()
-	{
-		return pg_num_fields($this->bConsulta_ID);
-	}
+  /**
+   * @see clsBancoSQL_#numCampos()
+   */
+  function Num_Campos()
+  {
+    return $this->numCampos();
+  }
 
-	/*
-	Retorna o valor do campo Nome de Consulta	com instru&ccedil;&atilde;o SELECT
-	*/
-	/*public*/ function Campo($Nome)
-	{
-		return $this->arrayStrRegistro[$Nome];
-	}
+  /**
+   * Retorna o número de campos do resultado de uma chamada a Consulta().
+   * @return int
+   */
+  function numCampos()
+  {
+    return pg_num_fields($this->bConsulta_ID);
+  }
 
-	/*
-	Retorna a tupla atual da Consulta atual
-	*/
-	/*public*/ function Tupla()
-	{
-		return $this->arrayStrRegistro;
-	}
+  /**
+   * Retorna o valor de um campo retornado por uma consulta SELECT.
+   * @param  string $Nome
+   * @return mixed
+   */
+  function Campo($Nome)
+  {
+    return $this->arrayStrRegistro[$Nome];
+  }
 
-	/*
-	Retorna um único campo de uma pesquisa de uma tupla
-	*/
-	/*public*/ function UnicoCampo($consulta)
-	{
-		$this->Consulta($consulta);
-		if( $this->ProximoRegistro() )
-		{
-			list ($campo) = $this->Tupla();
-			$this->Libera();
-			return $campo;
-		}
-		return false;
-	}
-	/*
-	Retorna um único campo de uma pesquisa de uma tupla
-	*/
-	/*public*/ function CampoUnico($consulta)
-	{
-		return $this->UnicoCampo( $consulta );
-	}
+  /**
+   * Retorna o registro atual do array de resultados.
+   * @return mixed
+   */
+  function Tupla()
+  {
+    return $this->arrayStrRegistro;
+  }
 
-	/*
-	Retorna uma única tupla de uma pesquisa
-	*/
-	/*public*/ function UnicaTupla($consulta)
-	{
-		$this->Consulta($consulta);
-		$this->ProximoRegistro();
-		$tupla = $this->Tupla();
-		$this->Libera();
-		return $tupla;
-	}
+  /**
+   * Retorna o valor de um campo em uma query SELECT.
+   * @param unknown_type $consulta
+   * @return unknown_type
+   */
+  function UnicoCampo($consulta)
+  {
+    $this->Consulta($consulta);
+    if ($this->ProximoRegistro()) {
+      list ($campo) = $this->Tupla();
+      $this->Libera();
+      return $campo;
+    }
+    return FALSE;
+  }
 
-	/*
-	Retorna uma única tupla de uma pesquisa
-	*/
-	/*public*/ function TuplaUnica($consulta)
-	{
-		return $this->UnicaTupla;
-	}
+  /**
+   * @see clsBancoSQL_#UnicoCampo()
+   */
+  function CampoUnico($consulta)
+  {
+    return $this->UnicoCampo($consulta);
+  }
 
-	/*
-	Interrompe a execu&ccedil;&atilde;o do Programa e Imprime mensagens de Erro
-	*/
-	/*private*/ function Interrompe($msg, $getError = false )
-	{
-		if( $getError )
-		{
-			$this->strErro = pg_result_error($this->bConsulta_ID);
-			$this->bErro_no = ($this->strErro == "") ? false : true;
-		}
-		/*
-		printf("</td></tr></table><br><b>arquivo {$_SERVER['SCRIPT_FILENAME']}<br><br>Erro de Banco de Dados:</b> %s<br>\n", $msg);
-		printf("<b>Erro do PgSQL </b>: %s (%s)<br>\n", $this->bErro_no, $this->strErro);
-		die("Sess&atilde;o Interrompida.");
-		*/
-		$erro1 = substr(md5('1erro'), 0, 10);
-		$erro2 = substr(md5('2erro'), 0, 10);
+  /**
+   * Retorna um único registro de uma query SELECT.
+   * @param  string $consulta
+   * @return mixed
+   */
+  function UnicaTupla($consulta)
+  {
+    $this->Consulta($consulta);
+    $this->ProximoRegistro();
+    $tupla = $this->Tupla();
+    $this->Libera();
+    return $tupla;
+  }
 
-		function show($data, $func = "var_dump")
-		{
-			ob_start();
-			$func( $data );
-			$output = ob_get_contents();
-			ob_end_clean();
-			return $output;
-		}
-		@session_start();
-		$_SESSION['vars_session'] = show( $_SESSION );
-		$_SESSION['vars_post'] = show( $_POST );
-		$_SESSION['vars_get'] = show( $_GET );
-		$_SESSION['vars_cookie'] = show( $_COOKIE );
-		$_SESSION['vars_erro1'] = $msg;
-		$_SESSION['vars_erro2'] = $this->strErro;
-		$_SESSION['vars_server'] = show( $_SERVER );
-		$id_pessoa = $_SESSION['id_pessoa'];
-		session_write_close();
-		if( $this->showReportarErro )
-		{
-			$array_idpes_erro_total = array();
-			$array_idpes_erro_total[4910] = true;
-			$array_idpes_erro_total[2151] = true;
-			$array_idpes_erro_total[8194] = true;
-			$array_idpes_erro_total[7470] = true;
-			$array_idpes_erro_total[4637] = true;
-			$array_idpes_erro_total[4702] = true;
-			$array_idpes_erro_total[1801] = true;
+  /**
+   * @see clsBancoSQL_#UnicaTupla()
+   */
+  function TuplaUnica($consulta)
+  {
+    return $this->UnicaTupla;
+  }
 
-			if( ! $array_idpes_erro_total[$id_pessoa] )
-			{
-				die( "<script>document.location.href = 'erro_banco.php';</script>" );
-			}
-			else
-			{
-				printf("</td></tr></table><b>Erro de Banco de Dados:</b> %s<br><br>\n", $msg);
-				printf("<b>SQL:</b> %s<br><br>\n", $this->strStringSQL );
-				printf("<b>Erro do PgSQL </b>: %s (%s)<br><br>\n", $this->bErro_no, $this->strErro);
-				die("Sess&atilde;o Interrompida.");
-			}
-		}
-		else
-		{
-			//echo $msg . "\n";
-			die( $this->strErro . "\n" );
-		}
-	}
+  /**
+   * Mostra a mensagem de erro e interrompe a execução do script.
+   * @param  string $msg
+   * @param  bool   $getError
+   */
+  function Interrompe($msg, $getError = FALSE)
+  {
+    if ($getError) {
+      $this->strErro = pg_result_error($this->bConsulta_ID);
+      $this->bErro_no = ($this->strErro == '') ? FALSE : TRUE;
+    }
+
+    $erro1 = substr(md5('1erro'), 0, 10);
+    $erro2 = substr(md5('2erro'), 0, 10);
+
+    function show($data, $func = 'var_dump') {
+      ob_start();
+      $func($data);
+      $output = ob_get_contents();
+      ob_end_clean();
+      return $output;
+    }
+
+    @session_start();
+    $_SESSION['vars_session'] = show($_SESSION);
+    $_SESSION['vars_post']    = show($_POST);
+    $_SESSION['vars_get']     = show($_GET);
+    $_SESSION['vars_cookie']  = show($_COOKIE);
+    $_SESSION['vars_erro1']   = $msg;
+    $_SESSION['vars_erro2']   = $this->strErro;
+    $_SESSION['vars_server']  = show($_SERVER);
+    $id_pessoa = $_SESSION['id_pessoa'];
+
+    session_write_close();
+
+    if ($this->showReportarErro) {
+      $array_idpes_erro_total = array();
+      $array_idpes_erro_total[4910] = TRUE;
+      $array_idpes_erro_total[2151] = TRUE;
+      $array_idpes_erro_total[8194] = TRUE;
+      $array_idpes_erro_total[7470] = TRUE;
+      $array_idpes_erro_total[4637] = TRUE;
+      $array_idpes_erro_total[4702] = TRUE;
+      $array_idpes_erro_total[1801] = TRUE;
+
+      if (! $array_idpes_erro_total[$id_pessoa]) {
+        die( "<script>document.location.href = 'erro_banco.php';</script>" );
+      }
+      else {
+        printf("</td></tr></table><b>Erro de Banco de Dados:</b> %s<br><br>\n", $msg);
+        printf("<b>SQL:</b> %s<br><br>\n", $this->strStringSQL );
+        printf("<b>Erro do PgSQL </b>: %s (%s)<br><br>\n", $this->bErro_no, $this->strErro);
+        die("Sessão Interrompida.");
+      }
+    }
+    else {
+      die($this->strErro . "\n");
+    }
+  }
 }
-?>

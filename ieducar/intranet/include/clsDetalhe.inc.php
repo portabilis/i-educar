@@ -20,13 +20,15 @@
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package     Core
- * @subpackage  UI
- * @since       Arquivo disponível desde a versão 1.0.0
- * @version     $Id$
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Include
+ * @since     Arquivo disponível desde a versão 1.0.0
+ * @version   $Id$
  */
+
+require_once 'Core/Controller/Page/Abstract.php';
 
 /**
  * clsDetalhe class.
@@ -34,14 +36,14 @@
  * Cria um template para a visualização de um registro de alguma tabela do banco
  * de dados.
  *
- * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package     Core
- * @subpackage  UI
- * @since       Classe disponível desde a versão 1.0.0
- * @version     $Id$
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Include
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
  */
-class clsDetalhe
+class clsDetalhe extends Core_Controller_Page_Abstract
 {
   var $titulo;
   var $banner = FALSE;
@@ -90,6 +92,8 @@ class clsDetalhe
 
   function RenderHTML()
   {
+    $this->_preRender();
+
     $this->titulo_barra= 'Intranet';
     $this->Gerar();
 

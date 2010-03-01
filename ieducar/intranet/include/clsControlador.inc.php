@@ -267,6 +267,8 @@ class clsControlador
 
       fclose($ptrTpl);
       die($strArquivo);
+      // @todo
+      #throw new Exception($strArquivo);
     }
   }
 

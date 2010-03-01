@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+  <table name="pessoa">
+    <column>id</column>
+    <column>nome</column>
+    <column>estado_civil</column>
+    <column>doador</column>
+    <row>
+      <value>2</value>
+      <value>Marvin Gaye</value>
+      <value>casado</value>
+      <value>t</value>
+    </row>
+  </table>
+</dataset>

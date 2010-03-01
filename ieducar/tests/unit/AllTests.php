@@ -32,6 +32,7 @@ require_once 'App/AllTests.php';
 require_once 'Core/AllTests.php';
 require_once 'CoreExt/AllTests.php';
 require_once 'Utils/AllTests.php';
+require_once 'Modules/AllTests.php';
 
 /**
  * Unit_AllTests class.
@@ -54,6 +55,7 @@ class Unit_AllTests
     $suite->addTest(Core_AllTests::suite());
     $suite->addTest(CoreExt_AllTests::suite());
     $suite->addTest(Utils_AllTests::suite());
+    $suite->addTest(Modules_AllTests::suite());
     return $suite;
   }
 }
