@@ -96,9 +96,9 @@ abstract class TestCollector
 
   /**
    * Diretório onde residem os arquivos com as classes de teste.
-   * @var string
+   * @var array
    */
-  protected $_dir  = NULL;
+  protected $_directory = array();
 
   /**
    * Nome da suíte de testes.
@@ -118,7 +118,7 @@ abstract class TestCollector
    */
   public function __construct()
   {
-    $this->_defineCurrentDir();
+    $this->_defineCurrentDirectory();
   }
 
   /**
@@ -173,7 +173,7 @@ abstract class TestCollector
    */
   protected function _collectTests()
   {
-    $testCollector = new PHPUnit_Runner_IncludePathTestCollector(array($this->_dir));
+    $testCollector = new PHPUnit_Runner_IncludePathTestCollector($this->_directory);
     return $testCollector->collectTests();
   }
 
@@ -185,17 +185,33 @@ abstract class TestCollector
    * @todo    Refatorar o código para utilizar {@link http://php.net/lsb Late static binding}
    *          quando a versão do PHP for a 5.3.
    */
-  protected function _defineCurrentDir()
+  protected function _defineCurrentDirectory()
   {
     if ($this->_file === NULL) {
       throw new Exception('A classe concreta deve sobrescrever a variável "$_file".');
     }
-    if ($this->_dir == '') {
-      $dir = realpath(dirname($this->_file));
-      if (!is_dir($dir)) {
-        throw new Exception('The path "'. $dir .'" is not a valid directory');
-      }
-      $this->_dir = $dir;
+    $directory = $this->_getDirectoryPath($this->_file);
+    if (!array_search($directory, $this->_directory)) {
+      $this->_directory[] = $directory;
     }
+  }
+
+  /**
+   * Pega o caminho do diretório que será varrido para a inclusão de testes.
+   * @param  string $path
+   * @return string
+   */
+  protected function _getDirectoryPath($path)
+  {
+    $directory = realpath(dirname($path));
+    if (!is_dir($directory)) {
+      throw new Exception('The path "'. $directory .'" is not a valid directory');
+    }
+    return $directory;
+  }
+
+  public function addDirectory($directory)
+  {
+    $this->_directory[] = $this->_getDirectoryPath($directory);
   }
 }

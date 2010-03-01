@@ -1,299 +1,309 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
 
+/**
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Arquivo disponível desde a versão 1.0.0
+ * @version   $Id$
+ */
+
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsListagem.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
+require_once 'CoreExt/View/Helper/UrlHelper.php';
+
+/**
+ * clsIndexBase class.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
+ */
 class clsIndexBase extends clsBase
 {
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Faltas/Notas Aluno" );
-		$this->processoAp = "642";
-	}
+  function Formular()
+  {
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Faltas/Notas Aluno');
+    $this->processoAp = "642";
+  }
 }
 
+/**
+ * indice class.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
+ */
 class indice extends clsListagem
 {
-	/**
-	 * Referencia pega da session para o idpes do usuario atual
-	 *
-	 * @var int
-	 */
-	var $pessoa_logada;
+  var $pessoa_logada;
+  var $titulo;
+  var $limite;
+  var $offset;
 
-	/**
-	 * Titulo no topo da pagina
-	 *
-	 * @var int
-	 */
-	var $titulo;
+  var $ref_ref_cod_escola;
+  var $ref_cod_matricula;
+  var $ref_cod_turma;
 
-	/**
-	 * Quantidade de registros a ser apresentada em cada pagina
-	 *
-	 * @var int
-	 */
-	var $limite;
+  var $ref_cod_instituicao;
+  var $ref_cod_escola;
+  var $ref_cod_curso;
+  var $ref_ref_cod_serie;
 
-	/**
-	 * Inicio dos registros a serem exibidos (limit)
-	 *
-	 * @var int
-	 */
-	var $offset;
+  var $ref_cod_aluno;
+  var $nm_aluno;
+  var $aprovado;
 
-	var $ref_ref_cod_escola;
-	var $ref_cod_matricula;
-	var $ref_cod_turma;
+  function Gerar()
+  {
+    @session_start();
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
+    session_write_close();
 
-	var $ref_cod_instituicao;
-	var $ref_cod_escola;
-	var $ref_cod_curso;
-	var $ref_ref_cod_serie;
+    $this->titulo = "Faltas/Notas Aluno - Listagem";
 
-	var $ref_cod_aluno;
-	var $nm_aluno;
-	var $aprovado;
+    // Passa todos os valores obtidos no GET para atributos do objeto
+    foreach ($_GET as $var => $val) {
+      $this->$var = $val === '' ? NULL : $val;
+    }
 
-	function Gerar()
-	{
-		@session_start();
-		$this->pessoa_logada = $_SESSION['id_pessoa'];
-		session_write_close();
-/*
-		$obj_func = new clsMenuFuncionario($this->pessoa_logada,false,false,0);
-		$det_func = $obj_func->detalhe();
-		if (!$det_func)
-		{
-			echo "Desculpe-nos o transtorno. Página fora do ar temporariamente!";
-//			header("location:educar_index.php");
-			die();
-		}
-*/
+    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
 
-		$this->titulo = "Faltas/Notas Aluno - Listagem";
+    $lista_busca = array(
+      'Aluno',
+      'Matrícula',
+      'Turma',
+      'Série',
+      'Curso'
+    );
 
-//		echo "<pre>";print_r($_GET);
+    $obj_permissao = new clsPermissoes();
+    $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
 
-		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
-			$this->$var = ( $val === "" ) ? null: $val;
+    if ($nivel_usuario == 1) {
+      $lista_busca[] = 'Escola';
+      $lista_busca[] = 'Institui&ccedil;&atilde;o';
+    }
+    else if ($nivel_usuario == 2) {
+      $lista_busca[] = 'Escola';
+    }
 
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+    $this->addCabecalhos($lista_busca);
 
-		$lista_busca = array(
-			"Aluno",
-			"Matr&iacute;cula",
-			"Turma",
-			"S&eacute;rie",
-			"Curso"
-		);
+    $this->campoTexto('nm_aluno', 'Aluno', $this->nm_aluno, 30, 255, FALSE,
+      FALSE, FALSE, '', "<img border=\"0\" onclick=\"pesquisa_aluno();\" id=\"ref_cod_aluno_lupa\" name=\"ref_cod_aluno_lupa\" src=\"imagens/lupa.png\"\/>", '', '', TRUE);
+    $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
 
-		$obj_permissao = new clsPermissoes();
-		$nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
-		if ($nivel_usuario == 1)
-		{
-			$lista_busca[] = "Escola";
-			$lista_busca[] = "Institui&ccedil;&atilde;o";
-		}
-		else if ($nivel_usuario == 2)
-		{
-			$lista_busca[] = "Escola";
-		}
-		$this->addCabecalhos($lista_busca);
+    $get_escola             = TRUE;
+    $get_curso              = TRUE;
+    $sem_padrao             = TRUE;
+    $get_escola_curso_serie = TRUE;
+    $get_turma              = TRUE;
+    include 'include/pmieducar/educar_campo_lista.php';
 
-		$this->campoTexto("nm_aluno", "Aluno", $this->nm_aluno, 30, 255, false, false, false, "", "<img border=\"0\" onclick=\"pesquisa_aluno();\" id=\"ref_cod_aluno_lupa\" name=\"ref_cod_aluno_lupa\" src=\"imagens/lupa.png\"\/>", "", "", true);
-		$this->campoOculto("ref_cod_aluno", $this->ref_cod_aluno);
+    if ($this->ref_cod_escola) {
+      $this->ref_ref_cod_escola = $this->ref_cod_escola;
+    }
 
-		$get_escola = true;
-//		$get_escola_curso = true;
-		$get_curso = true;
-		$sem_padrao = true;
-		$get_escola_curso_serie = true;
-		$get_turma = true;
-		include("include/pmieducar/educar_campo_lista.php");
+    $opcoes = array(
+      '' => 'Selecione',
+      1  => 'Aprovado',
+      2  => 'Reprovado',
+      3  => 'Em Andamento'
+    );
 
-		if ( $this->ref_cod_escola )
-		{
-			$this->ref_ref_cod_escola = $this->ref_cod_escola;
-		}
+    $this->campoLista('aprovado', 'Situa&ccedil;&atilde;o', $opcoes,
+      $this->aprovado, '', '', '', '', FALSE, FALSE);
 
-		$opcoes = array( '' => 'Selecione', 1 => 'Aprovado', 2 => 'Reprovado', 3 => 'Em Andamento' );
-		$this->campoLista( 'aprovado', 'Situa&ccedil;&atilde;o', $opcoes, $this->aprovado, '','','','',false,false );
+    // Paginador
+    $this->limite = 20;
+    $this->offset = $_GET['pagina_' . $this->nome] ?
+      $_GET['pagina_' . $this->nome] * $this->limite-$this->limite : 0;
 
-		// Paginador
-		$this->limite = 20;
-		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+    $obj_nota_aluno = new clsPmieducarMatriculaTurma();
+    $obj_nota_aluno->setOrderby('ref_cod_matricula ASC');
+    $obj_nota_aluno->setLimite($this->limite, $this->offset);
 
-		$obj_nota_aluno = new clsPmieducarMatriculaTurma();
-		$obj_nota_aluno->setOrderby( "ref_cod_matricula ASC" );
-		$obj_nota_aluno->setLimite( $this->limite, $this->offset );
+    $aparece = TRUE;
 
-//		if ($this->pessoa_logada==184580) {
-			$aparece=true;
-//		} else {
-//			$aparece=false;
-//		}
-		$lista = $obj_nota_aluno->lista(
-			$this->ref_cod_matricula,
-			$this->ref_cod_turma,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			1,
-			$this->ref_ref_cod_serie,
-			$this->ref_cod_curso,
-			$this->ref_ref_cod_escola,
-			$this->ref_cod_instituicao,
-			$this->ref_cod_aluno,
-			null,
-			$this->aprovado,
-			null,
-			null,
-			null,
-			true,
-			false,
-			null,
-			1,
-			true,
-			true
-			
-			,null,null,null,null,$aparece
-		);
+    $lista = $obj_nota_aluno->lista(
+      $this->ref_cod_matricula,
+      $this->ref_cod_turma,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      1,
+      $this->ref_ref_cod_serie,
+      $this->ref_cod_curso,
+      $this->ref_ref_cod_escola,
+      $this->ref_cod_instituicao,
+      $this->ref_cod_aluno,
+      NULL,
+      $this->aprovado,
+      NULL,
+      NULL,
+      NULL,
+      TRUE,
+      FALSE,
+      NULL,
+      1,
+      TRUE,
+      TRUE,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      $aparece
+    );
 
-		$total = $obj_nota_aluno->_total;
+    $total = $obj_nota_aluno->_total;
 
-		// monta a lista
-		if( is_array( $lista ) && count( $lista ) )
-		{
-			$ref_cod_serie= "";
-			$nm_serie = "";
-			$ref_cod_escola= "";
-			$nm_escola = "";
-			
-			
-			foreach ( $lista AS $registro )
-			{
-				
-				if(  $registro["ref_ref_cod_serie"]  != '' && $ref_cod_serie !=  $registro["ref_ref_cod_serie"] )
-				{
-					$obj_ref_cod_serie = new clsPmieducarSerie( $registro["ref_ref_cod_serie"] );
-					$det_ref_cod_serie = $obj_ref_cod_serie->detalhe();
-					$ref_cod_serie = $registro["ref_ref_cod_serie"];
-					$nm_serie = $det_ref_cod_serie["nm_serie"];
-				}elseif ($registro["ref_ref_cod_serie"]  == '')
-				{
-					$ref_cod_serie = "";
-					$nm_serie = "";
-				}
+    // monta a lista
+    if (is_array($lista) && count($lista)) {
+      $ref_cod_serie  = '';
+      $nm_serie       = '';
+      $ref_cod_escola = '';
+      $nm_escola      = '';
 
+      foreach ($lista as $registro) {
+        if ($registro['ref_ref_cod_serie']  != '' &&
+          $ref_cod_serie !=  $registro['ref_ref_cod_serie']
+        ) {
+          $obj_ref_cod_serie = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
+          $det_ref_cod_serie = $obj_ref_cod_serie->detalhe();
+          $ref_cod_serie = $registro['ref_ref_cod_serie'];
+          $nm_serie = $det_ref_cod_serie['nm_serie'];
+        }
+        elseif ($registro['ref_ref_cod_serie'] == '') {
+          $ref_cod_serie = '';
+          $nm_serie = '';
+        }
 
-				if(  $registro["ref_ref_cod_escola"]  != '' && $ref_cod_escola !=  $registro["ref_ref_cod_escola"]  )
-				{
-					$obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_ref_cod_escola"] );
-					$det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-					$ref_cod_escola = $registro["ref_ref_cod_escola"];
-					$nm_escola = $det_ref_cod_escola["nome"];
-				}elseif ($registro["ref_ref_cod_escola"]  == '')
-				{
-					$ref_cod_escola = "";
-					$nm_escola = "";
-				}
-				$lista_busca = array(
-					"<a href=\"educar_falta_nota_aluno_det.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}\">{$registro["nome"]}</a>",
-					"<a href=\"educar_falta_nota_aluno_det.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}\">{$registro["ref_cod_matricula"]}</a>",
-					"<a href=\"educar_falta_nota_aluno_det.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}\">{$registro["nm_turma"]}</a>"
-				);
+        if ($registro['ref_ref_cod_escola']  != '' &&
+          $ref_cod_escola !=  $registro['ref_ref_cod_escola']
+        ) {
+          $obj_ref_cod_escola = new clsPmieducarEscola( $registro['ref_ref_cod_escola']);
+          $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
+          $ref_cod_escola = $registro['ref_ref_cod_escola'];
+          $nm_escola = $det_ref_cod_escola['nome'];
+        }
+        elseif ($registro['ref_ref_cod_escola']  == '') {
+          $ref_cod_escola = '';
+          $nm_escola = '';
+        }
 
-				if ($registro["ref_ref_cod_serie"])
-					$lista_busca[] = "<a href=\"educar_falta_nota_aluno_det.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}\">{$nm_serie}</a>";
-				else
-					$lista_busca[] = "<a href=\"educar_falta_nota_aluno_det.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}\">-</a>";
+        // Itens a mostrar na listagem de alunos
+        $lista_busca = array();
 
-				$lista_busca[] = "<a href=\"educar_falta_nota_aluno_det.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}\">{$registro["nm_curso"]}</a>";
+        // Variáveis para a geração do link
+        $path = '/module/Avaliacao/boletim';
+        $params = array('query' => array('matricula' => $registro['ref_cod_matricula']));
 
-				if ($nivel_usuario == 1)
-				{
-					if ($registro["ref_ref_cod_escola"])
-						$lista_busca[] = "<a href=\"educar_falta_nota_aluno_det.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}\">{$nm_escola}</a>";
-					else
-						$lista_busca[] = "<a href=\"educar_falta_nota_aluno_det.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}\">-</a>";
+        // Instância de UrlHelper
+        $url = CoreExt_View_Helper_UrlHelper::getInstance();
 
-					$lista_busca[] = "<a href=\"educar_falta_nota_aluno_det.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}\">{$registro["nm_instituicao"]}</a>";
-				}
-				else if ($nivel_usuario == 2)
-				{
-					if ($registro["ref_ref_cod_escola"])
-						$lista_busca[] = "<a href=\"educar_falta_nota_aluno_det.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}\">{$registro["ref_ref_cod_escola"]}</a>";
-					else
-						$lista_busca[] = "<a href=\"educar_falta_nota_aluno_det.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}\">-</a>";
-				}
-				$this->addLinhas($lista_busca);
-			}
-		}
-		$this->addPaginador2( "educar_falta_nota_aluno_lst.php", $total, $_GET, $this->nome, $this->limite );
-		$this->largura = "100%";
-	}
+        $lista_busca[] = $url->l($registro['nome'], $path, $params);
+        $lista_busca[] = $url->l($registro['ref_cod_matricula'], $path, $params);
+        $lista_busca[] = $url->l($registro['nm_turma'], $path, $params);
+
+        $lista_busca[] = $url->l(
+          $registro['ref_ref_cod_serie'] ? $registro['ref_ref_cod_serie'] : '',
+          $path, $params
+        );
+
+        $lista_busca[] = $url->l($registro['nm_curso'], $path, $params);
+
+        if ($nivel_usuario == 1) {
+          $lista_busca[] = $url->l(
+            $registro['ref_ref_cod_escola'] ? $nm_escola : '-',
+            $path, $params
+          );
+
+          $lista_busca[] = $url->l(
+            $registro['nm_instituicao'], $path, $params
+          );
+        }
+        elseif ($nivel_usuario == 2) {
+          $lista_busca[] = $url->l(
+            $registro['ref_ref_cod_escola'] ? $registro['ref_ref_cod_escola'] : '-',
+            $path, $params
+          );
+        }
+
+        $this->addLinhas($lista_busca);
+      }
+    }
+
+    $this->addPaginador2('educar_falta_nota_aluno_lst.php', $total, $_GET,
+      $this->nome, $this->limite);
+
+    $this->largura = '100%';
+  }
 }
-// cria uma extensao da classe base
+
+// Instancia objeto de página
 $pagina = new clsIndexBase();
-// cria o conteudo
+
+// Instancia objeto de conteúdo
 $miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
-// gera o html
+
+// Atribui o conteúdo à  página
+$pagina->addForm($miolo);
+
+// Gera o código HTML
 $pagina->MakeAll();
 ?>
-
-<script>
-
+<script type="text/javascript">
 function pesquisa_aluno()
 {
-	pesquisa_valores_popless('educar_pesquisa_aluno.php')
+  pesquisa_valores_popless('educar_pesquisa_aluno.php')
 }
 
 
 document.getElementById('ref_cod_escola').onchange = function()
 {
-	getEscolaCurso();
+  getEscolaCurso();
 }
 
 document.getElementById('ref_cod_curso').onchange = function()
 {
-	getEscolaCursoSerie();
+  getEscolaCursoSerie();
 }
 
 document.getElementById('ref_ref_cod_serie').onchange = function()
 {
-	getTurma();
+  getTurma();
 }
-
 </script>

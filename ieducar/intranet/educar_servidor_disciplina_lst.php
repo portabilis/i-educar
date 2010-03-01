@@ -1,214 +1,201 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+/**
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Arquivo disponível desde a versão 1.0.0
+ * @version   $Id$
+ */
 
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
+
+/**
+ * clsIndexBase class.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
+ */
 class clsIndexBase extends clsBase
 {
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Servidor Disciplina" );
-		$this->processoAp = "0";
-		$this->renderBanner = false;
-		$this->renderMenu   = false;
-		$this->renderMenuSuspenso = false;
-
-	}
+  function Formular()
+  {
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Disciplina');
+    $this->processoAp = 0;
+    $this->renderBanner = FALSE;
+    $this->renderMenu = FALSE;
+    $this->renderMenuSuspenso = FALSE;
+  }
 }
 
+/**
+ * indice class.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
+ */
 class indice extends clsCadastro
 {
-	/**
-	 * Referencia pega da session para o idpes do usuario atual
-	 *
-	 * @var int
-	 */
-	var $pessoa_logada;
+  var $pessoa_logada;
 
-	var $cod_servidor;
-	var $ref_cod_instituicao;
-	var $ref_cod_deficiencia;
-	var $ref_idesco;
-	var $ref_cod_funcao;
-	var $carga_horaria;
-	var $data_cadastro;
-	var $data_exclusao;
-	var $ativo;
-	var $ref_cod_curso;
-	var $ref_cod_disciplina;
-	var $cursos_disciplina;
+  var $cod_servidor;
+  var $ref_cod_instituicao;
+  var $ref_cod_deficiencia;
+  var $ref_idesco;
+  var $ref_cod_funcao;
+  var $carga_horaria;
+  var $data_cadastro;
+  var $data_exclusao;
+  var $ativo;
+  var $ref_cod_curso;
+  var $ref_cod_disciplina;
+  var $cursos_disciplina;
 
+  function Inicializar()
+  {
+    $retorno = 'Novo';
+    @session_start();
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
+    @session_write_close();
 
-	function Inicializar()
-	{
-		$retorno = "Novo";
-		@session_start();
-		$this->pessoa_logada 	   			= $_SESSION['id_pessoa'];
-		@session_write_close();
+    $this->cod_servidor = $_GET['ref_cod_servidor'];
+    $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
-		$this->cod_servidor		   			= $_GET["ref_cod_servidor"];
-		$this->ref_cod_instituicao 			= $_GET["ref_cod_instituicao"];
+    $obj_permissoes = new clsPermissoes();
 
-		$obj_permissoes = new clsPermissoes();
+    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 3,
+      'educar_servidor_lst.php');
 
-		$obj_permissoes->permissao_cadastra( 635, $this->pessoa_logada, 3,  "educar_servidor_lst.php" );
+    if (is_numeric($this->cod_servidor) && is_numeric($this->ref_cod_instituicao)) {
+      $obj = new clsPmieducarServidor($this->cod_servidor, NULL, NULL, NULL,
+        NULL, NULL, NULL, $this->ref_cod_instituicao);
 
-		if( is_numeric( $this->cod_servidor ) && is_numeric( $this->ref_cod_instituicao ) )
-		{
+      $registro  = $obj->detalhe();
+      if ($registro) {
+        $retorno = 'Editar';
+      }
+    }
 
-			$obj = new clsPmieducarServidor( $this->cod_servidor, null, null, null, null, null, null, $this->ref_cod_instituicao );
-			$registro  = $obj->detalhe();
-			if( $registro )
-			{
-				//foreach( $registro AS $campo => $val )	// passa todos os valores obtidos no registro para atributos do objeto
-					//$this->$campo = $val;
+    @session_start();
+    $this->cursos_disciplina = $_SESSION['cursos_disciplina'];
+    @session_write_close();
 
-				/*$obj_permissoes = new clsPermissoes();
-				if( $obj_permissoes->permissao_excluir( 635, $this->pessoa_logada, 3 ) )
-				{
-					$this->fexcluir = true;
-				}*/
+    if (!$this->cursos_disciplina) {
+      $obj_servidor_disciplina = new clsPmieducarServidorDisciplina();
+      $lst_servidor_disciplina = $obj_servidor_disciplina->lista(NULL,
+        $this->ref_cod_instituicao,$this->cod_servidor);
 
-				$retorno = "Editar";
-			}
-		}
+      if ($lst_servidor_disciplina) {
+        foreach ($lst_servidor_disciplina as $disciplina) {
+          $obj_disciplina = new clsPmieducarDisciplina($disciplina['ref_cod_disciplina']);
+          $det_disciplina = $obj_disciplina->detalhe();
+          $this->cursos_disciplina[$det_disciplina['ref_cod_curso']][$disciplina['ref_cod_disciplina']] = $disciplina['ref_cod_disciplina'];
+        }
+      }
+    }
 
-		@session_start();
-		$this->cursos_disciplina = $_SESSION['cursos_disciplina'];
-		@session_write_close();
+    if ($this->cursos_disciplina) {
+      foreach ($this->cursos_disciplina as $curso => $disciplinas) {
+        if ($disciplinas) {
+          foreach ($disciplinas as $disciplina) {
+            $this->ref_cod_curso[] = $curso;
+            $this->ref_cod_disciplina[] = $disciplina;
+          }
+        }
+      }
+    }
 
-		if(!$this->cursos_disciplina)
-		{
-			$obj_servidor_disciplina = new clsPmieducarServidorDisciplina();
-			$lst_servidor_disciplina = $obj_servidor_disciplina->lista(null,$this->ref_cod_instituicao,$this->cod_servidor);
-			if($lst_servidor_disciplina)
-			{
-				foreach ($lst_servidor_disciplina as $disciplina)
-				{
-					$obj_disciplina = new clsPmieducarDisciplina($disciplina['ref_cod_disciplina']);
-					$det_disciplina = $obj_disciplina->detalhe();
-					$this->cursos_disciplina[$det_disciplina['ref_cod_curso']][$disciplina['ref_cod_disciplina']] = $disciplina['ref_cod_disciplina'];
-				}
-			}
+    return $retorno;
+  }
 
-		}
+  function Gerar()
+  {
+    $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
+    $opcoes = $opcoes_curso = array('' => 'Selecione');
 
-		if($this->cursos_disciplina)
-		{
-			foreach ($this->cursos_disciplina as $curso => $disciplinas)
-			{
-				if($disciplinas)
-				{
-					foreach ($disciplinas as $disciplina)
-					{
-						$this->ref_cod_curso[] = $curso;
-						$this->ref_cod_disciplina[] = $disciplina;
-					}
-				}
-			}
-		}
+    $obj_cursos = new clsPmieducarCurso();
+    $obj_cursos->setOrderby('nm_curso');
+    $lst_cursos = $obj_cursos->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+      NULL, NULL, NULL,1, NULL,$this->ref_cod_instituicao);
 
-		//$this->script_cancelar = "parent.fechaExpansivel( \"{$_GET['div']}\");";
-		//$this->nome_url_cancelar = "Cancelar";
-		return $retorno;
-	}
+    if ($lst_cursos) {
+      foreach ($lst_cursos as $curso) {
+        $opcoes_curso[$curso['cod_curso']] = $curso['nm_curso'];
+      }
+    }
 
-	function Gerar()
-	{
-		// foreign keys
-		//$obrigatorio 	 = true;
-	//	$get_instituicao = true;
-		//$get_funcao		 = true;
-		//include("include/pmieducar/educar_campo_lista.php");
+    $obj_disciplina = new clsPmieducarDisciplina();
+    $obj_disciplina->setOrderby('nm_disciplina');
+    $lst_opcoes = array();
+    $arr_valores = array();
 
+    if($this->cursos_disciplina) {
+      foreach ($this->cursos_disciplina as $curso => $disciplinas) {
+        if ($disciplinas) {
+          foreach ($disciplinas as $disciplina) {
+            $arr_valores[] = array($curso,$disciplina);
+          }
+        }
+      }
+    }
 
-		$this->campoOculto("ref_cod_instituicao",$this->ref_cod_instituicao);
-		$opcoes = $opcoes_curso = array('' => "Selecione");
+    if ($this->ref_cod_curso) {
+      foreach ($this->ref_cod_curso as $curso) {
+        $lst_disciplinas = $obj_disciplina->lista(NULL, NULL, NULL, NULL, NULL,
+          NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, $curso,
+          $this->ref_cod_instituicao);
 
-		$obj_cursos = new clsPmieducarCurso();
-		$obj_cursos->setOrderby("nm_curso");
-		$lst_cursos = $obj_cursos->lista(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null,$this->ref_cod_instituicao);
-		if ($lst_cursos)
-		{
-			foreach ($lst_cursos as $curso)
-			{
-				$opcoes_curso[$curso['cod_curso']] = $curso['nm_curso'];
-			}
-		}
+        $opcoes_disc = array();
+        foreach ($lst_disciplinas as $disciplina) {
+          $opcoes_disc[$disciplina['cod_disciplina']]  = $disciplina['nm_disciplina'];
+        }
 
-		$obj_disciplina = new clsPmieducarDisciplina();
-		$obj_disciplina->setOrderby("nm_disciplina");
-		$lst_opcoes = array();
-		$arr_valores = array();
+        $lst_opcoes[] = array($opcoes_curso,$opcoes_disc);
+      }
+    }
 
+    $this->campoTabelaInicio('funcao', 'Disciplinas', array('Curso','Disciplina'),
+      $arr_valores, '', $lst_opcoes);
 
-		if($this->cursos_disciplina)
-		{
-			foreach ($this->cursos_disciplina as $curso => $disciplinas)
-			{
-				if($disciplinas)
-				{
-					foreach ($disciplinas as $disciplina)
-					{
-						$arr_valores[] = array($curso,$disciplina);
-					}
-				}
-			}
-		}
+    $this->campoLista('ref_cod_curso', 'Curso', $opcoes_curso,
+      $this->ref_cod_curso, 'trocaCurso(this)', '', '', '');
+    $this->campoLista('ref_cod_disciplina', 'Disciplina', $opcoes,
+      $this->ref_cod_disciplina, '', '', '', '');
 
-
-		if ($this->ref_cod_curso)
-		{
-			foreach ($this->ref_cod_curso as $curso)
-			{
-				$lst_disciplinas = $obj_disciplina->lista(null,null,null,null,null,null,null,null,null,null,null,null,1,null,$curso,$this->ref_cod_instituicao);
-				$opcoes_disc = array();
-				foreach ($lst_disciplinas as $disciplina)
-				{
-
-					$opcoes_disc[$disciplina['cod_disciplina']]	= $disciplina['nm_disciplina'];
-				}
-				$lst_opcoes[] = array($opcoes_curso,$opcoes_disc);
-			}
-		}
-
-		$this->campoTabelaInicio("funcao","Disciplinas",array("Curso","Disciplina"),$arr_valores,"",$lst_opcoes);
-
-			$this->campoLista( "ref_cod_curso", "Curso", $opcoes_curso, $this->ref_cod_curso,"trocaCurso(this)","","","" );
-			$this->campoLista( "ref_cod_disciplina", "Disciplina", $opcoes, $this->ref_cod_disciplina,"","","","" );
-
-		$this->campoTabelaFim();
-
-
-
-	}
+    $this->campoTabelaFim();
+  }
 
   public function Novo()
   {
@@ -221,7 +208,6 @@ class indice extends clsCadastro
       for ($i = 0, $loop = count($this->ref_cod_curso); $i < $loop; $i++) {
         $curso = $this->ref_cod_curso[$i];
         $curso_servidor[$curso] = $curso;
-
         $disciplina = $this->ref_cod_disciplina[$i];
         $cursos_disciplina[$curso][$disciplina] = $disciplina;
       }
@@ -232,126 +218,102 @@ class indice extends clsCadastro
     $_SESSION['cursos_servidor']   = $curso_servidor;
     @session_write_close();
 
-    echo "<script>parent.fechaExpansivel( '{$_GET['div']}');</script>";
+    echo "<script>parent.fechaExpansivel('{$_GET['div']}');</script>";
     die;
-
-    return true;
   }
 
   public function Editar() {
     return $this->Novo();
   }
 
-	function Excluir()
-	{
-
-		return false;
-	}
+  function Excluir()
+  {
+    return FALSE;
+  }
 }
 
-// cria uma extensao da classe base
+// Instancia objeto de página
 $pagina = new clsIndexBase();
-// cria o conteudo
+
+// Instancia objeto de conteúdo
 $miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
-// gera o html
+
+// Atribui o conteúdo à  página
+$pagina->addForm($miolo);
+
+// Gera o código HTML
 $pagina->MakeAll();
 ?>
-<script>
+<script type="text/javascript">
+  function trocaCurso(id_campo)
+  {
+    var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
+    var campoCurso = document.getElementById(id_campo.id).value;
+    var id = /[0-9]+/.exec(id_campo.id);
+    var campoDisciplina = document.getElementById('ref_cod_disciplina['+id+']');
+    campoDisciplina.length = 1;
 
-	function trocaCurso(id_campo)
-	{
+    if (campoDisciplina) {
+      campoDisciplina.disabled = true;
+      campoDisciplina.options[0].text = 'Carregando Disciplinas';
 
-		var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
-		var campoCurso = document.getElementById(id_campo.id).value;
-		var id = /[0-9]+/.exec(id_campo.id);
-		var campoDisciplina	= document.getElementById('ref_cod_disciplina['+id+']');
-		campoDisciplina.length = 1;
+      var xml = new ajax(atualizaLstDisciplina,'ref_cod_disciplina['+id+']');
+      xml.envia("educar_disciplina_xml.php?cur="+campoCurso);
+    }
+    else {
+      campoFuncao.options[0].text = 'Selecione';
+    }
+  }
 
-		if( campoDisciplina )
-		{
-			campoDisciplina.disabled = true;
-			campoDisciplina.options[0].text = 'Carregando Disciplinas';
+  function atualizaLstDisciplina(xml)
+  {
+    var campoDisciplina = document.getElementById(arguments[1]);
 
-			var xml = new ajax(atualizaLstDisciplina,'ref_cod_disciplina['+id+']');
-			xml.envia("educar_disciplina_xml.php?cur="+campoCurso);
-		}
-		else
-		{
-			campoFuncao.options[0].text = 'Selecione';
-		}
-	}
+    campoDisciplina.length = 1;
+    campoDisciplina.options[0].text = 'Selecione uma Disciplina';
+    campoDisciplina.disabled = false;
 
-	function atualizaLstDisciplina(xml)
-	{
+    var disciplinas = xml.getElementsByTagName('disciplina');
 
-		var campoDisciplina = document.getElementById(arguments[1]);
+    if (disciplinas.length) {
+      for (var i = 0; i < disciplinas.length; i++) {
+        campoDisciplina.options[campoDisciplina.options.length] =
+          new Option(disciplinas[i].firstChild.data, disciplinas[i].getAttribute('cod_disciplina'), false, false);
+      }
+    }
+    else {
+      campoDisciplina.options[0].text = 'A instituição não possui nenhuma disciplina';
+    }
+  }
 
-		campoDisciplina.length = 1;
-		campoDisciplina.options[0].text = 'Selecione uma Disciplina';
-		campoDisciplina.disabled = false;
+  tab_add_1.afterAddRow = function () { }
 
-		var disciplinas = xml.getElementsByTagName('disciplina');
-		if(disciplinas.length)
-		{
-			for( var i = 0; i < disciplinas.length; i++ )
-			{
-				campoDisciplina.options[campoDisciplina.options.length] = new Option( disciplinas[i].firstChild.data, disciplinas[i].getAttribute('cod_disciplina'),false,false);
-			}
-		}
-		else
-		{
-			campoDisciplina.options[0].text = 'A instituição não possui nenhuma disciplina';
-		}
+  window.onload = function()
+  {
+  }
 
+  function trocaTodasfuncoes()
+  {
+    for (var ct = 0; ct < tab_add_1.id; ct++) {
+      getFuncao('ref_cod_funcao['+ct+']');
+    }
+  }
 
-	}
+  function acao2()
+  {
+    var total_horas_alocadas = getArrayHora(document.getElementById('total_horas_alocadas').value);
+    var carga_horaria = (document.getElementById('carga_horaria').value).replace(',', '.');
 
-	tab_add_1.afterAddRow = function () { }
+    if (parseFloat(total_horas_alocadas) > parseFloat(carga_horaria)) {
+      alert('Atenção, carga horária deve ser maior que horas alocadas!');
+      return false;
+    }
+    else {
+      acao();
+    }
+  }
 
-	window.onload = function()
-	{
-		//trocaTodasfuncoes();
-	}
-
-	function trocaTodasfuncoes()
-	{
-		for(var ct=0;ct<tab_add_1.id;ct++)
-		{
-			getFuncao('ref_cod_funcao['+ct+']');
-		}
-	}
-
-	/*if ( document.getElementById( 'ref_cod_instituicao' ) ) {
-		var ref_cod_instituicao = document.getElementById( 'ref_cod_instituicao' );
-		ref_cod_instituicao.onchange = function() { trocaTodasfuncoes(); }
-	}*/
-
-
-
-	function acao2()
-	{
-		var total_horas_alocadas = getArrayHora( document.getElementById( 'total_horas_alocadas' ).value );
-
-		var carga_horaria = ( document.getElementById( 'carga_horaria' ).value ).replace( ',', '.' );
-
-		//var horas_trabalhadas = Date.UTC( 1970, 01, 01, parseInt( total_horas_alocadas[0], 10 ), parseInt( total_horas_alocadas[1], 10 ), 0 );
-
-		//var total_horas = Date.UTC( 1970, 01, 01, parseInt( carga_horaria, 10 ), ( carga_horaria - parseInt( carga_horaria, 10 ) ) * 60, 0 );
-
-		if( parseFloat( total_horas_alocadas ) > parseFloat( carga_horaria ) )
-		{
-			alert( 'Atenção, carga horária deve ser maior que horas alocadas!' );
-			return false;
-
-		}
-		else
-		{
-			acao();
-		}
-	}
-
-	if ( document.getElementById('total_horas_alocadas') )
-		document.getElementById('total_horas_alocadas').style.textAlign='right';
+  if (document.getElementById('total_horas_alocadas')) {
+    document.getElementById('total_horas_alocadas').style.textAlign = 'right';
+  }
 </script>

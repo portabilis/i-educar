@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+  <table name="matricula">
+    <column>pessoa_id</column>
+    <column>curso_id</column>
+    <column>confirmado</column>
+    <row>
+      <value>1</value>
+      <value>1</value>
+      <value>t</value>
+    </row>
+    <row>
+      <value>1</value>
+      <value>2</value>
+      <value>f</value>
+    </row>
+  </table>
+</dataset>

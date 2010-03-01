@@ -1,0 +1,76 @@
+/** $Id$ */
+
+/**
+ * Sprites
+ */
+.sprite-buttons, 
+span.confirm a {
+  background: url('/intranet/static/images/sprite-buttons.png') no-repeat top left;
+}
+
+.sp-accept, 
+span.confirm.yes a { 
+  background-position: 0 0; 
+} 
+
+.sp-add { 
+  background-position: 0 -116px; 
+} 
+
+.sp-cancel, 
+span.confirm.no a { 
+  background-position: 0 -232px; 
+} 
+
+.sp-delete { 
+  background-position: 0 -348px; 
+}
+
+/**
+ * Mensagens de erro
+ */
+form div.error {
+  padding: 15px;
+  border-top: 1px solid #F00; 
+  border-bottom: 1px solid #F00;
+  background: #FBECEF; 
+  color: #220000;
+  font-size: 12px;
+}
+
+form div.error ul {
+  padding: 0;
+  list-style-type: square;
+  list-style-position: inside;
+}
+
+form div.error ul li {
+  line-height: 18px;
+}
+
+form div.error p {
+  margin-top: 0;
+}
+
+form div.error ul {
+  margin-bottom: 0;
+}
+
+/**
+ * Botões
+ */
+span.confirm a {
+  background-color: #FFF;
+  margin-right: 15px;
+  padding: 5px 15px 5px 25px;
+}
+ 
+span.confirm.yes a {
+  background-position: 4px 4px;
+  border-left: 3px solid #006400;
+}
+
+span.confirm.no a {
+  background-position: 4px -228px;
+  border-left: 3px solid #F00;
+}

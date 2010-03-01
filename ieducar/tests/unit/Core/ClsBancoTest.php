@@ -40,7 +40,7 @@ require_once 'include/pmieducar/clsPmieducarClienteSuspensao.inc.php';
  * @package     Core
  * @subpackage  UnitTests
  * @since       Classe disponível desde a versão 1.0.1
- * @todo        Mover método testConexao() para o pacote FunctionalTests
+ * @todo        Subclassificar classe como IntegrationBaseTest
  * @version     @@package_version@@
  */
 class ClsBancoTest extends UnitBaseTest
@@ -60,5 +60,56 @@ class ClsBancoTest extends UnitBaseTest
     $db->Conecta();
 
     $this->assertTrue((bool) $db->bLink_ID);
+  }
+
+  public function testFormatacaoDeValoresBooleanos()
+  {
+    $data = array(
+      'id' => 1,
+      'hasChild' => TRUE
+    );
+
+    $db = new clsBanco();
+    $formatted = $db->formatValues($data);
+    $this->assertSame('t', $formatted['hasChild']);
+
+    $data['hasChild'] = FALSE;
+    $formatted = $db->formatValues($data);
+    $this->assertSame('f', $formatted['hasChild']);
+  }
+
+  public function testOpcaoDeLancamentoDeExcecaoEFalsePorPadrao()
+  {
+    $db = new clsBanco();
+    $this->assertFalse($db->getThrowException());
+  }
+
+  public function testConfiguracaoDeOpcaoDeLancamentoDeExcecao()
+  {
+    $db = new clsBanco();
+    $db->setThrowException(TRUE);
+    $this->assertTrue($db->getThrowException());
+  }
+
+  public function testFetchTipoArrayDeResultadosDeUmaQuery()
+  {
+    $db = new clsBanco();
+
+    $db->Consulta("SELECT spcname, spcowner, spclocation, spcacl FROM pg_tablespace");
+    $row = $db->ProximoRegistro();
+    $row = $db->Tupla();
+    $this->assertNotNull($row[0]);
+    $this->assertNotNull($row['spcname']);
+  }
+
+  public function testFetchTipoAssocDeResultadosDeUmaQuery()
+  {
+    $db = new clsBanco(array('fetchMode' => clsBanco::FETCH_ASSOC));
+
+    $db->Consulta("SELECT spcname, spcowner, spclocation, spcacl FROM pg_tablespace");
+    $row = $db->ProximoRegistro();
+    $row = $db->Tupla();
+    $this->assertFalse(array_key_exists(0, $row));
+    $this->assertNotNull($row['spcname']);
   }
 }

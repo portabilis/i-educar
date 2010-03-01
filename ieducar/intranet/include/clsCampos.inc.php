@@ -20,12 +20,15 @@
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author   Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package  Core
- * @since    Classe disponível desde a versão 1.0.0
- * @version  $Id$
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Include
+ * @since     Arquivo disponível desde a versão 1.0.0
+ * @version   $Id$
  */
+
+require_once 'Core/Controller/Page/Abstract.php';
 
 /**
  * clsCampos class.
@@ -33,13 +36,14 @@
  * Implementa toda a lógica necessária para criar elementos de formulário e os
  * códigos HTML e Javascript necessários para o funcionamento no i-Educar.
  *
- * @author   Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package  Core
- * @since    Classe disponível desde a versão 1.0.0
- * @version  $Id$
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Include
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
  */
-class clsCampos
+class clsCampos extends Core_Controller_Page_Abstract
 {
   var $campos               = array();
   var $num_espaco           = 1;
@@ -1820,7 +1824,7 @@ class clsCampos
               $onClick = "onclick=\"{$componente[5]}\"";
             }
 
-            $retorno .= "<input type='checkbox' name=\"{$nome}\" id=\"{$nome}\" {$onClick}";
+            $retorno .= "<input valor=\"{$componente[3]}\" type='checkbox' name=\"{$nome}\" id=\"{$nome}\" {$onClick}";
 
             if ($componente[3]) {
               $retorno .= ' checked';

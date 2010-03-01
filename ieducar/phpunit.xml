@@ -5,4 +5,9 @@
   -->
 
 <phpunit colors='true' bootstrap='tests/bootstrap.php'>
+<filter>
+  <blacklist>
+    <directory suffix=".php">../tests</directory>
+  </blacklist>
+</filter>
 </phpunit>
