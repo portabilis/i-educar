@@ -125,7 +125,7 @@ class indice extends clsCadastro
     $corTexto = '#000000';
 
     $obj_curso = new clsPmieducarCurso();
-    $obj_curso->setOrderby("nm_curso");
+    $obj_curso->setOrderby('nm_curso');
     $lst_curso = $obj_curso->lista($this->ref_cod_curso, NULL, NULL, NULL, NULL,
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
       NULL, NULL, NULL, NULL, NULL, 1, NULL, $this->ref_cod_instituicao);
@@ -133,7 +133,7 @@ class indice extends clsCadastro
     if ($lst_curso) {
       foreach ($lst_curso as $curso) {
         $obj_serie = new clsPmieducarSerie();
-        $obj_serie->setOrderby("nm_serie");
+        $obj_serie->setOrderby('nm_serie');
         $lst_serie = $obj_serie->lista($this->ref_cod_serie, NULL, NULL,
           $curso['cod_curso'], NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
           1, $this->ref_cod_instituicao, NULL, NULL, NULL, $this->ref_cod_escola);
@@ -212,7 +212,6 @@ class indice extends clsCadastro
 
                         $det_servidor['nome'] = array_shift(explode(' ', $det_servidor['nome']));
 
-                        //$texto = substr($registro['hora_inicial'], 0, 5 )." - ".substr( $registro["hora_final"], 0, 5 )." \n {$det_disciplina["abreviatura"]} \n {$det_servidor["nome"]}"
                         $texto = sprintf("%s - %s\n%s\n%s",
                           substr($registro['hora_inicial'], 0, 5),
                           substr($registro["hora_final"], 0, 5),
@@ -221,8 +220,8 @@ class indice extends clsCadastro
                         );
 
                         $this->pdf->escreve_relativo(
-                          $texto,//substr($registro['hora_inicial'], 0, 5 )." - ".substr( $registro["hora_final"], 0, 5 )." \n {$det_disciplina["abreviatura"]} \n {$det_servidor["nome"]}",
-                          $inicio_x, $this->page_y + 12, 75, 50, $fonte, 10, $corTexto, 'center');
+                          $texto, $inicio_x, $this->page_y + 12, 75, 50, $fonte,
+                          10, $corTexto, 'center');
 
                         $this->page_y += 50;
                       }
@@ -322,24 +321,6 @@ class indice extends clsCadastro
       $this->page_y + 50, 535, 80, $fonte, 8, $corTexto, 'left');
 
     $this->page_y += 80;
-  }
-
-  function rodape()
-  {
-    $corTexto  = '#000000';
-    $fonte     = 'arial';
-    $dataAtual = date('d/m/Y');
-    $this->pdf->escreve_relativo('Data: ' . $dataAtual, 36, $this->page_y + 2,
-      100, 50, $fonte, 7, $corTexto, 'left');
-
-    $this->pdf->escreve_relativo('Estou ciente do aproveitamento de ' .
-      str2upper($this->nm_aluno) . ', matrícula nº: ' . $this->ref_cod_matricula, 68,
-      $this->page_y +12, 600, 50, $fonte, 9, $corTexto, 'left');
-
-    $this->pdf->escreve_relativo('Assinatura do Responsável(a)', 677,
-      $this->page_y + 18, 200, 50, $fonte, 7, $corTexto, 'left');
-
-    $this->pdf->linha_relativa(660, $this->page_y + 18, 130, 0, 0.4);
   }
 
   function Editar()
