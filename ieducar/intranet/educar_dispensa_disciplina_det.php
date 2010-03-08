@@ -32,6 +32,7 @@ require_once "include/clsBase.inc.php";
 require_once "include/clsDetalhe.inc.php";
 require_once "include/clsBanco.inc.php";
 require_once "include/pmieducar/geral.inc.php";
+require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
 /**
  * clsIndexBase class.
@@ -47,7 +48,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Dispensa Disciplina');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Dispensa Componente Curricular');
     $this->processoAp = 578;
   }
 }
@@ -86,7 +87,7 @@ class indice extends clsDetalhe
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->titulo = 'Dispensa Disciplina - Detalhe';
+    $this->titulo = 'Dispensa Componente Curricular - Detalhe';
     $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg',
       'Intranet');
 
@@ -116,17 +117,9 @@ class indice extends clsDetalhe
       echo "<!--\nErro\nClasse nao existente: clsPmieducarSerie\n-->";
     }
 
-    /**
-     * Busca dados da matrícula
-     */
-    if (class_exists('clsPmieducarMatricula')) {
-      $obj_ref_cod_matricula = new clsPmieducarMatricula();
-      $detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
-    }
-    else {
-      $registro['ref_cod_matricula'] = 'Erro na geracao';
-      echo "<!--\nErro\nClasse nao existente: clsPmieducarMatricula\n-->";
-    }
+    // Dados da matrícula
+    $obj_ref_cod_matricula = new clsPmieducarMatricula();
+    $detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
 
     $obj_aluno = new clsPmieducarAluno();
     $det_aluno = array_shift($obj_aluno->lista($detalhe_aluno['ref_cod_aluno'],
@@ -138,25 +131,15 @@ class indice extends clsDetalhe
 
     $nm_aluno = $det_aluno['nome_aluno'];
 
-    if (class_exists('clsPmieducarCurso')) {
-      $obj_ref_cod_curso = new clsPmieducarCurso( $detalhe_aluno['ref_cod_curso'] );
-      $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-      $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
-    }
-    else {
-      $registro['ref_cod_curso'] = 'Erro na geracao';
-      echo "<!--\nErro\nClasse nao existente: clsPmieducarCurso\n-->";
-    }
+    // Dados do curso
+    $obj_ref_cod_curso = new clsPmieducarCurso($detalhe_aluno['ref_cod_curso']);
+    $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
+    $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
 
-    if (class_exists('clsPmieducarTipoDispensa')) {
-      $obj_ref_cod_tipo_dispensa = new clsPmieducarTipoDispensa($registro['ref_cod_tipo_dispensa']);
-      $det_ref_cod_tipo_dispensa = $obj_ref_cod_tipo_dispensa->detalhe();
-      $registro['ref_cod_tipo_dispensa'] = $det_ref_cod_tipo_dispensa['nm_tipo'];
-    }
-    else {
-      $registro['ref_cod_tipo_dispensa'] = 'Erro na geracao';
-      echo "<!--\nErro\nClasse nao existente: clsPmieducarTipoDispensa\n-->";
-    }
+    // Tipo de dispensa
+    $obj_ref_cod_tipo_dispensa = new clsPmieducarTipoDispensa($registro['ref_cod_tipo_dispensa']);
+    $det_ref_cod_tipo_dispensa = $obj_ref_cod_tipo_dispensa->detalhe();
+    $registro['ref_cod_tipo_dispensa'] = $det_ref_cod_tipo_dispensa['nm_tipo'];
 
     if ($registro['ref_cod_matricula']) {
       $this->addDetalhe(array('Matricula', $registro['ref_cod_matricula']));
@@ -175,11 +158,9 @@ class indice extends clsDetalhe
     }
 
     if ($registro['ref_cod_disciplina']) {
-      $obj_disciplina = new clsPmieducarDisciplina($registro['ref_cod_disciplina'],
-        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
-
-      $det_disciplina = $obj_disciplina->detalhe();
-      $this->addDetalhe(array('Disciplina', $det_disciplina['nm_disciplina']));
+      $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+      $componente = $componenteMapper->find($registro['ref_cod_disciplina']);
+      $this->addDetalhe(array('Componente Curricular', $componente->nome));
     }
 
     if ($registro['ref_cod_tipo_dispensa']) {

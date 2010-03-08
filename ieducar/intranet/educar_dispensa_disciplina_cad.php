@@ -32,6 +32,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
 /**
  * clsIndexBase class.
@@ -47,7 +48,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Dispensa Disciplina');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Dispensa Componente Curricular');
     $this->processoAp = 578;
   }
 }
@@ -154,16 +155,8 @@ class indice extends clsCadastro
     /**
      * Busca dados da matricula
      */
-    if (class_exists('clsPmieducarMatricula')) {
-      $obj_ref_cod_matricula = new clsPmieducarMatricula();
-      $detalhe_aluno = array_shift($obj_ref_cod_matricula->lista(
-        $this->ref_cod_matricula)
-      );
-    }
-    else {
-      $registro['ref_cod_matricula'] = 'Erro na geracao';
-      echo "<!--\nErro\nClasse nao existente: clsPmieducarMatricula\n-->";
-    }
+    $obj_ref_cod_matricula = new clsPmieducarMatricula();
+    $detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
 
     $obj_aluno = new clsPmieducarAluno();
     $det_aluno = array_shift($det_aluno = $obj_aluno->lista($detalhe_aluno['ref_cod_aluno'],
@@ -173,9 +166,9 @@ class indice extends clsCadastro
       NULL, NULL, NULL, NULL, NULL, NULL, 1);
 
     $det_escola = $obj_escola->detalhe();
-    $this->ref_cod_instituicao = $det_escola["ref_cod_instituicao"];
+    $this->ref_cod_instituicao = $det_escola['ref_cod_instituicao'];
 
-    $this->campoRotulo("nm_aluno", "Nome do Aluno", $det_aluno['nome_aluno']);
+    $this->campoRotulo('nm_aluno', 'Nome do Aluno', $det_aluno['nome_aluno']);
 
     $obj_matricula_turma = new clsPmieducarMatriculaTurma();
     $lst_matricula_turma = $obj_matricula_turma->lista($this->ref_cod_matricula,
@@ -194,29 +187,21 @@ class indice extends clsCadastro
     $this->campoOculto('ref_cod_escola', $this->ref_cod_escola);
 
     $opcoes = array('' => 'Selecione');
-    if (class_exists('clsPmieducarEscolaSerieDisciplina')) {
-      $objTemp = new clsPmieducarEscolaSerieDisciplina();
-      $lista = $objTemp->lista($this->ref_cod_serie, $this->ref_cod_escola, NULL, 1);
 
-      if (is_array($lista) && count($lista)) {
-        foreach ($lista as $registro) {
-          $obj_disciplina = new clsPmieducarDisciplina(
-            $registro['ref_cod_disciplina'], NULL, NULL, NULL, NULL, NULL, NULL,
-            NULL, NULL, NULL, 1);
+    $objTemp = new clsPmieducarEscolaSerieDisciplina();
+    $lista = $objTemp->lista($this->ref_cod_serie, $this->ref_cod_escola, NULL, 1);
 
-          $det_disciplina = $obj_disciplina->detalhe();
-          $opcoes[$registro['ref_cod_disciplina']] = $det_disciplina['nm_disciplina'];
-        }
+    $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+    if (is_array($lista) && count($lista)) {
+      foreach ($lista as $registro) {
+        $componente = $componenteMapper->find($registro['ref_cod_disciplina']);
+        $opcoes[$componente->id] = $componente->nome;
       }
-    }
-    else {
-      echo "<!--\nErro\nClasse clsPmieducarTurmaDisciplina nao encontrada\n-->";
-      $opcoes = array('' => 'Erro na geracao');
     }
 
     if ($this->ref_cod_disciplina) {
       $this->campoRotulo('nm_disciplina', 'Disciplina', $opcoes[$this->ref_cod_disciplina]);
-      $this->campoOculto('ref_cod_disciplina', $this->ref_cod_disciplina );
+      $this->campoOculto('ref_cod_disciplina', $this->ref_cod_disciplina);
     }
     else {
       $this->campoLista('ref_cod_disciplina', 'Disciplina', $opcoes,
@@ -225,26 +210,20 @@ class indice extends clsCadastro
 
     $opcoes = array('' => 'Selecione');
 
-    if (class_exists('clsPmieducarTipoDispensa')) {
-      $objTemp = new clsPmieducarTipoDispensa();
+    $objTemp = new clsPmieducarTipoDispensa();
 
-      if ($this->ref_cod_instituicao) {
-        $lista = $objTemp->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-          NULL, 1, $this->ref_cod_instituicao);
-      }
-      else {
-        $lista = $objTemp->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
-      }
-
-      if (is_array($lista) && count($lista)) {
-        foreach ($lista as $registro) {
-          $opcoes[$registro['cod_tipo_dispensa']] = $registro['nm_tipo'];
-        }
-      }
+    if ($this->ref_cod_instituicao) {
+      $lista = $objTemp->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        NULL, 1, $this->ref_cod_instituicao);
     }
     else {
-      echo "<!--\nErro\nClasse clsPmieducarTipoDispensa nao encontrada\n-->";
-      $opcoes = array('' => 'Erro na geracao');
+      $lista = $objTemp->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+    }
+
+    if (is_array($lista) && count($lista)) {
+      foreach ($lista as $registro) {
+        $opcoes[$registro['cod_tipo_dispensa']] = $registro['nm_tipo'];
+      }
     }
 
     $this->campoLista('ref_cod_tipo_dispensa', 'Tipo Dispensa', $opcoes,
