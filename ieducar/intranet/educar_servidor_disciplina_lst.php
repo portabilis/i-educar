@@ -32,6 +32,8 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
+require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
 
 /**
  * clsIndexBase class.
@@ -48,9 +50,9 @@ class clsIndexBase extends clsBase
   function Formular()
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Disciplina');
-    $this->processoAp = 0;
-    $this->renderBanner = FALSE;
-    $this->renderMenu = FALSE;
+    $this->processoAp         = 0;
+    $this->renderBanner       = FALSE;
+    $this->renderMenu         = FALSE;
     $this->renderMenuSuspenso = FALSE;
   }
 }
@@ -114,13 +116,14 @@ class indice extends clsCadastro
     if (!$this->cursos_disciplina) {
       $obj_servidor_disciplina = new clsPmieducarServidorDisciplina();
       $lst_servidor_disciplina = $obj_servidor_disciplina->lista(NULL,
-        $this->ref_cod_instituicao,$this->cod_servidor);
+        $this->ref_cod_instituicao, $this->cod_servidor);
 
       if ($lst_servidor_disciplina) {
         foreach ($lst_servidor_disciplina as $disciplina) {
-          $obj_disciplina = new clsPmieducarDisciplina($disciplina['ref_cod_disciplina']);
-          $det_disciplina = $obj_disciplina->detalhe();
-          $this->cursos_disciplina[$det_disciplina['ref_cod_curso']][$disciplina['ref_cod_disciplina']] = $disciplina['ref_cod_disciplina'];
+          $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+          $componente = $componenteMapper->find($disciplina['ref_cod_disciplina']);
+
+          $this->cursos_disciplina[$disciplina['ref_cod_curso']][$disciplina['ref_cod_disciplina']] = $disciplina['ref_cod_disciplina'];
         }
       }
     }
@@ -148,7 +151,7 @@ class indice extends clsCadastro
     $obj_cursos->setOrderby('nm_curso');
     $lst_cursos = $obj_cursos->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-      NULL, NULL, NULL,1, NULL,$this->ref_cod_instituicao);
+      NULL, NULL, NULL,1, NULL, $this->ref_cod_instituicao);
 
     if ($lst_cursos) {
       foreach ($lst_cursos as $curso) {
@@ -161,11 +164,12 @@ class indice extends clsCadastro
     $lst_opcoes = array();
     $arr_valores = array();
 
-    if($this->cursos_disciplina) {
+
+    if ($this->cursos_disciplina) {
       foreach ($this->cursos_disciplina as $curso => $disciplinas) {
         if ($disciplinas) {
           foreach ($disciplinas as $disciplina) {
-            $arr_valores[] = array($curso,$disciplina);
+            $arr_valores[] = array($curso, $disciplina);
           }
         }
       }
@@ -177,21 +181,27 @@ class indice extends clsCadastro
           NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, $curso,
           $this->ref_cod_instituicao);
 
+        $componenteAnoDataMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
+        $componentes = $componenteAnoDataMapper->findComponentePorCurso($curso);
+
         $opcoes_disc = array();
-        foreach ($lst_disciplinas as $disciplina) {
-          $opcoes_disc[$disciplina['cod_disciplina']]  = $disciplina['nm_disciplina'];
+        foreach ($componentes as $componente) {
+          $opcoes_disc[$componente->id]  = $componente->nome;
         }
 
-        $lst_opcoes[] = array($opcoes_curso,$opcoes_disc);
+        $lst_opcoes[] = array($opcoes_curso, $opcoes_disc);
       }
     }
 
-    $this->campoTabelaInicio('funcao', 'Disciplinas', array('Curso','Disciplina'),
+    $this->campoTabelaInicio('funcao', 'Componentes Curriculares', array('Curso', 'Componente Curricular'),
       $arr_valores, '', $lst_opcoes);
 
+    // Cursos
     $this->campoLista('ref_cod_curso', 'Curso', $opcoes_curso,
       $this->ref_cod_curso, 'trocaCurso(this)', '', '', '');
-    $this->campoLista('ref_cod_disciplina', 'Disciplina', $opcoes,
+
+    // Disciplinas
+    $this->campoLista('ref_cod_disciplina', 'Componente Curricular', $opcoes,
       $this->ref_cod_disciplina, '', '', '', '');
 
     $this->campoTabelaFim();

@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * i-Educar - Sistema de gestão escolar
  *
  * Copyright (C) 2006  Prefeitura Municipal de Itajaí
@@ -19,45 +19,57 @@
  * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- */
-
-/**
- * Mostra detalhes do cadastro de um servidor junto com ações de cadastro
  *
- * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package     Core
- * @subpackage  Servidor
- * @since       Disponível desde a versão 1.0.0
- * @version     $Id$
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Arquivo disponível desde a versão 1.0.0
+ * @version   $Id$
  */
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
-
+/**
+ * clsIndexBase class.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
+ */
 class clsIndexBase extends clsBase {
-  public function Formular() {
+  function Formular()
+  {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor');
-    $this->processoAp = '635';
+    $this->processoAp = 635;
   }
 }
 
-
-class indice extends clsDetalhe {
-
-  /**
-   * Título da página
-   * @var string
-   */
-  public $titulo;
+/**
+ * indice class.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
+ */
+class indice extends clsDetalhe
+{
+  var $titulo;
 
   /**
    * Atributos de dados
    */
-  public
+  var
     $cod_servidor        = NULL,
     $ref_cod_deficiencia = NULL,
     $ref_idesco          = NULL,
@@ -69,23 +81,25 @@ class indice extends clsDetalhe {
     $ref_cod_instituicao = NULL,
     $alocacao_array      = array();
 
-
-
   /**
    * Implementação do método Gerar()
    */
-  public function Gerar() {
+  function Gerar()
+  {
     session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
     $this->titulo = 'Servidor - Detalhe';
-    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
+    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg',
+      'Intranet');
 
-    $this->cod_servidor        = $_GET["cod_servidor"];
-    $this->ref_cod_instituicao = $_GET["ref_cod_instituicao"];
+    $this->cod_servidor        = $_GET['cod_servidor'];
+    $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
-    $tmp_obj = new clsPmieducarServidor( $this->cod_servidor,null,null,null,null,null,null,$this->ref_cod_instituicao );
+    $tmp_obj = new clsPmieducarServidor($this->cod_servidor, NULL, NULL, NULL,
+      NULL, NULL, NULL, $this->ref_cod_instituicao);
+
     $registro = $tmp_obj->detalhe();
 
     if (!$registro) {
@@ -126,7 +140,7 @@ class indice extends clsDetalhe {
     $obj = new clsPmieducarServidorAlocacao();
     $obj->setOrderby('periodo, carga_horaria');
     $lista = $obj->lista(NULL, $this->ref_cod_instituicao, NULL, NULL, NULL,
-      $this->cod_servidor, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL ,1);
+      $this->cod_servidor, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
 
     if ($lista) {
       // Passa todos os valores do registro para atributos do objeto
@@ -149,7 +163,7 @@ class indice extends clsDetalhe {
     }
 
     if ($registro['matricula']) {
-      $this->addDetalhe(array('Matr&iacute;cula', $registro['matricula']));
+      $this->addDetalhe(array('Matrícula', $registro['matricula']));
     }
 
     if ($registro['nome']) {
@@ -157,11 +171,11 @@ class indice extends clsDetalhe {
     }
 
     if ($registro['ref_cod_instituicao']) {
-      $this->addDetalhe( array( "Institui&ccedil;&atilde;o", $registro['ref_cod_instituicao']));
+      $this->addDetalhe( array( "Instituição", $registro['ref_cod_instituicao']));
     }
 
     if ($registro['ref_cod_deficiencia']) {
-      $this->addDetalhe(array('Defici&eacute;ncia', $registro['ref_cod_deficiencia']));
+      $this->addDetalhe(array('Deficiência', $registro['ref_cod_deficiencia']));
     }
 
     if( $registro['ref_idesco']) {
@@ -176,7 +190,7 @@ class indice extends clsDetalhe {
     }
 
     if ($registro['ref_cod_funcao']) {
-      $this->addDetalhe(array('Fun&ccedil;&atilde;o', $registro['ref_cod_funcao']));
+      $this->addDetalhe(array('Função', $registro['ref_cod_funcao']));
     }
 
     $obj_funcao = new clsPmieducarServidorFuncao();
@@ -186,10 +200,10 @@ class indice extends clsDetalhe {
       $tabela .= "
         <table cellspacing='0' cellpadding='0' border='0'>
           <tr bgcolor='#A1B3BD' align='center'>
-            <td width='150'>Fun&ccedil;&atilde;o</td>
+            <td width='150'>Função</td>
           </tr>";
 
-      $class = "formlttd";
+      $class = 'formlttd';
 
       $tab_disc = NULL;
 
@@ -203,16 +217,16 @@ class indice extends clsDetalhe {
         $class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
         $tab_disc .= "
           <tr>
-            <td bgcolor='#A1B3BD' align='center'>Disciplinas</td>
+            <td bgcolor='#A1B3BD' align='center'>Componentes Curriculares</td>
           </tr>";
 
+        $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
         foreach ($lst_disciplina_servidor as $disciplina) {
-          $obj_disciplina = new clsPmieducarDisciplina($disciplina['ref_cod_disciplina']);
-          $det_disciplina = $obj_disciplina->detalhe();
+          $componente = $componenteMapper->find($disciplina['ref_cod_disciplina']);
 
           $tab_disc .= "
             <tr class='$class2' align='center'>
-              <td align='left'>{$det_disciplina['nm_disciplina']}</td>
+              <td align='left'>{$componente->nome}</td>
             </tr>";
 
           $class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
@@ -225,7 +239,7 @@ class indice extends clsDetalhe {
       $lst_servidor_curso = $obj_servidor_curso->lista(NULL,
         $this->ref_cod_instituicao, $this->cod_servidor);
 
-      if($lst_servidor_curso) {
+      if ($lst_servidor_curso) {
         $tab_curso .= "<table cellspacing='0' cellpadding='0' width='200' border='0' style='border:1px dotted #000000'>";
 
         $class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
@@ -279,7 +293,7 @@ class indice extends clsDetalhe {
       }
 
       $tabela .= "</table>";
-      $this->addDetalhe(array('Fun&ccedil;&atilde;o',
+      $this->addDetalhe(array('Função',
         "<a href='javascript:trocaDisplay(\"det_f\");' >Mostrar detalhe</a><div id='det_f' name='det_f' style='display:none;'>".$tabela."</div>"));
     }
 
@@ -293,25 +307,25 @@ class indice extends clsDetalhe {
       $horas   = (int)$cargaHoraria;
       $minutos = round(($cargaHoraria - $horas) * 60);
       $cargaHoraria = sprintf('%02d:%02d', $horas, $minutos);
-      $this->addDetalhe(array('Carga Hor&aacute;ria', $cargaHoraria));
+      $this->addDetalhe(array('Carga Horária', $cargaHoraria));
     }
 
     $dias_da_semana = array(
       '' => 'Selecione',
       1  => 'Domingo',
       2  => 'Segunda',
-      3  => 'Ter&ccedil;a',
+      3  => 'Terça',
       4  => 'Quarta',
       5  => 'Quinta',
       6  => 'Sexta',
-      7  => 'S&aacute;bado');
+      7  => 'Sábado');
 
     if ($this->alocacao_array) {
       $tabela .= "
         <table cellspacing='0' cellpadding='0' border='0'>
           <tr bgcolor='#A1B3BD' align='center'>
-            <td width='150'>Carga Horaria</td>
-            <td width='80'>Periodo</td>
+            <td width='150'>Carga Horária</td>
+            <td width='80'>Período</td>
             <td width='150'>Escola</td>
           </tr>";
 
@@ -341,7 +355,7 @@ class indice extends clsDetalhe {
 
       $tabela .= "</table>";
 
-      $this->addDetalhe(array('Hor&aacute;rios de trabalho',
+      $this->addDetalhe(array('Horários de trabalho',
         "<a href='javascript:trocaDisplay(\"det_pree\");' >Mostrar detalhe</a><div id='det_pree' name='det_pree' style='display:none;'>".$tabela."</div>"));
     }
 
@@ -357,10 +371,10 @@ class indice extends clsDetalhe {
       $this->array_botao = array();
       $this->array_botao_url_script = array();
 
-      $this->array_botao[] = 'Avalia&ccedil;&atilde;o de Desempenho';
+      $this->array_botao[] = 'Avaliação de Desempenho';
       $this->array_botao_url_script[] = "go(\"educar_avaliacao_desempenho_lst.php?{$get_padrao}\");";
 
-      $this->array_botao[] = 'Forma&ccedil;&atilde;o';
+      $this->array_botao[] = 'Formação';
       $this->array_botao_url_script[] = "go(\"educar_servidor_formacao_lst.php?{$get_padrao}\");";
 
       $this->array_botao[] = 'Faltas/Atrasos';
@@ -378,7 +392,7 @@ class indice extends clsDetalhe {
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
 
       if ($lista) {
-        $this->array_botao[] = 'Substituir Hor&aacute;rio Servidor';
+        $this->array_botao[] = 'Substituir Horário Servidor';
         $this->array_botao_url_script[] = "go(\"educar_servidor_substituicao_cad.php?{$get_padrao}\");";
       }
 
@@ -412,14 +426,15 @@ $pagina->addForm($miolo);
 // Gera o HTML
 $pagina->MakeAll();
 ?>
-
 <script type="text/javascript">
-function trocaDisplay(id) {
+function trocaDisplay(id)
+{
   var element = document.getElementById(id);
-  element.style.display = (element.style.display == "none") ? "inline" : "none";
+  element.style.display = (element.style.display == 'none') ? 'inline' : 'none';
 }
 
-function popless() {
+function popless()
+{
   var campoServidor = <?=$_GET["cod_servidor"];?>;
   var campoInstituicao = <?=$_GET["ref_cod_instituicao"];?>;
   pesquisa_valores_popless('educar_servidor_nivel_cad.php?ref_cod_servidor='+campoServidor+'&ref_cod_instituicao='+campoInstituicao, '');

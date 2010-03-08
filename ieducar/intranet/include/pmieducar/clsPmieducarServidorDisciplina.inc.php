@@ -29,6 +29,7 @@
  */
 
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
 /**
  * clsPmieducarServidorDisciplina class.
@@ -45,6 +46,7 @@ class clsPmieducarServidorDisciplina
   var $ref_cod_disciplina;
   var $ref_ref_cod_instituicao;
   var $ref_cod_servidor;
+  var $ref_cod_curso;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -99,54 +101,40 @@ class clsPmieducarServidorDisciplina
   /**
    * Construtor.
    */
-  function clsPmieducarServidorDisciplina( $ref_cod_disciplina = null, $ref_ref_cod_instituicao = null, $ref_cod_servidor = null )
+  function clsPmieducarServidorDisciplina($ref_cod_disciplina = NULL,
+    $ref_ref_cod_instituicao = NULL, $ref_cod_servidor = NULL, $ref_cod_curso = NULL)
   {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'servidor_disciplina';
 
-    $this->_campos_lista = $this->_todos_campos = 'ref_cod_disciplina, ref_ref_cod_instituicao, ref_cod_servidor';
+    $this->_campos_lista = $this->_todos_campos = 'ref_cod_disciplina, ref_ref_cod_instituicao, ref_cod_servidor, ref_cod_curso';
 
     if (is_numeric($ref_cod_servidor) && is_numeric($ref_ref_cod_instituicao)) {
-      if (class_exists('clsPmieducarServidor')) {
-        $tmp_obj = new clsPmieducarServidor($ref_cod_servidor, NULL, NULL, NULL,
-          NULL, NULL, NULL, $ref_ref_cod_instituicao);
+      $servidor = new clsPmieducarServidor($ref_cod_servidor, NULL, NULL, NULL,
+        NULL, NULL, NULL, $ref_ref_cod_instituicao);
 
-        if (method_exists($tmp_obj, 'existe')) {
-          if ($tmp_obj->existe()) {
-            $this->ref_cod_servidor = $ref_cod_servidor;
-            $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
-          }
-        }
-        elseif (method_exists($tmp_obj, 'detalhe')) {
-          if ($tmp_obj->detalhe()) {
-            $this->ref_cod_servidor = $ref_cod_servidor;
-            $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
-          }
-        }
-      }
-      elseif ($db->CampoUnico("SELECT 1 FROM pmieducar.servidor WHERE cod_servidor = '{$ref_cod_servidor}' AND ref_cod_instituicao = '{$ref_ref_cod_instituicao}'")) {
+      if ($servidor->existe()) {
         $this->ref_cod_servidor = $ref_cod_servidor;
         $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
       }
     }
 
     if (is_numeric($ref_cod_disciplina)) {
-      if (class_exists('clsPmieducarDisciplina')) {
-        $tmp_obj = new clsPmieducarDisciplina($ref_cod_disciplina);
-        if (method_exists($tmp_obj, 'existe')) {
-          if ($tmp_obj->existe()) {
-            $this->ref_cod_disciplina = $ref_cod_disciplina;
-          }
-        }
-        elseif (method_exists($tmp_obj, 'detalhe')) {
-          if ($tmp_obj->detalhe()) {
-            $this->ref_cod_disciplina = $ref_cod_disciplina;
-          }
-        }
-      }
-      elseif ($db->CampoUnico("SELECT 1 FROM pmieducar.disciplina WHERE cod_disciplina = '{$ref_cod_disciplina}'")) {
+      $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+      try {
+        $componenteMapper->find($ref_cod_disciplina);
         $this->ref_cod_disciplina = $ref_cod_disciplina;
+      }
+      catch (Exception $e) {
+      }
+    }
+
+    if (is_numeric($ref_cod_curso)) {
+      $curso = new clsPmieducarCurso($ref_cod_curso);
+
+      if ($curso->existe()) {
+        $this->ref_cod_curso = $ref_cod_curso;
       }
     }
   }
@@ -159,13 +147,14 @@ class clsPmieducarServidorDisciplina
   {
     if (is_numeric($this->ref_cod_disciplina) &&
       is_numeric($this->ref_ref_cod_instituicao) &&
-      is_numeric($this->ref_cod_servidor)
+      is_numeric($this->ref_cod_servidor) &&
+      is_numeric($this->ref_cod_curso)
     ) {
       $db = new clsBanco();
 
-      $campos = '';
+      $campos  = '';
       $valores = '';
-      $gruda = '';
+      $gruda   = '';
 
       if (is_numeric($this->ref_cod_disciplina)) {
         $campos .= "{$gruda}ref_cod_disciplina";
@@ -185,6 +174,12 @@ class clsPmieducarServidorDisciplina
         $gruda = ", ";
       }
 
+      if (is_numeric($this->ref_cod_curso)) {
+        $campos .= "{$gruda}ref_cod_curso";
+        $valores .= "{$gruda}'{$this->ref_cod_curso}'";
+        $gruda = ", ";
+      }
+
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
       return TRUE;
     }
@@ -199,13 +194,15 @@ class clsPmieducarServidorDisciplina
   function edita()
   {
     if (is_numeric($this->ref_cod_disciplina) &&
-      is_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_cod_servidor)
+      is_numeric($this->ref_ref_cod_instituicao) &&
+      is_numeric($this->ref_cod_servidor) &&
+      is_numeric($this->ref_cod_curso)
     ) {
       $db = new clsBanco();
       $set = '';
 
       if ($set) {
-        $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_disciplina = '{$this->ref_cod_disciplina}' AND ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}' AND ref_cod_servidor = '{$this->ref_cod_servidor}'");
+        $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_disciplina = '{$this->ref_cod_disciplina}' AND ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}' AND ref_cod_servidor = '{$this->ref_cod_servidor}' AND ref_cod_curso = '{$this->ref_cod_curso}'");
         return TRUE;
       }
     }
@@ -218,7 +215,7 @@ class clsPmieducarServidorDisciplina
    * @return array
    */
   function lista($int_ref_cod_disciplina = NULL, $int_ref_ref_cod_instituicao = NULL,
-    $int_ref_cod_servidor = NULL)
+    $int_ref_cod_servidor = NULL, $int_ref_cod_curso = NULL)
   {
     $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
     $filtros = "";
@@ -237,6 +234,11 @@ class clsPmieducarServidorDisciplina
 
     if (is_numeric($int_ref_cod_servidor)) {
       $filtros .= "{$whereAnd} ref_cod_servidor = '{$int_ref_cod_servidor}'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_numeric($int_ref_cod_curso)) {
+      $filtros .= "{$whereAnd} ref_cod_curso = '{$int_ref_cod_curso}'";
       $whereAnd = " AND ";
     }
 
@@ -278,8 +280,10 @@ class clsPmieducarServidorDisciplina
   function detalhe()
   {
     if (is_numeric($this->ref_cod_disciplina) &&
-      is_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_cod_servidor))
-    {
+      is_numeric($this->ref_ref_cod_instituicao) &&
+      is_numeric($this->ref_cod_servidor) &&
+      is_numeric($this->ref_cod_curso)
+    ) {
       $db = new clsBanco();
       $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_disciplina = '{$this->ref_cod_disciplina}' AND ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}' AND ref_cod_servidor = '{$this->ref_cod_servidor}'");
       $db->ProximoRegistro();
@@ -296,10 +300,12 @@ class clsPmieducarServidorDisciplina
   function existe()
   {
     if (is_numeric($this->ref_cod_disciplina) &&
-      is_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_cod_servidor)
+      is_numeric($this->ref_ref_cod_instituicao) &&
+      is_numeric($this->ref_cod_servidor) &&
+      is_numeric($this->ref_cod_curso)
     ) {
       $db = new clsBanco();
-      $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_disciplina = '{$this->ref_cod_disciplina}' AND ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}' AND ref_cod_servidor = '{$this->ref_cod_servidor}'");
+      $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_disciplina = '{$this->ref_cod_disciplina}' AND ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}' AND ref_cod_servidor = '{$this->ref_cod_servidor}' AND ref_cod_curso = '{$this->ref_cod_curso}'");
       if ($db->ProximoRegistro()) {
         return TRUE;
       }
@@ -313,9 +319,11 @@ class clsPmieducarServidorDisciplina
    */
   function excluir()
   {
-    if (is_numeric($this->ref_cod_disciplina) && is_numeric($this->ref_ref_cod_instituicao) &&
-      is_numeric($this->ref_cod_servidor))
-    {
+    if (is_numeric($this->ref_cod_disciplina) &&
+      is_numeric($this->ref_ref_cod_instituicao) &&
+      is_numeric($this->ref_cod_servidor) &&
+      is_numeric($this->ref_cod_curso)
+    ) {
     }
     return FALSE;
   }

@@ -1,12 +1,12 @@
 <?php
 
-/*
- * i-Educar - Sistema de gestão de escolas
+/**
+ * i-Educar - Sistema de gestão escolar
  *
- * Copyright (c) 2006   Prefeitura Municipal de Itajaí
- *                                 <ctima@itajai.sc.gov.br>
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuÃí-lo e/ou modificá-lo
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
  * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
  * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
  * qualquer versão posterior.
@@ -19,16 +19,13 @@
  * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- */
-
-/**
- * Formulário de cadastro de servidor
  *
- * @author   Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package  Core
- * @since    Arquivo disponível desde a versão 1.0.0
- * @version  $Id$
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Arquivo disponível desde a versão 1.0.0
+ * @version   $Id$
  */
 
 require_once 'include/clsBase.inc.php';
@@ -36,14 +33,35 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
-
-class clsIndexBase extends clsBase {
-  public function Formular() {
-    $this->SetTitulo($this->_instituicao . " i-Educar - Servidor");
-    $this->processoAp = "635";
+/**
+ * clsIndexBase class.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
+ */
+class clsIndexBase extends clsBase
+{
+  function Formular()
+  {
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor');
+    $this->processoAp = 635;
   }
 }
 
+/**
+ * indice class.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
+ */
 class indice extends clsCadastro
 {
   var $pessoa_logada;
@@ -98,14 +116,14 @@ class indice extends clsCadastro
         }
 
         $db = new clsBanco();
-        $consulta = "
+        $consulta = sprintf("
           SELECT
             SUBSTR(COALESCE(SUM(carga_horaria), '00:00'), 0, 6) AS horas_utilizadas
           FROM
             pmieducar.servidor_alocacao
           WHERE
-            ref_cod_servidor = '{$this->cod_servidor}' AND
-            ativo            = 1";
+            ref_cod_servidor = '%d' AND
+            ativo            = 1", $this->cod_servidor);
 
         $this->total_horas_alocadas = $db->CampoUnico($consulta);
 
@@ -247,15 +265,15 @@ class indice extends clsCadastro
     }
 
     $this->campoTabelaInicio('funcao', 'Funções Servidor',
-      array("Função", "Disciplinas", "Cursos"), ($this->ref_cod_funcao));
+      array("Função", "Componentes Curriculares", "Cursos"), ($this->ref_cod_funcao));
 
     $funcao = 'popless()';
 
     $this->campoLista('ref_cod_funcao', 'Função', $opcoes, $this->ref_cod_funcao,
       'funcaoChange(this)', '', '', '');
 
-    $this->campoRotulo('disciplina', 'Disciplinas',
-      "<img src='imagens/lupa_antiga.png' border='0' style='cursor:pointer;' alt='Buscar Disciplina' title='Buscar Disciplina' onclick=\"$funcao\">");
+    $this->campoRotulo('disciplina', 'Componentes Curriculares',
+      "<img src='imagens/lupa_antiga.png' border='0' style='cursor:pointer;' alt='Buscar Componente Curricular' title='Buscar Componente Curricular' onclick=\"$funcao\">");
 
     $funcao = 'popCurso()';
 
@@ -301,7 +319,9 @@ class indice extends clsCadastro
     $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 3,
       'educar_servidor_lst.php');
 
-    $obj = new clsPmieducarServidor($this->cod_servidor, NULL, NULL, NULL, NULL, NULL, NULL, $this->ref_cod_instituicao );
+    $obj = new clsPmieducarServidor($this->cod_servidor, NULL, NULL, NULL, NULL,
+      NULL, NULL, $this->ref_cod_instituicao);
+
     if ($obj->detalhe()) {
       $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
       $obj = new clsPmieducarServidor($this->cod_servidor,
@@ -361,8 +381,10 @@ class indice extends clsCadastro
 
     if ($this->ref_cod_instituicao == $this->ref_cod_instituicao_original) {
       $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
+
       $obj = new clsPmieducarServidor($this->cod_servidor, $this->ref_cod_deficiencia,
         $this->ref_idesco, $this->carga_horaria, NULL, NULL, 1, $this->ref_cod_instituicao);
+
       $editou = $obj->edita();
 
       if ($editou) {
@@ -483,15 +505,13 @@ class indice extends clsCadastro
   {
     @session_start();
     $cursos_disciplina = $_SESSION['cursos_disciplina'];
-    $cursos_servidor = $_SESSION['cursos_servidor'];
+    $cursos_servidor   = $_SESSION['cursos_servidor'];
     @session_write_close();
-
-    $this->excluiFuncoes();
-    $this->excluiCursos();
 
     $existe_funcao_professor = FALSE;
 
     if ($this->ref_cod_funcao) {
+      $this->excluiFuncoes();
       foreach ($this->ref_cod_funcao as $funcao) {
         $funcao_professor = explode('-', $funcao);
         $funcao = array_shift($funcao_professor);
@@ -511,11 +531,13 @@ class indice extends clsCadastro
 
     if ($existe_funcao_professor) {
       if ($cursos_disciplina) {
+        $this->excluiDisciplinas();
         foreach ($cursos_disciplina as $curso => $disciplinas) {
           if ($disciplinas) {
             foreach ($disciplinas as $disciplina) {
               $obj_servidor_disciplina = new clsPmieducarServidorDisciplina(
-                $disciplina, $this->ref_cod_instituicao, $this->cod_servidor);
+                $disciplina, $this->ref_cod_instituicao, $this->cod_servidor,
+                $curso);
 
               if (!$obj_servidor_disciplina->existe()) {
                 $obj_servidor_disciplina->cadastra();
@@ -526,6 +548,7 @@ class indice extends clsCadastro
       }
 
       if ($cursos_servidor) {
+        $this->excluiCursos();
         foreach ($cursos_servidor as $curso) {
           $obj_curso_servidor = new clsPmieducarServidorCursoMinistra($curso,
             $this->ref_cod_instituicao, $this->cod_servidor);
@@ -540,15 +563,18 @@ class indice extends clsCadastro
 
   function excluiFuncoes()
   {
-    $obj_servidor_disciplina = new clsPmieducarServidorDisciplina(NULL,
-      $this->ref_cod_instituicao,$this->cod_servidor);
-
-    $obj_servidor_disciplina->excluirTodos();
-
     $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao,
       $this->cod_servidor);
 
     $obj_servidor_funcao->excluirTodos();
+  }
+
+  function excluiDisciplinas()
+  {
+    $obj_servidor_disciplina = new clsPmieducarServidorDisciplina(NULL,
+      $this->ref_cod_instituicao, $this->cod_servidor);
+
+    $obj_servidor_disciplina->excluirTodos();
   }
 
   function excluiCursos()
@@ -577,7 +603,8 @@ $pagina->MakeAll();
 /**
  * Carrega as opções de um campo select de funções via Ajax
  */
-function getFuncao(id_campo) {
+function getFuncao(id_campo)
+{
   var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
   var campoFuncao      = document.getElementById(id_campo);
   campoFuncao.length   = 1;
@@ -598,7 +625,8 @@ function getFuncao(id_campo) {
  * Parse de resultado da chamada Ajax de getFuncao(). Adiciona cada item
  * retornado como option do select
  */
-function atualizaLstFuncao(xml) {
+function atualizaLstFuncao(xml)
+{
   var campoFuncao = document.getElementById(arguments[1]);
 
   campoFuncao.length = 1;
@@ -628,7 +656,8 @@ function atualizaLstFuncao(xml) {
  *
  * É um toggle on/off
  */
-function funcaoChange(campo) {
+function funcaoChange(campo)
+{
   var valor = campo.value.split("-");
   var id = /[0-9]+/.exec(campo.id)[0];
   var professor = (valor[1] == true);
@@ -711,7 +740,8 @@ function getArrayHora(hora) {
   return array_h;
 }
 
-function acao2() {
+function acao2()
+{
   var total_horas_alocadas = getArrayHora(document.getElementById('total_horas_alocadas').value);
   var carga_horaria = (document.getElementById('carga_horaria').value).replace(',', '.');
 
@@ -730,19 +760,22 @@ if (document.getElementById('total_horas_alocadas')) {
 }
 
 
-function popless() {
+function popless()
+{
   var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
   var campoServidor = document.getElementById('cod_servidor').value;
   pesquisa_valores_popless1('educar_servidor_disciplina_lst.php?ref_cod_servidor='+campoServidor+'&ref_cod_instituicao='+campoInstituicao, '');
 }
 
-function popCurso() {
+function popCurso()
+{
   var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
   var campoServidor = document.getElementById('cod_servidor').value;
   pesquisa_valores_popless('educar_servidor_curso_lst.php?ref_cod_servidor='+campoServidor+'&ref_cod_instituicao='+campoInstituicao, '');
 }
 
-function pesquisa_valores_popless1(caminho, campo) {
+function pesquisa_valores_popless1(caminho, campo)
+{
   new_id = DOM_divs.length;
   div = 'div_dinamico_' + new_id;
   if (caminho.indexOf('?') == -1) {
