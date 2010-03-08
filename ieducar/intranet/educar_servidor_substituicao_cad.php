@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * i-Educar - Sistema de gestão escolar
  *
  * Copyright (C) 2006  Prefeitura Municipal de Itajaí
@@ -19,21 +19,13 @@
  * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- */
-
-/**
- * Formulário de substituição de servidor
  *
- * Interface administrativa para a substituição de horário de um servidor por
- * outro. As classes deste arquivo extendem as classes básicas de interface
- * com o usuário.
- *
- * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package     Core
- * @subpackage  Servidor
- * @since       Disponível desde a versão 1.0.0
- * @version     $Id$
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Arquivo disponível desde a versão 1.0.0
+ * @version   $Id$
  */
 
 require_once 'include/clsBase.inc.php';
@@ -41,44 +33,59 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
+/**
+ * clsIndexBase class.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
+ */
 class clsIndexBase extends clsBase
 {
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Servidor Substitui&ccedil;&atilde;o" );
-		$this->processoAp = "635";
-	}
+  function Formular()
+  {
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Substituição');
+    $this->processoAp = 635;
+  }
 }
 
+/**
+ * indice class.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
+ */
 class indice extends clsCadastro
 {
-	/**
-	 * Referencia pega da session para o idpes do usuario atual
-	 *
-	 * @var int
-	 */
-	var $pessoa_logada;
+  var $pessoa_logada;
 
-	var $cod_servidor_alocacao;
-	var $ref_ref_cod_instituicao;
-	var $ref_usuario_exc;
-	var $ref_usuario_cad;
-	var $ref_cod_escola;
-	var $ref_cod_servidor;
-	var $dia_semana;
-	var $hora_inicial;
-	var $hora_final;
-	var $data_cadastro;
-	var $data_exclusao;
-	var $ativo;
+  var $cod_servidor_alocacao;
+  var $ref_ref_cod_instituicao;
+  var $ref_usuario_exc;
+  var $ref_usuario_cad;
+  var $ref_cod_escola;
+  var $ref_cod_servidor;
+  var $dia_semana;
+  var $hora_inicial;
+  var $hora_final;
+  var $data_cadastro;
+  var $data_exclusao;
+  var $ativo;
 
-	var $todos;
+  var $todos;
 
-	var $alocacao_array = array();
-	var $professor;
-	//var $dias_da_semana = array( '' => 'Selecione', 1 => 'Domingo', 2 => 'Segunda', 3 => 'Ter&ccedil;a', 4 => 'Quarta', 5 => 'Quinta', 6 => 'Sexta', 7 => 'S&aacute;bado' );
+  var $alocacao_array = array();
+  var $professor;
 
-  public function Inicializar() {
+  function Inicializar()
+  {
     $retorno = 'Novo';
     session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -88,7 +95,8 @@ class indice extends clsCadastro
     $this->ref_ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 3, 'educar_servidor_lst.php');
+    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 3,
+      'educar_servidor_lst.php');
 
     if (is_numeric($this->ref_cod_servidor) && is_numeric($this->ref_ref_cod_instituicao)) {
       $retorno = 'Novo';
@@ -121,7 +129,7 @@ class indice extends clsCadastro
           $this->alocacao_array[] = $temp;
         }
 
-        $retorno = "Novo";
+        $retorno = 'Novo';
       }
 
       $this->carga_horaria = $det_servidor['carga_horaria'];
@@ -131,23 +139,24 @@ class indice extends clsCadastro
       die;
     }
 
-    $this->url_cancelar = "educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}";
-    $this->nome_url_cancelar = "Cancelar";
+    $this->url_cancelar = sprintf(
+      'educar_servidor_det.php?cod_servidor=%d&ref_cod_instituicao=%d',
+      $this->ref_cod_servidor, $this->ref_ref_cod_instituicao);
+    $this->nome_url_cancelar = 'Cancelar';
 
     return $retorno;
   }
 
-
-
-  public function Gerar() {
+  function Gerar()
+  {
     $obj_inst = new clsPmieducarInstituicao($this->ref_ref_cod_instituicao);
     $inst_det = $obj_inst->detalhe();
 
-    $this->campoRotulo("nm_instituicao", "Institui&ccedil;&atilde;o", $inst_det['nm_instituicao']);
-    $this->campoOculto("ref_ref_cod_instituicao", $this->ref_ref_cod_instituicao);
+    $this->campoRotulo('nm_instituicao', 'Instituição', $inst_det['nm_instituicao']);
+    $this->campoOculto('ref_ref_cod_instituicao', $this->ref_ref_cod_instituicao);
 
-    $opcoes = array("" => "Selecione");
-    if (class_exists("clsPmieducarServidor")) {
+    $opcoes = array('' => 'Selecione');
+    if (class_exists('clsPmieducarServidor')) {
       $objTemp = new clsPmieducarServidor($this->ref_cod_servidor);
       $det = $objTemp->detalhe();
       if ($det) {
@@ -164,22 +173,32 @@ class indice extends clsCadastro
       }
     }
 
-    $this->campoRotulo("nm_servidor", "Servidor", $nm_servidor);
+    $this->campoRotulo('nm_servidor', 'Servidor', $nm_servidor);
 
-    $this->campoOculto("ref_cod_servidor", $this->ref_cod_servidor);
-    $this->campoOculto("professor",$this->professor);
+    $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
+    $this->campoOculto('professor',$this->professor);
 
-    $this->campoTextoInv("ref_cod_servidor_todos_", "Substituir por:", "",
-      30, 255, TRUE, FALSE, FALSE, "", "<img border='0' onclick=\"pesquisa_valores_popless('educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor_todos&campo2=ref_cod_servidor_todos_&ref_cod_instituicao={$this->ref_ref_cod_instituicao}&ref_cod_servidor={$this->ref_cod_servidor}&tipo=livre&professor={$this->professor}', 'nome')\" src=\"imagens/lupa.png\">","","","" );
-    $this->campoOculto("ref_cod_servidor_todos", "");
+    $url = sprintf(
+      'educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor_todos&campo2=ref_cod_servidor_todos_&ref_cod_instituicao=%d&ref_cod_servidor=%d&tipo=livre&professor=%d',
+      $this->ref_ref_cod_instituicao, $this->ref_cod_servidor, $this->professor
+    );
 
-    $this->campoOculto("alocacao_array", serialize($this->alocacao_array));
+    $img = sprintf(
+      '<img border="0" onclick="pesquisa_valores_popless(\'%s\', \'nome\')" src="imagens/lupa.png">',
+      $url
+    );
+
+    $this->campoTextoInv('ref_cod_servidor_todos_', 'Substituir por:', '',
+      30, 255, TRUE, FALSE, FALSE, '', $img,
+      '', '', '');
+    $this->campoOculto('ref_cod_servidor_todos', '');
+
+    $this->campoOculto('alocacao_array', serialize($this->alocacao_array));
     $this->acao_enviar = 'acao2()';
   }
 
-
-
-  public function Novo() {
+  function Novo()
+  {
     session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
@@ -188,7 +207,8 @@ class indice extends clsCadastro
     $substituto = isset($_POST['ref_cod_servidor_todos']) ? $_POST['ref_cod_servidor_todos'] : NULL;
 
     $permissoes = new clsPermissoes();
-    $permissoes->permissao_cadastra(635, $this->pessoa_logada, 3, 'educar_servidor_alocacao_lst.php');
+    $permissoes->permissao_cadastra(635, $this->pessoa_logada, 3,
+      'educar_servidor_alocacao_lst.php');
 
     $this->alocacao_array = array();
     if ($_POST['alocacao_array']) {
@@ -218,7 +238,7 @@ class indice extends clsCadastro
       }
 
       // Substituição do servidor no quadro de horários (caso seja professor)
-      if('true' == $professor) {
+      if ('true' == $professor) {
         $quadroHorarios = new clsPmieducarQuadroHorarioHorarios(NULL, NULL, NULL,
           NULL, NULL, NULL, $this->ref_ref_cod_instituicao, NULL, $this->ref_cod_servidor,
           NULL, NULL, NULL, NULL, 1, NULL, NULL);
@@ -234,115 +254,37 @@ class indice extends clsCadastro
     die();
   }
 
+  function Editar()
+  {
+    return FALSE;
+  }
 
-
-	function Editar()
-	{
-		/*@session_start();
-		 $this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
-
-		$obj_permissoes = new clsPermissoes();
-		$obj_permissoes->permissao_cadastra( 635, $this->pessoa_logada, 3,  "educar_servidor_alocacao_lst.php" );
-
-
-		$obj = new clsPmieducarServidorAlocacao($this->cod_servidor_alocacao, $this->ref_ref_cod_instituicao, $this->pessoa_logada, $this->pessoa_logada, $this->ref_cod_escola, $this->ref_cod_servidor, $this->dia_semana, $this->hora_inicial, $this->hora_final, $this->data_cadastro, $this->data_exclusao, $this->ativo);
-		$editou = $obj->edita();
-		if( $editou )
-		{
-			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-			header( "Location: educar_servidor_alocacao_lst.php" );
-			die();
-			return true;
-		}
-
-		$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-		echo "<!--\nErro ao editar clsPmieducarServidorAlocacao\nvalores obrigatorios\nif( is_numeric( $this->cod_servidor_alocacao ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
-		*/
-		return false;
-	}
-
-	function Excluir()
-	{
-	/*	@session_start();
-		 $this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
-
-		$obj_permissoes = new clsPermissoes();
-		$obj_permissoes->permissao_excluir( 635, $this->pessoa_logada, 3,  "educar_servidor_alocacao_lst.php" );
-
-
-		$obj = new clsPmieducarServidorAlocacao($this->cod_servidor_alocacao, $this->ref_ref_cod_instituicao, $this->pessoa_logada, $this->pessoa_logada, $this->ref_cod_escola, $this->ref_cod_servidor, $this->dia_semana, $this->hora_inicial, $this->hora_final, $this->data_cadastro, $this->data_exclusao, 0);
-		$excluiu = $obj->excluir();
-		if( $excluiu )
-		{
-			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-			header( "Location: educar_servidor_alocacao_lst.php" );
-			die();
-			return true;
-		}
-
-		$this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-		echo "<!--\nErro ao excluir clsPmieducarServidorAlocacao\nvalores obrigatorios\nif( is_numeric( $this->cod_servidor_alocacao ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
-		*/
-		return false;
-
-	}
+  function Excluir()
+  {
+    return FALSE;
+  }
 }
 
-// cria uma extensao da classe base
+// Instancia objeto de página
 $pagina = new clsIndexBase();
-// cria o conteudo
+
+// Instancia objeto de conteúdo
 $miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
-// gera o html
+
+// Atribui o conteúdo à  página
+$pagina->addForm($miolo);
+
+// Gera o código HTML
 $pagina->MakeAll();
 ?>
-<script>
-//setVisibility('tr_ref_cod_servidor_todos_',false);
-
-function trocaDisplay(id)
+<script type="text/javascript">
+function acao2()
 {
-	if(getVisibility(id)){
-		setVisibility(id,false);
-		setAll('ref_cod_servidor_substituto',true);
-		document.getElementById('todos').value='false';
-		document.getElementById('trocar').src = 'imagens/i-educar/bot_subt_todos.gif';
-		document.getElementById('trocar').blur();
-	}
-	else{
-		setVisibility(id,true);
-		setAll('ref_cod_servidor_substituto',false);
-		document.getElementById('todos').value='true';
-		document.getElementById('trocar').src = image.src;
-		document.getElementById('trocar').blur();
+  if (document.getElementById('ref_cod_servidor_todos').value == ''){
+    alert("Selecione um servidor substituto!");
+    return false;
+  }
 
-	}
+  acao();
 }
-
-function setAll(field,visibility){
-	var elements = window.parent.document.getElementsByName(field);
-
-	for(var ct =0;ct < elements.length;ct++)
-	{
-		setVisibility(elements[ct].id,visibility);
-	}
-}
-
-function acao2(){
-	//if(	document.getElementById('todos').value == "true"){
-		if(	document.getElementById('ref_cod_servidor_todos').value == ''){
-			alert("Selecione um servidor substituto!");
-			return false;
-		}
-
-//	}
-	acao();
-}
-
-//var image = new Image();
-//image.src = 'imagens/i-educar/bot_subt_horario.gif';
-
-
 </script>
