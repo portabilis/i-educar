@@ -33,6 +33,7 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/clsPDF.inc.php';
+require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
 /**
  * clsIndexBase class.
@@ -202,10 +203,11 @@ class indice extends clsCadastro
                         $this->pdf->quadrado_relativo($inicio_x, $this->page_y,
                           75, 50, 0.3);
 
-                        $obj_disciplina = new clsPmieducarDisciplina($registro['ref_cod_disciplina']);
-                        $det_disciplina = $obj_disciplina->detalhe();
-                        $obj_servidor   = new clsPmieducarServidor();
-                        $det_servidor   = array_shift($obj_servidor->lista(
+                        $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+                        $componente = $componenteMapper->find($registro['ref_cod_disciplina']);
+
+                        $obj_servidor = new clsPmieducarServidor();
+                        $det_servidor = array_shift($obj_servidor->lista(
                           $registro['ref_servidor'], NULL, NULL, NULL, NULL,
                           NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
                           NULL, NULL, TRUE));
@@ -215,7 +217,7 @@ class indice extends clsCadastro
                         $texto = sprintf("%s - %s\n%s\n%s",
                           substr($registro['hora_inicial'], 0, 5),
                           substr($registro["hora_final"], 0, 5),
-                          $det_disciplina['abreviatura'],
+                          $componente->abreviatura,
                           $det_servidor['nome']
                         );
 

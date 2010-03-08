@@ -32,6 +32,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
 /**
  * clsIndexBase class.
@@ -138,6 +139,9 @@ class indice extends clsConfig
       $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
     }
 
+    // Componente curricular
+    $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+
     $obrigatorio     = FALSE;
     $get_instituicao = TRUE;
     $get_escola      = TRUE;
@@ -168,17 +172,25 @@ class indice extends clsConfig
 
             if (is_array($resultado)) {
               foreach ($resultado as $registro) {
-                $obj_disciplina = new clsPmieducarDisciplina($registro['ref_cod_disciplina']);
-                $det_disciplina = $obj_disciplina->detalhe();
-                $obj_servidor   = new clsPmieducarServidor();
+                // Componente curricular
+                $componente = $componenteMapper->find($registro['ref_cod_disciplina']);
 
-                $det_servidor   = array_shift($obj_servidor->lista(
+                // Servidor
+                $obj_servidor = new clsPmieducarServidor();
+
+                $det_servidor = array_shift($obj_servidor->lista(
                   $registro['ref_servidor'], NULL, NULL, NULL, NULL, NULL, NULL,
                   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, TRUE));
 
                 $det_servidor['nome'] = array_shift(explode(' ',$det_servidor['nome']));
 
-                $texto .= "<div  style='text-align: center;background-color: #F6F6F6;font-size: 11px; width: 100px; margin: 3px; border: 1px solid #CCCCCC; padding:5px; '>".substr( $registro["hora_inicial"], 0, 5 )." - ".substr( $registro["hora_final"], 0, 5 )." <br> {$det_disciplina["abreviatura"]} <br> {$det_servidor["nome"]}</div>";
+                //$texto .= "<div  style='text-align: center;background-color: #F6F6F6;font-size: 11px; width: 100px; margin: 3px; border: 1px solid #CCCCCC; padding:5px; '>". substr($registro['hora_inicial'], 0, 5) . ' - ' . substr($registro['hora_final'], 0, 5) . " <br> {$componente->abreviatura} <br> {$det_servidor["nome"]}</div>";
+                $detalhes = sprintf("%s - %s<br />%s<br />%s",
+                  substr($registro['hora_inicial'], 0, 5), substr($registro['hora_final'], 0, 5),
+                  $componente->abreviatura, $det_servidor['nome']);
+
+                $texto .= sprintf('<div style="text-align: center; background-color: #F6F6F6; font-size: 11px; width: 100px; margin: 3px; border: 1px solid #CCCCCC; padding:5px;">%s</div>',
+                  $detalhes);
               }
             }
             else {
