@@ -32,6 +32,8 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
+require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
 
 /**
  * clsIndexBase class.
@@ -192,20 +194,20 @@ class indice extends clsCadastro
 
   function Gerar()
   {
-
-    if ($_POST)
+    if ($_POST) {
       foreach ($_POST as $campo => $val) {
         $this->$campo = ( $this->$campo ) ? $this->$campo : $val;
       }
+    }
 
-      $obrigatorio            = TRUE;
-      $desabilitado           = TRUE;
-      $get_escola             = TRUE;
-      $get_curso              = TRUE;
-      $get_escola_curso_serie = TRUE;
-      $get_turma              = TRUE;
+    $obrigatorio            = TRUE;
+    $desabilitado           = TRUE;
+    $get_escola             = TRUE;
+    $get_curso              = TRUE;
+    $get_escola_curso_serie = TRUE;
+    $get_turma              = TRUE;
 
-    include('include/pmieducar/educar_campo_lista.php');
+    include 'include/pmieducar/educar_campo_lista.php';
 
     $this->campoQuebra();
 
@@ -215,26 +217,44 @@ class indice extends clsCadastro
 
     // foreign keys
     $opcoes_disc = array('' => 'Selecione uma disciplina');
-    $obj_turm_disc = new clsPmieducarDisciplinaSerie();
-    $lst_turm_disc = $obj_turm_disc->lista(NULL, $this->ref_ref_cod_serie, 1);
 
-    if ($lst_turm_disc) {
-      foreach ($lst_turm_disc as $registro) {
-        $obj_disc = new clsPmieducarDisciplina($registro['ref_cod_disciplina'],
-          NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+    // Componentes curriculares da série
+    $escolaSerieDisciplina  = new clsPmieducarEscolaSerieDisciplina();
+    $escolaSerieDisciplinas = $escolaSerieDisciplina->lista($this->ref_ref_cod_serie,
+      $this->ref_cod_escola, NULL, 1);
 
-        $det_disc = $obj_disc->detalhe();
-        $opcoes_disc[$det_disc['cod_disciplina']] = $det_disc['nm_disciplina'];
+    if (0 == count($escolaSerieDisciplinas)) {
+      $opcoes_disc = array('NULL' => 'A série dessa escola não possui componentes cadastrados');
+    }
+    else {
+      // Mapper dos componentes curriculares
+      $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+
+      foreach ($escolaSerieDisciplinas as $escolaSerieDisciplina) {
+        $componente = $componenteMapper->find($escolaSerieDisciplina['ref_cod_disciplina']);
+        $opcoes_disc[$componente->id] = $componente;
       }
     }
 
-    $this->campoLista('ref_cod_disciplina', 'Disciplina', $opcoes_disc,
+    $this->campoLista('ref_cod_disciplina', 'Componente curricular', $opcoes_disc,
       $this->ref_cod_disciplina, '', FALSE, '', '', FALSE, FALSE);
 
     $this->campoOculto('identificador', $this->identificador);
 
+    $opcoesDias = array(
+      '' => 'Selecione um dia da semana',
+      1  => 'Domingo',
+      2  => 'Segunda-Feira',
+      3  => 'Terça-Feira',
+      4  => 'Quarta-Feira',
+      5  => 'Quinta-Feira',
+      6  => 'Sexta-Feira',
+      7  => 'Sábado'
+    );
+
     $this->campoOculto('dia_semana', $this->dia_semana);
-    $this->campoLista('dia_semana_', 'Dia da Semana', array( '' => 'Selecione um dia da semana', 1 => 'Domingo', 2 => 'Segunda-Feira', 3 => 'Terça-Feira', 4 => 'Quarta-Feira', 5 => 'Quinta-Feira', 6 => 'Sexta-Feira', 7 => 'Sábado' ), $this->dia_semana, '', FALSE, '', '', TRUE, FALSE );
+    $this->campoLista('dia_semana_', 'Dia da Semana', $opcoesDias,
+      $this->dia_semana, '', FALSE, '', '', TRUE, FALSE);
 
     $this->campoHora('hora_inicial', 'Hora Inicial', $this->hora_inicial, FALSE);
     $this->campoHora('hora_final', 'Hora Final', $this->hora_final, FALSE);
@@ -250,15 +270,15 @@ class indice extends clsCadastro
          alert('Você deve escolher a disciplina!');
          return;
        }
-       elseif (document.getElementById('hora_inicial').value == '') {
+       else if (document.getElementById('hora_inicial').value == '') {
          alert('Você deve preencher o campo Hora Inicial!');
          return;
        }
-       elseif (document.getElementById('hora_final').value == '') {
+       else if (document.getElementById('hora_final').value == '') {
          alert('Você deve preencher o campo Hora Final!');
          return;
        }
-       elseif (document.getElementById('ref_cod_servidor').value == '') {
+       else if (document.getElementById('ref_cod_servidor').value == '') {
          alert('Você deve selecionar um servidor no campo Servidor');
          return;
        }
@@ -429,10 +449,11 @@ class indice extends clsCadastro
           $this->campoTextoInv($campo['qtd_horario_'] . '_hora_final', '',
             $campo['hora_final_'], 5, 255, FALSE, FALSE, TRUE);
 
-          $obj_disc = new clsPmieducarDisciplina($campo['ref_ref_cod_disciplina_']);
-          $det_disc = $obj_disc->detalhe();
+          $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+          $componente = $componenteMapper->find($campo['ref_ref_cod_disciplina_']);
+
           $this->campoTextoInv($campo['qtd_horario_'] . '_ref_cod_disciplina',
-            '', $det_disc['nm_disciplina'], 30, 255, FALSE, FALSE, TRUE);
+            '', $componente->nome, 30, 255, FALSE, FALSE, TRUE);
 
           $obj_pes = new clsPessoa_($campo['ref_servidor_']);
           $det_pes = $obj_pes->detalhe();
@@ -824,8 +845,7 @@ function validaCampoServidor()
       if (document.getElementById('lst_matriculas').value) {
         pesquisa_valores_popless('educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor&professor=1&ref_cod_servidor=0&ref_cod_instituicao=' + ref_cod_instituicao + '&ref_cod_escola=' + ref_cod_escola + '&dia_semana=' + dia_semana + '&hora_inicial=' + hora_inicial + '&hora_final=' + hora_final + '&horario=S' + '&lst_matriculas=' + lst_matriculas + '&min_mat=' + min_mat + '&min_ves=' + min_ves + '&min_not=' + min_not + '&identificador=' + identificador + '&ref_cod_disciplina=' + ref_cod_disciplina + '&ref_cod_curso=' + ref_cod_curso, 'ref_cod_servidor');
       }
-      else
-      {
+      else {
         pesquisa_valores_popless('educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor&professor=1&ref_cod_servidor=0&ref_cod_instituicao=' + ref_cod_instituicao + '&ref_cod_escola=' + ref_cod_escola + '&dia_semana=' + dia_semana + '&hora_inicial=' + hora_inicial + '&hora_final=' + hora_final + '&horario=S' + '&min_mat=' + min_mat + '&min_ves=' + min_ves + '&min_not=' + min_not + '&identificador=' + identificador + '&ref_cod_disciplina=' + ref_cod_disciplina + '&ref_cod_curso=' + ref_cod_curso, 'ref_cod_servidor');
       }
     }

@@ -51,8 +51,8 @@ class ComponenteCurricular_Model_AnoEscolarDataMapper extends CoreExt_DataMapper
 
   protected $_attributeMap = array(
     'componenteCurricular' => 'componente_curricular_id',
-    'anoEscolar' => 'ano_escolar_id',
-    'cargaHoraria' => 'carga_horaria'
+    'anoEscolar'           => 'ano_escolar_id',
+    'cargaHoraria'         => 'carga_horaria'
   );
 
   protected $_primaryKey = array(
@@ -100,7 +100,7 @@ class ComponenteCurricular_Model_AnoEscolarDataMapper extends CoreExt_DataMapper
 SELECT
   mca.%s
 FROM
-  modules.%s mca, pmieducar.serie ps
+  %s mca, pmieducar.serie ps
 WHERE
   mca.%s = ps.cod_serie AND ps.ref_cod_curso = '%d'";
 

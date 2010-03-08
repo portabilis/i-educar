@@ -29,6 +29,7 @@
  */
 
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
 
 /**
  * clsPmieducarQuadroHorarioHorarios class
@@ -146,8 +147,8 @@ class clsPmieducarQuadroHorarioHorarios
       elseif ($db->CampoUnico("SELECT 1 FROM pmieducar.servidor WHERE cod_servidor = '{$ref_servidor_substituto}' AND ref_cod_instituicao = '{$ref_cod_instituicao_substituto}'")) {
           $this->ref_servidor_substituto = $ref_servidor_substituto;
           $this->ref_cod_instituicao_substituto = $ref_cod_instituicao_substituto;
-        }
       }
+    }
 
     if (is_numeric($ref_servidor) && is_numeric($ref_cod_instituicao_servidor)) {
       if (class_exists('clsPmieducarServidor')) {
@@ -170,8 +171,8 @@ class clsPmieducarQuadroHorarioHorarios
       elseif ($db->CampoUnico("SELECT 1 FROM pmieducar.servidor WHERE cod_servidor = '{$ref_servidor}' AND ref_cod_instituicao = '{$ref_cod_instituicao_servidor}'")) {
           $this->ref_servidor = $ref_servidor;
           $this->ref_cod_instituicao_servidor = $ref_cod_instituicao_servidor;
-        }
       }
+    }
 
     if (is_numeric($ref_servidor_substituto) && is_numeric($ref_cod_instituicao_substituto)) {
       if (class_exists('clsPmieducarServidor')) {
@@ -194,55 +195,32 @@ class clsPmieducarQuadroHorarioHorarios
       elseif ($db->CampoUnico("SELECT 1 FROM pmieducar.servidor WHERE cod_servidor = '{$ref_servidor_substituto}' AND ref_cod_instituicao = '{$ref_cod_instituicao_substituto}'")) {
           $this->ref_servidor_substituto = $ref_servidor_substituto;
           $this->ref_cod_instituicao_substituto = $ref_cod_instituicao_substituto;
-        }
       }
+    }
 
     if (is_numeric($ref_ref_cod_disciplina) && is_numeric($ref_ref_cod_serie)) {
-      if (class_exists('clsPmieducarDisciplinaSerie')) {
-        $tmp_obj = new clsPmieducarDisciplinaSerie($ref_ref_cod_disciplina,
-          $ref_ref_cod_serie, 1);
+      $anoEscolarMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
+      $componenteAnos = $anoEscolarMapper->findAll(array(), array(
+        'componenteCurricular'  => $ref_ref_cod_disciplina,
+        'anoEscolar' => $ref_ref_cod_serie)
+      );
 
-        if (method_exists($tmp_obj, 'existe')) {
-          if ($tmp_obj->existe()) {
-            $this->ref_ref_cod_disciplina = $ref_ref_cod_disciplina;
-            $this->ref_ref_cod_serie = $ref_ref_cod_serie;
-          }
-        }
-        elseif (method_exists($tmp_obj, 'detalhe')) {
-          if ($tmp_obj->detalhe()) {
-            $this->ref_ref_cod_disciplina = $ref_ref_cod_disciplina;
-            $this->ref_ref_cod_serie = $ref_ref_cod_serie;
-          }
-        }
+      if (1 == count($componenteAnos)) {
+        $this->ref_ref_cod_disciplina = $ref_ref_cod_disciplina;
+        $this->ref_ref_cod_serie = $ref_ref_cod_serie;
       }
-      elseif ($db->CampoUnico("SELECT 1 FROM pmieducar.disciplina_serie WHERE ref_cod_disciplina = '{$ref_ref_cod_disciplina}' AND ref_cod_serie = '{$ref_ref_cod_serie}' AND ativo = '1'")) {
-          $this->ref_ref_cod_disciplina = $ref_ref_cod_disciplina;
-          $this->ref_ref_cod_serie = $ref_ref_cod_serie;
-        }
-      }
+    }
 
     if (is_numeric($ref_ref_cod_escola) && is_numeric($ref_ref_cod_serie) &&
       is_numeric($ref_ref_cod_disciplina)
     ) {
-      if (class_exists('clsPmieducarEscolaSerieDisciplina')) {
-        $tmp_obj = new clsPmieducarEscolaSerieDisciplina($ref_ref_cod_serie,
-          $ref_ref_cod_escola, $ref_ref_cod_disciplina, 1);
+      $escolaSerieDisciplina = new clsPmieducarEscolaSerieDisciplina($ref_ref_cod_serie,
+        $ref_ref_cod_escola, $ref_ref_cod_disciplina, 1);
 
-        if (method_exists($tmp_obj, 'existe')) {
-          if ($tmp_obj->existe()) {
-            $this->ref_ref_cod_escola = $ref_ref_cod_escola;
-          }
-        }
-        elseif (method_exists($tmp_obj, 'detalhe')) {
-          if ($tmp_obj->detalhe()) {
-            $this->ref_ref_cod_escola = $ref_ref_cod_escola;
-          }
-        }
+      if ($escolaSerieDisciplina->existe()) {
+        $this->ref_ref_cod_escola = $ref_ref_cod_escola;
       }
-      elseif ($db->CampoUnico("SELECT 1 FROM pmieducar.escola_serie_disciplina WHERE ref_ref_cod_escola = '{$ref_ref_cod_escola}' AND ref_ref_cod_serie = '{$ref_ref_cod_serie}' AND ref_cod_disciplina = '{$ref_ref_cod_disciplina}' AND ativo = '1'")) {
-          $this->ref_ref_cod_escola = $ref_ref_cod_escola;
-        }
-      }
+    }
 
     if (is_numeric($ref_cod_quadro_horario)) {
       if (class_exists('clsPmieducarQuadroHorario')) {
@@ -261,8 +239,8 @@ class clsPmieducarQuadroHorarioHorarios
       }
       elseif ($db->CampoUnico("SELECT 1 FROM pmieducar.quadro_horario WHERE cod_quadro_horario = '{$ref_cod_quadro_horario}'")) {
           $this->ref_cod_quadro_horario = $ref_cod_quadro_horario;
-        }
       }
+    }
 
     if (is_numeric($sequencial)) {
       $this->sequencial = $sequencial;
