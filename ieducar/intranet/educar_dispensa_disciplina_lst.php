@@ -32,6 +32,8 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'CoreExt/View/Helper/UrlHelper.php';
+require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
 /**
  * clsIndexBase class.
@@ -47,7 +49,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Dispensa Disciplina');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Dispensa Componente Curricular');
     $this->processoAp = 578;
   }
 }
@@ -91,7 +93,10 @@ class indice extends clsListagem
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->titulo = 'Dispensa Disciplina - Listagem';
+    // Helper para url
+    $urlHelper = CoreExt_View_Helper_UrlHelper::getInstance();
+
+    $this->titulo = 'Dispensa Componente Curricular - Listagem';
 
     // passa todos os valores obtidos no GET para atributos do objeto
     foreach ($_GET as $var => $val) {
@@ -139,26 +144,20 @@ class indice extends clsListagem
 
     // Filtros de Foreign Keys
     $opcoes = array('' => 'Selecione');
-    if (class_exists('clsPmieducarTipoDispensa')) {
       $objTemp = new clsPmieducarTipoDispensa();
 
-      if ($this->ref_cod_instituicao) {
-        $lista = $objTemp->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-          NULL, 1, $this->ref_cod_instituicao);
-      }
-      else {
-        $lista = $objTemp->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
-      }
-
-      if (is_array($lista) && count($lista)) {
-        foreach ($lista as $registro) {
-          $opcoes[$registro['cod_tipo_dispensa']] = $registro['nm_tipo'];
-        }
-      }
+    if ($this->ref_cod_instituicao) {
+      $lista = $objTemp->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        NULL, 1, $this->ref_cod_instituicao);
     }
     else {
-      echo "<!--\nErro\nClasse clsPmieducarTipoDispensa nao encontrada\n-->";
-      $opcoes = array('' => 'Erro na geração');
+      $lista = $objTemp->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+    }
+
+    if (is_array($lista) && count($lista)) {
+      foreach ($lista as $registro) {
+        $opcoes[$registro['cod_tipo_dispensa']] = $registro['nm_tipo'];
+      }
     }
 
     $this->campoLista('ref_cod_tipo_dispensa', 'Motivo', $opcoes,
@@ -168,24 +167,20 @@ class indice extends clsListagem
 
     // outros Filtros
     $opcoes = array('' => 'Selecione');
-    if (class_exists('clsPmieducarEscolaSerieDisciplina')) {
-      $objTemp = new clsPmieducarEscolaSerieDisciplina();
-      $lista = $objTemp->lista($this->ref_cod_serie, $this->ref_cod_escola, NULL, 1);
 
-      if (is_array($lista) && count($lista)) {
-        foreach ($lista as $registro) {
-          $obj_disciplina = new clsPmieducarDisciplina(
-            $registro['ref_cod_disciplina'], NULL, NULL, NULL, NULL, NULL, NULL,
-            NULL, NULL, NULL, 1);
+    // Escola série disciplina
+    $objTemp = new clsPmieducarEscolaSerieDisciplina();
+    $lista = $objTemp->lista($this->ref_cod_serie, $this->ref_cod_escola, NULL, 1);
 
-          $det_disciplina = $obj_disciplina->detalhe();
-          $opcoes[$registro['ref_cod_disciplina']] = $det_disciplina['nm_disciplina'];
-        }
+    if (is_array($lista) && count($lista)) {
+      foreach ($lista as $registro) {
+        $obj_disciplina = new clsPmieducarDisciplina(
+          $registro['ref_cod_disciplina'], NULL, NULL, NULL, NULL, NULL, NULL,
+          NULL, NULL, NULL, 1);
+
+        $det_disciplina = $obj_disciplina->detalhe();
+        $opcoes[$registro['ref_cod_disciplina']] = $det_disciplina['nm_disciplina'];
       }
-    }
-    else {
-      echo "<!--\nErro\nClasse clsPmieducarEscolaSerieDisciplina nao encontrada\n-->";
-      $opcoes = array('' => 'Erro na geração');
     }
 
     $this->campoLista('ref_cod_disciplina', 'Disciplina', $opcoes,
@@ -217,6 +212,9 @@ class indice extends clsListagem
 
     $total = $obj_dispensa_disciplina->_total;
 
+    // Mapper de componente curricular
+    $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+
     // monta a lista
     if (is_array($lista) && count($lista)) {
       foreach ($lista as $registro) {
@@ -224,25 +222,27 @@ class indice extends clsListagem
         $registro['data_cadastro_time'] = strtotime(substr($registro['data_cadastro'], 0, 16));
         $registro['data_cadastro_br']   = date('d/m/Y', $registro['data_cadastro_time']);
 
-        if (class_exists('clsPmieducarTipoDispensa')) {
-          $obj_ref_cod_tipo_dispensa = new clsPmieducarTipoDispensa($registro['ref_cod_tipo_dispensa']);
-          $det_ref_cod_tipo_dispensa = $obj_ref_cod_tipo_dispensa->detalhe();
-          $registro['ref_cod_tipo_dispensa'] = $det_ref_cod_tipo_dispensa['nm_tipo'];
-        }
-        else {
-          $registro['ref_cod_tipo_dispensa'] = 'Erro na geracao';
-          echo "<!--\nErro\nClasse nao existente: clsPmieducarTipoDispensa\n-->";
-        }
+        // Tipo da dispensa
+        $obj_ref_cod_tipo_dispensa = new clsPmieducarTipoDispensa($registro['ref_cod_tipo_dispensa']);
+        $det_ref_cod_tipo_dispensa = $obj_ref_cod_tipo_dispensa->detalhe();
+        $registro['ref_cod_tipo_dispensa'] = $det_ref_cod_tipo_dispensa['nm_tipo'];
 
-        $obj_disciplina = new clsPmieducarDisciplina($registro['ref_cod_disciplina'],
-           NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+        // Componente curricular
+        $componente = $componenteMapper->find($registro['ref_cod_disciplina']);
 
-        $det_disciplina = $obj_disciplina->detalhe();
+        // Dados para a url
+        $url     = 'educar_dispensa_disciplina_det.php';
+        $options = array('query' => array(
+          'ref_cod_matricula'  => $registro['ref_cod_matricula'],
+          'ref_cod_serie'      => $registro['ref_cod_serie'],
+          'ref_cod_escola'     => $registro['ref_cod_escola'],
+          'ref_cod_disciplina' => $registro['ref_cod_disciplina']
+        ));
 
         $this->addLinhas(array(
-          "<a href=\"educar_dispensa_disciplina_det.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_serie={$registro["ref_cod_serie"]}&ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_disciplina={$registro["ref_cod_disciplina"]}\">{$det_disciplina["nm_disciplina"]}</a>",
-          "<a href=\"educar_dispensa_disciplina_det.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_serie={$registro["ref_cod_serie"]}&ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_disciplina={$registro["ref_cod_disciplina"]}\">{$registro["ref_cod_tipo_dispensa"]}</a>",
-          "<a href=\"educar_dispensa_disciplina_det.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_serie={$registro["ref_cod_serie"]}&ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_disciplina={$registro["ref_cod_disciplina"]}\">{$registro["data_cadastro_br"]}</a>"
+          $urlHelper->l($componente->nome, $url, $options),
+          $urlHelper->l($registro['ref_cod_tipo_dispensa'], $url, $options),
+          $urlHelper->l($registro['data_cadastro_br'], $url, $options)
         ));
       }
     }
