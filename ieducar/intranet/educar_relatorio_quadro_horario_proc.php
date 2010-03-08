@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * i-Educar - Sistema de gestão escolar
  *
  * Copyright (C) 2006  Prefeitura Municipal de Itajaí
@@ -19,17 +19,13 @@
  * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- */
-
-/**
- * Quadro de horários.
  *
- * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package     Core
- * @subpackage  Relatório
- * @since       Arquivo disponível desde a versão 1.0.0
- * @version     $Id$
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Arquivo disponível desde a versão 1.0.0
+ * @version   $Id$
  */
 
 require_once 'include/clsBase.inc.php';
@@ -38,7 +34,16 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/clsPDF.inc.php';
 
-
+/**
+ * clsIndexBase class.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
+ */
 class clsIndexBase extends clsBase
 {
   function Formular()
@@ -50,15 +55,18 @@ class clsIndexBase extends clsBase
   }
 }
 
+/**
+ * indice class.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
+ */
 class indice extends clsCadastro
 {
-
-
-  /**
-   * Referencia pega da session para o idpes do usuario atual
-   *
-   * @var int
-   */
   var $pessoa_logada;
 
   var $ref_cod_instituicao;
@@ -77,58 +85,36 @@ class indice extends clsCadastro
   var $nm_serie;
   var $nm_disciplina;
 
-  var $get_link = false;
-
-  var $pdf = false;
-
-  var $page_y = 15;
-
-  var $meses_do_ano = array(
-               "1" => "JANEIRO"
-              ,"2" => "FEVEREIRO"
-              ,"3" => "MAR&Ccedil;O"
-              ,"4" => "ABRIL"
-              ,"5" => "MAIO"
-              ,"6" => "JUNHO"
-              ,"7" => "JULHO"
-              ,"8" => "AGOSTO"
-              ,"9" => "SETEMBRO"
-              ,"10" => "OUTUBRO"
-              ,"11" => "NOVEMBRO"
-              ,"12" => "DEZEMBRO"
-            );
+  var $get_link = FALSE;
+  var $pdf      = FALSE;
+  var $page_y   = 15;
 
   var $array_dias_semana = array(
-               "1" => "Domingo"
-              ,"2" => "Segunda"
-              ,"3" => "Terça"
-              ,"4" => "Quarta"
-              ,"5" => "Quinta"
-              ,"6" => "Sexta"
-              ,"7" => "Sábado"
-              );
-
-
+    1 => 'Domingo',
+    2 => 'Segunda',
+    3 => 'Terça',
+    4 => 'Quarta',
+    5 => 'Quinta',
+    6 => 'Sexta',
+    7 => 'Sábado'
+  );
 
   function renderHTML()
   {
-
-    if($_POST){
+    if ($_POST){
       foreach ($_POST as $key => $value) {
         $this->$key = $value;
-
       }
     }
 
-    if($this->ref_ref_cod_serie)
+    if ($this->ref_ref_cod_serie) {
       $this->ref_cod_serie = $this->ref_ref_cod_serie;
+    }
 
-    if($this->ref_cod_escola){
-
+    if ($this->ref_cod_escola) {
       $obj_escola = new clsPmieducarEscola($this->ref_cod_escola);
       $det_escola = $obj_escola->detalhe();
       $this->nm_escola = $det_escola['nome'];
-
     }
 
     $obj_instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
@@ -140,67 +126,63 @@ class indice extends clsCadastro
 
     $obj_curso = new clsPmieducarCurso();
     $obj_curso->setOrderby("nm_curso");
-    $lst_curso = $obj_curso->lista($this->ref_cod_curso,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null,$this->ref_cod_instituicao);
+    $lst_curso = $obj_curso->lista($this->ref_cod_curso, NULL, NULL, NULL, NULL,
+      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+      NULL, NULL, NULL, NULL, NULL, 1, NULL, $this->ref_cod_instituicao);
 
-
-    if($lst_curso)
-    {
-
-      foreach ($lst_curso as $curso)
-      {
+    if ($lst_curso) {
+      foreach ($lst_curso as $curso) {
         $obj_serie = new clsPmieducarSerie();
         $obj_serie->setOrderby("nm_serie");
-        $lst_serie = $obj_serie->lista($this->ref_cod_serie,null,null,$curso['cod_curso'],null,null,null,null,null,null,null,null,1,$this->ref_cod_instituicao,null,null,null,$this->ref_cod_escola);
+        $lst_serie = $obj_serie->lista($this->ref_cod_serie, NULL, NULL,
+          $curso['cod_curso'], NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+          1, $this->ref_cod_instituicao, NULL, NULL, NULL, $this->ref_cod_escola);
 
         $quadro_horario = 0;
-        if($lst_serie)
-        {
-          foreach ($lst_serie as $serie)
-          {
-
+        if ($lst_serie) {
+          foreach ($lst_serie as $serie) {
             $obj_turma = new clsPmieducarTurma();
-            $obj_turma->setOrderby("nm_turma");
-            $lst_turma = $obj_turma->lista($this->ref_cod_turma,null,null,$serie['cod_serie'],$this->ref_cod_escola,null,null,null,null,null,null,null,null,null,1,null,null,null,null,null,null,null,null,null,$curso['cod_curso'],$this->ref_cod_instituicao);
+            $obj_turma->setOrderby('nm_turma');
+            $lst_turma = $obj_turma->lista($this->ref_cod_turma, NULL, NULL,
+              $serie['cod_serie'], $this->ref_cod_escola, NULL, NULL, NULL, NULL,
+              NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL,
+              NULL, NULL, NULL, NULL, $curso['cod_curso'], $this->ref_cod_instituicao);
 
-            if($lst_turma)
-            {
-              foreach ($lst_turma as $turma)
-              {
-
-                $obj_quadro = new clsPmieducarQuadroHorario( null, null, null, $turma['cod_turma'], null, null, 1 );
+            if ($lst_turma) {
+              foreach ($lst_turma as $turma) {
+                $obj_quadro = new clsPmieducarQuadroHorario(NULL, NULL, NULL,
+                  $turma['cod_turma'],  NULL,  NULL, 1);
                 $det_quadro = $obj_quadro->detalhe();
 
-                if($det_quadro)
-                {
-                  if(!$this->pdf)
-                  {
-                    $this->pdf = new clsPDF("Quadro Horarios", "Quadro Horarios", "A4", "", false, false);
+                if ($det_quadro) {
+                  if (!$this->pdf) {
+                    $this->pdf = new clsPDF('Quadro Horarios', 'Quadro Horarios',
+                      'A4', '', FALSE, FALSE);
                   }
 
-                  if($quadro_horario % 3 == 0)
-                  {
-                    //$this->pdf->largura  = 842.0;
-                      //$this->pdf->altura = 595.0;
-                      $this->page_y = 15;
-                      $this->pdf->OpenPage();
-                      $this->addCabecalho();
-                      $quadro_horario = 0;
+                  if ($quadro_horario % 3 == 0) {
+                    $this->page_y = 15;
+                    $this->pdf->OpenPage();
+                    $this->addCabecalho();
+                    $quadro_horario = 0;
                   }
 
+                  $this->pdf->escreve_relativo($turma['nm_turma'] . ' -  ' . $serie['nm_serie'],
+                    20, $this->page_y - 7, 550, 20, $fonte, 11, $corTexto, 'center');
 
-
-
-                  $this->pdf->escreve_relativo("{$turma['nm_turma']} - {$serie['nm_serie']}",20 ,$this->page_y - 7,550,20,$fonte,11,$corTexto,'center');
                   $this->page_y +=10;
 
-                  $this->pdf->quadrado_relativo(35,$this->page_y,525,20,0.3,"#777777","#777777");
+                  $this->pdf->quadrado_relativo(35, $this->page_y, 525, 20, 0.3,
+                    '#777777', '#777777');
                   $inicio_x = 35;
 
-                  for ($dia_semana = 1;$dia_semana <= 7;$dia_semana++)
-                  {
-                    $this->pdf->linha_relativa($inicio_x,$this->page_y,0,20);
-                    $this->pdf->escreve_relativo($this->array_dias_semana[$dia_semana],$inicio_x ,$this->page_y+3,75,20,$fonte,11,$corTexto,'center');
-                    $inicio_x+=75;
+                  for ($dia_semana = 1; $dia_semana <= 7; $dia_semana++) {
+                    $this->pdf->linha_relativa($inicio_x, $this->page_y, 0, 20);
+                    $this->pdf->escreve_relativo($this->array_dias_semana[$dia_semana],
+                      $inicio_x, $this->page_y + 3, 75, 20, $fonte, 11, $corTexto,
+                      'center');
+
+                    $inicio_x += 75;
                   }
 
                   $this->page_y += 20;
@@ -208,42 +190,49 @@ class indice extends clsCadastro
                   $inicio_y = $this->page_y;
 
                   $inicio_x = 35;
-                  $this->pdf->quadrado_relativo($inicio_x,$this->page_y,525,200,0.3);
-                  for ($dia_semana = 1;$dia_semana <= 7;$dia_semana++)
-                  {
-
+                  $this->pdf->quadrado_relativo($inicio_x, $this->page_y, 525, 200, 0.3);
+                  for ($dia_semana = 1; $dia_semana <= 7; $dia_semana++) {
                     $obj_horarios = new clsPmieducarQuadroHorarioHorarios();
-                    $resultado    = $obj_horarios->retornaHorario( $this->ref_cod_instituicao, $this->ref_cod_escola, $serie['cod_serie'], $turma['cod_turma'], $dia_semana );
+                    $resultado    = $obj_horarios->retornaHorario(
+                      $this->ref_cod_instituicao, $this->ref_cod_escola,
+                      $serie['cod_serie'], $turma['cod_turma'], $dia_semana);
 
-                    if ( is_array( $resultado ) )
-                    {
-                      foreach ( $resultado as $registro )
-                      {
-                        $this->pdf->quadrado_relativo($inicio_x,$this->page_y,75,50,0.3);
-                        $obj_disciplina = new clsPmieducarDisciplina( $registro["ref_cod_disciplina"] );
+                    if (is_array($resultado)) {
+                      foreach ($resultado as $registro) {
+                        $this->pdf->quadrado_relativo($inicio_x, $this->page_y,
+                          75, 50, 0.3);
+
+                        $obj_disciplina = new clsPmieducarDisciplina($registro['ref_cod_disciplina']);
                         $det_disciplina = $obj_disciplina->detalhe();
                         $obj_servidor   = new clsPmieducarServidor();
-                        $det_servidor   = array_shift($obj_servidor->lista($registro['ref_servidor'],null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,true));
-                        $det_servidor['nome'] = array_shift(explode(' ',$det_servidor['nome']));
+                        $det_servidor   = array_shift($obj_servidor->lista(
+                          $registro['ref_servidor'], NULL, NULL, NULL, NULL,
+                          NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+                          NULL, NULL, TRUE));
 
-                        $this->pdf->escreve_relativo(substr( $registro["hora_inicial"], 0, 5 )." - ".substr( $registro["hora_final"], 0, 5 )." \n {$det_disciplina["abreviatura"]} \n {$det_servidor["nome"]}",$inicio_x,$this->page_y+12,75,50,$fonte,10,$corTexto,'center');
+                        $det_servidor['nome'] = array_shift(explode(' ', $det_servidor['nome']));
 
-                        //substr( $registro["hora_inicial"], 0, 5 )." - ".substr( $registro["hora_final"], 0, 5 )." <br> {$det_disciplina["abreviatura"]} <br> {$det_servidor["nome"]}
+                        //$texto = substr($registro['hora_inicial'], 0, 5 )." - ".substr( $registro["hora_final"], 0, 5 )." \n {$det_disciplina["abreviatura"]} \n {$det_servidor["nome"]}"
+                        $texto = sprintf("%s - %s\n%s\n%s",
+                          substr($registro['hora_inicial'], 0, 5),
+                          substr($registro["hora_final"], 0, 5),
+                          $det_disciplina['abreviatura'],
+                          $det_servidor['nome']
+                        );
+
+                        $this->pdf->escreve_relativo(
+                          $texto,//substr($registro['hora_inicial'], 0, 5 )." - ".substr( $registro["hora_final"], 0, 5 )." \n {$det_disciplina["abreviatura"]} \n {$det_servidor["nome"]}",
+                          $inicio_x, $this->page_y + 12, 75, 50, $fonte, 10, $corTexto, 'center');
+
                         $this->page_y += 50;
                       }
                     }
 
-                    //$this->pdf->linha_relativa($inicio_x,$this->page_y,0,20);
-                    //$this->pdf->escreve_relativo($this->array_dias_semana[$dia_semana],$inicio_x ,$this->page_y+3,75,20,$fonte,11,$corTexto,'center');
-
                     $inicio_x+=75;
-
                     $this->page_y = $inicio_y;
-
                   }
 
                   $this->page_y += 220;
-
                 }
 
                 $quadro_horario++;
@@ -254,38 +243,41 @@ class indice extends clsCadastro
       }
     }
 
-    if ($this->pdf)
-    {
-
+    if ($this->pdf) {
       $this->pdf->CloseFile();
       $this->get_link = $this->pdf->GetLink();
-
     }
-    else
-    {
+    else {
+      echo '
+        <script>
+          alert("As turmas não possuem matrículas no ano selecionado");
+          window.parent.fechaExpansivel("div_dinamico_" + (window.parent.DOM_divs.length-1));
+        </script>';
 
-          echo '<script>
-              alert("As turmas não possuem matrículas no ano selecionado");
-              window.parent.fechaExpansivel(\'div_dinamico_\'+(window.parent.DOM_divs.length-1));
-            </script>';
-
-            return;
-
+       return;
     }
 
+    echo sprintf('
+      <script>
+        window.onload=function()
+        {
+          parent.EscondeDiv("LoadImprimir");
+          window.location="download.php?filename=%s"
+        }
+      </script>', $this->get_link);
 
-    echo "<script>window.onload=function(){parent.EscondeDiv('LoadImprimir');window.location='download.php?filename=".$this->get_link."'}</script>";
-
-    echo "<html><center>Se o download não iniciar automaticamente <br /><a target='blank' href='" . $this->get_link  . "' style='font-size: 16px; color: #000000; text-decoration: underline;'>clique aqui!</a><br><br>
-      <span style='font-size: 10px;'>Para visualizar os arquivos PDF, é necessário instalar o Adobe Acrobat Reader.<br>
-
-      Clique na Imagem para Baixar o instalador<br><br>
-      <a href=\"http://www.adobe.com.br/products/acrobat/readstep2.html\" target=\"new\"><br><img src=\"imagens/acrobat.gif\" width=\"88\" height=\"31\" border=\"0\"></a>
-      </span>
-      </center>";
+    echo sprintf('
+      <html>
+        <center>Se o download não iniciar automaticamente <br />
+        <a target="blank" href="%s" style="font-size: 16px; color: #000000; text-decoration: underline;">clique aqui!</a><br /><br />
+        <span style="font-size: 10px;">Para visualizar os arquivos PDF, é necessário instalar o Adobe Acrobat Reader.<br />
+          Clique na Imagem para Baixar o instalador<br /><br />
+          <a href="http://www.adobe.com.br/products/acrobat/readstep2.html" target="new"><br><img src="imagens/acrobat.gif" width="88" height="31" border="0"></a>
+        </span>
+      </center>', $this->get_link);
   }
 
-  public function addCabecalho()
+  function addCabecalho()
   {
     /**
      * Variável global com objetos do CoreExt.
@@ -314,57 +306,61 @@ class indice extends clsCadastro
       $fonte, 18, $corTexto, 'center');
 
     // Dados escola
-    $this->pdf->escreve_relativo("Instituição:  $this->nm_instituicao", 110,
+    $this->pdf->escreve_relativo('Instituição:  ' . $this->nm_instituicao, 110,
       $this->page_y + 38, 400, 80, $fonte, 10, $corTexto, 'left');
 
     $this->nm_escola ?
-      $this->pdf->escreve_relativo( "Escola:  {$this->nm_escola}", 127, $this->page_y + 48, 300, 80, $fonte, 10, $corTexto, 'left')
+      $this->pdf->escreve_relativo('Escola: ' . $this->nm_escola, 127, $this->page_y + 48, 300, 80, $fonte, 10, $corTexto, 'left')
       :
       NULL;
 
     // Título
-    $this->pdf->escreve_relativo("Quadro de Horários - $this->ano", 30,
+    $this->pdf->escreve_relativo('Quadro de Horários - ' . $this->ano, 30,
       $this->page_y + 23, 535, 80, $fonte, 12, $corTexto, 'center');
 
-    $this->pdf->escreve_relativo("Data de Emissão: ".date("d/m/Y"), 700,
+    $this->pdf->escreve_relativo('Data de Emissão: ' . date('d/m/Y'), 700,
       $this->page_y + 50, 535, 80, $fonte, 8, $corTexto, 'left');
 
     $this->page_y += 80;
   }
 
-
   function rodape()
   {
-    $corTexto = '#000000';
-    $fonte = 'arial';
-    $dataAtual = date("d/m/Y");
-    $this->pdf->escreve_relativo( "Data: $dataAtual", 36,$this->page_y + 2, 100, 50, $fonte, 7, $corTexto, 'left' );
+    $corTexto  = '#000000';
+    $fonte     = 'arial';
+    $dataAtual = date('d/m/Y');
+    $this->pdf->escreve_relativo('Data: ' . $dataAtual, 36, $this->page_y + 2,
+      100, 50, $fonte, 7, $corTexto, 'left');
 
-    $this->pdf->escreve_relativo( "Estou ciente do aproveitamento de ".str2upper($this->nm_aluno).", matrícula nº: $this->ref_cod_matricula.", 68,$this->page_y +12, 600, 50, $fonte, 9, $corTexto, 'left' );
-    $this->pdf->escreve_relativo( "Assinatura do Responsável(a)", 677,$this->page_y +18, 200, 50, $fonte, 7, $corTexto, 'left' );
-    $this->pdf->linha_relativa(660,$this->page_y+18,130,0,0.4);
+    $this->pdf->escreve_relativo('Estou ciente do aproveitamento de ' .
+      str2upper($this->nm_aluno) . ', matrícula nº: ' . $this->ref_cod_matricula, 68,
+      $this->page_y +12, 600, 50, $fonte, 9, $corTexto, 'left');
+
+    $this->pdf->escreve_relativo('Assinatura do Responsável(a)', 677,
+      $this->page_y + 18, 200, 50, $fonte, 7, $corTexto, 'left');
+
+    $this->pdf->linha_relativa(660, $this->page_y + 18, 130, 0, 0.4);
   }
 
   function Editar()
   {
-    return false;
+    return FALSE;
   }
 
   function Excluir()
   {
-    return false;
+    return FALSE;
   }
 }
 
-// cria uma extensao da classe base
+// Instancia objeto de página
 $pagina = new clsIndexBase();
-// cria o conteudo
+
+// Instancia objeto de conteúdo
 $miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
-// gera o html
+
+// Atribui o conteúdo à  página
+$pagina->addForm($miolo);
+
+// Gera o código HTML
 $pagina->MakeAll();
-
-
-?>
-<script>
