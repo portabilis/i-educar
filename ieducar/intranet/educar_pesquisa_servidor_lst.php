@@ -193,7 +193,7 @@ class indice extends clsListagem
 
     $hora_inicial_ = explode(':', $_SESSION['hora_inicial']);
     $hora_final_   = explode(':', $_SESSION['hora_final']);
-    $horas_ini      = sprintf('%02d', (int) abs($hora_final_[0]) - abs($hora_inicial_[0]));
+    $horas_ini     = sprintf('%02d', (int) abs($hora_final_[0]) - abs($hora_inicial_[0]));
     $minutos_ini   = sprintf('%02d', (int) abs($hora_final_[1]) - abs($hora_inicial_[1]));
 
     $h_m_ini = ($hora_inicial_[0] * 60) + $hora_inicial_[1];
@@ -246,7 +246,7 @@ class indice extends clsListagem
     // aos professores e não selecionar aqueles em que o curso não seja
     // globalizado e sem disciplinas cadastradas
     $this->ref_cod_disciplina = $this->ref_cod_disciplina ?
-      $this->ref_cod_disciplina : "NULL";
+      $this->ref_cod_disciplina : NULL;
 
     // Passa NULL para $alocacao_escola_instituicao senão o seu filtro anula
     // um anterior (referente a selecionar somente servidores não alocados),
@@ -331,10 +331,10 @@ class indice extends clsListagem
         if ($_SESSION['tipo']) {
           if (is_string($_SESSION['campo1']) && is_string($_SESSION['campo2'])) {
             if (is_string( $_SESSION['horario'])) {
-              $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['cod_servidor']}','{$registro['nome']}'); addVal1('{$_SESSION['campo2']}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
+              $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['nome']}','{$registro['cod_servidor']}'); addVal1('{$_SESSION['campo2']}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
             }
             else {
-              $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['cod_servidor']}',null); addVal1('{$_SESSION['campo2']}','{$registro['nome']}',null); $setAll fecha();\"";
+              $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['cod_servidor']}', null); addVal1('{$_SESSION['campo2']}','{$registro['nome']}', null); $setAll fecha();\"";
             }
           }
           elseif (is_string($_SESSION['campo1'])) {
@@ -386,9 +386,9 @@ function addVal1(campo, valor, opcao)
 {
   if (window.parent.document.getElementById(campo)) {
     if (window.parent.document.getElementById(campo).type == 'select-one') {
-      obj                     = window.parent.document.getElementById( campo );
+      obj                     = window.parent.document.getElementById(campo);
       novoIndice              = obj.options.length;
-      obj.options[novoIndice] = new Option( opcao );
+      obj.options[novoIndice] = new Option(opcao);
       opcao                   = obj.options[novoIndice];
       opcao.value             = valor;
       opcao.selected          = true;
@@ -396,7 +396,7 @@ function addVal1(campo, valor, opcao)
     }
     else if (window.parent.document.getElementById(campo)) {
       obj       =  window.parent.document.getElementById(campo);
-      obj.value = valor;
+      obj.value = opcao;
     }
   }
 }
@@ -424,7 +424,7 @@ function clearAll()
   }
 
   for (var ct =0;ct < num_alocacao;ct++) {
-      var elements = window.parent.document.getElementById('ref_cod_servidor_substituto_' + ct).value='';
+    var elements = window.parent.document.getElementById('ref_cod_servidor_substituto_' + ct).value='';
   }
 }
 

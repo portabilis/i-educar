@@ -14321,7 +14321,8 @@ CREATE TABLE servidor_curso_ministra (
 CREATE TABLE servidor_disciplina (
     ref_cod_disciplina integer NOT NULL,
     ref_ref_cod_instituicao integer NOT NULL,
-    ref_cod_servidor integer NOT NULL
+    ref_cod_servidor integer NOT NULL,
+    ref_cod_curso integer NOT NULL
 );
 
 
@@ -19941,6 +19942,7 @@ INSERT INTO changelog VALUES (13, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '13_adic
 INSERT INTO changelog VALUES (14, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '14_adiciona_campo_etapa_modules_nota_componente_curricular_media.sql');
 INSERT INTO changelog VALUES (15, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '15_atualiza_foreign_key_modules_falta_geral.sql');
 INSERT INTO changelog VALUES (16, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '16_permissoes_para_modules_e_correcao_menus.sql');
+INSERT INTO changelog VALUES (17, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '17_adiciona_campo_curso_componente_ano_escolar_e_atualiza_constraint_servidor_disciplina.sql');
 
 
 --
@@ -27879,7 +27881,7 @@ ALTER TABLE ONLY servidor_curso_ministra
 --
 
 ALTER TABLE ONLY servidor_disciplina
-    ADD CONSTRAINT servidor_disciplina_pkey PRIMARY KEY (ref_cod_disciplina, ref_ref_cod_instituicao, ref_cod_servidor);
+    ADD CONSTRAINT servidor_disciplina_pkey PRIMARY KEY (ref_cod_disciplina, ref_ref_cod_instituicao, ref_cod_servidor, ref_cod_curso);
 
 
 --
@@ -28754,7 +28756,7 @@ CREATE UNIQUE INDEX componente_curricular_id_key ON componente_curricular USING 
 
 
 --
--- Name: regra_avaliacao_id_key; Type: INDEX; Schema: modules; Owner: -; Tablespace:
+-- Name: regra_avaliacao_id_key; Type: INDEX; Schema: modules; Owner: -; Tablespace: 
 --
 
 CREATE UNIQUE INDEX regra_avaliacao_id_key ON regra_avaliacao USING btree (id);
@@ -35368,7 +35370,7 @@ ALTER TABLE ONLY servidor_curso_ministra
 --
 
 ALTER TABLE ONLY servidor_disciplina
-    ADD CONSTRAINT servidor_disciplina_ref_cod_disciplina_fkey FOREIGN KEY (ref_cod_disciplina) REFERENCES disciplina(cod_disciplina) ON UPDATE RESTRICT ON DELETE RESTRICT;
+    ADD CONSTRAINT servidor_disciplina_ref_cod_disciplina_fkey FOREIGN KEY (ref_cod_disciplina) REFERENCES modules.componente_curricular(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
 --

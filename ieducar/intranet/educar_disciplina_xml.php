@@ -25,10 +25,10 @@
  * @license   @@license@@
  * @package   iEd_Pmieducar
  * @since     Arquivo disponível desde a versão 1.0.0
- * @version   $Id: /ieducar/branches/1.1.0-avaliacao/ieducar/intranet/educar_disciplina_xml.php 1021 2009-12-20T22:17:05.346011Z eriksencosta  $
+ * @version   $Id$
  */
 
-header( 'Content-type: text/xml; charset=ISO-8859-1');
+header('Content-type: text/xml; charset=ISO-8859-1');
 
 require_once 'include/clsBanco.inc.php';
 require_once 'include/funcoes.inc.php';
