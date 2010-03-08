@@ -161,13 +161,12 @@ class indice extends clsDetalhe
     }
 
     $obj = new clsPmieducarEscolaSerieDisciplina();
-    $lst = $obj->lista($this->ref_cod_serie, $this->ref_cod_escola, NULL,1);
+    $escolaSerieDisciplinas = $obj->lista($this->ref_cod_serie, $this->ref_cod_escola, NULL, 1);
 
-    // Instancia o mapper de ano escolar
-    $anoEscolar = new ComponenteCurricular_Model_AnoEscolarDataMapper();
-    $componentes = $anoEscolar->findComponentePorSerie($this->ref_cod_serie);
+    // Mapper de componente curricular
+    $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
 
-    if ($componentes) {
+    if ($escolaSerieDisciplinas) {
       $tabela = '
 <table>
   <tr align="center">
@@ -176,13 +175,15 @@ class indice extends clsDetalhe
 
       $cont = 0;
 
-      foreach ($componentes as $componente) {
+      foreach ($escolaSerieDisciplinas as $escolaSerieDisciplina) {
         if (($cont % 2) == 0) {
           $color = ' bgcolor="#E4E9ED" ';
         }
         else {
           $color = ' bgcolor="#FFFFFF" ';
         }
+
+        $componente = $componenteMapper->find($escolaSerieDisciplina['ref_cod_disciplina']);
 
         $tabela .= sprintf('
   <tr>
