@@ -1,487 +1,488 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 /**
- * @author Adriano Erik Weiguert Nagasava
- * 		   Haissam Yebahi
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * @author    Adriano Erik Weiguert Nagasava <ctima@itajai.sc.gov.br>
+ * @author    Haissam Yebahi <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Arquivo disponível desde a versão 1.0.0
+ * @version   $Id$
  */
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
 
+/**
+ * clsIndexBase class.
+ *
+ * @author    Adriano Erik Weiguert Nagasava <ctima@itajai.sc.gov.br>
+ * @author    Haissam Yebahi <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
+ */
 class clsIndexBase extends clsBase
 {
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Servidor Alocação" );
-		$this->processoAp = "635";
-	}
+  function Formular()
+  {
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Alocação');
+    $this->processoAp = 635;
+  }
 }
 
+/**
+ * indice class.
+ *
+ * @author    Adriano Erik Weiguert Nagasava <ctima@itajai.sc.gov.br>
+ * @author    Haissam Yebahi <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
+ */
 class indice extends clsCadastro
 {
-	/**
-	 * Referencia pega da session para o idpes do usuario atual
-	 *
-	 * @var int
-	 */
-	var $pessoa_logada;
-	var $cod_servidor_alocacao;
-	var $ref_ref_cod_instituicao;
-	var $ref_usuario_exc;
-	var $ref_usuario_cad;
-	var $ref_cod_escola;
-	var $ref_cod_servidor;
-	var $data_cadastro;
-	var $data_exclusao;
-	var $ativo;
-	var $carga_horaria_alocada;
-	var $carga_horaria_disponivel;
-	var $periodo;
+  var $pessoa_logada;
+  var $cod_servidor_alocacao;
+  var $ref_ref_cod_instituicao;
+  var $ref_usuario_exc;
+  var $ref_usuario_cad;
+  var $ref_cod_escola;
+  var $ref_cod_servidor;
+  var $data_cadastro;
+  var $data_exclusao;
+  var $ativo;
+  var $carga_horaria_alocada;
+  var $carga_horaria_disponivel;
+  var $periodo;
 
-	var $alocacao_array 		 = array();
-	var $alocacao_excluida_array = array();
+  var $alocacao_array          = array();
+  var $alocacao_excluida_array = array();
 
-	function Inicializar()
-	{
-		$retorno = "Novo";
-		@session_start();
-		$this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
+  function Inicializar()
+  {
+    $retorno = 'Novo';
+    @session_start();
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
+    @session_write_close();
 
-		$this->ref_cod_servidor 	   = $_GET["ref_cod_servidor"];
-		$this->ref_ref_cod_instituicao = $_GET["ref_cod_instituicao"];
+    $this->ref_cod_servidor        = $_GET['ref_cod_servidor'];
+    $this->ref_ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
-		$obj_permissoes = new clsPermissoes();
-		$obj_permissoes->permissao_cadastra( 635, $this->pessoa_logada, 3,  "educar_servidor_alocacao_lst.php" );
+    $obj_permissoes = new clsPermissoes();
+    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 3,
+      'educar_servidor_alocacao_lst.php');
 
-		if ( is_numeric( $this->ref_cod_servidor ) && is_numeric( $this->ref_ref_cod_instituicao ) )
-		{
+    if (is_numeric($this->ref_cod_servidor) && is_numeric($this->ref_ref_cod_instituicao)) {
+      $obj   = new clsPmieducarServidorAlocacao();
+      $lista = $obj->lista(NULL, $this->ref_ref_cod_instituicao, NULL, NULL,
+        NULL, $this->ref_cod_servidor, NULL, NULL, NULL, NULL, 1, NULL, NULL);
 
-			$obj 	= new clsPmieducarServidorAlocacao( );
-			$lista  = $obj->lista( null, $this->ref_ref_cod_instituicao, null, null, null, $this->ref_cod_servidor, null, null, null, null, 1, null, null );
+      if ($lista) {
+        foreach ($lista as $campo => $val) {
+          $temp = array();
+          $temp['carga_horaria_alocada'] = $val['carga_horaria'];
+          $temp['periodo']               = $val['periodo'];
+          $temp['ref_cod_escola']        = $val['ref_cod_escola'];
+          $temp['novo']                  = 0;
 
-			if ( $lista )
-			{
-				foreach ( $lista AS $campo => $val )
-				{
-					$temp 							= array();
-					$temp['carga_horaria_alocada'] 	= $val['carga_horaria'];
-					$temp['periodo'] 				= $val['periodo'];
-					$temp['ref_cod_escola'] 		= $val['ref_cod_escola'];
-					$temp['novo'] 					= 0;
+          $this->alocacao_array[]     = $temp;
+        }
 
-					$this->alocacao_array[] 		= $temp;
-				}
-				$retorno = "Novo";
-			}
+        $retorno = 'Novo';
+      }
 
-			$obj_servidor 		 			= new clsPmieducarServidor( $this->ref_cod_servidor, null, null, null, null, null, 1, $this->ref_ref_cod_instituicao );
-			$det_servidor 		 			= $obj_servidor->detalhe();
-			$this->carga_horaria_disponivel = $det_servidor['carga_horaria'];
-		}
-		else
-		{
-			header( "location: educar_servidor_lst.php" );
-			die;
-		}
+      $obj_servidor = new clsPmieducarServidor($this->ref_cod_servidor, NULL,
+        NULL, NULL, NULL, NULL, 1, $this->ref_ref_cod_instituicao);
+      $det_servidor = $obj_servidor->detalhe();
 
-		$this->url_cancelar 	 = "educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}";
-		$this->nome_url_cancelar = "Cancelar";
-		return $retorno;
-	}
+      $this->carga_horaria_disponivel = $det_servidor['carga_horaria'];
+    }
+    else {
+      header('Location: educar_servidor_lst.php');
+      die();
+    }
 
-	function Gerar()
-	{
-		if ( $_POST )
-		{
-			foreach ( $_POST AS $campo => $val )
-			{
-				if ( is_string( $val ) )
-				{
-					$val = urldecode( $val );
-				}
-				$this->$campo = ( $this->$campo ) ? $this->$campo : $val;
-			}
-		}
+    $this->url_cancelar      = sprintf(
+      'educar_servidor_det.php?cod_servidor=%d&ref_cod_instituicao=%d',
+      $this->ref_cod_servidor, $this->ref_ref_cod_instituicao
+    );
+    $this->nome_url_cancelar = 'Cancelar';
+    return $retorno;
+  }
 
-		$obj_inst = new clsPmieducarInstituicao( $this->ref_ref_cod_instituicao );
-		$inst_det = $obj_inst->detalhe();
+  function Gerar()
+  {
+    if ($_POST) {
+      foreach ($_POST as $campo => $val) {
+        if (is_string($val)) {
+          $val = urldecode($val);
+        }
 
-		$this->campoRotulo( "nm_instituicao", "Institui&ccedil;&atilde;o", $inst_det['nm_instituicao'] );
-		$this->campoOculto( "ref_ref_cod_instituicao", $this->ref_ref_cod_instituicao );
+        $this->$campo = ($this->$campo) ? $this->$campo : $val;
+      }
+    }
 
-		if ( class_exists( "clsPmieducarServidor" ) )
-		{
-			$objTemp = new clsPmieducarServidor( $this->ref_cod_servidor );
-			$det 	 = $objTemp->detalhe();
-			if ( $det )
-			{
-				foreach ( $det as $key => $registro )
-				{
-					$this->$key = $registro;
-				}
-			}
+    $obj_inst = new clsPmieducarInstituicao($this->ref_ref_cod_instituicao);
+    $inst_det = $obj_inst->detalhe();
 
-			if ( $this->ref_cod_servidor )
-			{
-				$objTemp 	 = new clsFuncionario( $this->ref_cod_servidor );
-				$detalhe 	 = $objTemp->detalhe();
-				$detalhe 	 = $detalhe["idpes"]->detalhe();
-				$nm_servidor = $detalhe["nome"];
-			}
-		}
-		else
-		{
-			echo "<!--\nErro\nClasse clsPmieducarServidor nao encontrada\n-->";
-			$opcoes = array( "" => "Erro na geracao" );
-		}
+    $this->campoRotulo('nm_instituicao', 'Instituição', $inst_det['nm_instituicao']);
+    $this->campoOculto('ref_ref_cod_instituicao', $this->ref_ref_cod_instituicao);
 
-		$this->campoRotulo( "nm_servidor", "Servidor", $nm_servidor );
+    if (class_exists('clsPmieducarServidor')) {
+      $objTemp = new clsPmieducarServidor($this->ref_cod_servidor);
+      $det = $objTemp->detalhe();
 
-		$this->campoOculto( "ref_cod_servidor", $this->ref_cod_servidor );
+      if ($det) {
+        foreach ($det as $key => $registro) {
+          $this->$key = $registro;
+        }
+      }
 
-		if ( $_POST["alocacao_array"] )
-		{
-			$this->alocacao_array = unserialize( urldecode( $_POST["alocacao_array"] ) );
-		}
+      if ($this->ref_cod_servidor) {
+        $objTemp = new clsFuncionario($this->ref_cod_servidor);
+        $detalhe = $objTemp->detalhe();
+        $detalhe = $detalhe['idpes']->detalhe();
+        $nm_servidor = $detalhe['nome'];
+      }
+    }
+    else {
+      echo '<!--\nErro\nClasse clsPmieducarServidor não encontrada\n-->';
+      $opcoes = array('' => 'Erro na geração');
+    }
 
-		if ( $_POST["alocacao_excluida_array"] )
-		{
-			$this->alocacao_excluida_array = unserialize( urldecode( $_POST["alocacao_excluida_array"] ) );
-		}
+    $this->campoRotulo('nm_servidor', 'Servidor', $nm_servidor);
 
-		if ( $_POST["carga_horaria_alocada"] && $_POST["periodo"] )
-		{
-			$aux 						  = array();
-			$aux["carga_horaria_alocada"] = $_POST["carga_horaria_alocada"];
-			$aux["periodo"] 			  = $_POST["periodo"];
-			$aux["ref_cod_escola"] 		  = $_POST["ref_cod_escola"];
-			$aux['novo'] 				  = 1;
-			/*$achou 						  = false;
+    $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
 
-			foreach ( $this->alocacao_array as $alocacao )
-			{
-				if ( $alocacao['periodo'] == $aux["periodo"] )
-				{
-					$achou = true;
-				  	echo "<script>alert('Horário já utilizado!\\nPeriodo: {$this->periodo[$aux["periodo"]]}\\n');</script>";
-				}
-			}
+    if ($_POST['alocacao_array']) {
+      $this->alocacao_array = unserialize(urldecode($_POST['alocacao_array']));
+    }
 
-			if ( !$achou )
-			{
-				$this->alocacao_array[] = $aux;
-			}
-			*/
-			$this->alocacao_array[] = $aux;
+    if ($_POST['alocacao_excluida_array']) {
+      $this->alocacao_excluida_array = unserialize(urldecode($_POST['alocacao_excluida_array']));
+    }
 
-			unset( $this->periodo );
-			unset( $this->carga_horaria_alocada );
-			unset( $this->ref_cod_escola );
-		}
+    if ($_POST['carga_horaria_alocada'] && $_POST['periodo']) {
+      $aux = array();
+      $aux['carga_horaria_alocada'] = $_POST['carga_horaria_alocada'];
+      $aux['periodo']               = $_POST['periodo'];
+      $aux['ref_cod_escola']        = $_POST['ref_cod_escola'];
+      $aux['novo']                  = 1;
 
-		/**
-		 * Exclusão
-		 */
-		if ( $this->alocacao_array )
-		{
-			foreach ( $this->alocacao_array as $key => $alocacao )
-			{
-				if ( is_numeric( $_POST['excluir_periodo'] ) )
-				{
-					if ( $_POST['excluir_periodo'] == $key )
-					{
-						$this->alocacao_excluida_array[] = $alocacao;
-						unset( $this->alocacao_array[$key] );
-						unset( $this->excluir_periodo );
-					}
-				}
-			}
-		}
+      $this->alocacao_array[] = $aux;
 
-		/**
-		 * Carga Horaria
-		 */
-		$total_horas   = sprintf( "%02d", ( int ) ( floor( $this->carga_horaria_disponivel ) ) );
-		$total_horas   = sprintf( "%02d", ( int ) ( floor( $this->carga_horaria_disponivel ) ) );
-		$total_minutos = sprintf( "%02d", ( int ) ( ( floatval( $this->carga_horaria_disponivel ) - floatval( $total_horas ) ) * 60 ) );
+      unset($this->periodo);
+      unset($this->carga_horaria_alocada);
+      unset($this->ref_cod_escola);
+    }
 
-		$horas_utilizadas   = 0;
-		$minutos_utilizados = 0;
+    /**
+     * Exclusão
+     */
+    if ($this->alocacao_array) {
+      foreach ($this->alocacao_array as $key => $alocacao) {
+        if (is_numeric($_POST['excluir_periodo'])) {
+          if ($_POST['excluir_periodo'] == $key) {
+            $this->alocacao_excluida_array[] = $alocacao;
+            unset($this->alocacao_array[$key]);
+            unset($this->excluir_periodo);
+          }
+        }
+      }
+    }
 
-		if ( $this->alocacao_array )
-		{
-			foreach ( $this->alocacao_array as $alocacao )
-			{
-				$carga_horaria_ = explode( ":", $alocacao['carga_horaria_alocada'] );
+    /**
+     * Carga Horária
+     */
+    $total_horas   = sprintf('%02d', (int) (floor($this->carga_horaria_disponivel)));
+    $total_horas   = sprintf('%02d', (int) (floor($this->carga_horaria_disponivel)));
+    $total_minutos = sprintf('%02d', (int) ((floatval($this->carga_horaria_disponivel) - floatval($total_horas)) * 60));
 
-				$horas_utilizadas   += ( $carga_horaria_[0] );
-				$minutos_utilizados += ( $carga_horaria_[1] );
-			}
-		}
+    $horas_utilizadas   = 0;
+    $minutos_utilizados = 0;
 
-		$horas 				  = sprintf( "%02d", ( int ) $horas_utilizadas );
-		$minutos 			  = sprintf( "%02d", ( int ) $minutos_utilizados );
-		$str_horas_utilizadas =  "{$horas}:{$minutos}";
+    if ($this->alocacao_array) {
+      foreach ($this->alocacao_array as $alocacao) {
+        $carga_horaria_ = explode(':', $alocacao['carga_horaria_alocada']);
 
-		$this->campoRotulo( "carga_horaria_disponivel", "Carga Hor&aacute;ria", "{$total_horas}:{$total_minutos}" );
-		$this->campoRotulo( "horas_utilizadas", "Horas Utilizadas", $str_horas_utilizadas );
+        $horas_utilizadas   += ($carga_horaria_[0]);
+        $minutos_utilizados += ($carga_horaria_[1]);
+      }
+    }
 
-		$horas 				 = sprintf( "%02d", ( int ) $total_horas - $horas_utilizadas );
-		$minutos 			 = sprintf( "%02d", ( int ) $total_minutos - $minutos_utilizados );
-		$str_horas_restantes = "{$horas}:{$minutos}";
+    $horas                = sprintf('%02d', (int) $horas_utilizadas);
+    $minutos              = sprintf('%02d', (int) $minutos_utilizados);
+    $str_horas_utilizadas = sprintf('%s:%s', $horas, $minutos);
 
-		$this->campoRotulo( "horas_restantes", "Horas Restantes", $str_horas_restantes );
-		$this->campoOculto( "horas_restantes_", $str_horas_restantes );
+    $this->campoRotulo('carga_horaria_disponivel', 'Carga Horária',
+      sprintf('%s:%s', $total_horas, $total_minutos));
 
-		$this->campoQuebra();
+    $this->campoRotulo('horas_utilizadas', 'Horas Utilizadas', $str_horas_utilizadas);
 
-		$this->campoOculto( "excluir_periodo", "" );
-		unset( $aux );
+    $horas               = sprintf('%02d', (int) $total_horas - $horas_utilizadas);
+    $minutos             = sprintf('%02d', (int) $total_minutos - $minutos_utilizados);
+    $str_horas_restantes = sprintf('%s:%s', $horas, $minutos);
 
-//		array_multisort( $this->alocacao_array );
+    $this->campoRotulo('horas_restantes', 'Horas Restantes', $str_horas_restantes);
+    $this->campoOculto('horas_restantes_', $str_horas_restantes);
 
-		if ( class_exists( "clsPmieducarEscola" ) )
-		{
-			$obj_escola   = new clsPmieducarEscola();
-			$lista_escola = $obj_escola->lista( null, null, null, $this->ref_ref_cod_instituicao, null, null, null, null, null, null, 1 );
+    $this->campoQuebra();
 
-			if ( $lista_escola )
-			{
-				$opcoes = array( '' => "Selecione" );
-				foreach ( $lista_escola as $escola )
-				{
-					$opcoes[$escola['cod_escola']] = $escola['nome'];
-				}
-			}
-		}
-		else
-		{
-			$registro["ref_cod_escola"] = "Erro na geracao";
-			echo "<!--\nErro\nClasse nao existente: clsPmieducarEscola\n-->";
-		}
+    $this->campoOculto('excluir_periodo', '');
+    unset($aux);
 
-		$this->campoLista( "ref_cod_escola", "Escola", $opcoes, $this->ref_cod_escola, "", false, "", "", false, false );
-		$this->campoLista( "periodo", "Período", array( "" => "Selecione", "1" => "Matutino", "2" => "Vespertino", "3" => "Noturno" ), $this->periodo, null, false, "", "", false, false );
-		$this->campoHora( "carga_horaria_alocada", "Carga Horária", $this->carga_horaria_alocada, false );
-		$this->campoOculto( "alocacao_array", serialize( $this->alocacao_array ) );
-		$this->campoOculto( "alocacao_excluida_array", serialize( $this->alocacao_excluida_array ) );
-		$this->campoRotulo( "bt_incluir_periodo", "Período", "<a href='#' onclick=\"if(validaHora()){document.getElementById('incluir_periodo').value = 'S'; document.getElementById('tipoacao').value = ''; document.{$this->__nome}.submit();}\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>" );
+    if (class_exists('clsPmieducarEscola')) {
+      $obj_escola   = new clsPmieducarEscola();
+      $lista_escola = $obj_escola->lista(null, null, null,
+        $this->ref_ref_cod_instituicao, null, null, null, null, null, null, 1);
 
-		if ( $this->alocacao_array )
-		{
-			$excluir_ok = false;
+      if ($lista_escola) {
+        $opcoes = array('' => 'Selecione');
+        foreach ($lista_escola as $escola) {
+          $opcoes[$escola['cod_escola']] = $escola['nome'];
+        }
+      }
+    }
+    else {
+      $registro['ref_cod_escola'] = 'Erro na geração';
+      echo "<!--\nErro\nClasse não existente: clsPmieducarEscola\n-->";
+    }
 
-			if ( $_POST['excluir_periodo'] || $_POST['excluir_periodo'] == "0" )
-			{
-				$excluir_ok = true;
-			}
+    $periodo = array(
+      '' => 'Selecione',
+      1  => 'Matutino',
+      2  => 'Vespertino',
+      3  => 'Noturno'
+    );
 
-			foreach ( $this->alocacao_array as $key => $alocacao )
-			{
-				$obj_permissoes = new clsPermissoes();
-				$link_excluir 	= "";
+    $this->campoLista('ref_cod_escola', 'Escola', $opcoes, $this->ref_cod_escola,
+      '', FALSE, '', '', FALSE, FALSE);
 
-				if ( $obj_permissoes->permissao_excluir( 635, $this->pessoa_logada, 3 ) )
-				{
-					$link_excluir = "<a href='#' onclick=\"getElementById( 'excluir_periodo' ).value = '{$key}'; getElementById( 'tipoacao' ).value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>";
-				}
+    $this->campoLista('periodo', 'Período', $periodo, $this->periodo, NULL, FALSE,
+      '', '', FALSE, FALSE);
 
-				$obj_escola    = new clsPmieducarEscola( $alocacao['ref_cod_escola'] );
-				$det_escola    = $obj_escola->detalhe();
-				$det_escola    = $det_escola["nome"];
+    $this->campoHora('carga_horaria_alocada', 'Carga Horária',
+      $this->carga_horaria_alocada, FALSE);
 
-				switch( $alocacao["periodo"] )
-				{
-					case 1:
-						$nm_periodo = "Matutino";
-						break;
-					case 2:
-						$nm_periodo = "Vespertino";
-						break;
-					case 3:
-						$nm_periodo = "Noturno";
-						break;
-				}
+    $this->campoOculto('alocacao_array', serialize($this->alocacao_array));
 
-				$this->campoTextoInv( "periodo_{$key}", "", $nm_periodo, 10, 10, false, false, true, "", "", "", "", "periodo" );
-				$this->campoTextoInv( "carga_horaria_alocada_{$key}", "", $alocacao['carga_horaria_alocada'], 5, 5, false, false, true, "", "", "", "", "ds_carga_horaria_" );
-				$this->campoTextoInv( "ref_cod_escola_{$key}", "", $det_escola, 30, 255, false, false, false, "", "{$link_excluir}", "", "", "ref_cod_escola_" );
-			}
-		}
-		$this->campoOculto( "incluir_periodo", "" );
-		$this->campoQuebra();
-	}
+    $this->campoOculto('alocacao_excluida_array', serialize($this->alocacao_excluida_array));
 
-	function Novo()
-	{
-		@session_start();
-		 $this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
+    $this->campoRotulo('bt_incluir_periodo', 'Período', "<a href='#' onclick=\"if(validaHora()) { document.getElementById('incluir_periodo').value = 'S'; document.getElementById('tipoacao').value = ''; document.{$this->__nome}.submit();}\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
 
-		$obj_permissoes = new clsPermissoes();
-		$obj_permissoes->permissao_cadastra( 635, $this->pessoa_logada, 3,  "educar_servidor_alocacao_lst.php" );
+    if ($this->alocacao_array) {
+      $excluir_ok = FALSE;
 
-		if ( $_POST["alocacao_array"] )
-		{
-			$this->alocacao_array = unserialize( urldecode( $_POST["alocacao_array"] ) );
-		}
+      if ($_POST['excluir_periodo'] || $_POST['excluir_periodo'] == '0') {
+        $excluir_ok = TRUE;
+      }
 
-		if ( $_POST["alocacao_excluida_array"] )
-		{
-			$this->alocacao_excluida_array = unserialize( urldecode( $_POST["alocacao_excluida_array"] ) );
-		}
+      foreach ($this->alocacao_array as $key => $alocacao) {
+        $obj_permissoes = new clsPermissoes();
+        $link_excluir   = '';
 
-		if ( $this->alocacao_excluida_array )
-		{
-			foreach ( $this->alocacao_excluida_array as $excluida )
-			{
-				$obj = new clsPmieducarServidorAlocacao( null, $this->ref_ref_cod_instituicao, $this->pessoa_logada, $this->pessoa_logada, $excluida['ref_cod_escola'], $this->ref_cod_servidor, null, null, $this->ativo, $excluida['carga_horaria_alocada'], $excluida['periodo'] );
-				$cadastrou = $obj->excluir_horario();
-			}
-		}
+        if ($obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 3)) {
+          $link_excluir = "<a href='#' onclick=\"getElementById('excluir_periodo').value = '{$key}'; getElementById( 'tipoacao' ).value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>";
+        }
 
-		if ( $_POST["carga_horaria_alocada"] && $_POST["periodo"] )
-		{
+        $obj_escola = new clsPmieducarEscola( $alocacao['ref_cod_escola'] );
+        $det_escola = $obj_escola->detalhe();
+        $det_escola = $det_escola['nome'];
 
-			$aux 						  = array();
-			$aux["periodo"] 			  = $_POST["periodo"];
-			$aux["carga_horaria_alocada"] = $_POST["carga_horaria_alocada"];
-			$aux["ref_cod_escola"] 		  = $_POST["ref_cod_escola"];
-			$aux["novo"] 				  = 1;
-			$achou 						  = false;
+        // @todo CoreExt_Enum
+        switch ($alocacao['periodo']) {
+          case 1:
+            $nm_periodo = 'Matutino';
+            break;
+          case 2:
+            $nm_periodo = 'Vespertino';
+            break;
+          case 3:
+            $nm_periodo = 'Noturno';
+            break;
+        }
 
-			foreach ( $this->alocacao_array as $alocacao )
-			{
-				if ( $alocacao['periodo'] == $aux["periodo"] )
-				{
-					$achou = true;
-				}
-			}
-			if ( !$achou )
-			{
-				$this->alocacao_array[] = $aux;
-			}
-			unset( $this->periodo );
-			unset( $this->carga_horaria_alocada );
-		}
+        $this->campoTextoInv('periodo_' . $key, '', $nm_periodo, 10, 10, FALSE,
+          FALSE, TRUE, '', '', '', '', 'periodo');
 
-		if ( $this->alocacao_array )
-		{
-			foreach ( $this->alocacao_array as $alocacao )
-			{
-				if ( $alocacao['novo'] )
-				{
-					$obj = new clsPmieducarServidorAlocacao( null, $this->ref_ref_cod_instituicao, null, $this->pessoa_logada, $alocacao['ref_cod_escola'], $this->ref_cod_servidor, null, null, $this->ativo, $alocacao['carga_horaria_alocada'], $alocacao['periodo'] );
-					$cadastrou = $obj->cadastra();
+        $this->campoTextoInv('carga_horaria_alocada_' . $key, '',
+          $alocacao['carga_horaria_alocada'], 5, 5, FALSE, FALSE, TRUE, '', '',
+          '', '', 'ds_carga_horaria_');
 
-					if ( !$cadastrou )
-					{
-						$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-						echo "<!--\nErro ao cadastrar clsPmieducarServidorAlocacao\nvalores obrigatorios\nis_numeric( $this->ref_ref_cod_instituicao ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_servidor ) && is_numeric( $this->periodo ) && ( $this->carga_horaria_alocada )\n-->";
-						return false;
-					}
-				}
-			}
-		}
+        $this->campoTextoInv('ref_cod_escola_' . $key, '', $det_escola, 30, 255,
+          FALSE, FALSE, FALSE, '', $link_excluir, '', '', 'ref_cod_escola_');
+      }
+    }
 
-		$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-		header( "Location: educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao} ");
-		die();
-		return true;
-	}
+    $this->campoOculto('incluir_periodo', '');
+    $this->campoQuebra();
+  }
 
-	function Editar()
-	{
-		return false;
-	}
+  function Novo()
+  {
+    @session_start();
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
+    @session_write_close();
 
-	function Excluir()
-	{
-		return false;
+    $obj_permissoes = new clsPermissoes();
+    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 3,
+      'educar_servidor_alocacao_lst.php');
 
-	}
+    if ($_POST['alocacao_array']) {
+      $this->alocacao_array = unserialize(urldecode($_POST['alocacao_array']));
+    }
+
+    if ($_POST['alocacao_excluida_array']) {
+      $this->alocacao_excluida_array = unserialize(urldecode($_POST['alocacao_excluida_array']));
+    }
+
+    if ($this->alocacao_excluida_array) {
+      foreach ($this->alocacao_excluida_array as $excluida) {
+        $obj = new clsPmieducarServidorAlocacao(NULL, $this->ref_ref_cod_instituicao,
+          $this->pessoa_logada, $this->pessoa_logada, $excluida['ref_cod_escola'],
+          $this->ref_cod_servidor, NULL, NULL, $this->ativo,
+          $excluida['carga_horaria_alocada'], $excluida['periodo']);
+
+        $cadastrou = $obj->excluir_horario();
+      }
+    }
+
+    if ($_POST['carga_horaria_alocada'] && $_POST['periodo']) {
+      $aux                          = array();
+      $aux['periodo']               = $_POST['periodo'];
+      $aux['carga_horaria_alocada'] = $_POST['carga_horaria_alocada'];
+      $aux['ref_cod_escola']        = $_POST['ref_cod_escola'];
+      $aux['novo']                  = 1;
+      $achou                        = FALSE;
+
+      foreach ($this->alocacao_array as $alocacao) {
+        if ($alocacao['periodo'] == $aux["periodo"]) {
+          $achou = TRUE;
+        }
+      }
+
+      if (!$achou) {
+        $this->alocacao_array[] = $aux;
+      }
+
+      unset($this->periodo);
+      unset($this->carga_horaria_alocada);
+    }
+
+    if ($this->alocacao_array) {
+      foreach ($this->alocacao_array as $alocacao) {
+        if ($alocacao['novo']) {
+          $obj = new clsPmieducarServidorAlocacao(NULL, $this->ref_ref_cod_instituicao,
+            NULL, $this->pessoa_logada, $alocacao['ref_cod_escola'],
+            $this->ref_cod_servidor, NULL, NULL, $this->ativo,
+            $alocacao['carga_horaria_alocada'], $alocacao['periodo']);
+
+          $cadastrou = $obj->cadastra();
+
+          if (!$cadastrou) {
+            $this->mensagem = 'Cadastro não realizado.<br />';
+            echo "<!--\nErro ao cadastrar clsPmieducarServidorAlocacao\nvalores obrigatorios\nis_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_servidor) && is_numeric($this->periodo) && ($this->carga_horaria_alocada)\n-->";
+            return FALSE;
+          }
+        }
+      }
+    }
+
+    $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
+    header('Location: ' . sprintf('educar_servidor_det.php?cod_servidor=%d&ref_cod_instituicao=%d',
+      $this->ref_cod_servidor, $this->ref_ref_cod_instituicao));
+    die();
+  }
+
+  function Editar()
+  {
+    return FALSE;
+  }
+
+  function Excluir()
+  {
+    return FALSE;
+
+  }
 }
 
-// cria uma extensao da classe base
+// Instancia objeto de página
 $pagina = new clsIndexBase();
-// cria o conteudo
+
+// Instancia objeto de conteúdo
 $miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
-// gera o html
+
+// Atribui o conteúdo à  página
+$pagina->addForm($miolo);
+
+// Gera o código HTML
 $pagina->MakeAll();
 ?>
-<script>
-
+<script type="text/javascript">
 function validaHora()
 {
-	var carga_horaria 	= document.getElementById('carga_horaria_alocada').value;
-	var periodo 		= document.getElementById('periodo').value;
-	var ref_cod_escola  = document.getElementById('ref_cod_escola').value;
-	var horas_restantes = document.getElementById('horas_restantes_').value;
+  var carga_horaria   = document.getElementById('carga_horaria_alocada').value;
+  var periodo         = document.getElementById('periodo').value;
+  var ref_cod_escola  = document.getElementById('ref_cod_escola').value;
+  var horas_restantes = document.getElementById('horas_restantes_').value;
 
-	if ( !ref_cod_escola )
-	{
-		alert( 'Preencha o campo \'Escola\' corretamente!' );
-		return false;
-	}
+  if (!ref_cod_escola) {
+    alert('Preencha o campo "Escola" corretamente!');
+    return false;
+  }
 
-	if ( !( ( /[0-9]{2}:[0-9]{2}/ ).test( document.formcadastro.carga_horaria_alocada.value ) ) )
-	{
-		alert( "Preencha o campo 'Carga Horária' corretamente!" );
-		return false;
-	}
+  if (!((/[0-9]{2}:[0-9]{2}/).test(document.formcadastro.carga_horaria_alocada.value))) {
+    alert('Preencha o campo "Carga Horária" corretamente!');
+    return false;
+  }
 
-	if ( !periodo )
-	{
-		alert( "Preencha o campo 'Período' corretamente!" );
-		return false;
-	}
+  if (!periodo) {
+    alert('Preencha o campo "Período" corretamente!');
+    return false;
+  }
 
-	horas_restantes = unescape( horas_restantes );
-	horas_restantes = unescape( horas_restantes ).split( ":" );
+  horas_restantes = unescape(horas_restantes);
+  horas_restantes = unescape(horas_restantes).split(':');
 
-	var carga_horaria_alocada_ 	  = document.getElementById('carga_horaria_alocada').value.split( ":" );
+  var carga_horaria_alocada_ = document.getElementById('carga_horaria_alocada').value.split(":");
 
-	hora_ 			= Date.UTC( 1970, 01, 01, carga_horaria_alocada_[0], carga_horaria_alocada_[1], 0 );
-	hora_restantes_ = Date.UTC( 1970, 01, 01, horas_restantes[0], horas_restantes[1], 0 );
+  hora_           = Date.UTC(1970, 01, 01, carga_horaria_alocada_[0], carga_horaria_alocada_[1], 0);
+  hora_restantes_ = Date.UTC(1970, 01, 01, horas_restantes[0], horas_restantes[1], 0);
 
-	if ( hora_ > hora_restantes_ )
-	{
-		alert( "Atenção número de horas excedem o número de horas disponíveis ,\nPor favor corriga!!!" );
-		document.getElementById( 'ref_cod_escola' ).value 		 = '';
-		document.getElementById( 'periodo' ).value 				 = '';
-		document.getElementById( 'carga_horaria_alocada' ).value = '';
-		return false;
-	}
+  if (hora_ > hora_restantes_) {
+    alert("Atenção número de horas excedem o número de horas disponíveis! Por favor, corrija.");
+    document.getElementById('ref_cod_escola').value        = '';
+    document.getElementById('periodo').value               = '';
+    document.getElementById('carga_horaria_alocada').value = '';
+    return false;
+  }
 
-	return true;
+  return true;
 }
 </script>
