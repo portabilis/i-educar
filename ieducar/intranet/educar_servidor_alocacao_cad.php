@@ -84,6 +84,9 @@ class indice extends clsCadastro
   var $alocacao_array          = array();
   var $alocacao_excluida_array = array();
 
+  static $escolasPeriodos = array();
+  static $periodos = array();
+
   function Inicializar()
   {
     $retorno = 'Novo';
@@ -154,26 +157,21 @@ class indice extends clsCadastro
     $this->campoRotulo('nm_instituicao', 'Instituição', $inst_det['nm_instituicao']);
     $this->campoOculto('ref_ref_cod_instituicao', $this->ref_ref_cod_instituicao);
 
-    if (class_exists('clsPmieducarServidor')) {
-      $objTemp = new clsPmieducarServidor($this->ref_cod_servidor);
-      $det = $objTemp->detalhe();
+    // Dados do servidor
+    $objTemp = new clsPmieducarServidor($this->ref_cod_servidor);
+    $det = $objTemp->detalhe();
 
-      if ($det) {
-        foreach ($det as $key => $registro) {
-          $this->$key = $registro;
-        }
-      }
-
-      if ($this->ref_cod_servidor) {
-        $objTemp = new clsFuncionario($this->ref_cod_servidor);
-        $detalhe = $objTemp->detalhe();
-        $detalhe = $detalhe['idpes']->detalhe();
-        $nm_servidor = $detalhe['nome'];
+    if ($det) {
+      foreach ($det as $key => $registro) {
+        $this->$key = $registro;
       }
     }
-    else {
-      echo '<!--\nErro\nClasse clsPmieducarServidor não encontrada\n-->';
-      $opcoes = array('' => 'Erro na geração');
+
+    if ($this->ref_cod_servidor) {
+      $objTemp = new clsFuncionario($this->ref_cod_servidor);
+      $detalhe = $objTemp->detalhe();
+      $detalhe = $detalhe['idpes']->detalhe();
+      $nm_servidor = $detalhe['nome'];
     }
 
     $this->campoRotulo('nm_servidor', 'Servidor', $nm_servidor);
@@ -202,9 +200,7 @@ class indice extends clsCadastro
       unset($this->ref_cod_escola);
     }
 
-    /**
-     * Exclusão
-     */
+    // Exclusão
     if ($this->alocacao_array) {
       foreach ($this->alocacao_array as $key => $alocacao) {
         if (is_numeric($_POST['excluir_periodo'])) {
@@ -217,9 +213,7 @@ class indice extends clsCadastro
       }
     }
 
-    /**
-     * Carga Horária
-     */
+    // Carga horária
     $total_horas   = sprintf('%02d', (int) (floor($this->carga_horaria_disponivel)));
     $total_horas   = sprintf('%02d', (int) (floor($this->carga_horaria_disponivel)));
     $total_minutos = sprintf('%02d', (int) ((floatval($this->carga_horaria_disponivel) - floatval($total_horas)) * 60));
@@ -257,29 +251,24 @@ class indice extends clsCadastro
     $this->campoOculto('excluir_periodo', '');
     unset($aux);
 
-    if (class_exists('clsPmieducarEscola')) {
-      $obj_escola   = new clsPmieducarEscola();
-      $lista_escola = $obj_escola->lista(null, null, null,
-        $this->ref_ref_cod_instituicao, null, null, null, null, null, null, 1);
+    // Escolas
+    $obj_escola   = new clsPmieducarEscola();
+    $lista_escola = $obj_escola->lista(NULL, NULL, NULL,
+      $this->ref_ref_cod_instituicao, NULL, NULL, NULL, NULL, NULL, NULL, 1);
 
-      if ($lista_escola) {
-        $opcoes = array('' => 'Selecione');
-        foreach ($lista_escola as $escola) {
-          $opcoes[$escola['cod_escola']] = $escola['nome'];
-        }
+    if ($lista_escola) {
+      $opcoes = array('' => 'Selecione');
+      foreach ($lista_escola as $escola) {
+        $opcoes[$escola['cod_escola']] = $escola['nome'];
       }
-    }
-    else {
-      $registro['ref_cod_escola'] = 'Erro na geração';
-      echo "<!--\nErro\nClasse não existente: clsPmieducarEscola\n-->";
     }
 
     $periodo = array(
-      '' => 'Selecione',
       1  => 'Matutino',
       2  => 'Vespertino',
       3  => 'Noturno'
     );
+    self::$periodos = $periodo;
 
     $this->campoLista('ref_cod_escola', 'Escola', $opcoes, $this->ref_cod_escola,
       '', FALSE, '', '', FALSE, FALSE);
@@ -289,6 +278,9 @@ class indice extends clsCadastro
 
     $this->campoHora('carga_horaria_alocada', 'Carga Horária',
       $this->carga_horaria_alocada, FALSE);
+
+    // Altera a string de descrição original do campo hora
+    $this->campos['carga_horaria_alocada'][6] = sprintf('Formato hh:mm (máximo de %d horas por período)', clsPmieducarServidorAlocacao::$cargaHorariaMax);
 
     $this->campoOculto('alocacao_array', serialize($this->alocacao_array));
 
@@ -308,10 +300,10 @@ class indice extends clsCadastro
         $link_excluir   = '';
 
         if ($obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 3)) {
-          $link_excluir = "<a href='#' onclick=\"getElementById('excluir_periodo').value = '{$key}'; getElementById( 'tipoacao' ).value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>";
+          $link_excluir = "<a href='#' onclick=\"getElementById('excluir_periodo').value = '{$key}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>";
         }
 
-        $obj_escola = new clsPmieducarEscola( $alocacao['ref_cod_escola'] );
+        $obj_escola = new clsPmieducarEscola($alocacao['ref_cod_escola']);
         $det_escola = $obj_escola->detalhe();
         $det_escola = $det_escola['nome'];
 
@@ -327,6 +319,9 @@ class indice extends clsCadastro
             $nm_periodo = 'Noturno';
             break;
         }
+
+        // Períodos usados na escola
+        self::$escolasPeriodos[$alocacao['ref_cod_escola']][$alocacao['periodo']] = $alocacao['periodo'];
 
         $this->campoTextoInv('periodo_' . $key, '', $nm_periodo, 10, 10, FALSE,
           FALSE, TRUE, '', '', '', '', 'periodo');
@@ -382,7 +377,7 @@ class indice extends clsCadastro
       $achou                        = FALSE;
 
       foreach ($this->alocacao_array as $alocacao) {
-        if ($alocacao['periodo'] == $aux["periodo"]) {
+        if ($alocacao['periodo'] == $aux['periodo']) {
           $achou = TRUE;
         }
       }
@@ -403,7 +398,13 @@ class indice extends clsCadastro
             $this->ref_cod_servidor, NULL, NULL, $this->ativo,
             $alocacao['carga_horaria_alocada'], $alocacao['periodo']);
 
-          $cadastrou = $obj->cadastra();
+          $cadastrou = FALSE;
+          if (FALSE == $obj->lista(NULL, $this->ref_ref_cod_instituicao,
+            NULL, NULL, $alocacao['escola'], $this->ref_cod_servidor, NULL, NULL,
+            NULL, NULL, NULL, NULL, $alocacao['periodo'])
+          ) {
+            $cadastrou = $obj->cadastra();
+          }
 
           if (!$cadastrou) {
             $this->mensagem = 'Cadastro não realizado.<br />';
@@ -428,7 +429,6 @@ class indice extends clsCadastro
   function Excluir()
   {
     return FALSE;
-
   }
 }
 
@@ -445,6 +445,31 @@ $pagina->addForm($miolo);
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
+var escolasPeriodos = <?php print json_encode(indice::$escolasPeriodos); ?>;
+var periodos = <?php print json_encode(indice::$periodos); ?>;
+
+window.onload = function()
+{
+  getPeriodos(document.getElementById('ref_cod_escola').value);
+}
+
+document.getElementById('ref_cod_escola').onchange = function()
+{
+  getPeriodos(document.getElementById('ref_cod_escola').value);
+}
+
+function getPeriodos(codEscola)
+{
+  obj = document.getElementById('periodo');
+  obj.length = 0;
+
+  for (var ii in periodos) {
+    if (!escolasPeriodos[codEscola] || !escolasPeriodos[codEscola][ii]) {
+      obj.options[obj.length] = new Option(periodos[ii], i);
+    }
+  }
+}
+
 function validaHora()
 {
   var carga_horaria   = document.getElementById('carga_horaria_alocada').value;
@@ -473,7 +498,13 @@ function validaHora()
   var carga_horaria_alocada_ = document.getElementById('carga_horaria_alocada').value.split(":");
 
   hora_           = Date.UTC(1970, 01, 01, carga_horaria_alocada_[0], carga_horaria_alocada_[1], 0);
+  hora_max_       = Date.UTC(1970, 01, 01, <?php print clsPmieducarServidorAlocacao::$cargaHorariaMax ?>, 0, 0);
   hora_restantes_ = Date.UTC(1970, 01, 01, horas_restantes[0], horas_restantes[1], 0);
+
+  if (hora_ > hora_max_) {
+    alert("O número de horas máximo por período/escola é de 6h.");
+    return false;
+  }
 
   if (hora_ > hora_restantes_) {
     alert("Atenção número de horas excedem o número de horas disponíveis! Por favor, corrija.");

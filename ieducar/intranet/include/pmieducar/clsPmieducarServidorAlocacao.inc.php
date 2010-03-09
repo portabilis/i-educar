@@ -55,6 +55,12 @@ class clsPmieducarServidorAlocacao
   var $periodo;
 
   /**
+   * Carga horária máxima para um período de alocação (em horas).
+   * @var float
+   */
+  static $cargaHorariaMax = 6.0;
+
+  /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
    * @var int
    */
@@ -125,89 +131,33 @@ class clsPmieducarServidorAlocacao
     $this->_campos_lista = $this->_todos_campos = 'cod_servidor_alocacao, ref_ref_cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_cod_escola, ref_cod_servidor, data_cadastro, data_exclusao, ativo, carga_horaria, periodo';
 
     if (is_numeric($ref_usuario_cad)) {
-      if (class_exists("clsPmieducarUsuario")) {
-        $tmp_obj = new clsPmieducarUsuario($ref_usuario_cad);
-        if (method_exists($tmp_obj, "existe")) {
-          if ($tmp_obj->existe()) {
-            $this->ref_usuario_cad = $ref_usuario_cad;
-          }
-        }
-        elseif (method_exists($tmp_obj, "detalhe")) {
-          if ($tmp_obj->detalhe()) {
-            $this->ref_usuario_cad = $ref_usuario_cad;
-          }
-        }
-      }
-      else {
-        if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_cad}'")) {
-          $this->ref_usuario_cad = $ref_usuario_cad;
-        }
+      $usuario = new clsPmieducarUsuario($ref_usuario_cad);
+      if ($usuario->existe()) {
+        $this->ref_usuario_cad = $ref_usuario_cad;
       }
     }
 
     if (is_numeric($ref_usuario_exc)) {
-      if (class_exists("clsPmieducarUsuario")) {
-        $tmp_obj = new clsPmieducarUsuario($ref_usuario_exc);
-        if (method_exists($tmp_obj, "existe")) {
-          if ($tmp_obj->existe()) {
-            $this->ref_usuario_exc = $ref_usuario_exc;
-          }
-        }
-        elseif (method_exists($tmp_obj, "detalhe")) {
-          if ($tmp_obj->detalhe()) {
-            $this->ref_usuario_exc = $ref_usuario_exc;
-          }
-        }
-      }
-      else {
-        if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_exc}'")) {
-          $this->ref_usuario_exc = $ref_usuario_exc;
-        }
+      $usuario = new clsPmieducarUsuario($ref_usuario_exc);
+      if ($usuario->existe()) {
+        $this->ref_usuario_exc = $ref_usuario_exc;
       }
     }
+
     if (is_numeric($ref_cod_escola)) {
-      if (class_exists("clsPmieducarEscola")) {
-        $tmp_obj = new clsPmieducarEscola($ref_cod_escola);
-        if (method_exists($tmp_obj, "existe")) {
-          if ($tmp_obj->existe()) {
-            $this->ref_cod_escola = $ref_cod_escola;
-          }
-        }
-        elseif (method_exists($tmp_obj, "detalhe")) {
-          if ($tmp_obj->detalhe()) {
-            $this->ref_cod_escola = $ref_cod_escola;
-          }
-        }
-      }
-      else {
-        if ($db->CampoUnico("SELECT 1 FROM pmieducar.escola WHERE cod_escola = '{$ref_cod_escola}'")) {
-          $this->ref_cod_escola = $ref_cod_escola;
-        }
+      $escola = new clsPmieducarEscola($ref_cod_escola);
+      if ($escola->existe()) {
+        $this->ref_cod_escola = $ref_cod_escola;
       }
     }
 
     if (is_numeric($ref_cod_servidor) && is_numeric($ref_ref_cod_instituicao)) {
-      if (class_exists("clsPmieducarServidor")) {
-        $tmp_obj = new clsPmieducarServidor($ref_cod_servidor, NULL, NULL, NULL,
-          NULL, NULL, NULL, $ref_ref_cod_instituicao);
-        if (method_exists($tmp_obj, "existe")) {
-          if ($tmp_obj->existe()) {
-            $this->ref_cod_servidor = $ref_cod_servidor;
-            $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
-          }
-        }
-        elseif (method_exists($tmp_obj, "detalhe")) {
-          if ($tmp_obj->detalhe()) {
-            $this->ref_cod_servidor = $ref_cod_servidor;
-            $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
-          }
-        }
-      }
-      else {
-        if ($db->CampoUnico("SELECT 1 FROM pmieducar.servidor WHERE cod_servidor = '{$ref_cod_servidor}' AND ref_cod_instituicao = '{$ref_ref_cod_instituicao}'")) {
-          $this->ref_cod_servidor = $ref_cod_servidor;
-          $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
-        }
+      $servidor = new clsPmieducarServidor($ref_cod_servidor, NULL, NULL, NULL,
+        NULL, NULL, NULL, $ref_ref_cod_instituicao);
+
+      if ($servidor->existe()) {
+        $this->ref_cod_servidor = $ref_cod_servidor;
+        $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
       }
     }
 
@@ -227,8 +177,14 @@ class clsPmieducarServidorAlocacao
       $this->ativo = $ativo;
     }
 
+    // Valida a carga horária
     if (is_string($carga_horaria)) {
-      $this->carga_horaria = $carga_horaria;
+      $datetime = explode(':', $carga_horaria);
+      $minutos  = (((int) $datetime[0]) * 60) + (int) $datetime[1];
+
+      if ((self::$cargaHorariaMax * 60) >= $minutos) {
+        $this->carga_horaria = $carga_horaria;
+      }
     }
 
     if (is_numeric($periodo)) {
@@ -379,7 +335,7 @@ class clsPmieducarServidorAlocacao
     $int_ref_cod_servidor = NULL, $date_data_cadastro_ini = NULL,
     $date_data_cadastro_fim = NULL, $date_data_exclusao_ini = NULL,
     $date_data_exclusao_fim = NULL, $int_ativo = NULL, $int_carga_horaria = NULL,
-    $int_periodo = NULL,$bool_busca_nome = FALSE, $boo_professor = NULL)
+    $int_periodo = NULL, $bool_busca_nome = FALSE, $boo_professor = NULL)
   {
     $filtros  = '';
     $whereAnd = ' WHERE ';
@@ -533,7 +489,7 @@ class clsPmieducarServidorAlocacao
   {
     if (is_numeric($this->cod_servidor_alocacao)) {
       $db = new clsBanco();
-      $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_servidor_alocacao = '{$this->cod_servidor_alocacao}'" );
+      $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_servidor_alocacao = '{$this->cod_servidor_alocacao}'");
       $db->ProximoRegistro();
       return $db->Tupla();
     }
