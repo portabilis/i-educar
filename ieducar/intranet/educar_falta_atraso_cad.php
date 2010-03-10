@@ -134,9 +134,9 @@ class indice extends clsCadastro
     $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
 
     // Foreign keys
-    $obrigatorio     = true;
-    $get_instituicao = true;
-    $get_escola      = true;
+    $obrigatorio     = TRUE;
+    $get_instituicao = TRUE;
+    $get_escola      = TRUE;
     include 'include/pmieducar/educar_campo_lista.php';
 
     // Text

@@ -32,6 +32,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'CoreExt/View/Helper/UrlHelper.php';
 
 /**
  * clsIndexBase class.
@@ -145,15 +146,15 @@ class indice extends clsListagem
 
         $obj_comp = new clsPmieducarFaltaAtrasoCompensado();
         $horas    = $obj_comp->ServidorHorasCompensadas($this->ref_cod_servidor,
-          $registro["ref_cod_escola"], $registro["ref_ref_cod_instituicao"]);
+          $registro['ref_cod_escola'], $registro['ref_ref_cod_instituicao']);
 
         if ($horas) {
-          $horas_aux   = $horas["hora"];
-          $minutos_aux = $horas["min"];
+          $horas_aux   = $horas['hora'];
+          $minutos_aux = $horas['min'];
         }
 
-        $horas_aux   = $horas_aux - $registro["qtd_horas"];
-        $minutos_aux = $minutos_aux - $registro["qtd_min"];
+        $horas_aux   = $horas_aux - $registro['qtd_horas'];
+        $minutos_aux = $minutos_aux - $registro['qtd_min'];
 
         if ($horas_aux > 0 && $minutos_aux < 0) {
           $horas_aux--;
@@ -176,12 +177,21 @@ class indice extends clsListagem
         $tipo = $registro['tipo'] == 1 ?
           'Atraso' : 'Falta';
 
-        $this->addLinhas( array(
-          "<a href=\"educar_falta_atraso_det.php?cod_falta_atraso={$registro['cod_falta_atraso']}\">{$registro["nm_escola"]}</a>",
-          "<a href=\"educar_falta_atraso_det.php?cod_falta_atraso={$registro['cod_falta_atraso']}\">{$det_ins["nm_instituicao"]}</a>",
-          "<a href=\"educar_falta_atraso_det.php?cod_falta_atraso={$registro['cod_falta_atraso']}\">{$tipo}</a>",
-          "<a href=\"educar_falta_atraso_det.php?cod_falta_atraso={$registro['cod_falta_atraso']}\">{$horas_aux}</a>",
-          "<a href=\"educar_falta_atraso_det.php?cod_falta_atraso={$registro['cod_falta_atraso']}\">{$minutos_aux}</a>"
+        $urlHelper = CoreExt_View_Helper_UrlHelper::getInstance();
+        $url       = 'educar_falta_atraso_det.php';
+        $options   = array('query' => array(
+          'cod_falta_atraso'    => $registro['cod_falta_atraso'],
+          'ref_cod_servidor'    => $registro['ref_cod_servidor'],
+          'ref_cod_escola'      => $registro['ref_cod_escola'],
+          'ref_cod_instituicao' => $registro['ref_ref_cod_instituicao'],
+        ));
+
+        $this->addLinhas(array(
+          $urlHelper->l($registro['nm_escola'], $url, $options),
+          $urlHelper->l($det_ins['nm_instituicao'], $url, $options),
+          $urlHelper->l($tipo, $url, $options),
+          $urlHelper->l($horas_aux, $url, $options),
+          $urlHelper->l($minutos_aux, $url, $options)
         ));
       }
     }
