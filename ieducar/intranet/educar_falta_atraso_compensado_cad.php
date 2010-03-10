@@ -153,7 +153,7 @@ class indice extends clsCadastro
     $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7,
       "educar_falta_atraso_det.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}");
 
-    //
+    // Transforma a data para o formato aceito pelo banco
     $this->data_inicio = dataToBanco($this->data_inicio);
     $this->data_fim    = dataToBanco($this->data_fim);
 
@@ -171,7 +171,6 @@ class indice extends clsCadastro
     }
 
     $this->mensagem = 'Cadastro não realizado.<br />';
-    echo "<!--\nErro ao cadastrar clsPmieducarFaltaAtrasoCompensado\nvalores obrigatorios\nis_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_instituicao ) && is_numeric( $this->ref_cod_servidor ) && is_numeric( $this->ref_usuario_cad ) && is_string( $this->data_inicio ) && is_string( $this->data_fim )\n-->";
     return FALSE;
   }
 
@@ -185,6 +184,10 @@ class indice extends clsCadastro
     $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7,
       sprintf('educar_falta_atraso_det.php?ref_cod_servidor=%d&ref_cod_escola=%d&ref_cod_instituicao=%d',
         $this->ref_cod_servidor, $this->ref_cod_escola, $this->ref_cod_instituicao));
+
+    // Transforma a data para o formato aceito pelo banco
+    $this->data_inicio = dataToBanco($this->data_inicio);
+    $this->data_fim    = dataToBanco($this->data_fim);
 
     $obj = new clsPmieducarFaltaAtrasoCompensado($this->cod_compensado,
       $this->ref_cod_escola, $this->ref_cod_instituicao, $this->ref_cod_servidor,
@@ -201,7 +204,6 @@ class indice extends clsCadastro
     }
 
     $this->mensagem = 'Edição não realizada.<br />';
-    echo "<!--\nErro ao editar clsPmieducarFaltaAtrasoCompensado\nvalores obrigatorios\nif( is_numeric( $this->cod_compensado ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
     return FALSE;
   }
 
@@ -215,6 +217,10 @@ class indice extends clsCadastro
     $obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7,
       sprintf('educar_falta_atraso_det.php?ref_cod_servidor=%d&ref_cod_escola=%d&ref_cod_instituicao=%d',
         $this->ref_cod_servidor, $this->ref_cod_escola, $this->ref_cod_instituicao));
+
+    // Transforma a data para o formato aceito pelo banco
+    $this->data_inicio = dataToBanco($this->data_inicio);
+    $this->data_fim    = dataToBanco($this->data_fim);
 
     $obj = new clsPmieducarFaltaAtrasoCompensado($this->cod_compensado,
       $this->ref_cod_escola, $this->ref_cod_instituicao, $this->ref_cod_servidor,
@@ -230,7 +236,6 @@ class indice extends clsCadastro
     }
 
     $this->mensagem = 'Exclusão não realizada.<br />';
-    echo "<!--\nErro ao excluir clsPmieducarFaltaAtrasoCompensado\nvalores obrigatorios\nif( is_numeric( $this->cod_compensado ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
     return FALSE;
   }
 }
