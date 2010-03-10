@@ -1,29 +1,31 @@
 <?php
+
 /**
+ * i-Educar - Sistema de gestão escolar
  *
- * @author  Prefeitura Municipal de Itajaí
- * @version $Id$
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
  *
- * Pacote: i-PLB Software Público Livre e Brasileiro
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
  *
- * Copyright (C) 2006 PMI - Prefeitura Municipal de Itajaí
- *            ctima@itajai.sc.gov.br
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
  *
- * Este  programa  é  software livre, você pode redistribuí-lo e/ou
- * modificá-lo sob os termos da Licença Pública Geral GNU, conforme
- * publicada pela Free  Software  Foundation,  tanto  a versão 2 da
- * Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * Este programa  é distribuído na expectativa de ser útil, mas SEM
- * QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-
- * ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-
- * sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.
- *
- * Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU
- * junto  com  este  programa. Se não, escreva para a Free Software
- * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
- * 02111-1307, USA.
- *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Arquivo disponível desde a versão 1.0.0
+ * @version   $Id$
  */
 
 require_once 'include/clsBase.inc.php';
@@ -31,85 +33,77 @@ require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
-class clsIndexBase extends clsBase {
-
-  public function Formular() {
-    $this->SetTitulo( "{$this->_instituicao} i-Educar - Falta Atraso" );
-    $this->processoAp = "635";
+/**
+ * clsIndexBase class.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
+ */
+class clsIndexBase extends clsBase
+{
+  public function Formular()
+  {
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Falta Atraso');
+    $this->processoAp = 635;
   }
-
 }
 
-
+/**
+ * indice class.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
+ */
 class indice extends clsListagem
 {
-  /**
-   * Referencia pega da session para o idpes do usuario atual
-   *
-   * @var int
-   */
-  public $pessoa_logada = 0;
+  var $pessoa_logada;
+  var $titulo;
+  var $limite;
+  var $offset;
 
- /**
-   * Titulo no topo da pagina
-   *
-   * @var int
-   */
-  public $titulo = '';
+  var $cod_falta_atraso        = NULL;
+  var $ref_cod_escola          = NULL;
+  var $ref_ref_cod_instituicao = NULL;
+  var $ref_usuario_exc         = NULL;
+  var $ref_usuario_cad         = NULL;
+  var $ref_cod_servidor        = NULL;
+  var $tipo                    = NULL;
+  var $data_falta_atraso       = NULL;
+  var $qtd_horas               = NULL;
+  var $qtd_min                 = NULL;
+  var $justificada             = NULL;
+  var $data_cadastro           = NULL;
+  var $data_exclusao           = NULL;
+  var $ativo                   = NULL;
 
-  /**
-   * Quantidade de registros a ser apresentada em cada pagina
-   *
-   * @var int
-   */
-  public $limite = 0;
-
-  /**
-   * Inicio dos registros a serem exibidos (limit)
-   *
-   * @var int
-   */
-  public $offset = 0;
-
-  public
-    $cod_falta_atraso        = NULL,
-    $ref_cod_escola          = NULL,
-    $ref_ref_cod_instituicao = NULL,
-    $ref_usuario_exc         = NULL,
-    $ref_usuario_cad         = NULL,
-    $ref_cod_servidor        = NULL,
-    $tipo                    = NULL,
-    $data_falta_atraso       = NULL,
-    $qtd_horas               = NULL,
-    $qtd_min                 = NULL,
-    $justificada             = NULL,
-    $data_cadastro           = NULL,
-    $data_exclusao           = NULL,
-    $ativo                   = NULL;
-
-
-
-  public function Gerar() {
+  function Gerar()
+  {
     session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->ref_cod_servidor        = isset($_GET['ref_cod_servidor']) ?
-      $_GET['ref_cod_servidor'] : NULL;
-    $this->ref_ref_cod_instituicao = isset($_GET['ref_cod_instituicao']) ?
-      $_GET['ref_cod_instituicao'] : NULL;
+    $this->ref_cod_servidor        = $_GET['ref_cod_servidor'];
+    $this->ref_ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
     $this->titulo = 'Faltas e atrasos - Listagem';
 
     foreach ($_GET as $var => $val) {
-      $this->$var = ($val === "") ? NULL : $val;
+      $this->$var = ($val === '') ? NULL : $val;
     }
 
     $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
 
     $this->addCabecalhos(array(
       'Escola',
-      'Instituic&atilde;o',
+      'Instituição',
       'Tipo',
       'Horas',
       'Minutos'
@@ -192,29 +186,39 @@ class indice extends clsListagem
       }
     }
 
-    $this->addPaginador2('educar_falta_atraso_lst.php', $total, $_GET, $this->nome, $this->limite);
+    $this->addPaginador2('educar_falta_atraso_lst.php', $total, $_GET,
+      $this->nome, $this->limite);
     $obj_permissoes = new clsPermissoes();
 
     if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
-      $this->array_botao[]     = 'Novo';
-      $this->array_botao_url[] = "educar_falta_atraso_cad.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}";
+      $this->array_botao[] = 'Novo';
+
+      $this->array_botao_url[] = sprintf(
+        'educar_falta_atraso_cad.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
+        $this->ref_cod_servidor, $this->ref_ref_cod_instituicao
+      );
     }
 
-    $this->array_botao[]     = 'Voltar';
-    $this->array_botao_url[] = "educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}";
-    $this->largura           = "100%";
+    $this->array_botao[] = 'Voltar';
+
+    $this->array_botao_url[] = sprintf(
+      'educar_servidor_det.php?cod_servidor=%d&ref_cod_instituicao=%d',
+      $this->ref_cod_servidor, $this->ref_cod_instituicao
+    );
+
+    $this->largura = '100%';
   }
 
 }
 
-// cria uma extensao da classe base
+// Instancia objeto de página
 $pagina = new clsIndexBase();
 
-// cria o conteudo
+// Instancia objeto de conteúdo
 $miolo = new indice();
 
-// adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+// Atribui o conteúdo à  página
+$pagina->addForm($miolo);
 
-// gera o html
+// Gera o código HTML
 $pagina->MakeAll();
