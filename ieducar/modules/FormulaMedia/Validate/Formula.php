@@ -132,10 +132,10 @@ class FormulaMedia_Validate_Formula extends CoreExt_Validate_Abstract
     $tokensAvailable = array();
 
     if ($this->_hasOption('excludeToken') &&
-        is_array($this->_getOption('excludeToken')) &&
-        0 < count($this->_getOption('excludeToken'))
+        is_array($this->getOption('excludeToken')) &&
+        0 < count($this->getOption('excludeToken'))
     ) {
-      $excludeToken = $this->_getOption('excludeToken');
+      $excludeToken = $this->getOption('excludeToken');
       foreach ($tokens as $token) {
         if (!in_array($token, $excludeToken)) {
           $tokensAvailable[] = $token;

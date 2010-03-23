@@ -62,15 +62,15 @@ class CoreExt_Validate_String extends CoreExt_Validate_Abstract
   {
     $length = strlen($value);
 
-    if ($this->_hasOption('min') && $length < $this->_getOption('min')) {
+    if ($this->_hasOption('min') && $length < $this->getOption('min')) {
       throw new Exception($this->_getErrorMessage('min_error',
-        array('@value' => $this->getSanitizedValue(), '@min' => $this->_getOption('min')))
+        array('@value' => $this->getSanitizedValue(), '@min' => $this->getOption('min')))
       );
     }
 
-    if ($this->_hasOption('max') && $length > $this->_getOption('max')) {
+    if ($this->_hasOption('max') && $length > $this->getOption('max')) {
       throw new Exception($this->_getErrorMessage('max_error',
-        array('@value' => $this->getSanitizedValue(), '@max' => $this->_getOption('max')))
+        array('@value' => $this->getSanitizedValue(), '@max' => $this->getOption('max')))
       );
     }
 

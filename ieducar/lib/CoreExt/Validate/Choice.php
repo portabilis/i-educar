@@ -69,9 +69,9 @@ class CoreExt_Validate_Choice extends CoreExt_Validate_Abstract
   {
     if ($this->_hasOption('choices')) {
       $value   = $this->_getStringArray($value);
-      $choices = $this->_getStringArray($this->_getOption('choices'));
+      $choices = $this->_getStringArray($this->getOption('choices'));
 
-      if ($this->_hasOption('multiple') && FALSE == $this->_getOption('multiple')) {
+      if ($this->_hasOption('multiple') && FALSE == $this->getOption('multiple')) {
         if (in_array($value, $choices, TRUE)) {
           return TRUE;
         }
@@ -83,7 +83,7 @@ class CoreExt_Validate_Choice extends CoreExt_Validate_Abstract
         }
         throw new Exception($this->_getErrorMessage(
           'multiple_error',
-          array('@value' => array_diff($value, $this->_getOption('choices'))))
+          array('@value' => array_diff($value, $this->getOption('choices'))))
         );
       }
     }

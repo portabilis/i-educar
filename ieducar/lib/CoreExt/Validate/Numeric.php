@@ -72,16 +72,16 @@ class CoreExt_Validate_Numeric extends CoreExt_Validate_Abstract
     $value = floatval($value);
 
     if ($this->_hasOption('min') &&
-      $value < floatval($this->_getOption('min'))) {
+      $value < floatval($this->getOption('min'))) {
       throw new Exception($this->_getErrorMessage('min_error', array(
-        '@value' => $value, '@min' => $this->_getOption('min')
+        '@value' => $value, '@min' => $this->getOption('min')
       )));
     }
 
     if ($this->_hasOption('max') &&
-      $value > floatval($this->_getOption('max'))) {
+      $value > floatval($this->getOption('max'))) {
       throw new Exception($this->_getErrorMessage('max_error', array(
-        '@value' => $value, '@max' => $this->_getOption('max')
+        '@value' => $value, '@max' => $this->getOption('max')
       )));
     }
 
