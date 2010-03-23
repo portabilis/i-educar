@@ -81,7 +81,7 @@ class BoletimController extends Core_Controller_Page_ViewController
 
     $this->_service = new Avaliacao_Service_Boletim(array(
       'matricula' => $this->getRequest()->matricula,
-      'usuario' => $usuario
+      'usuario'   => $usuario
     ));
 
     $this->_situacao = $this->_service->getSituacaoAluno();
@@ -103,6 +103,30 @@ class BoletimController extends Core_Controller_Page_ViewController
     }
 
     parent::__construct();
+  }
+
+  /**
+   * Verifica um array de situações de componentes curriculares e retorna TRUE
+   * quando ao menos um dos componentes estiver encerrado (aprovado ou reprovado).
+   *
+   * @param array $componentes
+   * @return bool
+   */
+  protected function _componenteEncerrado(array $componentes)
+  {
+    foreach ($componentes as $situacao) {
+      switch ($situacao->situacao) {
+        case App_Model_MatriculaSituacao::APROVADO:
+        case App_Model_MatriculaSituacao::APROVADO_APOS_EXAME:
+        case App_Model_MatriculaSituacao::REPROVADO:
+          return TRUE;
+          break;
+        default:
+          break;
+      }
+    }
+
+    return FALSE;
   }
 
   /**
@@ -148,13 +172,13 @@ class BoletimController extends Core_Controller_Page_ViewController
     $this->addDetalhe(array('Aluno', $nome));
     $this->addDetalhe(array('Escola', $escola));
     $this->addDetalhe(array('Curso', $curso));
-    $this->addDetalhe(array('Série', $serie));
-    $this->addDetalhe(array('Turma', $turma));
+    $this->addDetalhe(array('Série/Turma', $serie . ' / ' . $turma));
     $this->addDetalhe(array('Situação', $situacao));
 
     // Dados da regra de avaliação
     $this->addDetalhe(array('Regra avaliação', $this->_service->getRegra()));
     $this->addDetalhe(array('Apuração de falta', $this->_service->getRegra()->tipoPresenca));
+    $this->addDetalhe(array('Parecer descritivo', $this->_service->getRegra()->parecerDescritivo));
     $this->addDetalhe(array('Progressão', $this->_service->getRegra()->tipoProgressao));
     $this->addDetalhe(array('Média', $this->_service->getRegra()->media));
 
@@ -199,11 +223,32 @@ class BoletimController extends Core_Controller_Page_ViewController
       $labels[] = $data;
     }
 
-    $colspan = $porComponente && $sit->recuperacao ? 4 : 3;
+    // Flag para auxiliar na composição da tabela em casos onde o parecer
+    // descritivo é lançado anualmente e por componente
+    $parecerComponenteAnual = FALSE;
+    $colspan = 0;
+
+    if ($this->_service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE) {
+      if (TRUE == $this->_componenteEncerrado($sit->nota->componentesCurriculares)) {
+        $parecerComponenteAnual = TRUE;
+        $colspan++;
+      }
+    }
+
+    // Colspan para tabela com labels e sublabels
+    $colspan += $porComponente && $sit->recuperacao ? 4 : 3;
     $labels[] = array('data' => $porComponente ? '' : 'Média final', 'attributes' => $attributes, 'colspan' => $porComponente ? $colspan : 1);
 
     // Inclui coluna para % de presença geral
     if (!$porComponente) {
+      if ($sit->recuperacao) {
+        $labels[] = array('data' => 'Exame', 'attributes' => $attributes);
+      }
+
+      if ($parecerComponenteAnual) {
+        $labels[] = array('data' => 'Parecer', 'attributes' => $attributes);
+      }
+
       $labels[] = array('data' => 'Presença', 'attributes' => $attributes);
       $labels[] = array('data' => 'Situação', 'attributes' => $attributes);
     }
@@ -226,6 +271,10 @@ class BoletimController extends Core_Controller_Page_ViewController
       }
 
       if ($porComponente) {
+        if ($parecerComponenteAnual) {
+          $subLabels[] = array('data' => 'Parecer', 'attributes' => $attributes);
+        }
+
         $subLabels[] = array('data' => 'Presença', 'attributes' => $attributes);
         $subLabels[] = array('data' => 'Situação', 'attributes' => $attributes);
       }
@@ -268,6 +317,13 @@ class BoletimController extends Core_Controller_Page_ViewController
       $medias         = $mediasComponentes[$id];
       $faltas         = $faltasComponentes[$id];
       $faltaStats     = $faltasStats->componentesCurriculares[$id];
+      $parecer        = NULL;
+
+      // Caso os pareceres sejam por componente e anuais, recupera a instância
+      if ($parecerComponenteAnual) {
+        $parecer = $this->_service->getPareceresComponentes();
+        $parecer = $parecer[$id];
+      }
 
       if ($porComponente == TRUE) {
         $new = $url->l('Lançar nota', 'nota',
@@ -324,6 +380,7 @@ class BoletimController extends Core_Controller_Page_ViewController
         }
       }
 
+      // Média no componente curricular
       $media = $medias[0]->mediaArredondada . ($medias[0]->etapa == 'Rc' ? ' (Rc)' : '');
       $data[] = array('data' => $media, 'attributes' => $attributes);
 
@@ -343,6 +400,36 @@ class BoletimController extends Core_Controller_Page_ViewController
 
           $recuperacaoLink = $url->l($link['text'], $link['path'], array('query' => $link['query']));
           $data[] = array('data' => $recuperacaoLink, 'attributes' => $attributes);
+        }
+        else {
+          $data[] = array('data' => '', 'attributes' => $attributes);
+        }
+      }
+
+      // Adiciona uma coluna extra caso o parecer seja por componente ao final do ano
+      if ($parecerComponenteAnual) {
+        $link = array(
+          'text'  => '',
+          'path'  => 'parecer',
+          'query' => array('matricula' => $this->getRequest()->matricula)
+        );
+
+        if (0 == count($parecer)) {
+          $text = 'Lançar';
+        }
+        else {
+          $text = 'Editar';
+        }
+
+        $link['query']['componenteCurricular'] = $id;
+
+        // @todo Constante ou CoreExt_Enum
+        $link['query']['etapa'] = 'An';
+
+        $link = $url->l($text, $link['path'], array('query' => $link['query']));
+
+        if (isset($mediaSituacao->situacao) && $mediaSituacao->situacao != App_Model_MatriculaSituacao::EM_ANDAMENTO) {
+          $data[] = array('data' => $link, 'attributes' => $attributes);
         }
         else {
           $data[] = array('data' => '', 'attributes' => $attributes);
@@ -406,13 +493,77 @@ class BoletimController extends Core_Controller_Page_ViewController
       $data[] = array('data' => '', 'attributes' => $attributes);
     }
 
+    if ($parecerComponenteAnual) {
+      $data[] = array('data' => '', 'attributes' => $attributes);
+    }
+
     $data[] = array('data' => sprintf('%.2f%%', $faltasStats->porcentagemPresenca), 'attributes' => $attributes);
     $data[] = array('data' => $situacao->getValue($sit->falta->situacao), 'attributes' => $attributes);
 
     $table->addFooterRow($data, $zebra[$class ^ 1]);
 
+    // Adiciona linha com links para lançamento de parecer descritivo geral por etapa
+    if ($this->_service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL) {
+      $newLink = array(
+        'text'  => 'Lançar parecer',
+        'path'  => 'parecer',
+        'query' => array('matricula' => $matricula['cod_matricula'])
+      );
+
+      $data = array(0 => array('data' => 'Pareceres', 'attributes' => array('style' => 'padding: 5px; text-align: left')));
+      $pareceres = $this->_service->getPareceresGerais();
+
+      for ($i = 1, $loop = count($etapas); $i <= $loop; $i++) {
+        if (isset($pareceres[$i])) {
+          $link = $newLink;
+          $link['text'] = 'Editar parecer';
+          $link['query']['etapa'] = $i;
+          $data[] = array('data' => $url->l($link['text'], $link['path'], array('query' => $link['query'])), 'attributes' => $attributes);
+        }
+        else {
+          if ('' == $newLink) {
+            $link = '';
+          }
+          else {
+            $link = $url->l($newLink['text'], $newLink['path'], array('query' => $newLink['query']));
+          }
+          $data[] = array('data' => $link, 'attributes' => $attributes);
+          $newLink = '';
+        }
+      }
+
+      if ($sit->recuperacao) {
+        $data[] = array('data' => '', 'attributes' => $attributes);
+      }
+
+      $data[] = array('data' => '', 'attributes' => $attributes);
+      $data[] = array('data' => '', 'attributes' => $attributes);
+
+      $table->addFooterRow($data);
+    }
+
     // Adiciona tabela na página
     $this->addDetalhe(array('Disciplinas', '<div id="disciplinas">' . $table . '</div>'));
+
+    // Adiciona link para lançamento de parecer descritivo anual geral
+    if (
+      FALSE == $sit->andamento &&
+      $this->_service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL
+    ) {
+      if (0 == count($this->_service->getPareceresGerais())) {
+        $label = 'Lançar';
+      }
+      else {
+        $label = 'Editar';
+      }
+
+      $link = array(
+        'text'  => $label . ' parecer descritivo do aluno',
+        'path'  => 'parecer',
+        'query' => array('matricula' => $this->getRequest()->matricula)
+      );
+      $this->addDetalhe(array('Parecer descritivo anual', $url->l($link['text'], $link['path'], array('query' => $link['query']))));
+    }
 
     // Caso o tipo de progressão seja manual, a situação das notas/faltas não
     // esteja mais em "andamento" e a matrícula esteja em andamento, exibe
@@ -420,7 +571,7 @@ class BoletimController extends Core_Controller_Page_ViewController
     if (
       $this->_service->getRegra()->get('tipoProgressao') ==
         RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL &&
-      FALSE == $sit->andamento && $matricula['aprovado'] == 3
+      FALSE == $sit->andamento && $matricula['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO
     ) {
       $link = array(
         'text' => 'sim',

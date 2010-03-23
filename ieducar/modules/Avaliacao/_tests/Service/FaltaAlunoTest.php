@@ -24,62 +24,52 @@
  * @category    i-Educar
  * @license     @@license@@
  * @package     Avaliacao
- * @subpackage  Modules
+ * @subpackage  UnitTests
  * @since       Arquivo disponível desde a versão 1.1.0
  * @version     $Id$
  */
 
-require_once 'Avaliacao/Model/Etapa.php';
+require_once 'Avaliacao/_tests/Service/TestCommon.php';
 
 /**
- * Avaliacao_Model_ParecerDescritivoAbstract abstract class.
+ * Avaliacao_Service_FaltaAlunoTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     Avaliacao
- * @subpackage  Modules
+ * @subpackage  UnitTests
  * @since       Classe disponível desde a versão 1.1.0
  * @version     @@package_version@@
  */
-abstract class Avaliacao_Model_ParecerDescritivoAbstract extends Avaliacao_Model_Etapa
+class Avaliacao_Service_FaltaAlunoTest extends Avaliacao_Service_TestCommon
 {
-  protected $_data = array(
-    'parecerDescritivoAluno' => NULL,
-    'parecer'                => NULL
-  );
-
-  protected $_references = array(
-    'parecerDescritivoAluno' => array(
-      'value' => NULL,
-      'class' => 'Avaliacao_Model_ParecerDescritivoAluno',
-      'file'  => 'Avaliacao/Model/ParecerDescritivoAluno.php'
-    )
-  );
-
-  /**
-   * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
-   */
-  public function getDefaultValidatorCollection()
+  public function testCriaNovaInstanciaDeFaltaAluno()
   {
-    $etapa  = $this->getValidator('etapa');
-    $etapas = $etapa->getOption('choices') + array('An');
+    $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
 
-    $etapa->setOptions(array('choices' => $etapas));
+    $faltaSave  = clone $faltaAluno;
+    $faltaSave->id = NULL;
 
-    return array(
-      'etapa'   => $etapa,
-      'parecer' => new CoreExt_Validate_String()
-    );
-  }
+    // Configura mock para Avaliacao_Model_FaltaAlunoDataMapper
+    $mock = $this->getCleanMock('Avaliacao_Model_FaltaAlunoDataMapper');
+    $mock->expects($this->at(0))
+         ->method('findAll')
+         ->with(array(), array('matricula' => $this->_getConfigOption('matricula', 'cod_matricula')))
+         ->will($this->returnValue(array()));
 
-  /**
-   * Implementa método mágico __toString().
-   * @link http://br.php.net/__toString
-   * @return string
-   */
-  public function __toString()
-  {
-    return $this->parecer;
+    $mock->expects($this->at(1))
+         ->method('save')
+         ->with($faltaSave)
+         ->will($this->returnValue(TRUE));
+
+    $mock->expects($this->at(2))
+         ->method('findAll')
+         ->with(array(), array('matricula' => $this->_getConfigOption('matricula', 'cod_matricula')))
+         ->will($this->returnValue(array($faltaAluno)));
+
+    $this->_setFaltaAlunoDataMapperMock($mock);
+
+    $service = $this->_getServiceInstance();
   }
 }

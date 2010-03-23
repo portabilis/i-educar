@@ -47,6 +47,8 @@ require_once 'App/Model/MatriculaSituacao.php';
  * @package     Avaliacao
  * @subpackage  Modules
  * @since       Classe disponível desde a versão 1.1.0
+ * @todo        Substituir todos os usos literais de 'Rc' e 'An' por constantes
+ *              ou por um novo CoreExt_Enum
  * @version     @@package_version@@
  */
 class Avaliacao_Service_Boletim implements CoreExt_Configurable
@@ -89,6 +91,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   protected $_faltaAlunoDataMapper = NULL;
 
   /**
+   * @var Avaliacao_Model_ParecerDescritivoAlunoDataMapper
+   */
+  protected $_parecerDescritivoAlunoDataMapper = NULL;
+
+  /**
    * @var Avaliacao_Model_NotaComponenteDataMapper
    */
   protected $_notaComponenteDataMapper = NULL;
@@ -102,6 +109,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    * @var Avaliacao_Model_NotaComponenteMediaDataMapper
    */
   protected $_notaComponenteMediaDataMapper = NULL;
+
+  /**
+   * @var Avaliacao_Model_ParecerDescritivoAbstractDataMapper
+   */
+  protected $_parecerDescritivoAbstractDataMapper = NULL;
 
   /**
    * Uma instância de Avaliacao_Model_NotaAluno, que é a entrada que contém
@@ -120,6 +132,15 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    * @var Avaliacao_Model_NotaAluno
    */
   protected $_faltaAluno = NULL;
+
+  /**
+   * Uma instância de Avaliacao_Model_ParecerDescritivoAluno, que é a entrada
+   * que contém o cruzamento de matrícula com os pareceres do aluno nos diversos
+   * componentes cursados ou no geral.
+   *
+   * @var Avaliacao_Model_ParecerDescritivoAluno
+   */
+  protected $_parecerDescritivoAluno = NULL;
 
   /**
    * Componentes que o aluno cursa, indexado pelo id de
@@ -165,13 +186,49 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   protected $_faltas = array();
 
   /**
+   * Pareceres descritivos adicionados no boletim para inclusão ou edição.
+   * @var array
+   */
+  protected $_pareceres = array();
+
+  /**
+   * Pareceres descritivos do aluno nos componentes cursados.
+   * @var array
+   */
+  protected $_pareceresComponentes = array();
+
+  /**
+   * Pareceres descritivos do aluno no geral.
+   * @var array
+   */
+  protected $_pareceresGerais = array();
+
+  /**
+   * Validadores para instâncias de Avaliacao_Model_FaltaAbstract e
+   * Avaliacao_Model_NotaComponente.
+   *
+   * @see Avaliacao_Service_Boletim#_addValidators()
+   * @var array
+   */
+  protected $_validators = NULL;
+
+  /**
+   * Validadores para uma instância de Avaliacao_Model_ParecerDescritivoAbstract
+   * adicionada no boletim.
+   *
+   * @see Avaliacao_Service_Boletim#_addParecerValidators()
+   * @var array
+   */
+  protected $_parecerValidators = NULL;
+
+  /**
    * Prioridade da situação da matrícula, usado para definir a situação
    * das notas e faltas.
    * @var array
    */
   protected $_situacaoPrioridade = array(
-    App_Model_MatriculaSituacao::EM_EXAME            => 1,
-    App_Model_MatriculaSituacao::EM_ANDAMENTO        => 2,
+    App_Model_MatriculaSituacao::EM_ANDAMENTO        => 1,
+    App_Model_MatriculaSituacao::EM_EXAME            => 2,
     App_Model_MatriculaSituacao::REPROVADO           => 3,
     App_Model_MatriculaSituacao::APROVADO_APOS_EXAME => 4,
     App_Model_MatriculaSituacao::APROVADO            => 5
@@ -193,7 +250,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $this->setOptions($options)
          ->_setMatriculaInfo()
          ->_loadNotaComponenteCurricular()
-         ->_loadFalta();
+         ->_loadFalta()
+         ->_loadParecerDescritivo();
   }
 
   /**
@@ -240,6 +298,16 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     if (isset($options['FaltaAbstractDataMapper'])) {
       $this->setFaltaAbstractDataMapper($options['FaltaAbstractDataMapper']);
       unset($options['FaltaAbstractDataMapper']);
+    }
+
+    if (isset($options['ParecerDescritivoAlunoDataMapper'])) {
+      $this->setParecerDescritivoAlunoDataMapper($options['ParecerDescritivoAlunoDataMapper']);
+      unset($options['ParecerDescritivoAlunoDataMapper']);
+    }
+
+    if (isset($options['ParecerDescritivoAbstractDataMapper'])) {
+      $this->setParecerDescritivoAbstractDataMapper($options['ParecerDescritivoAbstractDataMapper']);
+      unset($options['ParecerDescritivoAbstractDataMapper']);
     }
 
     $defaultOptions = array_keys($this->getOptions());
@@ -465,6 +533,70 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   }
 
   /**
+   * Setter.
+   * @param Avaliacao_Model_ParecerDescritivoAlunoDataMapper $mapper
+   * @return App_Service_Boletim Provê interface fluída
+   */
+  public function setParecerDescritivoAlunoDataMapper(Avaliacao_Model_ParecerDescritivoAlunoDataMapper $mapper)
+  {
+    $this->_parecerDescritivoAlunoDataMapper = $mapper;
+    return $this;
+  }
+
+  /**
+   * Getter.
+   * @return Avaliacao_Model_ParecerDescritivoAlunoDataMapper
+   */
+  public function getParecerDescritivoAlunoDataMapper()
+  {
+    if (is_null($this->_parecerDescritivoAlunoDataMapper)) {
+      require_once 'Avaliacao/Model/ParecerDescritivoAlunoDataMapper.php';
+      $this->setParecerDescritivoAlunoDataMapper(new Avaliacao_Model_ParecerDescritivoAlunoDataMapper());
+    }
+    return $this->_parecerDescritivoAlunoDataMapper;
+  }
+
+  /**
+   * Setter.
+   * @param Avaliacao_Model_ParecerDescritivoAbstractDataMapper $mapper
+   * @return App_Service_Boletim Provê interface fluída
+   */
+  public function setParecerDescritivoAbstractDataMapper(Avaliacao_Model_ParecerDescritivoAbstractDataMapper $mapper)
+  {
+    $this->_parecerDescritivoAbstractDataMapper = $mapper;
+    return $this;
+  }
+
+  /**
+   * Getter.
+   * @return Avaliacao_Model_ParecerDescritivoAbstractDataMapper
+   */
+  public function getParecerDescritivoAbstractDataMapper()
+  {
+    if (is_null($this->_parecerDescritivoAbstractDataMapper)) {
+      $parecerDescritivo = $this->getRegra()->get('parecerDescritivo');
+
+      switch($parecerDescritivo) {
+        case RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL:
+        case RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL:
+          $filename = 'Avaliacao/Model/ParecerDescritivoGeralDataMapper.php';
+          $class    = 'Avaliacao_Model_ParecerDescritivoGeralDataMapper';
+          break;
+        case RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE:
+        case RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE:
+          $filename = 'Avaliacao/Model/ParecerDescritivoComponenteDataMapper.php';
+          $class    = 'Avaliacao_Model_ParecerDescritivoComponenteDataMapper';
+          break;
+      }
+
+      require_once $filename;
+      $this->setParecerDescritivoAbstractDataMapper(new $class());
+    }
+
+    return $this->_parecerDescritivoAbstractDataMapper;
+  }
+
+  /**
    * Retorna as instâncias de Avaliacao_Model_NotaComponente do aluno.
    * @return array
    */
@@ -498,6 +630,25 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   public function getFaltasGerais()
   {
     return $this->_faltasGerais;
+  }
+
+  /**
+   * Retorna as instâncias de Avaliacao_Model_ParecerDescritivoComponente do
+   * aluno.
+   * @return array
+   */
+  public function getPareceresComponentes()
+  {
+    return $this->_pareceresComponentes;
+  }
+
+  /**
+   * Retorna as instâncias de Avaliacao_Model_ParecerDescritivoGeral do aluno.
+   * @return array
+   */
+  public function getPareceresGerais()
+  {
+    return $this->_pareceresGerais;
   }
 
   /**
@@ -557,6 +708,49 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return NULL;
   }
 
+  /**
+   * Retorna uma instância de Avaliacao_Model_ParecerDescritivoAbstract.
+   *
+   * @param int $etapa A etapa para o qual o parecer foi lançado
+   * @param int $id O identificador de ComponenteCurricular_Model_Componente
+   * @return Avaliacao_Model_ParecerAbstract|NULL
+   */
+  public function getParecerDescritivo($etapa = 1, $id = NULL)
+  {
+    $parecerDescritivo = $this->getRegra()->get('parecerDescritivo');
+
+    $gerais = array(
+      RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
+      RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL
+    );
+
+    $componentes = array(
+      RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE,
+      RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
+    );
+
+    if (in_array($parecerDescritivo, $gerais)) {
+      $pareceres = $this->getPareceresGerais();
+    }
+    elseif (in_array($parecerDescritivo, $componentes)) {
+      $pareceres = $this->getPareceresComponentes();
+
+      if (!isset($pareceres[$id])) {
+        return NULL;
+      }
+
+      $pareceres = $pareceres[$id];
+    }
+
+    foreach ($pareceres as $parecer) {
+      if ($parecer->etapa == $etapa) {
+        return $parecer;
+      }
+    }
+
+    return NULL;
+  }
+
 
   /**
    * Setter.
@@ -576,6 +770,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     // Valores scalar de referência
     $matricula = App_Model_IedFinder::getMatricula($codMatricula);
+
     $etapas = App_Model_IedFinder::getQuantidadeDeEtapasMatricula($codMatricula);
     $this->setOption('matriculaData', $matricula);
     $this->setOption('aprovado', $matricula['aprovado']);
@@ -682,6 +877,55 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       }
 
       $this->_faltasComponentes = $faltasComponentes;
+    }
+
+    return $this;
+  }
+
+  /**
+   * Carrega os pareceres do aluno, sejam gerais ou por componentes.
+   * @return App_Service_Boletim Provê interface fluída
+   */
+  protected function _loadParecerDescritivo()
+  {
+    if (!$this->hasParecerDescritivoAluno()) {
+      $this->_createParecerDescritivoAluno();
+    }
+
+    $parecerDescritivoAluno = $this->_getParecerDescritivoAluno();
+
+    $pareceres = $this->getParecerDescritivoAbstractDataMapper()->findAll(
+      array(), array('parecerDescritivoAluno' => $parecerDescritivoAluno->id), array('etapa' => 'ASC')
+    );
+
+    $gerais = array(
+      RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL,
+      RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL
+    );
+
+    $componentes = array(
+      RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE,
+      RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE
+    );
+
+    $parecerDescritivo = $this->getRegra()->get('parecerDescritivo');
+    if (in_array($parecerDescritivo, $gerais)) {
+      $pareceresGerais = array();
+
+      foreach ($pareceres as $parecer) {
+        $pareceresGerais[$parecer->etapa] = $parecer;
+      }
+
+      $this->_pareceresGerais = $pareceresGerais;
+    }
+    elseif (in_array($parecerDescritivo, $componentes)) {
+      $pareceresComponentes = array();
+
+      foreach ($pareceres as $parecer) {
+        $pareceresComponentes[$parecer->get('componenteCurricular')][] = $parecer;
+      }
+
+      $this->_pareceresComponentes = $pareceresComponentes;
     }
 
     return $this;
@@ -811,7 +1055,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $situacao->recuperacao = TRUE;
         break;
       case App_Model_MatriculaSituacao::REPROVADO:
-        $situacao->recuperacao = TRUE;
         $situacao->aprovado    = FALSE;
         break;
     }
@@ -909,7 +1152,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           $this->hasRecuperacao()) {
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
       }
-      elseif ($etapa == 'Rc' && $media < $this->getRegra()->media) {
+      elseif (($etapa == $this->getOption('etapas') || $etapa == 'Rc') &&
+               $media < $this->getRegra()->media) {
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
       }
       elseif ($etapa == 'Rc' && $media >= $this->getRegra()->media && $this->hasRecuperacao()) {
@@ -1007,6 +1251,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     // Faltas
     $faltasComponentes = array();
 
+    // Etapa padrão
+    $etapa = 0;
+
     // Faltas lançadas (persistidas)
     $this->_loadFalta();
 
@@ -1026,6 +1273,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     elseif ($presenca->tipoFalta == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
       $faltas = $this->_faltasComponentes;
       $total   = 0;
+      $etapasComponentes = array();
       $faltasComponentes = array();
 
       foreach ($faltas as $key => $falta) {
@@ -1033,10 +1281,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $componenteTotal = array_sum(CoreExt_Entity::entityFilterAttr($falta,
           'id', 'quantidade'));
 
-        // Pega o id de ComponenteCurricular_Model_Componente da primeira etapa do array
+        // Pega o id de ComponenteCurricular_Model_Componente da última etapa do array
         $componenteEtapa = array_pop($falta);
         $id = $componenteEtapa->get('componenteCurricular');
         $etapa = $componenteEtapa->etapa;
+
+        // Etapas lançadas
+        $etapasComponentes[$etapa] = $etapa;
 
         // Usa stdClass como interface de acesso
         $faltasComponentes[$id] = new stdClass();
@@ -1064,12 +1315,16 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             App_Model_MatriculaSituacao::APROVADO : App_Model_MatriculaSituacao::REPROVADO;
         }
 
-        if ($this->_situacaoPrioritaria($faltasComponentes[$id]->situacao, $situacaoGeral)) {
-          $situacaoGeral = $faltasComponentes[$id]->situacao;
-        }
-
         // Adiciona a quantidade de falta do componente ao total geral de faltas
         $total += $componenteTotal;
+      }
+
+      if (0 == count($faltasComponentes) ||
+          count($faltasComponentes) != count($this->getComponentes())) {
+        $etapa = 1;
+      }
+      else {
+        $etapa = min($etapasComponentes);
       }
     }
 
@@ -1091,7 +1346,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     // Situação geral. Última verificação pois somente ao fim é possível saber
     // se está em andamento ou se pode estabelecer como aprovado ou reprovado
-    if ($etapa == $this->getOption('etapas') || $etapa == 'Rc') {
+    if ($etapa == $this->getOption('etapas') || $etapa === 'Rc') {
       $aprovado = ($presenca->porcentagemPresenca >= $this->getRegra()->porcentagemPresenca);
       $presenca->situacao = $aprovado ?
         App_Model_MatriculaSituacao::APROVADO :
@@ -1270,7 +1525,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   protected function _hasFaltaGeral()
   {
     $faltasGerais = $this->getFaltasGerais();
-    if (!isset($faltasGerais)) {
+    if (0 == count($faltasGerais)) {
       return FALSE;
     }
     return TRUE;
@@ -1334,6 +1589,63 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   }
 
   /**
+   * Verifica se o aluno tem pareceres lançados.
+   * @return bool
+   */
+  public function hasParecerDescritivoAluno()
+  {
+    if (!is_null($this->_getParecerDescritivoAluno())) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Setter.
+   * @param Avaliacao_Model_ParecerDescritivoAluno $parecerDescritivoAluno
+   * @return Avaliacao_Service_Boletim Provê interface fluída
+   */
+  protected function _setParecerDescritivoAluno(Avaliacao_Model_ParecerDescritivoAluno $parecerDescritivoAluno)
+  {
+    $this->_parecerDescritivoAluno = $parecerDescritivoAluno;
+    return $this;
+  }
+
+  /**
+   * Getter.
+   * @return Avaliacao_Model_ParecerDescritivoAluno|NULL
+   */
+  protected function _getParecerDescritivoAluno()
+  {
+    if (!is_null($this->_parecerDescritivoAluno)) {
+      return $this->_parecerDescritivoAluno;
+    }
+
+    $parecerDescritivoAluno = $this->getParecerDescritivoAlunoDataMapper()->findAll(
+      array(), array('matricula' => $this->getOption('matricula'))
+    );
+
+    if (0 == count($parecerDescritivoAluno)) {
+      return NULL;
+    }
+
+    $this->_setParecerDescritivoAluno($parecerDescritivoAluno[0]);
+    return $this->_parecerDescritivoAluno;
+  }
+
+  /**
+   * Cria e persiste uma instância de Avaliacao_Model_ParecerDescritivoAluno.
+   * @return bool
+   */
+  protected function _createParecerDescritivoAluno()
+  {
+    $parecerDescritivoAluno = new Avaliacao_Model_ParecerDescritivoAluno();
+    $parecerDescritivoAluno->matricula         = $this->getOption('matricula');
+    $parecerDescritivoAluno->parecerDescritivo = $this->getRegra()->get('parecerDescritivo');
+    return $this->getParecerDescritivoAlunoDataMapper()->save($parecerDescritivoAluno);
+  }
+
+  /**
    * Adiciona um array de instâncias Avaliacao_Model_NotaComponente.
    *
    * @param array $notas
@@ -1345,6 +1657,79 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $this->addNota($nota);
     }
     return $this;
+  }
+
+  /**
+   * Verifica se existe alguma instância de Avaliacao_Model_ParecerDescritivoComponente
+   * persistida para o aluno.
+   *
+   * @param int $id Field identity de ComponenteCurricular_Model_Componente
+   * @return bool
+   */
+  protected function _hasParecerComponente($id)
+  {
+    $pareceresComponentes = $this->getPareceresComponentes();
+    if (!isset($pareceresComponentes[$id])) {
+      return FALSE;
+    }
+    return TRUE;
+  }
+
+  /**
+   * Verifica se existe alguma instância de Avaliacao_Model_ParecerDescritivoGeral
+   * persistida para o aluno.
+   * @return bool
+   */
+  protected function _hasParecerGeral()
+  {
+    if (0 == count($this->getPareceresGerais())) {
+      return FALSE;
+    }
+    return TRUE;
+  }
+
+  /**
+   * Verifica se existe alguma instância de Avaliacao_Model_ParecerDescritivoAbstract
+   * persistida em uma determinada etapa e retorna o field identity.
+   *
+   * @param Avaliacao_Model_ParecerDescritivoAbstract $instance
+   * @return int|NULL
+   */
+  protected function _getParecerIdEtapa(Avaliacao_Model_ParecerDescritivoAbstract $instance)
+  {
+    $gerais = array(
+      RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
+      RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL
+    );
+
+    $componentes = array(
+      RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE,
+      RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
+    );
+
+    $parecerDescritivo = $this->getRegra()->get('parecerDescritivo');
+
+    if (in_array($parecerDescritivo, $gerais)) {
+      if (!$this->_hasParecerGeral()) {
+        return NULL;
+      }
+
+      $pareceres = $this->getPareceresGerais();
+    }
+    elseif (in_array($parecerDescritivo, $componentes)) {
+      if (!$this->_hasParecerComponente($instance->get('componenteCurricular'))) {
+        return NULL;
+      }
+
+      $pareceres = $this->getPareceresComponentes();
+      $pareceres = $pareceres[$instance->get('componenteCurricular')];
+    }
+
+    foreach ($pareceres as $parecer) {
+      if ($instance->etapa == $parecer->etapa) {
+        return $parecer->id;
+      }
+    }
   }
 
   /**
@@ -1414,19 +1799,65 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   }
 
   /**
+   * Adiciona uma array de instâncias de Avaliacao_Model_ParecerDescritivoAbstract
+   * no boletim.
+   *
+   * @param array $pareceres
+   * @return Avaliacao_Service_Boletim Provê interface fluída
+   */
+  public function addPareceres(array $pareceres)
+  {
+    foreach ($pareceres as $parecer) {
+      $this->addParecer($parecer);
+    }
+    return $this;
+  }
+
+  /**
+   * Adiciona uma instância de Avaliacao_Model_ParecerDescritivoAbstract no
+   * boletim.
+   *
+   * @param Avaliacao_Model_ParecerDescritivoAbstract $parecer
+   * @return Avaliacao_Service_Boletim Provê interface fluída
+   */
+  public function addParecer(Avaliacao_Model_ParecerDescritivoAbstract $parecer)
+  {
+    $key = 'p_' . spl_object_hash($parecer);
+
+    $this->_pareceres[$key] = $parecer;
+    $this->_updateParecerEtapa($parecer);
+    $this->_addParecerValidators($parecer);
+
+    return $this;
+  }
+
+  /**
+   * Getter para as instâncias de Avaliacao_Model_ParecerDescritivoAbstract
+   * adicionadas no boletim (não persistidas).
+   *
+   * @return array
+   */
+  public function getPareceres()
+  {
+    return $this->_pareceres;
+  }
+
+  /**
    * Atualiza as opções de validação de uma instância de
    * CoreExt_Validate_Validatable, com os valores permitidos para os atributos
    * 'componenteCurricular' e 'etapa'.
    *
    * @param CoreExt_Validate_Validatable $nota
    * @return CoreExt_Validate_Validatable
+   * @todo Substituir variável estática por uma de instância {@see _updateParecerEtapa()}
    */
   protected function _addValidators(CoreExt_Validate_Validatable $validatable)
   {
-    static $validators = NULL;
+    $validators = array();
 
     // Como os componentes serão os mesmos, fazemos cache do validador
-    if (is_null($validators)) {
+    if (is_null($this->_validators)) {
+
       $componentes = $this->getComponentes();
       $componentes = CoreExt_Entity::entityFilterAttr($componentes, 'id', 'id');
 
@@ -1442,14 +1873,83 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $validators['etapa'] = new CoreExt_Validate_Choice(
         array('choices' => $etapas
       ));
+
+      $this->_validators = $validators;
     }
 
-    if (!($validatable instanceof Avaliacao_Model_FaltaGeral)) {
+    $validators = $this->_validators;
+
+    if ($this->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
       $validatable->setValidator('componenteCurricular', $validators['componenteCurricular']);
     }
     $validatable->setValidator('etapa', $validators['etapa']);
 
     return $validatable;
+  }
+
+  /**
+   * Atualiza as opções de validação de uma instância de
+   * Avaliacao_Model_ParecerDescritivoAbstract, com os valores permitidos
+   * para os atributos 'componenteCurricular' e 'etapa'.
+   *
+   * @param Avaliacao_Model_ParecerDescritivoAbstract $instance
+   * @return Avaliacao_Model_ParecerDescritivoAbstract
+   */
+  protected function _addParecerValidators(Avaliacao_Model_ParecerDescritivoAbstract $instance)
+  {
+    if (is_null($this->_parecerValidators)) {
+      $validators = array();
+
+      $anuais = array(
+        RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
+        RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE
+      );
+
+      $etapas = array(
+        RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL,
+        RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
+      );
+
+      $parecerDescritivo = $this->getRegra()->get('parecerDescritivo');
+
+      if (in_array($parecerDescritivo, $anuais)) {
+        $validators['etapa'] = new CoreExt_Validate_Choice(array(
+          'choices' => array('An')
+        ));
+      }
+      elseif (in_array($parecerDescritivo, $etapas)) {
+        $etapas = $this->getOption('etapas');
+        $etapas = array_merge(range(1, $etapas, 1), array('Rc'));
+
+        $validators['etapa'] = new CoreExt_Validate_Choice(array(
+          'choices' => $etapas
+        ));
+      }
+
+      if ($instance instanceof Avaliacao_Model_ParecerDescritivoComponente) {
+        $componentes = $this->getComponentes();
+        $componentes = CoreExt_Entity::entityFilterAttr($componentes, 'id', 'id');
+
+        $validators['componenteCurricular'] = new CoreExt_Validate_Choice(array(
+          'choices' => $componentes
+        ));
+      }
+
+      // Armazena os validadores na instância
+      $this->_parecerValidators = $validators;
+    }
+
+    $validators = $this->_parecerValidators;
+
+    // Etapas
+    $instance->setValidator('etapa', $validators['etapa']);
+
+    // Componentes curriculares
+    if ($instance instanceof Avaliacao_Model_ParecerDescritivoComponente) {
+      $instance->setValidator('componenteCurricular', $validators['componenteCurricular']);
+    }
+
+    return $instance;
   }
 
   /**
@@ -1505,17 +2005,91 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   }
 
   /**
+   * Atualiza a etapa de uma instância de Avaliacao_Model_ParecerDescritivoAbstract
+   * para a última etapa possível.
+   *
+   * @param Avaliacao_Model_ParecerDescritivoAbstract $instance
+   * @return Avaliacao_Model_ParecerDescritivoAbstract
+   */
+  protected function _updateParecerEtapa(Avaliacao_Model_ParecerDescritivoAbstract $instance)
+  {
+    if (!is_null($instance->etapa)) {
+      return $instance;
+    }
+
+    $proximaEtapa = 1;
+
+    $anuais = array(
+      RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
+      RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE
+    );
+
+    $etapas = array(
+      RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL,
+      RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
+    );
+
+    $componentes = array(
+      RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE,
+      RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
+    );
+
+    $gerais = array(
+      RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
+      RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL
+    );
+
+    $parecerDescritivo = $this->getRegra()->get('parecerDescritivo');
+    if (in_array($parecerDescritivo, $anuais)) {
+      $instance->etapa = 'An';
+      return $instance;
+    }
+    elseif (in_array($parecerDescritivo, $etapas)) {
+      $attrValues = array();
+
+      if (in_array($parecerDescritivo, $gerais)) {
+        $attrValues = $this->getPareceresGerais();
+      }
+      elseif (in_array($parecerDescritivo, $componentes)) {
+        $pareceresComponentes = $this->getPareceresComponentes();
+        if (isset($pareceresComponentes[$instance->get('componenteCurricular')])) {
+          $attrValues = $pareceresComponentes[$instance->get('componenteCurricular')];
+        }
+      }
+
+      if (0 < count($attrValues)) {
+        $etapas = CoreExt_Entity::entityFilterAttr($attrValues, 'id', 'etapa');
+        $proximaEtapa = max($etapas) + 1;
+      }
+    }
+
+    if ($proximaEtapa <= $this->getOption('etapas')) {
+      $instance->etapa = $proximaEtapa;
+    }
+    elseif ($this->hasRecuperacao()) {
+      $instance->etapa = 'Rc';
+    }
+
+    return $instance;
+  }
+
+  /**
    * Arredonda uma nota através da tabela de arredondamento da regra de avaliação.
    * @param Avaliacao_Model_NotaComponente|int $nota
    * @return mixed
+   * @throws CoreExt_Exception_InvalidArgumentException
    */
   public function arredondaNota($nota)
   {
     if ($nota instanceof Avaliacao_Model_NotaComponente) {
       $nota = $nota->nota;
     }
-    elseif (!is_numeric($nota)) {
-      // @todo Exception?
+
+    if (!is_numeric($nota)) {
+      require_once 'CoreExt/Exception/InvalidArgumentException.php';
+      throw new CoreExt_Exception_InvalidArgumentException(sprintf(
+        'O parâmetro $nota ("%s") não é um valor numérico.', $nota
+      ));
     }
 
     return $this->getRegra()->tabelaArredondamento->round($nota);
@@ -1532,6 +2106,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   {
     $num1 = floatval($num1);
     $num2 = floatval($num2);
+
+    if ($num1 == 0) {
+      return 0;
+    }
+
     $perc = $num2 / $num1;
     return ($decimal == TRUE ? $perc : ($perc * 100));
   }
@@ -1569,6 +2148,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     try {
       $this->saveNotas()
            ->saveFaltas()
+           ->savePareceres()
            ->promover();
     }
     catch (CoreExt_Service_Exception $e) {
@@ -1582,7 +2162,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   /**
    * Insere ou atualiza as notas no boletim do aluno.
    * @return Avaliacao_Service_Boletim Provê interface fluída
-   * @todo Criar teste para verificar se _getNotaIdEtapa retorna o esperado
    */
   public function saveNotas()
   {
@@ -1602,62 +2181,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   }
 
   /**
-   * Atualiza a média dos componentes curriculares.
-   */
-  protected function _updateNotaComponenteMedia()
-  {
-    require_once 'Avaliacao/Model/NotaComponenteMedia.php';
-    $this->_loadNotaComponenteCurricular(FALSE);
-
-    foreach ($this->_notasComponentes as $id => $notasComponentes) {
-      // Cria um array onde o índice é a etapa
-      $etapasNotas = CoreExt_Entity::entityFilterAttr($notasComponentes, 'etapa', 'nota');
-      $notas = array('Se' => 0, 'Et' => $this->getOption('etapas'));
-
-      // Cria o array formatado para o cálculo da fórmula da média
-      foreach ($etapasNotas as $etapa => $nota) {
-        if (is_numeric($etapa)) {
-          $notas['E' . $etapa] = $nota;
-          $notas['Se'] += $nota;
-          continue;
-        }
-        $notas[$etapa] = $nota;
-      }
-
-      // Calcula a média
-      $media = $this->_calculaMedia($notas);
-
-      // Cria uma nova instância de média, já com a nota arredondada e a etapa
-      $notaComponenteCurricularMedia = new Avaliacao_Model_NotaComponenteMedia(array(
-        'notaAluno' => $this->_getNotaAluno()->id,
-        'componenteCurricular' => $id,
-        'media' => $media,
-        'mediaArredondada' => $this->arredondaNota($media),
-        'etapa' => $etapa
-      ));
-
-      try {
-        // Se existir, marca como "old" para possibilitar a atualização
-        $this->getNotaComponenteMediaDataMapper()->find(array(
-          $notaComponenteCurricularMedia->get('notaAluno'),
-          $notaComponenteCurricularMedia->get('componenteCurricular'),
-        ));
-
-        $notaComponenteCurricularMedia->markOld();
-      }
-      catch (Exception $e) {
-        // Prossegue, sem problemas.
-      }
-
-      // Salva a média
-      $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
-    }
-  }
-
-  /**
    * Insere ou atualiza as faltas no boletim.
    * @return Avaliacao_Service_Boletim Provê interface fluída
-   * @todo Criar teste para verificar se _getFaltaIdEtapa retorna o esperado
    */
   public function saveFaltas()
   {
@@ -1668,6 +2193,24 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $falta->faltaAluno = $faltaAluno;
       $falta->id = $this->_getFaltaIdEtapa($falta);
       $this->getFaltaAbstractDataMapper()->save($falta);
+    }
+
+    return $this;
+  }
+
+  /**
+   * Insere ou atualiza os pareceres no boletim.
+   * @return Avaliacao_Service_Boletim Provê interface fluída
+   */
+  public function savePareceres()
+  {
+    $parecerAluno = $this->_getParecerDescritivoAluno();
+    $pareceres    = $this->getPareceres();
+
+    foreach ($pareceres as $parecer) {
+      $parecer->parecerDescritivoAluno = $parecerAluno->id;
+      $parecer->id = $this->_getParecerIdEtapa($parecer);
+      $this->getParecerDescritivoAbstractDataMapper()->save($parecer);
     }
 
     return $this;
@@ -1726,6 +2269,59 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     return $this->_updateMatricula($this->getOption('matricula'), $this->getOption('usuario'),
       $promover);
+  }
+
+  /**
+   * Atualiza a média dos componentes curriculares.
+   */
+  protected function _updateNotaComponenteMedia()
+  {
+    require_once 'Avaliacao/Model/NotaComponenteMedia.php';
+    $this->_loadNotaComponenteCurricular(FALSE);
+
+    foreach ($this->_notasComponentes as $id => $notasComponentes) {
+      // Cria um array onde o índice é a etapa
+      $etapasNotas = CoreExt_Entity::entityFilterAttr($notasComponentes, 'etapa', 'nota');
+      $notas = array('Se' => 0, 'Et' => $this->getOption('etapas'));
+
+      // Cria o array formatado para o cálculo da fórmula da média
+      foreach ($etapasNotas as $etapa => $nota) {
+        if (is_numeric($etapa)) {
+          $notas['E' . $etapa] = $nota;
+          $notas['Se'] += $nota;
+          continue;
+        }
+        $notas[$etapa] = $nota;
+      }
+
+      // Calcula a média
+      $media = $this->_calculaMedia($notas);
+
+      // Cria uma nova instância de média, já com a nota arredondada e a etapa
+      $notaComponenteCurricularMedia = new Avaliacao_Model_NotaComponenteMedia(array(
+        'notaAluno' => $this->_getNotaAluno()->id,
+        'componenteCurricular' => $id,
+        'media' => $media,
+        'mediaArredondada' => $this->arredondaNota($media),
+        'etapa' => $etapa
+      ));
+
+      try {
+        // Se existir, marca como "old" para possibilitar a atualização
+        $this->getNotaComponenteMediaDataMapper()->find(array(
+          $notaComponenteCurricularMedia->get('notaAluno'),
+          $notaComponenteCurricularMedia->get('componenteCurricular'),
+        ));
+
+        $notaComponenteCurricularMedia->markOld();
+      }
+      catch (Exception $e) {
+        // Prossegue, sem problemas.
+      }
+
+      // Salva a média
+      $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
+    }
   }
 
   /**

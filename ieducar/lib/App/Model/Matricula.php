@@ -59,7 +59,9 @@ class App_Model_Matricula
     $instance->cod_matricula   = $matricula;
     $instance->ref_usuario_cad = $usuario;
     $instance->ref_usuario_exc = $usuario;
-    $instance->aprovado        = ($aprovado == TRUE) ? 1 : 2;
+    $instance->aprovado        = ($aprovado == TRUE) ?
+      App_Model_MatriculaSituacao::APROVADO :
+      App_Model_MatriculaSituacao::REPROVADO;
 
     return $instance->edita();
   }

@@ -30,11 +30,12 @@
  */
 
 require_once 'Core/Controller/Page/EditController.php';
-require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
+require_once 'Avaliacao/Model/ParecerDescritivoComponenteDataMapper.php';
+require_once 'Avaliacao/Model/ParecerDescritivoGeralDataMapper.php';
 require_once 'Avaliacao/Service/Boletim.php';
 
 /**
- * NotaController class.
+ * ParecerController class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
@@ -42,14 +43,12 @@ require_once 'Avaliacao/Service/Boletim.php';
  * @package     Avaliacao
  * @subpackage  Modules
  * @since       Classe disponível desde a versão 1.1.0
- * @todo        Criar interface alternativa a Core_Controller_Page_EditController
- *   já que nem todos os formulários mapearam 1:1 a instâncias CoreExt_DataMapper.
  * @version     @@package_version@@
  */
-class NotaController extends Core_Controller_Page_EditController
+class ParecerController extends Core_Controller_Page_EditController
 {
-  protected $_dataMapper        = 'Avaliacao_Model_NotaComponenteDataMapper';
-  protected $_titulo            = 'Avaliação do aluno | Nota';
+  protected $_dataMapper        = 'Avaliacao_Model_ParecerDescritivoGeralDataMapper';
+  protected $_titulo            = 'Avaliação do aluno | Parecer Descritivo';
   protected $_processoAp        = 642;
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
   protected $_saveOption        = TRUE;
@@ -79,16 +78,6 @@ class NotaController extends Core_Controller_Page_EditController
    * @var string
    */
   protected $_etapa = NULL;
-
-  /**
-   * @var Avaliacao_Model_NotaComponente
-   */
-  protected $_nota = NULL;
-
-  /**
-   * @var Avaliacao_Model_FaltaAbstract
-   */
-  protected $_falta   = NULL;
 
   /**
    * @var Avaliacao_Model_ParecerDescritivoAbstract
@@ -123,11 +112,16 @@ class NotaController extends Core_Controller_Page_EditController
    */
   protected function _initNovo()
   {
-    $this->_etapa = $this->getRequest()->etapa;
-    $this->_matricula = $this->getRequest()->matricula;
+    $this->_etapa                = $this->getRequest()->etapa;
+    $this->_matricula            = $this->getRequest()->matricula;
     $this->_componenteCurricular = $this->getRequest()->componenteCurricular;
 
-    if (isset($this->_etapa) && isset($this->_matricula) && isset($this->_componenteCurricular)) {
+    if (isset($this->_etapa) && isset($this->_matricula)) {
+      return FALSE;
+    }
+
+    if ($this->_regra->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE &&
+        !isset($this->_componenteCurricular)) {
       return FALSE;
     }
 
@@ -139,8 +133,6 @@ class NotaController extends Core_Controller_Page_EditController
    */
   protected function _initEditar()
   {
-    $this->_nota    = $this->_service->getNotaComponente($this->_componenteCurricular, $this->_etapa);
-    $this->_falta   = $this->_service->getFalta($this->_etapa, $this->_componenteCurricular);
     $this->_parecer = $this->_service->getParecerDescritivo($this->_etapa, $this->_componenteCurricular);
     return TRUE;
   }
@@ -151,43 +143,28 @@ class NotaController extends Core_Controller_Page_EditController
   public function Gerar()
   {
     $this->campoOculto('matricula', $this->_matricula);
-    $this->campoOculto('componenteCurricular', $this->_componenteCurricular);
     $this->campoOculto('etapa', $this->_etapa);
+    $this->campoOculto('componenteCurricular', $this->_componenteCurricular);
 
     $matricula = $this->_service->getOption('matriculaData');
 
     $this->campoRotulo('1nome', 'Nome', $matricula['nome']);
     $this->campoRotulo('2curso', 'Curso', $matricula['curso_nome']);
     $this->campoRotulo('3serie', 'Série', $matricula['serie_nome']);
-    $this->campoRotulo('4etapa', 'Etapa', $this->_etapa == 'Rc' ? 'Exame' : $this->_etapa);
 
-    $componentes = $this->_service->getComponentes();
-    $this->campoRotulo('5componente_curricular', 'Componente curricular', $componentes[$this->getRequest()->componenteCurricular]);
-
-    // Valores de arredondamento
-    $valoresArredondamento = $this->_service->getRegra()->tabelaArredondamento->findTabelaValor();
-
-    $valores = array();
-    foreach ($valoresArredondamento as $valor) {
-      if ($this->_service->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
-        $valores[(string) $valor->nome] = $valor->nome;
-      }
-      else {
-        $valores[(string) $valor->valorMaximo] = $valor->nome . ' (' . $valor->descricao .  ')';
-      }
+    if ($this->_regra->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL) {
+      $this->campoRotulo('4etapa', 'Etapa', $this->_etapa == 'Rc' ? 'Recuperação' : $this->_etapa);
+    }
+    else {
+      $this->campoRotulo('4etapa', 'Etapa', 'Anual');
     }
 
-    $this->campoLista('nota', 'Nota', $valores, urldecode($this->_nota->nota));
-
-    // Caso a falta seja calculada por componente
-    if ($this->_regra->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
-      $this->campoLista('falta', 'Falta', range(0, 100, 1), $this->_falta->quantidade);
+    if ($this->_componenteCurricular) {
+      $componentes = $this->_service->getComponentes();
+      $this->campoRotulo('5componente_curricular', 'Componente curricular', $componentes[$this->_componenteCurricular]);
     }
 
-    // Caso o parecer seja por etapa e por componente
-    if ($this->_regra->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE) {
-      $this->campoMemo('parecer', 'Parecer', $this->_parecer, 40, 10, TRUE);
-    }
+    $this->campoMemo('parecer', 'Parecer', $this->_parecer, 40, 10, TRUE);
   }
 
   /**
@@ -195,32 +172,22 @@ class NotaController extends Core_Controller_Page_EditController
    */
   protected function _save()
   {
-    $nota = new Avaliacao_Model_NotaComponente(array(
-      'componenteCurricular' => $this->getRequest()->componenteCurricular,
-      'nota' => urldecode($this->getRequest()->nota),
-      'etapa' => $this->getRequest()->etapa
-    ));
-
-    $this->_service->addNota($nota);
-
-    if ($this->_regra->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
-      $quantidade = 0 < $this->getRequest()->falta ? (int) $this->getRequest()->falta : 0;
-      $falta = new Avaliacao_Model_FaltaComponente(array(
-        'componenteCurricular' => $this->getRequest()->componenteCurricular,
-        'quantidade' => $quantidade,
-        'etapa' => $this->getRequest()->etapa
-      ));
-      $this->_service->addFalta($falta);
-    }
-
-    if ($this->_regra->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE) {
+    // Instancia o objeto correto e passa para o service
+    if ($this->_regra->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE) {
       $parecer = new Avaliacao_Model_ParecerDescritivoComponente(array(
         'componenteCurricular' => $this->getRequest()->componenteCurricular,
-        'parecer'              => $this->getRequest()->parecer,
-        'etapa'                => $this->getRequest()->etapa
+        'parecer' => $this->getRequest()->parecer,
+        'etapa'   => $this->getRequest()->etapa
       ));
-      $this->_service->addParecer($parecer);
     }
+    else {
+      $parecer = new Avaliacao_Model_ParecerDescritivoGeral(array(
+        'parecer' => $this->getRequest()->parecer,
+        'etapa'   => $this->getRequest()->etapa
+      ));
+    }
+
+    $this->_service->addParecer($parecer);
 
     try {
       $this->_service->save();
