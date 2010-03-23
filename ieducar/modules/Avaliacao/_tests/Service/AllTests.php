@@ -24,62 +24,32 @@
  * @category    i-Educar
  * @license     @@license@@
  * @package     Avaliacao
- * @subpackage  Modules
+ * @subpackage  Tests
  * @since       Arquivo disponível desde a versão 1.1.0
  * @version     $Id$
  */
 
-require_once 'Avaliacao/Model/Etapa.php';
-
 /**
- * Avaliacao_Model_ParecerDescritivoAbstract abstract class.
+ * Avaliacao_AllTests class.
+ *
+ * Arquivo de definição de suíte para o módulo.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     Avaliacao
- * @subpackage  Modules
+ * @subpackage  Tests
  * @since       Classe disponível desde a versão 1.1.0
  * @version     @@package_version@@
  */
-abstract class Avaliacao_Model_ParecerDescritivoAbstract extends Avaliacao_Model_Etapa
+class Avaliacao_Service_AllTests extends TestCollector
 {
-  protected $_data = array(
-    'parecerDescritivoAluno' => NULL,
-    'parecer'                => NULL
-  );
+  protected $_name = 'Suíte de testes do service Avaliacao_Service_Boletim do módulo Avaliacao';
+  protected $_file = __FILE__;
 
-  protected $_references = array(
-    'parecerDescritivoAluno' => array(
-      'value' => NULL,
-      'class' => 'Avaliacao_Model_ParecerDescritivoAluno',
-      'file'  => 'Avaliacao/Model/ParecerDescritivoAluno.php'
-    )
-  );
-
-  /**
-   * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
-   */
-  public function getDefaultValidatorCollection()
+  public static function suite()
   {
-    $etapa  = $this->getValidator('etapa');
-    $etapas = $etapa->getOption('choices') + array('An');
-
-    $etapa->setOptions(array('choices' => $etapas));
-
-    return array(
-      'etapa'   => $etapa,
-      'parecer' => new CoreExt_Validate_String()
-    );
-  }
-
-  /**
-   * Implementa método mágico __toString().
-   * @link http://br.php.net/__toString
-   * @return string
-   */
-  public function __toString()
-  {
-    return $this->parecer;
+    $instance = new self;
+    return $instance->addDirectoryTests();
   }
 }
