@@ -10566,6 +10566,120 @@ CREATE TABLE nota_componente_curricular_media (
 
 
 --
+-- Name: parecer_aluno; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+--
+
+CREATE TABLE parecer_aluno (
+    id integer NOT NULL,
+    matricula_id integer NOT NULL,
+    parecer_descritivo smallint NOT NULL
+);
+
+
+--
+-- Name: parecer_aluno_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
+--
+
+CREATE SEQUENCE parecer_aluno_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: parecer_aluno_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
+--
+
+ALTER SEQUENCE parecer_aluno_id_seq OWNED BY parecer_aluno.id;
+
+
+--
+-- Name: parecer_aluno_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
+--
+
+SELECT pg_catalog.setval('parecer_aluno_id_seq', 1, false);
+
+
+--
+-- Name: parecer_componente_curricular; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+--
+
+CREATE TABLE parecer_componente_curricular (
+    id integer NOT NULL,
+    parecer_aluno_id integer NOT NULL,
+    componente_curricular_id integer NOT NULL,
+    parecer text,
+    etapa character varying(2) NOT NULL
+);
+
+
+--
+-- Name: parecer_componente_curricular_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
+--
+
+CREATE SEQUENCE parecer_componente_curricular_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: parecer_componente_curricular_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
+--
+
+ALTER SEQUENCE parecer_componente_curricular_id_seq OWNED BY parecer_componente_curricular.id;
+
+
+--
+-- Name: parecer_componente_curricular_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
+--
+
+SELECT pg_catalog.setval('parecer_componente_curricular_id_seq', 1, false);
+
+
+--
+-- Name: parecer_geral; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+--
+
+CREATE TABLE parecer_geral (
+    id integer NOT NULL,
+    parecer_aluno_id integer NOT NULL,
+    parecer text,
+    etapa character varying(2) NOT NULL
+);
+
+
+--
+-- Name: parecer_geral_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
+--
+
+CREATE SEQUENCE parecer_geral_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: parecer_geral_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
+--
+
+ALTER SEQUENCE parecer_geral_id_seq OWNED BY parecer_geral.id;
+
+
+--
+-- Name: parecer_geral_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
+--
+
+SELECT pg_catalog.setval('parecer_geral_id_seq', 1, false);
+
+
+--
 -- Name: regra_avaliacao; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
 --
 
@@ -16709,6 +16823,27 @@ ALTER TABLE nota_componente_curricular ALTER COLUMN id SET DEFAULT nextval('nota
 -- Name: id; Type: DEFAULT; Schema: modules; Owner: -
 --
 
+ALTER TABLE parecer_aluno ALTER COLUMN id SET DEFAULT nextval('parecer_aluno_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: modules; Owner: -
+--
+
+ALTER TABLE parecer_componente_curricular ALTER COLUMN id SET DEFAULT nextval('parecer_componente_curricular_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: modules; Owner: -
+--
+
+ALTER TABLE parecer_geral ALTER COLUMN id SET DEFAULT nextval('parecer_geral_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: modules; Owner: -
+--
+
 ALTER TABLE regra_avaliacao ALTER COLUMN id SET DEFAULT nextval('regra_avaliacao_id_seq'::regclass);
 
 
@@ -17601,6 +17736,24 @@ SET search_path = modules, pg_catalog;
 
 --
 -- Data for Name: nota_componente_curricular_media; Type: TABLE DATA; Schema: modules; Owner: -
+--
+
+
+
+--
+-- Data for Name: parecer_aluno; Type: TABLE DATA; Schema: modules; Owner: -
+--
+
+
+
+--
+-- Data for Name: parecer_componente_curricular; Type: TABLE DATA; Schema: modules; Owner: -
+--
+
+
+
+--
+-- Data for Name: parecer_geral; Type: TABLE DATA; Schema: modules; Owner: -
 --
 
 
@@ -19943,6 +20096,7 @@ INSERT INTO changelog VALUES (14, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '14_adic
 INSERT INTO changelog VALUES (15, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '15_atualiza_foreign_key_modules_falta_geral.sql');
 INSERT INTO changelog VALUES (16, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '16_permissoes_para_modules_e_correcao_menus.sql');
 INSERT INTO changelog VALUES (17, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '17_adiciona_campo_curso_componente_ano_escolar_e_atualiza_constraint_servidor_disciplina.sql');
+INSERT INTO changelog VALUES (18, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '18_cria_tabelas_de_parecer_descritivo.sql');
 
 
 --
@@ -26893,6 +27047,30 @@ ALTER TABLE ONLY nota_componente_curricular
 
 
 --
+-- Name: parecer_aluno_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY parecer_aluno
+    ADD CONSTRAINT parecer_aluno_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: parecer_componente_curricular_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY parecer_componente_curricular
+    ADD CONSTRAINT parecer_componente_curricular_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: parecer_geral_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY parecer_geral
+    ADD CONSTRAINT parecer_geral_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: regra_avaliacao_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
 --
 
@@ -32627,6 +32805,22 @@ ALTER TABLE ONLY nota_componente_curricular_media
 
 ALTER TABLE ONLY nota_componente_curricular
     ADD CONSTRAINT nota_componente_curricular_nota_aluno_fk FOREIGN KEY (nota_aluno_id) REFERENCES nota_aluno(id) ON DELETE CASCADE;
+
+
+--
+-- Name: parecer_componente_curricular_parecer_aluno_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
+--
+
+ALTER TABLE ONLY parecer_componente_curricular
+    ADD CONSTRAINT parecer_componente_curricular_parecer_aluno_fk FOREIGN KEY (parecer_aluno_id) REFERENCES parecer_aluno(id) ON DELETE CASCADE;
+
+
+--
+-- Name: parecer_geral_parecer_aluno_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
+--
+
+ALTER TABLE ONLY parecer_geral
+    ADD CONSTRAINT parecer_geral_parecer_aluno_fk FOREIGN KEY (parecer_aluno_id) REFERENCES parecer_aluno(id) ON DELETE CASCADE;
 
 
 --

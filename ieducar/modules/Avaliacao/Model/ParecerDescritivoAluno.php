@@ -23,45 +23,51 @@
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
- * @package     RegraAvaliacao
+ * @package     Avaliacao
  * @subpackage  Modules
  * @since       Arquivo disponível desde a versão 1.1.0
  * @version     $Id$
  */
 
-require_once 'CoreExt/Enum.php';
+require_once 'CoreExt/Entity.php';
+require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 
 /**
- * RegraAvaliacao_Model_TipoParecerDescritivo class.
+ * Avaliacao_Model_ParecerDescritivoAluno class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
- * @package     RegraAvaliacao
+ * @package     Avaliacao
  * @subpackage  Modules
  * @since       Classe disponível desde a versão 1.1.0
  * @version     @@package_version@@
  */
-class RegraAvaliacao_Model_TipoParecerDescritivo extends CoreExt_Enum
+class Avaliacao_Model_ParecerDescritivoAluno extends CoreExt_Entity
 {
-  const NENHUM           = 0;
-  const ETAPA_DESCRITOR  = 1;
-  const ETAPA_COMPONENTE = 2;
-  const ETAPA_GERAL      = 3;
-  const ANUAL_DESCRITOR  = 4;
-  const ANUAL_COMPONENTE = 5;
-  const ANUAL_GERAL      = 6;
-
   protected $_data = array(
-    self::NENHUM           => 'Não usar parecer descritivo',
-    self::ETAPA_COMPONENTE => 'Um parecer por etapa e por componente curricular',
-    self::ETAPA_GERAL      => 'Um parecer por etapa, geral',
-    self::ANUAL_COMPONENTE => 'Uma parecer por ano letivo e por componente curricular',
-    self::ANUAL_GERAL      => 'Um parecer por ano letivo, geral',
+    'matricula'         => NULL,
+    'parecerDescritivo' => NULL
   );
 
-  public static function getInstance()
+  protected $_references = array(
+    'parecerDescritivo' => array(
+      'value' => NULL,
+      'class' => 'RegraAvaliacao_Model_TipoParecerDescritivo',
+      'file'  => 'RegraAvaliacao/Model/TipoParecerDescritivo.php'
+    )
+  );
+
+  /**
+   * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
+   */
+  public function getDefaultValidatorCollection()
   {
-    return self::_getInstance(__CLASS__);
+    $parecer = RegraAvaliacao_Model_TipoParecerDescritivo::getInstance();
+
+    return array(
+      'matricula'         => new CoreExt_Validate_Numeric(array('min' => 0)),
+      'parecerDescritivo' => new CoreExt_Validate_Choice(array('choices' => $parecer->getKeys())),
+    );
   }
 }
