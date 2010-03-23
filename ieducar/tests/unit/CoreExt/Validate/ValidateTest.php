@@ -60,6 +60,16 @@ class CoreExt_ValidateTest extends UnitBaseTest
     $this->_validator->setOptions(array('invalidOption' => TRUE));
   }
 
+  public function testConfiguraOpcaoDoValidator()
+  {
+    $this->_validator->setOptions(array('required' => FALSE));
+
+    $options = $this->_validator->getOptions();
+    $this->assertFalse($options['required']);
+
+    $this->assertFalse($this->_validator->getOption('required'));
+  }
+
   /**
    * @expectedException Exception
    */

@@ -140,7 +140,7 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
    * @param string $key
    * @return mixed|NULL
    */
-  protected function _getOption($key)
+  public function getOption($key)
   {
     return $this->_hasOption($key) ? $this->_options[$key] : NULL;
   }
@@ -161,13 +161,13 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
     $this->_value = $value;
     $value = $this->_sanitize($value);
 
-    if (TRUE == $this->_getOption('trim')) {
+    if (TRUE == $this->getOption('trim')) {
       $value = trim($value);
     }
 
     $this->_sanitized = $value;
 
-    if (TRUE == $this->_getOption('required') && $this->_isEmpty($value)) {
+    if (TRUE == $this->getOption('required') && $this->_isEmpty($value)) {
       throw new Exception($this->_requiredMessage);
     }
 
@@ -244,7 +244,7 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
    */
   protected function _getErrorMessage($key, array $options = array())
   {
-    $message = $this->_getOption($key);
+    $message = $this->getOption($key);
 
     if (is_array($message)) {
       // Verifica o tipo de @value para determinar a quantidade de $count
