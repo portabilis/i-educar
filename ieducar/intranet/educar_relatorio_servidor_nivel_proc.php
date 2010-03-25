@@ -74,8 +74,14 @@ class indice extends clsCadastro
 
   var $get_link;
 
+  /**
+   * @global $coreExt
+   */
   function renderHTML()
   {
+    global $coreExt;
+    $config = $coreExt['Config']->app->template->pdf;
+
     if ($_POST) {
       foreach ($_POST as $key => $value) {
         $this->$key = $value;
@@ -161,7 +167,9 @@ class indice extends clsCadastro
 
     if ($db->Num_Linhas()) {
       $relatorio = new relatorios('Servidores por Nível', 210, FALSE,
-        'Servidores por Nível', 'A4', $this->nm_instituicao . "\n" . $this->nm_escola);
+        'Servidores por Nível', 'A4', $config->get($config->titulo, 'i-Educar') .
+        "\n" . $this->nm_escola);
+
       $relatorio->setMargem(20, 20, 50, 50);
       $relatorio->exibe_produzido_por = FALSE;
 
@@ -176,27 +184,37 @@ class indice extends clsCadastro
       }
 
       $this->get_link = $relatorio->fechaPdf();
+
+      echo sprintf('
+        <script>
+          window.onload = function()
+          {
+            parent.EscondeDiv("LoadImprimir");
+            window.location="download.php?filename=%s"
+          }
+        </script>', $this->get_link);
+
+      echo sprintf('
+        <html>
+          <center>
+            Se o download não iniciar automaticamente <br /><a target="blank" href="%s" style="font-size: 16px; color: #000000; text-decoration: underline;">clique aqui!</a><br><br>
+            <span style="font-size: 10px;">Para visualizar os arquivos PDF, é necessário instalar o Adobe Acrobat Reader.<br>
+              Clique na Imagem para Baixar o instalador<br><br>
+              <a href="http://www.adobe.com.br/products/acrobat/readstep2.html" target="new"><br><img src="imagens/acrobat.gif" width="88" height="31" border="0"></a>
+            </span>
+          </center>
+        </html>', $this->get_link);
     }
-
-    echo sprintf('
-      <script>
-        window.onload = function()
-        {
-          parent.EscondeDiv("LoadImprimir");
-          window.location="download.php?filename=%s"
-        }
-      </script>', $this->get_link);
-
-    echo sprintf('
-      <html>
-        <center>
-          Se o download não iniciar automaticamente <br /><a target="blank" href="%s" style="font-size: 16px; color: #000000; text-decoration: underline;">clique aqui!</a><br><br>
-          <span style="font-size: 10px;">Para visualizar os arquivos PDF, é necessário instalar o Adobe Acrobat Reader.<br>
-            Clique na Imagem para Baixar o instalador<br><br>
-            <a href="http://www.adobe.com.br/products/acrobat/readstep2.html" target="new"><br><img src="imagens/acrobat.gif" width="88" height="31" border="0"></a>
-          </span>
-        </center>
-      </html>', $this->get_link);
+    else {
+      echo '
+        <script>
+          window.onload = function()
+          {
+            parent.EscondeDiv("LoadImprimir");
+          }
+        </script>
+        <center>Nenhum servidor cadastrado ou categorizado em níveis.</center>';
+    }
   }
 
   function Editar()

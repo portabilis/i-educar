@@ -51,14 +51,16 @@
 </head>
 <body onload="parent.EscondeDiv('LoadImprimir');">
 <?php
-    require_once ("include/clsBase.inc.php");
-    require_once ("include/clsCadastro.inc.php");
-    require_once ("include/relatorio.inc.php");
-    require_once ("include/pmieducar/geral.inc.php");
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/relatorio.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
 
 $ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 $ref_cod_escola      = $_GET['ref_cod_escola'];
 $professor           = $_GET['professor'] ? TRUE : NULL;
+
+$config = $coreExt['Config']->app->template->pdf;
 
 if ($ref_cod_escola) {
   $obj_servidor = new clsPmieducarServidorAlocacao ();
@@ -71,8 +73,8 @@ if ($ref_cod_escola) {
   if (is_array($lst_servidor)) {
     $total_servidor = count($lst_servidor);
 
-    $relatorio = new relatorios('RELAÇÃO DO QUADRO DE PROFESSORES   -                Total de Funcionário/Professores = ' . $total_servidor,
-      120, FALSE, 'i-Educar', 'A4', "Prefeitura COBRA Tecnologia\n\nSecretaria da Educação",
+    $relatorio = new relatorios('RELAÇÃO DO QUADRO DE PROFESSORES 1  -                Total de Funcionário/Professores = ' . $total_servidor,
+      120, FALSE, 'i-Educar', 'A4', $config->get($config->titulo, 'i-Educar'),
       '#515151');
 
     $relatorio->exibe_produzido_por = FALSE;
@@ -116,7 +118,15 @@ if ($ref_cod_escola) {
         }
       }
 
-      $sql = 'SELECT nm_funcao FROM pmieducar.servidor_funcao, pmieducar.funcao WHERE ref_cod_funcao = cod_funcao AND ref_cod_servidor = ' . $servidor['ref_cod_servidor'];
+      $sql = '
+        SELECT
+          nm_funcao
+        FROM
+          pmieducar.servidor_funcao,
+          pmieducar.funcao
+        WHERE
+          ref_cod_funcao = cod_funcao AND
+          ref_cod_servidor = ' . $servidor['ref_cod_servidor'];
       $db = new clsBanco();
 
       $nm_funcao = $db->CampoUnico($sql);
@@ -156,7 +166,7 @@ if ($ref_cod_escola) {
       </html>', $link);
   }
   else {
-    echo '<center>Não existem servidores a serem listados!</center>';
+    echo '<center>Não existem servidores alocados na escola selecionada!</center>';
   }
 }
 else {
@@ -167,7 +177,7 @@ else {
 
   if (is_array($lst_escolas)) {
     $relatorio = new relatorios('RELAÇÃO DO QUADRO DE PROFESSORES', 120, FALSE,
-      'i-Educar', 'A4', "Prefeitura COBRA Tecnologia\n\nSecretaria da Educação",
+      'i-Educar', 'A4', $config->get($config->titulo, 'i-Educar'),
       '#515151');
 
     $relatorio->exibe_produzido_por = FALSE;
@@ -238,16 +248,28 @@ else {
   $link = $relatorio->fechaPdf();
 
   if ($entrou) {
-    echo "<center><a target='blank' href='" . $link . "' style='font-size: 16px; color: #000000; text-decoration: underline;'>Clique aqui para visualizar o arquivo!</a><br><br>
-      <span style='font-size: 10px;'>Para visualizar os arquivos PDF, é necessário instalar o Adobe Acrobat Reader.<br>
+    echo sprintf('
+      <script>
+        window.onload = function()
+        {
+          parent.EscondeDiv("LoadImprimir");
+          window.location="download.php?filename=%s"
+        }
+      </script>', $link);
 
-      Clique na Imagem para Baixar o instalador<br><br>
-      <a href=\"http://www.adobe.com.br/products/acrobat/readstep2.html\" target=\"new\"><br><img src=\"imagens/acrobat.gif\" width=\"88\" height=\"31\" border=\"0\"></a>
-      </span>
-      </center><script>window.onload=function(){parent.EscondeDiv('LoadImprimir');window.location='download.php?filename=" . $link . "'}</script>";
+    echo sprintf('
+      <html>
+        <center>
+          Se o download não iniciar automaticamente <br /><a target="blank" href="%s" style="font-size: 16px; color: #000000; text-decoration: underline;">clique aqui!</a><br><br>
+          <span style="font-size: 10px;">Para visualizar os arquivos PDF, é necessário instalar o Adobe Acrobat Reader.<br>
+            Clique na Imagem para Baixar o instalador<br><br>
+            <a href="http://www.adobe.com.br/products/acrobat/readstep2.html" target="new"><br><img src="imagens/acrobat.gif" width="88" height="31" border="0"></a>
+          </span>
+        </center>
+      </html>', $link);
   }
   else {
-    echo '<center>Não existem alunos enturmados!</center>';
+    echo '<center>Não existem servidores cadastrados.</center>';
   }
 }
 ?>
