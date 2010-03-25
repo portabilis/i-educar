@@ -76,8 +76,14 @@ class indice extends clsCadastro
 
   var $get_link;
 
+  /**
+   * @global $coreExt
+   */
   function renderHTML()
   {
+    global $coreExt;
+    $config = $coreExt['Config']->app->template->pdf;
+
     if ($_POST) {
       foreach ($_POST as $key => $value) {
         $this->$key = $value;
@@ -95,7 +101,7 @@ class indice extends clsCadastro
     $det_instituicao = $obj_instituicao->detalhe();
     $this->nm_instituicao = $det_instituicao['nm_instituicao'];
 
-    if($this->ref_cod_escola) {
+    if ($this->ref_cod_escola) {
       $obj_escola = new clsPmieducarEscola($this->ref_cod_escola);
       $det_escola = $obj_escola->detalhe();
       $this->nm_escola = $det_escola['nome'];
@@ -106,50 +112,52 @@ class indice extends clsCadastro
     $this->nm_curso = $det_curso['nm_curso'];
 
     if ($this->ref_cod_disciplina) {
-      $where = ' AND cod_disciplina = ' . $this->ref_cod_disciplina;
+      $where = ' AND mcc.id = ' . $this->ref_cod_disciplina;
     }
 
     if ($this->ref_cod_escola) {
       $sql = sprintf('
         SELECT
+          DISTINCT(cod_servidor_alocacao),
           cod_servidor,
-          nome,
+          cp.nome,
           sa.carga_horaria,
           CASE periodo
             WHEN 1 THEN \'Matutino\'
             WHEN 2 THEN \'Vespertino\'
             ELSE \'Noturno\'
           END AS turno,
-          nm_disciplina
+          mcc.nome as nm_disciplina
         FROM
           pmieducar.servidor s,
           pmieducar.servidor_disciplina sd,
           pmieducar.servidor_alocacao sa,
-          pmieducar.disciplina,
-          cadastro.pessoa
+          modules.componente_curricular mcc,
+          cadastro.pessoa cp
         WHERE
           cod_servidor = sd.ref_cod_servidor
           AND cod_servidor = sa.ref_cod_servidor
           AND ref_cod_instituicao = sd.ref_ref_cod_instituicao
           AND ref_cod_instituicao = sa.ref_ref_cod_instituicao
-          AND cod_disciplina = ref_cod_disciplina
-          AND cod_servidor   = idpes
+          AND mcc.id = ref_cod_disciplina
+          AND cod_servidor = idpes
           AND ref_cod_instituicao = \'%d\'
-          AND ref_cod_escola      = \'%d\'
+          AND ref_cod_escola = \'%d\'
           %s
+          AND sd.ref_cod_curso = \'%d\'
           AND sa.ativo = 1
           AND s.ativo  = 1
         ORDER BY
-          nome, nm_disciplina', $this->ref_cod_instituicao, $this->ref_cod_escola, $where);
+          nome, nm_disciplina', $this->ref_cod_instituicao, $this->ref_cod_escola, $where, $this->ref_cod_curso);
     }
     else {
       $sql = sprintf('
         SELECT
+          DISTINCT(cod_servidor_alocacao),
           cod_servidor,
-          nome,
+          cp.nome,
           CAST(s.carga_horaria || \' hour\' AS interval) AS carga_horaria,
-          nm_disciplina,
-          cod_disciplina,
+          mcc.nome as nm_disciplina,
           CASE periodo
             WHEN 1 THEN \'Matutino\'
             WHEN 2 THEN \'Vespertino\'
@@ -158,24 +166,24 @@ class indice extends clsCadastro
         FROM
           pmieducar.servidor s,
           pmieducar.servidor_disciplina sd,
-          pmieducar.disciplina,
-          cadastro.pessoa,
+          modules.componente_curricular mcc,
+          cadastro.pessoa cp,
           pmieducar.servidor_alocacao sa
        WHERE
          cod_servidor = sd.ref_cod_servidor
          AND cod_servidor = idpes
          AND ref_cod_instituicao = sd.ref_ref_cod_instituicao
-         AND cod_disciplina = ref_cod_disciplina
+         AND mcc.id = ref_cod_disciplina
          AND ref_cod_instituicao = \'%d\'
          %s
+         AND sd.ref_cod_curso = \'%d\'
          AND s.ativo = 1
          AND cod_servidor = sa.ref_cod_servidor
        ORDER BY
-          nome, nm_disciplina', $this->ref_cod_instituicao, $where);
+         nome, nm_disciplina', $this->ref_cod_instituicao, $where, $this->ref_cod_curso);
     }
 
     $db = new clsBanco();
-
     $db->Consulta($sql);
 
     $nm_disciplina = NULL;
@@ -183,7 +191,7 @@ class indice extends clsCadastro
     if ($db->Num_Linhas()) {
       $relatorio = new relatorios('Professores por Disciplina', 210, FALSE,
         'Professores por Disciplina', 'A4',
-        "{$this->nm_instituicao}\n{$this->nm_escola}\n{$this->nm_curso}");
+        $config->get($config->titulo, 'i-Educar') . "\n{$this->nm_escola}\n{$this->nm_curso}");
 
       $relatorio->setMargem(20, 20, 50, 50);
       $relatorio->exibe_produzido_por = FALSE;
@@ -214,27 +222,42 @@ class indice extends clsCadastro
       }
 
       $this->get_link = $relatorio->fechaPdf();
+
+      echo sprintf('
+        <script>
+          window.onload=function()
+          {
+            parent.EscondeDiv("LoadImprimir");
+            window.location="download.php?filename=%s"
+          }
+        </script>', $this->get_link);
+
+      echo sprintf('
+        <html>
+          <center>Se o download não iniciar automaticamente <br />
+          <a target="blank" href="%s" style="font-size: 16px; color: #000000; text-decoration: underline;">clique aqui!</a><br /><br />
+          <span style="font-size: 10px;">Para visualizar os arquivos PDF, é necessário instalar o Adobe Acrobat Reader.<br />
+            Clique na Imagem para Baixar o instalador<br /><br />
+            <a href="http://www.adobe.com.br/products/acrobat/readstep2.html" target="new"><br><img src="imagens/acrobat.gif" width="88" height="31" border="0"></a>
+          </span>
+        </center>', $this->get_link);
     }
-
-
-    echo sprintf('
-      <script>
-        window.onload=function()
-        {
-          parent.EscondeDiv("LoadImprimir");
-          window.location="download.php?filename=%s"
-        }
-      </script>', $this->get_link);
-
-    echo sprintf('
-      <html>
-        <center>Se o download não iniciar automaticamente <br />
-        <a target="blank" href="%s" style="font-size: 16px; color: #000000; text-decoration: underline;">clique aqui!</a><br /><br />
-        <span style="font-size: 10px;">Para visualizar os arquivos PDF, é necessário instalar o Adobe Acrobat Reader.<br />
-          Clique na Imagem para Baixar o instalador<br /><br />
-          <a href="http://www.adobe.com.br/products/acrobat/readstep2.html" target="new"><br><img src="imagens/acrobat.gif" width="88" height="31" border="0"></a>
-        </span>
-      </center>', $this->get_link);
+    else {
+      if ($this->ref_cod_escola) {
+        $msg = 'Nenhum professor ministra a disciplina ou está alocado na escola selecionada.';
+      }
+      else {
+        $msg = 'Nenhum professor ministra a disciplina selecionada.';
+      }
+      echo
+        '<script>
+           window.onload=function()
+           {
+             parent.EscondeDiv("LoadImprimir");
+           }
+         </script>' .
+        '<center>' . $msg . '</center>';
+    }
   }
 
   function Editar()

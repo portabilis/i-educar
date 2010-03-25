@@ -49,10 +49,10 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo( "{$this->_instituicao} i-Educar - Quadro Hor&aacute;rios" );
-    $this->processoAp = "835";
-    $this->renderMenu = false;
-    $this->renderMenuSuspenso = false;
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Quadro Horários');
+    $this->processoAp = 835;
+    $this->renderMenu = FALSE;
+    $this->renderMenuSuspenso = FALSE;
   }
 }
 
@@ -68,8 +68,6 @@ class clsIndexBase extends clsBase
  */
 class indice extends clsCadastro
 {
-  var $pessoa_logada;
-
   var $ref_cod_instituicao;
   var $ref_cod_escola;
   var $ref_cod_serie;
@@ -77,28 +75,13 @@ class indice extends clsCadastro
   var $ref_cod_curso;
 
   var $ano;
-  var $mes;
 
   var $nm_escola;
   var $nm_instituicao;
-  var $nm_professor;
-  var $nm_turma;
-  var $nm_serie;
-  var $nm_disciplina;
 
   var $get_link = FALSE;
   var $pdf      = FALSE;
   var $page_y   = 15;
-
-  var $array_dias_semana = array(
-    1 => 'Domingo',
-    2 => 'Segunda',
-    3 => 'Terça',
-    4 => 'Quarta',
-    5 => 'Quinta',
-    6 => 'Sexta',
-    7 => 'Sábado'
-  );
 
   function renderHTML()
   {
