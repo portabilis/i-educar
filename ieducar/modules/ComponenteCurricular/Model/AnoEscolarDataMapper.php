@@ -98,7 +98,7 @@ class ComponenteCurricular_Model_AnoEscolarDataMapper extends CoreExt_DataMapper
   {
     $sql = "
 SELECT
-  mca.%s
+  DISTINCT(mca.%s)
 FROM
   %s mca, pmieducar.serie ps
 WHERE
