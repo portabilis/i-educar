@@ -589,6 +589,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           break;
       }
 
+      // Se não usar parecer descritivo, retorna NULL
+      if (!isset($filename)) {
+        return NULL;
+      }
+
       require_once $filename;
       $this->setParecerDescritivoAbstractDataMapper(new $class());
     }
@@ -888,6 +893,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   protected function _loadParecerDescritivo()
   {
+    if ($this->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
+      return $this;
+    }
+
     if (!$this->hasParecerDescritivoAluno()) {
       $this->_createParecerDescritivoAluno();
     }

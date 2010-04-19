@@ -915,10 +915,15 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
       $parecerAluno = $this->_getConfigOption('parecerDescritivoAluno', 'instance');
 
       $mock = $this->getCleanMock('Avaliacao_Model_ParecerDescritivoAlunoDataMapper');
-      $mock->expects($this->at(0))
-           ->method('findAll')
-           ->with(array(), array('matricula' => $this->_getConfigOption('matricula', 'cod_matricula')))
-           ->will($this->returnValue(array($parecerAluno)));
+
+      if ($this->_getRegraOption('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
+        $matcher = $this->at(0);
+
+        $mock->expects($matcher)
+             ->method('findAll')
+             ->with(array(), array('matricula' => $this->_getConfigOption('matricula', 'cod_matricula')))
+             ->will($this->returnValue(array($parecerAluno)));
+      }
 
       $this->_setParecerDescritivoAlunoDataMapperMock($mock);
     }
@@ -938,10 +943,13 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
       $parecerAluno = $this->_getConfigOption('parecerDescritivoAluno', 'instance');
 
       $mock = $this->getCleanMock('Avaliacao_Model_ParecerDescritivoAbstractDataMapper');
-      $mock->expects($this->at(0))
+
+      if ($this->_getRegraOption('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
+        $mock->expects($this->at(0))
            ->method('findAll')
            ->with(array(), array('parecerDescritivoAluno' => $parecerAluno->id), array('etapa' => 'ASC'))
            ->will($this->returnValue(array()));
+      }
 
       $this->_setParecerDescritivoAbstractDataMapperMock($mock);
     }
