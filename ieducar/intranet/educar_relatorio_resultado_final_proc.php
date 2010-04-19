@@ -33,6 +33,8 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/clsPDF.inc.php';
+require_once 'Avaliacao/Service/Boletim.php';
+require_once 'App/Model/MatriculaSituacao.php';
 
 /**
  * clsIndexBase class.
@@ -84,8 +86,6 @@ class indice extends clsCadastro
   var $nm_turma;
   var $nm_serie;
   var $nm_cidade;
-
-  var $array_modulos;
 
   var $is_padrao;
   var $semestre;
@@ -147,36 +147,6 @@ class indice extends clsCadastro
       $eh_multi_seriado = TRUE;
     }
 
-    $obj_curso = new clsPmieducarCurso($this->ref_cod_curso);
-    $det_curso = $obj_curso->detalhe();
-
-    $frequencia_minima = $det_curso["frequencia_minima"];
-    $hora_falta = $det_curso["hora_falta"];
-
-    $obj_tipo_avaliacao = new clsPmieducarTipoAvaliacao($det_curso["ref_cod_tipo_avaliacao"]);
-    $det_tipo_avaliacao = $obj_tipo_avaliacao->detalhe();
-
-    $eh_conceitual = $det_tipo_avaliacao["conceitual"];
-
-    if ($det_curso['padrao_ano_escolar']) {
-      $obj_ano_letivo_modulo = new clsPmieducarAnoLetivoModulo();
-      $obj_ano_letivo_modulo->setOrderby('data_inicio asc');
-
-      $lst_ano_letivo_modulo = $obj_ano_letivo_modulo->lista($this->ano,
-        $this->ref_cod_escola, NULL, NULL);
-
-      if ($lst_ano_letivo_modulo) {
-        foreach ($lst_ano_letivo_modulo as $modulo) {
-          $obj_modulo = new clsPmieducarModulo($modulo['ref_cod_modulo']);
-          $det_modulo = $obj_modulo->detalhe();
-          $this->array_modulos[] = $det_modulo;
-        }
-      }
-    }
-
-    $obj_disc_serie = new clsPmieducarEscolaSerieDisciplina();
-    $lst_disc_serie = $obj_disc_serie->lista($this->ref_cod_serie, $this->ref_cod_escola, NULL, 1);
-
     $this->pdf = new clsPDF('Resultado Final', 'Resultado Final', 'A4', '', FALSE, FALSE);
 
     $this->pdf->OpenPage();
@@ -211,8 +181,7 @@ class indice extends clsCadastro
     $obj_matricula = new clsPmieducarMatriculaTurma();
     $obj_matricula->setOrderby('m.ref_ref_cod_serie, nome_ascii');
 
-    // @todo 2007? Que diabo de condição é essa?
-    if ($this->is_padrao || $this->ano == 2007) {
+    if ($this->is_padrao) {
       $this->semestre = NULL;
     }
 
@@ -238,7 +207,13 @@ class indice extends clsCadastro
         $obj_matricula = new clsPmieducarMatricula($matricula['ref_cod_matricula']);
         $det_matricula = $obj_matricula->detalhe();
 
-        if ($det_matricula['aprovado'] == 1 || $det_matricula['aprovado'] == 2) {
+        // Verifica se o aluno está aprovado ou reprovado
+        $situacoes = array(
+          App_Model_MatriculaSituacao::APROVADO,
+          App_Model_MatriculaSituacao::REPROVADO
+        );
+
+        if (in_array($det_matricula['aprovado'], $situacoes)) {
           $ordem_mostra++;
           $ordem_mostra = sprintf('%02d', $ordem_mostra);
 
@@ -271,172 +246,31 @@ class indice extends clsCadastro
               250, 15, NULL, 8);
           }
 
-          if (!$eh_conceitual) {
-            if ($det_matricula['aprovado'] == 1) {
-              $this->pdf->escreve_relativo('X', 345, ($base + 3) + ($linha * 15),
-                250, 15, NULL, 8);
-              $total_aprovados++;
-            }
-            else {
-              $reprovou_por_falta = FALSE;
-              $reprovou_por_nota  = FALSE;
+          /**
+           * Instancia o service de boletim e requisita os dados da situação
+           * do aluno. Graças ao service, são "apenas" 147 linhas de código
+           * mal-escrito a menos.
+           */
+          $boletim = new Avaliacao_Service_Boletim(array(
+            'matricula' => $matricula['ref_cod_matricula']
+          ));
 
-              if (is_array($lst_disc_serie)) {
-                foreach ($lst_disc_serie as $disciplina) {
-                  if (!$reprovou_por_falta) {
-                    $obj_falta = new clsPmieducarFaltaAluno();
+          $situacao = $boletim->getSituacaoAluno();
 
-                    if ($det_curso['padrao_ano_escolar'] == 1) {
-                      $lst_falta = $obj_falta->lista(NULL, NULL, NULL,
-                        $this->ref_cod_serie, $this->ref_cod_escola,
-                        $disciplina['ref_cod_disciplina'],
-                        $matricula['ref_cod_matricula'], NULL, NULL, NULL,
-                        NULL, NULL, 1);
-                    }
-                    else {
-                      $lst_falta = $obj_falta->lista(NULL, NULL, NULL,
-                        $this->ref_cod_serie, $this->ref_cod_escola, NULL,
-                        $matricula['ref_cod_matricula'], NULL, NULL, NULL, NULL,
-                        NULL, 1, NULL, $disciplina['ref_cod_disciplina']);
-                    }
-
-                    $total_faltas = 0;
-                    if (is_array($lst_falta)) {
-                      foreach ($lst_falta as $key => $value) {
-                        $total_faltas += $lst_falta[$key]['faltas'];
-                      }
-                    }
-
-                    $obj_disciplina = new clsPmieducarDisciplina($disciplina['ref_cod_disciplina']);
-                    $det_disciplina = $obj_disciplina->detalhe();
-                    $carga_horaria_disciplina = $det_disciplina['carga_horaria'];
-
-                    $max_falta = ($carga_horaria_disciplina * $frequencia_minima) / 100;
-                    $max_falta = $carga_horaria_disciplina - $max_falta;
-
-                    $total_faltas *= $hora_falta;
-                    if ($total_faltas > $max_falta) {
-                      $this->pdf->escreve_relativo('X', 465, ($base + 3) + ($linha * 15),
-                        250, 15, NULL, 8);
-
-                      $reprovou_por_falta = TRUE;
-                      $total_reprovados_desempenho++;
-                    }
-                  }
-
-                  if (!$reprovou_por_nota) {
-                    $obj_nota = new clsPmieducarNotaAluno();
-                    $obj_nota->setOrderby('modulo asc');
-
-                    if ($det_curso['padrao_ano_escolar'] == 1) {
-                      $det_nota = $obj_nota->lista(NULL, NULL, NULL,
-                        $this->ref_cod_serie, $this->ref_cod_escola,
-                        $disciplina['ref_cod_disciplina'], $matricula['ref_cod_matricula'],
-                        NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL);
-                    }
-                    else {
-                      $det_nota = $obj_nota->lista(NULL, NULL, NULL,
-                        $this->ref_cod_serie, $this->ref_cod_escola, NULL,
-                        $matricula['ref_cod_matricula'], NULL, NULL, NULL, NULL,
-                        NULL, NULL, 1, NULL, $disciplina['ref_cod_disciplina']);
-                    }
-
-                    if (is_array($det_nota)) {
-                      $soma_notas = 0;
-
-                      foreach ($det_nota as $key => $nota) {
-                        $obj_tipo_av_val = new clsPmieducarTipoAvaliacaoValores(
-                          $nota['ref_ref_cod_tipo_avaliacao'], $nota['ref_sequencial'],
-                          NULL, NULL, NULL, NULL
-                        );
-
-                        $det_tipo_av_val = $obj_tipo_av_val->detalhe();
-
-                        if (count($this->array_modulos) == count($det_nota)) {
-                          $frequencia_minima = $det_curso['frequencia_minima'];
-                          $hora_falta = $det_curso['hora_falta'];
-                          $carga_horaria_curso = $det_curso['carga_horaria'];
-                        }
-
-                        if (!dbBool($det_serie['ultima_nota_define'])) {
-                          if ($key < (count($this->array_modulos))) {
-                            $soma_notas  += $det_tipo_av_val['valor'];
-                            $media_sem_exame = TRUE;
-                          }
-                          else {
-                            $media_sem_exame = FALSE;
-                            $nota_exame      = TRUE;
-                            $exame_nota      = $det_nota[$key]['nota'];
-                          }
-                        }
-                        else {
-                          $media_sem_exame = TRUE;
-                          $soma_notas      = $det_tipo_av_val['valor'];
-                        }
-                      }
-                    }
-
-                    if (!dbBool($det_serie['ultima_nota_define'])) {
-                      if (!$nota_exame) {
-                        $media = $soma_notas / count($det_nota);
-                        // soh esta parte eh do codigo original
-                        // $media_ = $media;
-                      }
-                      else {
-                        $media = ($soma_notas + $exame_nota * 2) / (count($det_nota) + 1);
-                      }
-                    }
-                    else {
-                      $media = $soma_notas;
-                    }
-
-                    $obj_media = new clsPmieducarTipoAvaliacaoValores();
-                    $det_media = $obj_media->lista($det_curso['ref_cod_tipo_avaliacao'],
-                      $det_curso['ref_sequencial'], NULL, NULL, $media, $media);
-
-                    if ($det_media) {
-                      $det_media = array_shift($det_media);
-                      $media     = $det_media['valor'];
-                      $media     = sprintf('%01.1f',$media);
-                      $media     = str_replace('.', ',', $media);
-                    }
-
-                    if ($media_sem_exame) {
-                      $media_curso_ = $det_curso['media'];
-                    }
-                    else {
-                      $media_curso_ = $det_curso['media_exame'];
-                    }
-
-                    if (str_replace(',', '.', $media) < $media_curso_) {
-                      $this->pdf->escreve_relativo('X', 410, ($base + 3) + ($linha * 15),
-                        250, 15, NULL, 8);
-                      $reprovou_por_nota = TRUE;
-                      $total_reprovados_nota++;
-                    }
-                  }
-
-                  if ($reprovou_por_falta && $reprovou_por_nota) {
-                    break;
-                  }
-                }
-              }
-            }
+          if (TRUE == $situacao->aprovado) {
+            $this->pdf->escreve_relativo('X', 345, ($base + 3) + ($linha * 15),
+              250, 15, NULL, 8);
+            $total_aprovados++;
+          }
+          elseif (TRUE == $situacao->retidoFalta) {
+            $total_reprovados_desempenho++;
+            $this->pdf->escreve_relativo('X', 465, ($base + 3) + ($linha * 15),
+              250, 15, NULL, 8);
           }
           else {
-            if ($det_matricula['aprovado'] == 1) {
-              $this->pdf->escreve_relativo('X', 345, ($base + 3) + ($linha * 15),
-                250, 15, NULL, 8); // aprovado
-
-              $total_aprovados++;
-            }
-            else {
-              $this->pdf->escreve_relativo('X', 410, ($base + 3) + ($linha * 15),
-                250, 15, NULL, 8); // desempenho
-
-              $reprovou_por_nota = TRUE;
-              $total_reprovados_nota++;
-            }
+            $total_reprovados_nota++;
+            $this->pdf->escreve_relativo('X', 410, ($base + 3) + ($linha * 15),
+              250, 15, NULL, 8);
           }
 
           // analfabeto
