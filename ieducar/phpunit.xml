@@ -4,10 +4,10 @@
   - Configurações do PHPUnit.
   -->
 
-<phpunit colors='true' bootstrap='tests/bootstrap.php'>
+<phpunit cleanMock='false' colors='true' bootstrap='tests/bootstrap.php'>
 <filter>
   <blacklist>
-    <directory suffix=".php">../tests</directory>
+    <directory suffix='.php'>../tests</directory>
   </blacklist>
 </filter>
 </phpunit>
