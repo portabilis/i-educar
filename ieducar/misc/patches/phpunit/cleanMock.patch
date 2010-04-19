@@ -1,0 +1,284 @@
+diff --git a/PHPUnit/Framework/TestCase.php b/PHPUnit/Framework/TestCase.php
+index 1c52ccb..dc0002f 100644
+--- PHPUnit/Framework/TestCase.php
++++ PHPUnit/Framework/TestCase.php
+@@ -116,6 +116,14 @@ PHPUnit_Util_Filter::addFileToFilter(__FILE__, 'PHPUNIT');
+ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert implements PHPUnit_Framework_Test, PHPUnit_Framework_SelfDescribing
+ {
+     /**
++     * Enable or disable the clean of mock objects to reduce the memory
++     * footprint.
++     *
++     * @var    boolean
++     */
++    protected $cleanMock = NULL;
++
++    /**
+      * Enable or disable the backup and restoration of the $GLOBALS array.
+      * Overwrite this attribute in a child class of TestCase.
+      * Setting this attribute in setUp() has no effect!
+@@ -726,7 +734,10 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
+             foreach ($this->mockObjects as $mockObject) {
+                 $this->numAssertions++;
+                 $mockObject->__phpunit_verify();
+-                $mockObject->__phpunit_cleanup();
++
++                if ($this->cleanMock === TRUE || $this->cleanMock === NULL) {
++                    $mockObject->__phpunit_cleanup();
++                }
+             }
+ 
+             $this->status = PHPUnit_Runner_BaseTestRunner::STATUS_PASSED;
+@@ -906,6 +917,17 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
+     }
+ 
+     /**
++     * @param  boolean $cleanMock
++     * @since  Method available since Release 3.4.X
++     */
++    public function setCleanMock($cleanMock)
++    {
++        if (is_null($this->cleanMock) && is_bool($cleanMock)) {
++            $this->cleanMock = $cleanMock;
++        }
++    }
++
++    /**
+      * Calling this method in setUp() has no effect!
+      *
+      * @param  boolean $backupGlobals
+diff --git a/PHPUnit/Framework/TestSuite.php b/PHPUnit/Framework/TestSuite.php
+index aed6726..e365412 100644
+--- PHPUnit/Framework/TestSuite.php
++++ PHPUnit/Framework/TestSuite.php
+@@ -94,6 +94,14 @@ PHPUnit_Util_Filter::addFileToFilter(__FILE__, 'PHPUNIT');
+ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Framework_SelfDescribing, IteratorAggregate
+ {
+     /**
++     * Enable or disable the clean of mock objects to reduce the memory
++     * footprint.
++     *
++     * @var    boolean
++     */
++    protected $cleanMock = NULL;
++
++    /**
+      * Enable or disable the backup and restoration of the $GLOBALS array.
+      *
+      * @var    boolean
+@@ -679,6 +687,7 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
+             }
+ 
+             if ($test instanceof PHPUnit_Framework_TestSuite) {
++                $test->setCleanMock($this->cleanMock);
+                 $test->setBackupGlobals($this->backupGlobals);
+                 $test->setBackupStaticAttributes($this->backupStaticAttributes);
+                 $test->setSharedFixture($this->sharedFixture);
+@@ -718,6 +727,7 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
+ 
+                 if ($runTest) {
+                     if ($test instanceof PHPUnit_Framework_TestCase) {
++                        $test->setCleanMock($this->cleanMock);
+                         $test->setBackupGlobals($this->backupGlobals);
+                         $test->setBackupStaticAttributes(
+                           $this->backupStaticAttributes
+@@ -878,6 +888,17 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
+     }
+ 
+     /**
++     * @param  boolean $cleanMock
++     * @since  Method available since Release 3.4.X
++     */
++    public function setCleanMock($cleanMock)
++    {
++        if (is_null($this->cleanMock) && is_bool($cleanMock)) {
++            $this->cleanMock = $cleanMock;
++        }
++    }
++
++    /**
+      * @param  boolean $backupGlobals
+      * @since  Method available since Release 3.3.0
+      */
+diff --git a/PHPUnit/Tests/Framework/TestCaseTest.php b/PHPUnit/Tests/Framework/TestCaseTest.php
+index e1bcf59..f8c7581 100644
+--- PHPUnit/Tests/Framework/TestCaseTest.php
++++ PHPUnit/Tests/Framework/TestCaseTest.php
+@@ -52,6 +52,7 @@ require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files' . DIREC
+ require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'ExceptionInTearDownTest.php';
+ require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'ExceptionInTest.php';
+ require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'Failure.php';
++require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'MockCleaned.php';
+ require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'NoArgTestCaseTest.php';
+ require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'Singleton.php';
+ require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'Success.php';
+@@ -322,5 +323,35 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
+ 
+         $this->assertNotSame($GLOBALS['singleton'], Singleton::getInstance());
+     }
++
++    public function testMockInvocationMockerCleaned()
++    {
++        $test = new MockCleaned();
++        $mock = $test->getMock('StdClass');
++
++        $mock->expects($this->any())
++             ->method('__toString')
++             ->will($this->returnValue('foo'));
++
++        $test->run();
++
++        $this->assertNull($this->readAttribute($mock, 'invocationMocker'));
++    }
++
++    public function testMockInvocationMockerNotCleaned()
++    {
++        $test = new MockCleaned();
++        $test->setCleanMock(FALSE);
++
++        $mock = $test->getMock('StdClass');
++
++        $mock->expects($this->any())
++             ->method('__toString')
++             ->will($this->returnValue('foo'));
++
++        $test->run();
++
++        $this->assertNotNull($this->readAttribute($mock, 'invocationMocker'));
++    }
+ }
+ ?>
+diff --git a/PHPUnit/Tests/Util/ConfigurationTest.php b/PHPUnit/Tests/Util/ConfigurationTest.php
+index e341cb5..ff6aaf2 100644
+--- PHPUnit/Tests/Util/ConfigurationTest.php
++++ PHPUnit/Tests/Util/ConfigurationTest.php
+@@ -257,6 +257,7 @@ class Util_ConfigurationTest extends PHPUnit_Framework_TestCase
+             'backupGlobals' => TRUE,
+             'backupStaticAttributes' => FALSE,
+             'bootstrap' => '/path/to/bootstrap.php',
++            'cleanMock' => TRUE,
+             'colors' => FALSE,
+             'convertErrorsToExceptions' => TRUE,
+             'convertNoticesToExceptions' => TRUE,
+diff --git a/PHPUnit/Tests/_files/MockCleaned.php b/PHPUnit/Tests/_files/MockCleaned.php
+new file mode 100644
+index 0000000..4540972
+--- /dev/null
++++ PHPUnit/Tests/_files/MockCleaned.php
+@@ -0,0 +1,8 @@
++<?php
++class MockCleaned extends PHPUnit_Framework_TestCase
++{
++    public function runTest()
++    {
++    }
++}
++?>
+diff --git a/PHPUnit/Tests/_files/configuration.xml b/PHPUnit/Tests/_files/configuration.xml
+index fbca0c6..bf862db 100644
+--- PHPUnit/Tests/_files/configuration.xml
++++ PHPUnit/Tests/_files/configuration.xml
+@@ -3,6 +3,7 @@
+ <phpunit backupGlobals="true"
+          backupStaticAttributes="false"
+          bootstrap="/path/to/bootstrap.php"
++         cleanMock="true"
+          colors="false"
+          convertErrorsToExceptions="true"
+          convertNoticesToExceptions="true"
+diff --git a/PHPUnit/TextUI/TestRunner.php b/PHPUnit/TextUI/TestRunner.php
+index 570c17f..7a65dd6 100644
+--- PHPUnit/TextUI/TestRunner.php
++++ PHPUnit/TextUI/TestRunner.php
+@@ -168,6 +168,10 @@ class PHPUnit_TextUI_TestRunner extends PHPUnit_Runner_BaseTestRunner
+             }
+         }
+ 
++        if ($arguments['cleanMock'] === FALSE) {
++            $suite->setCleanMock(FALSE);
++        }
++
+         if ($arguments['backupGlobals'] === FALSE) {
+             $suite->setBackupGlobals(FALSE);
+         }
+@@ -660,6 +664,11 @@ class PHPUnit_TextUI_TestRunner extends PHPUnit_Runner_BaseTestRunner
+                 $arguments['bootstrap'] = $phpunitConfiguration['bootstrap'];
+             }
+ 
++            if (isset($phpunitConfiguration['cleanMock']) &&
++                !isset($arguments['cleanMock'])) {
++                $arguments['cleanMock'] = $phpunitConfiguration['cleanMock'];
++            }
++
+             if (isset($phpunitConfiguration['colors']) &&
+                 !isset($arguments['colors'])) {
+                 $arguments['colors'] = $phpunitConfiguration['colors'];
+@@ -852,6 +861,7 @@ class PHPUnit_TextUI_TestRunner extends PHPUnit_Runner_BaseTestRunner
+         $arguments['backupStaticAttributes']      = isset($arguments['backupStaticAttributes'])      ? $arguments['backupStaticAttributes']      : NULL;
+         $arguments['cpdMinLines']                 = isset($arguments['cpdMinLines'])                 ? $arguments['cpdMinLines']                 : 5;
+         $arguments['cpdMinMatches']               = isset($arguments['cpdMinMatches'])               ? $arguments['cpdMinMatches']               : 70;
++        $arguments['cleanMock']                   = isset($arguments['cleanMock'])                   ? $arguments['cleanMock']                   : TRUE;
+         $arguments['colors']                      = isset($arguments['colors'])                      ? $arguments['colors']                      : FALSE;
+         $arguments['convertErrorsToExceptions']   = isset($arguments['convertErrorsToExceptions'])   ? $arguments['convertErrorsToExceptions']   : TRUE;
+         $arguments['convertNoticesToExceptions']  = isset($arguments['convertNoticesToExceptions'])  ? $arguments['convertNoticesToExceptions']  : TRUE;
+diff --git a/PHPUnit/Util/Configuration.php b/PHPUnit/Util/Configuration.php
+index 39d749b..4c64aea 100644
+--- PHPUnit/Util/Configuration.php
++++ PHPUnit/Util/Configuration.php
+@@ -59,6 +59,7 @@ PHPUnit_Util_Filter::addFileToFilter(__FILE__, 'PHPUNIT');
+  * <phpunit backupGlobals="true"
+  *          backupStaticAttributes="false"
+  *          bootstrap="/path/to/bootstrap.php"
++ *          cleanMock="true"
+  *          colors="false"
+  *          convertErrorsToExceptions="true"
+  *          convertNoticesToExceptions="true"
+@@ -526,20 +527,6 @@ class PHPUnit_Util_Configuration
+     {
+         $result = array();
+ 
+-        if ($this->document->documentElement->hasAttribute('colors')) {
+-            $result['colors'] = $this->getBoolean(
+-              (string)$this->document->documentElement->getAttribute('colors'),
+-              FALSE
+-            );
+-        }
+-
+-        else if ($this->document->documentElement->hasAttribute('ansi')) {
+-            $result['colors'] = $this->getBoolean(
+-              (string)$this->document->documentElement->getAttribute('ansi'),
+-              FALSE
+-            );
+-        }
+-
+         if ($this->document->documentElement->hasAttribute('backupGlobals')) {
+             $result['backupGlobals'] = $this->getBoolean(
+               (string)$this->document->documentElement->getAttribute('backupGlobals'),
+@@ -558,6 +545,27 @@ class PHPUnit_Util_Configuration
+             $result['bootstrap'] = (string)$this->document->documentElement->getAttribute('bootstrap');
+         }
+ 
++        if ($this->document->documentElement->hasAttribute('cleanMock')) {
++            $result['cleanMock'] = $this->getBoolean(
++              (string)$this->document->documentElement->getAttribute('cleanMock'),
++              TRUE
++            );
++        }
++
++        if ($this->document->documentElement->hasAttribute('colors')) {
++            $result['colors'] = $this->getBoolean(
++              (string)$this->document->documentElement->getAttribute('colors'),
++              FALSE
++            );
++        }
++
++        else if ($this->document->documentElement->hasAttribute('ansi')) {
++            $result['colors'] = $this->getBoolean(
++              (string)$this->document->documentElement->getAttribute('ansi'),
++              FALSE
++            );
++        }
++
+         if ($this->document->documentElement->hasAttribute('convertErrorsToExceptions')) {
+             $result['convertErrorsToExceptions'] = $this->getBoolean(
+               (string)$this->document->documentElement->getAttribute('convertErrorsToExceptions'),
