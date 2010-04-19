@@ -44,6 +44,12 @@ require_once 'Avaliacao/_tests/Service/TestCommon.php';
  */
 class Avaliacao_Service_ParecerDescritivoAlunoTest extends Avaliacao_Service_TestCommon
 {
+  protected function setUp()
+  {
+    $this->_setRegraOption('parecerDescritivo', RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE);
+    parent::setUp();
+  }
+
   public function testCriaNovaInstanciaDeParecerDescritivoAluno()
   {
     $parecerAluno = $this->_getConfigOption('parecerDescritivoAluno', 'instance');
