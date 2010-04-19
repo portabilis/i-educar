@@ -26,7 +26,7 @@
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	header( 'Content-type: text/xml' );
 	
-	require_once( "include/protocol/geral.inc.php" );
+	require_once( "include/pmidrh/geral.inc.php" );
 	
 	echo "<?xml version=\"1.0\" encoding=\"ISO-8859-15\"?>\n<query xmlns=\"sugestoes\">\n";
 	if( isset( $_GET["setor_pai"] )  )
