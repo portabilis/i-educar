@@ -321,17 +321,36 @@ class App_Model_IedFinder extends CoreExt_Entity
         $ano = $ano['ano'];
       }
       else {
-        throw new App_Model_Exception('Vários anos em andamento. Problemas.');
+        throw new App_Model_Exception('Existem vários anos escolares em andamento.');
       }
 
       $anoLetivoModulo = self::addClassToStorage('clsPmieducarAnoLetivoModulo',
         NULL, 'include/pmieducar/clsPmieducarAnoLetivoModulo.inc.php');
 
       $modulos = $anoLetivoModulo->lista($ano, $codEscola);
+    }
+    else {
+      $matriculaTurma = self::addClassToStorage('clsPmieducarMatriculaTurma',
+        NULL, 'include/pmieducar/clsPmieducarMatriculaTurma.inc.php');
 
-      if (FALSE === $modulos) {
-        return 0;
+      $matriculas = $matriculaTurma->lista($codMatricula);
+
+      if (is_array($matriculas)) {
+        $matricula = array_shift($matriculas);
+        $codTurma  = $matricula['ref_cod_turma'];
       }
+      else {
+        throw new App_Model_Exception('Aluno não enturmado.');
+      }
+
+      $turmaModulo = self::addClassToStorage('clsPmieducarTurmaModulo',
+        NULL, 'include/pmieducar/clsPmieducarTurmaModulo.inc.php');
+
+      $modulos = $turmaModulo->lista($codTurma);
+    }
+
+    if (FALSE === $modulos) {
+      return 0;
     }
 
     return count($modulos);

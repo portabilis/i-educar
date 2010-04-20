@@ -361,4 +361,51 @@ class App_Model_IedFinderTest extends UnitBaseTest
 
     $this->assertEquals(4, $etapas);
   }
+
+  public function testEtapasDeUmCursoAnoNaoPadrao()
+  {
+    // Curso não padrão
+    $returnCurso = array('cod_curso' => 1, 'carga_horaria' => 800, 'hora_falta' => (50 / 60), 'padrao_ano_escolar' => 0);
+
+    $cursoMock = $this->getCleanMock('clsPmieducarCurso');
+    $cursoMock->expects($this->any())
+              ->method('detalhe')
+              ->will($this->returnValue($returnCurso));
+
+    CoreExt_Entity::addClassToStorage('clsPmieducarCurso', $cursoMock, NULL, TRUE);
+
+    // Pega informação da turma
+    $returnMatriculaTurma = array(
+      array('ref_cod_matricula' => 1, 'ref_cod_turma' => 1)
+    );
+
+    $matriculaTurmaMock = $this->getCleanMock('clsPmieducarMatriculaTurma');
+    $matriculaTurmaMock->expects($this->at(0))
+                       ->method('lista')
+                       ->with(1)
+                       ->will($this->returnValue($returnMatriculaTurma));
+
+    $returnTurmaModulo = array(
+      array('ref_cod_turma' => 1, 'ref_cod_modulo' => 1, 'sequencial' => 1),
+      array('ref_cod_turma' => 1, 'ref_cod_modulo' => 1, 'sequencial' => 2),
+      array('ref_cod_turma' => 1, 'ref_cod_modulo' => 1, 'sequencial' => 3),
+      array('ref_cod_turma' => 1, 'ref_cod_modulo' => 1, 'sequencial' => 4)
+    );
+new clsPmieducarTurmaModulo();
+    $turmaModuloMock = $this->getCleanMock('clsPmieducarTurmaModulo');
+    $turmaModuloMock->expects($this->at(0))
+                    ->method('lista')
+                    ->with(1)
+                    ->will($this->returnValue($returnTurmaModulo));
+
+    App_Model_IedFinder::addClassToStorage('clsPmieducarMatriculaTurma',
+      $matriculaTurmaMock, NULL, TRUE);
+
+    App_Model_IedFinder::addClassToStorage('clsPmieducarTurmaModulo',
+      $turmaModuloMock, NULL, TRUE);
+
+    $etapas = App_Model_IedFinder::getQuantidadeDeEtapasMatricula(1);
+
+    $this->assertEquals(4, $etapas);
+  }
 }

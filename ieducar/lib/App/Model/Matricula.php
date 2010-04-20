@@ -29,6 +29,7 @@
  */
 
 require_once 'CoreExt/Entity.php';
+require_once 'App/Model/MatriculaSituacao.php';
 
 /**
  * App_Model_Matricula class.
