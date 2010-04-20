@@ -391,7 +391,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
       array('ref_cod_turma' => 1, 'ref_cod_modulo' => 1, 'sequencial' => 3),
       array('ref_cod_turma' => 1, 'ref_cod_modulo' => 1, 'sequencial' => 4)
     );
-new clsPmieducarTurmaModulo();
+
     $turmaModuloMock = $this->getCleanMock('clsPmieducarTurmaModulo');
     $turmaModuloMock->expects($this->at(0))
                     ->method('lista')
