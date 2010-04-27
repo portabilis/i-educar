@@ -34,6 +34,9 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/clsPDF.inc.php';
 
+require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
+require_once 'Avaliacao/Service/Boletim.php';
+
 /**
  * clsIndexBase class.
  *
@@ -69,60 +72,25 @@ class indice extends clsCadastro
 {
   var $pessoa_logada;
 
+  var $em_branco;
   var $ref_cod_instituicao;
   var $ref_cod_escola;
   var $ref_cod_serie;
   var $ref_cod_turma;
 
-  var $ano;
-  var $mes;
-
-  var $nm_escola;
-  var $nm_instituicao;
-  var $ref_cod_curso;
-  var $sequencial;
   var $pdf;
   var $pagina_atual  = 1;
   var $total_paginas = 1;
-  var $nm_professor;
-  var $nm_turma;
-  var $nm_serie;
-  var $nm_disciplina;
-  var $curso_com_exame = 0;
-  var $ref_cod_matricula;
 
   var $page_y = 135;
 
-  var $nm_aluno;
   var $array_modulos = array();
   var $nm_curso;
   var $get_link = false;
 
   var $total;
 
-  var $ref_cod_modulo;
   var $inicio_y;
-
-  var $numero_registros;
-  var $em_branco;
-
-  var $meses_do_ano = array(
-    1  => 'JANEIRO',
-    2  => 'FEVEREIRO',
-    3  => 'MARÇO',
-    4  => 'ABRIL',
-    5  => 'MAIO',
-    6  => 'JUNHO',
-    7  => 'JULHO',
-    8  => 'AGOSTO',
-    9  => 'SETEMBRO',
-    10 => 'OUTUBRO',
-    11 => 'NOVEMBRO',
-    12 => 'DEZEMBRO'
-  );
-
-  var $segue_padrao_escolar    = TRUE;
-  var $mostra_cabecalho_modulo = array();
 
   function renderHTML()
   {
@@ -136,859 +104,75 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
-    if ($this->ref_ref_cod_serie) {
-      $this->ref_cod_serie = $this->ref_ref_cod_serie;
-    }
+    // Instancia o objeto clsPDF
+    $this->pdf = new clsPDF('Boletim', 'BolTit', 'A4', '');
 
-    $fonte    = 'arial';
-    $corTexto = '#000000';
+    $this->pdf->largura  = 842.0;
+    $this->pdf->altura   = 595.0;
 
-    if (empty($this->ref_cod_turma) && !$this->em_branco) {
-      echo '
-        <script>
-          alert("Erro ao gerar relatório!\nNenhuma turma selecionada!");
-          window.parent.fechaExpansivel(\'div_dinamico_\'+(window.parent.DOM_divs.length-1));
-        </script>';
+    $this->pdf->topmargin     = 5;
+    $this->pdf->bottommargirn = 5;
 
-      return TRUE;
-    }
+    $altura_linha = 13;
 
-    if ($this->ref_cod_escola) {
-      $obj_escola = new clsPmieducarEscola($this->ref_cod_escola);
-      $det_escola = $obj_escola->detalhe();
-      $this->nm_escola = $det_escola['nome'];
-    }
+    // Instituição
+    $instituicao = App_Model_IedFinder::getInstituicoes();
+    $instituicao = $instituicao[$this->ref_cod_instituicao];
 
-    $obj_instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
-    $det_instituicao = $obj_instituicao->detalhe();
-    $this->nm_instituicao = $det_instituicao['nm_instituicao'];
+    // Escola
+    $escola = new clsPmieducarEscola();
+    $escola->cod_escola = $this->ref_cod_escola;
+    $escola = $escola->detalhe();
+    $escola = $escola['nome'];
 
-    $obj_calendario = new clsPmieducarEscolaAnoLetivo();
-    $lista_calendario = $obj_calendario->lista($this->ref_cod_escola, $this->ano,
-      NULL, NULL, NULL, NULL, NULL, NULL, NULL,1, NULL);
+    // Carrega as informações do curso
+    $serie = new clsPmieducarSerie($this->ref_ref_cod_serie, NULL, NULL,
+      $this->ref_cod_curso);
 
-    $obj_turma = new clsPmieducarTurma($this->ref_cod_turma);
-    $det_turma = $obj_turma->detalhe();
-    $this->nm_turma = $det_turma['nm_turma'];
+    // Dados da série
+    $serie = $serie->detalhe();
 
-    $obj_serie = new clsPmieducarSerie($this->ref_cod_serie);
-    $det_serie = $obj_serie->detalhe();
-    $this->nm_serie = $det_serie['nm_serie'];
+    // Recupera a regra da série
+    $regraMapper = new RegraAvaliacao_Model_RegraDataMapper();
+    $regra = $regraMapper->find($serie['regra_avaliacao_id']);
 
-    $obj_pessoa = new clsPessoa_($det_turma["ref_cod_regente"]);
-    $det = $obj_pessoa->detalhe();
-    $this->nm_professor = $det["nome"];
+    // Carrega alunos matriculados
+    $matriculaTurma = new clsPmieducarMatriculaTurma();
+    $matriculaTurma->setOrderby('nome_aluno');
 
-    if (!$lista_calendario) {
-      echo '
-      <script>
-        alert("Escola não possui calendário definido para este ano");
-        window.parent.fechaExpansivel(\'div_dinamico_\'+(window.parent.DOM_divs.length-1));
-      </script>';
+    $matriculados = $matriculaTurma->lista($this->ref_cod_matricula,
+      $this->ref_cod_turma, NULL, NULL, NULL, NULL, NULL, NULL, 1,
+      $this->ref_cod_serie, $this->ref_cod_curso, $this->ref_cod_escola,
+      $this->ref_cod_instituicao, NULL, NULL, NULL, NULL, NULL, $this->ano,
+      NULL, TRUE);
 
-      return TRUE;
-    }
+    foreach ($matriculados as $matriculado) {
+      $this->pdf->OpenPage();
+      $this->page_y = 10;
 
-    $prox_mes = $this->mes + 1;
+      $codMatricula = $matriculado['ref_cod_matricula'];
+      $nomeAluno    = $matriculado['nome_aluno'];
+      $turma        = $matriculado['nm_turma'];
 
-    $obj = new clsPmieducarSerie();
-    $obj->setOrderby('cod_serie,etapa_curso');
+      $boletim = new Avaliacao_Service_Boletim(array(
+        'matricula' => $codMatricula
+      ));
 
-    $lista_serie_curso = $obj->lista(NULL, NULL, NULL,$this->ref_cod_curso, NULL,
-      NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, $this->ref_cod_instituicao);
+      $matriculaData = $boletim->getOption('matriculaData');
+      $curso         = $matriculaData['curso_nome'];
+      $serie         = $matriculaData['serie_nome'];
 
-    $obj_curso = new clsPmieducarCurso($this->ref_cod_curso);
-    $det_curso = $obj_curso->detalhe();
+      $this->addCabecalho($instituicao, $escola, $codMatricula, $nomeAluno, $curso, $turma, $serie);
+      $this->inicio_y = $this->page_y - 25;
 
-    $this->nm_curso = $det_curso['nm_curso_upper'];
+      $this->_notasFaltasComponentes($boletim);
 
-    if (!$this->em_branco) {
-      if ($det_curso['padrao_ano_escolar']) {
-        $obj_ano_letivo_modulo = new clsPmieducarAnoLetivoModulo();
-        $obj_ano_letivo_modulo->setOrderby("data_inicio asc");
-        $lst_ano_letivo_modulo = $obj_ano_letivo_modulo->lista($this->ano,
-          $this->ref_cod_escola, NULL, NULL);
+      $situacao = $boletim->getSituacaoAluno();
 
-        if ($lst_ano_letivo_modulo) {
-          foreach ($lst_ano_letivo_modulo as $modulo) {
-            $obj_modulo = new clsPmieducarModulo($modulo['ref_cod_modulo']);
-            $det_modulo = $obj_modulo->detalhe();
-            $this->array_modulos[] = $det_modulo;
-          }
-        }
+      $this->page_y += 25;
+      $this->rodape($codMatricula, $nomeAluno, $matriculaData['aprovado']);
 
-        if (!$this->em_branco) {
-          $obj_disc_serie = new clsPmieducarEscolaSerieDisciplina();
-          $lst_disc_serie = $obj_disc_serie->lista($this->ref_cod_serie,
-            $this->ref_cod_escola, NULL, 1);
-
-          if (is_array($lst_disc_serie)) {
-            foreach ($lst_disc_serie as $key => $disciplina) {
-              $obj_disc = new clsPmieducarDisciplina($disciplina['ref_cod_disciplina']);
-              $det_disc = $obj_disc->detalhe();
-              $lst_disc_serie[$key]['nm_disciplina'] = $det_disc['nm_disciplina'];
-              $array_disc[$key] = $det_disc['nm_disciplina'];
-            }
-
-            array_multisort($array_disc,SORT_ASC,$lst_disc_serie);
-          }
-        }
-      }
-      else {
-        $obj_turma_modulo = new clsPmieducarTurmaModulo();
-        $lst_turma_modulo = $obj_turma_modulo->lista($this->ref_cod_turma, NULL,
-          NULL, NULL, NULL, NULL, NULL);
-
-        if ($lst_turma_modulo) {
-          $this->segue_padrao_escolar = FALSE;
-
-          foreach ($lst_turma_modulo as $modulo) {
-            $obj_modulo = new clsPmieducarModulo($modulo['ref_cod_modulo']);
-            $det_modulo = $obj_modulo->detalhe();
-            $this->array_modulos[] = $det_modulo;
-
-            $nm_modulo = substr(strtoupper($det_modulo['nm_tipo']), 0, 1);
-          }
-
-          for ($i = 0; $i < count($this->array_modulos); $i++) {
-            $this->mostra_cabecalho_modulo[$i] = ($i + 1) . 'º' . $nm_modulo;
-          }
-        }
-
-        if (!$this->em_branco) {
-          $obj_disc_serie = new clsPmieducarEscolaSerieDisciplina();
-          $lst_disc_serie = $obj_disc_serie->lista($this->ref_cod_serie,$this->ref_cod_escola,null,1);
-
-          if (is_array($lst_disc_serie)) {
-            foreach ($lst_disc_serie as $key => $disciplina) {
-              $obj_disc = new clsPmieducarDisciplina($disciplina['ref_cod_disciplina']);
-              $det_disc = $obj_disc->detalhe();
-              $lst_disc_serie[$key]['nm_disciplina'] = $det_disc['nm_disciplina'];
-            }
-          }
-        }
-      }
-    }
-    else {
-      $this->array_modulos = array(
-        array('nm_tipo' => 'Bimestre'),
-        array('nm_tipo' => 'Bimestre'),
-        array('nm_tipo' => 'Bimestre'),
-        array('nm_tipo' => 'Bimestre')
-      );
-    }
-
-    if ($det_curso['media_exame']) {
-      $this->curso_com_exame = 1;
-    }
-
-    $media_curso = $det_curso['media'];
-
-    if (!$this->em_branco) {
-      $obj_matricula_turma = new clsPmieducarMatriculaTurma();
-      $obj_matricula_turma->setOrderby("nome_aluno");
-      $lista_matricula = $obj_matricula_turma->lista($this->ref_cod_matricula,
-        $this->ref_cod_turma, NULL, NULL, NULL, NULL, NULL, NULL, 1,
-        $this->ref_cod_serie, $this->ref_cod_curso, $this->ref_cod_escola,
-        $this->ref_cod_instituicao, NULL, NULL, NULL, NULL, NULL,$this->ano,
-        NULL, TRUE);
-    }
-
-    $obj_tipo_avaliacao = new clsPmieducarTipoAvaliacao($det_curso['ref_cod_tipo_avaliacao']);
-    $det_tipo_avaliacao = $obj_tipo_avaliacao->detalhe();
-    $curso_conceitual = $det_tipo_avaliacao['conceitual'];
-
-    if ($lista_matricula || $this->em_branco) {
-      if ($this->em_branco) {
-        $lista_matricula = array();
-        $lista_matricula[] = '';
-        $this->numero_registros = $this->numero_registros? $this->numero_registros : 20;
-
-        for ($i = 0 ; $i < $this->numero_registros; $i++) {
-          $lst_disc_serie[] = '';
-        }
-      }
-
-      if (!$curso_conceitual) {
-        $this->pdf = new clsPDF('Boletim', 'Boletim ' . $this->ano, 'A4', '', FALSE, FALSE);
-
-        $this->pdf->largura  = 842.0;
-        $this->pdf->altura = 595.0;
-
-        $this->pdf->topmargin     = 5;
-        $this->pdf->bottommargirn = 5;
-
-        $altura_linha = 13;
-
-        $this->pdf->OpenPage();
-        $this->page_y = 10;
-
-        $flag_tamanho = false;
-        $tamanho = $this->page_y;
-
-        foreach ($lista_matricula as $matricula) {
-          $reprovou = false;
-
-          if (!$this->em_branco) {
-            $obj_matricula = new clsPmieducarMatricula($matricula['ref_cod_matricula']);
-            $det_matricula = $obj_matricula->detalhe();
-            $this->ref_cod_matricula = $matricula['ref_cod_matricula'];
-            $this->nm_aluno = $matricula['nome_aluno'];
-          }
-
-          if ($this->page_y + $tamanho > 540) {
-            $this->pdf->ClosePage();
-            $this->pdf->OpenPage();
-            $this->page_y = 10;
-          }
-
-          $this->addCabecalho();
-          $this->inicio_y = $this->page_y - 25;
-
-          if (!$this->em_branco) {
-            $obj_matricula = new clsPmieducarMatricula($matricula['ref_cod_matricula']);
-            $det_matricula = $obj_matricula->detalhe();
-
-            $obj_aluno = new clsPmieducarAluno();
-            $det_aluno = array_shift($obj_aluno->lista($det_matricula['ref_cod_aluno']));
-          }
-
-          foreach ($lst_disc_serie as $key => $disciplina) {
-            $this->pdf->quadrado_relativo(30, $this->page_y, 782, $altura_linha, 0.5);
-
-            $inc       =  (strlen($det_disc['nm_disciplina']) > 40) ? -2 : +2;
-            $fonte_dis = 7;
-
-            $this->pdf->escreve_relativo($disciplina['nm_disciplina'] , 33,
-              $this->page_y + $inc, 170, 15, $fonte, $fonte_dis, $corTexto, 'left');
-
-            /**
-             * notas
-             */
-            $largura_anos = 620;
-            $altura = 30;
-
-            if (sizeof($this->array_modulos)  + $this->curso_com_exame + 2 >= 1) {
-              $incremental = (int) ceil($largura_anos / (sizeof($this->array_modulos) + $this->curso_com_exame + 2));
-            }
-            else {
-              $incremental = 1;
-            }
-
-            $reta_ano_x = 209;
-            $anos_x     = 209;
-
-            if (!$this->em_branco) {
-              $obj_nota = new clsPmieducarNotaAluno();
-              $obj_nota->setOrderby('cod_nota_aluno asc');
-
-              if ($det_curso['padrao_ano_escolar'] == 1) {
-                $det_nota = $obj_nota->lista(NULL,NULL, NULL,$this->ref_cod_serie,
-                  $this->ref_cod_escola, $disciplina['ref_cod_disciplina'],
-                  $matricula['ref_cod_matricula'], NULL, NULL, NULL, NULL, NULL,
-                  NULL,1, NULL);
-              }
-              else {
-                $det_nota = $obj_nota->lista(NULL, NULL, NULL, $this->ref_cod_serie,
-                  $this->ref_cod_escola, NULL, $matricula['ref_cod_matricula'],
-                  NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL,
-                  $disciplina['ref_cod_disciplina']);
-              }
-
-              if (is_array($det_nota)) {
-                usort($det_nota, 'cmp');
-              }
-
-              $obj_dispensa = new clsPmieducarDispensaDisciplina();
-
-              $matricula_dispensa_disciplina = $obj_dispensa->lista(
-                $matricula['ref_cod_matricula'], $this->ref_cod_serie,
-                $this->ref_cod_escola, $disciplina['ref_cod_disciplina'],
-                NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
-            }
-
-            $dispensas = array();
-            $completo  = TRUE;
-
-            if (count($det_nota) < count($this->array_modulos) || !$det_nota) {
-              if (!$det_nota) {
-                $det_nota = array();
-              }
-
-              for ($ct = count($det_nota); $ct <= count($this->array_modulos); $ct++) {
-                if ($matricula_dispensa_disciplina) {
-                  $det_nota[$ct] = array('D');
-                  $dispensas[$ct] = 1;
-                }
-                else {
-                  $det_nota[$ct] = array('');
-                }
-
-                $completo = FALSE;
-              }
-            }
-
-            if (!$this->em_branco) {
-              if ($det_curso['falta_ch_globalizada']) {
-                $obj_falta = new clsPmieducarFaltas();
-                $obj_falta->setOrderby("sequencial asc");
-                $det_falta = $obj_falta->lista($matricula['ref_cod_matricula'],
-                  NULL, NULL, NULL, NULL, NULL);
-
-                if(is_array($det_falta)) {
-                  $total_faltas = 0;
-                  foreach ($det_falta as $key => $value) {
-                    $total_faltas += $det_falta[$key]['faltas'] = $value['falta'];
-                  }
-
-                  $det_falta['total'] = $total_faltas;
-                }
-
-                if(count($det_nota) < count($this->array_modulos) || !$det_nota) {
-                  if (!$det_falta) {
-                    $det_falta = array();
-                  }
-
-                  for ($ct = count($det_nota); $ct <= count($this->array_modulos); $ct++) {
-                    $det_falta[$ct] = array('');
-                    $det_falta[$ct]['faltas'] = '0';
-                  }
-                }
-              }
-              else {
-                $obj_falta = new clsPmieducarFaltaAluno();
-                $obj_falta->setOrderby("cod_falta_aluno asc");
-
-                if($det_curso['padrao_ano_escolar'] == 1) {
-                  $det_falta = $obj_falta->lista(NULL, NULL, NULL, $this->ref_cod_serie,
-                    $this->ref_cod_escola, $disciplina['ref_cod_disciplina'],
-                    $matricula['ref_cod_matricula'], NULL, NULL, NULL, NULL, NULL, 1);
-                }
-                else {
-                  $det_falta = $obj_falta->lista(NULL, NULL, NULL, $this->ref_cod_serie,
-                    $this->ref_cod_escola, NULL, $matricula['ref_cod_matricula'],
-                    NULL, NULL, NULL, NULL, NULL, 1, NULL, $disciplina['ref_cod_disciplina']);
-                }
-
-                $total_faltas = 0;
-
-                if (is_array($det_falta)) {
-                  foreach ($det_falta as $key => $value) {
-                    $total_faltas += $det_falta[$key]['faltas'];
-                  }
-                }
-
-                $det_falta['total'] = $total_faltas;
-              }
-            }
-
-            if ($det_nota){
-              $soma_notas = 0;
-              $notas_primeiro_regular = array();
-
-              foreach ($det_nota as $key => $nota) {
-                $obj_tipo_av_val = new clsPmieducarTipoAvaliacaoValores(
-                  $nota['ref_ref_cod_tipo_avaliacao'], $nota['ref_sequencial'],
-                  NULL, NULL, NULL, NULL);
-
-                $det_tipo_av_val = $obj_tipo_av_val->detalhe();
-
-                if (dbBool($det_serie['ultima_nota_define'])) {
-                  $soma_notas = $det_tipo_av_val['valor'];
-                }
-                else {
-                  $soma_notas  += $det_tipo_av_val['valor'];
-                }
-
-                if ( count($this->array_modulos) == count($det_nota) ) {
-                  $frequencia_minima   = $det_curso['frequencia_minima'];
-                  $hora_falta          = $det_curso['hora_falta'];
-                  $carga_horaria_curso = $det_curso['carga_horaria'];
-                }
-
-                if ($det_tipo_av_val['conceitual']) {
-                  // situacao definida pelo professor
-                  $aprovado = $this->aprovado;
-                }
-                elseif ((count($this->array_modulos) <= $nota['modulo']) &&
-                  ($aprovado == 3) && !$det_tipo_av_val['conceitual']) {
-
-                  // aluno aprovado
-                  $aprovado = 1;
-                }
-
-                if ($key < (count($this->array_modulos))) {
-                  /**
-                   * variavel de controle para verificacao de media
-                   */
-                  $media_sem_exame = TRUE;
-
-                  if ($det_tipo_av_val['valor']) {
-                    $nota = sprintf('%01.1f', $det_tipo_av_val['valor']);
-                  }
-                  else {
-                    $nota = '-';
-                  }
-
-                  if ($this->em_branco) {
-                    $nota = '';
-                  }
-
-                  $nota = $dispensas[$key] ? 'D' : str_replace('.', ',', $nota);
-
-                  $this->pdf->escreve_relativo($nota, $anos_x + 10, $this->page_y + 2,
-                    ($incremental / 3), $altura, $fonte, 9, $corTexto, 'center');
-
-                  if ($det_curso['falta_ch_globalizada']) {
-                    $falta = ' - ';
-                  }
-                  else {
-                    if ($det_falta[$key]['faltas']) {
-                      $falta = $det_falta[$key]['faltas'];
-                    }
-                    else {
-                      $falta = '0';
-                    }
-                  }
-
-                  if ($this->em_branco) {
-                    $falta = '';
-                  }
-
-                  $falta = $dispensas[$key] ? 'D' : $falta;
-                  $this->pdf->escreve_relativo($falta, $anos_x + ($incremental / 2) + 10,
-                    $this->page_y + 2, ($incremental / 3), $altura, $fonte, 9,
-                    $corTexto, 'center');
-
-                  if (count($this->array_modulos) == count($det_nota) &&
-                    $key == count($det_nota) - 1) {
-                    $this->pdf->escreve_relativo($this->em_branco ? '' : '-',
-                    $anos_x + $incremental / 3 + $incremental, $this->page_y + 2,
-                    ($incremental / 3), $altura, $fonte, 9, $corTexto, 'center');
-                  }
-                }
-                else {
-                  /**
-                   * variavel de controle para verificacao de media
-                   */
-                  $media_sem_exame = FALSE;
-
-                  if (
-                    $this->curso_com_exame &&
-                    ($det_matricula['aprovado'] == 1 || $det_matricula['aprovado'] == 2)
-                  ) {
-                    $nota = sprintf('%01.2f', $det_nota[$key]['nota']);
-                    $nota = str_replace('.', ',', $nota);
-                    $nota = $dispensas[$key] ? 'D' : $nota;
-                    $this->pdf->escreve_relativo($nota, $anos_x + $incremental / 3,
-                      $this->page_y + 2, ($incremental / 3), $altura, $fonte, 9,
-                      $corTexto, 'center');
-
-                    $nota_exame = TRUE;
-                    $exame_nota = $det_nota[$key]["nota"];
-                  }
-                }
-
-                $anos_x += $incremental;
-                $reta_ano_x += $incremental;
-              }
-
-              if (!dbBool($det_serie['ultima_nota_define'])) {
-                if (!$nota_exame) {
-                  // soh esta parte eh do codigo original
-                  $media = $soma_notas / count($det_nota);
-                  $media_ = $media;
-                }
-                else {
-                  $media = ($soma_notas + $exame_nota * 2) / (count($det_nota) + 1);
-                }
-              }
-              else {
-                $media = $soma_notas;
-              }
-
-              $det_media = array();
-
-              if ($media >= $det_curso['media'] || $nota_exame) {
-                $obj_media = new clsPmieducarTipoAvaliacaoValores();
-                $det_media = $obj_media->lista($det_curso['ref_cod_tipo_avaliacao'],
-                  $det_curso['ref_sequencial'], NULL, NULL, $media, $media);
-              }
-
-              $nota_exame = FALSE;
-
-              if ($det_media && is_array($det_media)) {
-                $det_media = array_shift($det_media);
-                $media     = $det_media['valor'];
-                $media     = sprintf('%01.1f', $media);
-                $media     = str_replace('.', ',', $media);
-              }
-              elseif (dbBool($det_serie['ultima_nota_define'])) {
-                $media = sprintf('%01.1f', $media);
-                $media = str_replace('.', ',', $media);
-              }
-
-              if (count($det_nota) <= count($this->array_modulos) && $this->curso_com_exame) {
-                $anos_x     += $incremental;
-                $reta_ano_x += $incremental;
-              }
-
-              if (
-                count($det_nota) == 4 &&
-                (
-                $det_matricula['aprovado'] == 1 || $det_matricula['aprovado'] == 2 ||
-                  !(
-                    (
-                      $det_matricula['aprovado'] == 7 ||
-                      (str_replace(",",".",$media) < $media_curso_ && !$nota_exame)
-                    )
-                  )
-                )
-              ) {
-                if ($dispensas[$key]) {
-                  $this->pdf->escreve_relativo("D", $anos_x + 5, $this->page_y + 2,
-                    ($incremental / 3), $altura, $fonte, 9, $corTexto, 'center');
-                }
-                else {
-                  $this->pdf->escreve_relativo($media, $anos_x + 5, $this->page_y + 2,
-                    ($incremental / 3), $altura, $fonte, 9, $corTexto, 'center');
-                }
-              }
-              else {
-                $this->pdf->escreve_relativo('-', $anos_x + 5, $this->page_y + 2,
-                  ($incremental / 3), $altura, $fonte, 9, $corTexto, 'center');
-              }
-
-              if($det_curso['falta_ch_globalizada']) {
-                $falta = ' - ';
-              }
-              else {
-                if ($det_falta['total']) {
-                  $falta = $det_falta['total'];
-                }
-                else {
-                  $falta = '0';
-                }
-              }
-
-              if ($this->em_branco) {
-                $falta = '';
-              }
-
-              $falta = $dispensas[$key] ? 'D' : $falta;
-              $this->pdf->escreve_relativo($falta, $anos_x + ($incremental / 2) + 2,
-                $this->page_y + 2, ($incremental / 3), $altura, $fonte, 9, $corTexto, 'center');
-            }
-
-            $anos_x     += $incremental;
-            $reta_ano_x += $incremental;
-
-            $sit = '';
-
-            if ($completo) {
-              if ($media_sem_exame) {
-                $media_curso_ = $det_curso['media'];
-              }
-              else {
-                $media_curso_ = $det_curso['media_exame'];
-              }
-
-              $sit = (str_replace(',', '.', $media) >= $media_curso_) ?
-                'APROVADO' : 'REPROVADO';
-
-              $sit = ($det_matricula['aprovado'] == 3 && str_replace(',', '.', $media) >= $media_curso_) ?
-                'APROVADO' : $sit;
-
-              if ($det_matricula['aprovado'] != 1 && $det_matricula['aprovado'] != 2) {
-                $sit = ($det_matricula['aprovado'] == 7 || (str_replace(',', '.', $media) < $media_curso_ && !$nota_exame)) ?
-                  'EM EXAME' : $sit;
-              }
-
-              if ($this->em_branco) {
-                $sit = '';
-              }
-
-              $sit = $dispensas[$key] ? 'D' : $sit;
-              $this->pdf->escreve_relativo($sit, $anos_x - 12,$this->page_y + 2,
-                $incremental, $altura, $fonte, 8, $corTexto, 'center');
-            }
-
-            $this->page_y +=$altura_linha;
-
-          }
-          // end foreach
-
-          if ($det_curso['falta_ch_globalizada']) {
-            $this->pdf->quadrado_relativo(30, $this->page_y , 782, $altura_linha, 0.5);
-            $fonte_dis = 7;
-            $this->pdf->escreve_relativo('TOTAL FALTAS' , 80 ,$this->page_y + 2,
-              170, 15, $fonte, 8, $corTexto, 'left');
-
-            $reta_ano_x = 209 ;
-            $anos_x = 209;
-
-            if (is_array($det_falta)) {
-              $total_faltas = array_pop($det_falta);
-            }
-
-            if($det_falta) {
-              foreach ($det_falta as $key => $value) {
-                $incr = $anos_x + ($incremental / 2)+ 10;
-                if (count($det_nota) <= count($this->array_modulos) &&
-                    $this->curso_com_exame && (count($det_falta)  == $key)) {
-                  $incr = $anos_x +($incremental/3);
-                }
-
-                $this->pdf->escreve_relativo($det_falta[$key]['faltas'] ? $det_falta[$key]['faltas'] : '0',
-                  $incr, $this->page_y + 2, ($incremental / 3), $altura, $fonte,
-                  9, $corTexto, 'center');
-
-                $anos_x += $incremental;
-                $reta_ano_x += $incremental;
-              }
-            }
-
-            $reta_ano_x += $incremental;
-
-            if (count($det_nota) >= count($this->array_modulos) && $this->curso_com_exame) {
-              $anos_x += $incremental;
-              $reta_ano_x += $incremental;
-            }
-
-            $this->page_y +=$altura_linha;
-          }
-
-          $this->desenhaLinhasVertical();
-          $sit = '';
-
-          if ($completo) {
-            if ($det_matricula['aprovado'] == 1) {
-              $sit = 'APROVADO';
-            }
-            elseif ($det_matricula['aprovado'] == 2) {
-              $sit = 'REPROVADO';
-            }
-            elseif ($det_matricula['aprovado'] == 7) {
-              $sit = 'EM EXAME';
-            }
-          }
-
-          if ($sit) {
-            $this->pdf->escreve_relativo('ALUNO ' . $sit , 150, $this->page_y + 30,
-              530, $altura, $fonte, 9, $corTexto, 'center');
-          }
-
-          $this->rodape();
-
-          $this->page_y += 50;
-
-          $this->pdf->linha_relativa(30,$this->page_y - 15, 785, 0, 0.1);
-
-          if (!$flag_tamanho) {
-            $tamanho = $this->page_y - $tamanho;
-          }
-        }
-      }
-      /**
-       * conceitual
-       */
-      else {
-        $this->pdf = new clsPDF('Alunos Matriculados - ' . $this->ano,
-          'Alunos Matriculados - Sintético', 'A4', '', FALSE, FALSE);
-
-        foreach ($lista_matricula as $matricula) {
-          if (!$this->em_branco) {
-            $obj_matricula = new clsPmieducarMatricula($matricula['ref_cod_matricula']);
-            $det_matricula = $obj_matricula->detalhe();
-
-            $this->ref_cod_matricula = $matricula['ref_cod_matricula'];
-            $this->nm_aluno          = $matricula['nome_aluno'];
-          }
-
-          $page_open = FALSE;
-
-          if ($lst_disc_serie) {
-            foreach ($lst_disc_serie as $disciplina) {
-              if (!$page_open) {
-                $x_quadrado   = 30;
-                $this->page_y = 95;
-                $altura_caixa = 85;
-
-                $this->pdf->OpenPage();
-                $this->addCabecalhoc();
-                $this->addCabecalhoc2();
-
-                $page_open = TRUE;
-              }
-
-              $altura_caixa = 15 + (int) ((strlen($disciplina['nm_disciplina']) / 60 ) * 7);
-
-              $this->pdf->quadrado_relativo(30, $this->page_y, 535, $altura_caixa);
-
-              $this->pdf->linha_relativa(440, $this->page_y, 0, $altura_caixa, '0.1');
-
-              $this->pdf->escreve_relativo($disciplina['nm_disciplina'], 35,
-                $this->page_y + 5, 400, 120, 'arial', '8', '#000000', 'justify');
-
-              if (!$this->em_branco) {
-                $obj_nota = new clsPmieducarNotaAluno();
-                $obj_nota->setOrderby('cod_nota_aluno asc');
-
-                if ($det_curso['padrao_ano_escolar'] == 1) {
-                  $det_nota = $obj_nota->lista(NULL, NULL, NULL, $this->ref_cod_serie,
-                    $this->ref_cod_escola, $disciplina['ref_cod_disciplina'],
-                    $matricula['ref_cod_matricula'], NULL, NULL, NULL, NULL, NULL,
-                    NULL, 1, NULL);
-                }
-                else {
-                  $det_nota = $obj_nota->lista(NULL, NULL, NULL, $this->ref_cod_serie,
-                    $this->ref_cod_escola, $disciplina['ref_cod_disciplina'],
-                    $matricula['ref_cod_matricula'], NULL, NULL, NULL, NULL,
-                    NULL, NULL, 1, NULL, NULL);
-                }
-              }
-
-              $x_bim = 440 + 31;
-
-              for ($i = 1; $i <= 4; $i++) {
-                if(is_array($det_nota)) {
-                  $nota = array_shift($det_nota);
-                  $obj_tipo_av_val = new clsPmieducarTipoAvaliacaoValores(
-                    $nota['ref_ref_cod_tipo_avaliacao'], $nota['ref_sequencial'],
-                    NULL, NULL, NULL, NULL);
-
-                  $det_tipo_av_val = $obj_tipo_av_val->detalhe();
-                }
-                else {
-                  $det_tipo_av_val = NULL;
-                }
-
-                if ($i<=3) {
-                  $this->pdf->linha_relativa($x_bim, $this->page_y, 0,
-                    $altura_caixa, '0.1');
-                }
-
-                $this->pdf->escreve_relativo($det_tipo_av_val['nome'],
-                  $x_bim - 31, $this->page_y + ($altura_caixa / 3), 31, 120,
-                  'arial', '10', '#000000', 'center');
-
-                $x_bim += 31;
-              }
-
-              $this->page_y += $altura_caixa;
-            }
-          }
-          else {
-            $x_quadrado   = 30;
-            $altura_caixa = 85;
-            $this->page_y = 95;
-
-            $this->pdf->OpenPage();
-            $this->addCabecalhoc();
-            $this->addCabecalhoc2();
-
-            $page_open = TRUE;
-          }
-
-          $this->pdf->quadrado_relativo(30, $this->page_y, 535, 15);
-          $this->pdf->linha_relativa(440, $this->page_y, 0, 15, '0.1');
-          $this->pdf->escreve_relativo('TOTAL DE FALTAS', 35, $this->page_y + 2,
-            400, 120, 'arial', '8', '#000000', 'justify');
-
-          if ($det_curso['falta_ch_globalizada']) {
-            if (!$this->em_branco) {
-              $obj_falta = new clsPmieducarFaltas();
-              $obj_falta->setOrderby('sequencial asc');
-              $det_falta = $obj_falta->lista($matricula['ref_cod_matricula'],
-                NULL, NULL, NULL, NULL, NULL);
-            }
-
-            if (is_array($det_falta)) {
-              $total_faltas = 0;
-              foreach ($det_falta as $key => $value) {
-                $total_faltas += $det_falta[$key]['faltas'] = $value['falta'];
-              }
-
-              $det_falta['total'] = $total_faltas;
-            }
-          }
-
-          $x_bim = 440 + 31;
-
-          for ($i = 1; $i <= 4; $i++) {
-            if (is_array($det_falta)) {
-              $falta = array_shift($det_falta);
-              $falta = $falta['faltas'];
-            }
-            else {
-              $falta = NULL;
-            }
-
-            if ($i<=3) {
-              $this->pdf->linha_relativa($x_bim, $this->page_y, 0, 15, '0.1');
-            }
-
-            $this->pdf->escreve_relativo($falta, $x_bim - 31, $this->page_y + 2,
-              31, 120, 'arial', '10', '#000000', 'center');
-            $x_bim += 31;
-          }
-
-          $obj_matricula_situacao = new clsPmieducarMatricula($matricula['ref_cod_matricula']);
-          $obj_matricula_situacao->setCamposLista('aprovado');
-          $det_matricula_situacao = $obj_matricula_situacao->detalhe();
-
-          if ($det_matricula_situacao['aprovado'] == 1) {
-            $situacao = 'APROVADO';
-          }
-          elseif ($det_matricula_situacao['aprovado'] == 2) {
-            $situacao = 'REPROVADO';
-          }
-          else {
-            $situacao = 'EM ANDAMENTO';
-          }
-
-          $this->pdf->quadrado_relativo(30, $this->page_y + 15, 535, 15);
-
-          $this->pdf->linha_relativa(440, $this->page_y + 15, 0, 15, '0.1');
-
-          $this->pdf->escreve_relativo('SITUAÇÃO', 35, $this->page_y + 15 + 2,
-            400, 120, 'arial', '8', '#000000', 'justify');
-
-          $this->pdf->escreve_relativo($situacao, 440, $this->page_y + 15 + 2,
-            120, 120, 'arial', '10', '#000000', 'center');
-
-          $this->page_y += 35; // original é 25
-
-          $legenda = "LEGENDA:\n
-            D   = Desenvolvida
-            PD = Parcialmente Desenvolvida
-            ID   = Iniciando o Desenvolvimento
-            ND = Não Desenvolvida
-            CNA = Competência Não Avaliada";
-
-          $this->pdf->escreve_relativo($legenda, 36,$this->page_y, 200, 50, $fonte,
-            7, $corTexto, 'left' );
-
-          $this->page_y += 75;
-          $altura_obs    = 60;
-
-          $this->pdf->quadrado_relativo(30, $this->page_y, 535, $altura_obs, 0.1,
-            '#000000', '#FFFFFF');
-          $this->pdf->escreve_relativo('OBS: ' , 33, $this->page_y + 3 , 545, 60,
-            $fonte, 8, $corTexto, 'justify');
-
-          $this->pdf->ClosePage();
-        }
-      }
-    }
-    else {
-      echo '
-      <script>
-        alert("Turma não possui matrículas no ano selecionado");
-        window.parent.fechaExpansivel(\'div_dinamico_\'+(window.parent.DOM_divs.length-1));
-      </script>';
-
-      return;
+      $this->pdf->ClosePage();
     }
 
     $this->pdf->CloseFile();
@@ -1015,7 +199,194 @@ class indice extends clsCadastro
       </html>', $this->get_link);
   }
 
-  function addCabecalho()
+  protected function _notasFaltasComponentes(Avaliacao_Service_Boletim $boletim)
+  {
+    $etapas = $boletim->getOption('etapas');
+    $notas  = $boletim->getNotasComponentes();
+
+    if ($faltaPorComponente = ($boletim->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)) {
+      $faltas = $boletim->getFaltasComponentes();
+    }
+    else {
+      $faltas = $boletim->getFaltasGerais();
+    }
+
+    $componentes = $boletim->getComponentes();
+    $medias      = $boletim->getMediasComponentes();
+    $situacao    = $boletim->getSituacaoAluno();
+
+    $etapas = range(0, $etapas - 1);
+
+    $altura_linha = 15;
+
+    // Calcula o espaço disponível para as notas e faltas
+    $extraColumns = 2 + ($situacao->recuperacao == TRUE ? 1: 0);
+    $total = 782 - (80 + (60 * $extraColumns) + 120);
+
+    $this->pdf->quadrado_relativo(30, $this->page_y, 782, $altura_linha, 0.5);
+    $this->pdf->escreve_relativo_center('Módulos', 30, $this->page_y + 2, 80, 13);
+    $this->pdf->linha_relativa(30, $this->page_y, 0, $altura_linha, 0.1);
+    $this->pdf->linha_relativa(80 + 30, $this->page_y, 0, $altura_linha, 0.1);
+
+    $matriculaSituacao = App_Model_MatriculaSituacao::getInstance();
+
+    // Escreve as etapas
+    $x = 80 + 30;
+    $largura   = $total / count($etapas);
+
+    if ($faltaPorComponente) {
+      $larguraDv = $largura / 2;
+    }
+    else {
+      $larguraDv = $largura;
+    }
+
+    foreach ($etapas as $etapa) {
+      $this->pdf->escreve_relativo_center($etapa + 1, $x, $this->page_y + 2, $largura, 13);
+      $x += $largura;
+      $this->pdf->linha_relativa($x, $this->page_y, 0, $altura_linha, 0.1);
+    }
+
+    // Escreve os campos para Média final, Falta e Situação
+    $labels = array();
+    $labels[] = 'Média final';
+
+    if ($situacao->recuperacao) {
+      $labels[] = 'Exame';
+    }
+
+    $labels[] = '% Presença';
+    $labels[] = 'Situação';
+
+    foreach ($labels as $label) {
+      $largura = $label == 'Situação' ? 120 : 60;
+
+      $this->pdf->escreve_relativo_center($label, $x, $this->page_y + 2, $largura, 13);
+      $x += $largura;
+      $this->pdf->linha_relativa($x, $this->page_y, 0, $altura_linha, 0.1);
+    }
+
+    // Escreve os rótulos para notas e faltas
+    $x = 80 + 30;
+
+    // Nova linha
+    $this->page_y += 15;
+
+    $this->pdf->quadrado_relativo(30, $this->page_y, 782, $altura_linha, 0.5);
+    $this->pdf->escreve_relativo_center('Componentes', 30, $this->page_y + 2, 80, 13);
+    $this->pdf->linha_relativa(30, $this->page_y, 0, $altura_linha, 0.1);
+    $this->pdf->linha_relativa(110, $this->page_y, 0, $altura_linha, 0.1);
+
+    foreach ($etapas as $etapa) {
+      $this->pdf->escreve_relativo_center('Nota', $x, $this->page_y + 2, $larguraDv, 13);
+      $x += $larguraDv;
+      $this->pdf->linha_relativa($x, $this->page_y, 0, $altura_linha, 0.1);
+
+      if ($faltaPorComponente) {
+        $this->pdf->escreve_relativo_center('Falta', $x, $this->page_y + 2, $larguraDv, 13);
+        $x += $larguraDv;
+        $this->pdf->linha_relativa($x, $this->page_y, 0, $altura_linha, 0.1);
+      }
+    }
+
+    for ($i = 0; $i < 3; $i++) {
+      $x += 60;
+      $this->pdf->linha_relativa($x, $this->page_y, 0, $altura_linha, 0.1);
+    }
+
+    $yNotas = $this->page_y;
+
+    // Imprime as notas dos componentes
+    foreach ($componentes as $id => $componente) {
+      $this->page_y += 15;
+      $this->pdf->quadrado_relativo(30, $this->page_y, 782, $altura_linha, 0.5);
+      $this->pdf->escreve_relativo_center($componente, 30, $this->page_y + 2, 80, 13);
+      $this->pdf->linha_relativa(110, $this->page_y, 0, $altura_linha, 0.1);
+
+      $x = 110;
+
+      foreach ($etapas as $etapa) {
+        if (!$this->em_branco) {
+          $this->pdf->escreve_relativo_center($notas[$id][$etapa]->notaArredondada, $x, $this->page_y + 2, $larguraDv, 13);
+        }
+        $x += $larguraDv;
+        $this->pdf->linha_relativa($x, $this->page_y, 0, $altura_linha, 0.1);
+
+        if ($faltaPorComponente) {
+          if (!$this->em_branco) {
+            $this->pdf->escreve_relativo_center($faltas[$id][$etapa]->quantidade, $x, $this->page_y + 2, $larguraDv, 13);
+          }
+          $x += $larguraDv;
+          $this->pdf->linha_relativa($x, $this->page_y, 0, $altura_linha, 0.1);
+        }
+      }
+
+      if ($faltaPorComponente) {
+        $porcentagemPresenca = sprintf('%.2f', $situacao->falta->componentesCurriculares[$id]->porcentagemPresenca);
+      }
+      else {
+        $porcentagemPresenca = '-';
+      }
+
+      // Média, presenção e situação
+      $data   = array();
+      $data['media'] = $medias[$id][0]->mediaArredondada;
+
+      if ($situacao->recuperacao) {
+        $notaExame  = $notas[$id][$etapa + 1];
+        $data['rc'] = $notaExame->etapa == 'Rc' ? $notaExame->notaArredondada : '-';
+      }
+
+      $data['presenca'] = $porcentagemPresenca;
+      $data['situacao'] = $matriculaSituacao->getValue($situacao->nota->componentesCurriculares[$id]->situacao);
+
+      foreach ($data as $key => $value) {
+        $largura = ($key == 'situacao') ? 120 : 60;
+
+        if (!$this->em_branco) {
+          $this->pdf->escreve_relativo_center($value, $x, $this->page_y + 2, $largura, 13);
+        }
+        $x += $largura;
+        $this->pdf->linha_relativa($x, $this->page_y, 0, $altura_linha, 0.1);
+      }
+    }
+
+    // Imprime a porcentagem total de presença e a situação
+    $this->page_y += 15;
+    $this->pdf->quadrado_relativo(30, $this->page_y, 782, $altura_linha, 0.5);
+    $this->pdf->escreve_relativo_center('Faltas', 30, $this->page_y + 2, 80, 13);
+    $this->pdf->linha_relativa(110, $this->page_y, 0, $altura_linha, 0.1);
+
+    if (!$faltaPorComponente) {
+      $x = 80 + 30;
+
+      foreach ($etapas as $etapa) {
+        $this->pdf->escreve_relativo_center($faltas[$etapa + 1]->quantidade, $x, $this->page_y + 2, $larguraDv, 13);
+        $x += $larguraDv;
+        $this->pdf->linha_relativa($x, $this->page_y, 0, $altura_linha, 0.1);
+      }
+
+      $x = $x + 60 * ($situacao->recuperacao ? 2 : 1);
+    }
+    else {
+      $x = $x - (120 + 60);
+    }
+
+    if (!$this->em_branco) {
+      $this->pdf->escreve_relativo_center(sprintf('%.2f', $situacao->falta->porcentagemPresenca),
+        $x, $this->page_y + 2, 60, 13);
+
+      $this->pdf->escreve_relativo_center($matriculaSituacao->getValue($situacao->falta->situacao),
+        $x + 60, $this->page_y + 2, 120, 13);
+    }
+
+    for ($i = 0; $i < 3; $i++) {
+      $this->pdf->linha_relativa($x, $this->page_y, 0, $altura_linha, 0.1);
+      $x += 60;
+    }
+  }
+
+  function addCabecalho($instituicao, $escola, $codMatricula, $nomeAluno, $curso, $turma, $serie)
   {
     /**
      * Variável global com objetos do CoreExt.
@@ -1044,12 +415,12 @@ class indice extends clsCadastro
       $this->page_y + 2, 782, 80, $fonte, 18, $corTexto, 'center');
 
     // Dados escola
-    $this->pdf->escreve_relativo('Instituição: ' .  $this->nm_instituicao, 110,
+    $this->pdf->escreve_relativo('Instituição: ' .  $instituicao, 110,
       $this->page_y + 27, 400, 80, $fonte, 10, $corTexto, 'left');
 
-    $this->nm_escola || $this->em_branco? $this->pdf->escreve_relativo(
-      'Escola: ' . $this->nm_escola, 127, $this->page_y + 43, 300, 80, $fonte,
-      10, $corTexto, 'left') : NULL;
+    $this->pdf->escreve_relativo(
+      'Escola: ' . $escola, 127, $this->page_y + 43, 300, 80, $fonte,
+      10, $corTexto, 'left');
     $dif = 0;
 
     if ($this->nm_professor) {
@@ -1064,75 +435,34 @@ class indice extends clsCadastro
 
     $this->pdf->quadrado_relativo(30, $this->page_y + 83, 782, 12, $espessura_linha);
 
-    $this->pdf->escreve_relativo('Aluno: ' . $this->nm_aluno, 37, $this->page_y + 70,
+    $this->pdf->escreve_relativo('Aluno: ' . $nomeAluno, 37, $this->page_y + 70,
       200, 80, $fonte, 7, $corTexto, 'left');
 
-    $this->pdf->escreve_relativo('Matricula: ' . str2upper($this->ref_cod_matricula),
+    $this->pdf->escreve_relativo('Matricula: ' . $codMatricula,
       222, $this->page_y + 70, 300, 80, $fonte, 7, $corTexto, 'left');
 
-    $this->pdf->escreve_relativo('Turma: ' . str2upper($this->nm_turma), 300,
+    $this->pdf->escreve_relativo('Turma: ' . $turma, 300,
       $this->page_y + 70, 300, 80, $fonte, 7, $corTexto, 'left');
 
-    $this->pdf->escreve_relativo('Curso: ' . $this->nm_curso, 37, $this->page_y + 85,
+    $this->pdf->escreve_relativo('Curso: ' . $curso, 37, $this->page_y + 85,
       300, 80, $fonte, 7, $corTexto, 'left');
 
     $this->pdf->escreve_relativo('Ano/Série/Etapa: ' .
-      ($this->nm_serie ? str2upper($this->nm_serie) : $this->ano),
+      ($serie ? $serie : $this->ano),
       200, $this->page_y + 85, 300, 80, $fonte, 7, $corTexto, 'left');
 
     // Título
     $this->pdf->escreve_relativo('Boletim Escolar - ' . $this->ano, 30,
       $this->page_y + 30, 782, 80, $fonte, 12, $corTexto, 'center');
 
-    $obj_modulo = new clsPmieducarModulo($this->ref_cod_modulo);
-
-    $det_modulo = $obj_modulo->detalhe();
-
     // Data
     $this->pdf->escreve_relativo('Data de Emissão: ' . date('d/m/Y'), 700,
       $this->page_y + 50, 535, 80, $fonte, 8, $corTexto, 'left');
 
-    $this->page_y +=100;
-    $this->novoCabecalho();
+    $this->page_y += 100;
   }
 
-
-  function desenhaLinhasVertical()
-  {
-    $espessura_linha = 0.5;
-    $largura_anos    = 620;
-
-    if (count($this->array_modulos) + $this->curso_com_exame >= 1) {
-      $incremental = floor($largura_anos / (count($this->array_modulos) + $this->curso_com_exame + 2));
-    }
-    else {
-      $incremental = 1;
-    }
-
-    $reta_ano_x = 209 ;
-
-    $resto = $largura_anos - ($incremental * (count($this->array_modulos) + $this->curso_com_exame + 1));
-
-    for ($linha = 0;$linha <count($this->array_modulos) + $this->curso_com_exame + 2 ;$linha++) {
-      $this->pdf->linha_relativa($reta_ano_x,$this->inicio_y,0,$this->page_y - $this->inicio_y ,$espessura_linha);
-
-      if (
-        ($this->curso_com_exame && $linha != count($this->array_modulos) && $linha != count($this->array_modulos) + 2) ||
-        (!$this->curso_com_exame && $linha != count($this->array_modulos) + 1)
-      ) {
-        $this->pdf->linha_relativa($reta_ano_x + ($incremental / 2),
-          $this->inicio_y + 12, 0, $this->page_y - $this->inicio_y - 12,
-          $espessura_linha);
-      }
-
-      $reta_ano_x += $incremental;
-    }
-
-    $this->pdf->linha_relativa(812, $this->inicio_y, 0,
-      $this->page_y - $this->inicio_y,$espessura_linha);
-  }
-
-  function rodape()
+  function rodape($codMatricula, $nomeAluno, $situacao)
   {
     $corTexto  = '#000000';
     $fonte     = 'arial';
@@ -1143,8 +473,29 @@ class indice extends clsCadastro
 
     if (!$this->em_branco) {
       $this->pdf->escreve_relativo('Estou ciente do aproveitamento de ' .
-        str2upper($this->nm_aluno) . ', matrícula nº: ' . $this->ref_cod_matricula . '.',
+        $nomeAluno . ', matrícula nº: ' . $codMatricula . '.',
         68, $this->page_y + 12, 600, 50, $fonte, 9, $corTexto, 'left');
+
+     /* if ($situacao->aprovado) {
+        $situacao = App_Model_MatriculaSituacao::APROVADO;
+      }
+      elseif ($situacao->andamento) {
+        $situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+      }
+      elseif ($situacao->recuperacao) {
+        $situacao = App_Model_MatriculaSituacao::EM_EXAME;
+      }
+      elseif ($situacao->retidoFalta) {
+        $situacao = App_Model_MatriculaSituacao::RETIDO_FALTA;
+      }
+      else {
+        $situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+      }*/
+
+      $situacao = strtoupper(App_Model_MatriculaSituacao::getInstance()->getValue($situacao));
+
+      $this->pdf->escreve_relativo('Aluno ' . $situacao,
+        68, $this->page_y + 62, 600, 50, $fonte, 9, $corTexto, 'center');
     }
 
     $this->pdf->escreve_relativo('Assinatura do Responsável(a)', 677,
@@ -1162,191 +513,6 @@ class indice extends clsCadastro
   {
     return FALSE;
   }
-
-  public function novoCabecalho()
-  {
-    $altura2         = 300;
-    $altura          = 50;
-    $espessura_linha = 0.5;
-    $expande         = 24;
-
-    $fonte    = 'arial';
-    $corTexto = '#000000';
-
-    $inicio_escrita_y = $this->page_y;
-
-    $this->pdf->linha_relativa(30, $this->page_y, 782, 0, $espessura_linha);
-
-    $this->pdf->escreve_relativo('Disciplina', 110, $this->page_y, 50, $altura,
-      $fonte, 9, $corTexto, 'left');
-
-    $this->pdf->linha_relativa(30, $this->page_y, 0, 25, $espessura_linha);
-
-    $largura_anos = 605;
-
-    if (sizeof($this->array_modulos)  + $this->curso_com_exame + 2 >= 1) {
-      $incremental = (int) ceil($largura_anos / (sizeof($this->array_modulos) + $this->curso_com_exame + 2));
-    }
-    else {
-      $incremental = 1;
-    }
-
-    $reta_ano_x = 209 ;
-    $anos_x     = 209;
-
-    $ct = 0;
-
-    $num_modulo = 1;
-
-    foreach ($this->array_modulos as $key => $modulo) {
-      $this->pdf->escreve_relativo($num_modulo++ . 'º ' . $modulo['nm_tipo'],
-        $anos_x ,$inicio_escrita_y + 1, $incremental, $altura, $fonte, 9,
-        $corTexto, 'center');
-
-      // Médias
-      $this->pdf->escreve_relativo('Nota', $anos_x + 8, $inicio_escrita_y + 12,
-        ($incremental / 3), $altura, $fonte, 9, $corTexto, 'center');
-
-      $this->pdf->escreve_relativo('Faltas', $anos_x +($incremental / 2) + 8,
-        $inicio_escrita_y + 12, ($incremental / 3), $altura, $fonte, 9,
-        $corTexto, 'center');
-
-      $anos_x     += $incremental;
-      $reta_ano_x += $incremental;
-
-      $ct++;
-    }
-
-    if ($this->curso_com_exame) {
-      $this->pdf->escreve_relativo('Exame Final', $anos_x + 5,
-        $inicio_escrita_y + 4, $incremental, $altura, $fonte, 9, $corTexto, 'center');
-
-      $anos_x     += $incremental;
-      $reta_ano_x += $incremental;
-    }
-
-    $this->pdf->escreve_relativo('Resultado Final', $anos_x + 2,
-      $inicio_escrita_y + 1, $incremental, $altura, $fonte, 9, $corTexto, 'center');
-
-    // Médias
-    $this->pdf->escreve_relativo('Nota', $anos_x + 15, $inicio_escrita_y + 12,
-      ($incremental / 3), $altura, $fonte, 9, $corTexto, 'center');
-
-    $this->pdf->escreve_relativo('Faltas', $anos_x + ($incremental / 2) + 15,
-      $inicio_escrita_y + 12, ($incremental / 3), $altura, $fonte, 9,
-      $corTexto, 'center');
-
-    $this->pdf->escreve_relativo('Situação', $anos_x + $incremental + 5,
-      $inicio_escrita_y + 4, $incremental, $altura, $fonte, 9, $corTexto, 'center');
-
-    $this->page_y +=25;
-  }
-
-
-  public function addCabecalhoc()
-  {
-    /**
-     * Variável global com objetos do CoreExt.
-     * @see includes/bootstrap.php
-     */
-    global $coreExt;
-
-    // Namespace de configuração do template PDF
-    $config = $coreExt['Config']->app->template->pdf;
-
-    // Variável que controla a altura atual das caixas
-    $altura   = 30;
-    $fonte    = 'arial';
-    $corTexto = '#000000';
-
-    // Cabeçalho
-    $logo = $config->get($config->logo, 'imagens/brasao.gif');
-
-    $this->pdf->quadrado_relativo(30, $altura, 535, 85);
-    $this->pdf->insertImageScaled('gif', $logo, 50, 95, 41);
-
-    // Título principal
-    $titulo = $config->get($config->titulo, 'i-Educar');
-    $this->pdf->escreve_relativo($titulo, 30, 30, 535, 80, $fonte, 18,
-      $corTexto, 'center');
-
-    // Dados escola
-    $this->pdf->escreve_relativo('Instituição: ' . str2upper($this->nm_instituicao),
-      120, 50, 300, 80, $fonte, 10, $corTexto, 'left');
-
-    $this->pdf->escreve_relativo('Escola: ' . str2upper($this->nm_escola), 136, 62,
-      380, 80, $fonte, 10, $corTexto, 'left');
-
-    $this->pdf->escreve_relativo('Curso: ' . str2upper($this->nm_curso) .
-      '                     Turma: ' . str2upper($this->nm_turma),
-      136, 74, 500, 80, $fonte, 10, $corTexto, 'left');
-
-    $this->pdf->escreve_relativo('Aluno: ' . str2upper($this->nm_aluno), 136, 86,
-      300, 80, $fonte, 10, $corTexto, 'left');
-
-    // Título
-    $this->pdf->escreve_relativo('B O L E T I M  E S C O L A R', 30, 98, 535,
-      80, $fonte, 14, $corTexto, 'center');
-
-    // Data
-    $mes = date('n');
-  }
-
-  function addCabecalhoc2()
-  {
-    $fonte        = 'arial';
-    $corTexto     = '#000000';
-    $x_quadrado   = 30;
-    $altura_caixa = 20;
-
-    $this->page_y += $altura_caixa;
-
-    $this->pdf->quadrado_relativo($x_quadrado, $this->page_y + 10, 535, $altura_caixa);
-
-    $this->pdf->escreve_relativo('COMPETÊNCIAS', 30, $this->page_y + 15, 405,
-      $altura_caixa, $fonte, 9, $corTexto, 'center');
-
-    $this->pdf->linha_relativa(440, $this->page_y + 10, 0, $altura_caixa, '0.1');
-
-    if ($this->segue_padrao_escolar) {
-      $x_bim = 440 + 31;
-
-      for ($i=1;$i <= 4;$i++) {
-        if ($i <= 3) {
-          $this->pdf->linha_relativa($x_bim, $this->page_y + 10, 0, $altura_caixa, '0.1');
-        }
-
-        $this->pdf->escreve_relativo($i . 'ºBIM', $x_bim - 31, $this->page_y + 15,
-          31, 120, 'arial', '10', '#000000', 'center');
-
-        $x_bim += 31;
-      }
-
-      $this->page_y += $altura_caixa + 10;
-    }
-    else {
-      $x_bim = 440 + 31;
-      for ($i = 1; $i <= 4; $i++) {
-        if($i <= 3) {
-          $this->pdf->linha_relativa($x_bim, $this->page_y + 10, 0, $altura_caixa, '0.1');
-        }
-
-        $this->pdf->escreve_relativo($this->mostra_cabecalho_modulo[$i-1],
-          $x_bim - 31, $this->page_y + 15, 31, 120, 'arial', '10', '#000000', 'center');
-
-        $x_bim += 31;
-      }
-
-      $this->page_y += $altura_caixa + 10;
-    }
-
-    $this->page_y += $altura_caixa + 10;
-  }
-}
-
-function cmp($a, $b)
-{
-  return $a['modulo'] > $b['modulo'];
 }
 
 // Instancia objeto de página
