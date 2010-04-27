@@ -609,6 +609,13 @@ class clsPDF
       $fonte, $tamanho, $color, $align);
   }
 
+  function escreve_relativo_center($texto, $x_topleft, $y_topleft, $largura, $altura,
+    $fonte = 'arial', $tamanho = '10', $color = '#000000', $align = 'center')
+  {
+    $this->escreve_relativo($texto, $x_topleft, $y_topleft, $largura, $altura,
+      $fonte, $tamanho, $color, $align);
+  }
+
   /**
    * Funcao que escreve um texto na pagina (de cima para baixo, da esqueda para direita)
    * recebe todas as variaveis de posicao (X,Y) em valores absolutos
