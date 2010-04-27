@@ -66,55 +66,7 @@ class clsIndexBase extends clsBase
 class indice extends clsCadastro
 {
   var $pessoa_logada;
-
-  var $ref_cod_instituicao;
-  var $ref_cod_escola;
-  var $ref_cod_serie;
-  var $ref_cod_turma;
-
   var $ano;
-  var $mes;
-
-  var $nm_escola;
-  var $nm_instituicao;
-  var $ref_cod_curso;
-  var $sequencial;
-  var $pdf;
-  var $pagina_atual  = 1;
-  var $total_paginas = 1;
-  var $nm_professor;
-  var $nm_turma;
-  var $nm_serie;
-  var $nm_disciplina;
-  var $curso_com_exame = 0;
-  var $ref_cod_matricula;
-
-  var $page_y = 135;
-
-  var $nm_aluno;
-  var $array_modulos = array();
-  var $nm_curso;
-  var $get_link = FALSE;
-
-  var $total;
-
-  var $ref_cod_modulo;
-
-  var $meses_do_ano = array(
-    1  => 'JANEIRO',
-    2  => 'FEVEREIRO',
-    3  => 'MARÇO',
-    4  => 'ABRIL',
-    5  => 'MAIO',
-    6  => 'JUNHO',
-    7  => 'JULHO',
-    8  => 'AGOSTO',
-    9  => 'SETEMBRO',
-    10 => 'OUTUBRO',
-    11 => 'NOVEMBRO',
-    12 => 'DEZEMBRO'
-  );
-
 
   function Inicializar()
   {
@@ -134,14 +86,7 @@ class indice extends clsCadastro
     $obj_permissoes = new clsPermissoes();
     $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
-    if ($_POST){
-      foreach ($_POST as $key => $value) {
-        $this->$key = $value;
-      }
-    }
-
     $this->ano = $ano_atual = date('Y');
-    $this->mes = $mes_atual = date('n');
 
     $this->campoNumero('ano', 'Ano', $this->ano, 4, 4, TRUE);
 
@@ -161,16 +106,8 @@ class indice extends clsCadastro
     $this->campoLista('ref_cod_turma', 'Turma', array('' => 'Selecione'), '', '',
       FALSE, '', '', FALSE, FALSE);
 
-    if ($this->ref_cod_escola) {
-      $this->ref_ref_cod_escola = $this->ref_cod_escola;
-    }
-
     $this->campoLista('ref_cod_matricula', 'Aluno', array('' => 'Selecione'), '',
       '', FALSE, 'Campo não obrigatório', '', FALSE, FALSE);
-
-    if ($this->get_link) {
-      $this->campoRotulo('rotulo11', '-', sprintf('<a href="%s" target="_blank">Baixar Relatório</a>', $this->get_link));
-    }
 
     $this->url_cancelar      = 'educar_index.php';
     $this->nome_url_cancelar = 'Cancelar';
@@ -348,66 +285,40 @@ else if (window.attachEvent) {
 
 function acao2()
 {
-  var em_branco = document.getElementById('em_branco');
-
-  if(em_branco.checked) {
+  if (!acao()) {
+    return;
   }
   else {
-    if (!acao()) {
-      return;
+    if (!(/[^ ]/.test(document.getElementById('ref_cod_instituicao').value))) {
+      mudaClassName('formdestaque', 'obrigatorio');
+      document.getElementById('ref_cod_instituicao').className = 'formdestaque';
+      alert('Preencha o campo "Instituição" corretamente!');
+      document.getElementById('ref_cod_instituicao').focus();
+      return false;
     }
-    else {
-      if (!(/[^ ]/.test(document.getElementById('ref_cod_instituicao').value))) {
-        mudaClassName('formdestaque', 'obrigatorio');
-        document.getElementById('ref_cod_instituicao').className = 'formdestaque';
-        alert('Preencha o campo \'Instituição\' corretamente!');
-        document.getElementById('ref_cod_instituicao').focus();
-        return false;
-      }
 
-      if (!(/[^ ]/.test(document.getElementById('ref_cod_curso').value))) {
-        mudaClassName('formdestaque', 'obrigatorio');
-        document.getElementById("ref_cod_curso").className = 'formdestaque';
-        alert('Preencha o campo \'Curso\' corretamente!');
-        document.getElementById('ref_cod_curso').focus();
-        return false;
-      }
+    if (!(/[^ ]/.test(document.getElementById('ref_cod_curso').value))) {
+      mudaClassName('formdestaque', 'obrigatorio');
+      document.getElementById("ref_cod_curso").className = 'formdestaque';
+      alert('Preencha o campo "Curso" corretamente!');
+      document.getElementById('ref_cod_curso').focus();
+      return false;
+    }
 
-      if (!(/[^ ]/.test( document.getElementById('ref_cod_turma').value))) {
-        mudaClassName('formdestaque', 'obrigatorio');
-        document.getElementById('ref_cod_turma').className = 'formdestaque';
-        alert('Preencha o campo \'Turma\' corretamente!');
-        document.getElementById('ref_cod_turma').focus();
-        return false;
-      }
+    if (!(/[^ ]/.test( document.getElementById('ref_cod_turma').value))) {
+      mudaClassName('formdestaque', 'obrigatorio');
+      document.getElementById('ref_cod_turma').className = 'formdestaque';
+      alert('Preencha o campo "Turma" corretamente!');
+      document.getElementById('ref_cod_turma').focus();
+      return false;
     }
   }
 
-  showExpansivelImprimir(400, 200,'',[], "Boletim");
+  showExpansivelImprimir(400, 200,'',[], 'Boletim');
   document.formcadastro.target = 'miolo_'+(DOM_divs.length-1);
   document.getElementById('btn_enviar').disabled = false;
   document.formcadastro.submit();
 }
 
 document.formcadastro.action = 'educar_relatorio_boletim_proc.php';
-
-document.getElementById('em_branco').onclick = function()
-{
-  if(this.checked) {
-    $('ref_cod_instituicao').disabled = true;
-    $('ref_cod_escola').disabled      = true;
-    $('ref_cod_curso').disabled       = true;
-    $('ref_ref_cod_serie').disabled = true;
-    $('ref_cod_turma').disabled = true;
-    $('ref_cod_matricula').disabled = true;
-  }
-  else {
-    $('ref_cod_instituicao').disabled = false;
-    $('ref_cod_escola').disabled = false;
-    $('ref_cod_curso').disabled = false;
-    $('ref_ref_cod_serie').disabled = false;
-    $('ref_cod_turma').disabled = false;
-    $('ref_cod_matricula').disabled = false;
-  }
-}
 </script>
