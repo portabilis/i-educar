@@ -49,6 +49,9 @@ require_once 'App/Model/MatriculaSituacao.php';
  * @since       Classe disponível desde a versão 1.1.0
  * @todo        Substituir todos os usos literais de 'Rc' e 'An' por constantes
  *              ou por um novo CoreExt_Enum
+ * @todo        Criar método que retorna o conjunto de faltas de acordo com o
+ *              tipo de presença da regra, refatorando a série de condicionais
+ *              existentes em métodos como getSituacaoFaltas()
  * @version     @@package_version@@
  */
 class Avaliacao_Service_Boletim implements CoreExt_Configurable
