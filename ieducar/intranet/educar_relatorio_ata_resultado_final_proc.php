@@ -20,14 +20,12 @@
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package     Core
- * @subpackage  pmieducar
- * @subpackage  NotaFalta
- * @subpackage  Relatorio
- * @since       Arquivo disponível desde a versão 1.0.0
- * @version     $Id$
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Arquivo disponível desde a versão 1.0.0
+ * @version   $Id$
  */
 
 require_once 'include/clsBase.inc.php';
@@ -36,23 +34,39 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/clsPDF.inc.php';
 
+/**
+ * clsIndexBase class.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
+ */
 class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Registro de Matr&iacute;culas');
-    $this->processoAp         = '807';
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Ata de Resultado Final');
+    $this->processoAp         = 807;
     $this->renderMenu         = FALSE;
     $this->renderMenuSuspenso = FALSE;
   }
 }
 
+/**
+ * index class.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
+ */
 class indice extends clsCadastro
 {
-  /**
-   * Referência a usuário da sessão.
-   * @var int
-   */
   var $pessoa_logada;
 
   var $ref_cod_instituicao;
@@ -78,27 +92,9 @@ class indice extends clsCadastro
   var $campo_assinatura;
   var $total = 0;
 
-  var $meses_do_ano = array(
-    '1'  => 'JANEIRO',
-    '2'  => 'FEVEREIRO',
-    '3'  => 'MARÇO',
-    '4'  => 'ABRIL',
-    '5'  => 'MAIO',
-    '6'  => 'JUNHO',
-    '7'  => 'JULHO',
-    '8'  => 'AGOSTO',
-    '9'  => 'SETEMBRO',
-    '10' => 'OUTUBRO',
-    '11' => 'NOVEMBRO',
-    '12' => 'DEZEMBRO'
-  );
-
   var $array_modulos = array();
   var $dias_letivos;
   var $falta_ch_globalizada;
-
-  var $is_padrao;
-  var $semestre;
 
   function renderHTML()
   {
