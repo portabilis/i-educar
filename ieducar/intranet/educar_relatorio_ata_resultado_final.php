@@ -20,14 +20,12 @@
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package     Core
- * @subpackage  pmieducar
- * @subpackage  NotaFalta
- * @subpackage  Relatorio
- * @since       Arquivo disponível desde a versão 1.0.0
- * @version     $Id$
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Arquivo disponível desde a versão 1.0.0
+ * @version   $Id$
  */
 
 require_once 'include/clsBase.inc.php';
@@ -36,69 +34,43 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/clsPDF.inc.php';
 
+/**
+ * clsIndexBase class.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
+ */
 class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Rela&ccedil;&atilde;o de alunos/nota bimestres');
-    $this->processoAp = '807';
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Ata de Resultado Final');
+    $this->processoAp = 807;
   }
 }
 
+/**
+ * index class.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
+ */
 class indice extends clsCadastro
 {
-  /**
-   * Referência a usuário da sessão.
-   * @var int
-   */
   var $pessoa_logada;
 
   var $ref_cod_instituicao;
   var $ref_cod_escola;
   var $ref_cod_serie;
   var $ref_cod_turma;
-  var $ano;
-  var $mes;
-  var $nm_escola;
-  var $nm_instituicao;
-  var $ref_cod_curso;
-  var $sequencial;
-  var $nm_professor;
-  var $nm_turma;
-  var $nm_serie;
-  var $nm_disciplina;
-  var $ref_cod_matricula;
-  var $curso_com_exame = 0;
-
-  var $pagina_atual  = 1;
-  var $total_paginas = 1;
-
-  var $pdf;
-
-  var $page_y = 135;
-
-  var $nm_aluno;
-  var $array_modulos = array();
-  var $nm_curso;
-  var $get_link      = FALSE;
-  var $total;
-
-  var $ref_cod_modulo;
-
-  var $meses_do_ano = array(
-    '1'  => 'JANEIRO',
-    '2'  => 'FEVEREIRO',
-    '3'  => 'MAR&Ccedil;O',
-    '4'  => 'ABRIL',
-    '5'  => 'MAIO',
-    '6'  => 'JUNHO',
-    '7'  => 'JULHO',
-    '8'  => 'AGOSTO',
-    '9'  => 'SETEMBRO',
-    '10' => 'OUTUBRO',
-    '11' => 'NOVEMBRO',
-    '12' => 'DEZEMBRO'
-  );
 
   function Inicializar()
   {
@@ -118,14 +90,13 @@ class indice extends clsCadastro
     $obj_permissoes = new clsPermissoes();
     $nivel_usuario  = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
-    if($_POST){
+    if ($_POST){
       foreach ($_POST as $key => $value) {
         $this->$key = $value;
       }
     }
 
     $this->ano = $ano_atual = date('Y');
-    $this->mes = $mes_atual = date('n');
 
     $this->campoNumero('ano', 'Ano', $this->ano, 4, 4, TRUE);
 
