@@ -282,10 +282,9 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
-   * Retorna a quantidade de etapas (módulos) a serem ou cursados por um
-   * aluno em uma dada matrícula.
+   * Retorna a quantidade de módulos do ano letivo por uma dada matrícula.
    *
-   * @param int $codMatricula
+   * @param  int $codMatricula
    * @return int
    * @throws App_Model_Exception
    */
@@ -318,12 +317,23 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
+   * Retorna o total de módulos do ano letivo da escola ou turma (caso o ano
+   * escolar do curso não seja "padrão"). Retorna um array com o total de
+   * módulos atribuídos ao ano letivo e o nome do módulo. Ex:
    *
-   * @param unknown_type $codEscola
-   * @param unknown_type $codCurso
-   * @param unknown_type $codTurma
-   * @param unknown_type $ano
-   * @return unknown_type
+   * <code>
+   * <?php
+   * array(
+   *   'total' => 4,
+   *   'nome'  => 'Bimestre'
+   * );
+   * </code>
+   *
+   * @param int      $codEscola
+   * @param int      $codCurso
+   * @param int      $codTurma
+   * @param int|NULL $ano        Ano letivo da escola ou turma. Opcional.
+   * @return array
    */
   public static function getModulo($codEscola, $codCurso, $codTurma,
     $ano = NULL)
