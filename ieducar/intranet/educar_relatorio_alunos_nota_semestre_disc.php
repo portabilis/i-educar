@@ -363,12 +363,7 @@ function acao2()
 
   document.getElementById('btn_enviar').disabled = false;
 
-  if (document.formcadastro.tipo[0].checked) {
-    document.formcadastro.action = 'educar_relatorio_alunos_nota_semestre_disc_proc.php';
-  }
-  else {
-    document.formcadastro.action = 'educar_relatorio_alunos_falta_bimestre_disc_proc.php';
-  }
+  document.formcadastro.action = 'educar_relatorio_alunos_nota_semestre_disc_proc.php';
 
   document.formcadastro.submit();
 }
