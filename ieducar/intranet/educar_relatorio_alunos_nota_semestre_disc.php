@@ -397,10 +397,13 @@ function getModulos_XML(xml)
   var campoAno    = document.getElementById('ano').value;
 
   campoModulo.length     = 1;
-  campoModulo.options[0] = new Option('Selecione um módulo', '', false, false);
+  campoModulo.options[0] = new Option('Selecione um Módulo', '', false, false);
 
   for (var j = 0; j < modulos.length; j++) {
-    campoModulo.options[campoModulo.options.length] = new Option( modulos[j].firstChild.nodeValue, modulos[j].getAttribute('cod_modulo') + "-" +modulos[j].getAttribute('sequencial') , false, false );
+    campoModulo.options[campoModulo.options.length] = new Option(
+      modulos[j].firstChild.nodeValue, modulos[j].getAttribute('cod_modulo') + "-" + modulos[j].getAttribute('sequencial'),
+      false, false
+    );
   }
 
   if (campoModulo.length == 1) {
