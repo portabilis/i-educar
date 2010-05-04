@@ -281,10 +281,14 @@ class indice extends clsCadastro
         foreach ($array_disc as $cid => $disc) {
           if ($this->tipo == 'n') {
             $array_val[] = $notas[$cid]->notaArredondada;
+            continue;
           }
           else {
             $array_val[] = $faltas[$cid]->quantidade;
+            continue;
           }
+
+          $array_val[] = '';
         }
 
         $relatorio->novalinha($array_val, 0, $tam_linha, FALSE, 'arial',
