@@ -34,6 +34,9 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php' ;
 require_once 'include/relatorio.inc.php';
 
+require_once 'Avaliacao/Service/Boletim.php';
+require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
+
 /**
  * clsIndexBase class.
  *
@@ -69,12 +72,16 @@ class indice extends clsCadastro
 {
   var $pessoa_logada;
 
+  var $regra = NULL;
+
   var $ref_cod_instituicao;
   var $ref_cod_escola;
   var $ref_cod_serie;
   var $ref_cod_turma;
   var $ref_cod_curso;
   var $ref_cod_modulo;
+
+  var $tipo;
 
   var $ano;
 
@@ -138,6 +145,10 @@ class indice extends clsCadastro
     $det        = $obj_pessoa->detalhe();
     $this->nm_professor = $det['nome'];
 
+    //
+    $regraMapper = new RegraAvaliacao_Model_RegraDataMapper();
+    $this->regra = $regraMapper->find($det_serie['regra_avaliacao_id']);
+
     if (!$lista_calendario) {
       echo '<script>
              alert("Escola não possui calendário definido para este ano");
@@ -156,15 +167,12 @@ class indice extends clsCadastro
     $det_curso = $obj_curso->detalhe();
     $this->nm_curso = $det_curso['nm_curso'];
 
-    $obj_tipo_avaliacao = new clsPmieducarTipoAvaliacao($det_curso['ref_cod_tipo_avaliacao']);
-    $det_tipo_avaliacao = $obj_tipo_avaliacao->detalhe();
-    $conceitual         = $det_tipo_avaliacao['conceitual'];
-
     // @todo Ano 2007 porque? Remover
     if ($this->is_padrao || $this->ano == 2007) {
       $this->semestre = NULL;
     }
 
+    // Seleciona os alunos da turma
     $obj_matricula_turma = new clsPmieducarMatriculaTurma();
     $obj_matricula_turma->setOrderby('nome_ascii');
     $lst_matricula_turma = $obj_matricula_turma->lista($this->ref_cod_matricula,
@@ -173,38 +181,47 @@ class indice extends clsCadastro
       $this->ref_cod_instituicao, NULL, NULL, array(1, 2, 3), NULL, NULL,
       $this->ano, NULL, NULL, NULL, NULL, TRUE, NULL, NULL, TRUE, NULL, $this->semestre);
 
-    $obj_disciplinas = new clsPmieducarEscolaSerieDisciplina();
-    $lst_disciplinas = $obj_disciplinas->lista($this->ref_cod_serie,
-      $this->ref_cod_escola, NULL, 1);
+    $array_disc = $array_cab = array();
+    if ($this->regra->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL) {
+      $array_disc = $array_cab = array("FALTAS");
+    }
+    else {
+      $obj_disciplinas = new clsPmieducarEscolaSerieDisciplina();
+      $lst_disciplinas = $obj_disciplinas->lista($this->ref_cod_serie,
+        $this->ref_cod_escola, NULL, 1);
+    }
 
-    if($lst_matricula_turma) {
-      $relatorio = new relatorios("Espelho de Notas Bimestral {$this->ref_cod_modulo}º Bimestre Ano {$this->ano}", 210, false, "Espelho de Notas Bimestral", "A4", "{$this->nm_instituicao}\n{$this->nm_escola}\n{$this->nm_curso}\n{$this->nm_serie} -  Turma: $this->nm_turma             ".date("d/m/Y"));
+    if ($lst_matricula_turma) {
+      $relatorio = new relatorios(
+        "Espelho de Notas Bimestral {$this->ref_cod_modulo}º Bimestre Ano {$this->ano}",
+        210, FALSE, "Espelho de Notas Bimestral", "A4",
+        "{$this->nm_instituicao}\n{$this->nm_escola}\n{$this->nm_curso}\n{$this->nm_serie} -  Turma: $this->nm_turma             ".date("d/m/Y")
+      );
+
       $relatorio->setMargem(20, 20, 50, 50);
       $relatorio->exibe_produzido_por = FALSE;
 
-      $db = new clsBanco();
+      // Componente
+      $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
 
-      foreach ($lst_disciplinas as $disciplina) {
-        $obj_disciplina = new clsPmieducarDisciplina($disciplina['ref_cod_disciplina']);
-        $det_disciplina = $obj_disciplina->detalhe();
+      if (0 == count($array_disc)) {
+        foreach ($lst_disciplinas as $disciplina) {
+          $componente = $componenteMapper->find($disciplina['ref_cod_disciplina']);
 
-        $array_disc[$det_disciplina['cod_disciplina']] = ($det_disciplina['abreviatura']);
-        $array_cab[] = str2upper($det_disciplina['abreviatura']);
+          $array_disc[$componente->id] = $componente;
+          $array_cab[] = str2upper($componente->abreviatura);
+        }
+
+        asort($array_disc);
+        sort($array_cab);
       }
 
-      asort($array_disc);
-      sort($array_cab);
-      $array_cab = array_merge(array( "Cód.", "Nome do Aluno"  ),$array_cab);
+      $array_cab = array_merge(array('Cód.', 'Nome do Aluno'), $array_cab);
 
       $divisoes       = array(40, 165);
       $divisoes_texto = array(40, 165);
 
-      if (!$conceitual) {
-        $tamanho_divisao = 32 + (10 - count($array_disc)) * 5;
-      }
-      else {
-        $tamanho_divisao = 23 + (15 - count($array_disc)) * 5;
-      }
+      $tamanho_divisao = 32 + (10 - count($array_disc)) * 5;
 
       for ($ct = 0; $ct < 20; $ct++) {
         $divisoes[]       = $tamanho_divisao;
@@ -212,60 +229,29 @@ class indice extends clsCadastro
       }
 
       $relatorio->novalinha($array_cab, 0, 16, TRUE, 'arial', $divisoes,
-        '#515151', '#d3d3d3', '#FFFFFF', FALSE, TRUE);
-
-      if(!$conceitual) {
-        $campo_nota = 'COALESCE(nota, valor) ';
-      }
-      else {
-        $campo_nota = 'nome ';
-      }
-
-      if ($conceitual) {
-        $tam_fonte = 8;
-        $tam_linha = 11;
-      }
-      else {
-        $tam_fonte = NULL;
-        $tam_linha = 16;
-      }
+        '#515151', '#D3D3D3', '#FFFFFF', FALSE, TRUE);
 
       foreach ($lst_matricula_turma as $matricula) {
-        $consulta = sprintf("
-          SELECT
-            ref_cod_disciplina,
-            %s AS nota,
-            modulo
-          FROM
-            pmieducar.nota_aluno
-          LEFT OUTER JOIN
-            pmieducar.tipo_avaliacao_valores
-          ON (
-            ref_ref_cod_tipo_avaliacao = ref_cod_tipo_avaliacao
-            AND ref_sequencial = sequencial
-          )
-          WHERE
-            ref_cod_matricula    = %d
-            AND ref_cod_escola   = %d
-            AND ref_cod_serie    = %d
-            AND modulo           = %d
-            AND nota_aluno.ativo = 1
-          GROUP BY
-            ref_cod_disciplina,
-            modulo,
-            %s
-          ORDER BY
-            ref_cod_disciplina ASC", $campo_nota, $matricula['ref_cod_matricula'],
-            $this->ref_cod_escola, $this->ref_cod_serie, $this->ref_cod_modulo,
-            $campo_nota);
+        $boletim = new Avaliacao_Service_Boletim(array(
+          'matricula'            => $matricula['ref_cod_matricula'],
+          'ComponenteDataMapper' => $componenteMapper,
+          'RegraDataMapper'      => $regraMapper
+        ));
 
-        $db->Consulta($consulta);
+        $tam_fonte = NULL;
+        $tam_linha = 16;
 
-        unset($notas);
+        $componentes = $boletim->getComponentes();
 
-        while ($db->ProximoRegistro()) {
-          $registro = $db->Tupla();
-          $notas[$registro['ref_cod_disciplina']] = $registro['nota'];
+        foreach ($array_disc as $cid => $componente) {
+          if (!in_array($cid, array_keys($componentes))) {
+            $notas[$cid]  = 'D';
+            $faltas[$cid] = 'D';
+            continue;
+          }
+
+          $notas[$cid]  = $boletim->getNotaComponente($cid, $this->ref_cod_modulo);
+          $faltas[$cid] = $boletim->getFalta($this->ref_cod_modulo, $cid);
         }
 
         // @todo WTF?!
@@ -292,13 +278,12 @@ class indice extends clsCadastro
         $array_val[] = $matricula['ref_cod_aluno'];
         $array_val[] = $matricula['nome'];
 
-        foreach ($array_disc as $cod_disc => $disc) {
-          if (!$conceitual) {
-            $array_val[] = $notas[$cod_disc] ?
-              number_format($notas[$cod_disc], 2, '.', '') : $notas[$cod_disc];
+        foreach ($array_disc as $cid => $disc) {
+          if ($this->tipo == 'n') {
+            $array_val[] = $notas[$cid]->notaArredondada;
           }
           else {
-            $array_val[] = $notas[$cod_disc];
+            $array_val[] = $faltas[$cid]->quantidade;
           }
         }
 
