@@ -779,7 +779,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     // Valores scalar de referência
     $matricula = App_Model_IedFinder::getMatricula($codMatricula);
 
-    $etapas = App_Model_IedFinder::getQuantidadeDeEtapasMatricula($codMatricula);
+    $etapas = App_Model_IedFinder::getQuantidadeDeModulosMatricula($codMatricula);
     $this->setOption('matriculaData', $matricula);
     $this->setOption('aprovado', $matricula['aprovado']);
     $this->setOption('cursoHoraFalta', $matricula['curso_hora_falta']);
