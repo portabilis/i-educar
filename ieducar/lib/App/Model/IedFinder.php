@@ -289,7 +289,7 @@ class App_Model_IedFinder extends CoreExt_Entity
    * @return int
    * @throws App_Model_Exception
    */
-  public static function getQuantidadeDeEtapasMatricula($codMatricula)
+  public static function getQuantidadeDeModulosMatricula($codMatricula)
   {
     $modulos = array();
 
@@ -297,9 +297,41 @@ class App_Model_IedFinder extends CoreExt_Entity
     $matricula = self::getMatricula($codMatricula);
     $codEscola = $matricula['ref_ref_cod_escola'];
     $codCurso  = $matricula['ref_cod_curso'];
+    $codTurma  = NULL;
+
+    $matriculaTurma = self::addClassToStorage('clsPmieducarMatriculaTurma',
+      NULL, 'include/pmieducar/clsPmieducarMatriculaTurma.inc.php');
+
+    $matriculas = $matriculaTurma->lista($codMatricula);
+
+    if (is_array($matriculas)) {
+      $matricula = array_shift($matriculas);
+      $codTurma  = $matricula['ref_cod_turma'];
+    }
+    else {
+      throw new App_Model_Exception('Aluno não enturmado.');
+    }
+
+    $modulos = self::getModulo($codEscola, $codCurso, $codTurma);
+
+    return $modulos['total'];
+  }
+
+  /**
+   *
+   * @param unknown_type $codEscola
+   * @param unknown_type $codCurso
+   * @param unknown_type $codTurma
+   * @param unknown_type $ano
+   * @return unknown_type
+   */
+  public static function getModulo($codEscola, $codCurso, $codTurma,
+    $ano = NULL)
+  {
+    $modulos = array();
 
     $curso = self::addClassToStorage('clsPmieducarCurso', NULL,
-      'include/pmieducar/clsPmieducar.inc.php');
+      'include/pmieducar/clsPmieducarCurso.inc.php');
 
     $curso->cod_curso = $codCurso;
     $curso = $curso->detalhe();
@@ -311,7 +343,7 @@ class App_Model_IedFinder extends CoreExt_Entity
       $escolaAnoLetivo = self::addClassToStorage('clsPmieducarEscolaAnoLetivo',
         NULL, 'include/pmieducar/clsPmieducarEscolaAnoLetivo.inc.php');
 
-      $anosEmAndamento = $escolaAnoLetivo->lista($codEscola, NULL, NULL, NULL,
+      $anosEmAndamento = $escolaAnoLetivo->lista($codEscola, $ano, NULL, NULL,
         1, NULL, NULL, NULL, NULL, 1);
 
       // Pela restrição na criação de anos letivos, eu posso confiar no primeiro
@@ -330,19 +362,6 @@ class App_Model_IedFinder extends CoreExt_Entity
       $modulos = $anoLetivoModulo->lista($ano, $codEscola);
     }
     else {
-      $matriculaTurma = self::addClassToStorage('clsPmieducarMatriculaTurma',
-        NULL, 'include/pmieducar/clsPmieducarMatriculaTurma.inc.php');
-
-      $matriculas = $matriculaTurma->lista($codMatricula);
-
-      if (is_array($matriculas)) {
-        $matricula = array_shift($matriculas);
-        $codTurma  = $matricula['ref_cod_turma'];
-      }
-      else {
-        throw new App_Model_Exception('Aluno não enturmado.');
-      }
-
       $turmaModulo = self::addClassToStorage('clsPmieducarTurmaModulo',
         NULL, 'include/pmieducar/clsPmieducarTurmaModulo.inc.php');
 
@@ -353,7 +372,25 @@ class App_Model_IedFinder extends CoreExt_Entity
       return 0;
     }
 
-    return count($modulos);
+    // Total de módulos
+    $total = count($modulos);
+
+    // Código do tipo de módulo
+    $modulo    = array_shift($modulos);
+    $codModulo = $modulo['ref_cod_modulo'];
+
+    // Recupera do regstry o objeto legado
+    $modulo = self::addClassToStorage('clsPmieducarModulo', NULL,
+      'include/pmieducar/clsPmieducarModulo.inc.php');
+
+    $modulo->cod_modulo = $codModulo;
+    $modulo = $modulo->detalhe();
+    $modulo = $modulo['nm_tipo'];
+
+    return array(
+      'total' => $total,
+      'nome'  => $modulo
+    );
   }
 
   /**

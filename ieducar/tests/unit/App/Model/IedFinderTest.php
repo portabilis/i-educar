@@ -323,19 +323,24 @@ class App_Model_IedFinderTest extends UnitBaseTest
   /**
    * @depends App_Model_IedFinderTest::testInstanciaRegraDeAvaliacaoPorMatricula
    */
-  public function testEtapasDeUmCursoPadraoAnoEscolar()
+  public function testModulosDeUmCursoPadraoAnoEscolar()
   {
     $returnEscolaAno = array(
       array('ref_cod_escola' => 1, 'ano' => 2009, 'andamento' => 1, 'ativo' => 1)
     );
 
     $returnAnoLetivo = array(
-      array('ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 1),
-      array('ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 2),
-      array('ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 3),
-      array('ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 4)
+      array('ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 1, 'ref_cod_modulo' => 1),
+      array('ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 2, 'ref_cod_modulo' => 1),
+      array('ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 3, 'ref_cod_modulo' => 1),
+      array('ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 4, 'ref_cod_modulo' => 1)
     );
 
+    $returnMatriculaTurma = array(
+      array('ref_cod_matricula' => 1, 'ref_cod_turma' => 1)
+    );
+
+    $returnModulo = array('cod_modulo' => 1, 'nm_tipo' => 'Bimestre');
 
     // Mock para escola ano letivo (ano letivo em andamento)
     $escolaAnoMock = $this->getCleanMock('clsPmieducarEscolaAnoLetivo');
@@ -351,17 +356,35 @@ class App_Model_IedFinderTest extends UnitBaseTest
                   ->with(2009, 1)
                   ->will($this->returnValue($returnAnoLetivo));
 
+    $matriculaTurmaMock = $this->getCleanMock('clsPmieducarMatriculaTurma');
+    $matriculaTurmaMock->expects($this->any())
+                       ->method('lista')
+                       ->with(1)
+                       ->will($this->onConsecutiveCalls($returnMatriculaTurma, $returnMatriculaTurma));
+
+    $moduloMock = $this->getCleanMock('clsPmieducarModulo');
+    $moduloMock->expects($this->any())
+               ->method('detalhe')
+               ->will($this->onConsecutiveCalls($returnModulo, $returnModulo));
+
     // Adiciona mocks ao repositório estático
     App_Model_IedFinder::addClassToStorage('clsPmieducarEscolaAnoLetivo',
       $escolaAnoMock, NULL, TRUE);
     App_Model_IedFinder::addClassToStorage('clsPmieducarAnoLetivoModulo',
       $anoLetivoMock, NULL, TRUE);
+    App_Model_IedFinder::addClassToStorage('clsPmieducarMatriculaTurma',
+      $matriculaTurmaMock, NULL, TRUE);
+    App_Model_IedFinder::addClassToStorage('clsPmieducarModulo',
+      $moduloMock, NULL, TRUE);
 
-    $etapas = App_Model_IedFinder::getQuantidadeDeEtapasMatricula(1);
+    $modulos = App_Model_IedFinder::getQuantidadeDeModulosMatricula(1);
 
-    $this->assertEquals(4, $etapas);
+    $this->assertEquals(4, $modulos);
   }
 
+  /**
+   * @depends App_Model_IedFinderTest::testInstanciaRegraDeAvaliacaoPorMatricula
+   */
   public function testEtapasDeUmCursoAnoNaoPadrao()
   {
     // Curso não padrão
@@ -375,7 +398,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
     CoreExt_Entity::addClassToStorage('clsPmieducarCurso', $cursoMock, NULL, TRUE);
 
     // Pega informação da turma
-    $returnMatriculaTurma = array(
+    /*$returnMatriculaTurma = array(
       array('ref_cod_matricula' => 1, 'ref_cod_turma' => 1)
     );
 
@@ -383,7 +406,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
     $matriculaTurmaMock->expects($this->at(0))
                        ->method('lista')
                        ->with(1)
-                       ->will($this->returnValue($returnMatriculaTurma));
+                       ->will($this->returnValue($returnMatriculaTurma));*/
 
     $returnTurmaModulo = array(
       array('ref_cod_turma' => 1, 'ref_cod_modulo' => 1, 'sequencial' => 1),
@@ -398,13 +421,13 @@ class App_Model_IedFinderTest extends UnitBaseTest
                     ->with(1)
                     ->will($this->returnValue($returnTurmaModulo));
 
-    App_Model_IedFinder::addClassToStorage('clsPmieducarMatriculaTurma',
-      $matriculaTurmaMock, NULL, TRUE);
+    #App_Model_IedFinder::addClassToStorage('clsPmieducarMatriculaTurma',
+    #  $matriculaTurmaMock, NULL, TRUE);
 
     App_Model_IedFinder::addClassToStorage('clsPmieducarTurmaModulo',
       $turmaModuloMock, NULL, TRUE);
 
-    $etapas = App_Model_IedFinder::getQuantidadeDeEtapasMatricula(1);
+    $etapas = App_Model_IedFinder::getQuantidadeDeModulosMatricula(1);
 
     $this->assertEquals(4, $etapas);
   }

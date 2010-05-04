@@ -199,10 +199,12 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     // instâncias de objetos legados e novos
     $this->_setConfigOptions('usuario', array('cod_usuario' => 1))
          ->_setConfigOptions('matricula', $this->_getMatricula())
+         ->_setConfigOptions('matriculaTurma', $this->_getMatriculaTurma())
          ->_setConfigOptions('serie', $this->_getSerie())
          ->_setConfigOptions('curso', $this->_getCurso())
          ->_setConfigOptions('escolaAnoLetivo', $this->_getEscolaAnoLetivo())
          ->_setConfigOptions('anoLetivoModulo', $this->_getAnoLetivoModulo())
+         ->_setConfigOptions('modulo', $this->_getModulo())
          ->_setConfigOptions('escolaSerieDisciplina', $this->_getEscolaSerieDisciplina())
          ->_setConfigOptions('dispensaDisciplina', $this->_getDispensaDisciplina())
          ->_setConfigOptions('componenteCurricular', $this->_getComponenteCurricular())
@@ -235,10 +237,12 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
     // Cria os mocks das classes legadas
     $this->_setUpMatriculaMock()
+         ->_setUpMatriculaTurmaMock()
          ->_setUpCursoMock()
          ->_setUpSerieMock()
          ->_setUpEscolaAnoLetivo()
          ->_setUpAnoLetivoModulo()
+         ->_setUpModulo()
          ->_setUpEscolaSerieDisciplinaMock()
          ->_setUpDispensaDisciplinaMock();
 
@@ -364,6 +368,17 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
   /**
    * @return array
    */
+  protected function _getMatriculaTurma()
+  {
+    return array(
+      'ref_cod_matricula' => 1,
+      'ref_cod_turma'     => 1
+    );
+  }
+
+  /**
+   * @return array
+   */
   protected function _getSerie()
   {
     return array(
@@ -403,10 +418,20 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
   protected function _getAnoLetivoModulo()
   {
     return array(
-      array('ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 1),
-      array('ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 2),
-      array('ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 3),
-      array('ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 4)
+      array('ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 1, 'ref_cod_modulo' => 1),
+      array('ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 2, 'ref_cod_modulo' => 1),
+      array('ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 3, 'ref_cod_modulo' => 1),
+      array('ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 4, 'ref_cod_modulo' => 1)
+    );
+  }
+
+  /**
+   * @return array
+   */
+  protected function _getModulo()
+  {
+    return array(
+      'cod_modulo' => 1, 'nm_tipo' => 'Bimestre'
     );
   }
 
@@ -535,6 +560,25 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
   }
 
   /**
+   * @return clsPmieducarMatriculaTurma
+   */
+  protected function _setUpMatriculaTurmaMock()
+  {
+    $mock = $this->getCleanMock('clsPmieducarMatriculaTurma');
+
+    $mock->expects($this->any())
+        ->method('lista')
+        ->with(1)
+        ->will($this->returnValue($this->_getConfigOptions('matriculaTurma')));
+
+    CoreExt_Entity::addClassToStorage('clsPmieducarMatriculaTurma',
+      $mock, NULL, TRUE
+    );
+
+    return $this;
+  }
+
+  /**
    * @return clsPmieducarSerie
    */
   protected function _setUpSerieMock()
@@ -604,6 +648,22 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     CoreExt_Entity::addClassToStorage('clsPmieducarAnoLetivoModulo',
       $mock, NULL, TRUE
     );
+
+    return $this;
+  }
+
+  /**
+   * @return clsPmieducarModulo
+   */
+  protected function _setUpModulo()
+  {
+    $mock = $this->getCleanMock('clsPmieducarModulo');
+
+    $mock->expects($this->any())
+         ->method('detalhe')
+         ->will($this->returnValue($this->_getConfigOptions('modulo')));
+
+    CoreExt_Entity::addClassToStorage('clsPmieducarModulo', $mock, NULL, TRUE);
 
     return $this;
   }

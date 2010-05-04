@@ -360,7 +360,7 @@ class indice extends clsCadastro
     return $carga_global;
   }
 
-  function getAlunoNotasFaltasTable($alunos_matriculados, $det_curso, $curso_conceitual)
+  function getAlunoNotasFaltasTable($alunos_matriculados)
   {
     $fonte             = 'arial';
     $corTexto          = '#000000';
