@@ -17935,7 +17935,6 @@ INSERT INTO menu VALUES (21180, 911, 21126, 'Ficha de Rematrícula', 22, 'educar_
 INSERT INTO menu VALUES (21181, 835, 21124, 'Relatório Quadros de Horário', 25, 'educar_relatorio_quadro_horario.php', '_self', 1, 15, 105);
 INSERT INTO menu VALUES (21182, 916, 21126, 'Registro de Trans. Expedidas', 25, 'educar_relatorio_registro_transferencias.php', '_self', 1, 15, 1);
 INSERT INTO menu VALUES (21183, 774, 21126, 'Relatório Alunos Idade x Sexo', 25, 'educar_relatorio_quadro_idade_sexo_serie.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (21184, 917, 21126, 'Alunos 5ª Avaliação', 26, 'educar_relatorio_alunos_quinta_avaliacao.php', '_self', 1, 15, 1);
 INSERT INTO menu VALUES (21185, 918, 21126, 'Ata Resultado Final', 28, 'educar_relatorio_ata_resultado_final.php', '_self', 1, 15, 1);
 INSERT INTO menu VALUES (21186, 836, 21126, 'Relatório de alunos por idade', 30, 'educar_relatorio_alunos_idade.php', '_self', 1, 15, 1);
 INSERT INTO menu VALUES (21187, 823, 21126, 'Resultado Final', 30, 'educar_relatorio_resultado_final.php', '_self', 1, 15, 1);
@@ -17980,6 +17979,7 @@ INSERT INTO menu VALUES (21227, 947, 21226, 'Listar Regras', 0, 'module/RegraAva
 INSERT INTO menu VALUES (21228, 948, 21226, 'Fórmulas de Cálculo de Média', 1, 'module/FormulaMedia/index', '_self', 1, 15, 198);
 INSERT INTO menu VALUES (21229, 949, 21226, 'Tabelas de Arredondamento', 2, 'module/TabelaArredondamento/index', '_self', 1, 15, 199);
 INSERT INTO menu VALUES (21230, 693, 21126, 'Registro de Matrículas', 30, 'educar_relatorio_registro_matriculas.php', '_self', 1, 15, 1);
+INSERT INTO menu VALUES (21184, 917, 21126, 'Alunos em Exame', 26, 'educar_relatorio_alunos_quinta_avaliacao.php', '_self', 1, 15, 1);
 
 
 --
@@ -19951,7 +19951,6 @@ INSERT INTO menu_submenu VALUES (845, 55, 2, 'Rematrícula Automática', 'educar_a
 INSERT INTO menu_submenu VALUES (944, 55, 2, 'Demonstrativo Alunos Defasados Nominal', 'educar_alunos_defasados_nominal.php', '', 3);
 INSERT INTO menu_submenu VALUES (930, 55, 2, 'Levantamento Alfab. e não Alfab.', 'educar_relatorio_alfabetizados.php', '', 3);
 INSERT INTO menu_submenu VALUES (918, 55, 2, 'Ata Resultado Final', 'educar_relatorio_ata_resultado_final.php', '', 3);
-INSERT INTO menu_submenu VALUES (917, 55, 2, 'Alunos 5ª Avaliação', 'educar_relatorio_alunos_quinta_avaliacao.php', '', 3);
 INSERT INTO menu_submenu VALUES (911, 55, 2, 'Ficha de Rematrícula', 'educar_relatorio_ficha_rematricula.php', '', 3);
 INSERT INTO menu_submenu VALUES (916, 55, 2, 'Registro de Transferências Expedidas', 'educar_relatorio_registro_transferencias.php', '', 3);
 INSERT INTO menu_submenu VALUES (900, 55, 2, 'Relação de Alunos ANEEs Quantidade', 'educar_relatorio_relacao_qtd_aluno_pnee_escola.php', '', 3);
@@ -19987,6 +19986,7 @@ INSERT INTO menu_submenu VALUES (946, 55, 2, 'Componentes Curriculares', 'module
 INSERT INTO menu_submenu VALUES (947, 55, 2, 'Regras de Avaliação', 'module/RegraAvaliacao/index', '', 3);
 INSERT INTO menu_submenu VALUES (948, 55, 2, 'Fórmula de Cálculo de Média', 'module/FormulaMedia/index', '', 3);
 INSERT INTO menu_submenu VALUES (949, 55, 2, 'Tabelas de Arredondamento de Nota', 'module/TabelaArredondamento/index', '', 3);
+INSERT INTO menu_submenu VALUES (917, 55, 2, 'Alunos em Exame', 'educar_relatorio_alunos_quinta_avaliacao.php', '', 3);
 
 
 --
@@ -20097,6 +20097,7 @@ INSERT INTO changelog VALUES (15, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '15_atua
 INSERT INTO changelog VALUES (16, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '16_permissoes_para_modules_e_correcao_menus.sql');
 INSERT INTO changelog VALUES (17, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '17_adiciona_campo_curso_componente_ano_escolar_e_atualiza_constraint_servidor_disciplina.sql');
 INSERT INTO changelog VALUES (18, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '18_cria_tabelas_de_parecer_descritivo.sql');
+INSERT INTO changelog VALUES (19, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '19_atualiza_nome_de_relatorio_no_menu_e_permissoes.sql');
 
 
 --

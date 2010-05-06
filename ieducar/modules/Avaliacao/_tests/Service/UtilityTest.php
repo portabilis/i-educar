@@ -122,4 +122,55 @@ class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
     $this->assertEquals('S', $service->arredondaNota(6.50));
     $this->assertEquals('O', $service->arredondaNota(9.15));
   }
+
+  public function testPreverNotaParaRecuperacao()
+  {
+    // Define as notas do aluno
+    $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
+
+    $notas = array(
+      new Avaliacao_Model_NotaComponente(array(
+        'componenteCurricular' => 1,
+        'nota'                 => 4,
+        'etapa'                => 1
+      )),
+      new Avaliacao_Model_NotaComponente(array(
+        'componenteCurricular' => 1,
+        'nota'                 => 4,
+        'etapa'                => 2
+      )),
+      new Avaliacao_Model_NotaComponente(array(
+        'componenteCurricular' => 1,
+        'nota'                 => 4,
+        'etapa'                => 3
+      )),
+      new Avaliacao_Model_NotaComponente(array(
+        'componenteCurricular' => 1,
+        'nota'                 => 4,
+        'etapa'                => 4
+      )),
+    );
+
+    // Configura mock para Avaliacao_Model_NotaComponenteDataMapper
+    $mock = $this->getCleanMock('Avaliacao_Model_NotaComponenteDataMapper');
+
+    $mock->expects($this->at(0))
+         ->method('findAll')
+         ->with(array(), array('notaAluno' => $notaAluno->id), array('etapa' => 'ASC'))
+         ->will($this->returnValue($notas));
+
+    $this->_setNotaComponenteDataMapperMock($mock);
+
+    $service = $this->_getServiceInstance();
+
+    $expected = new TabelaArredondamento_Model_TabelaValor(array(
+      'nome'        => 10,
+      'valorMinimo' => 9,
+      'valorMaximo' => 10
+    ));
+
+    $ret = $service->preverNotaRecuperacao(1);
+    $this->assertEquals(array($expected->nome, $expected->valorMinimo, $expected->valorMaximo),
+                        array($ret->nome, $ret->valorMinimo, $ret->valorMaximo));
+  }
 }

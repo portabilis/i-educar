@@ -48,7 +48,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Alunos em 5ª Avaliação');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Alunos em Exame');
     $this->processoAp = 807;
   }
 }
@@ -208,7 +208,7 @@ function acao2()
     return;
   }
 
-  showExpansivelImprimir(400, 200,'',[], 'Quinta Avaliação');
+  showExpansivelImprimir(400, 200,'',[], 'Alunos em Exame');
 
   document.formcadastro.target = 'miolo_' + (DOM_divs.length - 1);
 
