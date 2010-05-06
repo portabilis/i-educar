@@ -34,6 +34,10 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/relatorio.inc.php';
 
+require_once 'Avaliacao/Service/Boletim.php';
+require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
+require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
+
 /**
  * clsIndexBase class.
  *
@@ -48,7 +52,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Alunos em 5ª Avaliação');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Alunos em Exame');
     $this->processoAp = 807;
     $this->renderMenu = FALSE;
     $this->renderMenuSuspenso = FALSE;
@@ -77,12 +81,7 @@ class indice extends clsCadastro
 
   var $ano;
 
-  var $cursos = array();
-
   var $get_link;
-
-  var $media;
-  var $media_exame;
 
   function renderHTML()
   {
@@ -99,259 +98,208 @@ class indice extends clsCadastro
     $fonte    = 'arial';
     $corTexto = '#000000';
 
-    if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_curso) &&
-        is_numeric($this->ref_cod_serie) && is_numeric($this->ref_cod_turma) &&
-        is_numeric($this->ano)
+    if (!is_numeric($this->ref_cod_escola) || !is_numeric($this->ref_cod_curso) ||
+        !is_numeric($this->ref_cod_serie) || !is_numeric($this->ref_cod_turma) ||
+        !is_numeric($this->ano)
     ) {
-
+      print $this->getError();
+      return;
     }
 
-    $obj_ref_cod_curso = new clsPmieducarCurso($this->ref_cod_curso);
-    $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
+    // Instituição
+    $obj_instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
+    $nm_instituicao  = $obj_instituicao->detalhe();
+    $nm_instituicao  = $nm_instituicao['nm_instituicao'];
 
-    $nm_curso           = $det_ref_cod_curso['nm_curso'];
-    $padrao_ano_escolar = $det_ref_cod_curso['padrao_ano_escolar'];
+    // Escola
+    $obj_escola = new clsPmieducarEscola($this->ref_cod_escola);
+    $nm_escola  = $obj_escola->detalhe();
+    $nm_escola  = $nm_escola['nome'];
 
-    if ($padrao_ano_escolar) {
-      $obj_ano_letivo = new clsPmieducarEscolaAnoLetivo();
-      $lst_ano_letivo = $obj_ano_letivo->lista($this->ref_cod_escola, $this->ano,
-        NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+    // Curso
+    $obj_curso = new clsPmieducarCurso($this->ref_cod_curso);
+    $obj_curso->setCamposLista('media, media_exame, nm_curso');
+    $det_curso = $obj_curso->detalhe();
+    $nm_curso  = $det_curso['nm_curso'];
 
-      if (is_array($lst_ano_letivo)) {
-        $det_ano_letivo = array_shift($lst_ano_letivo);
-        $ano_letivo     = $det_ano_letivo['ano'];
+    // Série
+    $obj_serie = new clsPmieducarSerie($this->ref_cod_serie);
+    $obj_serie->setCamposLista('nm_serie');
+    $det_serie = $obj_serie->detalhe();
+    $nm_serie  = $det_serie['nm_serie'];
+    $regraId   = $det_serie['regra_avaliacao_id'];
 
-        $obj_ano_letivo_modulo = new clsPmieducarAnoLetivoModulo();
-        $lst_ano_letivo_modulo = $obj_ano_letivo_modulo->lista($ano_letivo, $this->ref_cod_escola);
+    // Turma
+    $obj_turma = new clsPmieducarTurma($this->ref_cod_turma);
+    $obj_turma->setCamposLista('nm_turma');
+    $det_turma = $obj_turma->detalhe();
+    $nm_turma  = $det_turma['nm_turma'];
 
-        if (is_array($lst_ano_letivo_modulo)) {
-          $qtd_modulos = count($lst_ano_letivo_modulo);
-        }
-      }
-      else {
-        echo '
-          <script>
-            alert("Escola não possui calendário definido para este ano");
-            window.parent.fechaExpansivel(\'div_dinamico_\'+(window.parent.DOM_divs.length-1));
-          </script>';
+    // Situação da matrícula do aluno (aprovado)
+    $situacao = $this->ano == date('Y') ?
+      App_Model_MatriculaSituacao::EM_ANDAMENTO :
+      implode(', ', array(
+        App_Model_MatriculaSituacao::APROVADO,
+        App_Model_MatriculaSituacao::REPROVADO,
+        App_Model_MatriculaSituacao::EM_ANDAMENTO
+      ));
 
-        return TRUE;
-      }
-    }
-    else {
-      $obj_turma_modulo = new clsPmieducarTurmaModulo();
-      $lst_turma_modulo = $obj_turma_modulo->lista($registro['ref_cod_turma']);
-
-      if (is_array($lst_turma_modulo)) {
-        $qtd_modulos = count($lst_turma_modulo);
-      }
-    }
-
-    if ($this->ano == date('Y')) {
-      $sql = sprintf('
+    $sql = sprintf('
+      SELECT
+        m.cod_matricula,
+        (
         SELECT
-          m.cod_matricula,
-          (
-          SELECT
-            nome
-          FROM
-            pmieducar.aluno al,
-            cadastro.pessoa
-          WHERE
-            al.cod_aluno = m.ref_cod_aluno
-            AND al.ref_idpes = pessoa.idpes
-          ) AS nome
+          nome
         FROM
-          pmieducar.matricula m,
-          pmieducar.matricula_turma mt
+          pmieducar.aluno al,
+          cadastro.pessoa
         WHERE
-          mt.ref_cod_turma = %d
-          AND mt.ref_cod_matricula = m.cod_matricula
-          AND m.aprovado = 3
-          AND mt.ativo = 1 AND m.ativo = 1
-          AND m.modulo > %d
-          AND m.ano = %d
-        ORDER BY
-          nome', $this->ref_cod_turma, $qtd_modulos, $this->ano);
-    }
-    else {
-      $sql = sprintf('
-        SELECT
-          m.cod_matricula,
-          (
-          SELECT
-            nome
-          FROM
-            pmieducar.aluno al,
-            cadastro.pessoa
-          WHERE
-            al.cod_aluno = m.ref_cod_aluno
-            AND al.ref_idpes = pessoa.idpes
-          ) AS nome
-        FROM
-          pmieducar.matricula m,
-          pmieducar.matricula_turma mt
-        WHERE
-          mt.ref_cod_turma = %d
-          AND mt.ref_cod_matricula = m.cod_matricula
-          AND m.aprovado IN (1, 2, 3)
-          AND mt.ativo = 1 AND m.ativo = 1
-          AND m.modulo > %d
-          AND m.ano = %d
-        ORDER BY
-          nome', $this->ref_cod_turma, $qtd_modulos, $this->ano);
-    }
+          al.cod_aluno = m.ref_cod_aluno
+          AND al.ref_idpes = pessoa.idpes
+        ) AS nome
+      FROM
+        pmieducar.matricula m,
+        pmieducar.matricula_turma mt
+      WHERE
+        mt.ref_cod_turma = %d
+        AND mt.ref_cod_matricula = m.cod_matricula
+        AND m.aprovado IN (%s)
+        AND mt.ativo = 1
+        AND m.ativo = 1
+        AND m.ano = %d
+      ORDER BY
+        nome', $this->ref_cod_turma, $situacao, $this->ano);
 
     $db = new clsBanco();
     $db->Consulta($sql);
+
+    // Mappers
+    $regraMapper      = new RegraAvaliacao_Model_RegraDataMapper();
+    $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+
+    $regra = $regraMapper->find($regraId);
+    if (is_null($regra->formulaRecuperacao)) {
+      $regra = 'A regra de avaliação dessa série não possui uma fórmula de cálculo de recuperação.';
+    }
+    else {
+      $regra = sprintf('Recuperação: %s; fórmula: %s.', $regra->formulaRecuperacao, $regra->formulaRecuperacao->formulaMedia);
+    }
 
     if ($db->Num_Linhas()) {
       $alunos = array();
 
       // Disciplinas da escola-série
       $obj_disciplinas = new clsPmieducarEscolaSerieDisciplina();
-      $obj_disciplinas->setOrderby('nm_disciplina');
-      $obj_disciplinas->setCamposLista('cod_disciplina, nm_disciplina');
       $lst_disciplinas = $obj_disciplinas->lista($this->ref_cod_serie,
-        $this->ref_cod_escola, NULL, 1, TRUE);
-
-      // Curso
-      $obj_curso = new clsPmieducarCurso($this->ref_cod_curso);
-      $obj_curso->setCamposLista('media, media_exame, nm_curso');
-      $det_curso = $obj_curso->detalhe();
-
-      $this->media       = $det_curso['media'];
-      $this->media_exame = $det_curso['media_exame'];
+        $this->ref_cod_escola, NULL, 1);
 
       // Instancia objeto de relatório padrão
-      $detalhes = sprintf('%s%s%s%s%s%s%s - Turma: %s         %s', $this->nm_instituicao,
-        "\n", $this->nm_escola, "\n", $this->nm_curso, "\n", $this->nm_serie,
-        $this->nm_turma, date('d/m/Y'));
+      $detalhes = sprintf('%s%s%s%s%s%s%s - Turma: %s         %s', $nm_instituicao,
+        "\n", $nm_escola, "\n", $nm_curso, "\n", $nm_serie,
+        $nm_turma, date('d/m/Y'));
 
-      $relatorio = new relatorios('Relação de alunos em 5ª avaliação', 210,
-        FALSE, 'Relação de alunos em 5ª avaliação', 'A4', $detalhes);
+      $relatorio = new relatorios('Relação de alunos em exame', 210,
+        FALSE, 'Relação de alunos em exame', 'A4', $detalhes);
 
+      $relatorio->exibe_produzido_por = FALSE;
       $relatorio->setMargem(20, 20, 20, 20);
-
-      // Escola
-      $obj_escola = new clsPmieducarEscola($this->ref_cod_escola);
-      $nm_escola  = $obj_escola->detalhe();
-      $nm_escola  = $nm_escola['nome'];
-      $nm_curso   = $det_curso['nm_curso'];
-
-      // Série
-      $obj_serie = new clsPmieducarSerie($this->ref_cod_serie);
-      $obj_serie->setCamposLista('nm_serie');
-      $det_serie = $obj_serie->detalhe();
-      $nm_serie  = $det_serie['nm_serie'];
-
-      // Turma
-      $obj_turma = new clsPmieducarTurma($this->ref_cod_turma);
-      $obj_turma->setCamposLista('nm_turma');
-      $det_turma = $obj_turma->detalhe();
-      $nm_turma  = $det_turma['nm_turma'];
 
       $relatorio->novalinha(array(sprintf('Nome Escola: %s    Ano: %d', $nm_escola, $this->ano)),
         0, 12, TRUE, 'arial', FALSE, '#000000', '#d3d3d3', '#FFFFFF', FALSE, TRUE);
 
-      $relatorio->novalinha(array(sprintf('Curso: %s    Ano/Série: %s    Turma: %s    Date: %s', $nm_curso, $nm_serie, $nm_turma, date('d/m/Y'))),
+      $relatorio->novalinha(array(sprintf('Curso: %s    Ano/Série: %s    Turma: %s', $nm_curso, $nm_serie, $nm_turma)),
         0, 12, TRUE, 'arial', FALSE, '#000000', '#d3d3d3', '#FFFFFF', FALSE, TRUE);
 
-      $relatorio->novalinha(array('Matrícula', 'Nome Aluno', 'Disciplinas', 'Pontos', 'Nota 5º Av. Passar'),
-        0, 12, TRUE, 'arial', array(50, 200, 150, 50), '#515151', '#d3d3d3', '#FFFFFF', FALSE, TRUE);
+      $relatorio->novalinha(array(sprintf('%s    Data: %s', $regra, date('d/m/Y'))),
+        0, 12, TRUE, 'arial', FALSE, '#000000', '#d3d3d3', '#FFFFFF', FALSE, TRUE);
+
+      $relatorio->novalinha(array('Mat.', 'Nome Aluno', 'Componentes', 'Média', 'Nota necessária (mín.)'),
+        0, 12, TRUE, 'arial', array(30, 180, 150, 60), '#515151', '#d3d3d3', '#FFFFFF', FALSE, TRUE);
 
       while ($db->ProximoRegistro()) {
         list($cod_matricula, $nome_aluno) = $db->Tupla();
 
-        foreach ($lst_disciplinas as $disciplina) {
-          $obj_nota_aluno = new clsPmieducarNotaAluno();
-          $obj_nota_aluno->setOrderby('modulo ASC');
-          $lst_nota_aluno = $obj_nota_aluno->lista(NULL, NULL, NULL,
-            $this->ref_cod_serie, $this->ref_cod_escola, $disciplina['cod_disciplina'],
-            $cod_matricula, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+        $boletim = new Avaliacao_Service_Boletim(array(
+          'matricula'            => $cod_matricula,
+          'RegraDataMapper'      => $regraMapper,
+          'ComponenteDataMapper' => $componenteMapper
+        ));
 
-          $aluno_notas = array();
-          $aluno_notas_normal = array();
+        $componentes = $boletim->getComponentes();
+        $medias      = $boletim->getMediasComponentes();
+        $situacao    = $boletim->getSituacaoComponentesCurriculares();
 
-          if (is_array($lst_nota_aluno)) {
-            $aluno_notas[$disciplina['cod_disciplina']] = 0;
+        if ($situacao->situacao != App_Model_MatriculaSituacao::EM_EXAME) {
+          continue;
+        }
 
-            foreach ($lst_nota_aluno as $nota_aluno) {
-              $obj_avaliacao_valores = new clsPmieducarTipoAvaliacaoValores(
-                $nota_aluno['ref_ref_cod_tipo_avaliacao'], $nota_aluno['ref_sequencial']
-              );
-
-              $det_avaliacao_valores = $obj_avaliacao_valores->detalhe();
-
-              $aluno_notas[$disciplina['cod_disciplina']] += $det_avaliacao_valores['valor'];
-            }
-
-            $aluno_notas_normal[$disciplina['cod_disciplina']] = $aluno_notas[$disciplina['cod_disciplina']];
-
-            $aluno_notas[$disciplina['cod_disciplina']] /= count($lst_nota_aluno);
-
-            $aluno_notas[$disciplina['cod_disciplina']] = sprintf('%01.1f', $aluno_notas[$disciplina['cod_disciplina']]);
+        foreach ($situacao->componentesCurriculares as $id => $situacaoComponente) {
+          if ($situacaoComponente->situacao != App_Model_MatriculaSituacao::EM_EXAME) {
+            continue;
           }
 
-          if (is_array($aluno_notas)) {
-            foreach ($aluno_notas as $cod_disciplina => $media) {
-              if ($media < $this->media && $this->media_exame) {
-                // @todo WTF!??? Que diabos de nota fixa é essa?
-                // FÓRMULA: 30 - (SOMA DE PONTOS DOS 4 BIMESTRES) / 2.
-                // Ex: 30 - 23 / 2 = 3,5
-                $nota_necessaria_passar = (30 - $aluno_notas_normal[$cod_disciplina]) / 2;
+          $mediaRecuperacao = $boletim->preverNotaRecuperacao($id);
 
-                $data = array(
-                  $cod_matricula,
-                  $nome_aluno,
-                  $disciplina['nm_disciplina'],
-                  $aluno_notas_normal[$cod_disciplina],
-                  $nota_necessaria_passar
-                );
-
-                $relatorio->novalinha($data, 0, 12, FALSE, 'arial',
-                  array(50, 200, 150, 50), '#515151', '#d3d3d3', '#FFFFFF', FALSE, TRUE);
-              }
-            }
+          if (!is_null($mediaRecuperacao)) {
+            $previsao = sprintf('%s (%.2f)', $mediaRecuperacao->nome, $mediaRecuperacao->valorMinimo);
           }
+          else {
+            $previsao = 'Nenhuma nota possível.';
+          }
+
+          $data = array(
+            $cod_matricula,
+            $nome_aluno,
+            $componentes[$id],
+            $medias[$id][0]->mediaArredondada,
+            $previsao
+          );
+
+          $relatorio->novalinha($data, 0, 12, FALSE, 'arial',
+            array(30, 180, 150, 60), '#515151', '#d3d3d3', '#FFFFFF', FALSE, TRUE);
         }
       }
-
-      $this->get_link = $relatorio->fechaPdf();
-
-      echo sprintf('
-        <script>
-          window.onload=function()
-          {
-            parent.EscondeDiv("LoadImprimir");
-            window.location="download.php?filename=%s"
-          }
-        </script>', $this->get_link);
-
-      echo sprintf('
-        <html>
-          <center>
-            Se o download não iniciar automaticamente <br>
-            <a target="blank" href="%s" style="font-size: 16px; color: #000000; text-decoration: underline;">clique aqui!</a><br><br>
-            <span style="font-size: 10px;">
-              Para visualizar os arquivos PDF, é necessário instalar o Adobe Acrobat Reader.<br>
-              Clique na Imagem para Baixar o instalador<br><br>
-              <a href="http://www.adobe.com.br/products/acrobat/readstep2.html" target="new"><br><img src="imagens/acrobat.gif" width="88" height="31" border="0"></a>
-            </span>
-          </center>
-        </html>', $this->get_link);
     }
     else {
-      echo '
-        <script>
+      print $this->getError();
+      return;
+    }
+
+    $this->get_link = $relatorio->fechaPdf();
+
+    echo sprintf('
+      <script>
+        window.onload=function()
+        {
+          parent.EscondeDiv("LoadImprimir");
+          window.location="download.php?filename=%s"
+        }
+      </script>', $this->get_link);
+
+    echo sprintf('
+      <html>
+        <center>
+          Se o download não iniciar automaticamente <br>
+          <a target="blank" href="%s" style="font-size: 16px; color: #000000; text-decoration: underline;">clique aqui!</a><br><br>
+          <span style="font-size: 10px;">
+            Para visualizar os arquivos PDF, é necessário instalar o Adobe Acrobat Reader.<br>
+            Clique na Imagem para Baixar o instalador<br><br>
+            <a href="http://www.adobe.com.br/products/acrobat/readstep2.html" target="new"><br><img src="imagens/acrobat.gif" width="88" height="31" border="0"></a>
+          </span>
+        </center>
+      </html>', $this->get_link);
+  }
+
+  function getError()
+  {
+    return '
+      <script>
         window.onload=function()
         {
           parent.EscondeDiv("LoadImprimir");
         }
-        </script>';
-
-      echo 'Nenhum aluno está em exame';
-    }
+      </script>' .
+      'Nenhum aluno está em exame';
   }
 
   function Editar()

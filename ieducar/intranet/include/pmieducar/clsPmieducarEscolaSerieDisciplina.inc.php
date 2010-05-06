@@ -258,6 +258,8 @@ class clsPmieducarEscolaSerieDisciplina
   /**
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
    * @return array
+   * @todo Refatorar o primeiro if, tabela referenciada não armazena mais os
+   *   componentes curriculares
    */
   function lista($int_ref_ref_cod_serie = NULL, $int_ref_ref_cod_escola = NULL,
     $int_ref_cod_disciplina = NULL, $int_ativo = NULL, $boo_nome_disc = FALSE)

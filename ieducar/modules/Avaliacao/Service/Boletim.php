@@ -2107,13 +2107,62 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return $this->getRegra()->tabelaArredondamento->round($nota);
   }
 
+  /**
+   * Prevê a nota necessária para que o aluno seja aprovado após a recuperação
+   * escolar.
+   *
+   * @param  int $id
+   * @return TabelaArredondamento_Model_TabelaValor|NULL
+   * @see    TabelaArredondamento_Model_Tabela#predictValue()
+   */
+  public function preverNotaRecuperacao($id)
+  {
+    if (is_null($this->getRegra()->formulaRecuperacao) || !isset($this->_notasComponentes[$id])) {
+      return NULL;
+    }
 
+    $notas      = $this->_notasComponentes[$id];
+    $somaEtapas = array_sum(CoreExt_Entity::entityFilterAttr($notas, 'etapa', 'nota'));
+    $formula    = $this->getRegra()->formulaRecuperacao;
 
+    $data = array(
+      'formulaValues' => array(
+        'Se' => $somaEtapas,
+        'Et' => $this->getOption('etapas'),
+        'Rc' => NULL
+      ),
+      'expected' => array(
+        'var'   => 'Rc',
+        'value' => $this->getRegra()->media
+      )
+    );
+
+    foreach ($notas as $nota) {
+      $data['formulaValues']['E' . $nota->etapa] = $nota->nota;
+    }
+
+    return $this->getRegra()->tabelaArredondamento->predictValue($formula, $data);
+  }
+
+  /**
+   * @param  numeric $falta
+   * @param  numeric $horaFalta
+   * @return numeric
+   */
   protected function _calculateHoraFalta($falta, $horaFalta)
   {
     return ($falta * $horaFalta);
   }
 
+  /**
+   * Calcula a proporção de $num2 para $num1.
+   *
+   * @param  numeric $num1
+   * @param  numeric $num2
+   * @param  bool    $decimal Opcional. Se o resultado é retornado como decimal
+   *   ou percentual. O padrão é TRUE.
+   * @return float
+   */
   protected function _calculatePorcentagem($num1, $num2, $decimal = TRUE)
   {
     $num1 = floatval($num1);

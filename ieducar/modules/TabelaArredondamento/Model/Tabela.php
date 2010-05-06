@@ -137,6 +137,106 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
   }
 
   /**
+   * Prevê em qual range de arredondamento de acordo com um valor esperado. A
+   * definição do valor a retornar é dada por uma instância de
+   * FormulaMedia_Model_Formula e um array com valores para as tokens da fórmula
+   * e o valor da variável a prever. Exemplo:
+   *
+   * <code>
+   * <?php
+   * // Passa valores para as tokens disponíveis de FormulaMedia_Model_Formula
+   * // e espera que o resultado do cálculo dê 6, usando como referência a
+   * // variável "Rc"
+   * $data = array(
+   *   'formulaValues' => array(
+   *     'Se' => 16,
+   *     'Et' => 4,
+   *     'E1' => 4,
+   *     'E2' => 4,
+   *     'E3' => 4,
+   *     'E4' => 4,
+   *     'Rc' => NULL
+   *   ),
+   *   'expected' => array(
+   *     'var'   => 'Rc',
+   *     'value' => 6
+   *   )
+   * );
+   * </code>
+   *
+   * @param  FormulaMedia_Model_Formula $formula
+   * @param  array $data
+   * @return TabelaArredondamento_Model_TabelaValor|NULL Retorna NULL caso
+   *   nenhuma instância de TabelaArredondamento_Model_TabelaValor corresponda
+   *   ao valor esperado
+   * @todo Considerar o atributo valorMaximo da instância para o cálculo da
+   *   fórmula. Pode ser útil para os casos de notas conceituais (Exemplo: uma
+   *   nota "EP" que tem o range 5.25 a 7, sendo 6 a média de aprovação. Nesse
+   *   caso somente o próximo range (se houvesse) daria o valor esperado para
+   *   alcançar a média 6).
+   */
+  public function predictValue(FormulaMedia_Model_Formula $formula, array $data)
+  {
+    $values = $data['formulaValues'];
+    $scale  = pow(10, $this->_precision);
+    $return = NULL;
+
+    if (0 == count($this->_tabelaValores)) {
+      $this->_tabelaValores = $this->getDataMapper()->findTabelaValor($this);
+    }
+
+    $i = 0;
+    $total = count($this->_tabelaValores);
+
+    foreach ($this->_tabelaValores as $tabelaValor) {
+      $process = array();
+      $values[$data['expected']['var']] = $tabelaValor->valorMinimo;
+      $process[] = $values;
+
+      // Se for o último item, verifica se a nota máxima também
+      if (++$i == $total) {
+        $values[$data['expected']['var']] = $tabelaValor->valorMaximo;
+        $process[] = $values;
+      }
+
+      $valueRounded = $this->_getBestResultFromValuesArray($formula, $process);
+
+      if ($valueRounded * $scale >= ($data['expected']['value'] * $scale)) {
+        $return = $tabelaValor;
+        break;
+      }
+    }
+
+    return $return;
+  }
+
+  /**
+   * @param  FormulaMedia_Model_Formula $formula
+   * @param  array $values
+   * @return TabelaArredondamento_Model_TabelaValor|NULL
+   */
+  protected function _getBestResultFromValuesArray(FormulaMedia_Model_Formula $formula, array $values)
+  {
+    $best = NULL;
+
+    foreach ($values as $value) {
+      $value   = $formula->execFormulaMedia($value);
+      $rounded = $this->round($value);
+
+      if (is_null($best)) {
+        $best = $rounded;
+        continue;
+      }
+
+      if ($best < $rounded) {
+        $best = $rounded;
+      }
+    }
+
+    return $rounded;
+  }
+
+  /**
    * Método finder para TabelaArredondamento_Model_TabelaValor. Wrapper simples
    * para o mesmo método de TabelaArredondamento_Model_TabelaDataMapper.
    *

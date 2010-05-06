@@ -32,6 +32,7 @@
 require_once 'TabelaArredondamento/Model/Tabela.php';
 require_once 'TabelaArredondamento/Model/TabelaDataMapper.php';
 require_once 'TabelaArredondamento/Model/TabelaValorDataMapper.php';
+require_once 'FormulaMedia/Model/Formula.php';
 require_once 'include/pmieducar/clsPmieducarInstituicao.inc.php';
 
 /**
@@ -140,6 +141,91 @@ class TabelaTest extends UnitBaseTest
     }
     catch (CoreExt_Exception_InvalidArgumentException $e) {
     }
+  }
+
+  public function testCalculoDeNotaNecessariaParaMedia()
+  {
+    $this->_entity->getDataMapper()->setTabelaValorDataMapper($this->_getMockTabelaValor());
+
+    $formula = new FormulaMedia_Model_Formula(array(
+      'formulaMedia' => '(Se / Et * 0.6) + (Rc * 0.4)',
+      'tipoFormula'  => FormulaMedia_Model_TipoFormula::MEDIA_RECUPERACAO
+    ));
+
+    $expected = new TabelaArredondamento_Model_TabelaValor(array(
+      'nome'                 => 10,
+      'valorMinimo'          => 9.751,
+      'valorMaximo'          => 10
+    ));
+
+    $data = array(
+      'formulaValues' => array(
+        'Se' => 13.334,
+        'Et' => 4,
+        'Rc' => NULL
+      ),
+      'expected' => array(
+        'var'   => 'Rc',
+        'value' => 6
+      )
+    );
+
+    $ret = $this->_entity->predictValue($formula, $data);
+    $this->assertEquals(array($expected->nome, $expected->valorMinimo, $expected->valorMaximo),
+                        array($ret->nome, $ret->valorMinimo, $ret->valorMaximo));
+
+    $expected = new TabelaArredondamento_Model_TabelaValor(array(
+      'nome'        => 9,
+      'valorMinimo' => 8.751,
+      'valorMaximo' => 9.250
+    ));
+
+    $data = array(
+      'formulaValues' => array(
+        'Se' => 16,
+        'Et' => 4,
+        'Rc' => NULL
+      ),
+      'expected' => array(
+        'var'   => 'Rc',
+        'value' => 6
+      )
+    );
+
+    $ret = $this->_entity->predictValue($formula, $data);
+    $this->assertEquals(array($expected->nome, $expected->valorMinimo, $expected->valorMaximo),
+                        array($ret->nome, $ret->valorMinimo, $ret->valorMaximo));
+
+    $formula = new FormulaMedia_Model_Formula(array(
+      'formulaMedia' => '((E1 + E2 + E3 + E4) / 4 * 0.6) + (Rc * 0.4)',
+      'tipoFormula'  => FormulaMedia_Model_TipoFormula::MEDIA_RECUPERACAO
+    ));
+
+    $expected = new TabelaArredondamento_Model_TabelaValor(array(
+      'nome'        => 9,
+      'valorMinimo' => 8.751,
+      'valorMaximo' => 9.250
+    ));
+
+    $data = array(
+      'formulaValues' => array(
+        'Se' => NULL,
+        'Et' => NULL,
+        'E1' => 4,
+        'E2' => 4,
+        'E3' => 4,
+        'E4' => 4,
+        'Rc' => NULL
+      ),
+      'expected' => array(
+        'var'   => 'Rc',
+        'value' => 6
+      )
+    );
+
+    $ret = $this->_entity->predictValue($formula, $data);
+    $this->assertEquals(array($expected->nome, $expected->valorMinimo, $expected->valorMaximo),
+                        array($ret->nome, $ret->valorMinimo, $ret->valorMaximo));
   }
 
   /**
