@@ -69,51 +69,9 @@ class indice extends clsCadastro
 
   var $ref_cod_instituicao;
   var $ref_cod_escola;
+  var $ref_cod_curso;
   var $ref_cod_serie;
   var $ref_cod_turma;
-
-  var $ano;
-  var $mes;
-
-  var $nm_escola;
-  var $nm_instituicao;
-  var $ref_cod_curso;
-  var $sequencial;
-  var $pdf;
-  var $pagina_atual = 1;
-  var $total_paginas = 1;
-  var $nm_professor;
-  var $nm_turma;
-  var $nm_serie;
-  var $nm_disciplina;
-  var $curso_com_exame = 0;
-  var $ref_cod_matricula;
-
-  var $page_y = 135;
-
-  var $nm_aluno;
-  var $array_modulos = array();
-  var $nm_curso;
-  var $get_link = false;
-
-  var $total;
-
-  var $ref_cod_modulo;
-
-  var $meses_do_ano = array(
-    1  => 'JANEIRO',
-    2  => 'FEVEREIRO',
-    3  => 'MARÇO',
-    4  => 'ABRIL',
-    5  => 'MAIO',
-    6  => 'JUNHO',
-    7  => 'JULHO',
-    8  => 'AGOSTO',
-    9  => 'SETEMBRO',
-    10 => 'OUTUBRO',
-    11 => 'NOVEMBRO',
-    12 => 'DEZEMBRO'
-  );
 
   function Inicializar()
   {
@@ -123,15 +81,13 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
-    $obj_permissoes = new clsPermissoes();
-
     return $retorno;
   }
 
   function Gerar()
   {
     $obj_permissoes = new clsPermissoes();
-    $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+    $nivel_usuario  = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
     if ($_POST){
       foreach ($_POST as $key => $value) {
@@ -139,10 +95,7 @@ class indice extends clsCadastro
       }
     }
 
-    $this->ano = $ano_atual = date("Y");
-    $this->mes = $mes_atual = date("n");
-
-    $this->campoNumero("ano", "Ano", $this->ano, 4, 4, TRUE);
+    $this->campoNumero('ano', 'Ano', date('Y'), 4, 4, TRUE);
 
     $get_escola              = TRUE;
     $exibe_nm_escola         = TRUE;
@@ -152,13 +105,9 @@ class indice extends clsCadastro
     $curso_obrigatorio       = TRUE;
     $instituicao_obrigatorio = TRUE;
 
-    include "include/pmieducar/educar_campo_lista.php";
+    include 'include/pmieducar/educar_campo_lista.php';
 
-    $this->campoLista("ref_cod_turma", "Turma", array('' => 'Selecione'), '');
-
-    if ($this->ref_cod_escola) {
-      $this->ref_ref_cod_escola = $this->ref_cod_escola;
-    }
+    $this->campoLista('ref_cod_turma', 'Turma', array('' => 'Selecione'), '');
 
     $this->url_cancelar = 'educar_index.php';
     $this->nome_url_cancelar = 'Cancelar';
