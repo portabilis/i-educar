@@ -187,16 +187,16 @@ class indice extends clsCadastro
   }
 }
 
-// cria uma extensao da classe base
+// Instancia objeto de página
 $pagina = new clsIndexBase();
 
-// cria o conteudo
+// Instancia objeto de conteúdo
 $miolo = new indice();
 
-// adiciona o conteudo na clsBase
+// Atribui o conteúdo à  página
 $pagina->addForm($miolo);
 
-// gera o html
+// Gera o código HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
