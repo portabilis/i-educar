@@ -1353,12 +1353,6 @@ function valida_xml(xml)
       document.getElementById('ref_ref_cod_serie').focus();
       return false;
     }
-
-    if (!document.getElementById('ref_cod_infra_predio_comodo').value) {
-      alert("Preencha o campo 'Sala' corretamente!");
-      document.getElementById('ref_cod_infra_predio_comodo').focus();
-      return false;
-    }
   }
 
   if (document.getElementById('multiseriada').checked) {
