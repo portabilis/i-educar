@@ -140,20 +140,14 @@ class indice extends clsCadastro
     $this->ano = $ano_atual = date('Y');
     $this->campoNumero('ano', 'Ano', $this->ano, 4, 4, TRUE);
 
-    $this->campoRadio('tipo_relatorio', 'Tipo Relatório',
-      array(
-        'c' => 'Conceitual',
-        'p' => 'Padrão'
-      ), 'p');
-
     $this->campoCheck('em_branco', 'Relatório em branco', '');
     $this->campoNumero('numero_registros', 'Número de linhas', '', 3, 3);
 
-    $get_escola = true;
-    $obrigatorio = true;
-    $exibe_nm_escola = true;
-    $get_curso = true;
-    $get_escola_curso_serie = true;
+    $get_escola             = TRUE;
+    $obrigatorio            = TRUE;
+    $exibe_nm_escola        = TRUE;
+    $get_curso              = TRUE;
+    $get_escola_curso_serie = TRUE;
 
     include 'include/pmieducar/educar_campo_lista.php';
 
@@ -264,13 +258,6 @@ function acao2()
 
   document.formcadastro.target = 'miolo_' + (DOM_divs.length - 1);
 
-  if (document.formcadastro.tipo_relatorio[0].checked) {
-    document.formcadastro.action = 'educar_relatorio_diario_classe_avaliacao_conceitual_proc.php';
-  }
-  else {
-    document.formcadastro.action = 'educar_relatorio_diario_classe_avaliacao_proc.php';
-  }
-
   document.formcadastro.submit();
 }
 
@@ -316,4 +303,6 @@ document.getElementById('ano').onchange = function()
 {
   getModulos();
 }
+
+document.formcadastro.action = 'educar_relatorio_diario_classe_avaliacao_proc.php';
 </script>

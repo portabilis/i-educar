@@ -34,6 +34,8 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/clsPDF.inc.php';
 
+require_once 'App/Model/IedFinder.php';
+
 /**
  * clsIndexBase class.
  *
@@ -202,174 +204,103 @@ class indice extends clsCadastro
     $obj_curso = new clsPmieducarCurso($this->ref_cod_curso);
     $det_curso = $obj_curso->detalhe();
 
-    if ($det_curso['falta_ch_globalizada'] && $det_curso['avaliacao_globalizada'] == 't') {
-      if (!$this->em_branco) {
-        $obj_matricula_turma = new clsPmieducarMatriculaTurma();
-        $obj_matricula_turma->setOrderby('nome_aluno');
-        $lista_matricula = $obj_matricula_turma->lista(NULL, $this->ref_cod_turma,
-          NULL, NULL, NULL, NULL, NULL, NULL, 1, $this->ref_cod_serie, $this->ref_cod_curso,
-          $this->ref_cod_escola, $this->ref_cod_instituicao, NULL, NULL, NULL, NULL,
-          NULL, $this->ano, NULL, TRUE, NULL, NULL, TRUE);
-      }
+    // Recupera a lista de componentes curriculares da escola/série
+    $componentes = App_Model_IedFinder::getEscolaSerieDisciplina(
+      $this->ref_cod_serie, $this->ref_cod_escola, TRUE
+    );
 
-      if($lista_matricula || $this->em_branco) {
-        $this->pdf->OpenPage();
-        $this->addCabecalho();
+    if (0 == count($componentes)) {
+      echo '
+        <script>
+          alert("Turma não possui matriculas");
+          window.parent.fechaExpansivel(\'div_dinamico_\'+(window.parent.DOM_divs.length-1));
+        </script>';
+
+      return;
+    }
+    else {
+      foreach ($componentes as $id => $componente) {
+        $this->nm_disciplina = $componente->nome;
+        $this->page_y = 139;
+
+        // Número de semanas dos meses
+        $obj_quadro = new clsPmieducarQuadroHorario();
+        $obj_quadro->setCamposLista("cod_quadro_horario");
+        $quadro_horario = $obj_quadro->lista(NULL, NULL, NULL, $this->ref_cod_turma,
+          NULL, NULL, NULL, NULL, 1);
+
+        if (!$quadro_horario && $det_curso['avaliacao_globalizada'] == 't') {
+          echo '
+            <script>
+              alert("Turma não possui quadro de horários");
+              window.location = "educar_relatorio_diario_classe.php";
+            </script>';
+          break;
+        }
+
+        $obj_quadro_horarios = new clsPmieducarQuadroHorarioHorarios();
+        $obj_quadro_horarios->setCamposLista('dia_semana');
+        $obj_quadro_horarios->setOrderby('1 asc');
+
+        $lista_quadro_horarios = $obj_quadro_horarios->lista($quadro_horario,
+          $this->ref_cod_serie, $this->ref_cod_escola, $disciplina, NULL, NULL,
+          NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+
+        if (!$this->em_branco) {
+          $obj_matricula_turma = new clsPmieducarMatriculaTurma();
+          $obj_matricula_turma->setOrderby('nome_ascii');
+          $lista_matricula = $obj_matricula_turma->lista( NULL, $this->ref_cod_turma,
+            NULL, NULL, NULL, NULL, NULL, NULL, 1, $this->ref_cod_serie,
+            $this->ref_cod_curso, $this->ref_cod_escola, $this->ref_cod_instituicao,
+            NULL, NULL, array(1, 2, 3), NULL, NULL, $this->ano, NULL, TRUE,
+            NULL, NULL, TRUE);
+        }
+
         $num_aluno = 1;
 
-        if ($this->em_branco) {
-          $lista_matricula = array();
-          $this->numero_registros = $this->numero_registros? $this->numero_registros : 20;
+        if ($lista_matricula || $this->em_branco) {
+          $this->pdf->OpenPage();
+          $this->addCabecalho();
 
-          for ($i = 0 ; $i < $this->numero_registros; $i++) {
-            $lista_matricula[] = '';
-          }
-        }
+          if ($this->em_branco) {
+            $lista_matricula = array();
+            $this->numero_registros = $this->numero_registros ?
+              $this->numero_registros : 20;
 
-        foreach ($lista_matricula as $matricula) {
-          if($this->page_y > $altura_pagina) {
-            $this->desenhaLinhasVertical();
-            $this->pdf->ClosePage();
-            $this->pdf->OpenPage();
-            $this->page_y = 139;
-            $this->addCabecalho();
+            for ($i = 0 ; $i < $this->numero_registros; $i++) {
+              $lista_matricula[] = '';
+            }
           }
 
-          $this->pdf->quadrado_relativo( 30, $this->page_y , 540, $altura_linha);
-          $this->pdf->escreve_relativo(sprintf("%02d",$num_aluno) , 38 ,$this->page_y + 4,30, 15, $fonte, 7, $corTexto, 'left' );
-          $this->pdf->escreve_relativo($matricula['nome_aluno'] , 55 ,$this->page_y + 4,160, 15, $fonte, 7, $corTexto, 'left' );
+          foreach ($lista_matricula as $matricula) {
+            if($this->page_y > $altura_pagina) {
+              $this->desenhaLinhasVertical();
+              $this->pdf->ClosePage();
+              $this->pdf->OpenPage();
+              $this->page_y = 139;
+              $this->addCabecalho();
+            }
 
-          $num_aluno++;
-          $this->page_y +=$altura_linha;
+            $this->pdf->quadrado_relativo(30, $this->page_y , 540, $altura_linha);
+
+            $this->pdf->escreve_relativo($num_aluno, 38 ,$this->page_y + 4,
+              30, 15, $fonte, 7, $corTexto, 'left');
+
+            $this->pdf->escreve_relativo($matricula['nome_aluno'] , 55,
+              $this->page_y + 4, 160, 15, $fonte, 7, $corTexto, 'left');
+
+            $num_aluno++;
+            $this->page_y += $altura_linha;
+          }
+
+          $this->desenhaLinhasVertical();
+          $this->rodape();
+          $this->pdf->ClosePage();
         }
-
-        $this->desenhaLinhasVertical();
-
-        $this->rodape();
-        $this->pdf->ClosePage();
-      }
-      else {
-        echo '
-          <script>
-            alert("Turma não possui matriculas");
-            window.parent.fechaExpansivel(\'div_dinamico_\'+(window.parent.DOM_divs.length-1));
-          </script>';
-
-        return;
       }
 
       $this->pdf->CloseFile();
       $this->get_link = $this->pdf->GetLink();
-    }
-    else {
-      $obj_turma_disc = new clsPmieducarDisciplinaSerie();
-      $obj_turma_disc->setCamposLista('ref_cod_disciplina');
-      $lst_turma_disc = $obj_turma_disc->lista(NULL, $this->ref_cod_serie, 1);
-
-      if ($lst_turma_disc) {
-        foreach ($lst_turma_disc as $disciplina) {
-          $obj_disc = new clsPmieducarDisciplina($disciplina);
-          $det_disc = $obj_disc->detalhe();
-          $this->nm_disciplina = $det_disc['nm_disciplina'];
-          $this->page_y = 139;
-
-          // Número de semanas dos meses
-          $obj_quadro = new clsPmieducarQuadroHorario();
-          $obj_quadro->setCamposLista("cod_quadro_horario");
-          $quadro_horario = $obj_quadro->lista(NULL, NULL, NULL,$this->ref_cod_turma,
-            NULL, NULL, NULL, NULL, 1);
-
-          if (!$quadro_horario && $det_curso['avaliacao_globalizada'] == 't') {
-            echo '
-              <script>
-                alert("Turma não possui quadro de horários");
-                window.location = "educar_relatorio_diario_classe.php";
-              </script>';
-            break;
-          }
-
-          $obj_quadro_horarios = new clsPmieducarQuadroHorarioHorarios();
-          $obj_quadro_horarios->setCamposLista('dia_semana');
-          $obj_quadro_horarios->setOrderby('1 asc');
-
-          $lista_quadro_horarios = $obj_quadro_horarios->lista($quadro_horario,
-            $this->ref_cod_serie, $this->ref_cod_escola, $disciplina, NULL, NULL,
-            NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
-
-          if (!$this->em_branco) {
-            $obj_matricula_turma = new clsPmieducarMatriculaTurma();
-            $obj_matricula_turma->setOrderby('nome_ascii');
-            $lista_matricula = $obj_matricula_turma->lista( NULL, $this->ref_cod_turma,
-              NULL, NULL, NULL, NULL, NULL, NULL, 1, $this->ref_cod_serie,
-              $this->ref_cod_curso, $this->ref_cod_escola, $this->ref_cod_instituicao,
-              NULL, NULL, array(1, 2, 3), NULL, NULL, $this->ano, NULL, TRUE,
-              NULL, NULL, TRUE);
-          }
-
-          $num_aluno = 1;
-
-          if ($lista_matricula || $this->em_branco) {
-            $this->pdf->OpenPage();
-            $this->addCabecalho();
-
-            if ($this->em_branco) {
-              $lista_matricula = array();
-              $this->numero_registros = $this->numero_registros ?
-                $this->numero_registros : 20;
-
-              for ($i = 0 ; $i < $this->numero_registros; $i++) {
-                $lista_matricula[] = '';
-              }
-            }
-
-            foreach ($lista_matricula as $matricula) {
-              if($this->page_y > $altura_pagina) {
-                $this->desenhaLinhasVertical();
-                $this->pdf->ClosePage();
-                $this->pdf->OpenPage();
-                $this->page_y = 139;
-                $this->addCabecalho();
-              }
-
-              $this->pdf->quadrado_relativo(30, $this->page_y , 540, $altura_linha);
-
-              $this->pdf->escreve_relativo($num_aluno, 38 ,$this->page_y + 4,
-                30, 15, $fonte, 7, $corTexto, 'left');
-
-              $this->pdf->escreve_relativo($matricula['nome_aluno'] , 55,
-                $this->page_y + 4, 160, 15, $fonte, 7, $corTexto, 'left');
-
-              $num_aluno++;
-              $this->page_y +=$altura_linha;
-            }
-
-            $this->desenhaLinhasVertical();
-            $this->rodape();
-            $this->pdf->ClosePage();
-          }
-          else {
-            echo '
-              <script>
-                alert("Turma não possui matriculas");
-                window.parent.fechaExpansivel(\'div_dinamico_\'+(window.parent.DOM_divs.length-1));
-              </script>';
-
-            return;
-          }
-        }
-
-        $this->pdf->CloseFile();
-        $this->get_link = $this->pdf->GetLink();
-      }
-      else {
-        echo '
-          <script>
-            alert("A Série não possui disciplinas");
-            window.parent.fechaExpansivel(\'div_dinamico_\'+(window.parent.DOM_divs.length-1));
-          </script>';
-
-        return;
-      }
     }
 
     echo sprintf('

@@ -221,12 +221,13 @@ class App_Model_IedFinder extends CoreExt_Entity
    * Retorna array com as referências de pmieducar.escola_serie_disciplina
    * a modules.componente_curricular ('ref_ref_cod_disciplina').
    *
-   * @param int $codSerie
-   * @param int $codEscola
+   * @param int  $codSerie
+   * @param int  $codEscola
+   * @param bool $hydrate
    * @return array
    * @throws App_Model_Exception
    */
-  public static function getEscolaSerieDisciplina($codSerie, $codEscola)
+  public static function getEscolaSerieDisciplina($codSerie, $codEscola, $hydrate = FALSE)
   {
     // Disciplinas na série na escola
     $escolaSerieDisciplina = self::addClassToStorage('clsPmieducarEscolaSerieDisciplina',
@@ -241,8 +242,18 @@ class App_Model_IedFinder extends CoreExt_Entity
       );
     }
 
+    if ($hydrate) {
+      require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
+      $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+    }
+
     $disciplinas = array();
     foreach ($disciplinasEscolaSerie as $disciplinaEscolaSerie) {
+      if ($hydrate) {
+        $disciplinas[] = $mapper->find($disciplinaEscolaSerie['ref_cod_disciplina']);
+        continue;
+      }
+
       $disciplinas[] = array(
         'ref_cod_disciplina' => $disciplinaEscolaSerie['ref_cod_disciplina'],
         'carga_horaria' => $disciplinaEscolaSerie['carga_horaria']
