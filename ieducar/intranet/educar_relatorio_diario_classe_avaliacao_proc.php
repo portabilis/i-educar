@@ -65,6 +65,11 @@ class clsIndexBase extends clsBase
  * @license   @@license@@
  * @package   iEd_Pmieducar
  * @since     Classe disponível desde a versão 1.0.0
+ * @todo      Adicionar no título ou no header do arquivo o módulo atual ao qual
+ *   o relatório foi gerado. Pode ser um refactoring da lógica de
+ *   educar_modulo_xml.php em App_Model_IedFinder
+ * @see       intranet/educar_modulo_xml.php
+ * @see       App_Model_IedFinder
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -170,9 +175,9 @@ class indice extends clsCadastro
     $det_serie = $obj_serie->detalhe();
     $this->nm_serie = $det_serie['nm_serie'];
 
-    $obj_pessoa = new clsPessoa_($det_turma["ref_cod_regente"]);
+    $obj_pessoa = new clsPessoa_($det_turma['ref_cod_regente']);
     $det = $obj_pessoa->detalhe();
-    $this->nm_professor = $det["nome"];
+    $this->nm_professor = $det['nome'];
 
     if (!$lista_calendario) {
       echo '
@@ -184,10 +189,10 @@ class indice extends clsCadastro
       return TRUE;
     }
 
+    $titlo = 'Diário de Classe - ' . $this->ano;
+
     $prox_mes = $this->mes + 1;
-    $this->pdf = new clsPDF('Diário de Classe - ' . $this->ano,
-      "Diário de Classe - {$this->meses_do_ano[$this->mes]} e {$this->meses_do_ano[$prox_mes]} de {$this->ano}",
-      'A4', '', FALSE, FALSE);
+    $this->pdf = new clsPDF($titulo, $titulo, 'A4', '', FALSE, FALSE);
 
     $altura_linha     = 15;
     $inicio_escrita_y = 175;
@@ -225,7 +230,7 @@ class indice extends clsCadastro
 
         // Número de semanas dos meses
         $obj_quadro = new clsPmieducarQuadroHorario();
-        $obj_quadro->setCamposLista("cod_quadro_horario");
+        $obj_quadro->setCamposLista('cod_quadro_horario');
         $quadro_horario = $obj_quadro->lista(NULL, NULL, NULL, $this->ref_cod_turma,
           NULL, NULL, NULL, NULL, 1);
 
