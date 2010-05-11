@@ -100,33 +100,12 @@ class indice extends clsCadastro
 
   var $page_y = 125;
 
-  var $get_file;
-
-  var $cursos = array();
-
   var $get_link;
 
   var $total;
 
   var $ref_cod_modulo;
   var $data_ini, $data_fim;
-
-  var $z = 0;
-
-  var $meses_do_ano = array(
-    1  => 'JANEIRO',
-    2  => 'FEVEREIRO',
-    3  => 'MARÇO',
-    4  => 'ABRIL',
-    5  => 'MAIO',
-    6  => 'JUNHO',
-    7  => 'JULHO',
-    8  => 'AGOSTO',
-    9  => 'SETEMBRO',
-    10 => 'OUTUBRO',
-    11 => 'NOVEMBRO',
-    12 => 'DEZEMBRO'
-  );
 
   function renderHTML()
   {
