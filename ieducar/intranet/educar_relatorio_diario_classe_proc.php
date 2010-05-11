@@ -34,6 +34,10 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/clsPDF.inc.php';
 
+require_once 'App/Model/IedFinder.php';
+require_once 'App/Model/MatriculaSituacao.php';
+require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
+
 /**
  * clsIndexBase class.
  *
@@ -174,6 +178,7 @@ class indice extends clsCadastro
     $obj_serie = new clsPmieducarSerie($this->ref_cod_serie);
     $det_serie = $obj_serie->detalhe();
     $this->nm_serie = $det_serie['nm_serie'];
+    $regraId        = $det_serie['regra_avaliacao_id'];
 
     $obj_pessoa = new clsPessoa_($det_turma['ref_cod_regente']);
     $det = $obj_pessoa->detalhe();
@@ -200,216 +205,111 @@ class indice extends clsCadastro
     $obj_curso = new clsPmieducarCurso($this->ref_cod_curso);
     $det_curso = $obj_curso->detalhe();
 
-    if ($det_curso['falta_ch_globalizada']) {
-      // Números de semanas no mês
-      $db = new clsBanco();
-      $consulta = sprintf("SELECT padrao_ano_escolar FROM pmieducar.curso WHERE cod_curso = '%d'", $this->ref_cod_curso);
-      $padrao_ano_escolar = $db->CampoUnico($consulta);
-      $total_semanas = 0;
+    // Seleciona a regra para verificar se a presença é geral
+    $regraMapper   = new RegraAvaliacao_Model_RegraDataMapper();
+    $regra         = $regraMapper->find($regraId);
+    $presencaGeral = $regra->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL;
 
-      if ($padrao_ano_escolar) {
-        $meses = $db->CampoUnico(sprintf("
-          SELECT
-            to_char(data_inicio, 'dd/mm') || '-' || to_char(data_fim, 'dd/mm')
-          FROM
-            pmieducar.ano_letivo_modulo,
-            pmieducar.modulo
-          WHERE
-            modulo.cod_modulo = ano_letivo_modulo.ref_cod_modulo
-            AND modulo.ativo = 1
-            AND ano_letivo_modulo.ref_cod_modulo = '%d'
-            AND ano_letivo_modulo.sequencial = '%d'
-            AND ref_ano = '%d'
-            AND ref_ref_cod_escola = '%d'
-          ORDER BY
-            data_inicio,data_fim ASC
-        ", $this->ref_cod_modulo, $this->sequencial, $this->ano, $this->ref_cod_escola));
+    // Seleciona o curso para ver se é padrão e decidir qual ano letivo pesquisar
+    $db       = new clsBanco();
+    $consulta = sprintf('SELECT padrao_ano_escolar FROM pmieducar.curso WHERE cod_curso = \'%d\'', $this->ref_cod_curso);
+    $padrao_ano_escolar = $db->CampoUnico($consulta);
 
-        $data = explode('-', $meses);
+    $total_semanas = 0;
 
-        if (!$this->data_ini) {
-          $this->data_ini = $data[0];
-        }
-
-        if (!$this->data_fim) {
-          $this->data_fim = $data[1];
-        }
-
-        $data_ini = explode('/', $data[0]);
-        $data_fim = explode('/', $data[1]);
-
-        $meses = array($data_ini[1],$data_fim[1]);
-        $dias  = array($data_ini[0],$data_fim[0]);
-
-        $total_semanas = 0;
-
-        for ($mes = (int) $meses[0]; $mes <= (int) $meses[1]; $mes++) {
-          $mes_final = FALSE;
-
-          if ($mes == (int) $meses[0]) {
-            $dia = $dias[0];
-          }
-          elseif ($mes == (int)$meses[1]) {
-            $dia       = $dias[1];
-            $mes_final = TRUE;
-          }
-          else {
-            $dia = 1;
-          }
-
-          $total_semanas += $this->getNumeroDiasMes($dia, $mes, $this->ano, $mes_final);
-        }
-      }
-      else {
-        $meses = $db->CampoUnico(sprintf("
-          SELECT
-            to_char(data_inicio, 'dd/mm') || '-' || to_char(data_fim, 'dd/mm')
-          FROM
-            pmieducar.turma_modulo,
-            pmieducar.modulo
-          WHERE
-            modulo.cod_modulo = turma_modulo.ref_cod_modulo
-            AND ref_cod_turma = '%d'
-            AND turma_modulo.ref_cod_modulo = '%d'
-            AND turma_modulo.sequencial = '%d'
-            AND to_char(data_inicio,'yyyy') = '%d'
-          ORDER BY
-            data_inicio,data_fim ASC
-        ", $this->ref_cod_turma, $this->ref_cod_modulo, $this->sequencial, $this->ano));
-
-        $total_semanas = 0;
-
-        $data = explode('-', $meses);
-
-        if (!$this->data_ini) {
-          $this->data_ini = $data[0];
-        }
-
-        if (!$this->data_fim) {
-          $this->data_fim = $data[1];
-        }
-
-        $data_ini = explode('/', $data[0]);
-        $data_fim = explode('/', $data[1]);
-
-        $meses = array($data_ini[1],$data_fim[1]);
-        $dias  = array($data_ini[0],$data_fim[0]);
-
-        $total_semanas = 0;
-
-        for ($mes = $meses[0]; $mes <= $meses[1]; $mes++) {
-          $mes_final = FALSE;
-
-          if ($mes == $meses[0]) {
-            $dia = $dias[0];
-          }
-          elseif ($mes == $meses[1]) {
-            $dia       = 1;
-            $mes_final = TRUE;
-          }
-          else {
-            $dia = 1;
-          }
-
-          $total_semanas += $this->getNumeroDiasMes($dia, $mes, $this->ano, $mes_final);
-        }
-      }
-
-      $this->pdf = new clsPDF('Diário de Classe - ' . $this->ano,
-        sprintf('Diário de Classe - %s até %s de %s', $data[0], $data[1], $this->ano),
-        'A4', '', FALSE, FALSE
-      );
-
-      $this->mes_inicial   = (int) $meses[0];
-      $this->mes_final     = (int) $meses[1];
-      $this->pdf->largura  = 842.0;
-      $this->pdf->altura   = 595.0;
-
-      $this->total = $total_semanas;
-
-      if (!$this->em_branco) {
-        $obj_matricula_turma = new clsPmieducarMatriculaTurma();
-        $obj_matricula_turma->setOrderby('nome_ascii');
-        $lista_matricula = $obj_matricula_turma->lista(NULL, $this->ref_cod_turma,
-          NULL, NULL, NULL, NULL, NULL, NULL, 1, $this->ref_cod_serie,
-          $this->ref_cod_curso, $this->ref_cod_escola, $this->ref_cod_instituicao,
-          NULL, NULL, array(1, 2, 3), NULL, NULL, $this->ano, NULL, TRUE, NULL,
-          NULL, TRUE);
-      }
-
-      if ($lista_matricula || $this->em_branco) {
-        $this->pdf->OpenPage();
-        $this->addCabecalho();
-
-        if ($this->em_branco) {
-          $lista_matricula = array();
-          $this->numero_registros = $this->numero_registros ?
-            $this->numero_registros : 20;
-
-          for ($i = 0 ; $i < $this->numero_registros; $i++) {
-            $lista_matricula[] = '';
-          }
-        }
-
-        $num = 0;
-        foreach ($lista_matricula as $matricula) {
-          $num++;
-
-          if ($this->page_y > 500) {
-            $this->desenhaLinhasVertical();
-            $this->pdf->ClosePage();
-            $this->pdf->OpenPage();
-            $this->page_y = 125;
-            $this->addCabecalho();
-          }
-
-          $this->pdf->quadrado_relativo(30, $this->page_y , 782, 19);
-          $this->pdf->escreve_relativo($matricula['nome_aluno'] , 33,
-            $this->page_y + 4, 160, 15, $fonte, 7, $corTexto, 'left');
-
-          $this->pdf->escreve_relativo(sprintf('%02d', $num), 757,
-            $this->page_y + 4, 30, 30, $fonte, 7, $corTexto, 'left');
-
-          $this->page_y +=19;
-        }
-
-        $this->desenhaLinhasVertical();
-
-        $this->rodape();
-        $this->pdf->ClosePage();
-      }
-      else {
-        echo '
-          <script>
-            alert("Turma não possui matriculas");
-            window.parent.fechaExpansivel(\'div_dinamico_\'+(window.parent.DOM_divs.length-1));
-          </script>';
-
-        return;
-      }
-
-      $this->pdf->CloseFile();
-      $this->get_link = $this->pdf->GetLink();
+    if ($padrao_ano_escolar) {
+      // Seleciona o módulo do ano letivo da escola
+      $data = $this->getDatasModulo($this->ref_cod_modulo, $this->sequencial,
+        $this->ano, $this->ref_cod_escola);
     }
     else {
-      // Carga horária não globalizada gera relatório com uma disciplina por
-      // página
-      $obj_turma_disc = new clsPmieducarDisciplinaSerie();
-      $obj_turma_disc->setCamposLista('ref_cod_disciplina');
-      $lst_turma_disc = $obj_turma_disc->lista(NULL, $this->ref_cod_serie, 1);
+      // Seleciona o módulo do ano letivo da turma
+      $data = $this->getDatasModulo($this->ref_cod_modulo, $this->sequencial,
+        $this->ano, NULL, $this->ref_cod_turma);
+    }
 
-      if ($lst_turma_disc) {
-        $this->pdf = new clsPDF('Diário de Classe - ' . $this->ano,
-          sprintf('Diário de Classe - %s até %s de %s', $this->data_ini, $this->data_fim, $this->ano),
-          'A4', '', FALSE, FALSE
-        );
+    $meses = $data['meses'];
+    $dias  = $data['dias'];
 
-        foreach ($lst_turma_disc as $disciplina) {
-          $obj_disc = new clsPmieducarDisciplina($disciplina);
-          $det_disc = $obj_disc->detalhe();
-          $this->nm_disciplina = $det_disc['nm_disciplina'];
-          $this->page_y = 125;
+    if (!$this->data_ini) {
+      $this->data_ini = $data['dataInicial'];
+    }
 
+    if (!$this->data_fim) {
+      $this->data_fim = $data['dataFinal'];
+    }
+
+    $total_semanas = 0;
+
+    for ($mes = $meses[0]; $mes <= $meses[1]; $mes++) {
+      $mes_final = FALSE;
+
+      if ($mes == $meses[0]) {
+        $dia = $dias[0];
+      }
+      elseif ($mes == $meses[1]) {
+        $dia       = $dias[1];
+        $mes_final = TRUE;
+      }
+      else {
+        $dia = 1;
+      }
+
+      $total_semanas += $this->getNumeroDiasMes($dia, $mes, $this->ano, $mes_final);
+    }
+
+    $this->pdf = new clsPDF('Diário de Classe - ' . $this->ano,
+      sprintf('Diário de Classe - %s até %s de %s', $this->data_ini, $this->data_fim, $this->ano),
+      'A4', '', FALSE, FALSE
+    );
+
+    $this->mes_inicial  = (int) $meses[0];
+    $this->mes_final    = (int) $meses[1];
+    $this->pdf->largura = 842.0;
+    $this->pdf->altura  = 595.0;
+
+    $this->total = $total_semanas;
+
+    if (!$this->em_branco) {
+      $obj_matricula_turma = new clsPmieducarMatriculaTurma();
+      $obj_matricula_turma->setOrderby('nome_ascii');
+
+      $matriculaSituacao = array(
+        App_Model_MatriculaSituacao::APROVADO,
+        App_Model_MatriculaSituacao::REPROVADO,
+        App_Model_MatriculaSituacao::EM_ANDAMENTO
+      );
+
+      $lista_matricula = $obj_matricula_turma->lista(NULL, $this->ref_cod_turma,
+        NULL, NULL, NULL, NULL, NULL, NULL, 1, $this->ref_cod_serie,
+        $this->ref_cod_curso, $this->ref_cod_escola, $this->ref_cod_instituicao,
+        NULL, NULL, $matriculaSituacao, NULL, NULL, $this->ano, NULL, TRUE, NULL,
+        NULL, TRUE
+      );
+    }
+
+    if ($this->em_branco) {
+      $lista_matricula = array();
+      $this->numero_registros = $this->numero_registros ? $this->numero_registros : 20;
+
+      for ($i = 0 ; $i < $this->numero_registros; $i++) {
+        $lista_matricula[] = '';
+      }
+    }
+
+    // Seleciona os componentes da escola/série
+    $componentes = App_Model_IedFinder::getEscolaSerieDisciplina(
+      $this->ref_cod_serie, $this->ref_cod_escola, TRUE
+    );
+
+    if (0 < count($componentes) && FALSE == $presencaGeral) {
+      $this->total = $total_semanas = 0;
+
+      foreach ($componentes as $componente) {
+        $this->nm_disciplina = $componente->nome;
+        $this->page_y = 125;
+
+        if (FALSE == $presencaGeral) {
           // Número de semanas dos meses
           $obj_quadro = new clsPmieducarQuadroHorario();
           $obj_quadro->setCamposLista('cod_quadro_horario');
@@ -417,8 +317,12 @@ class indice extends clsCadastro
             NULL, NULL, NULL, NULL, 1);
 
           if (!$quadro_horario) {
-            echo '<script>alert(\'Turma não possui quadro de horários\');
-            window.parent.fechaExpansivel(\'div_dinamico_\'+(window.parent.DOM_divs.length-1));</script>';
+            echo '
+              <script>
+                alert(\'Turma não possui quadro de horários\');
+                window.parent.fechaExpansivel(\'div_dinamico_\'+(window.parent.DOM_divs.length-1));
+              </script>';
+
             die();
           }
 
@@ -427,189 +331,55 @@ class indice extends clsCadastro
           $obj_quadro_horarios->setOrderby('1 asc');
 
           $lista_quadro_horarios = $obj_quadro_horarios->lista($quadro_horario[0],
-            $this->ref_cod_serie, $this->ref_cod_escola, $disciplina, NULL, NULL,
+            $this->ref_cod_serie, $this->ref_cod_escola, $componente->id, NULL, NULL,
             NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
 
-          $db       = new clsBanco();
-          $consulta = sprintf('SELECT padrao_ano_escolar FROM pmieducar.curso WHERE cod_curso = \'%d\'', $this->ref_cod_curso);
-          $padrao_ano_escolar = $db->CampoUnico($consulta);
-
-          $total_semanas = 0;
-
-          if ($padrao_ano_escolar) {
-            $meses = $db->CampoUnico(sprintf("
-              SELECT
-                to_char(data_inicio, 'dd/mm') || '-' || to_char(data_fim, 'dd/mm')
-              FROM
-                pmieducar.ano_letivo_modulo,
-                pmieducar.modulo
-              WHERE
-                modulo.cod_modulo = ano_letivo_modulo.ref_cod_modulo
-                AND modulo.ativo = 1
-                AND ano_letivo_modulo.ref_cod_modulo = '%d'
-                AND ano_letivo_modulo.sequencial = '%d'
-                AND ref_ano = '%d'
-                AND ref_ref_cod_escola = '%d'
-              ORDER BY
-                data_inicio,data_fim ASC
-            ", $this->ref_cod_modulo, $this->sequencial, $this->ano, $this->ref_cod_escola));
-
-            $data = explode('-', $meses);
-
-            if (!$this->data_ini) {
-              $this->data_ini = $data[0];
-            }
-
-            if (!$this->data_fim) {
-              $this->data_fim = $data[1];
-            }
-
-            $data_ini = explode('/', $data[0]);
-            $data_fim = explode('/', $data[1]);
-
-            $meses = array($data_ini[1], $data_fim[1]);
-            $dias  = array($data_ini[0], $data_fim[0]);
-          }
-          else
-          {
-            $meses = $db->CampoUnico(sprintf("
-              SELECT
-                to_char(data_inicio, 'mm') || '-' || to_char(data_fim, 'mm')
-              FROM
-                pmieducar.turma_modulo,
-                pmieducar.modulo
-              WHERE
-                modulo.cod_modulo = turma_modulo.ref_cod_modulo
-                AND ref_cod_turma = '%d'
-                AND turma_modulo.ref_cod_modulo = '%d'
-                AND turma_modulo.sequencial = '%d'
-                AND to_char(data_inicio,'yyyy') = '%d'
-              ORDER BY
-                data_inicio, data_fim ASC
-            ", $this->ref_cod_turma, $this->ref_cod_modulo, $this->sequencial, $this->ano));
-
-            $data = explode('-', $meses);
-
-            if (!$this->data_ini) {
-              $this->data_ini = $data[0];
-            }
-
-            if (!$this->data_fim) {
-              $this->data_fim = $data[1];
-            }
-
-            $data_ini = explode('/', $data[0]);
-            $data_fim = explode('/', $data[1]);
-
-            $meses = array($data_ini[1], $data_fim[1]);
-            $dias  = array($data_ini[0], $data_fim[0]);
+          if (FALSE == $lista_quadro_horarios) {
+            continue;
           }
 
-          $total_dias_semanas = 0;
+          for ($mes_ = $meses[0]; $mes_ <= $meses[1]; $mes_++) {
+            $mes_final = FALSE;
 
-          if($lista_quadro_horarios) {
-            for($mes_ = $meses[0]; $mes_ <= $meses[1]; $mes_++) {
-              $mes_final = FALSE;
-
-              foreach ($lista_quadro_horarios as $dia_semana) {
-                if($mes_ == $meses[0]) {
-                  $dia = $dias[0];
-                }
-                elseif ($mes == $meses[1]) {
-                  $dia = 1;
-                  $mes_final = TRUE;
-                }
-                else {
-                  $dia = 1;
-                }
-
-                $total_dias_semanas += $this->getDiasSemanaMes(
-                  $dia, $mes_,$this->ano,$dia_semana,$mes_final
-                );
+            foreach ($lista_quadro_horarios as $dia_semana) {
+              if($mes_ == $meses[0]) {
+                $dia = $dias[0];
               }
-            }
-
-            $this->mes_inicial  = (int) $meses[0];
-            $this->mes_final    = (int) $meses[1];
-            $this->pdf->largura = 842.0;
-            $this->pdf->altura  = 595.0;
-
-            $this->total = $total_dias_semanas;
-
-            if (!$this->total) {
-              break;
-            }
-          }
-
-          if (!$this->em_branco) {
-            $obj_matricula_turma = new clsPmieducarMatriculaTurma();
-            $obj_matricula_turma->setOrderby('nome_ascii');
-            $lista_matricula = $obj_matricula_turma->lista(NULL, $this->ref_cod_turma,
-              NULL, NULL, NULL, NULL, NULL, NULL, 1, $this->ref_cod_serie,
-              $this->ref_cod_curso, $this->ref_cod_escola, $this->ref_cod_instituicao,
-              NULL, NULL, array(1, 2, 3), NULL, NULL, $this->ano, NULL, TRUE, NULL,
-              NULL, TRUE
-            );
-          }
-
-          if ($lista_matricula || $this->em_branco) {
-            $this->pdf->OpenPage();
-            $this->addCabecalho();
-
-            if ($this->em_branco) {
-              $lista_matricula = array();
-              $this->numero_registros = $this->numero_registros ? $this->numero_registros : 20;
-
-              for ($i = 0 ; $i < $this->numero_registros; $i++) {
-                $lista_matricula[] = '';
+              elseif ($mes == $meses[1]) {
+                $dia = 1;
+                $mes_final = TRUE;
               }
-            }
-
-            $num = 0;
-            foreach ($lista_matricula as $matricula) {
-              $num++;
-
-              if ($this->page_y > 500) {
-                $this->desenhaLinhasVertical();
-                $this->pdf->ClosePage();
-                $this->pdf->OpenPage();
-                $this->page_y = 125;
-                $this->addCabecalho();
+              else {
+                $dia = 1;
               }
 
-              $this->pdf->quadrado_relativo(30, $this->page_y, 782, 19);
-
-              $this->pdf->escreve_relativo($matricula['nome_aluno'] , 33,
-                $this->page_y + 4, 160, 15, $fonte, 7, $corTexto, 'left');
-
-              $this->pdf->escreve_relativo(sprintf('%02d', $num), 757,
-                $this->page_y + 4, 30, 30, $fonte, 7, $corTexto, 'left');
-
-              $this->page_y +=19;
+              $total_semanas += $this->getDiasSemanaMes(
+                $dia, $mes_, $this->ano, $dia_semana, $mes_final
+              );
             }
-
-            $this->desenhaLinhasVertical();
-            $this->pdf->ClosePage();
           }
-          else {
-            echo '
-              <script>
-                alert("Turma não possui matrículas");
-                window.parent.fechaExpansivel(\'div_dinamico_\' + (window.parent.DOM_divs.length - 1));
-              </script>';
 
-            return;
-          }
+          $this->total = $total_semanas;
         }
-      }
 
-      if ($this->total) {
-        $this->pdf->CloseFile();
-        $this->get_link = $this->pdf->GetLink();
+        if (!$this->total) {
+          continue;
+        }
+
+        $this->gerarListaAlunos($lista_matricula);
       }
-      else {
-        $this->mensagem = 'Não existem dias letivos cadastrados para esta turma';
-      }
+    }
+    else {
+      $this->gerarListaAlunos($lista_matricula);
+    }
+
+    if ($this->total) {
+      $this->pdf->CloseFile();
+      $this->get_link = $this->pdf->GetLink();
+    }
+    else {
+      $this->mensagem = 'Não existem dias letivos cadastrados para esta turma';
+      return;
     }
 
     echo sprintf('
@@ -633,8 +403,127 @@ class indice extends clsCadastro
       </html>', $this->get_link);
   }
 
+  /**
+   * Retorna a data inicial e final de um módulo do ano letivo de uma escola ou
+   * turma.
+   *
+   * @param  int      $codModulo
+   * @param  int      $sequencial
+   * @param  int      $ano
+   * @param  int|NULL $codEscola   Opcional. O código da escola para o qual o
+   *   módulo do ano letivo será selecionado
+   * @param  int|NULL $codTurma    Opcional. O código da turma com o qual o
+   *   módulo do ano letivo será selecionado
+   * @throws App_Model_Exception
+   * @return array
+   */
+  function getDatasModulo($codModulo, $sequencial, $ano, $codEscola = NULL, $codTurma = NULL)
+  {
+    if (is_null($codEscola) && is_null($codTurma)) {
+      require_once 'App/Model/Exception.php';
+      throw new App_Model_Exception('É necessário informar um código de escola ou de turma.');
+    }
 
-  public function addCabecalho()
+    if ($codEscola) {
+      $sql = sprintf("
+        SELECT
+          to_char(data_inicio, 'dd/mm') || '-' || to_char(data_fim, 'dd/mm')
+        FROM
+          pmieducar.ano_letivo_modulo,
+          pmieducar.modulo
+        WHERE
+          modulo.cod_modulo = ano_letivo_modulo.ref_cod_modulo
+          AND modulo.ativo = 1
+          AND ano_letivo_modulo.ref_cod_modulo = '%d'
+          AND ano_letivo_modulo.sequencial = '%d'
+          AND ref_ano = '%d'
+          AND ref_ref_cod_escola = '%d'
+        ORDER BY
+          data_inicio,data_fim ASC", $codModulo, $sequencial, $ano, $codEscola);
+    }
+    else {
+      $sql = sprintf("
+        SELECT
+          to_char(data_inicio, 'mm') || '-' || to_char(data_fim, 'mm')
+        FROM
+          pmieducar.turma_modulo,
+          pmieducar.modulo
+        WHERE
+          modulo.cod_modulo = turma_modulo.ref_cod_modulo
+          AND ref_cod_turma = '%d'
+          AND turma_modulo.ref_cod_modulo = '%d'
+          AND turma_modulo.sequencial = '%d'
+          AND to_char(data_inicio, 'yyyy') = '%d'
+        ORDER BY
+          data_inicio, data_fim ASC", $codTurma, $codModulo, $sequencial, $ano);
+    }
+
+    $db    = new clsBanco();
+    $meses = $db->CampoUnico($sql);
+
+    $data = explode('-', $meses);
+
+    $data_ini = explode('/', $data[0]);
+    $data_fim = explode('/', $data[1]);
+
+    return array(
+      'dataInicial' => $data[0],
+      'dataFinal'   => $data[1],
+      'meses'       => array($data_ini[1], $data_fim[1]),
+      'dias'        => array($data_ini[0], $data_fim[0])
+    );
+  }
+
+  /**
+   * Gera a lista de alunos no documento PDF.
+   *
+   * @param array  $lista_matricula
+   * @param string $fonte
+   * @param string $corTexto
+   */
+  function gerarListaAlunos($lista_matricula = NULL, $fonte = 'arial', $corTexto = '#000000')
+  {
+    if (!$lista_matricula && !$this->em_branco) {
+      echo '
+        <script>
+          alert("Turma não possui matrículas");
+          window.parent.fechaExpansivel(\'div_dinamico_\' + (window.parent.DOM_divs.length - 1));
+        </script>';
+
+      return;
+    }
+
+    $this->pdf->OpenPage();
+    $this->addCabecalho();
+
+    $num = 0;
+    foreach ($lista_matricula as $matricula) {
+      $num++;
+
+      if ($this->page_y > 500) {
+        $this->desenhaLinhasVertical();
+        $this->pdf->ClosePage();
+        $this->pdf->OpenPage();
+        $this->page_y = 125;
+        $this->addCabecalho();
+      }
+
+      $this->pdf->quadrado_relativo(30, $this->page_y, 782, 19);
+
+      $this->pdf->escreve_relativo($matricula['nome'], 33,
+        $this->page_y + 4, 160, 15, $fonte, 7, $corTexto, 'left');
+
+      $this->pdf->escreve_relativo(sprintf('%02d', $num), 757,
+        $this->page_y + 4, 30, 30, $fonte, 7, $corTexto, 'left');
+
+      $this->page_y +=19;
+    }
+
+    $this->desenhaLinhasVertical();
+    $this->pdf->ClosePage();
+  }
+
+  function addCabecalho()
   {
     /**
      * Variável global com objetos do CoreExt.
@@ -711,7 +600,6 @@ class indice extends clsCadastro
       80, $fonte, 10, $corTexto, 'left');
   }
 
-
   function desenhaLinhasVertical()
   {
     $corTexto = '#000000';
@@ -778,16 +666,6 @@ class indice extends clsCadastro
     $this->pdf->linha_relativa(660, 517, 130, 0);
   }
 
-  function Editar()
-  {
-    return FALSE;
-  }
-
-  function Excluir()
-  {
-    return FALSE;
-  }
-
   function getNumeroDiasMes($dia, $mes, $ano, $mes_final = FALSE)
   {
     $year  = $ano;
@@ -830,7 +708,7 @@ class indice extends clsCadastro
       $dia_semana_corrente = getdate($date);
       $dia_semana_corrente = $dia_semana_corrente['wday'] + 1;
 
-      if (($dia_semana_corrente != 1 &&  $dia_semana_corrente != 7) && (array_search($day,$dias_nao_letivo) === FALSE)) {
+      if (($dia_semana_corrente != 1 &&  $dia_semana_corrente != 7) && (array_search($day, $dias_nao_letivo) === FALSE)) {
         $numero_dias++;
       }
     }
@@ -845,15 +723,15 @@ class indice extends clsCadastro
 
     $date = mktime(1, 1, 1, $month, $dia, $year);
 
-    $first_day_of_month = strtotime("-" . (date("d", $date) - 1) . " days", $date);
-    $last_day_of_month  = strtotime("+" . (date("t", $first_day_of_month) - 1) . " days", $first_day_of_month);
+    $first_day_of_month = strtotime('-' . (date('d', $date) - 1) . ' days', $date);
+    $last_day_of_month  = strtotime('+' . (date('t', $first_day_of_month) - 1) . ' days', $first_day_of_month);
 
-    $last_day_of_month = date("d", $last_day_of_month);
+    $last_day_of_month = date('d', $last_day_of_month);
 
     $numero_dias = 0;
 
     $obj_calendario = new clsPmieducarCalendarioAnoLetivo();
-    $obj_calendario->setCamposLista("cod_calendario_ano_letivo");
+    $obj_calendario->setCamposLista('cod_calendario_ano_letivo');
     $lista_calendario = $obj_calendario->lista(NULL, $this->ref_cod_escola, NULL,
       NULL, $this->ano, NULL, NULL, NULL, NULL, 1);
 
@@ -863,14 +741,14 @@ class indice extends clsCadastro
 
     $obj_dia = new clsPmieducarCalendarioDia();
     $obj_dia->setCamposLista('dia');
-    $dias_nao_letivo = $obj_dia->lista($lista_calendario,$mes, NULL, NULL, NULL,
+    $dias_nao_letivo = $obj_dia->lista($lista_calendario, $mes, NULL, NULL, NULL,
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, "'n'");
 
     if (!$dias_nao_letivo) {
       $dias_nao_letivo = array();
     }
 
-    if($mes_final) {
+    if ($mes_final) {
       $last_day_of_month = $dia;
       $dia = 1;
     }
@@ -880,17 +758,27 @@ class indice extends clsCadastro
       $dia_semana_corrente = getdate($date);
       $dia_semana_corrente = $dia_semana_corrente['wday'] + 1;
 
-      $data_atual = sprintf("%s/%s/%s", $day, $mes, $ano);
-      $data_final = sprintf("%s/%s", $this->data_fim, $ano);
+      $data_atual = sprintf('%s/%s/%s', $day, $mes, $ano);
+      $data_final = sprintf('%s/%s', $this->data_fim, $ano);
 
       if (($dia_semana ==  $dia_semana_corrente) &&
-         (array_search($day,$dias_nao_letivo) === FALSE) && data_maior($data_final, $data_atual)
+         (array_search($day, $dias_nao_letivo) === FALSE) && data_maior($data_final, $data_atual)
       ) {
         $numero_dias++;
       }
     }
 
     return $numero_dias;
+  }
+
+  function Editar()
+  {
+    return FALSE;
+  }
+
+  function Excluir()
+  {
+    return FALSE;
   }
 }
 
