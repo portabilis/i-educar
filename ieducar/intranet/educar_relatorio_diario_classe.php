@@ -71,48 +71,11 @@ class indice extends clsCadastro
   var $ref_cod_escola;
   var $ref_cod_serie;
   var $ref_cod_turma;
-
-  var $ano;
-  var $mes;
-
-  var $nm_escola;
-  var $nm_instituicao;
   var $ref_cod_curso;
-  var $sequencial;
-  var $pdf;
-  var $pagina_atual = 1;
-  var $total_paginas = 1;
-  var $nm_professor;
-  var $nm_turma;
-  var $nm_serie;
-  var $nm_disciplina;
-
-  var $page_y = 125;
-
-  var $get_file;
-
-  var $cursos = array();
-
-  var $get_link;
-
-  var $total;
-
   var $ref_cod_modulo;
 
-  var $meses_do_ano = array(
-    1  => 'JANEIRO',
-    2  => 'FEVEREIRO',
-    3  => 'MARÇO',
-    4  => 'ABRIL',
-    5  => 'MAIO',
-    6  => 'JUNHO',
-    7  => 'JULHO',
-    8  => 'AGOSTO',
-    9  => 'SETEMBRO',
-    10 => 'OUTUBRO',
-    11 => 'NOVEMBRO',
-    12 => 'DEZEMBRO'
-  );
+  var $sequencial;
+  var $ano;
 
   function Inicializar()
   {
@@ -146,6 +109,9 @@ class indice extends clsCadastro
 
     $this->campoCheck('em_branco', 'Relatório em branco', '');
     $this->campoNumero('numero_registros', 'Número de linhas', '', 3, 3);
+    $this->campoCheck('temporario', 'Gerar lista temporária?', '',
+      'Gera lista de alunos mesmo para os componentes curriculares ' .
+      'não definidos no quadro de horário da turma.');
 
     $get_escola             = TRUE;
     $obrigatorio            = TRUE;

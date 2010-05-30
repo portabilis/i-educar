@@ -17906,7 +17906,6 @@ INSERT INTO menu VALUES (21150, NULL, 21122, 'Série', 4, NULL, '_self', 1, 15, 3
 INSERT INTO menu VALUES (21151, 633, 21123, 'Motivo de Afastamento', 4, 'educar_motivo_afastamento_lst.php', '_self', 1, 15, 1);
 INSERT INTO menu VALUES (21152, 642, 21124, 'Faltas/Notas', 4, 'educar_falta_nota_aluno_lst.php', '_self', 1, 15, 1);
 INSERT INTO menu VALUES (21153, 634, 21123, 'Função', 5, 'educar_funcao_lst.php', '_self', 1, 15, 1);
-INSERT INTO menu VALUES (21155, 927, 21127, 'Diário de Frequência Temp.', 5, 'educar_relatorio_diario_classe_temp.php', '_self', 1, 15, 1);
 INSERT INTO menu VALUES (21156, 829, 21123, 'Categoria Níveis', 5, 'educar_categoria_nivel_lst.php', '_self', 1, 15, 20);
 INSERT INTO menu VALUES (21157, 587, 21122, 'Sequência de Enturmação', 5, 'educar_sequencia_serie_lst.php', '_self', 1, 15, 145);
 INSERT INTO menu VALUES (21158, NULL, 21123, 'Relatórios Servidores', 6, NULL, '_self', 1, 15, 176);
@@ -18769,7 +18768,6 @@ INSERT INTO menu_tipo_usuario VALUES (2, 786, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 944, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 664, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 670, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (2, 927, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 711, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 659, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (2, 561, 1, 1, 1);
@@ -18870,7 +18868,6 @@ INSERT INTO menu_tipo_usuario VALUES (1, 786, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (1, 944, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (1, 664, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (1, 670, 1, 1, 1);
-INSERT INTO menu_tipo_usuario VALUES (1, 927, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (1, 711, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (1, 659, 1, 1, 1);
 INSERT INTO menu_tipo_usuario VALUES (1, 561, 1, 1, 1);
@@ -19690,7 +19687,6 @@ INSERT INTO menu_funcionario VALUES (1, 1, 1, 786);
 INSERT INTO menu_funcionario VALUES (1, 1, 1, 944);
 INSERT INTO menu_funcionario VALUES (1, 1, 1, 664);
 INSERT INTO menu_funcionario VALUES (1, 1, 1, 670);
-INSERT INTO menu_funcionario VALUES (1, 1, 1, 927);
 INSERT INTO menu_funcionario VALUES (1, 1, 1, 711);
 INSERT INTO menu_funcionario VALUES (1, 1, 1, 659);
 INSERT INTO menu_funcionario VALUES (1, 1, 1, 561);
@@ -19954,7 +19950,6 @@ INSERT INTO menu_submenu VALUES (918, 55, 2, 'Ata Resultado Final', 'educar_rela
 INSERT INTO menu_submenu VALUES (911, 55, 2, 'Ficha de Rematrícula', 'educar_relatorio_ficha_rematricula.php', '', 3);
 INSERT INTO menu_submenu VALUES (916, 55, 2, 'Registro de Transferências Expedidas', 'educar_relatorio_registro_transferencias.php', '', 3);
 INSERT INTO menu_submenu VALUES (900, 55, 2, 'Relação de Alunos ANEEs Quantidade', 'educar_relatorio_relacao_qtd_aluno_pnee_escola.php', '', 3);
-INSERT INTO menu_submenu VALUES (927, 55, 2, 'Diário de Frequência Temporário', 'educar_relatorio_diario_classe_temp.php', '', 3);
 INSERT INTO menu_submenu VALUES (933, 55, 2, 'Levantamento Turma Período', 'educar_relatorio_levantamento_turma_periodo_aluno.php', '', 3);
 INSERT INTO menu_submenu VALUES (555, 56, 2, 'Usuário', 'educar_usuario_lst.php', '', 3);
 INSERT INTO menu_submenu VALUES (554, 56, 2, 'Tipo Usuário', 'educar_tipo_usuario_lst.php', '', 3);
@@ -20098,6 +20093,7 @@ INSERT INTO changelog VALUES (16, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '16_perm
 INSERT INTO changelog VALUES (17, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '17_adiciona_campo_curso_componente_ano_escolar_e_atualiza_constraint_servidor_disciplina.sql');
 INSERT INTO changelog VALUES (18, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '18_cria_tabelas_de_parecer_descritivo.sql');
 INSERT INTO changelog VALUES (19, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '19_atualiza_nome_de_relatorio_no_menu_e_permissoes.sql');
+INSERT INTO changelog VALUES (20, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '20_remove_permissao_e_menu_diario_avaliacao_temp.sql');
 
 
 --

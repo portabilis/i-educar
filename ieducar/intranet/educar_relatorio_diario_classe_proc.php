@@ -107,13 +107,26 @@ class indice extends clsCadastro
   var $ref_cod_modulo;
   var $data_ini, $data_fim;
 
+  /**
+   * Define se será gerado uma lista com uma quantidade de dias padrão
+   * (report.diario_classe.dias_temporario) caso o componente curricular não
+   * esteja atribuído no quadro de horário da turma.
+   *
+   * @var bool
+   */
+  var $temporario = FALSE;
+
   function renderHTML()
   {
+    global $coreExt;
+
     if ($_POST) {
       foreach ($_POST as $key => $value) {
         $this->$key = $value;
       }
     }
+
+    $this->temporario = isset($_POST['temporario']) ? TRUE : FALSE;
 
     if ($this->ref_ref_cod_serie) {
       $this->ref_cod_serie = $this->ref_ref_cod_serie;
@@ -295,6 +308,9 @@ class indice extends clsCadastro
           $quadro_horario = $obj_quadro->lista(NULL, NULL, NULL, $this->ref_cod_turma,
             NULL, NULL, NULL, NULL, 1);
 
+          $total_semanas    = 0;
+          $this->indefinido = FALSE;
+
           if (!$quadro_horario) {
             echo '
               <script>
@@ -313,19 +329,31 @@ class indice extends clsCadastro
             $this->ref_cod_serie, $this->ref_cod_escola, $componente->id, NULL, NULL,
             NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
 
-          if (FALSE == $lista_quadro_horarios) {
+          // Se não for retornado horário e o diário não for temporário, gera
+          // a lista para o próximo componente
+          if (FALSE == $lista_quadro_horarios && FALSE == $this->temporario) {
             continue;
           }
 
-          for ($mes_ = $meses[0]; $mes_ <= $meses[1]; $mes_++) {
+          // Caso o diário seja temporário, gera lista de alunos para 30 dias
+          // por padrão
+          if (FALSE == $lista_quadro_horarios && TRUE == $this->temporario) {
+            $this->indefinido = TRUE;
+
+            $total_semanas    = $coreExt['Config']->get(
+              $coreExt['Config']->report->diario_classe->dias_temporarios, 30
+            );
+          }
+
+          for ($mes_ = $meses[0]; $mes_ <= $meses[1] && FALSE != $lista_quadro_horarios; $mes_++) {
             $mes_final = FALSE;
 
             foreach ($lista_quadro_horarios as $dia_semana) {
               if($mes_ == $meses[0]) {
                 $dia = $dias[0];
               }
-              elseif ($mes == $meses[1]) {
-                $dia = 1;
+              elseif ($mes_ == $meses[1]) {
+                $dia = $dias[1];
                 $mes_final = TRUE;
               }
               else {
@@ -575,7 +603,15 @@ class indice extends clsCadastro
 
     $this->page_y += 19;
 
-    $this->pdf->escreve_relativo('Dias de aula: ' . $this->total, 715, 100, 535,
+    $label = $this->total;
+    $pos   = 715;
+
+    if ($this->indefinido) {
+      $label = 'indefinido';
+      $pos   = 680;
+    }
+
+    $this->pdf->escreve_relativo('Dias de aula: ' . $label, $pos, 100, 535,
       80, $fonte, 10, $corTexto, 'left');
   }
 
