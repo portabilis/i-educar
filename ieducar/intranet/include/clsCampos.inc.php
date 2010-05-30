@@ -1824,7 +1824,7 @@ class clsCampos extends Core_Controller_Page_Abstract
               $onClick = "onclick=\"{$componente[5]}\"";
             }
 
-            $retorno .= "<input valor=\"{$componente[3]}\" type='checkbox' name=\"{$nome}\" id=\"{$nome}\" {$onClick}";
+            $retorno .= "<input value=\"{$componente[3]}\" type='checkbox' name=\"{$nome}\" id=\"{$nome}\" {$onClick}";
 
             if ($componente[3]) {
               $retorno .= ' checked';
