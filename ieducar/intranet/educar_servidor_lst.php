@@ -103,6 +103,10 @@ class indice extends clsListagem
       'Instituição'
     ));
 
+    $get_escola             = TRUE;
+    $obrigatorio            = TRUE;
+    $exibe_nm_escola        = TRUE;
+
     include 'include/pmieducar/educar_campo_lista.php';
 
     $opcoes = array('' => 'Pesquise o funcionario clicando na lupa ao lado');
@@ -149,7 +153,17 @@ class indice extends clsListagem
       NULL,
       NULL,
       NULL,
-      TRUE
+      TRUE,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      $this->ref_cod_escola,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      1
     );
 
     $total = $obj_servidor->_total;
