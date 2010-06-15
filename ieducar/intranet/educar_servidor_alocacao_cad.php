@@ -98,7 +98,7 @@ class indice extends clsCadastro
     $this->ref_ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 3,
+    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7,
       'educar_servidor_alocacao_lst.php');
 
     if (is_numeric($this->ref_cod_servidor) && is_numeric($this->ref_ref_cod_instituicao)) {
@@ -114,7 +114,7 @@ class indice extends clsCadastro
           $temp['ref_cod_escola']        = $val['ref_cod_escola'];
           $temp['novo']                  = 0;
 
-          $this->alocacao_array[]     = $temp;
+          $this->alocacao_array[] = $temp;
         }
 
         $retorno = 'Novo';
@@ -252,15 +252,36 @@ class indice extends clsCadastro
     unset($aux);
 
     // Escolas
-    $obj_escola   = new clsPmieducarEscola();
-    $lista_escola = $obj_escola->lista(NULL, NULL, NULL,
-      $this->ref_ref_cod_instituicao, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+    $obj_escola = new clsPmieducarEscola();
+    $permissao  = new clsPermissoes();
 
-    if ($lista_escola) {
+    // Exibe apenas a escola ao qual o usuário de nível escola está alocado
+    if (4 == $permissao->nivel_acesso($this->pessoa_logada)) {
+      $lista_escola = $obj_escola->lista($permissao->getEscola($this->pessoa_logada),
+        NULL, NULL, $this->ref_ref_cod_instituicao, NULL, NULL, NULL, NULL, NULL,
+        NULL, 1);
+
+      $nome_escola = $lista_escola[0]['nome'];
+      $cod_escola  = $lista_escola[0]['cod_escola'];
+
+      $this->campoTextoInv('ref_cod_escola_label', 'Escola', $nome_escola);
+      $this->campoOculto('ref_cod_escola', $cod_escola);
+    }
+    // Usuário administrador visualiza todas as escolas disponíveis
+    else {
+      $lista_escola = $obj_escola->lista(NULL, NULL, NULL,
+        $this->ref_ref_cod_instituicao, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+
       $opcoes = array('' => 'Selecione');
-      foreach ($lista_escola as $escola) {
-        $opcoes[$escola['cod_escola']] = $escola['nome'];
+
+      if ($lista_escola) {
+        foreach ($lista_escola as $escola) {
+          $opcoes[$escola['cod_escola']] = $escola['nome'];
+        }
       }
+
+      $this->campoLista('ref_cod_escola', 'Escola', $opcoes, $this->ref_cod_escola,
+        '', FALSE, '', '', FALSE, FALSE);
     }
 
     $periodo = array(
@@ -269,9 +290,6 @@ class indice extends clsCadastro
       3  => 'Noturno'
     );
     self::$periodos = $periodo;
-
-    $this->campoLista('ref_cod_escola', 'Escola', $opcoes, $this->ref_cod_escola,
-      '', FALSE, '', '', FALSE, FALSE);
 
     $this->campoLista('periodo', 'Período', $periodo, $this->periodo, NULL, FALSE,
       '', '', FALSE, FALSE);
@@ -299,7 +317,7 @@ class indice extends clsCadastro
         $obj_permissoes = new clsPermissoes();
         $link_excluir   = '';
 
-        if ($obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 3)) {
+        if ($obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7)) {
           $link_excluir = "<a href='#' onclick=\"getElementById('excluir_periodo').value = '{$key}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>";
         }
 
@@ -346,7 +364,7 @@ class indice extends clsCadastro
     @session_write_close();
 
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 3,
+    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7,
       'educar_servidor_alocacao_lst.php');
 
     if ($_POST['alocacao_array']) {
@@ -465,7 +483,7 @@ function getPeriodos(codEscola)
 
   for (var ii in periodos) {
     if (!escolasPeriodos[codEscola] || !escolasPeriodos[codEscola][ii]) {
-      obj.options[obj.length] = new Option(periodos[ii], i);
+      obj.options[obj.length] = new Option(periodos[ii], ii);
     }
   }
 }
