@@ -107,7 +107,7 @@ class indice extends clsCadastro
     );
 
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 3, $backUrl);
+    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $backUrl);
 
     if (is_string($this->passo) && $this->passo == 1) {
       $retorno = 'Novo';
@@ -141,7 +141,7 @@ class indice extends clsCadastro
         }
 
         $obj_permissoes = new clsPermissoes();
-        if ($obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 3)) {
+        if ($obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7)) {
           $this->fexcluir = TRUE;
         }
 
@@ -318,7 +318,7 @@ class indice extends clsCadastro
     );
 
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 3, $backUrl);
+    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $backUrl);
 
     $obj = new clsPmieducarServidorFormacao(NULL, NULL, $this->pessoa_logada,
       $this->ref_cod_servidor, $this->nm_formacao, $this->tipo, $this->descricao,
@@ -365,7 +365,7 @@ class indice extends clsCadastro
     );
 
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 3, $backUrl);
+    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $backUrl);
 
     $obj = new clsPmieducarServidorFormacao($this->cod_formacao, $this->pessoa_logada,
       NULL, $this->ref_cod_servidor, $this->nm_formacao, $this->tipo, $this->descricao,
@@ -419,7 +419,7 @@ class indice extends clsCadastro
     );
 
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 3, $backUrl);
+    $obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7, $backUrl);
 
     $obj = new clsPmieducarServidorFormacao($this->cod_formacao, $this->pessoa_logada,
       NULL, $this->ref_cod_servidor, $this->nm_formacao, $this->tipo, $this->descricao,

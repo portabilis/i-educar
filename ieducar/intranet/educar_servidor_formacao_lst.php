@@ -33,6 +33,8 @@ require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
+require_once 'CoreExt/View/Helper/UrlHelper.php';
+
 /**
  * clsIndexBase class.
  *
@@ -47,7 +49,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Formacao' );
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Formação');
     $this->processoAp = 635;
   }
 }
@@ -148,6 +150,10 @@ class indice extends clsListagem
 
     $total = $obj_servidor_formacao->_total;
 
+    // UrlHelper
+    $url  = CoreExt_View_Helper_UrlHelper::getInstance();
+    $path = 'educar_servidor_formacao_det.php';
+
     // Monta a lista
     if (is_array($lista) && count($lista)) {
       foreach ($lista as $registro) {
@@ -182,25 +188,36 @@ class indice extends clsListagem
           $registro['tipo'] = 'Concurso';
         }
 
+        $options = array(
+          'query' => array(
+            'cod_formacao' => $registro['cod_formacao']
+        ));
+
         $this->addLinhas(array(
-          "<a href=\"educar_servidor_formacao_det.php?cod_formacao={$registro["cod_formacao"]}\">{$registro["nm_formacao"]}</a>",
-          "<a href=\"educar_servidor_formacao_det.php?cod_formacao={$registro["cod_formacao"]}\">{$registro["tipo"]}</a>"
+          $url->l($registro['nm_formacao'], $path, $options),
+          $url->l($registro['tipo'], $path, $options)
         ));
 
         $this->tipo = '';
       }
     }
 
-    $this->addPaginador2( "educar_servidor_formacao_lst.php", $total, $_GET, $this->nome, $this->limite );
+    $this->addPaginador2('educar_servidor_formacao_lst.php', $total, $_GET, $this->nome, $this->limite);
     $obj_permissoes = new clsPermissoes();
 
-    if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 3)) {
-      $this->array_botao[]     = "Novo";
-      $this->array_botao_url[] = "educar_servidor_formacao_cad.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}";
+    if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
+      $this->array_botao[]     = 'Novo';
+      $this->array_botao_url[] = sprintf(
+        'educar_servidor_formacao_cad.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
+        $this->ref_cod_servidor, $this->ref_cod_instituicao
+      );
     }
 
     $this->array_botao[]     = 'Voltar';
-    $this->array_botao_url[] = "educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}";
+    $this->array_botao_url[] = sprintf(
+      'educar_servidor_det.php?cod_servidor=%d&ref_cod_instituicao=%d',
+      $this->ref_cod_servidor, $this->ref_cod_instituicao
+    );
 
     $this->largura = '100%';
   }
