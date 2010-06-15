@@ -95,7 +95,7 @@ class indice extends clsCadastro
 
     $obj_permissoes = new clsPermissoes();
 
-    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 3, 'educar_servidor_lst.php');
+    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, 'educar_servidor_lst.php');
 
     if (is_numeric($this->cod_servidor) && is_numeric($this->ref_cod_instituicao)) {
       $obj = new clsPmieducarServidor($this->cod_servidor, NULL, NULL, NULL, NULL,
