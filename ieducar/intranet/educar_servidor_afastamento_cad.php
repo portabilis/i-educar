@@ -213,6 +213,7 @@ class indice extends clsCadastro {
           NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL);
 
         if ($lista) {
+
           // Passa todos os valores obtidos no registro para atributos do objeto
           foreach ($lista as $campo => $val) {
             $temp = array();
@@ -386,8 +387,9 @@ class indice extends clsCadastro {
       return FALSE;
     }
 
-    $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-    return FALSE;
+    $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
+    header("Location: educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
+    die();
   }
 
 
@@ -416,8 +418,8 @@ class indice extends clsCadastro {
 
     $obj = new clsPmieducarServidorAfastamento($this->ref_cod_servidor,
       $this->sequencial, $this->ref_cod_motivo_afastamento, $this->pessoa_logada,
-      NULL, NULL, NULL, $this->data_retorno, unserialize($this->data_saida), 1,
-      $this->ref_cod_instituicao );
+      NULL, NULL, NULL, $this->data_retorno, unserialize($this->data_saida), 0,
+      $this->ref_cod_instituicao);
 
     $editou = $obj->edita();
     if ($editou) {
