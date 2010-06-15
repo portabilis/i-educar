@@ -552,7 +552,9 @@ class clsPmieducarServidor
       $whereAnd = " AND ";
     }
     else {
-      if (is_numeric($alocacao_escola_instituicao)) {
+      if (is_numeric($alocacao_escola_instituicao) &&
+        (is_numeric($int_ref_cod_instituicao) || is_numeric($int_ref_cod_escola))
+      ) {
         $filtros .= "
     {$whereAnd} s.cod_servidor IN
       (SELECT a.ref_cod_servidor
@@ -560,11 +562,14 @@ class clsPmieducarServidor
         WHERE ";
 
         if (is_numeric($int_ref_cod_instituicao)) {
-          $filtros .= $whereAnd . " a.ref_ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
+          $filtros .= " a.ref_ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
         }
 
         if (is_numeric($int_ref_cod_escola)) {
-          $filtros .= $whereAnd . " and ref_cod_escola = '{$int_ref_cod_escola}' ";
+          if (is_numeric($int_ref_cod_instituicao)) {
+            $filtros .= " " . $whereAnd;
+          }
+          $filtros .= " ref_cod_escola = '{$int_ref_cod_escola}' ";
         }
 
         $filtros .= ') ';
