@@ -95,7 +95,7 @@ class indice extends clsCadastro
     }
 
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 3,
+    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7,
       'educar_servidor_lst.php');
 
     if (is_numeric($this->cod_servidor) && is_numeric($this->ref_cod_instituicao)) {
@@ -111,7 +111,7 @@ class indice extends clsCadastro
         }
 
         $obj_permissoes = new clsPermissoes();
-        if ($obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 3)) {
+        if ($obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7)) {
           $this->fexcluir = TRUE;
         }
 
@@ -316,7 +316,7 @@ class indice extends clsCadastro
     @session_write_close();
 
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 3,
+    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7,
       'educar_servidor_lst.php');
 
     $obj = new clsPmieducarServidor($this->cod_servidor, NULL, NULL, NULL, NULL,
@@ -376,7 +376,7 @@ class indice extends clsCadastro
     @session_write_close();
 
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 3,
+    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7,
       'educar_servidor_lst.php');
 
     if ($this->ref_cod_instituicao == $this->ref_cod_instituicao_original) {
@@ -461,7 +461,7 @@ class indice extends clsCadastro
     @session_write_close();
 
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 3,
+    $obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7,
       'educar_servidor_lst.php');
 
     $obj_quadro_horario = new clsPmieducarQuadroHorarioHorarios(NULL, NULL, NULL,

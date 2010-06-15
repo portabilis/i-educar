@@ -200,7 +200,7 @@ class indice extends clsListagem
     $this->addPaginador2('educar_servidor_lst.php', $total, $_GET, $this->nome, $this->limite);
     $obj_permissoes = new clsPermissoes();
 
-    if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 3)) {
+    if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
       $this->acao      = 'go("educar_servidor_cad.php")';
       $this->nome_acao = 'Novo';
     }
