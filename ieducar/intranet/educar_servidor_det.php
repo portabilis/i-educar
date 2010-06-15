@@ -361,7 +361,7 @@ class indice extends clsDetalhe
 
     $obj_permissoes = new clsPermissoes();
 
-    if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 3)) {
+    if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
       $this->url_novo   = 'educar_servidor_cad.php';
       $this->url_editar = "educar_servidor_cad.php?cod_servidor={$registro["cod_servidor"]}&ref_cod_instituicao={$this->ref_cod_instituicao}";
 
