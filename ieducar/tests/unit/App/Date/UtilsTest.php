@@ -23,37 +23,49 @@
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
- * @package     App
+ * @package     App_Date
  * @subpackage  UnitTests
- * @since       Arquivo disponível desde a versão 1.1.0
+ * @since       Arquivo disponível desde a versão 1.2.0
  * @version     $Id$
  */
 
-require_once 'App/Date/AllTests.php';
-require_once 'App/Model/AllTests.php';
-require_once 'App/Service/AllTests.php';
+require_once 'App/Date/Utils.php';
 
 /**
- * App_AllTests class.
- *
- * Arquivo de definição de suíte para o pacote App.
+ * App_Date_UtilsTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
- * @package     App
+ * @package     App_Date
  * @subpackage  UnitTests
- * @since       Classe disponível desde a versão 1.1.0
+ * @since       Classe disponível desde a versão 1.2.0
  * @version     @@package_version@@
  */
-class App_AllTests
+class App_Date_UtilsTest extends UnitBaseTest
 {
-  public static function suite()
+  public function testDatesYearAtLeast()
   {
-    $suite = new PHPUnit_Framework_TestSuite('Suíte de testes unitários de App');
-    $suite->addTest(App_Date_AllTests::suite());
-    $suite->addTest(App_Model_AllTests::suite());
-    $suite->addTest(App_Service_AllTests::suite());
-    return $suite;
+    $dates = array(
+      '01/01/2000',
+      '01/02/2000'
+    );
+
+    try {
+      App_Date_Utils::datesYearAtLeast($dates, 2001, 1);
+      $this->fail('::datesYearAtLeast() deveria lançar App_Date_Exception.');
+    }
+    catch (App_Date_Exception $e) {
+      $this->assertEquals(
+        'Ao menos "1" das datas informadas deve ser do ano "2001". Datas: "01/01/2000", "01/02/2000".',
+        $e->getMessage(),
+        ''
+      );
+    }
+
+    $this->assertTrue(
+      App_Date_Utils::datesYearAtLeast($dates, 2000, 2),
+      '::datesYearAtLeast() retorna "TRUE" quando uma das datas é do ano esperado.'
+    );
   }
 }

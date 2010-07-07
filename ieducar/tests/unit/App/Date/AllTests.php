@@ -23,37 +23,33 @@
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
- * @package     App
+ * @package     App_Model
  * @subpackage  UnitTests
- * @since       Arquivo disponível desde a versão 1.1.0
+ * @since       Arquivo disponível desde a versão 1.2.0
  * @version     $Id$
  */
 
-require_once 'App/Date/AllTests.php';
-require_once 'App/Model/AllTests.php';
-require_once 'App/Service/AllTests.php';
-
 /**
- * App_AllTests class.
+ * App_Date_AllTests class.
  *
- * Arquivo de definição de suíte para o pacote App.
+ * Arquivo de definição de suíte para o pacote App_Date.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
- * @package     App
+ * @package     App_Date
  * @subpackage  UnitTests
- * @since       Classe disponível desde a versão 1.1.0
+ * @since       Classe disponível desde a versão 1.2.0
  * @version     @@package_version@@
  */
-class App_AllTests
+class App_Date_AllTests extends TestCollector
 {
+  protected $_name = 'Suíte de testes unitários de App_Date';
+  protected $_file = __FILE__;
+
   public static function suite()
   {
-    $suite = new PHPUnit_Framework_TestSuite('Suíte de testes unitários de App');
-    $suite->addTest(App_Date_AllTests::suite());
-    $suite->addTest(App_Model_AllTests::suite());
-    $suite->addTest(App_Service_AllTests::suite());
-    return $suite;
+    $instance = new self();
+    return $instance->addDirectoryTests();
   }
 }

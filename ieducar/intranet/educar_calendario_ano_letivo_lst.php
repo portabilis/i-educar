@@ -118,11 +118,11 @@ class indice extends clsConfig
         <tbody>';
 
     if ($_POST) {
-        $this->ref_cod_escola = $_POST['ref_cod_escola'] ?
-          $_POST['ref_cod_escola'] : $_SESSION['calendario']['ref_cod_escola'];
+      $this->ref_cod_escola = $_POST['ref_cod_escola'] ?
+        $_POST['ref_cod_escola'] : $_SESSION['calendario']['ref_cod_escola'];
 
-        $this->ref_cod_instituicao = $_POST['ref_cod_instituicao'] ?
-          $_POST['ref_cod_instituicao'] :  $_SESSION['calendario']['ref_cod_instituicao'];
+      $this->ref_cod_instituicao = $_POST['ref_cod_instituicao'] ?
+        $_POST['ref_cod_instituicao'] :  $_SESSION['calendario']['ref_cod_instituicao'];
 
       if ($_POST['mes']) {
         $this->mes = $_POST['mes'];
@@ -131,19 +131,15 @@ class indice extends clsConfig
       if ($_POST['ano']) {
         $this->ano = $_POST['ano'];
       }
-    }
-    else {
-      if ($_GET){
-        // passa todos os valores obtidos no GET para atributos do objeto
-        foreach($_GET as $var => $val) {
-          $this->$var = ( $val === "" ) ? NULL: $val;
-        }
+
+      if ($_POST['cod_calendario_ano_letivo']) {
+        $this->cod_calendario_ano_letivo = $_POST['cod_calendario_ano_letivo'];
       }
-      elseif ($_SESSION['calendario']) {
-        // passa todos os valores em SESSION para atributos do objeto
-        foreach ($_SESSION['calendario'] as $var => $val) {
-          $this->$var = ($val === '') ? NULL : $val;
-        }
+    }
+    elseif (isset($_SESSION['calendario'])) {
+      // passa todos os valores em SESSION para atributos do objeto
+      foreach ($_SESSION['calendario'] as $var => $val) {
+        $this->$var = ($val === '') ? NULL : $val;
       }
     }
 
@@ -157,49 +153,6 @@ class indice extends clsConfig
 
     if (!$this->ano) {
       $this->ano = date('Y');
-    }
-
-    $obj_cal = new clsPmieducarCalendarioAnoLetivo();
-
-    if ($this->ref_cod_escola && $this->ano) {
-      if ($obj_cal->lista(NULL, $this->ref_cod_escola, NULL, NULL,
-          $this->ano, NULL, NULL, NULL, NULL, 1)
-      ) {
-        $_SESSION['calendario']['ultimo_valido'] = 1;
-
-        if ($this->ref_cod_escola) {
-          $_SESSION['calendario']['ref_cod_escola'] = $this->ref_cod_escola;
-        }
-
-        if ($this->ref_cod_instituicao) {
-          $_SESSION['calendario']['ref_cod_instituicao'] = $this->ref_cod_instituicao;
-        }
-
-        if ($this->ano) {
-          $_SESSION['calendario']['ano'] = $this->ano;
-        }
-
-        if ($this->mes) {
-          $_SESSION['calendario']['mes'] = $this->mes;
-        }
-      }
-    }
-    elseif (! $_POST) {
-      if ($_SESSION['calendario']['ref_cod_escola']) {
-        $this->ref_cod_escola = $_SESSION["calendario"]["ref_cod_escola"];
-      }
-
-      if ($_SESSION['calendario']['ref_cod_instituicao']) {
-        $this->ref_cod_instituicao = $_SESSION['calendario']['ref_cod_instituicao'];
-      }
-
-      if ($_SESSION['calendario']['mes']) {
-        $this->ano = $_SESSION['calendario']['mes'];
-      }
-
-      if ($_SESSION['calendario']['mes']) {
-        $this->mes = $_SESSION['calendario']['mes'];
-      }
     }
 
     $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
@@ -234,22 +187,14 @@ class indice extends clsConfig
         }
 
         $lista = $obj_calendario_ano_letivo->lista(
-          NULL,
+          $this->cod_calendario_ano_letivo,
           $this->ref_cod_escola,
           NULL,
           NULL,
-          $this->ano,
+          (!isset($this->cod_calendario_ano_letivo) ? $this->ano : NULL),
           NULL,
           NULL,
-          1,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL
+          1
         );
         break;
     }
@@ -270,33 +215,32 @@ class indice extends clsConfig
       }
     }
 
-
     // Monta a lista
     if (is_array($lista) && count($lista)) {
       foreach ($lista as $key => $registro) {
-        $registro['inicio_ano_letivo_time']  = strtotime(substr($registro['inicio_ano_letivo'], 0, 16));
-        $registro['inicio_ano_letivo_br']    = date('d/m/Y', $registro['inicio_ano_letivo_time']);
-        $registro['termino_ano_letivo_time'] = strtotime(substr($registro['termino_ano_letivo'], 0, 16));
-        $registro['termino_ano_letivo_br']   = date('d/m/Y', $registro['termino_ano_letivo_time']);
+        // Guarda dados na $_SESSION
+        $_SESSION['calendario'] = array(
+          'cod_calendario_ano_letivo' => $registro['cod_calendario_ano_letivo'],
+          'ref_cod_instituicao'       => $this->ref_cod_instituicao,
+          'ref_cod_escola'            => $this->ref_cod_escola,
+          'ano'                       => $this->ano,
+          'mes'                       => $this->mes
+        );
 
-        // Pega detalhes de foreign_keys
-        if (class_exists('clsPmieducarEscola')) {
-          $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_cod_escola']);
-          $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-          $registro['nm_escola'] = $det_ref_cod_escola['nome'];
-        }
-        else {
-          $registro['ref_cod_escola'] = 'Erro na geração';
-        }
+        // Nome da escola
+        $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_cod_escola']);
+        $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
+        $registro['nm_escola'] = $det_ref_cod_escola['nome'];
 
+        // Início e término do ano letivo.
         $obj_ano_letivo_modulo = new clsPmieducarAnoLetivoModulo();
 
         $inicio_ano = $obj_ano_letivo_modulo->menorData(
-          $this->ano, $this->ref_cod_escola
+          $registro['ano'], $this->ref_cod_escola
         );
 
         $fim_ano = $obj_ano_letivo_modulo->maiorData(
-          $this->ano, $this->ref_cod_escola
+          $registro['ano'], $this->ref_cod_escola
         );
 
         $inicio_ano = explode('/', dataFromPgToBr($inicio_ano));
@@ -391,12 +335,12 @@ class indice extends clsConfig
         }
 
         if ($this->mes <= (int) $inicio_ano[1] && $this->ano == (int) $inicio_ano[2]) {
-          if ($this->mes == (int)$inicio_ano[1] ){
+          if ($this->mes == (int) $inicio_ano[1]) {
             $obj_calendario->adicionarLegenda('Início Ano Letivo', 'AMARELO');
             $obj_calendario->adicionarArrayDias('Início Ano Letivo', array($inicio_ano[0]));
           }
 
-          $dia_inicio = (int)$inicio_ano[0];
+          $dia_inicio = (int) $inicio_ano[0];
           $dias = array();
 
           if ($this->mes < (int) $inicio_ano[1]) {
@@ -414,6 +358,7 @@ class indice extends clsConfig
           }
           else {
             $dia_inicio;
+
             for ($d = 1 ; $d < $dia_inicio ; $d++) {
               $dias[] = $d;
             }
@@ -470,7 +415,7 @@ class indice extends clsConfig
 
         $obj_anotacao = new clsPmieducarCalendarioDiaAnotacao();
         $lista_anotacoes = $obj_anotacao->lista(
-          NULL, $this->mes,$registro['cod_calendario_ano_letivo'], NULL, 1
+          NULL, $this->mes, $registro['cod_calendario_ano_letivo'], NULL, 1
         );
 
         if ($lista_anotacoes) {
@@ -489,8 +434,10 @@ class indice extends clsConfig
           $registro['cod_calendario_ano_letivo']
         );
 
+        // Gera código HTML do calendário
         $calendario = $obj_calendario->getCalendario(
-          $this->mes, $registro['ano'], 'mes_corrente', $_GET
+          $this->mes, $this->ano, 'mes_corrente', $_GET,
+          array('cod_calendario_ano_letivo' => $registro['cod_calendario_ano_letivo'])
         );
 
         $retorno .= sprintf(

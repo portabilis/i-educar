@@ -33,6 +33,8 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
+require_once 'App/Date/Utils.php';
+
 /**
  * clsIndexBase class.
  *
@@ -280,12 +282,16 @@ class indice extends clsCadastro
 
     if ($this->ano_letivo_modulo) {
       $obj = new clsPmieducarEscolaAnoLetivo($this->ref_ref_cod_escola,
-        $this->ref_ano, $this->pessoa_logada,  NULL, 0,  NULL,  NULL, 1
+        $this->ref_ano, $this->pessoa_logada, NULL, 0, NULL, NULL, 1
       );
 
       $cadastrou = $obj->cadastra();
 
       if ($cadastrou) {
+        if (FALSE == $this->_verificaModuloDatas($this->ano_letivo_modulo)) {
+          return FALSE;
+        }
+
         foreach ($this->ano_letivo_modulo as $campo) {
           $campo['data_inicio_'] = dataToBanco($campo['data_inicio_']);
           $campo['data_fim_']    = dataToBanco($campo['data_fim_']);
@@ -336,6 +342,10 @@ class indice extends clsCadastro
       $excluiu = $obj->excluirTodos();
 
       if ($excluiu) {
+        if (FALSE == $this->_verificaModuloDatas($this->ano_letivo_modulo)) {
+          return FALSE;
+        }
+
         foreach ($this->ano_letivo_modulo as $campo) {
           $campo['data_inicio_'] = dataToBanco($campo['data_inicio_']);
           $campo['data_fim_']    = dataToBanco($campo['data_fim_']);
@@ -397,6 +407,33 @@ class indice extends clsCadastro
     $this->mensagem = 'Exclusão não realizada.<br />';
     return FALSE;
   }
+
+  /**
+   * Verifica se ao menos uma das datas as datas de início dos módulos é do
+   * mesmo ano letivo da escola. Em caso de erro, configura a mensagem de
+   * erro que é retornado pelo formulário.
+   *
+   * @access private
+   * @param  array $modulos O array associativo recebido via POST pelo formulário.
+   * @return bool  FALSE caso nenhuma das datas esteja no mesmo ano letivo da escola.
+   */
+  function _verificaModuloDatas(array $modulos)
+  {
+    $dates = array();
+    foreach ($modulos as $modulo) {
+      $dates[] = $modulo['data_inicio_'];
+    }
+
+    try {
+      App_Date_Utils::datesYearAtLeast($dates, $this->ref_ano, 1);
+    }
+    catch (App_Date_Exception $e) {
+      $this->mensagem = $e->getMessage();
+      return FALSE;
+    }
+
+    return TRUE;
+  }
 }
 
 // Instancia objeto de página
@@ -412,37 +449,43 @@ $pagina->addForm($miolo);
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
+/**
+ * Realiza validação client-side do formulário.
+ */
 function incluir()
 {
-  if (new Date(document.getElementById('data_fim').value) > new Date(document.getElementById('data_inicio').value))
+  var phpjs     = ied_phpjs.getInstance();
+  var startDate = null;
+  var endDate   = null;
 
-  if (! (/(((0[1-9]|[12][0-9])\/(02))|((0[1-9]|[12][0-9]|(30))\/(0[4689]|(11)))|((0[1-9]|[12][0-9]|3[01])\/(0[13578]|(10)|(12))))\/[1-2][0-9]{3}/.test( document.getElementById("data_inicio").value ))) {
-    mudaClassName('formdestaque', 'obrigatorio');
+  startDate = document.getElementById('data_inicio').value.split('/');
+  endDate   = document.getElementById('data_fim').value.split('/');
+
+  if ('' === document.getElementById('ref_cod_modulo').value) {
+    alert('É necessário selecionar um "módulo".');
+    return false;
+  }
+
+  if (!phpjs.checkdate(startDate[1], startDate[0], startDate[2])) {
     document.getElementById('data_inicio').className = 'formdestaque';
     alert('Preencha o campo "Data Início" corretamente!');
-
     document.getElementById('data_inicio').focus();
     return false;
   }
 
-  if (!(/(((0[1-9]|[12][0-9])\/(02))|((0[1-9]|[12][0-9]|(30))\/(0[4689]|(11)))|((0[1-9]|[12][0-9]|3[01])\/(0[13578]|(10)|(12))))\/[1-2][0-9]{3}/.test( document.getElementById("data_fim").value ))) {
-    mudaClassName('formdestaque', 'obrigatorio');
+  if (!phpjs.checkdate(endDate[1], endDate[0], endDate[2])) {
     document.getElementById('data_fim').className = 'formdestaque';
     alert('Preencha o campo "Data Fim" corretamente!');
-
     document.getElementById('data_fim').focus();
     return false;
   }
 
-  var dt1 = document.getElementById('data_inicio').value.split('/');
-  var dt2 = document.getElementById('data_fim').value.split('/');
+  startDate = new Date(parseInt(startDate[2], 10), parseInt(startDate[1], 10) - 1, parseInt(startDate[0], 10));
+  endDate   = new Date(parseInt(endDate[2], 10), parseInt(endDate[1], 10) - 1, parseInt(endDate[0], 10));
 
-  var data_ini = new Date(parseInt(dt1[2]), parseInt(dt1[1], 10), parseInt(dt1[0], 10));
-  var data_fim = new Date(parseInt(dt2[2]), parseInt(dt2[1], 10), parseInt(dt2[0], 10));
-
-  if (data_ini > data_fim || parseInt(dt1[2]) != parseInt(dt2[2])) {
-    alert( 'Datas incorretas!\n1- Verifique se as datas são do mesmo ano.\n2- Verifique se a "Data Fim" é maior que a "Data Início".');
-    return;
+  if (endDate < startDate) {
+    alert('"Data Início" não pode ser posterior a "Data Fim".');
+    return false;
   }
 
   document.getElementById('incluir_modulo').value = 'S';

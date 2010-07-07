@@ -278,10 +278,10 @@ function tamanhoTela()
 
 function acaoCalendario(nome, dia, mes, ano)
 {
-  document.getElementById('nome').value = nome;
-  document.getElementById('dia').value  = dia;
-  document.getElementById('mes').value  = mes;
-  document.form_calendario.ano.value    = ano;
+  document.getElementById('cal_nome').value = nome;
+  document.getElementById('cal_dia').value  = dia;
+  document.getElementById('cal_mes').value  = mes;
+  document.getElementById('cal_ano').value  = ano;
 
-  document.form_calendario.submit();
+  document.getElementById('form_calendario').submit();
 }
