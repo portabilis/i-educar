@@ -297,10 +297,11 @@ class clsCalendario
    * @todo   Substituir código de geração de calendário por uma biblioteca
    *         com licença compatível com GPL2
    */
-  function getCalendario($mes, $ano, $nome, $mixVariaveisMantidas)
+  function getCalendario($mes, $ano, $nome, $mixVariaveisMantidas,
+    array $formValues = array())
   {
-    $array_color   = $array_color;
-    $array_legenda = $array_legenda;
+    $array_color   = $this->array_cor;
+    $array_legenda = $this->array_legenda;
 
     if (
       isset($mixVariaveisMantidas["{$nome}_mes"]) &&
@@ -354,7 +355,7 @@ class clsCalendario
 
     // Create the table tag opener and day headers
     // GET
-    $linkFixo = $strUrl . "?";
+    $linkFixo = '?';
     if (is_array($mixVariaveisMantidas)) {
       foreach ($mixVariaveisMantidas as $key => $value) {
         if ($key != "{$nome}_mes" &&  $key != "{$nome}_ano") {
@@ -427,11 +428,15 @@ class clsCalendario
 
     $form = sprintf('
       <form id="form_calendario" name="form_calendario" method="post" action="%s">
-        <input type="hidden" id="nome" name="nome" value="">
-        <input type="hidden" id="dia" name="dia" value="">
-        <input type="hidden" id="mes" name="mes" value="">
-        <input type="hidden" id="ano" name="ano" value="">
-      </form>', $linkFixo);
+        <input type="hidden" id="cal_nome" name="nome" value="">
+        <input type="hidden" id="cal_dia" name="dia" value="">
+        <input type="hidden" id="cal_mes" name="mes" value="">
+        <input type="hidden" id="cal_ano" name="ano" value="">
+        %s
+      </form>',
+      $linkFixo,
+      $this->_generateFormValues($formValues, array('nome', 'ano', 'mes', 'dia'))
+    );
 
     if ($this->permite_trocar_ano == TRUE) {
       $select = sprintf(
@@ -467,8 +472,8 @@ class clsCalendario
         <a href="#" onclick="acaoCalendario(\'%s\', \'\', \'%s\', \'%s\')">
           <img src="/intranet/imagens/i-educar/seta_esq.gif" border="0" style="margin-right: 5px;" alt="Mês Anterior">
         </a>
-        %s
-      ', $nome, $mes_ano, $ano_anterior_ano, $ano);
+        %s',
+        $nome, $mes_ano, $ano_anterior_ano, $ano);
 
       $cab[] = sprintf('
         <a href="#" onclick="acaoCalendario(\'%s\', \'\', \'%s\', \'%s\')">
@@ -568,7 +573,7 @@ class clsCalendario
 
       $style_dia = sprintf('background-color: %s;', $this->array_cor[0]);
 
-      if ($this->array_cor_dia_padrao[$DiaSemana])
+      if (isset($this->array_cor_dia_padrao[$DiaSemana]))
         $style_dia = sprintf('background-color: %s;', $this->array_cor_dia_padrao[$DiaSemana]);
 
       if (key_exists($diaCorrente,$this->array_dias)) {
@@ -607,7 +612,7 @@ class clsCalendario
       $diaCorrente_ = strlen($diaCorrente) == 1 ? '0' . $diaCorrente : $diaCorrente;
       $NomeMes      = strtolower($NomeMes);
 
-      if (key_exists($diaCorrente,$this->array_div_flutuante_dias)) {
+      if (key_exists($diaCorrente, $this->array_div_flutuante_dias)) {
         $message    = "onmouseover=\"ShowContent('{$diaCorrente}','{$mes}','{$ano}','{$nome}'); return true;\"";
         $mouseout   = "onmouseout=\"HideContent(event,'{$diaCorrente}','{$mes}','{$ano}','{$nome}')\" ";
         $mensagens .= "
@@ -713,8 +718,53 @@ class clsCalendario
     $calendario .= '</td></tr>';
     $calendario .= '</table></div>';
 
-    $calendario .= $mensagens;
+    if (isset($mensagens)) {
+      $calendario .= $mensagens;
+    }
 
     return $calendario;
+  }
+
+  /**
+   * Gera campos hidden para o formulário do calendário.
+   *
+   * Exemplo de uso:
+   *
+   * <code>
+   * <?php
+   * $formValues = array(
+   *   'formFieldKey' => 'formFieldValue'
+   * );
+   * print $this->_generateFormValues($formValues);
+   * // <input id="cal_formFieldKey" name="formFieldKey" type="hidden" value="formFieldValue" />
+   * </code>
+   *
+   * @access protected
+   * @param  array   $formValues     Array associativo onde a chave torna-se o
+   *   o valor dos atributos id e name do campo hidden.
+   * @param  array   $invalidNames   Array com nomes inválidos para campos. Útil
+   *   para evitar que sejam criados campos duplicados.
+   * @return string  String com o HTML dos campos hidden gerados.
+   * @since  Método disponível desde a versão 1.2.0
+   * @todo   Refatorar código de geração de html para uma classe externa.
+   */
+  function _generateFormValues($formValues = array(), $invalidNames = array())
+  {
+    $ret = '';
+
+    if (is_array($formValues) && 0 < count($formValues)) {
+      foreach ($formValues as $name => $value) {
+        if (in_array($name, $invalidNames)) {
+          continue;
+        }
+
+        $ret .= sprintf(
+          '<input id="cal_%s" name="%s" type="hidden" value="%s" />',
+          $name, $name, $value
+        );
+      }
+    }
+
+    return $ret;
   }
 }

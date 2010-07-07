@@ -23,37 +23,42 @@
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
- * @package     App
+ * @package     Core
  * @subpackage  UnitTests
- * @since       Arquivo disponível desde a versão 1.1.0
+ * @since       Arquivo disponível desde a versão 1.2.0
  * @version     $Id$
  */
 
-require_once 'App/Date/AllTests.php';
-require_once 'App/Model/AllTests.php';
-require_once 'App/Service/AllTests.php';
+require_once 'clsCalendario.inc.php';
 
 /**
- * App_AllTests class.
- *
- * Arquivo de definição de suíte para o pacote App.
+ * ClsCalendarioTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
- * @package     App
+ * @package     Ied_Include
  * @subpackage  UnitTests
- * @since       Classe disponível desde a versão 1.1.0
+ * @since       Classe disponível desde a versão 1.2.0
+ * @todo        Mover para diretório Ied
  * @version     @@package_version@@
  */
-class App_AllTests
+class ClsCalendarioTest extends UnitBaseTest
 {
-  public static function suite()
+  public function testGenerateFormValues()
   {
-    $suite = new PHPUnit_Framework_TestSuite('Suíte de testes unitários de App');
-    $suite->addTest(App_Date_AllTests::suite());
-    $suite->addTest(App_Model_AllTests::suite());
-    $suite->addTest(App_Service_AllTests::suite());
-    return $suite;
+    $formValues = array(
+      'formFieldKey' => 'formFieldValue'
+    );
+
+    $calendario = new clsCalendario();
+
+    // Teste sem permissão de troca de ano
+    $html = $calendario->getCalendario(1, 2000, 'testGenerateFormValues', array(), $formValues);
+
+    $this->assertRegExp(
+      '/<input id="cal_formFieldKey" name="formFieldKey" type="hidden" value="formFieldValue" \/>/',
+      $html, '->getCalendario() gera campos extras de formulário.'
+    );
   }
 }
