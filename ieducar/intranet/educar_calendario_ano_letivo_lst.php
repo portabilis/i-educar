@@ -270,6 +270,7 @@ class indice extends clsConfig
       }
     }
 
+
     // Monta a lista
     if (is_array($lista) && count($lista)) {
       foreach ($lista as $key => $registro) {
@@ -300,6 +301,7 @@ class indice extends clsConfig
 
         $inicio_ano = explode('/', dataFromPgToBr($inicio_ano));
         $fim_ano    = explode('/', dataFromPgToBr($fim_ano));
+
         $obj_calendario = new clsCalendario();
         $obj_calendario->setLargura(600);
         $obj_calendario->permite_trocar_ano = TRUE;
