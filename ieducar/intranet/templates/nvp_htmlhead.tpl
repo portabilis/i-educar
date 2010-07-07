@@ -1,16 +1,11 @@
-<!doctype HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="pt">
 <head>
   <meta http-equiv='Content-Type' content='text/html; charset=ISO-8859-1' />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="-1" />
   <!-- #&REFRESH&# -->
-
-  <meta name='Author' content='Prefeitura de Itajaí' />
-  <meta name='Description' content='Portal da Prefeitura de Itajaí' />
-  <meta name='Keywords' content='portal, prefeitura, itajaí, serviço, cidadão' />
-
-  <link rel="icon" href="imagens/logo_itajai.ico" type="image/x-icon">
 
   <title><!-- #&TITULO&# --></title>
 
@@ -27,6 +22,7 @@
   <script type="text/javascript" src="scripts/menu.js?1"></script>
   <script type="text/javascript" src="scripts/scriptaculous/prototype.js"></script>
   <script type="text/javascript" src="scripts/scriptaculous/scriptaculous.js?load=effects"></script>
+  <script type="text/javascript" src="scripts/phpjs/ieducar.package.js?1"></script>
 
   <script type="text/javascript">
     var running = false;
@@ -87,41 +83,6 @@
 
   <script type="text/javascript">
   <!-- #&SCRIPT_HEADER&# -->
-  </script>
-</head>
-<body <!-- #&BODYSCRIPTS&# -->>
-  <div id="DOM_expansivel" class="DOM_expansivel"></div>
-
-<!doctype HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html lang="pt">
-<head>
-  <meta http-equiv='Content-Type' content='text/html; charset=ISO-8859-1' />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="-1" />
-  <!-- #&REFRESH&# -->
-
-  <meta name='Author' content='Prefeitura de Itajaí' />
-  <meta name='Description' content='Portal da Prefeitura de Itajaí' />
-  <meta name='Keywords' content='portal, prefeitura, itajaí, serviço, cidadão' />
-
-  <link rel="icon" href="imagens/logo_itajai.ico" type="image/x-icon">
-
-  <title><!-- #&TITULO&# --></title>
-
-  <link rel=stylesheet type='text/css' href='styles/styles.css' />
-  <link rel=stylesheet type='text/css' href='styles/novo.css' />
-  <link rel=stylesheet type='text/css' href='styles/menu.css' />
-  <!-- #&ESTILO&# -->
-
-  <script type='text/javascript' src='scripts/padrao.js?1'></script>
-  <script type='text/javascript' src='scripts/novo.js?1'></script>
-  <script type='text/javascript' src='scripts/dom.js?1'></script>
-  <script type='text/javascript' src='scripts/menu.js?1'></script>
-
-  <!-- #&SCRIPT&# -->
-
-  <script type="text/javascript">
-    <!-- #&SCRIPT_HEADER&# -->
   </script>
 </head>
 <body <!-- #&BODYSCRIPTS&# -->>
