@@ -88,11 +88,14 @@ $coreExt = array();
 
 // Localização para pt_BR
 $locale = CoreExt_Locale::getInstance();
-$locale->setCulture('pt_BR');
+$locale->setCulture('pt_BR')->setLocale();
 
 // Instancia objeto CoreExt_Configuration
 $coreExt['Config'] = new CoreExt_Config_Ini($configFile, CORE_EXT_CONFIGURATION_ENV);
 $coreExt['Locale'] = $locale;
+
+// Timezone
+date_default_timezone_set($coreExt['Config']->app->locale->timezone);
 
 /**
  * Altera o diretório da aplicação. chamadas a fopen() na aplicação não
