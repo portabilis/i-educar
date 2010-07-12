@@ -189,7 +189,7 @@ class indice extends clsCadastro
       return TRUE;
     }
 
-    $titlo = 'Diário de Classe - ' . $this->ano;
+    $titulo = 'Diário de Classe - ' . $this->ano;
 
     $prox_mes = $this->mes + 1;
     $this->pdf = new clsPDF($titulo, $titulo, 'A4', '', FALSE, FALSE);

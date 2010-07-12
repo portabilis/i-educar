@@ -20,9 +20,10 @@
   <script type="text/javascript" src="scripts/novo.js?1"></script>
   <script type="text/javascript" src="scripts/dom.js?1"></script>
   <script type="text/javascript" src="scripts/menu.js?1"></script>
+  <script type="text/javascript" src="scripts/ied/forms.js?1"></script>
+  <script type="text/javascript" src="scripts/ied/phpjs.js?1"></script>
   <script type="text/javascript" src="scripts/scriptaculous/prototype.js"></script>
   <script type="text/javascript" src="scripts/scriptaculous/scriptaculous.js?load=effects"></script>
-  <script type="text/javascript" src="scripts/phpjs/ieducar.package.js?1"></script>
 
   <script type="text/javascript">
     var running = false;

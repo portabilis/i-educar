@@ -247,7 +247,9 @@ class indice extends clsCadastro
         $dia = 1;
       }
 
-      $total_semanas += $this->getNumeroDiasMes($dia, $mes, $this->ano, $mes_final);
+      $total_semanas += $this->getNumeroDiasMes($this->ref_cod_turma, $dia, $mes,
+        $this->ano, $mes_final);
+      $total_semanas += $ndm;
     }
 
     $this->pdf = new clsPDF('Diário de Classe - ' . $this->ano,
@@ -340,7 +342,7 @@ class indice extends clsCadastro
           if (FALSE == $lista_quadro_horarios && TRUE == $this->temporario) {
             $this->indefinido = TRUE;
 
-            $total_semanas    = $coreExt['Config']->get(
+            $total_semanas = $coreExt['Config']->get(
               $coreExt['Config']->report->diario_classe->dias_temporarios, 30
             );
           }
@@ -361,7 +363,7 @@ class indice extends clsCadastro
               }
 
               $total_semanas += $this->getDiasSemanaMes(
-                $dia, $mes_, $this->ano, $dia_semana, $mes_final
+                $this->ref_cod_turma, $dia, $mes_, $this->ano, $dia_semana, $mes_final
               );
             }
           }
@@ -681,8 +683,60 @@ class indice extends clsCadastro
     $this->pdf->linha_relativa(660, 517, 130, 0);
   }
 
-  function getNumeroDiasMes($dia, $mes, $ano, $mes_final = FALSE)
+  /**
+   * Retorna o número de dias de um mês a partir de certo dia descartando
+   * domingos, sábados e dias não letivos.
+   *
+   * @param   int   $codTurma
+   * @param   int   $dia
+   * @param   int   $mes
+   * @param   int   $ano
+   * @param   bool  $mes_final
+   * @return  int
+   */
+  function getNumeroDiasMes($codTurma, $dia, $mes, $ano, $mes_final = FALSE)
   {
+    return $this->_getNumeroDias($codTurma, $dia, $mes, $ano,
+      array($this, '_counterNumeroDiaMes'), $mes_final);
+  }
+
+  /**
+   * Retorna o número de dias de um mês contabilizando apenas o dia da semana
+   * (domingo, segunda, ... sábado) desejado, descartando dias não letivos
+   * enquanto a data do dia da semana não for maior que a data final do
+   * período definido pelo módulo escolhido.
+   *
+   * @param   int   $codTurma
+   * @param   int   $dia
+   * @param   int   $mes
+   * @param   int   $ano
+   * @param   int   $dia_semana
+   * @param   bool  $mes_final
+   * @return  int
+   */
+  function getDiasSemanaMes($codTurma, $dia, $mes, $ano, $dia_semana,
+    $mes_final = FALSE)
+  {
+    return $this->_getNumeroDias($codTurma, $dia, $mes, $ano,
+      array($this, '_counterDiasSemanaMes'), $mes_final, $dia_semana);
+  }
+
+  /**
+   * @access  protected
+   * @param   int   $codTurma
+   * @param   int   $dia
+   * @param   int   $mes
+   * @param   int   $ano
+   * @param   array $counter
+   * @param   int   $dia_semana
+   * @param   bool  $mes_final
+   * @return  int
+   */
+  function _getNumeroDias($codTurma, $dia, $mes, $ano, $counter,
+    $mes_final = FALSE, $dia_semana = NULL)
+  {
+    static $calendarioTurmaMapper = NULL;
+
     $year  = $ano;
     $month = $mes;
 
@@ -693,24 +747,44 @@ class indice extends clsCadastro
 
     $last_day_of_month = date('d', $last_day_of_month);
 
-    $numero_dias = 0;
-
     $obj_calendario = new clsPmieducarCalendarioAnoLetivo();
     $obj_calendario->setCamposLista('cod_calendario_ano_letivo');
-    $lista = $obj_calendario->lista(NULL, $this->ref_cod_escola, NULL, NULL,
-      $this->ano, NULL, NULL, NULL, NULL, 1);
+    $lista_calendario = $obj_calendario->lista(NULL, $this->ref_cod_escola,
+      NULL, NULL, $this->ano, NULL, NULL, NULL, NULL, 1);
 
-    if ($lista) {
-      $lista_calendario = array_shift($lista);
-    }
+    // Dias não letivos da turma
+    $diasNaoLetivosTurma = array();
 
-    $obj_dia = new clsPmieducarCalendarioDia();
-    $obj_dia->setCamposLista('dia');
-    $dias_nao_letivo = $obj_dia->lista($lista_calendario, $mes, NULL, NULL, NULL,
-      NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, "'n'");
+    if (is_array($lista_calendario)) {
+      $lista_calendario = array_shift($lista_calendario);
 
-    if (!$dias_nao_letivo) {
-      $dias_nao_letivo = array();
+      $obj_dia = new clsPmieducarCalendarioDia();
+      $obj_dia->setCamposLista('dia');
+      $dias_nao_letivo = $obj_dia->lista($lista_calendario, $mes, NULL, NULL,
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, "'n'");
+
+      // Instancia o mapper apenas uma vez
+      if (is_null($calendarioTurmaMapper)) {
+        require_once 'Calendario/Model/TurmaDataMapper.php';
+        $calendarioTurmaMapper = new Calendario_Model_TurmaDataMapper();
+      }
+
+      // Carrega os dias do mês da turma
+      $where = array(
+        'calendarioAnoLetivo' => $lista_calendario,
+        'ano'                 => $ano,
+        'mes'                 => $mes,
+        'turma'               => $codTurma
+      );
+
+      $diasTurma = $calendarioTurmaMapper->findAll(array(), $where);
+
+      // Separa apenas os dias da turma que forem não-letivos
+      foreach ($diasTurma as $diaTurma) {
+        if (in_array($diaTurma->dia, $dias_nao_letivo)) {
+          $diasNaoLetivosTurma[] = $diaTurma->dia;
+        }
+      }
     }
 
     if ($mes_final) {
@@ -718,12 +792,39 @@ class indice extends clsCadastro
       $dia = 1;
     }
 
+    // Argumentos para o callback $counter
+    $args = array(
+      'dia'                 => $dia,
+      'mes'                 => $mes,
+      'ano'                 => $ano,
+      'last_day_of_month'   => $last_day_of_month,
+      'diasNaoLetivosTurma' => $diasNaoLetivosTurma,
+      'dia_semana'          => $dia_semana
+    );
+
+    return call_user_func_array($counter, $args);
+  }
+
+  /**
+   * @access  protected
+   * @param   int    $dia
+   * @param   int    $mes
+   * @param   int    $ano
+   * @param   int    $last_day_of_month
+   * @param   array  $diasNaoLetivosTurma
+   * @return  int
+   */
+  function _counterNumeroDiaMes($dia, $mes, $ano, $last_day_of_month,
+    $diasNaoLetivosTurma)
+  {
+    $numero_dias = 0;
+
     for ($day = $dia; $day <= $last_day_of_month; $day++) {
-      $date = mktime(1, 1, 1, $month, $day, $year);
+      $date = mktime(1, 1, 1, $mes, $day, $ano);
       $dia_semana_corrente = getdate($date);
       $dia_semana_corrente = $dia_semana_corrente['wday'] + 1;
 
-      if (($dia_semana_corrente != 1 &&  $dia_semana_corrente != 7) && (array_search($day, $dias_nao_letivo) === FALSE)) {
+      if (($dia_semana_corrente != 1 && $dia_semana_corrente != 7) && !in_array($day, $diasNaoLetivosTurma)) {
         $numero_dias++;
       }
     }
@@ -731,53 +832,32 @@ class indice extends clsCadastro
     return $numero_dias;
   }
 
-  function getDiasSemanaMes($dia, $mes, $ano, $dia_semana, $mes_final = FALSE)
+  /**
+   * @access  protected
+   * @param   int    $dia
+   * @param   int    $mes
+   * @param   int    $ano
+   * @param   int    $last_day_of_month
+   * @param   array  $diasNaoLetivosTurma
+   * @return  int
+   */
+  function _counterDiasSemanaMes($dia, $mes, $ano, $last_day_of_month,
+    $diasNaoLetivosTurma, $dia_semana)
   {
-    $year  = $ano;
-    $month = $mes;
-
-    $date = mktime(1, 1, 1, $month, $dia, $year);
-
-    $first_day_of_month = strtotime('-' . (date('d', $date) - 1) . ' days', $date);
-    $last_day_of_month  = strtotime('+' . (date('t', $first_day_of_month) - 1) . ' days', $first_day_of_month);
-
-    $last_day_of_month = date('d', $last_day_of_month);
-
     $numero_dias = 0;
 
-    $obj_calendario = new clsPmieducarCalendarioAnoLetivo();
-    $obj_calendario->setCamposLista('cod_calendario_ano_letivo');
-    $lista_calendario = $obj_calendario->lista(NULL, $this->ref_cod_escola, NULL,
-      NULL, $this->ano, NULL, NULL, NULL, NULL, 1);
-
-    if (is_array($lista_calendario)) {
-      $lista_calendario = array_shift($lista_calendario);
-    }
-
-    $obj_dia = new clsPmieducarCalendarioDia();
-    $obj_dia->setCamposLista('dia');
-    $dias_nao_letivo = $obj_dia->lista($lista_calendario, $mes, NULL, NULL, NULL,
-      NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, "'n'");
-
-    if (!$dias_nao_letivo) {
-      $dias_nao_letivo = array();
-    }
-
-    if ($mes_final) {
-      $last_day_of_month = $dia;
-      $dia = 1;
-    }
-
     for($day = $dia; $day <= $last_day_of_month; $day++) {
-      $date = mktime(1, 1, 1, $month, $day, $year);
+      $date = mktime(1, 1, 1, $mes, $day, $ano);
       $dia_semana_corrente = getdate($date);
       $dia_semana_corrente = $dia_semana_corrente['wday'] + 1;
 
       $data_atual = sprintf('%s/%s/%s', $day, $mes, $ano);
       $data_final = sprintf('%s/%s', $this->data_fim, $ano);
 
-      if (($dia_semana ==  $dia_semana_corrente) &&
-         (array_search($day, $dias_nao_letivo) === FALSE) && data_maior($data_final, $data_atual)
+      if (
+        ($dia_semana == $dia_semana_corrente) &&
+        !in_array($day, $diasNaoLetivosTurma) &&
+        data_maior($data_final, $data_atual)
       ) {
         $numero_dias++;
       }

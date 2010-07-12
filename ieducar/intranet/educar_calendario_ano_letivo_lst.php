@@ -34,6 +34,9 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'clsCalendario.inc.php';
 
+require_once 'Calendario/Model/TurmaDataMapper.php';
+require_once 'App/Model/IedFinder.php';
+
 /**
  * clsIndexBase class.
  *
@@ -246,6 +249,12 @@ class indice extends clsConfig
         $inicio_ano = explode('/', dataFromPgToBr($inicio_ano));
         $fim_ano    = explode('/', dataFromPgToBr($fim_ano));
 
+        // Turmas da escola
+        $turmas = App_Model_IedFinder::getTurmas($registro['ref_cod_escola']);
+
+        // Mapper de Calendario_Model_TurmaDataMapper
+        $calendarioTurmaMapper = new Calendario_Model_TurmaDataMapper();
+
         $obj_calendario = new clsCalendario();
         $obj_calendario->setLargura(600);
         $obj_calendario->permite_trocar_ano = TRUE;
@@ -292,9 +301,31 @@ class indice extends clsConfig
               $tipo = strtoupper($det_motivo['tipo']) == 'E' ?
                 'Dia Extra-Letivo' : 'Dia Não Letivo';
 
+              // Busca pelas turmas que estão marcadas para esse dia
+              $args = array(
+                'calendarioAnoLetivo' => $registro['cod_calendario_ano_letivo'],
+                'mes'                 => $dia['mes'],
+                'dia'                 => $dia['dia'],
+                'ano'                 => $this->ano
+              );
+
+              $calendarioTurmas = $calendarioTurmaMapper->findAll(array(), $args);
+
+              $nomeTurmas = array();
+              foreach ($calendarioTurmas as $calendarioTurma) {
+                $nomeTurmas[] = $turmas[$calendarioTurma->turma];
+              }
+
+              if (0 == count($nomeTurmas)) {
+                $calendarioTurmas = '';
+              }
+              else {
+                $calendarioTurmas = 'Turmas: <ul><li>' . implode('</li><li>', $nomeTurmas) . '</li></ul>';
+              }
+
               $descricao = sprintf(
-                '<div style="z-index: 0;">%s</div><div align="left" style="z-index: 0;">Motivo: %s<br />Descrição: %s</div>%s',
-                $tipo, $det_motivo['nm_motivo'], $dia['descricao'], $botao_editar
+                '<div style="z-index: 0;">%s</div><div align="left" style="z-index: 0;">Motivo: %s<br />Descrição: %s<br />%s</div>%s',
+                $tipo, $det_motivo['nm_motivo'], $dia['descricao'], $calendarioTurmas, $botao_editar
               );
 
               $array_descricao[$dia['dia']] = $descricao;
@@ -306,16 +337,9 @@ class indice extends clsConfig
               elseif (strtoupper($det_motivo['tipo']) == 'N') {
                 $obj_calendario->adicionarLegenda('Não Letivo', '#VERDE_ESCURO');
                 $obj_calendario->adicionarArrayDias('Não Letivo', array($dia['dia']));
-
-                $descricao = sprintf(
-                  '<div style="z-index: 0;">Descrição: %s</div>%s',
-                  $dia['descricao'], $botao_editar
-                );
-
-                $array_descricao[$dia['dia']] = $descricao;
-
-                $obj_calendario->diaDescricao($array_dias, $array_descricao);
               }
+
+              $obj_calendario->diaDescricao($array_dias, $array_descricao);
             }
             elseif ($dia['descricao']) {
               $array_dias[$dia['dia']] = $dia['dia'];

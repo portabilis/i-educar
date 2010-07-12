@@ -10273,6 +10273,19 @@ SELECT pg_catalog.setval('area_conhecimento_id_seq', 1, false);
 
 
 --
+-- Name: calendario_turma; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+--
+
+CREATE TABLE calendario_turma (
+    calendario_ano_letivo_id integer NOT NULL,
+    ano integer NOT NULL,
+    mes integer NOT NULL,
+    dia integer NOT NULL,
+    turma_id integer NOT NULL
+);
+
+
+--
 -- Name: componente_curricular; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
 --
 
@@ -17687,6 +17700,12 @@ SET search_path = modules, pg_catalog;
 
 
 --
+-- Data for Name: calendario_turma; Type: TABLE DATA; Schema: modules; Owner: -
+--
+
+
+
+--
 -- Data for Name: componente_curricular; Type: TABLE DATA; Schema: modules; Owner: -
 --
 
@@ -20094,6 +20113,7 @@ INSERT INTO changelog VALUES (17, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '17_adic
 INSERT INTO changelog VALUES (18, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '18_cria_tabelas_de_parecer_descritivo.sql');
 INSERT INTO changelog VALUES (19, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '19_atualiza_nome_de_relatorio_no_menu_e_permissoes.sql');
 INSERT INTO changelog VALUES (20, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '20_remove_permissao_e_menu_diario_avaliacao_temp.sql');
+INSERT INTO changelog VALUES (21, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '21_cria_tabelas_modulo_calendario.sql');
 
 
 --
@@ -32755,6 +32775,14 @@ ALTER TABLE ONLY tipo_incoerencia
 
 
 SET search_path = modules, pg_catalog;
+
+--
+-- Name: calendario_turma_calendario_dia_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
+--
+
+ALTER TABLE ONLY calendario_turma
+    ADD CONSTRAINT calendario_turma_calendario_dia_fk FOREIGN KEY (calendario_ano_letivo_id, mes, dia) REFERENCES pmieducar.calendario_dia(ref_cod_calendario_ano_letivo, mes, dia) MATCH FULL ON DELETE CASCADE;
+
 
 --
 -- Name: componente_curricular_ano_escolar_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -

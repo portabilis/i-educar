@@ -37,6 +37,7 @@ require_once 'include/pmieducar/clsPmieducarMatriculaTurma.inc.php';
 require_once 'include/pmieducar/clsPmieducarEscolaSerieDisciplina.inc.php';
 require_once 'include/pmieducar/clsPmieducarEscolaAnoLetivo.inc.php';
 require_once 'include/pmieducar/clsPmieducarAnoLetivoModulo.inc.php';
+require_once 'include/pmieducar/clsPmieducarTurma.inc.php';
 require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
 require_once 'FormulaMedia/Model/FormulaDataMapper.php';
 require_once 'TabelaArredondamento/Model/TabelaDataMapper.php';
@@ -152,6 +153,24 @@ class App_Model_IedFinderTest extends UnitBaseTest
 
     $instituicoes = App_Model_IedFinder::getInstituicoes();
     $this->assertEquals($expected, $instituicoes);
+  }
+
+  public function testCarregaTurmas()
+  {
+    $returnValue = array(1 => array('cod_turma' => 1, 'nm_turma' => 'Primeiro ano'));
+    $expected = array(1 => 'Primeiro ano');
+
+    $mock = $this->getCleanMock('clsPmieducarTurma');
+    $mock->expects($this->once())
+         ->method('lista')
+         ->with(NULL, NULL, NULL, NULL, 1)
+         ->will($this->returnValue($returnValue));
+
+    $instance = CoreExt_Entity::addClassToStorage(
+      'clsPmieducarTurma', $mock, NULL, TRUE);
+
+    $turmas = App_Model_IedFinder::getTurmas(1);
+    $this->assertEquals($expected, $turmas);
   }
 
   public function testGetMatricula()
