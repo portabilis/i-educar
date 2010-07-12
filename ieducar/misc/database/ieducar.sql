@@ -164,7 +164,7 @@ BEGIN
       v_qtde := v_qtde + (v_qtde_per_capita * reg_unidade.matr * v_correcao * v_coccao);
     END IF;
   END LOOP;
-  
+
   v_qtde_retorno := trim(to_char(v_qtde, '9999999999.99'));
   RETURN v_qtde_retorno;
 END;$_$
@@ -307,7 +307,7 @@ CREATE FUNCTION fcn_gerar_guia_remessa(text, text, integer, integer, character v
    v_classe ALIAS for $5;
    v_id_cliente ALIAS for $6;
    v_login ALIAS for $7;
-   v_id_log ALIAS for $8;   
+   v_id_log ALIAS for $8;
    v_sql_unidade text;
    v_reg_unidade RECORD;
    v_reg_faixa RECORD;
@@ -330,7 +330,7 @@ CREATE FUNCTION fcn_gerar_guia_remessa(text, text, integer, integer, character v
    v_qtde_guia integer:=0;
    v_qtde_produto_periodo numeric:=0; -- qtde de produto necessária para o período
               --(somatória da qtde percapita da receita)
-                                      
+
    v_id_guia integer:=0;
    v_id_guia_produto integer:=0;
    v_sequencial integer:=0;         -- sequencial da guia de remessa gerada
@@ -346,7 +346,7 @@ CREATE FUNCTION fcn_gerar_guia_remessa(text, text, integer, integer, character v
    v_existe_produto integer:=0;
    v_existe_estoque integer:=0;
    --v_id_log integer:=0;
-   
+
 BEGIN
    --
    -- Converte data numérica invertida para o formato DD/MM/YYYY
@@ -401,9 +401,9 @@ BEGIN
    AND car.finalizado = 'S'
    AND TO_NUMBER(TO_CHAR(car.dt_cardapio,'YYYYMMDD'),'99999999') BETWEEN v_data_inicial AND v_data_final;
    WHILE v_dt_cardapio_ini_x <= v_dt_cardapio_fim LOOP
-   
+
       RAISE NOTICE '---------------->>1º Loop Data(%)',v_dt_cardapio_ini_x;
-      
+
       --
       -- GRAVA LOG
       --
@@ -420,34 +420,34 @@ BEGIN
       WHERE car.idcar = caf.idcar
       AND caf.idfeu = ufa.idfeu
       AND ufa.iduni = uni.iduni';
-      
+
       IF v_array_unidade <> '0' THEN
          v_sql_unidade := v_sql_unidade || ' AND uni.iduni IN (' || v_array_unidade || ')';
       END IF;
-      
+
       v_sql_unidade := v_sql_unidade || ' AND car.finalizado = ''S''
       AND car.idcli = ''' || v_id_cliente || '''
       AND car.dt_cardapio = ''' || v_dt_cardapio_ini_x || '''';
-      
+
       --
       -- Executa SELECT para obter as unidades
       --
       FOR v_reg_unidade IN EXECUTE v_sql_unidade LOOP
-      
+
          RAISE NOTICE '                                          ';
          RAISE NOTICE '2º Loop Unidade(%)',v_reg_unidade.nome;
-         
+
          --
          -- GRAVA LOG
          --
          UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      ----- 2º Loop Unidade ' || TRIM(TO_CHAR(v_reg_unidade.iduni, '9999999999')) || '-' || v_reg_unidade.nome || ' -----' WHERE idlogguia = v_id_log;
          v_num_inscritos:=0;
    v_num_matriculados:=0;
-         
+
          --
          -- Obtém inscritos e matriculados para a unidade
          --
-         
+
          FOR v_reg_faixa IN SELECT distinct ufa.idfae as idfae
                    ,ufa.num_inscritos as num_inscritos
              ,ufa.num_matriculados as num_matriculados
@@ -462,14 +462,14 @@ BEGIN
       AND car.finalizado = 'S'
       AND car.idcli = v_id_cliente
       AND car.dt_cardapio = v_dt_cardapio_ini_x LOOP
-            
+
             v_num_inscritos:=v_num_inscritos + v_reg_faixa.num_inscritos;
       v_num_matriculados:=v_num_matriculados + v_reg_faixa.num_matriculados;
-            
+
    END LOOP;
    RAISE NOTICE 'Inscritos(%)',v_num_inscritos;
    RAISE NOTICE 'Matriculados(%)',v_num_matriculados;
-         
+
          --
          -- GRAVA LOG
          --
@@ -501,7 +501,7 @@ BEGIN
    IF v_classe is not null THEN
       v_sql_produto := v_sql_produto || ' AND pro.classe = ''' || v_classe || '''';
          END IF;
-         
+
          --
    -- Seleciona somente os produtos do cardápio que o fornecedor
          -- pode fornecedor
@@ -519,38 +519,38 @@ BEGIN
                   AND cop.qtde_remessa < cop.qtde_contratada
                   AND cop.idpro = pro.idpro)';
          END IF;
-         
+
          v_sql_produto := v_sql_produto || '
       AND uni.iduni = ' || v_reg_unidade.iduni || '
             AND car.finalizado = ''S''
             AND car.idcli = ''' || v_id_cliente || '''
             AND car.dt_cardapio = ''' || v_dt_cardapio_ini_x || '''
             ORDER BY TRIM(pro.nome_compra)';
-            
+
          --
          -- Obtém os produtos do cardápio utilizados pela unidade
          --
-         
+
          FOR v_reg_produto IN EXECUTE v_sql_produto LOOP
-         
+
             RAISE NOTICE '                                          ';
             RAISE NOTICE '3º Loop Produto(%)',v_reg_produto.nome_compra;
-            
+
             --
             -- GRAVA LOG
             --
             UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n \n      3º Loop Produto ' || TRIM(TO_CHAR(v_reg_produto.idpro, '9999999999')) || '-' || v_reg_produto.nome_compra WHERE idlogguia = v_id_log;
-            
+
             v_existe_produto := v_existe_produto + 1;
-            
+
             --
             -- Calcula a qtde percapita necessária do produto para o período
             --
-            
+
             v_dt_cardapio_ini_y := TO_NUMBER(TO_CHAR(v_dt_cardapio_ini_x, 'YYYYMMDD'),'99999999');
-            
+
             select INTO v_qtde_produto_periodo alimentos.fcn_calcular_qtde_percapita (v_id_cliente, v_reg_unidade.iduni, v_reg_produto.idpro, v_dt_cardapio_ini_y, v_dt_cardapio_ini_y);
-            
+
             --
             --
             -- Calcula a qtde necessária para o produto e para a unidade considerando
@@ -561,44 +561,44 @@ BEGIN
             ELSE
                v_qtde_necessaria := v_qtde_produto_periodo * v_num_matriculados * v_reg_produto.fator_correcao * v_reg_produto.fator_coccao;
             END IF;
-            
+
             --
             -- Divide qtde total em gramas pelo peso da unidade do produto
             --
             v_qtde_necessaria := ROUND(v_qtde_necessaria / v_reg_produto.peso);
-            
+
             --
             -- Obtém qtde do produto já gerado em outras guias
             --
             v_qtde_guia_produto := 0;
-            
+
             SELECT INTO v_qtde_guia_produto COALESCE(SUM(qtde),0)
                FROM alimentos.guia_produto_diario
                WHERE idpro = v_reg_produto.idpro
                AND iduni = v_reg_unidade.iduni
                AND dt_guia = v_dt_cardapio_ini_x;
-            
+
             v_qtde_necessaria_saldo:=v_qtde_necessaria - v_qtde_guia_produto;
-            
-            
+
+
             --
             -- GRAVA LOG
             --
             UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      Qtde per capita: ' || TRIM(TO_CHAR(v_qtde_produto_periodo, '9999999999.99')) WHERE idlogguia = v_id_log;
-            
+
             UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      Fator correção: ' || TRIM(TO_CHAR(v_reg_produto.fator_correcao, '9999999999.99')) WHERE idlogguia = v_id_log;
-            
+
             UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      Fator cocção: ' || TRIM(TO_CHAR(v_reg_produto.fator_coccao, '9999999999.99')) WHERE idlogguia = v_id_log;
-            
+
             UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      Peso: ' || TRIM(TO_CHAR(v_reg_produto.peso, '9999999999.99')) WHERE idlogguia = v_id_log;
             UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      Qtde necessária: ' || TRIM(TO_CHAR(v_qtde_necessaria, '9999999999.99')) WHERE idlogguia = v_id_log;
-            
+
             RAISE NOTICE 'Qtde per capita(%)',v_qtde_produto_periodo;
             RAISE NOTICE 'Fator correção(%)',v_reg_produto.fator_correcao;
             RAISE NOTICE 'Fator cocção(%)',v_reg_produto.fator_coccao;
             RAISE NOTICE 'Peso(%)',v_reg_produto.peso;
             RAISE NOTICE 'Qtde Necessária(%)',v_qtde_necessaria;
-            
+
             --
             -- Obtém qtde do produto em contrato, incluindo
             -- todos os fornecedores autorizados a fornecer para a unidade
@@ -626,46 +626,46 @@ BEGIN
                        AND cop2.idpro <> ' ||  v_reg_produto.idpro || ' ) > 0 ))
                AND cop.idpro = ' || v_reg_produto.idpro || '
                GROUP BY con.idfor ';
-               
+
             v_qtde_total_contrato := 0;
             v_existe_forn := 0;
-            
+
             FOR v_reg_fornecedor IN EXECUTE v_sql_fornecedor LOOP
                v_existe_forn := 1;
                v_qtde_total_contrato:= v_qtde_total_contrato + v_reg_fornecedor.qtde_contratada;
             END LOOP;
-            
+
             RAISE NOTICE 'Qtde total contrato(%)',v_qtde_total_contrato;
-            
+
             --
             -- GRAVA LOG
             --
             UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      Qtde total contrato: ' || TRIM(TO_CHAR(v_qtde_total_contrato, '9999999999.99')) WHERE idlogguia = v_id_log;
-            
+
             --
             -- Testa se fornecedor tem contrato e autorização para fornecer para a
             -- unidade
             --
             IF v_existe_forn = 0 THEN
-            
+
                --
                -- GRAVA LOG
                --
                UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      *** existe forn: N ***' WHERE idlogguia = v_id_log;
-               
+
                RETURN '-1 Produto: ' || v_reg_produto.nome_compra || ' não tem contrato ou o fornecedor contratado não está autorizado a fornecer para a unidade ' || v_reg_unidade.nome || '.';
-               
+
             END IF;
-            
+
             --
             -- Qtde necessária deve ser > 0
             --
             IF v_qtde_necessaria > 0 THEN
-            
+
                --
                -- Calcula a quantidade a ser fornecida por cada fornecedor
                --
-               
+
                -- PREPARA SELECT
                v_sql_fornecedor := 'SELECT con.idcon as idcon
                   ,con.idfor as idfor
@@ -682,79 +682,79 @@ BEGIN
                   AND     con.cancelado = ''N''
                   AND     con.finalizado = ''S''
                   AND con.ultimo_contrato = ''S''';
-                  
+
                IF v_array_fornecedor <> '0' THEN
                   v_sql_fornecedor := v_sql_fornecedor || ' AND con.idfor IN (' || v_array_fornecedor || ')';
                END IF;
-               
+
                v_sql_fornecedor := v_sql_fornecedor || ' AND con.idfor IN
-                  (SELECT idfor 
+                  (SELECT idfor
                       FROM alimentos.fornecedor_unidade_atendida
                       WHERE iduni = ' || v_reg_unidade.iduni || ')
                       AND cop.qtde_remessa < cop.qtde_contratada
                       AND cop.idpro = ' || v_reg_produto.idpro;
-               
+
                v_qtde_disponivel := 0;
                v_existe_estoque := 0;
-               
+
                -- EXECUTA SELECT PREPARADO
                FOR v_reg_fornecedor IN EXECUTE v_sql_fornecedor LOOP
-               
+
                   RAISE NOTICE '                                          ';
                   RAISE NOTICE '4º Loop Fornecedor(%)',v_reg_fornecedor.nome;
-                  
+
                   --
                   -- GRAVA LOG
                   --
                   UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n \n           4º Loop Fornecedor ' || TRIM(TO_CHAR(v_reg_fornecedor.idfor, '9999999999')) || '-' || v_reg_fornecedor.nome || ' Contrato: ' || v_reg_fornecedor.codigo  WHERE idlogguia = v_id_log;
-                  
+
                   v_existe_estoque := 1;
-                  
+
                   v_qtde_disponivel:=COALESCE(v_reg_fornecedor.qtde_contratada- v_reg_fornecedor.qtde_remessa,0);
-                  
+
                   v_percentual_forn:=(v_reg_fornecedor.qtde_contratada * 100) / v_qtde_total_contrato;
-                  
+
                   v_qtde_forn:=ROUND((v_qtde_necessaria * v_percentual_forn) / 100 );
-                  
+
                   --
                   -- Verifica quantidade de saldo a ser fornecida é < 0
                   -- Deve ser verificado por questões de arredondamento,
                   -- evitando enviar uma qtde maior que a necessária
-                  
+
                   v_qtde_nec_saldo_ant := v_qtde_necessaria_saldo;
                   v_qtde_necessaria_saldo:=v_qtde_necessaria_saldo - v_qtde_forn;
-                  
+
                   RAISE NOTICE 'Qtde disponível(%)',v_qtde_disponivel;
                   RAISE NOTICE 'Percentual(%)',v_percentual_forn;
                   RAISE NOTICE 'Qtde a fornecer(%)',v_qtde_forn;
-                  
+
                   --
                   -- GRAVA LOG
                   --
                   UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || '  \n           Qtde disponível: ' || TRIM(TO_CHAR(v_qtde_disponivel, '9999999999.99')) WHERE idlogguia = v_id_log;
-                  
+
                   UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || '  \n           Percentual: ' || TRIM(TO_CHAR(v_percentual_forn, '9999999999.9999999999')) WHERE idlogguia = v_id_log;
-                  
+
                   UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || '  \n           Qtde a fornecer: ' || TRIM(TO_CHAR(v_qtde_forn, '9999999999')) WHERE idlogguia = v_id_log;
-                  
+
                   IF v_qtde_necessaria_saldo < 0 THEN
-                  
+
                      v_qtde_forn := v_qtde_nec_saldo_ant;
                      RAISE NOTICE 'Qtde a fornecer ajustada(%)',v_qtde_forn;
-                     
+
                      --
                      -- GRAVA LOG
                      --
                      UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || '  \n           Qtde a fornecer ajustada: ' || TRIM(TO_CHAR(v_qtde_forn, '9999999999')) WHERE idlogguia = v_id_log;
-                     
+
                   END IF;
-                  
+
                   --
                   -- Qtde a ser fornecida do produto deve ser maior que zero
                   -- Qtde disponível > qtde a ser fornecida
-                  
+
                   IF v_qtde_forn > 0 AND v_qtde_disponivel >= v_qtde_forn THEN
-                  
+
                      --
                      -- Grava a Guia de Remessa para a Unidade, Forn, Produto
                      -- e Contrato
@@ -770,35 +770,35 @@ BEGIN
                         AND gui.situacao = 'E'
                         AND gui.dt_cardapio_inicial  = v_dt_cardapio_ini
                         AND gui.dt_cardapio_final = v_dt_cardapio_fim FOR UPDATE;
-                     
+
                      IF v_id_guia IS NULL THEN
-                     
+
                         -- Obtém ID próxima guia
                         v_id_guia := nextval( 'alimentos.guia_remessa_idgui_seq'::text);
-                        
+
                         IF v_inscritos = 'S' THEN
                            v_num_inscr_matr := v_num_inscritos;
                         ELSE
                            v_num_inscr_matr := v_num_matriculados;
                         END IF;
-                        
+
                         v_classe_aux := v_classe;
                         IF v_classe IS NULL THEN
                            v_classe_aux := 'PN';
                         END IF;
-                        
+
                         -- Obtém o próximo sequencial anual para guia
                         SELECT INTO v_sequencial
                            COALESCE(MAX(sequencial),0) + 1
                            FROM alimentos.guia_remessa gui
                            WHERE gui.ano = TO_NUMBER(TO_CHAR(CURRENT_TIMESTAMP, 'YYYY'),'9999')
                            AND gui.idcli = v_id_cliente;
-                           
+
                         --
                         -- GRAVA LOG
                         --
                         UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n \n           ID Nova guia: ' || TRIM(TO_CHAR(v_id_guia, '9999999999')) || ' Sequencial: ' || TRIM(TO_CHAR(v_sequencial, '9999999999')) WHERE idlogguia = v_id_log;
-                        
+
                         INSERT INTO alimentos.guia_remessa
          (idgui
                            ,idcon
@@ -830,11 +830,11 @@ BEGIN
                            ,v_num_refeicao
                            ,'E'
                            ,v_classe_aux);
-                           
+
                         v_qtde_guia := v_qtde_guia + 1;
-                        
+
                      END IF;
-                     
+
                      v_id_guia_produto:=0;
                      -- Verifica se produto já existe na guia
                      SELECT INTO v_id_guia_produto gup.idgup
@@ -844,20 +844,20 @@ BEGIN
                         AND gup.idpro = v_reg_produto.idpro
                         AND TRIM(gui.login_emissao) = TRIM(v_login)
                         AND gui.idgui = v_id_guia FOR UPDATE;
-                        
+
                      v_peso := v_reg_produto.peso;
-                     
+
                      IF v_peso = 0 THEN
                         v_peso := 1;
                      END IF;
-                     
+
                      IF v_id_guia_produto IS NULL THEN
-                     
+
                         --
                         -- GRAVA LOG
                         --
                         UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n \n           *** Novo produto na guia ***   ID Guia:  ' || TRIM(TO_CHAR(v_id_guia, '9999999999')) || ' *** ' WHERE idlogguia = v_id_log;
-                        
+
                         -- Insere novo produto na guia
                         INSERT INTO alimentos.guia_remessa_produto (
                             idgui
@@ -874,24 +874,24 @@ BEGIN
                            ,v_peso
                            ,0
                            ,ROUND((v_qtde_forn*v_peso),3));
-                           
+
                      ELSE
-                     
+
                         --
                         -- GRAVA LOG
                         --
                         UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n \n           Update ID guia_produto: ' || TRIM(TO_CHAR(v_id_guia_produto, '9999999999')) || '   ID Guia: ' || TRIM(TO_CHAR(v_id_guia, '9999999999')) WHERE idlogguia = v_id_log;
-                        
+
                         UPDATE alimentos.guia_remessa_produto
                            SET qtde_guia = (qtde_guia + v_qtde_forn)
                            ,peso_total = ROUND(((qtde_guia + v_qtde_forn)*v_peso),3)
                            WHERE idgup = v_id_guia_produto;
-                           
+
                      END IF;
-                     
+
                      --
                      -- Grava guia_produto_diario.
-                     -- Armazena a qtde a ser fornecida do produto em uma data  
+                     -- Armazena a qtde a ser fornecida do produto em uma data
                      -- e unidade, ou seja, diariamente.
                      --
                      INSERT INTO alimentos.guia_produto_diario
@@ -906,91 +906,91 @@ BEGIN
                         ,v_reg_unidade.iduni
                         ,v_dt_cardapio_ini_x
                         ,v_qtde_forn);
-                        
+
                      --
                      -- Diminui estoque do produto
                      --
                      UPDATE alimentos.produto
                         SET qtde_estoque = ROUND((qtde_estoque - v_qtde_forn),2)
                         WHERE idpro = v_reg_produto.idpro;
-                        
+
                      --
                      -- Aumenta quantidade de remessa emitida para o contrato
                      --
                      UPDATE alimentos.contrato_produto
                         SET qtde_remessa = ROUND((qtde_remessa + v_qtde_forn),2)
                         WHERE idcop = v_reg_fornecedor.idcop;
-                        
+
                   ELSE
-                  
+
                      IF v_qtde_disponivel < v_qtde_forn THEN
-                     
+
                         --
                         -- GRAVA LOG
                         --
                         UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n \n           *** Estoque insuficiente ***' WHERE idlogguia = v_id_log;
-                        
+
                         RETURN '-1 Fornecedor: ' ||  v_reg_fornecedor.nome || ' está com estoque insuficiente para o produto: ' || v_reg_produto.nome_compra || '.';
-                        
+
                      END IF;
-                     
+
                   END IF;
-                  
+
                END LOOP;
-               
+
                --
                -- Identifica que existe contrato com fornecedor, porém
                -- contrato está com estoque zerado.
                IF v_existe_estoque = 0 THEN
-               
+
                   --
                   -- GRAVA LOG
                   --
                   UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n \n      *** Estoque zerado ***' WHERE idlogguia = v_id_log;
-                  
+
                   RETURN '-1 Produto: ' ||  v_reg_produto.nome_compra || ' está com estoque zerado.';
-                                    
+
                END IF;
-                        
+
             END IF;
-            
+
          END LOOP;
-         
+
       END LOOP;
-      
+
       v_dt_cardapio_ini_x := v_dt_cardapio_ini_x + interval '1 day';
-      
+
    END LOOP;
-   
+
    IF v_existe_produto = 0 AND v_array_fornecedor <> '0' THEN
-   
+
       --
       -- GRAVA LOG
       --
       UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n \n     *** Fornecedor não possui produtos para fornecer no período. ***' WHERE idlogguia = v_id_log;
-      
+
       RETURN '-1 Fornecedor não possui produtos para fornecer no período. Verifique os contratos elaborados com o fornecedor.';
-      
+
    ELSIF v_qtde_guia > 0 THEN
-   
+
       --
       -- GRAVA LOG
       --
       UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n \n *** GUIAS GERADAS: ' ||  TRIM(TO_CHAR(v_qtde_guia, '9999999999')) || ' ***' WHERE idlogguia = v_id_log;
-      
+
       RETURN 'Foram geradas ' || REPLACE(TRIM(TO_CHAR(v_qtde_guia,'9,999,999,999')),',','.') || ' guias de remessas.';
-      
+
    ELSE
-   
+
       --
       -- GRAVA LOG
       --
       UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n \n     *** Não existem dados para gerar guias de acordo com os filtros informados. ***' WHERE idlogguia = v_id_log;
-      
+
       RETURN 'Não existem dados para gerar guias de acordo com os filtros informados.';
-      
+
    END IF;
-   
+
 END;$_$
     LANGUAGE plpgsql;
 
@@ -1024,24 +1024,24 @@ DECLARE
   v_rg        numeric;
   v_uf_expedicao      text;
   v_verificacao_provisorio  numeric;
-  
+
   v_comando     text;
   v_registro      record;
-  
+
   BEGIN
     v_idpes     := NEW.idpes;
     v_rg      := COALESCE(NEW.rg, -1);
     v_uf_expedicao    := TRIM(COALESCE(NEW.sigla_uf_exp_rg, ''));
-    
+
     v_verificacao_provisorio:= 0;
-    
+
     -- verificar se a situação do cadastro da pessoa é provisório
     FOR v_registro IN SELECT situacao FROM cadastro.pessoa WHERE idpes=v_idpes LOOP
       IF v_registro.situacao = 'P' THEN
         v_verificacao_provisorio := 1;
       END IF;
     END LOOP;
-    
+
     -- Verificação para atualizar ou não a situação do cadastro da pessoa para Ativo
     IF LENGTH(v_uf_expedicao) > 0 AND v_rg > 0 AND v_verificacao_provisorio = 1 THEN
       EXECUTE 'UPDATE cadastro.pessoa SET situacao='||quote_literal('A')||'WHERE idpes='||quote_literal(v_idpes)||';';
@@ -1063,30 +1063,30 @@ DECLARE
   v_idpes_pai     numeric;
   v_idpes_responsavel   numeric;
   v_idpes_conjuge     numeric;
-  
+
   v_nome_mae      text;
   v_nome_pai      text;
   v_nome_responsavel    text;
   v_nome_conjuge      text;
-  
+
   v_verificacao_mae   numeric;
   v_verificacao_pai   numeric;
   v_verificacao_conjuge   numeric;
   v_verificacao_responsavel numeric;
-  
+
   v_num_aviso_mae     numeric;
   v_num_aviso_pai     numeric;
   v_num_aviso_conjuge   numeric;
   v_num_aviso_responsavel   numeric;
-  
+
   v_existe_aviso_mae    numeric;
   v_existe_aviso_pai    numeric;
   v_existe_aviso_conjuge    numeric;
   v_existe_aviso_responsavel  numeric;
-  
+
   v_comando     text;
   v_registro      record;
-  
+
   BEGIN
     v_idpes     := NEW.idpes;
     v_idpes_mae   := NEW.idpes_mae;
@@ -1097,22 +1097,22 @@ DECLARE
     v_nome_pai    := TRIM(NEW.nome_pai);
     v_nome_responsavel  := TRIM(NEW.nome_responsavel);
     v_nome_conjuge    := TRIM(NEW.nome_conjuge);
-    
+
     v_num_aviso_mae   := 1;
     v_num_aviso_pai   := 2;
     v_num_aviso_conjuge := 3;
     v_num_aviso_responsavel := 4;
-    
+
     v_verificacao_mae   := 0;
     v_verificacao_pai   := 0;
     v_verificacao_conjuge   := 0;
     v_verificacao_responsavel := 0;
-    
+
     v_existe_aviso_mae    := 0;
     v_existe_aviso_pai    := 0;
     v_existe_aviso_conjuge    := 0;
     v_existe_aviso_responsavel  := 0;
-    
+
     -- obter os avisos já existentes para a pessoa
     FOR v_registro IN SELECT aviso FROM cadastro.aviso_nome WHERE idpes=v_idpes LOOP
       IF v_registro.aviso = 1 THEN
@@ -1125,7 +1125,7 @@ DECLARE
         v_existe_aviso_responsavel := 1;
       END IF;
     END LOOP;
-    
+
     -- MAE
     IF v_idpes_mae > 0 AND v_idpes_mae IS NOT NULL AND LENGTH(v_nome_mae) > 0 AND v_nome_mae IS NOT NULL THEN
       FOR v_registro IN SELECT * from public.fcn_compara_nome_pessoa_fonetica(v_nome_mae, v_idpes_mae) LOOP
@@ -1134,7 +1134,7 @@ DECLARE
     ELSE
       v_verificacao_mae := 1;
     END IF;
-    
+
     -- PAI
     IF v_idpes_pai > 0 AND v_idpes_pai IS NOT NULL AND LENGTH(v_nome_pai) > 0 AND v_nome_pai IS NOT NULL THEN
       FOR v_registro IN SELECT * from public.fcn_compara_nome_pessoa_fonetica(v_nome_pai, v_idpes_pai) LOOP
@@ -1143,7 +1143,7 @@ DECLARE
     ELSE
       v_verificacao_pai := 1;
     END IF;
-    
+
     -- CONJUGE
     IF v_idpes_conjuge > 0 AND v_idpes_conjuge IS NOT NULL AND LENGTH(v_nome_conjuge) > 0 AND v_nome_conjuge IS NOT NULL THEN
       FOR v_registro IN SELECT * from public.fcn_compara_nome_pessoa_fonetica(v_nome_conjuge, v_idpes_conjuge) LOOP
@@ -1152,7 +1152,7 @@ DECLARE
     ELSE
       v_verificacao_conjuge := 1;
     END IF;
-    
+
     -- RESPONSAVEL
     IF v_idpes_responsavel > 0 AND v_idpes_responsavel IS NOT NULL AND LENGTH(v_nome_responsavel) > 0 AND v_nome_responsavel IS NOT NULL THEN
       FOR v_registro IN SELECT * from public.fcn_compara_nome_pessoa_fonetica(v_nome_responsavel, v_idpes_responsavel) LOOP
@@ -1167,21 +1167,21 @@ DECLARE
     ELSIF v_verificacao_mae = 1 AND v_existe_aviso_mae = 1 THEN
       EXECUTE 'DELETE FROM cadastro.aviso_nome WHERE idpes='||quote_literal(v_idpes)||' AND aviso='||v_num_aviso_mae||';';
     END IF;
-    
+
     -- Inserir ou Deletar aviso do PAI
     IF v_verificacao_pai = 0 AND v_existe_aviso_pai = 0 THEN
       EXECUTE 'INSERT INTO cadastro.aviso_nome (idpes, aviso) VALUES ('||quote_literal(v_idpes)||','||v_num_aviso_pai||');';
     ELSIF v_verificacao_pai = 1 AND v_existe_aviso_pai = 1 THEN
       EXECUTE 'DELETE FROM cadastro.aviso_nome WHERE idpes='||quote_literal(v_idpes)||' AND aviso='||v_num_aviso_pai||';';
     END IF;
-    
+
     -- Inserir ou Deletar aviso do CONJUGE
     IF v_verificacao_conjuge = 0 AND v_existe_aviso_conjuge = 0 THEN
       EXECUTE 'INSERT INTO cadastro.aviso_nome (idpes, aviso) VALUES ('||quote_literal(v_idpes)||','||v_num_aviso_conjuge||');';
     ELSIF v_verificacao_conjuge = 1 AND v_existe_aviso_conjuge = 1 THEN
       EXECUTE 'DELETE FROM cadastro.aviso_nome WHERE idpes='||quote_literal(v_idpes)||' AND aviso='||v_num_aviso_conjuge||';';
     END IF;
-    
+
     -- Inserir ou Deletar aviso do RESPONSAVEL
     IF v_verificacao_responsavel = 0 AND v_existe_aviso_responsavel = 0 THEN
       EXECUTE 'INSERT INTO cadastro.aviso_nome (idpes, aviso) VALUES ('||quote_literal(v_idpes)||','||v_num_aviso_responsavel||');';
@@ -1203,23 +1203,23 @@ DECLARE
   v_idpes       numeric;
   v_cpf       numeric;
   v_verificacao_provisorio  numeric;
-  
+
   v_comando     text;
   v_registro      record;
-  
+
   BEGIN
     v_idpes     := NEW.idpes;
     v_cpf     := COALESCE(NEW.cpf, -1);
-    
+
     v_verificacao_provisorio:= 0;
-    
+
     -- verificar se a situação do cadastro da pessoa é provisório
     FOR v_registro IN SELECT situacao FROM cadastro.pessoa WHERE idpes=v_idpes LOOP
       IF v_registro.situacao = 'P' THEN
         v_verificacao_provisorio := 1;
       END IF;
     END LOOP;
-    
+
     -- Verificação para atualizar ou não a situação do cadastro da pessoa para Ativo
     IF v_cpf > 0 AND v_verificacao_provisorio = 1 THEN
       EXECUTE 'UPDATE cadastro.pessoa SET situacao='||quote_literal('A')||'WHERE idpes='||quote_literal(v_idpes)||';';
@@ -1241,25 +1241,25 @@ DECLARE
   v_nome_mae      text;
   v_data_nascimento   text;
   v_verificacao_provisorio  numeric;
-  
+
   v_comando     text;
   v_registro      record;
-  
+
   BEGIN
     v_idpes     := NEW.idpes;
     v_idpes_mae   := COALESCE(NEW.idpes_mae, -1);
     v_nome_mae    := TRIM(COALESCE(NEW.nome_mae, ''));
     v_data_nascimento := COALESCE(TO_CHAR(NEW.data_nasc, 'DD/MM/YYYY'), '');
-    
+
     v_verificacao_provisorio:= 0;
-    
+
     -- verificar se a situação do cadastro da pessoa é provisório
     FOR v_registro IN SELECT situacao FROM cadastro.pessoa WHERE idpes=v_idpes LOOP
       IF v_registro.situacao = 'P' THEN
         v_verificacao_provisorio := 1;
       END IF;
     END LOOP;
-    
+
     -- Verificação para atualizar ou não a situação do cadastro da pessoa para Ativo
     IF v_data_nascimento <> '' AND (LENGTH(v_nome_mae) > 0 OR v_idpes_mae > 0) AND v_verificacao_provisorio = 1 THEN
       EXECUTE 'UPDATE cadastro.pessoa SET situacao='||quote_literal('A')||'WHERE idpes='||quote_literal(v_idpes)||';';
@@ -1710,7 +1710,7 @@ CREATE FUNCTION fcn_endereco_externo_historico_campo() RETURNS "trigger"
     AS $$
 DECLARE
   v_idpes       numeric;
-  
+
   v_sigla_uf_antiga   text;
   v_sigla_uf_nova     text;
   v_id_tipo_logradouro_antigo text;
@@ -1729,20 +1729,20 @@ DECLARE
   v_cep_novo      numeric;
   v_cidade_antiga     text;
   v_cidade_nova     text;
-  
+
   v_tipo_endereco     numeric;
-  
+
   v_comando     text;
   v_origem_gravacao   text;
-  
+
   v_credibilidade_maxima    numeric;
   v_credibilidade_alta    numeric;
   v_sem_credibilidade   numeric;
-  
+
   v_nova_credibilidade    numeric;
-  
+
   v_registro      record;
-  
+
   -- ID dos campos
   v_idcam_sigla_uf_correspondencia    numeric;
   v_idcam_id_tipo_logradouro_correspondencia  numeric;
@@ -1753,7 +1753,7 @@ DECLARE
   v_idcam_bairro_correspondencia      numeric;
   v_idcam_cep_correspondencia     numeric;
   v_idcam_cidade_correspondencia      numeric;
-  
+
   v_idcam_sigla_uf_residencial      numeric;
   v_idcam_id_tipo_logradouro_residencial    numeric;
   v_idcam_logradouro_residencial      numeric;
@@ -1763,7 +1763,7 @@ DECLARE
   v_idcam_bairro_residencial      numeric;
   v_idcam_cep_residencial       numeric;
   v_idcam_cidade_residencial      numeric;
-  
+
   v_idcam_sigla_uf_comercial      numeric;
   v_idcam_id_tipo_logradouro_comercial    numeric;
   v_idcam_logradouro_comercial      numeric;
@@ -1773,7 +1773,7 @@ DECLARE
   v_idcam_bairro_comercial      numeric;
   v_idcam_cep_comercial       numeric;
   v_idcam_cidade_comercial      numeric;
-  
+
   v_idcam_sigla_uf    numeric;
   v_idcam_id_tipo_logradouro  numeric;
   v_idcam_logradouro    numeric;
@@ -1783,7 +1783,7 @@ DECLARE
   v_idcam_bairro      numeric;
   v_idcam_cep     numeric;
   v_idcam_cidade      numeric;
-  
+
   /*
   consistenciacao.historico_campo.credibilidade: 1 = Máxima, 2 = Alta, 3 = Média, 4 = Baixa, 5 = Sem credibilidade
   cadastro.pessoa.origem_gravacao: M = Migração, U = Usuário, C = Rotina de confrontação, O = Oscar
@@ -1791,7 +1791,7 @@ DECLARE
   BEGIN
     v_idpes       := NEW.idpes;
     v_tipo_endereco     := NEW.tipo;
-    
+
     v_sigla_uf_nova     := NEW.sigla_uf;
     v_id_tipo_logradouro_novo := NEW.idtlog;
     v_logradouro_novo   := NEW.logradouro;
@@ -1801,7 +1801,7 @@ DECLARE
     v_bairro_novo     := NEW.bairro;
     v_cep_novo      := NEW.cep;
     v_cidade_nova     := NEW.cidade;
-    
+
     IF TG_OP <> 'UPDATE' THEN
       v_sigla_uf_antiga   := '';
       v_id_tipo_logradouro_antigo := '';
@@ -1823,7 +1823,7 @@ DECLARE
       v_cep_antigo      := COALESCE(OLD.cep, 0);
       v_cidade_antiga     := COALESCE(OLD.cidade, '');
     END IF;
-    
+
     v_idcam_sigla_uf_correspondencia    := 55;
     v_idcam_id_tipo_logradouro_correspondencia  := 48;
     v_idcam_logradouro_correspondencia    := 47;
@@ -1851,23 +1851,23 @@ DECLARE
     v_idcam_bairro_comercial      := 70;
     v_idcam_cep_comercial       := 71;
     v_idcam_cidade_comercial      := 72;
-    
-    v_nova_credibilidade := 0;  
+
+    v_nova_credibilidade := 0;
     v_credibilidade_maxima := 1;
     v_credibilidade_alta := 2;
     v_sem_credibilidade := 5;
     v_comando := 'SELECT origem_gravacao FROM cadastro.pessoa WHERE idpes='||quote_literal(v_idpes)||';';
-    
+
     FOR v_registro IN EXECUTE v_comando LOOP
       v_origem_gravacao := v_registro.origem_gravacao;
     END LOOP;
-    
+
     IF v_origem_gravacao = 'U' OR v_origem_gravacao = 'O' THEN -- os dados foram editados pelo usuário ou usuário do Oscar
       v_nova_credibilidade := v_credibilidade_maxima;
     ELSIF v_origem_gravacao = 'M' THEN -- os dados foram originados por migração
       v_nova_credibilidade := v_credibilidade_alta;
     END IF;
-    
+
     IF v_tipo_endereco = 1 THEN
       v_idcam_sigla_uf    := v_idcam_sigla_uf_correspondencia;
       v_idcam_id_tipo_logradouro  := v_idcam_id_tipo_logradouro_correspondencia;
@@ -1899,67 +1899,67 @@ DECLARE
       v_idcam_cep     := v_idcam_cep_comercial;
       v_idcam_cidade      := v_idcam_cidade_comercial;
     END IF;
-    
+
     IF v_nova_credibilidade > 0 THEN
       -- UF
       IF v_sigla_uf_nova <> v_sigla_uf_antiga THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_sigla_uf||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- ID TIPO LOGRADOURO
       IF v_id_tipo_logradouro_novo <> v_id_tipo_logradouro_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_id_tipo_logradouro||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- LOGRADOURO
       IF v_logradouro_novo <> v_logradouro_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_logradouro||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- NUMERO
       IF v_numero_novo <> v_numero_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_numero||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- LETRA
       IF v_letra_nova <> v_letra_antiga THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_letra||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- COMPLEMENTO
       IF v_complemento_novo <> v_complemento_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_complemento||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- BAIRRO
       IF v_bairro_novo <> v_bairro_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_bairro||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- CEP
       IF v_cep_novo <> v_cep_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_cep||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- CIDADE
       IF v_cidade_nova <> v_cidade_antiga THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_cidade||','||v_nova_credibilidade||');';
       END IF;
-      
+
     END IF;
-    
+
     -- Verificar os campos Vazios ou Nulos
-    
+
     -- UF
     IF TRIM(v_sigla_uf_nova)='' OR v_sigla_uf_nova IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_sigla_uf||','||v_sem_credibilidade||');';
     END IF;
-    
+
     -- ID TIPO LOGRADOURO
     IF TRIM(v_id_tipo_logradouro_novo)='' OR v_id_tipo_logradouro_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_id_tipo_logradouro||','||v_sem_credibilidade||');';
     END IF;
-    
+
     -- LOGRADOURO
     IF TRIM(v_logradouro_novo)='' OR v_logradouro_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_logradouro||','||v_sem_credibilidade||');';
@@ -1968,17 +1968,17 @@ DECLARE
     IF v_numero_novo <= 0 OR v_numero_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_numero||','||v_sem_credibilidade||');';
     END IF;
-    
+
     -- LETRA
     IF TRIM(v_letra_nova)='' OR v_letra_nova IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_letra||','||v_sem_credibilidade||');';
     END IF;
-    
+
     -- COMPLEMENTO
     IF TRIM(v_complemento_novo)='' OR v_complemento_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_complemento||','||v_sem_credibilidade||');';
     END IF;
-    
+
     -- BAIRRO
     IF TRIM(v_bairro_novo)='' OR v_bairro_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_bairro||','||v_sem_credibilidade||');';
@@ -1987,12 +1987,12 @@ DECLARE
     IF v_cep_novo <= 0 OR v_cep_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_cep||','||v_sem_credibilidade||');';
     END IF;
-    
+
     -- CIDADE
     IF TRIM(v_cidade_nova)='' OR v_cidade_nova IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_cidade||','||v_sem_credibilidade||');';
     END IF;
-    
+
   RETURN NEW;
 END; $$
     LANGUAGE plpgsql;
@@ -2025,9 +2025,9 @@ DECLARE
   v_credibilidade_alta    numeric;
   v_sem_credibilidade   numeric;
   v_nova_credibilidade    numeric;
-  
+
   v_registro      record;
-  
+
   -- ID dos campos
   v_idcam_cep_correspondencia     numeric;
   v_idcam_id_logradouro_correspondencia   numeric;
@@ -2035,28 +2035,28 @@ DECLARE
   v_idcam_numero_correspondencia      numeric;
   v_idcam_letra_correspondencia     numeric;
   v_idcam_complemento_correspondencia   numeric;
-  
+
   v_idcam_cep_residencial       numeric;
   v_idcam_id_logradouro_residencial   numeric;
   v_idcam_id_bairro_residencial     numeric;
   v_idcam_numero_residencial      numeric;
   v_idcam_letra_residencial     numeric;
   v_idcam_complemento_residencial     numeric;
-  
+
   v_idcam_cep_comercial       numeric;
   v_idcam_id_logradouro_comercial     numeric;
   v_idcam_id_bairro_comercial     numeric;
   v_idcam_numero_comercial      numeric;
   v_idcam_letra_comercial       numeric;
   v_idcam_complemento_comercial     numeric;
-  
+
   v_idcam_cep     numeric;
   v_idcam_id_logradouro   numeric;
   v_idcam_id_bairro   numeric;
   v_idcam_numero      numeric;
   v_idcam_letra     numeric;
   v_idcam_complemento   numeric;
-  
+
   /*
   consistenciacao.historico_campo.credibilidade: 1 = Máxima, 2 = Alta, 3 = Média, 4 = Baixa, 5 = Sem credibilidade
   cadastro.pessoa.origem_gravacao: M = Migração, U = Usuário, C = Rotina de confrontação, O = Oscar
@@ -2064,14 +2064,14 @@ DECLARE
   BEGIN
     v_idpes       := NEW.idpes;
     v_tipo_endereco     := NEW.tipo;
-    
+
     v_cep_novo      := NEW.cep;
     v_id_logradouro_novo    := NEW.idlog;
     v_id_bairro_novo    := NEW.idbai;
     v_numero_novo     := NEW.numero;
     v_letra_nova      := NEW.letra;
     v_complemento_novo    := NEW.complemento;
-    
+
     IF TG_OP <> 'UPDATE' THEN
       v_cep_antigo    := 0;
       v_id_logradouro_antigo  := 0;
@@ -2087,7 +2087,7 @@ DECLARE
       v_letra_antiga    := COALESCE(OLD.letra, '');
       v_complemento_antigo  := COALESCE(OLD.complemento, '');
     END IF;
-    
+
     v_idcam_cep_correspondencia     := 53;
     v_idcam_id_logradouro_correspondencia   := 47;
     v_idcam_id_bairro_correspondencia   := 52;
@@ -2106,13 +2106,13 @@ DECLARE
     v_idcam_numero_comercial      := 67;
     v_idcam_letra_comercial       := 68;
     v_idcam_complemento_comercial     := 69;
-    
-    v_nova_credibilidade := 0;  
+
+    v_nova_credibilidade := 0;
     v_credibilidade_maxima := 1;
     v_credibilidade_alta := 2;
     v_sem_credibilidade := 5;
     v_comando := 'SELECT origem_gravacao FROM cadastro.pessoa WHERE idpes='||quote_literal(v_idpes)||';';
-    
+
     FOR v_registro IN EXECUTE v_comando LOOP
       v_origem_gravacao := v_registro.origem_gravacao;
     END LOOP;
@@ -2156,50 +2156,50 @@ DECLARE
       IF v_id_bairro_novo <> v_id_bairro_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_id_bairro||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- NUMERO
       IF v_numero_novo <> v_numero_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_numero||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- LETRA
       IF v_letra_nova <> v_letra_antiga THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_letra||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- COMPLEMENTO
       IF v_complemento_novo <> v_complemento_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_complemento||','||v_nova_credibilidade||');';
       END IF;
     END IF;
-    
+
     -- Verificar os campos Vazios ou Nulos
-    
+
     -- CEP
     IF v_cep_novo <= 0 OR v_cep_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_cep||','||v_sem_credibilidade||');';
     END IF;
-    
+
     -- ID LOGRADOURO
     IF v_id_logradouro_novo <= 0 OR v_id_logradouro_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_id_logradouro||','||v_sem_credibilidade||');';
     END IF;
-    
+
     -- BAIRRO
     IF v_id_bairro_novo <= 0 OR v_id_bairro_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_id_bairro||','||v_sem_credibilidade||');';
     END IF;
-    
+
     -- NUMERO
     IF v_numero_novo <= 0 OR v_numero_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_numero||','||v_sem_credibilidade||');';
     END IF;
-    
+
     -- LETRA
     IF TRIM(v_letra_nova)='' OR v_letra_nova IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_letra||','||v_sem_credibilidade||');';
     END IF;
-    
+
     -- COMPLEMENTO
     IF TRIM(v_complemento_novo)='' OR v_complemento_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_complemento||','||v_sem_credibilidade||');';
@@ -2245,20 +2245,20 @@ DECLARE
   v_data_obito_antiga   date;
   v_data_uniao_nova   date;
   v_data_uniao_antiga   date;
-  
+
   v_comando     text;
   v_origem_gravacao   text;
-  
+
   v_credibilidade_maxima    numeric;
   v_credibilidade_alta    numeric;
   v_sem_credibilidade   numeric;
-  
+
   v_nova_credibilidade    numeric;
-  
+
   v_registro      record;
   v_aux_data_nova     text;
   v_aux_data_antiga   text;
-  
+
   -- ID dos campos
   v_idcam_data_nasc   numeric;
   v_idcam_sexo      numeric;
@@ -2274,7 +2274,7 @@ DECLARE
   v_idcam_data_chegada_brasil numeric;
   v_idcam_data_obito    numeric;
   v_idcam_data_uniao    numeric;
-  
+
   /*
   consistenciacao.historico_campo.credibilidade: 1 = Máxima, 2 = Alta, 3 = Média, 4 = Baixa, 5 = Sem credibilidade
   cadastro.pessoa.origem_gravacao: M = Migração, U = Usuário, C = Rotina de confrontação, O = Oscar
@@ -2295,7 +2295,7 @@ DECLARE
     v_data_chegada_brasil_nova  := NEW.data_chegada_brasil;
     v_data_obito_nova   := NEW.data_obito;
     v_data_uniao_nova   := NEW.data_uniao;
-    
+
     IF TG_OP <> 'UPDATE' THEN
       v_data_nasc_antiga    := NULL;
       v_sexo_antigo     := '';
@@ -2327,7 +2327,7 @@ DECLARE
       v_data_obito_antiga   := OLD.data_obito;
       v_data_uniao_antiga   := OLD.data_uniao;
     END IF;
-    
+
     v_idcam_data_nasc   := 5;
     v_idcam_sexo      := 26;
     v_idcam_nome_mae    := 27;
@@ -2342,109 +2342,109 @@ DECLARE
     v_idcam_data_chegada_brasil := 36;
     v_idcam_data_obito    := 37;
     v_idcam_data_uniao    := 38;
-    
-    v_nova_credibilidade := 0;  
+
+    v_nova_credibilidade := 0;
     v_credibilidade_maxima := 1;
     v_credibilidade_alta := 2;
     v_sem_credibilidade := 5;
     v_comando := 'SELECT origem_gravacao FROM cadastro.pessoa WHERE idpes='||quote_literal(v_idpes)||';';
-    
+
     FOR v_registro IN EXECUTE v_comando LOOP
       v_origem_gravacao := v_registro.origem_gravacao;
     END LOOP;
-    
+
     IF v_origem_gravacao = 'U' OR v_origem_gravacao = 'O' THEN -- os dados foram editados pelo usuário ou pelo usuário do Oscar
       v_nova_credibilidade := v_credibilidade_maxima;
     ELSIF v_origem_gravacao = 'M' THEN -- os dados foram originados por migração
       v_nova_credibilidade := v_credibilidade_alta;
     END IF;
-    
+
     IF v_nova_credibilidade > 0 THEN
-      
+
       -- DATA DE NASCIMENTO
       v_aux_data_nova := COALESCE(TO_CHAR (v_data_nasc_nova, 'DD/MM/YYYY'), '');
       v_aux_data_antiga := COALESCE(TO_CHAR (v_data_nasc_antiga, 'DD/MM/YYYY'), '');
-      
+
       IF v_aux_data_nova <> v_aux_data_antiga THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_data_nasc||','||v_nova_credibilidade||');';
       END IF;
-    
+
       -- DATA DE UNIÃO
       v_aux_data_nova := COALESCE(TO_CHAR (v_data_uniao_nova, 'DD/MM/YYYY'), '');
       v_aux_data_antiga := COALESCE(TO_CHAR (v_data_uniao_antiga, 'DD/MM/YYYY'), '');
-      
+
       IF v_aux_data_nova <> v_aux_data_antiga THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_data_uniao||','||v_nova_credibilidade||');';
       END IF;
-    
+
       -- DATA DE ÓBITO
       v_aux_data_nova := COALESCE(TO_CHAR (v_data_obito_nova, 'DD/MM/YYYY'), '');
       v_aux_data_antiga := COALESCE(TO_CHAR (v_data_obito_antiga, 'DD/MM/YYYY'), '');
-      
+
       IF v_aux_data_nova <> v_aux_data_antiga THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_data_obito||','||v_nova_credibilidade||');';
       END IF;
-    
+
       -- DATA DE CHEGADA AO BRASIL
       v_aux_data_nova := COALESCE(TO_CHAR (v_data_chegada_brasil_nova, 'DD/MM/YYYY'), '');
       v_aux_data_antiga := COALESCE(TO_CHAR (v_data_chegada_brasil_antiga, 'DD/MM/YYYY'), '');
-      
+
       IF v_aux_data_nova <> v_aux_data_antiga THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_data_chegada_brasil||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- NOME DA MÃE
       IF v_nome_mae_novo <> v_nome_mae_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_nome_mae||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- NOME DO PAI
       IF v_nome_pai_novo <> v_nome_pai_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_nome_pai||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- NOME DO CONJUGE
       IF v_nome_conjuge_novo <> v_nome_conjuge_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_nome_conjuge||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- NOME DO RESPONSAVEL
       IF v_nome_responsavel_novo <> v_nome_responsavel_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_nome_responsavel||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- NOME ÚLTIMA EMPRESA
       IF v_nome_ultima_empresa_novo <> v_nome_ultima_empresa_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_nome_ultima_empresa||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- SEXO
       IF v_sexo_novo <> v_sexo_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_sexo||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- ID OCUPAÇÃO PROFISSIONAL
       IF v_id_ocupacao_novo <> v_id_ocupacao_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_ocupacao||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- ID ESCOLARIDADE
       IF v_id_escolaridade_novo <> v_id_escolaridade_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_escolaridade||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- ID ESTADO CIVIL
       IF v_id_estado_civil_novo <> v_id_estado_civil_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_estado_civil||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- ID PAIS ORIGEM
       IF v_id_pais_origem_novo <> v_id_pais_origem_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_pais_origem||','||v_nova_credibilidade||');';
       END IF;
-      
+
     END IF;
-    
+
     -- Verificar os campos Vazios ou Nulos
     -- DATA DE NASCIMENTO
     IF TRIM(v_data_nasc_nova)='' OR v_data_nasc_nova IS NULL THEN
@@ -2515,24 +2515,24 @@ CREATE FUNCTION fcn_fone_historico_campo() RETURNS "trigger"
     AS $$
 DECLARE
   v_idpes       numeric;
-  
+
   v_ddd_antigo      numeric;
   v_ddd_novo      numeric;
   v_fone_antigo     numeric;
   v_fone_novo     numeric;
   v_tipo_fone     numeric;
-  
+
   v_comando     text;
   v_origem_gravacao   text;
-  
+
   v_credibilidade_maxima    numeric;
   v_credibilidade_alta    numeric;
   v_sem_credibilidade   numeric;
-  
+
   v_nova_credibilidade    numeric;
-  
+
   v_registro      record;
-  
+
   -- ID dos campos
   v_idcam_ddd_fone_residencial  numeric;
   v_idcam_fone_residencial  numeric;
@@ -2542,10 +2542,10 @@ DECLARE
   v_idcam_fone_celular    numeric;
   v_idcam_ddd_fax     numeric;
   v_idcam_fax     numeric;
-  
+
   v_idcam_ddd     numeric;
   v_idcam_fone      numeric;
-  
+
   /*
   consistenciacao.historico_campo.credibilidade: 1 = Máxima, 2 = Alta, 3 = Média, 4 = Baixa, 5 = Sem credibilidade
   cadastro.pessoa.origem_gravacao: M = Migração, U = Usuário, C = Rotina de confrontação, O = Oscar
@@ -2555,7 +2555,7 @@ DECLARE
     v_tipo_fone := NEW.tipo;
     v_ddd_novo  := NEW.ddd;
     v_fone_novo := NEW.fone;
-    
+
     IF TG_OP <> 'UPDATE' THEN
       v_ddd_antigo  := 0;
       v_fone_antigo := 0;
@@ -2563,7 +2563,7 @@ DECLARE
       v_ddd_antigo  := COALESCE(OLD.ddd, 0);
       v_fone_antigo := COALESCE(OLD.fone, 0);
     END IF;
-    
+
     v_idcam_ddd_fone_residencial  := 39;
     v_idcam_fone_residencial  := 40;
     v_idcam_ddd_fone_comercial  := 41;
@@ -2572,23 +2572,23 @@ DECLARE
     v_idcam_fone_celular    := 44;
     v_idcam_ddd_fax     := 45;
     v_idcam_fax     := 46;
-    
-    v_nova_credibilidade := 0;  
+
+    v_nova_credibilidade := 0;
     v_credibilidade_maxima := 1;
     v_credibilidade_alta := 2;
     v_sem_credibilidade := 5;
     v_comando := 'SELECT origem_gravacao FROM cadastro.pessoa WHERE idpes='||quote_literal(v_idpes)||';';
-    
+
     FOR v_registro IN EXECUTE v_comando LOOP
       v_origem_gravacao := v_registro.origem_gravacao;
     END LOOP;
-    
+
     IF v_origem_gravacao = 'U' OR v_origem_gravacao = 'O' THEN -- os dados foram editados pelo usuário ou usuário do Oscar
       v_nova_credibilidade := v_credibilidade_maxima;
     ELSIF v_origem_gravacao = 'M' THEN -- os dados foram originados por migração
       v_nova_credibilidade := v_credibilidade_alta;
     END IF;
-    
+
     IF v_tipo_fone = 1 THEN
       v_idcam_ddd := v_idcam_ddd_fone_residencial;
       v_idcam_fone := v_idcam_fone_residencial;
@@ -2602,17 +2602,17 @@ DECLARE
       v_idcam_ddd := v_idcam_ddd_fax;
       v_idcam_fone := v_idcam_fax;
     END IF;
-    
+
     IF v_nova_credibilidade > 0 THEN
       IF v_ddd_novo <> v_ddd_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_ddd||','||v_nova_credibilidade||');';
       END IF;
-      
+
       IF v_fone_novo <> v_fone_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_fone||','||v_nova_credibilidade||');';
       END IF;
     END IF;
-    
+
     -- Verificar os campos Vazios ou Nulos
     IF v_ddd_novo <= 0 OR v_ddd_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_ddd||','||v_sem_credibilidade||');';
@@ -2620,7 +2620,7 @@ DECLARE
     IF v_fone_novo <= 0 OR v_fone_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_fone||','||v_sem_credibilidade||');';
     END IF;
-    
+
   RETURN NEW;
 END; $$
     LANGUAGE plpgsql;
@@ -2636,11 +2636,11 @@ DECLARE
   v_idpes ALIAS for $1;
   v_idcam ALIAS for $2;
   v_credibilidade ALIAS for $3;
-  
+
   v_comando   text;
-  v_existe_historico  numeric;  
+  v_existe_historico  numeric;
   v_registro    record;
-  
+
   BEGIN
     -- verificar se já existe histórico para o campo
     v_comando := 'SELECT idcam FROM consistenciacao.historico_campo WHERE idpes='||quote_literal(v_idpes)||' AND idcam='||quote_literal(v_idcam)||';';
@@ -2671,23 +2671,23 @@ DECLARE
   v_fantasia_antigo   text;
   v_inscricao_estadual_novo numeric;
   v_inscricao_estadual_antigo numeric;
-  
+
   v_comando     text;
   v_origem_gravacao   text;
-  
+
   v_credibilidade_maxima    numeric;
   v_credibilidade_alta    numeric;
   v_sem_credibilidade   numeric;
-  
+
   v_nova_credibilidade    numeric;
-  
+
   v_registro      record;
-  
+
   -- ID dos campos
   v_idcam_cnpj      numeric;
   v_idcam_fantasia    numeric;
   v_idcam_inscricao_estadual  numeric;
-  
+
   /*
   consistenciacao.historico_campo.credibilidade: 1 = Máxima, 2 = Alta, 3 = Média, 4 = Baixa, 5 = Sem credibilidade
   cadastro.pessoa.origem_gravacao: M = Migração, U = Usuário, C = Rotina de confrontação, O = Oscar
@@ -2697,7 +2697,7 @@ DECLARE
     v_cnpj_novo     := NEW.cnpj;
     v_fantasia_novo     := NEW.fantasia;
     v_inscricao_estadual_novo := NEW.insc_estadual;
-    
+
     IF TG_OP <> 'UPDATE' THEN
       v_cnpj_antigo     := 0;
       v_fantasia_antigo   := '';
@@ -2707,45 +2707,45 @@ DECLARE
       v_fantasia_antigo   := COALESCE(OLD.fantasia, '');
       v_inscricao_estadual_antigo := COALESCE(OLD.insc_estadual, 0);
     END IF;
-    
+
     v_idcam_cnpj      := 1;
     v_idcam_fantasia    := 24;
     v_idcam_inscricao_estadual  := 25;
-    
-    v_nova_credibilidade := 0;  
+
+    v_nova_credibilidade := 0;
     v_credibilidade_maxima := 1;
     v_credibilidade_alta := 2;
     v_sem_credibilidade := 5;
     v_comando := 'SELECT origem_gravacao FROM cadastro.pessoa WHERE idpes='||quote_literal(v_idpes)||';';
-    
+
     FOR v_registro IN EXECUTE v_comando LOOP
       v_origem_gravacao := v_registro.origem_gravacao;
     END LOOP;
-    
+
     IF v_origem_gravacao = 'U' OR v_origem_gravacao = 'O' THEN -- os dados foram editados pelo usuário ou pelo usuário do Oscar
       v_nova_credibilidade := v_credibilidade_maxima;
     ELSIF v_origem_gravacao = 'M' THEN -- os dados foram originados por migração
       v_nova_credibilidade := v_credibilidade_alta;
     END IF;
-    
+
     IF v_nova_credibilidade > 0 THEN
-      
+
       -- CNPJ
       IF v_cnpj_novo <> v_cnpj_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_cnpj||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- NOME FANTASIA
       IF v_fantasia_novo <> v_fantasia_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_fantasia||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- INSCRIÇÃO ESTADUAL
       IF v_inscricao_estadual_novo <> v_inscricao_estadual_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_inscricao_estadual||','||v_nova_credibilidade||');';
       END IF;
     END IF;
-    
+
     -- Verificar os campos Vazios ou Nulos
     -- CNPJ
     IF v_cnpj_novo <= 0 OR v_cnpj_novo IS NULL THEN
@@ -2755,7 +2755,7 @@ DECLARE
     IF TRIM(v_fantasia_novo)='' OR v_fantasia_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_fantasia||','||v_sem_credibilidade||');';
     END IF;
-    
+
     -- INSCRIÇÃO ESTADUAL
     IF v_inscricao_estadual_novo <= 0 OR v_inscricao_estadual_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_inscricao_estadual||','||v_sem_credibilidade||');';
@@ -2779,23 +2779,23 @@ DECLARE
   v_email_antigo      text;
   v_url_novo      text;
   v_url_antigo      text;
-  
+
   v_comando     text;
   v_origem_gravacao   text;
-  
+
   v_credibilidade_maxima    numeric;
   v_credibilidade_alta    numeric;
   v_sem_credibilidade   numeric;
-  
+
   v_nova_credibilidade    numeric;
-  
+
   v_registro      record;
-  
+
   -- ID dos campos
   v_idcam_nome      numeric;
   v_idcam_email     numeric;
   v_idcam_url     numeric;
-  
+
   /*
   consistenciacao.historico_campo.credibilidade: 1 = Máxima, 2 = Alta, 3 = Média, 4 = Baixa, 5 = Sem credibilidade
   cadastro.pessoa.origem_gravacao: M = Migração, U = Usuário, C = Rotina de confrontação, O = Oscar
@@ -2805,7 +2805,7 @@ DECLARE
     v_nome_novo := NEW.nome;
     v_email_novo  := NEW.email;
     v_url_novo  := NEW.url;
-    
+
     IF TG_OP <> 'UPDATE' THEN
       v_nome_antigo := '';
       v_email_antigo  := '';
@@ -2815,45 +2815,45 @@ DECLARE
       v_email_antigo  := COALESCE(OLD.email, '');
       v_url_antigo  := COALESCE(OLD.url, '');
     END IF;
-    
+
     v_idcam_nome  := 2;
     v_idcam_email := 3;
     v_idcam_url := 4;
-    
-    v_nova_credibilidade := 0;  
+
+    v_nova_credibilidade := 0;
     v_credibilidade_maxima := 1;
     v_credibilidade_alta := 2;
     v_sem_credibilidade := 5;
     v_comando := 'SELECT origem_gravacao FROM cadastro.pessoa WHERE idpes='||quote_literal(v_idpes)||';';
-    
+
     FOR v_registro IN EXECUTE v_comando LOOP
       v_origem_gravacao := v_registro.origem_gravacao;
     END LOOP;
-    
+
     IF v_origem_gravacao = 'U' OR v_origem_gravacao = 'O' THEN -- os dados foram editados pelo usuário ou pelo usuário do Oscar
       v_nova_credibilidade := v_credibilidade_maxima;
     ELSIF v_origem_gravacao = 'M' THEN -- os dados foram originados por migração
       v_nova_credibilidade := v_credibilidade_alta;
     END IF;
-    
+
     IF v_nova_credibilidade > 0 THEN
-      
+
       -- NOME
       IF v_nome_novo <> v_nome_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_nome||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- E-MAIL
       IF v_email_novo <> v_email_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_email||','||v_nova_credibilidade||');';
       END IF;
-      
+
       -- URL
       IF v_url_novo <> v_url_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_url||','||v_nova_credibilidade||');';
       END IF;
     END IF;
-    
+
     -- Verificar os campos Vazios ou Nulos
     -- NOME
     IF TRIM(v_nome_novo)='' OR v_nome_novo IS NULL THEN
@@ -2967,7 +2967,7 @@ DECLARE
   -- Parametro recebidos
   v_idpesVelho ALIAS for $1;
   v_idpesNovo ALIAS for $2;
-  
+
 BEGIN
   --Unificando registros do SECM (Sistema de Emissao de Certidoes Municipais)--
   EXECUTE 'SELECT consistenciacao.fcn_unifica_secm('||v_idpesVelho||','||v_idpesNovo||');';
@@ -3043,7 +3043,7 @@ BEGIN
          (SELECT login FROM usuario WHERE idpes ='|| v_idpesVelho ||');';
   --LOG_ERRO--
   EXECUTE 'UPDATE log_erro SET idpes = '||v_idpesNovo||' WHERE idpes = '||v_idpesVelho||';';
-  
+
   --USUARIO--
   EXECUTE 'DELETE FROM usuario WHERE idpes ='|| v_idpesVelho||';';
   RETURN 0;
@@ -3219,18 +3219,18 @@ BEGIN
    v_idpes_cad    := OLD.idpes_cad;
    v_data_cad   := OLD.data_cad;
    v_idsis_cad    := OLD.idsis_cad;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA BAIRRO
       INSERT INTO historico.bairro
-      (idbai, idmun, nome, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idbai, idmun, nome, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idbai, v_idmun, v_nome, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -3265,18 +3265,18 @@ BEGIN
    v_idpes_cad    := OLD.idpes_cad;
    v_data_cad   := OLD.data_cad;
    v_idsis_cad    := OLD.idsis_cad;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA CEP_LOGRADOURO
       INSERT INTO historico.cep_logradouro
-      (cep, idlog, nroini, nrofin, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (cep, idlog, nroini, nrofin, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_cep, v_idlog, v_nroini, v_nrofin, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -3310,18 +3310,18 @@ BEGIN
    v_idpes_cad    := OLD.idpes_cad;
    v_data_cad   := OLD.data_cad;
    v_idsis_cad    := OLD.idsis_cad;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA CEP_LOGRADOURO_BAIRRO
       INSERT INTO historico.cep_logradouro_bairro
-      (idbai, idlog, cep, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idbai, idlog, cep, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idbai, v_idlog, v_cep, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -3386,18 +3386,18 @@ BEGIN
    v_idpes_cad      := OLD.idpes_cad;
    v_data_cad     := OLD.data_cad;
    v_idsis_cad      := OLD.idsis_cad;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA DOCUMENTO
       INSERT INTO historico.documento
-      (idpes, sigla_uf_exp_rg, rg, data_exp_rg, tipo_cert_civil, num_termo, num_livro, num_folha, data_emissao_cert_civil, sigla_uf_cert_civil, sigla_uf_cart_trabalho, cartorio_cert_civil, num_cart_trabalho, serie_cart_trabalho, data_emissao_cart_trabalho, num_tit_eleitor, zona_tit_eleitor, secao_tit_eleitor, idorg_exp_rg, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idpes, sigla_uf_exp_rg, rg, data_exp_rg, tipo_cert_civil, num_termo, num_livro, num_folha, data_emissao_cert_civil, sigla_uf_cert_civil, sigla_uf_cart_trabalho, cartorio_cert_civil, num_cart_trabalho, serie_cart_trabalho, data_emissao_cart_trabalho, num_tit_eleitor, zona_tit_eleitor, secao_tit_eleitor, idorg_exp_rg, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idpes, v_sigla_uf_exp_rg, v_rg, v_data_exp_rg, v_tipo_cert_civil, v_num_termo, v_num_livro, v_num_folha, v_data_emissao_cert_civil, v_sigla_uf_cert_civil, v_sigla_uf_cart_trabalho, v_cartorio_cert_civil, v_num_cart_trabalho, v_serie_cart_trabalho, v_data_emissao_cart_trabalho, v_num_tit_eleitor, v_zona_tit_eleitor, v_secao_tit_eleitor, v_idorg_exp_rg, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -3448,18 +3448,18 @@ BEGIN
    v_idpes_cad      := OLD.idpes_cad;
    v_data_cad     := OLD.data_cad;
    v_idsis_cad      := OLD.idsis_cad;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA ENDERECO_EXTERNO
       INSERT INTO historico.endereco_externo
-      (idpes, tipo, sigla_uf, idtlog, logradouro, numero, letra, complemento, bairro, cep, cidade, reside_desde, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idpes, tipo, sigla_uf, idtlog, logradouro, numero, letra, complemento, bairro, cep, cidade, reside_desde, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idpes, v_tipo, v_sigla_uf, v_idtlog, v_logradouro, v_numero, v_letra, v_complemento, v_bairro, v_cep, v_cidade, v_reside_desde, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -3504,18 +3504,18 @@ BEGIN
    v_idpes_cad    := OLD.idpes_cad;
    v_data_cad   := OLD.data_cad;
    v_idsis_cad    := OLD.idsis_cad;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA ENDERECO_PESSOA
       INSERT INTO historico.endereco_pessoa
-      (idpes, tipo, cep, idlog, idbai, numero, letra, complemento, reside_desde, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idpes, tipo, cep, idlog, idbai, numero, letra, complemento, reside_desde, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idpes, v_tipo, v_cep, v_idlog, v_idbai, v_numero, v_letra, v_complemento, v_reside_desde, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -3586,18 +3586,18 @@ BEGIN
    v_idpes_cad      := OLD.idpes_cad;
    v_data_cad     := OLD.data_cad;
    v_idsis_cad      := OLD.idsis_cad;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA FISICA
       INSERT INTO historico.fisica
-      (idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idpes, v_data_nasc, v_sexo, v_idpes_mae, v_idpes_pai, v_idpes_responsavel, v_idesco, v_ideciv, v_idpes_con, v_data_uniao, v_data_obito, v_nacionalidade, v_idpais_estrangeiro, v_data_chegada_brasil, v_idmun_nascimento, v_ultima_empresa, v_idocup, v_nome_mae, v_nome_pai, v_nome_conjuge, v_nome_responsavel, v_justificativa_provisorio, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -3628,18 +3628,18 @@ BEGIN
    v_idpes_cad      := OLD.idpes_cad;
    v_data_cad     := OLD.data_cad;
    v_idsis_cad      := OLD.idsis_cad;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA FISICA_CPF
       INSERT INTO historico.fisica_cpf
-      (idpes, cpf, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idpes, cpf, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idpes, v_cpf, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -3674,18 +3674,18 @@ BEGIN
    v_idpes_cad      := OLD.idpes_cad;
    v_data_cad     := OLD.data_cad;
    v_idsis_cad      := OLD.idsis_cad;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA FONE_PESSOA
       INSERT INTO historico.fone_pessoa
-      (idpes, tipo, ddd, fone, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idpes, tipo, ddd, fone, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idpes, v_tipo, v_ddd, v_fone, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -3722,18 +3722,18 @@ BEGIN
    v_idpes_cad      := OLD.idpes_cad;
    v_data_cad     := OLD.data_cad;
    v_idsis_cad      := OLD.idsis_cad;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA FUNCIONARIO
       INSERT INTO historico.funcionario
-      (matricula, idins, idset, idpes, situacao, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (matricula, idins, idset, idpes, situacao, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_matricula, v_idins, v_idset, v_idpes, v_situacao, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -3768,18 +3768,18 @@ BEGIN
    v_idpes_cad      := OLD.idpes_cad;
    v_data_cad     := OLD.data_cad;
    v_idsis_cad      := OLD.idsis_cad;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA JURIDICA
       INSERT INTO historico.juridica
-      (idpes, cnpj, fantasia, insc_estadual, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idpes, cnpj, fantasia, insc_estadual, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idpes, v_cnpj, v_fantasia, v_insc_estadual, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -3816,18 +3816,18 @@ BEGIN
    v_idpes_cad      := OLD.idpes_cad;
    v_data_cad     := OLD.data_cad;
    v_idsis_cad      := OLD.idsis_cad;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA LOGRADOURO
       INSERT INTO historico.logradouro
-      (idlog, idtlog, nome, idmun, ident_oficial, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idlog, idtlog, nome, idmun, ident_oficial, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idlog, v_idtlog, v_nome, v_idmun, v_ident_oficial, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -3874,18 +3874,18 @@ BEGIN
    v_idpes_cad      := OLD.idpes_cad;
    v_data_cad     := OLD.data_cad;
    v_idsis_cad      := OLD.idsis_cad;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA MUNICIPIO
       INSERT INTO historico.municipio
-      (idmun, sigla_uf, nome, area_km2, idmreg, idasmun, cod_ibge, geom, tipo, idmun_pai, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idmun, sigla_uf, nome, area_km2, idmreg, idasmun, cod_ibge, geom, tipo, idmun_pai, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idmun, v_sigla_uf, v_nome, v_area_km2, v_idmreg, v_idasmun, v_cod_ibge, v_geom, v_tipo, v_idmun_pai, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -3924,18 +3924,18 @@ BEGIN
    v_origem_gravacao  := OLD.origem_gravacao;
    v_idsis_rev    := OLD.idsis_rev;
    v_idsis_cad    := OLD.idsis_cad;
-      
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA PESSOA
       INSERT INTO historico.pessoa
-      (idpes, nome, idpes_cad, data_cad, url, tipo, idpes_rev, data_rev, email, situacao, origem_gravacao, idsis_rev, idsis_cad, operacao) VALUES 
+      (idpes, nome, idpes_cad, data_cad, url, tipo, idpes_rev, data_rev, email, situacao, origem_gravacao, idsis_rev, idsis_cad, operacao) VALUES
       (v_idpes, v_nome, v_idpes_cad, v_data_cad, v_url, v_tipo, v_idpes_rev, v_data_rev, v_email, v_situacao, v_origem_gravacao, v_idsis_rev, v_idsis_cad, 'E');
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -3966,18 +3966,18 @@ BEGIN
    v_idpes_cad      := OLD.idpes_cad;
    v_data_cad     := OLD.data_cad;
    v_idsis_cad      := OLD.idsis_cad;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA SOCIO
       INSERT INTO historico.socio
-      (idpes_juridica, idpes_fisica, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idpes_juridica, idpes_fisica, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idpes_juridica, v_idpes_fisica, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -4012,18 +4012,18 @@ BEGIN
    v_data_cad   := OLD.data_cad;
    v_idsis_cad    := OLD.idsis_cad;
    v_operacao   := OLD.operacao;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA BAIRRO
       INSERT INTO historico.bairro
-      (idbai, idmun, nome, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idbai, idmun, nome, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idbai, v_idmun, v_nome, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -4060,18 +4060,18 @@ BEGIN
    v_data_cad   := OLD.data_cad;
    v_idsis_cad    := OLD.idsis_cad;
    v_operacao   := OLD.operacao;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA CEP_LOGRADOURO
       INSERT INTO historico.cep_logradouro
-      (cep, idlog, nroini, nrofin, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (cep, idlog, nroini, nrofin, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_cep, v_idlog, v_nroini, v_nrofin, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -4106,18 +4106,18 @@ BEGIN
    v_data_cad   := OLD.data_cad;
    v_idsis_cad    := OLD.idsis_cad;
    v_operacao   := OLD.operacao;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA CEP_LOGRADOURO_BAIRRO
       INSERT INTO historico.cep_logradouro_bairro
-      (idbai, idlog, cep, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idbai, idlog, cep, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idbai, v_idlog, v_cep, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -4184,18 +4184,18 @@ BEGIN
    v_data_cad     := OLD.data_cad;
    v_idsis_cad      := OLD.idsis_cad;
    v_operacao     := OLD.operacao;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA DOCUMENTO
       INSERT INTO historico.documento
-      (idpes, sigla_uf_exp_rg, rg, data_exp_rg, tipo_cert_civil, num_termo, num_livro, num_folha, data_emissao_cert_civil, sigla_uf_cert_civil, sigla_uf_cart_trabalho, cartorio_cert_civil, num_cart_trabalho, serie_cart_trabalho, data_emissao_cart_trabalho, num_tit_eleitor, zona_tit_eleitor, secao_tit_eleitor, idorg_exp_rg, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idpes, sigla_uf_exp_rg, rg, data_exp_rg, tipo_cert_civil, num_termo, num_livro, num_folha, data_emissao_cert_civil, sigla_uf_cert_civil, sigla_uf_cart_trabalho, cartorio_cert_civil, num_cart_trabalho, serie_cart_trabalho, data_emissao_cart_trabalho, num_tit_eleitor, zona_tit_eleitor, secao_tit_eleitor, idorg_exp_rg, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idpes, v_sigla_uf_exp_rg, v_rg, v_data_exp_rg, v_tipo_cert_civil, v_num_termo, v_num_livro, v_num_folha, v_data_emissao_cert_civil, v_sigla_uf_cert_civil, v_sigla_uf_cart_trabalho, v_cartorio_cert_civil, v_num_cart_trabalho, v_serie_cart_trabalho, v_data_emissao_cart_trabalho, v_num_tit_eleitor, v_zona_tit_eleitor, v_secao_tit_eleitor, v_idorg_exp_rg, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -4248,18 +4248,18 @@ BEGIN
    v_data_cad   := OLD.data_cad;
    v_idsis_cad    := OLD.idsis_cad;
    v_operacao   := OLD.operacao;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA ENDERECO_EXTERNO
       INSERT INTO historico.endereco_externo
-      (idpes, tipo, sigla_uf, idtlog, logradouro, numero, letra, complemento, bairro, cep, cidade, reside_desde, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idpes, tipo, sigla_uf, idtlog, logradouro, numero, letra, complemento, bairro, cep, cidade, reside_desde, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idpes, v_tipo, v_sigla_uf, v_idtlog, v_logradouro, v_numero, v_letra, v_complemento, v_bairro, v_cep, v_cidade, v_reside_desde, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -4306,18 +4306,18 @@ BEGIN
    v_data_cad   := OLD.data_cad;
    v_idsis_cad    := OLD.idsis_cad;
    v_operacao   := OLD.operacao;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA ENDERECO_PESSOA
       INSERT INTO historico.endereco_pessoa
-      (idpes, tipo, cep, idlog, idbai, numero, letra, complemento, reside_desde, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idpes, tipo, cep, idlog, idbai, numero, letra, complemento, reside_desde, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idpes, v_tipo, v_cep, v_idlog, v_idbai, v_numero, v_letra, v_complemento, v_reside_desde, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -4390,18 +4390,18 @@ BEGIN
    v_data_cad     := OLD.data_cad;
    v_idsis_cad      := OLD.idsis_cad;
    v_operacao     := OLD.operacao;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA FISICA
       INSERT INTO historico.fisica
-      (idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idpes, v_data_nasc, v_sexo, v_idpes_mae, v_idpes_pai, v_idpes_responsavel, v_idesco, v_ideciv, v_idpes_con, v_data_uniao, v_data_obito, v_nacionalidade, v_idpais_estrangeiro, v_data_chegada_brasil, v_idmun_nascimento, v_ultima_empresa, v_idocup, v_nome_mae, v_nome_pai, v_nome_conjuge, v_nome_responsavel, v_justificativa_provisorio, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -4434,18 +4434,18 @@ BEGIN
    v_data_cad     := OLD.data_cad;
    v_idsis_cad      := OLD.idsis_cad;
    v_operacao     := OLD.operacao;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA FISICA_CPF
       INSERT INTO historico.fisica_cpf
-      (idpes, cpf, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idpes, cpf, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idpes, v_cpf, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -4482,18 +4482,18 @@ BEGIN
    v_data_cad     := OLD.data_cad;
    v_idsis_cad      := OLD.idsis_cad;
    v_operacao     := OLD.operacao;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA FONE_PESSOA
       INSERT INTO historico.fone_pessoa
-      (idpes, tipo, ddd, fone, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idpes, tipo, ddd, fone, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idpes, v_tipo, v_ddd, v_fone, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -4532,18 +4532,18 @@ BEGIN
    v_data_cad     := OLD.data_cad;
    v_idsis_cad      := OLD.idsis_cad;
    v_operacao     := OLD.operacao;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA FUNCIONARIO
       INSERT INTO historico.funcionario
-      (matricula, idins, idset, idpes, situacao, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (matricula, idins, idset, idpes, situacao, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_matricula, v_idins, v_idset, v_idpes, v_situacao, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -4580,18 +4580,18 @@ BEGIN
    v_data_cad     := OLD.data_cad;
    v_idsis_cad      := OLD.idsis_cad;
    v_operacao     := OLD.operacao;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA JURIDICA
       INSERT INTO historico.juridica
-      (idpes, cnpj, fantasia, insc_estadual, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idpes, cnpj, fantasia, insc_estadual, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idpes, v_cnpj, v_fantasia, v_insc_estadual, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -4630,18 +4630,18 @@ BEGIN
    v_data_cad     := OLD.data_cad;
    v_idsis_cad      := OLD.idsis_cad;
    v_operacao     := OLD.operacao;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA LOGRADOURO
       INSERT INTO historico.logradouro
-      (idlog, idtlog, nome, idmun, ident_oficial, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idlog, idtlog, nome, idmun, ident_oficial, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idlog, v_idtlog, v_nome, v_idmun, v_ident_oficial, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -4690,18 +4690,18 @@ BEGIN
    v_data_cad     := OLD.data_cad;
    v_idsis_cad      := OLD.idsis_cad;
    v_operacao     := OLD.operacao;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA MUNICIPIO
       INSERT INTO historico.municipio
-      (idmun, sigla_uf, nome, area_km2, idmreg, idasmun, cod_ibge, geom, tipo, idmun_pai, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idmun, sigla_uf, nome, area_km2, idmreg, idasmun, cod_ibge, geom, tipo, idmun_pai, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idmun, v_sigla_uf, v_nome, v_area_km2, v_idmreg, v_idasmun, v_cod_ibge, v_geom, v_tipo, v_idmun_pai, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -4742,18 +4742,18 @@ BEGIN
    v_idsis_rev    := OLD.idsis_rev;
    v_idsis_cad    := OLD.idsis_cad;
    v_operacao   := OLD.operacao;
-      
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA PESSOA
       INSERT INTO historico.pessoa
-      (idpes, nome, idpes_cad, data_cad, url, tipo, idpes_rev, data_rev, email, situacao, origem_gravacao, idsis_rev, idsis_cad, operacao) VALUES 
+      (idpes, nome, idpes_cad, data_cad, url, tipo, idpes_rev, data_rev, email, situacao, origem_gravacao, idsis_rev, idsis_cad, operacao) VALUES
       (v_idpes, v_nome, v_idpes_cad, v_data_cad, v_url, v_tipo, v_idpes_rev, v_data_rev, v_email, v_situacao, v_origem_gravacao, v_idsis_rev, v_idsis_cad, v_operacao);
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -4786,18 +4786,18 @@ BEGIN
    v_data_cad     := OLD.data_cad;
    v_idsis_cad      := OLD.idsis_cad;
    v_operacao     := OLD.operacao;
-         
+
   IF v_data_rev IS NULL THEN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
-        
+
       -- GRAVA HISTÓRICO PARA TABELA SOCIO
       INSERT INTO historico.socio
-      (idpes_juridica, idpes_fisica, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
+      (idpes_juridica, idpes_fisica, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES
       (v_idpes_juridica, v_idpes_fisica, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
-      
+
    RETURN NEW;
-   
+
 END; $$
     LANGUAGE plpgsql;
 
@@ -4815,8 +4815,8 @@ DECLARE
   alteracoes    text;
   data_cadastro   TIMESTAMP;
   v_insercao    int2;
-  
-  
+
+
   BEGIN
     v_insercao    := 0;
     nm_tabela   := TG_RELNAME;
@@ -5001,43 +5001,43 @@ DECLARE
   v_cont     integer;
   v_fonema   text;
   v_comando  text;
-  
+
   BEGIN
-  
+
   -- obter o nome da pessoa referente ao IDPES passado como parametro
   v_comando := 'SELECT nome FROM cadastro.pessoa WHERE idpes = '||quote_literal(v_idpes_parametro)||';';
   FOR v_registro IN EXECUTE v_comando LOOP
     v_nome_pessoa_1 := v_registro.nome;
   END LOOP;
-  
+
   v_nome_pessoa_2 := v_nome_parametro;
-  
+
   v_nome_primeiro_ultimo_pessoa_1 := '';
   v_nome_primeiro_ultimo_pessoa_2 := '';
   v_cont := 0;
-  
+
   -- primeiro e último nome da pessoa com fonética
   FOR v_registro IN SELECT * FROM public.fcn_fonetiza(public.fcn_obter_primeiro_ultimo_nome(v_nome_pessoa_1)) LOOP
     v_cont := v_cont + 1;
     v_fonema := v_registro.fcn_fonetiza;
-    
+
     IF v_cont > 1 THEN
       v_nome_primeiro_ultimo_pessoa_1 := v_nome_primeiro_ultimo_pessoa_1 || ' ';
     END IF;
     v_nome_primeiro_ultimo_pessoa_1 := v_nome_primeiro_ultimo_pessoa_1 || v_fonema;
   END LOOP;
-  
+
   v_cont := 0;
   FOR v_registro IN SELECT * FROM public.fcn_fonetiza(public.fcn_obter_primeiro_ultimo_nome(v_nome_pessoa_2)) LOOP
     v_cont := v_cont + 1;
     v_fonema := v_registro.fcn_fonetiza;
-    
+
     IF v_cont > 1 THEN
       v_nome_primeiro_ultimo_pessoa_2 := v_nome_primeiro_ultimo_pessoa_2 || ' ';
     END IF;
     v_nome_primeiro_ultimo_pessoa_2 := v_nome_primeiro_ultimo_pessoa_2 || v_fonema;
   END LOOP;
-  
+
   IF v_nome_primeiro_ultimo_pessoa_1 = v_nome_primeiro_ultimo_pessoa_2 THEN
     RETURN 1;
   ELSE
@@ -5130,7 +5130,7 @@ DECLARE
   -- Parâmetro recebidos
   v_idpes ALIAS for $1;
   v_tipo ALIAS for $2;
-  
+
 BEGIN
   -- Deleta dados da tabela endereco_externo
   DELETE FROM cadastro.endereco_externo WHERE idpes = v_idpes AND tipo = v_tipo;
@@ -5149,7 +5149,7 @@ DECLARE
   -- Parâmetro recebidos
   v_idpes ALIAS for $1;
   v_tipo ALIAS for $2;
-  
+
 BEGIN
   -- Deleta dados da tabela endereco_pessoa
   DELETE FROM cadastro.endereco_pessoa WHERE idpes = v_idpes AND tipo = v_tipo;
@@ -5167,7 +5167,7 @@ CREATE FUNCTION fcn_delete_fone_pessoa(integer) RETURNS integer
 DECLARE
   -- Parâmetro recebidos
   v_id_pes ALIAS for $1;
-  
+
 BEGIN
   -- Deleta dados da tabela fone_pessoa
   DELETE FROM cadastro.fone_pessoa WHERE idpes = v_id_pes;
@@ -5186,7 +5186,7 @@ DECLARE
   -- Parâmetro recebidos
   v_matricula ALIAS for $1;
   v_id_ins ALIAS for $2;
-  
+
 BEGIN
   -- Deleta dados da tabela funcionário
   DELETE FROM cadastro.funcionario WHERE matricula = v_matricula AND idins = v_id_ins;
@@ -5841,7 +5841,7 @@ CREATE FUNCTION fcn_insert_documento(integer, character varying, character varyi
 DECLARE
   -- Parâmetro recebidos
   v_id_pes ALIAS for $1;
-  v_rg ALIAS for $2;  
+  v_rg ALIAS for $2;
   v_orgao_exp_rg ALIAS for $3;
   v_data_exp_rg ALIAS for $4;
   v_sigla_uf_exp_rg ALIAS for $5;
@@ -5856,13 +5856,13 @@ DECLARE
   v_num_cart_trabalho ALIAS for $14;
       v_serie_cart_trabalho ALIAS for $15;
       v_data_emissao_cart_trabalho ALIAS for $16;
-  v_num_tit_eleitor ALIAS for $17;  
+  v_num_tit_eleitor ALIAS for $17;
   v_zona_tit_eleitor ALIAS for $18;
   v_secao_tit_eleitor ALIAS for $19;
   v_origem_gravacao ALIAS for $20;
   v_idpes_cad ALIAS for $21;
   v_idsis_cad ALIAS for $22;
-    
+
     -- Outras variáveis
       v_rg_aux varchar(10);
       v_orgao_exp_rg_aux varchar(10);
@@ -5955,9 +5955,9 @@ BEGIN
     ELSE
         v_secao_tit_eleitor_aux := v_secao_tit_eleitor;
     END IF;
- 
+
   -- Insere dados na tabela funcionário
-    INSERT INTO cadastro.documento (idpes, rg, idorg_exp_rg, 
+    INSERT INTO cadastro.documento (idpes, rg, idorg_exp_rg,
                                 data_exp_rg, sigla_uf_exp_rg,
                                 tipo_cert_civil, num_termo,
                                 num_livro, num_folha,
@@ -5988,7 +5988,7 @@ CREATE FUNCTION fcn_insert_endereco_externo(integer, integer, character varying,
 DECLARE
   -- Parâmetro recebidos
   v_id_pes ALIAS for $1;
-  v_tipo ALIAS for $2; 
+  v_tipo ALIAS for $2;
   v_sigla_uf ALIAS for $3;
   v_idtlog ALIAS for $4;
     v_logradouro ALIAS for $5;
@@ -6002,12 +6002,12 @@ DECLARE
     v_origem_gravacao ALIAS for $13;
     v_idpes_cad ALIAS for $14;
     v_idsis_cad ALIAS for $15;
-  
+
 BEGIN
   -- Atualiza dados na tabela endereco_externo
     INSERT INTO cadastro.endereco_externo(idpes, tipo, sigla_uf, idtlog, logradouro, numero, letra, complemento, bairro, cep, cidade, reside_desde, origem_gravacao, idpes_cad, idsis_cad, data_cad, operacao)
     VALUES (v_id_pes, v_tipo, v_sigla_uf, v_idtlog, public.fcn_upper(v_logradouro), v_numero, public.fcn_upper(v_letra), public.fcn_upper(v_complemento), public.fcn_upper(v_bairro), v_cep, public.fcn_upper(v_cidade), to_date(v_reside_desde,'DD/MM/YYYY'), v_origem_gravacao, v_idpes_cad, v_idsis_cad, CURRENT_TIMESTAMP, 'I');
- 
+
   RETURN 0;
 END;$_$
     LANGUAGE plpgsql;
@@ -6144,22 +6144,22 @@ BEGIN
         v_sexo_aux := public.fcn_upper(v_sexo);
     END IF;
   -- Insere dados na tabela funcionário
-    INSERT INTO cadastro.fisica (idpes, data_nasc, sexo, 
-                                idpes_mae,idpes_pai, idpes_responsavel, 
-                                idesco, ideciv, idpes_con, 
+    INSERT INTO cadastro.fisica (idpes, data_nasc, sexo,
+                                idpes_mae,idpes_pai, idpes_responsavel,
+                                idesco, ideciv, idpes_con,
                                 data_uniao, data_obito, nacionalidade,
-                                idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, 
-                                ultima_empresa, idocup, nome_mae, 
-                                nome_pai, nome_conjuge, 
+                                idpais_estrangeiro, data_chegada_brasil, idmun_nascimento,
+                                ultima_empresa, idocup, nome_mae,
+                                nome_pai, nome_conjuge,
                                 nome_responsavel, justificativa_provisorio, origem_gravacao, idpes_cad, idsis_cad, data_cad, operacao)
     VALUES(v_id_pes,to_date(v_data_nasc,'DD/MM/YYYY'),v_sexo_aux,
-           v_id_pes_mae_aux, v_id_pes_pai_aux, v_id_pes_responsavel_aux, 
+           v_id_pes_mae_aux, v_id_pes_pai_aux, v_id_pes_responsavel_aux,
            v_id_esco_aux, v_id_eciv_aux, v_id_pes_con_aux,
            to_date(v_data_uniao,'DD/MM/YYYY'), to_date(v_data_obito,'DD/MM/YYYY'), v_nacionalidade_aux,
            v_id_pais_estrangeiro_aux, to_date(v_data_chegada,'DD/MM/YYYY'), v_id_mun_nascimento_aux,             public.fcn_upper(v_ultima_empresa), v_id_ocup_aux, public.fcn_upper(v_nome_mae),
-           public.fcn_upper(v_nome_pai), public.fcn_upper(v_nome_conjuge),         
+           public.fcn_upper(v_nome_pai), public.fcn_upper(v_nome_conjuge),
            public.fcn_upper(v_nome_responsavel), v_justificativa_provisorio, v_origem_gravacao, v_idpes_cad, v_idsis_cad, CURRENT_TIMESTAMP, 'I');
- 
+
   RETURN 0;
 END;$_$
     LANGUAGE plpgsql;
@@ -6256,7 +6256,7 @@ DECLARE
   v_origem_gravacao ALIAS for $5;
       v_idpes_cad ALIAS for $6;
       v_idsis_cad ALIAS for $7;
-  
+
 BEGIN
   -- Insere dados na tabela juridica
     INSERT INTO cadastro.juridica (idpes,cnpj,fantasia,insc_estadual, origem_gravacao, idpes_cad, idsis_cad, data_cad, operacao)
@@ -6284,7 +6284,7 @@ DECLARE
   v_origem_gravacao ALIAS for $8;
       v_idpes_cad ALIAS for $9;
       v_idsis_cad ALIAS for $10;
-  
+
   idpes_logado integer;
 BEGIN
   idpes_logado := v_id_pes_logado;
@@ -6426,12 +6426,12 @@ DECLARE
         IF v_posicao_espaco_primeiro_nome > 0 THEN
           v_primeiro_nome := SUBSTR(v_nome, 1, (v_posicao_espaco_primeiro_nome - 1));
         END IF;
-        
+
         -- obter o penultimo nome
         IF v_posicao_espaco_primeiro_nome > 0 THEN
           v_posicao_espaco_ultimo_nome := 0;
           v_cont := 1;
-          
+
           -- obter posição do espaço em branco anterior ao último nome
           WHILE v_cont < LENGTH(v_nome) LOOP
           IF SUBSTR(v_nome, v_cont, 1) = ' ' THEN
@@ -6586,8 +6586,8 @@ CREATE FUNCTION fcn_update_documento(integer, character varying, character varyi
 DECLARE
   -- Parâmetro recebidos
   v_id_pes ALIAS for $1;
-  v_rg ALIAS for $2;  
-  v_orgao_exp_rg ALIAS for $3;    
+  v_rg ALIAS for $2;
+  v_orgao_exp_rg ALIAS for $3;
   v_data_exp_rg ALIAS for $4;
   v_sigla_uf_exp_rg ALIAS for $5;
     v_tipo_cert_civil ALIAS for $6;
@@ -6601,13 +6601,13 @@ DECLARE
   v_num_cart_trabalho ALIAS for $14;
     v_serie_cart_trabalho ALIAS for $15;
     v_data_emissao_cart_trabalho ALIAS for $16;
-  v_num_tit_eleitor ALIAS for $17;  
+  v_num_tit_eleitor ALIAS for $17;
   v_zona_tit_eleitor ALIAS for $18;
   v_secao_tit_eleitor ALIAS for $19;
   v_origem_gravacao ALIAS for $20;
   v_idpes_rev ALIAS for $21;
   v_idsis_rev ALIAS for $22;
-    
+
     -- Outras variáveis
     v_rg_aux varchar(10);
     v_orgao_exp_rg_aux varchar(10);
@@ -6700,25 +6700,25 @@ BEGIN
     ELSE
         v_secao_tit_eleitor_aux := v_secao_tit_eleitor;
     END IF;
- 
+
   -- Insere dados na tabela funcionário
     UPDATE cadastro.documento
     SET rg = to_number(v_rg_aux,9999999999),
         idorg_exp_rg = to_number(v_orgao_exp_rg_aux,9999999999),
-        data_exp_rg = to_date(v_data_exp_rg,'DD/MM/YYYY'), 
-        sigla_uf_exp_rg = v_sigla_uf_exp_rg_aux, 
-        tipo_cert_civil = v_tipo_cert_civil_aux, 
-        num_termo = v_num_termo_aux, 
-        num_livro = v_num_livro_aux, 
-        num_folha = v_num_folha_aux, 
-        data_emissao_cert_civil = to_date(v_data_emissao_cert_civil,'DD/MM/YYYY'), 
-        sigla_uf_cert_civil = v_sigla_uf_cert_civil_aux, 
-        sigla_uf_cart_trabalho = v_sigla_uf_cart_trabalho_aux, 
-        cartorio_cert_civil = v_cartorio_cert_civil_aux, 
-        num_cart_trabalho = v_num_cart_trabalho_aux, 
-        serie_cart_trabalho = v_serie_cart_trabalho_aux, 
-        data_emissao_cart_trabalho = to_date(v_data_emissao_cart_trabalho,'DD/MM/YYYY'), 
-        num_tit_eleitor = to_number(v_num_tit_eleitor_aux,9999999999999),                                              zona_tit_eleitor = v_zona_tit_eleitor_aux, 
+        data_exp_rg = to_date(v_data_exp_rg,'DD/MM/YYYY'),
+        sigla_uf_exp_rg = v_sigla_uf_exp_rg_aux,
+        tipo_cert_civil = v_tipo_cert_civil_aux,
+        num_termo = v_num_termo_aux,
+        num_livro = v_num_livro_aux,
+        num_folha = v_num_folha_aux,
+        data_emissao_cert_civil = to_date(v_data_emissao_cert_civil,'DD/MM/YYYY'),
+        sigla_uf_cert_civil = v_sigla_uf_cert_civil_aux,
+        sigla_uf_cart_trabalho = v_sigla_uf_cart_trabalho_aux,
+        cartorio_cert_civil = v_cartorio_cert_civil_aux,
+        num_cart_trabalho = v_num_cart_trabalho_aux,
+        serie_cart_trabalho = v_serie_cart_trabalho_aux,
+        data_emissao_cart_trabalho = to_date(v_data_emissao_cart_trabalho,'DD/MM/YYYY'),
+        num_tit_eleitor = to_number(v_num_tit_eleitor_aux,9999999999999),                                              zona_tit_eleitor = v_zona_tit_eleitor_aux,
         secao_tit_eleitor = v_secao_tit_eleitor_aux,
   origem_gravacao = v_origem_gravacao,
   idpes_rev = v_idpes_rev,
@@ -6726,8 +6726,8 @@ BEGIN
   data_rev = CURRENT_TIMESTAMP,
   operacao = 'A'
     WHERE idpes = v_id_pes;
-   
- 
+
+
   RETURN 0;
 END;$_$
     LANGUAGE plpgsql;
@@ -6742,7 +6742,7 @@ CREATE FUNCTION fcn_update_endereco_externo(integer, integer, character varying,
 DECLARE
   -- Parâmetro recebidos
   v_id_pes ALIAS for $1;
-  v_tipo ALIAS for $2; 
+  v_tipo ALIAS for $2;
   v_sigla_uf ALIAS for $3;
   v_idtlog ALIAS for $4;
     v_logradouro ALIAS for $5;
@@ -6756,7 +6756,7 @@ DECLARE
     v_origem_gravacao ALIAS for $13;
     v_idpes_rev ALIAS for $14;
     v_idsis_rev ALIAS for $15;
-  
+
 BEGIN
   -- Atualiza dados na tabela endereco_externo
   UPDATE cadastro.endereco_externo
@@ -6858,7 +6858,7 @@ DECLARE
       v_origem_gravacao ALIAS for $23;
       v_idpes_rev ALIAS for $24;
       v_idsis_rev ALIAS for $25;
-    
+
       -- Outras variáveis
       v_id_pes_mae_aux integer;
       v_id_pes_pai_aux integer;
@@ -6928,27 +6928,27 @@ BEGIN
         v_sexo_aux := public.fcn_upper(v_sexo);
     END IF;
   -- Insere dados na tabela funcionário
-    UPDATE cadastro.fisica 
+    UPDATE cadastro.fisica
     SET data_nasc = to_date(v_data_nasc,'DD/MM/YYYY'),
-        sexo = v_sexo_aux, 
+        sexo = v_sexo_aux,
         idpes_mae = v_id_pes_mae_aux,
         idpes_pai = v_id_pes_pai_aux,
-        idpes_responsavel = v_id_pes_responsavel_aux, 
+        idpes_responsavel = v_id_pes_responsavel_aux,
         idesco = v_id_esco_aux,
-        ideciv = v_id_eciv_aux, 
-        idpes_con = v_id_pes_con_aux, 
-        data_uniao = to_date(v_data_uniao,'DD/MM/YYYY'), 
-        data_obito = to_date(v_data_obito,'DD/MM/YYYY'), 
+        ideciv = v_id_eciv_aux,
+        idpes_con = v_id_pes_con_aux,
+        data_uniao = to_date(v_data_uniao,'DD/MM/YYYY'),
+        data_obito = to_date(v_data_obito,'DD/MM/YYYY'),
         nacionalidade = v_nacionalidade_aux,
-        idpais_estrangeiro = v_id_pais_estrangeiro_aux, 
-        data_chegada_brasil = to_date(v_data_chegada,'DD/MM/YYYY'), 
-        idmun_nascimento = v_id_mun_nascimento_aux, 
-        ultima_empresa = public.fcn_upper(v_ultima_empresa), 
-        idocup = v_id_ocup_aux, 
-        nome_mae = public.fcn_upper(v_nome_mae), 
-        nome_pai = public.fcn_upper(v_nome_pai), 
+        idpais_estrangeiro = v_id_pais_estrangeiro_aux,
+        data_chegada_brasil = to_date(v_data_chegada,'DD/MM/YYYY'),
+        idmun_nascimento = v_id_mun_nascimento_aux,
+        ultima_empresa = public.fcn_upper(v_ultima_empresa),
+        idocup = v_id_ocup_aux,
+        nome_mae = public.fcn_upper(v_nome_mae),
+        nome_pai = public.fcn_upper(v_nome_pai),
         nome_conjuge = public.fcn_upper(v_nome_conjuge),
-        nome_responsavel = public.fcn_upper(v_nome_responsavel), 
+        nome_responsavel = public.fcn_upper(v_nome_responsavel),
         justificativa_provisorio = v_justificativa_provisorio,
   origem_gravacao = v_origem_gravacao,
   idpes_rev = v_idpes_rev,
@@ -6956,7 +6956,7 @@ BEGIN
   data_rev = CURRENT_TIMESTAMP,
   operacao = 'A'
     WHERE idpes = v_id_pes;
- 
+
   RETURN 0;
 END;$_$
     LANGUAGE plpgsql;
@@ -6975,10 +6975,10 @@ DECLARE
   v_origem_gravacao ALIAS for $3;
   v_idpes_rev ALIAS for $4;
   v_idsis_rev ALIAS for $5;
-  
+
 BEGIN
   -- Atualiza dados na tabela fisica_cpf
-  UPDATE cadastro.fisica_cpf SET 
+  UPDATE cadastro.fisica_cpf SET
     origem_gravacao = v_origem_gravacao,
     idpes_rev = v_idpes_rev,
     idsis_rev = v_idsis_rev,
@@ -7006,10 +7006,10 @@ DECLARE
   v_origem_gravacao ALIAS for $5;
       v_idpes_rev ALIAS for $6;
       v_idsis_rev ALIAS for $7;
-  
+
 BEGIN
   -- Atualiza dados na tabela fone_pessoa
-  UPDATE cadastro.fone_pessoa 
+  UPDATE cadastro.fone_pessoa
     SET ddd = v_ddd,
         fone = v_fone,
   origem_gravacao = v_origem_gravacao,
@@ -7053,33 +7053,33 @@ BEGIN
   ELSE
     v_id_set_aux := v_id_set;
   END IF;
-    
+
   IF v_id_set_aux IS NULL AND v_id_set = -1 THEN
     -- Sql utilizado para ativar e desativar o registro na tabela funcionário
-     UPDATE cadastro.funcionario 
+     UPDATE cadastro.funcionario
       SET situacao=v_situacao_aux,
       origem_gravacao = v_origem_gravacao,
       idpes_rev = v_idpes_rev,
       idsis_rev = v_idsis_rev,
       data_rev = CURRENT_DATE,
-      operacao = 'A' 
-      WHERE   
-          matricula=v_matricula_aux AND 
-          idins=v_id_ins_aux;  
-  ELSE 
-    UPDATE cadastro.funcionario 
+      operacao = 'A'
+      WHERE
+          matricula=v_matricula_aux AND
+          idins=v_id_ins_aux;
+  ELSE
+    UPDATE cadastro.funcionario
       SET idset=v_id_set_aux,
           situacao=v_situacao_aux,
           origem_gravacao = v_origem_gravacao,
           idpes_rev = v_idpes_rev,
           idsis_rev = v_idsis_rev,
           data_rev = CURRENT_TIMESTAMP,
-            operacao = 'A' 
-      WHERE 
-          matricula=v_matricula_aux AND 
+            operacao = 'A'
+      WHERE
+          matricula=v_matricula_aux AND
           idins=v_id_ins_aux;
   END IF;
-  
+
   RETURN 0;
 END;$_$
     LANGUAGE plpgsql;
@@ -7100,7 +7100,7 @@ DECLARE
       v_origem_gravacao ALIAS for $5;
       v_idpes_rev ALIAS for $6;
       v_idsis_rev ALIAS for $7;
-  
+
 BEGIN
   -- Atualiza dados na tabela juridica
   UPDATE cadastro.juridica
@@ -7135,7 +7135,7 @@ DECLARE
   v_origem_gravacao ALIAS for $7;
       v_idpes_rev ALIAS for $8;
       v_idsis_rev ALIAS for $9;
-  
+
   idpes_logado integer;
 BEGIN
   idpes_logado := v_id_pes_logado;
@@ -7244,7 +7244,7 @@ SET default_tablespace = '';
 SET default_with_oids = true;
 
 --
--- Name: funcao; Type: TABLE; Schema: acesso; Owner: -; Tablespace: 
+-- Name: funcao; Type: TABLE; Schema: acesso; Owner: -; Tablespace:
 --
 
 CREATE TABLE funcao (
@@ -7280,7 +7280,7 @@ SELECT pg_catalog.setval('grupo_idgrp_seq', 1, false);
 
 
 --
--- Name: grupo; Type: TABLE; Schema: acesso; Owner: -; Tablespace: 
+-- Name: grupo; Type: TABLE; Schema: acesso; Owner: -; Tablespace:
 --
 
 CREATE TABLE grupo (
@@ -7293,7 +7293,7 @@ CREATE TABLE grupo (
 
 
 --
--- Name: grupo_funcao; Type: TABLE; Schema: acesso; Owner: -; Tablespace: 
+-- Name: grupo_funcao; Type: TABLE; Schema: acesso; Owner: -; Tablespace:
 --
 
 CREATE TABLE grupo_funcao (
@@ -7305,7 +7305,7 @@ CREATE TABLE grupo_funcao (
 
 
 --
--- Name: grupo_menu; Type: TABLE; Schema: acesso; Owner: -; Tablespace: 
+-- Name: grupo_menu; Type: TABLE; Schema: acesso; Owner: -; Tablespace:
 --
 
 CREATE TABLE grupo_menu (
@@ -7316,7 +7316,7 @@ CREATE TABLE grupo_menu (
 
 
 --
--- Name: grupo_operacao; Type: TABLE; Schema: acesso; Owner: -; Tablespace: 
+-- Name: grupo_operacao; Type: TABLE; Schema: acesso; Owner: -; Tablespace:
 --
 
 CREATE TABLE grupo_operacao (
@@ -7329,7 +7329,7 @@ CREATE TABLE grupo_operacao (
 
 
 --
--- Name: grupo_sistema; Type: TABLE; Schema: acesso; Owner: -; Tablespace: 
+-- Name: grupo_sistema; Type: TABLE; Schema: acesso; Owner: -; Tablespace:
 --
 
 CREATE TABLE grupo_sistema (
@@ -7339,7 +7339,7 @@ CREATE TABLE grupo_sistema (
 
 
 --
--- Name: historico_senha; Type: TABLE; Schema: acesso; Owner: -; Tablespace: 
+-- Name: historico_senha; Type: TABLE; Schema: acesso; Owner: -; Tablespace:
 --
 
 CREATE TABLE historico_senha (
@@ -7369,7 +7369,7 @@ SELECT pg_catalog.setval('instituicao_idins_seq', 1, false);
 
 
 --
--- Name: instituicao; Type: TABLE; Schema: acesso; Owner: -; Tablespace: 
+-- Name: instituicao; Type: TABLE; Schema: acesso; Owner: -; Tablespace:
 --
 
 CREATE TABLE instituicao (
@@ -7381,7 +7381,7 @@ CREATE TABLE instituicao (
 
 
 --
--- Name: log_acesso; Type: TABLE; Schema: acesso; Owner: -; Tablespace: 
+-- Name: log_acesso; Type: TABLE; Schema: acesso; Owner: -; Tablespace:
 --
 
 CREATE TABLE log_acesso (
@@ -7396,7 +7396,7 @@ CREATE TABLE log_acesso (
 
 
 --
--- Name: log_erro; Type: TABLE; Schema: acesso; Owner: -; Tablespace: 
+-- Name: log_erro; Type: TABLE; Schema: acesso; Owner: -; Tablespace:
 --
 
 CREATE TABLE log_erro (
@@ -7430,7 +7430,7 @@ SELECT pg_catalog.setval('menu_idmen_seq', 1, false);
 
 
 --
--- Name: menu; Type: TABLE; Schema: acesso; Owner: -; Tablespace: 
+-- Name: menu; Type: TABLE; Schema: acesso; Owner: -; Tablespace:
 --
 
 CREATE TABLE menu (
@@ -7466,7 +7466,7 @@ SELECT pg_catalog.setval('operacao_idope_seq', 1, false);
 
 
 --
--- Name: operacao; Type: TABLE; Schema: acesso; Owner: -; Tablespace: 
+-- Name: operacao; Type: TABLE; Schema: acesso; Owner: -; Tablespace:
 --
 
 CREATE TABLE operacao (
@@ -7480,7 +7480,7 @@ CREATE TABLE operacao (
 
 
 --
--- Name: operacao_funcao; Type: TABLE; Schema: acesso; Owner: -; Tablespace: 
+-- Name: operacao_funcao; Type: TABLE; Schema: acesso; Owner: -; Tablespace:
 --
 
 CREATE TABLE operacao_funcao (
@@ -7492,7 +7492,7 @@ CREATE TABLE operacao_funcao (
 
 
 --
--- Name: pessoa_instituicao; Type: TABLE; Schema: acesso; Owner: -; Tablespace: 
+-- Name: pessoa_instituicao; Type: TABLE; Schema: acesso; Owner: -; Tablespace:
 --
 
 CREATE TABLE pessoa_instituicao (
@@ -7520,7 +7520,7 @@ SELECT pg_catalog.setval('sistema_idsis_seq', 17, true);
 
 
 --
--- Name: sistema; Type: TABLE; Schema: acesso; Owner: -; Tablespace: 
+-- Name: sistema; Type: TABLE; Schema: acesso; Owner: -; Tablespace:
 --
 
 CREATE TABLE sistema (
@@ -7534,7 +7534,7 @@ CREATE TABLE sistema (
 
 
 --
--- Name: usuario; Type: TABLE; Schema: acesso; Owner: -; Tablespace: 
+-- Name: usuario; Type: TABLE; Schema: acesso; Owner: -; Tablespace:
 --
 
 CREATE TABLE usuario (
@@ -7560,7 +7560,7 @@ CREATE TABLE usuario (
 
 
 --
--- Name: usuario_grupo; Type: TABLE; Schema: acesso; Owner: -; Tablespace: 
+-- Name: usuario_grupo; Type: TABLE; Schema: acesso; Owner: -; Tablespace:
 --
 
 CREATE TABLE usuario_grupo (
@@ -7591,7 +7591,7 @@ SELECT pg_catalog.setval('baixa_guia_produto_idbap_seq', 1, false);
 
 
 --
--- Name: baixa_guia_produto; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: baixa_guia_produto; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE baixa_guia_produto (
@@ -7625,7 +7625,7 @@ SELECT pg_catalog.setval('baixa_guia_remessa_idbai_seq', 1, false);
 
 
 --
--- Name: baixa_guia_remessa; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: baixa_guia_remessa; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE baixa_guia_remessa (
@@ -7659,7 +7659,7 @@ SELECT pg_catalog.setval('calendario_idcad_seq', 1, false);
 
 
 --
--- Name: calendario; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: calendario; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE calendario (
@@ -7690,7 +7690,7 @@ SELECT pg_catalog.setval('cardapio_idcar_seq', 1, false);
 
 
 --
--- Name: cardapio; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: cardapio; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE cardapio (
@@ -7709,7 +7709,7 @@ CREATE TABLE cardapio (
 
 
 --
--- Name: cardapio_faixa_unidade; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: cardapio_faixa_unidade; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE cardapio_faixa_unidade (
@@ -7738,7 +7738,7 @@ SELECT pg_catalog.setval('cardapio_produto_idcpr_seq', 1, false);
 
 
 --
--- Name: cardapio_produto; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: cardapio_produto; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE cardapio_produto (
@@ -7751,7 +7751,7 @@ CREATE TABLE cardapio_produto (
 
 
 --
--- Name: cardapio_receita; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: cardapio_receita; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE cardapio_receita (
@@ -7761,7 +7761,7 @@ CREATE TABLE cardapio_receita (
 
 
 --
--- Name: cliente; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: cliente; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE cliente (
@@ -7808,7 +7808,7 @@ SELECT pg_catalog.setval('composto_quimico_idcom_seq', 1, false);
 
 
 --
--- Name: composto_quimico; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: composto_quimico; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE composto_quimico (
@@ -7840,7 +7840,7 @@ SELECT pg_catalog.setval('contrato_idcon_seq', 1, false);
 
 
 --
--- Name: contrato; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: contrato; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE contrato (
@@ -7886,7 +7886,7 @@ SELECT pg_catalog.setval('contrato_produto_idcop_seq', 1, false);
 
 
 --
--- Name: contrato_produto; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: contrato_produto; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE contrato_produto (
@@ -7925,7 +7925,7 @@ SELECT pg_catalog.setval('evento_ideve_seq', 1, false);
 
 
 --
--- Name: evento; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: evento; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE evento (
@@ -7959,7 +7959,7 @@ SELECT pg_catalog.setval('faixa_composto_quimico_idfcp_seq', 1, false);
 
 
 --
--- Name: faixa_composto_quimico; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: faixa_composto_quimico; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE faixa_composto_quimico (
@@ -7992,7 +7992,7 @@ SELECT pg_catalog.setval('faixa_etaria_idfae_seq', 1, false);
 
 
 --
--- Name: faixa_etaria; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: faixa_etaria; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE faixa_etaria (
@@ -8023,7 +8023,7 @@ SELECT pg_catalog.setval('fornecedor_idfor_seq', 1, false);
 
 
 --
--- Name: fornecedor; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: fornecedor; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE fornecedor (
@@ -8051,7 +8051,7 @@ CREATE TABLE fornecedor (
 
 
 --
--- Name: fornecedor_unidade_atendida; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: fornecedor_unidade_atendida; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE fornecedor_unidade_atendida (
@@ -8080,7 +8080,7 @@ SELECT pg_catalog.setval('grupo_quimico_idgrpq_seq', 1, false);
 
 
 --
--- Name: grupo_quimico; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: grupo_quimico; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE grupo_quimico (
@@ -8110,7 +8110,7 @@ SELECT pg_catalog.setval('guia_produto_diario_idguiaprodiario_seq', 1, false);
 
 
 --
--- Name: guia_produto_diario; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: guia_produto_diario; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE guia_produto_diario (
@@ -8143,7 +8143,7 @@ SELECT pg_catalog.setval('guia_remessa_idgui_seq', 1, false);
 
 
 --
--- Name: guia_remessa; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: guia_remessa; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE guia_remessa (
@@ -8190,7 +8190,7 @@ SELECT pg_catalog.setval('guia_remessa_produto_idgup_seq', 1, false);
 
 
 --
--- Name: guia_remessa_produto; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: guia_remessa_produto; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE guia_remessa_produto (
@@ -8225,7 +8225,7 @@ SELECT pg_catalog.setval('log_guia_remessa_idlogguia_seq', 1, false);
 
 
 --
--- Name: log_guia_remessa; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: log_guia_remessa; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE log_guia_remessa (
@@ -8243,7 +8243,7 @@ CREATE TABLE log_guia_remessa (
 
 
 --
--- Name: medidas_caseiras; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: medidas_caseiras; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE medidas_caseiras (
@@ -8273,7 +8273,7 @@ SELECT pg_catalog.setval('pessoa_idpes_seq', 1, false);
 
 
 --
--- Name: pessoa; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pessoa; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE pessoa (
@@ -8303,7 +8303,7 @@ SELECT pg_catalog.setval('produto_idpro_seq', 1, false);
 
 
 --
--- Name: produto; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: produto; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE produto (
@@ -8350,7 +8350,7 @@ SELECT pg_catalog.setval('produto_composto_quimico_idpcq_seq', 1, false);
 
 
 --
--- Name: produto_composto_quimico; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: produto_composto_quimico; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE produto_composto_quimico (
@@ -8381,7 +8381,7 @@ SELECT pg_catalog.setval('produto_fornecedor_idprf_seq', 1, false);
 
 
 --
--- Name: produto_fornecedor; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: produto_fornecedor; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE produto_fornecedor (
@@ -8412,7 +8412,7 @@ SELECT pg_catalog.setval('produto_medida_caseira_idpmc_seq', 1, false);
 
 
 --
--- Name: produto_medida_caseira; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: produto_medida_caseira; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE produto_medida_caseira (
@@ -8444,7 +8444,7 @@ SELECT pg_catalog.setval('receita_idrec_seq', 1, false);
 
 
 --
--- Name: receita; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: receita; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE receita (
@@ -8478,7 +8478,7 @@ SELECT pg_catalog.setval('receita_composto_quimico_idrcq_seq', 1, false);
 
 
 --
--- Name: receita_composto_quimico; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: receita_composto_quimico; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE receita_composto_quimico (
@@ -8509,7 +8509,7 @@ SELECT pg_catalog.setval('receita_produto_idrpr_seq', 1, false);
 
 
 --
--- Name: receita_produto; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: receita_produto; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE receita_produto (
@@ -8544,7 +8544,7 @@ SELECT pg_catalog.setval('tipo_produto_idtip_seq', 1, false);
 
 
 --
--- Name: tipo_produto; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: tipo_produto; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE tipo_produto (
@@ -8574,7 +8574,7 @@ SELECT pg_catalog.setval('tipo_refeicao_idtre_seq', 1, false);
 
 
 --
--- Name: tipo_refeicao; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: tipo_refeicao; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE tipo_refeicao (
@@ -8604,7 +8604,7 @@ SELECT pg_catalog.setval('tipo_unidade_idtip_seq', 1, false);
 
 
 --
--- Name: tipo_unidade; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: tipo_unidade; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE tipo_unidade (
@@ -8634,7 +8634,7 @@ SELECT pg_catalog.setval('unidade_atendida_iduni_seq', 1, false);
 
 
 --
--- Name: unidade_atendida; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: unidade_atendida; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE unidade_atendida (
@@ -8676,7 +8676,7 @@ SELECT pg_catalog.setval('unidade_faixa_etaria_idfeu_seq', 1, false);
 
 
 --
--- Name: unidade_faixa_etaria; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: unidade_faixa_etaria; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE unidade_faixa_etaria (
@@ -8689,7 +8689,7 @@ CREATE TABLE unidade_faixa_etaria (
 
 
 --
--- Name: unidade_produto; Type: TABLE; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: unidade_produto; Type: TABLE; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE TABLE unidade_produto (
@@ -8703,7 +8703,7 @@ CREATE TABLE unidade_produto (
 SET search_path = cadastro, pg_catalog;
 
 --
--- Name: aviso_nome; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: aviso_nome; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE aviso_nome (
@@ -8733,7 +8733,7 @@ SELECT pg_catalog.setval('deficiencia_cod_deficiencia_seq', 1, false);
 
 
 --
--- Name: deficiencia; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: deficiencia; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE deficiencia (
@@ -8743,7 +8743,7 @@ CREATE TABLE deficiencia (
 
 
 --
--- Name: documento; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: documento; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE documento (
@@ -8781,7 +8781,7 @@ CREATE TABLE documento (
 
 
 --
--- Name: endereco_externo; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: endereco_externo; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE endereco_externo (
@@ -8815,7 +8815,7 @@ CREATE TABLE endereco_externo (
 
 
 --
--- Name: endereco_pessoa; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: endereco_pessoa; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE endereco_pessoa (
@@ -8846,7 +8846,7 @@ CREATE TABLE endereco_pessoa (
 
 
 --
--- Name: escolaridade; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: escolaridade; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE escolaridade (
@@ -8856,7 +8856,7 @@ CREATE TABLE escolaridade (
 
 
 --
--- Name: estado_civil; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: estado_civil; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE estado_civil (
@@ -8866,7 +8866,7 @@ CREATE TABLE estado_civil (
 
 
 --
--- Name: fisica; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: fisica; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE fisica (
@@ -8911,7 +8911,7 @@ CREATE TABLE fisica (
 
 
 --
--- Name: fisica_cpf; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: fisica_cpf; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE fisica_cpf (
@@ -8931,7 +8931,7 @@ CREATE TABLE fisica_cpf (
 
 
 --
--- Name: fisica_deficiencia; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: fisica_deficiencia; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE fisica_deficiencia (
@@ -8941,7 +8941,7 @@ CREATE TABLE fisica_deficiencia (
 
 
 --
--- Name: fisica_foto; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: fisica_foto; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE fisica_foto (
@@ -8951,7 +8951,7 @@ CREATE TABLE fisica_foto (
 
 
 --
--- Name: fisica_raca; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: fisica_raca; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE fisica_raca (
@@ -8961,7 +8961,7 @@ CREATE TABLE fisica_raca (
 
 
 --
--- Name: fisica_sangue; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: fisica_sangue; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE fisica_sangue (
@@ -8972,7 +8972,7 @@ CREATE TABLE fisica_sangue (
 
 
 --
--- Name: fone_pessoa; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: fone_pessoa; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE fone_pessoa (
@@ -8995,7 +8995,7 @@ CREATE TABLE fone_pessoa (
 
 
 --
--- Name: funcionario; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: funcionario; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE funcionario (
@@ -9019,7 +9019,7 @@ CREATE TABLE funcionario (
 
 
 --
--- Name: historico_cartao; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: historico_cartao; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE historico_cartao (
@@ -9032,7 +9032,7 @@ CREATE TABLE historico_cartao (
 
 
 --
--- Name: juridica; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: juridica; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE juridica (
@@ -9055,7 +9055,7 @@ CREATE TABLE juridica (
 
 
 --
--- Name: ocupacao; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: ocupacao; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE ocupacao (
@@ -9084,7 +9084,7 @@ SELECT pg_catalog.setval('orgao_emissor_rg_idorg_rg_seq', 30, false);
 
 
 --
--- Name: orgao_emissor_rg; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: orgao_emissor_rg; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE orgao_emissor_rg (
@@ -9097,7 +9097,7 @@ CREATE TABLE orgao_emissor_rg (
 
 
 --
--- Name: pessoa; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: pessoa; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE pessoa (
@@ -9123,7 +9123,7 @@ CREATE TABLE pessoa (
 
 
 --
--- Name: pessoa_fonetico; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: pessoa_fonetico; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE pessoa_fonetico (
@@ -9152,7 +9152,7 @@ SELECT pg_catalog.setval('raca_cod_raca_seq', 1, false);
 
 
 --
--- Name: raca; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: raca; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE raca (
@@ -9188,7 +9188,7 @@ SELECT pg_catalog.setval('religiao_cod_religiao_seq', 1, false);
 SET default_with_oids = false;
 
 --
--- Name: religiao; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: religiao; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE religiao (
@@ -9223,7 +9223,7 @@ SELECT pg_catalog.setval('seq_pessoa', 1, true);
 SET default_with_oids = true;
 
 --
--- Name: socio; Type: TABLE; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: socio; Type: TABLE; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE TABLE socio (
@@ -9245,7 +9245,7 @@ CREATE TABLE socio (
 SET search_path = public, pg_catalog;
 
 --
--- Name: bairro; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: bairro; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE bairro (
@@ -9267,7 +9267,7 @@ CREATE TABLE bairro (
 
 
 --
--- Name: logradouro; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: logradouro; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE logradouro (
@@ -9292,7 +9292,7 @@ CREATE TABLE logradouro (
 
 
 --
--- Name: municipio; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: municipio; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE municipio (
@@ -9381,7 +9381,7 @@ CREATE VIEW v_pessoafj_count AS
 SET search_path = consistenciacao, pg_catalog;
 
 --
--- Name: campo_consistenciacao; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: campo_consistenciacao; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 CREATE TABLE campo_consistenciacao (
@@ -9413,7 +9413,7 @@ SELECT pg_catalog.setval('campo_metadado_id_campo_met_seq', 1, false);
 
 
 --
--- Name: campo_metadado; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: campo_metadado; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 CREATE TABLE campo_metadado (
@@ -9451,7 +9451,7 @@ SELECT pg_catalog.setval('confrontacao_idcon_seq', 1, false);
 
 
 --
--- Name: confrontacao; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: confrontacao; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 CREATE TABLE confrontacao (
@@ -9486,7 +9486,7 @@ SELECT pg_catalog.setval('fonte_idfon_seq', 1, false);
 
 
 --
--- Name: fonte; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: fonte; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 CREATE TABLE fonte (
@@ -9498,7 +9498,7 @@ CREATE TABLE fonte (
 
 
 --
--- Name: historico_campo; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: historico_campo; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 CREATE TABLE historico_campo (
@@ -9530,7 +9530,7 @@ SELECT pg_catalog.setval('incoerencia_idinc_seq', 1, false);
 
 
 --
--- Name: incoerencia; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: incoerencia; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 CREATE TABLE incoerencia (
@@ -9581,7 +9581,7 @@ SELECT pg_catalog.setval('incoerencia_documento_id_inc_doc_seq', 1, false);
 
 
 --
--- Name: incoerencia_documento; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: incoerencia_documento; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 CREATE TABLE incoerencia_documento (
@@ -9628,7 +9628,7 @@ SELECT pg_catalog.setval('incoerencia_endereco_id_inc_end_seq', 1, false);
 
 
 --
--- Name: incoerencia_endereco; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: incoerencia_endereco; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 CREATE TABLE incoerencia_endereco (
@@ -9668,7 +9668,7 @@ SELECT pg_catalog.setval('incoerencia_fone_id_inc_fone_seq', 1, false);
 
 
 --
--- Name: incoerencia_fone; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: incoerencia_fone; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 CREATE TABLE incoerencia_fone (
@@ -9682,7 +9682,7 @@ CREATE TABLE incoerencia_fone (
 
 
 --
--- Name: incoerencia_pessoa_possivel; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: incoerencia_pessoa_possivel; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 CREATE TABLE incoerencia_pessoa_possivel (
@@ -9692,7 +9692,7 @@ CREATE TABLE incoerencia_pessoa_possivel (
 
 
 --
--- Name: incoerencia_tipo_incoerencia; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: incoerencia_tipo_incoerencia; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 CREATE TABLE incoerencia_tipo_incoerencia (
@@ -9721,7 +9721,7 @@ SELECT pg_catalog.setval('metadado_idmet_seq', 1, false);
 
 
 --
--- Name: metadado; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: metadado; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 CREATE TABLE metadado (
@@ -9735,7 +9735,7 @@ CREATE TABLE metadado (
 
 
 --
--- Name: ocorrencia_regra_campo; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: ocorrencia_regra_campo; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 CREATE TABLE ocorrencia_regra_campo (
@@ -9765,7 +9765,7 @@ SELECT pg_catalog.setval('regra_campo_idreg_seq', 1, false);
 
 
 --
--- Name: regra_campo; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: regra_campo; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 CREATE TABLE regra_campo (
@@ -9777,7 +9777,7 @@ CREATE TABLE regra_campo (
 
 
 --
--- Name: temp_cadastro_unificacao_cmf; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: temp_cadastro_unificacao_cmf; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 CREATE TABLE temp_cadastro_unificacao_cmf (
@@ -9807,7 +9807,7 @@ CREATE TABLE temp_cadastro_unificacao_cmf (
 
 
 --
--- Name: temp_cadastro_unificacao_siam; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: temp_cadastro_unificacao_siam; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 CREATE TABLE temp_cadastro_unificacao_siam (
@@ -9826,7 +9826,7 @@ CREATE TABLE temp_cadastro_unificacao_siam (
 
 
 --
--- Name: tipo_incoerencia; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: tipo_incoerencia; Type: TABLE; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 CREATE TABLE tipo_incoerencia (
@@ -9839,7 +9839,7 @@ CREATE TABLE tipo_incoerencia (
 SET search_path = historico, pg_catalog;
 
 --
--- Name: bairro; Type: TABLE; Schema: historico; Owner: -; Tablespace: 
+-- Name: bairro; Type: TABLE; Schema: historico; Owner: -; Tablespace:
 --
 
 CREATE TABLE bairro (
@@ -9861,7 +9861,7 @@ CREATE TABLE bairro (
 
 
 --
--- Name: cep_logradouro; Type: TABLE; Schema: historico; Owner: -; Tablespace: 
+-- Name: cep_logradouro; Type: TABLE; Schema: historico; Owner: -; Tablespace:
 --
 
 CREATE TABLE cep_logradouro (
@@ -9883,7 +9883,7 @@ CREATE TABLE cep_logradouro (
 
 
 --
--- Name: cep_logradouro_bairro; Type: TABLE; Schema: historico; Owner: -; Tablespace: 
+-- Name: cep_logradouro_bairro; Type: TABLE; Schema: historico; Owner: -; Tablespace:
 --
 
 CREATE TABLE cep_logradouro_bairro (
@@ -9904,7 +9904,7 @@ CREATE TABLE cep_logradouro_bairro (
 
 
 --
--- Name: documento; Type: TABLE; Schema: historico; Owner: -; Tablespace: 
+-- Name: documento; Type: TABLE; Schema: historico; Owner: -; Tablespace:
 --
 
 CREATE TABLE documento (
@@ -9942,7 +9942,7 @@ CREATE TABLE documento (
 
 
 --
--- Name: endereco_externo; Type: TABLE; Schema: historico; Owner: -; Tablespace: 
+-- Name: endereco_externo; Type: TABLE; Schema: historico; Owner: -; Tablespace:
 --
 
 CREATE TABLE endereco_externo (
@@ -9973,7 +9973,7 @@ CREATE TABLE endereco_externo (
 
 
 --
--- Name: endereco_pessoa; Type: TABLE; Schema: historico; Owner: -; Tablespace: 
+-- Name: endereco_pessoa; Type: TABLE; Schema: historico; Owner: -; Tablespace:
 --
 
 CREATE TABLE endereco_pessoa (
@@ -10001,7 +10001,7 @@ CREATE TABLE endereco_pessoa (
 
 
 --
--- Name: fisica; Type: TABLE; Schema: historico; Owner: -; Tablespace: 
+-- Name: fisica; Type: TABLE; Schema: historico; Owner: -; Tablespace:
 --
 
 CREATE TABLE fisica (
@@ -10043,7 +10043,7 @@ CREATE TABLE fisica (
 
 
 --
--- Name: fisica_cpf; Type: TABLE; Schema: historico; Owner: -; Tablespace: 
+-- Name: fisica_cpf; Type: TABLE; Schema: historico; Owner: -; Tablespace:
 --
 
 CREATE TABLE fisica_cpf (
@@ -10063,7 +10063,7 @@ CREATE TABLE fisica_cpf (
 
 
 --
--- Name: fone_pessoa; Type: TABLE; Schema: historico; Owner: -; Tablespace: 
+-- Name: fone_pessoa; Type: TABLE; Schema: historico; Owner: -; Tablespace:
 --
 
 CREATE TABLE fone_pessoa (
@@ -10086,7 +10086,7 @@ CREATE TABLE fone_pessoa (
 
 
 --
--- Name: funcionario; Type: TABLE; Schema: historico; Owner: -; Tablespace: 
+-- Name: funcionario; Type: TABLE; Schema: historico; Owner: -; Tablespace:
 --
 
 CREATE TABLE funcionario (
@@ -10110,7 +10110,7 @@ CREATE TABLE funcionario (
 
 
 --
--- Name: juridica; Type: TABLE; Schema: historico; Owner: -; Tablespace: 
+-- Name: juridica; Type: TABLE; Schema: historico; Owner: -; Tablespace:
 --
 
 CREATE TABLE juridica (
@@ -10132,7 +10132,7 @@ CREATE TABLE juridica (
 
 
 --
--- Name: logradouro; Type: TABLE; Schema: historico; Owner: -; Tablespace: 
+-- Name: logradouro; Type: TABLE; Schema: historico; Owner: -; Tablespace:
 --
 
 CREATE TABLE logradouro (
@@ -10157,7 +10157,7 @@ CREATE TABLE logradouro (
 
 
 --
--- Name: municipio; Type: TABLE; Schema: historico; Owner: -; Tablespace: 
+-- Name: municipio; Type: TABLE; Schema: historico; Owner: -; Tablespace:
 --
 
 CREATE TABLE municipio (
@@ -10186,7 +10186,7 @@ CREATE TABLE municipio (
 
 
 --
--- Name: pessoa; Type: TABLE; Schema: historico; Owner: -; Tablespace: 
+-- Name: pessoa; Type: TABLE; Schema: historico; Owner: -; Tablespace:
 --
 
 CREATE TABLE pessoa (
@@ -10212,7 +10212,7 @@ CREATE TABLE pessoa (
 
 
 --
--- Name: socio; Type: TABLE; Schema: historico; Owner: -; Tablespace: 
+-- Name: socio; Type: TABLE; Schema: historico; Owner: -; Tablespace:
 --
 
 CREATE TABLE socio (
@@ -10236,7 +10236,7 @@ SET search_path = modules, pg_catalog;
 SET default_with_oids = false;
 
 --
--- Name: area_conhecimento; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+-- Name: area_conhecimento; Type: TABLE; Schema: modules; Owner: -; Tablespace:
 --
 
 CREATE TABLE area_conhecimento (
@@ -10273,7 +10273,7 @@ SELECT pg_catalog.setval('area_conhecimento_id_seq', 1, false);
 
 
 --
--- Name: calendario_turma; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+-- Name: calendario_turma; Type: TABLE; Schema: modules; Owner: -; Tablespace:
 --
 
 CREATE TABLE calendario_turma (
@@ -10286,7 +10286,7 @@ CREATE TABLE calendario_turma (
 
 
 --
--- Name: componente_curricular; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+-- Name: componente_curricular; Type: TABLE; Schema: modules; Owner: -; Tablespace:
 --
 
 CREATE TABLE componente_curricular (
@@ -10300,7 +10300,7 @@ CREATE TABLE componente_curricular (
 
 
 --
--- Name: componente_curricular_ano_escolar; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+-- Name: componente_curricular_ano_escolar; Type: TABLE; Schema: modules; Owner: -; Tablespace:
 --
 
 CREATE TABLE componente_curricular_ano_escolar (
@@ -10337,7 +10337,7 @@ SELECT pg_catalog.setval('componente_curricular_id_seq', 1, false);
 
 
 --
--- Name: falta_aluno; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+-- Name: falta_aluno; Type: TABLE; Schema: modules; Owner: -; Tablespace:
 --
 
 CREATE TABLE falta_aluno (
@@ -10374,7 +10374,7 @@ SELECT pg_catalog.setval('falta_aluno_id_seq', 1, false);
 
 
 --
--- Name: falta_componente_curricular; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+-- Name: falta_componente_curricular; Type: TABLE; Schema: modules; Owner: -; Tablespace:
 --
 
 CREATE TABLE falta_componente_curricular (
@@ -10413,7 +10413,7 @@ SELECT pg_catalog.setval('falta_componente_curricular_id_seq', 1, false);
 
 
 --
--- Name: falta_geral; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+-- Name: falta_geral; Type: TABLE; Schema: modules; Owner: -; Tablespace:
 --
 
 CREATE TABLE falta_geral (
@@ -10451,7 +10451,7 @@ SELECT pg_catalog.setval('falta_geral_id_seq', 1, false);
 
 
 --
--- Name: formula_media; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+-- Name: formula_media; Type: TABLE; Schema: modules; Owner: -; Tablespace:
 --
 
 CREATE TABLE formula_media (
@@ -10490,7 +10490,7 @@ SELECT pg_catalog.setval('formula_media_id_seq', 1, false);
 
 
 --
--- Name: nota_aluno; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+-- Name: nota_aluno; Type: TABLE; Schema: modules; Owner: -; Tablespace:
 --
 
 CREATE TABLE nota_aluno (
@@ -10526,7 +10526,7 @@ SELECT pg_catalog.setval('nota_aluno_id_seq', 1, false);
 
 
 --
--- Name: nota_componente_curricular; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+-- Name: nota_componente_curricular; Type: TABLE; Schema: modules; Owner: -; Tablespace:
 --
 
 CREATE TABLE nota_componente_curricular (
@@ -10566,7 +10566,7 @@ SELECT pg_catalog.setval('nota_componente_curricular_id_seq', 1, false);
 
 
 --
--- Name: nota_componente_curricular_media; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+-- Name: nota_componente_curricular_media; Type: TABLE; Schema: modules; Owner: -; Tablespace:
 --
 
 CREATE TABLE nota_componente_curricular_media (
@@ -10579,7 +10579,7 @@ CREATE TABLE nota_componente_curricular_media (
 
 
 --
--- Name: parecer_aluno; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+-- Name: parecer_aluno; Type: TABLE; Schema: modules; Owner: -; Tablespace:
 --
 
 CREATE TABLE parecer_aluno (
@@ -10616,7 +10616,7 @@ SELECT pg_catalog.setval('parecer_aluno_id_seq', 1, false);
 
 
 --
--- Name: parecer_componente_curricular; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+-- Name: parecer_componente_curricular; Type: TABLE; Schema: modules; Owner: -; Tablespace:
 --
 
 CREATE TABLE parecer_componente_curricular (
@@ -10655,7 +10655,7 @@ SELECT pg_catalog.setval('parecer_componente_curricular_id_seq', 1, false);
 
 
 --
--- Name: parecer_geral; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+-- Name: parecer_geral; Type: TABLE; Schema: modules; Owner: -; Tablespace:
 --
 
 CREATE TABLE parecer_geral (
@@ -10693,7 +10693,7 @@ SELECT pg_catalog.setval('parecer_geral_id_seq', 1, false);
 
 
 --
--- Name: regra_avaliacao; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+-- Name: regra_avaliacao; Type: TABLE; Schema: modules; Owner: -; Tablespace:
 --
 
 CREATE TABLE regra_avaliacao (
@@ -10739,7 +10739,7 @@ SELECT pg_catalog.setval('regra_avaliacao_id_seq', 1, false);
 
 
 --
--- Name: tabela_arredondamento; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+-- Name: tabela_arredondamento; Type: TABLE; Schema: modules; Owner: -; Tablespace:
 --
 
 CREATE TABLE tabela_arredondamento (
@@ -10777,7 +10777,7 @@ SELECT pg_catalog.setval('tabela_arredondamento_id_seq', 1, false);
 
 
 --
--- Name: tabela_arredondamento_valor; Type: TABLE; Schema: modules; Owner: -; Tablespace: 
+-- Name: tabela_arredondamento_valor; Type: TABLE; Schema: modules; Owner: -; Tablespace:
 --
 
 CREATE TABLE tabela_arredondamento_valor (
@@ -10840,7 +10840,7 @@ SELECT pg_catalog.setval('acao_governo_cod_acao_governo_seq', 1, false);
 SET default_with_oids = true;
 
 --
--- Name: acao_governo; Type: TABLE; Schema: pmiacoes; Owner: -; Tablespace: 
+-- Name: acao_governo; Type: TABLE; Schema: pmiacoes; Owner: -; Tablespace:
 --
 
 CREATE TABLE acao_governo (
@@ -10880,7 +10880,7 @@ SELECT pg_catalog.setval('acao_governo_arquivo_cod_acao_governo_arquivo_seq', 1,
 
 
 --
--- Name: acao_governo_arquivo; Type: TABLE; Schema: pmiacoes; Owner: -; Tablespace: 
+-- Name: acao_governo_arquivo; Type: TABLE; Schema: pmiacoes; Owner: -; Tablespace:
 --
 
 CREATE TABLE acao_governo_arquivo (
@@ -10894,7 +10894,7 @@ CREATE TABLE acao_governo_arquivo (
 
 
 --
--- Name: acao_governo_categoria; Type: TABLE; Schema: pmiacoes; Owner: -; Tablespace: 
+-- Name: acao_governo_categoria; Type: TABLE; Schema: pmiacoes; Owner: -; Tablespace:
 --
 
 CREATE TABLE acao_governo_categoria (
@@ -10923,7 +10923,7 @@ SELECT pg_catalog.setval('acao_governo_foto_cod_acao_governo_foto_seq', 1, false
 
 
 --
--- Name: acao_governo_foto; Type: TABLE; Schema: pmiacoes; Owner: -; Tablespace: 
+-- Name: acao_governo_foto; Type: TABLE; Schema: pmiacoes; Owner: -; Tablespace:
 --
 
 CREATE TABLE acao_governo_foto (
@@ -10938,7 +10938,7 @@ CREATE TABLE acao_governo_foto (
 
 
 --
--- Name: acao_governo_foto_portal; Type: TABLE; Schema: pmiacoes; Owner: -; Tablespace: 
+-- Name: acao_governo_foto_portal; Type: TABLE; Schema: pmiacoes; Owner: -; Tablespace:
 --
 
 CREATE TABLE acao_governo_foto_portal (
@@ -10950,7 +10950,7 @@ CREATE TABLE acao_governo_foto_portal (
 
 
 --
--- Name: acao_governo_noticia; Type: TABLE; Schema: pmiacoes; Owner: -; Tablespace: 
+-- Name: acao_governo_noticia; Type: TABLE; Schema: pmiacoes; Owner: -; Tablespace:
 --
 
 CREATE TABLE acao_governo_noticia (
@@ -10962,7 +10962,7 @@ CREATE TABLE acao_governo_noticia (
 
 
 --
--- Name: acao_governo_setor; Type: TABLE; Schema: pmiacoes; Owner: -; Tablespace: 
+-- Name: acao_governo_setor; Type: TABLE; Schema: pmiacoes; Owner: -; Tablespace:
 --
 
 CREATE TABLE acao_governo_setor (
@@ -10993,7 +10993,7 @@ SELECT pg_catalog.setval('categoria_cod_categoria_seq', 1, false);
 
 
 --
--- Name: categoria; Type: TABLE; Schema: pmiacoes; Owner: -; Tablespace: 
+-- Name: categoria; Type: TABLE; Schema: pmiacoes; Owner: -; Tablespace:
 --
 
 CREATE TABLE categoria (
@@ -11008,7 +11008,7 @@ CREATE TABLE categoria (
 
 
 --
--- Name: secretaria_responsavel; Type: TABLE; Schema: pmiacoes; Owner: -; Tablespace: 
+-- Name: secretaria_responsavel; Type: TABLE; Schema: pmiacoes; Owner: -; Tablespace:
 --
 
 CREATE TABLE secretaria_responsavel (
@@ -11040,7 +11040,7 @@ SELECT pg_catalog.setval('acontecimento_cod_acontecimento_seq', 1, false);
 
 
 --
--- Name: acontecimento; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: acontecimento; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 CREATE TABLE acontecimento (
@@ -11083,7 +11083,7 @@ SELECT pg_catalog.setval('artigo_cod_artigo_seq', 1, false);
 
 
 --
--- Name: artigo; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: artigo; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 CREATE TABLE artigo (
@@ -11115,7 +11115,7 @@ SELECT pg_catalog.setval('foto_evento_cod_foto_evento_seq', 1, false);
 
 
 --
--- Name: foto_evento; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: foto_evento; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 CREATE TABLE foto_evento (
@@ -11153,7 +11153,7 @@ SELECT pg_catalog.setval('foto_vinc_cod_foto_vinc_seq', 1, false);
 SET default_with_oids = false;
 
 --
--- Name: foto_vinc; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: foto_vinc; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 CREATE TABLE foto_vinc (
@@ -11185,7 +11185,7 @@ SELECT pg_catalog.setval('itinerario_cod_itinerario_seq', 1, false);
 SET default_with_oids = true;
 
 --
--- Name: itinerario; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: itinerario; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 CREATE TABLE itinerario (
@@ -11223,7 +11223,7 @@ SELECT pg_catalog.setval('menu_cod_menu_seq', 20709, true);
 
 
 --
--- Name: menu; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: menu; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 CREATE TABLE menu (
@@ -11260,7 +11260,7 @@ SELECT pg_catalog.setval('menu_portal_cod_menu_portal_seq', 1, false);
 
 
 --
--- Name: menu_portal; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: menu_portal; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 CREATE TABLE menu_portal (
@@ -11300,7 +11300,7 @@ SELECT pg_catalog.setval('portais_cod_portais_seq', 1, false);
 
 
 --
--- Name: portais; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: portais; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 CREATE TABLE portais (
@@ -11337,7 +11337,7 @@ SELECT pg_catalog.setval('servicos_cod_servicos_seq', 1, false);
 
 
 --
--- Name: servicos; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: servicos; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 CREATE TABLE servicos (
@@ -11374,7 +11374,7 @@ SELECT pg_catalog.setval('sistema_cod_sistema_seq', 1, false);
 
 
 --
--- Name: sistema; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: sistema; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 CREATE TABLE sistema (
@@ -11408,7 +11408,7 @@ SELECT pg_catalog.setval('submenu_portal_cod_submenu_portal_seq', 1, false);
 
 
 --
--- Name: submenu_portal; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: submenu_portal; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 CREATE TABLE submenu_portal (
@@ -11447,7 +11447,7 @@ SELECT pg_catalog.setval('telefones_cod_telefones_seq', 1, false);
 
 
 --
--- Name: telefones; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: telefones; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 CREATE TABLE telefones (
@@ -11482,7 +11482,7 @@ SELECT pg_catalog.setval('tipo_acontecimento_cod_tipo_acontecimento_seq', 1, fal
 
 
 --
--- Name: tipo_acontecimento; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: tipo_acontecimento; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 CREATE TABLE tipo_acontecimento (
@@ -11517,7 +11517,7 @@ SELECT pg_catalog.setval('topo_portal_cod_topo_portal_seq', 1, false);
 
 
 --
--- Name: topo_portal; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: topo_portal; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 CREATE TABLE topo_portal (
@@ -11553,7 +11553,7 @@ SELECT pg_catalog.setval('tutormenu_cod_tutormenu_seq', 16, true);
 
 
 --
--- Name: tutormenu; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: tutormenu; Type: TABLE; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 CREATE TABLE tutormenu (
@@ -11584,7 +11584,7 @@ SELECT pg_catalog.setval('diaria_cod_diaria_seq', 1, false);
 
 
 --
--- Name: diaria; Type: TABLE; Schema: pmidrh; Owner: -; Tablespace: 
+-- Name: diaria; Type: TABLE; Schema: pmidrh; Owner: -; Tablespace:
 --
 
 CREATE TABLE diaria (
@@ -11633,7 +11633,7 @@ SELECT pg_catalog.setval('diaria_grupo_cod_diaria_grupo_seq', 1, false);
 
 
 --
--- Name: diaria_grupo; Type: TABLE; Schema: pmidrh; Owner: -; Tablespace: 
+-- Name: diaria_grupo; Type: TABLE; Schema: pmidrh; Owner: -; Tablespace:
 --
 
 CREATE TABLE diaria_grupo (
@@ -11662,7 +11662,7 @@ SELECT pg_catalog.setval('diaria_valores_cod_diaria_valores_seq', 1, false);
 
 
 --
--- Name: diaria_valores; Type: TABLE; Schema: pmidrh; Owner: -; Tablespace: 
+-- Name: diaria_valores; Type: TABLE; Schema: pmidrh; Owner: -; Tablespace:
 --
 
 CREATE TABLE diaria_valores (
@@ -11698,7 +11698,7 @@ SELECT pg_catalog.setval('setor_cod_setor_seq', 1, false);
 
 
 --
--- Name: setor; Type: TABLE; Schema: pmidrh; Owner: -; Tablespace: 
+-- Name: setor; Type: TABLE; Schema: pmidrh; Owner: -; Tablespace:
 --
 
 CREATE TABLE setor (
@@ -11741,7 +11741,7 @@ SELECT pg_catalog.setval('acervo_cod_acervo_seq', 1, false);
 
 
 --
--- Name: acervo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: acervo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE acervo (
@@ -11770,7 +11770,7 @@ CREATE TABLE acervo (
 
 
 --
--- Name: acervo_acervo_assunto; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: acervo_acervo_assunto; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE acervo_acervo_assunto (
@@ -11780,7 +11780,7 @@ CREATE TABLE acervo_acervo_assunto (
 
 
 --
--- Name: acervo_acervo_autor; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: acervo_acervo_autor; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE acervo_acervo_autor (
@@ -11810,7 +11810,7 @@ SELECT pg_catalog.setval('acervo_assunto_cod_acervo_assunto_seq', 1, false);
 
 
 --
--- Name: acervo_assunto; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: acervo_assunto; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE acervo_assunto (
@@ -11846,7 +11846,7 @@ SELECT pg_catalog.setval('acervo_autor_cod_acervo_autor_seq', 1, false);
 
 
 --
--- Name: acervo_autor; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: acervo_autor; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE acervo_autor (
@@ -11882,7 +11882,7 @@ SELECT pg_catalog.setval('acervo_colecao_cod_acervo_colecao_seq', 1, false);
 
 
 --
--- Name: acervo_colecao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: acervo_colecao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE acervo_colecao (
@@ -11918,7 +11918,7 @@ SELECT pg_catalog.setval('acervo_editora_cod_acervo_editora_seq', 1, false);
 
 
 --
--- Name: acervo_editora; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: acervo_editora; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE acervo_editora (
@@ -11962,7 +11962,7 @@ SELECT pg_catalog.setval('acervo_idioma_cod_acervo_idioma_seq', 1, false);
 
 
 --
--- Name: acervo_idioma; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: acervo_idioma; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE acervo_idioma (
@@ -11997,7 +11997,7 @@ SELECT pg_catalog.setval('aluno_cod_aluno_seq', 1, false);
 
 
 --
--- Name: aluno; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: aluno; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE aluno (
@@ -12038,7 +12038,7 @@ SELECT pg_catalog.setval('aluno_beneficio_cod_aluno_beneficio_seq', 1, false);
 
 
 --
--- Name: aluno_beneficio; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: aluno_beneficio; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE aluno_beneficio (
@@ -12054,7 +12054,7 @@ CREATE TABLE aluno_beneficio (
 
 
 --
--- Name: ano_letivo_modulo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: ano_letivo_modulo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE ano_letivo_modulo (
@@ -12068,7 +12068,7 @@ CREATE TABLE ano_letivo_modulo (
 
 
 --
--- Name: avaliacao_desempenho; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: avaliacao_desempenho; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE avaliacao_desempenho (
@@ -12105,7 +12105,7 @@ SELECT pg_catalog.setval('biblioteca_cod_biblioteca_seq', 1, false);
 
 
 --
--- Name: biblioteca; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: biblioteca; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE biblioteca (
@@ -12126,7 +12126,7 @@ CREATE TABLE biblioteca (
 
 
 --
--- Name: biblioteca_dia; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: biblioteca_dia; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE biblioteca_dia (
@@ -12155,7 +12155,7 @@ SELECT pg_catalog.setval('biblioteca_feriados_cod_feriado_seq', 1, false);
 
 
 --
--- Name: biblioteca_feriados; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: biblioteca_feriados; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE biblioteca_feriados (
@@ -12171,7 +12171,7 @@ CREATE TABLE biblioteca_feriados (
 
 
 --
--- Name: biblioteca_usuario; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: biblioteca_usuario; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE biblioteca_usuario (
@@ -12200,7 +12200,7 @@ SELECT pg_catalog.setval('calendario_ano_letivo_cod_calendario_ano_letivo_seq', 
 
 
 --
--- Name: calendario_ano_letivo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: calendario_ano_letivo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE calendario_ano_letivo (
@@ -12235,7 +12235,7 @@ SELECT pg_catalog.setval('calendario_anotacao_cod_calendario_anotacao_seq', 1, f
 
 
 --
--- Name: calendario_anotacao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: calendario_anotacao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE calendario_anotacao (
@@ -12251,7 +12251,7 @@ CREATE TABLE calendario_anotacao (
 
 
 --
--- Name: calendario_dia; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: calendario_dia; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE calendario_dia (
@@ -12269,7 +12269,7 @@ CREATE TABLE calendario_dia (
 
 
 --
--- Name: calendario_dia_anotacao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: calendario_dia_anotacao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE calendario_dia_anotacao (
@@ -12300,7 +12300,7 @@ SELECT pg_catalog.setval('calendario_dia_motivo_cod_calendario_dia_motivo_seq', 
 
 
 --
--- Name: calendario_dia_motivo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: calendario_dia_motivo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE calendario_dia_motivo (
@@ -12340,7 +12340,7 @@ SELECT pg_catalog.setval('categoria_nivel_cod_categoria_nivel_seq', 1, false);
 SET default_with_oids = false;
 
 --
--- Name: categoria_nivel; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: categoria_nivel; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE categoria_nivel (
@@ -12376,7 +12376,7 @@ SELECT pg_catalog.setval('cliente_cod_cliente_seq', 1, false);
 SET default_with_oids = true;
 
 --
--- Name: cliente; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: cliente; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE cliente (
@@ -12393,7 +12393,7 @@ CREATE TABLE cliente (
 
 
 --
--- Name: cliente_suspensao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: cliente_suspensao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE cliente_suspensao (
@@ -12428,7 +12428,7 @@ SELECT pg_catalog.setval('cliente_tipo_cod_cliente_tipo_seq', 1, false);
 
 
 --
--- Name: cliente_tipo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: cliente_tipo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE cliente_tipo (
@@ -12447,7 +12447,7 @@ CREATE TABLE cliente_tipo (
 SET default_with_oids = false;
 
 --
--- Name: cliente_tipo_cliente; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: cliente_tipo_cliente; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE cliente_tipo_cliente (
@@ -12465,7 +12465,7 @@ CREATE TABLE cliente_tipo_cliente (
 SET default_with_oids = true;
 
 --
--- Name: cliente_tipo_exemplar_tipo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: cliente_tipo_exemplar_tipo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE cliente_tipo_exemplar_tipo (
@@ -12495,7 +12495,7 @@ SELECT pg_catalog.setval('coffebreak_tipo_cod_coffebreak_tipo_seq', 1, false);
 
 
 --
--- Name: coffebreak_tipo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: coffebreak_tipo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE coffebreak_tipo (
@@ -12531,7 +12531,7 @@ SELECT pg_catalog.setval('curso_cod_curso_seq', 1, false);
 
 
 --
--- Name: curso; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: curso; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE curso (
@@ -12577,7 +12577,7 @@ SELECT pg_catalog.setval('disciplina_cod_disciplina_seq', 1, false);
 
 
 --
--- Name: disciplina; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: disciplina; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE disciplina (
@@ -12600,7 +12600,7 @@ CREATE TABLE disciplina (
 SET default_with_oids = false;
 
 --
--- Name: disciplina_serie; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: disciplina_serie; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE disciplina_serie (
@@ -12632,7 +12632,7 @@ SELECT pg_catalog.setval('disciplina_topico_cod_disciplina_topico_seq', 1, false
 SET default_with_oids = true;
 
 --
--- Name: disciplina_topico; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: disciplina_topico; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE disciplina_topico (
@@ -12650,7 +12650,7 @@ CREATE TABLE disciplina_topico (
 SET default_with_oids = false;
 
 --
--- Name: dispensa_disciplina; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: dispensa_disciplina; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE dispensa_disciplina (
@@ -12691,7 +12691,7 @@ SELECT pg_catalog.setval('escola_cod_escola_seq', 1, false);
 SET default_with_oids = true;
 
 --
--- Name: escola; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: escola; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE escola (
@@ -12710,7 +12710,7 @@ CREATE TABLE escola (
 
 
 --
--- Name: escola_ano_letivo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: escola_ano_letivo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE escola_ano_letivo (
@@ -12726,7 +12726,7 @@ CREATE TABLE escola_ano_letivo (
 
 
 --
--- Name: escola_complemento; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: escola_complemento; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE escola_complemento (
@@ -12752,7 +12752,7 @@ CREATE TABLE escola_complemento (
 
 
 --
--- Name: escola_curso; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: escola_curso; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE escola_curso (
@@ -12786,7 +12786,7 @@ SELECT pg_catalog.setval('escola_localizacao_cod_escola_localizacao_seq', 1, fal
 
 
 --
--- Name: escola_localizacao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: escola_localizacao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE escola_localizacao (
@@ -12821,7 +12821,7 @@ SELECT pg_catalog.setval('escola_rede_ensino_cod_escola_rede_ensino_seq', 1, fal
 
 
 --
--- Name: escola_rede_ensino; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: escola_rede_ensino; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE escola_rede_ensino (
@@ -12837,7 +12837,7 @@ CREATE TABLE escola_rede_ensino (
 
 
 --
--- Name: escola_serie; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: escola_serie; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE escola_serie (
@@ -12858,7 +12858,7 @@ CREATE TABLE escola_serie (
 SET default_with_oids = false;
 
 --
--- Name: escola_serie_disciplina; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: escola_serie_disciplina; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE escola_serie_disciplina (
@@ -12892,7 +12892,7 @@ SELECT pg_catalog.setval('exemplar_cod_exemplar_seq', 1, false);
 SET default_with_oids = true;
 
 --
--- Name: exemplar; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: exemplar; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE exemplar (
@@ -12933,7 +12933,7 @@ SELECT pg_catalog.setval('exemplar_emprestimo_cod_emprestimo_seq', 1, false);
 
 
 --
--- Name: exemplar_emprestimo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: exemplar_emprestimo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE exemplar_emprestimo (
@@ -12968,7 +12968,7 @@ SELECT pg_catalog.setval('exemplar_tipo_cod_exemplar_tipo_seq', 1, false);
 
 
 --
--- Name: exemplar_tipo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: exemplar_tipo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE exemplar_tipo (
@@ -13006,7 +13006,7 @@ SELECT pg_catalog.setval('falta_aluno_cod_falta_aluno_seq', 1, false);
 SET default_with_oids = false;
 
 --
--- Name: falta_aluno; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: falta_aluno; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE falta_aluno (
@@ -13048,7 +13048,7 @@ SELECT pg_catalog.setval('falta_atraso_cod_falta_atraso_seq', 1, false);
 SET default_with_oids = true;
 
 --
--- Name: falta_atraso; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: falta_atraso; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE falta_atraso (
@@ -13089,7 +13089,7 @@ SELECT pg_catalog.setval('falta_atraso_compensado_cod_compensado_seq', 1, false)
 
 
 --
--- Name: falta_atraso_compensado; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: falta_atraso_compensado; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE falta_atraso_compensado (
@@ -13129,7 +13129,7 @@ SELECT pg_catalog.setval('faltas_sequencial_seq', 1, false);
 SET default_with_oids = false;
 
 --
--- Name: faltas; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: faltas; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE faltas (
@@ -13163,7 +13163,7 @@ SELECT pg_catalog.setval('fonte_cod_fonte_seq', 1, false);
 SET default_with_oids = true;
 
 --
--- Name: fonte; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: fonte; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE fonte (
@@ -13199,7 +13199,7 @@ SELECT pg_catalog.setval('funcao_cod_funcao_seq', 1, false);
 
 
 --
--- Name: funcao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: funcao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE funcao (
@@ -13236,7 +13236,7 @@ SELECT pg_catalog.setval('habilitacao_cod_habilitacao_seq', 1, false);
 
 
 --
--- Name: habilitacao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: habilitacao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE habilitacao (
@@ -13253,7 +13253,7 @@ CREATE TABLE habilitacao (
 
 
 --
--- Name: habilitacao_curso; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: habilitacao_curso; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE habilitacao_curso (
@@ -13263,7 +13263,7 @@ CREATE TABLE habilitacao_curso (
 
 
 --
--- Name: historico_disciplinas; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: historico_disciplinas; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE historico_disciplinas (
@@ -13280,7 +13280,7 @@ CREATE TABLE historico_disciplinas (
 SET default_with_oids = false;
 
 --
--- Name: historico_educar; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: historico_educar; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE historico_educar (
@@ -13294,7 +13294,7 @@ CREATE TABLE historico_educar (
 SET default_with_oids = true;
 
 --
--- Name: historico_escolar; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: historico_escolar; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE historico_escolar (
@@ -13343,7 +13343,7 @@ SELECT pg_catalog.setval('infra_comodo_funcao_cod_infra_comodo_funcao_seq', 1, f
 
 
 --
--- Name: infra_comodo_funcao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: infra_comodo_funcao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE infra_comodo_funcao (
@@ -13379,7 +13379,7 @@ SELECT pg_catalog.setval('infra_predio_cod_infra_predio_seq', 1, false);
 
 
 --
--- Name: infra_predio; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: infra_predio; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE infra_predio (
@@ -13416,7 +13416,7 @@ SELECT pg_catalog.setval('infra_predio_comodo_cod_infra_predio_comodo_seq', 1, f
 
 
 --
--- Name: infra_predio_comodo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: infra_predio_comodo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE infra_predio_comodo (
@@ -13453,7 +13453,7 @@ SELECT pg_catalog.setval('instituicao_cod_instituicao_seq', 1, true);
 
 
 --
--- Name: instituicao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: instituicao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE instituicao (
@@ -13498,7 +13498,7 @@ SELECT pg_catalog.setval('material_didatico_cod_material_didatico_seq', 1, false
 
 
 --
--- Name: material_didatico; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: material_didatico; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE material_didatico (
@@ -13536,7 +13536,7 @@ SELECT pg_catalog.setval('material_tipo_cod_material_tipo_seq', 1, false);
 
 
 --
--- Name: material_tipo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: material_tipo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE material_tipo (
@@ -13572,7 +13572,7 @@ SELECT pg_catalog.setval('matricula_cod_matricula_seq', 1, false);
 
 
 --
--- Name: matricula; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: matricula; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE matricula (
@@ -13621,7 +13621,7 @@ SELECT pg_catalog.setval('matricula_excessao_cod_aluno_excessao_seq', 1, false);
 SET default_with_oids = false;
 
 --
--- Name: matricula_excessao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: matricula_excessao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE matricula_excessao (
@@ -13641,7 +13641,7 @@ CREATE TABLE matricula_excessao (
 SET default_with_oids = true;
 
 --
--- Name: matricula_ocorrencia_disciplinar; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: matricula_ocorrencia_disciplinar; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE matricula_ocorrencia_disciplinar (
@@ -13658,7 +13658,7 @@ CREATE TABLE matricula_ocorrencia_disciplinar (
 
 
 --
--- Name: matricula_turma; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: matricula_turma; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE matricula_turma (
@@ -13674,7 +13674,7 @@ CREATE TABLE matricula_turma (
 
 
 --
--- Name: menu_tipo_usuario; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: menu_tipo_usuario; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE menu_tipo_usuario (
@@ -13706,7 +13706,7 @@ SELECT pg_catalog.setval('modulo_cod_modulo_seq', 1, false);
 
 
 --
--- Name: modulo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: modulo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE modulo (
@@ -13744,7 +13744,7 @@ SELECT pg_catalog.setval('motivo_afastamento_cod_motivo_afastamento_seq', 1, fal
 
 
 --
--- Name: motivo_afastamento; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: motivo_afastamento; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE motivo_afastamento (
@@ -13780,7 +13780,7 @@ SELECT pg_catalog.setval('motivo_baixa_cod_motivo_baixa_seq', 1, false);
 
 
 --
--- Name: motivo_baixa; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: motivo_baixa; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE motivo_baixa (
@@ -13816,7 +13816,7 @@ SELECT pg_catalog.setval('motivo_suspensao_cod_motivo_suspensao_seq', 1, false);
 
 
 --
--- Name: motivo_suspensao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: motivo_suspensao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE motivo_suspensao (
@@ -13854,7 +13854,7 @@ SELECT pg_catalog.setval('nivel_cod_nivel_seq', 1, false);
 SET default_with_oids = false;
 
 --
--- Name: nivel; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: nivel; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE nivel (
@@ -13893,7 +13893,7 @@ SELECT pg_catalog.setval('nivel_ensino_cod_nivel_ensino_seq', 1, false);
 SET default_with_oids = true;
 
 --
--- Name: nivel_ensino; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: nivel_ensino; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE nivel_ensino (
@@ -13931,7 +13931,7 @@ SELECT pg_catalog.setval('nota_aluno_cod_nota_aluno_seq', 1, false);
 SET default_with_oids = false;
 
 --
--- Name: nota_aluno; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: nota_aluno; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE nota_aluno (
@@ -13975,7 +13975,7 @@ SELECT pg_catalog.setval('operador_cod_operador_seq', 1, false);
 SET default_with_oids = true;
 
 --
--- Name: operador; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: operador; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE operador (
@@ -14011,7 +14011,7 @@ SELECT pg_catalog.setval('pagamento_multa_cod_pagamento_multa_seq', 1, false);
 
 
 --
--- Name: pagamento_multa; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: pagamento_multa; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE pagamento_multa (
@@ -14044,7 +14044,7 @@ SELECT pg_catalog.setval('pre_requisito_cod_pre_requisito_seq', 1, false);
 
 
 --
--- Name: pre_requisito; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: pre_requisito; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE pre_requisito (
@@ -14081,7 +14081,7 @@ SELECT pg_catalog.setval('quadro_horario_cod_quadro_horario_seq', 1, false);
 
 
 --
--- Name: quadro_horario; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: quadro_horario; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE quadro_horario (
@@ -14098,7 +14098,7 @@ CREATE TABLE quadro_horario (
 SET default_with_oids = false;
 
 --
--- Name: quadro_horario_horarios; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: quadro_horario_horarios; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE quadro_horario_horarios (
@@ -14121,7 +14121,7 @@ CREATE TABLE quadro_horario_horarios (
 
 
 --
--- Name: quadro_horario_horarios_aux; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: quadro_horario_horarios_aux; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE quadro_horario_horarios_aux (
@@ -14162,7 +14162,7 @@ SELECT pg_catalog.setval('religiao_cod_religiao_seq', 1, false);
 SET default_with_oids = true;
 
 --
--- Name: religiao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: religiao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE religiao (
@@ -14196,7 +14196,7 @@ SELECT pg_catalog.setval('reserva_vaga_cod_reserva_vaga_seq', 1, false);
 
 
 --
--- Name: reserva_vaga; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: reserva_vaga; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE reserva_vaga (
@@ -14234,7 +14234,7 @@ SELECT pg_catalog.setval('reservas_cod_reserva_seq', 1, false);
 
 
 --
--- Name: reservas; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: reservas; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE reservas (
@@ -14251,7 +14251,7 @@ CREATE TABLE reservas (
 
 
 --
--- Name: sequencia_serie; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: sequencia_serie; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE sequencia_serie (
@@ -14285,7 +14285,7 @@ SELECT pg_catalog.setval('serie_cod_serie_seq', 1, false);
 
 
 --
--- Name: serie; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: serie; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE serie (
@@ -14308,7 +14308,7 @@ CREATE TABLE serie (
 
 
 --
--- Name: serie_pre_requisito; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: serie_pre_requisito; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE serie_pre_requisito (
@@ -14320,7 +14320,7 @@ CREATE TABLE serie_pre_requisito (
 
 
 --
--- Name: servidor; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: servidor; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE servidor (
@@ -14337,7 +14337,7 @@ CREATE TABLE servidor (
 
 
 --
--- Name: servidor_afastamento; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: servidor_afastamento; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE servidor_afastamento (
@@ -14375,7 +14375,7 @@ SELECT pg_catalog.setval('servidor_alocacao_cod_servidor_alocacao_seq', 1, false
 
 
 --
--- Name: servidor_alocacao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: servidor_alocacao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE servidor_alocacao (
@@ -14416,7 +14416,7 @@ SELECT pg_catalog.setval('servidor_curso_cod_servidor_curso_seq', 1, false);
 
 
 --
--- Name: servidor_curso; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: servidor_curso; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE servidor_curso (
@@ -14431,7 +14431,7 @@ CREATE TABLE servidor_curso (
 SET default_with_oids = false;
 
 --
--- Name: servidor_curso_ministra; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: servidor_curso_ministra; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE servidor_curso_ministra (
@@ -14442,7 +14442,7 @@ CREATE TABLE servidor_curso_ministra (
 
 
 --
--- Name: servidor_disciplina; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: servidor_disciplina; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE servidor_disciplina (
@@ -14475,7 +14475,7 @@ SELECT pg_catalog.setval('servidor_formacao_cod_formacao_seq', 1, false);
 SET default_with_oids = true;
 
 --
--- Name: servidor_formacao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: servidor_formacao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE servidor_formacao (
@@ -14496,7 +14496,7 @@ CREATE TABLE servidor_formacao (
 SET default_with_oids = false;
 
 --
--- Name: servidor_funcao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: servidor_funcao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE servidor_funcao (
@@ -14528,7 +14528,7 @@ SELECT pg_catalog.setval('servidor_titulo_concurso_cod_servidor_titulo_seq', 1, 
 SET default_with_oids = true;
 
 --
--- Name: servidor_titulo_concurso; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: servidor_titulo_concurso; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE servidor_titulo_concurso (
@@ -14559,7 +14559,7 @@ SELECT pg_catalog.setval('situacao_cod_situacao_seq', 1, false);
 
 
 --
--- Name: situacao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: situacao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE situacao (
@@ -14600,7 +14600,7 @@ SELECT pg_catalog.setval('subnivel_cod_subnivel_seq', 1, false);
 SET default_with_oids = false;
 
 --
--- Name: subnivel; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: subnivel; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE subnivel (
@@ -14639,7 +14639,7 @@ SELECT pg_catalog.setval('tipo_avaliacao_cod_tipo_avaliacao_seq', 1, false);
 SET default_with_oids = true;
 
 --
--- Name: tipo_avaliacao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: tipo_avaliacao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE tipo_avaliacao (
@@ -14656,7 +14656,7 @@ CREATE TABLE tipo_avaliacao (
 
 
 --
--- Name: tipo_avaliacao_valores; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: tipo_avaliacao_valores; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE tipo_avaliacao_valores (
@@ -14690,7 +14690,7 @@ SELECT pg_catalog.setval('tipo_dispensa_cod_tipo_dispensa_seq', 1, false);
 
 
 --
--- Name: tipo_dispensa; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: tipo_dispensa; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE tipo_dispensa (
@@ -14726,7 +14726,7 @@ SELECT pg_catalog.setval('tipo_ensino_cod_tipo_ensino_seq', 1, false);
 
 
 --
--- Name: tipo_ensino; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: tipo_ensino; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE tipo_ensino (
@@ -14761,7 +14761,7 @@ SELECT pg_catalog.setval('tipo_ocorrencia_disciplinar_cod_tipo_ocorrencia_discip
 
 
 --
--- Name: tipo_ocorrencia_disciplinar; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: tipo_ocorrencia_disciplinar; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE tipo_ocorrencia_disciplinar (
@@ -14798,7 +14798,7 @@ SELECT pg_catalog.setval('tipo_regime_cod_tipo_regime_seq', 1, false);
 
 
 --
--- Name: tipo_regime; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: tipo_regime; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE tipo_regime (
@@ -14832,7 +14832,7 @@ SELECT pg_catalog.setval('tipo_usuario_cod_tipo_usuario_seq', 3, true);
 
 
 --
--- Name: tipo_usuario; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: tipo_usuario; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE tipo_usuario (
@@ -14868,7 +14868,7 @@ SELECT pg_catalog.setval('transferencia_solicitacao_cod_transferencia_solicitaca
 
 
 --
--- Name: transferencia_solicitacao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: transferencia_solicitacao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE transferencia_solicitacao (
@@ -14906,7 +14906,7 @@ SELECT pg_catalog.setval('transferencia_tipo_cod_transferencia_tipo_seq', 1, fal
 
 
 --
--- Name: transferencia_tipo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: transferencia_tipo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE transferencia_tipo (
@@ -14942,7 +14942,7 @@ SELECT pg_catalog.setval('turma_cod_turma_seq', 1, false);
 
 
 --
--- Name: turma; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: turma; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE turma (
@@ -14975,7 +14975,7 @@ CREATE TABLE turma (
 
 
 --
--- Name: turma_dia_semana; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: turma_dia_semana; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE turma_dia_semana (
@@ -14987,7 +14987,7 @@ CREATE TABLE turma_dia_semana (
 
 
 --
--- Name: turma_modulo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: turma_modulo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE turma_modulo (
@@ -15019,7 +15019,7 @@ SELECT pg_catalog.setval('turma_tipo_cod_turma_tipo_seq', 1, false);
 
 
 --
--- Name: turma_tipo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: turma_tipo; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE turma_tipo (
@@ -15036,7 +15036,7 @@ CREATE TABLE turma_tipo (
 
 
 --
--- Name: usuario; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: usuario; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE TABLE usuario (
@@ -15063,7 +15063,7 @@ CREATE VIEW v_matricula_matricula_turma AS
 SET search_path = pmiotopic, pg_catalog;
 
 --
--- Name: funcionario_su; Type: TABLE; Schema: pmiotopic; Owner: -; Tablespace: 
+-- Name: funcionario_su; Type: TABLE; Schema: pmiotopic; Owner: -; Tablespace:
 --
 
 CREATE TABLE funcionario_su (
@@ -15072,7 +15072,7 @@ CREATE TABLE funcionario_su (
 
 
 --
--- Name: grupomoderador; Type: TABLE; Schema: pmiotopic; Owner: -; Tablespace: 
+-- Name: grupomoderador; Type: TABLE; Schema: pmiotopic; Owner: -; Tablespace:
 --
 
 CREATE TABLE grupomoderador (
@@ -15087,7 +15087,7 @@ CREATE TABLE grupomoderador (
 
 
 --
--- Name: grupopessoa; Type: TABLE; Schema: pmiotopic; Owner: -; Tablespace: 
+-- Name: grupopessoa; Type: TABLE; Schema: pmiotopic; Owner: -; Tablespace:
 --
 
 CREATE TABLE grupopessoa (
@@ -15125,7 +15125,7 @@ SELECT pg_catalog.setval('grupos_cod_grupos_seq', 1, false);
 
 
 --
--- Name: grupos; Type: TABLE; Schema: pmiotopic; Owner: -; Tablespace: 
+-- Name: grupos; Type: TABLE; Schema: pmiotopic; Owner: -; Tablespace:
 --
 
 CREATE TABLE grupos (
@@ -15141,7 +15141,7 @@ CREATE TABLE grupos (
 
 
 --
--- Name: notas; Type: TABLE; Schema: pmiotopic; Owner: -; Tablespace: 
+-- Name: notas; Type: TABLE; Schema: pmiotopic; Owner: -; Tablespace:
 --
 
 CREATE TABLE notas (
@@ -15157,7 +15157,7 @@ CREATE TABLE notas (
 
 
 --
--- Name: participante; Type: TABLE; Schema: pmiotopic; Owner: -; Tablespace: 
+-- Name: participante; Type: TABLE; Schema: pmiotopic; Owner: -; Tablespace:
 --
 
 CREATE TABLE participante (
@@ -15190,7 +15190,7 @@ SELECT pg_catalog.setval('reuniao_cod_reuniao_seq', 1, false);
 
 
 --
--- Name: reuniao; Type: TABLE; Schema: pmiotopic; Owner: -; Tablespace: 
+-- Name: reuniao; Type: TABLE; Schema: pmiotopic; Owner: -; Tablespace:
 --
 
 CREATE TABLE reuniao (
@@ -15227,7 +15227,7 @@ SELECT pg_catalog.setval('topico_cod_topico_seq', 1, false);
 
 
 --
--- Name: topico; Type: TABLE; Schema: pmiotopic; Owner: -; Tablespace: 
+-- Name: topico; Type: TABLE; Schema: pmiotopic; Owner: -; Tablespace:
 --
 
 CREATE TABLE topico (
@@ -15244,7 +15244,7 @@ CREATE TABLE topico (
 
 
 --
--- Name: topicoreuniao; Type: TABLE; Schema: pmiotopic; Owner: -; Tablespace: 
+-- Name: topicoreuniao; Type: TABLE; Schema: pmiotopic; Owner: -; Tablespace:
 --
 
 CREATE TABLE topicoreuniao (
@@ -15278,7 +15278,7 @@ SELECT pg_catalog.setval('acesso_cod_acesso_seq', 1, false);
 
 
 --
--- Name: acesso; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: acesso; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE acesso (
@@ -15312,7 +15312,7 @@ SELECT pg_catalog.setval('agenda_cod_agenda_seq', 1, false);
 
 
 --
--- Name: agenda; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: agenda; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE agenda (
@@ -15329,7 +15329,7 @@ CREATE TABLE agenda (
 
 
 --
--- Name: agenda_compromisso; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: agenda_compromisso; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE agenda_compromisso (
@@ -15368,7 +15368,7 @@ SELECT pg_catalog.setval('agenda_pref_cod_comp_seq', 1, false);
 
 
 --
--- Name: agenda_pref; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: agenda_pref; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE agenda_pref (
@@ -15387,7 +15387,7 @@ CREATE TABLE agenda_pref (
 
 
 --
--- Name: agenda_responsavel; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: agenda_responsavel; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE agenda_responsavel (
@@ -15417,7 +15417,7 @@ SELECT pg_catalog.setval('compras_editais_editais_cod_compras_editais_editais_se
 
 
 --
--- Name: compras_editais_editais; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: compras_editais_editais; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE compras_editais_editais (
@@ -15433,7 +15433,7 @@ CREATE TABLE compras_editais_editais (
 
 
 --
--- Name: compras_editais_editais_empresas; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: compras_editais_editais_empresas; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE compras_editais_editais_empresas (
@@ -15463,7 +15463,7 @@ SELECT pg_catalog.setval('compras_editais_empresa_cod_compras_editais_empresa_se
 
 
 --
--- Name: compras_editais_empresa; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: compras_editais_empresa; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE compras_editais_empresa (
@@ -15504,7 +15504,7 @@ SELECT pg_catalog.setval('compras_final_pregao_cod_compras_final_pregao_seq', 1,
 
 
 --
--- Name: compras_final_pregao; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: compras_final_pregao; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE compras_final_pregao (
@@ -15514,7 +15514,7 @@ CREATE TABLE compras_final_pregao (
 
 
 --
--- Name: compras_funcionarios; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: compras_funcionarios; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE compras_funcionarios (
@@ -15542,7 +15542,7 @@ SELECT pg_catalog.setval('compras_licitacoes_cod_compras_licitacoes_seq', 1, fal
 
 
 --
--- Name: compras_licitacoes; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: compras_licitacoes; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE compras_licitacoes (
@@ -15577,7 +15577,7 @@ SELECT pg_catalog.setval('compras_modalidade_cod_compras_modalidade_seq', 1, fal
 
 
 --
--- Name: compras_modalidade; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: compras_modalidade; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE compras_modalidade (
@@ -15606,7 +15606,7 @@ SELECT pg_catalog.setval('compras_pregao_execucao_cod_compras_pregao_execucao_se
 
 
 --
--- Name: compras_pregao_execucao; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: compras_pregao_execucao; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE compras_pregao_execucao (
@@ -15647,7 +15647,7 @@ SELECT pg_catalog.setval('compras_prestacao_contas_cod_compras_prestacao_contas_
 
 
 --
--- Name: compras_prestacao_contas; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: compras_prestacao_contas; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE compras_prestacao_contas (
@@ -15678,7 +15678,7 @@ SELECT pg_catalog.setval('foto_portal_cod_foto_portal_seq', 1, false);
 
 
 --
--- Name: foto_portal; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: foto_portal; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE foto_portal (
@@ -15717,7 +15717,7 @@ SELECT pg_catalog.setval('foto_secao_cod_foto_secao_seq', 1, false);
 
 
 --
--- Name: foto_secao; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: foto_secao; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE foto_secao (
@@ -15727,7 +15727,7 @@ CREATE TABLE foto_secao (
 
 
 --
--- Name: funcionario; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: funcionario; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE funcionario (
@@ -15776,7 +15776,7 @@ SELECT pg_catalog.setval('funcionario_vinculo_cod_funcionario_vinculo_seq', 1, f
 
 
 --
--- Name: funcionario_vinculo; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: funcionario_vinculo; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE funcionario_vinculo (
@@ -15804,7 +15804,7 @@ SELECT pg_catalog.setval('imagem_cod_imagem_seq', 186, true);
 
 
 --
--- Name: imagem; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: imagem; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE imagem (
@@ -15841,7 +15841,7 @@ SELECT pg_catalog.setval('imagem_tipo_cod_imagem_tipo_seq', 6, true);
 
 
 --
--- Name: imagem_tipo; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: imagem_tipo; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE imagem_tipo (
@@ -15870,7 +15870,7 @@ SELECT pg_catalog.setval('intranet_segur_permissao_nega_cod_intranet_segur_permi
 
 
 --
--- Name: intranet_segur_permissao_negada; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: intranet_segur_permissao_negada; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE intranet_segur_permissao_negada (
@@ -15885,7 +15885,7 @@ CREATE TABLE intranet_segur_permissao_negada (
 
 
 --
--- Name: jor_arquivo; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: jor_arquivo; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE jor_arquivo (
@@ -15915,7 +15915,7 @@ SELECT pg_catalog.setval('jor_edicao_cod_jor_edicao_seq', 1, false);
 
 
 --
--- Name: jor_edicao; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: jor_edicao; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE jor_edicao (
@@ -15949,7 +15949,7 @@ SELECT pg_catalog.setval('mailling_email_cod_mailling_email_seq', 1, false);
 
 
 --
--- Name: mailling_email; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: mailling_email; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE mailling_email (
@@ -15979,7 +15979,7 @@ SELECT pg_catalog.setval('mailling_email_conteudo_cod_mailling_email_conteudo_se
 
 
 --
--- Name: mailling_email_conteudo; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: mailling_email_conteudo; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE mailling_email_conteudo (
@@ -16012,7 +16012,7 @@ SELECT pg_catalog.setval('mailling_fila_envio_cod_mailling_fila_envio_seq', 1, f
 
 
 --
--- Name: mailling_fila_envio; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: mailling_fila_envio; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE mailling_fila_envio (
@@ -16045,7 +16045,7 @@ SELECT pg_catalog.setval('mailling_grupo_cod_mailling_grupo_seq', 1, false);
 
 
 --
--- Name: mailling_grupo; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: mailling_grupo; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE mailling_grupo (
@@ -16055,7 +16055,7 @@ CREATE TABLE mailling_grupo (
 
 
 --
--- Name: mailling_grupo_email; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: mailling_grupo_email; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE mailling_grupo_email (
@@ -16084,7 +16084,7 @@ SELECT pg_catalog.setval('mailling_historico_cod_mailling_historico_seq', 1, fal
 
 
 --
--- Name: mailling_historico; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: mailling_historico; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE mailling_historico (
@@ -16097,7 +16097,7 @@ CREATE TABLE mailling_historico (
 
 
 --
--- Name: menu_funcionario; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: menu_funcionario; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE menu_funcionario (
@@ -16127,7 +16127,7 @@ SELECT pg_catalog.setval('menu_menu_cod_menu_menu_seq', 68, true);
 
 
 --
--- Name: menu_menu; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: menu_menu; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE menu_menu (
@@ -16157,7 +16157,7 @@ SELECT pg_catalog.setval('menu_submenu_cod_menu_submenu_seq', 944, true);
 
 
 --
--- Name: menu_submenu; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: menu_submenu; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE menu_submenu (
@@ -16191,7 +16191,7 @@ SELECT pg_catalog.setval('not_portal_cod_not_portal_seq', 1, false);
 
 
 --
--- Name: not_portal; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: not_portal; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE not_portal (
@@ -16204,7 +16204,7 @@ CREATE TABLE not_portal (
 
 
 --
--- Name: not_portal_tipo; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: not_portal_tipo; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE not_portal_tipo (
@@ -16233,7 +16233,7 @@ SELECT pg_catalog.setval('not_tipo_cod_not_tipo_seq', 1, false);
 
 
 --
--- Name: not_tipo; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: not_tipo; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE not_tipo (
@@ -16243,7 +16243,7 @@ CREATE TABLE not_tipo (
 
 
 --
--- Name: not_vinc_portal; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: not_vinc_portal; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE not_vinc_portal (
@@ -16276,7 +16276,7 @@ SELECT pg_catalog.setval('notificacao_cod_notificacao_seq', 1, false);
 
 
 --
--- Name: notificacao; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: notificacao; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE notificacao (
@@ -16310,7 +16310,7 @@ SELECT pg_catalog.setval('pessoa_atividade_cod_pessoa_atividade_seq', 1, false);
 
 
 --
--- Name: pessoa_atividade; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: pessoa_atividade; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE pessoa_atividade (
@@ -16340,7 +16340,7 @@ SELECT pg_catalog.setval('pessoa_fj_cod_pessoa_fj_seq', 1, false);
 
 
 --
--- Name: pessoa_fj; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: pessoa_fj; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE pessoa_fj (
@@ -16374,7 +16374,7 @@ CREATE TABLE pessoa_fj (
 
 
 --
--- Name: pessoa_fj_pessoa_atividade; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: pessoa_fj_pessoa_atividade; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE pessoa_fj_pessoa_atividade (
@@ -16403,7 +16403,7 @@ SELECT pg_catalog.setval('pessoa_ramo_atividade_cod_ramo_atividade_seq', 1, fals
 
 
 --
--- Name: pessoa_ramo_atividade; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: pessoa_ramo_atividade; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE pessoa_ramo_atividade (
@@ -16432,7 +16432,7 @@ SELECT pg_catalog.setval('portal_banner_cod_portal_banner_seq', 1, false);
 
 
 --
--- Name: portal_banner; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: portal_banner; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE portal_banner (
@@ -16466,7 +16466,7 @@ SELECT pg_catalog.setval('portal_concurso_cod_portal_concurso_seq', 1, false);
 
 
 --
--- Name: portal_concurso; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: portal_concurso; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE portal_concurso (
@@ -16500,7 +16500,7 @@ SELECT pg_catalog.setval('sistema_cod_sistema_seq', 1, false);
 
 
 --
--- Name: sistema; Type: TABLE; Schema: portal; Owner: -; Tablespace: 
+-- Name: sistema; Type: TABLE; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE TABLE sistema (
@@ -16524,7 +16524,7 @@ CREATE VIEW v_funcionario AS
 SET search_path = public, pg_catalog;
 
 --
--- Name: bairro_regiao; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: bairro_regiao; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE bairro_regiao (
@@ -16536,7 +16536,7 @@ CREATE TABLE bairro_regiao (
 SET default_with_oids = false;
 
 --
--- Name: changelog; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: changelog; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE changelog (
@@ -16552,7 +16552,7 @@ CREATE TABLE changelog (
 SET default_with_oids = true;
 
 --
--- Name: logradouro_fonetico; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: logradouro_fonetico; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE logradouro_fonetico (
@@ -16562,7 +16562,7 @@ CREATE TABLE logradouro_fonetico (
 
 
 --
--- Name: pais; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: pais; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE pais (
@@ -16592,7 +16592,7 @@ SELECT pg_catalog.setval('regiao_cod_regiao_seq', 1, false);
 
 
 --
--- Name: regiao; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: regiao; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE regiao (
@@ -16678,7 +16678,7 @@ SELECT pg_catalog.setval('setor_idset_seq', 1, false);
 
 
 --
--- Name: setor; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: setor; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE setor (
@@ -16696,7 +16696,7 @@ CREATE TABLE setor (
 
 
 --
--- Name: uf; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: uf; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE uf (
@@ -16708,7 +16708,7 @@ CREATE TABLE uf (
 
 
 --
--- Name: vila; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: vila; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE vila (
@@ -16722,7 +16722,7 @@ CREATE TABLE vila (
 SET search_path = urbano, pg_catalog;
 
 --
--- Name: cep_logradouro; Type: TABLE; Schema: urbano; Owner: -; Tablespace: 
+-- Name: cep_logradouro; Type: TABLE; Schema: urbano; Owner: -; Tablespace:
 --
 
 CREATE TABLE cep_logradouro (
@@ -16744,7 +16744,7 @@ CREATE TABLE cep_logradouro (
 
 
 --
--- Name: cep_logradouro_bairro; Type: TABLE; Schema: urbano; Owner: -; Tablespace: 
+-- Name: cep_logradouro_bairro; Type: TABLE; Schema: urbano; Owner: -; Tablespace:
 --
 
 CREATE TABLE cep_logradouro_bairro (
@@ -16765,7 +16765,7 @@ CREATE TABLE cep_logradouro_bairro (
 
 
 --
--- Name: tipo_logradouro; Type: TABLE; Schema: urbano; Owner: -; Tablespace: 
+-- Name: tipo_logradouro; Type: TABLE; Schema: urbano; Owner: -; Tablespace:
 --
 
 CREATE TABLE tipo_logradouro (
@@ -26256,7 +26256,7 @@ INSERT INTO tipo_logradouro VALUES ('BALAO', 'Balão');
 SET search_path = acesso, pg_catalog;
 
 --
--- Name: pk_funcao; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace: 
+-- Name: pk_funcao; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY funcao
@@ -26264,7 +26264,7 @@ ALTER TABLE ONLY funcao
 
 
 --
--- Name: pk_grupo; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace: 
+-- Name: pk_grupo; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY grupo
@@ -26272,7 +26272,7 @@ ALTER TABLE ONLY grupo
 
 
 --
--- Name: pk_grupo_funcao; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace: 
+-- Name: pk_grupo_funcao; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY grupo_funcao
@@ -26280,7 +26280,7 @@ ALTER TABLE ONLY grupo_funcao
 
 
 --
--- Name: pk_grupo_menu; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace: 
+-- Name: pk_grupo_menu; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY grupo_menu
@@ -26288,7 +26288,7 @@ ALTER TABLE ONLY grupo_menu
 
 
 --
--- Name: pk_grupo_operacao; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace: 
+-- Name: pk_grupo_operacao; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY grupo_operacao
@@ -26296,7 +26296,7 @@ ALTER TABLE ONLY grupo_operacao
 
 
 --
--- Name: pk_grupo_sistema; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace: 
+-- Name: pk_grupo_sistema; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY grupo_sistema
@@ -26304,7 +26304,7 @@ ALTER TABLE ONLY grupo_sistema
 
 
 --
--- Name: pk_historico_senha; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace: 
+-- Name: pk_historico_senha; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY historico_senha
@@ -26312,7 +26312,7 @@ ALTER TABLE ONLY historico_senha
 
 
 --
--- Name: pk_instituicao; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace: 
+-- Name: pk_instituicao; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY instituicao
@@ -26320,7 +26320,7 @@ ALTER TABLE ONLY instituicao
 
 
 --
--- Name: pk_menu; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace: 
+-- Name: pk_menu; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY menu
@@ -26328,7 +26328,7 @@ ALTER TABLE ONLY menu
 
 
 --
--- Name: pk_operacao; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace: 
+-- Name: pk_operacao; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY operacao
@@ -26336,7 +26336,7 @@ ALTER TABLE ONLY operacao
 
 
 --
--- Name: pk_operacao_funcao; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace: 
+-- Name: pk_operacao_funcao; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY operacao_funcao
@@ -26344,7 +26344,7 @@ ALTER TABLE ONLY operacao_funcao
 
 
 --
--- Name: pk_pessoa_instituicao; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace: 
+-- Name: pk_pessoa_instituicao; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY pessoa_instituicao
@@ -26352,7 +26352,7 @@ ALTER TABLE ONLY pessoa_instituicao
 
 
 --
--- Name: pk_sistema; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace: 
+-- Name: pk_sistema; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY sistema
@@ -26360,7 +26360,7 @@ ALTER TABLE ONLY sistema
 
 
 --
--- Name: pk_usuario; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace: 
+-- Name: pk_usuario; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY usuario
@@ -26368,7 +26368,7 @@ ALTER TABLE ONLY usuario
 
 
 --
--- Name: pk_usuario_grupo; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace: 
+-- Name: pk_usuario_grupo; Type: CONSTRAINT; Schema: acesso; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY usuario_grupo
@@ -26378,7 +26378,7 @@ ALTER TABLE ONLY usuario_grupo
 SET search_path = alimentos, pg_catalog;
 
 --
--- Name: pk_baixa_guia_produto; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_baixa_guia_produto; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY baixa_guia_produto
@@ -26386,7 +26386,7 @@ ALTER TABLE ONLY baixa_guia_produto
 
 
 --
--- Name: pk_baixa_guia_remessa; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_baixa_guia_remessa; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY baixa_guia_remessa
@@ -26394,7 +26394,7 @@ ALTER TABLE ONLY baixa_guia_remessa
 
 
 --
--- Name: pk_calendario; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_calendario; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY calendario
@@ -26402,7 +26402,7 @@ ALTER TABLE ONLY calendario
 
 
 --
--- Name: pk_cardapio; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_cardapio; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY cardapio
@@ -26410,7 +26410,7 @@ ALTER TABLE ONLY cardapio
 
 
 --
--- Name: pk_cardapio_faixa_unidade; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_cardapio_faixa_unidade; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY cardapio_faixa_unidade
@@ -26418,7 +26418,7 @@ ALTER TABLE ONLY cardapio_faixa_unidade
 
 
 --
--- Name: pk_cardapio_produto; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_cardapio_produto; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY cardapio_produto
@@ -26426,7 +26426,7 @@ ALTER TABLE ONLY cardapio_produto
 
 
 --
--- Name: pk_cardapio_receita; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_cardapio_receita; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY cardapio_receita
@@ -26434,7 +26434,7 @@ ALTER TABLE ONLY cardapio_receita
 
 
 --
--- Name: pk_cliente; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_cliente; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY cliente
@@ -26442,7 +26442,7 @@ ALTER TABLE ONLY cliente
 
 
 --
--- Name: pk_contrato; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_contrato; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY contrato
@@ -26450,7 +26450,7 @@ ALTER TABLE ONLY contrato
 
 
 --
--- Name: pk_contrato_produto; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_contrato_produto; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY contrato_produto
@@ -26458,7 +26458,7 @@ ALTER TABLE ONLY contrato_produto
 
 
 --
--- Name: pk_cp_quimico; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_cp_quimico; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY composto_quimico
@@ -26466,7 +26466,7 @@ ALTER TABLE ONLY composto_quimico
 
 
 --
--- Name: pk_evento; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_evento; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY evento
@@ -26474,7 +26474,7 @@ ALTER TABLE ONLY evento
 
 
 --
--- Name: pk_faixa_composto_quimico; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_faixa_composto_quimico; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY faixa_composto_quimico
@@ -26482,7 +26482,7 @@ ALTER TABLE ONLY faixa_composto_quimico
 
 
 --
--- Name: pk_faixa_etaria; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_faixa_etaria; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY faixa_etaria
@@ -26490,7 +26490,7 @@ ALTER TABLE ONLY faixa_etaria
 
 
 --
--- Name: pk_fornecedor; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_fornecedor; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY fornecedor
@@ -26498,7 +26498,7 @@ ALTER TABLE ONLY fornecedor
 
 
 --
--- Name: pk_grp_quimico; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_grp_quimico; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY grupo_quimico
@@ -26506,7 +26506,7 @@ ALTER TABLE ONLY grupo_quimico
 
 
 --
--- Name: pk_guia_produto_diario; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_guia_produto_diario; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY guia_produto_diario
@@ -26514,7 +26514,7 @@ ALTER TABLE ONLY guia_produto_diario
 
 
 --
--- Name: pk_guia_remessa; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_guia_remessa; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY guia_remessa
@@ -26522,7 +26522,7 @@ ALTER TABLE ONLY guia_remessa
 
 
 --
--- Name: pk_guia_remessa_produto; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_guia_remessa_produto; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY guia_remessa_produto
@@ -26530,7 +26530,7 @@ ALTER TABLE ONLY guia_remessa_produto
 
 
 --
--- Name: pk_log_guia_remessa; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_log_guia_remessa; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY log_guia_remessa
@@ -26538,7 +26538,7 @@ ALTER TABLE ONLY log_guia_remessa
 
 
 --
--- Name: pk_medidas_caseiras; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_medidas_caseiras; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY medidas_caseiras
@@ -26546,7 +26546,7 @@ ALTER TABLE ONLY medidas_caseiras
 
 
 --
--- Name: pk_pessoa; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_pessoa; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY pessoa
@@ -26554,7 +26554,7 @@ ALTER TABLE ONLY pessoa
 
 
 --
--- Name: pk_prod_cp_quimico; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_prod_cp_quimico; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY produto_composto_quimico
@@ -26562,7 +26562,7 @@ ALTER TABLE ONLY produto_composto_quimico
 
 
 --
--- Name: pk_produto; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_produto; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY produto
@@ -26570,7 +26570,7 @@ ALTER TABLE ONLY produto
 
 
 --
--- Name: pk_produto_fornecedor; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_produto_fornecedor; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY produto_fornecedor
@@ -26578,7 +26578,7 @@ ALTER TABLE ONLY produto_fornecedor
 
 
 --
--- Name: pk_produto_medida_caseira; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_produto_medida_caseira; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY produto_medida_caseira
@@ -26586,7 +26586,7 @@ ALTER TABLE ONLY produto_medida_caseira
 
 
 --
--- Name: pk_rec_cp_quimico; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_rec_cp_quimico; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY receita_composto_quimico
@@ -26594,7 +26594,7 @@ ALTER TABLE ONLY receita_composto_quimico
 
 
 --
--- Name: pk_rec_prod; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_rec_prod; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY receita_produto
@@ -26602,7 +26602,7 @@ ALTER TABLE ONLY receita_produto
 
 
 --
--- Name: pk_receita; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_receita; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY receita
@@ -26610,7 +26610,7 @@ ALTER TABLE ONLY receita
 
 
 --
--- Name: pk_tipo_unidade; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_tipo_unidade; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY tipo_unidade
@@ -26618,7 +26618,7 @@ ALTER TABLE ONLY tipo_unidade
 
 
 --
--- Name: pk_tp_produto; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_tp_produto; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY tipo_produto
@@ -26626,7 +26626,7 @@ ALTER TABLE ONLY tipo_produto
 
 
 --
--- Name: pk_tp_refeicao; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_tp_refeicao; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY tipo_refeicao
@@ -26634,7 +26634,7 @@ ALTER TABLE ONLY tipo_refeicao
 
 
 --
--- Name: pk_uni_faixa_etaria; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_uni_faixa_etaria; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY unidade_faixa_etaria
@@ -26642,7 +26642,7 @@ ALTER TABLE ONLY unidade_faixa_etaria
 
 
 --
--- Name: pk_uni_produto; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_uni_produto; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY unidade_produto
@@ -26650,7 +26650,7 @@ ALTER TABLE ONLY unidade_produto
 
 
 --
--- Name: pk_unidade_atendida; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: pk_unidade_atendida; Type: CONSTRAINT; Schema: alimentos; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY unidade_atendida
@@ -26660,7 +26660,7 @@ ALTER TABLE ONLY unidade_atendida
 SET search_path = cadastro, pg_catalog;
 
 --
--- Name: fisica_foto_pkey; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: fisica_foto_pkey; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY fisica_foto
@@ -26668,7 +26668,7 @@ ALTER TABLE ONLY fisica_foto
 
 
 --
--- Name: fisica_sangue_pkey; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: fisica_sangue_pkey; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY fisica_sangue
@@ -26676,7 +26676,7 @@ ALTER TABLE ONLY fisica_sangue
 
 
 --
--- Name: pk_aviso_nome; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: pk_aviso_nome; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY aviso_nome
@@ -26684,7 +26684,7 @@ ALTER TABLE ONLY aviso_nome
 
 
 --
--- Name: pk_cadastro_escolaridade; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: pk_cadastro_escolaridade; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY deficiencia
@@ -26692,7 +26692,7 @@ ALTER TABLE ONLY deficiencia
 
 
 --
--- Name: pk_documento; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: pk_documento; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY documento
@@ -26700,7 +26700,7 @@ ALTER TABLE ONLY documento
 
 
 --
--- Name: pk_endereco_externo; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: pk_endereco_externo; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY endereco_externo
@@ -26708,7 +26708,7 @@ ALTER TABLE ONLY endereco_externo
 
 
 --
--- Name: pk_endereco_pessoa; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: pk_endereco_pessoa; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY endereco_pessoa
@@ -26716,7 +26716,7 @@ ALTER TABLE ONLY endereco_pessoa
 
 
 --
--- Name: pk_escolaridade; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: pk_escolaridade; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY escolaridade
@@ -26724,7 +26724,7 @@ ALTER TABLE ONLY escolaridade
 
 
 --
--- Name: pk_estado_civil; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: pk_estado_civil; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY estado_civil
@@ -26732,7 +26732,7 @@ ALTER TABLE ONLY estado_civil
 
 
 --
--- Name: pk_fisica; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: pk_fisica; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY fisica
@@ -26740,7 +26740,7 @@ ALTER TABLE ONLY fisica
 
 
 --
--- Name: pk_fisica_cpf; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: pk_fisica_cpf; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY fisica_cpf
@@ -26748,7 +26748,7 @@ ALTER TABLE ONLY fisica_cpf
 
 
 --
--- Name: pk_fisica_deficiencia; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: pk_fisica_deficiencia; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY fisica_deficiencia
@@ -26756,7 +26756,7 @@ ALTER TABLE ONLY fisica_deficiencia
 
 
 --
--- Name: pk_fisica_raca; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: pk_fisica_raca; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY fisica_raca
@@ -26764,7 +26764,7 @@ ALTER TABLE ONLY fisica_raca
 
 
 --
--- Name: pk_fone_pessoa; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: pk_fone_pessoa; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY fone_pessoa
@@ -26772,7 +26772,7 @@ ALTER TABLE ONLY fone_pessoa
 
 
 --
--- Name: pk_funcionario; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: pk_funcionario; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY funcionario
@@ -26780,7 +26780,7 @@ ALTER TABLE ONLY funcionario
 
 
 --
--- Name: pk_juridica; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: pk_juridica; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY juridica
@@ -26788,7 +26788,7 @@ ALTER TABLE ONLY juridica
 
 
 --
--- Name: pk_ocupacao; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: pk_ocupacao; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY ocupacao
@@ -26796,7 +26796,7 @@ ALTER TABLE ONLY ocupacao
 
 
 --
--- Name: pk_orgao_emissor_rg; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: pk_orgao_emissor_rg; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY orgao_emissor_rg
@@ -26804,7 +26804,7 @@ ALTER TABLE ONLY orgao_emissor_rg
 
 
 --
--- Name: pk_pessoa; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: pk_pessoa; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY pessoa
@@ -26812,7 +26812,7 @@ ALTER TABLE ONLY pessoa
 
 
 --
--- Name: pk_pessoa_fonetico; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: pk_pessoa_fonetico; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY pessoa_fonetico
@@ -26820,7 +26820,7 @@ ALTER TABLE ONLY pessoa_fonetico
 
 
 --
--- Name: pk_socio; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: pk_socio; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY socio
@@ -26828,7 +26828,7 @@ ALTER TABLE ONLY socio
 
 
 --
--- Name: raca_pkey; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: raca_pkey; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY raca
@@ -26836,7 +26836,7 @@ ALTER TABLE ONLY raca
 
 
 --
--- Name: religiao_pkey; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: religiao_pkey; Type: CONSTRAINT; Schema: cadastro; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY religiao
@@ -26846,7 +26846,7 @@ ALTER TABLE ONLY religiao
 SET search_path = consistenciacao, pg_catalog;
 
 --
--- Name: pk_campo_consistenciacao; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: pk_campo_consistenciacao; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY campo_consistenciacao
@@ -26854,7 +26854,7 @@ ALTER TABLE ONLY campo_consistenciacao
 
 
 --
--- Name: pk_campo_metadado; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: pk_campo_metadado; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY campo_metadado
@@ -26862,7 +26862,7 @@ ALTER TABLE ONLY campo_metadado
 
 
 --
--- Name: pk_confrontacao; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: pk_confrontacao; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY confrontacao
@@ -26870,7 +26870,7 @@ ALTER TABLE ONLY confrontacao
 
 
 --
--- Name: pk_fonte; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: pk_fonte; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY fonte
@@ -26878,7 +26878,7 @@ ALTER TABLE ONLY fonte
 
 
 --
--- Name: pk_historico_campo; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: pk_historico_campo; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY historico_campo
@@ -26886,7 +26886,7 @@ ALTER TABLE ONLY historico_campo
 
 
 --
--- Name: pk_inc_pessoa_possivel; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: pk_inc_pessoa_possivel; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY incoerencia_pessoa_possivel
@@ -26894,7 +26894,7 @@ ALTER TABLE ONLY incoerencia_pessoa_possivel
 
 
 --
--- Name: pk_incoerencia; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: pk_incoerencia; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY incoerencia
@@ -26902,7 +26902,7 @@ ALTER TABLE ONLY incoerencia
 
 
 --
--- Name: pk_incoerencia_documento; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: pk_incoerencia_documento; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY incoerencia_documento
@@ -26910,7 +26910,7 @@ ALTER TABLE ONLY incoerencia_documento
 
 
 --
--- Name: pk_incoerencia_endereco; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: pk_incoerencia_endereco; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY incoerencia_endereco
@@ -26918,7 +26918,7 @@ ALTER TABLE ONLY incoerencia_endereco
 
 
 --
--- Name: pk_incoerencia_fone; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: pk_incoerencia_fone; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY incoerencia_fone
@@ -26926,7 +26926,7 @@ ALTER TABLE ONLY incoerencia_fone
 
 
 --
--- Name: pk_incoerencia_tipo_incoerencia; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: pk_incoerencia_tipo_incoerencia; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY incoerencia_tipo_incoerencia
@@ -26934,7 +26934,7 @@ ALTER TABLE ONLY incoerencia_tipo_incoerencia
 
 
 --
--- Name: pk_metadado; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: pk_metadado; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY metadado
@@ -26942,7 +26942,7 @@ ALTER TABLE ONLY metadado
 
 
 --
--- Name: pk_ocorrencia_regra_campo; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: pk_ocorrencia_regra_campo; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY ocorrencia_regra_campo
@@ -26950,7 +26950,7 @@ ALTER TABLE ONLY ocorrencia_regra_campo
 
 
 --
--- Name: pk_regra_campo; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: pk_regra_campo; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY regra_campo
@@ -26958,7 +26958,7 @@ ALTER TABLE ONLY regra_campo
 
 
 --
--- Name: pk_temp_cadastro_unificacao_cmf; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: pk_temp_cadastro_unificacao_cmf; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY temp_cadastro_unificacao_cmf
@@ -26966,7 +26966,7 @@ ALTER TABLE ONLY temp_cadastro_unificacao_cmf
 
 
 --
--- Name: pk_temp_cadastro_unificacao_siam; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: pk_temp_cadastro_unificacao_siam; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY temp_cadastro_unificacao_siam
@@ -26974,7 +26974,7 @@ ALTER TABLE ONLY temp_cadastro_unificacao_siam
 
 
 --
--- Name: pk_tipo_incoerencia; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace: 
+-- Name: pk_tipo_incoerencia; Type: CONSTRAINT; Schema: consistenciacao; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY tipo_incoerencia
@@ -26984,7 +26984,7 @@ ALTER TABLE ONLY tipo_incoerencia
 SET search_path = modules, pg_catalog;
 
 --
--- Name: area_conhecimento_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+-- Name: area_conhecimento_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY area_conhecimento
@@ -26992,7 +26992,7 @@ ALTER TABLE ONLY area_conhecimento
 
 
 --
--- Name: componente_curricular_ano_escolar_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+-- Name: componente_curricular_ano_escolar_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY componente_curricular_ano_escolar
@@ -27000,7 +27000,7 @@ ALTER TABLE ONLY componente_curricular_ano_escolar
 
 
 --
--- Name: componente_curricular_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+-- Name: componente_curricular_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY componente_curricular
@@ -27008,7 +27008,7 @@ ALTER TABLE ONLY componente_curricular
 
 
 --
--- Name: falta_aluno_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+-- Name: falta_aluno_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY falta_aluno
@@ -27016,7 +27016,7 @@ ALTER TABLE ONLY falta_aluno
 
 
 --
--- Name: falta_componente_curricular_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+-- Name: falta_componente_curricular_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY falta_componente_curricular
@@ -27024,7 +27024,7 @@ ALTER TABLE ONLY falta_componente_curricular
 
 
 --
--- Name: falta_geral_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+-- Name: falta_geral_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY falta_geral
@@ -27032,7 +27032,7 @@ ALTER TABLE ONLY falta_geral
 
 
 --
--- Name: formula_media_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+-- Name: formula_media_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY formula_media
@@ -27040,7 +27040,7 @@ ALTER TABLE ONLY formula_media
 
 
 --
--- Name: nota_aluno_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+-- Name: nota_aluno_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY nota_aluno
@@ -27048,7 +27048,7 @@ ALTER TABLE ONLY nota_aluno
 
 
 --
--- Name: nota_componente_curricular_media_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+-- Name: nota_componente_curricular_media_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY nota_componente_curricular_media
@@ -27056,7 +27056,7 @@ ALTER TABLE ONLY nota_componente_curricular_media
 
 
 --
--- Name: nota_componente_curricular_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+-- Name: nota_componente_curricular_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY nota_componente_curricular
@@ -27064,7 +27064,7 @@ ALTER TABLE ONLY nota_componente_curricular
 
 
 --
--- Name: parecer_aluno_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+-- Name: parecer_aluno_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY parecer_aluno
@@ -27072,7 +27072,7 @@ ALTER TABLE ONLY parecer_aluno
 
 
 --
--- Name: parecer_componente_curricular_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+-- Name: parecer_componente_curricular_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY parecer_componente_curricular
@@ -27080,7 +27080,7 @@ ALTER TABLE ONLY parecer_componente_curricular
 
 
 --
--- Name: parecer_geral_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+-- Name: parecer_geral_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY parecer_geral
@@ -27088,7 +27088,7 @@ ALTER TABLE ONLY parecer_geral
 
 
 --
--- Name: regra_avaliacao_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+-- Name: regra_avaliacao_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY regra_avaliacao
@@ -27096,7 +27096,7 @@ ALTER TABLE ONLY regra_avaliacao
 
 
 --
--- Name: tabela_arredondamento_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+-- Name: tabela_arredondamento_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY tabela_arredondamento
@@ -27104,7 +27104,7 @@ ALTER TABLE ONLY tabela_arredondamento
 
 
 --
--- Name: tabela_arredondamento_valor_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace: 
+-- Name: tabela_arredondamento_valor_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY tabela_arredondamento_valor
@@ -27114,7 +27114,7 @@ ALTER TABLE ONLY tabela_arredondamento_valor
 SET search_path = pmiacoes, pg_catalog;
 
 --
--- Name: acao_governo_arquivo_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -; Tablespace: 
+-- Name: acao_governo_arquivo_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY acao_governo_arquivo
@@ -27122,7 +27122,7 @@ ALTER TABLE ONLY acao_governo_arquivo
 
 
 --
--- Name: acao_governo_categoria_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -; Tablespace: 
+-- Name: acao_governo_categoria_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY acao_governo_categoria
@@ -27130,7 +27130,7 @@ ALTER TABLE ONLY acao_governo_categoria
 
 
 --
--- Name: acao_governo_foto_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -; Tablespace: 
+-- Name: acao_governo_foto_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY acao_governo_foto
@@ -27138,7 +27138,7 @@ ALTER TABLE ONLY acao_governo_foto
 
 
 --
--- Name: acao_governo_foto_portal_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -; Tablespace: 
+-- Name: acao_governo_foto_portal_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY acao_governo_foto_portal
@@ -27146,7 +27146,7 @@ ALTER TABLE ONLY acao_governo_foto_portal
 
 
 --
--- Name: acao_governo_noticia_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -; Tablespace: 
+-- Name: acao_governo_noticia_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY acao_governo_noticia
@@ -27154,7 +27154,7 @@ ALTER TABLE ONLY acao_governo_noticia
 
 
 --
--- Name: acao_governo_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -; Tablespace: 
+-- Name: acao_governo_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY acao_governo
@@ -27162,7 +27162,7 @@ ALTER TABLE ONLY acao_governo
 
 
 --
--- Name: acao_governo_setor_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -; Tablespace: 
+-- Name: acao_governo_setor_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY acao_governo_setor
@@ -27170,7 +27170,7 @@ ALTER TABLE ONLY acao_governo_setor
 
 
 --
--- Name: categoria_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -; Tablespace: 
+-- Name: categoria_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY categoria
@@ -27178,7 +27178,7 @@ ALTER TABLE ONLY categoria
 
 
 --
--- Name: secretaria_responsavel_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -; Tablespace: 
+-- Name: secretaria_responsavel_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY secretaria_responsavel
@@ -27188,7 +27188,7 @@ ALTER TABLE ONLY secretaria_responsavel
 SET search_path = pmicontrolesis, pg_catalog;
 
 --
--- Name: acontecimento_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: acontecimento_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY acontecimento
@@ -27196,7 +27196,7 @@ ALTER TABLE ONLY acontecimento
 
 
 --
--- Name: artigo_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: artigo_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY artigo
@@ -27204,7 +27204,7 @@ ALTER TABLE ONLY artigo
 
 
 --
--- Name: foto_evento_pk; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: foto_evento_pk; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY foto_evento
@@ -27212,7 +27212,7 @@ ALTER TABLE ONLY foto_evento
 
 
 --
--- Name: foto_vinc_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: foto_vinc_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY foto_vinc
@@ -27220,7 +27220,7 @@ ALTER TABLE ONLY foto_vinc
 
 
 --
--- Name: itinerario_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: itinerario_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY itinerario
@@ -27228,7 +27228,7 @@ ALTER TABLE ONLY itinerario
 
 
 --
--- Name: menu_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: menu_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY menu
@@ -27236,7 +27236,7 @@ ALTER TABLE ONLY menu
 
 
 --
--- Name: menu_portal_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: menu_portal_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY menu_portal
@@ -27244,7 +27244,7 @@ ALTER TABLE ONLY menu_portal
 
 
 --
--- Name: portais_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: portais_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY portais
@@ -27252,7 +27252,7 @@ ALTER TABLE ONLY portais
 
 
 --
--- Name: servicos_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: servicos_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY servicos
@@ -27260,7 +27260,7 @@ ALTER TABLE ONLY servicos
 
 
 --
--- Name: sistema_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: sistema_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY sistema
@@ -27268,7 +27268,7 @@ ALTER TABLE ONLY sistema
 
 
 --
--- Name: submenu_portal_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: submenu_portal_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY submenu_portal
@@ -27276,7 +27276,7 @@ ALTER TABLE ONLY submenu_portal
 
 
 --
--- Name: telefones_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: telefones_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY telefones
@@ -27284,7 +27284,7 @@ ALTER TABLE ONLY telefones
 
 
 --
--- Name: tipo_acontecimento_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: tipo_acontecimento_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY tipo_acontecimento
@@ -27292,7 +27292,7 @@ ALTER TABLE ONLY tipo_acontecimento
 
 
 --
--- Name: topo_portal_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: topo_portal_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY topo_portal
@@ -27300,7 +27300,7 @@ ALTER TABLE ONLY topo_portal
 
 
 --
--- Name: tutormenu_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace: 
+-- Name: tutormenu_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY tutormenu
@@ -27310,7 +27310,7 @@ ALTER TABLE ONLY tutormenu
 SET search_path = pmidrh, pg_catalog;
 
 --
--- Name: diaria_grupo_pkey; Type: CONSTRAINT; Schema: pmidrh; Owner: -; Tablespace: 
+-- Name: diaria_grupo_pkey; Type: CONSTRAINT; Schema: pmidrh; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY diaria_grupo
@@ -27318,7 +27318,7 @@ ALTER TABLE ONLY diaria_grupo
 
 
 --
--- Name: diaria_pkey; Type: CONSTRAINT; Schema: pmidrh; Owner: -; Tablespace: 
+-- Name: diaria_pkey; Type: CONSTRAINT; Schema: pmidrh; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY diaria
@@ -27326,7 +27326,7 @@ ALTER TABLE ONLY diaria
 
 
 --
--- Name: diaria_valores_pkey; Type: CONSTRAINT; Schema: pmidrh; Owner: -; Tablespace: 
+-- Name: diaria_valores_pkey; Type: CONSTRAINT; Schema: pmidrh; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY diaria_valores
@@ -27334,7 +27334,7 @@ ALTER TABLE ONLY diaria_valores
 
 
 --
--- Name: setor_pkey; Type: CONSTRAINT; Schema: pmidrh; Owner: -; Tablespace: 
+-- Name: setor_pkey; Type: CONSTRAINT; Schema: pmidrh; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY setor
@@ -27344,7 +27344,7 @@ ALTER TABLE ONLY setor
 SET search_path = pmieducar, pg_catalog;
 
 --
--- Name: acervo_acervo_assunto_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: acervo_acervo_assunto_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY acervo_acervo_assunto
@@ -27352,7 +27352,7 @@ ALTER TABLE ONLY acervo_acervo_assunto
 
 
 --
--- Name: acervo_acervo_autor_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: acervo_acervo_autor_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY acervo_acervo_autor
@@ -27360,7 +27360,7 @@ ALTER TABLE ONLY acervo_acervo_autor
 
 
 --
--- Name: acervo_assunto_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: acervo_assunto_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY acervo_assunto
@@ -27368,7 +27368,7 @@ ALTER TABLE ONLY acervo_assunto
 
 
 --
--- Name: acervo_autor_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: acervo_autor_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY acervo_autor
@@ -27376,7 +27376,7 @@ ALTER TABLE ONLY acervo_autor
 
 
 --
--- Name: acervo_colecao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: acervo_colecao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY acervo_colecao
@@ -27384,7 +27384,7 @@ ALTER TABLE ONLY acervo_colecao
 
 
 --
--- Name: acervo_editora_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: acervo_editora_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY acervo_editora
@@ -27392,7 +27392,7 @@ ALTER TABLE ONLY acervo_editora
 
 
 --
--- Name: acervo_idioma_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: acervo_idioma_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY acervo_idioma
@@ -27400,7 +27400,7 @@ ALTER TABLE ONLY acervo_idioma
 
 
 --
--- Name: acervo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: acervo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY acervo
@@ -27408,7 +27408,7 @@ ALTER TABLE ONLY acervo
 
 
 --
--- Name: aluno_beneficio_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: aluno_beneficio_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY aluno_beneficio
@@ -27416,7 +27416,7 @@ ALTER TABLE ONLY aluno_beneficio
 
 
 --
--- Name: aluno_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: aluno_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY aluno
@@ -27424,7 +27424,7 @@ ALTER TABLE ONLY aluno
 
 
 --
--- Name: aluno_ref_idpes_un; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: aluno_ref_idpes_un; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY aluno
@@ -27432,7 +27432,7 @@ ALTER TABLE ONLY aluno
 
 
 --
--- Name: ano_letivo_modulo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: ano_letivo_modulo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY ano_letivo_modulo
@@ -27440,7 +27440,7 @@ ALTER TABLE ONLY ano_letivo_modulo
 
 
 --
--- Name: avaliacao_desempenho_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: avaliacao_desempenho_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY avaliacao_desempenho
@@ -27448,7 +27448,7 @@ ALTER TABLE ONLY avaliacao_desempenho
 
 
 --
--- Name: biblioteca_dia_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: biblioteca_dia_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY biblioteca_dia
@@ -27456,7 +27456,7 @@ ALTER TABLE ONLY biblioteca_dia
 
 
 --
--- Name: biblioteca_feriados_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: biblioteca_feriados_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY biblioteca_feriados
@@ -27464,7 +27464,7 @@ ALTER TABLE ONLY biblioteca_feriados
 
 
 --
--- Name: biblioteca_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: biblioteca_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY biblioteca
@@ -27472,7 +27472,7 @@ ALTER TABLE ONLY biblioteca
 
 
 --
--- Name: biblioteca_usuario_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: biblioteca_usuario_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY biblioteca_usuario
@@ -27480,7 +27480,7 @@ ALTER TABLE ONLY biblioteca_usuario
 
 
 --
--- Name: calendario_ano_letivo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: calendario_ano_letivo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY calendario_ano_letivo
@@ -27488,7 +27488,7 @@ ALTER TABLE ONLY calendario_ano_letivo
 
 
 --
--- Name: calendario_anotacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: calendario_anotacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY calendario_anotacao
@@ -27496,7 +27496,7 @@ ALTER TABLE ONLY calendario_anotacao
 
 
 --
--- Name: calendario_dia_anotacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: calendario_dia_anotacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY calendario_dia_anotacao
@@ -27504,7 +27504,7 @@ ALTER TABLE ONLY calendario_dia_anotacao
 
 
 --
--- Name: calendario_dia_motivo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: calendario_dia_motivo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY calendario_dia_motivo
@@ -27512,7 +27512,7 @@ ALTER TABLE ONLY calendario_dia_motivo
 
 
 --
--- Name: calendario_dia_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: calendario_dia_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY calendario_dia
@@ -27520,7 +27520,7 @@ ALTER TABLE ONLY calendario_dia
 
 
 --
--- Name: categoria_nivel_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: categoria_nivel_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY categoria_nivel
@@ -27528,7 +27528,7 @@ ALTER TABLE ONLY categoria_nivel
 
 
 --
--- Name: cliente_login_ukey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: cliente_login_ukey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY cliente
@@ -27536,7 +27536,7 @@ ALTER TABLE ONLY cliente
 
 
 --
--- Name: cliente_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: cliente_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY cliente
@@ -27544,7 +27544,7 @@ ALTER TABLE ONLY cliente
 
 
 --
--- Name: cliente_ref_idpes_ukey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: cliente_ref_idpes_ukey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY cliente
@@ -27552,7 +27552,7 @@ ALTER TABLE ONLY cliente
 
 
 --
--- Name: cliente_suspensao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: cliente_suspensao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY cliente_suspensao
@@ -27560,7 +27560,7 @@ ALTER TABLE ONLY cliente_suspensao
 
 
 --
--- Name: cliente_tipo_cliente_pk; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: cliente_tipo_cliente_pk; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY cliente_tipo_cliente
@@ -27568,7 +27568,7 @@ ALTER TABLE ONLY cliente_tipo_cliente
 
 
 --
--- Name: cliente_tipo_exemplar_tipo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: cliente_tipo_exemplar_tipo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY cliente_tipo_exemplar_tipo
@@ -27576,7 +27576,7 @@ ALTER TABLE ONLY cliente_tipo_exemplar_tipo
 
 
 --
--- Name: cliente_tipo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: cliente_tipo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY cliente_tipo
@@ -27584,7 +27584,7 @@ ALTER TABLE ONLY cliente_tipo
 
 
 --
--- Name: cod_dispensa_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: cod_dispensa_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY dispensa_disciplina
@@ -27592,7 +27592,7 @@ ALTER TABLE ONLY dispensa_disciplina
 
 
 --
--- Name: coffebreak_tipo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: coffebreak_tipo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY coffebreak_tipo
@@ -27600,7 +27600,7 @@ ALTER TABLE ONLY coffebreak_tipo
 
 
 --
--- Name: curso_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: curso_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY curso
@@ -27608,7 +27608,7 @@ ALTER TABLE ONLY curso
 
 
 --
--- Name: disciplina_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: disciplina_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY disciplina
@@ -27616,7 +27616,7 @@ ALTER TABLE ONLY disciplina
 
 
 --
--- Name: disciplina_serie_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: disciplina_serie_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY disciplina_serie
@@ -27624,7 +27624,7 @@ ALTER TABLE ONLY disciplina_serie
 
 
 --
--- Name: disciplina_topico_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: disciplina_topico_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY disciplina_topico
@@ -27632,7 +27632,7 @@ ALTER TABLE ONLY disciplina_topico
 
 
 --
--- Name: escola_ano_letivo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: escola_ano_letivo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY escola_ano_letivo
@@ -27640,7 +27640,7 @@ ALTER TABLE ONLY escola_ano_letivo
 
 
 --
--- Name: escola_complemento_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: escola_complemento_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY escola_complemento
@@ -27648,7 +27648,7 @@ ALTER TABLE ONLY escola_complemento
 
 
 --
--- Name: escola_curso_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: escola_curso_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY escola_curso
@@ -27656,7 +27656,7 @@ ALTER TABLE ONLY escola_curso
 
 
 --
--- Name: escola_localizacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: escola_localizacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY escola_localizacao
@@ -27664,7 +27664,7 @@ ALTER TABLE ONLY escola_localizacao
 
 
 --
--- Name: escola_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: escola_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY escola
@@ -27672,7 +27672,7 @@ ALTER TABLE ONLY escola
 
 
 --
--- Name: escola_rede_ensino_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: escola_rede_ensino_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY escola_rede_ensino
@@ -27680,7 +27680,7 @@ ALTER TABLE ONLY escola_rede_ensino
 
 
 --
--- Name: escola_serie_disciplina_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: escola_serie_disciplina_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY escola_serie_disciplina
@@ -27688,7 +27688,7 @@ ALTER TABLE ONLY escola_serie_disciplina
 
 
 --
--- Name: escola_serie_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: escola_serie_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY escola_serie
@@ -27696,7 +27696,7 @@ ALTER TABLE ONLY escola_serie
 
 
 --
--- Name: exemplar_emprestimo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: exemplar_emprestimo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY exemplar_emprestimo
@@ -27704,7 +27704,7 @@ ALTER TABLE ONLY exemplar_emprestimo
 
 
 --
--- Name: exemplar_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: exemplar_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY exemplar
@@ -27712,7 +27712,7 @@ ALTER TABLE ONLY exemplar
 
 
 --
--- Name: exemplar_tipo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: exemplar_tipo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY exemplar_tipo
@@ -27720,7 +27720,7 @@ ALTER TABLE ONLY exemplar_tipo
 
 
 --
--- Name: falta_aluno_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: falta_aluno_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY falta_aluno
@@ -27728,7 +27728,7 @@ ALTER TABLE ONLY falta_aluno
 
 
 --
--- Name: falta_atraso_compensado_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: falta_atraso_compensado_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY falta_atraso_compensado
@@ -27736,7 +27736,7 @@ ALTER TABLE ONLY falta_atraso_compensado
 
 
 --
--- Name: falta_atraso_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: falta_atraso_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY falta_atraso
@@ -27744,7 +27744,7 @@ ALTER TABLE ONLY falta_atraso
 
 
 --
--- Name: faltas_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: faltas_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY faltas
@@ -27752,7 +27752,7 @@ ALTER TABLE ONLY faltas
 
 
 --
--- Name: fonte_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: fonte_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY fonte
@@ -27760,7 +27760,7 @@ ALTER TABLE ONLY fonte
 
 
 --
--- Name: funcao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: funcao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY funcao
@@ -27768,7 +27768,7 @@ ALTER TABLE ONLY funcao
 
 
 --
--- Name: habilitacao_curso_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: habilitacao_curso_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY habilitacao_curso
@@ -27776,7 +27776,7 @@ ALTER TABLE ONLY habilitacao_curso
 
 
 --
--- Name: habilitacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: habilitacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY habilitacao
@@ -27784,7 +27784,7 @@ ALTER TABLE ONLY habilitacao
 
 
 --
--- Name: historico_disciplinas_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: historico_disciplinas_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY historico_disciplinas
@@ -27792,7 +27792,7 @@ ALTER TABLE ONLY historico_disciplinas
 
 
 --
--- Name: historico_escolar_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: historico_escolar_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY historico_escolar
@@ -27800,7 +27800,7 @@ ALTER TABLE ONLY historico_escolar
 
 
 --
--- Name: infra_comodo_funcao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: infra_comodo_funcao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY infra_comodo_funcao
@@ -27808,7 +27808,7 @@ ALTER TABLE ONLY infra_comodo_funcao
 
 
 --
--- Name: infra_predio_comodo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: infra_predio_comodo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY infra_predio_comodo
@@ -27816,7 +27816,7 @@ ALTER TABLE ONLY infra_predio_comodo
 
 
 --
--- Name: infra_predio_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: infra_predio_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY infra_predio
@@ -27824,7 +27824,7 @@ ALTER TABLE ONLY infra_predio
 
 
 --
--- Name: instituicao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: instituicao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY instituicao
@@ -27832,7 +27832,7 @@ ALTER TABLE ONLY instituicao
 
 
 --
--- Name: material_didatico_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: material_didatico_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY material_didatico
@@ -27840,7 +27840,7 @@ ALTER TABLE ONLY material_didatico
 
 
 --
--- Name: material_tipo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: material_tipo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY material_tipo
@@ -27848,7 +27848,7 @@ ALTER TABLE ONLY material_tipo
 
 
 --
--- Name: matricula_excessao_pk; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: matricula_excessao_pk; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY matricula_excessao
@@ -27856,7 +27856,7 @@ ALTER TABLE ONLY matricula_excessao
 
 
 --
--- Name: matricula_ocorrencia_disciplinar_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: matricula_ocorrencia_disciplinar_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY matricula_ocorrencia_disciplinar
@@ -27864,7 +27864,7 @@ ALTER TABLE ONLY matricula_ocorrencia_disciplinar
 
 
 --
--- Name: matricula_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: matricula_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY matricula
@@ -27872,7 +27872,7 @@ ALTER TABLE ONLY matricula
 
 
 --
--- Name: matricula_turma_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: matricula_turma_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY matricula_turma
@@ -27880,7 +27880,7 @@ ALTER TABLE ONLY matricula_turma
 
 
 --
--- Name: menu_tipo_usuario_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: menu_tipo_usuario_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY menu_tipo_usuario
@@ -27888,7 +27888,7 @@ ALTER TABLE ONLY menu_tipo_usuario
 
 
 --
--- Name: modulo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: modulo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY modulo
@@ -27896,7 +27896,7 @@ ALTER TABLE ONLY modulo
 
 
 --
--- Name: motivo_afastamento_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: motivo_afastamento_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY motivo_afastamento
@@ -27904,7 +27904,7 @@ ALTER TABLE ONLY motivo_afastamento
 
 
 --
--- Name: motivo_baixa_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: motivo_baixa_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY motivo_baixa
@@ -27912,7 +27912,7 @@ ALTER TABLE ONLY motivo_baixa
 
 
 --
--- Name: motivo_suspensao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: motivo_suspensao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY motivo_suspensao
@@ -27920,7 +27920,7 @@ ALTER TABLE ONLY motivo_suspensao
 
 
 --
--- Name: nivel_ensino_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: nivel_ensino_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY nivel_ensino
@@ -27928,7 +27928,7 @@ ALTER TABLE ONLY nivel_ensino
 
 
 --
--- Name: nivel_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: nivel_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY nivel
@@ -27936,7 +27936,7 @@ ALTER TABLE ONLY nivel
 
 
 --
--- Name: nota_aluno_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: nota_aluno_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY nota_aluno
@@ -27944,7 +27944,7 @@ ALTER TABLE ONLY nota_aluno
 
 
 --
--- Name: operador_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: operador_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY operador
@@ -27952,7 +27952,7 @@ ALTER TABLE ONLY operador
 
 
 --
--- Name: pagamento_multa_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: pagamento_multa_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY pagamento_multa
@@ -27960,7 +27960,7 @@ ALTER TABLE ONLY pagamento_multa
 
 
 --
--- Name: pre_requisito_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: pre_requisito_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY pre_requisito
@@ -27968,7 +27968,7 @@ ALTER TABLE ONLY pre_requisito
 
 
 --
--- Name: quadro_horario_horarios_aux_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: quadro_horario_horarios_aux_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY quadro_horario_horarios_aux
@@ -27976,7 +27976,7 @@ ALTER TABLE ONLY quadro_horario_horarios_aux
 
 
 --
--- Name: quadro_horario_horarios_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: quadro_horario_horarios_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY quadro_horario_horarios
@@ -27984,7 +27984,7 @@ ALTER TABLE ONLY quadro_horario_horarios
 
 
 --
--- Name: quadro_horario_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: quadro_horario_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY quadro_horario
@@ -27992,7 +27992,7 @@ ALTER TABLE ONLY quadro_horario
 
 
 --
--- Name: religiao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: religiao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY religiao
@@ -28000,7 +28000,7 @@ ALTER TABLE ONLY religiao
 
 
 --
--- Name: reserva_vaga_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: reserva_vaga_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY reserva_vaga
@@ -28008,7 +28008,7 @@ ALTER TABLE ONLY reserva_vaga
 
 
 --
--- Name: reservas_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: reservas_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY reservas
@@ -28016,7 +28016,7 @@ ALTER TABLE ONLY reservas
 
 
 --
--- Name: sequencia_serie_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: sequencia_serie_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY sequencia_serie
@@ -28024,7 +28024,7 @@ ALTER TABLE ONLY sequencia_serie
 
 
 --
--- Name: serie_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: serie_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY serie
@@ -28032,7 +28032,7 @@ ALTER TABLE ONLY serie
 
 
 --
--- Name: serie_pre_requisito_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: serie_pre_requisito_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY serie_pre_requisito
@@ -28040,7 +28040,7 @@ ALTER TABLE ONLY serie_pre_requisito
 
 
 --
--- Name: servidor_afastamento_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: servidor_afastamento_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY servidor_afastamento
@@ -28048,7 +28048,7 @@ ALTER TABLE ONLY servidor_afastamento
 
 
 --
--- Name: servidor_alocacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: servidor_alocacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY servidor_alocacao
@@ -28056,7 +28056,7 @@ ALTER TABLE ONLY servidor_alocacao
 
 
 --
--- Name: servidor_curso_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: servidor_curso_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY servidor_curso
@@ -28064,7 +28064,7 @@ ALTER TABLE ONLY servidor_curso
 
 
 --
--- Name: servidor_cuso_ministra_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: servidor_cuso_ministra_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY servidor_curso_ministra
@@ -28072,7 +28072,7 @@ ALTER TABLE ONLY servidor_curso_ministra
 
 
 --
--- Name: servidor_disciplina_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: servidor_disciplina_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY servidor_disciplina
@@ -28080,7 +28080,7 @@ ALTER TABLE ONLY servidor_disciplina
 
 
 --
--- Name: servidor_formacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: servidor_formacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY servidor_formacao
@@ -28088,7 +28088,7 @@ ALTER TABLE ONLY servidor_formacao
 
 
 --
--- Name: servidor_funcao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: servidor_funcao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY servidor_funcao
@@ -28096,7 +28096,7 @@ ALTER TABLE ONLY servidor_funcao
 
 
 --
--- Name: servidor_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: servidor_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY servidor
@@ -28104,7 +28104,7 @@ ALTER TABLE ONLY servidor
 
 
 --
--- Name: servidor_titulo_concurso_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: servidor_titulo_concurso_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY servidor_titulo_concurso
@@ -28112,7 +28112,7 @@ ALTER TABLE ONLY servidor_titulo_concurso
 
 
 --
--- Name: situacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: situacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY situacao
@@ -28120,7 +28120,7 @@ ALTER TABLE ONLY situacao
 
 
 --
--- Name: subnivel_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: subnivel_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY subnivel
@@ -28128,7 +28128,7 @@ ALTER TABLE ONLY subnivel
 
 
 --
--- Name: tipo_avaliacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: tipo_avaliacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY tipo_avaliacao
@@ -28136,7 +28136,7 @@ ALTER TABLE ONLY tipo_avaliacao
 
 
 --
--- Name: tipo_avaliacao_valores_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: tipo_avaliacao_valores_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY tipo_avaliacao_valores
@@ -28144,7 +28144,7 @@ ALTER TABLE ONLY tipo_avaliacao_valores
 
 
 --
--- Name: tipo_dispensa_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: tipo_dispensa_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY tipo_dispensa
@@ -28152,7 +28152,7 @@ ALTER TABLE ONLY tipo_dispensa
 
 
 --
--- Name: tipo_ensino_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: tipo_ensino_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY tipo_ensino
@@ -28160,7 +28160,7 @@ ALTER TABLE ONLY tipo_ensino
 
 
 --
--- Name: tipo_ocorrencia_disciplinar_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: tipo_ocorrencia_disciplinar_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY tipo_ocorrencia_disciplinar
@@ -28168,7 +28168,7 @@ ALTER TABLE ONLY tipo_ocorrencia_disciplinar
 
 
 --
--- Name: tipo_regime_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: tipo_regime_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY tipo_regime
@@ -28176,7 +28176,7 @@ ALTER TABLE ONLY tipo_regime
 
 
 --
--- Name: tipo_usuario_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: tipo_usuario_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY tipo_usuario
@@ -28184,7 +28184,7 @@ ALTER TABLE ONLY tipo_usuario
 
 
 --
--- Name: transferencia_solicitacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: transferencia_solicitacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY transferencia_solicitacao
@@ -28192,7 +28192,7 @@ ALTER TABLE ONLY transferencia_solicitacao
 
 
 --
--- Name: transferencia_tipo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: transferencia_tipo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY transferencia_tipo
@@ -28200,7 +28200,7 @@ ALTER TABLE ONLY transferencia_tipo
 
 
 --
--- Name: turma_dia_semana_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: turma_dia_semana_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY turma_dia_semana
@@ -28208,7 +28208,7 @@ ALTER TABLE ONLY turma_dia_semana
 
 
 --
--- Name: turma_modulo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: turma_modulo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY turma_modulo
@@ -28216,7 +28216,7 @@ ALTER TABLE ONLY turma_modulo
 
 
 --
--- Name: turma_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: turma_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY turma
@@ -28224,7 +28224,7 @@ ALTER TABLE ONLY turma
 
 
 --
--- Name: turma_tipo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: turma_tipo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY turma_tipo
@@ -28232,7 +28232,7 @@ ALTER TABLE ONLY turma_tipo
 
 
 --
--- Name: usuario_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: usuario_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY usuario
@@ -28242,7 +28242,7 @@ ALTER TABLE ONLY usuario
 SET search_path = pmiotopic, pg_catalog;
 
 --
--- Name: funcionario_su_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -; Tablespace: 
+-- Name: funcionario_su_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY funcionario_su
@@ -28250,7 +28250,7 @@ ALTER TABLE ONLY funcionario_su
 
 
 --
--- Name: grupomoderador_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -; Tablespace: 
+-- Name: grupomoderador_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY grupomoderador
@@ -28258,7 +28258,7 @@ ALTER TABLE ONLY grupomoderador
 
 
 --
--- Name: grupopessoa_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -; Tablespace: 
+-- Name: grupopessoa_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY grupopessoa
@@ -28266,7 +28266,7 @@ ALTER TABLE ONLY grupopessoa
 
 
 --
--- Name: grupos_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -; Tablespace: 
+-- Name: grupos_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY grupos
@@ -28274,7 +28274,7 @@ ALTER TABLE ONLY grupos
 
 
 --
--- Name: notas_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -; Tablespace: 
+-- Name: notas_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY notas
@@ -28282,7 +28282,7 @@ ALTER TABLE ONLY notas
 
 
 --
--- Name: participante_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -; Tablespace: 
+-- Name: participante_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY participante
@@ -28290,7 +28290,7 @@ ALTER TABLE ONLY participante
 
 
 --
--- Name: reuniao_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -; Tablespace: 
+-- Name: reuniao_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY reuniao
@@ -28298,7 +28298,7 @@ ALTER TABLE ONLY reuniao
 
 
 --
--- Name: topico_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -; Tablespace: 
+-- Name: topico_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY topico
@@ -28306,7 +28306,7 @@ ALTER TABLE ONLY topico
 
 
 --
--- Name: topicoreuniao_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -; Tablespace: 
+-- Name: topicoreuniao_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY topicoreuniao
@@ -28316,7 +28316,7 @@ ALTER TABLE ONLY topicoreuniao
 SET search_path = portal, pg_catalog;
 
 --
--- Name: acesso_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: acesso_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY acesso
@@ -28324,7 +28324,7 @@ ALTER TABLE ONLY acesso
 
 
 --
--- Name: agenda_compromisso_pkey; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: agenda_compromisso_pkey; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY agenda_compromisso
@@ -28332,7 +28332,7 @@ ALTER TABLE ONLY agenda_compromisso
 
 
 --
--- Name: agenda_pkey; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: agenda_pkey; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY agenda
@@ -28340,7 +28340,7 @@ ALTER TABLE ONLY agenda
 
 
 --
--- Name: agenda_pref_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: agenda_pref_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY agenda_pref
@@ -28348,7 +28348,7 @@ ALTER TABLE ONLY agenda_pref
 
 
 --
--- Name: agenda_responsavel_pkey; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: agenda_responsavel_pkey; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY agenda_responsavel
@@ -28356,7 +28356,7 @@ ALTER TABLE ONLY agenda_responsavel
 
 
 --
--- Name: compras_editais_editais_empresas_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: compras_editais_editais_empresas_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY compras_editais_editais_empresas
@@ -28364,7 +28364,7 @@ ALTER TABLE ONLY compras_editais_editais_empresas
 
 
 --
--- Name: compras_editais_editais_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: compras_editais_editais_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY compras_editais_editais
@@ -28372,7 +28372,7 @@ ALTER TABLE ONLY compras_editais_editais
 
 
 --
--- Name: compras_editais_empresa_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: compras_editais_empresa_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY compras_editais_empresa
@@ -28380,7 +28380,7 @@ ALTER TABLE ONLY compras_editais_empresa
 
 
 --
--- Name: compras_final_pregao_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: compras_final_pregao_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY compras_final_pregao
@@ -28388,7 +28388,7 @@ ALTER TABLE ONLY compras_final_pregao
 
 
 --
--- Name: compras_funcionarios_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: compras_funcionarios_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY compras_funcionarios
@@ -28396,7 +28396,7 @@ ALTER TABLE ONLY compras_funcionarios
 
 
 --
--- Name: compras_licitacoes_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: compras_licitacoes_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY compras_licitacoes
@@ -28404,7 +28404,7 @@ ALTER TABLE ONLY compras_licitacoes
 
 
 --
--- Name: compras_modalidade_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: compras_modalidade_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY compras_modalidade
@@ -28412,7 +28412,7 @@ ALTER TABLE ONLY compras_modalidade
 
 
 --
--- Name: compras_pregao_execucao_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: compras_pregao_execucao_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY compras_pregao_execucao
@@ -28420,7 +28420,7 @@ ALTER TABLE ONLY compras_pregao_execucao
 
 
 --
--- Name: compras_prestacao_contas_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: compras_prestacao_contas_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY compras_prestacao_contas
@@ -28428,7 +28428,7 @@ ALTER TABLE ONLY compras_prestacao_contas
 
 
 --
--- Name: foto_portal_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: foto_portal_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY foto_portal
@@ -28436,7 +28436,7 @@ ALTER TABLE ONLY foto_portal
 
 
 --
--- Name: foto_secao_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: foto_secao_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY foto_secao
@@ -28444,7 +28444,7 @@ ALTER TABLE ONLY foto_secao
 
 
 --
--- Name: funcionario_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: funcionario_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY funcionario
@@ -28452,7 +28452,7 @@ ALTER TABLE ONLY funcionario
 
 
 --
--- Name: funcionario_vinculo_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: funcionario_vinculo_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY funcionario_vinculo
@@ -28460,7 +28460,7 @@ ALTER TABLE ONLY funcionario_vinculo
 
 
 --
--- Name: imagem_pkey; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: imagem_pkey; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY imagem
@@ -28468,7 +28468,7 @@ ALTER TABLE ONLY imagem
 
 
 --
--- Name: imagem_tipo_pkey; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: imagem_tipo_pkey; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY imagem_tipo
@@ -28476,7 +28476,7 @@ ALTER TABLE ONLY imagem_tipo
 
 
 --
--- Name: intranet_segur_permissao_negada_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: intranet_segur_permissao_negada_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY intranet_segur_permissao_negada
@@ -28484,7 +28484,7 @@ ALTER TABLE ONLY intranet_segur_permissao_negada
 
 
 --
--- Name: jor_arquivo_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: jor_arquivo_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY jor_arquivo
@@ -28492,7 +28492,7 @@ ALTER TABLE ONLY jor_arquivo
 
 
 --
--- Name: jor_edicao_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: jor_edicao_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY jor_edicao
@@ -28500,7 +28500,7 @@ ALTER TABLE ONLY jor_edicao
 
 
 --
--- Name: mailling_email_conteudo_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: mailling_email_conteudo_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY mailling_email_conteudo
@@ -28508,7 +28508,7 @@ ALTER TABLE ONLY mailling_email_conteudo
 
 
 --
--- Name: mailling_email_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: mailling_email_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY mailling_email
@@ -28516,7 +28516,7 @@ ALTER TABLE ONLY mailling_email
 
 
 --
--- Name: mailling_fila_envio_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: mailling_fila_envio_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY mailling_fila_envio
@@ -28524,7 +28524,7 @@ ALTER TABLE ONLY mailling_fila_envio
 
 
 --
--- Name: mailling_grupo_email_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: mailling_grupo_email_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY mailling_grupo_email
@@ -28532,7 +28532,7 @@ ALTER TABLE ONLY mailling_grupo_email
 
 
 --
--- Name: mailling_grupo_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: mailling_grupo_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY mailling_grupo
@@ -28540,7 +28540,7 @@ ALTER TABLE ONLY mailling_grupo
 
 
 --
--- Name: mailling_historico_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: mailling_historico_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY mailling_historico
@@ -28548,7 +28548,7 @@ ALTER TABLE ONLY mailling_historico
 
 
 --
--- Name: menu_funcionario_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: menu_funcionario_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY menu_funcionario
@@ -28556,7 +28556,7 @@ ALTER TABLE ONLY menu_funcionario
 
 
 --
--- Name: menu_menu_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: menu_menu_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY menu_menu
@@ -28564,7 +28564,7 @@ ALTER TABLE ONLY menu_menu
 
 
 --
--- Name: menu_submenu_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: menu_submenu_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY menu_submenu
@@ -28572,7 +28572,7 @@ ALTER TABLE ONLY menu_submenu
 
 
 --
--- Name: not_portal_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: not_portal_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY not_portal
@@ -28580,7 +28580,7 @@ ALTER TABLE ONLY not_portal
 
 
 --
--- Name: not_portal_tipo_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: not_portal_tipo_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY not_portal_tipo
@@ -28588,7 +28588,7 @@ ALTER TABLE ONLY not_portal_tipo
 
 
 --
--- Name: not_tipo_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: not_tipo_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY not_tipo
@@ -28596,7 +28596,7 @@ ALTER TABLE ONLY not_tipo
 
 
 --
--- Name: not_vinc_portal_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: not_vinc_portal_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY not_vinc_portal
@@ -28604,7 +28604,7 @@ ALTER TABLE ONLY not_vinc_portal
 
 
 --
--- Name: pessoa_atividade_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: pessoa_atividade_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY pessoa_atividade
@@ -28612,7 +28612,7 @@ ALTER TABLE ONLY pessoa_atividade
 
 
 --
--- Name: pessoa_fj_pessoa_atividade_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: pessoa_fj_pessoa_atividade_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY pessoa_fj_pessoa_atividade
@@ -28620,7 +28620,7 @@ ALTER TABLE ONLY pessoa_fj_pessoa_atividade
 
 
 --
--- Name: pessoa_fj_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: pessoa_fj_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY pessoa_fj
@@ -28628,7 +28628,7 @@ ALTER TABLE ONLY pessoa_fj
 
 
 --
--- Name: pessoa_ramo_atividade_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: pessoa_ramo_atividade_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY pessoa_ramo_atividade
@@ -28636,7 +28636,7 @@ ALTER TABLE ONLY pessoa_ramo_atividade
 
 
 --
--- Name: portal_banner_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: portal_banner_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY portal_banner
@@ -28644,7 +28644,7 @@ ALTER TABLE ONLY portal_banner
 
 
 --
--- Name: portal_concurso_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace: 
+-- Name: portal_concurso_pk; Type: CONSTRAINT; Schema: portal; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY portal_concurso
@@ -28654,7 +28654,7 @@ ALTER TABLE ONLY portal_concurso
 SET search_path = public, pg_catalog;
 
 --
--- Name: bairro_regiao_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: bairro_regiao_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY bairro_regiao
@@ -28662,7 +28662,7 @@ ALTER TABLE ONLY bairro_regiao
 
 
 --
--- Name: pk_bairro; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pk_bairro; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY bairro
@@ -28670,7 +28670,7 @@ ALTER TABLE ONLY bairro
 
 
 --
--- Name: pk_logradouro; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pk_logradouro; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY logradouro
@@ -28678,7 +28678,7 @@ ALTER TABLE ONLY logradouro
 
 
 --
--- Name: pk_logradouro_fonetico; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pk_logradouro_fonetico; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY logradouro_fonetico
@@ -28686,7 +28686,7 @@ ALTER TABLE ONLY logradouro_fonetico
 
 
 --
--- Name: pk_municipio; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pk_municipio; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY municipio
@@ -28694,7 +28694,7 @@ ALTER TABLE ONLY municipio
 
 
 --
--- Name: pk_pais; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pk_pais; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY pais
@@ -28702,7 +28702,7 @@ ALTER TABLE ONLY pais
 
 
 --
--- Name: pk_setor; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pk_setor; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY setor
@@ -28710,7 +28710,7 @@ ALTER TABLE ONLY setor
 
 
 --
--- Name: pk_uf; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pk_uf; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY uf
@@ -28718,7 +28718,7 @@ ALTER TABLE ONLY uf
 
 
 --
--- Name: pk_vila; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pk_vila; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY vila
@@ -28726,7 +28726,7 @@ ALTER TABLE ONLY vila
 
 
 --
--- Name: pkchangelog; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pkchangelog; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY changelog
@@ -28734,7 +28734,7 @@ ALTER TABLE ONLY changelog
 
 
 --
--- Name: regiao_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: regiao_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY regiao
@@ -28744,7 +28744,7 @@ ALTER TABLE ONLY regiao
 SET search_path = urbano, pg_catalog;
 
 --
--- Name: pk_cep_logradouro; Type: CONSTRAINT; Schema: urbano; Owner: -; Tablespace: 
+-- Name: pk_cep_logradouro; Type: CONSTRAINT; Schema: urbano; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY cep_logradouro
@@ -28752,7 +28752,7 @@ ALTER TABLE ONLY cep_logradouro
 
 
 --
--- Name: pk_cep_logradouro_bairro; Type: CONSTRAINT; Schema: urbano; Owner: -; Tablespace: 
+-- Name: pk_cep_logradouro_bairro; Type: CONSTRAINT; Schema: urbano; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY cep_logradouro_bairro
@@ -28760,7 +28760,7 @@ ALTER TABLE ONLY cep_logradouro_bairro
 
 
 --
--- Name: pk_tipo_logradouro; Type: CONSTRAINT; Schema: urbano; Owner: -; Tablespace: 
+-- Name: pk_tipo_logradouro; Type: CONSTRAINT; Schema: urbano; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY tipo_logradouro
@@ -28770,7 +28770,7 @@ ALTER TABLE ONLY tipo_logradouro
 SET search_path = acesso, pg_catalog;
 
 --
--- Name: un_usuario_idpes; Type: INDEX; Schema: acesso; Owner: -; Tablespace: 
+-- Name: un_usuario_idpes; Type: INDEX; Schema: acesso; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX un_usuario_idpes ON usuario USING btree (idpes);
@@ -28779,133 +28779,133 @@ CREATE UNIQUE INDEX un_usuario_idpes ON usuario USING btree (idpes);
 SET search_path = alimentos, pg_catalog;
 
 --
--- Name: un_baixa_guia_remessa; Type: INDEX; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: un_baixa_guia_remessa; Type: INDEX; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX un_baixa_guia_remessa ON baixa_guia_remessa USING btree (idgui, dt_recebimento);
 
 
 --
--- Name: un_cardapio_produto; Type: INDEX; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: un_cardapio_produto; Type: INDEX; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX un_cardapio_produto ON cardapio_produto USING btree (idcar, idpro);
 
 
 --
--- Name: un_cliente; Type: INDEX; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: un_cliente; Type: INDEX; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX un_cliente ON cliente USING btree (idcli, identificacao);
 
 
 --
--- Name: un_contrato; Type: INDEX; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: un_contrato; Type: INDEX; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX un_contrato ON contrato USING btree (idcli, codigo, num_aditivo);
 
 
 --
--- Name: un_contrato_produto; Type: INDEX; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: un_contrato_produto; Type: INDEX; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX un_contrato_produto ON contrato_produto USING btree (idcon, idpro);
 
 
 --
--- Name: un_evento; Type: INDEX; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: un_evento; Type: INDEX; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX un_evento ON evento USING btree (idcad, mes, dia);
 
 
 --
--- Name: un_faixa_cp_quimico; Type: INDEX; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: un_faixa_cp_quimico; Type: INDEX; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX un_faixa_cp_quimico ON faixa_composto_quimico USING btree (idcom, idfae);
 
 
 --
--- Name: un_fornecedor; Type: INDEX; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: un_fornecedor; Type: INDEX; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX un_fornecedor ON fornecedor USING btree (idcli, nome_fantasia);
 
 
 --
--- Name: un_fornecedor_unidade_atend; Type: INDEX; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: un_fornecedor_unidade_atend; Type: INDEX; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX un_fornecedor_unidade_atend ON fornecedor_unidade_atendida USING btree (iduni, idfor);
 
 
 --
--- Name: un_guia_remessa; Type: INDEX; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: un_guia_remessa; Type: INDEX; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX un_guia_remessa ON guia_remessa USING btree (idcli, ano, sequencial);
 
 
 --
--- Name: un_guia_remessa_produto; Type: INDEX; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: un_guia_remessa_produto; Type: INDEX; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX un_guia_remessa_produto ON guia_remessa_produto USING btree (idgui, idpro);
 
 
 --
--- Name: un_prod_cp_quimico; Type: INDEX; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: un_prod_cp_quimico; Type: INDEX; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX un_prod_cp_quimico ON produto_composto_quimico USING btree (idpro, idcom);
 
 
 --
--- Name: un_produto; Type: INDEX; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: un_produto; Type: INDEX; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX un_produto ON produto USING btree (idcli, nome_compra);
 
 
 --
--- Name: un_produto_fornecedor; Type: INDEX; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: un_produto_fornecedor; Type: INDEX; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX un_produto_fornecedor ON produto_fornecedor USING btree (idfor, idpro);
 
 
 --
--- Name: un_produto_medida_caseira; Type: INDEX; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: un_produto_medida_caseira; Type: INDEX; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX un_produto_medida_caseira ON produto_medida_caseira USING btree (idmedcas, idcli, idpro);
 
 
 --
--- Name: un_rec_cp_quimico; Type: INDEX; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: un_rec_cp_quimico; Type: INDEX; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX un_rec_cp_quimico ON receita_composto_quimico USING btree (idcom, idrec);
 
 
 --
--- Name: un_rec_prod; Type: INDEX; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: un_rec_prod; Type: INDEX; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX un_rec_prod ON receita_produto USING btree (idpro, idrec);
 
 
 --
--- Name: un_uni_faixa_etaria; Type: INDEX; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: un_uni_faixa_etaria; Type: INDEX; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX un_uni_faixa_etaria ON unidade_faixa_etaria USING btree (iduni, idfae);
 
 
 --
--- Name: un_unidade_atendida; Type: INDEX; Schema: alimentos; Owner: -; Tablespace: 
+-- Name: un_unidade_atendida; Type: INDEX; Schema: alimentos; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX un_unidade_atendida ON unidade_atendida USING btree (idcli, codigo);
@@ -28914,14 +28914,14 @@ CREATE UNIQUE INDEX un_unidade_atendida ON unidade_atendida USING btree (idcli, 
 SET search_path = cadastro, pg_catalog;
 
 --
--- Name: un_fisica_cpf; Type: INDEX; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: un_fisica_cpf; Type: INDEX; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX un_fisica_cpf ON fisica_cpf USING btree (cpf);
 
 
 --
--- Name: un_juridica_cnpj; Type: INDEX; Schema: cadastro; Owner: -; Tablespace: 
+-- Name: un_juridica_cnpj; Type: INDEX; Schema: cadastro; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX un_juridica_cnpj ON juridica USING btree (cnpj);
@@ -28930,35 +28930,35 @@ CREATE UNIQUE INDEX un_juridica_cnpj ON juridica USING btree (cnpj);
 SET search_path = modules, pg_catalog;
 
 --
--- Name: area_conhecimento_nome_key; Type: INDEX; Schema: modules; Owner: -; Tablespace: 
+-- Name: area_conhecimento_nome_key; Type: INDEX; Schema: modules; Owner: -; Tablespace:
 --
 
 CREATE INDEX area_conhecimento_nome_key ON area_conhecimento USING btree (nome);
 
 
 --
--- Name: componente_curricular_area_conhecimento_key; Type: INDEX; Schema: modules; Owner: -; Tablespace: 
+-- Name: componente_curricular_area_conhecimento_key; Type: INDEX; Schema: modules; Owner: -; Tablespace:
 --
 
 CREATE INDEX componente_curricular_area_conhecimento_key ON componente_curricular USING btree (area_conhecimento_id);
 
 
 --
--- Name: componente_curricular_id_key; Type: INDEX; Schema: modules; Owner: -; Tablespace: 
+-- Name: componente_curricular_id_key; Type: INDEX; Schema: modules; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX componente_curricular_id_key ON componente_curricular USING btree (id);
 
 
 --
--- Name: regra_avaliacao_id_key; Type: INDEX; Schema: modules; Owner: -; Tablespace: 
+-- Name: regra_avaliacao_id_key; Type: INDEX; Schema: modules; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX regra_avaliacao_id_key ON regra_avaliacao USING btree (id);
 
 
 --
--- Name: tabela_arredondamento_id_key; Type: INDEX; Schema: modules; Owner: -; Tablespace: 
+-- Name: tabela_arredondamento_id_key; Type: INDEX; Schema: modules; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX tabela_arredondamento_id_key ON tabela_arredondamento USING btree (id);
@@ -28967,784 +28967,784 @@ CREATE UNIQUE INDEX tabela_arredondamento_id_key ON tabela_arredondamento USING 
 SET search_path = pmieducar, pg_catalog;
 
 --
--- Name: fki_biblioteca_usuario_ref_cod_biblioteca_fk; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: fki_biblioteca_usuario_ref_cod_biblioteca_fk; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX fki_biblioteca_usuario_ref_cod_biblioteca_fk ON biblioteca_usuario USING btree (ref_cod_biblioteca);
 
 
 --
--- Name: fki_servidor_ref_cod_subnivel; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: fki_servidor_ref_cod_subnivel; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX fki_servidor_ref_cod_subnivel ON servidor USING btree (ref_cod_subnivel);
 
 
 --
--- Name: fki_servidor_ref_cod_subnivel_; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: fki_servidor_ref_cod_subnivel_; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX fki_servidor_ref_cod_subnivel_ ON servidor USING btree (ref_cod_subnivel);
 
 
 --
--- Name: i_aluno_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_aluno_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_aluno_ativo ON aluno USING btree (ativo);
 
 
 --
--- Name: i_aluno_beneficio_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_aluno_beneficio_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_aluno_beneficio_ativo ON aluno_beneficio USING btree (ativo);
 
 
 --
--- Name: i_aluno_beneficio_nm_beneficio; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_aluno_beneficio_nm_beneficio; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_aluno_beneficio_nm_beneficio ON aluno_beneficio USING btree (nm_beneficio);
 
 
 --
--- Name: i_aluno_beneficio_nm_beneficio_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_aluno_beneficio_nm_beneficio_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_aluno_beneficio_nm_beneficio_asc ON aluno_beneficio USING btree (to_ascii((nm_beneficio)::text));
 
 
 --
--- Name: i_aluno_beneficio_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_aluno_beneficio_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_aluno_beneficio_ref_usuario_cad ON aluno_beneficio USING btree (ref_usuario_cad);
 
 
 --
--- Name: i_aluno_ref_cod_aluno_beneficio; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_aluno_ref_cod_aluno_beneficio; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_aluno_ref_cod_aluno_beneficio ON aluno USING btree (ref_cod_aluno_beneficio);
 
 
 --
--- Name: i_aluno_ref_cod_religiao; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_aluno_ref_cod_religiao; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_aluno_ref_cod_religiao ON aluno USING btree (ref_cod_religiao);
 
 
 --
--- Name: i_aluno_ref_idpes; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_aluno_ref_idpes; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_aluno_ref_idpes ON aluno USING btree (ref_idpes);
 
 
 --
--- Name: i_aluno_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_aluno_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_aluno_ref_usuario_cad ON aluno USING btree (ref_usuario_cad);
 
 
 --
--- Name: i_calendario_ano_letivo_ano; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_calendario_ano_letivo_ano; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_calendario_ano_letivo_ano ON calendario_ano_letivo USING btree (ano);
 
 
 --
--- Name: i_calendario_ano_letivo_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_calendario_ano_letivo_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_calendario_ano_letivo_ativo ON calendario_ano_letivo USING btree (ativo);
 
 
 --
--- Name: i_calendario_ano_letivo_ref_cod_escola; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_calendario_ano_letivo_ref_cod_escola; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_calendario_ano_letivo_ref_cod_escola ON calendario_ano_letivo USING btree (ref_cod_escola);
 
 
 --
--- Name: i_calendario_ano_letivo_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_calendario_ano_letivo_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_calendario_ano_letivo_ref_usuario_cad ON calendario_ano_letivo USING btree (ref_usuario_cad);
 
 
 --
--- Name: i_calendario_dia_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_calendario_dia_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_calendario_dia_ativo ON calendario_dia USING btree (ativo);
 
 
 --
--- Name: i_calendario_dia_dia; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_calendario_dia_dia; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_calendario_dia_dia ON calendario_dia USING btree (dia);
 
 
 --
--- Name: i_calendario_dia_mes; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_calendario_dia_mes; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_calendario_dia_mes ON calendario_dia USING btree (mes);
 
 
 --
--- Name: i_calendario_dia_motivo_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_calendario_dia_motivo_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_calendario_dia_motivo_ativo ON calendario_dia_motivo USING btree (ativo);
 
 
 --
--- Name: i_calendario_dia_motivo_ref_cod_escola; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_calendario_dia_motivo_ref_cod_escola; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_calendario_dia_motivo_ref_cod_escola ON calendario_dia_motivo USING btree (ref_cod_escola);
 
 
 --
--- Name: i_calendario_dia_motivo_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_calendario_dia_motivo_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_calendario_dia_motivo_ref_usuario_cad ON calendario_dia_motivo USING btree (ref_usuario_cad);
 
 
 --
--- Name: i_calendario_dia_motivo_sigla; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_calendario_dia_motivo_sigla; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_calendario_dia_motivo_sigla ON calendario_dia_motivo USING btree (sigla);
 
 
 --
--- Name: i_calendario_dia_motivo_sigla_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_calendario_dia_motivo_sigla_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_calendario_dia_motivo_sigla_asc ON calendario_dia_motivo USING btree (to_ascii((sigla)::text));
 
 
 --
--- Name: i_calendario_dia_motivo_tipo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_calendario_dia_motivo_tipo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_calendario_dia_motivo_tipo ON calendario_dia_motivo USING btree (tipo);
 
 
 --
--- Name: i_calendario_dia_ref_cod_calendario_dia_motivo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_calendario_dia_ref_cod_calendario_dia_motivo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_calendario_dia_ref_cod_calendario_dia_motivo ON calendario_dia USING btree (ref_cod_calendario_dia_motivo);
 
 
 --
--- Name: i_calendario_dia_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_calendario_dia_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_calendario_dia_ref_usuario_cad ON calendario_dia USING btree (ref_usuario_cad);
 
 
 --
--- Name: i_coffebreak_tipo_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_coffebreak_tipo_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_coffebreak_tipo_ativo ON coffebreak_tipo USING btree (ativo);
 
 
 --
--- Name: i_coffebreak_tipo_custo_unitario; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_coffebreak_tipo_custo_unitario; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_coffebreak_tipo_custo_unitario ON coffebreak_tipo USING btree (custo_unitario);
 
 
 --
--- Name: i_coffebreak_tipo_nm_tipo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_coffebreak_tipo_nm_tipo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_coffebreak_tipo_nm_tipo ON coffebreak_tipo USING btree (nm_tipo);
 
 
 --
--- Name: i_coffebreak_tipo_nm_tipo_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_coffebreak_tipo_nm_tipo_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_coffebreak_tipo_nm_tipo_asc ON coffebreak_tipo USING btree (to_ascii((nm_tipo)::text));
 
 
 --
--- Name: i_coffebreak_tipo_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_coffebreak_tipo_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_coffebreak_tipo_ref_usuario_cad ON coffebreak_tipo USING btree (ref_usuario_cad);
 
 
 --
--- Name: i_curso_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_curso_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_curso_ativo ON curso USING btree (ativo);
 
 
 --
--- Name: i_curso_ato_poder_publico; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_curso_ato_poder_publico; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_curso_ato_poder_publico ON curso USING btree (ato_poder_publico);
 
 
 --
--- Name: i_curso_carga_horaria; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_curso_carga_horaria; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_curso_carga_horaria ON curso USING btree (carga_horaria);
 
 
 --
--- Name: i_curso_nm_curso; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_curso_nm_curso; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_curso_nm_curso ON curso USING btree (nm_curso);
 
 
 --
--- Name: i_curso_nm_curso_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_curso_nm_curso_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_curso_nm_curso_asc ON curso USING btree (to_ascii((nm_curso)::text));
 
 
 --
--- Name: i_curso_objetivo_curso; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_curso_objetivo_curso; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_curso_objetivo_curso ON curso USING btree (objetivo_curso);
 
 
 --
--- Name: i_curso_objetivo_curso_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_curso_objetivo_curso_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_curso_objetivo_curso_asc ON curso USING btree (to_ascii(objetivo_curso));
 
 
 --
--- Name: i_curso_qtd_etapas; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_curso_qtd_etapas; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_curso_qtd_etapas ON curso USING btree (qtd_etapas);
 
 
 --
--- Name: i_curso_ref_cod_nivel_ensino; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_curso_ref_cod_nivel_ensino; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_curso_ref_cod_nivel_ensino ON curso USING btree (ref_cod_nivel_ensino);
 
 
 --
--- Name: i_curso_ref_cod_tipo_ensino; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_curso_ref_cod_tipo_ensino; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_curso_ref_cod_tipo_ensino ON curso USING btree (ref_cod_tipo_ensino);
 
 
 --
--- Name: i_curso_ref_cod_tipo_regime; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_curso_ref_cod_tipo_regime; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_curso_ref_cod_tipo_regime ON curso USING btree (ref_cod_tipo_regime);
 
 
 --
--- Name: i_curso_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_curso_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_curso_ref_usuario_cad ON curso USING btree (ref_usuario_cad);
 
 
 --
--- Name: i_curso_sgl_curso; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_curso_sgl_curso; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_curso_sgl_curso ON curso USING btree (sgl_curso);
 
 
 --
--- Name: i_curso_sgl_curso_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_curso_sgl_curso_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_curso_sgl_curso_asc ON curso USING btree (to_ascii((sgl_curso)::text));
 
 
 --
--- Name: i_disciplina_abreviatura; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_disciplina_abreviatura; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_disciplina_abreviatura ON disciplina USING btree (abreviatura);
 
 
 --
--- Name: i_disciplina_abreviatura_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_disciplina_abreviatura_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_disciplina_abreviatura_asc ON disciplina USING btree (to_ascii((abreviatura)::text));
 
 
 --
--- Name: i_disciplina_apura_falta; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_disciplina_apura_falta; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_disciplina_apura_falta ON disciplina USING btree (apura_falta);
 
 
 --
--- Name: i_disciplina_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_disciplina_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_disciplina_ativo ON disciplina USING btree (ativo);
 
 
 --
--- Name: i_disciplina_carga_horaria; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_disciplina_carga_horaria; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_disciplina_carga_horaria ON disciplina USING btree (carga_horaria);
 
 
 --
--- Name: i_disciplina_nm_disciplina; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_disciplina_nm_disciplina; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_disciplina_nm_disciplina ON disciplina USING btree (nm_disciplina);
 
 
 --
--- Name: i_disciplina_nm_disciplina_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_disciplina_nm_disciplina_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_disciplina_nm_disciplina_asc ON disciplina USING btree (to_ascii((nm_disciplina)::text));
 
 
 --
--- Name: i_disciplina_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_disciplina_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_disciplina_ref_usuario_cad ON disciplina USING btree (ref_usuario_cad);
 
 
 --
--- Name: i_disciplina_topico_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_disciplina_topico_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_disciplina_topico_ativo ON disciplina_topico USING btree (ativo);
 
 
 --
--- Name: i_disciplina_topico_nm_topico; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_disciplina_topico_nm_topico; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_disciplina_topico_nm_topico ON disciplina_topico USING btree (nm_topico);
 
 
 --
--- Name: i_disciplina_topico_nm_topico_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_disciplina_topico_nm_topico_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_disciplina_topico_nm_topico_asc ON disciplina_topico USING btree (to_ascii((nm_topico)::text));
 
 
 --
--- Name: i_disciplina_topico_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_disciplina_topico_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_disciplina_topico_ref_usuario_cad ON disciplina_topico USING btree (ref_usuario_cad);
 
 
 --
--- Name: i_dispensa_disciplina_ref_cod_matricula; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_dispensa_disciplina_ref_cod_matricula; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_dispensa_disciplina_ref_cod_matricula ON dispensa_disciplina USING btree (ref_cod_matricula);
 
 
 --
--- Name: i_escola_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_ativo ON escola USING btree (ativo);
 
 
 --
--- Name: i_escola_complemento_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_complemento_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_complemento_ativo ON escola_complemento USING btree (ativo);
 
 
 --
--- Name: i_escola_complemento_bairro; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_complemento_bairro; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_complemento_bairro ON escola_complemento USING btree (bairro);
 
 
 --
--- Name: i_escola_complemento_bairro_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_complemento_bairro_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_complemento_bairro_asc ON escola_complemento USING btree (to_ascii((bairro)::text));
 
 
 --
--- Name: i_escola_complemento_cep; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_complemento_cep; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_complemento_cep ON escola_complemento USING btree (cep);
 
 
 --
--- Name: i_escola_complemento_cep_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_complemento_cep_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_complemento_cep_asc ON escola_complemento USING btree (to_ascii((cep)::text));
 
 
 --
--- Name: i_escola_complemento_complemento; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_complemento_complemento; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_complemento_complemento ON escola_complemento USING btree (complemento);
 
 
 --
--- Name: i_escola_complemento_complemento_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_complemento_complemento_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_complemento_complemento_asc ON escola_complemento USING btree (to_ascii((complemento)::text));
 
 
 --
--- Name: i_escola_complemento_email; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_complemento_email; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_complemento_email ON escola_complemento USING btree (email);
 
 
 --
--- Name: i_escola_complemento_email_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_complemento_email_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_complemento_email_asc ON escola_complemento USING btree (to_ascii((email)::text));
 
 
 --
--- Name: i_escola_complemento_logradouro; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_complemento_logradouro; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_complemento_logradouro ON escola_complemento USING btree (logradouro);
 
 
 --
--- Name: i_escola_complemento_logradouro_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_complemento_logradouro_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_complemento_logradouro_asc ON escola_complemento USING btree (to_ascii((bairro)::text));
 
 
 --
--- Name: i_escola_complemento_municipio; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_complemento_municipio; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_complemento_municipio ON escola_complemento USING btree (municipio);
 
 
 --
--- Name: i_escola_complemento_municipio_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_complemento_municipio_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_complemento_municipio_asc ON escola_complemento USING btree (to_ascii((municipio)::text));
 
 
 --
--- Name: i_escola_complemento_nm_escola; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_complemento_nm_escola; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_complemento_nm_escola ON escola_complemento USING btree (nm_escola);
 
 
 --
--- Name: i_escola_complemento_nm_escola_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_complemento_nm_escola_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_complemento_nm_escola_asc ON escola_complemento USING btree (to_ascii((nm_escola)::text));
 
 
 --
--- Name: i_escola_complemento_numero; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_complemento_numero; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_complemento_numero ON escola_complemento USING btree (numero);
 
 
 --
--- Name: i_escola_complemento_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_complemento_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_complemento_ref_usuario_cad ON escola_complemento USING btree (ref_usuario_cad);
 
 
 --
--- Name: i_escola_curso_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_curso_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_curso_ativo ON escola_curso USING btree (ativo);
 
 
 --
--- Name: i_escola_curso_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_curso_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_curso_ref_usuario_cad ON escola_curso USING btree (ref_usuario_cad);
 
 
 --
--- Name: i_escola_localizacao_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_localizacao_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_localizacao_ativo ON escola_localizacao USING btree (ativo);
 
 
 --
--- Name: i_escola_localizacao_nm_localizacao; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_localizacao_nm_localizacao; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_localizacao_nm_localizacao ON escola_localizacao USING btree (nm_localizacao);
 
 
 --
--- Name: i_escola_localizacao_nm_localizacao_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_localizacao_nm_localizacao_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_localizacao_nm_localizacao_asc ON escola_localizacao USING btree (to_ascii((nm_localizacao)::text));
 
 
 --
--- Name: i_escola_localizacao_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_localizacao_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_localizacao_ref_usuario_cad ON escola_localizacao USING btree (ref_usuario_cad);
 
 
 --
--- Name: i_escola_rede_ensino_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_rede_ensino_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_rede_ensino_ativo ON escola_rede_ensino USING btree (ativo);
 
 
 --
--- Name: i_escola_rede_ensino_nm_rede; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_rede_ensino_nm_rede; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_rede_ensino_nm_rede ON escola_rede_ensino USING btree (nm_rede);
 
 
 --
--- Name: i_escola_rede_ensino_nm_rede_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_rede_ensino_nm_rede_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_rede_ensino_nm_rede_asc ON escola_rede_ensino USING btree (to_ascii((nm_rede)::text));
 
 
 --
--- Name: i_escola_rede_ensino_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_rede_ensino_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_rede_ensino_ref_usuario_cad ON escola_rede_ensino USING btree (ref_usuario_cad);
 
 
 --
--- Name: i_escola_ref_cod_escola_localizacao; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_ref_cod_escola_localizacao; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_ref_cod_escola_localizacao ON escola USING btree (ref_cod_escola_localizacao);
 
 
 --
--- Name: i_escola_ref_cod_escola_rede_ensino; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_ref_cod_escola_rede_ensino; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_ref_cod_escola_rede_ensino ON escola USING btree (ref_cod_escola_rede_ensino);
 
 
 --
--- Name: i_escola_ref_cod_instituicao; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_ref_cod_instituicao; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_ref_cod_instituicao ON escola USING btree (ref_cod_instituicao);
 
 
 --
--- Name: i_escola_ref_idpes; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_ref_idpes; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_ref_idpes ON escola USING btree (ref_idpes);
 
 
 --
--- Name: i_escola_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_ref_usuario_cad ON escola USING btree (ref_usuario_cad);
 
 
 --
--- Name: i_escola_serie_ensino_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_serie_ensino_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_serie_ensino_ativo ON escola_serie USING btree (ativo);
 
 
 --
--- Name: i_escola_serie_hora_final; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_serie_hora_final; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_serie_hora_final ON escola_serie USING btree (hora_final);
 
 
 --
--- Name: i_escola_serie_hora_inicial; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_serie_hora_inicial; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_serie_hora_inicial ON escola_serie USING btree (hora_inicial);
 
 
 --
--- Name: i_escola_serie_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_serie_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_serie_ref_usuario_cad ON escola_serie USING btree (ref_usuario_cad);
 
 
 --
--- Name: i_escola_sigla; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_sigla; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_sigla ON escola USING btree (sigla);
 
 
 --
--- Name: i_escola_sigla_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_escola_sigla_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_escola_sigla_asc ON escola USING btree (to_ascii((sigla)::text));
 
 
 --
--- Name: i_funcao_abreviatura; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_funcao_abreviatura; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_funcao_abreviatura ON funcao USING btree (abreviatura);
 
 
 --
--- Name: i_funcao_abreviatura_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_funcao_abreviatura_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_funcao_abreviatura_asc ON funcao USING btree (to_ascii((abreviatura)::text));
 
 
 --
--- Name: i_funcao_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_funcao_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_funcao_ativo ON funcao USING btree (ativo);
 
 
 --
--- Name: i_funcao_nm_funcao; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_funcao_nm_funcao; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_funcao_nm_funcao ON funcao USING btree (nm_funcao);
 
 
 --
--- Name: i_funcao_nm_funcao_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_funcao_nm_funcao_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_funcao_nm_funcao_asc ON funcao USING btree (to_ascii((nm_funcao)::text));
 
 
 --
--- Name: i_funcao_professor; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_funcao_professor; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_funcao_professor ON funcao USING btree (professor);
 
 
 --
--- Name: i_funcao_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_funcao_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_funcao_ref_usuario_cad ON funcao USING btree (ref_usuario_cad);
 
 
 --
--- Name: i_habilitacao_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_habilitacao_ativo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_habilitacao_ativo ON habilitacao USING btree (ativo);
 
 
 --
--- Name: i_habilitacao_nm_tipo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_habilitacao_nm_tipo; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_habilitacao_nm_tipo ON habilitacao USING btree (nm_tipo);
 
 
 --
--- Name: i_habilitacao_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_habilitacao_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_habilitacao_ref_usuario_cad ON habilitacao USING btree (ref_usuario_cad);
 
 
 --
--- Name: i_habilitacaoo_nm_tipo_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_habilitacaoo_nm_tipo_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_habilitacaoo_nm_tipo_asc ON habilitacao USING btree (to_ascii((nm_tipo)::text));
 
 
 --
--- Name: i_matricula_turma_ref_cod_turma; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_matricula_turma_ref_cod_turma; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_matricula_turma_ref_cod_turma ON matricula_turma USING btree (ref_cod_turma);
 
 
 --
--- Name: i_nota_aluno_ref_cod_matricula; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_nota_aluno_ref_cod_matricula; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_nota_aluno_ref_cod_matricula ON nota_aluno USING btree (ref_cod_matricula);
 
 
 --
--- Name: i_turma_nm_turma; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
+-- Name: i_turma_nm_turma; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX i_turma_nm_turma ON turma USING btree (nm_turma);
@@ -29753,28 +29753,28 @@ CREATE INDEX i_turma_nm_turma ON turma USING btree (nm_turma);
 SET search_path = portal, pg_catalog;
 
 --
--- Name: mailling_fila_envio_data_envio_idx; Type: INDEX; Schema: portal; Owner: -; Tablespace: 
+-- Name: mailling_fila_envio_data_envio_idx; Type: INDEX; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE INDEX mailling_fila_envio_data_envio_idx ON mailling_fila_envio USING btree (data_envio);
 
 
 --
--- Name: mailling_fila_envio_ref_cod_mailling_email; Type: INDEX; Schema: portal; Owner: -; Tablespace: 
+-- Name: mailling_fila_envio_ref_cod_mailling_email; Type: INDEX; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE INDEX mailling_fila_envio_ref_cod_mailling_email ON mailling_fila_envio USING btree (ref_cod_mailling_email);
 
 
 --
--- Name: mailling_fila_envio_ref_cod_mailling_email_conteudo; Type: INDEX; Schema: portal; Owner: -; Tablespace: 
+-- Name: mailling_fila_envio_ref_cod_mailling_email_conteudo; Type: INDEX; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE INDEX mailling_fila_envio_ref_cod_mailling_email_conteudo ON mailling_fila_envio USING btree (ref_cod_mailling_email_conteudo);
 
 
 --
--- Name: mailling_fila_envio_ref_cod_mailling_fila_envio; Type: INDEX; Schema: portal; Owner: -; Tablespace: 
+-- Name: mailling_fila_envio_ref_cod_mailling_fila_envio; Type: INDEX; Schema: portal; Owner: -; Tablespace:
 --
 
 CREATE INDEX mailling_fila_envio_ref_cod_mailling_fila_envio ON mailling_fila_envio USING btree (cod_mailling_fila_envio);
