@@ -378,11 +378,13 @@ abstract class clsBancoSQL_
   /**
    * Executa uma consulta SQL.
    *
-   * @param string $consulta
+   * @param  string  $consulta    Consulta SQL.
+   * @param  bool    $reescrever  (Opcional) SQL é reescrita para transformar
+   *   sintaxe MySQL em PostgreSQL.
    * @return bool|resource FALSE em caso de erro ou o identificador da consulta
    *   em caso de sucesso.
    */
-  public function Consulta($consulta)
+  public function Consulta($consulta, $reescrever = true)
   {
     $cronometro = new clsCronometro();
     $cronometro->marca('inicio');
@@ -403,20 +405,21 @@ abstract class clsBancoSQL_
     }
 
     // Alterações de padrão MySQL para PostgreSQL
+    if ($reescrever) {
+      // Altera o Limit
+      $this->strStringSQL = eregi_replace( "LIMIT[ ]{0,3}([0-9]+)[ ]{0,3},[ ]{0,3}([0-9]+)", "LIMIT \\2 OFFSET \\1", $this->strStringSQL );
 
-    // Altera o Limit
-    $this->strStringSQL = eregi_replace( "LIMIT[ ]{0,3}([0-9]+)[ ]{0,3},[ ]{0,3}([0-9]+)", "LIMIT \\2 OFFSET \\1", $this->strStringSQL );
+      // Altera selects com YEAR( campo ) ou MONTH ou DAY
+      $this->strStringSQL = eregi_replace( "(YEAR|MONTH|DAY)[(][ ]{0,3}(([a-z]|_|[0-9])+)[ ]{0,3}[)]", "EXTRACT( \\1 FROM \\2 )", $this->strStringSQL );
 
-    // Altera selects com YEAR( campo ) ou MONTH ou DAY
-    $this->strStringSQL = eregi_replace( "(YEAR|MONTH|DAY)[(][ ]{0,3}(([a-z]|_|[0-9])+)[ ]{0,3}[)]", "EXTRACT( \\1 FROM \\2 )", $this->strStringSQL );
+      // Remove os ORDER BY das querys COUNT()
+      // Altera os LIKE para ILIKE (ignore case)
+      $this->strStringSQL = eregi_replace(" LIKE ", " ILIKE ", $this->strStringSQL);
 
-    // Remove os ORDER BY das querys COUNT()
-    // Altera os LIKE para ILIKE (ignore case)
-    $this->strStringSQL = eregi_replace(" LIKE ", " ILIKE ", $this->strStringSQL);
+      $this->strStringSQL = eregi_replace("([a-z_0-9.]+) +ILIKE +'([^']+)'", "to_ascii(\\1) ILIKE to_ascii('\\2')", $this->strStringSQL);
 
-    $this->strStringSQL = eregi_replace("([a-z_0-9.]+) +ILIKE +'([^']+)'", "to_ascii(\\1) ILIKE to_ascii('\\2')", $this->strStringSQL);
-
-    $this->strStringSQL = eregi_replace("fcn_upper_nrm", "to_ascii", $this->strStringSQL);
+      $this->strStringSQL = eregi_replace("fcn_upper_nrm", "to_ascii", $this->strStringSQL);
+    }
 
     $temp = explode("'", $this->strStringSQL);
 
