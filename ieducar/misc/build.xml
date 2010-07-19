@@ -27,7 +27,8 @@
   <property name="project.conf.version"   value="1.1.0" />
   <property name="project.conf.curdir"    value="" />
   <property name="project.conf.buildin"   value="/tmp" />
-  <property name="project.conf.builddir"  value="${project.conf.buildin}/release-${project.conf.version}" />
+  <property name="project.conf.buildbase" value="${project.conf.buildin}/release-${project.conf.version}" />
+  <property name="project.conf.builddir"  value="${project.conf.buildin}/release-${project.conf.version}/ieducar" />
   <property name="project.conf.buildgzip" value="${project.conf.buildin}/ieducar-${project.conf.version}.tar.gz" />
   <property name="project.conf.buildzip"  value="${project.conf.buildin}/ieducar-${project.conf.version}.zip" />
 
@@ -166,21 +167,13 @@
   <!-- Empacota o build com Gzip -->
   <target name="gzip" depends="build">
     <echo msg="Gzipping ${project.conf.builddir}" />
-    <tar destfile="${project.conf.buildgzip}" compression="gzip">
-      <fileset dir="${project.conf.builddir}">
-        <include name="**" />
-      </fileset>
-    </tar>
+    <tar basedir="${project.conf.buildbase}" destfile="${project.conf.buildgzip}" compression="gzip" />
   </target>
 
   <!-- Empacota o build com Zip -->
   <target name="zip" depends="build">
     <echo msg="Zipping ${project.conf.builddir}" />
-    <zip destfile="${project.conf.buildzip}">
-      <fileset dir="${project.conf.builddir}">
-        <include name="**" />
-      </fileset>
-    </zip>
+    <zip basedir="${project.conf.buildbase}" destfile="${project.conf.buildzip}" />
   </target>
 
   <!-- Cria uma nova release -->
