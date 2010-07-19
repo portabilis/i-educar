@@ -102,10 +102,11 @@ class CustomPdo extends clsBanco
    * pelo DbUnit.
    *
    * @param  string $sql
+   * @param  bool   $reescrever
    * @return CustomPdo Provê interface fluída
    * @see    intranet/include/clsBancoSQL_#Consulta($consulta)
    */
-  public function Consulta($sql)
+  public function Consulta($sql, $reescrever = TRUE)
   {
     $this->_rs = $this->_pdo->query($sql);
     return $this;
