@@ -20114,6 +20114,7 @@ INSERT INTO changelog VALUES (18, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '18_cria
 INSERT INTO changelog VALUES (19, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '19_atualiza_nome_de_relatorio_no_menu_e_permissoes.sql');
 INSERT INTO changelog VALUES (20, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '20_remove_permissao_e_menu_diario_avaliacao_temp.sql');
 INSERT INTO changelog VALUES (21, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '21_cria_tabelas_modulo_calendario.sql');
+INSERT INTO changelog VALUES (22, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '22_cria_primary_key_em_modules_calendario_turma.sql');
 
 
 --
@@ -26989,6 +26990,14 @@ SET search_path = modules, pg_catalog;
 
 ALTER TABLE ONLY area_conhecimento
     ADD CONSTRAINT area_conhecimento_pkey PRIMARY KEY (id, instituicao_id);
+
+
+--
+-- Name: calendario_turma_pk; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY calendario_turma
+    ADD CONSTRAINT calendario_turma_pk PRIMARY KEY (calendario_ano_letivo_id, ano, mes, dia, turma_id);
 
 
 --
