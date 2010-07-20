@@ -64,6 +64,10 @@ class CoreExt_Validate_Numeric extends CoreExt_Validate_Abstract
    */
   protected function _validate($value)
   {
+    if (FALSE === $this->getOption('required') && is_null($value)) {
+      return TRUE;
+    }
+
     if (!is_numeric($value)) {
       throw new Exception($this->_getErrorMessage('invalid', array('@value' => $value)));
     }

@@ -85,6 +85,12 @@ class CoreExt_Validate_NumericTest extends UnitBaseTest
     $this->_validator->isValid('zero');
   }
 
+  public function testValorNullNaoLancaExcecaoSeRequiredForFalse()
+  {
+    $this->_validator->setOptions(array('required' => FALSE));
+    $this->_validator->isValid(NULL);
+  }
+
   public function testValorNumericoSemConfigurarOValidador()
   {
     $this->assertTrue($this->_validator->isValid(0));
