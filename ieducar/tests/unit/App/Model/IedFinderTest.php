@@ -194,6 +194,56 @@ class App_Model_IedFinderTest extends UnitBaseTest
     );
   }
 
+  public function testGetEscolaSerieDisciplina()
+  {
+    $returnAnoEscolar = array(
+      1 => new ComponenteCurricular_Model_Componente(
+        array('id' => 1, 'nome' => 'Matemática', 'cargaHoraria' => 100)
+      ),
+      2 => new ComponenteCurricular_Model_Componente(
+        array('id' => 2, 'nome' => 'Português', 'cargaHoraria' => 100)
+      ),
+      3 => new ComponenteCurricular_Model_Componente(
+        array('id' => 3, 'nome' => 'Ciências', 'cargaHoraria' => 60)
+      ),
+      4 => new ComponenteCurricular_Model_Componente(
+        array('id' => 4, 'nome' => 'Física', 'cargaHoraria' => 60)
+      )
+    );
+
+    $expected = $returnAnoEscolar;
+
+    $anoEscolarMock = $this->getCleanMock('ComponenteCurricular_Model_ComponenteDataMapper');
+    $anoEscolarMock->expects($this->exactly(4))
+                   ->method('findComponenteCurricularAnoEscolar')
+                   ->will($this->onConsecutiveCalls(
+                     $returnAnoEscolar[1], $returnAnoEscolar[2], $returnAnoEscolar[3], $returnAnoEscolar[4]
+                   ));
+
+    // Retorna para clsPmieducarEscolaSerieDisciplina
+    $returnEscolaSerieDisciplina = array(
+      array('ref_cod_serie' => 1, 'ref_cod_disciplina' => 1, 'carga_horaria' => 80),
+      array('ref_cod_serie' => 1, 'ref_cod_disciplina' => 2, 'carga_horaria' => NULL),
+      array('ref_cod_serie' => 1, 'ref_cod_disciplina' => 3, 'carga_horaria' => NULL),
+      array('ref_cod_serie' => 1, 'ref_cod_disciplina' => 4, 'carga_horaria' => NULL),
+    );
+
+    // Mock para clsPmieducarEscolaSerieDisciplina
+    $escolaMock = $this->getCleanMock('clsPmieducarEscolaSerieDisciplina');
+    $escolaMock->expects($this->any())
+               ->method('lista')
+               ->with(1, 1, NULL, 1)
+               ->will($this->returnValue($returnEscolaSerieDisciplina));
+
+    App_Model_IedFinder::addClassToStorage('clsPmieducarEscolaSerieDisciplina', $escolaMock, NULL, TRUE);
+
+    $componentes = App_Model_IedFinder::getEscolaSerieDisciplina(1, 1, $anoEscolarMock);
+    $this->assertEquals(
+      $expected, $componentes,
+      '::getEscolaSerieDisciplina() retorna os componentes de um escola-série.'
+    );
+  }
+
   public function testGetMatricula()
   {
     $expected = array(
@@ -352,9 +402,11 @@ class App_Model_IedFinderTest extends UnitBaseTest
 
     // Mock para ComponenteCurricular_Model_ComponenteDataMapper
     $mapperMock = $this->getCleanMock('ComponenteCurricular_Model_ComponenteDataMapper');
-    $mapperMock->expects($this->any())
+    $mapperMock->expects($this->exactly(4))
                ->method('findComponenteCurricularAnoEscolar')
-               ->will($this->onConsecutiveCalls($expected[1], $expected[3]));
+               ->will($this->onConsecutiveCalls(
+                 $componentes[0], $componentes[1], $componentes[2], $componentes[3]
+               ));
 
     // Registra mocks
     CoreExt_Entity::addClassToStorage('clsPmieducarEscolaSerieDisciplina',
