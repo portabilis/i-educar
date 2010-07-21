@@ -151,17 +151,18 @@ class ParecerController extends Core_Controller_Page_EditController
     $this->campoRotulo('1nome', 'Nome', $matricula['nome']);
     $this->campoRotulo('2curso', 'Curso', $matricula['curso_nome']);
     $this->campoRotulo('3serie', 'Série', $matricula['serie_nome']);
+    $this->campoRotulo('4turma', 'Turma', $matricula['turma_nome']);
 
     if ($this->_regra->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL) {
-      $this->campoRotulo('4etapa', 'Etapa', $this->_etapa == 'Rc' ? 'Recuperação' : $this->_etapa);
+      $this->campoRotulo('5etapa', 'Etapa', $this->_etapa == 'Rc' ? 'Recuperação' : $this->_etapa);
     }
     else {
-      $this->campoRotulo('4etapa', 'Etapa', 'Anual');
+      $this->campoRotulo('5etapa', 'Etapa', 'Anual');
     }
 
     if ($this->_componenteCurricular) {
       $componentes = $this->_service->getComponentes();
-      $this->campoRotulo('5componente_curricular', 'Componente curricular', $componentes[$this->_componenteCurricular]);
+      $this->campoRotulo('6componente_curricular', 'Componente curricular', $componentes[$this->_componenteCurricular]);
     }
 
     $this->campoMemo('parecer', 'Parecer', $this->_parecer, 40, 10, TRUE);

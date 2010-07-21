@@ -180,6 +180,8 @@ class App_Model_IedFinderTest extends UnitBaseTest
       'ref_ref_cod_serie'   => 1,
       'ref_ref_cod_escola'  => 1,
       'ref_cod_curso'       => 1,
+      'ref_cod_turma'       => 1,
+      'turma_nome'          => 'Turma 1',
       'curso_carga_horaria' => 800,
       'curso_hora_falta'    => (50 /60),
       'serie_carga_horaria' => 800,
@@ -189,6 +191,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
     );
 
     $returnMatricula = array('cod_matricula' => 1, 'ref_ref_cod_serie' => 1, 'ref_ref_cod_escola' => 1, 'ref_cod_curso' => 1);
+    $returnTurma = array(array('ref_cod_matricula' => 1, 'ref_cod_turma' => 1, 'nm_turma' => 'Turma 1', 'ativo' => 1));
     $returnSerie = array('cod_serie' => 1, 'carga_horaria' => 800, 'regra_avaliacao_id' => 1);
     $returnCurso = array('cod_curso' => 1, 'carga_horaria' => 800, 'hora_falta' => (50 / 60), 'padrao_ano_escolar' => 1);
 
@@ -196,6 +199,12 @@ class App_Model_IedFinderTest extends UnitBaseTest
     $matriculaMock->expects($this->once())
                   ->method('detalhe')
                   ->will($this->returnValue($returnMatricula));
+
+    $turmaMock = $this->getCleanMock('clsPmieducarMatriculaTurma');
+    $turmaMock->expects($this->any())
+              ->method('lista')
+              ->with(1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1)
+              ->will($this->returnValue($returnTurma));
 
     $serieMock = $this->getCleanMock('clsPmieducarSerie');
     $serieMock->expects($this->any())
@@ -208,6 +217,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
               ->will($this->returnValue($returnCurso));
 
     CoreExt_Entity::addClassToStorage('clsPmieducarMatricula', $matriculaMock, NULL, TRUE);
+    CoreExt_Entity::addClassToStorage('clsPmieducarMatriculaTurma', $turmaMock, NULL, TRUE);
     CoreExt_Entity::addClassToStorage('clsPmieducarSerie', $serieMock, NULL, TRUE);
     CoreExt_Entity::addClassToStorage('clsPmieducarCurso', $cursoMock, NULL, TRUE);
 
@@ -416,17 +426,6 @@ class App_Model_IedFinderTest extends UnitBaseTest
 
     CoreExt_Entity::addClassToStorage('clsPmieducarCurso', $cursoMock, NULL, TRUE);
 
-    // Pega informação da turma
-    /*$returnMatriculaTurma = array(
-      array('ref_cod_matricula' => 1, 'ref_cod_turma' => 1)
-    );
-
-    $matriculaTurmaMock = $this->getCleanMock('clsPmieducarMatriculaTurma');
-    $matriculaTurmaMock->expects($this->at(0))
-                       ->method('lista')
-                       ->with(1)
-                       ->will($this->returnValue($returnMatriculaTurma));*/
-
     $returnTurmaModulo = array(
       array('ref_cod_turma' => 1, 'ref_cod_modulo' => 1, 'sequencial' => 1),
       array('ref_cod_turma' => 1, 'ref_cod_modulo' => 1, 'sequencial' => 2),
@@ -439,9 +438,6 @@ class App_Model_IedFinderTest extends UnitBaseTest
                     ->method('lista')
                     ->with(1)
                     ->will($this->returnValue($returnTurmaModulo));
-
-    #App_Model_IedFinder::addClassToStorage('clsPmieducarMatriculaTurma',
-    #  $matriculaTurmaMock, NULL, TRUE);
 
     App_Model_IedFinder::addClassToStorage('clsPmieducarTurmaModulo',
       $turmaModuloMock, NULL, TRUE);
