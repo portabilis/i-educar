@@ -239,46 +239,48 @@ class App_Model_IedFinder extends CoreExt_Entity
    * Retorna array com as referências de pmieducar.escola_serie_disciplina
    * a modules.componente_curricular ('ref_ref_cod_disciplina').
    *
-   * @param int  $codSerie
-   * @param int  $codEscola
-   * @param bool $hydrate
+   * @param  int   $codSerie
+   * @param  int   $codEscola
+   * @param  ComponenteCurricular_Model_ComponenteDataMapper  $mapper
    * @return array
    * @throws App_Model_Exception
    */
-  public static function getEscolaSerieDisciplina($codSerie, $codEscola, $hydrate = FALSE)
+  public static function getEscolaSerieDisciplina($codSerie, $codEscola,
+    ComponenteCurricular_Model_ComponenteDataMapper $mapper = NULL)
   {
     // Disciplinas na série na escola
     $escolaSerieDisciplina = self::addClassToStorage('clsPmieducarEscolaSerieDisciplina',
       NULL, 'include/pmieducar/clsPmieducarEscolaSerieDisciplina.inc.php');
 
-    $disciplinasEscolaSerie = $escolaSerieDisciplina->lista($codSerie, $codEscola, NULL, 1);
+    $disciplinas = $escolaSerieDisciplina->lista($codSerie, $codEscola, NULL, 1);
 
-    if (FALSE === $disciplinasEscolaSerie) {
-      throw new App_Model_Exception(
-        sprintf('Nenhuma disciplina para a série (%d) e a escola (%d) informados',
-          $codSerie, $codEscola)
-      );
+    if (FALSE === $disciplinas) {
+      throw new App_Model_Exception(sprintf(
+          'Nenhuma disciplina para a série (%d) e a escola (%d) informados',
+          $codSerie, $codEscola
+      ));
     }
 
-    if ($hydrate) {
+    if (is_null($mapper)) {
       require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
       $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
     }
 
-    $disciplinas = array();
-    foreach ($disciplinasEscolaSerie as $disciplinaEscolaSerie) {
-      if ($hydrate) {
-        $disciplinas[] = $mapper->find($disciplinaEscolaSerie['ref_cod_disciplina']);
-        continue;
+    $ret = array();
+    foreach ($disciplinas as $disciplina) {
+      $id    = $disciplina['ref_cod_disciplina'];
+      $carga = $disciplina['carga_horaria'];
+
+      $componente = $mapper->findComponenteCurricularAnoEscolar($id, $codSerie);
+
+      if (!is_null($carga)) {
+        $componente->cargaHoraria = $carga;
       }
 
-      $disciplinas[] = array(
-        'ref_cod_disciplina' => $disciplinaEscolaSerie['ref_cod_disciplina'],
-        'carga_horaria' => $disciplinaEscolaSerie['carga_horaria']
-      );
+      $ret[$id] = $componente;
     }
 
-    return $disciplinas;
+    return $ret;
   }
 
   /**
@@ -388,40 +390,23 @@ class App_Model_IedFinder extends CoreExt_Entity
     $serie = self::getSerie($codSerie);
 
     // Disciplinas da escola na série em que o aluno está matriculado
-    $disciplinas = self::getEscolaSerieDisciplina($codSerie, $codEscola);
+    $componentes = self::getEscolaSerieDisciplina($codSerie, $codEscola, $mapper);
 
     // Dispensas do aluno
     $disciplinasDispensa = self::getDisciplinasDispensadasPorMatricula(
       $codMatricula, $codSerie, $codEscola
     );
 
-    // Instancia um data mapper caso nenhum seja provido
-    if (is_null($mapper)) {
-      require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-      $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
-    }
-
-    // Seleciona os componentes curriculares em que o aluno está cursando
-    $componentes = array();
-
-    foreach ($disciplinas as $disciplina) {
-      if (in_array($disciplina['ref_cod_disciplina'], $disciplinasDispensa)) {
+    $ret = array();
+    foreach ($componentes as $id => $componente) {
+      if (in_array($id, $disciplinasDispensa)) {
         continue;
       }
 
-      $componenteCurricular = $mapper->findComponenteCurricularAnoEscolar(
-        $disciplina['ref_cod_disciplina'],
-        $codSerie
-      );
-
-      if (!is_null($disciplina['carga_horaria'])) {
-        $componenteCurricular->cargaHoraria = $disciplina['carga_horaria'];
-      }
-
-      $componentes[$componenteCurricular->id] = $componenteCurricular;
+      $ret[$id] = $componente;
     }
 
-    return $componentes;
+    return $ret;
   }
 
   /**

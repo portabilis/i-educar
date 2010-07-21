@@ -211,7 +211,7 @@ class indice extends clsCadastro
 
     // Recupera a lista de componentes curriculares da escola/série
     $componentes = App_Model_IedFinder::getEscolaSerieDisciplina(
-      $this->ref_cod_serie, $this->ref_cod_escola, TRUE
+      $this->ref_cod_serie, $this->ref_cod_escola
     );
 
     if (0 == count($componentes)) {
