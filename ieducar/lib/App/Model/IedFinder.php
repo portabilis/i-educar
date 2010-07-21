@@ -63,146 +63,17 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
-   * Retorna uma instância de RegraAvaliacao_Model_Regra a partir dos dados
-   * da matrícula.
-   *
-   * @param int $codMatricula
-   * @param RegraAvaliacao_Model_RegraDataMapper $mapper
-   * @return RegraAvaliacao_Model_Regra
-   * @throws App_Model_Exception
+   * Retorna um nome de curso, procurando pelo seu código.
+   * @param  int $id
+   * @return string|FALSE
    */
-  public static function getRegraAvaliacaoPorMatricula($codMatricula,
-    RegraAvaliacao_Model_RegraDataMapper $mapper = NULL)
+  public static function getCurso($id)
   {
-    $matricula = self::getMatricula($codMatricula);
-    $serie     = self::getSerie($matricula['ref_ref_cod_serie']);
-
-    if (is_null($mapper)) {
-      require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
-      $mapper = new RegraAvaliacao_Model_RegraDataMapper();
-    }
-
-    return $mapper->find($serie['regra_avaliacao_id']);
-  }
-
-  /**
-   * Retorna um array de instâncias ComponenteCurricular_Model_Componente ao
-   * qual um aluno cursa através de sua matrícula.
-   *
-   * Exclui todas os componentes curriculares ao qual o aluno está dispensado
-   * de cursar.
-   *
-   * @param  int $codMatricula
-   * @param  ComponenteCurricular_Model_ComponenteDataMapper $mapper
-   * @return array
-   * @throws App_Model_Exception
-   */
-  public static function getComponentesPorMatricula($codMatricula,
-    ComponenteCurricular_Model_ComponenteDataMapper $mapper = NULL)
-  {
-    $matricula = self::getMatricula($codMatricula);
-
-    $codEscola = $matricula['ref_ref_cod_escola'];
-    $codSerie  = $matricula['ref_ref_cod_serie'];
-
-    $serie = self::getSerie($codSerie);
-
-    // Disciplinas da escola na série em que o aluno está matriculado
-    $disciplinas = self::getEscolaSerieDisciplina($codSerie, $codEscola);
-
-    // Dispensas do aluno
-    $disciplinasDispensa = self::getDisciplinasDispensadasPorMatricula(
-      $codMatricula, $codSerie, $codEscola
-    );
-
-    // Instancia um data mapper caso nenhum seja provido
-    if (is_null($mapper)) {
-      require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-      $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
-    }
-
-    // Seleciona os componentes curriculares em que o aluno está cursando
-    $componentes = array();
-
-    foreach ($disciplinas as $disciplina) {
-      if (in_array($disciplina['ref_cod_disciplina'], $disciplinasDispensa)) {
-        continue;
-      }
-
-      $componenteCurricular = $mapper->findComponenteCurricularAnoEscolar(
-        $disciplina['ref_cod_disciplina'],
-        $codSerie
-      );
-
-      if (!is_null($disciplina['carga_horaria'])) {
-        $componenteCurricular->cargaHoraria = $disciplina['carga_horaria'];
-      }
-
-      $componentes[$componenteCurricular->id] = $componenteCurricular;
-    }
-
-    return $componentes;
-  }
-
-  /**
-   * Retorna um array populado com os dados de uma matricula.
-   *
-   * @param  int $codMatricula
-   * @return array
-   * @throws App_Model_Exception
-   */
-  public static function getMatricula($codMatricula)
-  {
-    // Recupera clsPmieducarMatricula do storage de classe estático
-    $matricula = self::addClassToStorage('clsPmieducarMatricula', NULL,
-      'include/pmieducar/clsPmieducarMatricula.inc.php');
-
-    $turma = self::addClassToStorage('clsPmieducarMatriculaTurma', NULL,
-      'include/pmieducar/clsPmieducarMatriculaTurma.inc.php');
-
     $curso = self::addClassToStorage('clsPmieducarCurso', NULL,
       'include/pmieducar/clsPmieducarCurso.inc.php');
-
-    $serie = self::addClassToStorage('clsPmieducarSerie', NULL,
-      'include/pmieducar/clsPmieducarSerie.inc.php');
-
-    // Usa o atributo público para depois chamar o método detalhe()
-    $matricula->cod_matricula = $codMatricula;
-    $matricula = $matricula->detalhe();
-
-    if (FALSE === $matricula) {
-      throw new App_Model_Exception(
-        sprintf('Matrícula de código "%d" não existe.', $codMatricula)
-      );
-    }
-
-    // Atribui dados extra a matrícula
-    $turmas = $turma->lista($codMatricula, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
-    if (0 < count($turmas)) {
-      $turma = array_shift($turmas);
-
-      $matricula['ref_cod_turma'] = $turma['ref_cod_turma'];
-      $matricula['turma_nome']    = isset($turma['nm_turma']) ? $turma['nm_turma'] : NULL;
-    }
-    else {
-      throw new App_Model_Exception('Aluno não enturmado.');
-    }
-
-    $curso->cod_curso = $matricula['ref_cod_curso'];
+    $curso->cod_curso = $id;
     $curso = $curso->detalhe();
-
-    $serie->cod_serie = $matricula['ref_ref_cod_serie'];
-    $serie = $serie->detalhe();
-
-    $matricula['curso_carga_horaria'] = $curso['carga_horaria'];
-    $matricula['curso_hora_falta']    = $curso['hora_falta'];
-    $matricula['serie_carga_horaria'] = $serie['carga_horaria'];
-
-    $matricula['curso_nome']          = isset($curso['nm_curso']) ? $curso['nm_curso'] : NULL;
-    $matricula['serie_nome']          = isset($serie['nm_serie']) ? $serie['nm_serie'] : NULL;
-    $matricula['serie_concluinte']    = isset($serie['concluinte']) ? $serie['concluinte'] : NULL;
-
-    return $matricula;
+    return $curso['nm_curso'];
   }
 
   /**
@@ -232,99 +103,49 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
-   * Retorna array com as referências de pmieducar.escola_serie_disciplina
-   * a modules.componente_curricular ('ref_ref_cod_disciplina').
-   *
-   * @param int  $codSerie
-   * @param int  $codEscola
-   * @param bool $hydrate
+   * Retorna todas as séries cadastradas na tabela pmieducar.serie, selecionando
+   * opcionalmente pelo código da instituição.
+   * @param int $instituicaoId
    * @return array
-   * @throws App_Model_Exception
    */
-  public static function getEscolaSerieDisciplina($codSerie, $codEscola, $hydrate = FALSE)
+  public static function getSeries($instituicaoId = NULL)
   {
-    // Disciplinas na série na escola
-    $escolaSerieDisciplina = self::addClassToStorage('clsPmieducarEscolaSerieDisciplina',
-      NULL, 'include/pmieducar/clsPmieducarEscolaSerieDisciplina.inc.php');
+    $serie = self::addClassToStorage('clsPmieducarSerie', NULL,
+      'include/pmieducar/clsPmieducarSerie.inc.php');
 
-    $disciplinasEscolaSerie = $escolaSerieDisciplina->lista($codSerie, $codEscola, NULL, 1);
+    // Carrega as séries
+    $serie->setOrderby('ref_cod_curso ASC, cod_serie ASC, etapa_curso ASC');
+    $serie = $serie->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+      NULL, NULL, NULL, NULL, $instituicaoId);
 
-    if (FALSE === $disciplinasEscolaSerie) {
-      throw new App_Model_Exception(
-        sprintf('Nenhuma disciplina para a série (%d) e a escola (%d) informados',
-          $codSerie, $codEscola)
-      );
+    $series = array();
+    foreach ($serie as $key => $val) {
+      $series[$val['cod_serie']] = $val;
     }
 
-    if ($hydrate) {
-      require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-      $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
-    }
-
-    $disciplinas = array();
-    foreach ($disciplinasEscolaSerie as $disciplinaEscolaSerie) {
-      if ($hydrate) {
-        $disciplinas[] = $mapper->find($disciplinaEscolaSerie['ref_cod_disciplina']);
-        continue;
-      }
-
-      $disciplinas[] = array(
-        'ref_cod_disciplina' => $disciplinaEscolaSerie['ref_cod_disciplina'],
-        'carga_horaria' => $disciplinaEscolaSerie['carga_horaria']
-      );
-    }
-
-    return $disciplinas;
+    return $series;
   }
 
   /**
-   * Retorna array com as referências de pmieducar.dispensa_disciplina
-   * a modules.componente_curricular ('ref_ref_cod_disciplina').
-   *
-   * @param int $codMatricula
-   * @param int $codSerie
-   * @param int $codEscola
-   * @return array
+   * Retorna as turmas de uma escola.
+   * @param  int   $escola
+   * @return array (cod_turma => nm_turma)
    */
-  public static function getDisciplinasDispensadasPorMatricula($codMatricula,
-    $codSerie, $codEscola)
+  public static function getTurmas($escola)
   {
-    $dispensas = self::addClassToStorage('clsPmieducarDispensaDisciplina',
-      NULL, 'include/pmieducar/clsPmieducarDispensaDisciplina.inc.php');
+    $turma = self::addClassToStorage('clsPmieducarTurma', NULL,
+      'include/pmieducar/clsPmieducarTurma.inc.php');
 
-    $dispensas = $dispensas->lista($codMatricula, $codSerie, $codEscola);
+    // Carrega as turmas da escola
+    $turma->setOrderBy('nm_turma ASC');
+    $turmas = $turma->lista(NULL, NULL, NULL, NULL, $escola);
 
-    if (FALSE === $dispensas) {
-      return array();
+    $ret = array();
+    foreach ($turmas as $turma) {
+      $ret[$turma['cod_turma']] = $turma['nm_turma'];
     }
 
-    $disciplinasDispensa = array();
-    foreach ($dispensas as $dispensa) {
-      $disciplinasDispensa[] = $dispensa['ref_cod_disciplina'];
-    }
-
-    return $disciplinasDispensa;
-  }
-
-  /**
-   * Retorna a quantidade de módulos do ano letivo por uma dada matrícula.
-   *
-   * @param  int $codMatricula
-   * @return int
-   */
-  public static function getQuantidadeDeModulosMatricula($codMatricula)
-  {
-    $modulos = array();
-
-    // matricula
-    $matricula = self::getMatricula($codMatricula);
-    $codEscola = $matricula['ref_ref_cod_escola'];
-    $codCurso  = $matricula['ref_cod_curso'];
-    $codTurma  = $matricula['ref_cod_turma'];
-
-    $modulos = self::getModulo($codEscola, $codCurso, $codTurma);
-
-    return $modulos['total'];
+    return $ret;
   }
 
   /**
@@ -415,63 +236,242 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
-   * Retorna todas as séries cadastradas na tabela pmieducar.serie, selecionando
-   * opcionalmente pelo código da instituição.
-   * @param int $instituicaoId
+   * Retorna array com as referências de pmieducar.escola_serie_disciplina
+   * a modules.componente_curricular ('ref_ref_cod_disciplina').
+   *
+   * @param int  $codSerie
+   * @param int  $codEscola
+   * @param bool $hydrate
    * @return array
+   * @throws App_Model_Exception
    */
-  public static function getSeries($instituicaoId = NULL)
+  public static function getEscolaSerieDisciplina($codSerie, $codEscola, $hydrate = FALSE)
   {
+    // Disciplinas na série na escola
+    $escolaSerieDisciplina = self::addClassToStorage('clsPmieducarEscolaSerieDisciplina',
+      NULL, 'include/pmieducar/clsPmieducarEscolaSerieDisciplina.inc.php');
+
+    $disciplinasEscolaSerie = $escolaSerieDisciplina->lista($codSerie, $codEscola, NULL, 1);
+
+    if (FALSE === $disciplinasEscolaSerie) {
+      throw new App_Model_Exception(
+        sprintf('Nenhuma disciplina para a série (%d) e a escola (%d) informados',
+          $codSerie, $codEscola)
+      );
+    }
+
+    if ($hydrate) {
+      require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
+      $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+    }
+
+    $disciplinas = array();
+    foreach ($disciplinasEscolaSerie as $disciplinaEscolaSerie) {
+      if ($hydrate) {
+        $disciplinas[] = $mapper->find($disciplinaEscolaSerie['ref_cod_disciplina']);
+        continue;
+      }
+
+      $disciplinas[] = array(
+        'ref_cod_disciplina' => $disciplinaEscolaSerie['ref_cod_disciplina'],
+        'carga_horaria' => $disciplinaEscolaSerie['carga_horaria']
+      );
+    }
+
+    return $disciplinas;
+  }
+
+  /**
+   * Retorna um array populado com os dados de uma matricula.
+   *
+   * @param  int $codMatricula
+   * @return array
+   * @throws App_Model_Exception
+   */
+  public static function getMatricula($codMatricula)
+  {
+    // Recupera clsPmieducarMatricula do storage de classe estático
+    $matricula = self::addClassToStorage('clsPmieducarMatricula', NULL,
+      'include/pmieducar/clsPmieducarMatricula.inc.php');
+
+    $turma = self::addClassToStorage('clsPmieducarMatriculaTurma', NULL,
+      'include/pmieducar/clsPmieducarMatriculaTurma.inc.php');
+
+    $curso = self::addClassToStorage('clsPmieducarCurso', NULL,
+      'include/pmieducar/clsPmieducarCurso.inc.php');
+
     $serie = self::addClassToStorage('clsPmieducarSerie', NULL,
       'include/pmieducar/clsPmieducarSerie.inc.php');
 
-    // Carrega as séries
-    $serie->setOrderby('ref_cod_curso ASC, cod_serie ASC, etapa_curso ASC');
-    $serie = $serie->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-      NULL, NULL, NULL, NULL, $instituicaoId);
+    // Usa o atributo público para depois chamar o método detalhe()
+    $matricula->cod_matricula = $codMatricula;
+    $matricula = $matricula->detalhe();
 
-    $series = array();
-    foreach ($serie as $key => $val) {
-      $series[$val['cod_serie']] = $val;
+    if (FALSE === $matricula) {
+      throw new App_Model_Exception(
+        sprintf('Matrícula de código "%d" não existe.', $codMatricula)
+      );
     }
 
-    return $series;
-  }
+    // Atribui dados extra a matrícula
+    $turmas = $turma->lista($codMatricula, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+    if (0 < count($turmas)) {
+      $turma = array_shift($turmas);
 
-  /**
-   * Retorna um nome de curso, procurando pelo seu código.
-   * @param  int $id
-   * @return string|FALSE
-   */
-  public static function getCurso($id)
-  {
-    $curso = self::addClassToStorage('clsPmieducarCurso', NULL,
-      'include/pmieducar/clsPmieducarCurso.inc.php');
-    $curso->cod_curso = $id;
+      $matricula['ref_cod_turma'] = $turma['ref_cod_turma'];
+      $matricula['turma_nome']    = isset($turma['nm_turma']) ? $turma['nm_turma'] : NULL;
+    }
+    else {
+      throw new App_Model_Exception('Aluno não enturmado.');
+    }
+
+    $curso->cod_curso = $matricula['ref_cod_curso'];
     $curso = $curso->detalhe();
-    return $curso['nm_curso'];
+
+    $serie->cod_serie = $matricula['ref_ref_cod_serie'];
+    $serie = $serie->detalhe();
+
+    $matricula['curso_carga_horaria'] = $curso['carga_horaria'];
+    $matricula['curso_hora_falta']    = $curso['hora_falta'];
+    $matricula['serie_carga_horaria'] = $serie['carga_horaria'];
+
+    $matricula['curso_nome']          = isset($curso['nm_curso']) ? $curso['nm_curso'] : NULL;
+    $matricula['serie_nome']          = isset($serie['nm_serie']) ? $serie['nm_serie'] : NULL;
+    $matricula['serie_concluinte']    = isset($serie['concluinte']) ? $serie['concluinte'] : NULL;
+
+    return $matricula;
   }
 
   /**
-   * Retorna as turmas de uma escola.
-   * @param  int   $escola
-   * @return array (cod_turma => nm_turma)
+   * Retorna uma instância de RegraAvaliacao_Model_Regra a partir dos dados
+   * da matrícula.
+   *
+   * @param int $codMatricula
+   * @param RegraAvaliacao_Model_RegraDataMapper $mapper
+   * @return RegraAvaliacao_Model_Regra
+   * @throws App_Model_Exception
    */
-  public static function getTurmas($escola)
+  public static function getRegraAvaliacaoPorMatricula($codMatricula,
+    RegraAvaliacao_Model_RegraDataMapper $mapper = NULL)
   {
-    $turma = self::addClassToStorage('clsPmieducarTurma', NULL,
-      'include/pmieducar/clsPmieducarTurma.inc.php');
+    $matricula = self::getMatricula($codMatricula);
+    $serie     = self::getSerie($matricula['ref_ref_cod_serie']);
 
-    // Carrega as turmas da escola
-    $turma->setOrderBy('nm_turma ASC');
-    $turmas = $turma->lista(NULL, NULL, NULL, NULL, $escola);
-
-    $ret = array();
-    foreach ($turmas as $turma) {
-      $ret[$turma['cod_turma']] = $turma['nm_turma'];
+    if (is_null($mapper)) {
+      require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
+      $mapper = new RegraAvaliacao_Model_RegraDataMapper();
     }
 
-    return $ret;
+    return $mapper->find($serie['regra_avaliacao_id']);
+  }
+
+  /**
+   * Retorna um array de instâncias ComponenteCurricular_Model_Componente ao
+   * qual um aluno cursa através de sua matrícula.
+   *
+   * Exclui todas os componentes curriculares ao qual o aluno está dispensado
+   * de cursar.
+   *
+   * @param  int $codMatricula
+   * @param  ComponenteCurricular_Model_ComponenteDataMapper $mapper
+   * @return array
+   * @throws App_Model_Exception
+   */
+  public static function getComponentesPorMatricula($codMatricula,
+    ComponenteCurricular_Model_ComponenteDataMapper $mapper = NULL)
+  {
+    $matricula = self::getMatricula($codMatricula);
+
+    $codEscola = $matricula['ref_ref_cod_escola'];
+    $codSerie  = $matricula['ref_ref_cod_serie'];
+
+    $serie = self::getSerie($codSerie);
+
+    // Disciplinas da escola na série em que o aluno está matriculado
+    $disciplinas = self::getEscolaSerieDisciplina($codSerie, $codEscola);
+
+    // Dispensas do aluno
+    $disciplinasDispensa = self::getDisciplinasDispensadasPorMatricula(
+      $codMatricula, $codSerie, $codEscola
+    );
+
+    // Instancia um data mapper caso nenhum seja provido
+    if (is_null($mapper)) {
+      require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
+      $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+    }
+
+    // Seleciona os componentes curriculares em que o aluno está cursando
+    $componentes = array();
+
+    foreach ($disciplinas as $disciplina) {
+      if (in_array($disciplina['ref_cod_disciplina'], $disciplinasDispensa)) {
+        continue;
+      }
+
+      $componenteCurricular = $mapper->findComponenteCurricularAnoEscolar(
+        $disciplina['ref_cod_disciplina'],
+        $codSerie
+      );
+
+      if (!is_null($disciplina['carga_horaria'])) {
+        $componenteCurricular->cargaHoraria = $disciplina['carga_horaria'];
+      }
+
+      $componentes[$componenteCurricular->id] = $componenteCurricular;
+    }
+
+    return $componentes;
+  }
+
+  /**
+   * Retorna array com as referências de pmieducar.dispensa_disciplina
+   * a modules.componente_curricular ('ref_ref_cod_disciplina').
+   *
+   * @param int $codMatricula
+   * @param int $codSerie
+   * @param int $codEscola
+   * @return array
+   */
+  public static function getDisciplinasDispensadasPorMatricula($codMatricula,
+    $codSerie, $codEscola)
+  {
+    $dispensas = self::addClassToStorage('clsPmieducarDispensaDisciplina',
+      NULL, 'include/pmieducar/clsPmieducarDispensaDisciplina.inc.php');
+
+    $dispensas = $dispensas->lista($codMatricula, $codSerie, $codEscola);
+
+    if (FALSE === $dispensas) {
+      return array();
+    }
+
+    $disciplinasDispensa = array();
+    foreach ($dispensas as $dispensa) {
+      $disciplinasDispensa[] = $dispensa['ref_cod_disciplina'];
+    }
+
+    return $disciplinasDispensa;
+  }
+
+  /**
+   * Retorna a quantidade de módulos do ano letivo por uma dada matrícula.
+   *
+   * @param  int $codMatricula
+   * @return int
+   */
+  public static function getQuantidadeDeModulosMatricula($codMatricula)
+  {
+    $modulos = array();
+
+    // matricula
+    $matricula = self::getMatricula($codMatricula);
+    $codEscola = $matricula['ref_ref_cod_escola'];
+    $codCurso  = $matricula['ref_cod_curso'];
+    $codTurma  = $matricula['ref_cod_turma'];
+
+    $modulos = self::getModulo($codEscola, $codCurso, $codTurma);
+
+    return $modulos['total'];
   }
 
   /**

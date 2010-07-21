@@ -101,7 +101,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
     return $tabela;
   }
 
-  public function testCarregaNomeDeCursoPorCodigo()
+  public function testGetCurso()
   {
     $returnValue = array(
       'nm_curso' => 'Ensino Fundamental'
@@ -117,27 +117,13 @@ class App_Model_IedFinderTest extends UnitBaseTest
       'clsPmieducarCurso', $mock, NULL, TRUE);
 
     $curso = App_Model_IedFinder::getCurso(1);
-    $this->assertEquals($returnValue['nm_curso'], $curso);
+    $this->assertEquals(
+      $returnValue['nm_curso'], $curso,
+      '::getCurso() retorna o nome do curso através de uma busca pelo código.'
+    );
   }
 
-  public function testCarregaSeries()
-  {
-    $returnValue = array(1 => array('cod_serie' => 1, 'nm_serie' => 'Pré'));
-
-    $mock = $this->getCleanMock('clsPmieducarSerie');
-    $mock->expects($this->once())
-         ->method('lista')
-         ->will($this->returnValue($returnValue));
-
-    // Registra a instância no repositório de classes de CoreExt_Entity
-    $instance = CoreExt_Entity::addClassToStorage(
-      'clsPmieducarSerie', $mock, NULL, TRUE);
-
-    $series = App_Model_IedFinder::getSeries(1);
-    $this->assertEquals($returnValue, $series);
-  }
-
-  public function testCarregaInstituicoes()
+  public function testGetInstituicoes()
   {
     $returnValue = array(array('cod_instituicao' => 1, 'nm_instituicao' => 'Instituição'));
     $expected = array(1 => 'Instituição');
@@ -152,10 +138,42 @@ class App_Model_IedFinderTest extends UnitBaseTest
       'clsPmieducarInstituicao', $mock);
 
     $instituicoes = App_Model_IedFinder::getInstituicoes();
-    $this->assertEquals($expected, $instituicoes);
+    $this->assertEquals(
+      $expected, $instituicoes,
+      '::getInstituicoes() retorna todas as instituições cadastradas.'
+    );
   }
 
-  public function testCarregaTurmas()
+  public function testGetSeries()
+  {
+    $returnValue = array(
+      1 => array('cod_serie' => 1, 'ref_ref_cod_instituicao' => 1, 'nm_serie' => 'Pré'),
+      2 => array('cod_serie' => 2, 'ref_ref_cod_instituicao' => 2, 'nm_serie' => 'Pré')
+    );
+
+    $mock = $this->getCleanMock('clsPmieducarSerie');
+    $mock->expects($this->exactly(2))
+         ->method('lista')
+         ->will($this->onConsecutiveCalls($returnValue, array($returnValue[1])));
+
+    // Registra a instância no repositório de classes de CoreExt_Entity
+    $instance = CoreExt_Entity::addClassToStorage(
+      'clsPmieducarSerie', $mock, NULL, TRUE);
+
+    $series = App_Model_IedFinder::getSeries();
+    $this->assertEquals(
+      $returnValue, $series,
+      '::getSeries() retorna todas as séries cadastradas.'
+    );
+
+    $series = App_Model_IedFinder::getSeries(1);
+    $this->assertEquals(
+      array(1 => $returnValue[1]), $series,
+      '::getSeries() retorna todas as séries de uma instituição.'
+    );
+  }
+
+  public function testGetTurmas()
   {
     $returnValue = array(1 => array('cod_turma' => 1, 'nm_turma' => 'Primeiro ano'));
     $expected = array(1 => 'Primeiro ano');
@@ -170,7 +188,10 @@ class App_Model_IedFinderTest extends UnitBaseTest
       'clsPmieducarTurma', $mock, NULL, TRUE);
 
     $turmas = App_Model_IedFinder::getTurmas(1);
-    $this->assertEquals($expected, $turmas);
+    $this->assertEquals(
+      $expected, $turmas,
+      '::getTurmas() retorna todas as turmas de uma escola.'
+    );
   }
 
   public function testGetMatricula()
@@ -222,10 +243,13 @@ class App_Model_IedFinderTest extends UnitBaseTest
     CoreExt_Entity::addClassToStorage('clsPmieducarCurso', $cursoMock, NULL, TRUE);
 
     $matricula = App_Model_IedFinder::getMatricula(1);
-    $this->assertEquals($expected, $matricula);
+    $this->assertEquals(
+      $expected, $matricula,
+      '::getMatricula() retorna os dados (escola, série, curso, turma e carga horária) de uma matrícula.'
+    );
   }
 
-  public function testInstanciaRegraDeAvaliacaoPorMatricula()
+  public function testGetRegraAvaliacaoPorMatricula()
   {
     $expected = new RegraAvaliacao_Model_Regra(array(
       'id'                   => 1,
@@ -268,13 +292,16 @@ class App_Model_IedFinderTest extends UnitBaseTest
                ->will($this->returnValue($expected));
 
     $regraAvaliacao = App_Model_IedFinder::getRegraAvaliacaoPorMatricula(1, $mapperMock);
-    $this->assertEquals($expected, $regraAvaliacao);
+    $this->assertEquals(
+      $expected, $regraAvaliacao,
+      '::getRegraAvaliacaoPorMatricula() retorna a regra de avaliação de uma matrícula.'
+    );
   }
 
   /**
-   * @depends App_Model_IedFinderTest::testInstanciaRegraDeAvaliacaoPorMatricula
+   * @depends App_Model_IedFinderTest::testGetRegraAvaliacaoPorMatricula
    */
-  public function testDisciplinasPorMatricula()
+  public function testGetComponentesPorMatricula()
   {
     $componentes = array(
       new ComponenteCurricular_Model_Componente(
@@ -346,13 +373,16 @@ class App_Model_IedFinderTest extends UnitBaseTest
     $expected[3] = clone($expected[3]);
     $expected[3]->cargaHoraria = 60;
 
-    $this->assertEquals($expected, $disciplinas);
+    $this->assertEquals(
+      $expected, $disciplinas,
+      '::getComponentesPorMatricula() retorna um array de ComponenteCurricular_Model_Componente para uma matrícula.'
+    );
   }
 
   /**
-   * @depends App_Model_IedFinderTest::testInstanciaRegraDeAvaliacaoPorMatricula
+   * @depends App_Model_IedFinderTest::testGetRegraAvaliacaoPorMatricula
    */
-  public function testModulosDeUmCursoPadraoAnoEscolar()
+  public function testGetQuantidadeDeModulosMatricula()
   {
     $returnEscolaAno = array(
       array('ref_cod_escola' => 1, 'ano' => 2009, 'andamento' => 1, 'ativo' => 1)
@@ -408,13 +438,16 @@ class App_Model_IedFinderTest extends UnitBaseTest
 
     $modulos = App_Model_IedFinder::getQuantidadeDeModulosMatricula(1);
 
-    $this->assertEquals(4, $modulos);
+    $this->assertEquals(
+      4, $modulos,
+      '::getQuantidadeDeModulosMatricula() retorna a quantidade de módulos para uma matrícula de ano escolar padrão (curso padrão ano escolar).'
+    );
   }
 
   /**
-   * @depends App_Model_IedFinderTest::testInstanciaRegraDeAvaliacaoPorMatricula
+   * @depends App_Model_IedFinderTest::testGetRegraAvaliacaoPorMatricula
    */
-  public function testEtapasDeUmCursoAnoNaoPadrao()
+  public function testGetQuantidadeDeModulosMatriculaCursoAnoNaoPadrao()
   {
     // Curso não padrão
     $returnCurso = array('cod_curso' => 1, 'carga_horaria' => 800, 'hora_falta' => (50 / 60), 'padrao_ano_escolar' => 0);
@@ -444,6 +477,9 @@ class App_Model_IedFinderTest extends UnitBaseTest
 
     $etapas = App_Model_IedFinder::getQuantidadeDeModulosMatricula(1);
 
-    $this->assertEquals(4, $etapas);
+    $this->assertEquals(
+      4, $etapas,
+      '::getQuantidadeDeModulosMatricula() retorna a quantidade de módulos para uma matrícula de um ano escolar não padrão (curso não padrão).'
+    );
   }
 }
