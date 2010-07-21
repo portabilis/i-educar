@@ -143,7 +143,8 @@ class FaltaController extends Core_Controller_Page_EditController
     $this->campoRotulo('1nome', 'Nome', $matricula['nome']);
     $this->campoRotulo('2curso', 'Curso', $matricula['curso_nome']);
     $this->campoRotulo('3serie', 'Série', $matricula['serie_nome']);
-    $this->campoRotulo('4etapa', 'Etapa', $this->_etapa == 'Rc' ? 'Recuperação' : $this->_etapa);
+    $this->campoRotulo('4turma', 'Turma', $matricula['turma_nome']);
+    $this->campoRotulo('5etapa', 'Etapa', $this->_etapa == 'Rc' ? 'Recuperação' : $this->_etapa);
 
     $this->campoLista('falta', 'Falta', range(0, 100, 1), $this->_falta->quantidade);
   }

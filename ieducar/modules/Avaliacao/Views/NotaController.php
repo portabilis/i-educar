@@ -159,10 +159,11 @@ class NotaController extends Core_Controller_Page_EditController
     $this->campoRotulo('1nome', 'Nome', $matricula['nome']);
     $this->campoRotulo('2curso', 'Curso', $matricula['curso_nome']);
     $this->campoRotulo('3serie', 'Série', $matricula['serie_nome']);
-    $this->campoRotulo('4etapa', 'Etapa', $this->_etapa == 'Rc' ? 'Exame' : $this->_etapa);
+    $this->campoRotulo('4turma', 'Turma', $matricula['turma_nome']);
+    $this->campoRotulo('5etapa', 'Etapa', $this->_etapa == 'Rc' ? 'Exame' : $this->_etapa);
 
     $componentes = $this->_service->getComponentes();
-    $this->campoRotulo('5componente_curricular', 'Componente curricular', $componentes[$this->getRequest()->componenteCurricular]);
+    $this->campoRotulo('6componente_curricular', 'Componente curricular', $componentes[$this->getRequest()->componenteCurricular]);
 
     // Valores de arredondamento
     $valoresArredondamento = $this->_service->getRegra()->tabelaArredondamento->findTabelaValor();

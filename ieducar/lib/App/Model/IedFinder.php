@@ -92,8 +92,8 @@ class App_Model_IedFinder extends CoreExt_Entity
    * Exclui todas os componentes curriculares ao qual o aluno está dispensado
    * de cursar.
    *
-   * @param int $codMatricula
-   * @param RegraAvaliacao_Model_RegraDataMapper $mapper
+   * @param  int $codMatricula
+   * @param  ComponenteCurricular_Model_ComponenteDataMapper $mapper
    * @return array
    * @throws App_Model_Exception
    */
@@ -147,7 +147,7 @@ class App_Model_IedFinder extends CoreExt_Entity
   /**
    * Retorna um array populado com os dados de uma matricula.
    *
-   * @param int $codMatricula
+   * @param  int $codMatricula
    * @return array
    * @throws App_Model_Exception
    */
@@ -156,6 +156,9 @@ class App_Model_IedFinder extends CoreExt_Entity
     // Recupera clsPmieducarMatricula do storage de classe estático
     $matricula = self::addClassToStorage('clsPmieducarMatricula', NULL,
       'include/pmieducar/clsPmieducarMatricula.inc.php');
+
+    $turma = self::addClassToStorage('clsPmieducarMatriculaTurma', NULL,
+      'include/pmieducar/clsPmieducarMatriculaTurma.inc.php');
 
     $curso = self::addClassToStorage('clsPmieducarCurso', NULL,
       'include/pmieducar/clsPmieducarCurso.inc.php');
@@ -174,6 +177,17 @@ class App_Model_IedFinder extends CoreExt_Entity
     }
 
     // Atribui dados extra a matrícula
+    $turmas = $turma->lista($codMatricula, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+    if (0 < count($turmas)) {
+      $turma = array_shift($turmas);
+
+      $matricula['ref_cod_turma'] = $turma['ref_cod_turma'];
+      $matricula['turma_nome']    = isset($turma['nm_turma']) ? $turma['nm_turma'] : NULL;
+    }
+    else {
+      throw new App_Model_Exception('Aluno não enturmado.');
+    }
+
     $curso->cod_curso = $matricula['ref_cod_curso'];
     $curso = $curso->detalhe();
 
@@ -297,7 +311,6 @@ class App_Model_IedFinder extends CoreExt_Entity
    *
    * @param  int $codMatricula
    * @return int
-   * @throws App_Model_Exception
    */
   public static function getQuantidadeDeModulosMatricula($codMatricula)
   {
@@ -307,20 +320,7 @@ class App_Model_IedFinder extends CoreExt_Entity
     $matricula = self::getMatricula($codMatricula);
     $codEscola = $matricula['ref_ref_cod_escola'];
     $codCurso  = $matricula['ref_cod_curso'];
-    $codTurma  = NULL;
-
-    $matriculaTurma = self::addClassToStorage('clsPmieducarMatriculaTurma',
-      NULL, 'include/pmieducar/clsPmieducarMatriculaTurma.inc.php');
-
-    $matriculas = $matriculaTurma->lista($codMatricula);
-
-    if (is_array($matriculas)) {
-      $matricula = array_shift($matriculas);
-      $codTurma  = $matricula['ref_cod_turma'];
-    }
-    else {
-      throw new App_Model_Exception('Aluno não enturmado.');
-    }
+    $codTurma  = $matricula['ref_cod_turma'];
 
     $modulos = self::getModulo($codEscola, $codCurso, $codTurma);
 

@@ -152,17 +152,7 @@ class BoletimController extends Core_Controller_Page_ViewController
     $serie = $matricula['serie_nome'];
 
     // Nome da turma
-    $matTurma = new clsPmieducarMatriculaTurma();
-    $matTurma = $matTurma->lista($matricula['cod_matricula']);
-
-    if (FALSE != $matTurma) {
-      $matTurma = array_shift($matTurma);
-
-      $turma = new clsPmieducarTurma();
-      $turma->cod_turma = $matTurma['ref_cod_turma'];
-      $turma = $turma->detalhe();
-      $turma = $turma['nm_turma'];
-    }
+    $turma = $matricula['turma_nome'];
 
     // Situação da matrícula
     $situacao = App_Model_MatriculaSituacao::getInstance();
