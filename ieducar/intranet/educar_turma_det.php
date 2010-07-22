@@ -33,6 +33,8 @@ require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
+require_once 'App/Model/IedFinder.php';
+
 /**
  * clsIndexBase class.
  *
@@ -384,83 +386,31 @@ class indice extends clsDetalhe
       }
     }
 
-    if ($this->ref_ref_cod_escola && $this->ref_ref_cod_serie) {
-      $obj = new clsPmieducarEscolaSerieDisciplina();
-      $lst = $obj->lista($this->ref_ref_cod_serie, $this->ref_ref_cod_escola, NULL, 1);
+    // Recupera os componentes curriculares da turma
+    $componentes = App_Model_IedFinder::getComponentesTurma(
+      $this->ref_ref_cod_serie, $this->ref_ref_cod_escola, $this->cod_turma
+    );
 
-      if ($lst) {
-        $tabela3 = '
-          <table>
-            <tr align="center">
-              <td bgcolor="#A1B3BD"><b>Nome</b></td>
-            </tr>';
+    $tabela3 = '
+      <table>
+        <tr align="center">
+          <td bgcolor="#A1B3BD"><b>Nome</b></td>
+        </tr>';
 
-        $cont = 0;
-        foreach ($lst as $valor) {
-          if (($cont % 2) == 0) {
-            $color = ' bgcolor="#E4E9ED" ';
-          }
-          else {
-            $color = ' bgcolor="#FFFFFF" ';
-          }
+    $cont = 0;
+    foreach ($componentes as $componente) {
+      $color = ($cont++ % 2 == 0) ? ' bgcolor="#E4E9ED" ' : ' bgcolor="#FFFFFF" ';
 
-          $obj_disciplina = new clsPmieducarDisciplina($valor['ref_cod_disciplina']);
-          $obj_disciplina->setOrderby('nm_disciplina ASC');
-          $obj_disciplina_det = $obj_disciplina->detalhe();
-          $nm_disciplina = $obj_disciplina_det['nm_disciplina'];
-
-          $tabela3 .= sprintf('
-            <tr>
-              <td %s align=left>%s</td>
-            </tr>',
-            $color, $nm_disciplina
-          );
-
-          $cont++;
-        }
-        $tabela3 .= '</table>';
-      }
-    }
-    else {
-      $obj = new clsPmieducarDisciplina();
-      $lst = $obj->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, NULL, NULL, NULL, NULL, $this->ref_cod_curso,
-        $this->ref_cod_instituicao);
-
-      if ($lst) {
-        $tabela3 = '
-          <table>
-            <tr align="center">
-              <td bgcolor="#A1B3BD"><b>Nome</b></td>
-            </tr>';
-
-        $cont = 0;
-
-        foreach ($lst as $valor) {
-          if (($cont % 2) == 0) {
-            $color = ' bgcolor="#E4E9ED" ';
-          }
-          else {
-            $color = ' bgcolor="#FFFFFF" ';
-          }
-
-          $tabela3 .= sprintf('
-            <tr>
-              <td %s align=left>%s</TD>
-            </tr>',
-            $color, $valor['nm_disciplina']
-          );
-
-          $cont++;
-        }
-
-        $tabela3 .= '</table>';
-      }
+      $tabela3 .= sprintf('
+        <tr>
+          <td %s align=left>%s</td>
+        </tr>',
+        $color, $componente
+      );
     }
 
-    if ($tabela3) {
-      $this->addDetalhe(array('Disciplina', $tabela3));
-    }
+    $tabela3 .= '</table>';
+    $this->addDetalhe(array('Componentes curriculares', $tabela3));
 
     if ($obj_permissoes->permissao_cadastra(586, $this->pessoa_logada, 7)) {
       $this->url_novo   = 'educar_turma_cad.php';
