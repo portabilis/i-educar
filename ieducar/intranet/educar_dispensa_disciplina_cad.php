@@ -168,8 +168,6 @@ class indice extends clsCadastro
     $det_escola = $obj_escola->detalhe();
     $this->ref_cod_instituicao = $det_escola['ref_cod_instituicao'];
 
-    $this->campoRotulo('nm_aluno', 'Nome do Aluno', $det_aluno['nome_aluno']);
-
     $obj_matricula_turma = new clsPmieducarMatriculaTurma();
     $lst_matricula_turma = $obj_matricula_turma->lista($this->ref_cod_matricula,
        NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, $this->ref_cod_serie, NULL,
@@ -181,6 +179,13 @@ class indice extends clsCadastro
       $this->ref_sequencial = $det['sequencial'];
     }
 
+    $this->campoRotulo('nm_aluno', 'Nome do Aluno', $det_aluno['nome_aluno']);
+
+    if (!isset($this->ref_cod_turma)) {
+      $this->mensagem = 'Para dispensar um aluno de um componente curricular, é necessário que este esteja enturmado.';
+      return;
+    }
+
     // primary keys
     $this->campoOculto('ref_cod_matricula', $this->ref_cod_matricula);
     $this->campoOculto('ref_cod_serie', $this->ref_cod_serie);
@@ -188,15 +193,18 @@ class indice extends clsCadastro
 
     $opcoes = array('' => 'Selecione');
 
-    $objTemp = new clsPmieducarEscolaSerieDisciplina();
-    $lista = $objTemp->lista($this->ref_cod_serie, $this->ref_cod_escola, NULL, 1);
+    // Seleciona os componentes curriculares da turma
+    try {
+      $componentes = App_Model_IedFinder::getComponentesTurma($this->ref_cod_serie,
+        $this->ref_cod_escola, $this->ref_cod_turma);
+    }
+    catch (App_Model_Exception $e) {
+      $this->mensagem = $e->getMessage();
+      return;
+    }
 
-    $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
-    if (is_array($lista) && count($lista)) {
-      foreach ($lista as $registro) {
-        $componente = $componenteMapper->find($registro['ref_cod_disciplina']);
-        $opcoes[$componente->id] = $componente->nome;
-      }
+    foreach ($componentes as $componente) {
+      $opcoes[$componente->id] = $componente->nome;
     }
 
     if ($this->ref_cod_disciplina) {

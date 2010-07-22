@@ -151,13 +151,17 @@ class clsPmieducarDispensaDisciplina
     if (is_numeric($ref_cod_disciplina) && is_numeric($ref_cod_escola) &&
       is_numeric($ref_cod_serie)
     ) {
-      $escolaSerieDisciplina = new clsPmieducarEscolaSerieDisciplina($ref_cod_serie,
-        $ref_cod_escola, $ref_cod_disciplina);
+      require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
+      $anoEscolarMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
+      $componenteAnos = $anoEscolarMapper->findAll(array(), array(
+        'componenteCurricular' => $ref_cod_disciplina,
+        'anoEscolar'           => $ref_cod_serie
+      ));
 
-      if ($escolaSerieDisciplina->existe()) {
+      if (1 == count($componenteAnos)) {
         $this->ref_cod_disciplina = $ref_cod_disciplina;
-        $this->ref_cod_escola     = $ref_cod_escola;
         $this->ref_cod_serie      = $ref_cod_serie;
+        $this->ref_cod_escola     = $ref_cod_escola;
       }
     }
 

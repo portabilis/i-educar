@@ -169,18 +169,12 @@ class indice extends clsListagem
     $opcoes = array('' => 'Selecione');
 
     // Escola série disciplina
-    $objTemp = new clsPmieducarEscolaSerieDisciplina();
-    $lista = $objTemp->lista($this->ref_cod_serie, $this->ref_cod_escola, NULL, 1);
+    $componentes = App_Model_IedFinder::getComponentesTurma(
+      $this->ref_cod_serie, $this->ref_cod_escola, $this->ref_cod_turma
+    );
 
-    if (is_array($lista) && count($lista)) {
-      foreach ($lista as $registro) {
-        $obj_disciplina = new clsPmieducarDisciplina(
-          $registro['ref_cod_disciplina'], NULL, NULL, NULL, NULL, NULL, NULL,
-          NULL, NULL, NULL, 1);
-
-        $det_disciplina = $obj_disciplina->detalhe();
-        $opcoes[$registro['ref_cod_disciplina']] = $det_disciplina['nm_disciplina'];
-      }
+    foreach ($componentes as $componente) {
+      $opcoes[$componente->id] = $componente->nome;
     }
 
     $this->campoLista('ref_cod_disciplina', 'Disciplina', $opcoes,

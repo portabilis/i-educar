@@ -230,7 +230,8 @@ class indice extends clsDetalhe
         $this->array_botao[]            = 'Ocorrências Disciplinares';
         $this->array_botao_url_script[] = "go(\"educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
 
-        if ($registro['ref_ref_cod_serie']) {
+        // Apenas libera a dispensa de disciplina quando o aluno estiver enturmado
+        if ($registro['ref_ref_cod_serie'] && isset($nm_turma)) {
           $this->array_botao[]            = 'Dispensa de Componentes Curriculares';
           $this->array_botao_url_script[] = "go(\"educar_dispensa_disciplina_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
         }
