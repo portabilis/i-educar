@@ -49,6 +49,8 @@ require_once 'TabelaArredondamento/Model/TabelaDataMapper.php';
 require_once 'RegraAvaliacao/Model/Regra.php';
 require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
 
+require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
+
 require_once 'Avaliacao/Model/NotaAlunoDataMapper.php';
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
 require_once 'Avaliacao/Model/NotaComponenteMediaDataMapper.php';
@@ -179,6 +181,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
   protected $_componenteDataMapperMock = NULL;
 
+  protected $_componenteTurmaDataMapperMock = NULL;
+
   protected $_notaAlunoDataMapperMock = NULL;
 
   protected $_notaComponenteDataMapperMock = NULL;
@@ -205,6 +209,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
          ->_setConfigOptions('escolaAnoLetivo', $this->_getEscolaAnoLetivo())
          ->_setConfigOptions('anoLetivoModulo', $this->_getAnoLetivoModulo())
          ->_setConfigOptions('modulo', $this->_getModulo())
+         ->_setConfigOptions('componentesTurma', $this->_getComponentesTurma())
          ->_setConfigOptions('escolaSerieDisciplina', $this->_getEscolaSerieDisciplina())
          ->_setConfigOptions('dispensaDisciplina', $this->_getDispensaDisciplina())
          ->_setConfigOptions('componenteCurricular', $this->_getComponenteCurricular())
@@ -224,6 +229,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     $mappers = array(
       'RegraDataMapper'                     => $this->_getRegraDataMapperMock(),
       'ComponenteDataMapper'                => $this->_getComponenteDataMapperMock(),
+      'ComponenteTurmaDataMapper'           => $this->_getComponenteTurmaDataMapperMock(),
       'NotaAlunoDataMapper'                 => $this->_getNotaAlunoDataMapperMock(),
       'NotaComponenteDataMapper'            => $this->_getNotaComponenteDataMapperMock(),
       'NotaComponenteMediaDataMapper'       => $this->_getNotaComponenteMediaDataMapperMock(),
@@ -261,6 +267,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
       'usuario'                             => $this->_getConfigOption('usuario', 'cod_usuario'),
       'RegraDataMapper'                     => $this->_getConfigOption('mappers', 'RegraDataMapper'),
       'ComponenteDataMapper'                => $this->_getConfigOption('mappers', 'ComponenteDataMapper'),
+      'ComponenteTurmaDataMapper'           => $this->_getConfigOption('mappers', 'ComponenteTurmaDataMapper'),
       'NotaAlunoDataMapper'                 => $this->_getConfigOption('mappers', 'NotaAlunoDataMapper'),
       'NotaComponenteDataMapper'            => $this->_getConfigOption('mappers', 'NotaComponenteDataMapper'),
       'NotaComponenteMediaDataMapper'       => $this->_getConfigOption('mappers', 'NotaComponenteMediaDataMapper'),
@@ -444,6 +451,14 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
   {
     $etapas = count($this->_getConfigOptions('anoLetivoModulo'));
     return array_merge(range(1, $etapas, 1), array('Rc'));
+  }
+
+  /**
+   * @return array
+   */
+  protected function _getComponentesTurma()
+  {
+    return array();
   }
 
   /**
@@ -848,6 +863,29 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     }
 
     return $this->_componenteDataMapperMock;
+  }
+
+  protected function _setComponenteTurmaDataMapperMock(ComponenteCurricular_Model_TurmaDataMapper $mapper)
+  {
+    $this->_componenteTurmaDataMapperMock = $mapper;
+    return $this;
+  }
+
+  protected function _getComponenteTurmaDataMapperMock()
+  {
+    if (is_null($this->_componenteTurmaDataMapperMock)) {
+      $componentes = $this->_getConfigOptions('componentesTurma');
+
+      // Mock para ComponenteCurricular_Model_TurmaDataMapper
+      $mock = $this->getCleanMock('ComponenteCurricular_Model_TurmaDataMapper');
+      $mock->expects($this->any())
+           ->method('findAll')
+           ->will(new PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls($componentes));
+
+      $this->_setComponenteTurmaDataMapperMock($mock);
+    }
+
+    return $this->_componenteTurmaDataMapperMock;
   }
 
   protected function _setNotaAlunoDataMapperMock(Avaliacao_Model_NotaAlunoDataMapper $mapper = NULL)

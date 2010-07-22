@@ -239,20 +239,24 @@ class App_Model_IedFinder extends CoreExt_Entity
    * Retorna array com as referências de pmieducar.escola_serie_disciplina
    * a modules.componente_curricular ('ref_ref_cod_disciplina').
    *
-   * @param  int   $codSerie
-   * @param  int   $codEscola
-   * @param  ComponenteCurricular_Model_ComponenteDataMapper  $mapper
+   * @param  int $anoEscolar O código do ano escolar/série.
+   * @param  int $escola     O código da escola.
+   * @param  ComponenteCurricular_Model_ComponenteDataMapper $mapper (Opcional)
+   *   Instância do mapper para recuperar todas as instâncias persistidas de
+   *   ComponenteCurricular_Model_Componente atribuídas no ano escolar/série da
+   *   escola.
    * @return array
-   * @throws App_Model_Exception
+   * @throws App_Model_Exception caso não existam componentes curriculares
+   *   atribuídos ao ano escolar/série da escola.
    */
-  public static function getEscolaSerieDisciplina($codSerie, $codEscola,
+  public static function getEscolaSerieDisciplina($anoEscolar, $escola,
     ComponenteCurricular_Model_ComponenteDataMapper $mapper = NULL)
   {
     // Disciplinas na série na escola
     $escolaSerieDisciplina = self::addClassToStorage('clsPmieducarEscolaSerieDisciplina',
       NULL, 'include/pmieducar/clsPmieducarEscolaSerieDisciplina.inc.php');
 
-    $disciplinas = $escolaSerieDisciplina->lista($codSerie, $codEscola, NULL, 1);
+    $disciplinas = $escolaSerieDisciplina->lista($anoEscolar, $escola, NULL, 1);
 
     if (FALSE === $disciplinas) {
       throw new App_Model_Exception(sprintf(
@@ -261,19 +265,91 @@ class App_Model_IedFinder extends CoreExt_Entity
       ));
     }
 
+    $componentes = array();
+    foreach ($disciplinas as $disciplina) {
+      $componente = new stdClass();
+
+      $componente->id           = $disciplina['ref_cod_disciplina'];
+      $componente->cargaHoraria = $disciplina['carga_horaria'];
+
+      $componentes[] = $componente;
+    }
+
+    return self::_hydrateComponentes($componentes, $anoEscolar, $mapper);
+  }
+
+  /**
+   * Retorna as instâncias de ComponenteCurricular_Model_Componente de uma turma.
+   *
+   * @param int $anoEscolar O código do ano escolar/série da turma.
+   * @param int $escola     O código da escola da turma.
+   * @param int $turma      O código da turma.
+   * @param ComponenteCurricular_Model_TurmaDataMapper $mapper (Opcional) Instância
+   *   do mapper para selecionar todas as referências de
+   *   ComponenteCurricular_Model_Componente persistidas para a turma.
+   * @param ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper (Opcional)
+   *   Instância do mapper para recuperar as instâncias de
+   *   ComponenteCurricular_Model_Componente recuperadas por $mapper.
+   * @return array
+   */
+  public static function getComponentesTurma($anoEscolar, $escola, $turma,
+    ComponenteCurricular_Model_TurmaDataMapper $mapper = NULL,
+    ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper = NULL)
+  {
+    if (is_null($mapper)) {
+      require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
+      $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
+    }
+
+    $componentesTurma = $mapper->findAll(array(), array('turma' => $turma));
+
+    // Não existem componentes específicos para a turma
+    if (0 == count($componentesTurma)) {
+      return self::getEscolaSerieDisciplina($anoEscolar, $escola, $componenteMapper);
+    }
+
+    $componentes = array();
+    foreach ($componentesTurma as $componenteTurma) {
+      $componente = new stdClass();
+
+      $componente->id           = $componenteTurma->get('componenteCurricular');
+      $componente->cargaHoraria = $componenteTurma->cargaHoraria;
+
+      $componentes[] = $componente;
+    }
+
+    return self::_hydrateComponentes($componentes, $anoEscolar, $componenteMapper);
+  }
+
+  /**
+   * Recupera instâncias persistidas de ComponenteCurricular_Model_Componente,
+   * retornando-as com a carga horária padrão caso o componente identificado
+   * em $componentes possua uma carga horária (atributo cargaHoraria) nula.
+   *
+   * @param  array  $componentes  (array(stdClass->id, stdClass->cargaHoraria))
+   * @param  int    $anoEscolar   O ano escolar/série para recuperar a carga
+   *   horária padrão do componente curricular.
+   * @param  ComponenteCurricular_Model_ComponenteDataMapper $mapper (Opcional)
+   *   O mapper para recuperar a instância persistida com a carga horária padrão.
+   * @return array
+   */
+  protected static function _hydrateComponentes(array $componentes, $anoEscolar,
+    ComponenteCurricular_Model_ComponenteDataMapper $mapper = NULL)
+  {
     if (is_null($mapper)) {
       require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
       $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
     }
 
     $ret = array();
-    foreach ($disciplinas as $disciplina) {
-      $id    = $disciplina['ref_cod_disciplina'];
-      $carga = $disciplina['carga_horaria'];
 
-      $componente = $mapper->findComponenteCurricularAnoEscolar($id, $codSerie);
+    foreach ($componentes as $componentePlaceholder) {
+      $id    = $componentePlaceholder->id;
+      $carga = $componentePlaceholder->cargaHoraria;
 
-      if (!is_null($carga)) {
+      $componente = $mapper->findComponenteCurricularAnoEscolar($id, $anoEscolar);
+
+      if (! is_null($carga)) {
         $componente->cargaHoraria = $carga;
       }
 
@@ -375,22 +451,27 @@ class App_Model_IedFinder extends CoreExt_Entity
    * de cursar.
    *
    * @param  int $codMatricula
-   * @param  ComponenteCurricular_Model_ComponenteDataMapper $mapper
+   * @param  ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper
+   * @param  ComponenteCurricular_Model_TurmaDataMapper $turmaMapper
    * @return array
    * @throws App_Model_Exception
    */
   public static function getComponentesPorMatricula($codMatricula,
-    ComponenteCurricular_Model_ComponenteDataMapper $mapper = NULL)
+    ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper = NULL,
+    ComponenteCurricular_Model_TurmaDataMapper $turmaMapper = NULL)
   {
     $matricula = self::getMatricula($codMatricula);
 
     $codEscola = $matricula['ref_ref_cod_escola'];
     $codSerie  = $matricula['ref_ref_cod_serie'];
+    $turma     = $matricula['ref_cod_turma'];
 
     $serie = self::getSerie($codSerie);
 
     // Disciplinas da escola na série em que o aluno está matriculado
-    $componentes = self::getEscolaSerieDisciplina($codSerie, $codEscola, $mapper);
+    $componentes = self::getComponentesTurma(
+      $codSerie, $codEscola, $turma, $turmaMapper, $componenteMapper
+    );
 
     // Dispensas do aluno
     $disciplinasDispensa = self::getDisciplinasDispensadasPorMatricula(

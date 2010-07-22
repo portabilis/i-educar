@@ -44,6 +44,7 @@ require_once 'TabelaArredondamento/Model/TabelaDataMapper.php';
 require_once 'TabelaArredondamento/Model/TabelaValorDataMapper.php';
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
+require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
 require_once 'AreaConhecimento/Model/AreaDataMapper.php';
 
 /**
@@ -99,6 +100,58 @@ class App_Model_IedFinderTest extends UnitBaseTest
     $tabela = new TabelaArredondamento_Model_Tabela(array('nome' => 'Numéricas'));
     $tabela->setDataMapper($tabelaDataMapper);
     return $tabela;
+  }
+
+  /**
+   * Configura mocks para ComponenteCurricular_Model_ComponenteDataMapper e
+   * ComponenteCurricular_Model_TurmaDataMapper para o método getComponentesTurma().
+   *
+   * @return array ('componenteMock', 'turmaMock', 'expected')
+   */
+  protected function _getComponentesTurmaMock()
+  {
+    $returnComponenteMock = array(
+      1 => new ComponenteCurricular_Model_Componente(
+        array('id' => 1, 'nome' => 'Matemática', 'cargaHoraria' => 100)
+      ),
+      2 => new ComponenteCurricular_Model_Componente(
+        array('id' => 2, 'nome' => 'Português', 'cargaHoraria' => 100)
+      )
+    );
+
+    $expected = $returnComponenteMock;
+
+    $componenteMock = $this->getCleanMock('ComponenteCurricular_Model_ComponenteDataMapper');
+    $componenteMock->expects($this->exactly(2))
+                   ->method('findComponenteCurricularAnoEscolar')
+                   ->will($this->onConsecutiveCalls(
+                     $returnComponenteMock[1], $returnComponenteMock[2]
+                   ));
+
+    $returnTurmaMock = array(
+      new ComponenteCurricular_Model_Turma(
+        array('componenteCurricular' => 1, 'cargaHoraria' => 200)
+      ),
+      new ComponenteCurricular_Model_Turma(
+        array('componenteCurricular' => 2, 'cargaHoraria' => NULL)
+      )
+    );
+
+    $turmaMock = $this->getCleanMock('ComponenteCurricular_Model_TurmaDataMapper');
+    $turmaMock->expects($this->once())
+              ->method('findAll')
+              ->with(array(), array('turma' => 1))
+              ->will($this->returnValue($returnTurmaMock));
+
+    // O primeiro componente tem carga horária definida na turma, o segundo usa o padrão do componente
+    $expected[1] = clone $expected[1];
+    $expected[1]->cargaHoraria = 200;
+
+    return array(
+      'componenteMock' => $componenteMock,
+      'turmaMock'      => $turmaMock,
+      'expected'       => $expected
+    );
   }
 
   public function testGetCurso()
@@ -237,10 +290,28 @@ class App_Model_IedFinderTest extends UnitBaseTest
 
     App_Model_IedFinder::addClassToStorage('clsPmieducarEscolaSerieDisciplina', $escolaMock, NULL, TRUE);
 
+    // O primeiro componente tem uma carga horária definida em escola-série.
+    $expected[1] = clone $returnAnoEscolar[1];
+    $expected[1]->cargaHoraria = 80;
+
     $componentes = App_Model_IedFinder::getEscolaSerieDisciplina(1, 1, $anoEscolarMock);
     $this->assertEquals(
       $expected, $componentes,
       '::getEscolaSerieDisciplina() retorna os componentes de um escola-série.'
+    );
+  }
+
+  public function testGetComponentesTurma()
+  {
+    $mocks = $this->_getComponentesTurmaMock();
+
+    $componentes = App_Model_IedFinder::getComponentesTurma(
+      1, 1, 1, $mocks['turmaMock'], $mocks['componenteMock']
+    );
+
+    $this->assertEquals(
+      $mocks['expected'], $componentes,
+      '::getComponentesTurma() retorna os componentes de uma turma.'
     );
   }
 
@@ -353,81 +424,34 @@ class App_Model_IedFinderTest extends UnitBaseTest
    */
   public function testGetComponentesPorMatricula()
   {
-    $componentes = array(
-      new ComponenteCurricular_Model_Componente(
-        array('id' => 1, 'nome' => 'Matemática', 'cargaHoraria' => 100)
-      ),
-      new ComponenteCurricular_Model_Componente(
-        array('id' => 2, 'nome' => 'Português', 'cargaHoraria' => 100)
-      ),
-      new ComponenteCurricular_Model_Componente(
-        array('id' => 3, 'nome' => 'Ciências', 'cargaHoraria' => 60)
-      ),
-      new ComponenteCurricular_Model_Componente(
-        array('id' => 4, 'nome' => 'Física', 'cargaHoraria' => 60)
-      )
-    );
-
-    $expected = array(
-      1 => $componentes[0],
-      3 => $componentes[2]
-    );
-
-    // Retorna para clsPmieducarEscolaSerieDisciplina
-    $returnEscolaSerieDisciplina = array(
-      array('ref_cod_serie' => 1, 'ref_cod_disciplina' => 1, 'carga_horaria' => 80),
-      array('ref_cod_serie' => 1, 'ref_cod_disciplina' => 2, 'carga_horaria' => NULL),
-      array('ref_cod_serie' => 1, 'ref_cod_disciplina' => 3, 'carga_horaria' => NULL),
-      array('ref_cod_serie' => 1, 'ref_cod_disciplina' => 4, 'carga_horaria' => NULL),
-    );
-
-    // Mock para clsPmieducarEscolaSerieDisciplina
-    $escolaMock = $this->getCleanMock('clsPmieducarEscolaSerieDisciplina');
-    $escolaMock->expects($this->any())
-               ->method('lista')
-               ->will($this->returnValue($returnEscolaSerieDisciplina));
+    // A turma possui apenas 2 componentes, com os ids: 1 e 2
+    $mocks = $this->_getComponentesTurmaMock();
 
     // Retorna para clsPmieducarDispensaDisciplina
     $returnDispensa = array(
-      array('ref_cod_matricula' => 1, 'ref_cod_disciplina' => 2),
-      array('ref_cod_matricula' => 1, 'ref_cod_disciplina' => 4),
+      array('ref_cod_matricula' => 1, 'ref_cod_disciplina' => 2)
     );
 
     // Mock para clsPmieducarDispensaDisciplina
     $dispensaMock = $this->getCleanMock('clsPmieducarDispensaDisciplina');
-    $dispensaMock->expects($this->any())
+    $dispensaMock->expects($this->once())
                  ->method('lista')
                  ->with(1, 1, 1)
                  ->will($this->returnValue($returnDispensa));
 
-    // Mock para ComponenteCurricular_Model_ComponenteDataMapper
-    $mapperMock = $this->getCleanMock('ComponenteCurricular_Model_ComponenteDataMapper');
-    $mapperMock->expects($this->exactly(4))
-               ->method('findComponenteCurricularAnoEscolar')
-               ->will($this->onConsecutiveCalls(
-                 $componentes[0], $componentes[1], $componentes[2], $componentes[3]
-               ));
-
-    // Registra mocks
-    CoreExt_Entity::addClassToStorage('clsPmieducarEscolaSerieDisciplina',
-      $escolaMock, NULL, TRUE);
     CoreExt_Entity::addClassToStorage('clsPmieducarDispensaDisciplina',
       $dispensaMock, NULL, TRUE);
 
-    $disciplinas = App_Model_IedFinder::getComponentesPorMatricula(1, $mapperMock);
+    $componentes = App_Model_IedFinder::getComponentesPorMatricula(
+      1, $mocks['componenteMock'], $mocks['turmaMock']
+    );
 
-    // O esperado é que use a carga horária de escola_serie_disciplina ao
-    // invés de componente_curricular_ano_escolar.
-    // Usa clone para clonar a instância, senão usaria a mesma (copy by reference)
-    $expected[1] = clone($expected[1]);
-    $expected[1]->cargaHoraria = 80;
-
-    $expected[3] = clone($expected[3]);
-    $expected[3]->cargaHoraria = 60;
+    $expected = $mocks['expected'];
+    $expected = array(1 => clone $expected[1]);
 
     $this->assertEquals(
-      $expected, $disciplinas,
-      '::getComponentesPorMatricula() retorna um array de ComponenteCurricular_Model_Componente para uma matrícula.'
+      $expected, $componentes,
+      '::getComponentesPorMatricula() retorna os componentes curriculares de uma matrícula, descartando aqueles em regime de dispensa (dispensa de componente)'
     );
   }
 
