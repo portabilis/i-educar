@@ -31,11 +31,11 @@
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php' ;
+require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/relatorio.inc.php';
 
+require_once 'App/Model/IedFinder.php';
 require_once 'Avaliacao/Service/Boletim.php';
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
 /**
  * clsIndexBase class.
@@ -119,7 +119,7 @@ class indice extends clsCadastro
       return TRUE;
     }
 
-    if($this->ref_cod_escola) {
+    if ($this->ref_cod_escola) {
       $obj_escola      = new clsPmieducarEscola($this->ref_cod_escola);
       $det_escola      = $obj_escola->detalhe();
       $this->nm_escola = $det_escola['nome'];
@@ -167,11 +167,6 @@ class indice extends clsCadastro
     $det_curso = $obj_curso->detalhe();
     $this->nm_curso = $det_curso['nm_curso'];
 
-    // @todo Ano 2007 porque? Remover
-    if ($this->is_padrao || $this->ano == 2007) {
-      $this->semestre = NULL;
-    }
-
     // Seleciona os alunos da turma
     $obj_matricula_turma = new clsPmieducarMatriculaTurma();
     $obj_matricula_turma->setOrderby('nome_ascii');
@@ -181,33 +176,41 @@ class indice extends clsCadastro
       $this->ref_cod_instituicao, NULL, NULL, array(1, 2, 3), NULL, NULL,
       $this->ano, NULL, NULL, NULL, NULL, TRUE, NULL, NULL, TRUE, NULL, $this->semestre);
 
-    $array_disc = $array_cab = array();
-    if ($this->regra->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL) {
+    $componentes = $array_disc = $array_cab = array();
+    if ('f' == $this->tipo && $this->regra->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL) {
       $array_disc = $array_cab = array("FALTAS");
     }
     else {
-      $obj_disciplinas = new clsPmieducarEscolaSerieDisciplina();
-      $lst_disciplinas = $obj_disciplinas->lista($this->ref_cod_serie,
-        $this->ref_cod_escola, NULL, 1);
+      try {
+        $componentes = App_Model_IedFinder::getComponentesTurma(
+          $this->ref_cod_serie, $this->ref_cod_escola, $this->ref_cod_turma
+        );
+      }
+      catch (App_Model_Exception $e) {
+      }
     }
 
     if ($lst_matricula_turma) {
+      $titulo = sprintf(
+        'Espelho de Notas Bimestral %dº Bimestre Ano %d',
+        $this->ref_cod_modulo, $this->ano
+      );
+
+      $subtitulo = sprintf(
+        "%s\n%s\n%s\n%s -  Turma: %s             %s",
+        $this->nm_instituicao, $this->nm_escola, $this->nm_curso,
+        $this->nm_serie, $this->nm_turma, date('d/m/Y')
+      );
+
       $relatorio = new relatorios(
-        "Espelho de Notas Bimestral {$this->ref_cod_modulo}º Bimestre Ano {$this->ano}",
-        210, FALSE, "Espelho de Notas Bimestral", "A4",
-        "{$this->nm_instituicao}\n{$this->nm_escola}\n{$this->nm_curso}\n{$this->nm_serie} -  Turma: $this->nm_turma             ".date("d/m/Y")
+        $titulo, 210, FALSE, 'Espelho de Notas Bimestral', 'A4', $subtitulo
       );
 
       $relatorio->setMargem(20, 20, 50, 50);
       $relatorio->exibe_produzido_por = FALSE;
 
-      // Componente
-      $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
-
-      if (0 == count($array_disc)) {
-        foreach ($lst_disciplinas as $disciplina) {
-          $componente = $componenteMapper->find($disciplina['ref_cod_disciplina']);
-
+      if (0 == count($array_disc) && 0 < count($componentes)) {
+        foreach ($componentes as $componente) {
           $array_disc[$componente->id] = $componente;
           $array_cab[] = str2upper($componente->abreviatura);
         }
@@ -234,7 +237,6 @@ class indice extends clsCadastro
       foreach ($lst_matricula_turma as $matricula) {
         $boletim = new Avaliacao_Service_Boletim(array(
           'matricula'            => $matricula['ref_cod_matricula'],
-          'ComponenteDataMapper' => $componenteMapper,
           'RegraDataMapper'      => $regraMapper
         ));
 
@@ -244,6 +246,12 @@ class indice extends clsCadastro
         $componentes = $boletim->getComponentes();
 
         foreach ($array_disc as $cid => $componente) {
+          // Presença geral, seleciona apenas a quantidade de faltas da etapa
+          if (0 == $cid) {
+            $faltas[$cid] = $boletim->getFalta($this->ref_cod_modulo);
+            break;
+          }
+
           if (!in_array($cid, array_keys($componentes))) {
             $notas[$cid]  = 'D';
             $faltas[$cid] = 'D';
