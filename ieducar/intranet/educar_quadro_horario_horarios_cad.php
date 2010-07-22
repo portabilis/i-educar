@@ -32,6 +32,8 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+
+require_once 'App/Model/IedFinder.php';
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
 
@@ -219,19 +221,15 @@ class indice extends clsCadastro
     $opcoes_disc = array('' => 'Selecione uma disciplina');
 
     // Componentes curriculares da série
-    $escolaSerieDisciplina  = new clsPmieducarEscolaSerieDisciplina();
-    $escolaSerieDisciplinas = $escolaSerieDisciplina->lista($this->ref_ref_cod_serie,
-      $this->ref_cod_escola, NULL, 1);
+    $componentesTurma = App_Model_IedFinder::getComponentesTurma(
+      $this->ref_ref_cod_serie, $this->ref_cod_escola, $this->ref_cod_turma
+    );
 
-    if (0 == count($escolaSerieDisciplinas)) {
+    if (0 == count($componentesTurma)) {
       $opcoes_disc = array('NULL' => 'A série dessa escola não possui componentes cadastrados');
     }
     else {
-      // Mapper dos componentes curriculares
-      $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
-
-      foreach ($escolaSerieDisciplinas as $escolaSerieDisciplina) {
-        $componente = $componenteMapper->find($escolaSerieDisciplina['ref_cod_disciplina']);
+      foreach ($componentesTurma as $componente) {
         $opcoes_disc[$componente->id] = $componente;
       }
     }

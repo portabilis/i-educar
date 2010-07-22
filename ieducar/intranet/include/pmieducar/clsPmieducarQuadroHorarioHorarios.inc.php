@@ -29,7 +29,6 @@
  */
 
 require_once 'include/pmieducar/geral.inc.php';
-require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
 
 /**
  * clsPmieducarQuadroHorarioHorarios class
@@ -199,26 +198,17 @@ class clsPmieducarQuadroHorarioHorarios
     }
 
     if (is_numeric($ref_ref_cod_disciplina) && is_numeric($ref_ref_cod_serie)) {
+      require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
       $anoEscolarMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
       $componenteAnos = $anoEscolarMapper->findAll(array(), array(
-        'componenteCurricular'  => $ref_ref_cod_disciplina,
-        'anoEscolar' => $ref_ref_cod_serie)
-      );
+        'componenteCurricular' => $ref_ref_cod_disciplina,
+        'anoEscolar'           => $ref_ref_cod_serie
+      ));
 
       if (1 == count($componenteAnos)) {
         $this->ref_ref_cod_disciplina = $ref_ref_cod_disciplina;
-        $this->ref_ref_cod_serie = $ref_ref_cod_serie;
-      }
-    }
-
-    if (is_numeric($ref_ref_cod_escola) && is_numeric($ref_ref_cod_serie) &&
-      is_numeric($ref_ref_cod_disciplina)
-    ) {
-      $escolaSerieDisciplina = new clsPmieducarEscolaSerieDisciplina($ref_ref_cod_serie,
-        $ref_ref_cod_escola, $ref_ref_cod_disciplina, 1);
-
-      if ($escolaSerieDisciplina->existe()) {
-        $this->ref_ref_cod_escola = $ref_ref_cod_escola;
+        $this->ref_ref_cod_serie      = $ref_ref_cod_serie;
+        $this->ref_ref_cod_escola     = $ref_ref_cod_escola;
       }
     }
 
