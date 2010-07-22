@@ -303,13 +303,6 @@ class indice extends clsCadastro
 
       $cadastrou = $obj->cadastra();
       if ($cadastrou) {
-        /**
-         * @todo Remover
-         */
-        if ($this->pessoa_logada == 21317) {
-          $this->desativaMatriculasSequencia($cadastrou);
-        }
-
         $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
         $lst_transferencia = $obj_transferencia->lista(NULL, NULL, NULL, NULL,
           NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL,
@@ -639,118 +632,6 @@ class indice extends clsCadastro
 
     $this->mensagem = 'Exclusão não realizada.<br />';
     return FALSE;
-  }
-
-  /**
-   * Marca como zero o campo ultima_matricula das matriculas da sequência.
-   * @param int $ultima_matricula
-   * @todo  Remover, apenas um código condicional chama o método (L310).
-   */
-  function desativaMatriculasSequencia($ultima_matricula)
-  {
-    $db2 = new clsBanco();
-
-    $db2->Consulta('
-      SELECT
-        so.ref_cod_curso as curso_origem,
-        ss.ref_serie_origem as serie_origem,
-        sd.ref_cod_curso as curso_destino,
-        ss.ref_serie_destino as serie_destino
-      FROM
-        pmieducar.sequencia_serie ss,
-        pmieducar.serie so,
-        pmieducar.serie sd
-      WHERE
-        ss.ativo = 1
-        AND ref_serie_origem = so.cod_serie
-        AND ref_serie_destino = sd.cod_serie
-      ORDER BY
-        ss.ref_serie_origem ASC');
-
-    if ($db2->numLinhas()) {
-      while ($db2->ProximoRegistro()) {
-        $sequencias[] = $db2->Tupla();
-      }
-    }
-
-    $db2->Consulta('
-      SELECT
-        DISTINCT(o.ref_serie_origem)
-      FROM
-        pmieducar.sequencia_serie o,
-        pmieducar.escola_serie es
-      WHERE
-        NOT EXISTS (
-          SELECT
-            1
-          FROM
-            pmieducar.sequencia_serie d
-          WHERE
-            o.ref_serie_origem = d.ref_serie_destino
-        )');
-
-    if ($db2->numLinhas())
-    {
-      $pertence_sequencia = FALSE;
-      $achou_serie        = FALSE;
-      $reset              = FALSE;
-
-      $serie_sequencia[] = $this->ref_ref_cod_serie;
-
-      while ($db2->ProximoRegistro()) {
-        list($ini_sequencia) = $db2->Tupla();
-
-        $ini_serie = $ini_sequencia;
-        reset($sequencias);
-
-        do {
-          if ($reset) {
-            reset($sequencias);
-            $reset = FALSE;
-          }
-
-          $sequencia = current($sequencias);
-          $aux_serie = $sequencia['serie_origem'];
-
-          if ($ini_serie == $aux_serie) {
-            if ($this->ref_ref_cod_serie == $aux_serie) {
-              // Achou série da matricula
-              $achou_serie = TRUE;
-            }
-
-            if ($sequencia['curso_destino'] == $this->ref_cod_curso) {
-              // Curso pertence a sequência
-              $pertence_sequencia = TRUE;
-              $serie_sequencia[]  = $sequencia['serie_destino'];
-              $ini_serie          = $sequencia['serie_destino'];
-              $reset              = TRUE;
-            }
-            else {
-              $ini_serie = $sequencia['serie_destino'];
-              $reset     = TRUE;
-            }
-          }
-        } while (each($sequencias));
-
-        if ($achou_serie && $pertence_sequencia) {
-          // Curso escolhido pertence a sequência da série da matrícula
-          $series = implode(',', $serie_sequencia);
-          $db2->Consulta(sprintf("
-            UPDATE
-              pmieducar.matricula
-            SET
-              ultima_matricula = 0
-            WHERE
-              ref_ref_cod_serie IN (%s)
-              AND ref_cod_aluno = %d
-              AND cod_matricula != %d",
-            $series, $this->ref_cod_aluno, $ultima_matricula
-          ));
-
-          die();
-        }
-      }
-    }
   }
 }
 
