@@ -34,7 +34,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/clsPDF.inc.php';
 
-require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
+require_once 'App/Model/IedFinder.php';
 require_once 'Avaliacao/Service/Boletim.php';
 
 /**
@@ -204,24 +204,13 @@ class indice extends clsCadastro
     $this->regra = $regraMapper->find($det_serie['regra_avaliacao_id']);
 
     // Carrega as definições de disciplina
-    $escolaSerieDisciplina = new clsPmieducarEscolaSerieDisciplina();
-    $escolaSerieDisciplina = $escolaSerieDisciplina->lista(
-      $this->ref_cod_serie, $this->ref_cod_escola, NULL, 1);
+    $componentes = App_Model_IedFinder::getComponentesTurma(
+      $this->ref_cod_serie, $this->ref_cod_escola, $this->ref_cod_turma
+    );
 
-    // Instancia mapper para ano escolar
-    $anoEscolarMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
-
-    foreach ($escolaSerieDisciplina as $disciplina) {
-      $id = $disciplina['ref_cod_disciplina'];
-      $anoEscolar = $anoEscolarMapper->find(array($id));
-
-      $cargaHoraria = !is_null($disciplina['carga_horaria']) ?
-        $disciplina['carga_horaria'] : $anoEscolar->cargaHoraria;
-
-      $anoEscolar->componenteCurricular->cargaHoraria = $cargaHoraria;
-      $this->componentes[$id] = $anoEscolar->componenteCurricular;
+    foreach ($componentes as $id => $componente) {
+      $this->componentes[$id] = $componente;
     }
-
 
     $this->presencaGeral = ($this->regra->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL);
 
