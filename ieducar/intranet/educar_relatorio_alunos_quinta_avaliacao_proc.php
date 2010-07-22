@@ -188,11 +188,6 @@ class indice extends clsCadastro
     if ($db->Num_Linhas()) {
       $alunos = array();
 
-      // Disciplinas da escola-série
-      $obj_disciplinas = new clsPmieducarEscolaSerieDisciplina();
-      $lst_disciplinas = $obj_disciplinas->lista($this->ref_cod_serie,
-        $this->ref_cod_escola, NULL, 1);
-
       // Instancia objeto de relatório padrão
       $detalhes = sprintf('%s%s%s%s%s%s%s - Turma: %s         %s', $nm_instituicao,
         "\n", $nm_escola, "\n", $nm_curso, "\n", $nm_serie,
