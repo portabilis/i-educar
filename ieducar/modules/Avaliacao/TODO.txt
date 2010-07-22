@@ -1,0 +1,39 @@
+TODO
+====
+
+1. Reimplementar o histórico escolar
+
+O histórico escolar não foi atualizado para integrar com o novo Boletim. O
+histórico era populado durante o encerramento do ano letivo ou durante a
+rematrícula automática. Neste, os nomes das "disciplinas" (agora nomeadas como
+"componentes curriculares") era persistidas junto com as notas e faltas do
+aluno. Um relatório (intranet/educar_relatorio_historico_escolar_proc.php)
+exportava estes dados como um documento PDF.
+
+Todas essas funcionalidades estão quebradas.
+
+
+2. Analisar como as notas e faltas do aluno serão tratadas durante uma
+   transferência de turma e/ou escola
+
+No momento em que a matrícula do aluno era atualizada e este estivesse com uma
+solicitação de transferência para uma outra escola, as notas e faltas
+(globalizadas ou não) eram recriadas sob um novo identificador de escola
+(vide código removido do arquivo educar_matricula_cad.php na revisão 715
+<http://svn.softwarepublico.gov.br/trac/ieducar/changeset/715>).
+
+No entanto, a matriz curricular de uma escola/ano escolar (série) podem
+variar, o que já tornava esta operação inconsistente. Os registros com as notas
+e faltas continuavam nas tabelas subjacentes (e de fato, continuam). Uma melhor
+forma deve ser estudada, talvez com um implementação nova do histórico escolar.
+
+
+3. Analisar uma forma de "lock" para as regras de avaliação, para evitar que
+   alterações afetem os resultados apurados nos boletins
+
+A regra de avaliação foi implementada para ser estática durante um ano letivo.
+Como esta pode ser compartilhada entre diversos anos escolares (séries), as
+alterações são inevitáveis. É necessário descobrir uma forma para que isto não
+ocorra depois que as notas já tenham sido lançadas em um boletim, talvez
+impedindo a alteração ou dando uma opção de reprocessamento das médias e
+presença dos boletins afetados.
