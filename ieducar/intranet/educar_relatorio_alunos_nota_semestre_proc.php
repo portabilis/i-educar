@@ -34,6 +34,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/relatorio.inc.php';
 
+require_once 'App/Model/IedFinder.php';
 require_once 'Avaliacao/Service/Boletim.php';
 
 /**
@@ -179,9 +180,10 @@ class indice extends clsCadastro
       $this->ref_cod_curso, $this->ref_cod_escola, $this->ref_cod_instituicao,
       NULL, NULL, array(1,2,3), NULL, NULL, $this->ano, NULL, NULL, NULL, NULL, TRUE);
 
-    $obj_disciplinas = new clsPmieducarEscolaSerieDisciplina();
-    $lst_disciplinas = $obj_disciplinas->lista($this->ref_cod_serie,
-      $this->ref_cod_escola, NULL, 1);
+    // Recupera os componentes curriculares da turma
+    $componentes = App_Model_IedFinder::getComponentesTurma(
+      $this->ref_cod_serie, $this->ref_cod_escola, $this->ref_cod_turma
+    );
 
     // Recupera a quantidade de módulos e o nome do módulo da escola/turma
     $modulo = App_Model_IedFinder::getModulo($this->ref_cod_escola,
@@ -197,9 +199,6 @@ class indice extends clsCadastro
 
       $relatorio->setMargem(20, 20, 20, 20);
       $relatorio->exibe_produzido_por = FALSE;
-
-      // Mapper para o componente
-      $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
 
       $array_val = array(
         array(40, 'Cód.'),
@@ -225,10 +224,7 @@ class indice extends clsCadastro
 
       $arrFunc = create_function('$data, $index', $arrFuncBody);
 
-      foreach ($lst_disciplinas as $k => $disciplina) {
-        $componenteId = $disciplina['ref_cod_disciplina'];
-        $componente   = $componenteMapper->find($componenteId);
-
+      foreach ($componentes as $componente) {
         $relatorio->novalinha(array($componente->nome), 0, 16,
           TRUE, 'arial', array(400), '#515151', '#D3D3D3', '#FFFFFF', FALSE, TRUE);
 
@@ -242,7 +238,6 @@ class indice extends clsCadastro
           if (!isset($this->boletim[$codMatricula])) {
             $boletim = new Avaliacao_Service_Boletim(array(
               'matricula'            => $codMatricula,
-              'ComponenteDataMapper' => $componenteMapper,
               'RegraDataMapper'      => $regraMapper
             ));
           }
