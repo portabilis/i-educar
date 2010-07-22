@@ -10337,6 +10337,19 @@ SELECT pg_catalog.setval('componente_curricular_id_seq', 1, false);
 
 
 --
+-- Name: componente_curricular_turma; Type: TABLE; Schema: modules; Owner: -; Tablespace:
+--
+
+CREATE TABLE componente_curricular_turma (
+    componente_curricular_id integer NOT NULL,
+    ano_escolar_id integer NOT NULL,
+    escola_id integer NOT NULL,
+    turma_id integer NOT NULL,
+    carga_horaria numeric(6,3)
+);
+
+
+--
 -- Name: falta_aluno; Type: TABLE; Schema: modules; Owner: -; Tablespace:
 --
 
@@ -17718,6 +17731,12 @@ SET search_path = modules, pg_catalog;
 
 
 --
+-- Data for Name: componente_curricular_turma; Type: TABLE DATA; Schema: modules; Owner: -
+--
+
+
+
+--
 -- Data for Name: falta_aluno; Type: TABLE DATA; Schema: modules; Owner: -
 --
 
@@ -20115,6 +20134,7 @@ INSERT INTO changelog VALUES (19, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '19_atua
 INSERT INTO changelog VALUES (20, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '20_remove_permissao_e_menu_diario_avaliacao_temp.sql');
 INSERT INTO changelog VALUES (21, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '21_cria_tabelas_modulo_calendario.sql');
 INSERT INTO changelog VALUES (22, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '22_cria_primary_key_em_modules_calendario_turma.sql');
+INSERT INTO changelog VALUES (23, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '23_cria_tabela_modules_componente_curricular_turma.sql');
 
 
 --
@@ -27017,6 +27037,14 @@ ALTER TABLE ONLY componente_curricular
 
 
 --
+-- Name: componente_curricular_turma_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY componente_curricular_turma
+    ADD CONSTRAINT componente_curricular_turma_pkey PRIMARY KEY (componente_curricular_id, turma_id);
+
+
+--
 -- Name: falta_aluno_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
 --
 
@@ -28957,6 +28985,13 @@ CREATE INDEX componente_curricular_area_conhecimento_key ON componente_curricula
 --
 
 CREATE UNIQUE INDEX componente_curricular_id_key ON componente_curricular USING btree (id);
+
+
+--
+-- Name: componente_curricular_turma_turma_idx; Type: INDEX; Schema: modules; Owner: -; Tablespace:
+--
+
+CREATE INDEX componente_curricular_turma_turma_idx ON componente_curricular_turma USING btree (turma_id);
 
 
 --
@@ -32807,6 +32842,22 @@ ALTER TABLE ONLY componente_curricular_ano_escolar
 
 ALTER TABLE ONLY componente_curricular
     ADD CONSTRAINT componente_curricular_area_conhecimento_fk FOREIGN KEY (area_conhecimento_id, instituicao_id) REFERENCES area_conhecimento(id, instituicao_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: componente_curricular_turma_componente_curricular_fkey; Type: FK CONSTRAINT; Schema: modules; Owner: -
+--
+
+ALTER TABLE ONLY componente_curricular_turma
+    ADD CONSTRAINT componente_curricular_turma_componente_curricular_fkey FOREIGN KEY (componente_curricular_id) REFERENCES componente_curricular(id) ON DELETE RESTRICT;
+
+
+--
+-- Name: componente_curricular_turma_fkey; Type: FK CONSTRAINT; Schema: modules; Owner: -
+--
+
+ALTER TABLE ONLY componente_curricular_turma
+    ADD CONSTRAINT componente_curricular_turma_fkey FOREIGN KEY (turma_id) REFERENCES pmieducar.turma(cod_turma) ON DELETE CASCADE;
 
 
 --

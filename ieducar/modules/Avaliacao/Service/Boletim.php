@@ -79,6 +79,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   protected $_componenteDataMapper = NULL;
 
   /**
+   * @var ComponenteCurricular_Model_TurmaDataMapper
+   */
+  protected $_componenteTurmaDataMapper = NULL;
+
+  /**
    * @var RegraAvaliacao_Model_RegraDataMapper
    */
   protected $_regraDataMapper = NULL;
@@ -273,6 +278,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       unset($options['ComponenteDataMapper']);
     }
 
+    if (isset($options['ComponenteTurmaDataMapper'])) {
+      $this->setComponenteTurmaDataMapper($options['ComponenteTurmaDataMapper']);
+      unset($options['ComponenteTurmaDataMapper']);
+    }
+
     if (isset($options['RegraDataMapper'])) {
       $this->setRegraDataMapper($options['RegraDataMapper']);
       unset($options['RegraDataMapper']);
@@ -379,6 +389,30 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $this->setComponenteDataMapper(new ComponenteCurricular_Model_ComponenteDataMapper());
     }
     return $this->_componenteDataMapper;
+  }
+
+  /**
+   * Setter.
+   * @param ComponenteCurricular_Model_TurmaDataMapper $mapper
+   * @return App_Service_Boletim Provê interface fluída
+   */
+  public function setComponenteTurmaDataMapper(ComponenteCurricular_Model_TurmaDataMapper $mapper)
+  {
+    $this->_componenteTurmaDataMapper = $mapper;
+    return $this;
+  }
+
+  /**
+   * Getter.
+   * @return ComponenteCurricular_Model_TurmaDataMapper
+   */
+  public function getComponenteTurmaDataMapper()
+  {
+    if (is_null($this->_componenteTurmaDataMapper)) {
+      require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
+      $this->setComponenteTurmaDataMapper(new ComponenteCurricular_Model_TurmaDataMapper());
+    }
+    return $this->_componenteTurmaDataMapper;
   }
 
   /**
@@ -773,7 +807,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
            ))
 
          ->_setComponentes(App_Model_IedFinder::getComponentesPorMatricula(
-            $codMatricula, $this->getComponenteDataMapper()
+            $codMatricula, $this->getComponenteDataMapper(),
+            $this->getComponenteTurmaDataMapper()
            ));
 
     // Valores scalar de referência

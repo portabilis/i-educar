@@ -324,8 +324,93 @@ class indice extends clsCadastro
 
     $this->campoHora( 'hora_fim_intervalo', 'Hora Fim Intervalo', $this->hora_fim_intervalo, FALSE);
 
-    // Inclui módulo
-    $this->campoQuebra();
+    if ($this->ref_ref_cod_serie) {
+      require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
+      require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
+      require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
+
+      $disciplinas = '';
+      $conteudo    = '';
+
+      // Instancia o mapper de componente curricular
+      $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+
+      // Instancia o mapper de ano escolar
+      $anoEscolar = new ComponenteCurricular_Model_AnoEscolarDataMapper();
+      $lista = $anoEscolar->findComponentePorSerie($this->ref_ref_cod_serie);
+
+      // Instancia o mapper de turma
+      $componenteTurmaMapper = new ComponenteCurricular_Model_TurmaDataMapper();
+      $componentesTurma = $componenteTurmaMapper->findAll(array(), array('turma' => $this->cod_turma));
+
+      $componentes = array();
+      foreach ($componentesTurma as $componenteTurma) {
+        $componentes[$componenteTurma->get('componenteCurricular')] = $componenteTurma;
+      }
+      unset($componentesTurma);
+
+      $this->escola_serie_disciplina = array();
+
+      if (is_array($lista) && count($lista)) {
+        $conteudo .= '<div style="margin-bottom: 10px;">';
+        $conteudo .= '  <span style="display: block; float: left; width: 250px;">Nome</span>';
+        $conteudo .= '  <span style="display: block; float: left; width: 100px;">Carga horária</span>';
+        $conteudo .= '  <span style="display: block; float: left">Usar padrão do componente?</span>';
+        $conteudo .= '</div>';
+        $conteudo .= '<br style="clear: left" />';
+
+        foreach ($lista as $registro) {
+          $checked = '';
+
+          if (isset($componentes[$registro->id])) {
+            $checked = 'checked="checked"';
+          }
+
+          if (is_null($componentes[$registro->id]->cargaHoraria) ||
+            0 == $componentes[$registro->id]->cargaHoraria) {
+            $usarComponente = TRUE;
+          }
+          else {
+            $cargaHoraria = $componentes[$registro->id]->cargaHoraria;
+          }
+          $cargaComponente = $registro->cargaHoraria;
+
+          $conteudo .= '<div style="margin-bottom: 10px; float: left">';
+          $conteudo .= "  <label style='display: block; float: left; width: 250px'><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</label>";
+          $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7'></label>";
+          $conteudo .= "  <label style='display: block; float: left'><input type='checkbox' name='usar_componente[$registro->id]' value='1' ". ($usarComponente == TRUE ? $checked : '') .">($cargaComponente h)</label>";
+          $conteudo .= '</div>';
+          $conteudo .= '<br style="clear: left" />';
+
+          $cargaHoraria = '';
+        }
+
+        $disciplinas  = '<table cellspacing="0" cellpadding="0" border="0">';
+        $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $conteudo);
+        $disciplinas .= '</table>';
+      }
+      else {
+        $disciplinas = 'A série/ano escolar não possui componentes curriculares cadastrados.';
+      }
+    }
+
+    $this->campoQuebra2();
+
+    $help = array();
+    $componentes = App_Model_IedFinder::getEscolaSerieDisciplina($this->ref_ref_cod_serie, $this->ref_cod_escola);
+    foreach ($componentes as $componente) {
+      $help[] = sprintf('%s (%.0f h)', $componente->nome, $componente->cargaHoraria);
+    }
+    $help = '<ul><li>' . implode('</li><li>', $help) . '</li></ul>';
+
+    $label = 'Componentes curriculares:<br />'
+           . '<strong>Observação:</strong> caso não defina os componentes<br />'
+           . 'curriculares para a turma, esta usará a definição<br />'
+           . 'da série/ano escolar da escola'
+           . $help;
+
+    $this->campoRotulo('disciplinas_', $label,
+      "<div id='disciplinas'>$disciplinas</div>");
 
     if ($_POST['turma_modulo']) {
       $this->turma_modulo = unserialize(urldecode($_POST['turma_modulo']));
@@ -540,14 +625,14 @@ class indice extends clsCadastro
 
     $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
 
-    if ($this->multiseriada == 'on') {
+    if (isset($this->multiseriada)) {
       $this->multiseriada = 1;
     }
     else {
       $this->multiseriada = 0;
     }
 
-    if ($this->visivel == 'on') {
+    if (isset($this->visivel)) {
       $this->visivel = TRUE;
     }
     else {
@@ -648,6 +733,11 @@ class indice extends clsCadastro
 
       return FALSE;
     }
+
+    $this->atualizaComponentesCurriculares(
+      $this->ref_ref_cod_serie, $this->ref_cod_escola, $this->cod_turma,
+      $this->disciplinas, $this->carga_horaria, $this->usar_componente
+    );
   }
 
   function Editar()
@@ -658,14 +748,14 @@ class indice extends clsCadastro
 
     $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
 
-    if ($this->multiseriada == 'on') {
+    if (isset($this->multiseriada)) {
       $this->multiseriada = 1;
     }
     else {
       $this->multiseriada = 0;
     }
 
-    if ($this->visivel == 'on') {
+    if (isset($this->visivel)) {
       $this->visivel = TRUE;
     }
     else {
@@ -761,6 +851,11 @@ class indice extends clsCadastro
       $editou = $obj->edita();
     }
 
+    $this->atualizaComponentesCurriculares(
+      $this->ref_ref_cod_serie, $this->ref_cod_escola, $this->cod_turma,
+      $this->disciplinas, $this->carga_horaria, $this->usar_componente
+    );
+
     if ($editou) {
       $this->mensagem .= 'Edição efetuada com sucesso.';
       header('Location: educar_turma_lst.php');
@@ -772,6 +867,26 @@ class indice extends clsCadastro
 
       return FALSE;
     }
+  }
+
+  function atualizaComponentesCurriculares($codSerie, $codEscola, $codTurma, $componentes, $cargaHoraria, $usarComponente)
+  {
+    require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
+    $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
+
+    $componentesTurma = array();
+
+    foreach ($componentes as $key => $value) {
+      $carga = isset($usarComponente[$key]) ?
+        NULL : $cargaHoraria[$key];
+
+      $componentesTurma[] = array(
+        'id'           => $value,
+        'cargaHoraria' => $carga
+      );
+    }
+
+    $mapper->bulkUpdate($codSerie, $codEscola, $codTurma, $componentesTurma);
   }
 
   function Excluir()
@@ -1140,13 +1255,57 @@ document.getElementById('ref_ref_cod_serie').onchange = function()
 {
   if (this.value) {
     getHoraEscolaSerie();
+    getComponentesCurriculares(this.value);
   }
 
-  if(document.getElementById('multiseriada').checked == true) {
+  if (document.getElementById('multiseriada').checked == true) {
     changeMultiSerie();
   }
 
   hideMultiSerie();
+}
+
+function getComponentesCurriculares(campoSerie)
+{
+  var xml_disciplina = new ajax(parseComponentesCurriculares);
+  xml_disciplina.envia("educar_disciplina_xml.php?ser=" + campoSerie);
+}
+
+function parseComponentesCurriculares(xml_disciplina)
+{
+  var campoDisciplinas = document.getElementById('disciplinas');
+  var DOM_array = xml_disciplina.getElementsByTagName('disciplina');
+  var conteudo = '';
+
+  if (DOM_array.length) {
+    conteudo += '<div style="margin-bottom: 10px; float: left">';
+    conteudo += '  <span style="display: block; float: left; width: 250px;">Nome</span>';
+    conteudo += '  <label span="display: block; float: left; width: 100px">Carga horária</span>';
+    conteudo += '  <label span="display: block; float: left">Usar padrão do componente?</span>';
+    conteudo += '</div>';
+    conteudo += '<br style="clear: left" />';
+
+    for (var i = 0; i < DOM_array.length; i++) {
+      id = DOM_array[i].getAttribute("cod_disciplina");
+
+      conteudo += '<div style="margin-bottom: 10px; float: left">';
+      conteudo += '  <label style="display: block; float: left; width: 250px;"><input type="checkbox" name="disciplinas['+ id +']" id="disciplinas[]" value="'+ id +'">'+ DOM_array[i].firstChild.data +'</label>';
+      conteudo += '  <label style="display: block; float: left; width: 100px;"><input type="text" name="carga_horaria['+ id +']" value="" size="5" maxlength="7"></label>';
+      conteudo += '  <label style="display: block; float: left"><input type="checkbox" name="usar_componente['+ id +']" value="1">('+ DOM_array[i].getAttribute("carga_horaria") +' h)</label>';
+      conteudo += '</div>';
+      conteudo += '<br style="clear: left" />';
+    }
+  }
+  else {
+    campoDisciplinas.innerHTML = 'A série/ano escolar não possui componentes '
+                               + 'curriculares cadastrados.';
+  }
+
+  if (conteudo) {
+    campoDisciplinas.innerHTML = '<table cellspacing="0" cellpadding="0" border="0">';
+    campoDisciplinas.innerHTML += '<tr align="left"><td>'+ conteudo +'</td></tr>';
+    campoDisciplinas.innerHTML += '</table>';
+  }
 }
 
 function hideMultiSerie()
@@ -1159,6 +1318,7 @@ function hideMultiSerie()
   setVisibility('ref_ref_cod_serie_mult', multiBool);
   setVisibility('tr_ref_ref_cod_serie_mult',multiBool);
 }
+
 function PadraoAnoEscolar(xml)
 {
   var escola_curso_ = new Array();
