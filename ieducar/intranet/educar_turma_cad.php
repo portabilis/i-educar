@@ -361,6 +361,7 @@ class indice extends clsCadastro
 
         foreach ($lista as $registro) {
           $checked = '';
+          $usarComponente = FALSE;
 
           if (isset($componentes[$registro->id])) {
             $checked = 'checked="checked"';
