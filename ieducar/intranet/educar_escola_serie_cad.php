@@ -253,10 +253,12 @@ class indice extends clsCadastro
 
         foreach ($lista as $registro) {
           $checked = '';
+          $usarComponente = FALSE;
 
           if ($this->escola_serie_disciplina[$registro->id] == $registro->id) {
             $checked = 'checked="checked"';
           }
+
           if (is_null($this->escola_serie_disciplina_carga[$registro->id]) ||
             0 == $this->escola_serie_disciplina_carga[$registro->id]) {
             $usarComponente = TRUE;
@@ -264,6 +266,7 @@ class indice extends clsCadastro
           else {
             $cargaHoraria = $this->escola_serie_disciplina_carga[$registro->id];
           }
+
           $cargaComponente = $registro->cargaHoraria;
 
           $conteudo .= '<div style="margin-bottom: 10px; float: left">';
