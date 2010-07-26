@@ -32,7 +32,8 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
-require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
+
+require_once 'App/Model/IedFinder.php';
 
 /**
  * clsIndexBase class.
@@ -160,22 +161,20 @@ class indice extends clsDetalhe
       $this->addDetalhe(array( 'Hora Fim Intervalo', $registro['hora_fim_intervalo']));
     }
 
-    $obj = new clsPmieducarEscolaSerieDisciplina();
-    $escolaSerieDisciplinas = $obj->lista($this->ref_cod_serie, $this->ref_cod_escola, NULL, 1);
+    // Componentes da escola-série
+    $componentes = App_Model_IedFinder::getEscolaSerieDisciplina($this->ref_cod_serie, $this->ref_cod_escola);
 
-    // Mapper de componente curricular
-    $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
-
-    if ($escolaSerieDisciplinas) {
+    if (0 < count($componentes)) {
       $tabela = '
 <table>
   <tr align="center">
     <td bgcolor="#A1B3BD"><b>Nome</b></td>
+    <td bgcolor="#A1B3BD"><b>Carga horária</b></td>
   </tr>';
 
       $cont = 0;
 
-      foreach ($escolaSerieDisciplinas as $escolaSerieDisciplina) {
+      foreach ($componentes as $componente) {
         if (($cont % 2) == 0) {
           $color = ' bgcolor="#E4E9ED" ';
         }
@@ -183,12 +182,13 @@ class indice extends clsDetalhe
           $color = ' bgcolor="#FFFFFF" ';
         }
 
-        $componente = $componenteMapper->find($escolaSerieDisciplina['ref_cod_disciplina']);
-
         $tabela .= sprintf('
-  <tr>
-    <td %s align="left">%s</td>
-  </tr>', $color, $componente);
+          <tr>
+            <td %s align="left">%s</td>
+            <td %s align="center">%.0f h</td>
+          </tr>',
+          $color, $componente, $color, $componente->cargaHoraria
+        );
 
         $cont++;
       }

@@ -395,6 +395,7 @@ class indice extends clsDetalhe
       <table>
         <tr align="center">
           <td bgcolor="#A1B3BD"><b>Nome</b></td>
+          <td bgcolor="#A1B3BD"><b>Carga horária</b></td>
         </tr>';
 
     $cont = 0;
@@ -403,9 +404,10 @@ class indice extends clsDetalhe
 
       $tabela3 .= sprintf('
         <tr>
-          <td %s align=left>%s</td>
+          <td %s align="left">%s</td>
+          <td %s align="center">%.0f h</td>
         </tr>',
-        $color, $componente
+        $color, $componente, $color, $componente->cargaHoraria
       );
     }
 
