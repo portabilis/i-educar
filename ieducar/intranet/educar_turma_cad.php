@@ -324,6 +324,8 @@ class indice extends clsCadastro
 
     $this->campoHora( 'hora_fim_intervalo', 'Hora Fim Intervalo', $this->hora_fim_intervalo, FALSE);
 
+    $this->campoQuebra2();
+
     if ($this->ref_ref_cod_serie) {
       require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
       require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
@@ -395,23 +397,39 @@ class indice extends clsCadastro
       }
     }
 
-    $this->campoQuebra2();
+    $componentes = $help = array();
 
-    $help = array();
-    $componentes = App_Model_IedFinder::getEscolaSerieDisciplina($this->ref_ref_cod_serie, $this->ref_cod_escola);
+    try {
+      $componentes = App_Model_IedFinder::getEscolaSerieDisciplina(
+        $this->ref_ref_cod_serie, $this->ref_cod_escola
+      );
+    }
+    catch (Exception $e) {
+    }
+
     foreach ($componentes as $componente) {
       $help[] = sprintf('%s (%.0f h)', $componente->nome, $componente->cargaHoraria);
     }
-    $help = '<ul><li>' . implode('</li><li>', $help) . '</li></ul>';
+
+    if (count($componentes)) {
+      $help = '<ul><li>' . implode('</li><li>', $help) . '</li></ul>';
+    }
+    else {
+      $help = '';
+    }
 
     $label = 'Componentes curriculares:<br />'
            . '<strong>Observação:</strong> caso não defina os componentes<br />'
            . 'curriculares para a turma, esta usará a definição<br />'
-           . 'da série/ano escolar da escola'
-           . $help;
+           . 'da série/ano escolar da escola:'
+           . '<span id="_escola_serie_componentes">%s</span>';
+
+    $label = sprintf($label, $help);
 
     $this->campoRotulo('disciplinas_', $label,
       "<div id='disciplinas'>$disciplinas</div>");
+
+    $this->campoQuebra2();
 
     if ($_POST['turma_modulo']) {
       $this->turma_modulo = unserialize(urldecode($_POST['turma_modulo']));
@@ -518,10 +536,7 @@ class indice extends clsCadastro
       "<a href='#' onclick=\"document.getElementById('incluir_modulo').value = 'S'; document.getElementById('tipoacao').value = ''; acao();\"><img src='imagens/nvp_bot_adiciona.gif' alt='adicionar' title='Incluir' border=0></a>"
     );
 
-    $this->campoQuebra();
-
-    // Inclui dia da semana
-    $this->campoQuebra();
+    $this->campoQuebra2();
 
     if ($_POST['turma_dia_semana']) {
       $this->turma_dia_semana = unserialize(urldecode($_POST['turma_dia_semana']));
@@ -610,8 +625,6 @@ class indice extends clsCadastro
     $this->campoRotulo('bt_incluir_dia_semana', 'Dia Semana',
       "<a href='#' onclick=\"document.getElementById('incluir_dia_semana').value = 'S'; document.getElementById('tipoacao').value = ''; acao();\"><img src='imagens/nvp_bot_adiciona.gif' alt='adicionar' title='Incluir' border=0></a>"
     );
-
-    $this->campoQuebra();
 
     $this->campoOculto('padrao_ano_escolar', $this->padrao_ano_escolar);
 
@@ -1101,14 +1114,13 @@ var evtOnLoad = function()
     setVisibility(hr_tag[ct].parentNode.parentNode, false);
   }
 
+  setVisibility('tr_hora_inicial', true);
+  setVisibility('tr_hora_final', true);
+  setVisibility('tr_hora_inicio_intervalo', true);
+  setVisibility('tr_hora_fim_intervalo', true);
+
   if (document.getElementById('ref_cod_curso').value) {
-    if (document.getElementById('padrao_ano_escolar').value == 1) {
-      setVisibility('tr_hora_inicial', true);
-      setVisibility('tr_hora_final', true);
-      setVisibility('tr_hora_inicio_intervalo', true);
-      setVisibility('tr_hora_fim_intervalo', true);
-    }
-    else if (document.getElementById('padrao_ano_escolar').value == 0) {
+    if (document.getElementById('padrao_ano_escolar').value == 0) {
       setVisibility('tr_ref_cod_modulo', true);
       setVisibility('ref_cod_modulo', true);
       setVisibility('tr_data_inicio', true);
@@ -1255,8 +1267,11 @@ document.getElementById('multiseriada').onclick = function()
 document.getElementById('ref_ref_cod_serie').onchange = function()
 {
   if (this.value) {
+    codEscola = document.getElementById('ref_cod_escola').value;
+
     getHoraEscolaSerie();
     getComponentesCurriculares(this.value);
+    getComponentesEscolaSerie(codEscola, this.value);
   }
 
   if (document.getElementById('multiseriada').checked == true) {
@@ -1270,6 +1285,12 @@ function getComponentesCurriculares(campoSerie)
 {
   var xml_disciplina = new ajax(parseComponentesCurriculares);
   xml_disciplina.envia("educar_disciplina_xml.php?ser=" + campoSerie);
+}
+
+function getComponentesEscolaSerie(codEscola, codSerie)
+{
+  var xml_disciplina = new ajax(parseComponentesCurricularesEscolaSerie);
+  xml_disciplina.envia("educar_disciplina_xml.php?esc=" + codEscola + "&ser=" + codSerie);
 }
 
 function parseComponentesCurriculares(xml_disciplina)
@@ -1307,6 +1328,29 @@ function parseComponentesCurriculares(xml_disciplina)
     campoDisciplinas.innerHTML += '<tr align="left"><td>'+ conteudo +'</td></tr>';
     campoDisciplinas.innerHTML += '</table>';
   }
+}
+
+function parseComponentesCurricularesEscolaSerie(xml)
+{
+  var helpSpan = document.getElementById('_escola_serie_componentes');
+  var elements = xml.getElementsByTagName('disciplina');
+
+  ret = '';
+
+  if (elements.length) {
+    ret = '<ul>';
+
+    for (var i = 0; i < elements.length; i++) {
+      carga = elements[i].getAttribute('carga_horaria');
+      name  = elements[i].firstChild.data;
+
+      ret += '<li>' + name + ' (' + carga + ' h)</li>';
+    }
+
+    ret += '</ul>';
+  }
+
+  helpSpan.innerHTML = ret;
 }
 
 function hideMultiSerie()
@@ -1382,24 +1426,18 @@ function PadraoAnoEscolar(xml)
     setVisibility('tr_dia_semana_7', false);
   }
 
-  setVisibility('tr_hora_inicial',false);
-  setVisibility('tr_hora_final',false);
-  setVisibility('tr_hora_inicio_intervalo',false);
-  setVisibility('tr_hora_fim_intervalo',false);
+  setVisibility('tr_hora_inicial', true);
+  setVisibility('tr_hora_final', true);
+  setVisibility('tr_hora_inicio_intervalo', true);
+  setVisibility('tr_hora_fim_intervalo', true);
 
-  if (campoCurso == ''){
+  if (campoCurso == '') {
     return;
   }
 
   var campoCurso = document.getElementById('ref_cod_curso').value;
 
-  if (document.getElementById('padrao_ano_escolar').value == 1) {
-    setVisibility('tr_hora_inicial', true);
-    setVisibility('tr_hora_final', true);
-    setVisibility('tr_hora_inicio_intervalo', true);
-    setVisibility('tr_hora_fim_intervalo', true);
-  }
-  else if (document.getElementById('padrao_ano_escolar').value == 0) {
+  if (document.getElementById('padrao_ano_escolar').value == 0) {
     setVisibility('tr_ref_cod_modulo', true);
     setVisibility('ref_cod_modulo', true);
     setVisibility('tr_data_inicio', true);
