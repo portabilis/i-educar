@@ -14401,7 +14401,7 @@ CREATE TABLE servidor_alocacao (
     data_cadastro timestamp without time zone NOT NULL,
     data_exclusao timestamp without time zone,
     ativo smallint DEFAULT (1)::smallint NOT NULL,
-    carga_horaria time without time zone,
+    carga_horaria character varying(8),
     periodo smallint DEFAULT (1)::smallint,
     hora_final time without time zone,
     hora_inicial time without time zone,
@@ -20135,6 +20135,7 @@ INSERT INTO changelog VALUES (20, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '20_remo
 INSERT INTO changelog VALUES (21, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '21_cria_tabelas_modulo_calendario.sql');
 INSERT INTO changelog VALUES (22, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '22_cria_primary_key_em_modules_calendario_turma.sql');
 INSERT INTO changelog VALUES (23, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '23_cria_tabela_modules_componente_curricular_turma.sql');
+INSERT INTO changelog VALUES (24, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '24_altera_tipo_campo_carga_horaria_pmieducar_servidor_alocacao.sql');
 
 
 --

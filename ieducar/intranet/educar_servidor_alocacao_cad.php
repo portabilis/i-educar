@@ -214,37 +214,25 @@ class indice extends clsCadastro
     }
 
     // Carga horária
-    $total_horas   = sprintf('%02d', (int) (floor($this->carga_horaria_disponivel)));
-    $total_horas   = sprintf('%02d', (int) (floor($this->carga_horaria_disponivel)));
-    $total_minutos = sprintf('%02d', (int) ((floatval($this->carga_horaria_disponivel) - floatval($total_horas)) * 60));
+    $carga = $this->carga_horaria_disponivel;
+    $this->campoRotulo('carga_horaria_disponivel', 'Carga Horária', $carga . ':00');
 
-    $horas_utilizadas   = 0;
-    $minutos_utilizados = 0;
+    foreach ($this->alocacao_array as $alocacao) {
+      $carga_horaria_ = explode(':', $alocacao['carga_horaria_alocada']);
 
-    if ($this->alocacao_array) {
-      foreach ($this->alocacao_array as $alocacao) {
-        $carga_horaria_ = explode(':', $alocacao['carga_horaria_alocada']);
-
-        $horas_utilizadas   += ($carga_horaria_[0]);
-        $minutos_utilizados += ($carga_horaria_[1]);
-      }
+      $horas   += (int) $carga_horaria_[0];
+      $minutos += (int) $carga_horaria_[1];
     }
 
-    $horas                = sprintf('%02d', (int) $horas_utilizadas);
-    $minutos              = sprintf('%02d', (int) $minutos_utilizados);
-    $str_horas_utilizadas = sprintf('%s:%s', $horas, $minutos);
+    $total = ($horas * 60) + $minutos;
+    $rest  = ($carga * 60) - $total;
 
-    $this->campoRotulo('carga_horaria_disponivel', 'Carga Horária',
-      sprintf('%s:%s', $total_horas, $total_minutos));
+    $total = sprintf('%02d:%02d', ($total / 60), ($total % 60));
+    $rest  = sprintf('%02d:%02d', ($rest / 60), ($rest % 60));
 
-    $this->campoRotulo('horas_utilizadas', 'Horas Utilizadas', $str_horas_utilizadas);
-
-    $horas               = sprintf('%02d', (int) $total_horas - $horas_utilizadas);
-    $minutos             = sprintf('%02d', (int) $total_minutos - $minutos_utilizados);
-    $str_horas_restantes = sprintf('%s:%s', $horas, $minutos);
-
-    $this->campoRotulo('horas_restantes', 'Horas Restantes', $str_horas_restantes);
-    $this->campoOculto('horas_restantes_', $str_horas_restantes);
+    $this->campoRotulo('horas_utilizadas', 'Horas Utilizadas', $total);
+    $this->campoRotulo('horas_restantes', 'Horas Restantes', $rest);
+    $this->campoOculto('horas_restantes_', $rest);
 
     $this->campoQuebra();
 
@@ -264,7 +252,7 @@ class indice extends clsCadastro
       $nome_escola = $lista_escola[0]['nome'];
       $cod_escola  = $lista_escola[0]['cod_escola'];
 
-      $this->campoTextoInv('ref_cod_escola_label', 'Escola', $nome_escola);
+      $this->campoTextoInv('ref_cod_escola_label', 'Escola', $nome_escola, 100, 255, FALSE);
       $this->campoOculto('ref_cod_escola', $cod_escola);
     }
     // Usuário administrador visualiza todas as escolas disponíveis
@@ -317,13 +305,21 @@ class indice extends clsCadastro
         $obj_permissoes = new clsPermissoes();
         $link_excluir   = '';
 
-        if ($obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7)) {
-          $link_excluir = "<a href='#' onclick=\"getElementById('excluir_periodo').value = '{$key}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>";
-        }
-
         $obj_escola = new clsPmieducarEscola($alocacao['ref_cod_escola']);
         $det_escola = $obj_escola->detalhe();
         $det_escola = $det_escola['nome'];
+
+        if ($obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7)) {
+
+          $show = TRUE;
+          if (4 == $permissao->nivel_acesso($this->pessoa_logada)
+              && $alocacao['ref_cod_escola'] != $permissao->getEscola($this->pessoa_logada)
+          ) {
+            $show = FALSE;
+          }
+
+          $link_excluir = $show ? "<a href='#' onclick=\"getElementById('excluir_periodo').value = '{$key}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>" : "";
+        }
 
         // @todo CoreExt_Enum
         switch ($alocacao['periodo']) {
@@ -345,10 +341,10 @@ class indice extends clsCadastro
           FALSE, TRUE, '', '', '', '', 'periodo');
 
         $this->campoTextoInv('carga_horaria_alocada_' . $key, '',
-          $alocacao['carga_horaria_alocada'], 5, 5, FALSE, FALSE, TRUE, '', '',
+          substr($alocacao['carga_horaria_alocada'], 0, 5), 5, 5, FALSE, FALSE, TRUE, '', '',
           '', '', 'ds_carga_horaria_');
 
-        $this->campoTextoInv('ref_cod_escola_' . $key, '', $det_escola, 30, 255,
+        $this->campoTextoInv('ref_cod_escola_' . $key, '', $det_escola, 70, 255,
           FALSE, FALSE, FALSE, '', $link_excluir, '', '', 'ref_cod_escola_');
       }
     }
@@ -411,14 +407,23 @@ class indice extends clsCadastro
     if ($this->alocacao_array) {
       foreach ($this->alocacao_array as $alocacao) {
         if ($alocacao['novo']) {
+          $cargaHoraria = explode(':', $alocacao['carga_horaria_alocada']);
+
+          $hora    = isset($cargaHoraria[0]) ? $cargaHoraria[0] : 0;
+          $minuto  = isset($cargaHoraria[1]) ? $cargaHoraria[1] : 0;
+          $segundo = isset($cargaHoraria[2]) ? $cargaHoraria[2] : 0;
+
+          $cargaHoraria = sprintf("%'02d:%'02d:%'02d", $hora, $minuto, $segundo);
+
           $obj = new clsPmieducarServidorAlocacao(NULL, $this->ref_ref_cod_instituicao,
             NULL, $this->pessoa_logada, $alocacao['ref_cod_escola'],
             $this->ref_cod_servidor, NULL, NULL, $this->ativo,
-            $alocacao['carga_horaria_alocada'], $alocacao['periodo']);
+            $cargaHoraria, $alocacao['periodo']);
 
           $cadastrou = FALSE;
+
           if (FALSE == $obj->lista(NULL, $this->ref_ref_cod_instituicao,
-            NULL, NULL, $alocacao['escola'], $this->ref_cod_servidor, NULL, NULL,
+            NULL, NULL, $alocacao['ref_cod_escola'], $this->ref_cod_servidor, NULL, NULL,
             NULL, NULL, NULL, NULL, $alocacao['periodo'])
           ) {
             $cadastrou = $obj->cadastra();
@@ -520,7 +525,8 @@ function validaHora()
   hora_restantes_ = Date.UTC(1970, 01, 01, horas_restantes[0], horas_restantes[1], 0);
 
   if (hora_ > hora_max_) {
-    alert("O número de horas máximo por período/escola é de 6h.");
+    message = <?php print sprintf('"O número de horas máximo por período/escola é de %.0fh."', clsPmieducarServidorAlocacao::$cargaHorariaMax); ?>;
+    alert(message);
     return false;
   }
 
