@@ -116,17 +116,29 @@ class indice extends clsCadastro
         }
 
         $db = new clsBanco();
-        $consulta = sprintf("
-          SELECT
-            SUBSTR(COALESCE(SUM(carga_horaria), '00:00'), 0, 6) AS horas_utilizadas
+
+        // Carga horária alocada
+        $sql = sprintf("SELECT
+            carga_horaria
           FROM
             pmieducar.servidor_alocacao
           WHERE
             ref_cod_servidor = '%d' AND
             ativo            = 1", $this->cod_servidor);
 
-        $this->total_horas_alocadas = $db->CampoUnico($consulta);
+        $db->Consulta($sql);
 
+        $carga = 0;
+        while ($db->ProximoRegistro()) {
+          $cargaHoraria = $db->Tupla();
+          $cargaHoraria = explode(':', $cargaHoraria['carga_horaria']);
+          $carga += $cargaHoraria[0] * 60 + $cargaHoraria[1];
+        }
+
+        $this->total_horas_alocadas = sprintf('%02d:%02d',
+          $carga / 60, $carga % 60);
+
+        // Funções
         $obj_funcoes = new clsPmieducarServidorFuncao();
         $lst_funcoes = $obj_funcoes->lista($this->ref_cod_instituicao, $this->cod_servidor);
 

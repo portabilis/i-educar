@@ -58,7 +58,7 @@ class clsPmieducarServidorAlocacao
    * Carga horária máxima para um período de alocação (em horas).
    * @var float
    */
-  static $cargaHorariaMax = 6.0;
+  static $cargaHorariaMax = 36.0;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
