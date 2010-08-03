@@ -162,7 +162,12 @@ class indice extends clsDetalhe
     }
 
     // Componentes da escola-série
-    $componentes = App_Model_IedFinder::getEscolaSerieDisciplina($this->ref_cod_serie, $this->ref_cod_escola);
+    $componentes = array();
+    try {
+      $componentes = App_Model_IedFinder::getEscolaSerieDisciplina($this->ref_cod_serie, $this->ref_cod_escola);
+    }
+    catch (Exception $e) {
+    }
 
     if (0 < count($componentes)) {
       $tabela = '

@@ -343,7 +343,13 @@ class indice extends clsCadastro
 
       // Instancia o mapper de turma
       $componenteTurmaMapper = new ComponenteCurricular_Model_TurmaDataMapper();
-      $componentesTurma = $componenteTurmaMapper->findAll(array(), array('turma' => $this->cod_turma));
+      $componentesTurma = array();
+
+      if (isset($this->cod_turma) && is_numeric($this->cod_turma)) {
+        $componentesTurma = $componenteTurmaMapper->findAll(
+          array(), array('turma' => $this->cod_turma)
+        );
+      }
 
       $componentes = array();
       foreach ($componentesTurma as $componenteTurma) {
