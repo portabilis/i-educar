@@ -221,9 +221,14 @@ class indice extends clsCadastro
     $opcoes_disc = array('' => 'Selecione uma disciplina');
 
     // Componentes curriculares da série
-    $componentesTurma = App_Model_IedFinder::getComponentesTurma(
-      $this->ref_ref_cod_serie, $this->ref_cod_escola, $this->ref_cod_turma
-    );
+    $componentesTurma = array();
+    try {
+      $componentesTurma = App_Model_IedFinder::getComponentesTurma(
+        $this->ref_ref_cod_serie, $this->ref_cod_escola, $this->ref_cod_turma
+      );
+    }
+    catch (Exception $e) {
+    }
 
     if (0 == count($componentesTurma)) {
       $opcoes_disc = array('NULL' => 'A série dessa escola não possui componentes cadastrados');

@@ -261,7 +261,7 @@ class App_Model_IedFinder extends CoreExt_Entity
     if (FALSE === $disciplinas) {
       throw new App_Model_Exception(sprintf(
           'Nenhuma disciplina para a série (%d) e a escola (%d) informados',
-          $codSerie, $codEscola
+          $anoEscolar, $escola
       ));
     }
 

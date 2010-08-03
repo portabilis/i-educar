@@ -387,9 +387,15 @@ class indice extends clsDetalhe
     }
 
     // Recupera os componentes curriculares da turma
-    $componentes = App_Model_IedFinder::getComponentesTurma(
-      $this->ref_ref_cod_serie, $this->ref_ref_cod_escola, $this->cod_turma
-    );
+    $componentes = array();
+
+    try {
+      $componentes = App_Model_IedFinder::getComponentesTurma(
+        $this->ref_ref_cod_serie, $this->ref_ref_cod_escola, $this->cod_turma
+      );
+    }
+    catch (Exception $e) {
+    }
 
     $tabela3 = '
       <table>
