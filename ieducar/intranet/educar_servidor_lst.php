@@ -103,9 +103,9 @@ class indice extends clsListagem
       'Instituição'
     ));
 
-    $get_escola             = TRUE;
-    $obrigatorio            = TRUE;
-    $exibe_nm_escola        = TRUE;
+    $get_escola      = TRUE;
+    $obrigatorio     = TRUE;
+    $exibe_nm_escola = TRUE;
 
     include 'include/pmieducar/educar_campo_lista.php';
 
@@ -123,7 +123,7 @@ class indice extends clsListagem
     $parametros->setSubmit(0);
     $parametros->adicionaCampoSelect( 'cod_servidor', 'ref_cod_pessoa_fj', 'nome');
 
-    $this->campoListaPesq( 'cod_servidor', 'Servidor', $opcoes, $this->cod_servidor,
+    $this->campoListaPesq('cod_servidor', 'Servidor', $opcoes, $this->cod_servidor,
       'pesquisa_funcionario_lst.php', '', FALSE, '', '', NULL, NULL, '', FALSE,
       $parametros->serializaCampos() . '&com_matricula=false', TRUE);
 
@@ -158,12 +158,12 @@ class indice extends clsListagem
       NULL,
       NULL,
       NULL,
-      $this->ref_cod_escola,
+      ! isset($_GET['busca']) ? $this->ref_cod_escola : NULL,
       NULL,
       NULL,
       NULL,
       NULL,
-      1
+      ! isset($_GET['busca']) ? 1 : NULL
     );
 
     $total = $obj_servidor->_total;
