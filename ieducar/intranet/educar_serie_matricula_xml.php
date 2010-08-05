@@ -1,5 +1,33 @@
 <?php
 
+/**
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Pmieducar
+ * @since     Arquivo disponível desde a versão 1.0.0
+ * @version   $Id$
+ */
+
 header('Content-type: text/xml');
 
 require_once 'include/clsBanco.inc.php';
@@ -15,311 +43,28 @@ $pessoa_logada = $_SESSION['id_pessoa'];
 @session_write_close();
 
 /**
- * Retorna o ano escolar de sequÃªncia do ano escolar no curso.
- *
- * @param  clsBanco $db
- * @param  int      $codSerie
- * @param  int      $codCurso
- * @return array    (codSerie => nome)
- * @todo   Selecionar pelo curso Ã© desnecessÃ¡rio pois a relaÃ§Ã£o pmieducar.serie
- *         com pmieducar.curso Ã© 1:1.
+ * @param  array  $data
+ * @param  string $index
+ * @return array  $data[$index] => key($data)
  */
-function _anosEscolaresSequenciaCurso(clsBanco $db, $codSerie, $codCurso)
+function _createArrayFromIndex(array $data, $index)
 {
-  $sql = sprintf('SELECT
-      s.cod_serie,
-      s.nm_serie
-    FROM
-      pmieducar.serie s,
-      pmieducar.sequencia_serie ss
-    WHERE
-      ss.ref_serie_origem = %d
-      AND ss.ref_serie_destino = s.cod_serie
-      AND s.ref_cod_curso = %d
-      AND ss.ativo = 1
-    ORDER BY
-      s.nm_serie ASC',
-    $codSerie, $codCurso
-  );
-
-  $db->Consulta($sql);
-
-  $lst_serie = array();
-  if ($db->numLinhas()) {
-    while ($db->ProximoRegistro()) {
-      list($cod, $nome) = $db->Tupla();
-      $lst_serie[$cod] = $nome;
+  $ret = array();
+  foreach ($data as $key => $entry) {
+    if (isset($entry[$index])) {
+      $ret[$entry[$index]] = $key;
     }
   }
-
-  return $lst_serie;
+  return $ret;
 }
 
 /**
- * Seleciona um ano escolar/sÃ©rie.
- *
  * @param  clsBanco $db
- * @param  int      $codSerie  CÃ³digo do ano escolar/sÃ©rie.
+ * @param  string   $sql
  * @return array    (codSerie => nome)
  */
-function _mesmoAnoEscolar(clsBanco $db, $codSerie)
+function _getAnoEscolar(clsBanco $db, $sql)
 {
-  $sql = sprintf('SELECT
-      cod_serie,
-      nm_serie
-    FROM
-      pmieducar.serie
-    WHERE
-      cod_serie = %d
-      AND ativo = 1
-    ORDER BY
-      nm_serie ASC',
-    $codSerie
-  );
-
-  $db->Consulta($sql);
-
-  $lst_serie = array();
-  if ($db->numLinhas()) {
-    while ($db->ProximoRegistro()) {
-      list($cod, $nome) = $db->Tupla();
-      $lst_serie[$cod] = $nome;
-    }
-  }
-
-  return $lst_serie;
-}
-
-/**
- * Retorna os anos escolares da sequÃªncia do ano escolar/sÃ©rie para a escola
- * e o curso.
- *
- * @param  clsBanco $db
- * @param  int      $codSerie   CÃ³digo do ano escolar.
- * @param  int      $codEscola  CÃ³digo da escola.
- * @param  int      $codCurso   CÃ³digo do curso.
- * @return array    (codSerie => nome)
- * @see    _anosEscolaresEscolaCurso
- */
-function _sequencias(clsBanco $db, $codSerie, $codEscola, $codCurso)
-{
-  $db->Consulta('SELECT
-      so.ref_cod_curso AS curso_origem,
-      ss.ref_serie_origem AS serie_origem,
-      sd.ref_cod_curso AS curso_destino,
-      ss.ref_serie_destino AS serie_destino
-    FROM
-      pmieducar.sequencia_serie ss,
-      pmieducar.serie so,
-      pmieducar.serie sd
-    WHERE
-      ss.ativo = 1
-      AND ref_serie_origem = so.cod_serie
-      AND ref_serie_destino = sd.cod_serie
-    ORDER BY
-      ss.ref_serie_origem ASC');
-
-  $sequencias = array();
-  if ($db->numLinhas()) {
-    while ($db->ProximoRegistro()) {
-      $sequencias[] = $db->Tupla();
-    }
-  }
-
-  // Seleciona todas as sÃ©ries de origem de sequÃªncia de sÃ©rie que nÃ£o sejam
-  // sÃ©ries destino de alguma sequÃªncia.
-  $db->Consulta('SELECT
-      DISTINCT(o.ref_serie_origem)
-    FROM
-      pmieducar.sequencia_serie o,
-      pmieducar.escola_serie es
-    WHERE NOT EXISTS(
-      SELECT
-        1
-      FROM
-        pmieducar.sequencia_serie d
-      WHERE
-        o.ref_serie_origem = d.ref_serie_destino
-    )');
-
-  $lst_serie = array();
-  $serie_sequencia    = array();
-
-  if ($db->numLinhas()) {
-    $pertence_sequencia = FALSE;
-    $achou_serie        = FALSE;
-    $reset              = FALSE;
-
-    while ($db->ProximoRegistro()) {
-      list($ini_sequencia) = $db->Tupla();
-
-      $ini_serie = $ini_sequencia;
-      reset($sequencias);
-
-      do {
-        if ($reset) {
-          reset($sequencias);
-          $reset = FALSE;
-        }
-
-        $sequencia = current($sequencias);
-        $aux_serie = $sequencia['serie_origem'];
-
-        if ($ini_serie == $aux_serie) {
-          // Achou a sÃ©rie da matrÃ­cula.
-          if ($codSerie == $aux_serie) {
-            $achou_serie = TRUE;
-          }
-
-          // Curso escolhido Ã© da sequÃªncia de sÃ©rie
-          if ($sequencia['curso_destino'] == $codCurso) {
-            $pertence_sequencia = TRUE;
-            $ini_serie          = $sequencia['serie_destino'];
-            $reset              = TRUE;
-
-            // Armazena a sÃ©rie de destino no array de sÃ©rie sequencial
-            $serie_sequencia[]  = $sequencia['serie_destino'];
-          }
-          else {
-            $ini_serie = $sequencia['serie_destino'];
-            $reset     = TRUE;
-          }
-        }
-      } while (each($sequencias));
-
-      if ($achou_serie && $pertence_sequencia) {
-        // Curso escolhido pertence a sequÃªncia da sÃ©rie da matrÃ­cula.
-        break;
-      }
-    }
-
-    // @pertenceSequencia{
-    if (! $pertence_sequencia) {
-      $lst_serie = _anosEscolaresEscolaCurso($db, $serie_sequencia, $codEscola, $codCurso);
-    }
-    // }@pertenceSequencia
-  }
-
-  return $lst_serie;
-}
-
-/**
- * Seleciona os anos escolares de um curso em uma escola, eliminando da seleÃ§Ã£o
- * as sÃ©ries identificadas no array $serie_sequencia.
- *
- * @param  clsBanco $db
- * @param  array    $serie_sequencia CÃ³digos dos anos escolares/sÃ©ries da
- *                                   sequÃªncia.
- * @param  int      $codEscola       CÃ³digo da escola.
- * @param  int      $codCurso        CÃ³digo do curso.
- * @return array    (codSerie => nome)
- */
-function _anosEscolaresEscolaCurso(clsBanco $db, array $serie_sequencia, $codEscola, $codCurso)
-{
-  $sql = sprintf('SELECT
-      s.cod_serie,
-      s.nm_serie
-    FROM
-      pmieducar.serie s,
-      pmieducar.escola_serie es
-    WHERE
-      es.ref_cod_escola = %d
-      AND s.cod_serie = es.ref_cod_serie
-      AND s.ref_cod_curso = %d
-      AND s.ativo = 1',
-    $codEscola, $codCurso
-  );
-
-  if (is_array($serie_sequencia)) {
-    foreach ($serie_sequencia as $series)
-      $sql .=  sprintf(' AND s.cod_serie != %d ', $series);
-  }
-
-  $sql .= '
-    ORDER BY
-      s.nm_serie ASC';
-
-  $db->Consulta($sql);
-
-  $lst_serie = array();
-  if ($db->numLinhas()) {
-    while ($db->ProximoRegistro()) {
-      list($cod, $nome) = $db->Tupla();
-      $lst_serie[$cod] = $nome;
-    }
-  }
-
-  return $lst_serie;
-}
-
-/**
- * Retorna os anos escolares da sequÃªncia.
- *
- * @param  clsBanco $db
- * @param  int      $codSerie  CÃ³digo do ano escolar/sÃ©rie.
- * @return array    (codSerie => nome)
- */
-function _anoEscolarSequencia(clsBanco $db, $codSerie)
-{
-  $sql = sprintf('SELECT
-      s.cod_serie,
-      s.nm_serie
-    FROM
-      pmieducar.serie s,
-      pmieducar.sequencia_serie ss
-    WHERE
-      ss.ref_serie_origem = %d
-      AND ss.ref_serie_destino = s.cod_serie
-      AND ss.ativo = 1
-    ORDER BY
-      s.nm_serie ASC',
-    $codSerie
-  );
-
-  // Lista sÃ©rie sequÃªncia
-  $db->Consulta($sql);
-
-  $lst_serie = array();
-  if ($db->numLinhas()) {
-    while ($db->ProximoRegistro()) {
-      list($cod, $nome) = $db->Tupla();
-      $lst_serie[$cod] = $nome;
-    }
-  }
-
-  return $lst_serie;
-}
-
-/**
- * Retorna os anos escolares/sÃ©rie do curso de uma escola e instituiÃ§Ã£o.
- *
- * @param  clsBanco $db
- * @param  int      $codEscola       CÃ³digo da escola.
- * @param  int      $codCurso        CÃ³digo do curso.
- * @param  int      $codInstituicao  CÃ³digo da instituiÃ§Ã£o.
- * @return array    (codSerie => nome)
- */
-function _anoEscolarEscolaCurso(clsBanco $db, $codEscola, $codCurso, $codInstituicao)
-{
-  $sql = sprintf('SELECT
-      s.cod_serie,
-      s.nm_serie
-    FROM
-      pmieducar.serie s,
-      pmieducar.escola_serie es,
-      pmieducar.curso c
-    WHERE
-      es.ref_cod_escola = %d
-      AND es.ref_cod_serie = s.cod_serie
-      AND s.ativo = 1
-      AND c.cod_curso = %d
-      AND s.ref_cod_curso = c.cod_curso
-      AND c.ref_cod_instituicao = %d
-    ORDER BY
-      s.nm_serie ASC',
-    $codEscola, $codCurso, $codInstituicao
-  );
-
   $db->Consulta($sql);
 
   $resultado = array();
@@ -333,14 +78,109 @@ function _anoEscolarEscolaCurso(clsBanco $db, $codEscola, $codCurso, $codInstitu
   return $resultado;
 }
 
+/**
+ * Retorna o ano escolar/série de uma escola.
+ *
+ * @param  clsBanco $db
+ * @param  int      $codSerie  Código do ano escolar/série.
+ * @return array    (codSerie => nome)
+ */
+function _mesmoAnoEscolar(clsBanco $db, $codEscola, $codSerie)
+{
+  $sql = sprintf('SELECT
+      s.cod_serie,
+      s.nm_serie
+    FROM
+      pmieducar.serie s,
+      pmieducar.escola_serie es
+    WHERE
+      s.cod_serie = es.ref_cod_serie
+      AND es.ref_cod_escola = %d
+      AND es.ativo = 1
+      AND s.cod_serie = %d
+      AND s.ativo = 1
+    ORDER BY
+      s.nm_serie ASC',
+    $codEscola, $codSerie
+  );
+
+  return _getAnoEscolar($db, $sql);
+}
+
+/**
+ * Retorna os anos escolares/séries da sequência de série de uma escola.
+ *
+ * @param  clsBanco $db
+ * @param  int      $codEscola  Código da escola.
+ * @param  int      $codSerie   Código do ano escolar/série.
+ * @return array    (codSerie => nome)
+ */
+function _anoEscolarSequencia(clsBanco $db, $codEscola, $codSerie)
+{
+  $sql = sprintf('SELECT
+      s.cod_serie,
+      s.nm_serie
+    FROM
+      pmieducar.serie s,
+      pmieducar.sequencia_serie ss,
+      pmieducar.escola_serie es
+    WHERE
+      ss.ref_serie_destino = s.cod_serie
+      AND s.cod_serie = es.ref_cod_serie
+      AND es.ref_cod_escola = %d
+      AND es.ativo = 1
+      AND ss.ref_serie_origem = %d
+      AND ss.ativo = 1
+    ORDER BY
+      s.nm_serie ASC',
+    $codEscola, $codSerie
+  );
+
+  return _getAnoEscolar($db, $sql);
+}
+
+/**
+ * Retorna os anos escolares/série do curso de uma escola.
+ *
+ * @param  clsBanco  $db
+ * @param  int       $codEscola  Código da escola.
+ * @param  int       $codCurso   Código do curso.
+ * @return array     (codSerie => nome)
+ */
+function _anoEscolarEscolaCurso(clsBanco $db, $codEscola, $codCurso)
+{
+  $sql = sprintf('SELECT
+      s.cod_serie,
+      s.nm_serie
+    FROM
+      pmieducar.serie s,
+      pmieducar.escola_serie es,
+      pmieducar.curso c
+    WHERE
+      es.ref_cod_escola = %d
+      AND es.ref_cod_serie = s.cod_serie
+      AND es.ativo = 1
+      AND s.ref_cod_curso = c.cod_curso
+      AND s.ativo = 1
+      AND c.cod_curso = %d
+    ORDER BY
+      s.nm_serie ASC',
+    $codEscola, $codCurso
+  );
+
+  return _getAnoEscolar($db, $sql);
+}
+
+$resultado = array();
+
 if (is_numeric($_GET['alu']) && is_numeric($_GET['ins']) &&
     is_numeric($_GET['cur']) && is_numeric( $_GET['esc'])) {
 
   $sql = sprintf('SELECT
-    m.cod_matricula,
-    m.ref_ref_cod_escola,
-    m.ref_cod_curso,
-    m.ref_ref_cod_serie,
+    m.cod_matricula AS cod_matricula,
+    m.ref_ref_cod_escola AS cod_escola,
+    m.ref_cod_curso AS cod_curso,
+    m.ref_ref_cod_serie AS cod_serie,
     m.ano,
     eal.ano AS ano_letivo,
     c.padrao_ano_escolar,
@@ -388,218 +228,58 @@ if (is_numeric($_GET['alu']) && is_numeric($_GET['ins']) &&
   $db = new clsBanco();
   $db->Consulta($sql);
 
-  $resultado = array();
-
-  // caso o aluno nao tenha nenhuma matricula em determinada instituicao
-  if (! $db->numLinhas()) {
-    $resultado = _anoEscolarEscolaCurso($db, $_GET['esc'], $_GET['cur'], $_GET['ins']);
+  $matriculas = array();
+  while ($db->ProximoRegistro()) {
+    $tupla = $db->Tupla();
+    $matriculas[$tupla['cod_matricula']] = $tupla;
   }
-  // Caso o aluno tenha matrÃ­cula(s) em determinada InstituiÃ§Ã£o
-  else {
-    $db2 = new clsBanco();
 
-    while ($db->ProximoRegistro()) {
-      $lst_serie = array();
+  $codEscola = $_GET['esc'];
+  $codCurso  = $_GET['cur'];
 
-      list($matricula, $escola, $curso, $serie, $ano, $ano_letivo,
-           $padrao_ano_escolar, $aprovado, $transferencia_int,
-           $transferencia_ext) = $db->Tupla();
+  if (count($matriculas)) {
+    $cursos = _createArrayFromIndex($matriculas, 'cod_curso');
 
-      // Caso o aluno tenha alguma solicitaÃ§Ã£o de transferÃªncia externa em
-      // aberto, libera todas as sÃ©ries.
-      // @transferencia{
-      if ($transferencia_ext) {
-        $resultado = _anoEscolarEscolaCurso($db2, $_GET['esc'], $_GET['cur'], $_GET['ins']);
-        break;
-      }
-      // }@transferencia
+    // Mesmo curso?
+    if (in_array($codCurso, array_keys($cursos))) {
+      // Matrícula do curso.
+      $matricula = $matriculas[$cursos[$codCurso]];
 
-      // @escola{
-      if ($escola == $_GET['esc']) {
-
-        // @curso{
-        // Curso ao qual estÃ¡ matriculado Ã© igual ao escolhido.
-        if ($curso == $_GET['cur']) {
-
-          // @reprovado{
-          // SituaÃ§Ã£o reprovado.
-          // Ano letivo da escola maior que ano da matrÃ­cula OU nÃ£o padrÃ£o.
-          if (App_Model_MatriculaSituacao::REPROVADO == $aprovado &&
-              ($ano_letivo > $ano || !$padrao_ano_escolar)) {
-            $lst_serie = _mesmoAnoEscolar($db2, $serie);
-          }
-          // }@reprovado
-
-          // @aprovado{
-          // SituaÃ§Ã£o aprovado.
-          // Ano letivo da escola maior que ano da matrÃ­cula OU nÃ£o padrÃ£o.
-          elseif (App_Model_MatriculaSituacao::APROVADO == $aprovado &&
-                  ($ano_letivo > $ano || !$padrao_ano_escolar)) {
-            $lst_serie = _anoEscolarSequencia($db2, $serie);
-          }
-          // }@aprovado
-        }
-        // }@curso
-
-        // @curso-diferente{
-        // Curso matriculado diferente do curso escolhido.
-        else {
-          // O curso Ã© diferente mas o ano escolar/sÃ©rie faz parte da sequÃªncia.
-          // Isso se torna verdadeiro caso as sÃ©ries sejam listadas no primeiro
-          // IF @aprovado.
-
-          // @aprovado{
-          // Ano letivo da escola maior que ano da matrÃ­cula OU curso nÃ£o padrÃ£o.
-          if (App_Model_MatriculaSituacao::APROVADO == $aprovado &&
-              ($ano_letivo > $ano || !$padrao_ano_escolar)) {
-            // Lista anos escolares (sÃ©ries) da sequÃªncia.
-            $lst_serie = _anosEscolaresSequenciaCurso($db2, $serie, $_GET['cur']);
-          }
-          // }@aprovado
-
-          $situacoes = array(
-            App_Model_MatriculaSituacao::APROVADO,
-            App_Model_MatriculaSituacao::REPROVADO,
-            App_Model_MatriculaSituacao::EM_ANDAMENTO
-          );
-
-          // O curso Ã© diferente e nÃ£o faz parte da sequÃªncia.
-          // @emAndamento{
-          if (in_array($aprovado, $situacoes)) {
-            // Lista os anos escolares/sÃ©ries da sequÃªncia.
-            $lst_serie = _sequencias($db2, $serie, $_GET['esc'], $_GET['cur']);
-          }
-          // }@emAndamento
-        }
-        // }@curso-diferente
-      }
-      // }@escola
-
-      // @escolaDiferente{
-      elseif (($escola != $_GET['esc']) && ($transferencia_int == 1)) {
-
-        // Curso matriculado igual ao curso escolhido.
-        // @curso{
-        if ($curso == $_GET['cur']) {
-
-          // Reprovado ou em andamento.
-          $situacoes = array(
-            App_Model_MatriculaSituacao::REPROVADO,
-            App_Model_MatriculaSituacao::EM_ANDAMENTO
-          );
-
-          // @emAndamento{
-          if (in_array($aprovado, $situacoes)) {
-            // Lista a mesma sÃ©rie.
-            $lst_serie = _mesmoAnoEscolar($db2, $serie);
-          }
-          // }@emAndamento
-
-          // @aprovado{
-          elseif (App_Model_MatriculaSituacao::APROVADO == $aprovado) {
-            // Lista sÃ©rie sequÃªncia
-            $lst_serie = _anoEscolarSequencia($db2, $serie);
-          }
-          // }@aprovado
-        }
-        // }@curso
-
-        // Curso matriculado diferente do curso escolhido.
-        // @cursoDiferente{
-        else {
-
-          // Curso Ã© diferente mas faz parte da sequÃªncia.
-          // @aprovado{
-          if ($aprovado == 1) {
-            // Lista anos escolares (sÃ©ries) da sequÃªncia.
-            $lst_serie = _anosEscolaresSequenciaCurso($db2, $serie, $_GET['cur']);
-          }
-          // }@aprovado
-
-          $situacoes = array(
-            App_Model_MatriculaSituacao::APROVADO,
-            App_Model_MatriculaSituacao::REPROVADO,
-            App_Model_MatriculaSituacao::EM_ANDAMENTO
-          );
-
-          // Curso Ã© diferente e nÃ£o faz parte da sequÃªncia.
-          // @emAndamento{
-          if (in_array($aprovado, $situacoes)) {
-            // Lista os anos escolares/sÃ©ries da sequÃªncia.
-            $lst_serie = _sequencias($db2, $serie, $_GET['esc'], $_GET['cur']);
-          }
-          // }@emAndamento
-
-        }
-        // }@cursoDiferente
-      }
-      // }@escolaDiferente
-
-      // @escolaDiferenteNaoTransferencia
-      elseif ($escola != $_GET['esc'] && !$transferencia_int) {
-
-        // @cursoDiferente
-        // Curso matriculado diferente do curso escolhido.
-        if ($curso != $_GET['cur']) {
-
-          // SituaÃ§Ãµes aprovado e reprovado.
-          $situacoes = array(
-            App_Model_MatriculaSituacao::APROVADO,
-            App_Model_MatriculaSituacao::REPROVADO
-          );
-
-          // @aprovado{
-          if (in_array($aprovado, $situacoes)) {
-            // Lista os anos escolares/sÃ©ries da sequÃªncia.
-            $lst_serie = _sequencias($db2, $serie, $_GET['esc'], $_GET['cur']);
-          }
-          // }@aprovado
-
-        }
-        // }@cursoDiferente
-
-        // @cursoIgual{
-        else {
-
-          // Curso matriculado igual ao curso escolhido.
-          if ($curso == $_GET['cur']) {
-
-            // SituaÃ§Ã£o reprovado ou tranferÃªncia.
-            // @reprovado{
-            if ($aprovado == 2 || $transferencia_int == 1) {
-              // Lista a mesma sÃ©rie.
-              $lst_serie = _mesmoAnoEscolar($db2, $serie);
-            }
-            // }@reprovado
-
-            // SituaÃ§Ã£o aprovado
-            // @aprovado{
-            elseif ($aprovado == 1) {
-              // Lista ano escolar/sÃ©rie da sequÃªncia.
-              $lst_serie = _anoEscolarSequencia($db2, $serie);
-            }
-            // }@aprovado
-
-          }
-        }
-        // }@cursoIgual
+      // Matrícula reprovada, retorna o mesmo ano escolar da matrícula para a escola selecionada.
+      if (App_Model_MatriculaSituacao::REPROVADO == $matricula['aprovado']) {
+        $resultado = _mesmoAnoEscolar($db, $codEscola, $matricula['cod_serie']);
       }
 
-      if (empty($resultado)) {
-        $resultado = $lst_serie;
-      }
-      else {
-        $resultado = array_intersect_assoc($lst_serie,$resultado);
+      // Matrícula aprovada, retorna os anos escolares da sequência de série para a escola selecionada.
+      elseif (App_Model_MatriculaSituacao::APROVADO == $matricula['aprovado']) {
+        $resultado = _anoEscolarSequencia($db, $codEscola, $matricula['cod_serie']);
       }
 
+      // Matrícula em andamento
+      elseif (App_Model_MatriculaSituacao::EM_ANDAMENTO == $matricula['aprovado']) {
+        // Transferência interna, retorna o mesmo ano escolar da matrícula para a escola selecionada.
+        if (1 == $matricula['transferencia_int']) {
+          $resultado = _mesmoAnoEscolar($db, $codEscola, $matricula['cod_serie']);
+        }
+
+        // Transferência externa, retorna os anos escolares da sequência de série para a escola selecionada.
+        elseif (1 == $matricula['transferencia_ext']) {
+          $retultado = _anoEscolarSequencia($db, $codEscola, $matricula['cod_serie']);
+        }
+      }
     }
+    else {
+      // Retorna todos os anos escolares para o curso em uma escola.
+      $resultado = _anoEscolarEscolaCurso($db, $codEscola, $codCurso);
+    }
+  }
+  else {
+    $resultado = _anoEscolarEscolaCurso($db, $codEscola, $codCurso);
   }
 }
 
-if (! empty($resultado)) {
-  foreach ($resultado as $cod => $nome) {
-    print sprintf('<serie cod_serie="%d">%s</serie>' . "\n", $cod, $nome);
-  }
+foreach ($resultado as $cod => $nome) {
+  print sprintf('<serie cod_serie="%d">%s</serie>' . "\n", $cod, $nome);
 }
 
 print '</query>';
