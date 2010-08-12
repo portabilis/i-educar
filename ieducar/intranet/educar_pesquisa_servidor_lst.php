@@ -278,7 +278,7 @@ class indice extends clsListagem
       $hr_ves,
       $hr_not,
       $_SESSION['dia_semana'],
-      NULL,
+      $this->ref_cod_escola,
       $this->identificador,
       $this->ref_cod_curso,
       $this->ref_cod_disciplina
