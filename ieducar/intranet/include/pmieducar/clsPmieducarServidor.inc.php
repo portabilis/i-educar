@@ -525,29 +525,23 @@ class clsPmieducarServidor
 
     // Seleciona apenas servidores que tenham a carga atual maior ou igual ao
     // do servidor atual
-    if (is_string($str_tipo)) {
-      switch ($str_tipo) {
-        case "livre":
-          if (is_numeric($int_ref_cod_instituicao)) {
-            $where  = " AND s.ref_cod_instituicao      = '{$int_ref_cod_instituicao}' ";
-            $where2 = " AND sa.ref_ref_cod_instituicao = '{$int_ref_cod_instituicao}' ";
-          }
+    if (is_string($str_tipo) && $str_tipo == 'livre') {
+      if (is_numeric($int_ref_cod_instituicao)) {
+        $where  = " AND s.ref_cod_instituicao      = '{$int_ref_cod_instituicao}' ";
+        $where2 = " AND sa.ref_ref_cod_instituicao = '{$int_ref_cod_instituicao}' ";
+      }
 
-          $filtros .= "
+      $filtros .= "
   {$whereAnd} NOT EXISTS
     (SELECT 1
     FROM pmieducar.servidor_alocacao sa
     WHERE sa.ref_cod_servidor = s.cod_servidor $where2)";
 
-          $filtros .= "
+      $filtros .= "
   {$whereAnd} (s.carga_horaria::text || ':00:00') >= COALESCE(
     (SELECT SUM(carga_horaria)::text
     FROM pmieducar.servidor_alocacao saa
     WHERE saa.ref_cod_servidor = {$str_not_in_servidor}),'00:00') $where";
-
-          $whereAnd = " AND ";
-          break;
-      }
 
       $whereAnd = " AND ";
     }
