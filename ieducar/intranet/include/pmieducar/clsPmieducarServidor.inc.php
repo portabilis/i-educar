@@ -974,6 +974,34 @@ class clsPmieducarServidor
     return FALSE;
   }
 
+   /**
+    * Retorna um array com os códigos de servidor e instituição, usando os
+    * valores dos parâmetros ou das propriedades da instância atual.
+    *
+    * @since   Método disponível desde a versão 1.2.0
+    * @param   int  $codServidor     Código do servidor, caso não seja informado,
+    *   usa o código disponível no objeto atual
+    * @param   int  $codInstituicao  Código da instituição, caso não seja
+    *   informado, usa o código disponível no objeto atual
+    * @return  array|bool  (codServidor => (int), codInstituicao => (int))
+    */
+  function _getCodServidorInstituicao($codServidor = NULL, $codInstituicao = NULL)
+  {
+    $codServidor    = $codServidor != NULL ? $codServidor : $this->cod_servidor;
+    $codInstituicao = $codInstituicao != NULL ? $codInstituicao : $this->ref_cod_instituicao;
+
+    // Se códigos não forem fornecidos, nem pela classe nem pelo código cliente,
+    // retorna FALSE
+    if ($codServidor == NULL || $codInstituicao == NULL) {
+      return FALSE;
+    }
+
+    return array(
+      'codServidor'    => $codServidor,
+      'codInstituicao' => $codInstituicao
+    );
+  }
+
   /**
    * Retorna um array com os códigos das disciplinas do servidor
    *
@@ -988,8 +1016,10 @@ class clsPmieducarServidor
   function getServidorDisciplinas($codServidor = NULL,
     $codInstituicao = NULL)
   {
-    $codServidor = $codServidor != NULL ? $codServidor : $this->cod_servidor;
-    $codInstituicao = $codInstituicao != NULL ? $codInstituicao : $this->ref_cod_instituicao;
+    $codigos = $this->_getCodServidorInstituicao($codServidor, $codInstituicao);
+    if (! $codigos) {
+      return FALSE;
+    }
 
     // Se códigos não forem fornecidos, nem pela classe nem pelo código cliente,
     // retorna FALSE
@@ -1002,7 +1032,7 @@ class clsPmieducarServidor
     $sql .= 'WHERE sd.ref_cod_servidor = s.cod_servidor AND ';
     $sql .= 'sd.ref_cod_servidor = \'%d\' AND sd.ref_ref_cod_instituicao = \'%d\'';
 
-    $sql = sprintf($sql, $codServidor, $codInstituicao);
+    $sql = sprintf($sql, $codigos['codServidor'], $codigos['codInstituicao']);
 
     $db = new clsBanco();
     $db->Consulta($sql);
@@ -1019,6 +1049,78 @@ class clsPmieducarServidor
     }
 
     return FALSE;
+  }
+
+  /**
+   * Retorna os horários de aula do servidor na instituição.
+   *
+   * @since   Método disponível desde a versão 1.0.2
+   * @param   int  $codServidor     Código do servidor, caso não seja informado,
+   *   usa o código disponível no objeto atual
+   * @param   int  $codInstituicao  Código da instituição, caso não seja
+   *   informado, usa o código disponível no objeto atual
+   * @return  array|bool  Array associativo com os índices nm_escola, nm_curso,
+   *   nm_serie, nm_turma, nome (componente curricular), dia_semana,
+   *   hora_inicial e hora_final.
+   */
+  function getHorariosServidor($codServidor = NULL, $codInstituicao = NULL)
+  {
+    $codigos = $this->_getCodServidorInstituicao($codServidor, $codInstituicao);
+    if (! $codigos) {
+      return FALSE;
+    }
+
+    $sql = 'SELECT
+              ec.nm_escola,
+              c.nm_curso,
+              s.nm_serie,
+              t.nm_turma,
+              cc.nome,
+              qhh.dia_semana,
+              qhh.hora_inicial,
+              qhh.hora_final
+            FROM
+              pmieducar.quadro_horario_horarios qhh,
+              pmieducar.quadro_horario qh,
+              pmieducar.turma t,
+              pmieducar.serie s,
+              pmieducar.curso c,
+              pmieducar.escola_complemento ec,
+              modules.componente_curricular cc
+            WHERE
+              qh.cod_quadro_horario = qhh.ref_cod_quadro_horario
+              AND qh.ref_cod_turma = t.cod_turma
+              AND t.ref_ref_cod_serie = s.cod_serie
+              AND s.ref_cod_curso = c.cod_curso
+              AND qhh.ref_cod_escola = ec.ref_cod_escola
+              AND qhh.ref_cod_disciplina = cc.id
+              AND qh.ativo = 1
+              AND qhh.ativo = 1
+              AND t.ativo = 1
+              AND qhh.ref_servidor = %d
+              AND qhh.ref_cod_instituicao_servidor = %d
+            ORDER BY
+              nm_escola,
+              dia_semana,
+              hora_inicial';
+
+      $sql = sprintf($sql, $codigos['codServidor'], $codigos['codInstituicao']);
+
+      $db = new clsBanco();
+      $db->Consulta($sql);
+
+      $horarios = array();
+
+      while ($db->ProximoRegistro() != FALSE) {
+        $row = $db->Tupla();
+        $horarios[] = $row;
+      }
+
+      if (count($horarios)) {
+        return $horarios;
+      }
+
+      return FALSE;
   }
 
   /**

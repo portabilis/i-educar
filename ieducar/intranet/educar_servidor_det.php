@@ -359,6 +359,54 @@ class indice extends clsDetalhe
         "<a href='javascript:trocaDisplay(\"det_pree\");' >Mostrar detalhe</a><div id='det_pree' name='det_pree' style='display:none;'>".$tabela."</div>"));
     }
 
+    // Horários do professor
+    $horarios = $tmp_obj->getHorariosServidor($registro['cod_servidor'],
+      $this->ref_cod_instituicao);
+
+    if ($horarios) {
+      $tabela = "
+        <table cellspacing='0' cellpadding='0' border='0'>
+          <tr bgcolor='#A1B3BD' align='center'>
+            <td width='150'>Escola</td>
+            <td width='100'>Curso</td>
+            <td width='70'>Série</td>
+            <td width='70'>Turma</td>
+            <td width='100'>Componente curricular</td>
+            <td width='70'>Dia da semana</td>
+            <td width='70'>Hora inicial</td>
+            <td width='70'>Hora final</td>
+          </tr>";
+
+      foreach ($horarios as $horario) {
+        $class = $class == 'formlttd' ? 'formmdtd' : 'formlttd';
+
+        $tabela .= sprintf('
+          <tr class="%s" align="center">
+            <td>%s</td>
+            <td>%s</td>
+            <td>%s</td>
+            <td>%s</td>
+            <td>%s</td>
+            <td>%s</td>
+            <td>%s</td>
+            <td>%s</td>
+          </tr>',
+          $class,
+          $horario['nm_escola'], $horario['nm_curso'], $horario['nm_serie'],
+          $horario['nm_turma'], $horario['nome'], $dias_da_semana[$horario['dia_semana']],
+          $horario['hora_inicial'], $horario['hora_final']
+        );
+      }
+
+      $tabela .= "</table>";
+
+      $this->addDetalhe(array(
+        'Horários de aula',
+        "<a href='javascript:trocaDisplay(\"horarios\");' >Mostrar detalhes</a>" .
+        "<div id='horarios' name='det_pree' style='display:none;'>" . $tabela . "</div>"
+      ));
+    }
+
     $obj_permissoes = new clsPermissoes();
 
     if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
