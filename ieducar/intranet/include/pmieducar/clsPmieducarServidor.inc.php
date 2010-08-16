@@ -442,6 +442,34 @@ class clsPmieducarServidor
     $int_ref_cod_subnivel        = NULL
     ) {
 
+    // Extrai as informações de hora inicial e hora final, para definir melhor
+    // o lookup de carga horária de servidores alocados, para operações como
+    // a alocação de docente em quadro de horário. Isso é necessário para que
+    // não seja necessário alocar o docente em dois períodos diferentes apenas
+    // porque o horário final de uma aula extrapola o limite de horário do
+    // período.
+    if (is_array($array_horario) && 3 >= count($array_horario)) {
+      $horarioInicial = explode(':', $array_horario[1]);
+      $horarioFinal   = explode(':', $array_horario[2]);
+
+      $horarioInicial = $horarioInicial[0] * 60 + $horarioInicial[1];
+      $horarioFinal   = $horarioFinal[0] * 60 + $horarioFinal[1];
+
+      // Caso o horário definido inicie no período "matutino" e se encerre no
+      // período "vespertino", irá considerar como "matutino" apenas.
+      $matutinoLimite = 12 * 60;
+      if ($horarioInicial < $matutinoLimite && $horarioFinal > $matutinoLimite) {
+        $vespertino = false;
+      }
+
+      // Caso o horário definido inicie no período "vespertino" e se encerre
+      // no período "noturno", irá considerar como "vespertino" apenas.
+      $vespertinoLimite = 18 * 60;
+      if ($horarioInicial < $vespertinoLimite && $horarioFinal > $vespertinoLimite) {
+        $noturno = false;
+      }
+    }
+
     $whereAnd     = ' WHERE ';
     $filtros      = '';
     $tabela_compl = '';
@@ -609,7 +637,7 @@ class clsPmieducarServidor
         FROM pmieducar.quadro_horario_horarios qhh
         WHERE qhh.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
         AND qhh.ref_cod_escola = '$int_ref_cod_escola'
-        AND hora_inicial >= '08:00'
+        AND hora_inicial >= '06:00'
         AND hora_inicial <= '12:00'
         AND qhh.ativo = '1'
         AND qhh.dia_semana <> '$int_dia_semana'
@@ -619,7 +647,7 @@ class clsPmieducarServidor
           FROM pmieducar.quadro_horario_horarios_aux qhha
           WHERE qhha.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
           AND qhha.ref_cod_escola = $int_ref_cod_escola
-          AND hora_inicial >= '08:00'
+          AND hora_inicial >= '06:00'
           AND hora_inicial <= '12:00'
           AND qhha.ref_servidor = a.ref_cod_servidor
           AND identificador = '$int_identificador'
@@ -686,8 +714,9 @@ class clsPmieducarServidor
           AND qhh.ref_cod_escola = '$int_ref_cod_escola'
           AND qhh.ativo = '1'
           AND hora_inicial >= '18:00'
-          AND hora_inicial <= '23:00'
+          AND hora_inicial <= '23:59'
           AND qhh.dia_semana <> '$int_dia_semana'
+          AND qhh.ref_servidor = a.ref_cod_servidor
           GROUP BY qhh.ref_servidor ),'00:00')  + '$str_hr_not' +  COALESCE(
             (SELECT SUM( qhha.hora_final - qhha.hora_inicial )
             FROM pmieducar.quadro_horario_horarios_aux qhha
@@ -695,7 +724,7 @@ class clsPmieducarServidor
             AND qhha.ref_cod_escola = '$int_ref_cod_escola'
             AND qhha.ref_servidor = a.ref_cod_servidor
             AND hora_inicial >= '18:00'
-            AND hora_inicial <= '23:00'
+            AND hora_inicial <= '23:59'
             AND identificador = '$int_identificador'
             GROUP BY qhha.ref_servidor),'00:00') )";
           }
