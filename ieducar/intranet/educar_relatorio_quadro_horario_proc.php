@@ -234,7 +234,7 @@ class indice extends clsCadastro
     else {
       echo '
         <script>
-          alert("As turmas não possuem matrículas no ano selecionado");
+          alert("A(s) turma(s) não possui(em) quadro de horário(s).");
           window.parent.fechaExpansivel("div_dinamico_" + (window.parent.DOM_divs.length-1));
         </script>';
 
