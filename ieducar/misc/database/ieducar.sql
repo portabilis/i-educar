@@ -10352,6 +10352,34 @@ CREATE TABLE componente_curricular_turma (
 
 
 --
+-- Name: educacenso_cod_aluno; Type: TABLE; Schema: modules; Owner: -; Tablespace:
+--
+
+CREATE TABLE educacenso_cod_aluno (
+    cod_aluno integer NOT NULL,
+    cod_aluno_inep bigint NOT NULL,
+    nome_inep character varying(255),
+    fonte character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: educacenso_cod_docente; Type: TABLE; Schema: modules; Owner: -; Tablespace:
+--
+
+CREATE TABLE educacenso_cod_docente (
+    cod_servidor integer NOT NULL,
+    cod_docente_inep bigint NOT NULL,
+    nome_inep character varying(255),
+    fonte character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone
+);
+
+
+--
 -- Name: falta_aluno; Type: TABLE; Schema: modules; Owner: -; Tablespace:
 --
 
@@ -17752,6 +17780,18 @@ SET search_path = modules, pg_catalog;
 
 
 --
+-- Data for Name: educacenso_cod_aluno; Type: TABLE DATA; Schema: modules; Owner: -
+--
+
+
+
+--
+-- Data for Name: educacenso_cod_docente; Type: TABLE DATA; Schema: modules; Owner: -
+--
+
+
+
+--
 -- Data for Name: falta_aluno; Type: TABLE DATA; Schema: modules; Owner: -
 --
 
@@ -20159,6 +20199,7 @@ INSERT INTO changelog VALUES (23, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '23_cria
 INSERT INTO changelog VALUES (24, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '24_altera_tipo_campo_carga_horaria_pmieducar_servidor_alocacao.sql');
 INSERT INTO changelog VALUES (25, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '25_adiciona_campo_zona_localizacao_tabelas_enderecamento.sql');
 INSERT INTO changelog VALUES (26, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '26_cria_tabela_modules_transporte_aluno.sql');
+INSERT INTO changelog VALUES (27, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '27_cria_tabela_modules_educacenso_cod_aluno_e_docente.sql');
 
 
 --
@@ -27069,6 +27110,22 @@ ALTER TABLE ONLY componente_curricular_turma
 
 
 --
+-- Name: educacenso_cod_aluno_pk; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY educacenso_cod_aluno
+    ADD CONSTRAINT educacenso_cod_aluno_pk PRIMARY KEY (cod_aluno, cod_aluno_inep);
+
+
+--
+-- Name: educacenso_cod_docente_pk; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY educacenso_cod_docente
+    ADD CONSTRAINT educacenso_cod_docente_pk PRIMARY KEY (cod_servidor, cod_docente_inep);
+
+
+--
 -- Name: falta_aluno_pkey; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
 --
 
@@ -32890,6 +32947,14 @@ ALTER TABLE ONLY componente_curricular_turma
 
 ALTER TABLE ONLY componente_curricular_turma
     ADD CONSTRAINT componente_curricular_turma_fkey FOREIGN KEY (turma_id) REFERENCES pmieducar.turma(cod_turma) ON DELETE CASCADE;
+
+
+--
+-- Name: educacenso_cod_aluno_cod_aluno_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
+--
+
+ALTER TABLE ONLY educacenso_cod_aluno
+    ADD CONSTRAINT educacenso_cod_aluno_cod_aluno_fk FOREIGN KEY (cod_aluno) REFERENCES pmieducar.aluno(cod_aluno) ON DELETE CASCADE;
 
 
 --
