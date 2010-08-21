@@ -1,0 +1,21 @@
+TODO
+====
+
+1. Resolver problemas lógicos do gerenciamento de servidores para permitir
+   importação do Educacenso para múltiplas instituições (ver _data/install.sql)
+
+Enquanto modules.educacenso_cod_aluno possui uma restrição referenciando
+pmieducar.aluno, a mesma não é possível de se aplicar a
+modules.educacenso_cod_docente, já que pmieducar.servidor não possui
+cod_servidor com uma restrição do tipo única (primary key ou unique). Como a
+tabela pmieducar.servidor foi projetada para poder cadastrar uma mesma pessoa
+física em várias instituições diferentes, esta restrição foi ignorada.
+
+É importante notar que em um caso de vários importações de docentes do
+Educacenso em instituições diferentes, a pessoa física subjacente continuaria
+a mesma. Para que as diferenças cadastrais (por exemplo, um município informa
+que o docente tem mestrado enquanto o outro apenas informa que este possui
+nível superior) sejam resolvidas, seria necessário criar duas pessoas físicas
+diferentes. Enfim, toda a questão de lotação de servidores
+(ex: escolaridade) precisam ser movidas para o gerenciamento de pessoas
+físicas para evitar esse problema em instalações multi-institucionais.
