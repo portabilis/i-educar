@@ -10352,6 +10352,49 @@ CREATE TABLE componente_curricular_turma (
 
 
 --
+-- Name: docente_licenciatura; Type: TABLE; Schema: modules; Owner: -; Tablespace:
+--
+
+CREATE TABLE docente_licenciatura (
+    id integer NOT NULL,
+    servidor_id integer NOT NULL,
+    licenciatura integer NOT NULL,
+    curso_id integer,
+    ano_conclusao integer NOT NULL,
+    ies_id integer,
+    user_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: docente_licenciatura_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
+--
+
+CREATE SEQUENCE docente_licenciatura_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: docente_licenciatura_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
+--
+
+ALTER SEQUENCE docente_licenciatura_id_seq OWNED BY docente_licenciatura.id;
+
+
+--
+-- Name: docente_licenciatura_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
+--
+
+SELECT pg_catalog.setval('docente_licenciatura_id_seq', 1, false);
+
+
+--
 -- Name: educacenso_cod_aluno; Type: TABLE; Schema: modules; Owner: -; Tablespace:
 --
 
@@ -16932,6 +16975,13 @@ ALTER TABLE componente_curricular ALTER COLUMN id SET DEFAULT nextval('component
 -- Name: id; Type: DEFAULT; Schema: modules; Owner: -
 --
 
+ALTER TABLE docente_licenciatura ALTER COLUMN id SET DEFAULT nextval('docente_licenciatura_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: modules; Owner: -
+--
+
 ALTER TABLE educacenso_curso_superior ALTER COLUMN id SET DEFAULT nextval('educacenso_curso_superior_id_seq'::regclass);
 
 
@@ -17871,6 +17921,12 @@ SET search_path = modules, pg_catalog;
 
 --
 -- Data for Name: componente_curricular_turma; Type: TABLE DATA; Schema: modules; Owner: -
+--
+
+
+
+--
+-- Data for Name: docente_licenciatura; Type: TABLE DATA; Schema: modules; Owner: -
 --
 
 
@@ -25734,6 +25790,7 @@ INSERT INTO changelog VALUES (25, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '25_adic
 INSERT INTO changelog VALUES (26, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '26_cria_tabela_modules_transporte_aluno.sql');
 INSERT INTO changelog VALUES (27, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '27_cria_tabela_modules_educacenso_cod_aluno_e_docente.sql');
 INSERT INTO changelog VALUES (28, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '28_cria_tabelas_modules_educacenso_ies_e_curso_superior.sql');
+INSERT INTO changelog VALUES (29, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '29_cria_tabela_modules_docente_licenciatura.sql');
 
 
 --
@@ -32644,6 +32701,22 @@ ALTER TABLE ONLY componente_curricular_turma
 
 
 --
+-- Name: docente_licenciatura_curso_unique; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY docente_licenciatura
+    ADD CONSTRAINT docente_licenciatura_curso_unique UNIQUE (servidor_id, curso_id, ies_id);
+
+
+--
+-- Name: docente_licenciatura_pk; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY docente_licenciatura
+    ADD CONSTRAINT docente_licenciatura_pk PRIMARY KEY (id);
+
+
+--
 -- Name: educacenso_cod_aluno_pk; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
 --
 
@@ -34631,6 +34704,13 @@ CREATE UNIQUE INDEX componente_curricular_id_key ON componente_curricular USING 
 --
 
 CREATE INDEX componente_curricular_turma_turma_idx ON componente_curricular_turma USING btree (turma_id);
+
+
+--
+-- Name: docente_licenciatura_ies_idx; Type: INDEX; Schema: modules; Owner: -; Tablespace:
+--
+
+CREATE INDEX docente_licenciatura_ies_idx ON docente_licenciatura USING btree (ies_id);
 
 
 --
@@ -38497,6 +38577,14 @@ ALTER TABLE ONLY componente_curricular_turma
 
 ALTER TABLE ONLY componente_curricular_turma
     ADD CONSTRAINT componente_curricular_turma_fkey FOREIGN KEY (turma_id) REFERENCES pmieducar.turma(cod_turma) ON DELETE CASCADE;
+
+
+--
+-- Name: docente_licenciatura_ies_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
+--
+
+ALTER TABLE ONLY docente_licenciatura
+    ADD CONSTRAINT docente_licenciatura_ies_fk FOREIGN KEY (ies_id) REFERENCES educacenso_ies(id) ON DELETE RESTRICT;
 
 
 --
