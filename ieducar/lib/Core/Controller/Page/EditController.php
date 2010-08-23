@@ -366,8 +366,15 @@ abstract class Core_Controller_Page_EditController
   {
     if (isset($this->getRequest()->id)) {
       if ($this->getDataMapper()->delete($this->getRequest()->id)) {
-        $this->redirect($this->getDispatcher()->getControllerName() . '/' .
-        $this->getOption('delete_success'));
+        if (is_array($this->getOption('delete_success_params'))) {
+          $params = http_build_query($this->getOption('delete_success_params'));
+        }
+
+        $this->redirect(
+          $this->getDispatcher()->getControllerName() . '/' .
+          $this->getOption('delete_success') .
+          (isset($params) ? '?' . $params : '')
+        );
       }
     }
     return FALSE;
