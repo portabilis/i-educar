@@ -25,7 +25,7 @@
  * @license   @@license@@
  * @package   Core_Controller
  * @since     Arquivo disponível desde a versão 1.1.0
- * @version   $Id: /ieducar/branches/teste/ieducar/lib/Core/Controller/Page/Abstract.php 646 2009-11-12T21:54:25.107288Z eriksen  $
+ * @version   $Id$
  */
 
 require_once 'Core/View/Tabulable.php';
@@ -96,6 +96,36 @@ class Core_Controller_Page_ViewController extends clsDetalhe implements Core_Vie
   }
 
   /**
+   * Configura a URL padrão para a ação de Edição de um registro.
+   *
+   * Por padrão, cria uma URL "edit/id", onde id é o valor do atributo "id"
+   * de uma instância CoreExt_Entity.
+   *
+   * @param CoreExt_Entity $entry A instância atual recuperada
+   *   ViewController::Gerar().
+   */
+  public function setUrlEditar(CoreExt_Entity $entry)
+  {
+    $this->url_editar = CoreExt_View_Helper_UrlHelper::url(
+      'edit', array('query' => array('id' => $entry->id))
+    );
+  }
+
+  /**
+   * Configura a URL padrão para a ação Cancelar da tela de Edição de um
+   * registro.
+   *
+   * Por padrão, cria uma URL "index".
+   *
+   * @param CoreExt_Entity $entry A instância atual recuperada
+   *   ViewController::Gerar().
+   */
+  public function setUrlCancelar(CoreExt_Entity $entry)
+  {
+    $this->url_cancelar = CoreExt_View_Helper_UrlHelper::url('index');
+  }
+
+  /**
    * Implementação padrão para as subclasses que estenderem essa classe. Cria
    * uma tela de apresentação de dados simples utilizando o mapeamento de
    * $_tableMap.
@@ -106,7 +136,7 @@ class Core_Controller_Page_ViewController extends clsDetalhe implements Core_Vie
   public function Gerar()
   {
     $headers = $this->getTableMap();
-    $mapper = $this->getDataMapper();
+    $mapper  = $this->getDataMapper();
 
     $this->titulo  = $this->getBaseTitulo();
     $this->largura = "100%";
@@ -125,9 +155,7 @@ class Core_Controller_Page_ViewController extends clsDetalhe implements Core_Vie
       }
     }
 
-    $this->url_editar = CoreExt_View_Helper_UrlHelper::url(
-      'edit', array('query' => array('id' => $entry->id))
-    );
-    $this->url_cancelar = CoreExt_View_Helper_UrlHelper::url('index');
+    $this->setUrlEditar($entry);
+    $this->setUrlCancelar($entry);
   }
 }

@@ -25,7 +25,7 @@
  * @license   @@license@@
  * @package   Core_Controller
  * @since     Arquivo disponível desde a versão 1.1.0
- * @version   $Id: /ieducar/branches/teste/ieducar/lib/Core/Controller/Page/Abstract.php 646 2009-11-12T21:54:25.107288Z eriksen  $
+ * @version   $Id$
  */
 
 require_once 'Core/View/Tabulable.php';
@@ -86,6 +86,29 @@ class Core_Controller_Page_ListController extends clsListagem implements Core_Vi
   }
 
   /**
+   * Retorna os registros a serem exibidos na listagem.
+   *
+   * Subclasses devem sobrescrever este método quando os parâmetros para
+   * CoreExt_DataMapper::findAll forem mais específicos.
+   *
+   * @return array (int => CoreExt_Entity)
+   */
+  public function getEntries()
+  {
+    $mapper = $this->getDataMapper();
+    return $mapper->findAll();
+  }
+
+  /**
+   * Configura o botão de ação padrão para a criação de novo registro.
+   */
+  public function setAcao()
+  {
+    $this->acao = 'go("edit")';
+    $this->nome_acao = 'Novo';
+  }
+
+  /**
    * Implementação padrão para as subclasses que estenderem essa classe. Cria
    * uma lista de apresentação de dados simples utilizando o mapeamento de
    * $_tableMap.
@@ -97,10 +120,11 @@ class Core_Controller_Page_ListController extends clsListagem implements Core_Vi
   {
     $headers = $this->getTableMap();
 
+    // Configura o cabeçalho da listagem.
     $this->addCabecalhos(array_keys($headers));
 
-    $mapper  = $this->getDataMapper();
-    $entries = $mapper->findAll();
+    // Recupera os registros para a listagem.
+    $entries = $this->getEntries();
 
     // Paginador
     $this->limite = 20;
@@ -122,11 +146,12 @@ class Core_Controller_Page_ListController extends clsListagem implements Core_Vi
       $this->addLinhas($item);
     }
 
-    $this->addPaginador2("", count($entries), $_GET, $this->nome, $this->limite);
+    $this->addPaginador2('', count($entries), $_GET, $this->nome, $this->limite);
 
-    $this->acao = "go(\"edit\")";
-    $this->nome_acao = "Novo";
+    // Configura o botão padrão de ação para a criação de novo registro.
+    $this->setAcao();
 
-    $this->largura = "100%";
+    // Largura da tabela HTML onde se encontra a listagem.
+    $this->largura = '100%';
   }
 }
