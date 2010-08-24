@@ -10831,6 +10831,19 @@ ALTER SEQUENCE tabela_arredondamento_valor_id_seq OWNED BY tabela_arredondamento
 SELECT pg_catalog.setval('tabela_arredondamento_valor_id_seq', 1, false);
 
 
+--
+-- Name: transporte_aluno; Type: TABLE; Schema: modules; Owner: -; Tablespace:
+--
+
+CREATE TABLE transporte_aluno (
+    aluno_id integer NOT NULL,
+    responsavel integer NOT NULL,
+    user_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone
+);
+
+
 SET search_path = pmiacoes, pg_catalog;
 
 --
@@ -17816,6 +17829,12 @@ SET search_path = modules, pg_catalog;
 
 
 
+--
+-- Data for Name: transporte_aluno; Type: TABLE DATA; Schema: modules; Owner: -
+--
+
+
+
 SET search_path = pmiacoes, pg_catalog;
 
 --
@@ -20139,6 +20158,7 @@ INSERT INTO changelog VALUES (22, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '22_cria
 INSERT INTO changelog VALUES (23, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '23_cria_tabela_modules_componente_curricular_turma.sql');
 INSERT INTO changelog VALUES (24, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '24_altera_tipo_campo_carga_horaria_pmieducar_servidor_alocacao.sql');
 INSERT INTO changelog VALUES (25, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '25_adiciona_campo_zona_localizacao_tabelas_enderecamento.sql');
+INSERT INTO changelog VALUES (26, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '26_cria_tabela_modules_transporte_aluno.sql');
 
 
 --
@@ -27152,6 +27172,14 @@ ALTER TABLE ONLY tabela_arredondamento_valor
     ADD CONSTRAINT tabela_arredondamento_valor_pkey PRIMARY KEY (id);
 
 
+--
+-- Name: transporte_aluno_pk; Type: CONSTRAINT; Schema: modules; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY transporte_aluno
+    ADD CONSTRAINT transporte_aluno_pk PRIMARY KEY (aluno_id);
+
+
 SET search_path = pmiacoes, pg_catalog;
 
 --
@@ -32942,6 +32970,14 @@ ALTER TABLE ONLY regra_avaliacao
 
 ALTER TABLE ONLY tabela_arredondamento_valor
     ADD CONSTRAINT tabela_arredondamento_tabela_arredondamento_valor_fk FOREIGN KEY (tabela_arredondamento_id) REFERENCES tabela_arredondamento(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: transporte_aluno_aluno_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
+--
+
+ALTER TABLE ONLY transporte_aluno
+    ADD CONSTRAINT transporte_aluno_aluno_fk FOREIGN KEY (aluno_id) REFERENCES pmieducar.aluno(cod_aluno) ON DELETE CASCADE;
 
 
 SET search_path = pmiacoes, pg_catalog;
