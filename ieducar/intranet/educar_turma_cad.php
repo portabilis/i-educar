@@ -669,7 +669,8 @@ class indice extends clsCadastro
           $this->ref_ref_cod_serie, $this->ref_cod_escola,
           $this->ref_cod_infra_predio_comodo, $this->nm_turma, $this->sgl_turma,
           $this->max_aluno, $this->multiseriada, NULL, NULL, 1,
-          $this->ref_cod_turma_tipo, NULL, NULL, NULL, NULL, $this->ref_cod_regente,
+          $this->ref_cod_turma_tipo, $this->hora_inicial, $this->hora_final,
+          $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
           $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
           $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
           $this->visivel);
@@ -792,7 +793,8 @@ class indice extends clsCadastro
           $this->ref_ref_cod_serie, $this->ref_cod_escola,
           $this->ref_cod_infra_predio_comodo, $this->nm_turma, $this->sgl_turma,
           $this->max_aluno, $this->multiseriada, NULL, NULL, 1,
-          $this->ref_cod_turma_tipo, NULL, NULL, NULL, NULL, $this->ref_cod_regente,
+          $this->ref_cod_turma_tipo, $this->hora_inicial, $this->hora_final,
+          $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
           $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
           $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
           $this->visivel);
