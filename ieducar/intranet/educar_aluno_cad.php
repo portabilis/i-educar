@@ -1164,7 +1164,7 @@ class indice extends clsCadastro
       NULL, FALSE);
 
     $this->campoTexto('num_termo', 'Termo', $this->num_termo, '8', '8', FALSE);
-    $this->campoNumero('num_livro', 'Livro', $this->num_livro, '8', '8', FALSE);
+    $this->campoTexto('num_livro', 'Livro', $this->num_livro, '8', '8', FALSE);
     $this->campoTexto('num_folha', 'Folha', $this->num_folha, '4', '4', FALSE);
 
     $this->campoData('data_emissao_cert_civil', 'Emissão Certidão Civil',
