@@ -127,83 +127,6 @@ class clsPessoaFj
     return FALSE;
   }
 
-  /*function lista_rapida($idpes = null, $nome = null, $id_federal = null, $inicio_limite = null, $limite = null, $str_tipo_pessoa = null, $str_order_by = null, $int_ref_cod_sistema = null)
-  {
-    $db = new clsBanco();
-
-    $filtros = "";
-    $filtroTipo = "";
-    $whereAnd = " WHERE ";
-    $outros_filtros = false;
-    $filtro_cnpj = false;
-
-    if( is_string( $nome ) && $nome != "")
-    {
-      $filtros .= "{$whereAnd} (nome ILIKE '%{$nome}%')";
-      $whereAnd = " AND ";
-      $outros_filtros =true;
-    }
-
-    if( is_numeric( $id_federal ) )
-    {
-      $filtros .= "{$whereAnd} id_federal LIKE '%{$id_federal}'";
-      $whereAnd = " AND ";
-      $filtro_cnpj =true;
-    }
-
-
-    if( is_numeric( $idpes ) )
-    {
-      $filtros .= "{$whereAnd} idpes = '{$idpes}'";
-      $whereAnd = " AND ";
-      $outros_filtros =true;
-    }
-
-    if( is_numeric( $int_ref_cod_sistema ) )
-    {
-      $filtro_sistema = true;
-      $filtros .= "{$whereAnd} (ref_cod_sistema = '{$int_ref_cod_sistema}' OR id_federal is not null)";
-      $whereAnd = " AND ";
-    }
-
-    if ( is_string( $str_tipo_pessoa ) ) {
-      $filtroTipo .= " AND tipo  = '{$str_tipo_pessoa}' ";
-      $outros_filtros =true;
-    }
-
-    if ( is_string( $str_order_by ) ) {
-      $order = "ORDER BY $str_order_by";
-    }
-
-    $limit = "";
-    if(is_numeric($inicio_limite) && is_numeric($limite))
-    {
-      $limit = "LIMIT $limite OFFSET $inicio_limite";
-    }
-
-    if($filtro_sistema && $outros_filtros == false || $filtro_cnpj  )
-    {
-      $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM cadastro.v_pessoafj_count $filtros");
-    }else
-    {
-      $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM cadastro.v_pessoa_fj $filtros");
-    }
-
-    $db->Consulta("SELECT idpes, nome, ref_cod_sistema, fantasia, tipo , id_federal as cpf, id_federal as cnpj, id_federal FROM cadastro.v_pessoa_fj $filtros $order $limit ");
-    while ( $db->ProximoRegistro() )
-    {
-      $tupla = $db->Tupla();
-      $tupla["_total"] = $this->_total;
-      $resultado[] = $tupla;
-    }
-
-    if( count( $resultado ) )
-    {
-      return $resultado;
-    }
-    return false;
-  }*/
-
   function lista_rapida($idpes = NULL, $nome = NULL, $id_federal = NULL,
     $inicio_limite = NULL, $limite = NULL, $str_tipo_pessoa = NULL,
     $str_order_by = NULL, $int_ref_cod_sistema = NULL)
@@ -338,6 +261,10 @@ class clsPessoaFj
     return FALSE;
   }
 
+  /**
+   * Retorna um array com os dados de um registro
+   * @return array
+   */
   function detalhe()
   {
     if ($this->idpes) {
