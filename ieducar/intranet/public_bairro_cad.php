@@ -20,14 +20,12 @@
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package     Core
- * @subpackage  public
- * @subpackage  Enderecamento
- * @subpackage  Bairro
- * @since       Arquivo disponível desde a versão 1.0.0
- * @version     $Id$
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @package   Ied_Public
+ * @since     Arquivo disponível desde a versão 1.0.0
+ * @version   $Id$
  */
 
 require_once 'include/clsBase.inc.php';
@@ -35,15 +33,35 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
 
+/**
+ * clsIndexBase class.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Public
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
+ */
 class clsIndexBase extends clsBase
 {
   function Formular()
   {
     $this->SetTitulo($this->_instituicao . ' Bairro');
-    $this->processoAp = '756';
+    $this->processoAp = 756;
   }
 }
 
+/**
+ * indice class.
+ *
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   iEd_Public
+ * @since     Classe disponível desde a versão 1.0.0
+ * @version   @@package_version@@
+ */
 class indice extends clsCadastro
 {
   /**
@@ -79,7 +97,7 @@ class indice extends clsCadastro
 
     if (is_numeric($this->idbai)) {
       $obj_bairro = new clsPublicBairro();
-      $lst_bairro = $obj_bairro->lista( NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+      $lst_bairro = $obj_bairro->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->idbai);
       if ($lst_bairro) {
         $registro = $lst_bairro[0];
@@ -176,7 +194,7 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $obj = new clsPublicBairro( $this->idmun, NULL, NULL, $this->nome, NULL,
+    $obj = new clsPublicBairro($this->idmun, NULL, NULL, $this->nome, NULL,
       NULL, 'U', $this->pessoa_logada, NULL, 'I', NULL, 9);
 
     $cadastrou = $obj->cadastra();
@@ -240,15 +258,15 @@ $pagina = new clsIndexBase();
 // Instancia objeto de conteúdo
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteúdo à página
 $pagina->addForm($miolo);
 
 // Gera o código HTML
 $pagina->MakeAll();
 ?>
-
 <script type='text/javascript'>
-document.getElementById('idpais').onchange = function() {
+document.getElementById('idpais').onchange = function()
+{
   var campoPais = document.getElementById('idpais').value;
 
   var campoUf= document.getElementById('sigla_uf');
@@ -260,7 +278,8 @@ document.getElementById('idpais').onchange = function() {
   xml_uf.envia('public_uf_xml.php?pais=' + campoPais);
 }
 
-function getUf(xml_uf) {
+function getUf(xml_uf)
+{
   var campoUf = document.getElementById('sigla_uf');
   var DOM_array = xml_uf.getElementsByTagName('estado');
 
@@ -279,7 +298,8 @@ function getUf(xml_uf) {
   }
 }
 
-document.getElementById('sigla_uf').onchange = function() {
+document.getElementById('sigla_uf').onchange = function()
+{
   var campoUf = document.getElementById('sigla_uf').value;
 
   var campoMunicipio= document.getElementById('idmun');
@@ -291,7 +311,8 @@ document.getElementById('sigla_uf').onchange = function() {
   xml_municipio.envia('public_municipio_xml.php?uf=' + campoUf);
 }
 
-function getMunicipio(xml_municipio) {
+function getMunicipio(xml_municipio)
+{
   var campoMunicipio = document.getElementById('idmun');
   var DOM_array = xml_municipio.getElementsByTagName('municipio');
 
@@ -309,5 +330,4 @@ function getMunicipio(xml_municipio) {
     campoMunicipio.options[0].text = 'O estado não possui nenhum município';
   }
 }
-
 </script>
