@@ -68,6 +68,8 @@ class miolo1 extends clsListagem
 
   function Gerar()
   {
+    global $coreExt;
+
     @session_start();
     $_SESSION['campo1']  = $_GET['campo1']  ? $_GET['campo1']  : $_SESSION['campo1'];
     $_SESSION['campo2']  = $_GET['campo2']  ? $_GET['campo2']  : $_SESSION['campo2'];
@@ -114,7 +116,7 @@ class miolo1 extends clsListagem
     }
 
     if (! $_GET['ref_sigla_uf']) {
-      $_GET['ref_sigla_uf'] = 'SC';
+      $_GET['ref_sigla_uf'] = $coreExt['Config']->app->locale->province;
     }
 
     $this->campoLista('ref_sigla_uf', 'UF', $array_uf, $_GET['ref_sigla_uf'],
