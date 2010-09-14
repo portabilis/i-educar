@@ -32,6 +32,8 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/clsCadastro.inc.php';
 
+require_once 'App/Model/ZonaLocalizacao.php';
+
 /**
  * clsIndex class.
  *
@@ -91,6 +93,7 @@ class indice extends clsCadastro
   var $andar;
   var $numero;
   var $retorno;
+  var $zona_localizacao;
 
   var $caminho_det;
   var $caminho_lst;
@@ -137,14 +140,14 @@ class indice extends clsCadastro
         $this->http, $this->tipo_pessoa, $this->sexo, $this->cidade,
         $this->bairro, $this->logradouro, $this->cep, $this->idlog, $this->idbai,
         $this->idtlog, $this->sigla_uf, $this->complemento, $this->numero,
-        $this->bloco, $this->apartamento, $this->andar
+        $this->bloco, $this->apartamento, $this->andar, $this->zona_localizacao
       ) =
       $objPessoa->queryRapida(
         $this->cod_pessoa_fj, 'nome', 'cpf', 'data_nasc',  'ddd_1', 'fone_1',
         'ddd_2', 'fone_2', 'ddd_mov', 'fone_mov', 'ddd_fax', 'fone_fax', 'email',
         'url', 'tipo', 'sexo', 'cidade', 'bairro', 'logradouro', 'cep', 'idlog',
         'idbai', 'idtlog', 'sigla_uf', 'complemento', 'numero', 'bloco', 'apartamento',
-        'andar'
+        'andar', 'zona_localizacao'
       );
 
       $this->cep     = int2Cep($this->cep);
@@ -239,6 +242,8 @@ class indice extends clsCadastro
       $this->campoOculto('ref_idtlog', $this->idtlog);
       $this->campoOculto('id_cidade', $this->cidade);
 
+      $zona = App_Model_ZonaLocalizacao::getInstance();
+
       if ($this->idlog && $this->idbai && $this->cep && $this->cod_pessoa_fj) {
         $this->campoCep('cep_', 'CEP', $this->cep, true, '-',
           "&nbsp;<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel( 500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=bairro&campo2=idbai&campo3=cep&campo4=logradouro&campo5=idlog&campo6=ref_sigla_uf&campo7=cidade&campo8=ref_idtlog&campo9=isEnderecoExterno&campo10=cep_&campo11=sigla_uf&campo12=idtlog&campo13=id_cidade\'></iframe>');\">",
@@ -303,7 +308,10 @@ class indice extends clsCadastro
       }
       else {
         $this->campoCep('cep_', 'CEP', $this->cep, TRUE, '-',
-          "&nbsp;<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel( 500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=bairro&campo2=idbai&campo3=cep&campo4=logradouro&campo5=idlog&campo6=ref_sigla_uf&campo7=cidade&campo8=ref_idtlog&campo9=isEnderecoExterno&campo10=cep_&campo11=sigla_uf&campo12=idtlog&campo13=id_cidade\'></iframe>');\">", false/*$disabled*/);
+          "&nbsp;<img id='lupa' src=\"imagens/lupa.png\" border=\"0\"
+          onclick=\"showExpansivel(500, 500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=bairro&campo2=idbai&campo3=cep&campo4=logradouro&campo5=idlog&campo6=ref_sigla_uf&campo7=cidade&campo8=ref_idtlog&campo9=isEnderecoExterno&campo10=cep_&campo11=sigla_uf&campo12=idtlog&campo13=id_cidade&campo14=zona_localizacao\'></iframe>');\">",
+          false
+        );
 
         $this->campoLista('idtlog', 'Tipo Logradouro', $listaTLog, $this->idtlog,
           FALSE, FALSE, FALSE, FALSE, FALSE);
@@ -332,6 +340,11 @@ class indice extends clsCadastro
         $this->campoLista('sigla_uf', 'Estado', $listaEstado, $this->sigla_uf,
           FALSE, FALSE, FALSE, FALSE, FALSE);
       }
+
+      $this->campoLista('zona_localizacao', 'Zona Localização', $zona->getEnums(),
+        $this->zona_localizacao, FALSE, FALSE, FALSE, FALSE,
+        ($this->idbai ? TRUE : FALSE)
+      );
 
       $this->campoTexto('ddd_telefone_1', 'DDD Telefone 1', $this->ddd_telefone_1,
         '3', '2', FALSE);
@@ -450,7 +463,8 @@ class indice extends clsCadastro
       $objEnderecoExterno2 = new clsEnderecoExterno($idpes, '1', $this->idtlog,
         $this->logradouro, $this->numero, $this->letra, $this->complemento,
         $this->bairro, $this->cep_, $this->cidade, $this->sigla_uf, FALSE,
-        $this->bloco, $this->apartamento, $this->andar);
+        $this->bloco, $this->apartamento, $this->andar, FALSE, FALSE,
+        $this->zona_localizacao);
 
       if ($objEnderecoExterno->detalhe()) {
         $objEnderecoExterno2->edita();
@@ -557,7 +571,8 @@ class indice extends clsCadastro
       $objEnderecoExterno2 = new clsEnderecoExterno($this->cod_pessoa_fj, '1',
         $this->idtlog, $this->logradouro, $this->numero, $this->letra,
         $this->complemento, $this->bairro, $this->cep_, $this->cidade,
-        $this->sigla_uf, FALSE, $this->bloco, $this->apartamento, $this->andar);
+        $this->sigla_uf, FALSE, $this->bloco, $this->apartamento, $this->andar,
+        FALSE, FALSE, $this->zona_localizacao);
 
       if ($objEnderecoExterno->detalhe()) {
         $objEnderecoExterno2->edita();

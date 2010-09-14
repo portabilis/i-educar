@@ -33,6 +33,8 @@ require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
 
+require_once 'App/Model/ZonaLocalizacao.php';
+
 /**
  * clsIndexBase class.
  *
@@ -107,6 +109,10 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Nome', $registro['nome']));
     }
 
+    $zona = App_Model_ZonaLocalizacao::getInstance();
+    $zona = $zona->getValue($registro['zona_localizacao']);
+    $this->addDetalhe(array('Zona Localização', $zona));
+
     if ($registro['nm_municipio']) {
       $this->addDetalhe(array("Município", $registro['nm_municipio']));
     }
@@ -117,14 +123,6 @@ class indice extends clsDetalhe
 
     if ($registro['nm_pais']) {
       $this->addDetalhe(array('Pais', $registro['nm_pais']));
-    }
-
-    if ($registro['origem_gravacao']) {
-      $this->addDetalhe(array('Origem Gravação', $registro['origem_gravacao']));
-    }
-
-    if ($registro['operacao']) {
-      $this->addDetalhe(array('Operação', $registro['operacao']));
     }
 
     $this->url_novo   = 'public_bairro_cad.php';

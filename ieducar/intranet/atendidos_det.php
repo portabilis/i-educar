@@ -32,6 +32,8 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 
+require_once 'App/Model/ZonaLocalizacao.php';
+
 /**
  * clsIndex class.
  *
@@ -79,7 +81,7 @@ class indice extends clsDetalhe
       $cod_pessoa, 'idpes', 'complemento','nome', 'cpf', 'data_nasc',
       'logradouro', 'idtlog', 'numero', 'apartamento','cidade','sigla_uf',
       'cep', 'ddd_1', 'fone_1', 'ddd_2', 'fone_2', 'ddd_mov', 'fone_mov',
-      'ddd_fax', 'fone_fax', 'email', 'url', 'tipo', 'sexo'
+      'ddd_fax', 'fone_fax', 'email', 'url', 'tipo', 'sexo', 'zona_localizacao'
     );
 
     $this->addDetalhe(array('Nome', $detalhe['nome']));
@@ -108,11 +110,18 @@ class indice extends clsDetalhe
     }
 
     if ($detalhe['cidade']) {
-      $this->addDetalhe(array('Cidade', strtolower($detalhe['cidade'])));
+      $this->addDetalhe(array('Cidade', $detalhe['cidade']));
     }
 
     if ($detalhe['sigla_uf']) {
-      $this->addDetalhe(array('Estado', strtolower($detalhe['sigla_uf'])));
+      $this->addDetalhe(array('Estado', $detalhe['sigla_uf']));
+    }
+
+    $zona = App_Model_ZonaLocalizacao::getInstance();
+    if ($detalhe['zona_localizacao']) {
+      $this->addDetalhe(array(
+        'Zona Localização', $zona->getValue($detalhe['zona_localizacao'])
+      ));
     }
 
     if ($detalhe['cep']) {

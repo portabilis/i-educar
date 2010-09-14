@@ -1034,7 +1034,8 @@ function getVisibility(f)
 
 function cv_set_campo(campo1, valor1, campo2, valor2, campo3, valor3, campo4,
   valor4, campo5, valor5, campo6, valor6, campo7, valor7, campo8, valor8, campo9,
-  valor9, campo10, valor10, campo11, valor11, campo12, campo13, valor13)
+  valor9, campo10, valor10, campo11, valor11, campo12, campo13, valor13,
+  campo14, valor14)
 {
   obj1          = parent.document.getElementById(campo1);
   obj1.value    = valor1;
@@ -1082,14 +1083,20 @@ function cv_set_campo(campo1, valor1, campo2, valor2, campo3, valor3, campo4,
   obj12.disabled = true;
 
   if (parent.document.getElementById(campo13)) {
-    obj13       = parent.document.getElementById( campo13 );
+    obj13       = parent.document.getElementById(campo13);
     obj13.value = valor13;
+  }
+
+  if (parent.document.getElementById(campo14)) {
+    obj14          = parent.document.getElementById(campo14);
+    obj14.value    = valor14;
+    obj14.disabled = true;
   }
 
   window.parent.fechaExpansivel('div_dinamico_' + (parent.DOM_divs.length * 1 - 1));
 }
 
-function cv_libera_campos(campo1, campo2, campo3, campo4, campo5, campo6, campo7)
+function cv_libera_campos(campo1, campo2, campo3, campo4, campo5, campo6, campo7, campo8)
 {
   window.parent.fechaExpansivel('div_dinamico_' + (parent.DOM_divs.length * 1 - 1));
 
@@ -1109,6 +1116,11 @@ function cv_libera_campos(campo1, campo2, campo3, campo4, campo5, campo6, campo7
   if (parent.document.getElementById(campo7)) {
     parent.document.getElementById(campo7).disabled = false;
     parent.document.getElementById(campo7).value    = '1';
+  }
+
+  if (parent.document.getElementById(campo8)) {
+    parent.document.getElementById(campo8).disabled = false;
+    parent.document.getElementById(campo8).value    = '1';
   }
 }
 

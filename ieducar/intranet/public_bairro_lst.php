@@ -33,6 +33,9 @@ require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
 
+require_once 'App/Model/ZonaLocalizacao.php';
+require_once 'CoreExt/View/Helper/UrlHelper.php';
+
 /**
  * clsIndexBase class.
  *
@@ -103,6 +106,7 @@ class indice extends clsListagem
 
     $this->addCabecalhos(array(
       'Nome',
+      'Zona Localização',
       'Município',
       'Estado',
       'Pais'
@@ -207,14 +211,25 @@ class indice extends clsListagem
 
     $total = $obj_bairro->_total;
 
-    // Monta a lista
+    // Zona Localização.
+    $zona = App_Model_ZonaLocalizacao::getInstance();
+
+    // UrlHelper.
+    $url = CoreExt_View_Helper_UrlHelper::getInstance();
+    $options = array('query' => array('idbai' => NULL));
+
+    // Monta a lista.
     if (is_array($lista) && count($lista)) {
       foreach ($lista as $registro) {
+        $zl = $zona->getValue($registro['zona_localizacao']);
+        $options['query']['idbai'] = $registro['idbai'];
+
         $this->addLinhas(array(
-          "<a href=\"public_bairro_det.php?idbai={$registro["idbai"]}\">{$registro["nome"]}</a>",
-          "<a href=\"public_bairro_det.php?idbai={$registro["idbai"]}\">{$registro["nm_municipio"]}</a>",
-          "<a href=\"public_bairro_det.php?idbai={$registro["idbai"]}\">{$registro["nm_estado"]}</a>",
-          "<a href=\"public_bairro_det.php?idbai={$registro["idbai"]}\">{$registro["nm_pais"]}</a>"
+          $url->l($registro['nome'], 'public_bairro_det.php', $options),
+          $url->l($zl, 'public_bairro_det.php', $options),
+          $url->l($registro['nm_municipio'], 'public_bairro_det.php', $options),
+          $url->l($registro['nm_estado'], 'public_bairro_det.php', $options),
+          $url->l($registro['nm_pais'], 'public_bairro_det.php', $options)
         ));
       }
     }

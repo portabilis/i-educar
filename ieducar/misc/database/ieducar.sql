@@ -8808,6 +8808,7 @@ CREATE TABLE endereco_externo (
     apartamento numeric(6,0),
     idsis_rev integer,
     idsis_cad integer NOT NULL,
+    zona_localizacao integer DEFAULT 1,
     CONSTRAINT ck_endereco_externo_operacao CHECK ((((operacao = 'I'::bpchar) OR (operacao = 'A'::bpchar)) OR (operacao = 'E'::bpchar))),
     CONSTRAINT ck_endereco_externo_origem_gravacao CHECK (((((origem_gravacao = 'M'::bpchar) OR (origem_gravacao = 'U'::bpchar)) OR (origem_gravacao = 'C'::bpchar)) OR (origem_gravacao = 'O'::bpchar))),
     CONSTRAINT ck_endereco_externo_tipo CHECK (((tipo >= (1)::numeric) AND (tipo <= (3)::numeric)))
@@ -9261,6 +9262,7 @@ CREATE TABLE bairro (
     operacao character(1) NOT NULL,
     idsis_rev integer,
     idsis_cad integer NOT NULL,
+    zona_localizacao integer DEFAULT 1,
     CONSTRAINT ck_bairro_operacao CHECK ((((operacao = 'I'::bpchar) OR (operacao = 'A'::bpchar)) OR (operacao = 'E'::bpchar))),
     CONSTRAINT ck_bairro_origem_gravacao CHECK (((((origem_gravacao = 'M'::bpchar) OR (origem_gravacao = 'U'::bpchar)) OR (origem_gravacao = 'C'::bpchar)) OR (origem_gravacao = 'O'::bpchar)))
 );
@@ -9327,7 +9329,7 @@ SET search_path = cadastro, pg_catalog;
 --
 
 CREATE VIEW v_endereco AS
-    SELECT e.idpes, e.cep, e.idlog, e.numero, e.letra, e.complemento, e.idbai, e.bloco, e.andar, e.apartamento, l.nome AS logradouro, l.idtlog, b.nome AS bairro, m.nome AS cidade, m.sigla_uf FROM endereco_pessoa e, public.logradouro l, public.bairro b, public.municipio m WHERE ((((e.idlog = l.idlog) AND (e.idbai = b.idbai)) AND (b.idmun = m.idmun)) AND (e.tipo = (1)::numeric)) UNION SELECT e.idpes, e.cep, NULL::"unknown" AS idlog, e.numero, e.letra, e.complemento, NULL::"unknown" AS idbai, e.bloco, e.andar, e.apartamento, e.logradouro, e.idtlog, e.bairro, e.cidade, e.sigla_uf FROM endereco_externo e WHERE (e.tipo = (1)::numeric);
+    SELECT e.idpes, e.cep, e.idlog, e.numero, e.letra, e.complemento, e.idbai, e.bloco, e.andar, e.apartamento, l.nome AS logradouro, l.idtlog, b.nome AS bairro, m.nome AS cidade, m.sigla_uf, b.zona_localizacao FROM endereco_pessoa e, public.logradouro l, public.bairro b, public.municipio m WHERE ((((e.idlog = l.idlog) AND (e.idbai = b.idbai)) AND (b.idmun = m.idmun)) AND (e.tipo = (1)::numeric)) UNION SELECT e.idpes, e.cep, NULL::"unknown" AS idlog, e.numero, e.letra, e.complemento, NULL::"unknown" AS idbai, e.bloco, e.andar, e.apartamento, e.logradouro, e.idtlog, e.bairro, e.cidade, e.sigla_uf, e.zona_localizacao FROM endereco_externo e WHERE (e.tipo = (1)::numeric);
 
 
 --
@@ -20136,6 +20138,7 @@ INSERT INTO changelog VALUES (21, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '21_cria
 INSERT INTO changelog VALUES (22, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '22_cria_primary_key_em_modules_calendario_turma.sql');
 INSERT INTO changelog VALUES (23, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '23_cria_tabela_modules_componente_curricular_turma.sql');
 INSERT INTO changelog VALUES (24, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '24_altera_tipo_campo_carga_horaria_pmieducar_servidor_alocacao.sql');
+INSERT INTO changelog VALUES (25, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '25_adiciona_campo_zona_localizacao_tabelas_enderecamento.sql');
 
 
 --

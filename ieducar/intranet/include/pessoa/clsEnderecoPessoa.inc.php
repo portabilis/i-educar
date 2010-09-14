@@ -308,7 +308,11 @@ class clsPessoaEndereco
       $tupla = $db->Tupla();
       $tupla['cep']   = new clsCepLogradouro($tupla['cep'], $tupla['idlog']);
       $tupla['idlog'] = new clsCepLogradouro($tupla['cep'], $tupla['idlog']);
-      $tupla['idbai'] = new clsBairro($tupla['idbai']);
+      $tupla['idbai'] = new clsPublicBairro(NULL, NULL, $tupla['idbai']);
+
+      $bairro = $tupla['idbai']->detalhe();
+
+      $tupla['zona_localizacao'] = $bairro['zona_localizacao'];
 
       $tupla['total'] = $total;
 
@@ -343,7 +347,12 @@ class clsPessoaEndereco
 
         $tupla['cep']   = new clsCepLogradouro($cep, $tupla['idlog']);
         $tupla['idlog'] = new clsCepLogradouro($cep, $tupla['idlog']);
-        $tupla['idbai'] = new clsBairro($tupla['idbai']);
+
+        $tupla['idbai'] = new clsPublicBairro(NULL, NULL, $tupla['idbai']);
+
+        $bairro = $tupla['idbai']->detalhe();
+
+        $tupla['zona_localizacao'] = $bairro['zona_localizacao'];
 
         return $tupla;
       }

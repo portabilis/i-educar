@@ -64,7 +64,7 @@ class clsIndex extends clsBase
  */
 class miolo1 extends clsListagem
 {
-  var $funcao_js = 'cv_libera_campos(\'cep_\', \'ref_sigla_uf_\', \'cidade\', \'nm_bairro\', \'ref_idtlog\', \'nm_logradouro\', \'isEnderecoExterno\')';
+  var $funcao_js = 'cv_libera_campos(\'cep_\', \'ref_sigla_uf_\', \'cidade\', \'nm_bairro\', \'ref_idtlog\', \'nm_logradouro\', \'isEnderecoExterno\', \'zona_localizacao\')';
 
   function Gerar()
   {
@@ -84,14 +84,15 @@ class miolo1 extends clsListagem
     $_SESSION['campo11'] = $_GET['campo11'] ? $_GET['campo11'] : $_SESSION['campo11'];
     $_SESSION['campo12'] = $_GET['campo12'] ? $_GET['campo12'] : $_SESSION['campo12'];
     $_SESSION['campo13'] = $_GET['campo13'] ? $_GET['campo13'] : $_SESSION['campo13'];
+    $_SESSION['campo14'] = $_GET['campo14'] ? $_GET['campo14'] : $_SESSION['campo14'];
 
     $this->nome = 'form1';
 
     $this->funcao_js = sprintf(
-      'cv_libera_campos(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\')',
+      'cv_libera_campos(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\')',
       $_SESSION['campo10'], $_SESSION['campo11'], $_SESSION['campo7'],
       $_SESSION['campo1'], $_SESSION['campo12'], $_SESSION['campo4'],
-      $_SESSION['campo9']
+      $_SESSION['campo9'], $_SESSION['campo14']
     );
 
     $this->titulo = 'Endereço';
@@ -126,7 +127,7 @@ class miolo1 extends clsListagem
 
     $select = '
       SELECT
-        c.idlog, c.cep, c.idbai, u.sigla_uf, m.nome, t.idtlog,m.idmun
+        c.idlog, c.cep, c.idbai, u.sigla_uf, m.nome, t.idtlog, m.idmun, b.zona_localizacao
       FROM
         urbano.cep_logradouro_bairro c, public.bairro b, public.logradouro l,
         public.municipio m, public.uf u, urbano.tipo_logradouro t
@@ -191,10 +192,10 @@ class miolo1 extends clsListagem
     $db->Consulta($select);
 
     while ($db->ProximoRegistro()) {
-      list($idlog, $cep, $idbai, $uf, $cidade, $descricao,$id_mun) =
-        array('','','','','','','');
+      list($idlog, $cep, $idbai, $uf, $cidade, $descricao,$id_mun, $zona) =
+        array('', '', '', '', '', '', '', '');
 
-      list($idlog, $cep, $idbai, $uf, $cidade, $descricao, $id_mun) = $db->Tupla();
+      list($idlog, $cep, $idbai, $uf, $cidade, $descricao, $id_mun, $zona) = $db->Tupla();
 
       $logradouro         = new clsLogradouro($idlog);
       $detalhe_logradouro = $logradouro->detalhe();
@@ -223,7 +224,7 @@ class miolo1 extends clsListagem
       }
       else {
         $url = sprintf(
-          '<a href="javascript:void(0);" onclick="cv_set_campo(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\');">%%s</a>',
+          '<a href="javascript:void(0);" onclick="cv_set_campo(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\');">%%s</a>',
           $_SESSION['campo1'], $detalhe_bairro["nome"], $_SESSION['campo2'],
           $detalhe_bairro["idbai"], $_SESSION['campo3'], $cep,
           $_SESSION['campo4'], $detalhe_logradouro["nome"],
@@ -231,13 +232,14 @@ class miolo1 extends clsListagem
           $_SESSION['campo6'], $uf, $_SESSION['campo7'], $cidade,
           $_SESSION['campo8'], $descricao, $_SESSION['campo9'], $s_end,
           $_SESSION['campo10'], $cep2, $_SESSION['campo11'], $uf,
-          $_SESSION['campo12'], $_SESSION['campo13'], $id_mun
+          $_SESSION['campo12'], $_SESSION['campo13'], $id_mun,
+          $_SESSION['campo14'], $zona
         );
 
         $this->addLinhas(array(
-          sprintf($url, $detalhe_bairro["nome"]),
+          sprintf($url, $detalhe_bairro['nome']),
           sprintf($url, $cep2),
-          sprintf($url, $detalhe_logradouro["nome"]),
+          sprintf($url, $detalhe_logradouro['nome']),
           sprintf($url, $uf),
           sprintf($url, $cidade)
         ));
