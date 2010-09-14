@@ -1,3 +1,4 @@
+-- Referências para aluno e docente i-Educar x Educacenso.
 CREATE TABLE modules.educacenso_cod_aluno
 (
   cod_aluno integer NOT NULL,
@@ -31,3 +32,33 @@ CREATE TABLE modules.educacenso_cod_docente
 ALTER TABLE modules.educacenso_cod_docente ADD
   CONSTRAINT educacenso_cod_docente_pk
   PRIMARY KEY (cod_servidor, cod_docente_inep);
+
+
+-- Tabelas para armazenar nome das IES e cursos superiores de acordo com os
+-- dados do Educacenso/Inep.
+CREATE TABLE modules.educacenso_ies
+(
+  id serial,
+  ies_id integer NOT NULL,
+  nome character varying(255) NOT NULL,
+  dependencia_administrativa_id integer NOT NULL,
+  tipo_instituicao_id integer NOT NULL,
+  uf character(2),
+  user_id integer NOT NULL,
+  created_at timestamp without time zone NOT NULL,
+  updated_at timestamp without time zone,
+  CONSTRAINT educacenso_ies_pk PRIMARY KEY (id)
+) WITH (OIDS=FALSE);
+
+
+CREATE TABLE modules.educacenso_curso_superior
+(
+  id serial,
+  curso_id character varying(100) NOT NULL,
+  nome character varying(255) NOT NULL,
+  classe_id integer NOT NULL,
+  user_id integer NOT NULL,
+  created_at timestamp without time zone NOT NULL,
+  updated_at timestamp without time zone,
+  CONSTRAINT educacenso_curso_superior_pk PRIMARY KEY (id)
+) WITH (OIDS=FALSE);
