@@ -33,7 +33,10 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
+require_once 'App/Model/SimNao.php';
 require_once 'App/Model/ZonaLocalizacao.php';
+require_once 'Transporte/Model/AlunoDataMapper.php';
+require_once 'Transporte/Model/Responsavel.php';
 
 /**
  * clsIndexBase class.
@@ -699,6 +702,26 @@ class indice extends clsCadastro
 
     $this->campoLista('pais_origem', ' &nbsp; País de Origem', $lista_pais_origem,
       $this->pais_origem, '', '', '', '', $this->nacionalidade == 1, FALSE);
+
+    $this->campoQuebra2('#224488');
+
+    // Transporte escolar
+    $transporteMapper = new Transporte_Model_AlunoDataMapper();
+    $transporte       = NULL;
+
+    try {
+      $transporte = $transporteMapper->find(array($this->cod_aluno));
+    }
+    catch (Exception $e) {
+    }
+
+    $bit = App_Model_SimNao::getInstance();
+    $this->campoLista('transporte_aluno', 'Transporte', $bit->getEnums(),
+      !is_null($transporte) ? 1 : 0, 'transporteResponsavel();');
+
+    $responsavel = Transporte_Model_Responsavel::getInstance();
+    $this->campoLista('transporte_responsavel', 'Responsável', $responsavel->getEnums(),
+      !is_null($transporte) ? $transporte->get('responsavel') : 0);
 
     $this->campoQuebra2('#224488');
 
@@ -1611,10 +1634,11 @@ class indice extends clsCadastro
 
       if ($this->ref_idpes) {
         if ($obj->existePessoa()) {
-          $obj->edita();
+          $aluno = $obj->edita();
+          $this->cod_aluno = $aluno['cod_aluno'];
         }
         else {
-          $obj->cadastra();
+          $this->cod_aluno = $obj->cadastra();
         }
       }
     }
@@ -1633,6 +1657,10 @@ class indice extends clsCadastro
         }
       }
     }
+
+    // Atualiza a informação de uso de transporte escolar.
+    $this->_cadastraTransporte($this->cod_aluno, $this->transporte_aluno,
+      $this->transporte_responsavel, $this->pessoa_logada);
 
     header('Location: educar_aluno_det.php?cod_aluno=' . $this->cod_aluno);
     die();
@@ -1764,6 +1792,53 @@ class indice extends clsCadastro
     }
 
     return $nome_do_arquivo;
+  }
+
+  /**
+   * Cadastra ou atualiza a informação de uso de transporte escolar.
+   *
+   * @access protected
+   * @param  int  $codAluno     Código do aluno
+   * @param  bool $transporte   [Opcional] TRUE para cadastrar/atualizar e FALSE
+   *   para remover a informação de uso de transporte escolar
+   * @param  int  $responsavel  [Opcional] Código do responsável pelo transporte
+   *   escolar, valor mapeado para o enum Transporte_Model_Responsavel. Apenas
+   *   obrigatório caso $transporte = TRUE
+   * @param  int  $user         Código do usuário a alterar o registroo
+   * @return bool TRUE caso tenha criado/editado/apagado o registro com sucesso
+   * @since  Método disponível desde a versão 1.2.0
+   */
+  function _cadastraTransporte($codAluno, $transporte = TRUE, $responsavel = NULL,
+    $user)
+  {
+    $data = array(
+      'aluno'       => $codAluno,
+      'responsavel' => $responsavel,
+      'user'        => $user,
+      'created_at'  => 'NOW()'
+    );
+
+    $transporteMapper = new Transporte_Model_AlunoDataMapper();
+
+    if ($transporte) {
+      if (is_null($responsavel)) {
+        return FALSE;
+      }
+
+      try {
+        $transporteMapper->find(array('aluno' => $codAluno));
+      }
+      catch (Exception $e) {
+        $transporteMapper->save(
+          $transporteMapper->createNewEntityInstance($data)
+        );
+      }
+    }
+    else {
+      $transporteMapper->delete(array('aluno' => $codAluno));
+    }
+
+    return TRUE;
   }
 }
 
@@ -2083,4 +2158,18 @@ if (!$_GET['cod_aluno']) {
 }
 /** Javascript condicional */
 ?>
+Event.observe(window, 'load', transporteResponsavel, false);
+
+function transporteResponsavel()
+{
+  obj1 = document.getElementById('transporte_aluno');
+  obj2 = document.getElementById('transporte_responsavel');
+
+  if (obj1.value == 1) {
+    obj2.disabled = false;
+  }
+  else {
+    obj2.disabled = true;
+  }
+}
 </script>

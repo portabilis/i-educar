@@ -34,6 +34,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
 require_once 'App/Model/ZonaLocalizacao.php';
+require_once 'Transporte/Model/AlunoDataMapper.php';
 
 /**
  * clsIndexBase class.
@@ -608,6 +609,20 @@ class indice extends clsDetalhe
           $registro['caminho_foto']
         )
       ));
+    }
+
+    // Transporte escolar.
+    $transporteMapper = new Transporte_Model_AlunoDataMapper();
+    $transporteAluno  = NULL;
+    try {
+      $transporteAluno = $transporteMapper->find(array('aluno' => $this->cod_aluno));
+    }
+    catch (Exception $e) {
+    }
+
+    $this->addDetalhe(array('Transporte escolar', isset($transporteAluno) ? 'Sim' : 'Não'));
+    if ($transporteAluno) {
+      $this->addDetalhe(array('Responsável transporte', $transporteAluno->responsavel));
     }
 
     $this->addDetalhe(array('Matrícula', $this->montaTabelaMatricula()));
