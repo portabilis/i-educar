@@ -2829,6 +2829,15 @@ class clsCampos extends Core_Controller_Page_Abstract
     return $retorno .= "<input onKeyPress=\"formataCEP(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$disabled}>$descricao\n";
   }
 
+  /**
+   * TODO: Remover método. No único caso possível de ser invocado, não o é
+   *   (através de intranet/funcionario_cad.php). É necessário estudar
+   *   o método clsCampos::MakeCampos() para entender o caso possível em que
+   *   este método seria invocado.
+   *
+   * @see scripts/padrao.js::pesquisa_valores_f()
+   * @see clsCampos::MakeCampos()
+   */
   function getCampoTextoPesquisa($nome, $id = '', $valor, $class, $tamanhovisivel,
     $tamanhomaximo, $disabled = FALSE, $caminho, $campos_serializados = NULL,
     $descricao = NULL, $script = NULL, $evento = NULL)
