@@ -33,6 +33,8 @@ require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
+require_once 'App/Model/ZonaLocalizacao.php';
+
 /**
  * clsIndexBase class.
  *
@@ -326,6 +328,14 @@ class indice extends clsDetalhe
         }
       }
     }
+
+    // Adiciona a informação de zona de localização junto ao bairro do
+    // endereço.
+    $zona = App_Model_ZonaLocalizacao::getInstance();
+    $registro['nm_bairro'] = sprintf(
+      '%s (Zona %s)',
+      $registro['nm_bairro'], $zona->getValue($obj_endereco_det['zona_localizacao'])
+    );
 
     if ($registro['cod_aluno']) {
       $this->addDetalhe(array('Código Aluno', $registro['cod_aluno']));

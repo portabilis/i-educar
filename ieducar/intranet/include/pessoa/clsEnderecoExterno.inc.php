@@ -60,6 +60,7 @@ class clsEnderecoExterno
   var $bloco;
   var $apartamento;
   var $andar;
+  var $zona_localizacao;
 
   var $tabela;
   var $schema = 'cadastro';
@@ -71,7 +72,7 @@ class clsEnderecoExterno
     $logradouro = FALSE, $numero = FALSE, $letra = FALSE, $complemento = FALSE,
     $bairro = FALSE, $cep = FALSE, $cidade = FALSE, $sigla_uf = FALSE,
     $reside_desde = FALSE, $bloco = FALSE, $apartamento = FALSE, $andar = FALSE,
-    $idpes_cad = FALSE, $idpes_rev = FALSE)
+    $idpes_cad = FALSE, $idpes_rev = FALSE, $zona_localizacao = 1)
   {
     $idtlog = urldecode($idtlog);
 
@@ -106,6 +107,7 @@ class clsEnderecoExterno
     $this->bloco            = $bloco;
     $this->apartamento      = $apartamento;
     $this->andar            = $andar;
+    $this->zona_localizacao = $zona_localizacao;
 
     $this->tabela = 'endereco_externo';
   }
@@ -169,6 +171,11 @@ class clsEnderecoExterno
       if (is_numeric($this->andar)) {
         $campos .= ', andar';
         $values .= ", '{$this->andar}'";
+      }
+
+      if (is_numeric($this->zona_localizacao)) {
+        $campos .= ', zona_localizacao';
+        $values .= ", '{$this->zona_localizacao}'";
       }
 
       $sql = sprintf(
@@ -267,6 +274,10 @@ class clsEnderecoExterno
         $set .= ", andar = NULL";
       }
 
+      if (is_numeric($this->zona_localizacao)) {
+        $set .= ", zona_localizacao = '{$this->zona_localizacao}'";
+      }
+
       if (is_numeric($this->idpes_rev)) {
         $set .= ", idpes_rev = '$this->idpes_rev'";
       }
@@ -313,7 +324,7 @@ class clsEnderecoExterno
     $str_bairro = FALSE, $int_cep = FALSE, $str_cidade = FALSE, $sigla_uf = FALSE,
     $str_reside_desde = FALSE, $str_bloco = FALSE, $int_apartamento = FALSE,
     $int_andar = FALSE, $int_limite_ini = 0, $int_limite_qtd = 20,
-    $str_orderBy = FALSE, $int_idpes = FALSE
+    $str_orderBy = FALSE, $int_idpes = FALSE, $zona_localizacao = NULL
   )
   {
     $whereAnd = ' WHERE ';
@@ -388,6 +399,11 @@ class clsEnderecoExterno
       $whereAnd = ' AND ';
     }
 
+    if (is_numeric($zona_localizacao)) {
+      $where .= "{$whereAnd}zona_localizacao = '$zona_localizacao'";
+      $whereAnd = ' AND ';
+    }
+
     if ($str_orderBy) {
       $orderBy = "ORDER BY $str_orderBy";
     }
@@ -406,8 +422,8 @@ class clsEnderecoExterno
 
     $sql = sprintf(
       'SELECT idpes, tipo, idtlog, logradouro, numero, letra, complemento, ' .
-      'bairro, cep, cidade, sigla_uf, reside_desde, bloco, apartamento, andar ' .
-      'FROM %s.%s %s %s %s',
+      'bairro, cep, cidade, sigla_uf, reside_desde, bloco, apartamento, ' .
+      'andar, zona_localizacao FROM %s.%s %s %s %s',
       $this->schema, $this->tabela, $where, $orderBy, $limit
     );
 
@@ -444,7 +460,7 @@ class clsEnderecoExterno
       $sql = sprintf(
         'SELECT idpes, tipo, idtlog, logradouro, numero, letra, complemento, ' .
         'bairro, cep, cidade, sigla_uf, reside_desde, bloco, apartamento, '.
-        'andar FROM %s.%s WHERE idpes = %d',
+        'andar, zona_localizacao FROM %s.%s WHERE idpes = %d',
         $this->schema, $this->tabela, $this->idpes
       );
 
@@ -467,6 +483,7 @@ class clsEnderecoExterno
         $this->bloco            = $tupla['bloco'];
         $this->apartamento      = $tupla['apartamento'];
         $this->andar            = $tupla['andar'];
+        $this->zona_localizacao = $tupla['zona_localizacao'];
 
         $tupla['idpes']    = new clsPessoa_($tupla['idpes']);
         $tupla['idtlog']   = new clsTipoLogradouro($tupla['idtlog']);

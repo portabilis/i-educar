@@ -33,6 +33,8 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
 
+require_once 'App/Model/ZonaLocalizacao.php';
+
 /**
  * clsIndexBase class.
  *
@@ -82,6 +84,7 @@ class indice extends clsCadastro
   var $operacao;
   var $idsis_rev;
   var $idsis_cad;
+  var $zona_localizacao;
 
   var $idpais;
   var $sigla_uf;
@@ -99,6 +102,7 @@ class indice extends clsCadastro
       $obj_bairro = new clsPublicBairro();
       $lst_bairro = $obj_bairro->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->idbai);
+
       if ($lst_bairro) {
         $registro = $lst_bairro[0];
       }
@@ -183,7 +187,12 @@ class indice extends clsCadastro
       echo '<!--\nErro\nClasse clsMunicipio nao encontrada\n-->';
       $opcoes = array("" => "Erro na geracao");
     }
-    $this->campoLista('idmun', 'Munic&iacute;pio', $opcoes, $this->idmun);
+
+    $this->campoLista('idmun', 'Município', $opcoes, $this->idmun);
+
+    $zona = App_Model_ZonaLocalizacao::getInstance();
+    $this->campoLista('zona_localizacao', 'Zona Localização', $zona->getEnums(),
+      $this->zona_localizacao);
 
     $this->campoTexto('nome', 'Nome', $this->nome, 30, 255, TRUE);
   }
@@ -195,7 +204,8 @@ class indice extends clsCadastro
     session_write_close();
 
     $obj = new clsPublicBairro($this->idmun, NULL, NULL, $this->nome, NULL,
-      NULL, 'U', $this->pessoa_logada, NULL, 'I', NULL, 9);
+      NULL, 'U', $this->pessoa_logada, NULL, 'I', NULL, 9,
+      $this->zona_localizacao);
 
     $cadastrou = $obj->cadastra();
     if ($cadastrou) {
@@ -217,7 +227,9 @@ class indice extends clsCadastro
     session_write_close();
 
     $obj = new clsPublicBairro($this->idmun, NULL, $this->idbai, $this->nome,
-      $this->pessoa_logada, NULL, 'U', NULL, NULL, 'I', NULL, 9);
+      $this->pessoa_logada, NULL, 'U', NULL, NULL, 'I', NULL, 9,
+      $this->zona_localizacao);
+
     $editou = $obj->edita();
     if ($editou) {
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
@@ -239,14 +251,14 @@ class indice extends clsCadastro
 
     $obj = new clsPublicBairro(NULL, NULL, $this->idbai, NULL, $this->pessoa_logada);
     $excluiu = $obj->excluir();
+
     if ($excluiu) {
-      $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+      $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
       header('Location: public_bairro_lst.php');
       die();
     }
 
-    $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
-    echo "<!--\nErro ao excluir clsPublicBairro\nvalores obrigatorios\nif( is_numeric( $this->idbai ) )\n-->";
+    $this->mensagem = 'Exclusão não realizada.<br>';
 
     return FALSE;
   }

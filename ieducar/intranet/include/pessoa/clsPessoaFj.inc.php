@@ -275,21 +275,22 @@ class clsPessoaFj
       $detalheEndereco = $objEndereco->detalhe();
 
       if ($detalheEndereco) {
-        $this->bairro       = $detalheEndereco['bairro'];
-        $this->logradouro   = $detalheEndereco['logradouro'];
-        $this->sigla_uf     = $detalheEndereco['sigla_uf'];
-        $this->cidade       = $detalheEndereco['cidade'];
-        $this->reside_desde = $detalheEndereco['reside_desde'];
-        $this->idtlog       = $detalheEndereco['idtlog'];
-        $this->complemento  = $detalheEndereco['complemento'];
-        $this->numero       = $detalheEndereco['numero'];
-        $this->letra        = $detalheEndereco['letra'];
-        $this->idlog        = $detalheEndereco['idlog'];
-        $this->idbai        = $detalheEndereco['idbai'];
-        $this->cep          = $detalheEndereco['cep'];
-        $this->apartamento  = $detalheEndereco['apartamento'];
-        $this->bloco        = $detalheEndereco['bloco'];
-        $this->andar        = $detalheEndereco['andar'];
+        $this->bairro           = $detalheEndereco['bairro'];
+        $this->logradouro       = $detalheEndereco['logradouro'];
+        $this->sigla_uf         = $detalheEndereco['sigla_uf'];
+        $this->cidade           = $detalheEndereco['cidade'];
+        $this->reside_desde     = $detalheEndereco['reside_desde'];
+        $this->idtlog           = $detalheEndereco['idtlog'];
+        $this->complemento      = $detalheEndereco['complemento'];
+        $this->numero           = $detalheEndereco['numero'];
+        $this->letra            = $detalheEndereco['letra'];
+        $this->idlog            = $detalheEndereco['idlog'];
+        $this->idbai            = $detalheEndereco['idbai'];
+        $this->cep              = $detalheEndereco['cep'];
+        $this->apartamento      = $detalheEndereco['apartamento'];
+        $this->bloco            = $detalheEndereco['bloco'];
+        $this->andar            = $detalheEndereco['andar'];
+        $this->zona_localizacao = $detalheEndereco['zona_localizacao'];
 
         $detalhePessoa['bairro']       = $this->bairro;
         $detalhePessoa['logradouro']   = $this->logradouro;

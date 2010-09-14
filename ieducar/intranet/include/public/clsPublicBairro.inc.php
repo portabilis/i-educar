@@ -54,6 +54,7 @@ class clsPublicBairro
   var $operacao;
   var $idsis_rev;
   var $idsis_cad;
+  var $zona_localizacao;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -108,25 +109,24 @@ class clsPublicBairro
   /**
    * Construtor.
    *
-   * @param integer $idmun
+   * @param int     $idmun
    * @param string  $geom
-   * @param integer $idbai
+   * @param int     $idbai
    * @param string  $nome
-   * @param integer $idpes_rev
+   * @param int     $idpes_rev
    * @param string  $data_rev
    * @param string  $origem_gravacao
-   * @param integer $idpes_cad
+   * @param int     $idpes_cad
    * @param string  $data_cad
    * @param string  $operacao
-   * @param integer $idsis_rev
-   * @param integer $idsis_cad
-   *
-   * @return object
+   * @param int     $idsis_rev
+   * @param int     $idsis_cad
+   * @param int     $zona_localizacao
    */
   function clsPublicBairro($idmun = NULL, $geom = NULL, $idbai = NULL,
     $nome = NULL, $idpes_rev = NULL, $data_rev = NULL, $origem_gravacao = NULL,
     $idpes_cad = NULL, $data_cad = NULL, $operacao = NULL, $idsis_rev = NULL,
-    $idsis_cad = NULL)
+    $idsis_cad = NULL, $zona_localizacao = 1)
   {
     $db = new clsBanco();
     $this->_schema = 'public.';
@@ -134,7 +134,7 @@ class clsPublicBairro
 
     $this->_campos_lista = $this->_todos_campos = 'b.idmun, b.geom, b.idbai, ' .
       'b.nome, b.idpes_rev, b.data_rev, b.origem_gravacao, b.idpes_cad, ' .
-      'b.data_cad, b.operacao, b.idsis_rev, b.idsis_cad';
+      'b.data_cad, b.operacao, b.idsis_rev, b.idsis_cad, b.zona_localizacao';
 
     if (is_numeric($idsis_rev)) {
       if (class_exists('clsAcessoSistema')) {
@@ -283,6 +283,10 @@ class clsPublicBairro
     if (is_string($operacao)) {
       $this->operacao = $operacao;
     }
+
+    if (is_numeric($zona_localizacao)) {
+      $this->zona_localizacao = $zona_localizacao;
+    }
   }
 
   /**
@@ -365,6 +369,12 @@ class clsPublicBairro
         $gruda    = ', ';
       }
 
+      if (is_numeric($this->zona_localizacao)) {
+        $campos  .= "{$gruda}zona_localizacao";
+        $valores .= "{$gruda}'{$this->zona_localizacao}'";
+        $gruda    = ', ';
+      }
+
       $db->Consulta(sprintf(
         "INSERT INTO %s (%s) VALUES (%s)",
         $this->_tabela, $campos, $valores
@@ -441,6 +451,11 @@ class clsPublicBairro
         $gruda = ', ';
       }
 
+      if (is_numeric($this->zona_localizacao)) {
+        $set  .= "{$gruda}zona_localizacao = '{$this->zona_localizacao}'";
+        $gruda = ', ';
+      }
+
       if ($set) {
         $db->Consulta(sprintf(
           'UPDATE %s SET %s WHERE idbai = \'%d\'',
@@ -457,26 +472,28 @@ class clsPublicBairro
   /**
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
    *
-   * @param integer $int_idmun
+   * @param int     $int_idmun
    * @param string  $str_geom
    * @param string  $str_nome
-   * @param integer $int_idpes_rev
+   * @param int     $int_idpes_rev
    * @param string  $date_data_rev_ini
    * @param string  $date_data_rev_fim
    * @param string  $str_origem_gravacao
-   * @param integer $int_idpes_cad
+   * @param int     $int_idpes_cad
    * @param string  $date_data_cad_ini
    * @param string  $date_data_cad_fim
    * @param string  $str_operacao
-   * @param integer $int_idsis_rev
-   * @param integer $int_idsis_cad
+   * @param int     $int_idsis_rev
+   * @param int     $int_idsis_cad
+   * @param int     $zona_localizacao
    * @return array
    */
   function lista($int_idmun = NULL, $str_geom = NULL, $str_nome = NULL,
     $int_idpes_rev = NULL, $date_data_rev_ini = NULL, $date_data_rev_fim = NULL,
     $str_origem_gravacao = NULL, $int_idpes_cad = NULL, $date_data_cad_ini = NULL,
     $date_data_cad_fim = NULL, $str_operacao = NULL, $int_idsis_rev = NULL,
-    $int_idsis_cad = NULL, $int_idpais = NULL, $str_sigla_uf = NULL, $int_idbai = NULL)
+    $int_idsis_cad = NULL, $int_idpais = NULL, $str_sigla_uf = NULL, $int_idbai = NULL,
+    $zona_localizacao = NULL)
   {
     $select = ', m.nome AS nm_municipio, m.sigla_uf, u.nome AS nm_estado, u.idpais, p.nome AS nm_pais ';
     $from   = 'b, public.municipio m, public.uf u, public.pais p ';
@@ -556,6 +573,11 @@ class clsPublicBairro
 
     if (is_numeric($int_idsis_cad)) {
       $filtros .= "{$whereAnd} b.idsis_cad = '{$int_idsis_cad}'";
+      $whereAnd = ' AND ';
+    }
+
+    if (is_numeric($zona_localizacao)) {
+      $filtros .= "{$whereAnd} b.zona_localizacao = '{$zona_localizacao}'";
       $whereAnd = ' AND ';
     }
 

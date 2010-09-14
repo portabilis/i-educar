@@ -137,7 +137,7 @@ if ($_GET['cpf'] || $_GET['idpes']) {
       $nacionalidade    = $det_fisica['nacionalidade'];
       $idmun_nascimento = $det_fisica['idmun_nascimento']->idmun;
 
-      $xml .= sprintf('<ddd_fone_1>%s</ddd_fone_1>', $ddd_fone1) . PHP_EOL;
+      $xml .= sprintf('<ddd_fone_1>%s</ddd_fone_1>', $ddd_fone_1) . PHP_EOL;
       $xml .= sprintf('<fone_1>%s</fone_1>', $fone_1) . PHP_EOL;
       $xml .= sprintf('<ddd_mov>%s</ddd_mov>', $ddd_mov) . PHP_EOL;
       $xml .= sprintf('<fone_mov>%s</fone_mov>', $fone_mov) . PHP_EOL;
@@ -171,6 +171,8 @@ if ($_GET['cpf'] || $_GET['idpes']) {
 
       $obj_endereco = new clsPessoaEndereco($ref_idpes);
 
+      $zona = NULL;
+
       if ($obj_endereco_det = $obj_endereco->detalhe()) {
         $isEnderecoExterno = 0;
 
@@ -184,8 +186,9 @@ if ($_GET['cpf'] || $_GET['idpes']) {
         $apartamento    = $obj_endereco_det['apartamento'];
         $bloco          = $obj_endereco_det['bloco'];
         $ref_idtlog     = $obj_endereco_det['idtlog'];
-        $nm_bairro      =  $obj_endereco_det['bairro'];
-        $nm_logradouro  =  $obj_endereco_det['logradouro'];
+        $nm_bairro      = $obj_endereco_det['bairro'];
+        $nm_logradouro  = $obj_endereco_det['logradouro'];
+        $zona           = $obj_endereco_det['zona_localizacao'];
 
         $cep_ = int2CEP($id_cep);
 
@@ -221,6 +224,7 @@ if ($_GET['cpf'] || $_GET['idpes']) {
           $andar         = $obj_endereco_det['andar'];
           $apartamento   = $obj_endereco_det['apartamento'];
           $bloco         = $obj_endereco_det['bloco'];
+          $zona          = $obj_endereco_det['zona_localizacao'];
 
           $ref_idtlog   = $idtlog        = $obj_endereco_det['idtlog']->idtlog;
           $ref_sigla_uf = $ref_sigla_uf_ = $obj_endereco_det['sigla_uf']->sigla_uf;
@@ -242,6 +246,10 @@ if ($_GET['cpf'] || $_GET['idpes']) {
           $xml .= sprintf('<ref_sigla_uf_>%s</ref_sigla_uf_>', $ref_sigla_uf_) . PHP_EOL;
           $xml .= sprintf('<cep_>%s</cep_>', $cep_) . PHP_EOL;
         }
+      }
+
+      if (isset($zona)) {
+        $xml .= sprintf('<zona_localizacao>%s</zona_localizacao>', $zona) . PHP_EOL;
       }
     }
   }

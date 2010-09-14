@@ -64,6 +64,7 @@ class clsEndereco
   var $bloco;
   var $apartamento;
   var $andar;
+  var $zona_localizacao;
 
   /**
    * Construtor.
@@ -86,7 +87,8 @@ class clsEndereco
 
       $sql = sprintf('SELECT
                 cep, idlog, numero, letra, complemento, idbai, bloco, andar,
-                apartamento, logradouro, bairro, cidade, sigla_uf, idtlog
+                apartamento, logradouro, bairro, cidade, sigla_uf, idtlog,
+                zona_localizacao
               FROM
                 cadastro.v_endereco
               WHERE
@@ -95,21 +97,22 @@ class clsEndereco
       $db->Consulta($sql);
 
       if ($db->ProximoRegistro()) {
-        $tupla             = $db->Tupla();
-        $this->bairro      = $tupla['bairro'];
-        $this->idbai       = $tupla['idbai'];
-        $this->cidade      = $tupla['cidade'];
-        $this->sigla_uf    = $tupla['sigla_uf'];
-        $this->complemento = $tupla['complemento'];
-        $this->bloco       = $tupla['bloco'];
-        $this->apartamento = $tupla['apartamento'];
-        $this->andar       = $tupla['andar'];
-        $this->letra       = $tupla['letra'];
-        $this->numero      = $tupla['numero'];
-        $this->logradouro  = $tupla['logradouro'];
-        $this->idlog       = $tupla['idlog'];
-        $this->idtlog      = $tupla['idtlog'];
-        $this->cep         = $tupla['cep'];
+        $tupla                  = $db->Tupla();
+        $this->bairro           = $tupla['bairro'];
+        $this->idbai            = $tupla['idbai'];
+        $this->cidade           = $tupla['cidade'];
+        $this->sigla_uf         = $tupla['sigla_uf'];
+        $this->complemento      = $tupla['complemento'];
+        $this->bloco            = $tupla['bloco'];
+        $this->apartamento      = $tupla['apartamento'];
+        $this->andar            = $tupla['andar'];
+        $this->letra            = $tupla['letra'];
+        $this->numero           = $tupla['numero'];
+        $this->logradouro       = $tupla['logradouro'];
+        $this->idlog            = $tupla['idlog'];
+        $this->idtlog           = $tupla['idtlog'];
+        $this->cep              = $tupla['cep'];
+        $this->zona_localizacao = $tupla['zona_localizacao'];
 
         return $tupla;
       }

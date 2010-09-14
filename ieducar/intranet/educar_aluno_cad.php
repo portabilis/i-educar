@@ -33,6 +33,8 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
+require_once 'App/Model/ZonaLocalizacao.php';
+
 /**
  * clsIndexBase class.
  *
@@ -388,6 +390,8 @@ class indice extends clsCadastro
             $this->cep_ = int2CEP($this->id_cep);
           }
         }
+
+        $this->zona_localizacao = $obj_endereco_det['zona_localizacao'];
       }
     }
 
@@ -588,8 +592,19 @@ class indice extends clsCadastro
 
     $this->campoOculto('isEnderecoExterno', $this->isEnderecoExterno);
 
-    $this->campoCep('cep_', 'CEP', $this->cep_, TRUE, '-',
-      "<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel( 500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=nm_bairro&campo2=id_bairro&campo3=id_cep&campo4=nm_logradouro&campo5=id_logradouro&campo6=ref_sigla_uf&campo7=cidade&campo8=ref_idtlog_&campo9=isEnderecoExterno&campo10=cep_&campo11=ref_sigla_uf_&campo12=ref_idtlog&campo13=id_cidade\'></iframe>');\">", $disabled);
+    $urlPesquisaCep = 'educar_pesquisa_cep_log_bairro.php?' .
+      'campo1=nm_bairro&campo2=id_bairro&campo3=id_cep&campo4=nm_logradouro&' .
+      'campo5=id_logradouro&campo6=ref_sigla_uf&campo7=cidade&' .
+      'campo8=ref_idtlog_&campo9=isEnderecoExterno&campo10=cep_&' .
+      'campo11=ref_sigla_uf_&campo12=ref_idtlog&campo13=id_cidade&' .
+      'campo14=zona_localizacao';
+
+    $urlPesquisaCep = sprintf(
+      "<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel( 500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'%s\'></iframe>');\">",
+      $urlPesquisaCep
+    );
+
+    $this->campoCep('cep_', 'CEP', $this->cep_, TRUE, '-', $urlPesquisaCep, $disabled);
 
     $this->campoTexto('cidade', 'Cidade', $this->cidade, 30, 255, TRUE, FALSE,
       TRUE, '', '', '', '', $disabled);
@@ -625,6 +640,10 @@ class indice extends clsCadastro
     $this->campoTexto('nm_logradouro', 'Logradouro', $this->nm_logradouro, 30, 255,
       TRUE, FALSE, FALSE, '', '', '', '', $disabled);
 
+    $zl = App_Model_ZonaLocalizacao::getInstance();
+    $this->campoLista('zona_localizacao', 'Zona Localização', $zl->getEnums(),
+      $this->zona_localizacao, FALSE, FALSE, FALSE, FALSE, $disabled);
+
     $this->campoNumero('numero', 'N&uacute;mero', $this->numero, 4, 6, FALSE, '',
       '', FALSE, FALSE, TRUE);
     $this->campoTexto('letra', ' &nbsp; Letra', $this->letra, 4, 1, FALSE);
@@ -634,6 +653,11 @@ class indice extends clsCadastro
       FALSE, FALSE, TRUE);
     $this->campoNumero('apartamento', ' &nbsp; Apartamento', $this->apartamento,
       4, 6, FALSE);
+
+    $this->campoLista('nacionalidade', 'Nacionalidade', $lista_nacionalidade,
+      $this->nacionalidade, 'tmpObj = document.getElementById("pais_origem"); if(this.value != 1) { tmpObj.disabled = false; } else { tmpObj.selectedIndex = 27; tmpObj.disabled = true; }',
+      TRUE, '', '', '', FALSE);
+
 
     $lista_mun_nasc = array('NULL' => 'Selecione a cidade');
 
@@ -884,7 +908,9 @@ class indice extends clsCadastro
     $this->campoOculto('isEnderecoExterno', $this->isEnderecoExterno);
 
     $this->campoCep('cep_', 'CEP', $this->cep_, TRUE, '-',
-      "<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel( 500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=nm_bairro&campo2=id_bairro&campo3=id_cep&campo4=nm_logradouro&campo5=id_logradouro&campo6=ref_sigla_uf&campo7=cidade&campo8=ref_idtlog_&campo9=isEnderecoExterno&campo10=cep_&campo11=ref_sigla_uf_&campo12=ref_idtlog&campo13=id_cidade\'></iframe>');\">", $disabled);
+      //"<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel( 500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=nm_bairro&campo2=id_bairro&campo3=id_cep&campo4=nm_logradouro&campo5=id_logradouro&campo6=ref_sigla_uf&campo7=cidade&campo8=ref_idtlog_&campo9=isEnderecoExterno&campo10=cep_&campo11=ref_sigla_uf_&campo12=ref_idtlog&campo13=id_cidade\'></iframe>');\">",
+      $urlPesquisaCep,
+      $disabled);
 
     $this->campoTexto('cidade', 'Cidade', $this->cidade, 30, 255, TRUE, FALSE,
       TRUE, '', '', '', '', $disabled);
@@ -1418,7 +1444,7 @@ class indice extends clsCadastro
         $this->ref_idtlog, $this->nm_logradouro, $this->numero, $this->letra,
         $this->complemento, $this->nm_bairro, $this->cep_, $this->cidade,
         $this->ref_sigla_uf_, NULL, $this->bloco, $this->apartamento, $this->andar,
-        NULL, $this->pessoa_logada);
+        NULL, $this->pessoa_logada, $this->zona_localizacao);
 
       if ($obj_endereco->existe()) {
         if (!$obj_endereco->edita()) {
