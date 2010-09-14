@@ -57,17 +57,6 @@ function setFocus(campo)
 }
 
 /**
- * @TODO Remover função, sem chamadas no i-Educar.
- */
-function openfotoagricultura(foto, altura, largura)
-{
-  abrir = 'visualizarfotoagricultura.php?id_foto=' + foto;
-  apr   = 'width=' + altura + ', height=' + largura + ', scrollbars=no, top=10, left=10';
-  var foto_ = window.open(abrir, 'JANELA_FOTO',  apr);
-  foto_.focus();
-}
-
-/**
  * @TODO Remover função, chamadas no i-Educar comentadas (código nunca invocado).
  *   Remover também o código legado que o referencia, funcionalidades inúteis.
  *   Ver: $ egrep -rn 'openurl[ ]{0,3}\(' intranet/
@@ -75,21 +64,6 @@ function openfotoagricultura(foto, altura, largura)
 function openurl(url)
 {
   window.open(url, 'PROCURAR', 'width=800, height=300, top=10, left=10, scrollbars=yes');
-}
-
-/**
- * @TODO Remover função, sem chamadas no i-Educar.
- */
-function openurlmaximized(url)
-{
-  var janela = window.open(url, 'PROCURAR',
-    'status=no, toolbar=no, location=no, directories=no, menubar=no, resizable=yes, fullscreen=yes, scrollbars=yes'
-  );
-
-  janela.innerWidth  = screen.width;
-  janela.innerHeight = screen.height;
-  janela.screenX = 0;
-  janela.screenY = 0;
 }
 
 /**
@@ -130,100 +104,6 @@ function insereSubmitLista()
 }
 
 /**
- * @TODO Remover função, sem chamadas no i-Educar.
- */
-function insereSubmitNomeArquivo(nome)
-{
-  if (document.getElementById(nome).value) {
-    document.getElementById('tipoacao').value = '';
-    document.getElementById('formcadastro').submit();
-  }
-  else {
-    alert('Por favor insira um nome para o arquivo');
-  }
-}
-
-/**
- * @TODO Remover função, sem chamadas no i-Educar.
- */
-function insereSubmitValor(valor, campo)
-{
-  document.getElementById(campo).value      = valor;
-  document.getElementById('tipoacao').value = '';
-
-  document.getElementById('formcadastro').submit();
-}
-
-/**
- * @TODO Remover função, sem chamadas no i-Educar.
- */
-function reload(operador)
-{
-  if (document.getElementById('operador').value < 7) {
-    if (document.getElementById('valor').value != '') {
-      if (document.getElementById('logico').value != 0) {
-        document.getElementById('operador_logico').value = operador;
-        document.formcadastro.submit();
-      }
-    }
-    else {
-      document.getElementById('logico_0').selected = true;
-      alert('Insira o valor');
-    }
-  }
-  else {
-    document.getElementById('operador_logico').value = operador;
-    document.formcadastro.submit();
-  }
-}
-
-/**
- * @TODO Remover função, sem chamadas no i-Educar.
- */
-function meusdadosReload(tipo)
-{
-  document.getElementById('reloading').value = 1;
-  objSec = document.getElementById('f_ref_sec');
-  objDep = document.getElementById('f_ref_dept');
-  objSet = document.getElementById('f_ref_setor');
-
-  if (typeof objDep.selectedIndex == 'number' && tipo < 2) {
-    document.getElementById('f_ref_dept_0').selected = true;
-  }
-
-  if (typeof objSet.selectedIndex == 'number' && tipo < 3) {
-    document.getElementById('f_ref_setor_0').selected = true;
-  }
-
-  document.formcadastro.action = '';
-  document.formcadastro.submit();
-}
-
-/**
- * @TODO Remover função, sem chamadas no i-Educar.
- */
-function meusdadosReload2(tipo)
-{
-  document.getElementById('reloading').value = 1;
-
-  objSec = document.getElementById('f_ref_sec');
-  objDep = document.getElementById('f_ref_dept');
-  objSet = document.getElementById('f_ref_setor');
-
-  if (typeof objDep.selectedIndex == 'number' && tipo < 2) {
-    document.getElementById('f_ref_dept_0').selected = true;
-  }
-
-  if (typeof objSet.selectedIndex == 'number' && tipo < 3) {
-    document.getElementById('f_ref_setor_0').selected = true;
-  }
-
-  document.formcadastro.action = '';
-  document.getElementById('TipoAcao').value = '';
-  document.formcadastro.submit();
-}
-
-/**
  * @TODO Remover função após remover todos os arquivos legados não utilizados
  *   presentes no i-Educar. Ver: $ egrep -rn 'excluirSumit[ ]{0,3}\(' intranet/
  */
@@ -238,48 +118,6 @@ function excluirSumit(id, nome_campo)
   }
 
   document.getElementById('tipoacao').value = '';
-  document.getElementById('formcadastro').submit();
-}
-
-/**
- * @TODO Remover função, sem chamadas no i-Educar.
- */
-function excluirSumitAcervo(id, nome_campo, descricao)
-{
-  if (id && nome_campo) {
-    document.getElementById(nome_campo).value = id;
-  }
-
-  if (id == 0) {
-    document.getElementById(nome_campo).value = '0';
-  }
-
-  document.getElementById('descricao').value = descricao;
-  document.getElementById('tipoacao').value  = '';
-  document.getElementById('formcadastro').submit();
-}
-
-/**
- * @TODO Remover função, sem chamadas no i-Educar.
- */
-function exclui_idpes(idpes, campo)
-{
-  document.getElementById(campo).value = idpes;
-
-  document.getElementById('numero2').value      = document.getElementById('numero').value;
-  document.getElementById('complemento2').value = document.getElementById('complemento').value;
-  document.getElementById('letra2').value       = document.getElementById('letra').value;
-  document.getElementById('logradouro2').value  = document.getElementById('logradouro').value;
-  document.getElementById('bairro2').value      = document.getElementById('bairro').value;
-  document.getElementById('cidade2').value      = document.getElementById('cidade').value;
-  document.getElementById('sigla_uf2').value    = document.getElementById('sigla_uf').value;
-  document.getElementById('idtlog2').value      = document.getElementById('idtlog').value;
-  document.getElementById('apartamento2').value = document.getElementById('apartamento').value;
-  document.getElementById('bloco2').value       = document.getElementById('bloco').value;
-  document.getElementById('andar2').value       = document.getElementById('andar').value;
-  document.getElementById('cep').value          = document.getElementById('cep_').value;
-  document.getElementById('tipoacao').value     = '';
-
   document.getElementById('formcadastro').submit();
 }
 
@@ -801,66 +639,6 @@ function ativaCampo(campo)
   }
 }
 
-/**
- * @TODO Remover função, sem chamadas no i-Educar.
- */
-function trocaConteudo(obj, conteudo)
-{
-  if (typeof obj.HTMLContent == 'string') {
-    obj.HTMLContent = conteudo;
-  }
-  else {
-    obj.innerHTML = conteudo;
-  }
-}
-
-/**
- * @TODO Remover função, sem chamadas no i-Educar.
- */
-function LimpaSelect(campos)
-{
-  for (i = 0; i < campos.length; i++) {
-    ObjSelect = document.getElementById(campos[i]);
-    ObjSelect.options.length = 0;
-    ObjSelect.options[ObjSelect.options.length] = new Option (
-      'Selecione', '0', true, true
-    );
-  }
-}
-
-/**
- * @TODO Remover função, sem chamadas no i-Educar.
- */
-function coletaLocation(status, iptu)
-{
-  if (status == 2) {
-    if (confirm('Passar cadastro Nº' + iptu + ' para "Isento?"')) {
-      document.location = 'coleta_adesao_status.php?cod_adesao=' + iptu + '&status=' + status;
-    }
-    else {
-      return false;
-    }
-  }
-
-  if (status == 1) {
-    if (confirm('Passar cadastro Nº' + iptu + ' para "Não Assinante?"')) {
-      document.location = 'coleta_adesao_status.php?cod_adesao=' + iptu + '&status=' + status;
-    }
-    else {
-      return false;
-    }
-  }
-
-  if (status == 0) {
-    if (confirm('Passar cadastro Nº' + iptu + ' para "Assiante"?')) {
-      document.location = 'coleta_adesao_status.php?cod_adesao=' + iptu + '&status=' + status;
-    }
-    else {
-      return false;
-    }
-  }
-}
-
 function MenuCarregaDados(key, ordem, menu_pai, menu, submenu, titulo, ico_menu,
   alvo, suprime_menu)
 {
@@ -894,87 +672,6 @@ function MenuExcluiDado()
   document.getElementById('editando').value = '2';
   document.getElementById('tipoacao').value = '';
   document.getElementById('formcadastro').submit();
-}
-
-/**
- * @TODO Remover função, sem chamadas no i-Educar.
- */
-function insertAtCursor(myField, myValue)
-{
-  var ini = 0, fim = 0, tam = 0;
-  var pos = arguments[2];
-
-  // IE support
-  if (document.selection) {
-    myField.focus();
-    sel = document.selection.createRange();
-    sel.text = myValue;
-  }
-
-  // Mozilla/Netscape support
-  else if (myField.selectionStart || myField.selectionStart == '0') {
-    var startPos = myField.selectionStart;
-    var endPos   = myField.selectionEnd;
-
-    ini = startPos;
-    fim = endPos;
-    tam = myValue.length;
-
-    myField.value = myField.value.substring(0, startPos) + myValue +
-      myField.value.substring(endPos, myField.value.length);
-
-    myField.selectionStart = pos ? ini + pos : ini + tam;
-    myField.selectionEnd   = pos ? ini + pos : ini + tam;
-
-    myField.focus();
-  }
-  else {
-    myField.value += myValue;
-  }
-}
-
-/**
- * @TODO Remover função, sem chamadas no i-Educar.
- */
-function ouvidoria_set_campo(campo, valor, texto)
-{
-  obj        = parent.document.getElementById(campo);
-  novoIndice = obj.options.length;
-
-  obj.options[novoIndice] = new Option(texto);
-
-  opcao          = obj.options[novoIndice];
-  opcao.value    = valor;
-  opcao.selected = true;
-
-  window.parent.fechaExpansivel('div_dinamico_' + (parent.DOM_divs.length * 1 - 1));
-  obj.onchange();
-}
-
-/**
- * @TODO Remover função, sem chamadas no i-Educar.
- */
-function vistoria_set_campo(campo1, valor1, campo2, valor2, campo3, valor3, campo4, valor4, campo5, valor5)
-{
-  obj1       = parent.document.getElementById(campo1);
-  obj1.value = valor1;
-
-  obj2       = parent.document.getElementById(campo2);
-  obj2.value = valor2;
-
-  obj3       = parent.document.getElementById(campo3 + '_');
-  obj3.value = valor3;
-
-  var cep_oculto   = parent.document.getElementById(campo3);
-  cep_oculto.value = valor3.replace('-', '');
-
-  obj4       = parent.document.getElementById(campo4);
-  obj4.value = valor4;
-
-  obj5       = parent.document.getElementById(campo5);
-  obj5.value = valor5;
-
-  window.parent.fechaExpansivel('div_dinamico_' + (parent.DOM_divs.length * 1 - 1));
 }
 
 // Exibe ou esconde um campo da tela
@@ -1124,14 +821,6 @@ function cv_libera_campos(campo1, campo2, campo3, campo4, campo5, campo6, campo7
   }
 }
 
-/**
- * @TODO Remover função, sem chamadas no i-Educar.
- */
-function setCampoFoco(campo)
-{
-  document.getElementById(campo).focus();
-}
-
 // Função a ser executada antes de fechar a janela.
 var exec = null;
 
@@ -1244,26 +933,6 @@ function enviar()
   window.close();
 }
 
-/**
- * @TODO Remover função, sem chamadas no i-Educar.
- */
-function enviar2() {
-  if (
-    (typeof arguments[0] != 'undefined') &&
-    (typeof arguments[1] != 'undefined')
-  ) {
-    window.parent.addVal(arguments[0], arguments[1]);
-  }
-
-  if (typeof arguments[2] != 'undefined') {
-    window.parent.fechaExpansivel(
-      'div_dinamico_' + (parent.DOM_divs.length * 1 - 1)
-    );
-  }
-
-  window.parent.document.getElementById( 'formcadastro' ).submit();
-}
-
 function getElementsByClassName(oElm, strTagName, strClassName)
 {
   var arrElements = (strTagName == '*' && document.all) ?
@@ -1312,27 +981,5 @@ function addEvent_(evt, func, field)
   else if (field.attachEvent) {
     // IE
     field.attachEvent('on' + evt, func);
-  }
-}
-
-/**
- * @TODO Remover função, sem chamadas no i-Educar.
- */
-function removeEvent(evt, func, field)
-{
-  if (! field) {
-    field = window;
-  }
-  else {
-    field = document.getElementById(field);
-  }
-
-  if (field.addEventListener) {
-    // Mozilla
-    field.removeEventListener(evt, null, false);
-  }
-  else if (field.detachEvent) {
-    // IE
-    field.detachEvent('on' + evt, func);
   }
 }
