@@ -34,6 +34,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
 require_once 'App/Model/ZonaLocalizacao.php';
+require_once 'Educacenso/Model/AlunoDataMapper.php';
 require_once 'Transporte/Model/AlunoDataMapper.php';
 
 /**
@@ -623,6 +624,26 @@ class indice extends clsDetalhe
     $this->addDetalhe(array('Transporte escolar', isset($transporteAluno) ? 'Sim' : 'Não'));
     if ($transporteAluno) {
       $this->addDetalhe(array('Responsável transporte', $transporteAluno->responsavel));
+    }
+
+    // Adiciona uma aba com dados do Inep/Educacenso caso aluno tenha código Inep.
+    if (isset($this->cod_aluno)) {
+      $alunoMapper = new Educacenso_Model_AlunoDataMapper();
+
+      $alunoInep = NULL;
+      try {
+        $alunoInep = $alunoMapper->find(array('aluno' => $this->cod_aluno));
+      }
+      catch(Exception $e) {
+      }
+
+      if ($alunoInep) {
+        $this->addDetalhe(array('Código do aluno no Educacenso/Inep', $alunoInep->alunoInep));
+
+        if (isset($alunoInep->nomeInep)) {
+          $this->addDetalhe(array('Nome do aluno no Educacenso/Inep', $alunoInep->nomeInep));
+        }
+      }
     }
 
     $this->addDetalhe(array('Matrícula', $this->montaTabelaMatricula()));

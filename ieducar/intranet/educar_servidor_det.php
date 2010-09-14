@@ -32,7 +32,9 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
+require_once 'Educacenso/Model/DocenteDataMapper.php';
 
 /**
  * clsIndexBase class.
@@ -196,6 +198,9 @@ class indice extends clsDetalhe
     $obj_funcao = new clsPmieducarServidorFuncao();
     $lst_funcao = $obj_funcao->lista($this->ref_cod_instituicao, $this->cod_servidor);
 
+    // Inep.
+    $docente = false;
+
     if ($lst_funcao) {
       $tabela .= "
         <table cellspacing='0' cellpadding='0' border='0'>
@@ -272,6 +277,8 @@ class indice extends clsDetalhe
           <tr class='$class' align='left'>
             <td><b>{$det_funcao['nm_funcao']}</b></td>
           </tr>";
+
+        $docente = (bool) $det_funcao['professor'];
 
         $class = $class == "formlttd" ? "formmdtd" : "formlttd" ;
       }
@@ -405,6 +412,26 @@ class indice extends clsDetalhe
         "<a href='javascript:trocaDisplay(\"horarios\");' >Mostrar detalhes</a>" .
         "<div id='horarios' name='det_pree' style='display:none;'>" . $tabela . "</div>"
       ));
+    }
+
+    // Dados do docente no Educacenso/Inep.
+    if ($docente) {
+      $docenteMapper = new Educacenso_Model_DocenteDataMapper();
+
+      $docenteInep = NULL;
+      try {
+        $docenteInep = $docenteMapper->find(array('docente' => $registro['cod_servidor']));
+      }
+      catch (Exception $e) {
+      }
+
+      if (isset($docenteInep)) {
+        $this->addDetalhe(array('Código do docente no Educacenso/Inep', $docenteInep->docenteInep));
+
+        if (isset($docenteInep->nomeInep)) {
+          $this->addDetalhe(array('Nome do docente no Educacenso/Inep', $docenteInep->nomeInep));
+        }
+      }
     }
 
     $obj_permissoes = new clsPermissoes();

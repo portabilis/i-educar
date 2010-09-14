@@ -35,6 +35,7 @@ require_once 'include/pmieducar/geral.inc.php';
 
 require_once 'App/Model/SimNao.php';
 require_once 'App/Model/ZonaLocalizacao.php';
+require_once 'Educacenso/Model/AlunoDataMapper.php';
 require_once 'Transporte/Model/AlunoDataMapper.php';
 require_once 'Transporte/Model/Responsavel.php';
 
@@ -1234,6 +1235,30 @@ class indice extends clsCadastro
 
     $this->campoTexto('secao_tit_eleitor', 'Seção', $this->secao_tit_eleitor,
       '10', '10', FALSE);
+
+    // Adiciona uma aba com dados do Inep/Educacenso caso aluno tenha código Inep.
+    if (isset($this->cod_aluno)) {
+      $alunoMapper = new Educacenso_Model_AlunoDataMapper();
+
+      $alunoInep = NULL;
+      try {
+        $alunoInep = $alunoMapper->find(array('aluno' => $this->cod_aluno));
+      }
+      catch(Exception $e) {
+      }
+
+      if ($alunoInep) {
+        $this->campoAdicionaTab('Educacenso/Inep', $this->tab_habilitado);
+
+        $this->campoRotulo('_inep_cod_aluno', 'Código do aluno no Educacenso/Inep',
+          $alunoInep->alunoInep);
+
+        if (isset($alunoInep->nomeInep)) {
+          $this->campoRotulo('_inep_nome_aluno', 'Nome do aluno no Educacenso/Inep',
+            $alunoInep->nomeInep);
+        }
+      }
+    }
 
     $this->campoTabFim();
   }
