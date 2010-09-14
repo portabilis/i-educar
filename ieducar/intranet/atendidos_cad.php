@@ -31,6 +31,8 @@
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/clsCadastro.inc.php';
+require_once 'include/pessoa/clsCadastroRaca.inc.php';
+require_once 'include/pessoa/clsCadastroFisicaRaca.inc.php';
 
 require_once 'App/Model/ZonaLocalizacao.php';
 
@@ -94,6 +96,7 @@ class indice extends clsCadastro
   var $numero;
   var $retorno;
   var $zona_localizacao;
+  var $cor_raca;
 
   var $caminho_det;
   var $caminho_lst;
@@ -149,6 +152,13 @@ class indice extends clsCadastro
         'idbai', 'idtlog', 'sigla_uf', 'complemento', 'numero', 'bloco', 'apartamento',
         'andar', 'zona_localizacao'
       );
+
+      // Cor/Raça.
+      $raca = new clsCadastroFisicaRaca($this->cod_pessoa_fj);
+      $raca = $raca->detalhe();
+      if (is_array($raca)) {
+        $this->cod_raca = $raca['ref_cod_raca'];
+      }
 
       $this->cep     = int2Cep($this->cep);
       $this->retorno = 'Editar';
@@ -213,6 +223,20 @@ class indice extends clsCadastro
       $lista_sexos['M'] = 'Masculino';
       $lista_sexos['F'] = 'Feminino';
       $this->campoLista('sexo', 'Sexo', $lista_sexos, $this->sexo);
+
+      // Cor/raça.
+      $opcoes_raca = array('' => 'Selecione');
+      $obj_raca = new clsCadastroRaca();
+      $lst_raca = $obj_raca->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, TRUE);
+
+      if ($lst_raca) {
+        foreach ($lst_raca as $raca) {
+          $opcoes_raca[$raca['cod_raca']] = $raca['nm_raca'];
+        }
+      }
+
+      $this->campoLista('cor_raca', 'Raça', $opcoes_raca,
+        $this->cod_raca, '', FALSE, '', '', '', FALSE);
 
       // Detalhes do Endereço
       $objTipoLog   = new clsTipoLogradouro();
@@ -474,6 +498,9 @@ class indice extends clsCadastro
       }
     }
 
+    // Cadastra raça.
+    $this->_cadastraRaca($idpes, $this->cor_raca);
+
     echo '<script>document.location="atendidos_lst.php";</script>';
     return TRUE;
   }
@@ -582,6 +609,9 @@ class indice extends clsCadastro
       }
     }
 
+    // Atualizada raça.
+    $this->_cadastraRaca($this->cod_pessoa_fj, $this->cor_raca);
+
     echo '<script>document.location="atendidos_lst.php";</script>';
     return TRUE;
   }
@@ -590,6 +620,28 @@ class indice extends clsCadastro
   {
     echo '<script>document.location="atendidos_lst.php";</script>';
     return TRUE;
+  }
+
+  /**
+   * Cadastra ou atualiza a raça de uma pessoa.
+   *
+   * @access protected
+   * @param  int $pessoaId
+   * @param  int $corRaca
+   * @return bool
+   * @since  Método disponível desde a versão 1.2.0
+   */
+  function _cadastraRaca($pessoaId, $corRaca)
+  {
+    $pessoaId = (int) $pessoaId;
+    $corRaca  = (int) $corRaca;
+
+    $raca = new clsCadastroFisicaRaca($pessoaId, $corRaca);
+    if ($raca->existe()) {
+      return $raca->edita();
+    }
+
+    return $raca->cadastra();
   }
 }
 

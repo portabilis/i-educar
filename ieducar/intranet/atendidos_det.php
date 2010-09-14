@@ -31,6 +31,8 @@
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
+require_once 'include/pessoa/clsCadastroRaca.inc.php';
+require_once 'include/pessoa/clsCadastroFisicaRaca.inc.php';
 
 require_once 'App/Model/ZonaLocalizacao.php';
 
@@ -89,6 +91,18 @@ class indice extends clsDetalhe
 
     if ($detalhe['data_nasc']) {
       $this->addDetalhe(array('Data de Nascimento', dataFromPgToBr($detalhe['data_nasc'])));
+    }
+
+    // Cor/Raça.
+    $raca = new clsCadastroFisicaRaca($cod_pessoa);
+    $raca = $raca->detalhe();
+    if (is_array($raca)) {
+      $raca = new clsCadastroRaca($raca['ref_cod_raca']);
+      $raca = $raca->detalhe();
+
+      if (is_array($raca)) {
+        $this->addDetalhe(array('Raça', $raca['nm_raca']));
+      }
     }
 
     if ($detalhe['logradouro']) {
