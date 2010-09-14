@@ -452,6 +452,12 @@ class indice extends clsDetalhe
       $this->array_botao[] = 'Formação';
       $this->array_botao_url_script[] = "go(\"educar_servidor_formacao_lst.php?{$get_padrao}\");";
 
+      $this->array_botao[] = 'Cursos superiores/Licenciaturas';
+      $this->array_botao_url_script[] = sprintf(
+        "go(\"../module/Docente/index?servidor=%d&instituicao=%d\");",
+        $registro['cod_servidor'], $this->ref_cod_instituicao
+      );
+
       $this->array_botao[] = 'Faltas/Atrasos';
       $this->array_botao_url_script[] = "go(\"educar_falta_atraso_lst.php?{$get_padrao}\");";
 
