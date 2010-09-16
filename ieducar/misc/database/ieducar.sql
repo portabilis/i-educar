@@ -25791,6 +25791,7 @@ INSERT INTO changelog VALUES (26, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '26_cria
 INSERT INTO changelog VALUES (27, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '27_cria_tabela_modules_educacenso_cod_aluno_e_docente.sql');
 INSERT INTO changelog VALUES (28, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '28_cria_tabelas_modules_educacenso_ies_e_curso_superior.sql');
 INSERT INTO changelog VALUES (29, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '29_cria_tabela_modules_docente_licenciatura.sql');
+INSERT INTO changelog VALUES (30, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '30_cria_indices_otimizacao_queries_quadro_horarios.sql');
 
 
 --
@@ -35511,6 +35512,34 @@ CREATE INDEX i_nota_aluno_ref_cod_matricula ON nota_aluno USING btree (ref_cod_m
 --
 
 CREATE INDEX i_turma_nm_turma ON turma USING btree (nm_turma);
+
+
+--
+-- Name: quadro_horario_horarios_busca_horarios_idx; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
+--
+
+CREATE INDEX quadro_horario_horarios_busca_horarios_idx ON quadro_horario_horarios USING btree (ref_servidor, ref_cod_instituicao_servidor, dia_semana, hora_inicial, hora_final, ativo);
+
+
+--
+-- Name: servidor_alocacao_busca_horarios_idx; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
+--
+
+CREATE INDEX servidor_alocacao_busca_horarios_idx ON servidor_alocacao USING btree (ref_ref_cod_instituicao, ref_cod_escola, ativo, periodo, carga_horaria);
+
+
+--
+-- Name: servidor_idx; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
+--
+
+CREATE INDEX servidor_idx ON servidor USING btree (cod_servidor, ref_cod_instituicao, ativo);
+
+
+--
+-- Name: INDEX servidor_idx; Type: COMMENT; Schema: pmieducar; Owner: -
+--
+
+COMMENT ON INDEX servidor_idx IS 'Índice para otimização de acesso aos campos mais usados para queries na tabela.';
 
 
 SET search_path = portal, pg_catalog;
