@@ -1,0 +1,129 @@
+
+/* CoolMenus 4 - default styles - do not edit */
+.clCMAbs
+{
+	position: absolute; 
+	visibility: hidden; 
+	display: none; 
+	left: 0; 
+	top: 0;
+}
+/* CoolMenus 4 - default styles - end */
+  
+/*Style for the background-bar*/
+.clBar
+{
+	position:absolute; 
+	width:10; 
+	height:10; 
+	background-color:333333; 
+	/*layer-background-color:333333; */
+	visibility:hidden;
+
+}
+
+/*Styles for level 0*/
+.clLevel0,.clLevel0over
+{
+	position: absolute; 
+	font-family: arial, verdana, lucida, helvetica, sans-serif; 
+	font-size: 12px; 
+	text-align: center;
+}
+
+.clLevel0
+{
+	background-color: #546c76;
+	/*layer-background-color: #546c76;*/
+	color: #FFFFFF;
+	border-top: 1px solid #FFFFFF;
+}
+
+.clLevel0over
+{
+	background-color:#3c505b; 
+	/*layer-background-color:#3c505b;	*/
+	color: #DDDDDD; 
+	cursor: pointer; 
+	/*cursor: hand;*/
+	border-top: 2px solid #AAAAAA;
+}
+
+.clLevel0border
+{	
+	position:absolute; 
+	visibility:hidden; 
+	background-color:#000000; 
+	/*layer-background-color:#000000;*/
+}
+
+/*Styles for level 1*/
+.clLevel1, .clLevel1over
+{
+	position:absolute; 
+	padding:2px; 
+	font-family: arial, verdana, lucida, helvetica, sans-serif;
+	font-size:12px; 
+}
+
+.clLevel1
+{
+	background-color:#D9DCE5; 
+	/*layer-background-color:#D9DCE5; */
+	color:#000000;
+}
+
+.clLevel1over
+{
+	background-color:#3c505b; 
+	/*layer-background-color:#3c505b; */
+	color:#FFFFFF; 
+	cursor:pointer; 
+	/*cursor:hand; */
+}
+
+.clLevel1border
+{
+	position:absolute; 
+	visibility:hidden; 
+	background-color:#B2B1BF; 
+	/*layer-background-color:#B2B1BF;*/
+}
+
+/*Styles for level 2*/
+.clLevel2, .clLevel2over
+{
+	position:absolute; 
+	padding-top:2px; 
+	font-size:12px;
+	font-family: arial, verdana, lucida, helvetica, sans-serif;
+}
+
+.clLevel2
+{
+	background-color:#D9DCE5; 
+	/*layer-background-color:#D9DCE5; */
+	color:#000000;
+}
+
+.clLevel2over
+{
+	background-color:#3c505b; 
+	/*layer-background-color:#3c505b; */
+	color:#FFFFFF; 
+	cursor:pointer; 
+	/*cursor:hand; */
+}
+
+.clLevel2border
+{
+	position:absolute; 
+	visibility:hidden; 
+	background-color:#B2B1BF; 
+	/*layer-background-color:#B2B1BF;*/
+}
+A.menu_susp_root:link,A.menu_susp_root:visited,A.menu_susp_root:active,A.menu_susp_root:hover
+{
+	color: #FFFFFF;
+	text-decoration: none;
+}

@@ -1,0 +1,89 @@
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	border: 0px 0;
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;	
+}
+.titGuia {
+	font-size: 11px;
+	text-transform: uppercase;
+}
+.titUnder {
+	font-size: 9px;
+	text-transform: uppercase;
+}
+.style1 {
+	font-size: 14;
+	font-weight: bold;
+}
+.style2 {
+	font-size: x-large
+}
+.caixaTxt {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	color: #000000;
+}
+.subTit {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+.linhaDigi {
+	font-size: 14px;
+}
+font {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}
+.fontBold {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+a {
+	color: #3366CC;
+	text-decoration: none;
+}
+a:link, a:visited { 
+	color: #333333; font-weight: bold 
+}
+a:hover           {
+	color: #FFFFFF;
+	background: #999999;
+	font-weight: bold;
+}
+input {
+	background-color: #f1f1f1;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: lighter;
+	text-transform: none;
+}
+select {
+	background-color: f1f1f1;
+}
+textarea {
+	background-color: f1f1f1;
+}.mnu {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	text-transform: uppercase;
+	text-decoration: underline;
+}
+.{
+	scrollbar-arrow-color:#666666;
+	scrollbar-base-color:#F1F1F1;
+	scrollbar-face-color:#F1F1F1;
+	scrollbar-highlight:#F1F1F1;
+	scrollbar-shadow-color:#666666;
+}
+input {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	background-color: f1f1f1;
+}

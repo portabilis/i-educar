@@ -1,0 +1,394 @@
+@CHARSET 'ISO-8859-1';
+
+/*
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ */
+
+/**
+ * Folha de estilo em cascata (CSS).
+ *
+ * @author   Prefeitura Municipal de Itajaí
+ * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @since    Arquivo disponível desde a versão 1.0.0
+ * @version  $Id$
+ */
+
+body{
+  font-family: verdana, lucida, arial, helvetica, sans-serif;
+  text-align: center;
+  margin-top: 0px;
+}
+
+a {
+  color:#0000aa;
+  text-decoration: none;
+}
+
+a:hover {
+  color:#000055;
+  text-decoration: underline;
+}
+
+.tabelalogin {
+  border: 1px solid;
+  border-color: black;
+  font-family: verdana, lucida, arial, helvetica, sans-serif;
+  font-size: 11px;
+  height:100%;
+  width: 100%;
+  margin: 170px 0 0 0;
+}
+
+.tabelalogin1 {
+  font-family: verdana, lucida, arial, helvetica, sans-serif;
+  font-size: 11px;
+  border-spacing: 0;
+  border: 0;
+}
+
+.campo {
+  border: 1px solid;
+  border-color: black;
+  font-family: verdana, lucida, arial, helvetica, sans-serif;
+  font-size: 10px;
+}
+
+.botao {
+  border: 1px solid;
+  border-color: black;
+  background-color: white;
+  font-family: verdana, lucida, arial, helvetica, sans-serif;
+  font-size: 10px;
+}
+
+.bodyHead{
+  height: 80px;
+  border-bottom: 1px solid;
+  border-color: black;
+}
+
+.bodyMenu{
+  background-color: #6600FF;
+  border-right: 1px solid;
+  border-color: black;
+}
+
+.bodyBody{
+  background-color: #FFFFEF;
+}
+
+.bodyFoot{
+  background-color: #DDDDDD;
+  font-size: 10px;
+  height: 20px;
+  text-align: center;
+  border-top: 1px solid;
+  border-color: black;
+}
+
+.tableBody{
+  border: 1px solid;
+  border-color: black;
+}
+
+.linkmenu{
+  font-size: 10px;
+  color: black;
+  text-decoration: none;
+}
+
+.linkmenu:hover{
+  font-size: 10px;
+  color: white;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.linhamenu{
+  text-align: right;
+}
+
+.linhamenuhover{
+  /*
+  border: 1px solid;
+  */
+  border-color: #AAAAAA;
+  background-color: #AAAAAA;
+  color: white;
+  font-weight: bold;
+}
+
+.linhamenusubtitulo{
+  background-color: #495C67;
+  font-size: 11px;
+  color: #FFFFFF;
+  font-weight: bold;
+}
+
+.tableDetalhe{
+  font-family : arial, verdana, lucida, helvetica, sans-serif;
+  font-size: 11px;
+}
+
+.tableDetelheTitulo{
+  background-color: #BABABA;
+}
+
+.tableDetalheLinhaSim{
+}
+
+.tableDetalheLinhaNao{
+  background-color: white;
+}
+
+.tableDetalheLinhaSeparador{
+  font-size: 0px;
+  height: 2px;
+  background-color: black;
+}
+
+.tableDetalheBotao{
+}
+
+.linkBory{
+  font-size: 10px;
+  color: blue;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.tablelistagem{
+  font-family: arial, verdana, lucida, helvetica, sans-serif;
+  font-size: 11px;
+}
+
+.botaolistagem{
+  font-family: arial, verdana, lucida, helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  color: black;
+  border: 1px solid;
+  border-color: black;
+  background-color: #F7C5B4;
+}
+
+.obrigatorio{
+  border: 1px solid;
+  background-color: white;
+  font-family: arial, verdana, lucida, helvetica, sans-serif;
+  font-size: 11px;
+}
+
+.geral{
+  font-family: arial, verdana, lucida, helvetica, sans-serif;
+  font-size: 11px;
+  border: 1px solid;
+  background-color: #FFFFEF;
+}
+
+.obrigatorio2{
+  border: 1px solid;
+  background-color: white;
+  font-family: arial, verdana, lucida, helvetica, sans-serif;
+  font-size: 11px;
+}
+
+.geral2{
+  font-family: arial, verdana, lucida, helvetica, sans-serif;
+  font-size: 11px;
+  border: 1px solid;
+  background-color: #FFFFEF;
+}
+
+.linhaSim{
+  background-color: #FFFFFF;
+}
+
+.linhaNao{
+  background-color: #FFFFFF;
+}
+
+.linhaSIMNAO{
+  background-color: #BABABA;
+}
+
+.linhaBotoes{
+  background-color: #BABABA;
+}
+
+.tablecadastro{
+  font-family: arial, verdana, lucida, helvetica, sans-serif;
+  font-size: 11px;
+}
+
+#divcorpo{
+  width: 507px;
+  height: 266px;
+  overflow: auto;
+}
+
+.data{
+  font-family: verdana, arial, lucida, helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  color: white;
+}
+
+.rolagem{
+  background-image: url("imagens/fatiadoR5C7.jpg");
+  background-repeat: repeat-y;
+}
+
+.fontepequena{
+  font-family: verdana, arial, lucida, helvetica, sans-serif;
+  font-size: 10px;
+}
+
+.linhaSim2{
+  background-color: #DDDDDD;
+}
+
+.bordaLaranja{
+  border: 1px solid;
+  border-color: #FF6600;
+}
+
+.bordaAzul{
+  border: 1px solid;
+
+}
+
+.tabelaMenu{
+  border: 0px solid;
+  border-color: black;
+}
+
+.cor1{
+  border: 1px solid;
+  border-color: #FFFCC8;
+  font-weight: bold;
+}
+.cor2{
+  border: 2px solid;
+  border-color: #BA8FBA;
+  font-weight: bold;
+}
+.cor3{
+  border: 2px solid;
+  border-color: #F5C491;
+  font-weight: bold;
+}
+.cor4{
+  border: 2px solid;
+  border-color: #75C5F0;
+  font-weight: bold;
+}
+.cor5{
+  border: 2px solid;
+  border-color: #B6DDC7;
+  font-weight: bold;
+}
+.cor6{
+  border: 2px solid;
+  border-color: #F7C5B4;
+  font-weight: bold;
+}
+
+.creditos{
+  font-size: 9px;
+  font-family: arial, verdana, lucida, helvetica, sans-serif;
+  color: black;
+  background-color: #DEDEDE;
+  font-weight: bold;
+}
+
+.coru{
+  border: 1px solid;
+  border-color: red;
+  font-weight: bold;
+}
+
+.linkCorpoIndex{
+  color: black;
+}
+
+.menuzinho{
+  font-size: 10px;
+  font-family: verdana, arial, lucida, helvetica, sans-serif;
+  text-align: center;
+  text-decoration: none;
+}
+
+.menuzinho:hover{
+  font-size: 10px;
+  font-family: verdana, arial, lucida, helvetica, sans-serif;
+  text-align: center;
+  text-decoration: underline;
+}
+
+.subtitulo{
+  color: red;
+  font-family: verdana, arial, lucida, helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.jaber{
+
+  font-family: arial, verdana, lucida, helvetica, sans-serif;
+  font-size: 12px;
+  background-color: #FFFFFF;
+  margin:10px 10px 10px 10px;
+
+}
+#jaber a {
+  text-decoration:none;
+  font-family: verdana, arial, lucida, helvetica, sans-serif;
+  color:#000000;
+  background-color:#FFFFFF;
+  margin-left:10px;
+  font-size: 14px;
+}
+
+#jaber a:hover {
+  color:#606060;
+}
+
+a.simples:hover
+{
+  text-decoration: none;
+}
+
+#LoadImprimir
+{
+  position: absolute;
+  left: 10px;
+  top: 45px;
+  font-size: 14px;
+  height: 50px;
+}
+
+.campo_obrigatorio
+{
+  color: #994422;
+  padding-left:5px;
+  font-size:14px;
+  vertical-align:top;
+}
