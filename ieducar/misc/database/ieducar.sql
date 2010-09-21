@@ -25792,6 +25792,7 @@ INSERT INTO changelog VALUES (27, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '27_cria
 INSERT INTO changelog VALUES (28, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '28_cria_tabelas_modules_educacenso_ies_e_curso_superior.sql');
 INSERT INTO changelog VALUES (29, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '29_cria_tabela_modules_docente_licenciatura.sql');
 INSERT INTO changelog VALUES (30, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '30_cria_indices_otimizacao_queries_quadro_horarios.sql');
+INSERT INTO changelog VALUES (31, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '31_remove_constraint_desnecessaria_pmieducar_quadro_horario_horarios.sql');
 
 
 --
@@ -41101,14 +41102,6 @@ ALTER TABLE ONLY quadro_horario_horarios
 --
 
 ALTER TABLE ONLY quadro_horario_horarios_aux
-    ADD CONSTRAINT quadro_horario_horarios_ref_cod_serie_fkey FOREIGN KEY (ref_cod_serie, ref_cod_escola, ref_cod_disciplina) REFERENCES escola_serie_disciplina(ref_ref_cod_serie, ref_ref_cod_escola, ref_cod_disciplina) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: quadro_horario_horarios_ref_cod_serie_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
-ALTER TABLE ONLY quadro_horario_horarios
     ADD CONSTRAINT quadro_horario_horarios_ref_cod_serie_fkey FOREIGN KEY (ref_cod_serie, ref_cod_escola, ref_cod_disciplina) REFERENCES escola_serie_disciplina(ref_ref_cod_serie, ref_ref_cod_escola, ref_cod_disciplina) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
