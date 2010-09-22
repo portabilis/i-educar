@@ -78,7 +78,7 @@ DirectoryIndex index.php index.html index.htm
 <IfModule mod_php5.c>
   php_value memory_limit                32M
   php_value error_reporting             1
-  php_flag  display_errors              off
+  php_flag  display_errors              on
   php_flag  magic_quotes_gpc            off
   php_flag  register_globals            off
   php_flag  session.auto_start          off
