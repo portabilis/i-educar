@@ -3,7 +3,7 @@
 	<td align="left" width="40%" class="r2c1A" >&nbsp;Usuário atual: <b><!-- #&USERLOGADO&# --></b></td>
 	<td align="left" width="20%" class="r2c1A" >&nbsp;Último Acesso: <b><!-- #&ULTIMOACESSO&# --></b></td>
 	
-	<td align="right" width="40%"><a href="meusdados.php"><img src="imagens/nvp_bot_intra_dados.jpg" border="0" alt="Meus Dados" title="Meus Dados"></a><a href="logof.php"><img src="imagens/nvp_bot_intra_logout.jpg" border="0" alt="Logout" title="Fazer Logout"></a><a href="http://www.cobra.com.br/"><img src="imagens/nvp_bot_internet.jpg" border="0" alt="Acessar Internet" title="Acessar Página na Internet"></a></td>
+	<td align="right" width="40%"><a href="meusdados.php"><img src="imagens/nvp_bot_intra_dados.jpg" border="0" alt="Meus Dados" title="Meus dados"></a><a href="logof.php"><img src="imagens/nvp_bot_intra_logout.jpg" border="0" alt="Logout" title="Sair"></a><a href="http://www.google.com.br" target="_blank"><img src="imagens/nvp_bot_internet.jpg" border="0" alt="Acessar Internet" title="Acessar a Web"></a></td>
 </tr>
 <tr>
 	<td colspan="3">

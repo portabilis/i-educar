@@ -31,7 +31,7 @@ require_once 'include/clsBanco.inc.php';
  * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package  Core
  * @since    Classe disponível desde a versão 1.0.0
- * @version  $Id$
+ * @version  $Id: /ieducar/branches/1.1.0-avaliacao/ieducar/intranet/include/clsControlador.inc.php 662 2009-11-17T18:28:48.404882Z eriksen  $
  */
 class clsControlador
 {
@@ -217,11 +217,11 @@ class clsControlador
               if (!empty($tempo_conta) && !empty($data_conta))
               {
                 if (time() - strtotime( $data_conta ) > $tempo_conta * 60 * 60 * 24) {
-                  $this->erroMsg = "Sua conta expirou. Contacte o administrador para reativá-la.";
+                  $this->erroMsg = "Sua conta expirou. Contate o administrador para reativá-la.";
                   $expirada = 1;
                 }
                 else {
-                  $this->erroMsg = "Sua conta n&atilde;o est&aacute; ativa. Use a op&ccedil;&atilde;o 'Nunca usei a intrenet'.";
+                  $this->erroMsg = "Sua conta n&atilde;o est&aacute; ativa. Use a op&ccedil;&atilde;o 'Nunca usei a intranet'.";
                   $expirada = 0;
                 }
               }
@@ -246,12 +246,12 @@ class clsControlador
 
           $db->Consulta("INSERT INTO acesso (data_hora, ip_externo, ip_interno, cod_pessoa, sucesso) VALUES (now(), '{$ip}', '{$ip_de_rede}',  {$idpes}, 'f')");
 
-          $this->erroMsg = 'Login ou Senha incorretos.';
+          $this->erroMsg = '<p class="erro">Matrícula ou Senha incorretos.</p>';
           $this->logado  = FALSE;
         }
       }
       else {
-        $this->erroMsg = "Login ou Senha incorretos.";
+        $this->erroMsg = '<p class="erro">Matrícula ou Senha incorretos.</p>';
         $this->logado  = FALSE;
       }
     }

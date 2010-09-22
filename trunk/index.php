@@ -25,14 +25,14 @@
  * @license   @@license@@
  * @package   iEd
  * @since     Arquivo disponível desde a versão 1.0.0
- * @version   $Id$
+ * @version   $Id: index.php 621 2010-03-04 15:03:11Z eriksen.paixao_bs@cobra.com.br $
  */
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-  <title>Sistema de gestão escolar | i-Educar</title>
+  <title>Sistema de Gestão Escolar - i-Educar | Portabilis Tecnologia</title>
 </head>
 <frameset rows="115,*" frameborder="1" framespacing="2" border="0">
   <frame src="intranet/topo.php"  name="superior" noresize scrolling="no">
