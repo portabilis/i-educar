@@ -1,0 +1,1339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_atestado_vaga" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.2100000000000004"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="389"/>
+	<parameter name="instituicao" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="aluno" class="java.lang.String">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="escola" class="java.lang.String">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT public.fcn_upper(nm_instituicao) AS nome_instituicao,
+       instituicao.cidade AS cidade_instituicao,
+       public.fcn_upper(ref_sigla_uf) AS uf_instituicao,
+       to_char(CURRENT_DATE,'dd/mm/yyyy') AS data_atual,
+       to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
+       pessoa.nome as aluno,
+       fisica.nome_pai,
+       fisica.nome_mae,
+       fisica.sexo,
+       to_char(fisica.data_nasc,'dd/mm/yyyy') AS data_nasc,
+       (CASE WHEN fisica.nacionalidade = 1 THEN 'Brasileiro'
+             WHEN fisica.nacionalidade = 2 THEN 'Naturalizado Brasileiro'
+          ELSE 'Estrangeiro'
+        END) as nacionalidade,
+       (select religiao.nm_religiao from pmieducar.religiao where religiao.cod_religiao = fisica.ref_cod_religiao) as religiao,
+       (select municipio.nome from public.municipio where municipio.idmun = fisica.idmun_nascimento) as municipio_nasc,
+       (select municipio.sigla_uf from public.municipio where municipio.idmun = fisica.idmun_nascimento) as municipio_uf,
+       (select pais.nome from public.pais where pais.idpais = fisica.idpais_estrangeiro) as pais_origem,
+       (select estado_civil.descricao from cadastro.estado_civil where estado_civil.ideciv = fisica.ideciv) as estado_civil,
+       (select pessoa.nome from cadastro.pessoa ps where ps.idpes = fisica.idpes_mae) as nm_mae,
+       (select pessoa.nome from cadastro.pessoa ps where ps.idpes = fisica.idpes_pai) as nm_pai,
+       (select fisica_cpf.cpf from cadastro.fisica_cpf where fisica_cpf.idpes = fisica.idpes_mae) as cpf_mae,
+       (select fisica_cpf.cpf from cadastro.fisica_cpf where fisica_cpf.idpes = fisica.idpes_pai) as cpf_pai,
+       (select endereco_pessoa.numero from cadastro.endereco_pessoa where endereco_pessoa.idpes = pessoa.idpes) as numero,
+       (select endereco_pessoa.letra from cadastro.endereco_pessoa where endereco_pessoa.idpes = pessoa.idpes) as letra,
+       (select endereco_pessoa.bloco from cadastro.endereco_pessoa where endereco_pessoa.idpes = pessoa.idpes) as bloco,
+       (select endereco_pessoa.andar from cadastro.endereco_pessoa where endereco_pessoa.idpes = pessoa.idpes) as andar,
+       (select endereco_pessoa.apartamento from cadastro.endereco_pessoa where endereco_pessoa.idpes = pessoa.idpes) as apartamento,
+       (select endereco_pessoa.complemento from cadastro.endereco_pessoa where endereco_pessoa.idpes = pessoa.idpes) as complemento,
+       (select endereco_pessoa.cep from cadastro.endereco_pessoa where endereco_pessoa.idpes = pessoa.idpes) as cep,
+       (select logradouro.nome
+          from public.logradouro,
+               cadastro.endereco_pessoa
+         where logradouro.idlog = endereco_pessoa.idlog AND
+               endereco_pessoa.idpes = pessoa.idpes) as logradouro,
+
+       (select municipio.nome
+          from public.municipio,
+               public.logradouro,
+               cadastro.endereco_pessoa
+         where municipio.idmun = logradouro.idmun AND
+               logradouro.idlog = endereco_pessoa.idlog AND
+               endereco_pessoa.idpes = pessoa.idpes) as municipio,
+
+       (select municipio.sigla_uf
+          from public.municipio,
+               public.logradouro,
+               cadastro.endereco_pessoa
+         where municipio.idmun = logradouro.idmun AND
+               logradouro.idlog = endereco_pessoa.idlog AND
+               endereco_pessoa.idpes = pessoa.idpes) as sigla_uf,
+
+       (select min(bairro.nome)
+          from public.bairro,
+               public.municipio,
+               public.logradouro,
+               cadastro.endereco_pessoa
+         where bairro.idmun =  municipio.idmun AND
+               municipio.idmun = logradouro.idmun AND
+               logradouro.idlog = endereco_pessoa.idlog AND
+               endereco_pessoa.idpes = pessoa.idpes) as bairro,
+
+       (select pessoa.email from cadastro.pessoa ps where ps.idpes = fisica.idpes_pai) as email,
+       (select min(fone_pessoa.ddd) from cadastro.fone_pessoa where fone_pessoa.idpes = pessoa.idpes) as ddd,
+       (select min(fone_pessoa.fone) from cadastro.fone_pessoa where fone_pessoa.idpes = pessoa.idpes) as fone,
+       (select escolaridade.descricao from cadastro.escolaridade where escolaridade.idesco = fisica.idesco) as escolaridade,
+
+       (select deficiencia.nm_deficiencia
+          from cadastro.deficiencia,
+               cadastro.fisica_deficiencia
+         where deficiencia.cod_deficiencia = fisica_deficiencia.ref_cod_deficiencia AND
+               fisica_deficiencia.ref_idpes = fisica.idpes) as deficiencia,
+
+       (select COALESCE(fisica_cpf.cpf,fisica.cpf) from cadastro.fisica_cpf where fisica_cpf.idpes = fisica.idpes) as cpf,
+       (select documento.rg from cadastro.documento where documento.idpes = fisica.idpes) as rg,
+       (select documento.data_exp_rg from cadastro.documento where documento.idpes = fisica.idpes) as data_exp_rg,
+       (select documento.sigla_uf_exp_rg from cadastro.documento where documento.idpes = fisica.idpes) as sigla_uf_exp_rg,
+
+       (select orgao_emissor_rg.sigla
+          from cadastro.orgao_emissor_rg,
+               cadastro.documento
+         where orgao_emissor_rg.idorg_rg = documento.idorg_exp_rg AND
+               documento.idpes = fisica.idpes) as orgao_emissor_rg,
+
+       (select documento.num_tit_eleitor from cadastro.documento where documento.idpes = fisica.idpes) as num_tit_eleitor,
+       (select documento.zona_tit_eleitor from cadastro.documento where documento.idpes = fisica.idpes) as zona_tit_eleitor,
+       (select documento.secao_tit_eleitor from cadastro.documento where documento.idpes = fisica.idpes) as secao_tit_eleitor,
+       (select documento.tipo_cert_civil from cadastro.documento where documento.idpes = fisica.idpes) as tipo_cert_civil,
+       (select documento.sigla_uf_cert_civil from cadastro.documento where documento.idpes = fisica.idpes) as sigla_uf_cert_civil,
+       (select documento.data_emissao_cert_civil from cadastro.documento where documento.idpes = fisica.idpes) as data_emissao_cert_civil,
+       (select documento.num_termo from cadastro.documento where documento.idpes = fisica.idpes) as num_termo,
+       (select documento.num_livro from cadastro.documento where documento.idpes = fisica.idpes) as num_livro,
+       (select documento.num_folha from cadastro.documento where documento.idpes = fisica.idpes) as num_folha,
+       (select documento.cartorio_cert_civil from cadastro.documento where documento.idpes = fisica.idpes) as cartorio_cert_civil,
+       (select ps.nome from cadastro.pessoa ps where ps.idpes = fisica.idpes_responsavel) as nome_responsavel,
+       (select fisica_cpf.cpf from cadastro.pessoa ps, cadastro.fisica_cpf where ps.idpes = fisica_cpf.idpes) as cpf_responsavel,
+       (select fc.sexo from cadastro.fisica fc where fc.idpes_responsavel = pessoa.idpes) as sexo_responsavel,
+
+       (select min(fone_pessoa.ddd)
+          from cadastro.fone_pessoa,
+               cadastro.fisica fc
+         where fone_pessoa.idpes = fc.idpes_responsavel AND
+               fc.idpes_responsavel = pessoa.idpes) as ddd_responsavel,
+
+       (select min(fone_pessoa.fone)
+          from cadastro.fone_pessoa,
+               cadastro.fisica fc
+         where fone_pessoa.idpes = fc.idpes_responsavel AND
+               fc.idpes_responsavel = pessoa.idpes) as fone_responsavel,
+
+      (select pessoa.email
+         from cadastro.pessoa ps,
+              cadastro.fisica fc
+        where ps.idpes = fc.idpes_responsavel AND
+              fc.idpes_responsavel = pessoa.idpes) as email_responsavel,
+
+       (select endereco_pessoa.numero
+          from cadastro.endereco_pessoa,
+               cadastro.fisica fc
+         where endereco_pessoa.idpes = fc.idpes_responsavel AND
+               fc.idpes_responsavel = pessoa.idpes) as numero_responsavel,
+
+       (select endereco_pessoa.letra
+          from cadastro.endereco_pessoa,
+               cadastro.fisica fc
+         where endereco_pessoa.idpes = fc.idpes_responsavel AND
+               fc.idpes_responsavel = pessoa.idpes) as letra_responsavel,
+
+       (select endereco_pessoa.bloco
+          from cadastro.endereco_pessoa,
+               cadastro.fisica fc
+         where endereco_pessoa.idpes = fc.idpes_responsavel AND
+               fc.idpes_responsavel = pessoa.idpes) as bloco_responsavel,
+
+       (select endereco_pessoa.andar
+          from cadastro.endereco_pessoa,
+               cadastro.fisica fc where endereco_pessoa.idpes = fc.idpes_responsavel AND
+               fc.idpes_responsavel = pessoa.idpes) as andar_responsavel,
+
+       (select endereco_pessoa.apartamento
+          from cadastro.endereco_pessoa,
+               cadastro.fisica fc
+         where endereco_pessoa.idpes = fc.idpes_responsavel AND
+               fc.idpes_responsavel = pessoa.idpes) as apartamento_responsavel,
+
+       (select endereco_pessoa.cep
+          from cadastro.endereco_pessoa,
+               cadastro.fisica fc
+         where endereco_pessoa.idpes = fc.idpes_responsavel AND
+               fc.idpes_responsavel = pessoa.idpes) as cep_responsavel,
+
+       (select logradouro.nome
+          from public.logradouro,
+               cadastro.endereco_pessoa,
+               cadastro.fisica fc
+         where logradouro.idlog = endereco_pessoa.idlog AND
+               endereco_pessoa.idpes = fc.idpes_responsavel AND
+               fc.idpes_responsavel = pessoa.idpes) as logradouro_responsavel,
+
+       (select municipio.nome
+          from public.municipio,
+               public.logradouro,
+               cadastro.endereco_pessoa,
+               cadastro.fisica fc
+         where municipio.idmun = logradouro.idmun AND
+               logradouro.idlog = endereco_pessoa.idlog AND
+               endereco_pessoa.idpes = fc.idpes_responsavel AND
+               fc.idpes_responsavel = pessoa.idpes) as municipio_responsavel,
+
+       (select municipio.sigla_uf
+          from public.municipio,
+               public.logradouro,
+               cadastro.endereco_pessoa,
+               cadastro.fisica fc
+         where municipio.idmun = logradouro.idmun AND
+               logradouro.idlog = endereco_pessoa.idlog AND
+               endereco_pessoa.idpes = fc.idpes_responsavel AND
+               fc.idpes_responsavel = pessoa.idpes) as sigla_uf_responsavel,
+
+       (select min(bairro.nome)
+          from public.bairro,
+               public.municipio,
+               public.logradouro,
+               cadastro.endereco_pessoa,
+               cadastro.fisica fc
+         where bairro.idmun =  municipio.idmun AND
+               municipio.idmun = logradouro.idmun AND
+               logradouro.idlog = endereco_pessoa.idlog AND
+               endereco_pessoa.idpes = fc.idpes_responsavel AND
+               fc.idpes_responsavel = pessoa.idpes) as bairro_responsavel,
+
+       (select public.fcn_upper(ps.nome)
+          from cadastro.pessoa ps,
+               cadastro.juridica,
+               pmieducar.escola
+         where escola.ref_idpes = ps.idpes AND
+               ps.idpes = juridica .idpes AND
+	       escola.cod_escola = $P{escola}) AS nm_escola
+
+  FROM pmieducar.instituicao,
+       pmieducar.aluno,
+       cadastro.fisica,
+       cadastro.pessoa
+
+ WHERE instituicao.cod_instituicao = $P{instituicao} AND
+       aluno.ref_idpes = fisica.idpes AND
+       fisica.idpes = pessoa.idpes AND
+       aluno.cod_aluno = $P{aluno}]]>
+	</queryString>
+	<field name="nome_instituicao" class="java.lang.String"/>
+	<field name="cidade_instituicao" class="java.lang.String"/>
+	<field name="uf_instituicao" class="java.lang.String"/>
+	<field name="data_atual" class="java.lang.String"/>
+	<field name="hora_atual" class="java.lang.String"/>
+	<field name="aluno" class="java.lang.String"/>
+	<field name="nome_pai" class="java.lang.String"/>
+	<field name="nome_mae" class="java.lang.String"/>
+	<field name="sexo" class="java.lang.String"/>
+	<field name="data_nasc" class="java.lang.String"/>
+	<field name="nacionalidade" class="java.lang.String"/>
+	<field name="religiao" class="java.lang.String"/>
+	<field name="municipio_nasc" class="java.lang.String"/>
+	<field name="municipio_uf" class="java.lang.String"/>
+	<field name="pais_origem" class="java.lang.String"/>
+	<field name="estado_civil" class="java.lang.String"/>
+	<field name="nm_mae" class="java.lang.String"/>
+	<field name="nm_pai" class="java.lang.String"/>
+	<field name="cpf_mae" class="java.math.BigDecimal"/>
+	<field name="cpf_pai" class="java.math.BigDecimal"/>
+	<field name="numero" class="java.math.BigDecimal"/>
+	<field name="letra" class="java.lang.String"/>
+	<field name="bloco" class="java.lang.String"/>
+	<field name="andar" class="java.math.BigDecimal"/>
+	<field name="apartamento" class="java.math.BigDecimal"/>
+	<field name="complemento" class="java.lang.String"/>
+	<field name="cep" class="java.math.BigDecimal"/>
+	<field name="logradouro" class="java.lang.String"/>
+	<field name="municipio" class="java.lang.String"/>
+	<field name="sigla_uf" class="java.lang.String"/>
+	<field name="bairro" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="ddd" class="java.math.BigDecimal"/>
+	<field name="fone" class="java.math.BigDecimal"/>
+	<field name="escolaridade" class="java.lang.String"/>
+	<field name="deficiencia" class="java.lang.String"/>
+	<field name="cpf" class="java.math.BigDecimal"/>
+	<field name="rg" class="java.math.BigDecimal"/>
+	<field name="data_exp_rg" class="java.sql.Date"/>
+	<field name="sigla_uf_exp_rg" class="java.lang.String"/>
+	<field name="orgao_emissor_rg" class="java.lang.String"/>
+	<field name="num_tit_eleitor" class="java.math.BigDecimal"/>
+	<field name="zona_tit_eleitor" class="java.math.BigDecimal"/>
+	<field name="secao_tit_eleitor" class="java.math.BigDecimal"/>
+	<field name="tipo_cert_civil" class="java.math.BigDecimal"/>
+	<field name="sigla_uf_cert_civil" class="java.lang.String"/>
+	<field name="data_emissao_cert_civil" class="java.sql.Date"/>
+	<field name="num_termo" class="java.math.BigDecimal"/>
+	<field name="num_livro" class="java.lang.String"/>
+	<field name="num_folha" class="java.math.BigDecimal"/>
+	<field name="cartorio_cert_civil" class="java.lang.String"/>
+	<field name="nome_responsavel" class="java.lang.String"/>
+	<field name="cpf_responsavel" class="java.math.BigDecimal"/>
+	<field name="sexo_responsavel" class="java.lang.String"/>
+	<field name="ddd_responsavel" class="java.math.BigDecimal"/>
+	<field name="fone_responsavel" class="java.math.BigDecimal"/>
+	<field name="email_responsavel" class="java.lang.String"/>
+	<field name="numero_responsavel" class="java.math.BigDecimal"/>
+	<field name="letra_responsavel" class="java.lang.String"/>
+	<field name="bloco_responsavel" class="java.lang.String"/>
+	<field name="andar_responsavel" class="java.math.BigDecimal"/>
+	<field name="apartamento_responsavel" class="java.math.BigDecimal"/>
+	<field name="cep_responsavel" class="java.math.BigDecimal"/>
+	<field name="logradouro_responsavel" class="java.lang.String"/>
+	<field name="municipio_responsavel" class="java.lang.String"/>
+	<field name="sigla_uf_responsavel" class="java.lang.String"/>
+	<field name="bairro_responsavel" class="java.lang.String"/>
+	<field name="nm_escola" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="100" splitType="Stretch">
+			<rectangle radius="10">
+				<reportElement x="3" y="2" width="548" height="73"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="102" y="17" width="278" height="13"/>
+				<textElement>
+					<font size="8" isBold="true" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[SECRETARIA MUNICIPAL DE EDUCAÇÃO E CULTURA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="412" y="5" width="126" height="13"/>
+				<textElement>
+					<font size="7" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Emissão: "+$F{data_atual}+" "+$F{hora_atual}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="102" y="5" width="278" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="7" y="5" width="94" height="65"/>
+				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
+			</image>
+			<rectangle>
+				<reportElement x="3" y="78" width="548" height="20"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="185" y="80" width="179" height="16"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[FICHA DO ALUNO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="102" y="29" width="278" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="7" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="600" splitType="Stretch">
+			<rectangle>
+				<reportElement x="3" y="108" width="548" height="52"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="3" y="2" width="548" height="98"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="45" y="473" width="79" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{num_termo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="383" y="419" width="79" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{data_exp_rg}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="346" y="436" width="36" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[SEÇÃO:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="213" y="473" width="79" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_livro}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="74" y="419" width="100" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{rg}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="346" y="419" width="36" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[DATA:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="383" y="473" width="79" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{num_folha}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="176" y="454" width="47" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[ESTADO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="401" width="31" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[CPF:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="39" y="401" width="125" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{cpf}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="7" y="380" width="178" height="19"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DOCUMENTOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="176" y="419" width="77" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[ÓRGÃO EXP./UF:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="283" y="419" width="9" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[/]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="293" y="419" width="25" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{sigla_uf_exp_rg}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="95" y="436" width="79" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{num_tit_eleitor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="214" y="436" width="39" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{zona_tit_eleitor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="384" y="436" width="39" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{secao_tit_eleitor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="346" y="454" width="36" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[DATA:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="95" y="454" width="79" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{tipo_cert_civil}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="224" y="454" width="25" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{sigla_uf_cert_civil}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="383" y="454" width="79" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{data_emissao_cert_civil}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="64" y="490" width="131" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cartorio_cert_civil}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="176" y="473" width="36" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[LIVRO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="346" y="473" width="36" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[FOLHA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="490" width="56" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[CARTÓRIO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="419" width="66" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[IDENTIDADE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="436" width="87" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[TÍTULO ELEITORAL:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="454" width="87" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[CERTIFICADO CIVIL:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="473" width="38" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[TERMO:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="3" y="168" width="548" height="68"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="7" y="111" width="178" height="19"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FILIAÇÃO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="132" width="66" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NOME DO PAI:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="147" width="66" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NOME DA MÃE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="313" y="132" width="66" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[CPF DO PAI:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="313" y="147" width="66" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[CPF DA MÃE:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="74" y="147" width="216" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_mae}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="496" y="192" width="35" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{apartamento}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="74" y="132" width="216" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_pai}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="381" y="132" width="100" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{cpf_pai}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="381" y="147" width="100" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{cpf_mae}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="304" y="25" width="108" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[DATA DE NASCIMENTO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="304" y="40" width="69" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[ESTADO CIVIL:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="304" y="56" width="42" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[ESTADO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="304" y="72" width="80" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[PAÍS DE ORIGEM:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="471" y="6" width="72" height="90"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="483" y="42" width="44" height="12"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[FOTO 3X4]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="46" y="25" width="251" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{aluno}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="7" y="352" width="52" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Descrição:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="84" y="56" width="206" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio_nasc}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="413" y="25" width="52" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{data_nasc}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="59" y="87" width="174" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{religiao}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="3" y="246" width="548" height="71"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="7" y="249" width="178" height="19"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OUTRAS INFORMAÇÕES]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="46" y="303" width="231" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{email}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="376" y="192" width="21" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{bloco}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="444" y="208" width="18" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{sigla_uf}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="233" y="192" width="21" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Nº:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="399" y="192" width="37" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[ANDAR:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="465" y="192" width="30" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[APTO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="192" width="66" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[ENDEREÇO:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="254" y="419" width="28" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{orgao_emissor_rg}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="295" y="539" width="25" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{sexo_responsavel}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="45" y="539" width="127" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="7" y="4" width="178" height="19"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DADOS PESSOAIS DO ALUNO]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="84" y="223" width="229" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{complemento}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="66" y="288" width="3" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[(]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="171" width="178" height="19"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ENDEREÇO]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="255" y="192" width="23" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{numero}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="279" y="192" width="34" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[LETRA:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="198" y="539" width="63" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{cpf_responsavel}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="475" y="539" width="72" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{email_responsavel}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="72" y="557" width="125" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{logradouro_responsavel}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="253" y="574" width="110" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio_responsavel}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="415" y="575" width="18" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{sigla_uf_responsavel}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="60" y="352" width="125" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{deficiencia}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="7" y="329" width="178" height="19"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEFICIÊNCIAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="233" y="208" width="44" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[CIDADE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="223" width="75" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[COMPLEMENTO:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="314" y="192" width="21" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{letra}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="53" y="208" width="167" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{bairro}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="437" y="192" width="25" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{andar}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="278" y="208" width="116" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="337" y="192" width="38" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[BLOCO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="208" width="44" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[BAIRRO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="399" y="208" width="44" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[ESTADO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="303" width="38" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[E-MAIL:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="85" y="288" width="6" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="313" y="288" width="47" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[CELULAR:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="68" y="288" width="19" height="12"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ddd}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="7" y="288" width="56" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[TELEFONE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="270" width="56" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[BENEFÍCIO:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="383" y="270" width="100" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escolaridade}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="494" y="208" width="55" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{cep}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="74" y="192" width="146" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{logradouro}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="313" y="270" width="69" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[ALFABETIZADO:]]></text>
+			</staticText>
+			<textField pattern="####-####" isBlankWhenNull="true">
+				<reportElement x="92" y="288" width="60" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{fone}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="385" y="72" width="76" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{pais_origem}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="375" y="40" width="86" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{estado_civil}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="7" y="25" width="38" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NOME:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="347" y="56" width="26" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio_uf}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="7" y="40" width="38" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[SEXO:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="377" y="539" width="19" height="12"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{ddd_responsavel}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="398" y="539" width="40" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{fone_responsavel}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="377" y="539" width="3" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[(]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="394" y="539" width="3" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[)]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="233" y="559" width="21" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{numero_responsavel}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="297" y="559" width="14" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{letra_responsavel}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="350" y="559" width="19" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{bloco_responsavel}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="7" y="519" width="178" height="19"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DADOS DO RESPONSÁVEL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="539" width="38" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NOME:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="173" y="539" width="24" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[CPF:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="262" y="539" width="33" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[SEXO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="557" width="64" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[ENDEREÇO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="212" y="559" width="20" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Nº:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="262" y="559" width="34" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[LETRA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="313" y="559" width="37" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[BLOCO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="370" y="559" width="37" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[ANDAR:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="440" y="559" width="34" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[APTO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="574" width="44" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[BAIRRO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="212" y="574" width="41" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[CIDADE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="368" y="575" width="47" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[ESTADO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="442" y="575" width="32" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[CEP:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="321" y="539" width="55" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[TELEFONE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="439" y="539" width="35" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[E-MAIL:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="407" y="559" width="30" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{andar_responsavel}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="475" y="559" width="28" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{apartamento_responsavel}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="475" y="575" width="55" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{cep_responsavel}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="52" y="574" width="124" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{bairro_responsavel}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="176" y="436" width="36" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[ZONA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="56" width="76" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NATURALIDADE:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="84" y="72" width="207" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nacionalidade}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="7" y="72" width="76" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NACIONALIDADE:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="46" y="40" width="100" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{sexo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="7" y="87" width="51" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[RELIGIÃO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="465" y="208" width="28" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[CEP:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="2" y="326" width="549" height="1"/>
+			</line>
+			<line>
+				<reportElement x="551" y="326" width="1" height="39"/>
+			</line>
+			<line>
+				<reportElement x="2" y="326" width="1" height="39"/>
+			</line>
+			<line>
+				<reportElement x="2" y="365" width="549" height="1"/>
+			</line>
+			<line>
+				<reportElement x="2" y="376" width="549" height="1"/>
+			</line>
+			<line>
+				<reportElement x="2" y="504" width="549" height="1"/>
+			</line>
+			<line>
+				<reportElement x="551" y="377" width="1" height="127"/>
+			</line>
+			<line>
+				<reportElement x="2" y="377" width="1" height="127"/>
+			</line>
+			<line>
+				<reportElement x="2" y="515" width="549" height="1"/>
+			</line>
+			<line>
+				<reportElement x="2" y="589" width="549" height="1"/>
+			</line>
+			<line>
+				<reportElement x="551" y="515" width="1" height="74"/>
+			</line>
+			<line>
+				<reportElement x="2" y="515" width="1" height="74"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="11" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="15" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="18" splitType="Stretch"/>
+	</summary>
+</jasperReport>

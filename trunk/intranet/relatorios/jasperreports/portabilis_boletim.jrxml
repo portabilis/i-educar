@@ -1,0 +1,3041 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Boletim Escolar" language="groovy" pageWidth="625" pageHeight="500" columnWidth="585" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="0.8264462809917354"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="8"/>
+	<subDataset name="dataset1"/>
+	<subDataset name="dataset2"/>
+	<parameter name="ano" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="instituicao" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="escola" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="curso" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="serie" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="turma" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="matricula" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT public.fcn_upper(instituicao.nm_instituicao) AS nome_instituicao,
+
+       (SELECT public.fcn_upper(ps.nome)
+          FROM cadastro.pessoa ps,
+               cadastro.juridica
+         WHERE escola.ref_idpes = juridica.idpes AND
+               juridica.idpes = ps.idpes) AS nm_escola,
+
+      (SELECT public.fcn_upper(substring(logradouro.idtlog from 1 for 1)) ||
+              lower(substring(logradouro.idtlog, 2))
+         FROM public.logradouro,
+              cadastro.juridica,
+              cadastro.pessoa ps,
+              cadastro.endereco_pessoa
+        WHERE juridica.idpes = ps.idpes AND
+              ps.idpes = endereco_pessoa.idpes AND
+              endereco_pessoa.idlog = logradouro.idlog AND
+              juridica.idpes = escola.ref_idpes) AS tipo_logradouro,
+
+      (SELECT logradouro.nome
+         FROM public.logradouro,
+              cadastro.juridica,
+              cadastro.pessoa ps,
+              cadastro.endereco_pessoa
+        WHERE juridica.idpes = ps.idpes AND
+              ps.idpes = endereco_pessoa.idpes AND
+              endereco_pessoa.idlog = logradouro.idlog AND
+              juridica.idpes = escola.ref_idpes) AS logradouro,
+
+      (SELECT municipio.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS municipio,
+
+      (SELECT bairro.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS bairro,
+
+      (SELECT municipio.sigla_uf
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS uf_municipio,
+
+      (SELECT endereco_pessoa.numero
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS numero,
+
+     (SELECT to_char(endereco_pessoa.cep, '99999-999')
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS cep,
+
+     (SELECT min(fone_pessoa.ddd)
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS fone_ddd,
+
+     (SELECT min(to_char(fone_pessoa.fone, '9999-9999'))
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS fone,
+
+     (SELECT ps.email
+         FROM cadastro.pessoa ps,
+              cadastro.juridica
+        WHERE juridica.idpes = ps.idpes AND
+              juridica.idpes = escola.ref_idpes) AS email,
+
+       to_char(current_date,'dd/mm/yyyy') AS data_atual,
+       to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
+       curso.nm_curso as nm_curso,
+       serie.nm_serie as nm_serie,
+       turma.nm_turma as nm_turma,
+       aluno.cod_aluno as cod_aluno,
+       matricula.cod_matricula as cod_matricula,
+       pessoa.nome as nome,
+
+(select CASE WHEN (select min(to_char(escola_serie.hora_inicial,'HH'))
+                     from pmieducar.escola_serie
+                    where escola_serie.ref_cod_escola = escola.cod_escola and
+                          escola_serie.ref_cod_serie = serie.cod_serie) = '07' THEN 'Matutino'
+             WHEN (select min(to_char(escola_serie.hora_inicial,'HH'))
+                     from pmieducar.escola_serie
+                    where escola_serie.ref_cod_escola = escola.cod_escola and
+                          escola_serie.ref_cod_serie = serie.cod_serie) = '08' THEN 'Matutino'
+        ELSE 'Vespertino'
+        END) as periodo,
+
+(SELECT componente_curricular.nome
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 1 AND
+       nota_componente_curricular.etapa = 1) as nome_disciplina1,
+
+(SELECT componente_curricular.nome
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 2 AND
+       nota_componente_curricular.etapa = 1) as nome_disciplina2,
+
+(SELECT componente_curricular.nome
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 3 AND
+       nota_componente_curricular.etapa = 1) as nome_disciplina3,
+
+(SELECT componente_curricular.nome
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 4 AND
+       nota_componente_curricular.etapa = 1) as nome_disciplina4,
+
+(SELECT componente_curricular.nome
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 5 AND
+       nota_componente_curricular.etapa = 1) as nome_disciplina5,
+
+(SELECT componente_curricular.nome
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 6 AND
+       nota_componente_curricular.etapa = 1) as nome_disciplina6,
+
+(SELECT componente_curricular.nome
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 7 AND
+       nota_componente_curricular.etapa = 1) as nome_disciplina7,
+
+(SELECT componente_curricular.nome
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 8 AND
+       nota_componente_curricular.etapa = 1) as nome_disciplina8,
+
+(SELECT componente_curricular.nome
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 9 AND
+       nota_componente_curricular.etapa = 1) as nome_disciplina9,
+
+(SELECT componente_curricular.nome
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 10 AND
+       nota_componente_curricular.etapa = 1) as nome_disciplina10,
+
+(SELECT componente_curricular.nome
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 11 AND
+       nota_componente_curricular.etapa = 1) as nome_disciplina11,
+
+(SELECT componente_curricular.nome
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 12 AND
+       nota_componente_curricular.etapa = 1) as nome_disciplina12,
+
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 1 AND
+       nota_componente_curricular.etapa = 1) as nota11,
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 1 AND
+       nota_componente_curricular.etapa = 2) as nota12,
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 1 AND
+       nota_componente_curricular.etapa = 3) as nota13,
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 2 AND
+       nota_componente_curricular.etapa = 1) as nota21,
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 2 AND
+       nota_componente_curricular.etapa = 2) as nota22,
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 2 AND
+       nota_componente_curricular.etapa = 3) as nota23,
+
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 3 AND
+       nota_componente_curricular.etapa = 1) as nota31,
+
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 3 AND
+       nota_componente_curricular.etapa = 2) as nota32,
+
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 3 AND
+       nota_componente_curricular.etapa = 3) as nota33,
+
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 4 AND
+       nota_componente_curricular.etapa = 1) as nota41,
+
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 4 AND
+       nota_componente_curricular.etapa = 2) as nota42,
+
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 4 AND
+       nota_componente_curricular.etapa = 3) as nota43,
+
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 5 AND
+       nota_componente_curricular.etapa = 1) as nota51,
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 5 AND
+       nota_componente_curricular.etapa = 2) as nota52,
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 5 AND
+       nota_componente_curricular.etapa = 3) as nota53,
+
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 6 AND
+       nota_componente_curricular.etapa = 1) as nota61,
+
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 6 AND
+       nota_componente_curricular.etapa = 2) as nota62,
+
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 6 AND
+       nota_componente_curricular.etapa = 3) as nota63,
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 7 AND
+       nota_componente_curricular.etapa = 1) as nota71,
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 7 AND
+       nota_componente_curricular.etapa = 2) as nota72,
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 7 AND
+       nota_componente_curricular.etapa = 3) as nota73,
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 8 AND
+       nota_componente_curricular.etapa = 1) as nota81,
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 8 AND
+       nota_componente_curricular.etapa = 2) as nota82,
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 8 AND
+       nota_componente_curricular.etapa = 3) as nota83,
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 9 AND
+       nota_componente_curricular.etapa = 1) as nota91,
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 9 AND
+       nota_componente_curricular.etapa = 2) as nota92,
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 9 AND
+       nota_componente_curricular.etapa = 3) as nota93,
+
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 10 AND
+       nota_componente_curricular.etapa = 1) as nota101,
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 10 AND
+       nota_componente_curricular.etapa = 2) as nota102,
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 10 AND
+       nota_componente_curricular.etapa = 3) as nota103,
+
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 11 AND
+       nota_componente_curricular.etapa = 1) as nota111,
+
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 11 AND
+       nota_componente_curricular.etapa = 2) as nota112,
+
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 11 AND
+       nota_componente_curricular.etapa = 3) as nota113,
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 12 AND
+       nota_componente_curricular.etapa = 1) as nota121,
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 12 AND
+       nota_componente_curricular.etapa = 2) as nota122,
+
+(SELECT nota_componente_curricular.nota_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 12 AND
+       nota_componente_curricular.etapa = 3) as nota123,
+
+(SELECT nota_componente_curricular_media.media_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 1 AND
+       nota_componente_curricular.etapa = 1) as media1,
+
+(SELECT nota_componente_curricular_media.media_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 2 AND
+       nota_componente_curricular.etapa = 1) as media2,
+
+(SELECT nota_componente_curricular_media.media_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 3 AND
+       nota_componente_curricular.etapa = 1) as media3,
+
+(SELECT nota_componente_curricular_media.media_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 4 AND
+       nota_componente_curricular.etapa = 1) as media4,
+
+(SELECT nota_componente_curricular_media.media_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 5 AND
+       nota_componente_curricular.etapa = 1) as media5,
+
+(SELECT nota_componente_curricular_media.media_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 6 AND
+       nota_componente_curricular.etapa = 1) as media6,
+
+(SELECT nota_componente_curricular_media.media_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 7 AND
+       nota_componente_curricular.etapa = 1) as media7,
+
+(SELECT nota_componente_curricular_media.media_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 8 AND
+       nota_componente_curricular.etapa = 1) as media8,
+
+(SELECT nota_componente_curricular_media.media_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 9 AND
+       nota_componente_curricular.etapa = 1) as media9,
+
+(SELECT nota_componente_curricular_media.media_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 10 AND
+       nota_componente_curricular.etapa = 1) as media10,
+
+(SELECT nota_componente_curricular_media.media_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 11 AND
+       nota_componente_curricular.etapa = 1) as media11,
+
+(SELECT nota_componente_curricular_media.media_arredondada
+  FROM modules.componente_curricular,
+       modules.nota_aluno,
+       modules.nota_componente_curricular,
+       modules.nota_componente_curricular_media
+ WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+       nota_aluno.matricula_id = matricula.cod_matricula AND
+       nota_componente_curricular.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+       nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_componente_curricular_media.componente_curricular_id =
+       nota_componente_curricular.componente_curricular_id AND
+       componente_curricular.id = 12 AND
+       nota_componente_curricular.etapa = 1) as media12,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 1 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) as falta11,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 1 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) as falta12,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 1 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3) as falta13,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 2 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) as falta21,
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 2 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) as falta22,
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 2 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3) as falta23,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 3 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) as falta31,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 3 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) as falta32,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 3 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3) as falta33,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 4 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) as falta41,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 4 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) as falta42,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 4 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3) as falta43,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 5 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) as falta51,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 5 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) as falta52,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 5 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3) as falta53,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 6 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) as falta61,
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 6 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) as falta62,
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 6 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3) as falta63,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 7 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) as falta71,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 7 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) as falta72,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 7 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3) as falta73,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 8 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) as falta81,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 8 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) as falta82,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 8 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3) as falta83,
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 9 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) as falta91,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 9 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) as falta92,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 9 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3) as falta93,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 10 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) as falta101,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 10 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) as falta102,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 10 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3) as falta103,
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 11 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) as falta111,
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 11 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) as falta112,
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 11 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3) as falta113,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 12 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) as falta121,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 12 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) as falta122,
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 12 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3) as falta123,
+
+/*Controla o total de faltas*/
+
+((SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 1 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) +
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 1 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) +
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 1 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3)) as tot_falta1,
+
+((SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 2 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) +
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 2 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) +
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 2 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3)) as tot_falta2,
+
+((SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 3 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) +
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 3 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) +
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 3 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3)) as tot_falta3,
+
+((SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 4 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) +
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 4 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) +
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 4 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3)) as tot_falta4,
+
+((SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 5 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) +
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 5 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) +
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 5 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3)) as tot_falta5,
+
+((SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 6 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) +
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 6 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) +
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 6 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3)) as tot_falta6,
+
+((SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 7 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) +
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 7 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) +
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 7 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3)) as tot_falta7,
+
+((SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 8 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) +
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 8 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) +
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 8 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3)) as tot_falta8,
+
+((SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 9 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) +
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 9 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) +
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 9 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3)) as tot_falta9,
+
+((SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 10 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) +
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 10 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) +
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 10 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3)) as tot_falta10,
+
+((SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 11 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) +
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 11 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) +
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 11 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3)) as tot_falta11,
+
+((SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 12 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 1) +
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 12 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 2) +
+
+
+(SELECT falta_componente_curricular.quantidade
+   FROM modules.falta_componente_curricular,
+        modules.falta_aluno
+  WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id  and
+        componente_curricular_id = 12 and
+        falta_aluno.matricula_id = matricula.cod_matricula and
+        falta_componente_curricular.etapa = 3)) as tot_falta12
+
+
+  FROM pmieducar.aluno,
+       pmieducar.matricula,
+       cadastro.fisica,
+       cadastro.pessoa,
+       pmieducar.instituicao,
+       pmieducar.escola,
+       pmieducar.matricula_turma,
+       pmieducar.turma,
+       pmieducar.serie,
+       pmieducar.curso,
+       pmieducar.escola_serie,
+       pmieducar.escola_ano_letivo
+
+ WHERE pessoa.idpes = fisica.idpes AND
+       fisica.idpes = aluno.ref_idpes AND
+       aluno.cod_aluno = matricula.ref_cod_aluno AND
+       matricula.ref_cod_curso = curso.cod_curso AND
+       matricula.ref_cod_aluno = aluno.cod_aluno AND
+       serie.ref_cod_curso = curso.cod_curso AND
+       curso.ref_cod_instituicao = instituicao.cod_instituicao AND
+       escola.ref_cod_instituicao = instituicao.cod_instituicao AND
+       matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+       matricula_turma.ref_cod_turma = turma.cod_turma AND
+       serie.ref_cod_curso = curso.cod_curso AND
+       escola_serie.ref_cod_escola = escola.cod_escola AND
+       escola_ano_letivo.ref_cod_escola = escola.cod_escola AND
+       escola_serie.ref_cod_serie = serie.cod_serie AND
+       turma.ref_ref_cod_escola = escola_serie.ref_cod_escola AND
+       turma.ref_ref_cod_serie = escola_serie.ref_cod_serie AND
+       escola_ano_letivo.ano = $P{ano} AND
+       instituicao.cod_instituicao = $P{instituicao} AND
+       escola.cod_escola = $P{escola} AND
+       curso.cod_curso = $P{curso} AND
+       serie.cod_serie = $P{serie} AND
+       turma.cod_turma = $P{turma} AND
+       matricula.cod_matricula = $P{matricula} AND
+       matricula_turma.ativo = 1]]>
+	</queryString>
+	<field name="nome_instituicao" class="java.lang.String"/>
+	<field name="nm_escola" class="java.lang.String"/>
+	<field name="tipo_logradouro" class="java.lang.String"/>
+	<field name="logradouro" class="java.lang.String"/>
+	<field name="municipio" class="java.lang.String"/>
+	<field name="bairro" class="java.lang.String"/>
+	<field name="uf_municipio" class="java.lang.String"/>
+	<field name="numero" class="java.math.BigDecimal"/>
+	<field name="cep" class="java.lang.String"/>
+	<field name="fone_ddd" class="java.math.BigDecimal"/>
+	<field name="fone" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="data_atual" class="java.lang.String"/>
+	<field name="hora_atual" class="java.lang.String"/>
+	<field name="nm_curso" class="java.lang.String"/>
+	<field name="nm_serie" class="java.lang.String"/>
+	<field name="nm_turma" class="java.lang.String"/>
+	<field name="cod_aluno" class="java.lang.Integer"/>
+	<field name="cod_matricula" class="java.lang.Integer"/>
+	<field name="nome" class="java.lang.String"/>
+	<field name="periodo" class="java.lang.String"/>
+	<field name="nome_disciplina1" class="java.lang.String"/>
+	<field name="nome_disciplina2" class="java.lang.String"/>
+	<field name="nome_disciplina3" class="java.lang.String"/>
+	<field name="nome_disciplina4" class="java.lang.String"/>
+	<field name="nome_disciplina5" class="java.lang.String"/>
+	<field name="nome_disciplina6" class="java.lang.String"/>
+	<field name="nome_disciplina7" class="java.lang.String"/>
+	<field name="nome_disciplina8" class="java.lang.String"/>
+	<field name="nome_disciplina9" class="java.lang.String"/>
+	<field name="nome_disciplina10" class="java.lang.String"/>
+	<field name="nome_disciplina11" class="java.lang.String"/>
+	<field name="nome_disciplina12" class="java.lang.String"/>
+	<field name="nota11" class="java.lang.String"/>
+	<field name="nota12" class="java.lang.String"/>
+	<field name="nota13" class="java.lang.String"/>
+	<field name="nota21" class="java.lang.String"/>
+	<field name="nota22" class="java.lang.String"/>
+	<field name="nota23" class="java.lang.String"/>
+	<field name="nota31" class="java.lang.String"/>
+	<field name="nota32" class="java.lang.String"/>
+	<field name="nota33" class="java.lang.String"/>
+	<field name="nota41" class="java.lang.String"/>
+	<field name="nota42" class="java.lang.String"/>
+	<field name="nota43" class="java.lang.String"/>
+	<field name="nota51" class="java.lang.String"/>
+	<field name="nota52" class="java.lang.String"/>
+	<field name="nota53" class="java.lang.String"/>
+	<field name="nota61" class="java.lang.String"/>
+	<field name="nota62" class="java.lang.String"/>
+	<field name="nota63" class="java.lang.String"/>
+	<field name="nota71" class="java.lang.String"/>
+	<field name="nota72" class="java.lang.String"/>
+	<field name="nota73" class="java.lang.String"/>
+	<field name="nota81" class="java.lang.String"/>
+	<field name="nota82" class="java.lang.String"/>
+	<field name="nota83" class="java.lang.String"/>
+	<field name="nota91" class="java.lang.String"/>
+	<field name="nota92" class="java.lang.String"/>
+	<field name="nota93" class="java.lang.String"/>
+	<field name="nota101" class="java.lang.String"/>
+	<field name="nota102" class="java.lang.String"/>
+	<field name="nota103" class="java.lang.String"/>
+	<field name="nota111" class="java.lang.String"/>
+	<field name="nota112" class="java.lang.String"/>
+	<field name="nota113" class="java.lang.String"/>
+	<field name="nota121" class="java.lang.String"/>
+	<field name="nota122" class="java.lang.String"/>
+	<field name="nota123" class="java.lang.String"/>
+	<field name="media1" class="java.lang.String"/>
+	<field name="media2" class="java.lang.String"/>
+	<field name="media3" class="java.lang.String"/>
+	<field name="media4" class="java.lang.String"/>
+	<field name="media5" class="java.lang.String"/>
+	<field name="media6" class="java.lang.String"/>
+	<field name="media7" class="java.lang.String"/>
+	<field name="media8" class="java.lang.String"/>
+	<field name="media9" class="java.lang.String"/>
+	<field name="media10" class="java.lang.String"/>
+	<field name="media11" class="java.lang.String"/>
+	<field name="media12" class="java.lang.String"/>
+	<field name="falta11" class="java.lang.Integer"/>
+	<field name="falta12" class="java.lang.Integer"/>
+	<field name="falta13" class="java.lang.Integer"/>
+	<field name="falta21" class="java.lang.Integer"/>
+	<field name="falta22" class="java.lang.Integer"/>
+	<field name="falta23" class="java.lang.Integer"/>
+	<field name="falta31" class="java.lang.Integer"/>
+	<field name="falta32" class="java.lang.Integer"/>
+	<field name="falta33" class="java.lang.Integer"/>
+	<field name="falta41" class="java.lang.Integer"/>
+	<field name="falta42" class="java.lang.Integer"/>
+	<field name="falta43" class="java.lang.Integer"/>
+	<field name="falta51" class="java.lang.Integer"/>
+	<field name="falta52" class="java.lang.Integer"/>
+	<field name="falta53" class="java.lang.Integer"/>
+	<field name="falta61" class="java.lang.Integer"/>
+	<field name="falta62" class="java.lang.Integer"/>
+	<field name="falta63" class="java.lang.Integer"/>
+	<field name="falta71" class="java.lang.Integer"/>
+	<field name="falta72" class="java.lang.Integer"/>
+	<field name="falta73" class="java.lang.Integer"/>
+	<field name="falta81" class="java.lang.Integer"/>
+	<field name="falta82" class="java.lang.Integer"/>
+	<field name="falta83" class="java.lang.Integer"/>
+	<field name="falta91" class="java.lang.Integer"/>
+	<field name="falta92" class="java.lang.Integer"/>
+	<field name="falta93" class="java.lang.Integer"/>
+	<field name="falta101" class="java.lang.Integer"/>
+	<field name="falta102" class="java.lang.Integer"/>
+	<field name="falta103" class="java.lang.Integer"/>
+	<field name="falta111" class="java.lang.Integer"/>
+	<field name="falta112" class="java.lang.Integer"/>
+	<field name="falta113" class="java.lang.Integer"/>
+	<field name="falta121" class="java.lang.Integer"/>
+	<field name="falta122" class="java.lang.Integer"/>
+	<field name="falta123" class="java.lang.Integer"/>
+	<field name="tot_falta1" class="java.lang.Integer"/>
+	<field name="tot_falta2" class="java.lang.Integer"/>
+	<field name="tot_falta3" class="java.lang.Integer"/>
+	<field name="tot_falta4" class="java.lang.Integer"/>
+	<field name="tot_falta5" class="java.lang.Integer"/>
+	<field name="tot_falta6" class="java.lang.Integer"/>
+	<field name="tot_falta7" class="java.lang.Integer"/>
+	<field name="tot_falta8" class="java.lang.Integer"/>
+	<field name="tot_falta9" class="java.lang.Integer"/>
+	<field name="tot_falta10" class="java.lang.Integer"/>
+	<field name="tot_falta11" class="java.lang.Integer"/>
+	<field name="tot_falta12" class="java.lang.Integer"/>
+	<sortField name="cod_matricula"/>
+	<filterExpression><![CDATA[$P{JASPER_REPORT}]]></filterExpression>
+	<group name="matricula">
+		<groupExpression><![CDATA[$F{cod_matricula}]]></groupExpression>
+		<groupHeader>
+			<band height="348">
+				<rectangle>
+					<reportElement x="0" y="0" width="542" height="33"/>
+				</rectangle>
+				<rectangle>
+					<reportElement x="0" y="33" width="542" height="32"/>
+				</rectangle>
+				<textField isBlankWhenNull="true">
+					<reportElement x="289" y="181" width="29" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota53}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="341" y="181" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{media5}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="215" y="181" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta51}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="269" y="181" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta52}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="323" y="181" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta53}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="31" y="65" width="1" height="33"/>
+				</line>
+				<line>
+					<reportElement x="177" y="66" width="1" height="32"/>
+				</line>
+				<staticText>
+					<reportElement x="69" y="75" width="73" height="15"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[DISCIPLINA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="180" y="67" width="43" height="15"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[1º TRIM.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="233" y="67" width="43" height="15"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[2º TRIM.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="287" y="67" width="43" height="15"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[3º TRIM.]]></text>
+				</staticText>
+				<line>
+					<reportElement x="230" y="66" width="1" height="32"/>
+				</line>
+				<line>
+					<reportElement x="284" y="66" width="1" height="32"/>
+				</line>
+				<line>
+					<reportElement x="337" y="66" width="1" height="32"/>
+				</line>
+				<staticText>
+					<reportElement x="339" y="67" width="34" height="15"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[MÉDIA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="378" y="67" width="32" height="15"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[AVAL.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="419" y="67" width="34" height="15"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[MÉDIA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="473" y="67" width="50" height="15"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[FALTAS]]></text>
+				</staticText>
+				<line>
+					<reportElement x="375" y="66" width="1" height="32"/>
+				</line>
+				<line>
+					<reportElement x="415" y="65" width="1" height="32"/>
+				</line>
+				<line>
+					<reportElement x="456" y="66" width="1" height="32"/>
+				</line>
+				<textField>
+					<reportElement x="3" y="16" width="224" height="15"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_curso}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="351" y="16" width="59" height="15"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_serie}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="427" y="16" width="100" height="15"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_turma}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="4" y="49" width="341" height="16"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="178" y="84" width="159" height="1"/>
+				</line>
+				<staticText>
+					<reportElement x="181" y="85" width="30" height="13"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[NOTA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="217" y="85" width="10" height="13"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[F]]></text>
+				</staticText>
+				<line>
+					<reportElement x="213" y="85" width="1" height="13"/>
+				</line>
+				<staticText>
+					<reportElement x="234" y="85" width="30" height="13"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[NOTA]]></text>
+				</staticText>
+				<line>
+					<reportElement x="267" y="84" width="1" height="14"/>
+				</line>
+				<staticText>
+					<reportElement x="271" y="85" width="10" height="13"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[F]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="288" y="84" width="30" height="15"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[NOTA]]></text>
+				</staticText>
+				<line>
+					<reportElement x="321" y="84" width="1" height="14"/>
+				</line>
+				<staticText>
+					<reportElement x="324" y="84" width="10" height="15"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[F]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="419" y="83" width="34" height="15"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[FINAL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="339" y="83" width="34" height="15"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[TRIM.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="379" y="83" width="34" height="15"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[FINAL]]></text>
+				</staticText>
+				<line>
+					<reportElement x="493" y="84" width="1" height="14"/>
+				</line>
+				<staticText>
+					<reportElement x="469" y="84" width="11" height="14"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[%]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="503" y="84" width="26" height="14"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[TOT.]]></text>
+				</staticText>
+				<line>
+					<reportElement x="457" y="84" width="85" height="1"/>
+				</line>
+				<staticText>
+					<reportElement x="3" y="1" width="73" height="15"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[01 - CURSO]]></text>
+				</staticText>
+				<line>
+					<reportElement x="260" y="0" width="1" height="33"/>
+				</line>
+				<line>
+					<reportElement x="31" y="99" width="1" height="243"/>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="181" y="121" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota21}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="542" y="61" width="1" height="281"/>
+				</line>
+				<line>
+					<reportElement x="267" y="100" width="1" height="242"/>
+				</line>
+				<line>
+					<reportElement x="321" y="99" width="1" height="243"/>
+				</line>
+				<line>
+					<reportElement x="284" y="99" width="1" height="243"/>
+				</line>
+				<line>
+					<reportElement x="337" y="99" width="1" height="243"/>
+				</line>
+				<line>
+					<reportElement x="375" y="98" width="1" height="244"/>
+				</line>
+				<line>
+					<reportElement x="415" y="97" width="1" height="245"/>
+				</line>
+				<line>
+					<reportElement x="456" y="99" width="1" height="243"/>
+				</line>
+				<line>
+					<reportElement x="493" y="99" width="1" height="243"/>
+				</line>
+				<line>
+					<reportElement x="0" y="99" width="542" height="1"/>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="36" y="121" width="135" height="17"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina2}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="230" y="98" width="1" height="244"/>
+				</line>
+				<line>
+					<reportElement x="213" y="99" width="1" height="243"/>
+				</line>
+				<staticText>
+					<reportElement x="263" y="1" width="59" height="15"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[02 - TURNO]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="234" y="121" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota22}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="37" y="141" width="135" height="17"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina3}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="37" y="161" width="135" height="17"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina4}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="36" y="101" width="135" height="17"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina1}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="37" y="201" width="135" height="17"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina6}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="39" y="241" width="133" height="17"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina8}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="39" y="281" width="133" height="17"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina10}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="40" y="301" width="133" height="17"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina11}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="40" y="321" width="133" height="17"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina12}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="181" y="141" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota31}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="234" y="141" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota32}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="288" y="141" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota33}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="181" y="161" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota41}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="234" y="161" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota42}]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement x="288" y="161" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota43}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="215" y="101" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta11}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="269" y="101" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta12}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="323" y="101" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta13}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="181" y="201" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota61}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="235" y="201" width="29" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota62}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="288" y="201" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota63}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="288" y="121" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota23}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="341" y="121" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{media2}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="215" y="121" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta21}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="181" y="241" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota81}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="234" y="241" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota82}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="288" y="241" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota83}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="181" y="261" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota91}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="234" y="261" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota92}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="288" y="261" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota93}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="39" y="261" width="133" height="17"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina9}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="181" y="281" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota101}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="234" y="281" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota102}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="288" y="281" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota103}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="181" y="301" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota111}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="234" y="301" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota112}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="288" y="301" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota113}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="181" y="321" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota121}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="234" y="321" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota122}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="288" y="321" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota123}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="347" y="1" width="1" height="32"/>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="341" y="141" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{media3}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="341" y="161" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{media4}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="181" y="101" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota11}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="341" y="201" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{media6}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="269" y="121" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta22}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="341" y="241" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{media8}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="341" y="261" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{media9}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="341" y="281" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{media10}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="341" y="302" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{media11}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="341" y="322" width="30" height="16"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{media12}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="351" y="1" width="59" height="15"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[03 - SÉRIE]]></text>
+				</staticText>
+				<line>
+					<reportElement x="420" y="1" width="1" height="32"/>
+				</line>
+				<staticText>
+					<reportElement x="424" y="1" width="67" height="15"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[04 - TURMA]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="215" y="142" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta31}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="269" y="141" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta32}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="323" y="141" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta33}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="215" y="161" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta41}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="269" y="161" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta42}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="323" y="162" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta43}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="234" y="101" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota12}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="288" y="101" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota13}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="181" y="181" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota51}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="215" y="201" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta61}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="269" y="201" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta62}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="323" y="201" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta63}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="323" y="121" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta23}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="37" y="181" width="135" height="17"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina5}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="215" y="240" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta81}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="269" y="241" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta82}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="323" y="241" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta83}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="215" y="260" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta91}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="269" y="261" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta92}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="323" y="261" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta93}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="215" y="280" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta101}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="269" y="281" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta102}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="323" y="281" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta103}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="215" y="300" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta111}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="269" y="301" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta112}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="323" y="301" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta113}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="215" y="321" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta121}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="269" y="321" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta122}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="323" y="321" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta123}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="4" y="34" width="73" height="15"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[05 - ALUNO]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="341" y="101" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{media1}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="38" y="221" width="134" height="17"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina7}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="181" y="221" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota71}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="234" y="221" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota72}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="288" y="221" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota73}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="341" y="221" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{media7}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="215" y="221" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta71}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="269" y="221" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta72}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="323" y="221" width="13" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta73}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="177" y="97" width="1" height="245"/>
+				</line>
+				<line>
+					<reportElement x="0" y="66" width="1" height="276"/>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="235" y="181" width="29" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota52}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="342" width="542" height="1"/>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="263" y="16" width="78" height="15"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{periodo}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="503" y="101" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta1}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="503" y="121" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta2}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="503" y="141" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta3}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="503" y="161" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta4}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="503" y="181" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta5}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="503" y="201" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta6}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="503" y="221" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta7}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="503" y="241" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta8}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="503" y="261" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta9}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="503" y="281" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta10}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="503" y="301" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta11}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="503" y="322" width="30" height="17"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta12}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="7"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="77" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="4" width="542" height="73"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="403" y="10" width="133" height="16"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BOLETIM ESCOLAR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="108" y="23" width="253" height="15"/>
+				<textElement>
+					<font size="8" isBold="true" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[SECRETARIA MUNICIPAL DE EDUCAÇÃO E CULTURA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="108" y="10" width="253" height="14"/>
+				<textElement markup="none">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="108" y="37" width="252" height="15"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="108" y="51" width="160" height="15"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Endereço: "+$F{logradouro}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="271" y="51" width="43" height="15"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telefone:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="376" y="51" width="44" height="15"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[E-mail:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="422" y="51" width="111" height="15"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{email}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="454" y="37" width="42" height="15"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$P{ano}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="315" y="51" width="59" height="15"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{fone}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="3" y="9" width="105" height="65"/>
+				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="403" y="37" width="52" height="15"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ano Letivo:]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="4" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="5" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="6" splitType="Stretch"/>
+	</summary>
+</jasperReport>

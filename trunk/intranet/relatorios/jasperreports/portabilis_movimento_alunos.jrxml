@@ -1,0 +1,1686 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_atestado_vaga" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" isDefault="false" hAlign="Center"/>
+	<subDataset name="dataset1"/>
+	<subDataset name="dataset2"/>
+	<subDataset name="dataset3"/>
+	<parameter name="ano" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="instituicao" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="escola" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="curso" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="data_inicial" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="data_final" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT public.fcn_upper(nm_instituicao) AS nome_instituicao,
+       instituicao.cidade AS cidade_instituicao,
+       public.fcn_upper(ref_sigla_uf) AS uf_instituicao,
+       escola.cod_escola AS cod_escola,
+       escola_ano_letivo.ano,
+       curso.nm_curso,
+       serie.nm_serie,
+       turma.nm_turma,
+       to_char(CURRENT_DATE,'dd/mm/yyyy') AS data_atual,
+       to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
+       (select CASE WHEN (select min(to_char(turma.hora_inicial,'HH'))
+                     from pmieducar.turma
+                    where turma.ref_ref_cod_escola = escola_serie.ref_cod_escola and
+                          turma.ref_ref_cod_serie = escola_serie.ref_cod_serie) = '07' THEN 'Matutino'
+                    WHEN (select min(to_char(turma.hora_inicial,'HH'))
+                     from pmieducar.turma
+                    where turma.ref_ref_cod_escola = escola_serie.ref_cod_escola and
+                          turma.ref_ref_cod_serie = escola_serie.ref_cod_serie) = '08' THEN 'Matutino'
+        ELSE 'Vespertino'
+        END) as periodo,
+
+       (select CASE WHEN (select min(to_char(turma.hora_inicial,'HH'))
+                     from pmieducar.turma
+                    where turma.ref_ref_cod_escola = escola_serie.ref_cod_escola and
+                          turma.ref_ref_cod_serie = escola_serie.ref_cod_serie) = '07' THEN 1
+                    WHEN (select min(to_char(turma.hora_inicial,'HH'))
+                     from pmieducar.turma
+                    where turma.ref_ref_cod_escola = escola_serie.ref_cod_escola and
+                          turma.ref_ref_cod_serie = escola_serie.ref_cod_serie) = '08' THEN 1
+        ELSE 2
+        END) as periodo_aux,
+
+       (SELECT public.fcn_upper(ps.nome)
+          FROM cadastro.pessoa ps,
+               cadastro.juridica
+         WHERE escola.ref_idpes = juridica.idpes AND
+               juridica.idpes = ps.idpes) AS nm_escola,
+
+      (SELECT public.fcn_upper(substring(logradouro.idtlog from 1 for 1)) ||
+              lower(substring(logradouro.idtlog, 2))
+         FROM public.logradouro,
+              cadastro.juridica,
+              cadastro.pessoa ps,
+              cadastro.endereco_pessoa
+        WHERE juridica.idpes = ps.idpes AND
+              ps.idpes = endereco_pessoa.idpes AND
+              endereco_pessoa.idlog = logradouro.idlog AND
+              juridica.idpes = escola.ref_idpes) AS tipo_logradouro,
+
+      (SELECT logradouro.nome
+         FROM public.logradouro,
+              cadastro.juridica,
+              cadastro.pessoa ps,
+              cadastro.endereco_pessoa
+        WHERE juridica.idpes = ps.idpes AND
+              ps.idpes = endereco_pessoa.idpes AND
+              endereco_pessoa.idlog = logradouro.idlog AND
+              juridica.idpes = escola.ref_idpes) AS logradouro,
+
+      (SELECT municipio.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS municipio,
+
+      (SELECT bairro.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS bairro,
+
+      (SELECT municipio.sigla_uf
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS uf_municipio,
+
+      (SELECT endereco_pessoa.numero
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS numero,
+
+     (SELECT to_char(endereco_pessoa.cep, '99999-999')
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS cep,
+
+     (SELECT min(fone_pessoa.ddd)
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS fone_ddd,
+
+     (SELECT min(to_char(fone_pessoa.fone, '9999-9999'))
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS fone,
+
+     (SELECT ps.email
+         FROM cadastro.pessoa ps,
+              cadastro.juridica
+        WHERE juridica.idpes = ps.idpes AND
+              juridica.idpes = escola.ref_idpes) AS email,
+
+       to_char(current_date,'dd/mm/yyyy') AS data_atual,
+       to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
+
+/***************Conta as matriculas ativas********************/
+
+((select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'M' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 3 AND
+        matricula.ano = $P{ano}) +
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'M' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 4 AND
+        matricula.ano = $P{ano}) +
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'M' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 6 AND
+        matricula.ano = $P{ano}))as qtd_matr_masc,
+
+((select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'F' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 3 AND
+        matricula.ano = $P{ano}) +
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'F' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 4 AND
+        matricula.ano = $P{ano}) +
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'F' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 6 AND
+        matricula.ano = $P{ano}))as qtd_matr_femi,
+/***************Conta total de matriculas M/F********************/
+
+((select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 3 AND
+        matricula.ano = $P{ano}) +
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 4 AND
+        matricula.ano = $P{ano}) +
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 6 AND
+        matricula.ano = $P{ano})) as qtd_matric_tot,
+
+/***************Conta as transferencias por sexo********************/
+
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'M' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 4 AND
+        matricula.ano = $P{ano}) as qtd_tran_masc,
+
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'F' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 4 AND
+        matricula.ano = $P{ano}) as qtd_tran_femi,
+
+/***************Conta a quantidade de abandonos por sexo********************/
+
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'M' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 6 AND
+        matricula.ano = $P{ano}) as qtd_aban_masc,
+
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'F' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 6 AND
+        matricula.ano = $P{ano}) as qtd_aban_femi,
+
+/*Conta a quantidade de alunos com a marícula fnal diminuindo as transferencias e abandonos*/
+
+((select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'M' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 3 AND
+        matricula.ano = $P{ano}) -
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'M' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 4 AND
+        matricula.ano = $P{ano}) -
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'M' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 6 AND
+        matricula.ano = $P{ano}) * -1) as matric_final_masc,
+
+((select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'F' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 3 AND
+        matricula.ano = $P{ano}) -
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'F' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 4 AND
+        matricula.ano = $P{ano}) -
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'F' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 6 AND
+        matricula.ano = $P{ano}) * -1) as matric_final_femi,
+
+/*Total de matricula masculino final*/
+
+((select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'M' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 3 AND
+        matricula.ano = $P{ano}) +
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'M' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 4 AND
+        matricula.ano = $P{ano}) +
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'M' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 6 AND
+        matricula.ano = $P{ano}) -
+
+((select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'M' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 4 AND
+        matricula.ano = $P{ano}) +
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'M' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 6 AND
+        matricula.ano = $P{ano}))) as qtd_matri_final_masc,
+
+
+/*Total de matricula feminino final*/
+
+((select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'F' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 3 AND
+        matricula.ano = $P{ano}) +
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'F' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 4 AND
+        matricula.ano = $P{ano}) +
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'F' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 6 AND
+        matricula.ano = $P{ano}) -
+
+((select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'F' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 4 AND
+        matricula.ano = $P{ano}) +
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'F' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 6 AND
+        matricula.ano = $P{ano}))) as qtd_matri_final_femin,
+
+/*Total de matricula masculino e feminino final*/
+
+((select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'M' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 3 AND
+        matricula.ano = $P{ano}) +
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'M' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 4 AND
+        matricula.ano = $P{ano}) +
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'M' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 6 AND
+        matricula.ano = $P{ano}) -
+
+((select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'M' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 4 AND
+        matricula.ano = $P{ano}) +
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'M' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 6 AND
+        matricula.ano = $P{ano}))) +
+
+((select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'F' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 3 AND
+        matricula.ano = $P{ano}) +
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'F' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 4 AND
+        matricula.ano = $P{ano}) +
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'F' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 6 AND
+        matricula.ano = $P{ano}) -
+
+((select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'F' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 4 AND
+        matricula.ano = $P{ano}) +
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'F' AND
+        matricula.ativo = 1 AND
+        matricula.aprovado = 6 AND
+        matricula.ano = $P{ano}))) as qtd_matri_final_femin_masc,
+
+/********Contagem de alunos admitidos do sexo masculino*******/
+
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'M' AND
+        matricula.ativo = 1 AND
+        matricula.matricula_transferencia = 't' AND
+        matricula.ano = $P{ano}) as qtd_admitidos_mascu,
+
+/********Contagem de alunos admitidos do sexo feminino*******/
+
+(select count(aluno.cod_aluno)
+   from pmieducar.aluno,
+        cadastro.fisica,
+        cadastro.pessoa,
+        pmieducar.matricula,
+        pmieducar.matricula_turma
+  where pessoa.idpes = fisica.idpes AND
+        aluno.ref_idpes = fisica.idpes AND
+        matricula.ref_cod_aluno = aluno.cod_aluno AND
+        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+        matricula_turma.ref_cod_turma = turma.cod_turma AND
+        fisica.sexo = 'F' AND
+        matricula.ativo = 1 AND
+        matricula.matricula_transferencia = 't' AND
+        matricula.ano = $P{ano}) as qtd_admitidos_femin,
+
+(SELECT ps.nome
+   FROM cadastro.pessoa ps,
+        cadastro.fisica fs,
+	cadastro.funcionario fc,
+	pmieducar.turma tr,
+	pmieducar.servidor
+  WHERE tr.ref_cod_regente = servidor.cod_servidor AND
+        tr.ref_cod_instituicao_regente = servidor.ref_cod_instituicao AND
+        servidor.ref_cod_instituicao = instituicao.cod_instituicao AND
+        servidor.cod_servidor = fc.idpes AND
+        fc.idins = instituicao.cod_instituicao AND
+        fc.idpes = fs.idpes AND
+        fs.idpes = ps.idpes AND
+        tr.cod_turma = turma.cod_turma AND
+        tr.ref_ref_cod_serie = turma.ref_ref_cod_serie AND
+        tr.ref_ref_cod_escola = turma.ref_ref_cod_escola) as professor,
+
+(select to_date(quote_literal(06042010),'DDMMYYYY') - to_date(quote_literal(03022010),'DDMMYYYY')) as DIAS
+
+  FROM pmieducar.instituicao,
+       pmieducar.escola,
+       pmieducar.escola_ano_letivo,
+       pmieducar.escola_curso,
+       pmieducar.escola_serie,
+       pmieducar.curso,
+       pmieducar.serie,
+       pmieducar.turma
+
+ WHERE escola_ano_letivo.ano = $P{ano} AND
+       instituicao.cod_instituicao = $P{instituicao} AND
+       escola.cod_escola = $P{escola} AND
+       curso.cod_curso = $P{curso} AND
+       escola_serie.ref_cod_escola = escola.cod_escola AND
+       escola_serie.ref_cod_serie = serie.cod_serie AND
+       escola_curso.ref_cod_curso = curso.cod_curso AND
+       escola_curso.ref_cod_escola = escola.cod_escola AND
+       escola.ref_cod_instituicao = instituicao.cod_instituicao AND
+       turma.ref_ref_cod_escola = escola_serie.ref_cod_escola and
+       turma.ref_ref_cod_serie = escola_serie.ref_cod_serie AND
+       turma.ref_cod_curso = curso.cod_curso AND
+       turma.ref_cod_instituicao = instituicao.cod_instituicao AND
+       escola_ano_letivo.ref_cod_escola = escola.cod_escola AND
+       escola.ativo = 1 AND
+       instituicao.ativo = 1 AND
+       ((select count(aluno.cod_aluno)
+           from pmieducar.aluno,
+                pmieducar.matricula,
+                pmieducar.matricula_turma
+          where matricula.ref_cod_aluno = aluno.cod_aluno AND
+                matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+                matricula_turma.ref_cod_turma = turma.cod_turma AND
+                matricula.ativo = 1 AND
+                matricula.aprovado > 0 AND
+                to_char(matricula.data_cadastro,'DD/MM/YYYY') >= $P{data_inicial} AND
+                to_char(matricula.data_cadastro,'DD/MM/YYYY') <= $P{data_final} AND
+                matricula.ano = $P{ano}) > 0)
+
+order by nm_serie, nm_turma]]>
+	</queryString>
+	<field name="nome_instituicao" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cidade_instituicao" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="uf_instituicao" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cod_escola" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ano" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nm_curso" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nm_serie" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nm_turma" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="data_atual" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hora_atual" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="periodo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="periodo_aux" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nm_escola" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tipo_logradouro" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="logradouro" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="municipio" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="bairro" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="uf_municipio" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="numero" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cep" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fone_ddd" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fone" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="email" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="qtd_matr_masc" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="qtd_matr_femi" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="qtd_matric_tot" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="qtd_tran_masc" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="qtd_tran_femi" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="qtd_aban_masc" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="qtd_aban_femi" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="matric_final_masc" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="matric_final_femi" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="qtd_matri_final_masc" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="qtd_matri_final_femin" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="qtd_matri_final_femin_masc" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="qtd_admitidos_mascu" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="qtd_admitidos_femin" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="professor" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="dias" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="qtd_admitidos_femin_SUM" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{qtd_admitidos_femin}]]></variableExpression>
+	</variable>
+	<variable name="cod_escola_SUM" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{cod_escola}]]></variableExpression>
+	</variable>
+	<variable name="soma_turma" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{nm_turma}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
+	</variable>
+	<variable name="soma_periodo" class="java.lang.Integer" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{periodo_aux}]]></variableExpression>
+	</variable>
+	<variable name="soma1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{qtd_matr_masc}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
+	</variable>
+	<variable name="soma2" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{qtd_matr_femi}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
+	</variable>
+	<variable name="soma3" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{qtd_matric_tot}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
+	</variable>
+	<variable name="soma4" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{qtd_tran_masc}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
+	</variable>
+	<variable name="soma5" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{qtd_tran_femi}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
+	</variable>
+	<variable name="soma6" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{qtd_aban_masc}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
+	</variable>
+	<variable name="soma7" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{qtd_aban_femi}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
+	</variable>
+	<variable name="soma8" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{qtd_admitidos_mascu}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
+	</variable>
+	<variable name="soma9" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{qtd_admitidos_femin}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
+	</variable>
+	<variable name="soma10" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{qtd_matri_final_masc}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
+	</variable>
+	<variable name="soma11" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{qtd_matri_final_femin}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
+	</variable>
+	<variable name="soma12" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{qtd_matri_final_femin_masc}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="216" splitType="Stretch">
+			<staticText>
+				<reportElement x="270" y="108" width="250" height="16"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[MOVIMENTO MENSAL DE ALUNOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="102" y="16" width="278" height="13"/>
+				<textElement>
+					<font size="8" isBold="true" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[SECRETARIA MUNICIPAL DE EDUCAÇÃO E CULTURA]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="359" y="52" width="120" height="13" forecolor="#000033"/>
+				<textElement>
+					<font size="8" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="102" y="40" width="253" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{tipo_logradouro}+" "+$F{logradouro}+", "+$F{numero}+"            Bairro: " +$F{bairro}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="102" y="28" width="222" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="670" y="4" width="121" height="13"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Emissão: "+$F{data_atual}+" "+$F{hora_atual}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="102" y="4" width="278" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="358" y="40" width="77" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="468" y="39" width="77" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="15" y="174" width="39" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[SÉRIE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="75" y="174" width="39" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[TURMA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="138" y="174" width="39" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[TURNO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="193" y="174" width="87" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[MATRÍCULA INICIAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="377" y="146" width="50" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[ALUNOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="307" y="174" width="50" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[TRANSF.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="372" y="174" width="55" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[ABANDONO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="441" y="174" width="50" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[ADMITIDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="512" y="174" width="95" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[MATRÍCULA FINAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="642" y="174" width="105" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NOME DO PROFESSOR]]></text>
+			</staticText>
+			<line>
+				<reportElement x="6" y="142" width="785" height="1"/>
+			</line>
+			<line>
+				<reportElement x="6" y="215" width="785" height="1"/>
+			</line>
+			<line>
+				<reportElement x="5" y="142" width="1" height="73"/>
+			</line>
+			<line>
+				<reportElement x="64" y="143" width="1" height="72"/>
+			</line>
+			<line>
+				<reportElement x="126" y="143" width="1" height="72"/>
+			</line>
+			<line>
+				<reportElement x="185" y="143" width="1" height="72"/>
+			</line>
+			<line>
+				<reportElement x="296" y="143" width="1" height="72"/>
+			</line>
+			<line>
+				<reportElement x="365" y="165" width="1" height="50"/>
+			</line>
+			<line>
+				<reportElement x="432" y="165" width="1" height="50"/>
+			</line>
+			<line>
+				<reportElement x="504" y="143" width="1" height="72"/>
+			</line>
+			<line>
+				<reportElement x="613" y="143" width="1" height="72"/>
+			</line>
+			<line>
+				<reportElement x="791" y="142" width="1" height="73"/>
+			</line>
+			<line>
+				<reportElement x="297" y="165" width="207" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="102" y="52" width="201" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Fone/Fax: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="186" y="195" width="427" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="196" y="199" width="16" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[M]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="231" y="199" width="16" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[F]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="269" y="199" width="16" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[T]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="199" width="16" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[M]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="341" y="199" width="16" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[F]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="374" y="199" width="16" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[M]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="407" y="199" width="16" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[F]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="442" y="199" width="16" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[M]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="478" y="199" width="16" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[F]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="514" y="199" width="16" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[M]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="552" y="199" width="16" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[F]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="587" y="199" width="16" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[T]]></text>
+			</staticText>
+			<line>
+				<reportElement x="222" y="196" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="259" y="196" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="331" y="196" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="469" y="196" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="541" y="196" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="579" y="196" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="398" y="196" width="1" height="18"/>
+			</line>
+			<image>
+				<reportElement x="1" y="4" width="100" height="65"/>
+				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<rectangle>
+				<reportElement x="5" y="4" width="786" height="15"/>
+			</rectangle>
+			<textField>
+				<reportElement x="70" y="5" width="54" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_turma}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="131" y="5" width="52" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{periodo}]]></textFieldExpression>
+			</textField>
+			<elementGroup/>
+			<textField>
+				<reportElement x="10" y="5" width="49" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_serie}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="64" y="4" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="126" y="4" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="185" y="4" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="222" y="4" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="259" y="5" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="296" y="5" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="331" y="5" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="365" y="5" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="398" y="5" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="432" y="5" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="469" y="5" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="504" y="5" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="541" y="5" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="579" y="5" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="613" y="5" width="1" height="14"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="190" y="5" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_matr_masc}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="226" y="5" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_matr_femi}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="300" y="5" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_tran_masc}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="335" y="5" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_tran_femi}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="368" y="5" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_aban_masc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="402" y="5" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_aban_femi}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="264" y="5" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_matric_tot}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="510" y="5" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_matri_final_masc}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="546" y="5" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_matri_final_femin}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="583" y="5" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_matri_final_femin_masc}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="437" y="5" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_admitidos_mascu}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="473" y="5" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_admitidos_femin}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="620" y="6" width="161" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{professor}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="34" splitType="Stretch">
+			<rectangle>
+				<reportElement x="5" y="4" width="786" height="15"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="190" y="6" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="226" y="6" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma2}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="18" y="6" width="32" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<line>
+				<reportElement x="64" y="5" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="126" y="5" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="185" y="5" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="222" y="5" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="259" y="5" width="1" height="14"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="264" y="6" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma3}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="296" y="5" width="1" height="14"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="300" y="6" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma4}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="331" y="5" width="1" height="14"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="335" y="6" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma5}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="365" y="5" width="1" height="14"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="368" y="6" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma6}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="398" y="5" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="432" y="5" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="469" y="5" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="504" y="5" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="541" y="5" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="579" y="5" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="613" y="4" width="1" height="14"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="402" y="6" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma7}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="437" y="6" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma8}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="473" y="6" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma9}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="510" y="6" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma10}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="546" y="6" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma11}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="583" y="6" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma12}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="82" y="6" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma_turma}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="142" y="6" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma_periodo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="29" y="19" width="124" height="13"/>
+				<textElement markup="none">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["DIAS LETIVOS: "+$F{dias}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="624" y="19" width="168" height="13"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["DATA: "+$F{data_atual}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="145" splitType="Stretch"/>
+	</summary>
+</jasperReport>
