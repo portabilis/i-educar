@@ -1,5 +1,7 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  
+  RewriteBase /module/
 
   RewriteCond %{SCRIPT_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} -d [OR]
