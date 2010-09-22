@@ -132,6 +132,7 @@ class indice extends clsListagem
 		$this->addCabecalhos( array(
 			"C&oacute;digo Aluno",
 			"Nome do Aluno",
+			"Nome da Mãe",
 			"Nome do Respons&aacute;vel",
 			"CPF Respons&aacute;vel",
 		) );
@@ -308,6 +309,7 @@ class indice extends clsListagem
 				$this->addLinhas( array(
 					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["cod_aluno"]}</a>",
 					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["nome_aluno"]}</a>",
+					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["nm_mae"]}</a>",
 					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["nome_responsavel"]}</a>",
 					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["cpf_responsavel"]}</a>"
 				) );
