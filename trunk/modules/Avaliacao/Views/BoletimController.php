@@ -205,9 +205,9 @@ class BoletimController extends Core_Controller_Page_ViewController
     // Títulos da tabela
     $labels = array();
     $labels[] = array('data' => 'Disciplinas', 'attributes' => $attributes);
-
+    
     foreach ($etapas as $etapa) {
-      $data = array('data' => sprintf('Etapa %d', $etapa));
+      $data = array('data' => sprintf('%d&deg; Bimetre', $etapa));
       $data['colspan'] = $porComponente ? 2 : 1;
       $data['attributes'] = $attributes;
       $labels[] = $data;
