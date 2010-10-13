@@ -141,10 +141,10 @@ class BoletimController extends Core_Controller_Page_ViewController
     $nome   = $matricula['nome'];
 
     // Nome da escola
-    $escola = new clsPmieducarTurmaModulo($matricula['ref_ref_cod_escola']);
+    $escola = new clsPmieducarEscola($matricula['ref_ref_cod_escola']);
     $escolaDetalhe = $escola->detalhe();
     $escola = ucwords(strtolower($escolaDetalhe['nome']));
-
+    
     // Nome do curso
     $curso = $matricula['curso_nome'];
 
