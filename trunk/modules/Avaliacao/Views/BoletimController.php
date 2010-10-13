@@ -141,9 +141,9 @@ class BoletimController extends Core_Controller_Page_ViewController
     $nome   = $matricula['nome'];
 
     // Nome da escola
-    $escola = new clsPmieducarEscola($matricula['ref_ref_cod_escola']);
-    $escola = $escola->detalhe();
-    $escola = ucwords(strtolower($escola['nome']));
+    $escola = new clsPmieducarTurmaModulo($matricula['ref_ref_cod_escola']);
+    $escolaDetalhe = $escola->detalhe();
+    $escola = ucwords(strtolower($escolaDetalhe['nome']));
 
     // Nome do curso
     $curso = $matricula['curso_nome'];
@@ -171,7 +171,20 @@ class BoletimController extends Core_Controller_Page_ViewController
     $this->addDetalhe(array('Parecer descritivo', $this->_service->getRegra()->parecerDescritivo));
     $this->addDetalhe(array('Progressão', $this->_service->getRegra()->tipoProgressao));
     $this->addDetalhe(array('Média', $this->_service->getRegra()->media));
+    
+    //modulos
+    $descModulo = 'Etapa';//caso não encontre nada, fica etapa como default
+    $turmaModulo = new clsPmieducarTurmaModulo();
+    $arrModulo = $turmaModulo->lista($matricula['ref_cod_turma'], null, $matricula['modulo']);
 
+    if (count($arrModulo[0]) > 0) {
+        $modulo = new clsPmieducarModulo();
+        $infModulo = $modulo->lista($arrModulo[0]['ref_cod_modulo']);
+        if (!empty ($infModulo[0]['nm_tipo'])) {
+            $descModulo = $infModulo[0]['nm_tipo'];
+        }
+    }
+    
     // Cria um array com a quantidade de etapas de 1 a n
     $etapas = range(1, $this->_service->getOption('etapas'), 1);
 
@@ -207,7 +220,7 @@ class BoletimController extends Core_Controller_Page_ViewController
     $labels[] = array('data' => 'Disciplinas', 'attributes' => $attributes);
     
     foreach ($etapas as $etapa) {
-      $data = array('data' => sprintf('%d&deg; Bimetre', $etapa));
+      $data = array('data' => sprintf('%d&deg; %s', $etapa, $descModulo));
       $data['colspan'] = $porComponente ? 2 : 1;
       $data['attributes'] = $attributes;
       $labels[] = $data;
