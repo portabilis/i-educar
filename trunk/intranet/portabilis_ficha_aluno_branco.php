@@ -35,7 +35,7 @@ class clsIndexBase extends clsBase
 	function Formular()
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Ficha do Aluno em Branco" );
-		$this->processoAp = "746";
+		$this->processoAp = "999204";
 	}
 }
 
