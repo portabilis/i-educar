@@ -107,7 +107,7 @@ class indice extends clsCadastro
 		
 		$this->campoLista("ref_cod_turma","Turma",array('' => 'Selecione'),'',"",false,"","",false,true);		
 	
-		$this->campoLista( "ref_cod_matricula", "Aluno",array(''=>'Selecione'), "","",false,"Campo obrigatório","",false,false );
+		$this->campoLista( "ref_cod_matricula", "Aluno",array(''=>'Selecione'), "","",false,"Campo não obrigatório","",false,false );
 
 		$this->acao_enviar = 'acao2()';
 		$this->acao_executa_submit = false;

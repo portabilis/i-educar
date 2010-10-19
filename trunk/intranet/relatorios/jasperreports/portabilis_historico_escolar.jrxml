@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_historico_escolar" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<style name="Crosstab Data Text" isDefault="false" hAlign="Center"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="218"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["C:\\Xampp\\xampp\\htdocs\\PHPJasperXML\\"]]></defaultValueExpression>
 	</parameter>
@@ -238,7 +241,7 @@ FROM   pmieducar.aluno,
        fisica.idpes = aluno.ref_idpes AND
        aluno.cod_aluno = $P{aluno}) as data_nasc,
 
-(SELECT public.fcn_upper(COALESCE(aluno.nm_pai,'NÃO INFORMADO')) || ' e ' || public.fcn_upper(COALESCE(aluno.nm_mae,'NÃO INFORMADO'))
+(SELECT public.fcn_upper(COALESCE(aluno.nm_pai,'NAO INFORMADO')) || ' e ' || public.fcn_upper(COALESCE(aluno.nm_mae,'NAO INFORMADO'))
 FROM   pmieducar.aluno
  WHERE aluno.cod_aluno = $P{aluno}) as nome_dos_pais
 
@@ -701,89 +704,97 @@ SELECT nm_disciplina,
                 aluno.ref_idpes = fisica.idpes AND
                 aluno.cod_aluno = historico_escolar.ref_cod_aluno) as num_folha,
 
-       (select he.observacao
-          from pmieducar.historico_disciplinas hd,
-               pmieducar.historico_escolar he
-         where hd.sequencial = historico_disciplinas.sequencial AND
-               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
-               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
-               hd.ref_sequencial = he.sequencial AND
-               substring(nm_serie,1,1) = 1) as obs1,
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 1) as obs1,
 
-       (select he.observacao
-          from pmieducar.historico_disciplinas hd,
-               pmieducar.historico_escolar he
-         where hd.sequencial = historico_disciplinas.sequencial AND
-               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
-               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
-               hd.ref_sequencial = he.sequencial AND
-               substring(nm_serie,1,1) = 2) as obs2,
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 2) as obs2,
 
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 3) as obs3,
 
-       (select he.observacao
-          from pmieducar.historico_disciplinas hd,
-               pmieducar.historico_escolar he
-         where hd.sequencial = historico_disciplinas.sequencial AND
-               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
-               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
-               hd.ref_sequencial = he.sequencial AND
-               substring(nm_serie,1,1) = 3) as obs3,
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 4) as obs4,
 
-       (select he.observacao
-          from pmieducar.historico_disciplinas hd,
-               pmieducar.historico_escolar he
-         where hd.sequencial = historico_disciplinas.sequencial AND
-               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
-               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
-               hd.ref_sequencial = he.sequencial AND
-               substring(nm_serie,1,1) = 4) as obs4,
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 5) as obs5,
 
-                      (select he.observacao
-          from pmieducar.historico_disciplinas hd,
-               pmieducar.historico_escolar he
-         where hd.sequencial = historico_disciplinas.sequencial AND
-               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
-               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
-               hd.ref_sequencial = he.sequencial AND
-               substring(nm_serie,1,1) = 5) as obs5,
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 6) as obs6,
 
-       (select he.observacao
-          from pmieducar.historico_disciplinas hd,
-               pmieducar.historico_escolar he
-         where hd.sequencial = historico_disciplinas.sequencial AND
-               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
-               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
-               hd.ref_sequencial = he.sequencial AND
-               substring(nm_serie,1,1) = 6) as obs6,
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 7) as obs7,
 
-       (select he.observacao
-          from pmieducar.historico_disciplinas hd,
-               pmieducar.historico_escolar he
-         where hd.sequencial = historico_disciplinas.sequencial AND
-               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
-               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
-               hd.ref_sequencial = he.sequencial AND
-               substring(nm_serie,1,1) = 7) as obs7,
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 8) as obs8,
 
-       (select he.observacao
-          from pmieducar.historico_disciplinas hd,
-               pmieducar.historico_escolar he
-         where hd.sequencial = historico_disciplinas.sequencial AND
-               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
-               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
-               hd.ref_sequencial = he.sequencial AND
-               substring(nm_serie,1,1) = 8) as obs8,
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 9) as obs9,
 
-       (select he.observacao
-          from pmieducar.historico_disciplinas hd,
-               pmieducar.historico_escolar he
-         where hd.sequencial = historico_disciplinas.sequencial AND
-               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
-               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
-               hd.ref_sequencial = he.sequencial AND
-               substring(nm_serie,1,1) = 9) as obs9,
-
-       (SELECT CASE WHEN he.aprovado = 1 THEN 'Apro'
+       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
                     WHEN he.aprovado = 2 THEN 'Repr'
                     WHEN he.aprovado = 3  THEN 'Anda'
                     ELSE 'Tran'
@@ -794,7 +805,7 @@ SELECT nm_disciplina,
                  substring(nm_serie,1,1) = 1) as status_serie1,
 
 
-       (SELECT CASE WHEN he.aprovado = 1 THEN 'Apro'
+       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
                     WHEN he.aprovado = 2 THEN 'Repr'
                     WHEN he.aprovado = 3  THEN 'Anda'
                     ELSE 'Tran'
@@ -805,7 +816,7 @@ SELECT nm_disciplina,
                  substring(nm_serie,1,1) = 2) as status_serie2,
 
 
-       (SELECT CASE WHEN he.aprovado = 1 THEN 'Apro'
+       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
                     WHEN he.aprovado = 2 THEN 'Repr'
                     WHEN he.aprovado = 3  THEN 'Anda'
                     ELSE 'Tran'
@@ -816,7 +827,7 @@ SELECT nm_disciplina,
                  substring(nm_serie,1,1) = 3) as status_serie3,
 
 
-       (SELECT CASE WHEN he.aprovado = 1 THEN 'Apro'
+       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
                     WHEN he.aprovado = 2 THEN 'Repr'
                     WHEN he.aprovado = 3  THEN 'Anda'
                     ELSE 'Tran'
@@ -827,7 +838,7 @@ SELECT nm_disciplina,
                  substring(nm_serie,1,1) = 4) as status_serie4,
 
 
-       (SELECT CASE WHEN he.aprovado = 1 THEN 'Apro'
+       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
                     WHEN he.aprovado = 2 THEN 'Repr'
                     WHEN he.aprovado = 3  THEN 'Anda'
                     ELSE 'Tran'
@@ -838,7 +849,7 @@ SELECT nm_disciplina,
                  substring(nm_serie,1,1) = 5) as status_serie5,
 
 
-       (SELECT CASE WHEN he.aprovado = 1 THEN 'Apro'
+       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
                     WHEN he.aprovado = 2 THEN 'Repr'
                     WHEN he.aprovado = 3  THEN 'Anda'
                     ELSE 'Tran'
@@ -849,7 +860,7 @@ SELECT nm_disciplina,
                  substring(nm_serie,1,1) = 6) as status_serie6,
 
 
-       (SELECT CASE WHEN he.aprovado = 1 THEN 'Apro'
+       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
                     WHEN he.aprovado = 2 THEN 'Repr'
                     WHEN he.aprovado = 3  THEN 'Anda'
                     ELSE 'Tran'
@@ -860,7 +871,7 @@ SELECT nm_disciplina,
                  substring(nm_serie,1,1) = 7) as status_serie7,
 
 
-       (SELECT CASE WHEN he.aprovado = 1 THEN 'Apro'
+       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
                     WHEN he.aprovado = 2 THEN 'Repr'
                     WHEN he.aprovado = 3  THEN 'Anda'
                     ELSE 'Tran'
@@ -871,7 +882,7 @@ SELECT nm_disciplina,
                  substring(nm_serie,1,1) = 8) as status_serie8,
 
 
-       (SELECT CASE WHEN he.aprovado = 1 THEN 'Apro'
+       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
                     WHEN he.aprovado = 2 THEN 'Repr'
                     WHEN he.aprovado = 3  THEN 'Anda'
                     ELSE 'Tran'
@@ -881,7 +892,7 @@ SELECT nm_disciplina,
                  he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
                  substring(nm_serie,1,1) = 9) as status_serie9,
 
-(SELECT CASE WHEN faltas_globalizadas IS NOT NULL THEN
+(SELECT distinct CASE WHEN faltas_globalizadas IS NOT NULL THEN
            to_number(100::float -  (faltas_globalizadas::float / dias_letivos::float )::float * 100,'999')
 	ELSE
 	   to_number(100 - (((SELECT sum(faltas)
@@ -898,7 +909,7 @@ SELECT nm_disciplina,
         he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
         substring(nm_serie,1,1) = 1) as freq_serie1,
 
-(SELECT CASE WHEN faltas_globalizadas IS NOT NULL THEN
+(SELECT distinct CASE WHEN faltas_globalizadas IS NOT NULL THEN
            to_number(100::float -  (faltas_globalizadas::float / dias_letivos::float )::float * 100,'999')
 	ELSE
 	   to_number(100 - (((SELECT sum(faltas)
@@ -915,7 +926,7 @@ SELECT nm_disciplina,
         he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
         substring(nm_serie,1,1) = 2) as freq_serie2,
 
-(SELECT CASE WHEN faltas_globalizadas IS NOT NULL THEN
+(SELECT distinct CASE WHEN faltas_globalizadas IS NOT NULL THEN
            to_number(100::float -  (faltas_globalizadas::float / dias_letivos::float )::float * 100,'999')
 	ELSE
 	   to_number(100 - (((SELECT sum(faltas)
@@ -932,7 +943,7 @@ SELECT nm_disciplina,
         he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
         substring(nm_serie,1,1) = 3) as freq_serie3,
 
-(SELECT CASE WHEN faltas_globalizadas IS NOT NULL THEN
+(SELECT distinct CASE WHEN faltas_globalizadas IS NOT NULL THEN
            to_number(100::float -  (faltas_globalizadas::float / dias_letivos::float )::float * 100,'999')
 	ELSE
 	   to_number(100 - (((SELECT sum(faltas)
@@ -949,7 +960,7 @@ SELECT nm_disciplina,
         he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
         substring(nm_serie,1,1) = 4) as freq_serie4,
 
-(SELECT CASE WHEN faltas_globalizadas IS NOT NULL THEN
+(SELECT distinct CASE WHEN faltas_globalizadas IS NOT NULL THEN
            to_number(100::float -  (faltas_globalizadas::float / dias_letivos::float )::float * 100,'999')
 	ELSE
 	   to_number(100 - (((SELECT sum(faltas)
@@ -966,7 +977,7 @@ SELECT nm_disciplina,
         he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
         substring(nm_serie,1,1) = 5) as freq_serie5,
 
-(SELECT CASE WHEN faltas_globalizadas IS NOT NULL THEN
+(SELECT distinct CASE WHEN faltas_globalizadas IS NOT NULL THEN
            to_number(100::float -  (faltas_globalizadas::float / dias_letivos::float )::float * 100,'999')
 	ELSE
 	   to_number(100 - (((SELECT sum(faltas)
@@ -983,7 +994,7 @@ SELECT nm_disciplina,
         he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
         substring(nm_serie,1,1) = 6) as freq_serie6,
 
-(SELECT CASE WHEN faltas_globalizadas IS NOT NULL THEN
+(SELECT distinct CASE WHEN faltas_globalizadas IS NOT NULL THEN
            to_number(100::float -  (faltas_globalizadas::float / dias_letivos::float )::float * 100,'999')
 	ELSE
 	   to_number(100 - (((SELECT sum(faltas)
@@ -1000,7 +1011,7 @@ SELECT nm_disciplina,
         he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
         substring(nm_serie,1,1) = 7) as freq_serie7,
 
-(SELECT CASE WHEN faltas_globalizadas IS NOT NULL THEN
+(SELECT distinct CASE WHEN faltas_globalizadas IS NOT NULL THEN
            to_number(100::float -  (faltas_globalizadas::float / dias_letivos::float )::float * 100,'999')
 	ELSE
 	   to_number(100 - (((SELECT sum(faltas)
@@ -1017,7 +1028,7 @@ SELECT nm_disciplina,
         he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
         substring(nm_serie,1,1) = 8) as freq_serie8,
 
-(SELECT CASE WHEN faltas_globalizadas IS NOT NULL THEN
+(SELECT distinct CASE WHEN faltas_globalizadas IS NOT NULL THEN
            to_number(100::float -  (faltas_globalizadas::float / dias_letivos::float )::float * 100,'999')
 	ELSE
 	   to_number(100 - (((SELECT sum(faltas)
@@ -1052,297 +1063,103 @@ WHERE  instituicao.cod_instituicao = $P{instituicao} AND
 GROUP BY nm_disciplina
 ORDER BY 1 ASC]]>
 	</queryString>
-	<field name="nm_disciplina" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nota" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nota_1serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nota_2serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nota_3serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nota_4serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nota_5serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nota_6serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nota_7serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nota_8serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nota_9serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="ano_1serie" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_1serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_cidade_1serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_uf_1serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="ano_2serie" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_2serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_cidade_2serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_uf_2serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="ano_3serie" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_3serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_cidade_3serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_uf_3serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="ano_4serie" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_4serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_cidade_4serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_uf_4serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="ano_5serie" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_5serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_cidade_5serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_uf_5serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="ano_6serie" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_6serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_cidade_6serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_uf_6serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="ano_7serie" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_7serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_cidade_7serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_uf_7serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="ano_8serie" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_8serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_cidade_8serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_uf_8serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="ano_9serie" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_9serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_cidade_9serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escola_uf_9serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="data_atual" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="cod_aluno" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nm_instituicao" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nm_termo" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nm_livro" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="num_folha" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="obs1" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="obs2" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="obs3" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="obs4" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="obs5" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="obs6" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="obs7" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="obs8" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="obs9" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="status_serie1" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="status_serie2" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="status_serie3" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="status_serie4" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="status_serie5" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="status_serie6" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="status_serie7" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="status_serie8" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="status_serie9" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="freq_serie1" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="freq_serie2" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="freq_serie3" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="freq_serie4" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="freq_serie5" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="freq_serie6" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="freq_serie7" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="freq_serie8" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="freq_serie9" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="quebra" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nm_escola" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="tipo_logradouro" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="logradouro" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="municipio" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="bairro" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="uf_municipio" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="numero" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="cep" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="fone_ddd" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="fone" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="email" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="hora_atual" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nome_aluno" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="cidade_nascimento_uf" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="data_nasc" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nome_dos_pais" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="nm_disciplina" class="java.lang.String"/>
+	<field name="nota" class="java.lang.String"/>
+	<field name="nota_1serie" class="java.lang.String"/>
+	<field name="nota_2serie" class="java.lang.String"/>
+	<field name="nota_3serie" class="java.lang.String"/>
+	<field name="nota_4serie" class="java.lang.String"/>
+	<field name="nota_5serie" class="java.lang.String"/>
+	<field name="nota_6serie" class="java.lang.String"/>
+	<field name="nota_7serie" class="java.lang.String"/>
+	<field name="nota_8serie" class="java.lang.String"/>
+	<field name="nota_9serie" class="java.lang.String"/>
+	<field name="ano_1serie" class="java.lang.Integer"/>
+	<field name="escola_1serie" class="java.lang.String"/>
+	<field name="escola_cidade_1serie" class="java.lang.String"/>
+	<field name="escola_uf_1serie" class="java.lang.String"/>
+	<field name="ano_2serie" class="java.lang.Integer"/>
+	<field name="escola_2serie" class="java.lang.String"/>
+	<field name="escola_cidade_2serie" class="java.lang.String"/>
+	<field name="escola_uf_2serie" class="java.lang.String"/>
+	<field name="ano_3serie" class="java.lang.Integer"/>
+	<field name="escola_3serie" class="java.lang.String"/>
+	<field name="escola_cidade_3serie" class="java.lang.String"/>
+	<field name="escola_uf_3serie" class="java.lang.String"/>
+	<field name="ano_4serie" class="java.lang.Integer"/>
+	<field name="escola_4serie" class="java.lang.String"/>
+	<field name="escola_cidade_4serie" class="java.lang.String"/>
+	<field name="escola_uf_4serie" class="java.lang.String"/>
+	<field name="ano_5serie" class="java.lang.Integer"/>
+	<field name="escola_5serie" class="java.lang.String"/>
+	<field name="escola_cidade_5serie" class="java.lang.String"/>
+	<field name="escola_uf_5serie" class="java.lang.String"/>
+	<field name="ano_6serie" class="java.lang.Integer"/>
+	<field name="escola_6serie" class="java.lang.String"/>
+	<field name="escola_cidade_6serie" class="java.lang.String"/>
+	<field name="escola_uf_6serie" class="java.lang.String"/>
+	<field name="ano_7serie" class="java.lang.Integer"/>
+	<field name="escola_7serie" class="java.lang.String"/>
+	<field name="escola_cidade_7serie" class="java.lang.String"/>
+	<field name="escola_uf_7serie" class="java.lang.String"/>
+	<field name="ano_8serie" class="java.lang.Integer"/>
+	<field name="escola_8serie" class="java.lang.String"/>
+	<field name="escola_cidade_8serie" class="java.lang.String"/>
+	<field name="escola_uf_8serie" class="java.lang.String"/>
+	<field name="ano_9serie" class="java.lang.Integer"/>
+	<field name="escola_9serie" class="java.lang.String"/>
+	<field name="escola_cidade_9serie" class="java.lang.String"/>
+	<field name="escola_uf_9serie" class="java.lang.String"/>
+	<field name="data_atual" class="java.lang.String"/>
+	<field name="cod_aluno" class="java.lang.Integer"/>
+	<field name="nm_instituicao" class="java.lang.String"/>
+	<field name="nm_termo" class="java.math.BigDecimal"/>
+	<field name="nm_livro" class="java.lang.String"/>
+	<field name="num_folha" class="java.math.BigDecimal"/>
+	<field name="obs1" class="java.lang.String"/>
+	<field name="obs2" class="java.lang.String"/>
+	<field name="obs3" class="java.lang.String"/>
+	<field name="obs4" class="java.lang.String"/>
+	<field name="obs5" class="java.lang.String"/>
+	<field name="obs6" class="java.lang.String"/>
+	<field name="obs7" class="java.lang.String"/>
+	<field name="obs8" class="java.lang.String"/>
+	<field name="obs9" class="java.lang.String"/>
+	<field name="status_serie1" class="java.lang.String"/>
+	<field name="status_serie2" class="java.lang.String"/>
+	<field name="status_serie3" class="java.lang.String"/>
+	<field name="status_serie4" class="java.lang.String"/>
+	<field name="status_serie5" class="java.lang.String"/>
+	<field name="status_serie6" class="java.lang.String"/>
+	<field name="status_serie7" class="java.lang.String"/>
+	<field name="status_serie8" class="java.lang.String"/>
+	<field name="status_serie9" class="java.lang.String"/>
+	<field name="freq_serie1" class="java.math.BigDecimal"/>
+	<field name="freq_serie2" class="java.math.BigDecimal"/>
+	<field name="freq_serie3" class="java.math.BigDecimal"/>
+	<field name="freq_serie4" class="java.math.BigDecimal"/>
+	<field name="freq_serie5" class="java.math.BigDecimal"/>
+	<field name="freq_serie6" class="java.math.BigDecimal"/>
+	<field name="freq_serie7" class="java.math.BigDecimal"/>
+	<field name="freq_serie8" class="java.math.BigDecimal"/>
+	<field name="freq_serie9" class="java.math.BigDecimal"/>
+	<field name="quebra" class="java.lang.Integer"/>
+	<field name="nm_escola" class="java.lang.String"/>
+	<field name="tipo_logradouro" class="java.lang.String"/>
+	<field name="logradouro" class="java.lang.String"/>
+	<field name="municipio" class="java.lang.String"/>
+	<field name="bairro" class="java.lang.String"/>
+	<field name="uf_municipio" class="java.lang.String"/>
+	<field name="numero" class="java.math.BigDecimal"/>
+	<field name="cep" class="java.lang.String"/>
+	<field name="fone_ddd" class="java.math.BigDecimal"/>
+	<field name="fone" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="hora_atual" class="java.lang.String"/>
+	<field name="nome_aluno" class="java.lang.String"/>
+	<field name="cidade_nascimento_uf" class="java.lang.String"/>
+	<field name="data_nasc" class="java.lang.String"/>
+	<field name="nome_dos_pais" class="java.lang.String"/>
 	<group name="quebra">
 		<groupExpression><![CDATA[$F{quebra}]]></groupExpression>
 		<groupFooter>
@@ -2097,9 +1914,6 @@ ORDER BY 1 ASC]]>
 					</textElement>
 					<text><![CDATA[%FREQUÊNCIA]]></text>
 				</staticText>
-				<rectangle>
-					<reportElement mode="Transparent" x="5" y="43" width="545" height="323"/>
-				</rectangle>
 				<staticText>
 					<reportElement x="10" y="45" width="51" height="13"/>
 					<textElement>
@@ -2114,6 +1928,18 @@ ORDER BY 1 ASC]]>
 					</textElement>
 					<text><![CDATA[ANO]]></text>
 				</staticText>
+				<line>
+					<reportElement x="5" y="367" width="545" height="1"/>
+				</line>
+				<line>
+					<reportElement x="550" y="44" width="1" height="323"/>
+				</line>
+				<line>
+					<reportElement x="5" y="44" width="1" height="323"/>
+				</line>
+				<line>
+					<reportElement x="6" y="44" width="544" height="1"/>
+				</line>
 			</band>
 		</groupFooter>
 	</group>
@@ -2230,7 +2056,7 @@ ORDER BY 1 ASC]]>
 			</staticText>
 			<image>
 				<reportElement x="9" y="8" width="94" height="65"/>
-				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
+				<imageExpression class="java.lang.String"><![CDATA["C:\\xampp\\htdocs\\ieducar\\intranet\\relatorios\\jasperreports\\portabilis.jpg"]]></imageExpression>
 			</image>
 			<line>
 				<reportElement x="376" y="5" width="1" height="100"/>
@@ -2291,13 +2117,6 @@ ORDER BY 1 ASC]]>
 				<textFieldExpression class="java.lang.String"><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="105" y="77" width="142" height="13" forecolor="#000033"/>
-				<textElement>
-					<font size="8" isBold="true" isItalic="false"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
 				<reportElement x="105" y="63" width="142" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
@@ -2323,7 +2142,14 @@ ORDER BY 1 ASC]]>
 				<textElement lineSpacing="1_1_2">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_dos_pais}+", estando no curso ENSINO FUNDAMENTAL conforme Histórico Escolar."]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_dos_pais}+", frequêntaou o ENSINO FUNDAMENTAL conforme Histórico Escolar."]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="105" y="77" width="142" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -2332,13 +2158,6 @@ ORDER BY 1 ASC]]>
 	</columnHeader>
 	<detail>
 		<band height="15" splitType="Stretch">
-			<textField isBlankWhenNull="true">
-				<reportElement x="10" y="1" width="129" height="13" isRemoveLineWhenBlank="true"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_disciplina}]]></textFieldExpression>
-			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="149" y="1" width="36" height="13" isRemoveLineWhenBlank="true"/>
 				<textElement textAlignment="Center">
@@ -2401,6 +2220,13 @@ ORDER BY 1 ASC]]>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota_9serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="10" y="1" width="129" height="13" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_disciplina}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

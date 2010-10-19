@@ -86,6 +86,7 @@ class indice extends clsCadastro
 	var $nm_disciplina;
 	var $curso_com_exame = 0;
 	var $ref_cod_matricula;
+	var $aux_cod_matricula;
 
 	var $page_y = 135;
 
@@ -149,10 +150,16 @@ class indice extends clsCadastro
 	
 	*/
 	//echo($_POST['ano']);
-
+    if (($_POST['ref_cod_matricula']) == 0){
+	  $aux_cod_matricula = 0;
+	}
+	else{
+	  $aux_cod_matricula = $_POST['ref_cod_matricula'];
+	}
+	
 	$PHPJasperXML = new PHPJasperXML();
 	$PHPJasperXML->debugsql=false;
-	$PHPJasperXML->arrayParameter=array("ano"=>$_POST['ano'],"instituicao"=>$_POST['ref_cod_instituicao'],"escola"=>$_POST['ref_cod_escola'],"curso"=>$_POST['ref_cod_curso'],"serie"=>$_POST['ref_ref_cod_serie'],"turma"=>$_POST['ref_cod_turma'],"matricula"=>$_POST['ref_cod_matricula']); 
+	$PHPJasperXML->arrayParameter=array("ano"=>$_POST['ano'],"instituicao"=>$_POST['ref_cod_instituicao'],"escola"=>$_POST['ref_cod_escola'],"curso"=>$_POST['ref_cod_curso'],"serie"=>$_POST['ref_ref_cod_serie'],"turma"=>$_POST['ref_cod_turma'],"matricula"=>$aux_cod_matricula); 
     $PHPJasperXML->xml_dismantle($xml);
 
 	$PHPJasperXML->transferDBtoArray($server,$user,$pass,$db,$port);
