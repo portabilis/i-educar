@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_historico_escolar" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="218"/>
+	<property name="ireport.y" value="0"/>
 	<style name="Crosstab Data Text" hAlign="Center"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["C:\\Xampp\\xampp\\htdocs\\PHPJasperXML\\"]]></defaultValueExpression>
@@ -2056,7 +2056,7 @@ ORDER BY 1 ASC]]>
 			</staticText>
 			<image>
 				<reportElement x="9" y="8" width="94" height="65"/>
-				<imageExpression class="java.lang.String"><![CDATA["C:\\xampp\\htdocs\\ieducar\\intranet\\relatorios\\jasperreports\\portabilis.jpg"]]></imageExpression>
+				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
 			</image>
 			<line>
 				<reportElement x="376" y="5" width="1" height="100"/>

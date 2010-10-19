@@ -233,7 +233,7 @@ ORDER BY nm_escola, nome_aluno]]>
 			</textField>
 			<image>
 				<reportElement x="1" y="0" width="100" height="65"/>
-				<imageExpression class="java.lang.String"><![CDATA["C:\\xampp\\htdocs\\ieducar\\intranet\\relatorios\\jasperreports\\portabilis.jpg"]]></imageExpression>
+				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement x="102" y="53" width="201" height="13"/>
