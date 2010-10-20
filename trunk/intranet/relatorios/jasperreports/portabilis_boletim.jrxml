@@ -3082,10 +3082,10 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
                                                nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
                                                nota_aluno.matricula_id = matricula.cod_matricula AND
 											   nota_componente_curricular_media.nota_aluno_id = nota_componente_curricular.nota_aluno_id  AND
-											   nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id)) as exame12
+											   nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id)) as exame12,
 
 /* Fim Nota Exame caso exista */
-
+(select '' as field1)
 
   FROM pmieducar.aluno,
        pmieducar.matricula,
@@ -3312,6 +3312,7 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 	<field name="exame10" class="java.lang.String"/>
 	<field name="exame11" class="java.lang.String"/>
 	<field name="exame12" class="java.lang.String"/>
+	<field name="?column?" class="java.lang.String"/>
 	<sortField name="cod_matricula"/>
 	<filterExpression><![CDATA[$P{JASPER_REPORT}]]></filterExpression>
 	<group name="matricula">
@@ -3319,85 +3320,40 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 		<groupHeader>
 			<band height="391">
 				<textField>
-					<reportElement mode="Opaque" x="3" y="222" width="537" height="15" backcolor="#F0F0F0"/>
+					<reportElement mode="Opaque" x="3" y="102" width="537" height="15" backcolor="#F0F0F0"/>
 					<textElement/>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{field1}]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement mode="Opaque" x="3" y="262" width="537" height="15" backcolor="#F0F0F0"/>
-					<textElement/>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{field1}]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement mode="Opaque" x="3" y="302" width="537" height="15" backcolor="#F0F0F0"/>
-					<textElement/>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{field1}]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement mode="Opaque" x="3" y="101" width="537" height="15" backcolor="#F0F0F0"/>
-					<textElement/>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{field}]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement mode="Opaque" x="3" y="182" width="537" height="15" backcolor="#F0F0F0"/>
-					<textElement/>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{field1}]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement mode="Opaque" x="3" y="142" width="537" height="15" backcolor="#F0F0F0"/>
 					<textElement/>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{field1}]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="3" y="182" width="537" height="15" backcolor="#F0F0F0"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="3" y="222" width="537" height="15" backcolor="#F0F0F0"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="3" y="262" width="537" height="15" backcolor="#F0F0F0"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="3" y="302" width="537" height="15" backcolor="#F0F0F0"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement mode="Opaque" x="3" y="344" width="537" height="15" backcolor="#F0F0F0"/>
 					<textElement/>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{field1}]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[]]></textFieldExpression>
 				</textField>
-				<staticText>
-					<reportElement x="54" y="75" width="73" height="15"/>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-					<text><![CDATA[DISCIPLINA]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="149" y="67" width="43" height="15"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<text><![CDATA[1º BIM.]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="205" y="67" width="43" height="15"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<text><![CDATA[2º BIM.]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="259" y="67" width="43" height="15"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<text><![CDATA[3º BIM.]]></text>
-				</staticText>
-				<line>
-					<reportElement x="256" y="66" width="1" height="32"/>
-				</line>
-				<staticText>
-					<reportElement x="379" y="67" width="34" height="15"/>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-					<text><![CDATA[MÉDIA]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="418" y="67" width="38" height="15"/>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-					<text><![CDATA[EXAME]]></text>
-				</staticText>
 				<staticText>
 					<reportElement x="483" y="67" width="50" height="15"/>
 					<textElement textAlignment="Center">
@@ -4159,12 +4115,12 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 					</textElement>
 					<textFieldExpression class="java.lang.Long"><![CDATA[$F{freq_componente11}]]></textFieldExpression>
 				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="5" y="221" width="138" height="17"/>
-					<textElement>
+				<textField>
+					<reportElement x="467" y="344" width="29" height="15"/>
+					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina7}]]></textFieldExpression>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$F{freq_aux}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
 					<reportElement x="149" y="221" width="30" height="17"/>
@@ -4793,13 +4749,58 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 				<line>
 					<reportElement x="0" y="0" width="542" height="1"/>
 				</line>
-				<textField>
-					<reportElement x="467" y="344" width="29" height="15"/>
+				<textField isBlankWhenNull="true">
+					<reportElement x="5" y="221" width="138" height="17"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina7}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="54" y="75" width="73" height="15"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
-					<textFieldExpression class="java.lang.Double"><![CDATA[$F{freq_aux}]]></textFieldExpression>
-				</textField>
+					<text><![CDATA[DISCIPLINA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="149" y="67" width="43" height="15"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[1º BIM.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="205" y="67" width="43" height="15"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[2º BIM.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="259" y="67" width="43" height="15"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[3º BIM.]]></text>
+				</staticText>
+				<line>
+					<reportElement x="256" y="66" width="1" height="32"/>
+				</line>
+				<staticText>
+					<reportElement x="379" y="67" width="34" height="15"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[MÉDIA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="418" y="67" width="38" height="15"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[EXAME]]></text>
+				</staticText>
 			</band>
 		</groupHeader>
 		<groupFooter>
