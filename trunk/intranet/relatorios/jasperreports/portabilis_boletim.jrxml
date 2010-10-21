@@ -2371,14 +2371,14 @@
 (SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id)
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) as tot_falta1,
@@ -2386,14 +2386,14 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 (SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id) + 1
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) as tot_falta2,
@@ -2401,14 +2401,14 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 (SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id) + 2
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) as tot_falta3,
@@ -2416,14 +2416,14 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 (SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id) + 3
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) as tot_falta4,
@@ -2431,14 +2431,14 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 (SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id) + 4
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) as tot_falta5,
@@ -2446,14 +2446,14 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 (SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id) + 5
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) as tot_falta6,
@@ -2461,14 +2461,14 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 (SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id) + 6
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) as tot_falta7,
@@ -2476,14 +2476,14 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 (SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id) + 7
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) as tot_falta8,
@@ -2491,14 +2491,14 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 (SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id) + 8
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) as tot_falta9,
@@ -2506,14 +2506,14 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 (SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id) + 9
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) as tot_falta10,
@@ -2521,14 +2521,14 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 (SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id) + 10
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) as tot_falta11,
@@ -2536,14 +2536,14 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 (SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id) + 11
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) as tot_falta12,
@@ -2553,14 +2553,14 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 (100-(((SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id)
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) * 75)/200.00)) as freq_componente1,
@@ -2568,14 +2568,14 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 (100-(((SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id) + 1
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) * 75)/200.00)) as freq_componente2,
@@ -2583,14 +2583,14 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 (100-(((SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id) + 2
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) * 75)/200.00)) as freq_componente3,
@@ -2598,14 +2598,14 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 (100-(((SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id) + 3
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) * 75)/200.00)) as freq_componente4,
@@ -2613,14 +2613,14 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 (100-(((SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id) + 4
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) * 75)/200.00)) as freq_componente5,
@@ -2628,14 +2628,14 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 (100-(((SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id) + 5
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) * 75)/200.00)) as freq_componente6,
@@ -2643,14 +2643,14 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 (100-(((SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id) + 6
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) * 75)/200.00)) as freq_componente7,
@@ -2658,14 +2658,14 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 (100-(((SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id) + 7
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) * 75)/200.00)) as freq_componente8,
@@ -2673,14 +2673,14 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 (100-(((SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id) + 8
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) * 75)/200.00)) as freq_componente9,
@@ -2688,14 +2688,14 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 (100-(((SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id) + 9
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) * 75)/200.00)) as freq_componente10,
@@ -2703,14 +2703,14 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 (100-(((SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id) + 10
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) * 75)/200.00)) as freq_componente11,
@@ -2718,14 +2718,14 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
 (100-(((SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
-WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
       falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
       falta_aluno.tipo_falta = 2 AND
       falta_aluno.matricula_id = matricula.cod_matricula AND
       falta_componente_curricular.componente_curricular_id = (SELECT min(falta_componente_curricular.componente_curricular_id) + 11
                                                                   FROM modules.falta_componente_curricular,
                                                                        modules.falta_aluno
-                                                                 WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
+                                                                 WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) * 75)/200.00)) as freq_componente12,
@@ -2779,7 +2779,7 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
        modules.falta_aluno
  WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
        falta_aluno.matricula_id = matricula.cod_matricula AND
-       falta_geral.etapa in(1,2,3,4))::float / 200::float )::float * 100) as freq_aux,
+       falta_geral.etapa in('1','2','3','4'))::float / 200::float )::float * 100) as freq_aux,
 
 /* Nota Exame caso exista */
 
@@ -2802,7 +2802,7 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
                                                modules.nota_componente_curricular_media
                                          WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id and
                                                componente_curricular.instituicao_id = instituicao.cod_instituicao and
-                                               nota_componente_curricular.etapa in(3,4) and
+                                               nota_componente_curricular.etapa in('3','4') and
                                                nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
                                                nota_aluno.matricula_id = matricula.cod_matricula AND
 											   nota_componente_curricular_media.nota_aluno_id = nota_componente_curricular.nota_aluno_id  AND
@@ -2827,7 +2827,7 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
                                                modules.nota_componente_curricular_media
                                          WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id and
                                                componente_curricular.instituicao_id = instituicao.cod_instituicao and
-                                               nota_componente_curricular.etapa in(3,4) and
+                                               nota_componente_curricular.etapa in('3','4') and
                                                nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
                                                nota_aluno.matricula_id = matricula.cod_matricula AND
 											   nota_componente_curricular_media.nota_aluno_id = nota_componente_curricular.nota_aluno_id  AND
@@ -2852,7 +2852,7 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
                                                modules.nota_componente_curricular_media
                                          WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id and
                                                componente_curricular.instituicao_id = instituicao.cod_instituicao and
-                                               nota_componente_curricular.etapa in(3,4) and
+                                               nota_componente_curricular.etapa in('3','4') and
                                                nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
                                                nota_aluno.matricula_id = matricula.cod_matricula AND
 											   nota_componente_curricular_media.nota_aluno_id = nota_componente_curricular.nota_aluno_id  AND
@@ -2877,7 +2877,7 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
                                                modules.nota_componente_curricular_media
                                          WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id and
                                                componente_curricular.instituicao_id = instituicao.cod_instituicao and
-                                               nota_componente_curricular.etapa in(3,4) and
+                                               nota_componente_curricular.etapa in('3','4') and
                                                nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
                                                nota_aluno.matricula_id = matricula.cod_matricula AND
 											   nota_componente_curricular_media.nota_aluno_id = nota_componente_curricular.nota_aluno_id  AND
@@ -2902,7 +2902,7 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
                                                modules.nota_componente_curricular_media
                                          WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id and
                                                componente_curricular.instituicao_id = instituicao.cod_instituicao and
-                                               nota_componente_curricular.etapa in(3,4) and
+                                               nota_componente_curricular.etapa in('3','4') and
                                                nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
                                                nota_aluno.matricula_id = matricula.cod_matricula AND
 											   nota_componente_curricular_media.nota_aluno_id = nota_componente_curricular.nota_aluno_id  AND
@@ -2927,7 +2927,7 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
                                                modules.nota_componente_curricular_media
                                          WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id and
                                                componente_curricular.instituicao_id = instituicao.cod_instituicao and
-                                               nota_componente_curricular.etapa in(3,4) and
+                                               nota_componente_curricular.etapa in('3','4') and
                                                nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
                                                nota_aluno.matricula_id = matricula.cod_matricula AND
 											   nota_componente_curricular_media.nota_aluno_id = nota_componente_curricular.nota_aluno_id  AND
@@ -2952,7 +2952,7 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
                                                modules.nota_componente_curricular_media
                                          WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id and
                                                componente_curricular.instituicao_id = instituicao.cod_instituicao and
-                                               nota_componente_curricular.etapa in(3,4) and
+                                               nota_componente_curricular.etapa in('3','4') and
                                                nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
                                                nota_aluno.matricula_id = matricula.cod_matricula AND
 											   nota_componente_curricular_media.nota_aluno_id = nota_componente_curricular.nota_aluno_id  AND
@@ -2977,7 +2977,7 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
                                                modules.nota_componente_curricular_media
                                          WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id and
                                                componente_curricular.instituicao_id = instituicao.cod_instituicao and
-                                               nota_componente_curricular.etapa in(3,4) and
+                                               nota_componente_curricular.etapa in('3','4') and
                                                nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
                                                nota_aluno.matricula_id = matricula.cod_matricula AND
 											   nota_componente_curricular_media.nota_aluno_id = nota_componente_curricular.nota_aluno_id  AND
@@ -3002,7 +3002,7 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
                                                modules.nota_componente_curricular_media
                                          WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id and
                                                componente_curricular.instituicao_id = instituicao.cod_instituicao and
-                                               nota_componente_curricular.etapa in(3,4) and
+                                               nota_componente_curricular.etapa in('3','4') and
                                                nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
                                                nota_aluno.matricula_id = matricula.cod_matricula AND
 											   nota_componente_curricular_media.nota_aluno_id = nota_componente_curricular.nota_aluno_id  AND
@@ -3027,7 +3027,7 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
                                                modules.nota_componente_curricular_media
                                          WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id and
                                                componente_curricular.instituicao_id = instituicao.cod_instituicao and
-                                               nota_componente_curricular.etapa in(3,4) and
+                                               nota_componente_curricular.etapa in('3','4') and
                                                nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
                                                nota_aluno.matricula_id = matricula.cod_matricula AND
 											   nota_componente_curricular_media.nota_aluno_id = nota_componente_curricular.nota_aluno_id  AND
@@ -3053,7 +3053,7 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
                                                modules.nota_componente_curricular_media
                                          WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id and
                                                componente_curricular.instituicao_id = instituicao.cod_instituicao and
-                                               nota_componente_curricular.etapa in(3,4) and
+                                               nota_componente_curricular.etapa in('3','4') and
                                                nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
                                                nota_aluno.matricula_id = matricula.cod_matricula AND
 											   nota_componente_curricular_media.nota_aluno_id = nota_componente_curricular.nota_aluno_id  AND
@@ -3078,7 +3078,7 @@ WHERE falta_componente_curricular.etapa in(1,2,3,4) AND
                                                modules.nota_componente_curricular_media
                                          WHERE nota_componente_curricular.componente_curricular_id = componente_curricular.id and
                                                componente_curricular.instituicao_id = instituicao.cod_instituicao and
-                                               nota_componente_curricular.etapa in(3,4) and
+                                               nota_componente_curricular.etapa in('3','4') and
                                                nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
                                                nota_aluno.matricula_id = matricula.cod_matricula AND
 											   nota_componente_curricular_media.nota_aluno_id = nota_componente_curricular.nota_aluno_id  AND
