@@ -1,0 +1,2242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_historico_escolar" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Xampp\\xampp\\htdocs\\PHPJasperXML\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="instituicao" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="escola" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="aluno" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select nm_disciplina,
+	MAX(nota) AS NOTA,
+	MAX(nota_1serie) AS NOTA_1SERIE,
+	MAX(nota_2serie) AS NOTA_2SERIE,
+	MAX(nota_3serie) AS NOTA_3SERIE,
+	MAX(nota_4serie) AS NOTA_4SERIE,
+	MAX(nota_5serie) AS NOTA_5SERIE,
+	MAX(nota_6serie) AS NOTA_6SERIE,
+	MAX(nota_7serie) AS NOTA_7SERIE,
+	MAX(nota_8serie) AS NOTA_8SERIE,
+	MAX(nota_9serie) AS NOTA_9SERIE,
+        MAX(ano_1serie) AS ano_1serie,
+        MAX(escola_1serie) AS escola_1serie,
+        MAX(escola_cidade_1serie) AS escola_cidade_1serie,
+        MAX(escola_uf_1serie) AS escola_uf_1serie,
+	MAX(ano_2serie) AS ano_2serie,
+        MAX(escola_2serie) AS escola_2serie,
+        MAX(escola_cidade_2serie) AS escola_cidade_2serie,
+        MAX(escola_uf_2serie) AS escola_uf_2serie,
+        MAX(ano_3serie) AS ano_3serie,
+        MAX(escola_3serie) AS escola_3serie,
+        MAX(escola_cidade_3serie) AS escola_cidade_3serie,
+        MAX(escola_uf_3serie) AS escola_uf_3serie,
+        MAX(ano_4serie) AS ano_4serie,
+        MAX(escola_4serie) AS escola_4serie,
+        MAX(escola_cidade_4serie) AS escola_cidade_4serie,
+        MAX(escola_uf_4serie) AS escola_uf_4serie,
+	MAX(ano_5serie) AS ano_5serie,
+        MAX(escola_5serie) AS escola_5serie,
+        MAX(escola_cidade_5serie) AS escola_cidade_5serie,
+        MAX(escola_uf_5serie) AS escola_uf_5serie,
+        MAX(ano_6serie) AS ano_6serie,
+        MAX(escola_6serie) AS escola_6serie,
+        MAX(escola_cidade_6serie) AS escola_cidade_6serie,
+        MAX(escola_uf_6serie) AS escola_uf_6serie,
+	MAX(ano_7serie) AS ano_7serie,
+        MAX(escola_7serie) AS escola_7serie,
+        MAX(escola_cidade_7serie) AS escola_cidade_7serie,
+        MAX(escola_uf_7serie) AS escola_uf_7serie,
+        MAX(ano_8serie) AS ano_8serie,
+        MAX(escola_8serie) AS escola_8serie,
+        MAX(escola_cidade_8serie) AS escola_cidade_8serie,
+        MAX(escola_uf_8serie) AS escola_uf_8serie,
+	MAX(ano_9serie) AS ano_9serie,
+        MAX(escola_9serie) AS escola_9serie,
+        MAX(escola_cidade_9serie) AS escola_cidade_9serie,
+        MAX(escola_uf_9serie) AS escola_uf_9serie,
+        MAX(data_atual) AS data_atual,
+        MAX(cod_aluno) AS cod_aluno,
+        MAX(nm_instituicao) AS nm_instituicao,
+        MAX(num_termo) AS nm_termo,
+        MAX(num_livro) AS nm_livro,
+        MAX(num_folha) AS num_folha,
+        MAX(obs1) AS obs1,
+        MAX(obs2) AS obs2,
+        MAX(obs3) AS obs3,
+        MAX(obs4) AS obs4,
+        MAX(obs5) AS obs5,
+        MAX(obs6) AS obs6,
+        MAX(obs7) AS obs7,
+        MAX(obs8) AS obs8,
+        MAX(obs9) AS obs9,
+        MAX(status_serie1) AS status_serie1,
+        MAX(status_serie2) AS status_serie2,
+        MAX(status_serie3) AS status_serie3,
+        MAX(status_serie4) AS status_serie4,
+        MAX(status_serie5) AS status_serie5,
+        MAX(status_serie6) AS status_serie6,
+        MAX(status_serie7) AS status_serie7,
+        MAX(status_serie8) AS status_serie8,
+        MAX(status_serie9) AS status_serie9,
+        MAX(freq_serie1) AS freq_serie1,
+	MAX(freq_serie2) AS freq_serie2,
+	MAX(freq_serie3) AS freq_serie3,
+	MAX(freq_serie4) AS freq_serie4,
+	MAX(freq_serie5) AS freq_serie5,
+	MAX(freq_serie6) AS freq_serie6,
+	MAX(freq_serie7) AS freq_serie7,
+	MAX(freq_serie8) AS freq_serie8,
+	MAX(freq_serie9) AS freq_serie9,
+        MAX(quebra) AS quebra,
+
+       (select public.fcn_upper(ps.nome)
+          from cadastro.pessoa ps,
+               cadastro.juridica,
+			   pmieducar.escola
+         where escola.cod_escola = $P{escola} AND
+		       escola.ref_idpes = ps.idpes AND
+               ps.idpes = juridica.idpes) AS nm_escola,
+
+             (SELECT fcn_upper(substring(logradouro.idtlog from 1 for 1)) ||
+              lower(substring(logradouro.idtlog, 2))
+         FROM public.logradouro,
+              cadastro.juridica,
+              cadastro.pessoa ps,
+              cadastro.endereco_pessoa,
+			   pmieducar.escola
+        WHERE escola.cod_escola = $P{escola} AND
+		      juridica.idpes = ps.idpes AND
+              ps.idpes = endereco_pessoa.idpes AND
+              endereco_pessoa.idlog = logradouro.idlog AND
+              juridica.idpes = escola.ref_idpes) AS tipo_logradouro,
+
+      (SELECT logradouro.nome
+         FROM public.logradouro,
+              cadastro.juridica,
+              cadastro.pessoa ps,
+              cadastro.endereco_pessoa,
+			   pmieducar.escola
+        WHERE escola.cod_escola = $P{escola} AND
+		      juridica.idpes = ps.idpes AND
+              ps.idpes = endereco_pessoa.idpes AND
+              endereco_pessoa.idlog = logradouro.idlog AND
+              juridica.idpes = escola.ref_idpes) AS logradouro,
+
+      (SELECT municipio.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro,
+			   pmieducar.escola
+        WHERE escola.cod_escola = $P{escola} AND
+		      endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS municipio,
+
+      (SELECT bairro.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro,
+			   pmieducar.escola
+        WHERE escola.cod_escola = $P{escola} AND
+		      endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS bairro,
+
+      (SELECT municipio.sigla_uf
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro,
+			   pmieducar.escola
+        WHERE escola.cod_escola = $P{escola} AND
+		      endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS uf_municipio,
+
+      (SELECT endereco_pessoa.numero
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica,
+			  pmieducar.escola
+        WHERE escola.cod_escola = $P{escola} AND
+		      juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS numero,
+
+     (SELECT to_char(endereco_pessoa.cep, '99999-999')
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica,
+			   pmieducar.escola
+        WHERE escola.cod_escola = $P{escola} AND
+		      juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS cep,
+
+     (SELECT min(fone_pessoa.ddd)
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica,
+			  pmieducar.escola
+        WHERE escola.cod_escola = $P{escola} AND
+		      juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS fone_ddd,
+
+     (SELECT min(to_char(fone_pessoa.fone, '9999-9999'))
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica,
+			  pmieducar.escola
+        WHERE escola.cod_escola = $P{escola} AND
+		      juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS fone,
+
+     (SELECT ps.email
+         FROM cadastro.pessoa ps,
+              cadastro.juridica,
+			  pmieducar.escola
+        WHERE escola.cod_escola = $P{escola} AND
+		      juridica.idpes = ps.idpes AND
+              juridica.idpes = escola.ref_idpes) AS email,
+       to_char(CURRENT_DATE,'dd/mm/yyyy') AS data_atual,
+       to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
+
+(SELECT public.fcn_upper(pessoa.nome)
+  FROM pmieducar.aluno,
+       cadastro.fisica,
+       cadastro.pessoa
+ WHERE pessoa.idpes = fisica.idpes AND
+       fisica.idpes = aluno.ref_idpes AND
+       aluno.cod_aluno = $P{aluno}) as nome_aluno,
+
+
+(SELECT municipio.nome || '/' || municipio.sigla_uf
+  FROM  public.municipio,
+        public.bairro,
+        cadastro.pessoa ps,
+        cadastro.endereco_pessoa,
+        cadastro.fisica,
+        pmieducar.aluno
+  where ps.idpes = fisica.idpes AND
+        ps.idpes = endereco_pessoa.idpes AND
+        endereco_pessoa.idbai = bairro.idbai AND
+        bairro.idmun = municipio.idmun AND
+        fisica.idpes = aluno.ref_idpes AND
+        aluno.cod_aluno = $P{aluno}) as cidade_nascimento_uf,
+
+(SELECT to_char(fisica.data_nasc,'DD/MM/YYYY')
+FROM   pmieducar.aluno,
+       cadastro.fisica,
+       cadastro.pessoa
+ WHERE pessoa.idpes = fisica.idpes AND
+       fisica.idpes = aluno.ref_idpes AND
+       aluno.cod_aluno = $P{aluno}) as data_nasc,
+
+(SELECT public.fcn_upper(COALESCE(aluno.nm_pai,'NAO INFORMADO')) || ' e ' || public.fcn_upper(COALESCE(aluno.nm_mae,'NAO INFORMADO'))
+FROM   pmieducar.aluno
+ WHERE aluno.cod_aluno = $P{aluno}) as nome_dos_pais
+
+FROM (
+SELECT nm_disciplina,
+		nota,
+       (select hd.nota
+          from pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+               substring(nm_serie,1,1) = 1) as nota_1serie,
+       (select hd.nota
+          from pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+               substring(nm_serie,1,1) = 2) as nota_2serie,
+       (select hd.nota
+          from pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+               substring(nm_serie,1,1) = 3) as nota_3serie,
+       (select hd.nota
+          from pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+               substring(nm_serie,1,1) = 4) as nota_4serie,
+       (select hd.nota
+          from pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+               substring(nm_serie,1,1) = 5) as nota_5serie,
+       (select hd.nota
+          from pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+               substring(nm_serie,1,1) = 6) as nota_6serie,
+       (select hd.nota
+          from pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+               substring(nm_serie,1,1) = 7) as nota_7serie,
+       (select hd.nota
+          from pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+               substring(nm_serie,1,1) = 8) as nota_8serie,
+       (select hd.nota
+          from pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+               substring(nm_serie,1,1) = 9) as nota_9serie,
+
+        (select ano
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 1) as ano_1serie,
+
+        (select escola
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 1) as escola_1serie,
+
+        (select escola_cidade
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 1) as escola_cidade_1serie,
+
+
+        (select escola_uf
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 1) as escola_uf_1serie,
+
+        (select ano
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 2) as ano_2serie,
+
+        (select escola
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 2) as escola_2serie,
+
+        (select escola_cidade
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 2) as escola_cidade_2serie,
+
+
+        (select escola_uf
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 2) as escola_uf_2serie,
+
+        (select ano
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 3) as ano_3serie,
+
+        (select escola
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 3) as escola_3serie,
+
+        (select escola_cidade
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 3) as escola_cidade_3serie,
+
+
+        (select escola_uf
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 3) as escola_uf_3serie,
+
+		(select ano
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 4) as ano_4serie,
+
+        (select escola
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 4) as escola_4serie,
+
+        (select escola_cidade
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 4) as escola_cidade_4serie,
+
+
+        (select escola_uf
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 4) as escola_uf_4serie,
+
+        (select ano
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 5) as ano_5serie,
+
+        (select escola
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 5) as escola_5serie,
+
+        (select escola_cidade
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 5) as escola_cidade_5serie,
+
+
+        (select escola_uf
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 5) as escola_uf_5serie,
+
+		(select ano
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 6) as ano_6serie,
+
+        (select escola
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 6) as escola_6serie,
+
+        (select escola_cidade
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 6) as escola_cidade_6serie,
+
+
+        (select escola_uf
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 6) as escola_uf_6serie,
+
+		(select ano
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 7) as ano_7serie,
+
+        (select escola
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 7) as escola_7serie,
+
+        (select escola_cidade
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 7) as escola_cidade_7serie,
+
+
+        (select escola_uf
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 7) as escola_uf_7serie,
+
+        (select ano
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 8) as ano_8serie,
+
+        (select escola
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 8) as escola_8serie,
+
+        (select escola_cidade
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 8) as escola_cidade_8serie,
+
+
+        (select escola_uf
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 8) as escola_uf_8serie,
+
+        (select ano
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 9) as ano_9serie,
+
+        (select escola
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 9) as escola_9serie,
+
+        (select escola_cidade
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 9) as escola_cidade_9serie,
+
+
+        (select escola_uf
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 9) as escola_uf_9serie,
+
+        to_char(CURRENT_DATE,'dd/mm/yyyy') as data_atual,
+
+        historico_escolar.ref_cod_aluno as cod_aluno,
+
+        (select public.fcn_upper(nm_instituicao)
+           from pmieducar.instituicao
+          where instituicao.cod_instituicao = historico_escolar.ref_cod_instituicao) as nm_instituicao,
+
+        (SELECT documento.num_termo
+           FROM cadastro.documento,
+                cadastro.fisica,
+                pmieducar.aluno
+          WHERE documento.idpes = fisica.idpes AND
+                aluno.ref_idpes = fisica.idpes AND
+                aluno.cod_aluno = historico_escolar.ref_cod_aluno) as num_termo,
+
+        (SELECT documento.num_livro
+           FROM cadastro.documento,
+                cadastro.fisica,
+                pmieducar.aluno
+          WHERE documento.idpes = fisica.idpes AND
+                aluno.ref_idpes = fisica.idpes AND
+                aluno.cod_aluno = historico_escolar.ref_cod_aluno) as num_livro,
+
+        (SELECT documento.num_folha
+           FROM cadastro.documento,
+                cadastro.fisica,
+                pmieducar.aluno
+          WHERE documento.idpes = fisica.idpes AND
+                aluno.ref_idpes = fisica.idpes AND
+                aluno.cod_aluno = historico_escolar.ref_cod_aluno) as num_folha,
+
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 1) as obs1,
+
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 2) as obs2,
+
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 3) as obs3,
+
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 4) as obs4,
+
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 5) as obs5,
+
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 6) as obs6,
+
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 7) as obs7,
+
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 8) as obs8,
+
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 9) as obs9,
+
+       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
+                    WHEN he.aprovado = 2 THEN 'Repr'
+                    WHEN he.aprovado = 3  THEN 'Anda'
+                    ELSE 'Tran'
+                 END
+            from pmieducar.historico_escolar he
+           where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+                 he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+                 substring(nm_serie,1,1) = 1) as status_serie1,
+
+
+       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
+                    WHEN he.aprovado = 2 THEN 'Repr'
+                    WHEN he.aprovado = 3  THEN 'Anda'
+                    ELSE 'Tran'
+                 END
+            from pmieducar.historico_escolar he
+           where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+                 he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+                 substring(nm_serie,1,1) = 2) as status_serie2,
+
+
+       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
+                    WHEN he.aprovado = 2 THEN 'Repr'
+                    WHEN he.aprovado = 3  THEN 'Anda'
+                    ELSE 'Tran'
+                 END
+            from pmieducar.historico_escolar he
+           where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+                 he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+                 substring(nm_serie,1,1) = 3) as status_serie3,
+
+
+       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
+                    WHEN he.aprovado = 2 THEN 'Repr'
+                    WHEN he.aprovado = 3  THEN 'Anda'
+                    ELSE 'Tran'
+                 END
+            from pmieducar.historico_escolar he
+           where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+                 he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+                 substring(nm_serie,1,1) = 4) as status_serie4,
+
+
+       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
+                    WHEN he.aprovado = 2 THEN 'Repr'
+                    WHEN he.aprovado = 3  THEN 'Anda'
+                    ELSE 'Tran'
+                 END
+            from pmieducar.historico_escolar he
+           where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+                 he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+                 substring(nm_serie,1,1) = 5) as status_serie5,
+
+
+       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
+                    WHEN he.aprovado = 2 THEN 'Repr'
+                    WHEN he.aprovado = 3  THEN 'Anda'
+                    ELSE 'Tran'
+                 END
+            from pmieducar.historico_escolar he
+           where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+                 he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+                 substring(nm_serie,1,1) = 6) as status_serie6,
+
+
+       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
+                    WHEN he.aprovado = 2 THEN 'Repr'
+                    WHEN he.aprovado = 3  THEN 'Anda'
+                    ELSE 'Tran'
+                 END
+            from pmieducar.historico_escolar he
+           where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+                 he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+                 substring(nm_serie,1,1) = 7) as status_serie7,
+
+
+       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
+                    WHEN he.aprovado = 2 THEN 'Repr'
+                    WHEN he.aprovado = 3  THEN 'Anda'
+                    ELSE 'Tran'
+                 END
+            from pmieducar.historico_escolar he
+           where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+                 he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+                 substring(nm_serie,1,1) = 8) as status_serie8,
+
+
+       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
+                    WHEN he.aprovado = 2 THEN 'Repr'
+                    WHEN he.aprovado = 3  THEN 'Anda'
+                    ELSE 'Tran'
+                 END
+            from pmieducar.historico_escolar he
+           where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+                 he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+                 substring(nm_serie,1,1) = 9) as status_serie9,
+
+(SELECT distinct CASE WHEN faltas_globalizadas IS NOT NULL THEN
+           to_number(100::float -  (faltas_globalizadas::float / dias_letivos::float )::float * 100,'999')
+	ELSE
+	   to_number(100 - (((SELECT sum(faltas)
+              FROM pmieducar.historico_disciplinas hd,
+                   pmieducar.historico_escolar he
+             WHERE hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                   hd.ref_sequencial = he.sequencial AND
+                   he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+                   he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+                   substring(he.nm_serie,1,1) = 1) * 75)/he.carga_horaria),'999')
+	END AS frequencia
+   FROM pmieducar.historico_escolar he
+  WHERE he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+        he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+        substring(nm_serie,1,1) = 1) as freq_serie1,
+
+(SELECT distinct CASE WHEN faltas_globalizadas IS NOT NULL THEN
+           to_number(100::float -  (faltas_globalizadas::float / dias_letivos::float )::float * 100,'999')
+	ELSE
+	   to_number(100 - (((SELECT sum(faltas)
+              FROM pmieducar.historico_disciplinas hd,
+                   pmieducar.historico_escolar he
+             WHERE hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                   hd.ref_sequencial = he.sequencial AND
+                   he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+                   he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+                   substring(he.nm_serie,1,1) = 2) * 75)/he.carga_horaria),'999')
+	END AS frequencia
+   FROM pmieducar.historico_escolar he
+  WHERE he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+        he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+        substring(nm_serie,1,1) = 2) as freq_serie2,
+
+(SELECT distinct CASE WHEN faltas_globalizadas IS NOT NULL THEN
+           to_number(100::float -  (faltas_globalizadas::float / dias_letivos::float )::float * 100,'999')
+	ELSE
+	   to_number(100 - (((SELECT sum(faltas)
+              FROM pmieducar.historico_disciplinas hd,
+                   pmieducar.historico_escolar he
+             WHERE hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                   hd.ref_sequencial = he.sequencial AND
+                   he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+                   he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+                   substring(he.nm_serie,1,1) = 3) * 75)/he.carga_horaria),'999')
+	END AS frequencia
+   FROM pmieducar.historico_escolar he
+  WHERE he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+        he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+        substring(nm_serie,1,1) = 3) as freq_serie3,
+
+(SELECT distinct CASE WHEN faltas_globalizadas IS NOT NULL THEN
+           to_number(100::float -  (faltas_globalizadas::float / dias_letivos::float )::float * 100,'999')
+	ELSE
+	   to_number(100 - (((SELECT sum(faltas)
+              FROM pmieducar.historico_disciplinas hd,
+                   pmieducar.historico_escolar he
+             WHERE hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                   hd.ref_sequencial = he.sequencial AND
+                   he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+                   he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+                   substring(he.nm_serie,1,1) = 4) * 75)/he.carga_horaria),'999')
+	END AS frequencia
+   FROM pmieducar.historico_escolar he
+  WHERE he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+        he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+        substring(nm_serie,1,1) = 4) as freq_serie4,
+
+(SELECT distinct CASE WHEN faltas_globalizadas IS NOT NULL THEN
+           to_number(100::float -  (faltas_globalizadas::float / dias_letivos::float )::float * 100,'999')
+	ELSE
+	   to_number(100 - (((SELECT sum(faltas)
+              FROM pmieducar.historico_disciplinas hd,
+                   pmieducar.historico_escolar he
+             WHERE hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                   hd.ref_sequencial = he.sequencial AND
+                   he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+                   he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+                   substring(he.nm_serie,1,1) = 5) * 75)/he.carga_horaria),'999')
+	END AS frequencia
+   FROM pmieducar.historico_escolar he
+  WHERE he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+        he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+        substring(nm_serie,1,1) = 5) as freq_serie5,
+
+(SELECT distinct CASE WHEN faltas_globalizadas IS NOT NULL THEN
+           to_number(100::float -  (faltas_globalizadas::float / dias_letivos::float )::float * 100,'999')
+	ELSE
+	   to_number(100 - (((SELECT sum(faltas)
+              FROM pmieducar.historico_disciplinas hd,
+                   pmieducar.historico_escolar he
+             WHERE hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                   hd.ref_sequencial = he.sequencial AND
+                   he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+                   he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+                   substring(he.nm_serie,1,1) = 6) * 75)/he.carga_horaria),'999')
+	END AS frequencia
+   FROM pmieducar.historico_escolar he
+  WHERE he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+        he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+        substring(nm_serie,1,1) = 6) as freq_serie6,
+
+(SELECT distinct CASE WHEN faltas_globalizadas IS NOT NULL THEN
+           to_number(100::float -  (faltas_globalizadas::float / dias_letivos::float )::float * 100,'999')
+	ELSE
+	   to_number(100 - (((SELECT sum(faltas)
+              FROM pmieducar.historico_disciplinas hd,
+                   pmieducar.historico_escolar he
+             WHERE hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                   hd.ref_sequencial = he.sequencial AND
+                   he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+                   he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+                   substring(he.nm_serie,1,1) = 7) * 75)/he.carga_horaria),'999')
+	END AS frequencia
+   FROM pmieducar.historico_escolar he
+  WHERE he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+        he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+        substring(nm_serie,1,1) = 7) as freq_serie7,
+
+(SELECT distinct CASE WHEN faltas_globalizadas IS NOT NULL THEN
+           to_number(100::float -  (faltas_globalizadas::float / dias_letivos::float )::float * 100,'999')
+	ELSE
+	   to_number(100 - (((SELECT sum(faltas)
+              FROM pmieducar.historico_disciplinas hd,
+                   pmieducar.historico_escolar he
+             WHERE hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                   hd.ref_sequencial = he.sequencial AND
+                   he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+                   he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+                   substring(he.nm_serie,1,1) = 8) * 75)/he.carga_horaria),'999')
+	END AS frequencia
+   FROM pmieducar.historico_escolar he
+  WHERE he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+        he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+        substring(nm_serie,1,1) = 8) as freq_serie8,
+
+(SELECT distinct CASE WHEN faltas_globalizadas IS NOT NULL THEN
+           to_number(100::float -  (faltas_globalizadas::float / dias_letivos::float )::float * 100,'999')
+	ELSE
+	   to_number(100 - (((SELECT sum(faltas)
+              FROM pmieducar.historico_disciplinas hd,
+                   pmieducar.historico_escolar he
+             WHERE hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                   hd.ref_sequencial = he.sequencial AND
+                   he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+                   he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+                   substring(he.nm_serie,1,1) = 9) * 75)/he.carga_horaria),'999')
+	END AS frequencia
+   FROM pmieducar.historico_escolar he
+  WHERE he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+        he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+        substring(nm_serie,1,1) = 9) as freq_serie9,
+
+(SELECT 1 WHERE 1 = 1) AS quebra
+
+
+  FROM pmieducar.historico_escolar,
+       pmieducar.historico_disciplinas,
+       pmieducar.instituicao,
+       pmieducar.escola
+WHERE  instituicao.cod_instituicao = $P{instituicao} AND
+       escola.ref_cod_instituicao = instituicao.cod_instituicao AND
+       historico_escolar.ref_cod_instituicao = instituicao.cod_instituicao AND
+       historico_disciplinas.ref_ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+       historico_disciplinas.ref_sequencial = historico_escolar.sequencial AND
+       historico_escolar.ref_cod_aluno = $P{aluno} AND
+       instituicao.ativo = 1
+)  AS T
+GROUP BY nm_disciplina
+ORDER BY 1 ASC]]>
+	</queryString>
+	<field name="nm_disciplina" class="java.lang.String"/>
+	<field name="nota" class="java.lang.String"/>
+	<field name="nota_1serie" class="java.lang.String"/>
+	<field name="nota_2serie" class="java.lang.String"/>
+	<field name="nota_3serie" class="java.lang.String"/>
+	<field name="nota_4serie" class="java.lang.String"/>
+	<field name="nota_5serie" class="java.lang.String"/>
+	<field name="nota_6serie" class="java.lang.String"/>
+	<field name="nota_7serie" class="java.lang.String"/>
+	<field name="nota_8serie" class="java.lang.String"/>
+	<field name="nota_9serie" class="java.lang.String"/>
+	<field name="ano_1serie" class="java.lang.Integer"/>
+	<field name="escola_1serie" class="java.lang.String"/>
+	<field name="escola_cidade_1serie" class="java.lang.String"/>
+	<field name="escola_uf_1serie" class="java.lang.String"/>
+	<field name="ano_2serie" class="java.lang.Integer"/>
+	<field name="escola_2serie" class="java.lang.String"/>
+	<field name="escola_cidade_2serie" class="java.lang.String"/>
+	<field name="escola_uf_2serie" class="java.lang.String"/>
+	<field name="ano_3serie" class="java.lang.Integer"/>
+	<field name="escola_3serie" class="java.lang.String"/>
+	<field name="escola_cidade_3serie" class="java.lang.String"/>
+	<field name="escola_uf_3serie" class="java.lang.String"/>
+	<field name="ano_4serie" class="java.lang.Integer"/>
+	<field name="escola_4serie" class="java.lang.String"/>
+	<field name="escola_cidade_4serie" class="java.lang.String"/>
+	<field name="escola_uf_4serie" class="java.lang.String"/>
+	<field name="ano_5serie" class="java.lang.Integer"/>
+	<field name="escola_5serie" class="java.lang.String"/>
+	<field name="escola_cidade_5serie" class="java.lang.String"/>
+	<field name="escola_uf_5serie" class="java.lang.String"/>
+	<field name="ano_6serie" class="java.lang.Integer"/>
+	<field name="escola_6serie" class="java.lang.String"/>
+	<field name="escola_cidade_6serie" class="java.lang.String"/>
+	<field name="escola_uf_6serie" class="java.lang.String"/>
+	<field name="ano_7serie" class="java.lang.Integer"/>
+	<field name="escola_7serie" class="java.lang.String"/>
+	<field name="escola_cidade_7serie" class="java.lang.String"/>
+	<field name="escola_uf_7serie" class="java.lang.String"/>
+	<field name="ano_8serie" class="java.lang.Integer"/>
+	<field name="escola_8serie" class="java.lang.String"/>
+	<field name="escola_cidade_8serie" class="java.lang.String"/>
+	<field name="escola_uf_8serie" class="java.lang.String"/>
+	<field name="ano_9serie" class="java.lang.Integer"/>
+	<field name="escola_9serie" class="java.lang.String"/>
+	<field name="escola_cidade_9serie" class="java.lang.String"/>
+	<field name="escola_uf_9serie" class="java.lang.String"/>
+	<field name="data_atual" class="java.lang.String"/>
+	<field name="cod_aluno" class="java.lang.Integer"/>
+	<field name="nm_instituicao" class="java.lang.String"/>
+	<field name="nm_termo" class="java.math.BigDecimal"/>
+	<field name="nm_livro" class="java.lang.String"/>
+	<field name="num_folha" class="java.math.BigDecimal"/>
+	<field name="obs1" class="java.lang.String"/>
+	<field name="obs2" class="java.lang.String"/>
+	<field name="obs3" class="java.lang.String"/>
+	<field name="obs4" class="java.lang.String"/>
+	<field name="obs5" class="java.lang.String"/>
+	<field name="obs6" class="java.lang.String"/>
+	<field name="obs7" class="java.lang.String"/>
+	<field name="obs8" class="java.lang.String"/>
+	<field name="obs9" class="java.lang.String"/>
+	<field name="status_serie1" class="java.lang.String"/>
+	<field name="status_serie2" class="java.lang.String"/>
+	<field name="status_serie3" class="java.lang.String"/>
+	<field name="status_serie4" class="java.lang.String"/>
+	<field name="status_serie5" class="java.lang.String"/>
+	<field name="status_serie6" class="java.lang.String"/>
+	<field name="status_serie7" class="java.lang.String"/>
+	<field name="status_serie8" class="java.lang.String"/>
+	<field name="status_serie9" class="java.lang.String"/>
+	<field name="freq_serie1" class="java.math.BigDecimal"/>
+	<field name="freq_serie2" class="java.math.BigDecimal"/>
+	<field name="freq_serie3" class="java.math.BigDecimal"/>
+	<field name="freq_serie4" class="java.math.BigDecimal"/>
+	<field name="freq_serie5" class="java.math.BigDecimal"/>
+	<field name="freq_serie6" class="java.math.BigDecimal"/>
+	<field name="freq_serie7" class="java.math.BigDecimal"/>
+	<field name="freq_serie8" class="java.math.BigDecimal"/>
+	<field name="freq_serie9" class="java.math.BigDecimal"/>
+	<field name="quebra" class="java.lang.Integer"/>
+	<field name="nm_escola" class="java.lang.String"/>
+	<field name="tipo_logradouro" class="java.lang.String"/>
+	<field name="logradouro" class="java.lang.String"/>
+	<field name="municipio" class="java.lang.String"/>
+	<field name="bairro" class="java.lang.String"/>
+	<field name="uf_municipio" class="java.lang.String"/>
+	<field name="numero" class="java.math.BigDecimal"/>
+	<field name="cep" class="java.lang.String"/>
+	<field name="fone_ddd" class="java.math.BigDecimal"/>
+	<field name="fone" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="hora_atual" class="java.lang.String"/>
+	<field name="nome_aluno" class="java.lang.String"/>
+	<field name="cidade_nascimento_uf" class="java.lang.String"/>
+	<field name="data_nasc" class="java.lang.String"/>
+	<field name="nome_dos_pais" class="java.lang.String"/>
+	<group name="quebra">
+		<groupExpression><![CDATA[$F{quebra}]]></groupExpression>
+		<groupFooter>
+			<band height="444">
+				<rectangle>
+					<reportElement mode="Transparent" x="5" y="3" width="545" height="32"/>
+				</rectangle>
+				<textField isBlankWhenNull="true">
+					<reportElement x="320" y="182" width="179" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_9serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="320" y="152" width="179" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_7serie}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="517" y="45" width="26" height="13"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[UF]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="517" y="60" width="26" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_1serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="517" y="75" width="26" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_2serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="517" y="91" width="26" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_3serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="517" y="107" width="26" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_4serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="517" y="122" width="26" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_5serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="517" y="136" width="26" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_6serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="517" y="152" width="26" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_7serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="517" y="167" width="26" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_8serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="320" y="167" width="179" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_8serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="517" y="182" width="26" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_9serie}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="6" y="135" width="544" height="1"/>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="320" y="60" width="179" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_1serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="320" y="75" width="179" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_2serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="320" y="91" width="179" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_3serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="320" y="107" width="179" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_4serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="320" y="122" width="179" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_5serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="320" y="137" width="179" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_6serie}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="112" y="45" width="161" height="13"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[ESTABELECIMENTO DE ENSINO]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="112" y="60" width="161" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_1serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="112" y="75" width="161" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_2serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="112" y="91" width="161" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_3serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="112" y="106" width="161" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_4serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="112" y="122" width="161" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_5serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="112" y="136" width="161" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_6serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="112" y="151" width="161" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_7serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="112" y="166" width="161" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_8serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="112" y="182" width="161" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_9serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="69" y="182" width="34" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_9serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="69" y="166" width="34" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_8serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="69" y="151" width="34" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_7serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="69" y="136" width="34" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_6serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="69" y="121" width="34" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_5serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="69" y="106" width="34" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_4serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="69" y="91" width="34" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_3serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="69" y="75" width="34" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_2serie}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="69" y="60" width="34" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_1serie}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="10" y="60" width="51" height="13"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[1ª Série]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="10" y="75" width="51" height="13"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[2ª Série]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="10" y="91" width="51" height="13"/>
+					<textElement markup="none">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[3ª Série]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="10" y="106" width="51" height="13"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[4ª Série]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="10" y="121" width="51" height="13"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[5ª Série]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="10" y="137" width="51" height="13"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[6ª Série]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="10" y="152" width="51" height="13"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[7ª Série]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="10" y="166" width="51" height="13"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[8ª Série]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="10" y="182" width="51" height="13"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[9ª Série]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="10" y="201" width="59" height="13">
+						<printWhenExpression><![CDATA[$F{obs1}.getBytes()]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Obs. 1ª Série:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="10" y="229" width="59" height="13">
+						<printWhenExpression><![CDATA[$F{obs3}.getBytes()]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Obs. 3ª Série:]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="72" y="229" width="471" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{obs3}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="10" y="257" width="59" height="13">
+						<printWhenExpression><![CDATA[$F{obs5}.getBytes()]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Obs. 5ª Série:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="10" y="272" width="59" height="13">
+						<printWhenExpression><![CDATA[$F{obs6}.getBytes()]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Obs. 6ª Série:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="10" y="315" width="59" height="13">
+						<printWhenExpression><![CDATA[$F{obs9}.getBytes()]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Obs. 9ª Série:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="10" y="301" width="59" height="13">
+						<printWhenExpression><![CDATA[$F{obs8}.getBytes()]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Obs. 8ª Série:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="10" y="286" width="59" height="13">
+						<printWhenExpression><![CDATA[$F{obs7}.getBytes()]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Obs. 7ª Série:]]></text>
+				</staticText>
+				<line>
+					<reportElement x="107" y="44" width="1" height="14"/>
+				</line>
+				<line>
+					<reportElement x="65" y="44" width="1" height="14"/>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="72" y="201" width="471" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{obs1}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="381" y="352" width="33" height="14"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Folha:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="380" y="334" width="55" height="14"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Diretor(a)]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="415" y="353" width="78" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{num_folha}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="250" y="352" width="84" height="14"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_livro}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="218" y="352" width="30" height="14"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Livro:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="217" y="334" width="55" height="14"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Secretário(a):]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="88" y="334" width="122" height="14"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio}+", "+$F{data_atual}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="65" y="352" width="112" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{nm_termo}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="10" y="352" width="53" height="14"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Registro Nº:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="10" y="334" width="76" height="14"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Município e Data:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="320" y="45" width="57" height="13"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[MUNICÍPIO]]></text>
+				</staticText>
+				<line>
+					<reportElement x="6" y="58" width="544" height="1"/>
+				</line>
+				<line>
+					<reportElement x="6" y="73" width="544" height="1"/>
+				</line>
+				<line>
+					<reportElement x="6" y="89" width="544" height="1"/>
+				</line>
+				<line>
+					<reportElement x="6" y="105" width="544" height="1"/>
+				</line>
+				<line>
+					<reportElement x="6" y="196" width="544" height="1"/>
+				</line>
+				<line>
+					<reportElement x="512" y="44" width="1" height="14"/>
+				</line>
+				<line>
+					<reportElement x="316" y="44" width="1" height="14"/>
+				</line>
+				<staticText>
+					<reportElement x="10" y="215" width="59" height="13">
+						<printWhenExpression><![CDATA[$F{obs2}.getBytes()]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Obs. 2ª Série:]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="72" y="215" width="471" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{obs2}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="72" y="244" width="471" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{obs4}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="10" y="243" width="59" height="13">
+						<printWhenExpression><![CDATA[$F{obs4}.getBytes()]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Obs. 4ª Série:]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="72" y="258" width="471" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{obs5}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="72" y="272" width="471" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{obs6}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="72" y="286" width="471" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{obs7}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="72" y="301" width="471" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{obs8}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="72" y="315" width="471" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{obs9}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="6" y="331" width="544" height="1"/>
+				</line>
+				<line>
+					<reportElement x="5" y="351" width="545" height="1"/>
+				</line>
+				<line>
+					<reportElement x="214" y="332" width="1" height="34"/>
+				</line>
+				<line>
+					<reportElement x="6" y="19" width="544" height="1"/>
+				</line>
+				<line>
+					<reportElement x="378" y="332" width="1" height="34"/>
+				</line>
+				<line>
+					<reportElement x="6" y="180" width="544" height="1"/>
+				</line>
+				<line>
+					<reportElement x="6" y="165" width="544" height="1"/>
+				</line>
+				<line>
+					<reportElement x="6" y="120" width="544" height="1"/>
+				</line>
+				<line>
+					<reportElement x="6" y="150" width="544" height="1"/>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="508" y="21" width="35" height="13"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie9}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="464" y="21" width="35" height="13"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie8}]]></textFieldExpression>
+				</textField>
+				<textField pattern="##" isBlankWhenNull="true">
+					<reportElement x="238" y="5" width="35" height="14"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{freq_serie3}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="##" isBlankWhenNull="true">
+					<reportElement x="194" y="5" width="35" height="14"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{freq_serie2}]]></textFieldExpression>
+				</textField>
+				<textField pattern="##" isBlankWhenNull="true">
+					<reportElement x="508" y="5" width="35" height="14"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{freq_serie9}]]></textFieldExpression>
+				</textField>
+				<textField pattern="##" isBlankWhenNull="true">
+					<reportElement x="149" y="5" width="35" height="14"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{freq_serie1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="##" isBlankWhenNull="true">
+					<reportElement x="282" y="5" width="35" height="14"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{freq_serie4}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="149" y="21" width="35" height="13"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="##" isBlankWhenNull="true">
+					<reportElement x="327" y="5" width="35" height="14"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{freq_serie5}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="194" y="21" width="35" height="13"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie2}]]></textFieldExpression>
+				</textField>
+				<textField pattern="##" isBlankWhenNull="true">
+					<reportElement x="371" y="5" width="35" height="14"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{freq_serie6}]]></textFieldExpression>
+				</textField>
+				<textField pattern="##" isBlankWhenNull="true">
+					<reportElement x="464" y="5" width="35" height="14"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{freq_serie8}]]></textFieldExpression>
+				</textField>
+				<textField pattern="##" isBlankWhenNull="true">
+					<reportElement x="418" y="5" width="35" height="14"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{freq_serie7}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="238" y="21" width="35" height="13"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie3}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="282" y="21" width="35" height="13"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie4}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="327" y="21" width="35" height="13"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie5}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="371" y="21" width="35" height="13"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie6}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="418" y="21" width="35" height="13"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie7}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="10" y="21" width="93" height="13"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[RESULTADO FINAL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="10" y="5" width="74" height="13"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[%FREQUÊNCIA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="10" y="45" width="51" height="13"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[SÉRIES]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="69" y="45" width="34" height="13"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[ANO]]></text>
+				</staticText>
+				<line>
+					<reportElement x="5" y="367" width="545" height="1"/>
+				</line>
+				<line>
+					<reportElement x="550" y="44" width="1" height="323"/>
+				</line>
+				<line>
+					<reportElement x="5" y="44" width="1" height="323"/>
+				</line>
+				<line>
+					<reportElement x="6" y="44" width="544" height="1"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="211" splitType="Stretch">
+			<rectangle>
+				<reportElement x="5" y="188" width="545" height="20"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="507" y="193" width="36" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[9ª Série]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="192" y="193" width="36" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[2ª Série]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="237" y="193" width="36" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[3ª Série]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="282" y="193" width="36" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[4ª Série]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="327" y="193" width="36" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[5ª Série]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="371" y="193" width="36" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[6ª Série]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="418" y="193" width="36" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[7ª Série]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="148" y="193" width="36" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[1ª Série]]></text>
+			</staticText>
+			<line>
+				<reportElement x="145" y="188" width="1" height="20"/>
+			</line>
+			<line>
+				<reportElement x="188" y="188" width="1" height="20"/>
+			</line>
+			<line>
+				<reportElement x="233" y="188" width="1" height="20"/>
+			</line>
+			<line>
+				<reportElement x="279" y="188" width="1" height="20"/>
+			</line>
+			<line>
+				<reportElement x="322" y="188" width="1" height="20"/>
+			</line>
+			<line>
+				<reportElement x="368" y="188" width="1" height="20"/>
+			</line>
+			<line>
+				<reportElement x="414" y="188" width="1" height="20"/>
+			</line>
+			<staticText>
+				<reportElement x="463" y="193" width="36" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[8ª Série]]></text>
+			</staticText>
+			<line>
+				<reportElement x="503" y="188" width="1" height="20"/>
+			</line>
+			<rectangle>
+				<reportElement x="5" y="4" width="545" height="167"/>
+			</rectangle>
+			<line>
+				<reportElement x="457" y="188" width="1" height="20"/>
+			</line>
+			<staticText>
+				<reportElement x="39" y="171" width="477" height="16"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HISTÓRICO ESCOLAR DO ENSINO FUNDAMENTAL ]]></text>
+			</staticText>
+			<image>
+				<reportElement x="9" y="8" width="94" height="65"/>
+				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="376" y="5" width="1" height="100"/>
+			</line>
+			<line>
+				<reportElement x="6" y="105" width="544" height="1"/>
+			</line>
+			<line>
+				<reportElement x="6" y="132" width="544" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="10" y="193" width="53" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DISCIPLINA]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="39" y="134" width="504" height="16"/>
+				<textElement lineSpacing="1_1_2">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Certificamos que "+$F{nome_aluno}+ ", matrícula "+$F{cod_aluno}+ ", natural de "+$F{cidade_nascimento_uf}+", nascido em "+$F{data_nasc}+", filho de"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="39" y="112" width="477" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CERTIFICADO DE CONCLUSÃO DE SÉRIE E/OU CURSO ENSINO FUNDAMENTAL]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="105" y="49" width="261" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{tipo_logradouro}+" "+$F{logradouro}+", "+$F{numero}+"     Bairro " +$F{bairro}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="250" y="77" width="116" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Fone/Fax: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="105" y="8" width="261" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_instituicao}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="250" y="63" width="116" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="105" y="63" width="142" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="105" y="22" width="261" height="13"/>
+				<textElement>
+					<font size="8" isBold="true" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[SECRETARIA MUNICIPAL DE EDUCAÇÃO E CULTURA]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="105" y="35" width="261" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="39" y="150" width="504" height="16"/>
+				<textElement lineSpacing="1_1_2">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_dos_pais}+", frequêntaou o ENSINO FUNDAMENTAL conforme Histórico Escolar."]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="105" y="77" width="142" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="149" y="1" width="36" height="13" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota_1serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="194" y="1" width="36" height="13" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota_2serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="238" y="1" width="36" height="13" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota_3serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="282" y="1" width="36" height="13" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota_4serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="327" y="1" width="36" height="13" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota_5serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="371" y="1" width="36" height="13" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota_6serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="418" y="1" width="36" height="13" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota_7serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="464" y="1" width="36" height="13" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota_8serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="508" y="1" width="36" height="13" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota_9serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="10" y="1" width="129" height="13" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_disciplina}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="8" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Immediate"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_frequencia_professor" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="0.9090909090909091"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" isDefault="false" hAlign="Center"/>
+	<subDataset name="dataset1"/>
+	<subDataset name="dataset2"/>
+	<subDataset name="dataset3"/>
+	<parameter name="ano" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="instituicao" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="escola" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="data_inicio" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[new java.util.Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="data_fim" class="java.lang.String">
+		<defaultValueExpression><![CDATA[new java.util.Date()]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT pessoa.nome,
+       funcao.nm_funcao,
+       /* (3 -> Efetivo, 4 -> Contratado, 5 -> Comissionado, 6 -> Estagiário) */
+       (SELECT CASE WHEN funcionario.ref_cod_funcionario_vinculo = 3 THEN 'Efetivo'
+                    WHEN funcionario.ref_cod_funcionario_vinculo = 4 THEN 'Contratado'
+                    WHEN funcionario.ref_cod_funcionario_vinculo = 5 THEN 'Comissionado'
+               ELSE
+                   'Estagiário'
+               END) AS situacao,
+
+       (SELECT servidor_afastamento.data_saida
+          FROM pmieducar.servidor_afastamento
+         WHERE servidor_afastamento.ref_cod_servidor = servidor.cod_servidor AND
+               servidor_afastamento.ref_ref_cod_instituicao = servidor.ref_cod_instituicao)
+            AS licenca_inicio,
+
+       (SELECT servidor_afastamento.data_retorno
+          FROM pmieducar.servidor_afastamento
+         WHERE servidor_afastamento.ref_cod_servidor = servidor.cod_servidor AND
+               servidor_afastamento.ref_ref_cod_instituicao = servidor.ref_cod_instituicao)
+            AS licenca_termino,
+
+       (SELECT motivo_afastamento.nm_motivo
+          FROM pmieducar.motivo_afastamento,
+               pmieducar.servidor_afastamento
+         WHERE servidor_afastamento.ref_cod_servidor = servidor.cod_servidor AND
+               servidor_afastamento.ref_ref_cod_instituicao = servidor.ref_cod_instituicao AND
+             servidor_afastamento.ref_cod_motivo_afastamento = motivo_afastamento.cod_motivo_afastamento)
+AS tipo_licenca,
+
+/*Retirar daqui depois*/
+
+       (SELECT CASE WHEN servidor.cod_servidor = 6 THEN 'Licenca-Premio'
+               ELSE
+                   ''
+        END) AS licenca,
+
+       (SELECT CASE WHEN servidor.cod_servidor = 6 THEN '04/05/2010'
+               ELSE
+                   ''
+        END) AS inicio,
+
+       (SELECT CASE WHEN servidor.cod_servidor = 6 THEN '04/09/2010'
+               ELSE
+                   ''
+        END) AS fim,
+
+       /*Falta ver como contar a quantidade de faltas, subconsultas abaixo, pois o sistema precisa ser
+         corrigido para este teste*/
+
+       (SELECT count(falta_atraso.tipo)
+          FROM pmieducar.falta_atraso
+         WHERE falta_atraso.ref_cod_servidor = servidor.cod_servidor AND
+               falta_atraso.ref_ref_cod_instituicao = servidor.ref_cod_instituicao AND
+               falta_atraso.ref_cod_escola = escola.cod_escola AND
+               falta_atraso.tipo = 2 AND
+               falta_atraso.justificada = 1 AND
+               to_char(falta_atraso.data_falta_atraso,'DD/MM/YYYY') >= $P{data_inicio} AND
+               to_char(falta_atraso.data_falta_atraso,'DD/MM/YYYY') <= $P{data_fim}) AS justificadas,
+
+       (SELECT count(falta_atraso.tipo)
+          FROM pmieducar.falta_atraso
+         WHERE falta_atraso.ref_cod_servidor = servidor.cod_servidor AND
+               falta_atraso.ref_ref_cod_instituicao = servidor.ref_cod_instituicao AND
+               falta_atraso.ref_cod_escola = escola.cod_escola AND
+               falta_atraso.tipo = 2 AND
+               falta_atraso.justificada = 2 AND
+               to_char(falta_atraso.data_falta_atraso,'DD/MM/YYYY') >= $P{data_inicio} AND
+               to_char(falta_atraso.data_falta_atraso,'DD/MM/YYYY') <= $P{data_fim}) AS injustificadas,
+
+       public.fcn_upper(instituicao.nm_instituicao) AS nome_instituicao,
+
+       (SELECT public.fcn_upper(ps.nome)
+          FROM cadastro.pessoa ps,
+               cadastro.juridica
+         WHERE escola.ref_idpes = juridica.idpes AND
+               juridica.idpes = ps.idpes) AS nm_escola,
+
+      (SELECT public.fcn_upper(substring(logradouro.idtlog from 1 for 1)) ||
+              lower(substring(logradouro.idtlog, 2))
+         FROM public.logradouro,
+              cadastro.juridica,
+              cadastro.pessoa ps,
+              cadastro.endereco_pessoa
+        WHERE juridica.idpes = ps.idpes AND
+              ps.idpes = endereco_pessoa.idpes AND
+              endereco_pessoa.idlog = logradouro.idlog AND
+              juridica.idpes = escola.ref_idpes) AS tipo_logradouro,
+
+      (SELECT logradouro.nome
+         FROM public.logradouro,
+              cadastro.juridica,
+              cadastro.pessoa ps,
+              cadastro.endereco_pessoa
+        WHERE juridica.idpes = ps.idpes AND
+              ps.idpes = endereco_pessoa.idpes AND
+              endereco_pessoa.idlog = logradouro.idlog AND
+              juridica.idpes = escola.ref_idpes) AS logradouro,
+
+      (SELECT municipio.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS municipio,
+
+      (SELECT bairro.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS bairro,
+
+      (SELECT municipio.sigla_uf
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS uf_municipio,
+
+      (SELECT endereco_pessoa.numero
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS numero,
+
+     (SELECT to_char(endereco_pessoa.cep, '99999-999')
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS cep,
+
+     (SELECT min(fone_pessoa.ddd)
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS fone_ddd,
+
+     (SELECT min(to_char(fone_pessoa.fone, '9999-9999'))
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS fone,
+
+     (SELECT ps.email
+         FROM cadastro.pessoa ps,
+              cadastro.juridica
+        WHERE juridica.idpes = ps.idpes AND
+              juridica.idpes = escola.ref_idpes) AS email,
+
+       to_char(current_date,'dd/mm/yyyy') AS data_atual,
+       to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual
+
+  FROM pmieducar.servidor,
+       pmieducar.servidor_funcao,
+       pmieducar.funcao,
+       portal.funcionario,
+       cadastro.fisica,
+       cadastro.pessoa,
+       pmieducar.instituicao,
+       pmieducar.escola,
+       pmieducar.escola_ano_letivo
+
+WHERE escola_ano_letivo.ano = $P{ano} AND
+      instituicao.cod_instituicao = $P{instituicao} AND
+      escola.cod_escola = $P{escola} AND
+      pessoa.idpes = fisica.idpes AND
+      funcionario.ref_cod_pessoa_fj = fisica.idpes AND
+      servidor.cod_servidor = funcionario.ref_cod_pessoa_fj AND
+      servidor.ref_cod_instituicao = servidor_funcao.ref_ref_cod_instituicao AND
+      servidor.cod_servidor = servidor_funcao.ref_cod_servidor AND
+      servidor_funcao.ref_cod_funcao = funcao.cod_funcao AND
+      instituicao.cod_instituicao = escola.ref_cod_instituicao AND
+      escola_ano_letivo.ref_cod_escola = escola.cod_escola AND
+      servidor.ativo = 1
+
+ORDER BY pessoa.nome]]>
+	</queryString>
+	<field name="nome" class="java.lang.String"/>
+	<field name="nm_funcao" class="java.lang.String"/>
+	<field name="situacao" class="java.lang.String"/>
+	<field name="licenca_inicio" class="java.sql.Timestamp"/>
+	<field name="licenca_termino" class="java.sql.Timestamp"/>
+	<field name="tipo_licenca" class="java.lang.String"/>
+	<field name="licenca" class="java.lang.String"/>
+	<field name="inicio" class="java.lang.String"/>
+	<field name="fim" class="java.lang.String"/>
+	<field name="justificadas" class="java.lang.Long"/>
+	<field name="injustificadas" class="java.lang.Long"/>
+	<field name="nome_instituicao" class="java.lang.String"/>
+	<field name="nm_escola" class="java.lang.String"/>
+	<field name="tipo_logradouro" class="java.lang.String"/>
+	<field name="logradouro" class="java.lang.String"/>
+	<field name="municipio" class="java.lang.String"/>
+	<field name="bairro" class="java.lang.String"/>
+	<field name="uf_municipio" class="java.lang.String"/>
+	<field name="numero" class="java.math.BigDecimal"/>
+	<field name="cep" class="java.lang.String"/>
+	<field name="fone_ddd" class="java.math.BigDecimal"/>
+	<field name="fone" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="data_atual" class="java.lang.String"/>
+	<field name="hora_atual" class="java.lang.String"/>
+	<variable name="faltas_justificadas_1" class="java.lang.Integer" resetType="Page" calculation="Count">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="faltas_justificadas_2" class="java.lang.Integer" resetType="Page" calculation="Count">
+		<variableExpression><![CDATA[$F{justificadas}]]></variableExpression>
+	</variable>
+	<variable name="faltas_injustificadas_1" class="java.lang.Integer" resetType="Page" calculation="Count">
+		<variableExpression><![CDATA[$F{injustificadas}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="185" splitType="Stretch">
+			<rectangle>
+				<reportElement x="6" y="153" width="785" height="32"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="359" y="52" width="120" height="13" forecolor="#000000"/>
+				<textElement>
+					<font size="8" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="102" y="40" width="253" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{tipo_logradouro}+" "+$F{logradouro}+", "+$F{numero}+"            Bairro: " +$F{bairro}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="102" y="28" width="222" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="670" y="4" width="121" height="13"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Emissão: "+$F{data_atual}+" "+$F{hora_atual}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="102" y="4" width="278" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="358" y="40" width="77" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="468" y="39" width="77" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="102" y="52" width="201" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Fone/Fax: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="11" y="164" width="160" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome do Funcionário]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="213" y="164" width="44" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Função]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="281" y="164" width="85" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Situação Funcional]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="377" y="155" width="63" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Falta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="456" y="155" width="94" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Licença]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="639" y="164" width="85" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo de Licença]]></text>
+			</staticText>
+			<line>
+				<reportElement x="446" y="153" width="1" height="32"/>
+			</line>
+			<line>
+				<reportElement x="274" y="153" width="1" height="32"/>
+			</line>
+			<line>
+				<reportElement x="184" y="153" width="1" height="32"/>
+			</line>
+			<staticText>
+				<reportElement x="221" y="108" width="368" height="16"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[BOLETIM DE FREQUÊNCIA MENSAL DOS PROFESSORES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="378" y="172" width="25" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Just.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="413" y="172" width="30" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Injust.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="374" y="170" width="188" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="454" y="172" width="34" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Início]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="518" y="172" width="39" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Término]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="102" y="16" width="278" height="13"/>
+				<textElement>
+					<font size="8" isBold="true" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[SECRETARIA MUNICIPAL DE EDUCAÇÃO E CULTURA]]></text>
+			</staticText>
+			<line>
+				<reportElement x="562" y="153" width="1" height="32"/>
+			</line>
+			<line>
+				<reportElement x="374" y="153" width="1" height="32"/>
+			</line>
+			<line>
+				<reportElement x="501" y="171" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="410" y="171" width="1" height="14"/>
+			</line>
+			<image>
+				<reportElement x="1" y="0" width="100" height="65"/>
+				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="24" splitType="Stretch">
+			<rectangle>
+				<reportElement x="6" y="0" width="785" height="21"/>
+			</rectangle>
+			<textField>
+				<reportElement x="11" y="4" width="160" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="184" y="1" width="1" height="20"/>
+			</line>
+			<line>
+				<reportElement x="274" y="1" width="1" height="20"/>
+			</line>
+			<line>
+				<reportElement x="374" y="1" width="1" height="20"/>
+			</line>
+			<line>
+				<reportElement x="562" y="0" width="1" height="21"/>
+			</line>
+			<line>
+				<reportElement x="446" y="1" width="1" height="20"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="187" y="4" width="84" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_funcao}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="280" y="4" width="86" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{situacao}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="501" y="0" width="1" height="21"/>
+			</line>
+			<line>
+				<reportElement x="410" y="1" width="1" height="20"/>
+			</line>
+			<elementGroup/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="380" y="4" width="19" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{justificadas}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="417" y="4" width="19" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{injustificadas}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="449" y="4" width="49" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{inicio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="508" y="4" width="49" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{fim}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="570" y="4" width="209" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{licenca}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="101" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="67" splitType="Stretch"/>
+	</summary>
+</jasperReport>

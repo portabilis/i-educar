@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="atestado_matricula" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<parameter name="ano" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="instituicao" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="escola" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="curso" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="serie" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="turma" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="aluno" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT fcn_upper(instituicao.nm_instituicao) AS nm_instituicao,
+       escola.cod_escola as cod_escola,
+       escola_ano_letivo.ano,
+       fcn_upper(curso.nm_curso) as nm_curso,
+       serie.nm_serie as nm_serie,
+       fcn_upper(turma.nm_turma) as nm_turma,
+       aluno.cod_aluno as cod_aluno,
+       matricula.cod_matricula as cod_matricula,
+       fcn_upper(pessoa.nome) as nome,
+       fcn_upper(instituicao.cidade) as cidade,
+
+(SELECT fcn_upper(ps.nome)
+          FROM cadastro.pessoa ps,
+               cadastro.juridica
+         WHERE escola.ref_idpes = juridica.idpes AND
+               juridica.idpes = ps.idpes) AS nm_escola,
+
+      (SELECT fcn_upper(substring(logradouro.idtlog from 1 for 1)) ||
+              lower(substring(logradouro.idtlog, 2))
+         FROM public.logradouro,
+              cadastro.juridica,
+              cadastro.pessoa ps,
+              cadastro.endereco_pessoa
+        WHERE juridica.idpes = ps.idpes AND
+              ps.idpes = endereco_pessoa.idpes AND
+              endereco_pessoa.idlog = logradouro.idlog AND
+              juridica.idpes = escola.ref_idpes) AS tipo_logradouro,
+
+      (SELECT logradouro.nome
+         FROM public.logradouro,
+              cadastro.juridica,
+              cadastro.pessoa ps,
+              cadastro.endereco_pessoa
+        WHERE juridica.idpes = ps.idpes AND
+              ps.idpes = endereco_pessoa.idpes AND
+              endereco_pessoa.idlog = logradouro.idlog AND
+              juridica.idpes = escola.ref_idpes) AS logradouro,
+
+      (SELECT municipio.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS municipio,
+
+      (SELECT bairro.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS bairro,
+
+      (SELECT municipio.sigla_uf
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS uf_municipio,
+
+      (SELECT endereco_pessoa.numero
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS numero,
+
+     (SELECT to_char(endereco_pessoa.cep, '99999-999')
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS cep,
+
+     (SELECT min(fone_pessoa.ddd)
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS fone_ddd,
+
+     (SELECT min(to_char(fone_pessoa.fone, '9999-9999'))
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes) AS fone,
+
+     (SELECT ps.email
+         FROM cadastro.pessoa ps,
+              cadastro.juridica
+        WHERE juridica.idpes = ps.idpes AND
+              juridica.idpes = escola.ref_idpes) AS email,
+
+       to_char(current_date,'dd/mm/yyyy') AS data_atual,
+       to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual
+
+  FROM pmieducar.aluno,
+       pmieducar.matricula,
+       cadastro.fisica,
+       cadastro.pessoa,
+       pmieducar.instituicao,
+       pmieducar.escola,
+       pmieducar.matricula_turma,
+       pmieducar.turma,
+       pmieducar.serie,
+       pmieducar.curso,
+       pmieducar.escola_serie,
+       pmieducar.escola_ano_letivo
+
+ WHERE escola_ano_letivo.ano = $P{ano} AND
+       instituicao.cod_instituicao = $P{instituicao} AND
+       escola.cod_escola = $P{escola} AND
+       curso.cod_curso = $P{curso} AND
+       serie.cod_serie = $P{serie} AND
+       turma.cod_turma = $P{turma} AND
+       matricula.cod_matricula= $P{aluno} AND
+       pessoa.idpes = fisica.idpes AND
+       fisica.idpes = aluno.ref_idpes AND
+       aluno.cod_aluno = matricula.ref_cod_aluno AND
+       matricula.ref_cod_curso = curso.cod_curso AND
+       matricula.ref_cod_aluno = aluno.cod_aluno AND
+       serie.ref_cod_curso = curso.cod_curso AND
+       curso.ref_cod_instituicao = instituicao.cod_instituicao AND
+       escola.ref_cod_instituicao = instituicao.cod_instituicao AND
+       matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+       matricula_turma.ref_cod_turma = turma.cod_turma AND
+       serie.ref_cod_curso = curso.cod_curso AND
+       escola_serie.ref_cod_escola = escola.cod_escola AND
+       escola_ano_letivo.ref_cod_escola = escola.cod_escola AND
+       escola_serie.ref_cod_serie = serie.cod_serie AND
+       turma.ref_ref_cod_escola = escola_serie.ref_cod_escola AND
+       turma.ref_ref_cod_serie = escola_serie.ref_cod_serie AND
+       matricula.ano = escola_ano_letivo.ano AND
+       instituicao.ativo = 1 AND
+       escola.ativo = 1 AND
+       matricula.ativo = 1]]>
+	</queryString>
+	<field name="nm_instituicao" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cod_escola" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ano" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nm_curso" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nm_serie" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nm_turma" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cod_aluno" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cod_matricula" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nome" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cidade" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nm_escola" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tipo_logradouro" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="logradouro" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="municipio" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="bairro" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="uf_municipio" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="numero" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cep" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fone_ddd" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fone" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="email" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="data_atual" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hora_atual" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="508" splitType="Stretch">
+			<staticText>
+				<reportElement x="185" y="108" width="210" height="16"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[ATESTADO DE MATRÍCULA]]></text>
+			</staticText>
+			<image>
+				<reportElement x="1" y="0" width="100" height="65"/>
+				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="58" y="316" width="120" height="14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cidade}+", "+$F{data_atual}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="53" y="167" width="485" height="15"/>
+				<textElement lineSpacing="1_1_2">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Atestamos para os devidos fins, que o(a) aluno(a) "+$F{nome}+ ", efetuou matrícula para o(a) "+$F{nm_serie}+" do "+$F{nm_curso}+ " para o próximo ano letivo."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="243" y="478" width="100" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[DIRETOR(A)]]></text>
+			</staticText>
+			<line>
+				<reportElement x="179" y="475" width="246" height="1"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="102" y="40" width="253" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{tipo_logradouro}+" "+$F{logradouro}+", "+$F{numero}+"            Bairro" +$F{bairro}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="412" y="4" width="126" height="13"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Emissão: "+$F{data_atual}+" "+$F{hora_atual}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="103" y="52" width="201" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Fone/Fax: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="102" y="4" width="278" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_instituicao}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="359" y="52" width="120" height="13" forecolor="#000033"/>
+				<textElement>
+					<font size="8" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="358" y="40" width="77" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="468" y="39" width="77" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="102" y="16" width="278" height="13"/>
+				<textElement>
+					<font size="8" isBold="true" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[SECRETARIA MUNICIPAL DE EDUCAÇÃO E CULTURA]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="102" y="28" width="278" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="26" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="19" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="26" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="27" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="24" splitType="Stretch"/>
+	</summary>
+</jasperReport>
