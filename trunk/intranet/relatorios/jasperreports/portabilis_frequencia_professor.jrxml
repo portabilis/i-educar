@@ -3,7 +3,7 @@
 	<property name="ireport.zoom" value="0.9090909090909091"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<style name="Crosstab Data Text" isDefault="false" hAlign="Center"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
 	<subDataset name="dataset1"/>
 	<subDataset name="dataset2"/>
 	<subDataset name="dataset3"/>
@@ -26,7 +26,6 @@
 	<queryString>
 		<![CDATA[SELECT pessoa.nome,
        funcao.nm_funcao,
-       /* (3 -> Efetivo, 4 -> Contratado, 5 -> Comissionado, 6 -> Estagiário) */
        (SELECT CASE WHEN funcionario.ref_cod_funcionario_vinculo = 3 THEN 'Efetivo'
                     WHEN funcionario.ref_cod_funcionario_vinculo = 4 THEN 'Contratado'
                     WHEN funcionario.ref_cod_funcionario_vinculo = 5 THEN 'Comissionado'
@@ -54,7 +53,6 @@
              servidor_afastamento.ref_cod_motivo_afastamento = motivo_afastamento.cod_motivo_afastamento)
 AS tipo_licenca,
 
-/*Retirar daqui depois*/
 
        (SELECT CASE WHEN servidor.cod_servidor = 6 THEN 'Licenca-Premio'
                ELSE
@@ -71,8 +69,6 @@ AS tipo_licenca,
                    ''
         END) AS fim,
 
-       /*Falta ver como contar a quantidade de faltas, subconsultas abaixo, pois o sistema precisa ser
-         corrigido para este teste*/
 
        (SELECT count(falta_atraso.tipo)
           FROM pmieducar.falta_atraso

@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_atestado_vaga" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.2100000000000004"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="389"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="instituicao" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
@@ -19,8 +19,8 @@
        to_char(CURRENT_DATE,'dd/mm/yyyy') AS data_atual,
        to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
        pessoa.nome as aluno,
-       fisica.nome_pai,
-       fisica.nome_mae,
+       COALESCE(fisica.nome_pai,aluno.nm_pai) as nm_pai,
+       COALESCE(fisica.nome_mae,aluno.nm_MAE) as nm_mae,
        fisica.sexo,
        to_char(fisica.data_nasc,'dd/mm/yyyy') AS data_nasc,
        (CASE WHEN fisica.nacionalidade = 1 THEN 'Brasileiro'
@@ -228,8 +228,8 @@
 	<field name="data_atual" class="java.lang.String"/>
 	<field name="hora_atual" class="java.lang.String"/>
 	<field name="aluno" class="java.lang.String"/>
-	<field name="nome_pai" class="java.lang.String"/>
-	<field name="nome_mae" class="java.lang.String"/>
+	<field name="nm_pai" class="java.lang.String"/>
+	<field name="nm_mae" class="java.lang.String"/>
 	<field name="sexo" class="java.lang.String"/>
 	<field name="data_nasc" class="java.lang.String"/>
 	<field name="nacionalidade" class="java.lang.String"/>
@@ -238,8 +238,6 @@
 	<field name="municipio_uf" class="java.lang.String"/>
 	<field name="pais_origem" class="java.lang.String"/>
 	<field name="estado_civil" class="java.lang.String"/>
-	<field name="nm_mae" class="java.lang.String"/>
-	<field name="nm_pai" class="java.lang.String"/>
 	<field name="cpf_mae" class="java.math.BigDecimal"/>
 	<field name="cpf_pai" class="java.math.BigDecimal"/>
 	<field name="numero" class="java.math.BigDecimal"/>
@@ -322,7 +320,6 @@
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
 			</textField>
-			
 			<rectangle>
 				<reportElement x="3" y="78" width="548" height="20"/>
 			</rectangle>
@@ -340,6 +337,10 @@
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="9" y="5" width="93" height="58"/>
+				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
+			</image>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -687,13 +688,6 @@
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio_nasc}]]></textFieldExpression>
-			</textField>
-			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement x="413" y="25" width="52" height="12"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.util.Date"><![CDATA[$F{data_nasc}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="59" y="87" width="174" height="12"/>
@@ -1322,6 +1316,13 @@
 			<line>
 				<reportElement x="2" y="515" width="1" height="74"/>
 			</line>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="412" y="25" width="53" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{data_nasc}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>

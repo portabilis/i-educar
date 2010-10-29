@@ -2366,8 +2366,6 @@
                                                nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
                                                nota_aluno.matricula_id = matricula.cod_matricula)) as falta124,
 
-/*Controla o total de faltas*/
-
 (SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
@@ -2548,7 +2546,6 @@ WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) as tot_falta12,
 
-/*  -------------------------Frequencia por Componente Curricular -------------*/
 
 (100-(((SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
@@ -2730,8 +2727,6 @@ WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) * 75)/200.00)) as freq_componente12,
 
-/*  -------------------- Falta Global -------------------------------------- */
-
 (SELECT falta_geral.quantidade
   FROM modules.falta_geral,
        modules.falta_aluno
@@ -2764,8 +2759,6 @@ WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
        falta_geral.etapa = 4 AND
        falta_aluno.tipo_falta = 1) as ftq4,
 
-/* ------ Situacao Aluno -----*/
-
 (SELECT CASE WHEN (select mt.aprovado from pmieducar.matricula mt WHERE mt.cod_matricula = matricula.cod_matricula) = 1 THEN 'Aprovado'
             WHEN (select mt.aprovado from pmieducar.matricula mt WHERE mt.cod_matricula = matricula.cod_matricula) = 2 THEN 'Reprovado'
             WHEN (select mt.aprovado from pmieducar.matricula mt WHERE mt.cod_matricula = matricula.cod_matricula) = 3 THEN 'Em Andamento'
@@ -2780,8 +2773,6 @@ WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
  WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
        falta_aluno.matricula_id = matricula.cod_matricula AND
        falta_geral.etapa in('1','2','3','4'))::float / 200::float )::float * 100) as freq_aux,
-
-/* Nota Exame caso exista */
 
 (SELECT nota_componente_curricular.nota_arredondada
   FROM modules.componente_curricular,
@@ -3084,7 +3075,6 @@ WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
 											   nota_componente_curricular_media.nota_aluno_id = nota_componente_curricular.nota_aluno_id  AND
 											   nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id)) as exame12,
 
-/* Fim Nota Exame caso exista */
 (select '' as field1)
 
   FROM pmieducar.aluno,

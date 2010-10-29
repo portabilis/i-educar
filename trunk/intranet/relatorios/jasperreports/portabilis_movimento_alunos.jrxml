@@ -3,7 +3,7 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<style name="Crosstab Data Text" isDefault="false" hAlign="Center"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
 	<subDataset name="dataset1"/>
 	<subDataset name="dataset2"/>
 	<subDataset name="dataset3"/>
@@ -149,8 +149,6 @@
        to_char(current_date,'dd/mm/yyyy') AS data_atual,
        to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
 
-/***************Conta as matriculas ativas********************/
-
 ((select count(aluno.cod_aluno)
    from pmieducar.aluno,
         cadastro.fisica,
@@ -242,7 +240,6 @@
         matricula.ativo = 1 AND
         matricula.aprovado = 6 AND
         matricula.ano = $P{ano}))as qtd_matr_femi,
-/***************Conta total de matriculas M/F********************/
 
 ((select count(aluno.cod_aluno)
    from pmieducar.aluno,
@@ -287,8 +284,6 @@
         matricula.aprovado = 6 AND
         matricula.ano = $P{ano})) as qtd_matric_tot,
 
-/***************Conta as transferencias por sexo********************/
-
 (select count(aluno.cod_aluno)
    from pmieducar.aluno,
         cadastro.fisica,
@@ -321,8 +316,6 @@
         matricula.aprovado = 4 AND
         matricula.ano = $P{ano}) as qtd_tran_femi,
 
-/***************Conta a quantidade de abandonos por sexo********************/
-
 (select count(aluno.cod_aluno)
    from pmieducar.aluno,
         cadastro.fisica,
@@ -354,8 +347,6 @@
         matricula.ativo = 1 AND
         matricula.aprovado = 6 AND
         matricula.ano = $P{ano}) as qtd_aban_femi,
-
-/*Conta a quantidade de alunos com a marícula fnal diminuindo as transferencias e abandonos*/
 
 ((select count(aluno.cod_aluno)
    from pmieducar.aluno,
@@ -449,8 +440,6 @@
         matricula.aprovado = 6 AND
         matricula.ano = $P{ano}) * -1) as matric_final_femi,
 
-/*Total de matricula masculino final*/
-
 ((select count(aluno.cod_aluno)
    from pmieducar.aluno,
         cadastro.fisica,
@@ -528,9 +517,6 @@
         matricula.aprovado = 6 AND
         matricula.ano = $P{ano}))) as qtd_matri_final_masc,
 
-
-/*Total de matricula feminino final*/
-
 ((select count(aluno.cod_aluno)
    from pmieducar.aluno,
         cadastro.fisica,
@@ -607,8 +593,6 @@
         matricula.ativo = 1 AND
         matricula.aprovado = 6 AND
         matricula.ano = $P{ano}))) as qtd_matri_final_femin,
-
-/*Total de matricula masculino e feminino final*/
 
 ((select count(aluno.cod_aluno)
    from pmieducar.aluno,
@@ -764,8 +748,6 @@
         matricula.aprovado = 6 AND
         matricula.ano = $P{ano}))) as qtd_matri_final_femin_masc,
 
-/********Contagem de alunos admitidos do sexo masculino*******/
-
 (select count(aluno.cod_aluno)
    from pmieducar.aluno,
         cadastro.fisica,
@@ -781,8 +763,6 @@
         matricula.ativo = 1 AND
         matricula.matricula_transferencia = 't' AND
         matricula.ano = $P{ano}) as qtd_admitidos_mascu,
-
-/********Contagem de alunos admitidos do sexo feminino*******/
 
 (select count(aluno.cod_aluno)
    from pmieducar.aluno,
