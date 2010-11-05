@@ -19,8 +19,10 @@
        to_char(CURRENT_DATE,'dd/mm/yyyy') AS data_atual,
        to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
        pessoa.nome as aluno,
-       COALESCE(fisica.nome_pai,aluno.nm_pai) as nm_pai,
-       COALESCE(fisica.nome_mae,aluno.nm_MAE) as nm_mae,
+       fisica.nome_pai as nm_pai,
+       fisica.nome_mae as nm_mae,
+       aluno.nm_pai as nm_pai2,
+       aluno.nm_mae as nm_mae2,
        fisica.sexo,
        to_char(fisica.data_nasc,'dd/mm/yyyy') AS data_nasc,
        (CASE WHEN fisica.nacionalidade = 1 THEN 'Brasileiro'
@@ -230,6 +232,8 @@
 	<field name="aluno" class="java.lang.String"/>
 	<field name="nm_pai" class="java.lang.String"/>
 	<field name="nm_mae" class="java.lang.String"/>
+	<field name="nm_pai2" class="java.lang.String"/>
+	<field name="nm_mae2" class="java.lang.String"/>
 	<field name="sexo" class="java.lang.String"/>
 	<field name="data_nasc" class="java.lang.String"/>
 	<field name="nacionalidade" class="java.lang.String"/>
@@ -1322,6 +1326,20 @@
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{data_nasc}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="74" y="132" width="216" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_pai2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="74" y="147" width="216" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_mae2}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
