@@ -116,7 +116,25 @@
                fisica.idpes = pessoa.idpes) as data_nasc,
        (SELECT educacenso_cod_aluno.cod_aluno_inep
           FROM modules.educacenso_cod_aluno
-         WHERE educacenso_cod_aluno.cod_aluno = aluno.cod_aluno) as cod_aluno_inep
+         WHERE educacenso_cod_aluno.cod_aluno = aluno.cod_aluno) as cod_aluno_inep,
+
+(SELECT count(matricula.cod_matricula)
+  FROM pmieducar.instituicao,
+       pmieducar.matricula,
+       pmieducar.aluno,
+       pmieducar.escola
+ WHERE instituicao.cod_instituicao = $P{instituicao} AND
+       instituicao.cod_instituicao = escola.ref_cod_instituicao AND
+       (SELECT CASE WHEN $P{escola} = 0 THEN
+                    matricula.ref_ref_cod_escola = escola.cod_escola
+               ELSE
+                    matricula.ref_ref_cod_escola = escola.cod_escola AND
+                    escola.cod_escola = $P{escola}
+               END) AND
+       matricula.ref_cod_aluno = aluno.cod_aluno AND
+       matricula.ativo = 1 AND
+       matricula.ano = $P{ano} AND
+       matricula.ultima_matricula = 1) as total_alunos
 
   FROM pmieducar.instituicao,
        pmieducar.matricula,
@@ -157,21 +175,29 @@ ORDER BY nm_escola, nome_aluno]]>
 	<field name="sexo" class="java.lang.String"/>
 	<field name="data_nasc" class="java.lang.String"/>
 	<field name="cod_aluno_inep" class="java.lang.Long"/>
+	<field name="total_alunos" class="java.lang.Long"/>
 	<group name="escola">
 		<groupExpression><![CDATA[$F{nm_escola}]]></groupExpression>
 		<groupHeader>
 			<band height="16">
 				<textField>
-					<reportElement x="6" y="2" width="252" height="13"/>
+					<reportElement x="43" y="2" width="260" height="13"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
 				</textField>
+				<staticText>
+					<reportElement x="5" y="2" width="37" height="13"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Escola:]]></text>
+				</staticText>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="9"/>
+			<band height="12"/>
 		</groupFooter>
 	</group>
 	<background>
@@ -181,7 +207,7 @@ ORDER BY nm_escola, nome_aluno]]>
 		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="149" splitType="Stretch">
+		<band height="173" splitType="Stretch">
 			<staticText>
 				<reportElement x="102" y="16" width="278" height="13"/>
 				<textElement>
@@ -250,32 +276,39 @@ ORDER BY nm_escola, nome_aluno]]>
 				<textFieldExpression class="java.lang.String"><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="98" y="129" width="52" height="13"/>
+				<reportElement x="98" y="153" width="52" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Cód. INEP]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="167" y="129" width="37" height="13"/>
+				<reportElement x="167" y="153" width="37" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Aluno]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="328" y="129" width="37" height="13"/>
+				<reportElement x="328" y="153" width="37" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Sexo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="402" y="129" width="97" height="13"/>
+				<reportElement x="402" y="153" width="97" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Data de nascimento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="176" y="95" width="274" height="22"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Relação de Alunos Matriculados Por Escola]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
@@ -323,17 +356,10 @@ ORDER BY nm_escola, nome_aluno]]>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="14" splitType="Stretch"/>
+		<band height="12" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
 		<band height="17" splitType="Stretch">
-			<textField>
-				<reportElement x="71" y="3" width="52" height="13"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{COLUMN_COUNT}]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement x="6" y="3" width="64" height="13"/>
 				<textElement>
@@ -354,6 +380,13 @@ ORDER BY nm_escola, nome_aluno]]>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="71" y="3" width="30" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_alunos}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>
