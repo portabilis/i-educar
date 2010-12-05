@@ -1,7 +1,7 @@
 --
 -- @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
 -- @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
--- @link     http://phing.info/docs/guide/current/  Phing Documentation
+-- @link     http://github.com/eriksencosta/phpunit/commit/ae26bcc3c3bc81321f741c6d99e8389b1b937fb4  PHPUnit fork
 --
 
 Patch para o PHPUnit com a diretiva de configuração "cleanMock" para o arquivo
@@ -15,7 +15,7 @@ http://github.com/sebastianbergmann/phpunit/commit/8b5044ff919f51e1da653e49bc741
 O código simplesmente a desaloca o objeto na memória, disponibilizando-o ao GC
 do PHP.
 
-No entanto, essa correção quebrou alguns testes do i-Educar que lidam com 
+No entanto, essa correção quebrou alguns testes do i-Educar que lidam com
 classes legadas (namespace App). As instâncias dessas classes são mantidas no
 registry da classe CoreExt_Entity para facilitar o setup dos testes.
 
