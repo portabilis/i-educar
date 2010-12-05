@@ -137,7 +137,7 @@
       url="pgsql:host=${project.conf.dbdeploy.hostname};dbname=${project.conf.dbdeploy.dbname}"
       userid="${project.conf.dbdeploy.username}"
       password="${project.conf.dbdeploy.password}"
-      dir="${project.conf.curdir}/misc/database/deltas"
+      dir="${project.conf.curdir}/ieducar/misc/database/deltas"
       outputfile="${project.conf.builddir}/${project.conf.dbdeploy.deployfile}"
       undooutputfile="${project.conf.builddir}/${project.conf.dbdeploy.undofile}" />
 
