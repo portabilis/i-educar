@@ -25793,6 +25793,7 @@ INSERT INTO changelog VALUES (28, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '28_cria
 INSERT INTO changelog VALUES (29, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '29_cria_tabela_modules_docente_licenciatura.sql');
 INSERT INTO changelog VALUES (30, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '30_cria_indices_otimizacao_queries_quadro_horarios.sql');
 INSERT INTO changelog VALUES (31, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '31_remove_constraint_desnecessaria_pmieducar_quadro_horario_horarios.sql');
+INSERT INTO changelog VALUES (32, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '32_corrige_comentario_em_indices.sql');
 
 
 --
@@ -35523,10 +35524,24 @@ CREATE INDEX quadro_horario_horarios_busca_horarios_idx ON quadro_horario_horari
 
 
 --
+-- Name: INDEX quadro_horario_horarios_busca_horarios_idx; Type: COMMENT; Schema: pmieducar; Owner: -
+--
+
+COMMENT ON INDEX quadro_horario_horarios_busca_horarios_idx IS 'Índice para otimizar a busca por professores na criação de quadro de horários.';
+
+
+--
 -- Name: servidor_alocacao_busca_horarios_idx; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
 CREATE INDEX servidor_alocacao_busca_horarios_idx ON servidor_alocacao USING btree (ref_ref_cod_instituicao, ref_cod_escola, ativo, periodo, carga_horaria);
+
+
+--
+-- Name: INDEX servidor_alocacao_busca_horarios_idx; Type: COMMENT; Schema: pmieducar; Owner: -
+--
+
+COMMENT ON INDEX servidor_alocacao_busca_horarios_idx IS 'Índice para otimizar a busca por professores na criação de quadro de horários.';
 
 
 --
