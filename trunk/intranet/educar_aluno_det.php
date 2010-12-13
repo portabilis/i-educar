@@ -36,6 +36,7 @@ require_once 'include/pmieducar/geral.inc.php';
 require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'Educacenso/Model/AlunoDataMapper.php';
 require_once 'Transporte/Model/AlunoDataMapper.php';
+require_once 'Ciasc/Model/CodigoAlunoDataMapper.php';
 
 /**
  * clsIndexBase class.
@@ -647,6 +648,19 @@ class indice extends clsDetalhe
     }
 
     $this->addDetalhe(array('Matrícula', $this->montaTabelaMatricula()));
+
+    //informação seriesciasc
+    $SerieciascMapper = new Ciasc_Model_CodigoAlunoDataMapper();
+
+    try {
+        $ciasc = $SerieciascMapper->find(array('cod_aluno' => $this->cod_aluno));
+    }
+    catch(Exception $e) {
+    }
+
+    if (!empty($ciasc)){
+        $this->addDetalhe(array('Matrícula série - Siasc', $ciasc->cod_ciasc));
+    }
 
     // Verificação de permissão para cadastro.
     $obj_permissao = new clsPermissoes();

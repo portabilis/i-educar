@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once( "modules/Ciasc/Model/CodigoAlunoDataMapper.php" );
 
 class clsIndexBase extends clsBase
 {
@@ -104,6 +105,7 @@ class indice extends clsListagem
 		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
 
 		$this->campoNumero("cod_aluno","C&oacute;digo Aluno",$this->cod_aluno,20,255,false);
+		$this->campoNumero("cod_ciasc","C&oacute;digo CIASC",$this->cod_ciasc,20,255,false);
 		$this->campoTexto("nome_aluno","Nome do aluno",$this->nome_aluno,50,255,false);
 //		if ($this->pessoa_logada == 184580) {
 			$this->campoData("data_nascimento", "Data de Nascimento", $this->data_nascimento);
@@ -131,6 +133,7 @@ class indice extends clsListagem
 
 		$this->addCabecalhos( array(
 			"C&oacute;digo Aluno",
+                        "Matrícula CIASC",
 			"Nome do Aluno",
 			"Nome da Mãe",
 			"Nome do Respons&aacute;vel",
@@ -191,7 +194,8 @@ class indice extends clsListagem
 						$this->data_nascimento,
 						$this->nome_pai,
 						$this->nome_mae,
-						$this->nome_responsavel
+						$this->nome_responsavel,
+                                                $this->cod_ciasc
 					);
 		/*} else {
 			$lista = $obj_aluno->lista(
@@ -304,10 +308,23 @@ class indice extends clsListagem
 							$registro["nome_responsavel"] = $registro["nm_mae"];
 					}
 				}
+                                $ciascMapper = new Ciasc_Model_CodigoAlunoDataMapper();
+                                $alunoCiasc = NULL;
+                                  try {
+                                    $alunoCiasc = $ciascMapper->find(array('cod_aluno' => $registro["cod_aluno"]));
+                                  }
+                                  catch(Exception $e) {
+                                  }
+                                  if (empty($alunoCiasc->cod_aluno)){
+                                      $registro['cod_ciasc'] = '-';
+                                  } else {
+                                      $registro['cod_ciasc'] = $alunoCiasc->cod_ciasc;
+                                  }
 
 
 				$this->addLinhas( array(
 					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["cod_aluno"]}</a>",
+					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["cod_ciasc"]}</a>",
 					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["nome_aluno"]}</a>",
 					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["nm_mae"]}</a>",
 					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["nome_responsavel"]}</a>",

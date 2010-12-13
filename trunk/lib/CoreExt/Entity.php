@@ -722,7 +722,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
 
     $key = trim($key);
     $return = NULL;
-
+    
     if ('' != $key && !is_null($this->getValidator($key))) {
       $return = $this->_isValidProperty($key);
     }
@@ -851,7 +851,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   public function getValidator($key)
   {
     $return = NULL;
-
+    
     if (isset($this->_validators[$key])) {
       $return = $this->_validators[$key];
     }

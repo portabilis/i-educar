@@ -240,7 +240,7 @@ class EditController extends Core_Controller_Page_EditController
     // Cria um array de objetos a persistir
     for ($i = 0; $i < $loop; $i++) {
       $id = $valores['id'][$i];
-
+      
       // Não atribui a instância de $entity senão não teria sucesso em verificar
       // se a instância é isNull().
       $data = array(
@@ -273,6 +273,10 @@ class EditController extends Core_Controller_Page_EditController
         $this->getDataMapper()->getTabelaValorDataMapper()->save($tabelaValor);
       }
       else {
+          /* Retorna os erros da validação do formulário.
+        $arrStr = $tabelaValor->getErrors();
+        var_dump($arrStr);
+           */
         $this->mensagem = 'Erro no formulário';
         return FALSE;
       }
