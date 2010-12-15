@@ -2054,10 +2054,6 @@ ORDER BY 1 ASC]]>
 				</textElement>
 				<text><![CDATA[HISTÓRICO ESCOLAR DO ENSINO FUNDAMENTAL ]]></text>
 			</staticText>
-			<image>
-				<reportElement x="9" y="8" width="94" height="65"/>
-				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
-			</image>
 			<line>
 				<reportElement x="376" y="5" width="1" height="100"/>
 			</line>
@@ -2151,6 +2147,10 @@ ORDER BY 1 ASC]]>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="29" y="8" width="57" height="46"/>
+				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
+			</image>
 		</band>
 	</pageHeader>
 	<columnHeader>

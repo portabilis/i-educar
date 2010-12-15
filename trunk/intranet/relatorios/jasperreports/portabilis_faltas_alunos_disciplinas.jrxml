@@ -368,10 +368,6 @@ ORDER BY nm_serie, nm_turma]]>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{tipo_logradouro}+" "+$F{logradouro}+", "+$F{numero}+"            Bairro" +$F{bairro}]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="1" y="0" width="100" height="65"/>
-				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
-			</image>
 			<textField>
 				<reportElement x="102" y="4" width="278" height="13"/>
 				<textElement>
@@ -400,6 +396,10 @@ ORDER BY nm_serie, nm_turma]]>
 				</textElement>
 				<text><![CDATA[Quantidade de Faltas por Disciplina]]></text>
 			</staticText>
+			<image>
+				<reportElement x="28" y="4" width="57" height="46"/>
+				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
+			</image>
 		</band>
 	</pageHeader>
 	<columnHeader>

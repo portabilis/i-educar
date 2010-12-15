@@ -342,7 +342,7 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="9" y="5" width="93" height="58"/>
+				<reportElement x="25" y="5" width="57" height="46"/>
 				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
 			</image>
 		</band>

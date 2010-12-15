@@ -1313,8 +1313,8 @@ order by nm_serie, nm_turma]]>
 				<reportElement x="398" y="196" width="1" height="18"/>
 			</line>
 			<image>
-				<reportElement x="1" y="4" width="100" height="65"/>
-				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
+				<reportElement x="25" y="4" width="57" height="46"/>
+				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ararangua/intranet/imagens/brasao.jpg"]]></imageExpression>
 			</image>
 		</band>
 	</pageHeader>

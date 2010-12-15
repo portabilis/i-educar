@@ -267,10 +267,6 @@ ORDER BY nome_aluno ASC]]>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{tipo_logradouro}+" "+$F{logradouro}+", "+$F{numero}+"            Bairro" +$F{bairro}]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="1" y="0" width="100" height="65"/>
-				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
-			</image>
 			<textField>
 				<reportElement x="102" y="4" width="278" height="13"/>
 				<textElement>
@@ -592,6 +588,10 @@ ORDER BY nome_aluno ASC]]>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$P{professor}]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="23" y="4" width="57" height="46"/>
+				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
+			</image>
 		</band>
 	</pageHeader>
 	<columnHeader>

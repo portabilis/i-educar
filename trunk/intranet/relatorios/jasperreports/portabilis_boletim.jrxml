@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Boletim Escolar Bimestral" language="groovy" pageWidth="625" pageHeight="842" columnWidth="585" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.1000000000000005"/>
+	<property name="ireport.zoom" value="1.1000000000000019"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<subDataset name="dataset1"/>
@@ -2366,6 +2366,7 @@
                                                nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
                                                nota_aluno.matricula_id = matricula.cod_matricula)) as falta124,
 
+
 (SELECT sum(falta_componente_curricular.quantidade)
   FROM modules.falta_componente_curricular,
        modules.falta_aluno
@@ -2727,6 +2728,7 @@ WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
                                                                        falta_aluno.tipo_falta = 2 AND
                                                                        falta_aluno.matricula_id = matricula.cod_matricula)) * 75)/200.00)) as freq_componente12,
 
+
 (SELECT falta_geral.quantidade
   FROM modules.falta_geral,
        modules.falta_aluno
@@ -2759,6 +2761,7 @@ WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
        falta_geral.etapa = 4 AND
        falta_aluno.tipo_falta = 1) as ftq4,
 
+
 (SELECT CASE WHEN (select mt.aprovado from pmieducar.matricula mt WHERE mt.cod_matricula = matricula.cod_matricula) = 1 THEN 'Aprovado'
             WHEN (select mt.aprovado from pmieducar.matricula mt WHERE mt.cod_matricula = matricula.cod_matricula) = 2 THEN 'Reprovado'
             WHEN (select mt.aprovado from pmieducar.matricula mt WHERE mt.cod_matricula = matricula.cod_matricula) = 3 THEN 'Em Andamento'
@@ -2773,6 +2776,7 @@ WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
  WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
        falta_aluno.matricula_id = matricula.cod_matricula AND
        falta_geral.etapa in('1','2','3','4'))::float / 200::float )::float * 100) as freq_aux,
+
 
 (SELECT nota_componente_curricular.nota_arredondada
   FROM modules.componente_curricular,
@@ -3308,1489 +3312,1489 @@ WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
 	<group name="matricula">
 		<groupExpression><![CDATA[$F{cod_matricula}]]></groupExpression>
 		<groupHeader>
-			<band height="391">
+			<band height="343">
 				<textField>
-					<reportElement mode="Opaque" x="3" y="102" width="537" height="15" backcolor="#F0F0F0"/>
+					<reportElement mode="Opaque" x="30" y="86" width="537" height="15" backcolor="#F0F0F0"/>
 					<textElement/>
 					<textFieldExpression class="java.lang.String"><![CDATA[]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement mode="Opaque" x="3" y="142" width="537" height="15" backcolor="#F0F0F0"/>
+					<reportElement mode="Opaque" x="30" y="126" width="537" height="15" backcolor="#F0F0F0"/>
 					<textElement/>
 					<textFieldExpression class="java.lang.String"><![CDATA[]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement mode="Opaque" x="3" y="182" width="537" height="15" backcolor="#F0F0F0"/>
+					<reportElement mode="Opaque" x="30" y="166" width="537" height="15" backcolor="#F0F0F0"/>
 					<textElement/>
 					<textFieldExpression class="java.lang.String"><![CDATA[]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement mode="Opaque" x="3" y="222" width="537" height="15" backcolor="#F0F0F0"/>
+					<reportElement mode="Opaque" x="30" y="206" width="537" height="15" backcolor="#F0F0F0"/>
 					<textElement/>
 					<textFieldExpression class="java.lang.String"><![CDATA[]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement mode="Opaque" x="3" y="262" width="537" height="15" backcolor="#F0F0F0"/>
+					<reportElement mode="Opaque" x="30" y="246" width="537" height="15" backcolor="#F0F0F0"/>
 					<textElement/>
 					<textFieldExpression class="java.lang.String"><![CDATA[]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement mode="Opaque" x="3" y="302" width="537" height="15" backcolor="#F0F0F0"/>
+					<reportElement mode="Opaque" x="30" y="286" width="537" height="15" backcolor="#F0F0F0"/>
 					<textElement/>
 					<textFieldExpression class="java.lang.String"><![CDATA[]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement mode="Opaque" x="3" y="344" width="537" height="15" backcolor="#F0F0F0"/>
+					<reportElement mode="Opaque" x="30" y="326" width="537" height="13" backcolor="#F0F0F0"/>
 					<textElement/>
 					<textFieldExpression class="java.lang.String"><![CDATA[]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="483" y="67" width="50" height="15"/>
+					<reportElement x="510" y="57" width="50" height="12"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[FALTAS]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="3" y="16" width="224" height="15"/>
+					<reportElement x="30" y="12" width="224" height="15"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_curso}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="351" y="16" width="59" height="15"/>
+					<reportElement x="378" y="12" width="59" height="15"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_serie}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="427" y="16" width="100" height="15"/>
+					<reportElement x="454" y="12" width="100" height="15"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_turma}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="4" y="49" width="341" height="16"/>
+					<reportElement x="31" y="39" width="341" height="16"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome}]]></textFieldExpression>
 				</textField>
 				<line>
-					<reportElement x="147" y="84" width="229" height="1"/>
+					<reportElement x="173" y="69" width="229" height="1"/>
 				</line>
 				<staticText>
-					<reportElement x="150" y="85" width="30" height="13"/>
+					<reportElement x="177" y="70" width="30" height="11"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[NOTA]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="187" y="85" width="10" height="13"/>
+					<reportElement x="214" y="70" width="10" height="11"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[F]]></text>
 				</staticText>
 				<line>
-					<reportElement x="182" y="85" width="1" height="13"/>
+					<reportElement x="209" y="70" width="1" height="13"/>
 				</line>
 				<staticText>
-					<reportElement x="206" y="85" width="30" height="13"/>
+					<reportElement x="233" y="70" width="30" height="11"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[NOTA]]></text>
 				</staticText>
 				<line>
-					<reportElement x="238" y="85" width="1" height="14"/>
+					<reportElement x="265" y="70" width="1" height="14"/>
 				</line>
 				<staticText>
-					<reportElement x="242" y="85" width="10" height="13"/>
+					<reportElement x="269" y="70" width="10" height="11"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[F]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="260" y="84" width="30" height="15"/>
+					<reportElement x="287" y="70" width="30" height="11"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[NOTA]]></text>
 				</staticText>
 				<line>
-					<reportElement x="295" y="85" width="1" height="14"/>
+					<reportElement x="322" y="70" width="1" height="14"/>
 				</line>
 				<staticText>
-					<reportElement x="301" y="84" width="10" height="15"/>
+					<reportElement x="328" y="70" width="10" height="11"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[F]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="379" y="83" width="34" height="15"/>
+					<reportElement x="406" y="70" width="34" height="11"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[BIM.]]></text>
 				</staticText>
 				<line>
-					<reportElement x="503" y="84" width="1" height="14"/>
+					<reportElement x="530" y="70" width="1" height="13"/>
 				</line>
 				<staticText>
-					<reportElement x="460" y="84" width="40" height="14"/>
+					<reportElement x="487" y="70" width="40" height="11"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[Freq. %]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="507" y="84" width="26" height="14"/>
+					<reportElement x="534" y="70" width="26" height="11"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[TOT.]]></text>
 				</staticText>
 				<line>
-					<reportElement x="458" y="84" width="84" height="1"/>
+					<reportElement x="486" y="69" width="83" height="1"/>
 				</line>
 				<staticText>
-					<reportElement x="3" y="1" width="73" height="15"/>
+					<reportElement x="30" y="1" width="74" height="15"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[01 - CURSO]]></text>
 				</staticText>
 				<line>
-					<reportElement x="260" y="0" width="1" height="33"/>
+					<reportElement x="287" y="0" width="1" height="28"/>
 				</line>
 				<textField isBlankWhenNull="true">
-					<reportElement x="149" y="121" width="30" height="17" isRemoveLineWhenBlank="true"/>
+					<reportElement x="176" y="105" width="30" height="17" isRemoveLineWhenBlank="true"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota21}]]></textFieldExpression>
 				</textField>
 				<line>
-					<reportElement x="542" y="0" width="1" height="360"/>
+					<reportElement x="569" y="0" width="1" height="339"/>
 				</line>
 				<line>
-					<reportElement x="238" y="100" width="1" height="242"/>
+					<reportElement x="265" y="84" width="1" height="241"/>
 				</line>
 				<line>
-					<reportElement x="256" y="99" width="1" height="261"/>
+					<reportElement x="283" y="83" width="1" height="256"/>
 				</line>
 				<line>
-					<reportElement x="317" y="65" width="1" height="295"/>
+					<reportElement x="344" y="57" width="1" height="282"/>
 				</line>
 				<line>
-					<reportElement x="416" y="65" width="1" height="277"/>
+					<reportElement x="485" y="57" width="1" height="282"/>
 				</line>
 				<line>
-					<reportElement x="458" y="65" width="1" height="277"/>
+					<reportElement x="530" y="83" width="1" height="256"/>
 				</line>
 				<line>
-					<reportElement x="503" y="99" width="1" height="261"/>
-				</line>
-				<line>
-					<reportElement x="0" y="99" width="542" height="1"/>
+					<reportElement x="27" y="82" width="542" height="1"/>
 				</line>
 				<textField isBlankWhenNull="true">
-					<reportElement x="5" y="121" width="138" height="17" isRemoveLineWhenBlank="true"/>
+					<reportElement x="32" y="105" width="138" height="17" isRemoveLineWhenBlank="true"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina2}]]></textFieldExpression>
 				</textField>
 				<line>
-					<reportElement x="182" y="99" width="1" height="243"/>
+					<reportElement x="209" y="83" width="1" height="242"/>
 				</line>
 				<staticText>
-					<reportElement x="263" y="1" width="59" height="15"/>
+					<reportElement x="290" y="1" width="59" height="15"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[02 - TURNO]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement x="205" y="121" width="30" height="17" isRemoveLineWhenBlank="true"/>
+					<reportElement x="232" y="105" width="30" height="17" isRemoveLineWhenBlank="true"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota22}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="381" y="181" width="30" height="17"/>
+					<reportElement x="408" y="165" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{media5}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="5" y="161" width="138" height="17"/>
+					<reportElement x="32" y="145" width="138" height="17"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina4}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="466" y="161" width="30" height="17"/>
+					<reportElement x="493" y="145" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Long"><![CDATA[$F{freq_componente4}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="5" y="201" width="138" height="17"/>
+					<reportElement x="32" y="185" width="138" height="17"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina6}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="5" y="241" width="138" height="17"/>
+					<reportElement x="32" y="225" width="138" height="17"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina8}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="5" y="281" width="138" height="17"/>
+					<reportElement x="32" y="265" width="138" height="17"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina10}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="5" y="301" width="138" height="17"/>
+					<reportElement x="32" y="285" width="138" height="17"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina11}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="5" y="321" width="138" height="17"/>
+					<reportElement x="32" y="305" width="138" height="17"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina12}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="186" y="181" width="13" height="17"/>
+					<reportElement x="213" y="165" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta51}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="241" y="181" width="13" height="17"/>
+					<reportElement x="268" y="165" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta52}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="300" y="181" width="13" height="17"/>
+					<reportElement x="327" y="165" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta53}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="149" y="161" width="30" height="17"/>
+					<reportElement x="176" y="145" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota41}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="205" y="161" width="30" height="17"/>
+					<reportElement x="232" y="145" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota42}]]></textFieldExpression>
 				</textField>
 				<textField pattern="" isBlankWhenNull="true">
-					<reportElement x="259" y="161" width="30" height="17"/>
+					<reportElement x="286" y="145" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota43}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="186" y="142" width="13" height="17"/>
+					<reportElement x="213" y="126" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta31}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="466" y="201" width="30" height="17"/>
+					<reportElement x="493" y="185" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Long"><![CDATA[$F{freq_componente6}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="466" y="221" width="30" height="17"/>
+					<reportElement x="493" y="205" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Long"><![CDATA[$F{freq_componente7}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="149" y="201" width="30" height="17"/>
+					<reportElement x="176" y="185" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota61}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="205" y="201" width="30" height="17"/>
+					<reportElement x="232" y="185" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota62}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="259" y="201" width="30" height="17"/>
+					<reportElement x="286" y="185" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota63}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="259" y="121" width="30" height="17" isRemoveLineWhenBlank="true"/>
+					<reportElement x="286" y="105" width="30" height="17" isRemoveLineWhenBlank="true"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota23}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="381" y="121" width="30" height="17" isRemoveLineWhenBlank="true"/>
+					<reportElement x="408" y="105" width="30" height="17" isRemoveLineWhenBlank="true"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{media2}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="186" y="121" width="13" height="17" isRemoveLineWhenBlank="true"/>
+					<reportElement x="213" y="105" width="13" height="17" isRemoveLineWhenBlank="true"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta21}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="149" y="241" width="30" height="17"/>
+					<reportElement x="176" y="225" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota81}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="205" y="241" width="30" height="17"/>
+					<reportElement x="232" y="225" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota82}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="259" y="241" width="30" height="17"/>
+					<reportElement x="286" y="225" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota83}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="149" y="261" width="30" height="17"/>
+					<reportElement x="176" y="245" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota91}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="205" y="261" width="30" height="17"/>
+					<reportElement x="232" y="245" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota92}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="259" y="261" width="30" height="17"/>
+					<reportElement x="286" y="245" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota93}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="5" y="261" width="138" height="17"/>
+					<reportElement x="32" y="245" width="138" height="17"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina9}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="149" y="281" width="30" height="17"/>
+					<reportElement x="176" y="265" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota101}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="205" y="281" width="30" height="17"/>
+					<reportElement x="232" y="265" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota102}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="259" y="281" width="30" height="17"/>
+					<reportElement x="286" y="265" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota103}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="149" y="301" width="30" height="17"/>
+					<reportElement x="176" y="285" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota111}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="205" y="301" width="30" height="17"/>
+					<reportElement x="232" y="285" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota112}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="259" y="301" width="30" height="17"/>
+					<reportElement x="286" y="285" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota113}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="149" y="321" width="30" height="17"/>
+					<reportElement x="176" y="305" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota121}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="205" y="321" width="30" height="17"/>
+					<reportElement x="232" y="305" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota122}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="259" y="321" width="30" height="17"/>
+					<reportElement x="286" y="305" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota123}]]></textFieldExpression>
 				</textField>
 				<line>
-					<reportElement x="347" y="1" width="1" height="64"/>
+					<reportElement x="374" y="1" width="1" height="54"/>
 				</line>
 				<textField>
-					<reportElement x="466" y="181" width="30" height="17"/>
+					<reportElement x="493" y="165" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Long"><![CDATA[$F{freq_componente5}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="381" y="161" width="30" height="17"/>
+					<reportElement x="408" y="145" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{media4}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="466" y="241" width="30" height="17"/>
+					<reportElement x="493" y="225" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Long"><![CDATA[$F{freq_componente8}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="381" y="201" width="30" height="17"/>
+					<reportElement x="408" y="185" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{media6}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="241" y="121" width="13" height="17" isRemoveLineWhenBlank="true"/>
+					<reportElement x="268" y="105" width="13" height="17" isRemoveLineWhenBlank="true"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta22}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="381" y="241" width="30" height="17"/>
+					<reportElement x="408" y="225" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{media8}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="381" y="261" width="30" height="17"/>
+					<reportElement x="408" y="245" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{media9}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="381" y="281" width="30" height="17"/>
+					<reportElement x="408" y="265" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{media10}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="381" y="302" width="30" height="17"/>
+					<reportElement x="408" y="285" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{media11}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="381" y="322" width="30" height="16"/>
+					<reportElement x="408" y="306" width="30" height="16"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{media12}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="351" y="1" width="59" height="15"/>
+					<reportElement x="378" y="1" width="59" height="15"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[03 - SÉRIE]]></text>
 				</staticText>
 				<line>
-					<reportElement x="420" y="1" width="1" height="32"/>
+					<reportElement x="447" y="1" width="1" height="27"/>
 				</line>
 				<staticText>
-					<reportElement x="424" y="1" width="67" height="15"/>
+					<reportElement x="451" y="1" width="67" height="15"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[04 - TURMA]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement x="149" y="181" width="30" height="17"/>
+					<reportElement x="176" y="165" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota51}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="5" y="181" width="138" height="17"/>
+					<reportElement x="32" y="165" width="138" height="17"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina5}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="205" y="181" width="30" height="17"/>
+					<reportElement x="232" y="165" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota52}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="186" y="161" width="13" height="17"/>
+					<reportElement x="213" y="145" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta41}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="241" y="161" width="13" height="17"/>
+					<reportElement x="268" y="145" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta42}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="300" y="162" width="13" height="17"/>
+					<reportElement x="327" y="146" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta43}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="466" y="261" width="30" height="17"/>
+					<reportElement x="493" y="245" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Long"><![CDATA[$F{freq_componente9}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="466" y="281" width="30" height="17"/>
+					<reportElement x="493" y="265" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Long"><![CDATA[$F{freq_componente10}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="241" y="141" width="13" height="17"/>
+					<reportElement x="268" y="125" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta32}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="186" y="201" width="13" height="17"/>
+					<reportElement x="213" y="185" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta61}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="241" y="201" width="13" height="17"/>
+					<reportElement x="268" y="185" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta62}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="300" y="201" width="13" height="17"/>
+					<reportElement x="327" y="185" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta63}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="300" y="121" width="13" height="17" isRemoveLineWhenBlank="true"/>
+					<reportElement x="327" y="105" width="13" height="17" isRemoveLineWhenBlank="true"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta23}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="300" y="141" width="13" height="17"/>
+					<reportElement x="327" y="125" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta33}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="186" y="240" width="13" height="17"/>
+					<reportElement x="213" y="224" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta81}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="241" y="241" width="13" height="17"/>
+					<reportElement x="268" y="225" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta82}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="300" y="241" width="13" height="17"/>
+					<reportElement x="327" y="225" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta83}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="186" y="260" width="13" height="17"/>
+					<reportElement x="213" y="244" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta91}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="241" y="261" width="13" height="17"/>
+					<reportElement x="268" y="245" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta92}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="300" y="261" width="13" height="17"/>
+					<reportElement x="327" y="245" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta93}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="186" y="280" width="13" height="17"/>
+					<reportElement x="213" y="264" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta101}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="241" y="281" width="13" height="17"/>
+					<reportElement x="268" y="265" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta102}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="300" y="281" width="13" height="17"/>
+					<reportElement x="327" y="265" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta103}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="186" y="300" width="13" height="17"/>
+					<reportElement x="213" y="284" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta111}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="241" y="301" width="13" height="17"/>
+					<reportElement x="268" y="285" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta112}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="300" y="301" width="13" height="17"/>
+					<reportElement x="327" y="285" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta113}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="186" y="321" width="13" height="17"/>
+					<reportElement x="213" y="305" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta121}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="241" y="321" width="13" height="17"/>
+					<reportElement x="268" y="305" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta122}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="300" y="321" width="13" height="17"/>
+					<reportElement x="327" y="305" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta123}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="4" y="34" width="73" height="15"/>
+					<reportElement x="31" y="28" width="73" height="15"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[05 - ALUNO]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="466" y="302" width="30" height="17"/>
+					<reportElement x="493" y="285" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Long"><![CDATA[$F{freq_componente11}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="467" y="344" width="29" height="15"/>
+					<reportElement x="494" y="327" width="29" height="12"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$F{freq_aux}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="149" y="221" width="30" height="17"/>
+					<reportElement x="176" y="205" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota71}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="205" y="221" width="30" height="17"/>
+					<reportElement x="232" y="205" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota72}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="259" y="221" width="30" height="17"/>
+					<reportElement x="286" y="205" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota73}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="381" y="221" width="30" height="17"/>
+					<reportElement x="408" y="205" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{media7}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="186" y="221" width="13" height="17"/>
+					<reportElement x="213" y="205" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta71}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="241" y="221" width="13" height="17"/>
+					<reportElement x="268" y="205" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta72}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="300" y="221" width="13" height="17"/>
+					<reportElement x="327" y="205" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta73}]]></textFieldExpression>
 				</textField>
 				<line>
-					<reportElement x="146" y="97" width="1" height="263"/>
+					<reportElement x="173" y="81" width="1" height="258"/>
 				</line>
 				<line>
-					<reportElement x="0" y="0" width="1" height="360"/>
+					<reportElement x="27" y="0" width="1" height="339"/>
 				</line>
 				<textField isBlankWhenNull="true">
-					<reportElement x="507" y="141" width="30" height="17"/>
+					<reportElement x="534" y="125" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta3}]]></textFieldExpression>
 				</textField>
 				<line>
-					<reportElement x="0" y="342" width="542" height="1"/>
+					<reportElement x="27" y="325" width="542" height="1"/>
 				</line>
 				<textField isBlankWhenNull="true">
-					<reportElement x="263" y="16" width="78" height="15"/>
+					<reportElement x="290" y="12" width="78" height="15"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{periodo}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="466" y="322" width="30" height="17"/>
+					<reportElement x="493" y="306" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Long"><![CDATA[$F{freq_componente12}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="507" y="121" width="30" height="17" isRemoveLineWhenBlank="true"/>
+					<reportElement x="534" y="105" width="30" height="17" isRemoveLineWhenBlank="true"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta2}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="321" y="181" width="30" height="17"/>
+					<reportElement x="348" y="165" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota54}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="507" y="161" width="30" height="17"/>
+					<reportElement x="534" y="145" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta4}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="205" y="141" width="30" height="17"/>
+					<reportElement x="232" y="125" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota32}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="507" y="201" width="30" height="17"/>
+					<reportElement x="534" y="185" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta6}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="507" y="221" width="30" height="17"/>
+					<reportElement x="534" y="205" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta7}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="507" y="241" width="30" height="17"/>
+					<reportElement x="534" y="225" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta8}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="507" y="261" width="30" height="17"/>
+					<reportElement x="534" y="245" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta9}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="507" y="281" width="30" height="17"/>
+					<reportElement x="534" y="265" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta10}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="507" y="301" width="30" height="17"/>
+					<reportElement x="534" y="285" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta11}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="507" y="322" width="30" height="17"/>
+					<reportElement x="534" y="306" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta12}]]></textFieldExpression>
 				</textField>
 				<line>
-					<reportElement x="201" y="99" width="1" height="261"/>
+					<reportElement x="228" y="83" width="1" height="256"/>
 				</line>
 				<line>
-					<reportElement x="201" y="66" width="1" height="32"/>
+					<reportElement x="228" y="57" width="1" height="32"/>
 				</line>
 				<line>
-					<reportElement x="295" y="99" width="1" height="243"/>
+					<reportElement x="322" y="83" width="1" height="242"/>
 				</line>
 				<staticText>
-					<reportElement x="324" y="67" width="43" height="15"/>
+					<reportElement x="351" y="57" width="43" height="12"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[4º BIM.]]></text>
 				</staticText>
 				<line>
-					<reportElement x="376" y="65" width="1" height="295"/>
+					<reportElement x="403" y="57" width="1" height="282"/>
 				</line>
 				<line>
-					<reportElement x="355" y="85" width="1" height="257"/>
+					<reportElement x="382" y="70" width="1" height="254"/>
 				</line>
 				<staticText>
-					<reportElement x="360" y="84" width="10" height="15"/>
+					<reportElement x="387" y="70" width="10" height="11"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[F]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="322" y="84" width="30" height="15"/>
+					<reportElement x="349" y="70" width="30" height="11"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[NOTA]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement x="321" y="121" width="30" height="17" isRemoveLineWhenBlank="true"/>
+					<reportElement x="348" y="105" width="30" height="17" isRemoveLineWhenBlank="true"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota24}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="359" y="181" width="13" height="17"/>
+					<reportElement x="386" y="165" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta54}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="321" y="161" width="30" height="17"/>
+					<reportElement x="348" y="145" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota44}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="321" y="141" width="30" height="17"/>
+					<reportElement x="348" y="125" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota34}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="321" y="201" width="30" height="17"/>
+					<reportElement x="348" y="185" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota64}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="321" y="221" width="30" height="17"/>
+					<reportElement x="348" y="205" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota74}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="321" y="241" width="30" height="17"/>
+					<reportElement x="348" y="225" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota84}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="321" y="261" width="30" height="17"/>
+					<reportElement x="348" y="245" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota94}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="321" y="281" width="30" height="17"/>
+					<reportElement x="348" y="265" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota104}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="321" y="301" width="30" height="17"/>
+					<reportElement x="348" y="285" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota114}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="321" y="321" width="30" height="17"/>
+					<reportElement x="348" y="305" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota124}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="359" y="121" width="13" height="17" isRemoveLineWhenBlank="true"/>
+					<reportElement x="386" y="105" width="13" height="17" isRemoveLineWhenBlank="true"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta24}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="422" y="181" width="30" height="17"/>
+					<reportElement x="449" y="165" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{exame5}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="359" y="162" width="13" height="17"/>
+					<reportElement x="386" y="146" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta44}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="359" y="141" width="13" height="17"/>
+					<reportElement x="386" y="125" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta34}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="359" y="201" width="13" height="17"/>
+					<reportElement x="386" y="185" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta64}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="359" y="221" width="13" height="17"/>
+					<reportElement x="386" y="205" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta74}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="359" y="241" width="13" height="17"/>
+					<reportElement x="386" y="225" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta84}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="359" y="261" width="13" height="17"/>
+					<reportElement x="386" y="245" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta94}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="359" y="281" width="13" height="17"/>
+					<reportElement x="386" y="265" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta104}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="359" y="301" width="13" height="17"/>
+					<reportElement x="386" y="285" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta114}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="359" y="321" width="13" height="17"/>
+					<reportElement x="386" y="305" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta124}]]></textFieldExpression>
 				</textField>
 				<line>
-					<reportElement x="0" y="360" width="542" height="1"/>
+					<reportElement x="27" y="339" width="542" height="1"/>
 				</line>
 				<staticText>
-					<reportElement x="8" y="344" width="100" height="15"/>
+					<reportElement x="35" y="327" width="100" height="12"/>
 					<textElement>
 						<font size="8" isBold="false"/>
 					</textElement>
 					<text><![CDATA[Falta Global:]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement x="167" y="344" width="30" height="15"/>
+					<reportElement x="194" y="327" width="30" height="12"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ftq1}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="221" y="344" width="30" height="15"/>
+					<reportElement x="248" y="327" width="30" height="12"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ftq2}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="282" y="344" width="30" height="15"/>
+					<reportElement x="309" y="327" width="30" height="12"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ftq3}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="341" y="344" width="30" height="15"/>
+					<reportElement x="368" y="327" width="30" height="12"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ftq4}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="351" y="49" width="176" height="16"/>
+					<reportElement x="378" y="39" width="176" height="16"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{situacao}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="351" y="34" width="59" height="15"/>
+					<reportElement x="378" y="28" width="59" height="15"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[SITUAÇÃO]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement x="507" y="181" width="30" height="17"/>
+					<reportElement x="534" y="165" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta5}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="422" y="121" width="30" height="17"/>
+					<reportElement x="449" y="105" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{exame2}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="422" y="161" width="30" height="17"/>
+					<reportElement x="449" y="145" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{exame4}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="422" y="141" width="30" height="17"/>
+					<reportElement x="449" y="125" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{exame3}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="422" y="201" width="30" height="17"/>
+					<reportElement x="449" y="185" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{exame6}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="422" y="221" width="30" height="17"/>
+					<reportElement x="449" y="205" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{exame7}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="422" y="241" width="30" height="17"/>
+					<reportElement x="449" y="225" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{exame8}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="422" y="261" width="30" height="17"/>
+					<reportElement x="449" y="245" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{exame9}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="422" y="281" width="30" height="17"/>
+					<reportElement x="449" y="265" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{exame10}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="422" y="302" width="30" height="17"/>
+					<reportElement x="449" y="285" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{exame11}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="422" y="322" width="30" height="17"/>
+					<reportElement x="449" y="306" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{exame12}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="466" y="121" width="30" height="17"/>
+					<reportElement x="493" y="105" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Long"><![CDATA[$F{freq_componente2}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="466" y="141" width="30" height="17"/>
+					<reportElement x="493" y="125" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Long"><![CDATA[$F{freq_componente3}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="5" y="101" width="138" height="17"/>
+					<reportElement x="32" y="85" width="138" height="17"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina1}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="259" y="181" width="30" height="17"/>
+					<reportElement x="286" y="165" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota53}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="186" y="101" width="13" height="17"/>
+					<reportElement x="213" y="85" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta11}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="241" y="101" width="13" height="17"/>
+					<reportElement x="268" y="85" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta12}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="300" y="101" width="13" height="17"/>
+					<reportElement x="327" y="85" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta13}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="149" y="101" width="30" height="17"/>
+					<reportElement x="176" y="85" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota11}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="205" y="101" width="30" height="17"/>
+					<reportElement x="232" y="85" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota12}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="259" y="101" width="30" height="17"/>
+					<reportElement x="286" y="85" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota13}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="381" y="101" width="30" height="17"/>
+					<reportElement x="408" y="85" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{media1}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="507" y="101" width="30" height="17"/>
+					<reportElement x="534" y="85" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tot_falta1}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="321" y="101" width="30" height="17"/>
+					<reportElement x="348" y="85" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota14}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="359" y="101" width="13" height="17"/>
+					<reportElement x="386" y="85" width="13" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{falta14}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="422" y="101" width="30" height="17"/>
+					<reportElement x="449" y="85" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{exame1}]]></textFieldExpression>
 				</textField>
 				<textField pattern="###0.00">
-					<reportElement x="466" y="101" width="30" height="17"/>
+					<reportElement x="493" y="85" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Long"><![CDATA[$F{freq_componente1}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="381" y="141" width="30" height="17"/>
+					<reportElement x="408" y="125" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{media3}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="5" y="141" width="138" height="17"/>
+					<reportElement x="32" y="125" width="138" height="17"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina3}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="149" y="141" width="30" height="17"/>
+					<reportElement x="176" y="125" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota31}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="259" y="141" width="30" height="17"/>
+					<reportElement x="286" y="125" width="30" height="17"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nota33}]]></textFieldExpression>
 				</textField>
 				<line>
-					<reportElement x="146" y="66" width="1" height="32"/>
+					<reportElement x="173" y="57" width="1" height="32"/>
 				</line>
 				<line>
-					<reportElement x="0" y="33" width="542" height="1"/>
+					<reportElement x="27" y="28" width="542" height="1"/>
 				</line>
 				<line>
-					<reportElement x="0" y="65" width="542" height="1"/>
+					<reportElement x="27" y="56" width="542" height="1"/>
 				</line>
 				<line>
-					<reportElement x="0" y="0" width="542" height="1"/>
+					<reportElement x="27" y="0" width="542" height="1"/>
 				</line>
 				<textField isBlankWhenNull="true">
-					<reportElement x="5" y="221" width="138" height="17"/>
+					<reportElement x="32" y="205" width="138" height="17"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina7}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="54" y="75" width="73" height="15"/>
+					<reportElement x="32" y="64" width="138" height="15"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[DISCIPLINA]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="149" y="67" width="43" height="15"/>
+					<reportElement x="176" y="57" width="43" height="12"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[1º BIM.]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="205" y="67" width="43" height="15"/>
+					<reportElement x="232" y="57" width="43" height="12"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[2º BIM.]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="259" y="67" width="43" height="15"/>
+					<reportElement x="286" y="57" width="43" height="12"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[3º BIM.]]></text>
 				</staticText>
 				<line>
-					<reportElement x="256" y="66" width="1" height="32"/>
+					<reportElement x="283" y="57" width="1" height="32"/>
 				</line>
 				<staticText>
-					<reportElement x="379" y="67" width="34" height="15"/>
+					<reportElement x="406" y="57" width="34" height="12"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[MÉDIA]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="418" y="67" width="38" height="15"/>
+					<reportElement x="445" y="57" width="38" height="12"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[EXAME]]></text>
 				</staticText>
+				<line>
+					<reportElement x="443" y="57" width="1" height="282"/>
+				</line>
 			</band>
 		</groupHeader>
 		<groupFooter>
@@ -4806,87 +4810,87 @@ WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
 	<pageHeader>
 		<band height="66" splitType="Stretch">
 			<rectangle>
-				<reportElement x="0" y="4" width="542" height="62"/>
+				<reportElement x="27" y="4" width="542" height="62"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="403" y="10" width="133" height="16"/>
+				<reportElement x="430" y="10" width="133" height="16"/>
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[BOLETIM ESCOLAR]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="108" y="23" width="253" height="15"/>
+				<reportElement x="135" y="23" width="253" height="15"/>
 				<textElement>
 					<font size="8" isBold="true" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[SECRETARIA MUNICIPAL DE EDUCAÇÃO E CULTURA]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="108" y="10" width="253" height="14"/>
+				<reportElement x="135" y="10" width="253" height="14"/>
 				<textElement markup="none">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="108" y="37" width="253" height="15"/>
+				<reportElement x="135" y="37" width="253" height="15"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="108" y="51" width="160" height="15"/>
+				<reportElement x="135" y="51" width="160" height="15"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["Endereço: "+$F{logradouro}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="271" y="51" width="43" height="15"/>
+				<reportElement x="298" y="51" width="43" height="15"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Telefone:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="376" y="51" width="44" height="15"/>
+				<reportElement x="403" y="51" width="44" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[E-mail:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="422" y="51" width="111" height="15"/>
+				<reportElement x="449" y="51" width="111" height="15"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{email}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="454" y="37" width="42" height="15"/>
+				<reportElement x="481" y="37" width="42" height="15"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$P{ano}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="315" y="51" width="59" height="15"/>
+				<reportElement x="342" y="51" width="59" height="15"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{fone}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="403" y="37" width="52" height="15"/>
+				<reportElement x="430" y="37" width="52" height="15"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Ano Letivo:]]></text>
 			</staticText>
 			<image>
-				<reportElement x="5" y="8" width="103" height="58"/>
+				<reportElement x="53" y="10" width="57" height="46"/>
 				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
 			</image>
 		</band>
