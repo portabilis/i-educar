@@ -4289,7 +4289,7 @@ WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
 					<reportElement x="403" y="57" width="1" height="282"/>
 				</line>
 				<line>
-					<reportElement x="382" y="70" width="1" height="254"/>
+					<reportElement x="382" y="83" width="1" height="242"/>
 				</line>
 				<staticText>
 					<reportElement x="387" y="70" width="10" height="11"/>
@@ -4470,28 +4470,28 @@ WHERE falta_componente_curricular.etapa in('1','2','3','4') AND
 					<text><![CDATA[Falta Global:]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement x="194" y="327" width="30" height="12"/>
+					<reportElement x="206" y="327" width="20" height="12"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ftq1}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="248" y="327" width="30" height="12"/>
+					<reportElement x="261" y="327" width="20" height="12"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ftq2}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="309" y="327" width="30" height="12"/>
+					<reportElement x="322" y="327" width="20" height="12"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ftq3}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="368" y="327" width="30" height="12"/>
+					<reportElement x="381" y="327" width="20" height="12"/>
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
