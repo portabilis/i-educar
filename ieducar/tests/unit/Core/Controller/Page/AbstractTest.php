@@ -163,4 +163,38 @@ class Core_Controller_Page_AbstractTest extends UnitBaseTest
   {
     $this->_pageController->getBaseTitulo();
   }
+
+  public function testAppendOutput()
+  {
+    $this->_pageController->appendOutput('string 1')
+                          ->appendOutput('string 2');
+
+    $this->assertEquals(
+      'string 1' . PHP_EOL . 'string 2',
+      $this->_pageController->getAppendedOutput(),
+      '->getAppendedOutput() retorna o conteúdo a ser adicionado como uma string separada por quebra de linha'
+    );
+  }
+
+  public function testGetApendedOutputRetornaNullQuandoNaoExisteConteudoASerAdicionado()
+  {
+    $this->assertNull($this->_pageController->getAppendedOutput());
+  }
+
+  public function testPrependOutput()
+  {
+    $this->_pageController->prependOutput('string 1')
+                          ->prependOutput('string 2');
+
+    $this->assertEquals(
+      'string 1' . PHP_EOL . 'string 2',
+      $this->_pageController->getPrependedOutput(),
+      '->getPrependedOutput() retorna o conteúdo a ser adicionado como uma string separada por quebra de linha'
+    );
+  }
+
+  public function testGetPrependedOutputRetornaNullQuandoNaoExisteConteudoASerAdicionado()
+  {
+    $this->assertNull($this->_pageController->getPrependedOutput());
+  }
 }
