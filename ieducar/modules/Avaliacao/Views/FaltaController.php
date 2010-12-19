@@ -74,9 +74,9 @@ class FaltaController extends Core_Controller_Page_EditController
   protected $_etapa = NULL;
 
   /**
-   * @var Avaliacao_Model_NotaComponente
+   * @var int
    */
-  protected $_nota = NULL;
+  protected $_componenteCurricular = NULL;
 
   /**
    * @var Avaliacao_Model_FaltaAbstract
@@ -93,7 +93,7 @@ class FaltaController extends Core_Controller_Page_EditController
 
     $this->_options = array(
       'new_success'         => 'boletim',
-      'new_success_params' => array('matricula' => $this->getRequest()->matricula),
+      'new_success_params'  => array('matricula' => $this->getRequest()->matricula),
       'edit_success'        => 'boletim',
       'edit_success_params' => array('matricula' => $this->getRequest()->matricula),
     );
@@ -113,10 +113,22 @@ class FaltaController extends Core_Controller_Page_EditController
   {
     $this->_etapa = $this->getRequest()->etapa;
     $this->_matricula = $this->getRequest()->matricula;
+    $this->_componenteCurricular = $this->getRequest()->componenteCurricular;
 
     if (isset($this->_etapa) && isset($this->_matricula)) {
       return FALSE;
     }
+
+    if ($this->_regra->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+      $faltas = $this->_service->getFaltasComponentes();
+      $faltas = isset($faltas[$this->_componenteCurricular]) ?
+        $faltas[$this->_componenteCurricular] : array();
+    }
+    else {
+      $faltas = $this->_service->getFaltasGerais();
+    }
+
+    $this->_etapa = count($faltas) + 1;
 
     return TRUE;
   }
@@ -127,6 +139,7 @@ class FaltaController extends Core_Controller_Page_EditController
   protected function _initEditar()
   {
     $this->_falta = $this->_service->getFalta($this->_etapa);
+    $this->_parecer = $this->_service->getParecerDescritivo($this->_etapa, $this->_componenteCurricular);
     return TRUE;
   }
 
@@ -137,8 +150,13 @@ class FaltaController extends Core_Controller_Page_EditController
   {
     $this->campoOculto('matricula', $this->_matricula);
     $this->campoOculto('etapa', $this->_etapa);
+    $this->campoOculto('componenteCurricular', $this->_componenteCurricular);
 
     $matricula = $this->_service->getOption('matriculaData');
+
+    if (! isset($this->_etapa)) {
+      $this->_etapa = 1;
+    }
 
     $this->campoRotulo('1nome', 'Nome', $matricula['nome']);
     $this->campoRotulo('2curso', 'Curso', $matricula['curso_nome']);
@@ -146,7 +164,17 @@ class FaltaController extends Core_Controller_Page_EditController
     $this->campoRotulo('4turma', 'Turma', $matricula['turma_nome']);
     $this->campoRotulo('5etapa', 'Etapa', $this->_etapa == 'Rc' ? 'Recuperação' : $this->_etapa);
 
+    if ($this->_regra->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+      $componentes = $this->_service->getComponentes();
+      $this->campoRotulo('6componente_curricular', 'Componente curricular', $componentes[$this->getRequest()->componenteCurricular]);
+    }
+
     $this->campoLista('falta', 'Falta', range(0, 100, 1), $this->_falta->quantidade);
+
+    // Caso o parecer seja por etapa e por componente
+    if ($this->_regra->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE) {
+      $this->campoMemo('parecer', 'Parecer', $this->_parecer, 40, 10, TRUE);
+    }
   }
 
   /**
@@ -157,12 +185,31 @@ class FaltaController extends Core_Controller_Page_EditController
     $quantidade = 0 < $this->getRequest()->falta ?
       (int) $this->getRequest()->falta : 0;
 
-    $falta = new Avaliacao_Model_FaltaGeral(array(
-      'quantidade' => $quantidade,
-      'etapa' => $this->getRequest()->etapa
-    ));
+    if ($this->_regra->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+      $falta = new Avaliacao_Model_FaltaComponente(array(
+        'componenteCurricular' => $this->getRequest()->componenteCurricular,
+        'quantidade' => $quantidade,
+        'etapa' => $this->getRequest()->etapa
+      ));
+      $this->_service->addFalta($falta);
+    }
+    else {
+      $falta = new Avaliacao_Model_FaltaGeral(array(
+        'quantidade' => $quantidade,
+        'etapa' => $this->getRequest()->etapa
+      ));
+    }
 
     $this->_service->addFalta($falta);
+
+    if ($this->_regra->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE) {
+      $parecer = new Avaliacao_Model_ParecerDescritivoComponente(array(
+        'componenteCurricular' => $this->getRequest()->componenteCurricular,
+        'parecer'              => $this->getRequest()->parecer,
+        'etapa'                => $this->getRequest()->etapa
+      ));
+      $this->_service->addParecer($parecer);
+    }
 
     try {
       $this->_service->save();

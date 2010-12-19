@@ -165,12 +165,27 @@ class BoletimController extends Core_Controller_Page_ViewController
     $this->addDetalhe(array('Série/Turma', $serie . ' / ' . $turma));
     $this->addDetalhe(array('Situação', $situacao));
 
+    // Booleano para saber se o tipo de nota é nenhum.
+    $nenhumaNota = ($this->_service->getRegra()->get('tipoNota') ==
+      RegraAvaliacao_Model_Nota_TipoValor::NENHUM);
+
+    // Booleano para saber o tipo de presença em que ocorre apuração
+    $porComponente = ($this->_service->getRegra()->get('tipoPresenca') ==
+      RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE);
+
     // Dados da regra de avaliação
     $this->addDetalhe(array('Regra avaliação', $this->_service->getRegra()));
     $this->addDetalhe(array('Apuração de falta', $this->_service->getRegra()->tipoPresenca));
     $this->addDetalhe(array('Parecer descritivo', $this->_service->getRegra()->parecerDescritivo));
     $this->addDetalhe(array('Progressão', $this->_service->getRegra()->tipoProgressao));
-    $this->addDetalhe(array('Média', $this->_service->getRegra()->media));
+
+    if ($nenhumaNota) {
+      $media = 'Não usa nota';
+    }
+    else {
+      $media = $this->_service->getRegra()->media;
+    }
+    $this->addDetalhe(array('Média', $media));
 
     // Cria um array com a quantidade de etapas de 1 a n
     $etapas = range(1, $this->_service->getOption('etapas'), 1);
@@ -185,10 +200,6 @@ class BoletimController extends Core_Controller_Page_ViewController
       0 => array('style' => 'background-color: #E4E9ED'),
       1 => array('style' => 'background-color: #FFFFFF')
     );
-
-    // Booleano para saber o tipo de presença em que ocorre apuração
-    $porComponente = ($this->_service->getRegra()->get('tipoPresenca') ==
-      RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE);
 
     // Helper para criar links e urls
     $url = CoreExt_View_Helper_UrlHelper::getInstance();
@@ -208,7 +219,15 @@ class BoletimController extends Core_Controller_Page_ViewController
 
     foreach ($etapas as $etapa) {
       $data = array('data' => sprintf('Etapa %d', $etapa));
-      $data['colspan'] = $porComponente ? 2 : 1;
+
+      if ($nenhumaNota) {
+        $data['colspan'] = 1;
+      }
+      else {
+        $data['colspan'] = $porComponente ? 2 : 1;
+      }
+
+
       $data['attributes'] = $attributes;
       $labels[] = $data;
     }
@@ -227,9 +246,15 @@ class BoletimController extends Core_Controller_Page_ViewController
 
     // Colspan para tabela com labels e sublabels
     $colspan += $porComponente && $sit->recuperacao ? 4 : 3;
-    $labels[] = array('data' => $porComponente ? '' : 'Média final', 'attributes' => $attributes, 'colspan' => $porComponente ? $colspan : 1);
+    if ($nenhumaNota) {
+      $colspan--;
+    }
 
-    // Inclui coluna para % de presença geral
+    if (! $nenhumaNota) {
+      $labels[] = array('data' => $porComponente ? '' : 'Média', 'attributes' => $attributes, 'colspan' => $porComponente ? $colspan : 1);
+    }
+
+    // Inclui coluna para % de presença geral.
     if (!$porComponente) {
       if ($sit->recuperacao) {
         $labels[] = array('data' => 'Exame', 'attributes' => $attributes);
@@ -250,11 +275,15 @@ class BoletimController extends Core_Controller_Page_ViewController
       $subLabels = array();
       $subLabels[] = array('attributes' => $attributes);
       for ($i = 0, $loop = count($etapas); $i < $loop; $i++) {
-        $subLabels[] = array('data' => 'Nota', 'attributes' => $attributes);
+        if (! $nenhumaNota) {
+          $subLabels[] = array('data' => 'Nota', 'attributes' => $attributes);
+        }
         $subLabels[] = array('data' => 'Falta', 'attributes' => $attributes);
       }
 
-      $subLabels[] = array('data' => 'Média', 'attributes' => $attributes);
+      if (! $nenhumaNota) {
+        $subLabels[] = array('data' => 'Média', 'attributes' => $attributes);
+      }
 
       if ($sit->recuperacao) {
         $subLabels[] = array('data' => 'Exame', 'attributes' => $attributes);
@@ -286,13 +315,23 @@ class BoletimController extends Core_Controller_Page_ViewController
     $faltasStats = $this->_service->getSituacaoFaltas();
 
     // Texto do link
-    $linkText = ($porComponente ? 'nota/falta' : 'nota');
+    if ($nenhumaNota) {
+      $linkText = 'falta';
+      $linkPath = 'falta';
+    }
+    else {
+      $linkText = ($porComponente ? 'nota/falta' : 'nota');
+      $linkPath = 'nota';
+    }
 
     // Parâmetros para o link de nota/falta nova
     $newLink = array(
       'text'  => 'Lançar ' . $linkText,
-      'path'  => 'nota',
-      'query' => array('matricula' => $matricula['cod_matricula'], 'componenteCurricular' => 0)
+      'path'  => $linkPath,
+      'query' => array(
+        'matricula' => $matricula['cod_matricula'],
+        'componenteCurricular' => 0
+      )
     );
 
     $iteration = 0;
@@ -302,12 +341,12 @@ class BoletimController extends Core_Controller_Page_ViewController
       // Nome do componente curricular
       $data[] = array('data' => $componente, 'attributes' => array('style' => 'padding: 5px; text-align: left'));
 
-      $notas          = $notasComponentes[$id];
-      $mediaSituacao  = $mediasSituacoes->componentesCurriculares[$id];
-      $medias         = $mediasComponentes[$id];
-      $faltas         = $faltasComponentes[$id];
-      $faltaStats     = $faltasStats->componentesCurriculares[$id];
-      $parecer        = NULL;
+      $notas         = $notasComponentes[$id];
+      $mediaSituacao = $mediasSituacoes->componentesCurriculares[$id];
+      $medias        = $mediasComponentes[$id];
+      $faltas        = $faltasComponentes[$id];
+      $faltaStats    = $faltasStats->componentesCurriculares[$id];
+      $parecer       = NULL;
 
       // Caso os pareceres sejam por componente e anuais, recupera a instância
       if ($parecerComponenteAnual) {
@@ -343,36 +382,64 @@ class BoletimController extends Core_Controller_Page_ViewController
 
         if (isset($faltas[$i])) {
           $update['query']['etapa'] = $faltas[$i]->etapa;
-          $falta = $url->l($faltas[$i]->quantidade, 'nota', $update);
+          $linkPath = $nenhumaNota ? 'falta' : 'nota';
+          $falta = $url->l($faltas[$i]->quantidade, $linkPath, $update);
         }
 
-        if (is_null($nota)) {
-          if ($porComponente) {
-            if (is_null($falta)) {
-              $colspan = 2;
-            }
-            else {
-              $colspan = 1;
+        /*
+         * Exibição muito dinâmica. Em resumo, os casos são:
+         *
+         * 1. nota & falta componente
+         * 2. nota
+         * 3. falta componente
+         * 4. falta geral
+         */
+        if ($nenhumaNota) {
+          $colspan = 1;
+        }
+        elseif (! $nenhumaNota && $porComponente && is_null($falta)) {
+          $colspan = 2;
+        }
+        else {
+          $colspan = 1;
+        }
+
+        // Caso 1.
+        if (! $nenhumaNota) {
+          if ($nota) {
+            // Caso 2: resolvido com colspan.
+            $data[] = array('data' => $nota, 'attributes' => $attributes, 'colspan' => $colspan);
+
+            if ($porComponente) {
+              $data[] = array('data' => $falta, 'attributes' => $attributes);
             }
           }
           else {
-            $colspan = NULL;
+            $data[] = array('data' => $new, 'attributes' => $attributes, 'colspan' => $colspan);
+            $new = '';
           }
-          $data[] = array('data' => $new, 'attributes' => $attributes, 'colspan' => $colspan);
-          $new = '';
         }
-        else {
-          $data[] = array('data' => $nota, 'attributes' => $attributes);
-
-          if ($porComponente) {
-            $data[] = array('data' => $falta, 'attributes' => $attributes);
+        // Caso 3.
+        elseif ($nenhumaNota && $porComponente) {
+          if ($falta) {
+            $data[] = array('data' => $falta, 'attributes' => $attributes, 'colspan' => $colspan);
           }
+          else {
+            $data[] = array('data' => $new, 'attributes' => $attributes, 'colspan' => $colspan);
+            $new = '';
+          }
+        }
+        // Caso 4.
+        else {
+          $data[] = array('data' => '', 'attributes' => $attributes);
         }
       }
 
       // Média no componente curricular
-      $media = $medias[0]->mediaArredondada . ($medias[0]->etapa == 'Rc' ? ' (Rc)' : '');
-      $data[] = array('data' => $media, 'attributes' => $attributes);
+      if (! $nenhumaNota) {
+        $media = $medias[0]->mediaArredondada . ($medias[0]->etapa == 'Rc' ? ' (Rc)' : '');
+        $data[] = array('data' => $media, 'attributes' => $attributes);
+      }
 
       // Adiciona uma coluna extra caso aluno esteja em exame em alguma componente curricular
       if ($sit->recuperacao) {
@@ -470,14 +537,15 @@ class BoletimController extends Core_Controller_Page_ViewController
         $data[] = array('data' => $new, 'attributes' => $attributes);
         $new = '';
 
-        if ($porComponente) {
+        if ($porComponente && ! $nenhumaNota) {
           $data[] = array('data' => '', 'attributes' => $attributes);
         }
       }
     }
 
-    // Porcentagem presença
-    $data[] = array();
+    if (! $nenhumaNota) {
+      $data[] = array();
+    }
 
     if ($sit->recuperacao) {
       $data[] = array('data' => '', 'attributes' => $attributes);
@@ -487,6 +555,7 @@ class BoletimController extends Core_Controller_Page_ViewController
       $data[] = array('data' => '', 'attributes' => $attributes);
     }
 
+    // Porcentagem presença
     $data[] = array('data' => sprintf('%.2f%%', $faltasStats->porcentagemPresenca), 'attributes' => $attributes);
     $data[] = array('data' => $situacao->getValue($sit->falta->situacao), 'attributes' => $attributes);
 

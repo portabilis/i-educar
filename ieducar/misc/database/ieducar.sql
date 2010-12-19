@@ -10867,7 +10867,7 @@ SELECT pg_catalog.setval('parecer_geral_id_seq', 1, false);
 CREATE TABLE regra_avaliacao (
     id integer NOT NULL,
     instituicao_id integer NOT NULL,
-    formula_media_id integer NOT NULL,
+    formula_media_id integer,
     formula_recuperacao_id integer DEFAULT 0,
     tabela_arredondamento_id integer,
     nome character varying(50) NOT NULL,
@@ -25794,6 +25794,7 @@ INSERT INTO changelog VALUES (29, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '29_cria
 INSERT INTO changelog VALUES (30, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '30_cria_indices_otimizacao_queries_quadro_horarios.sql');
 INSERT INTO changelog VALUES (31, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '31_remove_constraint_desnecessaria_pmieducar_quadro_horario_horarios.sql');
 INSERT INTO changelog VALUES (32, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '32_corrige_comentario_em_indices.sql');
+INSERT INTO changelog VALUES (33, 'Main', 'NOW()', 'NOW()', 'dbdeploy', '33_atualiza_regra_avaliacao_nota_nao_mais_obrigatoria.sql');
 
 
 --

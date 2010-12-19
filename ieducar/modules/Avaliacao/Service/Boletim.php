@@ -1163,17 +1163,21 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function getSituacaoComponentesCurriculares()
   {
-    // Carrega as médias pois este método pode ser chamado após a chamada a
-    // saveNotas().
-    $mediasComponentes = $this->_loadNotaComponenteCurricularMedia()
-                              ->getMediasComponentes();
-
     $situacao = new stdClass();
     $situacao->situacao = 0;
     $situacao->componentesCurriculares = array();
 
     // A situação é "aprovado" por padrão
     $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
+
+    if ($this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
+      return $situacao;
+    }
+
+    // Carrega as médias pois este método pode ser chamado após a chamada a
+    // saveNotas().
+    $mediasComponentes = $this->_loadNotaComponenteCurricularMedia()
+                              ->getMediasComponentes();
 
     // Se não tiver nenhuma média ou a quantidade for diferente dos componentes
     // curriculares da matrícula, ainda está em andamento
@@ -2261,6 +2265,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function saveNotas()
   {
+    if ($this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
+      return $this;
+    }
+
     $notaAluno = $this->_getNotaAluno();
     $notas = $this->getNotas();
 
