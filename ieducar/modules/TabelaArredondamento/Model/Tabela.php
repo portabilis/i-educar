@@ -91,11 +91,15 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
 
     // Tipo nota
     $tipoNota = RegraAvaliacao_Model_Nota_TipoValor::getInstance();
+    $tipoNotas = $tipoNota->getKeys();
+
+    // Remove "nenhum" das opções.
+    unset($tipoNotas[RegraAvaliacao_Model_Nota_TipoValor::NENHUM]);
 
     return array(
       'instituicao' => new CoreExt_Validate_Choice(array('choices' => $instituicoes)),
       'nome'        => new CoreExt_Validate_String(array('min' => 5, 'max' => 50)),
-      'tipoNota'    => new CoreExt_Validate_Choice(array('choices' => $tipoNota->getKeys()))
+      'tipoNota'    => new CoreExt_Validate_Choice(array('choices' => $tipoNotas))
     );
   }
 

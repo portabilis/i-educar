@@ -154,7 +154,9 @@ class EditController extends Core_Controller_Page_EditController
 
     // Tipo de nota
     $notaTipoValor = RegraAvaliacao_Model_Nota_TipoValor::getInstance();
-    $this->campoRadio('tipoNota', $this->_getLabel('tipoNota'), $notaTipoValor->getEnums(),
+    $notaTipos = $notaTipoValor->getEnums();
+    unset($notaTipos[RegraAvaliacao_Model_Nota_TipoValor::NENHUM]);
+    $this->campoRadio('tipoNota', $this->_getLabel('tipoNota'), $notaTipos,
       $this->getEntity()->get('tipoNota'), '', $this->_getHelp('tipoNota'));
 
     // Parte condicional

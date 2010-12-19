@@ -23,39 +23,29 @@
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
- * @package     RegraAvaliacao
+ * @package     TabelaArredondamento
  * @subpackage  Modules
- * @since       Arquivo disponível desde a versão 1.1.0
+ * @since       Arquivo disponível desde a versão 1.2.0
  * @version     $Id$
  */
 
-require_once 'CoreExt/Enum.php';
+require_once dirname(__FILE__) . '/../../../includes/bootstrap.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'TabelaArredondamento/Model/TabelaDataMapper.php';
 
-/**
- * RegraAvaliacao_Model_Nota_TipoValor class.
- *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- * @category    i-Educar
- * @license     @@license@@
- * @package     RegraAvaliacao
- * @subpackage  Modules
- * @since       Classe disponível desde a versão 1.1.0
- * @version     @@package_version@@
- */
-class RegraAvaliacao_Model_Nota_TipoValor extends CoreExt_Enum
-{
-  const NENHUM     = 0;
-  const NUMERICA   = 1;
-  const CONCEITUAL = 2;
+$tabelas = array();
 
-  protected $_data = array(
-    self::NENHUM       => 'Não usar nota',
-    self::NUMERICA     => 'Nota numérica',
-    self::CONCEITUAL   => 'Nota conceitual'
-  );
-
-  public static function getInstance()
-  {
-    return self::_getInstance(__CLASS__);
-  }
+if (isset($_GET['tipoNota'])) {
+  $tabela = new TabelaArredondamento_Model_TabelaDataMapper();
+  $tabelas = $tabela->findAll(array(), array('tipoNota' => (int) $_GET['tipoNota']));
 }
+
+header('Content-type: text/xml');
+
+echo "<?xml version=\"1.0\" encoding=\"ISO-8859-15\"?>\n<query xmlns=\"sugestoes\">\n";
+
+foreach ($tabelas as $tabela) {
+  echo sprintf('<tabela id="%d">%s</tabela>', $tabela->id, $tabela->nome);
+}
+
+echo '</query>';
