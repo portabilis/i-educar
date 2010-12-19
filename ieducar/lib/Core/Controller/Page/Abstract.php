@@ -130,6 +130,11 @@ abstract class Core_Controller_Page_Abstract
   public $url_cancelar = NULL;
 
   /**
+   * @var array
+   */
+  private $_output = array();
+
+  /**
    * Construtor.
    */
   public function __construct()
@@ -381,6 +386,70 @@ abstract class Core_Controller_Page_Abstract
   protected function _preRender()
   {
     return $this->configurarBotoes();
+  }
+
+  /**
+   * Adiciona conteúdo HTML após o conteúdo gerado por um
+   * Core_Controller_Page_Abstract.
+   *
+   * @param string $data A string HTML a ser adiciona após o conteúdo.
+   * @return Core_Controller_Page_Abstract Provê interface fluída
+   */
+  public function appendOutput($data)
+  {
+    if (!empty($data) && is_string($data)) {
+      $this->_output['append'][] = $data;
+    }
+    return $this;
+  }
+
+  /**
+   * Retorna todo o conteúdo acrescentado como uma string.
+   * @return string O conteúdo a ser acrescentado separado com uma quebra de linha.
+   * @see clsBase#MakeBody()
+   */
+  public function getAppendedOutput()
+  {
+    return $this->_getOutput('append');
+  }
+
+  /**
+   * Adiciona conteúdo HTML antes do conteúdo HTML gerado por um
+   * Core_Controller_Page_Abstract.
+   *
+   * @param string $data A string HTML a ser adiciona após o conteúdo.
+   * @return Core_Controller_Page_Abstract Provê interface fluída
+   */
+  public function prependOutput($data)
+  {
+    if (!empty($data) && is_string($data)) {
+      $this->_output['prepend'][] = $data;
+    }
+    return $this;
+  }
+
+  /**
+   * Retorna todo o conteúdo prefixado como uma string.
+   * @return string O conteúdo a ser prefixado separado com uma quebra de linha.
+   * @see clsBase#MakeBody()
+   */
+  public function getPrependedOutput()
+  {
+    return $this->_getOutput('prepend');
+  }
+
+  /**
+   * Retorna o conteúdo a ser adicionado a saída de acordo com a região.
+   * @param string $pos Região para retornar o conteúdo a ser adicionado na saída.
+   * @return string|NULL Conteúdo da região separado por uma quebra de linha ou
+   *   NULL caso a região não exista.
+   */
+  private function _getOutput($pos = 'prepend')
+  {
+    if (isset($this->_output[$pos])) {
+      return implode(PHP_EOL, $this->_output[$pos]);
+    }
+    return NULL;
   }
 
   /**
