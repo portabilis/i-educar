@@ -363,13 +363,8 @@ class indice extends clsCadastro
       $this->hora_falta        = str_replace('.', '', $this->hora_falta);
       $this->hora_falta        = str_replace(',', '.', $this->hora_falta);
 
-      if ($this->padrao_ano_escolar == 'on') {
-        $this->padrao_ano_escolar = 1;
-      }
-      else {
-        $this->padrao_ano_escolar = 0;
-      }
-
+      $this->padrao_ano_escolar = is_null($this->padrao_ano_escolar) ? 0 : 1;
+      
       $obj = new clsPmieducarCurso(NULL, $this->pessoa_logada,
         $this->ref_cod_tipo_regime, $this->ref_cod_nivel_ensino,
         $this->ref_cod_tipo_ensino, NULL, $this->nm_curso, $this->sgl_curso,
@@ -416,19 +411,14 @@ class indice extends clsCadastro
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
-
+    
     if ($this->habilitacao_curso && $this->incluir != 'S' && empty($this->excluir_)) {
       $this->carga_horaria     = str_replace('.', '', $this->carga_horaria);
       $this->carga_horaria     = str_replace(',', '.', $this->carga_horaria);
       $this->hora_falta        = str_replace('.', '', $this->hora_falta);
       $this->hora_falta        = str_replace(',', '.', $this->hora_falta);
 
-      if ($this->padrao_ano_escolar == 'on') {
-        $this->padrao_ano_escolar = 1;
-      }
-      else {
-        $this->padrao_ano_escolar = 0;
-      }
+      $this->padrao_ano_escolar = is_null($this->padrao_ano_escolar) ? 0 : 1;
 
       $obj = new clsPmieducarCurso($this->cod_curso, NULL, $this->ref_cod_tipo_regime,
         $this->ref_cod_nivel_ensino, $this->ref_cod_tipo_ensino, NULL,
