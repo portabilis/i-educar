@@ -74,6 +74,12 @@ class indice extends clsCadastro
 
 		$obj_permissoes = new clsPermissoes();
 		$nivel_acesso = $obj_permissoes->nivel_acesso( $pessoa_logada );
+                
+                $this->ano = $ano_atual = date("Y");
+		
+		//campo adicionado para pegar por parametro o Ano Letivo da Escola
+		$this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true);
+                include("include/pmieducar/educar_campo_lista.php");
 		if( $nivel_acesso == 1 || $nivel_acesso == 2 )
 		{
 			$obrigatorio = true;

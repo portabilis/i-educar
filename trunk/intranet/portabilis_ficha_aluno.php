@@ -74,6 +74,7 @@ class indice extends clsCadastro
 
 		$obj_permissoes = new clsPermissoes();
 		$nivel_acesso = $obj_permissoes->nivel_acesso( $pessoa_logada );
+                include("include/pmieducar/educar_campo_lista.php");
 		if( $nivel_acesso == 1 || $nivel_acesso == 2 )
 		{
 			$obrigatorio = true;
