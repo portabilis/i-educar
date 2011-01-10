@@ -567,7 +567,7 @@ class clsPmieducarServidor
 
       $filtros .= "
   {$whereAnd} (s.carga_horaria::text || ':00:00') >= COALESCE(
-    (SELECT SUM(carga_horaria)::text
+    (SELECT SUM(carga_horaria::time)::text
     FROM pmieducar.servidor_alocacao saa
     WHERE saa.ref_cod_servidor = {$str_not_in_servidor}),'00:00') $where";
 
