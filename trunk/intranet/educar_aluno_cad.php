@@ -1238,7 +1238,7 @@ class indice extends clsCadastro
       '10', '10', FALSE);
 
     // Adiciona uma aba com dados do Inep/Educacenso caso aluno tenha código Inep.
-    if (isset($this->cod_aluno)) {
+
       $alunoMapper = new Educacenso_Model_AlunoDataMapper();
 
       $alunoInep = NULL;
@@ -1248,18 +1248,10 @@ class indice extends clsCadastro
       catch(Exception $e) {
       }
 
-      if ($alunoInep) {
-        $this->campoAdicionaTab('Educacenso/Inep', $this->tab_habilitado);
-
-        $this->campoRotulo('_inep_cod_aluno', 'Código do aluno no Educacenso/Inep',
-          $alunoInep->alunoInep);
-
-        if (isset($alunoInep->nomeInep)) {
-          $this->campoRotulo('_inep_nome_aluno', 'Nome do aluno no Educacenso/Inep',
-            $alunoInep->nomeInep);
-        }
-      }
-    }
+      $this->campoAdicionaTab('Educacenso/Inep', $this->tab_habilitado);
+            
+      $this->campoNumero('cod_inep', 'Código INEP', $alunoInep->alunoInep, 20, 20, FALSE);
+      $this->campoTexto('nome_inep', 'Nome Inep', $alunoInep->nomeInep, 40, 255, FALSE);
 
      // Adiciona uma aba com dados do Serieciasc caso aluno tenha código Inep.
     if (isset($this->cod_aluno)) {
@@ -1705,6 +1697,8 @@ class indice extends clsCadastro
     $this->_cadastraTransporte($this->cod_aluno, $this->transporte_aluno,
       $this->transporte_responsavel, $this->pessoa_logada);
 
+    $this->_cadastraInep($this->cod_aluno, $this->cod_inep, $this->nome_inep);
+
     //atualiza/cadastra serieciasc
     $this->_cadastraCiesc($this->cod_aluno, $this->cod_ciasc, $this->pessoa_logada);
 
@@ -1885,6 +1879,45 @@ class indice extends clsCadastro
     }
 
     return TRUE;
+  }
+
+  function _cadastraInep($cod_aluno, $cod_inep, $nome_inep)
+  {
+    $alunoMapper = new Educacenso_Model_AlunoDataMapper();
+
+    try {
+        $aluno = $alunoMapper->find(array('aluno' => $this->cod_aluno));
+      }
+      catch(Exception $e) {
+      }
+
+      if (!empty($aluno->aluno))
+      {
+        $mapperDelete = new Educacenso_Model_AlunoDataMapper();
+        $mapperDelete->delete($aluno);
+      }
+    
+      if (!empty($cod_inep))
+      {
+        $mapperSave = new Educacenso_Model_Aluno();
+        $mapperSave->aluno = $cod_aluno;
+        $mapperSave->alunoInep = $cod_inep;
+
+         $mapperSave->nomeInep = $nome_inep;
+         $mapperSave->fonte ='fonte';
+
+        if (empty($aluno->alunoInep))//se não existe não bd, adiciona
+        {
+           $mapperSave->created_at = 'NOW()';
+        }
+        else
+        {
+           $mapperSave->created_at = $aluno->created_at;
+           $mapperSave->updated_at = 'NOW()';
+        }
+        
+        $alunoMapper->save($mapperSave);
+      }    
   }
 
   function _cadastraCiesc($cod_aluno, $cod_ciasc, $user)

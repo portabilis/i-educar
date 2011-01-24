@@ -28,6 +28,8 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once 'Educacenso/Model/AlunoDataMapper.php';
+require_once( "modules/Ciasc/Model/CodigoAlunoDataMapper.php" );
 require_once( "modules/Ciasc/Model/CodigoAlunoDataMapper.php" );
 
 class clsIndexBase extends clsBase
@@ -106,6 +108,7 @@ class indice extends clsListagem
 
 		$this->campoNumero("cod_aluno","C&oacute;digo Aluno",$this->cod_aluno,20,255,false);
 		$this->campoNumero("cod_ciasc","C&oacute;digo CIASC",$this->cod_ciasc,20,255,false);
+		$this->campoNumero("cod_inep","C&oacute;digo INEP",$this->cod_inep,20,255,false);
 		$this->campoTexto("nome_aluno","Nome do aluno",$this->nome_aluno,50,255,false);
 //		if ($this->pessoa_logada == 184580) {
 			$this->campoData("data_nascimento", "Data de Nascimento", $this->data_nascimento);
@@ -134,6 +137,7 @@ class indice extends clsListagem
 		$this->addCabecalhos( array(
 			"C&oacute;digo Aluno",
                         "Matrícula CIASC",
+                        "Código INEP",
 			"Nome do Aluno",
 			"Nome da Mãe",
 			"Nome do Respons&aacute;vel",
@@ -195,7 +199,8 @@ class indice extends clsListagem
 						$this->nome_pai,
 						$this->nome_mae,
 						$this->nome_responsavel,
-                                                $this->cod_ciasc
+                                                $this->cod_ciasc,
+                                                $this->cod_inep
 					);
 		/*} else {
 			$lista = $obj_aluno->lista(
@@ -321,10 +326,25 @@ class indice extends clsListagem
                                       $registro['cod_ciasc'] = $alunoCiasc->cod_ciasc;
                                   }
 
+                                  $inepMapper = new Educacenso_Model_AlunoDataMapper();
+                                  $alunoInep = NULL;
+                                  
+                                  try {
+                                    $alunoInep = $inepMapper->find(array('cod_aluno' => $registro["cod_aluno"]));
+                                  }
+                                  catch(Exception $e) {
+                                  }
+                                  
+                                  if (empty($alunoInep->alunoInep)){
+                                      $registro['cod_inep'] = '-';
+                                  } else {
+                                      $registro['cod_inep'] = $alunoInep->alunoInep;
+                                  }
 
 				$this->addLinhas( array(
 					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["cod_aluno"]}</a>",
 					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["cod_ciasc"]}</a>",
+					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["cod_inep"]}</a>",
 					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["nome_aluno"]}</a>",
 					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["nm_mae"]}</a>",
 					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["nome_responsavel"]}</a>",
