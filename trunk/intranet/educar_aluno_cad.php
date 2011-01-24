@@ -1897,7 +1897,7 @@ class indice extends clsCadastro
     
     $ciascMapper = new Ciasc_Model_CodigoAlunoDataMapper();
     try {
-        $cad = $ciascMapper->find(array('cod_aluno' => $cod_aluno));
+        $cad = $ciascMapper->find(array('cod_aluno' => $cod_aluno));        
      }
      catch (Exception $e) 
      {}
@@ -1905,9 +1905,8 @@ class indice extends clsCadastro
      if (!empty($cad->cod_aluno))//remove o dado existente
      {
         $ciascMapperDelete = new Ciasc_Model_CodigoAluno();
-        $ciascMapperDelete->cod_aluno = $cad->cod_aluno;
-        $ciascMapperDelete->cod_ciasc = $cad->cod_ciasc;        
-        $ciascMapper->delete($ciascMapperDelete);
+        $ciascMapper->delete($cad);
+        
      }     
 
      if (!empty($cod_ciasc)) //foi informado um valor

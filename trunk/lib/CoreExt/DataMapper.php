@@ -450,7 +450,8 @@ abstract class CoreExt_DataMapper
     if ($instance instanceof CoreExt_Entity) {
       foreach ($this->_primaryKey as $pk) {
         $whereName = $this->_getTableColumn($pk);
-        $where[] = sprintf("%s = '%d'", $whereName, $instance->get($pk));
+        //$where[] = sprintf("%s = '%d'", $whereName, $instance->get($pk)); estoura o decimal. valor 9801762824 retornando 1211828232
+        $where[] = sprintf("%s = '%s'", $whereName, $instance->get($pk));
       }
     }
     elseif (is_numeric($instance)) {
@@ -591,7 +592,7 @@ abstract class CoreExt_DataMapper
    */
   public function delete($instance)
   {
-    return $this->_getDbAdapter()->Consulta($this->_getDeleteStatment($instance));
+      return $this->_getDbAdapter()->Consulta($this->_getDeleteStatment($instance));
   }
 
   /**
