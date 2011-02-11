@@ -193,7 +193,7 @@ class indice extends clsCadastro
 				$opcoes[$setor["cod_setor"]] = $setor["sgl_setor"];
 			}
 		}
-		$this->campoLista("setor_0", "Setor", $opcoes, $this->setor_0, "oproDocumentoNextLvl( this.value, '1' )");
+		$this->campoLista("setor_0", "Setor", $opcoes, $this->setor_0, "oproDocumentoNextLvl( this.value, '1' )", NULL, NULL, NULL, NULL, FALSE);
 
 		$lst_setor = $obj_setor->lista($this->setor_0);
 
