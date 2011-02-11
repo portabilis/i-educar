@@ -659,7 +659,7 @@ class indice extends clsDetalhe
     }
 
     if (!empty($ciasc)){
-        $this->addDetalhe(array('Matrícula série - Siasc', $ciasc->cod_ciasc));
+        $this->addDetalhe(array('Matrícula Série/Siasc', $ciasc->cod_ciasc));
     }
 
     // Verificação de permissão para cadastro.
