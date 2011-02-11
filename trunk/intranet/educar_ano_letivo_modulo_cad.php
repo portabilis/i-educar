@@ -145,7 +145,7 @@ class indice extends clsCadastro
     }
 
     $qtd_modulo = count($this->ano_letivo_modulo) == 0 ?
-      1 : count($this->ano_letivo_modulo) + 1;
+      0 : count($this->ano_letivo_modulo) + 1;
 
     if (is_numeric($this->ref_ano) &&
       is_numeric($this->ref_ref_cod_escola) &&
@@ -165,7 +165,7 @@ class indice extends clsCadastro
         }
       }
     }
-
+    
     if ($_POST['ref_cod_modulo'] && $_POST['data_inicio'] && $_POST['data_fim']) {
       $this->ano_letivo_modulo[$qtd_modulo]['sequencial_']     = $qtd_modulo;
       $this->ano_letivo_modulo[$qtd_modulo]['ref_cod_modulo_'] = $_POST['ref_cod_modulo'];
@@ -183,13 +183,13 @@ class indice extends clsCadastro
     $qtd_modulo = 1;
     unset($aux);
 
-    if ($this->ano_letivo_modulo) {
+    if ($this->ano_letivo_modulo) {        
       foreach ($this->ano_letivo_modulo as $campo) {
         if ($this->excluir_modulo == $campo['sequencial_']) {
           $this->ano_letivo_modulo[$campo['sequencial']] = NULL;
           $this->excluir_modulo = NULL;
         }
-        else {
+        else {            
           $obj_modulo = new clsPmieducarModulo($campo['ref_cod_modulo_']);
           $det_modulo = $obj_modulo->detalhe();
           $nm_tipo_modulo = $det_modulo['nm_tipo'];
