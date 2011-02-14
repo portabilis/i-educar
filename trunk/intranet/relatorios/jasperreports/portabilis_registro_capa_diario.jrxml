@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_registro_capa_diario" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.2100000000000006"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="524"/>
 	<subDataset name="dataset1"/>
 	<subDataset name="dataset2"/>
 	<subDataset name="dataset3"/>
@@ -416,7 +416,7 @@ ORDER BY nome_aluno ASC]]>
 				<reportElement x="376" y="695" width="1" height="18"/>
 			</line>
 			<staticText>
-				<reportElement x="561" y="733" width="55" height="13"/>
+				<reportElement x="379" y="698" width="55" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
