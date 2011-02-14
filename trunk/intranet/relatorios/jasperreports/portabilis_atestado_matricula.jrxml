@@ -26,6 +26,7 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT fcn_upper(instituicao.nm_instituicao) AS nm_instituicao,
+       fcn_upper(instituicao.nm_responsavel) AS nm_responsavel,
        escola.cod_escola as cod_escola,
        escola_ano_letivo.ano,
        fcn_upper(curso.nm_curso) as nm_curso,
@@ -53,7 +54,7 @@
               endereco_pessoa.idlog = logradouro.idlog AND
               juridica.idpes = escola.ref_idpes) AS tipo_logradouro,
 
-      (SELECT logradouro.nome
+      (SELECT COALESCE((SELECT logradouro.nome
          FROM public.logradouro,
               cadastro.juridica,
               cadastro.pessoa ps,
@@ -61,9 +62,9 @@
         WHERE juridica.idpes = ps.idpes AND
               ps.idpes = endereco_pessoa.idpes AND
               endereco_pessoa.idlog = logradouro.idlog AND
-              juridica.idpes = escola.ref_idpes) AS logradouro,
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.logradouro FROM cadastro.endereco_externo WHERE endereco_externo.idpes = pessoa.idpes))) AS logradouro,
 
-      (SELECT municipio.nome
+(SELECT COALESCE ((SELECT municipio.nome
          FROM public.municipio,
               cadastro.endereco_pessoa,
               cadastro.juridica,
@@ -71,9 +72,9 @@
         WHERE endereco_pessoa.idbai = bairro.idbai AND
               bairro.idmun = municipio.idmun AND
               juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS municipio,
+              juridica.idpes = escola.ref_idpes), (SELECT endereco_externo.cidade FROM cadastro.endereco_externo WHERE endereco_externo.idpes = pessoa.idpes))) AS municipio,
 
-      (SELECT bairro.nome
+      (SELECT COALESCE((SELECT bairro.nome
          FROM public.municipio,
               cadastro.endereco_pessoa,
               cadastro.juridica,
@@ -81,9 +82,9 @@
         WHERE endereco_pessoa.idbai = bairro.idbai AND
               bairro.idmun = municipio.idmun AND
               juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS bairro,
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.bairro FROM cadastro.endereco_externo WHERE endereco_externo.idpes = pessoa.idpes))) AS bairro,
 
-      (SELECT municipio.sigla_uf
+      (SELECT COALESCE((SELECT municipio.sigla_uf
          FROM public.municipio,
               cadastro.endereco_pessoa,
               cadastro.juridica,
@@ -91,19 +92,21 @@
         WHERE endereco_pessoa.idbai = bairro.idbai AND
               bairro.idmun = municipio.idmun AND
               juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS uf_municipio,
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.sigla_uf FROM cadastro.endereco_externo WHERE endereco_externo.idpes = pessoa.idpes))) AS uf_municipio,
 
-      (SELECT endereco_pessoa.numero
+      (SELECT COALESCE((SELECT endereco_pessoa.numero
          FROM cadastro.endereco_pessoa,
               cadastro.juridica
         WHERE juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS numero,
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.numero FROM cadastro.endereco_externo WHERE endereco_externo.idpes = pessoa.idpes))) AS numero,
 
-     (SELECT to_char(endereco_pessoa.cep, '99999-999')
+
+     (SELECT COALESCE((SELECT to_char(endereco_pessoa.cep, '99999-999')
          FROM cadastro.endereco_pessoa,
               cadastro.juridica
         WHERE juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS cep,
+              juridica.idpes = escola.ref_idpes),(SELECT to_char(endereco_externo.cep,'99999-999') FROM cadastro.endereco_externo WHERE endereco_externo.idpes = pessoa.idpes))) AS cep,
+
 
      (SELECT min(fone_pessoa.ddd)
          FROM cadastro.fone_pessoa,
@@ -167,75 +170,30 @@
        escola.ativo = 1 AND
        matricula.ativo = 1]]>
 	</queryString>
-	<field name="nm_instituicao" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="cod_escola" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="ano" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nm_curso" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nm_serie" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nm_turma" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="cod_aluno" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="cod_matricula" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nome" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="cidade" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nm_escola" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="tipo_logradouro" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="logradouro" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="municipio" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="bairro" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="uf_municipio" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="numero" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="cep" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="fone_ddd" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="fone" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="email" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="data_atual" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="hora_atual" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="nm_instituicao" class="java.lang.String"/>
+	<field name="nm_responsavel" class="java.lang.String"/>
+	<field name="cod_escola" class="java.lang.Integer"/>
+	<field name="ano" class="java.lang.Integer"/>
+	<field name="nm_curso" class="java.lang.String"/>
+	<field name="nm_serie" class="java.lang.String"/>
+	<field name="nm_turma" class="java.lang.String"/>
+	<field name="cod_aluno" class="java.lang.Integer"/>
+	<field name="cod_matricula" class="java.lang.Integer"/>
+	<field name="nome" class="java.lang.String"/>
+	<field name="cidade" class="java.lang.String"/>
+	<field name="nm_escola" class="java.lang.String"/>
+	<field name="tipo_logradouro" class="java.lang.String"/>
+	<field name="logradouro" class="java.lang.String"/>
+	<field name="municipio" class="java.lang.String"/>
+	<field name="bairro" class="java.lang.String"/>
+	<field name="uf_municipio" class="java.lang.String"/>
+	<field name="numero" class="java.math.BigDecimal"/>
+	<field name="cep" class="java.lang.String"/>
+	<field name="fone_ddd" class="java.math.BigDecimal"/>
+	<field name="fone" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="data_atual" class="java.lang.String"/>
+	<field name="hora_atual" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -270,7 +228,7 @@
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[DIRETOR(A)]]></text>
+				<text><![CDATA[SECRETÁRIO(A)]]></text>
 			</staticText>
 			<line>
 				<reportElement x="179" y="475" width="246" height="1"/>
@@ -290,7 +248,7 @@
 				<textFieldExpression class="java.lang.String"><![CDATA["Emissão: "+$F{data_atual}+" "+$F{hora_atual}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="103" y="52" width="201" height="13"/>
+				<reportElement x="102" y="52" width="202" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -324,13 +282,6 @@
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="102" y="16" width="278" height="13"/>
-				<textElement>
-					<font size="8" isBold="true" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[SECRETARIA MUNICIPAL DE EDUCAÇÃO E CULTURA]]></text>
-			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="102" y="28" width="278" height="13"/>
 				<textElement>
@@ -342,6 +293,13 @@
 				<reportElement x="21" y="4" width="57" height="46"/>
 				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
 			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="102" y="16" width="278" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_responsavel}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>

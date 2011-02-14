@@ -42,6 +42,10 @@
          FROM pmieducar.instituicao
         WHERE instituicao.cod_instituicao = $P{instituicao}) AS nome_instituicao,
 
+      (SELECT public.fcn_upper(instituicao.nm_responsavel)
+         FROM pmieducar.instituicao
+        WHERE instituicao.cod_instituicao = $P{instituicao}) AS nome_responsavel,
+
       (SELECT public.fcn_upper(substring(logradouro.idtlog from 1 for 1)) ||
               lower(substring(logradouro.idtlog, 2))
          FROM public.logradouro,
@@ -367,6 +371,7 @@ ORDER BY matricula_id]]>
 	<field name="ano" class="java.lang.Integer"/>
 	<field name="nm_escola" class="java.lang.String"/>
 	<field name="nome_instituicao" class="java.lang.String"/>
+	<field name="nome_responsavel" class="java.lang.String"/>
 	<field name="tipo_logradouro" class="java.lang.String"/>
 	<field name="logradouro" class="java.lang.String"/>
 	<field name="municipio" class="java.lang.String"/>
@@ -444,13 +449,6 @@ ORDER BY matricula_id]]>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="89" y="19" width="253" height="15"/>
-				<textElement>
-					<font size="8" isBold="true" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[SECRETARIA MUNICIPAL DE EDUCAÇÃO E CULTURA]]></text>
-			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="403" y="47" width="111" height="15"/>
 				<textElement>
@@ -783,6 +781,13 @@ ORDER BY matricula_id]]>
 				</textElement>
 				<text><![CDATA[final]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="89" y="18" width="253" height="14"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>

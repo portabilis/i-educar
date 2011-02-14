@@ -11,6 +11,7 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT public.fcn_upper(nm_instituicao) AS nome_instituicao,
+       public.fcn_upper(nm_responsavel) AS nome_responsavel,
        to_char(CURRENT_DATE,'dd/mm/yyyy') AS data_atual,
        to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
        (select public.fcn_upper(ps.nome)
@@ -27,6 +28,7 @@
        1 = 1]]>
 	</queryString>
 	<field name="nome_instituicao" class="java.lang.String"/>
+	<field name="nome_responsavel" class="java.lang.String"/>
 	<field name="data_atual" class="java.lang.String"/>
 	<field name="hora_atual" class="java.lang.String"/>
 	<field name="nm_escola" class="java.lang.String"/>
@@ -41,13 +43,6 @@
 			<rectangle radius="10">
 				<reportElement x="3" y="2" width="548" height="73"/>
 			</rectangle>
-			<staticText>
-				<reportElement x="102" y="17" width="278" height="13"/>
-				<textElement>
-					<font size="8" isBold="true" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[SECRETARIA MUNICIPAL DE EDUCAÇÃO E CULTURA]]></text>
-			</staticText>
 			<textField>
 				<reportElement x="412" y="5" width="126" height="13"/>
 				<textElement>
@@ -83,6 +78,13 @@
 				<reportElement x="25" y="5" width="57" height="46"/>
 				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
 			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="102" y="17" width="278" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>

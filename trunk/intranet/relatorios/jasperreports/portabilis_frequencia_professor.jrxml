@@ -91,6 +91,7 @@ AS tipo_licenca,
                to_char(falta_atraso.data_falta_atraso,'DD/MM/YYYY') <= $P{data_fim}) AS injustificadas,
 
        public.fcn_upper(instituicao.nm_instituicao) AS nome_instituicao,
+       public.fcn_upper(instituicao.nm_responsavel) AS nome_responsavel,
 
        (SELECT public.fcn_upper(ps.nome)
           FROM cadastro.pessoa ps,
@@ -109,7 +110,7 @@ AS tipo_licenca,
               endereco_pessoa.idlog = logradouro.idlog AND
               juridica.idpes = escola.ref_idpes) AS tipo_logradouro,
 
-      (SELECT logradouro.nome
+      (SELECT COALESCE((SELECT logradouro.nome
          FROM public.logradouro,
               cadastro.juridica,
               cadastro.pessoa ps,
@@ -117,9 +118,9 @@ AS tipo_licenca,
         WHERE juridica.idpes = ps.idpes AND
               ps.idpes = endereco_pessoa.idpes AND
               endereco_pessoa.idlog = logradouro.idlog AND
-              juridica.idpes = escola.ref_idpes) AS logradouro,
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.logradouro FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))) AS logradouro,
 
-      (SELECT municipio.nome
+      (SELECT COALESCE((SELECT municipio.nome
          FROM public.municipio,
               cadastro.endereco_pessoa,
               cadastro.juridica,
@@ -127,9 +128,9 @@ AS tipo_licenca,
         WHERE endereco_pessoa.idbai = bairro.idbai AND
               bairro.idmun = municipio.idmun AND
               juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS municipio,
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.cidade FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))) AS municipio,
 
-      (SELECT bairro.nome
+      (SELECT COALESCE((SELECT bairro.nome
          FROM public.municipio,
               cadastro.endereco_pessoa,
               cadastro.juridica,
@@ -137,9 +138,9 @@ AS tipo_licenca,
         WHERE endereco_pessoa.idbai = bairro.idbai AND
               bairro.idmun = municipio.idmun AND
               juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS bairro,
+              juridica.idpes = escola.ref_idpes), (SELECT endereco_externo.bairro FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))) AS bairro,
 
-      (SELECT municipio.sigla_uf
+      (SELECT COALESCE((SELECT municipio.sigla_uf
          FROM public.municipio,
               cadastro.endereco_pessoa,
               cadastro.juridica,
@@ -147,19 +148,19 @@ AS tipo_licenca,
         WHERE endereco_pessoa.idbai = bairro.idbai AND
               bairro.idmun = municipio.idmun AND
               juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS uf_municipio,
+              juridica.idpes = escola.ref_idpes), (SELECT endereco_externo.sigla_uf FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))) AS uf_municipio,
 
-      (SELECT endereco_pessoa.numero
+      (SELECT COALESCE((SELECT endereco_pessoa.numero
          FROM cadastro.endereco_pessoa,
               cadastro.juridica
         WHERE juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS numero,
+              juridica.idpes = escola.ref_idpes), (SELECT endereco_externo.numero FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))) AS numero,
 
-     (SELECT to_char(endereco_pessoa.cep, '99999-999')
+     (SELECT COALESCE((SELECT to_char(endereco_pessoa.cep, '99999-999')
          FROM cadastro.endereco_pessoa,
               cadastro.juridica
         WHERE juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS cep,
+              juridica.idpes = escola.ref_idpes), (SELECT to_char(endereco_externo.cep,'99999-999') FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))) AS cep,
 
      (SELECT min(fone_pessoa.ddd)
          FROM cadastro.fone_pessoa,
@@ -219,6 +220,7 @@ ORDER BY pessoa.nome]]>
 	<field name="justificadas" class="java.lang.Long"/>
 	<field name="injustificadas" class="java.lang.Long"/>
 	<field name="nome_instituicao" class="java.lang.String"/>
+	<field name="nome_responsavel" class="java.lang.String"/>
 	<field name="nm_escola" class="java.lang.String"/>
 	<field name="tipo_logradouro" class="java.lang.String"/>
 	<field name="logradouro" class="java.lang.String"/>
@@ -267,7 +269,7 @@ ORDER BY pessoa.nome]]>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{tipo_logradouro}+" "+$F{logradouro}+", "+$F{numero}+"            Bairro: " +$F{bairro}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="102" y="28" width="222" height="13"/>
+				<reportElement x="102" y="28" width="278" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -397,13 +399,6 @@ ORDER BY pessoa.nome]]>
 				</textElement>
 				<text><![CDATA[Término]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="102" y="16" width="278" height="13"/>
-				<textElement>
-					<font size="8" isBold="true" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[SECRETARIA MUNICIPAL DE EDUCAÇÃO E CULTURA]]></text>
-			</staticText>
 			<line>
 				<reportElement x="562" y="153" width="1" height="32"/>
 			</line>
@@ -420,6 +415,13 @@ ORDER BY pessoa.nome]]>
 				<reportElement x="23" y="4" width="57" height="46"/>
 				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
 			</image>
+			<textField>
+				<reportElement x="102" y="16" width="278" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>

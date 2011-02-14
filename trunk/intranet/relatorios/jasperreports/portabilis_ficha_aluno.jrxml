@@ -14,6 +14,7 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT public.fcn_upper(nm_instituicao) AS nome_instituicao,
+       public.fcn_upper(instituicao.nm_responsavel) AS nome_responsavel,
        instituicao.cidade AS cidade_instituicao,
        public.fcn_upper(ref_sigla_uf) AS uf_instituicao,
        to_char(CURRENT_DATE,'dd/mm/yyyy') AS data_atual,
@@ -225,6 +226,7 @@
        aluno.cod_aluno = $P{aluno}]]>
 	</queryString>
 	<field name="nome_instituicao" class="java.lang.String"/>
+	<field name="nome_responsavel" class="java.lang.String"/>
 	<field name="cidade_instituicao" class="java.lang.String"/>
 	<field name="uf_instituicao" class="java.lang.String"/>
 	<field name="data_atual" class="java.lang.String"/>
@@ -275,7 +277,6 @@
 	<field name="num_livro" class="java.lang.String"/>
 	<field name="num_folha" class="java.math.BigDecimal"/>
 	<field name="cartorio_cert_civil" class="java.lang.String"/>
-	<field name="nome_responsavel" class="java.lang.String"/>
 	<field name="cpf_responsavel" class="java.math.BigDecimal"/>
 	<field name="sexo_responsavel" class="java.lang.String"/>
 	<field name="ddd_responsavel" class="java.math.BigDecimal"/>
@@ -303,13 +304,6 @@
 			<rectangle radius="10">
 				<reportElement x="3" y="2" width="548" height="73"/>
 			</rectangle>
-			<staticText>
-				<reportElement x="102" y="17" width="278" height="13"/>
-				<textElement>
-					<font size="8" isBold="true" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[SECRETARIA MUNICIPAL DE EDUCAÇÃO E CULTURA]]></text>
-			</staticText>
 			<textField>
 				<reportElement x="412" y="5" width="126" height="13"/>
 				<textElement>
@@ -345,6 +339,13 @@
 				<reportElement x="25" y="5" width="57" height="46"/>
 				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
 			</image>
+			<staticText>
+				<reportElement x="102" y="17" width="278" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SECRETARIA MUNICIPAL DE EDUCAÇÃO, CULTURA E ESPORTES]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<columnHeader>

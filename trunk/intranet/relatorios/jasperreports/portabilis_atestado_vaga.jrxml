@@ -22,18 +22,22 @@
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="data_validade" class="java.lang.String"/>
+	<parameter name="periodo" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT public.fcn_upper(nm_instituicao) AS nome_instituicao,
+       public.fcn_upper(nm_responsavel) AS nm_responsavel,
        instituicao.cidade AS cidade_instituicao,
        public.fcn_upper(ref_sigla_uf) AS uf_instituicao,
        escola.cod_escola AS cod_escola,
        escola_ano_letivo.ano,
-       public.fcn_upper(pessoa.nome) AS nm_escola,
-(SELECT fcn_upper(ps.nome)
+       (SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))
           FROM cadastro.pessoa ps,
                cadastro.juridica
          WHERE escola.ref_idpes = juridica.idpes AND
-               juridica.idpes = ps.idpes) AS nm_escola,
+               juridica.idpes = ps.idpes AND
+			   ps.idpes = escola.ref_idpes) AS nm_escola,
 
       (SELECT fcn_upper(substring(logradouro.idtlog from 1 for 1)) ||
               lower(substring(logradouro.idtlog, 2))
@@ -46,7 +50,7 @@
               endereco_pessoa.idlog = logradouro.idlog AND
               juridica.idpes = escola.ref_idpes) AS tipo_logradouro,
 
-      (SELECT logradouro.nome
+      (SELECT COALESCE((SELECT logradouro.nome
          FROM public.logradouro,
               cadastro.juridica,
               cadastro.pessoa ps,
@@ -54,8 +58,9 @@
         WHERE juridica.idpes = ps.idpes AND
               ps.idpes = endereco_pessoa.idpes AND
               endereco_pessoa.idlog = logradouro.idlog AND
-              juridica.idpes = escola.ref_idpes) AS logradouro,
-      (SELECT bairro.nome
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.logradouro FROM cadastro.endereco_externo WHERE endereco_externo.idpes = pessoa.idpes))) AS logradouro,
+
+      (SELECT COALESCE((SELECT bairro.nome
          FROM public.municipio,
               cadastro.endereco_pessoa,
               cadastro.juridica,
@@ -63,8 +68,9 @@
         WHERE endereco_pessoa.idbai = bairro.idbai AND
               bairro.idmun = municipio.idmun AND
               juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS bairro,
-      (SELECT municipio.nome
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.bairro FROM cadastro.endereco_externo WHERE endereco_externo.idpes = pessoa.idpes))) AS bairro,
+
+      (SELECT COALESCE ((SELECT municipio.nome
          FROM public.municipio,
               cadastro.endereco_pessoa,
               cadastro.juridica,
@@ -72,13 +78,16 @@
         WHERE endereco_pessoa.idbai = bairro.idbai AND
               bairro.idmun = municipio.idmun AND
               juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS municipio,
-      (SELECT endereco_pessoa.numero
+              juridica.idpes = escola.ref_idpes), (SELECT endereco_externo.cidade FROM cadastro.endereco_externo WHERE endereco_externo.idpes = pessoa.idpes))) AS municipio,
+
+      (SELECT COALESCE((SELECT endereco_pessoa.numero
          FROM cadastro.endereco_pessoa,
               cadastro.juridica
         WHERE juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS numero,
-      (SELECT municipio.sigla_uf
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.numero FROM cadastro.endereco_externo WHERE endereco_externo.idpes = pessoa.idpes))) AS numero,
+
+
+      (SELECT COALESCE((SELECT municipio.sigla_uf
          FROM public.municipio,
               cadastro.endereco_pessoa,
               cadastro.juridica,
@@ -86,18 +95,20 @@
         WHERE endereco_pessoa.idbai = bairro.idbai AND
               bairro.idmun = municipio.idmun AND
               juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS uf_municipio,
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.sigla_uf FROM cadastro.endereco_externo WHERE endereco_externo.idpes = pessoa.idpes))) AS uf_municipio,
+
      (SELECT min(fone_pessoa.ddd)
          FROM cadastro.fone_pessoa,
               cadastro.juridica
         WHERE juridica.idpes = fone_pessoa.idpes AND
               juridica.idpes = escola.ref_idpes) AS fone_ddd,
 
-     (SELECT to_char(endereco_pessoa.cep, '99999-999')
+     (SELECT COALESCE((SELECT to_char(endereco_pessoa.cep, '99999-999')
          FROM cadastro.endereco_pessoa,
               cadastro.juridica
         WHERE juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS cep,
+              juridica.idpes = escola.ref_idpes),(SELECT to_char(endereco_externo.cep,'99999-999') FROM cadastro.endereco_externo WHERE endereco_externo.idpes = pessoa.idpes))) AS cep,
+
      (SELECT min(to_char(fone_pessoa.fone, '9999-9999'))
          FROM cadastro.fone_pessoa,
               cadastro.juridica
@@ -111,19 +122,7 @@
        curso.nm_curso,
        serie.nm_serie,
        to_char(CURRENT_DATE,'dd/mm/yyyy') AS data_atual,
-       to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
-       (select CASE WHEN (select min(to_char(turma.hora_inicial,'HH'))
-                     from pmieducar.turma
-                    where turma.ref_ref_cod_escola = escola_serie.ref_cod_escola and
-                          turma.ref_ref_cod_serie = escola_serie.ref_cod_serie and
-                          escola_serie.ref_cod_escola = escola.cod_escola) = '07' THEN 'Matutino'
-                    WHEN (select min(to_char(turma.hora_inicial,'HH'))
-                     from pmieducar.turma
-                    where turma.ref_ref_cod_escola = escola_serie.ref_cod_escola and
-                          turma.ref_ref_cod_serie = escola_serie.ref_cod_serie and
-                          escola_serie.ref_cod_escola = escola.cod_escola) = '08' THEN 'Matutino'
-        ELSE 'Vespertino'
-        END) as periodo
+       to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual
 
   FROM pmieducar.instituicao,
        pmieducar.escola,
@@ -149,6 +148,7 @@
        escola.ativo = 1]]>
 	</queryString>
 	<field name="nome_instituicao" class="java.lang.String"/>
+	<field name="nm_responsavel" class="java.lang.String"/>
 	<field name="cidade_instituicao" class="java.lang.String"/>
 	<field name="uf_instituicao" class="java.lang.String"/>
 	<field name="cod_escola" class="java.lang.Integer"/>
@@ -168,7 +168,6 @@
 	<field name="nm_serie" class="java.lang.String"/>
 	<field name="data_atual" class="java.lang.String"/>
 	<field name="hora_atual" class="java.lang.String"/>
-	<field name="periodo" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -178,7 +177,7 @@
 	<pageHeader>
 		<band height="613" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement x="103" y="52" width="201" height="13"/>
+				<reportElement x="102" y="52" width="201" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -190,13 +189,6 @@
 					<font size="12" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[ATESTADO DE VAGA]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="102" y="16" width="278" height="13"/>
-				<textElement>
-					<font size="8" isBold="true" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[SECRETARIA MUNICIPAL DE EDUCAÇÃO E CULTURA]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="359" y="52" width="120" height="13" forecolor="#000033"/>
@@ -213,7 +205,7 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{tipo_logradouro}+" "+$F{logradouro}+", "+$F{numero}+"            Bairro" +$F{bairro}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="102" y="28" width="222" height="13"/>
+				<reportElement x="102" y="28" width="280" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -266,7 +258,7 @@
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Boletim de notas dos trimestres concluídos.]]></text>
+				<text><![CDATA[Boletim de notas dos bimestres concluídos.]]></text>
 			</staticText>
 			<rectangle>
 				<reportElement x="86" y="253" width="14" height="10"/>
@@ -308,21 +300,21 @@
 				<textFieldExpression class="java.lang.String"><![CDATA["Emissão: "+$F{data_atual}+" "+$F{hora_atual}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="35" y="167" width="503" height="15"/>
+				<reportElement x="22" y="167" width="523" height="15"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["Atestamos para os devidos fins e a pedido da parte interessada, que há vaga no(a) "+$F{nm_serie}+" do "+$F{nm_curso}+" , no turno"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="35" y="183" width="503" height="15"/>
+				<reportElement x="22" y="183" width="523" height="15"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{periodo}+", para o ano letivo de "+$F{ano}+", podendo ser aceita a matrícula por transferência do(a) aluno(a) "+$P{aluno}+" desde que apresente a documentação exigida:"]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{periodo}+", para o ano letivo de "+$F{ano}+", podendo ser aceita a matrícula por transferência do(a) aluno(a) "+$P{aluno}+" desde que apresente a documentação exigida:"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="102" y="4" width="278" height="13"/>
+				<reportElement x="102" y="4" width="280" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -350,9 +342,16 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="22" y="4" width="57" height="46"/>
+				<reportElement x="35" y="4" width="57" height="46"/>
 				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
 			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="102" y="16" width="280" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_responsavel}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
