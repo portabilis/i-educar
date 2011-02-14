@@ -6,6 +6,7 @@
  	-- @license  @@license@@
  	-- @version  $Id$
  	--
+	insert into pmicontrolesis.menu values(999500,NULL,21127,'Registros',4,NULL,'_self',1,15,NULL);
 
 	insert into portal.menu_submenu values(999501,55,2,'Registro de Avaliação - Anos Iniciais','portabilis_registro_avaliacao_anos_iniciais.php',NULL,3);
 	insert into portal.menu_funcionario values(1,0,0,999501);
