@@ -99,6 +99,7 @@ class indice extends clsCadastro
     }
 
     // Seleciona todos os alunos que foram aprovados na turma/série/curso/escola informados
+	// Query abaixo foi revisada pela Portabilis em 22/02/2011 para não permitir duplicar as matrículas caso já existam no ano letivo subsequente
     $db->Consulta(sprintf("
       SELECT
         cod_matricula, ref_cod_aluno
@@ -107,8 +108,15 @@ class indice extends clsCadastro
       WHERE
         aprovado = '1' AND m.ativo = '1' AND ref_ref_cod_escola = '%d' AND
         ref_ref_cod_serie='%d' AND ref_cod_curso = '%d' AND
-        cod_matricula = ref_cod_matricula AND ref_cod_turma = '%d'",
-      $this->ref_cod_escola, $this->ref_ref_cod_serie, $this->ref_cod_curso, $this->ref_cod_turma)
+        cod_matricula = ref_cod_matricula AND ref_cod_turma = '%d' AND
+		NOT EXISTS(select 1 from pmieducar.matricula m2 where 
+			m2.ref_cod_aluno = m.ref_cod_aluno AND
+			m2.ano = '%d' AND
+			m2.ativo <> 0 AND
+			m2.ref_ref_cod_escola = m.ref_ref_cod_escola)
+							
+		",
+      $this->ref_cod_escola, $this->ref_ref_cod_serie, $this->ref_cod_curso, $this->ref_cod_turma, $ano)
     );
 
     while ($db->ProximoRegistro()) {
@@ -139,18 +147,25 @@ class indice extends clsCadastro
             ('%d', '%d', '%d', '%d', '3', 'NOW()', '%d', '%d', '1')",
           $this->ref_cod_escola, $prox_mod, $this->pessoa_logada, $ref_cod_aluno, $ano, $ref_cod_curso)
         );
-      }
+      }	  	  
     }
 
     // Seleciona todos os alunos que foram reprovados na turma/série/curso/escola informados
+	// Query abaixo foi revisada pela Portabilis em 22/02/2011 para não permitir duplicar as matrículas caso já existam no ano letivo subsequente
     $db->Consulta(sprintf("
       SELECT
         cod_matricula, ref_cod_aluno, ref_ref_cod_serie
       FROM
-        pmieducar.matricula, pmieducar.matricula_turma
+        pmieducar.matricula m, pmieducar.matricula_turma
       WHERE
-        aprovado = '2' AND ref_ref_cod_escola = '%d' AND ref_ref_cod_serie='%d' AND cod_matricula = ref_cod_matricula AND ref_cod_turma = '%d'",
-      $this->ref_cod_escola, $this->ref_ref_cod_serie, $this->ref_cod_turma)
+        aprovado = '2' AND ref_ref_cod_escola = '%d' AND ref_ref_cod_serie='%d' AND cod_matricula = ref_cod_matricula AND ref_cod_turma = '%d' AND
+		NOT EXISTS(select 1 from pmieducar.matricula m2 where 
+			m2.ref_cod_aluno = m.ref_cod_aluno AND
+			m2.ano = '%d' AND
+			m2.ativo <> 0 AND
+			m2.ref_ref_cod_escola = ref_ref_cod_escola)			
+		",
+      $this->ref_cod_escola, $this->ref_ref_cod_serie, $this->ref_cod_turma, $ano)
     );
 
     // Cria uma nova matrícula para cada aluno reprovado na mesma série/curso/escola informados
