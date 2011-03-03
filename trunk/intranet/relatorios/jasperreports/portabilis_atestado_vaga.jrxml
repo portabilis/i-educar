@@ -175,7 +175,7 @@
 		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="613" splitType="Stretch">
+		<band height="680" splitType="Stretch">
 			<textField isBlankWhenNull="true">
 				<reportElement x="102" y="52" width="201" height="13"/>
 				<textElement>
@@ -191,18 +191,18 @@
 				<text><![CDATA[ATESTADO DE VAGA]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="359" y="52" width="120" height="13" forecolor="#000033"/>
+				<reportElement x="385" y="52" width="120" height="13" forecolor="#000000"/>
 				<textElement>
 					<font size="8" isBold="true" isItalic="false"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="102" y="40" width="253" height="13"/>
+				<reportElement x="102" y="40" width="280" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{tipo_logradouro}+" "+$F{logradouro}+", "+$F{numero}+"            Bairro" +$F{bairro}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{tipo_logradouro}+": "+$F{logradouro}+" "+$F{numero}+"            Bairro:" +$F{bairro}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="102" y="28" width="280" height="13"/>
@@ -304,14 +304,14 @@
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Atestamos para os devidos fins e a pedido da parte interessada, que há vaga no(a) "+$F{nm_serie}+" do "+$F{nm_curso}+" , no turno"]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["Atestamos para os devidos fins e a pedido da parte interessada, que há vaga no(a) "+$F{nm_serie}+" do "+$F{nm_curso}+ "para o"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement x="22" y="183" width="523" height="15"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{periodo}+", para o ano letivo de "+$F{ano}+", podendo ser aceita a matrícula por transferência do(a) aluno(a) "+$P{aluno}+" desde que apresente a documentação exigida:"]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["ano letivo de "+$F{ano}+", podendo ser aceita a matrícula por transferência do(a) aluno(a) "+$P{aluno}+" desde que apresente a documentação exigida:"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="102" y="4" width="280" height="13"/>
@@ -328,7 +328,7 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[$P{data_validade}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="358" y="40" width="77" height="13"/>
+				<reportElement x="384" y="40" width="77" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -341,10 +341,6 @@
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="35" y="4" width="57" height="46"/>
-				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
-			</image>
 			<textField isBlankWhenNull="true">
 				<reportElement x="102" y="16" width="280" height="13"/>
 				<textElement>
@@ -352,6 +348,30 @@
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_responsavel}]]></textFieldExpression>
 			</textField>
+			<line>
+				<reportElement x="57" y="659" width="193" height="1"/>
+			</line>
+			<line>
+				<reportElement x="324" y="659" width="193" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="57" y="663" width="193" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Diretor(a)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="324" y="663" width="193" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Secretário(a)]]></text>
+			</staticText>
+			<image>
+				<reportElement x="30" y="4" width="57" height="46"/>
+				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
+			</image>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -361,12 +381,12 @@
 		<band height="19" splitType="Stretch"/>
 	</detail>
 	<columnFooter>
-		<band height="45" splitType="Stretch"/>
+		<band height="21" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="54" splitType="Stretch"/>
+		<band height="24" splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band height="42" splitType="Stretch"/>
+		<band height="22" splitType="Stretch"/>
 	</summary>
 </jasperReport>

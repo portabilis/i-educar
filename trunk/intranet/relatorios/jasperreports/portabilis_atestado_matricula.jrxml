@@ -224,21 +224,21 @@
 				<textFieldExpression class="java.lang.String"><![CDATA["Atestamos para os devidos fins, que o(a) aluno(a) "+$F{nome}+ ", efetuou matrícula para o(a) "+$F{nm_serie}+" do "+$F{nm_curso}+ " para o próximo ano letivo."]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="243" y="478" width="100" height="20"/>
+				<reportElement x="304" y="478" width="207" height="13"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[SECRETÁRIO(A)]]></text>
+				<text><![CDATA[Secretário(a)]]></text>
 			</staticText>
 			<line>
-				<reportElement x="179" y="475" width="246" height="1"/>
+				<reportElement x="302" y="475" width="208" height="1"/>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="102" y="40" width="253" height="13"/>
+				<reportElement x="102" y="40" width="285" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{tipo_logradouro}+" "+$F{logradouro}+", "+$F{numero}+"            Bairro" +$F{bairro}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{tipo_logradouro}+": "+$F{logradouro}+" "+$F{numero}+"            Bairro:" +$F{bairro}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="412" y="4" width="126" height="13"/>
@@ -255,51 +255,61 @@
 				<textFieldExpression class="java.lang.String"><![CDATA["Fone/Fax: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="102" y="4" width="278" height="13"/>
+				<reportElement x="102" y="4" width="285" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_instituicao}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="359" y="52" width="120" height="13" forecolor="#000033"/>
+				<reportElement x="391" y="52" width="120" height="13" forecolor="#000000"/>
 				<textElement>
 					<font size="8" isBold="true" isItalic="false"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="358" y="40" width="77" height="13"/>
+				<reportElement x="390" y="40" width="77" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="468" y="39" width="77" height="13"/>
+				<reportElement x="471" y="39" width="77" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="102" y="28" width="278" height="13"/>
+				<reportElement x="102" y="28" width="285" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="21" y="4" width="57" height="46"/>
-				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
-			</image>
 			<textField isBlankWhenNull="true">
-				<reportElement x="102" y="16" width="278" height="13"/>
+				<reportElement x="102" y="16" width="285" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_responsavel}]]></textFieldExpression>
 			</textField>
+			<line>
+				<reportElement x="37" y="475" width="208" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="38" y="478" width="207" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Diretor(a)]]></text>
+			</staticText>
+			<image>
+				<reportElement x="26" y="4" width="57" height="46"/>
+				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
+			</image>
 		</band>
 	</pageHeader>
 	<columnHeader>
