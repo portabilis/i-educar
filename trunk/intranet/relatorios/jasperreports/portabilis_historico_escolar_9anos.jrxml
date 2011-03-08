@@ -1436,63 +1436,63 @@ ORDER BY 1 ASC]]>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[1ª Série]]></text>
+					<text><![CDATA[1º Ano]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="10" y="75" width="51" height="13"/>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[2ª Série]]></text>
+					<text><![CDATA[2º Ano]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="10" y="91" width="51" height="13"/>
 					<textElement markup="none">
 						<font size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[3ª Série]]></text>
+					<text><![CDATA[3º Ano]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="10" y="106" width="51" height="13"/>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[4ª Série]]></text>
+					<text><![CDATA[4º Ano]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="10" y="121" width="51" height="13"/>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[5ª Série]]></text>
+					<text><![CDATA[5º Ano]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="10" y="137" width="51" height="13"/>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[6ª Série]]></text>
+					<text><![CDATA[6º Ano]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="10" y="152" width="51" height="13"/>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[7ª Série]]></text>
+					<text><![CDATA[7º Ano]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="10" y="166" width="51" height="13"/>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[8ª Série]]></text>
+					<text><![CDATA[8º Ano]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="10" y="182" width="51" height="13"/>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[9ª Série]]></text>
+					<text><![CDATA[9º Ano]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="10" y="201" width="59" height="13">
@@ -1501,7 +1501,7 @@ ORDER BY 1 ASC]]>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Obs. 1ª Série:]]></text>
+					<text><![CDATA[Obs. 1º Ano:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="10" y="229" width="59" height="13">
@@ -1510,7 +1510,7 @@ ORDER BY 1 ASC]]>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Obs. 3ª Série:]]></text>
+					<text><![CDATA[Obs. 3º Ano:]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
 					<reportElement x="72" y="229" width="471" height="13"/>
@@ -1526,7 +1526,7 @@ ORDER BY 1 ASC]]>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Obs. 5ª Série:]]></text>
+					<text><![CDATA[Obs. 5º Ano:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="10" y="272" width="59" height="13">
@@ -1535,7 +1535,7 @@ ORDER BY 1 ASC]]>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Obs. 6ª Série:]]></text>
+					<text><![CDATA[Obs. 6º Ano:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="10" y="315" width="59" height="13">
@@ -1544,7 +1544,7 @@ ORDER BY 1 ASC]]>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Obs. 9ª Série:]]></text>
+					<text><![CDATA[Obs. 9º Ano:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="10" y="301" width="59" height="13">
@@ -1553,7 +1553,7 @@ ORDER BY 1 ASC]]>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Obs. 8ª Série:]]></text>
+					<text><![CDATA[Obs. 8º Ano:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="10" y="286" width="59" height="13">
@@ -1562,7 +1562,7 @@ ORDER BY 1 ASC]]>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Obs. 7ª Série:]]></text>
+					<text><![CDATA[Obs. 7º Ano:]]></text>
 				</staticText>
 				<line>
 					<reportElement x="107" y="44" width="1" height="14"/>
@@ -1682,7 +1682,7 @@ ORDER BY 1 ASC]]>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Obs. 2ª Série:]]></text>
+					<text><![CDATA[Obs. 2º Ano:]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
 					<reportElement x="72" y="215" width="471" height="13"/>
@@ -1705,7 +1705,7 @@ ORDER BY 1 ASC]]>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Obs. 4ª Série:]]></text>
+					<text><![CDATA[Obs. 4º Ano:]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
 					<reportElement x="72" y="258" width="471" height="13"/>
@@ -1961,56 +1961,56 @@ ORDER BY 1 ASC]]>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[9ª Série]]></text>
+				<text><![CDATA[9º Ano]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="192" y="193" width="36" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[2ª Série]]></text>
+				<text><![CDATA[2º Ano]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="237" y="193" width="36" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[3ª Série]]></text>
+				<text><![CDATA[3º Ano]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="282" y="193" width="36" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[4ª Série]]></text>
+				<text><![CDATA[4º Ano]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="327" y="193" width="36" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[5ª Série]]></text>
+				<text><![CDATA[5º Ano]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="371" y="193" width="36" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[6ª Série]]></text>
+				<text><![CDATA[6º Ano]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="418" y="193" width="36" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[7ª Série]]></text>
+				<text><![CDATA[7º Ano]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="148" y="193" width="36" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[1ª Série]]></text>
+				<text><![CDATA[1º Ano]]></text>
 			</staticText>
 			<line>
 				<reportElement x="145" y="188" width="1" height="20"/>
@@ -2038,7 +2038,7 @@ ORDER BY 1 ASC]]>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[8ª Série]]></text>
+				<text><![CDATA[8º Ano]]></text>
 			</staticText>
 			<line>
 				<reportElement x="503" y="188" width="1" height="20"/>
@@ -2054,7 +2054,7 @@ ORDER BY 1 ASC]]>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[HISTÓRICO ESCOLAR DO ENSINO FUNDAMENTAL  (8 Anos)]]></text>
+				<text><![CDATA[HISTÓRICO ESCOLAR DO ENSINO FUNDAMENTAL (9 ANOS)]]></text>
 			</staticText>
 			<line>
 				<reportElement x="413" y="5" width="1" height="100"/>
@@ -2073,18 +2073,19 @@ ORDER BY 1 ASC]]>
 				<text><![CDATA[DISCIPLINA]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="10" y="134" width="534" height="16"/>
+				<reportElement x="10" y="134" width="533" height="15"/>
 				<textElement lineSpacing="1_1_2">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Certificamos que "+$F{nome_aluno}+ ", matrícula "+$F{cod_aluno}+ ", natural de "+$F{cidade_nascimento_uf}+", nascido em "+$F{data_nasc}+", filho de"]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["Certificamos que "+$F{nome_aluno}+ ", matrícula "+$F{cod_aluno}+ ", natural de "+$F{cidade_nascimento_uf}+", nascido em "+$F{data_nasc}+", filho de"
++$F{nome_dos_pais}+", frequêntou o ENSINO FUNDAMENTAL (9 ANOS) conforme Histórico Escolar."]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="39" y="112" width="477" height="15"/>
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[CERTIFICADO DE CONCLUSÃO DE SÉRIE E/OU CURSO ENSINO FUNDAMENTAL (8 ANOS)]]></text>
+				<text><![CDATA[CERTIFICADO DE CONCLUSÃO DE SÉRIE E/OU CURSO ENSINO FUNDAMENTAL (9 ANOS)]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="99" y="49" width="307" height="13"/>
@@ -2127,13 +2128,6 @@ ORDER BY 1 ASC]]>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement x="10" y="150" width="534" height="16"/>
-				<textElement lineSpacing="1_1_2">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_dos_pais}+", frequêntou o ENSINO FUNDAMENTAL (8 ANOS) conforme Histórico Escolar."]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="99" y="77" width="142" height="13"/>

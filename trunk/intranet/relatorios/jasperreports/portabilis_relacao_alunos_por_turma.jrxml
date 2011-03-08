@@ -136,10 +136,27 @@
 		        matricula_turma.ativo = 1 AND
                 hora_inicial IS NOT NULL) AS periodo,
 
-        (SELECT nm_predio
-           FROM pmieducar.infra_predio
-          WHERE infra_predio.ref_cod_escola = escola.cod_escola AND
-                infra_predio.ativo = 1) as predio,
+(select infra_predio.nm_predio
+   from pmieducar.infra_predio_comodo,
+        pmieducar.infra_comodo_funcao,
+        pmieducar.infra_predio
+  where infra_comodo_funcao.cod_infra_comodo_funcao = infra_predio_comodo.ref_cod_infra_comodo_funcao  AND
+        infra_comodo_funcao.ref_cod_escola = escola.cod_escola AND
+        infra_predio.cod_infra_predio = infra_predio_comodo.ref_cod_infra_predio AND
+        infra_predio.ref_cod_escola = escola.cod_escola AND
+        infra_predio.ativo = 1 AND
+        infra_predio_comodo.cod_infra_predio_comodo = turma.ref_cod_infra_predio_comodo) as predio,
+
+(select nm_comodo
+   from pmieducar.infra_predio_comodo,
+        pmieducar.infra_comodo_funcao,
+        pmieducar.infra_predio
+  where infra_comodo_funcao.cod_infra_comodo_funcao = infra_predio_comodo.ref_cod_infra_comodo_funcao  AND
+        infra_comodo_funcao.ref_cod_escola = escola.cod_escola AND
+        infra_predio.cod_infra_predio = infra_predio_comodo.ref_cod_infra_predio AND
+        infra_predio.ref_cod_escola = escola.cod_escola AND
+        infra_predio.ativo = 1 AND
+        infra_predio_comodo.cod_infra_predio_comodo = turma.ref_cod_infra_predio_comodo) as sala,
 
  (SELECT CASE WHEN matricula.aprovado = 1 THEN 'Aprovado'
                    WHEN matricula.aprovado = 2 THEN 'Reprovado'
@@ -215,6 +232,7 @@ ORDER BY nome_turma, nome_aluno]]>
 	<field name="hora_atual" class="java.lang.String"/>
 	<field name="periodo" class="java.lang.String"/>
 	<field name="predio" class="java.lang.String"/>
+	<field name="sala" class="java.lang.String"/>
 	<field name="situacao" class="java.lang.String"/>
 	<variable name="tot_alunos" class="java.lang.Integer" calculation="Count">
 		<variableExpression><![CDATA[$F{cod_aluno}]]></variableExpression>
@@ -388,7 +406,7 @@ ORDER BY nome_turma, nome_aluno]]>
 				<text><![CDATA[Situação]]></text>
 			</staticText>
 			<image>
-				<reportElement x="24" y="4" width="57" height="46"/>
+				<reportElement x="25" y="4" width="57" height="46"/>
 				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
 			</image>
 		</band>
