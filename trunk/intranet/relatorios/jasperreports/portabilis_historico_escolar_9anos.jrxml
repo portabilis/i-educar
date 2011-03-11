@@ -2078,7 +2078,7 @@ ORDER BY 1 ASC]]>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["Certificamos que "+$F{nome_aluno}+ ", matrícula "+$F{cod_aluno}+ ", natural de "+$F{cidade_nascimento_uf}+", nascido em "+$F{data_nasc}+", filho de"
-+$F{nome_dos_pais}+", frequêntou o ENSINO FUNDAMENTAL (9 ANOS) conforme Histórico Escolar."]]></textFieldExpression>
++$F{nome_dos_pais}+", frequentou o ENSINO FUNDAMENTAL (9 ANOS) conforme Histórico Escolar."]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="39" y="112" width="477" height="15"/>

@@ -2133,7 +2133,7 @@ ORDER BY 1 ASC]]>
 				<textElement lineSpacing="1_1_2">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_dos_pais}+", frequêntou o ENSINO FUNDAMENTAL (8 ANOS) conforme Histórico Escolar."]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_dos_pais}+", frequentou o ENSINO FUNDAMENTAL (8 ANOS) conforme Histórico Escolar."]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="99" y="77" width="142" height="13"/>
