@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="atestado_matricula" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="atestado_transferencia" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -35,6 +35,8 @@
        aluno.cod_aluno as cod_aluno,
        matricula.cod_matricula as cod_matricula,
        fcn_upper(pessoa.nome) as nome,
+       fcn_upper(instituicao.cidade) as cidade,
+       to_char(CURRENT_DATE,'dd/mm/yyyy') as data_atual,
 	   to_char(fisica.data_nasc,'dd/mm/yyyy') as data_nasc,
       (SELECT municipio.nome || ' - ' || sigla_uf
 	     FROM public.municipio
@@ -44,8 +46,6 @@
         WHERE mt.cod_matricula = matricula.cod_matricula AND
               mt.ativo = 1 AND
               mt.ultima_matricula = 1) as dt_matricula,
-	   matricula.ano as matricula_ano,
-       fcn_upper(instituicao.cidade) as cidade,
 	   fcn_upper(aluno.nm_pai) as nm_pai,
 	   fcn_upper(aluno.nm_mae) as nm_mae,
 
@@ -139,8 +139,6 @@
         WHERE juridica.idpes = ps.idpes AND
               juridica.idpes = escola.ref_idpes),(SELECT email FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS email,
 
-
-
        to_char(current_date,'dd/mm/yyyy') AS data_atual,
        to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual
 
@@ -195,11 +193,11 @@
 	<field name="cod_aluno" class="java.lang.Integer"/>
 	<field name="cod_matricula" class="java.lang.Integer"/>
 	<field name="nome" class="java.lang.String"/>
+	<field name="cidade" class="java.lang.String"/>
+	<field name="data_atual" class="java.lang.String"/>
 	<field name="data_nasc" class="java.lang.String"/>
 	<field name="municipio_uf_nascimento" class="java.lang.String"/>
 	<field name="dt_matricula" class="java.lang.String"/>
-	<field name="matricula_ano" class="java.lang.Integer"/>
-	<field name="cidade" class="java.lang.String"/>
 	<field name="nm_pai" class="java.lang.String"/>
 	<field name="nm_mae" class="java.lang.String"/>
 	<field name="nm_escola" class="java.lang.String"/>
@@ -213,7 +211,6 @@
 	<field name="cep" class="java.lang.String"/>
 	<field name="fone" class="java.lang.String"/>
 	<field name="email" class="java.lang.String"/>
-	<field name="data_atual" class="java.lang.String"/>
 	<field name="hora_atual" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
@@ -222,33 +219,40 @@
 		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="672" splitType="Stretch">
+		<band height="736" splitType="Stretch">
 			<staticText>
-				<reportElement x="11" y="158" width="537" height="16"/>
+				<reportElement x="13" y="158" width="525" height="16"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true" isUnderline="true"/>
 				</textElement>
-				<text><![CDATA[ATESTADO DE MATRÍCULA]]></text>
+				<text><![CDATA[ATESTADO DE TRANSFERÊNCIA]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="58" y="587" width="120" height="14"/>
+				<reportElement x="58" y="484" width="269" height="14"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{cidade}+", "+$F{data_atual}]]></textFieldExpression>
 			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="26" y="265" width="512" height="15"/>
+				<textElement textAlignment="Justified" lineSpacing="1_1_2">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Atestamos para os defidos fins que o(a) aluno(a): "+$F{nome}+" com o código nº: "+$F{cod_aluno}+" filho(a) de "+$F{nm_mae}+" e de "+$F{nm_pai}+" nascido(a) em "+$F{data_nasc}+", natural de "+$F{municipio_uf_nascimento}+", admitido em "+$F{dt_matricula}+", está regularmente matriculado(a) no ano de "+$F{matricula_ano}+" no curso: "+$F{nm_curso}+" no(a) ano/série: "+$F{nm_serie}+" e requereu nesta data sua transferência, sendo que a mesma será fornecida no prazo de 30 dias."]]></textFieldExpression>
+			</textField>
 			<staticText>
-				<reportElement x="304" y="703" width="207" height="13"/>
+				<reportElement x="304" y="644" width="207" height="13"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Secretário(a)]]></text>
 			</staticText>
 			<line>
-				<reportElement x="302" y="700" width="208" height="1"/>
+				<reportElement x="302" y="641" width="208" height="1"/>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="79" y="40" width="310" height="13"/>
+				<reportElement x="80" y="40" width="307" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -262,77 +266,70 @@
 				<textFieldExpression class="java.lang.String"><![CDATA["Emissão: "+$F{data_atual}+" "+$F{hora_atual}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="79" y="64" width="221" height="13"/>
+				<reportElement x="80" y="64" width="222" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["Fone/Fax: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="79" y="4" width="310" height="13"/>
+				<reportElement x="80" y="4" width="307" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_instituicao}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="302" y="64" width="236" height="13" forecolor="#000000"/>
+				<reportElement x="305" y="64" width="222" height="13" forecolor="#000000"/>
 				<textElement>
 					<font size="8" isBold="true" isItalic="false"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="435" y="52" width="76" height="13"/>
+				<reportElement x="416" y="52" width="77" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="302" y="52" width="132" height="13"/>
+				<reportElement x="305" y="52" width="109" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="79" y="28" width="310" height="13"/>
+				<reportElement x="80" y="28" width="307" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="79" y="16" width="310" height="13"/>
+				<reportElement x="80" y="16" width="307" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_responsavel}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="37" y="700" width="208" height="1"/>
+				<reportElement x="37" y="641" width="208" height="1"/>
 			</line>
 			<staticText>
-				<reportElement x="38" y="703" width="207" height="13"/>
+				<reportElement x="38" y="644" width="207" height="13"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Diretor(a)]]></text>
 			</staticText>
 			<image>
-				<reportElement x="16" y="4" width="57" height="46"/>
+				<reportElement x="13" y="4" width="57" height="46"/>
 				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
 			</image>
-			<textField isStretchWithOverflow="true">
-				<reportElement x="22" y="311" width="509" height="16"/>
-				<textElement textAlignment="Justified">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Atestamos para os defidos fins que, o(a) aluno(a): "+$F{nome}+" com o código nº: "+$F{cod_aluno}+" filho(a) de "+$F{nm_mae}+" e de "+$F{nm_pai}+" nascido(a) em "+$F{data_nasc}+", natural de "+$F{municipio_uf_nascimento}+", admitido em "+$F{dt_matricula}+", está regularmente matriculado no ano de "+$F{matricula_ano}+" no curso: "+$F{nm_curso}+" no(a) ano/série: "+$F{nm_serie}+"."]]></textFieldExpression>
-			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="79" y="52" width="221" height="13"/>
+				<reportElement x="80" y="52" width="222" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -341,18 +338,18 @@
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="15" splitType="Stretch"/>
+		<band height="11" splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="8" splitType="Stretch"/>
+		<band height="15" splitType="Stretch"/>
 	</detail>
 	<columnFooter>
-		<band height="15" splitType="Stretch"/>
+		<band height="17" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="27" splitType="Stretch"/>
+		<band height="15" splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band height="24" splitType="Stretch"/>
+		<band height="10" splitType="Stretch"/>
 	</summary>
 </jasperReport>

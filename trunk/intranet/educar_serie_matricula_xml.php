@@ -256,7 +256,7 @@ if (is_numeric($_GET['alu']) && is_numeric($_GET['ins']) &&
       }
 
       // Matrícula em andamento
-      elseif (App_Model_MatriculaSituacao::EM_ANDAMENTO == $matricula['aprovado']) {
+      elseif (App_Model_MatriculaSituacao::TRANSFERIDO == $matricula['aprovado']) {
         // Transferência interna, retorna o mesmo ano escolar da matrícula para a escola selecionada.
         if (1 == $matricula['transferencia_int']) {
           $resultado = _mesmoAnoEscolar($db, $codEscola, $matricula['cod_serie']);
@@ -264,7 +264,7 @@ if (is_numeric($_GET['alu']) && is_numeric($_GET['ins']) &&
 
         // Transferência externa, retorna os anos escolares da sequência de série para a escola selecionada.
         elseif (1 == $matricula['transferencia_ext']) {
-          $retultado = _anoEscolarSequencia($db, $codEscola, $matricula['cod_serie']);
+          $resultado = _anoEscolarSequencia($db, $codEscola, $matricula['cod_serie']);
         }
       }
     }

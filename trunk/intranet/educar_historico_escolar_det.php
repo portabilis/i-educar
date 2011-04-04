@@ -68,6 +68,7 @@ class indice extends clsDetalhe
 	var $origem;
 	var $extra_curricular;
 	var $ref_cod_matricula;
+	var $frequencia;
 
 	function Gerar()
 	{
@@ -167,6 +168,10 @@ class indice extends clsDetalhe
 		if( $registro["dias_letivos"] )
 		{
 			$this->addDetalhe( array( "Dias Letivos", "{$registro["dias_letivos"]}") );
+		}
+		if( $registro["frequencia"] )
+		{
+			$this->addDetalhe( array( "Frequência", "{$registro["frequencia"]}") );
 		}
 		if( $registro["extra_curricular"] )
 		{

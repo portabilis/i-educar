@@ -73,8 +73,8 @@ class indice extends clsCadastro
 
 	var $faltas_globalizadas;
 	var $cb_faltas_globalizadas;
-
-
+	var $frequencia;
+	
 //------INCLUI DISCIPLINA------//
 	var $historico_disciplinas;
 	var $nm_disciplina;
@@ -152,7 +152,7 @@ class indice extends clsCadastro
 		{
 			$obj_instituicao = new clsPmieducarInstituicao();
 			$lista = $obj_instituicao->lista(null,null,null,null,null,null,null,null,null,null,null,null,null,1);
-			$opcoes[""] = "Selecione";
+			$opcoes["1"] = "Selecione";
 			if ( is_array( $lista ) && count( $lista ) )
 			{
 				foreach ( $lista as $registro )
@@ -181,8 +181,7 @@ class indice extends clsCadastro
 			$obj_uf = new clsUf($this->escola_uf);
 			$det_uf = $obj_uf->detalhe();
 		}
-
-		$lista_pais_origem = array('NULL' => "País da escola");
+		$lista_pais_origem = array('45' => "País da escola");
 		$obj_pais = new clsPais();
 		$obj_pais_lista = $obj_pais->lista(null,null,null,"","","nome asc");
 		if($obj_pais_lista)
@@ -192,11 +191,11 @@ class indice extends clsCadastro
 				$lista_pais_origem[$pais["idpais"]] = $pais["nome"];
 			}
 		}
-		$this->campoLista("idpais", "Pa&iacute;s da Escola", $lista_pais_origem, $det_uf['idpais'] );
+		$this->campoLista("idpais", "Pa&iacute;s da Escola", $lista_pais_origem, $det_uf['45'] ); 
 
 		$obj_uf = new clsUf();
 		$lista_uf = $obj_uf->lista( false,false,$det_uf['idpais'],false,false, "sigla_uf" );
-		$lista_estado = array( "" => "Selecione um pa&iacute;s" );
+		$lista_estado = array( "SC" => "Selecione um pa&iacute;s" );
 		if( $lista_uf )
 		{
 			foreach ($lista_uf as $uf)
@@ -212,6 +211,7 @@ class indice extends clsCadastro
 		$this->campoCheck( "cb_faltas_globalizadas", "Faltas Globalizadas", $this->faltas_globalizadas );
 		$this->campoNumero( "faltas_globalizadas", "Faltas Globalizadas", $this->faltas_globalizadas, 4, 4, false );
 		$this->campoNumero( "dias_letivos", "Dias Letivos", $this->dias_letivos, 3, 3, true );
+		$this->campoMonetario( "frequencia", "Frequência", $this->frequencia, 8, 8, false );
 		$this->campoCheck( "extra_curricular", "Extra-Curricular", $this->extra_curricular );
 		$this->campoMemo( "observacao", "Observa&ccedil;&atilde;o", $this->observacao, 60, 5, false );
 
@@ -275,6 +275,8 @@ class indice extends clsCadastro
 		*/
 			$this->carga_horaria = str_replace(".","",$this->carga_horaria);
 			$this->carga_horaria = str_replace(",",".",$this->carga_horaria);
+			$this->frequencia = str_replace(".","",$this->frequencia);
+			$this->frequencia = str_replace(",",".",$this->frequencia);
 
 			if ($this->extra_curricular == 'on')
 				$this->extra_curricular = 1;
@@ -282,7 +284,7 @@ class indice extends clsCadastro
 				$this->extra_curricular = 0;
 
 //				echo "clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, null, null, $this->pessoa_logada, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, null, $this->ref_cod_instituicao, 1, $this->extra_curricular )";
-			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, null, null, $this->pessoa_logada, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular );
+			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, null, null, $this->pessoa_logada, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia );
 			$cadastrou = $obj->cadastra();
 			if( $cadastrou )
 			{
@@ -303,7 +305,7 @@ class indice extends clsCadastro
 							$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
 							echo "<!--\nErro ao cadastrar clsPmieducarHistoricoDisciplinas\nvalores obrigatorios\nis_numeric( {$this->ref_cod_aluno} ) && is_numeric( {$this->sequencial} ) && is_string( {$campo["nm_disciplina"]} ) && is_numeric( {$campo["sequencial"]} ) && is_string( {$campo["nota"]} ) && is_numeric( {$campo["faltas"]} )\n-->";
 							return false;
-						}
+						} 
 
 						$sequencial++;
 					}
@@ -339,7 +341,9 @@ class indice extends clsCadastro
 		*/
 			$this->carga_horaria = str_replace(".","",$this->carga_horaria);
 			$this->carga_horaria = str_replace(",",".",$this->carga_horaria);
-
+			$this->frequencia = str_replace(".","",$this->frequencia);
+			$this->frequencia = str_replace(",",".",$this->frequencia);
+			
 			if ($this->extra_curricular == 'on')
 				$this->extra_curricular = 1;
 			else
@@ -348,9 +352,9 @@ class indice extends clsCadastro
 
 			if(!$this->cb_faltas_globalizadas)
 				$this->faltas_globalizadas = 'NULL';
-
-			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, $this->sequencial, $this->pessoa_logada, null, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular );
+			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, $this->sequencial, $this->pessoa_logada, null, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia );
 			$editou = $obj->edita();
+			
 			if( $editou )
 			{
 			//--------------EDITA DISCIPLINAS--------------//
@@ -438,8 +442,7 @@ $pagina->MakeAll();
 ?>
 
 <script type="text/javascript">
-	document.getElementById('cb_faltas_globalizadas').onclick =
-	function()
+	document.getElementById('cb_faltas_globalizadas').onclick =function()
 	{
 		setVisibility('tr_faltas_globalizadas',this.checked);
 	}

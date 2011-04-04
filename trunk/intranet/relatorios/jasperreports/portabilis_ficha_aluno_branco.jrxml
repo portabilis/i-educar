@@ -14,13 +14,13 @@
        public.fcn_upper(nm_responsavel) AS nome_responsavel,
        to_char(CURRENT_DATE,'dd/mm/yyyy') AS data_atual,
        to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
-       (select public.fcn_upper(ps.nome)
+      (SELECT COALESCE((SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))
           from cadastro.pessoa ps,
                cadastro.juridica,
                pmieducar.escola
          where escola.ref_idpes = ps.idpes AND
                ps.idpes = juridica .idpes AND
-	       escola.cod_escola = $P{escola}) AS nm_escola
+	       escola.cod_escola = $P{escola}),(SELECT nm_escola FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS nm_escola
 
   FROM pmieducar.instituicao
 

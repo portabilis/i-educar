@@ -60,13 +60,14 @@
 			   tr.hora_inicial IS NOT NULL AND
 			   tr.cod_turma = turma.cod_turma) AS periodo_aux,
 
-       (SELECT public.fcn_upper(ps.nome)
+      (SELECT COALESCE((SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))
           FROM cadastro.pessoa ps,
                cadastro.juridica
          WHERE escola.ref_idpes = juridica.idpes AND
-               juridica.idpes = ps.idpes) AS nm_escola,
+               juridica.idpes = ps.idpes AND
+			   ps.idpes = escola.ref_idpes),(SELECT nm_escola FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS nm_escola,
 
-      (SELECT public.fcn_upper(substring(logradouro.idtlog from 1 for 1)) ||
+      (SELECT fcn_upper(substring(logradouro.idtlog from 1 for 1)) ||
               lower(substring(logradouro.idtlog, 2))
          FROM public.logradouro,
               cadastro.juridica,
@@ -77,7 +78,7 @@
               endereco_pessoa.idlog = logradouro.idlog AND
               juridica.idpes = escola.ref_idpes) AS tipo_logradouro,
 
-      (SELECT COALESCE((SELECT logradouro.nome
+      (SELECT COALESCE((SELECT COALESCE((SELECT logradouro.nome
          FROM public.logradouro,
               cadastro.juridica,
               cadastro.pessoa ps,
@@ -85,10 +86,9 @@
         WHERE juridica.idpes = ps.idpes AND
               ps.idpes = endereco_pessoa.idpes AND
               endereco_pessoa.idlog = logradouro.idlog AND
-              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.logradouro FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))) AS logradouro,
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.logradouro FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT logradouro FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS logradouro,
 
-
-      (SELECT COALESCE ((SELECT municipio.nome
+      (SELECT COALESCE((SELECT COALESCE((SELECT bairro.nome
          FROM public.municipio,
               cadastro.endereco_pessoa,
               cadastro.juridica,
@@ -96,10 +96,9 @@
         WHERE endereco_pessoa.idbai = bairro.idbai AND
               bairro.idmun = municipio.idmun AND
               juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes), (SELECT endereco_externo.cidade FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))) AS municipio,
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.bairro FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT bairro FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS bairro,
 
-
-      (SELECT COALESCE((SELECT bairro.nome
+      (SELECT COALESCE((SELECT COALESCE ((SELECT municipio.nome
          FROM public.municipio,
               cadastro.endereco_pessoa,
               cadastro.juridica,
@@ -107,50 +106,49 @@
         WHERE endereco_pessoa.idbai = bairro.idbai AND
               bairro.idmun = municipio.idmun AND
               juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.bairro FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))) AS bairro,
+              juridica.idpes = escola.ref_idpes), (SELECT endereco_externo.cidade FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT municipio FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS municipio,
 
-
-      (SELECT COALESCE((SELECT municipio.sigla_uf
-         FROM public.municipio,
-              cadastro.endereco_pessoa,
-              cadastro.juridica,
-              public.bairro
-        WHERE endereco_pessoa.idbai = bairro.idbai AND
-              bairro.idmun = municipio.idmun AND
-              juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.sigla_uf FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))) AS uf_municipio,
-
-      (SELECT COALESCE((SELECT endereco_pessoa.numero
+      (SELECT COALESCE((SELECT COALESCE((SELECT endereco_pessoa.numero
          FROM cadastro.endereco_pessoa,
               cadastro.juridica
         WHERE juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.numero FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))) AS numero,
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.numero FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT numero FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS numero,
 
 
-     (SELECT COALESCE((SELECT to_char(endereco_pessoa.cep, '99999-999')
+      (SELECT COALESCE((SELECT COALESCE((SELECT municipio.sigla_uf
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.sigla_uf FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(select inst.ref_sigla_uf from pmieducar.instituicao inst where inst.cod_instituicao = instituicao.cod_instituicao))) AS uf_municipio,
+
+     (SELECT COALESCE((SELECT min(fone_pessoa.ddd)
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT min(ddd_telefone) FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS fone_ddd,
+
+     (SELECT COALESCE((SELECT COALESCE((SELECT to_char(endereco_pessoa.cep, '99999-999')
          FROM cadastro.endereco_pessoa,
               cadastro.juridica
         WHERE juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes),(SELECT to_char(endereco_externo.cep,'99999-999') FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))) AS cep,
+              juridica.idpes = escola.ref_idpes),(SELECT to_char(endereco_externo.cep,'99999-999') FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT to_char(escola_complemento.cep,'99999-999') FROM pmieducar.escola_complemento where escola_complemento.ref_cod_escola = escola.cod_escola))) AS cep,
 
 
-     (SELECT min(fone_pessoa.ddd)
+     (SELECT COALESCE((SELECT min(to_char(fone_pessoa.fone, '9999-9999'))
          FROM cadastro.fone_pessoa,
               cadastro.juridica
         WHERE juridica.idpes = fone_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS fone_ddd,
+              juridica.idpes = escola.ref_idpes),(SELECT min(to_char(telefone, '9999-9999')) FROM pmieducar.escola_complemento where escola_complemento.ref_cod_escola = escola.cod_escola))) AS fone,
 
-     (SELECT min(to_char(fone_pessoa.fone, '9999-9999'))
-         FROM cadastro.fone_pessoa,
-              cadastro.juridica
-        WHERE juridica.idpes = fone_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS fone,
-
-     (SELECT ps.email
+   (SELECT COALESCE((SELECT ps.email
          FROM cadastro.pessoa ps,
               cadastro.juridica
         WHERE juridica.idpes = ps.idpes AND
-              juridica.idpes = escola.ref_idpes) AS email,
+              juridica.idpes = escola.ref_idpes),(SELECT email FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS email,
 
        to_char(current_date,'dd/mm/yyyy') AS data_atual,
        to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
@@ -222,12 +220,12 @@ ORDER BY nome_aluno ASC]]>
 	<field name="nm_escola" class="java.lang.String"/>
 	<field name="tipo_logradouro" class="java.lang.String"/>
 	<field name="logradouro" class="java.lang.String"/>
-	<field name="municipio" class="java.lang.String"/>
 	<field name="bairro" class="java.lang.String"/>
-	<field name="uf_municipio" class="java.lang.String"/>
+	<field name="municipio" class="java.lang.String"/>
 	<field name="numero" class="java.math.BigDecimal"/>
-	<field name="cep" class="java.lang.String"/>
+	<field name="uf_municipio" class="java.lang.String"/>
 	<field name="fone_ddd" class="java.math.BigDecimal"/>
+	<field name="cep" class="java.lang.String"/>
 	<field name="fone" class="java.lang.String"/>
 	<field name="email" class="java.lang.String"/>
 	<field name="cod_matricula" class="java.lang.Integer"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_registro_frequencia" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="0.9090909090909095"/>
+	<property name="ireport.zoom" value="0.8264462809917361"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<subDataset name="dataset1"/>
@@ -61,13 +61,14 @@
 			   tr.hora_inicial IS NOT NULL AND
 			   tr.cod_turma = turma.cod_turma) AS periodo_aux,
 
-       (SELECT public.fcn_upper(ps.nome)
+      (SELECT COALESCE((SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))
           FROM cadastro.pessoa ps,
                cadastro.juridica
          WHERE escola.ref_idpes = juridica.idpes AND
-               juridica.idpes = ps.idpes) AS nm_escola,
+               juridica.idpes = ps.idpes AND
+			   ps.idpes = escola.ref_idpes),(SELECT nm_escola FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS nm_escola,
 
-      (SELECT public.fcn_upper(substring(logradouro.idtlog from 1 for 1)) ||
+      (SELECT fcn_upper(substring(logradouro.idtlog from 1 for 1)) ||
               lower(substring(logradouro.idtlog, 2))
          FROM public.logradouro,
               cadastro.juridica,
@@ -78,7 +79,7 @@
               endereco_pessoa.idlog = logradouro.idlog AND
               juridica.idpes = escola.ref_idpes) AS tipo_logradouro,
 
-      (SELECT COALESCE((SELECT logradouro.nome
+      (SELECT COALESCE((SELECT COALESCE((SELECT logradouro.nome
          FROM public.logradouro,
               cadastro.juridica,
               cadastro.pessoa ps,
@@ -86,10 +87,9 @@
         WHERE juridica.idpes = ps.idpes AND
               ps.idpes = endereco_pessoa.idpes AND
               endereco_pessoa.idlog = logradouro.idlog AND
-              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.logradouro FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))) AS logradouro,
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.logradouro FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT logradouro FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS logradouro,
 
-
-      (SELECT COALESCE ((SELECT municipio.nome
+      (SELECT COALESCE((SELECT COALESCE((SELECT bairro.nome
          FROM public.municipio,
               cadastro.endereco_pessoa,
               cadastro.juridica,
@@ -97,10 +97,9 @@
         WHERE endereco_pessoa.idbai = bairro.idbai AND
               bairro.idmun = municipio.idmun AND
               juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes), (SELECT endereco_externo.cidade FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))) AS municipio,
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.bairro FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT bairro FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS bairro,
 
-
-      (SELECT COALESCE((SELECT bairro.nome
+      (SELECT COALESCE((SELECT COALESCE ((SELECT municipio.nome
          FROM public.municipio,
               cadastro.endereco_pessoa,
               cadastro.juridica,
@@ -108,50 +107,49 @@
         WHERE endereco_pessoa.idbai = bairro.idbai AND
               bairro.idmun = municipio.idmun AND
               juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.bairro FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))) AS bairro,
+              juridica.idpes = escola.ref_idpes), (SELECT endereco_externo.cidade FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT municipio FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS municipio,
 
-
-      (SELECT COALESCE((SELECT municipio.sigla_uf
-         FROM public.municipio,
-              cadastro.endereco_pessoa,
-              cadastro.juridica,
-              public.bairro
-        WHERE endereco_pessoa.idbai = bairro.idbai AND
-              bairro.idmun = municipio.idmun AND
-              juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.sigla_uf FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))) AS uf_municipio,
-
-      (SELECT COALESCE((SELECT endereco_pessoa.numero
+      (SELECT COALESCE((SELECT COALESCE((SELECT endereco_pessoa.numero
          FROM cadastro.endereco_pessoa,
               cadastro.juridica
         WHERE juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.numero FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))) AS numero,
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.numero FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT numero FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS numero,
 
 
-     (SELECT COALESCE((SELECT to_char(endereco_pessoa.cep, '99999-999')
+      (SELECT COALESCE((SELECT COALESCE((SELECT municipio.sigla_uf
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.sigla_uf FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(select inst.ref_sigla_uf from pmieducar.instituicao inst where inst.cod_instituicao = instituicao.cod_instituicao))) AS uf_municipio,
+
+     (SELECT COALESCE((SELECT min(fone_pessoa.ddd)
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT min(ddd_telefone) FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS fone_ddd,
+
+     (SELECT COALESCE((SELECT COALESCE((SELECT to_char(endereco_pessoa.cep, '99999-999')
          FROM cadastro.endereco_pessoa,
               cadastro.juridica
         WHERE juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes),(SELECT to_char(endereco_externo.cep,'99999-999') FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))) AS cep,
+              juridica.idpes = escola.ref_idpes),(SELECT to_char(endereco_externo.cep,'99999-999') FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT to_char(escola_complemento.cep,'99999-999') FROM pmieducar.escola_complemento where escola_complemento.ref_cod_escola = escola.cod_escola))) AS cep,
 
 
-     (SELECT min(fone_pessoa.ddd)
+     (SELECT COALESCE((SELECT min(to_char(fone_pessoa.fone, '9999-9999'))
          FROM cadastro.fone_pessoa,
               cadastro.juridica
         WHERE juridica.idpes = fone_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS fone_ddd,
+              juridica.idpes = escola.ref_idpes),(SELECT min(to_char(telefone, '9999-9999')) FROM pmieducar.escola_complemento where escola_complemento.ref_cod_escola = escola.cod_escola))) AS fone,
 
-     (SELECT min(to_char(fone_pessoa.fone, '9999-9999'))
-         FROM cadastro.fone_pessoa,
-              cadastro.juridica
-        WHERE juridica.idpes = fone_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS fone,
-
-     (SELECT ps.email
+   (SELECT COALESCE((SELECT ps.email
          FROM cadastro.pessoa ps,
               cadastro.juridica
         WHERE juridica.idpes = ps.idpes AND
-              juridica.idpes = escola.ref_idpes) AS email,
+              juridica.idpes = escola.ref_idpes),(SELECT email FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS email,
 
        to_char(current_date,'dd/mm/yyyy') AS data_atual,
        to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
@@ -204,7 +202,9 @@
        instituicao.ativo = 1 AND
        matricula.ultima_matricula = 1 AND
        matricula.ano = $P{ano} AND
-       matricula.ativo = 1
+       matricula.ativo = 1 AND
+       matricula_turma.ativo = 1 AND
+       matricula.aprovado <> 4
 
 ORDER BY nome_aluno ASC]]>
 	</queryString>
@@ -224,12 +224,12 @@ ORDER BY nome_aluno ASC]]>
 	<field name="nm_escola" class="java.lang.String"/>
 	<field name="tipo_logradouro" class="java.lang.String"/>
 	<field name="logradouro" class="java.lang.String"/>
-	<field name="municipio" class="java.lang.String"/>
 	<field name="bairro" class="java.lang.String"/>
-	<field name="uf_municipio" class="java.lang.String"/>
+	<field name="municipio" class="java.lang.String"/>
 	<field name="numero" class="java.math.BigDecimal"/>
-	<field name="cep" class="java.lang.String"/>
+	<field name="uf_municipio" class="java.lang.String"/>
 	<field name="fone_ddd" class="java.math.BigDecimal"/>
+	<field name="cep" class="java.lang.String"/>
 	<field name="fone" class="java.lang.String"/>
 	<field name="email" class="java.lang.String"/>
 	<field name="cod_matricula" class="java.lang.Integer"/>
@@ -242,7 +242,7 @@ ORDER BY nome_aluno ASC]]>
 		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="249" splitType="Stretch">
+		<band height="173" splitType="Stretch">
 			<textField isBlankWhenNull="true">
 				<reportElement x="465" y="40" width="77" height="13"/>
 				<textElement>
@@ -251,7 +251,7 @@ ORDER BY nome_aluno ASC]]>
 				<textFieldExpression class="java.lang.String"><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="132" y="28" width="325" height="13"/>
+				<reportElement x="113" y="28" width="344" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -265,304 +265,297 @@ ORDER BY nome_aluno ASC]]>
 				<textFieldExpression class="java.lang.String"><![CDATA["Emissão: "+$F{data_atual}+" "+$F{hora_atual}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="575" y="40" width="134" height="13"/>
+				<reportElement x="575" y="40" width="173" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="132" y="40" width="325" height="13"/>
+				<reportElement x="113" y="40" width="344" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{tipo_logradouro}+": "+$F{logradouro}+" "+$F{numero}+"            Bairro: " +$F{bairro}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["Endereço: "+$F{logradouro}+" "+$F{numero}+"            Bairro: " +$F{bairro}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="132" y="4" width="325" height="13"/>
+				<reportElement x="113" y="4" width="344" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="465" y="52" width="162" height="13"/>
+				<reportElement x="465" y="52" width="269" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="132" y="52" width="253" height="13"/>
+				<reportElement x="113" y="52" width="272" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["Fone/Fax: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="259" y="107" width="277" height="20"/>
+				<reportElement x="259" y="83" width="277" height="14"/>
 				<textElement textAlignment="Center">
-					<font size="12" isBold="true"/>
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[REGISTRO DE FREQUÊNCIA - ANOS INICIAIS]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="72" y="172" width="139" height="13"/>
+				<reportElement x="72" y="116" width="139" height="13"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_curso}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="22" y="172" width="48" height="13"/>
+				<reportElement x="22" y="116" width="48" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Curso:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="220" y="172" width="35" height="13"/>
+				<reportElement x="220" y="116" width="35" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Turno:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="336" y="172" width="35" height="13"/>
+				<reportElement x="336" y="116" width="35" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Série:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="372" y="172" width="84" height="13"/>
+				<reportElement x="372" y="116" width="84" height="13"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_serie}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="464" y="172" width="35" height="13"/>
+				<reportElement x="464" y="116" width="35" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Turma:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="608" y="172" width="27" height="13"/>
+				<reportElement x="608" y="116" width="27" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Ano:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="500" y="172" width="100" height="13"/>
+				<reportElement x="500" y="116" width="100" height="13"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_turma}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="636" y="172" width="37" height="13"/>
+				<reportElement x="636" y="116" width="37" height="13"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="22" y="225" width="44" height="13"/>
+				<reportElement x="22" y="158" width="44" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font size="5" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Aluno]]></text>
 			</staticText>
 			<line>
-				<reportElement x="15" y="167" width="775" height="1"/>
+				<reportElement x="15" y="111" width="775" height="1"/>
 			</line>
 			<line>
-				<reportElement x="15" y="189" width="775" height="1"/>
+				<reportElement x="15" y="133" width="775" height="1"/>
 			</line>
 			<line>
-				<reportElement x="14" y="167" width="1" height="81"/>
+				<reportElement x="14" y="111" width="1" height="62"/>
 			</line>
 			<line>
-				<reportElement x="790" y="167" width="1" height="81"/>
+				<reportElement x="790" y="112" width="1" height="61"/>
 			</line>
 			<line>
-				<reportElement x="15" y="248" width="775" height="1"/>
+				<reportElement x="15" y="172" width="775" height="1"/>
 			</line>
 			<line>
-				<reportElement x="311" y="212" width="1" height="35"/>
+				<reportElement x="311" y="156" width="1" height="16"/>
 			</line>
 			<line>
-				<reportElement x="271" y="212" width="1" height="35"/>
+				<reportElement x="271" y="156" width="1" height="16"/>
 			</line>
 			<line>
-				<reportElement x="339" y="213" width="1" height="34"/>
+				<reportElement x="339" y="157" width="1" height="15"/>
 			</line>
 			<line>
-				<reportElement x="352" y="213" width="1" height="34"/>
+				<reportElement x="352" y="157" width="1" height="15"/>
 			</line>
 			<line>
-				<reportElement x="471" y="213" width="1" height="34"/>
+				<reportElement x="471" y="157" width="1" height="15"/>
 			</line>
 			<line>
-				<reportElement x="484" y="213" width="1" height="34"/>
+				<reportElement x="484" y="157" width="1" height="15"/>
 			</line>
 			<line>
-				<reportElement x="524" y="213" width="1" height="34"/>
+				<reportElement x="524" y="157" width="1" height="15"/>
 			</line>
 			<line>
-				<reportElement x="563" y="213" width="1" height="34"/>
+				<reportElement x="563" y="157" width="1" height="15"/>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="257" y="172" width="75" height="13"/>
+				<reportElement x="257" y="116" width="75" height="13"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{periodo}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="132" y="16" width="325" height="13"/>
+				<reportElement x="113" y="16" width="344" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="325" y="212" width="1" height="35"/>
+				<reportElement x="325" y="156" width="1" height="16"/>
 			</line>
 			<line>
-				<reportElement x="365" y="213" width="1" height="34"/>
+				<reportElement x="365" y="157" width="1" height="15"/>
 			</line>
 			<line>
-				<reportElement x="379" y="213" width="1" height="34"/>
+				<reportElement x="379" y="157" width="1" height="15"/>
 			</line>
 			<line>
-				<reportElement x="497" y="213" width="1" height="34"/>
+				<reportElement x="497" y="157" width="1" height="15"/>
 			</line>
 			<line>
-				<reportElement x="258" y="189" width="1" height="58"/>
+				<reportElement x="258" y="133" width="1" height="39"/>
 			</line>
 			<line>
-				<reportElement x="511" y="213" width="1" height="34"/>
+				<reportElement x="511" y="157" width="1" height="15"/>
 			</line>
 			<line>
-				<reportElement x="576" y="213" width="1" height="34"/>
+				<reportElement x="576" y="157" width="1" height="15"/>
 			</line>
 			<line>
-				<reportElement x="392" y="213" width="1" height="34"/>
+				<reportElement x="392" y="157" width="1" height="15"/>
 			</line>
 			<line>
-				<reportElement x="405" y="213" width="1" height="34"/>
+				<reportElement x="405" y="157" width="1" height="15"/>
 			</line>
 			<line>
-				<reportElement x="418" y="213" width="1" height="34"/>
+				<reportElement x="418" y="157" width="1" height="15"/>
 			</line>
 			<line>
-				<reportElement x="431" y="213" width="1" height="34"/>
+				<reportElement x="431" y="157" width="1" height="15"/>
 			</line>
 			<line>
-				<reportElement x="457" y="213" width="1" height="34"/>
+				<reportElement x="457" y="157" width="1" height="15"/>
 			</line>
 			<line>
-				<reportElement x="537" y="213" width="1" height="34"/>
+				<reportElement x="537" y="157" width="1" height="15"/>
 			</line>
 			<line>
-				<reportElement x="550" y="213" width="1" height="34"/>
+				<reportElement x="550" y="157" width="1" height="15"/>
 			</line>
 			<line>
-				<reportElement x="589" y="213" width="1" height="34"/>
+				<reportElement x="589" y="157" width="1" height="15"/>
 			</line>
 			<line>
-				<reportElement x="602" y="213" width="1" height="34"/>
+				<reportElement x="602" y="157" width="1" height="15"/>
 			</line>
 			<line>
-				<reportElement x="615" y="213" width="1" height="34"/>
+				<reportElement x="615" y="157" width="1" height="15"/>
 			</line>
 			<line>
-				<reportElement x="628" y="212" width="1" height="35"/>
+				<reportElement x="628" y="156" width="1" height="16"/>
 			</line>
 			<line>
-				<reportElement x="444" y="213" width="1" height="34"/>
+				<reportElement x="444" y="157" width="1" height="15"/>
 			</line>
 			<staticText>
-				<reportElement x="751" y="229" width="35" height="13"/>
-				<textElement textAlignment="Center">
-					<font size="8" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Faltas]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="194" y="225" width="63" height="13"/>
+				<reportElement x="194" y="158" width="63" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font size="5" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Código INEP]]></text>
 			</staticText>
 			<line>
-				<reportElement x="297" y="212" width="1" height="35"/>
+				<reportElement x="297" y="156" width="1" height="16"/>
 			</line>
 			<staticText>
-				<reportElement x="22" y="194" width="73" height="13"/>
+				<reportElement x="22" y="138" width="73" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[PROFESSOR(A):]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="501" y="194" width="42" height="13"/>
+				<reportElement x="501" y="138" width="42" height="13"/>
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[DIA/MÊS]]></text>
 			</staticText>
 			<line>
-				<reportElement x="284" y="212" width="1" height="35"/>
+				<reportElement x="284" y="156" width="1" height="16"/>
 			</line>
 			<line>
-				<reportElement x="641" y="212" width="1" height="35"/>
+				<reportElement x="641" y="156" width="1" height="16"/>
 			</line>
 			<line>
-				<reportElement x="654" y="212" width="1" height="35"/>
+				<reportElement x="654" y="156" width="1" height="16"/>
 			</line>
 			<line>
-				<reportElement x="667" y="212" width="1" height="35"/>
+				<reportElement x="667" y="156" width="1" height="16"/>
 			</line>
 			<line>
-				<reportElement x="681" y="212" width="1" height="35"/>
+				<reportElement x="681" y="156" width="1" height="16"/>
 			</line>
 			<line>
-				<reportElement x="695" y="212" width="1" height="35"/>
+				<reportElement x="695" y="156" width="1" height="16"/>
 			</line>
 			<line>
-				<reportElement x="708" y="212" width="1" height="35"/>
+				<reportElement x="708" y="156" width="1" height="16"/>
 			</line>
 			<line>
-				<reportElement x="721" y="212" width="1" height="35"/>
+				<reportElement x="721" y="156" width="1" height="16"/>
 			</line>
 			<line>
-				<reportElement x="15" y="212" width="775" height="1"/>
+				<reportElement x="15" y="156" width="775" height="1"/>
 			</line>
 			<textField>
-				<reportElement x="96" y="194" width="156" height="13"/>
+				<reportElement x="96" y="138" width="156" height="13"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$P{professor}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="751" y="215" width="35" height="13"/>
+				<reportElement x="751" y="158" width="35" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8" isBold="false"/>
+					<font size="5" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Total]]></text>
+				<text><![CDATA[Total Faltas]]></text>
 			</staticText>
 			<line>
-				<reportElement x="734" y="212" width="1" height="35"/>
+				<reportElement x="734" y="156" width="1" height="16"/>
 			</line>
 			<line>
-				<reportElement x="748" y="212" width="1" height="35"/>
+				<reportElement x="748" y="156" width="1" height="16"/>
 			</line>
 			<image>
 				<reportElement x="39" y="4" width="57" height="46"/>
@@ -574,151 +567,151 @@ ORDER BY nome_aluno ASC]]>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="18" splitType="Stretch">
+		<band height="13" splitType="Stretch">
 			<line>
-				<reportElement x="15" y="17" width="775" height="1"/>
+				<reportElement x="14" y="11" width="776" height="1"/>
 			</line>
 			<line>
-				<reportElement x="790" y="-1" width="1" height="19"/>
+				<reportElement x="790" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="271" y="-1" width="1" height="18"/>
+				<reportElement x="271" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="297" y="-1" width="1" height="18"/>
+				<reportElement x="297" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="311" y="-1" width="1" height="18"/>
+				<reportElement x="311" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="325" y="-1" width="1" height="18"/>
+				<reportElement x="325" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="339" y="-1" width="1" height="18"/>
+				<reportElement x="339" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="352" y="-1" width="1" height="18"/>
+				<reportElement x="352" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="365" y="-1" width="1" height="18"/>
+				<reportElement x="365" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="457" y="-1" width="1" height="18"/>
+				<reportElement x="457" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="471" y="-1" width="1" height="18"/>
+				<reportElement x="471" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="511" y="-1" width="1" height="18"/>
+				<reportElement x="511" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="550" y="-1" width="1" height="18"/>
+				<reportElement x="550" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="484" y="-1" width="1" height="18"/>
+				<reportElement x="484" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="258" y="-1" width="1" height="18"/>
+				<reportElement x="258" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="497" y="-1" width="1" height="18"/>
+				<reportElement x="497" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="379" y="-1" width="1" height="18"/>
+				<reportElement x="379" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="392" y="-1" width="1" height="18"/>
+				<reportElement x="392" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="405" y="-1" width="1" height="18"/>
+				<reportElement x="405" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="418" y="-1" width="1" height="18"/>
+				<reportElement x="418" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="444" y="-1" width="1" height="18"/>
+				<reportElement x="444" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="524" y="-1" width="1" height="18"/>
+				<reportElement x="524" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="537" y="-1" width="1" height="18"/>
+				<reportElement x="537" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="563" y="-1" width="1" height="18"/>
+				<reportElement x="563" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="576" y="-1" width="1" height="18"/>
+				<reportElement x="576" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="589" y="-1" width="1" height="18"/>
+				<reportElement x="589" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="602" y="-1" width="1" height="18"/>
+				<reportElement x="602" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="615" y="-1" width="1" height="18"/>
+				<reportElement x="615" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="431" y="-1" width="1" height="18"/>
+				<reportElement x="431" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="284" y="-1" width="1" height="18"/>
+				<reportElement x="284" y="-1" width="1" height="12"/>
 			</line>
 			<textField>
-				<reportElement x="22" y="3" width="170" height="13" forecolor="#000000"/>
+				<reportElement x="22" y="1" width="170" height="8" forecolor="#000000"/>
 				<textElement>
-					<font size="8"/>
+					<font size="5"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_aluno}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="14" y="-1" width="1" height="19"/>
+				<reportElement x="14" y="-1" width="1" height="12"/>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="194" y="3" width="61" height="13"/>
+				<reportElement x="194" y="1" width="61" height="8"/>
 				<textElement>
-					<font size="8"/>
+					<font size="5"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{cod_aluno_inep}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="628" y="-1" width="1" height="18"/>
+				<reportElement x="628" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="641" y="-1" width="1" height="18"/>
+				<reportElement x="641" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="654" y="-1" width="1" height="18"/>
+				<reportElement x="654" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="667" y="-1" width="1" height="18"/>
+				<reportElement x="667" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="681" y="-1" width="1" height="18"/>
+				<reportElement x="681" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="695" y="-1" width="1" height="18"/>
+				<reportElement x="695" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="708" y="-1" width="1" height="18"/>
+				<reportElement x="708" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="721" y="-1" width="1" height="18"/>
+				<reportElement x="721" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="734" y="-1" width="1" height="18"/>
+				<reportElement x="734" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="748" y="-1" width="1" height="18"/>
+				<reportElement x="748" y="-1" width="1" height="12"/>
 			</line>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="5" splitType="Stretch"/>
+		<band height="2" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="5" splitType="Stretch"/>
+		<band height="2" splitType="Stretch"/>
 	</pageFooter>
 	<summary>
 		<band height="29" splitType="Stretch"/>

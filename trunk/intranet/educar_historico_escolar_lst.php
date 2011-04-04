@@ -87,6 +87,7 @@ class indice extends clsListagem
 	var $ref_cod_instituicao;
 	var $ref_cod_escola;
 	var $extra_curricular;
+	var $frequencia;
 
 	function Gerar()
 	{
@@ -180,7 +181,8 @@ class indice extends clsListagem
 			null,
 			$this->ref_cod_instituicao,
 			null,
-			$this->extra_curricular
+			$this->extra_curricular,
+			null
 		);
 
 		$total = $obj_historico_escolar->_total;

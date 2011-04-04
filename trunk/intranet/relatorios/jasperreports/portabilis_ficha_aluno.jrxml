@@ -14,7 +14,7 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT public.fcn_upper(nm_instituicao) AS nome_instituicao,
-       public.fcn_upper(instituicao.nm_responsavel) AS nome_responsavel,
+      public.fcn_upper(nm_responsavel) AS nome_secretaria,
        instituicao.cidade AS cidade_instituicao,
        public.fcn_upper(ref_sigla_uf) AS uf_instituicao,
        to_char(CURRENT_DATE,'dd/mm/yyyy') AS data_atual,
@@ -76,7 +76,8 @@
          where bairro.idmun =  municipio.idmun AND
                municipio.idmun = logradouro.idmun AND
                logradouro.idlog = endereco_pessoa.idlog AND
-               endereco_pessoa.idpes = pessoa.idpes) as bairro,
+               endereco_pessoa.idpes = aluno.ref_idpes AND
+			   endereco_pessoa.idbai = bairro.idbai) as bairro,
 
        (select pessoa.email from cadastro.pessoa ps where ps.idpes = fisica.idpes_pai) as email,
        (select min(fone_pessoa.ddd) from cadastro.fone_pessoa where fone_pessoa.idpes = pessoa.idpes) as ddd,
@@ -195,7 +196,7 @@
                endereco_pessoa.idpes = fc.idpes_responsavel AND
                fc.idpes_responsavel = pessoa.idpes) as sigla_uf_responsavel,
 
-       (select min(bairro.nome)
+       (select bairro.nome
           from public.bairro,
                public.municipio,
                public.logradouro,
@@ -205,15 +206,16 @@
                municipio.idmun = logradouro.idmun AND
                logradouro.idlog = endereco_pessoa.idlog AND
                endereco_pessoa.idpes = fc.idpes_responsavel AND
-               fc.idpes_responsavel = pessoa.idpes) as bairro_responsavel,
+               fc.idpes_responsavel = pessoa.idpes AND
+			   endereco_pessoa.idbai = bairro.idbai) as bairro_responsavel,
 
-       (select public.fcn_upper(ps.nome)
+      (SELECT COALESCE((SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))
           from cadastro.pessoa ps,
                cadastro.juridica,
                pmieducar.escola
          where escola.ref_idpes = ps.idpes AND
                ps.idpes = juridica .idpes AND
-	       escola.cod_escola = $P{escola}) AS nm_escola
+	       escola.cod_escola = $P{escola}),(SELECT nm_escola FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS nm_escola
 
   FROM pmieducar.instituicao,
        pmieducar.aluno,
@@ -226,7 +228,7 @@
        aluno.cod_aluno = $P{aluno}]]>
 	</queryString>
 	<field name="nome_instituicao" class="java.lang.String"/>
-	<field name="nome_responsavel" class="java.lang.String"/>
+	<field name="nome_secretaria" class="java.lang.String"/>
 	<field name="cidade_instituicao" class="java.lang.String"/>
 	<field name="uf_instituicao" class="java.lang.String"/>
 	<field name="data_atual" class="java.lang.String"/>
@@ -277,6 +279,7 @@
 	<field name="num_livro" class="java.lang.String"/>
 	<field name="num_folha" class="java.math.BigDecimal"/>
 	<field name="cartorio_cert_civil" class="java.lang.String"/>
+	<field name="nome_responsavel" class="java.lang.String"/>
 	<field name="cpf_responsavel" class="java.math.BigDecimal"/>
 	<field name="sexo_responsavel" class="java.lang.String"/>
 	<field name="ddd_responsavel" class="java.math.BigDecimal"/>
@@ -339,13 +342,13 @@
 				<reportElement x="25" y="5" width="57" height="46"/>
 				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
 			</image>
-			<staticText>
-				<reportElement x="102" y="17" width="278" height="13"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="102" y="16" width="278" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[SECRETARIA MUNICIPAL DE EDUCAÇÃO, CULTURA E ESPORTES]]></text>
-			</staticText>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_secretaria}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
