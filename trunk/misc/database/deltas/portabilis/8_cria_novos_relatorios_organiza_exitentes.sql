@@ -11,7 +11,6 @@
 
 	update pmicontrolesis.menu set ord_menu = 2 where cod_menu = 999450;
 	update pmicontrolesis.menu set ord_menu = 3 where cod_menu = 999460;
-	update pmicontrolesis.menu set ref_cod_ico = 192 where ref_cod_ico is null;
 
 	ALTER TABLE pmieducar.historico_escolar ADD COLUMN frequencia double precision;
 	ALTER TABLE pmieducar.historico_escolar ALTER COLUMN frequencia SET STORAGE PLAIN;
@@ -31,6 +30,7 @@
 	insert into pmicontrolesis.menu values(999217,999217,999301,'Ocorrências Disciplinares por Aluno',4,'portabilis_alunos_ocorrencias_disciplinares.php','_self',1,15,NULL);
 	insert into pmieducar.menu_tipo_usuario values(1,999217,1,0,1);
  	
+	update pmicontrolesis.menu set ref_cod_ico = 192 where ref_cod_ico is null;
 	-- //@UNDO
 	
 	ALTER TABLE pmieducar.historico_escolar DROP COLUMN frequencia;
