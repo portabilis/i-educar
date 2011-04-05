@@ -1,8 +1,9 @@
  	-- //
 
  	--
- 	-- Cria menu Servidores, organiza os menus e adiciona ícones, cria relatórios: Atestado de Transferência, 
-	-- Horas Alocadas por Servidor e Ocorrências Disciplinares por Aluno.
+ 	-- Cria menu Servidores, organiza os menus e submenus e adiciona ícones.
+	-- Cria relatórios: Atestado de Transferência, Horas Alocadas por Servidor e Ocorrências Disciplinares por Aluno.
+	-- Atualiza ícone do menu Documentos >> Registros.
  	-- @author   Ricardo Bortolotto Dagostim <ricardo@portabilis.com.br>
  	-- @license  @@license@@
  	-- @version  $Id$
@@ -30,7 +31,8 @@
 	insert into pmicontrolesis.menu values(999217,999217,999301,'Ocorrências Disciplinares por Aluno',4,'portabilis_alunos_ocorrencias_disciplinares.php','_self',1,15,NULL);
 	insert into pmieducar.menu_tipo_usuario values(1,999217,1,0,1);
  	
-	update pmicontrolesis.menu set ref_cod_ico = 192 where ref_cod_ico is null;
+	UPDATE pmicontrolesis.menu set ref_cod_ico = 192 where ref_cod_ico is null;
+	UPDATE pmicontrolesis.menu set ref_cod_ico = 36 where cod_menu = 999500;
 	-- //@UNDO
 	
 	ALTER TABLE pmieducar.historico_escolar DROP COLUMN frequencia;
