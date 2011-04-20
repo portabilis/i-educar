@@ -1,0 +1,41 @@
+@charset "ISO-8859-1";
+
+/*
+ *   Copyright (C) 2006  Thomas HARDING
+ *
+ *   This library is free software; you can redistribute it and/or
+ *   modify it under the terms of the GNU Library General Public
+ *   License as published by the Free Software Foundation; either
+ *   version 2 of the License, or (at your option) any later version.
+ *
+ *   This library is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *   Library General Public License for more details.
+ *
+ *   You should have received a copy of the GNU Library General Public
+ *   License along with this library; if not, write to the Free Software
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
+ *   MA  02110-1301  USA
+ *
+ *   mailto:thomas.harding@laposte.net
+ *   Thomas Harding, 56 rue de la bourie rouge, 45 000 ORLEANS -- FRANCE
+ */
+ 
+
+        body { background-color: white; color: black; font-size: 90% }
+        div.realbody { padding-left: 1.5em;  padding-right: 5em; padding-top: 3em; padding-bottom: 5em; }
+        li.menulogo {/* position: absolute;  top: 20px; */ margin-top: 20px ; margin-bottom: 100px;}
+        img.logo{ margin-bottom: -0.2ex; }
+        ul.menu { position: absolute; float: left; left: 0em; top: 0px; bottom: -120px; margin-top: 0px; width: 170px; text-indent: 0em; margin-left: 0em; padding-left: 10px; color: black; background-color: #88A2FF ; }
+        ul.menu li { text-decoration: underline; list-style-type: none; text-indent: 0em; font-family: sans-serif }
+        ul.menu li a { text-decoration: none; color: black; background-color: #88A2FF; }
+        li.menulogo a { text-decoration: none; }
+        img { border: none; }
+        div.main { margin-left: 200px; }
+        span.pre { display: inline; white-space: pre; font-family: monospace; }
+        div.section { padding-left: 3em; }
+        p.backtotop { text-align: right; }
+        p.footer { width: 80% ; margin-left: 170px; margin-bottom: 1em; text-align: center; font-family: sans-serif ; font-size: 60% ; color: black; background-color: #AAAAFF ; }
+        br.clear { clear: left; }
+
