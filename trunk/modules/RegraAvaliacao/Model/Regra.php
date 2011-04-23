@@ -76,7 +76,8 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     'tabelaArredondamento' => array(
       'value' => 1,
       'class' => 'TabelaArredondamento_Model_TabelaDataMapper',
-      'file'  => 'TabelaArredondamento/Model/TabelaDataMapper.php'
+      'file'  => 'TabelaArredondamento/Model/TabelaDataMapper.php',
+      'null'  => TRUE
     ),
     'tipoProgressao' => array(
       'value' => 1,
@@ -97,7 +98,8 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     'formulaMedia' => array(
       'value' => NULL,
       'class' => 'FormulaMedia_Model_FormulaDataMapper',
-      'file'  => 'FormulaMedia/Model/FormulaDataMapper.php'
+      'file'  => 'FormulaMedia/Model/FormulaDataMapper.php',
+      'null'  => TRUE
     ),
     'formulaRecuperacao' => array(
       'value' => NULL,
@@ -146,6 +148,20 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     // Instituições
     $instituicoes = array_keys(App_Model_IedFinder::getInstituicoes());
 
+    // Fórmula de média é obrigatória?
+    $isFormulaMediaRequired = TRUE;
+
+    // Média é obrigatória?
+    $isMediaRequired = TRUE;
+
+    if ($this->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
+      $isFormulaMediaRequired = FALSE;
+      $isMediaRequired = FALSE;
+
+      // Aceita somente o valor NULL quando o tipo de nota é Nenhum.
+      $formulaMedia = $formulaMedia + array(NULL);
+    }
+
     return array(
       'instituicao' => new CoreExt_Validate_Choice(array(
         'choices' => $instituicoes
@@ -154,7 +170,8 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
         'min' => 5, 'max' => 50
       )),
       'formulaMedia' => new CoreExt_Validate_Choice(array(
-        'choices' => $formulaMedia
+        'choices' => $formulaMedia,
+        'required' => $isFormulaMediaRequired
       )),
       'formulaRecuperacao' => new CoreExt_Validate_Choice(array(
         'choices' => $formulaRecuperacao,
@@ -179,8 +196,9 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
       )),
       'media' => $this->validateIfEquals(
         'tipoProgressao', RegraAvaliacao_Model_TipoProgressao::CONTINUADA,
-        'CoreExt_Validate_Numeric', array('min' => 1, 'max' => 10),
-        array('required' => FALSE, 'min' => 0, 'max' => 10)
+        'CoreExt_Validate_Numeric',
+        array('required' => $isMediaRequired, 'min' => 1, 'max' => 10),
+        array('required' => $isMediaRequired, 'min' => 0, 'max' => 10)
       ),
       'porcentagemPresenca' => new CoreExt_Validate_Numeric(array(
         'min' => 1, 'max' => 100

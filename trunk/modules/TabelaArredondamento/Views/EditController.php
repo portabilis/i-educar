@@ -154,7 +154,9 @@ class EditController extends Core_Controller_Page_EditController
 
     // Tipo de nota
     $notaTipoValor = RegraAvaliacao_Model_Nota_TipoValor::getInstance();
-    $this->campoRadio('tipoNota', $this->_getLabel('tipoNota'), $notaTipoValor->getEnums(),
+    $notaTipos = $notaTipoValor->getEnums();
+    unset($notaTipos[RegraAvaliacao_Model_Nota_TipoValor::NENHUM]);
+    $this->campoRadio('tipoNota', $this->_getLabel('tipoNota'), $notaTipos,
       $this->getEntity()->get('tipoNota'), '', $this->_getHelp('tipoNota'));
 
     // Parte condicional
@@ -240,7 +242,7 @@ class EditController extends Core_Controller_Page_EditController
     // Cria um array de objetos a persistir
     for ($i = 0; $i < $loop; $i++) {
       $id = $valores['id'][$i];
-      
+
       // Não atribui a instância de $entity senão não teria sucesso em verificar
       // se a instância é isNull().
       $data = array(
@@ -273,10 +275,6 @@ class EditController extends Core_Controller_Page_EditController
         $this->getDataMapper()->getTabelaValorDataMapper()->save($tabelaValor);
       }
       else {
-          /* Retorna os erros da validação do formulário.
-        $arrStr = $tabelaValor->getErrors();
-        var_dump($arrStr);
-           */
         $this->mensagem = 'Erro no formulário';
         return FALSE;
       }

@@ -25,7 +25,7 @@
  * @license   @@license@@
  * @package   iEd_Include
  * @since     Arquivo disponível desde a versão 1.0.0
- * @version   $Id$
+ * @version   $Id: clsBase.inc.php 773 2010-12-19 20:46:49Z eriksencosta@gmail.com $
  */
 
 // Inclui arquivo de bootstrapping
@@ -474,11 +474,26 @@ class clsBase extends clsConfig
     return $retorno;
   }
 
+  /**
+   * @see Core_Page_Controller_Abstract#getAppendedOutput()
+   * @see Core_Page_Controller_Abstract#getPrependedOutput()
+   */
   function MakeBody()
   {
     $corpo = '';
     foreach ($this->clsForm as $form) {
       $corpo .= $form->RenderHTML();
+
+      // Prepend output.
+      if (method_exists($form, 'getPrependedOutput')) {
+        $corpo = $form->getPrependedOutput() . $corpo;
+      }
+
+      // Append output.
+      if (method_exists($form, 'getAppendedOutput')) {
+        $corpo = $corpo . $form->getAppendedOutput();
+      }
+
       if (is_string($form->prog_alert) && $form->prog_alert) {
         $this->prog_alert .= $form->prog_alert;
       }
@@ -733,7 +748,7 @@ class clsBase extends clsConfig
       $saida_geral = $this->MakeHeadHtml();
 
       // @todo else ruim, colocar abre e fecha colchetes ao redor de foreach.
-      if($this->renderMenu) {
+      if ($this->renderMenu) {
         $saida_geral .= $this->MakeBody();
       }
       else {

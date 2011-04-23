@@ -203,7 +203,10 @@ class clsPessoaEndereco
   {
     if ($this->idpes) {
       $db = new clsBanco();
-      $db->Consulta("DELETE FROM {$this->schema_cadastro}.{$this->tabela} WHERE idpes = $this->idpes");
+      $db->Consulta(sprintf(
+        'DELETE FROM %s.%s WHERE idpes = %d',
+        $this->schema_cadastro, $this->tabela, $this->idpes
+      ));
     }
   }
 

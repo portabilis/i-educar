@@ -105,7 +105,7 @@ class NotaController extends Core_Controller_Page_EditController
 
     $this->_options = array(
       'new_success'         => 'boletim',
-      'new_success_params' => array('matricula' => $this->getRequest()->matricula),
+      'new_success_params'  => array('matricula' => $this->getRequest()->matricula),
       'edit_success'        => 'boletim',
       'edit_success_params' => array('matricula' => $this->getRequest()->matricula),
     );
@@ -129,6 +129,13 @@ class NotaController extends Core_Controller_Page_EditController
 
     if (isset($this->_etapa) && isset($this->_matricula) && isset($this->_componenteCurricular)) {
       return FALSE;
+    }
+
+    // Determina a etapa atual.
+    $this->_etapa = 1;
+    $notas = $this->_service->getNotasComponentes();
+    if (isset($notas[$this->_componenteCurricular])) {
+      $this->_etapa = count($notas[$this->_componenteCurricular]) + 1;
     }
 
     return TRUE;

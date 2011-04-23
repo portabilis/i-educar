@@ -33,6 +33,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
   <title>Sistema de Gestão Escolar - i-Educar | Portabilis Tecnologia</title>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 </head>
 <frameset rows="115,*" frameborder="1" framespacing="2" border="0">
   <frame src="intranet/topo.php"  name="superior" noresize scrolling="no">

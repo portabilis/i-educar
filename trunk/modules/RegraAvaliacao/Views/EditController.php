@@ -111,6 +111,102 @@ class EditController extends Core_Controller_Page_EditController
     )
   );
 
+  private $_tipoNotaJs = '
+var tipo_nota = new function() {
+  this.isNenhum = function(docObj, formId, fieldsName) {
+    var regex = new RegExp(fieldsName);
+    var form  = docObj.getElementById(formId);
+
+    for (var i = 0; i < form.elements.length; i++) {
+      var elementName = form.elements[i].name;
+      if (null !== elementName.match(regex)) {
+        if (form.elements[i].checked == false) {
+          continue;
+        }
+
+        docObj.getElementById(\'tabelaArredondamento\').disabled = false;
+        docObj.getElementById(\'media\').disabled = false;
+        docObj.getElementById(\'formulaMedia\').disabled = false;
+        docObj.getElementById(\'formulaRecuperacao\').disabled = false;
+
+        if (form.elements[i].value == 0) {
+          docObj.getElementById(\'tabelaArredondamento\').disabled = true;
+          docObj.getElementById(\'media\').disabled = true;
+          docObj.getElementById(\'formulaMedia\').disabled = true;
+          docObj.getElementById(\'formulaRecuperacao\').disabled = true;
+        }
+
+        break;
+      }
+    }
+  };
+};
+
+var tabela_arredondamento = new function() {
+  this.docObj = null;
+
+  this.getTabelasArredondamento = function(docObj, tipoNota) {
+    tabela_arredondamento.docObj = docObj;
+    var xml = new ajax(tabela_arredondamento.parseResponse);
+    xml.envia("/modules/TabelaArredondamento/Views/TabelaTipoNotaAjax.php?tipoNota=" + tipoNota);
+  };
+
+  this.parseResponse = function() {
+    if (arguments[0] === null) {
+      return;
+    }
+
+    docObj = tabela_arredondamento.docObj;
+
+    tabelas = arguments[0].getElementsByTagName(\'tabela\');
+    docObj.options.length = 0;
+    for (var i = 0; i < tabelas.length; i++) {
+      docObj[docObj.options.length] = new Option(
+        tabelas[i].firstChild.nodeValue, tabelas[i].getAttribute(\'id\'), false, false
+      );
+    }
+
+    if (tabelas.length == 0) {
+      docObj.options[0] = new Option(
+        \'O tipo de nota não possui tabela de arredondamento.\', \'\', false, false
+      );
+    }
+  }
+}
+';
+
+  protected function _preRender()
+  {
+    parent::_preRender();
+
+    // Adiciona o código Javascript de controle do formulário.
+    $js = sprintf('
+      <script type="text/javascript">
+        %s
+
+        window.onload = function() {
+          // Desabilita os campos relacionados caso o tipo de nota seja "nenhum".
+          new tipo_nota.isNenhum(document, \'formcadastro\', \'tipoNota\');
+
+          // Faz o binding dos eventos isNenhum e getTabelasArredondamento nos
+          // campos radio de tipo de nota.
+          var events = function() {
+            new tipo_nota.isNenhum(document, \'formcadastro\', \'tipoNota\');
+            new tabela_arredondamento.getTabelasArredondamento(
+              document.getElementById(\'tabelaArredondamento\'),
+              this.value
+            );
+          }
+
+          new ied_forms.bind(document, \'formcadastro\', \'tipoNota\', \'click\', events);
+        }
+      </script>',
+      $this->_tipoNotaJs
+    );
+
+    $this->prependOutput($js);
+  }
+
   /**
    * @see clsCadastro#Gerar()
    */
@@ -135,9 +231,14 @@ class EditController extends Core_Controller_Page_EditController
     // Tabela de arredondamento
     $tabelaArredondamento = $this->getDataMapper()->findTabelaArredondamento($this->getEntity());
     $tabelaArredondamento = CoreExt_Entity::entityFilterAttr($tabelaArredondamento, 'id', 'nome');
+
+    if (empty($tabelaArredondamento)) {
+      $tabelaArredondamento = array(0 => 'O tipo de nota não possui tabela de arredondamento.');
+    }
+
     $this->campoLista('tabelaArredondamento', $this->_getLabel('tabelaArredondamento'),
       $tabelaArredondamento, $this->getEntity()->get('tabelaArredondamento'), '',
-      FALSE, $this->_getHelp('tabelaArredondamento'));
+      FALSE, $this->_getHelp('tabelaArredondamento'), '', FALSE, FALSE);
 
     // Tipo progressão
     $tipoProgressao = RegraAvaliacao_Model_TipoProgressao::getInstance();
@@ -147,14 +248,14 @@ class EditController extends Core_Controller_Page_EditController
 
     // Média
     $this->campoTexto('media', $this->_getLabel('media'), $this->getEntity()->media,
-      5, 50, TRUE, FALSE, FALSE, $this->_getHelp('media'));
+      5, 50, FALSE, FALSE, FALSE, $this->_getHelp('media'));
 
     // Cálculo média
     $formulas = $this->getDataMapper()->findFormulaMediaFinal();
     $formulas = CoreExt_Entity::entityFilterAttr($formulas, 'id', 'nome');
     $this->campoLista('formulaMedia', $this->_getLabel('formulaMedia'),
       $formulas, $this->getEntity()->get('formulaMedia'), '', FALSE,
-      $this->_getHelp('formulaMedia'));
+      $this->_getHelp('formulaMedia'), '', FALSE, FALSE);
 
     // Cálculo média recuperação
     $formulas = $this->getDataMapper()->findFormulaMediaRecuperacao();
