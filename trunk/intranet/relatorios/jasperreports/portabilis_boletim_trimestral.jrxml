@@ -1,0 +1,1003 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_boletim_trimestral" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.9487171000000034"/>
+	<property name="ireport.x" value="120"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="ano" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="instituicao" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="escola" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="curso" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="serie" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="turma" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="matricula" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT (SELECT escola_ano_letivo.ano
+          FROM pmieducar.escola_ano_letivo
+         WHERE escola_ano_letivo.ref_cod_escola = $P{escola} and
+		       ano = $P{ano}) AS ano,
+
+      (SELECT public.fcn_upper(instituicao.nm_responsavel)
+         FROM pmieducar.instituicao
+        WHERE instituicao.cod_instituicao = $P{instituicao}) AS nome_responsavel,
+
+      (SELECT COALESCE((SELECT public.fcn_upper(ps.nome)
+          FROM cadastro.pessoa ps,
+               cadastro.juridica,
+               pmieducar.escola
+         WHERE escola.ref_idpes = juridica.idpes AND
+               juridica.idpes = ps.idpes AND
+               escola.cod_escola = $P{escola}),(SELECT nm_escola FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS nm_escola,
+
+
+      (SELECT public.fcn_upper(instituicao.nm_instituicao)
+         FROM pmieducar.instituicao
+        WHERE instituicao.cod_instituicao = $P{instituicao}) AS nome_instituicao,
+
+      (SELECT public.fcn_upper(substring(logradouro.idtlog from 1 for 1)) ||
+              lower(substring(logradouro.idtlog, 2))
+         FROM public.logradouro,
+              cadastro.juridica,
+              cadastro.pessoa ps,
+              cadastro.endereco_pessoa,
+              pmieducar.escola
+        WHERE juridica.idpes = ps.idpes AND
+              ps.idpes = endereco_pessoa.idpes AND
+              endereco_pessoa.idlog = logradouro.idlog AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}) AS tipo_logradouro,
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT logradouro.nome
+         FROM public.logradouro,
+              cadastro.juridica,
+              cadastro.pessoa ps,
+              cadastro.endereco_pessoa,
+              pmieducar.escola
+        WHERE juridica.idpes = ps.idpes AND
+              ps.idpes = endereco_pessoa.idpes AND
+              endereco_pessoa.idlog = logradouro.idlog AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT endereco_externo.logradouro FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(SELECT logradouro FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS logradouro,
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro,
+              pmieducar.escola
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT endereco_externo.cidade FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(SELECT municipio FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS municipio,
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT bairro.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro,
+              pmieducar.escola
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT endereco_externo.bairro FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(SELECT bairro FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS bairro,
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT municipio.sigla_uf
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro,
+              pmieducar.escola
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT endereco_externo.sigla_uf FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(select inst.ref_sigla_uf from pmieducar.instituicao inst where inst.cod_instituicao = $P{instituicao}))) AS uf_municipio,
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT endereco_pessoa.numero
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica,
+              pmieducar.escola
+        WHERE juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT endereco_externo.numero FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(SELECT numero FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS numero,
+
+     (SELECT COALESCE((SELECT COALESCE((SELECT to_char(endereco_pessoa.cep, '99999-999')
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica,
+              pmieducar.escola
+        WHERE juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT to_char(endereco_externo.cep,'99999-999') FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(SELECT to_char(escola_complemento.cep,'99999-999') FROM pmieducar.escola_complemento where escola_complemento.ref_cod_escola = $P{escola}))) AS cep,
+
+     (SELECT COALESCE((SELECT min(fone_pessoa.ddd)
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica,
+              pmieducar.escola
+        WHERE juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT min(ddd_telefone) FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS fone_ddd,
+
+
+     (SELECT COALESCE((SELECT min(to_char(fone_pessoa.fone, '9999-9999'))
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica,
+              pmieducar.escola
+        WHERE juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT min(to_char(telefone, '9999-9999')) FROM pmieducar.escola_complemento where escola_complemento.ref_cod_escola = $P{escola}))) AS fone,
+
+     (SELECT COALESCE((SELECT ps.email
+         FROM cadastro.pessoa ps,
+              cadastro.juridica,
+              pmieducar.escola
+        WHERE juridica.idpes = ps.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT email FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS email,
+
+       to_char(current_date,'dd/mm/yyyy') AS data_atual,
+       to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
+
+        nome_disciplina,
+        matricula_id,
+        MAX(matricula_id) as matricula,
+        MAX(componente_curricular_id) as id_disciplina,
+	MAX(nota_arredondada) AS nota1,
+        MAX(nota_arredondada_etapa2) AS nota2,
+        MAX(nota_arredondada_etapa3) AS nota3,
+        MAX(nota_arredondada_etapa4) AS nota4,
+		MAX(total_pontos) AS total_pontos,
+		MAX(nota_exame) AS nota_exame,
+		MAX(media) AS media,
+        MAX(nome_curso) AS nome_curso,
+	MAX(nome_serie) AS nome_serie,
+        MAX(nome_turma) AS nome_turma,
+        MAX(periodo) AS periodo,
+		MAX(situacao) AS situacao,
+		MAX(nome_aluno) AS nome_aluno,
+		MAX(total_faltas_et1) AS total_faltas_et1,
+		MAX(total_faltas_et2) AS total_faltas_et2,
+		MAX(total_faltas_et3) AS total_faltas_et3,
+		MAX(total_faltas_et4) AS total_faltas_et4,
+		MAX(total_faltas) AS total_faltas,
+		MAX(faltas_componente_et1) AS faltas_componente_et1,
+		MAX(faltas_componente_et2) AS faltas_componente_et2,
+		MAX(faltas_componente_et3) AS faltas_componente_et3,
+		MAX(faltas_componente_et4) AS faltas_componente_et4,
+		MAX(total_faltas_componente) AS total_faltas_componente,
+		MAX(frequencia) AS frequencia,
+		MAX(frequencia_componente) AS frequencia_componente,
+		MAX(carga_horaria) AS carga_horaria
+  FROM (SELECT
+             (SELECT componente_curricular.nome
+                FROM modules.componente_curricular
+               WHERE componente_curricular.id = nota_componente_curricular.componente_curricular_id) as nome_disciplina,
+             nota_componente_curricular.componente_curricular_id,
+			 (SELECT CASE WHEN char_length(nota_arredondada) = 1 THEN
+			                   replace(nota_arredondada,'.',',') || ',0'
+                           ELSE
+                               replace(nota_arredondada,'.',',')
+                           END) as nota_arredondada,
+             nota_componente_curricular.etapa,
+             matricula_id,
+             (SELECT CASE WHEN char_length(et1.nota_arredondada) = 1 THEN
+			                   replace(et1.nota_arredondada,'.',',') || ',0'
+                           ELSE
+                               replace(et1.nota_arredondada,'.',',')
+                           END
+                FROM modules.nota_componente_curricular et1
+               WHERE et1.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+                     et1.etapa = 2 AND
+                     nota_aluno.id  = et1.nota_aluno_id) AS nota_arredondada_etapa2,
+             (SELECT CASE WHEN char_length(et1.nota_arredondada) = 1 THEN
+			                   replace(et1.nota_arredondada,'.',',') || ',0'
+                           ELSE
+                               replace(et1.nota_arredondada,'.',',')
+                           END
+                FROM modules.nota_componente_curricular et1
+               WHERE et1.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+                     et1.etapa = 3 AND
+                     nota_aluno.id  = et1.nota_aluno_id) AS nota_arredondada_etapa3,
+             (SELECT CASE WHEN char_length(et1.nota_arredondada) = 1 THEN
+			                   replace(et1.nota_arredondada,'.',',') || ',0'
+                           ELSE
+                               replace(et1.nota_arredondada,'.',',')
+                           END
+                FROM modules.nota_componente_curricular et1
+               WHERE et1.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+                     et1.etapa = 4 AND
+                     nota_aluno.id  = et1.nota_aluno_id) AS nota_arredondada_etapa4,
+
+             (SELECT CASE WHEN char_length(nota_componente_curricular_media.media_arredondada) = 1 THEN
+			                   (to_number(nota_componente_curricular_media.media_arredondada,'999') * 100)
+                           ELSE
+                               (to_number(nota_componente_curricular_media.media_arredondada,'999') * 10)
+                           END
+			     FROM modules.nota_componente_curricular_media cm
+               WHERE cm.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+                     cm.componente_curricular_id = nota_componente_curricular_media.componente_curricular_id) AS total_pontos,
+
+            (SELECT CASE WHEN char_length(et1.nota_arredondada) = 1 THEN
+			                   replace(et1.nota_arredondada,'.',',') || ',0'
+                           ELSE
+                               replace(et1.nota_arredondada,'.',',')
+                           END
+                FROM modules.nota_componente_curricular et1
+               WHERE et1.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+					 et1.etapa = 'Rc' AND
+                     nota_aluno.id  = et1.nota_aluno_id) AS nota_exame,
+
+             (SELECT CASE WHEN char_length(nota_componente_curricular_media.media_arredondada) = 1 THEN
+			                   replace(nota_componente_curricular_media.media_arredondada,'.',',') || ',0'
+                           ELSE
+                               replace(nota_componente_curricular_media.media_arredondada,'.',',')
+                           END
+		FROM modules.nota_componente_curricular_media cm
+               WHERE cm.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
+                     cm.componente_curricular_id = nota_componente_curricular_media.componente_curricular_id) AS media,
+
+	         (SELECT curso.nm_curso
+                FROM pmieducar.curso
+	          WHERE curso.cod_curso = matricula.ref_cod_curso AND
+                        curso.ativo = 1) AS nome_curso,
+
+            (SELECT serie.nm_serie
+               FROM pmieducar.serie
+	         WHERE serie.cod_serie = matricula.ref_ref_cod_serie AND
+                       serie.ativo = 1) AS nome_serie,
+
+	    (SELECT turma.nm_turma
+	       FROM pmieducar.turma,
+                    pmieducar.matricula_turma
+              WHERE turma.cod_turma = matricula_turma.ref_cod_turma AND
+                    matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+                    turma.ativo = 1 AND
+					matricula_turma.ativo = 1) AS nome_turma,
+
+            (SELECT CASE WHEN (SELECT min(to_char(escola_serie.hora_inicial,'HH'))
+                                 FROM pmieducar.escola_serie,
+                                      pmieducar.matricula
+                                WHERE escola_serie.ref_cod_escola = matricula.ref_ref_cod_escola AND
+                                      matricula.ref_ref_cod_serie = escola_serie.ref_cod_serie) = '07' THEN 'Matutino'
+                         WHEN (SELECT min(to_char(escola_serie.hora_inicial,'HH'))
+                                 FROM pmieducar.escola_serie,
+                                      pmieducar.matricula
+                                WHERE escola_serie.ref_cod_escola = matricula.ref_ref_cod_escola AND
+                                      matricula.ref_ref_cod_serie = escola_serie.ref_cod_serie) = '08' THEN 'Matutino'
+        ELSE 'Vespertino'
+        END) AS periodo,
+
+		(SELECT CASE WHEN (SELECT mt.aprovado
+		                     FROM pmieducar.matricula mt
+							WHERE mt.cod_matricula = matricula.cod_matricula) = 1 THEN 'Aprovado'
+                     WHEN (SELECT mt.aprovado
+					         FROM pmieducar.matricula mt
+							WHERE mt.cod_matricula = matricula.cod_matricula) = 2 THEN 'Reprovado'
+                     WHEN (SELECT mt.aprovado
+					         FROM pmieducar.matricula mt
+							WHERE mt.cod_matricula = matricula.cod_matricula) = 3 THEN 'Em Andamento'
+                     WHEN (SELECT mt.aprovado
+					         FROM pmieducar.matricula mt
+							WHERE mt.cod_matricula = matricula.cod_matricula) = 4 THEN 'Transferido'
+                ELSE 'Reclassificado'
+                END) AS situacao,
+
+		(SELECT pessoa.nome
+           FROM cadastro.pessoa,
+                cadastro.fisica,
+                pmieducar.aluno
+          WHERE pessoa.idpes = fisica.idpes AND
+                fisica.idpes = aluno.ref_idpes AND
+                aluno.cod_aluno = matricula.ref_cod_aluno) AS nome_aluno,
+
+        (SELECT sum(falta_geral.quantidade)
+           FROM modules.falta_geral,
+                modules.falta_aluno
+          WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
+                falta_aluno.matricula_id = matricula.cod_matricula AND
+                falta_geral.etapa = 1 AND
+				falta_aluno.tipo_falta = 1) as total_faltas_et1,
+
+        (SELECT sum(falta_geral.quantidade)
+           FROM modules.falta_geral,
+                modules.falta_aluno
+          WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
+                falta_aluno.matricula_id = matricula.cod_matricula AND
+                falta_geral.etapa = 2 AND
+				falta_aluno.tipo_falta = 1) as total_faltas_et2,
+
+        (SELECT sum(falta_geral.quantidade)
+           FROM modules.falta_geral,
+                modules.falta_aluno
+          WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
+                falta_aluno.matricula_id = matricula.cod_matricula AND
+                falta_geral.etapa = 3 AND
+                falta_aluno.tipo_falta = 1) as total_faltas_et3,
+
+        (SELECT sum(falta_geral.quantidade)
+           FROM modules.falta_geral,
+                modules.falta_aluno
+          WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
+                falta_aluno.matricula_id = matricula.cod_matricula AND
+                falta_geral.etapa = 4 AND
+				falta_aluno.tipo_falta = 1) as total_faltas_et4,
+
+        (SELECT sum(falta_geral.quantidade)
+           FROM modules.falta_geral,
+                modules.falta_aluno
+          WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
+                falta_aluno.matricula_id = matricula.cod_matricula AND
+                falta_geral.etapa in ('1','2','3','4')) as total_faltas,
+
+       (SELECT sum(falta_componente_curricular.quantidade)
+           FROM modules.falta_componente_curricular,
+                modules.falta_aluno
+          WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
+                falta_aluno.matricula_id = matricula.cod_matricula AND
+                falta_componente_curricular.etapa = 1 AND
+				falta_componente_curricular.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+				falta_aluno.tipo_falta = 2) as faltas_componente_et1,
+
+       (SELECT sum(falta_componente_curricular.quantidade)
+           FROM modules.falta_componente_curricular,
+                modules.falta_aluno
+          WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
+                falta_aluno.matricula_id = matricula.cod_matricula AND
+                falta_componente_curricular.etapa = 2 AND
+				falta_componente_curricular.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+				falta_aluno.tipo_falta = 2) as faltas_componente_et2,
+
+       (SELECT sum(falta_componente_curricular.quantidade)
+           FROM modules.falta_componente_curricular,
+                modules.falta_aluno
+          WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
+                falta_aluno.matricula_id = matricula.cod_matricula AND
+                falta_componente_curricular.etapa = 3 AND
+				falta_componente_curricular.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+				falta_aluno.tipo_falta = 2) as faltas_componente_et3,
+
+       (SELECT sum(falta_componente_curricular.quantidade)
+           FROM modules.falta_componente_curricular,
+                modules.falta_aluno
+          WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
+                falta_aluno.matricula_id = matricula.cod_matricula AND
+                falta_componente_curricular.etapa = 4 AND
+				falta_componente_curricular.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+				falta_aluno.tipo_falta = 2) as faltas_componente_et4,
+
+       (SELECT sum(falta_componente_curricular.quantidade)
+           FROM modules.falta_componente_curricular,
+                modules.falta_aluno
+          WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
+                falta_aluno.matricula_id = matricula.cod_matricula AND
+				falta_componente_curricular.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+                falta_componente_curricular.etapa in ('1','2','3','4') AND
+				falta_aluno.tipo_falta = 2) as total_faltas_componente,
+
+  (SELECT to_number(100::float -  ((SELECT sum(falta_geral.quantidade)
+          FROM modules.falta_geral,
+               modules.falta_aluno
+         WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
+               falta_aluno.matricula_id = matricula.cod_matricula AND
+               falta_geral.etapa in('1','2','3','4'))::float / 800::float )::float * 100,'999')) AS frequencia,
+
+  (SELECT to_number(100::float -  ((SELECT sum(falta_componente_curricular.quantidade)
+          FROM modules.falta_componente_curricular,
+               modules.falta_aluno
+         WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
+               falta_aluno.matricula_id = matricula.cod_matricula AND
+               falta_componente_curricular.etapa in ('1','2','3','4'))::float / 800::float )::float * 100,'999')) AS frequencia_componente,
+
+    (SELECT sum(to_number(componente_curricular_ano_escolar.carga_horaria,'999'))
+       FROM modules.componente_curricular_ano_escolar
+     WHERE componente_curricular_ano_escolar.componente_curricular_id = nota_componente_curricular.componente_curricular_id) AS            carga_horaria
+
+        FROM modules.nota_componente_curricular,
+             modules.nota_componente_curricular_media,
+             modules.nota_aluno,
+	         pmieducar.matricula,
+			 pmieducar.matricula_turma
+       WHERE nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
+             nota_componente_curricular_media.nota_aluno_id = nota_componente_curricular.nota_aluno_id AND
+             nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+			 matricula.ref_ref_cod_escola = $P{escola} AND
+			 matricula.ref_cod_curso = $P{curso} AND
+			 matricula.ref_ref_cod_serie = $P{serie} AND
+	         matricula.cod_matricula = nota_aluno.matricula_id AND
+             matricula.ativo = 1 AND
+			 matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+             matricula_turma.ref_cod_turma = $P{turma} AND
+             (SELECT CASE WHEN $P{matricula} = 0 THEN
+                   matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+ 		           matricula_turma.ref_cod_turma = $P{turma}
+               ELSE
+                   matricula.cod_matricula = $P{matricula}
+               END)
+	) AS etapa1
+GROUP BY matricula_id,componente_curricular_id, nome_disciplina
+ORDER BY matricula_id]]>
+	</queryString>
+	<field name="ano" class="java.lang.Integer"/>
+	<field name="nome_responsavel" class="java.lang.String"/>
+	<field name="nm_escola" class="java.lang.String"/>
+	<field name="nome_instituicao" class="java.lang.String"/>
+	<field name="tipo_logradouro" class="java.lang.String"/>
+	<field name="logradouro" class="java.lang.String"/>
+	<field name="municipio" class="java.lang.String"/>
+	<field name="bairro" class="java.lang.String"/>
+	<field name="uf_municipio" class="java.lang.String"/>
+	<field name="numero" class="java.math.BigDecimal"/>
+	<field name="cep" class="java.lang.String"/>
+	<field name="fone_ddd" class="java.math.BigDecimal"/>
+	<field name="fone" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="data_atual" class="java.lang.String"/>
+	<field name="hora_atual" class="java.lang.String"/>
+	<field name="nome_disciplina" class="java.lang.String"/>
+	<field name="matricula_id" class="java.lang.Integer"/>
+	<field name="matricula" class="java.lang.Integer"/>
+	<field name="id_disciplina" class="java.lang.Integer"/>
+	<field name="nota1" class="java.lang.String"/>
+	<field name="nota2" class="java.lang.String"/>
+	<field name="nota3" class="java.lang.String"/>
+	<field name="nota4" class="java.lang.String"/>
+	<field name="total_pontos" class="java.math.BigDecimal"/>
+	<field name="nota_exame" class="java.lang.String"/>
+	<field name="media" class="java.lang.String"/>
+	<field name="nome_curso" class="java.lang.String"/>
+	<field name="nome_serie" class="java.lang.String"/>
+	<field name="nome_turma" class="java.lang.String"/>
+	<field name="periodo" class="java.lang.String"/>
+	<field name="situacao" class="java.lang.String"/>
+	<field name="nome_aluno" class="java.lang.String"/>
+	<field name="total_faltas_et1" class="java.lang.Long"/>
+	<field name="total_faltas_et2" class="java.lang.Long"/>
+	<field name="total_faltas_et3" class="java.lang.Long"/>
+	<field name="total_faltas_et4" class="java.lang.Long"/>
+	<field name="total_faltas" class="java.lang.Long"/>
+	<field name="faltas_componente_et1" class="java.lang.Long"/>
+	<field name="faltas_componente_et2" class="java.lang.Long"/>
+	<field name="faltas_componente_et3" class="java.lang.Long"/>
+	<field name="faltas_componente_et4" class="java.lang.Long"/>
+	<field name="total_faltas_componente" class="java.lang.Long"/>
+	<field name="frequencia" class="java.math.BigDecimal"/>
+	<field name="frequencia_componente" class="java.math.BigDecimal"/>
+	<field name="carga_horaria" class="java.math.BigDecimal"/>
+	<group name="matricula" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{matricula}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+		<groupFooter>
+			<band height="26"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="153" splitType="Stretch">
+			<rectangle>
+				<reportElement x="12" y="3" width="507" height="59"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="426" y="32" width="66" height="15"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="357" y="47" width="44" height="15"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[E-mail:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="89" y="32" width="253" height="15"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="403" y="47" width="88" height="15"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{email}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="252" y="47" width="43" height="15"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telefone:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="89" y="47" width="160" height="15"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Endereço: "+$F{logradouro}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="297" y="47" width="59" height="15"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{fone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="89" y="6" width="253" height="14"/>
+				<textElement markup="none">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="355" y="9" width="136" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BOLETIM ESCOLAR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="376" y="32" width="50" height="15"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ano Letivo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="396" y="127" width="30" height="11"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Média]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="16" y="64" width="68" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[01 - CURSO]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="16" y="77" width="170" height="14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_curso}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="233" y="64" width="64" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[02 - TURNO]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="233" y="77" width="100" height="14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{periodo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="345" y="64" width="58" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[03 - SÉRIE]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="345" y="77" width="79" height="14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_serie}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="432" y="64" width="59" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[04 - TURMA]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="432" y="77" width="59" height="14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_turma}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="94" width="100" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[05 - ALUNO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="16" y="107" width="242" height="14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_aluno}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="345" y="94" width="75" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[06 - SITUAÇÃO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="345" y="107" width="81" height="14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{situacao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="17" y="131" width="170" height="14"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[DISCIPLINA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="189" y="127" width="43" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[1º TRIM.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="244" y="127" width="43" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[2º TRIM.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="299" y="127" width="43" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[3º TRIM.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="196" y="140" width="33" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NOTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="232" y="127" width="9" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[F]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="249" y="140" width="33" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NOTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="287" y="127" width="9" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[F]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="298" y="140" width="33" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NOTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="343" y="127" width="9" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[F]]></text>
+			</staticText>
+			<line>
+				<reportElement x="519" y="62" width="1" height="91"/>
+			</line>
+			<line>
+				<reportElement x="12" y="62" width="1" height="91"/>
+			</line>
+			<line>
+				<reportElement x="229" y="62" width="1" height="30"/>
+			</line>
+			<line>
+				<reportElement x="429" y="62" width="1" height="31"/>
+			</line>
+			<line>
+				<reportElement x="13" y="93" width="506" height="1"/>
+			</line>
+			<line>
+				<reportElement x="13" y="125" width="506" height="1"/>
+			</line>
+			<line>
+				<reportElement x="428" y="126" width="1" height="26"/>
+			</line>
+			<line>
+				<reportElement x="341" y="62" width="1" height="63"/>
+			</line>
+			<line>
+				<reportElement x="189" y="139" width="164" height="1"/>
+			</line>
+			<line>
+				<reportElement x="296" y="126" width="1" height="27"/>
+			</line>
+			<line>
+				<reportElement x="242" y="125" width="1" height="27"/>
+			</line>
+			<line>
+				<reportElement x="188" y="125" width="1" height="27"/>
+			</line>
+			<line>
+				<reportElement x="14" y="152" width="505" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="474" y="127" width="34" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Freq. %]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="433" y="127" width="35" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Faltas]]></text>
+			</staticText>
+			<line>
+				<reportElement x="471" y="125" width="1" height="27"/>
+			</line>
+			<staticText>
+				<reportElement x="396" y="140" width="30" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[final]]></text>
+			</staticText>
+			<image>
+				<reportElement x="22" y="9" width="57" height="46"/>
+				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="391" y="125" width="1" height="27"/>
+			</line>
+			<staticText>
+				<reportElement x="356" y="127" width="34" height="11"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Exame]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="358" y="140" width="30" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[final]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="89" y="18" width="253" height="14"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="438" y="140" width="26" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="479" y="140" width="26" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{frequencia_componente}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="18" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="199" y="1" width="26" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="250" y="1" width="26" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="16" y="1" width="170" height="15"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="230" y="-1" width="1" height="17"/>
+			</line>
+			<line>
+				<reportElement x="242" y="-1" width="1" height="17"/>
+			</line>
+			<line>
+				<reportElement x="188" y="-1" width="1" height="17"/>
+			</line>
+			<line>
+				<reportElement x="13" y="16" width="506" height="1"/>
+			</line>
+			<line>
+				<reportElement x="12" y="-1" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="519" y="-2" width="1" height="19"/>
+			</line>
+			<line>
+				<reportElement x="285" y="-1" width="1" height="17"/>
+			</line>
+			<line>
+				<reportElement x="296" y="-1" width="1" height="17"/>
+			</line>
+			<line>
+				<reportElement x="353" y="-1" width="1" height="17"/>
+			</line>
+			<line>
+				<reportElement x="341" y="-1" width="1" height="17"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="297" y="1" width="26" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota3}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="428" y="-1" width="1" height="17"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="398" y="1" width="26" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{media}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="353" y="-28" width="1" height="27"/>
+			</line>
+			<line>
+				<reportElement x="285" y="-14" width="1" height="13"/>
+			</line>
+			<line>
+				<reportElement x="230" y="-14" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="471" y="-1" width="1" height="17"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="479" y="-13" width="26" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{frequencia}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="232" y="-13" width="9" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="287" y="-13" width="9" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="344" y="-13" width="9" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et3}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="391" y="-1" width="1" height="17"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="358" y="1" width="26" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota_exame}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="232" y="1" width="9" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{faltas_componente_et1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="287" y="1" width="9" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{faltas_componente_et2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="344" y="1" width="9" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{faltas_componente_et3}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="438" y="1" width="26" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_componente}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="341" y="-13" width="1" height="12"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="21" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="16" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="19" splitType="Stretch"/>
+	</summary>
+</jasperReport>

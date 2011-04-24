@@ -1,4 +1,7 @@
 <?php
+
+
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *																	     *
 *	@author Prefeitura Municipal de Itajaí								 *
@@ -34,7 +37,7 @@
 
 	if ($obrigatorio)
 	{
-		$instituicao_obrigatorio = $escola_obrigatorio = $curso_obrigatorio = $escola_curso_obrigatorio = $escola_curso_serie_obrigatorio = $serie_obrigatorio = $biblioteca_obrigatorio = $cliente_tipo_obrigatorio = $funcao_obrigatorio = $turma_obrigatorio = true;
+		$instituicao_obrigatorio = $escola_obrigatorio = $curso_obrigatorio = $escola_curso_obrigatorio = $escola_curso_serie_obrigatorio = $serie_obrigatorio = $biblioteca_obrigatorio = $cliente_tipo_obrigatorio = $funcao_obrigatorio = $turma_obrigatorio = $componente_curricular_obrigatorio = $etapa_obrigatorio = true;
 	}
 	else
 	{
@@ -48,11 +51,14 @@
 		$cliente_tipo_obrigatorio = 		isset( $cliente_tipo_obrigatorio ) 		? $cliente_tipo_obrigatorio 		: false;
 		$funcao_obrigatorio = 				isset( $funcao_obrigatorio ) 			? $funcao_obrigatorio 				: false;
 		$turma_obrigatorio = 				isset( $turma_obrigatorio ) 			? $turma_obrigatorio 				: false;
+    $componente_curricular_obrigatorio = isset( $componente_curricular_obrigatorio ) ? $componente_curricular_obrigatorio           : false;
+    $etapa_obrigatorio =                isset( $etapa_obrigatorio ) 	        ? $etapa_obrigatorio                : false;
+    $ano_escolar_obrigatorio =                isset( $ano_escolar_obrigatorio ) 	        ? $ano_escolar_obrigatorio                : false;
 	}
 
 	if ($desabilitado)
 	{
-		$instituicao_desabilitado = $escola_desabilitado = $curso_desabilitado = $escola_curso_desabilitado = $escola_curso_serie_desabilitado = $serie_desabilitado = $biblioteca_desabilitado = $cliente_tipo_desabilitado = $turma_desabilitado = true;
+		$instituicao_desabilitado = $escola_desabilitado = $curso_desabilitado = $escola_curso_desabilitado = $escola_curso_serie_desabilitado = $serie_desabilitado = $biblioteca_desabilitado = $cliente_tipo_desabilitado = $turma_desabilitado = $componente_curricular_obrigatorio = $etapa_obrigatorio = true;
 	}
 	else
 	{
@@ -66,6 +72,9 @@
 		$cliente_tipo_desabilitado = 		isset( $cliente_tipo_desabilitado ) 	? $cliente_tipo_desabilitado 		: false;
 		$funcao_desabilitado = 				isset( $funcao_desabilitado ) 			? $funcao_desabilitado 				: false;
 		$turma_desabilitado = 				isset( $turma_desabilitado ) 			? $turma_desabilitado 				: false;
+		$componente_curricular_desabilitado = 			isset( $componente_curricular_desabilitado ) 		? $displina_desabilitado     		: false;
+    $etapa_desabilitado =               isset( $etapa_desabilitado ) 	        ? $etapa_desabilitado                : false;
+    $ano_escolar_desabilitado =               isset( $ano_escolar_desabilitado ) 	        ? $ano_escolar_desabilitado                : false;
 	}
 
  	$obj_permissoes = new clsPermissoes();
@@ -177,6 +186,14 @@
 			$this->campoLista( "ref_cod_escola", "Escola", $opcoes_escola, $this->ref_cod_escola,null,null,null,null,$escola_desabilitado,$escola_obrigatorio );
 		}
 	}
+
+  if ($get_ano_escolar)
+  {
+    $this->campoLista( "ano_escolar", "Ano escolar", array("" => "Selecione"), null, null, null, null, null, $ano_escolar_desabilitado, $ano_escolar_obrigatorio );
+//    if ($this->ano_escolar)
+//      $this->appendOutput("<script type='text/javascript'>getAnoEscolar(defaultId=$this->ano_escolar);</script>");
+  }
+
 	if ($get_curso)
 	{
 		$opcoes_curso = array( "" => "Selecione" );
@@ -384,6 +401,17 @@
 		}
 		$this->campoLista( "ref_cod_turma", "Turma", $opcoes_turma, $this->ref_cod_turma, null, null, null, null, $turma_desabilitado, $turma_obrigatorio );
 	}
+
+	if ($get_etapa)
+  {
+    $this->campoLista( "etapa", "Etapa", array("" => "Selecione"), null, null, null, null, null, $etapa_desabilitado, $etapa_obrigatorio );
+  }
+
+	if ($get_componente_curricular)
+  {
+		$this->campoLista( "ref_cod_componente_curricular", "Componente curricular", array("" => "Selecione"), null, null, null, null, null, $componente_curricular_desabilitado, $componente_curricular_obrigatorio );
+  }
+
 	if (isset($get_cabecalho))
 	{
 		if ( $qtd_bibliotecas > 1 && ($nivel_usuario == 4 || $nivel_usuario == 8) )
@@ -1043,56 +1071,35 @@ if ( $get_turma )
 <?
 }
 ?>
+
+
 function limpaCampos(nivel)
 {
-	switch(nivel)
-	{
-		case 1:
-		{
-			if( document.getElementById('cod_instituicao') )
-				document.getElementById('cod_instituicao').length = 1;
-			if( document.getElementById('ref_cod_instituicao') )
-				document.getElementById('ref_cod_instituicao').length = 1;
-			if( document.getElementById('ref_ref_cod_instituicao') )
-				document.getElementById('ref_ref_cod_instituicao').length = 1;
-		}
-		case 2:
-		{
-			if( document.getElementById('cod_escola') )
-				document.getElementById('cod_escola').length = 1;
-			if( document.getElementById('ref_cod_escola') )
-				document.getElementById('ref_cod_escola').length = 1;
-			if( document.getElementById('ref_ref_cod_escola') )
-				document.getElementById('ref_ref_cod_escola').length = 1;
-		}
-		case 3:
-		{
-			if( document.getElementById('cod_curso') )
-				document.getElementById('cod_curso').length = 1;
-			if( document.getElementById('ref_cod_curso') )
-				document.getElementById('ref_cod_curso').length = 1;
-			if( document.getElementById('ref_ref_cod_curso') )
-				document.getElementById('ref_ref_cod_curso').length = 1;
-		}
-		case 4:
-		{
-			if( document.getElementById('cod_serie') )
-				document.getElementById('cod_serie').length = 1;
-			if( document.getElementById('ref_cod_serie') )
-				document.getElementById('ref_cod_serie').length = 1;
-			if( document.getElementById('ref_ref_cod_serie') )
-				document.getElementById('ref_ref_cod_serie').length = 1;
-		}
-		case 5:
-		{
-			if( document.getElementById('cod_turma') )
-				document.getElementById('cod_turma').length = 1;
-			if( document.getElementById('ref_cod_turma') )
-				document.getElementById('ref_cod_turma').length = 1;
-			if( document.getElementById('ref_ref_cod_turma') )
-				document.getElementById('ref_ref_cod_turma').length = 1;
-		}
-	}
+  //for backward compatibility
+  if (typeof(nivel) != 'string')
+  {
+    switch(nivel)
+    {
+      case 1:
+        nivel = 'instituicao';
+        break;
+      case 2:
+        nivel = 'escola';
+        break;
+      case 3:
+        nivel = 'curso';
+        break;
+      case 4:
+        nivel = 'serie';
+        break;
+      case 5:
+        nivel = 'turma';
+        break;
+      default:
+        nivel = '';
+    }
+  clearSelect(entity = nivel, disable = false, text = '', multipleId = true);
+  }
 }
 
 <?
@@ -1131,4 +1138,161 @@ if ($get_semestre)
 
 <?}?>
 
+function clearSelect(entity, disable, text, multipleId)
+{
+  if (multipleId)
+    var ids = new Array("cod_"+entity, "ref_cod_"+entity, "ref_ref_cod_"+entity);
+  else
+    var ids = new Array(entity);
+
+  for (var i=0; i<ids.length; i++)
+  {
+    var e = document.getElementById(ids[i]);
+    if (e)
+    {
+      e.disabled = disable;
+      if (e.type == 'select-one')
+      {
+        e.length = 1;
+        e.selectedIndex = 0;
+        if (!text)
+          text = 'Selecione';
+        e.options[0].text = text;
+      }
+    }
+  }
+}
+
+/*
+lista de funcoes a serem executadas apos atualizar um select
+entity: nome da entidade do select alvo
+_functions: funcoes e argumentos a serem executados ao atualizar o select (definido na entity)
+
+Ex: afterUpdateSelect.push({entity:'ano_escolar', _functions:[{_function:getEtapa, _args:[$this->etapa]}]}
+*/
+var afterUpdateSelect = [];
+
+function updateSelect(xml)
+{
+	var att = xml.documentElement.getAttribute('entity');
+  var attElementId = xml.documentElement.getAttribute('element_id');
+
+  if (! attElementId)
+    attElementId = att;
+  var att_name = att.replace('_', ' ');
+
+  var attElement = document.getElementById(attElementId);
+	attElement.length = 1;
+  attElement.selectedIndex = 0;
+
+	var atts = xml.getElementsByTagName(att);
+  if (atts.length)
+  {
+	  attElement.options[0] = new Option('Selecione um(a) ' + att_name,'');
+    var _index = 0;
+	  for(var i=0; i<atts.length; i++)
+	  {
+      var _selected = atts[i].getAttribute('selected') == 'selected';
+      if (_selected)
+        var _index = i+1;
+		  attElement.options[i+1] = new Option(atts[i].getAttribute('value'), atts[i].getAttribute('id'), _selected,true);
+    }
+    attElement.selectedIndex = _index;
+		attElement.disabled = false;
+
+    var _actions = [];
+    var __list = [];
+    for (var i = 0; i< afterUpdateSelect.length; i++)
+    {
+      if (afterUpdateSelect[i].entity == att)
+        _actions.push(afterUpdateSelect[i]);
+      else
+        __list.push(afterUpdateSelect[i]);
+    }
+    afterUpdateSelect = __list;
+
+    for (var i = 0; i<_actions.length; i++)
+    {
+      for (var j = 0; j<_actions[i]._functions.length; j++)
+      {
+        var _function = _actions[i]._functions[j]._function;
+        var _args = _actions[i]._functions[j]._args;
+        _function(_args);
+      }
+    }
+  }
+	else
+		attElement.options[0].text = 'Nenhum(a) '+ att_name +' encontrado(a)';
+}
+
+<?php if ($get_ano_escolar) { ?>
+	function getAnoEscolar(defaultId)
+	{
+		var escolaId = document.getElementById('ref_cod_escola').value;
+    if (escolaId)
+    {
+      clearSelect(entity = 'ano_escolar', disable = true, text = 'Carregando anos escolares...', multipleId=false);
+      var ajaxReq = new ajax( updateSelect );
+      ajaxReq.envia("portabilis_ano_escolar_xml.php?escola_id="+escolaId+"&default_id="+defaultId);
+    }
+    else
+      clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId=false);
+  }
+
+<?php
+    if ($this->ano_escolar)
+    {
+      $this->appendOutput("<script type='text/javascript'>getAnoEscolar(defaultId=$this->ano_escolar);</script>");
+    }
+} ?>
+
+<?php if ($get_etapa) { ?>
+	function getEtapa(defaultId)
+	{
+		var escolaId = document.getElementById('ref_cod_escola').value;
+    var anoEscolar = document.getElementById('ano_escolar').value;
+		var cursoId = document.getElementById('ref_cod_curso').value;
+		var turmaId = document.getElementById('ref_cod_turma').value;
+    if (escolaId && anoEscolar && cursoId && turmaId)
+    {
+		  clearSelect(entity = 'etapa', disable = true, text = 'Carregando etapas...', multipleId=false);
+
+      var ajaxReq = new ajax( updateSelect );
+      ajaxReq.envia("portabilis_etapa_xml.php?escola_id="+escolaId+"&ano_escolar="+anoEscolar+"&curso_id="+cursoId+"&turma_id="+turmaId+"&default_id="+defaultId);
+    }
+    else
+      clearSelect(entity = 'etapa', disable = false, text = '', multipleId=false);
+  }
+<?php
+    if ($this->etapa)
+    {
+      $this->appendOutput("<script type='text/javascript'>afterUpdateSelect.push({entity:'ano_escolar', _functions:[{_function:getEtapa, _args:[$this->etapa]}]});</script>");
+    }
+} ?>
+
+<?php if ($get_componente_curricular) { ?>
+
+	function getComponenteCurricular(defaultId)
+	{
+		var escolaId = document.getElementById('ref_cod_escola').value;
+    var anoEscolar = document.getElementById('ano_escolar').value;
+		var turmaId = document.getElementById('ref_cod_turma').value;
+    if (escolaId && anoEscolar && turmaId)
+    {
+  		clearSelect(entity = 'componente_curricular', disable = true, text = 'Carregando componentes curriculares...', multipleId = true);
+
+      var ajaxReq = new ajax( updateSelect );
+      ajaxReq.envia("portabilis_componente_curricular_xml.php?escola_id="+escolaId+"&turma_id="+turmaId+"&ano_escolar="+anoEscolar+"&default_id="+defaultId);
+    }
+    else
+  		clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
+	}
+<?php
+    if ($this->ref_cod_componente_curricular)
+    {
+      $this->appendOutput("<script type='text/javascript'>afterUpdateSelect.push({entity:'ano_escolar', _functions:[{_function:getComponenteCurricular, _args:[$this->ref_cod_componente_curricular]}]});</script>");
+    }
+} ?>
+
 </script>
+

@@ -1,6 +1,6 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  
+
   RewriteBase /module/
 
   RewriteCond %{SCRIPT_FILENAME} !-f
@@ -11,5 +11,7 @@
   # Se for um arquivo e o tamanho for maior que zero, faz nada
   RewriteRule ^.*$ - [L]
   RewriteRule ^(.*)/(imagens|scripts|styles)/(.*)$ /intranet/$2/$3 [NC,L]
+  RewriteRule ^(.*/)(.*_xml.*)(\.php)$  /intranet/$2.php [NC,L,R=301]
   RewriteRule ^.*$ index.php [NC,L]
 </IfModule>
+
