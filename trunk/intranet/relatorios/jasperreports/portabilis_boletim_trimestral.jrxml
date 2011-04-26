@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_boletim_trimestral" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.9487171000000034"/>
-	<property name="ireport.x" value="120"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.zoom" value="1.948717100000005"/>
+	<property name="ireport.x" value="64"/>
+	<property name="ireport.y" value="23"/>
 	<parameter name="ano" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
@@ -715,7 +715,7 @@ ORDER BY matricula_id]]>
 				<text><![CDATA[F]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="298" y="140" width="33" height="11"/>
+				<reportElement x="304" y="140" width="33" height="11"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
@@ -735,7 +735,7 @@ ORDER BY matricula_id]]>
 				<reportElement x="12" y="62" width="1" height="91"/>
 			</line>
 			<line>
-				<reportElement x="229" y="62" width="1" height="30"/>
+				<reportElement x="229" y="62" width="1" height="31"/>
 			</line>
 			<line>
 				<reportElement x="429" y="62" width="1" height="31"/>
@@ -747,16 +747,16 @@ ORDER BY matricula_id]]>
 				<reportElement x="13" y="125" width="506" height="1"/>
 			</line>
 			<line>
-				<reportElement x="428" y="126" width="1" height="26"/>
+				<reportElement x="428" y="125" width="1" height="27"/>
 			</line>
 			<line>
 				<reportElement x="341" y="62" width="1" height="63"/>
 			</line>
 			<line>
-				<reportElement x="189" y="139" width="164" height="1"/>
+				<reportElement x="188" y="139" width="165" height="1"/>
 			</line>
 			<line>
-				<reportElement x="296" y="126" width="1" height="27"/>
+				<reportElement x="296" y="125" width="1" height="27"/>
 			</line>
 			<line>
 				<reportElement x="242" y="125" width="1" height="27"/>
@@ -795,9 +795,6 @@ ORDER BY matricula_id]]>
 				<reportElement x="22" y="9" width="57" height="46"/>
 				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
 			</image>
-			<line>
-				<reportElement x="391" y="125" width="1" height="27"/>
-			</line>
 			<staticText>
 				<reportElement x="356" y="127" width="34" height="11"/>
 				<textElement>
@@ -833,13 +830,19 @@ ORDER BY matricula_id]]>
 				</textElement>
 				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{frequencia_componente}]]></textFieldExpression>
 			</textField>
+			<line>
+				<reportElement x="353" y="125" width="1" height="27"/>
+			</line>
+			<line>
+				<reportElement x="391" y="125" width="1" height="27"/>
+			</line>
 		</band>
 	</pageHeader>
 	<columnHeader>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="18" splitType="Stretch">
+		<band height="21" splitType="Stretch">
 			<textField isBlankWhenNull="true">
 				<reportElement x="199" y="1" width="26" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Center">
@@ -848,7 +851,7 @@ ORDER BY matricula_id]]>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota1}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="250" y="1" width="26" height="15"/>
+				<reportElement x="254" y="1" width="26" height="15"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
@@ -871,13 +874,13 @@ ORDER BY matricula_id]]>
 				<reportElement x="188" y="-1" width="1" height="17"/>
 			</line>
 			<line>
-				<reportElement x="13" y="16" width="506" height="1"/>
+				<reportElement x="12" y="16" width="509" height="1"/>
 			</line>
 			<line>
 				<reportElement x="12" y="-1" width="1" height="18"/>
 			</line>
 			<line>
-				<reportElement x="519" y="-2" width="1" height="19"/>
+				<reportElement x="519" y="-1" width="1" height="18"/>
 			</line>
 			<line>
 				<reportElement x="285" y="-1" width="1" height="17"/>
@@ -892,7 +895,7 @@ ORDER BY matricula_id]]>
 				<reportElement x="341" y="-1" width="1" height="17"/>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="297" y="1" width="26" height="15"/>
+				<reportElement x="310" y="1" width="26" height="15"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
@@ -908,9 +911,6 @@ ORDER BY matricula_id]]>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{media}]]></textFieldExpression>
 			</textField>
-			<line>
-				<reportElement x="353" y="-28" width="1" height="27"/>
-			</line>
 			<line>
 				<reportElement x="285" y="-14" width="1" height="13"/>
 			</line>
@@ -935,14 +935,14 @@ ORDER BY matricula_id]]>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et1}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="287" y="-13" width="9" height="11"/>
+				<reportElement x="286" y="-13" width="9" height="11"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et2}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="344" y="-13" width="9" height="11"/>
+				<reportElement x="343" y="-13" width="9" height="11"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
@@ -952,7 +952,7 @@ ORDER BY matricula_id]]>
 				<reportElement x="391" y="-1" width="1" height="17"/>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="358" y="1" width="26" height="15"/>
+				<reportElement x="360" y="1" width="26" height="15"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
@@ -966,14 +966,14 @@ ORDER BY matricula_id]]>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{faltas_componente_et1}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="287" y="1" width="9" height="15"/>
+				<reportElement x="286" y="1" width="9" height="15"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{faltas_componente_et2}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="344" y="1" width="9" height="15"/>
+				<reportElement x="343" y="1" width="9" height="15"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
