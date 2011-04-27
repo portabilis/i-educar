@@ -137,34 +137,6 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     }
     $result = 1;
 
-    /*  este codigo parece estar o valor antigo... // não da tempo do banco retornar o valor ?
-    if ($this->getRequest()->att == 'nota')
-      $attCurrentValue = $nota->nota;
-
-    elseif ($this->getRequest()->att=='falta')
-    {
-
-      if ($this->service->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
-        $attCurrentValue = $this->service->getFalta($this->getRequest()->etapa, $this->getRequest()->componente_curricular)->quantidade;
-
-      elseif ($this->service->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL)
-        $attCurrentValue = $this->service->getFalta($this->getRequest()->etapa)->quantidade;
-
-    }
-    elseif ($this->getRequest()->att=='parecer')
-    {
-      if ($this->service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE or
-          $this->service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE)
-      {
-        $attCurrentValue = $this->service->getParecerDescritivo($this->getRequest()->etapa, $this->getRequest()->componente_curricular);
-      }
-      else
-      {
-        $attCurrentValue = $this->service->getParecerDescritivo($this->getRequest()->etapa);
-      }
-    }
-    */
-
     $situacao = App_Model_MatriculaSituacao::getInstance()->getValue(
       $this->service->getSituacaoComponentesCurriculares()->componentesCurriculares[$this->getRequest()->componente_curricular]->situacao);
     $attCurrentValue = $this->getRequest()->att_value;
@@ -176,7 +148,6 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     <success>$result</success>
     <matricula>$_matricula</matricula>
     <att>$_att</att>
-    <att_current_value>$attCurrentValue</att_current_value>
     <situacao>$situacao</situacao>
     </status>";
   }

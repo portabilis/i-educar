@@ -214,16 +214,21 @@ class DiarioController extends Core_Controller_Page_ListController
             $valores[(string) $valor->valorMaximo] = $valor->nome . ' (' . $valor->descricao .  ')';
           }
         }
-        $_notaAtual = $service->getNotaComponente($this->ref_cod_componente_curricular, $this->etapa)->nota;
+        $_notaAtual = urldecode($service->getNotaComponente($this->ref_cod_componente_curricular, $this->etapa)->nota);
+        $_notaAtual = str_replace(',', '.', $_notaAtual);
         $notas = "<option></option>";
-        foreach ($valores as $v) {
-          if ($_notaAtual > -1 && $v == $_notaAtual)
-              $notas .= "\n<option selected='selected'>$v</option>";
+        foreach ($valores as $k => $v) {
+          $k = str_replace(',', '.', urldecode($k));
+          if ($_notaAtual > -1 && $k == $_notaAtual)
+          {
+            $notas .= "\n<option value='$k' selected='selected'>$v</option>";
+          }
           else
-            $notas .= "\n<option>$v</option>";
+          $notas .= "\n<option value='$k'>$v</option>";
         }
         $listagem_alunos[] = sprintf('<select id="nota-matricula:%s" class="notas" onchange="%s">%s</select>',
                   $aluno['ref_cod_matricula'], $onChangeSelectNota, $notas);
+
 
         $onChangeSelectFalta = sprintf("setAtt(att='falta', matricula=%s, etapa=%s, componente_curricular=%s);",
                       $aluno['ref_cod_matricula'], $this->etapa, $this->ref_cod_componente_curricular);
@@ -237,9 +242,9 @@ class DiarioController extends Core_Controller_Page_ListController
         $faltas = "<option></option>";
         foreach (range(0, 100, 1) as $f) {
           if ($_faltaAtual > -1 && $f == $_faltaAtual)
-            $faltas .= "\n<option selected='selected'>$f</option>";
+            $faltas .= "\n<option value='$f' selected='selected'>$f</option>";
           else
-            $faltas .= "\n<option>$f</option>";
+            $faltas .= "\n<option value='$f'>$f</option>";
         }
         $listagem_alunos[] = sprintf('<select id="falta-matricula:%s" class="faltas" onchange="%s">%s</select>',
                   $aluno['ref_cod_matricula'], $onChangeSelectFalta, $faltas);
@@ -320,7 +325,6 @@ class DiarioController extends Core_Controller_Page_ListController
             var __old_event = __bBusca.onclick;
             __bBusca.onclick = function()
             {
-
               var __not_empty_fields = document.getElementsByClassName('obrigatorio');
               var __all_filled = true;
               for (var i = 0; i < __not_empty_fields.length; i++)
@@ -331,13 +335,13 @@ class DiarioController extends Core_Controller_Page_ListController
                   break;
                 }
               }
-
               if (! __all_filled)
                 alert('Selecione um valor em todos os campos, antes de continuar.');
               else
               {
-              __bBusca.onclick = __old_event;
-              __bBusca.click();
+                __old_event();
+                //__bBusca.onclick = __old_event;
+                //__bBusca.click(); bug no ie ?
               }
             }
 
@@ -346,38 +350,39 @@ class DiarioController extends Core_Controller_Page_ListController
             __a.href = document.location.href.split('?')[0];
             __bBusca.parentNode.appendChild(__a);
 
-            document.getElementById('ref_cod_instituicao').onchange = function()
-            {
-              clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId = false);
-              clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-              getDuploEscolaCurso();
-            }
+              document.getElementById('ref_cod_instituicao').onchange = function()
+              {
+                clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId = false);
+                clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
+                clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
+                clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
+                clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
+                getDuploEscolaCurso();
+              }
 
-            document.getElementById('ref_cod_escola').onchange = function()
+              document.getElementById('ref_cod_escola').onchange = function()
+              {
+                clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId = false);
+                clearSelect(entity = 'curso', disable = false, text = '', multipleId = true);
+                clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
+                clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
+                clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
+                clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
+                getEscolaCurso();
+              }
+
+
+            document.getElementById('ref_cod_curso').onchange = function()
             {
               clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId = false);
-              clearSelect(entity = 'curso', disable = false, text = '', multipleId = true);
               clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
               clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
               clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
               clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-	            getAnoEscolar(null);
+              getAnoEscolar(null);
             }
 
             document.getElementById('ano_escolar').onchange = function()
-            {
-              clearSelect(entity = 'curso', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-	            getEscolaCurso();
-            }
-
-            document.getElementById('ref_cod_curso').onchange = function()
             {
               clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
               clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
@@ -412,73 +417,82 @@ class DiarioController extends Core_Controller_Page_ListController
 
           function setAtt(att, matricula, etapa, componente_curricular)
           {
-            var attElement = document.getElementById(att + '-matricula:' + matricula);
-            if (attElement.type == 'select-one')
-              var attValue = attElement.getElementsByTagName('option')[attElement.selectedIndex].text;
-            else
-              var attValue = attElement.value;
-            //alert('valor enviado:' + attValue);
-            if (attValue.length)
+            try
             {
-              var _c = ['notas', 'faltas', 'parecer'];
-              for (var i = 0; i < _c.length; i++)
+              var attElement = document.getElementById(att + '-matricula:' + matricula);
+              var attValue = attElement.value;
+              if (attValue.length)
               {
-                var _e = document.getElementsByClassName(_c[i]);
-                for (var j = 0; j < _e.length; j++)
-                  _e[j].disabled = true;
-              }
+                var _c = ['notas', 'faltas', 'parecer'];
+                for (var i = 0; i < _c.length; i++)
+                {
+                  var _e = document.getElementsByClassName(_c[i]);
+                  for (var j = 0; j < _e.length; j++)
+                    _e[j].disabled = true;
+                }
 
-              document.getElementById('status_alteracao-matricula:'+matricula).innerHTML = 'Atualizando... <img src="/modules/Avaliacao/Static/images/min-wait.gif"/>';
-              var vars = "att="+att+"&matricula=" + matricula + "&etapa=" + etapa + "&componente_curricular=" + componente_curricular+"&att_value=" + attValue;
-              //alert(vars);
-              ajaxReq.send("POST", "/module/Avaliacao/DiarioAjax", handleRequest, "application/x-www-form-urlencoded; charset=UTF-8", vars);
+                document.getElementById('status_alteracao-matricula:'+matricula).innerHTML = 'Atualizando... <img src="/modules/Avaliacao/Static/images/min-wait.gif"/>';
+                var vars = "att="+att+"&matricula=" + matricula + "&etapa=" + etapa + "&componente_curricular=" + componente_curricular+"&att_value=" + attValue;
+                //alert(vars);
+                ajaxReq.send("POST", "/module/Avaliacao/DiarioAjax", handleRequest, "application/x-www-form-urlencoded; charset=UTF-8", vars);
+              }
+              else
+                document.getElementById('status_alteracao-matricula:' + matricula).innerHTML = '<span class="error" style="color: red;">Selecione um valor v&aacute;lido.</span>';
             }
-            else
-              document.getElementById('status_alteracao-matricula:' + matricula).innerHTML = '<span class="error" style="color: red;">Selecione um valor v&aacute;lido.</span>';
+            catch(err)
+            {
+              try
+              {
+                document.getElementById('status_alteracao-matricula:' + matricula).innerHTML = '<span class="error" style="color: red;">ERRO1: Ocorreu um erro inesperado, por favor tente recarregar a p&aacute;gina.</span>';
+              }
+              catch(err)
+              {
+                alert('ERRO2: Ocorreram erros inesperados, por favor tente recarregar a p&aacute;gina.');
+              }
+            }
           }
 
           function handleRequest()
           {
-            if (ajaxReq.getReadyState() == 4 && ajaxReq.getStatus() == 200)
+            try
             {
-              var xmlData = ajaxReq.getResponseXML().getElementsByTagName("status")[0];
-              var att = getText(xmlData.getElementsByTagName('att')[0]);
-              var success = getText(xmlData.getElementsByTagName('success')[0]);
-              var matricula = getText(xmlData.getElementsByTagName('matricula')[0]);
-              document.getElementById(att + '-matricula:' + matricula).disabled = false;
-              document.getElementById('botao_busca').disabled = false;
-
-              var _c = ['notas', 'faltas', 'parecer'];
-              for (var i = 0; i < _c.length; i++)
+              if (ajaxReq.getReadyState() == 4 && ajaxReq.getStatus() == 200)
               {
-                var _e = document.getElementsByClassName(_c[i]);
-                for (var j = 0; j < _e.length; j++)
-                  _e[j].disabled = false;
-              }
+                var xmlData = ajaxReq.getResponseXML().getElementsByTagName("status")[0];
+                var att = getText(xmlData.getElementsByTagName('att')[0]);
+                var success = getText(xmlData.getElementsByTagName('success')[0]);
+                var matricula = getText(xmlData.getElementsByTagName('matricula')[0]);
+                document.getElementById(att + '-matricula:' + matricula).disabled = false;
+                document.getElementById('botao_busca').disabled = false;
 
-              var attCurrentValue = getText(xmlData.getElementsByTagName('att_current_value')[0]);
-              var situacao = getText(xmlData.getElementsByTagName('situacao')[0]);
-              document.getElementById('situacao'  + '-matricula:' + matricula).innerHTML = situacao;
-              //alert('valor recebido:' + attCurrentValue);
-              var attElement = document.getElementById(att + '-matricula:' + matricula);
-              //if (att == 'nota' || att == 'falta')//todo alterar para if (attElement.type == 'select-one')
-              if (attElement.type == 'select-one')
-              {
-                attElement.selectedIndex = 0;
-                for (var i = 0; i < attElement.length; i++)
+                var _c = ['notas', 'faltas', 'parecer'];
+                for (var i = 0; i < _c.length; i++)
                 {
-                  if (attElement.options[i].text == attCurrentValue)
-                    attElement.selectedIndex = i;
+                  var _e = document.getElementsByClassName(_c[i]);
+                  for (var j = 0; j < _e.length; j++)
+                    _e[j].disabled = false;
                 }
-              }
-              else
-                attElement.value = attCurrentValue;
 
-              if (success == '1')
-                var s = '<span class="success" style="color: green;">Atualizado</span>';
-              else
-                 var s = '<span class="error" style="color: red;">Erro ao atualizar, tente novamente !</span>';
-              document.getElementById('status_alteracao-matricula:' + matricula).innerHTML = s;
+                var situacao = getText(xmlData.getElementsByTagName('situacao')[0]);
+                document.getElementById('situacao'  + '-matricula:' + matricula).innerHTML = situacao;
+
+                if (success == '1')
+                  var s = '<span class="success" style="color: green;">Atualizado</span>';
+                else
+                   var s = '<span class="error" style="color: red;">Erro ao atualizar, tente novamente !</span>';
+                document.getElementById('status_alteracao-matricula:' + matricula).innerHTML = s;
+              }
+            }
+            catch(err)
+            {
+              try
+              {
+                document.getElementById('status_alteracao-matricula:' + matricula).innerHTML = '<span class="error" style="color: red;">ERRO3: Ocorreu um erro inesperado, por favor tente recarregar a p&aacute;gina.</span>';
+              }
+              catch(err)
+              {
+                alert('ERRO4: Ocorreram erros inesperados, por favor tente recarregar a p&aacute;gina.');
+              }
             }
           }
 

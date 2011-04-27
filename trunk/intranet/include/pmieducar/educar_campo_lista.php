@@ -187,13 +187,6 @@
 		}
 	}
 
-  if ($get_ano_escolar)
-  {
-    $this->campoLista( "ano_escolar", "Ano escolar", array("" => "Selecione"), null, null, null, null, null, $ano_escolar_desabilitado, $ano_escolar_obrigatorio );
-//    if ($this->ano_escolar)
-//      $this->appendOutput("<script type='text/javascript'>getAnoEscolar(defaultId=$this->ano_escolar);</script>");
-  }
-
 	if ($get_curso)
 	{
 		$opcoes_curso = array( "" => "Selecione" );
@@ -241,6 +234,13 @@
 			$this->campoOculto("is_padrao", 1);
 		}
 	}
+
+  if ($get_ano_escolar)
+  {
+    $this->campoLista( "ano_escolar", "Ano escolar", array("" => "Selecione"), null, null, null, null, null, $ano_escolar_desabilitado, $ano_escolar_obrigatorio );
+//    if ($this->ano_escolar)
+//      $this->appendOutput("<script type='text/javascript'>getAnoEscolar(defaultId=$this->ano_escolar);</script>");
+  }
 
 	if ( $get_escola_curso_serie )
 	{
