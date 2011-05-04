@@ -385,19 +385,18 @@ $pagina->MakeAll();
 function addVal1(campo,opcao, valor)
 {
   if (window.parent.document.getElementById(campo)) {
-      alert(campo);
     if (window.parent.document.getElementById(campo).type == 'select-one') {
       obj                     = window.parent.document.getElementById(campo);
       novoIndice              = obj.options.length;
-      obj.options[novoIndice] = new Option(opcao);
-      opcao                   = obj.options[novoIndice];
-      opcao.value             = valor;
-      opcao.selected          = true;
+      obj.options[novoIndice] = new Option(valor);
+      valor                   = obj.options[novoIndice];
+      valor.value             = opcao.toString();
+      valor.selected          = true;
       obj.onchange();      
     }
     else if (window.parent.document.getElementById(campo)) {
       obj       =  window.parent.document.getElementById(campo);
-      obj.value = opcao;
+      obj.value = valor;
     }
   }
 }
