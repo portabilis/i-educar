@@ -4,6 +4,9 @@
 #ini_set("display_errors", 1);
 
 require_once( "include/clsBanco.inc.php" );
+require_once( "include/portabilis_utils.php" );
+
+$user = new User();
 
 #TODO alterar para usar App_Model_IedFinder::getAnoEscolar ?
 function getAnosEscolares($escola)
@@ -25,16 +28,19 @@ $defaultId = $_GET['default_id'];
 header('Content-type: text/xml');
 $x = "<?xml version='1.0' encoding='ISO-8859-15'?>";
 $x .= "<anos_escolares entity='ano_escolar' element_id='ano_escolar'>";
-foreach ($anosEscolares as $a)
+
+if ($user->isLoggedIn())
 {
-  if ($defaultId && $defaultId == $a['ano'])
-    $selected='selected';
-  else
-    $selected='';
-  $x .= "<ano_escolar id='{$a['ano']}' value='{$a['ano']}' selected='$selected' />";
+  foreach ($anosEscolares as $a)
+  {
+    if ($defaultId && $defaultId == $a['ano'])
+      $selected='selected';
+    else
+      $selected='';
+    $x .= "<ano_escolar id='{$a['ano']}' value='{$a['ano']}' selected='$selected' />";
+  }
 }
 $x .= "</anos_escolares>";
 
 echo $x;
 ?>
-

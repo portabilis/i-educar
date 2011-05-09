@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_servidores_horas_alocadas" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.0263162364614136"/>
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="instituicao" class="java.lang.Integer">
@@ -264,14 +264,14 @@ ORDER BY pessoa.nome]]>
 		<groupHeader>
 			<band height="17">
 				<staticText>
-					<reportElement x="157" y="0" width="38" height="13"/>
+					<reportElement x="188" y="0" width="38" height="13"/>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Função:]]></text>
 				</staticText>
-				<textField>
-					<reportElement x="43" y="0" width="113" height="13"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement x="43" y="0" width="145" height="13"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
@@ -285,39 +285,25 @@ ORDER BY pessoa.nome]]>
 					<text><![CDATA[Servidor:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="316" y="0" width="54" height="13"/>
+					<reportElement x="323" y="0" width="50" height="13"/>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Carga Hor.:]]></text>
 				</staticText>
-				<textField isBlankWhenNull="false">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 					<reportElement x="371" y="0" width="27" height="13"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{cargahorserv}]]></textFieldExpression>
 				</textField>
-				<staticText>
-					<reportElement x="245" y="0" width="47" height="13"/>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Professor:]]></text>
-				</staticText>
-				<textField>
+				<textField isStretchWithOverflow="true">
 					<reportElement x="459" y="0" width="94" height="13"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{escolaridade}]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement x="293" y="0" width="21" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{professor}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="399" y="0" width="61" height="13"/>
@@ -326,8 +312,8 @@ ORDER BY pessoa.nome]]>
 					</textElement>
 					<text><![CDATA[Escolaridade:]]></text>
 				</staticText>
-				<textField>
-					<reportElement x="196" y="0" width="45" height="13"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement x="227" y="0" width="76" height="13" isPrintWhenDetailOverflows="true"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
@@ -412,7 +398,7 @@ ORDER BY pessoa.nome]]>
 			</textField>
 			<image>
 				<reportElement x="22" y="4" width="57" height="46"/>
-				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
+				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/dev/intranet/imagens/brasao.jpg"]]></imageExpression>
 			</image>
 			<elementGroup/>
 			<elementGroup/>

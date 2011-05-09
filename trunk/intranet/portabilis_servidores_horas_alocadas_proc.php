@@ -39,8 +39,8 @@ require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/clsPDF.inc.php';
 
 
-require_once 'relatorios/phpjasperxml/class/fpdf/fpdf.php';
-require_once 'relatorios/phpjasperxml/class/PHPJasperXML.inc';
+require_once 'relatorios/phpjasperxml07d/class/fpdf/fpdf.php';
+require_once 'relatorios/phpjasperxml07d/class/PHPJasperXML.inc';
 
 
 class clsIndexBase extends clsBase

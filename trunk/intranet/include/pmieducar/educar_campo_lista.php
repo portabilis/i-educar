@@ -28,12 +28,28 @@
 *																		 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 ?>
-<?	$pessoa_logada = $_SESSION['id_pessoa'];
+<?
+  require_once 'include/portabilis_utils.php';
 
-	if(!isset($exibe_campo_lista_curso_escola))
-	{
+	$pessoa_logada = $_SESSION['id_pessoa'];
+
+  if (! isset($listar_escolas_alocacao_professor))
+    $listar_escolas_alocacao_professor = false;
+
+  if (! isset($listar_somente_cursos_funcao_professor))
+    $listar_somente_cursos_funcao_professor = false;
+
+  if (! isset($listar_turmas_periodo_alocacao_professor))
+    $listar_turmas_periodo_alocacao_professor = false;
+
+  if (! isset($listar_componentes_curriculares_professor))
+    $listar_componentes_curriculares_professor = false;
+
+  if (! isset($exibe_nm_escola))
+    $exibe_nm_escola = true;
+
+	if (! isset($exibe_campo_lista_curso_escola))
 		$exibe_campo_lista_curso_escola = true;
-	}
 
 	if ($obrigatorio)
 	{
@@ -139,92 +155,110 @@
 		//se eh institucional - admin
 		if ($nivel_usuario == 4 || $nivel_usuario == 8)
 		{
-			$obj_usuario = new clsPmieducarUsuario($pessoa_logada);
-			$det_usuario = $obj_usuario->detalhe();
-			$this->ref_cod_escola = $det_usuario["ref_cod_escola"];
-			$this->campoOculto( "ref_cod_escola", $this->ref_cod_escola );
-			if($exibe_nm_escola == true)
-			{
-				$obj_escola = new clsPmieducarEscola($this->ref_cod_escola);
-				$det_escola = $obj_escola->detalhe();
-				$nm_escola = $det_escola['nome'];
-				$this->campoRotulo( "nm_escola","Escola", $nm_escola );
-			}
+      if (! $listar_escolas_alocacao_professor)
+      {
+			  $this->ref_cod_escola = $det_usuario["ref_cod_escola"];
+			  $this->campoOculto( "ref_cod_escola", $this->ref_cod_escola );
+			  if($exibe_nm_escola == true)
+			  {
+				  $obj_escola = new clsPmieducarEscola($this->ref_cod_escola);
+				  $det_escola = $obj_escola->detalhe();
+				  $nm_escola = $det_escola['nome'];
+				  $this->campoRotulo( "nm_escola","Escola", $nm_escola );
+			  }
+      }
 			if ( $get_biblioteca )
 			{
 				$obj_per = new clsPermissoes();
 				$ref_cod_biblioteca_ = $obj_per->getBiblioteca( $pessoa_logada );
-
 			}
 		}
 	}
+
 	//                    administrador          institucional - CPD
-	if ( $get_escola && ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario ) )
+	if ( $get_escola && ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario || $listar_escolas_alocacao_professor))
 	{
 		$opcoes_escola = array( "" => "Selecione uma escola" );
 		// EDITAR
 		if ($this->ref_cod_instituicao)
 		{
-			$obj_escola = new clsPmieducarEscola();
-			$obj_escola->setOrderby("nome ASC");
-			$lista = $obj_escola->lista(null,null,null,$this->ref_cod_instituicao,null,null,null,null,null,null,1);
-			if ( is_array( $lista ) && count( $lista ) )
-			{
-				foreach ( $lista as $registro )
-				{
-					$opcoes_escola["{$registro["cod_escola"]}"] = "{$registro['nome']}";
-				}
-			}
+      $user = isset($user) ? $user : new User();
+      if ($listar_escolas_alocacao_professor && $user->isProfessor())
+      {
+        $_professor = isset($_professor) ? $_professor : new Professor($user->userId);
+        $_escolas = $_professor->getEscolasByInstituicao($this->ref_cod_instituicao);
+			  foreach ($_escolas as $e)
+				  $opcoes_escola[$e["escola_id"]] = $e['escola_nome'];
+      }
+      else
+      {
+			  $obj_escola = new clsPmieducarEscola();
+			  $obj_escola->setOrderby("nome ASC");
+			  $lista = $obj_escola->lista(null,null,null,$this->ref_cod_instituicao,null,null,null,null,null,null,1);
+			  if ( is_array( $lista ) && count( $lista ) )
+			  {
+				  foreach ( $lista as $registro )
+					  $opcoes_escola["{$registro["cod_escola"]}"] = "{$registro['nome']}";
+			  }
+      }
 		}
 
 		if ($get_biblioteca)
-		{
-			$this->campoLista( "ref_cod_escola", "Escola", $opcoes_escola, $this->ref_cod_escola,"getBiblioteca(2);",null,null,null,$escola_desabilitado,$escola_obrigatorio );
-		}
-		else
-		{
-			$this->campoLista( "ref_cod_escola", "Escola", $opcoes_escola, $this->ref_cod_escola,null,null,null,null,$escola_desabilitado,$escola_obrigatorio );
-		}
+      $_js = 'getBiblioteca(2)';
+    else
+      $_js = null;
+
+		$this->campoLista( "ref_cod_escola", "Escola", $opcoes_escola, $this->ref_cod_escola, $_js, null, null ,null, $escola_desabilitado,$escola_obrigatorio );
 	}
 
 	if ($get_curso)
 	{
 		$opcoes_curso = array( "" => "Selecione" );
+    $opcoes_curso[''] = 'Selecione';
 
-		// EDITAR
-		if( $this->ref_cod_escola )
-		{
-			$obj_escola_curso = new clsPmieducarEscolaCurso();
+    $user = isset($user) ? $user : new User();
+    if ($this->ref_cod_escola  && $listar_somente_cursos_funcao_professor && $user->isProfessor())
+    {
+      $_professor = isset($_professor) ? $_professor : new Professor($user->userId);
+      $_cursos = $_professor->getCursosByInstituicaoEscola($this->ref_cod_instituicao, $this->ref_cod_escola);
+		  foreach ($_cursos as $c)
+			  $opcoes_curso[$c["curso_id"]] = $c['curso_nome'];
+    }
+		else
+    {
+  		// EDITAR
+      if( $this->ref_cod_escola )
+		  {
+			  $obj_escola_curso = new clsPmieducarEscolaCurso();
+			  $lst_escola_curso = $obj_escola_curso->lista( $this->ref_cod_escola,null,null,null,null,null,null,null,1 );
 
-			$lst_escola_curso = $obj_escola_curso->lista( $this->ref_cod_escola,null,null,null,null,null,null,null,1 );
+			  if ( is_array( $lst_escola_curso ) && count( $lst_escola_curso ) )
+			  {
+				  foreach ( $lst_escola_curso as $escola_curso )
+					  $opcoes_curso["{$escola_curso["ref_cod_curso"]}"] = $escola_curso['nm_curso'];
+			  }
+		  }
+		  else if( $this->ref_cod_instituicao )
+		  {
+			  $opcoes_curso = array( "" => "Selecione" );
+			  $obj_curso = new clsPmieducarCurso();
+			  $obj_curso->setOrderby("nm_curso ASC");
 
-			if ( is_array( $lst_escola_curso ) && count( $lst_escola_curso ) )
-			{
-				foreach ( $lst_escola_curso as $escola_curso )
-				{
-					$opcoes_curso["{$escola_curso["ref_cod_curso"]}"] = $escola_curso['nm_curso'];
-				}
-			}
-		}
-		else if( $this->ref_cod_instituicao )
-		{
-			$opcoes_curso = array( "" => "Selecione" );
-			$obj_curso = new clsPmieducarCurso();
-			$obj_curso->setOrderby("nm_curso ASC");
+			  if ($sem_padrao)
+			  {
+				  $lista = $obj_curso->lista(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null,$this->ref_cod_instituicao,0 );
+        }
+			  else
+        {
+				  $lista = $obj_curso->lista(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null,$this->ref_cod_instituicao);
+        }
 
-			if ($sem_padrao)
-				$lista = $obj_curso->lista(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null,$this->ref_cod_instituicao,0 );
-			else
-				$lista = $obj_curso->lista(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null,$this->ref_cod_instituicao);
-
-			if ( is_array( $lista ) && count( $lista ) )
-			{
-				foreach ( $lista as $registro )
-				{
-					$opcoes_curso["{$registro['cod_curso']}"] = "{$registro['nm_curso']}";
-				}
-			}
-
+			  if ( is_array( $lista ) && count( $lista ) )
+			  {
+				  foreach ( $lista as $registro )
+					  $opcoes_curso["{$registro['cod_curso']}"] = "{$registro['nm_curso']}";
+			  }
+      }
 		}
 		$this->campoLista( "ref_cod_curso", "Curso", $opcoes_curso, $this->ref_cod_curso,null,null,null,null,$curso_desabilitado,$curso_obrigatorio );
 
@@ -385,20 +419,40 @@
 	if ( $get_turma )
 	{
 		$opcoes_turma = array( "" => "Selecione" );
-		// EDITAR
-		if ( ($this->ref_ref_cod_serie && $this->ref_cod_escola) || $this->ref_cod_curso )
-		{
-			$obj_turma = new clsPmieducarTurma();
-			$obj_turma->setOrderby("nm_turma ASC");
-			$lst_turma = $obj_turma->lista( null, null, null, $this->ref_ref_cod_serie, $this->ref_cod_escola, null, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null, null, null, $this->ref_cod_curso );
-			if ( is_array( $lst_turma ) && count( $lst_turma ) )
-			{
-				foreach ( $lst_turma as $turma )
-				{
-					$opcoes_turma["{$turma['cod_turma']}"] = "{$turma['nm_turma']}";
-				}
-			}
-		}
+	  // EDITAR
+	  if ( ($this->ref_ref_cod_serie && $this->ref_cod_escola) || $this->ref_cod_curso )
+	  {
+
+      $user = isset($user) ? $user : new User();
+      $turnos = array();
+      if ($this->ref_cod_instituicao && $this->ref_cod_escola && $listar_turmas_periodo_alocacao_professor && $user->isProfessor())
+      {
+        require_once 'include/pmieducar/clsPmieducarServidorAlocacao.inc.php';
+        $aloc = new ClsPmieducarServidorAlocacao();
+        $aloc = $aloc->lista(null, $this->ref_cod_instituicao, null, null, $this->ref_cod_escola, $user->userId);
+        foreach($aloc as $a)
+          $turnos[] = $a['periodo'];
+      }
+
+		  $obj_turma = new clsPmieducarTurma();
+		  $obj_turma->setOrderby("nm_turma ASC");
+
+		  $lst_turma = $obj_turma->lista( null, null, null, $this->ref_ref_cod_serie, $this->ref_cod_escola, null, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null, null, null, $this->ref_cod_curso, $this->ref_cod_instituicao);
+		  if ( is_array( $lst_turma ) && count( $lst_turma ) )
+		  {
+			  foreach ( $lst_turma as $turma )
+			  {
+          if ($listar_turmas_periodo_alocacao_professor && $user->isProfessor())
+          {
+            if (in_array($turma['turma_turno_id'], $turnos))
+  				    $opcoes_turma["{$turma['cod_turma']}"] = "{$turma['nm_turma']}";
+          }
+          else
+				    $opcoes_turma["{$turma['cod_turma']}"] = "{$turma['nm_turma']}";
+			  }
+		  }
+	  }
+
 		$this->campoLista( "ref_cod_turma", "Turma", $opcoes_turma, $this->ref_cod_turma, null, null, null, null, $turma_desabilitado, $turma_obrigatorio );
 	}
 
@@ -425,6 +479,50 @@
 	}
 ?>
 <script type='text/javascript'>
+
+/*
+lista de funcoes a serem executadas apos atualizar um select
+entity: nome da entidade do select alvo
+_functions: funcoes e argumentos a serem executados ao atualizar o select (definido na entity)
+
+Ex: afterUpdateSelect.push({entity:'ano_escolar', _functions:[{_function:getEtapa, _args:[$this->etapa]}]}
+*/
+var afterUpdateSelect = [];
+
+/*
+lista de strings a serem incluidas no final da url a ser enviada na chamada ajax,
+ex: appendToUrl.push(['nome_entidade', 'var=valor']);
+*/
+var appendToUrl = [];
+
+/* adiciona a url o conteudo incluido na lista appendToUrl, quando a entidade da lista é a mesma entidade repasada a função,
+ex appendToUrl.push(['nome_entidade', 'var=valor']);
+var url = prepareUrl('nome_entidade', 'http://teste.com');  
+
+resultado http://teste.com?var=valor
+
+*/
+function prepareUrl(entity, url)
+{
+  for (var i=0; i<appendToUrl.length; i++)
+  {
+    if (appendToUrl[i][0] == entity && appendToUrl[i].length > 1)
+    {
+      if (url[url.length-1] != '&' && url[url.length-1] != '?')
+      {
+        if (url.indexOf('?') > -1)
+          var _div = '&';
+        else
+          var _div = '?';
+      }
+      else
+        var _div = '';
+      url += _div + appendToUrl[i][1];
+    }
+  }
+  return url;
+}
+
 <?
 //   administrador          institucional = cpd
 if ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario )
@@ -502,6 +600,7 @@ if ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario )
 <?
 	}
 }
+
 if ( $get_curso && $sem_padrao && !$get_matricula )
 {
 ?>
@@ -543,6 +642,9 @@ if ( $get_curso && $sem_padrao && !$get_matricula )
 		else
 		{
 			campoCurso.options[0].text = 'A instituição não possui nenhum curso';
+
+
+
 		}
 	}
 <?
@@ -615,6 +717,28 @@ if ( $get_escola && $get_curso && !$get_matricula)
 //if ( $get_escola_curso )
 if ( $get_curso )
 {
+  $user = isset($user) ? $user : new User();
+  if ($listar_somente_cursos_funcao_professor && $user->isProfessor())
+  {
+    ?>
+    function getEscolaCurso()
+	  {
+		  var escolaId = document.getElementById('ref_cod_escola').value;
+		  var instituicaoId = document.getElementById('ref_cod_instituicao').value;
+      if (escolaId)
+      {
+    		clearSelect(entity = 'curso', disable = true, text = 'Carregando cursos...', multipleId = true);
+
+        var ajaxReq = new ajax(updateSelect);
+        ajaxReq.envia("portabilis_curso_funcao_professor_xml.php?instituicao_id="+instituicaoId+"&escola_id="+escolaId);
+      }
+      else
+    		clearSelect(entity = 'curso', disable = false, text = '', multipleId = true);
+	  }
+<?php
+  }
+  else
+  {
 ?>
 	function getEscolaCurso()
 	{
@@ -669,6 +793,7 @@ if ( $get_curso )
 		}
 	}
 <?
+  }
 }
 if ( $get_escola_curso_serie && $get_matricula && $_GET["ref_cod_aluno"] )
 {
@@ -790,6 +915,7 @@ if ( $get_serie && $get_escola_serie)
 		{
 			var campoEscola = document.getElementById('ref_ref_cod_escola').value;
 		}
+
 		var campoSerie	= document.getElementById('ref_cod_serie');
 
 		campoSerie.length = 1;
@@ -822,6 +948,7 @@ if ( $get_serie && $get_escola_serie)
 		{
 			for( var i = 0; i < series.length; i++ )
 			{
+
 				campoSerie.options[campoSerie.options.length] = new Option( series[i].firstChild.data, series[i].getAttribute('cod_serie'),false,false);
 			}
 		}
@@ -1021,9 +1148,17 @@ if ( $get_funcao )
 }
 if ( $get_turma )
 {
+
+  $user = isset($user) ? $user : new User();
+  if ($listar_turmas_periodo_alocacao_professor && $user->isProfessor())
+  {
+    $this->appendOutput("<script type='text/javascript'>appendToUrl.push(['turma', 'somente_turno_alocado_professor=true']);</script>");
+  }
+
 ?>
 	function getTurma()
 	{
+    var instituicaoId = document.getElementById('ref_cod_instituicao').value;
 		var campoEscola = document.getElementById('ref_cod_escola').value;
 		var campoSerie = document.getElementById('ref_ref_cod_serie').value;
 		var campoTurma	= document.getElementById('ref_cod_turma');
@@ -1036,7 +1171,7 @@ if ( $get_turma )
 			campoTurma.options[0].text = 'Carregando turmas';
 
 			var xml = new ajax(atualizaLstTurma);
-			xml.envia("educar_turma_xml.php?esc="+campoEscola+"&ser="+campoSerie);
+		  xml.envia(prepareUrl('turma', "educar_turma_xml.php?inst="+instituicaoId+"&esc="+campoEscola+"&ser="+campoSerie));
 		}
 		else
 		{
@@ -1163,15 +1298,6 @@ function clearSelect(entity, disable, text, multipleId)
   }
 }
 
-/*
-lista de funcoes a serem executadas apos atualizar um select
-entity: nome da entidade do select alvo
-_functions: funcoes e argumentos a serem executados ao atualizar o select (definido na entity)
-
-Ex: afterUpdateSelect.push({entity:'ano_escolar', _functions:[{_function:getEtapa, _args:[$this->etapa]}]}
-*/
-var afterUpdateSelect = [];
-
 function updateSelect(xml)
 {
 	var att = xml.documentElement.getAttribute('entity');
@@ -1250,7 +1376,10 @@ function updateSelect(xml)
 	function getEtapa(defaultId)
 	{
 		var escolaId = document.getElementById('ref_cod_escola').value;
-    var anoEscolar = document.getElementById('ano_escolar').value;
+    var anoEscolar = document.getElementById('ano_escolar');
+    if (! anoEscolar)
+        var anoEscolar = document.getElementById('ano');
+    var anoEscolar = anoEscolar.value;   
 		var cursoId = document.getElementById('ref_cod_curso').value;
 		var turmaId = document.getElementById('ref_cod_turma').value;
     if (escolaId && anoEscolar && cursoId && turmaId)
@@ -1258,7 +1387,7 @@ function updateSelect(xml)
 		  clearSelect(entity = 'etapa', disable = true, text = 'Carregando etapas...', multipleId=false);
 
       var ajaxReq = new ajax( updateSelect );
-      ajaxReq.envia("portabilis_etapa_xml.php?escola_id="+escolaId+"&ano_escolar="+anoEscolar+"&curso_id="+cursoId+"&turma_id="+turmaId+"&default_id="+defaultId);
+      ajaxReq.envia("portabilis_etapa_xml.php?escola_id="+escolaId+"&ano_escolar="+anoEscolar+"&curso_id="+cursoId+"&turma_id="+turmaId+"&default_id="+defaultId);  
     }
     else
       clearSelect(entity = 'etapa', disable = false, text = '', multipleId=false);
@@ -1270,11 +1399,20 @@ function updateSelect(xml)
     }
 } ?>
 
-<?php if ($get_componente_curricular) { ?>
+<?php if ($get_componente_curricular) { 
+
+  $user = isset($user) ? $user : new User();
+  if ($listar_componentes_curriculares_professor && $user->isProfessor())
+  {
+    $this->appendOutput("<script type='text/javascript'>appendToUrl.push(['componente_curricular', 'somente_funcao_professor=true']);</script>");
+  }
+?>
 
 	function getComponenteCurricular(defaultId)
 	{
-		var escolaId = document.getElementById('ref_cod_escola').value;
+   	var instituicaoId = document.getElementById('ref_cod_instituicao').value;
+    var escolaId = document.getElementById('ref_cod_escola').value;
+		var cursoId = document.getElementById('ref_cod_curso').value;
     var anoEscolar = document.getElementById('ano_escolar').value;
 		var turmaId = document.getElementById('ref_cod_turma').value;
     if (escolaId && anoEscolar && turmaId)
@@ -1282,7 +1420,10 @@ function updateSelect(xml)
   		clearSelect(entity = 'componente_curricular', disable = true, text = 'Carregando componentes curriculares...', multipleId = true);
 
       var ajaxReq = new ajax( updateSelect );
-      ajaxReq.envia("portabilis_componente_curricular_xml.php?escola_id="+escolaId+"&turma_id="+turmaId+"&ano_escolar="+anoEscolar+"&default_id="+defaultId);
+
+      //ajaxReq.envia("portabilis_componente_curricular_xml.php?escola_id="+escolaId+"&turma_id="+turmaId+"&ano_escolar="+anoEscolar+"&default_id="+defaultId);
+
+      ajaxReq.envia(prepareUrl('componente_curricular', "portabilis_componente_curricular_xml.php?instituicao_id="+instituicaoId+"&escola_id="+escolaId+"&curso_id="+cursoId+"&turma_id="+turmaId+"&ano_escolar="+anoEscolar+"&default_id="+defaultId));
     }
     else
   		clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);

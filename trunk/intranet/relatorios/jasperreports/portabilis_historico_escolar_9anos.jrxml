@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_historico_escolar" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.2100000000000006"/>
+	<property name="ireport.zoom" value="1.6105100000000019"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="20"/>
+	<property name="ireport.y" value="294"/>
 	<style name="Crosstab Data Text" hAlign="Center"/>
+	<subDataset name="dataset1"/>
+	<subDataset name="dataset2"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["C:\\Xampp\\xampp\\htdocs\\PHPJasperXML\\"]]></defaultValueExpression>
 	</parameter>
@@ -1127,789 +1129,6 @@ ORDER BY 1 ASC]]>
 	<field name="cidade_nascimento_uf" class="java.lang.String"/>
 	<field name="data_nasc" class="java.lang.String"/>
 	<field name="nome_dos_pais" class="java.lang.String"/>
-	<group name="quebra">
-		<groupExpression><![CDATA[$F{quebra}]]></groupExpression>
-		<groupFooter>
-			<band height="379">
-				<rectangle>
-					<reportElement mode="Transparent" x="5" y="3" width="545" height="32"/>
-				</rectangle>
-				<textField isBlankWhenNull="true">
-					<reportElement x="320" y="182" width="179" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_9serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="320" y="152" width="179" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_7serie}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="517" y="45" width="26" height="13"/>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[UF]]></text>
-				</staticText>
-				<textField isBlankWhenNull="true">
-					<reportElement x="517" y="60" width="26" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_1serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="517" y="75" width="26" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_2serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="517" y="91" width="26" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_3serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="517" y="107" width="26" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_4serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="517" y="122" width="26" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_5serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="517" y="136" width="26" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_6serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="517" y="152" width="26" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_7serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="517" y="167" width="26" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_8serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="320" y="167" width="179" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_8serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="517" y="182" width="26" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_9serie}]]></textFieldExpression>
-				</textField>
-				<line>
-					<reportElement x="6" y="135" width="544" height="1"/>
-				</line>
-				<textField isBlankWhenNull="true">
-					<reportElement x="320" y="60" width="179" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_1serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="320" y="75" width="179" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_2serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="320" y="91" width="179" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_3serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="320" y="107" width="179" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_4serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="320" y="122" width="179" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_5serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="320" y="137" width="179" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_6serie}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="112" y="45" width="161" height="13"/>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[ESTABELECIMENTO DE ENSINO]]></text>
-				</staticText>
-				<textField isBlankWhenNull="true">
-					<reportElement x="112" y="75" width="161" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_2serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="112" y="91" width="161" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_3serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="112" y="106" width="161" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_4serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="112" y="122" width="161" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_5serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="112" y="136" width="161" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_6serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="112" y="151" width="161" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_7serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="112" y="166" width="161" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_8serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="112" y="182" width="161" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_9serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="69" y="182" width="34" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_9serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="69" y="166" width="34" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_8serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="69" y="151" width="34" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_7serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="69" y="136" width="34" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_6serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="69" y="121" width="34" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_5serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="69" y="106" width="34" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_4serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="69" y="91" width="34" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_3serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="69" y="75" width="34" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_2serie}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="69" y="60" width="34" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_1serie}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="10" y="60" width="51" height="13"/>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[1º Ano]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="10" y="75" width="51" height="13"/>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[2º Ano]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="10" y="91" width="51" height="13"/>
-					<textElement markup="none">
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[3º Ano]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="10" y="106" width="51" height="13"/>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[4º Ano]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="10" y="121" width="51" height="13"/>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[5º Ano]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="10" y="137" width="51" height="13"/>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[6º Ano]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="10" y="152" width="51" height="13"/>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[7º Ano]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="10" y="166" width="51" height="13"/>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[8º Ano]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="10" y="182" width="51" height="13"/>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[9º Ano]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="10" y="201" width="59" height="13">
-						<printWhenExpression><![CDATA[$F{obs1}.getBytes()]]></printWhenExpression>
-					</reportElement>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Obs. 1º Ano:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="10" y="229" width="59" height="13">
-						<printWhenExpression><![CDATA[$F{obs3}.getBytes()]]></printWhenExpression>
-					</reportElement>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Obs. 3º Ano:]]></text>
-				</staticText>
-				<textField isBlankWhenNull="true">
-					<reportElement x="72" y="229" width="471" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{obs3}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="10" y="257" width="59" height="13">
-						<printWhenExpression><![CDATA[$F{obs5}.getBytes()]]></printWhenExpression>
-					</reportElement>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Obs. 5º Ano:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="10" y="272" width="59" height="13">
-						<printWhenExpression><![CDATA[$F{obs6}.getBytes()]]></printWhenExpression>
-					</reportElement>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Obs. 6º Ano:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="10" y="315" width="59" height="13">
-						<printWhenExpression><![CDATA[$F{obs9}.getBytes()]]></printWhenExpression>
-					</reportElement>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Obs. 9º Ano:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="10" y="301" width="59" height="13">
-						<printWhenExpression><![CDATA[$F{obs8}.getBytes()]]></printWhenExpression>
-					</reportElement>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Obs. 8º Ano:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="10" y="286" width="59" height="13">
-						<printWhenExpression><![CDATA[$F{obs7}.getBytes()]]></printWhenExpression>
-					</reportElement>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Obs. 7º Ano:]]></text>
-				</staticText>
-				<line>
-					<reportElement x="107" y="44" width="1" height="14"/>
-				</line>
-				<line>
-					<reportElement x="65" y="44" width="1" height="14"/>
-				</line>
-				<textField isBlankWhenNull="true">
-					<reportElement x="72" y="201" width="471" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{obs1}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="381" y="352" width="33" height="14"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<text><![CDATA[Folha:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="380" y="334" width="55" height="14"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<text><![CDATA[Diretor(a)]]></text>
-				</staticText>
-				<textField isBlankWhenNull="true">
-					<reportElement x="415" y="353" width="78" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{num_folha}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="250" y="352" width="84" height="14"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_livro}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="218" y="352" width="30" height="14"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<text><![CDATA[Livro:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="217" y="334" width="55" height="14"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<text><![CDATA[Secretário(a):]]></text>
-				</staticText>
-				<textField>
-					<reportElement x="88" y="334" width="122" height="14"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio}+", "+$F{data_atual}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="65" y="352" width="112" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{nm_termo}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="10" y="352" width="53" height="14"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<text><![CDATA[Registro Nº:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="10" y="334" width="76" height="14"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<text><![CDATA[Município e Data:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="320" y="45" width="57" height="13"/>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[MUNICÍPIO]]></text>
-				</staticText>
-				<line>
-					<reportElement x="6" y="58" width="544" height="1"/>
-				</line>
-				<line>
-					<reportElement x="6" y="73" width="544" height="1"/>
-				</line>
-				<line>
-					<reportElement x="6" y="89" width="544" height="1"/>
-				</line>
-				<line>
-					<reportElement x="6" y="105" width="544" height="1"/>
-				</line>
-				<line>
-					<reportElement x="6" y="196" width="544" height="1"/>
-				</line>
-				<line>
-					<reportElement x="512" y="44" width="1" height="14"/>
-				</line>
-				<line>
-					<reportElement x="316" y="44" width="1" height="14"/>
-				</line>
-				<staticText>
-					<reportElement x="10" y="215" width="59" height="13">
-						<printWhenExpression><![CDATA[$F{obs2}.getBytes()]]></printWhenExpression>
-					</reportElement>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Obs. 2º Ano:]]></text>
-				</staticText>
-				<textField isBlankWhenNull="true">
-					<reportElement x="72" y="215" width="471" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{obs2}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="72" y="244" width="471" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{obs4}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="10" y="243" width="59" height="13">
-						<printWhenExpression><![CDATA[$F{obs4}.getBytes()]]></printWhenExpression>
-					</reportElement>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Obs. 4º Ano:]]></text>
-				</staticText>
-				<textField isBlankWhenNull="true">
-					<reportElement x="72" y="258" width="471" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{obs5}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="72" y="272" width="471" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{obs6}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="72" y="286" width="471" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{obs7}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="72" y="301" width="471" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{obs8}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="72" y="315" width="471" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{obs9}]]></textFieldExpression>
-				</textField>
-				<line>
-					<reportElement x="6" y="331" width="544" height="1"/>
-				</line>
-				<line>
-					<reportElement x="5" y="351" width="545" height="1"/>
-				</line>
-				<line>
-					<reportElement x="214" y="332" width="1" height="34"/>
-				</line>
-				<line>
-					<reportElement x="6" y="19" width="544" height="1"/>
-				</line>
-				<line>
-					<reportElement x="378" y="332" width="1" height="34"/>
-				</line>
-				<line>
-					<reportElement x="6" y="180" width="544" height="1"/>
-				</line>
-				<line>
-					<reportElement x="6" y="165" width="544" height="1"/>
-				</line>
-				<line>
-					<reportElement x="6" y="120" width="544" height="1"/>
-				</line>
-				<line>
-					<reportElement x="6" y="150" width="544" height="1"/>
-				</line>
-				<textField isBlankWhenNull="true">
-					<reportElement x="508" y="21" width="35" height="13"/>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie9}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="464" y="21" width="35" height="13"/>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie8}]]></textFieldExpression>
-				</textField>
-				<textField pattern="##" isBlankWhenNull="true">
-					<reportElement x="238" y="5" width="35" height="14"/>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{freq3}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="##" isBlankWhenNull="true">
-					<reportElement x="194" y="5" width="35" height="14"/>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{freq2}]]></textFieldExpression>
-				</textField>
-				<textField pattern="##" isBlankWhenNull="true">
-					<reportElement x="508" y="5" width="35" height="14"/>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{freq9}]]></textFieldExpression>
-				</textField>
-				<textField pattern="##" isBlankWhenNull="true">
-					<reportElement x="149" y="5" width="35" height="14" forecolor="#000000" backcolor="#FFFFFF"/>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{freq1}]]></textFieldExpression>
-				</textField>
-				<textField pattern="##" isBlankWhenNull="true">
-					<reportElement x="282" y="5" width="35" height="14"/>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{freq4}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="149" y="21" width="35" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie1}]]></textFieldExpression>
-				</textField>
-				<textField pattern="##" isBlankWhenNull="true">
-					<reportElement x="327" y="5" width="35" height="14"/>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{freq5}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="194" y="21" width="35" height="13"/>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie2}]]></textFieldExpression>
-				</textField>
-				<textField pattern="##" isBlankWhenNull="true">
-					<reportElement x="371" y="5" width="35" height="14"/>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{freq6}]]></textFieldExpression>
-				</textField>
-				<textField pattern="##" isBlankWhenNull="true">
-					<reportElement x="464" y="5" width="35" height="14"/>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{freq8}]]></textFieldExpression>
-				</textField>
-				<textField pattern="##" isBlankWhenNull="true">
-					<reportElement x="418" y="5" width="35" height="14"/>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{freq7}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="238" y="21" width="35" height="13"/>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie3}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="282" y="21" width="35" height="13"/>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie4}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="327" y="21" width="35" height="13"/>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie5}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="371" y="21" width="35" height="13"/>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie6}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="418" y="21" width="35" height="13"/>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie7}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="10" y="21" width="93" height="13"/>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[RESULTADO FINAL]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="10" y="5" width="74" height="13"/>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[%FREQUÊNCIA]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="10" y="45" width="51" height="13"/>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[SÉRIES]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="69" y="45" width="34" height="13"/>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[ANO]]></text>
-				</staticText>
-				<line>
-					<reportElement x="5" y="367" width="545" height="1"/>
-				</line>
-				<line>
-					<reportElement x="550" y="44" width="1" height="323"/>
-				</line>
-				<line>
-					<reportElement x="5" y="44" width="1" height="323"/>
-				</line>
-				<line>
-					<reportElement x="6" y="44" width="544" height="1"/>
-				</line>
-				<textField isBlankWhenNull="true">
-					<reportElement x="112" y="60" width="161" height="13"/>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_1serie}]]></textFieldExpression>
-				</textField>
-			</band>
-		</groupFooter>
-	</group>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -2022,7 +1241,7 @@ ORDER BY 1 ASC]]>
 				<text><![CDATA[HISTÓRICO ESCOLAR DO ENSINO FUNDAMENTAL (9 ANOS)]]></text>
 			</staticText>
 			<line>
-				<reportElement x="370" y="5" width="1" height="100"/>
+				<reportElement x="369" y="5" width="1" height="100"/>
 			</line>
 			<line>
 				<reportElement x="6" y="105" width="544" height="1"/>
@@ -2038,19 +1257,18 @@ ORDER BY 1 ASC]]>
 				<text><![CDATA[DISCIPLINA]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="10" y="134" width="533" height="15"/>
-				<textElement lineSpacing="1_1_2">
+				<reportElement x="10" y="133" width="533" height="17"/>
+				<textElement textAlignment="Justified" lineSpacing="1_1_2">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Certificamos que "+$F{nome_aluno}+ ", matrícula "+$F{cod_aluno}+ ", natural de "+$F{cidade_nascimento_uf}+", nascido em "+$F{data_nasc}+", filho de "
-+$F{nome_dos_pais}+", concluiu o ENSINO FUNDAMENTAL (9 ANOS) conforme Histórico Escolar."]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["Certificamos que "+$F{nome_aluno}+ ", matrícula "+$F{cod_aluno}+ ", natural de "+$F{cidade_nascimento_uf}+", nascido em "+$F{data_nasc}+", filho de "+$F{nome_dos_pais}+", concluiu o ENSINO FUNDAMENTAL (9 ANOS) conforme Histórico Escolar."]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="39" y="112" width="477" height="15"/>
+				<reportElement x="9" y="112" width="534" height="15"/>
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[CERTIFICADO DE CONCLUSÃO DE SÉRIE E/OU CURSO ENSINO FUNDAMENTAL (9 ANOS)]]></text>
+				<text><![CDATA[CERTIFICADO DE CONCLUSÃO DE SÉRIE/ANO E/OU CURSO ENSINO FUNDAMENTAL]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="72" y="43" width="296" height="13"/>
@@ -2059,12 +1277,12 @@ ORDER BY 1 ASC]]>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["Endereço: "+$F{logradouro}+" "+$F{numero}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="282" y="79" width="85" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Fone/Fax: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["Tel.: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="72" y="7" width="296" height="13"/>
@@ -2125,7 +1343,7 @@ ORDER BY 1 ASC]]>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="16" splitType="Stretch">
+		<band height="15" splitType="Stretch">
 			<textField isBlankWhenNull="true">
 				<reportElement x="149" y="1" width="36" height="13" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Center">
@@ -2202,7 +1420,781 @@ ORDER BY 1 ASC]]>
 		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="8" splitType="Stretch"/>
+		<band height="431" splitType="Stretch">
+			<rectangle>
+				<reportElement x="5" y="3" width="545" height="39"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="10" y="6" width="100" height="15"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[% FREQUÊNCIA]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="149" y="7" width="36" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{freq1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="194" y="7" width="36" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{freq2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="238" y="7" width="36" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{freq3}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="282" y="7" width="36" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{freq4}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="327" y="6" width="36" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{freq5}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="371" y="6" width="36" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{freq6}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="418" y="6" width="36" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{freq7}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="464" y="6" width="36" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{freq8}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="508" y="6" width="36" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{freq9}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="149" y="26" width="35" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="194" y="26" width="35" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="238" y="26" width="35" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie3}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="282" y="26" width="35" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie4}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="5" y="23" width="545" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="10" y="26" width="100" height="15"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RESULTADO FINAL]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="327" y="26" width="35" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie5}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="371" y="26" width="35" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie6}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="418" y="26" width="35" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie7}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="464" y="26" width="35" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie8}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="508" y="26" width="35" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{status_serie9}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="5" y="49" width="545" height="354"/>
+			</rectangle>
+			<line>
+				<reportElement x="5" y="212" width="545" height="1"/>
+			</line>
+			<line>
+				<reportElement x="5" y="66" width="545" height="1"/>
+			</line>
+			<line>
+				<reportElement x="54" y="49" width="1" height="17"/>
+			</line>
+			<staticText>
+				<reportElement x="9" y="50" width="45" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ANO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="58" y="50" width="56" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ANO LETIVO]]></text>
+			</staticText>
+			<line>
+				<reportElement x="114" y="49" width="1" height="17"/>
+			</line>
+			<staticText>
+				<reportElement x="117" y="50" width="245" height="15"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESTABELECIMENTO DE ENSINO]]></text>
+			</staticText>
+			<line>
+				<reportElement x="365" y="49" width="1" height="17"/>
+			</line>
+			<staticText>
+				<reportElement x="367" y="50" width="59" height="15"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MUNICÍPIO]]></text>
+			</staticText>
+			<line>
+				<reportElement x="523" y="49" width="1" height="17"/>
+			</line>
+			<staticText>
+				<reportElement x="527" y="50" width="20" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UF]]></text>
+			</staticText>
+			<line>
+				<reportElement x="5" y="82" width="545" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="9" y="68" width="45" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[1º Ano]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="69" y="68" width="34" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_1serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="367" y="68" width="149" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_1serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="117" y="68" width="245" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_1serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="527" y="68" width="20" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_1serie}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="5" y="98" width="545" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="9" y="84" width="45" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[2º Ano]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="69" y="84" width="34" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_2serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="117" y="84" width="245" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_2serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="367" y="84" width="149" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_2serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="527" y="84" width="20" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_2serie}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="100" width="45" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[3º Ano]]></text>
+			</staticText>
+			<line>
+				<reportElement x="5" y="114" width="545" height="1"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="69" y="100" width="34" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_3serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="117" y="100" width="245" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_3serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="367" y="100" width="149" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_3serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="527" y="100" width="20" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_3serie}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="117" width="45" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[4º Ano]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="69" y="117" width="34" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_4serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="117" y="117" width="245" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_4serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="367" y="117" width="149" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_4serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="527" y="117" width="20" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_4serie}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="5" y="131" width="545" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="9" y="133" width="45" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[5º Ano]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="69" y="133" width="34" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_5serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="117" y="133" width="245" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_5serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="367" y="133" width="149" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_5serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="527" y="133" width="20" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_5serie}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="5" y="147" width="545" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="9" y="149" width="45" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[6º Ano]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="69" y="149" width="34" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_6serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="117" y="149" width="245" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_6serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="367" y="149" width="149" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_6serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="527" y="149" width="20" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_6serie}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="5" y="163" width="545" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="9" y="165" width="45" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[7º Ano]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="69" y="165" width="34" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_7serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="117" y="181" width="245" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_8serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="367" y="165" width="149" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_7serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="527" y="165" width="20" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_7serie}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="5" y="179" width="545" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="9" y="181" width="45" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[8º Ano]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="69" y="181" width="34" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_8serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="117" y="165" width="245" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_7serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="367" y="181" width="149" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_8serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="527" y="181" width="20" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_8serie}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="5" y="195" width="545" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="9" y="197" width="45" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[9º Ano]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="69" y="197" width="34" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano_9serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="117" y="197" width="245" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_9serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="367" y="197" width="149" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_cidade_9serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="527" y="197" width="20" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{escola_uf_9serie}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="214" width="59" height="13"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Obs. 1º Ano:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="68" y="214" width="479" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{obs1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="231" width="59" height="13"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Obs. 2º Ano:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="5" y="229" width="545" height="1"/>
+			</line>
+			<line>
+				<reportElement x="5" y="245" width="545" height="1"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="68" y="231" width="479" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{obs2}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="248" width="59" height="13"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Obs. 3º Ano:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="5" y="263" width="545" height="1"/>
+			</line>
+			<line>
+				<reportElement x="5" y="281" width="545" height="1"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="68" y="248" width="479" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{obs3}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="266" width="59" height="13"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Obs. 4º Ano:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="68" y="266" width="479" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{obs4}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="5" y="335" width="545" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="9" y="284" width="59" height="13"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Obs. 5º Ano:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="68" y="284" width="479" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{obs5}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="5" y="299" width="545" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="9" y="302" width="59" height="13"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Obs. 6º Ano:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="68" y="302" width="479" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{obs6}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="5" y="317" width="545" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="9" y="320" width="59" height="13"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Obs. 7º Ano:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="68" y="320" width="479" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{obs7}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="337" width="59" height="13"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Obs. 8º Ano:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="68" y="337" width="479" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{obs8}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="5" y="368" width="545" height="1"/>
+			</line>
+			<line>
+				<reportElement x="5" y="352" width="545" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="9" y="354" width="59" height="13"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Obs. 9º Ano:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="68" y="354" width="479" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{obs9}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="371" width="76" height="14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Município e Data:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="5" y="386" width="545" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="85" y="371" width="122" height="14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio}+", "+$F{data_atual}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="210" y="369" width="1" height="34"/>
+			</line>
+			<line>
+				<reportElement x="378" y="369" width="1" height="34"/>
+			</line>
+			<staticText>
+				<reportElement x="7" y="388" width="51" height="14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Registro Nº:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="58" y="388" width="112" height="14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{nm_termo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="213" y="371" width="55" height="14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Secretário(a):]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="214" y="388" width="27" height="14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Livro:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="241" y="388" width="84" height="14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_livro}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="382" y="371" width="55" height="14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Diretor(a):]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="382" y="388" width="32" height="14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Folha:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="415" y="388" width="78" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{num_folha}]]></textFieldExpression>
+			</textField>
+		</band>
 	</pageFooter>
 	<summary>
 		<band splitType="Immediate"/>

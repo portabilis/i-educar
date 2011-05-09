@@ -56,13 +56,7 @@ require_once 'include/pmieducar/clsPmieducarMatriculaTurma.inc.php';
 require_once 'include/pmieducar/clsPmieducarTurma.inc.php';
 require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
 
-include("Avaliacao/models/aluno.php");
-include("Avaliacao/models/disciplina.php");
-include("Avaliacao/models/matricula.php");
-include("Avaliacao/models/serie.php");
-include("Avaliacao/models/turma.php");
-#include("Avaliacao/views/boletim/index.php");
-#include("Avaliacao/views/boletim/set_nota.php");
+require_once 'include/portabilis_utils.php';
 
 /**
  * BoletimController class.
@@ -80,7 +74,9 @@ class DiarioController extends Core_Controller_Page_ListController
 {
   protected $_dataMapper = 'Avaliacao_Model_NotaAlunoDataMapper';
   protected $_titulo   = 'Novo boletim';
-  protected $_processoAp = 946;
+//  protected $_processoAp = 946;
+  protected $_processoAp = 644;
+
   protected $_formMap  = array();
 
   public function Gerar()
@@ -103,13 +99,13 @@ class DiarioController extends Core_Controller_Page_ListController
     $this->ref_cod_componente_curricular = $_GET['ref_cod_componente_curricular'];
     $this->etapa = $_GET['etapa'];
 
-    $get_escola = $escola_obrigatorio = TRUE;
+    $get_escola = $escola_obrigatorio = $listar_escolas_alocacao_professor = TRUE;
     $get_ano_escolar = $ano_escolar_obrigatorio = TRUE;
-    $get_curso = $curso_obrigatorio = TRUE;
+    $get_curso = $curso_obrigatorio = $listar_somente_cursos_funcao_professor = TRUE;
     #$sem_padrao       = TRUE;
     $get_escola_curso_serie = $escola_curso_serie_obrigatorio = TRUE;
-    $get_turma = $turma_obrigatorio = TRUE;
-    $get_componente_curricular = $componente_curricular_obrigatorio = TRUE;
+    $get_turma = $turma_obrigatorio = $listar_turmas_periodo_alocacao_professor = TRUE;
+    $get_componente_curricular = $componente_curricular_obrigatorio = $listar_componentes_curriculares_professor = TRUE;
     $get_etapa = $etapa_obrigatorio = TRUE;
     include 'include/pmieducar/educar_campo_lista.php';
 
@@ -135,7 +131,7 @@ class DiarioController extends Core_Controller_Page_ListController
       $obj_nota_aluno = new clsPmieducarMatriculaTurma();
 
       #TODO ordenar pelo nome do aluno
-      $obj_nota_aluno->setOrderby('ref_cod_matricula ASC');
+      $obj_nota_aluno->setOrderby('nome');
 
       $alunos = $obj_nota_aluno->lista(
         $this->ref_cod_matricula,
@@ -238,7 +234,6 @@ class DiarioController extends Core_Controller_Page_ListController
         elseif ($service->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL)
             $_faltaAtual = $service->getFalta($this->etapa)->quantidade;
 
-        #FIXME não esta retornando as faltas por componente, erro no service ? // no get ou no >> set ?
         $faltas = "<option></option>";
         foreach (range(0, 100, 1) as $f) {
           if ($_faltaAtual > -1 && $f == $_faltaAtual)
@@ -287,20 +282,27 @@ class DiarioController extends Core_Controller_Page_ListController
 
       $this->titulo = "Encontrado(s) " . count($alunos) . " aluno(s).";
 
+      if ($service->getRegra()->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM)
+        $headers[] = "Parecer descritivo **";
+
+      $headers[] = "Status altera&ccedil;&atilde;o";
+      $this->addCabecalhos($headers);
+
       $_tipoParecer = RegraAvaliacao_Model_TipoParecerDescritivo::getInstance()->getValue($service->getRegra()->get('parecerDescritivo'));
       if ($_tipoParecer)
         $_tipoParecer = '<br />** ' . $_tipoParecer;
 
       $_tipoPresenca = RegraAvaliacao_Model_TipoPresenca::getInstance()->getValue($service->getRegra()->get('tipoPresenca'));
       $this->rodape = "* $_tipoPresenca $_tipoParecer";
-
-      if ($service->getRegra()->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM)
-        $headers[] = "Parecer descritivo **";
-
-      $headers[] = "Status altera&ccedil;&atilde;o";
-      $this->addCabecalhos($headers);
       }
     }
+    else
+    {
+      $this->rodape = "N&atilde;o est&aacute; sendo listado as informa&ccedil;&otilde;es que voc&ecirc; espera ? solicite a(o) secret&aacute;rio(a) da escola que verifique a aloca&ccedil;&atilde;o do seu usu&aacute;rio.";
+    }
+
+
+
     $this->largura = '100%';
     $a = <<<EOT
 
@@ -353,11 +355,13 @@ class DiarioController extends Core_Controller_Page_ListController
               document.getElementById('ref_cod_instituicao').onchange = function()
               {
                 clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId = false);
+                clearSelect(entity = 'curso', disable = false, text = '', multipleId = true);
                 clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
                 clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
                 clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
                 clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-                getDuploEscolaCurso();
+                //getDuploEscolaCurso();
+                getEscola();
               }
 
               document.getElementById('ref_cod_escola').onchange = function()
@@ -379,7 +383,7 @@ class DiarioController extends Core_Controller_Page_ListController
               clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
               clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
               clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-              getAnoEscolar(null);
+              getAnoEscolar();
             }
 
             document.getElementById('ano_escolar').onchange = function()
@@ -443,11 +447,13 @@ class DiarioController extends Core_Controller_Page_ListController
             {
               try
               {
-                document.getElementById('status_alteracao-matricula:' + matricula).innerHTML = '<span class="error" style="color: red;">ERRO1: Ocorreu um erro inesperado, por favor tente recarregar a p&aacute;gina.</span>';
+                document.getElementById('status_alteracao-matricula:' + matricula).innerHTML = '<span class="error" style="color: red;">ERRO1: Ocorreu um erro inesperado, por favor tente novamente.</span>';
+                window.location.reload();
               }
               catch(err)
               {
-                alert('ERRO2: Ocorreram erros inesperados, por favor tente recarregar a p&aacute;gina.');
+                alert('ERRO2: Ocorreram erros inesperados, por favor tente novamente.');
+                window.location.reload();
               }
             }
           }
@@ -487,11 +493,13 @@ class DiarioController extends Core_Controller_Page_ListController
             {
               try
               {
-                document.getElementById('status_alteracao-matricula:' + matricula).innerHTML = '<span class="error" style="color: red;">ERRO3: Ocorreu um erro inesperado, por favor tente recarregar a p&aacute;gina.</span>';
+                document.getElementById('status_alteracao-matricula:' + matricula).innerHTML = '<span class="error" style="color: red;">ERRO3: Ocorreu um erro inesperado, por favor tente novamente.</span>';
+                window.location.reload();
               }
               catch(err)
               {
-                alert('ERRO4: Ocorreram erros inesperados, por favor tente recarregar a p&aacute;gina.');
+                alert('ERRO4: Ocorreram erros inesperados, por favor tente novamente.');
+                window.location.reload();
               }
             }
           }

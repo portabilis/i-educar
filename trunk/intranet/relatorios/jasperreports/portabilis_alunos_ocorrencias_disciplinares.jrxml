@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_alunos_ocorrencias_disciplinares" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="20"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="instituicao" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
@@ -256,62 +256,62 @@ ORDER BY nm_escola, nm_aluno, data_ocorrencia]]>
 		<groupExpression><![CDATA[$F{cod_aluno}]]></groupExpression>
 		<groupHeader>
 			<band height="16">
-				<textField>
-					<reportElement x="44" y="2" width="157" height="13"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement x="35" y="2" width="168" height="13"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_aluno}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="5" y="2" width="37" height="13"/>
-					<textElement>
-						<font size="8" isBold="true" isItalic="false"/>
-					</textElement>
-					<text><![CDATA[Aluno:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="201" y="2" width="37" height="13"/>
+					<reportElement x="203" y="2" width="34" height="13"/>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Curso:]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="238" y="2" width="86" height="13"/>
+					<reportElement x="234" y="2" width="113" height="13"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_curso}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="326" y="2" width="30" height="13"/>
+					<reportElement x="350" y="2" width="30" height="13"/>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Série:]]></text>
 				</staticText>
-				<textField>
-					<reportElement x="359" y="2" width="64" height="13"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement x="380" y="2" width="62" height="13"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_serie}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="425" y="2" width="33" height="13"/>
+					<reportElement x="443" y="2" width="33" height="13"/>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Turma:]]></text>
 				</staticText>
-				<textField>
-					<reportElement x="464" y="2" width="81" height="13"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement x="476" y="2" width="74" height="13"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_turma}]]></textFieldExpression>
 				</textField>
+				<staticText>
+					<reportElement x="4" y="2" width="34" height="13"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Aluno:]]></text>
+				</staticText>
 			</band>
 		</groupHeader>
 		<groupFooter>
@@ -391,7 +391,7 @@ ORDER BY nm_escola, nm_aluno, data_ocorrencia]]>
 			</textField>
 			<image>
 				<reportElement x="22" y="4" width="57" height="46"/>
-				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
+				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ararangua/intranet/imagens/brasao.jpg"]]></imageExpression>
 			</image>
 			<elementGroup/>
 			<elementGroup/>
@@ -443,7 +443,7 @@ ORDER BY nm_escola, nm_aluno, data_ocorrencia]]>
 		<band height="16" splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="17" splitType="Stretch">
+		<band height="18" splitType="Stretch">
 			<textField>
 				<reportElement x="44" y="2" width="129" height="13"/>
 				<textElement>

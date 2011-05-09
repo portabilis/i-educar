@@ -4,6 +4,9 @@
 #ini_set("display_errors", 1);
 
 require_once( "include/clsBanco.inc.php" );
+require_once( "include/portabilis_utils.php" );
+
+$user = new User();
 
 #TODO alterar para usar App_Model_IedFinder::getAnoEscolar ?
 function getEtapas($ano_escolar, $escola, $curso, $turma)
@@ -32,17 +35,19 @@ $defaultId = $_GET['default_id'];
 header('Content-type: text/xml');
 $x = "<?xml version='1.0' encoding='ISO-8859-15'?>";
 $x .= "<etapas entity='etapa' element_id='etapa'>";
-foreach ($etapas as $e)
+if ($user->isLoggedIn())
 {
-  if ($defaultId && $defaultId == $e['etapa'])
-    $selected='selected';
-  else
-    $selected='';
-  $e['descricao'] = $e['etapa'].'&#186; ' . $e['descricao'] ;
-  $x .= "<etapa id='{$e['etapa']}' value='{$e['descricao']}' selected='$selected' />";
+  foreach ($etapas as $e)
+  {
+    if ($defaultId && $defaultId == $e['etapa'])
+      $selected='selected';
+    else
+      $selected='';
+    $e['descricao'] = $e['etapa'].'&#186; ' . $e['descricao'] ;
+    $x .= "<etapa id='{$e['etapa']}' value='{$e['descricao']}' selected='$selected' />";
+  }
 }
 $x .= "</etapas>";
 
 echo $x;
 ?>
-

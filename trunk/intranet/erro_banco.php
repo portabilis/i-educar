@@ -76,12 +76,7 @@
     <div id="error">
       <div class="content">
         <h1>Erro</h1>
-        <p>Ocorreu um erro de conexão com o banco de dados.</p>
-        <ul>Sugestões:
-          <li>Verifique se o seu banco de dados está corretamente configurado e se o serviço relacionado está executando</li>
-          <li>Verifique se configurou o i-Educar com os parâmetros corretos de conexão com o banco de dados no arquivo <code>configuration/ieducar.ini</code></li>
-          <li><a href="http://svn.softwarepublico.gov.br/trac/ieducar#FAQsetutoriais">Consulte a documentação do i-Educar</a> sobre os procedimentos de instalação da versão desejada</li>
-        </ul>
+        <p>Estamos passando por dificuldades em nosso servidor, por favor tente novamente mais tarde.</p>
       </div>
     </div>
   </body>

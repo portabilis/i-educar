@@ -268,18 +268,17 @@
                     turma.ativo = 1 AND
 					matricula_turma.ativo = 1) AS nome_turma,
 
-            (SELECT CASE WHEN (SELECT min(to_char(escola_serie.hora_inicial,'HH'))
-                                 FROM pmieducar.escola_serie,
-                                      pmieducar.matricula
-                                WHERE escola_serie.ref_cod_escola = matricula.ref_ref_cod_escola AND
-                                      matricula.ref_ref_cod_serie = escola_serie.ref_cod_serie) = '07' THEN 'Matutino'
-                         WHEN (SELECT min(to_char(escola_serie.hora_inicial,'HH'))
-                                 FROM pmieducar.escola_serie,
-                                      pmieducar.matricula
-                                WHERE escola_serie.ref_cod_escola = matricula.ref_ref_cod_escola AND
-                                      matricula.ref_ref_cod_serie = escola_serie.ref_cod_serie) = '08' THEN 'Matutino'
-        ELSE 'Vespertino'
-        END) AS periodo,
+    (SELECT CASE WHEN date_part('hour',hora_inicial) = 6 or date_part('hour',hora_inicial) = 7 or date_part('hour',hora_inicial) = 8 THEN 'Matutino'
+                     WHEN date_part('hour',hora_inicial) = 13 or date_part('hour',hora_inicial) = 14 THEN 'Vespertino'
+                     WHEN date_part('hour',hora_inicial) = 18 or date_part('hour',hora_inicial) = 19 THEN 'Noturno'
+                END
+	       FROM pmieducar.turma,
+                pmieducar.matricula_turma
+          WHERE turma.cod_turma = matricula_turma.ref_cod_turma AND
+                matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+                turma.ativo = 1 AND
+		        matricula_turma.ativo = 1 AND
+                hora_inicial IS NOT NULL) AS periodo,
 
 		(SELECT CASE WHEN (SELECT mt.aprovado
 		                     FROM pmieducar.matricula mt
@@ -296,7 +295,7 @@
                 ELSE 'Reclassificado'
                 END) AS situacao,
 
-		(SELECT pessoa.nome
+		(SELECT public.fcn_upper(pessoa.nome)
            FROM cadastro.pessoa,
                 cadastro.fisica,
                 pmieducar.aluno

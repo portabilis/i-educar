@@ -324,6 +324,25 @@ class indice extends clsCadastro
 
     $this->campoHora( 'hora_fim_intervalo', 'Hora Fim Intervalo', $this->hora_fim_intervalo, FALSE);
 
+    #aquiiii
+
+    // Turma tipo
+    $turnos = array('' => 'Selecione');
+
+    // Editar
+    if ($this->ref_cod_instituicao)
+    {
+      require_once 'include/pmieducar/clsPortabilisTurmaTurno.inc.php';
+
+      $t = new clsPortabilisTurmaTurno($this->ref_cod_instituicao);
+      $_turnos = $t->select();
+      foreach ($_turnos as $_t)
+        $turnos[$_t['turma_turno_id']] = $_t['nm_turno'];
+    }
+
+    $this->campoLista('turma_turno_id', 'Turno', $turnos,
+      $this->turma_turno_id, '', FALSE, '', null);
+
     $this->campoQuebra2();
 
     if ($this->ref_ref_cod_serie) {
@@ -673,7 +692,7 @@ class indice extends clsCadastro
           $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
           $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
           $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
-          $this->visivel);
+          $this->visivel, $this->turma_turno_id);
 
         $cadastrou = $obj->cadastra();
 
@@ -797,7 +816,8 @@ class indice extends clsCadastro
           $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
           $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
           $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
-          $this->visivel);
+          $this->visivel,
+          $this->turma_turno_id);
 
         $editou = $obj->edita();
 
@@ -868,7 +888,7 @@ class indice extends clsCadastro
         $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
         $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
         $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
-        $this->visivel);
+        $this->visivel, $this->turma_turno_id);
 
       $editou = $obj->edita();
     }

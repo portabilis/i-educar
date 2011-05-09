@@ -1,6 +1,6 @@
 <?php
-#  error_reporting(E_ALL);
-#  ini_set("display_errors", 1);
+  //error_reporting(E_ALL);
+  //ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -35,11 +35,12 @@ require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
 require_once 'Avaliacao/Service/Boletim.php';
 require_once 'App/Model/MatriculaSituacao.php';
 require_once 'RegraAvaliacao/Model/TipoPresenca.php';
+require_once 'include/portabilis_utils.php';
 
 class DiarioAjaxController extends Core_Controller_Page_EditController
 {
   protected $_dataMapper  = 'Avaliacao_Model_NotaComponenteDataMapper'; #FIXME ? esta propriedade deveria ser diferente para outros atts ? ex Falta
-  protected $_processoAp  = 642;
+  protected $_processoAp  = 644;
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
   protected $_saveOption  = FALSE;
   protected $_deleteOption  = FALSE;
@@ -48,9 +49,11 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   protected function _preConstruct()
   {
     // Id do usuário na session
-    $this->user = $this->getSession()->id_pessoa;
+    //$this->user = $this->getSession()->id_pessoa;
 
-    if (! $this->user)#TODO verificar se usuário logado tem permissão para alterar / criar nota
+    $user = new User();
+
+    if (! $user->isLoggedIn())#TODO verificar se usuário logado tem permissão para alterar / criar nota
       die('not authorized');
     elseif (! isset($this->getRequest()->att))
       die('invalid att');
@@ -58,7 +61,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     {
       $this->service = new Avaliacao_Service_Boletim(array(
           'matricula' => $this->getRequest()->matricula,
-          'usuario'   => $this->user
+          'usuario'   => $user->userId
       ));
     }
   }

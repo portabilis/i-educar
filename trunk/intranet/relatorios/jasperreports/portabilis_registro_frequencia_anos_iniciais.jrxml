@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_registro_frequencia" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="0.8264462809917361"/>
+	<property name="ireport.zoom" value="0.9090909090909101"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<subDataset name="dataset1"/>
@@ -37,29 +37,17 @@
        turma.nm_turma,
        to_char(CURRENT_DATE,'dd/mm/yyyy') AS data_atual,
        to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
-		(SELECT CASE WHEN date_part('hour',turma.hora_inicial) = 7 or date_part('hour',turma.hora_inicial) = 8 THEN 'Matutino'
-                     WHEN date_part('hour',turma.hora_inicial) = 13 or date_part('hour',turma.hora_inicial) = 14 THEN 'Verpertino'
-                     WHEN date_part('hour',turma.hora_inicial) = 18 or date_part('hour',turma.hora_inicial) = 19 THEN 'Noturno'
+    (SELECT CASE WHEN date_part('hour',hora_inicial) = 6 or date_part('hour',hora_inicial) = 7 or date_part('hour',hora_inicial) = 8 THEN 'Matutino'
+                     WHEN date_part('hour',hora_inicial) = 13 or date_part('hour',hora_inicial) = 14 THEN 'Vespertino'
+                     WHEN date_part('hour',hora_inicial) = 18 or date_part('hour',hora_inicial) = 19 THEN 'Noturno'
                 END
-           FROM pmieducar.turma tr
-         WHERE  tr.ref_ref_cod_escola = escola_serie.ref_cod_escola and
-               tr.ref_ref_cod_serie = escola_serie.ref_cod_serie and
-               escola_serie.ref_cod_escola = escola.cod_escola and
-		       tr.ativo = 1 AND
-			   tr.hora_inicial IS NOT NULL AND
-			   tr.cod_turma = turma.cod_turma) AS periodo,
-
-		(SELECT CASE WHEN date_part('hour',turma.hora_inicial) = 7 or date_part('hour',turma.hora_inicial) = 8 THEN 1
-                     WHEN date_part('hour',turma.hora_inicial) = 13 or date_part('hour',turma.hora_inicial) = 14 THEN 2
-                     WHEN date_part('hour',turma.hora_inicial) = 18 or date_part('hour',turma.hora_inicial) = 19 THEN 2
-                END
-           FROM pmieducar.turma tr
-         WHERE  tr.ref_ref_cod_escola = escola_serie.ref_cod_escola and
-               tr.ref_ref_cod_serie = escola_serie.ref_cod_serie and
-               escola_serie.ref_cod_escola = escola.cod_escola and
-		       tr.ativo = 1 AND
-			   tr.hora_inicial IS NOT NULL AND
-			   tr.cod_turma = turma.cod_turma) AS periodo_aux,
+	       FROM pmieducar.turma,
+                pmieducar.matricula_turma
+          WHERE turma.cod_turma = matricula_turma.ref_cod_turma AND
+                matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+                turma.ativo = 1 AND
+		        matricula_turma.ativo = 1 AND
+                hora_inicial IS NOT NULL) AS periodo,
 
       (SELECT COALESCE((SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))
           FROM cadastro.pessoa ps,
@@ -155,7 +143,7 @@
        to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
        matricula.cod_matricula,
 
-     (SELECT pessoa.nome
+     (SELECT public.fcn_upper(pessoa.nome)
         FROM cadastro.pessoa,
              cadastro.fisica
        WHERE pessoa.idpes = fisica.idpes AND
@@ -204,7 +192,7 @@
        matricula.ano = $P{ano} AND
        matricula.ativo = 1 AND
        matricula_turma.ativo = 1 AND
-       matricula.aprovado <> 4
+       matricula.aprovado = 3
 
 ORDER BY nome_aluno ASC]]>
 	</queryString>
@@ -220,7 +208,6 @@ ORDER BY nome_aluno ASC]]>
 	<field name="data_atual" class="java.lang.String"/>
 	<field name="hora_atual" class="java.lang.String"/>
 	<field name="periodo" class="java.lang.String"/>
-	<field name="periodo_aux" class="java.lang.Integer"/>
 	<field name="nm_escola" class="java.lang.String"/>
 	<field name="tipo_logradouro" class="java.lang.String"/>
 	<field name="logradouro" class="java.lang.String"/>
@@ -372,7 +359,7 @@ ORDER BY nome_aluno ASC]]>
 			<staticText>
 				<reportElement x="22" y="158" width="44" height="13"/>
 				<textElement>
-					<font size="5" isBold="true"/>
+					<font size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Aluno]]></text>
 			</staticText>
@@ -442,7 +429,7 @@ ORDER BY nome_aluno ASC]]>
 				<reportElement x="497" y="157" width="1" height="15"/>
 			</line>
 			<line>
-				<reportElement x="258" y="133" width="1" height="39"/>
+				<reportElement x="218" y="133" width="1" height="39"/>
 			</line>
 			<line>
 				<reportElement x="511" y="157" width="1" height="15"/>
@@ -487,9 +474,9 @@ ORDER BY nome_aluno ASC]]>
 				<reportElement x="444" y="157" width="1" height="15"/>
 			</line>
 			<staticText>
-				<reportElement x="194" y="158" width="63" height="13"/>
+				<reportElement x="154" y="158" width="63" height="13"/>
 				<textElement>
-					<font size="5" isBold="true"/>
+					<font size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Código INEP]]></text>
 			</staticText>
@@ -538,18 +525,18 @@ ORDER BY nome_aluno ASC]]>
 				<reportElement x="15" y="156" width="775" height="1"/>
 			</line>
 			<textField>
-				<reportElement x="96" y="138" width="156" height="13"/>
+				<reportElement x="96" y="138" width="115" height="13"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$P{professor}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="751" y="158" width="35" height="13"/>
+				<reportElement x="763" y="158" width="23" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="5" isBold="false"/>
+					<font size="6" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Total Faltas]]></text>
+				<text><![CDATA[Faltas]]></text>
 			</staticText>
 			<line>
 				<reportElement x="734" y="156" width="1" height="16"/>
@@ -561,6 +548,18 @@ ORDER BY nome_aluno ASC]]>
 				<reportElement x="39" y="4" width="57" height="46"/>
 				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
 			</image>
+			<line>
+				<reportElement x="258" y="156" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="244" y="156" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="231" y="156" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="760" y="157" width="1" height="16"/>
+			</line>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -611,7 +610,7 @@ ORDER BY nome_aluno ASC]]>
 				<reportElement x="484" y="-1" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="258" y="-1" width="1" height="12"/>
+				<reportElement x="218" y="-1" width="1" height="12"/>
 			</line>
 			<line>
 				<reportElement x="497" y="-1" width="1" height="12"/>
@@ -659,9 +658,9 @@ ORDER BY nome_aluno ASC]]>
 				<reportElement x="284" y="-1" width="1" height="12"/>
 			</line>
 			<textField>
-				<reportElement x="22" y="1" width="170" height="8" forecolor="#000000"/>
+				<reportElement x="22" y="1" width="128" height="8" forecolor="#000000"/>
 				<textElement>
-					<font size="5"/>
+					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_aluno}]]></textFieldExpression>
 			</textField>
@@ -669,9 +668,9 @@ ORDER BY nome_aluno ASC]]>
 				<reportElement x="14" y="-1" width="1" height="12"/>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="194" y="1" width="61" height="8"/>
+				<reportElement x="154" y="1" width="61" height="8"/>
 				<textElement>
-					<font size="5"/>
+					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{cod_aluno_inep}]]></textFieldExpression>
 			</textField>
@@ -704,6 +703,18 @@ ORDER BY nome_aluno ASC]]>
 			</line>
 			<line>
 				<reportElement x="748" y="-1" width="1" height="12"/>
+			</line>
+			<line>
+				<reportElement x="258" y="-1" width="1" height="12"/>
+			</line>
+			<line>
+				<reportElement x="244" y="-1" width="1" height="12"/>
+			</line>
+			<line>
+				<reportElement x="231" y="-1" width="1" height="12"/>
+			</line>
+			<line>
+				<reportElement x="760" y="0" width="1" height="12"/>
 			</line>
 		</band>
 	</detail>
