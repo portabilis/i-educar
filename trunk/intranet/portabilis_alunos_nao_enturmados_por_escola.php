@@ -35,8 +35,8 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Relação de Horas Alocadas por Servidor" );
-		$this->processoAp = "999101"; //Verificar o q é?
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Alunos Não Enturmados por Escola" );
+		$this->processoAp = "999108";
 	}
 }
 
@@ -85,8 +85,8 @@ class indice extends clsCadastro
 			$this->ref_ref_cod_escola = $this->ref_cod_escola;
 
 		$get_escola = true;
-		//$get_curso = true; 
-		//$get_escola_curso_serie = true; 
+		//$get_curso = true;
+		//$get_escola_curso_serie = true;
 		//$get_turma = true;
 		$sem_padrao = true;
 		$instituicao_obrigatorio = true;
@@ -135,17 +135,12 @@ function acao2()
 }
 
 // Chamado do arquivo que ira processar o relatorio
-document.formcadastro.action = 'portabilis_servidores_horas_alocadas_proc.php';
+document.formcadastro.action = 'portabilis_alunos_nao_enturmados_por_escola_proc.php';
 
-/*document.getElementById('ref_cod_escola').onchange = function()
+document.getElementById('ref_cod_escola').onchange = function()
 {
 	getEscolaCurso();
 }
-
-document.getElementById('ref_cod_curso').onchange = function()
-{
-	getEscolaCursoSerie();
-} */
 
 </script>
 

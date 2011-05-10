@@ -21,16 +21,6 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  */
 
-/**
- * Boletim de aluno.
- *
- * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package     Core
- * @subpackage  Aluno
- * @since       Arquivo disponível desde a versão 1.0.0
- * @version     $Id: /ieducar/branches/1.1.0-avaliacao/ieducar/intranet/educar_relatorio_boletim_proc.php 398 2009-07-17T18:57:29.965182Z eriksen.paixao_bs@cobra.com.br  $
- */
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -40,6 +30,7 @@ require_once 'include/clsPDF.inc.php';
 
 
 require_once 'relatorios/phpjasperxml07d/class/fpdf/fpdf.php';
+require_once 'relatorios/phpjasperxml07d/class/tcpdf/tcpdf.php';
 require_once 'relatorios/phpjasperxml07d/class/PHPJasperXML.inc';
 
 
@@ -47,8 +38,8 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Horas Alocadas por Servidor" );
-		$this->processoAp = "999101"; //Alterar depois
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Alunos Não Enturmados por Escola" );
+		$this->processoAp = "999108";
 		$this->renderMenu = false;
 		$this->renderMenuSuspenso = false;
 	}
@@ -68,9 +59,8 @@ class indice extends clsCadastro
 
 	var $ref_cod_instituicao;
 	var $ref_cod_escola;
-	var $ref_cod_servidor;
-	var $ref_cod_serie; 
-	var $ref_cod_turma; 
+	var $ref_cod_serie;
+	var $ref_cod_turma;
 
 	var $ano;
 	var $mes;
@@ -107,6 +97,7 @@ class indice extends clsCadastro
 
 	var $numero_registros;
 	var $em_branco;
+        var $aux_cod_escola;
 
 	var $meses_do_ano = array(
 							 "1" => "JANEIRO"
@@ -128,12 +119,11 @@ class indice extends clsCadastro
 	var $mostra_cabecalho_modulo = array();
 	/****************COLOCADO********************************/
 
-
 	function renderHTML()
 	{
 	
 	
-	$xml =  simplexml_load_file("relatorios/jasperreports/portabilis_servidores_horas_alocadas.jrxml");
+	$xml =  simplexml_load_file("relatorios/jasperreports/portabilis_alunos_nao_enturmados_por_escola.jrxml");
 	
 /*
 	print "instituicao: ";
@@ -151,19 +141,19 @@ class indice extends clsCadastro
 	print "passei";
 	
 	*/
-	
-	if (($_POST['ref_cod_escola']) == 0){
+// Condicao adicionada para trazer todas as escolas ou apenas a selecionada.
+
+    if (($_POST['ref_cod_escola']) == 0){
 	  $aux_cod_escola = 0;
 	}
 	else{
 	  $aux_cod_escola = $_POST['ref_cod_escola'];
 	}
 
-	$PHPJasperXML = new PHPJasperXML();
+
+    $PHPJasperXML = new PHPJasperXML();
 	$PHPJasperXML->debugsql=false;
-	//$PHPJasperXML->arrayParameter=array("ano"=>$_POST['ano'],"instituicao"=>$_POST['ref_cod_instituicao'],"escola"=>$_POST['ref_cod_escola'],"servidor"=>$_POST['ref_cod_servidor']); 
-	$PHPJasperXML->arrayParameter=array("ano"=>$_POST['ano'],"instituicao"=>$_POST['ref_cod_instituicao'],"escola"=>$aux_cod_escola); 
-	
+    $PHPJasperXML->arrayParameter=array("ano"=>$_POST['ano'],"instituicao"=>$_POST['ref_cod_instituicao'],"escola"    =>$aux_cod_escola);
 	$PHPJasperXML->xml_dismantle($xml);
 
 	$PHPJasperXML->transferDBtoArray($server,$user,$pass,$db,$port);
@@ -177,13 +167,6 @@ class indice extends clsCadastro
 			}
 		}
 	}	
-		
-		
-		
-		
-		
-
-  
 }
 
 // cria uma extensao da classe base
@@ -195,6 +178,4 @@ $pagina->addForm( $miolo );
 // gera o html
 $pagina->MakeAll();
 
-
 ?>
-<script>

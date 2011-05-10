@@ -33,75 +33,114 @@
               endereco_pessoa.idlog = logradouro.idlog AND
               juridica.idpes = escola.ref_idpes) AS tipo_logradouro,
 
-      (SELECT logradouro.nome
-         FROM public.logradouro,
-              cadastro.juridica,
-              cadastro.pessoa ps,
-              cadastro.endereco_pessoa
-        WHERE juridica.idpes = ps.idpes AND
-              ps.idpes = endereco_pessoa.idpes AND
-              endereco_pessoa.idlog = logradouro.idlog AND
-              juridica.idpes = escola.ref_idpes) AS logradouro,
+      (SELECT CASE WHEN $P{escola} = 0 THEN
+              instituicao.logradouro
+			  ELSE
+	             (SELECT logradouro.nome
+                    FROM public.logradouro,
+                         cadastro.juridica,
+                         cadastro.pessoa ps,
+                         cadastro.endereco_pessoa
+                   WHERE juridica.idpes = ps.idpes AND
+                         ps.idpes = endereco_pessoa.idpes AND
+                         endereco_pessoa.idlog = logradouro.idlog AND
+                         juridica.idpes = escola.ref_idpes)
+			  END) AS logradouro,
 
-      (SELECT bairro.nome
-         FROM public.municipio,
-              cadastro.endereco_pessoa,
-              cadastro.juridica,
-              public.bairro
-        WHERE endereco_pessoa.idbai = bairro.idbai AND
-              bairro.idmun = municipio.idmun AND
-              juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS bairro,
+      (SELECT CASE WHEN $P{escola} = 0 THEN
+              instituicao.bairro
+			  ELSE
+		         (SELECT bairro.nome
+                    FROM public.municipio,
+                         cadastro.endereco_pessoa,
+                         cadastro.juridica,
+                         public.bairro
+                   WHERE endereco_pessoa.idbai = bairro.idbai AND
+						 bairro.idmun = municipio.idmun AND
+						 juridica.idpes = endereco_pessoa.idpes AND
+						 juridica.idpes = escola.ref_idpes)
+			  END) AS bairro,
 
-      (SELECT municipio.nome
-         FROM public.municipio,
-              cadastro.endereco_pessoa,
-              cadastro.juridica,
-              public.bairro
-        WHERE endereco_pessoa.idbai = bairro.idbai AND
-              bairro.idmun = municipio.idmun AND
-              juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS municipio,
+			(SELECT CASE WHEN $P{escola} = 0 THEN
+                 instituicao.cidade
+			 ELSE
+                   (SELECT municipio.nome
+				     FROM public.municipio,
+                          cadastro.endereco_pessoa,
+                          cadastro.juridica,
+                          public.bairro
+					WHERE endereco_pessoa.idbai = bairro.idbai AND
+						  bairro.idmun = municipio.idmun AND
+						  juridica.idpes = endereco_pessoa.idpes AND
+                          juridica.idpes = escola.ref_idpes)
+		     END)  AS municipio,
 
-      (SELECT COALESCE(endereco_pessoa.numero,0)
-         FROM cadastro.endereco_pessoa,
-              cadastro.juridica
-        WHERE juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS numero,
+      (SELECT CASE WHEN $P{escola} = 0 THEN
+                 instituicao.numero
+			  ELSE
+		         (SELECT COALESCE(endereco_pessoa.numero,0)
+                   FROM cadastro.endereco_pessoa,
+                        cadastro.juridica
+                  WHERE juridica.idpes = endereco_pessoa.idpes AND
+                        juridica.idpes = escola.ref_idpes)
+		      END) AS numero,
 
-      (SELECT municipio.sigla_uf
-         FROM public.municipio,
-              cadastro.endereco_pessoa,
-              cadastro.juridica,
-              public.bairro
-        WHERE endereco_pessoa.idbai = bairro.idbai AND
-              bairro.idmun = municipio.idmun AND
-              juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS uf_municipio,
 
-     (SELECT min(fone_pessoa.ddd)
-         FROM cadastro.fone_pessoa,
-              cadastro.juridica
-        WHERE juridica.idpes = fone_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS fone_ddd,
+	 (SELECT CASE WHEN $P{escola} = 0 THEN
+                 instituicao.ref_sigla_uf
+			 ELSE
+                (SELECT municipio.sigla_uf
+                   FROM public.municipio,
+                        cadastro.endereco_pessoa,
+                        cadastro.juridica,
+                        public.bairro
+                  WHERE endereco_pessoa.idbai = bairro.idbai AND
+                        bairro.idmun = municipio.idmun AND
+                        juridica.idpes = endereco_pessoa.idpes AND
+                        juridica.idpes = escola.ref_idpes)
+		     END)  AS uf_municipio,
 
-     (SELECT to_char(endereco_pessoa.cep, '99999-999')
-         FROM cadastro.endereco_pessoa,
-              cadastro.juridica
-        WHERE juridica.idpes = endereco_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS cep,
 
-     (SELECT min(to_char(fone_pessoa.fone, '9999-9999'))
-         FROM cadastro.fone_pessoa,
-              cadastro.juridica
-        WHERE juridica.idpes = fone_pessoa.idpes AND
-              juridica.idpes = escola.ref_idpes) AS fone,
+	 (SELECT CASE WHEN $P{escola} = 0 THEN
+                  instituicao.ddd_telefone
+			 ELSE
+		         (SELECT min(fone_pessoa.ddd)
+                    FROM cadastro.fone_pessoa,
+                         cadastro.juridica
+                   WHERE juridica.idpes = fone_pessoa.idpes AND
+                         juridica.idpes = escola.ref_idpes)
+		     END) AS fone_ddd,
 
-     (SELECT ps.email
-         FROM cadastro.pessoa ps,
-              cadastro.juridica
-        WHERE juridica.idpes = ps.idpes AND
-              juridica.idpes = escola.ref_idpes) AS email,
+
+	 (SELECT CASE WHEN $P{escola} = 0 THEN
+                  to_char(instituicao.telefone, '9999-9999')
+			 ELSE
+                 (SELECT min(to_char(fone_pessoa.fone, '9999-9999'))
+                    FROM cadastro.fone_pessoa,
+                         cadastro.juridica
+                   WHERE juridica.idpes = fone_pessoa.idpes AND
+                         juridica.idpes = escola.ref_idpes)
+		     END) AS fone,
+
+	 (SELECT CASE WHEN $P{escola} = 0 THEN
+                  to_char(instituicao.cep, '99999-999')
+			 ELSE
+                 (SELECT to_char(endereco_pessoa.cep, '99999-999')
+                    FROM cadastro.endereco_pessoa,
+                         cadastro.juridica
+                   WHERE juridica.idpes = endereco_pessoa.idpes AND
+                         juridica.idpes = escola.ref_idpes)
+		     END) AS cep,
+
+     	 (SELECT CASE WHEN $P{escola} = 0 THEN
+                 ''
+			     ELSE
+                 	(SELECT ps.email
+                       FROM cadastro.pessoa ps,
+                            cadastro.juridica
+                      WHERE juridica.idpes = ps.idpes AND
+                            juridica.idpes = escola.ref_idpes)
+		         END) AS email,
 
        to_char(CURRENT_DATE,'dd/mm/yyyy') AS data_atual,
 
@@ -109,11 +148,22 @@
 
 	servidor.cod_servidor as CodServ,
 	sa.carga_horaria as CargaHoraLoc,
-	(SELECT pessoa.nome
-          FROM cadastro.pessoa,
-               cadastro.juridica
-         WHERE escola.ref_idpes = juridica.idpes AND
-               juridica.idpes = pessoa.idpes) as nm_escola,
+
+     (SELECT CASE WHEN $P{escola} = 0 THEN
+                 ''
+			 ELSE
+                 (SELECT pessoa.nome
+                    FROM cadastro.pessoa,
+                         cadastro.juridica
+                   WHERE escola.ref_idpes = juridica.idpes AND
+                         juridica.idpes = pessoa.idpes)
+		    END) AS nm_escola,
+
+     (SELECT pessoa.nome
+                    FROM cadastro.pessoa,
+                         cadastro.juridica
+                   WHERE escola.ref_idpes = juridica.idpes AND
+                         juridica.idpes = pessoa.idpes) AS nm_escola_servidor,
 		pessoa.nome,
     	funcao.nm_funcao,
 	    	(SELECT CASE WHEN funcionario.ref_cod_funcionario_vinculo = 3 THEN 'Efetivo'
@@ -174,146 +224,93 @@
        escola_ano_letivo.ref_cod_escola = escola.cod_escola AND
        servidor.ativo = 1
 
-ORDER BY pessoa.nome]]>
+ORDER BY pessoa.nome,nm_escola_servidor]]>
 	</queryString>
-	<field name="nome_instituicao" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="cidade_instituicao" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="uf_instituicao" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="tipo_logradouro" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="logradouro" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="bairro" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="municipio" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="numero" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="uf_municipio" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="fone_ddd" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="cep" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="fone" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="email" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="data_atual" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="hora_atual" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="codserv" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="cargahoraloc" class="java.sql.Time">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nm_escola" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nome" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nm_funcao" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="situacao" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="professor" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="matricula" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="escolaridade" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="deficiencia" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="cargahorserv" class="java.lang.Double">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="periodo" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="nome_instituicao" class="java.lang.String"/>
+	<field name="cidade_instituicao" class="java.lang.String"/>
+	<field name="uf_instituicao" class="java.lang.String"/>
+	<field name="tipo_logradouro" class="java.lang.String"/>
+	<field name="logradouro" class="java.lang.String"/>
+	<field name="bairro" class="java.lang.String"/>
+	<field name="municipio" class="java.lang.String"/>
+	<field name="numero" class="java.math.BigDecimal"/>
+	<field name="uf_municipio" class="java.lang.String"/>
+	<field name="fone_ddd" class="java.math.BigDecimal"/>
+	<field name="fone" class="java.lang.String"/>
+	<field name="cep" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="data_atual" class="java.lang.String"/>
+	<field name="hora_atual" class="java.lang.String"/>
+	<field name="codserv" class="java.lang.Integer"/>
+	<field name="cargahoraloc" class="java.lang.String"/>
+	<field name="nm_escola" class="java.lang.String"/>
+	<field name="nm_escola_servidor" class="java.lang.String"/>
+	<field name="nome" class="java.lang.String"/>
+	<field name="nm_funcao" class="java.lang.String"/>
+	<field name="situacao" class="java.lang.String"/>
+	<field name="professor" class="java.lang.String"/>
+	<field name="matricula" class="java.lang.String"/>
+	<field name="escolaridade" class="java.lang.String"/>
+	<field name="deficiencia" class="java.lang.String"/>
+	<field name="cargahorserv" class="java.lang.Double"/>
+	<field name="periodo" class="java.lang.String"/>
 	<variable name="variable1" class="java.lang.String"/>
 	<variable name="variable2" class="java.lang.String"/>
 	<group name="Servidor">
 		<groupExpression><![CDATA[$F{codserv}]]></groupExpression>
 		<groupHeader>
-			<band height="17">
+			<band height="21">
 				<staticText>
-					<reportElement x="188" y="0" width="38" height="13"/>
+					<reportElement x="188" y="7" width="38" height="13"/>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Função:]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true">
-					<reportElement x="43" y="0" width="145" height="13"/>
+					<reportElement x="43" y="7" width="145" height="13"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="0" y="0" width="41" height="13"/>
+					<reportElement x="0" y="7" width="41" height="13"/>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Servidor:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="323" y="0" width="50" height="13"/>
+					<reportElement x="323" y="7" width="50" height="13"/>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Carga Hor.:]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-					<reportElement x="371" y="0" width="27" height="13"/>
+					<reportElement x="371" y="7" width="27" height="13"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{cargahorserv}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement x="459" y="0" width="94" height="13"/>
+					<reportElement x="459" y="7" width="94" height="13"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{escolaridade}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="399" y="0" width="61" height="13"/>
+					<reportElement x="399" y="7" width="61" height="13"/>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Escolaridade:]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true">
-					<reportElement x="227" y="0" width="76" height="13" isPrintWhenDetailOverflows="true"/>
+					<reportElement x="227" y="7" width="76" height="13" isPrintWhenDetailOverflows="true"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
@@ -443,13 +440,13 @@ ORDER BY pessoa.nome]]>
 		<band height="2" splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="15" splitType="Stretch">
+		<band height="14" splitType="Stretch">
 			<textField>
 				<reportElement x="220" y="0" width="239" height="13"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola_servidor}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="46" y="0" width="60" height="13"/>

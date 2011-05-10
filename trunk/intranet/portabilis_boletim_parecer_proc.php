@@ -39,16 +39,15 @@ require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/clsPDF.inc.php';
 
 
-require_once 'relatorios/phpjasperxml07d/class/fpdf/fpdf.php';
-require_once 'relatorios/phpjasperxml07d/class/PHPJasperXML.inc';
-
+require_once 'relatorios/phpjasperxml/class/fpdf/fpdf.php';
+require_once 'relatorios/phpjasperxml/class/PHPJasperXML.inc';
 
 class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Horas Alocadas por Servidor" );
-		$this->processoAp = "999101"; //Alterar depois
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Boletim Escolar - Parecer Descritivo" );
+		$this->processoAp = "999219";
 		$this->renderMenu = false;
 		$this->renderMenuSuspenso = false;
 	}
@@ -68,9 +67,9 @@ class indice extends clsCadastro
 
 	var $ref_cod_instituicao;
 	var $ref_cod_escola;
-	var $ref_cod_servidor;
-	var $ref_cod_serie; 
-	var $ref_cod_turma; 
+	var $ref_cod_serie;
+	var $ref_cod_turma;
+	var $etapa;
 
 	var $ano;
 	var $mes;
@@ -88,11 +87,12 @@ class indice extends clsCadastro
 	var $nm_disciplina;
 	var $curso_com_exame = 0;
 	var $ref_cod_matricula;
+	var $aux_cod_matricula;
 
 	var $page_y = 135;
 
-//	var $ref_cod_matricula;
 	var $nm_aluno;
+	//var $ref_cod_aluno;
 	var $array_modulos = array();
 	var $nm_curso;
 	var $get_link = false;
@@ -132,8 +132,7 @@ class indice extends clsCadastro
 	function renderHTML()
 	{
 	
-	
-	$xml =  simplexml_load_file("relatorios/jasperreports/portabilis_servidores_horas_alocadas.jrxml");
+	$xml =  simplexml_load_file("relatorios/jasperreports/portabilis_boletim_parecer.jrxml");
 	
 /*
 	print "instituicao: ";
@@ -151,20 +150,18 @@ class indice extends clsCadastro
 	print "passei";
 	
 	*/
-	
-	if (($_POST['ref_cod_escola']) == 0){
-	  $aux_cod_escola = 0;
+	//echo($_POST['ano']);
+    if (($_POST['ref_cod_matricula']) == 0){
+	  $aux_cod_matricula = 0;
 	}
 	else{
-	  $aux_cod_escola = $_POST['ref_cod_escola'];
+	  $aux_cod_matricula = $_POST['ref_cod_matricula'];
 	}
-
+	
 	$PHPJasperXML = new PHPJasperXML();
 	$PHPJasperXML->debugsql=false;
-	//$PHPJasperXML->arrayParameter=array("ano"=>$_POST['ano'],"instituicao"=>$_POST['ref_cod_instituicao'],"escola"=>$_POST['ref_cod_escola'],"servidor"=>$_POST['ref_cod_servidor']); 
-	$PHPJasperXML->arrayParameter=array("ano"=>$_POST['ano'],"instituicao"=>$_POST['ref_cod_instituicao'],"escola"=>$aux_cod_escola); 
-	
-	$PHPJasperXML->xml_dismantle($xml);
+	$PHPJasperXML->arrayParameter=array("ano"=>$_POST['ano'],"instituicao"=>$_POST['ref_cod_instituicao'],"escola"=>$_POST['ref_cod_escola'],"curso"=>$_POST['ref_cod_curso'],"serie"=>$_POST['ref_ref_cod_serie'],"turma"=>$_POST['ref_cod_turma'],"matricula"=>$aux_cod_matricula,"etapa"=>$_POST['etapa']); 
+    $PHPJasperXML->xml_dismantle($xml);
 
 	$PHPJasperXML->transferDBtoArray($server,$user,$pass,$db,$port);
 	$PHPJasperXML->outpage("I");    //page output method I:standard output  D:Download file
@@ -176,14 +173,7 @@ class indice extends clsCadastro
 				//$this->$key = $value;
 			}
 		}
-	}	
-		
-		
-		
-		
-		
-
-  
+	}  
 }
 
 // cria uma extensao da classe base
@@ -197,4 +187,3 @@ $pagina->MakeAll();
 
 
 ?>
-<script>
