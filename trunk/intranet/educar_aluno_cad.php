@@ -1749,8 +1749,8 @@ class indice extends clsCadastro
     $extensao = $img_type == 2 ? '.jpg' : (($img_type == 3) ? '.png' : '');
 
     $nome_do_arquivo       = array_pop(explode(DIRECTORY_SEPARATOR, $fotoOriginal)) . $extensao;
-    $caminhoDaBig          = __DIR__ . DIRECTORY_SEPARATOR . 'arquivos' . DIRECTORY_SEPARATOR . 'educar' . DIRECTORY_SEPARATOR . 'aluno' . DIRECTORY_SEPARATOR .'big' . DIRECTORY_SEPARATOR . $nome_do_arquivo;
-    $caminhoDaFotoOriginal = __DIR__ . DIRECTORY_SEPARATOR . 'arquivos' . DIRECTORY_SEPARATOR . 'educar' . DIRECTORY_SEPARATOR . 'aluno' . DIRECTORY_SEPARATOR . 'original' . DIRECTORY_SEPARATOR . $nome_do_arquivo;
+    $caminhoDaBig          = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'arquivos' . DIRECTORY_SEPARATOR . 'educar' . DIRECTORY_SEPARATOR . 'aluno' . DIRECTORY_SEPARATOR .'big' . DIRECTORY_SEPARATOR . $nome_do_arquivo;
+    $caminhoDaFotoOriginal = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'arquivos' . DIRECTORY_SEPARATOR . 'educar' . DIRECTORY_SEPARATOR . 'aluno' . DIRECTORY_SEPARATOR . 'original' . DIRECTORY_SEPARATOR . $nome_do_arquivo;
 
     if ($imagewidth > 700) {
       $new_w = 700;
@@ -1796,7 +1796,7 @@ class indice extends clsCadastro
     $ratio = ($imagewidth / $new_w);
     $new_h = round($imageheight / $ratio);
 
-    $caminhoDaSmall = __DIR__ . DIRECTORY_SEPARATOR . 'arquivos'. DIRECTORY_SEPARATOR . 'educar'. DIRECTORY_SEPARATOR . 'aluno'. DIRECTORY_SEPARATOR .'small' . DIRECTORY_SEPARATOR .  $nome_do_arquivo;
+    $caminhoDaSmall = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'arquivos'. DIRECTORY_SEPARATOR . 'educar'. DIRECTORY_SEPARATOR . 'aluno'. DIRECTORY_SEPARATOR .'small' . DIRECTORY_SEPARATOR .  $nome_do_arquivo;
 
     if (file_exists($caminhoDaBig)) {
       if ($img_type == 2) {
