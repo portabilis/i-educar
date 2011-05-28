@@ -3,6 +3,7 @@
 <html lang="pt">
 <head>
   <meta http-equiv='Content-Type' content='text/html; charset=ISO-8859-1' />
+  <!--meta http-equiv="Content-Type" content="text/html; charset=utf-8" /-->
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="-1" />
   <!-- #&REFRESH&# -->
@@ -13,6 +14,9 @@
   <link rel=stylesheet type='text/css' href='styles/styles.css' />
   <link rel=stylesheet type='text/css' href='styles/novo.css' />
   <link rel=stylesheet type='text/css' href='styles/menu.css' />
+  <!--link rel=stylesheet type='text/css' href='styles/reset.css' />
+  <link rel=stylesheet type='text/css' href='styles/portabilis.css' /-->
+  <link rel=stylesheet type='text/css' href='styles/min-portabilis.css' />
 
   <!-- #&ESTILO&# -->
 

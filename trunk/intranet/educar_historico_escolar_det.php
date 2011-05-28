@@ -214,6 +214,21 @@ class indice extends clsDetalhe
 			$this->addDetalhe( array( "Situa&ccedil;&atilde;o", "{$registro["aprovado"]}") );
 		}
 
+			if( $registro["registro"] )
+			{
+				$this->addDetalhe( array( "Registro (arquivo)", "{$registro["registro"]}") );
+			}
+
+			if( $registro["livro"] )
+			{
+				$this->addDetalhe( array( "Livro", "{$registro["livro"]}") );
+			}
+
+			if( $registro["folha"] )
+			{
+				$this->addDetalhe( array( "Folha", "{$registro["folha"]}") );
+			}    
+
 		$obj = new clsPmieducarHistoricoDisciplinas();
 		$obj->setOrderby("nm_disciplina ASC");
 		$lst = $obj->lista( null,$this->ref_cod_aluno,$this->sequencial );

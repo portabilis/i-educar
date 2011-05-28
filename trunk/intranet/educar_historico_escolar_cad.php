@@ -211,12 +211,17 @@ class indice extends clsCadastro
 		$this->campoCheck( "cb_faltas_globalizadas", "Faltas Globalizadas", $this->faltas_globalizadas );
 		$this->campoNumero( "faltas_globalizadas", "Faltas Globalizadas", $this->faltas_globalizadas, 4, 4, false );
 		$this->campoNumero( "dias_letivos", "Dias Letivos", $this->dias_letivos, 3, 3, true );
-		$this->campoMonetario( "frequencia", "Frequência", $this->frequencia, 8, 8, false );
+		$this->campoMonetario( "frequencia", "Frequência", $this->frequencia, 8, 8, true );
 		$this->campoCheck( "extra_curricular", "Extra-Curricular", $this->extra_curricular );
 		$this->campoMemo( "observacao", "Observa&ccedil;&atilde;o", $this->observacao, 60, 5, false );
 
 		$opcoes = array( "" => "Selecione", 1 => "Aprovado", 2 => "Reprovado", 3 => "Em Andamento", 4 => "Transferido" );
 		$this->campoLista( "aprovado", "Situa&ccedil;&atilde;o", $opcoes, $this->aprovado );
+
+		$this->campoTexto( "registro", "Registro (arquivo)", $this->registro, 30, 50, false);
+		$this->campoTexto( "livro", "Livro", $this->livro, 30, 50, false);
+		$this->campoTexto( "folha", "Folha", $this->folha, 30, 50, false);
+    
 
 	//---------------------INCLUI DISCIPLINAS---------------------//
 		$this->campoQuebra();
@@ -247,7 +252,9 @@ class indice extends clsCadastro
 
 		$this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas"),$this->historico_disciplinas);
 
-			$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false );
+    //$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', 'autoCompleteComponentesCurricular(this)', 'onfocus' );
+    $this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', 'disableAutoCompleteAndSetOnKeyUpEvent(this)', 'onfocus' );
+
 			$this->campoTexto( "nota", "Nota", $this->nota, 10, 255, false );
 			$this->campoNumero( "faltas", "Faltas", $this->faltas, 3, 3, false );
 			//$this->campoOculto("sequencial","");
@@ -284,7 +291,7 @@ class indice extends clsCadastro
 				$this->extra_curricular = 0;
 
 //				echo "clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, null, null, $this->pessoa_logada, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, null, $this->ref_cod_instituicao, 1, $this->extra_curricular )";
-			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, null, null, $this->pessoa_logada, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia );
+			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, null, null, $this->pessoa_logada, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha);
 			$cadastrou = $obj->cadastra();
 			if( $cadastrou )
 			{
@@ -352,7 +359,7 @@ class indice extends clsCadastro
 
 			if(!$this->cb_faltas_globalizadas)
 				$this->faltas_globalizadas = 'NULL';
-			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, $this->sequencial, $this->pessoa_logada, null, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia );
+			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, $this->sequencial, $this->pessoa_logada, null, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha);
 			$editou = $obj->edita();
 			
 			if( $editou )
@@ -439,6 +446,7 @@ $miolo = new indice();
 $pagina->addForm( $miolo );
 // gera o html
 $pagina->MakeAll();
+
 ?>
 
 <script type="text/javascript">
@@ -487,5 +495,100 @@ function getEstado_XML(xml)
 	}
 
 	campoEstado.disabled = false;
+}
+
+function disableAutoCompleteAndSetOnKeyUpEvent(targetElement)
+{
+  targetElement.setAttribute('autocomplete', 'off');
+
+  if (document.addEventListener)
+    targetElement.addEventListener('keyup', autoCompleteComponentesCurricular, false);
+  else
+    targetElement.attachEvent('onkeyup', autoCompleteComponentesCurricular);
+}
+
+function autoCompleteComponentesCurricular(_event)
+{
+
+  if (! _event)
+    _event = event;
+
+  targetElement = _event.srcElement || _event.target;
+
+/*  if (! targetElement.hasAttribute('old_value'))*/
+  if (! targetElement.getAttribute('old_value') && targetElement.getAttribute('value').length > 1)
+    targetElement.setAttribute('old_value', targetElement.getAttribute('value'));
+  else if (! targetElement.getAttribute('old_value'))
+    targetElement.setAttribute('old_value', '');
+
+  if (targetElement.value != targetElement.getAttribute('old_value'))
+    targetElement.value = targetElement.value.replace(/^\s+/,'');  
+
+  if (! targetElement.value.length || targetElement.value != targetElement.getAttribute('old_value'))
+  {
+    var minLength = 0;
+    var className = 'auto_complete_componente_curricular';
+
+    var listsComponentes = document.getElementsByClassName(className);
+    for (var i = 0; i < listsComponentes.length; i++)
+    {
+      listsComponentes[i].parentNode.removeChild(listsComponentes[i]);
+    }
+
+    if (targetElement.value.length && targetElement.value.length >= minLength)
+    {    
+      var instituicaoId = document.getElementById('ref_cod_instituicao').value;
+      var word = targetElement.value;
+      var limit = 15;
+
+      targetElement.setAttribute('old_value', targetElement.value);
+      var url = "portabilis_auto_complete_componente_curricular_xml.php?instituicao_id="+instituicaoId+"&limit="+limit+"&word="+word+"&target_element_id="+targetElement.id+"&element_class_name="+className;
+      //alert(url);
+      new ajax(createListAutoComplete).envia(url);
+    }
+  }
+}
+
+function createListAutoComplete(xml)
+{
+	var entity = xml.documentElement.getAttribute('entity');
+  var targetElementId = xml.documentElement.getAttribute('target_element_id');
+  var className = xml.documentElement.getAttribute('element_class_name');
+
+  var targetElement = document.getElementById(targetElementId);
+
+  var listComponentes = document.createElement('ul');
+  listComponentes.className = className + ' autocomplete';    
+
+	var items = xml.getElementsByTagName(entity);
+  for (var i = 0; i < items.length; i++)
+  {
+    var _i = document.createElement('li');
+    _i.innerHTML = items[i].getAttribute('value');
+    _i.id = entity + ':' + items[i].getAttribute('id');
+    _i.onclick = function(){targetElement.value = this.innerHTML; /*if (this.parentNode.childElementCount == 1){*/ this.parentNode.style.display='none';/*} this.remove();*/};
+
+    /*
+    if (el.addEventListener){
+      el.addEventListener('click', modifyText, false); 
+    } else if (el.attachEvent){
+      el.attachEvent('onclick', modifyText);
+    }
+    */
+
+    listComponentes.appendChild(_i);
+  }
+  if (! items.length)
+  {
+      var _i = document.createElement('li');
+      _i.innerHTML = 'Sem sugestões para "' + targetElement.value + '"';
+  }
+  
+  listComponentes.appendChild(_i);
+
+  //TODO criar estilo para lista / itens, (remover bullets, margin / padding 0, onhover change color
+  //TODO call ajax / in callback function criar itens / append in list
+
+  targetElement.parentNode.appendChild(listComponentes);
 }
 </script>
