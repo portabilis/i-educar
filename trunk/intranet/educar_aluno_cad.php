@@ -254,10 +254,28 @@ class indice extends clsCadastro
     }
 
     if (!$this->cod_aluno) {
-      $this->campoAdicionaTab('CPF', $this->tab_habilitado);
+  		$obj_permissao = new clsPermissoes();
+		  if($obj_permissao->permissao_cadastra(578, $this->pessoa_logada,7))
+		  {
+			  $onClick = "document.getElementById(\"cpf\").disabled = true;
+						     document.getElementById(\"cpf_\").value = \"\";
+						     document.getElementById(\"cpf_2\").disabled = true; 
+						     document.getElementById(\"cpf_2\").value = \"\"; 
+						     document.getElementById(\"ref_idpes\").value = \"\"; 
+						     document.getElementById(\"cpf\").value = \"\";
+						     document.getElementById(\"cpf\").disabled = true;
+						     document.getElementById(\"cpf\").value = \"\";
+						     document.getElementById(\"bloqueado\").value = \"0\";
+						     passaPagina();
+                ";
+        $botaoNovoSemCpf = "<input id='btn_cad_aluno_sem_cpf' type='button' onclick='$onClick' value='Cadastrar aluno sem CPF' />";
+		  }
+
+
+      $this->campoAdicionaTab('Buscar por CPF', $this->tab_habilitado);
       $opcoes = array('' => 'Pesquise a pessoa clicando na lupa ao lado');
       $this->campoCpf('cpf_', 'CPF', $cpf, FALSE,
-        '<img border="0" onclick="pesquisa_valores_popless(\'educar_pesquisa_aluno_lst2.php?campo1=ref_idpes&campo3=cpf&campo4=cpf_\', \'nome\')" src="imagens/lupa.png">');
+        '<img border="0" onclick="pesquisa_valores_popless(\'educar_pesquisa_aluno_lst2.php?campo1=ref_idpes&campo3=cpf&campo4=cpf_\', \'nome\')" src="imagens/lupa.png" /> '. $botaoNovoSemCpf);
     }
 
     $this->campoOculto('ref_idpes', $this->ref_idpes);
@@ -2289,5 +2307,9 @@ function transporteResponsavel()
   else {
     obj2.disabled = true;
   }
+
+  var b = document.getElementById('btn_cad_aluno_sem_cpf');
+  if (b) b.click();
+
 }
 </script>
