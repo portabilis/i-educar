@@ -391,7 +391,7 @@ ORDER BY nm_escola, nm_aluno, data_ocorrencia]]>
 			</textField>
 			<image>
 				<reportElement x="22" y="4" width="57" height="46"/>
-				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ararangua/intranet/imagens/brasao.jpg"]]></imageExpression>
+				<imageExpression class="java.lang.String"><![CDATA["imagens/brasao.jpg"]]></imageExpression>
 			</image>
 			<elementGroup/>
 			<elementGroup/>

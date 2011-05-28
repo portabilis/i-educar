@@ -1318,7 +1318,7 @@ ORDER BY 1 ASC]]>
 			</textField>
 			<image>
 				<reportElement x="11" y="7" width="57" height="46"/>
-				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
+				<imageExpression class="java.lang.String"><![CDATA["imagens/brasao.jpg"]]></imageExpression>
 			</image>
 			<textField isBlankWhenNull="true">
 				<reportElement x="72" y="55" width="296" height="13"/>

@@ -328,7 +328,7 @@ ORDER BY nome_turma, nome_aluno]]>
 		<band height="155" splitType="Stretch">
 			<image>
 				<reportElement x="4" y="6" width="57" height="46"/>
-				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
+				<imageExpression class="java.lang.String"><![CDATA["imagens/brasao.jpg"]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement x="65" y="6" width="240" height="13"/>

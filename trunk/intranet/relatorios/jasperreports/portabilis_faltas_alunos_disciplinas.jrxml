@@ -396,7 +396,7 @@ ORDER BY nm_serie, nm_turma]]>
 			</staticText>
 			<image>
 				<reportElement x="33" y="4" width="57" height="46"/>
-				<imageExpression class="java.lang.String"><![CDATA["/home/portabilis/www/ieducar/intranet/imagens/brasao.jpg"]]></imageExpression>
+				<imageExpression class="java.lang.String"><![CDATA["imagens/brasao.jpg"]]></imageExpression>
 			</image>
 			<textField isBlankWhenNull="true">
 				<reportElement x="102" y="16" width="278" height="13"/>
