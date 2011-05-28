@@ -51,6 +51,9 @@
 	if (! isset($exibe_campo_lista_curso_escola))
 		$exibe_campo_lista_curso_escola = true;
 
+  if (! isset($verificar_campos_obrigatorios))
+    $verificar_campos_obrigatorios = false;
+
 	if ($obrigatorio)
 	{
 		$instituicao_obrigatorio = $escola_obrigatorio = $curso_obrigatorio = $escola_curso_obrigatorio = $escola_curso_serie_obrigatorio = $serie_obrigatorio = $biblioteca_obrigatorio = $cliente_tipo_obrigatorio = $funcao_obrigatorio = $turma_obrigatorio = $componente_curricular_obrigatorio = $etapa_obrigatorio = true;
@@ -95,6 +98,8 @@
 
  	$obj_permissoes = new clsPermissoes();
  	$nivel_usuario = $obj_permissoes->nivel_acesso($pessoa_logada);
+
+  $user = isset($user) ? $user : new User();
 
  	//Se administrador
 	if( $nivel_usuario == 1 || $cad_usuario )
@@ -155,7 +160,7 @@
 		//se eh institucional - admin
 		if ($nivel_usuario == 4 || $nivel_usuario == 8)
 		{
-      if (! $listar_escolas_alocacao_professor)
+      if (! $listar_escolas_alocacao_professor || ($listar_escolas_alocacao_professor && ! $user->isProfessor()))
       {
 			  $this->ref_cod_escola = $det_usuario["ref_cod_escola"];
 			  $this->campoOculto( "ref_cod_escola", $this->ref_cod_escola );
@@ -176,13 +181,12 @@
 	}
 
 	//                    administrador          institucional - CPD
-	if ( $get_escola && ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario || $listar_escolas_alocacao_professor))
+	if ( $get_escola && ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario || ($listar_escolas_alocacao_professor && $user->isProfessor())))
 	{
 		$opcoes_escola = array( "" => "Selecione uma escola" );
 		// EDITAR
 		if ($this->ref_cod_instituicao)
 		{
-      $user = isset($user) ? $user : new User();
       if ($listar_escolas_alocacao_professor && $user->isProfessor())
       {
         $_professor = isset($_professor) ? $_professor : new Professor($user->userId);
@@ -1434,6 +1438,45 @@ function updateSelect(xml)
       $this->appendOutput("<script type='text/javascript'>afterUpdateSelect.push({entity:'ano_escolar', _functions:[{_function:getComponenteCurricular, _args:[$this->ref_cod_componente_curricular]}]});</script>");
     }
 } ?>
+
+<?php
+	if ($verificar_campos_obrigatorios)
+	{
+  
+    $s = <<<EOT
+<script>
+var __bSubmit = document.getElementById('btn_enviar');
+if (! __bSubmit)
+  var __bSubmit = document.getElementById('botao_busca');
+
+if (__bSubmit)
+{
+
+  var __old_event = __bSubmit.onclick;
+  __bSubmit.onclick = function()
+  {
+    var __not_empty_fields = document.getElementsByClassName('obrigatorio');
+    var __all_filled = true;
+    for (var i = 0; i < __not_empty_fields.length; i++)
+    {
+    if (! __not_empty_fields[i].value)
+    {
+      var __all_filled = false;
+      break;
+    }
+    }
+    if (! __all_filled)
+    alert('Selecione um valor em todos os campos, antes de continuar.');
+    else
+    {
+    __old_event();
+    }
+  }
+} </script>
+EOT;
+  $this->appendOutput($s);
+} 
+?>
 
 </script>
 

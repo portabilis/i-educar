@@ -81,7 +81,6 @@ class DiarioController extends Core_Controller_Page_ListController
 
   public function Gerar()
   {
-
     $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
     if ($this->ref_cod_aluno)
     {
@@ -173,19 +172,23 @@ class DiarioController extends Core_Controller_Page_ListController
         $ref_cod_escola = '';
         $nm_escola    = '';
 
-
-        $headers = array(
-          "Matr&iacute;cula",
-          "Aluno",
-          "Situa&ccedil;&atilde;o",
-          "Nota",
-          "Falta *");
-
         foreach ($alunos as $aluno) {
           $service = new Avaliacao_Service_Boletim(array(
             'matricula' =>   $aluno['ref_cod_matricula'],
             'usuario'   => $this->getSession()->id_pessoa
         ));
+
+        $headers = array(
+          "Matr&iacute;cula",
+          "Aluno",
+          "Situa&ccedil;&atilde;o");
+
+        if ($service->getRegra()->get('tipoNota') != RegraAvaliacao_Model_Nota_TipoValor::NENHUM)
+        {
+          $headers[] ="Nota";
+        }
+  
+        $headers[] =   "Falta *";
 
         // Itens a mostrar na listagem de alunos
         $listagem_alunos = array();
@@ -197,34 +200,39 @@ class DiarioController extends Core_Controller_Page_ListController
               $service->getSituacaoComponentesCurriculares()->componentesCurriculares[$this->ref_cod_componente_curricular]->situacao);
 
         $listagem_alunos[] = sprintf('<span id="situacao-matricula:%s">%s</span>',   $aluno['ref_cod_matricula'],$situacao);
-        $onChangeSelectNota = sprintf("setAtt(att='nota', matricula=%s, etapa=%s, componente_curricular=%s);",
-                          $aluno['ref_cod_matricula'], $this->etapa, $this->ref_cod_componente_curricular);
-        // Valores de arredondamento
-        $valoresArredondamento = $service->getRegra()->tabelaArredondamento->findTabelaValor();
-        $valores = array();
-        foreach ($valoresArredondamento as $valor) {
-          if ($service->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
-            $valores[(string) $valor->nome] = $valor->nome;
-          }
-          else {
-            $valores[(string) $valor->valorMaximo] = $valor->nome . ' (' . $valor->descricao .  ')';
-          }
-        }
-        $_notaAtual = urldecode($service->getNotaComponente($this->ref_cod_componente_curricular, $this->etapa)->nota);
-        $_notaAtual = str_replace(',', '.', $_notaAtual);
-        $notas = "<option></option>";
-        foreach ($valores as $k => $v) {
-          $k = str_replace(',', '.', urldecode($k));
-          if ($_notaAtual > -1 && $k == $_notaAtual)
-          {
-            $notas .= "\n<option value='$k' selected='selected'>$v</option>";
-          }
-          else
-          $notas .= "\n<option value='$k'>$v</option>";
-        }
-        $listagem_alunos[] = sprintf('<select id="nota-matricula:%s" class="notas" onchange="%s">%s</select>',
-                  $aluno['ref_cod_matricula'], $onChangeSelectNota, $notas);
 
+        if ($service->getRegra()->get('tipoNota') != RegraAvaliacao_Model_Nota_TipoValor::NENHUM)
+        {
+
+          $onChangeSelectNota = sprintf("setAtt(att='nota', matricula=%s, etapa=%s, componente_curricular=%s);",
+                            $aluno['ref_cod_matricula'], $this->etapa, $this->ref_cod_componente_curricular);
+          // Valores de arredondamento
+          $valoresArredondamento = $service->getRegra()->tabelaArredondamento->findTabelaValor();
+          $valores = array();
+          foreach ($valoresArredondamento as $valor) {
+            if ($service->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
+              $valores[(string) $valor->nome] = $valor->nome;
+            }
+            else {
+              $valores[(string) $valor->valorMaximo] = $valor->nome . ' (' . $valor->descricao .  ')';
+            }
+          }
+
+          $_notaAtual = urldecode($service->getNotaComponente($this->ref_cod_componente_curricular, $this->etapa)->nota);
+          $_notaAtual = str_replace(',', '.', $_notaAtual);
+          $notas = "<option></option>";
+          foreach ($valores as $k => $v) {
+            $k = str_replace(',', '.', urldecode($k));
+            if ($_notaAtual > -1 && $k == $_notaAtual)
+            {
+              $notas .= "\n<option value='$k' selected='selected'>$v</option>";
+            }
+            else
+            $notas .= "\n<option value='$k'>$v</option>";
+          }
+          $listagem_alunos[] = sprintf('<select id="nota-matricula:%s" class="notas" onchange="%s">%s</select>',
+                    $aluno['ref_cod_matricula'], $onChangeSelectNota, $notas);
+        }
 
         $onChangeSelectFalta = sprintf("setAtt(att='falta', matricula=%s, etapa=%s, componente_curricular=%s);",
                       $aluno['ref_cod_matricula'], $this->etapa, $this->ref_cod_componente_curricular);
@@ -272,7 +280,7 @@ class DiarioController extends Core_Controller_Page_ListController
           }
 
           $listagem_alunos[] = sprintf('<textarea id="parecer-matricula:%s" class="parecer" onchange="%s" cols="40" rows="10">%s</textarea>',
-                        $aluno['ref_cod_matricula'], $onChangeParecer, $parecer);
+                        $aluno['ref_cod_matricula'], $onChangeParecer, utf8_decode($parecer));
         }
 
         $listagem_alunos[] = sprintf('<span id="status_alteracao-matricula:%s"</spam>',   $aluno['ref_cod_matricula']);
@@ -298,13 +306,13 @@ class DiarioController extends Core_Controller_Page_ListController
     }
     else
     {
-      $this->rodape = "N&atilde;o est&aacute; sendo listado as informa&ccedil;&otilde;es que voc&ecirc; espera ? solicite a(o) secret&aacute;rio(a) da escola que verifique a aloca&ccedil;&atilde;o do seu usu&aacute;rio.";
+      $this->rodape = "<strong>N&atilde;o est&aacute; sendo listado as op&ccedil;&otilde;es de filtro que voc&ecirc; espera ?</strong> solicite a(o) secret&aacute;rio(a) da escola que verifique a aloca&ccedil;&atilde;o do seu usu&aacute;rio.";
     }
-
-
 
     $this->largura = '100%';
     $a = <<<EOT
+
+
 
         <style type="text/css">
           #formcadastro #nm_aluno, #formcadastro select {
@@ -317,6 +325,8 @@ class DiarioController extends Core_Controller_Page_ListController
         </style>
 
         <script type="text/javascript">
+
+            document.getElementById('botao_busca').value = 'Carregar';
 
             function pesquisa_aluno()
             {
@@ -341,6 +351,16 @@ class DiarioController extends Core_Controller_Page_ListController
                 alert('Selecione um valor em todos os campos, antes de continuar.');
               else
               {
+                __bBusca.disable();
+                __bBusca.value = 'Carregando...';
+                var form = document.getElementById('form_resultado');
+                var parent = form.parentNode;
+                form.remove();                                
+                t = document.createElement('p');
+                t.align = 'center';
+                //t.textContent = 'Por favor aguarde, carregando dados...'; 
+
+                parent.appendChild(t);
                 __old_event();
                 //__bBusca.onclick = __old_event;
                 //__bBusca.click(); bug no ie ?
@@ -377,6 +397,9 @@ class DiarioController extends Core_Controller_Page_ListController
 
 
             document.getElementById('ref_cod_curso').onchange = function()
+
+
+
             {
               clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId = false);
               clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
@@ -425,7 +448,11 @@ class DiarioController extends Core_Controller_Page_ListController
             {
               var attElement = document.getElementById(att + '-matricula:' + matricula);
               var attValue = attElement.value;
-              if (attValue.length)
+
+              //fix for bug in service boletim
+              if (att == 'parecer' && ((/^\d+\.\d+$/.test(attValue)) || (/^\d+$/.test(attValue)) || (/^\.\d+$/.test(attValue)) || (/^\d+\.$/.test(attValue))))
+                document.getElementById('status_alteracao-matricula:' + matricula).innerHTML = '<span class="error" style="color: red;">Informe pelo menos uma letra.</span>';
+              else if (attValue.length)
               {
                 var _c = ['notas', 'faltas', 'parecer'];
                 for (var i = 0; i < _c.length; i++)
@@ -503,7 +530,6 @@ class DiarioController extends Core_Controller_Page_ListController
               }
             }
           }
-
         </script>
 EOT;
 
