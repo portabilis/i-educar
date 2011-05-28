@@ -110,6 +110,7 @@ class indice extends clsListagem
 
 		$lista_busca = array(
 			"Turma",
+      "Turno",
 			"S&eacute;rie",
 			"Curso"
 		);
@@ -251,6 +252,17 @@ class indice extends clsListagem
 				$lista_busca = array(
 					"<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$registro["nm_turma"]}</a>"
 				);
+
+        if ($registro["turma_turno_id"])
+        {
+          require_once 'include/pmieducar/clsPortabilisTurmaTurno.inc.php';
+         
+          $t = new clsPortabilisTurmaTurno($registro['ref_cod_instituicao'], $registro["turma_turno_id"]);
+          $turno = $t->select();
+				  $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$turno[0]['nm_turno']}</a>";        
+        }
+        else
+				  $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\"></a>";        
 
 				if ($registro["nm_serie"])
 					$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$registro["nm_serie"]}</a>";
