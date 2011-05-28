@@ -569,7 +569,10 @@ class clsBase extends clsConfig
           // senha vai expirar dentro de 10 dias
           $expirando = TRUE;
           $days_left = $tempo_senha - (int)((time() - strtotime( $data_senha )) / 86400);
-          $mensagem_expirar = "Sua senha expirará em $days_left dias, atualize sua senha em 'Meus dados' no menu 'Principal' !";
+          if ($days_left > 0)
+            $mensagem_expirar = "Sua senha expirará em $days_left dias, atualize sua senha em 'Meus dados' no menu 'Principal' !";
+          else
+            $mensagem_expirar = "Sua senha expirou, por favor atualize sua senha para continuar utilizando o sistema";
           $mensagem_expirar .= "<script>showExpansivelIframe(800, 270, 'troca_senha_pop.php', 1);</script>";
         }
       }

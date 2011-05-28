@@ -162,7 +162,11 @@ class clsControlador
               if (!empty($tempo_senha) && ! empty($data_senha)) {
                 if (time() - strtotime($data_senha) > $tempo_senha * 60 * 60 * 24) {
                   // Senha expirada, pede que mude a senha
-                  die("<html><body><form id='reenvio' name='reenvio' action='usuario_trocasenha.php' method='POST'><input type='hidden' name='cod_pessoa' value='{$id_pessoa}'></form></body><script>document.getElementById('reenvio').submit();</script></html>");
+                  //die("<html><body><form id='reenvio' name='reenvio' action='usuario_trocasenha.php' method='POST'><input type='hidden' name='cod_pessoa' value='{$id_pessoa}'></form></body><script>document.getElementById('reenvio').submit();</script></html>");
+               // echo("<script>showExpansivelIframe(800, 270, 'troca_senha_pop.php', 1);</script>");
+
+                echo("<script type='text/javascript'>alert('Sua senha expirou, por favor atualize sua senha para continuar utilizando o sistema.')</script>");              
+
                 }
               }
 
