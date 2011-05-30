@@ -12,15 +12,6 @@
 	<parameter name="escola" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
-	<parameter name="curso" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
-	</parameter>
-	<parameter name="serie" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
-	</parameter>
-	<parameter name="turma" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
-	</parameter>
 	<parameter name="aluno" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
@@ -29,11 +20,19 @@
        fcn_upper(instituicao.nm_responsavel) AS nm_responsavel,
        escola.cod_escola as cod_escola,
        escola_ano_letivo.ano,
-       fcn_upper(curso.nm_curso) as nm_curso,
-       serie.nm_serie as nm_serie,
-       fcn_upper(turma.nm_turma) as nm_turma,
        aluno.cod_aluno as cod_aluno,
        matricula.cod_matricula as cod_matricula,
+       (SELECT public.fcn_upper(curso.nm_curso)
+	      FROM pmieducar.curso
+		WHERE  curso.cod_curso = matricula.ref_cod_curso) as nm_curso,
+       (SELECT serie.nm_serie
+	      FROM pmieducar.serie
+		 WHERE serie.cod_serie = matricula.ref_ref_cod_serie) as nm_serie,
+       (SELECT turma.nm_turma
+	      FROM pmieducar.turma,
+                   pmieducar.matricula_turma
+		 WHERE turma.cod_turma = matricula_turma.ref_cod_turma and
+		       matricula_turma.ref_cod_matricula = matricula.cod_matricula) as nm_turma,
        fcn_upper(pessoa.nome) as nome,
        fcn_upper(instituicao.cidade) as cidade,
        to_char(CURRENT_DATE,'dd/mm/yyyy') as data_atual,
@@ -141,57 +140,47 @@
 
        to_char(current_date,'dd/mm/yyyy') AS data_atual,
        to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual
-
   FROM pmieducar.aluno,
        pmieducar.matricula,
        cadastro.fisica,
        cadastro.pessoa,
        pmieducar.instituicao,
        pmieducar.escola,
-       pmieducar.matricula_turma,
-       pmieducar.turma,
-       pmieducar.serie,
-       pmieducar.curso,
-       pmieducar.escola_serie,
        pmieducar.escola_ano_letivo
 
  WHERE escola_ano_letivo.ano = $P{ano} AND
        instituicao.cod_instituicao = $P{instituicao} AND
        escola.cod_escola = $P{escola} AND
-       curso.cod_curso = $P{curso} AND
-       serie.cod_serie = $P{serie} AND
-       turma.cod_turma = $P{turma} AND
-       matricula.cod_matricula= $P{aluno} AND
+       matricula.cod_matricula = (SELECT MAX(cod_matricula)
+	                                 from pmieducar.matricula mt,
+									      pmieducar.aluno al
+								    where mt.ref_cod_aluno = matricula.ref_cod_aluno AND
+									      aluno.cod_aluno = $P{aluno}  AND
+										  mt.ano = matricula.ano AND
+										  mt.ref_ref_cod_escola = matricula.ref_ref_cod_escola AND
+										  mt.ref_ref_cod_serie = matricula.ref_ref_cod_serie AND
+										  mt.ativo  = 1 AND
+										  mt.ultima_matricula = 1) AND
        pessoa.idpes = fisica.idpes AND
        fisica.idpes = aluno.ref_idpes AND
        aluno.cod_aluno = matricula.ref_cod_aluno AND
-       matricula.ref_cod_curso = curso.cod_curso AND
        matricula.ref_cod_aluno = aluno.cod_aluno AND
-       serie.ref_cod_curso = curso.cod_curso AND
-       curso.ref_cod_instituicao = instituicao.cod_instituicao AND
        escola.ref_cod_instituicao = instituicao.cod_instituicao AND
-       matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
-       matricula_turma.ref_cod_turma = turma.cod_turma AND
-       serie.ref_cod_curso = curso.cod_curso AND
-       escola_serie.ref_cod_escola = escola.cod_escola AND
        escola_ano_letivo.ref_cod_escola = escola.cod_escola AND
-       escola_serie.ref_cod_serie = serie.cod_serie AND
-       turma.ref_ref_cod_escola = escola_serie.ref_cod_escola AND
-       turma.ref_ref_cod_serie = escola_serie.ref_cod_serie AND
        matricula.ano = escola_ano_letivo.ano AND
-       instituicao.ativo = 1 AND
+       matricula.ativo  = 1 AND
        escola.ativo = 1 AND
-       matricula.ativo = 1]]>
+       instituicao.ativo = 1]]>
 	</queryString>
 	<field name="nm_instituicao" class="java.lang.String"/>
 	<field name="nm_responsavel" class="java.lang.String"/>
 	<field name="cod_escola" class="java.lang.Integer"/>
 	<field name="ano" class="java.lang.Integer"/>
+	<field name="cod_aluno" class="java.lang.Integer"/>
+	<field name="cod_matricula" class="java.lang.Integer"/>
 	<field name="nm_curso" class="java.lang.String"/>
 	<field name="nm_serie" class="java.lang.String"/>
 	<field name="nm_turma" class="java.lang.String"/>
-	<field name="cod_aluno" class="java.lang.Integer"/>
-	<field name="cod_matricula" class="java.lang.Integer"/>
 	<field name="nome" class="java.lang.String"/>
 	<field name="cidade" class="java.lang.String"/>
 	<field name="data_atual" class="java.lang.String"/>
@@ -241,16 +230,6 @@
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["Atestamos para os defidos fins que o(a) aluno(a): "+$F{nome}+" com o código nº: "+$F{cod_aluno}+" filho(a) de "+$F{nm_mae}+" e de "+$F{nm_pai}+" nascido(a) em "+$F{data_nasc}+", natural de "+$F{municipio_uf_nascimento}+", admitido em "+$F{dt_matricula}+", está regularmente matriculado(a) no ano de "+$F{matricula_ano}+" no curso: "+$F{nm_curso}+" no(a) ano/série: "+$F{nm_serie}+" e requereu nesta data sua transferência, sendo que a mesma será fornecida no prazo de 30 dias."]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="304" y="644" width="207" height="13"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[Secretário(a)]]></text>
-			</staticText>
-			<line>
-				<reportElement x="302" y="641" width="208" height="1"/>
-			</line>
 			<textField isBlankWhenNull="true">
 				<reportElement x="80" y="40" width="307" height="13"/>
 				<textElement>
@@ -315,14 +294,14 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_responsavel}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="37" y="641" width="208" height="1"/>
+				<reportElement x="164" y="641" width="208" height="1"/>
 			</line>
 			<staticText>
-				<reportElement x="38" y="644" width="207" height="13"/>
+				<reportElement x="165" y="644" width="207" height="13"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Diretor(a)]]></text>
+				<text><![CDATA[Assinatura]]></text>
 			</staticText>
 			<image>
 				<reportElement x="13" y="4" width="57" height="46"/>

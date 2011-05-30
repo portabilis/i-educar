@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_boletim_parecer" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_boletim_parecer" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.9487171000000043"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -223,7 +223,7 @@ MAX(componente_curricular_id) AS componente_curricular_id
                 ELSE 'Reclassificado'
                 END) AS situacao,
 
-		(SELECT pessoa.nome
+		(SELECT public.fcn_upper(pessoa.nome)
            FROM cadastro.pessoa,
                 cadastro.fisica,
                 pmieducar.aluno
@@ -276,7 +276,7 @@ MAX(componente_curricular_id) AS componente_curricular_id
     (SELECT sum(to_number(componente_curricular_ano_escolar.carga_horaria,'999'))
        FROM modules.componente_curricular_ano_escolar
      WHERE componente_curricular_ano_escolar.componente_curricular_id = parecer_componente_curricular.componente_curricular_id) AS carga_horaria,
-parecer_componente_curricular.parecer AS parecer,
+     convert(parecer_componente_curricular.parecer using utf8_to_iso_8859_1) AS parecer,
 parecer_componente_curricular.componente_curricular_id AS componente_curricular_id
 
         FROM pmieducar.matricula,
@@ -292,6 +292,7 @@ parecer_componente_curricular.componente_curricular_id AS componente_curricular_
              parecer_componente_curricular.parecer_aluno_id = parecer_aluno.id AND
              parecer_aluno.matricula_id = matricula.cod_matricula AND
              parecer_componente_curricular.etapa = $P{etapa} AND
+             matricula_turma.ativo = 1 AND
           (SELECT CASE WHEN $P{matricula} = 0 THEN
                    matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
  		           matricula_turma.ref_cod_turma = $P{turma}
@@ -353,7 +354,7 @@ ORDER BY matricula_id]]>
 	<pageHeader>
 		<band height="153" splitType="Stretch">
 			<rectangle>
-				<reportElement x="12" y="3" width="532" height="59"/>
+				<reportElement x="12" y="3" width="780" height="59"/>
 			</rectangle>
 			<textField isBlankWhenNull="true">
 				<reportElement x="426" y="32" width="66" height="15"/>
@@ -517,21 +518,14 @@ ORDER BY matricula_id]]>
 				<text><![CDATA[DISCIPLINA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="163" y="131" width="196" height="14"/>
+				<reportElement x="162" y="131" width="196" height="14"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Parecer Descritivo]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="459" y="127" width="9" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[F]]></text>
-			</staticText>
 			<line>
-				<reportElement x="543" y="62" width="1" height="91"/>
+				<reportElement x="791" y="62" width="1" height="91"/>
 			</line>
 			<line>
 				<reportElement x="12" y="62" width="1" height="91"/>
@@ -543,13 +537,13 @@ ORDER BY matricula_id]]>
 				<reportElement x="429" y="62" width="1" height="31"/>
 			</line>
 			<line>
-				<reportElement x="13" y="93" width="530" height="1"/>
+				<reportElement x="13" y="93" width="778" height="1"/>
 			</line>
 			<line>
-				<reportElement x="13" y="125" width="530" height="1"/>
+				<reportElement x="13" y="125" width="778" height="1"/>
 			</line>
 			<line>
-				<reportElement x="470" y="126" width="1" height="26"/>
+				<reportElement x="716" y="126" width="1" height="26"/>
 			</line>
 			<line>
 				<reportElement x="341" y="62" width="1" height="63"/>
@@ -558,24 +552,24 @@ ORDER BY matricula_id]]>
 				<reportElement x="160" y="125" width="1" height="27"/>
 			</line>
 			<line>
-				<reportElement x="14" y="152" width="529" height="1"/>
+				<reportElement x="14" y="152" width="777" height="1"/>
 			</line>
 			<staticText>
-				<reportElement x="508" y="127" width="34" height="11"/>
+				<reportElement x="755" y="127" width="34" height="11"/>
 				<textElement textAlignment="Center">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Freq. %]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="471" y="127" width="35" height="11"/>
+				<reportElement x="717" y="127" width="35" height="11"/>
 				<textElement textAlignment="Center">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Faltas]]></text>
 			</staticText>
 			<line>
-				<reportElement x="507" y="125" width="1" height="27"/>
+				<reportElement x="753" y="125" width="1" height="27"/>
 			</line>
 			<image>
 				<reportElement x="22" y="9" width="57" height="46"/>
@@ -589,22 +583,19 @@ ORDER BY matricula_id]]>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="476" y="139" width="26" height="11"/>
+				<reportElement x="722" y="139" width="26" height="11"/>
 				<textElement textAlignment="Center">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas}]]></textFieldExpression>
 			</textField>
-			<line>
-				<reportElement x="457" y="126" width="1" height="26"/>
-			</line>
 		</band>
 	</pageHeader>
 	<columnHeader>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="18" splitType="Stretch">
+		<band height="17" splitType="Stretch">
 			<textField isBlankWhenNull="true">
 				<reportElement x="16" y="1" width="142" height="15"/>
 				<textElement>
@@ -616,65 +607,48 @@ ORDER BY matricula_id]]>
 				<reportElement x="160" y="-1" width="1" height="17"/>
 			</line>
 			<line>
-				<reportElement x="13" y="16" width="530" height="1"/>
+				<reportElement x="13" y="16" width="778" height="1"/>
 			</line>
 			<line>
 				<reportElement x="12" y="-1" width="1" height="17"/>
 			</line>
 			<line>
-				<reportElement x="543" y="-1" width="1" height="17"/>
+				<reportElement x="791" y="-1" width="1" height="17"/>
 			</line>
 			<line>
-				<reportElement x="470" y="-1" width="1" height="17"/>
+				<reportElement x="716" y="-1" width="1" height="17"/>
 			</line>
 			<line>
-				<reportElement x="507" y="-1" width="1" height="17"/>
+				<reportElement x="753" y="-1" width="1" height="17"/>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="512" y="-14" width="26" height="11"/>
+				<reportElement x="758" y="-14" width="26" height="11"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Double"><![CDATA[$F{frequencia}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="459" y="-14" width="9" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et1}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="459" y="1" width="9" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$F{faltas_componente_et1}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="476" y="1" width="26" height="15"/>
+				<reportElement x="722" y="1" width="26" height="15"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_componente}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="163" y="1" width="292" height="15"/>
+				<reportElement x="162" y="1" width="553" height="15"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{parecer}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="512" y="-14" width="26" height="11"/>
+				<reportElement x="758" y="-14" width="26" height="11"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{frequencia_componente}]]></textFieldExpression>
 			</textField>
-			<line>
-				<reportElement x="457" y="-1" width="1" height="17"/>
-			</line>
 		</band>
 	</detail>
 	<columnFooter>

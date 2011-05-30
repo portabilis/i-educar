@@ -145,16 +145,12 @@ class indice extends clsCadastro
 	print $_POST['ref_ref_cod_serie'];
 	print "aluno: ";
 	print $_POST['nm_aluno'];
-	print $_POST['ano'];
-	print $_POST['data_validade'];
-	print "passei";
-	
 	*/
 	
 
 	$PHPJasperXML = new PHPJasperXML();
 	$PHPJasperXML->debugsql=false;
-	$PHPJasperXML->arrayParameter=array("instituicao"=>$_POST['ref_cod_instituicao'],"escola"=>$_POST['ref_cod_escola'],"curso"=>$_POST['ref_cod_curso'],"serie"=>$_POST['ref_ref_cod_serie'],"aluno"=>$_POST['nm_aluno'],"ano"=>$_POST['ano'],"data_validade"=>$_POST['data_validade']); 
+	$PHPJasperXML->arrayParameter=array("instituicao"=>$_POST['ref_cod_instituicao'],"escola"=>$_POST['ref_cod_escola'],"curso"=>$_POST['ref_cod_curso'],"serie"=>$_POST['ref_ref_cod_serie'],"aluno"=>$_POST['nm_aluno'],"ano"=>$_POST['ano']); 
 
 	$PHPJasperXML->xml_dismantle($xml);
 

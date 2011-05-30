@@ -21,10 +21,6 @@
 	<parameter name="ano" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
-	<parameter name="data_validade" class="java.lang.String"/>
-	<parameter name="periodo" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
-	</parameter>
 	<queryString>
 		<![CDATA[SELECT public.fcn_upper(nm_instituicao) AS nome_instituicao,
        public.fcn_upper(nm_responsavel) AS nm_responsavel,
@@ -286,13 +282,6 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{cidade_instituicao}+" ("+$F{uf_instituicao}+")"+",  "+$F{data_atual}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="53" y="568" width="311" height="16"/>
-				<textElement markup="none">
-					<font size="8" isBold="false"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["OBSERVAÇÃO: O prazo de vencimento, para entrega dos documentos será até o dia:"]]></textFieldExpression>
-			</textField>
-			<textField>
 				<reportElement x="412" y="4" width="126" height="13"/>
 				<textElement>
 					<font size="7" isBold="false"/>
@@ -312,13 +301,6 @@
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="363" y="568" width="100" height="16"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{data_validade}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="415" y="52" width="77" height="13"/>
@@ -342,24 +324,14 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_responsavel}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="57" y="698" width="193" height="1"/>
-			</line>
-			<line>
-				<reportElement x="324" y="698" width="193" height="1"/>
+				<reportElement x="181" y="698" width="193" height="1"/>
 			</line>
 			<staticText>
-				<reportElement x="57" y="702" width="193" height="13"/>
+				<reportElement x="181" y="702" width="193" height="13"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Diretor(a)]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="324" y="702" width="193" height="13"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[Secretário(a)]]></text>
+				<text><![CDATA[Assinatura]]></text>
 			</staticText>
 			<image>
 				<reportElement x="16" y="4" width="57" height="46"/>

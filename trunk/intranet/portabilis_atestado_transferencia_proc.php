@@ -46,7 +46,7 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Atestado de Trasferência" );
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Atestado de Transferência" );
 		$this->processoAp = "999216";
 		$this->renderMenu = false;
 		$this->renderMenuSuspenso = false;
@@ -152,7 +152,7 @@ class indice extends clsCadastro
 
 	$PHPJasperXML = new PHPJasperXML();
 	$PHPJasperXML->debugsql=false;
-	$PHPJasperXML->arrayParameter=array("ano"=>$_POST['ano'],"instituicao"=>$_POST['ref_cod_instituicao'],"escola"=>$_POST['ref_cod_escola'],"curso"=>$_POST['ref_cod_curso'],"serie"=>$_POST['ref_ref_cod_serie'],"turma"=>$_POST['ref_cod_turma'],"aluno"=>$_POST['ref_cod_matricula']); 
+	$PHPJasperXML->arrayParameter=array("ano"=>$_POST['ano'],"instituicao"=>$_POST['ref_cod_instituicao'],"escola"=>$_POST['ref_cod_escola'],"aluno"=>$_POST['ref_cod_aluno']); 
     $PHPJasperXML->xml_dismantle($xml);
 
 	$PHPJasperXML->transferDBtoArray($server,$user,$pass,$db,$port);

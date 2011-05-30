@@ -248,7 +248,8 @@
                            END
 		FROM modules.nota_componente_curricular_media cm
                WHERE cm.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
-                     cm.componente_curricular_id = nota_componente_curricular_media.componente_curricular_id) AS media,
+                     cm.componente_curricular_id = nota_componente_curricular_media.componente_curricular_id AND
+                     cm.etapa = 4) AS media,
 
 	         (SELECT curso.nm_curso
                 FROM pmieducar.curso
@@ -420,6 +421,7 @@
              matricula.ativo = 1 AND
 			 matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
              matricula_turma.ref_cod_turma = $P{turma} AND
+             matricula_turma.ativo = 1 AND
              (SELECT CASE WHEN $P{matricula} = 0 THEN
                    matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
  		           matricula_turma.ref_cod_turma = $P{turma}

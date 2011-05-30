@@ -24,6 +24,7 @@
 	*	02111-1307, USA.													 *
 	*																		 *
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -34,13 +35,14 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Atestado de Transferência" );
-		$this->processoAp = "999216";
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Relação Geral de Alunos por Escola" );
+		$this->processoAp = "999105"; //alterar
 	}
 }
 
 class indice extends clsCadastro
 {
+
 
 	/**
 	 * Referencia pega da session para o idpes do usuario atual
@@ -49,18 +51,20 @@ class indice extends clsCadastro
 	 */
 	var $pessoa_logada;
 
-	var $ref_cod_escola;
-	var $ref_cod_aluno;
-	var $nm_aluno;
-	var $nm_aluno_;
+	var $pdf;
 
-	var $ano;
+
+	var $page_y = 139;
+
+	var $sexo;
+	var $idadeinicial;
+	var $idadefinal;
 
 	function Inicializar()
 	{
 		$retorno = "Novo";
 		@session_start();
-		$pessoa_logada = $_SESSION['id_pessoa'];
+		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
 		return $retorno;
@@ -68,53 +72,49 @@ class indice extends clsCadastro
 
 	function Gerar()
 	{
-   
 		@session_start();
-			$pessoa_logada = $_SESSION['id_pessoa'];
+		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-		$obj_permissoes = new clsPermissoes();
-		$nivel_acesso = $obj_permissoes->nivel_acesso( $pessoa_logada );
+		if($_POST){
+			foreach ($_POST as $key => $value) {
+				$this->$key = $value;
+
+			}
+		}
+
+		if($this->ref_cod_escola)
+			$this->ref_ref_cod_escola = $this->ref_cod_escola;
+
+		$get_escola = true;
+		$sem_padrao = true;
+		$instituicao_obrigatorio = true;
+		$escola_obrigatorio = true;
+		
 		$this->ano = $ano_atual = date("Y");
 		
 		//campo adicionado para pegar por parametro o Ano Letivo da Escola
 		$this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true);
-    #include("include/pmieducar/educar_campo_lista.php");
-                
-    $verificar_campos_obrigatorios = true;
-    $obrigatorio = true;
-		if( $nivel_acesso == 1 || $nivel_acesso == 2 )
-		{			
-			$get_escola = true;
-			#include("include/pmieducar/educar_campo_lista.php");
-		}
-		else
-		{
-			$this->ref_cod_escola = $obj_permissoes->getEscola( $pessoa_logada );
-			$this->campoOculto("ref_cod_escola", $this->ref_cod_escola);
-		}
-    include("include/pmieducar/educar_campo_lista.php");   
-    
-		$this->nm_aluno = $this->nm_aluno_;
+		
+		include("include/pmieducar/educar_campo_lista.php");
+		
+		$opcoes[1] = "Ambos";
+		$opcoes[2] = "Masculino";
+		$opcoes[3] = "Feminino";
+		
+		$this->campoLista('sexo', 'Sexo', $opcoes, $this->sexo);
+		
+		$this->campoNumero('idadeinicial', 'Faixa etária', $this->idadeinicial,
+		2, 2, FALSE, '', '', FALSE, FALSE, TRUE);
 
-		$this->campoTexto("nm_aluno", "Aluno", $this->nm_aluno, 30, 255, true, false, false, "", "<img border=\"0\" onclick=\"pesquisa_aluno();\" id=\"ref_cod_aluno_lupa\" name=\"ref_cod_aluno_lupa\" src=\"imagens/lupa.png\"\/>","","",true);
-		$this->campoOculto("nm_aluno_", $this->nm_aluno_);
-		$this->campoOculto("ref_cod_aluno", $this->ref_cod_aluno);
-		$this->acao_enviar = false;
-
-		//$this->array_botao = array( "Gerar Relat&oacute;rio" );
-		//this->array_botao_url_script = array( "document.formcadastro.action = 'portabilis_historico_escolar_proc.php'" );
-		$this->acao_enviar = 'acao2()';
-		$this->acao_executa_submit = false;
+		$this->campoNumero('idadefinal', ' até ', $this->idadefinal, 2, 2, FALSE);
 		
 		$this->url_cancelar = "educar_index.php";
 		$this->nome_url_cancelar = "Cancelar";
-    
-	}
 
-	function Novo()
-	{
-		return true;
+		$this->acao_enviar = 'acao2()';
+		$this->acao_executa_submit = false;
+
 	}
 }
 
@@ -126,30 +126,38 @@ $miolo = new indice();
 $pagina->addForm( $miolo );
 // gera o html
 $pagina->MakeAll();
+
+
 ?>
+
+
 <script>
 
-function pesquisa_aluno()
-{
-	pesquisa_valores_popless('educar_pesquisa_aluno.php?ref_cod_escola='+document.getElementById('ref_cod_escola').value)
-}
-
-var func = function(){document.getElementById('btn_enviar').disabled= false;};
-if( window.addEventListener ) {
-		//mozilla
-	  document.getElementById('btn_enviar').addEventListener('click',func,false);
-	} else if ( window.attachEvent ) {
-		//ie
-	  document.getElementById('btn_enviar').attachEvent('onclick',func);
-	}
 function acao2()
 {
-    document.formcadastro.target = '_blank';
+
+	if(!acao())
+		return false;
+
+	document.formcadastro.target = '_blank';
 	document.getElementById( 'btn_enviar' ).disabled =false;
 	document.formcadastro.submit();
 }
 
 // Chamado do arquivo que ira processar o relatorio
-document.formcadastro.action = 'portabilis_atestado_transferencia_proc.php';
-  
+document.formcadastro.action = 'portabilis_alunos_relacao_geral_alunos_escola_proc.php';
+
+document.getElementById('ref_cod_escola').onchange = function()
+{
+	getEscolaCurso();
+}
+
 </script>
+
+
+
+
+
+
+
+

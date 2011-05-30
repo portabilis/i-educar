@@ -24,7 +24,6 @@
 	*	02111-1307, USA.													 *
 	*																		 *
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -43,7 +42,6 @@ class clsIndexBase extends clsBase
 class indice extends clsCadastro
 {
 
-
 	/**
 	 * Referencia pega da session para o idpes do usuario atual
 	 *
@@ -51,19 +49,18 @@ class indice extends clsCadastro
 	 */
 	var $pessoa_logada;
 
-	var $pdf;
-	var $ref_cod_turma;
-	var $ref_cod_matricula;
+	var $ref_cod_escola;
+	var $ref_cod_aluno;
+	var $nm_aluno;
+	var $nm_aluno_;
 
-	var $page_y = 139;
-
-
+	var $ano;
 
 	function Inicializar()
 	{
 		$retorno = "Novo";
 		@session_start();
-		$this->pessoa_logada = $_SESSION['id_pessoa'];
+		$pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
 		return $retorno;
@@ -71,47 +68,53 @@ class indice extends clsCadastro
 
 	function Gerar()
 	{
+   
 		@session_start();
-		$this->pessoa_logada = $_SESSION['id_pessoa'];
+			$pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-		if($_POST){
-			foreach ($_POST as $key => $value) {
-				$this->$key = $value;
-
-			}
-		}
-
-		if($this->ref_cod_escola)
-			$this->ref_ref_cod_escola = $this->ref_cod_escola;
-
-		$get_escola = true;
-		$get_curso = true;
-		$get_escola_curso_serie = true;
-		$get_turma = true;
-		$sem_padrao = true;
-		$instituicao_obrigatorio = true;
-		$escola_obrigatorio = true;
-		$escola_curso_serie_obrigatorio = true;
-		$curso_obrigatorio = true;
-		
+		$obj_permissoes = new clsPermissoes();
+		$nivel_acesso = $obj_permissoes->nivel_acesso( $pessoa_logada );
 		$this->ano = $ano_atual = date("Y");
 		
 		//campo adicionado para pegar por parametro o Ano Letivo da Escola
 		$this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true);
+    #include("include/pmieducar/educar_campo_lista.php");
+                
+    $verificar_campos_obrigatorios = true;
+    $obrigatorio = true;
+		if( $nivel_acesso == 1 || $nivel_acesso == 2 )
+		{			
+			$get_escola = true;
+			#include("include/pmieducar/educar_campo_lista.php");
+		}
+		else
+		{
+			$this->ref_cod_escola = $obj_permissoes->getEscola( $pessoa_logada );
+			$this->campoOculto("ref_cod_escola", $this->ref_cod_escola);
+		}
+    include("include/pmieducar/educar_campo_lista.php");   
+    
+		$this->nm_aluno = $this->nm_aluno_;
 
-		include("include/pmieducar/educar_campo_lista.php");
+		$this->campoTexto("nm_aluno", "Aluno", $this->nm_aluno, 30, 255, true, false, false, "", "<img border=\"0\" onclick=\"pesquisa_aluno();\" id=\"ref_cod_aluno_lupa\" name=\"ref_cod_aluno_lupa\" src=\"imagens/lupa.png\"\/>","","",true);
+		$this->campoOculto("nm_aluno_", $this->nm_aluno_);
+		$this->campoOculto("ref_cod_aluno", $this->ref_cod_aluno);
+		$this->acao_enviar = false;
+
+		//$this->array_botao = array( "Gerar Relat&oacute;rio" );
+		//this->array_botao_url_script = array( "document.formcadastro.action = 'portabilis_historico_escolar_proc.php'" );
+		$this->acao_enviar = 'acao2()';
+		$this->acao_executa_submit = false;
 		
 		$this->url_cancelar = "educar_index.php";
 		$this->nome_url_cancelar = "Cancelar";
-		
-		$this->campoLista("ref_cod_turma","Turma",array('' => 'Selecione'),'',"",false,"","",false,true);		
-	
-		$this->campoLista( "ref_cod_matricula", "Aluno",array(''=>'Selecione'), "","",false,"Campo obrigatório","",false,false );
+    
+	}
 
-		$this->acao_enviar = 'acao2()';
-		$this->acao_executa_submit = false;
-
+	function Novo()
+	{
+		return true;
 	}
 }
 
@@ -123,166 +126,14 @@ $miolo = new indice();
 $pagina->addForm( $miolo );
 // gera o html
 $pagina->MakeAll();
-
-
 ?>
-
-
 <script>
 
-
-document.getElementById('ref_cod_escola').onchange = function()
+function pesquisa_aluno()
 {
-	setMatVisibility();
-	getEscolaCurso();
-	var campoTurma = document.getElementById( 'ref_cod_turma' );
-	getTurmaCurso();
+	pesquisa_valores_popless('educar_pesquisa_aluno.php?ref_cod_escola='+document.getElementById('ref_cod_escola').value)
 }
 
-document.getElementById('ref_cod_curso').onchange = function()
-{
-
-	getEscolaCursoSerie();
-	getTurmaCurso();
-}
-
-document.getElementById('ano').onkeyup = function()
-{
-
-	setMatVisibility();
-	getAluno();
-}
-
-document.getElementById('ref_ref_cod_serie').onchange = function()
-{
-
-	var campoEscola = document.getElementById( 'ref_cod_escola' ).value;
-	var campoSerie = document.getElementById( 'ref_ref_cod_serie' ).value;
-
-	var xml1 = new ajax(getTurma_XML);
-	strURL = "educar_turma_xml.php?esc="+campoEscola+"&ser="+campoSerie;
-	xml1.envia(strURL);
-}
-
-function getTurma_XML(xml)
-{
-
-
-	var campoSerie = document.getElementById( 'ref_ref_cod_serie' ).value;
-
-	var campoTurma = document.getElementById( 'ref_cod_turma' );
-
-	var turma = xml.getElementsByTagName( "turma" );
-
-	campoTurma.length = 1;
-	campoTurma.options[0] = new Option( 'Selecione uma Turma', '', false, false );
-	for ( var j = 0; j < turma.length; j++ )
-	{
-
-		campoTurma.options[campoTurma.options.length] = new Option( turma[j].firstChild.nodeValue, turma[j].getAttribute('cod_turma'), false, false );
-
-	}
-	if ( campoTurma.length == 1 && campoSerie != '' ) {
-		campoTurma.options[0] = new Option( 'A série não possui nenhuma turma', '', false, false );
-	}
-
-	setMatVisibility();
-
-}
-
-function getTurmaCurso()
-{
-	var campoCurso = document.getElementById('ref_cod_curso').value;
-	var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
-
-	var xml1 = new ajax(getTurmaCurso_XML);
-	strURL = "educar_turma_xml.php?ins="+campoInstituicao+"&cur="+campoCurso;
-
-	xml1.envia(strURL);
-}
-
-function getTurmaCurso_XML(xml)
-{
-	var turma = xml.getElementsByTagName( "turma" );
-	var campoTurma = document.getElementById( 'ref_cod_turma' );
-	var campoCurso = document.getElementById('ref_cod_curso');
-
-	campoTurma.length = 1;
-	campoTurma.options[0] = new Option( 'Selecione uma Turma', '', false, false );
-
-	for ( var j = 0; j < turma.length; j++ )
-	{
-
-		campoTurma.options[campoTurma.options.length] = new Option( turma[j].firstChild.nodeValue, turma[j].getAttribute('cod_turma'), false, false );
-
-	}
-	/*if ( campoTurma.length == 1 && campoCurso != '' ) {
-		campoTurma.options[0] = new Option( 'O curso não possui nenhuma turma', '', false, false );
-	}*/
-	setMatVisibility();
-}
-
-
-document.getElementById('ref_cod_turma').onchange = function()
-{
-	getAluno();
-	var This = this;
-	setMatVisibility();
-
-}
-
-function setMatVisibility()
-{
-	var campoTurma = document.getElementById('ref_cod_turma');
-	var campoAluno = document.getElementById('ref_cod_matricula');
-
-	campoAluno.length = 1;
-
-	if (campoTurma.value == '')
-	{
-		setVisibility('tr_ref_cod_matricula',false);
-		setVisibility('ref_cod_matricula',false);
-	}
-	else
-	{
-		setVisibility('tr_ref_cod_matricula',true);
-		setVisibility('ref_cod_matricula',true);
-	}
-}
-function getAluno()
-{
-
-	var campoTurma = document.getElementById('ref_cod_turma').value;
-	var campoAno = document.getElementById('ano').value;
-
-	var xml1 = new ajax(getAluno_XML);
-	strURL = "educar_matricula_turma_xml.php?tur="+campoTurma+"&ano="+campoAno;
-
-	xml1.envia(strURL);
-}
-
-function getAluno_XML(xml)
-{
-	var aluno = xml.getElementsByTagName( "matricula" );
-	var campoTurma = document.getElementById( 'ref_cod_turma' );
-	var campoAluno = document.getElementById('ref_cod_matricula');
-
-	campoAluno.length = 1;
-	//campoAluno.options[0] = new Option( 'Selecione uma Turma', '', false, false );
-
-	for ( var j = 0; j < aluno.length; j++ )
-	{
-
-		campoAluno.options[campoAluno.options.length] = new Option( aluno[j].firstChild.nodeValue, aluno[j].getAttribute('cod_matricula'), false, false );
-
-	}
-	/*if ( campoTurma.length == 1 && campoCurso != '' ) {
-		campoTurma.options[0] = new Option( 'O curso não possui nenhuma turma', '', false, false );
-	}*/
-}
-
-
-setVisibility('tr_ref_cod_matricula',false);
 var func = function(){document.getElementById('btn_enviar').disabled= false;};
 if( window.addEventListener ) {
 		//mozilla
@@ -291,78 +142,14 @@ if( window.addEventListener ) {
 		//ie
 	  document.getElementById('btn_enviar').attachEvent('onclick',func);
 	}
-
 function acao2()
 {
-
-		if(!acao())
-			return false;
-
-			 if (!(/[^ ]/.test( document.getElementById("ref_cod_instituicao").value )))
-			{
-				mudaClassName( 'formdestaque', 'obrigatorio' );
-				document.getElementById("ref_cod_instituicao").className = "formdestaque";
-				alert( 'Preencha o campo \'Instituição\' corretamente!' );
-				document.getElementById("ref_cod_instituicao").focus();
-				return false;
-			}
-			 if (!(/[^ ]/.test( document.getElementById("ref_cod_curso").value )))
-			{
-				mudaClassName( 'formdestaque', 'obrigatorio' );
-				document.getElementById("ref_cod_curso").className = "formdestaque";
-				alert( 'Preencha o campo \'Curso\' corretamente!' );
-				document.getElementById("ref_cod_curso").focus();
-				return false;
-			}
-
-
-			 if (!(/[^ ]/.test( document.getElementById("ref_cod_turma").value )))
-			{
-				mudaClassName( 'formdestaque', 'obrigatorio' );
-				document.getElementById("ref_cod_turma").className = "formdestaque";
-				alert( 'Preencha o campo \'Turma\' corretamente!' );
-				document.getElementById("ref_cod_turma").focus();
-				return false;
-			}		
-
     document.formcadastro.target = '_blank';
 	document.getElementById( 'btn_enviar' ).disabled =false;
 	document.formcadastro.submit();
-
 }
-
 
 // Chamado do arquivo que ira processar o relatorio
 document.formcadastro.action = 'portabilis_atestado_matricula_proc.php';
-
-document.getElementById('em_branco').onclick = function()
-{
-	if(this.checked)
-	{
-		$('ref_cod_instituicao').disabled = true;
-		$('ref_cod_escola').disabled = true;
-		$('ref_cod_curso').disabled = true;
-		$('ref_ref_cod_serie').disabled = true;
-		$('ref_cod_turma').disabled = true;
-		$('ref_cod_matricula').disabled = true;
-	}
-	else
-	{
-		$('ref_cod_instituicao').disabled = false;
-		$('ref_cod_escola').disabled = false;
-		$('ref_cod_curso').disabled = false;
-		$('ref_ref_cod_serie').disabled = false;
-		$('ref_cod_turma').disabled = false;
-		$('ref_cod_matricula').disabled = false;
-	}
-}
+  
 </script>
-
-
-
-
-
-
-
-
-

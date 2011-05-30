@@ -105,9 +105,6 @@ class indice extends clsCadastro
 		//campo adicionado para pegar por parametro o nome do aluno para o Atestado de Vaga
 		$this->campoTexto("nm_aluno","Nome do aluno",$this->nm_aluno,40,255,false);
 		
-		//campo adicionado para pegar por parametro a data validade do Atestado de Vaga
-		$this->campoData("data_validade","Validade do documento:",$this->data_validade,true);
-
 		$this->acao_enviar = 'acao2()';
 		$this->acao_executa_submit = false;
 

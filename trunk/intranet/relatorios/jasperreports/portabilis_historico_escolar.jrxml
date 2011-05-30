@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_historico_escolar" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.6105100000000019"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="85"/>
+	<property name="ireport.y" value="202"/>
 	<style name="Crosstab Data Text" hAlign="Center"/>
 	<subDataset name="dataset1"/>
 	<subDataset name="dataset2"/>
@@ -690,29 +690,6 @@ SELECT nm_disciplina,
            from pmieducar.instituicao
           where instituicao.cod_instituicao = historico_escolar.ref_cod_instituicao) as nm_responsavel,
 
-        (SELECT documento.num_termo
-           FROM cadastro.documento,
-                cadastro.fisica,
-                pmieducar.aluno
-          WHERE documento.idpes = fisica.idpes AND
-                aluno.ref_idpes = fisica.idpes AND
-                aluno.cod_aluno = historico_escolar.ref_cod_aluno) as num_termo,
-
-        (SELECT documento.num_livro
-           FROM cadastro.documento,
-                cadastro.fisica,
-                pmieducar.aluno
-          WHERE documento.idpes = fisica.idpes AND
-                aluno.ref_idpes = fisica.idpes AND
-                aluno.cod_aluno = historico_escolar.ref_cod_aluno) as num_livro,
-
-        (SELECT documento.num_folha
-           FROM cadastro.documento,
-                cadastro.fisica,
-                pmieducar.aluno
-          WHERE documento.idpes = fisica.idpes AND
-                aluno.ref_idpes = fisica.idpes AND
-                aluno.cod_aluno = historico_escolar.ref_cod_aluno) as num_folha,
 
         (select he.observacao
           from  pmieducar.historico_escolar he,
@@ -1011,7 +988,28 @@ SELECT nm_disciplina,
                  substring(nm_serie,1,1) = 9) as status_serie9,
 
 
-(SELECT 1 WHERE 1 = 1) AS quebra
+(SELECT 1 WHERE 1 = 1) AS quebra,
+
+  (SELECT registro
+     FROM pmieducar.historico_escolar
+    WHERE ref_cod_aluno = $P{aluno} and
+          historico_escolar.sequencial = (SELECT max(sequencial)
+                                            FROM pmieducar.historico_escolar he
+                                           WHERE he.ref_cod_aluno = $P{aluno})) AS num_termo,
+
+  (SELECT livro
+     FROM pmieducar.historico_escolar
+    WHERE ref_cod_aluno = $P{aluno} and
+          historico_escolar.sequencial = (SELECT max(sequencial)
+                                            FROM pmieducar.historico_escolar he
+                                           WHERE he.ref_cod_aluno = $P{aluno})) AS num_livro,
+
+  (SELECT folha
+     FROM pmieducar.historico_escolar
+    WHERE ref_cod_aluno = $P{aluno} and
+          historico_escolar.sequencial = (SELECT max(sequencial)
+                                            FROM pmieducar.historico_escolar he
+                                           WHERE he.ref_cod_aluno = $P{aluno})) AS num_folha
 
 
   FROM pmieducar.historico_escolar,
@@ -1082,9 +1080,9 @@ ORDER BY 1 ASC]]>
 	<field name="cod_aluno" class="java.lang.Integer"/>
 	<field name="nm_instituicao" class="java.lang.String"/>
 	<field name="nm_responsavel" class="java.lang.String"/>
-	<field name="nm_termo" class="java.math.BigDecimal"/>
+	<field name="nm_termo" class="java.lang.String"/>
 	<field name="nm_livro" class="java.lang.String"/>
-	<field name="num_folha" class="java.math.BigDecimal"/>
+	<field name="num_folha" class="java.lang.String"/>
 	<field name="obs1" class="java.lang.String"/>
 	<field name="obs2" class="java.lang.String"/>
 	<field name="obs3" class="java.lang.String"/>
@@ -1403,7 +1401,7 @@ ORDER BY 1 ASC]]>
 		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="431" splitType="Stretch">
+		<band height="374" splitType="Stretch">
 			<rectangle>
 				<reportElement x="5" y="3" width="545" height="39"/>
 			</rectangle>
