@@ -732,7 +732,6 @@ class indice extends clsCadastro
 
           $this->mensagem .= 'Cadastro efetuado com sucesso.';
           header('Location: educar_turma_lst.php');
-
           die();
         }
 
@@ -758,7 +757,7 @@ class indice extends clsCadastro
         $this->hora_inicio_intervalo, $this->hora_fim_intervalo,
         $this->ref_cod_regente, $this->ref_cod_instituicao_regente,
         $this->ref_cod_instituicao, $this->ref_cod_curso,
-        $this->ref_ref_cod_serie_mult, $this->ref_cod_escola, $this->visivel);
+        $this->ref_ref_cod_serie_mult, $this->ref_cod_escola, $this->visivel, $this->turma_turno_id);
 
       $cadastrou = $obj->cadastra();
 
@@ -1729,4 +1728,30 @@ function atualizaLstEscolaCursoSerie(xml)
     campoSerie.options[0].text = 'A escola/curso não possui nenhuma série';
   }
 }
+
+var _fieldInstituicao = document.getElementById('ref_cod_instituicao');
+if (_fieldInstituicao)
+{
+  var __old_event = _fieldInstituicao.onchange;  
+  document.getElementById('ref_cod_instituicao').onchange = function(){
+    getTurmaTurno();
+    __old_event();
+  }
+}
+
+
+function getTurmaTurno()
+{
+	var instituicaoId = document.getElementById('ref_cod_instituicao').value;
+  if (instituicaoId)
+  {
+	  clearSelect(entity = 'turma_turno_id', disable = true, text = 'Carregando turnos...', multipleId=false);
+
+    var ajaxReq = new ajax(updateSelect);
+    ajaxReq.envia("portabilis_turma_turno_xml.php?instituicao_id="+instituicaoId);  
+  }
+  else
+	  clearSelect(entity = 'turma_turno_id', disable = true, text = '', multipleId=false);
+}
+
 </script>
