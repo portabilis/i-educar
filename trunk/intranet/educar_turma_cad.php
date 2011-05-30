@@ -761,6 +761,7 @@ class indice extends clsCadastro
 
       $cadastrou = $obj->cadastra();
 
+
       if ($cadastrou) {
         $this->mensagem .= 'Cadastro efetuado com sucesso.';
         header('Location: educar_turma_lst.php');
@@ -887,7 +888,7 @@ class indice extends clsCadastro
         $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
         $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
         $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
-        $this->visivel, $this->turma_turno_id);
+        $this->visivel, $this->turma_turno_id); 
 
       $editou = $obj->edita();
     }
