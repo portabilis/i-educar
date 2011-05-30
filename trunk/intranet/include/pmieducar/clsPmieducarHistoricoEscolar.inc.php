@@ -122,13 +122,13 @@ class clsPmieducarHistoricoEscolar
 	 *
 	 * @return object
 	 */
-	function clsPmieducarHistoricoEscolar( $ref_cod_aluno = null, $sequencial = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_serie = null, $ano = null, $carga_horaria = null, $dias_letivos = null, $escola = null, $escola_cidade = null, $escola_uf = null, $observacao = null, $aprovado = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $faltas_globalizadas = null, $ref_cod_instituicao = null, $origem = null, $extra_curricular = null, $ref_cod_matricula = null, $frequencia = null )
+	function clsPmieducarHistoricoEscolar( $ref_cod_aluno = null, $sequencial = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_serie = null, $ano = null, $carga_horaria = null, $dias_letivos = null, $escola = null, $escola_cidade = null, $escola_uf = null, $observacao = null, $aprovado = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $faltas_globalizadas = null, $ref_cod_instituicao = null, $origem = null, $extra_curricular = null, $ref_cod_matricula = null, $frequencia = null, $registro = null, $livro = null, $folha = null )
 	{ 
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}historico_escolar";
 
-		$this->_campos_lista = $this->_todos_campos = "ref_cod_aluno, sequencial, ref_usuario_exc, ref_usuario_cad, ano, carga_horaria, dias_letivos, escola, escola_cidade, escola_uf, observacao, aprovado, data_cadastro, data_exclusao, ativo, faltas_globalizadas, ref_cod_instituicao, nm_serie, origem, extra_curricular, ref_cod_matricula, frequencia";
+		$this->_campos_lista = $this->_todos_campos = "ref_cod_aluno, sequencial, ref_usuario_exc, ref_usuario_cad, ano, carga_horaria, dias_letivos, escola, escola_cidade, escola_uf, observacao, aprovado, data_cadastro, data_exclusao, ativo, faltas_globalizadas, ref_cod_instituicao, nm_serie, origem, extra_curricular, ref_cod_matricula, frequencia, registro, livro, folha";
 
 		if( is_numeric( $ref_usuario_exc ) )
 		{
@@ -340,6 +340,10 @@ class clsPmieducarHistoricoEscolar
 			$this->frequencia = $frequencia;
 		}		
 
+    $this->registro = $registro;
+    $this->livro = $livro;
+    $this->folha = $folha;
+
 	}
 
 	/**
@@ -457,6 +461,27 @@ class clsPmieducarHistoricoEscolar
 			{
 				$campos .= "{$gruda}frequencia";
 				$valores .= "{$gruda}'{$this->frequencia}'";
+				$gruda = ", ";
+			}
+
+			if( is_string( $this->registro ))
+			{
+				$campos .= "{$gruda}registro";
+				$valores .= "{$gruda}'{$this->registro}'";
+				$gruda = ", ";
+			}
+
+			if( is_string( $this->livro ))
+			{
+				$campos .= "{$gruda}livro";
+				$valores .= "{$gruda}'{$this->livro}'";
+				$gruda = ", ";
+			}
+
+			if( is_string( $this->folha ))
+			{
+				$campos .= "{$gruda}folha";
+				$valores .= "{$gruda}'{$this->folha}'";
 				$gruda = ", ";
 			}
 			
@@ -588,6 +613,24 @@ class clsPmieducarHistoricoEscolar
 			elseif ($this->faltas_globalizadas == 'NULL')
 			{
 				$set .= "{$gruda}faltas_globalizadas = NULL";
+				$gruda = ", ";
+			}
+
+			if( is_string( $this->registro))
+			{
+				$set .= "{$gruda}registro = '{$this->registro}'";
+				$gruda = ", ";
+			}
+
+			if( is_string( $this->livro))
+			{
+				$set .= "{$gruda}livro = '{$this->livro}'";
+				$gruda = ", ";
+			}
+
+			if( is_string( $this->folha))
+			{
+				$set .= "{$gruda}folha = '{$this->folha}'";
 				$gruda = ", ";
 			}
 
