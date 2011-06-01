@@ -187,14 +187,19 @@
                 FROM modules.componente_curricular
                WHERE componente_curricular.id = nota_componente_curricular.componente_curricular_id) as nome_disciplina,
              nota_componente_curricular.componente_curricular_id,
-			 (SELECT CASE WHEN char_length(nota_arredondada) = 1 THEN
+	 (SELECT CASE  WHEN nota_arredondada = 10 THEN
+			                   '10,0'
+			               WHEN char_length(nota_arredondada) = 1 THEN
 			                   replace(nota_arredondada,'.',',') || ',0'
                            ELSE
                                replace(nota_arredondada,'.',',')
-                           END) as nota_arredondada,
+                           END ) as nota_arredondada,
              nota_componente_curricular.etapa,
              matricula_id,
-             (SELECT CASE WHEN char_length(et1.nota_arredondada) = 1 THEN
+
+ (SELECT CASE  WHEN et1.nota_arredondada = 10 THEN
+			                   '10,0'
+			               WHEN char_length(et1.nota_arredondada) = 1 THEN
 			                   replace(et1.nota_arredondada,'.',',') || ',0'
                            ELSE
                                replace(et1.nota_arredondada,'.',',')
@@ -203,7 +208,10 @@
                WHERE et1.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
                      et1.etapa = 2 AND
                      nota_aluno.id  = et1.nota_aluno_id) AS nota_arredondada_etapa2,
-             (SELECT CASE WHEN char_length(et1.nota_arredondada) = 1 THEN
+
+ (SELECT CASE  WHEN et1.nota_arredondada = 10 THEN
+			                   '10,0'
+			               WHEN char_length(et1.nota_arredondada) = 1 THEN
 			                   replace(et1.nota_arredondada,'.',',') || ',0'
                            ELSE
                                replace(et1.nota_arredondada,'.',',')
@@ -212,7 +220,10 @@
                WHERE et1.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
                      et1.etapa = 3 AND
                      nota_aluno.id  = et1.nota_aluno_id) AS nota_arredondada_etapa3,
-             (SELECT CASE WHEN char_length(et1.nota_arredondada) = 1 THEN
+
+ (SELECT CASE  WHEN et1.nota_arredondada = 10 THEN
+			                   '10,0'
+			               WHEN char_length(et1.nota_arredondada) = 1 THEN
 			                   replace(et1.nota_arredondada,'.',',') || ',0'
                            ELSE
                                replace(et1.nota_arredondada,'.',',')
@@ -231,7 +242,9 @@
                WHERE cm.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
                      cm.componente_curricular_id = nota_componente_curricular_media.componente_curricular_id) AS total_pontos,
 
-            (SELECT CASE WHEN char_length(et1.nota_arredondada) = 1 THEN
+           (SELECT CASE  WHEN et1.nota_arredondada = 10 THEN
+			                   '10,0'
+			               WHEN char_length(et1.nota_arredondada) = 1 THEN
 			                   replace(et1.nota_arredondada,'.',',') || ',0'
                            ELSE
                                replace(et1.nota_arredondada,'.',',')
@@ -240,6 +253,7 @@
                WHERE et1.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
 					 et1.etapa = 'Rc' AND
                      nota_aluno.id  = et1.nota_aluno_id) AS nota_exame,
+
 
              (SELECT CASE WHEN char_length(nota_componente_curricular_media.media_arredondada) = 1 THEN
 			                   replace(nota_componente_curricular_media.media_arredondada,'.',',') || ',0'
