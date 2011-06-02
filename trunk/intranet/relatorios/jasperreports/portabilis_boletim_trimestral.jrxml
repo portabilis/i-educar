@@ -839,13 +839,6 @@ ORDER BY matricula_id]]>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="479" y="140" width="26" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{frequencia_componente}]]></textFieldExpression>
-			</textField>
 			<line>
 				<reportElement x="353" y="125" width="1" height="27"/>
 			</line>
@@ -1005,6 +998,13 @@ ORDER BY matricula_id]]>
 			<line>
 				<reportElement x="341" y="-14" width="1" height="15"/>
 			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="479" y="4" width="26" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{frequencia_componente}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>
