@@ -22,15 +22,18 @@
        escola_ano_letivo.ano,
        (SELECT public.fcn_upper(curso.nm_curso)
 	      FROM pmieducar.curso
-		WHERE  curso.cod_curso = matricula.ref_cod_curso) as nm_curso,
+		WHERE  curso.cod_curso = matricula.ref_cod_curso AND
+                       curso.ativo = 1) as nm_curso,
        (SELECT serie.nm_serie
 	      FROM pmieducar.serie
-		 WHERE serie.cod_serie = matricula.ref_ref_cod_serie) as nm_serie,
+		 WHERE serie.cod_serie = matricula.ref_ref_cod_serie AND
+                       serie.ativo = 1) as nm_serie,
        (SELECT turma.nm_turma
 	      FROM pmieducar.turma,
                    pmieducar.matricula_turma
 		 WHERE turma.cod_turma = matricula_turma.ref_cod_turma and
-		       matricula_turma.ref_cod_matricula = matricula.cod_matricula) as nm_turma,
+		       matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+                       matricula_turma.ativo = 1) as nm_turma,
        aluno.cod_aluno as cod_aluno,
        matricula.cod_matricula as cod_matricula,
        public.fcn_upper(pessoa.nome) as nome,
@@ -46,18 +49,18 @@
               mt.ativo = 1 AND
               mt.ultima_matricula = 1) as dt_matricula,
 	   matricula.ano as matricula_ano,
-       fcn_upper(instituicao.cidade) as cidade,
-	   fcn_upper(aluno.nm_pai) as nm_pai,
-	   fcn_upper(aluno.nm_mae) as nm_mae,
+       public.fcn_upper(instituicao.cidade) as cidade,
+	   public.fcn_upper(aluno.nm_pai) as nm_pai,
+	   public.fcn_upper(aluno.nm_mae) as nm_mae,
 
-      (SELECT COALESCE((SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))
+      (SELECT COALESCE((SELECT COALESCE (public.fcn_upper(ps.nome),public.fcn_upper(juridica.fantasia))
           FROM cadastro.pessoa ps,
                cadastro.juridica
          WHERE escola.ref_idpes = juridica.idpes AND
                juridica.idpes = ps.idpes AND
 			   ps.idpes = escola.ref_idpes),(SELECT nm_escola FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS nm_escola,
 
-      (SELECT fcn_upper(substring(logradouro.idtlog from 1 for 1)) ||
+      (SELECT public.fcn_upper(substring(logradouro.idtlog from 1 for 1)) ||
               lower(substring(logradouro.idtlog, 2))
          FROM public.logradouro,
               cadastro.juridica,
