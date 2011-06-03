@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_boletim" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.1000000000000005"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.zoom" value="1.3310000000000008"/>
+	<property name="ireport.x" value="105"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="ano" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
@@ -872,6 +872,41 @@ ORDER BY matricula_id]]>
 				</textElement>
 				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{frequencia_componente}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="510" y="140" width="26" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{frequencia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="232" y="140" width="9" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="282" y="140" width="9" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="331" y="140" width="9" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et3}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="378" y="140" width="9" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et4}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -973,45 +1008,7 @@ ORDER BY matricula_id]]>
 				<reportElement x="230" y="-14" width="1" height="12"/>
 			</line>
 			<line>
-				<reportElement x="504" y="0" width="1" height="16"/>
-			</line>
-			<textField>
-				<reportElement x="510" y="-13" width="26" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{frequencia}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="232" y="-13" width="9" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et1}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="282" y="-13" width="9" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et2}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="331" y="-13" width="9" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et3}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="378" y="-13" width="9" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et4}]]></textFieldExpression>
-			</textField>
-			<line>
-				<reportElement x="429" y="-1" width="1" height="17"/>
+				<reportElement x="504" y="-1" width="1" height="17"/>
 			</line>
 			<textField isBlankWhenNull="true">
 				<reportElement x="397" y="1" width="26" height="15"/>
@@ -1055,6 +1052,9 @@ ORDER BY matricula_id]]>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_componente}]]></textFieldExpression>
 			</textField>
+			<line>
+				<reportElement x="429" y="-1" width="1" height="17"/>
+			</line>
 		</band>
 	</detail>
 	<columnFooter>
