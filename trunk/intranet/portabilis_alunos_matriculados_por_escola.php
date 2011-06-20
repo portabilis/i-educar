@@ -96,15 +96,24 @@ class indice extends clsCadastro
 		
 		//campo adicionado para pegar por parametro o Ano Letivo da Escola
 		$this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true);
-
+             
 		include("include/pmieducar/educar_campo_lista.php");
+    
+    $opcoes[1] = "Aprovado";
+		$opcoes[2] = "Reprovado";
+    $opcoes[3] = "Em Andamento";
+    $opcoes[6] = "Abandono";
+    $opcoes[4] = "Transferido";
+		$opcoes[9] = "Todas";
+		
+		$this->campoLista('situacao', 'Situação', $opcoes, $this->situacao, 6);
 		
 		$this->url_cancelar = "educar_index.php";
 		$this->nome_url_cancelar = "Cancelar";
 
 		$this->acao_enviar = 'acao2()';
 		$this->acao_executa_submit = false;
-
+    
 	}
 }
 

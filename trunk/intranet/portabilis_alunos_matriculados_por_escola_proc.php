@@ -77,6 +77,7 @@ class indice extends clsCadastro
 	var $nm_disciplina;
 	var $curso_com_exame = 0;
 	var $ref_cod_matricula;
+  var $situacao;
 
 	var $page_y = 135;
 
@@ -97,7 +98,7 @@ class indice extends clsCadastro
 	var $numero_registros;
 	var $em_branco;
         var $aux_cod_escola;
-
+        
 	var $meses_do_ano = array(
 							 "1" => "JANEIRO"
 							,"2" => "FEVEREIRO"
@@ -149,10 +150,9 @@ class indice extends clsCadastro
 	  $aux_cod_escola = $_POST['ref_cod_escola'];
 	}
 
-
     $PHPJasperXML = new PHPJasperXML();
 	$PHPJasperXML->debugsql=false;
-    $PHPJasperXML->arrayParameter=array("ano"=>$_POST['ano'],"instituicao"=>$_POST['ref_cod_instituicao'],"escola"    =>$aux_cod_escola);
+    $PHPJasperXML->arrayParameter=array("ano"=>$_POST['ano'],"instituicao"=>$_POST['ref_cod_instituicao'],"escola"=>$aux_cod_escola, "situacao" => $_POST['situacao']);
 	$PHPJasperXML->xml_dismantle($xml);
 
 	$PHPJasperXML->transferDBtoArray($server,$user,$pass,$db,$port);

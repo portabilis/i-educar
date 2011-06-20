@@ -12,6 +12,9 @@
 	<parameter name="escola" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
+	<parameter name="situacao" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT public.fcn_upper(nm_instituicao) AS nome_instituicao,
        public.fcn_upper(nm_responsavel) AS nome_responsavel,
@@ -179,7 +182,12 @@
        matricula.ref_cod_aluno = aluno.cod_aluno AND
        matricula.ativo = 1 AND
        matricula.ano = $P{ano} AND
-       matricula.ultima_matricula = 1
+       matricula.ultima_matricula = 1 AND
+      (SELECT CASE WHEN $P{situacao} = 9 THEN
+                   matricula.aprovado in ('1','2','3','4','6')
+              ELSE
+                   matricula.aprovado = $P{situacao}
+              END)
 ORDER BY nm_escola, nome_aluno]]>
 	</queryString>
 	<field name="nome_instituicao" class="java.lang.String"/>

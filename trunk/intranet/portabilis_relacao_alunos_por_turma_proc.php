@@ -68,6 +68,7 @@ class indice extends clsCadastro
 
 	var $ref_cod_instituicao;
 	var $ref_cod_escola;
+	var $ref_cod_curso;
 	var $ref_cod_serie;
 	var $ref_cod_turma;
 
@@ -75,8 +76,7 @@ class indice extends clsCadastro
 	var $mes;
 
 	var $nm_escola;
-	var $nm_instituicao;
-	var $ref_cod_curso;
+	var $nm_instituicao;	
 	var $sequencial;
 	var $pdf;
 	var $pagina_atual = 1;
@@ -87,6 +87,10 @@ class indice extends clsCadastro
 	var $nm_disciplina;
 	var $curso_com_exame = 0;
 	var $ref_cod_matricula;
+	
+	var $aux_cod_curso;
+	var $aux_cod_serie;
+	var $aux_cod_turma;
 
 	var $page_y = 135;
 
@@ -151,10 +155,34 @@ class indice extends clsCadastro
 	
 	*/
 	
+	//Curso nao obrigatorio
+	if (! isset($_POST['ref_cod_curso']) || ! $_POST['ref_cod_curso']) {
+	  $aux_cod_curso = 0;
+	}
+	else{
+	  $aux_cod_curso = $_POST['ref_cod_curso'];
+	}
+	
+	//Serie nao obrigatorio
+	if (! isset($_POST['ref_ref_cod_serie']) || ! $_POST['ref_ref_cod_serie']) {
+	  $aux_cod_serie = 0;	 
+	}
+	else{
+	  $aux_cod_serie = $_POST['ref_ref_cod_serie'];	  
+	}
+			
+	//Turma nao obrigatorio
+	if (! isset($_POST['ref_cod_turma']) || ! $_POST['ref_cod_turma']) {
+	  $aux_cod_turma = 0;
+	}
+	else{
+	  $aux_cod_turma = $_POST['ref_cod_turma'];
+	}		
+	
 
 	$PHPJasperXML = new PHPJasperXML();
 	$PHPJasperXML->debugsql=false;
-	$PHPJasperXML->arrayParameter=array("ano"=>$_POST['ano'],"instituicao"=>$_POST['ref_cod_instituicao'],"escola"=>$_POST['ref_cod_escola'],"curso"=>$_POST['ref_cod_curso'],"serie"=>$_POST['ref_ref_cod_serie']); 
+	$PHPJasperXML->arrayParameter=array("ano"=>$_POST['ano'],"instituicao"=>$_POST['ref_cod_instituicao'],"escola"=>$_POST['ref_cod_escola'],"curso" =>$aux_cod_curso, "serie" =>$aux_cod_serie, "turma" =>$aux_cod_turma); 
 
 	$PHPJasperXML->xml_dismantle($xml);
 

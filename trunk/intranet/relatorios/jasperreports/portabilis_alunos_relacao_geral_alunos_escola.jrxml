@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_alunos_relacao_geral_alunos_escola" language="groovy" pageWidth="842" pageHeight="625" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="0.9313819845887328"/>
-	<property name="ireport.x" value="93"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="ano" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
@@ -12,6 +12,9 @@
 	<parameter name="escola" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
+	<parameter name="curso" class="java.lang.Integer"/>
+	<parameter name="serie" class="java.lang.Integer"/>
+	<parameter name="turma" class="java.lang.Integer"/>
 	<parameter name="sexo" class="java.lang.String"/>
 	<parameter name="idadeinicial" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -140,44 +143,66 @@
 
        (SELECT count(matricula.cod_matricula)
           FROM pmieducar.instituicao,
-	     pmieducar.matricula,
-	     pmieducar.aluno,
-	     pmieducar.escola
-         WHERE instituicao.cod_instituicao = $P{instituicao} AND
-	     instituicao.cod_instituicao = escola.ref_cod_instituicao AND
-	     matricula.ref_ref_cod_escola = escola.cod_escola AND
-	     escola.cod_escola = $P{escola} AND
-	     matricula.ref_cod_aluno = aluno.cod_aluno AND
-	     matricula.ativo = 1 AND
-	     matricula.ano = $P{ano} AND
-	    (SELECT CASE WHEN $P{sexo} = 'M' THEN
-			(SELECT fisica.sexo
-			   FROM cadastro.pessoa,
-		                  cadastro.fisica
-	          		  WHERE aluno.ref_idpes = fisica.idpes AND
-		                   fisica.idpes = pessoa.idpes) = 'M'
-		       WHEN $P{sexo} = 'F' THEN
-			(SELECT fisica.sexo
-		 	   FROM cadastro.pessoa,
-	                 	        cadastro.fisica
-	          		  WHERE aluno.ref_idpes = fisica.idpes AND
-	                	        fisica.idpes = pessoa.idpes) = 'F'
-		       ELSE
-			$P{sexo} = 'A'
-		END) AND
-		((($P{idadeinicial} > 0  and
-		(SELECT substring(age(CURRENT_DATE, fisica.data_nasc),1,2)
-          		   FROM cadastro.pessoa,
-              	        cadastro.fisica
-       		  WHERE aluno.ref_idpes = fisica.idpes AND
-              	        fisica.idpes = pessoa.idpes)::integer >= $P{idadeinicial}) and
-		 ($P{idadefinal} > 0 and
-		(SELECT substring(age(CURRENT_DATE, fisica.data_nasc),1,2)
-          		   FROM cadastro.pessoa,
-              	        cadastro.fisica
-       		  WHERE aluno.ref_idpes = fisica.idpes AND
-              	        fisica.idpes = pessoa.idpes)::integer <= $P{idadefinal})) or
-		($P{idadeinicial} = 0 and $P{idadefinal} = 0))) as total_alunos,
+			 pmieducar.matricula,
+			 pmieducar.matricula_turma,
+			 pmieducar.turma,
+			 pmieducar.aluno,
+			 pmieducar.escola
+		WHERE instituicao.cod_instituicao = $P{instituicao} AND
+			 instituicao.cod_instituicao = escola.ref_cod_instituicao AND
+			 matricula.ref_ref_cod_escola = escola.cod_escola AND
+			 escola.cod_escola = $P{escola} AND
+			 matricula.ref_cod_aluno = aluno.cod_aluno AND
+			 matricula.ativo = 1 AND
+			 matricula.ano = $P{ano} AND
+			 (SELECT CASE WHEN $P{turma} = 0 THEN
+					  turma.cod_turma = matricula_turma.ref_cod_turma
+				   ELSE
+					   turma.cod_turma = matricula_turma.ref_cod_turma AND
+					   matricula_turma.ref_cod_turma = $P{turma}
+				   END)	AND
+		   matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+		   (SELECT CASE WHEN $P{serie} = 0 THEN
+					  turma.ref_ref_cod_serie = matricula.ref_ref_cod_serie
+				   ELSE
+					   turma.ref_ref_cod_serie = matricula.ref_ref_cod_serie AND
+					   matricula.ref_ref_cod_serie = $P{serie}
+				   END) AND
+		   turma.ref_ref_cod_escola = matricula.ref_ref_cod_escola AND
+		   (SELECT CASE WHEN $P{curso} = 0 THEN
+					  turma.ref_cod_curso = matricula.ref_cod_curso
+				   ELSE
+					   turma.ref_cod_curso = matricula.ref_cod_curso AND
+					   matricula.ref_cod_curso = $P{curso}
+				   END) AND
+			(SELECT CASE WHEN $P{sexo} = 'M' THEN
+				(SELECT fisica.sexo
+				   FROM cadastro.pessoa,
+							  cadastro.fisica
+						  WHERE aluno.ref_idpes = fisica.idpes AND
+							   fisica.idpes = pessoa.idpes) = 'M'
+				   WHEN $P{sexo} = 'F' THEN
+				(SELECT fisica.sexo
+				   FROM cadastro.pessoa,
+									cadastro.fisica
+						  WHERE aluno.ref_idpes = fisica.idpes AND
+									fisica.idpes = pessoa.idpes) = 'F'
+				   ELSE
+				$P{sexo} = 'A'
+			END) AND
+			((($P{idadeinicial} > 0  and
+			(SELECT substring(age(CURRENT_DATE, fisica.data_nasc),1,2)
+					   FROM cadastro.pessoa,
+							cadastro.fisica
+				  WHERE aluno.ref_idpes = fisica.idpes AND
+							fisica.idpes = pessoa.idpes)::integer >= $P{idadeinicial}) and
+			 ($P{idadefinal} > 0 and
+			(SELECT substring(age(CURRENT_DATE, fisica.data_nasc),1,2)
+					   FROM cadastro.pessoa,
+							cadastro.fisica
+				  WHERE aluno.ref_idpes = fisica.idpes AND
+							fisica.idpes = pessoa.idpes)::integer <= $P{idadefinal})) or
+			($P{idadeinicial} = 0 and $P{idadefinal} = 0))) as total_alunos,
 
  (SELECT CASE WHEN matricula.aprovado = 1 THEN 'Aprovado'
                    WHEN matricula.aprovado = 2 THEN 'Reprovado'
@@ -271,11 +296,26 @@ COALESCE((SELECT bairro.nome
        matricula.ativo = 1 AND
        matricula.ano = $P{ano} AND
        matricula.ultima_matricula = 1 AND
-       turma.cod_turma = matricula_turma.ref_cod_turma AND
+	   (SELECT CASE WHEN $P{turma} = 0 THEN
+                  turma.cod_turma = matricula_turma.ref_cod_turma
+               ELSE
+                   turma.cod_turma = matricula_turma.ref_cod_turma AND
+				   matricula_turma.ref_cod_turma = $P{turma}
+               END)	AND
        matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
-       turma.ref_ref_cod_serie = matricula.ref_ref_cod_serie AND
+	   (SELECT CASE WHEN $P{serie} = 0 THEN
+                  turma.ref_ref_cod_serie = matricula.ref_ref_cod_serie
+               ELSE
+                   turma.ref_ref_cod_serie = matricula.ref_ref_cod_serie AND
+				   matricula.ref_ref_cod_serie = $P{serie}
+               END) AND
        turma.ref_ref_cod_escola = matricula.ref_ref_cod_escola AND
-       turma.ref_cod_curso = matricula.ref_cod_curso AND
+	   (SELECT CASE WHEN $P{curso} = 0 THEN
+                  turma.ref_cod_curso = matricula.ref_cod_curso
+               ELSE
+                   turma.ref_cod_curso = matricula.ref_cod_curso AND
+				   matricula.ref_cod_curso = $P{curso}
+               END) AND
 	(SELECT CASE WHEN $P{sexo} = 'M' THEN
 			(SELECT fisica.sexo
 		 	   FROM cadastro.pessoa,

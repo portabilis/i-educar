@@ -87,7 +87,7 @@ class indice extends clsCadastro
 		$get_escola = true;
 		$get_curso = true;
 		$get_escola_curso_serie = true;
-		//$get_turma = true;
+		$get_turma = true;
 		$sem_padrao = true;
 		$instituicao_obrigatorio = true;
 		$escola_obrigatorio = true;
@@ -98,6 +98,8 @@ class indice extends clsCadastro
 		$this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true);
 
 		include("include/pmieducar/educar_campo_lista.php");
+		
+		$this->campoLista("ref_cod_turma","Turma",array('' => 'Selecione'),'',"",false,"","",false,false);	
 		
 		$this->url_cancelar = "educar_index.php";
 		$this->nome_url_cancelar = "Cancelar";
@@ -144,7 +146,69 @@ document.getElementById('ref_cod_escola').onchange = function()
 
 document.getElementById('ref_cod_curso').onchange = function()
 {
+
 	getEscolaCursoSerie();
+	getTurmaCurso();
+}
+
+document.getElementById('ref_ref_cod_serie').onchange = function()
+{
+
+	var campoEscola = document.getElementById( 'ref_cod_escola' ).value;
+	var campoSerie = document.getElementById( 'ref_ref_cod_serie' ).value;
+
+	var xml1 = new ajax(getTurma_XML);
+	strURL = "educar_turma_xml.php?esc="+campoEscola+"&ser="+campoSerie;
+	xml1.envia(strURL);
+}
+
+function getTurma_XML(xml)
+{
+	var campoSerie = document.getElementById( 'ref_ref_cod_serie' ).value;
+	
+	var campoTurma = document.getElementById( 'ref_cod_turma' );
+
+	var turma = xml.getElementsByTagName( "turma" );
+
+	campoTurma.length = 1;
+	campoTurma.options[0] = new Option( 'Selecione uma Turma', '', false, false );
+	for ( var j = 0; j < turma.length; j++ )
+	{
+
+		campoTurma.options[campoTurma.options.length] = new Option( turma[j].firstChild.nodeValue, turma[j].getAttribute('cod_turma'), false, false );
+
+	}
+	if ( campoTurma.length == 1 && campoSerie != '' ) {
+		campoTurma.options[0] = new Option( 'A série não possui nenhuma turma', '', false, false );
+	}
+}
+
+function getTurmaCurso()
+{
+	var campoCurso = document.getElementById('ref_cod_curso').value;
+	var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
+
+	var xml1 = new ajax(getTurmaCurso_XML);
+	strURL = "educar_turma_xml.php?ins="+campoInstituicao+"&cur="+campoCurso;
+
+	xml1.envia(strURL);
+}
+
+function getTurmaCurso_XML(xml)
+{
+	var turma = xml.getElementsByTagName( "turma" );
+	var campoTurma = document.getElementById( 'ref_cod_turma' );
+	var campoCurso = document.getElementById('ref_cod_curso');
+
+	campoTurma.length = 1;
+	campoTurma.options[0] = new Option( 'Selecione uma Turma', '', false, false );
+
+	for ( var j = 0; j < turma.length; j++ )
+	{
+
+		campoTurma.options[campoTurma.options.length] = new Option( turma[j].firstChild.nodeValue, turma[j].getAttribute('cod_turma'), false, false );
+
+	}	
 }
 
 </script>

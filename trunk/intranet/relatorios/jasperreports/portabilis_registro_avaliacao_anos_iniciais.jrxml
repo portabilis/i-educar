@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_ficha_avaliacao_anos_iniciais" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.1000000000000032"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.zoom" value="0.826446280991739"/>
+	<property name="ireport.x" value="3"/>
 	<property name="ireport.y" value="0"/>
 	<subDataset name="dataset1"/>
 	<subDataset name="dataset2"/>
@@ -228,297 +228,297 @@ ORDER BY nome_aluno ASC]]>
 		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="157" splitType="Stretch">
+		<band height="145" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement x="510" y="52" width="77" height="13"/>
+				<reportElement x="510" y="50" width="77" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="98" y="28" width="387" height="13"/>
+				<reportElement x="98" y="26" width="387" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="601" y="4" width="138" height="13"/>
+				<reportElement x="601" y="2" width="138" height="13"/>
 				<textElement>
 					<font size="7" isBold="false"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["Emissão: "+$F{data_atual}+" "+$F{hora_atual}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="364" y="52" width="139" height="13"/>
+				<reportElement x="364" y="50" width="139" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="98" y="40" width="387" height="13"/>
+				<reportElement x="98" y="38" width="387" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["Endereço: "+$F{logradouro}+" "+$F{numero}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="98" y="4" width="387" height="13"/>
+				<reportElement x="98" y="2" width="387" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="365" y="64" width="249" height="13"/>
+				<reportElement x="365" y="62" width="249" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="98" y="64" width="259" height="13"/>
+				<reportElement x="98" y="62" width="259" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["Fone/Fax: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="259" y="86" width="277" height="13"/>
+				<reportElement x="259" y="81" width="277" height="13"/>
 				<textElement textAlignment="Center">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[REGISTRO DE AVALIAÇÃO - ANOS INICIAIS]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="67" y="114" width="228" height="13"/>
+				<reportElement x="61" y="102" width="228" height="13"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_curso}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="22" y="114" width="44" height="13"/>
+				<reportElement x="16" y="102" width="44" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Curso:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="301" y="114" width="37" height="13"/>
+				<reportElement x="301" y="102" width="37" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Turno:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="422" y="114" width="32" height="13"/>
+				<reportElement x="422" y="102" width="32" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Série:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="455" y="114" width="84" height="13"/>
+				<reportElement x="455" y="102" width="84" height="13"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_serie}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="550" y="114" width="39" height="13"/>
+				<reportElement x="550" y="102" width="39" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Turma:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="697" y="114" width="29" height="13"/>
+				<reportElement x="697" y="102" width="29" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Ano:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="590" y="114" width="100" height="13"/>
+				<reportElement x="590" y="102" width="100" height="13"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_turma}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="727" y="114" width="37" height="13"/>
+				<reportElement x="727" y="102" width="37" height="13"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="22" y="140" width="44" height="9"/>
+				<reportElement x="16" y="128" width="44" height="9"/>
 				<textElement>
 					<font size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Aluno]]></text>
 			</staticText>
 			<line>
-				<reportElement x="15" y="109" width="775" height="1"/>
+				<reportElement x="15" y="97" width="775" height="1"/>
 			</line>
 			<line>
-				<reportElement x="15" y="131" width="775" height="1"/>
+				<reportElement x="15" y="119" width="775" height="1"/>
 			</line>
 			<line>
-				<reportElement x="14" y="109" width="1" height="48"/>
+				<reportElement x="14" y="97" width="1" height="48"/>
 			</line>
 			<line>
-				<reportElement x="790" y="109" width="1" height="48"/>
+				<reportElement x="790" y="97" width="1" height="48"/>
 			</line>
 			<line>
-				<reportElement x="15" y="156" width="775" height="1"/>
+				<reportElement x="15" y="144" width="775" height="1"/>
 			</line>
 			<line>
-				<reportElement x="309" y="131" width="1" height="25"/>
+				<reportElement x="309" y="119" width="1" height="25"/>
 			</line>
 			<line>
-				<reportElement x="328" y="131" width="1" height="25"/>
+				<reportElement x="328" y="119" width="1" height="25"/>
 			</line>
 			<staticText>
-				<reportElement x="570" y="133" width="83" height="9"/>
+				<reportElement x="570" y="121" width="83" height="9"/>
 				<textElement textAlignment="Center">
 					<font size="5" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Disciplinas]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="339" y="114" width="75" height="13"/>
+				<reportElement x="339" y="102" width="75" height="13"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{periodo}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="98" y="16" width="387" height="13"/>
+				<reportElement x="98" y="14" width="387" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="365" y="131" width="1" height="25"/>
+				<reportElement x="365" y="119" width="1" height="25"/>
 			</line>
 			<line>
-				<reportElement x="536" y="144" width="1" height="12"/>
+				<reportElement x="536" y="131" width="1" height="13"/>
 			</line>
 			<line>
-				<reportElement x="253" y="131" width="1" height="25"/>
+				<reportElement x="253" y="119" width="1" height="25"/>
 			</line>
 			<line>
-				<reportElement x="631" y="144" width="1" height="12"/>
+				<reportElement x="631" y="131" width="1" height="13"/>
 			</line>
 			<line>
-				<reportElement x="422" y="131" width="1" height="25"/>
+				<reportElement x="422" y="119" width="1" height="25"/>
 			</line>
 			<line>
-				<reportElement x="441" y="131" width="1" height="25"/>
+				<reportElement x="441" y="119" width="1" height="25"/>
 			</line>
 			<line>
-				<reportElement x="518" y="143" width="272" height="1"/>
+				<reportElement x="517" y="131" width="273" height="1"/>
 			</line>
 			<line>
-				<reportElement x="593" y="144" width="1" height="12"/>
+				<reportElement x="593" y="131" width="1" height="13"/>
 			</line>
 			<line>
-				<reportElement x="650" y="144" width="1" height="12"/>
+				<reportElement x="650" y="131" width="1" height="13"/>
 			</line>
 			<line>
-				<reportElement x="727" y="131" width="1" height="26"/>
+				<reportElement x="727" y="119" width="1" height="26"/>
 			</line>
 			<staticText>
-				<reportElement x="728" y="146" width="27" height="9"/>
+				<reportElement x="728" y="134" width="27" height="9"/>
 				<textElement textAlignment="Center">
 					<font size="6" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Média]]></text>
 			</staticText>
 			<line>
-				<reportElement x="460" y="131" width="1" height="25"/>
+				<reportElement x="460" y="119" width="1" height="25"/>
 			</line>
 			<line>
-				<reportElement x="757" y="143" width="1" height="14"/>
+				<reportElement x="757" y="131" width="1" height="13"/>
 			</line>
 			<staticText>
-				<reportElement x="758" y="146" width="32" height="9"/>
+				<reportElement x="758" y="134" width="32" height="9"/>
 				<textElement textAlignment="Center">
 					<font size="6" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Faltas]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="166" y="140" width="48" height="9"/>
+				<reportElement x="158" y="128" width="48" height="9"/>
 				<textElement>
 					<font size="6" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Código INEP]]></text>
+				<text><![CDATA[Cód. INEP]]></text>
 			</staticText>
 			<line>
-				<reportElement x="346" y="131" width="1" height="25"/>
+				<reportElement x="346" y="119" width="1" height="25"/>
 			</line>
 			<line>
-				<reportElement x="689" y="144" width="1" height="12"/>
+				<reportElement x="689" y="131" width="1" height="13"/>
 			</line>
 			<image>
-				<reportElement x="22" y="7" width="57" height="46"/>
+				<reportElement x="22" y="5" width="57" height="46"/>
 				<imageExpression class="java.lang.String"><![CDATA["imagens/brasao.jpg"]]></imageExpression>
 			</image>
 			<line>
-				<reportElement x="234" y="132" width="1" height="25"/>
+				<reportElement x="234" y="120" width="1" height="25"/>
 			</line>
 			<line>
-				<reportElement x="216" y="131" width="1" height="25"/>
+				<reportElement x="216" y="119" width="1" height="25"/>
 			</line>
 			<line>
-				<reportElement x="272" y="131" width="1" height="25"/>
+				<reportElement x="272" y="119" width="1" height="25"/>
 			</line>
 			<line>
-				<reportElement x="291" y="132" width="1" height="25"/>
+				<reportElement x="291" y="120" width="1" height="25"/>
 			</line>
 			<line>
-				<reportElement x="384" y="132" width="1" height="25"/>
+				<reportElement x="384" y="120" width="1" height="25"/>
 			</line>
 			<line>
-				<reportElement x="403" y="132" width="1" height="25"/>
+				<reportElement x="403" y="120" width="1" height="25"/>
 			</line>
 			<line>
-				<reportElement x="479" y="132" width="1" height="25"/>
+				<reportElement x="479" y="120" width="1" height="25"/>
 			</line>
 			<line>
-				<reportElement x="498" y="132" width="1" height="25"/>
+				<reportElement x="498" y="120" width="1" height="25"/>
 			</line>
 			<line>
-				<reportElement x="555" y="144" width="1" height="12"/>
+				<reportElement x="555" y="131" width="1" height="13"/>
 			</line>
 			<line>
-				<reportElement x="574" y="144" width="1" height="12"/>
+				<reportElement x="574" y="131" width="1" height="13"/>
 			</line>
 			<line>
-				<reportElement x="612" y="144" width="1" height="12"/>
+				<reportElement x="612" y="131" width="1" height="13"/>
 			</line>
 			<line>
-				<reportElement x="670" y="144" width="1" height="12"/>
+				<reportElement x="670" y="131" width="1" height="13"/>
 			</line>
 			<line>
-				<reportElement x="709" y="144" width="1" height="12"/>
+				<reportElement x="709" y="131" width="1" height="13"/>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="98" y="52" width="259" height="13"/>
+				<reportElement x="98" y="50" width="259" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["Bairro: " +$F{bairro}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="517" y="132" width="1" height="25"/>
+				<reportElement x="517" y="120" width="1" height="25"/>
 			</line>
 		</band>
 	</pageHeader>
@@ -526,127 +526,127 @@ ORDER BY nome_aluno ASC]]>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="19" splitType="Stretch">
+		<band height="10" splitType="Stretch">
 			<line>
-				<reportElement x="15" y="17" width="775" height="1"/>
+				<reportElement x="14" y="9" width="776" height="1"/>
 			</line>
 			<line>
-				<reportElement x="790" y="0" width="1" height="18"/>
+				<reportElement x="790" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="253" y="-1" width="1" height="18"/>
+				<reportElement x="253" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="727" y="-1" width="1" height="18"/>
+				<reportElement x="727" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="757" y="-1" width="1" height="18"/>
+				<reportElement x="757" y="-1" width="1" height="10"/>
 			</line>
 			<textField>
-				<reportElement x="22" y="4" width="141" height="9" forecolor="#000000"/>
+				<reportElement x="16" y="0" width="141" height="9" forecolor="#000000"/>
 				<textElement>
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_aluno}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="14" y="0" width="1" height="17"/>
+				<reportElement x="14" y="-1" width="1" height="10"/>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="166" y="4" width="46" height="9"/>
+				<reportElement x="158" y="0" width="56" height="9"/>
 				<textElement>
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{cod_aluno_inep}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="234" y="-1" width="1" height="18"/>
+				<reportElement x="234" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="216" y="-1" width="1" height="18"/>
+				<reportElement x="216" y="-1" width="1" height="10"/>
 			</line>
 			<elementGroup/>
 			<line>
-				<reportElement x="272" y="-1" width="1" height="18"/>
+				<reportElement x="272" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="291" y="-1" width="1" height="18"/>
+				<reportElement x="291" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="309" y="-1" width="1" height="18"/>
+				<reportElement x="309" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="328" y="-1" width="1" height="18"/>
+				<reportElement x="328" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="346" y="-1" width="1" height="18"/>
+				<reportElement x="346" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="365" y="-1" width="1" height="18"/>
+				<reportElement x="365" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="384" y="-1" width="1" height="18"/>
+				<reportElement x="384" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="403" y="-1" width="1" height="18"/>
+				<reportElement x="403" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="422" y="-1" width="1" height="18"/>
+				<reportElement x="422" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="441" y="-1" width="1" height="18"/>
+				<reportElement x="441" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="460" y="-1" width="1" height="18"/>
+				<reportElement x="460" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="479" y="-1" width="1" height="18"/>
+				<reportElement x="479" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="498" y="-1" width="1" height="18"/>
+				<reportElement x="498" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="517" y="-1" width="1" height="18"/>
+				<reportElement x="517" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="536" y="-1" width="1" height="18"/>
+				<reportElement x="536" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="555" y="-1" width="1" height="18"/>
+				<reportElement x="555" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="574" y="-1" width="1" height="18"/>
+				<reportElement x="574" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="593" y="-1" width="1" height="18"/>
+				<reportElement x="593" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="612" y="-1" width="1" height="18"/>
+				<reportElement x="612" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="631" y="-1" width="1" height="18"/>
+				<reportElement x="631" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="650" y="-1" width="1" height="18"/>
+				<reportElement x="650" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="670" y="-1" width="1" height="18"/>
+				<reportElement x="670" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="689" y="-1" width="1" height="18"/>
+				<reportElement x="689" y="-1" width="1" height="10"/>
 			</line>
 			<line>
-				<reportElement x="709" y="-1" width="1" height="18"/>
+				<reportElement x="709" y="-1" width="1" height="10"/>
 			</line>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="5" splitType="Stretch"/>
+		<band height="2" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="5" splitType="Stretch"/>
+		<band height="3" splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band height="16" splitType="Stretch"/>
+		<band height="3" splitType="Stretch"/>
 	</summary>
 </jasperReport>

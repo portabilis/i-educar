@@ -57,6 +57,9 @@ class indice extends clsCadastro
 
 	var $ref_cod_instituicao;
 	var $ref_cod_escola;
+	var $ref_cod_curso;
+	var $ref_cod_serie;
+	var $ref_cod_turma;
 	
 	var $aux_sexo;
 	var $aux_idadeinicial;
@@ -76,7 +79,11 @@ class indice extends clsCadastro
 	var $total;
 
 	var $aux_cod_escola;	
-
+	
+	var $aux_cod_curso;
+	var $aux_cod_serie;
+	var $aux_cod_turma;
+	
 	/****************COLOCADO********************************/
 	var $segue_padrao_escolar = true;
 	var $mostra_cabecalho_modulo = array();
@@ -105,6 +112,8 @@ class indice extends clsCadastro
 		$aux_sexo = "A";		
 	}
 	
+	
+	//Faixa etária nao obrigatorio
 	if (! isset($_POST['idadeinicial']) || ! $_POST['idadeinicial']) {
 		$aux_idadeinicial = 0;	
 	}
@@ -118,10 +127,35 @@ class indice extends clsCadastro
 	else{
 		$aux_idadefinal = $_POST['idadefinal'];			
 	}
+	
+	
+	//Curso nao obrigatorio
+	if (! isset($_POST['ref_cod_curso']) || ! $_POST['ref_cod_curso']) {
+	  $aux_cod_curso = 0;
+	}
+	else{
+	  $aux_cod_curso = $_POST['ref_cod_curso'];
+	}
+	
+	//Serie nao obrigatorio
+	if (! isset($_POST['ref_ref_cod_serie']) || ! $_POST['ref_ref_cod_serie']) {
+	  $aux_cod_serie = 0;	 
+	}
+	else{
+	  $aux_cod_serie = $_POST['ref_ref_cod_serie'];	  
+	}
+			
+	//Turma nao obrigatorio
+	if (! isset($_POST['ref_cod_turma']) || ! $_POST['ref_cod_turma']) {
+	  $aux_cod_turma = 0;
+	}
+	else{
+	  $aux_cod_turma = $_POST['ref_cod_turma'];
+	}		
 			
     $PHPJasperXML = new PHPJasperXML();
 	$PHPJasperXML->debugsql=false;
-    $PHPJasperXML->arrayParameter=array("ano"=>$_POST['ano'],"instituicao"=>$_POST['ref_cod_instituicao'],"escola" =>$aux_cod_escola, "sexo"=>"'".  $aux_sexo."'","idadeinicial"=>$aux_idadeinicial,"idadefinal"=>$aux_idadefinal);	
+    $PHPJasperXML->arrayParameter=array("ano"=>$_POST['ano'],"instituicao"=>$_POST['ref_cod_instituicao'],"escola" =>$aux_cod_escola, "curso" =>$aux_cod_curso, "serie" =>$aux_cod_serie, "turma" =>$aux_cod_turma, "sexo"=>"'".  $aux_sexo."'","idadeinicial"=>$aux_idadeinicial,"idadefinal"=>$aux_idadefinal);	
 		
 	$PHPJasperXML->xml_dismantle($xml);
 
