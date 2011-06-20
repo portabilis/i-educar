@@ -20,6 +20,7 @@
 
     <link rel=stylesheet type='text/css' href='styles/reset.css' />
     <link rel=stylesheet type='text/css' href='styles/portabilis.css' />
+    <link rel=stylesheet type='text/css' href='styles/min-portabilis.css' />
     <style rel=stylesheet type='text/css'>
 #flash-container, #menu, #corpo, #cabecalho #ccorpo, #rodape {
     width: 800px;
