@@ -730,6 +730,10 @@ class clsBase extends clsConfig
 
   function MakeAll ()
   {
+
+  try
+  {
+
     $cronometro = new clsCronometro();
     $cronometro->marca('inicio');
     $liberado = TRUE;
@@ -836,6 +840,13 @@ class clsBase extends clsConfig
       $objMail = new clsEmail($objConfig->arrayConfig['ArrStrEmailsAdministradores'], "[INTRANET - PMI] Desempenho de pagina", $conteudo);
       $objMail->envia();
     }
+}
+catch (Exception $e) 
+{
+  echo "<html><head><link rel='stylesheet' type='text/css' href='styles/reset.css'><link rel='stylesheet' type='text/css' href='styles/portabilis.css'><link rel='stylesheet' type='text/css' href='styles/min-portabilis.css'></head>";
+  echo "<body><div id='error'><h1>Erro inesperado</h1><p class='explication'>Descupe-nos ocorreu algum erro no sistema, <strong>por favor tente novamente mais tarde</strong></p><ul class='unstyled'><li><a href='/intranet/index.php'>- Voltar para o sistema</a></li><li>- Tentou mais de uma vez e o erro persiste ? Por favor, <a target='_blank' href='http://www.portabilis.com.br/site/suporte'>solicite suporte</a> ou envie um email para suporte@portabilis.com.br</li></ul><div id='detail'><p><strong>Detalhes:</strong> {$e->getMessage()}</p></div></div></body></html>";
+}
+
   }
 
   function setAlertaProgramacao($string)
