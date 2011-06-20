@@ -31,11 +31,10 @@
  * @version  $Id$
  */
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
   <head>
-    <title></title>
-    <style type="text/css">
+    <!--style type="text/css">
       * {
         margin: 0;
         padding: 0
@@ -68,15 +67,21 @@
         margin-top: 20px;
         list-style-position: inside
       }
-    </style>
+    </style-->
+
+    <link rel='stylesheet' type='text/css' href='styles/reset.css'>
+    <link rel='stylesheet' type='text/css' href='styles/portabilis.css'>
+    <link rel='stylesheet' type='text/css' href='styles/min-portabilis.css'></head>
 
   </head>
 
   <body>
     <div id="error">
       <div class="content">
-        <h1>Erro</h1>
-        <p>Estamos passando por dificuldades em nosso servidor, por favor tente novamente mais tarde.</p>
+        <h1>Erro inesperado</h1>
+        <p class="explication">Descupe-nos, estamos passando por dificuldades em nosso servidor de banco de dados, <strong>por favor tente novamente mais tarde.</strong></p>
+
+        <ul class='unstyled'><li><a href='/intranet/index.php'>- Voltar para o sistema</a></li><li>- Tentou mais de uma vez e o erro persiste ? Por favor, <a target='_blank' href='http://www.portabilis.com.br/site/suporte'>solicite suporte</a> ou envie um email para suporte@portabilis.com.br</li></ul>
       </div>
     </div>
   </body>

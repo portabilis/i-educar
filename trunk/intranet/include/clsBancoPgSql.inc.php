@@ -454,16 +454,20 @@ abstract class clsBancoSQL_
 
         throw new Exception($message);
       }
-      else {
-        $erroMsg = "SQL invalido: {$this->strStringSQL}<br>\n";
-        die($erroMsg);
+      else
+      {
 
-        if ($this->transactionBlock) {
-          // Nada.
-        }
+          $erroMsg = "SQL invalido: {$this->strStringSQL}<br>\n";
+        /*
+          die($erroMsg);
+          if ($this->transactionBlock) {
+            // Nada.
+          }
 
-        $this->Interrompe($erroMsg);
-        return FALSE;
+          $this->Interrompe($erroMsg);
+          return FALSE;
+        */
+        throw new Exception("Erro ao executar uma ação no banco de dados: $erroMsg");
       }
     }
 
