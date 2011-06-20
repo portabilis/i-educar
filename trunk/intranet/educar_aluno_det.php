@@ -94,6 +94,11 @@ class indice extends clsDetalhe
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
+    // Verificação de permissão para cadastro.
+    $this->obj_permissao = new clsPermissoes();
+
+    $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
+
     $this->titulo = 'Aluno - Detalhe';
     $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
 
@@ -342,6 +347,16 @@ class indice extends clsDetalhe
 
     if ($registro['cod_aluno']) {
       $this->addDetalhe(array('Código Aluno', $registro['cod_aluno']));
+    }
+
+    if ($registro['caminho_foto']) {
+      $this->addDetalhe(array(
+        'Foto',
+        sprintf(
+          '<img src="arquivos/educar/aluno/small/%s" border="0">',
+          $registro['caminho_foto']
+        )
+      ));
     }
 
     if ($registro['nome_aluno']) {
@@ -603,16 +618,6 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Seção', $registro['secao_tit_eleitor']));
     }
 
-    if ($registro['caminho_foto']) {
-      $this->addDetalhe(array(
-        'Foto',
-        sprintf(
-          '<img src="arquivos/educar/aluno/small/%s" border="0">',
-          $registro['caminho_foto']
-        )
-      ));
-    }
-
     // Transporte escolar.
     $transporteMapper = new Transporte_Model_AlunoDataMapper();
     $transporteAluno  = NULL;
@@ -647,8 +652,6 @@ class indice extends clsDetalhe
       }
     }
 
-    $this->addDetalhe(array('Matrícula', $this->montaTabelaMatricula()));
-
     //informação seriesciasc
     $SerieciascMapper = new Ciasc_Model_CodigoAlunoDataMapper();
 
@@ -662,9 +665,10 @@ class indice extends clsDetalhe
         $this->addDetalhe(array('Matrícula Série/CIASC', $ciasc->cod_ciasc));
     }
 
-    // Verificação de permissão para cadastro.
-    $obj_permissao = new clsPermissoes();
-    if ($obj_permissao->permissao_cadastra(578, $this->pessoa_logada, 7)) {
+    $this->addDetalhe($this->montaTabelaMatricula());
+    //$this->addDetalhe(array('Matrícula', $this->montaTabelaMatricula()));
+
+    if ($this->obj_permissao->permissao_cadastra(578, $this->pessoa_logada, 7)) {
       $this->url_novo   = 'educar_aluno_cad.php';
       $this->url_editar = 'educar_aluno_cad.php?cod_aluno=' . $registro['cod_aluno'];
 
@@ -680,7 +684,199 @@ class indice extends clsDetalhe
     $this->largura      = '100%';
   }
 
+
   function montaTabelaMatricula()
+  {
+    $db = new clsBanco();
+
+    require_once 'include/portabilis/ml.php';
+    $div = new DIV(new P('<strong>Matriculas:</strong>'));    
+
+    $matriculas = new clsPmieducarMatricula();#null, null, null, null, null, null, $this->cod_aluno, null, null, null, 1);
+    $matriculas->setOrderby('ano DESC, ref_ref_cod_serie DESC, aprovado, cod_matricula');
+    $matriculas = $matriculas->lista(null, null, null, null, null, null, $this->cod_aluno, null, null, null, null, null, 1);
+
+    if ($matriculas)
+    {
+      $tr = new TR(new TH('Ano', array('class' => 'center')), new TH('Situação'), new TH('Turma'), new TH('Série'), new TH('Curso'), new TH('Escola'));
+
+      if ($this->nivel_usuario == 1)
+        $tr->append(new TH('Instituição'));    
+
+      $tr->append(new TH('Formando', array('class' => 'center')));
+      $tr->append(new TH('Entrada', array('class' => 'center')));
+      $tr->append(new TH('Saída', array('class' => 'center')));
+
+      $t = new HtmlTable($tr, array('class'=>'horizontal-expand styled small strong'));
+
+      $classRow = '';
+      $possuiSolTransfEmAberto = false;
+      foreach($matriculas as $m)
+      {
+        
+        $turma = new clsPmieducarMatriculaTurma();
+        $turma = $turma->lista($m['cod_matricula'], NULL, NULL,
+          NULL, NULL, NULL, NULL, NULL, 1);
+        if ($turma)
+        {
+          $turma = array_shift($turma);
+
+          $turma = new clsPmieducarTurma($turma['ref_cod_turma']);
+          $turma = $turma->detalhe();
+          $turma  = $turma['nm_turma'];
+        }
+        else
+          $turma = '';
+
+        $serie = new clsPmieducarSerie($m['ref_ref_cod_serie']);
+        $serie = $serie->detalhe();
+        $serie = $serie['nm_serie'];
+
+        $situacao = $m['aprovado'];
+        if ($situacao == 1)
+          $situacao = 'Aprovado';
+        elseif ($situacao == 2)
+          $situacao = 'Reprovado';
+        elseif ($situacao == 3)
+        {
+          $situacao = 'Em Andamento';
+
+          if ($db->UnicoCampo("select count(cod_transferencia_solicitacao) from pmieducar.transferencia_solicitacao where ativo = 1 and ref_cod_matricula_saida = {$m['cod_matricula']} and ref_cod_matricula_entrada is null and data_transferencia is null") > 0)
+          {
+            #$situacao = '* ' . $situacao;    
+            $situacao .=  ' *';   
+            $possuiSolTransfEmAberto = true;
+          }
+        }
+        elseif ($situacao == 4)
+          $situacao = 'Transferido';
+
+        $curso = new clsPmieducarCurso($m['ref_cod_curso']);
+        $curso = $curso->detalhe();
+        $curso = $curso['nm_curso'];
+
+        $instituicao = new clsPmieducarInstituicao($m['ref_cod_instituicao']);
+        $instituicao = $instituicao->detalhe();
+        $instituicao = $instituicao['nm_instituicao'];
+
+        $escola = new clsPmieducarEscola($m['ref_ref_cod_escola']);
+        $escola = $escola->detalhe();
+        $escola = $escola['nome'];
+
+        $sql = sprintf('SELECT
+                  ref_cod_matricula_entrada,
+                  ref_cod_matricula_saida,
+                  to_char(data_transferencia, \'DD/MM/YYYY\') AS dt_transferencia
+                FROM
+                  pmieducar.transferencia_solicitacao
+                WHERE
+                  (ref_cod_matricula_entrada = %d
+                  OR ref_cod_matricula_saida = %d)
+                  AND ativo = 1',
+                $m['cod_matricula'], $m['cod_matricula']
+        );
+
+        $db->Consulta($sql);
+
+        while ($db->ProximoRegistro())
+        {
+          list($ref_cod_matricula_entrada, $ref_cod_matricula_saida, $dTrans) = $db->Tupla();
+
+          if ($ref_cod_matricula_saida == $m['cod_matricula'])
+          {
+              $dTransSaida = $dTrans;
+              $dTransEntrada = '';
+          }
+          elseif ($ref_cod_matricula_entrada == $m['cod_matricula'])
+          {
+            $dTransEntrada = $dTrans;
+            $dTransSaida = '';
+          }
+        }
+        $formando = $m['formando'] ? 'Sim' : '';
+
+        $instEsc = $this->obj_permissao->getInstituicaoEscola($this->pessoa_logada);      
+        if ($this->nivel_usuario == 1 || ($m['ref_cod_instituicao'] == $instEsc['instituicao'] && $m['ref_ref_cod_escola'] == $instEsc['escola']))
+          $href = 'educar_matricula_det.php?cod_matricula='.$m['cod_matricula'];
+        else
+          $href = '';
+
+        if ($href)
+        {
+          $tr = new TR(new TD(new A($m['ano'], array('href' => $href, 'class' => 'decorated')), array('class' => 'center')), 
+                        new TD(new A($situacao, array('href' => $href))), 
+                        new TD(new A($turma, array('href' => $href))),                         
+                        new TD(new A($serie, array('href' => $href))), 
+                        new TD(new A($curso, array('href' => $href))), 
+                        new TD(new A($escola, array('href' => $href))), 
+                        array('class' => $classRow));
+
+          if ($this->nivel_usuario == 1)
+            $tr->append(new TD(new A($instituicao, array('href' => $href))));
+
+          $tr->append(new TD(new A($formando, array('href' => $href)), array('class' => 'center')));
+          $tr->append(new TD(new A($dTransEntrada, array('href' => $href)), array('class' => 'center')));
+          $tr->append(new TD(new A($dTransSaida, array('href' => $href)), array('class' => 'center')));
+        }
+        else
+        {
+          $tr = new TR(new TD($m['ano'], array('class' => 'center')), 
+                        new TD($situacao), 
+                        new TD($turma),                         
+                        new TD($serie), 
+                        new TD($curso), 
+                        new TD($escola), 
+                        array('class' => $classRow)); 
+
+          if ($this->nivel_usuario == 1)
+            $tr->append(new TD($instituicao));
+
+          $tr->append(new TD($formando, array('class' => 'center')));
+          $tr->append(new TD($dTransEntrada, array('class' => 'center')));
+          $tr->append(new TD($dTransSaida, array('class' => 'center')));
+        }
+
+        $t->append($tr);
+
+        if ($classRow)
+          $classRow = '';
+        else
+          $classRow = 'cellcolor';
+  /*
+        $t = new HtmlTable(                
+                   new TR(new TH('Ano / Matrícula'), new TD($m['ano'], ' / ', $m['cod_matricula'], $link), array('class' => 'strong')), 
+                   new TR(new TH('Matrícula'), new TD()), 
+                   new TR(new TH('Situação'), new TD($situacao), array('class' => 'cellcolor')), 
+                   new TR(new TH('Turma'), new TD($turma)),                         
+                   new TR(new TH('Série'), new TD($serie), array('class' => 'cellcolor')), 
+                   new TR(new TH('Curso'), new TD($curso)), 
+                   new TR(new TH('Escola'), new TD($escola), array('class' => 'cellcolor')), array('class'=>'styled nocellcolor'));
+
+        if ($this->nivel_usuario == 1)
+          $t->append(new TR(new TH('Instituição'), new TD($instituicao), array('class' => 'cellcolor')));
+
+        if ($formando)
+          $t->append(new TR(new TH('Formando'), new TD($formando)));
+
+        if ($dTransEntrada)
+          $t->append(new TR(new TH('Data transferencia admissão'), new TD($dTransEntrada), array('class' => 'cellcolor')));
+
+        if ($dTransSaida)
+          $t->append(new TR(new TH('Data transferencia saída'), new TD($dTransSaida)));
+  */
+      }
+      $div->append($t);
+
+      if ($possuiSolTransfEmAberto)
+        $div->append(new P('* Matrícula com solicitação de transferência interna em aberto. ', new A('matricular aluno', array('class' => 'decorated', 'href' => "educar_matricula_cad.php?ref_cod_aluno={$_GET['cod_aluno']}"))));
+    }
+    else
+      $div->append(new P('<strong>Este aluno não possui matrículas. </strong>', new A('matrícular aluno', array('class' => 'decorated', 'href' => "educar_matricula_cad.php?ref_cod_aluno={$_GET['cod_aluno']}"))));
+
+    return $div->render();
+  }  
+
+/*  function montaTabelaMatricula()
   {
     $sql = sprintf('SELECT
               cod_matricula
@@ -759,7 +955,8 @@ class indice extends clsDetalhe
             $aprovado = 'Em Andamento';
           }
           elseif ($registro['aprovado'] == 4) {
-            if (is_numeric($registro['cod_matricula'])) {
+            if (is_numeric($registro['cod_matricula'])) 
+            {
               $aprovado = 'Transferido';
 
               $sql = sprintf('SELECT
@@ -819,6 +1016,11 @@ class indice extends clsDetalhe
           $table .= sprintf(
             '<tr class="formmdtd"><td>Instituição</td><td>%s</td></tr>',
             $nm_instituicao
+          );
+
+          $table .= sprintf(
+            '<tr class="formlttd"><td>Curso</td><td>%s</td></tr>',
+            $nm_curso
           );
 
           $table .= sprintf(
@@ -894,7 +1096,7 @@ class indice extends clsDetalhe
     }
 
     return $table;
-  }
+  }*/
 }
 
 // Instancia o objeto da página

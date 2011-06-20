@@ -27,6 +27,14 @@ ul.autocomplete {
   -webkit-border-top-right-radius: 2px;
 }
 
+.decorated {
+	text-decoration: underline;
+}
+
+*:hover.decorated {
+	text-decoration: none;
+}
+
 ul.autocomplete li {
   padding: 4px;
 }
@@ -37,3 +45,90 @@ ul.autocomplete li:hover {
 	text-shadow: none;
 	text-decoration: none;
 }
+
+table.small {
+
+}
+
+table.styled {
+  border:           thin solid #e9e9e9;
+  border-collapse:  collapse;
+  margin-top: 5px;
+  
+  font-family: Verdana, Geneva, Arial, sans-serif;
+}
+
+table {
+  caption-side:     top;
+}
+
+table > caption {
+	margin-bottom: 5px;
+}
+
+table.styled tr td, table.styled tr th {
+  border: thin dotted #e9e9e9;
+}
+
+table.styled td, table.styled th {
+  padding: 5px;
+}
+
+table.styled th {
+  background-color: #f5f5f5;
+  color: #3C3C3D;
+  font-weight: bold;
+}
+
+.horizontal-expand {
+	width: 100%;
+}
+
+.center {
+  text-align:       center;
+}
+
+.right {
+  text-align:       right;
+}
+
+.texto-normal, .texto-normal a, a.texto-normal {
+	font-weight: normal;	
+}
+
+table.nocellcolor th, .nocellcolor {
+  background-color: #fff;
+}
+
+table.cellcolor th, table tr.cellcolor th, .cellcolor {
+  background-color: #f5f5f5;
+}
+
+table.strong th , tr.strong th, tr.strong td{
+  background-color: #dbdbdb;
+}
+
+div#error h1 {
+  font-size: 300%;
+}
+
+div#error {
+  margin-top: 20px;
+  border: 1px solid;
+  width: 800px;
+  margin-right: auto;
+  margin-left: auto;
+  padding: 20px;
+}
+
+div#error ul {
+  margin: 0px;
+  margin-top: 10px;
+  padding: 0px;
+}
+
+div#error div#detail {
+  margin-top: 40px;
+  border-top: 1px solid;
+}
+

@@ -19,14 +19,6 @@ a {
 	text-decoration: none;
 }
 
-a.decorated {
-	text-decoration: underline;
-}
-
-a:hover.decorated {
-	text-decoration: none;
-}
-
 a.logout {
 	color: #ff8f00;
 }	
@@ -161,10 +153,6 @@ body {
 form {
     margin-top: 10px;
     margin-bottom: 10px;
-}
-
-.texto-normal, .texto-normal a {
-	font-weight: normal;	
 }
 
 #rodape {

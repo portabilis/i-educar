@@ -107,6 +107,10 @@ class indice extends clsListagem
 		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
 
 		$lista_busca = array(
+      "Ano",
+      "Matrícula",
+      "Situação",
+      "Turma",
 			"S&eacute;rie",
 			"Curso"
 		);
@@ -139,7 +143,7 @@ class indice extends clsListagem
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
 		$obj_matricula = new clsPmieducarMatricula();
-		$obj_matricula->setOrderby( "cod_matricula ASC" );
+		$obj_matricula->setOrderby('ano DESC, ref_ref_cod_serie DESC, aprovado, cod_matricula');
 		$obj_matricula->setLimite( $this->limite, $this->offset );
 
 		$lista = $obj_matricula->lista(
@@ -214,7 +218,40 @@ class indice extends clsListagem
 					echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
 				}
 
+        $turma = new clsPmieducarMatriculaTurma();
+        $turma = $turma->lista($registro['cod_matricula'], NULL, NULL,
+          NULL, NULL, NULL, NULL, NULL, 1);
+        if ($turma)
+        {
+          $turma = array_shift($turma);
+
+          $turma = new clsPmieducarTurma($turma['ref_cod_turma']);
+          $turma = $turma->detalhe();
+          $turma  = $turma['nm_turma'];
+        }
+        else
+          $turma = '';
+
+        $situacao = $registro['aprovado'];
+        if ($situacao == 1)
+          $situacao = 'Aprovado';
+        elseif ($situacao == 2)
+          $situacao = 'Reprovado';
+        elseif ($situacao == 3)
+          $situacao = 'Em Andamento';
+        elseif ($situacao == 4)
+          $situacao = 'Transferido';
+
 				$lista_busca = array();
+
+   			$lista_busca[] = "<a href=\"educar_matricula_det.php?cod_matricula={$registro["cod_matricula"]}\">{$registro["ano"]}</a>";
+   			$lista_busca[] = "<a href=\"educar_matricula_det.php?cod_matricula={$registro["cod_matricula"]}\">{$registro["cod_matricula"]}</a>";
+   			$lista_busca[] = "<a href=\"educar_matricula_det.php?cod_matricula={$registro["cod_matricula"]}\">$situacao</a>";
+
+				if ($turma)
+					$lista_busca[] = "<a href=\"educar_matricula_det.php?cod_matricula={$registro["cod_matricula"]}\">$turma</a>";
+				else
+					$lista_busca[] = "";
 
 				if ($registro["ref_ref_cod_serie"])
 					$lista_busca[] = "<a href=\"educar_matricula_det.php?cod_matricula={$registro["cod_matricula"]}\">{$registro["ref_ref_cod_serie"]}</a>";
@@ -246,6 +283,11 @@ class indice extends clsListagem
 				$this->addLinhas($lista_busca);
 			}
 		}
+    else
+    {
+				$this->addLinhas(array('Aluno sem matrículas em andamento na sua escola.'));
+    }
+
 		$this->addPaginador2( "educar_matricula_lst.php", $total, $_GET, $this->nome, $this->limite );
 		if( $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7 ) )
 		{
