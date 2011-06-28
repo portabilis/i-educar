@@ -59,6 +59,7 @@
 		while ( $db->ProximoRegistro() )
 		{
 			list( $cod, $nome ) = $db->Tupla();
+      $nome = htmlspecialchars($nome);
 			echo "	<escola cod_escola=\"{$cod}\">{$nome}</escola>\n";
 		}
 	}
