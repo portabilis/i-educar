@@ -187,13 +187,17 @@
                 FROM modules.componente_curricular
                WHERE componente_curricular.id = nota_componente_curricular.componente_curricular_id) as nome_disciplina,
              nota_componente_curricular.componente_curricular_id,
-	 (SELECT CASE  WHEN nota_arredondada = 10 THEN
+ (SELECT CASE  WHEN et1.nota_arredondada = 10 THEN
 			                   '10,0'
-			               WHEN char_length(nota_arredondada) = 1 THEN
-			                   replace(nota_arredondada,'.',',') || ',0'
+			               WHEN char_length(et1.nota_arredondada) = 1 THEN
+			                   replace(et1.nota_arredondada,'.',',') || ',0'
                            ELSE
-                               replace(nota_arredondada,'.',',')
-                           END ) as nota_arredondada,
+                               replace(et1.nota_arredondada,'.',',')
+                           END
+                FROM modules.nota_componente_curricular et1
+               WHERE et1.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+                     et1.etapa = 1 AND
+                     nota_aluno.id  = et1.nota_aluno_id) AS nota_arredondada,
              nota_componente_curricular.etapa,
              matricula_id,
 
