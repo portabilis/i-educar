@@ -94,7 +94,8 @@ class indice extends clsCadastro
 		$escola_obrigatorio = true;
 		$escola_curso_serie_obrigatorio = true;
 		$curso_obrigatorio = true;
-		
+    $get_componente_curricular = $componente_curricular_obrigatorio = true;
+    
 		$this->ano = $ano_atual = date("Y");
 		
 		//campo adicionado para pegar por parametro o Ano Letivo da Escola
@@ -110,9 +111,7 @@ class indice extends clsCadastro
 
 		$this->campoLista( "ref_cod_matricula", "Aluno",array(''=>'Selecione'), "","",false,"Campo não obrigatório","",false,false);
 
-		
-	    //campo adicionado para pegar por parametro o nome da disciplina
-		$this->campoTexto("disciplina","Disciplina:",$this->disciplina,40,255,false);
+    $this->campoLista("ref_cod_componente_curricular","Componente curricular",array('' => 'Selecione'),"","",false,"","",false,true);
 		
 		//campo adicionado para pegar por parametro o nome do professor
 		$this->campoTexto("professor","Professor(a):",$this->professor,40,255,false);
@@ -231,10 +230,7 @@ function getTurmaCurso_XML(xml)
 
 document.getElementById('ref_cod_turma').onchange = function()
 {
-	getAluno();
-	var This = this;
-	setMatVisibility();
-
+  getComponenteCurricular();
 }
 
 function setMatVisibility()
@@ -286,7 +282,6 @@ function getAluno_XML(xml)
 		campoTurma.options[0] = new Option( 'O curso não possui nenhuma turma', '', false, false );
 	}*/
 }
-
 
 setVisibility('tr_ref_cod_matricula',false);
 var func = function(){document.getElementById('btn_enviar').disabled= false;};

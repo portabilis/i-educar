@@ -1417,7 +1417,10 @@ function updateSelect(xml)
    	var instituicaoId = document.getElementById('ref_cod_instituicao').value;
     var escolaId = document.getElementById('ref_cod_escola').value;
 		var cursoId = document.getElementById('ref_cod_curso').value;
-    var anoEscolar = document.getElementById('ano_escolar').value;
+    var anoEscolar = document.getElementById('ano_escolar');
+    if (! anoEscolar)
+        var anoEscolar = document.getElementById('ano');
+    var anoEscolar = anoEscolar.value;   
 		var turmaId = document.getElementById('ref_cod_turma').value;
     if (escolaId && anoEscolar && turmaId)
     {

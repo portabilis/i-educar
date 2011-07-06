@@ -155,8 +155,8 @@ class indice extends clsCadastro
 	
 	$PHPJasperXML = new PHPJasperXML();
 	$PHPJasperXML->debugsql=false;
-	$PHPJasperXML->arrayParameter=array("ano"=>$_POST['ano'],"instituicao"=>$_POST['ref_cod_instituicao'],"escola"=>$_POST['ref_cod_escola'],"curso"=>$_POST['ref_cod_curso'],"serie"=>$_POST['ref_ref_cod_serie'],"turma"=>$_POST['ref_cod_turma'],"disciplina"=>$_POST['disciplina'],"professor"=>$_POST['professor']); 
-    $PHPJasperXML->xml_dismantle($xml);
+	$PHPJasperXML->arrayParameter=array("ano"=>$_POST['ano'],"instituicao"=>$_POST['ref_cod_instituicao'],"escola"=>$_POST['ref_cod_escola'],"curso"=>$_POST['ref_cod_curso'],"serie"=>$_POST['ref_ref_cod_serie'],"turma"=>$_POST['ref_cod_turma'],"disciplina"=>$_POST['ref_cod_componente_curricular'],"professor"=>$_POST['professor']); 
+  $PHPJasperXML->xml_dismantle($xml);
 
 	$PHPJasperXML->transferDBtoArray($server,$user,$pass,$db,$port);
 	$PHPJasperXML->outpage("I");    //page output method I:standard output  D:Download file
