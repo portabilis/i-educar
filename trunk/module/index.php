@@ -1,5 +1,8 @@
 <?php
 
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -39,29 +42,37 @@ require_once 'CoreExt/Controller/Request.php';
 require_once 'CoreExt/Controller/Front.php';
 require_once 'CoreExt/DataMapper.php';
 
-// Objeto de requisição
-$request = new CoreExt_Controller_Request();
+try
+{
+  // Objeto de requisição
+  $request = new CoreExt_Controller_Request();
 
-// Helper de URL. Auxilia para criar uma URL no formato http://www.example.org/module
-$url = CoreExt_View_Helper_UrlHelper::getInstance();
-$url = $url->url($request->get('REQUEST_URI'), array('components' => CoreExt_View_Helper_UrlHelper::URL_HOST));
+  // Helper de URL. Auxilia para criar uma URL no formato http://www.example.org/module
+  $url = CoreExt_View_Helper_UrlHelper::getInstance();
+  $url = $url->url($request->get('REQUEST_URI'), array('components' => CoreExt_View_Helper_UrlHelper::URL_HOST));
 
-// Configura o baseurl da request
-$request->setBaseurl(sprintf('%s/module', $url));
+  // Configura o baseurl da request
+  $request->setBaseurl(sprintf('%s/module', $url));
 
-// Configura o DataMapper para usar uma instância de clsBanco com fetch de resultados
-// usando o tipo FETCH_ASSOC
-CoreExt_DataMapper::setDefaultDbAdapter(new clsBanco(array('fetchMode' => clsBanco::FETCH_ASSOC)));
+  // Configura o DataMapper para usar uma instância de clsBanco com fetch de resultados
+  // usando o tipo FETCH_ASSOC
+  CoreExt_DataMapper::setDefaultDbAdapter(new clsBanco(array('fetchMode' => clsBanco::FETCH_ASSOC)));
 
-// Inicia o Front Controller
-$frontController = CoreExt_Controller_Front::getInstance();
-$frontController->setRequest($request);
+  // Inicia o Front Controller
+  $frontController = CoreExt_Controller_Front::getInstance();
+  $frontController->setRequest($request);
 
-// Configura o caminho aonde os módulos estão instalados
-$frontController->setOptions(
-  array('basepath' => PROJECT_ROOT . DS . 'modules')
-);
-$frontController->dispatch();
+  // Configura o caminho aonde os módulos estão instalados
+  $frontController->setOptions(
+    array('basepath' => PROJECT_ROOT . DS . 'modules')
+  );
+  $frontController->dispatch();
 
-// Resultado
-print $frontController->getViewContents();
+  // Resultado
+  print $frontController->getViewContents();
+}
+catch (Exception $e) 
+{
+  echo "<html><head><link rel='stylesheet' type='text/css' href='styles/reset.css'><link rel='stylesheet' type='text/css' href='styles/portabilis.css'><link rel='stylesheet' type='text/css' href='styles/min-portabilis.css'></head>";
+  echo "<body><div id='error'><h1>Erro inesperado</h1><p class='explication'>Descupe-nos ocorreu algum erro no sistema, <strong>por favor tente novamente mais tarde</strong></p><ul class='unstyled'><li><a href='/'>- Voltar para o sistema</a></li><li>- Tentou mais de uma vez e o erro persiste ? Por favor, <a target='_blank' href='http://www.portabilis.com.br/site/suporte'>solicite suporte</a> ou envie um email para suporte@portabilis.com.br</li></ul><div id='detail'><p><strong>Detalhes:</strong> {$e->getMessage()}</p></div></div></body></html>";
+}
