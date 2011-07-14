@@ -28,8 +28,18 @@
  * @version   $Id: clsBase.inc.php 773 2010-12-19 20:46:49Z eriksencosta@gmail.com $
  */
 
+
+$paths_to_include = array();
+$paths_to_include[] = dirname(__FILE__); #/intranet/include
+$paths_to_include[] = dirname(dirname(__FILE__)); #/intranet
+$paths_to_include[] = dirname(dirname(dirname(__FILE__))); #/
+
+foreach ($paths_to_include as $p)
+  set_include_path(get_include_path() . PATH_SEPARATOR . $p);
+
+
 // Inclui arquivo de bootstrapping
-require_once '../includes/bootstrap.php';
+require_once 'includes/bootstrap.php';
 
 require_once 'include/clsCronometro.inc.php';
 require_once 'clsConfigItajai.inc.php';

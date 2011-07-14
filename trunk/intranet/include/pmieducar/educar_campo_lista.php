@@ -1443,7 +1443,7 @@ function updateSelect(xml)
 } ?>
 
 <?php
-	if ($verificar_campos_obrigatorios)
+	if ($verificar_campos_obrigatorios || (isset($this->verificar_campos_obrigatorios) && $this->verificar_campos_obrigatorios))
 	{
   
     $s = <<<EOT
@@ -1458,24 +1458,64 @@ if (__bSubmit)
   var __old_event = __bSubmit.onclick;
   __bSubmit.onclick = function()
   {
+    var __toSetFocus = '';
     var __not_empty_fields = document.getElementsByClassName('obrigatorio');
     var __all_filled = true;
     for (var i = 0; i < __not_empty_fields.length; i++)
     {
     if (! __not_empty_fields[i].value)
     {
-      var __all_filled = false;
+      __all_filled = false;
+      __toSetFocus = __not_empty_fields[i];
       break;
     }
     }
     if (! __all_filled)
-    alert('Selecione um valor em todos os campos, antes de continuar.');
+    {
+      alert('Preencha todos campos obrigat\u00F3rios, antes de continuar.');
+      __toSetFocus.focus();
+    }
     else
     {
     __old_event();
     }
   }
 } </script>
+EOT;
+  $this->appendOutput($s);
+} 
+?>
+
+
+<?php
+	if ((isset($add_onchange_events) && $add_onchange_events)  || (isset($this->add_onchange_events) && $this->add_onchange_events))
+	{
+  
+    $s = <<<EOT
+<script>
+
+  document.getElementById('ref_cod_escola').onchange = function()
+  {
+	  getEscolaCurso();
+  }
+
+  document.getElementById('ref_cod_curso').onchange = function()
+  {
+
+	  getEscolaCursoSerie();
+  }
+
+ 
+  var __serie_field = document.getElementById('ref_cod_serie');
+  if (! __serie_field)
+    var __serie_field = document.getElementById('ref_ref_cod_serie');
+
+  __serie_field.onchange = function()
+  {
+    getTurma();
+  }
+
+</script>
 EOT;
   $this->appendOutput($s);
 } 
