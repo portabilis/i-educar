@@ -237,6 +237,13 @@ class indice extends clsDetalhe
 		{
 			$this->addDetalhe( array( "Institui&ccedil;&atilde;o", "{$registro["ref_cod_instituicao"]}") );
 		}
+
+    $codInep = $tmp_obj->educacensoEscola->getCodInep($codIeducar = $registro["cod_escola"]);
+		if($codInep)
+		{
+			$this->addDetalhe(array( "Código Inep", "$codInep"));
+		}
+
 		if( $nm_escola )
 		{
 			$this->addDetalhe( array( "Escola", "{$nm_escola}") );

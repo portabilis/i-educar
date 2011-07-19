@@ -2,37 +2,9 @@
 #error_reporting(E_ALL);
 #ini_set("display_errors", 1);
 
-require_once( "clsBanco.inc.php" );
+require_once("portabilis/dal.php");
 
-#wrapper to clsBanco
-class Db
-{
-  function __construct()
-  {
-    $this->_db = new clsBanco();
-  }
-
-  function select($sql)
-  {
-    try{    
-  $this->_db->Consulta($sql);
-    $rows = array();
-    while ($this->_db->ProximoRegistro())
-      $rows[] = $this->_db->Tupla();
-    return $rows;
-    }
-    catch(Exception $e) 
-    {
-      echo $e->getMessage();
-    }
-  }
-
-  function selectField($sql)
-  {
-    return $this->_db->UnicoCampo($sql);
-  }
-}
-
+#TODO refatorar estas classes / mover para intranet/include/portabilis/
 class Utils
 {
   function __construct()

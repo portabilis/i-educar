@@ -97,7 +97,7 @@ class indice extends clsListagem
 
 		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
 
-		$cabecalhos = array( "Escola" );
+		$cabecalhos = array("Código Inep", "Escola" );
 		$nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 		if( $nivel == 1 )
 		{
@@ -160,7 +160,10 @@ class indice extends clsListagem
 		{
 			foreach ( $lista AS $registro )
 			{
-				$linha = array( "<a href=\"educar_escola_det.php?cod_escola={$registro["cod_escola"]}\">{$registro["nome"]}</a>" );
+  
+				$linha = array("<a href=\"educar_escola_det.php?cod_escola={$registro["cod_escola"]}\">{$obj_escola->educacensoEscola->getCodInep($registro["cod_escola"])}</a>");
+
+				$linha[] = "<a href=\"educar_escola_det.php?cod_escola={$registro["cod_escola"]}\">{$registro["nome"]}</a>";
 				if( $nivel == 1 )
 				{
 					$objInstituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );

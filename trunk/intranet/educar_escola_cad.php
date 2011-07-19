@@ -1,4 +1,8 @@
 <?php
+
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
 	*	@author Prefeitura Municipal de Itajaí								 *
@@ -293,6 +297,9 @@ class indice extends clsCadastro
 					$this->p_telefone_fax = $this->fax;
 				}
 			}
+
+      $this->cod_inep = $obj->educacensoEscola->getCodInep($codIeducar = $registro['cod_escola']);
+
 		}
 		elseif($_POST['cnpj'] && !$_POST["passou"])
 		{
@@ -596,6 +603,7 @@ class indice extends clsCadastro
 					$this->campoOculto( "ref_idpes", $this->ref_idpes );
 //					$this->campoOculto( "passo", 3 );
 					$this->campoOculto( "cod_escola", $this->cod_escola );
+					$this->campoNumero( "cod_inep", "Código Inep", $this->cod_inep);
 
 					// text
 					$this->campoTexto( "fantasia", "Escola", $this->fantasia, 30, 255, true );
@@ -989,6 +997,7 @@ if(!$this->isEnderecoExterno){
 				{
 					$obj = new clsPmieducarEscola( null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1 );
 					$cadastrou1 = $obj->cadastra();
+
 					if( $cadastrou1 )
 					{
 						$objTelefone = new clsPessoaTelefone( $this->ref_idpes);
@@ -1083,6 +1092,9 @@ if(!$this->isEnderecoExterno){
 		{
 			$obj = new clsPmieducarEscola( null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, null, $this->sigla, null, null, 1 );
 			$cadastrou = $obj->cadastra();
+
+      
+
 			if ($cadastrou)
 			{
 				$obj2 = new clsPmieducarEscolaComplemento( $cadastrou, null, $this->pessoa_logada, idFederal2int( $this->cep ),$this->numero,$this->complemento,$this->p_email,$this->fantasia,$this->cidade,$this->bairro,$this->logradouro,$this->p_ddd_telefone_1, $this->p_telefone_1,$this->p_ddd_telefone_fax, $this->p_telefone_fax,null,null,1);
@@ -1141,14 +1153,16 @@ if(!$this->isEnderecoExterno){
 //		echo "<br>cep_: ".$this->cep_;die;
 		if ($this->cod_escola)
 		{
-			$obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1);
+			$obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->cod_inep);
 			$editou = $obj->edita();
+      
 		}
 		else
 		{
-			$obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1);
+			$obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->cod_inep);
 			$editou = $obj->cadastra();
 			$this->cod_escola = $editou;
+      
 		}
 		if( $editou )
 		{

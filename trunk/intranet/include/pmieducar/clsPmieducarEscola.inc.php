@@ -1,5 +1,8 @@
 <?php
 
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -29,6 +32,7 @@
  */
 
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/portabilis/educacenso.php';
 
 /**
  * clsPmieducarEscola class.
@@ -111,7 +115,8 @@ class clsPmieducarEscola
     $ref_usuario_exc = NULL, $ref_cod_instituicao = NULL,
     $ref_cod_escola_localizacao = NULL, $ref_cod_escola_rede_ensino = NULL,
     $ref_idpes = NULL, $sigla = NULL, $data_cadastro = NULL, $data_exclusao = NULL,
-    $ativo = NULL
+    $ativo = NULL, 
+    $cod_inep = NULL
   ) {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
@@ -265,6 +270,8 @@ class clsPmieducarEscola
     if (is_numeric($ativo)) {
       $this->ativo = $ativo;
     }
+    $this->cod_inep = $cod_inep;
+    $this->educacensoEscola = new EducacensoEscola();
   }
 
   /**
@@ -333,7 +340,13 @@ class clsPmieducarEscola
       $valores .= "{$gruda}'1'";
 
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
-      return $db->InsertId("{$this->_tabela}_cod_escola_seq");
+      $recordId = $db->InsertId("{$this->_tabela}_cod_escola_seq");
+
+      $this->educacensoEscola->setCodIeducar($cod = $recordId);
+      $this->educacensoEscola->setcodInep($cod = $this->cod_inep);
+      $this->educacensoEscola->save();
+
+      return $recordId;
     }
     else {
       echo "<br><br>is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_instituicao) && is_numeric($this->ref_cod_escola_localizacao) && is_numeric($this->ref_cod_escola_rede_ensino) && is_string($this->sigla )";
@@ -402,6 +415,9 @@ class clsPmieducarEscola
 
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_escola = '{$this->cod_escola}'");
+        $this->educacensoEscola->setcodInep($cod = $this->cod_inep);
+        $this->educacensoEscola->setCodIeducar($cod = $this->cod_escola);
+        $this->educacensoEscola->save();
         return TRUE;
       }
     }
