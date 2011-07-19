@@ -21,7 +21,7 @@
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author
+ * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   Avaliacao
@@ -41,7 +41,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 {
   protected $_dataMapper  = 'Avaliacao_Model_NotaComponenteDataMapper'; #FIXME ? esta propriedade deveria ser diferente para outros atts ? ex Falta
   protected $_processoAp  = 644;
-  protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
+  protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA; #FIXME para que serve esta propriedade ? remover ?
   protected $_saveOption  = FALSE;
   protected $_deleteOption  = FALSE;
   protected $_titulo   = '';

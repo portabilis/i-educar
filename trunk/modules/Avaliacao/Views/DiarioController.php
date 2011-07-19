@@ -23,7 +23,7 @@
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author   ?
+ * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   Avaliacao
@@ -32,9 +32,9 @@
  * @version   $Id$
  */
 
+#TODO remover includes desnecessarios
 require_once 'CoreExt/View/Helper/UrlHelper.php';
 require_once 'CoreExt/View/Helper/TableHelper.php';
-require_once 'Core/Controller/Page/EditController.php';
 require_once 'Core/Controller/Page/ListController.php';
 require_once 'App/Model/IedFinder.php';
 require_once 'Avaliacao/Model/NotaAlunoDataMapper.php';
@@ -58,37 +58,40 @@ require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
 
 require_once 'include/portabilis_utils.php';
 
-/**
- * BoletimController class.
- *
- * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   Avaliacao
- * @subpackage  Modules
- * @since     Classe disponível desde a versão 1.1.0
- * @version   @@package_version@@
- */
-
 class DiarioController extends Core_Controller_Page_ListController
 {
   protected $_dataMapper = 'Avaliacao_Model_NotaAlunoDataMapper';
-  protected $_titulo   = 'Novo boletim';
+  protected $_titulo   = 'Lan&ccedil;amento por turma';
 //  protected $_processoAp = 946;
   protected $_processoAp = 644;
-
   protected $_formMap  = array();
 
-  public function Gerar()
+
+  protected function setHeaders($service)
+  {
+
+    if (! isset($this->_headers))
+    {
+  
+      $this->_headers = array("Matr&iacute;cula", "Aluno", "Situa&ccedil;&atilde;o");
+
+      if ($service->getRegra()->get('tipoNota') != RegraAvaliacao_Model_Nota_TipoValor::NENHUM)
+        $this->_headers[] ="Nota";  
+
+      $this->_headers[] =   "Falta *";
+
+      if ($service->getRegra()->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM)
+        $this->_headers[] = "Parecer descritivo **";
+
+      $this->_headers[] = "Status altera&ccedil;&atilde;o";
+    }
+    $this->addCabecalhos($this->_headers);
+  }
+
+
+  protected function setVars()
   {
     $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
-    if ($this->ref_cod_aluno)
-    {
-      $_a = new clsPmieducarAluno();
-      $_a = $_a->lista($int_cod_aluno = $this->ref_cod_aluno);
-      $this->nm_aluno = $_a[0]['nome_aluno'];
-    }
-
     $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
     $this->ref_cod_escola = $_GET['ref_cod_escola'];
     $this->ref_cod_curso = $_GET['ref_cod_curso'];
@@ -98,10 +101,22 @@ class DiarioController extends Core_Controller_Page_ListController
     $this->ref_cod_componente_curricular = $_GET['ref_cod_componente_curricular'];
     $this->etapa = $_GET['etapa'];
 
+    if ($this->ref_cod_aluno)
+    {
+      $nome_aluno_filtro = new clsPmieducarAluno();
+      $nome_aluno_filtro = $nome_aluno_filtro->lista($int_cod_aluno = $this->ref_cod_aluno);
+      $this->nm_aluno = $nome_aluno_filtro[0]['nome_aluno'];
+    }
+  }
+
+
+  protected function setSelectionFields()
+  {
+
+    #TODO mover para funcao setSelectionFields() ?
     $get_escola = $escola_obrigatorio = $listar_escolas_alocacao_professor = TRUE;
     $get_ano_escolar = $ano_escolar_obrigatorio = TRUE;
     $get_curso = $curso_obrigatorio = $listar_somente_cursos_funcao_professor = TRUE;
-    #$sem_padrao       = TRUE;
     $get_escola_curso_serie = $escola_curso_serie_obrigatorio = TRUE;
     $get_turma = $turma_obrigatorio = $listar_turmas_periodo_alocacao_professor = TRUE;
     $get_componente_curricular = $componente_curricular_obrigatorio = $listar_componentes_curriculares_professor = TRUE;
@@ -111,208 +126,226 @@ class DiarioController extends Core_Controller_Page_ListController
     $this->campoTexto('nm_aluno', 'Aluno', $this->nm_aluno, 30, 255, FALSE,
       FALSE, FALSE, '', "<img border=\"0\" onclick=\"pesquisa_aluno();\" id=\"ref_cod_aluno_lupa\" name=\"ref_cod_aluno_lupa\" src=\"imagens/lupa.png\"\/>", '', '', TRUE);
     $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
+  }
 
-    /*
-      $opcoes = array(
-        '' => 'Selecione',
-        1  => 'Aprovado',
-        2  => 'Reprovado',
-        3  => 'Em Andamento',
-        4  => 'Não iniciado',
-        );
 
-      $this->campoLista('aprovado', 'Situa&ccedil;&atilde;o', $opcoes,
-                        $this->aprovado, '', '', '', '', FALSE, FALSE);
-    */
+  protected function getAlunos()
+  {
 
-    if ($this->ref_cod_escola && $this->ref_cod_curso && $this->ref_cod_turma && $this->ref_ref_cod_serie && $this->ano_escolar && $this->ref_cod_componente_curricular && $this->etapa)
-    {
-      $obj_nota_aluno = new clsPmieducarMatriculaTurma();
+    $alunos = new clsPmieducarMatriculaTurma();
+    $alunos->setOrderby('nome');
 
-      #TODO ordenar pelo nome do aluno
-      $obj_nota_aluno->setOrderby('nome');
+    #FIXME pega só a ultima matricula ?
+    #FIXME revisao todos parametros repassados, bool_escola_andamento passar false ?
+    $alunos = $alunos->lista(
+      $this->ref_cod_matricula,
+      $this->ref_cod_turma,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      1,
+      $this->ref_ref_cod_serie,
+      $this->ref_cod_curso,
+      $this->ref_cod_escola,
+      $this->ref_cod_instituicao,
+      $this->ref_cod_aluno,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      $this->ano_escolar,
+      NULL,
+      TRUE,
+      NULL,
+      NULL,
+      TRUE,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL
+    );
 
-      $alunos = $obj_nota_aluno->lista(
-        $this->ref_cod_matricula,
-        $this->ref_cod_turma,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        1,
-        $this->ref_ref_cod_serie,
-        $this->ref_cod_curso,
-        $this->ref_cod_escola,
-        $this->ref_cod_instituicao,
-        $this->ref_cod_aluno,
-        NULL,
-        $this->aprovado,
-        NULL,
-        NULL,
-        $this->ano_escolar,
-        TRUE,
-        FALSE,
-        NULL,
-        1,
-        TRUE,
-        TRUE,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL
-      );
+    if (! is_array($alunos))
+      $alunos = array();
 
-      // monta a lista
-      if (is_array($alunos) && count($alunos)) {
-        $ref_cod_serie  = '';
-        $nm_serie     = '';
-        $ref_cod_escola = '';
-        $nm_escola    = '';
+    return $alunos;
+  }
 
-        foreach ($alunos as $aluno) {
-          $service = new Avaliacao_Service_Boletim(array(
-            'matricula' =>   $aluno['ref_cod_matricula'],
-            'usuario'   => $this->getSession()->id_pessoa
-        ));
 
-        $headers = array(
-          "Matr&iacute;cula",
-          "Aluno",
-          "Situa&ccedil;&atilde;o");
-
-        if ($service->getRegra()->get('tipoNota') != RegraAvaliacao_Model_Nota_TipoValor::NENHUM)
-        {
-          $headers[] ="Nota";
-        }
-  
-        $headers[] =   "Falta *";
-
-        // Itens a mostrar na listagem de alunos
-        $listagem_alunos = array();
-
-        $listagem_alunos[] =   $aluno['ref_cod_matricula'];
-        $listagem_alunos[] =   $aluno['ref_cod_aluno'] . ' - ' .  $aluno['nome'];
-
-        $situacao = App_Model_MatriculaSituacao::getInstance()->getValue(
-              $service->getSituacaoComponentesCurriculares()->componentesCurriculares[$this->ref_cod_componente_curricular]->situacao);
-
-        $listagem_alunos[] = sprintf('<span id="situacao-matricula:%s">%s</span>',   $aluno['ref_cod_matricula'],$situacao);
-
-        if ($service->getRegra()->get('tipoNota') != RegraAvaliacao_Model_Nota_TipoValor::NENHUM)
-        {
-
-          $onChangeSelectNota = sprintf("setAtt(att='nota', matricula=%s, etapa=%s, componente_curricular=%s);",
-                            $aluno['ref_cod_matricula'], $this->etapa, $this->ref_cod_componente_curricular);
-          // Valores de arredondamento
-          $valoresArredondamento = $service->getRegra()->tabelaArredondamento->findTabelaValor();
-          $valores = array();
-          foreach ($valoresArredondamento as $valor) {
-            if ($service->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
-              $valores[(string) $valor->nome] = $valor->nome;
-            }
-            else {
-              $valores[(string) $valor->valorMaximo] = $valor->nome . ' (' . $valor->descricao .  ')';
-            }
-          }
-
-          $_notaAtual = urldecode($service->getNotaComponente($this->ref_cod_componente_curricular, $this->etapa)->nota);
-          $_notaAtual = str_replace(',', '.', $_notaAtual);
-          $notas = "<option></option>";
-          foreach ($valores as $k => $v) {
-            $k = str_replace(',', '.', urldecode($k));
-            if ($_notaAtual > -1 && $k == $_notaAtual)
-            {
-              $notas .= "\n<option value='$k' selected='selected'>$v</option>";
-            }
-            else
-            $notas .= "\n<option value='$k'>$v</option>";
-          }
-          $listagem_alunos[] = sprintf('<select id="nota-matricula:%s" class="notas" onchange="%s">%s</select>',
-                    $aluno['ref_cod_matricula'], $onChangeSelectNota, $notas);
-        }
-
-        $onChangeSelectFalta = sprintf("setAtt(att='falta', matricula=%s, etapa=%s, componente_curricular=%s);",
+  protected function getFieldNotaAluno($aluno, $service)
+  {
+    $onChangeSelectNota = sprintf("setAtt(att='nota', matricula=%s, etapa=%s, componente_curricular=%s);",
                       $aluno['ref_cod_matricula'], $this->etapa, $this->ref_cod_componente_curricular);
 
-        if ($service->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
-            $_faltaAtual = $service->getFalta($this->etapa, $this->ref_cod_componente_curricular)->quantidade;
-        elseif ($service->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL)
-            $_faltaAtual = $service->getFalta($this->etapa)->quantidade;
+    // Valores de arredondamento
+    $valoresArredondamento = $service->getRegra()->tabelaArredondamento->findTabelaValor();
+    $valores = array();
 
-        $faltas = "<option></option>";
-        foreach (range(0, 100, 1) as $f) {
-          if ($_faltaAtual > -1 && $f == $_faltaAtual)
-            $faltas .= "\n<option value='$f' selected='selected'>$f</option>";
-          else
-            $faltas .= "\n<option value='$f'>$f</option>";
-        }
-        $listagem_alunos[] = sprintf('<select id="falta-matricula:%s" class="faltas" onchange="%s">%s</select>',
-                  $aluno['ref_cod_matricula'], $onChangeSelectFalta, $faltas);
+    foreach ($valoresArredondamento as $valor)
+    {
 
-        if ($service->getRegra()->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM)
-        {
-          if ($service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_DESCRITOR or
-            $service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE or
-            $service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL)
-          {
-            $etapa_parecer = 'An';
-            $onChangeParecer = sprintf("setAtt(att='parecer', matricula=%s, etapa='%s', componente_curricular=%s);",
-                             $aluno['ref_cod_matricula'], $etapa_parecer, $this->ref_cod_componente_curricular);
-          }
-          else
-          {
-            $etapa_parecer = $this->etapa;
-            $onChangeParecer = sprintf("setAtt(att='parecer', matricula=%s, etapa=%s, componente_curricular=%s);",
-                             $aluno['ref_cod_matricula'], $etapa_parecer, $this->ref_cod_componente_curricular);
-          }
+      if ($service->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA)
+        $valores[(string) $valor->nome] = $valor->nome;
+      else
+        $valores[(string) $valor->valorMaximo] = $valor->nome . ' (' . $valor->descricao .  ')';
+    }
 
-          if ($service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE or
-            $service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE)
-          {
-            $parecer = $service->getParecerDescritivo($etapa_parecer, $this->ref_cod_componente_curricular);
-          }
-          else
-          {
-            $parecer = $service->getParecerDescritivo($etapa_parecer);
-          }
+    $_notaAtual = urldecode($service->getNotaComponente($this->ref_cod_componente_curricular, $this->etapa)->nota);
+    $_notaAtual = str_replace(',', '.', $_notaAtual);
+    $notas = "<option></option>";
 
-          $listagem_alunos[] = sprintf('<textarea id="parecer-matricula:%s" class="parecer" onchange="%s" cols="40" rows="10">%s</textarea>',
-                        $aluno['ref_cod_matricula'], $onChangeParecer, utf8_decode($parecer));
-        }
+    foreach ($valores as $k => $v)
+    {
+      $k = str_replace(',', '.', urldecode($k));
 
-        $listagem_alunos[] = sprintf('<span id="status_alteracao-matricula:%s"</spam>',   $aluno['ref_cod_matricula']);
+      if ($_notaAtual > -1 && $k == $_notaAtual)
+        $notas .= "\n<option value='$k' selected='selected'>$v</option>";
+      else
+        $notas .= "\n<option value='$k'>$v</option>";
+    }
 
-        $this->addLinhas($listagem_alunos);
-        }
+    return sprintf('<select id="nota-matricula:%s" class="notas" onchange="%s">%s</select>', $aluno['ref_cod_matricula'], $onChangeSelectNota, $notas);
+  }
 
-      $this->titulo = "Encontrado(s) " . count($alunos) . " aluno(s).";
+ 
+  protected function getFieldNomeAluno($aluno)
+  {
+    return $aluno['ref_cod_aluno'] . ' - ' .  $aluno['nome'];
+  }
 
-      if ($service->getRegra()->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM)
-        $headers[] = "Parecer descritivo **";
 
-      $headers[] = "Status altera&ccedil;&atilde;o";
-      $this->addCabecalhos($headers);
+  protected function getFieldSituacaoAluno($aluno, $service)
+  {
+    $situacao = App_Model_MatriculaSituacao::getInstance()->getValue(
+          $service->getSituacaoComponentesCurriculares()->componentesCurriculares[$this->ref_cod_componente_curricular]->situacao);
 
-      $_tipoParecer = RegraAvaliacao_Model_TipoParecerDescritivo::getInstance()->getValue($service->getRegra()->get('parecerDescritivo'));
-      if ($_tipoParecer)
-        $_tipoParecer = '<br />** ' . $_tipoParecer;
+    return sprintf('<span id="situacao-matricula:%s">%s</span>',   $aluno['ref_cod_matricula'],$situacao);
+  }
 
-      $_tipoPresenca = RegraAvaliacao_Model_TipoPresenca::getInstance()->getValue($service->getRegra()->get('tipoPresenca'));
-      $this->rodape = "* $_tipoPresenca $_tipoParecer";
-      }
+
+  protected function getFieldFaltaAluno($aluno, $service)
+  {
+    $onChangeSelectFalta = sprintf("setAtt(att='falta', matricula=%s, etapa=%s, componente_curricular=%s);",
+                  $aluno['ref_cod_matricula'], $this->etapa, $this->ref_cod_componente_curricular);
+
+    if ($service->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
+        $_faltaAtual = $service->getFalta($this->etapa, $this->ref_cod_componente_curricular)->quantidade;
+    elseif ($service->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL)
+        $_faltaAtual = $service->getFalta($this->etapa)->quantidade;
+
+    $faltas = "<option></option>";
+    foreach (range(0, 100, 1) as $f) {
+      if ($_faltaAtual > -1 && $f == $_faltaAtual)
+        $faltas .= "\n<option value='$f' selected='selected'>$f</option>";
+      else
+        $faltas .= "\n<option value='$f'>$f</option>";
+    }
+    return sprintf('<select id="falta-matricula:%s" class="faltas" onchange="%s">%s</select>',
+              $aluno['ref_cod_matricula'], $onChangeSelectFalta, $faltas);
+  }
+
+
+  protected function getFieldParecerDescritivoAluno($aluno, $service)
+  {
+    if ($service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_DESCRITOR or
+      $service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE or
+      $service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL)
+    {
+      $etapa_parecer = 'An';
+      $onChangeParecer = sprintf("setAtt(att='parecer', matricula=%s, etapa='%s', componente_curricular=%s);",
+                       $aluno['ref_cod_matricula'], $etapa_parecer, $this->ref_cod_componente_curricular);
     }
     else
     {
-      $this->rodape = "<strong>N&atilde;o est&aacute; sendo listado as op&ccedil;&otilde;es de filtro que voc&ecirc; espera ?</strong> solicite a(o) secret&aacute;rio(a) da escola que verifique a aloca&ccedil;&atilde;o do seu usu&aacute;rio.";
+      $etapa_parecer = $this->etapa;
+      $onChangeParecer = sprintf("setAtt(att='parecer', matricula=%s, etapa=%s, componente_curricular=%s);",
+                       $aluno['ref_cod_matricula'], $etapa_parecer, $this->ref_cod_componente_curricular);
     }
+
+    if ($service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE or
+      $service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE)
+    {
+      $parecer = $service->getParecerDescritivo($etapa_parecer, $this->ref_cod_componente_curricular);
+    }
+    else
+      $parecer = $service->getParecerDescritivo($etapa_parecer);
+
+    return sprintf('<textarea id="parecer-matricula:%s" class="parecer" onchange="%s" cols="40" rows="10">%s</textarea>',
+                  $aluno['ref_cod_matricula'], $onChangeParecer, utf8_decode($parecer));
+  }
+
+
+  protected function addLinhaAluno($aluno, $service)
+  {
+    $linha_aluno = array(
+      $aluno['ref_cod_matricula'], 
+      $this->getFieldNomeAluno($aluno), 
+      $this->getFieldSituacaoAluno($aluno, $service)
+    );
+
+    if ($service->getRegra()->get('tipoNota') != RegraAvaliacao_Model_Nota_TipoValor::NENHUM)
+      $linha_aluno[] = $this->getFieldNotaAluno($aluno, $service);
+
+    $linha_aluno[] = $this->getFieldFaltaAluno($aluno, $service);
+
+    if ($service->getRegra()->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM)
+      $linha_aluno[] = $this->getFieldParecerDescritivoAluno($aluno, $service);
+
+    $linha_aluno[] = sprintf('<span id="status_alteracao-matricula:%s"</spam>',   $aluno['ref_cod_matricula']);
+
+    $this->addLinhas($linha_aluno);
+  }
+
+
+  protected function setRodapePagina($service)
+  {
+    $_tipoParecer = RegraAvaliacao_Model_TipoParecerDescritivo::getInstance()->getValue($service->getRegra()->get('parecerDescritivo'));
+    if ($_tipoParecer)
+      $_tipoParecer = '<br />** ' . $_tipoParecer;
+
+    $_tipoPresenca = RegraAvaliacao_Model_TipoPresenca::getInstance()->getValue($service->getRegra()->get('tipoPresenca'));
+    $this->rodape = "* $_tipoPresenca $_tipoParecer";
+  }
+
+
+  public function Gerar()
+  {
+
+    $this->setVars();
+    $this->setSelectionFields();
+
+    if ($this->ref_cod_escola && $this->ref_cod_curso && $this->ref_cod_turma && $this->ref_ref_cod_serie && 
+        $this->ano_escolar && $this->ref_cod_componente_curricular && $this->etapa)
+    {
+
+      $alunos = $this->getAlunos();
+
+      if (count($alunos))
+      {
+        #TODO remover ?
+        #$ref_cod_serie  = $nm_serie = $ref_cod_escola = $nm_escola = '';
+
+        foreach ($alunos as $aluno)
+        {
+          $service = new Avaliacao_Service_Boletim(array('matricula' =>   $aluno['ref_cod_matricula'], 'usuario'   => $this->getSession()->id_pessoa));
+          $this->addLinhaAluno($aluno, $service);
+        }
+
+        $this->setHeaders($service);
+        $this->titulo = "Encontrado(s) " . count($alunos) . " aluno(s).";
+        $this->setRodapePagina($service);
+      }
+    }
+    else
+      $this->rodape = "<strong>N&atilde;o est&aacute; sendo listado as op&ccedil;&otilde;es de filtro que voc&ecirc; espera ?</strong> solicite a(o) secret&aacute;rio(a) da escola que verifique a aloca&ccedil;&atilde;o do seu usu&aacute;rio.";
 
     $this->largura = '100%';
     $a = <<<EOT
-
-
 
         <style type="text/css">
           #formcadastro #nm_aluno, #formcadastro select {
@@ -449,7 +482,7 @@ class DiarioController extends Core_Controller_Page_ListController
               var attElement = document.getElementById(att + '-matricula:' + matricula);
               var attValue = attElement.value;
 
-              //fix for bug in service boletim
+              //Trava para evitar erro com o serviço do boletim
               if (att == 'parecer' && ((/^\d+\.\d+$/.test(attValue)) || (/^\d+$/.test(attValue)) || (/^\.\d+$/.test(attValue)) || (/^\d+\.$/.test(attValue))))
                 document.getElementById('status_alteracao-matricula:' + matricula).innerHTML = '<span class="error" style="color: red;">Informe pelo menos uma letra.</span>';
               else if (attValue.length)
