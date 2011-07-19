@@ -1,0 +1,10 @@
+.hgignore
+*.pyc
+*.bak
+*.1
+.project
+.pydevproject
+.hg
+.hg/*.*
+.hg/*
+/trunk/configuration/*.ini
