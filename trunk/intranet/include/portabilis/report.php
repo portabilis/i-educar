@@ -1,25 +1,16 @@
 <?php
 
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
-
-$paths_to_include = array();
-$paths_to_include[] = dirname(__FILE__) . '/libs'; #/intranet/include/portabilis/libs
-$paths_to_include[] = dirname(dirname(dirname(__FILE__))); #/intranet
-
-foreach ($paths_to_include as $p)
-  set_include_path(get_include_path() . PATH_SEPARATOR . $p);
-
+require_once("include_paths.php");
 require_once("include/clsBase.inc.php");
 require_once("include/clsCadastro.inc.php");
-require_once("include/clsBanco.inc.php");
 require_once("include/pmieducar/geral.inc.php");
+require_once("portabilis/dal.php");
 
 class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->processoAp = "999101";
+		$this->processoAp = "999101";#FIXME setar qual valor aqui ?
 	}
 }
 
@@ -91,11 +82,8 @@ class Report extends clsCadastro
   function renderForm()
   {
 
-    #TODO show error messages if exists...
     $this->setForm();
     $this->nome_url_sucesso = "Exibir";
-    #$miolo = new indice();
-    #$pagina->addForm($miolo);
     $this->page->SetTitulo('Relat&oacute;rio' . $this->name);
     $this->page->addForm($this);
     $this->page->MakeAll(); 
@@ -109,8 +97,14 @@ class Report extends clsCadastro
     }
     catch (Exception $e) 
     {
+
+      if ($this->reportFactorySettings['show_exceptions_msg'])
+        $details = "<div id='detail'><p><strong>Detalhes:</strong> {$e->getMessage()}</p></div>";
+      else
+        $details = "<div id='detail'><p>Visualização dos detalhes sobre o erro desativada.</p></div>";
+
       echo "<html><head><link rel='stylesheet' type='text/css' href='styles/reset.css'><link rel='stylesheet' type='text/css' href='styles/portabilis.css'><link rel='stylesheet' type='text/css' href='styles/min-portabilis.css'></head>";
-      echo "<body><div id='error'><h1>Erro inesperado</h1><p class='explication'>Descupe-nos ocorreu algum erro no sistema, <strong>por favor tente novamente mais tarde</strong></p><ul class='unstyled'><li><a href='/intranet/index.php'>- Voltar para o sistema</a></li><li>- Tentou mais de uma vez e o erro persiste ? Por favor, <a target='_blank' href='http://www.portabilis.com.br/site/suporte'>solicite suporte</a> ou envie um email para suporte@portabilis.com.br</li></ul><div id='detail'><p><strong>Detalhes:</strong> {$e->getMessage()}</p></div></div></body></html>";
+      echo "<body><div id='error'><h1>Relatório não emitido</h1><p class='explication'>Descupe-nos ocorreu algum erro na geração do relatório, <strong>por favor tente novamente mais tarde</strong></p><ul class='unstyled'><li><a href='/intranet/index.php'>- Voltar para o sistema</a></li><li>- Tentou mais de uma vez e o erro persiste? Por favor, <a target='_blank' href='http://www.portabilis.com.br/site/suporte'>solicite suporte</a> ou envie um email para suporte@portabilis.com.br</li></ul>$details</div></body></html>";
     }
   }
 
@@ -187,6 +181,7 @@ class Report extends clsCadastro
   function onValidationSuccess()
   {
     //defina aqui operacoes apos o sucesso da validacao (antes de imprimir) , como os argumentos ex: $this->addArg('id', 1); $this->addArg('id_2', 2);
+    throw new Exception("The method 'onValidationSuccess' from class Report must be overridden!");
   }
 
   function onValidationError()
@@ -218,7 +213,7 @@ EOT;
     $this->appendOutput($js);
   }
 
-  function __construct($name, $templateName)
+  function __construct($name, $templateName, $addLogoNameToArgs = True)
   {
 
 		@session_start();
@@ -227,6 +222,8 @@ EOT;
 
     if (! $this->_user_id)
       header('Location: logof.php');
+
+    $this->db = new Db();
 
     $config = $GLOBALS['coreExt']['Config']->report->remote_factory;
 
@@ -253,6 +250,9 @@ EOT;
 
     $this->acao_executa_submit = false;
     $this->acao_enviar = 'printReport()';
+
+    if ($addLogoNameToArgs)
+      $this->addArg('logo_name', $config->logo_name);
   }
 }
 ?>
