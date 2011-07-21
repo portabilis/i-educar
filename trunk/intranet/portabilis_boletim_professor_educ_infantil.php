@@ -103,7 +103,6 @@ class indice extends clsCadastro
 		
 		$this->url_cancelar = "educar_index.php";
 		$this->nome_url_cancelar = "Cancelar";
-		$this->campoTexto("legenda","Legenda:",$this->legenda,50,255,false);
 	
 		$this->acao_enviar = 'acao2()';
 		$this->acao_executa_submit = false;

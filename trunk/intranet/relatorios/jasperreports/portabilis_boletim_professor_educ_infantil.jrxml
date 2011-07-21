@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_boletim_professor_educ_infantil" language="groovy" pageWidth="625" pageHeight="842" columnWidth="585" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.0000000000000004"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="ano" class="java.lang.Integer">
@@ -18,7 +18,6 @@
 	<parameter name="serie" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
-	<parameter name="legenda" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT public.fcn_upper(nm_instituicao) AS nome_instituicao,
        public.fcn_upper(nm_responsavel) AS nome_responsavel,
@@ -211,7 +210,7 @@ WHERE escola.cod_escola = escola_serie_disciplina.ref_ref_cod_escola AND
 		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="153" splitType="Stretch">
+		<band height="146" splitType="Stretch">
 			<textField isBlankWhenNull="true">
 				<reportElement x="74" y="40" width="306" height="13"/>
 				<textElement>
@@ -307,11 +306,11 @@ WHERE escola.cod_escola = escola_serie_disciplina.ref_ref_cod_escola AND
 				<reportElement x="42" y="124" width="205" height="1"/>
 			</line>
 			<staticText>
-				<reportElement x="431" y="136" width="56" height="13"/>
+				<reportElement x="413" y="132" width="56" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[1º Bimestre]]></text>
+				<text><![CDATA[1º Semestre]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="448" y="112" width="40" height="13"/>
@@ -335,11 +334,11 @@ WHERE escola.cod_escola = escola_serie_disciplina.ref_ref_cod_escola AND
 				<textFieldExpression class="java.lang.String"><![CDATA[Curso: "+$F{curso}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="500" y="136" width="56" height="13"/>
+				<reportElement x="500" y="132" width="56" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[2º Bimestre]]></text>
+				<text><![CDATA[2º Semestre]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
@@ -349,32 +348,35 @@ WHERE escola.cod_escola = escola_serie_disciplina.ref_ref_cod_escola AND
 	<detail>
 		<band height="16" splitType="Stretch">
 			<textField isStretchWithOverflow="true">
-				<reportElement x="15" y="2" width="418" height="13" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="15" y="2" width="393" height="13" isPrintWhenDetailOverflows="true"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_componente}]]></textFieldExpression>
 			</textField>
 			<rectangle>
-				<reportElement x="449" y="2" width="22" height="13"/>
+				<reportElement x="413" y="2" width="80" height="13"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="519" y="2" width="22" height="13"/>
+				<reportElement x="500" y="2" width="80" height="13"/>
 			</rectangle>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="12" splitType="Stretch"/>
+		<band height="3" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="22" splitType="Stretch">
-			<textField>
-				<reportElement x="15" y="2" width="545" height="20"/>
+		<band height="18" splitType="Stretch">
+			<staticText>
+				<reportElement x="13" y="2" width="42" height="14"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Legenda: "+$P{legenda}]]></textFieldExpression>
-			</textField>
+				<text><![CDATA[Parecer:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="59" y="13" width="521" height="1"/>
+			</line>
 		</band>
 	</pageFooter>
 	<summary>

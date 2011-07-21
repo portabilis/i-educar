@@ -87,7 +87,6 @@ class indice extends clsCadastro
 	var $nm_disciplina;
 	var $curso_com_exame = 0;
 	var $ref_cod_matricula;
-  var $legenda;
 
 	var $page_y = 135;
 
@@ -135,23 +134,11 @@ class indice extends clsCadastro
 	
 	$xml =  simplexml_load_file("relatorios/jasperreports/portabilis_boletim_professor_educ_infantil.jrxml");
 	
-/*
-	print "instituicao: ";
-	print $_POST['ref_cod_instituicao'];
-	print "escola: ";
-	print $_POST['ref_cod_escola'];
-	print "curso: ";
-	print $_POST['ref_cod_curso'];
-	print "serie: ";
-	print $_POST['ref_ref_cod_serie'];
-	print "aluno: ";
-	print $_POST['nm_aluno'];
-	*/
-	
+
 
 	$PHPJasperXML = new PHPJasperXML();
 	$PHPJasperXML->debugsql=false;
-	$PHPJasperXML->arrayParameter=array("ano"=>$_POST['ano'],"instituicao"=>$_POST['ref_cod_instituicao'],"escola"=>$_POST['ref_cod_escola'],"curso"=>$_POST['ref_cod_curso'],"serie"=>$_POST['ref_ref_cod_serie'],"legenda"=>$_POST['legenda']); 
+	$PHPJasperXML->arrayParameter=array("ano"=>$_POST['ano'],"instituicao"=>$_POST['ref_cod_instituicao'],"escola"=>$_POST['ref_cod_escola'],"curso"=>$_POST['ref_cod_curso'],"serie"=>$_POST['ref_ref_cod_serie']); 
 
 	$PHPJasperXML->xml_dismantle($xml);
 
