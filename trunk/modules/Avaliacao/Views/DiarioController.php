@@ -56,7 +56,7 @@ require_once 'include/pmieducar/clsPmieducarMatriculaTurma.inc.php';
 require_once 'include/pmieducar/clsPmieducarTurma.inc.php';
 require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
 
-require_once 'include/portabilis_utils.php';
+#require_once 'include/portabilis_utils.php';
 
 class DiarioController extends Core_Controller_Page_ListController
 {
@@ -420,6 +420,7 @@ class DiarioController extends Core_Controller_Page_ListController
               document.getElementById('ref_cod_escola').onchange = function()
               {
                 clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId = false);
+
                 clearSelect(entity = 'curso', disable = false, text = '', multipleId = true);
                 clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
                 clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
@@ -525,48 +526,46 @@ class DiarioController extends Core_Controller_Page_ListController
               if (ajaxReq.getReadyState() == 4 && ajaxReq.getStatus() == 200)
               {
                 var xmlData = ajaxReq.getResponseXML().getElementsByTagName("status")[0];
-                var att = getText(xmlData.getElementsByTagName('att')[0]);
-                var success = getText(xmlData.getElementsByTagName('success')[0]);
-                var matricula = getText(xmlData.getElementsByTagName('matricula')[0]);
-                document.getElementById(att + '-matricula:' + matricula).disabled = false;
-                document.getElementById('botao_busca').disabled = false;
+                var error = getText(xmlData.getElementsByTagName('error')[0]);
 
-                var _c = ['notas', 'faltas', 'parecer'];
-                for (var i = 0; i < _c.length; i++)
+                if (error == '')
                 {
-                  var _e = document.getElementsByClassName(_c[i]);
-                  for (var j = 0; j < _e.length; j++)
-                    _e[j].disabled = false;
-                }
+                  var matricula = getText(xmlData.getElementsByTagName('matricula')[0]);
+                  var att = getText(xmlData.getElementsByTagName('att')[0]);
+                  document.getElementById(att + '-matricula:' + matricula).disabled = false;
+                  document.getElementById('botao_busca').disabled = false;
 
-                var situacao = getText(xmlData.getElementsByTagName('situacao')[0]);
-                document.getElementById('situacao'  + '-matricula:' + matricula).innerHTML = situacao;
+                  var _c = ['notas', 'faltas', 'parecer'];
+                  for (var i = 0; i < _c.length; i++)
+                  {
+                    var _e = document.getElementsByClassName(_c[i]);
+                    for (var j = 0; j < _e.length; j++)
+                      _e[j].disabled = false;
+                  }
 
-                if (success == '1')
+                  var situacao = getText(xmlData.getElementsByTagName('situacao')[0]);
+                  document.getElementById('situacao'  + '-matricula:' + matricula).innerHTML = situacao;
+
                   var s = '<span class="success" style="color: green;">Atualizado</span>';
+                  document.getElementById('status_alteracao-matricula:' + matricula).innerHTML = s;
+                }
                 else
-                   var s = '<span class="error" style="color: red;">Erro ao atualizar, tente novamente !</span>';
-                document.getElementById('status_alteracao-matricula:' + matricula).innerHTML = s;
+                {
+                  alert("Ocorreram erros, por favor  verifique se a ação foi gravada ou tente novamente. Detalhes: " + error);
+                  window.location.reload();
+                }
               }
             }
             catch(err)
             {
-              try
-              {
-                document.getElementById('status_alteracao-matricula:' + matricula).innerHTML = '<span class="error" style="color: red;">ERRO3: Ocorreu um erro inesperado, por favor tente novamente.</span>';
-                window.location.reload();
-              }
-              catch(err)
-              {
-                alert('ERRO4: Ocorreram erros inesperados, por favor tente novamente.');
-                window.location.reload();
-              }
+                  alert("Ocorreram erros inesperados, por favor  verifique se a ação foi gravada ou tente novamente. Detalhes: " + err);
+              window.location.reload();
             }
-          }
-        </script>
+         }
+</script>
 EOT;
 
-  $this->appendOutput($a);
+  $this->appendOutput(utf8_decode($a));
   }
 }
 ?>
