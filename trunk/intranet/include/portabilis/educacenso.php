@@ -3,8 +3,8 @@
 #error_reporting(E_ALL);
 #ini_set("display_errors", 1);
 
-require_once("portabilis/include_paths.php");
-require_once("portabilis/dal.php");
+require_once("include_paths.php");
+require_once("dal.php");
 
   class Educacenso
   {

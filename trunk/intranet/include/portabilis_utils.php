@@ -93,12 +93,13 @@ WHERE servidor_curso_ministra.ref_ref_cod_instituicao = $instituicaoId and servi
   {
 //    $s = "SELECT * from (SELECT ref_cod_disciplina as componente_curricular_id, cc.nome as componente_curricular_nome FROM pmieducar.servidor_disciplina, modules.componente_curricular as cc WHERE servidor_disciplina.ref_ref_cod_instituicao = $instituicaoId and servidor_disciplina.ref_cod_servidor = $this->userId and servidor_disciplina.ref_cod_curso = $cursoId and ref_cod_disciplina = cc.id) AS professor_disciplina";
 
+echo '1';
     $s = "select cc.id as componente_curricular_id, cc.nome as componente_curricular_nome from modules.componente_curricular_turma as cct, modules.componente_curricular as cc, pmieducar.escola_ano_letivo as al, pmieducar.servidor_disciplina as scc where cct.turma_id = $turmaId and cct.escola_id = $escolaId and cct.componente_curricular_id = cc.id and al.ano = $anoEscolar and cct.escola_id = al.ref_cod_escola and scc.ref_ref_cod_instituicao = $instituicaoId and scc.ref_cod_servidor = $this->userId and scc.ref_cod_curso = $cursoId and scc.ref_cod_disciplina = cc.id";
 
     $componentes = $this->db->select($s);
     if (count($componentes))
       return $componentes;
-
+echo $s;
     $s = "select cc.id as componente_curricular_id, cc.nome as componente_curricular_nome from pmieducar.turma as	t, pmieducar.escola_serie_disciplina as esd, modules.componente_curricular as cc, pmieducar.escola_ano_letivo as al, pmieducar.servidor_disciplina as scc where t.cod_turma = $turmaId and esd.ref_ref_cod_escola = $escolaId and t.ref_ref_cod_serie = esd.ref_ref_cod_serie and esd.ref_cod_disciplina = cc.id and al.ano = $anoEscolar and 
 	esd.ref_ref_cod_escola = al.ref_cod_escola and t.ativo = 1 and esd.ativo = 1 and al.ativo = 1 and	scc.ref_ref_cod_instituicao = $instituicaoId and scc.ref_cod_servidor = $this->userId and scc.ref_cod_curso = $cursoId and scc.ref_cod_disciplina = cc.id";
 
