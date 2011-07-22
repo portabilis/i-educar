@@ -7,4 +7,9 @@
 .hg
 .hg/*.*
 .hg/*
-/trunk/configuration/*.ini
+*.ini
+/trunk/configuration/*.*
+/trunk/configuration/*
+/trunk/intranet/portabilis_report_test.php
+/trunk/intranet/test_db.php
+
