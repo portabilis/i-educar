@@ -239,7 +239,7 @@ class indice extends clsDetalhe
 		}
 
     $codInep = $tmp_obj->educacensoEscola->getCodInep($codIeducar = $registro["cod_escola"]);
-		if($codInep)
+		if($codInep != null)
 		{
 			$this->addDetalhe(array( "Código Inep", "$codInep"));
 		}
