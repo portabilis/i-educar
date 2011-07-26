@@ -8,11 +8,9 @@
 .hg/*.*
 .hg/*
 *.ini
-/trunk/configuration/*
-/trunk/configuration/*.ini
 /trunk/configuration/*.*
+/trunk/configuration/*
 /trunk/intranet/portabilis_report_test.php
 /trunk/intranet/test_db.php
 /trunk/modules/Avaliacao/Views/PromocaoAjaxController.php
 /trunk/modules/Avaliacao/Views/PromocaoController.php
-
