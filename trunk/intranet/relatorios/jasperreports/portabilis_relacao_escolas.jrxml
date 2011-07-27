@@ -40,13 +40,11 @@
 
        (SELECT count(*)
           FROM pmieducar.instituicao,
-               pmieducar.escola,
-               pmieducar.escola_ano_letivo
-         WHERE escola_ano_letivo.ano = $P{ano} AND
-               instituicao.cod_instituicao = $P{instituicao} AND
-               escola_ano_letivo.ref_cod_escola = escola.cod_escola AND
+               pmieducar.escola
+         WHERE instituicao.cod_instituicao = $P{instituicao} AND
                (SELECT CASE WHEN $P{escola} = 0 THEN
-              	  escola_ano_letivo.ref_cod_escola = escola.cod_escola
+              	  escola.ref_cod_instituicao = instituicao.cod_instituicao AND
+                  escola.ativo = 1
                 ELSE
               	  escola.cod_escola = $P{escola}
                 END) AND
@@ -54,14 +52,12 @@
                escola.ativo = 1) as total_escola
 
   from pmieducar.instituicao,
-       pmieducar.escola,
-       pmieducar.escola_ano_letivo
+       pmieducar.escola
 
-where  escola_ano_letivo.ano = $P{ano} AND
-       instituicao.cod_instituicao = $P{instituicao} AND
-       escola_ano_letivo.ref_cod_escola = escola.cod_escola AND
+where  instituicao.cod_instituicao = $P{instituicao} AND
       (SELECT CASE WHEN $P{escola} = 0 THEN
-              	escola_ano_letivo.ref_cod_escola = escola.cod_escola
+              	escola.ref_cod_instituicao = instituicao.cod_instituicao AND
+                escola.ativo = 1
               ELSE
               	escola.cod_escola = $P{escola}
               END) AND
@@ -174,7 +170,7 @@ ORDER BY nm_escola]]>
 				<reportElement x="6" y="123" width="541" height="1"/>
 			</line>
 			<image>
-				<reportElement x="13" y="4" width="57" height="46"/>
+				<reportElement x="10" y="4" width="57" height="46"/>
 				<imageExpression class="java.lang.String"><![CDATA["imagens/brasao.jpg"]]></imageExpression>
 			</image>
 		</band>
@@ -213,7 +209,7 @@ ORDER BY nm_escola]]>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Total de escolas:]]></text>
+				<text><![CDATA[Total de escola:]]></text>
 			</staticText>
 			<line>
 				<reportElement x="6" y="6" width="541" height="1"/>
