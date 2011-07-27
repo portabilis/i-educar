@@ -90,11 +90,20 @@ require_once("dal.php");
     function save()
     {
       $nomeIeducar = pg_escape_string($this->getNomeIeducar($codIeducar = $this->codIeducar));
+      $exists = $this->exists();
 
-      if (! $this->exists())
+      #TODO criar metodo para cada operacao
+      if (! $exists and ! is_numeric($this->codInep))
+        return True;
+      else if (! $exists)
         $sql = "insert into {$this->_getEntityTableName()} (cod_escola, cod_escola_inep, nome_inep, fonte, created_at, updated_at) values ($this->codIeducar, $this->codInep, '$nomeIeducar', {$this->getFonte()}, now(), null)";
-      else
+      else if ($exists and ! is_numeric($this->codInep))
+        $sql = "delete from {$this->_getEntityTableName()} where cod_escola = $this->codIeducar";
+      else if ($exists)
         $sql = "update {$this->_getEntityTableName()} set cod_escola_inep = $this->codInep, nome_inep = '$nomeIeducar', fonte = {$this->getFonte()}, updated_at = now() where cod_escola = $this->codIeducar";
+      else
+        throw new Exception("Educacenso record can not be saved!");
+
       return $this->db->select($sql);
     }
   }
