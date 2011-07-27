@@ -32,6 +32,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once 'include/portabilis/educacenso.php';
 
 class clsIndexBase extends clsBase
 {
@@ -357,18 +358,21 @@ class indice extends clsCadastro
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_escola_det.php?cod_escola={$registro["cod_escola"]}" : "educar_escola_lst.php";
 		$this->nome_url_cancelar = "Cancelar";
 
-    $this->cod_inep = $obj->educacensoEscola->getCodInep($codIeducar = $registro['cod_escola']);
+    if (isset($_GET['cod_escola']))
+    {
+      $educacensoEscola = new EducacensoEscola();
+      $this->cod_inep = $educacensoEscola->getCodInep($codIeducar = $_GET['cod_escola']);
+    }
+    else
+      $this->cod_inep = '';
 
-		return $retorno;
+  	return $retorno;
 	}
 
 	function Gerar()
 	{
 
 		$obj_permissoes = new clsPermissoes();
-
-		$this->campoNumero( "cod_inep", "Código Inep", $this->cod_inep, null, null, true);
-
 //		echo "<pre>";print_r($_POST);die;
 
 		if( !$this->sem_cnpj && !$this->com_cnpj)
@@ -394,6 +398,8 @@ class indice extends clsCadastro
 		}
 		else
 		{
+
+  		$this->campoNumero( "cod_inep", "Código Inep", $this->cod_inep);
 
 			if( $_POST )
 			foreach( $_POST AS $campo => $val )
