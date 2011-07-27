@@ -297,9 +297,6 @@ class indice extends clsCadastro
 					$this->p_telefone_fax = $this->fax;
 				}
 			}
-
-      $this->cod_inep = $obj->educacensoEscola->getCodInep($codIeducar = $registro['cod_escola']);
-
 		}
 		elseif($_POST['cnpj'] && !$_POST["passou"])
 		{
@@ -360,6 +357,8 @@ class indice extends clsCadastro
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_escola_det.php?cod_escola={$registro["cod_escola"]}" : "educar_escola_lst.php";
 		$this->nome_url_cancelar = "Cancelar";
 
+    $this->cod_inep = $obj->educacensoEscola->getCodInep($codIeducar = $registro['cod_escola']);
+
 		return $retorno;
 	}
 
@@ -367,6 +366,8 @@ class indice extends clsCadastro
 	{
 
 		$obj_permissoes = new clsPermissoes();
+
+		$this->campoNumero( "cod_inep", "Código Inep", $this->cod_inep, null, null, true);
 
 //		echo "<pre>";print_r($_POST);die;
 
@@ -557,6 +558,7 @@ class indice extends clsCadastro
 
 				$this->campoTexto( "p_email", "E-mail",  $this->p_email, "50", "255", false );
 			}
+
 			if ($this->com_cnpj)
 			{
 				$this->campoOculto( "com_cnpj", $this->com_cnpj );
@@ -603,7 +605,6 @@ class indice extends clsCadastro
 					$this->campoOculto( "ref_idpes", $this->ref_idpes );
 //					$this->campoOculto( "passo", 3 );
 					$this->campoOculto( "cod_escola", $this->cod_escola );
-					$this->campoNumero( "cod_inep", "Código Inep", $this->cod_inep);
 
 					// text
 					$this->campoTexto( "fantasia", "Escola", $this->fantasia, 30, 255, true );
