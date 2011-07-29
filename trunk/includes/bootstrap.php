@@ -74,8 +74,9 @@ else {
   define('CORE_EXT_CONFIGURATION_ENV', 'production');
 }
 
+$clientName = $_SERVER['HTTP_HOST'];
 // Arquivo de configuração INI
-$configFile = realpath(dirname(__FILE__) . '/../') . '/configuration/ieducar.ini';
+$configFile = realpath(dirname(__FILE__) . '/../') . '/configuration/' . $clientName . '.ini';
 
 // Classe de configuração
 require_once 'CoreExt/Config.class.php';
