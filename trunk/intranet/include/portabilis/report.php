@@ -252,7 +252,11 @@ EOT;
     $this->acao_enviar = 'printReport()';
 
     if ($addLogoNameToArgs)
+    {
+      if (! $config->logo_name)
+        throw new Exception("Invalid logo_name, please check the ini file");      
       $this->addArg('logo_name', $config->logo_name);
+    }
   }
 }
 ?>
