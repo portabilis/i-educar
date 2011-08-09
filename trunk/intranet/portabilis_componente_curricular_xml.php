@@ -44,7 +44,9 @@ else
 
 $defaultId = $_GET['default_id'];
 
-header('Content-type: text/xml');
+if (! isset($_GET['not_set_content']) || $_GET['not_set_content'] != 'true')
+    header('Content-type: text/xml');
+
 $x = "<?xml version='1.0' encoding='ISO-8859-15'?>";
 $x .= "<componentes_curriculares entity='componente_curricular' element_id='ref_cod_componente_curricular' >";
 if ($user->isLoggedIn())
