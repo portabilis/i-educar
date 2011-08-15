@@ -24,15 +24,18 @@
        matricula.cod_matricula as cod_matricula,
        (SELECT public.fcn_upper(curso.nm_curso)
 	      FROM pmieducar.curso
-		WHERE  curso.cod_curso = matricula.ref_cod_curso) as nm_curso,
+	    WHERE  curso.cod_curso = matricula.ref_cod_curso AND
+                     curso.ativo = 1) as nm_curso,
        (SELECT serie.nm_serie
-	      FROM pmieducar.serie
-		 WHERE serie.cod_serie = matricula.ref_ref_cod_serie) as nm_serie,
+	FROM pmieducar.serie
+         WHERE serie.cod_serie = matricula.ref_ref_cod_serie AND
+               serie.ativo = 1) as nm_serie,
        (SELECT turma.nm_turma
-	      FROM pmieducar.turma,
-                   pmieducar.matricula_turma
-		 WHERE turma.cod_turma = matricula_turma.ref_cod_turma and
-		       matricula_turma.ref_cod_matricula = matricula.cod_matricula) as nm_turma,
+	FROM pmieducar.turma,
+               pmieducar.matricula_turma
+         WHERE turma.cod_turma = matricula_turma.ref_cod_turma and
+               matricula_turma.ref_cod_matricula = matricula.cod_matricula and
+               matricula_turma.ativo = 1) as nm_turma,
        fcn_upper(pessoa.nome) as nome,
        fcn_upper(instituicao.cidade) as cidade,
        to_char(CURRENT_DATE,'dd/mm/yyyy') as data_atual,
@@ -225,8 +228,9 @@
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement x="26" y="265" width="512" height="15"/>
-				<textElement textAlignment="Justified" lineSpacing="1_1_2">
+				<textElement textAlignment="Justified">
 					<font size="8"/>
+					<paragraph lineSpacing="1_1_2"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["Atestamos para os defidos fins que o(a) aluno(a): "+$F{nome}+" com o código nº: "+$F{cod_aluno}+" filho(a) de "+$F{nm_mae}+" e de "+$F{nm_pai}+" nascido(a) em "+$F{data_nasc}+", natural de "+$F{municipio_uf_nascimento}+", admitido em "+$F{dt_matricula}+", está regularmente matriculado(a) no ano de "+$F{matricula_ano}+" no curso: "+$F{nm_curso}+" no(a) ano/série: "+$F{nm_serie}+" e requereu nesta data sua transferência, sendo que a mesma será fornecida no prazo de 30 dias."]]></textFieldExpression>
 			</textField>
@@ -303,10 +307,6 @@
 				</textElement>
 				<text><![CDATA[Assinatura]]></text>
 			</staticText>
-			<image>
-				<reportElement x="13" y="4" width="57" height="46"/>
-				<imageExpression class="java.lang.String"><![CDATA["imagens/brasao.jpg"]]></imageExpression>
-			</image>
 			<textField isBlankWhenNull="true">
 				<reportElement x="80" y="52" width="222" height="13"/>
 				<textElement>
@@ -314,6 +314,10 @@
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["Bairro:" +$F{bairro}]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="12" y="4" width="57" height="46"/>
+				<imageExpression class="java.lang.String"><![CDATA["imagens/brasao.jpg"]]></imageExpression>
+			</image>
 		</band>
 	</pageHeader>
 	<columnHeader>
