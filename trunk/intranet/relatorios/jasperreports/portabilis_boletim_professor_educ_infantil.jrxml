@@ -210,131 +210,57 @@ WHERE escola.cod_escola = escola_serie_disciplina.ref_ref_cod_escola AND
 		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="146" splitType="Stretch">
-			<textField isBlankWhenNull="true">
-				<reportElement x="74" y="40" width="306" height="13"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Endereço: "+$F{logradouro}+", "+$F{numero}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="74" y="28" width="306" height="13"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="454" y="4" width="126" height="13"/>
-				<textElement>
-					<font size="7" isBold="false"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Emissão: "+$F{data_atual}+" "+$F{hora_atual}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="74" y="4" width="306" height="13"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="481" y="52" width="77" height="13"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="321" y="52" width="157" height="13"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="74" y="64" width="242" height="13"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Fone/Fax: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="321" y="64" width="187" height="13"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
-			</textField>
+		<band height="64" splitType="Stretch">
 			<staticText>
-				<reportElement x="74" y="85" width="447" height="22"/>
+				<reportElement x="77" y="3" width="447" height="22"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[BOLETIM DO PROFESSOR EDUCAÇÃO INFANTIL]]></text>
 			</staticText>
-			<textField isBlankWhenNull="true">
-				<reportElement x="74" y="17" width="306" height="13"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="74" y="52" width="242" height="13"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Bairro: " +$F{bairro}]]></textFieldExpression>
-			</textField>
 			<textField>
-				<reportElement x="351" y="112" width="93" height="13"/>
+				<reportElement x="354" y="30" width="93" height="13"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["Série/Ano: "+$F{serie}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="6" y="112" width="36" height="13"/>
+				<reportElement x="9" y="30" width="36" height="13"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Aluno:]]></text>
 			</staticText>
 			<line>
-				<reportElement x="42" y="124" width="205" height="1"/>
+				<reportElement x="45" y="42" width="205" height="1"/>
 			</line>
 			<staticText>
-				<reportElement x="413" y="132" width="56" height="13"/>
+				<reportElement x="416" y="48" width="56" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[1º Semestre]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="448" y="112" width="40" height="13"/>
+				<reportElement x="451" y="30" width="40" height="13"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Turma:]]></text>
 			</staticText>
 			<line>
-				<reportElement x="487" y="124" width="79" height="1"/>
+				<reportElement x="490" y="42" width="79" height="1"/>
 			</line>
-			<image>
-				<reportElement x="9" y="4" width="57" height="46"/>
-				<imageExpression class="java.lang.String"><![CDATA["imagens/brasao.jpg"]]></imageExpression>
-			</image>
 			<textField>
-				<reportElement x="249" y="112" width="96" height="13"/>
+				<reportElement x="252" y="30" width="96" height="13"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[Curso: "+$F{curso}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="500" y="132" width="56" height="13"/>
+				<reportElement x="503" y="48" width="56" height="13"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -343,7 +269,7 @@ WHERE escola.cod_escola = escola_serie_disciplina.ref_ref_cod_escola AND
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="2" splitType="Stretch"/>
+		<band height="3" splitType="Stretch"/>
 	</columnHeader>
 	<detail>
 		<band height="16" splitType="Stretch">
