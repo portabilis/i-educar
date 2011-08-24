@@ -67,6 +67,27 @@ class DiarioController extends Core_Controller_Page_ListController
   protected $_formMap  = array();
 
 
+  //implementado funcoes setRegra e getRegraByName para carregar as regras no inicio do processamento
+  //evitando fazer um select novo a cada aluno
+  protected function setRegra($service)
+  {
+    if (! isset($this->_regra))
+    {
+      $this->_regra = array();
+      $this->_regra['tipoNota'] = $service->getRegra()->get('tipoNota');
+      $this->_regra['parecerDescritivo'] = $service->getRegra()->get('parecerDescritivo');
+      $this->_regra['tipoPresenca'] = $service->getRegra()->get('tipoPresenca');
+    }
+  }
+
+  protected function getRegraByName($name)
+  {
+    if (! array_key_exists($name, $this->_regra))
+      throw new Exception("A regra de avaliação não possui alguma variavel com o nome '$name', erro ocorrido na função getRegraByName.");
+
+    return $this->_regra[$name];
+  }
+
   protected function setHeaders($service)
   {
 
@@ -75,12 +96,12 @@ class DiarioController extends Core_Controller_Page_ListController
   
       $this->_headers = array("Matr&iacute;cula", "Aluno", "Situa&ccedil;&atilde;o");
 
-      if ($service->getRegra()->get('tipoNota') != RegraAvaliacao_Model_Nota_TipoValor::NENHUM)
+      if ($this->getRegraByName('tipoNota') != RegraAvaliacao_Model_Nota_TipoValor::NENHUM)
         $this->_headers[] ="Nota";  
 
       $this->_headers[] =   "Falta *";
 
-      if ($service->getRegra()->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM)
+      if ($this->getRegraByName('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM)
         $this->_headers[] = "Parecer descritivo **";
 
       $this->_headers[] = "Status altera&ccedil;&atilde;o";
@@ -182,14 +203,15 @@ class DiarioController extends Core_Controller_Page_ListController
     $onChangeSelectNota = sprintf("setAtt(att='nota', matricula=%s, etapa=%s, componente_curricular=%s);",
                       $aluno['ref_cod_matricula'], $this->etapa, $this->ref_cod_componente_curricular);
 
-    // Valores de arredondamento
-    $valoresArredondamento = $service->getRegra()->tabelaArredondamento->findTabelaValor();
-    $valores = array();
+    //seleciona os valores de arredondamento apenas no primeiro aluno, pois todos estão matriculados na mesma turma (mesma regra)
+    if (! isset($this->valoresArredondamento))    
+      $this->valoresArredondamento = $service->getRegra()->tabelaArredondamento->findTabelaValor();
 
-    foreach ($valoresArredondamento as $valor)
+    $valores = array();
+    foreach ($this->valoresArredondamento as $valor)
     {
 
-      if ($service->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA)
+      if ($this->getRegraByName('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA)
         $valores[(string) $valor->nome] = $valor->nome;
       else
         $valores[(string) $valor->valorMaximo] = $valor->nome . ' (' . $valor->descricao .  ')';
@@ -233,9 +255,9 @@ class DiarioController extends Core_Controller_Page_ListController
     $onChangeSelectFalta = sprintf("setAtt(att='falta', matricula=%s, etapa=%s, componente_curricular=%s);",
                   $aluno['ref_cod_matricula'], $this->etapa, $this->ref_cod_componente_curricular);
 
-    if ($service->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
+    if ($this->getRegraByName('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
         $_faltaAtual = $service->getFalta($this->etapa, $this->ref_cod_componente_curricular)->quantidade;
-    elseif ($service->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL)
+    elseif ($this->getRegraByName('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL)
         $_faltaAtual = $service->getFalta($this->etapa)->quantidade;
 
     $faltas = "<option></option>";
@@ -252,9 +274,9 @@ class DiarioController extends Core_Controller_Page_ListController
 
   protected function getFieldParecerDescritivoAluno($aluno, $service)
   {
-    if ($service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_DESCRITOR or
-      $service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE or
-      $service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL)
+    if ($this->getRegraByName('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_DESCRITOR or
+      $this->getRegraByName('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE or
+      $this->getRegraByName('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL)
     {
       $etapa_parecer = 'An';
       $onChangeParecer = sprintf("setAtt(att='parecer', matricula=%s, etapa='%s', componente_curricular=%s);",
@@ -267,8 +289,8 @@ class DiarioController extends Core_Controller_Page_ListController
                        $aluno['ref_cod_matricula'], $etapa_parecer, $this->ref_cod_componente_curricular);
     }
 
-    if ($service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE or
-      $service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE)
+    if ($this->getRegraByName('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE or
+      $this->getRegraByName('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE)
     {
       $parecer = $service->getParecerDescritivo($etapa_parecer, $this->ref_cod_componente_curricular);
     }
@@ -288,12 +310,12 @@ class DiarioController extends Core_Controller_Page_ListController
       $this->getFieldSituacaoAluno($aluno, $service)
     );
 
-    if ($service->getRegra()->get('tipoNota') != RegraAvaliacao_Model_Nota_TipoValor::NENHUM)
+    if ($this->getRegraByName('tipoNota') != RegraAvaliacao_Model_Nota_TipoValor::NENHUM)
       $linha_aluno[] = $this->getFieldNotaAluno($aluno, $service);
 
     $linha_aluno[] = $this->getFieldFaltaAluno($aluno, $service);
 
-    if ($service->getRegra()->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM)
+    if ($this->getRegraByName('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM)
       $linha_aluno[] = $this->getFieldParecerDescritivoAluno($aluno, $service);
 
     $linha_aluno[] = sprintf('<span id="status_alteracao-matricula:%s"</spam>',   $aluno['ref_cod_matricula']);
@@ -304,11 +326,11 @@ class DiarioController extends Core_Controller_Page_ListController
 
   protected function setRodapePagina($service)
   {
-    $_tipoParecer = RegraAvaliacao_Model_TipoParecerDescritivo::getInstance()->getValue($service->getRegra()->get('parecerDescritivo'));
+    $_tipoParecer = RegraAvaliacao_Model_TipoParecerDescritivo::getInstance()->getValue($this->getRegraByName('parecerDescritivo'));
     if ($_tipoParecer)
       $_tipoParecer = '<br />** ' . $_tipoParecer;
 
-    $_tipoPresenca = RegraAvaliacao_Model_TipoPresenca::getInstance()->getValue($service->getRegra()->get('tipoPresenca'));
+    $_tipoPresenca = RegraAvaliacao_Model_TipoPresenca::getInstance()->getValue($this->getRegraByName('tipoPresenca'));
     $this->rodape = "* $_tipoPresenca $_tipoParecer";
   }
 
@@ -333,6 +355,7 @@ class DiarioController extends Core_Controller_Page_ListController
         foreach ($alunos as $aluno)
         {
           $service = new Avaliacao_Service_Boletim(array('matricula' =>   $aluno['ref_cod_matricula'], 'usuario'   => $this->getSession()->id_pessoa));
+          $this->setRegra($service);
           $this->addLinhaAluno($aluno, $service);
         }
 
@@ -405,6 +428,101 @@ class DiarioController extends Core_Controller_Page_ListController
             __a.href = document.location.href.split('?')[0];
             __bBusca.parentNode.appendChild(__a);
 
+            
+              function _fixSelectsFilter(selectId)
+              {
+                //try
+                //{
+                  if (selectId)
+                    var _ids = [selectId,];
+                  else
+                    var _ids = ['ref_cod_instituicao', 'ref_cod_escola', 'ref_cod_curso', 'ano_escolar', 'ref_ref_cod_serie', 'ref_cod_turma', 'etapa', 'ref_cod_componente_curricular', 'nm_aluno'];
+                    
+                  var w = 0;
+                  for (var i=0; i< _ids.length; i++)
+                  {
+                    var s = document.getElementById(_ids[i]);
+                    
+                    try
+                    {
+                      if (s.offsetWidth > w)
+                        w = s.offsetWidth;
+                    }
+                    catch(err) {/*ie :(*/ }
+     
+                    if (s && s.type == 'select-one')
+                    {
+                      s.size = s.length;
+                      if (s.length == 2 && s.selectedIndex == 0)
+                      {
+                        s.selectedIndex = 1;
+                        s.onchange();
+                      }
+                    }
+                    else if (s && s.type == 'hidden' && s.id == 'ref_cod_instituicao')
+                      _fixSelectsFilter('ref_cod_escola');
+                  }
+
+                  try
+                  {
+                    for (var i=0; i< _ids.length; i++)
+                    {
+                      var s = document.getElementById(_ids[i]);
+                      
+                      if (s.offsetWidth < w)
+                        s.style.width = w + "px";
+                    }
+                  }
+                  catch(err) { /*ie :(*/ }
+
+                //}
+              }
+
+              document.getElementById('ref_cod_escola').afterchange = function()
+              {
+                _fixSelectsFilter('ref_cod_escola');
+              }
+
+              document.getElementById('ref_cod_escola').afterchange = function()
+              {
+                _fixSelectsFilter('ref_cod_escola');
+              }
+
+              document.getElementById('ref_cod_curso').afterchange = function()
+              {
+                _fixSelectsFilter('ref_cod_curso');
+              }
+
+              document.getElementById('ano_escolar').afterchange = function()
+              {
+                _fixSelectsFilter('ano_escolar');
+              }
+
+              document.getElementById('ref_ref_cod_serie').afterchange = function()
+              {
+                _fixSelectsFilter('ref_ref_cod_serie');
+              }
+
+              document.getElementById('ref_cod_turma').afterchange = function()
+              {
+                _fixSelectsFilter('ref_cod_turma');
+              }
+
+              document.getElementById('etapa').afterchange = function()
+              {
+                _fixSelectsFilter('etapa');
+              }
+
+              document.getElementById('ref_cod_componente_curricular').afterchange = function()
+              {
+                _fixSelectsFilter('ref_cod_componente_curricular');
+              }
+
+              document.getElementById('nm_aluno').onchange = function()
+              {
+                _fixSelectsFilter();
+              }
+
               document.getElementById('ref_cod_instituicao').onchange = function()
               {
                 clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId = false);
@@ -431,9 +549,6 @@ class DiarioController extends Core_Controller_Page_ListController
 
 
             document.getElementById('ref_cod_curso').onchange = function()
-
-
-
             {
               clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId = false);
               clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
@@ -467,6 +582,9 @@ class DiarioController extends Core_Controller_Page_ListController
               getComponenteCurricular();
               getEtapa();
             }
+
+            _fixSelectsFilter();
+            document.getElementById('botao_busca').focus();
 
         </script>
 

@@ -235,14 +235,13 @@
 		  {
 			  $obj_escola_curso = new clsPmieducarEscolaCurso();
 			  $lst_escola_curso = $obj_escola_curso->lista( $this->ref_cod_escola,null,null,null,null,null,null,null,1 );
-
 			  if ( is_array( $lst_escola_curso ) && count( $lst_escola_curso ) )
 			  {
 				  foreach ( $lst_escola_curso as $escola_curso )
 					  $opcoes_curso["{$escola_curso["ref_cod_curso"]}"] = $escola_curso['nm_curso'];
 			  }
 		  }
-		  else if( $this->ref_cod_instituicao )
+		  else if( $this->ref_cod_instituicao)
 		  {
 			  $opcoes_curso = array( "" => "Selecione" );
 			  $obj_curso = new clsPmieducarCurso();
@@ -572,7 +571,6 @@ if ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario )
 		}
 		campoEscola.length = 1;
 		campoEscola.options[0].text = 'Selecione uma escola';
-		campoEscola.disabled = false;
 
 		var escolas = xml.getElementsByTagName( "escola" );
 		if(escolas.length)
@@ -587,6 +585,10 @@ if ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario )
 			campoEscola.options[0].text = 'A instituição não possui nenhuma escola';
 		}
 
+		campoEscola.disabled = false;
+    if (campoEscola.afterchange)
+      campoEscola.afterchange(); 
+
 		if( typeof after_getEscola == 'function' )
 		{
 			after_getEscola();
@@ -598,6 +600,7 @@ if ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario )
 ?>
 		function getDuploEscolaBiblioteca()
 		{
+
 			getEscola();
 			getBiblioteca(1);
 		}
@@ -633,7 +636,6 @@ if ( $get_curso && $sem_padrao && !$get_matricula )
 		var campoCurso = document.getElementById('ref_cod_curso');
 		campoCurso.length = 1;
 		campoCurso.options[0].text = 'Selecione um curso';
-		campoCurso.disabled = false;
 
 		var cursos = xml.getElementsByTagName( "curso" );
 		if(cursos.length)
@@ -646,10 +648,10 @@ if ( $get_curso && $sem_padrao && !$get_matricula )
 		else
 		{
 			campoCurso.options[0].text = 'A instituição não possui nenhum curso';
-
-
-
 		}
+		campoCurso.disabled = false;
+    if (campoCurso.afterchange)
+      campoCurso.afterchange();    
 	}
 <?
 }
@@ -681,7 +683,6 @@ elseif ( $get_curso && !$get_matricula )
 		var campoCurso = document.getElementById('ref_cod_curso');
 		campoCurso.length = 1;
 		campoCurso.options[0].text = 'Selecione um curso';
-		campoCurso.disabled = false;
 
 		var cursos = xml.getElementsByTagName( "curso" );
 		if(cursos.length)
@@ -695,6 +696,9 @@ elseif ( $get_curso && !$get_matricula )
 		{
 			campoCurso.options[0].text = 'A instituição não possui nenhum curso';
 		}
+    campoCurso.disabled = false;
+    if (campoCurso.afterchange)
+      campoCurso.afterchange();
 	}
 <?
 }
@@ -781,7 +785,6 @@ if ( $get_curso )
 		var campoCurso = document.getElementById('ref_cod_curso');
 		campoCurso.length = 1;
 		campoCurso.options[0].text = 'Selecione um curso';
-		campoCurso.disabled = false;
 
 		var cursos = xml.getElementsByTagName( "curso" );
 		if(cursos.length)
@@ -795,6 +798,9 @@ if ( $get_curso )
 		{
 			campoCurso.options[0].text = 'A escola não possui nenhum curso';
 		}
+    campoCurso.disabled = false;
+    if (campoCurso.afterchange)
+      campoCurso.afterchange();
 	}
 <?
   }
@@ -834,7 +840,6 @@ if ( $get_escola_curso_serie && $get_matricula && $_GET["ref_cod_aluno"] )
 		var campoSerie = document.getElementById('ref_ref_cod_serie');
 		campoSerie.length = 1;
 		campoSerie.options[0].text = 'Selecione uma série';
-		campoSerie.disabled = false;
 
 		series = xml.getElementsByTagName('serie');
 		if(series.length)
@@ -848,6 +853,9 @@ if ( $get_escola_curso_serie && $get_matricula && $_GET["ref_cod_aluno"] )
 		{
 			campoSerie.options[0].text = 'A escola/curso não possui nenhuma série';
 		}
+    campoSerie.disabled = false;
+    if (campoSerie.afterchange)
+      campoSerie.afterchange();
 	}
 <?
 }
@@ -887,7 +895,6 @@ if ( $get_escola_curso_serie  && !$get_matricula )
 		var campoSerie = document.getElementById('ref_ref_cod_serie');
 		campoSerie.length = 1;
 		campoSerie.options[0].text = 'Selecione uma série';
-		campoSerie.disabled = false;
 
 		series = xml.getElementsByTagName('serie');
 		if(series.length)
@@ -901,6 +908,9 @@ if ( $get_escola_curso_serie  && !$get_matricula )
 		{
 			campoSerie.options[0].text = 'A escola/curso não possui nenhuma série';
 		}
+		campoSerie.disabled = false;
+    if (campoSerie.afterchange)
+      campoSerie.afterchange();      
 	}
 <?
 }
@@ -945,7 +955,6 @@ if ( $get_serie && $get_escola_serie)
 		var campoSerie = document.getElementById('ref_cod_serie');
 		campoSerie.length = 1;
 		campoSerie.options[0].text = 'Selecione uma série';
-		campoSerie.disabled = false;
 
 		series = xml.getElementsByTagName('serie');
 		if(series.length)
@@ -960,6 +969,9 @@ if ( $get_serie && $get_escola_serie)
 		{
 			campoSerie.options[0].text = 'O curso não possui nenhuma série ou todas as séries já estã associadas a essa escola';
 		}
+		campoSerie.disabled = false;
+    if (campoSerie.afterchange)
+      campoSerie.afterchange();
 	}
 <?
 }
@@ -996,7 +1008,6 @@ if ( $get_serie && !$get_escola_serie  || $exibe_get_serie)
 			campoSerie = document.getElementById('ref_ref_cod_serie');
 		campoSerie.length = 1;
 		campoSerie.options[0].text = 'Selecione uma série';
-		campoSerie.disabled = false;
 
 		series = xml.getElementsByTagName('serie');
 		if(series.length)
@@ -1010,6 +1021,9 @@ if ( $get_serie && !$get_escola_serie  || $exibe_get_serie)
 		{
 			campoSerie.options[0].text = 'O curso não possui nenhuma série';
 		}
+		campoSerie.disabled = false;
+    if (campoSerie.afterchange)
+      campoSerie.afterchange();
 	}
 <?
 }
@@ -1190,7 +1204,6 @@ if ( $get_turma )
 		var campoTurma = document.getElementById('ref_cod_turma');
 		campoTurma.length = 1;
 		campoTurma.options[0].text = 'Selecione uma turma';
-		campoTurma.disabled = false;
 
 		var turmas = xml.getElementsByTagName('turma');
 		if(turmas.length)
@@ -1204,6 +1217,9 @@ if ( $get_turma )
 		{
 			campoTurma.options[0].text = 'A série não possui nenhuma turma';
 		}
+    campoTurma.disabled = false;
+    if (campoTurma.afterchange)
+      campoTurma.afterchange();
 
 		after_getTurma();
 	}
@@ -1298,6 +1314,8 @@ function clearSelect(entity, disable, text, multipleId)
           text = 'Selecione';
         e.options[0].text = text;
       }
+      if (e.afterchange)
+        e.afterchange();
     }
   }
 }
@@ -1328,7 +1346,6 @@ function updateSelect(xml)
 		  attElement.options[i+1] = new Option(atts[i].getAttribute('value'), atts[i].getAttribute('id'), _selected,true);
     }
     attElement.selectedIndex = _index;
-		attElement.disabled = false;
 
     var _actions = [];
     var __list = [];
@@ -1350,6 +1367,11 @@ function updateSelect(xml)
         _function(_args);
       }
     }
+
+		attElement.disabled = false;
+		if (attElement.afterchange)
+      attElement.afterchange();
+
   }
 	else
 		attElement.options[0].text = 'Nenhum(a) '+ att_name +' encontrado(a)';
@@ -1465,6 +1487,7 @@ if (__bSubmit)
     {
     if (! __not_empty_fields[i].value)
     {
+
       __all_filled = false;
       __toSetFocus = __not_empty_fields[i];
       break;
