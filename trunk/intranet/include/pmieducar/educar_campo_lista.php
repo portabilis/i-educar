@@ -480,6 +480,14 @@
 		if ($nivel_usuario == 1)
 			${$get_cabecalho}[] = "Institui&ccedil;&atilde;o";
 	}
+
+	if (isset($get_aluno) && $get_aluno)
+	{
+    $aluno_obrigatorio = isset($aluno_obrigatorio) && $aluno_obrigatorio ? $aluno_obrigatorio  : false;
+    $this->campoTexto('nm_aluno', 'Aluno', $this->nm_aluno, 30, 255, $aluno_obrigatorio,
+      FALSE, FALSE, '', "<img border=\"0\" onclick=\"pesquisa_valores_popless('/intranet/educar_pesquisa_aluno.php')\" id=\"ref_cod_aluno_lupa\" name=\"ref_cod_aluno_lupa\" src=\"imagens/lupa.png\"\/>", '', '', TRUE);
+    $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);    
+  }
 ?>
 <script type='text/javascript'>
 
@@ -600,6 +608,7 @@ if ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario )
 ?>
 		function getDuploEscolaBiblioteca()
 		{
+
 
 			getEscola();
 			getBiblioteca(1);
