@@ -32,6 +32,16 @@ require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsCronometro.inc.php';
 require_once 'include/clsEmail.inc.php';
 
+
+$redirectTo = '';#/intranet/suspenso.php';  
+if ($redirectTo)
+{
+  header('HTTP/1.1 503 Service Temporarily Unavailable');
+  header('Status: 503 Service Temporarily Unavailable');
+  header("Location: $redirectTo");      
+}
+
+
 /**
  * clsBancoSQL_ abstract class.
  *
