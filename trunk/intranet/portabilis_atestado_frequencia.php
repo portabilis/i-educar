@@ -31,6 +31,15 @@ class PortabilisAtestadoFrequencia extends Report
     $this->addArg('escola', (int)$_POST['ref_cod_escola']);
     $this->addArg('aluno', (int)$_POST['ref_cod_aluno']);
   }
+
+  function validate()
+  {
+    if (! $this->db->selectField("select 1 from pmieducar.matricula where ref_ref_cod_escola = {$_POST['ref_cod_escola']} and ref_cod_aluno = {$_POST['ref_cod_aluno']} and aprovado = 3 and ano = {$_POST['ano']}"))
+    {
+      $this->addValidationError('Este aluno não possui matriculas em andamento neste ano e escola.');
+    }
+  }
+
 }
 
 $report = new PortabilisAtestadoFrequencia($name = 'Atestado de Frequência', $templateName = 'portabilis_atestado_frequencia');
