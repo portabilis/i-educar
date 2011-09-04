@@ -608,6 +608,7 @@ if ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario )
 ?>
 		function getDuploEscolaBiblioteca()
 		{
+
 			getEscola();
 			getBiblioteca(1);
 		}
