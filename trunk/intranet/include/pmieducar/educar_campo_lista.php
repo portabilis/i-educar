@@ -56,7 +56,7 @@
 
 	if ($obrigatorio)
 	{
-		$instituicao_obrigatorio = $escola_obrigatorio = $curso_obrigatorio = $escola_curso_obrigatorio = $escola_curso_serie_obrigatorio = $serie_obrigatorio = $biblioteca_obrigatorio = $cliente_tipo_obrigatorio = $funcao_obrigatorio = $turma_obrigatorio = $componente_curricular_obrigatorio = $etapa_obrigatorio = true;
+		$instituicao_obrigatorio = $escola_obrigatorio = $curso_obrigatorio = $escola_curso_obrigatorio = $escola_curso_serie_obrigatorio = $serie_obrigatorio = $biblioteca_obrigatorio = $cliente_tipo_obrigatorio = $funcao_obrigatorio = $turma_obrigatorio = $componente_curricular_obrigatorio = $etapa_obrigatorio = $alunos_matriculados_obrigatorio = true;
 	}
 	else
 	{
@@ -73,11 +73,12 @@
     $componente_curricular_obrigatorio = isset( $componente_curricular_obrigatorio ) ? $componente_curricular_obrigatorio           : false;
     $etapa_obrigatorio =                isset( $etapa_obrigatorio ) 	        ? $etapa_obrigatorio                : false;
     $ano_escolar_obrigatorio =                isset( $ano_escolar_obrigatorio ) 	        ? $ano_escolar_obrigatorio                : false;
+    $alunos_matriculados_obrigatorio = isset( $alunos_matriculados_obrigatorio ) ? $alunos_matriculados_obrigatorio : false;
 	}
 
 	if ($desabilitado)
 	{
-		$instituicao_desabilitado = $escola_desabilitado = $curso_desabilitado = $escola_curso_desabilitado = $escola_curso_serie_desabilitado = $serie_desabilitado = $biblioteca_desabilitado = $cliente_tipo_desabilitado = $turma_desabilitado = $componente_curricular_obrigatorio = $etapa_obrigatorio = true;
+		$instituicao_desabilitado = $escola_desabilitado = $curso_desabilitado = $escola_curso_desabilitado = $escola_curso_serie_desabilitado = $serie_desabilitado = $biblioteca_desabilitado = $cliente_tipo_desabilitado = $turma_desabilitado = $componente_curricular_obrigatorio = $etapa_obrigatorio = $alunos_matriculados_desabilitado = true;
 	}
 	else
 	{
@@ -94,6 +95,7 @@
 		$componente_curricular_desabilitado = 			isset( $componente_curricular_desabilitado ) 		? $displina_desabilitado     		: false;
     $etapa_desabilitado =               isset( $etapa_desabilitado ) 	        ? $etapa_desabilitado                : false;
     $ano_escolar_desabilitado =               isset( $ano_escolar_desabilitado ) 	        ? $ano_escolar_desabilitado                : false;
+    $alunos_matriculados_desabilitado = isset( $alunos_matriculados_desabilitado ) ? $alunos_matriculados_desabilitado : false;
 	}
 
  	$obj_permissoes = new clsPermissoes();
@@ -459,14 +461,19 @@
 		$this->campoLista( "ref_cod_turma", "Turma", $opcoes_turma, $this->ref_cod_turma, null, null, null, null, $turma_desabilitado, $turma_obrigatorio );
 	}
 
-	if ($get_etapa)
+	if (isset($get_etapa) && $get_etapa)
   {
     $this->campoLista( "etapa", "Etapa", array("" => "Selecione"), null, null, null, null, null, $etapa_desabilitado, $etapa_obrigatorio );
   }
 
-	if ($get_componente_curricular)
+	if (isset($get_componente_curricular) && $get_componente_curricular)
   {
 		$this->campoLista( "ref_cod_componente_curricular", "Componente curricular", array("" => "Selecione"), null, null, null, null, null, $componente_curricular_desabilitado, $componente_curricular_obrigatorio );
+  }
+
+	if (isset($get_alunos_matriculados) && $get_alunos_matriculados)
+  {
+    $this->campoLista( "ref_cod_matricula", "Matricula", array("" => "Selecione"), null, null, null, null, null, $alunos_matriculados_desabilitado, $alunos_matriculados_obrigatorio );
   }
 
 	if (isset($get_cabecalho))
@@ -1525,14 +1532,40 @@ EOT;
     $s = <<<EOT
 <script>
 
+  document.getElementById('ref_cod_instituicao').onchange = function()
+  {
+    clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId = false);
+    clearSelect(entity = 'ano', disable = false, text = '', multipleId = false);
+    clearSelect(entity = 'escola', disable = false, text = '', multipleId = true);
+    clearSelect(entity = 'curso', disable = false, text = '', multipleId = true);
+    clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
+    clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
+    clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
+    clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
+    clearSelect(entity = 'matricula', disable = false, text = '', multipleId = true);
+	  getEscola();
+  }
+
   document.getElementById('ref_cod_escola').onchange = function()
   {
+    clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId = false);
+    clearSelect(entity = 'ano', disable = false, text = '', multipleId = false);
+    clearSelect(entity = 'curso', disable = false, text = '', multipleId = true);
+    clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
+    clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
+    clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
+    clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
+    clearSelect(entity = 'matricula', disable = false, text = '', multipleId = true);
 	  getEscolaCurso();
   }
 
   document.getElementById('ref_cod_curso').onchange = function()
   {
-
+    clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
+    clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
+    clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
+    clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
+    clearSelect(entity = 'matricula', disable = false, text = '', multipleId = true);
 	  getEscolaCursoSerie();
   }
 
@@ -1543,14 +1576,59 @@ EOT;
 
   __serie_field.onchange = function()
   {
+    clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
+    clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
+    clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
+    clearSelect(entity = 'matricula', disable = false, text = '', multipleId = true);
     getTurma();
   }
 
 </script>
 EOT;
   $this->appendOutput($s);
+
+  if (isset($get_alunos_matriculados) && $get_alunos_matriculados && isset($get_turma) && $get_turma)
+  {
+    $s = <<<EOT
+<script>
+ 
+  var __turma_field = document.getElementById('ref_cod_turma');
+  __turma_field.onchange = function()
+  {
+
+    clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
+    clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
+    clearSelect(entity = 'matricula', disable = false, text = '', multipleId = true);
+
+    getAlunosMatriculados();
+  }
+
+</script>
+EOT;
+  $this->appendOutput($s);
+  }
 } 
 ?>
+
+<?php if (isset($get_alunos_matriculados) && $get_alunos_matriculados) { ?>
+  function getAlunosMatriculados()
+  {
+	  var turmaId = document.getElementById('ref_cod_turma').value;
+    var anoEscolar = document.getElementById('ano_escolar');
+    if (! anoEscolar)
+        var anoEscolar = document.getElementById('ano');
+
+    if (turmaId && anoEscolar)
+    {
+		  clearSelect(entity = 'matricula', disable = true, text = 'Carregando alunos...', multipleId=true);
+
+      var ajaxReq = new ajax( updateSelect );
+      ajaxReq.envia("portabilis_alunos_matriculados_xml.php?ano_escolar="+anoEscolar+"&turma_id="+turmaId);  
+    }
+    else
+      clearSelect(entity = 'matricula', disable = false, text = '', multipleId=true);
+  }
+<?php } ?>
 
 </script>
 
