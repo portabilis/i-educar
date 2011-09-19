@@ -39,41 +39,6 @@ header("HTTP/1.1 503 Service Unavailable");
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
   <head>
-    <!--style type="text/css">
-      * {
-        margin: 0;
-        padding: 0
-      }
-
-      body {
-        align: center;
-        font-size: 85%;
-        font-family: verdana, arial, sans-serif;
-        line-height: 160%
-      }
-
-      div#error {
-        width: 500px;
-        position: absolute;
-        left: 250px;
-        top: 35px;
-        border: 1px solid #666
-      }
-
-      div.content {
-        padding: 25px
-      }
-
-      h1 {
-        padding-bottom: 15px
-      }
-
-      ul {
-        margin-top: 20px;
-        list-style-position: inside
-      }
-    </style-->
-
     <link rel='stylesheet' type='text/css' href='styles/reset.css'>
     <link rel='stylesheet' type='text/css' href='styles/portabilis.css'>
     <link rel='stylesheet' type='text/css' href='styles/min-portabilis.css'></head>
@@ -81,12 +46,10 @@ header("HTTP/1.1 503 Service Unavailable");
   </head>
 
   <body>
-    <div id="error">
+    <div id="error" style="border: 0px solid #666;">
       <div class="content">
-        <h1>Erro inesperado</h1>
-        <p class="explication">Desculpe-nos, estamos passando por dificuldades em nosso servidor de banco de dados, <strong>por favor tente novamente mais tarde.</strong></p>
-
-        <ul class='unstyled'><li><a href='/intranet/index.php'>- Voltar para o sistema</a></li><li>- Tentou mais de uma vez e o erro persiste ? Por favor, <a target='_blank' href='http://www.portabilis.com.br/site/suporte'>solicite suporte</a> ou envie um email para suporte@portabilis.com.br</li></ul>
+        <h1>Em manutenção</h1>
+        <p class="explication">Descupe-nos, estamos passando por uma manutenção<strong> por favor tente novamente mais tarde.</strong></p>
       </div>
     </div>
   </body>
