@@ -125,7 +125,7 @@ class Report extends clsCadastro
 
   function addValidationError($message)
   {
-    $this->validationErrors[] = array('message' => $message);
+    $this->validationErrors[] = array('message' => utf8_encode($message));
   }
 
   function addRequiredField($name, $label = '')
@@ -191,7 +191,7 @@ class Report extends clsCadastro
     {
       $msg .= '- ' . $e['message'] . '\n';
     }
-    $msg .= '\npor favor, verifique esta(s) situaçõe(s) e tente novamente.';
+    $msg .= '\nPor favor, verifique esta(s) situação(s) e tente novamente.';
     $msg = "<script type='text/javascript'>alert('$msg'); close();</script> ";
     print utf8_decode($msg);
   }
