@@ -52,7 +52,7 @@
         position: absolute;
         left: 250px;
         top: 35px;
-        border: 1px solid #666
+        /*border: 1px solid #666*/
       }
 
       div.content {
@@ -78,10 +78,9 @@
   <body>
     <div id="error">
       <div class="content">
-        <h1>Erro inesperado</h1>
-        <p class="explication">Desculpe-nos, estamos passando por dificuldades em nosso servidor de banco de dados, <strong>por favor tente novamente mais tarde.</strong></p>
-
-        <ul class='unstyled'><li><a href='/intranet/index.php'>- Voltar para o sistema</a></li><li>- Tentou mais de uma vez e o erro persiste ? Por favor, <a target='_blank' href='http://www.portabilis.com.br/site/suporte'>solicite suporte</a> ou envie um email para suporte@portabilis.com.br</li></ul>
+        <h1>Acesso suspenso</h1>
+        <p class="explication">Desculpe-nos, o acesso ao sistema foi suspenso, por favor, entre em contato com o responsável pelo sistema em sua entidade, e tente novamente.</strong>
+        </p>
       </div>
     </div>
   </body>

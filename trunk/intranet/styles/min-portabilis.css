@@ -114,7 +114,7 @@ div#error h1 {
 
 div#error {
   margin-top: 20px;
-  border: 1px solid;
+  /*border: 1px solid;*/
   width: 800px;
   margin-right: auto;
   margin-left: auto;
@@ -131,4 +131,3 @@ div#error div#detail {
   margin-top: 40px;
   border-top: 1px solid;
 }
-
