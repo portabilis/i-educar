@@ -1,6 +1,8 @@
 <?php
+
 #error_reporting(E_ALL);
 #ini_set("display_errors", 1);
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -45,7 +47,149 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   protected $_deleteOption  = FALSE;
   protected $_titulo   = '';
 
-  #TODO implementar uma funcao para cada att, setFalta, setNota, setParecer
+  protected function validadeParams()
+  {
+  
+    $expectedAtts = array('nota', 'falta', 'parecer');
+    $msgError = '';
+
+    #TODO verificar se usuário logado tem permissão para alterar / criar nota
+    if (! $this->getSession()->id_pessoa)
+    {
+      $msgError = "Usuário não logado";
+    }
+    elseif(! isset($this->getRequest()->att))
+    {
+      $msgError = "É necessario receber um atributo 'att'";
+    }
+    elseif(! in_array($this->getRequest()->att, $expectedAtts))
+    {
+      $msgError = "Valor recebido inválido para o atributo 'att'";
+    }
+
+    if($msgError)
+    {
+      $this->AppendMsg($msgError);
+      return false;
+    }
+    return true; 
+  }
+
+
+  protected function setService()
+  {
+    try
+    {
+      $this->service = new Avaliacao_Service_Boletim(array(
+          'matricula' => $this->getRequest()->matricula,
+          'usuario'   => $this->getSession()->id_pessoa
+      ));
+    }
+    catch (Exception $e)
+    {
+      $this->AppendMsg('Exception: ' . $e->getMessage(), $decode_to_utf8  = False);
+      return false;
+    }
+    return true;
+  }
+
+
+  protected function addNota()
+  {
+    $nota = new Avaliacao_Model_NotaComponente(array(
+      'componenteCurricular' => $this->getRequest()->componente_curricular,
+      'nota' => urldecode($this->getRequest()->att_value),
+      'etapa' => $this->getRequest()->etapa
+    ));
+    $this->service->addNota($nota);
+  }
+
+
+  protected function getQuantidadeFalta()
+  {
+    $quantidade = (int) $this->getRequest()->att_value;
+
+    if ($quantidade < 0)
+      $quantidade = 0;
+    
+    return $quantidade;
+  }
+
+
+  protected function getFaltaGeral()
+  {
+    return new Avaliacao_Model_FaltaGeral(array(
+        'quantidade' => $this->getQuantidadeFalta(),
+        'etapa' => $this->getRequest()->etapa
+        ));
+  }
+
+
+  protected function getFaltaComponente()
+  {
+
+    return new Avaliacao_Model_FaltaComponente(array(
+            'componenteCurricular' => $this->getRequest()->componente_curricular,
+            'quantidade' => $this->getQuantidadeFalta(),
+            'etapa' => $this->getRequest()->etapa
+          ));
+  }
+
+
+  protected function addFalta()
+  {
+
+    if ($this->service->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
+      $falta = $this->getFaltaComponente();
+    elseif ($this->service->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL)
+      $falta = $this->getFaltaGeral();
+
+    $this->service->addFalta($falta);
+  }
+
+
+  protected function getParecerComponente()
+  {
+    return new Avaliacao_Model_ParecerDescritivoComponente(array(
+              'componenteCurricular' => $this->getRequest()->componente_curricular,
+              'parecer'  => addslashes($this->getRequest()->att_value),
+              'etapa'  => $this->getRequest()->etapa
+            ));
+  }
+
+
+  protected function getParecerGeral()
+  {
+    return new Avaliacao_Model_ParecerDescritivoGeral(array(
+              'parecer' => addslashes($this->getRequest()->att_value),
+              'etapa'   => $this->getRequest()->etapa
+            ));
+  }
+
+
+  protected function addParecer()
+  {
+    if ($this->service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM)
+    {
+      $this->appendMsg("Não é gravar parecer descritivo, pois a regra de avaliação não utiliza parecer.");
+    }
+    else
+    {    
+      if ($this->service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE or
+        $this->service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE)
+      {
+        $parecer = $this->getParecerComponente();
+      }
+      else
+      {
+        $parecer = $this->getParecerGeral();
+      }
+
+      $this->service->addParecer($parecer);
+    } 
+  }
+
+
   public function Gerar()
   {
 
@@ -53,91 +197,21 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
     $this->msgs = array();
 
-    if (! $this->getSession()->id_pessoa)#TODO verificar se usuário logado tem permissão para alterar / criar nota
-      $this->appendMsg("Usuario nao logado");
-    elseif (! isset($this->getRequest()->att))
-      $this->appendMsg("É necessario receber um atributo 'att'");
-    else
+    if ($this->validadeParams() && $this->setService())
     {
-      try {
-        $this->service = new Avaliacao_Service_Boletim(array(
-            'matricula' => $this->getRequest()->matricula,
-            'usuario'   => $this->getSession()->id_pessoa
-        ));
-      }
-      catch (Exception $e) {
-        $this->AppendMsg('Exception: ' . $e->getMessage(), $decode_to_utf8  = False);
-      }
-    }
-
-    if (count($this->msgs) < 1)
-    {
-
       if ($this->getRequest()->att == 'nota')
-      {
-        $nota = new Avaliacao_Model_NotaComponente(array(
-          'componenteCurricular' => $this->getRequest()->componente_curricular,
-          'nota' => urldecode($this->getRequest()->att_value),
-          'etapa' => $this->getRequest()->etapa
-        ));
-        $this->service->addNota($nota);
-      }
+        $this->addNota();
       elseif ($this->getRequest()->att == 'falta')
-      {
-        $quantidade = 0 < $this->getRequest()->att_value ? (int) $this->getRequest()->att_value : 0;
-
-        if ($this->service->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
-        {
-          $falta = new Avaliacao_Model_FaltaComponente(array(
-            'componenteCurricular' => $this->getRequest()->componente_curricular,
-            'quantidade' => $quantidade,
-            'etapa' => $this->getRequest()->etapa
-          ));
-        }
-        elseif ($this->service->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL)
-        {
-          $falta = new Avaliacao_Model_FaltaGeral(array(
-            'quantidade' => $quantidade,
-            'etapa' => $this->getRequest()->etapa
-            ));
-          }
-          $this->service->addFalta($falta);
-      }
+        $this->addFalta();
       elseif ($this->getRequest()->att == 'parecer')
-      {
-        if ($this->service->getRegra()->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM)
-        {
-          if ($this->service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE or
-            $this->service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE)
-          {
-            $parecer = new Avaliacao_Model_ParecerDescritivoComponente(array(
-              'componenteCurricular' => $this->getRequest()->componente_curricular,
-              'parecer'  => addslashes($this->getRequest()->att_value),
-              'etapa'  => $this->getRequest()->etapa
-            ));
-          }
-
-          else
-          {
-            $parecer = new Avaliacao_Model_ParecerDescritivoGeral(array(
-              'parecer' => addslashes($this->getRequest()->att_value),
-              'etapa'   => $this->getRequest()->etapa
-            ));
-          }
-        $this->service->addParecer($parecer);
-        }
-        else
-          $this->appendMsg("Não é gravar parecer descritivo, pois a regra de avaliação não utiliza parecer.");        
-      }
-      else
-        $this->AppendMsg("Valor recebido do atributo 'att' inválido");
+        $this->addParecer();      
 
       try {
         $this->service->save();
       }
-      catch (CoreExt_Service_Exception $e) {
-        // Ok. Não pode promover por se tratar de progressão manual ou por estar em andamento
-        #error_log('CoreExt_Service_Exception: ' . $e->getMessage(), $decode_to_utf8  = False);
+      catch (CoreExt_Service_Exception $e)
+      {
+        //excecoes ignoradas :( servico lanca excecoes de alertas, que não são exatamente errors.
       }
       catch (Exception $e) {
         $this->AppendMsg('Exception: ' . $e->getMessage(), $decode_to_utf8  = False);
@@ -145,31 +219,28 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
       $situacao = App_Model_MatriculaSituacao::getInstance()->getValue(
         $this->service->getSituacaoComponentesCurriculares()->componentesCurriculares[$this->getRequest()->componente_curricular]->situacao);
-      $attCurrentValue = $this->getRequest()->att_value;
-      $_att = $this->getRequest()->att;
     }
-
-
+    
     $_matricula = $this->getRequest()->matricula;
 
     echo "<?xml version='1.0' encoding='ISO-8859-1' ?>
     <status>
     <errors>{$this->msgsToXml('error')}</errors>
     <matricula>$_matricula</matricula>
-    <att>$_att</att>
+    <att>{$this->getRequest()->att}</att>
     <situacao>$situacao</situacao>
     </status>";
   }
 
-  function appendMsg($msg, $decode_to_utf8 = True)
+  protected function appendMsg($msg, $decode_to_utf8 = True)
   {
     if ($decode_to_utf8)
       $msg = utf8_decode($msg);
     $this->msgs[] = $msg;
-    #error_log($msg);
+    error_log($msg);
   }
 
-  function msgsToXml($tag = 'msg')
+  protected function msgsToXml($tag = 'msg')
   {
     $x = "";
     foreach($this->msgs as $m)
@@ -180,7 +251,6 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   public function generate(CoreExt_Controller_Page_Interface $instance)
   {
     header("Content-type: text/xml");
-    #TODO implementar uma funcao para cada att, setFalta, setNota, setParecer
     $instance->Gerar();
   }
 }
