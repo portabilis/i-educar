@@ -50,7 +50,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   protected function validadeParams()
   {
   
-    $expectedAtts = array('nota', 'falta', 'parecer');
+    $expectedAtts = array('nota', 'nota_exame', 'falta', 'parecer');
     $msgError = '';
 
     #TODO verificar se usuário logado tem permissão para alterar / criar nota
@@ -94,8 +94,11 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  protected function addNota()
+  protected function changeNota()
   {
+
+    #TODO se nota for vaziu, deletar
+
     $nota = new Avaliacao_Model_NotaComponente(array(
       'componenteCurricular' => $this->getRequest()->componente_curricular,
       'nota' => urldecode($this->getRequest()->att_value),
@@ -136,8 +139,10 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  protected function addFalta()
+  protected function changeFalta()
   {
+
+    #TODO se falta for vaziu, deletar
 
     if ($this->service->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
       $falta = $this->getFaltaComponente();
@@ -167,8 +172,11 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  protected function addParecer()
+  protected function changeParecer()
   {
+
+    #TODO se nota for vaziu, deletar
+
     if ($this->service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM)
     {
       $this->appendMsg("Não é gravar parecer descritivo, pois a regra de avaliação não utiliza parecer.");
@@ -197,30 +205,29 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
     $this->msgs = array();
 
-    if ($this->validadeParams() && $this->setService())
-    {
-      if ($this->getRequest()->att == 'nota')
-        $this->addNota();
-      elseif ($this->getRequest()->att == 'falta')
-        $this->addFalta();
-      elseif ($this->getRequest()->att == 'parecer')
-        $this->addParecer();      
+    try {
+      if ($this->validadeParams() && $this->setService())
+      {
+        if ($this->getRequest()->att == 'nota' || $this->getRequest()->att == 'nota_exame')
+          $this->changeNota();
+        elseif ($this->getRequest()->att == 'falta')
+          $this->changeFalta();
+        elseif ($this->getRequest()->att == 'parecer')
+          $this->changeParecer();      
 
-      try {
         $this->service->save();
       }
-      catch (CoreExt_Service_Exception $e)
-      {
-        //excecoes ignoradas :( servico lanca excecoes de alertas, que não são exatamente errors.
-      }
-      catch (Exception $e) {
-        $this->AppendMsg('Exception: ' . $e->getMessage(), $decode_to_utf8  = False);
-      }
-
-      $situacao = App_Model_MatriculaSituacao::getInstance()->getValue(
-        $this->service->getSituacaoComponentesCurriculares()->componentesCurriculares[$this->getRequest()->componente_curricular]->situacao);
     }
-    
+    catch (CoreExt_Service_Exception $e)
+    {
+      //excecoes ignoradas :( servico lanca excecoes de alertas, que não são exatamente errors.
+      error_log('CoreExt_Service_Exception ignorada: ' . $e->getMessage());
+    }
+    catch (Exception $e) {
+      $this->AppendMsg('Exception: ' . $e->getMessage(), $decode_to_utf8  = False);
+    }
+
+    $situacao = App_Model_MatriculaSituacao::getInstance()->getValue($this->service->getSituacaoComponentesCurriculares()->componentesCurriculares[$this->getRequest()->componente_curricular]->situacao);    
     $_matricula = $this->getRequest()->matricula;
 
     echo "<?xml version='1.0' encoding='ISO-8859-1' ?>
