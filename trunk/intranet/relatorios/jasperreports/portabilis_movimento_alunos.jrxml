@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_atestado_vaga" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.0"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_movimento_alunos" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0000000000000004"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Crosstab Data Text" hAlign="Center"/>
@@ -26,6 +26,7 @@
 	<parameter name="data_final" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="logo" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT public.fcn_upper(nm_instituicao) AS nome_instituicao,
        public.fcn_upper(nm_responsavel) AS nome_responsavel,
@@ -952,305 +953,298 @@ order by nm_serie, nm_turma]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band splitType="Stretch"/>
+		<band height="115" splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="216" splitType="Stretch">
+		<band height="80" splitType="Stretch">
 			<staticText>
-				<reportElement x="270" y="108" width="250" height="16"/>
+				<reportElement x="270" y="-26" width="250" height="16"/>
 				<textElement textAlignment="Center">
-					<font size="12" isBold="true" isUnderline="true"/>
+					<font fontName="DejaVu Sans" size="12" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[MOVIMENTO MENSAL DE ALUNOS]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="346" y="64" width="261" height="13" forecolor="#000000"/>
+				<reportElement x="346" y="-52" width="261" height="13" forecolor="#000000"/>
 				<textElement>
-					<font size="8" isBold="true" isItalic="false"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="102" y="40" width="356" height="13"/>
+				<reportElement x="102" y="-76" width="356" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["Endereço: "+$F{logradouro}+", "+$F{numero}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="102" y="28" width="356" height="13"/>
+				<reportElement x="102" y="-88" width="356" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="670" y="4" width="121" height="13"/>
+				<reportElement x="102" y="-112" width="356" height="13"/>
 				<textElement>
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Emissão: "+$F{data_atual}+" "+$F{hora_atual}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="102" y="4" width="356" height="13"/>
-				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="501" y="52" width="83" height="13"/>
+				<reportElement x="501" y="-64" width="83" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="346" y="52" width="152" height="13"/>
+				<reportElement x="346" y="-64" width="152" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="15" y="174" width="39" height="13"/>
+				<reportElement x="15" y="38" width="39" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[SÉRIE]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="75" y="174" width="39" height="13"/>
+				<reportElement x="75" y="38" width="39" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[TURMA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="138" y="174" width="39" height="13"/>
+				<reportElement x="138" y="38" width="39" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[TURNO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="193" y="174" width="87" height="13"/>
+				<reportElement x="193" y="38" width="87" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[MATRÍCULA INICIAL]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="377" y="146" width="50" height="13"/>
+				<reportElement x="377" y="10" width="50" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[ALUNOS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="307" y="174" width="50" height="13"/>
+				<reportElement x="307" y="38" width="50" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[TRANSF.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="372" y="174" width="55" height="13"/>
+				<reportElement x="372" y="38" width="55" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[ABANDONO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="441" y="174" width="50" height="13"/>
+				<reportElement x="441" y="38" width="50" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[ADMITIDO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="512" y="174" width="95" height="13"/>
+				<reportElement x="512" y="38" width="95" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[MATRÍCULA FINAL]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="642" y="174" width="105" height="13"/>
+				<reportElement x="642" y="38" width="105" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[NOME DO PROFESSOR]]></text>
 			</staticText>
 			<line>
-				<reportElement x="6" y="142" width="785" height="1"/>
+				<reportElement x="6" y="6" width="785" height="1"/>
 			</line>
 			<line>
-				<reportElement x="6" y="215" width="785" height="1"/>
+				<reportElement x="6" y="79" width="785" height="1"/>
 			</line>
 			<line>
-				<reportElement x="5" y="142" width="1" height="73"/>
+				<reportElement x="5" y="6" width="1" height="73"/>
 			</line>
 			<line>
-				<reportElement x="64" y="143" width="1" height="72"/>
+				<reportElement x="64" y="7" width="1" height="72"/>
 			</line>
 			<line>
-				<reportElement x="126" y="143" width="1" height="72"/>
+				<reportElement x="126" y="7" width="1" height="72"/>
 			</line>
 			<line>
-				<reportElement x="185" y="143" width="1" height="72"/>
+				<reportElement x="185" y="7" width="1" height="72"/>
 			</line>
 			<line>
-				<reportElement x="296" y="143" width="1" height="72"/>
+				<reportElement x="296" y="7" width="1" height="72"/>
 			</line>
 			<line>
-				<reportElement x="365" y="165" width="1" height="50"/>
+				<reportElement x="365" y="29" width="1" height="50"/>
 			</line>
 			<line>
-				<reportElement x="432" y="165" width="1" height="50"/>
+				<reportElement x="432" y="29" width="1" height="50"/>
 			</line>
 			<line>
-				<reportElement x="504" y="143" width="1" height="72"/>
+				<reportElement x="504" y="7" width="1" height="72"/>
 			</line>
 			<line>
-				<reportElement x="613" y="143" width="1" height="72"/>
+				<reportElement x="613" y="7" width="1" height="72"/>
 			</line>
 			<line>
-				<reportElement x="791" y="142" width="1" height="73"/>
+				<reportElement x="791" y="6" width="1" height="73"/>
 			</line>
 			<line>
-				<reportElement x="297" y="165" width="207" height="1"/>
+				<reportElement x="297" y="29" width="207" height="1"/>
 			</line>
 			<textField>
-				<reportElement x="102" y="64" width="240" height="13"/>
+				<reportElement x="102" y="-52" width="240" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["Fone/Fax: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="186" y="195" width="427" height="1"/>
+				<reportElement x="186" y="59" width="427" height="1"/>
 			</line>
 			<staticText>
-				<reportElement x="196" y="199" width="16" height="13"/>
+				<reportElement x="196" y="63" width="16" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[M]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="231" y="199" width="16" height="13"/>
+				<reportElement x="231" y="63" width="16" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[F]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="269" y="199" width="16" height="13"/>
+				<reportElement x="269" y="63" width="16" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[T]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="306" y="199" width="16" height="13"/>
+				<reportElement x="306" y="63" width="16" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[M]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="341" y="199" width="16" height="13"/>
+				<reportElement x="341" y="63" width="16" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[F]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="374" y="199" width="16" height="13"/>
+				<reportElement x="374" y="63" width="16" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[M]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="407" y="199" width="16" height="13"/>
+				<reportElement x="407" y="63" width="16" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[F]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="442" y="199" width="16" height="13"/>
+				<reportElement x="442" y="63" width="16" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[M]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="478" y="199" width="16" height="13"/>
+				<reportElement x="478" y="63" width="16" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[F]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="514" y="199" width="16" height="13"/>
+				<reportElement x="514" y="63" width="16" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[M]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="552" y="199" width="16" height="13"/>
+				<reportElement x="552" y="63" width="16" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[F]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="587" y="199" width="16" height="13"/>
+				<reportElement x="587" y="63" width="16" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[T]]></text>
 			</staticText>
 			<line>
-				<reportElement x="222" y="196" width="1" height="18"/>
+				<reportElement x="222" y="60" width="1" height="18"/>
 			</line>
 			<line>
-				<reportElement x="259" y="196" width="1" height="18"/>
+				<reportElement x="259" y="60" width="1" height="18"/>
 			</line>
 			<line>
-				<reportElement x="331" y="196" width="1" height="18"/>
+				<reportElement x="331" y="60" width="1" height="18"/>
 			</line>
 			<line>
-				<reportElement x="469" y="196" width="1" height="18"/>
+				<reportElement x="469" y="60" width="1" height="18"/>
 			</line>
 			<line>
-				<reportElement x="541" y="196" width="1" height="18"/>
+				<reportElement x="541" y="60" width="1" height="18"/>
 			</line>
 			<line>
-				<reportElement x="579" y="196" width="1" height="18"/>
+				<reportElement x="579" y="60" width="1" height="18"/>
 			</line>
 			<line>
-				<reportElement x="398" y="196" width="1" height="18"/>
+				<reportElement x="398" y="60" width="1" height="18"/>
 			</line>
 			<image>
-				<reportElement x="25" y="4" width="57" height="46"/>
-				<imageExpression class="java.lang.String"><![CDATA["imagens/brasao.jpg"]]></imageExpression>
+				<reportElement x="25" y="-112" width="57" height="46"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{logo}]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="102" y="16" width="356" height="13"/>
+				<reportElement x="102" y="-100" width="356" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="102" y="52" width="240" height="13"/>
+				<reportElement x="102" y="-64" width="240" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["Bairro: " +$F{bairro}]]></textFieldExpression>
 			</textField>
@@ -1260,167 +1254,167 @@ order by nm_serie, nm_turma]]>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="21" splitType="Stretch">
+		<band height="17" splitType="Stretch">
 			<rectangle>
-				<reportElement x="5" y="4" width="786" height="15"/>
+				<reportElement x="5" y="1" width="786" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
 			</rectangle>
 			<textField>
-				<reportElement x="70" y="5" width="54" height="13"/>
+				<reportElement x="70" y="2" width="54" height="13"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_turma}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="131" y="5" width="52" height="13"/>
+				<reportElement x="131" y="2" width="52" height="13"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{periodo}]]></textFieldExpression>
 			</textField>
 			<elementGroup/>
 			<textField>
-				<reportElement x="10" y="5" width="49" height="13"/>
+				<reportElement x="10" y="2" width="49" height="13"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_serie}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="64" y="4" width="1" height="14"/>
+				<reportElement x="64" y="1" width="1" height="14"/>
 			</line>
 			<line>
-				<reportElement x="126" y="4" width="1" height="14"/>
+				<reportElement x="126" y="1" width="1" height="14"/>
 			</line>
 			<line>
-				<reportElement x="185" y="4" width="1" height="14"/>
+				<reportElement x="185" y="1" width="1" height="14"/>
 			</line>
 			<line>
-				<reportElement x="222" y="4" width="1" height="14"/>
+				<reportElement x="222" y="1" width="1" height="14"/>
 			</line>
 			<line>
-				<reportElement x="259" y="5" width="1" height="14"/>
+				<reportElement x="259" y="2" width="1" height="14"/>
 			</line>
 			<line>
-				<reportElement x="296" y="5" width="1" height="14"/>
+				<reportElement x="296" y="2" width="1" height="14"/>
 			</line>
 			<line>
-				<reportElement x="331" y="5" width="1" height="14"/>
+				<reportElement x="331" y="2" width="1" height="14"/>
 			</line>
 			<line>
-				<reportElement x="365" y="5" width="1" height="14"/>
+				<reportElement x="365" y="2" width="1" height="14"/>
 			</line>
 			<line>
-				<reportElement x="398" y="5" width="1" height="14"/>
+				<reportElement x="398" y="2" width="1" height="14"/>
 			</line>
 			<line>
-				<reportElement x="432" y="5" width="1" height="14"/>
+				<reportElement x="432" y="2" width="1" height="14"/>
 			</line>
 			<line>
-				<reportElement x="469" y="5" width="1" height="14"/>
+				<reportElement x="469" y="2" width="1" height="14"/>
 			</line>
 			<line>
-				<reportElement x="504" y="5" width="1" height="14"/>
+				<reportElement x="504" y="2" width="1" height="14"/>
 			</line>
 			<line>
-				<reportElement x="541" y="5" width="1" height="14"/>
+				<reportElement x="541" y="2" width="1" height="14"/>
 			</line>
 			<line>
-				<reportElement x="579" y="5" width="1" height="14"/>
-			</line>
-			<line>
-				<reportElement x="613" y="5" width="1" height="14"/>
+				<reportElement x="579" y="2" width="1" height="14"/>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="190" y="5" width="28" height="13"/>
+				<reportElement x="190" y="2" width="28" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_matr_masc}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="226" y="5" width="28" height="13"/>
+				<reportElement x="226" y="2" width="28" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_matr_femi}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="300" y="5" width="28" height="13"/>
+				<reportElement x="300" y="2" width="28" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_tran_masc}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="335" y="5" width="28" height="13"/>
+				<reportElement x="335" y="2" width="28" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_tran_femi}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="368" y="5" width="28" height="13"/>
+				<reportElement x="368" y="2" width="28" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_aban_masc}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="402" y="5" width="28" height="13"/>
+				<reportElement x="402" y="2" width="28" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_aban_femi}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="264" y="5" width="28" height="13"/>
+				<reportElement x="264" y="2" width="28" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_matric_tot}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="510" y="5" width="28" height="13"/>
+				<reportElement x="510" y="2" width="28" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_matri_final_masc}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="546" y="5" width="28" height="13"/>
+				<reportElement x="546" y="2" width="28" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_matri_final_femin}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="583" y="5" width="28" height="13"/>
+				<reportElement x="437" y="2" width="28" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_matri_final_femin_masc}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="437" y="5" width="28" height="13"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_admitidos_mascu}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="473" y="5" width="28" height="13"/>
+				<reportElement x="473" y="2" width="28" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_admitidos_femin}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="620" y="6" width="161" height="13"/>
+				<reportElement x="623" y="2" width="158" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{professor}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="613" y="2" width="1" height="14"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="583" y="2" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{qtd_matri_final_femin_masc}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -1428,177 +1422,186 @@ order by nm_serie, nm_turma]]>
 		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="34" splitType="Stretch">
-			<rectangle>
-				<reportElement x="5" y="4" width="786" height="15"/>
-			</rectangle>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="31" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement x="190" y="6" width="28" height="13"/>
+				<reportElement x="583" y="2" width="28" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma1}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="226" y="6" width="28" height="13"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma2}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="18" y="6" width="32" height="13"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[Total]]></text>
-			</staticText>
-			<line>
-				<reportElement x="64" y="5" width="1" height="14"/>
-			</line>
-			<line>
-				<reportElement x="126" y="5" width="1" height="14"/>
-			</line>
-			<line>
-				<reportElement x="185" y="5" width="1" height="14"/>
-			</line>
-			<line>
-				<reportElement x="222" y="5" width="1" height="14"/>
-			</line>
-			<line>
-				<reportElement x="259" y="5" width="1" height="14"/>
-			</line>
-			<textField isBlankWhenNull="true">
-				<reportElement x="264" y="6" width="28" height="13"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma3}]]></textFieldExpression>
-			</textField>
-			<line>
-				<reportElement x="296" y="5" width="1" height="14"/>
-			</line>
-			<textField isBlankWhenNull="true">
-				<reportElement x="300" y="6" width="28" height="13"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma4}]]></textFieldExpression>
-			</textField>
-			<line>
-				<reportElement x="331" y="5" width="1" height="14"/>
-			</line>
-			<textField isBlankWhenNull="true">
-				<reportElement x="335" y="6" width="28" height="13"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma5}]]></textFieldExpression>
-			</textField>
-			<line>
-				<reportElement x="365" y="5" width="1" height="14"/>
-			</line>
-			<textField isBlankWhenNull="true">
-				<reportElement x="368" y="6" width="28" height="13"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma6}]]></textFieldExpression>
-			</textField>
-			<line>
-				<reportElement x="398" y="5" width="1" height="14"/>
-			</line>
-			<line>
-				<reportElement x="432" y="5" width="1" height="14"/>
-			</line>
-			<line>
-				<reportElement x="469" y="5" width="1" height="14"/>
-			</line>
-			<line>
-				<reportElement x="504" y="5" width="1" height="14"/>
-			</line>
-			<line>
-				<reportElement x="541" y="5" width="1" height="14"/>
-			</line>
-			<line>
-				<reportElement x="579" y="5" width="1" height="14"/>
-			</line>
-			<line>
-				<reportElement x="613" y="4" width="1" height="14"/>
-			</line>
-			<textField isBlankWhenNull="true">
-				<reportElement x="402" y="6" width="28" height="13"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma7}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="437" y="6" width="28" height="13"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma8}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="473" y="6" width="28" height="13"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma9}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="510" y="6" width="28" height="13"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma10}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="546" y="6" width="28" height="13"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma11}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="583" y="6" width="28" height="13"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma12}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="82" y="6" width="28" height="13"/>
+				<reportElement x="82" y="2" width="28" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma_turma}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="142" y="6" width="28" height="13"/>
+				<reportElement x="142" y="2" width="28" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma_periodo}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="29" y="19" width="124" height="13"/>
-				<textElement markup="none">
-					<font size="10" isBold="true"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="546" y="2" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["DIAS LETIVOS: "+$F{dias}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma11}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="510" y="2" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma10}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="402" y="2" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma7}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="437" y="2" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma8}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="473" y="2" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma9}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="190" y="2" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="226" y="2" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma2}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="18" y="2" width="32" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="264" y="2" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma3}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="300" y="2" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma4}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="335" y="2" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma5}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="368" y="2" width="28" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma6}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="624" y="19" width="168" height="13"/>
+				<reportElement x="623" y="18" width="168" height="13"/>
 				<textElement>
-					<font size="10" isBold="true"/>
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["DATA: "+$F{data_atual}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="25" y="18" width="124" height="13"/>
+				<textElement markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["DIAS LETIVOS: "+$F{dias}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="64" y="2" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="126" y="2" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="185" y="2" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="222" y="2" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="259" y="2" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="296" y="2" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="331" y="2" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="365" y="2" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="398" y="2" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="432" y="2" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="469" y="2" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="504" y="2" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="541" y="2" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="579" y="2" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="613" y="2" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="6" y="16" width="785" height="1"/>
+			</line>
+			<line>
+				<reportElement x="6" y="1" width="785" height="1"/>
+			</line>
+			<line>
+				<reportElement x="5" y="1" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="790" y="1" width="1" height="16"/>
+			</line>
 		</band>
-	</pageFooter>
-	<summary>
-		<band height="145" splitType="Stretch"/>
 	</summary>
 </jasperReport>

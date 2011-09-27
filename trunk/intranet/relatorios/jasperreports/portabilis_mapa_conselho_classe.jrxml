@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_mapa_conselho_classe" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="linha-zebrado" hAlign="Center">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean(($V{ROW_COUNT}.intValue() % 2) == 0)]]></conditionExpression>
+			<style backcolor="#F0F0F0"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="ano" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="instituicao" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="escola" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="curso" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="serie" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="turma" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="etapa" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT DISTINCT
+       matricula.cod_matricula,
+       matricula.ref_cod_aluno AS cod_aluno,
+
+      (SELECT upper(pessoa.nome)
+	       FROM cadastro.pessoa, cadastro.fisica, pmieducar.aluno
+	      WHERE pessoa.idpes = fisica.idpes AND
+	            fisica.idpes = aluno.ref_idpes AND
+	            aluno.cod_aluno = matricula.ref_cod_aluno LIMIT 1
+      ) AS nm_aluno,
+
+      (CASE matricula.aprovado
+	          WHEN 1 THEN 'Apr'
+	          WHEN 2 THEN 'Rep'
+	          WHEN 3 THEN 'And'
+	          WHEN 4 THEN 'Trs'
+	          ELSE 'Rec'
+      END) AS situacao,
+
+
+                      (SELECT COALESCE(COALESCE((SELECT to_number(100::float -  ((SELECT sum(falta_geral.quantidade)
+          FROM modules.falta_geral,
+               modules.falta_aluno
+         WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
+               falta_aluno.matricula_id = matricula.cod_matricula AND
+               falta_geral.etapa = $P{etapa})::float / 800::float )::float * 100,'999')),
+  (SELECT to_number(100::float -  ((SELECT sum(falta_componente_curricular.quantidade)
+          FROM modules.falta_componente_curricular,
+               modules.falta_aluno
+         WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
+               falta_aluno.matricula_id = matricula.cod_matricula AND
+               falta_componente_curricular.etapa = $P{etapa})::float / 800::float )::float * 100,'999'))),100)) AS frequencia_geral,
+
+
+       (SELECT CASE  WHEN nota_componente_curricular.nota_arredondada = 10 THEN
+			                   '10,0'
+			               WHEN char_length(nota_componente_curricular.nota_arredondada) = 1 THEN
+			                   replace(nota_componente_curricular.nota_arredondada,'.',',') || ',0'
+                           ELSE
+                               replace(nota_componente_curricular.nota_arredondada,'.',',')
+                           END
+	      FROM modules.nota_componente_curricular,
+	           modules.nota_aluno
+	     WHERE nota_componente_curricular.nota_aluno_id = nota_aluno.id AND
+	           nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+	           nota_aluno.matricula_id = matricula.cod_matricula AND
+             nota_componente_curricular.etapa = $P{etapa}
+      ) AS media,
+
+      componente_curricular.abreviatura AS nm_componente_curricular,
+
+      (SELECT escola_ano_letivo.ano
+          FROM pmieducar.escola_ano_letivo
+         WHERE escola_ano_letivo.ref_cod_escola = $P{escola} and
+		       ano = $P{ano}) AS ano,
+
+      (SELECT public.fcn_upper(instituicao.nm_responsavel)
+         FROM pmieducar.instituicao
+        WHERE instituicao.cod_instituicao = $P{instituicao}) AS nome_responsavel,
+
+      (SELECT COALESCE((SELECT public.fcn_upper(ps.nome)
+          FROM cadastro.pessoa ps,
+               cadastro.juridica,
+               pmieducar.escola
+         WHERE escola.ref_idpes = juridica.idpes AND
+               juridica.idpes = ps.idpes AND
+               escola.cod_escola = $P{escola}),(SELECT nm_escola FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS nm_escola,
+
+
+      (SELECT public.fcn_upper(instituicao.nm_instituicao)
+         FROM pmieducar.instituicao
+        WHERE instituicao.cod_instituicao = $P{instituicao}) AS nome_instituicao,
+
+      (SELECT public.fcn_upper(substring(logradouro.idtlog from 1 for 1)) ||
+              lower(substring(logradouro.idtlog, 2))
+         FROM public.logradouro,
+              cadastro.juridica,
+              cadastro.pessoa ps,
+              cadastro.endereco_pessoa,
+              pmieducar.escola
+        WHERE juridica.idpes = ps.idpes AND
+              ps.idpes = endereco_pessoa.idpes AND
+              endereco_pessoa.idlog = logradouro.idlog AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}) AS tipo_logradouro,
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT logradouro.nome
+         FROM public.logradouro,
+              cadastro.juridica,
+              cadastro.pessoa ps,
+              cadastro.endereco_pessoa,
+              pmieducar.escola
+        WHERE juridica.idpes = ps.idpes AND
+              ps.idpes = endereco_pessoa.idpes AND
+              endereco_pessoa.idlog = logradouro.idlog AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT endereco_externo.logradouro FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(SELECT logradouro FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS logradouro,
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro,
+              pmieducar.escola
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT endereco_externo.cidade FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(SELECT municipio FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS municipio,
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT bairro.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro,
+              pmieducar.escola
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT endereco_externo.bairro FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(SELECT bairro FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS bairro,
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT municipio.sigla_uf
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro,
+              pmieducar.escola
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT endereco_externo.sigla_uf FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(select inst.ref_sigla_uf from pmieducar.instituicao inst where inst.cod_instituicao = $P{instituicao}))) AS uf_municipio,
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT endereco_pessoa.numero
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica,
+              pmieducar.escola
+        WHERE juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT endereco_externo.numero FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(SELECT numero FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS numero,
+
+     (SELECT COALESCE((SELECT COALESCE((SELECT to_char(endereco_pessoa.cep, '99999-999')
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica,
+              pmieducar.escola
+        WHERE juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT to_char(endereco_externo.cep,'99999-999') FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(SELECT to_char(escola_complemento.cep,'99999-999') FROM pmieducar.escola_complemento where escola_complemento.ref_cod_escola = $P{escola}))) AS cep,
+
+     (SELECT COALESCE((SELECT min(fone_pessoa.ddd)
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica,
+              pmieducar.escola
+        WHERE juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT min(ddd_telefone) FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS fone_ddd,
+
+
+     (SELECT COALESCE((SELECT min(to_char(fone_pessoa.fone, '9999-9999'))
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica,
+              pmieducar.escola
+        WHERE juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT min(to_char(telefone, '9999-9999')) FROM pmieducar.escola_complemento where escola_complemento.ref_cod_escola = $P{escola}))) AS fone,
+
+     (SELECT COALESCE((SELECT ps.email
+         FROM cadastro.pessoa ps,
+              cadastro.juridica,
+              pmieducar.escola
+        WHERE juridica.idpes = ps.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT email FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS email,
+
+	   (SELECT curso.nm_curso
+        FROM pmieducar.curso
+	     WHERE curso.cod_curso = matricula.ref_cod_curso AND
+             curso.ativo = 1 AND
+             curso.cod_curso = $P{curso}) AS nome_curso,
+
+     (SELECT serie.nm_serie
+        FROM pmieducar.serie
+	     WHERE serie.cod_serie = matricula.ref_ref_cod_serie AND
+             serie.ativo = 1 AND
+             serie.cod_serie = $P{serie}) AS nome_serie,
+
+	   (SELECT turma.nm_turma
+	      FROM pmieducar.turma
+       WHERE turma.cod_turma = matricula_turma.ref_cod_turma AND
+             turma.ativo = 1) AS nome_turma,
+
+    (SELECT nm_turno
+       FROM pmieducar.turma_turno,
+            pmieducar.turma
+      WHERE turma_turno.turma_turno_id = turma.turma_turno_id AND
+            turma.cod_turma = matricula_turma.ref_cod_turma) AS periodo
+
+
+ FROM pmieducar.escola_ano_letivo,
+	    pmieducar.matricula
+	    JOIN pmieducar.matricula_turma ON
+		  matricula_turma.ref_cod_matricula = matricula.cod_matricula
+      LEFT JOIN pmieducar.escola_serie_disciplina ON
+		  escola_serie_disciplina.ref_ref_cod_serie = matricula.ref_ref_cod_serie AND
+		  escola_serie_disciplina.ref_ref_cod_escola = matricula.ref_ref_cod_escola AND
+		  escola_serie_disciplina.ativo = 1
+      LEFT JOIN modules.componente_curricular_turma ON
+		  componente_curricular_turma.escola_id = matricula.ref_ref_cod_escola AND
+		  componente_curricular_turma.turma_id = matricula_turma.ref_cod_turma
+      JOIN modules.componente_curricular ON
+      CASE WHEN (SELECT COUNT(componente_curricular_turma.componente_curricular_id)
+		               FROM modules.componente_curricular_turma
+		              WHERE componente_curricular_turma.turma_id = matricula_turma.ref_cod_turma AND
+		                    componente_curricular_turma.escola_id = matricula.ref_ref_cod_escola) > 0
+           THEN componente_curricular.id = componente_curricular_turma.componente_curricular_id
+		       ELSE componente_curricular.id = escola_serie_disciplina.ref_cod_disciplina
+	    END
+
+WHERE escola_ano_letivo.ativo = 1 AND
+	    escola_ano_letivo.ref_cod_escola = matricula.ref_ref_cod_escola AND
+	    escola_ano_letivo.ano = $P{ano} AND
+	    matricula_turma.ref_cod_turma = $P{turma} AND
+	    matricula_turma.ativo = 1 AND
+	    matricula.ativo = 1
+
+ORDER BY nm_aluno, cod_aluno]]>
+	</queryString>
+	<field name="cod_matricula" class="java.lang.Integer"/>
+	<field name="cod_aluno" class="java.lang.Integer"/>
+	<field name="nm_aluno" class="java.lang.String"/>
+	<field name="situacao" class="java.lang.String"/>
+	<field name="frequencia_geral" class="java.math.BigDecimal"/>
+	<field name="media" class="java.lang.String"/>
+	<field name="nm_componente_curricular" class="java.lang.String"/>
+	<field name="ano" class="java.lang.Integer"/>
+	<field name="nome_responsavel" class="java.lang.String"/>
+	<field name="nm_escola" class="java.lang.String"/>
+	<field name="nome_instituicao" class="java.lang.String"/>
+	<field name="tipo_logradouro" class="java.lang.String"/>
+	<field name="logradouro" class="java.lang.String"/>
+	<field name="municipio" class="java.lang.String"/>
+	<field name="bairro" class="java.lang.String"/>
+	<field name="uf_municipio" class="java.lang.String"/>
+	<field name="numero" class="java.math.BigDecimal"/>
+	<field name="cep" class="java.lang.String"/>
+	<field name="fone_ddd" class="java.math.BigDecimal"/>
+	<field name="fone" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="nome_curso" class="java.lang.String"/>
+	<field name="nome_serie" class="java.lang.String"/>
+	<field name="nome_turma" class="java.lang.String"/>
+	<field name="periodo" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="136" splitType="Stretch">
+			<staticText>
+				<reportElement x="295" y="87" width="210" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mapa do Conselho de Classe]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="303" y="51" width="141" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="73" y="39" width="307" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Endereço: "+$F{logradouro}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="73" y="51" width="228" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Bairro:" +$F{bairro}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="303" y="63" width="233" height="13" forecolor="#000000"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="73" y="16" width="307" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="73" y="4" width="307" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="447" y="51" width="77" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="10" y="4" width="57" height="46"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="73" y="63" width="201" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Telefone: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="73" y="28" width="307" height="12"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nm_escola}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="37" y="122" width="36" height="12"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Curso:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="272" y="122" width="36" height="12"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Turno:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="414" y="122" width="36" height="12"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Turma:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="562" y="122" width="36" height="12"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Série:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="73" y="122" width="190" height="12"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome_curso}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="308" y="122" width="100" height="12"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodo}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="450" y="122" width="100" height="12"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome_turma}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="598" y="122" width="100" height="12"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome_serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="447" y="39" width="82" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Nº: "+$F{numero}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<summary>
+		<band height="184" splitType="Stretch">
+			<elementGroup>
+				<elementGroup>
+					<crosstab>
+						<reportElement x="20" y="0" width="766" height="184"/>
+						<crosstabHeaderCell>
+							<cellContents mode="Opaque">
+								<box>
+									<pen lineWidth="0.0"/>
+									<topPen lineWidth="0.0"/>
+									<leftPen lineWidth="0.0"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.0"/>
+								</box>
+								<staticText>
+									<reportElement style="Crosstab Data Text" x="20" y="5" width="259" height="15"/>
+									<textElement textAlignment="Left">
+										<font fontName="DejaVu Sans" size="8" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Aluno]]></text>
+								</staticText>
+								<staticText>
+									<reportElement style="Crosstab Data Text" x="279" y="5" width="32" height="15"/>
+									<textElement textAlignment="Center">
+										<font fontName="DejaVu Sans" size="8" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Sit]]></text>
+								</staticText>
+								<staticText>
+									<reportElement style="Crosstab Data Text" x="311" y="5" width="32" height="15"/>
+									<textElement textAlignment="Center">
+										<font fontName="DejaVu Sans" size="8" isBold="true"/>
+									</textElement>
+									<text><![CDATA[ %Fr]]></text>
+								</staticText>
+							</cellContents>
+						</crosstabHeaderCell>
+						<rowGroup name="nm_aluno" width="279">
+							<bucket class="java.lang.String">
+								<bucketExpression><![CDATA[$F{nm_aluno}]]></bucketExpression>
+							</bucket>
+							<crosstabRowHeader>
+								<cellContents mode="Opaque" style="linha-zebrado">
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textField>
+										<reportElement mode="Transparent" x="20" y="0" width="259" height="15"/>
+										<textElement textAlignment="Left" verticalAlignment="Middle">
+											<font fontName="DejaVu Sans" size="8"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$V{nm_aluno}]]></textFieldExpression>
+									</textField>
+								</cellContents>
+							</crosstabRowHeader>
+							<crosstabTotalRowHeader>
+								<cellContents>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+								</cellContents>
+							</crosstabTotalRowHeader>
+						</rowGroup>
+						<rowGroup name="situacao" width="32">
+							<bucket class="java.lang.String">
+								<bucketExpression><![CDATA[$F{situacao}]]></bucketExpression>
+							</bucket>
+							<crosstabRowHeader>
+								<cellContents mode="Opaque" style="linha-zebrado">
+									<textField>
+										<reportElement mode="Transparent" x="0" y="0" width="32" height="15"/>
+										<textElement textAlignment="Center">
+											<font fontName="DejaVu Sans" size="8"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$V{situacao}]]></textFieldExpression>
+									</textField>
+								</cellContents>
+							</crosstabRowHeader>
+							<crosstabTotalRowHeader>
+								<cellContents/>
+							</crosstabTotalRowHeader>
+						</rowGroup>
+						<rowGroup name="%fr" width="33">
+							<bucket class="java.lang.String">
+								<bucketExpression><![CDATA[$F{frequencia_geral}]]></bucketExpression>
+							</bucket>
+							<crosstabRowHeader>
+								<cellContents mode="Opaque" style="linha-zebrado">
+									<textField>
+										<reportElement mode="Transparent" x="0" y="0" width="32" height="15"/>
+										<textElement textAlignment="Center">
+											<font fontName="DejaVu Sans" size="8"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$V{%fr}]]></textFieldExpression>
+									</textField>
+								</cellContents>
+							</crosstabRowHeader>
+							<crosstabTotalRowHeader>
+								<cellContents/>
+							</crosstabTotalRowHeader>
+						</rowGroup>
+						<columnGroup name="nm_componente_curricular" height="21" totalPosition="End">
+							<bucket class="java.lang.String">
+								<bucketExpression><![CDATA[$F{nm_componente_curricular}]]></bucketExpression>
+							</bucket>
+							<crosstabColumnHeader>
+								<cellContents mode="Opaque">
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textField>
+										<reportElement style="Crosstab Data Text" x="1" y="5" width="32" height="15"/>
+										<textElement textAlignment="Center">
+											<font fontName="DejaVu Sans" size="8" isBold="true"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$V{nm_componente_curricular}]]></textFieldExpression>
+									</textField>
+								</cellContents>
+							</crosstabColumnHeader>
+							<crosstabTotalColumnHeader>
+								<cellContents backcolor="#BFE1FF" mode="Transparent">
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+								</cellContents>
+							</crosstabTotalColumnHeader>
+						</columnGroup>
+						<measure name="mediaMeasure" class="java.lang.String" calculation="First">
+							<measureExpression><![CDATA[$F{media}]]></measureExpression>
+						</measure>
+						<crosstabCell width="34" height="15">
+							<cellContents mode="Opaque" style="linha-zebrado">
+								<box>
+									<pen lineWidth="0.0"/>
+									<topPen lineWidth="0.0"/>
+									<leftPen lineWidth="0.0"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.0"/>
+								</box>
+								<textField pattern="###0.00" isBlankWhenNull="true">
+									<reportElement mode="Transparent" x="1" y="0" width="32" height="15" forecolor="#010101"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="DejaVu Sans" size="8"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{mediaMeasure}]]></textFieldExpression>
+								</textField>
+							</cellContents>
+						</crosstabCell>
+						<crosstabCell width="0" height="15" columnTotalGroup="nm_componente_curricular">
+							<cellContents backcolor="#BFE1FF" mode="Transparent">
+								<box>
+									<pen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<topPen lineWidth="0.0"/>
+									<leftPen lineWidth="0.0"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.0"/>
+								</box>
+							</cellContents>
+						</crosstabCell>
+						<crosstabCell rowTotalGroup="nm_aluno">
+							<cellContents/>
+						</crosstabCell>
+						<crosstabCell rowTotalGroup="nm_aluno" columnTotalGroup="nm_componente_curricular">
+							<cellContents/>
+						</crosstabCell>
+						<crosstabCell rowTotalGroup="situacao">
+							<cellContents/>
+						</crosstabCell>
+						<crosstabCell rowTotalGroup="situacao" columnTotalGroup="nm_componente_curricular">
+							<cellContents/>
+						</crosstabCell>
+						<crosstabCell rowTotalGroup="%fr">
+							<cellContents/>
+						</crosstabCell>
+						<crosstabCell rowTotalGroup="%fr" columnTotalGroup="nm_componente_curricular">
+							<cellContents/>
+						</crosstabCell>
+					</crosstab>
+				</elementGroup>
+			</elementGroup>
+		</band>
+	</summary>
+</jasperReport>

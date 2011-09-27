@@ -1,156 +1,47 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-require_once ("include/clsPDF.inc.php");
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
 
-class clsIndexBase extends clsBase
+require_once("include/portabilis/report.php");
+
+class PortabilisFrequenciaProfessores extends Report
 {
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Frequência Professor" );
-		$this->processoAp = "999104";
-	}
+  function setForm()
+  {
+
+    $get_escola = true;
+    $instituicao_obrigatorio = true;
+    
+    $this->ano = $ano_atual = date("Y");
+    $this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true);
+
+    include("include/pmieducar/educar_campo_lista.php");  
+
+		$this->campoData("data_inicio","Data inicial (falta/atraso):",$this->data_inicio,true);		
+		$this->campoData("data_fim","Data final (falta/atraso):",$this->data_fim,true);
+    
+  }
+
+  function onValidationSuccess()
+  {
+    if (! isset($_POST['ref_cod_escola']))
+      $this->addArg('escola', 0);
+    else
+    $this->addArg('ano', (int)$_POST['ano']);
+    $this->addArg('instituicao', (int)$_POST['ref_cod_instituicao']);
+    $this->addArg('escola', (int)$_POST['ref_cod_escola']);
+    $this->addArg('data_inicio', $_POST['data_inicio']);
+    $this->addArg('data_fim', $_POST['data_fim']);
+  }
 }
 
-class indice extends clsCadastro
-{
+$report = new PortabilisFrequenciaProfessores($name = 'Frequência dos Professores', $templateName = 'portabilis_frequencia_professor');
 
+$report->addRequiredField('ano','ano');
+$report->addRequiredField('ref_cod_instituicao', 'instituicao');
+$report->addRequiredField('data_inicio', 'data_inicio');
+$report->addRequiredField('data_fim', 'data_fim');
 
-	/**
-	 * Referencia pega da session para o idpes do usuario atual
-	 *
-	 * @var int
-	 */
-	var $pessoa_logada;
-
-	var $pdf;
-
-
-	var $page_y = 139;
-
-
-
-	function Inicializar()
-	{
-		$retorno = "Novo";
-		@session_start();
-		$this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
-
-		return $retorno;
-	}
-
-	function Gerar()
-	{
-		@session_start();
-		$this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
-
-		if($_POST){
-			foreach ($_POST as $key => $value) {
-				$this->$key = $value;
-
-			}
-		}
-
-		if($this->ref_cod_escola)
-			$this->ref_ref_cod_escola = $this->ref_cod_escola;
-
-		$get_escola = true;
-		$get_curso = true;
-		$get_escola_curso_serie = false;
-		//$get_turma = true;
-		$sem_padrao = true;
-		$instituicao_obrigatorio = true;
-		$escola_obrigatorio = true;
-		$curso_obrigatorio = true;
-		
-		$this->ano = $ano_atual = date("Y");
-		
-		//campo adicionado para pegar por parametro o Ano Letivo da Escola
-		$this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true);
-
-		include("include/pmieducar/educar_campo_lista.php");
-		
-		$this->url_cancelar = "educar_index.php";
-		$this->nome_url_cancelar = "Cancelar";		
-		
-		//campo adicionado para pegar por parametro a data inicio
-		$this->campoData("data_inicio","Data inicial:",$this->data_inicio,true);
-		
-		//campo adicionado para pegar por parametro a data final
-		$this->campoData("data_fim","Data final:",$this->data_fim,true);
-
-		$this->acao_enviar = 'acao2()';
-		$this->acao_executa_submit = false;
-
-	}
-}
-
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
-// gera o html
-$pagina->MakeAll();
-
-
+$report->render();
 ?>
-
-<script>
-
-function acao2()
-{
-
-	if(!acao())
-		return false;
-
-	document.formcadastro.target = '_blank';
-	document.getElementById( 'btn_enviar' ).disabled =false;
-	document.formcadastro.submit();
-}
-
-// Chamado do arquivo que ira processar o relatorio
-document.formcadastro.action = 'portabilis_frequencia_professor_proc.php';
-
-document.getElementById('ref_cod_escola').onchange = function()
-{
-	getEscolaCurso();
-}
-
-document.getElementById('ref_cod_curso').onchange = function()
-{
-	getEscolaCursoSerie();
-}
-
-</script>

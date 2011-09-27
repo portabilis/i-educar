@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_ficha_aluno_branco" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.2100000000000004"/>
+	<property name="ireport.zoom" value="1.210000000000001"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="instituicao" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
-	<parameter name="escola" class="java.lang.String">
+	<parameter name="escola" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
+	<parameter name="logo" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT public.fcn_upper(nm_instituicao) AS nome_instituicao,
        public.fcn_upper(nm_responsavel) AS nome_responsavel,
@@ -44,16 +45,9 @@
 				<reportElement x="3" y="2" width="548" height="73"/>
 			</rectangle>
 			<textField>
-				<reportElement x="412" y="5" width="126" height="13"/>
+				<reportElement x="102" y="5" width="356" height="13"/>
 				<textElement>
-					<font size="7" isBold="false"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Emissão: "+$F{data_atual}+" "+$F{hora_atual}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="102" y="5" width="278" height="13"/>
-				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
 			</textField>
@@ -63,25 +57,25 @@
 			<staticText>
 				<reportElement x="185" y="80" width="179" height="16"/>
 				<textElement textAlignment="Center">
-					<font size="12" isBold="true" isUnderline="true"/>
+					<font fontName="DejaVu Sans" size="12" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[FICHA DO ALUNO]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="102" y="29" width="278" height="13"/>
+				<reportElement x="102" y="29" width="356" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
 			</textField>
 			<image>
 				<reportElement x="25" y="5" width="57" height="46"/>
-				<imageExpression class="java.lang.String"><![CDATA["imagens/brasao.jpg"]]></imageExpression>
+				<imageExpression class="java.lang.String"><![CDATA[$P{logo}]]></imageExpression>
 			</image>
 			<textField isBlankWhenNull="true">
-				<reportElement x="102" y="17" width="278" height="13"/>
+				<reportElement x="102" y="17" width="356" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
 			</textField>
@@ -101,98 +95,98 @@
 			<staticText>
 				<reportElement x="346" y="436" width="93" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[SEÇÃO: ________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="346" y="419" width="129" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[DATA: ____/____/________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="176" y="454" width="73" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[ESTADO: ______]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="401" width="191" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[CPF: ________________________________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="380" width="178" height="19"/>
 				<textElement>
-					<font size="10" isBold="true"/>
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[DOCUMENTOS]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="176" y="419" width="145" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[ÓRGÃO EXP./UF: ________/_____]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="346" y="454" width="129" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[DATA: ____/____/________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="176" y="473" width="97" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[LIVRO: __________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="346" y="473" width="96" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[FOLHA: __________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="490" width="496" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[CARTÓRIO: _______________________________________________________________________________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="419" width="152" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[IDENTIDADE: _________________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="436" width="167" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[TÍTULO ELEITORAL: _____________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="454" width="165" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[CERTIFICADO CIVIL: __________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="473" width="142" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[TERMO: __________]]></text>
 			</staticText>
@@ -202,63 +196,63 @@
 			<staticText>
 				<reportElement x="7" y="111" width="178" height="19"/>
 				<textElement>
-					<font size="10" isBold="true"/>
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[FILIAÇÃO]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="132" width="290" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[NOME DO PAI: ____________________________________________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="147" width="290" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[NOME DA MÃE: ___________________________________________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="313" y="132" width="180" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[CPF DO PAI: _______________________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="313" y="147" width="180" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[CPF DA MÃE: ______________________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="281" y="25" width="184" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[DATA DE NASCIMENTO: ____/____/______]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="281" y="40" width="184" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[ESTADO CIVIL: _______________________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="281" y="56" width="184" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[ESTADO: ___________________________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="281" y="72" width="184" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[PAÍS DE ORIGEM: ____________________]]></text>
 			</staticText>
@@ -268,14 +262,14 @@
 			<staticText>
 				<reportElement x="483" y="42" width="44" height="12"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[FOTO 3X4]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="352" width="516" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[DESCRIÇÃO: ____________________________________________________________________________________________]]></text>
 			</staticText>
@@ -285,217 +279,217 @@
 			<staticText>
 				<reportElement x="7" y="249" width="178" height="19"/>
 				<textElement>
-					<font size="10" isBold="true"/>
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[OUTRAS INFORMAÇÕES]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="229" y="192" width="44" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[Nº: ____]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="395" y="192" width="63" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[ANDAR: ____]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="461" y="192" width="62" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[APTO: ____]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="192" width="216" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[ENDEREÇO: _______________________________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="4" width="178" height="19"/>
 				<textElement>
-					<font size="10" isBold="true"/>
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[DADOS PESSOAIS DO ALUNO]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="171" width="178" height="19"/>
 				<textElement>
-					<font size="10" isBold="true"/>
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[ENDEREÇO]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="275" y="192" width="58" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[LETRA: ____]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="329" width="178" height="19"/>
 				<textElement>
-					<font size="10" isBold="true"/>
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[DEFICIÊNCIAS]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="229" y="208" width="151" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[CIDADE: ______________________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="223" width="75" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[COMPLEMENTO:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="334" y="192" width="59" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[BLOCO: ____]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="208" width="216" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[BAIRRO: __________________________________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="395" y="208" width="63" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[ESTADO: ____]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="303" width="285" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[E-MAIL: ________________________________________________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="313" y="288" width="190" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[CELULAR: (     )  ________________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="288" width="216" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[TELEFONE: (      )  _______________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="270" width="217" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[BENEFÍCIO: ______________________________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="313" y="270" width="180" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[ALFABETIZADO: (     ) Sim     (     ) Não]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="25" width="242" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[NOME: _________________________________________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="40" width="205" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[SEXO: (     ) Masculino     (     ) Feminino]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="519" width="178" height="19"/>
 				<textElement>
-					<font size="10" isBold="true"/>
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[DADOS DO RESPONSÁVEL]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="539" width="165" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[NOME: __________________________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="173" y="539" width="88" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[CPF: _____________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="555" width="166" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[SEXO: (     ) Masculino     (     ) Feminino]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="570" width="191" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[ENDEREÇO: ___________________________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="212" y="572" width="49" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[Nº: _____]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="262" y="572" width="51" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[LETRA: ___]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="313" y="572" width="55" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[BLOCO: ___]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="370" y="572" width="63" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[ANDAR: ____]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="440" y="572" width="63" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[APTO: ____]]></text>
 			</staticText>
@@ -530,49 +524,49 @@
 			<staticText>
 				<reportElement x="179" y="555" width="142" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[TELEFONE: (     ) _____________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="333" y="555" width="215" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[E-MAIL: ___________________________________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="176" y="436" width="85" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[ZONA: ________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="56" width="225" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[NATURALIDADE: ____________________________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="72" width="225" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[NACIONALIDADE: ___________________________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="87" width="225" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[RELIGIÃO: ___________________________________]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="461" y="208" width="87" height="12"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[CEP: ____________]]></text>
 			</staticText>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_frequencia_professor" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="0.9090909090909091"/>
+	<property name="ireport.zoom" value="1.2100000000000006"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Crosstab Data Text" hAlign="Center"/>
@@ -23,6 +23,7 @@
 	<parameter name="data_fim" class="java.lang.String">
 		<defaultValueExpression><![CDATA[new java.util.Date()]]></defaultValueExpression>
 	</parameter>
+	<parameter name="logo" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT pessoa.nome,
        funcao.nm_funcao,
@@ -184,32 +185,51 @@ AS tipo_licenca,
               juridica.idpes = escola.ref_idpes),(SELECT email FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS email,
 
        to_char(current_date,'dd/mm/yyyy') AS data_atual,
-       to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual
+       to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
+	(SELECT CASE WHEN sa.periodo = 3 THEN 'Noturno'
+		     WHEN sa.periodo = 2 THEN 'Vespertino'
+		     WHEN sa.periodo = 1 THEN 'Matutino'
+		END) AS periodo,
+     (SELECT pessoa.nome
+                    FROM cadastro.pessoa,
+                         cadastro.juridica
+                   WHERE escola.ref_idpes = juridica.idpes AND
+                         juridica.idpes = pessoa.idpes) AS nm_escola_servidor
 
-  FROM pmieducar.servidor,
+  FROM pmieducar.servidor_alocacao sa,
+       pmieducar.servidor,
        pmieducar.servidor_funcao,
        pmieducar.funcao,
        portal.funcionario,
        cadastro.fisica,
        cadastro.pessoa,
-       pmieducar.instituicao,
        pmieducar.escola,
+       pmieducar.instituicao,
        pmieducar.escola_ano_letivo
 
-WHERE escola_ano_letivo.ano = $P{ano} AND
-      instituicao.cod_instituicao = $P{instituicao} AND
-      escola.cod_escola = $P{escola} AND
-      pessoa.idpes = fisica.idpes AND
-      funcionario.ref_cod_pessoa_fj = fisica.idpes AND
-      servidor.cod_servidor = funcionario.ref_cod_pessoa_fj AND
-      servidor.ref_cod_instituicao = servidor_funcao.ref_ref_cod_instituicao AND
-      servidor.cod_servidor = servidor_funcao.ref_cod_servidor AND
-      servidor_funcao.ref_cod_funcao = funcao.cod_funcao AND
-      instituicao.cod_instituicao = escola.ref_cod_instituicao AND
-      escola_ano_letivo.ref_cod_escola = escola.cod_escola AND
-      servidor.ativo = 1
+ WHERE escola_ano_letivo.ano = $P{ano} AND
+       instituicao.cod_instituicao = $P{instituicao} AND
+       (SELECT CASE WHEN $P{escola} = 0 THEN
+                 sa.ref_cod_escola = escola.cod_escola
+               ELSE
+                 sa.ref_cod_escola = escola.cod_escola AND
+                 escola.cod_escola = $P{escola}
+               END) AND
+	   sa.ref_cod_servidor = servidor.cod_servidor AND
+       instituicao.cod_instituicao = escola.ref_cod_instituicao AND
+       servidor.ref_cod_instituicao = instituicao.cod_instituicao AND
+       servidor.cod_servidor = funcionario.ref_cod_pessoa_fj AND
+       sa.ref_cod_escola = escola.cod_escola AND
+       sa.ref_ref_cod_instituicao = servidor.ref_cod_instituicao AND
+       pessoa.idpes = fisica.idpes AND
+       funcionario.ref_cod_pessoa_fj = fisica.idpes AND
+       servidor_funcao.ref_ref_cod_instituicao = servidor.ref_cod_instituicao AND
+       servidor_funcao.ref_cod_servidor = servidor.cod_servidor AND
+       servidor_funcao.ref_cod_funcao = funcao.cod_funcao AND
+       escola_ano_letivo.ref_cod_escola = escola.cod_escola AND
+       servidor.ativo = 1
 
-ORDER BY pessoa.nome]]>
+ORDER BY pessoa.nome, nm_escola_servidor]]>
 	</queryString>
 	<field name="nome" class="java.lang.String"/>
 	<field name="nm_funcao" class="java.lang.String"/>
@@ -237,6 +257,8 @@ ORDER BY pessoa.nome]]>
 	<field name="email" class="java.lang.String"/>
 	<field name="data_atual" class="java.lang.String"/>
 	<field name="hora_atual" class="java.lang.String"/>
+	<field name="periodo" class="java.lang.String"/>
+	<field name="nm_escola_servidor" class="java.lang.String"/>
 	<variable name="faltas_justificadas_1" class="java.lang.Integer" resetType="Page" calculation="Count">
 		<variableExpression><![CDATA[]]></variableExpression>
 	</variable>
@@ -246,189 +268,212 @@ ORDER BY pessoa.nome]]>
 	<variable name="faltas_injustificadas_1" class="java.lang.Integer" resetType="Page" calculation="Count">
 		<variableExpression><![CDATA[$F{injustificadas}]]></variableExpression>
 	</variable>
+	<group name="servidor">
+		<groupExpression><![CDATA[$F{nome}]]></groupExpression>
+		<groupHeader>
+			<band height="41">
+				<rectangle>
+					<reportElement x="6" y="9" width="785" height="32"/>
+				</rectangle>
+				<staticText>
+					<reportElement x="11" y="18" width="160" height="13"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nome do Funcionário]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="230" y="18" width="61" height="13"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Função]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="296" y="18" width="62" height="13"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Situação Funcional]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="365" y="11" width="63" height="13"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Falta]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="444" y="11" width="94" height="13"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Licença]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="556" y="20" width="85" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Tipo de Licença]]></text>
+				</staticText>
+				<line>
+					<reportElement x="434" y="9" width="1" height="32"/>
+				</line>
+				<line>
+					<reportElement x="293" y="9" width="1" height="32"/>
+				</line>
+				<line>
+					<reportElement x="172" y="9" width="1" height="32"/>
+				</line>
+				<staticText>
+					<reportElement x="366" y="28" width="25" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Just.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="401" y="28" width="30" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Injust.]]></text>
+				</staticText>
+				<line>
+					<reportElement x="362" y="26" width="188" height="1"/>
+				</line>
+				<staticText>
+					<reportElement x="442" y="28" width="34" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Início]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="493" y="28" width="39" height="13"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Término]]></text>
+				</staticText>
+				<line>
+					<reportElement x="550" y="9" width="1" height="32"/>
+				</line>
+				<line>
+					<reportElement x="362" y="9" width="1" height="32"/>
+				</line>
+				<line>
+					<reportElement x="489" y="27" width="1" height="14"/>
+				</line>
+				<line>
+					<reportElement x="398" y="27" width="1" height="14"/>
+				</line>
+				<staticText>
+					<reportElement x="176" y="18" width="45" height="13"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Período]]></text>
+				</staticText>
+				<line>
+					<reportElement x="224" y="9" width="1" height="32"/>
+				</line>
+				<staticText>
+					<reportElement x="681" y="20" width="85" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Escola]]></text>
+				</staticText>
+				<line>
+					<reportElement x="679" y="9" width="1" height="32"/>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="1"/>
+		</groupFooter>
+	</group>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band splitType="Stretch"/>
+		<band height="122" splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="185" splitType="Stretch">
-			<rectangle>
-				<reportElement x="6" y="153" width="785" height="32"/>
-			</rectangle>
+		<band height="4" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement x="403" y="65" width="226" height="13" forecolor="#000000"/>
+				<reportElement x="403" y="-57" width="226" height="13" forecolor="#000000"/>
 				<textElement>
-					<font size="8" isBold="true" isItalic="false"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="102" y="40" width="396" height="13"/>
+				<reportElement x="102" y="-82" width="396" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["Endereço: "+$F{logradouro}+", "+$F{numero}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="102" y="28" width="396" height="13"/>
+				<reportElement x="102" y="-94" width="396" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="670" y="4" width="121" height="13"/>
+				<reportElement x="102" y="-118" width="396" height="13"/>
 				<textElement>
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Emissão: "+$F{data_atual}+" "+$F{hora_atual}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="102" y="4" width="396" height="13"/>
-				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="548" y="53" width="77" height="13"/>
+				<reportElement x="548" y="-69" width="77" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="403" y="53" width="142" height="13"/>
+				<reportElement x="403" y="-69" width="142" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="102" y="65" width="297" height="13"/>
+				<reportElement x="102" y="-57" width="297" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["Fone/Fax: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="11" y="164" width="160" height="13"/>
+				<reportElement x="221" y="-36" width="368" height="15"/>
 				<textElement textAlignment="Center">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Nome do Funcionário]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="213" y="164" width="44" height="13"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Função]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="281" y="164" width="85" height="13"/>
-				<textElement textAlignment="Center">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Situação Funcional]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="377" y="155" width="63" height="13"/>
-				<textElement textAlignment="Center">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Falta]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="456" y="155" width="94" height="13"/>
-				<textElement textAlignment="Center">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Licença]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="639" y="164" width="85" height="13"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Tipo de Licença]]></text>
-			</staticText>
-			<line>
-				<reportElement x="446" y="153" width="1" height="32"/>
-			</line>
-			<line>
-				<reportElement x="274" y="153" width="1" height="32"/>
-			</line>
-			<line>
-				<reportElement x="184" y="153" width="1" height="32"/>
-			</line>
-			<staticText>
-				<reportElement x="221" y="108" width="368" height="16"/>
-				<textElement textAlignment="Center">
-					<font size="12" isBold="true" isUnderline="true"/>
+					<font fontName="DejaVu Sans" size="12" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[BOLETIM DE FREQUÊNCIA MENSAL DOS PROFESSORES]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="378" y="172" width="25" height="13"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Just.]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="413" y="172" width="30" height="13"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Injust.]]></text>
-			</staticText>
-			<line>
-				<reportElement x="374" y="170" width="188" height="1"/>
-			</line>
-			<staticText>
-				<reportElement x="454" y="172" width="34" height="13"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Início]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="518" y="172" width="39" height="13"/>
-				<textElement textAlignment="Center">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Término]]></text>
-			</staticText>
-			<line>
-				<reportElement x="562" y="153" width="1" height="32"/>
-			</line>
-			<line>
-				<reportElement x="374" y="153" width="1" height="32"/>
-			</line>
-			<line>
-				<reportElement x="501" y="171" width="1" height="14"/>
-			</line>
-			<line>
-				<reportElement x="410" y="171" width="1" height="14"/>
-			</line>
 			<image>
-				<reportElement x="23" y="4" width="57" height="46"/>
-				<imageExpression class="java.lang.String"><![CDATA["imagens/brasao.jpg"]]></imageExpression>
+				<reportElement x="23" y="-118" width="57" height="46"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{logo}]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="102" y="16" width="396" height="13"/>
+				<reportElement x="102" y="-106" width="396" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="102" y="53" width="297" height="13"/>
+				<reportElement x="102" y="-69" width="297" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["Bairro: " +$F{bairro}]]></textFieldExpression>
 			</textField>
@@ -438,87 +483,107 @@ ORDER BY pessoa.nome]]>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="24" splitType="Stretch">
+		<band height="21" splitType="Stretch">
 			<rectangle>
 				<reportElement x="6" y="0" width="785" height="21"/>
 			</rectangle>
 			<textField>
 				<reportElement x="11" y="4" width="160" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="184" y="1" width="1" height="20"/>
+				<reportElement x="172" y="1" width="1" height="20"/>
 			</line>
 			<line>
-				<reportElement x="274" y="1" width="1" height="20"/>
+				<reportElement x="293" y="1" width="1" height="20"/>
 			</line>
 			<line>
-				<reportElement x="374" y="1" width="1" height="20"/>
+				<reportElement x="362" y="1" width="1" height="20"/>
 			</line>
 			<line>
-				<reportElement x="562" y="0" width="1" height="21"/>
+				<reportElement x="550" y="0" width="1" height="21"/>
 			</line>
 			<line>
-				<reportElement x="446" y="1" width="1" height="20"/>
+				<reportElement x="434" y="1" width="1" height="20"/>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="187" y="4" width="84" height="13"/>
+				<reportElement x="229" y="4" width="61" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_funcao}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="280" y="4" width="86" height="13"/>
+				<reportElement x="299" y="4" width="59" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{situacao}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="501" y="0" width="1" height="21"/>
+				<reportElement x="489" y="0" width="1" height="21"/>
 			</line>
 			<line>
-				<reportElement x="410" y="1" width="1" height="20"/>
+				<reportElement x="398" y="1" width="1" height="20"/>
 			</line>
 			<elementGroup/>
 			<textField isBlankWhenNull="true">
-				<reportElement x="380" y="4" width="19" height="13"/>
+				<reportElement x="369" y="4" width="19" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{justificadas}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="417" y="4" width="19" height="13"/>
+				<reportElement x="406" y="4" width="19" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{injustificadas}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="449" y="4" width="49" height="13"/>
+				<reportElement x="437" y="4" width="49" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{inicio}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="508" y="4" width="49" height="13"/>
+				<reportElement x="495" y="4" width="49" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{fim}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="570" y="4" width="209" height="13"/>
+				<reportElement x="556" y="4" width="121" height="13"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{licenca}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="224" y="0" width="1" height="20"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="176" y="4" width="45" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{periodo}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="679" y="0" width="1" height="21"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="681" y="4" width="109" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola_servidor}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -526,9 +591,9 @@ ORDER BY pessoa.nome]]>
 		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="101" splitType="Stretch"/>
+		<band height="6" splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band height="67" splitType="Stretch"/>
+		<band height="5" splitType="Stretch"/>
 	</summary>
 </jasperReport>

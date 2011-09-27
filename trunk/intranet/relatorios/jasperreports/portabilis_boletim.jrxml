@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_boletim" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.3310000000000008"/>
+	<property name="ireport.zoom" value="1.3310000000000026"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="ano" class="java.lang.Integer">
@@ -24,6 +24,7 @@
 	<parameter name="matricula" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
+	<parameter name="logo" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT (SELECT escola_ano_letivo.ano
           FROM pmieducar.escola_ano_letivo
@@ -447,8 +448,8 @@
                    matricula.cod_matricula = $P{matricula}
                END)
 	) AS etapa1
-GROUP BY matricula_id,componente_curricular_id, nome_disciplina
-ORDER BY matricula_id]]>
+GROUP BY nome_aluno, matricula_id,componente_curricular_id, nome_disciplina
+ORDER BY nome_aluno, matricula_id]]>
 	</queryString>
 	<field name="ano" class="java.lang.Integer"/>
 	<field name="nome_responsavel" class="java.lang.String"/>
@@ -496,13 +497,477 @@ ORDER BY matricula_id]]>
 	<field name="frequencia" class="java.math.BigDecimal"/>
 	<field name="frequencia_componente" class="java.math.BigDecimal"/>
 	<field name="carga_horaria" class="java.math.BigDecimal"/>
-	<group name="matricula" isStartNewPage="true">
+	<group name="matricula">
 		<groupExpression><![CDATA[$F{matricula}]]></groupExpression>
 		<groupHeader>
-			<band/>
+			<band height="158">
+				<rectangle>
+					<reportElement x="12" y="8" width="530" height="59"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement x="195" y="132" width="37" height="11"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[1º BIM.]]></text>
+				</staticText>
+				<line>
+					<reportElement x="229" y="67" width="1" height="30"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement x="281" y="132" width="9" height="11"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[F]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="252" y="52" width="43" height="15"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Telefone:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="506" y="132" width="34" height="11"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Freq. %]]></text>
+				</staticText>
+				<line>
+					<reportElement x="341" y="67" width="1" height="91"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<textField>
+					<reportElement x="89" y="23" width="253" height="14"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="357" y="37" width="69" height="15"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Ano Letivo:]]></text>
+				</staticText>
+				<line>
+					<reportElement x="12" y="98" width="530" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement x="355" y="14" width="171" height="20"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[BOLETIM ESCOLAR]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="89" y="11" width="253" height="14"/>
+					<textElement markup="none">
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="510" y="145" width="26" height="11"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$F{frequencia}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="429" y="131" width="1" height="26"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="504" y="131" width="1" height="26"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="429" y="67" width="1" height="31"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="297" y="52" width="59" height="15"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{fone}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="17" y="136" width="170" height="14"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[DISCIPLINA]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="346" y="112" width="75" height="14" backcolor="#FFFFFF"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{situacao}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="542" y="67" width="1" height="91"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="345" y="82" width="79" height="14"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_serie}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="466" y="132" width="35" height="11"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Faltas]]></text>
+				</staticText>
+				<line>
+					<reportElement x="12" y="130" width="530" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.25" lineStyle="Solid"/>
+					</graphicElement>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="331" y="145" width="9" height="11"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et3}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="345" y="99" width="75" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[06 - SITUAÇÃO]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="282" y="145" width="9" height="11"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et2}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="12" y="157" width="530" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement x="395" y="145" width="30" height="11"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[final]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="16" y="82" width="209" height="14"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_curso}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="331" y="132" width="9" height="11"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[F]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="378" y="145" width="9" height="11"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et4}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="244" y="132" width="37" height="11"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[2º BIM.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="344" y="145" width="33" height="11"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[NOTA]]></text>
+				</staticText>
+				<line>
+					<reportElement x="193" y="130" width="1" height="27"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="193" y="144" width="195" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="432" y="82" width="100" height="14"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_turma}]]></textFieldExpression>
+				</textField>
+				<image>
+					<reportElement x="22" y="14" width="57" height="46"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{logo}]]></imageExpression>
+				</image>
+				<line>
+					<reportElement x="388" y="131" width="1" height="26"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement x="432" y="145" width="30" height="11"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[final]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="16" y="112" width="242" height="14"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_aluno}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="426" y="37" width="66" height="15"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="242" y="130" width="1" height="27"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement x="232" y="132" width="9" height="11"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[F]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="345" y="69" width="58" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[03 - SÉRIE]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="294" y="132" width="37" height="11"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[3º BIM.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="196" y="145" width="33" height="11"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[NOTA]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="89" y="37" width="253" height="15"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="16" y="99" width="100" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[05 - ALUNO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="294" y="145" width="33" height="11"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[NOTA]]></text>
+				</staticText>
+				<line>
+					<reportElement x="464" y="131" width="1" height="26"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement x="16" y="69" width="68" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[01 - CURSO]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="89" y="52" width="160" height="15"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["Endereço: "+$F{logradouro}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="233" y="69" width="64" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[02 - TURNO]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="232" y="145" width="9" height="11"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et1}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="343" y="132" width="34" height="11"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[4º BIM.]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="233" y="82" width="100" height="14"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{periodo}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="403" y="52" width="123" height="15"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{email}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="357" y="52" width="44" height="15"/>
+					<textElement textAlignment="Right">
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[E-mail:]]></text>
+				</staticText>
+				<line>
+					<reportElement x="292" y="131" width="1" height="27"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="12" y="67" width="1" height="91"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement x="245" y="145" width="33" height="11"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[NOTA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="393" y="132" width="34" height="11"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Exame]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="510" y="145" width="26" height="11"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{frequencia_componente}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="471" y="145" width="26" height="11"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="377" y="132" width="9" height="11"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[F]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="432" y="132" width="30" height="11"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Média]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="432" y="69" width="59" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[04 - TURMA]]></text>
+				</staticText>
+			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="26"/>
+			<band height="41">
+				<staticText>
+					<reportElement x="26" y="14" width="504" height="11"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------]]></text>
+				</staticText>
+				<line>
+					<reportElement x="13" y="0" width="530" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+			</band>
 		</groupFooter>
 	</group>
 	<background>
@@ -512,562 +977,210 @@ ORDER BY matricula_id]]>
 		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="153" splitType="Stretch">
-			<rectangle>
-				<reportElement x="12" y="3" width="530" height="59"/>
-			</rectangle>
-			<textField isBlankWhenNull="true">
-				<reportElement x="426" y="32" width="66" height="15"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="357" y="47" width="44" height="15"/>
-				<textElement textAlignment="Right">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[E-mail:]]></text>
-			</staticText>
-			<textField isBlankWhenNull="true">
-				<reportElement x="89" y="32" width="253" height="15"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="403" y="47" width="123" height="15"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{email}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="252" y="47" width="43" height="15"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Telefone:]]></text>
-			</staticText>
-			<textField isBlankWhenNull="true">
-				<reportElement x="89" y="47" width="160" height="15"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Endereço: "+$F{logradouro}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="297" y="47" width="59" height="15"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{fone}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="89" y="6" width="253" height="14"/>
-				<textElement markup="none">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="355" y="9" width="171" height="20"/>
-				<textElement>
-					<font size="12" isBold="true"/>
-				</textElement>
-				<text><![CDATA[BOLETIM ESCOLAR]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="376" y="32" width="50" height="15"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Ano Letivo:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="432" y="127" width="30" height="11"/>
-				<textElement>
-					<font size="8" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Média]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="16" y="64" width="68" height="13"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[01 - CURSO]]></text>
-			</staticText>
-			<textField isBlankWhenNull="true">
-				<reportElement x="16" y="77" width="170" height="14"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_curso}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="233" y="64" width="64" height="13"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[02 - TURNO]]></text>
-			</staticText>
-			<textField isBlankWhenNull="true">
-				<reportElement x="233" y="77" width="100" height="14"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{periodo}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="345" y="64" width="58" height="13"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[03 - SÉRIE]]></text>
-			</staticText>
-			<textField isBlankWhenNull="true">
-				<reportElement x="345" y="77" width="79" height="14"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_serie}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="432" y="64" width="59" height="13"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[04 - TURMA]]></text>
-			</staticText>
-			<textField isBlankWhenNull="true">
-				<reportElement x="432" y="77" width="100" height="14"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_turma}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="16" y="94" width="100" height="13"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[05 - ALUNO]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="16" y="107" width="242" height="14"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_aluno}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="345" y="94" width="75" height="13"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[06 - SITUAÇÃO]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="345" y="107" width="81" height="14"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{situacao}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="17" y="131" width="170" height="14"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[DISCIPLINA]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="195" y="127" width="37" height="11"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[1º BIM.]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="244" y="127" width="37" height="11"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[2º BIM.]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="294" y="127" width="37" height="11"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[3º BIM.]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="343" y="127" width="34" height="11"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[4º BIM.]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="196" y="140" width="33" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[NOTA]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="232" y="127" width="9" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[F]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="245" y="140" width="33" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[NOTA]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="281" y="127" width="9" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[F]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="294" y="140" width="33" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[NOTA]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="331" y="127" width="9" height="11"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[F]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="344" y="140" width="33" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[NOTA]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="377" y="127" width="9" height="11"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[F]]></text>
-			</staticText>
-			<line>
-				<reportElement x="542" y="62" width="1" height="91"/>
-			</line>
-			<line>
-				<reportElement x="12" y="62" width="1" height="91"/>
-			</line>
-			<line>
-				<reportElement x="229" y="62" width="1" height="30"/>
-			</line>
-			<line>
-				<reportElement x="429" y="62" width="1" height="31"/>
-			</line>
-			<line>
-				<reportElement x="12" y="93" width="530" height="1"/>
-			</line>
-			<line>
-				<reportElement x="12" y="125" width="530" height="1"/>
-			</line>
-			<line>
-				<reportElement x="464" y="126" width="1" height="26"/>
-			</line>
-			<line>
-				<reportElement x="341" y="62" width="1" height="91"/>
-			</line>
-			<line>
-				<reportElement x="388" y="126" width="1" height="26"/>
-			</line>
-			<line>
-				<reportElement x="193" y="139" width="195" height="1"/>
-			</line>
-			<line>
-				<reportElement x="292" y="126" width="1" height="27"/>
-			</line>
-			<line>
-				<reportElement x="242" y="125" width="1" height="27"/>
-			</line>
-			<line>
-				<reportElement x="193" y="125" width="1" height="27"/>
-			</line>
-			<line>
-				<reportElement x="12" y="152" width="530" height="1"/>
-			</line>
-			<staticText>
-				<reportElement x="506" y="127" width="34" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Freq. %]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="466" y="127" width="35" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Faltas]]></text>
-			</staticText>
-			<line>
-				<reportElement x="504" y="126" width="1" height="26"/>
-			</line>
-			<staticText>
-				<reportElement x="432" y="140" width="30" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8" isBold="false"/>
-				</textElement>
-				<text><![CDATA[final]]></text>
-			</staticText>
-			<image>
-				<reportElement x="22" y="9" width="57" height="46"/>
-				<imageExpression class="java.lang.String"><![CDATA["imagens/brasao.jpg"]]></imageExpression>
-			</image>
-			<line>
-				<reportElement x="429" y="126" width="1" height="26"/>
-			</line>
-			<staticText>
-				<reportElement x="393" y="127" width="34" height="11"/>
-				<textElement>
-					<font size="8" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Exame]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="395" y="140" width="30" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8" isBold="false"/>
-				</textElement>
-				<text><![CDATA[final]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="89" y="18" width="253" height="14"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="471" y="140" width="26" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8" isBold="false"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="510" y="140" width="26" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{frequencia_componente}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="510" y="140" width="26" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{frequencia}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="232" y="140" width="9" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et1}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="282" y="140" width="9" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et2}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="331" y="140" width="9" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et3}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="378" y="140" width="9" height="11"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et4}]]></textFieldExpression>
-			</textField>
-		</band>
+		<band height="1" splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="18" splitType="Stretch">
+		<band height="16" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Opaque" x="14" y="0" width="527" height="15" forecolor="#FFFFFF" backcolor="#F0F0F0">
+					<printWhenExpression><![CDATA[new Boolean(($V{COLUMN_COUNT} % 2) == 1)]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
 			<textField isBlankWhenNull="true">
 				<reportElement x="199" y="1" width="26" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota1}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="249" y="1" width="26" height="15"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota2}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="16" y="1" width="170" height="15"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="230" y="-1" width="1" height="17"/>
-			</line>
-			<line>
 				<reportElement x="242" y="-1" width="1" height="17"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="193" y="-1" width="1" height="17"/>
-			</line>
-			<line>
-				<reportElement x="12" y="16" width="530" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="12" y="-1" width="1" height="17"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="542" y="-2" width="1" height="18"/>
-			</line>
-			<line>
-				<reportElement x="280" y="-1" width="1" height="17"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="292" y="-1" width="1" height="17"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="329" y="-1" width="1" height="17"/>
-			</line>
-			<line>
-				<reportElement x="341" y="-1" width="1" height="17"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
 				<reportElement x="297" y="1" width="26" height="15"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota3}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="388" y="-1" width="1" height="17"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="376" y="-1" width="1" height="17"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
 				<reportElement x="347" y="1" width="26" height="15"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota4}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="464" y="-1" width="1" height="17"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
 				<reportElement x="434" y="1" width="26" height="15"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{media}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="376" y="-14" width="1" height="12"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="329" y="-14" width="1" height="12"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="280" y="-14" width="1" height="12"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="230" y="-14" width="1" height="12"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="504" y="-1" width="1" height="17"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
 				<reportElement x="397" y="1" width="26" height="15"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota_exame}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="232" y="1" width="9" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{faltas_componente_et1}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="282" y="1" width="9" height="15"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{faltas_componente_et2}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="331" y="1" width="9" height="15"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{faltas_componente_et3}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="378" y="1" width="9" height="15"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{faltas_componente_et4}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="471" y="1" width="26" height="15"/>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_componente}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="429" y="-1" width="1" height="17"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="230" y="-1" width="1" height="17"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="280" y="-1" width="1" height="17"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="341" y="-1" width="1" height="17"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 		</band>
 	</detail>
-	<columnFooter>
-		<band height="21" splitType="Stretch"/>
-	</columnFooter>
-	<pageFooter>
-		<band height="16" splitType="Stretch"/>
-	</pageFooter>
-	<summary>
-		<band height="19" splitType="Stretch"/>
-	</summary>
 </jasperReport>

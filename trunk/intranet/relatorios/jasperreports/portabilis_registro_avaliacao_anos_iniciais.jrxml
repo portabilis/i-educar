@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_ficha_avaliacao_anos_iniciais" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="0.826446280991739"/>
-	<property name="ireport.x" value="3"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_registro_avaliacao_anos_iniciais" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.2100000000000062"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<subDataset name="dataset1"/>
 	<subDataset name="dataset2"/>
@@ -24,8 +24,12 @@
 	<parameter name="turma" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
+	<parameter name="linha" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT public.fcn_upper(nm_instituicao) AS nome_instituicao,
+		<![CDATA[(SELECT public.fcn_upper(nm_instituicao) AS nome_instituicao,
        public.fcn_upper(nm_responsavel) AS nome_responsavel,
        instituicao.cidade AS cidade_instituicao,
        public.fcn_upper(ref_sigla_uf) AS uf_instituicao,
@@ -193,7 +197,46 @@
        matricula_turma.ativo = 1 AND
        matricula.aprovado = 3
 
-ORDER BY nome_aluno ASC]]>
+ORDER BY nome_aluno ASC)
+
+union all
+
+(
+select
+
+null,
+null,
+null,
+null,
+null,
+null,
+null,
+null,
+null,
+null,
+null,
+null,
+null,
+null,
+null,
+null,
+null,
+null,
+null,
+null,
+null,
+null,
+null,
+null,
+null,
+null,
+null,
+null
+
+from pmieducar.aluno
+
+limit $P{linha}
+)]]>
 	</queryString>
 	<field name="nome_instituicao" class="java.lang.String"/>
 	<field name="nome_responsavel" class="java.lang.String"/>
@@ -225,300 +268,398 @@ ORDER BY nome_aluno ASC]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band splitType="Stretch"/>
+		<band height="119" splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="145" splitType="Stretch">
+		<band height="51" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement x="510" y="50" width="77" height="13"/>
+				<reportElement x="510" y="-66" width="77" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="98" y="26" width="387" height="13"/>
+				<reportElement x="98" y="-90" width="387" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nm_escola}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="364" y="-66" width="139" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="98" y="-78" width="387" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Endereço: "+$F{logradouro}+" "+$F{numero}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="601" y="2" width="138" height="13"/>
+				<reportElement x="98" y="-114" width="387" height="13"/>
 				<textElement>
-					<font size="7" isBold="false"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Emissão: "+$F{data_atual}+" "+$F{hora_atual}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="364" y="50" width="139" height="13"/>
+				<reportElement x="365" y="-54" width="249" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="98" y="38" width="387" height="13"/>
+				<reportElement x="98" y="-54" width="259" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Endereço: "+$F{logradouro}+" "+$F{numero}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="98" y="2" width="387" height="13"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="365" y="62" width="249" height="13"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="98" y="62" width="259" height="13"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Fone/Fax: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Fone/Fax: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="259" y="81" width="277" height="13"/>
+				<reportElement x="259" y="-35" width="277" height="13"/>
 				<textElement textAlignment="Center">
-					<font size="10" isBold="true"/>
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[REGISTRO DE AVALIAÇÃO - ANOS INICIAIS]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="61" y="102" width="228" height="13"/>
+				<reportElement x="61" y="8" width="228" height="13"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_curso}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nm_curso}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="16" y="102" width="44" height="13"/>
+				<reportElement x="16" y="8" width="44" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Curso:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="301" y="102" width="37" height="13"/>
+				<reportElement x="301" y="8" width="37" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Turno:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="422" y="102" width="32" height="13"/>
+				<reportElement x="422" y="8" width="32" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Série:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="455" y="102" width="84" height="13"/>
+				<reportElement x="455" y="8" width="84" height="13"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_serie}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nm_serie}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="550" y="102" width="39" height="13"/>
+				<reportElement x="550" y="8" width="39" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Turma:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="697" y="102" width="29" height="13"/>
+				<reportElement x="697" y="8" width="29" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Ano:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="590" y="102" width="100" height="13"/>
+				<reportElement x="590" y="8" width="100" height="13"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_turma}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nm_turma}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="727" y="102" width="37" height="13"/>
+				<reportElement x="727" y="8" width="37" height="13"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ano}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="16" y="128" width="44" height="9"/>
+				<reportElement x="16" y="34" width="44" height="13"/>
 				<textElement>
-					<font size="6" isBold="true"/>
+					<font fontName="DejaVu Sans" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Aluno]]></text>
 			</staticText>
 			<line>
-				<reportElement x="15" y="97" width="775" height="1"/>
+				<reportElement x="15" y="3" width="775" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="15" y="119" width="775" height="1"/>
+				<reportElement x="15" y="25" width="775" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="14" y="97" width="1" height="48"/>
+				<reportElement x="14" y="3" width="1" height="48"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="790" y="97" width="1" height="48"/>
+				<reportElement x="790" y="3" width="1" height="48"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="15" y="144" width="775" height="1"/>
+				<reportElement x="15" y="50" width="775" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="309" y="119" width="1" height="25"/>
+				<reportElement x="309" y="25" width="1" height="25"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="328" y="119" width="1" height="25"/>
+				<reportElement x="328" y="25" width="1" height="25"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement x="570" y="121" width="83" height="9"/>
+				<reportElement x="570" y="27" width="83" height="9"/>
 				<textElement textAlignment="Center">
-					<font size="5" isBold="false"/>
+					<font fontName="DejaVu Sans" size="5" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Disciplinas]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="339" y="102" width="75" height="13"/>
+				<reportElement x="339" y="8" width="75" height="13"/>
 				<textElement>
-					<font size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{periodo}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{periodo}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="98" y="14" width="387" height="13"/>
+				<reportElement x="98" y="-102" width="387" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="365" y="119" width="1" height="25"/>
+				<reportElement x="365" y="25" width="1" height="25"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="536" y="131" width="1" height="13"/>
+				<reportElement x="536" y="37" width="1" height="13"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="253" y="119" width="1" height="25"/>
+				<reportElement x="253" y="25" width="1" height="25"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="631" y="131" width="1" height="13"/>
+				<reportElement x="631" y="37" width="1" height="13"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="422" y="119" width="1" height="25"/>
+				<reportElement x="422" y="25" width="1" height="25"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="441" y="119" width="1" height="25"/>
+				<reportElement x="441" y="25" width="1" height="25"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="517" y="131" width="273" height="1"/>
+				<reportElement x="517" y="37" width="273" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="593" y="131" width="1" height="13"/>
+				<reportElement x="593" y="37" width="1" height="13"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="650" y="131" width="1" height="13"/>
+				<reportElement x="650" y="37" width="1" height="13"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="727" y="119" width="1" height="26"/>
+				<reportElement x="727" y="25" width="1" height="26"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement x="728" y="134" width="27" height="9"/>
+				<reportElement x="728" y="40" width="27" height="9"/>
 				<textElement textAlignment="Center">
-					<font size="6" isBold="false"/>
+					<font fontName="DejaVu Sans" size="6" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Média]]></text>
 			</staticText>
 			<line>
-				<reportElement x="460" y="119" width="1" height="25"/>
+				<reportElement x="460" y="25" width="1" height="25"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="757" y="131" width="1" height="13"/>
+				<reportElement x="757" y="37" width="1" height="13"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement x="758" y="134" width="32" height="9"/>
+				<reportElement x="758" y="40" width="32" height="9"/>
 				<textElement textAlignment="Center">
-					<font size="6" isBold="false"/>
+					<font fontName="DejaVu Sans" size="6" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Faltas]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="158" y="128" width="48" height="9"/>
+				<reportElement x="171" y="34" width="48" height="13"/>
 				<textElement>
-					<font size="6" isBold="true"/>
+					<font fontName="DejaVu Sans" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Cód. INEP]]></text>
 			</staticText>
 			<line>
-				<reportElement x="346" y="119" width="1" height="25"/>
+				<reportElement x="346" y="25" width="1" height="25"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="689" y="131" width="1" height="13"/>
+				<reportElement x="689" y="37" width="1" height="13"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<image>
-				<reportElement x="22" y="5" width="57" height="46"/>
-				<imageExpression class="java.lang.String"><![CDATA["imagens/brasao.jpg"]]></imageExpression>
+				<reportElement x="22" y="-114" width="57" height="46"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
 			<line>
-				<reportElement x="234" y="120" width="1" height="25"/>
+				<reportElement x="235" y="26" width="1" height="25"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="216" y="119" width="1" height="25"/>
+				<reportElement x="272" y="25" width="1" height="25"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="272" y="119" width="1" height="25"/>
+				<reportElement x="291" y="26" width="1" height="25"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="291" y="120" width="1" height="25"/>
+				<reportElement x="384" y="26" width="1" height="25"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="384" y="120" width="1" height="25"/>
+				<reportElement x="403" y="26" width="1" height="25"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="403" y="120" width="1" height="25"/>
+				<reportElement x="479" y="26" width="1" height="25"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="479" y="120" width="1" height="25"/>
+				<reportElement x="498" y="26" width="1" height="25"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="498" y="120" width="1" height="25"/>
+				<reportElement x="555" y="37" width="1" height="13"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="555" y="131" width="1" height="13"/>
+				<reportElement x="574" y="37" width="1" height="13"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="574" y="131" width="1" height="13"/>
+				<reportElement x="612" y="37" width="1" height="13"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="612" y="131" width="1" height="13"/>
+				<reportElement x="670" y="37" width="1" height="13"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="670" y="131" width="1" height="13"/>
-			</line>
-			<line>
-				<reportElement x="709" y="131" width="1" height="13"/>
+				<reportElement x="709" y="37" width="1" height="13"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="98" y="50" width="259" height="13"/>
+				<reportElement x="98" y="-66" width="259" height="13"/>
 				<textElement>
-					<font size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Bairro: " +$F{bairro}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Bairro: " +$F{bairro}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="517" y="120" width="1" height="25"/>
+				<reportElement x="517" y="26" width="1" height="25"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="169" y="26" width="1" height="25"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 		</band>
 	</pageHeader>
@@ -526,127 +667,266 @@ ORDER BY nome_aluno ASC]]>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="10" splitType="Stretch">
+		<band height="14" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Opaque" x="15" y="1" width="776" height="11" forecolor="#FFFFFF" backcolor="#F0F0F0">
+					<printWhenExpression><![CDATA[new Boolean(($V{COLUMN_COUNT} % 2) == 1)]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
 			<line>
-				<reportElement x="14" y="9" width="776" height="1"/>
+				<reportElement x="14" y="13" width="776" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="790" y="-1" width="1" height="10"/>
+				<reportElement x="790" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="253" y="-1" width="1" height="10"/>
+				<reportElement x="253" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="727" y="-1" width="1" height="10"/>
+				<reportElement x="727" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="757" y="-1" width="1" height="10"/>
-			</line>
-			<textField>
-				<reportElement x="16" y="0" width="141" height="9" forecolor="#000000"/>
-				<textElement>
-					<font size="6"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_aluno}]]></textFieldExpression>
-			</textField>
-			<line>
-				<reportElement x="14" y="-1" width="1" height="10"/>
+				<reportElement x="757" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="158" y="0" width="56" height="9"/>
+				<reportElement x="16" y="0" width="151" height="13" forecolor="#000000"/>
 				<textElement>
-					<font size="6"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$F{cod_aluno_inep}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nome_aluno}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="234" y="-1" width="1" height="10"/>
+				<reportElement x="14" y="-1" width="1" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="171" y="0" width="63" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cod_aluno_inep}]]></textFieldExpression>
+			</textField>
 			<line>
-				<reportElement x="216" y="-1" width="1" height="10"/>
+				<reportElement x="235" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<elementGroup/>
 			<line>
-				<reportElement x="272" y="-1" width="1" height="10"/>
+				<reportElement x="272" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="291" y="-1" width="1" height="10"/>
+				<reportElement x="291" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="309" y="-1" width="1" height="10"/>
+				<reportElement x="309" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="328" y="-1" width="1" height="10"/>
+				<reportElement x="328" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="346" y="-1" width="1" height="10"/>
+				<reportElement x="346" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="365" y="-1" width="1" height="10"/>
+				<reportElement x="365" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="384" y="-1" width="1" height="10"/>
+				<reportElement x="384" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="403" y="-1" width="1" height="10"/>
+				<reportElement x="403" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="422" y="-1" width="1" height="10"/>
+				<reportElement x="422" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="441" y="-1" width="1" height="10"/>
+				<reportElement x="441" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="460" y="-1" width="1" height="10"/>
+				<reportElement x="460" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="479" y="-1" width="1" height="10"/>
+				<reportElement x="479" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="498" y="-1" width="1" height="10"/>
+				<reportElement x="498" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="517" y="-1" width="1" height="10"/>
+				<reportElement x="517" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="536" y="-1" width="1" height="10"/>
+				<reportElement x="536" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="555" y="-1" width="1" height="10"/>
+				<reportElement x="555" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="574" y="-1" width="1" height="10"/>
+				<reportElement x="574" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="593" y="-1" width="1" height="10"/>
+				<reportElement x="593" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="612" y="-1" width="1" height="10"/>
+				<reportElement x="612" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="631" y="-1" width="1" height="10"/>
+				<reportElement x="631" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="650" y="-1" width="1" height="10"/>
+				<reportElement x="650" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="670" y="-1" width="1" height="10"/>
+				<reportElement x="670" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="689" y="-1" width="1" height="10"/>
+				<reportElement x="689" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="709" y="-1" width="1" height="10"/>
+				<reportElement x="709" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="169" y="-1" width="1" height="14"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="2" splitType="Stretch"/>
+		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="3" splitType="Stretch"/>
+		<band splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band height="3" splitType="Stretch"/>
+		<band height="43" splitType="Stretch">
+			<staticText>
+				<reportElement x="16" y="1" width="63" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Observações:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="14" y="-1" width="1" height="43"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="79" y="12" width="711" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="790" y="-3" width="1" height="45"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="15" y="27" width="775" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="15" y="41" width="775" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+		</band>
 	</summary>
 </jasperReport>

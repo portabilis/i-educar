@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_registro_contra_capa_diario" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.2100000000000006"/>
+	<property name="ireport.zoom" value="1.6105100000000012"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="511"/>
+	<property name="ireport.y" value="0"/>
 	<subDataset name="dataset1"/>
 	<subDataset name="dataset2"/>
 	<subDataset name="dataset3"/>
@@ -240,7 +240,7 @@ ORDER BY nome_aluno ASC]]>
 		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="766" splitType="Stretch">
+		<band height="765" splitType="Stretch">
 			<staticText>
 				<reportElement x="16" y="661" width="244" height="13"/>
 				<textElement>
@@ -249,28 +249,40 @@ ORDER BY nome_aluno ASC]]>
 				<text><![CDATA[DATA, ASSINATURA E OBSERVAÇÕES DO PROFESSOR]]></text>
 			</staticText>
 			<line>
-				<reportElement x="11" y="763" width="535" height="1"/>
+				<reportElement x="9" y="763" width="538" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="9" y="11" width="537" height="1"/>
+				<reportElement x="9" y="11" width="539" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="9" y="12" width="2" height="752"/>
+				<reportElement x="10" y="605" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="545" y="12" width="2" height="751"/>
+				<reportElement x="10" y="622" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="605" width="535" height="1"/>
+				<reportElement x="10" y="639" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="622" width="535" height="1"/>
-			</line>
-			<line>
-				<reportElement x="10" y="639" width="535" height="1"/>
-			</line>
-			<line>
-				<reportElement x="10" y="41" width="535" height="1"/>
+				<reportElement x="10" y="41" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<staticText>
 				<reportElement x="23" y="21" width="40" height="13"/>
@@ -279,9 +291,6 @@ ORDER BY nome_aluno ASC]]>
 				</textElement>
 				<text><![CDATA[DATA]]></text>
 			</staticText>
-			<line>
-				<reportElement x="68" y="12" width="2" height="645"/>
-			</line>
 			<staticText>
 				<reportElement x="246" y="21" width="150" height="13"/>
 				<textElement>
@@ -290,106 +299,208 @@ ORDER BY nome_aluno ASC]]>
 				<text><![CDATA[CONTEÚDO E ATIVIDADES]]></text>
 			</staticText>
 			<line>
-				<reportElement x="10" y="57" width="535" height="1"/>
+				<reportElement x="10" y="57" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="73" width="535" height="1"/>
+				<reportElement x="10" y="73" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="91" width="535" height="1"/>
+				<reportElement x="10" y="91" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="109" width="535" height="1"/>
+				<reportElement x="10" y="109" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="125" width="535" height="1"/>
+				<reportElement x="10" y="125" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="143" width="535" height="1"/>
+				<reportElement x="10" y="143" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="159" width="535" height="1"/>
+				<reportElement x="10" y="159" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="176" width="535" height="1"/>
+				<reportElement x="10" y="176" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="192" width="535" height="1"/>
+				<reportElement x="10" y="192" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="210" width="535" height="1"/>
+				<reportElement x="10" y="210" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="228" width="535" height="1"/>
+				<reportElement x="10" y="228" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="244" width="535" height="1"/>
+				<reportElement x="10" y="244" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="262" width="535" height="1"/>
+				<reportElement x="10" y="262" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="278" width="535" height="1"/>
+				<reportElement x="10" y="278" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="295" width="535" height="1"/>
+				<reportElement x="10" y="295" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="311" width="535" height="1"/>
+				<reportElement x="10" y="311" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="329" width="535" height="1"/>
+				<reportElement x="10" y="329" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="345" width="535" height="1"/>
+				<reportElement x="10" y="345" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="363" width="535" height="1"/>
+				<reportElement x="10" y="363" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="381" width="535" height="1"/>
+				<reportElement x="10" y="381" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="397" width="535" height="1"/>
+				<reportElement x="10" y="397" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="415" width="535" height="1"/>
+				<reportElement x="10" y="415" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="433" width="535" height="1"/>
+				<reportElement x="10" y="433" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="449" width="535" height="1"/>
+				<reportElement x="10" y="449" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="467" width="535" height="1"/>
+				<reportElement x="10" y="467" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="483" width="535" height="1"/>
+				<reportElement x="10" y="483" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="501" width="535" height="1"/>
+				<reportElement x="10" y="501" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="519" width="535" height="1"/>
+				<reportElement x="10" y="519" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="535" width="535" height="1"/>
+				<reportElement x="10" y="535" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="553" width="535" height="1"/>
+				<reportElement x="10" y="553" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="571" width="535" height="1"/>
+				<reportElement x="10" y="571" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="587" width="535" height="1"/>
+				<reportElement x="10" y="587" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="10" y="657" width="535" height="1"/>
+				<reportElement x="10" y="657" width="537" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="262" y="658" width="1" height="105"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<staticText>
 				<reportElement x="267" y="661" width="278" height="13"/>
@@ -398,13 +509,31 @@ ORDER BY nome_aluno ASC]]>
 				</textElement>
 				<text><![CDATA[DATA, ASSINATURA E OBSERVAÇÕES DO DIRETOR/SECRETÁRIO]]></text>
 			</staticText>
+			<line>
+				<reportElement x="68" y="12" width="1" height="645"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="9" y="12" width="1" height="751"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="547" y="11" width="1" height="752"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
 		</band>
 	</pageHeader>
 	<columnHeader>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="1" splitType="Stretch"/>
+		<band height="2" splitType="Stretch"/>
 	</detail>
 	<columnFooter>
 		<band splitType="Stretch"/>
