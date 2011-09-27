@@ -1632,33 +1632,16 @@ EOT;
       var etapaField = document.getElementById('etapa');
       if (etapaField)
         getEtapa();
+
+      var matriculaField = document.getElementById('ref_cod_matricula');
+      if (matriculaField)
+        getAlunosMatriculados();
     }
   }
 
 </script>
 EOT;
   $this->appendOutput($s);
-
-  if (isset($get_alunos_matriculados) && $get_alunos_matriculados && isset($get_turma) && $get_turma)
-  {
-    $s = <<<EOT
-<script>
- 
-  var __turma_field = document.getElementById('ref_cod_turma');
-  __turma_field.onchange = function()
-  {
-
-    clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
-    clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-    clearSelect(entity = 'matricula', disable = false, text = '', multipleId = true);
-
-    getAlunosMatriculados();
-  }
-
-</script>
-EOT;
-  $this->appendOutput($s);
-  }
 } 
 ?>
 
