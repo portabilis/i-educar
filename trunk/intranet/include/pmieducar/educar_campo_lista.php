@@ -1624,8 +1624,14 @@ EOT;
     {
       clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
       clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-      getComponenteCurricular();
-      getEtapa();
+
+      var componenteCurricularField = document.getElementById('ref_cod_componente_curricular');
+      if (componenteCurricularField)
+        getComponenteCurricular();
+
+      var etapaField = document.getElementById('etapa');
+      if (etapaField)
+        getEtapa();
     }
   }
 
