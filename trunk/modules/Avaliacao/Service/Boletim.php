@@ -2320,6 +2320,34 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return $this;
   }
 
+  protected function updateSituacaoMatricula($situacaoNotasFaltas)
+  {
+    $matriculaSituacao = null;
+
+    //se a situacao da matricula não é aprovado e a situacao da nota e falta estão aprovadas, aprova a matricula
+    if (($this->getOption('aprovado') != App_Model_MatriculaSituacao::APROVADO) && 
+        ($situacaoNotasFaltas->aprovado && ! $situacaoNotasFaltas->andamento))
+    {
+      $matriculaSituacao = App_Model_MatriculaSituacao::APROVADO;
+    }
+    //se a situacao da matricula não é reprovado e a situacao da nota e falta não estão aprovadas e nem em andamento, reprova a matricula
+    elseif (($this->getOption('aprovado') != App_Model_MatriculaSituacao::REPROVADO) && 
+            (! $situacaoNotasFaltas->aprovado && ! $situacaoNotasFaltas->andamento))
+    {
+      $matriculaSituacao = App_Model_MatriculaSituacao::REPROVADO;  
+    }
+    elseif ($this->getOption('aprovado') != App_Model_MatriculaSituacao::EM_ANDAMENTO)
+    {
+      $matriculaSituacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+    }
+
+    if ($matriculaSituacao)
+    {
+      error_log("Alterando situacao matricula aluno de '{$this->getOption('aprovado')}' para '$matriculaSituacao'");
+      $this->_updateMatricula($this->getOption('matricula'), $this->getOption('usuario'), $matriculaSituacao);
+    }
+  }
+
   /**
    * Promove o aluno de etapa escolar caso esteja aprovado de acordo com o
    * necessário estabelecido por tipoProgressao de
@@ -2329,51 +2357,67 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    *   confirmação externa para a promoção do aluno.
    * @return bool
    */
-  public function promover($ok = NULL)
+
+  public function promover($novaSituacaoMatricula = NULL)
   {
-    $situacao = $this->getSituacaoAluno();
-
-    if (TRUE == $situacao->andamento) {
-      require_once 'CoreExt/Service/Exception.php';
-      throw new CoreExt_Service_Exception('Não é possível promover uma matrícula em andamento.');
-    }
-
-    // Se a matrícula já foi alterada (aluno aprovado ou reprovado), lança exceção.
-    if (App_Model_MatriculaSituacao::EM_ANDAMENTO > $this->getOption('aprovado')) {
-      require_once 'CoreExt/Service/Exception.php';
-      throw new CoreExt_Service_Exception('A matrícula já foi promovida.');
-    }
-
     $tipoProgressao = $this->getRegra()->get('tipoProgressao');
+    $situacaoMatricula = $this->getOption('aprovado');
+    $situacaoBoletim = $this->getSituacaoAluno();
+    $exceptionMsg = '';
 
-    switch ($tipoProgressao) {
-      case RegraAvaliacao_Model_TipoProgressao::CONTINUADA:
-        $promover = TRUE;
-        break;
-      case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_AUTO_MEDIA_PRESENCA:
-        $promover = $situacao->aprovado && !$situacao->retidoFalta;
-        break;
-      case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_AUTO_SOMENTE_MEDIA:
-        $promover = $situacao->aprovado;
-        break;
-      case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL:
-        if (is_null($ok)) {
-          $enum = RegraAvaliacao_Model_TipoProgressao::getInstance();
-          $message = sprintf('Para atualizar a matrícula em uma regra %s é '
-                   . 'necessário confirmação externa no argumento "$ok".',
-                   $enum->getValue($tipoProgressao));
+    if ($situacaoBoletim->andamento)
+        $novaSituacaoMatricula = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+    else
+    {
 
-          require_once 'CoreExt/Service/Exception.php';
-          throw new CoreExt_Service_Exception($message);
-        }
+      switch ($tipoProgressao) {
+        case RegraAvaliacao_Model_TipoProgressao::CONTINUADA:
 
-        $promover = $ok;
-        break;
+          $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO;
+          break;
+
+        case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_AUTO_MEDIA_PRESENCA:
+
+          if ($situacaoBoletim->aprovado && !$situacaoBoletim->retidoFalta)
+            $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO;
+          else
+            $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
+          break;
+
+        case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_AUTO_SOMENTE_MEDIA:
+
+          if ($situacaoBoletim->aprovado)
+            $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO;
+          else
+            $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
+
+          break;
+
+        case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL && is_null($novaSituacaoMatricula):
+
+          $tipoProgressaoInstance = RegraAvaliacao_Model_TipoProgressao::getInstance();
+          $exceptionMsg = sprintf('Para atualizar a matrícula em uma regra %s é '
+                                  . 'necessário passar o valor do argumento "$novaSituacaoMatricula".',
+                                  $tipoProgressaoInstance->getValue($tipoProgressao));
+          break;
+      }
     }
 
-    return $this->_updateMatricula($this->getOption('matricula'), $this->getOption('usuario'),
-      $promover);
+    if($novaSituacaoMatricula == $situacaoMatricula)
+      $exceptionMsg = "Matricula ({$this->getOption('matricula')}) não precisou ser promovida, "
+                      . "pois a nova situação continua a mesma da anterior ($novaSituacaoMatricula)";
+
+    if ($exceptionMsg)
+    { 
+      error_log("Erro ocorrido ao promover matricula {$this->getOption('matricula')}: " . $exceptionMsg);
+      require_once 'CoreExt/Service/Exception.php';
+      throw new CoreExt_Service_Exception($exceptionMsg);
+    }
+
+    error_log("Alterando situacao matricula ({$this->getOption('matricula')}) de ($situacaoMatricula) para ($novaSituacaoMatricula)");
+    return $this->_updateMatricula($this->getOption('matricula'), $this->getOption('usuario'), $novaSituacaoMatricula);
   }
+
 
   /**
    * Atualiza a média dos componentes curriculares.

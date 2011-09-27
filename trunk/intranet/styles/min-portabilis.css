@@ -131,3 +131,7 @@ div#error div#detail {
   margin-top: 40px;
   border-top: 1px solid;
 }
+
+.hidden {
+  display: none;
+}

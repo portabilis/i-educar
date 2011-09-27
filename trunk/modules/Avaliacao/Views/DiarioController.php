@@ -74,9 +74,14 @@ class DiarioController extends Core_Controller_Page_ListController
     if (! isset($this->_regra))
     {
       $this->_regra = array();
+      $this->_regra['id'] = $service->getRegra()->get('id');
+      $this->_regra['nome'] = $service->getRegra()->get('nome');
       $this->_regra['tipoNota'] = $service->getRegra()->get('tipoNota');
       $this->_regra['parecerDescritivo'] = $service->getRegra()->get('parecerDescritivo');
       $this->_regra['tipoPresenca'] = $service->getRegra()->get('tipoPresenca');
+      //$this->_regra['formulaRecuperacao'] = $service->getRegra()->get('formulaRecuperacao');
+      $this->_regra['quantidadeModulos'] = $service->getOption('etapas');
+      $this->_regra['showFieldNotaExame'] = $service->getRegra()->get('formulaRecuperacao') == FormulaMedia_Model_TipoFormula::MEDIA_RECUPERACAO && isset($_GET['etapa']) && $this->_regra['quantidadeModulos'] == $_GET['etapa'];
     }
   }
 
@@ -97,7 +102,14 @@ class DiarioController extends Core_Controller_Page_ListController
       $this->_headers = array("Matr&iacute;cula", "Aluno", "Situa&ccedil;&atilde;o");
 
       if ($this->getRegraByName('tipoNota') != RegraAvaliacao_Model_Nota_TipoValor::NENHUM)
-        $this->_headers[] ="Nota";  
+      {
+        $this->_headers[] ="Nota";
+
+        if ($this->getRegraByName('showFieldNotaExame'))
+          $this->_headers[] = "Nota exame";
+
+        #var_dump($service->getRegra());
+      }
 
       $this->_headers[] =   "Falta *";
 
@@ -134,7 +146,10 @@ class DiarioController extends Core_Controller_Page_ListController
   protected function setSelectionFields()
   {
 
-    #TODO mover para funcao setSelectionFields() ?
+    #variaveis usadas pelo modulo /intranet/include/pmieducar/educar_campo_lista.php
+    $this->verificar_campos_obrigatorios = True;
+    $this->add_onchange_events = True;
+
     $get_escola = $escola_obrigatorio = $listar_escolas_alocacao_professor = TRUE;
     $get_ano_escolar = $ano_escolar_obrigatorio = TRUE;
     $get_curso = $curso_obrigatorio = $listar_somente_cursos_funcao_professor = TRUE;
@@ -146,6 +161,7 @@ class DiarioController extends Core_Controller_Page_ListController
 
     $this->campoTexto('nm_aluno', 'Aluno', $this->nm_aluno, 30, 255, FALSE,
       FALSE, FALSE, '', "<img border=\"0\" onclick=\"pesquisa_aluno();\" id=\"ref_cod_aluno_lupa\" name=\"ref_cod_aluno_lupa\" src=\"imagens/lupa.png\"\/>", '', '', TRUE);
+
     $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
   }
 
@@ -197,11 +213,23 @@ class DiarioController extends Core_Controller_Page_ListController
     return $alunos;
   }
 
-
-  protected function getFieldNotaAluno($aluno, $service)
+  protected function getNota($service, $componenteCurricular, $etapa)
   {
-    $onChangeSelectNota = sprintf("setAtt(att='nota', matricula=%s, etapa=%s, componente_curricular=%s);",
-                      $aluno['ref_cod_matricula'], $this->etapa, $this->ref_cod_componente_curricular);
+    $nota = urldecode($service->getNotaComponente($componenteCurricular, $etapa)->nota);
+    return str_replace(',', '.', $nota);
+  }
+
+  protected function getFieldNotaAluno($aluno, $service, $exame = false, $visible = true)
+  {
+
+    if ($exame)
+      $etapa = 'Rc';
+    else
+      $etapa = $this->etapa;
+
+    $att = $exame == 'Rc' ? "att='nota_exame'" : "att='nota'";
+    $onChangeSelectNota = sprintf("setAtt(%s, matricula=%s, etapa='%s', componente_curricular=%s);",
+                      $att, $aluno['ref_cod_matricula'], $etapa, $this->ref_cod_componente_curricular);
 
     //seleciona os valores de arredondamento apenas no primeiro aluno, pois todos estão matriculados na mesma turma (mesma regra)
     if (! isset($this->valoresArredondamento))    
@@ -217,21 +245,23 @@ class DiarioController extends Core_Controller_Page_ListController
         $valores[(string) $valor->valorMaximo] = $valor->nome . ' (' . $valor->descricao .  ')';
     }
 
-    $_notaAtual = urldecode($service->getNotaComponente($this->ref_cod_componente_curricular, $this->etapa)->nota);
-    $_notaAtual = str_replace(',', '.', $_notaAtual);
-    $notas = "<option></option>";
+    $notaAtual = $this->getNota($service, $this->ref_cod_componente_curricular, $etapa);
 
+    $notas = "<option></optioen>";
     foreach ($valores as $k => $v)
     {
       $k = str_replace(',', '.', urldecode($k));
 
-      if ($_notaAtual > -1 && $k == $_notaAtual)
+      if ($notaAtual > -1 && $k == $notaAtual)
         $notas .= "\n<option value='$k' selected='selected'>$v</option>";
       else
         $notas .= "\n<option value='$k'>$v</option>";
     }
 
-    return sprintf('<select id="nota-matricula:%s" class="notas" onchange="%s">%s</select>', $aluno['ref_cod_matricula'], $onChangeSelectNota, $notas);
+    $hidden = $visible ? '' : 'hidden';
+    $id = $exame ? "nota_exame-matricula:{$aluno['ref_cod_matricula']}" : "nota-matricula:{$aluno['ref_cod_matricula']}";
+
+    return sprintf('<select id="%s" class="notas %s" onchange="%s">%s</select>', $id, $hidden, $onChangeSelectNota, $notas);
   }
 
  
@@ -240,12 +270,11 @@ class DiarioController extends Core_Controller_Page_ListController
     return $aluno['ref_cod_aluno'] . ' - ' .  $aluno['nome'];
   }
 
-
   protected function getFieldSituacaoAluno($aluno, $service)
   {
     $situacao = App_Model_MatriculaSituacao::getInstance()->getValue(
           $service->getSituacaoComponentesCurriculares()->componentesCurriculares[$this->ref_cod_componente_curricular]->situacao);
-
+    
     return sprintf('<span id="situacao-matricula:%s">%s</span>',   $aluno['ref_cod_matricula'],$situacao);
   }
 
@@ -311,7 +340,23 @@ class DiarioController extends Core_Controller_Page_ListController
     );
 
     if ($this->getRegraByName('tipoNota') != RegraAvaliacao_Model_Nota_TipoValor::NENHUM)
+    {
       $linha_aluno[] = $this->getFieldNotaAluno($aluno, $service);
+
+      #TODO alterar nome showFieldNotaExame para hasFormulaRecuperacao ?
+      if ($this->getRegraByName('showFieldNotaExame'))
+      {
+        $situacoesExibirExame = array(
+          App_Model_MatriculaSituacao::EM_EXAME, 
+          App_Model_MatriculaSituacao::APROVADO_APOS_EXAME
+        );
+
+        $emExame = in_array($service->getSituacaoComponentesCurriculares()->componentesCurriculares[$this->ref_cod_componente_curricular]->situacao, $situacoesExibirExame);
+
+        $possuiNotaExame = $this->getNota($service, $this->ref_cod_componente_curricular, 'Rc') != '';
+        $linha_aluno[] = $this->getFieldNotaAluno($aluno, $service, $exame = true, $visible = ($emExame || $possuiNotaExame));
+      }
+    }
 
     $linha_aluno[] = $this->getFieldFaltaAluno($aluno, $service);
 
@@ -331,7 +376,7 @@ class DiarioController extends Core_Controller_Page_ListController
       $_tipoParecer = '<br />** ' . $_tipoParecer;
 
     $_tipoPresenca = RegraAvaliacao_Model_TipoPresenca::getInstance()->getValue($this->getRegraByName('tipoPresenca'));
-    $this->rodape = "* $_tipoPresenca $_tipoParecer";
+    $this->rodape = "* $_tipoPresenca $_tipoParecer<br />Regra avalia&ccedil;&atilde;o usada: {$this->getRegraByName('id')} - {$this->getRegraByName('nome')}";
   }
 
 
@@ -390,44 +435,40 @@ class DiarioController extends Core_Controller_Page_ListController
             }
 
             var __bBusca = document.getElementById('botao_busca');
-            var __old_event = __bBusca.onclick;
             __bBusca.onclick = function()
             {
-              var __not_empty_fields = document.getElementsByClassName('obrigatorio');
-              var __all_filled = true;
-              for (var i = 0; i < __not_empty_fields.length; i++)
-              {
-                if (! __not_empty_fields[i].value)
-                {
-                  var __all_filled = false;
-                  break;
-                }
-              }
-              if (! __all_filled)
-                alert('Selecione um valor em todos os campos, antes de continuar.');
-              else
-              {
-                __bBusca.disable();
-                __bBusca.value = 'Carregando...';
-                var form = document.getElementById('form_resultado');
-                var parent = form.parentNode;
-                form.remove();                                
-                t = document.createElement('p');
-                t.align = 'center';
-                //t.textContent = 'Por favor aguarde, carregando dados...'; 
-
-                parent.appendChild(t);
-                __old_event();
-                //__bBusca.onclick = __old_event;
-                //__bBusca.click(); bug no ie ?
-              }
+              __bBusca.disable();
+              __bBusca.value = 'Carregando...';
+              var form_filtro = document.getElementById('formcadastro');
+              var form_resultado = document.getElementById('form_resultado');
+              form_resultado.remove();                                
+              
+              form_filtro.action = '/module/Avaliacao/diario';
+              form_filtro.submit();
             }
 
-            var __a = document.createElement('a');
-            __a.innerHTML = 'Limpar filtros';
-            __a.href = document.location.href.split('?')[0];
-            __bBusca.parentNode.appendChild(__a);
+            __lupa = document.getElementById('ref_cod_aluno_lupa');
+            if (__lupa)
+            {
+              var __a = document.createElement('a');
+              __a.innerHTML = 'Limpar filtros';
+              __a.href = document.location.href.split('?')[0];
+              __bBusca.parentNode.appendChild(__a);
 
+              var __a = document.createElement('a');
+              __a.innerHTML = ' Limpar';
+              __a.onclick = function() {
+                  __fieldIdAluno = document.getElementById('ref_cod_aluno');
+                  if (__fieldIdAluno)
+                    __fieldIdAluno.value = '';
+
+                  __fieldNomeAluno = document.getElementById('nm_aluno');
+                  if (__fieldNomeAluno)
+                    __fieldNomeAluno.value = '';
+                };
+              __a.href = '#';
+              __lupa.parentNode.appendChild(__a);
+            }
             
               function _fixSelectsFilter(selectId)
               {
@@ -523,66 +564,6 @@ class DiarioController extends Core_Controller_Page_ListController
                 _fixSelectsFilter();
               }
 
-              document.getElementById('ref_cod_instituicao').onchange = function()
-              {
-                clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId = false);
-                clearSelect(entity = 'curso', disable = false, text = '', multipleId = true);
-                clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
-                clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
-                clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
-                clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-                //getDuploEscolaCurso();
-                getEscola();
-              }
-
-              document.getElementById('ref_cod_escola').onchange = function()
-              {
-                clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId = false);
-
-                clearSelect(entity = 'curso', disable = false, text = '', multipleId = true);
-                clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
-                clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
-                clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
-                clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-                getEscolaCurso();
-              }
-
-
-            document.getElementById('ref_cod_curso').onchange = function()
-            {
-              clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId = false);
-              clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-              getAnoEscolar();
-            }
-
-            document.getElementById('ano_escolar').onchange = function()
-            {
-              clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-              getEscolaCursoSerie();
-            }
-
-            document.getElementById('ref_ref_cod_serie').onchange = function()
-            {
-              clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-              getTurma();
-            }
-
-            document.getElementById('ref_cod_turma').onchange = function()
-            {
-              clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-              getComponenteCurricular();
-              getEtapa();
-            }
-
             _fixSelectsFilter();
             document.getElementById('botao_busca').focus();
 
@@ -604,23 +585,32 @@ class DiarioController extends Core_Controller_Page_ListController
               //Trava para evitar erro com o serviço do boletim
               if (att == 'parecer' && ((/^\d+\.\d+$/.test(attValue)) || (/^\d+$/.test(attValue)) || (/^\.\d+$/.test(attValue)) || (/^\d+\.$/.test(attValue))))
                 document.getElementById('status_alteracao-matricula:' + matricula).innerHTML = '<span class="error" style="color: red;">Informe pelo menos uma letra.</span>';
-              else if (attValue.length)
+              else /* if (attValue.length)*/
               {
-                var _c = ['notas', 'faltas', 'parecer'];
-                for (var i = 0; i < _c.length; i++)
+                if(! attValue.length && ! confirm('Confirma exclusão ' + att.replace('_', ' ') + '?'))
+                  alert('Voltar nota...');
+                else
                 {
-                  var _e = document.getElementsByClassName(_c[i]);
-                  for (var j = 0; j < _e.length; j++)
-                    _e[j].disabled = true;
-                }
+                  var _c = ['notas', 'faltas', 'parecer'];
+                  for (var i = 0; i < _c.length; i++)
+                  {
+                    var _e = document.getElementsByClassName(_c[i]);
+                    for (var j = 0; j < _e.length; j++)
+                      _e[j].disabled = true;
+                  }
 
-                document.getElementById('status_alteracao-matricula:'+matricula).innerHTML = 'Atualizando... <img src="/modules/Avaliacao/Static/images/min-wait.gif"/>';
-                var vars = "att="+att+"&matricula=" + matricula + "&etapa=" + etapa + "&componente_curricular=" + componente_curricular+"&att_value=" + attValue;
-                //alert(vars);
-                ajaxReq.send("POST", "/module/Avaliacao/DiarioAjax", handleRequest, "application/x-www-form-urlencoded; charset=UTF-8", vars);
+                  document.getElementById('status_alteracao-matricula:'+matricula).innerHTML = 'Atualizando... <img src="/modules/Avaliacao/Static/images/min-wait.gif"/>';
+                  var vars = "att="+att+"&matricula=" + matricula + "&etapa=" + etapa + "&componente_curricular=" + componente_curricular+"&att_value=" + attValue;
+                  //console.log(vars);
+                  //alert(vars);
+                  ajaxReq.send("POST", "/module/Avaliacao/DiarioAjax", handleRequest, "application/x-www-form-urlencoded; charset=UTF-8", vars);
+                }
               }
-              else
+              /*else
+              {
                 document.getElementById('status_alteracao-matricula:' + matricula).innerHTML = '<span class="error" style="color: red;">Selecione um valor v&aacute;lido.</span>';
+
+              }*/
             }
             catch(err)
             {
@@ -663,6 +653,10 @@ class DiarioController extends Core_Controller_Page_ListController
 
                   var situacao = getText(xmlData.getElementsByTagName('situacao')[0]);
                   document.getElementById('situacao'  + '-matricula:' + matricula).innerHTML = situacao;
+
+                  var fieldExame = document.getElementById('nota_exame-matricula:' + matricula);
+                  if (att == 'nota' && situacao.toLowerCase().trim() == 'em exame' && fieldExame)
+                    fieldExame.setAttribute('class', fieldExame.getAttribute('class').replace('hidden', ''));   
 
                   var s = '<span class="success" style="color: green;">Atualizado</span>';
                   document.getElementById('status_alteracao-matricula:' + matricula).innerHTML = s;
