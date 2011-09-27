@@ -1531,55 +1531,81 @@ EOT;
     $s = <<<EOT
 <script>
 
-  document.getElementById('ref_cod_instituicao').onchange = function()
+  var instituicaoField = document.getElementById('ref_cod_instituicao');
+  if (instituicaoField)
   {
-    clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId = false);
-    clearSelect(entity = 'ano', disable = false, text = '', multipleId = false);
-    clearSelect(entity = 'escola', disable = false, text = '', multipleId = true);
-    clearSelect(entity = 'curso', disable = false, text = '', multipleId = true);
-    clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
-    clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
-    clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
-    clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-    clearSelect(entity = 'matricula', disable = false, text = '', multipleId = true);
-	  getEscola();
+    instituicaoField.onchange = function()
+    {
+      clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId = false);
+      clearSelect(entity = 'ano', disable = false, text = '', multipleId = false);
+      clearSelect(entity = 'escola', disable = false, text = '', multipleId = true);
+      clearSelect(entity = 'curso', disable = false, text = '', multipleId = true);
+      clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
+      clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
+      clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
+      clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
+      clearSelect(entity = 'matricula', disable = false, text = '', multipleId = true);
+	    getEscola();
+    }
   }
 
-  document.getElementById('ref_cod_escola').onchange = function()
+  var escolaField = document.getElementById('ref_cod_escola');
+  if (escolaField)
   {
-    clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId = false);
-    clearSelect(entity = 'ano', disable = false, text = '', multipleId = false);
-    clearSelect(entity = 'curso', disable = false, text = '', multipleId = true);
-    clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
-    clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
-    clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
-    clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-    clearSelect(entity = 'matricula', disable = false, text = '', multipleId = true);
-	  getEscolaCurso();
+    escolaField.onchange = function()
+    {
+      clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId = false);
+      clearSelect(entity = 'ano', disable = false, text = '', multipleId = false);
+      clearSelect(entity = 'curso', disable = false, text = '', multipleId = true);
+      clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
+      clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
+      clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
+      clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
+      clearSelect(entity = 'matricula', disable = false, text = '', multipleId = true);
+	    getEscolaCurso();
+    }
   }
 
-  document.getElementById('ref_cod_curso').onchange = function()
+  var cursoField = document.getElementById('ref_cod_curso');
+  if (cursoField)
   {
-    clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
-    clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
-    clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
-    clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-    clearSelect(entity = 'matricula', disable = false, text = '', multipleId = true);
-	  getEscolaCursoSerie();
+    cursoField.onchange = function()
+    {
+      clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
+      clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
+      clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
+      clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
+      clearSelect(entity = 'matricula', disable = false, text = '', multipleId = true);
+	    getEscolaCursoSerie();
+    }
   }
-
  
-  var __serie_field = document.getElementById('ref_cod_serie');
-  if (! __serie_field)
-    var __serie_field = document.getElementById('ref_ref_cod_serie');
+  var serieField = document.getElementById('ref_cod_serie');
+  if (! serieField)
+    var serieField = document.getElementById('ref_ref_cod_serie');
 
-  __serie_field.onchange = function()
+  if (serieField)
   {
-    clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
-    clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
-    clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-    clearSelect(entity = 'matricula', disable = false, text = '', multipleId = true);
-    getTurma();
+    serieField.onchange = function()
+    {
+      clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
+      clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
+      clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
+      clearSelect(entity = 'matricula', disable = false, text = '', multipleId = true);
+      getTurma();
+    }
+  }
+
+  var turmaField = document.getElementById('ref_cod_turma');
+  if (turmaField)
+  {
+    turmaField.onchange = function()
+    {
+      clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
+      clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
+      getComponenteCurricular();
+      getEtapa();
+    }
   }
 
 </script>
