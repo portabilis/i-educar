@@ -1576,10 +1576,31 @@ EOT;
       clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
       clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
       clearSelect(entity = 'matricula', disable = false, text = '', multipleId = true);
-	    getEscolaCursoSerie();
+
+      var fieldAnoEscolar = document.getElementById('ano_escolar');
+      if (! fieldAnoEscolar)
+        var fieldAnoEscolar = document.getElementById('ano');
+
+      if (fieldAnoEscolar.type == 'select-one')
+        getAnoEscolar();  
+      else
+  	    getEscolaCursoSerie();
     }
   }
- 
+
+  var fieldAnoEscolar = document.getElementById('ano_escolar');
+  if (fieldAnoEscolar)
+  {
+    fieldAnoEscolar.onchange = function()
+    {
+      clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
+      clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
+      clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
+      clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
+      getEscolaCursoSerie();
+    }
+  }
+
   var serieField = document.getElementById('ref_cod_serie');
   if (! serieField)
     var serieField = document.getElementById('ref_ref_cod_serie');

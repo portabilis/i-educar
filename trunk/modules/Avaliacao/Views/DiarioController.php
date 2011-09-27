@@ -146,7 +146,10 @@ class DiarioController extends Core_Controller_Page_ListController
   protected function setSelectionFields()
   {
 
-    #TODO mover para funcao setSelectionFields() ?
+    #variaveis usadas pelo modulo /intranet/include/pmieducar/educar_campo_lista.php
+    $this->verificar_campos_obrigatorios = True;
+    $this->add_onchange_events = True;
+
     $get_escola = $escola_obrigatorio = $listar_escolas_alocacao_professor = TRUE;
     $get_ano_escolar = $ano_escolar_obrigatorio = TRUE;
     $get_curso = $curso_obrigatorio = $listar_somente_cursos_funcao_professor = TRUE;
@@ -432,32 +435,16 @@ class DiarioController extends Core_Controller_Page_ListController
             }
 
             var __bBusca = document.getElementById('botao_busca');
-            var __old_event = __bBusca.onclick;
             __bBusca.onclick = function()
             {
-              var __not_empty_fields = document.getElementsByClassName('obrigatorio');
-              var __all_filled = true;
-              for (var i = 0; i < __not_empty_fields.length; i++)
-              {
-                if (! __not_empty_fields[i].value)
-                {
-                  var __all_filled = false;
-                  break;
-                }
-              }
-              if (! __all_filled)
-                alert('Selecione um valor em todos os campos, antes de continuar.');
-              else
-              {
-                __bBusca.disable();
-                __bBusca.value = 'Carregando...';
-                var form_filtro = document.getElementById('formcadastro');
-                var form_resultado = document.getElementById('form_resultado');
-                form_resultado.remove();                                
-                
-                form_filtro.action = '/module/Avaliacao/diario';
-                form_filtro.submit();
-              }
+              __bBusca.disable();
+              __bBusca.value = 'Carregando...';
+              var form_filtro = document.getElementById('formcadastro');
+              var form_resultado = document.getElementById('form_resultado');
+              form_resultado.remove();                                
+              
+              form_filtro.action = '/module/Avaliacao/diario';
+              form_filtro.submit();
             }
 
             __lupa = document.getElementById('ref_cod_aluno_lupa');
@@ -576,66 +563,6 @@ class DiarioController extends Core_Controller_Page_ListController
               {
                 _fixSelectsFilter();
               }
-
-              document.getElementById('ref_cod_instituicao').onchange = function()
-              {
-                clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId = false);
-                clearSelect(entity = 'curso', disable = false, text = '', multipleId = true);
-                clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
-                clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
-                clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
-                clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-                //getDuploEscolaCurso();
-                getEscola();
-              }
-
-              document.getElementById('ref_cod_escola').onchange = function()
-              {
-                clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId = false);
-
-                clearSelect(entity = 'curso', disable = false, text = '', multipleId = true);
-                clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
-                clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
-                clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
-                clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-                getEscolaCurso();
-              }
-
-
-            document.getElementById('ref_cod_curso').onchange = function()
-            {
-              clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId = false);
-              clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-              getAnoEscolar();
-            }
-
-            document.getElementById('ano_escolar').onchange = function()
-            {
-              clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-              getEscolaCursoSerie();
-            }
-
-            document.getElementById('ref_ref_cod_serie').onchange = function()
-            {
-              clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-              getTurma();
-            }
-
-            document.getElementById('ref_cod_turma').onchange = function()
-            {
-              clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
-              clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-              getComponenteCurricular();
-              getEtapa();
-            }
 
             _fixSelectsFilter();
             document.getElementById('botao_busca').focus();
