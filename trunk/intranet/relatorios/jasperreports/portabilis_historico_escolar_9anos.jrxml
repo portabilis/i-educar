@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_historico_escolar" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.0000000000000016"/>
+	<property name="ireport.zoom" value="1.2100000000000022"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Crosstab Data Text" hAlign="Center"/>
@@ -1155,6 +1155,9 @@ ORDER BY 1 ASC]]>
 		<band height="215" splitType="Stretch">
 			<rectangle>
 				<reportElement x="5" y="193" width="545" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</rectangle>
 			<staticText>
 				<reportElement x="507" y="198" width="36" height="13"/>
@@ -1214,24 +1217,45 @@ ORDER BY 1 ASC]]>
 			</staticText>
 			<line>
 				<reportElement x="145" y="193" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="188" y="193" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="233" y="193" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="279" y="193" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="322" y="193" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="368" y="193" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="414" y="193" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<staticText>
 				<reportElement x="463" y="198" width="36" height="13"/>
@@ -1242,12 +1266,21 @@ ORDER BY 1 ASC]]>
 			</staticText>
 			<line>
 				<reportElement x="503" y="193" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<rectangle>
 				<reportElement x="5" y="4" width="545" height="167"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</rectangle>
 			<line>
 				<reportElement x="457" y="193" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<staticText>
 				<reportElement x="39" y="175" width="477" height="16"/>
@@ -1258,12 +1291,21 @@ ORDER BY 1 ASC]]>
 			</staticText>
 			<line>
 				<reportElement x="369" y="5" width="1" height="100"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="6" y="105" width="544" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="6" y="132" width="544" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<staticText>
 				<reportElement x="10" y="198" width="53" height="13"/>
@@ -1343,10 +1385,6 @@ ORDER BY 1 ASC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nm_responsavel}]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="11" y="7" width="57" height="46"/>
-				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
-			</image>
 			<textField isBlankWhenNull="true">
 				<reportElement x="72" y="55" width="296" height="13"/>
 				<textElement>
@@ -1354,6 +1392,10 @@ ORDER BY 1 ASC]]>
 				</textElement>
 				<textFieldExpression><![CDATA["Bairro: " +$F{bairro}]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="10" y="7" width="57" height="46"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -1445,6 +1487,9 @@ ORDER BY 1 ASC]]>
 		<band height="404" splitType="Stretch">
 			<rectangle>
 				<reportElement x="5" y="3" width="545" height="39"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</rectangle>
 			<staticText>
 				<reportElement x="10" y="6" width="100" height="15"/>
@@ -1546,6 +1591,9 @@ ORDER BY 1 ASC]]>
 			</textField>
 			<line>
 				<reportElement x="5" y="23" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<staticText>
 				<reportElement x="10" y="26" width="100" height="15"/>
@@ -1591,15 +1639,27 @@ ORDER BY 1 ASC]]>
 			</textField>
 			<rectangle>
 				<reportElement x="5" y="49" width="545" height="354"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</rectangle>
 			<line>
 				<reportElement x="5" y="212" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="5" y="66" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="54" y="49" width="1" height="17"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<staticText>
 				<reportElement x="9" y="50" width="45" height="15"/>
@@ -1617,6 +1677,9 @@ ORDER BY 1 ASC]]>
 			</staticText>
 			<line>
 				<reportElement x="114" y="49" width="1" height="17"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<staticText>
 				<reportElement x="117" y="50" width="245" height="15"/>
@@ -1627,6 +1690,9 @@ ORDER BY 1 ASC]]>
 			</staticText>
 			<line>
 				<reportElement x="365" y="49" width="1" height="17"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<staticText>
 				<reportElement x="367" y="50" width="59" height="15"/>
@@ -1637,6 +1703,9 @@ ORDER BY 1 ASC]]>
 			</staticText>
 			<line>
 				<reportElement x="523" y="49" width="1" height="17"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<staticText>
 				<reportElement x="527" y="50" width="20" height="15"/>
@@ -1647,6 +1716,9 @@ ORDER BY 1 ASC]]>
 			</staticText>
 			<line>
 				<reportElement x="5" y="82" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<staticText>
 				<reportElement x="9" y="68" width="45" height="13"/>
@@ -1685,6 +1757,9 @@ ORDER BY 1 ASC]]>
 			</textField>
 			<line>
 				<reportElement x="5" y="98" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<staticText>
 				<reportElement x="9" y="84" width="45" height="13"/>
@@ -1730,6 +1805,9 @@ ORDER BY 1 ASC]]>
 			</staticText>
 			<line>
 				<reportElement x="5" y="114" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
 				<reportElement x="69" y="100" width="34" height="13"/>
@@ -1796,6 +1874,9 @@ ORDER BY 1 ASC]]>
 			</textField>
 			<line>
 				<reportElement x="5" y="131" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<staticText>
 				<reportElement x="9" y="133" width="45" height="13"/>
@@ -1834,6 +1915,9 @@ ORDER BY 1 ASC]]>
 			</textField>
 			<line>
 				<reportElement x="5" y="147" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<staticText>
 				<reportElement x="9" y="149" width="45" height="13"/>
@@ -1872,6 +1956,9 @@ ORDER BY 1 ASC]]>
 			</textField>
 			<line>
 				<reportElement x="5" y="163" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<staticText>
 				<reportElement x="9" y="165" width="45" height="13"/>
@@ -1910,6 +1997,9 @@ ORDER BY 1 ASC]]>
 			</textField>
 			<line>
 				<reportElement x="5" y="179" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<staticText>
 				<reportElement x="9" y="181" width="45" height="13"/>
@@ -1948,6 +2038,9 @@ ORDER BY 1 ASC]]>
 			</textField>
 			<line>
 				<reportElement x="5" y="195" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<staticText>
 				<reportElement x="9" y="197" width="45" height="13"/>
@@ -2049,6 +2142,9 @@ ORDER BY 1 ASC]]>
 			</textField>
 			<line>
 				<reportElement x="5" y="368" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
 				<reportElement x="33" y="354" width="514" height="13"/>
@@ -2066,6 +2162,9 @@ ORDER BY 1 ASC]]>
 			</staticText>
 			<line>
 				<reportElement x="5" y="386" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<textField>
 				<reportElement x="85" y="371" width="122" height="14"/>
@@ -2076,9 +2175,15 @@ ORDER BY 1 ASC]]>
 			</textField>
 			<line>
 				<reportElement x="210" y="369" width="1" height="34"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="378" y="369" width="1" height="34"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<staticText>
 				<reportElement x="7" y="388" width="51" height="14"/>

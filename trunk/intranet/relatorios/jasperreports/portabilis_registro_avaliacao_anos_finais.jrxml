@@ -272,7 +272,7 @@ limit $P{linha}
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="108" splitType="Stretch">
+		<band height="116" splitType="Stretch">
 			<image>
 				<reportElement x="22" y="3" width="57" height="46"/>
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
@@ -282,56 +282,56 @@ limit $P{linha}
 	<pageHeader>
 		<band height="59" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement x="500" y="-57" width="77" height="13"/>
+				<reportElement x="500" y="-63" width="77" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="95" y="-81" width="402" height="13"/>
+				<reportElement x="95" y="-87" width="402" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nm_escola}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="357" y="-57" width="140" height="13"/>
+				<reportElement x="357" y="-63" width="140" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="95" y="-69" width="402" height="13"/>
+				<reportElement x="95" y="-75" width="402" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Endereço: "+$F{logradouro}+" "+$F{numero}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="95" y="-105" width="402" height="13"/>
+				<reportElement x="95" y="-111" width="402" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="357" y="-45" width="230" height="13"/>
+				<reportElement x="357" y="-51" width="230" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="95" y="-57" width="252" height="13"/>
+				<reportElement x="95" y="-63" width="252" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Bairro: " +$F{bairro}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="256" y="-28" width="277" height="16"/>
+				<reportElement x="256" y="-34" width="277" height="16"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
@@ -463,7 +463,7 @@ limit $P{linha}
 				<textFieldExpression><![CDATA[$F{periodo}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="95" y="-93" width="402" height="13"/>
+				<reportElement x="95" y="-99" width="402" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
@@ -621,7 +621,7 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="95" y="-45" width="252" height="13"/>
+				<reportElement x="95" y="-51" width="252" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
