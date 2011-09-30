@@ -204,8 +204,8 @@ class Report extends clsCadastro
   function printReport()
   {
 	  document.formcadastro.target = '_blank';
-	  document.getElementById( 'btn_enviar' ).disabled =false;
 	  document.formcadastro.submit();
+	  document.getElementById( 'btn_enviar' ).disabled = false;
   }
 </script>
 
