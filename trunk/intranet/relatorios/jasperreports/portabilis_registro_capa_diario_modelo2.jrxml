@@ -38,7 +38,7 @@
        to_char(CURRENT_DATE,'dd/mm/yyyy') AS data_atual,
        to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
 		(SELECT CASE WHEN date_part('hour',turma.hora_inicial) = 7 or date_part('hour',turma.hora_inicial) = 8 THEN 'Matutino'
-                     WHEN date_part('hour',turma.hora_inicial) = 13 or date_part('hour',turma.hora_inicial) = 14 THEN 'Verpertino'
+                     WHEN date_part('hour',turma.hora_inicial) = 13 or date_part('hour',turma.hora_inicial) = 14 THEN 'Vespertino'
                      WHEN date_part('hour',turma.hora_inicial) = 18 or date_part('hour',turma.hora_inicial) = 19 THEN 'Noturno'
                 END
            FROM pmieducar.turma tr
