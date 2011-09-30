@@ -162,7 +162,7 @@ class Report extends clsCadastro
       if ($method == 'post')
         $dict = $_POST;
       elseif($method == 'get')
-        $dict = $_POST;
+        $dict = $_GET;
       else
         throw new Exception('Invalid method!');
 
