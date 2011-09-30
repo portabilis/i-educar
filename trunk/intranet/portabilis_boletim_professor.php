@@ -24,12 +24,12 @@ class PortabilisBoletimProfessor extends Report
 
     include("include/pmieducar/educar_campo_lista.php");
     $this->campoTexto("professor","Professor(a):",'',40,255,false);
-    $this->campoNumero( "linha", "Linhas em branco", 0, 2, 2, true);   
+    $this->campoNumero( "linha", "Linhas em branco", 0, 2, 2, true); 
   }
 
   function onValidationSuccess()
   {
-    $this->addArg('linha', isset($_POST['linha']) ? (int)$_POST['linha'] : 0);    
+    $this->addArg('linha', isset($_POST['linha']) ? (int)$_POST['linha'] : 0);
     $this->addArg('ano', (int)$_POST['ano']);
     $this->addArg('instituicao', (int)$_POST['ref_cod_instituicao']);
     $this->addArg('escola', (int)$_POST['ref_cod_escola']);
@@ -38,7 +38,6 @@ class PortabilisBoletimProfessor extends Report
     $this->addArg('turma', (int)$_POST['ref_cod_turma']);
     $this->addArg('disciplina', (int)$_POST['ref_cod_componente_curricular']);
     $this->addArg('professor', $_POST['professor']);
-
   }
 }
 
@@ -52,6 +51,5 @@ $report->addRequiredField('ref_ref_cod_serie', 'serie');
 $report->addRequiredField('ref_cod_turma', 'turma');
 $report->addRequiredField('ref_cod_componente_curricular', 'componente curricular');
 
-
 $report->render();
-?>
+?>(int)$_POST['linha']

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_boletim_professor" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.2100000000000022"/>
-	<property name="ireport.x" value="163"/>
+	<property name="ireport.zoom" value="2.1435888100000056"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="ano" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
@@ -25,7 +25,7 @@
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="professor" class="java.lang.String"/>
-	<parameter name="linhas" class="java.lang.Integer">
+	<parameter name="linha" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
 	<queryString>
@@ -430,7 +430,7 @@ null
 
 from pmieducar.aluno
 
-limit $P{linhas}
+limit $P{linha}
 )]]>
 	</queryString>
 	<field name="nome_instituicao" class="java.lang.String"/>
@@ -483,9 +483,15 @@ limit $P{linhas}
 		<band height="84" splitType="Stretch">
 			<line>
 				<reportElement x="57" y="32" width="1" height="52"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="743" y="32" width="1" height="52"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 		</band>
 	</title>
@@ -640,33 +646,63 @@ limit $P{linhas}
 			</staticText>
 			<line>
 				<reportElement x="58" y="-53" width="685" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="58" y="0" width="685" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="57" y="0" width="1" height="32"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="743" y="0" width="1" height="32"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="58" y="31" width="685" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="351" y="1" width="1" height="30"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="297" y="0" width="1" height="31"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="405" y="1" width="1" height="30"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="459" y="0" width="1" height="30"/>
+				<reportElement x="459" y="1" width="1" height="30"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="513" y="0" width="1" height="30"/>
+				<reportElement x="513" y="1" width="1" height="30"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<staticText>
 				<reportElement x="518" y="2" width="31" height="13"/>
@@ -684,6 +720,9 @@ limit $P{linhas}
 			</staticText>
 			<line>
 				<reportElement x="553" y="1" width="1" height="30"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<staticText>
 				<reportElement x="620" y="15" width="27" height="13"/>
@@ -701,9 +740,15 @@ limit $P{linhas}
 			</staticText>
 			<line>
 				<reportElement x="613" y="1" width="1" height="30"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="651" y="0" width="1" height="31"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
 				<reportElement x="323" y="-49" width="75" height="13"/>
@@ -732,7 +777,7 @@ limit $P{linhas}
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="17" splitType="Stretch">
+		<band height="16" splitType="Stretch">
 			<rectangle>
 				<reportElement mode="Opaque" x="62" y="0" width="679" height="16" forecolor="#FFFFFF" backcolor="#F2F1F0">
 					<printWhenExpression><![CDATA[new Boolean(($V{COLUMN_COUNT} % 2) == 1)]]></printWhenExpression>
@@ -746,49 +791,94 @@ limit $P{linhas}
 				<textFieldExpression><![CDATA[$F{nome_aluno}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="57" y="0" width="1" height="15"/>
+				<reportElement x="57" y="-1" width="1" height="16"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="58" y="15" width="685" height="1"/>
+				<reportElement x="58" y="15" width="686" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="743" y="0" width="1" height="15"/>
+				<reportElement x="743" y="-1" width="1" height="16"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="297" y="0" width="1" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="351" y="0" width="1" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="335" y="0" width="1" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="390" y="0" width="1" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="405" y="0" width="1" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="443" y="0" width="1" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="459" y="0" width="1" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="497" y="0" width="1" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="513" y="0" width="1" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="553" y="0" width="1" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="613" y="0" width="1" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<line>
 				<reportElement x="651" y="0" width="1" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
 				<reportElement x="301" y="1" width="31" height="13"/>
@@ -912,10 +1002,10 @@ limit $P{linhas}
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="5" splitType="Stretch"/>
+		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="6" splitType="Stretch"/>
+		<band height="4" splitType="Stretch"/>
 	</pageFooter>
 	<summary>
 		<band height="5" splitType="Stretch"/>
