@@ -49,8 +49,8 @@ class RemoteReportJasperFactory extends RemoteReportFactory
                                            $args = $args);
 
       header('Content-type: application/pdf');
-      //header("Content-Disposition: inline; filename={$templateName}.pdf");
-      header("Content-Disposition: attachment; filename={$templateName}.pdf");
+      //header("Content-Disposition: attachment; filename={$templateName}.pdf");
+      header("Content-Disposition: inline; filename={$templateName}.pdf");
 
       return base64_decode($result['report']);
   }
