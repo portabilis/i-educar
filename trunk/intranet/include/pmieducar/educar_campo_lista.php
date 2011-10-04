@@ -567,8 +567,12 @@ if ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario )
 		{
 			var campoEscola = document.getElementById('ref_ref_cod_escola');
 		}
-		campoEscola.disabled = true;
-		campoEscola.options[0].text = 'Carregando escolas';
+
+    if (campoEscola)
+    {
+  		campoEscola.disabled = true;
+  		campoEscola.options[0].text = 'Carregando escolas';
+    }
 
 		var xml = new ajax( atualizaLstEscola );
 		xml.envia( "educar_escola_xml2.php?ins="+campoInstituicao );
@@ -584,8 +588,12 @@ if ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario )
 		{
 			var campoEscola = document.getElementById('ref_ref_cod_escola');
 		}
-		campoEscola.length = 1;
-		campoEscola.options[0].text = 'Selecione uma escola';
+
+    if (campoEscola)
+    {
+		  campoEscola.length = 1;
+  		campoEscola.options[0].text = 'Selecione uma escola';
+    }
 
 		var escolas = xml.getElementsByTagName( "escola" );
 		if(escolas.length)
