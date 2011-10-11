@@ -121,6 +121,9 @@ class Report extends clsCadastro
 
   function addArg($name, $value)
   {
+    if (is_string($value))
+      $value = utf8_encode($value);
+
     $this->args[$name] = $value;
   }
 
