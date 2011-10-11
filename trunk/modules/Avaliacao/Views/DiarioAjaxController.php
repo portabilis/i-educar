@@ -37,6 +37,8 @@ require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
 require_once 'Avaliacao/Service/Boletim.php';
 require_once 'App/Model/MatriculaSituacao.php';
 require_once 'RegraAvaliacao/Model/TipoPresenca.php';
+require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
+require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
 
 class DiarioAjaxController extends Core_Controller_Page_EditController
 {
@@ -47,64 +49,231 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   protected $_deleteOption  = FALSE;
   protected $_titulo   = '';
 
-  protected function validadeParams()
+
+  protected function validatesPresenceOf(&$value, $name, $raiseExceptionOnEmpty = false, $msg = '')
   {
-  
-    $expectedAtts = array('nota', 'nota_exame', 'falta', 'parecer');
-    $msgError = '';
+    if (! isset($value) || empty($value))
+    {
+      $msg = empty($msg) ? "É necessário receber uma variavel '$name'" : $msg;
+      $this->appendMsg($msg);
 
-    #TODO verificar se usuário logado tem permissão para alterar / criar nota
-    if (! $this->getSession()->id_pessoa)
-    {
-      $msgError = "Usuário não logado";
-    }
-    elseif(! isset($this->getRequest()->att))
-    {
-      $msgError = "É necessario receber um atributo 'att'";
-    }
-    elseif(! in_array($this->getRequest()->att, $expectedAtts))
-    {
-      $msgError = "Valor recebido inválido para o atributo 'att'";
-    }
+      if ($raiseExceptionOnEmpty)
+         throw new Exception($msg);
 
-    if($msgError)
-    {
-      $this->AppendMsg($msgError);
       return false;
     }
-    return true; 
+    return true;
   }
 
-
-  protected function setService()
+  protected function validatesValueInSetOf($value, $setExpectedValues, $name, $raiseExceptionOnError = false, $msg = '')
   {
-    try
+    if (! in_array($value, $setExpectedValues))
     {
-      $this->service = new Avaliacao_Service_Boletim(array(
-          'matricula' => $this->getRequest()->matricula,
-          'usuario'   => $this->getSession()->id_pessoa
-      ));
-    }
-    catch (Exception $e)
-    {
-      $this->AppendMsg('Exception: ' . $e->getMessage(), $decode_to_utf8  = False);
+      $msg = empty($msg) ? "Valor recebido na variavel '$name' é invalido" : $msg;
+      $this->appendMsg($msg);
+
+      if ($raiseExceptionOnError)
+         throw new Exception($msg);
+
       return false;
     }
     return true;
   }
 
 
-  protected function changeNota()
+  protected function requiresLogin($raiseExceptionOnEmpty)
   {
+    #TODO verificar se usuário logado tem permissão para alterar / criar nota
+    return $this->validatesPresenceOf($this->getSession()->id_pessoa, '', $raiseExceptionOnEmpty, 'Usuário deve estar logado');
+  }
 
-    #TODO se nota for vaziu, deletar
+  protected function validatesPresenceOfInstituicaoId($raiseExceptionOnEmpty)
+  {
+    return $this->validatesPresenceOf($this->getRequest()->instituicao_id, 'instituicao_id', $raiseExceptionOnEmpty);
+  }
 
-    $nota = new Avaliacao_Model_NotaComponente(array(
-      'componenteCurricular' => $this->getRequest()->componente_curricular,
-      'nota' => urldecode($this->getRequest()->att_value),
-      'etapa' => $this->getRequest()->etapa
-    ));
-    $this->service->addNota($nota);
+  protected function validatesPresenceOfEscolaId($raiseExceptionOnEmpty)
+  {
+    $this->validatesPresenceOf($this->getRequest()->escola_id, 'escola_id', $raiseExceptionOnEmpty);
+  }
+
+  protected function validatesPresenceOfCursoId($raiseExceptionOnEmpty)
+  {
+    $this->validatesPresenceOf($this->getRequest()->curso_id, 'curso_id', $raiseExceptionOnEmpty);
+  }
+
+  protected function validatesPresenceOfSerieId($raiseExceptionOnEmpty)
+  {
+    $this->validatesPresenceOf($this->getRequest()->serie_id, 'serie_id', $raiseExceptionOnEmpty);
+  }
+
+  protected function validatesPresenceOfTurmaId($raiseExceptionOnEmpty)
+  {
+    $this->validatesPresenceOf($this->getRequest()->turma_id, 'turma_id', $raiseExceptionOnEmpty);
+  }
+
+  protected function validatesPresenceOfAnoEscolar($raiseExceptionOnEmpty)
+  {
+    $this->validatesPresenceOf($this->getRequest()->ano_escolar, 'ano_escolar', $raiseExceptionOnEmpty);
+  }
+
+  protected function validatesPresenceOfAlunoId($raiseExceptionOnEmpty)
+  {
+    $this->validatesPresenceOf($this->getRequest()->aluno_id, 'aluno_id', $raiseExceptionOnEmpty);
+  }
+
+  protected function validatesPresenceOfMatriculaId($raiseExceptionOnEmpty)
+  {
+    $this->validatesPresenceOf($this->getRequest()->matricula_id, 'matricula_id', $raiseExceptionOnEmpty);
+  }
+
+  protected function validatesPresenceOfEtapa($raiseExceptionOnEmpty)
+  {
+    $this->validatesPresenceOf($this->getRequest()->etapa, 'etapa', $raiseExceptionOnEmpty);
+  }
+
+  protected function validatesPresenceOfAttValue($raiseExceptionOnEmpty)
+  {
+    $this->validatesPresenceOf($this->getRequest()->att_value, 'att_value', $raiseExceptionOnEmpty);
+  }
+
+  protected function validatesPresenceAndValueInSetOfAtt($raiseExceptionOnError)
+  {
+    $result = $this->validatesPresenceOf($this->getRequest()->att, 'att', $raiseExceptionOnError);
+
+    if ($result)
+    {
+      $expectedAtts = array('nota', 'nota_exame', 'falta', 'parecer', 'matriculas');
+      $result = $this->validatesValueInSetOf($this->getRequest()->att, $expectedAtts, 'att', $raiseExceptionOnEmpty);
+    }
+    return $result;
+  }
+
+  protected function validatesPresenceAndValueInSetOfOper($raiseExceptionOnError)
+  {
+    $result = $this->validatesPresenceOf($this->getRequest()->oper, 'oper', $raiseExceptionOnError);
+
+    if ($result)
+    {
+      $expectedOpers = array('post', 'get', 'delete');
+      $result = $this->validatesValueInSetOf($this->getRequest()->oper, $expectedOpers, 'oper', $raiseExceptionOnEmpty);
+    }
+    return $result;
+  }
+
+  /* esta funcao só pode ser chamada após setar $this->getService() */
+  protected function validatesPresenceOfComponenteCurricularId($raiseExceptionOnEmpty)
+  {
+    return $this->validatesPresenceOf($this->getRequest()->componente_curricular_id, 'componente_curricular_id', $raiseExceptionOnEmpty);
+  }
+
+  protected function canAcceptRequest()
+  {
+    try {
+      $this->requiresLogin(true);
+      $this->validatesPresenceAndValueInSetOfAtt(true);
+      $this->validatesPresenceAndValueInSetOfOper(true);
+    }
+    catch (Exception $e) {
+      return false;
+    }
+    return true;
+  }
+
+  protected function canGetMatriculas()
+  {
+    try {
+      $this->validatesPresenceOfInstituicaoId(true);
+      $this->validatesPresenceOfEscolaId(true);
+      $this->validatesPresenceOfCursoId(true);
+      $this->validatesPresenceOfSerieId(true);
+      $this->validatesPresenceOfTurmaId(true);
+      $this->validatesPresenceOfAnoEscolar(true);
+      $this->validatesPresenceOfComponenteCurricularId(true);
+      $this->validatesPresenceOfEtapa(true);
+    }
+    catch (Exception $e) {
+      return false;
+    }
+    return true;
+  }
+
+
+  protected function canPost()
+  {
+    try {
+      $this->validatesPresenceOfEtapa(true);
+      $this->validatesPresenceOfAttValue(true);
+    }
+    catch (Exception $e) {
+      return false;
+    }
+    return true;
+  }
+
+  protected function canPostNota()
+  {
+    return $this->canPost();
+  }
+
+
+  protected function canPostFalta()
+  {
+    return $this->canPost();
+  }
+
+
+  protected function canPostParecer()
+  {
+    return $this->canPost();
+  }
+
+
+  protected function canDeleteNota()
+  {
+  }
+
+
+  protected function canDeleteFalta()
+  {
+  }
+
+
+  protected function canDeleteParecer()
+  {
+  }
+
+
+  protected function deleteNota()
+  {
+  }
+
+
+  protected function deleteFalta()
+  {
+  }
+
+
+  protected function deleteParecer()
+  {
+  }
+
+
+  protected function postNota()
+  {
+    if ($this->canPostNota() &&
+        $this->setService() &&
+        $this->validatesPresenceOfComponenteCurricularId(false))
+    {
+      $nota = new Avaliacao_Model_NotaComponente(array(
+        'componenteCurricular' => $this->getRequest()->componente_curricular_id,
+        'nota' => urldecode($this->getRequest()->att_value),
+        'etapa' => $this->getRequest()->etapa
+      ));
+      $this->getService()->addNota($nota);
+      $this->saveService();
+      $this->appendMsg('Nota alterada com sucesso.', 'notice');
+    }
   }
 
 
@@ -124,42 +293,48 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     return new Avaliacao_Model_FaltaGeral(array(
         'quantidade' => $this->getQuantidadeFalta(),
         'etapa' => $this->getRequest()->etapa
-        ));
+    ));
   }
 
 
   protected function getFaltaComponente()
   {
-
     return new Avaliacao_Model_FaltaComponente(array(
-            'componenteCurricular' => $this->getRequest()->componente_curricular,
+            'componenteCurricular' => $this->getRequest()->componente_curricular_id,
             'quantidade' => $this->getQuantidadeFalta(),
             'etapa' => $this->getRequest()->etapa
-          ));
+    ));
   }
 
 
-  protected function changeFalta()
+  protected function postFalta()
   {
 
-    #TODO se falta for vaziu, deletar
+    $canPost = $this->canPostFalta() && $this->setService();
+    if ($canPost && $this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
+      $canPost = $this->validatesPresenceOfComponenteCurricularId(false);
 
-    if ($this->service->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
-      $falta = $this->getFaltaComponente();
-    elseif ($this->service->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL)
-      $falta = $this->getFaltaGeral();
+    if ($canPost)
+    {
+      if ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
+        $falta = $this->getFaltaComponente();
+      elseif ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL)
+        $falta = $this->getFaltaGeral();
 
-    $this->service->addFalta($falta);
+      $this->getService()->addFalta($falta);
+      $this->saveService();
+      $this->appendMsg('Falta alterada com sucesso.', 'notice');
+    }
   }
 
 
   protected function getParecerComponente()
   {
     return new Avaliacao_Model_ParecerDescritivoComponente(array(
-              'componenteCurricular' => $this->getRequest()->componente_curricular,
+              'componenteCurricular' => $this->getRequest()->componente_curricular_id,
               'parecer'  => addslashes($this->getRequest()->att_value),
               'etapa'  => $this->getRequest()->etapa
-            ));
+    ));
   }
 
 
@@ -168,96 +343,318 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     return new Avaliacao_Model_ParecerDescritivoGeral(array(
               'parecer' => addslashes($this->getRequest()->att_value),
               'etapa'   => $this->getRequest()->etapa
-            ));
+    ));
   }
 
 
-  protected function changeParecer()
+  protected function postParecer()
   {
-
-    #TODO se nota for vaziu, deletar
-
-    if ($this->service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM)
+    $canPost = $this->canPostParecer() && $this->setService();
+    if ($canPost && $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM)
     {
-      $this->appendMsg("Não é gravar parecer descritivo, pois a regra de avaliação não utiliza parecer.");
+      $this->appendMsg("Não é possivel gravar o parecer descritivo, pois a regra de avaliação não utiliza parecer.");
+    }
+    elseif($this->getRequest()->etapa != 'An' && ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE || $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL))
+    {
+      $canPost = false;
+      $this->appendMsg("Não é possivel gravar o parecer descritivo, pois é esperado uma etapa 'An' e foi recebido a etapa '{$this->getRequest()->etapa}'.");
+    }
+
+    if ($canPost && ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE || $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE))
+    {
+      $canPost = $this->validatesPresenceOfComponenteCurricularId(false);
+      if ($canPost)
+        $parecer = $this->getParecerComponente();
+    }
+    elseif ($canpost)
+      $parecer = $this->getParecerGeral();
+
+    if ($canPost)
+    {
+      $this->getService()->addParecer($parecer);
+      $this->saveService();
+      $this->appendMsg('Parecer alterado com sucesso.', 'notice');
+    }
+  }
+
+
+  protected function getEtapaParecer()
+  {
+    if($this->getRequest()->etapa != 'An' && ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE || $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL))
+    {
+      $this->appendMsg("Ignorado etapa recebida '{$this->getRequest()->etapa}', utilizando 'An' pois a regra de avaliação é anual.", 'notice');
+      return 'An';
     }
     else
-    {    
-      if ($this->service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE or
-        $this->service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE)
-      {
-        $parecer = $this->getParecerComponente();
-      }
-      else
-      {
-        $parecer = $this->getParecerGeral();
-      }
-
-      $this->service->addParecer($parecer);
-    } 
+      return $this->getRequest()->etapa;
   }
 
 
-  public function Gerar()
+  protected function getSituacaoMatricula($raiseExceptionOnErrors = true, $appendMsgOnErrors = true)
   {
-
-    #error_log("New DiarioAjax request: id_pessoa [{$this->getSession()->id_pessoa}] att [{$this->getRequest()->att}] matricula [{$this->getRequest()->matricula}] componente_curricular [{$this->getRequest()->componente_curricular}] att_value [{$this->getRequest()->att_value}] att_value encoded [" . urldecode($this->getRequest()->att_value) . "] etapa [{$this->getRequest()->etapa}]");
-
-    $this->msgs = array();
-
-    try {
-      if ($this->validadeParams() && $this->setService())
-      {
-        if ($this->getRequest()->att == 'nota' || $this->getRequest()->att == 'nota_exame')
-          $this->changeNota();
-        elseif ($this->getRequest()->att == 'falta')
-          $this->changeFalta();
-        elseif ($this->getRequest()->att == 'parecer')
-          $this->changeParecer();      
-
-        $this->service->save();
+    $service = $this->getService($raiseExceptionOnErrors, $appendMsgOnErrors);
+    $situacao = 'Situação não recuperada';
+    if ($service)
+    {
+      try {
+        $situacao = App_Model_MatriculaSituacao::getInstance()->getValue($service->getSituacaoComponentesCurriculares()->componentesCurriculares[$this->getRequest()->componente_curricular_id]->situacao);
       }
+      catch (Exception $e) {
+        $this->appendMsg("Erro ao recuperar situação matricula: " . $e->getMessage());
+      }
+    }
+    return utf8_encode($situacao);
+  }
+
+
+  protected function getMatriculas()
+  {
+    $etapaParecer = null;
+    $matriculas = array();
+    if ($this->canGetMatriculas())
+    {
+      $alunos = new clsPmieducarMatriculaTurma();
+      $alunos->setOrderby('nome');
+
+      #FIXME pega só a ultima matricula ?
+      #FIXME revisao todos parametros repassados, bool_escola_andamento passar false ?
+      $alunos = $alunos->lista(
+        $this->getRequest()->matricula_id,
+        $this->getRequest()->turma_id,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        1,
+        $this->getRequest()->serie_id,
+        $this->getRequest()->curso_id,
+        $this->getRequest()->escola_id,
+        $this->getRequest()->instituicao_id,
+        $this->getRequest()->aluno_id,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        $this->getRequest()->ano_escolar,
+        NULL,
+        TRUE,
+        NULL,
+        NULL,
+        TRUE,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL
+      );
+      if (! is_array($alunos))
+        $alunos = array();
+
+      $requiredFields = array(
+        array('matricula_id', 'ref_cod_matricula'), 
+        array('nome', 'nome_aluno'),
+      );
+
+      foreach($alunos as $aluno)
+      {
+        $matricula = array();
+        $this->setService($matriculaId = $aluno['ref_cod_matricula']);
+
+        //confere a etapa apenas uma vez, para não repetir a mesma mensagem varias vezes
+        if (is_null($etapaParecer))
+          $etapaParecer = $this->getEtapaParecer();
+
+        $matricula['situacao'] = $this->getSituacaoMatricula($raiseExceptionOnErrors = false);
+        $matricula['nota_atual'] = $this->getNotaAtual();
+        $matricula['falta_atual'] = $this->getFaltaAtual();
+        $matricula['parecer_atual'] = $this->getParecerAtual($etapaParecer);
+
+        foreach($requiredFields as $f)
+          $matricula[$f[0]] = $aluno[$f[1]];
+
+        $matriculas[] = $matricula;
+      }
+    }
+    return $matriculas;
+  }
+
+  protected function getNotaAtual()
+  {
+    $nota = urldecode($this->service->getNotaComponente($this->getRequest()->componente_curricular_id, $this->getRequest()->etapa)->nota);
+    return str_replace(',', '.', $nota);
+  }
+
+  protected function getFaltaAtual()
+  {
+    if ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
+      return $service->getFalta($this->getRequest()->componente_curricular_id, $this->getRequest()->componente_curricular_id)->etapa;
+    elseif ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL)
+      return $this->service->getFalta($this->getRequest()->etapa)->quantidade;
+  }
+
+  protected function getParecerAtual($etapa)
+  {
+    if ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE or
+      $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE)
+    {
+      return utf8_encode($this->service->getParecerDescritivo($etapa, $this->getRequest()->componente_curricular_id));
+    }
+    else
+      return utf8_encode($this->service->getParecerDescritivo($this->getRequest()->etapa));
+  }
+
+  protected function saveService()
+  {
+    try {
+      $this->getService()->save();   
     }
     catch (CoreExt_Service_Exception $e)
     {
       //excecoes ignoradas :( servico lanca excecoes de alertas, que não são exatamente errors.
       error_log('CoreExt_Service_Exception ignorada: ' . $e->getMessage());
     }
+  }
+
+  protected function getService($raiseExceptionOnErrors = false, $appendMsgOnErrors = true)
+  {
+    if (isset($this->service) && ! is_null($this->service))
+      return $this->service;
+
+    $msg = 'Erro ao recuperar serviço boletim: serviço não definido.';
+    if($appendMsgOnErrors)
+      $this->appendMsg($msg);
+
+    if ($raiseExceptionOnErrors)
+      throw new Exception($msg);
+
+    return null;
+  }
+
+  protected function canSetService($validatesPresenceOfMatriculaId = true)
+  {
+    try {
+      $this->requiresLogin(true);
+      if ($validatesPresenceOfMatriculaId)
+        $this->validatesPresenceOfMatriculaId(true);
+    }
     catch (Exception $e) {
-      $this->AppendMsg('Exception: ' . $e->getMessage(), $decode_to_utf8  = False);
+      return false;
+    }
+    return true;
+  }
+
+  protected function setService($matriculaId = null)
+  {
+    if ($this->canSetService($validatesPresenceOfMatriculaId = is_null($matriculaId)))
+    {
+      try {
+
+        if (! $matriculaId)
+          $matriculaId = $this->getRequest()->matricula_id;
+
+        $this->service = new Avaliacao_Service_Boletim(array(
+            'matricula' => $matriculaId,
+            'usuario'   => $this->getSession()->id_pessoa
+        ));
+
+      return true;
+      }
+      catch (Exception $e) {
+        $this->appendMsg('Exception ao instanciar serviço boletim: ' . $e->getMessage(), 'error', $encodeToUtf8 = true);
+      }
+    }
+    return false;
+  }
+
+
+  public function Gerar()
+  {
+
+    $this->msgs = array();
+    $this->response = array();
+
+    if ($this->canAcceptRequest())
+    {
+      try {
+        if ($this->getRequest()->oper == 'get')
+        {
+          if ($this->getRequest()->att == 'matriculas')
+          {
+            $matriculas = $this->getMatriculas();          
+            $this->appendResponse('matriculas', $matriculas);
+          }
+          if ($this->getRequest()->att == 'opcoes-notas')
+          {
+            #TODO
+          }
+          if ($this->getRequest()->att == 'opcoes-faltas')
+          {
+            #TODO
+          }
+        }
+        elseif ($this->getRequest()->oper == 'post')
+        {
+          if ($this->getRequest()->att == 'nota' || $this->getRequest()->att == 'nota_exame')
+            $this->postNota();
+
+          elseif ($this->getRequest()->att == 'falta')
+            $this->postFalta();
+
+          elseif ($this->getRequest()->att == 'parecer')
+            $this->postParecer();        
+        }
+        elseif ($this->getRequest()->oper == 'delete')
+        {
+          #TODO delete
+        }
+      }
+      catch (Exception $e) {
+        $this->appendMsg('Exception: ' . $e->getMessage(), $type = 'error', $encodeToUtf8 = true);
+      }
+    }
+    echo $this->prepareResponse();
+  }
+
+  protected function appendResponse($name, $value)
+  {
+    $this->response[$name] = $value;
+  }
+
+  protected function prepareResponse()
+  {
+    $msgs = array();
+    $this->appendResponse('att', isset($this->getRequest()->att) ? $this->getRequest()->att : '');
+
+    if (isset($this->getRequest()->matricula_id) && 
+              $this->getRequest()->oper != 'get' && 
+              $this->getRequest()->att !== 'matriculas')
+    {
+      $this->appendResponse('matricula', $this->getRequest()->matricula_id);
+      $this->appendResponse('situacao', $this->getSituacaoMatricula($raiseExceptionOnErrors = false, $appendMsgOnErrors = false));
     }
 
-    $situacao = App_Model_MatriculaSituacao::getInstance()->getValue($this->service->getSituacaoComponentesCurriculares()->componentesCurriculares[$this->getRequest()->componente_curricular]->situacao);    
-    $_matricula = $this->getRequest()->matricula;
-
-    echo "<?xml version='1.0' encoding='ISO-8859-1' ?>
-    <status>
-    <errors>{$this->msgsToXml('error')}</errors>
-    <matricula>$_matricula</matricula>
-    <att>{$this->getRequest()->att}</att>
-    <situacao>$situacao</situacao>
-    </status>";
-  }
-
-  protected function appendMsg($msg, $decode_to_utf8 = True)
-  {
-    if ($decode_to_utf8)
-      $msg = utf8_decode($msg);
-    $this->msgs[] = $msg;
-    error_log($msg);
-  }
-
-  protected function msgsToXml($tag = 'msg')
-  {
-    $x = "";
     foreach($this->msgs as $m)
-      $x .= "<$tag>$m</$tag>";
-    return $x;
+      $msgs[] = array('msg' => $m['msg'], 'type' => $m['type']);
+    $this->appendResponse('msgs', $msgs);
+
+    echo json_encode($this->response);
+  }
+
+  protected function appendMsg($msg, $type="error", $encodeToUtf8 = false)
+  {
+    if ($encodeToUtf8)
+      $msg = utf8_encode($msg);
+
+    error_log("$type msg: '$msg'");
+    $this->msgs[] = array('msg' => $msg, 'type' => $type);
   }
 
   public function generate(CoreExt_Controller_Page_Interface $instance)
   {
-    header("Content-type: text/xml");
+    header('Content-type: application/json');
     $instance->Gerar();
   }
 }

@@ -587,9 +587,17 @@ class DiarioController extends Core_Controller_Page_ListController
                 document.getElementById('status_alteracao-matricula:' + matricula).innerHTML = '<span class="error" style="color: red;">Informe pelo menos uma letra.</span>';
               else /* if (attValue.length)*/
               {
+
                 if(! attValue.length)
-                { /* #TODO remover valor se '' && ! confirm('Confirma exclusão ' + att.replace('_', ' ') + '?'))*/
-                  alert('Por favor, selecione um valor válido.');
+                {
+                  if (confirm('Confirma exclusão ' + att.replace('_', ' ') + '?'))
+                  {
+                    alert('Exluir (e selecionar opção em branco e atualizar situação aluno).');
+                  }
+                  else
+                  {
+                    alert('Não exluir, voltar para opção selecionada.');
+                  }
                 }
                 else
                 {
@@ -603,7 +611,10 @@ class DiarioController extends Core_Controller_Page_ListController
 
                   document.getElementById('status_alteracao-matricula:'+matricula).innerHTML = 'Atualizando... <img src="/modules/Avaliacao/Static/images/min-wait.gif"/>';
                   var vars = "att="+att+"&matricula=" + matricula + "&etapa=" + etapa + "&componente_curricular=" + componente_curricular+"&att_value=" + attValue;
-                  //console.log(vars);
+
+                  if (console)
+                    console.log(vars);
+
                   //alert(vars);
                   ajaxReq.send("POST", "/module/Avaliacao/DiarioAjax", handleRequest, "application/x-www-form-urlencoded; charset=UTF-8", vars);
                 }
