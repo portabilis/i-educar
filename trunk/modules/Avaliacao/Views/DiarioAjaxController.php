@@ -94,47 +94,47 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
   protected function validatesPresenceOfEscolaId($raiseExceptionOnEmpty)
   {
-    $this->validatesPresenceOf($this->getRequest()->escola_id, 'escola_id', $raiseExceptionOnEmpty);
+    return $this->validatesPresenceOf($this->getRequest()->escola_id, 'escola_id', $raiseExceptionOnEmpty);
   }
 
   protected function validatesPresenceOfCursoId($raiseExceptionOnEmpty)
   {
-    $this->validatesPresenceOf($this->getRequest()->curso_id, 'curso_id', $raiseExceptionOnEmpty);
+    return $this->validatesPresenceOf($this->getRequest()->curso_id, 'curso_id', $raiseExceptionOnEmpty);
   }
 
   protected function validatesPresenceOfSerieId($raiseExceptionOnEmpty)
   {
-    $this->validatesPresenceOf($this->getRequest()->serie_id, 'serie_id', $raiseExceptionOnEmpty);
+    return $this->validatesPresenceOf($this->getRequest()->serie_id, 'serie_id', $raiseExceptionOnEmpty);
   }
 
   protected function validatesPresenceOfTurmaId($raiseExceptionOnEmpty)
   {
-    $this->validatesPresenceOf($this->getRequest()->turma_id, 'turma_id', $raiseExceptionOnEmpty);
+    return $this->validatesPresenceOf($this->getRequest()->turma_id, 'turma_id', $raiseExceptionOnEmpty);
   }
 
   protected function validatesPresenceOfAnoEscolar($raiseExceptionOnEmpty)
   {
-    $this->validatesPresenceOf($this->getRequest()->ano_escolar, 'ano_escolar', $raiseExceptionOnEmpty);
+    return $this->validatesPresenceOf($this->getRequest()->ano_escolar, 'ano_escolar', $raiseExceptionOnEmpty);
   }
 
   protected function validatesPresenceOfAlunoId($raiseExceptionOnEmpty)
   {
-    $this->validatesPresenceOf($this->getRequest()->aluno_id, 'aluno_id', $raiseExceptionOnEmpty);
+    return $this->validatesPresenceOf($this->getRequest()->aluno_id, 'aluno_id', $raiseExceptionOnEmpty);
   }
 
   protected function validatesPresenceOfMatriculaId($raiseExceptionOnEmpty)
   {
-    $this->validatesPresenceOf($this->getRequest()->matricula_id, 'matricula_id', $raiseExceptionOnEmpty);
+    return $this->validatesPresenceOf($this->getRequest()->matricula_id, 'matricula_id', $raiseExceptionOnEmpty);
   }
 
   protected function validatesPresenceOfEtapa($raiseExceptionOnEmpty)
   {
-    $this->validatesPresenceOf($this->getRequest()->etapa, 'etapa', $raiseExceptionOnEmpty);
+    return $this->validatesPresenceOf($this->getRequest()->etapa, 'etapa', $raiseExceptionOnEmpty);
   }
 
   protected function validatesPresenceOfAttValue($raiseExceptionOnEmpty)
   {
-    $this->validatesPresenceOf($this->getRequest()->att_value, 'att_value', $raiseExceptionOnEmpty);
+    return $this->validatesPresenceOf($this->getRequest()->att_value, 'att_value', $raiseExceptionOnEmpty);
   }
 
   protected function validatesPresenceAndValueInSetOfAtt($raiseExceptionOnError)
@@ -143,7 +143,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
     if ($result)
     {
-      $expectedAtts = array('nota', 'nota_exame', 'falta', 'parecer', 'matriculas');
+      $expectedAtts = array('nota', 'nota_exame', 'falta', 'parecer', 'matriculas', 'opcoes_notas', 'opcoes_faltas');
       $result = $this->validatesValueInSetOf($this->getRequest()->att, $expectedAtts, 'att', $raiseExceptionOnEmpty);
     }
     return $result;
@@ -487,6 +487,8 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     return str_replace(',', '.', $nota);
   }
 
+
+
   protected function getFaltaAtual()
   {
     if ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
@@ -494,6 +496,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     elseif ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL)
       return $this->service->getFalta($this->getRequest()->etapa)->quantidade;
   }
+
 
   protected function getParecerAtual($etapa)
   {
@@ -505,6 +508,40 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     else
       return utf8_encode($this->service->getParecerDescritivo($this->getRequest()->etapa));
   }
+
+
+  protected function getOpcoesFaltas()
+  {
+    $opcoes = array();
+    foreach (range(0, 100, 1) as $f)
+      $opcoes[$f] = $f;
+    return $opcoes;
+  }
+
+
+  protected function canGetOpcoesNotas()
+  {
+    return $this->validatesPresenceOfMatriculaId(false);
+  }  
+
+
+  protected function getOpcoesNotas()
+  {
+    $opcoes = array();
+    if ($this->canGetOpcoesNotas() && $this->setService())
+    {
+      $tabela = $this->getService()->getRegra()->tabelaArredondamento->findTabelaValor();
+      foreach ($tabela as $item)
+      {
+        if ($this->getService()->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA)
+          $opcoes[(string) $item->nome] = (string) $item->nome;
+        else
+          $opcoes[(string) $item->valorMaximo] = $item->nome . ' (' . $item->descricao .  ')';
+      }
+    }
+    return $opcoes;
+  }
+
 
   protected function saveService()
   {
@@ -586,13 +623,15 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
             $matriculas = $this->getMatriculas();          
             $this->appendResponse('matriculas', $matriculas);
           }
-          if ($this->getRequest()->att == 'opcoes-notas')
+          if ($this->getRequest()->att == 'opcoes_notas')
           {
-            #TODO
+            $opcoesNotas = $this->getOpcoesNotas();
+            $this->appendResponse('opcoes_notas', $opcoesNotas);
           }
-          if ($this->getRequest()->att == 'opcoes-faltas')
+          if ($this->getRequest()->att == 'opcoes_faltas')
           {
-            #TODO
+            $opcoesFaltas = $this->getOpcoesFaltas();
+            $this->appendResponse('opcoes_faltas', $opcoesFaltas);
           }
         }
         elseif ($this->getRequest()->oper == 'post')
