@@ -140,9 +140,29 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     return false;
   }
 
+
+/*  protected function validatesValueOfComponenteCurricularForParecer($raiseExceptionOnError)
+  {
+
+    if (($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL || $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL) && $this->validatesPresenceOfComponenteCurricularId(false, false)) {
+      $msg = 'Não deve ser enviado o atributo componente_curricular_id.';
+    }
+    else
+      return true;
+
+    $this->appendMsg($msg);
+
+    if ($raiseExceptionOnEmpty)
+       throw new Exception($msg);
+
+    return false;
+  }
+*/
+
   protected function validatesPresenceOfAttValue($raiseExceptionOnEmpty) {
     return $this->validatesPresenceOf($this->getRequest()->att_value, 'att_value', $raiseExceptionOnEmpty);
   }
+
 
   protected function validatesPresenceAndValueInSetOfAtt($raiseExceptionOnError) {
     $result = $this->validatesPresenceOf($this->getRequest()->att, 'att', $raiseExceptionOnError);
@@ -153,6 +173,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     }
     return $result;
   }
+
 
   protected function validatesPresenceAndValueInSetOfOper($raiseExceptionOnError) {
     $result = $this->validatesPresenceOf($this->getRequest()->oper, 'oper', $raiseExceptionOnError);
@@ -288,22 +309,21 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
   protected function deleteParecer() {
 
-    $canDelete = $this->canDeleteParecer() && $this->setService() && $this->validatesValueOfEtapaForParecer();
+    $canDelete = $this->canDeleteParecer() && $this->setService() && $this->validatesValueOfEtapaForParecer()/* && $this->validatesValueOfComponenteCurricularForParecer()*/;
     if ($canDelete && ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE || $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE))
       $canDelete = $this->validatesPresenceOfComponenteCurricularId(false);
 
     if ($canDelete && $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
       $this->appendMsg("Não é possivel remover o parecer descritivo, pois a regra de avaliação não utiliza parecer.");
     }
-    elseif ($canDelete && ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL || $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL) && $this->validatesPresenceOfComponenteCurricularId(false, false))   {
-      $this->appendMsg('Parecer descritivo não removido, pois o tipo de parecer descritivo é geral, não deve ser enviado o atributo componente_curricular_id.', 'error');
+    elseif ($canDelete && ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL || $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL) && $this->validatesPresenceOfComponenteCurricularId(false, false)) {
+      $this->appendMsg('Não deve ser enviado o atributo componente_curricular_id.', 'error');
     }
-    elseif ($canDelete && ! $this->getParecerAtual($this->getRequest()->etapa)) {
+    elseif ($canDelete && ! $this->getParecerAtual()) {
       $this->appendMsg('Parecer descritivo inexistente ou já removido.', 'notice');
     }
     elseif ($canDelete) {
-      #TODO
-      //$this->getService()->deleteParecer($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id);
+      $this->getService()->deleteParecer($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id);
       $this->saveService();
       $this->appendMsg('Parecer descritivo removido com sucesso.', 'notice');
     }
@@ -390,13 +410,9 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
 
   protected function postParecer() {
-    $canPost = $this->canPostParecer() && $this->setService();
+    $canPost = $this->canPostParecer() && $this->setService() && $this->validatesValueOfEtapaForParecer();
     if ($canPost && $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
       $this->appendMsg("Não é possivel gravar o parecer descritivo, pois a regra de avaliação não utiliza parecer.");
-    }
-    elseif($this->getRequest()->etapa != 'An' && ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE || $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL)) {
-      $canPost = false;
-      $this->appendMsg("Não é possivel gravar o parecer descritivo, pois é esperado uma etapa 'An' e foi recebido a etapa '{$this->getRequest()->etapa}'.");
     }
 
     if ($canPost && ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE || $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE)) {
@@ -431,7 +447,6 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
 
   protected function getMatriculas() {
-    $etapaValidated = false;
     $matriculas = array();
 
     if ($this->canGetMatriculas()) {
@@ -485,18 +500,10 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
         $matricula = array();
         $this->setService($matriculaId = $aluno['ref_cod_matricula']);
 
-        //confere / seta a etapa (precisa do sercice definido) apenas uma vez, para não repetir para cada aluno
-        if (! $etapaValidated)
-        {
-          if (! $this->validatesValueOfEtapaForParecer())
-            break;
-          $etapaValidated = true;
-        }
-
         $matricula['situacao'] = $this->getSituacaoMatricula($raiseExceptionOnErrors = false);
         $matricula['nota_atual'] = $this->getNotaAtual();
         $matricula['falta_atual'] = $this->getFaltaAtual();
-        $matricula['parecer_atual'] = $this->getParecerAtual($validateEtapa = false);
+        $matricula['parecer_atual'] = $this->getParecerAtual();
 
         foreach($requiredFields as $f)
           $matricula[$f[0]] = $aluno[$f[1]];
@@ -523,17 +530,25 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  protected function getParecerAtual($validateEtapa = true)
+  protected function getEtapaParecer()
   {
-    if ($validateEtapa && ! $this->validatesValueOfEtapaForParecer())
-      return 'Parecer não recuperado.';
 
-    if ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE or
-      $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE) {
-      return utf8_encode($this->service->getParecerDescritivo($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id));
+    if($this->getRequest()->etapa != 'An' && ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE || $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL)) {
+      return 'An';
     }
     else
-      return utf8_encode($this->service->getParecerDescritivo($this->getRequest()->etapa));
+      return $this->getRequest()->etapa;
+  }
+
+
+  protected function getParecerAtual()
+  {
+    if ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE or
+      $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE) {
+      return utf8_encode($this->service->getParecerDescritivo($this->getEtapaParecer(), $this->getRequest()->componente_curricular_id));
+    }
+    else
+      return utf8_encode($this->service->getParecerDescritivo($this->getEtapaParecer()));
   }
 
 
