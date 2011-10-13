@@ -50,10 +50,8 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   protected $_titulo   = '';
 
 
-  protected function validatesPresenceOf(&$value, $name, $raiseExceptionOnEmpty = false, $msg = '', $addMsgOnEmpty = true)
-  {
-    if (! isset($value) || empty($value))
-    {
+  protected function validatesPresenceOf(&$value, $name, $raiseExceptionOnEmpty = false, $msg = '', $addMsgOnEmpty = true) {
+    if (! isset($value) || empty($value)) {
       if ($addMsgOnEmpty)
       {
         $msg = empty($msg) ? "É necessário receber uma variavel '$name'" : $msg;
@@ -68,10 +66,8 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     return true;
   }
 
-  protected function validatesValueInSetOf($value, $setExpectedValues, $name, $raiseExceptionOnError = false, $msg = '')
-  {
-    if (! in_array($value, $setExpectedValues))
-    {
+  protected function validatesValueInSetOf($value, $setExpectedValues, $name, $raiseExceptionOnError = false, $msg = '') {
+    if (! in_array($value, $setExpectedValues)) {
       $msg = empty($msg) ? "Valor recebido na variavel '$name' é invalido" : $msg;
       $this->appendMsg($msg);
 
@@ -84,80 +80,84 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  protected function requiresLogin($raiseExceptionOnEmpty)
-  {
+  protected function requiresLogin($raiseExceptionOnEmpty) {
     #TODO verificar se usuário logado tem permissão para alterar / criar nota
     return $this->validatesPresenceOf($this->getSession()->id_pessoa, '', $raiseExceptionOnEmpty, 'Usuário deve estar logado');
   }
 
-  protected function validatesPresenceOfInstituicaoId($raiseExceptionOnEmpty)
-  {
+  protected function validatesPresenceOfInstituicaoId($raiseExceptionOnEmpty) {
     return $this->validatesPresenceOf($this->getRequest()->instituicao_id, 'instituicao_id', $raiseExceptionOnEmpty);
   }
 
-  protected function validatesPresenceOfEscolaId($raiseExceptionOnEmpty)
-  {
+  protected function validatesPresenceOfEscolaId($raiseExceptionOnEmpty) {
     return $this->validatesPresenceOf($this->getRequest()->escola_id, 'escola_id', $raiseExceptionOnEmpty);
   }
 
-  protected function validatesPresenceOfCursoId($raiseExceptionOnEmpty)
-  {
+  protected function validatesPresenceOfCursoId($raiseExceptionOnEmpty) {
     return $this->validatesPresenceOf($this->getRequest()->curso_id, 'curso_id', $raiseExceptionOnEmpty);
   }
 
-  protected function validatesPresenceOfSerieId($raiseExceptionOnEmpty)
-  {
+  protected function validatesPresenceOfSerieId($raiseExceptionOnEmpty) {
     return $this->validatesPresenceOf($this->getRequest()->serie_id, 'serie_id', $raiseExceptionOnEmpty);
   }
 
-  protected function validatesPresenceOfTurmaId($raiseExceptionOnEmpty)
-  {
+  protected function validatesPresenceOfTurmaId($raiseExceptionOnEmpty) {
     return $this->validatesPresenceOf($this->getRequest()->turma_id, 'turma_id', $raiseExceptionOnEmpty);
   }
 
-  protected function validatesPresenceOfAnoEscolar($raiseExceptionOnEmpty)
-  {
+  protected function validatesPresenceOfAnoEscolar($raiseExceptionOnEmpty) {
     return $this->validatesPresenceOf($this->getRequest()->ano_escolar, 'ano_escolar', $raiseExceptionOnEmpty);
   }
 
-  protected function validatesPresenceOfAlunoId($raiseExceptionOnEmpty)
-  {
+  protected function validatesPresenceOfAlunoId($raiseExceptionOnEmpty) {
     return $this->validatesPresenceOf($this->getRequest()->aluno_id, 'aluno_id', $raiseExceptionOnEmpty);
   }
 
-  protected function validatesPresenceOfMatriculaId($raiseExceptionOnEmpty)
-  {
+  protected function validatesPresenceOfMatriculaId($raiseExceptionOnEmpty) {
     return $this->validatesPresenceOf($this->getRequest()->matricula_id, 'matricula_id', $raiseExceptionOnEmpty);
   }
 
-  protected function validatesPresenceOfEtapa($raiseExceptionOnEmpty)
-  {
+  protected function validatesPresenceOfEtapa($raiseExceptionOnEmpty) {
     return $this->validatesPresenceOf($this->getRequest()->etapa, 'etapa', $raiseExceptionOnEmpty);
   }
 
-  protected function validatesPresenceOfAttValue($raiseExceptionOnEmpty)
+  protected function validatesValueOfEtapaForParecer($raiseExceptionOnError)
   {
+    if($this->getRequest()->etapa != 'An' && ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE || $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL)) {
+      $msg = "Valor inválido para o atributo 'etapa', é esperado o valor 'An' e foi recebido '{$this->getRequest()->etapa}'.";
+    }
+    elseif($this->getRequest()->etapa == 'An' && ($this->getService()->getRegra()->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE && $this->getService()->getRegra()->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL)) {
+      $msg = "Valor inválido para o atributo 'etapa', é esperado o valor diferente de 'An'.";
+    }
+    else
+      return true;
+
+    $this->appendMsg($msg);
+
+    if ($raiseExceptionOnEmpty)
+       throw new Exception($msg);
+
+    return false;
+  }
+
+  protected function validatesPresenceOfAttValue($raiseExceptionOnEmpty) {
     return $this->validatesPresenceOf($this->getRequest()->att_value, 'att_value', $raiseExceptionOnEmpty);
   }
 
-  protected function validatesPresenceAndValueInSetOfAtt($raiseExceptionOnError)
-  {
+  protected function validatesPresenceAndValueInSetOfAtt($raiseExceptionOnError) {
     $result = $this->validatesPresenceOf($this->getRequest()->att, 'att', $raiseExceptionOnError);
 
-    if ($result)
-    {
+    if ($result) {
       $expectedAtts = array('nota', 'nota_exame', 'falta', 'parecer', 'matriculas', 'opcoes_notas', 'opcoes_faltas');
       $result = $this->validatesValueInSetOf($this->getRequest()->att, $expectedAtts, 'att', $raiseExceptionOnEmpty);
     }
     return $result;
   }
 
-  protected function validatesPresenceAndValueInSetOfOper($raiseExceptionOnError)
-  {
+  protected function validatesPresenceAndValueInSetOfOper($raiseExceptionOnError) {
     $result = $this->validatesPresenceOf($this->getRequest()->oper, 'oper', $raiseExceptionOnError);
 
-    if ($result)
-    {
+    if ($result) {
       $expectedOpers = array('post', 'get', 'delete');
       $result = $this->validatesValueInSetOf($this->getRequest()->oper, $expectedOpers, 'oper', $raiseExceptionOnEmpty);
     }
@@ -183,8 +183,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     return true;
   }
 
-  protected function canGetMatriculas()
-  {
+  protected function canGetMatriculas() {
     try {
       $this->validatesPresenceOfInstituicaoId(true);
       $this->validatesPresenceOfEscolaId(true);
@@ -202,8 +201,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  protected function canPost()
-  {
+  protected function canPost() {
     try {
       $this->validatesPresenceOfEtapa(true);
       $this->validatesPresenceOfAttValue(true);
@@ -214,25 +212,21 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     return true;
   }
 
-  protected function canPostNota()
-  {
+  protected function canPostNota() {
     return $this->canPost();
   }
 
 
-  protected function canPostFalta()
-  {
+  protected function canPostFalta() {
     return $this->canPost();
   }
 
 
-  protected function canPostParecer()
-  {
+  protected function canPostParecer() {
     return $this->canPost();
   }
 
-  protected function canDelete()
-  {
+  protected function canDelete() {
     try {
       $this->validatesPresenceOfEtapa(true);
     }
@@ -243,30 +237,25 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  protected function canDeleteNota()
-  {
+  protected function canDeleteNota() {
     return $this->canDelete();
   }
 
 
-  protected function canDeleteFalta()
-  {
+  protected function canDeleteFalta() {
     return $this->canDelete();
   }
 
 
-  protected function canDeleteParecer()
-  {
+  protected function canDeleteParecer() {
     return $this->canDelete();
   }
 
 
-  protected function deleteNota()
-  {
+  protected function deleteNota() {
     if ($this->canDeleteNota() &&
         $this->setService() &&
-        $this->validatesPresenceOfComponenteCurricularId(false))
-    {
+        $this->validatesPresenceOfComponenteCurricularId(false)) {
       if (! $this->getNotaAtual())
         $this->appendMsg('Nota inexistente ou já removida.', 'notice');
       else
@@ -279,43 +268,52 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  protected function deleteFalta()
-  {
-
+  protected function deleteFalta() {
     $canDelete = $this->canDeleteFalta() && $this->setService();
     if ($canDelete && $this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
       $canDelete = $this->validatesPresenceOfComponenteCurricularId(false);
 
-    if ($canDelete)
-    {
-      if ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL && $this->validatesPresenceOfComponenteCurricularId(false, false))  
-      {
-        $this->appendMsg('Falta não removida, pois o tipo de presença é geral, não deve ser enviado o atributo componente_curricular_id.', 'error');
-      }
-      elseif (! $this->getFaltaAtual())
-        $this->appendMsg('Falta inexistente ou já removida.', 'notice');
-      else
-      {
-        #TODO verificar se deve ser enviado o componente curricular
-        $this->getService()->deleteFalta($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id);
-        $this->saveService();
-        $this->appendMsg('Falta removida com sucesso.', 'notice');
-      }
+    if ($canDelete && $this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL && $this->validatesPresenceOfComponenteCurricularId(false, false))   {
+      $this->appendMsg('Falta não removida, pois o tipo de presença é geral, não deve ser enviado o atributo componente_curricular_id.', 'error');
+    }
+    elseif ($canDelete && ! $this->getFaltaAtual()) {
+      $this->appendMsg('Falta inexistente ou já removida.', 'notice');
+    }
+    elseif ($canDelete) {
+      $this->getService()->deleteFalta($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id);
+      $this->saveService();
+      $this->appendMsg('Falta removida com sucesso.', 'notice');
+    }
+  }
+
+  protected function deleteParecer() {
+
+    $canDelete = $this->canDeleteParecer() && $this->setService() && $this->validatesValueOfEtapaForParecer();
+    if ($canDelete && ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE || $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE))
+      $canDelete = $this->validatesPresenceOfComponenteCurricularId(false);
+
+    if ($canDelete && $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
+      $this->appendMsg("Não é possivel remover o parecer descritivo, pois a regra de avaliação não utiliza parecer.");
+    }
+    elseif ($canDelete && ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL || $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL) && $this->validatesPresenceOfComponenteCurricularId(false, false))   {
+      $this->appendMsg('Parecer descritivo não removido, pois o tipo de parecer descritivo é geral, não deve ser enviado o atributo componente_curricular_id.', 'error');
+    }
+    elseif ($canDelete && ! $this->getParecerAtual($this->getRequest()->etapa)) {
+      $this->appendMsg('Parecer descritivo inexistente ou já removido.', 'notice');
+    }
+    elseif ($canDelete) {
+      #TODO
+      //$this->getService()->deleteParecer($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id);
+      $this->saveService();
+      $this->appendMsg('Parecer descritivo removido com sucesso.', 'notice');
     }
   }
 
 
-  protected function deleteParecer()
-  {
-  }
-
-
-  protected function postNota()
-  {
+  protected function postNota() {
     if ($this->canPostNota() &&
         $this->setService() &&
-        $this->validatesPresenceOfComponenteCurricularId(false))
-    {
+        $this->validatesPresenceOfComponenteCurricularId(false)) {
       $nota = new Avaliacao_Model_NotaComponente(array(
         'componenteCurricular' => $this->getRequest()->componente_curricular_id,
         'nota' => urldecode($this->getRequest()->att_value),
@@ -328,8 +326,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  protected function getQuantidadeFalta()
-  {
+  protected function getQuantidadeFalta() {
     $quantidade = (int) $this->getRequest()->att_value;
 
     if ($quantidade < 0)
@@ -339,8 +336,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  protected function getFaltaGeral()
-  {
+  protected function getFaltaGeral() {
     return new Avaliacao_Model_FaltaGeral(array(
         'quantidade' => $this->getQuantidadeFalta(),
         'etapa' => $this->getRequest()->etapa
@@ -348,8 +344,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  protected function getFaltaComponente()
-  {
+  protected function getFaltaComponente() {
     return new Avaliacao_Model_FaltaComponente(array(
             'componenteCurricular' => $this->getRequest()->componente_curricular_id,
             'quantidade' => $this->getQuantidadeFalta(),
@@ -358,15 +353,13 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  protected function postFalta()
-  {
+  protected function postFalta() {
 
     $canPost = $this->canPostFalta() && $this->setService();
     if ($canPost && $this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
       $canPost = $this->validatesPresenceOfComponenteCurricularId(false);
 
-    if ($canPost)
-    {
+    if ($canPost) {
       if ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
         $falta = $this->getFaltaComponente();
       elseif ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL)
@@ -379,8 +372,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  protected function getParecerComponente()
-  {
+  protected function getParecerComponente() {
     return new Avaliacao_Model_ParecerDescritivoComponente(array(
               'componenteCurricular' => $this->getRequest()->componente_curricular_id,
               'parecer'  => addslashes($this->getRequest()->att_value),
@@ -389,8 +381,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  protected function getParecerGeral()
-  {
+  protected function getParecerGeral() {
     return new Avaliacao_Model_ParecerDescritivoGeral(array(
               'parecer' => addslashes($this->getRequest()->att_value),
               'etapa'   => $this->getRequest()->etapa
@@ -398,21 +389,17 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  protected function postParecer()
-  {
+  protected function postParecer() {
     $canPost = $this->canPostParecer() && $this->setService();
-    if ($canPost && $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM)
-    {
+    if ($canPost && $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
       $this->appendMsg("Não é possivel gravar o parecer descritivo, pois a regra de avaliação não utiliza parecer.");
     }
-    elseif($this->getRequest()->etapa != 'An' && ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE || $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL))
-    {
+    elseif($this->getRequest()->etapa != 'An' && ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE || $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL)) {
       $canPost = false;
       $this->appendMsg("Não é possivel gravar o parecer descritivo, pois é esperado uma etapa 'An' e foi recebido a etapa '{$this->getRequest()->etapa}'.");
     }
 
-    if ($canPost && ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE || $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE))
-    {
+    if ($canPost && ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE || $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE)) {
       $canPost = $this->validatesPresenceOfComponenteCurricularId(false);
       if ($canPost)
         $parecer = $this->getParecerComponente();
@@ -420,8 +407,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     elseif ($canpost)
       $parecer = $this->getParecerGeral();
 
-    if ($canPost)
-    {
+    if ($canPost) {
       $this->getService()->addParecer($parecer);
       $this->saveService();
       $this->appendMsg('Parecer alterado com sucesso.', 'notice');
@@ -429,24 +415,10 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  protected function getEtapaParecer()
-  {
-    if($this->getRequest()->etapa != 'An' && ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE || $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL))
-    {
-      $this->appendMsg("Ignorado etapa recebida '{$this->getRequest()->etapa}', utilizando 'An' pois a regra de avaliação é anual.", 'notice');
-      return 'An';
-    }
-    else
-      return $this->getRequest()->etapa;
-  }
-
-
-  protected function getSituacaoMatricula($raiseExceptionOnErrors = true, $appendMsgOnErrors = true)
-  {
+  protected function getSituacaoMatricula($raiseExceptionOnErrors = true, $appendMsgOnErrors = true) {
     $service = $this->getService($raiseExceptionOnErrors, $appendMsgOnErrors);
     $situacao = 'Situação não recuperada';
-    if ($service)
-    {
+    if ($service) {
       try {
         $situacao = App_Model_MatriculaSituacao::getInstance()->getValue($service->getSituacaoComponentesCurriculares()->componentesCurriculares[$this->getRequest()->componente_curricular_id]->situacao);
       }
@@ -458,12 +430,11 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  protected function getMatriculas()
-  {
-    $etapaParecer = null;
+  protected function getMatriculas() {
+    $etapaValidated = false;
     $matriculas = array();
-    if ($this->canGetMatriculas())
-    {
+
+    if ($this->canGetMatriculas()) {
       $alunos = new clsPmieducarMatriculaTurma();
       $alunos->setOrderby('nome');
 
@@ -514,14 +485,18 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
         $matricula = array();
         $this->setService($matriculaId = $aluno['ref_cod_matricula']);
 
-        //confere a etapa apenas uma vez, para não repetir a mesma mensagem varias vezes
-        if (is_null($etapaParecer))
-          $etapaParecer = $this->getEtapaParecer();
+        //confere / seta a etapa (precisa do sercice definido) apenas uma vez, para não repetir para cada aluno
+        if (! $etapaValidated)
+        {
+          if (! $this->validatesValueOfEtapaForParecer())
+            break;
+          $etapaValidated = true;
+        }
 
         $matricula['situacao'] = $this->getSituacaoMatricula($raiseExceptionOnErrors = false);
         $matricula['nota_atual'] = $this->getNotaAtual();
         $matricula['falta_atual'] = $this->getFaltaAtual();
-        $matricula['parecer_atual'] = $this->getParecerAtual($etapaParecer);
+        $matricula['parecer_atual'] = $this->getParecerAtual($validateEtapa = false);
 
         foreach($requiredFields as $f)
           $matricula[$f[0]] = $aluno[$f[1]];
@@ -532,8 +507,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     return $matriculas;
   }
 
-  protected function getNotaAtual()
-  {
+  protected function getNotaAtual() {
     $nota = urldecode($this->service->getNotaComponente($this->getRequest()->componente_curricular_id, $this->getRequest()->etapa)->nota);
     return str_replace(',', '.', $nota);
   }
@@ -549,12 +523,14 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  protected function getParecerAtual($etapa)
+  protected function getParecerAtual($validateEtapa = true)
   {
+    if ($validateEtapa && ! $this->validatesValueOfEtapaForParecer())
+      return 'Parecer não recuperado.';
+
     if ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE or
-      $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE)
-    {
-      return utf8_encode($this->service->getParecerDescritivo($etapa, $this->getRequest()->componente_curricular_id));
+      $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE) {
+      return utf8_encode($this->service->getParecerDescritivo($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id));
     }
     else
       return utf8_encode($this->service->getParecerDescritivo($this->getRequest()->etapa));
@@ -579,8 +555,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   protected function getOpcoesNotas()
   {
     $opcoes = array();
-    if ($this->canGetOpcoesNotas() && $this->setService())
-    {
+    if ($this->canGetOpcoesNotas() && $this->setService()) {
       $tabela = $this->getService()->getRegra()->tabelaArredondamento->findTabelaValor();
       foreach ($tabela as $item)
       {
@@ -599,15 +574,13 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     try {
       $this->getService()->save();   
     }
-    catch (CoreExt_Service_Exception $e)
-    {
+    catch (CoreExt_Service_Exception $e) {
       //excecoes ignoradas :( servico lanca excecoes de alertas, que não são exatamente errors.
       error_log('CoreExt_Service_Exception ignorada: ' . $e->getMessage());
     }
   }
 
-  protected function getService($raiseExceptionOnErrors = false, $appendMsgOnErrors = true)
-  {
+  protected function getService($raiseExceptionOnErrors = false, $appendMsgOnErrors = true) {
     if (isset($this->service) && ! is_null($this->service))
       return $this->service;
 
@@ -634,10 +607,8 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     return true;
   }
 
-  protected function setService($matriculaId = null)
-  {
-    if ($this->canSetService($validatesPresenceOfMatriculaId = is_null($matriculaId)))
-    {
+  protected function setService($matriculaId = null) {
+    if ($this->canSetService($validatesPresenceOfMatriculaId = is_null($matriculaId))) {
       try {
 
         if (! $matriculaId)
@@ -658,14 +629,12 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  public function Gerar()
-  {
+  public function Gerar() {
 
     $this->msgs = array();
     $this->response = array();
 
-    if ($this->canAcceptRequest())
-    {
+    if ($this->canAcceptRequest()) {
       try {
         if ($this->getRequest()->oper == 'get')
         {
@@ -715,13 +684,11 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     echo $this->prepareResponse();
   }
 
-  protected function appendResponse($name, $value)
-  {
+  protected function appendResponse($name, $value) {
     $this->response[$name] = $value;
   }
 
-  protected function prepareResponse()
-  {
+  protected function prepareResponse() {
     $msgs = array();
     $this->appendResponse('att', isset($this->getRequest()->att) ? $this->getRequest()->att : '');
 
@@ -729,8 +696,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     if (isset($this->getRequest()->matricula_id) && 
               $this->getRequest()->oper != 'delete' &&
               $this->getRequest()->oper != 'get' && 
-              $this->getRequest()->att !== 'matriculas')
-    {
+              $this->getRequest()->att !== 'matriculas') {
       $this->appendResponse('matricula', $this->getRequest()->matricula_id);
       $this->appendResponse('situacao', $this->getSituacaoMatricula($raiseExceptionOnErrors = false, $appendMsgOnErrors = false));
     }
@@ -742,8 +708,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     echo json_encode($this->response);
   }
 
-  protected function appendMsg($msg, $type="error", $encodeToUtf8 = false)
-  {
+  protected function appendMsg($msg, $type="error", $encodeToUtf8 = false) {
     if ($encodeToUtf8)
       $msg = utf8_encode($msg);
 
@@ -751,8 +716,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     $this->msgs[] = array('msg' => $msg, 'type' => $type);
   }
 
-  public function generate(CoreExt_Controller_Page_Interface $instance)
-  {
+  public function generate(CoreExt_Controller_Page_Interface $instance) {
     header('Content-type: application/json');
     $instance->Gerar();
   }
