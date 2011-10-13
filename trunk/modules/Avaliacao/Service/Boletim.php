@@ -2486,7 +2486,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return App_Model_Matricula::atualizaMatricula($matricula, $usuario, $promover);
   }
 
-  public function deleteNota($ComponenteCurricularId, $etapa)
+  public function deleteNota($etapa, $ComponenteCurricularId)
   {
     //#TODO verificar outra forma de calcular media sem ter que zerar nota antes
     //zerado nota, antes de deletar, para recalcular media
@@ -2505,6 +2505,14 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     $nota = $this->getNotaComponente($ComponenteCurricularId, $etapa);
     $this->getNotaComponenteDataMapper()->delete($nota);
+
+    return $this;
+  }
+
+  public function deleteFalta($etapa, $ComponenteCurricularId)
+  {
+    $nota = $this->getFalta($etapa, $ComponenteCurricularId);
+    $this->getFaltaAbstractDataMapper()->delete($nota);
 
     return $this;
   }

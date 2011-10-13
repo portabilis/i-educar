@@ -50,12 +50,15 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   protected $_titulo   = '';
 
 
-  protected function validatesPresenceOf(&$value, $name, $raiseExceptionOnEmpty = false, $msg = '')
+  protected function validatesPresenceOf(&$value, $name, $raiseExceptionOnEmpty = false, $msg = '', $addMsgOnEmpty = true)
   {
     if (! isset($value) || empty($value))
     {
-      $msg = empty($msg) ? "É necessário receber uma variavel '$name'" : $msg;
-      $this->appendMsg($msg);
+      if ($addMsgOnEmpty)
+      {
+        $msg = empty($msg) ? "É necessário receber uma variavel '$name'" : $msg;
+        $this->appendMsg($msg);
+      }
 
       if ($raiseExceptionOnEmpty)
          throw new Exception($msg);
@@ -162,9 +165,9 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
   /* esta funcao só pode ser chamada após setar $this->getService() */
-  protected function validatesPresenceOfComponenteCurricularId($raiseExceptionOnEmpty)
+  protected function validatesPresenceOfComponenteCurricularId($raiseExceptionOnEmpty, $addMsgOnEmpty = true)
   {
-    return $this->validatesPresenceOf($this->getRequest()->componente_curricular_id, 'componente_curricular_id', $raiseExceptionOnEmpty);
+    return $this->validatesPresenceOf($this->getRequest()->componente_curricular_id, 'componente_curricular_id', $raiseExceptionOnEmpty, $msg = '', $addMsgOnEmpty);
   }
 
   protected function canAcceptRequest()
@@ -268,7 +271,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
         $this->appendMsg('Nota inexistente ou já removida.', 'notice');
       else
       {
-        $this->getService()->deleteNota($this->getRequest()->componente_curricular_id, $this->getRequest()->etapa);
+        $this->getService()->deleteNota($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id);
         $this->saveService();
         $this->appendMsg('Nota removida com sucesso.', 'notice');
       }
@@ -278,6 +281,27 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
   protected function deleteFalta()
   {
+
+    $canDelete = $this->canDeleteFalta() && $this->setService();
+    if ($canDelete && $this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
+      $canDelete = $this->validatesPresenceOfComponenteCurricularId(false);
+
+    if ($canDelete)
+    {
+      if ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL && $this->validatesPresenceOfComponenteCurricularId(false, false))  
+      {
+        $this->appendMsg('Falta não removida, pois o tipo de presença é geral, não deve ser enviado o atributo componente_curricular_id.', 'error');
+      }
+      elseif (! $this->getFaltaAtual())
+        $this->appendMsg('Falta inexistente ou já removida.', 'notice');
+      else
+      {
+        #TODO verificar se deve ser enviado o componente curricular
+        $this->getService()->deleteFalta($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id);
+        $this->saveService();
+        $this->appendMsg('Falta removida com sucesso.', 'notice');
+      }
+    }
   }
 
 
