@@ -2485,4 +2485,19 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   {
     return App_Model_Matricula::atualizaMatricula($matricula, $usuario, $promover);
   }
+
+  public function deleteNota($ComponenteCurricularId, $etapa)
+  {
+    $nota = $this->getNotaComponente($ComponenteCurricularId, $etapa);
+    $this->getNotaComponenteDataMapper()->delete($nota);
+
+    #TODO remover nota do array de notas
+    //$this->_notas[$key] = $nota;
+
+    // Atualiza as médias
+    $this->_updateNotaComponenteMedia();
+
+    return $this;
+  }
+
 }

@@ -228,24 +228,46 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     return $this->canPost();
   }
 
+  protected function canDelete()
+  {
+    try {
+      $this->validatesPresenceOfEtapa(true);
+    }
+    catch (Exception $e) {
+      return false;
+    }
+    return true;
+  }
+
 
   protected function canDeleteNota()
   {
+    return $this->canDelete();
   }
 
 
   protected function canDeleteFalta()
   {
+    return $this->canDelete();
   }
 
 
   protected function canDeleteParecer()
   {
+    return $this->canDelete();
   }
 
 
   protected function deleteNota()
   {
+    if ($this->canDeleteNota() &&
+        $this->setService() &&
+        $this->validatesPresenceOfComponenteCurricularId(false))
+    {
+      $this->getService()->deleteNota($this->getRequest()->componente_curricular_id, $this->getRequest()->etapa);
+      $this->saveService();
+      $this->appendMsg('Nota removida com sucesso.', 'notice');
+    }
   }
 
 
@@ -647,7 +669,14 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
         }
         elseif ($this->getRequest()->oper == 'delete')
         {
-          #TODO delete
+          if ($this->getRequest()->att == 'nota' || $this->getRequest()->att == 'nota_exame')
+            $this->deleteNota();
+
+          elseif ($this->getRequest()->att == 'falta')
+            $this->deleteFalta();
+
+          elseif ($this->getRequest()->att == 'parecer')
+            $this->deleteParecer();  
         }
       }
       catch (Exception $e) {
@@ -667,7 +696,9 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     $msgs = array();
     $this->appendResponse('att', isset($this->getRequest()->att) ? $this->getRequest()->att : '');
 
+    #TODO quebrar este metodo em submetodos para cada tipo de request (oper / att) ?
     if (isset($this->getRequest()->matricula_id) && 
+              $this->getRequest()->oper != 'delete' &&
               $this->getRequest()->oper != 'get' && 
               $this->getRequest()->att !== 'matriculas')
     {
