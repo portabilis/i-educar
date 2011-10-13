@@ -264,9 +264,14 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
         $this->setService() &&
         $this->validatesPresenceOfComponenteCurricularId(false))
     {
-      $this->getService()->deleteNota($this->getRequest()->componente_curricular_id, $this->getRequest()->etapa);
-      $this->saveService();
-      $this->appendMsg('Nota removida com sucesso.', 'notice');
+      if (! $this->getNotaAtual())
+        $this->appendMsg('Nota inexistente ou já removida.', 'notice');
+      else
+      {
+        $this->getService()->deleteNota($this->getRequest()->componente_curricular_id, $this->getRequest()->etapa);
+        $this->saveService();
+        $this->appendMsg('Nota removida com sucesso.', 'notice');
+      }
     }
   }
 
