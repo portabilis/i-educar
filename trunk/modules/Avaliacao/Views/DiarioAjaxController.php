@@ -644,6 +644,12 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
 
+  protected function notImplementedError()
+  {
+    $this->appendMsg("Erro não existe metódo implementado para o att '{$this->getRequest()->att}' e oper '{$this->getRequest()->oper}'");    
+  }
+
+
   public function Gerar() {
 
     $this->msgs = array();
@@ -658,16 +664,18 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
             $matriculas = $this->getMatriculas();          
             $this->appendResponse('matriculas', $matriculas);
           }
-          if ($this->getRequest()->att == 'opcoes_notas')
+          elseif ($this->getRequest()->att == 'opcoes_notas')
           {
             $opcoesNotas = $this->getOpcoesNotas();
             $this->appendResponse('opcoes_notas', $opcoesNotas);
           }
-          if ($this->getRequest()->att == 'opcoes_faltas')
+          elseif ($this->getRequest()->att == 'opcoes_faltas')
           {
             $opcoesFaltas = $this->getOpcoesFaltas();
             $this->appendResponse('opcoes_faltas', $opcoesFaltas);
           }
+          else
+            $this->notImplementedError();
         }
         elseif ($this->getRequest()->oper == 'post')
         {
@@ -678,7 +686,9 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
             $this->postFalta();
 
           elseif ($this->getRequest()->att == 'parecer')
-            $this->postParecer();        
+            $this->postParecer();   
+          else
+            $this->notImplementedError();     
         }
         elseif ($this->getRequest()->oper == 'delete')
         {
@@ -690,6 +700,8 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
           elseif ($this->getRequest()->att == 'parecer')
             $this->deleteParecer();  
+          else
+            $this->notImplementedError();
         }
       }
       catch (Exception $e) {
