@@ -567,8 +567,12 @@ if ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario )
 		{
 			var campoEscola = document.getElementById('ref_ref_cod_escola');
 		}
-		campoEscola.disabled = true;
-		campoEscola.options[0].text = 'Carregando escolas';
+
+    if (campoEscola)
+    {
+  		campoEscola.disabled = true;
+  		campoEscola.options[0].text = 'Carregando escolas';
+    }
 
 		var xml = new ajax( atualizaLstEscola );
 		xml.envia( "educar_escola_xml2.php?ins="+campoInstituicao );
@@ -584,25 +588,29 @@ if ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario )
 		{
 			var campoEscola = document.getElementById('ref_ref_cod_escola');
 		}
-		campoEscola.length = 1;
-		campoEscola.options[0].text = 'Selecione uma escola';
 
-		var escolas = xml.getElementsByTagName( "escola" );
-		if(escolas.length)
-		{
-			for( var i = 0; i < escolas.length; i++ )
-			{
-				campoEscola.options[campoEscola.options.length] = new Option( escolas[i].firstChild.data, escolas[i].getAttribute("cod_escola"),false,false);
-			}
-		}
-		else
-		{
-			campoEscola.options[0].text = 'A instituição não possui nenhuma escola';
-		}
+    if (campoEscola)
+    {
+		  campoEscola.length = 1;
+  		campoEscola.options[0].text = 'Selecione uma escola';
 
-		campoEscola.disabled = false;
-    if (campoEscola.afterchange)
-      campoEscola.afterchange(); 
+		  var escolas = xml.getElementsByTagName( "escola" );
+		  if(escolas.length)
+		  {
+			  for( var i = 0; i < escolas.length; i++ )
+			  {
+				  campoEscola.options[campoEscola.options.length] = new Option( escolas[i].firstChild.data, escolas[i].getAttribute("cod_escola"),false,false);
+			  }
+		  }
+		  else
+		  {
+			  campoEscola.options[0].text = 'A instituição não possui nenhuma escola';
+		  }
+
+		  campoEscola.disabled = false;
+      if (campoEscola.afterchange)
+        campoEscola.afterchange(); 
+    }
 
 		if( typeof after_getEscola == 'function' )
 		{
@@ -871,6 +879,7 @@ if ( $get_escola_curso_serie && $get_matricula && $_GET["ref_cod_aluno"] )
     if (campoSerie.afterchange)
       campoSerie.afterchange();
 	}
+
 <?
 }
 if ( $get_escola_curso_serie  && !$get_matricula )

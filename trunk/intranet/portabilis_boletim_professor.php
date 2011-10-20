@@ -52,4 +52,4 @@ $report->addRequiredField('ref_cod_turma', 'turma');
 $report->addRequiredField('ref_cod_componente_curricular', 'componente curricular');
 
 $report->render();
-?>(int)$_POST['linha']
+?>

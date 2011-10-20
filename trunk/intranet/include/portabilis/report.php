@@ -49,7 +49,8 @@ class RemoteReportJasperFactory extends RemoteReportFactory
                                            $args = $args);
 
       header('Content-type: application/pdf');
-      header("Content-Disposition: inline; filename={$result['filename']}");
+      //header("Content-Disposition: attachment; filename={$templateName}.pdf");
+      header("Content-Disposition: inline; filename={$templateName}.pdf");
 
       return base64_decode($result['report']);
   }
@@ -84,7 +85,7 @@ class Report extends clsCadastro
 
     $this->setForm();
     $this->nome_url_sucesso = "Exibir";
-    $this->page->SetTitulo('Relat&oacute;rio' . $this->name);
+    $this->page->SetTitulo('Relat&oacute;rio - ' . $this->name);
     $this->page->addForm($this);
     $this->page->MakeAll(); 
   }
@@ -93,7 +94,7 @@ class Report extends clsCadastro
   {
     try
     {
-      print $this->reportFactory->build($templateName = $this->templateName, $args = $this->args);
+      echo $this->reportFactory->build($templateName = $this->templateName, $args = $this->args);
     }
     catch (Exception $e) 
     {
@@ -120,6 +121,9 @@ class Report extends clsCadastro
 
   function addArg($name, $value)
   {
+    if (is_string($value))
+      $value = utf8_encode($value);
+
     $this->args[$name] = $value;
   }
 
@@ -162,7 +166,7 @@ class Report extends clsCadastro
       if ($method == 'post')
         $dict = $_POST;
       elseif($method == 'get')
-        $dict = $_POST;
+        $dict = $_GET;
       else
         throw new Exception('Invalid method!');
 
@@ -204,8 +208,8 @@ class Report extends clsCadastro
   function printReport()
   {
 	  document.formcadastro.target = '_blank';
-	  document.getElementById( 'btn_enviar' ).disabled =false;
 	  document.formcadastro.submit();
+	  document.getElementById( 'btn_enviar' ).disabled = false;
   }
 </script>
 
@@ -236,7 +240,7 @@ EOT;
 
     $this->reportFactory = new RemoteReportJasperFactory($settings = $this->reportFactorySettings);
 
-    $this->name = '';
+    $this->name = $name;
     $this->templateName = $templateName;
     $this->args = array();
 

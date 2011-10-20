@@ -587,8 +587,10 @@ class DiarioController extends Core_Controller_Page_ListController
                 document.getElementById('status_alteracao-matricula:' + matricula).innerHTML = '<span class="error" style="color: red;">Informe pelo menos uma letra.</span>';
               else /* if (attValue.length)*/
               {
-                if(! attValue.length && ! confirm('Confirma exclusão ' + att.replace('_', ' ') + '?'))
-                  alert('Voltar nota...');
+                if(! attValue.length)
+                { /* #TODO remover valor se '' && ! confirm('Confirma exclusão ' + att.replace('_', ' ') + '?'))*/
+                  alert('Por favor, selecione um valor válido.');
+                }
                 else
                 {
                   var _c = ['notas', 'faltas', 'parecer'];

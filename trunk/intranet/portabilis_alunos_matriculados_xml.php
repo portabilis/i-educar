@@ -42,7 +42,8 @@ if ($user->isLoggedIn())
 {
   foreach ($records as $r)
   {
-    $x .= "<matricula id='{$r['cod_matricula']}' value='{$r['nome']}' />";
+    $nome = ucwords(strtolower(htmlspecialchars($r['nome'], ENT_QUOTES, 'ISO-8859-15')));
+    $x .= "<matricula id='{$r['cod_matricula']}' value='$nome' />";
   }
 }
 $x .= "</matriculas>";
