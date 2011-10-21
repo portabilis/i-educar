@@ -12,7 +12,6 @@ class PortabilisAtestadoVaga extends Report
 
     $get_escola = true;
     $instituicao_obrigatorio = true;
-    $get_aluno = true;
     $get_curso = true;
     $get_escola_curso_serie = true;
     $escola_obrigatorio = true;
@@ -20,7 +19,9 @@ class PortabilisAtestadoVaga extends Report
     $this->ano = $ano_atual = date("Y");
     $this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true);
 
-    include("include/pmieducar/educar_campo_lista.php");  
+    include("include/pmieducar/educar_campo_lista.php");
+
+    $this->campoTexto("aluno","Aluno",'',40,255,true);  
  
     
   }
@@ -32,7 +33,7 @@ class PortabilisAtestadoVaga extends Report
     $this->addArg('escola', (int)$_POST['ref_cod_escola']);
     $this->addArg('curso', (int)$_POST['ref_cod_curso']);
     $this->addArg('serie', (int)$_POST['ref_ref_cod_serie']);
-    $this->addArg('aluno', (int)$_POST['ref_cod_aluno']);
+    $this->addArg('aluno', $_POST['aluno']);
   }
 }
 
@@ -43,7 +44,7 @@ $report->addRequiredField('ref_cod_instituicao', 'instituicao');
 $report->addRequiredField('ref_cod_escola', 'escola');
 $report->addRequiredField('ref_cod_curso', 'curso');
 $report->addRequiredField('ref_ref_cod_serie', 'serie');
-$report->addRequiredField('ref_cod_aluno', 'aluno');
+$report->addRequiredField('aluno', 'aluno');
 
 $report->render();
 ?>
