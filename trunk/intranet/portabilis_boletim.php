@@ -23,7 +23,7 @@ class PortabilisBoletimBimestral extends Report
     $this->ano = $ano_atual = date("Y");
     $this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true);
 
-    include("include/pmieducar/educar_campo_lista.php");    
+    include("include/pmieducar/educar_campo_lista.php");
   }
 
   function onValidationSuccess()
@@ -39,7 +39,6 @@ class PortabilisBoletimBimestral extends Report
     $this->addArg('curso', (int)$_POST['ref_cod_curso']);
     $this->addArg('serie', (int)$_POST['ref_ref_cod_serie']);
     $this->addArg('turma', (int)$_POST['ref_cod_turma']);
-
   }
 }
 
