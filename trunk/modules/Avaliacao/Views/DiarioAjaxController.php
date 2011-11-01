@@ -493,6 +493,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
       $requiredFields = array(
         array('matricula_id', 'ref_cod_matricula'), 
         array('nome', 'nome_aluno'),
+        array('aluno_id', 'ref_cod_aluno'),
       );
 
       foreach($alunos as $aluno)

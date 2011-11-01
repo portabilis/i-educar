@@ -64,6 +64,26 @@ class DiarioController extends Core_Controller_Page_ListController
   protected $_processoAp = 644;
   protected $_formMap  = array();
 
+  protected function setVars()
+  {
+    $this->ref_cod_aluno = $_GET['aluno_id'];
+    $this->ref_cod_instituicao = $_GET['instituicao_id'];
+    $this->ref_cod_escola = $_GET['escola_id'];
+    $this->ref_cod_curso = $_GET['curso_id'];
+    $this->ref_cod_turma = $_GET['turma_id'];
+    $this->ref_ref_cod_serie = $this->ref_cod_serie = $_GET['serie_id'];
+    $this->ano_escolar = $_GET['ano_escolar'];
+    $this->ref_cod_componente_curricular = $_GET['componente_curricular_id'];
+    $this->etapa = $_GET['etapa'];
+
+    if ($this->ref_cod_aluno)
+    {
+      $nome_aluno_filtro = new clsPmieducarAluno();
+      $nome_aluno_filtro = $nome_aluno_filtro->lista($int_cod_aluno = $this->ref_cod_aluno);
+      $this->nm_aluno = $nome_aluno_filtro[0]['nome_aluno'];
+    }
+  }
+
 
   protected function setSelectionFields()
   {
@@ -91,6 +111,7 @@ class DiarioController extends Core_Controller_Page_ListController
   public function Gerar()
   {
 
+    $this->setVars();
     $this->setSelectionFields();
 
     $this->rodape = "<strong>N&atilde;o est&aacute; sendo listado as op&ccedil;&otilde;es de filtro que voc&ecirc; espera ?</strong> solicite a(o) secret&aacute;rio(a) da escola que verifique a aloca&ccedil;&atilde;o do seu usu&aacute;rio.";
