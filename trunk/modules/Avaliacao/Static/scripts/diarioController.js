@@ -4,6 +4,9 @@ var $j = jQuery.noConflict();
 
   $(function(){
 
+    var diarioUrlBase = 'diario';
+    var diarioAjaxUrlBase = 'diarioAjax';
+
     //global ajax events
     $('.change-visibility-on-ajax-change')
       .ajaxStart(function() { $(this).show(); })
@@ -20,11 +23,69 @@ var $j = jQuery.noConflict();
     //ao submeter form carregar matriculas, notas, faltas e pareceres
     //ao mudar nota, falta ou parecer enviar postar, e tratar retorno
 
-    var matriculasSearchUrlBuilder = {
-      urlBase : 'diarioAjax',
-      buildUrl : function(urlBase){
+    var resourceUrlBuilder = {
+      buildUrl : function(urlBase, vars){
+
+        _vars = '';
+        for(varName in vars){
+          _vars += '&'+varName+'='+vars[varName];
+        }
+
+        return urlBase + '?' + _vars;
+      }
+    };
+
+  
+    var deleteResourceUrlBuilder = {
+      buildUrl : function(urlBase, resourceName, additionalVars){
+
         var vars = {
-          att : 'matriculas',
+          att : resourceName,
+          oper : 'delete',
+          instituicao_id : $j('#ref_cod_instituicao').val(),
+          escola_id : $j('#ref_cod_escola').val(),
+          curso_id : $j('#ref_cod_curso').val(),
+          serie_id : $j('#ref_ref_cod_serie').val(),
+          turma_id : $j('#ref_cod_turma').val(),
+          ano_escolar : $j('#ano_escolar').val(),
+          componente_curricular_id : $j('#ref_cod_componente_curricular').val(),
+          etapa : $j('#etapa').val()
+        };
+
+        return resourceUrlBuilder.buildUrl(urlBase, $.extend(vars, additionalVars));
+
+      }
+    };
+
+
+    var postResourceUrlBuilder = {
+      buildUrl : function(urlBase, resourceName, additionalVars){
+
+        var vars = {
+          att : resourceName,
+          oper : 'post',
+          instituicao_id : $j('#ref_cod_instituicao').val(),
+          escola_id : $j('#ref_cod_escola').val(),
+          curso_id : $j('#ref_cod_curso').val(),
+          serie_id : $j('#ref_ref_cod_serie').val(),
+          turma_id : $j('#ref_cod_turma').val(),
+          ano_escolar : $j('#ano_escolar').val(),
+          componente_curricular_id : $j('#ref_cod_componente_curricular').val(),
+          etapa : $j('#etapa').val(),
+          matricula_id : $j('#etapa').val()
+        };
+
+        return resourceUrlBuilder.buildUrl(urlBase, $.extend(vars, additionalVars));
+
+      }
+    };
+
+
+    var getResourceUrlBuilder = {
+      buildUrl : function(urlBase, resourceName, additionalVars){
+
+        var vars = {
+          att : resourceName,
           oper : 'get',
           instituicao_id : $j('#ref_cod_instituicao').val(),
           escola_id : $j('#ref_cod_escola').val(),
@@ -34,14 +95,10 @@ var $j = jQuery.noConflict();
           ano_escolar : $j('#ano_escolar').val(),
           componente_curricular_id : $j('#ref_cod_componente_curricular').val(),
           etapa : $j('#etapa').val()
-        }
+        };
 
-        _vars = '';
-        for(varName in vars){
-          _vars += '&'+varName+'='+vars[varName];
-        }
+        return resourceUrlBuilder.buildUrl(urlBase, $.extend(vars, additionalVars));
 
-        return (urlBase || this.urlBase) + '?' + _vars;
       }
     };
 
@@ -77,7 +134,14 @@ var $j = jQuery.noConflict();
 
 
     function postNota($notaFieldElement){
-      console.log('post nota...');
+      var options = {
+        url : postResourceUrlBuilder.buildUrl(diarioAjaxUrlBase, 'nota', {matricula_id : $notaFieldElement.data('matricula_id'),}),
+        dataType : 'json',
+        data : {att_value : $notaFieldElement.val()},
+        success : handlePostNota
+      };
+
+      $.ajax(options).error(handleErrorPost).complete(function(){console.log('post completado...')});
     }
 
 
@@ -106,54 +170,19 @@ var $j = jQuery.noConflict();
         console.log('#todo call getResource url');  
       }
     }
-    
-
-    //#TODO change matriculasSearchUrlBuilder to use this helper
-    var resourceUrlBuilder = {
-      urlBase : 'diarioAjax',
-      buildUrl : function(vars, urlBase){
-
-        _vars = '';
-        for(varName in vars){
-          _vars += '&'+varName+'='+vars[varName];
-        }
-
-        return (urlBase || this.urlBase) + '?' + _vars;
-      }
-    };
-
-  
-    var deleteResourceUrlBuilder = {
-      urlBase : 'diarioAjax',
-      buildUrl : function(resourceName, urlBase){
-
-        var vars = {
-          att : resourceName,
-          oper : 'delete',
-          instituicao_id : $j('#ref_cod_instituicao').val(),
-          escola_id : $j('#ref_cod_escola').val(),
-          curso_id : $j('#ref_cod_curso').val(),
-          serie_id : $j('#ref_ref_cod_serie').val(),
-          turma_id : $j('#ref_cod_turma').val(),
-          ano_escolar : $j('#ano_escolar').val(),
-          componente_curricular_id : $j('#ref_cod_componente_curricular').val(),
-          etapa : $j('#etapa').val()
-        };
-
-        return resourceUrlBuilder.buildUrl(vars, (urlBase || this.urlBase));
-
-      };
-    };
 
 
     function deleteNota($notaFieldElement){
+
+      var resourceName = 'nota';
+
       var options = {
-        url : '',
+        url : deleteResourceUrlBuilder.buildUrl(diarioAjaxUrlBase, resourceName),
         dataType : 'json',
         success : handleDeleteNota
       };
 
-      deleteResource('nota', options);
+      deleteResource(resourceName, options);
     };
 
 
@@ -181,8 +210,48 @@ var $j = jQuery.noConflict();
 
     //callback handlers
 
+    function handleErrorPost(request){
+      console.log('#todo handleError');
+      console.log(request);
+    }
+
+    function handleGetNota(nota){
+      console.log('#todo handleGetNota');
+      console.log(nota);
+    }
+
+
+    function handleGetFalta(falta){
+      console.log('#todo handleGetFalta');
+    }
+
+
+    function handleGetParecer(parecer){
+      console.log('#todo handleGetParecer');
+    }
+
+
+    function handlePostNota(dataResponse){
+      //#TODO pintar campo de verde caso não tenha msgs de erro
+      //#TODO pintar campo de vermelho caso tenha msgs de erro
+      //console.log(dataResponse);
+      handleMessages(dataResponse.msgs);
+    }
+
+
+    function handlePostFalta(falta){
+      console.log('#todo handlePostFalta');
+    }
+
+
+    function handlePostParecer(parecer){
+      console.log('#todo handlePostParecer');
+    }
+
+
     function handleDeleteNota(nota){
       console.log('#todo handleDeleteNota');
+      console.log(nota);
     }
 
 
@@ -228,15 +297,15 @@ var $j = jQuery.noConflict();
         $('<td />').html(value.situacao).appendTo($linha);
 
         //nota
-        var $notaField = $('<input />').addClass('nota-matricula').attr('id', 'nota-matricula-' + value.matricula_id).val(value.nota_atual).attr('maxlength', '4').attr('size', '4');
+        var $notaField = $('<input />').addClass('nota-matricula').attr('id', 'nota-matricula-' + value.matricula_id).val(value.nota_atual).attr('maxlength', '4').attr('size', '4').data('matricula_id', value.matricula_id);
         $('<td />').html($notaField).appendTo($linha);
         
         //falta
-        var $faltaField = $('<input />').addClass('falta-matricula').attr('id', 'falta-matricula-' + value.matricula_id).val(value.falta_atual).attr('maxlength', '4').attr('size', '4');
+        var $faltaField = $('<input />').addClass('falta-matricula').attr('id', 'falta-matricula-' + value.matricula_id).val(value.falta_atual).attr('maxlength', '4').attr('size', '4').data('matricula_id', value.matricula_id);
         $('<td />').html($faltaField).appendTo($linha);
 
         //parecer
-        var $parecerField = $('<textarea />').attr('cols', '40').attr('rows', '2').addClass('parecer-matricula').attr('id', 'parecer-matricula-' + value.matricula_id).val(value.parecer_atual);
+        var $parecerField = $('<textarea />').attr('cols', '40').attr('rows', '2').addClass('parecer-matricula').attr('id', 'parecer-matricula-' + value.matricula_id).val(value.parecer_atual).data('matricula_id', value.matricula_id);
         $('<td />').html($parecerField).appendTo($linha);
 
         $linha.appendTo($resultTable);
@@ -259,10 +328,10 @@ var $j = jQuery.noConflict();
     $submitButton.click(function(event){
       if (validatesPresenseOfValueInRequiredFields())
       {
-        matriculasSearchOptions.url = matriculasSearchUrlBuilder.buildUrl();
+        matriculasSearchOptions.url = getResourceUrlBuilder.buildUrl(diarioAjaxUrlBase, 'matriculas');
 
         if (window.history && window.history.pushState)
-          window.history.pushState('', '', matriculasSearchUrlBuilder.buildUrl('diario'));
+          window.history.pushState('', '', getResourceUrlBuilder.buildUrl(diarioUrlBase, 'matriculas'));
 
         $submitButton.val('Carregando...');
         $resultTable.children().remove();
