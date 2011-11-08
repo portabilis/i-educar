@@ -66,6 +66,22 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     return true;
   }
 
+  protected function validatesValueIsNumeric(&$value, $name, $raiseExceptionOnError = false, $msg = '', $addMsgOnError = true) {
+    if (! is_numeric($value)) {
+      if ($addMsgOnError)
+      {
+        $msg = empty($msg) ? "O valor recebido para variavel '$name' deve ser numerico" : $msg;
+        $this->appendMsg($msg);
+      }
+
+      if ($raiseExceptionOnError)
+         throw new Exception($msg);
+
+      return false;
+    }
+    return true;
+  }
+
   protected function validatesValueInSetOf($value, $setExpectedValues, $name, $raiseExceptionOnError = false, $msg = '') {
     if (! in_array($value, $setExpectedValues)) {
       $msg = empty($msg) ? "Valor recebido na variavel '$name' é invalido" : $msg;
@@ -159,6 +175,11 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 */
 
+  protected function validatesValueOfAttValue($raiseExceptionOnError) {
+    return $this->validatesValueIsNumeric($this->getRequest()->att_value, 'att_value', $raiseExceptionOnError);
+  }
+
+
   protected function validatesPresenceOfAttValue($raiseExceptionOnEmpty) {
     return $this->validatesPresenceOf($this->getRequest()->att_value, 'att_value', $raiseExceptionOnEmpty);
   }
@@ -168,7 +189,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     $result = $this->validatesPresenceOf($this->getRequest()->att, 'att', $raiseExceptionOnError);
 
     if ($result) {
-      $expectedAtts = array('nota', 'nota_exame', 'falta', 'parecer', 'matriculas', 'opcoes_notas', 'opcoes_faltas');
+      $expectedAtts = array('nota', 'nota_exame', 'falta', 'parecer', 'matriculas', 'opcoes_notas', 'opcoes_faltas', 'regra_avaliacao');
       $result = $this->validatesValueInSetOf($this->getRequest()->att, $expectedAtts, 'att', $raiseExceptionOnEmpty);
     }
     return $result;
@@ -223,38 +244,21 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
 
   protected function canPost() {
-    try {
-      $this->validatesPresenceOfEtapa(true);
-      $this->validatesPresenceOfAttValue(true);
-    }
-    catch (Exception $e) {
-      return false;
-    }
-    return true;
+    return $this->validatesPresenceOfEtapa(false);
   }
 
   protected function canPostNota() {
-    return $this->canPost();
+    return $this->canPost() && $this->validatesValueOfAttValue(false);
   }
 
 
   protected function canPostFalta() {
-    return $this->canPost();
+    return $this->canPost() && $this->validatesValueOfAttValue(false);
   }
 
 
   protected function canPostParecer() {
-    return $this->canPost();
-  }
-
-  protected function canDelete() {
-    try {
-      $this->validatesPresenceOfEtapa(true);
-    }
-    catch (Exception $e) {
-      return false;
-    }
-    return true;
+    return $this->canPost() && $this->validatesPresenceOfAttValue(false);
   }
 
 
@@ -331,14 +335,15 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
 
   protected function postNota() {
-    if ($this->canPostNota() &&
-        $this->setService() &&
+    if ($this->setService() &&
+        $this->canPostNota() &&
         $this->validatesPresenceOfComponenteCurricularId(false)) {
+
       $nota = new Avaliacao_Model_NotaComponente(array(
         'componenteCurricular' => $this->getRequest()->componente_curricular_id,
         'nota' => urldecode($this->getRequest()->att_value),
         'etapa' => $this->getRequest()->etapa
-      ));
+        ));
       $this->getService()->addNota($nota);
       $this->saveService();
       $this->appendMsg('Nota alterada com sucesso.', 'notice');
@@ -492,7 +497,6 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
       $requiredFields = array(
         array('matricula_id', 'ref_cod_matricula'), 
-        array('nome', 'nome_aluno'),
         array('aluno_id', 'ref_cod_aluno'),
       );
 
@@ -508,6 +512,8 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
         foreach($requiredFields as $f)
           $matricula[$f[0]] = $aluno[$f[1]];
+
+        $matricula['nome'] = ucwords(strtolower(utf8_encode($aluno['nome_aluno'])));
 
         $matriculas[] = $matricula;
       }
@@ -585,6 +591,60 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
 
+  protected function canGetRegraAvaliacao()
+  {
+    return $this->validatesPresenceOfMatriculaId(false);
+  }  
+
+
+  protected function getRegraAvaliacao($useCurrentService = False)
+  {
+    $itensRegra = array();
+    if (($useCurrentService && $this->getService()) || $this->canGetRegraAvaliacao() && $this->setService()) {
+      $regra = $this->getService()->getRegra();
+      $itensRegra['nome'] = utf8_encode($regra->get('nome'));
+
+      $cnsPresenca = RegraAvaliacao_Model_TipoPresenca;
+      $tpPresenca = $this->getService()->getRegra()->get('tipoPresenca');
+      if($tpPresenca == $cnsPresenca::GERAL)
+        $itensRegra['tipo_presenca'] = 'geral';
+      elseif($tpPresenca == $cnsPresenca::POR_COMPONENTE)
+        $itensRegra['tipo_presenca'] = 'por_componente';
+      else
+        $itensRegra['tipo_presenca'] = $tpPresenca;
+
+      $cnsNota = RegraAvaliacao_Model_Nota_TipoValor;
+      $tpNota = $this->getService()->getRegra()->get('tipoNota');
+      if ($tpNota == $cnsNota::NENHUM)
+        $itensRegra['tipo_nota'] = 'nenhum';
+      elseif ($tpNota == $cnsNota::NUMERICA)
+        $itensRegra['tipo_nota'] = 'numerica';
+      elseif ($tpNota == $cnsNota::CONCEITUAL)
+        $itensRegra['tipo_nota'] = 'conceitual';
+      else
+        $itensRegra['tipo_nota'] = $tpNota;
+
+      $cnsParecer = RegraAvaliacao_Model_TipoParecerDescritivo;
+      $tpParecer = $this->getService()->getRegra()->get('parecerDescritivo');
+      if ($tpParecer == $cnsParecer::NENHUM)
+        $itensRegra['tipo_parecer_descritivo'] = 'nenhum';
+      elseif ($tpParecer == $cnsParecer::ETAPA_COMPONENTE)
+        $itensRegra['tipo_parecer_descritivo'] = 'etapa_componente';
+      elseif ($tpParecer == $cnsParecer::ETAPA_GERAL)
+        $itensRegra['tipo_parecer_descritivo'] = 'etapa_geral';
+      elseif ($tpParecer == $cnsParecer::ANUAL_COMPONENTE)
+        $itensRegra['tipo_parecer_descritivo'] = 'anual_componente';
+      elseif ($tpParecer == $cnsParecer::ANUAL_GERAL)
+        $itensRegra['tipo_parecer_descritivo'] = 'anual_geral';
+      else
+        $itensRegra['tipo_parecer_descritivo'] = $tpParecer;
+
+    }
+    
+    return $itensRegra;
+  }
+
+
   protected function saveService()
   {
     try {
@@ -647,7 +707,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
   protected function notImplementedError()
   {
-    $this->appendMsg("Erro não existe metódo implementado para o att '{$this->getRequest()->att}' e oper '{$this->getRequest()->oper}'");    
+    $this->appendMsg("Operação '{$this->getRequest()->oper}' inválida para o att '{$this->getRequest()->att}'");    
   }
 
 
@@ -664,6 +724,9 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
           {
             $matriculas = $this->getMatriculas();          
             $this->appendResponse('matriculas', $matriculas);
+
+            $regraAvaliacao = $this->getRegraAvaliacao($useCurrentService = true);
+            $this->appendResponse('regra_avaliacao', $regraAvaliacao);
           }
           elseif ($this->getRequest()->att == 'opcoes_notas')
           {
@@ -674,6 +737,11 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
           {
             $opcoesFaltas = $this->getOpcoesFaltas();
             $this->appendResponse('opcoes_faltas', $opcoesFaltas);
+          }
+          elseif ($this->getRequest()->att == 'regra_avaliacao')
+          {
+            $regraAvaliacao = $this->getRegraAvaliacao();
+            $this->appendResponse('regra_avaliacao', $regraAvaliacao);
           }
           else
             $this->notImplementedError();
@@ -722,10 +790,11 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
     #TODO quebrar este metodo em submetodos para cada tipo de request (oper / att) ?
     if (isset($this->getRequest()->matricula_id) && 
-              $this->getRequest()->oper != 'delete' &&
-              $this->getRequest()->oper != 'get' && 
-              $this->getRequest()->att !== 'matriculas') {
-      $this->appendResponse('matricula', $this->getRequest()->matricula_id);
+              #$this->getRequest()->oper != 'delete' &&
+              #$this->getRequest()->oper != 'get' && 
+              $this->getRequest()->att != 'regra_avaliacao' &&
+              $this->getRequest()->att != 'matriculas') {
+      $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
       $this->appendResponse('situacao', $this->getSituacaoMatricula($raiseExceptionOnErrors = false, $appendMsgOnErrors = false));
     }
 
