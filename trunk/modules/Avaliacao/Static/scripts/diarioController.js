@@ -396,6 +396,7 @@ var $j = jQuery.noConflict();
 
       //set headers table
       var $linha = $('<tr />');
+      $('<th />').html('Etapa').appendTo($linha);
       $('<th />').html('Comp. Curricular').appendTo($linha);
       $('<th />').html('Turma').appendTo($linha);
       $('<th />').html('Serie').appendTo($linha);
@@ -408,6 +409,7 @@ var $j = jQuery.noConflict();
       $linha.appendTo($tableDadosDiario);
 
       var $linha = $('<tr />');
+      $('<td />').html($j('#etapa').children("[selected='selected']").html().toLowerCase()).appendTo($linha);
       $('<td />').html($j('#ref_cod_componente_curricular').children("[selected='selected']").html().toLowerCase()).appendTo($linha);
       $('<td />').html($j('#ref_cod_turma').children("[selected='selected']").html().toLowerCase()).appendTo($linha);
       $('<td />').html($j('#ref_ref_cod_serie').children("[selected='selected']").html().toLowerCase()).appendTo($linha);
