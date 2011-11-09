@@ -82,7 +82,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     return true;
   }
 
-  protected function validatesValueInSetOf($value, $setExpectedValues, $name, $raiseExceptionOnError = false, $msg = '') {
+  protected function validatesValueInSetOf(&$value, $setExpectedValues, $name, $raiseExceptionOnError = false, $msg = '') {
     if (! in_array($value, $setExpectedValues)) {
       $msg = empty($msg) ? "Valor recebido na variavel '$name' é invalido" : $msg;
       $this->appendMsg($msg);
@@ -175,10 +175,9 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 */
 
-  protected function validatesValueOfAttValue($raiseExceptionOnError) {
+  protected function validatesValueOfAttValueIsNumeric($raiseExceptionOnError) {
     return $this->validatesValueIsNumeric($this->getRequest()->att_value, 'att_value', $raiseExceptionOnError);
   }
-
 
   protected function validatesPresenceOfAttValue($raiseExceptionOnEmpty) {
     return $this->validatesPresenceOf($this->getRequest()->att_value, 'att_value', $raiseExceptionOnEmpty);
@@ -248,12 +247,12 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
   protected function canPostNota() {
-    return $this->canPost() && $this->validatesValueOfAttValue(false);
+    return $this->canPost() && $this->validatesValueOfAttValueIsNumeric(false);
   }
 
 
   protected function canPostFalta() {
-    return $this->canPost() && $this->validatesValueOfAttValue(false);
+    return $this->canPost() && $this->validatesValueOfAttValueIsNumeric(false);
   }
 
 
@@ -293,12 +292,12 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
         $this->setService() &&
         $this->validatesPresenceOfComponenteCurricularId(false)) {
       if (! $this->getNotaAtual())
-        $this->appendMsg('Nota inexistente ou já removida.', 'notice');
+        $this->appendMsg('Nota matricula '. $this->getRequest()->matricula_id .' inexistente ou já removida.', 'notice');
       else
       {
         $this->getService()->deleteNota($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id);
         $this->saveService();
-        $this->appendMsg('Nota removida com sucesso.', 'notice');
+        $this->appendMsg('Nota matricula '. $this->getRequest()->matricula_id .' removida com sucesso.', 'success');
       }
     }
   }
@@ -306,21 +305,31 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
   protected function deleteFalta() {
     $canDelete = $this->canDeleteFalta() && $this->setService();
-    if ($canDelete && $this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
-      $canDelete = $this->validatesPresenceOfComponenteCurricularId(false);
+    $cnsPresenca = RegraAvaliacao_Model_TipoPresenca;
+    $tpPresenca = $this->getService()->getRegra()->get('tipoPresenca');
 
-    if ($canDelete && $this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL && $this->validatesPresenceOfComponenteCurricularId(false, false))   {
+    if ($canDelete && $tpPresenca == $cnsPresenca::POR_COMPONENTE) {
+      $canDelete = $this->validatesPresenceOfComponenteCurricularId(false);
+      $componenteCurricularId = $this->getRequest()->componente_curricular_id;
+    }
+    else
+      $componenteCurricularId = null;
+
+    /*if ($canDelete && $this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL && $this->validatesPresenceOfComponenteCurricularId(false, false))   {
       $this->appendMsg('Falta não removida, pois o tipo de presença é geral, não deve ser enviado o atributo componente_curricular_id.', 'error');
     }
-    elseif ($canDelete && ! $this->getFaltaAtual()) {
-      $this->appendMsg('Falta inexistente ou já removida.', 'notice');
+    elseif...*/
+
+    if ($canDelete && ! $this->getFaltaAtual()) {
+      $this->appendMsg('Falta matricula '. $this->getRequest()->matricula_id .' inexistente ou já removida.', 'notice');
     }
     elseif ($canDelete) {
-      $this->getService()->deleteFalta($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id);
+      $this->getService()->deleteFalta($this->getRequest()->etapa, $componenteCurricularId);
       $this->saveService();
-      $this->appendMsg('Falta removida com sucesso.', 'notice');
+      $this->appendMsg('Falta matricula '. $this->getRequest()->matricula_id .' removida com sucesso.', 'success');
     }
   }
+
 
   protected function deleteParecer() {
 
@@ -335,12 +344,12 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
       $this->appendMsg('Não deve ser enviado o atributo componente_curricular_id.', 'error');
     }
     elseif ($canDelete && ! $this->getParecerAtual()) {
-      $this->appendMsg('Parecer descritivo inexistente ou já removido.', 'notice');
+      $this->appendMsg('Parecer descritivo matricula '. $this->getRequest()->matricula_id .' inexistente ou já removido.', 'notice');
     }
     elseif ($canDelete) {
       $this->getService()->deleteParecer($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id);
       $this->saveService();
-      $this->appendMsg('Parecer descritivo removido com sucesso.', 'notice');
+      $this->appendMsg('Parecer descritivo matricula '. $this->getRequest()->matricula_id .' removido com sucesso.', 'success');
     }
   }
 
@@ -357,7 +366,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
         ));
       $this->getService()->addNota($nota);
       $this->saveService();
-      $this->appendMsg('Nota alterada com sucesso.', 'notice');
+      $this->appendMsg('Nota matricula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
     }
   }
 
@@ -403,7 +412,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
       $this->getService()->addFalta($falta);
       $this->saveService();
-      $this->appendMsg('Falta alterada com sucesso.', 'notice');
+      $this->appendMsg('Falta matricula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
     }
   }
 
@@ -442,7 +451,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     if ($canPost) {
       $this->getService()->addParecer($parecer);
       $this->saveService();
-      $this->appendMsg('Parecer alterado com sucesso.', 'notice');
+      $this->appendMsg('Parecer descritivo matricula '. $this->getRequest()->matricula_id .' alterado com sucesso.', 'success');
     }
   }
 
@@ -585,17 +594,17 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }  
 
 
-  protected function getOpcoesNotas()
+  protected function getOpcoesNotas($useCurrentService = False)
   {
     $opcoes = array();
-    if ($this->canGetOpcoesNotas() && $this->setService()) {
+    if (($useCurrentService && $this->getService()) || $this->canGetOpcoesNotas() && $this->setService()) {
       $tabela = $this->getService()->getRegra()->tabelaArredondamento->findTabelaValor();
       foreach ($tabela as $item)
       {
         if ($this->getService()->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA)
           $opcoes[(string) $item->nome] = (string) $item->nome;
         else
-          $opcoes[(string) $item->valorMaximo] = $item->nome . ' (' . $item->descricao .  ')';
+          $opcoes[(string) $item->valorMaximo] = utf8_decode($item->nome . ' (' . $item->descricao .  ')');
       }
     }
     return $opcoes;
@@ -613,6 +622,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     $itensRegra = array();
     if (($useCurrentService && $this->getService()) || $this->canGetRegraAvaliacao() && $this->setService()) {
       $regra = $this->getService()->getRegra();
+      $itensRegra['id'] = utf8_encode($regra->get('id'));
       $itensRegra['nome'] = utf8_encode($regra->get('nome'));
 
       $cnsPresenca = RegraAvaliacao_Model_TipoPresenca;
@@ -650,6 +660,8 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
       else
         $itensRegra['tipo_parecer_descritivo'] = $tpParecer;
 
+      //incluido opcoes notas, pois notas conceituais requer isto para visualizar os nomes
+      $itensRegra['opcoes_notas'] = $this->getOpcoesNotas($useCurrentService = $useCurrentService);
     }
     
     return $itensRegra;
@@ -723,6 +735,8 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
 
   public function Gerar() {
+
+
 
     $this->msgs = array();
     $this->response = array();
