@@ -235,7 +235,7 @@ class indice extends clsDetalhe
     $obj_permissoes = new clsPermissoes();
     if ($obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7)) {
       $script = "enturmar({$this->ref_cod_matricula},{$this->ref_cod_turma})";
-      $this->array_botao = array('Transferir Aluno');
+      $this->array_botao = array('Enturmação');
       $this->array_botao_url_script = array($script);
     }
 

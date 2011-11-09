@@ -5,7 +5,7 @@
 
 require_once("include/portabilis/report.php");
 
-class PortabilisBoletimTrimestral extends Report
+class PortabilisBoletimEdInfantilSemestral extends Report
 {
   function setForm()
   {
@@ -14,7 +14,7 @@ class PortabilisBoletimTrimestral extends Report
     $get_curso = true;
     $get_escola_curso_serie = true;
     $get_turma = true;
-    $get_alunos_matriculados = true;
+    $get_alunos_matriculados = true; 
     $instituicao_obrigatorio = true;
     $escola_obrigatorio = true;
     $escola_curso_serie_obrigatorio = true;
@@ -23,7 +23,8 @@ class PortabilisBoletimTrimestral extends Report
     $this->ano = $ano_atual = date("Y");
     $this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true);
 
-    include("include/pmieducar/educar_campo_lista.php");  
+    include("include/pmieducar/educar_campo_lista.php");
+    $this->campoCheck( "manual", "Boletim do professor", null, null, false);
   }
 
   function onValidationSuccess()
@@ -33,17 +34,20 @@ class PortabilisBoletimTrimestral extends Report
       $this->addArg('matricula',0);
     else
       $this->addArg('matricula', (int)$_POST['ref_cod_matricula']);
+    if (! isset($_POST['manual']))
+      $this->addArg('manual',0);
+    else
+      $this->addArg('manual', 1);
     $this->addArg('ano', (int)$_POST['ano']);
     $this->addArg('instituicao', (int)$_POST['ref_cod_instituicao']);
     $this->addArg('escola', (int)$_POST['ref_cod_escola']);
     $this->addArg('curso', (int)$_POST['ref_cod_curso']);
     $this->addArg('serie', (int)$_POST['ref_ref_cod_serie']);
     $this->addArg('turma', (int)$_POST['ref_cod_turma']);
-
   }
 }
 
-$report = new PortabilisBoletimTrimestral($name = 'Boletim Escolar - Trimestral', $templateName = 'portabilis_boletim_trimestral');
+$report = new PortabilisBoletimEdInfantilSemestral($name = 'Boletim Escolar - Ed. Infantil Semestral', $templateName = 'portabilis_boletim_educ_infantil_semestral');
 
 $report->addRequiredField('ano','ano');
 $report->addRequiredField('ref_cod_instituicao', 'instituicao');

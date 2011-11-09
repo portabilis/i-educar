@@ -154,14 +154,12 @@
        to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
 
         nome_disciplina,
-        matricula_id,
-        MAX(matricula_id) as matricula,
-        MAX(componente_curricular_id) as id_disciplina,
+        MAX(matricula) as matricula,
+        MAX(id_disciplina) as id_disciplina,
 	MAX(nota_arredondada) AS nota1,
         MAX(nota_arredondada_etapa2) AS nota2,
         MAX(nota_arredondada_etapa3) AS nota3,
         MAX(nota_arredondada_etapa4) AS nota4,
-		MAX(total_pontos) AS total_pontos,
 		MAX(nota_exame) AS nota_exame,
 		MAX(media) AS media,
         MAX(nome_curso) AS nome_curso,
@@ -186,8 +184,13 @@
   FROM (SELECT
              (SELECT componente_curricular.nome
                 FROM modules.componente_curricular
-               WHERE componente_curricular.id = nota_componente_curricular.componente_curricular_id) as nome_disciplina,
-             nota_componente_curricular.componente_curricular_id,
+               WHERE componente_curricular.id = escola_serie_disciplina.ref_cod_disciplina) as nome_disciplina,
+
+               matricula.cod_matricula AS matricula,
+
+                          (SELECT componente_curricular.id
+                FROM modules.componente_curricular
+               WHERE componente_curricular.id = escola_serie_disciplina.ref_cod_disciplina) as id_disciplina,
  (SELECT CASE  WHEN et1.nota_arredondada = 10 THEN
 			                   '10,0'
 			               WHEN char_length(et1.nota_arredondada) = 1 THEN
@@ -195,12 +198,12 @@
                            ELSE
                                replace(et1.nota_arredondada,'.',',')
                            END
-                FROM modules.nota_componente_curricular et1
-               WHERE et1.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+                FROM modules.nota_componente_curricular et1,
+                     modules.nota_aluno
+               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
                      et1.etapa = 1 AND
-                     nota_aluno.id  = et1.nota_aluno_id) AS nota_arredondada,
-             nota_componente_curricular.etapa,
-             matricula_id,
+                     nota_aluno.id  = et1.nota_aluno_id AND
+                    nota_aluno.matricula_id = matricula.cod_matricula) AS nota_arredondada,
 
  (SELECT CASE  WHEN et1.nota_arredondada = 10 THEN
 			                   '10,0'
@@ -209,10 +212,12 @@
                            ELSE
                                replace(et1.nota_arredondada,'.',',')
                            END
-                FROM modules.nota_componente_curricular et1
-               WHERE et1.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+                FROM modules.nota_componente_curricular et1,
+                     modules.nota_aluno
+               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
                      et1.etapa = 2 AND
-                     nota_aluno.id  = et1.nota_aluno_id) AS nota_arredondada_etapa2,
+                     nota_aluno.id  = et1.nota_aluno_id AND
+                     nota_aluno.matricula_id = matricula.cod_matricula) AS nota_arredondada_etapa2,
 
  (SELECT CASE  WHEN et1.nota_arredondada = 10 THEN
 			                   '10,0'
@@ -221,10 +226,12 @@
                            ELSE
                                replace(et1.nota_arredondada,'.',',')
                            END
-                FROM modules.nota_componente_curricular et1
-               WHERE et1.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+                FROM modules.nota_componente_curricular et1,
+                     modules.nota_aluno
+               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
                      et1.etapa = 3 AND
-                     nota_aluno.id  = et1.nota_aluno_id) AS nota_arredondada_etapa3,
+                     nota_aluno.id  = et1.nota_aluno_id AND
+                     nota_aluno.matricula_id = matricula.cod_matricula) AS nota_arredondada_etapa3,
 
  (SELECT CASE  WHEN et1.nota_arredondada = 10 THEN
 			                   '10,0'
@@ -233,19 +240,13 @@
                            ELSE
                                replace(et1.nota_arredondada,'.',',')
                            END
-                FROM modules.nota_componente_curricular et1
-               WHERE et1.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+                FROM modules.nota_componente_curricular et1,
+                     modules.nota_aluno
+               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
                      et1.etapa = 4 AND
-                     nota_aluno.id  = et1.nota_aluno_id) AS nota_arredondada_etapa4,
+                     nota_aluno.id  = et1.nota_aluno_id AND
+                     nota_aluno.matricula_id = matricula.cod_matricula) AS nota_arredondada_etapa4,
 
-             (SELECT CASE WHEN char_length(nota_componente_curricular_media.media_arredondada) = 1 THEN
-			                   (to_number(nota_componente_curricular_media.media_arredondada,'999') * 100)
-                           ELSE
-                               (to_number(nota_componente_curricular_media.media_arredondada,'999') * 10)
-                           END
-			     FROM modules.nota_componente_curricular_media cm
-               WHERE cm.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
-                     cm.componente_curricular_id = nota_componente_curricular_media.componente_curricular_id) AS total_pontos,
 
            (SELECT CASE  WHEN et1.nota_arredondada = 10 THEN
 			                   '10,0'
@@ -254,10 +255,12 @@
                            ELSE
                                replace(et1.nota_arredondada,'.',',')
                            END
-                FROM modules.nota_componente_curricular et1
-               WHERE et1.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+                FROM modules.nota_componente_curricular et1,
+                     modules.nota_aluno
+               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
 					 et1.etapa = 'Rc' AND
-                     nota_aluno.id  = et1.nota_aluno_id) AS nota_exame,
+                     nota_aluno.id  = et1.nota_aluno_id AND
+                     nota_aluno.matricula_id = matricula.cod_matricula) AS nota_exame,
 
 
              (SELECT CASE WHEN char_length(nota_componente_curricular_media.media_arredondada) = 1 THEN
@@ -265,10 +268,12 @@
                            ELSE
                                replace(nota_componente_curricular_media.media_arredondada,'.',',')
                            END
-		FROM modules.nota_componente_curricular_media cm
-               WHERE cm.nota_aluno_id = nota_componente_curricular_media.nota_aluno_id AND
-                     cm.componente_curricular_id = nota_componente_curricular_media.componente_curricular_id AND
-                     cm.etapa = 4) AS media,
+		FROM modules.nota_componente_curricular_media,
+         modules.nota_aluno
+               WHERE nota_aluno.id = nota_componente_curricular_media.nota_aluno_id AND
+                     nota_componente_curricular_media.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+                     nota_componente_curricular_media.etapa in('4','Rc') AND
+                     nota_aluno.matricula_id = matricula.cod_matricula) AS media,
 
 	         (SELECT curso.nm_curso
                 FROM pmieducar.curso
@@ -368,7 +373,7 @@
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_componente_curricular.etapa = 1 AND
-				falta_componente_curricular.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
 				falta_aluno.tipo_falta = 2) as faltas_componente_et1,
 
        (SELECT sum(falta_componente_curricular.quantidade)
@@ -377,7 +382,7 @@
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_componente_curricular.etapa = 2 AND
-				falta_componente_curricular.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
 				falta_aluno.tipo_falta = 2) as faltas_componente_et2,
 
        (SELECT sum(falta_componente_curricular.quantidade)
@@ -386,7 +391,7 @@
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_componente_curricular.etapa = 3 AND
-				falta_componente_curricular.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
 				falta_aluno.tipo_falta = 2) as faltas_componente_et3,
 
        (SELECT sum(falta_componente_curricular.quantidade)
@@ -395,7 +400,7 @@
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_componente_curricular.etapa = 4 AND
-				falta_componente_curricular.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
 				falta_aluno.tipo_falta = 2) as faltas_componente_et4,
 
        (SELECT sum(falta_componente_curricular.quantidade)
@@ -403,7 +408,7 @@
                 modules.falta_aluno
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
-				falta_componente_curricular.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
                 falta_componente_curricular.etapa in ('1','2','3','4') AND
 				falta_aluno.tipo_falta = 2) as total_faltas_componente,
 
@@ -423,33 +428,38 @@
 
     (SELECT sum(to_number(componente_curricular_ano_escolar.carga_horaria,'999'))
        FROM modules.componente_curricular_ano_escolar
-     WHERE componente_curricular_ano_escolar.componente_curricular_id = nota_componente_curricular.componente_curricular_id) AS            carga_horaria
+     WHERE componente_curricular_ano_escolar.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina) AS            carga_horaria
 
-        FROM modules.nota_componente_curricular,
-             modules.nota_componente_curricular_media,
-             modules.nota_aluno,
-	         pmieducar.matricula,
-			 pmieducar.matricula_turma
-       WHERE nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
-             nota_componente_curricular_media.nota_aluno_id = nota_componente_curricular.nota_aluno_id AND
-             nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
-			 matricula.ref_ref_cod_escola = $P{escola} AND
+ FROM  pmieducar.matricula,
+		pmieducar.matricula_turma,
+       pmieducar.escola_serie_disciplina
+
+       WHERE  (SELECT CASE WHEN ((select count(*) FROM componente_curricular_turma WHERE escola_id = matricula.ref_ref_cod_escola AND turma_id = matricula_turma.ref_cod_turma) > 0) THEN
+                       escola_serie_disciplina.ref_ref_cod_serie = matricula.ref_ref_cod_serie AND
+                       escola_serie_disciplina.ativo = 1
+                     ELSE
+                       escola_serie_disciplina.ref_ref_cod_serie = matricula.ref_ref_cod_serie AND
+                       escola_serie_disciplina.ref_ref_cod_escola = matricula.ref_ref_cod_escola AND
+                       escola_serie_disciplina.ativo = 1
+                     END) AND
+             matricula.ref_ref_cod_escola = $P{escola} AND
 			 matricula.ref_cod_curso = $P{curso} AND
 			 matricula.ref_ref_cod_serie = $P{serie} AND
-	         matricula.cod_matricula = nota_aluno.matricula_id AND
              matricula.ativo = 1 AND
 			 matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
              matricula_turma.ref_cod_turma = $P{turma} AND
-             matricula_turma.ativo = 1 AND
+             matricula.ano = $P{ano} AND
+
              (SELECT CASE WHEN $P{matricula} = 0 THEN
                    matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
  		           matricula_turma.ref_cod_turma = $P{turma}
                ELSE
                    matricula.cod_matricula = $P{matricula}
                END)
+
 	) AS etapa1
-GROUP BY nome_aluno, matricula_id,componente_curricular_id, nome_disciplina
-ORDER BY nome_aluno, matricula_id]]>
+GROUP BY id_disciplina, nome_disciplina, nome_aluno
+ORDER BY nome_aluno, nome_disciplina]]>
 	</queryString>
 	<field name="ano" class="java.lang.Integer"/>
 	<field name="nome_responsavel" class="java.lang.String"/>
@@ -468,14 +478,12 @@ ORDER BY nome_aluno, matricula_id]]>
 	<field name="data_atual" class="java.lang.String"/>
 	<field name="hora_atual" class="java.lang.String"/>
 	<field name="nome_disciplina" class="java.lang.String"/>
-	<field name="matricula_id" class="java.lang.Integer"/>
 	<field name="matricula" class="java.lang.Integer"/>
 	<field name="id_disciplina" class="java.lang.Integer"/>
 	<field name="nota1" class="java.lang.String"/>
 	<field name="nota2" class="java.lang.String"/>
 	<field name="nota3" class="java.lang.String"/>
 	<field name="nota4" class="java.lang.String"/>
-	<field name="total_pontos" class="java.math.BigDecimal"/>
 	<field name="nota_exame" class="java.lang.String"/>
 	<field name="media" class="java.lang.String"/>
 	<field name="nome_curso" class="java.lang.String"/>
@@ -528,11 +536,11 @@ ORDER BY nome_aluno, matricula_id]]>
 					<text><![CDATA[F]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="252" y="52" width="43" height="15"/>
+					<reportElement x="252" y="51" width="30" height="15"/>
 					<textElement>
 						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Telefone:]]></text>
+					<text><![CDATA[Fone:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="506" y="132" width="34" height="11"/>
@@ -548,11 +556,11 @@ ORDER BY nome_aluno, matricula_id]]>
 					</graphicElement>
 				</line>
 				<textField>
-					<reportElement x="89" y="23" width="253" height="14"/>
+					<reportElement x="89" y="24" width="253" height="14"/>
 					<textElement>
 						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="357" y="37" width="69" height="15"/>
@@ -579,14 +587,14 @@ ORDER BY nome_aluno, matricula_id]]>
 					<textElement markup="none">
 						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
 					<reportElement x="510" y="145" width="26" height="11"/>
 					<textElement textAlignment="Center">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression class="java.lang.Double"><![CDATA[$F{frequencia}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{frequencia}]]></textFieldExpression>
 				</textField>
 				<line>
 					<reportElement x="429" y="131" width="1" height="26"/>
@@ -607,11 +615,11 @@ ORDER BY nome_aluno, matricula_id]]>
 					</graphicElement>
 				</line>
 				<textField isBlankWhenNull="true">
-					<reportElement x="297" y="52" width="59" height="15"/>
+					<reportElement x="283" y="51" width="59" height="15"/>
 					<textElement>
 						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{fone}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{fone}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="17" y="136" width="170" height="14"/>
@@ -625,7 +633,7 @@ ORDER BY nome_aluno, matricula_id]]>
 					<textElement>
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{situacao}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{situacao}]]></textFieldExpression>
 				</textField>
 				<line>
 					<reportElement x="542" y="67" width="1" height="91"/>
@@ -638,7 +646,7 @@ ORDER BY nome_aluno, matricula_id]]>
 					<textElement>
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_serie}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{nome_serie}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="466" y="132" width="35" height="11"/>
@@ -658,7 +666,7 @@ ORDER BY nome_aluno, matricula_id]]>
 					<textElement textAlignment="Center">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et3}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{total_faltas_et3}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="345" y="99" width="75" height="13"/>
@@ -672,7 +680,7 @@ ORDER BY nome_aluno, matricula_id]]>
 					<textElement textAlignment="Center">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et2}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{total_faltas_et2}]]></textFieldExpression>
 				</textField>
 				<line>
 					<reportElement x="12" y="157" width="530" height="1"/>
@@ -692,7 +700,7 @@ ORDER BY nome_aluno, matricula_id]]>
 					<textElement>
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_curso}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{nome_curso}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="331" y="132" width="9" height="11"/>
@@ -706,7 +714,7 @@ ORDER BY nome_aluno, matricula_id]]>
 					<textElement textAlignment="Center">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et4}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{total_faltas_et4}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="244" y="132" width="37" height="11"/>
@@ -739,12 +747,8 @@ ORDER BY nome_aluno, matricula_id]]>
 					<textElement>
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_turma}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{nome_turma}]]></textFieldExpression>
 				</textField>
-				<image>
-					<reportElement x="22" y="14" width="57" height="46"/>
-					<imageExpression class="java.lang.String"><![CDATA[$P{logo}]]></imageExpression>
-				</image>
 				<line>
 					<reportElement x="388" y="131" width="1" height="26"/>
 					<graphicElement>
@@ -763,14 +767,14 @@ ORDER BY nome_aluno, matricula_id]]>
 					<textElement>
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_aluno}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{nome_aluno}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
 					<reportElement x="426" y="37" width="66" height="15"/>
 					<textElement>
 						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ano}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{ano}]]></textFieldExpression>
 				</textField>
 				<line>
 					<reportElement x="242" y="130" width="1" height="27"/>
@@ -811,7 +815,7 @@ ORDER BY nome_aluno, matricula_id]]>
 					<textElement>
 						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{nm_escola}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="16" y="99" width="100" height="13"/>
@@ -841,11 +845,11 @@ ORDER BY nome_aluno, matricula_id]]>
 					<text><![CDATA[01 - CURSO]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement x="89" y="52" width="160" height="15"/>
+					<reportElement x="89" y="51" width="160" height="15"/>
 					<textElement>
 						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Endereço: "+$F{logradouro}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{logradouro}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="233" y="69" width="64" height="13"/>
@@ -859,7 +863,7 @@ ORDER BY nome_aluno, matricula_id]]>
 					<textElement textAlignment="Center">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_et1}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{total_faltas_et1}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="343" y="132" width="34" height="11"/>
@@ -873,18 +877,18 @@ ORDER BY nome_aluno, matricula_id]]>
 					<textElement>
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{periodo}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{periodo}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="403" y="52" width="123" height="15"/>
+					<reportElement x="396" y="51" width="145" height="15"/>
 					<textElement>
 						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{email}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="357" y="52" width="44" height="15"/>
-					<textElement textAlignment="Right">
+					<reportElement x="357" y="51" width="38" height="15"/>
+					<textElement>
 						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[E-mail:]]></text>
@@ -920,14 +924,14 @@ ORDER BY nome_aluno, matricula_id]]>
 					<textElement textAlignment="Center">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{frequencia_componente}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{frequencia_componente}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
 					<reportElement x="471" y="145" width="26" height="11"/>
 					<textElement textAlignment="Center">
 						<font fontName="DejaVu Sans" size="8" isBold="false"/>
 					</textElement>
-					<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{total_faltas}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="377" y="132" width="9" height="11"/>
@@ -950,19 +954,16 @@ ORDER BY nome_aluno, matricula_id]]>
 					</textElement>
 					<text><![CDATA[04 - TURMA]]></text>
 				</staticText>
+				<image>
+					<reportElement x="22" y="11" width="57" height="46"/>
+					<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+				</image>
 			</band>
 		</groupHeader>
 		<groupFooter>
 			<band height="41">
-				<staticText>
-					<reportElement x="26" y="14" width="504" height="11"/>
-					<textElement textAlignment="Center">
-						<font fontName="DejaVu Sans" size="8"/>
-					</textElement>
-					<text><![CDATA[------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------]]></text>
-				</staticText>
 				<line>
-					<reportElement x="13" y="0" width="530" height="1"/>
+					<reportElement x="13" y="-2" width="530" height="1"/>
 					<graphicElement>
 						<pen lineWidth="0.25"/>
 					</graphicElement>
@@ -977,15 +978,15 @@ ORDER BY nome_aluno, matricula_id]]>
 		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="1" splitType="Stretch"/>
+		<band height="14" splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="16" splitType="Stretch">
+		<band height="18" splitType="Stretch">
 			<rectangle>
-				<reportElement mode="Opaque" x="14" y="0" width="527" height="15" forecolor="#FFFFFF" backcolor="#F0F0F0">
+				<reportElement mode="Opaque" x="14" y="0" width="527" height="16" forecolor="#FFFFFF" backcolor="#F0F0F0">
 					<printWhenExpression><![CDATA[new Boolean(($V{COLUMN_COUNT} % 2) == 1)]]></printWhenExpression>
 				</reportElement>
 			</rectangle>
@@ -994,21 +995,21 @@ ORDER BY nome_aluno, matricula_id]]>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nota1}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="249" y="1" width="26" height="15"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota2}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nota2}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="16" y="1" width="170" height="15"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_disciplina}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nome_disciplina}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="242" y="-1" width="1" height="17"/>
@@ -1051,7 +1052,7 @@ ORDER BY nome_aluno, matricula_id]]>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota3}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nota3}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="388" y="-1" width="1" height="17"/>
@@ -1070,7 +1071,7 @@ ORDER BY nome_aluno, matricula_id]]>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota4}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nota4}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="464" y="-1" width="1" height="17"/>
@@ -1083,7 +1084,7 @@ ORDER BY nome_aluno, matricula_id]]>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{media}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{media}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="376" y="-14" width="1" height="12"/>
@@ -1120,42 +1121,42 @@ ORDER BY nome_aluno, matricula_id]]>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota_exame}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nota_exame}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="232" y="1" width="9" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement x="231" y="1" width="11" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$F{faltas_componente_et1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{faltas_componente_et1}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="282" y="1" width="9" height="15"/>
+				<reportElement x="281" y="1" width="11" height="15"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$F{faltas_componente_et2}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{faltas_componente_et2}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="331" y="1" width="9" height="15"/>
+				<reportElement x="330" y="1" width="11" height="15"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$F{faltas_componente_et3}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{faltas_componente_et3}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="378" y="1" width="9" height="15"/>
+				<reportElement x="377" y="1" width="11" height="15"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$F{faltas_componente_et4}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{faltas_componente_et4}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="471" y="1" width="26" height="15"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_faltas_componente}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{total_faltas_componente}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="429" y="-1" width="1" height="17"/>

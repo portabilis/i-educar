@@ -34,9 +34,9 @@
                public.fcn_upper(pessoa.nome) as nome_aluno,
 
        (SELECT CASE WHEN fisica.sexo = 'M' THEN
-                        'Masculino'
+                        'Mas'
                      ELSE
-                        'Feminino'
+                        'Fem'
                      END) as sexo,
        to_char(fisica.data_nasc,'dd/mm/yyyy') as data_nasc,
        (SELECT documento.rg from cadastro.documento where documento.idpes = fisica.idpes) as identidade,
@@ -328,7 +328,7 @@ ORDER BY nome_turma, nome_aluno]]>
 		<groupHeader>
 			<band height="19">
 				<textField>
-					<reportElement x="6" y="4" width="144" height="13"/>
+					<reportElement x="4" y="4" width="144" height="13"/>
 					<textElement>
 						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 					</textElement>
@@ -450,65 +450,65 @@ ORDER BY nome_turma, nome_aluno]]>
 				<text><![CDATA[Relação de Alunos]]></text>
 			</staticText>
 			<textField>
-				<reportElement isPrintRepeatedValues="false" x="7" y="4" width="210" height="13"/>
+				<reportElement isPrintRepeatedValues="false" x="5" y="4" width="210" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Curso: "+$F{nome_curso}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="299" y="20" width="54" height="13"/>
+				<reportElement x="330" y="20" width="27" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
+					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
 				<text><![CDATA[Sexo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="357" y="20" width="62" height="13"/>
+				<reportElement x="359" y="20" width="62" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
+					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
 				<text><![CDATA[Dt. nascimento]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="422" y="20" width="32" height="13"/>
+				<reportElement x="424" y="20" width="32" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
+					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
 				<text><![CDATA[RG]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="166" y="20" width="100" height="13"/>
+				<reportElement x="163" y="20" width="100" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
+					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
 				<text><![CDATA[Aluno(a)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="6" y="20" width="33" height="13"/>
+				<reportElement x="4" y="20" width="33" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
+					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
 				<text><![CDATA[Código]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="487" y="20" width="49" height="13"/>
+				<reportElement x="488" y="20" width="49" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
+					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
 				<text><![CDATA[Situação]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="41" y="20" width="48" height="13"/>
+				<reportElement x="39" y="20" width="48" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
+					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
 				<text><![CDATA[Série/Ciasc]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="103" y="20" width="36" height="13"/>
+				<reportElement x="101" y="20" width="36" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
+					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
 				<text><![CDATA[ID INEP]]></text>
 			</staticText>
@@ -519,20 +519,34 @@ ORDER BY nome_turma, nome_aluno]]>
 				</textElement>
 				<textFieldExpression><![CDATA["Série: "+$F{nome_serie}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement isPrintRepeatedValues="false" x="326" y="4" width="145" height="13"/>
+			<textField isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="362" y="4" width="92" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Prédio: "+$F{predio}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{predio}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement isPrintRepeatedValues="false" x="474" y="4" width="76" height="13"/>
+			<textField isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="488" y="4" width="58" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Sala: "+$F{sala}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{sala}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="326" y="4" width="37" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Prédio:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="462" y="4" width="26" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sala:]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -541,58 +555,58 @@ ORDER BY nome_turma, nome_aluno]]>
 	<detail>
 		<band height="15" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement x="166" y="2" width="131" height="11"/>
+				<reportElement x="163" y="2" width="164" height="11"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
+					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nome_aluno}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="299" y="2" width="54" height="11"/>
+				<reportElement x="330" y="2" width="27" height="11"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
+					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sexo}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement x="357" y="2" width="62" height="11"/>
+				<reportElement x="359" y="2" width="62" height="11"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
+					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{data_nasc}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="422" y="2" width="60" height="11"/>
+				<reportElement x="424" y="2" width="60" height="11"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
+					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{identidade}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="487" y="2" width="64" height="11"/>
+				<reportElement x="488" y="2" width="64" height="11"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
+					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{situacao}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="6" y="2" width="33" height="11"/>
+				<reportElement x="4" y="2" width="33" height="11"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
+					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cod_aluno}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="41" y="2" width="59" height="11"/>
+				<reportElement x="39" y="2" width="59" height="11"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
+					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{serie_ciasc}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="103" y="2" width="59" height="11"/>
+				<reportElement x="101" y="2" width="59" height="11"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
+					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{inep}]]></textFieldExpression>
 			</textField>
