@@ -262,6 +262,17 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
 
+  protected function canDelete() {
+    try {
+      $this->validatesPresenceOfEtapa(true);
+    }
+    catch (Exception $e) {
+      return false;
+    }
+    return true;
+  }
+
+
   protected function canDeleteNota() {
     return $this->canDelete();
   }
