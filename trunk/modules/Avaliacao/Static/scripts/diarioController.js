@@ -149,20 +149,22 @@ var $j = jQuery.noConflict();
 
     function afterChangeResource($resourceElement){
       $resourceElement.removeAttr('disabled').siblings('img').remove();
-      //$resourceElement.siblings().first().focus();
 
+      //#TODO setar foco antes da requisao acabar...
       //set focus in next field or textarea
       if ($resourceElement.attr('class') == 'nota-matricula')
         $('#falta-matricula-' + $resourceElement.data('matricula_id')).focus();
       else if ($resourceElement.attr('class') == 'falta-matricula')
-        $('#parecer-matricula-' + $resourceElement.data('matricula_id')).focus();
+      {
+        if ($('#parecer-matricula-' + $resourceElement.data('matricula_id')).focus().length < 1)
+          $j('#falta-matricula-' + $resourceElement.data('matricula_id')).closest('tr').next().find('input:first').focus();
+      }
       else if ($resourceElement.attr('class') == 'parecer-matricula')
       {
-        $firstField = $j('#parecer-matricula-' + $resourceElement.data('matricula_id')).closest('tr').next().find('input:first');
-        if ($firstField)
-          $firstField.focus();
-        else
+        if ($j('#parecer-matricula-' + $resourceElement.data('matricula_id')).closest('tr').next().find('input:first').focus().length < 1)
+        {
           $j('#parecer-matricula-' + $resourceElement.data('matricula_id')).closest('tr').next().find('textarea:first').focus();
+        }
       }
     }
 
