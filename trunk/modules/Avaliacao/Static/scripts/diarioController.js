@@ -5,29 +5,54 @@ var $j = jQuery.noConflict();
   $(function(){
 
     var $formFilter = $('#formcadastro');
-    var $resultTable = $('#form_resultado .tablelistagem').addClass('styled');
     var $submitButton = $('#botao_busca');
+    var $resultTable = $('#form_resultado .tablelistagem').addClass('horizontal-expand');
+    $resultTable.children().remove();
 
-    //initial fixups
     var diarioUrlBase = 'diario';
     var diarioAjaxUrlBase = 'diarioAjax';
-    var $tableDadosDiario = $('<table />').attr('id', 'dados-diario').addClass('styled').addClass('horizontal-expand').addClass('center');
 
-    $feedbackMessages = $('<div />').attr('id', 'feedback-messages').prependTo($formFilter.parent());
-    $navActions = $('<p />').attr('id', 'nav-actions').prependTo($formFilter.parent()); 
-    $tableDadosDiario.prependTo($formFilter.parent()).hide();
+    var $navActions = $('<p />').attr('id', 'nav-actions').prependTo($formFilter.parent()); 
+    var $tableDadosDiario = $('<table />')
+                              .attr('id', 'dados-diario')
+                              .addClass('styled')
+                              .addClass('horizontal-expand')
+                              .addClass('center')
+                              .hide()
+                              .prependTo($formFilter.parent());
 
-    //global ajax events
-    $('.change-visibility-on-ajax-change')
-      .ajaxStart(function() { $(this).show(); })
-      .ajaxStop(function() { $(this).hide(); });
-    $('.change-status-on-ajax-change')
-      .ajaxStart(function() { $(this).attr('disabled', 'disabled'); })
-      .ajaxStop(function() { $(this).removeAttr('disabled'); });
+    var $feedbackMessages = $('<div />').attr('id', 'feedback-messages').prependTo($formFilter.parent());
 
-    //ao submeter form carregar matriculas, notas, faltas e pareceres
-    //ao mudar nota, falta ou parecer enviar postar, e tratar retorno
+    var $tableOrientationSearch = $('<table />')
+                                    .attr('id', 'orientation-search')
+                                    .appendTo($resultTable.parent());
 
+    var $orientationSearch = $('<p />')
+      .html('')
+      .addClass('center')
+      .appendTo($('<tr />').appendTo($tableOrientationSearch));
+
+    function fixupFieldsWidth(){
+      var maxWidth = 0;
+      var $fields = $.merge($j('#formcadastro select'), 
+                            $j('#formcadastro input[type="text"]')
+                    );
+
+      //get maxWidh
+      $.each($fields, function(index, value){
+        $value = $(value);
+        if ($value.width() > maxWidth)
+          maxWidth = $value.width(); 
+      });
+
+      //set maxWidth
+      $.each($fields, function(index, value){
+        $(value).width(maxWidth);
+      });
+    };
+    fixupFieldsWidth();
+
+    //url builders
     var resourceUrlBuilder = {
       buildUrl : function(urlBase, vars){
 
@@ -108,13 +133,6 @@ var $j = jQuery.noConflict();
     };
 
 
-    var matriculasSearchOptions = {
-      url : '',
-      dataType : 'json',
-      success : handleMatriculasSearch
-    };
-
-
     function changeResource($resourceElement, postFunction, deleteFunction){
       beforeChangeResource($resourceElement);
 
@@ -150,6 +168,7 @@ var $j = jQuery.noConflict();
     function afterChangeResource($resourceElement){
       $resourceElement.removeAttr('disabled').siblings('img').remove();
 
+      //#FIXME somente mudar foco, se o elemento com foco for o atual
       //#TODO setar foco antes da requisao acabar...
       //set focus in next field or textarea
       if ($resourceElement.attr('class') == 'nota-matricula')
@@ -237,20 +256,15 @@ var $j = jQuery.noConflict();
     }
 
 
-    function deleteResource(resourceName, $resourceElement, options, handleErrorDeleteResource){
+    function deleteResource(resourceName, $resourceElement, options, handleCompleteDeleteResource, handleErrorDeleteResource){
       if (confirmDelete(resourceName))
-      {
-        $.ajax(options).error(handleErrorDeleteResource).complete(function(){console.log('delete completado...')});
-      }
+        $.ajax(options).error(handleErrorDeleteResource).complete(handleCompleteDeleteResource);
       else
-      {
         console.log('#todo call getResource url');  
-      }
     }
 
 
     function deleteNota($notaFieldElement){
-
       var resourceName = 'nota';
 
       var options = {
@@ -262,7 +276,7 @@ var $j = jQuery.noConflict();
         }
       };
 
-      deleteResource(resourceName, $notaFieldElement, options, handleErrorDeleteResource);
+      deleteResource(resourceName, $notaFieldElement, options, handleCompleteDeleteResource, handleErrorDeleteResource);
     };
 
 
@@ -278,7 +292,7 @@ var $j = jQuery.noConflict();
         }
       };
 
-      deleteResource(resourceName, $faltaFieldElement, options, handleErrorDeleteResource);
+      deleteResource(resourceName, $faltaFieldElement, options, handleCompleteDeleteResource, handleErrorDeleteResource);
     }
 
 
@@ -294,11 +308,9 @@ var $j = jQuery.noConflict();
         }
       };
 
-      deleteResource(resourceName, $parecerFieldElement, options, handleErrorDeleteResource);
+      deleteResource(resourceName, $parecerFieldElement, options, handleCompleteDeleteResource, handleErrorDeleteResource);
     }
 
-
-    //update fields functions
 
     function updateFieldSituacaoMatricula(matricula_id, situacao){
       $('#situacao-matricula-' + matricula_id).html(situacao);
@@ -306,16 +318,56 @@ var $j = jQuery.noConflict();
 
 
     //callback handlers
+
+    //delete
+    function handleDelete(dataResponse){
+      var targetId = dataResponse.att + '-matricula-' + dataResponse.matricula_id;
+      handleMessages(dataResponse.msgs, targetId);
+      updateFieldSituacaoMatricula(dataResponse.matricula_id, dataResponse.situacao);
+    }
+
+
     function handleErrorDeleteResource(request){
       console.log('#todo handleErrorDeleteResource');
       console.log(request);
     }
 
+
+    var handleCompleteDeleteResource = function(){
+      console.log('delete completado...')
+    };
+
+    
+    //post
     function handleErrorPost(request){
       console.log('#todo handleError');
       console.log(request);
     }
 
+
+    function handlePost(dataResponse){
+      var targetId = dataResponse.att + '-matricula-' + dataResponse.matricula_id;
+      handleMessages(dataResponse.msgs, targetId);
+      updateFieldSituacaoMatricula(dataResponse.matricula_id, dataResponse.situacao);
+    }
+
+
+    function handleCompletePostNota(){
+      console.log('#todo post nota completado...')
+    };
+
+
+    function handleCompletePostFalta(){
+      console.log('#todo post falta completado...')
+    };
+
+
+    function handleCompletePostParecer(){
+      console.log('#todo post parecer completado...')
+    };
+
+
+    //get
     function handleGetNota(nota){
       console.log('#todo handleGetNota');
       console.log(nota);
@@ -331,38 +383,6 @@ var $j = jQuery.noConflict();
       console.log('#todo handleGetParecer');
     }
 
-
-    function handlePost(dataResponse){
-      //#TODO pintar campo de verde caso não tenha msgs de erro
-      //#TODO pintar campo de vermelho caso tenha msgs de erro
-
-      var targetId = dataResponse.att + '-matricula-' + dataResponse.matricula_id;
-      handleMessages(dataResponse.msgs, targetId);
-      updateFieldSituacaoMatricula(dataResponse.matricula_id, dataResponse.situacao);
-    }
-
-
-    function handleCompletePostNota(){
-      console.log('#todo post nota completado...')
-    };
-
-
-
-    function handleCompletePostFalta(){
-      console.log('#todo post falta completado...')
-    };
-
-
-    function handleCompletePostParecer(){
-      console.log('#todo post parecer completado...')
-    };
-
-
-    function handleDelete(dataResponse){
-      var targetId = dataResponse.att + '-matricula-' + dataResponse.matricula_id;
-      handleMessages(dataResponse.msgs, targetId);
-      updateFieldSituacaoMatricula(dataResponse.matricula_id, dataResponse.situacao);
-    }
 
     function handleMessages(messages, targetId){
 
@@ -424,21 +444,26 @@ var $j = jQuery.noConflict();
 
       $linha.appendTo($tableDadosDiario);
       $tableDadosDiario.show();
-
       $tableDadosDiario.data.regra_avaliacao = regraAvaliacao;
     }
 
-
     function handleMatriculasSearch(dataResponse) { 
 
-      //todo move to a function ?
-      $navActions.html(
-        $("<a href='#'>Nova consulta</a>").bind('click', function(){
-          $(this).hide();
-          $tableDadosDiario.children().remove();
-          $formFilter.fadeIn('fast', function(){$(this).show()});
-          $resultTable.children().fadeOut('fast', function(){$resultTable.children().remove()});
-        }).attr('style', 'text-decoration: underline').addClass('button')
+      var setSearchPage = function(event) {
+        $(this).hide();
+        $tableDadosDiario.children().remove();
+
+        $formFilter.fadeIn('fast', function(){
+          $(this).show()
+        });
+
+        $resultTable.children().fadeOut('fast').remove();
+        $tableOrientationSearch.show();
+      };
+
+      $navActions.html($("<a href='#'>Nova consulta</a>")
+                        .bind('click', setSearchPage)
+                        .attr('style', 'text-decoration: underline')
       );
 
       setTableDadosDiario(dataResponse.regra_avaliacao);
@@ -447,7 +472,7 @@ var $j = jQuery.noConflict();
 
       handleMessages(dataResponse.msgs);
 
-      //set headers table
+      //set headers
       var $linha = $('<tr />');
       $('<th />').html('Matricula').appendTo($linha);
       $('<th />').html('Aluno').appendTo($linha);
@@ -463,22 +488,20 @@ var $j = jQuery.noConflict();
   
       $linha.appendTo($resultTable);
 
+
+      //set (result) rows
       $.each(dataResponse.matriculas, function(index, value){
 
         var $linha = $('<tr />');
         
         $('<td />').html(value.matricula_id).addClass('center').appendTo($linha);
         $('<td />').html(value.aluno_id + ' - ' +value.nome).appendTo($linha);
-
-        //situacao
         $('<td />').addClass('situacao-matricula').attr('id', 'situacao-matricula-' + value.matricula_id).data('matricula_id', value.matricula_id).addClass('center').html(value.situacao).appendTo($linha);
 
         //nota
         if(useNota) {
-
           if($tableDadosDiario.data.regra_avaliacao.tipo_nota == 'conceitual')
           {
-
             var opcoesNotas = $tableDadosDiario.data.regra_avaliacao.opcoes_notas;
             var $notaField = $('<select />').addClass('nota-matricula').attr('id', 'nota-matricula-' + value.matricula_id).data('matricula_id', value.matricula_id);
 
@@ -512,41 +535,52 @@ var $j = jQuery.noConflict();
 
         $linha.fadeIn('slow').appendTo($resultTable);
       });
+
       $resultTable.find('tr:even').addClass('even');
 
-      //events
+      //set onchange events
       var $notaFields = $resultTable.find('.nota-matricula');
       var $faltaFields = $resultTable.find('.falta-matricula');
       var $parecerFields = $resultTable.find('.parecer-matricula');
-
       $notaFields.on('change', changeNota);
       $faltaFields.on('change', changeFalta);
-      $parecerFields
-        .on('change', changeParecer);
-        //.on('focusout', function(event){$(this).attr('rows', '2')})
-        //.on('focusin', function(event){$(this).attr('rows', '10')});
+      $parecerFields.on('change', changeParecer);
+      //.on('focusout', function(event){$(this).attr('rows', '2')})
+      //.on('focusin', function(event){$(this).attr('rows', '10')});
 
-      //#FIXME not working $notaFields.on('keypress', useTabOnPressEnter);
-
-      $resultTable.find('input:first').focus();
+      $resultTable.addClass('styled').find('input:first').focus();
     }
 
-    $submitButton.val('Carregar');
-    $submitButton.addClass('change-status-on-ajax-change');
-    $submitButton.attr('onclick', '');
-    $submitButton.click(function(event){
+    //change submit button
+    var onClickSearchEvent = function(event){
       if (validatesPresenseOfValueInRequiredFields())
       {
-        matriculasSearchOptions.url = getResourceUrlBuilder.buildUrl(diarioAjaxUrlBase, 'matriculas');
+        matriculasSearchOptions.url = getResourceUrlBuilder.buildUrl(diarioAjaxUrlBase, 'matriculas', {matricula_id : $('#ref_cod_matricula').val()});
 
         if (window.history && window.history.pushState)
           window.history.pushState('', '', getResourceUrlBuilder.buildUrl(diarioUrlBase, 'matriculas'));
 
         $resultTable.children().fadeOut('fast').remove();
-        $formFilter.submit();
-        $formFilter.fadeOut('fast', function(){$navActions.fadeIn('slow').html('Aguarde, carregando...').attr('style', 'text-align:center;').unbind('click');});
+        $tableOrientationSearch.hide();
+        $formFilter.submit().fadeOut('fast', function(){
+          $navActions
+            .fadeIn('slow')
+            .html('Aguarde, carregando...')
+            .attr('style', 'text-align:center;')
+            .unbind('click');
+        });
       }
-    });
+    };
+    $submitButton.val('Carregar');
+    $submitButton.attr('onclick', '');
+    $submitButton.click(onClickSearchEvent);
+
+    //config form search
+    var matriculasSearchOptions = {
+      url : '',
+      dataType : 'json',
+      success : handleMatriculasSearch
+    };
     $formFilter.ajaxForm(matriculasSearchOptions);
 
   });
