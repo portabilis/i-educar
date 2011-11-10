@@ -55,7 +55,8 @@ table.styled {
   border-collapse:  collapse;
   margin-top: 5px;
   
-  font-family: Verdana, Geneva, Arial, sans-serif;
+  font-family: arial, verdana, lucida, helvetica, sans-serif;
+  font-size: 11px;
 }
 
 table {
@@ -67,7 +68,7 @@ table > caption {
 }
 
 table.styled tr td, table.styled tr th {
-  border: thin dotted #e9e9e9;
+  border: 1px solid #fff;
 }
 
 table.styled td, table.styled th {
@@ -75,7 +76,7 @@ table.styled td, table.styled th {
 }
 
 table.styled th {
-  background-color: #f5f5f5;
+  background-color: #A1B3BD;
   color: #3C3C3D;
   font-weight: bold;
 }
@@ -100,12 +101,39 @@ table.nocellcolor th, .nocellcolor {
   background-color: #fff;
 }
 
-table.cellcolor th, table tr.cellcolor th, .cellcolor {
-  background-color: #f5f5f5;
+table.cellcolor th, table tr.cellcolor th, .cellcolor, tr.even {
+  background-color: #E4E9ED;
+}
+
+select, input, textarea {
+    border: 1px solid #CACACA;
+}
+
+select, input, textarea{
+
+  -moz-border-radius-bottomleft: 2px;
+  border-bottom-left-radius: 2px;
+  -webkit-border-bottom-left-radius: 2px;
+
+  -moz-border-radius-topright: 2px;
+  border-top-right-radius: 2px;
+  -webkit-border-top-right-radius: 2px;
+
+  -moz-border-radius-bottomright: 2px;
+  border-bottom-right-radius: 2px;
+  -webkit-border-bottom-right-radius: 2px;
+
+  -moz-border-radius-topleft: 2px;
+  border-top-left-radius: 2px;
+  -webkit-border-top-right-radius: 2px;
+}
+
+select, input, textarea {
+    padding: 2px;
 }
 
 table.strong th , tr.strong th, tr.strong td{
-  background-color: #dbdbdb;
+  background-color: #A1B3BD;
 }
 
 div#error h1 {
