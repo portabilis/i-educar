@@ -149,6 +149,11 @@ var $j = jQuery.noConflict();
     };
 
 
+    var changeNotaExame = function(event){
+      changeResource($(this), postNotaExame, deleteNotaExame);
+    };
+
+
     var changeFalta = function(event){
       changeResource($(this), postFalta, deleteFalta);
     };
@@ -207,6 +212,22 @@ var $j = jQuery.noConflict();
       };
 
       postResource(options, handleErrorPost, handleCompletePostNota);
+    }
+
+
+    function postNotaExame($notaExameFieldElement){
+
+      var options = {
+        url : postResourceUrlBuilder.buildUrl(diarioAjaxUrlBase, 'nota_exame', {matricula_id : $notaExameFieldElement.data('matricula_id'), etapa : 'Rc'}),
+        dataType : 'json',
+        data : {att_value : $notaExameFieldElement.val()},
+        success : function(dataResponse){
+          afterChangeResource($notaExameFieldElement);
+          handlePost(dataResponse);
+        }
+      };
+
+      postResource(options, handleErrorPost, handleCompletePostNotaExame);
     }
 
 
@@ -281,6 +302,22 @@ var $j = jQuery.noConflict();
     };
 
 
+    function deleteNotaExame($notaExameFieldElement){
+      var resourceName = 'nota_exame';
+
+      var options = {
+        url : deleteResourceUrlBuilder.buildUrl(diarioAjaxUrlBase, resourceName, {matricula_id : $notaExameFieldElement.data('matricula_id'), etapa : 'Rc'}),
+        dataType : 'json',
+        success : function(dataResponse){
+          afterChangeResource($notaExameFieldElement);
+          handleDelete(dataResponse);
+        }
+      };
+
+      deleteResource(resourceName, $notaExameFieldElement, options, handleCompleteDeleteResource, handleErrorDeleteResource);
+    };
+
+
     function deleteFalta($faltaFieldElement){
       var resourceName = 'falta';
 
@@ -315,6 +352,13 @@ var $j = jQuery.noConflict();
 
     function updateFieldSituacaoMatricula(matricula_id, situacao){
       $('#situacao-matricula-' + matricula_id).html(situacao);
+  
+      $fieldNotaExame = $('#nota-exame-matricula-'+matricula_id);
+      console.log($fieldNotaExame);
+      if ($fieldNotaExame.val() != '' || situacao.toLowerCase() == 'em exame')
+        $fieldNotaExame.show();
+      else if($fieldNotaExame.val() == '')
+        $fieldNotaExame.hide();
     }
 
 
@@ -355,6 +399,11 @@ var $j = jQuery.noConflict();
 
     function handleCompletePostNota(){
       console.log('#todo post nota completado...')
+    };
+
+
+    function handleCompletePostNotaExame(){
+      console.log('#todo post nota_exame completado...')
     };
 
 
@@ -513,7 +562,12 @@ var $j = jQuery.noConflict();
         $('<th />').html('Situação').appendTo($linha);
 
         if(useNota)
+        {
           $('<th />').html('Nota').appendTo($linha);
+
+          if ($tableDadosDiario.data.regra_avaliacao.quantidade_etapas == $('#etapa').val())
+            $('<th />').html('Nota exame').appendTo($linha);
+        }
 
         $('<th />').html('Falta').appendTo($linha);
 
@@ -533,18 +587,19 @@ var $j = jQuery.noConflict();
         $('<td />').addClass('situacao-matricula').attr('id', 'situacao-matricula-' + value.matricula_id).data('matricula_id', value.matricula_id).addClass('center').html(value.situacao).appendTo($linha);
 
         //nota
-        if(useNota) {
+        var getFieldNota = function(notaAtual, klass, id){
+    
           if($tableDadosDiario.data.regra_avaliacao.tipo_nota == 'conceitual')
           {
             var opcoesNotas = $tableDadosDiario.data.regra_avaliacao.opcoes_notas;
-            var $notaField = $('<select />').addClass('nota-matricula').attr('id', 'nota-matricula-' + value.matricula_id).data('matricula_id', value.matricula_id);
+            var $notaField = $('<select />').addClass(klass).attr('id', id).data('matricula_id', value.matricula_id);
 
             //adiciona options
             var $option = $('<option />').appendTo($notaField);
             for(key in opcoesNotas) {
               var $option = $('<option />').val(key).html(opcoesNotas[key]);
 
-              if (value.nota_atual == key)
+              if (notaAtual == key)
                 $option.attr('selected', 'selected');
     
               $option.appendTo($notaField);
@@ -552,9 +607,25 @@ var $j = jQuery.noConflict();
           }
           else
           {
-            var $notaField = $('<input />').addClass('nota-matricula').attr('id', 'nota-matricula-' + value.matricula_id).val(value.nota_atual).attr('maxlength', '4').attr('size', '4').data('matricula_id', value.matricula_id);
+            var $notaField = $('<input />').addClass(klass).attr('id', id).val(notaAtual).attr('maxlength', '4').attr('size', '4').data('matricula_id', value.matricula_id);
           }
-          $('<td />').html($notaField).addClass('center').appendTo($linha);
+
+          return $notaField;
+        }
+
+        if(useNota) {
+          $('<td />').html(getFieldNota(value.nota_atual, 'nota-matricula', 'nota-matricula-' + value.matricula_id)).addClass('center').appendTo($linha);
+
+          if ($tableDadosDiario.data.regra_avaliacao.quantidade_etapas == $('#etapa').val())
+          {
+
+            var $fieldNotaExame = getFieldNota(value.nota_exame, 'nota-exame-matricula', 'nota-exame-matricula-' + value.matricula_id);
+            $('<td />').html($fieldNotaExame).addClass('center').appendTo($linha);
+
+            if (value.nota_exame == '' && value.situacao.toLowerCase() != 'em exame')
+              $fieldNotaExame.hide();
+          }
+
         }
         
         //falta
@@ -574,9 +645,11 @@ var $j = jQuery.noConflict();
 
       //set onchange events
       var $notaFields = $resultTable.find('.nota-matricula');
+      var $notaExameFields = $resultTable.find('.nota-exame-matricula');
       var $faltaFields = $resultTable.find('.falta-matricula');
       var $parecerFields = $resultTable.find('.parecer-matricula');
       $notaFields.on('change', changeNota);
+      $notaExameFields.on('change', changeNotaExame);
       $faltaFields.on('change', changeFalta);
       $parecerFields.on('change', changeParecer);
       //.on('focusout', function(event){$(this).attr('rows', '2')})
