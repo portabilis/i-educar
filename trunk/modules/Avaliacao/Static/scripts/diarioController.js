@@ -28,9 +28,8 @@ var $j = jQuery.noConflict();
                                     .appendTo($resultTable.parent());
 
     var $orientationSearch = $('<p />')
-      .html('')
-      .addClass('center')
-      .appendTo($('<tr />').appendTo($tableOrientationSearch));
+      .html('<strong>Obs:</strong>Caso n&atilde;o esteja sendo listado as op&ccedil;&otilde;es de filtro que voc&ecirc; espera, solicite a(o) secret&aacute;rio(a) da escola que verifique a aloca&ccedil;&atilde;o do seu usu&aacute;rio.')
+      .appendTo($('<td />').addClass('center').appendTo($('<tr />').appendTo($tableOrientationSearch)));
 
     function fixupFieldsWidth(){
       var maxWidth = 0;
