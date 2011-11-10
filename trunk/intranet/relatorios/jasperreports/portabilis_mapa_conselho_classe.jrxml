@@ -69,6 +69,7 @@
 	          WHEN 2 THEN 'Rep'
 	          WHEN 3 THEN 'And'
 	          WHEN 4 THEN 'Trs'
+                    WHEN 6 THEN 'Aba'
 	          ELSE 'Rec'
       END) AS situacao,
 
@@ -276,7 +277,7 @@ WHERE escola_ano_letivo.ativo = 1 AND
 	    escola_ano_letivo.ref_cod_escola = matricula.ref_ref_cod_escola AND
 	    escola_ano_letivo.ano = $P{ano} AND
 	    matricula_turma.ref_cod_turma = $P{turma} AND
-	    matricula_turma.ativo = 1 AND
+	    matricula.ultima_matricula = 1 AND
 	    matricula.ativo = 1
 
 ORDER BY nm_aluno, cod_aluno]]>
