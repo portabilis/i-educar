@@ -209,6 +209,7 @@ var $j = jQuery.noConflict();
         }
       };
 
+      $notaFieldElement.data('old_value', $notaFieldElement.val());
       postResource(options, handleErrorPost, handleCompletePostNota);
     }
 
@@ -225,6 +226,7 @@ var $j = jQuery.noConflict();
         }
       };
 
+      $notaExameFieldElement.data('old_value', $notaExameFieldElement.val());
       postResource(options, handleErrorPost, handleCompletePostNotaExame);
     }
 
@@ -240,6 +242,7 @@ var $j = jQuery.noConflict();
         }
       };
 
+      $faltaFieldElement.data('old_value', $faltaFieldElement.val());
       postResource(options, handleErrorPost, handleCompletePostFalta);
     }
 
@@ -266,7 +269,7 @@ var $j = jQuery.noConflict();
         }
       };
 
-      console.log(options.url);
+      $parecerFieldElement.data('old_value', $parecerFieldElement.val());
       postResource(options, handleErrorPost, handleCompletePostParecer);
     }
 
@@ -278,9 +281,15 @@ var $j = jQuery.noConflict();
 
     function deleteResource(resourceName, $resourceElement, options, handleCompleteDeleteResource, handleErrorDeleteResource){
       if (confirmDelete(resourceName))
+      {
+        $resourceElement.data('old_value', '');
         $.ajax(options).error(handleErrorDeleteResource).complete(handleCompleteDeleteResource);
+      }
       else
-        console.log('#todo call getResource url');  
+      {
+        afterChangeResource($resourceElement);
+        $resourceElement.val($resourceElement.data('old_value'));
+      }
     }
 
 
@@ -380,7 +389,6 @@ var $j = jQuery.noConflict();
       console.log('delete completado...')
     };
 
-    
     //post
     function handleErrorPost(request){
       console.log('#todo handleError');
@@ -608,6 +616,7 @@ var $j = jQuery.noConflict();
             var $notaField = $('<input />').addClass(klass).attr('id', id).val(notaAtual).attr('maxlength', '4').attr('size', '4').data('matricula_id', value.matricula_id);
           }
 
+          $notaField.data('old_value', $notaField.val());
           return $notaField;
         }
 
@@ -628,11 +637,13 @@ var $j = jQuery.noConflict();
         
         //falta
         var $faltaField = $('<input />').addClass('falta-matricula').attr('id', 'falta-matricula-' + value.matricula_id).val(value.falta_atual).attr('maxlength', '4').attr('size', '4').data('matricula_id', value.matricula_id);
+          $faltaField.data('old_value', $faltaField.val());
         $('<td />').html($faltaField).addClass('center').appendTo($linha);
 
         //parecer
         if(useParecer) {
           var $parecerField = $('<textarea />').attr('cols', '40').attr('rows', '5').addClass('parecer-matricula').attr('id', 'parecer-matricula-' + value.matricula_id).val(value.parecer_atual).data('matricula_id', value.matricula_id);
+          $parecerField.data('old_value', $parecerField.val());
           $('<td />').addClass('center').html($parecerField).appendTo($linha);
         }
 
