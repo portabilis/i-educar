@@ -429,8 +429,8 @@ var $j = jQuery.noConflict();
       if(regraAvaliacao.nome)
         $('<th />').html('Regra avaliação').appendTo($linha);
 
-      /*if(regraAvaliacao.tipo_nota)
-        $('<th />').html('Tipo nota').appendTo($linha);*/
+      if(regraAvaliacao.tipo_nota)
+        $('<th />').html('Tipo nota').appendTo($linha);
 
       if(regraAvaliacao.tipo_presenca)
         $('<th />').html('Tipo presença').appendTo($linha);
@@ -451,8 +451,15 @@ var $j = jQuery.noConflict();
       if(regraAvaliacao.nome)
         $('<td />').html(regraAvaliacao.id + ' - ' +regraAvaliacao.nome.toUpperCase()).appendTo($linha);
 
-      /*if(regraAvaliacao.tipo_nota)
-        $('<td />').html(regraAvaliacao.tipo_nota.replace('_', ' ')).appendTo($linha);*/
+      if(regraAvaliacao.tipo_nota)
+      {
+        var tipoNota = regraAvaliacao.tipo_nota.replace('_', ' ');
+
+        if (tipoNota == 'numerica')
+          tipoNota = 'numérica';
+
+        $('<td />').html(tipoNota.toUpperCase()).appendTo($linha);
+      }
 
       if(regraAvaliacao.tipo_presenca)
         $('<td />').html(regraAvaliacao.tipo_presenca.replace('_', ' ').toUpperCase()).appendTo($linha);
