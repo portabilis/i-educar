@@ -12,7 +12,9 @@ var $j = jQuery.noConflict();
     var diarioUrlBase = 'diario';
     var diarioAjaxUrlBase = 'diarioAjax';
 
-    var $navActions = $('<p />').attr('id', 'nav-actions').prependTo($formFilter.parent()); 
+    var $navActions = $('<p />').attr('id', 'nav-actions');
+    $navActions.prependTo($formFilter.parent()); 
+
     var $tableDadosDiario = $('<table />')
                               .attr('id', 'dados-diario')
                               .addClass('styled')
@@ -423,23 +425,40 @@ var $j = jQuery.noConflict();
       $('<th />').html('Serie').appendTo($linha);
       $('<th />').html('Ano').appendTo($linha);
       $('<th />').html('Escola').appendTo($linha);
-      $('<th />').html('Regra avaliação').appendTo($linha);
-      $('<th />').html('Tipo nota').appendTo($linha);
-      $('<th />').html('Tipo presença').appendTo($linha);
-      $('<th />').html('Tipo parecer').appendTo($linha);
+  
+      if(regraAvaliacao.nome)
+        $('<th />').html('Regra avaliação').appendTo($linha);
+
+      /*if(regraAvaliacao.tipo_nota)
+        $('<th />').html('Tipo nota').appendTo($linha);*/
+
+      if(regraAvaliacao.tipo_presenca)
+        $('<th />').html('Tipo presença').appendTo($linha);
+
+      if(regraAvaliacao.tipo_parecer_descritivo)
+        $('<th />').html('Tipo parecer').appendTo($linha);
+
       $linha.appendTo($tableDadosDiario);
 
-      var $linha = $('<tr />');
-      $('<td />').html($j('#etapa').children("[selected='selected']").html().toLowerCase()).appendTo($linha);
-      $('<td />').html($j('#ref_cod_componente_curricular').children("[selected='selected']").html().toLowerCase()).appendTo($linha);
-      $('<td />').html($j('#ref_cod_turma').children("[selected='selected']").html().toLowerCase()).appendTo($linha);
-      $('<td />').html($j('#ref_ref_cod_serie').children("[selected='selected']").html().toLowerCase()).appendTo($linha);
+      var $linha = $('<tr />').addClass('even');
+      $('<td />').html($j('#etapa').children("[selected='selected']").html().toUpperCase()).appendTo($linha);
+      $('<td />').html($j('#ref_cod_componente_curricular').children("[selected='selected']").html().toUpperCase()).appendTo($linha);
+      $('<td />').html($j('#ref_cod_turma').children("[selected='selected']").html().toUpperCase()).appendTo($linha);
+      $('<td />').html($j('#ref_ref_cod_serie').children("[selected='selected']").html().toUpperCase()).appendTo($linha);
       $('<td />').html($j('#ano_escolar').children("[selected='selected']").html()).appendTo($linha);
-      $('<td />').html($j('#ref_cod_escola').children("[selected='selected']").html().toLowerCase()).appendTo($linha);
-      $('<td />').html(regraAvaliacao.id + ' - ' +regraAvaliacao.nome).appendTo($linha);
-      $('<td />').html(regraAvaliacao.tipo_nota.replace('_', ' ')).appendTo($linha);
-      $('<td />').html(regraAvaliacao.tipo_presenca.replace('_', ' ')).appendTo($linha);
-      $('<td />').html(regraAvaliacao.tipo_parecer_descritivo.replace('_', ' ')).appendTo($linha);
+      $('<td />').html($j('#ref_cod_escola').children("[selected='selected']").html().toUpperCase()).appendTo($linha);
+    
+      if(regraAvaliacao.nome)
+        $('<td />').html(regraAvaliacao.id + ' - ' +regraAvaliacao.nome.toUpperCase()).appendTo($linha);
+
+      /*if(regraAvaliacao.tipo_nota)
+        $('<td />').html(regraAvaliacao.tipo_nota.replace('_', ' ')).appendTo($linha);*/
+
+      if(regraAvaliacao.tipo_presenca)
+        $('<td />').html(regraAvaliacao.tipo_presenca.replace('_', ' ').toUpperCase()).appendTo($linha);
+
+      if(regraAvaliacao.tipo_parecer_descritivo)
+        $('<td />').html(regraAvaliacao.tipo_parecer_descritivo.replace('_', ' ').toUpperCase()).appendTo($linha);
 
       $linha.appendTo($tableDadosDiario);
       $tableDadosDiario.show();
@@ -448,21 +467,21 @@ var $j = jQuery.noConflict();
 
     function handleMatriculasSearch(dataResponse) { 
 
+      //link para nova consulta
       var setSearchPage = function(event) {
         $(this).hide();
         $tableDadosDiario.children().remove();
-
+        $resultTable.children().fadeOut('fast').remove();
         $formFilter.fadeIn('fast', function(){
           $(this).show()
         });
-
-        $resultTable.children().fadeOut('fast').remove();
         $tableOrientationSearch.show();
       };
 
-      $navActions.html($("<a href='#'>Nova consulta</a>")
-                        .bind('click', setSearchPage)
-                        .attr('style', 'text-decoration: underline')
+      $navActions.html(
+        $("<a href='#'>Nova consulta</a>")
+        .bind('click', setSearchPage)
+        .attr('style', 'text-decoration: underline')
       );
 
       setTableDadosDiario(dataResponse.regra_avaliacao);
@@ -471,22 +490,31 @@ var $j = jQuery.noConflict();
 
       handleMessages(dataResponse.msgs);
 
-      //set headers
-      var $linha = $('<tr />');
-      $('<th />').html('Matricula').appendTo($linha);
-      $('<th />').html('Aluno').appendTo($linha);
-      $('<th />').html('Situação').appendTo($linha);
+      if (dataResponse.matriculas.length < 1)
+      {
+         $('<td />')
+          .html('Sem matriculas em andamento nesta turma.')
+          .addClass('center')
+          .appendTo($('<tr />').appendTo($resultTable));
+      }
+      else
+      {
+        //set headers
+        var $linha = $('<tr />');
+        $('<th />').html('Matricula').appendTo($linha);
+        $('<th />').html('Aluno').appendTo($linha);
+        $('<th />').html('Situação').appendTo($linha);
 
-      if(useNota)
-        $('<th />').html('Nota').appendTo($linha);
+        if(useNota)
+          $('<th />').html('Nota').appendTo($linha);
 
-      $('<th />').html('Falta').appendTo($linha);
+        $('<th />').html('Falta').appendTo($linha);
 
-      if(useParecer)
-        $('<th />').html('Parecer').appendTo($linha);
-  
-      $linha.appendTo($resultTable);
-
+        if(useParecer)
+          $('<th />').html('Parecer').appendTo($linha);
+    
+        $linha.appendTo($resultTable);
+      }
 
       //set (result) rows
       $.each(dataResponse.matriculas, function(index, value){
@@ -494,7 +522,7 @@ var $j = jQuery.noConflict();
         var $linha = $('<tr />');
         
         $('<td />').html(value.matricula_id).addClass('center').appendTo($linha);
-        $('<td />').html(value.aluno_id + ' - ' +value.nome).appendTo($linha);
+        $('<td />').html(value.aluno_id + ' - ' +value.nome.toUpperCase()).appendTo($linha);
         $('<td />').addClass('situacao-matricula').attr('id', 'situacao-matricula-' + value.matricula_id).data('matricula_id', value.matricula_id).addClass('center').html(value.situacao).appendTo($linha);
 
         //nota
@@ -561,13 +589,12 @@ var $j = jQuery.noConflict();
 
         $resultTable.children().fadeOut('fast').remove();
         $tableOrientationSearch.hide();
-        $formFilter.submit().fadeOut('fast', function(){
-          $navActions
-            .fadeIn('slow')
-            .html('Aguarde, carregando...')
-            .attr('style', 'text-align:center;')
-            .unbind('click');
-        });
+        $formFilter.submit();
+        $formFilter.fadeOut('fast');
+        $navActions
+          .html('Aguarde, carregando...')
+          .attr('style', 'text-align:center;')
+          .unbind('click');
       }
     };
     $submitButton.val('Carregar');
