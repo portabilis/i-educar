@@ -3,13 +3,6 @@ table#tablenum1 {
   border: 0px;
 }
 
-form#formcadastro {
-  width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-  border: 1px solid #E9E9E9;
-}
-
 td.formdktd {
   background-color: #fff;  
 }
@@ -18,18 +11,13 @@ td.formdktd {
   margin-bottom: 70px;
 }
 
-tr.rodape, td.r3c1 {
+tr.rodape {
   display: none;
 }
 
 #corpo {
   margin: 0 
 }
-
-
-
-
-
 
 #feedback-messages {
   position: fixed;
