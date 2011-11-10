@@ -35,9 +35,7 @@ var $j = jQuery.noConflict();
 
     function fixupFieldsWidth(){
       var maxWidth = 0;
-      var $fields = $.merge($j('#formcadastro select'), 
-                            $j('#formcadastro input[type="text"]')
-                    );
+      var $fields = $('#formcadastro select');
 
       //get maxWidh
       $.each($fields, function(index, value){
