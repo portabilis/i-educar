@@ -364,6 +364,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
         'nota' => urldecode($this->getRequest()->att_value),
         'etapa' => $this->getRequest()->etapa
         ));
+
       $this->getService()->addNota($nota);
       $this->saveService();
       $this->appendMsg('Nota matricula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
@@ -527,6 +528,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
         $matricula['situacao'] = $this->getSituacaoMatricula($raiseExceptionOnErrors = false);
         $matricula['nota_atual'] = $this->getNotaAtual();
+        $matricula['nota_exame'] = $this->getNotaExame();
         $matricula['falta_atual'] = $this->getFaltaAtual();
         $matricula['parecer_atual'] = $this->getParecerAtual();
 
@@ -541,19 +543,40 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     return $matriculas;
   }
 
-  protected function getNotaAtual() {
-    $nota = urldecode($this->service->getNotaComponente($this->getRequest()->componente_curricular_id, $this->getRequest()->etapa)->nota);
+  protected function getNotaAtual($etapa = null) {
+
+    if (! $etapa)
+      $etapa = $this->getRequest()->etapa;
+
+    $nota = urldecode($this->getService()->getNotaComponente($this->getRequest()->componente_curricular_id, $etapa)->nota);
     return str_replace(',', '.', $nota);
   }
 
+
+  protected function getNotaExame() {
+
+    //busca nota de exame se a etapa for a ultima
+    if (($this->getService()->getRegra()->get('tipoNota') != RegraAvaliacao_Model_Nota_TipoValor::NENHUM) && 
+        ($this->getService()->getRegra()->get('formulaRecuperacao') == FormulaMedia_Model_TipoFormula::MEDIA_RECUPERACAO) &&
+        ($this->getRequest()->etapa == $this->getService()->getOption('etapas')))
+    {
+      $nota = $this->getNotaAtual($etapa='Rc'); 
+    }
+    else
+      $nota = '';
+
+    return $nota;
+  }
 
 
   protected function getFaltaAtual()
   {
     if ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
-      return $service->getFalta($this->getRequest()->componente_curricular_id, $this->getRequest()->componente_curricular_id)->etapa;
+      $falta = $this->getService()->getFalta($this->getRequest()->componente_curricular_id, $this->getRequest()->componente_curricular_id)->etapa;
     elseif ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL)
-      return $this->service->getFalta($this->getRequest()->etapa)->quantidade;
+      $falta = $this->getService()->getFalta($this->getRequest()->etapa)->quantidade;
+
+    return $falta;
   }
 
 
@@ -572,10 +595,10 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   {
     if ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE or
       $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE) {
-      return utf8_encode($this->service->getParecerDescritivo($this->getEtapaParecer(), $this->getRequest()->componente_curricular_id));
+      return utf8_encode($this->getService()->getParecerDescritivo($this->getEtapaParecer(), $this->getRequest()->componente_curricular_id));
     }
     else
-      return utf8_encode($this->service->getParecerDescritivo($this->getEtapaParecer()));
+      return utf8_encode($this->getService()->getParecerDescritivo($this->getEtapaParecer()));
   }
 
 
@@ -641,7 +664,11 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
       elseif ($tpNota == $cnsNota::NUMERICA)
         $itensRegra['tipo_nota'] = 'numerica';
       elseif ($tpNota == $cnsNota::CONCEITUAL)
+      {
         $itensRegra['tipo_nota'] = 'conceitual';
+        //incluido opcoes notas, pois notas conceituais requer isto para visualizar os nomes
+        $itensRegra['opcoes_notas'] = $this->getOpcoesNotas($useCurrentService = $useCurrentService);
+      }
       else
         $itensRegra['tipo_nota'] = $tpNota;
 
@@ -660,8 +687,8 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
       else
         $itensRegra['tipo_parecer_descritivo'] = $tpParecer;
 
-      //incluido opcoes notas, pois notas conceituais requer isto para visualizar os nomes
-      $itensRegra['opcoes_notas'] = $this->getOpcoesNotas($useCurrentService = $useCurrentService);
+      $itensRegra['quantidade_etapas'] = $this->getService()->getOption('etapas');
+
     }
     
     return $itensRegra;
