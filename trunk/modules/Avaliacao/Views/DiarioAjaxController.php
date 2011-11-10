@@ -291,7 +291,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     if ($this->canDeleteNota() &&
         $this->setService() &&
         $this->validatesPresenceOfComponenteCurricularId(false)) {
-      if (! $this->getNotaAtual())
+      if (is_null($this->getNotaAtual()))
         $this->appendMsg('Nota matricula '. $this->getRequest()->matricula_id .' inexistente ou já removida.', 'notice');
       else
       {
@@ -320,7 +320,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     }
     elseif...*/
 
-    if ($canDelete && ! $this->getFaltaAtual()) {
+    if ($canDelete && is_null($this->getFaltaAtual())) {
       $this->appendMsg('Falta matricula '. $this->getRequest()->matricula_id .' inexistente ou já removida.', 'notice');
     }
     elseif ($canDelete) {
@@ -343,7 +343,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     elseif ($canDelete && ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL || $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL) && $this->validatesPresenceOfComponenteCurricularId(false, false)) {
       $this->appendMsg('Não deve ser enviado o atributo componente_curricular_id.', 'error');
     }
-    elseif ($canDelete && ! $this->getParecerAtual()) {
+    elseif ($canDelete && is_null($this->getParecerAtual())) {
       $this->appendMsg('Parecer descritivo matricula '. $this->getRequest()->matricula_id .' inexistente ou já removido.', 'notice');
     }
     elseif ($canDelete) {
@@ -749,8 +749,12 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
           {
             $matriculas = $this->getMatriculas();          
             $this->appendResponse('matriculas', $matriculas);
+            
+            if(! empty($matriculas) && $this->getService(false, false))
+              $regraAvaliacao = $this->getRegraAvaliacao($useCurrentService = true);
+            else
+              $regraAvaliacao = array();
 
-            $regraAvaliacao = $this->getRegraAvaliacao($useCurrentService = true);
             $this->appendResponse('regra_avaliacao', $regraAvaliacao);
           }
           elseif ($this->getRequest()->att == 'opcoes_notas')
