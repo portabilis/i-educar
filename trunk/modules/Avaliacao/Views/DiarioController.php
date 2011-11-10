@@ -99,12 +99,8 @@ class DiarioController extends Core_Controller_Page_ListController
     $get_turma = $turma_obrigatorio = $listar_turmas_periodo_alocacao_professor = TRUE;
     $get_componente_curricular = $componente_curricular_obrigatorio = $listar_componentes_curriculares_professor = TRUE;
     $get_etapa = $etapa_obrigatorio = TRUE;
+    $get_alunos_matriculados = true;
     include 'include/pmieducar/educar_campo_lista.php';
-
-    $this->campoTexto('nm_aluno', 'Aluno', $this->nm_aluno, 30, 255, FALSE,
-      FALSE, FALSE, '', "<img border=\"0\" onclick=\"pesquisa_aluno();\" id=\"ref_cod_aluno_lupa\" name=\"ref_cod_aluno_lupa\" src=\"imagens/lupa.png\"\/>", '', '', TRUE);
-
-    $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
   }
 
   
@@ -114,7 +110,7 @@ class DiarioController extends Core_Controller_Page_ListController
     $this->setVars();
     $this->setSelectionFields();
 
-    $this->rodape = "<strong>N&atilde;o est&aacute; sendo listado as op&ccedil;&otilde;es de filtro que voc&ecirc; espera ?</strong> solicite a(o) secret&aacute;rio(a) da escola que verifique a aloca&ccedil;&atilde;o do seu usu&aacute;rio.";
+    $this->rodape = "";
 
     $this->largura = '100%';
 
