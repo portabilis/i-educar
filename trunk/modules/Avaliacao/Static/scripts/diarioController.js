@@ -163,6 +163,17 @@ var $j = jQuery.noConflict();
       return true;
     }   
 
+    
+    function setDefaultFaltaIfEmpty(matricula_id){
+      var $element = $('#falta-matricula-' + matricula_id);
+      console.log('#falta-matricula-' + matricula_id);
+      if ($.trim($element.val()) == '')
+      {
+        $element.val(0);
+        $element.change();
+      }
+    }    
+
 
     var changeNota = function(event){
       var $element = $(this);
@@ -172,6 +183,7 @@ var $j = jQuery.noConflict();
            (validatesIfValueIsNumberic($element.val(), $element.attr('id')) &&
             validatesIfNumericValueIsInRange($element.val(), $element.attr('id'), 0, 10)))
         {
+          setDefaultFaltaIfEmpty($element.data('matricula_id'));
           changeResource($element, postNota, deleteNota);
         }
     };
@@ -185,6 +197,7 @@ var $j = jQuery.noConflict();
            (validatesIfValueIsNumberic($element.val(), $element.attr('id')) &&
             validatesIfNumericValueIsInRange($element.val(), $element.attr('id'), 0, 10)))
         {
+          setDefaultFaltaIfEmpty($element.data('matricula_id'));
           changeResource($element, postNotaExame, deleteNotaExame);
         }
     };
@@ -208,7 +221,9 @@ var $j = jQuery.noConflict();
 
 
     var changeParecer = function(event){
-      changeResource($(this), postParecer, deleteParecer);
+      var $element = $(this);
+      setDefaultFaltaIfEmpty($element.data('matricula_id'));
+      changeResource($element, postParecer, deleteParecer);
     };
 
 
