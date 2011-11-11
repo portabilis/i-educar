@@ -133,10 +133,11 @@ var $j = jQuery.noConflict();
 
 
     function changeResource($resourceElement, postFunction, deleteFunction){
-      beforeChangeResource($resourceElement);
-
       if ($.trim($resourceElement.val())  == '')
+      {
+        beforeChangeResource($resourceElement);
         deleteFunction($resourceElement);
+      }
       else
         postFunction($resourceElement);
     };
@@ -177,46 +178,20 @@ var $j = jQuery.noConflict();
 
     var changeNota = function(event){
       var $element = $(this);
-      $element.val($element.val().replace(',', '.'));
-
-        if ($.trim($element.val()) == '' || 
-           (validatesIfValueIsNumberic($element.val(), $element.attr('id')) &&
-            validatesIfNumericValueIsInRange($element.val(), $element.attr('id'), 0, 10)))
-        {
-          setDefaultFaltaIfEmpty($element.data('matricula_id'));
-          changeResource($element, postNota, deleteNota);
-        }
+      setDefaultFaltaIfEmpty($element.data('matricula_id'));
+      changeResource($element, postNota, deleteNota);
     };
 
 
     var changeNotaExame = function(event){
       var $element = $(this);
-      $element.val($element.val().replace(',', '.'));
-
-        if ($.trim($element.val()) == '' || 
-           (validatesIfValueIsNumberic($element.val(), $element.attr('id')) &&
-            validatesIfNumericValueIsInRange($element.val(), $element.attr('id'), 0, 10)))
-        {
-          setDefaultFaltaIfEmpty($element.data('matricula_id'));
-          changeResource($element, postNotaExame, deleteNotaExame);
-        }
+      setDefaultFaltaIfEmpty($element.data('matricula_id'));
+      changeResource($element, postNotaExame, deleteNotaExame);
     };
 
 
     var changeFalta = function(event){
-      var $element = $(this);
-      $element.val($element.val().replace(',', '.'));
-      
-      //falta é persistida como inteiro
-      if ($.isNumeric($element.val()))
-        $element.val(parseInt($element.val()).toString());
-
-        if ($.trim($element.val()) == '' || 
-           (validatesIfValueIsNumberic($element.val(), $element.attr('id')) &&
-            validatesIfNumericValueIsInRange($element.val(), $element.attr('id'), 0, 100)))
-        {
-          changeResource($element, postFalta, deleteFalta);
-        }
+      changeResource($(this), postFalta, deleteFalta);
     };
 
 
@@ -264,51 +239,83 @@ var $j = jQuery.noConflict();
 
     function postNota($notaFieldElement){
 
-      var options = {
-        url : postResourceUrlBuilder.buildUrl(diarioAjaxUrlBase, 'nota', {matricula_id : $notaFieldElement.data('matricula_id'),}),
-        dataType : 'json',
-        data : {att_value : $notaFieldElement.val()},
-        success : function(dataResponse){
-          afterChangeResource($notaFieldElement);
-          handlePost(dataResponse);
-        }
-      };
+      $notaFieldElement.val($notaFieldElement.val().replace(',', '.'));
 
-      $notaFieldElement.data('old_value', $notaFieldElement.val());
-      postResource(options, handleErrorPost, handleCompletePostNota);
+      if (validatesIfValueIsNumberic($notaFieldElement.val(), $notaFieldElement.attr('id')) &&
+          validatesIfNumericValueIsInRange($notaFieldElement.val(), $notaFieldElement.attr('id'), 0, 10))
+      {
+      
+        beforeChangeResource($notaFieldElement);
+
+        var options = {
+          url : postResourceUrlBuilder.buildUrl(diarioAjaxUrlBase, 'nota', {matricula_id : $notaFieldElement.data('matricula_id'),}),
+          dataType : 'json',
+          data : {att_value : $notaFieldElement.val()},
+          success : function(dataResponse){
+            afterChangeResource($notaFieldElement);
+            handlePost(dataResponse);
+          }
+        };
+
+        $notaFieldElement.data('old_value', $notaFieldElement.val());
+        postResource(options, handleErrorPost, handleCompletePostNota);
+      }
     }
 
 
     function postNotaExame($notaExameFieldElement){
 
-      var options = {
-        url : postResourceUrlBuilder.buildUrl(diarioAjaxUrlBase, 'nota_exame', {matricula_id : $notaExameFieldElement.data('matricula_id'), etapa : 'Rc'}),
-        dataType : 'json',
-        data : {att_value : $notaExameFieldElement.val()},
-        success : function(dataResponse){
-          afterChangeResource($notaExameFieldElement);
-          handlePost(dataResponse);
-        }
-      };
+      $notaExameFieldElement.val($notaExameFieldElement.val().replace(',', '.'));
 
-      $notaExameFieldElement.data('old_value', $notaExameFieldElement.val());
-      postResource(options, handleErrorPost, handleCompletePostNotaExame);
+      if (validatesIfValueIsNumberic($notaExameFieldElement.val(), $notaExameFieldElement.attr('id')) &&
+          validatesIfNumericValueIsInRange($notaExameFieldElement.val(), $notaExameFieldElement.attr('id'), 0, 10))
+      {
+
+        beforeChangeResource($notaExameFieldElement);
+
+        var options = {
+          url : postResourceUrlBuilder.buildUrl(diarioAjaxUrlBase, 'nota_exame', {matricula_id : $notaExameFieldElement.data('matricula_id'), etapa : 'Rc'}),
+          dataType : 'json',
+          data : {att_value : $notaExameFieldElement.val()},
+          success : function(dataResponse){
+            afterChangeResource($notaExameFieldElement);
+            handlePost(dataResponse);
+          }
+        };
+
+        $notaExameFieldElement.data('old_value', $notaExameFieldElement.val());
+        postResource(options, handleErrorPost, handleCompletePostNotaExame);
+      }
     }
 
 
     function postFalta($faltaFieldElement){
-      var options = {
-        url : postResourceUrlBuilder.buildUrl(diarioAjaxUrlBase, 'falta', {matricula_id : $faltaFieldElement.data('matricula_id'),}),
-        dataType : 'json',
-        data : {att_value : $faltaFieldElement.val()},
-        success : function(dataResponse){
-          afterChangeResource($faltaFieldElement);
-          handlePost(dataResponse);
-        }
-      };
 
-      $faltaFieldElement.data('old_value', $faltaFieldElement.val());
-      postResource(options, handleErrorPost, handleCompletePostFalta);
+      $faltaFieldElement.val($faltaFieldElement.val().replace(',', '.'));
+      
+      //falta é persistida como inteiro
+      if ($.isNumeric($faltaFieldElement.val()))
+        $faltaFieldElement.val(parseInt($faltaFieldElement.val()).toString());
+
+      if (validatesIfValueIsNumberic($faltaFieldElement.val(), $faltaFieldElement.attr('id')) &&
+          validatesIfNumericValueIsInRange($faltaFieldElement.val(), $faltaFieldElement.attr('id'), 0, 100))
+      {
+
+        beforeChangeResource($faltaFieldElement);
+
+        var options = {
+          url : postResourceUrlBuilder.buildUrl(diarioAjaxUrlBase, 'falta', {matricula_id : $faltaFieldElement.data('matricula_id'),}),
+          dataType : 'json',
+          data : {att_value : $faltaFieldElement.val()},
+          success : function(dataResponse){
+            afterChangeResource($faltaFieldElement);
+            handlePost(dataResponse);
+          }
+        };
+
+        $faltaFieldElement.data('old_value', $faltaFieldElement.val());
+        postResource(options, handleErrorPost, handleCompletePostFalta);
+      }
     }
 
 
