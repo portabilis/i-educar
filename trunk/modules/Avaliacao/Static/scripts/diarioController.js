@@ -142,18 +142,68 @@ var $j = jQuery.noConflict();
     };
 
 
+    function validatesIfValueIsNumberic(value, targetId){
+      var isNumeric = $.isNumeric(value);
+
+      if (! isNumeric)
+        handleMessages([{type : 'error', msg : 'Informe um numero válido.'}], targetId);
+
+      return isNumeric;
+    }  
+
+
+    function validatesIfNumericValueIsInRange(value, targetId, initialRange, finalRange){
+
+      if (! $.isNumeric(value) || value < initialRange || value > finalRange)
+      {
+        handleMessages([{type : 'error', msg : 'Informe um valor entre ' + initialRange + ' e ' + finalRange}], targetId);
+        return false;
+      }
+
+      return true;
+    }   
+
+
     var changeNota = function(event){
-      changeResource($(this), postNota, deleteNota);
+      var $element = $(this);
+      $element.val($element.val().replace(',', '.'));
+
+        if ($.trim($element.val()) == '' || 
+           (validatesIfValueIsNumberic($element.val(), $element.attr('id')) &&
+            validatesIfNumericValueIsInRange($element.val(), $element.attr('id'), 0, 10)))
+        {
+          changeResource($element, postNota, deleteNota);
+        }
     };
 
 
     var changeNotaExame = function(event){
-      changeResource($(this), postNotaExame, deleteNotaExame);
+      var $element = $(this);
+      $element.val($element.val().replace(',', '.'));
+
+        if ($.trim($element.val()) == '' || 
+           (validatesIfValueIsNumberic($element.val(), $element.attr('id')) &&
+            validatesIfNumericValueIsInRange($element.val(), $element.attr('id'), 0, 10)))
+        {
+          changeResource($element, postNotaExame, deleteNotaExame);
+        }
     };
 
 
     var changeFalta = function(event){
-      changeResource($(this), postFalta, deleteFalta);
+      var $element = $(this);
+      $element.val($element.val().replace(',', '.'));
+      
+      //falta é persistida como inteiro
+      if ($.isNumeric($element.val()))
+        $element.val(parseInt($element.val()).toString());
+
+        if ($.trim($element.val()) == '' || 
+           (validatesIfValueIsNumberic($element.val(), $element.attr('id')) &&
+            validatesIfNumericValueIsInRange($element.val(), $element.attr('id'), 0, 100)))
+        {
+          changeResource($element, postFalta, deleteFalta);
+        }
     };
 
 
@@ -191,7 +241,7 @@ var $j = jQuery.noConflict();
       }
     }
 
-
+    
     function postResource(options, errorCallback, completeCallback){
       $.ajax(options).error(errorCallback).complete(completeCallback);
     }
