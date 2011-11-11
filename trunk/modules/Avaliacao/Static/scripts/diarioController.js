@@ -134,37 +134,12 @@ var $j = jQuery.noConflict();
 
     function changeResource($resourceElement, postFunction, deleteFunction){
       if ($.trim($resourceElement.val())  == '')
-      {
-        beforeChangeResource($resourceElement);
         deleteFunction($resourceElement);
-      }
       else
         postFunction($resourceElement);
     };
 
-
-    function validatesIfValueIsNumberic(value, targetId){
-      var isNumeric = $.isNumeric(value);
-
-      if (! isNumeric)
-        handleMessages([{type : 'error', msg : 'Informe um numero válido.'}], targetId);
-
-      return isNumeric;
-    }  
-
-
-    function validatesIfNumericValueIsInRange(value, targetId, initialRange, finalRange){
-
-      if (! $.isNumeric(value) || value < initialRange || value > finalRange)
-      {
-        handleMessages([{type : 'error', msg : 'Informe um valor entre ' + initialRange + ' e ' + finalRange}], targetId);
-        return false;
-      }
-
-      return true;
-    }   
-
-    
+   
     function setDefaultFaltaIfEmpty(matricula_id){
       var $element = $('#falta-matricula-' + matricula_id);
       console.log('#falta-matricula-' + matricula_id);
@@ -229,6 +204,28 @@ var $j = jQuery.noConflict();
           $j('#parecer-matricula-' + $resourceElement.data('matricula_id')).closest('tr').next().find('textarea:first').focus();
         }
       }
+    }
+
+
+    function validatesIfValueIsNumberic(value, targetId){
+      var isNumeric = $.isNumeric(value);
+
+      if (! isNumeric)
+        handleMessages([{type : 'error', msg : 'Informe um numero válido.'}], targetId);
+
+      return isNumeric;
+    }  
+
+
+    function validatesIfNumericValueIsInRange(value, targetId, initialRange, finalRange){
+
+      if (! $.isNumeric(value) || value < initialRange || value > finalRange)
+      {
+        handleMessages([{type : 'error', msg : 'Informe um valor entre ' + initialRange + ' e ' + finalRange}], targetId);
+        return false;
+      }
+
+      return true;
     }
 
     
@@ -354,6 +351,7 @@ var $j = jQuery.noConflict();
     function deleteResource(resourceName, $resourceElement, options, handleCompleteDeleteResource, handleErrorDeleteResource){
       if (confirmDelete(resourceName))
       {
+        beforeChangeResource($resourceElement);
         $resourceElement.data('old_value', '');
         $.ajax(options).error(handleErrorDeleteResource).complete(handleCompleteDeleteResource);
       }
@@ -398,18 +396,34 @@ var $j = jQuery.noConflict();
 
 
     function deleteFalta($faltaFieldElement){
-      var resourceName = 'falta';
+        
+      //excluir falta se nota, nota exame e parecer (não existirem ou) estiverem sem valor
+      var matricula_id = $faltaFieldElement.data('matricula_id');
 
-      var options = {
-        url : deleteResourceUrlBuilder.buildUrl(diarioAjaxUrlBase, resourceName, {matricula_id : $faltaFieldElement.data('matricula_id'),}),
-        dataType : 'json',
-        success : function(dataResponse){
-          afterChangeResource($faltaFieldElement);
-          handleDelete(dataResponse);
-        }
-      };
+      var $notaField = $('#nota-matricula-'+matricula_id);
+      var $notaExameField = $('#nota-exame-matricula-'+matricula_id);
+      var $parecerField = $('#parecer-matricula-'+matricula_id);
 
-      deleteResource(resourceName, $faltaFieldElement, options, handleCompleteDeleteResource, handleErrorDeleteResource);
+      if(($notaField.length < 1 || $notaField.val() == '') &&
+         ($notaExameField.length < 1 || $notaExameField.val() == '') &&
+         ($parecerField.length < 1 || $.trim($parecerField.val()) == '')
+        )
+      {      
+        var resourceName = 'falta';
+
+        var options = {
+          url : deleteResourceUrlBuilder.buildUrl(diarioAjaxUrlBase, resourceName, {matricula_id : $faltaFieldElement.data('matricula_id'),}),
+          dataType : 'json',
+          success : function(dataResponse){
+            afterChangeResource($faltaFieldElement);
+            handleDelete(dataResponse);
+          }
+        };
+
+        deleteResource(resourceName, $faltaFieldElement, options, handleCompleteDeleteResource, handleErrorDeleteResource);
+      }
+      else
+        handleMessages([{type : 'error', msg : 'Falta não pode ser removida após ter lançado notas ou parecer descritivo, tente definir como 0 (zero).'}], $faltaFieldElement.attr('id'));
     }
 
 
