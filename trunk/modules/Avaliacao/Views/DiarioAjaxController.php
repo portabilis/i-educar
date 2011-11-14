@@ -572,9 +572,13 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   protected function getFaltaAtual()
   {
     if ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
-      $falta = $this->getService()->getFalta($this->getRequest()->componente_curricular_id, $this->getRequest()->componente_curricular_id)->etapa;
+    {
+      $falta = $this->getService()->getFalta($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id)->quantidade;
+    }
     elseif ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL)
+    {
       $falta = $this->getService()->getFalta($this->getRequest()->etapa)->quantidade;
+    }
 
     return $falta;
   }
