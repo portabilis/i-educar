@@ -566,18 +566,10 @@ var $j = jQuery.noConflict();
       $('<th />').html('Serie').appendTo($linha);
       $('<th />').html('Ano').appendTo($linha);
       $('<th />').html('Escola').appendTo($linha);
-  
-      if(regraAvaliacao.nome)
-        $('<th />').html('Regra avaliação').appendTo($linha);
-
-      if(regraAvaliacao.tipo_nota)
-        $('<th />').html('Tipo nota').appendTo($linha);
-
-      if(regraAvaliacao.tipo_presenca)
-        $('<th />').html('Tipo presença').appendTo($linha);
-
-      if(regraAvaliacao.tipo_parecer_descritivo)
-        $('<th />').html('Tipo parecer').appendTo($linha);
+      $('<th />').html('Regra avaliação').appendTo($linha);
+      $('<th />').html('Tipo nota').appendTo($linha);
+      $('<th />').html('Tipo presença').appendTo($linha);
+      $('<th />').html('Tipo parecer').appendTo($linha);
 
       $linha.appendTo($tableDadosDiario);
 
@@ -588,25 +580,16 @@ var $j = jQuery.noConflict();
       $('<td />').html($j('#ref_ref_cod_serie').children("[selected='selected']").html().toUpperCase()).appendTo($linha);
       $('<td />').html($j('#ano_escolar').children("[selected='selected']").html()).appendTo($linha);
       $('<td />').html($j('#ref_cod_escola').children("[selected='selected']").html().toUpperCase()).appendTo($linha);
-    
-      if(regraAvaliacao.nome)
-        $('<td />').html(regraAvaliacao.id + ' - ' +regraAvaliacao.nome.toUpperCase()).appendTo($linha);
+      $('<td />').html(regraAvaliacao.id + ' - ' +regraAvaliacao.nome.toUpperCase()).appendTo($linha);
+     
+      //corrige acentuação
+      var tipoNota = regraAvaliacao.tipo_nota.replace('_', ' ');
+      if (tipoNota == 'numerica')
+        tipoNota = 'numérica';
+      $('<td />').html(tipoNota.toUpperCase()).appendTo($linha);
 
-      if(regraAvaliacao.tipo_nota)
-      {
-        var tipoNota = regraAvaliacao.tipo_nota.replace('_', ' ');
-
-        if (tipoNota == 'numerica')
-          tipoNota = 'numérica';
-
-        $('<td />').html(tipoNota.toUpperCase()).appendTo($linha);
-      }
-
-      if(regraAvaliacao.tipo_presenca)
-        $('<td />').html(regraAvaliacao.tipo_presenca.replace('_', ' ').toUpperCase()).appendTo($linha);
-
-      if(regraAvaliacao.tipo_parecer_descritivo)
-        $('<td />').html(regraAvaliacao.tipo_parecer_descritivo.replace('_', ' ').toUpperCase()).appendTo($linha);
+      $('<td />').html(regraAvaliacao.tipo_presenca.replace('_', ' ').toUpperCase()).appendTo($linha);
+      $('<td />').html(regraAvaliacao.tipo_parecer_descritivo.replace('_', ' ').toUpperCase()).appendTo($linha);
 
       $linha.appendTo($tableDadosDiario);
       $tableDadosDiario.show();
@@ -632,13 +615,16 @@ var $j = jQuery.noConflict();
         .attr('style', 'text-decoration: underline')
       );
 
-      setTableDadosDiario(dataResponse.regra_avaliacao);
-      var useNota = $tableDadosDiario.data.regra_avaliacao.tipo_nota != 'nenhum';
-      var useParecer = $tableDadosDiario.data.regra_avaliacao.tipo_parecer_descritivo != 'nenhum';
-
       handleMessages(dataResponse.msgs);
 
-      if (dataResponse.matriculas.length < 1)
+      if(! $.isArray(dataResponse.matriculas))
+      {
+         $('<td />')
+          .html('As matriculas não poderam ser recuperadas, verifique as mensagens de erro ou tente <a alt="Recarregar página" href="/">recarregar</a>.')
+          .addClass('center')
+          .appendTo($('<tr />').appendTo($resultTable));
+      }
+      else if (dataResponse.matriculas.length < 1)
       {
          $('<td />')
           .html('Sem matriculas em andamento nesta turma.')
@@ -647,6 +633,11 @@ var $j = jQuery.noConflict();
       }
       else
       {
+
+        setTableDadosDiario(dataResponse.regra_avaliacao);
+        var useNota = $tableDadosDiario.data.regra_avaliacao.tipo_nota != 'nenhum';
+        var useParecer = $tableDadosDiario.data.regra_avaliacao.tipo_parecer_descritivo != 'nenhum';
+
         //set headers
         var $linha = $('<tr />');
         $('<th />').html('Matricula').appendTo($linha);
@@ -667,90 +658,89 @@ var $j = jQuery.noConflict();
           $('<th />').html('Parecer').appendTo($linha);
     
         $linha.appendTo($resultTable);
-      }
 
-      //set (result) rows
-      $.each(dataResponse.matriculas, function(index, value){
+        //set (result) rows
+        $.each(dataResponse.matriculas, function(index, value){
 
-        var $linha = $('<tr />');
-        
-        $('<td />').html(value.matricula_id).addClass('center').appendTo($linha);
-        $('<td />').html(value.aluno_id + ' - ' +value.nome.toUpperCase()).appendTo($linha);
-        $('<td />').addClass('situacao-matricula').attr('id', 'situacao-matricula-' + value.matricula_id).data('matricula_id', value.matricula_id).addClass('center').html(value.situacao).appendTo($linha);
+          var $linha = $('<tr />');
+          
+          $('<td />').html(value.matricula_id).addClass('center').appendTo($linha);
+          $('<td />').html(value.aluno_id + ' - ' +value.nome.toUpperCase()).appendTo($linha);
+          $('<td />').addClass('situacao-matricula').attr('id', 'situacao-matricula-' + value.matricula_id).data('matricula_id', value.matricula_id).addClass('center').html(value.situacao).appendTo($linha);
 
-        //nota
-        var getFieldNota = function(notaAtual, klass, id){
-    
-          if($tableDadosDiario.data.regra_avaliacao.tipo_nota == 'conceitual')
-          {
-            var opcoesNotas = $tableDadosDiario.data.regra_avaliacao.opcoes_notas;
-            var $notaField = $('<select />').addClass(klass).attr('id', id).data('matricula_id', value.matricula_id);
+          //nota
+          var getFieldNota = function(notaAtual, klass, id){
+      
+            if($tableDadosDiario.data.regra_avaliacao.tipo_nota == 'conceitual')
+            {
+              var opcoesNotas = $tableDadosDiario.data.regra_avaliacao.opcoes_notas;
+              var $notaField = $('<select />').addClass(klass).attr('id', id).data('matricula_id', value.matricula_id);
 
-            //adiciona options
-            var $option = $('<option />').appendTo($notaField);
-            for(key in opcoesNotas) {
-              var $option = $('<option />').val(key).html(opcoesNotas[key]);
+              //adiciona options
+              var $option = $('<option />').appendTo($notaField);
+              for(key in opcoesNotas) {
+                var $option = $('<option />').val(key).html(opcoesNotas[key]);
 
-              if (notaAtual == key)
-                $option.attr('selected', 'selected');
-    
-              $option.appendTo($notaField);
+                if (notaAtual == key)
+                  $option.attr('selected', 'selected');
+      
+                $option.appendTo($notaField);
+              }
+            }
+            else
+            {
+              var $notaField = $('<input />').addClass(klass).attr('id', id).val(notaAtual).attr('maxlength', '4').attr('size', '4').data('matricula_id', value.matricula_id);
+            }
+
+            $notaField.data('old_value', $notaField.val());
+            return $notaField;
+          }
+
+          if(useNota) {
+            $('<td />').html(getFieldNota(value.nota_atual, 'nota-matricula', 'nota-matricula-' + value.matricula_id)).addClass('center').appendTo($linha);
+
+            if ($tableDadosDiario.data.regra_avaliacao.quantidade_etapas == $('#etapa').val())
+            {
+
+              var $fieldNotaExame = getFieldNota(value.nota_exame, 'nota-exame-matricula', 'nota-exame-matricula-' + value.matricula_id);
+              $('<td />').html($fieldNotaExame).addClass('center').appendTo($linha);
+
+              if (value.nota_exame == '' && value.situacao.toLowerCase() != 'em exame')
+                $fieldNotaExame.hide();
             }
           }
-          else
-          {
-            var $notaField = $('<input />').addClass(klass).attr('id', id).val(notaAtual).attr('maxlength', '4').attr('size', '4').data('matricula_id', value.matricula_id);
+          
+          //falta
+          var $faltaField = $('<input />').addClass('falta-matricula').attr('id', 'falta-matricula-' + value.matricula_id).val(value.falta_atual).attr('maxlength', '4').attr('size', '4').data('matricula_id', value.matricula_id);
+            $faltaField.data('old_value', $faltaField.val());
+          $('<td />').html($faltaField).addClass('center').appendTo($linha);
+
+          //parecer
+          if(useParecer) {
+            var $parecerField = $('<textarea />').attr('cols', '40').attr('rows', '5').addClass('parecer-matricula').attr('id', 'parecer-matricula-' + value.matricula_id).val(value.parecer_atual).data('matricula_id', value.matricula_id);
+            $parecerField.data('old_value', $parecerField.val());
+            $('<td />').addClass('center').html($parecerField).appendTo($linha);
           }
 
-          $notaField.data('old_value', $notaField.val());
-          return $notaField;
-        }
+          $linha.fadeIn('slow').appendTo($resultTable);
+        });//fim each matriculas
 
-        if(useNota) {
-          $('<td />').html(getFieldNota(value.nota_atual, 'nota-matricula', 'nota-matricula-' + value.matricula_id)).addClass('center').appendTo($linha);
+        $resultTable.find('tr:even').addClass('even');
 
-          if ($tableDadosDiario.data.regra_avaliacao.quantidade_etapas == $('#etapa').val())
-          {
+        //set onchange events
+        var $notaFields = $resultTable.find('.nota-matricula');
+        var $notaExameFields = $resultTable.find('.nota-exame-matricula');
+        var $faltaFields = $resultTable.find('.falta-matricula');
+        var $parecerFields = $resultTable.find('.parecer-matricula');
+        $notaFields.on('change', changeNota);
+        $notaExameFields.on('change', changeNotaExame);
+        $faltaFields.on('change', changeFalta);
+        $parecerFields.on('change', changeParecer);
+        //.on('focusout', function(event){$(this).attr('rows', '2')})
+        //.on('focusin', function(event){$(this).attr('rows', '10')});
 
-            var $fieldNotaExame = getFieldNota(value.nota_exame, 'nota-exame-matricula', 'nota-exame-matricula-' + value.matricula_id);
-            $('<td />').html($fieldNotaExame).addClass('center').appendTo($linha);
-
-            if (value.nota_exame == '' && value.situacao.toLowerCase() != 'em exame')
-              $fieldNotaExame.hide();
-          }
-
-        }
-        
-        //falta
-        var $faltaField = $('<input />').addClass('falta-matricula').attr('id', 'falta-matricula-' + value.matricula_id).val(value.falta_atual).attr('maxlength', '4').attr('size', '4').data('matricula_id', value.matricula_id);
-          $faltaField.data('old_value', $faltaField.val());
-        $('<td />').html($faltaField).addClass('center').appendTo($linha);
-
-        //parecer
-        if(useParecer) {
-          var $parecerField = $('<textarea />').attr('cols', '40').attr('rows', '5').addClass('parecer-matricula').attr('id', 'parecer-matricula-' + value.matricula_id).val(value.parecer_atual).data('matricula_id', value.matricula_id);
-          $parecerField.data('old_value', $parecerField.val());
-          $('<td />').addClass('center').html($parecerField).appendTo($linha);
-        }
-
-        $linha.fadeIn('slow').appendTo($resultTable);
-      });
-
-      $resultTable.find('tr:even').addClass('even');
-
-      //set onchange events
-      var $notaFields = $resultTable.find('.nota-matricula');
-      var $notaExameFields = $resultTable.find('.nota-exame-matricula');
-      var $faltaFields = $resultTable.find('.falta-matricula');
-      var $parecerFields = $resultTable.find('.parecer-matricula');
-      $notaFields.on('change', changeNota);
-      $notaExameFields.on('change', changeNotaExame);
-      $faltaFields.on('change', changeFalta);
-      $parecerFields.on('change', changeParecer);
-      //.on('focusout', function(event){$(this).attr('rows', '2')})
-      //.on('focusin', function(event){$(this).attr('rows', '10')});
-
-      $resultTable.addClass('styled').find('input:first').focus();
+        $resultTable.addClass('styled').find('input:first').focus();
+      }
     }
 
     //change submit button
@@ -764,12 +754,16 @@ var $j = jQuery.noConflict();
 
         $resultTable.children().fadeOut('fast').remove();
         $tableOrientationSearch.hide();
-        $formFilter.submit();
-        $formFilter.fadeOut('fast');
-        $navActions
-          .html('Aguarde, carregando...')
-          .attr('style', 'text-align:center;')
-          .unbind('click');
+
+        //submit form after load a page, to keep session alive
+        $.ajax({url: diarioUrlBase, async: false, success: function(data){
+          $formFilter.submit();
+          $formFilter.fadeOut('fast');
+          $navActions
+            .html('Aguarde, carregando...')
+            .attr('style', 'text-align:center;')
+            .unbind('click');
+        }});
       }
     };
     $submitButton.val('Carregar');
