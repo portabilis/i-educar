@@ -117,7 +117,7 @@ class DiarioController extends Core_Controller_Page_ListController
     $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery.js"></script>');
     $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery.form.js"></script>');
     $this->appendOutput('<link type="text/javascript" rel="stylesheet" href="/modules/Avaliacao/Static/styles/diarioController.css"></script>');
-    $this->appendOutput('<script type="text/javascript" src="/modules/Avaliacao/Static/scripts/diarioController.js"></script>');
+    $this->appendOutput('<script type="text/javascript" charset="utf-8" src="/modules/Avaliacao/Static/scripts/diarioController.js"></script>');
   }
 }
 ?>
