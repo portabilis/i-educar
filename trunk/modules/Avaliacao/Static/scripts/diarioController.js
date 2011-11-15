@@ -186,24 +186,12 @@ var $j = jQuery.noConflict();
 
     function afterChangeResource($resourceElement){
       $resourceElement.removeAttr('disabled').siblings('img').remove();
+      var resourceElementTabIndex = $resourceElement.attr('tabindex');
+      var focusedElementTabIndex = $j('*:focus').first().attr('tabindex');
+      var nextTabIndex = resourceElementTabIndex + 1;
 
-      //#FIXME somente mudar foco, se o elemento com foco for o atual
-      //#TODO setar foco antes da requisao acabar...
-      //set focus in next field or textarea
-      if ($resourceElement.attr('class') == 'nota-matricula')
-        $('#falta-matricula-' + $resourceElement.data('matricula_id')).focus();
-      else if ($resourceElement.attr('class') == 'falta-matricula')
-      {
-        if ($('#parecer-matricula-' + $resourceElement.data('matricula_id')).focus().length < 1)
-          $j('#falta-matricula-' + $resourceElement.data('matricula_id')).closest('tr').next().find('input:first').focus();
-      }
-      else if ($resourceElement.attr('class') == 'parecer-matricula')
-      {
-        if ($j('#parecer-matricula-' + $resourceElement.data('matricula_id')).closest('tr').next().find('input:first').focus().length < 1)
-        {
-          $j('#parecer-matricula-' + $resourceElement.data('matricula_id')).closest('tr').next().find('textarea:first').focus();
-        }
-      }
+      if(focusedElementTabIndex == resourceElementTabIndex)
+        $($resourceElement.closest('table').find('[tabindex ="' + nextTabIndex + '"]')).focus();
     }
 
 
@@ -659,6 +647,12 @@ var $j = jQuery.noConflict();
     
         $linha.appendTo($resultTable);
 
+        var nextTabIndex = 1;
+        var setNextTabIndex = function($element){
+          $element.attr('tabindex', nextTabIndex);
+          nextTabIndex += 1;
+        };
+
         //set (result) rows
         $.each(dataResponse.matriculas, function(index, value){
 
@@ -693,6 +687,7 @@ var $j = jQuery.noConflict();
             }
 
             $notaField.data('old_value', $notaField.val());
+            setNextTabIndex($notaField);
             return $notaField;
           }
 
@@ -712,13 +707,15 @@ var $j = jQuery.noConflict();
           
           //falta
           var $faltaField = $('<input />').addClass('falta-matricula').attr('id', 'falta-matricula-' + value.matricula_id).val(value.falta_atual).attr('maxlength', '4').attr('size', '4').data('matricula_id', value.matricula_id);
-            $faltaField.data('old_value', $faltaField.val());
+          $faltaField.data('old_value', $faltaField.val());
+          setNextTabIndex($faltaField);
           $('<td />').html($faltaField).addClass('center').appendTo($linha);
 
           //parecer
           if(useParecer) {
             var $parecerField = $('<textarea />').attr('cols', '40').attr('rows', '5').addClass('parecer-matricula').attr('id', 'parecer-matricula-' + value.matricula_id).val(value.parecer_atual).data('matricula_id', value.matricula_id);
             $parecerField.data('old_value', $parecerField.val());
+            setNextTabIndex($parecerField);
             $('<td />').addClass('center').html($parecerField).appendTo($linha);
           }
 
