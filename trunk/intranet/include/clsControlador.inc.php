@@ -52,7 +52,12 @@ class clsControlador
    */
   public function clsControlador()
   {
-    @session_set_cookie_params(1200);
+
+    /*
+      Desabilitado esta linha para usar o valor setado no php.ini > session.cookie_lifetime  
+      @session_set_cookie_params(200);
+    */
+
     @session_start();
 
     if ('logado' == $_SESSION['itj_controle']) {
