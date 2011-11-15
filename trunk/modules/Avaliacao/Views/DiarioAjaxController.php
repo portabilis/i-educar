@@ -42,9 +42,9 @@ require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
 
 class DiarioAjaxController extends Core_Controller_Page_EditController
 {
-  protected $_dataMapper  = 'Avaliacao_Model_NotaComponenteDataMapper'; #FIXME ? esta propriedade deveria ser diferente para outros atts ? ex Falta
+  protected $_dataMapper  = 'Avaliacao_Model_NotaComponenteDataMapper';
   protected $_processoAp  = 644;
-  protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA; #FIXME para que serve esta propriedade ? remover ?
+  protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
   protected $_saveOption  = FALSE;
   protected $_deleteOption  = FALSE;
   protected $_titulo   = '';
@@ -97,7 +97,6 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
 
   protected function requiresLogin($raiseExceptionOnEmpty) {
-    #TODO verificar se usuário logado tem permissão para alterar / criar nota
     return $this->validatesPresenceOf($this->getSession()->id_pessoa, '', $raiseExceptionOnEmpty, 'Usuário deve estar logado');
   }
 
@@ -155,25 +154,6 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
     return false;
   }
-
-
-/*  protected function validatesValueOfComponenteCurricularForParecer($raiseExceptionOnError)
-  {
-
-    if (($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL || $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL) && $this->validatesPresenceOfComponenteCurricularId(false, false)) {
-      $msg = 'Não deve ser enviado o atributo componente_curricular_id.';
-    }
-    else
-      return true;
-
-    $this->appendMsg($msg);
-
-    if ($raiseExceptionOnEmpty)
-       throw new Exception($msg);
-
-    return false;
-  }
-*/
 
   protected function validatesValueOfAttValueIsNumeric($raiseExceptionOnError) {
     return $this->validatesValueIsNumeric($this->getRequest()->att_value, 'att_value', $raiseExceptionOnError);
@@ -315,11 +295,6 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     else
       $componenteCurricularId = null;
 
-    /*if ($canDelete && $this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL && $this->validatesPresenceOfComponenteCurricularId(false, false))   {
-      $this->appendMsg('Falta não removida, pois o tipo de presença é geral, não deve ser enviado o atributo componente_curricular_id.', 'error');
-    }
-    elseif...*/
-
     if ($canDelete && is_null($this->getFaltaAtual())) {
       $this->appendMsg('Falta matricula '. $this->getRequest()->matricula_id .' inexistente ou já removida.', 'notice');
     }
@@ -333,7 +308,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
   protected function deleteParecer() {
 
-    $canDelete = $this->canDeleteParecer() && $this->setService() && $this->validatesValueOfEtapaForParecer()/* && $this->validatesValueOfComponenteCurricularForParecer()*/;
+    $canDelete = $this->canDeleteParecer() && $this->setService() && $this->validatesValueOfEtapaForParecer();
     if ($canDelete && ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE || $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE))
       $canDelete = $this->validatesPresenceOfComponenteCurricularId(false);
 
@@ -479,8 +454,6 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
       $alunos = new clsPmieducarMatriculaTurma();
       $alunos->setOrderby('nome');
 
-      #FIXME pega só a ultima matricula ?
-      #FIXME revisao todos parametros repassados, bool_escola_andamento passar false ?
       $alunos = $alunos->lista(
         $this->getRequest()->matricula_id,
         $this->getRequest()->turma_id,
@@ -705,7 +678,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
       $this->getService()->save();   
     }
     catch (CoreExt_Service_Exception $e) {
-      //excecoes ignoradas :( servico lanca excecoes de alertas, que não são exatamente errors.
+      //excecoes ignoradas :( servico lanca excecoes de alertas, que não são exatamente erros.
       error_log('CoreExt_Service_Exception ignorada: ' . $e->getMessage());
     }
   }
@@ -766,9 +739,6 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
 
   public function Gerar() {
-
-
-
     $this->msgs = array();
     $this->response = array();
 
@@ -848,10 +818,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     $msgs = array();
     $this->appendResponse('att', isset($this->getRequest()->att) ? $this->getRequest()->att : '');
 
-    #TODO quebrar este metodo em submetodos para cada tipo de request (oper / att) ?
     if (isset($this->getRequest()->matricula_id) && 
-              #$this->getRequest()->oper != 'delete' &&
-              #$this->getRequest()->oper != 'get' && 
               $this->getRequest()->att != 'regra_avaliacao' &&
               $this->getRequest()->att != 'matriculas') {
       $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
