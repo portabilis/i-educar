@@ -4,6 +4,10 @@ var $j = jQuery.noConflict();
 
   $(function(){
 
+    function utf8Decode(s){
+      return decodeURIComponent(escape(s));
+    }
+
     var $formFilter = $('#formcadastro');
     var $submitButton = $('#botao_busca');
     var $resultTable = $('#form_resultado .tablelistagem').addClass('horizontal-expand');
@@ -207,7 +211,7 @@ var $j = jQuery.noConflict();
       var isNumeric = $.isNumeric(value);
 
       if (! isNumeric)
-        handleMessages([{type : 'error', msg : 'Informe um numero válido.'}], targetId);
+        handleMessages([{type : 'error', msg : utf8Decode('Informe um numero válido.')}], targetId);
 
       return isNumeric;
     }  
@@ -340,7 +344,7 @@ var $j = jQuery.noConflict();
 
     
     function confirmDelete(resourceName){
-      return confirm('Confirma exclusão ' + resourceName + '?');
+      return confirm(utf8Decode('Confirma exclusão ' + resourceName + '?'));
     }
 
 
@@ -531,7 +535,7 @@ var $j = jQuery.noConflict();
 
     
     function setTableDadosDiario(regraAvaliacao){
-      $('<caption />').html('<strong>Informações sobre o lançamento de notas</strong>').appendTo($tableDadosDiario);
+      $('<caption />').html('<strong>Lan&#231;amento de notas por turma</strong>').appendTo($tableDadosDiario);
 
       //set headers table
       var $linha = $('<tr />');
@@ -541,9 +545,9 @@ var $j = jQuery.noConflict();
       $('<th />').html('Serie').appendTo($linha);
       $('<th />').html('Ano').appendTo($linha);
       $('<th />').html('Escola').appendTo($linha);
-      $('<th />').html('Regra avaliação').appendTo($linha);
+      $('<th />').html('Regra avalia&#231;&#227;o').appendTo($linha);
       $('<th />').html('Tipo nota').appendTo($linha);
-      $('<th />').html('Tipo presença').appendTo($linha);
+      $('<th />').html('Tipo presen&#231;a').appendTo($linha);
       $('<th />').html('Tipo parecer').appendTo($linha);
 
       $linha.appendTo($tableDadosDiario);
@@ -560,7 +564,7 @@ var $j = jQuery.noConflict();
       //corrige acentuação
       var tipoNota = regraAvaliacao.tipo_nota.replace('_', ' ');
       if (tipoNota == 'numerica')
-        tipoNota = 'numérica';
+        tipoNota = utf8Decode('numérica');
       $('<td />').html(tipoNota.toUpperCase()).appendTo($linha);
 
       $('<td />').html(regraAvaliacao.tipo_presenca.replace('_', ' ').toUpperCase()).appendTo($linha);
@@ -595,7 +599,7 @@ var $j = jQuery.noConflict();
       if(! $.isArray(dataResponse.matriculas))
       {
          $('<td />')
-          .html('As matriculas não poderam ser recuperadas, verifique as mensagens de erro ou tente <a alt="Recarregar página" href="/">recarregar</a>.')
+          .html('As matriculas n&#227;o poderam ser recuperadas, verifique as mensagens de erro ou tente <a alt="Recarregar página" href="/" style="text-decoration:underline">recarregar</a>.')
           .addClass('center')
           .appendTo($('<tr />').appendTo($resultTable));
       }
@@ -617,7 +621,7 @@ var $j = jQuery.noConflict();
         var $linha = $('<tr />');
         $('<th />').html('Matricula').appendTo($linha);
         $('<th />').html('Aluno').appendTo($linha);
-        $('<th />').html('Situação').appendTo($linha);
+        $('<th />').html('Situa&#231;&#227;o').appendTo($linha);
 
         if(useNota)
         {
