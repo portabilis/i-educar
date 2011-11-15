@@ -142,7 +142,6 @@ var $j = jQuery.noConflict();
    
     function setDefaultFaltaIfEmpty(matricula_id){
       var $element = $('#falta-matricula-' + matricula_id);
-      console.log('#falta-matricula-' + matricula_id);
       if ($.trim($element.val()) == '')
       {
         $element.val(0);
@@ -187,11 +186,20 @@ var $j = jQuery.noConflict();
     function afterChangeResource($resourceElement){
       $resourceElement.removeAttr('disabled').siblings('img').remove();
       var resourceElementTabIndex = $resourceElement.attr('tabindex');
-      var focusedElementTabIndex = $j('*:focus').first().attr('tabindex');
-      var nextTabIndex = resourceElementTabIndex + 1;
+      var focusedElementTabIndex = $('*:focus').first().attr('tabindex');
+      var lastElementTabIndex = $resourceElement.closest('form').find(':last:[tabindex]').attr('tabindex');
 
-      if(focusedElementTabIndex == resourceElementTabIndex)
-        $($resourceElement.closest('table').find('[tabindex ="' + nextTabIndex + '"]')).focus();
+      for(var nextTabIndex = resourceElementTabIndex + 1; nextTabIndex < lastElementTabIndex + 1; nextTabIndex++){
+        var $nextElement = $($resourceElement.closest('form').find(':[tabindex="'+nextTabIndex+'"]')).first();
+
+        if($nextElement.is(':visible'))
+        {
+          if(focusedElementTabIndex == resourceElementTabIndex)
+            $nextElement.focus();
+
+          break;
+        }
+      }
     }
 
 
@@ -435,9 +443,11 @@ var $j = jQuery.noConflict();
       $('#situacao-matricula-' + matricula_id).html(situacao);
   
       $fieldNotaExame = $('#nota-exame-matricula-'+matricula_id);
-      console.log($fieldNotaExame);
-      if ($fieldNotaExame.val() != '' || situacao.toLowerCase() == 'em exame')
+      if (! $fieldNotaExame.is(':visible') && ($fieldNotaExame.val() != '' || situacao.toLowerCase() == 'em exame'))
+      {
         $fieldNotaExame.show();
+        $fieldNotaExame.focus();
+      }
       else if($fieldNotaExame.val() == '')
         $fieldNotaExame.hide();
     }
@@ -454,19 +464,17 @@ var $j = jQuery.noConflict();
 
 
     function handleErrorDeleteResource(request){
-      console.log('#todo handleErrorDeleteResource');
-      console.log(request);
+      handleMessages([{type : 'error', msg : 'Erro ao remover recurso.'}], '');
     }
 
 
-    var handleCompleteDeleteResource = function(){
-      console.log('delete completado...')
+    var handleCompleteDeleteResource = function(request){
     };
+
 
     //post
     function handleErrorPost(request){
-      console.log('#todo handleError');
-      console.log(request);
+      handleMessages([{type : 'error', msg : 'Erro ao alterar recurso.'}], '');
     }
 
 
@@ -478,40 +486,19 @@ var $j = jQuery.noConflict();
 
 
     function handleCompletePostNota(){
-      console.log('#todo post nota completado...')
     };
 
 
     function handleCompletePostNotaExame(){
-      console.log('#todo post nota_exame completado...')
     };
 
 
     function handleCompletePostFalta(){
-      console.log('#todo post falta completado...')
     };
 
 
     function handleCompletePostParecer(){
-      console.log('#todo post parecer completado...')
     };
-
-
-    //get
-    function handleGetNota(nota){
-      console.log('#todo handleGetNota');
-      console.log(nota);
-    }
-
-
-    function handleGetFalta(falta){
-      console.log('#todo handleGetFalta');
-    }
-
-
-    function handleGetParecer(parecer){
-      console.log('#todo handleGetParecer');
-    }
 
 
     function handleMessages(messages, targetId){
@@ -526,7 +513,7 @@ var $j = jQuery.noConflict();
         else
           var delay = 60000;
 
-        $('<p />').addClass(messages[i].type).html(messages[i].msg).appendTo($feedbackMessages).delay(delay).fadeOut(function(){/*$('#'+$(this).data('target_id')).removeClass('success');*/ $(this).remove()}).data('target_id', targetId);
+        $('<p />').addClass(messages[i].type).html(messages[i].msg).appendTo($feedbackMessages).delay(delay).fadeOut(function(){$(this).remove()}).data('target_id', targetId);
 
         if (! hasErrorMessages && messages[i].type == 'error')
           hasErrorMessages = true;
@@ -733,8 +720,6 @@ var $j = jQuery.noConflict();
         $notaExameFields.on('change', changeNotaExame);
         $faltaFields.on('change', changeFalta);
         $parecerFields.on('change', changeParecer);
-        //.on('focusout', function(event){$(this).attr('rows', '2')})
-        //.on('focusin', function(event){$(this).attr('rows', '10')});
 
         $resultTable.addClass('styled').find('input:first').focus();
       }
