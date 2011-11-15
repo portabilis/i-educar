@@ -227,14 +227,21 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
   protected function canPostNota(){
-    $canPost = $this->canPost() &&
-               $this->validatesValueOfAttValueIsNumeric(false);
 
-    //TODO mover para postNota pelo getService?
+    $canPost = $this->setService() &&
+               $this->canPost() &&                
+               $this->validatesValueOfAttValueIsNumeric(false) &&
+               $this->validatesPresenceOfComponenteCurricularId(false);
+
     if ($canPost && $this->getService()->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NENHUM)
     {
       $canPost = false;
       $this->appendMsg("Nota não lançada, pois a regra de avaliação não utiliza nota.");
+    }
+    elseif ($canPost && $this->getRequest()->etapa == 'Rc' && is_null($this->getService()->getRegra()->formulaRecuperacao))
+    {
+      $canPost = false;
+      $this->appendMsg("Nota de recuperação não lançada, pois a fórmula de recuperação não possui fórmula de recuperação.");
     }
     elseif ($canPost && $this->getRequest()->etapa == 'Rc' && $this->getService()->getRegra()->formulaRecuperacao->get('tipoFormula') != FormulaMedia_Model_TipoFormula::MEDIA_RECUPERACAO)
     {
@@ -375,9 +382,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
 
   protected function postNota(){
-    if ($this->setService() &&
-        $this->canPostNota() &&
-        $this->validatesPresenceOfComponenteCurricularId(false)){
+    if ($this->canPostNota()){
 
       $nota = new Avaliacao_Model_NotaComponente(array(
         'componenteCurricular' => $this->getRequest()->componente_curricular_id,
@@ -647,7 +652,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
         if ($this->getService()->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA)
           $opcoes[(string) $item->nome] = (string) $item->nome;
         else
-          $opcoes[(string) $item->valorMaximo] = utf8_decode($item->nome . ' (' . $item->descricao .  ')');
+          $opcoes[(string) $item->valorMaximo] = utf8_encode($item->nome . ' (' . $item->descricao .  ')');
       }
     }
     return $opcoes;
