@@ -423,7 +423,7 @@ var $j = jQuery.noConflict();
         deleteResource(resourceName, $faltaFieldElement, options, handleCompleteDeleteResource, handleErrorDeleteResource);
       }
       else
-        handleMessages([{type : 'error', msg : 'Falta não pode ser removida após ter lançado notas ou parecer descritivo, tente definir como 0 (zero).'}], $faltaFieldElement.attr('id'));
+        handleMessages([{type : 'error', msg : utf8Decode('Falta não pode ser removida após ter lançado notas ou parecer descritivo, tente definir como 0 (zero).')}], $faltaFieldElement.attr('id'));
     }
 
 
