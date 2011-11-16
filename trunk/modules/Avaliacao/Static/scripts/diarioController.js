@@ -4,8 +4,20 @@ var $j = jQuery.noConflict();
 
   $(function(){
 
+    function safeLog(value)
+    {
+      if(typeof(console) != 'undefined' && typeof(console.log) == 'function')
+        console.log(value);
+    }
+
     function utf8Decode(s){
-      return decodeURIComponent(escape(s));
+      try{
+          return decodeURIComponent(escape(s));
+      }
+      catch(e){
+          safeLog('Erro ao decodificar string utf8: ' + s);
+          return s;
+      }
     }
 
     var $formFilter = $('#formcadastro');
@@ -211,7 +223,7 @@ var $j = jQuery.noConflict();
       var isNumeric = $.isNumeric(value);
 
       if (! isNumeric)
-        handleMessages([{type : 'error', msg : utf8Decode('Informe um numero válido.')}], targetId);
+        handleMessages([{type : 'error', msg : 'Informe um numero válido.'}], targetId);
 
       return isNumeric;
     }  
@@ -344,7 +356,7 @@ var $j = jQuery.noConflict();
 
     
     function confirmDelete(resourceName){
-      return confirm(utf8Decode('Confirma exclusão ' + resourceName + '?'));
+      return confirm(utf8Decode('Confirma exclusão ' + resourceName.replace('_',' ') + '?'));
     }
 
 
@@ -452,7 +464,7 @@ var $j = jQuery.noConflict();
         $fieldNotaExame.show();
         $fieldNotaExame.focus();
       }
-      else if($fieldNotaExame.val() == '')
+      else if($fieldNotaExame.val() == '' && situacao.toLowerCase() != 'em exame')
         $fieldNotaExame.hide();
     }
 
@@ -564,7 +576,7 @@ var $j = jQuery.noConflict();
       //corrige acentuação
       var tipoNota = regraAvaliacao.tipo_nota.replace('_', ' ');
       if (tipoNota == 'numerica')
-        tipoNota = utf8Decode('numérica');
+        tipoNota = 'numérica';
       $('<td />').html(tipoNota.toUpperCase()).appendTo($linha);
 
       $('<td />').html(regraAvaliacao.tipo_presenca.replace('_', ' ').toUpperCase()).appendTo($linha);
