@@ -257,7 +257,7 @@ var $j = jQuery.noConflict();
         beforeChangeResource($notaFieldElement);
 
         var options = {
-          url : postResourceUrlBuilder.buildUrl(diarioAjaxUrlBase, 'nota', {matricula_id : $notaFieldElement.data('matricula_id'),}),
+          url : postResourceUrlBuilder.buildUrl(diarioAjaxUrlBase, 'nota', {matricula_id : $notaFieldElement.data('matricula_id')}),
           dataType : 'json',
           data : {att_value : $notaFieldElement.val()},
           success : function(dataResponse){
@@ -313,7 +313,7 @@ var $j = jQuery.noConflict();
         beforeChangeResource($faltaFieldElement);
 
         var options = {
-          url : postResourceUrlBuilder.buildUrl(diarioAjaxUrlBase, 'falta', {matricula_id : $faltaFieldElement.data('matricula_id'),}),
+          url : postResourceUrlBuilder.buildUrl(diarioAjaxUrlBase, 'falta', {matricula_id : $faltaFieldElement.data('matricula_id')}),
           dataType : 'json',
           data : {att_value : $faltaFieldElement.val()},
           success : function(dataResponse){
@@ -379,7 +379,7 @@ var $j = jQuery.noConflict();
       var resourceName = 'nota';
 
       var options = {
-        url : deleteResourceUrlBuilder.buildUrl(diarioAjaxUrlBase, resourceName, {matricula_id : $notaFieldElement.data('matricula_id'),}),
+        url : deleteResourceUrlBuilder.buildUrl(diarioAjaxUrlBase, resourceName, {matricula_id : $notaFieldElement.data('matricula_id')}),
         dataType : 'json',
         success : function(dataResponse){
           afterChangeResource($notaFieldElement);
@@ -424,7 +424,7 @@ var $j = jQuery.noConflict();
         var resourceName = 'falta';
 
         var options = {
-          url : deleteResourceUrlBuilder.buildUrl(diarioAjaxUrlBase, resourceName, {matricula_id : $faltaFieldElement.data('matricula_id'),}),
+          url : deleteResourceUrlBuilder.buildUrl(diarioAjaxUrlBase, resourceName, {matricula_id : $faltaFieldElement.data('matricula_id')}),
           dataType : 'json',
           success : function(dataResponse){
             afterChangeResource($faltaFieldElement);
