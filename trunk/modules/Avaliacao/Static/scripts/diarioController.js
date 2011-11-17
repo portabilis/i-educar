@@ -87,14 +87,14 @@ var $j = jQuery.noConflict();
         var vars = {
           att : resourceName,
           oper : 'delete',
-          instituicao_id : $j('#ref_cod_instituicao').val(),
-          escola_id : $j('#ref_cod_escola').val(),
-          curso_id : $j('#ref_cod_curso').val(),
-          serie_id : $j('#ref_ref_cod_serie').val(),
-          turma_id : $j('#ref_cod_turma').val(),
-          ano_escolar : $j('#ano_escolar').val(),
-          componente_curricular_id : $j('#ref_cod_componente_curricular').val(),
-          etapa : $j('#etapa').val()
+          instituicao_id : $('#ref_cod_instituicao').val(),
+          escola_id : $('#ref_cod_escola').val(),
+          curso_id : $('#ref_cod_curso').val(),
+          serie_id : $('#ref_ref_cod_serie').val(),
+          turma_id : $('#ref_cod_turma').val(),
+          ano_escolar : $('#ano_escolar').val(),
+          componente_curricular_id : $('#ref_cod_componente_curricular').val(),
+          etapa : $('#etapa').val()
         };
 
         return resourceUrlBuilder.buildUrl(urlBase, $.extend(vars, additionalVars));
@@ -109,15 +109,15 @@ var $j = jQuery.noConflict();
         var vars = {
           att : resourceName,
           oper : 'post',
-          instituicao_id : $j('#ref_cod_instituicao').val(),
-          escola_id : $j('#ref_cod_escola').val(),
-          curso_id : $j('#ref_cod_curso').val(),
-          serie_id : $j('#ref_ref_cod_serie').val(),
-          turma_id : $j('#ref_cod_turma').val(),
-          ano_escolar : $j('#ano_escolar').val(),
-          componente_curricular_id : $j('#ref_cod_componente_curricular').val(),
-          etapa : $j('#etapa').val(),
-          matricula_id : $j('#etapa').val()
+          instituicao_id : $('#ref_cod_instituicao').val(),
+          escola_id : $('#ref_cod_escola').val(),
+          curso_id : $('#ref_cod_curso').val(),
+          serie_id : $('#ref_ref_cod_serie').val(),
+          turma_id : $('#ref_cod_turma').val(),
+          ano_escolar : $('#ano_escolar').val(),
+          componente_curricular_id : $('#ref_cod_componente_curricular').val(),
+          etapa : $('#etapa').val(),
+          matricula_id : $('#etapa').val()
         };
 
         return resourceUrlBuilder.buildUrl(urlBase, $.extend(vars, additionalVars));
@@ -132,14 +132,14 @@ var $j = jQuery.noConflict();
         var vars = {
           att : resourceName,
           oper : 'get',
-          instituicao_id : $j('#ref_cod_instituicao').val(),
-          escola_id : $j('#ref_cod_escola').val(),
-          curso_id : $j('#ref_cod_curso').val(),
-          serie_id : $j('#ref_ref_cod_serie').val(),
-          turma_id : $j('#ref_cod_turma').val(),
-          ano_escolar : $j('#ano_escolar').val(),
-          componente_curricular_id : $j('#ref_cod_componente_curricular').val(),
-          etapa : $j('#etapa').val()
+          instituicao_id : $('#ref_cod_instituicao').val(),
+          escola_id : $('#ref_cod_escola').val(),
+          curso_id : $('#ref_cod_curso').val(),
+          serie_id : $('#ref_ref_cod_serie').val(),
+          turma_id : $('#ref_cod_turma').val(),
+          ano_escolar : $('#ano_escolar').val(),
+          componente_curricular_id : $('#ref_cod_componente_curricular').val(),
+          etapa : $('#etapa').val()
         };
 
         return resourceUrlBuilder.buildUrl(urlBase, $.extend(vars, additionalVars));
@@ -332,7 +332,7 @@ var $j = jQuery.noConflict();
       if ($tableDadosDiario.data.regra_avaliacao.tipo_parecer_descritivo.split('_')[0] == 'anual')
         var etapaParecer = 'An';
       else
-        var etapaParecer = $j('#etapa').val();
+        var etapaParecer = $('#etapa').val();
 
       return etapaParecer;
     }
@@ -567,12 +567,18 @@ var $j = jQuery.noConflict();
       $linha.appendTo($tableDadosDiario);
 
       var $linha = $('<tr />').addClass('even');
-      $('<td />').html($j('#etapa').children("[selected='selected']").html().toUpperCase()).appendTo($linha);
-      $('<td />').html($j('#ref_cod_componente_curricular').children("[selected='selected']").html().toUpperCase()).appendTo($linha);
-      $('<td />').html($j('#ref_cod_turma').children("[selected='selected']").html().toUpperCase()).appendTo($linha);
-      $('<td />').html($j('#ref_ref_cod_serie').children("[selected='selected']").html().toUpperCase()).appendTo($linha);
-      $('<td />').html($j('#ano_escolar').children("[selected='selected']").html()).appendTo($linha);
-      $('<td />').html($j('#ref_cod_escola').children("[selected='selected']").html().toUpperCase()).appendTo($linha);
+      $('<td />').html($('#etapa').children("[selected='selected']").html().toUpperCase()).appendTo($linha);
+      $('<td />').html($('#ref_cod_componente_curricular').children("[selected='selected']").html().toUpperCase()).appendTo($linha);
+      $('<td />').html($('#ref_cod_turma').children("[selected='selected']").html().toUpperCase()).appendTo($linha);
+      $('<td />').html($('#ref_ref_cod_serie').children("[selected='selected']").html().toUpperCase()).appendTo($linha);
+      $('<td />').html($('#ano_escolar').children("[selected='selected']").html()).appendTo($linha);
+
+      //field escola pode ser diferente de select caso usuario comum 
+      var $htmlEscolaField = $('#ref_cod_escola').children("[selected='selected']").html();
+      if (typeof($htmlEscolaField) == 'string')
+        $htmlEscolaField = $htmlEscolaField.toUpperCase();
+
+      $('<td />').html($htmlEscolaField).appendTo($linha);
       $('<td />').html(regraAvaliacao.id + ' - ' +regraAvaliacao.nome.toUpperCase()).appendTo($linha);
      
       //corrige acentuação
