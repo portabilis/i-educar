@@ -4,6 +4,14 @@ var $j = jQuery.noConflict();
 
   $(function(){
 
+    function safeToUpperCase(value){
+
+      if (typeof(value) == 'string')
+        value = value.toUpperCase();
+
+      return value;
+    }
+
     function safeLog(value)
     {
       if(typeof(console) != 'undefined' && typeof(console.log) == 'function')
@@ -567,28 +575,27 @@ var $j = jQuery.noConflict();
       $linha.appendTo($tableDadosDiario);
 
       var $linha = $('<tr />').addClass('even');
-      $('<td />').html($('#etapa').children("[selected='selected']").html().toUpperCase()).appendTo($linha);
-      $('<td />').html($('#ref_cod_componente_curricular').children("[selected='selected']").html().toUpperCase()).appendTo($linha);
-      $('<td />').html($('#ref_cod_turma').children("[selected='selected']").html().toUpperCase()).appendTo($linha);
-      $('<td />').html($('#ref_ref_cod_serie').children("[selected='selected']").html().toUpperCase()).appendTo($linha);
+      $('<td />').html(safeToUpperCase($('#etapa').children("[selected='selected']").html())).appendTo($linha);
+      $('<td />').html(safeToUpperCase($('#ref_cod_componente_curricular').children("[selected='selected']").html())).appendTo($linha);
+      $('<td />').html(safeToUpperCase($('#ref_cod_turma').children("[selected='selected']").html())).appendTo($linha);
+      $('<td />').html(safeToUpperCase($('#ref_ref_cod_serie').children("[selected='selected']").html())).appendTo($linha);
       $('<td />').html($('#ano_escolar').children("[selected='selected']").html()).appendTo($linha);
 
       //field escola pode ser diferente de select caso usuario comum 
-      var $htmlEscolaField = $('#ref_cod_escola').children("[selected='selected']").html();
-      if (typeof($htmlEscolaField) == 'string')
-        $htmlEscolaField = $htmlEscolaField.toUpperCase();
+      var $htmlEscolaField = $('#ref_cod_escola').children("[selected='selected']").html() ||
+                             $j('#tr_nm_escola span:last').html();
 
-      $('<td />').html($htmlEscolaField).appendTo($linha);
-      $('<td />').html(regraAvaliacao.id + ' - ' +regraAvaliacao.nome.toUpperCase()).appendTo($linha);
+      $('<td />').html(safeToUpperCase($htmlEscolaField)).appendTo($linha);
+      $('<td />').html(regraAvaliacao.id + ' - ' +safeToUpperCase(regraAvaliacao.nome)).appendTo($linha);
      
       //corrige acentuação
       var tipoNota = regraAvaliacao.tipo_nota.replace('_', ' ');
       if (tipoNota == 'numerica')
         tipoNota = 'numérica';
-      $('<td />').html(tipoNota.toUpperCase()).appendTo($linha);
+      $('<td />').html(safeToUpperCase(tipoNota)).appendTo($linha);
 
-      $('<td />').html(regraAvaliacao.tipo_presenca.replace('_', ' ').toUpperCase()).appendTo($linha);
-      $('<td />').html(regraAvaliacao.tipo_parecer_descritivo.replace('_', ' ').toUpperCase()).appendTo($linha);
+      $('<td />').html(safeToUpperCase(regraAvaliacao.tipo_presenca.replace('_', ' '))).appendTo($linha);
+      $('<td />').html(safeToUpperCase(regraAvaliacao.tipo_parecer_descritivo.replace('_', ' '))).appendTo($linha);
 
       $linha.appendTo($tableDadosDiario);
       $tableDadosDiario.show();
@@ -680,7 +687,7 @@ var $j = jQuery.noConflict();
             var $linha = $('<tr />');
             
             $('<td />').html(value.matricula_id).addClass('center').appendTo($linha);
-            $('<td />').html(value.aluno_id + ' - ' +value.nome.toUpperCase()).appendTo($linha);
+            $('<td />').html(value.aluno_id + ' - ' +safeToUpperCase(value.nome)).appendTo($linha);
             $('<td />').addClass('situacao-matricula').attr('id', 'situacao-matricula-' + value.matricula_id).data('matricula_id', value.matricula_id).addClass('center').html(value.situacao).appendTo($linha);
 
             //nota
