@@ -47,6 +47,9 @@ class PortabilisBoletimEdInfantilSemestral extends Report
   }
 }
 
+if ($_POST['ref_ref_cod_serie'] == 1)
+  $report = new PortabilisBoletimEdInfantilSemestral($name = 'Boletim Escolar - Ed. Infantil Semestral', $templateName =    'portabilis_boletim_primeiro_ano_trimestral');
+else
 $report = new PortabilisBoletimEdInfantilSemestral($name = 'Boletim Escolar - Ed. Infantil Semestral', $templateName = 'portabilis_boletim_educ_infantil_semestral');
 
 $report->addRequiredField('ano','ano');

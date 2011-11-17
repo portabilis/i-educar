@@ -1,0 +1,1331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_boletim_primeiro_ano_trimestral" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.1000000000000045"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="ano" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="instituicao" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="escola" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="curso" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="serie" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="turma" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="matricula" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.lang.String"/>
+	<parameter name="manual" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT (SELECT escola_ano_letivo.ano
+          FROM pmieducar.escola_ano_letivo
+         WHERE escola_ano_letivo.ref_cod_escola = $P{escola} and
+		       ano = $P{ano}) AS ano,
+
+      (SELECT public.fcn_upper(instituicao.nm_responsavel)
+         FROM pmieducar.instituicao
+        WHERE instituicao.cod_instituicao = $P{instituicao}) AS nome_responsavel,
+
+      (SELECT COALESCE((SELECT public.fcn_upper(ps.nome)
+          FROM cadastro.pessoa ps,
+               cadastro.juridica,
+               pmieducar.escola
+         WHERE escola.ref_idpes = juridica.idpes AND
+               juridica.idpes = ps.idpes AND
+               escola.cod_escola = $P{escola}),(SELECT nm_escola FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS nm_escola,
+
+
+      (SELECT public.fcn_upper(instituicao.nm_instituicao)
+         FROM pmieducar.instituicao
+        WHERE instituicao.cod_instituicao = $P{instituicao}) AS nome_instituicao,
+
+      (SELECT public.fcn_upper(substring(logradouro.idtlog from 1 for 1)) ||
+              lower(substring(logradouro.idtlog, 2))
+         FROM public.logradouro,
+              cadastro.juridica,
+              cadastro.pessoa ps,
+              cadastro.endereco_pessoa,
+              pmieducar.escola
+        WHERE juridica.idpes = ps.idpes AND
+              ps.idpes = endereco_pessoa.idpes AND
+              endereco_pessoa.idlog = logradouro.idlog AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}) AS tipo_logradouro,
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT logradouro.nome
+         FROM public.logradouro,
+              cadastro.juridica,
+              cadastro.pessoa ps,
+              cadastro.endereco_pessoa,
+              pmieducar.escola
+        WHERE juridica.idpes = ps.idpes AND
+              ps.idpes = endereco_pessoa.idpes AND
+              endereco_pessoa.idlog = logradouro.idlog AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT endereco_externo.logradouro FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(SELECT logradouro FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS logradouro,
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro,
+              pmieducar.escola
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT endereco_externo.cidade FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(SELECT municipio FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS municipio,
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT bairro.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro,
+              pmieducar.escola
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT endereco_externo.bairro FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(SELECT bairro FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS bairro,
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT municipio.sigla_uf
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro,
+              pmieducar.escola
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT endereco_externo.sigla_uf FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(select inst.ref_sigla_uf from pmieducar.instituicao inst where inst.cod_instituicao = $P{instituicao}))) AS uf_municipio,
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT endereco_pessoa.numero
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica,
+              pmieducar.escola
+        WHERE juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT endereco_externo.numero FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(SELECT numero FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS numero,
+
+     (SELECT COALESCE((SELECT COALESCE((SELECT to_char(endereco_pessoa.cep, '99999-999')
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica,
+              pmieducar.escola
+        WHERE juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT to_char(endereco_externo.cep,'99999-999') FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(SELECT to_char(escola_complemento.cep,'99999-999') FROM pmieducar.escola_complemento where escola_complemento.ref_cod_escola = $P{escola}))) AS cep,
+
+     (SELECT COALESCE((SELECT min(fone_pessoa.ddd)
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica,
+              pmieducar.escola
+        WHERE juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT min(ddd_telefone) FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS fone_ddd,
+
+
+     (SELECT COALESCE((SELECT min(to_char(fone_pessoa.fone, '9999-9999'))
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica,
+              pmieducar.escola
+        WHERE juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT min(to_char(telefone, '9999-9999')) FROM pmieducar.escola_complemento where escola_complemento.ref_cod_escola = $P{escola}))) AS fone,
+
+     (SELECT COALESCE((SELECT ps.email
+         FROM cadastro.pessoa ps,
+              cadastro.juridica,
+              pmieducar.escola
+        WHERE juridica.idpes = ps.idpes AND
+              juridica.idpes = escola.ref_idpes AND
+              escola.cod_escola = $P{escola}),(SELECT email FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS email,
+
+       to_char(current_date,'dd/mm/yyyy') AS data_atual,
+       to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
+
+        nome_disciplina,
+        MAX(area_conhecimento) AS area_conhecimento,
+        MAX(parecer_semestre1) AS parecer_semestre1,
+        MAX(parecer_semestre2) AS parecer_semestre2,
+        MAX(parecer_semestre3) AS parecer_semestre3,
+        MAX(matricula) as matricula,
+        MAX(id_disciplina) as id_disciplina,
+	MAX(nota_arredondada) AS nota1,
+        MAX(nota_arredondada_etapa2) AS nota2,
+        MAX(nota_arredondada_etapa3) AS nota3,
+        MAX(nota_arredondada_etapa4) AS nota4,
+		MAX(nota_exame) AS nota_exame,
+		MAX(media) AS media,
+        MAX(nome_curso) AS nome_curso,
+	MAX(nome_serie) AS nome_serie,
+        MAX(nome_turma) AS nome_turma,
+        MAX(periodo) AS periodo,
+		MAX(situacao) AS situacao,
+		MAX(nome_aluno) AS nome_aluno,
+		MAX(total_faltas_et1) AS total_faltas_et1,
+		MAX(total_faltas_et2) AS total_faltas_et2,
+		MAX(total_faltas_et3) AS total_faltas_et3,
+		MAX(total_faltas_et4) AS total_faltas_et4,
+		MAX(total_faltas) AS total_faltas,
+		MAX(faltas_componente_et1) AS faltas_componente_et1,
+		MAX(faltas_componente_et2) AS faltas_componente_et2,
+		MAX(faltas_componente_et3) AS faltas_componente_et3,
+		MAX(faltas_componente_et4) AS faltas_componente_et4,
+		MAX(total_faltas_componente) AS total_faltas_componente,
+		MAX(frequencia) AS frequencia,
+		MAX(frequencia_componente) AS frequencia_componente,
+		MAX(carga_horaria) AS carga_horaria
+  FROM (SELECT
+             (SELECT componente_curricular.nome
+                FROM modules.componente_curricular
+               WHERE componente_curricular.id = escola_serie_disciplina.ref_cod_disciplina) as nome_disciplina,
+
+     (SELECT area_conhecimento.nome
+        FROM modules.area_conhecimento,
+             modules.componente_curricular
+       WHERE area_conhecimento.id = componente_curricular.area_conhecimento_id AND
+             area_conhecimento.instituicao_id = $P{instituicao} AND
+             componente_curricular.id = escola_serie_disciplina.ref_cod_disciplina) as area_conhecimento,
+
+      (SELECT parecer
+         FROM modules.parecer_geral,
+              modules.parecer_aluno
+        WHERE parecer_aluno.matricula_id = matricula.cod_matricula AND
+              parecer_geral.parecer_aluno_id = parecer_aluno.id AND
+              parecer_geral.etapa = 1 ) AS parecer_semestre1,
+
+      (SELECT parecer
+         FROM modules.parecer_geral,
+              modules.parecer_aluno
+        WHERE parecer_aluno.matricula_id = matricula.cod_matricula AND
+              parecer_geral.parecer_aluno_id = parecer_aluno.id AND
+              parecer_geral.etapa = 2 ) AS parecer_semestre2,
+
+      (SELECT parecer
+         FROM modules.parecer_geral,
+              modules.parecer_aluno
+        WHERE parecer_aluno.matricula_id = matricula.cod_matricula AND
+              parecer_geral.parecer_aluno_id = parecer_aluno.id AND
+              parecer_geral.etapa = 3 ) AS parecer_semestre3,
+
+               matricula.cod_matricula AS matricula,
+
+                          (SELECT componente_curricular.id
+                FROM modules.componente_curricular
+               WHERE componente_curricular.id = escola_serie_disciplina.ref_cod_disciplina) as id_disciplina,
+
+ (SELECT et1.nota_arredondada
+                FROM modules.nota_componente_curricular et1,
+                     modules.nota_aluno
+               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+                     et1.etapa = 1 AND
+                     nota_aluno.id  = et1.nota_aluno_id AND
+                    nota_aluno.matricula_id = matricula.cod_matricula) AS nota_arredondada,
+
+ (SELECT et1.nota_arredondada
+                FROM modules.nota_componente_curricular et1,
+                     modules.nota_aluno
+               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+                     et1.etapa = 2 AND
+                     nota_aluno.id  = et1.nota_aluno_id AND
+                     nota_aluno.matricula_id = matricula.cod_matricula) AS nota_arredondada_etapa2,
+
+ (SELECT et1.nota_arredondada
+                FROM modules.nota_componente_curricular et1,
+                     modules.nota_aluno
+               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+                     et1.etapa = 3 AND
+                     nota_aluno.id  = et1.nota_aluno_id AND
+                     nota_aluno.matricula_id = matricula.cod_matricula) AS nota_arredondada_etapa3,
+
+ (SELECT et1.nota_arredondada
+                FROM modules.nota_componente_curricular et1,
+                     modules.nota_aluno
+               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+                     et1.etapa = 4 AND
+                     nota_aluno.id  = et1.nota_aluno_id AND
+                     nota_aluno.matricula_id = matricula.cod_matricula) AS nota_arredondada_etapa4,
+
+
+           (SELECT CASE  WHEN et1.nota_arredondada = 10 THEN
+			                   '10,0'
+			               WHEN char_length(et1.nota_arredondada) = 1 THEN
+			                   replace(et1.nota_arredondada,'.',',') || ',0'
+                           ELSE
+                               replace(et1.nota_arredondada,'.',',')
+                           END
+                FROM modules.nota_componente_curricular et1,
+                     modules.nota_aluno
+               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+					 et1.etapa = 'Rc' AND
+                     nota_aluno.id  = et1.nota_aluno_id AND
+                     nota_aluno.matricula_id = matricula.cod_matricula) AS nota_exame,
+
+
+             (SELECT CASE WHEN char_length(nota_componente_curricular_media.media_arredondada) = 1 THEN
+			                   replace(nota_componente_curricular_media.media_arredondada,'.',',') || ',0'
+                           ELSE
+                               replace(nota_componente_curricular_media.media_arredondada,'.',',')
+                           END
+		FROM modules.nota_componente_curricular_media,
+         modules.nota_aluno
+               WHERE nota_aluno.id = nota_componente_curricular_media.nota_aluno_id AND
+                     nota_componente_curricular_media.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+                     nota_componente_curricular_media.etapa in('3','Rc') AND
+                     nota_aluno.matricula_id = matricula.cod_matricula) AS media,
+
+	         (SELECT curso.nm_curso
+                FROM pmieducar.curso
+	          WHERE curso.cod_curso = matricula.ref_cod_curso AND
+                        curso.ativo = 1) AS nome_curso,
+
+            (SELECT serie.nm_serie
+               FROM pmieducar.serie
+	         WHERE serie.cod_serie = matricula.ref_ref_cod_serie AND
+                       serie.ativo = 1) AS nome_serie,
+
+	    (SELECT turma.nm_turma
+	       FROM pmieducar.turma,
+                    pmieducar.matricula_turma
+              WHERE turma.cod_turma = matricula_turma.ref_cod_turma AND
+                    matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+                    turma.ativo = 1 AND
+					matricula_turma.ativo = 1) AS nome_turma,
+
+    (SELECT CASE WHEN date_part('hour',hora_inicial) = 6 or date_part('hour',hora_inicial) = 7 or date_part('hour',hora_inicial) = 8 THEN 'Matutino'
+                     WHEN date_part('hour',hora_inicial) = 13 or date_part('hour',hora_inicial) = 14 THEN 'Vespertino'
+                     WHEN date_part('hour',hora_inicial) = 18 or date_part('hour',hora_inicial) = 19 THEN 'Noturno'
+                END
+	       FROM pmieducar.turma,
+                pmieducar.matricula_turma
+          WHERE turma.cod_turma = matricula_turma.ref_cod_turma AND
+                matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+                turma.ativo = 1 AND
+		        matricula_turma.ativo = 1 AND
+                hora_inicial IS NOT NULL) AS periodo,
+
+		(SELECT CASE WHEN (SELECT mt.aprovado
+		                     FROM pmieducar.matricula mt
+							WHERE mt.cod_matricula = matricula.cod_matricula) = 1 THEN 'Aprovado'
+                     WHEN (SELECT mt.aprovado
+					         FROM pmieducar.matricula mt
+							WHERE mt.cod_matricula = matricula.cod_matricula) = 2 THEN 'Reprovado'
+                     WHEN (SELECT mt.aprovado
+					         FROM pmieducar.matricula mt
+							WHERE mt.cod_matricula = matricula.cod_matricula) = 3 THEN 'Em Andamento'
+                     WHEN (SELECT mt.aprovado
+					         FROM pmieducar.matricula mt
+							WHERE mt.cod_matricula = matricula.cod_matricula) = 4 THEN 'Transferido'
+                ELSE 'Reclassificado'
+                END) AS situacao,
+
+		(SELECT public.fcn_upper(pessoa.nome)
+           FROM cadastro.pessoa,
+                cadastro.fisica,
+                pmieducar.aluno
+          WHERE pessoa.idpes = fisica.idpes AND
+                fisica.idpes = aluno.ref_idpes AND
+                aluno.cod_aluno = matricula.ref_cod_aluno) AS nome_aluno,
+
+        (SELECT sum(falta_geral.quantidade)
+           FROM modules.falta_geral,
+                modules.falta_aluno
+          WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
+                falta_aluno.matricula_id = matricula.cod_matricula AND
+                falta_geral.etapa = 1 AND
+				falta_aluno.tipo_falta = 1) as total_faltas_et1,
+
+        (SELECT sum(falta_geral.quantidade)
+           FROM modules.falta_geral,
+                modules.falta_aluno
+          WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
+                falta_aluno.matricula_id = matricula.cod_matricula AND
+                falta_geral.etapa = 2 AND
+				falta_aluno.tipo_falta = 1) as total_faltas_et2,
+
+        (SELECT sum(falta_geral.quantidade)
+           FROM modules.falta_geral,
+                modules.falta_aluno
+          WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
+                falta_aluno.matricula_id = matricula.cod_matricula AND
+                falta_geral.etapa = 3 AND
+                falta_aluno.tipo_falta = 1) as total_faltas_et3,
+
+        (SELECT sum(falta_geral.quantidade)
+           FROM modules.falta_geral,
+                modules.falta_aluno
+          WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
+                falta_aluno.matricula_id = matricula.cod_matricula AND
+                falta_geral.etapa = 4 AND
+				falta_aluno.tipo_falta = 1) as total_faltas_et4,
+
+        (SELECT sum(falta_geral.quantidade)
+           FROM modules.falta_geral,
+                modules.falta_aluno
+          WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
+                falta_aluno.matricula_id = matricula.cod_matricula AND
+                falta_geral.etapa in ('1','2','3','4')) as total_faltas,
+
+       (SELECT sum(falta_componente_curricular.quantidade)
+           FROM modules.falta_componente_curricular,
+                modules.falta_aluno
+          WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
+                falta_aluno.matricula_id = matricula.cod_matricula AND
+                falta_componente_curricular.etapa = 1 AND
+				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+				falta_aluno.tipo_falta = 2) as faltas_componente_et1,
+
+       (SELECT sum(falta_componente_curricular.quantidade)
+           FROM modules.falta_componente_curricular,
+                modules.falta_aluno
+          WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
+                falta_aluno.matricula_id = matricula.cod_matricula AND
+                falta_componente_curricular.etapa = 2 AND
+				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+				falta_aluno.tipo_falta = 2) as faltas_componente_et2,
+
+       (SELECT sum(falta_componente_curricular.quantidade)
+           FROM modules.falta_componente_curricular,
+                modules.falta_aluno
+          WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
+                falta_aluno.matricula_id = matricula.cod_matricula AND
+                falta_componente_curricular.etapa = 3 AND
+				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+				falta_aluno.tipo_falta = 2) as faltas_componente_et3,
+
+       (SELECT sum(falta_componente_curricular.quantidade)
+           FROM modules.falta_componente_curricular,
+                modules.falta_aluno
+          WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
+                falta_aluno.matricula_id = matricula.cod_matricula AND
+                falta_componente_curricular.etapa = 4 AND
+				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+				falta_aluno.tipo_falta = 2) as faltas_componente_et4,
+
+       (SELECT sum(falta_componente_curricular.quantidade)
+           FROM modules.falta_componente_curricular,
+                modules.falta_aluno
+          WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
+                falta_aluno.matricula_id = matricula.cod_matricula AND
+				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+                falta_componente_curricular.etapa in ('1','2','3','4') AND
+				falta_aluno.tipo_falta = 2) as total_faltas_componente,
+
+  (SELECT to_number(100::float -  ((SELECT sum(falta_geral.quantidade)
+          FROM modules.falta_geral,
+               modules.falta_aluno
+         WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
+               falta_aluno.matricula_id = matricula.cod_matricula AND
+               falta_geral.etapa in('1','2','3','4'))::float / 800::float )::float * 100,'999')) AS frequencia,
+
+  (SELECT to_number(100::float -  ((SELECT sum(falta_componente_curricular.quantidade)
+          FROM modules.falta_componente_curricular,
+               modules.falta_aluno
+         WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
+               falta_aluno.matricula_id = matricula.cod_matricula AND
+               falta_componente_curricular.etapa in ('1','2','3','4'))::float / 800::float )::float * 100,'999')) AS frequencia_componente,
+
+    (SELECT sum(to_number(componente_curricular_ano_escolar.carga_horaria,'999'))
+       FROM modules.componente_curricular_ano_escolar
+     WHERE componente_curricular_ano_escolar.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina) AS            carga_horaria
+
+ FROM  pmieducar.matricula,
+			 pmieducar.matricula_turma,
+       pmieducar.escola_serie_disciplina
+
+       WHERE escola_serie_disciplina.ref_ref_cod_serie = matricula.ref_ref_cod_serie AND
+             escola_serie_disciplina.ref_ref_cod_escola = matricula.ref_ref_cod_escola AND
+             escola_serie_disciplina.ativo = 1 AND
+             matricula.ref_ref_cod_escola = $P{escola} AND
+			 matricula.ref_cod_curso = $P{curso} AND
+			 matricula.ref_ref_cod_serie = $P{serie} AND
+             matricula.ativo = 1 AND
+			 matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+             matricula_turma.ref_cod_turma = $P{turma} AND
+             matricula.ano = $P{ano} AND
+
+             (SELECT CASE WHEN $P{matricula} = 0 THEN
+                   matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+ 		           matricula_turma.ref_cod_turma = $P{turma}
+               ELSE
+                   matricula.cod_matricula = $P{matricula}
+               END)
+
+	) AS etapa1
+GROUP BY id_disciplina, nome_disciplina, nome_aluno
+ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
+	</queryString>
+	<field name="ano" class="java.lang.Integer"/>
+	<field name="nome_responsavel" class="java.lang.String"/>
+	<field name="nm_escola" class="java.lang.String"/>
+	<field name="nome_instituicao" class="java.lang.String"/>
+	<field name="tipo_logradouro" class="java.lang.String"/>
+	<field name="logradouro" class="java.lang.String"/>
+	<field name="municipio" class="java.lang.String"/>
+	<field name="bairro" class="java.lang.String"/>
+	<field name="uf_municipio" class="java.lang.String"/>
+	<field name="numero" class="java.math.BigDecimal"/>
+	<field name="cep" class="java.lang.String"/>
+	<field name="fone_ddd" class="java.math.BigDecimal"/>
+	<field name="fone" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="data_atual" class="java.lang.String"/>
+	<field name="hora_atual" class="java.lang.String"/>
+	<field name="nome_disciplina" class="java.lang.String"/>
+	<field name="area_conhecimento" class="java.lang.String"/>
+	<field name="parecer_semestre1" class="java.lang.String"/>
+	<field name="parecer_semestre2" class="java.lang.String"/>
+	<field name="parecer_semestre3" class="java.lang.String"/>
+	<field name="matricula" class="java.lang.Integer"/>
+	<field name="id_disciplina" class="java.lang.Integer"/>
+	<field name="nota1" class="java.lang.String"/>
+	<field name="nota2" class="java.lang.String"/>
+	<field name="nota3" class="java.lang.String"/>
+	<field name="nota4" class="java.lang.String"/>
+	<field name="nota_exame" class="java.lang.String"/>
+	<field name="media" class="java.lang.String"/>
+	<field name="nome_curso" class="java.lang.String"/>
+	<field name="nome_serie" class="java.lang.String"/>
+	<field name="nome_turma" class="java.lang.String"/>
+	<field name="periodo" class="java.lang.String"/>
+	<field name="situacao" class="java.lang.String"/>
+	<field name="nome_aluno" class="java.lang.String"/>
+	<field name="total_faltas_et1" class="java.lang.Long"/>
+	<field name="total_faltas_et2" class="java.lang.Long"/>
+	<field name="total_faltas_et3" class="java.lang.Long"/>
+	<field name="total_faltas_et4" class="java.lang.Long"/>
+	<field name="total_faltas" class="java.lang.Long"/>
+	<field name="faltas_componente_et1" class="java.lang.Long"/>
+	<field name="faltas_componente_et2" class="java.lang.Long"/>
+	<field name="faltas_componente_et3" class="java.lang.Long"/>
+	<field name="faltas_componente_et4" class="java.lang.Long"/>
+	<field name="total_faltas_componente" class="java.lang.Long"/>
+	<field name="frequencia" class="java.math.BigDecimal"/>
+	<field name="frequencia_componente" class="java.math.BigDecimal"/>
+	<field name="carga_horaria" class="java.math.BigDecimal"/>
+	<group name="matricula" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{matricula}]]></groupExpression>
+		<groupHeader>
+			<band height="80">
+				<rectangle>
+					<reportElement x="12" y="4" width="787" height="51" printWhenGroupChanges="matricula"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</rectangle>
+				<textField>
+					<reportElement x="14" y="67" width="224" height="12" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nome_aluno}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="547" y="67" width="79" height="12" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nome_serie}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="243" y="56" width="68" height="12" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<text><![CDATA[01 - CURSO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="578" y="9" width="136" height="20" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[BOLETIM ESCOLAR]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="14" y="56" width="100" height="12" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<text><![CDATA[05 - ALUNO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="578" y="30" width="60" height="12" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Ano Letivo:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="89" y="18" width="341" height="12" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="438" y="56" width="64" height="12" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<text><![CDATA[02 - TURNO]]></text>
+				</staticText>
+				<line>
+					<reportElement x="435" y="55" width="1" height="25" printWhenGroupChanges="matricula"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="89" y="30" width="341" height="12" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nm_escola}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="639" y="30" width="66" height="12" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{ano}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="89" y="42" width="341" height="12" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{logradouro}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="12" y="55" width="1" height="25" printWhenGroupChanges="matricula"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement x="432" y="42" width="32" height="12" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fone:]]></text>
+				</staticText>
+				<line>
+					<reportElement x="798" y="55" width="1" height="25" printWhenGroupChanges="matricula"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement x="578" y="42" width="35" height="12" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[E-mail:]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="438" y="67" width="100" height="12" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{periodo}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="13" y="79" width="786" height="1" printWhenGroupChanges="matricula"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="631" y="67" width="86" height="12" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nome_turma}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="613" y="42" width="183" height="12" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="547" y="56" width="58" height="12" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<text><![CDATA[03 - SÉRIE]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="243" y="67" width="187" height="12" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nome_curso}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="89" y="6" width="341" height="12" printWhenGroupChanges="matricula"/>
+					<textElement markup="none">
+						<font fontName="DejaVu Sans" size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="721" y="67" width="75" height="12" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{situacao}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="464" y="42" width="105" height="12" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{fone}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="721" y="56" width="75" height="12" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<text><![CDATA[06 - SITUAÇÃO]]></text>
+				</staticText>
+				<line>
+					<reportElement x="628" y="55" width="1" height="25" printWhenGroupChanges="matricula"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement x="631" y="56" width="59" height="12" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<text><![CDATA[04 - TURMA]]></text>
+				</staticText>
+				<line>
+					<reportElement x="718" y="55" width="1" height="25" printWhenGroupChanges="matricula"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="545" y="55" width="1" height="25" printWhenGroupChanges="matricula"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="240" y="55" width="1" height="25" printWhenGroupChanges="matricula"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<image>
+					<reportElement x="22" y="6" width="57" height="46"/>
+					<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+				</image>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="92">
+				<staticText>
+					<reportElement x="12" y="1" width="33" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<text><![CDATA[Parecer:]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="46" y="1" width="753" height="31"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{parecer_semestre1}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="46" y="32" width="753" height="31"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{parecer_semestre2}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="310" y="78" width="192" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement x="355" y="80" width="100" height="12"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<text><![CDATA[Assinatura do Professor(a)]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="602" y="-16" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
+						<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nota3} == 'S' ? "( X )" : ""]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="area_conhecimento">
+		<groupExpression><![CDATA[$F{area_conhecimento}]]></groupExpression>
+		<groupHeader>
+			<band height="27">
+				<textField>
+					<reportElement x="14" y="2" width="226" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Área de conhecimento: "+$F{area_conhecimento}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="761" y="4" width="34" height="11" printWhenGroupChanges="matricula"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Freq. %]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="764" y="16" width="26" height="11" printWhenGroupChanges="matricula">
+						<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{frequencia}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="736" y="16" width="24" height="11" printWhenGroupChanges="matricula">
+						<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{total_faltas}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="736" y="5" width="24" height="11" printWhenGroupChanges="matricula"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Falt.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="584" y="5" width="9" height="11" printWhenGroupChanges="matricula"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<text><![CDATA[F]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="584" y="16" width="12" height="11" printWhenGroupChanges="matricula">
+						<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{total_faltas_et2}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="527" y="5" width="52" height="11" printWhenGroupChanges="matricula"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<text><![CDATA[Em processo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="531" y="16" width="52" height="11" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<text><![CDATA[de construção]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="487" y="16" width="42" height="11" printWhenGroupChanges="matricula"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<text><![CDATA[As vezes]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="451" y="16" width="36" height="11" printWhenGroupChanges="matricula"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<text><![CDATA[Sempre]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="451" y="2" width="57" height="11" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[2º Trimestre]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement isPrintRepeatedValues="false" x="436" y="16" width="12" height="11" printWhenGroupChanges="matricula">
+						<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{total_faltas_et1}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="436" y="5" width="9" height="11" printWhenGroupChanges="matricula"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<text><![CDATA[F]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="312" y="16" width="35" height="11" printWhenGroupChanges="matricula"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<text><![CDATA[Sempre]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="348" y="16" width="36" height="11" printWhenGroupChanges="matricula"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<text><![CDATA[As vezes]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="384" y="5" width="51" height="11" isPrintWhenDetailOverflows="true" printWhenGroupChanges="matricula"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<text><![CDATA[Em processo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="385" y="16" width="50" height="11" printWhenGroupChanges="matricula"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<text><![CDATA[de construção]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="313" y="2" width="58" height="11" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[1º Trimestre]]></text>
+				</staticText>
+				<line>
+					<reportElement x="583" y="0" width="1" height="26" printWhenGroupChanges="matricula"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="760" y="0" width="1" height="26" printWhenGroupChanges="matricula"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="435" y="-1" width="1" height="27" printWhenGroupChanges="matricula"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="311" y="-1" width="1" height="27" printWhenGroupChanges="matricula"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="449" y="0" width="1" height="26" printWhenGroupChanges="matricula"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="722" y="0" width="1" height="26" printWhenGroupChanges="matricula"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="798" y="-1" width="1" height="27" printWhenGroupChanges="matricula"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="764" y="16" width="26" height="11" printWhenGroupChanges="matricula">
+						<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{frequencia_componente}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="12" y="-1" width="1" height="27" printWhenGroupChanges="matricula"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="596" y="0" width="1" height="26" printWhenGroupChanges="matricula"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement x="599" y="2" width="57" height="11" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[3º Trimestre]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="669" y="5" width="52" height="11" printWhenGroupChanges="matricula"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<text><![CDATA[Em processo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="598" y="15" width="36" height="11" printWhenGroupChanges="matricula"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<text><![CDATA[Sempre]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="635" y="15" width="33" height="11" printWhenGroupChanges="matricula"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<text><![CDATA[As vezes]]></text>
+				</staticText>
+				<line>
+					<reportElement x="735" y="0" width="1" height="26" printWhenGroupChanges="matricula"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement x="724" y="5" width="9" height="11" printWhenGroupChanges="matricula"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<text><![CDATA[F]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="669" y="16" width="52" height="11" printWhenGroupChanges="matricula"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<text><![CDATA[de construção]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="723" y="16" width="12" height="11" printWhenGroupChanges="matricula">
+						<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{total_faltas_et3}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="2"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="2" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Opaque" x="15" y="0" width="783" height="15" isPrintWhenDetailOverflows="true" forecolor="#FFFFFF" backcolor="#F0F0F0">
+					<printWhenExpression><![CDATA[new Boolean(($V{COLUMN_COUNT} % 2) == 1)]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="399" y="2" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nota1} == 'S' ? "( X )" : ""]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="15" y="2" width="295" height="12"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome_disciplina}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="435" y="-1" width="1" height="16" isPrintWhenDetailOverflows="true"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="449" y="-1" width="1" height="16" isPrintWhenDetailOverflows="true"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="311" y="-1" width="1" height="16" isPrintWhenDetailOverflows="true"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="13" y="14" width="786" height="1" isPrintWhenDetailOverflows="true"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="584" y="2" width="12" height="12">
+					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{faltas_componente_et2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="736" y="2" width="24" height="12">
+					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_faltas_componente}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="436" y="2" width="12" height="12" forecolor="#000000" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{faltas_componente_et1}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="722" y="-1" width="1" height="16" isPrintWhenDetailOverflows="true"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="583" y="-1" width="1" height="16" isPrintWhenDetailOverflows="true"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="318" y="2" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nota1} == 'A' ? "( X )" : ""]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="355" y="2" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nota1} == 'C' ? "( X )" : ""]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="760" y="-1" width="1" height="16" isPrintWhenDetailOverflows="true"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="798" y="-1" width="1" height="16" isPrintWhenDetailOverflows="true"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="457" y="2" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nota2} == 'S' ? "( X )" : ""]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="497" y="2" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nota2} == 'A' ? "( X )" : ""]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="542" y="2" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nota2} == 'C' ? "( X )" : ""]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="12" y="-1" width="1" height="16" isPrintWhenDetailOverflows="true"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="318" y="2" width="26" height="12">
+					<printWhenExpression><![CDATA[$P{manual}.intValue() == 1]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<text><![CDATA[(     )]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="354" y="2" width="26" height="12">
+					<printWhenExpression><![CDATA[$P{manual}.intValue() == 1]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<text><![CDATA[(     )]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="457" y="2" width="26" height="12">
+					<printWhenExpression><![CDATA[$P{manual}.intValue() == 1]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<text><![CDATA[(     )]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="497" y="2" width="26" height="12">
+					<printWhenExpression><![CDATA[$P{manual}.intValue() == 1]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<text><![CDATA[(     )]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="543" y="2" width="26" height="12">
+					<printWhenExpression><![CDATA[$P{manual}.intValue() == 1]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<text><![CDATA[(     )]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="399" y="2" width="26" height="12">
+					<printWhenExpression><![CDATA[$P{manual}.intValue() == 1]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<text><![CDATA[(     )]]></text>
+			</staticText>
+			<line>
+				<reportElement x="596" y="-1" width="1" height="16" isPrintWhenDetailOverflows="true"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="735" y="-1" width="1" height="16" isPrintWhenDetailOverflows="true"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="602" y="2" width="26" height="12">
+					<printWhenExpression><![CDATA[$P{manual}.intValue() == 1]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<text><![CDATA[(     )]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="637" y="2" width="26" height="12">
+					<printWhenExpression><![CDATA[$P{manual}.intValue() == 1]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<text><![CDATA[(     )]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="677" y="2" width="26" height="12">
+					<printWhenExpression><![CDATA[$P{manual}.intValue() == 1]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<text><![CDATA[(     )]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="637" y="2" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nota3} == 'A' ? "( X )" : ""]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="676" y="2" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nota3} == 'C' ? "( X )" : ""]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="723" y="2" width="12" height="12">
+					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{faltas_componente_et3}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="6"/>
+	</summary>
+</jasperReport>
