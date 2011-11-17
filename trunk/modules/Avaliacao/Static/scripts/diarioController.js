@@ -1,6 +1,6 @@
 var $j = jQuery.noConflict();
 
-(function($) {
+(function($){
 
   $(function(){
 
@@ -479,18 +479,20 @@ var $j = jQuery.noConflict();
     }
 
 
-    function handleErrorDeleteResource(request){
-      handleMessages([{type : 'error', msg : 'Erro ao remover recurso.'}], '');
+    function handleErrorDeleteResource(response){
+      handleMessages([{type : 'error', msg : 'Erro ao alterar recurso, detalhes:' + response.responseText}], '');
+      safeLog(response);
     }
 
 
-    var handleCompleteDeleteResource = function(request){
+    var handleCompleteDeleteResource = function(response){
     };
 
 
     //post
-    function handleErrorPost(request){
-      handleMessages([{type : 'error', msg : 'Erro ao alterar recurso.'}], '');
+    function handleErrorPost(response){
+      handleMessages([{type : 'error', msg : 'Erro ao alterar recurso, detalhes:' + response.responseText}], '');
+      safeLog(response);
     }
 
 
@@ -501,19 +503,19 @@ var $j = jQuery.noConflict();
     }
 
 
-    function handleCompletePostNota(){
+    function handleCompletePostNota(response){
     };
 
 
-    function handleCompletePostNotaExame(){
+    function handleCompletePostNotaExame(response){
     };
 
 
-    function handleCompletePostFalta(){
+    function handleCompletePostFalta(response){
     };
 
 
-    function handleCompletePostParecer(){
+    function handleCompletePostParecer(response){
     };
 
 
@@ -587,158 +589,185 @@ var $j = jQuery.noConflict();
       $tableDadosDiario.data.regra_avaliacao = regraAvaliacao;
     }
 
-    function handleMatriculasSearch(dataResponse) { 
 
-      //link para nova consulta
-      var setSearchPage = function(event) {
-        $(this).hide();
-        $tableDadosDiario.children().remove();
-        $resultTable.children().fadeOut('fast').remove();
-        $formFilter.fadeIn('fast', function(){
-          $(this).show()
-        });
-        $tableOrientationSearch.show();
-      };
+    //exibe formulário nova consulta
+    function showSearchForm(event){
+      //$(this).hide();
+      $navActions.html('');
+      $tableDadosDiario.children().remove();
+      $resultTable.children().fadeOut('fast').remove();
+      $formFilter.fadeIn('fast', function(){
+        $(this).show()
+      });
+      $tableOrientationSearch.show();
+    }
 
+
+    function showSearchButton(){
       $navActions.html(
         $("<a href='#'>Nova consulta</a>")
-        .bind('click', setSearchPage)
+        .bind('click', showSearchForm)
         .attr('style', 'text-decoration: underline')
       );
+    }
 
-      handleMessages(dataResponse.msgs);
 
-      if(! $.isArray(dataResponse.matriculas))
-      {
-         $('<td />')
-          .html('As matriculas n&#227;o poderam ser recuperadas, verifique as mensagens de erro ou tente <a alt="Recarregar página" href="/" style="text-decoration:underline">recarregar</a>.')
-          .addClass('center')
-          .appendTo($('<tr />').appendTo($resultTable));
-      }
-      else if (dataResponse.matriculas.length < 1)
-      {
-         $('<td />')
-          .html('Sem matriculas em andamento nesta turma.')
-          .addClass('center')
-          .appendTo($('<tr />').appendTo($resultTable));
-      }
-      else
-      {
+    function handleMatriculasSearch(dataResponse){ 
 
-        setTableDadosDiario(dataResponse.regra_avaliacao);
-        var useNota = $tableDadosDiario.data.regra_avaliacao.tipo_nota != 'nenhum';
-        var useParecer = $tableDadosDiario.data.regra_avaliacao.tipo_parecer_descritivo != 'nenhum';
+      showSearchButton();
 
-        //set headers
-        var $linha = $('<tr />');
-        $('<th />').html('Matricula').appendTo($linha);
-        $('<th />').html('Aluno').appendTo($linha);
-        $('<th />').html('Situa&#231;&#227;o').appendTo($linha);
+      try{      
 
-        if(useNota)
+        handleMessages(dataResponse.msgs);
+
+        if(! $.isArray(dataResponse.matriculas))
         {
-          $('<th />').html('Nota').appendTo($linha);
-
-          if ($tableDadosDiario.data.regra_avaliacao.quantidade_etapas == $('#etapa').val())
-            $('<th />').html('Nota exame').appendTo($linha);
+           $('<td />')
+            .html('As matriculas n&#227;o poderam ser recuperadas, verifique as mensagens de erro ou tente <a alt="Recarregar página" href="/" style="text-decoration:underline">recarregar</a>.')
+            .addClass('center')
+            .appendTo($('<tr />').appendTo($resultTable));
         }
+        else if (dataResponse.matriculas.length < 1)
+        {
+           $('<td />')
+            .html('Sem matriculas em andamento nesta turma.')
+            .addClass('center')
+            .appendTo($('<tr />').appendTo($resultTable));
+        }
+        else
+        {
 
-        $('<th />').html('Falta').appendTo($linha);
+          setTableDadosDiario(dataResponse.regra_avaliacao);
+          var useNota = $tableDadosDiario.data.regra_avaliacao.tipo_nota != 'nenhum';
+          var useParecer = $tableDadosDiario.data.regra_avaliacao.tipo_parecer_descritivo != 'nenhum';
 
-        if(useParecer)
-          $('<th />').html('Parecer').appendTo($linha);
-    
-        $linha.appendTo($resultTable);
-
-        var nextTabIndex = 1;
-        var setNextTabIndex = function($element){
-          $element.attr('tabindex', nextTabIndex);
-          nextTabIndex += 1;
-        };
-
-        //set (result) rows
-        $.each(dataResponse.matriculas, function(index, value){
-
+          //set headers
           var $linha = $('<tr />');
-          
-          $('<td />').html(value.matricula_id).addClass('center').appendTo($linha);
-          $('<td />').html(value.aluno_id + ' - ' +value.nome.toUpperCase()).appendTo($linha);
-          $('<td />').addClass('situacao-matricula').attr('id', 'situacao-matricula-' + value.matricula_id).data('matricula_id', value.matricula_id).addClass('center').html(value.situacao).appendTo($linha);
+          $('<th />').html('Matricula').appendTo($linha);
+          $('<th />').html('Aluno').appendTo($linha);
+          $('<th />').html('Situa&#231;&#227;o').appendTo($linha);
 
-          //nota
-          var getFieldNota = function(notaAtual, klass, id){
-      
-            if($tableDadosDiario.data.regra_avaliacao.tipo_nota == 'conceitual')
-            {
-              var opcoesNotas = $tableDadosDiario.data.regra_avaliacao.opcoes_notas;
-              var $notaField = $('<select />').addClass(klass).attr('id', id).data('matricula_id', value.matricula_id);
-
-              //adiciona options
-              var $option = $('<option />').appendTo($notaField);
-              for(key in opcoesNotas) {
-                var $option = $('<option />').val(key).html(opcoesNotas[key]);
-
-                if (notaAtual == key)
-                  $option.attr('selected', 'selected');
-      
-                $option.appendTo($notaField);
-              }
-            }
-            else
-            {
-              var $notaField = $('<input />').addClass(klass).attr('id', id).val(notaAtual).attr('maxlength', '4').attr('size', '4').data('matricula_id', value.matricula_id);
-            }
-
-            $notaField.data('old_value', $notaField.val());
-            setNextTabIndex($notaField);
-            return $notaField;
-          }
-
-          if(useNota) {
-            $('<td />').html(getFieldNota(value.nota_atual, 'nota-matricula', 'nota-matricula-' + value.matricula_id)).addClass('center').appendTo($linha);
+          if(useNota)
+          {
+            $('<th />').html('Nota').appendTo($linha);
 
             if ($tableDadosDiario.data.regra_avaliacao.quantidade_etapas == $('#etapa').val())
-            {
+              $('<th />').html('Nota exame').appendTo($linha);
+          }
 
-              var $fieldNotaExame = getFieldNota(value.nota_exame, 'nota-exame-matricula', 'nota-exame-matricula-' + value.matricula_id);
-              $('<td />').html($fieldNotaExame).addClass('center').appendTo($linha);
+          $('<th />').html('Falta').appendTo($linha);
 
-              if (value.nota_exame == '' && value.situacao.toLowerCase() != 'em exame')
-                $fieldNotaExame.hide();
+          if(useParecer)
+            $('<th />').html('Parecer').appendTo($linha);
+      
+          $linha.appendTo($resultTable);
+
+          var nextTabIndex = 1;
+          var setNextTabIndex = function($element){
+            $element.attr('tabindex', nextTabIndex);
+            nextTabIndex += 1;
+          };
+
+          //set (result) rows
+          $.each(dataResponse.matriculas, function(index, value){
+
+            var $linha = $('<tr />');
+            
+            $('<td />').html(value.matricula_id).addClass('center').appendTo($linha);
+            $('<td />').html(value.aluno_id + ' - ' +value.nome.toUpperCase()).appendTo($linha);
+            $('<td />').addClass('situacao-matricula').attr('id', 'situacao-matricula-' + value.matricula_id).data('matricula_id', value.matricula_id).addClass('center').html(value.situacao).appendTo($linha);
+
+            //nota
+            var getFieldNota = function(notaAtual, klass, id){
+        
+              if($tableDadosDiario.data.regra_avaliacao.tipo_nota == 'conceitual')
+              {
+                var opcoesNotas = $tableDadosDiario.data.regra_avaliacao.opcoes_notas;
+                var $notaField = $('<select />').addClass(klass).attr('id', id).data('matricula_id', value.matricula_id);
+
+                //adiciona options
+                var $option = $('<option />').appendTo($notaField);
+                for(key in opcoesNotas){
+                  var $option = $('<option />').val(key).html(opcoesNotas[key]);
+
+                  if (notaAtual == key)
+                    $option.attr('selected', 'selected');
+        
+                  $option.appendTo($notaField);
+                }
+              }
+              else
+              {
+                var $notaField = $('<input />').addClass(klass).attr('id', id).val(notaAtual).attr('maxlength', '4').attr('size', '4').data('matricula_id', value.matricula_id);
+              }
+
+              $notaField.data('old_value', $notaField.val());
+              setNextTabIndex($notaField);
+              return $notaField;
             }
-          }
-          
-          //falta
-          var $faltaField = $('<input />').addClass('falta-matricula').attr('id', 'falta-matricula-' + value.matricula_id).val(value.falta_atual).attr('maxlength', '4').attr('size', '4').data('matricula_id', value.matricula_id);
-          $faltaField.data('old_value', $faltaField.val());
-          setNextTabIndex($faltaField);
-          $('<td />').html($faltaField).addClass('center').appendTo($linha);
 
-          //parecer
-          if(useParecer) {
-            var $parecerField = $('<textarea />').attr('cols', '40').attr('rows', '5').addClass('parecer-matricula').attr('id', 'parecer-matricula-' + value.matricula_id).val(utf8Decode(value.parecer_atual)).data('matricula_id', value.matricula_id);
-            $parecerField.data('old_value', $parecerField.val());
-            setNextTabIndex($parecerField);
-            $('<td />').addClass('center').html($parecerField).appendTo($linha);
-          }
+            if(useNota){
+              $('<td />').html(getFieldNota(value.nota_atual, 'nota-matricula', 'nota-matricula-' + value.matricula_id)).addClass('center').appendTo($linha);
 
-          $linha.fadeIn('slow').appendTo($resultTable);
-        });//fim each matriculas
+              if ($tableDadosDiario.data.regra_avaliacao.quantidade_etapas == $('#etapa').val())
+              {
 
-        $resultTable.find('tr:even').addClass('even');
+                var $fieldNotaExame = getFieldNota(value.nota_exame, 'nota-exame-matricula', 'nota-exame-matricula-' + value.matricula_id);
+                $('<td />').html($fieldNotaExame).addClass('center').appendTo($linha);
 
-        //set onchange events
-        var $notaFields = $resultTable.find('.nota-matricula');
-        var $notaExameFields = $resultTable.find('.nota-exame-matricula');
-        var $faltaFields = $resultTable.find('.falta-matricula');
-        var $parecerFields = $resultTable.find('.parecer-matricula');
-        $notaFields.on('change', changeNota);
-        $notaExameFields.on('change', changeNotaExame);
-        $faltaFields.on('change', changeFalta);
-        $parecerFields.on('change', changeParecer);
+                if (value.nota_exame == '' && value.situacao.toLowerCase() != 'em exame')
+                  $fieldNotaExame.hide();
+              }
+            }
+            
+            //falta
+            var $faltaField = $('<input />').addClass('falta-matricula').attr('id', 'falta-matricula-' + value.matricula_id).val(value.falta_atual).attr('maxlength', '4').attr('size', '4').data('matricula_id', value.matricula_id);
+            $faltaField.data('old_value', $faltaField.val());
+            setNextTabIndex($faltaField);
+            $('<td />').html($faltaField).addClass('center').appendTo($linha);
 
-        $resultTable.addClass('styled').find('input:first').focus();
+            //parecer
+            if(useParecer){
+              var $parecerField = $('<textarea />').attr('cols', '40').attr('rows', '5').addClass('parecer-matricula').attr('id', 'parecer-matricula-' + value.matricula_id).val(utf8Decode(value.parecer_atual)).data('matricula_id', value.matricula_id);
+              $parecerField.data('old_value', $parecerField.val());
+              setNextTabIndex($parecerField);
+              $('<td />').addClass('center').html($parecerField).appendTo($linha);
+            }
+
+            $linha.fadeIn('slow').appendTo($resultTable);
+          });//fim each matriculas
+
+          $resultTable.find('tr:even').addClass('even');
+
+          //set onchange events
+          var $notaFields = $resultTable.find('.nota-matricula');
+          var $notaExameFields = $resultTable.find('.nota-exame-matricula');
+          var $faltaFields = $resultTable.find('.falta-matricula');
+          var $parecerFields = $resultTable.find('.parecer-matricula');
+          $notaFields.on('change', changeNota);
+          $notaExameFields.on('change', changeNotaExame);
+          $faltaFields.on('change', changeFalta);
+          $parecerFields.on('change', changeParecer);
+
+          $resultTable.addClass('styled').find('input:first').focus();
+        }
+
       }
+      catch(error){
+        showSearchButton();
+
+        handleMessages([{type : 'error', msg : 'Ocorreu um erro ao exibir as matriculas, por favor tente novamente, detalhes: ' + error}], '');
+
+        safeLog(dataResponse);
+      }
+    }
+
+    function handleErrorMatriculasSearch(response){
+      showSearchButton();
+
+      handleMessages([{type : 'error', msg : 'Ocorreu um erro ao carregar as matriculas, por favor tente novamente, detalhes:' + response.responseText}], '');
+
+      safeLog(response);
     }
 
     //change submit button
@@ -753,15 +782,12 @@ var $j = jQuery.noConflict();
         $resultTable.children().fadeOut('fast').remove();
         $tableOrientationSearch.hide();
 
-        //submit form after load a page, to keep session alive
-        $.ajax({url: diarioUrlBase, async: false, success: function(data){
-          $formFilter.submit();
-          $formFilter.fadeOut('fast');
-          $navActions
-            .html('Aguarde, carregando...')
-            .attr('style', 'text-align:center;')
-            .unbind('click');
-        }});
+        $formFilter.submit();
+        $formFilter.fadeOut('fast');
+        $navActions
+          .html('Aguarde, carregando...')
+          .attr('style', 'text-align:center;')
+          .unbind('click');
       }
     };
     $submitButton.val('Carregar');
@@ -772,7 +798,8 @@ var $j = jQuery.noConflict();
     var matriculasSearchOptions = {
       url : '',
       dataType : 'json',
-      success : handleMatriculasSearch
+      success : handleMatriculasSearch,
+      error : handleErrorMatriculasSearch
     };
     $formFilter.ajaxForm(matriculasSearchOptions);
 
