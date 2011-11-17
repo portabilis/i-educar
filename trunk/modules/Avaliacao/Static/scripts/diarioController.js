@@ -716,7 +716,7 @@ var $j = jQuery.noConflict();
 
           //parecer
           if(useParecer) {
-            var $parecerField = $('<textarea />').attr('cols', '40').attr('rows', '5').addClass('parecer-matricula').attr('id', 'parecer-matricula-' + value.matricula_id).val(value.parecer_atual).data('matricula_id', value.matricula_id);
+            var $parecerField = $('<textarea />').attr('cols', '40').attr('rows', '5').addClass('parecer-matricula').attr('id', 'parecer-matricula-' + value.matricula_id).val(utf8Decode(value.parecer_atual)).data('matricula_id', value.matricula_id);
             $parecerField.data('old_value', $parecerField.val());
             setNextTabIndex($parecerField);
             $('<td />').addClass('center').html($parecerField).appendTo($linha);
