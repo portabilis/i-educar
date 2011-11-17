@@ -2485,4 +2485,47 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   {
     return App_Model_Matricula::atualizaMatricula($matricula, $usuario, $promover);
   }
+
+
+  public function deleteNota($etapa, $ComponenteCurricularId)
+  {
+    //#TODO verificar outra forma de calcular media sem ter que zerar nota antes
+    //zerado nota, antes de deletar, para recalcular media
+    try {
+      $nota = new Avaliacao_Model_NotaComponente(array(
+        'componenteCurricular' => $ComponenteCurricularId,
+        'nota' => 0,
+        'etapa' => $etapa
+      ));
+      $this->addNota($nota);
+      $this->save();
+    }
+    catch (Exception $e) {
+      error_log("Excessao ignorada ao atualizar nota (antes de deletar): " . $e->getMessage());
+    }
+
+    $nota = $this->getNotaComponente($ComponenteCurricularId, $etapa);
+    $this->getNotaComponenteDataMapper()->delete($nota);
+
+    return $this;
+  }
+
+
+  public function deleteFalta($etapa, $ComponenteCurricularId)
+  {
+    $nota = $this->getFalta($etapa, $ComponenteCurricularId);
+    $this->getFaltaAbstractDataMapper()->delete($nota);
+
+    return $this;
+  }
+
+
+  public function deleteParecer($etapa, $ComponenteCurricularId)
+  {
+    $parecer = $this->getParecerDescritivo($etapa, $ComponenteCurricularId);
+    $this->getParecerDescritivoAbstractDataMapper()->delete($parecer);
+
+    return $this;
+  }
+
 }

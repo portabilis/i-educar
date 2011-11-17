@@ -52,7 +52,12 @@ class clsControlador
    */
   public function clsControlador()
   {
-    @session_set_cookie_params(1200);
+
+    /*
+      Desabilitado esta linha para usar o valor setado no php.ini > session.cookie_lifetime  
+      @session_set_cookie_params(200);
+    */
+
     @session_start();
 
     if ('logado' == $_SESSION['itj_controle']) {
@@ -189,14 +194,14 @@ class clsControlador
                 list($ip_banco, $data_login) = $db2->Tupla();
                 if ($ip_banco)
                 {
+
                   if (abs(time() - strftime("now") - strtotime($data_login)) <= 10 * 60
                     && $ip_banco != $ip_maquina) {
-                    die("<html><body></body><script>alert('Conta já em uso.\\nTente novamente mais tarde');document.location.href='/intranet';</script></html>");
+                    echo("<html><body></body><script>alert('Sua conta de usuário foi acessada recentemente de outro computador.\\n\nCaso não tenha sido você, altere sua senha.');</script></html>");
                   }
-                  else {
-                    $sql = "UPDATE funcionario SET data_login = NOW() WHERE ref_cod_pessoa_fj = {$id_pessoa}";
-                    $db2->Consulta($sql);
-                  }
+
+                  $sql = "UPDATE funcionario SET data_login = NOW() WHERE ref_cod_pessoa_fj = {$id_pessoa}";
+                  $db2->Consulta($sql);
                 }
                 else {
                   $sql = "UPDATE funcionario SET ip_logado = '{$ip_maquina}', data_login = NOW() WHERE ref_cod_pessoa_fj = {$id_pessoa}";

@@ -1485,48 +1485,52 @@ function updateSelect(xml)
     {
       $this->appendOutput("<script type='text/javascript'>afterUpdateSelect.push({entity:'ano_escolar', _functions:[{_function:getComponenteCurricular, _args:[$this->ref_cod_componente_curricular]}]});</script>");
     }
-} ?>
+} 
 
-<?php
+    $s = <<<EOT
+<script>
+function validatesPresenseOfValueInRequiredFields() {
+  var emptyField = null;
+  var requiredFields = document.getElementsByClassName('obrigatorio');
+
+  for (var i = 0; i < requiredFields.length; i++) {
+    if (! requiredFields[i].value) {
+      emptyField = requiredFields[i];
+      break;
+    }
+  }
+
+  if (emptyField == null)
+    return true;
+
+  alert('Preencha todos campos obrigat\u00F3rios, antes de continuar.');
+  emptyField.focus();
+  return false;
+}
+</script>
+EOT;
+  $this->appendOutput($s);
+
+
 	if ($verificar_campos_obrigatorios || (isset($this->verificar_campos_obrigatorios) && $this->verificar_campos_obrigatorios))
 	{
   
     $s = <<<EOT
 <script>
-var __bSubmit = document.getElementById('btn_enviar');
-if (! __bSubmit)
-  var __bSubmit = document.getElementById('botao_busca');
+var buttonSubmit = document.getElementById('btn_enviar');
+if (! buttonSubmit)
+  var buttonSubmit = document.getElementById('botao_busca');
 
-if (__bSubmit)
+if (buttonSubmit)
 {
-
-  var __old_event = __bSubmit.onclick;
-  __bSubmit.onclick = function()
+  var oldEvent = buttonSubmit.onclick;
+  buttonSubmit.onclick = function()
   {
-    var __toSetFocus = '';
-    var __not_empty_fields = document.getElementsByClassName('obrigatorio');
-    var __all_filled = true;
-    for (var i = 0; i < __not_empty_fields.length; i++)
-    {
-    if (! __not_empty_fields[i].value)
-    {
-
-      __all_filled = false;
-      __toSetFocus = __not_empty_fields[i];
-      break;
-    }
-    }
-    if (! __all_filled)
-    {
-      alert('Preencha todos campos obrigat\u00F3rios, antes de continuar.');
-      __toSetFocus.focus();
-    }
-    else
-    {
-    __old_event();
-    }
+    if (validatesPresenseOfValueInRequiredFields())
+      oldEvent();
   }
-} </script>
+}
+</script>
 EOT;
   $this->appendOutput($s);
 } 

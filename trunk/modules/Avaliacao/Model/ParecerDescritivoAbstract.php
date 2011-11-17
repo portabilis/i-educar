@@ -80,6 +80,6 @@ abstract class Avaliacao_Model_ParecerDescritivoAbstract extends Avaliacao_Model
    */
   public function __toString()
   {
-    return $this->parecer;
+    return (string)$this->parecer;
   }
 }
