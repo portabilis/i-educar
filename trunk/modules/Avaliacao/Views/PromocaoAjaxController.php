@@ -513,6 +513,65 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
     }
   }
 
+  protected function getComponentesCurriculares($matriculaId){
+
+    $dadosMatricula = $this->getDadosMatricula($matriculaId);
+
+    $anoEscolar = $dadosMatricula['ano'];
+    $escolaId = $dadosMatricula['escola_id'];
+    $turmaId = $dadosMatricula['turma_id'];
+
+    $sqlTurma = "select cc.id, cc.nome from modules.componente_curricular_turma as cct, modules.componente_curricular as cc, pmieducar.escola_ano_letivo as al where cct.turma_id = $turmaId and cct.escola_id = $escolaId and cct.componente_curricular_id = cc.id and al.ano = $anoEscolar and cct.escola_id = al.ref_cod_escola and cc.instituicao_id = {$this->getRequest()->instituicao_id}";
+
+    $db = new Db();
+    $componentesCurricularesTurma = $db->select($sqlTurma);
+ 
+  if (count($componentesCurricularesTurma))
+    return $componentesCurricularesTurma;
+
+    $sqlSerie = "select cc.id, cc.nome from pmieducar.turma as t, pmieducar.escola_serie_disciplina as esd,	modules.componente_curricular as cc, pmieducar.escola_ano_letivo as al	where t.cod_turma = $turmaId and esd.ref_ref_cod_escola = $escolaId and t.ref_ref_cod_serie = esd.ref_ref_cod_serie and esd.ref_cod_disciplina = cc.id and al.ano = $anoEscolar and cc.instituicao_id = {$this->getRequest()->instituicao_id} and esd.ref_ref_cod_escola = al.ref_cod_escola and t.ativo = 1 and esd.ativo = 1 and al.ativo = 1";
+
+    $db = new Db();
+    $componentesCurricularesSerie = $db->select($sqlSerie);
+    return $componentesCurricularesSerie;
+
+  }
+
+
+  protected function removerFaltasInvalidas($matriculaId){
+
+    $componentesCurriculares = $this->getComponentesCurriculares($matriculaId);
+    $faltasComponenteCurricularEtapa = array();
+
+    foreach(range(1, $this->getService()->getOption('etapas')) as $etapa){
+      foreach($componentesCurriculares as $cc){
+
+        $falta = $this->getService()->getFalta($etapa, $cc['id'])->quantidade;
+
+        $faltasComponenteCurricularEtapa[] = array('etapa' => $etapa, 
+                                                   'componente_curricular' => $cc,
+                                                   'falta' => $falta);
+      }
+    }
+
+    print_r($faltasComponenteCurricularEtapa);
+
+    /*
+
+    pegar falta global,
+
+    cc .. pegar componentes-curriculares
+      pegar falta por parecer
+
+    - remover falta global se regra de avaliacao for por componente curricular e existir falta global
+    - remover falta componente curricular se regra de avaliacao for por global e existir falta componente
+
+    adicionar falta correta ? (seguranca que não será removido a falta invalida)
+
+    */
+
+  }
+
 
   protected function postPromocaoMatricula()  {
 
@@ -524,8 +583,10 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
       $novaSituacao = '';
 
       if($matriculaId == 0){
-        if (is_numeric($proximoMatriculaId))
+        if (is_numeric($proximoMatriculaId)){
           $matriculaId = $proximoMatriculaId;
+          $proximoMatriculaId = $this->getProximoMatriculaId($matriculaId);
+        }
         else
           $this->appendMsg('Sem matriculas em andamento para a seleção informada.', 'notice');
       }
@@ -538,9 +599,6 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
 
       /*
 
-        - remover falta global se regra de avaliacao for por componente curricular e existir falta global
-        - remover falta componente curricular se regra de avaliacao for por global e existir falta componente
-
         - remover parecer descritivo se regra de avaliacao for ?
         - remover parecer descritivo se regra de avaliacao for ?
         ...
@@ -549,9 +607,10 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
           - setar falta como 0 caso não exista
 
         recalcurar media
-      
 
       */
+
+      $this->removerFaltasInvalidas($matriculaId);
 
       $this->saveService();
 
@@ -593,6 +652,14 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
   }
 
 
+  protected function getDadosMatricula($matriculaId){
+    $sql = "select m.cod_matricula as matricula_id, m.ref_cod_aluno as aluno_id, m.ref_ref_cod_escola as escola_id, m.ref_cod_curso as curso_id, m.ref_ref_cod_serie as serie_id, mt.ref_cod_turma as turma_id, m.ano, m.aprovado from pmieducar.matricula  as m, pmieducar.matricula_turma as mt where mt.ref_cod_matricula = m.cod_matricula and mt.ativo = 1 and cod_matricula = $matriculaId limit 1";
+
+    $db = new Db();
+    $quantidadeMatriculas = $db->select($sql);
+
+    return $quantidadeMatriculas[0];
+  }
 
 
   protected function getQuantidadeMatriculas(){
