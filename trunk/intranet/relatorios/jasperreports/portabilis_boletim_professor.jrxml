@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_boletim_professor" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="2.1435888100000056"/>
+	<property name="ireport.zoom" value="1.1000000000000025"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="ano" class="java.lang.Integer">
@@ -480,172 +480,159 @@ limit $P{linha}
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="84" splitType="Stretch">
-			<line>
-				<reportElement x="57" y="32" width="1" height="52"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="743" y="32" width="1" height="52"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-		</band>
+		<band height="52" splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="32" splitType="Stretch">
+		<band height="17" splitType="Stretch">
 			<staticText>
-				<reportElement x="329" y="-79" width="182" height="20"/>
+				<reportElement x="329" y="-50" width="182" height="15"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Boletim do Professor]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="116" y="-49" width="165" height="13"/>
+				<reportElement x="116" y="-29" width="165" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nm_curso}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="66" y="-49" width="48" height="13"/>
+				<reportElement x="66" y="-29" width="48" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Curso:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="66" y="-34" width="48" height="13"/>
+				<reportElement x="66" y="-14" width="48" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Disciplina:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="286" y="-49" width="35" height="13"/>
+				<reportElement x="286" y="-29" width="35" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Turno:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="402" y="-49" width="35" height="13"/>
+				<reportElement x="402" y="-29" width="35" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Série:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="438" y="-49" width="84" height="13"/>
+				<reportElement x="438" y="-29" width="84" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nm_serie}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="530" y="-49" width="35" height="13"/>
+				<reportElement x="530" y="-29" width="35" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Turma:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="674" y="-49" width="27" height="13"/>
+				<reportElement x="674" y="-29" width="27" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Ano:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="566" y="-49" width="100" height="13"/>
+				<reportElement x="566" y="-29" width="100" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nm_turma}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="702" y="-49" width="37" height="13"/>
+				<reportElement x="702" y="-29" width="37" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ano}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="286" y="-34" width="58" height="13"/>
+				<reportElement x="286" y="-14" width="58" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Professor(a):]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="66" y="13" width="44" height="13"/>
+				<reportElement x="66" y="2" width="44" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Aluno]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="301" y="15" width="31" height="13"/>
+				<reportElement x="301" y="2" width="31" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Nota]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="339" y="15" width="9" height="13"/>
+				<reportElement x="339" y="2" width="9" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[F]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="356" y="15" width="31" height="13"/>
+				<reportElement x="356" y="2" width="31" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Nota]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="410" y="15" width="31" height="13"/>
+				<reportElement x="410" y="2" width="31" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Nota]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="464" y="15" width="31" height="13"/>
+				<reportElement x="464" y="2" width="31" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Nota]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="394" y="15" width="9" height="13"/>
+				<reportElement x="394" y="2" width="9" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[F]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="447" y="15" width="9" height="13"/>
+				<reportElement x="447" y="2" width="9" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[F]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="501" y="15" width="9" height="13"/>
+				<reportElement x="501" y="2" width="9" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[F]]></text>
 			</staticText>
 			<line>
-				<reportElement x="58" y="-53" width="685" height="1"/>
+				<reportElement x="58" y="-33" width="685" height="1"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -657,49 +644,49 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="57" y="0" width="1" height="32"/>
+				<reportElement x="57" y="0" width="1" height="16"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="743" y="0" width="1" height="32"/>
+				<reportElement x="743" y="0" width="1" height="16"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="58" y="31" width="685" height="1"/>
+				<reportElement x="58" y="16" width="685" height="1"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="351" y="1" width="1" height="30"/>
+				<reportElement x="351" y="0" width="1" height="16"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="297" y="0" width="1" height="31"/>
+				<reportElement x="297" y="0" width="1" height="16"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="405" y="1" width="1" height="30"/>
+				<reportElement x="405" y="0" width="1" height="16"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="459" y="1" width="1" height="30"/>
+				<reportElement x="459" y="0" width="1" height="16"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="513" y="1" width="1" height="30"/>
+				<reportElement x="513" y="0" width="1" height="16"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -719,58 +706,70 @@ limit $P{linha}
 				<text><![CDATA[Média Final]]></text>
 			</staticText>
 			<line>
-				<reportElement x="553" y="1" width="1" height="30"/>
+				<reportElement x="553" y="0" width="1" height="16"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement x="620" y="15" width="27" height="13"/>
+				<reportElement x="620" y="2" width="27" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Freq.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="656" y="15" width="83" height="13"/>
+				<reportElement x="656" y="2" width="83" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Situação]]></text>
 			</staticText>
 			<line>
-				<reportElement x="613" y="1" width="1" height="30"/>
+				<reportElement x="613" y="0" width="1" height="16"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="651" y="0" width="1" height="31"/>
+				<reportElement x="651" y="0" width="1" height="16"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="323" y="-49" width="75" height="13"/>
+				<reportElement x="323" y="-29" width="75" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{periodo}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="345" y="-34" width="138" height="13"/>
+				<reportElement x="345" y="-14" width="138" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{professor}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="116" y="-34" width="165" height="13"/>
+				<reportElement x="116" y="-14" width="165" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nome_disciplina}]]></textFieldExpression>
 			</textField>
+			<line>
+				<reportElement x="743" y="-33" width="1" height="33"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="57" y="-32" width="1" height="33"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -1005,9 +1004,9 @@ limit $P{linha}
 		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="4" splitType="Stretch"/>
+		<band height="2" splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band height="5" splitType="Stretch"/>
+		<band height="1" splitType="Stretch"/>
 	</summary>
 </jasperReport>
