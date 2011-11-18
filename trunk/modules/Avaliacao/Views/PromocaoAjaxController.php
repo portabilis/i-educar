@@ -557,9 +557,12 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
 
       $novaSituacao = $this->getSituacaoArmazenadaMatricula($matriculaId);
 
+      $type = 'success';
       $msg = "Matricula $matriculaId";
-      if($situacaoAnterior == $novaSituacao)
+      if($situacaoAnterior == $novaSituacao){
+        $type = 'notice';
         $msg .= ' não mudou de situação';
+      }
       elseif($novaSituacao == 1)
         $msg .= " foi aprovada (situaçao antiga $situacaoAnterior)";
       elseif($novaSituacao == 2)
@@ -567,7 +570,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
       else
         $msg .= " teve a situação alterada de $novaSituacao para $situacaoAnterior)";
 
-      $this->appendMsg($msg, 'notice');
+      $this->appendMsg($msg, $type);
       }
 
       return array('proximo_matricula_id' => $proximoMatriculaId, 'situacao_anterior' => $situacaoAnterior, 'nova_situacao' => $novaSituacao);
