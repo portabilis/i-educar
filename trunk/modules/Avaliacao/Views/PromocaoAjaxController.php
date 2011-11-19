@@ -433,29 +433,19 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  protected function getQuantidadeFalta(){
-    $quantidade = (int) $this->getRequest()->att_value;
-
-    if ($quantidade < 0)
-      $quantidade = 0;
-    
-    return $quantidade;
-  }
-
-
-  protected function getFaltaGeral(){
+  protected function getFaltaGeral($etapa, $quantidade){
     return new Avaliacao_Model_FaltaGeral(array(
-        'quantidade' => $this->getQuantidadeFalta(),
-        'etapa' => $this->getRequest()->etapa
+        'quantidade' => $quantidade,
+        'etapa' => $etapa
     ));
   }
 
 
-  protected function getFaltaComponente(){
+  protected function getFaltaComponente($etapa, $componenteCurricularId, $quantidade){
     return new Avaliacao_Model_FaltaComponente(array(
-            'componenteCurricular' => $this->getRequest()->componente_curricular_id,
-            'quantidade' => $this->getQuantidadeFalta(),
-            'etapa' => $this->getRequest()->etapa
+            'componenteCurricular' => $componenteCurricularId,
+            'quantidade' => $quantidade,
+            'etapa' => $etapa
     ));
   }
 
@@ -538,37 +528,67 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  protected function removerFaltasInvalidas($matriculaId){
+  protected function lancarFaltasNaoLancadas($matriculaId){
 
+    $defaultValue = 0;
+    $cnsPresenca = RegraAvaliacao_Model_TipoPresenca;
+    $tpPresenca = $this->getService()->getRegra()->get('tipoPresenca');
     $componentesCurriculares = $this->getComponentesCurriculares($matriculaId);
-    $faltasComponenteCurricularEtapa = array();
 
-    foreach(range(1, $this->getService()->getOption('etapas')) as $etapa){
-      foreach($componentesCurriculares as $cc){
+    if($tpPresenca == $cnsPresenca::GERAL){
 
-        $falta = $this->getService()->getFalta($etapa, $cc['id'])->quantidade;
+      foreach(range(1, $this->getService()->getOption('etapas')) as $etapa){
+        $hasNotaOrParecerInEtapa = false;
+        foreach($componentesCurriculares as $cc){
+          $nota = $this->getNota($etapa, $cc['id']);
+          $parecer = $this->getParecerDescritivo($etapa, $cc['id']);
 
-        $faltasComponenteCurricularEtapa[] = array('etapa' => $etapa, 
-                                                   'componente_curricular' => $cc,
-                                                   'falta' => $falta);
-      }
+          if(! $hasNotaOrParecerInEtapa && (trim($nota) != '' || trim($parecer) != '')){
+            $hasNotaOrParecerInEtapa = true;
+            break;
+          }
+        }
+
+        if($hasNotaOrParecerInEtapa){
+          $falta = $this->getService()->getFalta($etapa)->quantidade;
+          if(is_null($falta)){
+            $notaFalta = new Avaliacao_Model_FaltaGeral(array(
+                    'quantidade' => $defaultValue,
+                    'etapa' => $etapa
+                ));
+
+            $this->getService()->addFalta($notaFalta);
+            $this->appendMsg("Lançado falta geral (valor $defaultValue) para etapa $etapa (matricula $matriculaId)", 'notice');
+          }
+        }
+      }//for etapa
+
     }
+    elseif($tpPresenca == $cnsPresenca::POR_COMPONENTE){
 
-    print_r($faltasComponenteCurricularEtapa);
+      foreach(range(1, $this->getService()->getOption('etapas')) as $etapa){
 
-    /*
+        foreach($componentesCurriculares as $cc){
+          
+          $nota = $this->getNota($etapa, $cc['id']);
+          $parecer = $this->getParecerDescritivo($etapa, $cc['id']);
 
-    pegar falta global,
+          if(trim($nota) != '' || trim($parecer) != ''){
+            $falta = $this->getService()->getFalta($etapa, $cc['id'])->quantidade;
 
-    cc .. pegar componentes-curriculares
-      pegar falta por parecer
+            if(is_null($falta)){
+              $this->getService()->addFalta(
+                $this->getFaltaComponente($etapa, $cc['id'], $defaultValue));
 
-    - remover falta global se regra de avaliacao for por componente curricular e existir falta global
-    - remover falta componente curricular se regra de avaliacao for por global e existir falta componente
+              $this->appendMsg("Lançado falta (valor $defaultValue) para etapa $etapa e componente curricular {$cc['id']} - {$cc['nome']} (matricula $matriculaId)", 'notice');
+            }
+          }
+        }
+      }
 
-    adicionar falta correta ? (seguranca que não será removido a falta invalida)
-
-    */
+    }
+    else
+      throw new Exception("Tipo de presença desconhecido metodo lancarFaltasNaoLancadas");
 
   }
 
@@ -599,10 +619,6 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
 
       /*
 
-        - remover parecer descritivo se regra de avaliacao for ?
-        - remover parecer descritivo se regra de avaliacao for ?
-        ...
-  
         enquanto etapa 1 .. etapas regra
           - setar falta como 0 caso não exista
 
@@ -610,26 +626,26 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
 
       */
 
-      $this->removerFaltasInvalidas($matriculaId);
+        $this->lancarFaltasNaoLancadas($matriculaId);
 
-      $this->saveService();
+        $this->saveService();
 
-      $novaSituacao = $this->getSituacaoArmazenadaMatricula($matriculaId);
+        $novaSituacao = $this->getSituacaoArmazenadaMatricula($matriculaId);
 
-      $type = 'success';
-      $msg = "Matricula $matriculaId";
-      if($situacaoAnterior == $novaSituacao){
-        $type = 'notice';
-        $msg .= ' não mudou de situação';
-      }
-      elseif($novaSituacao == 1)
-        $msg .= " foi aprovada (situaçao antiga $situacaoAnterior)";
-      elseif($novaSituacao == 2)
-        $msg .= " foi reprovada (situaçao antiga $situacaoAnterior)";
-      else
-        $msg .= " teve a situação alterada de $novaSituacao para $situacaoAnterior)";
+        $type = 'success';
+        $msg = "Matricula $matriculaId";
+        if($situacaoAnterior == $novaSituacao){
+          $type = 'notice';
+          $msg .= ' não mudou de situação';
+        }
+        elseif($novaSituacao == 1)
+          $msg .= " foi aprovada (situaçao antiga $situacaoAnterior)";
+        elseif($novaSituacao == 2)
+          $msg .= " foi reprovada (situaçao antiga $situacaoAnterior)";
+        else
+          $msg .= " teve a situação alterada de $novaSituacao para $situacaoAnterior)";
 
-      $this->appendMsg($msg, $type);
+        $this->appendMsg($msg, $type);
       }
 
       return array('proximo_matricula_id' => $proximoMatriculaId, 'situacao_anterior' => $situacaoAnterior, 'nova_situacao' => $novaSituacao);
@@ -767,12 +783,9 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
     return $matriculas;
   }
 
-  protected function getNotaAtual($etapa = null){
+  protected function getNota($etapa = null, $componenteCurricularId){
 
-    if (! $etapa)
-      $etapa = $this->getRequest()->etapa;
-
-    $nota = urldecode($this->getService()->getNotaComponente($this->getRequest()->componente_curricular_id, $etapa)->nota);
+    $nota = urldecode($this->getService()->getNotaComponente($componenteCurricularId, $etapa)->nota);
     return str_replace(',', '.', $nota);
   }
 
@@ -810,25 +823,25 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  protected function getEtapaParecer()
+  protected function getEtapaParecer($etapaDefault)
   {
 
-    if($this->getRequest()->etapa != 'An' && ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE || $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL)){
+    if($etapaDefault != 'An' && ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE || $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL)){
       return 'An';
     }
     else
-      return $this->getRequest()->etapa;
+      return $etapaDefault;
   }
 
 
-  protected function getParecerAtual()
+  protected function getParecerDescritivo($etapa, $componenteCurricularId)
   {
     if ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE or
       $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE){
-      return utf8_encode($this->getService()->getParecerDescritivo($this->getEtapaParecer(), $this->getRequest()->componente_curricular_id));
+      return utf8_encode($this->getService()->getParecerDescritivo($this->getEtapaParecer($etapa), $componenteCurricularId));
     }
     else
-      return utf8_encode($this->getService()->getParecerDescritivo($this->getEtapaParecer()));
+      return utf8_encode($this->getService()->getParecerDescritivo($this->getEtapaParecer($etapa)));
   }
 
 
