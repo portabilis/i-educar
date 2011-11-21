@@ -29,8 +29,11 @@ var $j = jQuery.noConflict();
     }
 
     var $formFilter = $('#formcadastro');
+    var $formResult = $('#form_resultado');
     var $submitButton = $('#botao_busca');
-    var $resultTable = $('#form_resultado .tablelistagem').addClass('horizontal-expand');
+    var $resultTable = $formResult.find('.tablelistagem').addClass('horizontal-expand');
+
+    $formResult.submit(function(event){event.preventDefault()});
     $resultTable.children().remove();
 
     var diarioUrlBase = 'diario';
@@ -442,8 +445,12 @@ var $j = jQuery.noConflict();
 
         deleteResource(resourceName, $faltaFieldElement, options, handleCompleteDeleteResource, handleErrorDeleteResource);
       }
-      else
+      else{
+
+        $faltaFieldElement.val($faltaFieldElement.data('old_value'));
+
         handleMessages([{type : 'error', msg : utf8Decode('Falta não pode ser removida após ter lançado notas ou parecer descritivo, tente definir como 0 (zero).')}], $faltaFieldElement.attr('id'));
+      }
     }
 
 

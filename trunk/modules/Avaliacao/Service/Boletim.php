@@ -1529,6 +1529,16 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   protected function _setFaltaAluno(Avaliacao_Model_FaltaAluno $falta)
   {
     $this->_faltaAluno = $falta;
+    $tipoFaltaAtual = $this->_faltaAluno->get('tipoFalta');
+    $tipoFaltaRegraAvaliacao = $this->getRegra()->get('tipoPresenca');
+
+    if ($tipoFaltaAtual != $tipoFaltaRegraAvaliacao){
+      $this->_faltaAluno->tipoFalta = $tipoFaltaRegraAvaliacao;
+      $this->getFaltaAlunoDataMapper()->save($this->_faltaAluno);
+
+      error_log("Alterado falta aluno: {$this->_faltaAluno->get('id')} do tipo $tipoFaltaAtual para $tipoFaltaRegraAvaliacao (matricula: {$this->_faltaAluno->get('matricula')})");
+    }
+
     return $this;
   }
 
