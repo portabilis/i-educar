@@ -156,10 +156,10 @@
         nome_disciplina,
         MAX(matricula) as matricula,
         MAX(id_disciplina) as id_disciplina,
-	MAX(nota_arredondada) AS nota1,
-        MAX(nota_arredondada_etapa2) AS nota2,
-        MAX(nota_arredondada_etapa3) AS nota3,
-        MAX(nota_arredondada_etapa4) AS nota4,
+	MAX(nota1) AS nota1,
+        MAX(nota2) AS nota2,
+        MAX(nota3) AS nota3,
+        MAX(nota4) AS nota4,
 		MAX(nota_exame) AS nota_exame,
 		MAX(media) AS media,
         MAX(nome_curso) AS nome_curso,
@@ -182,98 +182,102 @@
 		MAX(frequencia_componente) AS frequencia_componente,
 		MAX(carga_horaria) AS carga_horaria
   FROM (SELECT
-             (SELECT componente_curricular.nome
-                FROM modules.componente_curricular
-               WHERE componente_curricular.id = escola_serie_disciplina.ref_cod_disciplina) as nome_disciplina,
+             componente_curricular.nome as nome_disciplina,
 
                matricula.cod_matricula AS matricula,
 
-                          (SELECT componente_curricular.id
-                FROM modules.componente_curricular
-               WHERE componente_curricular.id = escola_serie_disciplina.ref_cod_disciplina) as id_disciplina,
- (SELECT CASE  WHEN et1.nota_arredondada = 10 THEN
+              componente_curricular.id as id_disciplina,
+
+       (SELECT CASE  WHEN nota_componente_curricular.nota_arredondada = 10 THEN
 			                   '10,0'
-			               WHEN char_length(et1.nota_arredondada) = 1 THEN
-			                   replace(et1.nota_arredondada,'.',',') || ',0'
+			               WHEN char_length(nota_componente_curricular.nota_arredondada) = 1 THEN
+			                   replace(nota_componente_curricular.nota_arredondada,'.',',') || ',0'
                            ELSE
-                               replace(et1.nota_arredondada,'.',',')
+                               replace(nota_componente_curricular.nota_arredondada,'.',',')
                            END
-                FROM modules.nota_componente_curricular et1,
-                     modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
-                     et1.etapa = 1 AND
-                     nota_aluno.id  = et1.nota_aluno_id AND
-                    nota_aluno.matricula_id = matricula.cod_matricula) AS nota_arredondada,
+	      FROM modules.nota_componente_curricular,
+	           modules.nota_aluno
+	     WHERE nota_componente_curricular.nota_aluno_id = nota_aluno.id AND
+	           nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+	           nota_aluno.matricula_id = matricula.cod_matricula AND
+             nota_componente_curricular.etapa = 1
+      ) AS nota1,
 
- (SELECT CASE  WHEN et1.nota_arredondada = 10 THEN
+       (SELECT CASE  WHEN nota_componente_curricular.nota_arredondada = 10 THEN
 			                   '10,0'
-			               WHEN char_length(et1.nota_arredondada) = 1 THEN
-			                   replace(et1.nota_arredondada,'.',',') || ',0'
+			               WHEN char_length(nota_componente_curricular.nota_arredondada) = 1 THEN
+			                   replace(nota_componente_curricular.nota_arredondada,'.',',') || ',0'
                            ELSE
-                               replace(et1.nota_arredondada,'.',',')
+                               replace(nota_componente_curricular.nota_arredondada,'.',',')
                            END
-                FROM modules.nota_componente_curricular et1,
-                     modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
-                     et1.etapa = 2 AND
-                     nota_aluno.id  = et1.nota_aluno_id AND
-                     nota_aluno.matricula_id = matricula.cod_matricula) AS nota_arredondada_etapa2,
+	      FROM modules.nota_componente_curricular,
+	           modules.nota_aluno
+	     WHERE nota_componente_curricular.nota_aluno_id = nota_aluno.id AND
+	           nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+	           nota_aluno.matricula_id = matricula.cod_matricula AND
+             nota_componente_curricular.etapa = 2
+      ) AS nota2,
 
- (SELECT CASE  WHEN et1.nota_arredondada = 10 THEN
+       (SELECT CASE  WHEN nota_componente_curricular.nota_arredondada = 10 THEN
 			                   '10,0'
-			               WHEN char_length(et1.nota_arredondada) = 1 THEN
-			                   replace(et1.nota_arredondada,'.',',') || ',0'
+			               WHEN char_length(nota_componente_curricular.nota_arredondada) = 1 THEN
+			                   replace(nota_componente_curricular.nota_arredondada,'.',',') || ',0'
                            ELSE
-                               replace(et1.nota_arredondada,'.',',')
+                               replace(nota_componente_curricular.nota_arredondada,'.',',')
                            END
-                FROM modules.nota_componente_curricular et1,
-                     modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
-                     et1.etapa = 3 AND
-                     nota_aluno.id  = et1.nota_aluno_id AND
-                     nota_aluno.matricula_id = matricula.cod_matricula) AS nota_arredondada_etapa3,
+	      FROM modules.nota_componente_curricular,
+	           modules.nota_aluno
+	     WHERE nota_componente_curricular.nota_aluno_id = nota_aluno.id AND
+	           nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+	           nota_aluno.matricula_id = matricula.cod_matricula AND
+             nota_componente_curricular.etapa = 3
+      ) AS nota3,
 
- (SELECT CASE  WHEN et1.nota_arredondada = 10 THEN
+       (SELECT CASE  WHEN nota_componente_curricular.nota_arredondada = 10 THEN
 			                   '10,0'
-			               WHEN char_length(et1.nota_arredondada) = 1 THEN
-			                   replace(et1.nota_arredondada,'.',',') || ',0'
+			               WHEN char_length(nota_componente_curricular.nota_arredondada) = 1 THEN
+			                   replace(nota_componente_curricular.nota_arredondada,'.',',') || ',0'
                            ELSE
-                               replace(et1.nota_arredondada,'.',',')
+                               replace(nota_componente_curricular.nota_arredondada,'.',',')
                            END
-                FROM modules.nota_componente_curricular et1,
-                     modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
-                     et1.etapa = 4 AND
-                     nota_aluno.id  = et1.nota_aluno_id AND
-                     nota_aluno.matricula_id = matricula.cod_matricula) AS nota_arredondada_etapa4,
+	      FROM modules.nota_componente_curricular,
+	           modules.nota_aluno
+	     WHERE nota_componente_curricular.nota_aluno_id = nota_aluno.id AND
+	           nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+	           nota_aluno.matricula_id = matricula.cod_matricula AND
+             nota_componente_curricular.etapa = 4
+      ) AS nota4,
 
 
-           (SELECT CASE  WHEN et1.nota_arredondada = 10 THEN
+       (SELECT CASE  WHEN nota_componente_curricular.nota_arredondada = 10 THEN
 			                   '10,0'
-			               WHEN char_length(et1.nota_arredondada) = 1 THEN
-			                   replace(et1.nota_arredondada,'.',',') || ',0'
+			               WHEN char_length(nota_componente_curricular.nota_arredondada) = 1 THEN
+			                   replace(nota_componente_curricular.nota_arredondada,'.',',') || ',0'
                            ELSE
-                               replace(et1.nota_arredondada,'.',',')
+                               replace(nota_componente_curricular.nota_arredondada,'.',',')
                            END
-                FROM modules.nota_componente_curricular et1,
-                     modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
-					 et1.etapa = 'Rc' AND
-                     nota_aluno.id  = et1.nota_aluno_id AND
-                     nota_aluno.matricula_id = matricula.cod_matricula) AS nota_exame,
+	      FROM modules.nota_componente_curricular,
+	           modules.nota_aluno
+	     WHERE nota_componente_curricular.nota_aluno_id = nota_aluno.id AND
+	           nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+	           nota_aluno.matricula_id = matricula.cod_matricula AND
+             nota_componente_curricular.etapa = 'Rc'
+      ) AS nota_exame,
 
 
-             (SELECT CASE WHEN char_length(nota_componente_curricular_media.media_arredondada) = 1 THEN
+       (SELECT CASE  WHEN nota_componente_curricular_media.media_arredondada = 10 THEN
+			                   '10,0'
+			               WHEN char_length(nota_componente_curricular_media.media_arredondada) = 1 THEN
 			                   replace(nota_componente_curricular_media.media_arredondada,'.',',') || ',0'
                            ELSE
                                replace(nota_componente_curricular_media.media_arredondada,'.',',')
                            END
-		FROM modules.nota_componente_curricular_media,
-         modules.nota_aluno
-               WHERE nota_aluno.id = nota_componente_curricular_media.nota_aluno_id AND
-                     nota_componente_curricular_media.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
-                     nota_componente_curricular_media.etapa in('2','Rc') AND
-                     nota_aluno.matricula_id = matricula.cod_matricula) AS media,
+	      FROM modules.nota_componente_curricular_media,
+	           modules.nota_aluno
+	     WHERE nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+	           nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+	           nota_aluno.matricula_id = matricula.cod_matricula
+      ) AS media,
 
 	         (SELECT curso.nm_curso
                 FROM pmieducar.curso
@@ -373,7 +377,7 @@
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_componente_curricular.etapa = 1 AND
-				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+				falta_componente_curricular.componente_curricular_id = componente_curricular.id AND
 				falta_aluno.tipo_falta = 2) as faltas_componente_et1,
 
        (SELECT sum(falta_componente_curricular.quantidade)
@@ -382,7 +386,7 @@
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_componente_curricular.etapa = 2 AND
-				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+				falta_componente_curricular.componente_curricular_id = componente_curricular.id AND
 				falta_aluno.tipo_falta = 2) as faltas_componente_et2,
 
        (SELECT sum(falta_componente_curricular.quantidade)
@@ -391,7 +395,7 @@
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_componente_curricular.etapa = 3 AND
-				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+				falta_componente_curricular.componente_curricular_id = componente_curricular.id AND
 				falta_aluno.tipo_falta = 2) as faltas_componente_et3,
 
        (SELECT sum(falta_componente_curricular.quantidade)
@@ -400,7 +404,7 @@
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_componente_curricular.etapa = 4 AND
-				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+				falta_componente_curricular.componente_curricular_id = componente_curricular.id AND
 				falta_aluno.tipo_falta = 2) as faltas_componente_et4,
 
        (SELECT sum(falta_componente_curricular.quantidade)
@@ -408,7 +412,7 @@
                 modules.falta_aluno
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
-				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+				falta_componente_curricular.componente_curricular_id = componente_curricular.id AND
                 falta_componente_curricular.etapa in ('1','2','3','4') AND
 				falta_aluno.tipo_falta = 2) as total_faltas_componente,
 
@@ -428,7 +432,7 @@
 
     (SELECT sum(to_number(componente_curricular_ano_escolar.carga_horaria,'999'))
        FROM modules.componente_curricular_ano_escolar
-     WHERE componente_curricular_ano_escolar.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina) AS            carga_horaria
+     WHERE componente_curricular_ano_escolar.componente_curricular_id = componente_curricular.id) AS            carga_horaria
 
  FROM pmieducar.matricula
 	    JOIN pmieducar.matricula_turma ON
@@ -1008,7 +1012,7 @@ ORDER BY nome_aluno, nome_disciplina]]>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{media}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nota2} >= "0,0" ? $F{media} : ""]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="337" y="-14" width="1" height="15"/>
