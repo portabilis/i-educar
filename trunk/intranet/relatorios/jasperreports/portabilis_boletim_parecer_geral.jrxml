@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_boletim_parecer_geral" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.464100000000004"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="96"/>
 	<parameter name="ano" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
@@ -157,9 +157,8 @@
        to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
 
         nome_disciplina,
-        matricula_id,
-        MAX(matricula_id) as matricula,
-        MAX(componente_curricular_id) as id_disciplina,
+        MAX(matricula) as matricula,
+        MAX(id_disciplina) as id_disciplina,
         MAX(nome_curso) AS nome_curso,
 	MAX(nome_serie) AS nome_serie,
         MAX(nome_turma) AS nome_turma,
@@ -175,11 +174,14 @@
     MAX(parecer) AS parecer,
     MAX(nota) AS nota
   FROM (SELECT
-             (SELECT componente_curricular.nome
+                         (SELECT componente_curricular.nome
                 FROM modules.componente_curricular
-               WHERE componente_curricular.id = nota_componente_curricular.componente_curricular_id) as nome_disciplina,
-             nota_componente_curricular.componente_curricular_id,
-             matricula_id,
+               WHERE componente_curricular.id = escola_serie_disciplina.ref_cod_disciplina AND
+                     escola_serie_disciplina.ativo = 1) as nome_disciplina,
+ matricula.cod_matricula AS matricula,
+                          (SELECT componente_curricular.id
+                FROM modules.componente_curricular
+               WHERE componente_curricular.id = escola_serie_disciplina.ref_cod_disciplina) as id_disciplina,
 
 	         (SELECT curso.nm_curso
                 FROM pmieducar.curso
@@ -250,14 +252,15 @@
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_geral.etapa in ('1','2','3','4')) as total_faltas,
 
+
        (SELECT sum(falta_componente_curricular.quantidade)
            FROM modules.falta_componente_curricular,
                 modules.falta_aluno
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
-                falta_componente_curricular.etapa = $P{etapa} AND
-				falta_componente_curricular.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
-				falta_aluno.tipo_falta = 2) as faltas_componente_et1,
+                falta_componente_curricular.etapa = 2 AND
+				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+				falta_aluno.tipo_falta = $P{etapa}) as faltas_componente_et1,
 
 
        (SELECT sum(falta_componente_curricular.quantidade)
@@ -265,7 +268,7 @@
                 modules.falta_aluno
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
-				falta_componente_curricular.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
+				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
                 falta_componente_curricular.etapa in ('1','2','3','4') AND
 				falta_aluno.tipo_falta = 2) as total_faltas_componente,
 
@@ -283,42 +286,59 @@
                falta_aluno.matricula_id = matricula.cod_matricula AND
                falta_componente_curricular.etapa in ('1','2','3','4'))::float / 800::float )::float * 100,'999')) AS frequencia_componente,
 
-     (SELECT convert(parecer_geral.parecer using utf8_to_iso_8859_1)
+     (SELECT parecer_geral.parecer
         FROM modules.parecer_geral,
              modules.parecer_aluno
        WHERE parecer_geral.parecer_aluno_id = parecer_aluno.id AND
              parecer_aluno.matricula_id = matricula.cod_matricula AND
              parecer_geral.etapa = $P{etapa}) AS parecer,
 
-      nota_componente_curricular.nota_arredondada as nota
+      (SELECT nota_arredondada
+                FROM modules.nota_componente_curricular,
+                     modules.nota_aluno
+               WHERE nota_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+                     nota_componente_curricular.etapa = $P{etapa} AND
+                     nota_aluno.id  = nota_componente_curricular.nota_aluno_id AND
+                    nota_aluno.matricula_id = matricula.cod_matricula) as nota
 
+ FROM pmieducar.matricula
+	    JOIN pmieducar.matricula_turma ON
+		  matricula_turma.ref_cod_matricula = matricula.cod_matricula
+      LEFT JOIN pmieducar.escola_serie_disciplina ON
+		  escola_serie_disciplina.ref_ref_cod_serie = matricula.ref_ref_cod_serie AND
+		  escola_serie_disciplina.ref_ref_cod_escola = matricula.ref_ref_cod_escola AND
+		  escola_serie_disciplina.ativo = 1
+      LEFT JOIN modules.componente_curricular_turma ON
+		  componente_curricular_turma.escola_id = matricula.ref_ref_cod_escola AND
+		  componente_curricular_turma.turma_id = matricula_turma.ref_cod_turma
+      JOIN modules.componente_curricular ON
+      CASE WHEN (SELECT COUNT(componente_curricular_turma.componente_curricular_id)
+		               FROM modules.componente_curricular_turma
+		              WHERE componente_curricular_turma.turma_id = matricula_turma.ref_cod_turma AND
+		                    componente_curricular_turma.escola_id = matricula.ref_ref_cod_escola) > 0
+           THEN componente_curricular.id = componente_curricular_turma.componente_curricular_id
+		       ELSE componente_curricular.id = escola_serie_disciplina.ref_cod_disciplina
+	    END
 
-        FROM modules.nota_componente_curricular,
-             modules.nota_componente_curricular_media,
-             modules.nota_aluno,
-	         pmieducar.matricula,
-			 pmieducar.matricula_turma
-       WHERE nota_aluno.id = nota_componente_curricular.nota_aluno_id AND
-             nota_componente_curricular_media.nota_aluno_id = nota_componente_curricular.nota_aluno_id AND
-             nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id AND
-			 matricula.ref_ref_cod_escola = $P{escola} AND
+       WHERE
+             matricula.ref_ref_cod_escola = $P{escola} AND
 			 matricula.ref_cod_curso = $P{curso} AND
 			 matricula.ref_ref_cod_serie = $P{serie} AND
-       nota_componente_curricular.etapa = $P{etapa} AND
-	         matricula.cod_matricula = nota_aluno.matricula_id AND
              matricula.ativo = 1 AND
-			 matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
              matricula_turma.ref_cod_turma = $P{turma} AND
-             matricula_turma.ativo = 1 AND
+             matricula.ano = $P{ano} AND
+
              (SELECT CASE WHEN $P{matricula} = 0 THEN
                    matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
  		           matricula_turma.ref_cod_turma = $P{turma}
                ELSE
                    matricula.cod_matricula = $P{matricula}
                END)
+
 	) AS etapa1
-GROUP BY matricula_id,componente_curricular_id, nome_disciplina
-ORDER BY matricula_id]]>
+
+GROUP BY id_disciplina, nome_disciplina, nome_aluno
+ORDER BY nome_aluno, nome_disciplina]]>
 	</queryString>
 	<field name="ano" class="java.lang.Integer"/>
 	<field name="nome_responsavel" class="java.lang.String"/>
@@ -337,7 +357,6 @@ ORDER BY matricula_id]]>
 	<field name="data_atual" class="java.lang.String"/>
 	<field name="hora_atual" class="java.lang.String"/>
 	<field name="nome_disciplina" class="java.lang.String"/>
-	<field name="matricula_id" class="java.lang.Integer"/>
 	<field name="matricula" class="java.lang.Integer"/>
 	<field name="id_disciplina" class="java.lang.Integer"/>
 	<field name="nome_curso" class="java.lang.String"/>
@@ -360,20 +379,27 @@ ORDER BY matricula_id]]>
 			<band/>
 		</groupHeader>
 		<groupFooter>
-			<band height="66">
+			<band height="151">
 				<rectangle>
-					<reportElement x="12" y="0" width="531" height="64"/>
+					<reportElement x="13" y="0" width="531" height="149"/>
 					<graphicElement>
 						<pen lineWidth="0.25"/>
 					</graphicElement>
 				</rectangle>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement x="16" y="4" width="517" height="13"/>
+					<reportElement x="54" y="4" width="479" height="13"/>
 					<textElement>
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Parecer: "+$F{parecer}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{parecer}]]></textFieldExpression>
 				</textField>
+				<staticText>
+					<reportElement x="15" y="4" width="39" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[Parecer:]]></text>
+				</staticText>
 			</band>
 		</groupFooter>
 	</group>
@@ -602,7 +628,7 @@ ORDER BY matricula_id]]>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="341" y="62" width="1" height="63"/>
+				<reportElement x="341" y="62" width="1" height="91"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -671,6 +697,13 @@ ORDER BY matricula_id]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{frequencia}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="345" y="131" width="109" height="14"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Etapa: "+$P{etapa}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -728,7 +761,7 @@ ORDER BY matricula_id]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{total_faltas_componente}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="201" y="1" width="18" height="15"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
