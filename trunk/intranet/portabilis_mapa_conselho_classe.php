@@ -18,7 +18,6 @@ class PortabilisMapaConselhoClasse extends Report
     $escola_obrigatorio = true;
     $escola_curso_serie_obrigatorio = true;
     $turma_obrigatorio = true;
-    $get_etapa = $etapa_obrigatorio = true;
     $this->campoNumero( "ano", "Ano", date("Y"), 4, 4, true);
 
     include("include/pmieducar/educar_campo_lista.php");    
@@ -33,8 +32,6 @@ class PortabilisMapaConselhoClasse extends Report
     $this->addArg('curso', (int)$_POST['ref_cod_curso']);
     $this->addArg('serie', (int)$_POST['ref_ref_cod_serie']);
     $this->addArg('turma', (int)$_POST['ref_cod_turma']);
-    $this->addArg('etapa', (int)$_POST['etapa']);
-
   }
 }
 
@@ -46,7 +43,6 @@ $report->addRequiredField('ref_cod_escola', 'escola');
 $report->addRequiredField('ref_cod_curso', 'curso');
 $report->addRequiredField('ref_ref_cod_serie', 'serie');
 $report->addRequiredField('ref_cod_turma', 'turma');
-$report->addRequiredField('etapa');
 
 $report->render();
 ?>
