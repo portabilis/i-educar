@@ -159,6 +159,11 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     return $this->validatesValueIsNumeric($this->getRequest()->att_value, 'att_value', $raiseExceptionOnError);
   }
 
+  protected function validatesValueOfAttValueIsInOpcoesNotas($raiseExceptionOnError){
+    $expectedValues = array_keys($this->getOpcoesNotas());
+    return $this->validatesValueInSetOf($this->getRequest()->att_value, $expectedValues, 'att_value', $raiseExceptionOnError);
+  }
+
   protected function validatesPresenceOfAttValue($raiseExceptionOnEmpty){
     return $this->validatesPresenceOf($this->getRequest()->att_value, 'att_value', $raiseExceptionOnEmpty);
   }
@@ -231,6 +236,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     $canPost = $this->setService() &&
                $this->canPost() &&                
                $this->validatesValueOfAttValueIsNumeric(false) &&
+               $this->validatesValueOfAttValueIsInOpcoesNotas(false) &&
                $this->validatesPresenceOfComponenteCurricularId(false);
 
     if ($canPost && $this->getService()->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NENHUM)
@@ -645,16 +651,24 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   protected function getOpcoesNotas($useCurrentService = False)
   {
     $opcoes = array();
+
     if (($useCurrentService && $this->getService()) || $this->canGetOpcoesNotas() && $this->setService()){
-      $tabela = $this->getService()->getRegra()->tabelaArredondamento->findTabelaValor();
-      foreach ($tabela as $item)
-      {
-        if ($this->getService()->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA)
-          $opcoes[(string) $item->nome] = (string) $item->nome;
-        else
-          $opcoes[(string) $item->valorMaximo] = utf8_encode($item->nome . ' (' . $item->descricao .  ')');
+
+      $tpNota = $this->getService()->getRegra()->get('tipoNota');
+      $cnsNota = RegraAvaliacao_Model_Nota_TipoValor;
+
+      if ($tpNota != $cnsNota::NENHUM){
+        $tabela = $this->getService()->getRegra()->tabelaArredondamento->findTabelaValor();
+        foreach ($tabela as $item)
+        {
+          if ($tpNota == $cnsNota::NUMERICA)
+            $opcoes[(string) $item->nome] = (string) $item->nome;
+          else
+            $opcoes[(string) $item->valorMaximo] = utf8_encode($item->nome . ' (' . $item->descricao .  ')');
+        }
       }
     }
+
     return $opcoes;
   }
 
@@ -692,10 +706,11 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
       {
         $itensRegra['tipo_nota'] = 'conceitual';
         //incluido opcoes notas, pois notas conceituais requer isto para visualizar os nomes
-        $itensRegra['opcoes_notas'] = $this->getOpcoesNotas($useCurrentService = $useCurrentService);
       }
       else
         $itensRegra['tipo_nota'] = $tpNota;
+
+      $itensRegra['opcoes_notas'] = $this->getOpcoesNotas($useCurrentService = $useCurrentService);
 
       $cnsParecer = RegraAvaliacao_Model_TipoParecerDescritivo;
       $tpParecer = $this->getService()->getRegra()->get('parecerDescritivo');
