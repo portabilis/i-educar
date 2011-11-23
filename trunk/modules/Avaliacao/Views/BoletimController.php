@@ -66,7 +66,7 @@ class BoletimController extends Core_Controller_Page_ViewController
    */
   protected $_service = NULL;
 
-  /**
+  /**z
    * @var stdClass
    */
   protected $_situacao = NULL;
@@ -188,7 +188,7 @@ class BoletimController extends Core_Controller_Page_ViewController
     $this->addDetalhe(array('Média', $media));
 
     // Cria um array com a quantidade de etapas de 1 a n
-    $etapas = range(1, $this->_service->getOption('etapas'), 1);
+    $etapas = $this->getEtapas();
 
     // Atributos para a tabela
     $attributes = array(
@@ -245,7 +245,7 @@ class BoletimController extends Core_Controller_Page_ViewController
     }
 
     // Colspan para tabela com labels e sublabels
-    $colspan += $porComponente && $sit->recuperacao ? 4 : 3;
+    $colspan += $porComponente && $this->alunoPossuiNotaRec() ? 4 : 3;
     if ($nenhumaNota) {
       $colspan--;
     }
@@ -256,7 +256,7 @@ class BoletimController extends Core_Controller_Page_ViewController
 
     // Inclui coluna para % de presença geral.
     if (!$porComponente) {
-      if ($sit->recuperacao) {
+      if ($this->alunoPossuiNotaRec()) {
         $labels[] = array('data' => 'Exame', 'attributes' => $attributes);
       }
 
@@ -285,7 +285,7 @@ class BoletimController extends Core_Controller_Page_ViewController
         $subLabels[] = array('data' => 'Média', 'attributes' => $attributes);
       }
 
-      if ($sit->recuperacao) {
+      if ($this->alunoPossuiNotaRec()) {
         $subLabels[] = array('data' => 'Exame', 'attributes' => $attributes);
       }
 
@@ -305,8 +305,8 @@ class BoletimController extends Core_Controller_Page_ViewController
     $attributes = array('style' => 'padding: 5px; text-align: center');
 
     // Notas
-    $componentes = $this->_service->getComponentes();
-    $notasComponentes  = $this->_service->getNotasComponentes();
+    $componentes = $this->getComponentesCurriculares();
+    $notasComponentes  = $this->getNotasComponentesCurriculares();
     $mediasSituacoes   = $this->_situacao->nota;
     $mediasComponentes = $this->_service->getMediasComponentes();
     $faltasComponentes = $this->_service->getFaltasComponentes();
@@ -441,8 +441,8 @@ class BoletimController extends Core_Controller_Page_ViewController
         $data[] = array('data' => $media, 'attributes' => $attributes);
       }
 
-      // Adiciona uma coluna extra caso aluno esteja em exame em alguma componente curricular
-      if ($sit->recuperacao) {
+      // Adiciona uma coluna extra caso aluno esteja em exame em alguma componente curricular ou possua nota de exame
+      if ($sit->recuperacao || $this->alunoPossuiNotaRec()) {
         if ($mediaSituacao->situacao == App_Model_MatriculaSituacao::EM_EXAME ||
             $mediaSituacao->situacao == App_Model_MatriculaSituacao::APROVADO_APOS_EXAME ||
             $mediaSituacao->situacao == App_Model_MatriculaSituacao::REPROVADO) {
@@ -450,9 +450,8 @@ class BoletimController extends Core_Controller_Page_ViewController
           $link['query']['componenteCurricular'] = $id;
           $link['query']['etapa'] = 'Rc';
 
-          $notaRec = $i;
-          if (isset($notas[$notaRec]) && $notas[$notaRec]->etapa == 'Rc') {
-            $link['text'] = $notas[$notaRec]->notaArredondada;
+          if (isset($notas[$i]) && $notas[$i]->etapa == 'Rc') {
+            $link['text'] = $notas[$i]->notaArredondada;
           }
 
           $recuperacaoLink = $url->l($link['text'], $link['path'], array('query' => $link['query']));
@@ -547,7 +546,7 @@ class BoletimController extends Core_Controller_Page_ViewController
       $data[] = array();
     }
 
-    if ($sit->recuperacao) {
+    if ($this->alunoPossuiNotaRec()) {
       $data[] = array('data' => '', 'attributes' => $attributes);
     }
 
@@ -591,7 +590,7 @@ class BoletimController extends Core_Controller_Page_ViewController
         }
       }
 
-      if ($sit->recuperacao) {
+      if ($this->alunoPossuiNotaRec()) {
         $data[] = array('data' => '', 'attributes' => $attributes);
       }
 
@@ -657,4 +656,62 @@ class BoletimController extends Core_Controller_Page_ViewController
       $this->addDetalhe(array('Promover aluno?', $links));
     }
   }
+
+  
+  protected function getComponentesCurriculares(){
+    if(! isset($this->_componentesCurriculares))
+      $this->_componentesCurriculares = $this->_service->getComponentes();
+
+    return $this->_componentesCurriculares;
+  }
+
+  
+  protected function getNotasComponentesCurriculares(){
+    if(! isset($this->_notasComponentesCurriculares))
+      $this->_notasComponentesCurriculares = $this->_service->getNotasComponentes();
+
+    return $this->_notasComponentesCurriculares;
+  }
+
+
+  protected function getEtapas(){
+    if(! isset($this->_etapas))
+      $this->_etapas = range(1, $this->_service->getOption('etapas'), 1);
+
+    return $this->_etapas;
+  }    
+
+
+  /**
+  * caso algum componente curricular e alguma etapa possua nota exame lançada, então o aluno possui nota exame  
+  */
+  protected function alunoPossuiNotaRec(){
+
+    $notasComponentesCurriculares = $this->getNotasComponentesCurriculares();
+    //var_dump($notasComponentesCurriculares);
+
+    if (! isset($this->_alunoPossuiNotaRec)){
+      foreach($this->getComponentesCurriculares() as $cc){
+        $notasCc = $notasComponentesCurriculares[$cc->get('id')];
+
+        foreach ($this->getEtapas() as $etapa){
+          foreach($notasCc as $notaCc){
+            if($notaCc->etapa == 'Rc'){
+              $this->_alunoPossuiNotaRec = true;
+              break;
+            }
+          }
+
+          if (isset($this->_alunoPossuiNotaRec))
+            break;
+        }
+
+        if (isset($this->_alunoPossuiNotaRec))
+          break;
+      }
+    }
+
+    return $this->_alunoPossuiNotaRec;
+  }
+
 }
