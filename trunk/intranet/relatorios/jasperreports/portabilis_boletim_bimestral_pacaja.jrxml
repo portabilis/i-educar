@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_boletim_pacaja" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.6105100000000008"/>
+	<property name="ireport.zoom" value="1.2100000000000006"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="ano" class="java.lang.Integer">
@@ -631,20 +631,34 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_componente_curricular.etapa = 4) as faltas_disc_et4
 
- FROM  pmieducar.matricula,
-			 pmieducar.matricula_turma,
-       pmieducar.escola_serie_disciplina
 
-       WHERE escola_serie_disciplina.ref_ref_cod_serie = matricula.ref_ref_cod_serie AND
-             escola_serie_disciplina.ref_ref_cod_escola = matricula.ref_ref_cod_escola AND
-             escola_serie_disciplina.ativo = 1 AND
+ FROM pmieducar.matricula
+	    JOIN pmieducar.matricula_turma ON
+		  matricula_turma.ref_cod_matricula = matricula.cod_matricula
+      LEFT JOIN pmieducar.escola_serie_disciplina ON
+		  escola_serie_disciplina.ref_ref_cod_serie = matricula.ref_ref_cod_serie AND
+		  escola_serie_disciplina.ref_ref_cod_escola = matricula.ref_ref_cod_escola AND
+		  escola_serie_disciplina.ativo = 1
+      LEFT JOIN modules.componente_curricular_turma ON
+		  componente_curricular_turma.escola_id = matricula.ref_ref_cod_escola AND
+		  componente_curricular_turma.turma_id = $P{turma}
+      JOIN modules.componente_curricular ON
+      CASE WHEN (SELECT COUNT(componente_curricular_turma.componente_curricular_id)
+		               FROM modules.componente_curricular_turma
+		              WHERE componente_curricular_turma.turma_id = $P{turma} AND
+		                    componente_curricular_turma.escola_id = matricula.ref_ref_cod_escola) > 0
+           THEN componente_curricular.id = componente_curricular_turma.componente_curricular_id
+		       ELSE componente_curricular.id = escola_serie_disciplina.ref_cod_disciplina
+	    END
+
+       WHERE
              matricula.ref_ref_cod_escola = $P{escola} AND
 			 matricula.ref_cod_curso = $P{curso} AND
 			 matricula.ref_ref_cod_serie = $P{serie} AND
              matricula.ativo = 1 AND
-			 matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
              matricula_turma.ref_cod_turma = $P{turma} AND
              matricula.ano = $P{ano} AND
+
              (SELECT CASE WHEN $P{matricula} = 0 THEN
                    matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
  		           matricula_turma.ref_cod_turma = $P{turma}
@@ -653,6 +667,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
                END)
 
 	) AS etapa1
+
 GROUP BY id_disciplina, nome_disciplina, nome_aluno
 ORDER BY nome_aluno, nome_disciplina]]>
 	</queryString>
@@ -1078,10 +1093,6 @@ ORDER BY nome_aluno, nome_disciplina]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{total_faltas}]]></textFieldExpression>
 				</textField>
-				<image>
-					<reportElement x="25" y="6" width="57" height="46"/>
-					<imageExpression><![CDATA[$P{logo}]]></imageExpression>
-				</image>
 				<textField isBlankWhenNull="true">
 					<reportElement x="508" y="140" width="30" height="11"/>
 					<textElement textAlignment="Center">
@@ -1166,6 +1177,10 @@ ORDER BY nome_aluno, nome_disciplina]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{ano}]]></textFieldExpression>
 				</textField>
+				<image>
+					<reportElement x="22" y="6" width="57" height="46"/>
+					<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+				</image>
 			</band>
 		</groupHeader>
 		<groupFooter>

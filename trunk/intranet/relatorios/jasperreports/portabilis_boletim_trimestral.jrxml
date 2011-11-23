@@ -444,11 +444,11 @@
 		  escola_serie_disciplina.ativo = 1
       LEFT JOIN modules.componente_curricular_turma ON
 		  componente_curricular_turma.escola_id = matricula.ref_ref_cod_escola AND
-		  componente_curricular_turma.turma_id = matricula_turma.ref_cod_turma
+		  componente_curricular_turma.turma_id = $P{turma}
       JOIN modules.componente_curricular ON
       CASE WHEN (SELECT COUNT(componente_curricular_turma.componente_curricular_id)
 		               FROM modules.componente_curricular_turma
-		              WHERE componente_curricular_turma.turma_id = matricula_turma.ref_cod_turma AND
+		              WHERE componente_curricular_turma.turma_id = $P{turma} AND
 		                    componente_curricular_turma.escola_id = matricula.ref_ref_cod_escola) > 0
            THEN componente_curricular.id = componente_curricular_turma.componente_curricular_id
 		       ELSE componente_curricular.id = escola_serie_disciplina.ref_cod_disciplina
