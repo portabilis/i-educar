@@ -254,6 +254,26 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
       $canPost = false;
       $this->appendMsg("Nota de recuperação não lançada, pois a fórmula de recuperação é diferente do tipo média recuperação.");
     }
+    elseif ($canPost && $this->getRequest()->etapa == 'Rc')
+    {
+      $etapasWithoutNotas = array();
+      $hasAllNotas = true;
+      foreach(range(1, $this->getService()->getOption('etapas'), 1) as $etapa){
+        $nota = $this->getNotaAtual($etapa);
+
+        if(empty($nota) && ! is_numeric($nota)){
+
+          if($hasAllNotas){
+            $hasAllNotas = false;
+            $canPost = false;
+          }
+          $etapasWithoutNotas[] = $etapa;
+        }
+      }
+
+      if (! $hasAllNotas)
+        $this->appendMsg("Nota exame somente pode ser lançada após lançar notas nas etapas: " . join(', ', $etapasWithoutNotas) . ' deste componente curricular.');
+    }
     
     return $canPost;
   }
@@ -299,7 +319,19 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
 
   protected function canDeleteNota(){
-    return $this->canDelete();
+    $canDelete = $this->canDelete() &&
+                 $this->setService() && 
+                 $this->validatesPresenceOfComponenteCurricularId(false);
+
+    if ($canDelete && $this->getRequest()->etapa != 'Rc' && is_numeric($this->getRequest()->etapa)){
+        $notaExame = $this->getNotaAtual($etapa='Rc');
+      if(! (empty($notaExame) && ! is_numeric($notaExame))){
+        $this->appendMsg('Nota da matricula '. $this->getRequest()->matricula_id .' somente pode ser removida, após remover nota de exame.', 'error');
+        $canDelete = false;
+      }
+    }
+
+    return $canDelete;
   }
 
 
@@ -326,10 +358,10 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
 
   protected function deleteNota(){
-    if ($this->canDeleteNota() &&
-        $this->setService() &&
-        $this->validatesPresenceOfComponenteCurricularId(false)){
-      if (is_null($this->getNotaAtual()))
+    if ($this->canDeleteNota()){
+
+      $nota = $this->getNotaAtual();
+      if (empty($nota) && ! is_numeric($nota))
         $this->appendMsg('Nota matricula '. $this->getRequest()->matricula_id .' inexistente ou já removida.', 'notice');
       else
       {
@@ -569,7 +601,6 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
   protected function getNotaAtual($etapa = null){
-
     if (! $etapa)
       $etapa = $this->getRequest()->etapa;
 
