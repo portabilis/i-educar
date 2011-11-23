@@ -505,6 +505,8 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
 
   protected function getComponentesCurriculares($matriculaId){
 
+    #TODO substituir este metodo por service->getComponentes()?
+
     $dadosMatricula = $this->getDadosMatricula($matriculaId);
 
     $anoEscolar = $dadosMatricula['ano'];

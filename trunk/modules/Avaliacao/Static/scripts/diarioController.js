@@ -18,13 +18,34 @@ var $j = jQuery.noConflict();
         console.log(value);
     }
 
-    function utf8Decode(s){
+
+    function safeSort(values){
       try{
-          return decodeURIComponent(escape(s));
+        var sortedValues = values.sort(function(a, b){  
+          if (typeof(a) == 'string' && typeof(b) == 'string')
+            var isGreaterThan = a.toLowerCase() > b.toLowerCase();  
+          else
+            var isGreaterThan = a > b;
+
+         return isGreaterThan ? 1 : -1;
+        });
+        return sortedValues;
       }
       catch(e){
-          safeLog('Erro ao decodificar string utf8: ' + s);
-          return s;
+        safeLog('Erro ao ordenar valores: ' + e);
+        safeLog(values);
+        return values;
+      }
+    }
+
+
+    function utf8Decode(s){
+      try{
+        return decodeURIComponent(escape(s));
+      }
+      catch(e){
+        safeLog('Erro ao decodificar string utf8: ' + s);
+        return s;
       }
     }
 
@@ -251,6 +272,26 @@ var $j = jQuery.noConflict();
       return true;
     }
 
+
+    function validatesIfValueIsInSet(value, targetId, set){
+
+      safeLog(value);
+      safeLog(set);
+
+      //se array contem chave(valor numeric?)
+      if (set[value] == undefined)
+      {
+        var s = [];
+        $.each(set, function(index, value){
+          s.push(value);
+        });
+        s = safeSort(s);
+        handleMessages([{type : 'error', msg : 'Informe um valor que pertença ao conjunto: ' + s.join(', ')}], targetId);
+        return false;
+      }
+
+      return true;
+    }
     
     function postResource(options, errorCallback, completeCallback){
       $.ajax(options).error(errorCallback).complete(completeCallback);
@@ -262,7 +303,8 @@ var $j = jQuery.noConflict();
       $notaFieldElement.val($notaFieldElement.val().replace(',', '.'));
 
       if (validatesIfValueIsNumberic($notaFieldElement.val(), $notaFieldElement.attr('id')) &&
-          validatesIfNumericValueIsInRange($notaFieldElement.val(), $notaFieldElement.attr('id'), 0, 10))
+          validatesIfNumericValueIsInRange($notaFieldElement.val(), $notaFieldElement.attr('id'), 0, 10) && 
+          validatesIfValueIsInSet($notaFieldElement.val(), $notaFieldElement.attr('id'), $tableDadosDiario.data('regra_avaliacao').opcoes_notas))
       {
       
         beforeChangeResource($notaFieldElement);
@@ -288,7 +330,8 @@ var $j = jQuery.noConflict();
       $notaExameFieldElement.val($notaExameFieldElement.val().replace(',', '.'));
 
       if (validatesIfValueIsNumberic($notaExameFieldElement.val(), $notaExameFieldElement.attr('id')) &&
-          validatesIfNumericValueIsInRange($notaExameFieldElement.val(), $notaExameFieldElement.attr('id'), 0, 10))
+          validatesIfNumericValueIsInRange($notaExameFieldElement.val(), $notaExameFieldElement.attr('id'), 0, 10) && 
+          validatesIfValueIsInSet($notaExameFieldElement.val(), $notaExameFieldElement.attr('id'), $tableDadosDiario.data('regra_avaliacao').opcoes_notas))
       {
 
         beforeChangeResource($notaExameFieldElement);
@@ -340,7 +383,7 @@ var $j = jQuery.noConflict();
 
 
     function getEtapaParecer(){
-      if ($tableDadosDiario.data.regra_avaliacao.tipo_parecer_descritivo.split('_')[0] == 'anual')
+      if ($tableDadosDiario.data('regra_avaliacao').tipo_parecer_descritivo.split('_')[0] == 'anual')
         var etapaParecer = 'An';
       else
         var etapaParecer = $('#etapa').val();
@@ -606,7 +649,9 @@ var $j = jQuery.noConflict();
 
       $linha.appendTo($tableDadosDiario);
       $tableDadosDiario.show();
-      $tableDadosDiario.data.regra_avaliacao = regraAvaliacao;
+
+      //regraAvaliacao.opcoes_notas = safeSortArray(regraAvaliacao.opcoes_notas);
+      $tableDadosDiario.data('regra_avaliacao', regraAvaliacao);
     }
 
 
@@ -658,8 +703,8 @@ var $j = jQuery.noConflict();
         {
 
           setTableDadosDiario(dataResponse.regra_avaliacao);
-          var useNota = $tableDadosDiario.data.regra_avaliacao.tipo_nota != 'nenhum';
-          var useParecer = $tableDadosDiario.data.regra_avaliacao.tipo_parecer_descritivo != 'nenhum';
+          var useNota = $tableDadosDiario.data('regra_avaliacao').tipo_nota != 'nenhum';
+          var useParecer = $tableDadosDiario.data('regra_avaliacao').tipo_parecer_descritivo != 'nenhum';
 
           //set headers
           var $linha = $('<tr />');
@@ -671,7 +716,7 @@ var $j = jQuery.noConflict();
           {
             $('<th />').html('Nota').appendTo($linha);
 
-            if ($tableDadosDiario.data.regra_avaliacao.quantidade_etapas == $('#etapa').val())
+            if ($tableDadosDiario.data('regra_avaliacao').quantidade_etapas == $('#etapa').val())
               $('<th />').html('Nota exame').appendTo($linha);
           }
 
@@ -699,10 +744,11 @@ var $j = jQuery.noConflict();
 
             //nota
             var getFieldNota = function(notaAtual, klass, id){
+
+              var opcoesNotas = $tableDadosDiario.data('regra_avaliacao').opcoes_notas;
         
-              if($tableDadosDiario.data.regra_avaliacao.tipo_nota == 'conceitual')
+              if($tableDadosDiario.data('regra_avaliacao').tipo_nota == 'conceitual')
               {
-                var opcoesNotas = $tableDadosDiario.data.regra_avaliacao.opcoes_notas;
                 var $notaField = $('<select />').addClass(klass).attr('id', id).data('matricula_id', value.matricula_id);
 
                 //adiciona options
@@ -729,7 +775,7 @@ var $j = jQuery.noConflict();
             if(useNota){
               $('<td />').html(getFieldNota(value.nota_atual, 'nota-matricula', 'nota-matricula-' + value.matricula_id)).addClass('center').appendTo($linha);
 
-              if ($tableDadosDiario.data.regra_avaliacao.quantidade_etapas == $('#etapa').val())
+              if ($tableDadosDiario.data('regra_avaliacao').quantidade_etapas == $('#etapa').val())
               {
 
                 var $fieldNotaExame = getFieldNota(value.nota_exame, 'nota-exame-matricula', 'nota-exame-matricula-' + value.matricula_id);
