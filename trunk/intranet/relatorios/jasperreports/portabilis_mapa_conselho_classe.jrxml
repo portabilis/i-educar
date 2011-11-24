@@ -318,9 +318,11 @@
 WHERE escola_ano_letivo.ativo = 1 AND
 	    escola_ano_letivo.ref_cod_escola = matricula.ref_ref_cod_escola AND
 	    escola_ano_letivo.ano = $P{ano} AND
-	    matricula_turma.ref_cod_turma = $P{turma} AND
+	    matricula_turma.ref_cod_turma = $P{turma}  AND
 	    matricula.ultima_matricula = 1 AND
-	    matricula.ativo = 1
+	    matricula.ativo = 1 AND
+              matricula_turma.data_cadastro = (select max(mt.data_cadastro) from matricula_turma mt where
+              matricula_turma.ref_cod_matricula = mt.ref_cod_matricula)
 
 ORDER BY nm_aluno, cod_aluno]]>
 	</queryString>
@@ -494,6 +496,20 @@ ORDER BY nm_aluno, cod_aluno]]>
 				<reportElement x="8" y="4" width="57" height="46"/>
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
+			<staticText>
+				<reportElement x="704" y="122" width="36" height="12"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ano:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="740" y="122" width="42" height="12"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ano}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<summary>

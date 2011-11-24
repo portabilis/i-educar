@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_resultado_final" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="150"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Crosstab Data Text" hAlign="Center"/>
 	<style name="table">
@@ -274,7 +274,9 @@ WHERE escola_ano_letivo.ativo = 1 AND
 	    escola_ano_letivo.ano = $P{ano} AND
 	    matricula_turma.ref_cod_turma = $P{turma} AND
 	    matricula.ativo = 1 AND
-              matricula.ultima_matricula = 1
+              matricula.ultima_matricula = 1 AND
+              matricula_turma.data_cadastro = (select max(mt.data_cadastro) from matricula_turma mt where
+              matricula_turma.ref_cod_matricula = mt.ref_cod_matricula)
 
 ORDER BY nm_aluno, cod_aluno]]>
 	</queryString>
@@ -365,7 +367,7 @@ ORDER BY nm_aluno, cod_aluno]]>
 				<textFieldExpression><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="10" y="4" width="57" height="46"/>
+				<reportElement x="9" y="4" width="57" height="46"/>
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
 			<textField>
@@ -444,6 +446,20 @@ ORDER BY nm_aluno, cod_aluno]]>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Nº: "+$F{numero}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="712" y="122" width="29" height="12"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ano:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="741" y="122" width="45" height="12"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ano}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

@@ -623,6 +623,7 @@
              matricula.ativo = 1 AND
 			 matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
              matricula_turma.ref_cod_turma = $P{turma} AND
+             matricula_turma.ativo = 1 AND
              matricula.ano = $P{ano} AND
              (SELECT CASE WHEN $P{matricula} = 0 THEN
                    matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
