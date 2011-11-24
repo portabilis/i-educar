@@ -254,33 +254,69 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
       $canPost = false;
       $this->appendMsg("Nota de recuperação não lançada, pois a fórmula de recuperação é diferente do tipo média recuperação.");
     }
-    elseif ($canPost && $this->getRequest()->etapa == 'Rc')
+    elseif ($canPost)
     {
       $etapasWithoutNotas = array();
-      $hasAllNotas = true;
-      foreach(range(1, $this->getService()->getOption('etapas'), 1) as $etapa){
+      $hasPreviousNotas = true;
+
+      if($this->getRequest()->etapa == 'Rc')
+        $etapaRequest = $this->getService()->getOption('etapas');
+      else
+        $etapaRequest = $this->getRequest()->etapa;
+
+      for($etapa = 1; $etapa <= $etapaRequest; $etapa++){
         $nota = $this->getNotaAtual($etapa);
 
-        if(empty($nota) && ! is_numeric($nota)){
+        if(($etapa != $this->getRequest()->etapa || $this->getRequest()->etapa == 'Rc') && empty($nota) && ! is_numeric($nota)){
 
-          if($hasAllNotas){
-            $hasAllNotas = false;
+          if($hasPreviousNotas){
+            $hasPreviousNotas = false;
             $canPost = false;
           }
           $etapasWithoutNotas[] = $etapa;
         }
       }
 
-      if (! $hasAllNotas)
-        $this->appendMsg("Nota exame somente pode ser lançada após lançar notas nas etapas: " . join(', ', $etapasWithoutNotas) . ' deste componente curricular.');
+      if (! $hasPreviousNotas){
+        $this->appendMsg("Nota somente pode ser lançada após lançar notas nas etapas: " . join(', ', $etapasWithoutNotas) . ' deste componente curricular.');
+      }
     }
-    
     return $canPost;
   }
 
 
   protected function canPostFalta(){
-    return $this->canPost() && $this->validatesValueOfAttValueIsNumeric(false);
+    $canPost = $this->canPost() && 
+              $this->validatesValueOfAttValueIsNumeric(false) &&
+              $this->setService();
+
+    if ($canPost && is_numeric($this->getRequest()->etapa))
+    {
+      $etapasWithoutFaltas = array();
+      $hasPreviousFaltas = true;
+      for($etapa = 1; $etapa <= $this->getRequest()->etapa; $etapa++){
+        $falta = $this->getFaltaAtual($etapa);
+
+        if($etapa != $this->getRequest()->etapa && empty($falta) && ! is_numeric($falta)){
+          if($hasPreviousFaltas){
+            $hasPreviousFaltas = false;
+            $canPost = false;
+          }
+          $etapasWithoutFaltas[] = $etapa;
+        }
+      }
+
+      if (! $hasPreviousFaltas){
+        if ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE){
+          $this->appendMsg("Falta somente pode ser lançada após lançar faltas nas etapas anteriores: " . join(', ', $etapasWithoutFaltas) . ' deste componente curricular.');
+        }
+        else{
+          $this->appendMsg("Falta somente pode ser lançada após lançar faltas nas etapas anteriores: " . join(', ', $etapasWithoutFaltas) . '.');
+        }
+      }
+    }
+
+    return $canPost;
   }
 
 
@@ -301,7 +337,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
       elseif ($tpParecer == $cnsParecer::ETAPA_COMPONENTE || $tpParecer == $cnsParecer::ANUAL_COMPONENTE){
         $canPost = $this->validatesPresenceOfComponenteCurricularId(false);
       }
-    }
+    }    
 
     return $canPost;
   }
@@ -464,7 +500,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
   protected function postFalta(){
 
-    $canPost = $this->canPostFalta() && $this->setService();
+    $canPost = $this->canPostFalta();
     if ($canPost && $this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
       $canPost = $this->validatesPresenceOfComponenteCurricularId(false);
 
@@ -601,7 +637,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
   protected function getNotaAtual($etapa = null){
-    if (! $etapa)
+    if (is_null($etapa))
       $etapa = $this->getRequest()->etapa;
 
     $nota = urldecode($this->getService()->getNotaComponente($this->getRequest()->componente_curricular_id, $etapa)->nota);
@@ -627,15 +663,19 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  protected function getFaltaAtual()
+  protected function getFaltaAtual($etapa = null)
   {
+
+    if (is_null($etapa))
+      $etapa = $this->getRequest()->etapa;
+
     if ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
     {
-      $falta = $this->getService()->getFalta($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id)->quantidade;
+      $falta = $this->getService()->getFalta($etapa, $this->getRequest()->componente_curricular_id)->quantidade;
     }
     elseif ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL)
     {
-      $falta = $this->getService()->getFalta($this->getRequest()->etapa)->quantidade;
+      $falta = $this->getService()->getFalta($etapa)->quantidade;
     }
 
     return $falta;
