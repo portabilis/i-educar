@@ -20,8 +20,8 @@ tr.rodape {
 }
 
 #feedback-messages {
-  /*position: fixed;
-  bottom: 0px;*/
+  position: fixed;
+  bottom: 0px;
   background-color: #fff;
 }
 
