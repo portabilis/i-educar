@@ -61,8 +61,6 @@ class ProcessamentoController extends Core_Controller_Page_ListController
     $this->ref_cod_turma = $_GET['turma_id'];
     $this->ref_ref_cod_serie = $this->ref_cod_serie = $_GET['serie_id'];
     $this->ano = $_GET['ano'];
-    $this->ref_cod_componente_curricular = $_GET['componente_curricular_id'];
-    $this->etapa = $_GET['etapa'];
 
     if ($this->ref_cod_aluno)
     {
@@ -86,8 +84,6 @@ class ProcessamentoController extends Core_Controller_Page_ListController
     $get_curso = true;
     $get_escola_curso_serie = true;
     $get_turma = true;
-    $get_componente_curricular = true;
-    $get_etapa = true;
     $get_alunos_matriculados = true;
     include 'include/pmieducar/educar_campo_lista.php';
   }

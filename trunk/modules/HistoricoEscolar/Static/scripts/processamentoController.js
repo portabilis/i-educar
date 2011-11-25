@@ -33,11 +33,29 @@ var $j = jQuery.noConflict();
     var $resultTable = $('#form_resultado .tablelistagem').addClass('horizontal-expand');
     $resultTable.children().remove();
 
+    $('<div />').attr('id', 'first-bar-action')
+                .attr('class', 'bar-action')
+                .prependTo($resultTable.parent());
+
+    $('<div />').attr('id', 'second-bar-action')
+                .attr('class', 'bar-action')
+                .appendTo($resultTable.parent());
+
+    var $barActions = $('.bar-action');
+
     var PageUrlBase = 'processamento';
     var ApiUrlBase = 'processamentoApi';
 
     var $navActions = $('<p />').attr('id', 'nav-actions');
     $navActions.prependTo($formFilter.parent()); 
+
+    var $tableSearchDetails = $('<table />')
+                              .attr('id', 'search-details')
+                              .addClass('styled')
+                              .addClass('horizontal-expand')
+                              .addClass('center')
+                              .hide()
+                              .prependTo($formFilter.parent());
 
     var $feedbackMessages = $('<div />').attr('id', 'feedback-messages').appendTo($formFilter.parent());
 
@@ -67,7 +85,6 @@ var $j = jQuery.noConflict();
         for(varName in vars){
           _vars += '&'+varName+'='+vars[varName];
         }
-
         return urlBase + '?' + _vars;
       }
     };
@@ -90,7 +107,6 @@ var $j = jQuery.noConflict();
         };
 
         return resourceUrlBuilder.buildUrl(urlBase, $.extend(vars, additionalVars));
-
       }
     };
 
@@ -113,7 +129,6 @@ var $j = jQuery.noConflict();
         };
 
         return resourceUrlBuilder.buildUrl(urlBase, $.extend(vars, additionalVars));
-
       }
     };
 
@@ -166,7 +181,7 @@ var $j = jQuery.noConflict();
     }
 
  
-    var postPromocaoMatricula = function(){
+    var postProcessamento = function(){
 
       var $proximoMatriculaIdField = $('#proximo-matricula-id');
       $proximoMatriculaIdField.data('initial_matricula_id', $proximoMatriculaIdField.val())
@@ -178,7 +193,7 @@ var $j = jQuery.noConflict();
           url : postResourceUrlBuilder.buildUrl(ApiUrlBase, 'promocao', {matricula_id : $proximoMatriculaIdField.val()}),
           dataType : 'json',
           data : {},
-          success : handlePostPromocaoMatricula
+          success : handlePostProcessamento
         };
 
         postResource(options, handleErrorPost);
@@ -209,24 +224,12 @@ var $j = jQuery.noConflict();
     }
 
 
-    function handlePostPromocaoMatricula(dataResponse){
+    function handlePostProcessamento(dataResponse){
 
       safeLog(dataResponse);
-
       handleMessages(dataResponse.msgs);
-      var $proximoMatriculaIdField = $('#proximo-matricula-id');
-      $proximoMatriculaIdField.val(dataResponse.result.proximo_matricula_id);
+      safeLog('#TODO handlePostProcessamento');
 
-      if($('#continuar-processo').is(':checked') && 
-         $.isNumeric($proximoMatriculaIdField.val()) &&
-         $proximoMatriculaIdField.data('initial_matricula_id') != $proximoMatriculaIdField.val()){
-        $('#promover-matricula').click();
-      }
-      else if(($('#continuar-processo').is(':checked') && 
-             $proximoMatriculaIdField.data('initial_matricula_id') == $proximoMatriculaIdField.val()) ||
-             ! $.isNumeric($proximoMatriculaIdField.val())){
-        alert('Processo finalizado');
-      }
     }
 
     function handleMessages(messages, targetId){
@@ -258,10 +261,45 @@ var $j = jQuery.noConflict();
     }
 
 
+    function setTableSearchDetails(dataDetails){
+      $('<caption />').html('<strong>Proccessamento histórico</strong>').appendTo($tableSearchDetails);
+
+      //set headers table
+      var $linha = $('<tr />');
+      $('<th />').html('Ano').appendTo($linha);
+      $('<th />').html('Escola').appendTo($linha);
+      $('<th />').html('Curso').appendTo($linha);
+      $('<th />').html('Serie').appendTo($linha);
+      $('<th />').html('Turma').appendTo($linha);
+      $('<th />').html('Matricula').appendTo($linha);
+
+      $linha.appendTo($tableSearchDetails);
+
+      var $linha = $('<tr />').addClass('even');
+
+      $('<td />').html($('#ano').val()).appendTo($linha);
+
+      //field escola pode ser diferente de select caso usuario comum 
+      var $htmlEscolaField = $('#ref_cod_escola').children("[selected='selected']").html() ||
+                             $j('#tr_nm_escola span:last').html();
+      $('<td />').html(safeToUpperCase($htmlEscolaField)).appendTo($linha);
+
+      $('<td />').html(safeToUpperCase($('#ref_cod_curso').children("[value!=''][selected='selected']").html()  || 'Todos')).appendTo($linha);
+      $('<td />').html(safeToUpperCase($('#ref_ref_cod_serie').children("[value!=''][selected='selected']").html()  || 'Todas')).appendTo($linha);
+      $('<td />').html(safeToUpperCase($('#ref_cod_turma').children("[value!=''][selected='selected']").html()  || 'Todas')).appendTo($linha);
+      $('<td />').html(safeToUpperCase($('#ref_cod_matricula').children("[value!=''][selected='selected']").html() || 'Todas')).appendTo($linha);
+     
+      $linha.appendTo($tableSearchDetails);
+      $tableSearchDetails.show();
+
+      $tableSearchDetails.data('details', dataDetails);
+    }
+
     //exibe formulário nova consulta
     function showSearchForm(event){
       //$(this).hide();
       $navActions.html('');
+      $tableSearchDetails.children().remove();
       $resultTable.children().fadeOut('fast').remove();
       $formFilter.fadeIn('fast', function(){
         $(this).show()
@@ -289,49 +327,71 @@ var $j = jQuery.noConflict();
 
       showNewSearchButton();
 
-      try{      
-
+      //try{      
         handleMessages(dataResponse.msgs);
 
-        var $text = $('<p />').html('Quantidade matriculas em andamento: ' + 
-                                    dataResponse.quantidade_matriculas + '<br />');
+        if(! $.isArray(dataResponse.matriculas))
+        {
+           $('<td />')
+            .html('As matriculas n&#227;o poderam ser recuperadas, verifique as mensagens de erro ou tente <a alt="Recarregar página" href="/" style="text-decoration:underline">recarregar</a>.')
+            .addClass('center')
+            .appendTo($('<tr />').appendTo($resultTable));
+        }
+        else if (dataResponse.matriculas.length < 1)
+        {
+           $('<td />')
+            .html('Sem matriculas em andamento nesta turma.')
+            .addClass('center')
+            .appendTo($('<tr />').appendTo($resultTable));
+        }
+        else
+        {
+          setTableSearchDetails();
+          //set headers
+          var $linha = $('<tr />');
+          $('<th />').html('Selecionar').appendTo($linha);
+          $('<th />').html('Curso').appendTo($linha);
+          $('<th />').html('Série').appendTo($linha);
+          $('<th />').html('Turma').appendTo($linha);
+          $('<th />').html('Matricula').appendTo($linha);
+          $('<th />').html('Aluno').appendTo($linha);
+          $('<th />').html('Situa&#231;&#227;o').appendTo($linha);
+          $linha.appendTo($resultTable);
 
-        $('<input />').attr('type', 'checkbox').attr('id', 'continuar-processo').attr('name', 'continuar-processo').appendTo($text);
-        $('<span />').html('Continuar processo <br />').appendTo($text);
+          //set rows
+          $.each(dataResponse.matriculas, function(index, value){
 
-        $('<span />').html('proxima matricula:').appendTo($text);
-        $('<input />').attr('type', 'text').attr('name', 'proximo-matricula-id').attr('id', 'proximo-matricula-id').val('0').appendTo($text);
+            var $checkbox = $('<input />')
+                            .attr('type', 'checkbox')
+                            .attr('name', 'processar-matricula')
+                            .attr('value', 'sim')
+                            .attr('id', 'matricula-id-' + value.matricula_id)
+                            .attr('class', 'matricula')
+                            .data('matricula_id', value.matricula_id);
 
-        $('<br />').appendTo($text);
+            var $linha = $('<tr />');
+            $('<td />').html($checkbox).addClass('center').appendTo($linha);
+            $('<td />').html(value.nome_curso).addClass('center').appendTo($linha);
+            $('<td />').html(value.nome_serie).addClass('center').appendTo($linha);
+            $('<td />').html(value.nome_turma).addClass('center').appendTo($linha);
+            $('<td />').html(value.matricula_id).addClass('center').appendTo($linha);
+            $('<td />').html(value.aluno_id + " - " + safeToUpperCase(value.nome)).appendTo($linha);
+            $('<td />').html(value.situacao_historico).addClass('center').appendTo($linha);
 
-        $('<a />').attr('id', 'promover-matricula')
-                  .attr('href', '#')
-                  .html('Iniciar processo')
-                  .attr('style', 'text-decoration:underline')
-                  .bind('click', postPromocaoMatricula)
-                  .appendTo($text);
+            $linha.fadeIn('slow').appendTo($resultTable);
+          });//fim each matriculas
 
-        $('<span />').html(' ').appendTo($text);
-
-        $('<a />').attr('id', 'clear-messages')
-                  .attr('href', '#')
-                  .html('Limpar mensagens')
-                  .attr('style', 'text-decoration:underline')
-                  .bind('click', function(){
-                    $('#feedback-messages').children().remove();
-                  })
-                  .appendTo($text);
-
-        $('<td />').html($text).appendTo($('<tr />').appendTo($resultTable));
-
-      }
+          $resultTable.find('tr:even').addClass('even');
+          $resultTable.addClass('styled').find('checkbox:first').focus();
+        }
+      /*}
       catch(error){
         showSearchButton();
 
         handleMessages([{type : 'error', msg : 'Ocorreu um erro ao exibir as matriculas, por favor tente novamente, detalhes: ' + error}], '');
 
         safeLog(dataResponse);
-      }
+      }*/
     }
 
     function handleErrorMatriculasSearch(response){
@@ -346,10 +406,10 @@ var $j = jQuery.noConflict();
     var onClickSearchEvent = function(event){
       if (validatesPresenseOfValueInRequiredFields())
       {
-        matriculasSearchOptions.url = getResourceUrlBuilder.buildUrl(ApiUrlBase, 'quantidade_matriculas', {matricula_id : $('#ref_cod_matricula').val()});
+        matriculasSearchOptions.url = getResourceUrlBuilder.buildUrl(ApiUrlBase, 'matriculas', {matricula_id : $('#ref_cod_matricula').val()});
 
         if (window.history && window.history.pushState)
-          window.history.pushState('', '', getResourceUrlBuilder.buildUrl(PageUrlBase, 'quantidade_matriculas'));
+          window.history.pushState('', '', getResourceUrlBuilder.buildUrl(PageUrlBase, 'matriculas'));
 
         $resultTable.children().fadeOut('fast').remove();
 

@@ -231,6 +231,51 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
   }
 */
 
+
+  protected function getNomeSerie($serieId){
+    $sql = "select nm_serie from pmieducar.serie where cod_serie = $serieId";
+
+    $db = new Db();
+    $nome = $db->select($sql);
+    return $nome[0]['nm_serie'];
+  }
+
+
+  protected function existsHistorico($alunoId, $ano){
+    $sql = "select 1 from pmieducar.historico_escolar where ref_cod_aluno = $alunoId and ano = $ano";
+
+    $db = new Db();
+    $exists = $db->selectField($sql);
+
+    return ($situacao == '1');
+  }
+
+
+  protected function getSituacaoHistorico($alunoId, $ano){
+    if ($this->existsHistorico($alunoId, $ano))
+        $situacao = 'Histórico processado';
+    else 
+        $situacao = 'Não processado';
+
+    return $situacao;
+  }
+
+
+  protected function getLinkToHistorico($alunoId, $ano){
+    $sql = "select sequencial from pmieducar.historico_escolar where ref_cod_aluno = $alunoId and ano = $ano";
+
+    $db = new Db();
+    $sequencial = $db->selectField($sql);
+    
+    if (is_numeric($sequencial))
+        $link = "/intranet/educar_historico_escolar_det.php?ref_cod_aluno=$alunoId&sequencial=$sequencial";
+    else 
+        $link = '';
+
+    return $link;
+  }
+
+
   protected function getMatriculas(){
     $matriculas = array();
 
@@ -238,7 +283,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
       
       $alunos = new clsPmieducarMatriculaTurma();
-      $alunos->setOrderby('nome');
+      $alunos->setOrderby('ref_cod_curso, ref_ref_cod_serie, ref_cod_turma, nome');
 
       $alunos = $alunos->lista(
         $this->getRequest()->matricula_id,
@@ -286,17 +331,13 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         $matricula['aluno_id'] = $aluno['ref_cod_aluno'];
         $matricula['nome'] = ucwords(strtolower(utf8_encode($aluno['nome_aluno'])));
         $matricula['nome_curso'] = ucwords(strtolower(utf8_encode($aluno['nm_curso'])));
-        $matricula['nome_serie'] = ucwords(strtolower(utf8_encode('#todo nome serie')));
+        $matricula['nome_serie'] = ucwords(strtolower(utf8_encode($this->getNomeSerie($aluno['ref_ref_cod_serie']))));
         $matricula['nome_turma'] = ucwords(strtolower(utf8_encode($aluno['nm_turma'])));
-        $matricula['situacao_historico'] = ucwords(strtolower(utf8_encode('#todo situacao historico')));
-        $matricula['link_to_historico'] = ucwords(strtolower(utf8_encode('#todo link_to historico')));
+        $matricula['situacao_historico'] = ucwords(strtolower(utf8_encode($this->getSituacaoHistorico($aluno['ref_cod_aluno'], $this->getRequest()->ano))));
+        $matricula['link_to_historico'] = ucwords(strtolower(utf8_encode($this->getLinkToHistorico($aluno['ref_cod_aluno'], $this->getRequest()->ano))));
         $matriculas[] = $matricula;
       }
     }
-
-    var_dump($aluno);
-
-    //return array();
 
     return $matriculas;
   }
