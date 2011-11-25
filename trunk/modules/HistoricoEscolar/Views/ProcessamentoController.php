@@ -53,13 +53,14 @@ class ProcessamentoController extends Core_Controller_Page_ListController
 
   protected function setVars()
   {
+
     $this->ref_cod_aluno = $_GET['aluno_id'];
     $this->ref_cod_instituicao = $_GET['instituicao_id'];
     $this->ref_cod_escola = $_GET['escola_id'];
     $this->ref_cod_curso = $_GET['curso_id'];
     $this->ref_cod_turma = $_GET['turma_id'];
     $this->ref_ref_cod_serie = $this->ref_cod_serie = $_GET['serie_id'];
-    $this->ano_escolar = $_GET['ano_escolar'];
+    $this->ano = $_GET['ano'];
     $this->ref_cod_componente_curricular = $_GET['componente_curricular_id'];
     $this->etapa = $_GET['etapa'];
 
@@ -76,16 +77,17 @@ class ProcessamentoController extends Core_Controller_Page_ListController
   {
 
     #variaveis usadas pelo modulo /intranet/include/pmieducar/educar_campo_lista.php
-    $this->verificar_campos_obrigatorios = True;
-    $this->add_onchange_events = True;
+    $this->verificar_campos_obrigatorios = true;
+    $this->add_onchange_events = true;
 
-    $get_escola = $escola_obrigatorio = $listar_escolas_alocacao_professor = TRUE;
-    $get_ano_escolar = $ano_escolar_obrigatorio = TRUE;
-    $get_curso = $curso_obrigatorio = $listar_somente_cursos_funcao_professor = TRUE;
-    $get_escola_curso_serie = $escola_curso_serie_obrigatorio = TRUE;
-    $get_turma = $turma_obrigatorio = $listar_turmas_periodo_alocacao_professor = TRUE;
-    $get_componente_curricular = $componente_curricular_obrigatorio = $listar_componentes_curriculares_professor = TRUE;
-    $get_etapa = $etapa_obrigatorio = TRUE;
+    $this->campoNumero( "ano", "Ano", date("Y"), 4, 4, true);
+    $instituicao_obrigatorio = true;
+    $get_escola = $escola_obrigatorio = true;
+    $get_curso = true;
+    $get_escola_curso_serie = true;
+    $get_turma = true;
+    $get_componente_curricular = true;
+    $get_etapa = true;
     $get_alunos_matriculados = true;
     include 'include/pmieducar/educar_campo_lista.php';
   }
@@ -104,9 +106,9 @@ class ProcessamentoController extends Core_Controller_Page_ListController
     $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery.js"></script>');
     $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery.form.js"></script>');
 
-    $this->appendOutput('<link type="text/css" rel="stylesheet" href="/modules/Avaliacao/Static/styles/diarioController.css"></script>');
+    $this->appendOutput('<link type="text/css" rel="stylesheet" href="/modules/HistoricoEscolar/Static/styles/processamentoController.css"></script>');
 
-    $this->appendOutput('<script type="text/javascript" charset="utf-8" src="/modules/Avaliacao/Static/scripts/diarioController.js?timestamp='.date('dmY').'"></script>');
+    $this->appendOutput('<script type="text/javascript" charset="utf-8" src="/modules/HistoricoEscolar/Static/scripts/processamentoController.js?timestamp='.date('dmY').'"></script>');
   }
 }
 ?>
