@@ -33,13 +33,12 @@ var $j = jQuery.noConflict();
     var $resultTable = $('#form_resultado .tablelistagem').addClass('horizontal-expand');
     $resultTable.children().remove();
 
-    var promocaoUrlBase = 'promocao';
-    var promocaoAjaxUrlBase = 'promocaoAjax';
+    var PageUrlBase = 'processamento';
+    var ApiUrlBase = 'processamentoApi';
 
     var $navActions = $('<p />').attr('id', 'nav-actions');
     $navActions.prependTo($formFilter.parent()); 
 
-    var $feedbackMessagesSuccess = $('<div />').attr('id', 'feedback-messages-success').appendTo($formFilter.parent());
     var $feedbackMessages = $('<div />').attr('id', 'feedback-messages').appendTo($formFilter.parent());
 
     function fixupFieldsWidth(){
@@ -85,7 +84,7 @@ var $j = jQuery.noConflict();
           curso_id : $('#ref_cod_curso').val(),
           serie_id : $('#ref_ref_cod_serie').val(),
           turma_id : $('#ref_cod_turma').val(),
-          ano_escolar : $('#ano_escolar').val(),
+          ano : $('#ano').val(),
           componente_curricular_id : $('#ref_cod_componente_curricular').val(),
           etapa : $('#etapa').val()
         };
@@ -107,7 +106,7 @@ var $j = jQuery.noConflict();
           curso_id : $('#ref_cod_curso').val(),
           serie_id : $('#ref_ref_cod_serie').val(),
           turma_id : $('#ref_cod_turma').val(),
-          ano_escolar : $('#ano_escolar').val(),
+          ano : $('#ano').val(),
           componente_curricular_id : $('#ref_cod_componente_curricular').val(),
           etapa : $('#etapa').val(),
           matricula_id : ''
@@ -130,7 +129,7 @@ var $j = jQuery.noConflict();
           curso_id : $('#ref_cod_curso').val(),
           serie_id : $('#ref_ref_cod_serie').val(),
           turma_id : $('#ref_cod_turma').val(),
-          ano_escolar : $('#ano_escolar').val(),
+          ano : $('#ano').val(),
           componente_curricular_id : $('#ref_cod_componente_curricular').val(),
           etapa : $('#etapa').val()
         };
@@ -176,7 +175,7 @@ var $j = jQuery.noConflict();
       {
 
         var options = {
-          url : postResourceUrlBuilder.buildUrl(promocaoAjaxUrlBase, 'promocao', {matricula_id : $proximoMatriculaIdField.val()}),
+          url : postResourceUrlBuilder.buildUrl(ApiUrlBase, 'promocao', {matricula_id : $proximoMatriculaIdField.val()}),
           dataType : 'json',
           data : {},
           success : handlePostPromocaoMatricula
@@ -230,16 +229,32 @@ var $j = jQuery.noConflict();
       }
     }
 
-
     function handleMessages(messages, targetId){
+
+      var hasErrorMessages = false;
+      var hasSuccessMessages = false;
 
       for (var i = 0; i < messages.length; i++){
 
-        if (messages[i].type == 'success')
-          $('<p />').addClass(messages[i].type).html(messages[i].msg).appendTo($feedbackMessagesSuccess);
+        if (messages[i].type != 'error')
+          var delay = 10000;
         else
-          $('<p />').addClass(messages[i].type).html(messages[i].msg).appendTo($feedbackMessages);
+          var delay = 60000;
+
+        $('<p />').addClass(messages[i].type).html(messages[i].msg).appendTo($feedbackMessages).delay(delay).fadeOut(function(){$(this).remove()}).data('target_id', targetId);
+
+        if (! hasErrorMessages && messages[i].type == 'error')
+          hasErrorMessages = true;
+        else if(! hasSuccessMessages && messages[i].type == 'success')
+          hasSuccessMessages = true;
       }
+
+      if (targetId && hasErrorMessages)
+        $('#'+targetId).addClass('error').removeClass('success');
+      else if(targetId && hasSuccessMessages)
+        $('#'+targetId).addClass('success').removeClass('error');
+      else
+        $('#'+targetId).removeClass('success').removeClass('error');
     }
 
 
@@ -262,6 +277,13 @@ var $j = jQuery.noConflict();
       );
     }
 
+    function showSearchButton(){
+      $navActions.html(
+        $("<a href='#'>Nova consulta</a>")
+        .bind('click', showSearchForm)
+        .attr('style', 'text-decoration: underline')
+      );
+    }
 
     function handleMatriculasSearch(dataResponse){ 
 
@@ -297,7 +319,6 @@ var $j = jQuery.noConflict();
                   .attr('style', 'text-decoration:underline')
                   .bind('click', function(){
                     $('#feedback-messages').children().remove();
-                    $('#feedback-messages-success').children().remove();
                   })
                   .appendTo($text);
 
@@ -325,10 +346,10 @@ var $j = jQuery.noConflict();
     var onClickSearchEvent = function(event){
       if (validatesPresenseOfValueInRequiredFields())
       {
-        matriculasSearchOptions.url = getResourceUrlBuilder.buildUrl(promocaoAjaxUrlBase, 'quantidade_matriculas', {matricula_id : $('#ref_cod_matricula').val()});
+        matriculasSearchOptions.url = getResourceUrlBuilder.buildUrl(ApiUrlBase, 'quantidade_matriculas', {matricula_id : $('#ref_cod_matricula').val()});
 
         if (window.history && window.history.pushState)
-          window.history.pushState('', '', getResourceUrlBuilder.buildUrl(promocaoUrlBase, 'quantidade_matriculas'));
+          window.history.pushState('', '', getResourceUrlBuilder.buildUrl(PageUrlBase, 'quantidade_matriculas'));
 
         $resultTable.children().fadeOut('fast').remove();
 
