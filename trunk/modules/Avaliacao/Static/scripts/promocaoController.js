@@ -262,6 +262,13 @@ var $j = jQuery.noConflict();
       );
     }
 
+    function showSearchButton(){
+      $navActions.html(
+        $("<a href='#'>Nova consulta</a>")
+        .bind('click', showSearchForm)
+        .attr('style', 'text-decoration: underline')
+      );
+    }
 
     function handleMatriculasSearch(dataResponse){ 
 
