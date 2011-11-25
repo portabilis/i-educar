@@ -1,0 +1,315 @@
+-- Schema: "alimentacao"
+-- DROP SCHEMA alimentacao;
+CREATE SCHEMA alimentacao
+  AUTHORIZATION portabilis;
+GRANT ALL ON SCHEMA alimentacao TO portabilis;
+
+-- Sequence: alimentacao.cardapio_idcar_seq
+-- DROP SEQUENCE alimentacao.cardapio_idcar_seq;
+CREATE SEQUENCE alimentacao.cardapio_idcar_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE alimentacao.cardapio_idcar_seq OWNER TO portabilis;
+-- Sequence: alimentacao.envio_mensal_padroes_idemp_seq
+-- DROP SEQUENCE alimentacao.envio_mensal_padroes_idemp_seq;
+CREATE SEQUENCE alimentacao.envio_mensal_padroes_idemp_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 9
+  CACHE 1;
+ALTER TABLE alimentacao.envio_mensal_padroes_idemp_seq OWNER TO portabilis;
+-- Sequence: alimentacao.envio_mensal_escola_ideme_seq
+-- DROP SEQUENCE alimentacao.envio_mensal_escola_ideme_seq;
+CREATE SEQUENCE alimentacao.envio_mensal_escola_ideme_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 9
+  CACHE 1;
+ALTER TABLE alimentacao.envio_mensal_escola_ideme_seq OWNER TO portabilis;
+
+-- Sequence: alimentacao.imc_idimc_seq
+-- DROP SEQUENCE alimentacao.imc_idimc_seq;
+CREATE SEQUENCE alimentacao.imc_idimc_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 8
+  CACHE 1;
+ALTER TABLE alimentacao.imc_idimc_seq OWNER TO portabilis;
+
+-- Sequence: alimentacao.produto_fornecedor_idpf_seq
+-- DROP SEQUENCE alimentacao.produto_fornecedor_idpf_seq;
+CREATE SEQUENCE alimentacao.produto_fornecedor_idpf_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 7
+  CACHE 1;
+ALTER TABLE alimentacao.produto_fornecedor_idpf_seq OWNER TO portabilis;
+
+-- Sequence: alimentacao.produto_grupo_idpg_seq
+-- DROP SEQUENCE alimentacao.produto_grupo_idpg_seq;
+CREATE SEQUENCE alimentacao.produto_grupo_idpg_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 3
+  CACHE 1;
+ALTER TABLE alimentacao.produto_grupo_idpg_seq OWNER TO portabilis;
+-- Sequence: alimentacao.produto_unidade_idpu_seq
+-- DROP SEQUENCE alimentacao.produto_unidade_idpu_seq;
+CREATE SEQUENCE alimentacao.produto_unidade_idpu_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 3
+  CACHE 1;
+ALTER TABLE alimentacao.produto_unidade_idpu_seq OWNER TO portabilis;
+-- Sequence: alimentacao.produto_idpro_seq
+-- DROP SEQUENCE alimentacao.produto_idpro_seq;
+CREATE SEQUENCE alimentacao.produto_idpro_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE alimentacao.produto_idpro_seq OWNER TO portabilis;
+
+-- Table: alimentacao.usuario_escola
+-- DROP TABLE alimentacao.usuario_escola;
+CREATE TABLE alimentacao.usuario_escola
+(
+  ref_usuario integer NOT NULL,
+  ref_escola integer NOT NULL,
+  dt_cadastro timestamp without time zone NOT NULL,
+  CONSTRAINT pk_usuario_escola PRIMARY KEY (ref_usuario, ref_escola),
+  CONSTRAINT usuario_escola_ref_escola_fkey FOREIGN KEY (ref_escola)
+      REFERENCES pmieducar.escola (cod_escola) MATCH SIMPLE
+      ON UPDATE RESTRICT ON DELETE RESTRICT,
+  CONSTRAINT usuario_escola_ref_usuario_fkey FOREIGN KEY (ref_usuario)
+      REFERENCES pmieducar.usuario (cod_usuario) MATCH SIMPLE
+      ON UPDATE RESTRICT ON DELETE RESTRICT
+) 
+WITH OIDS;
+ALTER TABLE alimentacao.usuario_escola OWNER TO portabilis;
+GRANT ALL ON TABLE alimentacao.usuario_escola TO portabilis;
+
+-- Table: alimentacao.cardapio
+-- DROP TABLE alimentacao.cardapio;
+CREATE TABLE alimentacao.cardapio
+(
+  idcar integer NOT NULL DEFAULT nextval('alimentacao.cardapio_idcar_seq'::regclass),
+  dt_cadastro timestamp without time zone NOT NULL,
+  descricao character varying(250),
+  nm_arquivo character varying(100) NOT NULL,
+  ref_usuario_cad integer NOT NULL,
+  ref_escola integer NOT NULL,
+  path_arquivo character varying(100),
+  CONSTRAINT pk_cardapio PRIMARY KEY (idcar),
+  CONSTRAINT cardapio_ref_escola_fkey FOREIGN KEY (ref_escola)
+      REFERENCES pmieducar.escola (cod_escola) MATCH SIMPLE
+      ON UPDATE RESTRICT ON DELETE RESTRICT,
+  CONSTRAINT cardapio_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad)
+      REFERENCES pmieducar.usuario (cod_usuario) MATCH SIMPLE
+      ON UPDATE RESTRICT ON DELETE RESTRICT
+) 
+WITH OIDS;
+ALTER TABLE alimentacao.cardapio OWNER TO portabilis;
+GRANT ALL ON TABLE alimentacao.cardapio TO portabilis;
+
+-- Table: alimentacao.produto_grupo
+-- DROP TABLE alimentacao.produto_grupo;
+CREATE TABLE alimentacao.produto_grupo
+(
+  idpg integer NOT NULL DEFAULT nextval('alimentacao.produto_grupo_idpg_seq'::regclass),
+  descricao character varying(20) NOT NULL,
+  CONSTRAINT pk_produto_grupo PRIMARY KEY (idpg)
+) 
+WITH OIDS;
+ALTER TABLE alimentacao.produto_grupo OWNER TO portabilis;
+GRANT ALL ON TABLE alimentacao.produto_grupo TO portabilis;
+-- Table: alimentacao.produto_unidade
+-- DROP TABLE alimentacao.produto_unidade;
+CREATE TABLE alimentacao.produto_unidade
+(
+  idpu integer NOT NULL DEFAULT nextval('alimentacao.produto_unidade_idpu_seq'::regclass),
+  descricao character varying(20) NOT NULL,
+  unidade character varying(5) NOT NULL,
+  CONSTRAINT pk_produto_unidade PRIMARY KEY (idpu)
+) 
+WITH OIDS;
+ALTER TABLE alimentacao.produto_unidade OWNER TO portabilis;
+GRANT ALL ON TABLE alimentacao.produto_unidade TO portabilis;
+-- Table: alimentacao.produto
+-- DROP TABLE alimentacao.produto;
+CREATE TABLE alimentacao.produto
+(
+  idpro integer NOT NULL DEFAULT nextval('alimentacao.produto_idpro_seq'::regclass),
+  nm_produto character varying(50) NOT NULL,
+  fator_correcao numeric(4) NOT NULL DEFAULT 0,
+  fator_coccao numeric(4) NOT NULL DEFAULT 0,
+  ref_produto_grupo integer NOT NULL,
+  ref_produto_unidade integer NOT NULL,
+  calorias numeric(4) NOT NULL DEFAULT 0,
+  proteinas numeric(4) NOT NULL DEFAULT 0,
+  CONSTRAINT pk_produto PRIMARY KEY (idpro),
+  CONSTRAINT produto_ref_produto_grupo_fkey FOREIGN KEY (ref_produto_grupo)
+      REFERENCES alimentacao.produto_grupo (idpg) MATCH SIMPLE
+      ON UPDATE RESTRICT ON DELETE RESTRICT,
+  CONSTRAINT produto_ref_produto_unidade_fkey FOREIGN KEY (ref_produto_unidade)
+      REFERENCES alimentacao.produto_unidade (idpu) MATCH SIMPLE
+      ON UPDATE RESTRICT ON DELETE RESTRICT
+) 
+WITH OIDS;
+ALTER TABLE alimentacao.produto OWNER TO portabilis;
+GRANT ALL ON TABLE alimentacao.produto TO portabilis;
+
+-- Table: alimentacao.fornecedor
+-- DROP TABLE alimentacao.fornecedor;
+CREATE TABLE alimentacao.fornecedor
+(
+  idpes integer NOT NULL,
+  descricao character varying(100),
+  CONSTRAINT pk_fornecedor PRIMARY KEY (idpes),
+  CONSTRAINT fornecedor_ref_juridica_fkey FOREIGN KEY (idpes)
+      REFERENCES cadastro.juridica (idpes) MATCH SIMPLE
+      ON UPDATE RESTRICT ON DELETE RESTRICT
+) 
+WITH OIDS;
+ALTER TABLE alimentacao.fornecedor OWNER TO portabilis;
+GRANT ALL ON TABLE alimentacao.fornecedor TO portabilis;
+
+-- Table: alimentacao.produto_fornecedor
+-- DROP TABLE alimentacao.produto_fornecedor;
+CREATE TABLE alimentacao.produto_fornecedor
+(
+  idpf integer NOT NULL DEFAULT nextval('alimentacao.produto_fornecedor_idpf_seq'::regclass),
+  ref_produto integer NOT NULL,
+  ref_fornecedor integer NOT NULL,
+  ano numeric(4) NOT NULL,
+  mes_inicio numeric(2) NOT NULL,
+  mes_fim numeric(2) NOT NULL,
+  pesoouvolume_un numeric(7,2),
+  preco_un numeric(5,2),
+  agri_familiar smallint NOT NULL DEFAULT 0,
+  CONSTRAINT pk_produto_fornecedor PRIMARY KEY (idpf),
+  CONSTRAINT produto_forncedor_ref_fornecedor_fkey FOREIGN KEY (ref_fornecedor)
+      REFERENCES alimentacao.fornecedor (idpes) MATCH SIMPLE
+      ON UPDATE RESTRICT ON DELETE RESTRICT,
+  CONSTRAINT produto_fornecedor_ref_produto_fkey FOREIGN KEY (ref_produto)
+      REFERENCES alimentacao.produto (idpro) MATCH SIMPLE
+      ON UPDATE RESTRICT ON DELETE RESTRICT
+) 
+WITH OIDS;
+ALTER TABLE alimentacao.produto_fornecedor OWNER TO portabilis;
+GRANT ALL ON TABLE alimentacao.produto_fornecedor TO portabilis;
+
+-- Table: alimentacao.envio_mensal_padroes
+-- DROP TABLE alimentacao.envio_mensal_padroes;
+
+CREATE TABLE alimentacao.envio_mensal_padroes
+(
+  idemp integer NOT NULL DEFAULT nextval('alimentacao.envio_mensal_padroes_idemp_seq'::regclass),
+  ano numeric(4) NOT NULL,
+  mes numeric(2) NOT NULL,
+  dias smallint NOT NULL,
+  refeicoes smallint NOT NULL,
+  CONSTRAINT pk_envio_mensal_padores_idemp PRIMARY KEY (idemp)
+) 
+WITH OIDS;
+ALTER TABLE alimentacao.envio_mensal_padroes OWNER TO portabilis;
+GRANT ALL ON TABLE alimentacao.envio_mensal_padroes TO portabilis;
+
+-- Table: alimentacao.envio_mensal_escola
+-- DROP TABLE alimentacao.envio_mensal_escola;
+CREATE TABLE alimentacao.envio_mensal_escola
+(
+  ideme integer NOT NULL DEFAULT nextval('alimentacao.envio_mensal_escola_ideme_seq'::regclass),
+  ref_escola integer NOT NULL,
+  alunos integer NOT NULL DEFAULT 0,
+  ano numeric(4) NOT NULL,
+  mes numeric(2) NOT NULL,
+  dias smallint NOT NULL,
+  refeicoes smallint NOT NULL,
+  dt_cadastro timestamp without time zone NOT NULL,
+  CONSTRAINT pk_envio_mensal_escola_ideme PRIMARY KEY (ideme),
+  CONSTRAINT envio_mensal_escola_ref_escola_fkey FOREIGN KEY (ref_escola)
+      REFERENCES pmieducar.escola (cod_escola) MATCH SIMPLE
+      ON UPDATE RESTRICT ON DELETE RESTRICT
+) 
+WITH OIDS;
+ALTER TABLE alimentacao.envio_mensal_escola OWNER TO portabilis;
+GRANT ALL ON TABLE alimentacao.envio_mensal_escola TO portabilis;
+
+-- Table: alimentacao.envio_mensal_escola_produto
+-- DROP TABLE alimentacao.envio_mensal_escola_produto;
+CREATE TABLE alimentacao.envio_mensal_escola_produto
+(
+  ref_envio_mensal_escola integer NOT NULL,
+  ref_produto integer NOT NULL,
+  pesoouvolume numeric(7,2) NOT NULL DEFAULT 0,
+  CONSTRAINT pk_envio_mensal_escola_produto PRIMARY KEY (ref_envio_mensal_escola, ref_produto),
+  CONSTRAINT envio_mensal_escola_produto_ref_envio_mensal_escola_fkey FOREIGN KEY (ref_envio_mensal_escola)
+      REFERENCES alimentacao.envio_mensal_escola (ideme) MATCH SIMPLE
+      ON UPDATE RESTRICT ON DELETE RESTRICT,
+  CONSTRAINT envio_mensal_escola_ref_produto_fkey FOREIGN KEY (ref_produto)
+      REFERENCES alimentacao.produto (idpro) MATCH SIMPLE
+      ON UPDATE RESTRICT ON DELETE RESTRICT
+) 
+WITH OIDS;
+ALTER TABLE alimentacao.envio_mensal_escola_produto OWNER TO portabilis;
+GRANT ALL ON TABLE alimentacao.envio_mensal_escola_produto TO portabilis;
+
+-- Table: alimentacao.imc
+-- DROP TABLE alimentacao.imc;
+CREATE TABLE alimentacao.imc
+(
+  idimc integer NOT NULL DEFAULT nextval('alimentacao.imc_idimc_seq'::regclass),
+  ref_escola integer NOT NULL,
+  ref_aluno integer NOT NULL,
+  ref_serie integer NOT NULL,
+  dt_cadastro timestamp without time zone NOT NULL,
+  altura numeric(5,2) NOT NULL,
+  peso numeric(5,2) NOT NULL,
+  imc numeric(5,2) NOT NULL,
+  observacao character varying(200),
+  CONSTRAINT pk_imc PRIMARY KEY (idimc),
+  CONSTRAINT imc_ref_aluno_fkey FOREIGN KEY (ref_aluno)
+      REFERENCES pmieducar.aluno (cod_aluno) MATCH SIMPLE
+      ON UPDATE RESTRICT ON DELETE RESTRICT,
+  CONSTRAINT imc_ref_escola_fkey FOREIGN KEY (ref_escola)
+      REFERENCES pmieducar.escola (cod_escola) MATCH SIMPLE
+      ON UPDATE RESTRICT ON DELETE RESTRICT,
+  CONSTRAINT imc_ref_serie FOREIGN KEY (ref_serie)
+      REFERENCES pmieducar.serie (cod_serie) MATCH SIMPLE
+      ON UPDATE RESTRICT ON DELETE RESTRICT
+) 
+WITH OIDS;
+ALTER TABLE alimentacao.imc OWNER TO portabilis;
+GRANT ALL ON TABLE alimentacao.imc TO portabilis;
+
+-- Inclusão dos menus
+INSERT INTO PORTAL.MENU_MENU(cod_menu_menu,nm_menu) VALUES(1000,'i-Educar - Alimentação');
+INSERT INTO PORTAL.MENU_SUBMENU( cod_menu_submenu, ref_cod_menu_menu, cod_sistema, nm_submenu, arquivo, nivel) VALUES(10000,1000,2, 'Cardápio', 'alimentacao_cardapio_lst.php',3);
+INSERT INTO PORTAL.MENU_SUBMENU( cod_menu_submenu, ref_cod_menu_menu, cod_sistema, nm_submenu, arquivo, nivel) VALUES(10001,1000,2, 'Nutricionista Escolas', 'alimentacao_nutricionista_escola_lst.php',3);
+INSERT INTO PORTAL.MENU_SUBMENU( cod_menu_submenu, ref_cod_menu_menu, cod_sistema, nm_submenu, arquivo, nivel) VALUES(10002,1000,2, 'Produtos', 'alimentacao_produto_lst.php',3);
+INSERT INTO PORTAL.MENU_SUBMENU( cod_menu_submenu, ref_cod_menu_menu, cod_sistema, nm_submenu, arquivo, nivel) VALUES(10003,1000,2, 'Fornecedores', 'alimentacao_fornecedor_lst.php',3);
+INSERT INTO PORTAL.MENU_SUBMENU( cod_menu_submenu, ref_cod_menu_menu, cod_sistema, nm_submenu, arquivo, nivel) VALUES(10004,1000,2, 'Produto Fornecedor', 'alimentacao_produto_fornecedor_lst.php',3);
+INSERT INTO PORTAL.MENU_SUBMENU( cod_menu_submenu, ref_cod_menu_menu, cod_sistema, nm_submenu, arquivo, nivel) VALUES(10005,1000,2, 'Envio Mensal Escola', 'alimentacao_envio_mensal_escola_lst.php',3);
+INSERT INTO PORTAL.MENU_SUBMENU( cod_menu_submenu, ref_cod_menu_menu, cod_sistema, nm_submenu, arquivo, nivel) VALUES(10006,1000,2, 'IMC', 'alimentacao_imc_lst.php',3);
+INSERT INTO PORTAL.MENU_SUBMENU( cod_menu_submenu, ref_cod_menu_menu, cod_sistema, nm_submenu, arquivo, nivel) VALUES(10007,1000,2, 'Relatório - IMC por Escola', 'alimentacao_relatorio_imc_escola.php',3);
+INSERT INTO PORTAL.MENU_SUBMENU( cod_menu_submenu, ref_cod_menu_menu, cod_sistema, nm_submenu, arquivo, nivel) VALUES(10008,1000,2, 'Relatório - IMC por Série', 'alimentacao_relatorio_imc_serie.php',3);
+INSERT INTO PORTAL.MENU_SUBMENU( cod_menu_submenu, ref_cod_menu_menu, cod_sistema, nm_submenu, arquivo, nivel) VALUES(10009,1000,2, 'Relatório - Resumo por Escola', 'alimentacao_relatorio_resumo_escola.php',3);
+INSERT INTO PORTAL.MENU_SUBMENU( cod_menu_submenu, ref_cod_menu_menu, cod_sistema, nm_submenu, arquivo, nivel) VALUES(10010,1000,2, 'Relatório - Resumo por Mês', 'alimentacao_relatorio_resumo_mes.php',3);
+INSERT INTO PORTAL.MENU_SUBMENU( cod_menu_submenu, ref_cod_menu_menu, cod_sistema, nm_submenu, arquivo, nivel) VALUES(10011,1000,2, 'Envio Mensal Padrões', 'alimentacao_envio_mensal_padroes_lst.php',3);
+INSERT INTO ALIMENTACAO.PRODUTO_GRUPO(descricao) VALUES('Menos Perecíveis');
+INSERT INTO ALIMENTACAO.PRODUTO_GRUPO(descricao) VALUES('Mais Perecíveis');
+INSERT INTO ALIMENTACAO.PRODUTO_GRUPO(descricao) VALUES('Não Perecível');
+
+INSERT INTO ALIMENTACAO.PRODUTO_UNIDADE(descricao,unidade) VALUES('Kg - Quilograma','Kg');
+INSERT INTO ALIMENTACAO.PRODUTO_UNIDADE(descricao,unidade) VALUES('L - Litros','L');
