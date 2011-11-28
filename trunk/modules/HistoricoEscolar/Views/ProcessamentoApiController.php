@@ -40,6 +40,7 @@ require_once 'RegraAvaliacao/Model/TipoPresenca.php';
 require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
 require_once 'include/portabilis/dal.php';
+require_once 'include/pmieducar/clsPmieducarHistoricoEscolar.inc.php';
 
 class ProcessamentoApiController extends Core_Controller_Page_EditController
 {
@@ -197,7 +198,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
 
   protected function canPostProcessamento(){
-    return $this->validatesPresenceOfMatriculaId(false);
+    return $this->validatesPresenceOfAno(true) && 
+           $this->validatesPresenceOfInstituicaoId(true) &&
+           $this->validatesPresenceOfMatriculaId(false);
   }
 
   protected function canDeleteHistorico(){
@@ -210,26 +213,118 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
   }
 
 
+  #TODO implement this functions
+  protected function getdadosEscola($dadosMatricula){
+  }
+
+  protected function getNextSequencial(){
+  }
+
+  protected function getdadosEscola($dadosMatricula){
+  }
+
   protected function postProcessamento()  {
 
     if ($this->canPostProcessamento()){
 
       $matriculaId = $this->getRequest()->matricula_id;
-      $this->appendMsg('#TODO postProcessamento', 'notice');
 
-      return array('todo' => 'return postProcessamento');
+      try {
+
+        $refCodAluno = $this->getAlunoIdByMatriculaId($matriculaId);
+        $ano = $this->getRequest()->ano;
+        $isNewHistorico = ! $this->existsHistorico($refCodAluno, $ano);
+        $dadosMatricula = $this->getdadosMatricula($matriculaId);
+
+        $dadosEscola = $this->getdadosEscola($dadosMatricula['escola_id']);
+
+        if ($isNewHistorico){
+
+          $historicoEscolar =  new clsPmieducarHistoricoEscolar(
+                                  $ref_cod_aluno = $refCodAluno,
+                                  $sequencial = $this->getNextSequencial(),
+                                  $ref_usuario_exc = null,
+                                  $ref_usuario_cad = $this->getSession()->id_pessoa,
+                                  /*#TODO nm_curso*/
+                                  $nm_serie = $dadosMatricula['nome_serie'], 
+                                  $ano = $ano,
+                                  $carga_horaria
+                                  $dias_letivos
+                                  $escola
+                                  $escola_cidade
+                                  $escola_uf
+                                  $observacao
+                                  $aprovado
+                                  $data_cadastro
+                                  $data_exclusao
+                                  $ativo
+                                  $faltas_globalizadas
+                                  $ref_cod_instituicao
+                                  $origem
+                                  $extra_curricular
+                                  $ref_cod_matricula
+                                  $frequencia
+                                  $registro
+                                  $livro
+                                  $folha
+                                );
+
+          $historicoEscolar->cadastra();
+        }
+        else{
+          $historicoEscolar->edita();
+        }
+
+      }
+      catch (Exception $e){
+        $this->appendMsg('Erro ao processar histórico, detalhes:' . $e, 'error');
+        return false;
+      }
+
+      //$this->appendMsg('Histórico processado com sucesso', 'success');
+      $this->appendMsg('#TODO processar histórico', 'notice');
+
+      $situacaoHistorico = $this->getSituacaoHistorico($refCodAluno , $ano);
+      $linkToHistorico = $this->getLinkToHistorico($refCodAluno , $ano);
+
+      $this->appendResponse('matricula_id', $matriculaId);
+      $this->appendResponse('situacao_historico', $situacaoHistorico);
+      $this->appendResponse('link_to_historico', $linkToHistorico);
     }
   }
 
 
-/*  protected function getProximoMatriculaId($currentMatriculaId){
-    $sql = "select m.cod_matricula from pmieducar.matricula as m, pmieducar.matricula_turma as mt where m.ano = {$this->getRequest()->ano} and m.ativo = 1 and m.aprovado = 3 and mt.ref_cod_matricula = m.cod_matricula and mt.ativo = 1 and ref_cod_matricula > $currentMatriculaId order by ref_cod_matricula limit 1";
+  protected function getDadosMatricula($matriculaId){
+    $matriculas = array();
+
+    $matriculaTurma = new clsPmieducarMatriculaTurma();
+    $matriculaTurma->setOrderby('ref_cod_curso, ref_ref_cod_serie, ref_cod_turma, nome');
+    $matriculaTurma = $matriculaTurma->lista($matriculaId);
+
+    $dadosMatricula = array();
+    if (is_array($matriculaTurma) && count($matriculaTurma) > 0){
+      $dadosMatricula['instituicao_id'] = $matriculaTurma['ref_cod_instituicao'];
+      $dadosMatricula['escola_id'] = $matriculaTurma['ref_ref_cod_escola'];
+      $dadosMatricula['matricula_id'] = $matriculaTurma['ref_cod_matricula'];
+      $dadosMatricula['aluno_id'] = $matriculaTurma['ref_cod_aluno'];
+      $dadosMatricula['nome'] = ucwords(strtolower(utf8_encode($matriculaTurma['nome_aluno'])));
+      $dadosMatricula['nome_curso'] = ucwords(strtolower(utf8_encode($matriculaTurma['nm_curso'])));
+      $dadosMatricula['nome_serie'] = ucwords(strtolower(utf8_encode($this->getNomeSerie($matriculaTurma['ref_ref_cod_serie']))));
+      $dadosMatricula['nome_turma'] = ucwords(strtolower(utf8_encode($matriculaTurma['nm_turma'])));
+      $dadosMatricula['situacao_historico'] = $this->getSituacaoHistorico($matriculaTurma['ref_cod_aluno'], $this->getRequest()->ano);
+      $dadosMatricula['link_to_historico'] = $this->getLinkToHistorico($matriculaTurma['ref_cod_aluno'], $this->getRequest()->ano);
+    }
+
+    return $dadosMatricula;
+  }
+
+
+  protected function getAlunoIdByMatriculaId($matriculaId){
+    $sql = "select ref_cod_aluno from pmieducar.matricula where cod_matricula = $matriculaId";
 
     $db = new Db();
-    $proximoMatriculaId = $db->select($sql);
-    return $proximoMatriculaId[0]['cod_matricula'];
+    return $db->selectField($sql);
   }
-*/
 
 
   protected function getNomeSerie($serieId){
@@ -245,9 +340,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     $sql = "select 1 from pmieducar.historico_escolar where ref_cod_aluno = $alunoId and ano = $ano";
 
     $db = new Db();
-    $exists = $db->selectField($sql);
-
-    return ($situacao == '1');
+    return ($db->selectField($sql) == '1');
   }
 
 
@@ -257,7 +350,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     else 
         $situacao = 'Não processado';
 
-    return $situacao;
+    return ucwords(strtolower(utf8_encode($situacao)));
   }
 
 
@@ -333,8 +426,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         $matricula['nome_curso'] = ucwords(strtolower(utf8_encode($aluno['nm_curso'])));
         $matricula['nome_serie'] = ucwords(strtolower(utf8_encode($this->getNomeSerie($aluno['ref_ref_cod_serie']))));
         $matricula['nome_turma'] = ucwords(strtolower(utf8_encode($aluno['nm_turma'])));
-        $matricula['situacao_historico'] = ucwords(strtolower(utf8_encode($this->getSituacaoHistorico($aluno['ref_cod_aluno'], $this->getRequest()->ano))));
-        $matricula['link_to_historico'] = ucwords(strtolower(utf8_encode($this->getLinkToHistorico($aluno['ref_cod_aluno'], $this->getRequest()->ano))));
+        $matricula['situacao_historico'] = $this->getSituacaoHistorico($aluno['ref_cod_aluno'], $this->getRequest()->ano);
+        $matricula['link_to_historico'] = $this->getLinkToHistorico($aluno['ref_cod_aluno'], $this->getRequest()->ano);
         $matriculas[] = $matricula;
       }
     }
@@ -418,7 +511,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         {
           if ($this->getRequest()->att == 'matriculas')
           {
-            $matriculas = $this->getMatriculas();          
+            $matriculas = $this->getMatriculas();
             $this->appendResponse('matriculas', $matriculas);
           }
           else
@@ -429,10 +522,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         {
           if ($this->getRequest()->att == 'processamento')
           {
-            //conferir returns
-            $this->appendResponse('result', $this->postProcessamento());
-            $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-            //ver outros returns
+            $this->postProcessamento();
           }
           else
             $this->notImplementedError();  
