@@ -124,6 +124,14 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     return $this->validatesPresenceOf($this->getRequest()->escola_id, 'escola_id', $raiseExceptionOnEmpty);
   }
 
+  protected function validatesPresenceOfCursoId($raiseExceptionOnEmpty){
+    return $this->validatesPresenceOf($this->getRequest()->curso_id, 'curso_id', $raiseExceptionOnEmpty);
+  }
+
+  protected function validatesPresenceOfSerieId($raiseExceptionOnEmpty){
+    return $this->validatesPresenceOf($this->getRequest()->serie_id, 'serie_id', $raiseExceptionOnEmpty);
+  }
+
   protected function validatesPresenceOfAno($raiseExceptionOnEmpty){
     return $this->validatesPresenceOf($this->getRequest()->ano, 'ano', $raiseExceptionOnEmpty);
   }
@@ -185,21 +193,17 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
 
   protected function canGetMatriculas(){
-    try {
-      $this->validatesPresenceOfAno(true);
-      $this->validatesPresenceOfInstituicaoId(true);
-      $this->validatesPresenceOfEscolaId(true);
-    }
-    catch (Exception $e){
-      return false;
-    }
-    return true;
+    return $this->validatesPresenceOfAno(false) &&
+           $this->validatesPresenceOfInstituicaoId(false) &&
+           $this->validatesPresenceOfEscolaId(false);
   }
 
 
   protected function canPostProcessamento(){
-    return $this->validatesPresenceOfAno(true) && 
-           $this->validatesPresenceOfInstituicaoId(true) &&
+    return $this->validatesPresenceOfAno(false) && 
+           $this->validatesPresenceOfInstituicaoId(false) &&
+           $this->validatesPresenceOfSerieId(false) &&
+           $this->validatesPresenceOfCursoId(false) &&
            $this->validatesPresenceOfMatriculaId(false);
   }
 
@@ -220,7 +224,24 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
   protected function getNextSequencial(){
   }
 
-  protected function getdadosEscola($dadosMatricula){
+  protected function getCargaHoraria(){
+  }
+
+  protected function getDiasLetivos(){
+  }
+
+  protected function getSituacaoMatricula(){
+  }
+
+  protected function isFaltaGlobalizada(){
+    //(1 / 0) ? (get se regra é falta globalizada ?)
+  }
+
+  protected function isExtraCurricular(){
+    //(1 / 0) ? ?)
+  }
+
+  protected function getFrequencia(){
   }
 
   protected function postProcessamento()  {
@@ -245,44 +266,41 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                   $sequencial = $this->getNextSequencial(),
                                   $ref_usuario_exc = null,
                                   $ref_usuario_cad = $this->getSession()->id_pessoa,
-                                  /*#TODO nm_curso*/
-                                  $nm_serie = $dadosMatricula['nome_serie'], 
+                                  #TODO nm_curso
+                                  $nm_serie = $dadosMatricula['nome_serie'],
                                   $ano = $ano,
-                                  $carga_horaria
-                                  $dias_letivos
-                                  $escola
-                                  $escola_cidade
-                                  $escola_uf
-                                  $observacao
-                                  $aprovado
-                                  $data_cadastro
-                                  $data_exclusao
-                                  $ativo
-                                  $faltas_globalizadas
-                                  $ref_cod_instituicao
-                                  $origem
-                                  $extra_curricular
-                                  $ref_cod_matricula
-                                  $frequencia
-                                  $registro
-                                  $livro
-                                  $folha
+                                  $carga_horaria = $this->getCargaHoraria(),
+                                  $dias_letivos = $this->getDiasLetivos(),
+                                  $escola = $dadosEscola['nome'],
+                                  $escola_cidade = $dadosEscola['cidade'],
+                                  $escola_uf = $dadosEscola['uf'],
+                                  $observacao = $this->getRequest()->observacao,
+                                  $aprovado = $this->getSituacaoMatricula(),
+                                  $data_cadastro = date('Y-m-d'),
+                                  $data_exclusao = null,
+                                  $ativo = 1,
+                                  $faltas_globalizadas = $this->isFaltaGlobalizada(),
+                                  $ref_cod_instituicao = $dadosMatricula['instituicao_id'],
+                                  $origem = '', #TODO
+                                  $extra_curricular = $this->isExtraCurricular(),
+                                  $ref_cod_matricula = $dadosMatricula['matricula_id'],
+                                  $frequencia = $this->getFrequencia(),
+                                  $registro = $this->getRequest()->registro,
+                                  $livro = $this->getRequest()->livro,
+                                  $folha = $this->getRequest()->folha
                                 );
 
-          $historicoEscolar->cadastra();
+          //$historicoEscolar->cadastra();
         }
         else{
-          $historicoEscolar->edita();
+          //$historicoEscolar->edita();
         }
 
       }
       catch (Exception $e){
-        $this->appendMsg('Erro ao processar histórico, detalhes:' . $e, 'error');
+        $this->appendMsg('Erro ao processar histórico, detalhes:' . $e, 'error', true);
         return false;
       }
-
-      //$this->appendMsg('Histórico processado com sucesso', 'success');
-      $this->appendMsg('#TODO processar histórico', 'notice');
 
       $situacaoHistorico = $this->getSituacaoHistorico($refCodAluno , $ano);
       $linkToHistorico = $this->getLinkToHistorico($refCodAluno , $ano);
@@ -290,6 +308,10 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       $this->appendResponse('matricula_id', $matriculaId);
       $this->appendResponse('situacao_historico', $situacaoHistorico);
       $this->appendResponse('link_to_historico', $linkToHistorico);
+
+      //$this->appendMsg('Histórico processado com sucesso', 'success');
+      $this->appendMsg('#TODO processar histórico', 'notice');
+      return true;
     }
   }
 
@@ -298,8 +320,19 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     $matriculas = array();
 
     $matriculaTurma = new clsPmieducarMatriculaTurma();
-    $matriculaTurma->setOrderby('ref_cod_curso, ref_ref_cod_serie, ref_cod_turma, nome');
-    $matriculaTurma = $matriculaTurma->lista($matriculaId);
+    $matriculaTurma = $matriculaTurma->lista(
+      $this->getRequest()->matricula_id,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      $this->getRequest()->serie_id,
+      $this->getRequest()->curso_id
+    );
 
     $dadosMatricula = array();
     if (is_array($matriculaTurma) && count($matriculaTurma) > 0){
