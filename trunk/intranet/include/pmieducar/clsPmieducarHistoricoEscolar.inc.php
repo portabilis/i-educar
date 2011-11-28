@@ -235,7 +235,7 @@ class clsPmieducarHistoricoEscolar
 				}
 			}
 			else
-			{   echo ("Entra aqui na budega");
+			{
 				if( $db->CampoUnico( "SELECT 1 FROM pmieducar.instituicao WHERE cod_instituicao = '{$ref_cod_instituicao}'" ) )
 				{
 					$this->ref_cod_instituicao = $ref_cod_instituicao;
