@@ -185,6 +185,16 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     return $result;
   }
 
+  protected function validatesPresenceAndValueInSetOfExtraCurricular($raiseExceptionOnError){
+    $result = $this->validatesPresenceOf($this->getRequest()->extra_curricular, 'extra_curricular', $raiseExceptionOnError);
+
+    if ($result){
+      $expectedOpers = array(0, 1);
+      $resut = $this->validatesValueInSetOf($this->getRequest()->extra_curricular, $expectedOpers, 'extra_curricular', $raiseExceptionOnError);
+    }
+    return $result;
+  }
+
 
   /* esta funcao só pode ser chamada após setar $this->getService() */
   protected function validatesPresenceOfComponenteCurricularId($raiseExceptionOnEmpty, $addMsgOnEmpty = true)
@@ -223,6 +233,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
            $this->validatesPresenceOfMatriculaId(false) &&
            $this->validatesPresenceOfDiasLetivos(false) &&
            $this->validatesPresenceAndValueInSetOfSituacao(false) &&
+           $this->validatesPresenceAndValueInSetOfExtraCurricular(false) &&
            $this->setService();
   }
 
@@ -296,11 +307,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
   }
 
   protected function isFaltaGlobalizada(){
-    return ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL);
-  }
-
-  protected function isExtraCurricular(){
-    //(1 / 0) ? ?)
+    return ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL ? 1 : 0);
   }
 
   protected function getFrequencia(){
@@ -318,7 +325,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         $dadosMatricula = $this->getdadosMatricula($matriculaId);
         $dadosEscola = $this->getdadosEscola($dadosMatricula['escola_id']);
 
-        var_dump($this->isFaltaGlobalizada());
+        var_dump($this->getRequest()->extra_curricular);
 
           if ($isNewHistorico){
           $historicoEscolar =  new clsPmieducarHistoricoEscolar(
@@ -342,7 +349,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                   $faltas_globalizadas = $this->isFaltaGlobalizada(),
                                   $ref_cod_instituicao = $dadosMatricula['instituicao_id'],
                                   $origem = '', #TODO
-                                  $extra_curricular = $this->isExtraCurricular(),
+                                  $extra_curricular = $this->getRequest()->extra_curricular,
                                   $ref_cod_matricula = $dadosMatricula['matricula_id'],
                                   $frequencia = $this->getFrequencia(),
                                   $registro = $this->getRequest()->registro,
