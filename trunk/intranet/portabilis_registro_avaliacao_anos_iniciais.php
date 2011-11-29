@@ -22,7 +22,16 @@ class PortabilisRegistroAvaliacaoAnosIniciais extends Report
     $this->campoNumero( "ano", "Ano", date("Y"), 4, 4, true);
 
     include("include/pmieducar/educar_campo_lista.php");
-   
+
+    $opcoes[1] = "Aprovado";
+		$opcoes[2] = "Reprovado";
+    $opcoes[3] = "Em andamento";
+    $opcoes[4] = "Transferido";
+    $opcoes[6] = "Abandono";
+    $opcoes[9] = "Exceto Transferidos/Abandono";
+    $opcoes[10] = "Todas";
+    
+    $this->campoLista('situacao', 'Situação', $opcoes, 3, $this->situacao);   
     $this->campoNumero( "linha", "Linhas em branco", 0, 2, 2, true); 
    
   }
@@ -40,6 +49,7 @@ class PortabilisRegistroAvaliacaoAnosIniciais extends Report
     $this->addArg('curso', (int)$_POST['ref_cod_curso']);
     $this->addArg('serie', (int)$_POST['ref_ref_cod_serie']);
     $this->addArg('turma', (int)$_POST['ref_cod_turma']);
+    $this->addArg('situacao', (int)$_POST['situacao']);
 
   }
 }
@@ -52,6 +62,7 @@ $report->addRequiredField('ref_cod_escola', 'escola');
 $report->addRequiredField('ref_cod_curso', 'curso');
 $report->addRequiredField('ref_ref_cod_serie', 'serie');
 $report->addRequiredField('ref_cod_turma', 'turma');
+$report->addRequiredField('situacao', 'situacao');
 
 $report->render();
 ?>

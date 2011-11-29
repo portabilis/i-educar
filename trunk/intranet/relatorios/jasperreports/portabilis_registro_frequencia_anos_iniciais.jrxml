@@ -29,6 +29,9 @@
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="logo" class="java.lang.String"/>
+	<parameter name="situacao" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[(SELECT public.fcn_upper(nm_instituicao) AS nome_instituicao,
        public.fcn_upper(nm_responsavel) AS nome_responsavel,
@@ -155,7 +158,16 @@
 
      (SELECT cod_aluno_inep
         FROM modules.educacenso_cod_aluno
-       WHERE educacenso_cod_aluno.cod_aluno = aluno.cod_aluno) as cod_aluno_inep
+       WHERE educacenso_cod_aluno.cod_aluno = aluno.cod_aluno) as cod_aluno_inep,
+
+      (CASE matricula.aprovado
+	          WHEN 1 THEN 'Apr'
+	          WHEN 2 THEN 'Rep'
+	          WHEN 3 THEN 'And'
+	          WHEN 4 THEN 'Trs'
+                    WHEN 6 THEN 'Aba'
+	          ELSE 'Rec'
+      END) AS situacao
 
   FROM pmieducar.instituicao,
        pmieducar.escola,
@@ -195,8 +207,25 @@
        matricula.ultima_matricula = 1 AND
        matricula.ano = $P{ano} AND
        matricula.ativo = 1 AND
-       matricula_turma.ativo = 1 AND
-       matricula.aprovado = 3
+       (SELECT CASE WHEN $P{situacao} = 10 THEN
+                      matricula.aprovado in ('1', '2', '3', '4','6')
+                    WHEN $P{situacao} = 9 THEN
+                      matricula.aprovado in ('1', '2', '3')
+                    ELSE
+                    matricula.aprovado = (SELECT CASE WHEN $P{situacao} = 1 THEN
+                                                    1
+                                                  WHEN $P{situacao} = 2 THEN
+                                                    2
+                                                  WHEN $P{situacao} = 3 THEN
+                                                    3
+                                                  WHEN $P{situacao} = 4 THEN
+                                                    4
+                                                  ELSE
+                                                    6
+                                             END)
+       END) AND
+       matricula_turma.data_cadastro = (select max(mt.data_cadastro) from matricula_turma mt where
+       matricula_turma.ref_cod_matricula = mt.ref_cod_matricula)
 
 ORDER BY nome_aluno ASC)
 
@@ -205,6 +234,7 @@ union all
 (
 select
 
+null,
 null,
 null,
 null,
@@ -265,6 +295,7 @@ limit $P{linha}
 	<field name="cod_matricula" class="java.lang.Integer"/>
 	<field name="nome_aluno" class="java.lang.String"/>
 	<field name="cod_aluno_inep" class="java.lang.Long"/>
+	<field name="situacao" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -855,12 +886,6 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="193" y="50" width="1" height="16"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
 				<reportElement x="184" y="50" width="1" height="16"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
@@ -898,6 +923,13 @@ limit $P{linha}
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
+			<staticText>
+				<reportElement x="184" y="51" width="18" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sit.]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -1303,12 +1335,6 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="193" y="-1" width="1" height="14"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
 				<reportElement x="184" y="-1" width="1" height="14"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
@@ -1333,6 +1359,13 @@ limit $P{linha}
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
+			<textField>
+				<reportElement x="184" y="1" width="18" height="11"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{situacao}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>
