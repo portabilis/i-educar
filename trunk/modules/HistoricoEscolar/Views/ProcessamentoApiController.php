@@ -228,8 +228,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
   protected function canPostProcessamento(){
     return $this->validatesPresenceOfAno(false) && 
            $this->validatesPresenceOfInstituicaoId(false) &&
-           $this->validatesPresenceOfSerieId(false) &&
-           $this->validatesPresenceOfCursoId(false) &&
+           //$this->validatesPresenceOfSerieId(false) &&
+           //$this->validatesPresenceOfCursoId(false) &&
            $this->validatesPresenceOfMatriculaId(false) &&
            $this->validatesPresenceOfDiasLetivos(false) &&
            $this->validatesPresenceAndValueInSetOfSituacao(false) &&
@@ -310,8 +310,6 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     return ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL ? 1 : 0);
   }
 
-  protected function getFrequencia(){
-  }
 
   protected function postProcessamento()  {
 
@@ -325,7 +323,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         $dadosMatricula = $this->getdadosMatricula($matriculaId);
         $dadosEscola = $this->getdadosEscola($dadosMatricula['escola_id']);
 
-        var_dump($this->getRequest()->extra_curricular);
+        var_dump();
 
           if ($isNewHistorico){
           $historicoEscolar =  new clsPmieducarHistoricoEscolar(
@@ -350,17 +348,20 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                   $ref_cod_instituicao = $dadosMatricula['instituicao_id'],
                                   $origem = '', #TODO
                                   $extra_curricular = $this->getRequest()->extra_curricular,
-                                  $ref_cod_matricula = $dadosMatricula['matricula_id'],
-                                  $frequencia = $this->getFrequencia(),
+                                  $ref_cod_matricula = $matriculaId,
+                                  $frequencia = round($this->getService()->getSituacaoFaltas()->porcentagemPresenca, 2),
                                   $registro = $this->getRequest()->registro,
                                   $livro = $this->getRequest()->livro,
                                   $folha = $this->getRequest()->folha
                                 );
 
-          //$historicoEscolar->cadastra();
+          #TODO gravar notas / faltas de cada componente curricular
+
+          $historicoEscolar->cadastra();
         }
         else{
           //$historicoEscolar->edita();
+          $this->appendMsg('#TODO editar historico', 'notice');
         }
 
       }
@@ -418,10 +419,10 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       $dadosMatricula['serie_id'] = $matriculaTurma['ref_ref_cod_serie'];
       $dadosMatricula['matricula_id'] = $matriculaTurma['ref_cod_matricula'];
       $dadosMatricula['aluno_id'] = $matriculaTurma['ref_cod_aluno'];
-      $dadosMatricula['nome'] = ucwords(strtolower(utf8_encode($matriculaTurma['nome_aluno'])));
-      $dadosMatricula['nome_curso'] = ucwords(strtolower(utf8_encode($matriculaTurma['nm_curso'])));
-      $dadosMatricula['nome_serie'] = $this->getNomeSerie($matriculaTurma['ref_ref_cod_serie']);
-      $dadosMatricula['nome_turma'] = ucwords(strtolower(utf8_encode($matriculaTurma['nm_turma'])));
+      $dadosMatricula['nome'] = ucwords(strtolower(utf8_decode($matriculaTurma['nome_aluno'])));
+      $dadosMatricula['nome_curso'] = ucwords(strtolower(utf8_decode($matriculaTurma['nm_curso'])));
+      $dadosMatricula['nome_serie'] = strtolower(utf8_decode($this->getNomeSerie($matriculaTurma['ref_ref_cod_serie'])));
+      $dadosMatricula['nome_turma'] = ucwords(strtolower(utf8_decode($matriculaTurma['nm_turma'])));
       $dadosMatricula['situacao_historico'] = $this->getSituacaoHistorico($matriculaTurma['ref_cod_aluno'], $this->getRequest()->ano);
       $dadosMatricula['link_to_historico'] = $this->getLinkToHistorico($matriculaTurma['ref_cod_aluno'], $this->getRequest()->ano);
     }
