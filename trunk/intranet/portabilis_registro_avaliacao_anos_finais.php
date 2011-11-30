@@ -23,6 +23,15 @@ class PortabilisRegistroAvaliacaoAnosFinais extends Report
 
     include("include/pmieducar/educar_campo_lista.php");
 
+    $opcoes[1] = "Aprovado";
+		$opcoes[2] = "Reprovado";
+    $opcoes[3] = "Em andamento";
+    $opcoes[4] = "Transferido";
+    $opcoes[6] = "Abandono";
+    $opcoes[9] = "Exceto Transferidos/Abandono";
+    $opcoes[10] = "Todas";
+    
+    $this->campoLista('situacao', 'Situação', $opcoes, 3, $this->situacao);
     $this->campoTexto("disciplina", "Disciplina:", '',40, 255, false);    
     $this->campoTexto("professor", "Professor(a):", '',40, 255, false);
     $this->campoNumero( "linha", "Linhas em branco", 0, 2, 2, false); 
@@ -38,6 +47,7 @@ class PortabilisRegistroAvaliacaoAnosFinais extends Report
     $this->addArg('curso', (int)$_POST['ref_cod_curso']);
     $this->addArg('serie', (int)$_POST['ref_ref_cod_serie']);
     $this->addArg('turma', (int)$_POST['ref_cod_turma']);
+    $this->addArg('situacao', (int)$_POST['situacao']);
     $this->addArg('disciplina', $_POST['disciplina']);
     $this->addArg('professor', $_POST['professor']);
   }
@@ -51,6 +61,7 @@ $report->addRequiredField('ref_cod_escola', 'escola');
 $report->addRequiredField('ref_cod_curso', 'curso');
 $report->addRequiredField('ref_ref_cod_serie', 'serie');
 $report->addRequiredField('ref_cod_turma', 'turma');
+$report->addRequiredField('situacao', 'situacao');
 
 $report->render();
 ?>
