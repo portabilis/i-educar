@@ -34,9 +34,9 @@ class PortabilisAtestadoFrequencia extends Report
 
   function validate()
   {
-    if (! $this->db->selectField("select 1 from pmieducar.matricula where ref_ref_cod_escola = {$_POST['ref_cod_escola']} and ref_cod_aluno = {$_POST['ref_cod_aluno']} and aprovado = 3 and ano = {$_POST['ano']}"))
+    if (! $this->db->selectField("select 1 from pmieducar.matricula where ref_ref_cod_escola = {$_POST['ref_cod_escola']} and ref_cod_aluno = {$_POST['ref_cod_aluno']} and ano = {$_POST['ano']}"))
     {
-      $this->addValidationError('Este aluno não possui matriculas em andamento neste ano e escola.');
+      $this->addValidationError('Este aluno não possui matricula neste ano e escola.');
     }
   }
 
