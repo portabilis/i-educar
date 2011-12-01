@@ -122,7 +122,7 @@ class clsPmieducarHistoricoEscolar
 	 *
 	 * @return object
 	 */
-	function clsPmieducarHistoricoEscolar( $ref_cod_aluno = null, $sequencial = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_serie = null, $ano = null, $carga_horaria = null, $dias_letivos = null, $escola = null, $escola_cidade = null, $escola_uf = null, $observacao = null, $aprovado = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $faltas_globalizadas = null, $ref_cod_instituicao = null, $origem = null, $extra_curricular = null, $ref_cod_matricula = null, $frequencia = null, $registro = null, $livro = null, $folha = null )
+	function clsPmieducarHistoricoEscolar( $ref_cod_aluno = null, $sequencial = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_serie = null, $ano = null, $carga_horaria = null, $dias_letivos = null, $escola = null, $escola_cidade = null, $escola_uf = null, $observacao = null, $aprovado = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $faltas_globalizadas = null, $ref_cod_instituicao = null, $origem = null, $extra_curricular = null, $ref_cod_matricula = null, $frequencia = null, $registro = null, $livro = null, $folha = null, $nm_curso = null )
 	{ 
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
@@ -343,6 +343,7 @@ class clsPmieducarHistoricoEscolar
     $this->registro = $registro;
     $this->livro = $livro;
     $this->folha = $folha;
+    $this->nm_curso = $nm_curso;
 
 	}
 
@@ -482,6 +483,13 @@ class clsPmieducarHistoricoEscolar
 			{
 				$campos .= "{$gruda}folha";
 				$valores .= "{$gruda}'{$this->folha}'";
+				$gruda = ", ";
+			}
+
+			if( is_string( $this->nm_curso ))
+			{
+				$campos .= "{$gruda}nm_curso";
+				$valores .= "{$gruda}'{$this->nm_curso}'";
 				$gruda = ", ";
 			}
 			
@@ -631,6 +639,12 @@ class clsPmieducarHistoricoEscolar
 			if( is_string( $this->folha))
 			{
 				$set .= "{$gruda}folha = '{$this->folha}'";
+				$gruda = ", ";
+			}
+
+			if( is_string( $this->nm_curso))
+			{
+				$set .= "{$gruda}nm_curso = '{$this->nm_curso}'";
 				$gruda = ", ";
 			}
 
