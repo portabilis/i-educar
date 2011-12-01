@@ -41,6 +41,7 @@ require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
 require_once 'include/portabilis/dal.php';
 require_once 'include/pmieducar/clsPmieducarHistoricoEscolar.inc.php';
+require_once 'include/pmieducar/clsPmieducarHistoricoDisciplinas.inc.php';
 
 class ProcessamentoApiController extends Core_Controller_Page_EditController
 {
@@ -300,12 +301,22 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     return $dadosEscola[0];
   }
 
-  protected function getNextSequencial($alunoId){
+
+  protected function getNextHistoricoSequencial($alunoId){
 
     $sql = "select coalesce(max(sequencial), 0) + 1 from pmieducar.historico_escolar where ref_cod_aluno = $alunoId";
 
     return $this->db->selectField($sql);
   }
+
+
+  protected function getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId){
+
+    $sql = "select coalesce(max(sequencial), 0) + 1 from pmieducar.historico_disciplinas where ref_sequencial = $historicoSequencial and ref_ref_cod_aluno = $alunoId";
+
+    return $this->db->selectField($sql);
+  }
+
 
   protected function getSituacaoMatricula(){
 
@@ -344,9 +355,11 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         $isNewHistorico = ! $this->existsHistorico($alunoId, $ano);
 
           if ($isNewHistorico){
+          $sequencial = $this->getNextHistoricoSequencial($alunoId);
+
           $historicoEscolar =  new clsPmieducarHistoricoEscolar(
                                   $ref_cod_aluno = $alunoId,
-                                  $sequencial = $this->getNextSequencial($alunoId),
+                                  $sequencial = $sequencial,
                                   $ref_usuario_exc = null,
                                   $ref_usuario_cad = $this->getSession()->id_pessoa,
                                   #TODO nm_curso
@@ -376,6 +389,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
           #TODO gravar notas / faltas de cada componente curricular
 
           $historicoEscolar->cadastra();
+          $this->recreateHistoricoDisciplinas($sequencial, $alunoId);
+
           $successMsg = 'Histórico processado com sucesso';
         }
         else{
@@ -411,7 +426,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                   $folha = $this->getRequest()->folha
                                 );
 
-          echo $historicoEscolar->edita();
+          $historicoEscolar->edita();
+          $this->recreateHistoricoDisciplinas($dadosHistoricoEscolar['sequencial'], $alunoId);
           $successMsg = 'Histórico reprocessado com sucesso';
         }
 
@@ -428,8 +444,59 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       $this->appendResponse('situacao_historico', $situacaoHistorico);
       $this->appendResponse('link_to_historico', $linkToHistorico);
 
-      $this->appendMsg($successMsg, 'success');
+      if ($successMsg)
+        $this->appendMsg($successMsg, 'success');
+      else
+        $this->appendMsg('Histórico não reprocessado', 'notice');
+
       return true;
+    }
+  }
+
+
+  protected function recreateHistoricoDisciplinas($historicoSequencial, $alunoId){
+
+    $this->db->select("delete from pmieducar.historico_disciplinas where ref_ref_cod_aluno = $alunoId and ref_sequencial = $historicoSequencial");
+
+    $cnsPresenca = RegraAvaliacao_Model_TipoPresenca;
+    $tpPresenca = $this->getService()->getRegra()->get('tipoPresenca');
+    $cnsNota = RegraAvaliacao_Model_Nota_TipoValor;
+    $tpNota = $this->getService()->getRegra()->get('tipoNota');
+    $situacaoFaltasCc = $this->getService()->getSituacaoFaltas()->componentesCurriculares;
+    $mediasCc = $this->getService()->getMediasComponentes();
+
+    foreach ($this->getService()->getComponentes() as $componenteCurricular)
+    {
+      $ccId = $componenteCurricular->get('id');
+      $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
+      $situacaoFaltaCc = $situacaoFaltasCc[$ccId];
+
+      if($tpPresenca == $cnsPresenca::POR_COMPONENTE){
+        $falta = $situacaoFaltaCc->total;
+      }
+      elseif($tpPresenca == $cnsPresenca::GERAL){
+        $falta = $this->getService()->getSituacaoFaltas()->totalFaltas;
+      }
+
+      if ($tpNota == $cnsNota::NUMERICA || $tpNota == $cnsNota::CONCEITUAL){
+        if(is_array($mediasCc[$ccId]) && count($mediasCc[$ccId]) > 0)
+          $nota = (string)$mediasCc[$ccId][0]->mediaArredondada;
+        else
+          $nota = '';
+      }
+      else
+        $nota = '';
+
+      $historicoDisciplina = new clsPmieducarHistoricoDisciplinas(
+                                $sequencial, 
+                                $alunoId,
+                                $historicoSequencial,
+                                $componenteCurricular->nome,
+                                $nota,
+                                $falta
+                            );
+
+      $historicoDisciplina->cadastra();
     }
   }
 
