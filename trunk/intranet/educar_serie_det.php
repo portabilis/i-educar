@@ -159,6 +159,10 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Intervalo', $registro['intervalo']));
     }
 
+    if ($registro['observacao_historico']) {
+      $this->addDetalhe(array('Observação histórico', $registro['observacao_historico']));
+    }
+
     if ($obj_permissoes->permissao_cadastra(583, $this->pessoa_logada, 3)) {
       $this->url_novo = 'educar_serie_cad.php';
       $this->url_editar = "educar_serie_cad.php?cod_serie={$registro['cod_serie']}";

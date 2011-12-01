@@ -197,6 +197,8 @@ class indice extends clsCadastro
       2, 2, FALSE, '', '', FALSE, FALSE, TRUE);
 
     $this->campoNumero('idade_final', '&nbsp;até', $this->idade_final, 2, 2, FALSE);
+
+		$this->campoMemo( "observacao_historico", "Observa&ccedil;&atilde;o histórico", $this->observacao_historico, 60, 5, false );
   }
 
   function Novo()
@@ -211,7 +213,7 @@ class indice extends clsCadastro
     $obj = new clsPmieducarSerie(NULL, NULL, $this->pessoa_logada, $this->ref_cod_curso,
       $this->nm_serie, $this->etapa_curso, $this->concluinte, $this->carga_horaria,
       NULL, NULL, 1, $this->intervalo, $this->idade_inicial, $this->idade_final,
-      $this->regra_avaliacao_id);
+      $this->regra_avaliacao_id, $this->observacao_historico);
 
     $cadastrou = $obj->cadastra();
 
@@ -238,7 +240,7 @@ class indice extends clsCadastro
     $obj = new clsPmieducarSerie($this->cod_serie, $this->pessoa_logada, NULL,
       $this->ref_cod_curso, $this->nm_serie, $this->etapa_curso, $this->concluinte,
       $this->carga_horaria, NULL, NULL, 1, $this->intervalo, $this->idade_inicial,
-      $this->idade_final, $this->regra_avaliacao_id);
+      $this->idade_final, $this->regra_avaliacao_id, $this->observacao_historico);
 
     $editou = $obj->edita();
     if ($editou) {
