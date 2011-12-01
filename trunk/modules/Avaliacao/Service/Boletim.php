@@ -1346,6 +1346,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $faltasComponentes[$id]->horasFaltas = NULL;
         $faltasComponentes[$id]->porcentagemFalta = NULL;
         $faltasComponentes[$id]->porcentagemPresenca = NULL;
+        $faltasComponentes[$id]->total = $componenteTotal;
+        //$faltasComponentes[$id]->componenteCurricular = $componenteEtapa;
 
         // Calcula a quantidade de horas/faltas no componente
         $faltasComponentes[$id]->horasFaltas =
