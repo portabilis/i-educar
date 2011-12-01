@@ -53,6 +53,7 @@ class IndexController extends Core_Controller_Page_ListController
     'Sistema de nota' => 'tipoNota',
     'Progressão' => 'tipoProgressao',
     'Média aprovação' => 'media',
+    'Média exame' => 'mediaRecuperacao',
     'Fórmula média' => 'formulaMedia',
     'Fórmula recuperação' => 'formulaRecuperacao'
   );
