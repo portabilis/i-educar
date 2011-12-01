@@ -158,7 +158,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     $result = $this->validatesPresenceOf($this->getRequest()->att, 'att', $raiseExceptionOnError);
 
     if ($result){
-      $expectedAtts = array('matriculas', 'processamento');
+      $expectedAtts = array('matriculas', 'processamento', 'historico');
       $result = $this->validatesValueInSetOf($this->getRequest()->att, $expectedAtts, 'att', $raiseExceptionOnError);
     }
     return $result;
@@ -228,9 +228,6 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
   protected function canPostProcessamento(){
     $canPost = $this->validatesPresenceOfInstituicaoId(false) &&
-           //$this->validatesPresenceOfAno(false) && 
-           //$this->validatesPresenceOfSerieId(false) &&
-           //$this->validatesPresenceOfCursoId(false) &&
            $this->validatesPresenceOfMatriculaId(false) &&
            $this->validatesPresenceOfDiasLetivos(false) &&
            $this->validatesPresenceAndValueInSetOfSituacao(false) &&
@@ -257,17 +254,58 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     return $canPost && $this->setService();
   }
 
+
   protected function canDeleteHistorico(){
     return $this->validatesPresenceOfMatriculaId(false);
   }
 
 
   protected function deleteHistorico(){
-    $this->appendMsg('#TODO deleteHistorico', 'notice');
+
+    $matriculaId = $this->getRequest()->matricula_id;
+    $alunoId = $this->getAlunoIdByMatriculaId($matriculaId);
+    $dadosMatricula = $this->getdadosMatricula($matriculaId);
+    $ano = $dadosMatricula['ano'];
+
+    if ($this->existsHistorico($alunoId, $ano, $matriculaId)){
+
+      $dadosHistoricoEscolar = $this->getDadosHistorico($alunoId, $ano, $matriculaId);
+      $this->deleteHistoricoDisplinas($alunoId, $dadosHistoricoEscolar['sequencial']);
+
+      $historicoEscolar =  new clsPmieducarHistoricoEscolar(
+                                  $ref_cod_aluno = $alunoId,
+                                  $sequencial = $dadosHistoricoEscolar['sequencial'],
+                                  $ref_usuario_exc = $this->getSession()->id_pessoa,
+                                  $ref_usuario_cad = null,
+                                  #TODO nm_curso
+                                  $nm_serie = null,
+                                  $ano = null,
+                                  $carga_horaria = null,
+                                  $dias_letivos = null,
+                                  $escola = null,
+                                  $escola_cidade = null,
+                                  $escola_uf = null,
+                                  $observacao = null,
+                                  $aprovado = null,
+                                  $data_cadastro = null,
+                                  $data_exclusao = date('Y-m-d'),
+                                  $ativo = 0
+                          );
+      $historicoEscolar->edita();
+
+      $this->appendMsg('Histórico escolar removido com sucesso', 'success');
+    }
+    else
+      $this->appendMsg("Histórico matricula $matriculaId inexistente ou já removido", 'notice');
   }
 
 
-  #TODO implement this functions
+  protected function deleteHistoricoDisplinas($alunoId, $historicoSequencial){
+    $historicoDisciplinas = new clsPmieducarHistoricoDisciplinas();
+    $historicoDisciplinas->excluirTodos($alunoId, $historicoSequencial);
+  }
+
+
   protected function getdadosEscola($escolaId){
 
     $sql = "select (select pes.nome from pmieducar.escola esc, cadastro.pessoa pes where esc.ref_cod_instituicao = {$this->getRequest()->instituicao_id} and esc.cod_escola = $escolaId and pes.idpes = esc.ref_idpes) as nome,
@@ -456,7 +494,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
   protected function recreateHistoricoDisciplinas($historicoSequencial, $alunoId){
 
-    $this->db->select("delete from pmieducar.historico_disciplinas where ref_ref_cod_aluno = $alunoId and ref_sequencial = $historicoSequencial");
+    $this->deleteHistoricoDisplinas($alunoId, $historicoSequencial);
 
     $cnsPresenca = RegraAvaliacao_Model_TipoPresenca;
     $tpPresenca = $this->getService()->getRegra()->get('tipoPresenca');
@@ -527,8 +565,6 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     );
     $matriculaTurma = $matriculaTurma[0];
 
-    //var_dump($matriculaTurma);
-
     $dadosMatricula = array();
     if (is_array($matriculaTurma) && count($matriculaTurma) > 0){
       $dadosMatricula['ano'] = $ano;
@@ -586,12 +622,12 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
   }
 
 
-  protected function existsHistorico($alunoId, $ano, $matriculaId){
+  protected function existsHistorico($alunoId, $ano, $matriculaId, $ativo = 1){
 
     if (is_null($matriculaId))
       $matriculaId = $this->getRequest()->matricula_id;
 
-    $sql = "select 1 from pmieducar.historico_escolar where ref_cod_aluno = $alunoId and ano = $ano and ref_cod_instituicao = {$this->getRequest()->instituicao_id} and ref_cod_matricula = $matriculaId";
+    $sql = "select 1 from pmieducar.historico_escolar where ref_cod_aluno = $alunoId and ano = $ano and ref_cod_instituicao = {$this->getRequest()->instituicao_id} and ref_cod_matricula = $matriculaId and ativo = $ativo";
     return ($this->db->selectField($sql) == '1');
   }
 
@@ -673,7 +709,6 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       foreach($alunos as $aluno)
       {
         $matricula = array();
-        //$this->setService($matriculaId = $aluno['ref_cod_matricula']);
 
         $matricula['matricula_id'] = $aluno['ref_cod_matricula'];
         $matricula['aluno_id'] = $aluno['ref_cod_aluno'];
@@ -785,6 +820,11 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         }
         elseif ($this->getRequest()->oper == 'delete')
         {
+          if ($this->getRequest()->att == 'historico')
+          {
+            $this->deleteHistorico();
+          }
+          else
             $this->notImplementedError();
         }
       }
