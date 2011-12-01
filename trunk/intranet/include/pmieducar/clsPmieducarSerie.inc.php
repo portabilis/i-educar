@@ -342,9 +342,11 @@ class clsPmieducarSerie
         $gruda    = ", ";
       }
 
-      $campos .= "{$gruda}observacao_historico";
-      $valores .= "{$gruda}'{$this->observacao_historico}'";
-      $gruda = ", ";
+      if(is_string($this->observacao_historico)){
+        $campos .= "{$gruda}observacao_historico";
+        $valores .= "{$gruda}'{$this->observacao_historico}'";
+        $gruda = ", ";
+      }
 
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
       return $db->InsertId("{$this->_tabela}_cod_serie_seq");
@@ -439,8 +441,10 @@ class clsPmieducarSerie
         $gruda = ", ";
       }
 
-      $set .= "{$gruda}observacao_historico = '{$this->observacao_historico}'";
-      $gruda = ", ";
+      if(is_string($this->observacao_historico)){
+        $set .= "{$gruda}observacao_historico = '{$this->observacao_historico}'";
+        $gruda = ", ";
+      }
 
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_serie = '{$this->cod_serie}'");
