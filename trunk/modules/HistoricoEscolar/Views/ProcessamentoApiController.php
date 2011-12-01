@@ -256,47 +256,51 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
 
   protected function canDeleteHistorico(){
-    return $this->validatesPresenceOfMatriculaId(false);
+    return $this->validatesPresenceOfInstituicaoId(false) &&
+    $this->validatesPresenceOfMatriculaId(false);
   }
 
 
   protected function deleteHistorico(){
 
-    $matriculaId = $this->getRequest()->matricula_id;
-    $alunoId = $this->getAlunoIdByMatriculaId($matriculaId);
-    $dadosMatricula = $this->getdadosMatricula($matriculaId);
-    $ano = $dadosMatricula['ano'];
+    if ($this->canDeleteHistorico()){
 
-    if ($this->existsHistorico($alunoId, $ano, $matriculaId)){
+      $matriculaId = $this->getRequest()->matricula_id;
+      $alunoId = $this->getAlunoIdByMatriculaId($matriculaId);
+      $dadosMatricula = $this->getdadosMatricula($matriculaId);
+      $ano = $dadosMatricula['ano'];
 
-      $dadosHistoricoEscolar = $this->getDadosHistorico($alunoId, $ano, $matriculaId);
-      $this->deleteHistoricoDisplinas($alunoId, $dadosHistoricoEscolar['sequencial']);
+      if ($this->existsHistorico($alunoId, $ano, $matriculaId)){
 
-      $historicoEscolar =  new clsPmieducarHistoricoEscolar(
-                                  $ref_cod_aluno = $alunoId,
-                                  $sequencial = $dadosHistoricoEscolar['sequencial'],
-                                  $ref_usuario_exc = $this->getSession()->id_pessoa,
-                                  $ref_usuario_cad = null,
-                                  #TODO nm_curso
-                                  $nm_serie = null,
-                                  $ano = null,
-                                  $carga_horaria = null,
-                                  $dias_letivos = null,
-                                  $escola = null,
-                                  $escola_cidade = null,
-                                  $escola_uf = null,
-                                  $observacao = null,
-                                  $aprovado = null,
-                                  $data_cadastro = null,
-                                  $data_exclusao = date('Y-m-d'),
-                                  $ativo = 0
-                          );
-      $historicoEscolar->edita();
+        $dadosHistoricoEscolar = $this->getDadosHistorico($alunoId, $ano, $matriculaId);
+        $this->deleteHistoricoDisplinas($alunoId, $dadosHistoricoEscolar['sequencial']);
 
-      $this->appendMsg('Histórico escolar removido com sucesso', 'success');
+        $historicoEscolar =  new clsPmieducarHistoricoEscolar(
+                                    $ref_cod_aluno = $alunoId,
+                                    $sequencial = $dadosHistoricoEscolar['sequencial'],
+                                    $ref_usuario_exc = $this->getSession()->id_pessoa,
+                                    $ref_usuario_cad = null,
+                                    #TODO nm_curso
+                                    $nm_serie = null,
+                                    $ano = null,
+                                    $carga_horaria = null,
+                                    $dias_letivos = null,
+                                    $escola = null,
+                                    $escola_cidade = null,
+                                    $escola_uf = null,
+                                    $observacao = null,
+                                    $aprovado = null,
+                                    $data_cadastro = null,
+                                    $data_exclusao = date('Y-m-d'),
+                                    $ativo = 0
+                            );
+        $historicoEscolar->edita();
+
+        $this->appendMsg('Histórico escolar removido com sucesso', 'success');
+      }
+      else
+        $this->appendMsg("Histórico matricula $matriculaId inexistente ou já removido", 'notice');
     }
-    else
-      $this->appendMsg("Histórico matricula $matriculaId inexistente ou já removido", 'notice');
   }
 
 
