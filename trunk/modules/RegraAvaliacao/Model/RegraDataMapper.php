@@ -60,6 +60,7 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
     'porcentagemPresenca'  => 'porcentagem_presenca',
     'parecerDescritivo'    => 'parecer_descritivo',
     'tipoPresenca'         => 'tipo_presenca',
+    'mediaRecuperacao'     => 'media_recuperacao',
   );
 
   /**

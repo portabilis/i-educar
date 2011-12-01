@@ -81,7 +81,7 @@ class EditController extends Core_Controller_Page_EditController
                    valor não será considerado.'
     ),
     'mediaRecuperacao' => array(
-      'label'  => 'Média final para promoção',
+      'label'  => 'Média exame final para promoção',
       'help'   => 'Informe a média necessária para promoção<br />
                    do aluno, aceita até 3 casas decimais. Exemplos: 5,00; 6,725, 6.<br >
                    Desconsidere esse campo caso selecione o tipo de nota "conceitual"'
@@ -249,6 +249,8 @@ var tabela_arredondamento = new function() {
     // Média
     $this->campoTexto('media', $this->_getLabel('media'), $this->getEntity()->media,
       5, 50, FALSE, FALSE, FALSE, $this->_getHelp('media'));
+
+    $this->campoTexto('mediaRecuperacao', $this->_getLabel('mediaRecuperacao'), $this->getEntity()->mediaRecuperacao, 5, 50, FALSE, FALSE, FALSE, $this->_getHelp('mediaRecuperacao'));
 
     // Cálculo média
     $formulas = $this->getDataMapper()->findFormulaMediaFinal();
