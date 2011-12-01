@@ -21,6 +21,16 @@ class PortabilisRelacaoAlunosTurma extends Report
     $this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true);
 
     include("include/pmieducar/educar_campo_lista.php");
+
+    $opcoes[1] = "Aprovado";
+		$opcoes[2] = "Reprovado";
+    $opcoes[3] = "Em andamento";
+    $opcoes[4] = "Transferido";
+    $opcoes[6] = "Abandono";
+    $opcoes[9] = "Exceto Transferidos/Abandono";
+    $opcoes[10] = "Todas";
+    
+    $this->campoLista('situacao', 'Situação', $opcoes, 3, $this->situacao);
     
   }
 
@@ -46,6 +56,7 @@ class PortabilisRelacaoAlunosTurma extends Report
 
     $this->addArg('instituicao', (int)$_POST['ref_cod_instituicao']);
     $this->addArg('escola', (int)$_POST['ref_cod_escola']);
+    $this->addArg('situacao', (int)$_POST['situacao']);
   }
 
 }
@@ -55,6 +66,7 @@ $report = new PortabilisRelacaoAlunosTurma($name = 'Relação de Alunos por Turma'
 $report->addRequiredField('ano');
 $report->addRequiredField('ref_cod_instituicao', 'instituicao');
 $report->addRequiredField('ref_cod_escola', 'escola');
+$report->addRequiredField('situacao', 'situacao');
 
 $report->render();
 ?>

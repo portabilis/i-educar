@@ -28,6 +28,9 @@
 	<parameter name="linha" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
+	<parameter name="situacao" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[(SELECT public.fcn_upper(nm_instituicao) AS nome_instituicao,
        public.fcn_upper(nm_responsavel) AS nome_responsavel,
@@ -336,7 +339,6 @@
                      modules.nota_aluno
                WHERE cm.nota_aluno_id = nota_aluno.id  AND
                      cm.componente_curricular_id = $P{disciplina} AND
-                     cm.etapa = 4 AND
                      nota_aluno.matricula_id = matricula.cod_matricula) AS media
 
 
@@ -370,10 +372,28 @@
        turma.ref_ref_cod_serie = escola_serie.ref_cod_serie AND
        turma.ref_ref_cod_escola = escola_serie.ref_cod_escola AND
        turma.ref_cod_curso = curso.cod_curso AND
-       matricula_turma.ativo = 1 AND
+       matricula.ativo = 1 AND
        matricula.ultima_matricula > 0 AND
-       matricula.aprovado = 3 AND
-       matricula.ano = $P{ano}
+       matricula.ano = $P{ano} AND
+       (SELECT CASE WHEN $P{situacao} = 10 THEN
+                      matricula.aprovado in ('1', '2', '3', '4','6')
+                    WHEN $P{situacao} = 9 THEN
+                      matricula.aprovado in ('1', '2', '3')
+                    ELSE
+                    matricula.aprovado = (SELECT CASE WHEN $P{situacao} = 1 THEN
+                                                    1
+                                                  WHEN $P{situacao} = 2 THEN
+                                                    2
+                                                  WHEN $P{situacao} = 3 THEN
+                                                    3
+                                                  WHEN $P{situacao} = 4 THEN
+                                                    4
+                                                  ELSE
+                                                    6
+                                             END)
+       END) AND
+       matricula_turma.data_cadastro = (select max(mt.data_cadastro) from matricula_turma mt where
+       matricula_turma.ref_cod_matricula = mt.ref_cod_matricula)
 
 ORDER BY nome_aluno ASC)
 
@@ -929,56 +949,56 @@ limit $P{linha}
 				<textFieldExpression><![CDATA[$F{frequencia_componente}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="338" y="1" width="10" height="13"/>
+				<reportElement x="336" y="1" width="15" height="13"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{faltas_disc_et1}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="392" y="1" width="10" height="13"/>
+				<reportElement x="391" y="1" width="15" height="13"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{faltas_disc_et2}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="446" y="1" width="10" height="13"/>
+				<reportElement x="444" y="1" width="15" height="13"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{faltas_disc_et3}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="500" y="1" width="10" height="13"/>
+				<reportElement x="498" y="1" width="15" height="13"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{faltas_disc_et4}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="338" y="1" width="10" height="13"/>
+				<reportElement x="336" y="1" width="15" height="13"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{total_faltas_et1}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="392" y="1" width="10" height="13"/>
+				<reportElement x="391" y="1" width="15" height="13"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{total_faltas_et2}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="446" y="1" width="10" height="13"/>
+				<reportElement x="444" y="1" width="15" height="13"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{total_faltas_et3}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="500" y="1" width="10" height="13"/>
+				<reportElement x="498" y="1" width="15" height="13"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
@@ -1007,6 +1027,21 @@ limit $P{linha}
 		<band height="2" splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band height="1" splitType="Stretch"/>
+		<band height="15" splitType="Stretch">
+			<staticText>
+				<reportElement x="66" y="1" width="80" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total de alunos:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="146" y="1" width="23" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
 	</summary>
 </jasperReport>

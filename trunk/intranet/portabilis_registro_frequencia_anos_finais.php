@@ -21,7 +21,16 @@ class PortabilisRegistroFrequenciaAnosFinais extends Report
     $this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true);
 
     include("include/pmieducar/educar_campo_lista.php");
+
+    $opcoes[1] = "Aprovado";
+		$opcoes[2] = "Reprovado";
+    $opcoes[3] = "Em andamento";
+    $opcoes[4] = "Transferido";
+    $opcoes[6] = "Abandono";
+    $opcoes[9] = "Exceto Transferidos/Abandono";
+    $opcoes[10] = "Todas";
     
+    $this->campoLista('situacao', 'Situação', $opcoes, 3, $this->situacao);    
     $this->campoTexto("disciplina","Disciplina:",'',40,255,false);    
     $this->campoTexto("professor","Professor(a):",'',40,255,false);
     $this->campoNumero( "linha", "Linhas em branco", 0, 2, 2, true); 
@@ -37,6 +46,7 @@ class PortabilisRegistroFrequenciaAnosFinais extends Report
     $this->addArg('curso', isset($_POST['ref_cod_curso']) ? (int)$_POST['ref_cod_curso'] : 0);
     $this->addArg('serie', isset($_POST['ref_ref_cod_serie']) ? (int)$_POST['ref_ref_cod_serie'] : 0);
     $this->addArg('turma', isset($_POST['ref_cod_turma']) ? (int)$_POST['ref_cod_turma'] : 0);
+    $this->addArg('situacao', (int)$_POST['situacao']);
     $this->addArg('linha', isset($_POST['linha']) ? (int)$_POST['linha'] : 0);
     $this->addArg('disciplina', $_POST['disciplina']);
     $this->addArg('professor', $_POST['professor']);
@@ -48,6 +58,7 @@ $report = new PortabilisRegistroFrequenciaAnosFinais($name = 'Registro de Frequê
 $report->addRequiredField('ano');
 $report->addRequiredField('ref_cod_instituicao', 'instituicao');
 $report->addRequiredField('ref_cod_escola', 'escola');
+$report->addRequiredField('situacao', 'situacao');
 
 $report->render();
 ?>

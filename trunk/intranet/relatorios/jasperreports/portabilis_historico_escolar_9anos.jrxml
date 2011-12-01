@@ -1393,7 +1393,7 @@ ORDER BY 1 ASC]]>
 				<textFieldExpression><![CDATA["Bairro: " +$F{bairro}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="10" y="7" width="57" height="46"/>
+				<reportElement x="11" y="7" width="57" height="46"/>
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
 		</band>
