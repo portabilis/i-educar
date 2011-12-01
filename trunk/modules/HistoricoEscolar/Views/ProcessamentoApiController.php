@@ -334,6 +334,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
     if ($this->canPostProcessamento()){
       $matriculaId = $this->getRequest()->matricula_id;
+      $successMsg = '';
 
       try {
         $alunoId = $this->getAlunoIdByMatriculaId($matriculaId);
@@ -375,14 +376,17 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
           #TODO gravar notas / faltas de cada componente curricular
 
           $historicoEscolar->cadastra();
+          $successMsg = 'Histórico processado com sucesso';
         }
         else{
 
+          $dadosHistoricoEscolar = $this->getDadosHistorico($alunoId, $ano, $matriculaId);
+
           $historicoEscolar =  new clsPmieducarHistoricoEscolar(
                                   $ref_cod_aluno = $alunoId,
-                                  $sequencial = $this->getNextSequencial($alunoId),
+                                  $sequencial = $dadosHistoricoEscolar['sequencial'],
                                   $ref_usuario_exc = $this->getSession()->id_pessoa,
-                                  $ref_usuario_cad = null,
+                                  $ref_usuario_cad = $dadosHistoricoEscolar['ref_usuario_cad'],
                                   #TODO nm_curso
                                   $nm_serie = $dadosMatricula['nome_serie'],
                                   $ano = $ano,
@@ -393,7 +397,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                   $escola_uf = $dadosEscola['uf'],
                                   $observacao = $this->getRequest()->observacao,
                                   $aprovado = $this->getSituacaoMatricula(),
-                                  $data_cadastro = date('Y-m-d'),
+                                  $data_cadastro = null,
                                   $data_exclusao = null,
                                   $ativo = 1,
                                   $faltas_globalizadas = $this->isFaltaGlobalizada(),
@@ -407,7 +411,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                   $folha = $this->getRequest()->folha
                                 );
 
-          $historicoEscolar->edita();
+          echo $historicoEscolar->edita();
+          $successMsg = 'Histórico reprocessado com sucesso';
         }
 
       }
@@ -423,7 +428,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       $this->appendResponse('situacao_historico', $situacaoHistorico);
       $this->appendResponse('link_to_historico', $linkToHistorico);
 
-      $this->appendMsg('Histórico processado com sucesso', 'success');
+      $this->appendMsg($successMsg, 'success');
       return true;
     }
   }
@@ -498,6 +503,19 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     $sql = "select nm_serie from pmieducar.serie where cod_serie = $serieId";
     $nome = $this->db->select($sql);
     return ucwords(strtolower(utf8_encode($nome[0]['nm_serie'])));
+  }
+
+
+  protected function getDadosHistorico($alunoId, $ano, $matriculaId){
+
+    if (is_null($matriculaId))
+      $matriculaId = $this->getRequest()->matricula_id;
+
+    $sql = "select sequencial from pmieducar.historico_escolar where ref_cod_aluno = $alunoId and ano = $ano and ref_cod_instituicao = {$this->getRequest()->instituicao_id} and ref_cod_matricula = $matriculaId";
+
+    $record = $this->db->selectField($sql);
+    $record = $record[0];
+    return $record;
   }
 
 
