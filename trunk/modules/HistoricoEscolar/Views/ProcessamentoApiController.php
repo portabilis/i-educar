@@ -312,9 +312,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
   protected function getdadosEscola($escolaId){
 
-    $sql = "select (select pes.nome from pmieducar.escola esc, cadastro.pessoa pes where esc.ref_cod_instituicao = {$this->getRequest()->instituicao_id} and esc.cod_escola = $escolaId and pes.idpes = esc.ref_idpes) as nome,
+    $sql = "select (select upper(pes.nome) from pmieducar.escola esc, cadastro.pessoa pes where esc.ref_cod_instituicao = {$this->getRequest()->instituicao_id} and esc.cod_escola = $escolaId and pes.idpes = esc.ref_idpes) as nome,
 
-(SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
+upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
         FROM public.municipio,
              cadastro.endereco_pessoa,
              cadastro.juridica,
@@ -324,7 +324,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
              bairro.idmun = municipio.idmun AND
              juridica.idpes = endereco_pessoa.idpes AND
              juridica.idpes = escola.ref_idpes AND
-             escola.cod_escola = $escolaId),(SELECT endereco_externo.cidade FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $escolaId))),(SELECT municipio FROM pmieducar.escola_complemento where ref_cod_escola = $escolaId))) AS cidade,
+             escola.cod_escola = $escolaId),(SELECT endereco_externo.cidade FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $escolaId))),(SELECT municipio FROM pmieducar.escola_complemento where ref_cod_escola = $escolaId)))) AS cidade,
 
 (SELECT COALESCE((SELECT COALESCE((SELECT municipio.sigla_uf
         FROM public.municipio,
@@ -404,7 +404,6 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                   $sequencial = $sequencial,
                                   $ref_usuario_exc = null,
                                   $ref_usuario_cad = $this->getSession()->id_pessoa,
-                                  #TODO nm_curso
                                   $nm_serie = $dadosMatricula['nome_serie'],
                                   $ano = $ano,
                                   $carga_horaria = $this->getService()->getOption('serieCargaHoraria'),
@@ -425,7 +424,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                   $frequencia = round($this->getService()->getSituacaoFaltas()->porcentagemPresenca, 2),
                                   $registro = $this->getRequest()->registro,
                                   $livro = $this->getRequest()->livro,
-                                  $folha = $this->getRequest()->folha
+                                  $folha = $this->getRequest()->folha,
+                                  $nm_curso = $dadosMatricula['nome_curso']
                                 );
 
           #TODO gravar notas / faltas de cada componente curricular
@@ -465,7 +465,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                   $frequencia = round($this->getService()->getSituacaoFaltas()->porcentagemPresenca, 2),
                                   $registro = $this->getRequest()->registro,
                                   $livro = $this->getRequest()->livro,
-                                  $folha = $this->getRequest()->folha
+                                  $folha = $this->getRequest()->folha,
+                                  $nm_curso = $dadosMatricula['nome_curso']
                                 );
 
           $historicoEscolar->edita();
@@ -578,7 +579,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       $dadosMatricula['matricula_id'] = $matriculaTurma['ref_cod_matricula'];
       $dadosMatricula['aluno_id'] = $matriculaTurma['ref_cod_aluno'];
       $dadosMatricula['nome'] = ucwords(strtolower(utf8_decode($matriculaTurma['nome_aluno'])));
-      $dadosMatricula['nome_curso'] = ucwords(strtolower(utf8_decode($matriculaTurma['nm_curso'])));
+      $dadosMatricula['nome_curso'] = ucwords(strtolower($matriculaTurma['nm_curso']));
       $dadosMatricula['nome_serie'] = strtolower(utf8_decode($this->getNomeSerie($matriculaTurma['ref_ref_cod_serie'])));
       $dadosMatricula['nome_turma'] = ucwords(strtolower(utf8_decode($matriculaTurma['nm_turma'])));
       $dadosMatricula['situacao_historico'] = $this->getSituacaoHistorico($matriculaTurma['ref_cod_aluno'], $ano);
