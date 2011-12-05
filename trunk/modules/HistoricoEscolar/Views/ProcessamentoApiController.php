@@ -141,6 +141,10 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     return $this->validatesPresenceOf($this->getRequest()->matricula_id, 'matricula_id', $raiseExceptionOnEmpty);
   }
 
+  protected function validatesPresenceOfGradeCursoId($raiseExceptionOnEmpty){
+    return $this->validatesPresenceOf($this->getRequest()->grade_curso_id, 'grade_curso_id', $raiseExceptionOnEmpty);
+  }
+
   protected function validatesPresenceOfDiasLetivos($raiseExceptionOnEmpty){
     return $this->validatesPresenceOf($this->getRequest()->dias_letivos, 'dias_letivos', $raiseExceptionOnEmpty);
   }
@@ -231,7 +235,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
            $this->validatesPresenceOfMatriculaId(false) &&
            $this->validatesPresenceOfDiasLetivos(false) &&
            $this->validatesPresenceAndValueInSetOfSituacao(false) &&
-           $this->validatesPresenceAndValueInSetOfExtraCurricular(false);
+           $this->validatesPresenceAndValueInSetOfExtraCurricular(false) &&
+           $this->validatesPresenceOfGradeCursoId(false);
 
     if($canPost){
       $sql = "select 1 from pmieducar.matricula where cod_matricula = {$this->getRequest()->matricula_id} and ativo = 1";
@@ -271,7 +276,6 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       $ano = $dadosMatricula['ano'];
 
       if ($this->existsHistorico($alunoId, $ano, $matriculaId)){
-
         $dadosHistoricoEscolar = $this->getDadosHistorico($alunoId, $ano, $matriculaId);
         $this->deleteHistoricoDisplinas($alunoId, $dadosHistoricoEscolar['sequencial']);
 
@@ -346,7 +350,7 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
 
   protected function getNextHistoricoSequencial($alunoId){
 
-    $sql = "select coalesce(max(sequencial), 0) + 1 from pmieducar.historico_escolar where ref_cod_aluno = $alunoId";
+    $sql = "select coalesce(max(sequencial), 0) + 1 from pmieducar.historico_escolar where ref_cod_aluno = $alunoId and ativo = 1";
 
     return $this->db->selectField($sql);
   }
@@ -394,7 +398,7 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
         $dadosMatricula = $this->getdadosMatricula($matriculaId);
         $dadosEscola = $this->getdadosEscola($dadosMatricula['escola_id']);
         $ano = $dadosMatricula['ano'];
-        $isNewHistorico = ! $this->existsHistorico($alunoId, $ano);
+        $isNewHistorico = ! $this->existsHistorico($alunoId, $ano, $matriculaId);
 
           if ($isNewHistorico){
           $sequencial = $this->getNextHistoricoSequencial($alunoId);
@@ -425,10 +429,9 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
                                   $registro = $this->getRequest()->registro,
                                   $livro = $this->getRequest()->livro,
                                   $folha = $this->getRequest()->folha,
-                                  $nm_curso = $dadosMatricula['nome_curso']
+                                  $nm_curso = $dadosMatricula['nome_curso'],
+                                  $historico_grade_curso_id = $this->getRequest()->grade_curso_id
                                 );
-
-          #TODO gravar notas / faltas de cada componente curricular
 
           $historicoEscolar->cadastra();
           $this->recreateHistoricoDisciplinas($sequencial, $alunoId);
@@ -444,7 +447,6 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
                                   $sequencial = $dadosHistoricoEscolar['sequencial'],
                                   $ref_usuario_exc = $this->getSession()->id_pessoa,
                                   $ref_usuario_cad = $dadosHistoricoEscolar['ref_usuario_cad'],
-                                  #TODO nm_curso
                                   $nm_serie = $dadosMatricula['nome_serie'],
                                   $ano = $ano,
                                   $carga_horaria = $this->getService()->getOption('serieCargaHoraria'),
@@ -466,7 +468,8 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
                                   $registro = $this->getRequest()->registro,
                                   $livro = $this->getRequest()->livro,
                                   $folha = $this->getRequest()->folha,
-                                  $nm_curso = $dadosMatricula['nome_curso']
+                                  $nm_curso = $dadosMatricula['nome_curso'],
+                                  $historico_grade_curso_id = $this->getRequest()->grade_curso_id
                                 );
 
           $historicoEscolar->edita();
@@ -480,8 +483,8 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
         return false;
       }
 
-      $situacaoHistorico = $this->getSituacaoHistorico($alunoId, $ano);
-      $linkToHistorico = $this->getLinkToHistorico($alunoId, $ano);
+      $situacaoHistorico = $this->getSituacaoHistorico($alunoId, $ano, $matriculaId, $reload = true);
+      $linkToHistorico = $this->getLinkToHistorico($alunoId, $ano, $matriculaId);
 
       $this->appendResponse('matricula_id', $matriculaId);
       $this->appendResponse('situacao_historico', $situacaoHistorico);
@@ -582,8 +585,8 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
       $dadosMatricula['nome_curso'] = ucwords(strtolower($matriculaTurma['nm_curso']));
       $dadosMatricula['nome_serie'] = strtolower(utf8_decode($this->getNomeSerie($matriculaTurma['ref_ref_cod_serie'])));
       $dadosMatricula['nome_turma'] = ucwords(strtolower(utf8_decode($matriculaTurma['nm_turma'])));
-      $dadosMatricula['situacao_historico'] = $this->getSituacaoHistorico($matriculaTurma['ref_cod_aluno'], $ano);
-      $dadosMatricula['link_to_historico'] = $this->getLinkToHistorico($matriculaTurma['ref_cod_aluno'], $ano);
+      $dadosMatricula['situacao_historico'] = $this->getSituacaoHistorico($matriculaTurma['ref_cod_aluno'], $ano, $matriculaId);
+      $dadosMatricula['link_to_historico'] = $this->getLinkToHistorico($matriculaTurma['ref_cod_aluno'], $ano, $matriculaId);
     }
     else{
       throw new Exception("Não foi possivel recuperar os dados da matricula: $matriculaId.");
@@ -615,30 +618,25 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
 
 
   protected function getDadosHistorico($alunoId, $ano, $matriculaId){
-
-    if (is_null($matriculaId))
-      $matriculaId = $this->getRequest()->matricula_id;
-
-    $sql = "select sequencial from pmieducar.historico_escolar where ref_cod_aluno = $alunoId and ano = $ano and ref_cod_instituicao = {$this->getRequest()->instituicao_id} and ref_cod_matricula = $matriculaId";
-
-    $record = $this->db->selectField($sql);
-    $record = $record[0];
-    return $record;
+    $sql = "select sequencial from pmieducar.historico_escolar where ref_cod_aluno = $alunoId and ano = $ano and ref_cod_instituicao = {$this->getRequest()->instituicao_id} and ref_cod_matricula = $matriculaId and ativo = 1 limit 1";
+    $record = $this->db->select($sql);
+    return $record[0];
   }
 
 
-  protected function existsHistorico($alunoId, $ano, $matriculaId, $ativo = 1){
+  protected function existsHistorico($alunoId, $ano, $matriculaId, $ativo = 1, $reload = false){
 
-    if (is_null($matriculaId))
-      $matriculaId = $this->getRequest()->matricula_id;
+    if(! isset($this->existsHistorico) || $reload){
+      $sql = "select 1 from pmieducar.historico_escolar where ref_cod_aluno = $alunoId and ano = $ano and ref_cod_instituicao = {$this->getRequest()->instituicao_id} and ref_cod_matricula = $matriculaId and ativo = $ativo";
+      $this->existsHistorico = ($this->db->selectField($sql) == '1');
+    }
 
-    $sql = "select 1 from pmieducar.historico_escolar where ref_cod_aluno = $alunoId and ano = $ano and ref_cod_instituicao = {$this->getRequest()->instituicao_id} and ref_cod_matricula = $matriculaId and ativo = $ativo";
-    return ($this->db->selectField($sql) == '1');
+    return $this->existsHistorico;
   }
 
 
-  protected function getSituacaoHistorico($alunoId, $ano, $matriculaId){
-    if ($this->existsHistorico($alunoId, $ano, $matriculaId))
+  protected function getSituacaoHistorico($alunoId, $ano, $matriculaId, $reload = false){
+    if ($this->existsHistorico($alunoId, $ano, $matriculaId, 1, $reload))
         $situacao = 'Histórico processado';
     else 
         $situacao = 'Não processado';
@@ -648,10 +646,6 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
 
 
   protected function getLinkToHistorico($alunoId, $ano, $matriculaId){
-
-    if (is_null($matriculaId))
-      $matriculaId = $this->getRequest()->matricula_id;
-
     $sql = "select sequencial from pmieducar.historico_escolar where ref_cod_aluno = $alunoId and ano = $ano and ref_cod_instituicao = {$this->getRequest()->instituicao_id} and ref_cod_matricula = $matriculaId";
 
     $sequencial = $this->db->selectField($sql);
@@ -714,15 +708,15 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
       foreach($alunos as $aluno)
       {
         $matricula = array();
-
-        $matricula['matricula_id'] = $aluno['ref_cod_matricula'];
+        $matriculaId = $aluno['ref_cod_matricula'];
+        $matricula['matricula_id'] = $matriculaId;
         $matricula['aluno_id'] = $aluno['ref_cod_aluno'];
         $matricula['nome'] = ucwords(strtolower(utf8_encode($aluno['nome_aluno'])));
         $matricula['nome_curso'] = ucwords(strtolower(utf8_encode($aluno['nm_curso'])));
         $matricula['nome_serie'] = ucwords(strtolower(utf8_encode($this->getNomeSerie($aluno['ref_ref_cod_serie']))));
         $matricula['nome_turma'] = ucwords(strtolower(utf8_encode($aluno['nm_turma'])));
-        $matricula['situacao_historico'] = $this->getSituacaoHistorico($aluno['ref_cod_aluno'], $this->getRequest()->ano);
-        $matricula['link_to_historico'] = $this->getLinkToHistorico($aluno['ref_cod_aluno'], $this->getRequest()->ano);
+        $matricula['situacao_historico'] = $this->getSituacaoHistorico($aluno['ref_cod_aluno'], $this->getRequest()->ano, $matriculaId, $reload = true);
+        $matricula['link_to_historico'] = $this->getLinkToHistorico($aluno['ref_cod_aluno'], $this->getRequest()->ano, $matriculaId);
         $matriculas[] = $matricula;
       }
     }
