@@ -129,7 +129,7 @@ class indice extends clsListagem
 			if (!$this->extra_curricular)
 				$lista_busca[] = "Escola";
 		}
-    $lista_busca = array_merge($lista_busca, array('Registro (arquivo)', 'Livro', 'Folha'));
+    $lista_busca = array_merge($lista_busca, array('Curso', 'Série', 'Registro', 'Livro', 'Folha'));
 
 		$this->addCabecalhos($lista_busca);
 
@@ -230,6 +230,8 @@ class indice extends clsListagem
 						$lista_busca[] = "<a href=\"educar_historico_escolar_det.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}\">{$registro["escola"]}</a>";
 				}
 
+        $lista_busca[] = $registro['nm_curso'];
+        $lista_busca[] = $registro['nm_serie'];
         $lista_busca[] = $registro['registro'];
         $lista_busca[] = $registro['livro'];
         $lista_busca[] = $registro['folha'];

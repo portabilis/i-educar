@@ -155,6 +155,12 @@ class indice extends clsDetalhe
 				$this->addDetalhe( array( "S&eacute;rie", "{$registro["nm_serie"]}") );
 			}
 		}
+
+		if( $registro["nm_curso"] )
+		{
+			$this->addDetalhe( array( "Curso", "{$registro["nm_curso"]}") );
+		}
+
 		if( $registro["ano"] )
 		{
 			$this->addDetalhe( array( "Ano", "{$registro["ano"]}") );
