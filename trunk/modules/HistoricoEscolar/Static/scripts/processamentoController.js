@@ -41,7 +41,12 @@ var $j = jQuery.noConflict();
                 .attr('class', 'bar-action')
                 .appendTo($resultTable.parent());
 
-    var $barActions = $('.bar-action');
+    var $barActions = $('.bar-action').hide();
+
+    var $selectAllButton = $('<input class="selecionar" type="button" value="Selecionar todos" />');
+    $selectAllButton.appendTo($barActions);
+    var $actionButton = $('<input class="processar" type="button" value="Processar" />');
+    $actionButton.appendTo($barActions);
 
     var PageUrlBase = 'processamento';
     var ApiUrlBase = 'processamentoApi';
@@ -304,6 +309,7 @@ var $j = jQuery.noConflict();
       $formFilter.fadeIn('fast', function(){
         $(this).show()
       });
+      $barActions.hide();
     }
 
 
@@ -313,15 +319,17 @@ var $j = jQuery.noConflict();
         .bind('click', showSearchForm)
         .attr('style', 'text-decoration: underline')
       );
+      $barActions.show();
     }
 
-    function showSearchButton(){
+/*    function showSearchButton(){
       $navActions.html(
         $("<a href='#'>Nova consulta</a>")
         .bind('click', showSearchForm)
         .attr('style', 'text-decoration: underline')
       );
     }
+*/
 
     function handleMatriculasSearch(dataResponse){ 
 
@@ -372,11 +380,11 @@ var $j = jQuery.noConflict();
             var $linha = $('<tr />');
             $('<td />').html($checkbox).addClass('center').appendTo($linha);
             $('<td />').html(value.nome_curso).addClass('center').appendTo($linha);
-            $('<td />').html(value.nome_serie).addClass('center').appendTo($linha);
-            $('<td />').html(value.nome_turma).addClass('center').appendTo($linha);
+            $('<td />').html(utf8Decode(value.nome_serie)).addClass('center').appendTo($linha);
+            $('<td />').html(utf8Decode(value.nome_turma)).addClass('center').appendTo($linha);
             $('<td />').html(value.matricula_id).addClass('center').appendTo($linha);
             $('<td />').html(value.aluno_id + " - " + safeToUpperCase(value.nome)).appendTo($linha);
-            $('<td />').html(value.situacao_historico).addClass('center').appendTo($linha);
+            $('<td />').html(utf8Decode(value.situacao_historico)).addClass('center').appendTo($linha);
 
             $linha.fadeIn('slow').appendTo($resultTable);
           });//fim each matriculas
@@ -432,8 +440,27 @@ var $j = jQuery.noConflict();
       success : handleMatriculasSearch,
       error : handleErrorMatriculasSearch
     };
+
     $formFilter.ajaxForm(matriculasSearchOptions);
 
-  });
+    var onClickActionEvent = function(event){
+      var checkboxes = $('input.matricula:checked');
 
+      if (checkboxes.length < 1)
+        alert('Selecione ao menos uma matrícula.');
+
+    };
+
+    var onClickSelectAllEvent = function(event){
+      var checked = $('input.matricula:checked');
+      var unchecked = $('input.matricula:not(:checked)');
+
+      checked.attr('checked', false);
+      unchecked.attr('checked', true);
+    };
+
+    $actionButton.click(onClickActionEvent);
+    $selectAllButton.click(onClickSelectAllEvent);
+
+  });
 })(jQuery);
