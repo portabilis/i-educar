@@ -141,8 +141,26 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     return $this->validatesPresenceOf($this->getRequest()->matricula_id, 'matricula_id', $raiseExceptionOnEmpty);
   }
 
-  protected function validatesPresenceOfGradeCursoId($raiseExceptionOnEmpty){
-    return $this->validatesPresenceOf($this->getRequest()->grade_curso_id, 'grade_curso_id', $raiseExceptionOnEmpty);
+  protected function validatesValueIsInBd($fieldName, &$value, $schemaName, $tableName, $raiseExceptionOnError = true){
+
+    $sql = "select 1 from $schemaName.$tableName where $fieldName = $value";
+    $isValid = $this->db->selectField($sql) == '1';
+
+    if (! $isValid){
+      $msg = "O valor informado {$value} para $tableName, não esta presente no banco de dados.";
+      $this->appendMsg($msg);
+
+      if ($raiseExceptionOnError)
+         throw new Exception($msg);
+
+      return false;
+    }
+    return true;
+  }
+
+  protected function validatesPresenceAndValueInDbOfGradeCursoId($raiseExceptionOnError){
+    return $this->validatesPresenceOf($this->getRequest()->grade_curso_id, 'grade_curso_id', $raiseExceptionOnError) &&
+            $this->validatesValueIsInBd('id', $this->getRequest()->grade_curso_id, 'pmieducar', 'historico_grade_curso', $raiseExceptionOnError);
   }
 
   protected function validatesPresenceOfDiasLetivos($raiseExceptionOnEmpty){
@@ -236,7 +254,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
            $this->validatesPresenceOfDiasLetivos(false) &&
            $this->validatesPresenceAndValueInSetOfSituacao(false) &&
            $this->validatesPresenceAndValueInSetOfExtraCurricular(false) &&
-           $this->validatesPresenceOfGradeCursoId(false);
+           $this->validatesPresenceAndValueInDbOfGradeCursoId(false);
 
     if($canPost){
       $sql = "select 1 from pmieducar.matricula where cod_matricula = {$this->getRequest()->matricula_id} and ativo = 1";
