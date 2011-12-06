@@ -133,7 +133,7 @@ class indice extends clsDetalhe
 			}
 			if( $registro["nm_serie"] )
 			{
-				$this->addDetalhe( array( "Curso", "{$registro["nm_serie"]}") );
+				$this->addDetalhe( array( "Série", "{$registro["nm_serie"]}") );
 			}
 		}
 		else
