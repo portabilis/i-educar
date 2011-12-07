@@ -1494,16 +1494,20 @@ function validatesPresenseOfValueInRequiredFields() {
   var requiredFields = document.getElementsByClassName('obrigatorio');
 
   for (var i = 0; i < requiredFields.length; i++) {
-    if (! requiredFields[i].getAttribute('disabled') && ! requiredFields[i].value) {
-      emptyField = requiredFields[i];
-      break;
+    var requiredField = requiredFields[i];
+    if (emptyField == null && ! requiredField.getAttribute('disabled') && ! requiredField.value) {
+      emptyField = requiredField;
+      requiredField.classList.add('error');
     }
+    else
+      requiredField.classList.remove('error');
   }
 
   if (emptyField == null)
     return true;
 
   alert('Preencha todos campos obrigat\u00F3rios, antes de continuar.');
+  console.log(emptyField);
   emptyField.focus();
   return false;
 }
