@@ -212,9 +212,9 @@ var $j = jQuery.noConflict();
     }
 
 
-    function updateFieldSituacao(matricula_id, situacao){
+    function updateFieldSituacao(linkToHistorico, matricula_id, situacao){
       if(situacao)
-        $('#situacao-matricula-' + matricula_id).html(utf8Decode(situacao));
+        $('#situacao-matricula-' + matricula_id).html(getLinkToHistorico(linkToHistorico, utf8Decode(situacao)));
     } 
 
 
@@ -224,7 +224,7 @@ var $j = jQuery.noConflict();
     function handleDelete(dataResponse){
       var targetId = dataResponse.att + '-matricula-' + dataResponse.matricula_id;
       handleMessages(dataResponse.msgs, targetId);
-      updateFieldSituacao(dataResponse.matricula_id, dataResponse.situacao_historico);
+      updateFieldSituacao(dataResponse.link_to_historico, dataResponse.matricula_id, dataResponse.situacao_historico);
     }
 
 
@@ -350,6 +350,14 @@ var $j = jQuery.noConflict();
     }
 */
 
+    function getLinkToHistorico(link, text){
+      if (link)
+        return $('<a target="__blank" style="text-decoration:underline;" href='+link+'>'+text+'</a>');
+      else
+        return text;
+    }
+
+
     function handleMatriculasSearch(dataResponse){ 
 
       showNewSearchButton();
@@ -403,7 +411,9 @@ var $j = jQuery.noConflict();
             $('<td />').html(utf8Decode(value.nome_turma)).addClass('center').appendTo($linha);
             $('<td />').html(value.matricula_id).addClass('center').appendTo($linha);
             $('<td />').html(value.aluno_id + " - " + safeToUpperCase(value.nome)).appendTo($linha);
-            $('<td />').html(utf8Decode(value.situacao_historico)).attr('id', 'situacao-matricula-' + value.matricula_id).addClass('center').appendTo($linha);
+
+            var $htmlSituacao = getLinkToHistorico(value.link_to_historico, utf8Decode(value.situacao_historico));
+            $('<td />').html($htmlSituacao).attr('id', 'situacao-matricula-' + value.matricula_id).addClass('center').appendTo($linha);
 
             $linha.fadeIn('slow').appendTo($resultTable);
           });//fim each matriculas
@@ -541,7 +551,7 @@ var $j = jQuery.noConflict();
         var $checkbox = $('matricula-' + dataResponse.matricula_id);
         var $targetElement = $j('#matricula-'+dataResponse.matricula_id).closest('tr').first();
         handleMessages(dataResponse.msgs, $targetElement);
-        updateFieldSituacao(dataResponse.matricula_id, dataResponse.situacao_historico);
+        updateFieldSituacao(dataResponse.link_to_historico, dataResponse.matricula_id, dataResponse.situacao_historico);
       /*}
       catch(error){
         showNewSearchButton();
