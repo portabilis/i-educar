@@ -1507,7 +1507,6 @@ function validatesPresenseOfValueInRequiredFields() {
     return true;
 
   alert('Preencha todos campos obrigat\u00F3rios, antes de continuar.');
-  console.log(emptyField);
   emptyField.focus();
   return false;
 }
