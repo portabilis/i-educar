@@ -1494,7 +1494,7 @@ function validatesPresenseOfValueInRequiredFields() {
   var requiredFields = document.getElementsByClassName('obrigatorio');
 
   for (var i = 0; i < requiredFields.length; i++) {
-    if (! requiredFields[i].value) {
+    if (! requiredFields[i].getAttribute('disabled') && ! requiredFields[i].value) {
       emptyField = requiredFields[i];
       break;
     }
