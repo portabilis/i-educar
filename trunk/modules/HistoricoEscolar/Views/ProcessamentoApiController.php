@@ -402,7 +402,8 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
 
   protected function getNextHistoricoSequencial($alunoId){
 
-    $sql = "select coalesce(max(sequencial), 0) + 1 from pmieducar.historico_escolar where ref_cod_aluno = $alunoId and ativo = 1";
+    //A consulta leva em consideração historicos inativos pois o sequencial é chave composta com ref_cod_aluno id
+    $sql = "select coalesce(max(sequencial), 0) + 1 from pmieducar.historico_escolar where ref_cod_aluno = $alunoId";
 
     return $this->db->selectField($sql);
   }
@@ -461,37 +462,37 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
         $ano = $dadosMatricula['ano'];
         $isNewHistorico = ! $this->existsHistorico($alunoId, $ano, $matriculaId);
 
-          if ($isNewHistorico){
+        if ($isNewHistorico){
           $sequencial = $this->getNextHistoricoSequencial($alunoId);
 
           $historicoEscolar =  new clsPmieducarHistoricoEscolar(
-                                  $ref_cod_aluno = $alunoId,
-                                  $sequencial = $sequencial,
+                                  $alunoId,
+                                  $sequencial,
                                   $ref_usuario_exc = null,
                                   $ref_usuario_cad = $this->getSession()->id_pessoa,
-                                  $nm_serie = $dadosMatricula['nome_serie'],
-                                  $ano = $ano,
-                                  $carga_horaria = $this->getService()->getOption('serieCargaHoraria'),
-                                  $dias_letivos = $this->getRequest()->dias_letivos,
-                                  $escola = $dadosEscola['nome'],
-                                  $escola_cidade = $dadosEscola['cidade'],
-                                  $escola_uf = $dadosEscola['uf'],
-                                  $observacao = $this->getRequest()->observacao,
-                                  $aprovado = $this->getSituacaoMatricula(),
+                                  $dadosMatricula['nome_serie'],
+                                  $ano,
+                                  $this->getService()->getOption('serieCargaHoraria'),
+                                  $this->getRequest()->dias_letivos,
+                                  $dadosEscola['nome'],
+                                  $dadosEscola['cidade'],
+                                  $dadosEscola['uf'],
+                                  $this->getRequest()->observacao,
+                                  $this->getSituacaoMatricula(),
                                   $data_cadastro = date('Y-m-d'),
                                   $data_exclusao = null,
                                   $ativo = 1,
-                                  $faltas_globalizadas = $this->isFaltaGlobalizada(),
-                                  $ref_cod_instituicao = $dadosMatricula['instituicao_id'],
+                                  $this->isFaltaGlobalizada(),
+                                  $dadosMatricula['instituicao_id'],
                                   $origem = '', #TODO
-                                  $extra_curricular = $this->getRequest()->extra_curricular,
-                                  $ref_cod_matricula = $matriculaId,
-                                  $frequencia = $this->getPercentualFrequencia(),
-                                  $registro = $this->getRequest()->registro,
-                                  $livro = $this->getRequest()->livro,
-                                  $folha = $this->getRequest()->folha,
-                                  $nm_curso = $dadosMatricula['nome_curso'],
-                                  $historico_grade_curso_id = $this->getRequest()->grade_curso_id
+                                  $this->getRequest()->extra_curricular,
+                                  $matriculaId,
+                                  $this->getPercentualFrequencia(),
+                                  $this->getRequest()->registro,
+                                  $this->getRequest()->livro,
+                                  $this->getRequest()->folha,
+                                  $dadosMatricula['nome_curso'],
+                                  $this->getRequest()->grade_curso_id
                                 );
 
           $historicoEscolar->cadastra();
@@ -504,33 +505,33 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
           $dadosHistoricoEscolar = $this->getDadosHistorico($alunoId, $ano, $matriculaId);
 
           $historicoEscolar =  new clsPmieducarHistoricoEscolar(
-                                  $ref_cod_aluno = $alunoId,
-                                  $sequencial = $dadosHistoricoEscolar['sequencial'],
-                                  $ref_usuario_exc = $this->getSession()->id_pessoa,
-                                  $ref_usuario_cad = $dadosHistoricoEscolar['ref_usuario_cad'],
-                                  $nm_serie = $dadosMatricula['nome_serie'],
-                                  $ano = $ano,
-                                  $carga_horaria = $this->getService()->getOption('serieCargaHoraria'),
-                                  $dias_letivos = $this->getRequest()->dias_letivos,
-                                  $escola = $dadosEscola['nome'],
-                                  $escola_cidade = $dadosEscola['cidade'],
-                                  $escola_uf = $dadosEscola['uf'],
-                                  $observacao = $this->getRequest()->observacao,
-                                  $aprovado = $this->getSituacaoMatricula(),
+                                  $alunoId,
+                                  $dadosHistoricoEscolar['sequencial'],
+                                  $this->getSession()->id_pessoa,
+                                  $dadosHistoricoEscolar['ref_usuario_cad'],
+                                  $dadosMatricula['nome_serie'],
+                                  $ano,
+                                  $this->getService()->getOption('serieCargaHoraria'),
+                                  $this->getRequest()->dias_letivos,
+                                  $dadosEscola['nome'],
+                                  $dadosEscola['cidade'],
+                                  $dadosEscola['uf'],
+                                  $this->getRequest()->observacao,
+                                  $this->getSituacaoMatricula(),
                                   $data_cadastro = null,
                                   $data_exclusao = null,
                                   $ativo = 1,
-                                  $faltas_globalizadas = $this->isFaltaGlobalizada(),
-                                  $ref_cod_instituicao = $dadosMatricula['instituicao_id'],
+                                  $this->isFaltaGlobalizada(),
+                                  $dadosMatricula['instituicao_id'],
                                   $origem = '', #TODO
-                                  $extra_curricular = $this->getRequest()->extra_curricular,
-                                  $ref_cod_matricula = $matriculaId,
-                                  $frequencia = $this->getPercentualFrequencia(),
-                                  $registro = $this->getRequest()->registro,
-                                  $livro = $this->getRequest()->livro,
-                                  $folha = $this->getRequest()->folha,
-                                  $nm_curso = $dadosMatricula['nome_curso'],
-                                  $historico_grade_curso_id = $this->getRequest()->grade_curso_id
+                                  $this->getRequest()->extra_curricular,
+                                  $matriculaId,
+                                  $this->getPercentualFrequencia(),
+                                  $this->getRequest()->registro,
+                                  $this->getRequest()->livro,
+                                  $this->getRequest()->folha,
+                                  $dadosMatricula['nome_curso'],
+                                  $this->getRequest()->grade_curso_id
                                 );
 
           $historicoEscolar->edita();
@@ -608,7 +609,7 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
                                 $nota,
                                 $falta
                             );
-
+      var_dump($historicoDisciplina);
       $historicoDisciplina->cadastra();
     }
   }
