@@ -436,11 +436,7 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
 
   }
 
-  protected function isFaltaGlobalizada(){
-    return ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL ? 1 : 0);
-  }
 
- 
   protected function getPercentualFrequencia(){
     if($this->getRequest()->percentual_frequencia == 'buscar-boletim')
       return round($this->getService()->getSituacaoFaltas()->porcentagemPresenca, 2);
@@ -448,6 +444,14 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
       return $this->getRequest()->percentual_frequencia;
   }
 
+
+  protected function getFaltaGlobalizada($defaultValue=null){
+    if ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL){
+      return $this->getFalta();
+    }
+    else
+      return $defaultValue;
+  }
 
   protected function postProcessamento()  {
 
@@ -482,7 +486,7 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
                                   $data_cadastro = date('Y-m-d'),
                                   $data_exclusao = null,
                                   $ativo = 1,
-                                  $this->isFaltaGlobalizada(),
+                                  $this->getFaltaGlobalizada($defaultValue='null'),
                                   $dadosMatricula['instituicao_id'],
                                   $origem = '', #TODO
                                   $this->getRequest()->extra_curricular,
@@ -521,7 +525,7 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
                                   $data_cadastro = null,
                                   $data_exclusao = null,
                                   $ativo = 1,
-                                  $this->isFaltaGlobalizada(),
+                                  $this->getFaltaGlobalizada($defaultValue='null'),
                                   $dadosMatricula['instituicao_id'],
                                   $origem = '', #TODO
                                   $this->getRequest()->extra_curricular,
@@ -563,8 +567,6 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
 
     $this->deleteHistoricoDisplinas($alunoId, $historicoSequencial);
 
-    $cnsPresenca = RegraAvaliacao_Model_TipoPresenca;
-    $tpPresenca = $this->getService()->getRegra()->get('tipoPresenca');
     $cnsNota = RegraAvaliacao_Model_Nota_TipoValor;
     $tpNota = $this->getService()->getRegra()->get('tipoNota');
     $situacaoFaltasCc = $this->getService()->getSituacaoFaltas()->componentesCurriculares;
@@ -575,18 +577,8 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
       $ccId = $componenteCurricular->get('id');
       $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
       $situacaoFaltaCc = $situacaoFaltasCc[$ccId];
-
-      if ($this->getRequest()->faltas == 'buscar-boletim'){
-        if($tpPresenca == $cnsPresenca::POR_COMPONENTE){
-          $falta = $situacaoFaltaCc->total;
-        }
-        elseif($tpPresenca == $cnsPresenca::GERAL){
-          $falta = $this->getService()->getSituacaoFaltas()->totalFaltas;
-        }
-      }
-      else
-        $falta = $this->getRequest()->faltas;
-     
+    
+      $falta = $this->getFalta($situacaoFaltaCc);
 
       if ($this->getRequest()->notas == 'buscar-boletim'){
         if ($tpNota == $cnsNota::NUMERICA) {
@@ -611,6 +603,28 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
                             );
       $historicoDisciplina->cadastra();
     }
+  }
+
+  protected function getFalta($situacaoFaltaCc=null){
+    if ($this->getRequest()->faltas == 'buscar-boletim'){
+
+      $cnsPresenca = RegraAvaliacao_Model_TipoPresenca;
+      $tpPresenca = $this->getService()->getRegra()->get('tipoPresenca');
+
+      if($tpPresenca == $cnsPresenca::POR_COMPONENTE){
+        if(is_null($situacaoFaltaCc))
+          throw new Exception('Invalid situacaoFaltaCc in getFalta');
+
+        $falta = $situacaoFaltaCc->total;
+      }
+      elseif($tpPresenca == $cnsPresenca::GERAL){
+        $falta = $this->getService()->getSituacaoFaltas()->totalFaltas;
+      }
+    }
+    else
+      $falta = $this->getRequest()->faltas;
+
+    return $falta;
   }
 
 
