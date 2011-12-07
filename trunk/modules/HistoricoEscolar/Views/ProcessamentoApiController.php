@@ -438,6 +438,14 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
     return ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL ? 1 : 0);
   }
 
+ 
+  protected function getPercentualFrequencia(){
+    if($this->getRequest()->percentual_frequencia == 'buscar-boletim')
+      return round($this->getService()->getSituacaoFaltas()->porcentagemPresenca, 2);
+    else
+      return $this->getRequest()->percentual_frequencia;
+  }
+
 
   protected function postProcessamento()  {
 
@@ -477,7 +485,7 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
                                   $origem = '', #TODO
                                   $extra_curricular = $this->getRequest()->extra_curricular,
                                   $ref_cod_matricula = $matriculaId,
-                                  $frequencia = round($this->getService()->getSituacaoFaltas()->porcentagemPresenca, 2),
+                                  $frequencia = $this->getPercentualFrequencia(),
                                   $registro = $this->getRequest()->registro,
                                   $livro = $this->getRequest()->livro,
                                   $folha = $this->getRequest()->folha,
@@ -516,7 +524,7 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
                                   $origem = '', #TODO
                                   $extra_curricular = $this->getRequest()->extra_curricular,
                                   $ref_cod_matricula = $matriculaId,
-                                  $frequencia = round($this->getService()->getSituacaoFaltas()->porcentagemPresenca, 2),
+                                  $frequencia = $this->getPercentualFrequencia(),
                                   $registro = $this->getRequest()->registro,
                                   $livro = $this->getRequest()->livro,
                                   $folha = $this->getRequest()->folha,
@@ -573,7 +581,7 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
         $falta = $this->getService()->getSituacaoFaltas()->totalFaltas;
       }
 
-      if ($tpNota == $cnsNota::NUMERICA || $tpNota == $cnsNota::CONCEITUAL){
+      if (($tpNota == $cnsNota::NUMERICA || $tpNota == $cnsNota::CONCEITUAL)){
         if(is_array($mediasCc[$ccId]) && count($mediasCc[$ccId]) > 0)
           $nota = (string)$mediasCc[$ccId][0]->mediaArredondada;
         else
