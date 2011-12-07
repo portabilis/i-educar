@@ -214,7 +214,7 @@ class indice extends clsCadastro
 		$this->campoTexto( "nm_serie", "S&eacute;rie", $this->nm_serie, 30, 255, true );
 		$this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true );
 		$this->campoMonetario( "carga_horaria", "Carga Hor&aacute;ria", $this->carga_horaria, 8, 8, true );
-		$this->campoCheck( "cb_faltas_globalizadas", "Faltas Globalizadas", $this->faltas_globalizadas );
+		$this->campoCheck( "cb_faltas_globalizadas", "Faltas Globalizadas", is_numeric($this->faltas_globalizadas) ? 'on' : '');
 		$this->campoNumero( "faltas_globalizadas", "Faltas Globalizadas", $this->faltas_globalizadas, 4, 4, false );
 		$this->campoNumero( "dias_letivos", "Dias Letivos", $this->dias_letivos, 3, 3, true );
 		$this->campoMonetario( "frequencia", "Frequência", $this->frequencia, 8, 8, true );
@@ -361,10 +361,10 @@ class indice extends clsCadastro
 				$this->extra_curricular = 1;
 			else
 				$this->extra_curricular = 0;
-
-
-			if(!$this->cb_faltas_globalizadas)
+      
+			if($this->cb_faltas_globalizadas != 'on')
 				$this->faltas_globalizadas = 'NULL';
+
 			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, $this->sequencial, $this->pessoa_logada, null, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha, $this->nm_curso, $this->historico_grade_curso_id);
 			$editou = $obj->edita();
 			
@@ -476,6 +476,7 @@ $pagina->MakeAll();
 	document.getElementById('cb_faltas_globalizadas').onclick =function()
 	{
 		setVisibility('tr_faltas_globalizadas',this.checked);
+    this.setAttribute('value', this.checked ? 'on' : '');
 	}
 
 	document.getElementById('cb_faltas_globalizadas').onclick();

@@ -171,6 +171,9 @@ class indice extends clsDetalhe
 
 			$this->addDetalhe( array( "Carga Hor&aacute;ria", "{$registro["carga_horaria"]}") );
 		}
+
+		$this->addDetalhe( array( "Faltas globalizadas", is_numeric($registro["faltas_globalizadas"]) ? 'Sim' : 'Não'));
+
 		if( $registro["dias_letivos"] )
 		{
 			$this->addDetalhe( array( "Dias Letivos", "{$registro["dias_letivos"]}") );
@@ -266,9 +269,9 @@ class indice extends clsDetalhe
 							    <td {$color} align='left'>{$valor["nm_disciplina"]}</td>
 							    <td {$color} align='center'>{$valor["nota"]}</td>";
 
-				if ($registro["faltas_globalizadas"] && !$prim_disciplina)
+				if (is_numeric($registro["faltas_globalizadas"]) && !$prim_disciplina)
 					$tabela .= "<td rowspan='{$qtd_disciplinas}' {$color} align='center'>{$registro["faltas_globalizadas"]}</td>";
-				else if ( !$registro["faltas_globalizadas"] )
+				else if ( !is_numeric($registro["faltas_globalizadas"]) )
 					$tabela .= "<td {$color} align='center'>{$valor["faltas"]}</td>";
 
 				$tabela .= "</tr>";
