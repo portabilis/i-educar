@@ -134,7 +134,7 @@ function getSelectGradeCurso(){
         <td>
           <select id='percentual-frequencia' class='obrigatorio disable-on-search'>
             <option value=''>Selecione</option>
-            <option value='buscar-boletim'>Buscar boletim</option>
+            <option value='buscar-boletim'>Usar do boletim</option>
             <option value='informar-manualmente'>Informar manualmente</option>
           </select>
         </td>
@@ -146,7 +146,7 @@ function getSelectGradeCurso(){
         <td colspan='2'>
           <select id='situacao' class='obrigatorio disable-on-search'>
             <option value=''>Selecione</option>
-            <option value='buscar-matricula'>Buscar boletim</option>
+            <option value='buscar-matricula'>Usar do boletim</option>
             <option value='em-andamento'>Em andamento</option>
             <option value='aprovado'>Aprovado</option>
             <option value='reprovado'>Reprovado</option>
@@ -160,7 +160,7 @@ function getSelectGradeCurso(){
         <td>
           <select id='notas' class='obrigatorio disable-on-search'>
             <option value=''>Selecione</option>
-            <option value='buscar-boletim'>Buscar boletim</option>
+            <option value='buscar-boletim'>Lan&ccedil;adas no boletim</option>
             <option value='AP'>AP</option>
             <option value='informar-manualmente'>Informar manualmente</option>
           </select>
@@ -173,7 +173,7 @@ function getSelectGradeCurso(){
         <td>
           <select id='faltas' class='obrigatorio disable-on-search'>
             <option value=''>Selecione</option>
-            <option value='buscar-boletim'>Buscar boletim</option>
+            <option value='buscar-boletim'>Lan&ccedil;adas no boletim</option>
             <option value='informar-manualmente'>Informar manualmente</option>
           </select>
         </td>
