@@ -418,17 +418,18 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
 
   protected function getSituacaoMatricula(){
 
-    $situacoes = array('aprovado' => App_Model_MatriculaSituacao::APROVADO,
-                       'reprovado' => App_Model_MatriculaSituacao::REPROVADO,
-                       'em-andamento' => App_Model_MatriculaSituacao::EM_ANDAMENTO,
-                       'transferido' => App_Model_MatriculaSituacao::TRANSFERIDO
-                 );
-
     if($this->getRequest()->situacao == 'buscar-matricula'){
       $situacao = $this->getService()->getOption('aprovado');
     }
-    else
+    else{
+      $situacoes = array('aprovado' => App_Model_MatriculaSituacao::APROVADO,
+                         'reprovado' => App_Model_MatriculaSituacao::REPROVADO,
+                         'em-andamento' => App_Model_MatriculaSituacao::EM_ANDAMENTO,
+                         'transferido' => App_Model_MatriculaSituacao::TRANSFERIDO
+                   );
+
       $situacao = $situacoes[$this->getRequest()->situacao];
+    }
 
     return $situacao;
 
