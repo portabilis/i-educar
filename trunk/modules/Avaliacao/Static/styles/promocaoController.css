@@ -28,21 +28,3 @@ tr.rodape {
 #feedback-messages p {
   margin: 2;
 }
-
-.success {
-  color: #157100;
-  border: 1px solid #e0f9d8;
-  background-color: #f0f9ee;
-}
-
-.notice {
-  color: #b0af84;
-  border: 1px solid #fdffac;
-  background-color: #feffce;
-}
-
-.error {
-  color: #ff4e4e;
-  border: 1px solid #ffe5e5;
-  background-color: #ffeeee;
-}
