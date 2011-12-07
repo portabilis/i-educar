@@ -547,18 +547,18 @@ var $j = jQuery.noConflict();
     }
 
     function handlePostProcessamento(dataResponse){
-      //try{
+      try{
         var $checkbox = $('matricula-' + dataResponse.matricula_id);
         var $targetElement = $j('#matricula-'+dataResponse.matricula_id).closest('tr').first();
         handleMessages(dataResponse.msgs, $targetElement);
         updateFieldSituacao(dataResponse.link_to_historico, dataResponse.matricula_id, dataResponse.situacao_historico);
-      /*}
+      }
       catch(error){
         showNewSearchButton();
         handleMessages([{type : 'error', msg : 'Ocorreu um erro ao enviar o processamento, por favor tente novamente, detalhes: ' + error}], '');
 
         safeLog(dataResponse);
-      }*/
+      }
     }
 
 
