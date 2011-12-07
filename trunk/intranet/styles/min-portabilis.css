@@ -165,19 +165,19 @@ div#error div#detail {
 }
 
 .success {
-  color: #157100;
-  border: 1px solid #e0f9d8;
-  background-color: #f0f9ee;
+  color: #157100 !important;
+  border: 1px solid #e0f9d8 !important;
+  background-color: #f0f9ee !important;
 }
 
 .notice {
-  color: #b0af84;
-  border: 1px solid #fdffac;
-  background-color: #feffce;
+  color: #b0af84 !important;
+  border: 1px solid #fdffac !important;
+  background-color: #feffce !important;
 }
 
 .error {
-  color: #ff4e4e;
-  border: 1px solid #ffe5e5;
-  background-color: #ffeeee;
+  color: #ff4e4e !important;
+  border: 1px solid #ffe5e5 !important;
+  background-color: #ffeeee !important;
 }
