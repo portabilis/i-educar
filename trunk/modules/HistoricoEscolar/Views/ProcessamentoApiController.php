@@ -704,11 +704,11 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
 
   protected function getSituacaoHistorico($alunoId, $ano, $matriculaId, $reload = false){
     if ($this->existsHistorico($alunoId, $ano, $matriculaId, 1, $reload))
-        $situacao = 'Histórico processado';
+        $situacao = 'Processado';
     else 
-        $situacao = 'Não processado';
+        $situacao = 'Sem histórico';
 
-    return ucwords(strtolower(utf8_encode($situacao)));
+    return utf8_encode($situacao);
   }
 
 
