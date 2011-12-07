@@ -65,20 +65,21 @@ var $j = jQuery.noConflict();
     $resourceOptionsTable.find('#percentual-frequencia').change(function(){
       changeStateFieldManual('#percentual-frequencia', '#percentual-frequencia-manual');
     });
-    changeStateFieldManual('#percentual-frequencia', '#percentual-frequencia-manual');
 
     $resourceOptionsTable.find('#notas').change(function(){
       changeStateFieldManual('#notas', '#notas-manual');
     });
-    changeStateFieldManual('#notas', '#notas-manual');
 
     $resourceOptionsTable.find('#faltas').change(function(){
       changeStateFieldManual('#faltas', '#faltas-manual');
     });
-    changeStateFieldManual('#faltas', '#faltas-manual');
 
     $('.disable-on-search').attr('disabled', 'disabled');
     $('.hide-on-search').hide();
+
+    $('#ref_cod_curso').change(function(){
+      $('.clear-on-change-curso').val('');
+    });
 
     var $navActions = $('<p />').attr('id', 'nav-actions');
     $navActions.prependTo($formFilter.parent()); 
@@ -200,14 +201,20 @@ var $j = jQuery.noConflict();
       $.ajax(options).error(errorCallback);
     }
 
- 
+
+    function updateFieldSituacao(matricula_id, situacao){
+      if(situacao)
+        $('#situacao-matricula-' + matricula_id).html(utf8Decode(situacao));
+    } 
+
+
     //callback handlers
 
     //delete
     function handleDelete(dataResponse){
       var targetId = dataResponse.att + '-matricula-' + dataResponse.matricula_id;
       handleMessages(dataResponse.msgs, targetId);
-      updateFieldSituacaoMatricula(dataResponse.matricula_id, dataResponse.situacao);
+      updateFieldSituacao(dataResponse.matricula_id, dataResponse.situacao_historico);
     }
 
 
@@ -228,14 +235,19 @@ var $j = jQuery.noConflict();
       var hasErrorMessages = false;
       var hasSuccessMessages = false;
 
+      if($targetElement)
+        var targetElementId = $targetElement.attr('id');
+      else
+        var targetElementId = '';
+
       for (var i = 0; i < messages.length; i++){
 
         if (messages[i].type != 'error')
-          var delay = 10000;
+          var delay = 30000;
         else
           var delay = 60000;
 
-        $('<p />').addClass(messages[i].type).html(messages[i].msg).appendTo($feedbackMessages).delay(delay).fadeOut(function(){$(this).remove()}).data('target_id', targetId);
+        $('<p />').addClass(messages[i].type).html(messages[i].msg).appendTo($feedbackMessages).delay(delay).fadeOut(function(){$(this).remove()}).data('target_id', targetElementId);
 
         if (! hasErrorMessages && messages[i].type == 'error')
           hasErrorMessages = true;
@@ -243,7 +255,7 @@ var $j = jQuery.noConflict();
           hasSuccessMessages = true;
       }
 
-      if($.isArray($targetElement) && $targetElement.length > 0){
+      if($targetElement){
         if (hasErrorMessages)
           $targetElement.addClass('error').removeClass('success');
         else if (hasSuccessMessages)
@@ -329,7 +341,7 @@ var $j = jQuery.noConflict();
 
       showNewSearchButton();
 
-      //try{      
+      try{      
         handleMessages(dataResponse.msgs);
 
         if(! $.isArray(dataResponse.matriculas))
@@ -378,7 +390,7 @@ var $j = jQuery.noConflict();
             $('<td />').html(utf8Decode(value.nome_turma)).addClass('center').appendTo($linha);
             $('<td />').html(value.matricula_id).addClass('center').appendTo($linha);
             $('<td />').html(value.aluno_id + " - " + safeToUpperCase(value.nome)).appendTo($linha);
-            $('<td />').html(utf8Decode(value.situacao_historico)).addClass('center').appendTo($linha);
+            $('<td />').html(utf8Decode(value.situacao_historico)).attr('id', 'situacao-matricula-' + value.matricula_id).addClass('center').appendTo($linha);
 
             $linha.fadeIn('slow').appendTo($resultTable);
           });//fim each matriculas
@@ -386,18 +398,18 @@ var $j = jQuery.noConflict();
           $resultTable.find('tr:even').addClass('even');
           $resultTable.addClass('styled').find('checkbox:first').focus();
         }
-      /*}
+      }
       catch(error){
-        showSearchButton();
+        showNewSearchButton();
 
         handleMessages([{type : 'error', msg : 'Ocorreu um erro ao exibir as matriculas, por favor tente novamente, detalhes: ' + error}], '');
 
         safeLog(dataResponse);
-      }*/
+      }
     }
 
     function handleErrorMatriculasSearch(response){
-      showSearchButton();
+      showNewSearchButton();
 
       handleMessages([{type : 'error', msg : 'Ocorreu um erro ao carregar as matriculas, por favor tente novamente, detalhes:' + response.responseText}], '');
 
@@ -445,7 +457,12 @@ var $j = jQuery.noConflict();
         alert('Selecione ao menos uma matrícula.');
       else{
 
-        if (validatesPresenseOfValueInRequiredFields()){
+        var additionalFields = [$('#percentual-frequencia-manual').get(0),
+                                $('#notas-manual').get(0), 
+                                $('#faltas-manual').get(0)
+        ];
+
+        if (validatesPresenseOfValueInRequiredFields(additionalFields)){
           $('.disable-on-apply-changes').attr('disabled', 'disabled');
           $actionButton.val('Aguarde processando...');
         
@@ -461,11 +478,16 @@ var $j = jQuery.noConflict();
 
       var options = {
         url : postResourceUrlBuilder.buildUrl(ApiUrlBase, 'processamento', {
-          matricula_id : $resourceElement.data('matricula_id'),
-          dias_letivos : $('#dias-letivos').val()
+          matricula_id : $resourceElement.data('matricula_id')
         }),
         dataType : 'json',
-        data : {},
+        data : {
+          dias_letivos : $('#dias-letivos').val(),
+          situacao : $('#situacao').val(),
+          extra_curricular : $('#extra-curricular').is(':checked') ? 1 : 0,
+          grade_curso_id : $('#grade-curso').val()//#,
+          //percentual_frequencia : $('#grade-curso').val(),
+        },
         success : function(dataResponse){
           afterChangeResource($resourceElement);
           handlePostProcessamento(dataResponse);
@@ -482,10 +504,18 @@ var $j = jQuery.noConflict();
     }
 
     function handlePostProcessamento(dataResponse){
-      var $checkbox = $('matricula-' + dataResponse.matricula_id);
-      var $targetElement = $j('#matricula-5269').closest('tr').first();
-      handleMessages(dataResponse.msgs, $targetElement);
-      updateFieldSituacao(dataResponse.matricula_id, dataResponse.situacao_historico);
+      try{
+        var $checkbox = $('matricula-' + dataResponse.matricula_id);
+        var $targetElement = $j('#matricula-'+dataResponse.matricula_id).closest('tr').first();
+        handleMessages(dataResponse.msgs, $targetElement);
+        updateFieldSituacao(dataResponse.matricula_id, dataResponse.situacao_historico);
+      }
+      catch(error){
+        showNewSearchButton();
+        handleMessages([{type : 'error', msg : 'Ocorreu um erro ao enviar o processamento, por favor tente novamente, detalhes: ' + error}], '');
+
+        safeLog(dataResponse);
+      }
     }
 
 
