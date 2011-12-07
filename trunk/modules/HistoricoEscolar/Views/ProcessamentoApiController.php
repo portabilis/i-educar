@@ -457,7 +457,6 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
 
     if ($this->canPostProcessamento()){
       $matriculaId = $this->getRequest()->matricula_id;
-      $successMsg = '';
 
       try {
         $alunoId = $this->getAlunoIdByMatriculaId($matriculaId);
@@ -502,7 +501,7 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
           $historicoEscolar->cadastra();
           $this->recreateHistoricoDisciplinas($sequencial, $alunoId);
 
-          $successMsg = 'Histórico processado com sucesso';
+          $this->appendMsg('Histórico processado com sucesso', 'success');
         }
         else{
 
@@ -540,13 +539,12 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
 
           $historicoEscolar->edita();
           $this->recreateHistoricoDisciplinas($dadosHistoricoEscolar['sequencial'], $alunoId);
-          $successMsg = 'Histórico reprocessado com sucesso';
+          $this->appendMsg('Histórico reprocessado com sucesso', 'success');
         }
 
       }
       catch (Exception $e){
         $this->appendMsg('Erro ao processar histórico, detalhes:' . $e->getMessage(), 'error', true);
-        return false;
       }
 
       $situacaoHistorico = $this->getSituacaoHistorico($alunoId, $ano, $matriculaId, $reload = true);
@@ -554,11 +552,6 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
 
       $this->appendResponse('situacao_historico', $situacaoHistorico);
       $this->appendResponse('link_to_historico', $linkToHistorico);
-
-      if ($successMsg)
-        $this->appendMsg($successMsg, 'success');
-      else
-        $this->appendMsg('Histórico não reprocessado', 'notice');
     }
   }
 
@@ -576,9 +569,8 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
     {
       $ccId = $componenteCurricular->get('id');
       $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
-      $situacaoFaltaCc = $situacaoFaltasCc[$ccId];
-    
-      $falta = $this->getFalta($situacaoFaltaCc);
+
+      $falta = $this->getFalta($situacaoFaltasCc[$ccId]);
 
       if ($this->getRequest()->notas == 'buscar-boletim'){
         if ($tpNota == $cnsNota::NUMERICA) {
@@ -605,17 +597,19 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
     }
   }
 
-  protected function getFalta($situacaoFaltaCc=null){
+  protected function getFalta($situacaoFaltaComponenteCurricular=null){
     if ($this->getRequest()->faltas == 'buscar-boletim'){
 
       $cnsPresenca = RegraAvaliacao_Model_TipoPresenca;
       $tpPresenca = $this->getService()->getRegra()->get('tipoPresenca');
 
-      if($tpPresenca == $cnsPresenca::POR_COMPONENTE){
-        if(is_null($situacaoFaltaCc))
-          throw new Exception('Invalid situacaoFaltaCc in getFalta');
-
-        $falta = $situacaoFaltaCc->total;
+      //retorna '' caso não exista situacaoFalta para o componente curricular,
+      //como nos casos em que a regra de avaliação muda
+      if($tpPresenca == $cnsPresenca::POR_COMPONENTE && ! is_null($situacaoFaltaComponenteCurricular)){
+        $falta = $situacaoFaltaComponenteCurricular->total;
+      }
+      elseif($tpPresenca == $cnsPresenca::POR_COMPONENTE){
+        $falta = '';
       }
       elseif($tpPresenca == $cnsPresenca::GERAL){
         $falta = $this->getService()->getSituacaoFaltas()->totalFaltas;
