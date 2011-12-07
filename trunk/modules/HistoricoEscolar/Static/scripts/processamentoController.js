@@ -196,6 +196,16 @@ var $j = jQuery.noConflict();
       return isNumeric;
     }  
 
+    function validatesIfNumericValueIsInRange(value, targetId, initialRange, finalRange){
+
+      if (! $.isNumeric(value) || value < initialRange || value > finalRange)
+      {
+        handleMessages([{type : 'error', msg : 'Informe um valor entre ' + initialRange + ' e ' + finalRange}], targetId);
+        return false;
+      }
+      return true;
+    }
+
     
     function postResource(options, errorCallback){
       $.ajax(options).error(errorCallback);
@@ -230,24 +240,27 @@ var $j = jQuery.noConflict();
     }
 
 
-    function handleMessages(messages, $targetElement){
+    function handleMessages(messages, targetId){
 
       var hasErrorMessages = false;
       var hasSuccessMessages = false;
 
-      if($targetElement)
-        var targetElementId = $targetElement.attr('id');
+      //se nao é um elemento (é uma string) e o id nao inicia com #
+      if (targetId && typeof(targetId) == 'string' && targetId[0] != '#')
+        var $targetElement = $('#'+targetId);
       else
-        var targetElementId = '';
+        var $targetElement = $(targetId || '');
 
       for (var i = 0; i < messages.length; i++){
 
-        if (messages[i].type != 'error')
-          var delay = 30000;
+        if (messages[i].type == 'success')
+          var delay = 2000;
+        else if (messages[i].type != 'error')
+          var delay = 10000;
         else
           var delay = 60000;
 
-        $('<p />').addClass(messages[i].type).html(messages[i].msg).appendTo($feedbackMessages).delay(delay).fadeOut(function(){$(this).remove()}).data('target_id', targetElementId);
+        $('<p />').addClass(messages[i].type).html(messages[i].msg).appendTo($feedbackMessages).delay(delay).fadeOut(function(){$(this).remove()}).data('target_id', targetId);
 
         if (! hasErrorMessages && messages[i].type == 'error')
           hasErrorMessages = true;
@@ -463,10 +476,21 @@ var $j = jQuery.noConflict();
         ];
 
         if (validatesPresenseOfValueInRequiredFields(additionalFields)){
-          $('.disable-on-apply-changes').attr('disabled', 'disabled');
-          $actionButton.val('Aguarde processando...');
-        
-          postProcessamento($firstChecked);
+
+          var isValid = validatesIfValueIsNumeric($('#dias-letivos').val(), 'dias-letivos');
+
+          if (isValid && $('#percentual-frequencia').val() != 'buscar-boletim')
+            isValid = validatesIfNumericValueIsInRange($('#percentual-frequencia-manual').val(), '#percentual-frequencia-manual', 0, 100);
+
+          if (isValid && $('#faltas').val() != 'buscar-boletim')
+            isValid = validatesIfNumericValueIsInRange($('#faltas-manual').val(), '#faltas-manual', 0, 999);
+
+
+          if (isValid){
+            $('.disable-on-apply-changes').attr('disabled', 'disabled');
+            $actionButton.val('Aguarde processando...');
+            postProcessamento($firstChecked);
+          }
         }
       }
     };
@@ -474,7 +498,10 @@ var $j = jQuery.noConflict();
     function postProcessamento($resourceElement){
 
       //#TODO validar campos que usuário preenche
-      //if (validatesIfValueIsNumeric($proximoMatriculaIdField.val()))
+
+      var percentualFrequencia = $('#percentual-frequencia').val() == 'buscar-boletim' ? 'buscar-boletim' : $('#percentual-frequencia-manual').val();
+      var faltas = $('#faltas').val() == 'buscar-boletim' ? 'buscar-boletim' : $('#faltas-manual').val();
+      var notas = $('#notas').val() == 'buscar-boletim' ? 'buscar-boletim' : $('#notas-manual').val();
 
       var options = {
         url : postResourceUrlBuilder.buildUrl(ApiUrlBase, 'processamento', {
@@ -485,8 +512,14 @@ var $j = jQuery.noConflict();
           dias_letivos : $('#dias-letivos').val(),
           situacao : $('#situacao').val(),
           extra_curricular : $('#extra-curricular').is(':checked') ? 1 : 0,
-          grade_curso_id : $('#grade-curso').val()//#,
-          //percentual_frequencia : $('#grade-curso').val(),
+          grade_curso_id : $('#grade-curso').val(),
+          percentual_frequencia : percentualFrequencia,
+          notas : notas,
+          faltas : faltas,
+          observacao : $('#observacao').val(),
+          registro : $('#registro').val(),
+          livro : $('#livro').val(),
+          folha : $('#folha').val()
         },
         success : function(dataResponse){
           afterChangeResource($resourceElement);
@@ -504,18 +537,18 @@ var $j = jQuery.noConflict();
     }
 
     function handlePostProcessamento(dataResponse){
-      try{
+      //try{
         var $checkbox = $('matricula-' + dataResponse.matricula_id);
         var $targetElement = $j('#matricula-'+dataResponse.matricula_id).closest('tr').first();
         handleMessages(dataResponse.msgs, $targetElement);
         updateFieldSituacao(dataResponse.matricula_id, dataResponse.situacao_historico);
-      }
+      /*}
       catch(error){
         showNewSearchButton();
         handleMessages([{type : 'error', msg : 'Ocorreu um erro ao enviar o processamento, por favor tente novamente, detalhes: ' + error}], '');
 
         safeLog(dataResponse);
-      }
+      }*/
     }
 
 
@@ -528,6 +561,7 @@ var $j = jQuery.noConflict();
       if ($firstChecked.length < 1){
         $('.disable-on-apply-changes').removeAttr('disabled');
         $actionButton.val('Processar');
+        alert('O processamento chegou ao fim.');
       }
       else
         postProcessamento($firstChecked);
