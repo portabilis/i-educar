@@ -575,12 +575,17 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
       $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
       $situacaoFaltaCc = $situacaoFaltasCc[$ccId];
 
-      if($tpPresenca == $cnsPresenca::POR_COMPONENTE){
-        $falta = $situacaoFaltaCc->total;
+      if ($this->getRequest()->faltas == 'buscar-boletim'){
+        if($tpPresenca == $cnsPresenca::POR_COMPONENTE){
+          $falta = $situacaoFaltaCc->total;
+        }
+        elseif($tpPresenca == $cnsPresenca::GERAL){
+          $falta = $this->getService()->getSituacaoFaltas()->totalFaltas;
+        }
       }
-      elseif($tpPresenca == $cnsPresenca::GERAL){
-        $falta = $this->getService()->getSituacaoFaltas()->totalFaltas;
-      }
+      else
+        $falta = $this->getRequest()->faltas;
+     
 
       if ($this->getRequest()->notas == 'buscar-boletim'){
         $nota = '';
