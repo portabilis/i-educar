@@ -198,24 +198,50 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
   }
 
 
-  protected function validatesPresenceAndValueInSetOfSituacao($raiseExceptionOnError){
-    $result = $this->validatesPresenceOf($this->getRequest()->situacao, 'situacao', $raiseExceptionOnError);
-
-    if ($result){
-      $expectedOpers = array('buscar-matricula', 'aprovado', 'reprovado', 'em-andamento', 'transferido');
-      $result = $this->validatesValueInSetOf($this->getRequest()->situacao, $expectedOpers, 'situacao', $raiseExceptionOnError);
-    }
-    return $result;
-  }
-
   protected function validatesPresenceAndValueInSetOfExtraCurricular($raiseExceptionOnError){
     $result = $this->validatesPresenceOf($this->getRequest()->extra_curricular, 'extra_curricular', $raiseExceptionOnError);
 
     if ($result){
       $expectedOpers = array(0, 1);
-      $resut = $this->validatesValueInSetOf($this->getRequest()->extra_curricular, $expectedOpers, 'extra_curricular', $raiseExceptionOnError);
+      $result = $this->validatesValueInSetOf($this->getRequest()->extra_curricular, $expectedOpers, 'extra_curricular', $raiseExceptionOnError);
     }
     return $result;
+  }
+
+  protected function validatesPresenceAndValueOfPercentualFrequencia($raiseExceptionOnError){
+    $name = 'percentual_frequencia';
+    $isValid = $this->validatesPresenceOf($this->getRequest()->percentual_frequencia, $name, $raiseExceptionOnError);
+
+    if ($isValid && $this->getRequest()->percentual_frequencia != 'buscar-boletim')
+      $isValid = $this->validatesValueIsNumeric($this->getRequest()->percentual_frequencia, $name, $raiseExceptionOnError);
+
+    return $isValid;
+  }
+
+  protected function validatesPresenceOfNotas($raiseExceptionOnError){
+    return $this->validatesPresenceOf($this->getRequest()->notas, 'notas', $raiseExceptionOnError);
+  }
+
+  protected function validatesPresenceAndValueOfFaltas($raiseExceptionOnError){
+    $name = 'faltas';
+    $isValid = $this->validatesPresenceOf($this->getRequest()->faltas, $name, $raiseExceptionOnError);
+
+    if ($isValid && $this->getRequest()->faltas != 'buscar-boletim')
+      $isValid = $this->validatesValueIsNumeric($this->getRequest()->faltas, $name, $raiseExceptionOnError);
+
+    return $isValid;
+  }
+
+  protected function validatesPresenceAndValueInSetOfSituacao($raiseExceptionOnError){
+    $name = 'situacao';
+    $isValid = $this->validatesPresenceOf($this->getRequest()->situacao, $name, $raiseExceptionOnError);
+
+    if ($isValid){
+      $expectedOpers = array('buscar-matricula', 'aprovado', 'reprovado', 'em-andamento', 'transferido');
+      $isValid = $this->validatesValueInSetOf($this->getRequest()->situacao, $expectedOpers, $name, $raiseExceptionOnError);
+    }
+
+    return $isValid;
   }
 
 
@@ -254,7 +280,10 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
            $this->validatesPresenceOfDiasLetivos(false) &&
            $this->validatesPresenceAndValueInSetOfSituacao(false) &&
            $this->validatesPresenceAndValueInSetOfExtraCurricular(false) &&
-           $this->validatesPresenceAndValueInDbOfGradeCursoId(false);
+           $this->validatesPresenceAndValueInDbOfGradeCursoId(false) &&
+           $this->validatesPresenceAndValueOfPercentualFrequencia(false) &&
+           $this->validatesPresenceOfNotas(false) &&
+           $this->validatesPresenceAndValueOfFaltas(false);
 
     if($canPost){
       $sql = "select 1 from pmieducar.matricula where cod_matricula = {$this->getRequest()->matricula_id} and ativo = 1";
@@ -304,7 +333,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                     $ref_usuario_cad = null,
                                     #TODO nm_curso
                                     $nm_serie = null,
-                                    $ano = null,
+                                    $ano = $ano,
                                     $carga_horaria = null,
                                     $dias_letivos = null,
                                     $escola = null,
@@ -322,6 +351,11 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       }
       else
         $this->appendMsg("Histórico matricula $matriculaId inexistente ou já removido", 'notice');
+
+      $situacaoHistorico = $this->getSituacaoHistorico($alunoId, $ano, $matriculaId, $reload = true);
+
+      $this->appendResponse('situacao_historico', $situacaoHistorico);
+      $this->appendResponse('link_to_historico', '');
     }
   }
 
@@ -504,7 +538,6 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
       $situacaoHistorico = $this->getSituacaoHistorico($alunoId, $ano, $matriculaId, $reload = true);
       $linkToHistorico = $this->getLinkToHistorico($alunoId, $ano, $matriculaId);
 
-      $this->appendResponse('matricula_id', $matriculaId);
       $this->appendResponse('situacao_historico', $situacaoHistorico);
       $this->appendResponse('link_to_historico', $linkToHistorico);
 
@@ -512,8 +545,6 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
         $this->appendMsg($successMsg, 'success');
       else
         $this->appendMsg('Histórico não reprocessado', 'notice');
-
-      return true;
     }
   }
 
@@ -815,6 +846,10 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
 
     if ($this->canAcceptRequest()){
       try {
+
+        if(isset($this->getRequest()->matricula_id))
+          $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
+
         if ($this->getRequest()->oper == 'get')
         {
           if ($this->getRequest()->att == 'matriculas')
