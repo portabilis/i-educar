@@ -23,7 +23,7 @@ var $j = jQuery.noConflict();
           return decodeURIComponent(escape(s));
       }
       catch(e){
-          safeLog('Erro ao decodificar string utf8: ' + s);
+          //safeLog('Erro ao decodificar string utf8: ' + s);
           return s;
       }
     }
@@ -34,22 +34,51 @@ var $j = jQuery.noConflict();
     $resultTable.children().remove();
 
     $('<div />').attr('id', 'first-bar-action')
-                .attr('class', 'bar-action')
+                .attr('class', 'bar-action hide-on-search')
                 .prependTo($resultTable.parent());
 
     $('<div />').attr('id', 'second-bar-action')
-                .attr('class', 'bar-action')
+                .attr('class', 'bar-action hide-on-search')
                 .appendTo($resultTable.parent());
 
     var $barActions = $('.bar-action').hide();
 
-    var $selectAllButton = $('<input class="selecionar" type="button" value="Selecionar todos" />');
+    var $selectAllButton = $('<input class="selecionar disable-on-apply-changes" type="button" value="Selecionar todos" />');
     $selectAllButton.appendTo($barActions);
-    var $actionButton = $('<input class="processar" type="button" value="Processar" />');
+    var $actionButton = $('<input class="processar disable-on-apply-changes" type="button" value="Processar" />');
     $actionButton.appendTo($barActions);
 
     var PageUrlBase = 'processamento';
     var ApiUrlBase = 'processamentoApi';
+
+    var $resourceOptionsTable = $('#resource-options');
+    $resourceOptionsTable.find('tr:even').addClass('even');
+    $resourceOptionsTable.hide().prependTo($formFilter.parent()); 
+
+    var changeStateFieldManual = function($containerElementId, $targetElementId){
+      if ($($containerElementId).val() == 'informar-manualmente')
+        $($targetElementId).show().removeAttr('disabled');
+      else
+        $($targetElementId).hide().attr('disabled', 'disabled');
+    };
+
+    $resourceOptionsTable.find('#percentual-frequencia').change(function(){
+      changeStateFieldManual('#percentual-frequencia', '#percentual-frequencia-manual');
+    });
+    changeStateFieldManual('#percentual-frequencia', '#percentual-frequencia-manual');
+
+    $resourceOptionsTable.find('#notas').change(function(){
+      changeStateFieldManual('#notas', '#notas-manual');
+    });
+    changeStateFieldManual('#notas', '#notas-manual');
+
+    $resourceOptionsTable.find('#faltas').change(function(){
+      changeStateFieldManual('#faltas', '#faltas-manual');
+    });
+    changeStateFieldManual('#faltas', '#faltas-manual');
+
+    $('.disable-on-search').attr('disabled', 'disabled');
+    $('.hide-on-search').hide();
 
     var $navActions = $('<p />').attr('id', 'nav-actions');
     $navActions.prependTo($formFilter.parent()); 
@@ -102,13 +131,7 @@ var $j = jQuery.noConflict();
           att : resourceName,
           oper : 'delete',
           instituicao_id : $('#ref_cod_instituicao').val(),
-          escola_id : $('#ref_cod_escola').val(),
-          curso_id : $('#ref_cod_curso').val(),
-          serie_id : $('#ref_ref_cod_serie').val(),
-          turma_id : $('#ref_cod_turma').val(),
-          ano : $('#ano').val(),
-          componente_curricular_id : $('#ref_cod_componente_curricular').val(),
-          etapa : $('#etapa').val()
+          matricula_id : ''
         };
 
         return resourceUrlBuilder.buildUrl(urlBase, $.extend(vars, additionalVars));
@@ -123,13 +146,6 @@ var $j = jQuery.noConflict();
           att : resourceName,
           oper : 'post',
           instituicao_id : $('#ref_cod_instituicao').val(),
-          escola_id : $('#ref_cod_escola').val(),
-          curso_id : $('#ref_cod_curso').val(),
-          serie_id : $('#ref_ref_cod_serie').val(),
-          turma_id : $('#ref_cod_turma').val(),
-          ano : $('#ano').val(),
-          componente_curricular_id : $('#ref_cod_componente_curricular').val(),
-          etapa : $('#etapa').val(),
           matricula_id : ''
         };
 
@@ -150,7 +166,6 @@ var $j = jQuery.noConflict();
           serie_id : $('#ref_ref_cod_serie').val(),
           turma_id : $('#ref_cod_turma').val(),
           ano : $('#ano').val(),
-          componente_curricular_id : $('#ref_cod_componente_curricular').val(),
           etapa : $('#etapa').val()
         };
 
@@ -186,27 +201,6 @@ var $j = jQuery.noConflict();
     }
 
  
-    var postProcessamento = function(){
-
-      var $proximoMatriculaIdField = $('#proximo-matricula-id');
-      $proximoMatriculaIdField.data('initial_matricula_id', $proximoMatriculaIdField.val())
-
-      if (validatesIfValueIsNumeric($proximoMatriculaIdField.val()))
-      {
-
-        var options = {
-          url : postResourceUrlBuilder.buildUrl(ApiUrlBase, 'promocao', {matricula_id : $proximoMatriculaIdField.val()}),
-          dataType : 'json',
-          data : {},
-          success : handlePostProcessamento
-        };
-
-        postResource(options, handleErrorPost);
-
-      }
-    }
-
-
     //callback handlers
 
     //delete
@@ -229,15 +223,7 @@ var $j = jQuery.noConflict();
     }
 
 
-    function handlePostProcessamento(dataResponse){
-
-      safeLog(dataResponse);
-      handleMessages(dataResponse.msgs);
-      safeLog('#TODO handlePostProcessamento');
-
-    }
-
-    function handleMessages(messages, targetId){
+    function handleMessages(messages, $targetElement){
 
       var hasErrorMessages = false;
       var hasSuccessMessages = false;
@@ -257,12 +243,14 @@ var $j = jQuery.noConflict();
           hasSuccessMessages = true;
       }
 
-      if (targetId && hasErrorMessages)
-        $('#'+targetId).addClass('error').removeClass('success');
-      else if(targetId && hasSuccessMessages)
-        $('#'+targetId).addClass('success').removeClass('error');
-      else
-        $('#'+targetId).removeClass('success').removeClass('error');
+      if($.isArray($targetElement) && $targetElement.length > 0){
+        if (hasErrorMessages)
+          $targetElement.addClass('error').removeClass('success');
+        else if (hasSuccessMessages)
+          $targetElement.addClass('success').removeClass('error');
+        else
+          $targetElement.removeClass('success').removeClass('error');
+      }
     }
 
 
@@ -309,7 +297,10 @@ var $j = jQuery.noConflict();
       $formFilter.fadeIn('fast', function(){
         $(this).show()
       });
-      $barActions.hide();
+      //$barActions.hide();
+      //$resourceOptionsTable.hide();
+      $('.disable-on-search').attr('disabled', 'disabled');
+      $('.hide-on-search').hide();
     }
 
 
@@ -319,7 +310,10 @@ var $j = jQuery.noConflict();
         .bind('click', showSearchForm)
         .attr('style', 'text-decoration: underline')
       );
-      $barActions.show();
+      //$barActions.show();
+      //$resourceOptionsTable.show();
+      $('.disable-on-search').removeAttr('disabled');
+      $('.hide-on-search').show();
     }
 
 /*    function showSearchButton(){
@@ -373,8 +367,8 @@ var $j = jQuery.noConflict();
                             .attr('type', 'checkbox')
                             .attr('name', 'processar-matricula')
                             .attr('value', 'sim')
-                            .attr('id', 'matricula-id-' + value.matricula_id)
-                            .attr('class', 'matricula')
+                            .attr('id', 'matricula-' + value.matricula_id)
+                            .attr('class', 'matricula disable-on-apply-changes')
                             .data('matricula_id', value.matricula_id);
 
             var $linha = $('<tr />');
@@ -444,19 +438,77 @@ var $j = jQuery.noConflict();
     $formFilter.ajaxForm(matriculasSearchOptions);
 
     var onClickActionEvent = function(event){
-      var checkboxes = $('input.matricula:checked');
 
-      if (checkboxes.length < 1)
+      var $firstChecked = $('input.matricula:checked:first');
+
+      if ($firstChecked.length < 1)
         alert('Selecione ao menos uma matrícula.');
+      else{
 
+        if (validatesPresenseOfValueInRequiredFields()){
+          $('.disable-on-apply-changes').attr('disabled', 'disabled');
+          $actionButton.val('Aguarde processando...');
+        
+          postProcessamento($firstChecked);
+        }
+      }
     };
 
-    var onClickSelectAllEvent = function(event){
-      var checked = $('input.matricula:checked');
-      var unchecked = $('input.matricula:not(:checked)');
+    function postProcessamento($resourceElement){
 
-      checked.attr('checked', false);
-      unchecked.attr('checked', true);
+      //#TODO validar campos que usuário preenche
+      //if (validatesIfValueIsNumeric($proximoMatriculaIdField.val()))
+
+      var options = {
+        url : postResourceUrlBuilder.buildUrl(ApiUrlBase, 'processamento', {
+          matricula_id : $resourceElement.data('matricula_id'),
+          dias_letivos : $('#dias-letivos').val()
+        }),
+        dataType : 'json',
+        data : {},
+        success : function(dataResponse){
+          afterChangeResource($resourceElement);
+          handlePostProcessamento(dataResponse);
+        }
+      };
+
+      beforeChangeResource($resourceElement);
+      postResource(options, handleErrorPost);
+    }
+
+    function beforeChangeResource($resourceElement){
+      if ($resourceElement.siblings('img').length < 1);
+        $('<img alt="loading..." src="/modules/HistoricoEscolar/Static/images/loading.gif" />').appendTo($resourceElement.parent());
+    }
+
+    function handlePostProcessamento(dataResponse){
+      var $checkbox = $('matricula-' + dataResponse.matricula_id);
+      var $targetElement = $j('#matricula-5269').closest('tr').first();
+      handleMessages(dataResponse.msgs, $targetElement);
+      updateFieldSituacao(dataResponse.matricula_id, dataResponse.situacao_historico);
+    }
+
+
+    function afterChangeResource($resourceElement){
+      $resourceElement.siblings('img').remove();
+      $resourceElement.attr('checked', false);
+
+      //verifica se chegou na ultima matricula e ativa os elements desativados
+      var $firstChecked = $('input.matricula:checked:first');
+      if ($firstChecked.length < 1){
+        $('.disable-on-apply-changes').removeAttr('disabled');
+        $actionButton.val('Processar');
+      }
+      else
+        postProcessamento($firstChecked);
+    }
+
+    var onClickSelectAllEvent = function(event){
+      var $checked = $('input.matricula:checked');
+      var $unchecked = $('input.matricula:not(:checked)');
+
+      $checked.attr('checked', false);
+      $unchecked.attr('checked', true);
     };
 
     $actionButton.click(onClickActionEvent);

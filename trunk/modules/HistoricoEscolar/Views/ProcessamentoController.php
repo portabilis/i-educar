@@ -99,6 +99,93 @@ class ProcessamentoController extends Core_Controller_Page_ListController
 
     $this->largura = '100%';
 
+    $resourceOptionsTable = "<table id='resource-options' class='styled horizontal-expand hide-on-search disable-on-apply-changes'>
+
+      <tr>
+        <td><label for='dias-letivos'>Quantidade dias letivos *</label></td>
+        <td colspan='2'><input id='dias-letivos' name='quantidade-dias-letivos' class='obrigatorio disable-on-search'></input></td>
+      </tr>
+
+      <tr>
+        <td><label for='percentual-frequencia'>% Frequencia *</label></td>
+        <td>
+          <select id='percentual-frequencia' class='obrigatorio disable-on-search'>
+            <option>Selecione</option>
+            <option value='buscar-boletim'>Buscar boletim</option>
+            <option value='informar-manualmente'>Informar manualmente</option>
+          </select>
+        </td>
+        <td><input id='percentual-frequencia-manual' name='percentual-frequencia-manual' class='obrigatorio disable-on-search' style='display:none;'></input></td>
+      </tr>
+
+      <tr>
+        <td><label for='situacao'>Situa&ccedil;&atilde;o *</label></td>
+        <td colspan='2'>
+          <select id='situacao' class='obrigatorio disable-on-search'>
+            <option>Selecione</option>
+            <option value='buscar-matricula'>Buscar boletim</option>
+            <option value='aprovado'>Aprovado</option>
+            <option value='reprovado'>Reprovado</option>
+            <option value='transferido'>Transferido</option>
+          </select>
+        </td>
+      </tr>
+
+      <tr>
+        <td><label for='notas'>Notas *</label></td>
+        <td>
+          <select id='notas' class='obrigatorio disable-on-search'>
+            <option>Selecione</option>
+            <option value='buscar-boletim'>Buscar boletim</option>
+            <option value='AP'>AP</option>
+            <option value='informar-manualmente'>Informar manualmente</option>
+          </select>
+        </td>
+        <td><input id='notas-manual' name='notas-manual' class='obrigatorio disable-on-search' style='display:none;'></input></td>
+      </tr>
+
+      <tr>
+        <td><label for='faltas'>Faltas *</label></td>
+        <td>
+          <select id='faltas' class='obrigatorio disable-on-search'>
+            <option>Selecione</option>
+            <option value='buscar-boletim'>Buscar boletim</option>
+            <option value='informar-manualmente'>Informar manualmente</option>
+          </select>
+        </td>
+        <td><input id='faltas-manual' name='faltas-manual' class='obrigatorio disable-on-search' style='display:none;'></input></td>
+      </tr>
+
+      <tr>
+        <td><label for='observacao'>Observa&ccedil;&atilde;o</label></td>
+        <td colspan='2'><textarea id='observacao' name='observacao' cols='60' rows='5'></textarea></td>
+      </tr>
+
+      <tr>
+        <td><label for='registro'>Registro (arquivo)</label></td>
+        <td colspan='2'><input id='registro' name='registro'></input></td>
+      </tr>
+
+      <tr>
+        <td><label for='livro'>Livro</label></td>
+        <td colspan='2'><input id='livro' name='livro'></input></td>
+      </tr>
+
+      <tr>
+        <td><label for='dias-letivos'>Folha</label></td>
+        <td colspan='2'><input id='folha' name='folha'></input></td>
+      </tr>
+
+      <tr>
+        <td><label for='extra-curricular'>Extra curricular</label></td>
+        <td colspan='2'><input type='checkbox' id='extra-curricular' name='extra-curricular'></input></td>
+      </tr>
+
+    </table>";
+
+
+    $this->appendOutput($resourceOptionsTable);
+
     $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery.js"></script>');
     $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery.form.js"></script>');
 
