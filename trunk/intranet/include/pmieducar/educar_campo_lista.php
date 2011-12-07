@@ -1489,13 +1489,16 @@ function updateSelect(xml)
 
     $s = <<<EOT
 <script>
-function validatesPresenseOfValueInRequiredFields() {
+function validatesPresenseOfValueInRequiredFields(additionalFields) {
   var emptyField = null;
   var requiredFields = document.getElementsByClassName('obrigatorio');
 
+  if (additionalFields)
+    requiredFields = requiredFields.concat(additionalFields);
+    
   for (var i = 0; i < requiredFields.length; i++) {
     var requiredField = requiredFields[i];
-    if (emptyField == null && ! requiredField.getAttribute('disabled') && ! requiredField.value) {
+    if (emptyField == null && requiredField.style.display != 'none' && ! requiredField.getAttribute('disabled') && ! requiredField.value) {
       emptyField = requiredField;
       requiredField.classList.add('error');
     }
