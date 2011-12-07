@@ -588,12 +588,14 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
      
 
       if ($this->getRequest()->notas == 'buscar-boletim'){
-        $nota = '';
-
-        if (($tpNota == $cnsNota::NUMERICA || $tpNota == $cnsNota::CONCEITUAL) && 
-            is_array($mediasCc[$ccId]) && count($mediasCc[$ccId]) > 0){
+        if ($tpNota == $cnsNota::NUMERICA) {
           $nota = (string)$mediasCc[$ccId][0]->mediaArredondada;
         }
+        elseif ($tpNota == $cnsNota::CONCEITUAL){
+          $nota = (string)$mediasCc[$ccId][0]->media;
+        }
+        else
+          $nota = '';
       }
       else
         $nota = $this->getRequest()->notas;
