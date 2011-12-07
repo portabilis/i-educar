@@ -582,14 +582,16 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
         $falta = $this->getService()->getSituacaoFaltas()->totalFaltas;
       }
 
-      if (($tpNota == $cnsNota::NUMERICA || $tpNota == $cnsNota::CONCEITUAL)){
-        if(is_array($mediasCc[$ccId]) && count($mediasCc[$ccId]) > 0)
+      if ($this->getRequest()->notas == 'buscar-boletim'){
+        $nota = '';
+
+        if (($tpNota == $cnsNota::NUMERICA || $tpNota == $cnsNota::CONCEITUAL) && 
+            is_array($mediasCc[$ccId]) && count($mediasCc[$ccId]) > 0){
           $nota = (string)$mediasCc[$ccId][0]->mediaArredondada;
-        else
-          $nota = '';
+        }
       }
       else
-        $nota = '';
+        $nota = $this->getRequest()->notas;
 
       $historicoDisciplina = new clsPmieducarHistoricoDisciplinas(
                                 $sequencial, 
