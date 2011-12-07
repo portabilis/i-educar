@@ -88,7 +88,25 @@ class ProcessamentoController extends Core_Controller_Page_ListController
     include 'include/pmieducar/educar_campo_lista.php';
   }
 
-  
+
+function getSelectGradeCurso(){
+
+    $db = new clsBanco();
+    $sql = "select * from pmieducar.historico_grade_curso where ativo = 1";
+    $db->Consulta($sql);
+
+    $select = "<select id='grade-curso' class='obrigatorio disable-on-search clear-on-change-curso'>";
+    $select .= "<option value=''>Selecione</option>";
+
+    while ($db->ProximoRegistro()){
+      $record = $db->Tupla();
+      $select .= "<option value='{$record['id']}'>{$record['descricao_etapa']}</option>";
+    }
+
+    $select .= '</select>';
+    return $select;
+  }
+
   public function Gerar()
   {
 
@@ -103,27 +121,33 @@ class ProcessamentoController extends Core_Controller_Page_ListController
 
       <tr>
         <td><label for='dias-letivos'>Quantidade dias letivos *</label></td>
-        <td colspan='2'><input id='dias-letivos' name='quantidade-dias-letivos' class='obrigatorio disable-on-search'></input></td>
+        <td colspan='2'><input id='dias-letivos' name='quantidade-dias-letivos' class='obrigatorio disable-on-search clear-on-change-curso'></input></td>
+      </tr>
+
+      <tr>
+        <td><label for='grade-curso'>Grade curso *</label></td>
+        <td>{$this->getSelectGradeCurso()}</td>
       </tr>
 
       <tr>
         <td><label for='percentual-frequencia'>% Frequencia *</label></td>
         <td>
           <select id='percentual-frequencia' class='obrigatorio disable-on-search'>
-            <option>Selecione</option>
+            <option value=''>Selecione</option>
             <option value='buscar-boletim'>Buscar boletim</option>
             <option value='informar-manualmente'>Informar manualmente</option>
           </select>
         </td>
-        <td><input id='percentual-frequencia-manual' name='percentual-frequencia-manual' class='obrigatorio disable-on-search' style='display:none;'></input></td>
+        <td><input id='percentual-frequencia-manual' name='percentual-frequencia-manual' style='display:none;'></input></td>
       </tr>
 
       <tr>
         <td><label for='situacao'>Situa&ccedil;&atilde;o *</label></td>
         <td colspan='2'>
           <select id='situacao' class='obrigatorio disable-on-search'>
-            <option>Selecione</option>
+            <option value=''>Selecione</option>
             <option value='buscar-matricula'>Buscar boletim</option>
+            <option value='em-andamento'>Em andamento</option>
             <option value='aprovado'>Aprovado</option>
             <option value='reprovado'>Reprovado</option>
             <option value='transferido'>Transferido</option>
@@ -135,25 +159,25 @@ class ProcessamentoController extends Core_Controller_Page_ListController
         <td><label for='notas'>Notas *</label></td>
         <td>
           <select id='notas' class='obrigatorio disable-on-search'>
-            <option>Selecione</option>
+            <option value=''>Selecione</option>
             <option value='buscar-boletim'>Buscar boletim</option>
             <option value='AP'>AP</option>
             <option value='informar-manualmente'>Informar manualmente</option>
           </select>
         </td>
-        <td><input id='notas-manual' name='notas-manual' class='obrigatorio disable-on-search' style='display:none;'></input></td>
+        <td><input id='notas-manual' name='notas-manual' style='display:none;'></input></td>
       </tr>
 
       <tr>
         <td><label for='faltas'>Faltas *</label></td>
         <td>
           <select id='faltas' class='obrigatorio disable-on-search'>
-            <option>Selecione</option>
+            <option value=''>Selecione</option>
             <option value='buscar-boletim'>Buscar boletim</option>
             <option value='informar-manualmente'>Informar manualmente</option>
           </select>
         </td>
-        <td><input id='faltas-manual' name='faltas-manual' class='obrigatorio disable-on-search' style='display:none;'></input></td>
+        <td><input id='faltas-manual' name='faltas-manual' style='display:none;'></input></td>
       </tr>
 
       <tr>
