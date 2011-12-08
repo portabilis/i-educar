@@ -55,6 +55,18 @@ var $j = jQuery.noConflict();
     $resourceOptionsTable.find('tr:even').addClass('even');
     $resourceOptionsTable.hide().prependTo($formFilter.parent()); 
 
+    var $notasField = $resourceOptionsTable.find('#notas');
+    $notasField.change(function(){
+      var $targetElementId = '#notas-manual';
+
+      if ($notasField.val() == 'informar-manualmente')
+        $($targetElementId).show().removeAttr('disabled');
+      else if($notasField.val() == 'AP')
+        $($targetElementId).show().removeAttr('disabled').val('AP');
+      else
+        $($targetElementId).hide().attr('disabled', 'disabled');
+    });
+
     var changeStateFieldManual = function($containerElementId, $targetElementId){
       if ($($containerElementId).val() == 'informar-manualmente')
         $($targetElementId).show().removeAttr('disabled');
@@ -64,10 +76,6 @@ var $j = jQuery.noConflict();
 
     $resourceOptionsTable.find('#percentual-frequencia').change(function(){
       changeStateFieldManual('#percentual-frequencia', '#percentual-frequencia-manual');
-    });
-
-    $resourceOptionsTable.find('#notas').change(function(){
-      changeStateFieldManual('#notas', '#notas-manual');
     });
 
     $resourceOptionsTable.find('#faltas').change(function(){
@@ -508,8 +516,6 @@ var $j = jQuery.noConflict();
     };
 
     function postProcessamento($resourceElement){
-
-      //#TODO validar campos que usuário preenche
 
       var percentualFrequencia = $('#percentual-frequencia').val() == 'buscar-boletim' ? 'buscar-boletim' : $('#percentual-frequencia-manual').val();
       var faltas = $('#faltas').val() == 'buscar-boletim' ? 'buscar-boletim' : $('#faltas-manual').val();
