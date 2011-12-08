@@ -353,9 +353,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
   protected function getdadosEscola($escolaId){
 
-    $sql = "select (select upper(pes.nome) from pmieducar.escola esc, cadastro.pessoa pes where esc.ref_cod_instituicao = {$this->getRequest()->instituicao_id} and esc.cod_escola = $escolaId and pes.idpes = esc.ref_idpes) as nome,
+    $sql = "select (select pes.nome from pmieducar.escola esc, cadastro.pessoa pes where esc.ref_cod_instituicao = {$this->getRequest()->instituicao_id} and esc.cod_escola = $escolaId and pes.idpes = esc.ref_idpes) as nome,
 
-upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
+(SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
         FROM public.municipio,
              cadastro.endereco_pessoa,
              cadastro.juridica,
@@ -365,7 +365,7 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
              bairro.idmun = municipio.idmun AND
              juridica.idpes = endereco_pessoa.idpes AND
              juridica.idpes = escola.ref_idpes AND
-             escola.cod_escola = $escolaId),(SELECT endereco_externo.cidade FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $escolaId))),(SELECT municipio FROM pmieducar.escola_complemento where ref_cod_escola = $escolaId)))) AS cidade,
+             escola.cod_escola = $escolaId),(SELECT endereco_externo.cidade FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $escolaId))),(SELECT municipio FROM pmieducar.escola_complemento where ref_cod_escola = $escolaId))) AS cidade,
 
 (SELECT COALESCE((SELECT COALESCE((SELECT municipio.sigla_uf
         FROM public.municipio,
@@ -462,10 +462,10 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
                                   $ano,
                                   $this->getService()->getOption('serieCargaHoraria'),
                                   $this->getRequest()->dias_letivos,
-                                  $dadosEscola['nome'],
-                                  $dadosEscola['cidade'],
+                                  mb_strtoupper($dadosEscola['nome']),
+                                  mb_strtoupper($dadosEscola['cidade']),
                                   $dadosEscola['uf'],
-                                  $this->getRequest()->observacao,
+                                  utf8_decode($this->getRequest()->observacao),
                                   $this->getSituacaoMatricula(),
                                   $data_cadastro = date('Y-m-d'),
                                   $data_exclusao = null,
@@ -476,9 +476,9 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
                                   $this->getRequest()->extra_curricular,
                                   $matriculaId,
                                   $this->getPercentualFrequencia(),
-                                  $this->getRequest()->registro,
-                                  $this->getRequest()->livro,
-                                  $this->getRequest()->folha,
+                                  utf8_decode($this->getRequest()->registro),
+                                  utf8_decode($this->getRequest()->livro),
+                                  utf8_decode($this->getRequest()->folha),
                                   $dadosMatricula['nome_curso'],
                                   $this->getRequest()->grade_curso_id
                                 );
@@ -501,10 +501,10 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
                                   $ano,
                                   $this->getService()->getOption('serieCargaHoraria'),
                                   $this->getRequest()->dias_letivos,
-                                  $dadosEscola['nome'],
-                                  $dadosEscola['cidade'],
+                                  mb_strtoupper($dadosEscola['nome']),
+                                  mb_strtoupper($dadosEscola['cidade']),
                                   $dadosEscola['uf'],
-                                  $this->getRequest()->observacao,
+                                  utf8_decode($this->getRequest()->observacao),
                                   $this->getSituacaoMatricula(),
                                   $data_cadastro = null,
                                   $data_exclusao = null,
@@ -515,9 +515,9 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
                                   $this->getRequest()->extra_curricular,
                                   $matriculaId,
                                   $this->getPercentualFrequencia(),
-                                  $this->getRequest()->registro,
-                                  $this->getRequest()->livro,
-                                  $this->getRequest()->folha,
+                                  utf8_decode($this->getRequest()->registro),
+                                  utf8_decode($this->getRequest()->livro),
+                                  utf8_decode($this->getRequest()->folha),
                                   $dadosMatricula['nome_curso'],
                                   $this->getRequest()->grade_curso_id
                                 );
@@ -568,7 +568,7 @@ upper((SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
           $nota = '';
       }
       else
-        $nota = $this->getRequest()->notas;
+        $nota = utf8_decode($this->getRequest()->notas);
 
       $historicoDisciplina = new clsPmieducarHistoricoDisciplinas(
                                 $sequencial, 
