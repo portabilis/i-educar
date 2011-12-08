@@ -121,7 +121,7 @@ function getSelectGradeCurso(){
 
       <tr>
         <td><label for='dias-letivos'>Quantidade dias letivos *</label></td>
-        <td colspan='2'><input id='dias-letivos' name='quantidade-dias-letivos' class='obrigatorio disable-on-search clear-on-change-curso'></input></td>
+        <td colspan='2'><input type='text' id='dias-letivos' name='quantidade-dias-letivos' class='obrigatorio disable-on-search clear-on-change-curso'></input></td>
       </tr>
 
       <tr>
@@ -130,7 +130,7 @@ function getSelectGradeCurso(){
       </tr>
 
       <tr>
-        <td><label for='percentual-frequencia'>% Frequencia *</label></td>
+        <td><label for='percentual-frequencia'>% Frequ&ecirc;ncia *</label></td>
         <td>
           <select id='percentual-frequencia' class='obrigatorio disable-on-search'>
             <option value=''>Selecione</option>
@@ -181,23 +181,23 @@ function getSelectGradeCurso(){
       </tr>
 
       <tr>
-        <td><label for='observacao'>Observa&ccedil;&atilde;o</label></td>
-        <td colspan='2'><textarea id='observacao' name='observacao' cols='60' rows='5'></textarea></td>
-      </tr>
-
-      <tr>
         <td><label for='registro'>Registro (arquivo)</label></td>
-        <td colspan='2'><input id='registro' name='registro'></input></td>
+        <td colspan='2'><input type='text' id='registro' name='registro'></input></td>
       </tr>
 
       <tr>
         <td><label for='livro'>Livro</label></td>
-        <td colspan='2'><input id='livro' name='livro'></input></td>
+        <td colspan='2'><input type='text' id='livro' name='livro'></input></td>
       </tr>
 
       <tr>
         <td><label for='dias-letivos'>Folha</label></td>
-        <td colspan='2'><input id='folha' name='folha'></input></td>
+        <td colspan='2'><input type='text' id='folha' name='folha'></input></td>
+      </tr>
+
+      <tr>
+        <td><label for='observacao'>Observa&ccedil;&atilde;o</label></td>
+        <td colspan='2'><textarea id='observacao' name='observacao' cols='60' rows='5'></textarea></td>
       </tr>
 
       <tr>
