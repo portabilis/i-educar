@@ -48,7 +48,7 @@ class ProcessamentoController extends Core_Controller_Page_ListController
 {
   protected $_dataMapper = 'Avaliacao_Model_NotaAlunoDataMapper';
   protected $_titulo   = 'Processamento histórico';
-  protected $_processoAp = 644;
+  protected $_processoAp = 999613;
   protected $_formMap  = array();
 
   protected function setVars()

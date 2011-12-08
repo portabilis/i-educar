@@ -46,7 +46,7 @@ require_once 'include/pmieducar/clsPmieducarHistoricoDisciplinas.inc.php';
 class ProcessamentoApiController extends Core_Controller_Page_EditController
 {
   protected $_dataMapper  = 'Avaliacao_Model_NotaComponenteDataMapper';
-  protected $_processoAp  = 644;
+  protected $_processoAp  = 999613;
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
   protected $_saveOption  = FALSE;
   protected $_deleteOption  = FALSE;
