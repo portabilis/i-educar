@@ -103,20 +103,6 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     return $this->validatesPresenceOf($this->getSession()->id_pessoa, '', $raiseExceptionOnEmpty, 'Usuário deve estar logado');
   }
 
-  protected function requiresUserIsAdmin($raiseExceptionOnError){
-
-    if($this->getSession()->id_pessoa != 1){
-      $msg = "O usuário logado deve ser o admin";
-      $this->appendMsg($msg);
-
-      if ($raiseExceptionOnError)
-         throw new Exception($msg);
-
-      return false;
-    }
-    return true;
-  }
-
   protected function validatesPresenceOfInstituicaoId($raiseExceptionOnEmpty){
     return $this->validatesPresenceOf($this->getRequest()->instituicao_id, 'instituicao_id', $raiseExceptionOnEmpty);
   }
@@ -256,7 +242,6 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
   {
     try {
       $this->requiresLogin(true);
-      $this->requiresUserIsAdmin(true);
       $this->validatesPresenceAndValueInSetOfAtt(true);
       $this->validatesPresenceAndValueInSetOfOper(true);
     }
