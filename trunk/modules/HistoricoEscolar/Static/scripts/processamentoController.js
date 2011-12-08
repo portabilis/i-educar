@@ -290,7 +290,7 @@ var $j = jQuery.noConflict();
 
 
     function setTableSearchDetails(dataDetails){
-      $('<caption />').html('<strong>Proccessamento histórico</strong>').appendTo($tableSearchDetails);
+      $('<caption />').html('<strong>Processamento dos históricos</strong>').appendTo($tableSearchDetails);
 
       //set headers table
       var $linha = $('<tr />');
@@ -487,7 +487,7 @@ var $j = jQuery.noConflict();
       var $firstChecked = $('input.matricula:checked:first');
 
       if ($firstChecked.length < 1)
-        alert('Selecione ao menos uma matrícula.');
+        alert('Selecione alguma matrícula.');
       else{
 
         var additionalFields = [$('#percentual-frequencia-manual').get(0),
