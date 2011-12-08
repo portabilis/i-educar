@@ -97,6 +97,8 @@ var $j = jQuery.noConflict();
     function fixupFieldsWidth(){
       var maxWidth = 0;
       var $fields = $('#formcadastro select');
+      $.merge($fields, $('#resource-options select'));
+      $.merge($fields, $('#resource-options input[type="text"]'));
 
       //get maxWidh
       $.each($fields, function(index, value){
