@@ -43,10 +43,11 @@ var $j = jQuery.noConflict();
 
     var $barActions = $('.bar-action').hide();
 
-    var $selectAllButton = $('<input class="selecionar disable-on-apply-changes" type="button" value="Selecionar todos" />');
-    $selectAllButton.appendTo($barActions);
-    var $actionButton = $('<input class="processar disable-on-apply-changes" type="button" value="Processar" />');
-    $actionButton.appendTo($barActions);
+    $('<input class="selecionar disable-on-apply-changes" type="button" value="Selecionar todos" />').appendTo($barActions);
+    var $selectAllButton = $barActions.find('input.selecionar');
+
+    $('<input class="processar disable-on-apply-changes" type="button" value="Processar" />').appendTo($barActions);
+    var $actionButton = $barActions.find('input.processar');
 
     var PageUrlBase = 'processamento';
     var ApiUrlBase = 'processamentoApi';
@@ -364,17 +365,16 @@ var $j = jQuery.noConflict();
 
     //exibe formulário nova consulta
     function showSearchForm(event){
-      //$(this).hide();
       $navActions.html('');
       $tableSearchDetails.children().remove();
       $resultTable.children().fadeOut('fast').remove();
       $formFilter.fadeIn('fast', function(){
         $(this).show()
       });
-      //$barActions.hide();
-      //$resourceOptionsTable.hide();
       $('.disable-on-search').attr('disabled', 'disabled');
       $('.hide-on-search').hide();
+      $('.disable-on-apply-changes').removeAttr('disabled');
+      $actionButton.val('Processar');
     }
 
 
@@ -384,20 +384,9 @@ var $j = jQuery.noConflict();
         .bind('click', showSearchForm)
         .attr('style', 'text-decoration: underline')
       );
-      //$barActions.show();
-      //$resourceOptionsTable.show();
       $('.disable-on-search').removeAttr('disabled');
       $('.hide-on-search').show();
     }
-
-/*    function showSearchButton(){
-      $navActions.html(
-        $("<a href='#'>Nova consulta</a>")
-        .bind('click', showSearchForm)
-        .attr('style', 'text-decoration: underline')
-      );
-    }
-*/
 
     function getLinkToHistorico(link, text){
       if (link)
@@ -585,8 +574,6 @@ var $j = jQuery.noConflict();
       var notas = $('#notas').val() == 'buscar-boletim' ? 'buscar-boletim' : $('#notas-manual').val();
       var disciplinas = $('#disciplinas').val() == 'buscar-boletim' ? 'buscar-boletim' : getDisciplinasManuais();
 
-      safeLog(disciplinas);
-
       var options = {
         url : postResourceUrlBuilder.buildUrl(ApiUrlBase, 'processamento', {
           matricula_id : $resourceElement.data('matricula_id')
@@ -604,7 +591,7 @@ var $j = jQuery.noConflict();
           registro : $('#registro').val(),
           livro : $('#livro').val(),
           folha : $('#folha').val(),
-          disciplinas : $('#disciplinas').val()
+          disciplinas : disciplinas
         },
         success : function(dataResponse){
           afterChangeResource($resourceElement);
@@ -646,7 +633,7 @@ var $j = jQuery.noConflict();
       if ($firstChecked.length < 1){
         $('.disable-on-apply-changes').removeAttr('disabled');
         $actionButton.val('Processar');
-        alert('O processamento chegou ao fim.');
+        window.setTimeout(function(){alert('O processamento chegou ao fim');}, 1);
       }
       else
         postProcessamento($firstChecked);
