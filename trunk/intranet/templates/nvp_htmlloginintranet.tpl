@@ -41,7 +41,7 @@
 
     <!--p style="min-height: 0px;" class="flash"><strong>Importante, manuten&ccedil;&atilde;o agendada:</strong> No dia 05/08/2011, a partir das 17h, o sistema estar&aacute; em processo de manuten&ccedil;&atilde;o com previs&atilde;o de t&eacute;rmino para &agrave;s 21h. Durante este per&iacute;odo poder&atilde;o ocorrer instabilidades.</p-->
 
-    <p style="min-height: 0px;" class="flash"><strong>Novo!</strong> acompanhe as &uacute;ltimas novidades do i-Educar acessando <a href="http://ieducar.com.br/wiki" class="decorated texto-normal">ieducar.com.br/wiki</a></p>
+    <p style="min-height: 0px;" class="flash"><strong>Novo!</strong> acompanhe as &uacute;ltimas novidades do i-Educar em <a href="http://ieducar.com.br/wiki" class="decorated texto-normal">ieducar.com.br/wiki</a></p>
 
   </div>
 
