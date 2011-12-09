@@ -545,22 +545,11 @@ var $j = jQuery.noConflict();
       });
 
     }
-
     resetAutoCompleteNomeDisciplinaEvent();
 
     var $newDisciplinaButton = $('#btn_add_tab_add_1');
-    //var _oldDisciplinaButtonOnClickEvent = $newDisciplinaButton.attr('onclick');
-    //$newDisciplinaButton.attr('onclick', '');
     $newDisciplinaButton.click(function(){
-      //tab_add_1.addRow();
-      //var $tableDisciplinas = $('#tr_notas').find('table');
-      //var $newRow = $tableDisciplinas.find('tr.formmdtd:last').clone();
-      //var $nomeDisciplinaField = $newRow.find('input[type="text"]:first').val('');
-      //var $lastDisciplinaRow = $tableDisciplinas.find('tr.formmdtd:last');
-      //setAutoCompleteEvent($lastDisciplinaRow.find('input[type="text"]:first'));
-      //$newRow.insertBefore($newDisciplinaButton.closest('tr'));
       resetAutoCompleteNomeDisciplinaEvent();
-      console.log('hehe');
     });
   });
 })(jQuery);
