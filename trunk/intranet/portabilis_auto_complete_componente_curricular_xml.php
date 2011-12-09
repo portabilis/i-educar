@@ -27,5 +27,8 @@ function getComponentesCurriculares($instituicaoId, $limit, $word)
 }
 
 header('Content-type: application/json');
-echo json_encode(getComponentesCurriculares($_GET['instituicao_id'], $_GET['limit'], $_GET['term']));
+if ($user->isLoggedIn())
+  echo json_encode(getComponentesCurriculares($_GET['instituicao_id'], $_GET['limit'], $_GET['term']));
+else
+  echo json_encode(array());
 ?>
