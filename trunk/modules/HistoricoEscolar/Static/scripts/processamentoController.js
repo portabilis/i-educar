@@ -53,7 +53,26 @@ var $j = jQuery.noConflict();
 
     var $resourceOptionsTable = $('#resource-options');
     $resourceOptionsTable.find('tr:even').addClass('even');
-    $resourceOptionsTable.hide().prependTo($formFilter.parent()); 
+    $resourceOptionsTable.hide().prependTo($formFilter.parent());
+
+    var $disciplinasManualTable = $('#disciplinas-manual');
+    $('#new-disciplina-line').click(function(){
+      var $lastDisplinaRow = $disciplinasManualTable.find('tr.disciplina:last');
+      var $newRow = $lastDisplinaRow.clone().removeClass('notice').insertAfter($lastDisplinaRow);
+      $newRow.find('input.nome').val('');
+      setRemoveDisciplinaLineEvent($newRow.find('.remove-disciplina-line'));
+    });
+
+    function setRemoveDisciplinaLineEvent($targetElement){
+      $targetElement.click(function(event){
+        event.preventDefault();
+        if($disciplinasManualTable.find('tr.disciplina').length > 1)
+          $(this).closest('tr').remove();
+        else
+          handleMessages([{type : 'notice', msg : 'Não é possivel remover a primeira linha.'}], $(this).closest('tr'));
+      });
+    }
+    setRemoveDisciplinaLineEvent($('.remove-disciplina-line'));
 
     var $notasField = $resourceOptionsTable.find('#notas');
     $notasField.change(function(){
@@ -68,10 +87,14 @@ var $j = jQuery.noConflict();
     });
 
     var changeStateFieldManual = function($containerElementId, $targetElementId){
-      if ($($containerElementId).val() == 'informar-manualmente')
-        $($targetElementId).show().removeAttr('disabled');
-      else
-        $($targetElementId).hide().attr('disabled', 'disabled');
+      $targetElement = $($targetElementId);
+
+      if ($($containerElementId).val() == 'informar-manualmente'){
+        $targetElement.show().removeAttr('disabled').find('.change-state-with-parent').show().removeAttr('disabled');
+      }
+      else{
+        $targetElement.hide().attr('disabled', 'disabled').find('.change-state-with-parent').hide().attr('disabled', 'disabled');
+      }
     };
 
     $resourceOptionsTable.find('#percentual-frequencia').change(function(){
@@ -80,6 +103,10 @@ var $j = jQuery.noConflict();
 
     $resourceOptionsTable.find('#faltas').change(function(){
       changeStateFieldManual('#faltas', '#faltas-manual');
+    });
+
+    $resourceOptionsTable.find('#disciplinas').change(function(){
+      changeStateFieldManual('#disciplinas', '#disciplinas-manual');
     });
 
     $('.disable-on-search').attr('disabled', 'disabled');
@@ -250,10 +277,12 @@ var $j = jQuery.noConflict();
     }
 
 
-    function handleMessages(messages, targetId){
+    function handleMessages(messages, targetId, useDelayClassRemoval){
 
       var hasErrorMessages = false;
       var hasSuccessMessages = false;
+      var hasNoticeMessages = false;
+      var delayClassRemoval = 5000;
 
       //se nao é um elemento (é uma string) e o id nao inicia com #
       if (targetId && typeof(targetId) == 'string' && targetId[0] != '#')
@@ -276,15 +305,25 @@ var $j = jQuery.noConflict();
           hasErrorMessages = true;
         else if(! hasSuccessMessages && messages[i].type == 'success')
           hasSuccessMessages = true;
+        else if(! hasNoticeMessages && messages[i].type == 'notice')
+          hasNoticeMessages = true;
       }
 
       if($targetElement){
         if (hasErrorMessages)
-          $targetElement.addClass('error').removeClass('success');
+          $targetElement.addClass('error').removeClass('success').removeClass('notice');
         else if (hasSuccessMessages)
-          $targetElement.addClass('success').removeClass('error');
+          $targetElement.addClass('success').removeClass('error').removeClass('notice');
+        else if (hasNoticeMessages)
+          $targetElement.addClass('notice').removeClass('error').removeClass('sucess');
         else
-          $targetElement.removeClass('success').removeClass('error');
+          $targetElement.removeClass('success').removeClass('error').removeClass('notice');
+
+        $targetElement.focus();
+
+        if (useDelayClassRemoval){
+          window.setTimeout(function(){$targetElement.removeClass('success').removeClass('error').removeClass('notice');}, delayClassRemoval);
+        }
       }
     }
 
@@ -487,13 +526,17 @@ var $j = jQuery.noConflict();
       var $firstChecked = $('input.matricula:checked:first');
 
       if ($firstChecked.length < 1)
-        alert('Selecione alguma matrícula.');
+        handleMessages([{type : 'error', msg : 'Selecione alguma matrícula.'}], $actionButton, true);
       else{
 
         var additionalFields = [$('#percentual-frequencia-manual').get(0),
                                 $('#notas-manual').get(0), 
                                 $('#faltas-manual').get(0)
         ];
+
+        $.each($('#disciplinas-manual').find('.obrigatorio'), function(index, requiredElement){
+          additionalFields.push(requiredElement);
+        });
 
         if (validatesPresenseOfValueInRequiredFields(additionalFields)){
 
@@ -505,6 +548,12 @@ var $j = jQuery.noConflict();
           if (isValid && $('#faltas').val() != 'buscar-boletim')
             isValid = validatesIfNumericValueIsInRange($('#faltas-manual').val(), '#faltas-manual', 0, 999);
 
+          if (isValid && $('#disciplinas').val() != 'buscar-boletim'){
+            $.each($('#disciplinas-manual').find('.nota'), function(index, field){
+              $field = $(field);  
+              isValid = $.trim($field.val()) == '' || validatesIfNumericValueIsInRange($field.val(), $field, 0, 999);
+            });
+          }
 
           if (isValid){
             $('.disable-on-apply-changes').attr('disabled', 'disabled');
