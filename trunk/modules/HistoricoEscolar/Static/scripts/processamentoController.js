@@ -320,7 +320,7 @@ var $j = jQuery.noConflict();
         else
           $targetElement.removeClass('success').removeClass('error').removeClass('notice');
 
-        $targetElement.focus();
+        $($targetElement.get(0)).focus();
 
         if (useDelayClassRemoval){
           window.setTimeout(function(){$targetElement.removeClass('success').removeClass('error').removeClass('notice');}, delayClassRemoval);
