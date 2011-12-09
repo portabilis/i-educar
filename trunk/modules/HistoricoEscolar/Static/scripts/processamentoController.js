@@ -108,6 +108,12 @@ var $j = jQuery.noConflict();
 
     $resourceOptionsTable.find('#disciplinas').change(function(){
       changeStateFieldManual('#disciplinas', '#disciplinas-manual');
+
+      if ($(this).val() == 'informar-manualmente')
+        $('.disable-and-hide-wen-disciplinas-manual').hide().attr('disabled', 'disabled');
+      else
+        $('.disable-and-hide-wen-disciplinas-manual').show().removeAttr('disabled');
+
     });
 
     $('.disable-on-search').attr('disabled', 'disabled');
@@ -534,7 +540,8 @@ var $j = jQuery.noConflict();
           if (isValid && $('#percentual-frequencia').val() != 'buscar-boletim')
             isValid = validatesIfNumericValueIsInRange($('#percentual-frequencia-manual').val(), '#percentual-frequencia-manual', 0, 100);
 
-          if (isValid && $('#faltas').val() != 'buscar-boletim')
+          var $faltas = $('#faltas');
+          if (isValid && $faltas.val() != 'buscar-boletim' && $faltas.is(':visible'))
             isValid = validatesIfNumericValueIsInRange($('#faltas-manual').val(), '#faltas-manual', 0, 999);
 
           if (isValid && $('#disciplinas').val() != 'buscar-boletim'){

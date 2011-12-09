@@ -194,26 +194,26 @@ function getSelectGradeCurso(){
       <tr>
         <td><label for='notas'>Notas *</label></td>
         <td>
-          <select id='notas' class='obrigatorio disable-on-search'>
+          <select id='notas' class='obrigatorio disable-on-search disable-and-hide-wen-disciplinas-manual'>
             <option value=''>Selecione</option>
             <option value='buscar-boletim'>Lan&ccedil;adas no boletim</option>
             <option value='AP'>AP</option>
             <option value='informar-manualmente'>Informar manualmente</option>
           </select>
         </td>
-        <td><input id='notas-manual' name='notas-manual' style='display:none;'></input></td>
+        <td><input id='notas-manual' name='notas-manual' style='display:none;' class='disable-and-hide-wen-disciplinas-manual'></input></td>
       </tr>
 
       <tr>
         <td><label for='faltas'>Faltas *</label></td>
         <td>
-          <select id='faltas' class='obrigatorio disable-on-search'>
+          <select id='faltas' class='obrigatorio disable-on-search disable-and-hide-wen-disciplinas-manual'>
             <option value=''>Selecione</option>
             <option value='buscar-boletim'>Lan&ccedil;adas no boletim</option>
             <option value='informar-manualmente'>Informar manualmente</option>
           </select>
         </td>
-        <td><input id='faltas-manual' name='faltas-manual' style='display:none;'></input></td>
+        <td><input id='faltas-manual' name='faltas-manual' style='display:none;' class='disable-and-hide-wen-disciplinas-manual'></input></td>
       </tr>
 
       <tr>
