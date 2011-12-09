@@ -39,9 +39,12 @@
     <p style="min-height: 32px;" class="flash update-browser"><strong>Seu navegador est&aacute desatualizado.</strong> Para melhor navega&ccedil;&atildeo  no sistema, por favor, atualize seu navegador.<a href="http://br.mozdev.org/download/" target="_blank"><img style="margin-top:4px;" src="http://www.mozilla.org/contribute/buttons/110x32bubble_r_pt.png" alt="Firefox" width="110" height="32" style="border-style:none;" title="Mozilla Firefox" /></a></p>
     <![endif]-->
 
-    <!--p style="min-height: 0px;" class="flash update-browser"><strong>Importante, manuten&ccedil;&atilde;o agendada:</strong> No dia 05/08/2011, a partir das 17h, o sistema estar&aacute; em processo de manuten&ccedil;&atilde;o com previs&atilde;o de t&eacute;rmino para &agrave;s 21h. Durante este per&iacute;odo poder&atilde;o ocorrer instabilidades.</p-->
+    <!--p style="min-height: 0px;" class="flash"><strong>Importante, manuten&ccedil;&atilde;o agendada:</strong> No dia 05/08/2011, a partir das 17h, o sistema estar&aacute; em processo de manuten&ccedil;&atilde;o com previs&atilde;o de t&eacute;rmino para &agrave;s 21h. Durante este per&iacute;odo poder&atilde;o ocorrer instabilidades.</p-->
+
+    <p style="min-height: 0px;" class="flash"><strong>Novo!</strong> acompanhe as &uacute;ltimas novidades do i-Educar acessando <a href="http://ieducar.com.br/wiki" class="decorated texto-normal">ieducar.com.br/wiki</a></p>
 
   </div>
+
 
 
 		  <!--img src="imagens/nvp_tit_intranet.jpg" border="0" alt="Bem vindo" title="Bem vindo" /-->
