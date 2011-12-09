@@ -248,8 +248,11 @@ function getSelectGradeCurso(){
 
     $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery.js"></script>');
     $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery.form.js"></script>');
+    $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery-ui.js"></script>');
 
     $this->appendOutput('<link type="text/css" rel="stylesheet" href="/modules/HistoricoEscolar/Static/styles/processamentoController.css"></script>');
+
+    $this->appendOutput('<link type="text/css" rel="stylesheet" href="/intranet/styles/jquery-ui/ui-lightness/jquery-ui.css"></script>');
 
     $this->appendOutput('<script type="text/javascript" charset="utf-8" src="/modules/HistoricoEscolar/Static/scripts/processamentoController.js?timestamp='.date('dmY').'"></script>');
   }

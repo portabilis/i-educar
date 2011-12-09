@@ -60,9 +60,19 @@ var $j = jQuery.noConflict();
     $('#new-disciplina-line').click(function(){
       var $lastDisplinaRow = $disciplinasManualTable.find('tr.disciplina:last');
       var $newRow = $lastDisplinaRow.clone().removeClass('notice').insertAfter($lastDisplinaRow);
-      $newRow.find('input.nome').val('');
+      setAutoCompleteEvent($newRow.find('input.nome').val(''));
       setRemoveDisciplinaLineEvent($newRow.find('.remove-disciplina-line'));
     });
+
+    function setAutoCompleteEvent($element){
+      $element.autocomplete({
+        source: "/intranet/portabilis_auto_complete_componente_curricular_xml.php?instituicao_id=" + $('#ref_cod_instituicao').val() + "&limit=15",
+        minLength: 2,
+        autoFocus: true
+      });
+    }
+
+    setAutoCompleteEvent($disciplinasManualTable.find('input.nome'));
 
     function setRemoveDisciplinaLineEvent($targetElement){
       $targetElement.click(function(event){

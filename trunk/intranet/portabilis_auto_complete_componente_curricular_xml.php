@@ -15,27 +15,17 @@ function getComponentesCurriculares($instituicaoId, $limit, $word)
 
   $db->Consulta("select cc.id as componente_curricular_id, cc.nome as componente_curricular_nome from modules.componente_curricular as cc where instituicao_id = $instituicaoId and lower(nome) like '%$word%' limit $limit");
 
-  $c = array();
-  while ($db->ProximoRegistro())
-    $c[] = $db->Tupla();
-  return $c;
-}
-
-$componentesCurriculares = getComponentesCurriculares($_GET['instituicao_id'], $_GET['limit'], $_GET['word']);
-
-header('Content-type: text/xml');
-$x = "<?xml version='1.0' encoding='ISO-8859-15'?>";
-$x .= "<componentes_curriculares entity='componente_curricular' target_element_id='{$_GET['target_element_id']}' element_class_name='{$_GET['element_class_name']}' >";
-if ($user->isLoggedIn())
-{
-  foreach ($componentesCurriculares as $c)
-  {
-    //$value = ucwords(strtolower($c['componente_curricular_nome']));
-    $x .= "<componente_curricular id='{$c['componente_curricular_id']}' value='{$c['componente_curricular_nome']}' />";
+  $result = array();
+  while ($db->ProximoRegistro()){
+    $record = $db->Tupla();
+    $result[] = array(
+      'id' => $record['componente_curricular_id'],
+      'value' => utf8_encode(mb_strtoupper($record['componente_curricular_nome']))
+    );
   }
+  return $result;
 }
-$x .= "</componentes_curriculares>";
 
-echo $x;
-
+header('Content-type: application/json');
+echo json_encode(getComponentesCurriculares($_GET['instituicao_id'], $_GET['limit'], $_GET['term']));
 ?>
