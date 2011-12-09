@@ -228,7 +228,7 @@ var $j = jQuery.noConflict();
       var isNumeric = $.isNumeric(value);
 
       if (! isNumeric)
-        handleMessages([{type : 'error', msg : 'Informe um numero válido.'}], targetId);
+        handleMessages([{type : 'error', msg : 'Informe um numero válido.'}], targetId, true);
 
       return isNumeric;
     }  
@@ -237,7 +237,7 @@ var $j = jQuery.noConflict();
 
       if (! $.isNumeric(value) || value < initialRange || value > finalRange)
       {
-        handleMessages([{type : 'error', msg : 'Informe um valor entre ' + initialRange + ' e ' + finalRange}], targetId);
+        handleMessages([{type : 'error', msg : 'Informe um valor entre ' + initialRange + ' e ' + finalRange}], targetId, true);
         return false;
       }
       return true;
@@ -282,7 +282,7 @@ var $j = jQuery.noConflict();
       var hasErrorMessages = false;
       var hasSuccessMessages = false;
       var hasNoticeMessages = false;
-      var delayClassRemoval = 5000;
+      var delayClassRemoval = 20000;
 
       //se nao é um elemento (é uma string) e o id nao inicia com #
       if (targetId && typeof(targetId) == 'string' && targetId[0] != '#')
@@ -549,7 +549,7 @@ var $j = jQuery.noConflict();
             isValid = validatesIfNumericValueIsInRange($('#faltas-manual').val(), '#faltas-manual', 0, 999);
 
           if (isValid && $('#disciplinas').val() != 'buscar-boletim'){
-            $.each($('#disciplinas-manual').find('.nota'), function(index, field){
+            $.each($('#disciplinas-manual').find('.falta'), function(index, field){
               $field = $(field);  
               isValid = $.trim($field.val()) == '' || validatesIfNumericValueIsInRange($field.val(), $field, 0, 999);
             });
@@ -564,11 +564,28 @@ var $j = jQuery.noConflict();
       }
     };
 
+    function getDisciplinasManuais(){
+      var disciplinas = [];
+      $.each($('#disciplinas-manual').find('.disciplina'), function(index, disciplina){
+        var $disciplina = $(disciplina);
+
+        disciplinas.push({
+          nome : $disciplina.find('.nome').val(),
+          nota : $disciplina.find('.nota').val(),
+          falta : $disciplina.find('.falta').val()
+        });
+      });
+      return disciplinas;
+    }
+
     function postProcessamento($resourceElement){
 
       var percentualFrequencia = $('#percentual-frequencia').val() == 'buscar-boletim' ? 'buscar-boletim' : $('#percentual-frequencia-manual').val();
       var faltas = $('#faltas').val() == 'buscar-boletim' ? 'buscar-boletim' : $('#faltas-manual').val();
       var notas = $('#notas').val() == 'buscar-boletim' ? 'buscar-boletim' : $('#notas-manual').val();
+      var disciplinas = $('#disciplinas').val() == 'buscar-boletim' ? 'buscar-boletim' : getDisciplinasManuais();
+
+      safeLog(disciplinas);
 
       var options = {
         url : postResourceUrlBuilder.buildUrl(ApiUrlBase, 'processamento', {
@@ -586,7 +603,8 @@ var $j = jQuery.noConflict();
           observacao : $('#observacao').val(),
           registro : $('#registro').val(),
           livro : $('#livro').val(),
-          folha : $('#folha').val()
+          folha : $('#folha').val(),
+          disciplinas : $('#disciplinas').val()
         },
         success : function(dataResponse){
           afterChangeResource($resourceElement);
