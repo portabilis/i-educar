@@ -43,17 +43,45 @@ var $j = jQuery.noConflict();
 
     var $barActions = $('.bar-action').hide();
 
-    var $selectAllButton = $('<input class="selecionar disable-on-apply-changes" type="button" value="Selecionar todos" />');
-    $selectAllButton.appendTo($barActions);
-    var $actionButton = $('<input class="processar disable-on-apply-changes" type="button" value="Processar" />');
-    $actionButton.appendTo($barActions);
+    $('<input class="selecionar disable-on-apply-changes" type="button" value="Selecionar todos" />').appendTo($barActions);
+    var $selectAllButton = $barActions.find('input.selecionar');
+
+    $('<input class="processar disable-on-apply-changes" type="button" value="Processar" />').appendTo($barActions);
+    var $actionButton = $barActions.find('input.processar');
 
     var PageUrlBase = 'processamento';
     var ApiUrlBase = 'processamentoApi';
 
     var $resourceOptionsTable = $('#resource-options');
     $resourceOptionsTable.find('tr:even').addClass('even');
-    $resourceOptionsTable.hide().prependTo($formFilter.parent()); 
+    $resourceOptionsTable.hide().prependTo($formFilter.parent());
+
+    var $disciplinasManualTable = $('#disciplinas-manual');
+    $('#new-disciplina-line').click(function(){
+      var $lastDisplinaRow = $disciplinasManualTable.find('tr.disciplina:last');
+      var $newRow = $lastDisplinaRow.clone().removeClass('notice').insertAfter($lastDisplinaRow);
+      resetAutoCompleteNomeDisciplinaEvent($newRow.find('input.nome').val(''));
+      setRemoveDisciplinaLineEvent($newRow.find('.remove-disciplina-line'));
+    });
+
+    function resetAutoCompleteNomeDisciplinaEvent($element){
+      $element.autocomplete({
+        source: "/intranet/portabilis_auto_complete_componente_curricular_xml.php?instituicao_id=" + $('#ref_cod_instituicao').val() + "&limit=15",
+        minLength: 2,
+        autoFocus: true
+      });
+    }
+
+    function setRemoveDisciplinaLineEvent($targetElement){
+      $targetElement.click(function(event){
+        event.preventDefault();
+        if($disciplinasManualTable.find('tr.disciplina').length > 1)
+          $(this).closest('tr').remove();
+        else
+          handleMessages([{type : 'notice', msg : 'Não é possivel remover a primeira linha.'}], $(this).closest('tr'));
+      });
+    }
+    setRemoveDisciplinaLineEvent($('.remove-disciplina-line'));
 
     var $notasField = $resourceOptionsTable.find('#notas');
     $notasField.change(function(){
@@ -68,10 +96,14 @@ var $j = jQuery.noConflict();
     });
 
     var changeStateFieldManual = function($containerElementId, $targetElementId){
-      if ($($containerElementId).val() == 'informar-manualmente')
-        $($targetElementId).show().removeAttr('disabled');
-      else
-        $($targetElementId).hide().attr('disabled', 'disabled');
+      $targetElement = $($targetElementId);
+
+      if ($($containerElementId).val() == 'informar-manualmente'){
+        $targetElement.show().removeAttr('disabled').find('.change-state-with-parent').show().removeAttr('disabled');
+      }
+      else{
+        $targetElement.hide().attr('disabled', 'disabled').find('.change-state-with-parent').hide().attr('disabled', 'disabled');
+      }
     };
 
     $resourceOptionsTable.find('#percentual-frequencia').change(function(){
@@ -80,6 +112,16 @@ var $j = jQuery.noConflict();
 
     $resourceOptionsTable.find('#faltas').change(function(){
       changeStateFieldManual('#faltas', '#faltas-manual');
+    });
+
+    $resourceOptionsTable.find('#disciplinas').change(function(){
+      changeStateFieldManual('#disciplinas', '#disciplinas-manual');
+
+      if ($(this).val() == 'informar-manualmente')
+        $('.disable-and-hide-wen-disciplinas-manual').hide().attr('disabled', 'disabled');
+      else
+        $('.disable-and-hide-wen-disciplinas-manual').show().removeAttr('disabled');
+
     });
 
     $('.disable-on-search').attr('disabled', 'disabled');
@@ -201,7 +243,7 @@ var $j = jQuery.noConflict();
       var isNumeric = $.isNumeric(value);
 
       if (! isNumeric)
-        handleMessages([{type : 'error', msg : 'Informe um numero válido.'}], targetId);
+        handleMessages([{type : 'error', msg : 'Informe um numero válido.'}], targetId, true);
 
       return isNumeric;
     }  
@@ -210,7 +252,7 @@ var $j = jQuery.noConflict();
 
       if (! $.isNumeric(value) || value < initialRange || value > finalRange)
       {
-        handleMessages([{type : 'error', msg : 'Informe um valor entre ' + initialRange + ' e ' + finalRange}], targetId);
+        handleMessages([{type : 'error', msg : 'Informe um valor entre ' + initialRange + ' e ' + finalRange}], targetId, true);
         return false;
       }
       return true;
@@ -250,10 +292,12 @@ var $j = jQuery.noConflict();
     }
 
 
-    function handleMessages(messages, targetId){
+    function handleMessages(messages, targetId, useDelayClassRemoval){
 
       var hasErrorMessages = false;
       var hasSuccessMessages = false;
+      var hasNoticeMessages = false;
+      var delayClassRemoval = 20000;
 
       //se nao é um elemento (é uma string) e o id nao inicia com #
       if (targetId && typeof(targetId) == 'string' && targetId[0] != '#')
@@ -276,15 +320,25 @@ var $j = jQuery.noConflict();
           hasErrorMessages = true;
         else if(! hasSuccessMessages && messages[i].type == 'success')
           hasSuccessMessages = true;
+        else if(! hasNoticeMessages && messages[i].type == 'notice')
+          hasNoticeMessages = true;
       }
 
       if($targetElement){
         if (hasErrorMessages)
-          $targetElement.addClass('error').removeClass('success');
+          $targetElement.addClass('error').removeClass('success').removeClass('notice');
         else if (hasSuccessMessages)
-          $targetElement.addClass('success').removeClass('error');
+          $targetElement.addClass('success').removeClass('error').removeClass('notice');
+        else if (hasNoticeMessages)
+          $targetElement.addClass('notice').removeClass('error').removeClass('sucess');
         else
-          $targetElement.removeClass('success').removeClass('error');
+          $targetElement.removeClass('success').removeClass('error').removeClass('notice');
+
+        $($targetElement.get(0)).focus();
+
+        if (useDelayClassRemoval){
+          window.setTimeout(function(){$targetElement.removeClass('success').removeClass('error').removeClass('notice');}, delayClassRemoval);
+        }
       }
     }
 
@@ -325,17 +379,16 @@ var $j = jQuery.noConflict();
 
     //exibe formulário nova consulta
     function showSearchForm(event){
-      //$(this).hide();
       $navActions.html('');
       $tableSearchDetails.children().remove();
       $resultTable.children().fadeOut('fast').remove();
       $formFilter.fadeIn('fast', function(){
         $(this).show()
       });
-      //$barActions.hide();
-      //$resourceOptionsTable.hide();
       $('.disable-on-search').attr('disabled', 'disabled');
       $('.hide-on-search').hide();
+      $('.disable-on-apply-changes').removeAttr('disabled');
+      $actionButton.val('Processar');
     }
 
 
@@ -345,20 +398,9 @@ var $j = jQuery.noConflict();
         .bind('click', showSearchForm)
         .attr('style', 'text-decoration: underline')
       );
-      //$barActions.show();
-      //$resourceOptionsTable.show();
       $('.disable-on-search').removeAttr('disabled');
       $('.hide-on-search').show();
     }
-
-/*    function showSearchButton(){
-      $navActions.html(
-        $("<a href='#'>Nova consulta</a>")
-        .bind('click', showSearchForm)
-        .attr('style', 'text-decoration: underline')
-      );
-    }
-*/
 
     function getLinkToHistorico(link, text){
       if (link)
@@ -466,6 +508,8 @@ var $j = jQuery.noConflict();
           .html('Aguarde, carregando...')
           .attr('style', 'text-align:center;')
           .unbind('click');
+
+        resetAutoCompleteNomeDisciplinaEvent($disciplinasManualTable.find('input.nome'));
       }
     };
     $submitButton.val('Carregar');
@@ -487,13 +531,17 @@ var $j = jQuery.noConflict();
       var $firstChecked = $('input.matricula:checked:first');
 
       if ($firstChecked.length < 1)
-        alert('Selecione alguma matrícula.');
+        handleMessages([{type : 'error', msg : 'Selecione alguma matrícula.'}], $actionButton, true);
       else{
 
         var additionalFields = [$('#percentual-frequencia-manual').get(0),
                                 $('#notas-manual').get(0), 
                                 $('#faltas-manual').get(0)
         ];
+
+        $.each($('#disciplinas-manual').find('.obrigatorio'), function(index, requiredElement){
+          additionalFields.push(requiredElement);
+        });
 
         if (validatesPresenseOfValueInRequiredFields(additionalFields)){
 
@@ -502,9 +550,16 @@ var $j = jQuery.noConflict();
           if (isValid && $('#percentual-frequencia').val() != 'buscar-boletim')
             isValid = validatesIfNumericValueIsInRange($('#percentual-frequencia-manual').val(), '#percentual-frequencia-manual', 0, 100);
 
-          if (isValid && $('#faltas').val() != 'buscar-boletim')
+          var $faltas = $('#faltas');
+          if (isValid && $faltas.val() != 'buscar-boletim' && $faltas.is(':visible'))
             isValid = validatesIfNumericValueIsInRange($('#faltas-manual').val(), '#faltas-manual', 0, 999);
 
+          if (isValid && $('#disciplinas').val() != 'buscar-boletim'){
+            $.each($('#disciplinas-manual').find('.falta'), function(index, field){
+              $field = $(field);  
+              isValid = $.trim($field.val()) == '' || validatesIfNumericValueIsInRange($field.val(), $field, 0, 999);
+            });
+          }
 
           if (isValid){
             $('.disable-on-apply-changes').attr('disabled', 'disabled');
@@ -515,11 +570,26 @@ var $j = jQuery.noConflict();
       }
     };
 
+    function getDisciplinasManuais(){
+      var disciplinas = [];
+      $.each($('#disciplinas-manual').find('.disciplina'), function(index, disciplina){
+        var $disciplina = $(disciplina);
+
+        disciplinas.push({
+          nome : $disciplina.find('.nome').val(),
+          nota : $disciplina.find('.nota').val(),
+          falta : $disciplina.find('.falta').val()
+        });
+      });
+      return disciplinas;
+    }
+
     function postProcessamento($resourceElement){
 
       var percentualFrequencia = $('#percentual-frequencia').val() == 'buscar-boletim' ? 'buscar-boletim' : $('#percentual-frequencia-manual').val();
       var faltas = $('#faltas').val() == 'buscar-boletim' ? 'buscar-boletim' : $('#faltas-manual').val();
       var notas = $('#notas').val() == 'buscar-boletim' ? 'buscar-boletim' : $('#notas-manual').val();
+      var disciplinas = $('#disciplinas').val() == 'buscar-boletim' ? 'buscar-boletim' : getDisciplinasManuais();
 
       var options = {
         url : postResourceUrlBuilder.buildUrl(ApiUrlBase, 'processamento', {
@@ -537,7 +607,8 @@ var $j = jQuery.noConflict();
           observacao : $('#observacao').val(),
           registro : $('#registro').val(),
           livro : $('#livro').val(),
-          folha : $('#folha').val()
+          folha : $('#folha').val(),
+          disciplinas : disciplinas
         },
         success : function(dataResponse){
           afterChangeResource($resourceElement);
@@ -579,7 +650,7 @@ var $j = jQuery.noConflict();
       if ($firstChecked.length < 1){
         $('.disable-on-apply-changes').removeAttr('disabled');
         $actionButton.val('Processar');
-        alert('O processamento chegou ao fim.');
+        window.setTimeout(function(){alert('O processamento chegou ao fim');}, 1);
       }
       else
         postProcessamento($firstChecked);

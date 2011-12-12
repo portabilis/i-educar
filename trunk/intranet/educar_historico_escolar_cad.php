@@ -259,7 +259,7 @@ class indice extends clsCadastro
 		$this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas"),$this->historico_disciplinas);
 
     //$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', 'autoCompleteComponentesCurricular(this)', 'onfocus' );
-    $this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', 'disableAutoCompleteAndSetOnKeyUpEvent(this)', 'onfocus' );
+    $this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', '', 'onfocus' );
 
 			$this->campoTexto( "nota", "Nota", $this->nota, 10, 255, false );
 			$this->campoNumero( "faltas", "Faltas", $this->faltas, 3, 3, false );
@@ -271,6 +271,11 @@ class indice extends clsCadastro
 
 		$this->campoQuebra();
 	//---------------------FIM INCLUI DISCIPLINAS---------------------//
+
+    $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery.js"></script>');
+    $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery-ui.js"></script>');
+    $this->appendOutput('<link type="text/css" rel="stylesheet" href="/intranet/styles/jquery-ui/ui-lightness/jquery-ui.css"></script>');
+
 	}
 
 	function Novo()
@@ -460,7 +465,6 @@ function getOpcoesGradeCurso(){
     return $opcoes;
   }
 
-
 // cria uma extensao da classe base
 $pagina = new clsIndexBase();
 // cria o conteudo
@@ -521,98 +525,32 @@ function getEstado_XML(xml)
 	campoEstado.disabled = false;
 }
 
-function disableAutoCompleteAndSetOnKeyUpEvent(targetElement)
-{
-  targetElement.setAttribute('autocomplete', 'off');
+var $j = jQuery.noConflict();
 
-  if (document.addEventListener)
-    targetElement.addEventListener('keyup', autoCompleteComponentesCurricular, false);
-  else
-    targetElement.attachEvent('onkeyup', autoCompleteComponentesCurricular);
-}
+(function($){
 
-function autoCompleteComponentesCurricular(_event)
-{
+  $(function(){
 
-  if (! _event)
-    _event = event;
+    function resetAutoCompleteNomeDisciplinaEvent(){
+      $.each($('#tr_notas').find('input[type="text"]'), function(index, value){
+        $value = $j(value);
 
-  targetElement = _event.srcElement || _event.target;
+        if($value.attr('id').split('[', 1) == 'nm_disciplina'){
+          $value.autocomplete({
+            source: "/intranet/portabilis_auto_complete_componente_curricular_xml.php?instituicao_id=" + $('#ref_cod_instituicao').val() + "&limit=15",
+            minLength: 2,
+            autoFocus: true
+          });
+        }
+      });
 
-/*  if (! targetElement.hasAttribute('old_value'))*/
-  if (! targetElement.getAttribute('old_value') && targetElement.getAttribute('value').length > 1)
-    targetElement.setAttribute('old_value', targetElement.getAttribute('value'));
-  else if (! targetElement.getAttribute('old_value'))
-    targetElement.setAttribute('old_value', '');
-
-  if (targetElement.value != targetElement.getAttribute('old_value'))
-    targetElement.value = targetElement.value.replace(/^\s+/,'');  
-
-  if (! targetElement.value.length || targetElement.value != targetElement.getAttribute('old_value'))
-  {
-    var minLength = 0;
-    var className = 'auto_complete_componente_curricular';
-
-    var listsComponentes = document.getElementsByClassName(className);
-    for (var i = 0; i < listsComponentes.length; i++)
-    {
-      listsComponentes[i].parentNode.removeChild(listsComponentes[i]);
     }
+    resetAutoCompleteNomeDisciplinaEvent();
 
-    if (targetElement.value.length && targetElement.value.length >= minLength)
-    {    
-      var instituicaoId = document.getElementById('ref_cod_instituicao').value;
-      var word = targetElement.value;
-      var limit = 15;
-
-      targetElement.setAttribute('old_value', targetElement.value);
-      var url = "portabilis_auto_complete_componente_curricular_xml.php?instituicao_id="+instituicaoId+"&limit="+limit+"&word="+word+"&target_element_id="+targetElement.id+"&element_class_name="+className;
-      //alert(url);
-      new ajax(createListAutoComplete).envia(url);
-    }
-  }
-}
-
-function createListAutoComplete(xml)
-{
-	var entity = xml.documentElement.getAttribute('entity');
-  var targetElementId = xml.documentElement.getAttribute('target_element_id');
-  var className = xml.documentElement.getAttribute('element_class_name');
-
-  var targetElement = document.getElementById(targetElementId);
-
-  var listComponentes = document.createElement('ul');
-  listComponentes.className = className + ' autocomplete';    
-
-	var items = xml.getElementsByTagName(entity);
-  for (var i = 0; i < items.length; i++)
-  {
-    var _i = document.createElement('li');
-    _i.innerHTML = items[i].getAttribute('value');
-    _i.id = entity + ':' + items[i].getAttribute('id');
-    _i.onclick = function(){targetElement.value = this.innerHTML; /*if (this.parentNode.childElementCount == 1){*/ this.parentNode.style.display='none';/*} this.remove();*/};
-
-    /*
-    if (el.addEventListener){
-      el.addEventListener('click', modifyText, false); 
-    } else if (el.attachEvent){
-      el.attachEvent('onclick', modifyText);
-    }
-    */
-
-    listComponentes.appendChild(_i);
-  }
-  if (! items.length)
-  {
-      var _i = document.createElement('li');
-      _i.innerHTML = 'Sem sugestões para "' + targetElement.value + '"';
-  }
-  
-  listComponentes.appendChild(_i);
-
-  //TODO criar estilo para lista / itens, (remover bullets, margin / padding 0, onhover change color
-  //TODO call ajax / in callback function criar itens / append in list
-
-  targetElement.parentNode.appendChild(listComponentes);
-}
+    var $newDisciplinaButton = $('#btn_add_tab_add_1');
+    $newDisciplinaButton.click(function(){
+      resetAutoCompleteNomeDisciplinaEvent();
+    });
+  });
+})(jQuery);
 </script>

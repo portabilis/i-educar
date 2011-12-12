@@ -1490,7 +1490,7 @@ function updateSelect(xml)
     $s = <<<EOT
 <script>
 function validatesPresenseOfValueInRequiredFields(additionalFields) {
-  var emptyField = null;
+  var emptyFields = [];
   var requiredFields = document.getElementsByClassName('obrigatorio');
 
   if (additionalFields)
@@ -1498,19 +1498,19 @@ function validatesPresenseOfValueInRequiredFields(additionalFields) {
     
   for (var i = 0; i < requiredFields.length; i++) {
     var requiredField = requiredFields[i];
-    if (emptyField == null && requiredField.style.display != 'none' && ! requiredField.getAttribute('disabled') && ! requiredField.value) {
-      emptyField = requiredField;
+    if (requiredField.style.display != 'none' && ! requiredField.getAttribute('disabled') && ! requiredField.value) {
+      emptyFields.push(requiredField);
       requiredField.classList.add('error');
     }
     else
       requiredField.classList.remove('error');
   }
 
-  if (emptyField == null)
+  if (emptyFields.length == 0)
     return true;
 
   alert('Preencha todos campos obrigat\u00F3rios, antes de continuar.');
-  emptyField.focus();
+  emptyFields[0].focus();
   return false;
 }
 </script>

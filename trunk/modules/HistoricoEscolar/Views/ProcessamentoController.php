@@ -121,7 +121,7 @@ function getSelectGradeCurso(){
 
       <tr>
         <td><label for='dias-letivos'>Quantidade dias letivos *</label></td>
-        <td colspan='2'><input type='text' id='dias-letivos' name='quantidade-dias-letivos' class='obrigatorio disable-on-search clear-on-change-curso'></input></td>
+        <td colspan='2'><input type='text' id='dias-letivos' name='quantidade-dias-letivos' class='obrigatorio disable-on-search clear-on-change-curso validates-value-is-numeric'></input></td>
       </tr>
 
       <tr>
@@ -156,28 +156,64 @@ function getSelectGradeCurso(){
       </tr>
 
       <tr>
+        <td><label for='disciplinas'>Disciplinas *</label></td>
+        <td>
+          <select id='disciplinas' name='disciplinas' class='obrigatorio disable-on-search'>
+            <option value=''>Selecione</option>
+            <option value='buscar-boletim'>Presentes no boletim</option>
+            <option value='informar-manualmente'>Informar manualmente</option>
+          </select>
+        </td>
+        <td>
+          <table id='disciplinas-manual' style='display:none;'>
+            <tr>
+              <th>Nome</th>
+              <th>Nota</th>
+              <th>Falta</th>
+              <th>A&ccedil;&atilde;o</th>
+            </tr>
+            <tr class='disciplina'>
+              <td><input class='nome obrigatorio disable-on-search change-state-with-parent' style='display:none;'></input></td>
+              <td><input class='nota' ></input></td>
+              <td>
+                <input class='falta validates-value-is-numeric'></input>
+              </td>
+              <td>
+                <a class='remove-disciplina-line' href='#'>Remover</a>
+              </td>
+            </tr>
+            <tr class='actions'>
+              <td colspan='4'>
+                <input type='button' class='action' id='new-disciplina-line' name='new-line' value='Adicionar nova'></input>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <tr>
         <td><label for='notas'>Notas *</label></td>
         <td>
-          <select id='notas' class='obrigatorio disable-on-search'>
+          <select id='notas' class='obrigatorio disable-on-search disable-and-hide-wen-disciplinas-manual'>
             <option value=''>Selecione</option>
             <option value='buscar-boletim'>Lan&ccedil;adas no boletim</option>
             <option value='AP'>AP</option>
             <option value='informar-manualmente'>Informar manualmente</option>
           </select>
         </td>
-        <td><input id='notas-manual' name='notas-manual' style='display:none;'></input></td>
+        <td><input id='notas-manual' name='notas-manual' style='display:none;' class='disable-and-hide-wen-disciplinas-manual'></input></td>
       </tr>
 
       <tr>
         <td><label for='faltas'>Faltas *</label></td>
         <td>
-          <select id='faltas' class='obrigatorio disable-on-search'>
+          <select id='faltas' class='obrigatorio disable-on-search disable-and-hide-wen-disciplinas-manual'>
             <option value=''>Selecione</option>
             <option value='buscar-boletim'>Lan&ccedil;adas no boletim</option>
             <option value='informar-manualmente'>Informar manualmente</option>
           </select>
         </td>
-        <td><input id='faltas-manual' name='faltas-manual' style='display:none;'></input></td>
+        <td><input id='faltas-manual' name='faltas-manual' style='display:none;' class='disable-and-hide-wen-disciplinas-manual'></input></td>
       </tr>
 
       <tr>
@@ -212,8 +248,11 @@ function getSelectGradeCurso(){
 
     $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery.js"></script>');
     $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery.form.js"></script>');
+    $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery-ui.js"></script>');
 
     $this->appendOutput('<link type="text/css" rel="stylesheet" href="/modules/HistoricoEscolar/Static/styles/processamentoController.css"></script>');
+
+    $this->appendOutput('<link type="text/css" rel="stylesheet" href="/intranet/styles/jquery-ui/ui-lightness/jquery-ui.css"></script>');
 
     $this->appendOutput('<script type="text/javascript" charset="utf-8" src="/modules/HistoricoEscolar/Static/scripts/processamentoController.js?timestamp='.date('dmY').'"></script>');
   }

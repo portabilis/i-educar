@@ -85,6 +85,23 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     return true;
   }
 
+  protected function validatesValueIsArray(&$value, $name, $raiseExceptionOnError = false, $msg = '', $addMsgOnError = true){
+
+    if (! is_array($value)){
+      if ($addMsgOnError)
+      {
+        $msg = empty($msg) ? "Deve ser recebido uma lista de '$name'" : $msg;
+        $this->appendMsg($msg);
+      }
+
+      if ($raiseExceptionOnError)
+         throw new Exception($msg);
+
+      return false;
+    }
+    return true;
+  }
+
   protected function validatesValueInSetOf(&$value, $setExpectedValues, $name, $raiseExceptionOnError = false, $msg = ''){
     if (! in_array($value, $setExpectedValues)){
       $msg = empty($msg) ? "Valor recebido na variavel '$name' é invalido" : $msg;
@@ -218,6 +235,25 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     return $isValid;
   }
 
+
+  protected function validatesPresenceAndValueOfDisciplinas($raiseExceptionOnError){
+    $name = 'disciplinas';
+    $isValid = $this->validatesPresenceOf($this->getRequest()->disciplinas, $name, $raiseExceptionOnError);
+
+    if ($isValid && $this->getRequest()->disciplinas != 'buscar-boletim'){
+      $isValid = $this->validatesValueIsArray($this->getRequest()->disciplinas, 'disciplinas', $raiseExceptionOnError);
+      if ($isValid){
+        foreach($this->getRequest()->disciplinas as $disciplina){
+          $isValid = $this->validatesPresenceOf($disciplina['nome'], 'nome (para todas disciplinas)', $raiseExceptionOnError);
+
+          if ($isValid && isset($disciplina['falta']) && trim($disciplina['falta']) != '')
+            $isValid = $this->validatesValueIsNumeric($disciplina['falta'], 'falta (para todas disciplinas)', $raiseExceptionOnError);
+        }
+      }
+    }
+    return $isValid;
+  }
+
   protected function validatesPresenceAndValueInSetOfSituacao($raiseExceptionOnError){
     $name = 'situacao';
     $isValid = $this->validatesPresenceOf($this->getRequest()->situacao, $name, $raiseExceptionOnError);
@@ -261,14 +297,16 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
   protected function canPostProcessamento(){
     $canPost = $this->validatesPresenceOfInstituicaoId(false) &&
-           $this->validatesPresenceOfMatriculaId(false) &&
-           $this->validatesPresenceOfDiasLetivos(false) &&
-           $this->validatesPresenceAndValueInSetOfSituacao(false) &&
-           $this->validatesPresenceAndValueInSetOfExtraCurricular(false) &&
-           $this->validatesPresenceAndValueInDbOfGradeCursoId(false) &&
-           $this->validatesPresenceAndValueOfPercentualFrequencia(false) &&
-           $this->validatesPresenceOfNotas(false) &&
-           $this->validatesPresenceAndValueOfFaltas(false);
+               $this->validatesPresenceOfMatriculaId(false) &&
+               $this->validatesPresenceOfDiasLetivos(false) &&
+               $this->validatesPresenceAndValueInSetOfSituacao(false) &&
+               $this->validatesPresenceAndValueInSetOfExtraCurricular(false) &&
+               $this->validatesPresenceAndValueInDbOfGradeCursoId(false) &&
+               $this->validatesPresenceAndValueOfPercentualFrequencia(false) &&
+               $this->validatesPresenceAndValueOfDisciplinas(false);
+
+    if ($canPost && $this->getRequest()->disciplinas == 'buscar-boletim')
+      $canPost = $this->validatesPresenceOfNotas(false) && $this->validatesPresenceAndValueOfFaltas(false);
 
     if($canPost){
       $sql = "select 1 from pmieducar.matricula where cod_matricula = {$this->getRequest()->matricula_id} and ativo = 1";
@@ -431,9 +469,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
 
   protected function getFaltaGlobalizada($defaultValue=null){
-    if ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL){
+    if ($this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL)
       return $this->getFalta();
-    }
     else
       return $defaultValue;
   }
@@ -456,7 +493,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
           $historicoEscolar =  new clsPmieducarHistoricoEscolar(
                                   $alunoId,
                                   $sequencial,
-                                  $ref_usuario_exc = null,
+                                  $ref_usuario_exc = NULL,
                                   $ref_usuario_cad = $this->getSession()->id_pessoa,
                                   $dadosMatricula['nome_serie'],
                                   $ano,
@@ -468,9 +505,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                   utf8_decode($this->getRequest()->observacao),
                                   $this->getSituacaoMatricula(),
                                   $data_cadastro = date('Y-m-d'),
-                                  $data_exclusao = null,
+                                  $data_exclusao = NULL,
                                   $ativo = 1,
-                                  $this->getFaltaGlobalizada($defaultValue='null'),
+                                  $this->getFaltaGlobalizada($defaultValue='NULL'),
                                   $dadosMatricula['instituicao_id'],
                                   $origem = '', #TODO
                                   $this->getRequest()->extra_curricular,
@@ -506,10 +543,10 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                   $dadosEscola['uf'],
                                   utf8_decode($this->getRequest()->observacao),
                                   $this->getSituacaoMatricula(),
-                                  $data_cadastro = null,
-                                  $data_exclusao = null,
+                                  $data_cadastro = NULL,
+                                  $data_exclusao = NULL,
                                   $ativo = 1,
-                                  $this->getFaltaGlobalizada($defaultValue='null'),
+                                  $this->getFaltaGlobalizada($defaultValue='NULL'),
                                   $dadosMatricula['instituicao_id'],
                                   $origem = '', #TODO
                                   $this->getRequest()->extra_curricular,
@@ -541,44 +578,71 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
   }
 
 
+  protected function _createHistoricoDisciplinas($fields){
+    $historicoDisciplina = new clsPmieducarHistoricoDisciplinas(
+                              $fields['sequencial'], 
+                              $fields['alunoId'],
+                              $fields['historicoSequencial'],
+                              $fields['nome'],
+                              $fields['nota'],
+                              $fields['falta']
+                          );
+    $historicoDisciplina->cadastra();
+  }
+
+
   protected function recreateHistoricoDisciplinas($historicoSequencial, $alunoId){
 
     $this->deleteHistoricoDisplinas($alunoId, $historicoSequencial);
 
-    $cnsNota = RegraAvaliacao_Model_Nota_TipoValor;
-    $tpNota = $this->getService()->getRegra()->get('tipoNota');
-    $situacaoFaltasCc = $this->getService()->getSituacaoFaltas()->componentesCurriculares;
-    $mediasCc = $this->getService()->getMediasComponentes();
+    if ($this->getRequest()->disciplinas == 'buscar-boletim'){
 
-    foreach ($this->getService()->getComponentes() as $componenteCurricular)
-    {
-      $ccId = $componenteCurricular->get('id');
-      $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
+      $cnsNota = RegraAvaliacao_Model_Nota_TipoValor;
+      $tpNota = $this->getService()->getRegra()->get('tipoNota');
+      $situacaoFaltasCc = $this->getService()->getSituacaoFaltas()->componentesCurriculares;
+      $mediasCc = $this->getService()->getMediasComponentes();
 
-      $falta = $this->getFalta($situacaoFaltasCc[$ccId]);
+      foreach ($this->getService()->getComponentes() as $componenteCurricular)
+      {
+        $ccId = $componenteCurricular->get('id');
+        $nome = $componenteCurricular->nome;
+        $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
+        $nota = '';
 
-      if ($this->getRequest()->notas == 'buscar-boletim'){
-        if ($tpNota == $cnsNota::NUMERICA) {
-          $nota = (string)$mediasCc[$ccId][0]->mediaArredondada;
-        }
-        elseif ($tpNota == $cnsNota::CONCEITUAL){
-          $nota = (string)$mediasCc[$ccId][0]->media;
+        if ($this->getRequest()->notas == 'buscar-boletim'){
+          if ($tpNota == $cnsNota::NUMERICA) {
+            $nota = (string)$mediasCc[$ccId][0]->mediaArredondada;
+          }
+          elseif ($tpNota == $cnsNota::CONCEITUAL){
+            $nota = (string)$mediasCc[$ccId][0]->media;
+          }
         }
         else
-          $nota = '';
-      }
-      else
-        $nota = utf8_decode($this->getRequest()->notas);
+          $nota = utf8_decode($this->getRequest()->notas);
 
-      $historicoDisciplina = new clsPmieducarHistoricoDisciplinas(
-                                $sequencial, 
-                                $alunoId,
-                                $historicoSequencial,
-                                $componenteCurricular->nome,
-                                $nota,
-                                $falta
-                            );
-      $historicoDisciplina->cadastra();
+        $this->_createHistoricoDisciplinas(array(
+          "sequencial" => $sequencial, 
+          "alunoId" => $alunoId,
+          "historicoSequencial" => $historicoSequencial,
+          "nome" => $nome,
+          "nota" => $nota,
+          "falta" => $this->getFalta($situacaoFaltasCc[$ccId])
+        ));
+      }
+    }
+    else{
+      foreach ($this->getRequest()->disciplinas as $disciplina){
+        $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
+
+        $this->_createHistoricoDisciplinas(array(
+          "sequencial" => $sequencial, 
+          "alunoId" => $alunoId,
+          "historicoSequencial" => $historicoSequencial,
+          "nome" => $disciplina['nome'],
+          "nota" => $disciplina['nota'],
+          "falta" => $falta = $disciplina['falta']
+        ));
+      }
     }
   }
 
@@ -706,7 +770,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
 
   protected function getLinkToHistorico($alunoId, $ano, $matriculaId){
-    $sql = "select sequencial from pmieducar.historico_escolar where ref_cod_aluno = $alunoId and ano = $ano and ref_cod_instituicao = {$this->getRequest()->instituicao_id} and ref_cod_matricula = $matriculaId";
+    $sql = "select sequencial from pmieducar.historico_escolar where ref_cod_aluno = $alunoId and ano = $ano and ref_cod_instituicao = {$this->getRequest()->instituicao_id} and ref_cod_matricula = $matriculaId and ativo = 1";
 
     $sequencial = $this->db->selectField($sql);
     
