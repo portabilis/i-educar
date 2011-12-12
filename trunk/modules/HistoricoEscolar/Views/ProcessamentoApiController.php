@@ -440,9 +440,18 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
   }
 
 
-  protected function getSituacaoMatricula(){
+  protected function getSituacaoMatricula($matriculaId = null){
 
-    if($this->getRequest()->situacao == 'buscar-matricula'){
+    if (! is_null($matriculaId)){
+      if (! is_null($this->getService(false, false))){
+        $situacao = $this->getService()->getOption('aprovado');
+      }
+      else{
+        $sql = "select aprovado from pmieducar.matricula where cod_matricula = $matriculaId";
+        $situacao = $this->db->selectField($sql);
+      }
+    }
+    else if($this->getRequest()->situacao == 'buscar-matricula'){
       $situacao = $this->getService()->getOption('aprovado');
     }
     else{
@@ -450,7 +459,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                          'reprovado' => App_Model_MatriculaSituacao::REPROVADO,
                          'em-andamento' => App_Model_MatriculaSituacao::EM_ANDAMENTO,
                          'transferido' => App_Model_MatriculaSituacao::TRANSFERIDO
-                   );
+                 );
 
       $situacao = $situacoes[$this->getRequest()->situacao];
     }
@@ -829,19 +838,29 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       if (! is_array($alunos))
         $alunos = array();
 
+      $situacoesMatricula = array('aprovado' => App_Model_MatriculaSituacao::APROVADO,
+                         'reprovado' => App_Model_MatriculaSituacao::REPROVADO,
+                         'em-andamento' => App_Model_MatriculaSituacao::EM_ANDAMENTO,
+                   );
+
       foreach($alunos as $aluno)
       {
-        $matricula = array();
-        $matriculaId = $aluno['ref_cod_matricula'];
-        $matricula['matricula_id'] = $matriculaId;
-        $matricula['aluno_id'] = $aluno['ref_cod_aluno'];
-        $matricula['nome'] = ucwords(strtolower(utf8_encode($aluno['nome_aluno'])));
-        $matricula['nome_curso'] = ucwords(strtolower(utf8_encode($aluno['nm_curso'])));
-        $matricula['nome_serie'] = ucwords(strtolower(utf8_encode($this->getNomeSerie($aluno['ref_ref_cod_serie']))));
-        $matricula['nome_turma'] = ucwords(strtolower(utf8_encode($aluno['nm_turma'])));
-        $matricula['situacao_historico'] = $this->getSituacaoHistorico($aluno['ref_cod_aluno'], $this->getRequest()->ano, $matriculaId, $reload = true);
-        $matricula['link_to_historico'] = $this->getLinkToHistorico($aluno['ref_cod_aluno'], $this->getRequest()->ano, $matriculaId);
-        $matriculas[] = $matricula;
+
+        $situacaoMatricula = $this->getSituacaoMatricula($aluno['ref_cod_matricula']);
+
+        if (in_array($situacaoMatricula, $situacoesMatricula)){
+          $matricula = array();
+          $matriculaId = $aluno['ref_cod_matricula'];
+          $matricula['matricula_id'] = $matriculaId;
+          $matricula['aluno_id'] = $aluno['ref_cod_aluno'];
+          $matricula['nome'] = ucwords(strtolower(utf8_encode($aluno['nome_aluno'])));
+          $matricula['nome_curso'] = ucwords(strtolower(utf8_encode($aluno['nm_curso'])));
+          $matricula['nome_serie'] = ucwords(strtolower(utf8_encode($this->getNomeSerie($aluno['ref_ref_cod_serie']))));
+          $matricula['nome_turma'] = ucwords(strtolower(utf8_encode($aluno['nm_turma'])));
+          $matricula['situacao_historico'] = $this->getSituacaoHistorico($aluno['ref_cod_aluno'], $this->getRequest()->ano, $matriculaId, $reload = true);
+          $matricula['link_to_historico'] = $this->getLinkToHistorico($aluno['ref_cod_aluno'], $this->getRequest()->ano, $matriculaId);
+          $matriculas[] = $matricula;
+        }
       }
     }
 
