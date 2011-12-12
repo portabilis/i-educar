@@ -160,7 +160,7 @@ function getSelectGradeCurso(){
         <td>
           <select id='disciplinas' name='disciplinas' class='obrigatorio disable-on-search'>
             <option value=''>Selecione</option>
-            <option value='buscar-boletim'>Presentes no boletim</option>
+            <option value='buscar-boletim'>Usar do boletim</option>
             <option value='informar-manualmente'>Informar manualmente</option>
           </select>
         </td>
