@@ -647,8 +647,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
           "sequencial" => $sequencial, 
           "alunoId" => $alunoId,
           "historicoSequencial" => $historicoSequencial,
-          "nome" => $disciplina['nome'],
-          "nota" => $disciplina['nota'],
+          "nome" => utf8_decode($disciplina['nome']),
+          "nota" => utf8_decode($disciplina['nota']),
           "falta" => $falta = $disciplina['falta']
         ));
       }
