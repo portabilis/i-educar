@@ -201,7 +201,7 @@ function getSelectGradeCurso(){
             <option value='informar-manualmente'>Informar manualmente</option>
           </select>
         </td>
-        <td><input id='notas-manual' name='notas-manual' style='display:none;' class='disable-and-hide-wen-disciplinas-manual'></input></td>
+        <td><input id='notas-manual' name='notas-manual' style='display:none;'></input></td>
       </tr>
 
       <tr>
@@ -213,7 +213,7 @@ function getSelectGradeCurso(){
             <option value='informar-manualmente'>Informar manualmente</option>
           </select>
         </td>
-        <td><input id='faltas-manual' name='faltas-manual' style='display:none;' class='disable-and-hide-wen-disciplinas-manual'></input></td>
+        <td><input id='faltas-manual' name='faltas-manual' style='display:none;'></input></td>
       </tr>
 
       <tr>

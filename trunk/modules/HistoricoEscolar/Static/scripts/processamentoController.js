@@ -117,10 +117,12 @@ var $j = jQuery.noConflict();
     $resourceOptionsTable.find('#disciplinas').change(function(){
       changeStateFieldManual('#disciplinas', '#disciplinas-manual');
 
+      /*chama .change para respectivos elementos esconderem / mostrar os campos que
+        dependam deles*/
       if ($(this).val() == 'informar-manualmente')
-        $('.disable-and-hide-wen-disciplinas-manual').hide().attr('disabled', 'disabled');
+        $('.disable-and-hide-wen-disciplinas-manual').hide().attr('disabled', 'disabled').change();
       else
-        $('.disable-and-hide-wen-disciplinas-manual').show().removeAttr('disabled');
+        $('.disable-and-hide-wen-disciplinas-manual').show().removeAttr('disabled').change();
 
     });
 
