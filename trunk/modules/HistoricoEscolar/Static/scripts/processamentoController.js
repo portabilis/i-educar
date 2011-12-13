@@ -270,8 +270,13 @@ var $j = jQuery.noConflict();
 
 
     function updateFieldSituacao(linkToHistorico, matricula_id, situacao){
-      if(situacao)
-        $('#situacao-matricula-' + matricula_id).html(getLinkToHistorico(linkToHistorico, utf8Decode(situacao)));
+      if(situacao){
+        var $fieldSituacao = $('#situacao-matricula-' + matricula_id);
+        var situacaoHistorico = utf8Decode(situacao);
+
+        $fieldSituacao.html(getLinkToHistorico(linkToHistorico, situacaoHistorico));
+        $fieldSituacao.data('situacao_historico', situacaoHistorico);
+      }
     } 
 
 
@@ -477,8 +482,9 @@ var $j = jQuery.noConflict();
             $('<td />').html(value.matricula_id).addClass('center').appendTo($linha);
             $('<td />').html(value.aluno_id + " - " + safeToUpperCase(value.nome)).appendTo($linha);
 
-            var $htmlSituacao = getLinkToHistorico(value.link_to_historico, utf8Decode(value.situacao_historico));
-            $('<td />').html($htmlSituacao).attr('id', 'situacao-matricula-' + value.matricula_id).addClass('center').appendTo($linha);
+            var situacaoHistorico = utf8Decode(value.situacao_historico);
+            var $htmlSituacao = getLinkToHistorico(value.link_to_historico, situacaoHistorico);
+            $('<td />').html($htmlSituacao).data('situacao_historico', situacaoHistorico).attr('id', 'situacao-matricula-' + value.matricula_id).addClass('situacao').addClass('center').appendTo($linha);
 
             $linha.fadeIn('slow').appendTo($resultTable);
           });//fim each matriculas
@@ -640,7 +646,6 @@ var $j = jQuery.noConflict();
     }
 
     function deleteHistorico($resourceElement){
-
       var options = {
         url : deleteResourceUrlBuilder.buildUrl(ApiUrlBase, 'historico', {
           matricula_id : $resourceElement.data('matricula_id')
@@ -658,7 +663,6 @@ var $j = jQuery.noConflict();
       deleteResource(options, handleErrorDeleteResource);
     }
 
-    //#TODO
     function deleteResource(options, errorCallback){
       $.ajax(options).error(errorCallback);
     }
@@ -716,6 +720,12 @@ var $j = jQuery.noConflict();
       else{
 
         if (confirm("Confirma remoção dos históricos selecionados?")){
+
+          $.each($('input.matricula:checked').closest('tr').find('.situacao'), function(indice, fieldSituacao){
+            var $fieldSituacao = $(fieldSituacao);
+            if ($fieldSituacao.data('situacao_historico') != 'Processado')
+              $fieldSituacao.closest('tr').find('input.matricula').attr('checked', false);
+          });
 
           $('.disable-on-apply-changes').attr('disabled', 'disabled');
           $actionButton.val('Aguarde removendo...');
