@@ -485,6 +485,12 @@ var $j = jQuery.noConflict();
 
           $resultTable.find('tr:even').addClass('even');
           $resultTable.addClass('styled').find('checkbox:first').focus();
+
+          var $observacaoField = $('#observacao');
+          if($.trim($observacaoField.val()) == '' || ($observacaoField.val() == $observacaoField.data('old_value'))){
+            $observacaoField.val(dataResponse.observacao_padrao);
+            $observacaoField.data('old_value', dataResponse.observacao_padrao);
+          }
         }
       }
       catch(error){
