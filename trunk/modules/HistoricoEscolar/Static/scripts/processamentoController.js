@@ -63,7 +63,9 @@ var $j = jQuery.noConflict();
     $('#new-disciplina-line').click(function(){
       var $lastDisplinaRow = $disciplinasManualTable.find('tr.disciplina:last');
       var $newRow = $lastDisplinaRow.clone().removeClass('notice').insertAfter($lastDisplinaRow);
-      resetAutoCompleteNomeDisciplinaEvent($newRow.find('input.nome').val(''));
+      var $fieldNome = $newRow.find('input.nome');
+      resetAutoCompleteNomeDisciplinaEvent($fieldNome.val(''));
+      $fieldNome.focus();
       setRemoveDisciplinaLineEvent($newRow.find('.remove-disciplina-line'));
     });
 
@@ -122,8 +124,10 @@ var $j = jQuery.noConflict();
 
       /*chama .change para respectivos elementos esconderem / mostrar os campos que
         dependam deles*/
-      if ($(this).val() == 'informar-manualmente')
+      if ($(this).val() == 'informar-manualmente'){
         $('.disable-and-hide-wen-disciplinas-manual').hide().attr('disabled', 'disabled').change();
+        $('#disciplinas-manual').find('input.nome').focus();
+      }
       else
         $('.disable-and-hide-wen-disciplinas-manual').show().removeAttr('disabled').change();
 
