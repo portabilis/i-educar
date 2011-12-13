@@ -132,8 +132,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     return $this->validatesPresenceOf($this->getRequest()->curso_id, 'curso_id', $raiseExceptionOnEmpty);
   }
 
-  protected function validatesPresenceOfSerieId($raiseExceptionOnEmpty){
-    return $this->validatesPresenceOf($this->getRequest()->serie_id, 'serie_id', $raiseExceptionOnEmpty);
+  protected function validatesPresenceOfSerieId($raiseExceptionOnEmpty, $addMsgOnEmpty = true){
+    return $this->validatesPresenceOf($this->getRequest()->serie_id, 'serie_id', $raiseExceptionOnEmpty, '', $addMsgOnEmpty);
   }
 
   protected function validatesPresenceOfAno($raiseExceptionOnEmpty){
@@ -867,6 +867,19 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     return $matriculas;
   }
 
+
+  protected function getObservacaoPadraoSerie(){
+    if($this->validatesPresenceOfSerieId(false, false)){
+      $sql = "select coalesce(observacao_historico, '') as observacao_historico from pmieducar.serie where cod_serie = {$this->getRequest()->serie_id}";
+      $observacao = $this->db->selectField($sql);      
+    }    
+    else
+      $observacao = '';
+
+    return utf8_encode($observacao);
+  }
+
+
   protected function saveService()
   {
     try {
@@ -950,6 +963,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
           {
             $matriculas = $this->getMatriculas();
             $this->appendResponse('matriculas', $matriculas);
+            $this->appendResponse('observacao_padrao', $this->getObservacaoPadraoSerie());
           }
           else
             $this->notImplementedError();

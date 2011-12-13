@@ -1539,8 +1539,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     if ($tipoFaltaAtual != $tipoFaltaRegraAvaliacao){
       $this->_faltaAluno->tipoFalta = $tipoFaltaRegraAvaliacao;
       $this->getFaltaAlunoDataMapper()->save($this->_faltaAluno);
-
-      error_log("Alterado falta aluno: {$this->_faltaAluno->get('id')} do tipo $tipoFaltaAtual para $tipoFaltaRegraAvaliacao (matricula: {$this->_faltaAluno->get('matricula')})");
     }
 
     return $this;
@@ -2285,7 +2283,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     $notaAluno = $this->_getNotaAluno();
     $notas = $this->getNotas();
-
+  
     foreach ($notas as $nota) {
       $nota->notaAluno = $notaAluno;
       $nota->id = $this->_getNotaIdEtapa($nota);
@@ -2356,10 +2354,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     if ($matriculaSituacao)
-    {
-      error_log("Alterando situacao matricula aluno de '{$this->getOption('aprovado')}' para '$matriculaSituacao'");
       $this->_updateMatricula($this->getOption('matricula'), $this->getOption('usuario'), $matriculaSituacao);
-    }
   }
 
   /**
@@ -2423,12 +2418,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     if ($exceptionMsg)
     { 
-      error_log("Erro ocorrido ao promover matricula {$this->getOption('matricula')}: " . $exceptionMsg);
       require_once 'CoreExt/Service/Exception.php';
       throw new CoreExt_Service_Exception($exceptionMsg);
     }
 
-    error_log("Alterando situacao matricula ({$this->getOption('matricula')}) de ($situacaoMatricula) para ($novaSituacaoMatricula)");
     return $this->_updateMatricula($this->getOption('matricula'), $this->getOption('usuario'), $novaSituacaoMatricula);
   }
 
@@ -2503,8 +2496,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   public function deleteNota($etapa, $ComponenteCurricularId)
   {
-    //#TODO verificar outra forma de calcular media sem ter que zerar nota antes
-    //zerado nota, antes de deletar, para recalcular media
+    /*
+      #TODO verificar outra forma de calcular media sem ter que zerar nota antes
+      (zerado nota, antes de deletar, para recalcular media)
+    */
     try {
       $nota = new Avaliacao_Model_NotaComponente(array(
         'componenteCurricular' => $ComponenteCurricularId,
@@ -2515,7 +2510,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $this->save();
     }
     catch (Exception $e) {
-      error_log("Excessao ignorada ao atualizar nota (antes de deletar): " . $e->getMessage());
+      error_log("Excessao ignorada ao zerar nota a ser removida: " . $e->getMessage());
     }
 
     $nota = $this->getNotaComponente($ComponenteCurricularId, $etapa);
