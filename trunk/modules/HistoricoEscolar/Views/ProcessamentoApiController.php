@@ -634,7 +634,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
           "alunoId" => $alunoId,
           "historicoSequencial" => $historicoSequencial,
           "nome" => $nome,
-          "nota" => $nota,
+          "nota" => trim($nota) != '' ? sprintf("%.1f", $nota) : $nota,
           "falta" => $this->getFalta($situacaoFaltasCc[$ccId])
         ));
       }
