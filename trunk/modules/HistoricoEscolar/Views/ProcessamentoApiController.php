@@ -621,15 +621,16 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         if ($this->getRequest()->notas == 'buscar-boletim'){
           if ($tpNota == $cnsNota::NUMERICA) {
             $nota = (string)$mediasCc[$ccId][0]->mediaArredondada;
-            $nota = trim($nota) != '' ? sprintf("%.1f", $nota) : $nota;
           }
           elseif ($tpNota == $cnsNota::CONCEITUAL){
             $nota = (string)$mediasCc[$ccId][0]->media;
-            $nota = trim($nota) != '' ? sprintf("%.1f", $nota) : $nota;
           }
         }
         else
           $nota = utf8_decode($this->getRequest()->notas);
+
+        if(is_numeric($nota))
+          $nota = sprintf("%.1f", $nota);
 
         $this->_createHistoricoDisciplinas(array(
           "sequencial" => $sequencial, 
