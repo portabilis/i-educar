@@ -813,7 +813,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     }
     catch (CoreExt_Service_Exception $e){
       //excecoes ignoradas :( servico lanca excecoes de alertas, que não são exatamente erros.
-      error_log('CoreExt_Service_Exception ignorada: ' . $e->getMessage());
+      //error_log('CoreExt_Service_Exception ignorada: ' . $e->getMessage());
     }
   }
 
@@ -970,7 +970,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     if ($encodeToUtf8)
       $msg = utf8_encode($msg);
 
-    error_log("$type msg: '$msg'");
+    //error_log("$type msg: '$msg'");
     $this->msgs[] = array('msg' => $msg, 'type' => $type);
   }
 
