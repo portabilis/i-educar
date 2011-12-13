@@ -160,7 +160,7 @@ function getSelectGradeCurso(){
         <td>
           <select id='disciplinas' name='disciplinas' class='obrigatorio disable-on-search'>
             <option value=''>Selecione</option>
-            <option value='buscar-boletim'>Presentes no boletim</option>
+            <option value='buscar-boletim'>Usar do boletim</option>
             <option value='informar-manualmente'>Informar manualmente</option>
           </select>
         </td>
@@ -201,7 +201,7 @@ function getSelectGradeCurso(){
             <option value='informar-manualmente'>Informar manualmente</option>
           </select>
         </td>
-        <td><input id='notas-manual' name='notas-manual' style='display:none;' class='disable-and-hide-wen-disciplinas-manual'></input></td>
+        <td><input id='notas-manual' name='notas-manual' style='display:none;'></input></td>
       </tr>
 
       <tr>
@@ -213,7 +213,7 @@ function getSelectGradeCurso(){
             <option value='informar-manualmente'>Informar manualmente</option>
           </select>
         </td>
-        <td><input id='faltas-manual' name='faltas-manual' style='display:none;' class='disable-and-hide-wen-disciplinas-manual'></input></td>
+        <td><input id='faltas-manual' name='faltas-manual' style='display:none;'></input></td>
       </tr>
 
       <tr>

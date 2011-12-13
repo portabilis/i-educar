@@ -49,6 +49,9 @@ var $j = jQuery.noConflict();
     $('<input class="processar disable-on-apply-changes" type="button" value="Processar" />').appendTo($barActions);
     var $actionButton = $barActions.find('input.processar');
 
+    $('<input class="destroy disable-on-apply-changes" type="button" value="Remover" />').appendTo($barActions);
+    var $destroyButton = $barActions.find('input.destroy');
+
     var PageUrlBase = 'processamento';
     var ApiUrlBase = 'processamentoApi';
 
@@ -117,10 +120,12 @@ var $j = jQuery.noConflict();
     $resourceOptionsTable.find('#disciplinas').change(function(){
       changeStateFieldManual('#disciplinas', '#disciplinas-manual');
 
+      /*chama .change para respectivos elementos esconderem / mostrar os campos que
+        dependam deles*/
       if ($(this).val() == 'informar-manualmente')
-        $('.disable-and-hide-wen-disciplinas-manual').hide().attr('disabled', 'disabled');
+        $('.disable-and-hide-wen-disciplinas-manual').hide().attr('disabled', 'disabled').change();
       else
-        $('.disable-and-hide-wen-disciplinas-manual').show().removeAttr('disabled');
+        $('.disable-and-hide-wen-disciplinas-manual').show().removeAttr('disabled').change();
 
     });
 
@@ -274,9 +279,18 @@ var $j = jQuery.noConflict();
 
     //delete
     function handleDelete(dataResponse){
-      var targetId = dataResponse.att + '-matricula-' + dataResponse.matricula_id;
-      handleMessages(dataResponse.msgs, targetId);
-      updateFieldSituacao(dataResponse.link_to_historico, dataResponse.matricula_id, dataResponse.situacao_historico);
+      try{
+        var $checkbox = $('matricula-' + dataResponse.matricula_id);
+        var $targetElement = $j('#matricula-'+dataResponse.matricula_id).closest('tr').first();
+        handleMessages(dataResponse.msgs, $targetElement);
+        updateFieldSituacao(dataResponse.link_to_historico, dataResponse.matricula_id, dataResponse.situacao_historico);
+      }
+      catch(error){
+        showNewSearchButton();
+        handleMessages([{type : 'error', msg : 'Ocorreu um erro ao remover o recurso, por favor tente novamente, detalhes: ' + error}], '');
+
+        safeLog(dataResponse);
+      }
     }
 
 
@@ -285,7 +299,6 @@ var $j = jQuery.noConflict();
       safeLog(response);
     }
 
-    //post
     function handleErrorPost(response){
       handleMessages([{type : 'error', msg : 'Erro ao alterar recurso, detalhes:' + response.responseText}], '');
       safeLog(response);
@@ -611,13 +624,37 @@ var $j = jQuery.noConflict();
           disciplinas : disciplinas
         },
         success : function(dataResponse){
-          afterChangeResource($resourceElement);
+          afterChangeResource($resourceElement, postProcessamento);
           handlePostProcessamento(dataResponse);
         }
       };
 
       beforeChangeResource($resourceElement);
       postResource(options, handleErrorPost);
+    }
+
+    function deleteHistorico($resourceElement){
+
+      var options = {
+        url : deleteResourceUrlBuilder.buildUrl(ApiUrlBase, 'historico', {
+          matricula_id : $resourceElement.data('matricula_id')
+        }),
+        dataType : 'json',
+        data : {
+        },
+        success : function(dataResponse){
+          afterChangeResource($resourceElement, deleteHistorico);
+          handlePostProcessamento(dataResponse);
+        }
+      };
+
+      beforeChangeResource($resourceElement);
+      deleteResource(options, handleErrorDeleteResource);
+    }
+
+    //#TODO
+    function deleteResource(options, errorCallback){
+      $.ajax(options).error(errorCallback);
     }
 
     function beforeChangeResource($resourceElement){
@@ -641,7 +678,7 @@ var $j = jQuery.noConflict();
     }
 
 
-    function afterChangeResource($resourceElement){
+    function afterChangeResource($resourceElement, callbackContinueNextChange){
       $resourceElement.siblings('img').remove();
       $resourceElement.attr('checked', false);
 
@@ -650,10 +687,10 @@ var $j = jQuery.noConflict();
       if ($firstChecked.length < 1){
         $('.disable-on-apply-changes').removeAttr('disabled');
         $actionButton.val('Processar');
-        window.setTimeout(function(){alert('O processamento chegou ao fim');}, 1);
+        window.setTimeout(function(){alert('Operação finalizada.');}, 1);
       }
-      else
-        postProcessamento($firstChecked);
+      else if (typeof(callbackContinueNextChange) == 'function')
+        callbackContinueNextChange($firstChecked);
     }
 
     var onClickSelectAllEvent = function(event){
@@ -663,9 +700,27 @@ var $j = jQuery.noConflict();
       $checked.attr('checked', false);
       $unchecked.attr('checked', true);
     };
+    
+    var onClickDestroyEvent = function(event){
+
+      var $firstChecked = $('input.matricula:checked:first');
+
+      if ($firstChecked.length < 1)
+        handleMessages([{type : 'error', msg : 'Selecione alguma matrícula.'}], $actionButton, true);
+      else{
+
+        if (confirm("Confirma remoção dos históricos selecionados?")){
+
+          $('.disable-on-apply-changes').attr('disabled', 'disabled');
+          $actionButton.val('Aguarde removendo...');
+          deleteHistorico($firstChecked);
+        }
+      }
+    };
 
     $actionButton.click(onClickActionEvent);
     $selectAllButton.click(onClickSelectAllEvent);
+    $destroyButton.click(onClickDestroyEvent)
 
   });
 })(jQuery);
