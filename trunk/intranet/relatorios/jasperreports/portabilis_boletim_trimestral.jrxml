@@ -435,40 +435,41 @@
        FROM modules.componente_curricular_ano_escolar
      WHERE componente_curricular_ano_escolar.componente_curricular_id = componente_curricular.id) AS            carga_horaria
 
- FROM pmieducar.matricula
-	    JOIN pmieducar.matricula_turma ON
-		  matricula_turma.ref_cod_matricula = matricula.cod_matricula
-      LEFT JOIN pmieducar.escola_serie_disciplina ON
-		  escola_serie_disciplina.ref_ref_cod_serie = matricula.ref_ref_cod_serie AND
-		  escola_serie_disciplina.ref_ref_cod_escola = matricula.ref_ref_cod_escola AND
-		  escola_serie_disciplina.ativo = 1
-      LEFT JOIN modules.componente_curricular_turma ON
-		  componente_curricular_turma.escola_id = matricula.ref_ref_cod_escola AND
-		  componente_curricular_turma.turma_id = $P{turma}
-      JOIN modules.componente_curricular ON
-      CASE WHEN (SELECT COUNT(componente_curricular_turma.componente_curricular_id)
-		               FROM modules.componente_curricular_turma
-		              WHERE componente_curricular_turma.turma_id = $P{turma} AND
-		                    componente_curricular_turma.escola_id = matricula.ref_ref_cod_escola) > 0
-           THEN componente_curricular.id = componente_curricular_turma.componente_curricular_id
-		       ELSE componente_curricular.id = escola_serie_disciplina.ref_cod_disciplina
-	    END
+ FROM pmieducar.matricula,
+ pmieducar.matricula_turma,
+ modules.componente_curricular
 
        WHERE
-             matricula.ref_ref_cod_escola = $P{escola} AND
-			 matricula.ref_cod_curso = $P{curso} AND
-			 matricula.ref_ref_cod_serie = $P{serie} AND
-             matricula.ativo = 1 AND
-             matricula_turma.ref_cod_turma = $P{turma} AND
-             matricula_turma.ativo = 1 AND
-             matricula.ano = $P{ano} AND
+matricula.ref_ref_cod_escola = $P{escola} AND
+  matricula.ref_cod_curso = $P{curso} AND
+  matricula.ref_ref_cod_serie = $P{serie} AND
+  matricula.ativo = 1 AND
+  matricula_turma.ref_cod_turma = $P{turma} AND
+  matricula_turma.ativo = 1 AND
+  matricula.ano = $P{ano} AND
+  matricula_turma.ref_cod_matricula = matricula.cod_matricula and
 
-             (SELECT CASE WHEN $P{matricula} = 0 THEN
-                   matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
- 		           matricula_turma.ref_cod_turma = $P{turma}
-               ELSE
-                   matricula.cod_matricula = $P{matricula}
-               END)
+  (SELECT CASE WHEN $P{matricula} = 0 THEN
+    matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+    matricula_turma.ref_cod_turma = $P{turma}
+  ELSE
+    matricula.cod_matricula = $P{matricula}
+  END) and
+
+
+  CASE WHEN (select 1 from modules.componente_curricular_turma
+    WHERE componente_curricular_turma.turma_id = matricula_turma.ref_cod_turma AND
+    componente_curricular_turma.escola_id = matricula.ref_ref_cod_escola limit 1) = 1 THEN
+
+    componente_curricular.id in (select componente_curricular_id from modules.componente_curricular_turma
+    where componente_curricular_turma.escola_id = matricula.ref_ref_cod_escola AND
+    componente_curricular_turma.turma_id = matricula_turma.ref_cod_turma)
+  ELSE
+    componente_curricular.id in (select ref_cod_disciplina from pmieducar.escola_serie_disciplina
+    where escola_serie_disciplina.ref_ref_cod_serie = matricula.ref_ref_cod_serie AND
+    escola_serie_disciplina.ref_ref_cod_escola = matricula.ref_ref_cod_escola AND
+    escola_serie_disciplina.ativo = 1)
+  END
 
 	) AS etapa1
 GROUP BY id_disciplina, nome_disciplina, nome_aluno
