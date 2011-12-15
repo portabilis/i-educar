@@ -45,7 +45,7 @@
     ADD COLUMN nm_curso character varying(255);
 
   ALTER TABLE pmieducar.serie
-    ADD COLUMN observacao_historico character varying(100);
+    ADD COLUMN observacao_historico text;
 
   -- //@UNDO
 

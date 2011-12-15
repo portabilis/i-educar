@@ -296,33 +296,40 @@
 
 
  FROM pmieducar.escola_ano_letivo,
-	    pmieducar.matricula
-	    JOIN pmieducar.matricula_turma ON
-		  matricula_turma.ref_cod_matricula = matricula.cod_matricula
-      LEFT JOIN pmieducar.escola_serie_disciplina ON
-		  escola_serie_disciplina.ref_ref_cod_serie = matricula.ref_ref_cod_serie AND
-		  escola_serie_disciplina.ref_ref_cod_escola = matricula.ref_ref_cod_escola AND
-		  escola_serie_disciplina.ativo = 1
-      LEFT JOIN modules.componente_curricular_turma ON
-		  componente_curricular_turma.escola_id = matricula.ref_ref_cod_escola AND
-		  componente_curricular_turma.turma_id = $P{turma}
-      JOIN modules.componente_curricular ON
-      CASE WHEN (SELECT COUNT(componente_curricular_turma.componente_curricular_id)
-		               FROM modules.componente_curricular_turma
-		              WHERE componente_curricular_turma.turma_id = $P{turma} AND
-		                    componente_curricular_turma.escola_id = matricula.ref_ref_cod_escola) > 0
-           THEN componente_curricular.id = componente_curricular_turma.componente_curricular_id
-		       ELSE componente_curricular.id = escola_serie_disciplina.ref_cod_disciplina
-	    END
+	    pmieducar.matricula,
+      pmieducar.matricula_turma,
+      modules.componente_curricular
 
-WHERE escola_ano_letivo.ativo = 1 AND
-	    escola_ano_letivo.ref_cod_escola = matricula.ref_ref_cod_escola AND
-	    escola_ano_letivo.ano = $P{ano} AND
-	    matricula_turma.ref_cod_turma = $P{turma}  AND
-	    matricula.ultima_matricula = 1 AND
-	    matricula.ativo = 1 AND
-              matricula_turma.data_cadastro = (select max(mt.data_cadastro) from matricula_turma mt where
-              matricula_turma.ref_cod_matricula = mt.ref_cod_matricula)
+WHERE
+  escola_ano_letivo.ativo = 1 AND
+  escola_ano_letivo.ref_cod_escola = matricula.ref_ref_cod_escola AND
+  escola_ano_letivo.ano = $P{ano} AND
+  matricula.ref_ref_cod_escola = $P{escola} AND
+  matricula.ref_cod_curso = $P{curso} AND
+  matricula.ref_ref_cod_serie = $P{serie} AND
+  matricula.ativo = 1 AND
+  matricula.ano = $P{ano} AND
+  matricula_turma.ref_cod_turma = $P{turma} AND
+  --matricula_turma.ativo = 1 AND
+  matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+
+  --pega somente a ultima matricula_turma
+  matricula_turma.data_cadastro = (select max(mt.data_cadastro) from matricula_turma mt where
+    matricula_turma.ref_cod_matricula = mt.ref_cod_matricula) AND
+
+  CASE WHEN (select 1 from modules.componente_curricular_turma
+    WHERE componente_curricular_turma.turma_id = matricula_turma.ref_cod_turma AND
+    componente_curricular_turma.escola_id = matricula.ref_ref_cod_escola limit 1) = 1 THEN
+
+    componente_curricular.id in (select componente_curricular_id from modules.componente_curricular_turma
+    where componente_curricular_turma.escola_id = matricula.ref_ref_cod_escola AND
+    componente_curricular_turma.turma_id = matricula_turma.ref_cod_turma)
+  ELSE
+    componente_curricular.id in (select ref_cod_disciplina from pmieducar.escola_serie_disciplina
+    where escola_serie_disciplina.ref_ref_cod_serie = matricula.ref_ref_cod_serie AND
+    escola_serie_disciplina.ref_ref_cod_escola = matricula.ref_ref_cod_escola AND
+    escola_serie_disciplina.ativo = 1)
+  END
 
 ORDER BY nm_aluno, cod_aluno]]>
 	</queryString>
