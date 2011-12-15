@@ -178,15 +178,10 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
 		MAX(frequencia_componente) AS frequencia_componente,
 		MAX(carga_horaria) AS carga_horaria
   FROM (SELECT
-             (SELECT componente_curricular.nome
-                FROM modules.componente_curricular
-               WHERE componente_curricular.id = escola_serie_disciplina.ref_cod_disciplina) as nome_disciplina,
 
-               matricula.cod_matricula AS matricula,
-
-                          (SELECT componente_curricular.id
-                FROM modules.componente_curricular
-               WHERE componente_curricular.id = escola_serie_disciplina.ref_cod_disciplina) as id_disciplina,
+  componente_curricular.nome as nome_disciplina,
+  matricula.cod_matricula AS matricula,
+  componente_curricular.id as id_disciplina,
 
 
              (SELECT CASE  WHEN nota_arredondada = 10 THEN
@@ -198,7 +193,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
                            END
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 1 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula) AS nota_arredondada_etapa1,
@@ -212,7 +207,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
                            END
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 2 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula) AS nota_arredondada_etapa2,
@@ -226,7 +221,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
                            END
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 3 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula) AS nota_arredondada_etapa3,
@@ -240,7 +235,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
                            END
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 4 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula) AS nota_arredondada_etapa4,
@@ -249,7 +244,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
 					 (SELECT CASE WHEN  (SELECT (((SELECT  nota * 1
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 1 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula) +
@@ -257,7 +252,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
              ((SELECT  nota * 2
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 2 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula)) +
@@ -265,7 +260,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
              ((SELECT  nota * 3
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 3 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula)) +
@@ -273,7 +268,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
              (SELECT  nota * 4
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 4 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula)))) = '100.000'
@@ -283,7 +278,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
 			   (SELECT (((SELECT  nota * 1
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id =componente_curricular.id AND
                      et1.etapa = 1 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula) +
@@ -291,7 +286,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
              ((SELECT  nota * 2
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 2 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula)) +
@@ -299,7 +294,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
              ((SELECT  nota * 3
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 3 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula)) +
@@ -307,7 +302,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
              (SELECT  nota * 4
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 4 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula)))) END)
@@ -317,7 +312,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
 			(SELECT CASE WHEN substr(replace(to_number((SELECT (((SELECT  nota * 1
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 1 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula) +
@@ -325,7 +320,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
              ((SELECT  nota * 2
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 2 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula)) +
@@ -333,7 +328,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
              ((SELECT  nota * 3
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 3 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula)) +
@@ -341,13 +336,13 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
              (SELECT  nota * 4
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 4 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula)))),'999D9'),'.',','),1,1) || ',' || substr(replace(to_number((SELECT (((SELECT  nota * 1
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 1 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula) +
@@ -355,7 +350,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
              ((SELECT  nota * 2
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 2 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula)) +
@@ -363,7 +358,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
              ((SELECT  nota * 3
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 3 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula)) +
@@ -371,7 +366,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
              (SELECT  nota * 4
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 4 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula)))),'999D9'),'.',','),2,1) = '1,0' THEN
@@ -380,7 +375,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
                             substr(replace(to_number((SELECT (((SELECT  nota * 1
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 1 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula) +
@@ -388,7 +383,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
              ((SELECT  nota * 2
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 2 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula)) +
@@ -396,7 +391,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
              ((SELECT  nota * 3
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 3 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula)) +
@@ -404,13 +399,13 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
              (SELECT  nota * 4
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 4 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula)))),'999D9'),'.',','),1,1) || ',' || substr(replace(to_number((SELECT (((SELECT  nota * 1
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 1 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula) +
@@ -418,7 +413,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
              ((SELECT  nota * 2
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 2 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula)) +
@@ -426,7 +421,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
              ((SELECT  nota * 3
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 3 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula)) +
@@ -434,7 +429,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
              (SELECT  nota * 4
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+               WHERE et1.componente_curricular_id = componente_curricular.id AND
                      et1.etapa = 4 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula)))),'999D9'),'.',','),2,1)
@@ -442,7 +437,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
 		FROM modules.nota_componente_curricular_media,
          modules.nota_aluno
                WHERE nota_aluno.id = nota_componente_curricular_media.nota_aluno_id AND
-                     nota_componente_curricular_media.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
+                     nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
                      nota_aluno.matricula_id = matricula.cod_matricula) AS media,
 
 	         (SELECT curso.nm_curso
@@ -543,7 +538,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_componente_curricular.etapa = 1 AND
-				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina  AND
+				falta_componente_curricular.componente_curricular_id = componente_curricular.id  AND
 				falta_aluno.tipo_falta = 2) as faltas_componente_et1,
 
        (SELECT sum(falta_componente_curricular.quantidade)
@@ -552,7 +547,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_componente_curricular.etapa = 2 AND
-				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina  AND
+				falta_componente_curricular.componente_curricular_id = componente_curricular.id  AND
 				falta_aluno.tipo_falta = 2) as faltas_componente_et2,
 
        (SELECT sum(falta_componente_curricular.quantidade)
@@ -561,7 +556,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_componente_curricular.etapa = 3 AND
-				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina  AND
+				falta_componente_curricular.componente_curricular_id = componente_curricular.id  AND
 				falta_aluno.tipo_falta = 2) as faltas_componente_et3,
 
        (SELECT sum(falta_componente_curricular.quantidade)
@@ -570,7 +565,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_componente_curricular.etapa = 4 AND
-				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina  AND
+				falta_componente_curricular.componente_curricular_id = componente_curricular.id  AND
 				falta_aluno.tipo_falta = 2) as faltas_componente_et4,
 
        (SELECT sum(falta_componente_curricular.quantidade)
@@ -578,7 +573,7 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
                 modules.falta_aluno
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
-				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina  AND
+				falta_componente_curricular.componente_curricular_id = componente_curricular.id  AND
                 falta_componente_curricular.etapa in ('1','2','3','4') AND
 				falta_aluno.tipo_falta = 2) as total_faltas_componente,
 
@@ -631,43 +626,42 @@ to_char(current_date,'dd/mm/yyyy') AS data_atual,
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_componente_curricular.etapa = 4) as faltas_disc_et4
 
+ FROM pmieducar.matricula,
+ pmieducar.matricula_turma,
+ modules.componente_curricular
 
- FROM pmieducar.matricula
-	    JOIN pmieducar.matricula_turma ON
-		  matricula_turma.ref_cod_matricula = matricula.cod_matricula
-      LEFT JOIN pmieducar.escola_serie_disciplina ON
-		  escola_serie_disciplina.ref_ref_cod_serie = matricula.ref_ref_cod_serie AND
-		  escola_serie_disciplina.ref_ref_cod_escola = matricula.ref_ref_cod_escola AND
-		  escola_serie_disciplina.ativo = 1
-      LEFT JOIN modules.componente_curricular_turma ON
-		  componente_curricular_turma.escola_id = matricula.ref_ref_cod_escola AND
-		  componente_curricular_turma.turma_id = $P{turma}
-      JOIN modules.componente_curricular ON
-      CASE WHEN (SELECT COUNT(componente_curricular_turma.componente_curricular_id)
-		               FROM modules.componente_curricular_turma
-		              WHERE componente_curricular_turma.turma_id = $P{turma} AND
-		                    componente_curricular_turma.escola_id = matricula.ref_ref_cod_escola) > 0
-           THEN componente_curricular.id = componente_curricular_turma.componente_curricular_id
-		       ELSE componente_curricular.id = escola_serie_disciplina.ref_cod_disciplina
-	    END
+WHERE
+  matricula.ref_ref_cod_escola = $P{escola} AND
+  matricula.ref_cod_curso = $P{curso} AND
+  matricula.ref_ref_cod_serie = $P{serie} AND
+  matricula.ativo = 1 AND
+  matricula_turma.ref_cod_turma = $P{turma} AND
+  matricula_turma.ativo = 1 AND
+  matricula.ano = $P{ano} AND
+  matricula_turma.ref_cod_matricula = matricula.cod_matricula and
 
-       WHERE
-             matricula.ref_ref_cod_escola = $P{escola} AND
-			 matricula.ref_cod_curso = $P{curso} AND
-			 matricula.ref_ref_cod_serie = $P{serie} AND
-             matricula.ativo = 1 AND
-             matricula_turma.ref_cod_turma = $P{turma} AND
-             matricula_turma.ativo = 1 AND
-             matricula.ano = $P{ano} AND
+  (SELECT CASE WHEN $P{matricula} = 0 THEN
+    matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+    matricula_turma.ref_cod_turma = $P{turma}
+  ELSE
+    matricula.cod_matricula = $P{matricula}
+  END) and
 
-             (SELECT CASE WHEN $P{matricula} = 0 THEN
-                   matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
- 		           matricula_turma.ref_cod_turma = $P{turma}
-               ELSE
-                   matricula.cod_matricula = $P{matricula}
-               END)
+  CASE WHEN (select 1 from modules.componente_curricular_turma
+    WHERE componente_curricular_turma.turma_id = matricula_turma.ref_cod_turma AND
+    componente_curricular_turma.escola_id = matricula.ref_ref_cod_escola limit 1) = 1 THEN
 
-	) AS etapa1
+    componente_curricular.id in (select componente_curricular_id from modules.componente_curricular_turma
+    where componente_curricular_turma.escola_id = matricula.ref_ref_cod_escola AND
+    componente_curricular_turma.turma_id = matricula_turma.ref_cod_turma)
+  ELSE
+    componente_curricular.id in (select ref_cod_disciplina from pmieducar.escola_serie_disciplina
+    where escola_serie_disciplina.ref_ref_cod_serie = matricula.ref_ref_cod_serie AND
+    escola_serie_disciplina.ref_ref_cod_escola = matricula.ref_ref_cod_escola AND
+    escola_serie_disciplina.ativo = 1)
+  END
+
+) AS etapa1
 
 GROUP BY id_disciplina, nome_disciplina, nome_aluno
 ORDER BY nome_aluno, nome_disciplina]]>
