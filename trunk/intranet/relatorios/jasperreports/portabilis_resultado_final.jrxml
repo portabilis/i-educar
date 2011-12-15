@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_resultado_final" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="148"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Crosstab Data Text" hAlign="Center"/>
 	<style name="table">
@@ -84,20 +84,23 @@
                falta_aluno.matricula_id = matricula.cod_matricula AND
                falta_componente_curricular.etapa in ('1','2','3','4'))::float / 800::float )::float * 100,'999'))),100)) AS frequencia_geral,
 
+  (SELECT CASE WHEN matricula.aprovado != 4 THEN
 
-       (SELECT CASE  WHEN nota_componente_curricular_media.media_arredondada = 10 THEN
-			                   '10,0'
-			               WHEN char_length(nota_componente_curricular_media.media_arredondada) = 1 THEN
-			                   replace(nota_componente_curricular_media.media_arredondada,'.',',') || ',0'
-                           ELSE
-                               replace(nota_componente_curricular_media.media_arredondada,'.',',')
-                           END
-	      FROM modules.nota_componente_curricular_media,
-	           modules.nota_aluno
-	     WHERE nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
-	           nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
-	           nota_aluno.matricula_id = matricula.cod_matricula
-      ) AS media,
+     (select CASE WHEN nota_componente_curricular_media.media_arredondada = 10 THEN
+       '10,0'
+     WHEN char_length(nota_componente_curricular_media.media_arredondada) = 1 THEN
+       replace(nota_componente_curricular_media.media_arredondada,'.',',') || ',0'
+     ELSE
+       replace(nota_componente_curricular_media.media_arredondada,'.',',')
+     END
+     FROM modules.nota_componente_curricular_media,
+          modules.nota_aluno
+     WHERE nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+       nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+       nota_aluno.matricula_id = matricula.cod_matricula)
+  ELSE
+    '-'
+  END) as media,
 
       componente_curricular.abreviatura AS nm_componente_curricular,
 
