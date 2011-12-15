@@ -257,17 +257,16 @@
 
 WHERE
   escola_ano_letivo.ativo = 1 AND
-	escola_ano_letivo.ref_cod_escola = matricula.ref_ref_cod_escola AND
-	escola_ano_letivo.ano = $P{ano} AND
+  escola_ano_letivo.ref_cod_escola = matricula.ref_ref_cod_escola AND
+  escola_ano_letivo.ano = $P{ano} AND
   matricula.ref_ref_cod_escola = $P{escola} AND
   matricula.ref_cod_curso = $P{curso} AND
   matricula.ref_ref_cod_serie = $P{serie} AND
   matricula.ativo = 1 AND
   matricula.ano = $P{ano} AND
   matricula_turma.ref_cod_turma = $P{turma} AND
-  matricula_turma.ativo = 1 AND
+  --matricula_turma.ativo = 1 AND
   matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
-  matricula_turma.ref_cod_turma = $P{turma} AND
 
   --pega somente a ultima matricula_turma
   matricula_turma.data_cadastro = (select max(mt.data_cadastro) from matricula_turma mt where

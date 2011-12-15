@@ -312,7 +312,10 @@ WHERE
   matricula_turma.ref_cod_turma = $P{turma} AND
   --matricula_turma.ativo = 1 AND
   matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
-  matricula_turma.ref_cod_turma = $P{turma} AND
+
+  --pega somente a ultima matricula_turma
+  matricula_turma.data_cadastro = (select max(mt.data_cadastro) from matricula_turma mt where
+    matricula_turma.ref_cod_matricula = mt.ref_cod_matricula) AND
 
   CASE WHEN (select 1 from modules.componente_curricular_turma
     WHERE componente_curricular_turma.turma_id = matricula_turma.ref_cod_turma AND
