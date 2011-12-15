@@ -752,14 +752,7 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 					<text><![CDATA[Parecer:]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement x="46" y="1" width="753" height="31"/>
-					<textElement>
-						<font fontName="DejaVu Sans" size="7"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{parecer_semestre1}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="46" y="32" width="753" height="31"/>
+					<reportElement x="46" y="33" width="753" height="31"/>
 					<textElement>
 						<font fontName="DejaVu Sans" size="7"/>
 					</textElement>
@@ -779,13 +772,11 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 					<text><![CDATA[Assinatura do Professor(a)]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement x="602" y="-16" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
-						<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
-					</reportElement>
-					<textElement textAlignment="Center">
+					<reportElement x="46" y="1" width="753" height="31"/>
+					<textElement>
 						<font fontName="DejaVu Sans" size="7"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{nota3} == 'S' ? "( X )" : ""]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{parecer_semestre1}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -1087,7 +1078,7 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{nota1} == 'S' ? "( X )" : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nota1} == 'C' ? "( X )" : ""]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="15" y="2" width="295" height="12"/>
@@ -1166,7 +1157,7 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{nota1} == 'A' ? "( X )" : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nota1} == 'S' ? "( X )" : ""]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="355" y="2" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
@@ -1175,7 +1166,7 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{nota1} == 'C' ? "( X )" : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nota1} == 'A' ? "( X )" : ""]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="760" y="-1" width="1" height="16" isPrintWhenDetailOverflows="true"/>
@@ -1230,7 +1221,7 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 				<text><![CDATA[(     )]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="354" y="2" width="26" height="12">
+				<reportElement x="355" y="2" width="26" height="12">
 					<printWhenExpression><![CDATA[$P{manual}.intValue() == 1]]></printWhenExpression>
 				</reportElement>
 				<textElement/>
@@ -1298,15 +1289,6 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 				<text><![CDATA[(     )]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="637" y="2" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
-					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" size="7"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{nota3} == 'A' ? "( X )" : ""]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
 				<reportElement x="676" y="2" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
 					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
 				</reportElement>
@@ -1323,6 +1305,24 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{faltas_componente_et3}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="636" y="2" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nota3} == 'A' ? "( X )" : ""]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="601" y="2" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nota3} == 'S' ? "( X )" : ""]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
