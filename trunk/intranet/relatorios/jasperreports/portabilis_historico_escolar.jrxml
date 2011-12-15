@@ -882,7 +882,7 @@ SELECT nm_disciplina,
            where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
                  he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
 				 he.ativo = 1 AND
-                 he.aprovado <> 2 AND
+                 he.ano = historico_escolar.ano AND
                  substring(nm_serie,1,1) = 1) as status_serie1,
 
 
@@ -895,7 +895,7 @@ SELECT nm_disciplina,
            where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
                  he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
 				 he.ativo = 1 AND
-                 he.aprovado <> 2 AND
+                 he.ano = historico_escolar.ano AND
                  substring(nm_serie,1,1) = 2) as status_serie2,
 
 
@@ -908,7 +908,7 @@ SELECT nm_disciplina,
            where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
                  he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
 				 he.ativo = 1 AND
-                 he.aprovado <> 2 AND
+                 he.ano = historico_escolar.ano AND
                  substring(nm_serie,1,1) = 3) as status_serie3,
 
 
@@ -921,7 +921,7 @@ SELECT nm_disciplina,
            where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
                  he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
 				 he.ativo = 1 AND
-                 he.aprovado <> 2 AND
+                 he.ano = historico_escolar.ano AND
                  substring(nm_serie,1,1) = 4) as status_serie4,
 
 
@@ -934,7 +934,7 @@ SELECT nm_disciplina,
            where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
                  he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
 				 he.ativo = 1 AND
-                 he.aprovado <> 2 AND
+                 he.ano = historico_escolar.ano AND
                  substring(nm_serie,1,1) = 5) as status_serie5,
 
 
@@ -947,7 +947,7 @@ SELECT nm_disciplina,
            where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
                  he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
 				 he.ativo = 1 AND
-                 he.aprovado <> 2 AND
+                 he.ano = historico_escolar.ano AND
                  substring(nm_serie,1,1) = 6) as status_serie6,
 
 
@@ -960,7 +960,7 @@ SELECT nm_disciplina,
            where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
                  he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
 				 he.ativo = 1 AND
-                 he.aprovado <> 2 AND
+                 he.ano = historico_escolar.ano AND
                  substring(nm_serie,1,1) = 7) as status_serie7,
 
 
@@ -973,7 +973,7 @@ SELECT nm_disciplina,
            where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
                  he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
 				 he.ativo = 1 AND
-                 he.aprovado <> 2 AND
+                 he.ano = historico_escolar.ano AND
                  substring(nm_serie,1,1) = 8) as status_serie8,
 
 
@@ -985,8 +985,8 @@ SELECT nm_disciplina,
             from pmieducar.historico_escolar he
            where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
                  he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
-				 he.ativo = 1 AND
-                 he.aprovado <> 2 AND
+	       he.ativo = 1 AND
+                 he.ano = historico_escolar.ano AND
                  substring(nm_serie,1,1) = 9) as status_serie9,
 
 
@@ -1012,20 +1012,20 @@ SELECT nm_disciplina,
           historico_escolar.sequencial = (SELECT max(sequencial)
                                             FROM pmieducar.historico_escolar he
                                            WHERE he.ref_cod_aluno = $P{aluno})) AS num_folha,
+
 ( select CASE WHEN ((substring(nm_serie,1,1) = 8) or (substring(nm_serie,1,1) = 9)) THEN
                  'concluiu o ENSINO FUNDAMENTAL (8 ANOS)'
              ELSE
                  'concluiu a ' || substring(nm_serie,1,1) || ' série'
              END
 
-          from pmieducar.historico_disciplinas hd
-         where hd.sequencial = historico_disciplinas.sequencial AND
-               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
-               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
-               historico_escolar.ano = (select max(he.ano)
-                                          from pmieducar.historico_escolar he
-                                         where historico_escolar.ref_cod_aluno = he.ref_cod_aluno AND
-                                               historico_escolar.sequencial = he.sequencial)) as nome_serie_aux
+          from pmieducar.historico_escolar he
+         where he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+               he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+               he.ano = (select max(hi.ano)
+                                          from pmieducar.historico_escolar hi
+                                         where hi.ref_cod_aluno = he.ref_cod_aluno AND
+                                               hi.ref_cod_instituicao = he.ref_cod_instituicao)) as nome_serie_aux
 
 
   FROM pmieducar.historico_escolar,
@@ -1039,8 +1039,13 @@ WHERE  instituicao.cod_instituicao = $P{instituicao} AND
        historico_disciplinas.ref_sequencial = historico_escolar.sequencial AND
        historico_escolar.ref_cod_aluno = $P{aluno} AND
        instituicao.ativo = 1 AND
-	   historico_escolar.aprovado = 1 AND
-	   historico_escolar.ativo = 1
+       historico_escolar.ativo = 1 AND
+       historico_escolar.ano = (SELECT max(he.ano)
+                           FROM pmieducar.historico_escolar he
+                          WHERE he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+                                he.sequencial = historico_escolar.sequencial AND
+                                he.ref_cod_aluno = $P{aluno})
+
 )  AS T
 GROUP BY 1, nm_disciplina
 ORDER BY 1 ASC]]>
@@ -1371,10 +1376,6 @@ ORDER BY 1 ASC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nm_responsavel}]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="11" y="7" width="57" height="46"/>
-				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
-			</image>
 			<textField isBlankWhenNull="true">
 				<reportElement x="72" y="55" width="296" height="13"/>
 				<textElement>
@@ -1382,6 +1383,10 @@ ORDER BY 1 ASC]]>
 				</textElement>
 				<textFieldExpression><![CDATA["Bairro: " +$F{bairro}]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="10" y="7" width="57" height="46"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
 		</band>
 	</pageHeader>
 	<columnHeader>

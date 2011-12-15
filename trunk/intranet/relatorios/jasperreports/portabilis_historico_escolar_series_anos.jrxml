@@ -1012,20 +1012,20 @@ SELECT nm_disciplina,
                                             FROM pmieducar.historico_escolar he
                                            WHERE he.ref_cod_aluno = $P{aluno})) AS num_folha,
 
+
 ( select CASE WHEN ((substring(nm_serie,1,1) = 8) or (substring(nm_serie,1,1) = 9)) THEN
-                 'concluiu o ENSINO FUNDAMENTAL'
+                 'concluiu o ENSINO FUNDAMENTAL (8 ANOS)'
              ELSE
                  'concluiu a ' || substring(nm_serie,1,1) || ' série/ano'
              END
 
-          from pmieducar.historico_disciplinas hd
-         where hd.sequencial = historico_disciplinas.sequencial AND
-               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
-               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
-               historico_escolar.ano = (select max(he.ano)
-                                          from pmieducar.historico_escolar he
-                                         where historico_escolar.ref_cod_aluno = he.ref_cod_aluno AND
-                                               historico_escolar.sequencial = he.sequencial)) as nome_serie_aux
+          from pmieducar.historico_escolar he
+         where he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+               he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+               he.ano = (select max(hi.ano)
+                                          from pmieducar.historico_escolar hi
+                                         where hi.ref_cod_aluno = he.ref_cod_aluno AND
+                                               hi.ref_cod_instituicao = he.ref_cod_instituicao)) as nome_serie_aux
 
 
 
