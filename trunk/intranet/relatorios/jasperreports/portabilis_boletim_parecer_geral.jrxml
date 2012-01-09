@@ -281,12 +281,12 @@
                falta_aluno.matricula_id = matricula.cod_matricula AND
                falta_componente_curricular.etapa in ('1','2','3','4'))::float / 800::float )::float * 100,'999')) AS frequencia_componente,
 
-     (SELECT parecer_geral.parecer
+     convert((SELECT parecer_geral.parecer
         FROM modules.parecer_geral,
              modules.parecer_aluno
        WHERE parecer_geral.parecer_aluno_id = parecer_aluno.id AND
              parecer_aluno.matricula_id = matricula.cod_matricula AND
-             parecer_geral.etapa = $P{etapa}) AS parecer,
+             parecer_geral.etapa = $P{etapa}) using utf8_to_iso_8859_1) AS parecer,
 
       (SELECT nota_arredondada
                 FROM modules.nota_componente_curricular,
