@@ -24,7 +24,7 @@
   USING btree
   (ativo);
 
-  VACUUM VERBOSE ANALYZE pmieducar.matricula;
+  VACUUM ANALYZE pmieducar.matricula;
   REINDEX TABLE pmieducar.matricula;
 
 
