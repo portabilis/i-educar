@@ -165,7 +165,8 @@ class indice extends clsCadastro
     #variaveis usadas pelo modulo /intranet/include/pmieducar/educar_campo_lista.php
     $this->verificar_campos_obrigatorios = TRUE;
     $this->add_onchange_events = TRUE;
-    $get_ano_escolar = $ano_escolar_obrigatorio = $ano_escolar_em_andamento = TRUE;
+    $get_ano_escolar = $ano_escolar_obrigatorio = TRUE;
+    $ano_escolar_andamento_in = '0,1';
 
     include 'include/pmieducar/educar_campo_lista.php';
 
