@@ -1689,7 +1689,7 @@ EOT;
 		  clearSelect(entity = 'matricula', disable = true, text = 'Carregando alunos...', multipleId=true);
 
       var ajaxReq = new ajax( updateSelect );
-      ajaxReq.envia("portabilis_alunos_matriculados_xml.php?ano_escolar="+anoEscolar+"&turma_id="+turmaId);  
+      ajaxReq.envia("portabilis_alunos_matriculados_xml.php?ano_escolar="+anoEscolar.value+"&turma_id="+turmaId);  
     }
     else
       clearSelect(entity = 'matricula', disable = false, text = '', multipleId=true);

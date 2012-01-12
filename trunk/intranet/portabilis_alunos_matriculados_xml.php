@@ -8,7 +8,7 @@ require_once("include/portabilis/dal.php");
 
 $user = new User();
 
-function getRecords($turmaId)
+function getRecords($turmaId, $ano)
 {
   $db = new Db();
 
@@ -26,20 +26,23 @@ function getRecords($turmaId)
 				AND a.ref_idpes	     = p.idpes
 				AND aprovado IN (1,2,3)
 				AND mt.ativo 	= 1
-				AND m.ativo     = 1
+				AND m.ativo   = 1
+        AND m.ano = $ano
 			ORDER BY
 				to_ascii(p.nome) ASC";
 
   return $db->select($sql);
 }
 
-$records = getRecords($turmaId = $_GET['turma_id']);
-
 header('Content-type: text/xml');
 $x = "<?xml version='1.0' encoding='ISO-8859-15'?>";
 $x .= "<matriculas entity='matricula' element_id='ref_cod_matricula'>";
 if ($user->isLoggedIn())
 {
+
+  $ano = ! is_null($_GET['ano']) ? $_GET['ano'] : $_GET['ano_escolar'];
+  $records = getRecords($_GET['turma_id'], $ano);
+
   foreach ($records as $r)
   {
     $nome = ucwords(strtolower(htmlspecialchars($r['nome'], ENT_QUOTES, 'ISO-8859-15')));
