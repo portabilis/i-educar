@@ -123,6 +123,7 @@ class indice extends clsCadastro
 
   function Gerar()
   {
+
     // primary keys
     $this->campoOculto("cod_matricula", $this->cod_matricula);
     $this->campoOculto("ref_cod_aluno", $this->ref_cod_aluno);
@@ -160,6 +161,12 @@ class indice extends clsCadastro
 #    $get_matricula            = TRUE;
 #    $sem_padrao               = TRUE;
 
+
+    #variaveis usadas pelo modulo /intranet/include/pmieducar/educar_campo_lista.php
+    $this->verificar_campos_obrigatorios = TRUE;
+    $this->add_onchange_events = TRUE;
+    $get_ano_escolar = $ano_escolar_obrigatorio = $ano_escolar_em_andamento = TRUE;
+
     include 'include/pmieducar/educar_campo_lista.php';
 
     if (is_numeric($this->ref_cod_curso)) {
@@ -189,45 +196,32 @@ class indice extends clsCadastro
     $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7,
       'educar_matricula_lst.php?ref_cod_aluno=' . $this->ref_cod_aluno);
 
-    $obj_escola_ano_letivo = new clsPmieducarEscolaAnoLetivo();
-    $lst_escola_ano_letivo = $obj_escola_ano_letivo->lista($this->ref_cod_escola,
-      NULL, NULL, NULL,1, NULL, NULL, NULL, NULL, 1);
-
-    if (is_array($lst_escola_ano_letivo)) {
-      $det_escola_ano_letivo = array_shift($lst_escola_ano_letivo);
-      $this->ano = $det_escola_ano_letivo['ano'];
-
     //novas regras matricula aluno
-    require_once 'include/pmieducar/clsPmieducarSerie.inc.php';    
-    $db = new clsBanco();
+    $this->ano = $_POST['ano_escolar'];
 
-    $db->Consulta("select ref_ref_cod_serie, ref_cod_curso from pmieducar.matricula where ativo = 1 and ref_ref_cod_escola = $this->ref_cod_escola and ref_cod_curso = $this->ref_cod_curso and ref_cod_aluno = $this->ref_cod_aluno and aprovado not in (1,2,4,5,7,8,9)");
-    $db->ProximoRegistro();
-    $m = $db->Tupla();
-    if (is_array($m) && count($m))
-    {
-      $serie = new clsPmieducarSerie($m['ref_ref_cod_serie'], null, null, $m['ref_cod_curso']);
-      $serie = $serie->detalhe();
-      if (is_array($serie) && count($serie))
-        $serie = $serie['nm_serie'];
-      else
-        $serie = '';
+    $anoLetivoEmAndamentoEscola = new clsPmieducarEscolaAnoLetivo();
+    $anoLetivoEmAndamentoEscola = $anoLetivoEmAndamentoEscola->lista($this->ref_cod_escola,
+                                                                     $this->ano,
+                                                                     null,
+                                                                     null,
+                                                                     1,
+                                                                     null,
+                                                                     null,
+                                                                     null,
+                                                                     null,
+                                                                     1
+                                                                     );
 
-      $this->mensagem .= "Este aluno já está matriculado no(a) '$serie' deste curso e escola, não é possivel manter duas matriculas em andamento para o mesmo curso.<br />";
+    if(is_array($anoLetivoEmAndamentoEscola)){
 
-      return false;
-    }
+      require_once 'include/pmieducar/clsPmieducarSerie.inc.php';    
+      $db = new clsBanco();
 
-    else
-    {
-      $db->Consulta("select ref_ref_cod_escola, ref_cod_curso, ref_ref_cod_serie from pmieducar.matricula where ativo = 1 and ref_ref_cod_escola != $this->ref_cod_escola and ref_cod_aluno = $this->ref_cod_aluno and aprovado not in (1,2,4,5,7,8,9) and not exists (select 1 from pmieducar.transferencia_solicitacao as ts where ts.ativo = 1 and ts.ref_cod_matricula_saida = matricula.cod_matricula)");
-
+      $db->Consulta("select ref_ref_cod_serie, ref_cod_curso from pmieducar.matricula where ativo = 1 and ref_ref_cod_escola = $this->ref_cod_escola and ref_cod_curso = $this->ref_cod_curso and ref_cod_aluno = $this->ref_cod_aluno and aprovado not in (1,2,4,5,7,8,9)");
       $db->ProximoRegistro();
       $m = $db->Tupla();
-      if (is_array($m) && count($m)){
-        require_once 'include/pmieducar/clsPmieducarEscola.inc.php';
-        require_once 'include/pessoa/clsJuridica.inc.php';
-
+      if (is_array($m) && count($m))
+      {
         $serie = new clsPmieducarSerie($m['ref_ref_cod_serie'], null, null, $m['ref_cod_curso']);
         $serie = $serie->detalhe();
         if (is_array($serie) && count($serie))
@@ -235,32 +229,54 @@ class indice extends clsCadastro
         else
           $serie = '';
 
-        $escola = new clsPmieducarEscola($m['ref_ref_cod_escola']);
-        $escola = $escola->detalhe();
-        if (is_array($escola) && count($escola))
-        {
-          $escola = new clsJuridica($escola['ref_idpes']);
-          $escola = $escola->detalhe();
-          if (is_array($escola) && count($escola))
-            $escola = $escola['fantasia'];
-          else
-            $escola = '';  
-        }
-        else
-          $escola = '';
-
-        $curso = new clsPmieducarCurso($m['ref_cod_curso']);
-        $curso = $curso->detalhe();
-        if (is_array($curso) && count($curso))
-          $curso = $curso['nm_curso'];
-        else
-          $curso = '';
-
-        #TODO mover mensagens para $_SESSION['flash'] = 'ERROR:<msg>';
-        $this->mensagem .= "Este aluno já está matriculado no(a) '$serie' do curso '$curso' na escola '$escola', para matricular este aluno na sua escola solicite transferência ao secretário(a) da escola citada.<br />";
+        $this->mensagem .= "Este aluno já está matriculado no(a) '$serie' deste curso e escola, não é possivel manter duas matriculas em andamento para o mesmo curso.<br />";
 
         return false;
       }
+
+      else
+      {
+        $db->Consulta("select ref_ref_cod_escola, ref_cod_curso, ref_ref_cod_serie from pmieducar.matricula where ativo = 1 and ref_ref_cod_escola != $this->ref_cod_escola and ref_cod_aluno = $this->ref_cod_aluno and aprovado not in (1,2,4,5,7,8,9) and not exists (select 1 from pmieducar.transferencia_solicitacao as ts where ts.ativo = 1 and ts.ref_cod_matricula_saida = matricula.cod_matricula)");
+
+        $db->ProximoRegistro();
+        $m = $db->Tupla();
+        if (is_array($m) && count($m)){
+          require_once 'include/pmieducar/clsPmieducarEscola.inc.php';
+          require_once 'include/pessoa/clsJuridica.inc.php';
+
+          $serie = new clsPmieducarSerie($m['ref_ref_cod_serie'], null, null, $m['ref_cod_curso']);
+          $serie = $serie->detalhe();
+          if (is_array($serie) && count($serie))
+            $serie = $serie['nm_serie'];
+          else
+            $serie = '';
+
+          $escola = new clsPmieducarEscola($m['ref_ref_cod_escola']);
+          $escola = $escola->detalhe();
+          if (is_array($escola) && count($escola))
+          {
+            $escola = new clsJuridica($escola['ref_idpes']);
+            $escola = $escola->detalhe();
+            if (is_array($escola) && count($escola))
+              $escola = $escola['fantasia'];
+            else
+              $escola = '';  
+          }
+          else
+            $escola = '';
+
+          $curso = new clsPmieducarCurso($m['ref_cod_curso']);
+          $curso = $curso->detalhe();
+          if (is_array($curso) && count($curso))
+            $curso = $curso['nm_curso'];
+          else
+            $curso = '';
+
+          #TODO mover mensagens para $_SESSION['flash'] = 'ERROR:<msg>';
+          $this->mensagem .= "Este aluno já está matriculado no(a) '$serie' do curso '$curso' na escola '$escola', para matricular este aluno na sua escola solicite transferência ao secretário(a) da escola citada.<br />";
+
+          return false;
+        }
     }
 
       $obj_reserva_vaga = new clsPmieducarReservaVaga();
@@ -517,7 +533,8 @@ class indice extends clsCadastro
           }
         //}
 
-        $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';#TODO set in $_SESSION['flash'] 'Aluno matriculado com sucesso'
+        #TODO set in $_SESSION['flash'] 'Aluno matriculado com sucesso'
+        $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
         header('Location: educar_matricula_lst.php?ref_cod_aluno=' . $this->ref_cod_aluno);
         #die();
         #return true;
@@ -527,7 +544,7 @@ class indice extends clsCadastro
       return FALSE;
     }
     else {
-      $this->mensagem = 'Não foi possível encontrar o "Ano Letivo" em andamento da Escola.<br />';
+      $this->mensagem = 'O ano (letivo) selecionado não esta em andamento na escola selecionada.<br />';
       return FALSE;
     }
   }
@@ -727,12 +744,12 @@ document.getElementById('ref_cod_escola').onchange = function()
     getEscolaCurso();
   }
 }
-
+/*
 document.getElementById('ref_cod_curso').onchange = function()
 {
 //  getSerieMatricula();
   getEscolaCursoSerie();
-}
+}*/
 
 function valida()
 {
