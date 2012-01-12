@@ -9,10 +9,16 @@ require_once( "include/portabilis_utils.php" );
 $user = new User();
 
 #TODO alterar para usar App_Model_IedFinder::getAnoEscolar ?
-function getAnosEscolares($escola)
+function getAnosEscolares($escola, $andamento = null)
 {
   $db = new clsBanco();
-  $db->Consulta("select ano from pmieducar.escola_ano_letivo as al where ref_cod_escola = $escola and ativo = 1 order by ano desc");
+
+  if(is_numeric($andamento))
+    $situacaoAndamento = "and andamento = $andamento";
+  else
+    $situacaoAndamento = '';
+
+  $db->Consulta("select ano from pmieducar.escola_ano_letivo as al where ref_cod_escola = $escola and ativo = 1 $situacaoAndamento order by ano desc");
 
   $a = array();
   while ($db->ProximoRegistro())
@@ -20,9 +26,7 @@ function getAnosEscolares($escola)
   return $a;
 }
 
-#TODO ver se usuário esta logado
-
-$anosEscolares = getAnosEscolares($escola = $_GET['escola_id']);
+$anosEscolares = getAnosEscolares($escola = $_GET['escola_id'], $andamento = $_GET['andamento']);
 $defaultId = $_GET['default_id'];
 
 header('Content-type: text/xml');

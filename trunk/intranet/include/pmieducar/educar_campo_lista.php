@@ -277,6 +277,10 @@
   if ($get_ano_escolar)
   {
     $this->campoLista( "ano_escolar", "Ano escolar", array("" => "Selecione"), null, null, null, null, null, $ano_escolar_desabilitado, $ano_escolar_obrigatorio );
+
+    if($ano_escolar_em_andamento)
+      $this->campoOculto('ano_escolar_andamento', 1);
+
 //    if ($this->ano_escolar)
 //      $this->appendOutput("<script type='text/javascript'>getAnoEscolar(defaultId=$this->ano_escolar);</script>");
   }
@@ -1404,11 +1408,17 @@ function updateSelect(xml)
 	function getAnoEscolar(defaultId)
 	{
 		var escolaId = document.getElementById('ref_cod_escola').value;
+    var anoEscolar = document.getElementById('ano_escolar_andamento');
+    if(anoEscolar)
+      andamento = anoEscolar.value;
+    else
+      andamento = '';
+
     if (escolaId)
     {
       clearSelect(entity = 'ano_escolar', disable = true, text = 'Carregando anos escolares...', multipleId=false);
       var ajaxReq = new ajax( updateSelect );
-      ajaxReq.envia("portabilis_ano_escolar_xml.php?escola_id="+escolaId+"&default_id="+defaultId);
+      ajaxReq.envia("portabilis_ano_escolar_xml.php?escola_id="+escolaId+"&default_id="+defaultId+"&andamento="+andamento);
     }
     else
       clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId=false);
@@ -1632,7 +1642,9 @@ EOT;
       clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
       clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
       clearSelect(entity = 'matricula', disable = false, text = '', multipleId = true);
-      getTurma();
+
+      if (typeof(getTurma) == 'function')      
+        getTurma();
     }
   }
 
