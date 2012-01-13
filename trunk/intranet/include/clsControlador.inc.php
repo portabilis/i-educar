@@ -296,9 +296,9 @@ class clsControlador
 
   //novo metodo login
   public function Logar($validateCredentials) {
-    if ($validateCredentials) {
-      $this->_loginMsgs = array();
+    $this->_loginMsgs = array();
 
+    if ($validateCredentials) {
       $username = @$_POST['login'];
       $password = md5(@$_POST['senha']);
       $userId = $this->validateUser($username, $password);
@@ -404,7 +404,7 @@ class clsControlador
         while ($db->ProximoRegistro())
           $result[] = $db->Tupla();
 
-        if ($returnOnly == 'first-line' and isset($result[0]) and isset($result[0][0]))
+        if ($returnOnly == 'first-line' and isset($result[0]))
           $result = $result[0];
         elseif ($returnOnly == 'first-field' and isset($result[0]) and isset($result[0][0]))
           $result = $result[0][0];

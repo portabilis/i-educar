@@ -882,7 +882,7 @@ abstract class clsBancoSQL_
 
   /**
    * Executa uma consulta SQL preparada ver: http://php.net/manual/en/function.pg-prepare.php
-   * ex: $db->execPreparedQuery("user_login", "select 1 from portal.funcionario where matricula = $1 and senha = $2", array('admin', '123'))
+   * ex: $db->execPreparedQuery("select * from portal.funcionario where matricula = $1 and senha = $2", array('admin', '123'))
    *
    * @param  string $name    nome da consulta
    * @param  string $query   sql para ser preparado
