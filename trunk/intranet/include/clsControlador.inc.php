@@ -329,16 +329,18 @@ class clsControlador
 
   protected function canStartLoginSession($userId) {
 
-    if ($this->fetchPreparedQuery("SELECT ativo FROM portal.funcionario WHERE ref_cod_pessoa_fj = $1",
-                                  $userId, true, 'first-field') != '1') {
-      $this->appendLoginMsg("Aparentemente sua conta de usuário esta inativa (expirada), por favor, " .
-                            "entre em contato com o administrador do sistema.", "error");
-    }
+    if (! $this->hasLoginMsgWithType("error")) {
+      if ($this->fetchPreparedQuery("SELECT ativo FROM portal.funcionario WHERE ref_cod_pessoa_fj = $1",
+                                    $userId, true, 'first-field') != '1') {
+        $this->appendLoginMsg("Aparentemente sua conta de usuário esta inativa (expirada), por favor, " .
+                              "entre em contato com o administrador do sistema.", "error");
+      }
 
-    elseif ($this->fetchPreparedQuery("SELECT proibido FROM portal.funcionario WHERE ref_cod_pessoa_fj = $1",
-                                  $userId, true, 'first-field') != '0') {
-      $this->appendLoginMsg("Aparentemente sua conta não pode acessar o sistema, " .
-                            "por favor, entre em contato com o administrador do sistema.", "error");
+      elseif ($this->fetchPreparedQuery("SELECT proibido FROM portal.funcionario WHERE ref_cod_pessoa_fj = $1",
+                                    $userId, true, 'first-field') != '0') {
+        $this->appendLoginMsg("Aparentemente sua conta não pode acessar o sistema, " .
+                              "por favor, entre em contato com o administrador do sistema.", "error");
+      }
     }
 
     #TODO verificar se conta expirou (se sim, inativar conta)
