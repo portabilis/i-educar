@@ -303,7 +303,7 @@ class clsControlador
       $password = md5(@$_POST['senha']);
       $userId = $this->validateUser($username, $password);
 
-      if ($this->canStartLoginSession())
+      if ($this->canStartLoginSession($userId))
         $this->startLoginSession($userId);
       else {
         $this->validateHumanAccess();
@@ -327,14 +327,24 @@ class clsControlador
   }
 
 
-  protected function canStartLoginSession() {
+  protected function canStartLoginSession($userId) {
 
-    #TODO verificar se conta inativa
-    #TODO verificar se conta nunca usada (exibir mensagem ?)
-    #TODO verificar se acesso proibido para conta
+    if ($this->fetchPreparedQuery("SELECT ativo FROM portal.funcionario WHERE ref_cod_pessoa_fj = $1",
+                                  $userId, true, 'first-field') != '1') {
+      $this->appendLoginMsg("Aparentemente sua conta de usuário esta inativa (expirada), por favor, " .
+                            "entre em contato com o administrador do sistema.", "error");
+    }
+
+    elseif ($this->fetchPreparedQuery("SELECT proibido FROM portal.funcionario WHERE ref_cod_pessoa_fj = $1",
+                                  $userId, true, 'first-field') != '0') {
+      $this->appendLoginMsg("Aparentemente sua conta não pode acessar o sistema, " .
+                            "por favor, entre em contato com o administrador do sistema.", "error");
+    }
+
     #TODO verificar se conta expirou (se sim, inativar conta)
     #TODO verificar se senha expirou
     #TODO verifica se usuario acessou de outro ip em memos de 10 minutos (eliminar esta verificação ?), se bloquear setar $sql = "UPDATE funcionario SET data_login = NOW() WHERE ref_cod_pessoa_fj = {$id_pessoa}" ?;
+    #TODO verificar se conta nunca usada (exibir mensagem ?)
 
     return ! $this->hasLoginMsgWithType("error");
   }
