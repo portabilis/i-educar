@@ -43,6 +43,8 @@
 
     <p style="min-height: 0px;" class="flash"><strong>Novo!</strong> acompanhe as &uacute;ltimas novidades do i-Educar em <a href="http://ieducar.com.br/wiki" class="decorated texto-normal">ieducar.com.br/wiki</a></p>
 
+    <!-- #&ERROLOGIN&# -->
+
   </div>
 
 
@@ -65,7 +67,7 @@
           </tr>
           <tr>
             <td></td>
-            <td><!-- #&ERROLOGIN&# --><input type="submit" class="submit" src="imagens/nvp_bot_entra_webmail.jpg" value="Entrar"></td>
+            <td><input type="submit" class="submit" src="imagens/nvp_bot_entra_webmail.jpg" value="Entrar"></td>
           </tr>
         </tbody></table>
 		    </form>	

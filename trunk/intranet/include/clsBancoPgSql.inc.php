@@ -878,4 +878,40 @@ abstract class clsBancoSQL_
       die($this->strErro . "\n");
     }
   }
+
+
+  /**
+   * Executa uma consulta SQL preparada ver: http://php.net/manual/en/function.pg-prepare.php
+   * ex: $db->execPreparedQuery("user_login", "select 1 from portal.funcionario where matricula = $1 and senha = $2", array('admin', '123'))
+   *
+   * @param  string $name    nome da consulta
+   * @param  string $query   sql para ser preparado
+   * @param  array  $params  parametros para consulta
+   * 
+   * @return bool|resource FALSE em caso de erro ou o identificador da consulta
+   *   em caso de sucesso.
+   */
+  public function execPreparedQuery($query, $params = array()) {
+    try {
+      $errorMsgs = '';
+      $this->Conecta();
+      $dbConn = $this->bLink_ID;
+
+      if (! is_array($params))
+        $params = array($params);
+
+      $this->bConsulta_ID = @pg_query_params($dbConn, $query, $params); 
+      $resultError = @pg_result_error($this->bConsulta_ID);
+      $errorMsgs .= trim($resultError) != '' ? $resultError : @pg_last_error($this->bConsulta_ID);
+
+      }
+      catch(Exception $e) {
+        $errorMsgs .= "Exception: " . $e->getMessage();
+      }
+
+      if ($this->bConsulta_ID == false || trim($errorMsgs) != '')
+        throw new Exception("Erro ao preparar consulta ($query) no banco de dados: $errorMsgs");
+
+      return $this->bConsulta_ID;
+  }
 }

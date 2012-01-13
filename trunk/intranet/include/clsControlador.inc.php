@@ -104,7 +104,7 @@ class clsControlador
    * Faz o login do usuário.
    * @param  mixed  $acao
    */
-  public function Logar($acao)
+  /*public function _Logar($acao)
   {
     if ($acao)
     {
@@ -279,7 +279,7 @@ class clsControlador
       // @todo
       #throw new Exception($strArquivo);
     }
-  }
+  }*/
 
   /**
    * Executa o login do usuário.
@@ -294,4 +294,158 @@ class clsControlador
     }
   }
 
+  //novo metodo login
+  public function Logar($validateCredentials) {
+    if ($validateCredentials) {
+      $this->_loginMsgs = array();
+
+      $username = @$_POST['login'];
+      $password = md5(@$_POST['senha']);
+      $userId = $this->validateUser($username, $password);
+
+      if ($this->canStartLoginSession())
+        $this->startLoginSession($userId);
+      else {
+        $this->validateHumanAccess();
+        $this->renderLoginPage();
+      }
+    }
+    else
+      $this->renderLoginPage();
+  }
+
+
+  //metodos usados pelo novo metodo de login
+  protected function validateUser($username, $password) {
+    $sql = "SELECT ref_cod_pessoa_fj FROM portal.funcionario WHERE matricula = $1 and senha = $2";
+    $userId = $this->fetchPreparedQuery($sql, array($username, $password), true, 'first-field');
+
+    if (! is_numeric($userId))
+      $this->appendLoginMsg("Usuário ou senha incorreta.", "error");
+
+    return $userId;
+  }
+
+
+  protected function canStartLoginSession() {
+
+    #TODO verificar se conta inativa
+    #TODO verificar se conta nunca usada (exibir mensagem ?)
+    #TODO verificar se acesso proibido para conta
+    #TODO verificar se conta expirou (se sim, inativar conta)
+    #TODO verificar se senha expirou
+    #TODO verifica se usuario acessou de outro ip em memos de 10 minutos (eliminar esta verificação ?), se bloquear setar $sql = "UPDATE funcionario SET data_login = NOW() WHERE ref_cod_pessoa_fj = {$id_pessoa}" ?;
+
+    return ! $this->hasLoginMsgWithType("error");
+  }
+
+
+  protected function startLoginSession($userId) {
+    $sql = "SELECT ref_cod_pessoa_fj, opcao_menu, ref_cod_setor_new, tipo_menu FROM funcionario WHERE ref_cod_pessoa_fj = $1";
+    $record = $this->fetchPreparedQuery($sql, $userId, true, 'first-line');
+
+    $userId    = $record['ref_cod_pessoa_fj'];
+    $pessoaSetor = $record['ref_cod_setor_new'];
+    $opcaoMenu   = $record['opcao_menu'];
+    $tipoMenu    = $record['tipo_menu'];
+
+    @session_start();
+    $_SESSION = array();
+    $_SESSION['itj_controle'] = 'logado';
+    $_SESSION['id_pessoa']    = $userId;
+    $_SESSION['pessoa_setor'] = $pessoaSetor;
+    $_SESSION['menu_opt']     = unserialize($opcaoMenu);
+    $_SESSION['tipo_menu']    = $tipoMenu;
+    @session_write_close();
+
+    $this->logado = true;
+    $this->appendLoginMsg("Usuário logado com sucesso.", "success");
+
+    #TODO setar data_login, ip_logado ? "UPDATE funcionario SET ip_logado = '{$ip_maquina}', data_login = NOW() WHERE ref_cod_pessoa_fj = {$id_pessoa}";
+  }
+
+
+  protected function destroyLoginSession($addMsg = false) {
+    @session_start();
+    $_SESSION = array();
+    @session_destroy();
+
+    if ($addMsg)
+      $this->appendLoginMsg("Usuário deslogado com sucesso.", "success");
+  }
+
+
+  protected function validateHumanAccess() {
+    /* #TODO se ocorreram mais de 5 tentativas erradas nos ultimos minutos,
+             confirmar se usuário que esta acessando é humano, like http://www.google.com/recaptcha */
+    return true;
+  }
+
+
+  protected function renderLoginPage() {
+    $this->destroyLoginSession();
+
+    $templateName = 'templates/nvp_htmlloginintranet.tpl';
+    $templateFile  = fopen($templateName, "r");
+    $templateText = fread($templateFile, filesize($templateName));
+    $templateText = str_replace( "<!-- #&ERROLOGIN&# -->", $this->getLoginMsgs(), $templateText);
+
+    fclose($templateFile);
+    die($templateText);
+  }
+
+
+  protected function fetchPreparedQuery($sql, $params = array(), $hideExceptions = true, $returnOnly = '') {
+    try{    
+      $result = array();
+      $db = new clsBanco();
+      if ($db->execPreparedQuery($sql, $params) != false) {
+
+        while ($db->ProximoRegistro())
+          $result[] = $db->Tupla();
+
+        if ($returnOnly == 'first-line' and isset($result[0]) and isset($result[0][0]))
+          $result = $result[0];
+        elseif ($returnOnly == 'first-field' and isset($result[0]) and isset($result[0][0]))
+          $result = $result[0][0];
+      }
+    }
+    catch(Exception $e) 
+    {
+      if (! $hideExceptions)
+        $this->appendLoginMsg($e->getMessage(), "error", true);
+    }
+    return $result;
+  }
+
+
+  protected function appendLoginMsg($msg, $type="error", $encodeToUtf8 = false){
+    if ($encodeToUtf8)
+      $msg = utf8_encode($msg);
+
+    //error_log("$type msg: '$msg'");
+    $this->_loginMsgs[] = array('msg' => $msg, 'type' => $type);
+  }
+
+
+  protected function hasLoginMsgWithType($type) {
+    $hasMsg = false;
+
+    foreach ($this->_loginMsgs as $m){
+      if ($m['type'] == $type) {
+        $hasMsg = true;
+        break;
+      }
+    }
+
+    return $hasMsg;
+  }
+
+
+  protected function getLoginMsgs() {
+    $msgs = '';
+    foreach($this->_loginMsgs as $m)
+      $msgs .= "<p class='{$m['type']}'>{$m['msg']}</p>";
+    return $msgs;
+  }
 }
