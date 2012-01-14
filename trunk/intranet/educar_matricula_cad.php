@@ -188,7 +188,8 @@ class indice extends clsCadastro
   }
 
   function Novo()
-  {
+  {       
+
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
@@ -205,7 +206,7 @@ class indice extends clsCadastro
                                                                      $this->ano,
                                                                      null,
                                                                      null,
-                                                                     1,
+                                                                     2, /*adiciona where 0 ou 1*/
                                                                      null,
                                                                      null,
                                                                      null,
