@@ -311,7 +311,7 @@ class clsCadastro extends clsCampos
     }
 
     if (!empty($this->mensagem)) {
-      $retorno .=  "<tr><td class='formmdtd' colspan='2' height='24'><span class='form_erro'><b>$this->mensagem</b></span></td></tr>";
+      $retorno .=  "<tr><td class='formmdtd' colspan='2' height='24'><span class='form_erro error'>$this->mensagem</span></td></tr>";
     }
 
     if (empty($this->campos)) {

@@ -302,7 +302,7 @@ class indice extends clsCadastro
 
     $this->campoTexto("p_http", "Site", $this->p_http, "50", "255", FALSE);
 
-    $this->campoTexto("p_email", "E-mail", $this->p_email, "50", "255", FALSE);
+    $this->campoTexto("p_email", "E-mail", $this->p_email, "50", "255", true);
 
     $lista_sexos = array();
     $lista_sexos['']  = 'Escolha uma op&ccedil;&atilde;o...';
@@ -334,9 +334,12 @@ class indice extends clsCadastro
 
   public function Editar()
   {
+
     session_start();
     $pessoaFj = $_SESSION['id_pessoa'];
     session_write_close();
+
+    $result = $this->validateEmail();
 
     $objPessoa = new clsPessoa_($pessoaFj, FALSE, FALSE, $this->p_http, FALSE,
       $pessoaFj, date("Y-m-d H:i:s", time()), $this->p_email);
@@ -434,8 +437,19 @@ class indice extends clsCadastro
       }
     }
 
-    header('Location: index.php');
-    return TRUE;
+    if ($result)
+      header('Location: index.php');
+
+    return $result;
+  }
+
+
+  protected function validateEmail(){
+    if (! filter_var($this->p_email, FILTER_VALIDATE_EMAIL)) {
+      $this->mensagem = 'Por favor, informe um email válido.';
+      return false;
+    }
+    return true;
   }
 }
 
