@@ -53,28 +53,40 @@
 
       <div id="login-form">
         <h2>Entrar</h2>
-        <p class="explication">Entre com sua conta</p>
+        <p class="explication"></p>
         
 		    <form action="" method="post">
         <table>
           <tbody><tr>
-				    <td><label for="login">Matr&iacute;cula:</label></td>
-			      <td><input type="text" name="login" id="login"></td>
+			      <td>
+              <label class="" for="login">Matr&iacute;cula:</label>
+				    </td>
+				    <td>
+              <input type="text" name="login" id="login"></td>
 			    </tr>
           <tr>
-				    <td><label for="senha">Senha:</label></td>
-				    <td><input type="password" name="senha" id="senha"></td>
+				    <td>
+              <label class="" for="senha">Senha:</label>
+				    </td>
+				    <td>
+              <input type="password" name="senha" id="senha">
+              <a class="light block small" href="/module/Usuario/RedefinirSenha">Esqueceu a senha?</a>
+            </td>
           </tr>
+          <tr><td class="spacer"><td></tr>
           <tr>
-            <td></td>
-            <td><input type="submit" class="submit" src="imagens/nvp_bot_entra_webmail.jpg" value="Entrar"></td>
+            <td>
+				    </td>
+				    <td>
+              <input type="submit" class="submit" src="imagens/nvp_bot_entra_webmail.jpg" value="Entrar">
+            </td>
           </tr>
         </tbody></table>
 		    </form>	
       </div>
 
       <div id="service-info" class="texto-normal">
-        <p class="requiriments">Requisitos para uso</p>
+        <p class="requiriments">Requisitos</p>
         <p class="explication">Para melhor uso do sistema, recomendamos:</p>
         <ul class="requiriments unstyled">
           <li>- Navegador <a target="_blank" class="decorated" href="http://br.mozdev.org/download/">Mozilla Firefox</a></li> 

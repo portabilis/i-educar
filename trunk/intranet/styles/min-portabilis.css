@@ -106,7 +106,7 @@ table.cellcolor th, table tr.cellcolor th, .cellcolor, tr.even {
 }
 
 select, input, textarea {
-    border: 1px solid #CACACA;
+  border: 1px solid #CACACA;
 }
 
 select, input, textarea{
@@ -129,7 +129,7 @@ select, input, textarea{
 }
 
 select, input, textarea {
-    padding: 2px;
+  padding: 2px;
 }
 
 table.strong th , tr.strong th, tr.strong td{
@@ -180,4 +180,24 @@ div#error div#detail {
   color: #ff4e4e !important;
   border: 1px solid #ffe5e5 !important;
   background-color: #ffeeee !important;
+}
+
+.block {
+  display: block;
+}
+
+.light {
+  font-weight: normal;  
+}
+
+.small {
+  font-size: 90%;
+}
+
+#login-form a {
+  margin-left: 5px;
+}
+
+.spacer {
+  padding: 2px;
 }
