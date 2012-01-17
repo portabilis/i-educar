@@ -120,8 +120,8 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     return $this->validatesPresenceOf($this->getRequest()->turma_id, 'turma_id', $raiseExceptionOnEmpty);
   }
 
-  protected function validatesPresenceOfAnoEscolar($raiseExceptionOnEmpty){
-    return $this->validatesPresenceOf($this->getRequest()->ano_escolar, 'ano_escolar', $raiseExceptionOnEmpty);
+  protected function validatesPresenceOfAno($raiseExceptionOnEmpty){
+    return $this->validatesPresenceOf($this->getRequest()->ano, 'ano', $raiseExceptionOnEmpty);
   }
 
   protected function validatesPresenceOfAlunoId($raiseExceptionOnEmpty){
@@ -216,7 +216,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
       $this->validatesPresenceOfCursoId(true);
       $this->validatesPresenceOfSerieId(true);
       $this->validatesPresenceOfTurmaId(true);
-      $this->validatesPresenceOfAnoEscolar(true);
+      $this->validatesPresenceOfAno(true);
       $this->validatesPresenceOfComponenteCurricularId(true);
       $this->validatesPresenceOfEtapa(true);
     }
@@ -593,7 +593,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
         NULL,
         NULL,
         NULL,
-        $this->getRequest()->ano_escolar,
+        $this->getRequest()->ano,
         NULL,
         TRUE,
         NULL,

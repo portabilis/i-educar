@@ -71,8 +71,7 @@
 		$funcao_obrigatorio = 				isset( $funcao_obrigatorio ) 			? $funcao_obrigatorio 				: false;
 		$turma_obrigatorio = 				isset( $turma_obrigatorio ) 			? $turma_obrigatorio 				: false;
     $componente_curricular_obrigatorio = isset( $componente_curricular_obrigatorio ) ? $componente_curricular_obrigatorio           : false;
-    $etapa_obrigatorio =                isset( $etapa_obrigatorio ) 	        ? $etapa_obrigatorio                : false;
-    $ano_escolar_obrigatorio =                isset( $ano_escolar_obrigatorio ) 	        ? $ano_escolar_obrigatorio                : false;
+    $etapa_obrigatorio =                isset( $etapa_obrigatorio ) 	        ? $etapa_obrigatorio                : false;    
     $alunos_matriculados_obrigatorio = isset( $alunos_matriculados_obrigatorio ) ? $alunos_matriculados_obrigatorio : false;
 	}
 
@@ -94,7 +93,6 @@
 		$turma_desabilitado = 				isset( $turma_desabilitado ) 			? $turma_desabilitado 				: false;
 		$componente_curricular_desabilitado = 			isset( $componente_curricular_desabilitado ) 		? $displina_desabilitado     		: false;
     $etapa_desabilitado =               isset( $etapa_desabilitado ) 	        ? $etapa_desabilitado                : false;
-    $ano_escolar_desabilitado =               isset( $ano_escolar_desabilitado ) 	        ? $ano_escolar_desabilitado                : false;
     $alunos_matriculados_desabilitado = isset( $alunos_matriculados_desabilitado ) ? $alunos_matriculados_desabilitado : false;
 	}
 
@@ -273,17 +271,6 @@
 			$this->campoOculto("is_padrao", 1);
 		}
 	}
-
-  if ($get_ano_escolar)
-  {
-    $this->campoLista( "ano_escolar", "Ano escolar", array("" => "Selecione"), null, null, null, null, null, $ano_escolar_desabilitado, $ano_escolar_obrigatorio );
-
-    if($ano_escolar_andamento_in)
-      $this->campoOculto('ano_escolar_andamento_in', $ano_escolar_andamento_in);
-
-//    if ($this->ano_escolar)
-//      $this->appendOutput("<script type='text/javascript'>getAnoEscolar(defaultId=$this->ano_escolar);</script>");
-  }
 
 	if ( $get_escola_curso_serie )
 	{
@@ -507,7 +494,7 @@ lista de funcoes a serem executadas apos atualizar um select
 entity: nome da entidade do select alvo
 _functions: funcoes e argumentos a serem executados ao atualizar o select (definido na entity)
 
-Ex: afterUpdateSelect.push({entity:'ano_escolar', _functions:[{_function:getEtapa, _args:[$this->etapa]}]}
+Ex: afterUpdateSelect.push({entity:'ano', _functions:[{_function:getEtapa, _args:[$this->etapa]}]}
 */
 var afterUpdateSelect = [];
 
@@ -1404,40 +1391,11 @@ function updateSelect(xml)
 		attElement.options[0].text = 'Nenhum(a) '+ att_name +' encontrado(a)';
 }
 
-<?php if ($get_ano_escolar) { ?>
-	function getAnoEscolar(defaultId)
-	{
-		var escolaId = document.getElementById('ref_cod_escola').value;
-    var anoEscolar = document.getElementById('ano_escolar_andamento_in');
-    if(anoEscolar)
-      andamento_in = anoEscolar.value;
-    else
-      andamento_in = '';
-
-    if (escolaId)
-    {
-      clearSelect(entity = 'ano_escolar', disable = true, text = 'Carregando anos escolares...', multipleId=false);
-      var ajaxReq = new ajax( updateSelect );
-      ajaxReq.envia("portabilis_ano_escolar_xml.php?escola_id="+escolaId+"&default_id="+defaultId+"&andamento_in="+andamento_in);
-    }
-    else
-      clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId=false);
-  }
-
-<?php
-    if ($this->ano_escolar)
-    {
-      $this->appendOutput("<script type='text/javascript'>getAnoEscolar(defaultId=$this->ano_escolar);</script>");
-    }
-} ?>
-
 <?php if ($get_etapa) { ?>
 	function getEtapa(defaultId)
 	{
 		var escolaId = document.getElementById('ref_cod_escola').value;
-    var anoEscolar = document.getElementById('ano_escolar');
-    if (! anoEscolar)
-        var anoEscolar = document.getElementById('ano');
+    var anoEscolar = document.getElementById('ano');
     var anoEscolar = anoEscolar.value;   
 		var cursoId = document.getElementById('ref_cod_curso').value;
 		var turmaId = document.getElementById('ref_cod_turma').value;
@@ -1472,9 +1430,7 @@ function updateSelect(xml)
    	var instituicaoId = document.getElementById('ref_cod_instituicao').value;
     var escolaId = document.getElementById('ref_cod_escola').value;
 		var cursoId = document.getElementById('ref_cod_curso').value;
-    var anoEscolar = document.getElementById('ano_escolar');
-    if (! anoEscolar)
-        var anoEscolar = document.getElementById('ano');
+    var anoEscolar = document.getElementById('ano');
     var anoEscolar = anoEscolar.value;   
 		var turmaId = document.getElementById('ref_cod_turma').value;
     if (escolaId && anoEscolar && turmaId)
@@ -1565,7 +1521,6 @@ EOT;
   {
     instituicaoField.onchange = function()
     {
-      clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId = false);
       clearSelect(entity = 'ano', disable = false, text = '', multipleId = false);
       clearSelect(entity = 'escola', disable = false, text = '', multipleId = true);
       clearSelect(entity = 'curso', disable = false, text = '', multipleId = true);
@@ -1583,7 +1538,6 @@ EOT;
   {
     escolaField.onchange = function()
     {
-      clearSelect(entity = 'ano_escolar', disable = false, text = '', multipleId = false);
       clearSelect(entity = 'ano', disable = false, text = '', multipleId = false);
       clearSelect(entity = 'curso', disable = false, text = '', multipleId = true);
       clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
@@ -1606,27 +1560,12 @@ EOT;
       clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
       clearSelect(entity = 'matricula', disable = false, text = '', multipleId = true);
 
-      var fieldAnoEscolar = document.getElementById('ano_escolar');
-      if (! fieldAnoEscolar)
-        var fieldAnoEscolar = document.getElementById('ano');
+      var fieldAnoEscolar = document.getElementById('ano');
 
       if (fieldAnoEscolar.type == 'select-one')
         getAnoEscolar();  
       else
   	    getEscolaCursoSerie();
-    }
-  }
-
-  var fieldAnoEscolar = document.getElementById('ano_escolar');
-  if (fieldAnoEscolar)
-  {
-    fieldAnoEscolar.onchange = function()
-    {
-      clearSelect(entity = 'serie', disable = false, text = '', multipleId = true);
-      clearSelect(entity = 'turma', disable = false, text = '', multipleId = true);
-      clearSelect(entity = 'componente_curricular', disable = false, text = '', multipleId = true);
-      clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
-      getEscolaCursoSerie();
     }
   }
 
@@ -1680,9 +1619,7 @@ EOT;
   function getAlunosMatriculados()
   {
 	  var turmaId = document.getElementById('ref_cod_turma').value;
-    var anoEscolar = document.getElementById('ano_escolar');
-    if (! anoEscolar)
-        var anoEscolar = document.getElementById('ano');
+    var anoEscolar = document.getElementById('ano');
 
     if (turmaId && anoEscolar)
     {

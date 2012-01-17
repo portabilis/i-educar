@@ -124,7 +124,7 @@ var $j = jQuery.noConflict();
           curso_id : $('#ref_cod_curso').val(),
           serie_id : $('#ref_ref_cod_serie').val(),
           turma_id : $('#ref_cod_turma').val(),
-          ano_escolar : $('#ano_escolar').val(),
+          ano_escolar : $('#ano').val(),
           componente_curricular_id : $('#ref_cod_componente_curricular').val(),
           etapa : $('#etapa').val()
         };
@@ -146,7 +146,7 @@ var $j = jQuery.noConflict();
           curso_id : $('#ref_cod_curso').val(),
           serie_id : $('#ref_ref_cod_serie').val(),
           turma_id : $('#ref_cod_turma').val(),
-          ano_escolar : $('#ano_escolar').val(),
+          ano_escolar : $('#ano').val(),
           componente_curricular_id : $('#ref_cod_componente_curricular').val(),
           etapa : $('#etapa').val(),
           matricula_id : $('#etapa').val()
@@ -169,7 +169,7 @@ var $j = jQuery.noConflict();
           curso_id : $('#ref_cod_curso').val(),
           serie_id : $('#ref_ref_cod_serie').val(),
           turma_id : $('#ref_cod_turma').val(),
-          ano_escolar : $('#ano_escolar').val(),
+          ano_escolar : $('#ano').val(),
           componente_curricular_id : $('#ref_cod_componente_curricular').val(),
           etapa : $('#etapa').val()
         };
@@ -629,7 +629,7 @@ var $j = jQuery.noConflict();
       $('<td />').html(safeToUpperCase($('#ref_cod_componente_curricular').children("[selected='selected']").html())).appendTo($linha);
       $('<td />').html(safeToUpperCase($('#ref_cod_turma').children("[selected='selected']").html())).appendTo($linha);
       $('<td />').html(safeToUpperCase($('#ref_ref_cod_serie').children("[selected='selected']").html())).appendTo($linha);
-      $('<td />').html($('#ano_escolar').children("[selected='selected']").html()).appendTo($linha);
+      $('<td />').html($('#ano').children("[selected='selected']").html()).appendTo($linha);
 
       //field escola pode ser diferente de select caso usuario comum 
       var $htmlEscolaField = $('#ref_cod_escola').children("[selected='selected']").html() ||

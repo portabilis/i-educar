@@ -32,30 +32,16 @@
  * @version   $Id$
  */
 
-#TODO remover includes desnecessarios
 require_once 'CoreExt/View/Helper/UrlHelper.php';
 require_once 'CoreExt/View/Helper/TableHelper.php';
 require_once 'Core/Controller/Page/ListController.php';
 require_once 'App/Model/IedFinder.php';
-#require_once 'Avaliacao/Model/NotaAlunoDataMapper.php';
-#require_once 'Avaliacao/Model/FaltaAlunoDataMapper.php';
-#require_once 'Avaliacao/Service/Boletim.php';
-#require_once 'RegraAvaliacao/Model/TipoPresenca.php';
-#require_once 'App/Model/MatriculaSituacao.php';
 
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
-
-#require_once 'include/pmieducar/clsPmieducarEscola.inc.php';
-#require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
-#require_once 'include/pmieducar/clsPmieducarMatriculaTurma.inc.php';
-#require_once 'include/pmieducar/clsPmieducarTurma.inc.php';
-#require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
-
-#require_once 'include/portabilis_utils.php';
 
 class DiarioController extends Core_Controller_Page_ListController
 {
@@ -72,7 +58,7 @@ class DiarioController extends Core_Controller_Page_ListController
     $this->ref_cod_curso = $_GET['curso_id'];
     $this->ref_cod_turma = $_GET['turma_id'];
     $this->ref_ref_cod_serie = $this->ref_cod_serie = $_GET['serie_id'];
-    $this->ano_escolar = $_GET['ano_escolar'];
+    $this->ano = $_GET['ano'];
     $this->ref_cod_componente_curricular = $_GET['componente_curricular_id'];
     $this->etapa = $_GET['etapa'];
 
@@ -92,14 +78,18 @@ class DiarioController extends Core_Controller_Page_ListController
     $this->verificar_campos_obrigatorios = True;
     $this->add_onchange_events = True;
 
+    $this->campoNumero( "ano", "Ano", date("Y"), 4, 4, true);
     $get_escola = $escola_obrigatorio = $listar_escolas_alocacao_professor = TRUE;
-    $get_ano_escolar = $ano_escolar_obrigatorio = TRUE;
     $get_curso = $curso_obrigatorio = $listar_somente_cursos_funcao_professor = TRUE;
     $get_escola_curso_serie = $escola_curso_serie_obrigatorio = TRUE;
     $get_turma = $turma_obrigatorio = $listar_turmas_periodo_alocacao_professor = TRUE;
     $get_componente_curricular = $componente_curricular_obrigatorio = $listar_componentes_curriculares_professor = TRUE;
     $get_etapa = $etapa_obrigatorio = TRUE;
     $get_alunos_matriculados = true;
+
+    //TODO remover educar_campos_lista
+    //$get_ano_escolar = $ano_escolar_obrigatorio = TRUE;
+
     include 'include/pmieducar/educar_campo_lista.php';
   }
 
