@@ -353,27 +353,26 @@ class clsControlador
 
 
   protected function startLoginSession($userId) {
-    $sql = "SELECT ref_cod_pessoa_fj, opcao_menu, ref_cod_setor_new, tipo_menu FROM funcionario WHERE ref_cod_pessoa_fj = $1";
+    $sql = "SELECT ref_cod_pessoa_fj, opcao_menu, ref_cod_setor_new, tipo_menu, email FROM funcionario WHERE ref_cod_pessoa_fj = $1";
     $record = $this->fetchPreparedQuery($sql, $userId, true, 'first-line');
-
-    $userId    = $record['ref_cod_pessoa_fj'];
-    $pessoaSetor = $record['ref_cod_setor_new'];
-    $opcaoMenu   = $record['opcao_menu'];
-    $tipoMenu    = $record['tipo_menu'];
 
     @session_start();
     $_SESSION = array();
     $_SESSION['itj_controle'] = 'logado';
-    $_SESSION['id_pessoa']    = $userId;
-    $_SESSION['pessoa_setor'] = $pessoaSetor;
-    $_SESSION['menu_opt']     = unserialize($opcaoMenu);
-    $_SESSION['tipo_menu']    = $tipoMenu;
+    $_SESSION['id_pessoa']    = $record['ref_cod_pessoa_fj'];
+    $_SESSION['pessoa_setor'] = $record['ref_cod_setor_new'];
+    $_SESSION['menu_opt']     = unserialize($record['opcao_menu']);
+    $_SESSION['tipo_menu']    = $record['tipo_menu'];
     @session_write_close();
 
     $this->logado = true;
     $this->appendLoginMsg("Usuário logado com sucesso.", "success");
 
     #TODO setar data_login, ip_logado ? "UPDATE funcionario SET ip_logado = '{$ip_maquina}', data_login = NOW() WHERE ref_cod_pessoa_fj = {$id_pessoa}";
+
+    //redireciona para usuário informar email, caso este seja inválido
+    if (! filter_var($record['email'], FILTER_VALIDATE_EMAIL))
+       header("Location: /module/Usuario/AlterarEmail");
   }
 
 
