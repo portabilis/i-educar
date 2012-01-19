@@ -327,7 +327,7 @@ class clsControlador
   }
 
 
-  protected function canStartLoginSession($userId) {
+  public function canStartLoginSession($userId) {
 
     if (! $this->hasLoginMsgWithType("error")) {
       if ($this->fetchPreparedQuery("SELECT ativo FROM portal.funcionario WHERE ref_cod_pessoa_fj = $1",
@@ -352,7 +352,7 @@ class clsControlador
   }
 
 
-  protected function startLoginSession($userId) {
+  public function startLoginSession($userId, $redirectTo = '') {
     $sql = "SELECT ref_cod_pessoa_fj, opcao_menu, ref_cod_setor_new, tipo_menu, email FROM funcionario WHERE ref_cod_pessoa_fj = $1";
     $record = $this->fetchPreparedQuery($sql, $userId, true, 'first-line');
 
@@ -373,6 +373,8 @@ class clsControlador
     //redireciona para usuário informar email, caso este seja inválido
     if (! filter_var($record['email'], FILTER_VALIDATE_EMAIL))
        header("Location: /module/Usuario/AlterarEmail");
+    elseif(! empty($redirectTo))
+       header("Location: $redirectTo");
   }
 
 
