@@ -52,7 +52,9 @@ class Usuario_Model_Funcionario extends CoreExt_Entity
   protected $_data = array(
     'ref_cod_pessoa_fj' => NULL,
     'matricula'  => NULL,
-    'email' => NULL
+    'email' => NULL,
+    'senha' => NULL,
+    'status_token' => NULL
   );
 
   protected $_references = array(
@@ -79,13 +81,5 @@ class Usuario_Model_Funcionario extends CoreExt_Entity
     $id = array('ref_cod_pessoa_fj' => NULL);
     $this->_data = array_merge($id, $this->_data);
     return $this;
-  }
-
-  /**
-   * @see CoreExt_Entity#__toString()
-   */
-  public function __toString()
-  {
-    return $this->email;
   }
 }
