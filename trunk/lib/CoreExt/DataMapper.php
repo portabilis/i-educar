@@ -477,12 +477,12 @@ abstract class CoreExt_DataMapper
    * @return array
    * @todo   Problema potencial com busca em registros com compount key. Testar.
    */
-  public function findAll(array $columns = array(), array $where = array(), array $orderBy = array())
+  public function findAll(array $columns = array(), array $where = array(), array $orderBy = array(), $addColumnIdIfNotSet = true)
   {
     // Inverte chave valor, permitindo array simples como array('nome')
     if (0 < count($columns)) {
       $columns = array_flip($columns);
-      if (!isset($columns['id'])) {
+      if (!isset($columns['id']) && $addColumnIdIfNotSet) {
         $columns['id'] = TRUE;
       }
     }
