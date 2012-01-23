@@ -277,24 +277,23 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
 
 
   protected function _sendMail($to, $subject, $message) {
-    #TODO alterar para ieducar.ini
-    $from     = "Portabilis Tecnologia <cloud@portabilis.com.br>";
-    $host     = "smtp.gmail.com";
-    $port     = "587";
-    $username = "cloud@portabilis.com.br";
-    $password = "MkS95hU75P9";
-
+    $mailerConfigs = $GLOBALS['coreExt']['Config']->app->mailer;
+    $from = "{$mailerConfigs->smtp->from_name} <{$mailerConfigs->smtp->from_email}>";
     $headers = array ('From'    => $from,
                       'To'      => $to,
                       'Subject' => $subject);
 
-    $smtp = Mail::factory('smtp', array ('host'     => $host,
-                                         'port'     => $port,
-                                         'auth'     => true,
-                                         'username' => $username,
-                                         'password' => $password));
+    $smtp = Mail::factory('smtp', array ('host'     => $mailerConfigs->smtp->host,
+                                         'port'     => $mailerConfigs->smtp->port,
+                                         'auth'     => $mailerConfigs->smtp->auth == '1',
+                                         'username' => $mailerConfigs->smtp->username,
+                                         'password' => $mailerConfigs->smtp->password,
+                                         'debug'    => $mailerConfigs->debug == '1',
+                                         'persist'  => false));
+  
+    $sendResult = $smtp->send($to, $headers, $message);
 
-    return ! PEAR::isError($smtp->send($to, $headers, $message));
+    return ! PEAR::isError($sendResult);
   }
 
 
