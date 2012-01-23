@@ -155,6 +155,7 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
   {
     require_once 'Core/View.php';
     $viewBase = new Core_View($instance);
+    $viewBase->titulo = 'i-Educar - Redefini&ccedil;&atilde;o senha';
     $viewBase->addForm($instance);
     //$viewBase->Formular();
 
