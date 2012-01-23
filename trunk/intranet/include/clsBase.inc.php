@@ -575,15 +575,16 @@ class clsBase extends clsConfig
       list($tempo_senha, $data_senha) = $db->Tupla();
 
       if (!empty($tempo_senha) && !empty($data_senha)) {
-        if (time() - strtotime($data_senha) > ($tempo_senha-10) * 60 * 60 * 24) {
+        if (time() - strtotime($data_senha) > ($tempo_senha - 5) * 60 * 60 * 24) {
           // senha vai expirar dentro de 10 dias
           $expirando = TRUE;
           $days_left = $tempo_senha - (int)((time() - strtotime( $data_senha )) / 86400);
           if ($days_left > 0)
             $mensagem_expirar = "Sua senha expirará em $days_left dias, atualize sua senha em 'Meus dados' no menu 'Principal' !";
-          else
+          else {
             $mensagem_expirar = "Sua senha expirou, por favor atualize sua senha para continuar utilizando o sistema";
-          $mensagem_expirar .= "<script>showExpansivelIframe(800, 270, 'troca_senha_pop.php', 1);</script>";
+            $mensagem_expirar .= "<script>showExpansivelIframe(800, 270, 'troca_senha_pop.php', $id_usuario == 1 ? true : 0);</script>";
+          }
         }
       }
     }
