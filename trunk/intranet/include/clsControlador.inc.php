@@ -353,7 +353,7 @@ class clsControlador
 
 
   public function startLoginSession($userId, $redirectTo = '') {
-    $sql = "SELECT ref_cod_pessoa_fj, opcao_menu, ref_cod_setor_new, tipo_menu, email FROM funcionario WHERE ref_cod_pessoa_fj = $1";
+    $sql = "SELECT ref_cod_pessoa_fj, opcao_menu, ref_cod_setor_new, tipo_menu, email, status_token FROM funcionario WHERE ref_cod_pessoa_fj = $1";
     $record = $this->fetchPreparedQuery($sql, $userId, true, 'first-line');
 
     @session_start();
@@ -369,6 +369,8 @@ class clsControlador
     $this->appendLoginMsg("Usuário logado com sucesso.", "success");
 
     #TODO setar data_login, ip_logado ? "UPDATE funcionario SET ip_logado = '{$ip_maquina}', data_login = NOW() WHERE ref_cod_pessoa_fj = {$id_pessoa}";
+
+    $this->destroyUserStatusToken($userId);
 
     //redireciona para usuário informar email, caso este seja inválido
     if (! filter_var($record['email'], FILTER_VALIDATE_EMAIL))
@@ -387,6 +389,24 @@ class clsControlador
       $this->appendLoginMsg("Usuário deslogado com sucesso.", "success");
   }
 
+
+  /* Ao fazer login destroy solicitações em aberto, como redefinição de senha.
+  */
+  protected function destroyUserStatusToken($userId) {
+
+    $statusTokensToDestoyOnLogin = array('redefinir_senha');
+
+    $sql = "SELECT status_token FROM funcionario WHERE ref_cod_pessoa_fj = $1";
+    $record = $this->fetchPreparedQuery($sql, $userId, true, 'first-line');
+
+    $statusToken = explode('-', $record['status_token']);
+    $statusToken = $statusToken[0];
+
+    if(in_array($statusToken, $statusTokensToDestoyOnLogin)) {
+      $sql = "UPDATE funcionario set status_token = '' WHERE ref_cod_pessoa_fj = $1";
+      $record = $this->fetchPreparedQuery($sql, $userId, true);
+    }    
+  }
 
   protected function validateHumanAccess() {
     /* #TODO se ocorreram mais de 5 tentativas erradas nos ultimos minutos,
