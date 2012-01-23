@@ -150,24 +150,49 @@ class clsControlador
   public function canStartLoginSession($userId) {
 
     if (! $this->hasLoginMsgWithType("error")) {
-      if ($this->fetchPreparedQuery("SELECT ativo FROM portal.funcionario WHERE ref_cod_pessoa_fj = $1",
-                                    $userId, true, 'first-field') != '1') {
+      $sql = "SELECT ativo, proibido, tempo_expira_conta, data_reativa_conta, ip_logado as ip_ultimo_acesso, data_login " .
+             "FROM portal.funcionario WHERE ref_cod_pessoa_fj = $1";
+      $user = $this->fetchPreparedQuery($sql, $userId, true, 'first-line');
+
+      if ($user['ativo'] != '1') {
         $this->appendLoginMsg("Aparentemente sua conta de usuário esta inativa (expirada), por favor, " .
-                              "entre em contato com o administrador do sistema.", "error");
+                              "entre em contato com o administrador do sistema.", "error", false, "error");
       }
 
-      elseif ($this->fetchPreparedQuery("SELECT proibido FROM portal.funcionario WHERE ref_cod_pessoa_fj = $1",
-                                    $userId, true, 'first-field') != '0') {
+      if ($user['proibido'] != '0') {
         $this->appendLoginMsg("Aparentemente sua conta não pode acessar o sistema, " .
-                              "por favor, entre em contato com o administrador do sistema.", "error");
+                              "por favor, entre em contato com o administrador do sistema.", "error", false, "error");
       }
+
+      /* considera como expirado caso data_reativa_conta + tempo_expira_conta <= now
+         obs: ao salvar drh > cadastro funcionario, seta data_reativa_conta = now */
+      $contaExpirou = ! empty($user['tempo_expira_conta']) && ! empty($user['data_reativa_conta']) &&
+                      time() - strtotime($user['data_reativa_conta']) > $user['tempo_expira_conta'] * 60 * 60 * 24;
+
+      if($contaExpirou) {
+        $sql = "UPDATE funcionario SET ativo = 0 WHERE ref_cod_pessoa_fj = $1";
+        $this->fetchPreparedQuery($sql, $userId, true);
+
+        $this->appendLoginMsg("Aparentemente a conta de usuário expirou, por favor, " .
+                              "entre em contato com o administrador do sistema.", "error", false, "error");
+      }
+
+      // considera como acesso multiplo, acesso em diferentes IPs em menos de $tempoMultiploAcesso minutos
+      $tempoMultiploAcesso = 10;
+      $tempoEmEspera = abs(time() - strftime("now") - strtotime($user['data_login'])) / 60;
+
+      $multiploAcesso = $tempoEmEspera <= $tempoMultiploAcesso &&
+                        $user['ip_ultimo_acesso'] != $this->getClientIP();
+    
+      if ($multiploAcesso) {
+        $minutosEmEspera = round($tempoMultiploAcesso - $tempoEmEspera) + 1;
+        $this->appendLoginMsg("Aparentemente sua conta foi acessada em outro computador nos últimos " .
+                              "$tempoMultiploAcesso minutos, caso não tenha sido você, " . 
+                              "por favor, altere sua senha ou tente novamente em $minutosEmEspera minutos",
+                              "error", false, "error");
+      }
+      #TODO verificar se conta nunca usada (exibir "Sua conta n&atilde;o est&aacute; ativa. Use a op&ccedil;&atilde;o 'Nunca usei a intrenet'." ?)
     }
-
-    #TODO verificar se conta expirou (se sim, inativar conta)
-    #TODO verificar se senha expirou
-    #TODO verifica se usuario acessou de outro ip em memos de 10 minutos (eliminar esta verificação ?), se bloquear;
-    #TODO verificar se conta nunca usada (exibir mensagem ?)
-
     return ! $this->hasLoginMsgWithType("error");
   }
 
@@ -228,7 +253,7 @@ class clsControlador
   }
 
 
-  protected function logAccess($userId) {
+  protected function getClientIP() {
     if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '') {
       // pega o (ultimo) IP real caso o host esteja atrás de um proxy
       $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
@@ -236,8 +261,12 @@ class clsControlador
     }
     else
       $ip = $_SERVER['REMOTE_ADDR'];
+    return $ip;
+  }
 
-    $sql = "UPDATE funcionario SET ip_logado = '{$ip}', data_login = NOW() WHERE ref_cod_pessoa_fj = $1";
+
+  protected function logAccess($userId) {
+    $sql = "UPDATE funcionario SET ip_logado = '{$this->getClientIP()}', data_login = NOW() WHERE ref_cod_pessoa_fj = $1";
     $this->fetchPreparedQuery($sql, $userId, true);
   }
 
@@ -286,12 +315,14 @@ class clsControlador
   }
 
 
-  protected function appendLoginMsg($msg, $type="error", $encodeToUtf8 = false){
-    if ($encodeToUtf8)
-      $msg = utf8_encode($msg);
+  protected function appendLoginMsg($msg, $type="error", $encodeToUtf8 = false, $ignoreIfHasMsgWithType = ''){
+    if (empty($ignoreIfHasMsgWithType) || ! $this->hasLoginMsgWithType($ignoreIfHasMsgWithType)) {
+      if ($encodeToUtf8)
+        $msg = utf8_encode($msg);
 
-    //error_log("$type msg: '$msg'");
-    $this->_loginMsgs[] = array('msg' => $msg, 'type' => $type);
+      //error_log("$type msg: '$msg'");
+      $this->_loginMsgs[] = array('msg' => $msg, 'type' => $type);
+    }
   }
 
 
