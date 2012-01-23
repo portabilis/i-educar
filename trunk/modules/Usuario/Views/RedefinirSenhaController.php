@@ -326,8 +326,8 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
 
       if (empty($password))
         $this->appendMsg('Por favor informe uma senha.', 'error');
-      elseif (strlen($password) < 6)
-        $this->appendMsg('Por favor informe uma senha segura, com pelo menos 6 caracteres.', 'error');
+      elseif (strlen($password) < 8)
+        $this->appendMsg('Por favor informe uma senha segura, com pelo menos 8 caracteres.', 'error');
       elseif ($password != $passwordConfirmation)
         $this->appendMsg('A senha e confirma&ccedil;&atilde;o de senha devem ser as mesmas.', 'error');
       elseif ($password == $user->matricula)
