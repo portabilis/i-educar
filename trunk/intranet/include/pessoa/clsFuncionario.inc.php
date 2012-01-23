@@ -101,7 +101,7 @@ class clsFuncionario extends clsPessoaFisica
 	 */
 	var $_campo_order_by;
 
-	function  clsFuncionario($int_idpes = false, $str_matricula = false, $int_cpf = false, $int_ref_cod_setor = false, $str_senha = false, $data_troca_senha = false, $tempo_expira_senha = false, $data_reativa_conta = false, $tempo_expira_conta = false, $ref_cod_funcionario_vinculo = false, $ramal = false, $matricula_permanente = false, $banido = false)
+	function  clsFuncionario($int_idpes = false, $str_matricula = false, $int_cpf = false, $int_ref_cod_setor = false, $str_senha = false, $data_troca_senha = false, $tempo_expira_senha = false, $data_reativa_conta = false, $tempo_expira_conta = false, $ref_cod_funcionario_vinculo = false, $ramal = false, $matricula_permanente = false, $banido = false, $email = null)
 	{
 		$this->idpes = $int_idpes;
 		$this->matricula = $str_matricula;
@@ -116,6 +116,7 @@ class clsFuncionario extends clsPessoaFisica
 		$this->ramal = $ramal;
 		$this->matricula_permanente = $matricula_permanente;
 		$this->proibido = $banido;
+		$this->email = $email;
 		$this->_campos_lista = " f.ref_cod_pessoa_fj,
 					     		 f.matricula,
 								 f.senha,
@@ -132,7 +133,8 @@ class clsFuncionario extends clsPessoaFisica
 								 f.ref_ref_cod_pessoa_fj,
 								 f.proibido,
 								 f.nome,
-								 f.ref_cod_setor_new
+								 f.ref_cod_setor_new,
+                 f.email
 								 ";
 	}
 
@@ -157,7 +159,7 @@ class clsFuncionario extends clsPessoaFisica
 		}
 	}
 
-	function lista($str_matricula=false, $str_nome=false, $int_ativo=false, $int_secretaria=false, $int_departamento=false, $int_setor=false, $int_vinculo=false, $int_inicio_limit=false, $int_qtd_registros=false, $str_ramal = false, $matricula_is_not_null = false, $int_idpes = false )
+	function lista($str_matricula=false, $str_nome=false, $int_ativo=false, $int_secretaria=false, $int_departamento=false, $int_setor=false, $int_vinculo=false, $int_inicio_limit=false, $int_qtd_registros=false, $str_ramal = false, $matricula_is_not_null = false, $int_idpes = false, $email = null )
 	{
 		$sql = " SELECT {$this->_campos_lista} FROM {$this->schema_portal}.v_funcionario f";
 		$filtros = "";
@@ -202,6 +204,12 @@ class clsFuncionario extends clsPessoaFisica
 			$filtros .= "{$whereAnd} f.ref_cod_pessoa_fj = '{$int_idpes}'";
 			$whereAnd = " AND ";
 			$filtro_pessoa =true;
+		}
+
+		if(is_string($str_email))
+		{
+			$filtros .= "{$whereAnd} f.email ILIKE '%{$str_email}%'f";
+			$whereAnd = " AND ";
 		}
 
 		$limite = "";
@@ -284,7 +292,7 @@ class clsFuncionario extends clsPessoaFisica
 
 			$tupla = parent::detalhe();
 			$db = new clsBanco();
-			$db->Consulta("SELECT ref_cod_pessoa_fj, matricula, senha, ativo, ref_sec, ramal, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, tempo_expira_conta, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, proibido, ref_cod_setor_new, matricula_permanente FROM funcionario WHERE ref_cod_pessoa_fj = '{$this->idpes}'");
+			$db->Consulta("SELECT ref_cod_pessoa_fj, matricula, senha, ativo, ref_sec, ramal, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, tempo_expira_conta, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, proibido, ref_cod_setor_new, matricula_permanente, email FROM funcionario WHERE ref_cod_pessoa_fj = '{$this->idpes}'");
 			if($db->ProximoRegistro())
 			{
 				$tupla = $db->Tupla();
