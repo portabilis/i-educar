@@ -93,11 +93,11 @@ class indice extends clsCadastro
       $this->p_cod_pessoa_fj = $_SESSION['id_pessoa'];
       $objPessoa = new clsPessoaFj();
       $db = new clsBanco();
-      $db->Consulta("SELECT f.matricula, f.senha, f.ativo, f.ramal, f.ref_cod_setor, f.ref_cod_funcionario_vinculo, f.ref_cod_setor_new FROM funcionario f WHERE f.ref_cod_pessoa_fj={$this->p_cod_pessoa_fj}");
+      $db->Consulta("SELECT f.matricula, f.senha, f.ativo, f.ramal, f.ref_cod_setor, f.ref_cod_funcionario_vinculo, f.ref_cod_setor_new, email FROM funcionario f WHERE f.ref_cod_pessoa_fj={$this->p_cod_pessoa_fj}");
 
       if ($db->ProximoRegistro()) {
         list($this->f_matricula, $this->f_senha, $this->f_ativo, $this->f_ramal,
-          $this->f_ref_setor, $this->ref_cod_funcionario_vinculo, $this->ref_cod_setor) = $db->Tupla();
+          $this->f_ref_setor, $this->ref_cod_funcionario_vinculo, $this->ref_cod_setor, $this->email) = $db->Tupla();
 
         list($this->p_nm_pessoa, $this->p_id_federal, $this->p_endereco, $this->p_cep,
           $this->p_ref_bairro, $this->p_ddd_telefone_1, $this->p_telefone_1,
@@ -302,7 +302,8 @@ class indice extends clsCadastro
 
     $this->campoTexto("p_http", "Site", $this->p_http, "50", "255", FALSE);
 
-    $this->campoTexto("p_email", "E-mail", $this->p_email, "50", "255", true);
+    // exibe o email definido pelo usuário ($this->email) no lugar do email da pessoa ($this->p_email)
+    $this->campoRotulo('email', 'E-mail', $this->email . " <a href='/module/Usuario/AlterarEmail' class='decorated'>alterar E-mail</a>");
 
     $lista_sexos = array();
     $lista_sexos['']  = 'Escolha uma op&ccedil;&atilde;o...';
