@@ -54,6 +54,14 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
       'label'  => 'matricula',
       'help'   => '',
     ),
+    'nova_senha' => array(
+      'label'  => 'Nova senha',
+      'help'   => '',
+    ),
+    'confirmacao_senha' => array(
+      'label'  => 'Confirma&ccedil;&atilde;o de senha',
+      'help'   => '',
+    ),
   );
 
 
@@ -74,8 +82,8 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
       $this->setUserByStatusToken('redefinir_senha-' . $_GET['token']);
 
       $this->campoRotulo('matricula', $this->_getLabel('matricula'), $this->getEntity()->matricula);
-      $this->campoSenha('password', 'Nova senha', $_POST['password'], TRUE);
-      $this->campoSenha('password_confirmation', 'Confirma&ccedil;&atilde;o de senha', $_POST['password_confirmation'], TRUE);
+      $this->campoSenha('password', $this->_getLabel('nova_senha'), $_POST['password'], TRUE);
+      $this->campoSenha('password_confirmation', $this->_getLabel('confirmacao_senha'), $_POST['password_confirmation'], TRUE);
     }
 
     $this->url_cancelar = '/intranet/index.php';
@@ -89,6 +97,7 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
   {
     return ! isset($_GET['token']);
   }
+
 
   protected function _initEditar()
   {
@@ -137,6 +146,25 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
   protected function _save()
   {
     return false;
+  }
+
+
+  /* overwrite Core/Controller/Page/Abstract.php para renderizar html,
+     sem necessidade de usuário estar logado */
+  public function generate(CoreExt_Controller_Page_Interface $instance)
+  {
+    require_once 'Core/View.php';
+    $viewBase = new Core_View($instance);
+    $viewBase->addForm($instance);
+    //$viewBase->Formular();
+
+    $html = $viewBase->MakeHeadHtml();
+    foreach ($viewBase->clsForm as $form) {
+      $html .= $form->RenderHTML();
+    }
+    $html .= $viewBase->MakeFootHtml();  
+
+    echo $html;
   }
 
 
@@ -241,7 +269,7 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
     $subject = "Sua senha foi alterada - i-Educar - {$_SERVER['HTTP_HOST']}";
     $message = "Olá!\n\n" . 
                "A senha da matricula {$user->matricula} foi alterada recentemente.\n\n" .
-               "Caso você não tenha feito esta alteração, por favor, tente alterar sua senha acessando o link $link ou entre em contato com o administrador do sistema (solicitando mudança da sua senha), pois sua conta pode estar sendo usada por outra pessoa não autorizada.";
+               "Caso você não tenha feito esta alteração, por favor, tente alterar sua senha acessando o link $link ou entre em contato com o administrador do sistema (solicitando mudança da sua senha), pois sua conta pode estar sendo usada por alguma pessoa não autorizada.";
 
     return $this->_sendMail($email, $subject, $message);
   }
