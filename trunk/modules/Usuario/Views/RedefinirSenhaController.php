@@ -73,10 +73,28 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
   public function Gerar()
   {
     if (! isset($_GET['token'])) {
+      $this->nome_url_cancelar = 'Entrar';
+
       $this->campoTexto('matricula', $this->_getLabel('matricula'), $_POST['matricula'],
         50, 50, TRUE, FALSE, FALSE, $this->_getHelp('email'));
 
-      $this->nome_url_cancelar = 'Entrar';
+
+      // fixup para mover o widget para o local correto, necessário pois chrome não executa
+      // o script caso seja usado $this->campoRotulo('...', '...', '<script...>')
+      $this->campoRotulo('replace_by_recaptcha_widget_wrapper', 
+                         'Confirma&ccedil;&atilde;o visual', 
+                         '<div id="replace_by_recaptcha_widget"></div>');
+
+      echo $this->getRecaptchaWidget();
+      echo "<script type='text/javascript'>
+              function replaceRecaptchaWidget() {
+                var emptyElement = document.getElementById('replace_by_recaptcha_widget'); 
+                var originElement = document.getElementById('recaptcha_widget_div'); 
+                var movedElement = emptyElement.parentNode.replaceChild(originElement, emptyElement);
+              }
+
+              window.onload = replaceRecaptchaWidget; 
+            </script>";
     }
     else {
       $this->setUserByStatusToken('redefinir_senha-' . $_GET['token']);
@@ -107,8 +125,14 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
 
   public function Novo()
   {
-    if (! $this->hasMsgWithType('error') && $this->setUserByMatricula($_POST['matricula']))
-      $this->sendResetPasswordMail();
+    if (! $this->hasMsgWithType('error')) {
+      if (! $this->getRecaptchaWidget()->validate()) {
+        $this->appendMsg('Por favor, informe a confirma&ccedil;&atilde;o visual no respectivo campo.' . 
+                         'tente novamente.', 'error');
+      }
+      elseif ($this->setUserByMatricula($_POST['matricula']))
+        $this->sendResetPasswordMail();
+    }
 
     $this->mensagem = $this->getMsgs();
     return ! $this->hasMsgWithType('error');
@@ -125,11 +149,11 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
         $controlador->canStartLoginSession($this->getEntity()->ref_cod_pessoa_fj)) {
       $this->sendUpdatedPasswordMail();
       $controlador->startLoginSession($this->getEntity()->ref_cod_pessoa_fj, '/intranet/index.php');
+    }
 
-      //#TODO refatorar ? copia msgs da instancia do controlador (ieducar) para esta instancia
-      foreach($controlador->_loginMsgs as $msg) {
-        $this->appendMsg($msg['msg'], $msg['type']);
-      }
+    //#TODO refatorar ? copia msgs da instancia do controlador (ieducar) para esta instancia
+    foreach($controlador->_loginMsgs as $msg) {
+      $this->appendMsg($msg['msg'], $msg['type']);
     }
 
     $this->mensagem = $this->getMsgs();
@@ -385,6 +409,22 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
       $msgs .= "<span class='{$m['type']}'>{$m['msg']}</span>";
     return $msgs;
   }
+
+  #TODO generalizar este metodo (duplicado em clsControlador)
+  // see http://www.google.com/recaptcha && http://pear.php.net/package/Services_ReCaptcha
+  protected function getRecaptchaWidget() {
+    if (! isset($this->_recaptchaWidget)) {
+      $recaptchaConfigs = $GLOBALS['coreExt']['Config']->app->recaptcha;
+      $this->_recaptchaWidget = new Services_ReCaptcha($recaptchaConfigs->public_key, 
+                                          $recaptchaConfigs->private_key,
+                                          array('lang' => $recaptchaConfigs->options->lang,
+                                                'theme' => $recaptchaConfigs->options->theme,
+                                                'secure' => $recaptchaConfigs->options->secure == '1'));
+    }
+
+    return $this->_recaptchaWidget;
+  }
+
 }
 ?>
 
