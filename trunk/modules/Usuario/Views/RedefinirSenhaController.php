@@ -125,11 +125,11 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
         $controlador->canStartLoginSession($this->getEntity()->ref_cod_pessoa_fj)) {
       $this->sendUpdatedPasswordMail();
       $controlador->startLoginSession($this->getEntity()->ref_cod_pessoa_fj, '/intranet/index.php');
-    }
 
-    //#TODO refatorar ? copia msgs da instancia do controlador (ieducar) para esta instancia
-    foreach($controlador->_loginMsgs as $msg) {
-      $this->appendMessage($msg['msg'], $msg['type']);
+      //#TODO refatorar ? copia msgs da instancia do controlador (ieducar) para esta instancia
+      foreach($controlador->_loginMsgs as $msg) {
+        $this->appendMsg($msg['msg'], $msg['type']);
+      }
     }
 
     $this->mensagem = $this->getMsgs();
