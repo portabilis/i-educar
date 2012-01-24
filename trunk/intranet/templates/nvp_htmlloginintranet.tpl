@@ -65,7 +65,7 @@
 				    </td>
 				    <td>
               <input type="password" name="senha" id="senha">
-              <a class="light block small" href="/module/Usuario/RedefinirSenha">Esqueceu a senha?</a>
+              <a class="light block small" href="/module/Usuario/RedefinirSenha">Esqueceu sua senha?</a>
             </td>
           </tr>
           <tr>

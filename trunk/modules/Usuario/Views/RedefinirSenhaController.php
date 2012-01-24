@@ -51,7 +51,7 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
 
   protected $_formMap = array(
     'matricula' => array(
-      'label'  => 'matricula',
+      'label'  => 'Matr&iacute;cula',
       'help'   => '',
     ),
     'nova_senha' => array(
@@ -76,7 +76,7 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
       $this->nome_url_cancelar = 'Entrar';
 
       $this->campoTexto('matricula', $this->_getLabel('matricula'), $_POST['matricula'],
-        50, 50, TRUE, FALSE, FALSE, $this->_getHelp('email'));
+        50, 50, TRUE, FALSE, FALSE, $this->_getHelp('matricula'));
 
 
       // fixup para mover o widget para o local correto, necessário pois chrome não executa
@@ -180,6 +180,7 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
     require_once 'Core/View.php';
     $viewBase = new Core_View($instance);
     $viewBase->titulo = 'i-Educar - Redefini&ccedil;&atilde;o senha';
+    $instance->titulo = 'Redefini&ccedil;&atilde;o senha';
     $viewBase->addForm($instance);
     //$viewBase->Formular();
 
@@ -188,6 +189,7 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
       $html .= $form->RenderHTML();
     }
     $html .= $viewBase->MakeFootHtml();  
+
 
     echo $html;
   }
@@ -208,7 +210,7 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
         }
         else
           $this->appendMsg('Nenhum usu&aacute;rio encontrado com o token recebido. Verifique se voc&ecirc; ' . 
-                           'esta acessando o link enviado no ultimo email.', 'error', false, 'error');
+                           'esta acessando o link enviado no ultimo e-mail.', 'error', false, 'error');
       }
     }
     catch (Exception $e) {
@@ -259,23 +261,24 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
     $email = $user->email;
 
     if(empty($email)) {
-      $this->appendMsg('Parece que seu usu&aacute;rio n&atilde;o possui um email definido, por favor, '.
-                       'solicite ao administrador do sistema para definir seu email (em DRH > Cadastro '.
+      $this->appendMsg('Parece que seu usu&aacute;rio n&atilde;o possui um e-mail definido, por favor, '.
+                       'solicite ao administrador do sistema para definir seu e-mail (em DRH > Cadastro '.
                        'de funcion&aacute;rios) e tente novamente.', 'error');
     }
     else {
       $token = $this->setTokenRedefinicaoSenha();
       if ($token != false) {
-        $link = $_SERVER['HTTP_ORIGIN'] . "/module/Usuario/RedefinirSenha?token=$token";
+
+        $link = $_SERVER['HTTP_REFERER'] . "?token=$token";
       
-        $subject = "Redefinição senha - i-Educar - {$_SERVER['HTTP_HOST']}";
+        $subject = "Redefinição de senha - i-Educar - {$_SERVER['HTTP_HOST']}";
         $message = "Olá!\n\n" . 
-                   "Recebemos uma solicitação de redefinição de senha para matricula {$user->matricula}.\n\n" .
-                   "Para redefinir sua senha clique neste link: $link.\n\n" .
+                   "Recebemos uma solicitação de redefinição de senha para a matrícula {$user->matricula}.\n\n" .
+                   "Para redefinir sua senha acesse o link: $link\n\n" .
                    "Caso você não tenha feito esta solicitação, por favor, ignore esta mensagem.";
 
-        $successMsg = 'Enviamos um email para voc&ecirc;, por favor, clique no link recebido para redefinir sua senha.';
-        $errorMsg   = 'N&atilde;o conseguimos enviar um email para voc&ecirc;, por favor, tente novamente mais tarde.';
+        $successMsg = 'Enviamos um e-mail para voc&ecirc;, por favor, clique no link recebido para redefinir sua senha.';
+        $errorMsg   = 'N&atilde;o conseguimos enviar um e-mail para voc&ecirc;, por favor, tente novamente mais tarde.';
 
         if($this->_sendMail($email, $subject, $message))
           $this->appendMsg($successMsg, 'success');
@@ -290,10 +293,11 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
     $user  = $this->getEntity();
     $email = $user->email;
 
-    $link = $_SERVER['HTTP_ORIGIN'] . '/module/Usuario/RedefinirSenha';
+    $link = explode('?', $_SERVER['HTTP_REFERER']);
+    $link = $link[0];
     $subject = "Sua senha foi alterada - i-Educar - {$_SERVER['HTTP_HOST']}";
     $message = "Olá!\n\n" . 
-               "A senha da matricula {$user->matricula} foi alterada recentemente.\n\n" .
+               "A senha da matrícula {$user->matricula} foi alterada recentemente.\n\n" .
                "Caso você não tenha feito esta alteração, por favor, tente alterar sua senha acessando o link $link ou entre em contato com o administrador do sistema (solicitando mudança da sua senha), pois sua conta pode estar sendo usada por alguma pessoa não autorizada.";
 
     return $this->_sendMail($email, $subject, $message);

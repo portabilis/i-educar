@@ -180,7 +180,7 @@ class indice extends clsCadastro
 
 		$this->campoTexto("matricula", "Matr&iacute;cula", $this->matricula, 12, 12, true);
 		$this->campoSenha("_senha", "Senha", $this->_senha, true);
-		$this->campoEmail("email", "E-mail usuário", $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o usúario esqueça<br />Este campo pode ser gravado em branco, neste caso será solicitado um email ao usuário, após entrar no sistema.');
+		$this->campoEmail("email", "E-mail usuário", $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o usúario esqueça<br />Este campo pode ser gravado em branco, neste caso será solicitado um e-mail ao usuário, após entrar no sistema.');
 
 		$obj_setor = new clsSetor();
 		$lst_setor = $obj_setor->lista(null, null, null, null, null, null, null, null, null, 1, 0);

@@ -69,5 +69,5 @@ class CoreExt_Validate_Email extends CoreExt_Validate_Abstract
    * Mensagem padrão para erros de valor obrigatório.
    * @var string
    */
-  protected $_requiredMessage = 'Informe um email para ser utilizado caso você esqueça sua senha.';
+  protected $_requiredMessage = 'Informe um email válido.';
 }

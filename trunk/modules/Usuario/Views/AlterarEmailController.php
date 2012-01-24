@@ -38,7 +38,7 @@ require_once 'Usuario/Model/FuncionarioDataMapper.php';
 class AlterarEmailController extends Core_Controller_Page_EditController
 {
   protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
-  protected $_titulo   = 'Alterar email';
+  protected $_titulo   = 'Alterar e-mail';
   protected $_processoAp = 0;
 
   protected $_formMap = array(
@@ -47,8 +47,8 @@ class AlterarEmailController extends Core_Controller_Page_EditController
       'help'   => '',
     ),
     'email' => array(
-      'label'  => 'Email',
-      'help'   => 'Email utilizado para recuperar senha.',
+      'label'  => 'E-mail',
+      'help'   => 'E-mail utilizado para recuperar senha.',
     ),
   );
 
@@ -56,7 +56,10 @@ class AlterarEmailController extends Core_Controller_Page_EditController
   public function Gerar()
   {
     //exibe mensagem pedindo para usuário corrigir os erros
-    $hasValidEmail = $this->getEntity()->isValid('email');
+    //$hasValidEmail = $this->getEntity()->isValid('email');
+
+    if (filter_var($this->getEntity()->email, FILTER_VALIDATE_EMAIL) == false)
+      $this->mensagem = "Por favor informe um e-mail v&aacute;lido, para ser usado caso voc&ecirc; esque&ccedil;a sua senha.";
 
     $this->campoRotulo('matricula', $this->_getLabel('matricula'), $this->getEntity()->matricula);
     $this->campoTexto('email', $this->_getLabel('email'), $this->getEntity()->email,
@@ -120,7 +123,7 @@ class AlterarEmailController extends Core_Controller_Page_EditController
       return TRUE;
     }
     catch (Exception $e) {
-      $this->mensagem = "Erro no preenchimento do formulário.";
+      $this->mensagem = "E-mail n&atilde;o alterado, por favor, tente novamente.";
       return FALSE;
     }
   }

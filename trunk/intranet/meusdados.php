@@ -303,7 +303,7 @@ class indice extends clsCadastro
     $this->campoTexto("p_http", "Site", $this->p_http, "50", "255", FALSE);
 
     // exibe o email definido pelo usuário ($this->email) no lugar do email da pessoa ($this->p_email)
-    $this->campoRotulo('email', 'E-mail', $this->email . " <a href='/module/Usuario/AlterarEmail' class='decorated'>alterar E-mail</a>");
+    $this->campoRotulo('email', 'E-mail', $this->email . " <a href='/module/Usuario/AlterarEmail' class='decorated'>alterar e-mail</a>");
 
     $lista_sexos = array();
     $lista_sexos['']  = 'Escolha uma op&ccedil;&atilde;o...';

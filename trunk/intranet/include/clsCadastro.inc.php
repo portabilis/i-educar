@@ -259,7 +259,7 @@ class clsCadastro extends clsCampos
     }
 
     $retorno .= "<center>\n<table class='tablecadastro' $width border='0' cellpadding='2' cellspacing='0'>\n";
-    $titulo = "<b>{$this->tipoacao} {$this->titulo_aplication}</b>";
+    $titulo = $this->titulo ? $this->titulo : "<b>{$this->tipoacao} {$this->titulo_aplication}</b>";
 
     /**
      * Adiciona os botoes de help para a pagina atual
@@ -278,7 +278,6 @@ class clsCadastro extends clsCampos
     else {
       $tipo = 'cad';
     }
-
     $barra = $titulo;
 
     // @todo Remover código, funcionalidade não existente.
