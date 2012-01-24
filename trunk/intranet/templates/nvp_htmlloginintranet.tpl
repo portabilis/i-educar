@@ -46,11 +46,6 @@
     <!-- #&ERROLOGIN&# -->
 
   </div>
-
-
-
-		  <!--img src="imagens/nvp_tit_intranet.jpg" border="0" alt="Bem vindo" title="Bem vindo" /-->
-
       <div id="login-form">
         <h2>Entrar</h2>
         <p class="explication"></p>
@@ -73,10 +68,12 @@
               <a class="light block small" href="/module/Usuario/RedefinirSenha">Esqueceu a senha?</a>
             </td>
           </tr>
-          <tr><td class="spacer"><td></tr>
           <tr>
-            <td>
-				    </td>
+            <td class="spacer"></td>
+            <td><!-- #&RECAPTCHA&# --></td>
+          </tr>
+          <tr>
+            <td></td>
 				    <td>
               <input type="submit" class="submit" src="imagens/nvp_bot_entra_webmail.jpg" value="Entrar">
             </td>

@@ -23,6 +23,9 @@
 
 require_once 'include/clsBanco.inc.php';
 
+/* requer Services_ReCaptcha:
+ $ pear install Services_ReCaptcha */
+require_once 'Services/ReCaptcha.php';
 
 /**
  * clsControlador class.
@@ -117,6 +120,7 @@ class clsControlador
   //novo metodo login
   public function Logar($validateCredentials) {
     $this->_loginMsgs = array();
+    $this->_maximoTentativasFalhas = 6;
 
     if ($validateCredentials) {
       $username = @$_POST['login'];
@@ -126,7 +130,6 @@ class clsControlador
       if ($this->canStartLoginSession($userId))
         $this->startLoginSession($userId);
       else {
-        $this->validateHumanAccess();
         $this->renderLoginPage();
       }
     }
@@ -137,13 +140,26 @@ class clsControlador
 
   //metodos usados pelo novo metodo de login
   protected function validateUser($username, $password) {
-    $sql = "SELECT ref_cod_pessoa_fj FROM portal.funcionario WHERE matricula = $1 and senha = $2";
-    $userId = $this->fetchPreparedQuery($sql, array($username, $password), true, 'first-field');
+    $result = false;
 
-    if (! is_numeric($userId))
-      $this->appendLoginMsg("Usuário ou senha incorreta.", "error");
+    if (! $this->validateHumanAccess()) {
+      $this->appendLoginMsg("Parece que você errou a senha muitas vezes, por favor, preencha o " .
+                            "campo de confirmação visual.", "error", false, "error");
+    }
+    else {
+      $sql = "SELECT ref_cod_pessoa_fj FROM portal.funcionario WHERE matricula = $1 and senha = $2";
+      $userId = $this->fetchPreparedQuery($sql, array($username, $password), true, 'first-field');
 
-    return $userId;
+      if (! is_numeric($userId)) {
+        $this->appendLoginMsg("Usuário ou senha incorreta.", "error");
+        $this->incrementTentativasLogin();
+      }
+      else {
+        $this->unsetTentativasLogin();
+        $result = $userId;
+      }
+    }
+    return $result;
   }
 
 
@@ -225,9 +241,15 @@ class clsControlador
 
 
   protected function destroyLoginSession($addMsg = false) {
+    $tentativasLoginFalhas = $_SESSION['tentativas_login_falhas'];
     @session_start();
     $_SESSION = array();
     @session_destroy();
+
+    //mantem tentativas_login_falhas, até que senha senha informada corretamente
+    @session_start();
+    $_SESSION['tentativas_login_falhas'] = $tentativasLoginFalhas;
+    @session_write_close();
 
     if ($addMsg)
       $this->appendLoginMsg("Usuário deslogado com sucesso.", "success");
@@ -270,11 +292,53 @@ class clsControlador
     $this->fetchPreparedQuery($sql, $userId, true);
   }
 
+  // see http://www.google.com/recaptcha && http://pear.php.net/package/Services_ReCaptcha
+  protected function getRecaptchaWidget() {
+    $recaptchaConfigs = $GLOBALS['coreExt']['Config']->app->recaptcha;
+    $recaptcha = new Services_ReCaptcha($recaptchaConfigs->public_key, 
+                                        $recaptchaConfigs->private_key,
+                                        array('lang' => $recaptchaConfigs->options->lang,
+                                              'theme' => $recaptchaConfigs->options->theme,
+                                              'secure' => $recaptchaConfigs->options->secure == '1'));
+    return $recaptcha;
+  }
+
 
   protected function validateHumanAccess() {
-    /* #TODO se ocorreram mais de 5 tentativas erradas nos ultimos minutos,
-             confirmar se usuário que esta acessando é humano, like http://www.google.com/recaptcha */
-    return true;
+    $result = false;
+
+    if (! $this->atingiuTentativasLogin())
+      $result = true;
+
+    elseif ($this->getRecaptchaWidget()->validate()) {
+      $this->unsetTentativasLogin();
+      $result = true;
+    }
+    return $result;
+  }
+
+
+  protected function atingiuTentativasLogin($value) {
+    return isset($_SESSION['tentativas_login_falhas']) &&
+                 is_numeric($_SESSION['tentativas_login_falhas']) &&
+                 $_SESSION['tentativas_login_falhas'] >= $this->_maximoTentativasFalhas;
+  }
+
+
+  protected function incrementTentativasLogin($value) {
+    @session_start();
+    if (! isset($_SESSION['tentativas_login_falhas']) or ! is_numeric($_SESSION['tentativas_login_falhas'])) 
+      $_SESSION['tentativas_login_falhas'] = 1;
+    else
+      $_SESSION['tentativas_login_falhas'] += 1;
+    @session_write_close();
+  }
+
+
+  protected function unsetTentativasLogin() {
+    @session_start();
+    unset($_SESSION['tentativas_login_falhas']);
+    @session_write_close();
   }
 
 
@@ -285,6 +349,13 @@ class clsControlador
     $templateFile  = fopen($templateName, "r");
     $templateText = fread($templateFile, filesize($templateName));
     $templateText = str_replace( "<!-- #&ERROLOGIN&# -->", $this->getLoginMsgs(), $templateText);
+
+    $requiresHumanAccessValidation = isset($_SESSION['tentativas_login_falhas']) &&
+                                     is_numeric($_SESSION['tentativas_login_falhas']) &&
+                                     $_SESSION['tentativas_login_falhas'] >= $this->_maximoTentativasFalhas;
+
+    if ($requiresHumanAccessValidation)
+      $templateText = str_replace( "<!-- #&RECAPTCHA&# -->", $this->getRecaptchaWidget(), $templateText);
 
     fclose($templateFile);
     die($templateText);

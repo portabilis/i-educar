@@ -197,7 +197,9 @@ div#error div#detail {
 #login-form a {
   margin-left: 5px;
 }
-
+#recaptcha_widget_div a {
+  margin-left: 0;
+}
 .spacer {
   padding: 2px;
 }
