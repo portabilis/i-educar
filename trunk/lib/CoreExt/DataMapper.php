@@ -479,6 +479,7 @@ abstract class CoreExt_DataMapper
    * @param  array $columns Atributos a serem carregados. O atributo id é sempre carregado.
    * @param  array $where
    * @param  array $orderBy
+   * @param  array $addColumnIdIfNotSet Se true, adiciona a coluna 'id' caso não esteja definido no array $columns
    * @return array
    * @todo   Problema potencial com busca em registros com compount key. Testar.
    */
@@ -509,7 +510,19 @@ abstract class CoreExt_DataMapper
   }
 
 
-  public function findAllByPreparedQuery(array $columns = array(), array $where = array(), array $params = array(), array $orderBy = array(), $addColumnIdIfNotSet = true) {
+  /**
+   * Retorna todos os registros como objetos CoreExt_Entity retornados pela
+   * query de _getFindAllStatment() (usando consulta preparada, util para evitar sql injection).
+   *
+   * @param  array $columns Atributos a serem carregados. O atributo id é sempre carregado.
+   * @param  array $where   Condicoes preparadas ex: array('arg1 = $1', 'arg2 = $2');
+   * @param  array $params  Valor das condiçoes ($1, $2 ...) ex: array('1', '3');
+   * @param  array $orderBy
+   * @param  array $addColumnIdIfNotSet Se true, adiciona a coluna 'id' caso não esteja definido no array $columns
+   * @return array
+   * @todo   
+   */
+  public function findAllUsingPreparedQuery(array $columns = array(), array $where = array(), array $params = array(), array $orderBy = array(), $addColumnIdIfNotSet = true) {
 
     $list = array();
 
