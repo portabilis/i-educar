@@ -144,7 +144,7 @@ class clsControlador
 
     if (! $this->validateHumanAccess()) {
       $this->appendLoginMsg("Parece que você errou a senha muitas vezes, por favor, preencha o " .
-                            "campo de confirmação visual.", "error", false, "error");
+                            "campo de confirmação visual ou <a class='light decorated' href='/module/Usuario/RedefinirSenha'>tente redefinir sua senha</a>.", "error", false, "error");
     }
     else {
       $sql = "SELECT ref_cod_pessoa_fj FROM portal.funcionario WHERE matricula = $1 and senha = $2";
