@@ -280,8 +280,13 @@ abstract class CoreExt_DataMapper
 
     if (0 < count($whereArg)) {
       foreach ($whereArg as $key => $value) {
-        $whereName = $this->_getTableColumn($key);
-        $where[] = sprintf("%s = '%s'", $whereName, $value);
+        //consultas preparadas passam $where = array("col1 = $1", "col2 = $2");
+        if(! empty($key)) {
+          $whereName = $this->_getTableColumn($key);
+          $where[] = sprintf("%s = '%s'", $whereName, $value);
+        }
+        else
+          $where[] = $value;
       }
     }
     else {
@@ -502,6 +507,37 @@ abstract class CoreExt_DataMapper
 
     return $list;
   }
+
+
+  public function findAllByPreparedQuery(array $columns = array(), array $where = array(), array $params = array(), array $orderBy = array(), $addColumnIdIfNotSet = true) {
+
+    $list = array();
+
+    // Inverte chave valor, permitindo array simples como array('nome')
+    if (0 < count($columns)) {
+      $columns = array_flip($columns);
+      if (!isset($columns['id']) && $addColumnIdIfNotSet) {
+        $columns['id'] = TRUE;
+      }
+    }
+
+    // Reseta o locale para o default (en_US)
+    $this->getLocale()->resetLocale();
+
+    $sql = $this->_getFindAllStatment($columns, $where, $orderBy);
+
+    if ($this->_getDbAdapter()->execPreparedQuery($sql, $params) != false) {
+      // Retorna o locale para o usado no restante da aplicação
+      $this->getLocale()->setLocale();
+
+      while ($this->_getDbAdapter()->ProximoRegistro()) {
+        $list[] = $this->_createEntityObject($this->_getDbAdapter()->Tupla());
+      }
+    }
+
+    return $list;
+  }
+
 
   /**
    * Retorna um registro que tenha como identificador (chave única ou composta)
