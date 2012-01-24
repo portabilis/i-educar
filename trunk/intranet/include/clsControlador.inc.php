@@ -92,6 +92,9 @@ class clsControlador
     }
 
     session_write_close();
+
+    $this->_loginMsgs = array();
+    $this->_maximoTentativasFalhas = 6;
   }
 
   /**
@@ -119,9 +122,6 @@ class clsControlador
 
   //novo metodo login
   public function Logar($validateCredentials) {
-    $this->_loginMsgs = array();
-    $this->_maximoTentativasFalhas = 6;
-
     if ($validateCredentials) {
       $username = @$_POST['login'];
       $password = md5(@$_POST['senha']);

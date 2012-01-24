@@ -1,8 +1,5 @@
 <?php
 
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
-
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -55,9 +52,6 @@ class AlterarEmailController extends Core_Controller_Page_EditController
 
   public function Gerar()
   {
-    //exibe mensagem pedindo para usuário corrigir os erros
-    //$hasValidEmail = $this->getEntity()->isValid('email');
-
     if (filter_var($this->getEntity()->email, FILTER_VALIDATE_EMAIL) == false)
       $this->mensagem = "Por favor informe um e-mail v&aacute;lido, para ser usado caso voc&ecirc; esque&ccedil;a sua senha.";
 

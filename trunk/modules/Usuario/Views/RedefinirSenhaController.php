@@ -1,9 +1,5 @@
 <?php
 
-#TODO corrigir diplay errors
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
-
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -100,8 +96,8 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
       $this->setUserByStatusToken('redefinir_senha-' . $_GET['token']);
 
       $this->campoRotulo('matricula', $this->_getLabel('matricula'), $this->getEntity()->matricula);
-      $this->campoSenha('password', $this->_getLabel('nova_senha'), $_POST['password'], TRUE);
-      $this->campoSenha('password_confirmation', $this->_getLabel('confirmacao_senha'), $_POST['password_confirmation'], TRUE);
+      $this->campoSenha('password', $this->_getLabel('nova_senha'), @$_POST['password'], TRUE);
+      $this->campoSenha('password_confirmation', $this->_getLabel('confirmacao_senha'), @$_POST['password_confirmation'], TRUE);
     }
 
     $this->url_cancelar = '/intranet/index.php';
@@ -190,7 +186,6 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
     }
     $html .= $viewBase->MakeFootHtml();  
 
-
     echo $html;
   }
 
@@ -201,8 +196,11 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
       if(empty($statusToken) && ! is_numeric($statusToken))
         $this->appendMsg('Deve ser recebido um token.', 'error');
       else {
-        #FIXME usar pegar id user com sql prepared query E então setar uma entidade com este id
-        $user = $this->getDataMapper()->findAll(array(), array('status_token' => $statusToken), array(), false);
+        $user = $this->getDataMapper()->findAllUsingPreparedQuery(array(), 
+                                                               array('status_token = $1'), 
+                                                               array($statusToken), 
+                                                               array(), 
+                                                               false);
 
         if(! empty($user) && ! empty($user[0]->ref_cod_pessoa_fj)) {
           $this->setEntity($user[0]);
@@ -233,8 +231,12 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
       if(empty($matricula) && ! is_numeric($matricula))
         $this->appendMsg('Informe uma matr&iacute;cula.', 'error');
       else {
-        #FIXME usar pegar id user com sql prepared query E então setar uma entidade com este id
-        $user = $this->getDataMapper()->findAll(array(), array('matricula' => $matricula), array(), false);
+        $user = $this->getDataMapper()->findAllUsingPreparedQuery(array(), 
+                                                               array('matricula = $1'), 
+                                                               array($matricula), 
+                                                               array(), 
+                                                               false);
+
         if(! empty($user) && ! empty($user[0]->ref_cod_pessoa_fj)) {
           $this->setEntity($user[0]);
           $result = true;
@@ -369,10 +371,6 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
       }
     }
     catch (Exception $e) {
-
-        var_dump($user);
-
-
       $this->appendMsg('Erro ao atualizar de senha.', 'error');
       error_log("Exception ocorrida ao atualizar senha, matricula: {$user->matricula}, erro: " .  $e->getMessage());
     }
