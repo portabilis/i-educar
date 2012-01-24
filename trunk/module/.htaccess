@@ -13,6 +13,7 @@
   RewriteRule ^(.*)/(imagens|scripts|styles)/(.*)$ /intranet/$2/$3 [NC,L]
   RewriteRule ^(.*/)(.*_xml.*)(\.php)$  /intranet/$2.php [NC,L,R=301]
   RewriteRule ^(.*/)(.*logof\.php)$ /intranet/logof\.php [NC,L,R=301]
+  RewriteRule ^(.*/)(.*meusdados\.php)$ /intranet/meusdados\.php [NC,L,R=301]
   RewriteRule ^(.*/)(.*erro_banco\.php)$ /intranet/erro_banco\.php [NC,L,R=301]
   RewriteRule ^.*$ index.php [NC,L]
 </IfModule>
