@@ -96,6 +96,8 @@ class clsListagem extends clsCampos
   var $campos_ordenacao;
   var $fonte;
 
+  var $exibirBotaoSubmit = true;
+
   function Gerar()
   {
     return FALSE;
@@ -413,11 +415,13 @@ class clsListagem extends clsCampos
 
         $retorno .=  "</script>";
 
-        if ($this->botao_submit) {
-          $retorno .=  "&nbsp;<input type='submit' class='botaolistagem' value='busca' id='botao_busca'>&nbsp;";
-        }
-        else {
-          $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:acao{$this->funcAcaoNome}();' value='busca' id='botao_busca'>&nbsp;";
+        if ($this->exibirBotaoSubmit) {
+          if ($this->botao_submit) {
+            $retorno .=  "&nbsp;<input type='submit' class='botaolistagem' value='busca' id='botao_busca'>&nbsp;";
+          }
+          else {
+            $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:acao{$this->funcAcaoNome}();' value='busca' id='botao_busca'>&nbsp;";
+          }
         }
 
         $retorno .=  "
