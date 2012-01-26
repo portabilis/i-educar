@@ -183,7 +183,31 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('S&eacute;rie', $registro['ref_ref_cod_serie']));
     }
 
-    $this->addDetalhe(array('Turma atual', $this->nm_turma));
+    //(enturmações) turma atual
+    $enturmacoes = new clsPmieducarMatriculaTurma();
+    $enturmacoes = $enturmacoes->lista($this->ref_cod_matricula, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+
+    $this->possuiEnturmacao = ! empty($enturmacoes);
+
+    if ($this->possuiEnturmacao) {
+      //se possui uma enturmacao mostra o nome, se mais de uma mostra select para selecionar
+      if (count($enturmacoes) > 1) {
+        $selectEnturmacoes = "<select id='ref_cod_turma_origem' class='obrigatorio'>";
+        $selectEnturmacoes .= "<option value=''>Selecione</option>";
+
+        foreach ($enturmacoes as $enturmacao) {
+          $selectEnturmacoes .= "<option value='{$enturmacao['ref_cod_turma']}'>{$enturmacao['nm_turma']}</option>";
+        }
+        $selectEnturmacoes .= "</select>";
+      }
+      else
+        $selectEnturmacoes = "<input id='ref_cod_turma_origem' type='hidden' value = '{$enturmacoes[0]['ref_cod_turma']}'/>{$enturmacoes[0]['nm_turma']}";
+
+      $this->addDetalhe(array('Turma atual (origem)', $selectEnturmacoes));
+    }
+    else
+      $this->addDetalhe(array('Turma atual (origem)', 'Sem enturmações'));
+    
 
     if ($registro['nm_turma']) {
       $this->addDetalhe(array('Turma destino' , $registro['nm_turma']));
@@ -217,29 +241,53 @@ class indice extends clsDetalhe
       $valida = sprintf('if (!confirm("%s")) return false;', $msg);
     }
     else {
-      $valida = 'if (!confirm("Confirmar a enturmação?")) return false;';
+      $valida = 'if (!confirm("Confirma a enturmação?")) return false;';
     }
 
     $script = sprintf('
       <script type="text/javascript">
-        function enturmar(ref_cod_matricula, ref_cod_turma_destino){
+        function enturmar(ref_cod_matricula, ref_cod_turma_destino, tipo){
+
+          document.formcadastro.ref_cod_turma_origem.value = "";
+
+          if(tipo == "transferir") {
+            var turmaOrigemId = document.getElementById("ref_cod_turma_origem");
+            if (turmaOrigemId && turmaOrigemId.value)
+              document.formcadastro.ref_cod_turma_origem.value = turmaOrigemId.value;
+            else {
+              alert("Por favor selecione a turma atual.");
+              return false;
+            }
+          }
+
           %s
+
           document.formcadastro.ref_cod_matricula.value = ref_cod_matricula;
           document.formcadastro.ref_cod_turma_destino.value = ref_cod_turma_destino;
           document.formcadastro.submit();
         }
+
       </script>', $valida);
 
     print $script;
 
     $obj_permissoes = new clsPermissoes();
     if ($obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7)) {
-      $script = "enturmar({$this->ref_cod_matricula},{$this->ref_cod_turma})";
-      $this->array_botao = array('Enturmação');
-      $this->array_botao_url_script = array($script);
+
+      if ($this->possuiEnturmacao) {
+        //mover enturmação
+        $script = "enturmar({$this->ref_cod_matricula}, {$this->ref_cod_turma}, \"transferir\")";
+        $this->array_botao = array('Transferir enturmação');
+        $this->array_botao_url_script = array($script);
+      }
+
+      //nova enturmação
+      $script = "enturmar({$this->ref_cod_matricula}, {$this->ref_cod_turma}, \"nova\")";
+      $this->array_botao[] = 'Nova enturmação';
+      $this->array_botao_url_script[] = $script;
     }
 
-    $this->array_botao[] = 'Voltar';
+    $this->array_botao[] = 'Cancelar';
     $this->array_botao_url_script[] = "go(\"educar_matricula_turma_lst.php?ref_cod_matricula={$this->ref_cod_matricula}\");";
 
     $this->largura = '100%';
