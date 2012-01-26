@@ -91,7 +91,7 @@ class indice extends clsListagem
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->titulo = 'Selecione uma turma para enturmar a matrícula';
+    $this->titulo = 'Selecione uma turma para enturmar ou remover a enturmação';
 
     $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
 
@@ -111,7 +111,8 @@ class indice extends clsListagem
     $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
 
     $this->addCabecalhos(array(
-      'Turma destino'
+      'Turma',
+      'Enturmado'
     ));
 
     // Busca dados da matricula
@@ -146,9 +147,12 @@ class indice extends clsListagem
       foreach ($lista as $registro) {
         $opcoes[$registro['cod_turma']] = $registro['nm_turma'];
       }
+
+      $this->exibirBotaoSubmit = false;
+
     }
 
-    $this->campoLista('ref_cod_turma_', 'Turma', $opcoes, $this->ref_cod_turma);
+    #$this->campoLista('ref_cod_turma_', 'Turma', $opcoes, $this->ref_cod_turma);
 
     // outros filtros
     $this->campoOculto('ref_cod_matricula', $this->ref_cod_matricula);
@@ -225,13 +229,16 @@ WHERE
           $turmaHasEnturmacao = true;
       }
 
-      if(! $turmaHasEnturmacao) {
-        $script = sprintf('onclick="enturmar(\'%s\',\'%s\',\'%s\',\'%s\');"',
-                          $this->ref_cod_escola, $turma['ref_ref_cod_serie'],
-                          $this->ref_cod_matricula, $turma['cod_turma']);
+      if($turmaHasEnturmacao) 
+        $enturmado = "Sim";
+      else
+        $enturmado = "Não";
 
-        $this->addLinhas(array(sprintf('<a href="#" %s>%s</a>', $script, $turma['nm_turma'])));
-      }
+      $script = sprintf('onclick="enturmar(\'%s\',\'%s\',\'%s\',\'%s\');"',
+                        $this->ref_cod_escola, $turma['ref_ref_cod_serie'],
+                        $this->ref_cod_matricula, $turma['cod_turma']);
+
+      $this->addLinhas(array(sprintf('<a href="#" %s>%s</a>', $script, $turma['nm_turma']), $enturmado));
     }
 
     $this->addPaginador2("educar_matricula_turma_lst.php", $total, $_GET,

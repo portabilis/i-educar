@@ -103,7 +103,9 @@ class indice extends clsCadastro
     //nova lógica
     if (is_numeric($this->ref_cod_matricula)) {
 
-      if (! is_numeric($this->ref_cod_turma_origem))
+      if ($this->ref_cod_turma_origem == 'remover-enturmacao-destino')
+        $this->removerEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma_destino);
+      elseif (! is_numeric($this->ref_cod_turma_origem))
         $this->novaEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma_destino);
       else {
         $this->transferirEnturmacao($this->ref_cod_matricula, 
@@ -121,40 +123,61 @@ class indice extends clsCadastro
   }
 
   function novaEnturmacao($matriculaId, $turmaDestinoId) {
-    $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
+
+    $enturmacaoExists = new clsPmieducarMatriculaTurma();
+    $enturmacaoExists = $enturmacaoExists->lista($matriculaId,
                                                  $turmaDestinoId,
-                                                 $this->pessoa_logada, 
-                                                 $this->pessoa_logada, 
+                                                 NULL, 
                                                  NULL,
                                                  NULL, 
+                                                 NULL,
+                                                 NULL,
+                                                 NULL,
                                                  1);
-    return $enturmacao->cadastra();
+
+    $enturmacaoExists = is_array($enturmacaoExists) && count($enturmacaoExists) > 0;
+    if (! $enturmacaoExists) {
+      $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
+                                                   $turmaDestinoId,
+                                                   $this->pessoa_logada, 
+                                                   $this->pessoa_logada, 
+                                                   NULL,
+                                                   NULL, 
+                                                   1);
+      return $enturmacao->cadastra();
+    }
+    return false;
   }
 
   
   function transferirEnturmacao($matriculaId, $turmaOrigemId, $turmaDestinoId) {
-    $sequencialEnturmacaoOrigem = $this->getSequencialEnturmacaoByTurmaId($matriculaId, $turmaOrigemId);
+    if($this->removerEnturmacao($matriculaId, $turmaOrigemId))
+      return $this->novaEnturmacao($matriculaId, $turmaDestinoId);
+    return false;
+  }
+
+
+  function removerEnturmacao($matriculaId, $turmaId) {
+    $sequencialEnturmacao = $this->getSequencialEnturmacaoByTurmaId($matriculaId, $turmaId);
     $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
-                                                 $turmaOrigemId,
+                                                 $turmaId,
                                                  $this->pessoa_logada, 
                                                  NULL, 
                                                  NULL,
                                                  NULL, 
                                                  0,
                                                  NULL,
-                                                 $sequencialEnturmacaoOrigem);
+                                                 $sequencialEnturmacao);
 
-    if($enturmacao->edita())
-      return $this->novaEnturmacao($matriculaId, $turmaDestinoId);
-    return false;
+    return $enturmacao->edita();
   }
 
 
-  function getSequencialEnturmacaoByTurmaId($matriculaId, $turmaOrigemId) {
+  function getSequencialEnturmacaoByTurmaId($matriculaId, $turmaId) {
     $db = new clsBanco();
     $sql = 'select coalesce(max(sequencial), 1) from pmieducar.matricula_turma where ativo = 1 and ref_cod_matricula = $1 and ref_cod_turma = $2';
 
-    if ($db->execPreparedQuery($sql, array($matriculaId, $turmaOrigemId)) != false) {
+    if ($db->execPreparedQuery($sql, array($matriculaId, $turmaId)) != false) {
       $db->ProximoRegistro();
       $sequencial = $db->Tupla();
       return $sequencial[0];
