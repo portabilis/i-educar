@@ -91,7 +91,7 @@ class indice extends clsListagem
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->titulo = 'Listagem - Selecione a turma para realizar a transferência';
+    $this->titulo = 'Selecione uma turma para enturmar a matrícula';
 
     $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
 
@@ -111,7 +111,7 @@ class indice extends clsListagem
     $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
 
     $this->addCabecalhos(array(
-      'Turma'
+      'Turma destino'
     ));
 
     // Busca dados da matricula
@@ -211,26 +211,26 @@ WHERE
       $total = $obj_matricula_turma->_total;
     }
 
-    $tmp_obj = new clsPmieducarMatriculaTurma();
-    $det_obj = $tmp_obj->lista($this->ref_cod_matricula, NULL, NULL, NULL, NULL,
-      NULL, NULL, NULL, 1);
+    $enturmacoesMatricula = new clsPmieducarMatriculaTurma();
+    $enturmacoesMatricula = $enturmacoesMatricula->lista($this->ref_cod_matricula, NULL, NULL,
+                                                         NULL, NULL, NULL, NULL, NULL, 1);
 
-    if ($det_obj) {
-      $det_obj = array_shift($det_obj);
-    }
+    $turmasThisSerie = $lista;
+    // lista turmas disponiveis para enturmacao, somente lista as turmas sem enturmacao
+    foreach ($turmasThisSerie as $turma) {
 
-    // Monta a lista
-    if (is_array($lista) && count($lista)) {
-      foreach ($lista as $registro) {
-        if($registro['cod_turma'] != $det_obj['ref_cod_turma']) {
-          $script = sprintf('onclick="enturmar(\'%s\',\'%s\',\'%s\',\'%s\');"',
-            $this->ref_cod_escola, $registro['ref_ref_cod_serie'],
-            $this->ref_cod_matricula, $registro['cod_turma']);
+      $turmaHasEnturmacao = false;
+      foreach ($enturmacoesMatricula as $enturmacao) {
+        if(! $turmaHasEnturmacao && $turma['cod_turma'] == $enturmacao['ref_cod_turma'])
+          $turmaHasEnturmacao = true;
+      }
 
-          $this->addLinhas(array(
-            sprintf('<a href="#" %s>%s</a>', $script, $registro['nm_turma'])
-          ));
-        }
+      if(! $turmaHasEnturmacao) {
+        $script = sprintf('onclick="enturmar(\'%s\',\'%s\',\'%s\',\'%s\');"',
+                          $this->ref_cod_escola, $turma['ref_ref_cod_serie'],
+                          $this->ref_cod_matricula, $turma['cod_turma']);
+
+        $this->addLinhas(array(sprintf('<a href="#" %s>%s</a>', $script, $turma['nm_turma'])));
       }
     }
 
