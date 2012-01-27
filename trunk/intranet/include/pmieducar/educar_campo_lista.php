@@ -1562,7 +1562,7 @@ EOT;
 
       var fieldAnoEscolar = document.getElementById('ano');
 
-      if (fieldAnoEscolar.type == 'select-one')
+      if (fieldAnoEscolar && fieldAnoEscolar.type == 'select-one')
         getAnoEscolar();  
       else
   	    getEscolaCursoSerie();
