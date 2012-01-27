@@ -31,7 +31,7 @@ $defaultId = $_GET['default_id'];
 
 header('Content-type: text/xml');
 $x = "<?xml version='1.0' encoding='ISO-8859-15'?>";
-$x .= "<anos_escolares entity='ano_escolar' element_id='ano_escolar'>";
+$x .= "<anos entity='ano' element_id='ano'>";
 
 if ($user->isLoggedIn())
 {
@@ -41,10 +41,10 @@ if ($user->isLoggedIn())
       $selected='selected';
     else
       $selected='';
-    $x .= "<ano_escolar id='{$a['ano']}' value='{$a['ano']}' selected='$selected' />";
+    $x .= "<ano id='{$a['ano']}' value='{$a['ano']}' selected='$selected' />";
   }
 }
-$x .= "</anos_escolares>";
+$x .= "</anos>";
 
 echo $x;
 ?>
