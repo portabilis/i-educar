@@ -199,7 +199,7 @@ class indice extends clsCadastro
       'educar_matricula_lst.php?ref_cod_aluno=' . $this->ref_cod_aluno);
 
     //novas regras matricula aluno
-    $this->ano = $_POST['ano_escolar'];
+    $this->ano = $_POST['ano'];
 
     $anoLetivoEmAndamentoEscola = new clsPmieducarEscolaAnoLetivo();
     $anoLetivoEmAndamentoEscola = $anoLetivoEmAndamentoEscola->lista($this->ref_cod_escola,
