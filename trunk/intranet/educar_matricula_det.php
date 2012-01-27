@@ -131,18 +131,6 @@ class indice extends clsDetalhe
       $nm_aluno = $det_aluno['nome_aluno'];
     }
 
-    // Nome da turma
-    $obj_mat_turma = new clsPmieducarMatriculaTurma();
-    $det_mat_turma = $obj_mat_turma->lista($this->ref_cod_matricula, NULL, NULL,
-      NULL, NULL, NULL, NULL, NULL, 1);
-
-    if ($det_mat_turma){
-      $det_mat_turma = array_shift($det_mat_turma);
-      $obj_turma     = new clsPmieducarTurma($det_mat_turma['ref_cod_turma']);
-      $det_turma     = $obj_turma->detalhe();
-      $nm_turma      = $det_turma['nm_turma'];
-    }
-
     if ($registro['cod_matricula']) {
       $this->addDetalhe(array('Número Matrícula', $registro['cod_matricula']));
     }
@@ -167,9 +155,23 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Série', $registro['ref_ref_cod_serie']));
     }
 
-    if ($nm_turma) {
-      $this->addDetalhe(array('Turma', $nm_turma));
+    // Nome da turma
+    $enturmacoes = new clsPmieducarMatriculaTurma();
+    $enturmacoes = $enturmacoes->lista($this->ref_cod_matricula, NULL, NULL,
+      NULL, NULL, NULL, NULL, NULL, 1);
+
+    $nomesTurmas = array();
+    foreach ($enturmacoes as $enturmacao) {
+      $turma         = new clsPmieducarTurma($enturmacao['ref_cod_turma']);
+      $turma         = $turma->detalhe();
+      $nomesTurmas[] = $turma['nm_turma'];
     }
+    $nomesTurmas = implode('<br />', $nomesTurmas);
+
+    if ($nomesTurmas)
+      $this->addDetalhe(array('Turma', $nomesTurmas));
+    else
+      $this->addDetalhe(array('Turma', ''));
 
     if ($registro['ref_cod_reserva_vaga']) {
       $this->addDetalhe(array('Número Reserva Vaga', $registro['ref_cod_reserva_vaga']));

@@ -218,19 +218,16 @@ class indice extends clsListagem
 					echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
 				}
 
-        $turma = new clsPmieducarMatriculaTurma();
-        $turma = $turma->lista($registro['cod_matricula'], NULL, NULL,
-          NULL, NULL, NULL, NULL, NULL, 1);
-        if ($turma)
-        {
-          $turma = array_shift($turma);
-
-          $turma = new clsPmieducarTurma($turma['ref_cod_turma']);
-          $turma = $turma->detalhe();
-          $turma  = $turma['nm_turma'];
+        $enturmacoes = new clsPmieducarMatriculaTurma();
+        $enturmacoes = $enturmacoes->lista($registro['cod_matricula'], NULL, NULL,
+                                           NULL, NULL, NULL, NULL, NULL, 1);
+        $nomesTurmas = array();
+        foreach ($enturmacoes as $enturmacao) {
+          $turma         = new clsPmieducarTurma($enturmacao['ref_cod_turma']);
+          $turma         = $turma->detalhe();
+          $nomesTurmas[] = $turma['nm_turma'];
         }
-        else
-          $turma = '';
+        $nomesTurmas = implode('<br />', $nomesTurmas);
 
         $situacao = $registro['aprovado'];
         if ($situacao == 1)
@@ -248,8 +245,9 @@ class indice extends clsListagem
    			$lista_busca[] = "<a href=\"educar_matricula_det.php?cod_matricula={$registro["cod_matricula"]}\">{$registro["cod_matricula"]}</a>";
    			$lista_busca[] = "<a href=\"educar_matricula_det.php?cod_matricula={$registro["cod_matricula"]}\">$situacao</a>";
 
-				if ($turma)
-					$lista_busca[] = "<a href=\"educar_matricula_det.php?cod_matricula={$registro["cod_matricula"]}\">$turma</a>";
+				if ($nomesTurmas) {          
+					$lista_busca[] = "<a href=\"educar_matricula_det.php?cod_matricula={$registro["cod_matricula"]}\">$nomesTurmas</a>";
+        }
 				else
 					$lista_busca[] = "";
 

@@ -728,6 +728,17 @@ class indice extends clsDetalhe
         else
           $turma = '';
 
+        $enturmacoes = new clsPmieducarMatriculaTurma();
+        $enturmacoes = $enturmacoes->lista($m['cod_matricula'], NULL, NULL,
+                                           NULL, NULL, NULL, NULL, NULL, 1);
+        $nomesTurmas = array();
+        foreach ($enturmacoes as $enturmacao) {
+          $turma         = new clsPmieducarTurma($enturmacao['ref_cod_turma']);
+          $turma         = $turma->detalhe();
+          $nomesTurmas[] = $turma['nm_turma'];
+        }
+        $nomesTurmas = implode('<br />', $nomesTurmas);
+
         $serie = new clsPmieducarSerie($m['ref_ref_cod_serie']);
         $serie = $serie->detalhe();
         $serie = $serie['nm_serie'];
@@ -805,7 +816,7 @@ class indice extends clsDetalhe
         {
           $tr = new TR(new TD(new A($m['ano'], array('href' => $href, 'class' => 'decorated')), array('class' => 'center')), 
                         new TD(new A($situacao, array('href' => $href))), 
-                        new TD(new A($turma, array('href' => $href))),                         
+                        new TD(new A($nomesTurmas, array('href' => $href))),                         
                         new TD(new A($serie, array('href' => $href))), 
                         new TD(new A($curso, array('href' => $href))), 
                         new TD(new A($escola, array('href' => $href))), 
@@ -822,7 +833,7 @@ class indice extends clsDetalhe
         {
           $tr = new TR(new TD($m['ano'], array('class' => 'center')), 
                         new TD($situacao), 
-                        new TD($turma),                         
+                        new TD($nomesTurmas),                         
                         new TD($serie), 
                         new TD($curso), 
                         new TD($escola), 
@@ -842,28 +853,6 @@ class indice extends clsDetalhe
           $classRow = '';
         else
           $classRow = 'cellcolor';
-  /*
-        $t = new HtmlTable(                
-                   new TR(new TH('Ano / Matrícula'), new TD($m['ano'], ' / ', $m['cod_matricula'], $link), array('class' => 'strong')), 
-                   new TR(new TH('Matrícula'), new TD()), 
-                   new TR(new TH('Situação'), new TD($situacao), array('class' => 'cellcolor')), 
-                   new TR(new TH('Turma'), new TD($turma)),                         
-                   new TR(new TH('Série'), new TD($serie), array('class' => 'cellcolor')), 
-                   new TR(new TH('Curso'), new TD($curso)), 
-                   new TR(new TH('Escola'), new TD($escola), array('class' => 'cellcolor')), array('class'=>'styled nocellcolor'));
-
-        if ($this->nivel_usuario == 1)
-          $t->append(new TR(new TH('Instituição'), new TD($instituicao), array('class' => 'cellcolor')));
-
-        if ($formando)
-          $t->append(new TR(new TH('Formando'), new TD($formando)));
-
-        if ($dTransEntrada)
-          $t->append(new TR(new TH('Data transferencia admissão'), new TD($dTransEntrada), array('class' => 'cellcolor')));
-
-        if ($dTransSaida)
-          $t->append(new TR(new TH('Data transferencia saída'), new TD($dTransSaida)));
-  */
       }
       $div->append($t);
 
@@ -875,228 +864,6 @@ class indice extends clsDetalhe
 
     return $div->render();
   }  
-
-/*  function montaTabelaMatricula()
-  {
-    $sql = sprintf('SELECT
-              cod_matricula
-            FROM
-              pmieducar.matricula
-            WHERE
-              ref_cod_aluno = %d
-              AND ativo = 1
-            ORDER BY
-              cod_matricula DESC', $this->cod_aluno);
-
-    $db = new clsBanco();
-    $db->Consulta($sql);
-
-    if ($db->Num_Linhas()) {
-      while ($db->ProximoRegistro()) {
-        list($ref_cod_matricula) = $db->Tupla();
-
-        if (is_numeric($ref_cod_matricula)) {
-          $obj_matricula = new clsPmieducarMatricula();
-          $obj_matricula->setOrderby('ano ASC');
-          $lst_matricula = $obj_matricula->lista($ref_cod_matricula);
-
-          if ($lst_matricula) {
-            $registro = array_shift($lst_matricula);
-          }
-
-          $table .= sprintf(
-            '<table class="tableDetalhe">
-               <tr class="formdktd">
-                 <td colspan="2"><strong>Matrícula - Ano %d</strong></td>
-               </tr>',
-            $registro['ano']
-          );
-
-          $obj_ref_cod_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
-          $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-          $nm_curso = $det_ref_cod_curso['nm_curso'];
-
-          $obj_serie = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
-          $det_serie = $obj_serie->detalhe();
-          $nm_serie = $det_serie['nm_serie'];
-
-          $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
-          $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
-          $nm_instituicao = $obj_cod_instituicao_det['nm_instituicao'];
-
-          $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
-          $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-          $nm_escola = $det_ref_cod_escola['nome'];
-
-          $obj_mat_turma = new clsPmieducarMatriculaTurma();
-          $det_mat_turma = $obj_mat_turma->lista($ref_cod_matricula, NULL, NULL,
-            NULL, NULL, NULL, NULL, NULL, 1);
-
-          if ($det_mat_turma) {
-            $det_mat_turma = array_shift($det_mat_turma);
-
-            $obj_turma = new clsPmieducarTurma($det_mat_turma['ref_cod_turma']);
-            $det_turma = $obj_turma->detalhe();
-            $nm_turma  = $det_turma['nm_turma'];
-          }
-          else {
-            $nm_turma = '';
-          }
-
-          $transferencias = array();
-
-          if ($registro['aprovado'] == 1) {
-            $aprovado = 'Aprovado';
-          }
-          elseif ($registro['aprovado'] == 2) {
-            $aprovado = 'Reprovado';
-          }
-          elseif ($registro['aprovado'] == 3) {
-            $aprovado = 'Em Andamento';
-          }
-          elseif ($registro['aprovado'] == 4) {
-            if (is_numeric($registro['cod_matricula'])) 
-            {
-              $aprovado = 'Transferido';
-
-              $sql = sprintf('SELECT
-                        ref_cod_matricula_entrada,
-                        ref_cod_matricula_saida,
-                        to_char(data_transferencia, \'DD/MM/YYYY\') AS dt_transferencia
-                      FROM
-                        pmieducar.transferencia_solicitacao
-                      WHERE
-                        (ref_cod_matricula_entrada = %d
-                        OR ref_cod_matricula_saida = %d)
-                        AND ativo = 1',
-                      $registro['cod_matricula'], $registro['cod_matricula']
-              );
-
-              $db2 = new clsBanco();
-              $db2->Consulta($sql);
-
-              if ($db2->Num_Linhas()) {
-                while ($db2->ProximoRegistro()) {
-                  list($ref_cod_matricula_entrada, $ref_cod_matricula_saida,
-                    $dt_transferencia) = $db2->Tupla();
-
-                  if ($ref_cod_matricula_saida == $registro['cod_matricula']) {
-                    $transferencias[] = array(
-                      'data_trans' => $dt_transferencia,
-                      'desc'       => 'Data Transferência Saída'
-                    );
-                  }
-                  elseif ($ref_cod_matricula_entrada == $registro['cod_matricula']) {
-                    $transferencias[] = array(
-                      'data_trans' => $dt_transferencia,
-                      'desc'       => 'Data Transferência Admissão'
-                    );
-                  }
-                }
-              }
-            }
-          }
-          elseif ($registro['aprovado'] == 5) {
-            $aprovado = 'Reclassificado';
-          }
-          elseif ($registro['aprovado'] == 6) {
-            $aprovado = 'Abandono';
-          }
-          elseif ($registro['aprovado'] == 7) {
-            $aprovado = 'Em Exame';
-          }
-
-          $formando = $registro['formando'] == 0 ? 'Não' : 'Sim';
-
-          $table .= sprintf(
-            '<tr class="formlttd"><td>Número da Matrícula</td><td>%s</td></tr>',
-            $registro['cod_matricula']
-          );
-
-          $table .= sprintf(
-            '<tr class="formmdtd"><td>Instituição</td><td>%s</td></tr>',
-            $nm_instituicao
-          );
-
-          $table .= sprintf(
-            '<tr class="formlttd"><td>Curso</td><td>%s</td></tr>',
-            $nm_curso
-          );
-
-          $table .= sprintf(
-            '<tr class="formlttd"><td>Escola</td><td>%s</td></tr>',
-            $nm_escola
-          );
-
-          $table .= sprintf(
-            '<tr class="formmdtd"><td>Série</td><td>%s</td></tr>',
-            $nm_serie
-          );
-
-          $table .= sprintf(
-            '<tr class="formlttd"><td>Turma</td><td>%s</td></tr>',
-            $nm_turma
-          );
-
-          $table .= sprintf(
-            '<tr class="formmdtd"><td>Situação</td><td>%s</td></tr>',
-            $aprovado
-          );
-
-          $class = 'formmdtd';
-
-          if (is_array($transferencias)) {
-            asort($transferencias);
-
-            foreach ($transferencias as $trans) {
-              $table .= sprintf(
-                '<tr class="%s"><td>%s</td><td>%s</td></tr>',
-                $class, $trans['desc'], $trans['data_trans']
-              );
-
-              $class = $class == 'formmdtd' ? 'formlttd' : 'formmdtd';
-            }
-          }
-
-          if ($registro['aprovado'] < 4) {
-            if (is_numeric($registro["cod_matricula"])) {
-              $sql = sprintf('SELECT
-                        to_char(data_transferencia, \'DD/MM/YYYY\')
-                      FROM
-                        pmieducar.transferencia_solicitacao
-                      WHERE
-                        ref_cod_matricula_entrada = %d
-                        AND ativo = 1', $registro['cod_matricula']);
-
-              $db2 = new clsBanco();
-              $data_transferencia = $db2->CampoUnico($sql);
-
-              if ($data_transferencia) {
-                $table .= sprintf('
-                  <tr class="%s">
-                    <td>Data Transferência Admissão</td>
-                    <td>%s</td>
-                  </tr>',
-                  $class, $data_transferencia);
-
-                $class = $class == 'formmdtd' ? 'formlttd' : 'formmdtd';
-              }
-            }
-          }
-
-          $table .= sprintf('<tr class="%s"><td>Formando</td><td>%s</td></tr>',
-            $class == 'formmdtd' ? 'formlttd' : 'formmdtd', $formando);
-
-          $table .= '</table>';
-        }
-      }
-    }
-    else {
-      return '<strong>O aluno não está matriculado em nenhuma escola</strong>';
-    }
-
-    return $table;
-  }*/
 }
 
 // Instancia o objeto da página
