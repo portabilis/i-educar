@@ -252,7 +252,7 @@ class indice extends clsDetalhe
 
       if ($registro['aprovado'] != 4 && $registro['aprovado'] != 6) {
         if (is_array($lst_transferencia) && !isset($data_transferencia)) {
-          $this->array_botao[]            = 'Cancelar Solicitação Transferência';
+          $this->array_botao[]            = 'Cancelar Solicitação Transferência (escola do sistema)';
           $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true\")";
         }
         else {
@@ -276,6 +276,15 @@ class indice extends clsDetalhe
         }
       }
 
+      if($registro['aprovado'] == 4 && 
+         $this->canCancelTransferenciaExterna($registro['cod_matricula'], $registro['ref_cod_aluno'])) {
+        $this->array_botao[]            = 'Cancelar transferência (escola externa)';
+
+
+        # TODO ver se código, seta matricula como em andamento, ativa ultima matricula_turma for matricula, e desativa transferencia solicitacao
+        $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true&reabrir_matricula=true\")";
+      }
+
       if ($registro['aprovado'] == 4 || $det_transferencia) {
         $this->array_botao[]            = 'Imprimir Atestado Frequência';
         $this->array_botao_url_script[] = "showExpansivelImprimir(400, 200,  \"educar_relatorio_atestado_frequencia.php?cod_matricula={$registro['cod_matricula']}\",[], \"Relatório Atestado de Freqüência\")";
@@ -284,6 +293,16 @@ class indice extends clsDetalhe
 
     $this->url_cancelar = 'educar_matricula_lst.php?ref_cod_aluno=' . $registro['ref_cod_aluno'];
     $this->largura      = '100%';
+  }
+
+  
+  function canCancelTransferenciaExterna($matriculaId, $alunoId) {
+    $sql = "select 1 from pmieducar.matricula where ativo = 1 and cod_matricula > $matriculaId and ref_cod_aluno = $alunoId limit 1";
+
+    $db = new clsBanco();
+    $existeNovaMatricula = $db->CampoUnico($sql) == '1';
+
+    return ! $existeNovaMatricula;
   }
 }
 
