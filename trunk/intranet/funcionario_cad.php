@@ -446,6 +446,12 @@ class indice extends clsCadastro
 			}
 		}
 
+    if (! $this->validatesUniquenessOfMatricula($this->ref_pessoa, $this->matricula))
+      return false;
+
+    if (! $this->validatesPassword($this->matricula, $this->_senha))
+      return false;
+
 		$obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, md5($this->_senha), $this->ativo, null, $this->ramal, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->tempo_expira_conta, "NOW()", "NOW()", $this->pessoa_logada, empty($this->proibido) ? 0 : 1, $this->ref_cod_setor_new, null, empty($this->matricula_permanente)? 0 : 1, 1, $this->email);
 		if( $obj_funcionario->cadastra() )
 		{
@@ -480,6 +486,13 @@ class indice extends clsCadastro
 				$this->ref_cod_setor_new = $this->$nmvar;
 			}
 		}
+
+    if (! $this->validatesUniquenessOfMatricula($this->ref_pessoa, $this->matricula))
+      return false;
+
+    if (! $this->validatesPassword($this->matricula, $this->_senha))
+      return false;
+
 		//verifica se a senha ja esta criptografada
 		if($this->_senha != $this->confere_senha)
 		{
@@ -520,6 +533,33 @@ class indice extends clsCadastro
 		echo "<!--\nErro ao excluir clsPortalFuncionario\n-->";
 		return false;
 	}
+
+  
+  function validatesUniquenessOfMatricula($pessoaId, $matricula) {
+    $sql = "select 1 from portal.funcionario where lower(matricula) = lower('$matricula') and ref_cod_pessoa_fj != $pessoaId";
+    $db = new clsBanco();
+
+		if ($db->CampoUnico($sql) == '1') {
+      $this->mensagem = "A matrícula '$matricula' já foi usada, por favor, informe outra.";
+      return false;
+    }
+    return true;
+  }
+
+  function validatesPassword($matricula, $password) {
+    $msg = '';
+
+		if ($password == $matricula)
+      $msg = 'Informe uma senha diferente da matricula.';
+    elseif (strlen($password) < 8)
+      $msg = 'Por favor informe uma senha segura, com pelo menos 8 caracteres.';
+
+    if ($msg) {
+      $this->mensagem = $msg;
+      return false;
+    }
+    return true;
+  }
 }
 
 // cria uma extensao da classe base
