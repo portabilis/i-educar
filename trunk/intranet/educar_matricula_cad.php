@@ -487,31 +487,8 @@ class indice extends clsCadastro
                     NULL, NULL, NULL, NULL, 1, NULL, NULL, $det_matricula['modulo']
                   );
 
-                  $editou_mat = $obj_matricula->edita();
-
-                  // inativa as enturmações da matricula
-                  if ($editou_mat) {
-                    $enturmacoes = new clsPmieducarMatriculaTurma();
-                    $enturmacoes = $enturmacoes->lista($matricula_saida, NULL, NULL, NULL, NULL, 
-                                                       NULL, NULL, NULL, 1);
-
-                    if ($enturmacoes) {
-					            foreach ($enturmacoes as $enturmacao) {
-					              $enturmacao = new clsPmieducarMatriculaTurma($matricula_saida,
-                                                                     $enturmacao['ref_cod_turma'],
-                                                                     $this->pessoa_logada, null,
-                                                                     null, null, 0, null, 
-                                                                     $enturmacao['sequencial']);
-
-					              if(! $enturmacao->edita())
-					              {
-                				  $this->mensagem = "N&atilde;o foi poss&iacute;vel desativar as " . 
-                                            "enturma&ccedil;&otilde;es da matr&iacute;cula.";
-						              return false;
-					              }
-                      }
-                    }
-                  }
+                  if ($obj_matricula->edita() && ! $this->desativaEnturmacoesMatricula($matricula_saida))
+                    return false;
                 }
 
                 $obj = new clsPmieducarMatricula(
@@ -550,6 +527,35 @@ class indice extends clsCadastro
     }
   }
 
+
+  function desativaEnturmacoesMatricula($matriculaId) {
+    $result = true;
+
+    $enturmacoes = new clsPmieducarMatriculaTurma();
+    $enturmacoes = $enturmacoes->lista($matriculaId, NULL, NULL, NULL, NULL, 
+                                       NULL, NULL, NULL, 1);
+
+    if ($enturmacoes) {
+      foreach ($enturmacoes as $enturmacao) {
+        $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
+                                                     $enturmacao['ref_cod_turma'],
+                                                     $this->pessoa_logada, null,
+                                                     null, null, 0, null, 
+                                                     $enturmacao['sequencial']);
+        if ($result && ! $enturmacao->edita())
+          $result = false;
+      }
+    }
+
+    if(! $result) {
+		  $this->mensagem = "N&atilde;o foi poss&iacute;vel desativar as " . 
+                        "enturma&ccedil;&otilde;es da matr&iacute;cula.";
+    }
+
+    return $result;
+  }
+
+
   function Excluir()
   {
     @session_start();
@@ -560,26 +566,8 @@ class indice extends clsCadastro
     $obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7,
       'educar_matricula_lst.php?ref_cod_aluno=' . $this->ref_cod_aluno);
 
-    $obj_matricula_turma = new clsPmieducarMatriculaTurma();
-    $lst_matricula_turma = $obj_matricula_turma->lista(
-      $this->cod_matricula, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1
-    );
-
-    if (is_array($lst_matricula_turma)) {
-      $det_matricula_turma = array_shift($lst_matricula_turma);
-      $obj_matricula_turma = new clsPmieducarMatriculaTurma(
-        $det_matricula_turma['ref_cod_matricula'],
-        $det_matricula_turma['ref_cod_turma'], $this->pessoa_logada, NULL,
-        NULL, NULL, 0, NULL, $det_matricula_turma['sequencial']
-      );
-
-      $editou = $obj_matricula_turma->edita();
-
-      if (! $editou) {
-        $this->mensagem = 'Edição não realizada.<br />';
-        return FALSE;
-      }
-    }
+    if (! $this->desativaEnturmacoesMatricula($this->cod_matricula))
+      return false;
 
     $obj_matricula = new clsPmieducarMatricula( $this->cod_matricula );
     $det_matricula = $obj_matricula->detalhe();
