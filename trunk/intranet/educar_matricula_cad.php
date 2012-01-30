@@ -489,26 +489,26 @@ class indice extends clsCadastro
 
                   $editou_mat = $obj_matricula->edita();
 
+                  // inativa as enturmações da matricula
                   if ($editou_mat) {
-                    $obj_matricula_turma = new clsPmieducarMatriculaTurma();
-                    $lst_matricula_turma = $obj_matricula_turma->lista(
-                      $matricula_saida, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1
-                    );
+                    $enturmacoes = new clsPmieducarMatriculaTurma();
+                    $enturmacoes = $enturmacoes->lista($matricula_saida, NULL, NULL, NULL, NULL, 
+                                                       NULL, NULL, NULL, 1);
 
-                    if (is_array($lst_matricula_turma)) {
-                      $det_matricula_turma = array_shift($lst_matricula_turma);
+                    if ($enturmacoes) {
+					            foreach ($enturmacoes as $enturmacao) {
+					              $enturmacao = new clsPmieducarMatriculaTurma($matricula_saida,
+                                                                     $enturmacao['ref_cod_turma'],
+                                                                     $this->pessoa_logada, null,
+                                                                     null, null, 0, null, 
+                                                                     $enturmacao['sequencial']);
 
-                      $obj_matricula_turma = new clsPmieducarMatriculaTurma(
-                        $matricula_saida, $det_matricula_turma['ref_cod_turma'],
-                        $this->pessoa_logada, NULL, NULL, NULL, 0, NULL,
-                        $det_matricula_turma['sequencial']
-                      );
-
-                      $editou_mat_turma = $obj_matricula_turma->edita();
-
-                      if (! $editou_mat_turma) {
-                        $this->mensagem = 'Não foi possível editar a Matrícula Turma.<br />';
-                        return FALSE;
+					              if(! $enturmacao->edita())
+					              {
+                				  $this->mensagem = "N&atilde;o foi poss&iacute;vel desativar as " . 
+                                            "enturma&ccedil;&otilde;es da matr&iacute;cula.";
+						              return false;
+					              }
                       }
                     }
                   }
