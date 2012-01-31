@@ -163,8 +163,6 @@ class clsControlador
 
   // valida se o usuário e senha informados, existem no banco de dados.
   protected function validateUser($username, $password) {
-    $result = false;
-
     if (! $this->validateHumanAccess()) {
       $msg = "Parece que você errou a senha muitas vezes, por favor, preencha o campo de " . 
              "confirmação visual ou <a class='light decorated' href='/module/Usuario/Rede" . 
@@ -181,10 +179,11 @@ class clsControlador
       }
       else {
         $this->unsetTentativasLogin();
-        $result = $userId;
+        return $userId;
       }
     }
-    return $result;
+
+    return false;
   }
 
 

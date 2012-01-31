@@ -78,5 +78,9 @@ class Message {
       $msgs .= "<$contentTag class='{$m['type']}'>{$m['msg']}</$contentTag>";
     return $msgs;
   }
+
+  public function getMsgs() {
+    return $this->_msgs;
+  }
 }
 ?>

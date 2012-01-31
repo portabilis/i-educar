@@ -147,8 +147,9 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
       $controlador->startLoginSession($this->getEntity()->ref_cod_pessoa_fj, '/intranet/index.php');
     }
 
-    //#TODO refatorar ? copia msgs da instancia do controlador (ieducar) para esta instancia
-    foreach($controlador->_loginMsgs as $msg) {
+    // #TODO refatorar, criar metodo mergeMsgs em lib/Portabilis/Message,
+    // mover referências msgs */services para instancia desta classe
+    foreach($controlador->messages->getMsgs() as $msg) {
       $this->appendMsg($msg['msg'], $msg['type']);
     }
 
