@@ -22,6 +22,7 @@
  */
 
 require_once 'include/clsBanco.inc.php';
+require_once 'lib/Portabilis/Message.php';
 
 /* requer Services_ReCaptcha:
  $ pear install Services_ReCaptcha */
@@ -93,7 +94,7 @@ class clsControlador
 
     session_write_close();
 
-    $this->_loginMsgs = array();
+    $this->messages = new Message();
     $this->_maximoTentativasFalhas = 6;
   }
 
@@ -120,7 +121,8 @@ class clsControlador
     }
   }
 
-  //novo metodo login
+
+  // novo metodo login, logica quebrada em metodos menores
   public function Logar($validateCredentials) {
     if ($validateCredentials) {
       $username = @$_POST['login'];
@@ -138,20 +140,43 @@ class clsControlador
   }
 
 
-  //metodos usados pelo novo metodo de login
+  // renderiza o template de login, com as mensagens adicionadas durante validações
+  protected function renderLoginPage() {
+    $this->destroyLoginSession();
+
+    $templateName = 'templates/nvp_htmlloginintranet.tpl';
+    $templateFile  = fopen($templateName, "r");
+    $templateText = fread($templateFile, filesize($templateName));
+    $templateText = str_replace( "<!-- #&ERROLOGIN&# -->", $this->messages->toHtml('p'), $templateText);
+
+    $requiresHumanAccessValidation = isset($_SESSION['tentativas_login_falhas']) &&
+                                     is_numeric($_SESSION['tentativas_login_falhas']) &&
+                                     $_SESSION['tentativas_login_falhas'] >= $this->_maximoTentativasFalhas;
+
+    if ($requiresHumanAccessValidation)
+      $templateText = str_replace( "<!-- #&RECAPTCHA&# -->", $this->getRecaptchaWidget(), $templateText);
+
+    fclose($templateFile);
+    die($templateText);
+  }
+
+
+  // valida se o usuário e senha informados, existem no banco de dados.
   protected function validateUser($username, $password) {
     $result = false;
 
     if (! $this->validateHumanAccess()) {
-      $this->appendLoginMsg("Parece que você errou a senha muitas vezes, por favor, preencha o " .
-                            "campo de confirmação visual ou <a class='light decorated' href='/module/Usuario/RedefinirSenha'>tente redefinir sua senha</a>.", "error", false, "error");
+      $msg = "Parece que você errou a senha muitas vezes, por favor, preencha o campo de " . 
+             "confirmação visual ou <a class='light decorated' href='/module/Usuario/Rede" . 
+             "finirSenha'>tente redefinir sua senha</a>.";
+      $this->messages->append($msg, "error", false, "error");
     }
     else {
       $sql = "SELECT ref_cod_pessoa_fj FROM portal.funcionario WHERE matricula = $1 and senha = $2";
       $userId = $this->fetchPreparedQuery($sql, array($username, $password), true, 'first-field');
 
       if (! is_numeric($userId)) {
-        $this->appendLoginMsg("Usuário ou senha incorreta.", "error");
+        $this->messages->append("Usuário ou senha incorreta.", "error");
         $this->incrementTentativasLogin();
       }
       else {
@@ -163,21 +188,24 @@ class clsControlador
   }
 
 
+  // valida se o usuário, pode acessar o sistema.
   public function canStartLoginSession($userId) {
 
-    if (! $this->hasLoginMsgWithType("error")) {
-      $sql = "SELECT ativo, proibido, tempo_expira_conta, data_reativa_conta, ip_logado as ip_ultimo_acesso, data_login " .
-             "FROM portal.funcionario WHERE ref_cod_pessoa_fj = $1";
+    if (! $this->messages->hasMsgWithType("error")) {
+      $sql = "SELECT ativo, proibido, tempo_expira_conta, data_reativa_conta, ip_logado " .
+             "as ip_ultimo_acesso, data_login FROM portal.funcionario WHERE ref_cod_pessoa_fj = $1";
+
       $user = $this->fetchPreparedQuery($sql, $userId, true, 'first-line');
 
       if ($user['ativo'] != '1') {
-        $this->appendLoginMsg("Aparentemente sua conta de usuário esta inativa (expirada), por favor, " .
-                              "entre em contato com o administrador do sistema.", "error", false, "error");
+        $this->messages->append("Aparentemente sua conta de usuário esta inativa (expirada), por favor, " .
+                                "entre em contato com o administrador do sistema.", "error", false, "error");
       }
 
       if ($user['proibido'] != '0') {
-        $this->appendLoginMsg("Aparentemente sua conta não pode acessar o sistema, " .
-                              "por favor, entre em contato com o administrador do sistema.", "error", false, "error");
+        $this->messages->append("Aparentemente sua conta não pode acessar o sistema, " .
+                                "por favor, entre em contato com o administrador do sistema.", 
+                                "error", false, "error");
       }
 
       /* considera como expirado caso data_reativa_conta + tempo_expira_conta <= now
@@ -189,8 +217,8 @@ class clsControlador
         $sql = "UPDATE funcionario SET ativo = 0 WHERE ref_cod_pessoa_fj = $1";
         $this->fetchPreparedQuery($sql, $userId, true);
 
-        $this->appendLoginMsg("Aparentemente a conta de usuário expirou, por favor, " .
-                              "entre em contato com o administrador do sistema.", "error", false, "error");
+        $this->messages->append("Aparentemente a conta de usuário expirou, por favor, " .
+                                "entre em contato com o administrador do sistema.", "error", false, "error");
       }
 
       // considera como acesso multiplo, acesso em diferentes IPs em menos de $tempoMultiploAcesso minutos
@@ -202,14 +230,14 @@ class clsControlador
     
       if ($multiploAcesso) {
         $minutosEmEspera = round($tempoMultiploAcesso - $tempoEmEspera) + 1;
-        $this->appendLoginMsg("Aparentemente sua conta foi acessada em outro computador nos últimos " .
-                              "$tempoMultiploAcesso minutos, caso não tenha sido você, " . 
-                              "por favor, altere sua senha ou tente novamente em $minutosEmEspera minutos",
-                              "error", false, "error");
+        $this->messages->append("Aparentemente sua conta foi acessada em outro computador nos últimos " .
+                                "$tempoMultiploAcesso minutos, caso não tenha sido você, " . 
+                                "por favor, altere sua senha ou tente novamente em $minutosEmEspera minutos",
+                                "error", false, "error");
       }
       #TODO verificar se conta nunca usada (exibir "Sua conta n&atilde;o est&aacute; ativa. Use a op&ccedil;&atilde;o 'Nunca usei a intrenet'." ?)
     }
-    return ! $this->hasLoginMsgWithType("error");
+    return ! $this->messages->hasMsgWithType("error");
   }
 
 
@@ -227,7 +255,7 @@ class clsControlador
     @session_write_close();
 
     $this->logado = true;
-    $this->appendLoginMsg("Usuário logado com sucesso.", "success");
+    $this->messages->append("Usuário logado com sucesso.", "success");
 
     $this->logAccess($userId);
     $this->destroyUserStatusToken($userId);
@@ -252,26 +280,7 @@ class clsControlador
     @session_write_close();
 
     if ($addMsg)
-      $this->appendLoginMsg("Usuário deslogado com sucesso.", "success");
-  }
-
-
-  /* Ao fazer login destroy solicitações em aberto, como redefinição de senha.
-  */
-  protected function destroyUserStatusToken($userId) {
-
-    $statusTokensToDestoyOnLogin = array('redefinir_senha');
-
-    $sql = "SELECT status_token FROM funcionario WHERE ref_cod_pessoa_fj = $1";
-    $record = $this->fetchPreparedQuery($sql, $userId, true, 'first-line');
-
-    $statusToken = explode('-', $record['status_token']);
-    $statusToken = $statusToken[0];
-
-    if(in_array($statusToken, $statusTokensToDestoyOnLogin)) {
-      $sql = "UPDATE funcionario set status_token = '' WHERE ref_cod_pessoa_fj = $1";
-      $record = $this->fetchPreparedQuery($sql, $userId, true);
-    }    
+      $this->messages->append("Usuário deslogado com sucesso.", "success");
   }
 
 
@@ -291,6 +300,50 @@ class clsControlador
     $sql = "UPDATE funcionario SET ip_logado = '{$this->getClientIP()}', data_login = NOW() WHERE ref_cod_pessoa_fj = $1";
     $this->fetchPreparedQuery($sql, $userId, true);
   }
+
+
+  // wrapper para $db->execPreparedQuery($sql, $params)
+  protected function fetchPreparedQuery($sql, $params = array(), $hideExceptions = true, $returnOnly = '') {
+    try{    
+      $result = array();
+      $db = new clsBanco();
+      if ($db->execPreparedQuery($sql, $params) != false) {
+
+        while ($db->ProximoRegistro())
+          $result[] = $db->Tupla();
+
+        if ($returnOnly == 'first-line' and isset($result[0]))
+          $result = $result[0];
+        elseif ($returnOnly == 'first-field' and isset($result[0]) and isset($result[0][0]))
+          $result = $result[0][0];
+      }
+    }
+    catch(Exception $e) 
+    {
+      if (! $hideExceptions)
+        $this->messages->append($e->getMessage(), "error", true);
+    }
+    return $result;
+  }
+
+
+  // Ao fazer login destroy solicitações em aberto, como redefinição de senha.
+  protected function destroyUserStatusToken($userId) {
+
+    $statusTokensToDestoyOnLogin = array('redefinir_senha');
+
+    $sql = "SELECT status_token FROM funcionario WHERE ref_cod_pessoa_fj = $1";
+    $record = $this->fetchPreparedQuery($sql, $userId, true, 'first-line');
+
+    $statusToken = explode('-', $record['status_token']);
+    $statusToken = $statusToken[0];
+
+    if(in_array($statusToken, $statusTokensToDestoyOnLogin)) {
+      $sql = "UPDATE funcionario set status_token = '' WHERE ref_cod_pessoa_fj = $1";
+      $record = $this->fetchPreparedQuery($sql, $userId, true);
+    }    
+  }
+
 
   // see http://www.google.com/recaptcha && http://pear.php.net/package/Services_ReCaptcha
   protected function getRecaptchaWidget() {
@@ -339,82 +392,5 @@ class clsControlador
     @session_start();
     unset($_SESSION['tentativas_login_falhas']);
     @session_write_close();
-  }
-
-
-  protected function renderLoginPage() {
-    $this->destroyLoginSession();
-
-    $templateName = 'templates/nvp_htmlloginintranet.tpl';
-    $templateFile  = fopen($templateName, "r");
-    $templateText = fread($templateFile, filesize($templateName));
-    $templateText = str_replace( "<!-- #&ERROLOGIN&# -->", $this->getLoginMsgs(), $templateText);
-
-    $requiresHumanAccessValidation = isset($_SESSION['tentativas_login_falhas']) &&
-                                     is_numeric($_SESSION['tentativas_login_falhas']) &&
-                                     $_SESSION['tentativas_login_falhas'] >= $this->_maximoTentativasFalhas;
-
-    if ($requiresHumanAccessValidation)
-      $templateText = str_replace( "<!-- #&RECAPTCHA&# -->", $this->getRecaptchaWidget(), $templateText);
-
-    fclose($templateFile);
-    die($templateText);
-  }
-
-
-  protected function fetchPreparedQuery($sql, $params = array(), $hideExceptions = true, $returnOnly = '') {
-    try{    
-      $result = array();
-      $db = new clsBanco();
-      if ($db->execPreparedQuery($sql, $params) != false) {
-
-        while ($db->ProximoRegistro())
-          $result[] = $db->Tupla();
-
-        if ($returnOnly == 'first-line' and isset($result[0]))
-          $result = $result[0];
-        elseif ($returnOnly == 'first-field' and isset($result[0]) and isset($result[0][0]))
-          $result = $result[0][0];
-      }
-    }
-    catch(Exception $e) 
-    {
-      if (! $hideExceptions)
-        $this->appendLoginMsg($e->getMessage(), "error", true);
-    }
-    return $result;
-  }
-
-
-  protected function appendLoginMsg($msg, $type="error", $encodeToUtf8 = false, $ignoreIfHasMsgWithType = ''){
-    if (empty($ignoreIfHasMsgWithType) || ! $this->hasLoginMsgWithType($ignoreIfHasMsgWithType)) {
-      if ($encodeToUtf8)
-        $msg = utf8_encode($msg);
-
-      //error_log("$type msg: '$msg'");
-      $this->_loginMsgs[] = array('msg' => $msg, 'type' => $type);
-    }
-  }
-
-
-  protected function hasLoginMsgWithType($type) {
-    $hasMsg = false;
-
-    foreach ($this->_loginMsgs as $m){
-      if ($m['type'] == $type) {
-        $hasMsg = true;
-        break;
-      }
-    }
-
-    return $hasMsg;
-  }
-
-
-  protected function getLoginMsgs() {
-    $msgs = '';
-    foreach($this->_loginMsgs as $m)
-      $msgs .= "<p class='{$m['type']}'>{$m['msg']}</p>";
-    return $msgs;
   }
 }
