@@ -670,7 +670,7 @@ class indice extends clsCadastro
     $this->campoNumero('numero', 'N&uacute;mero', $this->numero, 4, 6, FALSE, '',
       '', FALSE, FALSE, TRUE);
     $this->campoTexto('letra', ' &nbsp; Letra', $this->letra, 4, 1, FALSE);
-    $this->campoTexto('complemento', 'Complemento', $this->complemento, 30, 50, FALSE);
+    $this->campoTexto('complemento', 'Complemento', $this->complemento, 30, 20, FALSE);
     $this->campoTexto('bloco', 'Bloco', $this->bloco, 30, 50, FALSE);
     $this->campoNumero('andar', 'Andar', $this->andar, 4, 2, FALSE, '', '',
       FALSE, FALSE, TRUE);
@@ -993,7 +993,7 @@ class indice extends clsCadastro
 
     $this->campoTexto('letra', ' &nbsp; Letra', $this->letra, 4, 1, FALSE);
 
-    $this->campoTexto('complemento', 'Complemento', $this->complemento, 30, 50, FALSE);
+    $this->campoTexto('complemento', 'Complemento', $this->complemento, 30, 20, FALSE);
 
     $this->campoTexto('bloco', 'Bloco', $this->bloco, 30, 50, FALSE);
 
