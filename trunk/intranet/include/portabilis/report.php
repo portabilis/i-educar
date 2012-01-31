@@ -8,10 +8,14 @@ require_once("portabilis/dal.php");
 
 class clsIndexBase extends clsBase
 {
-	function Formular()
-	{
-		$this->processoAp = "999101";#FIXME setar qual valor aqui ?
-	}
+  function __construct()
+  {
+    // código usado para verificação de autorização de acesso a página,
+    // ex, setar em instancia de Report: $instancia->page->processoAp = "123";
+		$this->processoAp = "0";
+
+    parent::__construct();
+  }
 }
 
 class RemoteReportFactory
@@ -42,9 +46,9 @@ class RemoteReportJasperFactory extends RemoteReportFactory
       $args['fake_arg'] = '';
 
     $client = XML_RPC2_Client::create($this->settings['url']);
-    $result = $client->build_report_jasper($app_name = $this->settings['app_name'], 
-                                           $template_name = $templateName, 
-                                           $username = $this->settings['username'], 
+    $result = $client->build_report_jasper($app_name = $this->settings['app_name'],
+                                           $template_name = $templateName,
+                                           $username = $this->settings['username'],
                                            $password = $this->settings['password'],
                                            $args = $args);
 
@@ -87,7 +91,7 @@ class Report extends clsCadastro
     $this->nome_url_sucesso = "Exibir";
     $this->page->SetTitulo('Relat&oacute;rio - ' . $this->name);
     $this->page->addForm($this);
-    $this->page->MakeAll(); 
+    $this->page->MakeAll();
   }
 
   function renderReport()
@@ -96,7 +100,7 @@ class Report extends clsCadastro
     {
       echo $this->reportFactory->build($templateName = $this->templateName, $args = $this->args);
     }
-    catch (Exception $e) 
+    catch (Exception $e)
     {
 
       if ($this->reportFactorySettings['show_exceptions_msg'])
@@ -145,7 +149,7 @@ class Report extends clsCadastro
   {
     //adiciona uma lista (array de arrays) de fields requiridos
     //ex: $this->addRequiredFields(array(array('ref_cod_curso', 'curso'), array('ref_cod_escola', 'escola')));
-    
+
     if (! is_array($fieldsList))
       throw new Exception("Invalid type for arg 'fieldsList'");
 
@@ -172,7 +176,7 @@ class Report extends clsCadastro
 
       if (! isset($dict[$f['name']]) || ! trim($dict[$f['name']]))
         $this->addValidationError('Informe um valor no campo "' . $f['label'] . '"');
-        
+
     }
   }
 
@@ -258,7 +262,7 @@ EOT;
     if ($addLogoNameToArgs)
     {
       if (! $config->logo_name)
-        throw new Exception("Invalid logo_name, please check the ini file");      
+        throw new Exception("Invalid logo_name, please check the ini file");
       $this->addArg('logo_name', $config->logo_name);
     }
   }
