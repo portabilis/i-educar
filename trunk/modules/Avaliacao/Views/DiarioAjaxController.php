@@ -366,10 +366,27 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
                  $this->validatesPresenceOfComponenteCurricularId(false);
 
     if ($canDelete && $this->getRequest()->etapa != 'Rc' && is_numeric($this->getRequest()->etapa)){
-        $notaExame = $this->getNotaAtual($etapa='Rc');
-      if(! (empty($notaExame) && ! is_numeric($notaExame))){
+
+      $notaExame = $this->getNotaAtual($etapa='Rc');
+      if(! empty($notaExame) || is_numeric($notaExame)){
         $this->messages->append('Nota da matricula '. $this->getRequest()->matricula_id .' somente pode ser removida, após remover nota de exame.', 'error');
         $canDelete = false;
+      }
+      else {
+        $etapasComNota = array();
+        for($etapa = $this->getRequest()->etapa + 1;
+            $etapa <= $this->getService()->getOption('etapas');
+            $etapa++) {
+          $notaNextEtapa = $this->getNotaAtual($etapa);
+          $this->messages->append("Verificando nota etapa $etapa", 'notice');
+
+          if(! empty($notaNextEtapa) || is_numeric($notaNextEtapa)){
+            $etapasComNota[] = $etapa;
+            $canDelete = false;
+          }
+        }
+        if (! empty($etapasComNota))
+          $this->messages->append("Nota somente pode ser removida, após remover as notas lançadas nas etapas posteriores: " . join(', ', $etapasComNota) . '.', 'error');
       }
     }
 
@@ -378,7 +395,27 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
 
   protected function canDeleteFalta(){
-    return $this->canDelete();
+    $canDelete = $this->canDelete() && $this->setService();
+
+    if ($canDelete && is_numeric($this->getRequest()->etapa)){
+      $etapasComFalta = array();
+      for($etapa = $this->getRequest()->etapa + 1;
+          $etapa <= $this->getService()->getOption('etapas');
+          $etapa++) {
+        $faltaNextEtapa = $this->getFaltaAtual($etapa);
+
+        if(! empty($faltaNextEtapa) || is_numeric($faltaNextEtapa)){
+          $etapasComFalta[] = $etapa;
+          $canDelete = false;
+        }
+
+      }
+
+      if (! empty($etapasComFalta))
+        $this->messages->append("Falta somente pode ser removida, após remover as faltas lançadas nas etapas posteriores: " . join(', ', $etapasComFalta) . '.', 'error');
+    }
+
+    return $canDelete;
   }
 
 
@@ -416,7 +453,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
 
   protected function deleteFalta(){
-    $canDelete = $this->canDeleteFalta() && $this->setService();
+    $canDelete = $this->canDeleteFalta();
     $cnsPresenca = RegraAvaliacao_Model_TipoPresenca;
     $tpPresenca = $this->getService()->getRegra()->get('tipoPresenca');
 
