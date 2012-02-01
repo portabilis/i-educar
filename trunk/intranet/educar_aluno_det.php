@@ -671,6 +671,7 @@ class indice extends clsDetalhe
     if ($this->obj_permissao->permissao_cadastra(578, $this->pessoa_logada, 7)) {
       $this->url_novo   = 'educar_aluno_cad.php';
       $this->url_editar = 'educar_aluno_cad.php?cod_aluno=' . $registro['cod_aluno'];
+      $this->url_deleta = 'educar_aluno_cad.php?cod_aluno=' . $registro['cod_aluno'];
 
       $this->array_botao = array('Matrícula', 'Atualizar Histórico', 'Ficha do Aluno');
       $this->array_botao_url_script = array(
@@ -678,6 +679,12 @@ class indice extends clsDetalhe
         sprintf('go("educar_historico_escolar_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno']),
         sprintf('showExpansivelImprimir(400, 200, "educar_relatorio_aluno_dados.php?ref_cod_aluno=%d", [], "Relatório i-Educar")', $registro['cod_aluno'])
       );
+
+      $this->array_botao[] = 'Remover aluno';
+      $script = sprintf('if(confirm("Tem certeza que deseja remover o aluno?\n\nEsta operação removerá também as matriculas, enturmações, notas e históricos do aluno e não poderá ser desfeita.")){go("educar_aluno_cad.php?excluir=true&cod_aluno=%d");}', $registro['cod_aluno']);
+
+      $this->array_botao_url_script[] = $script;
+
     }
 
     $this->url_cancelar = 'educar_aluno_lst.php';
@@ -690,7 +697,7 @@ class indice extends clsDetalhe
     $db = new clsBanco();
 
     require_once 'include/portabilis/ml.php';
-    $div = new DIV(new P('<strong>Matriculas:</strong>'));    
+    $div = new DIV(new P('<strong>Matriculas:</strong>'));
 
     $matriculas = new clsPmieducarMatricula();#null, null, null, null, null, null, $this->cod_aluno, null, null, null, 1);
     $matriculas->setOrderby('ano DESC, ref_ref_cod_serie DESC, aprovado, cod_matricula');
@@ -701,7 +708,7 @@ class indice extends clsDetalhe
       $tr = new TR(new TH('Ano', array('class' => 'center')), new TH('Situação'), new TH('Turma'), new TH('Série'), new TH('Curso'), new TH('Escola'));
 
       if ($this->nivel_usuario == 1)
-        $tr->append(new TH('Instituição'));    
+        $tr->append(new TH('Instituição'));
 
       $tr->append(new TH('Formando', array('class' => 'center')));
       $tr->append(new TH('Entrada', array('class' => 'center')));
@@ -713,7 +720,7 @@ class indice extends clsDetalhe
       $possuiSolTransfEmAberto = false;
       foreach($matriculas as $m)
       {
-        
+
         $turma = new clsPmieducarMatriculaTurma();
         $turma = $turma->lista($m['cod_matricula'], NULL, NULL,
           NULL, NULL, NULL, NULL, NULL, 1);
@@ -754,8 +761,8 @@ class indice extends clsDetalhe
 
           if ($db->UnicoCampo("select count(cod_transferencia_solicitacao) from pmieducar.transferencia_solicitacao where ativo = 1 and ref_cod_matricula_saida = {$m['cod_matricula']} and ref_cod_matricula_entrada is null and data_transferencia is null") > 0)
           {
-            #$situacao = '* ' . $situacao;    
-            $situacao .=  ' *';   
+            #$situacao = '* ' . $situacao;
+            $situacao .=  ' *';
             $possuiSolTransfEmAberto = true;
           }
         }
@@ -806,7 +813,7 @@ class indice extends clsDetalhe
         }
         $formando = $m['formando'] ? 'Sim' : '';
 
-        $instEsc = $this->obj_permissao->getInstituicaoEscola($this->pessoa_logada);      
+        $instEsc = $this->obj_permissao->getInstituicaoEscola($this->pessoa_logada);
         if ($this->nivel_usuario == 1 || ($m['ref_cod_instituicao'] == $instEsc['instituicao'] && $m['ref_ref_cod_escola'] == $instEsc['escola']))
           $href = 'educar_matricula_det.php?cod_matricula='.$m['cod_matricula'];
         else
@@ -814,12 +821,12 @@ class indice extends clsDetalhe
 
         if ($href)
         {
-          $tr = new TR(new TD(new A($m['ano'], array('href' => $href, 'class' => 'decorated')), array('class' => 'center')), 
-                        new TD(new A($situacao, array('href' => $href))), 
-                        new TD(new A($nomesTurmas, array('href' => $href))),                         
-                        new TD(new A($serie, array('href' => $href))), 
-                        new TD(new A($curso, array('href' => $href))), 
-                        new TD(new A($escola, array('href' => $href))), 
+          $tr = new TR(new TD(new A($m['ano'], array('href' => $href, 'class' => 'decorated')), array('class' => 'center')),
+                        new TD(new A($situacao, array('href' => $href))),
+                        new TD(new A($nomesTurmas, array('href' => $href))),
+                        new TD(new A($serie, array('href' => $href))),
+                        new TD(new A($curso, array('href' => $href))),
+                        new TD(new A($escola, array('href' => $href))),
                         array('class' => $classRow));
 
           if ($this->nivel_usuario == 1)
@@ -831,13 +838,13 @@ class indice extends clsDetalhe
         }
         else
         {
-          $tr = new TR(new TD($m['ano'], array('class' => 'center')), 
-                        new TD($situacao), 
-                        new TD($nomesTurmas),                         
-                        new TD($serie), 
-                        new TD($curso), 
-                        new TD($escola), 
-                        array('class' => $classRow)); 
+          $tr = new TR(new TD($m['ano'], array('class' => 'center')),
+                        new TD($situacao),
+                        new TD($nomesTurmas),
+                        new TD($serie),
+                        new TD($curso),
+                        new TD($escola),
+                        array('class' => $classRow));
 
           if ($this->nivel_usuario == 1)
             $tr->append(new TD($instituicao));
@@ -863,7 +870,7 @@ class indice extends clsDetalhe
       $div->append(new P('<strong>Este aluno não possui matrículas. </strong>', new A('matrícular aluno', array('class' => 'decorated', 'href' => "educar_matricula_cad.php?ref_cod_aluno={$_GET['cod_aluno']}"))));
 
     return $div->render();
-  }  
+  }
 }
 
 // Instancia o objeto da página

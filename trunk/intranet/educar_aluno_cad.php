@@ -259,9 +259,9 @@ class indice extends clsCadastro
 		  {
 			  $onClick = "document.getElementById(\"cpf\").disabled = true;
 						     document.getElementById(\"cpf_\").value = \"\";
-						     document.getElementById(\"cpf_2\").disabled = true; 
-						     document.getElementById(\"cpf_2\").value = \"\"; 
-						     document.getElementById(\"ref_idpes\").value = \"\"; 
+						     document.getElementById(\"cpf_2\").disabled = true;
+						     document.getElementById(\"cpf_2\").value = \"\";
+						     document.getElementById(\"ref_idpes\").value = \"\";
 						     document.getElementById(\"cpf\").value = \"\";
 						     document.getElementById(\"cpf\").disabled = true;
 						     document.getElementById(\"cpf\").value = \"\";
@@ -1267,13 +1267,13 @@ class indice extends clsCadastro
       }
 
       $this->campoAdicionaTab('Educacenso/Inep', $this->tab_habilitado);
-            
+
       $this->campoNumero('cod_inep', 'Código INEP', $alunoInep->alunoInep, 20, 20, FALSE);
       $this->campoTexto('nome_inep', 'Nome Inep', $alunoInep->nomeInep, 40, 255, FALSE);
 
      // Adiciona uma aba com dados do Serieciasc caso aluno tenha código Inep.
     if (isset($this->cod_aluno)) {
-        
+
       $alunoMapper = new Ciasc_Model_CodigoAlunoDataMapper();
 
       $serie = NULL;
@@ -1284,7 +1284,7 @@ class indice extends clsCadastro
       }
 
       $this->campoAdicionaTab('Serie/CIASC', $this->tab_habilitado);
-      
+
       $this->campoNumero('cod_ciasc', 'Matricula Série', $serie->cod_ciasc, 20, 20, FALSE);
    }
 
@@ -1735,21 +1735,83 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $obj = new clsPmieducarAluno($this->cod_aluno, $this->ref_cod_aluno_beneficio,
-      $this->ref_cod_religiao, $this->pessoa_logada, $this->pessoa_logada,
-      $this->ref_idpes, $this->data_cadastro, $this->data_exclusao, 0);
+    $alunoId = $_GET['cod_aluno'];
 
-    $excluiu = $obj->excluir();
+    $aluno = new clsPmieducarAluno($alunoId, NULL, NULL, $this->pessoa_logada);
 
-    if ($excluiu) {
-      $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-      header("Location: educar_aluno_lst.php");
-      die();
+    if (! $this->desativarMatriculas($alunoId) || ! $this->desativarHistoricos($alunoId))
+      return false;
+
+    if (! $aluno->excluir()) {
+      $this->mensagem = "Erro ao desativar aluno.";
+      return false;
     }
 
-    $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-    echo "<!--\nErro ao excluir clsPmieducarAluno\nvalores obrigatorios\nif( is_numeric( $this->cod_aluno ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
-    return false;
+    $this->mensagem = "Exclus&atilde;o efetuada com sucesso.";
+    header("Location: educar_aluno_lst.php");
+    die();
+  }
+
+
+  function desativarMatriculas($alunoId) {
+
+    $matriculas = new clsPmieducarMatricula();
+    $matriculas = $matriculas->lista(NULL, NULL, NULL, NULL, NULL, NULL, $alunoId);
+
+    foreach($matriculas as $matricula) {
+      $matriculaId = $matricula['cod_matricula'];
+      $matricula = new clsPmieducarMatricula($matriculaId, NULL, NULL, NULL, $this->pessoa_logada);
+
+      if (! $this->desativarEnturmacoes($matriculaId))
+        return false;
+      elseif (! $matricula->excluir()) {
+        $this->mensagem = "Erro ao desativar matriculas";
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+
+  function desativarEnturmacoes($matriculaId) {
+    $enturmacoes = new clsPmieducarMatriculaTurma();
+    $enturmacoes = $enturmacoes->lista($matriculaId);
+    foreach($enturmacoes as $enturmacao) {
+      $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
+                                                   $enturmacao['ref_cod_turma'],
+                                                   $this->pessoa_logada,
+                                                   NULL,
+                                                   NULL,
+                                                   NULL,
+                                                   NULL,
+                                                   NULL,
+                                                   $enturmacao['sequencial']);
+
+      if (! $enturmacao->excluir()) {
+        $this->mensagem = "Erro ao desativar enturmações";
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+
+  function desativarHistoricos($alunoId) {
+    #TODO desativar historicos
+    $historicos = new clsPmieducarHistoricoEscolar();
+    $historicos = $historicos->lista($alunoId);
+
+    foreach($historicos as $historico) {
+      $historico = new clsPmieducarHistoricoEscolar($alunoId, $historico['sequencial'], $this->pessoa_logada);
+
+      if (! $historico->excluir()) {
+        $this->mensagem = "Erro ao desativar históricos";
+        return false;
+      }
+    }
+    return true;
   }
 
   function geraFotos($fotoOriginal)
@@ -1915,7 +1977,7 @@ class indice extends clsCadastro
         $mapperDelete = new Educacenso_Model_AlunoDataMapper();
         $mapperDelete->delete($aluno);
       }
-    
+
       if (!empty($cod_inep))
       {
         $mapperSave = new Educacenso_Model_Aluno();
@@ -1934,9 +1996,9 @@ class indice extends clsCadastro
            $mapperSave->created_at = $aluno->created_at;
            $mapperSave->updated_at = 'NOW()';
         }
-        
+
         $alunoMapper->save($mapperSave);
-      }    
+      }
   }
 
   function _cadastraCiesc($cod_aluno, $cod_ciasc, $user)
@@ -1946,34 +2008,34 @@ class indice extends clsCadastro
     $ciascMapperSave->cod_aluno = $cod_aluno;
     $ciascMapperSave->cod_ciasc = $cod_ciasc;
     $ciascMapperSave->user = $user;
-    
+
     $ciascMapper = new Ciasc_Model_CodigoAlunoDataMapper();
     try {
-        $cad = $ciascMapper->find(array('cod_aluno' => $cod_aluno));        
+        $cad = $ciascMapper->find(array('cod_aluno' => $cod_aluno));
      }
-     catch (Exception $e) 
+     catch (Exception $e)
      {}
 
      if (!empty($cad->cod_aluno))//remove o dado existente
      {
         $ciascMapperDelete = new Ciasc_Model_CodigoAluno();
         $ciascMapper->delete($cad);
-        
-     }     
+
+     }
 
      if (!empty($cod_ciasc)) //foi informado um valor
-     {  
+     {
         if (empty($cad->cod_ciasc))//se não existe não bd, adiciona
         {
            $ciascMapperSave->created_at = 'NOW()';
-        } 
+        }
         else
         {
            $ciascMapperSave->created_at = $cad->created_at;
            $ciascMapperSave->updated_at = 'NOW()';
         }
         $ciascMapper->save($ciascMapperSave);
-     }   
+     }
     return TRUE;
   }
 }
