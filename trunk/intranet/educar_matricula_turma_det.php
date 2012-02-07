@@ -108,18 +108,26 @@ class indice extends clsDetalhe
       $this->sequencial = $det_mat_turma['sequencial'];
     }
 
-    $tmp_obj = new clsPmieducarMatriculaTurma( );
-    $lista = $tmp_obj->lista(NULL, $this->ref_cod_turma, NULL, NULL, NULL, NULL,
-      NULL, NULL, 1);
+    // #TODO adicionar ano da matricula atual
+    #$tmp_obj = new clsPmieducarMatriculaTurma( );
+    #$lista = $tmp_obj->lista(NULL, $this->ref_cod_turma, NULL, NULL, NULL, NULL,
+    #  NULL, NULL, 1);
 
-    $total_alunos = 0;
-    if ($lista) {
-      $total_alunos = count($lista);
-    }
+    #$total_alunos = 0;
+    #if ($lista) {
+    #  $total_alunos = count($lista);
+    #}
 
     $tmp_obj  = new clsPmieducarTurma();
     $lst_obj  = $tmp_obj->lista($this->ref_cod_turma);
     $registro = array_shift($lst_obj);
+
+    $db = new clsBanco();
+
+    $ano = $db->CampoUnico("select ano from pmieducar.matricula where cod_matricula = $this->ref_cod_matricula");
+    $sql = "select count(cod_matricula) as qtd_matriculas from pmieducar.matricula, pmieducar.matricula_turma where ano = {$ano} and matricula.ativo = 1 and matricula_turma.ativo = matricula.ativo and cod_matricula = ref_cod_matricula and ref_cod_turma = $this->ref_cod_turma";
+
+    $total_alunos = $db->CampoUnico($sql);
 
     $this->ref_cod_curso = $registro['ref_cod_curso'];
 
@@ -218,7 +226,7 @@ class indice extends clsDetalhe
     }
     else
       $this->addDetalhe(array('Turma atual (origem)', 'Sem enturmações'));
-    
+
 
     if ($registro['nm_turma']) {
       $this->addDetalhe(array('Turma destino' , $registro['nm_turma']));
@@ -281,7 +289,7 @@ class indice extends clsDetalhe
         function removerEnturmacao(ref_cod_matricula, ref_cod_turma_destino) {
 
           if (! confirm("Tem certeza que deseja remover a enturmação (da turma destino)?"))
-            return false;  
+            return false;
 
           document.formcadastro.ref_cod_turma_origem.value = "remover-enturmacao-destino";
           document.formcadastro.ref_cod_matricula.value = ref_cod_matricula;
