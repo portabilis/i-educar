@@ -340,8 +340,6 @@ class indice extends clsCadastro
     $pessoaFj = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $result = $this->validateEmail();
-
     $objPessoa = new clsPessoa_($pessoaFj, FALSE, FALSE, $this->p_http, FALSE,
       $pessoaFj, date("Y-m-d H:i:s", time()), $this->p_email);
 
@@ -438,19 +436,7 @@ class indice extends clsCadastro
       }
     }
 
-    if ($result)
-      header('Location: index.php');
-
-    return $result;
-  }
-
-
-  protected function validateEmail(){
-    if (! filter_var($this->p_email, FILTER_VALIDATE_EMAIL)) {
-      $this->mensagem = 'Por favor, informe um email válido.';
-      return false;
-    }
-    return true;
+    header('Location: index.php');
   }
 }
 
