@@ -57,6 +57,10 @@ class Usuario_Model_Funcionario extends CoreExt_Entity
     'status_token' => NULL
   );
 
+  protected $_dataTypes = array(
+    'matricula' => 'string'
+  );
+
   protected $_references = array(
   );
 
