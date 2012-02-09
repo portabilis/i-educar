@@ -198,7 +198,7 @@
        pmieducar.escola_serie
 
 where  escola_ano_letivo.ano = $P{ano} AND
-       escola_ano_letivo.andamento = 1 AND
+       --escola_ano_letivo.andamento = 1 AND
        instituicao.cod_instituicao = $P{instituicao} AND
        escola.cod_escola = $P{escola} AND
 
