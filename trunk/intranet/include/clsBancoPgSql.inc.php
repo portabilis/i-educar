@@ -32,15 +32,13 @@ require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsCronometro.inc.php';
 require_once 'include/clsEmail.inc.php';
 
-
-$redirectTo = '';#/intranet/suspenso.php';  
-if ($redirectTo)
+$routesConfigs = $GLOBALS['coreExt']['Config']->app->routes;
+if ($routesConfigs->redirect_to)
 {
   header('HTTP/1.1 503 Service Temporarily Unavailable');
   header('Status: 503 Service Temporarily Unavailable');
-  header("Location: $redirectTo");      
+  header("Location: $routesConfigs->redirect_to");
 }
-
 
 /**
  * clsBancoSQL_ abstract class.
@@ -887,7 +885,7 @@ abstract class clsBancoSQL_
    * @param  string $name    nome da consulta
    * @param  string $query   sql para ser preparado
    * @param  array  $params  parametros para consulta
-   * 
+   *
    * @return bool|resource FALSE em caso de erro ou o identificador da consulta
    *   em caso de sucesso.
    */
@@ -900,7 +898,7 @@ abstract class clsBancoSQL_
       if (! is_array($params))
         $params = array($params);
 
-      $this->bConsulta_ID = @pg_query_params($dbConn, $query, $params); 
+      $this->bConsulta_ID = @pg_query_params($dbConn, $query, $params);
       $resultError = @pg_result_error($this->bConsulta_ID);
       $errorMsgs .= trim($resultError) != '' ? $resultError : @pg_last_error($this->bConsulta_ID);
 
