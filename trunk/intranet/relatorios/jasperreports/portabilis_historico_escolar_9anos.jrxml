@@ -1024,10 +1024,7 @@ SELECT nm_disciplina,
           from pmieducar.historico_escolar he
          where he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
                he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
-               he.ano = (select max(hi.ano)
-                                          from pmieducar.historico_escolar hi
-                                         where hi.ref_cod_aluno = he.ref_cod_aluno AND
-                                               hi.ref_cod_instituicao = he.ref_cod_instituicao)) as nome_serie_aux
+        he.ano = historico_escolar.ano and ativo = 1 limit 1) as nome_serie_aux
 
 
   FROM pmieducar.historico_escolar,
@@ -1041,8 +1038,14 @@ WHERE  instituicao.cod_instituicao = $P{instituicao} AND
        historico_disciplinas.ref_sequencial = historico_escolar.sequencial AND
        historico_escolar.ref_cod_aluno = $P{aluno} AND
        instituicao.ativo = 1 AND
-	   historico_escolar.aprovado = 1 AND
-	   historico_escolar.ativo = 1
+       historico_escolar.aprovado = 1 AND
+       historico_escolar.ativo = 1 AND
+
+       historico_escolar.ano = (SELECT max(he.ano)
+       FROM pmieducar.historico_escolar he
+       WHERE he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+       he.sequencial = historico_escolar.sequencial AND
+       he.ref_cod_aluno = 10538 and ativo = 1)
 )  AS T
 GROUP BY nm_disciplina
 ORDER BY 1 ASC]]>
