@@ -188,7 +188,7 @@ class indice extends clsCadastro
   }
 
   function Novo()
-  {       
+  {
 
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -216,7 +216,7 @@ class indice extends clsCadastro
 
     if(is_array($anoLetivoEmAndamentoEscola)){
 
-      require_once 'include/pmieducar/clsPmieducarSerie.inc.php';    
+      require_once 'include/pmieducar/clsPmieducarSerie.inc.php';
       $db = new clsBanco();
 
       $db->Consulta("select ref_ref_cod_serie, ref_cod_curso from pmieducar.matricula where ativo = 1 and ref_ref_cod_escola = $this->ref_cod_escola and ref_cod_curso = $this->ref_cod_curso and ref_cod_aluno = $this->ref_cod_aluno and aprovado not in (1,2,4,5,6,7,8,9)");
@@ -262,7 +262,7 @@ class indice extends clsCadastro
             if (is_array($escola) && count($escola))
               $escola = $escola['fantasia'];
             else
-              $escola = '';  
+              $escola = '';
           }
           else
             $escola = '';
@@ -376,6 +376,10 @@ class indice extends clsCadastro
         $this->semestre =  NULL;
       }
 
+      if (! $this->removerFlagUltimaMatricula($this->ref_cod_aluno)) {
+        return false;
+      }
+
       $obj = new clsPmieducarMatricula(NULL, $this->ref_cod_reserva_vaga,
         $this->ref_cod_escola, $this->ref_ref_cod_serie, NULL,
         $this->pessoa_logada, $this->ref_cod_aluno, 3, NULL, NULL, 1, $this->ano,
@@ -422,7 +426,7 @@ class indice extends clsCadastro
         #senão pega as solicitacoes de transferencia internas (sem data de transferencia e sem codigo de matricula de entrada) e
         #seta a data de transferencia e codigo de matricula de entrada, atualiza a situacao da matricula para transferido e inativa a matricula turma
         else {
-        */  
+        */
           $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
           $lst_transferencia = $obj_transferencia->lista(NULL, NULL, NULL, NULL,
             NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL,
@@ -532,7 +536,7 @@ class indice extends clsCadastro
     $result = true;
 
     $enturmacoes = new clsPmieducarMatriculaTurma();
-    $enturmacoes = $enturmacoes->lista($matriculaId, NULL, NULL, NULL, NULL, 
+    $enturmacoes = $enturmacoes->lista($matriculaId, NULL, NULL, NULL, NULL,
                                        NULL, NULL, NULL, 1);
 
     if ($enturmacoes) {
@@ -540,7 +544,7 @@ class indice extends clsCadastro
         $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
                                                      $enturmacao['ref_cod_turma'],
                                                      $this->pessoa_logada, null,
-                                                     null, null, 0, null, 
+                                                     null, null, 0, null,
                                                      $enturmacao['sequencial']);
         if ($result && ! $enturmacao->edita())
           $result = false;
@@ -548,7 +552,7 @@ class indice extends clsCadastro
     }
 
     if(! $result) {
-		  $this->mensagem = "N&atilde;o foi poss&iacute;vel desativar as " . 
+		  $this->mensagem = "N&atilde;o foi poss&iacute;vel desativar as " .
                         "enturma&ccedil;&otilde;es da matr&iacute;cula.";
     }
 
@@ -622,6 +626,25 @@ class indice extends clsCadastro
 
     $this->mensagem = 'Exclusão não realizada.<br />';
     return FALSE;
+  }
+
+  protected function removerFlagUltimaMatricula($alunoId) {
+    $matriculas = new clsPmieducarMatricula();
+    $matriculas = $matriculas->lista(NULL, NULL, NULL, NULL, NULL, NULL, $this->ref_cod_aluno,
+                                     NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, 1);
+
+
+    foreach ($matriculas as $matricula) {
+      $matricula = new clsPmieducarMatricula($matricula['cod_matricula'], NULL, NULL, NULL,
+                                             $this->pessoa_logada, NULL, $alunoId, NULL, NULL,
+                                             NULL, 1, NULL, 0);
+      if (! $matricula->edita()) {
+        $this->mensagem = 'Erro ao remover flag ultima matricula das matriculas anteriores.';
+        return false;
+      }
+    }
+
+    return true;
   }
 }
 
