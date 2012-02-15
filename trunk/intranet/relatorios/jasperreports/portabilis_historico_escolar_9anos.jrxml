@@ -1045,7 +1045,7 @@ WHERE  instituicao.cod_instituicao = $P{instituicao} AND
        FROM pmieducar.historico_escolar he
        WHERE he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
        he.sequencial = historico_escolar.sequencial AND
-       he.ref_cod_aluno = 10538 and ativo = 1)
+       he.ref_cod_aluno = $P{aluno} and ativo = 1)
 )  AS T
 GROUP BY nm_disciplina
 ORDER BY 1 ASC]]>
