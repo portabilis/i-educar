@@ -1018,7 +1018,7 @@ SELECT nm_disciplina,
 ( select CASE WHEN ((substring(nm_serie,1,1) = 8) or (substring(nm_serie,1,1) = 9)) THEN
                  'concluiu o ENSINO FUNDAMENTAL (8 ANOS)'
              ELSE
-                 'concluiu a ' || substring(nm_serie,1,1) || ' ano'
+                 'concluiu o ' || substring(nm_serie,1,1) || ' ano'
              END
 
           from pmieducar.historico_escolar he
