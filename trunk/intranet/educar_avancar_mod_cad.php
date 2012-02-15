@@ -61,7 +61,7 @@ class indice extends clsCadastro
 
   function Gerar()
   {
-    $this->campoNumero( "ano", "Ano", date("Y"), 4, 4, true);
+    $this->campoNumero( "ano", "Ano (atual)", date("Y"), 4, 4, true);
 
     $instituicao_obrigatorio        = TRUE;
     $escola_obrigatorio             = TRUE;
@@ -86,122 +86,113 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $db  = new clsBanco();
-    $db2 = new clsBanco();
+    $this->db  = new clsBanco();
+    $this->db2 = new clsBanco();
 
-    if ($this->rematricular($this->ref_cod_escola, $this->ref_ref_cod_serie,
-                        $this->ref_cod_curso, $this->ref_cod_turma, $_POST['ano'])) {
+    $result = $this->rematricularALunos($this->ref_cod_escola, $this->ref_cod_curso,
+                                        $this->ref_ref_cod_serie, $this->ref_cod_turma, $_POST['ano']);
 
-      $this->mensagem = "Rematrícula efetuada com sucesso!";
-      return TRUE;
-    }
-
-    return false;
+    return $result;
   }
+
 
   function Editar() {
     return TRUE;
   }
 
 
-  protected function rematricular($escolaId, $serieId, $cursoId, $turmaId, $ano) {
-    if (! $this->rematricularAlunosAprovados($escolaId, $serieId, $cursoId, $turmaId, $ano))
-      return false;
+  protected function rematricularALunos($escolaId, $cursoId, $serieId, $turmaId, $ano) {
+    $result = $this->selectMatriculas($escolaId, $cursoId, $serieId, $turmaId, $ano);
+    $count = 0;
 
-    if (! $this->rematricularAlunosReprovados($escolaId, $serieId, $cursoId, $turmaId, $ano))
-      return false;
+    while ($result && $this->db->ProximoRegistro()) {
+      list($matriculaId, $alunoId, $situacao) = $this->db->Tupla();
+
+      $this->db2->Consulta("UPDATE pmieducar.matricula SET ultima_matricula = '0' WHERE cod_matricula = $matriculaId");
+
+      if ($result && $situacao == 1)
+        $result = $this->rematricularAlunoAprovado($escolaId, $serieId, $ano, $alunoId);
+      elseif ($result && $situacao == 2)
+        $result = $this->rematricularAlunoReprovado($escolaId, $cursoId, $serieId, $ano, $alunoId);
+
+      if (! $result)
+        break;
+
+      $count += 1;
+    }
+
+    if ($result && empty($this->mensagem))
+      $this->mensagem = $count > 0 ? "<span class='success'>Rematrículado $count alunos com sucesso em $ano!</span>" : "<span class='notice'>Nenhum aluno rematrículado. Certifique-se que a turma possui alunos aprovados ou reprovados não matrículados em $ano.</span>";
+
+    elseif(empty($this->mensagem))
+      $this->mensagem = "Ocorreu algum erro inesperado durante rematrículas, por favor, tente novamente.";
+
+    return $result;
   }
 
 
-  protected function selectMatriculas($escolaId, $serieId, $cursoId, $turmaId, $ano, $situacao) {
-    $db->Consulta("SELECT cod_matricula, ref_cod_aluno
+  protected function selectMatriculas($escolaId, $cursoId, $serieId, $turmaId, $ano) {
+    try {
+      $anoAnterior = $ano - 1;
+
+      $this->db->Consulta("SELECT cod_matricula, ref_cod_aluno, aprovado
                    FROM
                      pmieducar.matricula m, pmieducar.matricula_turma
-                   WHERE aprovado = $situacao AND m.ativo = 1 AND ref_ref_cod_escola = $escolaId AND
+                   WHERE aprovado in (1, 2) AND m.ativo = 1 AND ref_ref_cod_escola = $escolaId AND
                      ref_ref_cod_serie = $serieId AND ref_cod_curso = $cursoId AND
                      cod_matricula = ref_cod_matricula AND ref_cod_turma = $turmaId AND
+                     ano  = $anoAnterior AND
                      NOT EXISTS(select 1 from pmieducar.matricula m2 where
     			           m2.ref_cod_aluno = m.ref_cod_aluno AND
      			           m2.ano = $ano AND
      			           m2.ativo = 1 AND
      			           m2.ref_ref_cod_escola = m.ref_ref_cod_escola)");
-  }
 
-  protected function rematricularAlunosAprovados($escolaId, $serieId, $cursoId, $turmaId, $ano) {
-
-    $this->selectMatriculas($escolaId, $serieId, $cursoId, $turmaId, $ano, 1);
-
-    while ($db->ProximoRegistro()) {
-      list($cod_matricula, $ref_cod_aluno) = $db->Tupla();
-
-      // Seleciona a série da sequência de séries
-      $prox_mod = $db2->campoUnico(sprintf(
-        "SELECT
-          ref_serie_destino
-        FROM
-          pmieducar.sequencia_serie
-        WHERE
-          ref_serie_origem = '%d' AND ativo = '1'", $this->ref_ref_cod_serie)
-      );
-
-      // Seleciona o código do curso da série de sequência
-      $ref_cod_curso = $db2->CampoUnico(sprintf("SELECT ref_cod_curso FROM pmieducar.serie WHERE cod_serie = %d", $prox_mod));
-
-      if (is_numeric($prox_mod)) {
-        // Atualiza a matrícula atual do aluno, para evitar que seja listada no cadastro deste
-        $db2->Consulta(sprintf("UPDATE pmieducar.matricula SET ultima_matricula = '0' WHERE cod_matricula = '%d'", $cod_matricula));
-
-        // Cria uma nova matrícula
-        $db2->Consulta(sprintf("
-          INSERT INTO pmieducar.matricula
-            (ref_ref_cod_escola, ref_ref_cod_serie, ref_usuario_cad, ref_cod_aluno, aprovado, data_cadastro, ano, ref_cod_curso, ultima_matricula)
-          VALUES
-            ('%d', '%d', '%d', '%d', '3', 'NOW()', '%d', '%d', '1')",
-          $this->ref_cod_escola, $prox_mod, $this->pessoa_logada, $ref_cod_aluno, $ano, $ref_cod_curso)
-        );
-      }
+    }
+    catch (Exception $e) {
+      $this->mensagem = "Erro ao selecionar matriculas ano anterior: $anoAnterior";
+      error_log("Erro ao selecionar matriculas ano anterior, no processo rematricula automatica:" . $e->getMessage());
+      return false;
     }
 
+    return true;
+  }
 
-    $this->mensagem = "Erro ao rematrícular alunos aprovados no ano anterior.";
+
+  protected function rematricularAlunoAprovado($escolaId, $serieId, $ano, $alunoId) {
+    $nextSerieId = $this->db2->campoUnico("SELECT ref_serie_destino FROM pmieducar.sequencia_serie
+                                           WHERE ref_serie_origem = $serieId AND ativo = 1");
+
+    $nextCursoId = $this->db2->CampoUnico("SELECT ref_cod_curso FROM pmieducar.serie
+                                           WHERE cod_serie = $nextSerieId");
+
+    if (is_numeric($nextSerieId))
+      return $this->matricularAluno($escolaId, $nextCursoId, $nextSerieId, $ano, $alunoId);
+    else
+      $this->mensagem = "Não foi possivel obter a proxima série da sequencia de enturmação";
+
     return false;
   }
 
-  protected function rematricularAlunosReprovados($escolaId, $serieId, $cursoId, $turmaId, $ano) {
-    $db->Consulta(sprintf("
-      SELECT
-        cod_matricula, ref_cod_aluno, ref_ref_cod_serie
-      FROM
-        pmieducar.matricula m, pmieducar.matricula_turma
-      WHERE
-        aprovado = '2' AND ref_ref_cod_escola = '%d' AND ref_ref_cod_serie='%d' AND cod_matricula = ref_cod_matricula AND ref_cod_turma = '%d' AND
-		NOT EXISTS(select 1 from pmieducar.matricula m2 where
-			m2.ref_cod_aluno = m.ref_cod_aluno AND
-			m2.ano = '%d' AND
-			m2.ativo <> 0 AND
-			m2.ref_ref_cod_escola = ref_ref_cod_escola)
-		",
-      $this->ref_cod_escola, $this->ref_ref_cod_serie, $this->ref_cod_turma, $ano)
-    );
 
-    // Cria uma nova matrícula para cada aluno reprovado na mesma série/curso/escola informados
-    while ($db->ProximoRegistro()) {
-      list($cod_matricula, $ref_cod_aluno, $ref_cod_serie) = $db->Tupla();
+  protected function rematricularAlunoReprovado($escolaId, $cursoId, $serieId, $ano, $alunoId) {
+    return $this->matricularAluno($escolaId, $cursoId, $serieId, $ano, $alunoId);
+  }
 
-      $db2->Consulta(sprintf("UPDATE pmieducar.matricula SET ultima_matricula = '0'
-        WHERE cod_matricula = '%d'", $cod_matricula));
 
-      $db2->Consulta(
-        sprintf("INSERT INTO pmieducar.matricula
-          (ref_ref_cod_escola, ref_ref_cod_serie, ref_usuario_cad, ref_cod_aluno, aprovado, data_cadastro, ano, ref_cod_curso, ultima_matricula)
-        VALUES
-          ('%d', '%d', '%d', '%d', '3', 'NOW()', '%d', '%d', '1')",
-        $this->ref_cod_escola, $ref_cod_serie, $this->pessoa_logada, $ref_cod_aluno, $ano, $this->ref_cod_curso)
-      );
+  protected function matricularAluno($escolaId, $cursoId, $serieId, $ano, $alunoId) {
+    try {
+      $this->db2->Consulta(sprintf("INSERT INTO pmieducar.matricula
+        (ref_ref_cod_escola, ref_ref_cod_serie, ref_usuario_cad, ref_cod_aluno, aprovado, data_cadastro, ano, ref_cod_curso, ultima_matricula) VALUES ('%d', '%d', '%d', '%d', '3', 'NOW()', '%d', '%d', '1')",
+      $escolaId, $serieId, $this->pessoa_logada, $alunoId, $ano, $cursoId));
+    }
+    catch (Exception $e) {
+      $this->mensagem = "Erro durante matrícula do aluno: $alunoId";
+      error_log("Erro durante matricula do aluno $alunoId, no processo rematricula automatica:" . $e->getMessage());
+      return false;
     }
 
-    $this->mensagem = "Erro ao rematrícular alunos reprovados no ano anterior.";
-    return false;
+    return true;
   }
 }
 
