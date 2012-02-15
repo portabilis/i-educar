@@ -61,6 +61,8 @@ class indice extends clsCadastro
 
   function Gerar()
   {
+    $this->campoNumero( "ano", "Ano", date("Y"), 4, 4, true);
+
     $instituicao_obrigatorio        = TRUE;
     $escola_obrigatorio             = TRUE;
     $curso_obrigatorio              = TRUE;
@@ -87,37 +89,47 @@ class indice extends clsCadastro
     $db  = new clsBanco();
     $db2 = new clsBanco();
 
-    // Seleciona o maior ano letivo da escola em andamento
-    $ano = $db2->CampoUnico(sprintf("
-      SELECT MAX(ano) FROM pmieducar.escola_ano_letivo
-      WHERE ref_cod_escola = '%d' AND andamento = 1", $this->ref_cod_escola)
-    );
+    if ($this->rematricular($this->ref_cod_escola, $this->ref_ref_cod_serie,
+                        $this->ref_cod_curso, $this->ref_cod_turma, $_POST['ano'])) {
 
-    // Caso a escola não tenha um ano letivo, usa o ano da data do servidor web
-    if (! is_numeric($ano)) {
-      $ano = date('Y');
+      $this->mensagem = "Rematrícula efetuada com sucesso!";
+      return TRUE;
     }
 
-    // Seleciona todos os alunos que foram aprovados na turma/série/curso/escola informados
-	// Query abaixo foi revisada pela Portabilis em 22/02/2011 para não permitir duplicar as matrículas caso já existam no ano letivo subsequente
-    $db->Consulta(sprintf("
-      SELECT
-        cod_matricula, ref_cod_aluno
-      FROM
-        pmieducar.matricula m, pmieducar.matricula_turma
-      WHERE
-        aprovado = '1' AND m.ativo = '1' AND ref_ref_cod_escola = '%d' AND
-        ref_ref_cod_serie='%d' AND ref_cod_curso = '%d' AND
-        cod_matricula = ref_cod_matricula AND ref_cod_turma = '%d' AND
-		NOT EXISTS(select 1 from pmieducar.matricula m2 where 
-			m2.ref_cod_aluno = m.ref_cod_aluno AND
-			m2.ano = '%d' AND
-			m2.ativo <> 0 AND
-			m2.ref_ref_cod_escola = m.ref_ref_cod_escola)
-							
-		",
-      $this->ref_cod_escola, $this->ref_ref_cod_serie, $this->ref_cod_curso, $this->ref_cod_turma, $ano)
-    );
+    return false;
+  }
+
+  function Editar() {
+    return TRUE;
+  }
+
+
+  protected function rematricular($escolaId, $serieId, $cursoId, $turmaId, $ano) {
+    if (! $this->rematricularAlunosAprovados($escolaId, $serieId, $cursoId, $turmaId, $ano))
+      return false;
+
+    if (! $this->rematricularAlunosReprovados($escolaId, $serieId, $cursoId, $turmaId, $ano))
+      return false;
+  }
+
+
+  protected function selectMatriculas($escolaId, $serieId, $cursoId, $turmaId, $ano, $situacao) {
+    $db->Consulta("SELECT cod_matricula, ref_cod_aluno
+                   FROM
+                     pmieducar.matricula m, pmieducar.matricula_turma
+                   WHERE aprovado = $situacao AND m.ativo = 1 AND ref_ref_cod_escola = $escolaId AND
+                     ref_ref_cod_serie = $serieId AND ref_cod_curso = $cursoId AND
+                     cod_matricula = ref_cod_matricula AND ref_cod_turma = $turmaId AND
+                     NOT EXISTS(select 1 from pmieducar.matricula m2 where
+    			           m2.ref_cod_aluno = m.ref_cod_aluno AND
+     			           m2.ano = $ano AND
+     			           m2.ativo = 1 AND
+     			           m2.ref_ref_cod_escola = m.ref_ref_cod_escola)");
+  }
+
+  protected function rematricularAlunosAprovados($escolaId, $serieId, $cursoId, $turmaId, $ano) {
+
+    $this->selectMatriculas($escolaId, $serieId, $cursoId, $turmaId, $ano, 1);
 
     while ($db->ProximoRegistro()) {
       list($cod_matricula, $ref_cod_aluno) = $db->Tupla();
@@ -147,11 +159,15 @@ class indice extends clsCadastro
             ('%d', '%d', '%d', '%d', '3', 'NOW()', '%d', '%d', '1')",
           $this->ref_cod_escola, $prox_mod, $this->pessoa_logada, $ref_cod_aluno, $ano, $ref_cod_curso)
         );
-      }	  	  
+      }
     }
 
-    // Seleciona todos os alunos que foram reprovados na turma/série/curso/escola informados
-	// Query abaixo foi revisada pela Portabilis em 22/02/2011 para não permitir duplicar as matrículas caso já existam no ano letivo subsequente
+
+    $this->mensagem = "Erro ao rematrícular alunos aprovados no ano anterior.";
+    return false;
+  }
+
+  protected function rematricularAlunosReprovados($escolaId, $serieId, $cursoId, $turmaId, $ano) {
     $db->Consulta(sprintf("
       SELECT
         cod_matricula, ref_cod_aluno, ref_ref_cod_serie
@@ -159,11 +175,11 @@ class indice extends clsCadastro
         pmieducar.matricula m, pmieducar.matricula_turma
       WHERE
         aprovado = '2' AND ref_ref_cod_escola = '%d' AND ref_ref_cod_serie='%d' AND cod_matricula = ref_cod_matricula AND ref_cod_turma = '%d' AND
-		NOT EXISTS(select 1 from pmieducar.matricula m2 where 
+		NOT EXISTS(select 1 from pmieducar.matricula m2 where
 			m2.ref_cod_aluno = m.ref_cod_aluno AND
 			m2.ano = '%d' AND
 			m2.ativo <> 0 AND
-			m2.ref_ref_cod_escola = ref_ref_cod_escola)			
+			m2.ref_ref_cod_escola = ref_ref_cod_escola)
 		",
       $this->ref_cod_escola, $this->ref_ref_cod_serie, $this->ref_cod_turma, $ano)
     );
@@ -184,12 +200,8 @@ class indice extends clsCadastro
       );
     }
 
-    $this->mensagem = "Rematrícula efetuada com sucesso!";
-    return TRUE;
-  }
-
-  function Editar() {
-    return TRUE;
+    $this->mensagem = "Erro ao rematrícular alunos reprovados no ano anterior.";
+    return false;
   }
 }
 
