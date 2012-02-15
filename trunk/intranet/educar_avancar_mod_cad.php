@@ -61,18 +61,19 @@ class indice extends clsCadastro
 
   function Gerar()
   {
-    $this->campoNumero( "ano", "Ano (atual)", date("Y"), 4, 4, true);
+    #$this->campoNumero( "ano", "Ano (atual)", date("Y"), 4, 4, true);
 
-    $instituicao_obrigatorio        = TRUE;
-    $escola_obrigatorio             = TRUE;
-    $curso_obrigatorio              = TRUE;
-    $escola_curso_serie_obrigatorio = TRUE;
-    $turma_obrigatorio              = TRUE;
-    $get_escola                     = TRUE;
-    $get_curso                      = TRUE;
-    $get_escola_curso_serie         = TRUE;
-    $get_turma                      = TRUE;
-    $get_cursos_nao_padrao          = FALSE;
+    $instituicao_obrigatorio                                  = TRUE;
+    $get_escola = $escola_obrigatorio                         = TRUE;
+    $get_curso  = $curso_obrigatorio                          = TRUE;
+    $get_escola_curso_serie = $escola_curso_serie_obrigatorio = TRUE;
+    $get_turma  = $turma_obrigatorio                          = TRUE;
+    $get_cursos_nao_padrao                                    = FALSE;
+
+    $this->verificar_campos_obrigatorios                      = TRUE;
+    $this->add_onchange_events                                = TRUE;
+    $get_ano = $ano_obrigatorio                               = TRUE;
+    $ano_andamento_in                                         = '0,1';
 
     include 'include/pmieducar/educar_campo_lista.php';
   }
@@ -208,16 +209,3 @@ $pagina->addForm($miolo);
 // Gera o código HTML
 $pagina->MakeAll();
 ?>
-<script type="text/javascript">
-document.getElementById('ref_cod_escola').onchange = function() {
-  getEscolaCurso();
-}
-
-document.getElementById('ref_cod_curso').onchange = function() {
-  getEscolaCursoSerie();
-}
-
-document.getElementById('ref_ref_cod_serie').onchange = function() {
-  getTurma();
-}
-</script>
