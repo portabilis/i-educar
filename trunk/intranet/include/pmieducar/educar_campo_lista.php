@@ -497,7 +497,7 @@
     $aluno_obrigatorio = isset($aluno_obrigatorio) && $aluno_obrigatorio ? $aluno_obrigatorio  : false;
     $this->campoTexto('nm_aluno', 'Aluno', $this->nm_aluno, 30, 255, $aluno_obrigatorio,
       FALSE, FALSE, '', "<img border=\"0\" onclick=\"pesquisa_valores_popless('/intranet/educar_pesquisa_aluno.php')\" id=\"ref_cod_aluno_lupa\" name=\"ref_cod_aluno_lupa\" src=\"imagens/lupa.png\"\/>", '', '', TRUE);
-    $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);    
+    $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
   }
 ?>
 <script type='text/javascript'>
@@ -519,7 +519,7 @@ var appendToUrl = [];
 
 /* adiciona a url o conteudo incluido na lista appendToUrl, quando a entidade da lista é a mesma entidade repasada a função,
 ex appendToUrl.push(['nome_entidade', 'var=valor']);
-var url = prepareUrl('nome_entidade', 'http://teste.com');  
+var url = prepareUrl('nome_entidade', 'http://teste.com');
 
 resultado http://teste.com?var=valor
 
@@ -613,7 +613,7 @@ if ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario )
 
 		  campoEscola.disabled = false;
       if (campoEscola.afterchange)
-        campoEscola.afterchange(); 
+        campoEscola.afterchange();
     }
 
 		if( typeof after_getEscola == 'function' )
@@ -677,7 +677,7 @@ if ( $get_curso && $sem_padrao && !$get_matricula )
 		}
 		campoCurso.disabled = false;
     if (campoCurso.afterchange)
-      campoCurso.afterchange();    
+      campoCurso.afterchange();
 	}
 <?
 }
@@ -937,7 +937,7 @@ if ( $get_escola_curso_serie  && !$get_matricula )
 		}
 		campoSerie.disabled = false;
     if (campoSerie.afterchange)
-      campoSerie.afterchange();      
+      campoSerie.afterchange();
 	}
 <?
 }
@@ -1443,7 +1443,7 @@ function updateSelect(xml)
 		  clearSelect(entity = 'etapa', disable = true, text = 'Carregando etapas...', multipleId=false);
 
       var ajaxReq = new ajax( updateSelect );
-      ajaxReq.envia("portabilis_etapa_xml.php?escola_id="+escolaId+"&ano_escolar="+ano+"&curso_id="+cursoId+"&turma_id="+turmaId+"&default_id="+defaultId);  
+      ajaxReq.envia("portabilis_etapa_xml.php?escola_id="+escolaId+"&ano_escolar="+ano+"&curso_id="+cursoId+"&turma_id="+turmaId+"&default_id="+defaultId);
     }
     else
       clearSelect(entity = 'etapa', disable = false, text = '', multipleId=false);
@@ -1455,7 +1455,7 @@ function updateSelect(xml)
     }
 } ?>
 
-<?php if ($get_componente_curricular) { 
+<?php if ($get_componente_curricular) {
 
   $user = isset($user) ? $user : new User();
   if ($listar_componentes_curriculares_professor && $user->isProfessor())
@@ -1489,7 +1489,7 @@ function updateSelect(xml)
     {
       $this->appendOutput("<script type='text/javascript'>afterUpdateSelect.push({entity:'ano', _functions:[{_function:getComponenteCurricular, _args:[$this->ref_cod_componente_curricular]}]});</script>");
     }
-} 
+}
 
     $s = <<<EOT
 <script>
@@ -1499,15 +1499,17 @@ function validatesPresenseOfValueInRequiredFields(additionalFields) {
 
   if (additionalFields)
     requiredFields = requiredFields.concat(additionalFields);
-    
+
   for (var i = 0; i < requiredFields.length; i++) {
     var requiredField = requiredFields[i];
     if (requiredField.style.display != 'none' && ! requiredField.getAttribute('disabled') && ! requiredField.value) {
       emptyFields.push(requiredField);
-      requiredField.classList.add('error');
+
+      if (requiredField.className.indexOf('error') < 0)
+        requiredField.className = requiredField.className + " error";
     }
     else
-      requiredField.classList.remove('error');
+      requiredField.className = requiredField.className.replace('error', '')
   }
 
   if (emptyFields.length == 0)
@@ -1524,7 +1526,7 @@ EOT;
 
 	if ($verificar_campos_obrigatorios || (isset($this->verificar_campos_obrigatorios) && $this->verificar_campos_obrigatorios))
 	{
-  
+
     $s = <<<EOT
 <script>
 var buttonSubmit = document.getElementById('btn_enviar');
@@ -1543,14 +1545,14 @@ if (buttonSubmit)
 </script>
 EOT;
   $this->appendOutput($s);
-} 
+}
 ?>
 
 
 <?php
 	if ((isset($add_onchange_events) && $add_onchange_events)  || (isset($this->add_onchange_events) && $this->add_onchange_events))
 	{
-  
+
     $s = <<<EOT
 <script>
 
@@ -1601,7 +1603,7 @@ EOT;
       var fieldAno = document.getElementById('ano');
 
       if (fieldAno && fieldAno.type == 'select-one')
-        getAno();  
+        getAno();
       else
   	    getEscolaCursoSerie();
     }
@@ -1633,7 +1635,7 @@ EOT;
       clearSelect(entity = 'etapa', disable = false, text = '', multipleId = false);
       clearSelect(entity = 'matricula', disable = false, text = '', multipleId = true);
 
-      if (typeof(getTurma) == 'function')      
+      if (typeof(getTurma) == 'function')
         getTurma();
     }
   }
@@ -1663,7 +1665,7 @@ EOT;
 </script>
 EOT;
   $this->appendOutput($s);
-} 
+}
 ?>
 
 <?php if (isset($get_alunos_matriculados) && $get_alunos_matriculados) { ?>
@@ -1677,7 +1679,7 @@ var ano = document.getElementById('ano');
 		  clearSelect(entity = 'matricula', disable = true, text = 'Carregando alunos...', multipleId=true);
 
       var ajaxReq = new ajax( updateSelect );
-      ajaxReq.envia("portabilis_alunos_matriculados_xml.php?ano_escolar="+ano.value+"&turma_id="+turmaId);  
+      ajaxReq.envia("portabilis_alunos_matriculados_xml.php?ano_escolar="+ano.value+"&turma_id="+turmaId);
     }
     else
       clearSelect(entity = 'matricula', disable = false, text = '', multipleId=true);
@@ -1685,4 +1687,3 @@ var ano = document.getElementById('ano');
 <?php } ?>
 
 </script>
-
