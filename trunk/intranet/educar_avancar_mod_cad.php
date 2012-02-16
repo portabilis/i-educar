@@ -164,11 +164,12 @@ class indice extends clsCadastro
     $nextSerieId = $this->db2->campoUnico("SELECT ref_serie_destino FROM pmieducar.sequencia_serie
                                            WHERE ref_serie_origem = $serieId AND ativo = 1");
 
-    $nextCursoId = $this->db2->CampoUnico("SELECT ref_cod_curso FROM pmieducar.serie
-                                           WHERE cod_serie = $nextSerieId");
+    if (is_numeric($nextSerieId)) {
+      $nextCursoId = $this->db2->CampoUnico("SELECT ref_cod_curso FROM pmieducar.serie
+                                            WHERE cod_serie = $nextSerieId");
 
-    if (is_numeric($nextSerieId))
       return $this->matricularAluno($escolaId, $nextCursoId, $nextSerieId, $ano, $alunoId);
+    }
     else
       $this->mensagem = "Não foi possivel obter a proxima série da sequencia de enturmação";
 
