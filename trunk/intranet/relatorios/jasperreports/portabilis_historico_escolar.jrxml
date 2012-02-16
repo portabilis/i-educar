@@ -1038,11 +1038,12 @@ WHERE  instituicao.cod_instituicao = $P{instituicao} AND
        historico_escolar.ref_cod_aluno = $P{aluno} AND
        instituicao.ativo = 1 AND
        historico_escolar.ativo = 1 AND
-       historico_escolar.ano = (SELECT max(he.ano)
-                           FROM pmieducar.historico_escolar he
-                          WHERE he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
-                                he.sequencial = historico_escolar.sequencial AND
-                                he.ref_cod_aluno = $P{aluno} and ativo = 1)
+
+       historico_escolar.sequencial = (SELECT max(he.sequencial)
+       FROM pmieducar.historico_escolar he
+       WHERE he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+       substring(he.nm_serie,1,1) = substring(historico_escolar.nm_serie,1,1) AND
+       he.ref_cod_aluno = historico_escolar.ref_cod_aluno and ativo = 1)
 
 )  AS T
 GROUP BY 1, nm_disciplina
