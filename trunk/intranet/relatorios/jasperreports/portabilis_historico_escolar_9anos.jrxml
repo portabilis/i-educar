@@ -874,121 +874,140 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = he.sequencial AND
                 substring(nm_serie,1,1) = 9) as freq9,
 
-       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
-                    WHEN he.aprovado = 2 THEN 'Repr'
-                    WHEN he.aprovado = 3  THEN 'Anda'
-                    ELSE 'Tran'
-                 END
-            from pmieducar.historico_escolar he
-           where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
-                 he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
-				 he.ativo = 1 AND
-                 he.aprovado <> 2 AND
-                 substring(nm_serie,1,1) = 1) as status_serie1,
+       (SELECT distinct
+         (CASE WHEN he.aceleracao = 1 THEN
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END) || ' AC'
+	  ELSE
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END)
+          END)
+
+          from pmieducar.historico_escolar he
+          where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+            he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+				    he.ativo = 1 AND
+            he.ano = historico_escolar.ano AND
+            substring(nm_serie,1,1) = 1 AND
+            he.sequencial = historico_escolar.sequencial) as status_serie1,
 
 
-       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
-                    WHEN he.aprovado = 2 THEN 'Repr'
-                    WHEN he.aprovado = 3  THEN 'Anda'
-                    ELSE 'Tran'
-                 END
-            from pmieducar.historico_escolar he
-           where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
-                 he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
-				 he.ativo = 1 AND
-                 he.aprovado <> 2 AND
-                 substring(nm_serie,1,1) = 2) as status_serie2,
+       (SELECT distinct
+         (CASE WHEN he.aceleracao = 1 THEN
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END) || ' AC'
+	  ELSE
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END)
+          END)
+          from pmieducar.historico_escolar he
+          where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+            he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+				    he.ativo = 1 AND
+            he.ano = historico_escolar.ano AND
+            substring(nm_serie,1,1) = 2 AND
+            he.sequencial = historico_escolar.sequencial) as status_serie2,
 
 
-       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
-                    WHEN he.aprovado = 2 THEN 'Repr'
-                    WHEN he.aprovado = 3  THEN 'Anda'
-                    ELSE 'Tran'
-                 END
-            from pmieducar.historico_escolar he
-           where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
-                 he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
-				 he.ativo = 1 AND
-                 he.aprovado <> 2 AND
-                 substring(nm_serie,1,1) = 3) as status_serie3,
+       (SELECT distinct
+         (CASE WHEN he.aceleracao = 1 THEN
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END) || ' AC'
+	  ELSE
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END)
+          END)
+          from pmieducar.historico_escolar he
+          where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+            he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+				    he.ativo = 1 AND
+            he.ano = historico_escolar.ano AND
+            substring(nm_serie,1,1) = 3 AND
+            he.sequencial = historico_escolar.sequencial) as status_serie3,
 
 
-       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
-                    WHEN he.aprovado = 2 THEN 'Repr'
-                    WHEN he.aprovado = 3  THEN 'Anda'
-                    ELSE 'Tran'
-                 END
-            from pmieducar.historico_escolar he
-           where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
-                 he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
-				 he.ativo = 1 AND
-                 he.aprovado <> 2 AND
-                 substring(nm_serie,1,1) = 4) as status_serie4,
+       (SELECT distinct
+         (CASE WHEN he.aceleracao = 1 THEN
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END) || ' AC'
+	  ELSE
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END)
+          END)
+          from pmieducar.historico_escolar he
+          where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+            he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+				    he.ativo = 1 AND
+            he.ano = historico_escolar.ano AND
+            substring(nm_serie,1,1) = 4 AND
+            he.sequencial = historico_escolar.sequencial) as status_serie4,
 
 
-       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
-                    WHEN he.aprovado = 2 THEN 'Repr'
-                    WHEN he.aprovado = 3  THEN 'Anda'
-                    ELSE 'Tran'
-                 END
-            from pmieducar.historico_escolar he
-           where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
-                 he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
-				 he.ativo = 1 AND
-                 he.aprovado <> 2 AND
-                 substring(nm_serie,1,1) = 5) as status_serie5,
+       (SELECT distinct
+         (CASE WHEN he.aceleracao = 1 THEN
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END) || ' AC'
+	  ELSE
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END)
+          END)
+          from pmieducar.historico_escolar he
+          where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+            he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+				    he.ativo = 1 AND
+            he.ano = historico_escolar.ano AND
+            substring(nm_serie,1,1) = 5 AND
+            he.sequencial = historico_escolar.sequencial) as status_serie5,
 
 
-       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
-                    WHEN he.aprovado = 2 THEN 'Repr'
-                    WHEN he.aprovado = 3  THEN 'Anda'
-                    ELSE 'Tran'
-                 END
-            from pmieducar.historico_escolar he
-           where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
-                 he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
-				 he.ativo = 1 AND
-                 he.aprovado <> 2 AND
-                 substring(nm_serie,1,1) = 6) as status_serie6,
+       (SELECT distinct
+         (CASE WHEN he.aceleracao = 1 THEN
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END) || ' AC'
+	  ELSE
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END)
+          END)
+          from pmieducar.historico_escolar he
+          where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+            he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+				    he.ativo = 1 AND
+            he.ano = historico_escolar.ano AND
+            substring(nm_serie,1,1) = 6 AND
+            he.sequencial = historico_escolar.sequencial) as status_serie6,
 
 
-       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
-                    WHEN he.aprovado = 2 THEN 'Repr'
-                    WHEN he.aprovado = 3  THEN 'Anda'
-                    ELSE 'Tran'
-                 END
-            from pmieducar.historico_escolar he
-           where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
-                 he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
-				 he.ativo = 1 AND
-                 he.aprovado <> 2 AND
-                 substring(nm_serie,1,1) = 7) as status_serie7,
+       (SELECT distinct
+         (CASE WHEN he.aceleracao = 1 THEN
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END) || ' AC'
+	  ELSE
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END)
+          END)
+          from pmieducar.historico_escolar he
+          where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+            he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+				    he.ativo = 1 AND
+            he.ano = historico_escolar.ano AND
+            substring(nm_serie,1,1) = 7 AND
+            he.sequencial = historico_escolar.sequencial) as status_serie7,
 
 
-       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
-                    WHEN he.aprovado = 2 THEN 'Repr'
-                    WHEN he.aprovado = 3  THEN 'Anda'
-                    ELSE 'Tran'
-                 END
-            from pmieducar.historico_escolar he
-           where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
-                 he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
-				 he.ativo = 1 AND
-                 he.aprovado <> 2 AND
-                 substring(nm_serie,1,1) = 8) as status_serie8,
+       (SELECT distinct
+         (CASE WHEN he.aceleracao = 1 THEN
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END) || ' AC'
+	  ELSE
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END)
+          END)
+          from pmieducar.historico_escolar he
+          where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+            he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+				    he.ativo = 1 AND
+            he.ano = historico_escolar.ano AND
+            substring(nm_serie,1,1) = 8 AND
+            he.sequencial = historico_escolar.sequencial) as status_serie8,
 
 
-       (SELECT distinct CASE WHEN he.aprovado = 1 THEN 'Apro'
-                    WHEN he.aprovado = 2 THEN 'Repr'
-                    WHEN he.aprovado = 3  THEN 'Anda'
-                    ELSE 'Tran'
-                 END
-            from pmieducar.historico_escolar he
-           where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
-                 he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
-				 he.ativo = 1 AND
-                 he.aprovado <> 2 AND
-                 substring(nm_serie,1,1) = 9) as status_serie9,
+       (SELECT distinct
+         (CASE WHEN he.aceleracao = 1 THEN
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END) || ' AC'
+	  ELSE
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END)
+          END)
+          from pmieducar.historico_escolar he
+          where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+            he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+				    he.ativo = 1 AND
+            he.ano = historico_escolar.ano AND
+            substring(nm_serie,1,1) = 9 AND
+            he.sequencial = historico_escolar.sequencial) as status_serie9,
 
 
   (SELECT 1 WHERE 1 = 1) AS quebra,
@@ -1014,7 +1033,6 @@ SELECT nm_disciplina,
                                             FROM pmieducar.historico_escolar he
                                            WHERE he.ref_cod_aluno = $P{aluno})) AS num_folha,
 
-
 ( select CASE WHEN ((substring(nm_serie,1,1) = 8) or (substring(nm_serie,1,1) = 9)) THEN
                  'concluiu o ENSINO FUNDAMENTAL (8 ANOS)'
              ELSE
@@ -1023,8 +1041,9 @@ SELECT nm_disciplina,
 
           from pmieducar.historico_escolar he
          where he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+               he.sequencial = historico_escolar.sequencial AND
                he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
-        he.ano = historico_escolar.ano and ativo = 1 limit 1) as nome_serie_aux
+               he.ano = historico_escolar.ano and ativo = 1 limit 1) as nome_serie_aux
 
 
   FROM pmieducar.historico_escolar,
@@ -1038,14 +1057,14 @@ WHERE  instituicao.cod_instituicao = $P{instituicao} AND
        historico_disciplinas.ref_sequencial = historico_escolar.sequencial AND
        historico_escolar.ref_cod_aluno = $P{aluno} AND
        instituicao.ativo = 1 AND
-       historico_escolar.aprovado = 1 AND
+       --historico_escolar.aprovado = 1 AND
        historico_escolar.ativo = 1 AND
 
-       historico_escolar.ano = (SELECT max(he.ano)
+       historico_escolar.sequencial = (SELECT max(he.sequencial)
        FROM pmieducar.historico_escolar he
        WHERE he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
-       he.sequencial = historico_escolar.sequencial AND
-       he.ref_cod_aluno = $P{aluno} and ativo = 1)
+       substring(he.nm_serie,1,1) = substring(historico_escolar.nm_serie,1,1) AND
+       he.ref_cod_aluno = historico_escolar.ref_cod_aluno and ativo = 1)
 )  AS T
 GROUP BY nm_disciplina
 ORDER BY 1 ASC]]>
@@ -1408,7 +1427,7 @@ ORDER BY 1 ASC]]>
 	<detail>
 		<band height="15" splitType="Stretch">
 			<rectangle>
-				<reportElement mode="Opaque" x="7" y="1" width="541" height="13" forecolor="#FFFFFF" backcolor="#F0F0F0">
+				<reportElement mode="Opaque" x="7" y="-1" width="541" height="13" forecolor="#FFFFFF" backcolor="#F0F0F0">
 					<printWhenExpression><![CDATA[new Boolean(($V{COLUMN_COUNT} % 2) == 1)]]></printWhenExpression>
 				</reportElement>
 			</rectangle>
