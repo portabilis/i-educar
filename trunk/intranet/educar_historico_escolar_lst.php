@@ -134,7 +134,7 @@ class indice extends clsListagem
 		$this->addCabecalhos($lista_busca);
 
 		$get_escola = true;
-		
+
 		include("include/pmieducar/educar_campo_lista.php");
 
 		// outros Filtros
@@ -158,7 +158,7 @@ class indice extends clsListagem
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
 		$obj_historico_escolar = new clsPmieducarHistoricoEscolar();
-		$obj_historico_escolar->setOrderby( "ano ASC" );
+		$obj_historico_escolar->setOrderby( "ano, sequencial ASC" );
 		$obj_historico_escolar->setLimite( $this->limite, $this->offset );
 
 		$lista = $obj_historico_escolar->lista(
