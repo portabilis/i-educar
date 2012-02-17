@@ -122,13 +122,13 @@ class clsPmieducarHistoricoEscolar
 	 *
 	 * @return object
 	 */
-	function clsPmieducarHistoricoEscolar( $ref_cod_aluno = null, $sequencial = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_serie = null, $ano = null, $carga_horaria = null, $dias_letivos = null, $escola = null, $escola_cidade = null, $escola_uf = null, $observacao = null, $aprovado = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $faltas_globalizadas = null, $ref_cod_instituicao = null, $origem = null, $extra_curricular = null, $ref_cod_matricula = null, $frequencia = null, $registro = null, $livro = null, $folha = null, $nm_curso = null, $historico_grade_curso_id = null )
-	{ 
+	function clsPmieducarHistoricoEscolar( $ref_cod_aluno = null, $sequencial = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_serie = null, $ano = null, $carga_horaria = null, $dias_letivos = null, $escola = null, $escola_cidade = null, $escola_uf = null, $observacao = null, $aprovado = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $faltas_globalizadas = null, $ref_cod_instituicao = null, $origem = null, $extra_curricular = null, $ref_cod_matricula = null, $frequencia = null, $registro = null, $livro = null, $folha = null, $nm_curso = null, $historico_grade_curso_id = null, $aceleracao = null )
+	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}historico_escolar";
 
-		$this->_campos_lista = $this->_todos_campos = "ref_cod_aluno, sequencial, ref_usuario_exc, ref_usuario_cad, ano, carga_horaria, dias_letivos, escola, escola_cidade, escola_uf, observacao, aprovado, data_cadastro, data_exclusao, ativo, faltas_globalizadas, ref_cod_instituicao, nm_serie, origem, extra_curricular, ref_cod_matricula, frequencia, registro, livro, folha, nm_curso, historico_grade_curso_id";
+		$this->_campos_lista = $this->_todos_campos = "ref_cod_aluno, sequencial, ref_usuario_exc, ref_usuario_cad, ano, carga_horaria, dias_letivos, escola, escola_cidade, escola_uf, observacao, aprovado, data_cadastro, data_exclusao, ativo, faltas_globalizadas, ref_cod_instituicao, nm_serie, origem, extra_curricular, ref_cod_matricula, frequencia, registro, livro, folha, nm_curso, historico_grade_curso_id, aceleracao";
 
 		if( is_numeric( $ref_usuario_exc ) )
 		{
@@ -338,14 +338,14 @@ class clsPmieducarHistoricoEscolar
 		if( is_numeric( $frequencia ) )
 		{
 			$this->frequencia = $frequencia;
-		}		
+		}
 
     $this->registro = $registro;
     $this->livro = $livro;
     $this->folha = $folha;
     $this->nm_curso = $nm_curso;
     $this->historico_grade_curso_id = $historico_grade_curso_id;
-
+    $this->aceleracao = $aceleracao;
 	}
 
 	/**
@@ -354,7 +354,7 @@ class clsPmieducarHistoricoEscolar
 	 * @return bool
 	 */
 	function cadastra()
-	{ 
+	{
 		if( is_numeric( $this->ref_cod_aluno ) && is_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_serie ) && is_numeric( $this->ano ) && is_numeric( $this->carga_horaria ) && is_string( $this->escola ) && is_string( $this->escola_cidade ) && is_numeric( $this->aprovado ) && is_numeric( $this->ref_cod_instituicao ) && is_numeric( $this->frequencia))
 		{
 			$db = new clsBanco();
@@ -500,7 +500,13 @@ class clsPmieducarHistoricoEscolar
 				$valores .= "{$gruda}'{$this->historico_grade_curso_id}'";
 				$gruda = ", ";
 			}
-			
+
+      if (is_numeric($aceleracao)) {
+				$campos .= "{$gruda}aceleracao";
+				$valores .= "{$gruda}'{$this->aceleracao}'";
+				$gruda = ", ";
+      }
+
 			$campos .= "{$gruda}data_cadastro";
 			$valores .= "{$gruda}NOW()";
 			$gruda = ", ";
@@ -662,6 +668,12 @@ class clsPmieducarHistoricoEscolar
 				$gruda = ", ";
 			}
 
+			if( is_numeric( $this->aceleracao))
+			{
+				$set .= "{$gruda}aceleracao = '{$this->aceleracao}'";
+				$gruda = ", ";
+			}
+
 			if( $set )
 			{
 				$db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE ref_cod_aluno = '{$this->ref_cod_aluno}' AND sequencial = '{$this->sequencial}'" );
@@ -810,7 +822,7 @@ class clsPmieducarHistoricoEscolar
 		{
 			$filtros .= "{$whereAnd} frequencia = '{$int_frequencia}'";
 			$whereAnd = " AND ";
-		}		
+		}
 
 		$db = new clsBanco();
 		$countCampos = count( explode( ",", $this->_campos_lista ) );
