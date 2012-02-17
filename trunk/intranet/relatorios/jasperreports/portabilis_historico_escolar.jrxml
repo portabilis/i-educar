@@ -1413,7 +1413,7 @@ ORDER BY 1 ASC]]>
 	<detail>
 		<band height="15" splitType="Stretch">
 			<rectangle>
-				<reportElement mode="Opaque" x="7" y="1" width="541" height="13" forecolor="#FFFFFF" backcolor="#F0F0F0">
+				<reportElement mode="Opaque" x="7" y="-1" width="541" height="13" forecolor="#FFFFFF" backcolor="#F0F0F0">
 					<printWhenExpression><![CDATA[new Boolean(($V{COLUMN_COUNT} % 2) == 1)]]></printWhenExpression>
 				</reportElement>
 			</rectangle>
