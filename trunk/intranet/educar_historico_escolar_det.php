@@ -190,6 +190,15 @@ class indice extends clsDetalhe
 		{
 			$this->addDetalhe( array( "Extra-Curricular", "N&atilde;o") );
 		}
+
+    if( $registro["aceleracao"] )
+		{
+			$this->addDetalhe( array( "Aceleração", "Sim") );
+		}
+		else
+		{
+			$this->addDetalhe( array( "Aceleração", "N&atilde;o") );
+		}
 		if( $registro["origem"] )
 		{
 			$this->addDetalhe( array( "Origem", "Externo") );
@@ -236,7 +245,7 @@ class indice extends clsDetalhe
 			if( $registro["folha"] )
 			{
 				$this->addDetalhe( array( "Folha", "{$registro["folha"]}") );
-			}    
+			}
 
 		$obj = new clsPmieducarHistoricoDisciplinas();
 		$obj->setOrderby("nm_disciplina ASC");
