@@ -49,7 +49,7 @@ header("HTTP/1.1 503 Service Unavailable");
     <div id="error" style="border: 0px solid #666;">
       <div class="content">
         <h1>Em manutenção</h1>
-        <p class="explication">Descupe-nos, estamos passando por uma manutenção<strong> por favor tente novamente mais tarde.</strong></p>
+        <p class="explication">Desculpe-nos, estamos passando por uma manutenção<strong>, por favor, tente novamente mais tarde.</strong></p>
       </div>
     </div>
   </body>
