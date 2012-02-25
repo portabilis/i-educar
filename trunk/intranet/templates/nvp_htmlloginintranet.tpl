@@ -43,7 +43,7 @@
 
     <p style="min-height: 0px;" class="flash"><strong>Novo!</strong> acompanhe as &uacute;ltimas novidades do i-Educar em <a href="http://ieducar.com.br/wiki" class="decorated texto-normal">ieducar.com.br/wiki</a></p>
 
-    <p style="min-height: 0px;" class="flash"><strong>Aviso de manuten&ccedil;&atilde;o:</strong> durante os dias 25 e 26 de fevereiro os sistemas poder&atilde;o estar inst&aacute;veis ou indispon&iacute;veis, devido melhorias na infraestrutura.</p>
+    <p style="min-height: 0px;" class="flash"><strong>Aviso de manuten&ccedil;&atilde;o:</strong> durante o dia 26 de fevereiro os sistemas poder&atilde;o estar inst&aacute;veis ou indispon&iacute;veis, devido melhorias na infraestrutura.</p>
 
     <!-- #&ERROLOGIN&# -->
 
