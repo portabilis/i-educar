@@ -43,7 +43,7 @@
 
     <p style="min-height: 0px;" class="flash"><strong>Novo!</strong> acompanhe as &uacute;ltimas novidades do i-Educar em <a href="http://ieducar.com.br/wiki" class="decorated texto-normal">ieducar.com.br/wiki</a></p>
 
-    <p style="min-height: 0px;" class="flash"><strong>Aviso de manuten&ccedil;&atilde;o:</strong> durante o dia 26 de fevereiro os sistemas poder&atilde;o estar inst&aacute;veis ou indispon&iacute;veis, devido melhorias na infraestrutura.</p>
+    <!--p style="min-height: 0px;" class="flash"><strong>Aviso de manuten&ccedil;&atilde;o:</strong> durante o dia 26 de fevereiro os sistemas poder&atilde;o estar inst&aacute;veis ou indispon&iacute;veis, devido melhorias na infraestrutura.</p-->
 
     <!-- #&ERROLOGIN&# -->
 
@@ -94,9 +94,9 @@
 
       </div>
 
-		  <div id="rodape" class="texto-normal">
-			  Portabilis Tecnologia - <a target="_blank" class="decorated" href="http://www.portabilis.com.br/site/suporte">Precisa de ajuda?</a> ou suporte@portabilis.com.br
-		  </div>
+		  <p id="rodape" class="texto-normal">
+      Portabilis Tecnologia - suporte@portabilis.com.br - <a target="_blank" class="decorated" href="http://www.teamviewer.com/pt/download/index.aspx">suporte remoto</a>
+		  </p>
     </div>
   </body>
 
