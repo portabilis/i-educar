@@ -54,7 +54,7 @@
                 matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
                 turma.ativo = 1 AND
 		        matricula_turma.ativo = 1 AND
-                hora_inicial IS NOT NULL) AS periodo,
+                hora_inicial IS NOT NULL limit 1) AS periodo,
 
       (SELECT COALESCE((SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))
           FROM cadastro.pessoa ps,
