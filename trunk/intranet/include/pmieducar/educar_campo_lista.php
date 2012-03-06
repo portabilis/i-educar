@@ -1332,6 +1332,10 @@ function clearSelect(entity, disable, text, multipleId)
     var e = document.getElementById(ids[i]);
     if (e)
     {
+
+      if (typeof(e.onchange) == "function")
+        e.onchange();
+
       e.disabled = disable;
       if (e.type == 'select-one')
       {
