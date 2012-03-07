@@ -63,6 +63,45 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
+   * Retorna um array com as informações de escola a partir de seu código.
+   * @param  int $id
+   * @return array
+   */
+  public static function getEscola($id)
+  {
+    $escola = self::addClassToStorage('clsPmieducarEscola', NULL,
+      'include/pmieducar/clsPmieducarEscola.inc.php');
+    $escola->cod_escola = $id;
+    $escola = $escola->detalhe();
+
+    if (FALSE === $escola) {
+      throw new App_Model_Exception(
+        sprintf('Escola com o código "%d" não existe.', $id)
+      );
+    }
+
+    return $escola;
+  }
+
+  /**
+   * Retorna um array com as informações de escola a partir de seu código.
+   * @param  int $id
+   * @return array
+   */
+  public static function getEscolas($instituicaoId = NULL)
+  {
+    $_escolas = self::addClassToStorage('clsPmieducarEscola', NULL,
+      'include/pmieducar/clsPmieducarEscola.inc.php');
+
+    $escolas = array();
+    foreach ($_escolas->lista(NULL, NULL, NULL,  $instituicaoId) as $escola) {
+      $escolas[$escola['cod_escola']] = $escola['nome'];
+    }
+
+    return $escolas;
+  }
+
+  /**
    * Retorna um nome de curso, procurando pelo seu código.
    * @param  int $id
    * @return string|FALSE
