@@ -30,6 +30,8 @@
 
 require_once 'CoreExt/View/Helper/Abstract.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
+require_once 'App/Model/NivelAcesso.php';
+require_once 'App/Model/IedFinder.php';
 //require_once 'Usuario/Model/UsuarioDataMapper.php';
 
 /**
@@ -85,6 +87,15 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
     return $dataMapper;
   }
 
+  protected static function mergeArrayWithDefaults($options, $defaultOptions) {
+    foreach($options as $key => $value) {
+      if (array_key_exists($key, $defaultOptions))
+        $defaultOptions[$key] = $value;
+    }
+
+    return $defaultOptions;
+  }
+
   /**
    *
    * <code>
@@ -100,7 +111,7 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
     $defaultOptions = array('id'    => 'ref_cod_instituicao',
                             'value' => isset($instituicaoId) ? $instituicaoId : null);
 
-    $options = array_merge($defaultOptions, $options);
+    $options = self::mergeArrayWithDefaults($options, $defaultOptions);
     call_user_func_array(array($viewInstance, 'campoOculto'), $options);
   }
 
@@ -116,8 +127,12 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
   public static function instituicaoSelect($viewInstance, $options = array()) {
 
     // TODO obter instituicoes conforme permissoes / tipo usuário
-    if (! array_key_exists('instituicoes', $options))
-      $instituicoes = array("1" => "teste");
+    if (! array_key_exists('instituicoes', $options)) {
+      $instituicoes       = App_Model_IedFinder::getInstituicoes();
+
+      // TODO deve ser a primeira opcao
+      $instituicoes[null] = "Selecione uma institui&ccedil;&atilde;o";
+    }
 
     $defaultOptions = array('id'           => 'ref_cod_instituicao',
                             'label'        => 'Institui&ccedil;&atilde;o',
@@ -131,7 +146,7 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
                             'required'     => true,
                             'multiple'     => false);
 
-    $options = array_merge($defaultOptions, $options);
+    $options = self::mergeArrayWithDefaults($options, $defaultOptions);
     call_user_func_array(array($viewInstance, 'campoLista'), $options);
   }
 
@@ -145,10 +160,93 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
    * @return  null
    */
   public static function instituicao($viewInstance, $options = array()) {
-    if (self::getPermissoes()->nivel_acesso($viewInstance->getSession()->id_pessoa) == 1)
+    $nivelAcesso = self::getPermissoes()->nivel_acesso($viewInstance->getSession()->id_pessoa);
+
+    if ($nivelAcesso == App_Model_NivelAcesso::POLI_INSTITUCIONAL)
       self::instituicaoSelect($viewInstance, $options);
     else
       self::instituicaoHidden($viewInstance, $options);
+  }
+
+
+  /**
+   *
+   * <code>
+   * </code>
+   *
+   * @param   type
+   * @return  null
+   */
+  public static function escolaText($viewInstance, $options = array()) {
+    if (! array_key_exists('value', $options)) {
+      $escolaId = self::getPermissoes()->getEscola($viewInstance->getSession()->id_pessoa);
+      $nomeEscola = App_Model_IedFinder::getEscola($escolaId);;
+      $nomeEscola = $nomeEscola['nm_escola'];
+    }
+
+    $defaultOptions = array('id'    => 'ref_cod_escola',
+                            'label'        => 'Escola',
+                            'value' => isset($nomeEscola) ? $nomeEscola : '');
+
+    $options = self::mergeArrayWithDefaults($options, $defaultOptions);
+    call_user_func_array(array($viewInstance, 'campoRotulo'), $options);
+
+    #TODO incluir escolaHidden
+  }
+
+
+  /**
+   *
+   * <code>
+   * </code>
+   *
+   * @param   type
+   * @return  null
+   */
+  public static function escolaSelect($viewInstance, $options = array()) {
+
+    // TODO obter escolas conforme permissoes / tipo usuário
+    if (! array_key_exists('escolas', $options)) {
+      $instituicaoId = self::getPermissoes()->getInstituicao($viewInstance->getSession()->id_pessoa);
+      $escolas       = App_Model_IedFinder::getEscolas($instituicaoId);
+
+      // TODO deve ser a primeira opcao, criar funcao para usar abaixo, getSelectFor...?
+      $escolas[null] = "Selecione uma escola";
+    }
+
+    $defaultOptions = array('id'           => 'ref_cod_escola',
+                            'label'        => 'Escola',
+                            'escolas'      => isset($escolas) ? $escolas : array(),
+                            'value'        => null,
+                            'callback'     => '',
+                            'duplo'        => false,
+                            'label_hint'   => '',
+                            'input_hint'   => '',
+                            'disabled'     => false,
+                            'required'     => true,
+                            'multiple'     => false);
+
+    $options = self::mergeArrayWithDefaults($options, $defaultOptions);
+    call_user_func_array(array($viewInstance, 'campoLista'), $options);
+  }
+
+
+  /**
+   *
+   * <code>
+   * </code>
+   *
+   * @param   type
+   * @return  null
+   */
+  public static function escola($viewInstance, $options = array()) {
+    $nivelAcesso = self::getPermissoes()->nivel_acesso($viewInstance->getSession()->id_pessoa);
+    $niveisAcessoSelecaoEscola = array(App_Model_NivelAcesso::POLI_INSTITUCIONAL, INSTITUCIONAL);
+
+    if (in_array($nivelAcesso, $niveisAcessoSelecaoEscola))
+      self::escolaSelect($viewInstance, $options);
+    else
+      self::escolaText($viewInstance, $options);
   }
 }
 ?>
