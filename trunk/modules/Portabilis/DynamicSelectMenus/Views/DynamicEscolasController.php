@@ -44,7 +44,7 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 #require_once 'include/pmieducar/clsPmieducarHistoricoEscolar.inc.php';
 #require_once 'include/pmieducar/clsPmieducarHistoricoDisciplinas.inc.php';
 
-class EscolasDinamicoController extends ApiCoreController
+class DynamicEscolasController extends ApiCoreController
 {
   protected $_dataMapper  = ''; #Avaliacao_Model_NotaComponenteDataMapper';
   protected $_processoAp  = 0;
@@ -71,7 +71,7 @@ class EscolasDinamicoController extends ApiCoreController
 
 
   public function Gerar(){
-    if ($this->getRequest()->oper == 'get') 
+    if ($this->getRequest()->oper == 'get')
       $this->appendResponse('escolas', $this->getEscolas());
     else
       $this->notImplementedError();
