@@ -49,10 +49,13 @@ class DynamicSelectMenusHelper {
 
   public function __construct($viewInstance) {
     $this->viewInstance = $viewInstance;
-    $dependencies = array('scripts/jquery/jquery.js',
-                          '/modules/Portabilis/DynamicSelectMenus/Assets/Javascripts/DynamicSelectMenus.js');
 
-    ApplicationHelper::javascript($this->viewInstance, $dependencies);
+    ApplicationHelper::loadJavascript($this->viewInstance, 'scripts/jquery/jquery.js');
+    ApplicationHelper::embedJavascript($this->viewInstance, 'var $j = jQuery.noConflict();');
+
+    $dependencies = array('/modules/Portabilis/Assets/Javascripts/ClientApi.js',
+                          '/modules/Portabilis/DynamicSelectMenus/Assets/Javascripts/DynamicSelectMenus.js');
+    ApplicationHelper::loadJavascript($this->viewInstance, $dependencies);
   }
 
 
@@ -250,7 +253,7 @@ class DynamicSelectMenusHelper {
     elseif (in_array($nivelAcesso, $niveisAcessoEscola))
       $this->escolaText($options);
 
-    ApplicationHelper::javascript($this->viewInstance, '/modules/Portabilis/DynamicSelectMenus/Assets/Javascripts/DynamicEscolas.js');
+    ApplicationHelper::loadJavascript($this->viewInstance, '/modules/Portabilis/DynamicSelectMenus/Assets/Javascripts/DynamicEscolas.js');
   }
 
 

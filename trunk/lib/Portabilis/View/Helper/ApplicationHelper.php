@@ -71,13 +71,25 @@ class ApplicationHelper extends CoreExt_View_Helper_Abstract {
    * @param   array ou string  $files1  Lista de scripts a serem carregados.
    * @return  null
    */
-  public static function javascript($viewInstance, $files) {
+  public static function loadJavascript($viewInstance, $files) {
     if (! is_array($files))
       $files = array($files);
 
     foreach ($files as $file) {
       $viewInstance->appendOutput("<script type='text/javascript' src='$file'></script>");
     }
+  }
+
+  /**
+   *
+   * <code>
+   * </code>
+   *
+   * @param   type ?
+   * @return  null
+   */
+  public static function embedJavascript($viewInstance, $script) {
+    $viewInstance->appendOutput("<script type='text/javascript'>$script</script>");
   }
 }
 ?>

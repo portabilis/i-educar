@@ -1,10 +1,9 @@
-var $j = jQuery.noConflict();
-
 function buildId(id) {
   if (id.length > 0)
     return id[0] == '#' ? id : '#' + id;
   return id;
 }
+
 
 function updateSelect($targetElement, options) {
   $targetElement.children('[value^=""]').remove();
@@ -24,6 +23,7 @@ function updateSelect($targetElement, options) {
 function disableElement($targetElement) {
   $($targetElement).attr('disabled', 'disabled');
 }
+
 
 function enableElement($targetElement) {
   $($targetElement).removeAttr('disabled');
