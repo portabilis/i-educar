@@ -30,9 +30,9 @@
 
 require_once 'CoreExt/View/Helper/Abstract.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
-require_once 'App/Model/NivelAcesso.php';
 require_once 'App/Model/IedFinder.php';
-//require_once 'Usuario/Model/UsuarioDataMapper.php';
+// require_once 'App/Model/NivelAcesso.php';
+// require_once 'Usuario/Model/UsuarioDataMapper.php';
 
 /**
  * SelectMenusHelper class.
@@ -162,7 +162,10 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
   public static function instituicao($viewInstance, $options = array()) {
     $nivelAcesso = self::getPermissoes()->nivel_acesso($viewInstance->getSession()->id_pessoa);
 
-    if ($nivelAcesso == App_Model_NivelAcesso::POLI_INSTITUCIONAL)
+    // poli-institucional
+    $nivelAcessoMultiplasInstituicoes = 1;
+
+    if ($nivelAcesso == $nivelAcessoMultiplasInstituicoes)
       self::instituicaoSelect($viewInstance, $options);
     else
       self::instituicaoHidden($viewInstance, $options);
@@ -180,7 +183,7 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
   public static function escolaText($viewInstance, $options = array()) {
     if (! array_key_exists('value', $options)) {
       $escolaId = self::getPermissoes()->getEscola($viewInstance->getSession()->id_pessoa);
-      $nomeEscola = App_Model_IedFinder::getEscola($escolaId);;
+      $nomeEscola = App_Model_IedFinder::getEscola($escolaId);
       $nomeEscola = $nomeEscola['nm_escola'];
     }
 
@@ -241,12 +244,103 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
    */
   public static function escola($viewInstance, $options = array()) {
     $nivelAcesso = self::getPermissoes()->nivel_acesso($viewInstance->getSession()->id_pessoa);
-    $niveisAcessoSelecaoEscola = array(App_Model_NivelAcesso::POLI_INSTITUCIONAL, INSTITUCIONAL);
 
-    if (in_array($nivelAcesso, $niveisAcessoSelecaoEscola))
+    // poli-institucional, institucional
+    $niveisAcessoMultiplasEscolas = array(1, 2);
+
+    // escola
+    $niveisAcessoEscola = array(4);
+
+    if (in_array($nivelAcesso, $niveisAcessoMultiplasEscolas))
       self::escolaSelect($viewInstance, $options);
-    else
+    elseif (in_array($nivelAcesso, $niveisAcessoEscola))
       self::escolaText($viewInstance, $options);
+  }
+
+
+  /**
+   *
+   * <code>
+   * </code>
+   *
+   * @param   type
+   * @return  null
+   */
+  public static function bibliotecaText($viewInstance, $options = array()) {
+    if (! array_key_exists('value', $options)) {
+      $bibliotecaId = self::getPermissoes()->getBiblioteca($viewInstance->getSession()->id_pessoa);
+      $nomeBiblioteca = App_Model_IedFinder::getBiblioteca($bibliotecaId);
+      $nomeBiblioteca = $nomeEscola['nm_biblioteca'];
+    }
+
+    $defaultOptions = array('id'    => 'ref_cod_biblioteca',
+                            'label' => 'Biblioteca',
+                            'value' => isset($nomeBiblioteca) ? $nomeBiblioteca : '');
+
+    $options = self::mergeArrayWithDefaults($options, $defaultOptions);
+    call_user_func_array(array($viewInstance, 'campoRotulo'), $options);
+
+    #TODO incluir bibliotecaHidden
+  }
+
+
+  /**
+   *
+   * <code>
+   * </code>
+   *
+   * @param   type
+   * @return  null
+   */
+  public static function bibliotecaSelect($viewInstance, $options = array()) {
+
+    // TODO obter bibliotecas conforme permissoes / tipo usuário
+    if (! array_key_exists('bibliotecas', $options)) {
+      $instituicaoId = self::getPermissoes()->getInstituicao($viewInstance->getSession()->id_pessoa);
+      $bibliotecas   = App_Model_IedFinder::getBibliotecas($instituicaoId);
+
+      // TODO deve ser a primeira opcao, criar funcao para usar abaixo, getSelectFor...?
+      $bibliotecas[null] = "Selecione uma biblioteca";
+    }
+
+    $defaultOptions = array('id'           => 'ref_cod_biblioteca',
+                            'label'        => 'Biblioteca',
+                            'bibliotecas'  => isset($bibliotecas) ? $bibliotecas : array(),
+                            'value'        => null,
+                            'callback'     => '',
+                            'duplo'        => false,
+                            'label_hint'   => '',
+                            'input_hint'   => '',
+                            'disabled'     => false,
+                            'required'     => true,
+                            'multiple'     => false);
+
+    $options = self::mergeArrayWithDefaults($options, $defaultOptions);
+    call_user_func_array(array($viewInstance, 'campoLista'), $options);
+  }
+
+
+  /**
+   *
+   * <code>
+   * </code>
+   *
+   * @param   type
+   * @return  null
+   */
+  public static function biblioteca($viewInstance, $options = array()) {
+    $nivelAcesso = self::getPermissoes()->nivel_acesso($viewInstance->getSession()->id_pessoa);
+
+    // poli-institucional, institucional
+    $niveisAcessoMultiplasBibliotecas = array(1, 2);
+
+    // escola, biblioteca
+    $niveisAcessoBiblioteca = array(4, 8);
+
+    if (in_array($nivelAcesso, $niveisAcessoMultiplasBibliotecas))
+      self::bibliotecaSelect($viewInstance, $options);
+    elseif(in_array($nivelAcesso, $niveisAcessoBiblioteca))
+      self::bibliotecaText($viewInstance, $options);
   }
 }
 ?>
