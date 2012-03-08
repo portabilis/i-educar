@@ -31,6 +31,7 @@
 require_once 'CoreExt/View/Helper/Abstract.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
 require_once 'App/Model/IedFinder.php';
+require_once 'lib/Portabilis/View/Helper/ApplicationHelper.php';
 // require_once 'App/Model/NivelAcesso.php';
 // require_once 'Usuario/Model/UsuarioDataMapper.php';
 
@@ -44,33 +45,26 @@ require_once 'App/Model/IedFinder.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
+class DynamicSelectMenusHelper {
 
-  /**
-   * Construtor singleton.
-   */
-  protected function __construct() {
-  }
+  public function __construct($viewInstance) {
+    $this->viewInstance = $viewInstance;
+    $dependencies = array('scripts/jquery/jquery.js',
+                          '/modules/Portabilis/DynamicSelectMenus/Assets/Javascripts/DynamicSelectMenus.js');
 
-  /**
-   * Retorna uma instância singleton.
-   * @return CoreExt_View_Helper_Abstract
-   */
-  public static function getInstance() {
-    return self::_getInstance(__CLASS__);
+    ApplicationHelper::javascript($this->viewInstance, $dependencies);
   }
 
 
-  protected static function getPermissoes() {
-    $instance = self::getInstance();
-    if (! isset($instance->permissoes))
-      $instance->permissoes = new clsPermissoes();
+  protected function getPermissoes() {
+    if (! isset($this->permissoes))
+      $this->permissoes = new clsPermissoes();
 
-    return $instance->permissoes;
+    return $this->permissoes;
   }
 
 
-  protected static function getDataMapperFor($dataMapper) {
+  protected function getDataMapperFor($dataMapper) {
     if (is_string($dataMapper)) {
       if (class_exists($dataMapper))
         $dataMapper = new $dataMapper();
@@ -87,7 +81,7 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
     return $dataMapper;
   }
 
-  protected static function mergeArrayWithDefaults($options, $defaultOptions) {
+  protected function mergeArrayWithDefaults($options, $defaultOptions) {
     foreach($options as $key => $value) {
       if (array_key_exists($key, $defaultOptions))
         $defaultOptions[$key] = $value;
@@ -104,15 +98,15 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
    * @param   type
    * @return  null
    */
-  public static function instituicaoHidden($viewInstance, $options = array()) {
+  public function instituicaoHidden($options = array()) {
     if (! array_key_exists('instituicaoId', $options))
-      $instituicaoId = self::getPermissoes()->getInstituicao($viewInstance->getSession()->id_pessoa);
+      $instituicaoId = $this->getPermissoes()->getInstituicao($this->viewInstance->getSession()->id_pessoa);
 
     $defaultOptions = array('id'    => 'ref_cod_instituicao',
                             'value' => isset($instituicaoId) ? $instituicaoId : null);
 
-    $options = self::mergeArrayWithDefaults($options, $defaultOptions);
-    call_user_func_array(array($viewInstance, 'campoOculto'), $options);
+    $options = $this->mergeArrayWithDefaults($options, $defaultOptions);
+    call_user_func_array(array($this->viewInstance, 'campoOculto'), $options);
   }
 
 
@@ -124,7 +118,7 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
    * @param   type
    * @return  null
    */
-  public static function instituicaoSelect($viewInstance, $options = array()) {
+  public function instituicaoSelect($options = array()) {
 
     // TODO obter instituicoes conforme permissoes / tipo usuário
     if (! array_key_exists('instituicoes', $options)) {
@@ -146,8 +140,8 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
                             'required'     => true,
                             'multiple'     => false);
 
-    $options = self::mergeArrayWithDefaults($options, $defaultOptions);
-    call_user_func_array(array($viewInstance, 'campoLista'), $options);
+    $options = $this->mergeArrayWithDefaults($options, $defaultOptions);
+    call_user_func_array(array($this->viewInstance, 'campoLista'), $options);
   }
 
 
@@ -159,16 +153,16 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
    * @param   type
    * @return  null
    */
-  public static function instituicao($viewInstance, $options = array()) {
-    $nivelAcesso = self::getPermissoes()->nivel_acesso($viewInstance->getSession()->id_pessoa);
+  public function instituicao($options = array()) {
+    $nivelAcesso = $this->getPermissoes()->nivel_acesso($this->viewInstance->getSession()->id_pessoa);
 
     // poli-institucional
     $nivelAcessoMultiplasInstituicoes = 1;
 
     if ($nivelAcesso == $nivelAcessoMultiplasInstituicoes)
-      self::instituicaoSelect($viewInstance, $options);
+      $this->instituicaoSelect($options);
     else
-      self::instituicaoHidden($viewInstance, $options);
+      $this->instituicaoHidden($options);
   }
 
 
@@ -180,9 +174,9 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
    * @param   type
    * @return  null
    */
-  public static function escolaText($viewInstance, $options = array()) {
+  public function escolaText($options = array()) {
     if (! array_key_exists('value', $options)) {
-      $escolaId = self::getPermissoes()->getEscola($viewInstance->getSession()->id_pessoa);
+      $escolaId = $this->getPermissoes()->getEscola($this->viewInstance->getSession()->id_pessoa);
       $nomeEscola = App_Model_IedFinder::getEscola($escolaId);
       $nomeEscola = $nomeEscola['nm_escola'];
     }
@@ -191,8 +185,8 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
                             'label'        => 'Escola',
                             'value' => isset($nomeEscola) ? $nomeEscola : '');
 
-    $options = self::mergeArrayWithDefaults($options, $defaultOptions);
-    call_user_func_array(array($viewInstance, 'campoRotulo'), $options);
+    $options = $this->mergeArrayWithDefaults($options, $defaultOptions);
+    call_user_func_array(array($this->viewInstance, 'campoRotulo'), $options);
 
     #TODO incluir escolaHidden
   }
@@ -206,11 +200,11 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
    * @param   type
    * @return  null
    */
-  public static function escolaSelect($viewInstance, $options = array()) {
+  public function escolaSelect($options = array()) {
 
     // TODO obter escolas conforme permissoes / tipo usuário
     if (! array_key_exists('escolas', $options)) {
-      $instituicaoId = self::getPermissoes()->getInstituicao($viewInstance->getSession()->id_pessoa);
+      $instituicaoId = $this->getPermissoes()->getInstituicao($this->viewInstance->getSession()->id_pessoa);
       $escolas       = App_Model_IedFinder::getEscolas($instituicaoId);
 
       // TODO deve ser a primeira opcao, criar funcao para usar abaixo, getSelectFor...?
@@ -229,8 +223,8 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
                             'required'     => true,
                             'multiple'     => false);
 
-    $options = self::mergeArrayWithDefaults($options, $defaultOptions);
-    call_user_func_array(array($viewInstance, 'campoLista'), $options);
+    $options = $this->mergeArrayWithDefaults($options, $defaultOptions);
+    call_user_func_array(array($this->viewInstance, 'campoLista'), $options);
   }
 
 
@@ -242,8 +236,8 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
    * @param   type
    * @return  null
    */
-  public static function escola($viewInstance, $options = array()) {
-    $nivelAcesso = self::getPermissoes()->nivel_acesso($viewInstance->getSession()->id_pessoa);
+  public function escola($options = array()) {
+    $nivelAcesso = $this->getPermissoes()->nivel_acesso($this->viewInstance->getSession()->id_pessoa);
 
     // poli-institucional, institucional
     $niveisAcessoMultiplasEscolas = array(1, 2);
@@ -252,9 +246,11 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
     $niveisAcessoEscola = array(4);
 
     if (in_array($nivelAcesso, $niveisAcessoMultiplasEscolas))
-      self::escolaSelect($viewInstance, $options);
+      $this->escolaSelect($options);
     elseif (in_array($nivelAcesso, $niveisAcessoEscola))
-      self::escolaText($viewInstance, $options);
+      $this->escolaText($options);
+
+    ApplicationHelper::javascript($this->viewInstance, '/modules/Portabilis/DynamicSelectMenus/Assets/Javascripts/DynamicEscolas.js');
   }
 
 
@@ -266,9 +262,9 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
    * @param   type
    * @return  null
    */
-  public static function bibliotecaText($viewInstance, $options = array()) {
+  public function bibliotecaText($options = array()) {
     if (! array_key_exists('value', $options)) {
-      $bibliotecaId = self::getPermissoes()->getBiblioteca($viewInstance->getSession()->id_pessoa);
+      $bibliotecaId = $this->getPermissoes()->getBiblioteca($this->viewInstance->getSession()->id_pessoa);
       $nomeBiblioteca = App_Model_IedFinder::getBiblioteca($bibliotecaId);
       $nomeBiblioteca = $nomeEscola['nm_biblioteca'];
     }
@@ -277,8 +273,8 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
                             'label' => 'Biblioteca',
                             'value' => isset($nomeBiblioteca) ? $nomeBiblioteca : '');
 
-    $options = self::mergeArrayWithDefaults($options, $defaultOptions);
-    call_user_func_array(array($viewInstance, 'campoRotulo'), $options);
+    $options = $this->mergeArrayWithDefaults($options, $defaultOptions);
+    call_user_func_array(array($this->viewInstance, 'campoRotulo'), $options);
 
     #TODO incluir bibliotecaHidden
   }
@@ -292,11 +288,11 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
    * @param   type
    * @return  null
    */
-  public static function bibliotecaSelect($viewInstance, $options = array()) {
+  public function bibliotecaSelect($options = array()) {
 
     // TODO obter bibliotecas conforme permissoes / tipo usuário
     if (! array_key_exists('bibliotecas', $options)) {
-      $instituicaoId = self::getPermissoes()->getInstituicao($viewInstance->getSession()->id_pessoa);
+      $instituicaoId = $this->getPermissoes()->getInstituicao($this->viewInstance->getSession()->id_pessoa);
       $bibliotecas   = App_Model_IedFinder::getBibliotecas($instituicaoId);
 
       // TODO deve ser a primeira opcao, criar funcao para usar abaixo, getSelectFor...?
@@ -315,8 +311,8 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
                             'required'     => true,
                             'multiple'     => false);
 
-    $options = self::mergeArrayWithDefaults($options, $defaultOptions);
-    call_user_func_array(array($viewInstance, 'campoLista'), $options);
+    $options = $this->mergeArrayWithDefaults($options, $defaultOptions);
+    call_user_func_array(array($this->viewInstance, 'campoLista'), $options);
   }
 
 
@@ -328,8 +324,8 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
    * @param   type
    * @return  null
    */
-  public static function biblioteca($viewInstance, $options = array()) {
-    $nivelAcesso = self::getPermissoes()->nivel_acesso($viewInstance->getSession()->id_pessoa);
+  public function biblioteca($options = array()) {
+    $nivelAcesso = $this->getPermissoes()->nivel_acesso($this->viewInstance->getSession()->id_pessoa);
 
     // poli-institucional, institucional
     $niveisAcessoMultiplasBibliotecas = array(1, 2);
@@ -338,9 +334,9 @@ class SelectMenusHelper extends CoreExt_View_Helper_Abstract {
     $niveisAcessoBiblioteca = array(4, 8);
 
     if (in_array($nivelAcesso, $niveisAcessoMultiplasBibliotecas))
-      self::bibliotecaSelect($viewInstance, $options);
+      $this->bibliotecaSelect($options);
     elseif(in_array($nivelAcesso, $niveisAcessoBiblioteca))
-      self::bibliotecaText($viewInstance, $options);
+      $this->bibliotecaText($options);
   }
 }
 ?>
