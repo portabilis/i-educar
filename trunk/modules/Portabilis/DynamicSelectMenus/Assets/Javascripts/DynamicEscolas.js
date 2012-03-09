@@ -1,26 +1,31 @@
 (function($){
   $(document).ready(function(){
+    var $instituicaoField = $('#ref_cod_instituicao');
+    var $escolaField      = $('#ref_cod_escola');
 
-    var instituicaoId = '#ref_cod_instituicao';
-    var $instituicaoField = $(instituicaoId);
+    var handleGetEscolas = function(resources) {
+      var selectOptions = xmlResourcesToSelectOptions(resources, 'query', 'cod_escola');
+      updateSelect($escolaField, selectOptions);
+    }
 
     var updateEscolas = function(){
-      var ApiUrlBase = 'educar_escola_xml2.php';
-      var $escolaField = $('#ref_cod_escola');
-      disableElement($escolaField);
+      $escolaField.attr('disabled', 'disabled');
 
       if ($instituicaoField.val()) {
-        // TODO load escolas via ajax
-        getEscolasUrl = getResourceUrlBuilder.buildUrl(ApiUrlBase, 'matriculas', {ins : $instituicaoField.val()});
-        console.log(getEscolasUrl);
+        getEscolasUrl = getResourceUrlBuilder.buildUrl('educar_escola_xml2.php', 'matriculas', {
+                                                       ins : $instituicaoField.val() });
 
-        var escolas = [{id : 1, value : 'Escola 1', checked : false},
-                       {id : 2, value : 'Escola 2', checked : true}];
+        var options = {
+          url : getEscolasUrl,
+          dataType : 'xml',
+          success  : handleGetEscolas
+        };
 
-        updateSelect($escolaField, escolas);
+        getResources(options, handleGetEscolas);
       }
     };
 
+    // bind onchange event
     $instituicaoField.change(updateEscolas);
 
   }); // ready
