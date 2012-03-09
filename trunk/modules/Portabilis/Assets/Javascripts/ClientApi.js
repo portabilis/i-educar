@@ -1,4 +1,3 @@
-// url builders
 var resourceUrlBuilder = {
   buildUrl : function(urlBase, vars){
 
@@ -21,3 +20,12 @@ var getResourceUrlBuilder = {
     return resourceUrlBuilder.buildUrl(urlBase, $j.extend(vars, additionalVars));
   }
 };
+
+var handleErrorGetResources = function(response){
+  alert('Erro ao alterar recurso, detalhes:' + response.responseText);
+  safeLog(response);
+}
+
+var getResources = function(options, errorCallback) {
+  $j.ajax(options).error(errorCallback || handleErrorGetResources);
+}
