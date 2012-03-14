@@ -86,12 +86,25 @@ class DynamicSelectMenusHelper {
 
   protected function mergeArrayWithDefaults($options, $defaultOptions) {
     foreach($options as $key => $value) {
-      if (array_key_exists($key, $defaultOptions))
-        $defaultOptions[$key] = $value;
+      //if (array_key_exists($key, $defaultOptions))
+      $defaultOptions[$key] = $value;
     }
 
     return $defaultOptions;
   }
+
+  /* Insere uma chave => valor no inicio de um array, preservando os indices
+     inteiros do array */
+  protected function insertInArray($key, $value, $array) {
+    $newArray = array($key => $value);
+
+    foreach($array as $key => $value) {
+      $newArray[$key] = $value;
+    }
+
+    return $newArray;
+  }
+
 
   /**
    *
@@ -122,13 +135,9 @@ class DynamicSelectMenusHelper {
    * @return  null
    */
   public function instituicaoSelect($options = array()) {
-
-    // TODO obter instituicoes conforme permissoes / tipo usuário
     if (! array_key_exists('instituicoes', $options)) {
-      $instituicoes       = App_Model_IedFinder::getInstituicoes();
-
-      // TODO deve ser a primeira opcao
-      $instituicoes[null] = "Selecione uma institui&ccedil;&atilde;o";
+      $instituicoes = App_Model_IedFinder::getInstituicoes();
+      $instituicoes = $this->insertInArray(null, "Selecione uma institui&ccedil;&atilde;o", $instituicoes);
     }
 
     $defaultOptions = array('id'           => 'ref_cod_instituicao',
@@ -189,13 +198,13 @@ class DynamicSelectMenusHelper {
     }
 
     $defaultOptions = array('id'    => 'ref_cod_escola',
-                            'label'        => 'Escola',
+                            'label' => 'Escola',
                             'value' => isset($nomeEscola) ? $nomeEscola : '');
 
     $options = $this->mergeArrayWithDefaults($options, $defaultOptions);
-    call_user_func_array(array($this->viewInstance, 'campoRotulo'), $options);
 
-    #TODO incluir escolaHidden
+    // adiciona campo texto e campo hidden
+    call_user_func_array(array($this->viewInstance, 'campoRotulo'), $options);
   }
 
 
@@ -208,14 +217,10 @@ class DynamicSelectMenusHelper {
    * @return  null
    */
   public function escolaSelect($options = array()) {
-
-    // TODO obter escolas conforme permissoes / tipo usuário
     if (! array_key_exists('escolas', $options)) {
       $instituicaoId = $this->getPermissoes()->getInstituicao($this->viewInstance->getSession()->id_pessoa);
       $escolas       = App_Model_IedFinder::getEscolas($instituicaoId);
-
-      // TODO deve ser a primeira opcao, criar funcao para usar abaixo, getSelectFor...?
-      $escolas[null] = "Selecione uma escola";
+      $escolas = $this->insertInArray(null, "Selecione uma escola", $escolas);
     }
 
     $defaultOptions = array('id'           => 'ref_cod_escola',
@@ -286,9 +291,9 @@ class DynamicSelectMenusHelper {
                             'value' => isset($nomeBiblioteca) ? $nomeBiblioteca : '');
 
     $options = $this->mergeArrayWithDefaults($options, $defaultOptions);
-    call_user_func_array(array($this->viewInstance, 'campoRotulo'), $options);
 
-    #TODO incluir bibliotecaHidden
+    // adiciona campo texto e campo hidden
+    call_user_func_array(array($this->viewInstance, 'campoRotulo'), $options);
   }
 
 
@@ -301,14 +306,11 @@ class DynamicSelectMenusHelper {
    * @return  null
    */
   public function bibliotecaSelect($options = array()) {
-
-    // TODO obter bibliotecas conforme permissoes / tipo usuário
     if (! array_key_exists('bibliotecas', $options)) {
       $instituicaoId = $this->getPermissoes()->getInstituicao($this->viewInstance->getSession()->id_pessoa);
 
       $bibliotecas   = App_Model_IedFinder::getBibliotecas($instituicaoId);
-      // TODO deve ser a primeira opcao, criar funcao para usar abaixo, getSelectFor...?
-      $bibliotecas[null] = "Selecione uma biblioteca";
+      $bibliotecas = $this->insertInArray(null, "Selecione uma biblioteca", $bibliotecas);
     }
 
     $defaultOptions = array('id'           => 'ref_cod_biblioteca',
@@ -376,8 +378,7 @@ class DynamicSelectMenusHelper {
       else
         $situacoes = array();
 
-      // TODO deve ser a primeira opcao, criar funcao para usar abaixo, getSelectFor...?
-      $situacoes[null] = "Selecione uma situa&ccedil;&atilde;o";
+      $situacoes = $this->insertInArray(null, "Selecione uma situa&ccedil;&atilde;o", $situacoes);
     }
 
     $defaultOptions = array('id'         => 'ref_cod_situacao',
@@ -421,8 +422,7 @@ class DynamicSelectMenusHelper {
       else
         $fontes = array();
 
-      // TODO deve ser a primeira opcao, criar funcao para usar abaixo, getSelectFor...?
-      $fontes[null] = "Selecione uma fonte";
+      $fontes = $this->insertInArray(null, "Selecione uma fonte", $fontes);
     }
 
     $defaultOptions = array('id'         => 'ref_cod_fonte',
