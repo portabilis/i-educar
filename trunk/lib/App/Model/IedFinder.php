@@ -621,6 +621,24 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
+   * Retorna todas as situações cadastradas para as bibliotecasna na tabela pmieducar.situacao, selecionando
+   * opcionalmente pelo código da biblioteca.
+   * @param int $bibliotecaId
+   * @return array
+   */
+  public static function getBibliotecaSituacoes($bibliotecaId = NULL)
+  {
+    $_situacoes = self::addClassToStorage('clsPmieducarSituacao', NULL,
+      'include/pmieducar/clsPmieducarSituacao.inc.php');
+
+    $situacoes = array();
+    foreach ($_situacoes->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, $bibliotecaId) as $situacao) {
+      $situacoes[$situacao['cod_situacao']] = $situacao['nm_situacao'];
+    }
+    return $situacoes;
+  }
+
+  /**
    * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
    */
   public function getDefaultValidatorCollection()
