@@ -11,9 +11,9 @@
     var updateEscolas = function(){
       $escolaField.attr('disabled', 'disabled');
 
-      if ($instituicaoField.val()) {
-        getEscolasUrl = getResourceUrlBuilder.buildUrl('educar_escola_xml2.php', 'matriculas', {
-                                                       ins : $instituicaoField.val() });
+      if ($instituicaoField.val() && $instituicaoField.is(':enabled')) {
+        getEscolasUrl = getResourceUrlBuilder.buildUrl('educar_escola_xml2.php', '', {
+                                                       ins : $instituicaoField.attr('value') });
 
         var options = {
           url : getEscolasUrl,
@@ -23,6 +23,8 @@
 
         getResources(options, handleGetEscolas);
       }
+
+      $escolaField.change();
     };
 
     // bind onchange event
