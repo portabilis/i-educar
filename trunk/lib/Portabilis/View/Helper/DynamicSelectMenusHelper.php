@@ -371,10 +371,10 @@ class DynamicSelectMenusHelper {
       elseif (! $bibliotecaId && array_key_exists('bibliotecaId', $options))
         $bibliotecaId = $options['bibliotecaId'];
 
-      if (! $bibliotecaId)
-        throw new CoreExt_Exception_InvalidArgumentException("Não foi possivel recuperar / não foi recebido um paramêtro 'bibliotecaId' no helper bibliotecaSituacao");
-
-      $situacoes = App_Model_IedFinder::getBibliotecaSituacoes($bibliotecaId);
+      if ($bibliotecaId)
+        $situacoes = App_Model_IedFinder::getBibliotecaSituacoes($bibliotecaId);
+      else
+        $situacoes = array();
 
       // TODO deve ser a primeira opcao, criar funcao para usar abaixo, getSelectFor...?
       $situacoes[null] = "Selecione uma situa&ccedil;&atilde;o";
@@ -396,6 +396,51 @@ class DynamicSelectMenusHelper {
     call_user_func_array(array($this->viewInstance, 'campoLista'), $options);
 
     ApplicationHelper::loadJavascript($this->viewInstance, '/modules/Portabilis/DynamicSelectMenus/Assets/Javascripts/DynamicBibliotecaSituacoes.js');
+  }
+
+
+  /**
+   *
+   * <code>
+   * </code>
+   *
+   * @param   type
+   * @return  null
+   */
+  public function bibliotecaFonte($options = array()) {
+    if (! array_key_exists('fontes', $options)) {
+      $bibliotecaId = $this->getPermissoes()->getBiblioteca($this->viewInstance->getSession()->id_pessoa);
+
+      if (is_array($bibliotecaId) && count($bibliotecaId) > 0)
+        $bibliotecaId = $bibliotecaId[0]['ref_cod_biblioteca'];
+      elseif (! $bibliotecaId && array_key_exists('bibliotecaId', $options))
+        $bibliotecaId = $options['bibliotecaId'];
+
+      if ($bibliotecaId)
+        $fontes = App_Model_IedFinder::getBibliotecaFontes($bibliotecaId);
+      else
+        $fontes = array();
+
+      // TODO deve ser a primeira opcao, criar funcao para usar abaixo, getSelectFor...?
+      $fontes[null] = "Selecione uma fonte";
+    }
+
+    $defaultOptions = array('id'         => 'ref_cod_fonte',
+                            'label'      => 'Fonte',
+                            'fontes'  => isset($fontes) ? $fontes : array(),
+                            'value'      => null,
+                            'callback'   => '',
+                            'duplo'      => false,
+                            'label_hint' => '',
+                            'input_hint' => '',
+                            'disabled'   => false,
+                            'required'   => true,
+                            'multiple'   => false);
+
+    $options = $this->mergeArrayWithDefaults($options, $defaultOptions);
+    call_user_func_array(array($this->viewInstance, 'campoLista'), $options);
+
+    ApplicationHelper::loadJavascript($this->viewInstance, '/modules/Portabilis/DynamicSelectMenus/Assets/Javascripts/DynamicBibliotecaFontes.js');
   }
 }
 ?>
