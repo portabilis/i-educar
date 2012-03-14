@@ -115,11 +115,11 @@ class DynamicSelectMenusHelper {
    * @return  null
    */
   public function instituicaoHidden($options = array()) {
-    if (! array_key_exists('instituicaoId', $options))
-      $instituicaoId = $this->getPermissoes()->getInstituicao($this->viewInstance->getSession()->id_pessoa);
+    if (! isset($options['value']) || ! $options['value'])
+      $options['value'] = $this->getPermissoes()->getInstituicao($this->viewInstance->getSession()->id_pessoa);
 
     $defaultOptions = array('id'    => 'ref_cod_instituicao',
-                            'value' => isset($instituicaoId) ? $instituicaoId : null);
+                            'value' => null);
 
     $options = $this->mergeArrayWithDefaults($options, $defaultOptions);
     call_user_func_array(array($this->viewInstance, 'campoOculto'), $options);
@@ -134,15 +134,15 @@ class DynamicSelectMenusHelper {
    * @param   type
    * @return  null
    */
-  public function instituicaoSelect($options = array()) {
-    if (! array_key_exists('instituicoes', $options)) {
+  public function instituicaoSelect($options = array(), $instituicoes = array()) {
+    if (empty($instituicoes))
       $instituicoes = App_Model_IedFinder::getInstituicoes();
-      $instituicoes = $this->insertInArray(null, "Selecione uma institui&ccedil;&atilde;o", $instituicoes);
-    }
+
+    $instituicoes = $this->insertInArray(null, "Selecione uma institui&ccedil;&atilde;o", $instituicoes);
 
     $defaultOptions = array('id'           => 'ref_cod_instituicao',
                             'label'        => 'Institui&ccedil;&atilde;o',
-                            'instituicoes' => isset($instituicoes) ? $instituicoes : array(),
+                            'instituicoes' => $instituicoes,
                             'value'        => null,
                             'callback'     => '',
                             'duplo'        => false,
@@ -165,14 +165,14 @@ class DynamicSelectMenusHelper {
    * @param   type
    * @return  null
    */
-  public function instituicao($options = array()) {
+  public function instituicao($options = array(), $instituicoes = array()) {
     $nivelAcesso = $this->getPermissoes()->nivel_acesso($this->viewInstance->getSession()->id_pessoa);
 
     // poli-institucional
     $nivelAcessoMultiplasInstituicoes = 1;
 
     if ($nivelAcesso == $nivelAcessoMultiplasInstituicoes)
-      $this->instituicaoSelect($options);
+      $this->instituicaoSelect($options, $instituicoes);
     else
       $this->instituicaoHidden($options);
   }
@@ -187,24 +187,28 @@ class DynamicSelectMenusHelper {
    * @return  null
    */
   public function escolaText($options = array()) {
-    if (! array_key_exists('value', $options)) {
+    if (! isset($options['value']) || ! $options['value'])
       $escolaId = $this->getPermissoes()->getEscola($this->viewInstance->getSession()->id_pessoa);
-      $nomeEscola = App_Model_IedFinder::getEscola($escolaId);
-      $nomeEscola = $nomeEscola['nome'];
-    }
-    else {
-      $nomeEscola = App_Model_IedFinder::getEscola($options['value']);
-      $options['value'] = $nomeEscola['nome'];
-    }
+    else
+      $escolaId = $options['value'];
 
-    $defaultOptions = array('id'    => 'ref_cod_escola',
-                            'label' => 'Escola',
-                            'value' => isset($nomeEscola) ? $nomeEscola : '');
+    $escola = App_Model_IedFinder::getEscola($escolaId);
+    $options['value'] = $escola['nome'];
+
+    $defaultOptions = array('id'        => 'escola_nome',
+                            'label'     => 'Escola',
+                            'value'     => '',
+                            'duplo'     => false,
+                            'descricao' => '',
+                            'separador' => ':');
 
     $options = $this->mergeArrayWithDefaults($options, $defaultOptions);
 
-    // adiciona campo texto e campo hidden
     call_user_func_array(array($this->viewInstance, 'campoRotulo'), $options);
+
+    /* adicionado campo oculto manualmente, pois o metodo campoRotulo adiciona
+       como value o nome da escola */
+    $this->viewInstance->campoOculto("ref_cod_escola", $escolaId);
   }
 
 
@@ -216,16 +220,17 @@ class DynamicSelectMenusHelper {
    * @param   type
    * @return  null
    */
-  public function escolaSelect($options = array()) {
-    if (! array_key_exists('escolas', $options)) {
+  public function escolaSelect($options = array(), $escolas = array()) {
+    if (empty($escolas)) {
       $instituicaoId = $this->getPermissoes()->getInstituicao($this->viewInstance->getSession()->id_pessoa);
       $escolas       = App_Model_IedFinder::getEscolas($instituicaoId);
-      $escolas = $this->insertInArray(null, "Selecione uma escola", $escolas);
     }
+
+    $escolas = $this->insertInArray(null, "Selecione uma escola", $escolas);
 
     $defaultOptions = array('id'           => 'ref_cod_escola',
                             'label'        => 'Escola',
-                            'escolas'      => isset($escolas) ? $escolas : array(),
+                            'escolas'      => $escolas,
                             'value'        => null,
                             'callback'     => '',
                             'duplo'        => false,
@@ -248,7 +253,7 @@ class DynamicSelectMenusHelper {
    * @param   type
    * @return  null
    */
-  public function escola($options = array()) {
+  public function escola($options = array(), $escolas = array()) {
     $nivelAcesso = $this->getPermissoes()->nivel_acesso($this->viewInstance->getSession()->id_pessoa);
 
     // poli-institucional, institucional
@@ -258,7 +263,7 @@ class DynamicSelectMenusHelper {
     $niveisAcessoEscola = array(4, 8);
 
     if (in_array($nivelAcesso, $niveisAcessoMultiplasEscolas))
-      $this->escolaSelect($options);
+      $this->escolaSelect($options, $escolas);
     elseif (in_array($nivelAcesso, $niveisAcessoEscola))
       $this->escolaText($options);
 
@@ -275,25 +280,27 @@ class DynamicSelectMenusHelper {
    * @return  null
    */
   public function bibliotecaText($options = array()) {
-    if (! array_key_exists('value', $options)) {
-      $bibliotecaId = $this->getPermissoes()->getBiblioteca($this->viewInstance->getSession()->id_pessoa);
-
-      $nomeBiblioteca = App_Model_IedFinder::getBiblioteca($bibliotecaId[0]['ref_cod_biblioteca']);
-      $nomeBiblioteca = $nomeBiblioteca['nm_biblioteca'];
+    if (! isset($options['value']) || ! $options['value']) {
+      $biblioteca = $this->getPermissoes()->getBiblioteca($this->viewInstance->getSession()->id_pessoa);
+      $bibliotecaId = $biblioteca[0]['ref_cod_biblioteca'];
     }
-    else {
-      $nomeBiblioteca = App_Model_IedFinder::getBiblioteca($options['value']);
-      $options['value'] = $nomeBiblioteca['nm_biblioteca'];
-    }
+    else
+      $bibliotecaId = $options['value'];
 
-    $defaultOptions = array('id'    => 'ref_cod_biblioteca',
+    $biblioteca = App_Model_IedFinder::getBiblioteca($bibliotecaId);
+    $options['value'] = $biblioteca['nm_biblioteca'];
+
+    $defaultOptions = array('id'    => 'biblioteca_nome',
                             'label' => 'Biblioteca',
-                            'value' => isset($nomeBiblioteca) ? $nomeBiblioteca : '');
+                            'value' => '');
 
     $options = $this->mergeArrayWithDefaults($options, $defaultOptions);
 
-    // adiciona campo texto e campo hidden
     call_user_func_array(array($this->viewInstance, 'campoRotulo'), $options);
+
+    /* adicionado campo oculto manualmente, pois o metodo campoRotulo adiciona
+       como value o nome da biblioteca */
+    $this->viewInstance->campoOculto("ref_cod_biblioteca", $bibliotecaId);
   }
 
 
@@ -305,17 +312,17 @@ class DynamicSelectMenusHelper {
    * @param   type
    * @return  null
    */
-  public function bibliotecaSelect($options = array()) {
-    if (! array_key_exists('bibliotecas', $options)) {
+  public function bibliotecaSelect($options = array(), $bibliotecas = array()) {
+    if (empty($bibliotecas)) {
       $instituicaoId = $this->getPermissoes()->getInstituicao($this->viewInstance->getSession()->id_pessoa);
-
       $bibliotecas   = App_Model_IedFinder::getBibliotecas($instituicaoId);
-      $bibliotecas = $this->insertInArray(null, "Selecione uma biblioteca", $bibliotecas);
     }
+
+    $bibliotecas = $this->insertInArray(null, "Selecione uma biblioteca", $bibliotecas);
 
     $defaultOptions = array('id'           => 'ref_cod_biblioteca',
                             'label'        => 'Biblioteca',
-                            'bibliotecas'  => isset($bibliotecas) ? $bibliotecas : array(),
+                            'bibliotecas'  => $bibliotecas,
                             'value'        => null,
                             'callback'     => '',
                             'duplo'        => false,
@@ -338,7 +345,7 @@ class DynamicSelectMenusHelper {
    * @param   type
    * @return  null
    */
-  public function biblioteca($options = array()) {
+  public function biblioteca($options = array(), $bibliotecas = array()) {
     $nivelAcesso = $this->getPermissoes()->nivel_acesso($this->viewInstance->getSession()->id_pessoa);
 
     // poli-institucional, institucional
@@ -348,7 +355,7 @@ class DynamicSelectMenusHelper {
     $niveisAcessoBiblioteca = array(4, 8);
 
     if (in_array($nivelAcesso, $niveisAcessoMultiplasBibliotecas))
-      $this->bibliotecaSelect($options);
+      $this->bibliotecaSelect($options, $bibliotecas);
     elseif(in_array($nivelAcesso, $niveisAcessoBiblioteca))
       $this->bibliotecaText($options);
 
@@ -364,26 +371,23 @@ class DynamicSelectMenusHelper {
    * @param   type
    * @return  null
    */
-  public function bibliotecaSituacao($options = array()) {
-    if (! array_key_exists('situacoes', $options)) {
-      $bibliotecaId = $this->getPermissoes()->getBiblioteca($this->viewInstance->getSession()->id_pessoa);
+  public function bibliotecaSituacao($bibliotecaId = 0, $options = array(), $situacoes = array()) {
+    if (empty($situacoes)) {
 
-      if (is_array($bibliotecaId) && count($bibliotecaId) > 0)
-        $bibliotecaId = $bibliotecaId[0]['ref_cod_biblioteca'];
-      elseif (! $bibliotecaId && array_key_exists('bibliotecaId', $options))
-        $bibliotecaId = $options['bibliotecaId'];
+      if (! $bibliotecaId) {
+        $biblioteca = $this->getPermissoes()->getBiblioteca($this->viewInstance->getSession()->id_pessoa);
+        // if (is_array($biblioteca) && count($biblioteca) > 0)
+        $bibliotecaId = $biblioteca[0]['ref_cod_biblioteca'];
+      }
 
-      if ($bibliotecaId)
-        $situacoes = App_Model_IedFinder::getBibliotecaSituacoes($bibliotecaId);
-      else
-        $situacoes = array();
-
-      $situacoes = $this->insertInArray(null, "Selecione uma situa&ccedil;&atilde;o", $situacoes);
+      $situacoes = App_Model_IedFinder::getBibliotecaSituacoes($bibliotecaId);
     }
+
+    $situacoes = $this->insertInArray(null, "Selecione uma situa&ccedil;&atilde;o", $situacoes);
 
     $defaultOptions = array('id'         => 'ref_cod_situacao',
                             'label'      => 'Situa&ccedil;&atilde;o',
-                            'situacoes'  => isset($situacoes) ? $situacoes : array(),
+                            'situacoes'  => $situacoes,
                             'value'      => null,
                             'callback'   => '',
                             'duplo'      => false,
@@ -408,26 +412,23 @@ class DynamicSelectMenusHelper {
    * @param   type
    * @return  null
    */
-  public function bibliotecaFonte($options = array()) {
-    if (! array_key_exists('fontes', $options)) {
-      $bibliotecaId = $this->getPermissoes()->getBiblioteca($this->viewInstance->getSession()->id_pessoa);
+  public function bibliotecaFonte($bibliotecaId = 0, $options = array(), $fontes = array()) {
+    if (empty($fontes)) {
 
-      if (is_array($bibliotecaId) && count($bibliotecaId) > 0)
-        $bibliotecaId = $bibliotecaId[0]['ref_cod_biblioteca'];
-      elseif (! $bibliotecaId && array_key_exists('bibliotecaId', $options))
-        $bibliotecaId = $options['bibliotecaId'];
+      if (! $bibliotecaId) {
+        $biblioteca = $this->getPermissoes()->getBiblioteca($this->viewInstance->getSession()->id_pessoa);
+        // if (is_array($biblioteca) && count($biblioteca) > 0)
+        $bibliotecaId = $biblioteca[0]['ref_cod_biblioteca'];
+      }
 
-      if ($bibliotecaId)
-        $fontes = App_Model_IedFinder::getBibliotecaFontes($bibliotecaId);
-      else
-        $fontes = array();
-
-      $fontes = $this->insertInArray(null, "Selecione uma fonte", $fontes);
+      $fontes = App_Model_IedFinder::getBibliotecaFontes($bibliotecaId);
     }
+
+    $fontes = $this->insertInArray(null, "Selecione uma fonte", $fontes);
 
     $defaultOptions = array('id'         => 'ref_cod_fonte',
                             'label'      => 'Fonte',
-                            'fontes'  => isset($fontes) ? $fontes : array(),
+                            'fontes'     => $fontes,
                             'value'      => null,
                             'callback'   => '',
                             'duplo'      => false,

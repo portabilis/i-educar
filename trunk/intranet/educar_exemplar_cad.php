@@ -137,11 +137,9 @@ class indice extends clsCadastro
 
     $dynamicSelectMenusHelper->biblioteca(array('value' => $this->ref_cod_biblioteca));
 
-    $dynamicSelectMenusHelper->bibliotecaSituacao(array('value' => $this->ref_cod_situacao,
-                                                        'bibliotecaId' => $this->ref_cod_biblioteca));
+    $dynamicSelectMenusHelper->bibliotecaSituacao($this->ref_cod_biblioteca, array('value' => $this->ref_cod_situacao));
 
-    $dynamicSelectMenusHelper->bibliotecaFonte(array('value' => $this->ref_cod_fonte,
-                                                     'bibliotecaId' => $this->ref_cod_biblioteca));
+    $dynamicSelectMenusHelper->bibliotecaFonte($this->ref_cod_biblioteca, array('value' => $this->ref_cod_fonte));
 
 		$opcoes = array();
 		if( $this->ref_cod_acervo && $this->ref_cod_acervo != "NULL")
