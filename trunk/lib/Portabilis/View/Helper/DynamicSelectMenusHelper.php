@@ -181,7 +181,11 @@ class DynamicSelectMenusHelper {
     if (! array_key_exists('value', $options)) {
       $escolaId = $this->getPermissoes()->getEscola($this->viewInstance->getSession()->id_pessoa);
       $nomeEscola = App_Model_IedFinder::getEscola($escolaId);
-      $nomeEscola = $nomeEscola['nm_escola'];
+      $nomeEscola = $nomeEscola['nome'];
+    }
+    else {
+      $nomeEscola = App_Model_IedFinder::getEscola($options['value']);
+      $options['value'] = $nomeEscola['nome'];
     }
 
     $defaultOptions = array('id'    => 'ref_cod_escola',
@@ -246,7 +250,7 @@ class DynamicSelectMenusHelper {
     $niveisAcessoMultiplasEscolas = array(1, 2);
 
     // escola
-    $niveisAcessoEscola = array(4);
+    $niveisAcessoEscola = array(4, 8);
 
     if (in_array($nivelAcesso, $niveisAcessoMultiplasEscolas))
       $this->escolaSelect($options);
@@ -268,8 +272,12 @@ class DynamicSelectMenusHelper {
   public function bibliotecaText($options = array()) {
     if (! array_key_exists('value', $options)) {
       $bibliotecaId = $this->getPermissoes()->getBiblioteca($this->viewInstance->getSession()->id_pessoa);
-      $nomeBiblioteca = App_Model_IedFinder::getBiblioteca($bibliotecaId);
-      $nomeBiblioteca = $nomeEscola['nm_biblioteca'];
+      $nomeBiblioteca = App_Model_IedFinder::getBiblioteca($bibliotecaId[0]['ref_cod_biblioteca']);
+      $nomeBiblioteca = $nomeBiblioteca['nm_biblioteca'];
+    }
+    else {
+      $nomeBiblioteca = App_Model_IedFinder::getBiblioteca($options['value']);
+      $options['value'] = $nomeBiblioteca['nm_biblioteca'];
     }
 
     $defaultOptions = array('id'    => 'ref_cod_biblioteca',
@@ -340,6 +348,8 @@ class DynamicSelectMenusHelper {
       $this->bibliotecaSelect($options);
     elseif(in_array($nivelAcesso, $niveisAcessoBiblioteca))
       $this->bibliotecaText($options);
+
+    ApplicationHelper::loadJavascript($this->viewInstance, '/modules/Portabilis/DynamicSelectMenus/Assets/Javascripts/DynamicBibliotecas.js');
   }
 }
 ?>
