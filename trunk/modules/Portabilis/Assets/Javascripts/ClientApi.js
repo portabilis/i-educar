@@ -13,11 +13,16 @@ var getResourceUrlBuilder = {
   buildUrl : function(urlBase, resourceName, additionalVars){
 
     var vars = {
-      att : resourceName,
       oper : 'get'
     };
 
-    return resourceUrlBuilder.buildUrl(urlBase, $j.extend(vars, additionalVars));
+    if (resourceName)
+      vars.att = resourceName;
+
+    if (additionalVars)
+      vars = $j.extend(vars, additionalVars);
+
+    return resourceUrlBuilder.buildUrl(urlBase, vars);
   }
 };
 
