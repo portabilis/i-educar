@@ -128,7 +128,6 @@ class indice extends clsCadastro
 	{
 		$this->campoOculto( "cod_exemplar", $this->cod_exemplar );
 
-
     // Dynamic Select Menus
     $dynamicSelectMenusHelper = new DynamicSelectMenusHelper($this);
 
@@ -169,7 +168,7 @@ class indice extends clsCadastro
 		if(!$this->data_aquisicao)
 			$this->data_aquisicao = date("d/m/Y");
 
-		$this->campoData( "data_aquisicao", "Data Aquisic&atilde;o", $this->data_aquisicao, false );
+		$this->campoData( "data_aquisicao", "Data Aquisic&atilde;o", $this->data_aquisicao, true );
 
 		if (!is_numeric($this->cod_exemplar))
 		{
@@ -191,6 +190,9 @@ class indice extends clsCadastro
 
 		$this->preco = str_replace(".","",$this->preco);
 		$this->preco = str_replace(",",".",$this->preco);
+
+    $this->data_aquisicao = dataToBanco($this->data_aquisicao);
+
 		if (!$this->combo_manual)
 		{
 			$obj_exemplar = new clsPmieducarExemplar();
@@ -200,6 +202,7 @@ class indice extends clsCadastro
 		{
 			$max_tombo = $this->combo_manual;
 		}
+
 		for ($i = 0; $i < $this->qtd_livros; $i++)
 		{
 			$obj = new clsPmieducarExemplar( $this->cod_exemplar, $this->ref_cod_fonte, $this->ref_cod_motivo_baixa, $this->ref_cod_acervo, $this->ref_cod_situacao, $this->pessoa_logada, $this->pessoa_logada, $this->permite_emprestimo, $this->preco, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->data_aquisicao, $max_tombo );
@@ -230,6 +233,8 @@ class indice extends clsCadastro
 
 		$this->preco = str_replace(".","",$this->preco);
 		$this->preco = str_replace(",",".",$this->preco);
+
+    $this->data_aquisicao = dataToBanco($this->data_aquisicao);
 
 		$obj = new clsPmieducarExemplar($this->cod_exemplar, $this->ref_cod_fonte, $this->ref_cod_motivo_baixa, $this->ref_cod_acervo, $this->ref_cod_situacao, $this->pessoa_logada, $this->pessoa_logada, $this->permite_emprestimo, $this->preco, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->data_aquisicao);
 		$editou = $obj->edita();
