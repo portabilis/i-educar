@@ -621,7 +621,7 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
-   * Retorna todas as situações cadastradas para as bibliotecasna na tabela pmieducar.situacao, selecionando
+   * Retorna todas as situações cadastradas para as bibliotecas na tabela pmieducar.situacao, selecionando
    * opcionalmente pelo código da biblioteca.
    * @param int $bibliotecaId
    * @return array
@@ -636,6 +636,24 @@ class App_Model_IedFinder extends CoreExt_Entity
       $situacoes[$situacao['cod_situacao']] = $situacao['nm_situacao'];
     }
     return $situacoes;
+  }
+
+  /**
+   * Retorna todas as fontes cadastradas para as bibliotecas na tabela pmieducar.fonte, selecionando
+   * opcionalmente pelo código da biblioteca.
+   * @param int $bibliotecaId
+   * @return array
+   */
+  public static function getBibliotecaFontes($bibliotecaId = NULL)
+  {
+    $_fontes = self::addClassToStorage('clsPmieducarFonte', NULL,
+      'include/pmieducar/clsPmieducarFonte.inc.php');
+
+    $fontes = array();
+    foreach ($_fontes->lista(null,null,null,null,null,null,null,null,null,1, $bibliotecaId) as $fonte) {
+      $fontes[$fonte['cod_fonte']] = $fonte['nm_fonte'];
+    }
+    return $fontes;
   }
 
   /**
