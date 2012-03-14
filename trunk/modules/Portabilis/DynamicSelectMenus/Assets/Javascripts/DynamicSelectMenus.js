@@ -12,18 +12,21 @@ function buildId(id) {
 }
 
 
-function updateSelect($targetElement, options) {
+function updateSelect($targetElement, options, emptyOptionHtml) {
   $targetElement.children('[value^=""]').remove();
 
   $j.each(options, function(index, value){
     $j(value).appendTo($targetElement);
   });
 
-  if (options.length > 0)
+  if (options.length > 0) {
     $targetElement.removeAttr('disabled');
+    $targetElement.children('[value=""]').first().html(emptyOptionHtml || "Selecione uma op&ccedil;&atilde;o");
+  }
   else
     $targetElement.children(':first').html('Sem op&ccedil;&otilde;es');
 }
+
 
 function xmlResourcesToSelectOptions(resources, parentNodeName, optionIdAttrName) {
   var options = [];
@@ -32,7 +35,7 @@ function xmlResourcesToSelectOptions(resources, parentNodeName, optionIdAttrName
     $value = $j(value);
 
     var $option = $j('<option />');
-    $option.attr('id', $value.attr(optionIdAttrName));
+    $option.attr('value', $value.attr(optionIdAttrName));
     $option.html($value.text());
     options.push($option);
   });
