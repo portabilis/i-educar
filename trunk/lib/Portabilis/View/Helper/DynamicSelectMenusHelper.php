@@ -272,6 +272,7 @@ class DynamicSelectMenusHelper {
   public function bibliotecaText($options = array()) {
     if (! array_key_exists('value', $options)) {
       $bibliotecaId = $this->getPermissoes()->getBiblioteca($this->viewInstance->getSession()->id_pessoa);
+
       $nomeBiblioteca = App_Model_IedFinder::getBiblioteca($bibliotecaId[0]['ref_cod_biblioteca']);
       $nomeBiblioteca = $nomeBiblioteca['nm_biblioteca'];
     }
@@ -304,8 +305,8 @@ class DynamicSelectMenusHelper {
     // TODO obter bibliotecas conforme permissoes / tipo usuário
     if (! array_key_exists('bibliotecas', $options)) {
       $instituicaoId = $this->getPermissoes()->getInstituicao($this->viewInstance->getSession()->id_pessoa);
-      $bibliotecas   = App_Model_IedFinder::getBibliotecas($instituicaoId);
 
+      $bibliotecas   = App_Model_IedFinder::getBibliotecas($instituicaoId);
       // TODO deve ser a primeira opcao, criar funcao para usar abaixo, getSelectFor...?
       $bibliotecas[null] = "Selecione uma biblioteca";
     }
@@ -350,6 +351,51 @@ class DynamicSelectMenusHelper {
       $this->bibliotecaText($options);
 
     ApplicationHelper::loadJavascript($this->viewInstance, '/modules/Portabilis/DynamicSelectMenus/Assets/Javascripts/DynamicBibliotecas.js');
+  }
+
+
+  /**
+   *
+   * <code>
+   * </code>
+   *
+   * @param   type
+   * @return  null
+   */
+  public function bibliotecaSituacao($options = array()) {
+    if (! array_key_exists('situacoes', $options)) {
+      $bibliotecaId = $this->getPermissoes()->getBiblioteca($this->viewInstance->getSession()->id_pessoa);
+
+      if (is_array($bibliotecaId) && count($bibliotecaId) > 0)
+        $bibliotecaId = $bibliotecaId[0]['ref_cod_biblioteca'];
+      elseif (! $bibliotecaId && array_key_exists('bibliotecaId', $options))
+        $bibliotecaId = $options['bibliotecaId'];
+
+      if (! $bibliotecaId)
+        throw new CoreExt_Exception_InvalidArgumentException("Não foi possivel recuperar / não foi recebido um paramêtro 'bibliotecaId' no helper bibliotecaSituacao");
+
+      $situacoes = App_Model_IedFinder::getBibliotecaSituacoes($bibliotecaId);
+
+      // TODO deve ser a primeira opcao, criar funcao para usar abaixo, getSelectFor...?
+      $situacoes[null] = "Selecione uma situa&ccedil;&atilde;o";
+    }
+
+    $defaultOptions = array('id'         => 'ref_cod_situacao',
+                            'label'      => 'Situa&ccedil;&atilde;o',
+                            'situacoes'  => isset($situacoes) ? $situacoes : array(),
+                            'value'      => null,
+                            'callback'   => '',
+                            'duplo'      => false,
+                            'label_hint' => '',
+                            'input_hint' => '',
+                            'disabled'   => false,
+                            'required'   => true,
+                            'multiple'   => false);
+
+    $options = $this->mergeArrayWithDefaults($options, $defaultOptions);
+    call_user_func_array(array($this->viewInstance, 'campoLista'), $options);
+
+    ApplicationHelper::loadJavascript($this->viewInstance, '/modules/Portabilis/DynamicSelectMenus/Assets/Javascripts/DynamicBibliotecaSituacoes.js');
   }
 }
 ?>
