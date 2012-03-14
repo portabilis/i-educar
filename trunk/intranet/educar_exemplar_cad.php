@@ -1,4 +1,8 @@
 <?php
+
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
 	*	@author Prefeitura Municipal de Itajaí								 *
@@ -24,10 +28,11 @@
 	*	02111-1307, USA.													 *
 	*																		 *
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
+require_once 'lib/Portabilis/View/Helper/DynamicSelectMenusHelper.php';
 
 class clsIndexBase extends clsBase
 {
@@ -64,7 +69,7 @@ class indice extends clsCadastro
 	var $ref_cod_instituicao;
 	var $ref_cod_escola;
 	var $ref_cod_biblioteca;
-	
+
 	var $tombo_automarico;
 	var $combo_manual;
 	var $qtd_livros;
@@ -112,9 +117,8 @@ class indice extends clsCadastro
 
 				$retorno = "Editar";
 			}
-		} else {
-			$this->acao_enviar = "acao2()";
 		}
+
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_exemplar_det.php?cod_exemplar={$registro["cod_exemplar"]}" : "educar_exemplar_lst.php";
 		$this->nome_url_cancelar = "Cancelar";
 		return $retorno;
@@ -122,58 +126,23 @@ class indice extends clsCadastro
 
 	function Gerar()
 	{
-		// primary keys
 		$this->campoOculto( "cod_exemplar", $this->cod_exemplar );
 
-		$get_escola     = 1;
-		$escola_obrigatorio = false;
-		$get_biblioteca = 1;
-		$instituicao_obrigatorio = true;
-		$biblioteca_obrigatorio = true;
-		include("include/pmieducar/educar_campo_lista.php");
 
-		// foreign keys
-		$opcoes = array( "" => "Selecione" );
-		if( class_exists( "clsPmieducarFonte" ) )
-		{
-			$objTemp = new clsPmieducarFonte();
-			$lista = $objTemp->lista( null,null,null,null,null,null,null,null,null,1 );
-			if ( is_array( $lista ) && count( $lista ) )
-			{
-				foreach ( $lista as $registro )
-				{
-					$opcoes["{$registro['cod_fonte']}"] = "{$registro['nm_fonte']}";
-				}
-			}
-		}
-		else
-		{
-			echo "<!--\nErro\nClasse clsPmieducarFonte nao encontrada\n-->";
-			$opcoes = array( "" => "Erro na geracao" );
-		}
-		$this->campoLista( "ref_cod_fonte", "Fonte", $opcoes, $this->ref_cod_fonte );
+    // Dynamic Select Menus
+    $dynamicSelectMenusHelper = new DynamicSelectMenusHelper($this);
 
-		/*$opcoes = array( "" => "Selecione" );
-		if( class_exists( "clsPmieducarMotivoBaixa" ) )
-		{
-			$objTemp = new clsPmieducarMotivoBaixa();
-			$lista = $objTemp->lista();
-			if ( is_array( $lista ) && count( $lista ) )
-			{
-				foreach ( $lista as $registro )
-				{
-					$opcoes["{$registro['cod_motivo_baixa']}"] = "{$registro['nm_motivo_baixa']}";
-				}
-			}
-		}
-		else
-		{
-			echo "<!--\nErro\nClasse clsPmieducarMotivoBaixa nao encontrada\n-->";
-			$opcoes = array( "" => "Erro na geracao" );
-		}
-		$this->campoLista( "ref_cod_motivo_baixa", "Motivo Baixa", $opcoes, $this->ref_cod_motivo_baixa );
-		*/
+    $dynamicSelectMenusHelper->instituicao(array('value' => $this->ref_cod_instituicao));
 
+    $dynamicSelectMenusHelper->escola(array('value' => $this->ref_cod_escola));
+
+    $dynamicSelectMenusHelper->biblioteca(array('value' => $this->ref_cod_biblioteca));
+
+    $dynamicSelectMenusHelper->bibliotecaSituacao(array('value' => $this->ref_cod_situacao,
+                                                        'bibliotecaId' => $this->ref_cod_biblioteca));
+
+    $dynamicSelectMenusHelper->bibliotecaFonte(array('value' => $this->ref_cod_fonte,
+                                                     'bibliotecaId' => $this->ref_cod_biblioteca));
 
 		$opcoes = array();
 		if( $this->ref_cod_acervo && $this->ref_cod_acervo != "NULL")
@@ -188,92 +157,24 @@ class indice extends clsCadastro
 			$opcoes = array( "" => "Selecione" );
 		}
 
-		//campoListaPesq( $nome, $campo, $valor, $default, $caminho="", $acao = "" , $duplo=false, $descricao="", $descricao2="", $flag=null, $pag_cadastro = null, $disabled = "", $div = false, $serializedcampos = false, $obrigatorio = false )
-//		$this->campoListaPesq( "ref_cod_acervo", "Obra Refer&ecirc;ncia", $opcoes, $this->ref_cod_acervo,"educar_pesquisa_acervo_lst.php?campo1=ref_cod_acervo","","","","","","","",true );
 		$this->campoLista("ref_cod_acervo","Obra",$opcoes,$this->ref_cod_acervo,"",false,"","<img border=\"0\" onclick=\"pesquisa();\" id=\"ref_cod_acervo_lupa\" name=\"ref_cod_acervo_lupa\" src=\"imagens/lupa.png\"\/>",false,true);
 
-	/*	$opcoes = array( "" => "Selecione" );
-		if( class_exists( "clsPmieducarAcervo" ) )
-		{
-			$objTemp = new clsPmieducarAcervo();
-			$lista = $objTemp->lista();
-			if ( is_array( $lista ) && count( $lista ) )
-			{
-				foreach ( $lista as $registro )
-				{
-					$opcoes["{$registro['cod_acervo']}"] = "{$registro['titulo']}";
-				}
-			}
-		}
-		else
-		{
-			echo "<!--\nErro\nClasse clsPmieducarAcervo nao encontrada\n-->";
-			$opcoes = array( "" => "Erro na geracao" );
-		}
-		$this->campoLista( "ref_cod_acervo", "Acervo", $opcoes, $this->ref_cod_acervo );
-*/
-
-		/*if( class_exists( "clsPmieducarSituacao" ) )
-		{
-			$objTemp = new clsPmieducarSituacao();
-			$lista = $objTemp->lista();
-			if ( is_array( $lista ) && count( $lista ) )
-			{
-				$situacao = "situacao = new Array();\n";
-				foreach ( $lista as $registro )
-				{
-					//$opcoes["{$registro['cod_situacao']}"] = "{$registro['nm_situacao']}";
-					$situacao .= "situacao[situacao.length] = new Array( {$registro["cod_situacao"]}, '{$registro['nm_situacao']}', {$registro['ref_cod_biblioteca']});\n";
-				}
-
-				echo "<script>{$situacao}</script>";
-			}
-		}
-		else
-		{
-			echo "<!--\nErro\nClasse clsPmieducarSituacao nao encontrada\n-->";
-			$opcoes = array( "" => "Erro na geracao" );
-		}*/
-
-		$opcoes = array( "" => "Selecione" );
-		if($this->ref_cod_biblioteca)
-		{
-			if( class_exists( "clsPmieducarSituacao" ) )
-			{
-				$objTemp = new clsPmieducarSituacao();
-				$lista = $objTemp->lista(null,null,null,null,null,null,null,null,null,null,null,null,null,$this->ref_cod_biblioteca);
-				if ( is_array( $lista ) && count( $lista ) )
-				{
-					foreach ( $lista as $registro )
-					{
-						$opcoes["{$registro['cod_situacao']}"] = "{$registro['nm_situacao']}";
-					}
-				}
-			}
-			else
-			{
-				echo "<!--\nErro\nClasse clsPmieducarSituacao nao encontrada\n-->";
-				$opcoes = array( "" => "Erro na geracao" );
-			}
-		}
-		$this->campoLista( "ref_cod_situacao", "Situac&atilde;o", $opcoes, $this->ref_cod_situacao );
-
-
-		// text
 		$opcoes = array( "" => "Selecione", "2" => "Sim", "1" => "N&atilde;o" );
 		$this->campoLista( "permite_emprestimo", "Permite Emprestimo", $opcoes, $this->permite_emprestimo );
-		//$this->campoTexto( "permite_emprestimo", "Permite Emprestimo", $this->permite_emprestimo, 30, 255, true );
+
 		$this->preco = is_numeric($this->preco) ? number_format($this->preco, 2, ",", ".") : "";
 		$this->campoMonetario( "preco", "Preco", $this->preco, 10, 20, true );
 
 		// data
 		if(!$this->data_aquisicao)
 			$this->data_aquisicao = date("d/m/Y");
+
 		$this->campoData( "data_aquisicao", "Data Aquisic&atilde;o", $this->data_aquisicao, false );
+
 		if (!is_numeric($this->cod_exemplar))
 		{
 			$this->campoNumero("qtd_livros", "Quantidade de Livros", 1, 5, 5, true);
-//			$this->campoBoolLista("tombo_automarico", "Tombo Automático", "t");
+      // $this->campoBoolLista("tombo_automarico", "Tombo Automático", "t");
 			$this->campoNumero("combo_manual", "Combo", "", 5, 5, false);
 			$this->campoOculto("eh_manual", 0);
 		}
@@ -294,23 +195,23 @@ class indice extends clsCadastro
 		{
 			$obj_exemplar = new clsPmieducarExemplar();
 			$max_tombo = $obj_exemplar->retorna_tombo_maximo() + 1;
-		} 
-		else 
+		}
+		else
 		{
 			$max_tombo = $this->combo_manual;
 		}
-		for ($i = 0; $i < $this->qtd_livros; $i++) 
+		for ($i = 0; $i < $this->qtd_livros; $i++)
 		{
 			$obj = new clsPmieducarExemplar( $this->cod_exemplar, $this->ref_cod_fonte, $this->ref_cod_motivo_baixa, $this->ref_cod_acervo, $this->ref_cod_situacao, $this->pessoa_logada, $this->pessoa_logada, $this->permite_emprestimo, $this->preco, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->data_aquisicao, $max_tombo );
 			$cadastrou = $obj->cadastra();
-			if (!$cadastrou) 
+			if (!$cadastrou)
 			{
 				$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
 				echo "<!--\nErro ao cadastrar clsPmieducarExemplar\nvalores obrigatorios\nis_numeric( $this->ref_cod_fonte ) && is_numeric( $this->ref_cod_acervo ) && is_numeric( $this->ref_cod_situacao ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->permite_emprestimo ) && is_numeric( $this->preco )\n-->";
 				return false;
 			}
 			$max_tombo++;
-		} 
+		}
 		$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			header( "Location: educar_exemplar_lst.php" );
 			die();
@@ -381,120 +282,6 @@ $pagina->addForm( $miolo );
 $pagina->MakeAll();
 ?>
 <script>
-/*
-var before_getSituacao = function(){}
-var after_getSituacao = function(){}
-*/
-
-Event.observe(window, 'load', Init, false);
-
-function Init() {
-	$('tr_combo_manual').style.display = 'none;';
-}
-
-var tempFonte;
-var tempSitueacao;
-if(document.getElementById('ref_cod_biblioteca').value != '')
-{
-	ajaxBiblioteca('novo');
-	tempFonte = null;
-	tempSituacao = null;
-}
-
-function getSituacao(xml_situacao)
-{
-	var campoSituacao = document.getElementById('ref_cod_situacao');
-	var DOM_array = xml_situacao.getElementsByTagName( "situacao" );
-
-	if(DOM_array.length)
-	{
-		campoSituacao.length = 1;
-		campoSituacao.options[0].text = 'Selecione uma situação';
-		campoSituacao.disabled = false;
-
-		for( var i = 0; i < DOM_array.length; i++ )
-		{
-			campoSituacao.options[campoSituacao.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_situacao"),false,false);
-		}
-		if(tempSituacao != null)
-			campoSituacao.value = tempSituacao;
-	}
-	else
-		campoSituacao.options[0].text = 'A biblioteca não possui nenhuma situação';
-}
-
-function getFonte(xml_fonte)
-{
-	var campoFonte = document.getElementById('ref_cod_fonte');
-	var DOM_array = xml_fonte.getElementsByTagName( "fonte" );
-
-	if(DOM_array.length)
-	{
-		campoFonte.length = 1;
-		campoFonte.options[0].text = 'Selecione uma fonte';
-		campoFonte.disabled = false;
-
-		for( var i = 0; i < DOM_array.length; i++ )
-		{
-			campoFonte.options[campoFonte.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_fonte"),false,false);
-		}
-		if(tempFonte != null)
-			campoFonte.value = tempFonte;
-	}
-	else
-		campoFonte.options[0].text = 'A biblioteca não possui fonte';
-}
-
-document.getElementById('ref_cod_biblioteca').onchange = function()
-{
-	ajaxBiblioteca();
-	ajaxTomboAutomatico();
-};
-
-
-function ajaxTomboAutomatico()
-{
-	var pars = 'biblioteca='+$F('ref_cod_biblioteca');
-	new Ajax.Request("educar_tombo_automatico.ajax.php", {method: 'get', parameters: pars,
-														onComplete: function(resp) {
-																if (resp.responseText == 1) {
-																	$('tr_combo_manual').style.display = 'none;';
-																	$('eh_manual').value = 0;
-																} else {
-																	$('tr_combo_manual').style.display = '';
-																	$('eh_manual').value = 1;
-																}
-															}
-														});
-}
-
-function ajaxBiblioteca(acao)
-{
-	var campoBiblioteca = document.getElementById('ref_cod_biblioteca').value;
-	var campoSituacao = document.getElementById('ref_cod_situacao');
-	if(acao == 'novo')
-	{
-			tempSituacao = campoSituacao.value;
-	}
-	campoSituacao.length = 1;
-	campoSituacao.disabled = true;
-	campoSituacao.options[0].text = 'Carregando situação';
-
-	var xml_situacao = new ajax( getSituacao );
-	xml_situacao.envia( "educar_situacao_xml.php?bib="+campoBiblioteca );
-	
-	var campoFonte = document.getElementById('ref_cod_fonte');
-	if(acao == 'novo')
-	{
-		tempFonte = campoFonte.value;
-	}
-	campoFonte.length = 1;
-	campoFonte.disabled = true;
-	campoFonte.options[0].text = 'Carregando fontes';
-
-	var xml_fonte = new ajax( getFonte );
-	xml_fonte.envia( "educar_fonte_xml.php?bib="+campoBiblioteca );
-}
 
 function pesquisa()
 {
@@ -505,18 +292,6 @@ function pesquisa()
 		return;
 	}
 	pesquisa_valores_popless('educar_pesquisa_acervo_lst.php?campo1=ref_cod_acervo&ref_cod_biblioteca=' + biblioteca , 'ref_cod_acervo');
-}
-
-function acao2()
-{
-	if ($('eh_manual').value = 0 && $F('combo_manual') == '')
-	{
-		alert('Favor preencher o campo combo corretamente');
-	}
-	else
-	{
-		acao();
-	}
 }
 
 //pesquisa_valores_popless('educar_pesquisa_acervo_lst.php?campo1=ref_cod_acervo', 'ref_cod_acervo')
