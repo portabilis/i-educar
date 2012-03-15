@@ -28,6 +28,13 @@ function updateSelect($targetElement, options, emptyOptionHtml) {
 }
 
 
+function resetSelect($targetElement) {
+  $targetElement.children('[value^=""]').remove();
+  $targetElement.children().first().attr('checked', 'checked');
+  $targetElement.attr('disabled', 'disabled');
+}
+
+
 function xmlResourcesToSelectOptions(resources, parentNodeName, optionIdAttrName) {
   var options = [];
 
@@ -42,3 +49,21 @@ function xmlResourcesToSelectOptions(resources, parentNodeName, optionIdAttrName
 
   return options;
 }
+
+
+function fixupFieldsWidth(){
+  var maxWidth = 0;
+  var $fields = $j('form select');
+
+  //get maxWidh
+  $j.each($fields, function(index, value){
+    $value = $j(value);
+    if ($value.outerWidth() > maxWidth)
+      maxWidth = $value.outerWidth();
+  });
+
+  //set maxWidth
+  $j.each($fields, function(index, value){
+    $j(value).width(maxWidth);
+  });
+};

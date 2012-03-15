@@ -55,7 +55,9 @@ class DynamicSelectMenusHelper {
 
     $dependencies = array('/modules/Portabilis/Assets/Javascripts/ClientApi.js',
                           '/modules/Portabilis/DynamicSelectMenus/Assets/Javascripts/DynamicSelectMenus.js');
+
     ApplicationHelper::loadJavascript($this->viewInstance, $dependencies);
+    ApplicationHelper::embedJavascript($this->viewInstance, 'fixupFieldsWidth();');
   }
 
 

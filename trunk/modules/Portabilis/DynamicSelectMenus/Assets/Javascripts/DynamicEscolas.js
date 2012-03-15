@@ -5,18 +5,18 @@
 
     var handleGetEscolas = function(resources) {
       var selectOptions = xmlResourcesToSelectOptions(resources, 'query', 'cod_escola');
-      updateSelect($escolaField, selectOptions);
+      updateSelect($escolaField, selectOptions, "Selecione uma escola");
     }
 
     var updateEscolas = function(){
-      $escolaField.attr('disabled', 'disabled');
+      resetSelect($escolaField);
 
       if ($instituicaoField.val() && $instituicaoField.is(':enabled')) {
-        getEscolasUrl = getResourceUrlBuilder.buildUrl('educar_escola_xml2.php', '', {
+        urlForGetEscolas = getResourceUrlBuilder.buildUrl('educar_escola_xml2.php', '', {
                                                        ins : $instituicaoField.attr('value') });
 
         var options = {
-          url : getEscolasUrl,
+          url : urlForGetEscolas,
           dataType : 'xml',
           success  : handleGetEscolas
         };

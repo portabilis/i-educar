@@ -5,18 +5,18 @@
 
     var handleGetBibliotecas = function(resources) {
       var selectOptions = xmlResourcesToSelectOptions(resources, 'query', 'cod_biblioteca');
-      updateSelect($bibliotecaField, selectOptions);
+      updateSelect($bibliotecaField, selectOptions, "Selecione uma biblioteca");
     }
 
     var updateBibliotecas = function(){
-      $bibliotecaField.attr('disabled', 'disabled');
+      resetSelect($bibliotecaField);
 
       if ($escolaField.val() && $escolaField.is(':enabled')) {
-        getBibliotecasUrl = getResourceUrlBuilder.buildUrl('educar_biblioteca_xml.php', '', {
+        urlForGetBibliotecas = getResourceUrlBuilder.buildUrl('educar_biblioteca_xml.php', '', {
                                                        esc : $escolaField.attr('value') });
 
         var options = {
-          url : getBibliotecasUrl,
+          url : urlForGetBibliotecas,
           dataType : 'xml',
           success  : handleGetBibliotecas
         };

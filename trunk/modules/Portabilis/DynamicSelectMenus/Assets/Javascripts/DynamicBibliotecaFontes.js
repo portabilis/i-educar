@@ -5,18 +5,18 @@
 
     var handleGetFontes = function(resources) {
       var selectOptions = xmlResourcesToSelectOptions(resources, 'query', 'cod_fonte');
-      updateSelect($fonteField, selectOptions);
+      updateSelect($fonteField, selectOptions, "Selecione uma fonte");
     }
 
     var updateFontes = function(){
-      $fonteField.attr('disabled', 'disabled');
+      resetSelect($fonteField);
 
       if ($bibliotecaField.val() && $bibliotecaField.is(':enabled')) {
-        getFontesUrl = getResourceUrlBuilder.buildUrl('educar_fonte_xml.php', '', {
+        urlForGetFontes = getResourceUrlBuilder.buildUrl('educar_fonte_xml.php', '', {
                                                        bib : $bibliotecaField.attr('value') });
 
         var options = {
-          url : getFontesUrl,
+          url : urlForGetFontes,
           dataType : 'xml',
           success  : handleGetFontes
         };

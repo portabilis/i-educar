@@ -5,18 +5,18 @@
 
     var handleGetSituacoes = function(resources) {
       var selectOptions = xmlResourcesToSelectOptions(resources, 'query', 'cod_situacao');
-      updateSelect($situacaoField, selectOptions);
+      updateSelect($situacaoField, selectOptions, "Selecione uma situa&ccedil;&atilde;o");
     }
 
     var updateSituacoes = function(){
-      $situacaoField.attr('disabled', 'disabled');
+      resetSelect($situacaoField);
 
       if ($bibliotecaField.val() && $bibliotecaField.is(':enabled')) {
-        getSituacoesUrl = getResourceUrlBuilder.buildUrl('educar_situacao_xml.php', '', {
+        urlForGetSituacoes = getResourceUrlBuilder.buildUrl('educar_situacao_xml.php', '', {
                                                        bib : $bibliotecaField.attr('value') });
 
         var options = {
-          url : getSituacoesUrl,
+          url : urlForGetSituacoes,
           dataType : 'xml',
           success  : handleGetSituacoes
         };
