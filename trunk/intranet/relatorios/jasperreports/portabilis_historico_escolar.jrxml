@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_historico_escolar" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.331000000000004"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="192"/>
+	<property name="ireport.y" value="0"/>
 	<style name="Crosstab Data Text" hAlign="Center"/>
 	<subDataset name="dataset1"/>
 	<subDataset name="dataset2"/>
@@ -70,11 +70,12 @@
         MAX(data_atual) AS data_atual,
         MAX(cod_aluno) AS cod_aluno,
         MAX(nm_instituicao) AS nm_instituicao,
-		MAX(nm_responsavel) AS nm_responsavel,
+        MAX(nm_responsavel) AS nm_responsavel,
         MAX(num_termo) AS nm_termo,
         MAX(num_livro) AS nm_livro,
         MAX(num_folha) AS num_folha,
         MAX(nome_serie_aux) AS nome_serie_aux,
+        MAX(nome_curso) AS nome_curso,
         MAX(obs1) AS obs1,
         MAX(obs2) AS obs2,
         MAX(obs3) AS obs3,
@@ -1032,17 +1033,35 @@ SELECT nm_disciplina,
                                             FROM pmieducar.historico_escolar he
                                            WHERE he.ref_cod_aluno = $P{aluno})) AS num_folha,
 
- ( select CASE WHEN ((substring(nm_serie,1,1) = 8) or (substring(nm_serie,1,1) = 9)) THEN
-                 'concluiu o ENSINO FUNDAMENTAL (8 ANOS)'
-             ELSE
-                 'concluiu a ' || substring(nm_serie,1,1) || ' série'
-             END
+ ( select  CASE WHEN ((SELECT nm_curso
+                         FROM pmieducar.historico_escolar
+                        WHERE historico_escolar.ref_cod_aluno = $P{aluno} AND
+                              historico_escolar.ativo = 1 AND
+                              historico_escolar.sequencial = (SELECT max(he.sequencial)
+                         FROM pmieducar.historico_escolar he
+                        WHERE he.ref_cod_instituicao = 1 AND
+                              he.ref_cod_aluno = historico_escolar.ref_cod_aluno and he.ativo = 1)) <> NULL) THEN
+                  'concluiu o ' || historico_escolar.nm_curso
+                WHEN ((substring(nm_serie,1,1) = 8) or (substring(nm_serie,1,1) = 9)) THEN
+                  'concluiu o ENSINO FUNDAMENTAL (8 ANOS)'
+                ELSE
+                   'concluiu a ' || substring(nm_serie,1,1) || ' série'
+           END
 
           from pmieducar.historico_escolar he
          where he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
                he.sequencial = historico_escolar.sequencial AND
                he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
-               he.ano = historico_escolar.ano and ativo = 1 limit 1) as nome_serie_aux
+               he.ano = historico_escolar.ano and ativo = 1 limit 1) as nome_serie_aux,
+
+         (SELECT COALESCE(fcn_upper(nm_curso),'')
+           FROM pmieducar.historico_escolar
+          WHERE historico_escolar.ref_cod_aluno = $P{aluno} AND
+                historico_escolar.ativo = 1 AND
+                historico_escolar.sequencial = (SELECT max(he.sequencial)
+           FROM pmieducar.historico_escolar he
+          WHERE he.ref_cod_instituicao = 1 AND
+                he.ref_cod_aluno = historico_escolar.ref_cod_aluno and he.ativo = 1))  as nome_curso
 
 
   FROM pmieducar.historico_escolar,
@@ -1123,6 +1142,7 @@ ORDER BY 1 ASC]]>
 	<field name="nm_livro" class="java.lang.String"/>
 	<field name="num_folha" class="java.lang.String"/>
 	<field name="nome_serie_aux" class="java.lang.String"/>
+	<field name="nome_curso" class="java.lang.String"/>
 	<field name="obs1" class="java.lang.String"/>
 	<field name="obs2" class="java.lang.String"/>
 	<field name="obs3" class="java.lang.String"/>
@@ -1292,11 +1312,11 @@ ORDER BY 1 ASC]]>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement x="39" y="175" width="477" height="16"/>
-				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				<reportElement x="44" y="175" width="168" height="16"/>
+				<textElement textAlignment="Right" markup="none">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
-				<text><![CDATA[HISTÓRICO ESCOLAR DO ENSINO FUNDAMENTAL (8 ANOS)]]></text>
+				<text><![CDATA[HISTÓRICO ESCOLAR DO]]></text>
 			</staticText>
 			<line>
 				<reportElement x="369" y="5" width="1" height="100"/>
@@ -1331,66 +1351,66 @@ ORDER BY 1 ASC]]>
 				</textElement>
 				<textFieldExpression><![CDATA["Certificamos que "+$F{nome_aluno}+ ", matrícula "+$F{cod_aluno}+ ", natural de "+$F{cidade_nascimento_uf}+", nascido em "+$F{data_nasc}+", filho de "+$F{nome_dos_pais}+", "+$F{nome_serie_aux}+" conforme Histórico Escolar."]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="9" y="112" width="534" height="15"/>
-				<textElement textAlignment="Center">
+			<textField>
+				<reportElement x="54" y="113" width="234" height="15"/>
+				<textElement textAlignment="Right" markup="none">
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[CERTIFICADO DE CONCLUSÃO DE SÉRIE E/OU CURSO ENSINO FUNDAMENTAL]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA["CERTIFICADO DE CONCLUSÃO DE SÉRIE E/OU "]]></textFieldExpression>
+			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="72" y="43" width="296" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Endereço: "+$F{logradouro}+" "+$F{numero}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="282" y="79" width="85" height="13"/>
+				<reportElement x="278" y="79" width="89" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Tel.: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="72" y="7" width="296" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nm_instituicao}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="282" y="67" width="85" height="13"/>
+				<reportElement x="278" y="67" width="88" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="72" y="67" width="178" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="72" y="31" width="296" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nm_escola}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="72" y="79" width="205" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="72" y="19" width="296" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nm_responsavel}]]></textFieldExpression>
 			</textField>
@@ -1405,6 +1425,38 @@ ORDER BY 1 ASC]]>
 				<reportElement x="10" y="7" width="57" height="46"/>
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
+			<textField>
+				<reportElement x="291" y="113" width="257" height="15"/>
+				<textElement markup="none">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome_curso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="291" y="113" width="257" height="15">
+					<printWhenExpression><![CDATA[$F{nome_curso} == ""]]></printWhenExpression>
+				</reportElement>
+				<textElement markup="none">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ENSINO FUNDAMENTAL"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="214" y="175" width="328" height="16">
+					<printWhenExpression><![CDATA[$F{nome_curso} == ""]]></printWhenExpression>
+				</reportElement>
+				<textElement markup="none">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ENSINO FUNDAMENTAL (8 ANOS)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="214" y="175" width="328" height="16"/>
+				<textElement markup="none">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome_curso}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>

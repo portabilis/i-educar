@@ -75,6 +75,7 @@
         MAX(num_livro) AS nm_livro,
         MAX(num_folha) AS num_folha,
         MAX(nome_serie_aux) AS nome_serie_aux,
+        MAx(nome_curso) AS nome_curso,
         MAX(obs1) AS obs1,
         MAX(obs2) AS obs2,
         MAX(obs3) AS obs3,
@@ -1042,7 +1043,16 @@ SELECT nm_disciplina,
           where he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
                he.sequencial = historico_escolar.sequencial AND
                he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
-               he.ano = historico_escolar.ano and ativo = 1 limit 1) as nome_serie_aux
+               he.ano = historico_escolar.ano and ativo = 1 limit 1) as nome_serie_aux,
+
+         (SELECT COALESCE(fcn_upper(nm_curso),'')
+           FROM pmieducar.historico_escolar
+          WHERE historico_escolar.ref_cod_aluno = $P{aluno} AND
+                historico_escolar.ativo = 1 AND
+                historico_escolar.sequencial = (SELECT max(he.sequencial)
+           FROM pmieducar.historico_escolar he
+          WHERE he.ref_cod_instituicao = 1 AND
+                he.ref_cod_aluno = historico_escolar.ref_cod_aluno and he.ativo = 1))  as nome_curso
 
 
   FROM pmieducar.historico_escolar,
@@ -1124,6 +1134,7 @@ ORDER BY 1 ASC]]>
 	<field name="nm_livro" class="java.lang.String"/>
 	<field name="num_folha" class="java.lang.String"/>
 	<field name="nome_serie_aux" class="java.lang.String"/>
+	<field name="nome_curso" class="java.lang.String"/>
 	<field name="obs1" class="java.lang.String"/>
 	<field name="obs2" class="java.lang.String"/>
 	<field name="obs3" class="java.lang.String"/>
@@ -1267,13 +1278,6 @@ ORDER BY 1 ASC]]>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</rectangle>
-			<staticText>
-				<reportElement x="39" y="174" width="477" height="16"/>
-				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" size="12" isBold="true"/>
-				</textElement>
-				<text><![CDATA[HISTÓRICO ESCOLAR DO ENSINO FUNDAMENTAL]]></text>
-			</staticText>
 			<line>
 				<reportElement x="348" y="5" width="1" height="107"/>
 				<graphicElement>
@@ -1307,66 +1311,59 @@ ORDER BY 1 ASC]]>
 				</textElement>
 				<textFieldExpression><![CDATA["Certificamos que "+$F{nome_aluno}+ ", matrícula "+$F{cod_aluno}+ ", natural de "+$F{cidade_nascimento_uf}+", nascido em "+$F{data_nasc}+", filho de "+$F{nome_dos_pais}+", "+ $F{nome_serie_aux} +" conforme Histórico Escolar."]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="9" y="115" width="534" height="15"/>
-				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[CERTIFICADO DE CONCLUSÃO DE SÉRIE/ANO E/OU CURSO ENSINO FUNDAMENTAL]]></text>
-			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="72" y="43" width="275" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Endereço: "+$F{logradouro}+" "+$F{numero}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="262" y="79" width="85" height="13"/>
+				<reportElement x="251" y="79" width="97" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Tel.: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="72" y="7" width="275" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nm_instituicao}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="262" y="67" width="85" height="13"/>
+				<reportElement x="251" y="67" width="85" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="72" y="67" width="178" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="72" y="31" width="275" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nm_escola}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="72" y="79" width="178" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="72" y="19" width="275" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nm_responsavel}]]></textFieldExpression>
 			</textField>
@@ -1377,7 +1374,7 @@ ORDER BY 1 ASC]]>
 			<textField isBlankWhenNull="true">
 				<reportElement x="72" y="55" width="275" height="13"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Bairro: " +$F{bairro}]]></textFieldExpression>
 			</textField>
@@ -1475,6 +1472,52 @@ ORDER BY 1 ASC]]>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
+			<textField>
+				<reportElement x="40" y="115" width="234" height="15"/>
+				<textElement textAlignment="Right" markup="none">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CERTIFICADO DE CONCLUSÃO DE SÉRIE E/OU "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="277" y="115" width="257" height="15"/>
+				<textElement markup="none">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome_curso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="277" y="115" width="257" height="15">
+					<printWhenExpression><![CDATA[$F{nome_curso} == ""]]></printWhenExpression>
+				</reportElement>
+				<textElement markup="none">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ENSINO FUNDAMENTAL"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="50" y="174" width="168" height="16"/>
+				<textElement textAlignment="Right" markup="none">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HISTÓRICO ESCOLAR DO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="220" y="174" width="328" height="16">
+					<printWhenExpression><![CDATA[$F{nome_curso} == ""]]></printWhenExpression>
+				</reportElement>
+				<textElement markup="none">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ENSINO FUNDAMENTAL]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="220" y="174" width="328" height="16"/>
+				<textElement markup="none">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome_curso}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
