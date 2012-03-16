@@ -445,5 +445,49 @@ class DynamicSelectMenusHelper {
 
     ApplicationHelper::loadJavascript($this->viewInstance, '/modules/Portabilis/DynamicSelectMenus/Assets/Javascripts/DynamicBibliotecaFontes.js');
   }
+
+
+  /**
+   *
+   * <code>
+   * </code>
+   *
+   * @param   type
+   * @return  null
+   */
+  public function bibliotecaPesquisaCliente($clienteId, $options = array()) {
+    $inputHint = "<img border='0' onclick='pesquisaCliente();' id='lupa_pesquisa_cliente' name='lupa_pesquisa_cliente' src='imagens/lupa.png' />";
+
+    $defaultOptions = array('id'         => 'nome_cliente',
+                            'label'      => 'Cliente',
+                            'value'      => '',
+                            'size'       => '30',
+                            'maxLength'  => '255',
+                            'required'   => false,
+                            'expressao'  => false,
+                            'duplo'      => false,
+                            'label_hint' => '',
+                            'input_hint' => $inputHint,
+                            'callback'   => '',
+                            'event'      => 'onKeyUp',
+                            'disabled'   => true);
+
+
+		//"nm_cliente1", "Cliente", $this->nm_cliente, 30, 255, false, false, false, "", "<img border=\"0\" onclick=\"pesquisa_cliente();\" id=\"ref_cod_cliente_lupa\" name=\"ref_cod_cliente_lupa\" src=\"imagens/lupa.png\"\/>","","",true
+
+    $options = $this->mergeArrayWithDefaults($options, $defaultOptions);
+    call_user_func_array(array($this->viewInstance, 'campoTexto'), $options);
+
+    $this->viewInstance->campoOculto("ref_cod_cliente", $clienteId);
+
+    ApplicationHelper::embedJavascript($this->viewInstance, "
+      function pesquisaCliente() {
+        if (validatesPresenseOfValueInRequiredFields()) {
+	        var bibliotecaId = document.getElementById('ref_cod_biblioteca').value;
+	        pesquisa_valores_popless('educar_pesquisa_cliente_lst.php?campo1=ref_cod_cliente&campo2=nome_cliente&ref_cod_biblioteca='+bibliotecaId);
+        }
+      }
+");
+  }
 }
 ?>
