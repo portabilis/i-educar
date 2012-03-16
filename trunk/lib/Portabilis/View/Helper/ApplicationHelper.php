@@ -67,15 +67,21 @@ class ApplicationHelper extends CoreExt_View_Helper_Abstract {
    * $applicationHelper->javascript($viewInstance, array('/modules/ModuleName/Assets/Javascripts/ScriptName.js', '...'));
    * </code>
    *
-   * @param   object   $files1  Lista de scripts a serem carregados.
-   * @param   array ou string  $files1  Lista de scripts a serem carregados.
+   * @param   object   $viewInstance  Istancia da view a ser carregado os scripts.
+   * @param   array ou string  $files  Lista de scripts a serem carregados.
    * @return  null
    */
-  public static function loadJavascript($viewInstance, $files) {
+  public static function loadJavascript($viewInstance, $files, $expireCacheDateFormat = 'dmY') {
     if (! is_array($files))
       $files = array($files);
 
+    if ($expireCacheDateFormat)
+      $timestamp = '?timestamp=' . date($expireCacheDateFormat);
+    else
+      $timestamp = '';
+
     foreach ($files as $file) {
+      $file .= $timestamp;
       $viewInstance->appendOutput("<script type='text/javascript' src='$file'></script>");
     }
   }
@@ -90,6 +96,33 @@ class ApplicationHelper extends CoreExt_View_Helper_Abstract {
    */
   public static function embedJavascript($viewInstance, $script) {
     $viewInstance->appendOutput("<script type='text/javascript'>$script</script>");
+  }
+
+
+  /**
+   * Adiciona links css para instancia da view recebida, exemplo:
+   *
+   * <code>
+   * $applicationHelper->stylesheet($viewInstance, array('/modules/ModuleName/Assets/Stylesheets/StyleName.css', '...'));
+   * </code>
+   *
+   * @param   object   $viewInstance1  Istancia da view a ser adicionado os links para os estilos.
+   * @param   array ou string  $files  Lista de estilos a serem carregados.
+   * @return  null
+   */
+  public static function loadStylesheet($viewInstance, $files, $expireCacheDateFormat = 'dmY') {
+    if (! is_array($files))
+      $files = array($files);
+
+    if ($expireCacheDateFormat)
+      $timestamp = '?timestamp=' . date($expireCacheDateFormat);
+    else
+      $timestamp = '';
+
+    foreach ($files as $file) {
+      $file .= $timestamp;
+      $viewInstance->appendOutput("<link type='text/css' rel='stylesheet' href='$file'></script>");
+    }
   }
 }
 ?>
