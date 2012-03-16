@@ -473,8 +473,6 @@ class DynamicSelectMenusHelper {
                             'disabled'   => true);
 
 
-		//"nm_cliente1", "Cliente", $this->nm_cliente, 30, 255, false, false, false, "", "<img border=\"0\" onclick=\"pesquisa_cliente();\" id=\"ref_cod_cliente_lupa\" name=\"ref_cod_cliente_lupa\" src=\"imagens/lupa.png\"\/>","","",true
-
     $options = $this->mergeArrayWithDefaults($options, $defaultOptions);
     call_user_func_array(array($this->viewInstance, 'campoTexto'), $options);
 
