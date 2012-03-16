@@ -6,9 +6,7 @@ function safeLog(value)
 
 
 function buildId(id) {
-  if (id.length > 0)
-    return id[0] == '#' ? id : '#' + id;
-  return id;
+  return typeof(id) == 'string' && id.length > 0 && id[0] == '#' ? id : '#' + id;
 }
 
 
