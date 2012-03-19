@@ -67,7 +67,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
 
   protected function validatesUserIsLoggedIn(){
-    return $this->validator->validatesPresenceOf($this->getSession()->id_pessoa, '', 'Usuário deve estar logado');
+    return $this->validator->validatesPresenceOf($this->getSession()->id_pessoa, '', false, 'Usuário deve estar logado');
   }
 
 
