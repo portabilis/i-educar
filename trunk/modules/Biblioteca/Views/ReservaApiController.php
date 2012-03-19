@@ -56,6 +56,44 @@ class ReservaApiController extends ApiCoreController
   protected $_processoAp  = 0;
 
 
+  // validadores especificos reserva
+  protected function validatesPresenceOfRefCodInstituicao(){
+    return $this->validator->validatesPresenceOf($this->getRequest()->ref_cod_instituicao, 'ref_cod_instituicao');
+  }
+
+
+  protected function validatesPresenceOfRefCodEscola(){
+    return $this->validator->validatesPresenceOf($this->getRequest()->ref_cod_escola, 'ref_cod_escola');
+  }
+
+
+  protected function validatesPresenceOfRefCodBiblioteca(){
+    return $this->validator->validatesPresenceOf($this->getRequest()->ref_cod_biblioteca, 'ref_cod_biblioteca');
+  }
+
+
+  protected function validatesPresenceOfRefCodCliente(){
+    return $this->validator->validatesPresenceOf($this->getRequest()->ref_cod_cliente, 'ref_cod_cliente');
+  }
+
+
+  protected function validatesPresenceOfRefCodAcervo(){
+    return $this->validator->validatesPresenceOf($this->getRequest()->ref_cod_acervo, 'ref_cod_acervo');
+  }
+
+
+  protected function canAcceptRequest()
+  {
+
+    return parent::canAcceptRequest() &&
+           $this->validatesPresenceOfRefCodInstituicao() &&
+           $this->validatesPresenceOfRefCodEscola() &&
+           $this->validatesPresenceOfRefCodBiblioteca() &&
+           $this->validatesPresenceOfRefCodCliente() &&
+           $this->validatesPresenceOfRefCodAcervo();
+  }
+
+
   protected function getExpectedAtts() {
     return array('exemplares');
   }
