@@ -16,5 +16,6 @@
   RewriteRule ^(.*/)(.*meusdados\.php)$ /intranet/meusdados\.php [NC,L,R=301]
   RewriteRule ^(.*/)(.*erro_banco\.php)$ /intranet/erro_banco\.php [NC,L,R=301]
   RewriteRule ^(.*/)(.*educar_pesquisa_cliente_lst\.php)$ /intranet/educar_pesquisa_cliente_lst\.php [NC,L,R=301]
+  RewriteRule ^(.*/)(.*educar_pesquisa_obra_lst\.php)$ /intranet/educar_pesquisa_obra_lst\.php [NC,L,R=301]
   RewriteRule ^.*$ index.php [NC,L]
 </IfModule>
