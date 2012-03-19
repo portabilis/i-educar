@@ -94,7 +94,17 @@ class ApplicationHelper extends CoreExt_View_Helper_Abstract {
    * @param   type ?
    * @return  null
    */
-  public static function embedJavascript($viewInstance, $script) {
+  public static function embedJavascript($viewInstance, $script, $afterReady = false) {
+
+    if ($afterReady) {
+
+      $script = "(function($){
+        $(document).ready(function(){
+          $script
+        });
+      })(jQuery);";
+    }
+
     $viewInstance->appendOutput("<script type='text/javascript'>$script</script>");
   }
 
