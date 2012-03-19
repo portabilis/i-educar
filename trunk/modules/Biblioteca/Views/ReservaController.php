@@ -81,8 +81,14 @@ class ReservaController extends Core_Controller_Page_ListController
 
     # TODO add field código cliente
     # TODO add field senha cliente
+
+    #TODO enable required, add except_id in validates method
     $dynamicSelectMenusHelper->bibliotecaPesquisaCliente(array('value' => $this->nm_cliente,
                                                                'required' => true));
+
+    #TODO enable required, add except_id in validates method
+    $dynamicSelectMenusHelper->bibliotecaPesquisaObra(array('value' => $this->titulo_obra,
+                                                            'required' => true));
   }
 
 
