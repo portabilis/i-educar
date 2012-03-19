@@ -532,7 +532,7 @@ class DynamicSelectMenusHelper {
 
     ApplicationHelper::embedJavascript($this->viewInstance, '
       var resetObra = function(){
-        $("#ref_cod_obra").val("");
+        $("#ref_cod_acervo").val("");
         $("#titulo_obra").val("");
       }
 
