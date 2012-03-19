@@ -478,6 +478,14 @@ class DynamicSelectMenusHelper {
 
     $this->viewInstance->campoOculto("ref_cod_cliente", $clienteId);
 
+    ApplicationHelper::embedJavascript($this->viewInstance, '
+      var resetCliente = function(){
+        $("#ref_cod_cliente").val("");
+        $("#nome_cliente").val("");
+      }
+
+      $("#ref_cod_biblioteca").change(resetCliente);', true);
+
     ApplicationHelper::embedJavascript($this->viewInstance, "
       function pesquisaCliente() {
         if (validatesPresenseOfValueInRequiredFields()) {
@@ -485,7 +493,58 @@ class DynamicSelectMenusHelper {
 	        pesquisa_valores_popless('educar_pesquisa_cliente_lst.php?campo1=ref_cod_cliente&campo2=nome_cliente&ref_cod_biblioteca='+bibliotecaId);
         }
       }
-");
+    ");
+  }
+
+
+  /**
+   *
+   * <code>
+   * </code>
+   *
+   * @param   type
+   * @return  null
+   */
+  public function bibliotecaPesquisaObra($acervoId, $options = array()) {
+    $inputHint = "<img border='0' onclick='pesquisaObra();' id='lupa_pesquisa_obra' name='lupa_pesquisa_cliente' src='imagens/lupa.png' />";
+
+    $defaultOptions = array('id'         => 'titulo_obra',
+                            'label'      => 'Obra',
+                            'value'      => '',
+                            'size'       => '30',
+                            'maxLength'  => '255',
+                            'required'   => false,
+                            'expressao'  => false,
+                            'duplo'      => false,
+                            'label_hint' => '',
+                            'input_hint' => $inputHint,
+                            'callback'   => '',
+                            'event'      => 'onKeyUp',
+                            'disabled'   => true);
+
+    $options = $this->mergeArrayWithDefaults($options, $defaultOptions);
+    call_user_func_array(array($this->viewInstance, 'campoTexto'), $options);
+
+    $this->viewInstance->campoOculto("ref_cod_acervo", $acervoId);
+
+    // Ao selecionar obra, na pesquisa de obra é setado o value deste elemento
+    $this->viewInstance->campoOculto("cod_biblioteca", "");
+
+    ApplicationHelper::embedJavascript($this->viewInstance, '
+      var resetObra = function(){
+        $("#ref_cod_obra").val("");
+        $("#titulo_obra").val("");
+      }
+
+      $("#ref_cod_biblioteca").change(resetObra);', true);
+
+    ApplicationHelper::embedJavascript($this->viewInstance, '
+      function pesquisaObra() {
+        if (validatesPresenseOfValueInRequiredFields()) {
+  	      var bibliotecaId = document.getElementById("ref_cod_biblioteca").value;
+          pesquisa_valores_popless("educar_pesquisa_obra_lst.php?campo1=ref_cod_acervo&campo2=titulo_obra&campo3="+bibliotecaId)
+        }
+      }');
   }
 }
 ?>
