@@ -33,6 +33,8 @@
  */
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
+require_once 'include/pmieducar/clsPmieducarExemplar.inc.php';
+
 #require_once 'Core/Controller/Page/EditController.php';
 #require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
 #require_once 'Avaliacao/Service/Boletim.php';
@@ -42,7 +44,7 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 #require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
 #require_once 'include/portabilis/dal.php';
 #require_once 'include/pmieducar/clsPmieducarHistoricoEscolar.inc.php';
-#require_once 'include/pmieducar/clsPmieducarHistoricoDisciplinas.inc.php';
+
 
 class ReservaApiController extends ApiCoreController
 {
@@ -105,7 +107,63 @@ class ReservaApiController extends ApiCoreController
 
 
   protected function getExemplares() {
-    return "#TODO implementar getExemplares";
+
+    $_exemplares = array();
+
+		$exemplares = new clsPmieducarExemplar();
+    $exemplares = $exemplares->lista(null,
+                                     null,
+                                     null,
+                                     $this->getRequest()->ref_cod_acervo,
+                                     null,
+                                     null,
+                                     null,
+                                     null,
+                                     null,
+                                     null,
+                                     null,
+                                     null,
+                                     null,
+                                     1,
+                                     null,
+                                     null,
+                                     null,
+                                     null,
+                                     $this->getRequest()->ref_cod_biblioteca,
+                                     null,
+                                     $this->getRequest()->ref_cod_instituicao,
+                                     $this->getRequest()->ref_cod_escola);
+
+    foreach($exemplares as $exemplar) {
+      $_exemplar = array();
+
+      // TODO executar verificacoes / setar campos
+
+      // código exemplar, situação, tombo, combo ?
+      $_exemplar['id'] = $exemplar['cod_exemplar'];
+
+      //indisponível, disponível, emprestado, reservado
+      $_exemplar['situacao'] = $this->getSituacaoForExemplar($exemplar);
+
+      $_exemplares[] = $_exemplar;
+    }
+
+    return $_exemplares;
+  }
+
+
+  public function getSituacaoForExemplar($exemplar) {
+    $situacoes = array(
+      'indisponivel' => array('flag' => 'indisponivel', 'label' => 'indisponível'),
+      'disponivel'   => array('flag' => 'disponivel'  , 'label' => 'disponível'  ),
+      'emprestado'   => array('flag' => 'emprestado'  , 'label' => 'emprestado'  ),
+    );
+
+    // emprestado se situacao.emprestado?
+    // indisponivel se não situacao.disponivel? || não exemplar.disponivel?
+    // disponivel se situacao.permite_emprestimo && não situacao.emprestado? && exemplar.disponivel?
+
+    return '#todo situacao'
   }
 
 
