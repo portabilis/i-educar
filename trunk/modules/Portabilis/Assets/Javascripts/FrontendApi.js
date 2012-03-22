@@ -5,6 +5,15 @@ function safeLog(value)
 }
 
 
+function safeToUpperCase(value){
+
+  if (typeof(value) == 'string')
+    value = value.toUpperCase();
+
+  return value;
+}
+
+
 function buildId(id) {
   return typeof(id) == 'string' && id.length > 0 && id[0] == '#' ? id : '#' + id;
 }
@@ -188,10 +197,10 @@ function validatesPresenseOfValueInRequiredFields(additionalFields) {
     // submit button callbacks
     var onClickSearchEvent = function(event) {
       if (validatesPresenseOfValueInRequiredFields()) {
-        searchOptions.url = getResourceUrlBuilder.buildUrl(ApiUrlBase, ResourcesName, {});
+        searchOptions.url = getResourceUrlBuilder.buildUrl(API_URL_BASE, RESOURCES_NAME, {});
 
         if (window.history && window.history.pushState)
-          window.history.pushState('', '', getResourceUrlBuilder.buildUrl(PageUrlBase, ResourcesName));
+          window.history.pushState('', '', getResourceUrlBuilder.buildUrl(PAGE_URL_BASE, RESOURCES_NAME));
 
         $resultTable.children().fadeOut('fast').remove();
 
@@ -204,38 +213,44 @@ function validatesPresenseOfValueInRequiredFields(additionalFields) {
       }
     };
 
+
+    function _setTableSearchDetails(dataDetails){
+      setTableSearchDetails($tableSearchDetails, dataDetails);
+    }
+
+
     function _handleSearch(dataResponse){
       showNewSearchButton();
 
       //try{
         handleMessages(dataResponse.msgs);
 
-        var resources = dataResponse[ResourcesName];
+        var resources = dataResponse[RESOURCES_NAME];
 
         if(! $.isArray(resources))
         {
            $('<td />')
-            .html('O(a)s '+ ResourcesName +' n&#227;o poderam ser recuperado(a)s, verifique as mensagens de erro ou tente <a alt="Recarregar página" href="/" style="text-decoration:underline">recarregar</a>.')
+            .html('O(a)s '+ RESOURCES_NAME +' n&#227;o poderam ser recuperado(a)s, verifique as mensagens de erro ou tente <a alt="Recarregar página" href="/" style="text-decoration:underline">recarregar</a>.')
             .addClass('center')
             .appendTo($('<tr />').appendTo($resultTable));
         }
         else if (resources.length < 1)
         {
            $('<td />')
-            .html('Busca de '+ ResourcesName +' sem resultados.')
+            .html('Busca de '+ RESOURCES_NAME +' sem resultados.')
             .addClass('center')
             .appendTo($('<tr />').appendTo($resultTable));
         }
         else
         {
-          setTableSearchDetails();
+          _setTableSearchDetails(dataResponse['details']);
           handleSearch(dataResponse);
         }
       /*}
       catch(error){
         showNewSearchButton();
 
-        handleMessages([{type : 'error', msg : 'Ocorreu um erro ao exibir o(a)s '+ ResourcesName +', por favor tente novamente, detalhes: ' + error}], '');
+        handleMessages([{type : 'error', msg : 'Ocorreu um erro ao exibir o(a)s '+ RESOURCES_NAME +', por favor tente novamente, detalhes: ' + error}], '');
 
         safeLog('Error details:');
         safeLog(error);
@@ -249,7 +264,7 @@ function validatesPresenseOfValueInRequiredFields(additionalFields) {
     function handleSearchError(response){
       showNewSearchButton();
 
-      handleMessages([{type : 'error', msg : 'Ocorreu um erro ao carregar o(a)s '+ ResourcesName +', por favor tente novamente, detalhes:' + response.responseText}], '');
+      handleMessages([{type : 'error', msg : 'Ocorreu um erro ao carregar o(a)s '+ RESOURCES_NAME +', por favor tente novamente, detalhes:' + response.responseText}], '');
 
       safeLog(response);
     }
