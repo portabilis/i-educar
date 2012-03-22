@@ -54,7 +54,7 @@ class DynamicSelectMenusHelper {
     ApplicationHelper::embedJavascript($this->viewInstance, 'var $j = jQuery.noConflict();');
 
     $dependencies = array('/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-                          '/modules/Portabilis/DynamicSelectMenus/Assets/Javascripts/DynamicSelectMenus.js');
+                          '/modules/DynamicSelectMenus/Assets/Javascripts/DynamicSelectMenus.js');
 
     ApplicationHelper::loadJavascript($this->viewInstance, $dependencies);
     ApplicationHelper::embedJavascript($this->viewInstance, 'fixupFieldsWidth();');
@@ -269,7 +269,7 @@ class DynamicSelectMenusHelper {
     elseif (in_array($nivelAcesso, $niveisAcessoEscola))
       $this->escolaText($options);
 
-    ApplicationHelper::loadJavascript($this->viewInstance, '/modules/Portabilis/DynamicSelectMenus/Assets/Javascripts/DynamicEscolas.js');
+    ApplicationHelper::loadJavascript($this->viewInstance, '/modules/DynamicSelectMenus/Assets/Javascripts/DynamicEscolas.js');
   }
 
 
@@ -361,7 +361,7 @@ class DynamicSelectMenusHelper {
     elseif(in_array($nivelAcesso, $niveisAcessoBiblioteca))
       $this->bibliotecaText($options);
 
-    ApplicationHelper::loadJavascript($this->viewInstance, '/modules/Portabilis/DynamicSelectMenus/Assets/Javascripts/DynamicBibliotecas.js');
+    ApplicationHelper::loadJavascript($this->viewInstance, '/modules/DynamicSelectMenus/Assets/Javascripts/DynamicBibliotecas.js');
   }
 
 
@@ -402,7 +402,7 @@ class DynamicSelectMenusHelper {
     $options = $this->mergeArrayWithDefaults($options, $defaultOptions);
     call_user_func_array(array($this->viewInstance, 'campoLista'), $options);
 
-    ApplicationHelper::loadJavascript($this->viewInstance, '/modules/Portabilis/DynamicSelectMenus/Assets/Javascripts/DynamicBibliotecaSituacoes.js');
+    ApplicationHelper::loadJavascript($this->viewInstance, '/modules/DynamicSelectMenus/Assets/Javascripts/DynamicBibliotecaSituacoes.js');
   }
 
 
@@ -443,7 +443,7 @@ class DynamicSelectMenusHelper {
     $options = $this->mergeArrayWithDefaults($options, $defaultOptions);
     call_user_func_array(array($this->viewInstance, 'campoLista'), $options);
 
-    ApplicationHelper::loadJavascript($this->viewInstance, '/modules/Portabilis/DynamicSelectMenus/Assets/Javascripts/DynamicBibliotecaFontes.js');
+    ApplicationHelper::loadJavascript($this->viewInstance, '/modules/DynamicSelectMenus/Assets/Javascripts/DynamicBibliotecaFontes.js');
   }
 
 
