@@ -36,18 +36,7 @@ require_once 'Core/Controller/Page/EditController.php';
 require_once 'CoreExt/Exception.php';
 require_once 'lib/Portabilis/Messenger.php';
 require_once 'lib/Portabilis/Validator.php';
-
-
-# TODO remover requires descenessários
-#require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
-#require_once 'Avaliacao/Service/Boletim.php';
-#require_once 'App/Model/MatriculaSituacao.php';
-#require_once 'RegraAvaliacao/Model/TipoPresenca.php';
-#require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
-#require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
-#require_once 'include/portabilis/dal.php';
-#require_once 'include/pmieducar/clsPmieducarHistoricoEscolar.inc.php';
-#require_once 'include/pmieducar/clsPmieducarHistoricoDisciplinas.inc.php';
+require_once 'include/clsBanco.inc.php';
 
 class ApiCoreController extends Core_Controller_Page_EditController
 {
@@ -63,6 +52,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     $this->messenger = new Messenger();
     $this->validator = new Validator($this->messenger);
     $this->response = array();
+    $this->db = new clsBanco();
   }
 
 
@@ -71,32 +61,15 @@ class ApiCoreController extends Core_Controller_Page_EditController
   }
 
 
-  protected function validatesPresenceAndValueInSetOfAtt(){
-    return $this->validator->validatesPresenceOf($this->getRequest()->att, 'att') &&
-           $this->validator->validatesValueInSetOf($this->getRequest()->att, $this->getExpectedAtts(), 'att');
-  }
-
-
-  protected function validatesPresenceAndValueInSetOfOper(){
-    $msg = "Operação '{$this->getRequest()->oper}' não implementada.";
-
-    return $this->validator->validatesPresenceOf($this->getRequest()->oper, 'oper') &&
-           $this->validator->validatesValueInSetOf($this->getRequest()->oper, $this->getExpectedOpers(), 'oper',
-                                                   $raiseExceptionOnFail = false, $msg);
-  }
-
-
   protected function canAcceptRequest()
   {
-    return $this->validatesUserIsLoggedIn() &&
-           $this->validatesPresenceAndValueInSetOfAtt() &&
-           $this->validatesPresenceAndValueInSetOfOper();
+    return $this->validatesUserIsLoggedIn();
   }
 
 
-  protected function notImplementedError()
+  protected function notImplementedOperationError()
   {
-    $this->messenger->append("Operação '{$this->getRequest()->oper}' inválida para o att '{$this->getRequest()->att}'");
+    $this->messenger->append("Operação '{$this->getRequest()->oper}' não implementada para o recurso '{$this->getRequest()->resource}'");
   }
 
 
@@ -105,10 +78,23 @@ class ApiCoreController extends Core_Controller_Page_EditController
   }
 
 
+  // subscrever nas classes filhas sentando os recursos disponibilizados e operacoes permitidas, ex:
+  // return array('resources1' => array('get'), 'resouce2'    => array('post', 'delete'));
+  protected function getAvailableOperationsForResources() {
+    throw new CoreExt_Exception('É necessário sobrescrever o método "getExpectedOperationsForResources()" de ApiCoreController.');
+  }
+
+
+  protected function isRequestFor($oper, $resource) {
+    return $this->getRequest()->resource == $resource &&
+           $this->getRequest()->oper == $oper;
+  }
+
+
   protected function prepareResponse(){
     try {
       $msgs = array();
-      $this->appendResponse('att', isset($this->getRequest()->att) ? $this->getRequest()->att : '');
+      $this->appendResponse('resource', isset($this->getRequest()->resource) ? $this->getRequest()->resource : '');
       $this->appendResponse('msgs', $this->messenger->getMsgs());
 
       $response = json_encode($this->response);
@@ -140,32 +126,18 @@ class ApiCoreController extends Core_Controller_Page_EditController
   }
 
 
-  // subescrever nas classes filhas setando as operações permitidas, ex:
-  // return array('resource1', 'resource2', 'resource3');
-  protected function getExpectedAtts() {
-    throw new CoreExt_Exception('É necessário sobrescrever o método "getExpectedAtts()" de ApiCoreController.');
-  }
-
-
-  // subescrever nas classes filhas setando as operações permitidas, ex:
-  // return array('post', 'get', 'delete');
-  protected function getExpectedOpers() {
-    throw new CoreExt_Exception('É necessário sobrescrever o método "getExpectedOpers()" de ApiCoreController.');
-  }
-
-
   /*  subescrever nas classes filhas setando as verificações desejadas e retornando a resposta,
-      conforme oper (operação ex: get, post ou delete) e/ ou att (nome do recurso) recebidos ex:
+      conforme recurso e operação recebida ex: get, post ou delete, ex:
 
       if ($this->getRequest()->oper == 'get')
       {
         // caso retorne apenas um recurso
         $this->appendResponse('matriculas', $matriculas);
 
-        // ou para multiplos recursos, pode-se usar o argumento att
-        if ($this->getRequest()->att == 'matriculas')
+        // ou para multiplos recursos, pode-se usar o argumento resource
+        if ($this->getRequest()->resource == 'matriculas')
           $this->appendResponse('matriculas', $this->getMatriculas());
-        elseif ($this->getRequest()->att == 'alunos')
+        elseif ($this->getRequest()->resource == 'alunos')
           $this->appendResponse('alunos', $this->getAlunos);
         else
           $this->notImplementedError();
@@ -175,8 +147,31 @@ class ApiCoreController extends Core_Controller_Page_EditController
       else
         $this->notImplementedError();
   */
-
   public function Gerar(){
     throw new CoreExt_Exception('É necessário sobrescrever o método "ApiCoreController()" de ApiCoreController.');
+  }
+
+
+  // wrapper para $this->db->execPreparedQuery($sql, $params)
+  protected function fetchPreparedQuery($sql, $params = array(), $hideExceptions = true, $returnOnly = '') {
+    try{
+      $result = array();
+      if ($this->db->execPreparedQuery($sql, $params) != false) {
+
+        while ($this->db->ProximoRegistro())
+          $result[] = $this->db->Tupla();
+
+        if ($returnOnly == 'first-line' and isset($result[0]))
+          $result = $result[0];
+        elseif ($returnOnly == 'first-field' and isset($result[0]) and isset($result[0][0]))
+          $result = $result[0][0];
+      }
+    }
+    catch(Exception $e)
+    {
+      if (! $hideExceptions)
+        $this->messages->append($e->getMessage(), "error", true);
+    }
+    return $result;
   }
 }
