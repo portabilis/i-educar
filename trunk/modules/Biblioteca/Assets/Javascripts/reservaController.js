@@ -4,18 +4,55 @@ var API_URL_BASE = 'reservaApi';
 var RESOURCE_NAME = 'exemplar';
 var RESOURCES_NAME = 'exemplares';
 
+var onClickDestroyEvent = false;
+
 var onClickActionEvent = function(event){
-  // TODO
+  $this = $j(this);
+  var $firstChecked = $j('input.exemplar:checked:first');
+
+  if ($firstChecked.length < 1)
+    handleMessages([{type : 'error', msg : 'Selecione algum exemplar.'}], $this, true);
+  else{
+    $j('.disable-on-apply-changes').attr('disabled', 'disabled');
+    $this.val('Aguarde reservando...');
+    postResource($firstChecked);
+  }
 };
 
 var onClickSelectAllEvent = function(event){
   // TODO
+  console.log('#TODO onClickSelectAllEvent');
 };
 
-var onClickDestroyEvent = function(event){
+var postResource = function ($resourceElement) {
   // TODO
+  console.log('#TODO postProcessamento');
+
+  var options = {
+    url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'reserva'),
+    dataType : 'json',
+    data : {
+      ref_cod_instituicao : $j('#ref_cod_instituicao').val(),
+      ref_cod_escola : $j('#ref_cod_escola').val(),
+      ref_cod_biblioteca : $j('#ref_cod_biblioteca').val(),
+      ref_cod_cliente : $j('#ref_cod_cliente').val(),
+      ref_cod_acervo : $j('#ref_cod_acervo').val(),
+      exemplar_id : $j('#exemplar_id').val()
+    },
+
+    success : function(dataResponse){
+      removeImgLoadingFor($resourceElement);
+      handlePost(dataResponse);
+    }
+  };
+
+  appendImgLoadingTo($resourceElement);
+  postResource(options, handleErrorPost);
 };
 
+var handlePost = function(dataResponse){
+  console.log('#TODO handlePost');
+};
 
 function setTableSearchDetails($tableSearchDetails, dataDetails){
   $j('<caption />').html('<strong>Reserva exemplares</strong>').appendTo($tableSearchDetails);

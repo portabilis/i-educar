@@ -47,6 +47,16 @@ function validatesPresenseOfValueInRequiredFields(additionalFields) {
 }
 
 
+function removeImgLoadingFor($targetElement) {
+  console.log('#TODO removeImgLoadingFor');
+}
+
+
+function appendImgLoadingTo($targetElement) {
+  console.log('#TODO appendImgLoadingTo');
+}
+
+
 (function($){
   $(document).ready(function(){
 

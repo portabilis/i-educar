@@ -84,6 +84,11 @@ class ReservaApiController extends ApiCoreController
   }
 
 
+  protected function validatesPresenceOfExemplarId(){
+    return $this->validator->validatesPresenceOf($this->getRequest()->exemplar_id, 'exemplar_id');
+  }
+
+
   protected function canAcceptRequest()
   {
 
@@ -97,16 +102,10 @@ class ReservaApiController extends ApiCoreController
   }
 
 
-  // TODO validar canPostReserva -> cliente não suspenso
-
-
-  protected function getExpectedAtts() {
-    return array('exemplares');
-  }
-
-
-  protected function getExpectedOpers() {
-    return array('get');
+  protected function getAvailableOperationsForResources() {
+    return array('exemplares' => array('get'),
+                 'reserva'    => array('post')
+    );
   }
 
 
@@ -245,7 +244,10 @@ class ReservaApiController extends ApiCoreController
   }
 
 
-  protected function getCliente($clienteId) {
+  protected function getCliente($clienteId = '') {
+
+    if (empty($clienteId))
+      $clienteId = $this->getRequest()->ref_cod_cliente;
 
     $_cliente = array('id' => $clienteId);
 
@@ -259,14 +261,71 @@ class ReservaApiController extends ApiCoreController
 
     $_cliente['nome'] = $pessoa["nome"];
 
+    $sql = "select 1 from pmieducar.cliente_suspensao where ref_cod_cliente = $1 and data_liberacao is null and data_suspensao + (dias||' day')::interval >= now()";
+    $suspenso = $this->fetchPreparedQuery($sql, $params = array($clienteId), true, 'first-field');
+
+    $_cliente['suspenso'] = $suspenso == '1';
+
     return $_cliente;
   }
 
 
-  public function Gerar(){
-    if ($this->getRequest()->oper == 'get')
+  protected function getSituacaoExemplar($exemplarId) {
+    return "#TODO";
+  }
+
+
+  protected function validatesSituacaoExemplarIs($situacao) {
+    // TODO add msg if false
+    $this->messenger->append("Situação do exemplar deve ser '$situacao'", 'error');
+    return false;
+  }
+
+
+  protected function validatesClienteIsNotSuspenso() {
+    $cliente = $this->getCliente();
+
+    if($cliente['suspenso']) {
+      $this->messenger->append("O cliente esta suspenso", 'error');
+      return false;
+    }
+
+    return true;
+  }
+
+
+  protected function canPostReserva() {
+    return $this->validatesClienteIsNotSuspenso() &&
+           $this->validatesPresenceOfExemplarId() &&
+           $this->validatesSituacaoExemplarIs('disponivel');
+  }
+
+
+  protected function postReserva() {
+    if ($this->canPostReserva()) {
+
+
+      // TODO pegar excessoes no post, se pegar add msg erro inesperado
+
+
+      $situacaoExemplar = $this->getSituacaoExemplar($exemplarId);
+
+      $this->appendResponse('situacao_exemplar',     $situacaoExemplar);
+      $this->appendResponse('cliente',               '#TODO');
+      $this->appendResponse('dataReserva',           '#TODO');
+      $this->appendResponse('dataDevolucaoPrevista', '#TODO');
+    }
+  }
+
+
+  public function Gerar() {
+    if ($this->isRequestFor('get', 'exemplares'))
       $this->appendResponse('exemplares', $this->getExemplares());
+
+    elseif ($this->isRequestFor('post', 'reserva'))
+      $this->postReserva();
+
     else
-      $this->notImplementedError();
+      $this->notImplementedOperationError();
   }
 }
