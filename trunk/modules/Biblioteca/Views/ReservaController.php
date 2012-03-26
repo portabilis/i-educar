@@ -102,7 +102,7 @@ class ReservaController extends Core_Controller_Page_ListController
     $this->rodape = '';
     $this->largura = '100%';
 
-    $resourceOptionsTable = "
+    /*$resourceOptionsTable = "
     <table id='resource-options' class='styled horizontal-expand hide-on-search disable-on-apply-changes'>
 
       <tr>
@@ -112,7 +112,7 @@ class ReservaController extends Core_Controller_Page_ListController
 
     </table>";
 
-    $this->appendOutput($resourceOptionsTable);
+    $this->appendOutput($resourceOptionsTable);*/
 
     ApplicationHelper::loadJavascript($this, 'scripts/jquery/jquery.form.js');
     ApplicationHelper::loadJavascript($this, '/modules/Portabilis/Assets/Javascripts/FrontendApi.js');

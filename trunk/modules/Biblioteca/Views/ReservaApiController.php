@@ -93,7 +93,11 @@ class ReservaApiController extends ApiCoreController
            $this->validatesPresenceOfRefCodBiblioteca() &&
            $this->validatesPresenceOfRefCodCliente() &&
            $this->validatesPresenceOfRefCodAcervo();
+          // TODO validar se cliente da biblioteca
   }
+
+
+  // TODO validar canPostReserva -> cliente não suspenso
 
 
   protected function getExpectedAtts() {
@@ -135,35 +139,127 @@ class ReservaApiController extends ApiCoreController
                                      $this->getRequest()->ref_cod_escola);
 
     foreach($exemplares as $exemplar) {
-      $_exemplar = array();
+      $situacaoExemplar = $this->getSituacaoForExemplar($exemplar);
 
-      // TODO executar verificacoes / setar campos
+      $nomeClienteReserva    = '';
+      $dataReserva           = '';
+      $dataDevolucaoPrevista = '';
 
-      // código exemplar, situação, tombo, combo ?
-      $_exemplar['id'] = $exemplar['cod_exemplar'];
+      if ($situacaoExemplar['flag'] == 'emprestado') {
+        $reserva = $this->getReservaForExemplar($exemplar);
 
-      //indisponível, disponível, emprestado, reservado
-      $_exemplar['situacao'] = $this->getSituacaoForExemplar($exemplar);
+        if(is_array($reserva['cliente']))
+          $nomeClienteReserva = $reserva['cliente']['id'] . ' - ' . $reserva['cliente']['nome'];
 
-      $_exemplares[] = $_exemplar;
+        $dataReserva           = $reserva['dataReserva'];
+        $dataDevolucaoPrevista = $reserva['dataDevolucaoPrevista'];
+      }
+
+
+      else
+        $nomeClienteReserva = '';
+
+      $e = array('id'                      => $exemplar['cod_exemplar'],
+                 'situacao'                => $situacaoExemplar,
+                 'cliente_reserva'         => $nomeClienteReserva,
+                 'data_reserva'            => $dataReserva,
+                 'data_devolucao_prevista' => $dataDevolucaoPrevista
+      );
+
+      $_exemplares[] = $e;
     }
 
     return $_exemplares;
   }
 
 
-  public function getSituacaoForExemplar($exemplar) {
+  protected function loadSituacaoById($id) {
+    $situacao = new clsPmieducarSituacao($id);
+    return $situacao->detalhe();
+  }
+
+
+  protected function getSituacaoForExemplar($exemplar) {
     $situacoes = array(
-      'indisponivel' => array('flag' => 'indisponivel', 'label' => 'indisponível'),
-      'disponivel'   => array('flag' => 'disponivel'  , 'label' => 'disponível'  ),
-      'emprestado'   => array('flag' => 'emprestado'  , 'label' => 'emprestado'  ),
+      'indisponivel' => array('flag' => 'indisponivel', 'label' => 'Indisponível'),
+      'disponivel'   => array('flag' => 'disponivel'  , 'label' => 'Disponível'  ),
+      'emprestado'   => array('flag' => 'emprestado'  , 'label' => 'Emprestado'  ),
+      'invalida'     => array('flag' => 'invalida'    , 'label' => 'Inválida'  ),
     );
 
-    // emprestado se situacao.emprestado?
-    // indisponivel se não situacao.disponivel? || não exemplar.disponivel?
-    // disponivel se situacao.permite_emprestimo && não situacao.emprestado? && exemplar.disponivel?
+    $flagPermiteEmprestimo = 2;
+    $situacaoCadastro = $this->loadSituacaoById($exemplar["ref_cod_situacao"]);
 
-    return '#todo situacao'
+    if ($situacaoCadastro["situacao_emprestada"] == 1)
+      $situacao = $situacoes['emprestado'];
+
+    elseif($situacaoCadastro["permite_emprestimo"] == $flagPermiteEmprestimo &&
+           $exemplar["permite_emprestimo"] == $flagPermiteEmprestimo) {
+      $situacao = $situacoes['disponivel'];
+    }
+
+    elseif($situacaoCadastro["permite_emprestimo"] != $flagPermiteEmprestimo ||
+           $exemplar["permite_emprestimo"] != $flagPermiteEmprestimo) {
+      $situacao = $situacoes['indisponivel'];
+    }
+
+    else
+      $situacao = $situacoes['invalida'];
+
+    return $situacao;
+  }
+
+
+  protected function getReservaForExemplar($exemplar) {
+    $_reserva = array('cliente'              => null,
+                     'dataReserva'           => '#TODO',
+                     'dataDevolucaoPrevista' => '#TODO'
+    );
+
+		$reserva = new clsPmieducarReservas();
+		$reserva = $reserva->lista(null,
+                               null,
+                               null,
+                               null,
+                               null,
+                               null,
+                               null,
+                               null,
+                               null,
+                               null,
+                               $exemplar['cod_exemplar'],
+                               1,
+                               $this->getRequest()->ref_cod_biblioteca,
+                               $this->getRequest()->ref_cod_instituicao,
+                               $this->getRequest()->ref_cod_escola);
+
+		if(is_array($reserva) && ! empty($reserva))
+		{
+			$reserva = array_shift($reserva);
+      $_reserva['dataReserva']           = date('d/m/Y', strtotime($reserva['data_reserva']));
+      $_reserva['dataDevolucaoPrevista'] = date('d/m/Y', strtotime($reserva['data_prevista_disponivel']));
+      $_reserva['cliente']               = $this->getCliente($reserva["ref_cod_cliente"]);
+    }
+
+    return $_reserva;
+  }
+
+
+  protected function getCliente($clienteId) {
+
+    $_cliente = array('id' => $clienteId);
+
+		$cliente = new clsPmieducarCliente($clienteId);
+		$cliente = $cliente->detalhe();
+
+    $_cliente['pessoaId'] = $cliente["ref_idpes"];
+
+		$pessoa = new clsPessoa_($_cliente['pessoaId']);
+		$pessoa = $pessoa->detalhe();
+
+    $_cliente['nome'] = $pessoa["nome"];
+
+    return $_cliente;
   }
 
 

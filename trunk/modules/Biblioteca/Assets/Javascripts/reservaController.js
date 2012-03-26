@@ -51,6 +51,43 @@ function setTableSearchDetails($tableSearchDetails, dataDetails){
 }
 
 
-function handleSearch(dataResponse) {
-  // TODO
+function handleSearch($resultTable, dataResponse) {
+  var $linha = $j('<tr />');
+  $j('<th />').html('Selecionar').addClass('center').appendTo($linha);
+  $j('<th />').html('Id').addClass('center').appendTo($linha);
+  $j('<th />').html('Situa&#231;&#227;o').addClass('center').appendTo($linha);
+  $j('<th />').html('Cliente').appendTo($linha);
+  $j('<th />').html('Data reserva').addClass('center').appendTo($linha);
+  $j('<th />').html('Data prevista devolu&#231;&#227;o').addClass('center').appendTo($linha);
+  $linha.appendTo($resultTable);
+
+  //set rows
+  $j.each(dataResponse[RESOURCES_NAME], function(index, value){
+
+    var $checkbox = $j('<input />')
+                    .attr('type', 'checkbox')
+                    .attr('name', 'reservar-exempar')
+                    .attr('value', 'sim')
+                    .attr('id', 'exemplar-' + value.id)
+                    .attr('class', 'exemplar disable-on-apply-changes')
+                    .data('id', value.id);
+
+    if (value.situacao.flag != 'disponivel')
+      $checkbox.attr('disabled', 'disabled');
+
+    var $linha = $j('<tr />');
+    $j('<td />').html($checkbox).addClass('center').appendTo($linha);
+    $j('<td />').html(value.id).addClass('center').appendTo($linha);
+
+    $j('<td />').html(value.situacao.label).data('situacao', value.situacao).attr('id', 'situacao-' + value.id).addClass('situacao').addClass('center').appendTo($linha);
+
+    $j('<td />').html(value.cliente_reserva).appendTo($linha);
+    $j('<td />').html(value.data_reserva).addClass('center').appendTo($linha);
+    $j('<td />').html(value.data_devolucao_prevista).addClass('center').appendTo($linha);
+
+    $linha.fadeIn('slow').appendTo($resultTable);
+  });// each
+
+  $resultTable.find('tr:even').addClass('even');
+  $resultTable.addClass('styled').find('checkbox:first').focus();
 }

@@ -244,7 +244,7 @@ function validatesPresenseOfValueInRequiredFields(additionalFields) {
         else
         {
           _setTableSearchDetails(dataResponse['details']);
-          handleSearch(dataResponse);
+          handleSearch($resultTable, dataResponse);
         }
       /*}
       catch(error){
