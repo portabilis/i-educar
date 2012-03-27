@@ -53,7 +53,7 @@
                 matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
                 turma.ativo = 1 AND
 		        matricula_turma.ativo = 1 AND
-                hora_inicial IS NOT NULL) AS periodo,
+                hora_inicial IS NOT NULL limit 1) AS periodo,
 
       (SELECT COALESCE((SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))
           FROM cadastro.pessoa ps,
@@ -223,7 +223,7 @@
                                                     6
                                              END)
        END) AND
-       matricula_turma.data_cadastro = (select max(mt.data_cadastro) from matricula_turma mt where
+       matricula_turma.data_cadastro = (select max(mt.data_cadastro) from pmieducar.matricula_turma mt where
        matricula_turma.ref_cod_matricula = mt.ref_cod_matricula)
 
 ORDER BY nome_aluno ASC)
