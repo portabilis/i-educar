@@ -94,8 +94,8 @@ function handleSearch($resultTable, dataResponse) {
   $j('<th />').html('Id').addClass('center').appendTo($linha);
   $j('<th />').html('Situa&#231;&#227;o').addClass('center').appendTo($linha);
   $j('<th />').html('Cliente').appendTo($linha);
-  $j('<th />').html('Data reserva').addClass('center').appendTo($linha);
-  $j('<th />').html('Data prevista devolu&#231;&#227;o').addClass('center').appendTo($linha);
+  $j('<th />').html('Data').addClass('center').appendTo($linha);
+  $j('<th />').html('Data prevista dispon&iacute;vel').addClass('center').appendTo($linha);
   $linha.appendTo($resultTable);
 
   //set rows
@@ -118,9 +118,9 @@ function handleSearch($resultTable, dataResponse) {
 
     $j('<td />').html(value.situacao.label).data('situacao', value.situacao).attr('id', 'situacao-' + value.id).addClass('situacao').addClass('center').appendTo($linha);
 
-    $j('<td />').html(value.cliente_reserva).appendTo($linha);
-    $j('<td />').html(value.data_reserva).addClass('center').appendTo($linha);
-    $j('<td />').html(value.data_devolucao_prevista).addClass('center').appendTo($linha);
+    $j('<td />').html(value.cliente).appendTo($linha);
+    $j('<td />').html(value.data).addClass('center').appendTo($linha);
+    $j('<td />').html(value.data_prevista_disponivel).addClass('center').appendTo($linha);
 
     $linha.fadeIn('slow').appendTo($resultTable);
   });// each
