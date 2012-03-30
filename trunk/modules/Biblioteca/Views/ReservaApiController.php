@@ -35,17 +35,6 @@
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'include/pmieducar/clsPmieducarExemplar.inc.php';
 
-#require_once 'Core/Controller/Page/EditController.php';
-#require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
-#require_once 'Avaliacao/Service/Boletim.php';
-#require_once 'App/Model/MatriculaSituacao.php';
-#require_once 'RegraAvaliacao/Model/TipoPresenca.php';
-#require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
-#require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
-#require_once 'include/portabilis/dal.php';
-#require_once 'include/pmieducar/clsPmieducarHistoricoEscolar.inc.php';
-
-
 class ReservaApiController extends ApiCoreController
 {
   protected $_dataMapper  = '';#Avaliacao_Model_NotaComponenteDataMapper';
@@ -108,6 +97,7 @@ class ReservaApiController extends ApiCoreController
            $this->validatesSituacaoExemplarIsIn(array('emprestado', 'reservado', 'emprestado_e_reservado'));
            // TODO qtd reservas em aberto do cliente <= limite biblioteca
            // TODO valor R$ multas em aberto do cliente <= limite biblioteca
+           // TODO não existe reserva do exemplar em aberto para o cliente
   }
 
 
@@ -166,9 +156,41 @@ class ReservaApiController extends ApiCoreController
     if (is_null($exemplar))
       $exemplar = $this->getExemplar();
 
-    // TODO $dataInicio + tempo emprestimo for tipo exemplar E tipo cliente + dias não trabalho
+    $qtdDiasEmprestimo = $this->getQtdDiasEmprestimoForExemplar($exemplar);
+    $date = date('d/m/Y', strtotime("+$qtdDiasEmprestimo days", strtotime($dataInicio)));
 
-    return $dataInicio;
+    return $date;
+  }
+
+
+  protected function getQtdDiasEmprestimoForExemplar($exemplar = null) {
+    if (is_null($exemplar))
+      $exemplar = $this->getExemplar();
+
+    $acervo             = $this->getAcervo($exemplar['ref_cod_acervo']);
+    $exemplarTipoId     = $acervo['ref_cod_exemplar_tipo'];
+
+		$clienteTipoCliente = new clsPmieducarClienteTipoCliente();
+
+    $clienteTipoCliente      = $clienteTipoCliente->lista(null,
+                                                          $this->getRequest()->ref_cod_cliente,
+                                                          null,
+                                                          null,
+                                                          null,
+                                                          null,
+                                                          null,
+                                                          null,
+                                                          $this->getRequest()->ref_cod_biblioteca,
+                                                          1);
+
+    $clienteTipoId           = $clienteTipoCliente[0]['ref_cod_cliente_tipo'];
+
+		$clienteTipoExemplarTipo = new clsPmieducarClienteTipoExemplarTipo($clienteTipoId,
+                                                                       $exemplarTipoId);
+
+		$clienteTipoExemplarTipo = $clienteTipoExemplarTipo->detalhe();
+
+		return $clienteTipoExemplarTipo["dias_emprestimo"];
   }
 
 
@@ -243,6 +265,15 @@ class ReservaApiController extends ApiCoreController
   }
 
 
+  protected function getAcervo($id = '') {
+    if (empty($id))
+      $id = $this->getRequest()->ref_cod_acervo;
+
+    $acervo = new clsPmieducarAcervo($id);
+    return $acervo->detalhe();
+  }
+
+
   protected function getEmprestimoForExemplar($exemplar = null) {
     if (is_null($exemplar))
       $exemplar = $this->getExemplar();
@@ -255,27 +286,34 @@ class ReservaApiController extends ApiCoreController
                          'situacao'               => $this->getSituacaoForFlag('emprestado')
     );
 
-    $emprestimo = new clsPmieducarExemplarEmprestimo(null,
-                                                     null,
-                                                     null,
-                                                     null,
-                                                     $exemplar['cod_exemplar'],
-                                                     null,
-                                                     null,
-                                                     null,
-                                                     $this->getRequest()->ref_cod_biblioteca);
+    $emprestimo = new clsPmieducarExemplarEmprestimo();
 
-    $emprestimo = $emprestimo->detalhe();
+    $emprestimo = $emprestimo->lista(null,
+                                     null,
+                                     null,
+                                     null,
+                                     $exemplar['cod_exemplar'],
+                                     null,
+                                     null,
+                                     null,
+                                     null,
+                                     null,
+                                     $devolvido = false,
+                                     $this->getRequest()->ref_cod_biblioteca,
+                                     null,
+                                     $this->getRequest()->ref_cod_instituicao,
+                                     $this->getRequest()->ref_cod_escola);
 
-    if ($emprestimo) {
-      $cliente                               = $this->getCliente($emprestimo["ref_cod_cliente"]);
-      $dataPrevistaDisponivel                = date('d/m/Y', strtotime($emprestimo['data_retirada']));
+    if(is_array($emprestimo) && ! empty($emprestimo)) {
+  	  $emprestimo                              = array_shift($emprestimo);
+      $cliente                                 = $this->getCliente($emprestimo["ref_cod_cliente"]);
 
-      $_emprestimo['exists']                 = true;
-      $_emprestimo['data']                   = date('d/m/Y', strtotime($emprestimo['data_reserva']));
-      $_emprestimo['data_prevista_disponivel'] = $this->getDataPrevistaDisponivelForExemplar($dataPrevistaDisponivel, $exemplar);
-      $_emprestimo['cliente']                = $cliente;
-      $_emprestimo['nome_cliente']            = $cliente['id'] . ' - ' . $cliente['nome'];
+      $_emprestimo['exists']                   = true;
+      $_emprestimo['data']                     = date('d/m/Y', strtotime($emprestimo['data_retirada']));
+
+      $_emprestimo['data_prevista_disponivel'] = $this->getDataPrevistaDisponivelForExemplar($emprestimo['data_retirada'], $exemplar);
+      $_emprestimo['cliente']                  = $cliente;
+      $_emprestimo['nome_cliente']             = $cliente['id'] . ' - ' . $cliente['nome'];
     }
 
     return $_emprestimo;
@@ -283,54 +321,60 @@ class ReservaApiController extends ApiCoreController
 
 
   protected function existsReservaForExemplar($exemplar = null) {
-    $reserva = $this->getReservaForExemplar($exemplar);
+    $reserva = $this->getReservaForExemplar($exemplar, $reload = true);
     return $reserva['exists'];
   }
 
 
-  protected function getReservaForExemplar($exemplar = null) {
-    if (is_null($exemplar))
-      $exemplar = $this->getExemplar();
+  protected function getReservaForExemplar($exemplar = null, $reload = false) {
 
-    $_reserva = array('cliente'                => null,
-                      'nome_cliente'            => '',
-                      'data'                   => '',
-                      'data_prevista_disponivel' => '',
-                      'exists'                 => false,
-                      'situacao'               => $this->getSituacaoForFlag('reservado')
-    );
+    if ($reload || ! isset($this->_reserva)) {
+      if (is_null($exemplar))
+        $exemplar = $this->getExemplar();
+
+      $this->_reserva = array('cliente'                  => null,
+                              'nome_cliente'             => '',
+                              'data'                     => '',
+                              'data_prevista_disponivel' => '',
+                              'exists'                   => false,
+                              'situacao'                 => $this->getSituacaoForFlag('reservado')
+      );
 
 
-		$reserva = new clsPmieducarReservas();
-		$reserva = $reserva->lista(null,
-                               null,
-                               null,
-                               null,
-                               null,
-                               null,
-                               null,
-                               null,
-                               null,
-                               null,
-                               $exemplar['cod_exemplar'],
-                               1,
-                               $this->getRequest()->ref_cod_biblioteca,
-                               $this->getRequest()->ref_cod_instituicao,
-                               $this->getRequest()->ref_cod_escola);
+		  $reserva = new clsPmieducarReservas();
+		  $reserva = $reserva->lista(null,
+                                 null,
+                                 null,
+                                 null,
+                                 null,
+                                 null,
+                                 null,
+                                 null,
+                                 null,
+                                 null,
+                                 $exemplar['cod_exemplar'],
+                                 1,
+                                 $this->getRequest()->ref_cod_biblioteca,
+                                 $this->getRequest()->ref_cod_instituicao,
+                                 $this->getRequest()->ref_cod_escola);
 
-		if(is_array($reserva) && ! empty($reserva)) {
-			$reserva                            = array_shift($reserva);
-      $cliente                            = $this->getCliente($reserva["ref_cod_cliente"]);
-      $dataPrevistaDisponivel             = date('d/m/Y', strtotime($reserva['data_prevista_disponivel']));
+		  if(is_array($reserva) && ! empty($reserva)) {
+			  $reserva                            = array_shift($reserva);
+        $cliente                            = $this->getCliente($reserva["ref_cod_cliente"]);
+        //$dataPrevistaDisponivel             = date('d/m/Y', strtotime($reserva['data_prevista_disponivel']));
 
-      $_reserva['exists']                 = true;
-      $_reserva['data']                   = date('d/m/Y', strtotime($reserva['data_reserva']));
-      $_reserva['data_prevista_disponivel'] = $this->getDataPrevistaDisponivelForExemplar($dataPrevistaDisponivel, $exemplar);
-      $_reserva['cliente']                = $cliente;
-      $_reserva['nome_cliente']            = $cliente['id'] . ' - ' . $cliente['nome'];
+        $dataPrevistaDisponivel             = $reserva['data_prevista_disponivel'];
+
+        $this->_reserva['exists']           = true;
+        $this->_reserva['data']             = date('d/m/Y', strtotime($reserva['data_reserva']));
+
+        $this->_reserva['data_prevista_disponivel'] = $this->getDataPrevistaDisponivelForExemplar($dataPrevistaDisponivel, $exemplar);
+        $this->_reserva['cliente']          = $cliente;
+        $this->_reserva['nome_cliente']     = $cliente['id'] . ' - ' . $cliente['nome'];
+      }
     }
 
-    return $_reserva;
+    return $this->_reserva;
   }
 
 
@@ -401,6 +445,8 @@ class ReservaApiController extends ApiCoreController
   protected function postReserva() {
     if ($this->canPostReserva()) {
       //TODO try pegar excessoes no post, se pegar add msg erro inesperado
+
+      // TODO gravar reserva
 
         $this->messenger->append("Reserva realizada com sucesso.", 'success');
       //TODO fim try
