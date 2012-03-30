@@ -142,19 +142,23 @@ class ReservaApiController extends ApiCoreController
   }
 
 
-  protected function getExemplar($id = '') {
-    if (empty($id))
-      $id = $this->getRequest()->exemplar_id;
+  protected function getExemplar($id = '', $reload = false) {
+    if ($reload || ! isset($this->_exemplar)) {
 
-    $exemplar         = new clsPmieducarExemplar($id);
-    $exemplar         = $exemplar->detalhe();
+      if (empty($id))
+        $id = $this->getRequest()->exemplar_id;
 
-    $situacaoExemplar = $this->_getSituacaoForExemplar($exemplar);
+      $exemplar         = new clsPmieducarExemplar($id);
+      $exemplar         = $exemplar->detalhe();
 
-    return array('id'         => $exemplar['cod_exemplar'],
-                 'situacao'   => $situacaoExemplar,
-                 'pendencias' => $this->_getPendenciasForExemplar($exemplar, $situacaoExemplar)
-    );
+      $situacaoExemplar = $this->_getSituacaoForExemplar($exemplar);
+      $this->_exemplar  = array('id'         => $exemplar['cod_exemplar'],
+                                'situacao'   => $situacaoExemplar,
+                                'pendencias' => $this->_getPendenciasForExemplar($exemplar, $situacaoExemplar)
+      );
+    }
+
+    return $this->_exemplar;
   }
 
 
@@ -174,9 +178,10 @@ class ReservaApiController extends ApiCoreController
 
     $pendencias = array();
 
-    if (strpos($situacaoExemplar['flag'], 'emprestado'))
+    if (strpos($situacaoExemplar['flag'], 'emprestado') > -1)
       $pendencias[] = $this->getEmprestimoForExemplar($exemplar);
-    elseif (strpos($situacaoExemplar['flag'], 'reservado'))
+
+    if (strpos($situacaoExemplar['flag'], 'reservado') > -1)
       $pendencias[] = $this->getReservaForExemplar($exemplar);
 
     return $pendencias;
@@ -243,14 +248,35 @@ class ReservaApiController extends ApiCoreController
       $exemplar = $this->getExemplar();
 
     $_emprestimo = array('cliente'                => null,
-                         'nomeCliente'            => '',
+                         'nome_cliente'            => '',
                          'data'                   => '',
-                         'dataPrevistaDisponivel' => '',
+                         'data_prevista_disponivel' => '',
                          'exists'                 => false,
                          'situacao'               => $this->getSituacaoForFlag('emprestado')
     );
 
-    // TODO get reserva
+    $emprestimo = new clsPmieducarExemplarEmprestimo(null,
+                                                     null,
+                                                     null,
+                                                     null,
+                                                     $exemplar['cod_exemplar'],
+                                                     null,
+                                                     null,
+                                                     null,
+                                                     $this->getRequest()->ref_cod_biblioteca);
+
+    $emprestimo = $emprestimo->detalhe();
+
+    if ($emprestimo) {
+      $cliente                               = $this->getCliente($emprestimo["ref_cod_cliente"]);
+      $dataPrevistaDisponivel                = date('d/m/Y', strtotime($emprestimo['data_retirada']));
+
+      $_emprestimo['exists']                 = true;
+      $_emprestimo['data']                   = date('d/m/Y', strtotime($emprestimo['data_reserva']));
+      $_emprestimo['data_prevista_disponivel'] = $this->getDataPrevistaDisponivelForExemplar($dataPrevistaDisponivel, $exemplar);
+      $_emprestimo['cliente']                = $cliente;
+      $_emprestimo['nome_cliente']            = $cliente['id'] . ' - ' . $cliente['nome'];
+    }
 
     return $_emprestimo;
   }
@@ -267,9 +293,9 @@ class ReservaApiController extends ApiCoreController
       $exemplar = $this->getExemplar();
 
     $_reserva = array('cliente'                => null,
-                      'nomeCliente'            => '',
+                      'nome_cliente'            => '',
                       'data'                   => '',
-                      'dataPrevistaDisponivel' => '',
+                      'data_prevista_disponivel' => '',
                       'exists'                 => false,
                       'situacao'               => $this->getSituacaoForFlag('reservado')
     );
@@ -298,10 +324,10 @@ class ReservaApiController extends ApiCoreController
       $dataPrevistaDisponivel             = date('d/m/Y', strtotime($reserva['data_prevista_disponivel']));
 
       $_reserva['exists']                 = true;
-      $_reserva['dataReserva']            = date('d/m/Y', strtotime($reserva['data_reserva']));
-      $_reserva['dataPrevistaDisponivel'] = $this->getDataPrevistaDisponivelForExemplar($dataPrevistaDisponivel, $exemplar);
+      $_reserva['data']                   = date('d/m/Y', strtotime($reserva['data_reserva']));
+      $_reserva['data_prevista_disponivel'] = $this->getDataPrevistaDisponivelForExemplar($dataPrevistaDisponivel, $exemplar);
       $_reserva['cliente']                = $cliente;
-      $_reserva['nomeCliente']            = $cliente['id'] . ' - ' . $cliente['nome'];
+      $_reserva['nome_cliente']            = $cliente['id'] . ' - ' . $cliente['nome'];
     }
 
     return $_reserva;
@@ -365,7 +391,7 @@ class ReservaApiController extends ApiCoreController
     $_exemplares = array();
 
     foreach($exemplares as $exemplar) {
-      $_exemplares[] = $this->getExemplar($exemplar['cod_exemplar']);
+      $_exemplares[] = $this->getExemplar($exemplar['cod_exemplar'], $reload = true);
     }
 
     return $_exemplares;
@@ -379,10 +405,10 @@ class ReservaApiController extends ApiCoreController
         $this->messenger->append("Reserva realizada com sucesso.", 'success');
       //TODO fim try
 
-      $situacaoExemplar = $this->getSituacaoForExemplar();
+      $exemplar = $this->getExemplar();
 
-      $this->appendResponse('situacao_exemplar', $situacaoExemplar);
-      $this->appendResponse('pendencias', $this->_getPendenciasForExemplar($exemplar, $situacaoExemplar));
+      $this->appendResponse('situacao_exemplar', $exemplar['situacao']);
+      $this->appendResponse('pendencias', $exemplar['pendencias']);
     }
   }
 

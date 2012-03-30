@@ -109,18 +109,36 @@ function handleSearch($resultTable, dataResponse) {
                     .attr('class', 'exemplar disable-on-apply-changes')
                     .data('id', value.id);
 
-    if (value.situacao.flag != 'disponivel')
+    var situacoesReservaPermitida = ['emprestado', 'reservado', 'emprestado_e_reservado'];
+
+    if ($j.inArray(value.situacao.flag, situacoesReservaPermitida) < 0)
       $checkbox.attr('disabled', 'disabled');
 
     var $linha = $j('<tr />');
     $j('<td />').html($checkbox).addClass('center').appendTo($linha);
     $j('<td />').html(value.id).addClass('center').appendTo($linha);
 
-    $j('<td />').html(value.situacao.label).data('situacao', value.situacao).attr('id', 'situacao-' + value.id).addClass('situacao').addClass('center').appendTo($linha);
+    var $colSituacao = $j('<td />').attr('id', 'situacao-' + value.id).addClass('situacao center');
+    var $colCliente                = $j('<td />');
+    var $colData                   = $j('<td />').addClass('center');
+    var $colDataPrevistaDisponivel = $j('<td />').addClass('center');
 
-    $j('<td />').html(value.cliente).appendTo($linha);
-    $j('<td />').html(value.data).addClass('center').appendTo($linha);
-    $j('<td />').html(value.data_prevista_disponivel).addClass('center').appendTo($linha);
+    $j.each(value.pendencias, function(indexPendencia, valuePendencia){
+      $j('<p />').html(valuePendencia.situacao.label || '-').appendTo($colSituacao);
+      $j('<p />').html(valuePendencia.nome_cliente || '-').appendTo($colCliente);
+      $j('<p />').html(valuePendencia.data || '-').appendTo($colData);
+      $j('<p />').html(valuePendencia.data_prevista_disponivel || '-').appendTo($colDataPrevistaDisponivel);
+    });
+
+    if (value.pendencias.length < 1)
+      $j('<p />').html(value.situacao.label || '-').appendTo($colSituacao);
+
+    $colSituacao.data('situacao', value.situacao_exemplar);
+
+    $colSituacao.appendTo($linha);
+    $colCliente.appendTo($linha);
+    $colData.appendTo($linha);
+    $colDataPrevistaDisponivel.appendTo($linha);
 
     $linha.fadeIn('slow').appendTo($resultTable);
   });// each
