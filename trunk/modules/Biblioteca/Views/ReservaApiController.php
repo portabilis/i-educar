@@ -105,7 +105,7 @@ class ReservaApiController extends ApiCoreController
     if (! is_array($situacoes))
       $situacoes = array($situacoes);
 
-    $situacaoAtual = $this->getSituacaoForExemplar();
+    $situacaoAtual = $this->getSituacaoExemplar();
     $situacaoAtual = $situacaoAtual['flag'];
     $msg = "Situação do exemplar deve estar em (" . implode(', ', $situacoes) . ") porem atualmente é $situacaoAtual.";
 
@@ -114,7 +114,7 @@ class ReservaApiController extends ApiCoreController
 
 
   protected function validatesClienteIsNotSuspenso() {
-    $cliente = $this->getCliente();
+    $cliente = $this->loadCliente();
 
     if($cliente['suspenso']) {
       $this->messenger->append("O cliente esta suspenso", 'error');
@@ -132,7 +132,12 @@ class ReservaApiController extends ApiCoreController
   }
 
 
-  protected function getExemplar($id = '', $reload = false) {
+  /* metódos auxiliares resposta operação / recurso
+    metódos iniciados com load consultam informação no banco de dados
+    metódos iniciados com get consultam informação em objetos
+  */
+
+  protected function loadExemplar($id = '', $reload = false) {
     if ($reload || ! isset($this->_exemplar)) {
 
       if (empty($id))
@@ -141,10 +146,10 @@ class ReservaApiController extends ApiCoreController
       $exemplar         = new clsPmieducarExemplar($id);
       $exemplar         = $exemplar->detalhe();
 
-      $situacaoExemplar = $this->_getSituacaoForExemplar($exemplar);
+      $situacaoExemplar = $this->loadSituacaoForExemplar($exemplar);
       $this->_exemplar  = array('id'         => $exemplar['cod_exemplar'],
                                 'situacao'   => $situacaoExemplar,
-                                'pendencias' => $this->_getPendenciasForExemplar($exemplar, $situacaoExemplar)
+                                'pendencias' => $this->getPendenciasForExemplar($exemplar, $situacaoExemplar)
       );
     }
 
@@ -154,18 +159,18 @@ class ReservaApiController extends ApiCoreController
 
   protected function getDataPrevistaDisponivelForExemplar($dataInicio, $exemplar = null) {
     if (is_null($exemplar))
-      $exemplar = $this->getExemplar();
+      $exemplar = $this->loadExemplar();
 
-    $qtdDiasEmprestimo = $this->getQtdDiasEmprestimoForExemplar($exemplar);
+    $qtdDiasEmprestimo = $this->loadQtdDiasEmprestimoForExemplar($exemplar);
     $date = date('d/m/Y', strtotime("+$qtdDiasEmprestimo days", strtotime($dataInicio)));
 
     return $date;
   }
 
 
-  protected function getQtdDiasEmprestimoForExemplar($exemplar = null) {
+  protected function loadQtdDiasEmprestimoForExemplar($exemplar = null) {
     if (is_null($exemplar))
-      $exemplar = $this->getExemplar();
+      $exemplar = $this->loadExemplar();
 
     $acervo             = $this->getAcervo($exemplar['ref_cod_acervo']);
     $exemplarTipoId     = $acervo['ref_cod_exemplar_tipo'];
@@ -194,24 +199,25 @@ class ReservaApiController extends ApiCoreController
   }
 
 
-  protected function _getPendenciasForExemplar($exemplar, $situacaoExemplar = '') {
+  protected function getPendenciasForExemplar($exemplar, $situacaoExemplar = '') {
     if (empty($situacaoExemplar))
-      $situacaoExemplar = $this->_getSituacaoForExemplar($exemplar);
+      $situacaoExemplar = $exemplar['situacao'];
 
     $pendencias = array();
 
     if (strpos($situacaoExemplar['flag'], 'emprestado') > -1)
-      $pendencias[] = $this->getEmprestimoForExemplar($exemplar);
+      $pendencias[] = $this->loadEmprestimoForExemplar($exemplar);
 
     if (strpos($situacaoExemplar['flag'], 'reservado') > -1)
-      $pendencias[] = $this->getReservaForExemplar($exemplar);
+      $pendencias[] = $this->loadReservaForExemplar($exemplar);
 
     return $pendencias;
   }
 
 
-  protected function _getSituacaoForExemplar($exemplar) {
-    $situacao                  = $this->getSituacaoById($exemplar["ref_cod_situacao"]);
+  protected function loadSituacaoForExemplar($exemplar) {
+    $situacao                  = new clsPmieducarSituacao($exemplar["ref_cod_situacao"]);
+    $situacao                  = $situacao->detalhe();
 
     $reservado                 = $this->existsReservaForExemplar($exemplar);
     $emprestado                = $situacao["situacao_emprestada"] == 1;
@@ -251,17 +257,11 @@ class ReservaApiController extends ApiCoreController
   }
 
 
-  protected function getSituacaoForExemplar($exemplar = null) {
+  protected function getSituacaoExemplar($exemplar = null) {
     if (is_null($exemplar))
-      $exemplar = $this->getExemplar();
+      $exemplar = $this->loadExemplar();
 
     return $exemplar['situacao'];
-  }
-
-
-  protected function getSituacaoById($id) {
-    $situacao = new clsPmieducarSituacao($id);
-    return $situacao->detalhe();
   }
 
 
@@ -274,9 +274,9 @@ class ReservaApiController extends ApiCoreController
   }
 
 
-  protected function getEmprestimoForExemplar($exemplar = null) {
+  protected function loadEmprestimoForExemplar($exemplar = null) {
     if (is_null($exemplar))
-      $exemplar = $this->getExemplar();
+      $exemplar = $this->loadExemplar();
 
     $_emprestimo = array('cliente'                => null,
                          'nome_cliente'            => '',
@@ -306,7 +306,7 @@ class ReservaApiController extends ApiCoreController
 
     if(is_array($emprestimo) && ! empty($emprestimo)) {
   	  $emprestimo                              = array_shift($emprestimo);
-      $cliente                                 = $this->getCliente($emprestimo["ref_cod_cliente"]);
+      $cliente                                 = $this->loadCliente($emprestimo["ref_cod_cliente"]);
 
       $_emprestimo['exists']                   = true;
       $_emprestimo['data']                     = date('d/m/Y', strtotime($emprestimo['data_retirada']));
@@ -321,16 +321,16 @@ class ReservaApiController extends ApiCoreController
 
 
   protected function existsReservaForExemplar($exemplar = null) {
-    $reserva = $this->getReservaForExemplar($exemplar, $reload = true);
+    $reserva = $this->loadReservaForExemplar($exemplar, $reload = true);
     return $reserva['exists'];
   }
 
 
-  protected function getReservaForExemplar($exemplar = null, $reload = false) {
+  protected function loadReservaForExemplar($exemplar = null, $reload = false) {
 
     if ($reload || ! isset($this->_reserva)) {
       if (is_null($exemplar))
-        $exemplar = $this->getExemplar();
+        $exemplar = $this->loadExemplar();
 
       $this->_reserva = array('cliente'                  => null,
                               'nome_cliente'             => '',
@@ -360,15 +360,12 @@ class ReservaApiController extends ApiCoreController
 
 		  if(is_array($reserva) && ! empty($reserva)) {
 			  $reserva                            = array_shift($reserva);
-        $cliente                            = $this->getCliente($reserva["ref_cod_cliente"]);
-        //$dataPrevistaDisponivel             = date('d/m/Y', strtotime($reserva['data_prevista_disponivel']));
-
-        $dataPrevistaDisponivel             = $reserva['data_prevista_disponivel'];
+        $cliente                            = $this->loadCliente($reserva["ref_cod_cliente"]);
 
         $this->_reserva['exists']           = true;
         $this->_reserva['data']             = date('d/m/Y', strtotime($reserva['data_reserva']));
 
-        $this->_reserva['data_prevista_disponivel'] = $this->getDataPrevistaDisponivelForExemplar($dataPrevistaDisponivel, $exemplar);
+        $this->_reserva['data_prevista_disponivel'] = $this->getDataPrevistaDisponivelForExemplar($reserva['data_prevista_disponivel'], $exemplar);
         $this->_reserva['cliente']          = $cliente;
         $this->_reserva['nome_cliente']     = $cliente['id'] . ' - ' . $cliente['nome'];
       }
@@ -378,7 +375,7 @@ class ReservaApiController extends ApiCoreController
   }
 
 
-  protected function getCliente($id = '') {
+  protected function loadCliente($id = '') {
 
     if (empty($id))
       $id = $this->getRequest()->ref_cod_cliente;
@@ -404,7 +401,8 @@ class ReservaApiController extends ApiCoreController
   }
 
 
-  // metódos resposta operação / recurso
+  /* metódos resposta operação / recurso
+     metódos nomeados no padrão operaçãoRecurso */
 
   protected function getExemplares() {
 
@@ -435,7 +433,7 @@ class ReservaApiController extends ApiCoreController
     $_exemplares = array();
 
     foreach($exemplares as $exemplar) {
-      $_exemplares[] = $this->getExemplar($exemplar['cod_exemplar'], $reload = true);
+      $_exemplares[] = $this->loadExemplar($exemplar['cod_exemplar'], $reload = true);
     }
 
     return $_exemplares;
@@ -443,15 +441,35 @@ class ReservaApiController extends ApiCoreController
 
 
   protected function postReserva() {
+    $exemplar = $this->loadExemplar();
+
     if ($this->canPostReserva()) {
       //TODO try pegar excessoes no post, se pegar add msg erro inesperado
 
-      // TODO gravar reserva
+      //TODO pegar data de onde?
+      $dataPrevistaDisponivel = null;
 
+      // cada pendencia > dataPrevistaDisponivel + qtd dias emprestimo exemplar
+
+  		$reserva = new clsPmieducarReservas(null,
+                                          null,
+                                          $this->getSession()->id_pessoa,
+                                          $this->getRequest()->ref_cod_cliente,
+                                          null,
+                                          $dataPrevistaDisponivel,
+                                          null,
+                                          $this->getRequest()->exemplar_id,
+                                          1);
+
+		  if($reserva->cadastra())
         $this->messenger->append("Reserva realizada com sucesso.", 'success');
+      else
+        $this->messenger->append("Aparentemente a reserva não foi cadastrada, por favor, tente novamente.", 'error');
+
       //TODO fim try
 
-      $exemplar = $this->getExemplar();
+      // recarrega exemplar
+      $exemplar = $this->loadExemplar($this->getRequest()->exemplar_id, $reload = true);
 
       $this->appendResponse('situacao_exemplar', $exemplar['situacao']);
       $this->appendResponse('pendencias', $exemplar['pendencias']);
