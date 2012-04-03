@@ -94,10 +94,12 @@ class ReservaApiController extends ApiCoreController
   protected function canPostReserva() {
     return $this->validatesClienteIsNotSuspenso() &&
            $this->validatesPresenceOfExemplarId() &&
-           $this->validatesSituacaoExemplarIsIn(array('emprestado', 'reservado', 'emprestado_e_reservado'));
+           $this->validatesSituacaoExemplarIsIn(array('emprestado', 'reservado', 'emprestado_e_reservado')) &&
+           $this->validatesNotExistsReservaEmAbertoForCliente();
+
+           // TODO não existe reserva do exemplar em aberto para o cliente
            // TODO qtd reservas em aberto do cliente <= limite biblioteca
            // TODO valor R$ multas em aberto do cliente <= limite biblioteca
-           // TODO não existe reserva do exemplar em aberto para o cliente
   }
 
 
@@ -124,6 +126,23 @@ class ReservaApiController extends ApiCoreController
     return true;
   }
 
+
+  protected function validatesNotExistsReservaEmAbertoForCliente() {
+    $clienteId = $this->getRequest()->ref_cod_cliente;
+    $exemplares = $this->loadExemplares();
+
+    foreach($exemplares as $exemplar) {
+      if ($this->existsReservaForExemplar($exemplar, $clienteId)) {
+        $this->messenger->append("Este cliente já possui uma reserva em aberto para um exemplar desta obra.", 'error');
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+
+  // subscreve metódo super classe
 
   protected function getAvailableOperationsForResources() {
     return array('exemplares' => array('get'),
@@ -157,48 +176,6 @@ class ReservaApiController extends ApiCoreController
   }
 
 
-  protected function getDataPrevistaDisponivelForExemplar($dataInicio, $exemplar = null) {
-    if (is_null($exemplar))
-      $exemplar = $this->loadExemplar();
-
-    $qtdDiasEmprestimo = $this->loadQtdDiasEmprestimoForExemplar($exemplar);
-    $date = date('d/m/Y', strtotime("+$qtdDiasEmprestimo days", strtotime($dataInicio)));
-
-    return $date;
-  }
-
-
-  protected function loadQtdDiasEmprestimoForExemplar($exemplar = null) {
-    if (is_null($exemplar))
-      $exemplar = $this->loadExemplar();
-
-    $acervo             = $this->getAcervo($exemplar['ref_cod_acervo']);
-    $exemplarTipoId     = $acervo['ref_cod_exemplar_tipo'];
-
-		$clienteTipoCliente = new clsPmieducarClienteTipoCliente();
-
-    $clienteTipoCliente      = $clienteTipoCliente->lista(null,
-                                                          $this->getRequest()->ref_cod_cliente,
-                                                          null,
-                                                          null,
-                                                          null,
-                                                          null,
-                                                          null,
-                                                          null,
-                                                          $this->getRequest()->ref_cod_biblioteca,
-                                                          1);
-
-    $clienteTipoId           = $clienteTipoCliente[0]['ref_cod_cliente_tipo'];
-
-		$clienteTipoExemplarTipo = new clsPmieducarClienteTipoExemplarTipo($clienteTipoId,
-                                                                       $exemplarTipoId);
-
-		$clienteTipoExemplarTipo = $clienteTipoExemplarTipo->detalhe();
-
-		return $clienteTipoExemplarTipo["dias_emprestimo"];
-  }
-
-
   protected function getPendenciasForExemplar($exemplar, $situacaoExemplar = '') {
     if (empty($situacaoExemplar))
       $situacaoExemplar = $exemplar['situacao'];
@@ -209,7 +186,7 @@ class ReservaApiController extends ApiCoreController
       $pendencias[] = $this->loadEmprestimoForExemplar($exemplar);
 
     if (strpos($situacaoExemplar['flag'], 'reservado') > -1)
-      $pendencias[] = $this->loadReservaForExemplar($exemplar);
+      $pendencias = array_merge($pendencias, $this->loadReservasForExemplar($exemplar));
 
     return $pendencias;
   }
@@ -311,7 +288,7 @@ class ReservaApiController extends ApiCoreController
       $_emprestimo['exists']                   = true;
       $_emprestimo['data']                     = date('d/m/Y', strtotime($emprestimo['data_retirada']));
 
-      $_emprestimo['data_prevista_disponivel'] = $this->getDataPrevistaDisponivelForExemplar($emprestimo['data_retirada'], $exemplar);
+      $_emprestimo['data_prevista_disponivel'] = $this->getDataPrevistaDisponivelForExemplar($emprestimo['data_retirada'], 'd/m/Y', $exemplar);
       $_emprestimo['cliente']                  = $cliente;
       $_emprestimo['nome_cliente']             = $cliente['id'] . ' - ' . $cliente['nome'];
     }
@@ -320,58 +297,68 @@ class ReservaApiController extends ApiCoreController
   }
 
 
-  protected function existsReservaForExemplar($exemplar = null) {
-    $reserva = $this->loadReservaForExemplar($exemplar, $reload = true);
-    return $reserva['exists'];
+  protected function existsReservaForExemplar($exemplar = null, $clienteId = null) {
+    $reservas = $this->loadReservasForExemplar($exemplar, $clienteId, $reload = true);
+    return ! empty($reservas) && $reservas[0]['exists'];
   }
 
 
-  protected function loadReservaForExemplar($exemplar = null, $reload = false) {
+  protected function loadReservasForExemplar($exemplar = null, $clienteId = null, $reload = false) {
 
-    if ($reload || ! isset($this->_reserva)) {
+    if ($reload || ! isset($this->_reservas)) {
       if (is_null($exemplar))
         $exemplar = $this->loadExemplar();
 
-      $this->_reserva = array('cliente'                  => null,
-                              'nome_cliente'             => '',
-                              'data'                     => '',
-                              'data_prevista_disponivel' => '',
-                              'exists'                   => false,
-                              'situacao'                 => $this->getSituacaoForFlag('reservado')
-      );
+      $this->_reservas   = array();
+      /* $this->_reservas[] = array('cliente'                  => null,
+                                 'nome_cliente'              => '',
+                                 'data'                      => '',
+                                 'data_prevista_disponivel'  => '',
+                                 'exists'                    => false,
+                                 'situacao'                  => $this->getSituacaoForFlag('reservado'));
+      */
 
+		  $reservas = new clsPmieducarReservas();
+		  $reservas = $reservas->lista(null,
+                                   null,
+                                   null,
+                                   $clienteId,
+                                   null,
+                                   null,
+                                   null,
+                                   null,
+                                   null,
+                                   null,
+                                   $exemplar['cod_exemplar'],
+                                   1,
+                                   $this->getRequest()->ref_cod_biblioteca,
+                                   $this->getRequest()->ref_cod_instituicao,
+                                   $this->getRequest()->ref_cod_escola);
 
-		  $reserva = new clsPmieducarReservas();
-		  $reserva = $reserva->lista(null,
-                                 null,
-                                 null,
-                                 null,
-                                 null,
-                                 null,
-                                 null,
-                                 null,
-                                 null,
-                                 null,
-                                 $exemplar['cod_exemplar'],
-                                 1,
-                                 $this->getRequest()->ref_cod_biblioteca,
-                                 $this->getRequest()->ref_cod_instituicao,
-                                 $this->getRequest()->ref_cod_escola);
+      foreach ($reservas as $reserva) {
+        $_reserva = array();
+        $cliente                      = $this->loadCliente($reserva["ref_cod_cliente"]);
 
-		  if(is_array($reserva) && ! empty($reserva)) {
-			  $reserva                            = array_shift($reserva);
-        $cliente                            = $this->loadCliente($reserva["ref_cod_cliente"]);
+        $_reserva['exists']           = true;
+        $_reserva['reserva_id']       = $reserva['cod_reserva'];
+        $_reserva['data']             = date('d/m/Y', strtotime($reserva['data_reserva']));
 
-        $this->_reserva['exists']           = true;
-        $this->_reserva['data']             = date('d/m/Y', strtotime($reserva['data_reserva']));
+        /* caso seja o mesmo cliente da reserva: considera a data prevista disponivel gravada na reserva
+           senão considera a data prevista disponivel da reserva + a quantidade de dias de emprestimo do exemplar */
+        if ($this->getRequest()->ref_cod_escola == $cliente['id'])
+          $_reserva['data_prevista_disponivel'] = date('d/m/Y', strtotime($reserva['data_prevista_disponivel']));
+        else
+          $_reserva['data_prevista_disponivel'] = $this->getDataPrevistaDisponivelForExemplar($reserva['data_prevista_disponivel'], 'd/m/Y', $exemplar);
 
-        $this->_reserva['data_prevista_disponivel'] = $this->getDataPrevistaDisponivelForExemplar($reserva['data_prevista_disponivel'], $exemplar);
-        $this->_reserva['cliente']          = $cliente;
-        $this->_reserva['nome_cliente']     = $cliente['id'] . ' - ' . $cliente['nome'];
+        $_reserva['cliente']          = $cliente;
+        $_reserva['nome_cliente']     = $cliente['id'] . ' - ' . $cliente['nome'];
+        $_reserva['situacao']         = $this->getSituacaoForFlag('reservado');
+
+        $this->_reservas[] = $_reserva;
       }
     }
 
-    return $this->_reserva;
+    return $this->_reservas;
   }
 
 
@@ -401,35 +388,100 @@ class ReservaApiController extends ApiCoreController
   }
 
 
+  protected function getDataPrevistaDisponivelForExemplar($dataInicio, $format = 'd/m/Y', $exemplar = null) {
+    if (is_null($exemplar))
+      $exemplar = $this->loadExemplar();
+
+    $qtdDiasEmprestimo = $this->loadQtdDiasEmprestimoForExemplar($exemplar);
+    $date = date($format, strtotime("+$qtdDiasEmprestimo days", strtotime($dataInicio)));
+
+    # TODO ver se data cai em feriado ou dia de não trabalho somando +1 dia
+
+    return $date;
+  }
+
+
+  protected function loadQtdDiasEmprestimoForExemplar($exemplar = null) {
+    if (is_null($exemplar))
+      $exemplar = $this->loadExemplar();
+
+    $acervo             = $this->getAcervo($exemplar['ref_cod_acervo']);
+    $exemplarTipoId     = $acervo['ref_cod_exemplar_tipo'];
+
+		$clienteTipoCliente = new clsPmieducarClienteTipoCliente();
+
+    $clienteTipoCliente      = $clienteTipoCliente->lista(null,
+                                                          $this->getRequest()->ref_cod_cliente,
+                                                          null,
+                                                          null,
+                                                          null,
+                                                          null,
+                                                          null,
+                                                          null,
+                                                          $this->getRequest()->ref_cod_biblioteca,
+                                                          1);
+
+    $clienteTipoId           = $clienteTipoCliente[0]['ref_cod_cliente_tipo'];
+
+		$clienteTipoExemplarTipo = new clsPmieducarClienteTipoExemplarTipo($clienteTipoId,
+                                                                       $exemplarTipoId);
+
+		$clienteTipoExemplarTipo = $clienteTipoExemplarTipo->detalhe();
+
+		return $clienteTipoExemplarTipo["dias_emprestimo"];
+  }
+
+
+  protected function getDataPrevistaDisponivelForExemplarAfterLastPendencia($exemplar = null) {
+    if (is_null($exemplar))
+      $exemplar = $this->loadExemplar();
+
+    if (! empty($exemplar['pendencias'])) {
+      $lastPendencia          = end($exemplar['pendencias']);
+      $dataPrevistaDisponivel = $this->getDataPrevistaDisponivelForExemplar($lastPendencia['data_prevista_disponivel'], 'Y-m-d', $exemplar);
+    }
+    else
+      $dataPrevistaDisponivel = date("Y-m-d");
+
+    return $dataPrevistaDisponivel;
+  }
+
+
+  protected function loadExemplares($reload = false) {
+    if ($reload || ! isset($this->_exemplares)) {
+		  $this->_exemplares = new clsPmieducarExemplar();
+      $this->_exemplares = $this->_exemplares->lista(null,
+                                                     null,
+                                                     null,
+                                                     $this->getRequest()->ref_cod_acervo,
+                                                     null,
+                                                     null,
+                                                     null,
+                                                     null,
+                                                     null,
+                                                     null,
+                                                     null,
+                                                     null,
+                                                     null,
+                                                     1,
+                                                     null,
+                                                     null,
+                                                     null,
+                                                     null,
+                                                     $this->getRequest()->ref_cod_biblioteca,
+                                                     null,
+                                                     $this->getRequest()->ref_cod_instituicao,
+                                                     $this->getRequest()->ref_cod_escola);
+    }
+
+    return $this->_exemplares;
+  }
+
   /* metódos resposta operação / recurso
      metódos nomeados no padrão operaçãoRecurso */
 
   protected function getExemplares() {
-
-		$exemplares = new clsPmieducarExemplar();
-    $exemplares = $exemplares->lista(null,
-                                     null,
-                                     null,
-                                     $this->getRequest()->ref_cod_acervo,
-                                     null,
-                                     null,
-                                     null,
-                                     null,
-                                     null,
-                                     null,
-                                     null,
-                                     null,
-                                     null,
-                                     1,
-                                     null,
-                                     null,
-                                     null,
-                                     null,
-                                     $this->getRequest()->ref_cod_biblioteca,
-                                     null,
-                                     $this->getRequest()->ref_cod_instituicao,
-                                     $this->getRequest()->ref_cod_escola);
-
+    $exemplares = $this->loadExemplares();
     $_exemplares = array();
 
     foreach($exemplares as $exemplar) {
@@ -441,15 +493,12 @@ class ReservaApiController extends ApiCoreController
 
 
   protected function postReserva() {
-    $exemplar = $this->loadExemplar();
-
     if ($this->canPostReserva()) {
       //TODO try pegar excessoes no post, se pegar add msg erro inesperado
 
-      //TODO pegar data de onde?
-      $dataPrevistaDisponivel = null;
+      $exemplar = $this->loadExemplar();
 
-      // cada pendencia > dataPrevistaDisponivel + qtd dias emprestimo exemplar
+      $dataPrevistaDisponivel = $this->getDataPrevistaDisponivelForExemplarAfterLastPendencia($exemplar);
 
   		$reserva = new clsPmieducarReservas(null,
                                           null,
