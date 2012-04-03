@@ -310,13 +310,10 @@ class ReservaApiController extends ApiCoreController
         $exemplar = $this->loadExemplar();
 
       $this->_reservas   = array();
-      /* $this->_reservas[] = array('cliente'                  => null,
-                                 'nome_cliente'              => '',
-                                 'data'                      => '',
-                                 'data_prevista_disponivel'  => '',
-                                 'exists'                    => false,
-                                 'situacao'                  => $this->getSituacaoForFlag('reservado'));
-      */
+
+      $sql = "select 1 from pmieducar.cliente_suspensao where ref_cod_cliente = $1 and data_liberacao is null and data_suspensao + (dias||' day')::interval >= now()";
+
+      $suspenso = $this->fetchPreparedQuery($sql, $params = array($id), true, 'first-field');
 
 		  $reservas = new clsPmieducarReservas();
 		  $reservas = $reservas->lista(null,
@@ -333,7 +330,8 @@ class ReservaApiController extends ApiCoreController
                                    1,
                                    $this->getRequest()->ref_cod_biblioteca,
                                    $this->getRequest()->ref_cod_instituicao,
-                                   $this->getRequest()->ref_cod_escola);
+                                   $this->getRequest()->ref_cod_escola,
+                                   $data_retirada_null = true);
 
       foreach ($reservas as $reserva) {
         $_reserva = array();
