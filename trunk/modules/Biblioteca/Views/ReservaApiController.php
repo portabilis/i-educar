@@ -97,7 +97,6 @@ class ReservaApiController extends ApiCoreController
            $this->validatesSituacaoExemplarIsIn(array('emprestado', 'reservado', 'emprestado_e_reservado')) &&
            $this->validatesNotExistsReservaEmAbertoForCliente();
 
-           // TODO não existe reserva do exemplar em aberto para o cliente
            // TODO qtd reservas em aberto do cliente <= limite biblioteca
            // TODO valor R$ multas em aberto do cliente <= limite biblioteca
   }
@@ -514,13 +513,12 @@ class ReservaApiController extends ApiCoreController
         $this->messenger->append("Aparentemente a reserva não foi cadastrada, por favor, tente novamente.", 'error');
 
       //TODO fim try
-
-      // recarrega exemplar
-      $exemplar = $this->loadExemplar($this->getRequest()->exemplar_id, $reload = true);
-
-      $this->appendResponse('situacao_exemplar', $exemplar['situacao']);
-      $this->appendResponse('pendencias', $exemplar['pendencias']);
     }
+    // recarrega exemplar
+    $exemplar = $this->loadExemplar($this->getRequest()->exemplar_id, $reload = true);
+
+    $this->appendResponse('situacao_exemplar', $exemplar['situacao']);
+    $this->appendResponse('pendencias', $exemplar['pendencias']);
   }
 
 

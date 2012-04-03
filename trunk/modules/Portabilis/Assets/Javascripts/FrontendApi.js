@@ -6,7 +6,6 @@ function safeLog(value)
 
 
 function safeToUpperCase(value){
-
   if (typeof(value) == 'string')
     value = value.toUpperCase();
 
@@ -15,7 +14,7 @@ function safeToUpperCase(value){
 
 
 function buildId(id) {
-  return typeof(id) == 'string' && id.length > 0 && id[0] == '#' ? id : '#' + id;
+  return typeof(id) == 'string' && id.length > 0 && id[0] != '#' ? '#' + id : id;
 }
 
 
@@ -48,14 +47,72 @@ function validatesPresenseOfValueInRequiredFields(additionalFields) {
 
 
 function removeImgLoadingFor($targetElement) {
-  console.log('#TODO removeImgLoadingFor');
+  $targetElement.siblings('img').remove();
 }
 
 
 function appendImgLoadingTo($targetElement) {
-  console.log('#TODO appendImgLoadingTo');
+  if ($targetElement.siblings('img').length < 1);
+    $j('<img alt="loading..." src="/modules/Portabilis/Assets/Images/loading.gif" />').appendTo($targetElement.parent());
 }
 
+
+function afterChangeResource($resourceElement){
+  removeImgLoadingFor($resourceElement);
+  $resourceElement.attr('checked', false);
+  $j('.disable-on-apply-changes').removeAttr('disabled');
+
+  // change value of execute action button
+  $j('input.execute-action').val(ACTION_NAME);
+}
+
+function handleMessages(messages, targetId, useDelayClassRemoval){
+
+  var $feedbackMessages = $j('#feedback-messages');
+  var hasErrorMessages   = false;
+  var hasSuccessMessages = false;
+  var hasNoticeMessages  = false;
+  var delayClassRemoval  = 20000;
+
+  var $targetElement = buildId(targetId);
+  console.log($targetElement);
+  var $targetElement = $j($targetElement);
+
+  for (var i = 0; i < messages.length; i++){
+    if (messages[i].type == 'success')
+      var delay = 2000;
+    else if (messages[i].type != 'error')
+      var delay = 10000;
+    else
+      var delay = 60000;
+
+    $j('<p />').addClass(messages[i].type).html(messages[i].msg).appendTo($feedbackMessages).delay(delay).fadeOut(function(){$j(this).remove()}).data('target_id', targetId);
+
+    if (! hasErrorMessages && messages[i].type == 'error')
+      hasErrorMessages = true;
+    else if(! hasSuccessMessages && messages[i].type == 'success')
+      hasSuccessMessages = true;
+    else if(! hasNoticeMessages && messages[i].type == 'notice')
+      hasNoticeMessages = true;
+  }
+
+  if($targetElement){
+    if (hasErrorMessages)
+      $targetElement.addClass('error').removeClass('success').removeClass('notice');
+    else if (hasSuccessMessages)
+      $targetElement.addClass('success').removeClass('error').removeClass('notice');
+    else if (hasNoticeMessages)
+      $targetElement.addClass('notice').removeClass('error').removeClass('sucess');
+    else
+      $targetElement.removeClass('success').removeClass('error').removeClass('notice');
+
+    $j($targetElement.get(0)).focus();
+
+    if (useDelayClassRemoval){
+      window.setTimeout(function(){$targetElement.removeClass('success').removeClass('error').removeClass('notice');}, delayClassRemoval);
+    }
+  }
+}
 
 (function($){
   $(document).ready(function(){
@@ -112,7 +169,7 @@ function appendImgLoadingTo($targetElement) {
 
 
     // add div for feedback messages
-    var $feedbackMessages = $('<div />').attr('id', 'feedback-messages').appendTo($formFilter.parent());
+    $('<div />').attr('id', 'feedback-messages').appendTo($formFilter.parent());
 
 
     // before search changes
@@ -121,52 +178,6 @@ function appendImgLoadingTo($targetElement) {
 
 
     // functions, callbacks
-
-    function handleMessages(messages, targetId, useDelayClassRemoval){
-
-      var hasErrorMessages = false;
-      var hasSuccessMessages = false;
-      var hasNoticeMessages = false;
-      var delayClassRemoval = 20000;
-
-      var $targetElement = $(buildId(targetId));
-
-      for (var i = 0; i < messages.length; i++){
-        if (messages[i].type == 'success')
-          var delay = 2000;
-        else if (messages[i].type != 'error')
-          var delay = 10000;
-        else
-          var delay = 60000;
-
-        $('<p />').addClass(messages[i].type).html(messages[i].msg).appendTo($feedbackMessages).delay(delay).fadeOut(function(){$(this).remove()}).data('target_id', targetId);
-
-        if (! hasErrorMessages && messages[i].type == 'error')
-          hasErrorMessages = true;
-        else if(! hasSuccessMessages && messages[i].type == 'success')
-          hasSuccessMessages = true;
-        else if(! hasNoticeMessages && messages[i].type == 'notice')
-          hasNoticeMessages = true;
-      }
-
-      if($targetElement){
-        if (hasErrorMessages)
-          $targetElement.addClass('error').removeClass('success').removeClass('notice');
-        else if (hasSuccessMessages)
-          $targetElement.addClass('success').removeClass('error').removeClass('notice');
-        else if (hasNoticeMessages)
-          $targetElement.addClass('notice').removeClass('error').removeClass('sucess');
-        else
-          $targetElement.removeClass('success').removeClass('error').removeClass('notice');
-
-        $($targetElement.get(0)).focus();
-
-        if (useDelayClassRemoval){
-          window.setTimeout(function(){$targetElement.removeClass('success').removeClass('error').removeClass('notice');}, delayClassRemoval);
-        }
-      }
-    }
-
 
     function showSearchForm(event){
       $navActions.html('');

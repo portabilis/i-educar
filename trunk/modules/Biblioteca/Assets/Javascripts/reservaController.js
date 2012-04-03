@@ -4,10 +4,12 @@ var API_URL_BASE = 'reservaApi';
 var RESOURCE_NAME = 'exemplar';
 var RESOURCES_NAME = 'exemplares';
 
+var ACTION_NAME = 'Reservar';
+
 var onClickDestroyEvent = false;
 
 var onClickActionEvent = function(event){
-  $this = $j(this);
+  var $this = $j(this);
   var $firstChecked = $j('input.exemplar:checked:first');
 
   if ($firstChecked.length < 1)
@@ -15,7 +17,7 @@ var onClickActionEvent = function(event){
   else{
     $j('.disable-on-apply-changes').attr('disabled', 'disabled');
     $this.val('Aguarde reservando...');
-    postResource($firstChecked);
+    postReserva($firstChecked);
   }
 };
 
@@ -24,7 +26,7 @@ var onClickSelectAllEvent = function(event){
   console.log('#TODO onClickSelectAllEvent');
 };
 
-var postResource = function ($resourceElement) {
+var postReserva = function ($resourceElement) {
   // TODO
   console.log('#TODO postProcessamento');
 
@@ -37,11 +39,11 @@ var postResource = function ($resourceElement) {
       ref_cod_biblioteca : $j('#ref_cod_biblioteca').val(),
       ref_cod_cliente : $j('#ref_cod_cliente').val(),
       ref_cod_acervo : $j('#ref_cod_acervo').val(),
-      exemplar_id : $j('#exemplar_id').val()
+      exemplar_id : $resourceElement.data('exemplar_id')
     },
 
     success : function(dataResponse){
-      removeImgLoadingFor($resourceElement);
+      afterChangeResource($resourceElement);
       handlePost(dataResponse);
     }
   };
@@ -52,7 +54,21 @@ var postResource = function ($resourceElement) {
 
 var handlePost = function(dataResponse){
   console.log('#TODO handlePost');
+
+  //try{
+    var $checkbox = $j('exemplar-' + dataResponse.id);
+    var $targetElement = $j('#exemplar-'+dataResponse.id).closest('tr').first();
+    handleMessages(dataResponse.msgs, $targetElement);
+    updateResourceRow(dataResponse);
+  /*}
+  catch(error){
+    showNewSearchButton();
+    handleMessages([{type : 'error', msg : 'Ocorreu um erro ao enviar o processamento, por favor tente novamente, detalhes: ' + error}], '');
+
+    safeLog(dataResponse);
+  }*/
 };
+
 
 function setTableSearchDetails($tableSearchDetails, dataDetails){
   $j('<caption />').html('<strong>Reserva exemplares</strong>').appendTo($tableSearchDetails);
@@ -107,7 +123,7 @@ function handleSearch($resultTable, dataResponse) {
                     .attr('value', 'sim')
                     .attr('id', 'exemplar-' + value.id)
                     .attr('class', 'exemplar disable-on-apply-changes')
-                    .data('id', value.id);
+                    .data('exemplar_id', value.id);
 
     var situacoesReservaPermitida = ['emprestado', 'reservado', 'emprestado_e_reservado'];
 
@@ -118,31 +134,43 @@ function handleSearch($resultTable, dataResponse) {
     $j('<td />').html($checkbox).addClass('center').appendTo($linha);
     $j('<td />').html(value.id).addClass('center').appendTo($linha);
 
-    var $colSituacao = $j('<td />').attr('id', 'situacao-' + value.id).addClass('situacao center');
-    var $colCliente                = $j('<td />');
-    var $colData                   = $j('<td />').addClass('center');
-    var $colDataPrevistaDisponivel = $j('<td />').addClass('center');
-
-    $j.each(value.pendencias, function(indexPendencia, valuePendencia){
-      $j('<p />').html(valuePendencia.situacao.label || '-').appendTo($colSituacao);
-      $j('<p />').html(valuePendencia.nome_cliente || '-').appendTo($colCliente);
-      $j('<p />').html(valuePendencia.data || '-').appendTo($colData);
-      $j('<p />').html(valuePendencia.data_prevista_disponivel || '-').appendTo($colDataPrevistaDisponivel);
-    });
-
-    if (value.pendencias.length < 1)
-      $j('<p />').html(value.situacao.label || '-').appendTo($colSituacao);
-
-    $colSituacao.data('situacao', value.situacao_exemplar);
+    var $colSituacao               = $j('<td />').attr('id', 'situacao-' + value.id).addClass('situacao center');
+    var $colCliente                = $j('<td />').attr('id', 'clientes-' + value.id);
+    var $colData                   = $j('<td />').attr('id', 'datas-' + value.id).addClass('center');
+    var $colDataPrevistaDisponivel = $j('<td />').attr('id', 'datas-prevista-disponivel-' + value.id).addClass('center');
 
     $colSituacao.appendTo($linha);
     $colCliente.appendTo($linha);
     $colData.appendTo($linha);
     $colDataPrevistaDisponivel.appendTo($linha);
 
-    $linha.fadeIn('slow').appendTo($resultTable);
+    $linha.appendTo($resultTable);
+    updateResourceRow(value);
   });// each
 
   $resultTable.find('tr:even').addClass('even');
   $resultTable.addClass('styled').find('checkbox:first').focus();
+}
+
+
+function updateResourceRow(exemplar){
+  console.log(exemplar);
+  var $linha = $j('#exemplar-' + exemplar.id).closest('tr');
+
+  var $colSituacao               = $j('#situacao-' + exemplar.id).html('');
+  var $colCliente                = $j('#clientes-' + exemplar.id).html('');
+  var $colData                   = $j('#datas-' + exemplar.id).html('');
+  var $colDataPrevistaDisponivel = $j('#datas-prevista-disponivel-' + exemplar.id).html('');
+
+  $j.each(exemplar.pendencias, function(index, value){
+    $j('<p />').html(value.situacao.label || '-').appendTo($colSituacao);
+    $j('<p />').html(value.nome_cliente || '-').appendTo($colCliente);
+    $j('<p />').html(value.data || '-').appendTo($colData);
+    $j('<p />').html(value.data_prevista_disponivel || '-').appendTo($colDataPrevistaDisponivel);
+  });
+
+  if (exemplar.pendencias.length < 1)
+    $j('<p />').html(exemplar.situacao.label || '-').appendTo($colSituacao);
+
+  $colSituacao.data('situacao', exemplar.situacao_exemplar);
 }
