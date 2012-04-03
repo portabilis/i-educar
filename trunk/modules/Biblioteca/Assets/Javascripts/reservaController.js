@@ -60,8 +60,10 @@ var handlePost = function(dataResponse){
     var $targetElement = $j('#exemplar-'+dataResponse.id).closest('tr').first();
     handleMessages(dataResponse.msgs, $targetElement);
     updateResourceRow(dataResponse);
+
   /*}
   catch(error){
+    //TODO causar excessao dentro do try, corrigir erro não declaração showNewSearchButton
     showNewSearchButton();
     handleMessages([{type : 'error', msg : 'Ocorreu um erro ao enviar o processamento, por favor tente novamente, detalhes: ' + error}], '');
 
@@ -128,7 +130,7 @@ function handleSearch($resultTable, dataResponse) {
     var situacoesReservaPermitida = ['emprestado', 'reservado', 'emprestado_e_reservado'];
 
     if ($j.inArray(value.situacao.flag, situacoesReservaPermitida) < 0)
-      $checkbox.attr('disabled', 'disabled');
+      $checkbox.attr('disabled', 'disabled').removeClass('disable-on-apply-changes');
 
     var $linha = $j('<tr />');
     $j('<td />').html($checkbox).addClass('center').appendTo($linha);
