@@ -9,9 +9,7 @@ var DESTROY_LABEL = 'Cancelar';
 
 var onClickSelectAllEvent = false;
 
-var onClickDestroyEvent = function(event) {
-  console.log('#TODO onClickDestroyEvent');
-};
+var onClickDestroyEvent = false;
 
 var onClickActionEvent = function(event){
   var $this = $j(this);
