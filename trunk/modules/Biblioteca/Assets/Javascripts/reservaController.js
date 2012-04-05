@@ -127,7 +127,7 @@ function handleSearch($resultTable, dataResponse) {
                     .attr('class', 'exemplar disable-on-apply-changes')
                     .data('exemplar_id', value.id);
 
-    var situacoesReservaPermitida = ['emprestado', 'reservado', 'emprestado_e_reservado'];
+    var situacoesReservaPermitida = ['disponivel', 'emprestado', 'reservado', 'emprestado_e_reservado'];
 
     if ($j.inArray(value.situacao.flag, situacoesReservaPermitida) < 0)
       $checkbox.attr('disabled', 'disabled').removeClass('disable-on-apply-changes');

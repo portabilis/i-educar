@@ -94,7 +94,12 @@ class ReservaApiController extends ApiCoreController
   protected function canPostReserva() {
     return $this->validatesClienteIsNotSuspenso() &&
            $this->validatesPresenceOfExemplarId() &&
-           $this->validatesSituacaoExemplarIsIn(array('emprestado', 'reservado', 'emprestado_e_reservado')) &&
+
+           $this->validatesSituacaoExemplarIsIn(array('disponivel',
+                                                      'emprestado',
+                                                      'reservado',
+                                                      'emprestado_e_reservado')) &&
+
            $this->validatesNotExistsReservaEmAbertoForCliente();
 
            // TODO qtd reservas em aberto do cliente <= limite biblioteca
