@@ -152,6 +152,11 @@ function handleSearch($resultTable, dataResponse) {
 
   $resultTable.find('tr:even').addClass('even');
   $resultTable.addClass('styled').find('checkbox:first').focus();
+
+  var $checkboxes = $resultTable.find("input[type='checkbox']");
+  $checkboxes.change(function(){
+    $checkboxes.not(this).removeAttr('checked');
+  });
 }
 
 
