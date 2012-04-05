@@ -5,11 +5,11 @@ var RESOURCE_NAME = 'exemplar';
 var RESOURCES_NAME = 'exemplares';
 
 var POST_LABEL = 'Reservar';
-var DESTROY_LABEL = 'Cancelar';
+var DELETE_LABEL = 'Cancelar';
 
 var onClickSelectAllEvent = false;
 
-var onClickDestroyEvent = false;
+var onClickDeleteEvent = false;
 
 var onClickActionEvent = function(event){
   var $this = $j(this);
@@ -24,10 +24,7 @@ var onClickActionEvent = function(event){
   }
 };
 
-var postReserva = function ($resourceElement) {
-  // TODO
-  console.log('#TODO postProcessamento');
-
+var postReserva = function ($resourceCheckbox) {
   var options = {
     url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'reserva'),
     dataType : 'json',
@@ -37,23 +34,22 @@ var postReserva = function ($resourceElement) {
       ref_cod_biblioteca : $j('#ref_cod_biblioteca').val(),
       ref_cod_cliente : $j('#ref_cod_cliente').val(),
       ref_cod_acervo : $j('#ref_cod_acervo').val(),
-      exemplar_id : $resourceElement.data('exemplar_id')
+      exemplar_id : $resourceCheckbox.data('exemplar_id')
     },
 
     success : function(dataResponse){
-      afterChangeResource($resourceElement);
+      afterChangeResource($resourceCheckbox);
       handlePost(dataResponse);
     }
   };
 
-  appendImgLoadingTo($resourceElement);
-  postResource(options, handleErrorPost);
+  beforeChangeResource($resourceCheckbox);
+  postResource(options);
 };
 
 var handlePost = function(dataResponse){
   console.log('#TODO handlePost');
   //try{
-    var $checkbox = $j('exemplar-' + dataResponse.id);
     var $targetElement = $j('#exemplar-'+dataResponse.id).closest('tr').first();
     handleMessages(dataResponse.msgs, $targetElement);
     updateResourceRow(dataResponse);
@@ -68,6 +64,57 @@ var handlePost = function(dataResponse){
   }*/
 };
 
+var onClickCancelEvent = function(event) {
+  if (confirm("Confirma cancelamento da reserva?")) {
+    var $this = $j(this);
+
+    //var $checkbox = $this.closest('tr').find("input[type='checkbox']").first();
+    //console.log($checkbox);
+    deleteReserva($this);
+  }
+}
+
+var deleteReserva = function($deleteLink) {
+  console.log('#TODO delete reserva');
+
+  var options = {
+    url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, 'reserva', {
+      ref_cod_instituicao : $j('#ref_cod_instituicao').val(),
+      ref_cod_escola : $j('#ref_cod_escola').val(),
+      ref_cod_biblioteca : $j('#ref_cod_biblioteca').val(),
+      ref_cod_cliente : $j('#ref_cod_cliente').val(),
+      ref_cod_acervo : $j('#ref_cod_acervo').val(),
+      exemplar_id : $deleteLink.data('exemplar_id'),
+      reserva_id : $deleteLink.data('reserva_id')
+    }),
+    dataType : 'json',
+    data : {
+    },
+    success : function(dataResponse){
+      afterChangeResource($deleteLink);
+      handleDeleteReserva(dataResponse);
+    }
+  };
+
+  beforeChangeResource($deleteLink);
+  deleteResource(options);
+}
+
+var handleDeleteReserva = function(dataResponse) {
+  safeLog(dataResponse);
+
+  //try{
+    var $targetElement = $j('#exemplar-' + dataResponse.id).closest('tr').first();
+    handleMessages(dataResponse.msgs, $targetElement);
+    updateResourceRow(dataResponse);
+  //}
+  //catch(error){
+    //showNewSearchButton();
+    //handleMessages([{type : 'error', msg : 'Ocorreu um erro ao remover o recurso, por favor tente novamente, detalhes: ' + error}], '');
+
+    //safeLog(dataResponse);
+  //}
+}
 
 function setTableSearchDetails($tableSearchDetails, dataDetails){
   $j('<caption />').html('<strong>Reserva exemplares</strong>').appendTo($tableSearchDetails);
@@ -111,6 +158,7 @@ function handleSearch($resultTable, dataResponse) {
   $j('<th />').html('Cliente').appendTo($linha);
   $j('<th />').html('Data').addClass('center').appendTo($linha);
   $j('<th />').html('Data prevista dispon&iacute;vel').addClass('center').appendTo($linha);
+  $j('<th />').html('A&#231;&#227;o').addClass('center').appendTo($linha);
   $linha.appendTo($resultTable);
 
   //set rows
@@ -137,11 +185,13 @@ function handleSearch($resultTable, dataResponse) {
     var $colClientes                = $j('<td />').attr('id', 'clientes-' + value.id);
     var $colDatas                   = $j('<td />').attr('id', 'datas-' + value.id).addClass('center');
     var $colDatasPrevistaDisponivel = $j('<td />').attr('id', 'datas-prevista-disponivel-' + value.id).addClass('center');
+    var $colAcoes                   = $j('<td />').attr('id', 'acoes-' + value.id).addClass('center');
 
     $colSituacoes.appendTo($linha);
     $colClientes.appendTo($linha);
     $colDatas.appendTo($linha);
     $colDatasPrevistaDisponivel.appendTo($linha);
+    $colAcoes.appendTo($linha);
 
     $linha.appendTo($resultTable);
     updateResourceRow(value);
@@ -162,16 +212,26 @@ function updateResourceRow(exemplar){
   var $colClientes                = $j('#clientes-' + exemplar.id).html('');
   var $colDatas                   = $j('#datas-' + exemplar.id).html('');
   var $colDatasPrevistaDisponivel = $j('#datas-prevista-disponivel-' + exemplar.id).html('');
+  var $colAcoes                   = $j('#acoes-' + exemplar.id).html('');
 
-  $j.each(exemplar.pendencias, function(index, value){
-    $j('<p />').html(value.situacao.label || '-').appendTo($colSituacoes);
-    $j('<p />').html(value.nome_cliente || '-').appendTo($colClientes);
-    $j('<p />').html(value.data || '-').appendTo($colDatas);
-    $j('<p />').html(value.data_prevista_disponivel || '-').appendTo($colDatasPrevistaDisponivel);
-  });
+  if ($j.isArray(exemplar.pendencias)) {
+    $j.each(exemplar.pendencias, function(index, value){
+      $j('<p />').html(value.situacao.label || '-').appendTo($colSituacoes);
+      $j('<p />').html(value.nome_cliente || '-').appendTo($colClientes);
+      $j('<p />').html(value.data || '-').appendTo($colDatas);
+      $j('<p />').html(value.data_prevista_disponivel || '-').appendTo($colDatasPrevistaDisponivel);
 
-  if (exemplar.pendencias.length < 1)
-    $j('<p />').html(exemplar.situacao.label || '-').appendTo($colSituacoes);
+      if (value.situacao.flag == 'reservado' && value.cliente && value.cliente.id == $j('#ref_cod_cliente').val()) {
+        var $linkToDelete = $j("<a href='#' class='disable-on-apply-changes'>Cancelar reserva</a>").click(onClickCancelEvent).data('exemplar_id', exemplar.id).data('reserva_id', value.reserva_id);
+        $j('<p />').html($linkToDelete).appendTo($colAcoes);
+      }
+      else
+        $j('<p />').html('-').appendTo($colAcoes);
+    });
+
+   if (exemplar.pendencias.length < 1)
+      $j('<p />').html(exemplar.situacao.label || '-').appendTo($colSituacoes);
+  }
 
   $colSituacoes.data('situacao', exemplar.situacao_exemplar);
 }

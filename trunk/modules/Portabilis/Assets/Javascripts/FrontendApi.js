@@ -57,9 +57,18 @@ function appendImgLoadingTo($targetElement) {
 }
 
 
+function beforeChangeResource($resourceElement){
+  if ($resourceElement.is(':checkbox'))
+    $j('.disable-on-apply-changes').attr('disabled', 'disabled');
+
+  appendImgLoadingTo($resourceElement);
+}
+
 function afterChangeResource($resourceElement){
+  if ($resourceElement.is(':checkbox'))
+    $resourceElement.attr('checked', false);
+
   removeImgLoadingFor($resourceElement);
-  $resourceElement.attr('checked', false);
   $j('.disable-on-apply-changes').removeAttr('disabled');
 
   // change value of execute action button
@@ -139,11 +148,11 @@ function handleMessages(messages, targetId, useDelayClassRemoval){
 
     $('<input class="execute-action disable-on-apply-changes" type="button" />').val(POST_LABEL).appendTo($barActions);
 
-    $('<input class="destroy disable-on-apply-changes" type="button" />').val(DESTROY_LABEL).appendTo($barActions);
+    $('<input class="delete disable-on-apply-changes" type="button" />').val(DELETE_LABEL).appendTo($barActions);
 
     var $selectAllButton = $barActions.find('input.select-all');
     var $actionButton = $barActions.find('input.execute-action');
-    var $destroyButton = $barActions.find('input.destroy');
+    var $deleteButton = $barActions.find('input.delete');
 
 
     // add resource options table
@@ -297,7 +306,7 @@ function handleMessages(messages, targetId, useDelayClassRemoval){
 
     onClickSelectAllEvent ? $selectAllButton.click(onClickSelectAllEvent) : $selectAllButton.hide();
     onClickActionEvent    ? $actionButton.click(onClickActionEvent)       : $actionButton.hide();
-    onClickDestroyEvent   ? $destroyButton.click(onClickDestroyEvent)     : $destroyButton.hide();
+    onClickDeleteEvent   ? $deleteButton.click(onClickDeleteEvent)     : $deleteButton.hide();
 
   }); // ready
 })(jQuery);

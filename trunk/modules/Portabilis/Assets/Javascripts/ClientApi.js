@@ -43,20 +43,46 @@ var postResourceUrlBuilder = {
   }
 };
 
-var handleErrorGetResources = function(response){
+var deleteResourceUrlBuilder = {
+  buildUrl : function(urlBase, resourceName, additionalVars){
+
+    var vars = {
+      oper : 'delete',
+    };
+
+    if (resourceName)
+      vars.resource = resourceName;
+
+    if (additionalVars)
+      vars = $j.extend(vars, additionalVars);
+
+    return resourceUrlBuilder.buildUrl(urlBase, vars);
+  }
+};
+
+var handleErrorOnGetResources = function(response){
   alert('Erro ao alterar recurso, detalhes:' + response.responseText);
   safeLog(response);
 };
 
-var handleErrorPost = function(response){
+var handleErrorOnPostResource = function(response){
   handleMessages([{type : 'error', msg : 'Erro ao alterar recurso, detalhes:' + response.responseText}], '');
   safeLog(response);
 };
 
+function handleErrorOnDeleteResource(response){
+  handleMessages([{type : 'error', msg : 'Erro ao alterar recurso, detalhes:' + response.responseText}], '');
+  safeLog(response);
+}
+
 var getResources = function(options, errorCallback) {
-  $j.ajax(options).error(errorCallback || handleErrorGetResources);
+  $j.ajax(options).error(errorCallback || handleErrorOnGetResources);
 };
 
 var postResource = function(options, errorCallback){
-  $j.ajax(options).error(errorCallback);
+  $j.ajax(options).error(errorCallback || handleErrorOnPostResource);
 };
+
+function deleteResource(options, errorCallback){
+  $j.ajax(options).error(errorCallback || handleErrorOnDeleteResource);
+}

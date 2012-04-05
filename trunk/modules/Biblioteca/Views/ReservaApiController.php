@@ -77,6 +77,10 @@ class ReservaApiController extends ApiCoreController
     return $this->validator->validatesPresenceOf($this->getRequest()->exemplar_id, 'exemplar_id');
   }
 
+  protected function validatesPresenceOfReservaId(){
+    return $this->validator->validatesPresenceOf($this->getRequest()->reserva_id, 'reserva_id');
+  }
+
 
   // validações negócio
 
@@ -107,6 +111,17 @@ class ReservaApiController extends ApiCoreController
   }
 
 
+  protected function canDeleteReserva() {
+    return $this->validatesPresenceOfExemplarId() &&
+           $this->validatesPresenceOfReservaId() &&
+
+           $this->validatesSituacaoExemplarIsIn(array('reservado',
+                                                      'emprestado_e_reservado')) &&
+
+           $this->validatesExistsReservaEmAbertoForCliente();
+  }
+
+
   protected function validatesSituacaoExemplarIsIn($situacoes) {
     if (! is_array($situacoes))
       $situacoes = array($situacoes);
@@ -132,14 +147,19 @@ class ReservaApiController extends ApiCoreController
 
 
   protected function validatesNotExistsReservaEmAbertoForCliente() {
-    $clienteId = $this->getRequest()->ref_cod_cliente;
-    $exemplares = $this->loadExemplares();
+    if ($this->existsReservaEmAbertoForCliente()) {
+      $this->messenger->append("Este cliente já possui uma reserva em aberto para um exemplar desta obra.", 'error');
+      return false;
+    }
 
-    foreach($exemplares as $exemplar) {
-      if ($this->existsReservaForExemplar($exemplar, $clienteId)) {
-        $this->messenger->append("Este cliente já possui uma reserva em aberto para um exemplar desta obra.", 'error');
-        return false;
-      }
+    return true;
+  }
+
+
+  protected function validatesExistsReservaEmAbertoForCliente() {
+    if (! $this->existsReservaEmAbertoForCliente()) {
+      $this->messenger->append("O cliente não possui reserva em aberto para este exemplar.", 'error');
+      return false;
     }
 
     return true;
@@ -306,6 +326,17 @@ class ReservaApiController extends ApiCoreController
     return ! empty($reservas) && $reservas[0]['exists'];
   }
 
+  protected function existsReservaEmAbertoForCliente() {
+    $clienteId = $this->getRequest()->ref_cod_cliente;
+    $exemplares = $this->loadExemplares();
+
+    foreach($exemplares as $exemplar) {
+      if ($this->existsReservaForExemplar($exemplar, $clienteId))
+        return true;
+    }
+
+    return false;
+  }
 
   protected function loadReservasForExemplar($exemplar = null, $clienteId = null, $reload = false) {
 
@@ -523,6 +554,47 @@ class ReservaApiController extends ApiCoreController
     $this->appendResponse($this->loadExemplar($this->getRequest()->exemplar_id, $reload = true));
   }
 
+  protected function deleteReserva() {
+
+    if ($this->canDeleteReserva()) {
+      $this->messenger->append("#todo desabilitar reserva.", 'notice');
+
+      $exemplar = $this->loadExemplar();
+
+      // chamado list para assegurar que esta excluindo a reserva do cliente, biblioteca, instituicao e escola
+		  $reservas = new clsPmieducarReservas();
+		  $reservas = $reservas->lista($this->getRequest()->reserva_id,
+                                   null,
+                                   null,
+                                   $this->getRequest()->ref_cod_cliente,
+                                   null,
+                                   null,
+                                   null,
+                                   null,
+                                   null,
+                                   null,
+                                   $this->getRequest()->exemplar_id,
+                                   1,
+                                   $this->getRequest()->ref_cod_biblioteca,
+                                   $this->getRequest()->ref_cod_instituicao,
+                                   $this->getRequest()->ref_cod_escola,
+                                   $data_retirada_null = true);
+
+      foreach ($reservas as $reserva) {
+    		$_reserva = new clsPmieducarReservas($this->getRequest()->reserva_id);
+
+        if($_reserva->excluir())
+          $this->messenger->append("Reserva cancelada com sucesso.", 'success');
+        else
+          $this->messenger->append("Aparentemente a reserva não foi cancelada, por favor, tente novamente.", 'error');
+      }
+
+      if(empty($reservas))
+        $this->messenger->append("Não foi encontrado uma reserva com os parâmetros recebidos.", 'error');
+    }
+
+    $this->appendResponse($this->loadExemplar($this->getRequest()->exemplar_id, $reload = true));
+  }
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'exemplares'))
@@ -530,6 +602,9 @@ class ReservaApiController extends ApiCoreController
 
     elseif ($this->isRequestFor('post', 'reserva'))
       $this->postReserva();
+
+    elseif ($this->isRequestFor('delete', 'reserva'))
+      $this->deleteReserva();
 
     else
       $this->notImplementedOperationError();
