@@ -73,8 +73,14 @@ class ApiCoreController extends Core_Controller_Page_EditController
   }
 
 
-  protected function appendResponse($name, $value){
-    $this->response[$name] = $value;
+  protected function appendResponse($name, $value = ''){
+    if (is_array($name)) {
+      foreach($name as $k => $v) {
+        $this->response[$k] = $v;
+      }
+    }
+    else
+      $this->response[$name] = $value;
   }
 
 
@@ -93,10 +99,13 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
   protected function prepareResponse(){
     try {
-      $msgs = array();
-      $this->appendResponse('resource', isset($this->getRequest()->resource) ? $this->getRequest()->resource : '');
-      $this->appendResponse('msgs', $this->messenger->getMsgs());
+      if (isset($this->getRequest()->oper))
+        $this->appendResponse('oper', $this->getRequest()->oper);
 
+      if (isset($this->getRequest()->resource))
+        $this->appendResponse('resource', $this->getRequest()->resource);
+
+      $this->appendResponse('msgs', $this->messenger->getMsgs());
       $response = json_encode($this->response);
     }
     catch (Exception $e){
