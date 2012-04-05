@@ -63,7 +63,7 @@ function afterChangeResource($resourceElement){
   $j('.disable-on-apply-changes').removeAttr('disabled');
 
   // change value of execute action button
-  $j('input.execute-action').val(ACTION_NAME);
+  $j('input.execute-action').val(POST_LABEL);
 }
 
 function handleMessages(messages, targetId, useDelayClassRemoval){
@@ -75,7 +75,6 @@ function handleMessages(messages, targetId, useDelayClassRemoval){
   var delayClassRemoval  = 20000;
 
   var $targetElement = buildId(targetId);
-  console.log($targetElement);
   var $targetElement = $j($targetElement);
 
   for (var i = 0; i < messages.length; i++){
@@ -136,13 +135,13 @@ function handleMessages(messages, targetId, useDelayClassRemoval){
 
     var $barActions = $('.bar-action').hide();
 
-    $('<input class="selecionar disable-on-apply-changes" type="button" value="Selecionar todos" />').appendTo($barActions);
+    $('<input class="select-all disable-on-apply-changes" type="button" value="Selecionar todos" />').appendTo($barActions);
 
-    $('<input class="execute-action disable-on-apply-changes" type="button" value="Execute action" />').appendTo($barActions);
+    $('<input class="execute-action disable-on-apply-changes" type="button" />').val(POST_LABEL).appendTo($barActions);
 
-    $('<input class="destroy disable-on-apply-changes" type="button" value="Remover" />').appendTo($barActions);
+    $('<input class="destroy disable-on-apply-changes" type="button" />').val(DESTROY_LABEL).appendTo($barActions);
 
-    var $selectAllButton = $barActions.find('input.selecionar');
+    var $selectAllButton = $barActions.find('input.select-all');
     var $actionButton = $barActions.find('input.execute-action');
     var $destroyButton = $barActions.find('input.destroy');
 
@@ -189,7 +188,7 @@ function handleMessages(messages, targetId, useDelayClassRemoval){
       $('.disable-on-search').attr('disabled', 'disabled');
       $('.hide-on-search').hide();
       $('.disable-on-apply-changes').removeAttr('disabled');
-      $actionButton.val('Processar');
+      //$actionButton.val(POST_LABEL);
     }
 
 
@@ -295,9 +294,10 @@ function handleMessages(messages, targetId, useDelayClassRemoval){
 
     // bind events
     $submitButton.click(onClickSearchEvent);
-    $actionButton.click(onClickActionEvent);
-    $selectAllButton.click(onClickSelectAllEvent);
-    $destroyButton.click(onClickDestroyEvent)
+
+    onClickSelectAllEvent ? $selectAllButton.click(onClickSelectAllEvent) : $selectAllButton.hide();
+    onClickActionEvent    ? $actionButton.click(onClickActionEvent)       : $actionButton.hide();
+    onClickDestroyEvent   ? $destroyButton.click(onClickDestroyEvent)     : $destroyButton.hide();
 
   }); // ready
 })(jQuery);

@@ -4,9 +4,14 @@ var API_URL_BASE = 'reservaApi';
 var RESOURCE_NAME = 'exemplar';
 var RESOURCES_NAME = 'exemplares';
 
-var ACTION_NAME = 'Reservar';
+var POST_LABEL = 'Reservar';
+var DESTROY_LABEL = 'Cancelar';
 
-var onClickDestroyEvent = false;
+var onClickSelectAllEvent = false;
+
+var onClickDestroyEvent = function(event) {
+  console.log('#TODO onClickDestroyEvent');
+};
 
 var onClickActionEvent = function(event){
   var $this = $j(this);
@@ -19,11 +24,6 @@ var onClickActionEvent = function(event){
     $this.val('Aguarde reservando...');
     postReserva($firstChecked);
   }
-};
-
-var onClickSelectAllEvent = function(event){
-  // TODO
-  console.log('#TODO onClickSelectAllEvent');
 };
 
 var postReserva = function ($resourceElement) {
@@ -54,7 +54,6 @@ var postReserva = function ($resourceElement) {
 
 var handlePost = function(dataResponse){
   console.log('#TODO handlePost');
-
   //try{
     var $checkbox = $j('exemplar-' + dataResponse.id);
     var $targetElement = $j('#exemplar-'+dataResponse.id).closest('tr').first();
