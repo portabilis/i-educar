@@ -136,15 +136,15 @@ function handleSearch($resultTable, dataResponse) {
     $j('<td />').html($checkbox).addClass('center').appendTo($linha);
     $j('<td />').html(value.id).addClass('center').appendTo($linha);
 
-    var $colSituacao               = $j('<td />').attr('id', 'situacao-' + value.id).addClass('situacao center');
-    var $colCliente                = $j('<td />').attr('id', 'clientes-' + value.id);
-    var $colData                   = $j('<td />').attr('id', 'datas-' + value.id).addClass('center');
-    var $colDataPrevistaDisponivel = $j('<td />').attr('id', 'datas-prevista-disponivel-' + value.id).addClass('center');
+    var $colSituacoes               = $j('<td />').attr('id', 'situacoes-' + value.id).addClass('situacoes center');
+    var $colClientes                = $j('<td />').attr('id', 'clientes-' + value.id);
+    var $colDatas                   = $j('<td />').attr('id', 'datas-' + value.id).addClass('center');
+    var $colDatasPrevistaDisponivel = $j('<td />').attr('id', 'datas-prevista-disponivel-' + value.id).addClass('center');
 
-    $colSituacao.appendTo($linha);
-    $colCliente.appendTo($linha);
-    $colData.appendTo($linha);
-    $colDataPrevistaDisponivel.appendTo($linha);
+    $colSituacoes.appendTo($linha);
+    $colClientes.appendTo($linha);
+    $colDatas.appendTo($linha);
+    $colDatasPrevistaDisponivel.appendTo($linha);
 
     $linha.appendTo($resultTable);
     updateResourceRow(value);
@@ -156,23 +156,20 @@ function handleSearch($resultTable, dataResponse) {
 
 
 function updateResourceRow(exemplar){
-  console.log(exemplar);
-  var $linha = $j('#exemplar-' + exemplar.id).closest('tr');
-
-  var $colSituacao               = $j('#situacao-' + exemplar.id).html('');
-  var $colCliente                = $j('#clientes-' + exemplar.id).html('');
-  var $colData                   = $j('#datas-' + exemplar.id).html('');
-  var $colDataPrevistaDisponivel = $j('#datas-prevista-disponivel-' + exemplar.id).html('');
+  var $colSituacoes               = $j('#situacoes-' + exemplar.id).html('');
+  var $colClientes                = $j('#clientes-' + exemplar.id).html('');
+  var $colDatas                   = $j('#datas-' + exemplar.id).html('');
+  var $colDatasPrevistaDisponivel = $j('#datas-prevista-disponivel-' + exemplar.id).html('');
 
   $j.each(exemplar.pendencias, function(index, value){
-    $j('<p />').html(value.situacao.label || '-').appendTo($colSituacao);
-    $j('<p />').html(value.nome_cliente || '-').appendTo($colCliente);
-    $j('<p />').html(value.data || '-').appendTo($colData);
-    $j('<p />').html(value.data_prevista_disponivel || '-').appendTo($colDataPrevistaDisponivel);
+    $j('<p />').html(value.situacao.label || '-').appendTo($colSituacoes);
+    $j('<p />').html(value.nome_cliente || '-').appendTo($colClientes);
+    $j('<p />').html(value.data || '-').appendTo($colDatas);
+    $j('<p />').html(value.data_prevista_disponivel || '-').appendTo($colDatasPrevistaDisponivel);
   });
 
   if (exemplar.pendencias.length < 1)
-    $j('<p />').html(exemplar.situacao.label || '-').appendTo($colSituacao);
+    $j('<p />').html(exemplar.situacao.label || '-').appendTo($colSituacoes);
 
-  $colSituacao.data('situacao', exemplar.situacao_exemplar);
+  $colSituacoes.data('situacao', exemplar.situacao_exemplar);
 }

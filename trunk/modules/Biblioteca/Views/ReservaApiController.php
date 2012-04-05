@@ -519,11 +519,8 @@ class ReservaApiController extends ApiCoreController
 
       //TODO fim try
     }
-    // recarrega exemplar
-    $exemplar = $this->loadExemplar($this->getRequest()->exemplar_id, $reload = true);
 
-    $this->appendResponse('situacao_exemplar', $exemplar['situacao']);
-    $this->appendResponse('pendencias', $exemplar['pendencias']);
+    $this->appendResponse($this->loadExemplar($this->getRequest()->exemplar_id, $reload = true));
   }
 
 
