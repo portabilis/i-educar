@@ -187,6 +187,11 @@ class indice extends clsCadastro
     $this->acao_enviar = 'valida()';
   }
 
+  protected function getCurso($id) {
+    $curso = new clsPmieducarCurso($id);
+    return $curso->detalhe();
+  }
+
   function Novo()
   {
 
@@ -214,26 +219,37 @@ class indice extends clsCadastro
                                                                      1
                                                                      );
 
-    if(is_array($anoLetivoEmAndamentoEscola)){
-
+    if(is_array($anoLetivoEmAndamentoEscola)) {
       require_once 'include/pmieducar/clsPmieducarSerie.inc.php';
       $db = new clsBanco();
 
       $db->Consulta("select ref_ref_cod_serie, ref_cod_curso from pmieducar.matricula where ativo = 1 and ref_ref_cod_escola = $this->ref_cod_escola and ref_cod_curso = $this->ref_cod_curso and ref_cod_aluno = $this->ref_cod_aluno and aprovado not in (1,2,4,5,6,7,8,9)");
+
       $db->ProximoRegistro();
       $m = $db->Tupla();
-      if (is_array($m) && count($m))
-      {
-        $serie = new clsPmieducarSerie($m['ref_ref_cod_serie'], null, null, $m['ref_cod_curso']);
-        $serie = $serie->detalhe();
-        if (is_array($serie) && count($serie))
-          $serie = $serie['nm_serie'];
-        else
-          $serie = '';
+      if (is_array($m) && count($m)) {
 
-        $this->mensagem .= "Este aluno já está matriculado no(a) '$serie' deste curso e escola, não é possivel manter duas matriculas em andamento para o mesmo curso.<br />";
+        $curso = $this->getCurso($this->ref_cod_curso);
 
-        return false;
+        if ($m['ref_ref_cod_serie'] == $this->ref_ref_cod_serie) {
+          $this->mensagem .= "Este aluno já está matriculado nesta série e curso, não é possivel matricular um aluno mais de uma vez na mesma série.<br />";
+
+          return false;
+        }
+
+        elseif ($curso['multi_seriado'] != 1) {
+          $serie = new clsPmieducarSerie($m['ref_ref_cod_serie'], null, null, $m['ref_cod_curso']);
+          $serie = $serie->detalhe();
+
+          if (is_array($serie) && count($serie))
+            $nomeSerie = $serie['nm_serie'];
+          else
+            $nomeSerie = '';
+
+          $this->mensagem .= "Este aluno já está matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso não é multi seriado, não é possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
+
+          return false;
+        }
       }
 
       else
