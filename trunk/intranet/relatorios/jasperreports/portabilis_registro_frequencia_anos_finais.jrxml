@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_registro_frequencia" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.2100000000000066"/>
+	<property name="ireport.zoom" value="1.6105100000000092"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="132"/>
 	<subDataset name="dataset1"/>
 	<subDataset name="dataset2"/>
 	<subDataset name="dataset3"/>
@@ -31,6 +31,9 @@
 	</parameter>
 	<parameter name="logo" class="java.lang.String"/>
 	<parameter name="situacao" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="infantil" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
 	<queryString>
@@ -356,7 +359,9 @@ limit $P{linha}
 				<textFieldExpression><![CDATA["Telefone: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="259" y="-31" width="277" height="16"/>
+				<reportElement x="259" y="-31" width="277" height="16">
+					<printWhenExpression><![CDATA[$P{infantil} == 0]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
@@ -463,13 +468,13 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="316" y="51" width="1" height="21"/>
+				<reportElement x="309" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="279" y="51" width="1" height="21"/>
+				<reportElement x="274" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -481,7 +486,7 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="352" y="51" width="1" height="21"/>
+				<reportElement x="354" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -493,13 +498,7 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="482" y="51" width="1" height="21"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="528" y="51" width="1" height="21"/>
+				<reportElement x="530" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -525,13 +524,13 @@ limit $P{linha}
 				<textFieldExpression><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="325" y="51" width="1" height="21"/>
+				<reportElement x="320" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="370" y="51" width="1" height="21"/>
+				<reportElement x="366" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -543,37 +542,25 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="501" y="51" width="1" height="21"/>
+				<reportElement x="497" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="174" y="51" width="1" height="21"/>
+				<reportElement x="157" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="510" y="51" width="1" height="21"/>
+				<reportElement x="508" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="582" y="51" width="1" height="21"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="388" y="51" width="1" height="21"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="406" y="51" width="1" height="21"/>
+				<reportElement x="403" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -585,31 +572,25 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="435" y="51" width="1" height="21"/>
+				<reportElement x="437" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="464" y="51" width="1" height="21"/>
+				<reportElement x="461" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="537" y="51" width="1" height="21"/>
+				<reportElement x="553" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="555" y="51" width="1" height="21"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="591" y="51" width="1" height="21"/>
+				<reportElement x="587" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -621,19 +602,7 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="618" y="51" width="1" height="21"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="627" y="51" width="1" height="21"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="445" y="51" width="1" height="21"/>
+				<reportElement x="620" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -644,13 +613,6 @@ limit $P{linha}
 					<font fontName="DejaVu Sans" size="6" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Faltas]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="118" y="52" width="38" height="8"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="6" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Cód. INEP]]></text>
 			</staticText>
 			<line>
 				<reportElement x="297" y="51" width="1" height="21"/>
@@ -673,7 +635,7 @@ limit $P{linha}
 				<text><![CDATA[DIA/MÊS]]></text>
 			</staticText>
 			<line>
-				<reportElement x="288" y="51" width="1" height="21"/>
+				<reportElement x="286" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -685,37 +647,31 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="662" y="51" width="1" height="21"/>
+				<reportElement x="663" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="671" y="51" width="1" height="21"/>
+				<reportElement x="682" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="689" y="51" width="1" height="21"/>
+				<reportElement x="692" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="698" y="51" width="1" height="21"/>
+				<reportElement x="702" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="707" y="51" width="1" height="21"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="725" y="51" width="1" height="21"/>
+				<reportElement x="724" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -765,85 +721,61 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="752" y="51" width="1" height="21"/>
+				<reportElement x="755" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="760" y="51" width="1" height="21"/>
+				<reportElement x="263" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="261" y="51" width="1" height="21"/>
+				<reportElement x="253" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="252" y="51" width="1" height="21"/>
+				<reportElement x="232" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="234" y="51" width="1" height="21"/>
+				<reportElement x="242" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="243" y="51" width="1" height="21"/>
+				<reportElement x="331" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="270" y="51" width="1" height="21"/>
+				<reportElement x="391" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="306" y="51" width="1" height="21"/>
+				<reportElement x="426" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="334" y="51" width="1" height="21"/>
+				<reportElement x="449" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="361" y="51" width="1" height="21"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="397" y="51" width="1" height="21"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="425" y="51" width="1" height="21"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="454" y="51" width="1" height="21"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="491" y="51" width="1" height="21"/>
+				<reportElement x="485" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -855,79 +787,67 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="546" y="51" width="1" height="21"/>
+				<reportElement x="541" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="573" y="51" width="1" height="21"/>
+				<reportElement x="575" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="600" y="51" width="1" height="21"/>
+				<reportElement x="598" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="636" y="51" width="1" height="21"/>
+				<reportElement x="631" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="680" y="51" width="1" height="21"/>
+				<reportElement x="672" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="645" y="51" width="1" height="21"/>
+				<reportElement x="642" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="716" y="51" width="1" height="21"/>
+				<reportElement x="713" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="743" y="51" width="1" height="21"/>
+				<reportElement x="745" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="768" y="51" width="1" height="21"/>
+				<reportElement x="766" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="226" y="51" width="1" height="21"/>
+				<reportElement x="221" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="217" y="51" width="1" height="21"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="209" y="51" width="1" height="21"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="776" y="51" width="1" height="21"/>
+				<reportElement x="211" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -939,19 +859,31 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="191" y="51" width="1" height="21"/>
+				<reportElement x="776" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="183" y="51" width="1" height="21"/>
+				<reportElement x="189" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="156" y="51" width="1" height="21"/>
+				<reportElement x="177" y="51" width="1" height="21"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="167" y="51" width="1" height="21"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="147" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -983,17 +915,26 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="117" y="51" width="1" height="21"/>
+				<reportElement x="128" y="51" width="1" height="21"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement x="158" y="52" width="16" height="8"/>
+				<reportElement x="130" y="52" width="16" height="8"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Sit.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="267" y="-31" width="305" height="16">
+					<printWhenExpression><![CDATA[$P{infantil} == 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REGISTRO DE FREQUÊNCIA - EDUCAÇÃO INFANTIL]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
@@ -1014,7 +955,7 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="279" y="-1" width="1" height="10"/>
+				<reportElement x="274" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -1026,13 +967,13 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="316" y="-1" width="1" height="10"/>
+				<reportElement x="309" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="325" y="-1" width="1" height="10"/>
+				<reportElement x="320" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -1044,19 +985,19 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="352" y="-1" width="1" height="10"/>
+				<reportElement x="354" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="370" y="-1" width="1" height="10"/>
+				<reportElement x="366" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="464" y="-1" width="1" height="10"/>
+				<reportElement x="461" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -1068,31 +1009,25 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="510" y="-1" width="1" height="10"/>
+				<reportElement x="508" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="555" y="-1" width="1" height="10"/>
+				<reportElement x="553" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="482" y="-1" width="1" height="10"/>
+				<reportElement x="263" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="261" y="-1" width="1" height="10"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="501" y="-1" width="1" height="10"/>
+				<reportElement x="497" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -1104,13 +1039,7 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="388" y="-1" width="1" height="10"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="406" y="-1" width="1" height="10"/>
+				<reportElement x="403" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -1122,19 +1051,7 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="445" y="-1" width="1" height="10"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="528" y="-1" width="1" height="10"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="537" y="-1" width="1" height="10"/>
+				<reportElement x="530" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -1146,13 +1063,7 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="582" y="-1" width="1" height="10"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="591" y="-1" width="1" height="10"/>
+				<reportElement x="587" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -1164,25 +1075,19 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="618" y="-1" width="1" height="10"/>
+				<reportElement x="437" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="435" y="-1" width="1" height="10"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="288" y="-1" width="1" height="10"/>
+				<reportElement x="286" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="18" y="0" width="97" height="8" forecolor="#000000"/>
+				<reportElement x="18" y="0" width="110" height="8" forecolor="#000000"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="6"/>
 				</textElement>
@@ -1194,15 +1099,8 @@ limit $P{linha}
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
-			<textField isBlankWhenNull="true">
-				<reportElement x="118" y="0" width="38" height="8"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{cod_aluno_inep}]]></textFieldExpression>
-			</textField>
 			<line>
-				<reportElement x="627" y="-1" width="1" height="10"/>
+				<reportElement x="620" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -1214,37 +1112,31 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="662" y="-1" width="1" height="10"/>
+				<reportElement x="663" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="671" y="-1" width="1" height="10"/>
+				<reportElement x="682" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="689" y="-1" width="1" height="10"/>
+				<reportElement x="692" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="698" y="-1" width="1" height="10"/>
+				<reportElement x="702" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="707" y="-1" width="1" height="10"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="725" y="-1" width="1" height="10"/>
+				<reportElement x="724" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -1256,85 +1148,61 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="752" y="-1" width="1" height="10"/>
+				<reportElement x="755" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="760" y="-1" width="1" height="10"/>
+				<reportElement x="253" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="252" y="-1" width="1" height="10"/>
+				<reportElement x="232" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="234" y="-1" width="1" height="10"/>
+				<reportElement x="157" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="174" y="-1" width="1" height="10"/>
+				<reportElement x="242" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="243" y="-1" width="1" height="10"/>
+				<reportElement x="331" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="270" y="-1" width="1" height="10"/>
+				<reportElement x="391" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="306" y="-1" width="1" height="10"/>
+				<reportElement x="426" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="334" y="-1" width="1" height="10"/>
+				<reportElement x="449" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="361" y="-1" width="1" height="10"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="397" y="-1" width="1" height="10"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="425" y="-1" width="1" height="10"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="454" y="-1" width="1" height="10"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="491" y="-1" width="1" height="10"/>
+				<reportElement x="485" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -1346,73 +1214,67 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="546" y="-1" width="1" height="10"/>
+				<reportElement x="541" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="573" y="-1" width="1" height="10"/>
+				<reportElement x="575" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="600" y="-1" width="1" height="10"/>
+				<reportElement x="598" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="636" y="-1" width="1" height="10"/>
+				<reportElement x="631" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="680" y="-1" width="1" height="10"/>
+				<reportElement x="672" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="645" y="-1" width="1" height="10"/>
+				<reportElement x="642" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="716" y="-1" width="1" height="10"/>
+				<reportElement x="713" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="743" y="-1" width="1" height="10"/>
+				<reportElement x="745" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="768" y="-1" width="1" height="10"/>
+				<reportElement x="766" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="226" y="-1" width="1" height="10"/>
+				<reportElement x="221" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="217" y="-1" width="1" height="10"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="209" y="-1" width="1" height="10"/>
+				<reportElement x="211" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -1424,13 +1286,19 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="191" y="-1" width="1" height="10"/>
+				<reportElement x="189" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="183" y="-1" width="1" height="10"/>
+				<reportElement x="177" y="-1" width="1" height="10"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="167" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -1442,7 +1310,7 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="156" y="-1" width="1" height="10"/>
+				<reportElement x="147" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -1455,7 +1323,7 @@ limit $P{linha}
 				<textFieldExpression><![CDATA[$V{COLUMN_COUNT}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="117" y="-1" width="1" height="10"/>
+				<reportElement x="128" y="-1" width="1" height="10"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -1467,7 +1335,7 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<textField>
-				<reportElement x="157" y="0" width="16" height="8"/>
+				<reportElement x="130" y="0" width="16" height="8"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="6"/>
 				</textElement>

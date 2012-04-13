@@ -31,7 +31,8 @@ class PortabilisRegistroFrequenciaAnosIniciais extends Report
     
     $this->campoLista('situacao', 'Situação', $opcoes, 3, $this->situacao);    
     $this->campoTexto("professor","Professor(a):",'',40,255,false);
-    $this->campoNumero( "linha", "Linhas em branco", 0, 2, 2, true); 
+    $this->campoNumero( "linha", "Linhas em branco", 0, 2, 2, true);
+    $this->campoCheck( "infantil", "Educação infantil", null, null, false); 
     
   }
 
@@ -47,6 +48,10 @@ class PortabilisRegistroFrequenciaAnosIniciais extends Report
     $this->addArg('situacao', (int)$_POST['situacao']);
     $this->addArg('linha', isset($_POST['linha']) ? (int)$_POST['linha'] : 0);
     $this->addArg('professor', $_POST['professor']);
+    if (! isset($_POST['infantil']))
+      $this->addArg('infantil',0);
+    else
+      $this->addArg('infantil',1);
   }
 }
 
