@@ -44,17 +44,10 @@
        to_char(CURRENT_DATE,'dd/mm/yyyy') AS data_atual,
        to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
 
-    (SELECT CASE WHEN date_part('hour',hora_inicial) = 6 or date_part('hour',hora_inicial) = 7 or date_part('hour',hora_inicial) = 8 THEN 'Matutino'
-                     WHEN date_part('hour',hora_inicial) = 13 or date_part('hour',hora_inicial) = 14 THEN 'Vespertino'
-                     WHEN date_part('hour',hora_inicial) = 18 or date_part('hour',hora_inicial) = 19 THEN 'Noturno'
-                END
-	       FROM pmieducar.turma,
-                pmieducar.matricula_turma
-          WHERE turma.cod_turma = matricula_turma.ref_cod_turma AND
-                matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
-                turma.ativo = 1 AND
-		        matricula_turma.ativo = 1 AND
-                hora_inicial IS NOT NULL) AS periodo,
+(SELECT nm_turno
+  FROM pmieducar.turma_turno
+WHERE turma_turno.turma_turno_id = turma.turma_turno_id)
+ AS periodo,
 
       (SELECT COALESCE((SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))
           FROM cadastro.pessoa ps,
