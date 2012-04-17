@@ -25,7 +25,7 @@ class PortabilisRegistroDiarioClasseContracapa extends Report
 
     include("include/pmieducar/educar_campo_lista.php");
 
-    $this->campoTexto( "responsavel_diario", "Responsável diário", "Diretor");
+    $this->campoTexto( "responsavel_diario", "Responsável", "DIRETOR");
 
   }
 
