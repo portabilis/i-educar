@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_registro_frequencia" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="0.9090909090909177"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.zoom" value="1.331000000000013"/>
+	<property name="ireport.x" value="226"/>
+	<property name="ireport.y" value="27"/>
 	<subDataset name="dataset1"/>
 	<subDataset name="dataset2"/>
 	<subDataset name="dataset3"/>
@@ -366,14 +366,14 @@ limit $P{linha}
 				<text><![CDATA[REGISTRO DE FREQUÊNCIA - ANOS INICIAIS]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="56" y="12" width="127" height="13"/>
+				<reportElement x="39" y="12" width="144" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nm_curso}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="7" y="12" width="48" height="13"/>
+				<reportElement x="7" y="12" width="32" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
@@ -415,14 +415,14 @@ limit $P{linha}
 				<text><![CDATA[Aulas Previstas]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="461" y="12" width="64" height="13"/>
+				<reportElement x="461" y="12" width="122" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nm_turma}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="559" y="12" width="37" height="13"/>
+				<reportElement x="615" y="12" width="37" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
@@ -855,7 +855,7 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement x="534" y="12" width="24" height="13"/>
+				<reportElement x="591" y="12" width="24" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_registro_frequencia" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.6105100000000092"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="92"/>
 	<property name="ireport.y" value="132"/>
 	<subDataset name="dataset1"/>
 	<subDataset name="dataset2"/>
@@ -368,63 +368,63 @@ limit $P{linha}
 				<text><![CDATA[REGISTRO DE FREQUÊNCIA - ANOS FINAIS]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="57" y="13" width="139" height="13"/>
+				<reportElement x="40" y="13" width="139" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nm_curso}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="7" y="13" width="48" height="13"/>
+				<reportElement x="7" y="13" width="32" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Curso:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="220" y="13" width="35" height="13"/>
+				<reportElement x="182" y="13" width="33" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Turno:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="336" y="13" width="35" height="13"/>
+				<reportElement x="296" y="13" width="35" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Série:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="373" y="13" width="84" height="13"/>
+				<reportElement x="332" y="13" width="84" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nm_serie}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="464" y="13" width="35" height="13"/>
+				<reportElement x="420" y="13" width="35" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Turma:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="586" y="13" width="27" height="13"/>
+				<reportElement x="583" y="13" width="25" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Ano:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="500" y="13" width="73" height="13"/>
+				<reportElement x="456" y="13" width="120" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nm_turma}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="614" y="13" width="37" height="13"/>
+				<reportElement x="609" y="13" width="37" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
@@ -510,7 +510,7 @@ limit $P{linha}
 				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="257" y="13" width="75" height="13"/>
+				<reportElement x="216" y="13" width="75" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
