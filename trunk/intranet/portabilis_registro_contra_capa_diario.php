@@ -19,23 +19,26 @@ class PortabilisRegistroDiarioClasseContracapa extends Report
     $curso_obrigatorio = true;
     $escola_curso_serie_obrigatorio = true;
     $turma_obrigatorio = true;
-    
+
     $this->ano = $ano_atual = date("Y");
     $this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true);
 
     include("include/pmieducar/educar_campo_lista.php");
-    
+
+    $this->campoTexto( "responsavel_diario", "Responsável diário", "Diretor");
+
   }
 
   function onValidationSuccess()
   {
-  
+
     $this->addArg('ano', (int)$_POST['ano']);
     $this->addArg('instituicao', (int)$_POST['ref_cod_instituicao']);
     $this->addArg('escola', (int)$_POST['ref_cod_escola']);
     $this->addArg('curso', (int)$_POST['ref_cod_curso']);
     $this->addArg('serie', (int)$_POST['ref_ref_cod_serie']);
     $this->addArg('turma', (int)$_POST['ref_cod_turma']);
+    $this->addArg('responsavel_diario', (string)$_POST['responsavel_diario']);
 
   }
 }

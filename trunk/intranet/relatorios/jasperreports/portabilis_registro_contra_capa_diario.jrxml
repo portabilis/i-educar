@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_registro_contra_capa_diario" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.6105100000000012"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="830"/>
+	<property name="ireport.x" value="238"/>
+	<property name="ireport.y" value="986"/>
 	<subDataset name="dataset1"/>
 	<subDataset name="dataset2"/>
 	<subDataset name="dataset3"/>
@@ -23,6 +23,9 @@
 	</parameter>
 	<parameter name="turma" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="responsavel_diario" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT public.fcn_upper(nm_instituicao) AS nome_instituicao,
@@ -502,13 +505,6 @@ ORDER BY nome_aluno ASC]]>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
-			<staticText>
-				<reportElement x="267" y="661" width="278" height="13"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[DATA, ASSINATURA E OBSERVAÇÕES DO DIRETOR/SECRETÁRIO]]></text>
-			</staticText>
 			<line>
 				<reportElement x="68" y="12" width="1" height="645"/>
 				<graphicElement>
@@ -527,6 +523,13 @@ ORDER BY nome_aluno ASC]]>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
+			<textField>
+				<reportElement x="267" y="661" width="275" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["DATA, ASSINATURA E OBSERVAÇÕES DO " +  $P{responsavel_diario}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
