@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_ficha_avaliacao_anos_finais" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.1000000000000094"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="11"/>
 	<property name="ireport.y" value="0"/>
 	<subDataset name="dataset1"/>
 	<subDataset name="dataset2"/>
@@ -416,21 +416,21 @@ limit $P{linha}
 				<text><![CDATA[Turma:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="685" y="7" width="33" height="13"/>
+				<reportElement x="734" y="7" width="21" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Ano:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="574" y="7" width="76" height="13"/>
+				<reportElement x="574" y="7" width="149" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nm_turma}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="719" y="7" width="37" height="13"/>
+				<reportElement x="755" y="7" width="37" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
