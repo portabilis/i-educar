@@ -210,7 +210,7 @@
        escola_ano_letivo.ref_cod_escola = escola.cod_escola AND
        escola.ativo = 1 AND
        instituicao.ativo = 1 AND
-       matricula.ultima_matricula = 1 AND
+       /*matricula.ultima_matricula = 1 AND*/
        matricula.ativo = 1 AND
        matricula.ano = $P{ano} AND
        (SELECT CASE WHEN $P{situacao} = 10 THEN
@@ -229,9 +229,9 @@
                                                   ELSE
                                                     6
                                              END)
-       END) AND
+       END) /*AND
        matricula_turma.data_cadastro = (select max(mt.data_cadastro) from pmieducar.matricula_turma mt where
-       matricula_turma.ref_cod_matricula = mt.ref_cod_matricula)
+       matricula_turma.ref_cod_matricula = mt.ref_cod_matricula)*/
 
 ORDER BY nome_aluno ASC)
 

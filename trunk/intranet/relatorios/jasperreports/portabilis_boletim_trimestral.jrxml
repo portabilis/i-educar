@@ -725,10 +725,6 @@ ORDER BY nome_aluno, nome_disciplina]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{logradouro}]]></textFieldExpression>
 				</textField>
-				<image>
-					<reportElement x="22" y="13" width="57" height="46" printWhenGroupChanges="matricula"/>
-					<imageExpression><![CDATA[$P{logo}]]></imageExpression>
-				</image>
 				<line>
 					<reportElement x="12" y="66" width="1" height="91" printWhenGroupChanges="matricula"/>
 					<graphicElement>
