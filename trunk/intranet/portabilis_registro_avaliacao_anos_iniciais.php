@@ -32,7 +32,8 @@ class PortabilisRegistroAvaliacaoAnosIniciais extends Report
     $opcoes[10] = "Todas";
     
     $this->campoLista('situacao', 'Situação', $opcoes, 3, $this->situacao);   
-    $this->campoNumero( "linha", "Linhas em branco", 0, 2, 2, true); 
+    $this->campoNumero( "linha", "Linhas em branco", 0, 2, 2, true);
+    $this->campoCheck( "infantil", "Educação infantil", null, null, false);
    
   }
 
@@ -50,6 +51,10 @@ class PortabilisRegistroAvaliacaoAnosIniciais extends Report
     $this->addArg('serie', (int)$_POST['ref_ref_cod_serie']);
     $this->addArg('turma', (int)$_POST['ref_cod_turma']);
     $this->addArg('situacao', (int)$_POST['situacao']);
+    if (! isset($_POST['infantil']))
+      $this->addArg('infantil',0);
+    else
+      $this->addArg('infantil',1);
 
   }
 }
