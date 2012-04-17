@@ -225,9 +225,9 @@
                                                   ELSE
                                                     6
                                              END)
-       END) AND
+       END) /* AND
        matricula_turma.data_cadastro = (select max(mt.data_cadastro) from pmieducar.matricula_turma mt where
-       matricula_turma.ref_cod_matricula = mt.ref_cod_matricula)
+       matricula_turma.ref_cod_matricula = mt.ref_cod_matricula) */
 
 ORDER BY nome_aluno ASC)
 
