@@ -43,7 +43,7 @@
 # Protege arquivos e diretórios de serem listados ou servidos. Arquivo info.php
 # e arquivos SQL são protegidos assim como os diretórios misc, test e
 # diretórios comuns a SCMs como CVS e SVN (para proteger deployments desse tipo).
-<FilesMatch "\.(.*sql|ini|svn-base)$|^(misc|tests|configuration|spikes|Entries.*|Repository|Root|Tag|Template|all-wcprops|entries|format)$|^info\.php$">
+<FilesMatch "\.(.*sql|ini|sh|svn-base)$|^(misc|tests|configuration|scripts|spikes|Entries.*|Repository|Root|Tag|Template|all-wcprops|entries|format)$|^info\.php$">
   Order allow,deny
 </FilesMatch>
 
