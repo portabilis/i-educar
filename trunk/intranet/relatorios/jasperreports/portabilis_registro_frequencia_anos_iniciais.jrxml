@@ -210,6 +210,7 @@
        /*matricula.ultima_matricula = 1 AND*/
        matricula.ano = $P{ano} AND
        matricula.ativo = 1 AND
+       matricula_turma.ativo = 1 AND
        (SELECT CASE WHEN $P{situacao} = 10 THEN
                       matricula.aprovado in ('1', '2', '3', '4','6')
                     WHEN $P{situacao} = 9 THEN
