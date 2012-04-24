@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_registro_frequencia" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.331000000000013"/>
 	<property name="ireport.x" value="226"/>
-	<property name="ireport.y" value="27"/>
+	<property name="ireport.y" value="10"/>
 	<subDataset name="dataset1"/>
 	<subDataset name="dataset2"/>
 	<subDataset name="dataset3"/>
@@ -47,17 +47,8 @@
        turma.nm_turma,
        to_char(CURRENT_DATE,'dd/mm/yyyy') AS data_atual,
        to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
-    (SELECT CASE WHEN date_part('hour',hora_inicial) = 6 or date_part('hour',hora_inicial) = 7 or date_part('hour',hora_inicial) = 8 THEN 'Matutino'
-                     WHEN date_part('hour',hora_inicial) = 13 or date_part('hour',hora_inicial) = 14 THEN 'Vespertino'
-                     WHEN date_part('hour',hora_inicial) = 18 or date_part('hour',hora_inicial) = 19 THEN 'Noturno'
-                END
-	       FROM pmieducar.turma,
-                pmieducar.matricula_turma
-          WHERE turma.cod_turma = matricula_turma.ref_cod_turma AND
-                matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
-                turma.ativo = 1 AND
-		        matricula_turma.ativo = 1 AND
-                hora_inicial IS NOT NULL limit 1) AS periodo,
+
+       (select nm_turno from pmieducar.turma_turno where turma_turno_id = turma.turma_turno_id and instituicao_id = $P{instituicao} limit 1) as periodo,
 
       (SELECT COALESCE((SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))
           FROM cadastro.pessoa ps,
