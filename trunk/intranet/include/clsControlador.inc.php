@@ -23,6 +23,7 @@
 
 require_once 'include/clsBanco.inc.php';
 require_once 'lib/Portabilis/Message.php';
+require_once 'lib/Portabilis/Mailer.php';
 
 /* requer Services_ReCaptcha:
  $ pear install Services_ReCaptcha */
@@ -58,7 +59,7 @@ class clsControlador
   {
 
     /*
-      Desabilitado esta linha para usar o valor setado no php.ini > session.cookie_lifetime  
+      Desabilitado esta linha para usar o valor setado no php.ini > session.cookie_lifetime
       @session_set_cookie_params(200);
     */
 
@@ -96,6 +97,7 @@ class clsControlador
 
     $this->messages = new Message();
     $this->_maximoTentativasFalhas = 6;
+    $this->mailer = new Mailer();
   }
 
   /**
@@ -107,7 +109,7 @@ class clsControlador
     return $this->logado;
   }
 
-  
+
   /**
    * Executa o login do usuário.
    */
@@ -164,8 +166,8 @@ class clsControlador
   // valida se o usuário e senha informados, existem no banco de dados.
   protected function validateUser($username, $password) {
     if (! $this->validateHumanAccess()) {
-      $msg = "Parece que você errou a senha muitas vezes, por favor, preencha o campo de " . 
-             "confirmação visual ou <a class='light decorated' href='/module/Usuario/Rede" . 
+      $msg = "Parece que você errou a senha muitas vezes, por favor, preencha o campo de " .
+             "confirmação visual ou <a class='light decorated' href='/module/Usuario/Rede" .
              "finirSenha'>tente redefinir sua senha</a>.";
       $this->messages->append($msg, "error", false, "error");
     }
@@ -192,9 +194,11 @@ class clsControlador
 
     if (! $this->messages->hasMsgWithType("error")) {
       $sql = "SELECT ativo, proibido, tempo_expira_conta, data_reativa_conta, ip_logado " .
-             "as ip_ultimo_acesso, data_login FROM portal.funcionario WHERE ref_cod_pessoa_fj = $1";
+             "as ip_ultimo_acesso, data_login, matricula, email FROM portal.funcionario WHERE ref_cod_pessoa_fj = $1";
 
       $user = $this->fetchPreparedQuery($sql, $userId, true, 'first-line');
+
+      $isSuperUser = $GLOBALS['coreExt']['Config']->app->superuser == $user['matricula'];
 
       if ($user['ativo'] != '1') {
         $this->messages->append("Aparentemente sua conta de usuário esta inativa (expirada), por favor, " .
@@ -203,7 +207,7 @@ class clsControlador
 
       if ($user['proibido'] != '0') {
         $this->messages->append("Aparentemente sua conta não pode acessar o sistema, " .
-                                "por favor, entre em contato com o administrador do sistema.", 
+                                "por favor, entre em contato com o administrador do sistema.",
                                 "error", false, "error");
       }
 
@@ -226,16 +230,28 @@ class clsControlador
 
       $multiploAcesso = $tempoEmEspera <= $tempoMultiploAcesso &&
                         $user['ip_ultimo_acesso'] != $this->getClientIP();
-    
-      if ($multiploAcesso) {
+
+      if ($multiploAcesso and $isSuperUser) {
+        $subject = "Conta do super usuário {$_SERVER['HTTP_HOST']} acessada em mais de um local";
+
+        $message = ("Aparentemente a conta do super usuário {$user['matricula']} foi acessada em " .
+                    "outro computador nos últimos $tempoMultiploAcesso " .
+                    "minutos, caso não tenha sido você, por favor, altere sua senha.\n\n" .
+                    "Endereço IP último acesso: {$user['ip_ultimo_acesso']}\n".
+                    "Endereço IP acesso atual: {$this->getClientIP()}");
+
+        $this->mailer->sendMail($user['email'], $subject, $message);
+      }
+      elseif ($multiploAcesso) {
         $minutosEmEspera = round($tempoMultiploAcesso - $tempoEmEspera) + 1;
         $this->messages->append("Aparentemente sua conta foi acessada em outro computador nos últimos " .
-                                "$tempoMultiploAcesso minutos, caso não tenha sido você, " . 
+                                "$tempoMultiploAcesso minutos, caso não tenha sido você, " .
                                 "por favor, altere sua senha ou tente novamente em $minutosEmEspera minutos",
                                 "error", false, "error");
       }
       #TODO verificar se conta nunca usada (exibir "Sua conta n&atilde;o est&aacute; ativa. Use a op&ccedil;&atilde;o 'Nunca usei a intrenet'." ?)
     }
+
     return ! $this->messages->hasMsgWithType("error");
   }
 
@@ -303,7 +319,7 @@ class clsControlador
 
   // wrapper para $db->execPreparedQuery($sql, $params)
   protected function fetchPreparedQuery($sql, $params = array(), $hideExceptions = true, $returnOnly = '') {
-    try{    
+    try{
       $result = array();
       $db = new clsBanco();
       if ($db->execPreparedQuery($sql, $params) != false) {
@@ -317,7 +333,7 @@ class clsControlador
           $result = $result[0][0];
       }
     }
-    catch(Exception $e) 
+    catch(Exception $e)
     {
       if (! $hideExceptions)
         $this->messages->append($e->getMessage(), "error", true);
@@ -340,14 +356,14 @@ class clsControlador
     if(in_array($statusToken, $statusTokensToDestoyOnLogin)) {
       $sql = "UPDATE funcionario set status_token = '' WHERE ref_cod_pessoa_fj = $1";
       $record = $this->fetchPreparedQuery($sql, $userId, true);
-    }    
+    }
   }
 
 
   // see http://www.google.com/recaptcha && http://pear.php.net/package/Services_ReCaptcha
   protected function getRecaptchaWidget() {
     $recaptchaConfigs = $GLOBALS['coreExt']['Config']->app->recaptcha;
-    $recaptcha = new Services_ReCaptcha($recaptchaConfigs->public_key, 
+    $recaptcha = new Services_ReCaptcha($recaptchaConfigs->public_key,
                                         $recaptchaConfigs->private_key,
                                         array('lang' => $recaptchaConfigs->options->lang,
                                               'theme' => $recaptchaConfigs->options->theme,
@@ -379,7 +395,7 @@ class clsControlador
 
   protected function incrementTentativasLogin($value) {
     @session_start();
-    if (! isset($_SESSION['tentativas_login_falhas']) or ! is_numeric($_SESSION['tentativas_login_falhas'])) 
+    if (! isset($_SESSION['tentativas_login_falhas']) or ! is_numeric($_SESSION['tentativas_login_falhas']))
       $_SESSION['tentativas_login_falhas'] = 1;
     else
       $_SESSION['tentativas_login_falhas'] += 1;
