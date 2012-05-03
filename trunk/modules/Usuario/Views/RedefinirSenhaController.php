@@ -32,12 +32,7 @@
 require_once 'Core/Controller/Page/EditController.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
 require_once 'include/clsControlador.inc.php';
-
-/* requer instalação Mail, Net_SMTP:
-  $ pear install Mail
-  $ pear install Net_SMTP
-*/
-require_once 'Mail.php';
+require_once 'lib/Portabilis/Mailer.php';
 
 class RedefinirSenhaController extends Core_Controller_Page_EditController
 {
@@ -62,7 +57,8 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
 
 
   public function _preConstruct() {
-    $this->_msgs = array();
+    $this->_msgs  = array();
+    $this->mailer = new Mailer();
   }
 
 
@@ -77,19 +73,19 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
 
       // fixup para mover o widget para o local correto, necessário pois chrome não executa
       // o script caso seja usado $this->campoRotulo('...', '...', '<script...>')
-      $this->campoRotulo('replace_by_recaptcha_widget_wrapper', 
-                         'Confirma&ccedil;&atilde;o visual', 
+      $this->campoRotulo('replace_by_recaptcha_widget_wrapper',
+                         'Confirma&ccedil;&atilde;o visual',
                          '<div id="replace_by_recaptcha_widget"></div>');
 
       echo $this->getRecaptchaWidget();
       echo "<script type='text/javascript'>
               function replaceRecaptchaWidget() {
-                var emptyElement = document.getElementById('replace_by_recaptcha_widget'); 
-                var originElement = document.getElementById('recaptcha_widget_div'); 
+                var emptyElement = document.getElementById('replace_by_recaptcha_widget');
+                var originElement = document.getElementById('recaptcha_widget_div');
                 var movedElement = emptyElement.parentNode.replaceChild(originElement, emptyElement);
               }
 
-              window.onload = replaceRecaptchaWidget; 
+              window.onload = replaceRecaptchaWidget;
             </script>";
     }
     else {
@@ -106,7 +102,7 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
   }
 
 
-  // considera como novo quando nao recebe token  
+  // considera como novo quando nao recebe token
   protected function _initNovo()
   {
     return ! isset($_GET['token']);
@@ -123,7 +119,7 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
   {
     if (! $this->hasMsgWithType('error')) {
       if (! $this->getRecaptchaWidget()->validate()) {
-        $this->appendMsg('Por favor, informe a confirma&ccedil;&atilde;o visual no respectivo campo.' . 
+        $this->appendMsg('Por favor, informe a confirma&ccedil;&atilde;o visual no respectivo campo.' .
                          'tente novamente.', 'error');
       }
       elseif ($this->setUserByMatricula($_POST['matricula']))
@@ -139,7 +135,7 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
   {
     $controlador = new clsControlador();
 
-    if (! $this->hasMsgWithType('error') && 
+    if (! $this->hasMsgWithType('error') &&
         $this->setUserByStatusToken('redefinir_senha-' . $_GET['token']) &&
         $this->updatePassword() &&
         $controlador->canStartLoginSession($this->getEntity()->ref_cod_pessoa_fj)) {
@@ -185,7 +181,7 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
     foreach ($viewBase->clsForm as $form) {
       $html .= $form->RenderHTML();
     }
-    $html .= $viewBase->MakeFootHtml();  
+    $html .= $viewBase->MakeFootHtml();
 
     echo $html;
   }
@@ -197,10 +193,10 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
       if(empty($statusToken) && ! is_numeric($statusToken))
         $this->appendMsg('Deve ser recebido um token.', 'error');
       else {
-        $user = $this->getDataMapper()->findAllUsingPreparedQuery(array(), 
-                                                               array('status_token = $1'), 
-                                                               array($statusToken), 
-                                                               array(), 
+        $user = $this->getDataMapper()->findAllUsingPreparedQuery(array(),
+                                                               array('status_token = $1'),
+                                                               array($statusToken),
+                                                               array(),
                                                                false);
 
         if(! empty($user) && ! empty($user[0]->ref_cod_pessoa_fj)) {
@@ -208,15 +204,15 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
           $result = true;
         }
         else
-          $this->appendMsg('Nenhum usu&aacute;rio encontrado com o token recebido. Verifique se voc&ecirc; ' . 
+          $this->appendMsg('Nenhum usu&aacute;rio encontrado com o token recebido. Verifique se voc&ecirc; ' .
                            'esta acessando o link enviado no ultimo e-mail.', 'error', false, 'error');
       }
     }
     catch (Exception $e) {
-      $this->appendMsg('Ocorreu um erro inesperado ao recuperar o usu&aacute;rio, por favor, ' . 
+      $this->appendMsg('Ocorreu um erro inesperado ao recuperar o usu&aacute;rio, por favor, ' .
                        'tente novamente.', 'error');
 
-      error_log("Exception ocorrida ao redefinir senha (setUserByStatusToken), " . 
+      error_log("Exception ocorrida ao redefinir senha (setUserByStatusToken), " .
                 "matricula: $matricula, erro: " .  $e->getMessage());
     }
 
@@ -232,10 +228,10 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
       if(empty($matricula) && ! is_numeric($matricula))
         $this->appendMsg('Informe uma matr&iacute;cula.', 'error');
       else {
-        $user = $this->getDataMapper()->findAllUsingPreparedQuery(array(), 
-                                                               array('matricula = $1'), 
-                                                               array($matricula), 
-                                                               array(), 
+        $user = $this->getDataMapper()->findAllUsingPreparedQuery(array(),
+                                                               array('matricula = $1'),
+                                                               array($matricula),
+                                                               array(),
                                                                false);
 
         if(! empty($user) && ! empty($user[0]->ref_cod_pessoa_fj)) {
@@ -243,7 +239,7 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
           $result = true;
         }
         else
-          $this->appendMsg('Nenhum usu&aacute;rio encontrado com a matr&iacute;cula informada.', 
+          $this->appendMsg('Nenhum usu&aacute;rio encontrado com a matr&iacute;cula informada.',
                            'error', false, 'error');
       }
     }
@@ -251,7 +247,7 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
       $this->appendMsg('Ocorreu um erro inesperado ao recuperar o usu&aacute;rio, por favor, ' .
                        'verifique o valor informado e tente novamente.', 'error');
 
-      error_log("Exception ocorrida ao redefinir senha (setUserByMatricula), " . 
+      error_log("Exception ocorrida ao redefinir senha (setUserByMatricula), " .
                 "matricula: $matricula, erro: " .  $e->getMessage());
     }
 
@@ -273,9 +269,9 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
       if ($token != false) {
 
         $link = $_SERVER['HTTP_REFERER'] . "?token=$token";
-      
+
         $subject = "Redefinição de senha - i-Educar - {$_SERVER['HTTP_HOST']}";
-        $message = "Olá!\n\n" . 
+        $message = "Olá!\n\n" .
                    "Recebemos uma solicitação de redefinição de senha para a matrícula {$user->matricula}.\n\n" .
                    "Para redefinir sua senha acesse o link: $link\n\n" .
                    "Caso você não tenha feito esta solicitação, por favor, ignore esta mensagem.";
@@ -283,7 +279,7 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
         $successMsg = 'Enviamos um e-mail para voc&ecirc;, por favor, clique no link recebido para redefinir sua senha.';
         $errorMsg   = 'N&atilde;o conseguimos enviar um e-mail para voc&ecirc;, por favor, tente novamente mais tarde.';
 
-        if($this->_sendMail($email, $subject, $message))
+        if($this->mailer->sendMail($email, $subject, $message))
           $this->appendMsg($successMsg, 'success');
         else
           $this->appendMsg($errorMsg, 'error');
@@ -299,32 +295,11 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
     $link = explode('?', $_SERVER['HTTP_REFERER']);
     $link = $link[0];
     $subject = "Sua senha foi alterada - i-Educar - {$_SERVER['HTTP_HOST']}";
-    $message = "Olá!\n\n" . 
+    $message = "Olá!\n\n" .
                "A senha da matrícula {$user->matricula} foi alterada recentemente.\n\n" .
                "Caso você não tenha feito esta alteração, por favor, tente alterar sua senha acessando o link $link ou entre em contato com o administrador do sistema (solicitando mudança da sua senha), pois sua conta pode estar sendo usada por alguma pessoa não autorizada.";
 
-    return $this->_sendMail($email, $subject, $message);
-  }
-
-
-  protected function _sendMail($to, $subject, $message) {
-    $mailerConfigs = $GLOBALS['coreExt']['Config']->app->mailer;
-    $from = "{$mailerConfigs->smtp->from_name} <{$mailerConfigs->smtp->from_email}>";
-    $headers = array ('From'    => $from,
-                      'To'      => $to,
-                      'Subject' => $subject);
-
-    $smtp = Mail::factory('smtp', array ('host'     => $mailerConfigs->smtp->host,
-                                         'port'     => $mailerConfigs->smtp->port,
-                                         'auth'     => $mailerConfigs->smtp->auth == '1',
-                                         'username' => $mailerConfigs->smtp->username,
-                                         'password' => $mailerConfigs->smtp->password,
-                                         'debug'    => $mailerConfigs->debug == '1',
-                                         'persist'  => false));
-  
-    $sendResult = $smtp->send($to, $headers, $message);
-
-    return ! PEAR::isError($sendResult);
+    return $this->mailer->sendMail($email, $subject, $message);
   }
 
 
@@ -418,7 +393,7 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
   protected function getRecaptchaWidget() {
     if (! isset($this->_recaptchaWidget)) {
       $recaptchaConfigs = $GLOBALS['coreExt']['Config']->app->recaptcha;
-      $this->_recaptchaWidget = new Services_ReCaptcha($recaptchaConfigs->public_key, 
+      $this->_recaptchaWidget = new Services_ReCaptcha($recaptchaConfigs->public_key,
                                           $recaptchaConfigs->private_key,
                                           array('lang' => $recaptchaConfigs->options->lang,
                                                 'theme' => $recaptchaConfigs->options->theme,
@@ -430,4 +405,3 @@ class RedefinirSenhaController extends Core_Controller_Page_EditController
 
 }
 ?>
-
