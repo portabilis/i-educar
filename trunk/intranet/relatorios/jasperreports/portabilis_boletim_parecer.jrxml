@@ -157,8 +157,8 @@
        to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
 
         nome_disciplina,
-        matricula_id,
-        MAX(matricula_id) as matricula,
+        matricula,
+        MAX(matricula) as matricula,
         MAX(nome_curso) AS nome_curso,
 	MAX(nome_serie) AS nome_serie,
         MAX(nome_turma) AS nome_turma,
@@ -174,10 +174,8 @@
          MAX(parecer) AS parecer,
 MAX(componente_curricular_id) AS componente_curricular_id
   FROM (SELECT
-             (SELECT componente_curricular.nome
-                FROM modules.componente_curricular
-               WHERE componente_curricular.id = parecer_componente_curricular.componente_curricular_id) as nome_disciplina,
-             matricula_id,
+                componente_curricular.nome as nome_disciplina,
+    matricula.cod_matricula AS matricula,
 
 	         (SELECT curso.nm_curso
                 FROM pmieducar.curso
@@ -195,19 +193,16 @@ MAX(componente_curricular_id) AS componente_curricular_id
               WHERE turma.cod_turma = matricula_turma.ref_cod_turma AND
                     matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
                     turma.ativo = 1 AND
-					matricula_turma.ativo = 1) AS nome_turma,
+		matricula_turma.ativo = 1 AND
+                     turma.cod_turma = $P{turma}) AS nome_turma,
 
-    (SELECT CASE WHEN date_part('hour',hora_inicial) = 6 or date_part('hour',hora_inicial) = 7 or date_part('hour',hora_inicial) = 8 THEN 'Matutino'
-                     WHEN date_part('hour',hora_inicial) = 13 or date_part('hour',hora_inicial) = 14 THEN 'Vespertino'
-                     WHEN date_part('hour',hora_inicial) = 18 or date_part('hour',hora_inicial) = 19 THEN 'Noturno'
-                END
-	       FROM pmieducar.turma,
-                pmieducar.matricula_turma
-          WHERE turma.cod_turma = matricula_turma.ref_cod_turma AND
-                matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
-                turma.ativo = 1 AND
-		        matricula_turma.ativo = 1 AND
-                hora_inicial IS NOT NULL) AS periodo,
+       (select nm_turno
+          from pmieducar.turma_turno,
+               pmieducar.turma
+         where turma_turno.turma_turno_id = turma.turma_turno_id and
+               turma.cod_turma = $P{turma} AND
+               instituicao_id = 1 limit 1) as periodo,
+
 
 		(SELECT CASE WHEN (SELECT mt.aprovado
 		                     FROM pmieducar.matricula mt
@@ -247,7 +242,7 @@ MAX(componente_curricular_id) AS componente_curricular_id
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_componente_curricular.etapa = $P{etapa} AND
-				falta_componente_curricular.componente_curricular_id = parecer_componente_curricular.componente_curricular_id AND
+				falta_componente_curricular.componente_curricular_id = componente_curricular.id AND
 				falta_aluno.tipo_falta = 2) as faltas_componente_et1,
 
 
@@ -256,7 +251,7 @@ MAX(componente_curricular_id) AS componente_curricular_id
                 modules.falta_aluno
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
-				falta_componente_curricular.componente_curricular_id = parecer_componente_curricular.componente_curricular_id AND
+				falta_componente_curricular.componente_curricular_id = componente_curricular.id AND
                 falta_componente_curricular.etapa = $P{etapa} AND
 				falta_aluno.tipo_falta = 2) as total_faltas_componente,
 
@@ -276,37 +271,57 @@ MAX(componente_curricular_id) AS componente_curricular_id
 
     (SELECT sum(to_number(componente_curricular_ano_escolar.carga_horaria,'999'))
        FROM modules.componente_curricular_ano_escolar
-     WHERE componente_curricular_ano_escolar.componente_curricular_id = parecer_componente_curricular.componente_curricular_id) AS carga_horaria,
+     WHERE componente_curricular_ano_escolar.componente_curricular_id = componente_curricular.id) AS carga_horaria,
 
-convert(parecer_componente_curricular.parecer using utf8_to_iso_8859_1) AS parecer,
-
-
-
-parecer_componente_curricular.componente_curricular_id AS componente_curricular_id
-
-        FROM pmieducar.matricula,
-	     pmieducar.matricula_turma,
-             modules.parecer_componente_curricular,
-             modules.parecer_aluno
-       WHERE matricula.ref_ref_cod_escola = $P{escola} AND
-	     matricula.ref_cod_curso = $P{curso} AND
-	     matricula.ref_ref_cod_serie = $P{serie} AND
-             matricula.ativo = 1 AND
-	     matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
-             matricula_turma.ref_cod_turma = $P{turma} AND
+convert((select parecer_componente_curricular.parecer
+           from modules.parecer_componente_curricular, modules.parecer_aluno
+          where parecer_componente_curricular.componente_curricular_id = componente_curricular.id AND
              parecer_componente_curricular.parecer_aluno_id = parecer_aluno.id AND
              parecer_aluno.matricula_id = matricula.cod_matricula AND
-             parecer_componente_curricular.etapa = $P{etapa} AND
-             matricula_turma.ativo = 1 AND
-          (SELECT CASE WHEN $P{matricula} = 0 THEN
-                   matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
- 		           matricula_turma.ref_cod_turma = $P{turma}
-               ELSE
-                   matricula.cod_matricula = $P{matricula}
-               END)
+             parecer_componente_curricular.etapa = $P{etapa}) using utf8_to_iso_8859_1) AS parecer,
+
+componente_curricular.id AS componente_curricular_id
+
+ FROM pmieducar.matricula,
+ pmieducar.matricula_turma,
+ modules.componente_curricular
+
+       WHERE
+matricula.ref_ref_cod_escola = $P{escola} AND
+  matricula.ref_cod_curso = $P{curso} AND
+  matricula.ref_ref_cod_serie = $P{serie} AND
+  matricula.ativo = 1 AND
+  matricula_turma.ref_cod_turma = $P{turma} AND
+  matricula_turma.ativo = 1 AND
+  matricula.ano = $P{ano} AND
+  matricula_turma.ref_cod_matricula = matricula.cod_matricula and
+
+  (SELECT CASE WHEN $P{matricula} = 0 THEN
+    matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+    matricula_turma.ref_cod_turma = $P{turma}
+  ELSE
+    matricula.cod_matricula = $P{matricula}
+  END) and
+
+
+  CASE WHEN (select 1 from modules.componente_curricular_turma
+    WHERE componente_curricular_turma.turma_id = matricula_turma.ref_cod_turma AND
+    componente_curricular_turma.escola_id = matricula.ref_ref_cod_escola limit 1) = 1 THEN
+
+    componente_curricular.id in (select componente_curricular_id from modules.componente_curricular_turma
+    where componente_curricular_turma.escola_id = matricula.ref_ref_cod_escola AND
+    componente_curricular_turma.turma_id = matricula_turma.ref_cod_turma)
+  ELSE
+    componente_curricular.id in (select ref_cod_disciplina from pmieducar.escola_serie_disciplina
+    where escola_serie_disciplina.ref_ref_cod_serie = matricula.ref_ref_cod_serie AND
+    escola_serie_disciplina.ref_ref_cod_escola = matricula.ref_ref_cod_escola AND
+    escola_serie_disciplina.ativo = 1)
+  END
+
 	) AS etapa1
-GROUP BY nome_aluno, matricula_id, componente_curricular_id, nome_disciplina
-ORDER BY nome_aluno, matricula_id]]>
+
+GROUP BY etapa1.matricula, nome_disciplina, nome_aluno
+ORDER BY nome_aluno, nome_disciplina]]>
 	</queryString>
 	<field name="ano" class="java.lang.Integer"/>
 	<field name="nome_responsavel" class="java.lang.String"/>
@@ -325,7 +340,6 @@ ORDER BY nome_aluno, matricula_id]]>
 	<field name="data_atual" class="java.lang.String"/>
 	<field name="hora_atual" class="java.lang.String"/>
 	<field name="nome_disciplina" class="java.lang.String"/>
-	<field name="matricula_id" class="java.lang.Integer"/>
 	<field name="matricula" class="java.lang.Integer"/>
 	<field name="nome_curso" class="java.lang.String"/>
 	<field name="nome_serie" class="java.lang.String"/>
