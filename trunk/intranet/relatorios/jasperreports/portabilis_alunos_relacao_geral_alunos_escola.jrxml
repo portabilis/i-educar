@@ -233,7 +233,9 @@ COALESCE((SELECT bairro.nome
        matricula.ref_cod_aluno = aluno.cod_aluno AND
        matricula.ativo = 1 AND
        matricula.ano = $P{ano} AND
-       matricula.ultima_matricula = 1 AND
+       (matricula_turma.ativo = 1 or exists( select 1 from pmieducar.transferencia_solicitacao
+                                                     where ref_cod_matricula_saida = matricula.cod_matricula and
+                                                           ativo = 1 limit 1)) and
 	   (SELECT CASE WHEN $P{turma} = 0 THEN
                   turma.cod_turma = matricula_turma.ref_cod_turma
                ELSE
@@ -282,9 +284,7 @@ COALESCE((SELECT bairro.nome
               	        cadastro.fisica
        		  WHERE aluno.ref_idpes = fisica.idpes AND
               	        fisica.idpes = pessoa.idpes)::integer <= $P{idadefinal})) or
-		($P{idadeinicial} = 0) and ($P{idadefinal}= 0 )) AND
-       matricula_turma.data_cadastro = (select max(mt.data_cadastro) from matricula_turma mt where
-       matricula_turma.ref_cod_matricula = mt.ref_cod_matricula)
+		($P{idadeinicial} = 0) and ($P{idadefinal}= 0 ))
 
 ORDER BY nm_curso, nm_serie, nm_turma, nome_aluno]]>
 	</queryString>

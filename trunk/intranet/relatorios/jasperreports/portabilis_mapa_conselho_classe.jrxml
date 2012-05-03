@@ -283,16 +283,16 @@
              serie.ativo = 1 AND
              serie.cod_serie = $P{serie}) AS nome_serie,
 
-	   (SELECT turma.nm_turma
-	      FROM pmieducar.turma
-       WHERE turma.cod_turma = matricula_turma.ref_cod_turma AND
-             turma.ativo = 1) AS nome_turma,
+	    (SELECT turma.nm_turma
+	       FROM pmieducar.turma,
+                    pmieducar.matricula_turma
+              WHERE turma.cod_turma = $P{turma} AND
+                    matricula_turma.ref_cod_turma = turma.cod_turma AND
+                    matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
+                    turma.ativo = 1 AND
+		matricula_turma.ativo = 1) AS nome_turma,
 
-    (SELECT nm_turno
-       FROM pmieducar.turma_turno,
-            pmieducar.turma
-      WHERE turma_turno.turma_turno_id = turma.turma_turno_id AND
-            turma.cod_turma = matricula_turma.ref_cod_turma) AS periodo
+       (select turma_turno.nm_turno from pmieducar.turma_turno, pmieducar.turma where turma_turno.turma_turno_id = turma.turma_turno_id and turma.cod_turma = matricula_turma.ref_cod_turma and  instituicao_id = $P{instituicao} limit 1) as periodo
 
 
  FROM pmieducar.escola_ano_letivo,
@@ -313,9 +313,9 @@ WHERE
   --matricula_turma.ativo = 1 AND
   matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
 
-  --pega somente a ultima matricula_turma
-  matricula_turma.data_cadastro = (select max(mt.data_cadastro) from matricula_turma mt where
-    matricula_turma.ref_cod_matricula = mt.ref_cod_matricula) AND
+ (matricula_turma.ativo = 1 or exists( select 1 from pmieducar.transferencia_solicitacao
+                                                     where ref_cod_matricula_saida = matricula.cod_matricula and
+                                                           ativo = 1 limit 1)) and
 
   CASE WHEN (select 1 from modules.componente_curricular_turma
     WHERE componente_curricular_turma.turma_id = matricula_turma.ref_cod_turma AND
@@ -499,10 +499,6 @@ ORDER BY nm_aluno, cod_aluno]]>
 				</textElement>
 				<textFieldExpression><![CDATA["Nº: "+$F{numero}]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="8" y="4" width="57" height="46"/>
-				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
-			</image>
 			<staticText>
 				<reportElement x="704" y="122" width="36" height="12"/>
 				<textElement>
@@ -517,6 +513,10 @@ ORDER BY nm_aluno, cod_aluno]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ano}]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="9" y="4" width="57" height="46"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<summary>
