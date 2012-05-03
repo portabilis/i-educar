@@ -11,9 +11,9 @@ class PortabilisRelacaoAlunosTurma extends Report
   {
 
     $get_escola = $escola_obrigatorio = true;
-    $get_curso = $curso_obrigatorio = true;
-    $get_escola_curso_serie = $escola_curso_serie_obrigatorio = true;
-    $get_turma = $turma_obrigatorio = true;
+    $get_curso = true;
+    $get_escola_curso_serie = true;
+    $get_turma = true;
     $instituicao_obrigatorio = true;
     $escola_obrigatorio = true;
 
@@ -31,6 +31,7 @@ class PortabilisRelacaoAlunosTurma extends Report
     $opcoes[10] = "Todas";
 
     $this->campoLista('situacao', 'Situação', $opcoes, 3, $this->situacao);
+    $this->campoCheck( "proerd", "Modelo: PROERD", null, null, false);
 
   }
 
@@ -61,14 +62,15 @@ class PortabilisRelacaoAlunosTurma extends Report
 
 }
 
-$report = new PortabilisRelacaoAlunosTurma($name = 'Relação de Alunos por Turma', $templateName = 'portabilis_relacao_alunos_por_turma');
+if (! isset($_POST['proerd']))
+  $report = new PortabilisRelacaoAlunosTurma($name = 'Relação de Alunos por Turma', $templateName =       'portabilis_relacao_alunos_por_turma');
+else
+  $report = new PortabilisRelacaoAlunosTurma($name = 'Relação de Alunos por Turma', $templateName =  'portabilis_relacao_alunos_proerd');
+
 
 $report->addRequiredField('ano');
 $report->addRequiredField('ref_cod_instituicao', 'instituicao');
 $report->addRequiredField('ref_cod_escola', 'escola');
-$report->addRequiredField('ref_cod_curso', 'curso');
-$report->addRequiredField('ref_ref_cod_serie', 'serie');
-$report->addRequiredField('ref_cod_turma', 'turma');
 $report->addRequiredField('situacao', 'situacao');
 
 $report->render();
