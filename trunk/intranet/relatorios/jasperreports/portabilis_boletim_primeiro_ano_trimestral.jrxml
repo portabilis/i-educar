@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_boletim_primeiro_ano_trimestral" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.1000000000000045"/>
+	<property name="ireport.zoom" value="1.4641000000000064"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="ano" class="java.lang.Integer">
@@ -1041,7 +1041,7 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="2"/>
+			<band/>
 		</groupFooter>
 	</group>
 	<background>
@@ -1057,9 +1057,9 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="16" splitType="Stretch">
+		<band height="24" splitType="Stretch">
 			<rectangle>
-				<reportElement mode="Opaque" x="15" y="0" width="783" height="15" isPrintWhenDetailOverflows="true" forecolor="#FFFFFF" backcolor="#F0F0F0">
+				<reportElement mode="Opaque" x="15" y="2" width="783" height="19" isPrintWhenDetailOverflows="true" forecolor="#FFFFFF" backcolor="#F0F0F0">
 					<printWhenExpression><![CDATA[new Boolean(($V{COLUMN_COUNT} % 2) == 1)]]></printWhenExpression>
 				</reportElement>
 			</rectangle>
@@ -1072,7 +1072,7 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nota1} == 'C' ? "( X )" : ""]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="15" y="2" width="295" height="12"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="7"/>
@@ -1080,25 +1080,25 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 				<textFieldExpression><![CDATA[$F{nome_disciplina}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="435" y="-1" width="1" height="16" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="435" y="-2" width="1" height="26" isPrintWhenDetailOverflows="true"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="449" y="-1" width="1" height="16" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="449" y="-2" width="1" height="26" isPrintWhenDetailOverflows="true"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="311" y="-1" width="1" height="16" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="311" y="-2" width="1" height="26" isPrintWhenDetailOverflows="true"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="13" y="14" width="786" height="1" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="13" y="23" width="786" height="1" isPrintWhenDetailOverflows="true"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -1131,13 +1131,13 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 				<textFieldExpression><![CDATA[$F{faltas_componente_et1}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="722" y="-1" width="1" height="16" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="722" y="-2" width="1" height="26" isPrintWhenDetailOverflows="true"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="583" y="-1" width="1" height="16" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="583" y="-2" width="1" height="26" isPrintWhenDetailOverflows="true"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -1161,13 +1161,13 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 				<textFieldExpression><![CDATA[$F{nota1} == 'A' ? "( X )" : ""]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="760" y="-1" width="1" height="16" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="760" y="-2" width="1" height="26" isPrintWhenDetailOverflows="true"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="798" y="-1" width="1" height="16" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="798" y="-1" width="1" height="24" isPrintWhenDetailOverflows="true"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -1200,7 +1200,7 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 				<textFieldExpression><![CDATA[$F{nota2} == 'C' ? "( X )" : ""]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="12" y="-1" width="1" height="16" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="12" y="-2" width="1" height="26" isPrintWhenDetailOverflows="true"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -1248,13 +1248,13 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 				<text><![CDATA[(     )]]></text>
 			</staticText>
 			<line>
-				<reportElement x="596" y="-1" width="1" height="16" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="596" y="-2" width="1" height="26" isPrintWhenDetailOverflows="true"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="735" y="-1" width="1" height="16" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="735" y="-2" width="1" height="26" isPrintWhenDetailOverflows="true"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
