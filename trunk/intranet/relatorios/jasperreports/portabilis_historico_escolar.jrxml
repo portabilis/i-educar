@@ -1526,7 +1526,7 @@ ORDER BY 1 ASC]]>
 				<textFieldExpression><![CDATA[$F{nota_8serie}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="10" y="1" width="170" height="13" isRemoveLineWhenBlank="true"/>
+				<reportElement x="10" y="1" width="180" height="13" isRemoveLineWhenBlank="true"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
@@ -1545,6 +1545,17 @@ ORDER BY 1 ASC]]>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</rectangle>
+			<textField pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement x="371" y="6" width="36" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.lang.String(
+  new java.text.DecimalFormat("#.##").format(
+    new java.lang.Double( $F{freq5}.doubleValue() )
+    ).replace(".",",")
+  )]]></textFieldExpression>
+			</textField>
 			<staticText>
 				<reportElement x="10" y="6" width="100" height="15"/>
 				<textElement>
@@ -1552,61 +1563,82 @@ ORDER BY 1 ASC]]>
 				</textElement>
 				<text><![CDATA[% FREQUÊNCIA]]></text>
 			</staticText>
-			<textField isBlankWhenNull="true">
+			<textField pattern="###,## %" isBlankWhenNull="true">
 				<reportElement x="194" y="7" width="36" height="13"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{freq1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new java.lang.String(
+  new java.text.DecimalFormat("#.##").format(
+    new java.lang.Double( $F{freq1}.doubleValue() )
+    ).replace(".",",")
+  )]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField pattern="#,##0.00 %" isBlankWhenNull="true">
 				<reportElement x="239" y="7" width="36" height="13"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{freq2}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new java.lang.String(
+  new java.text.DecimalFormat("#.##").format(
+    new java.lang.Double( $F{freq2}.doubleValue() )
+    ).replace(".",",")
+  )]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField pattern="#,##0.00 %" isBlankWhenNull="true">
 				<reportElement x="282" y="7" width="36" height="13"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{freq3}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new java.lang.String(
+  new java.text.DecimalFormat("#.##").format(
+    new java.lang.Double( $F{freq3}.doubleValue() )
+    ).replace(".",",")
+  )]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField pattern="#,##0.00 %" isBlankWhenNull="true">
 				<reportElement x="327" y="7" width="36" height="13"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{freq4}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="371" y="6" width="36" height="13"/>
-				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{freq5}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new java.lang.String(
+  new java.text.DecimalFormat("#.##").format(
+    new java.lang.Double( $F{freq4}.doubleValue() )
+    ).replace(".",",")
+  )]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="415" y="6" width="36" height="13"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{freq6}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new java.lang.String(
+  new java.text.DecimalFormat("#.##").format(
+    new java.lang.Double( $F{freq6}.doubleValue() )
+    ).replace(".",",")
+  )]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField pattern="#,##0.00 %" isBlankWhenNull="true">
 				<reportElement x="461" y="6" width="36" height="13"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{freq7}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new java.lang.String(
+  new java.text.DecimalFormat("#.##").format(
+    new java.lang.Double( $F{freq7}.doubleValue() )
+    ).replace(".",",")
+  )]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField pattern="###,## %" isBlankWhenNull="true">
 				<reportElement x="508" y="6" width="36" height="13"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{freq8}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new java.lang.String(
+  new java.text.DecimalFormat("#.##").format(
+    new java.lang.Double( $F{freq8}.doubleValue() )
+    ).replace(".",",")
+  )]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="194" y="26" width="35" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
