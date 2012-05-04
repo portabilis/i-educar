@@ -293,22 +293,13 @@ nome_disciplina,
 	    (SELECT turma.nm_turma
 	       FROM pmieducar.turma,
                     pmieducar.matricula_turma
-              WHERE turma.cod_turma = matricula_turma.ref_cod_turma AND
+              WHERE turma.cod_turma = $P{turma} AND
+                    matricula_turma.ref_cod_turma = turma.cod_turma AND
                     matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
                     turma.ativo = 1 AND
-					matricula_turma.ativo = 1) AS nome_turma,
+		matricula_turma.ativo = 1) AS nome_turma,
 
-    (SELECT CASE WHEN date_part('hour',hora_inicial) = 6 or date_part('hour',hora_inicial) = 7 or date_part('hour',hora_inicial) = 8 THEN 'Matutino'
-                     WHEN date_part('hour',hora_inicial) = 13 or date_part('hour',hora_inicial) = 14 THEN 'Vespertino'
-                     WHEN date_part('hour',hora_inicial) = 18 or date_part('hour',hora_inicial) = 19 THEN 'Noturno'
-                END
-	       FROM pmieducar.turma,
-                pmieducar.matricula_turma
-          WHERE turma.cod_turma = matricula_turma.ref_cod_turma AND
-                matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
-                turma.ativo = 1 AND
-		        matricula_turma.ativo = 1 AND
-                hora_inicial IS NOT NULL) AS periodo,
+       (select turma_turno.nm_turno from pmieducar.turma_turno, pmieducar.turma where turma_turno.turma_turno_id = turma.turma_turno_id and turma.cod_turma = matricula_turma.ref_cod_turma and  instituicao_id = $P{instituicao} limit 1) as periodo,
 
 		(SELECT CASE WHEN (SELECT mt.aprovado
 		                     FROM pmieducar.matricula mt
@@ -445,7 +436,7 @@ nome_disciplina,
   matricula.ref_ref_cod_serie = $P{serie} AND
   matricula.ativo = 1 AND
   matricula_turma.ref_cod_turma = $P{turma} AND
-  matricula_turma.ativo = 1 AND
+  matricula_turma.ativo = 1 and
   matricula.ano = $P{ano} AND
   matricula_turma.ref_cod_matricula = matricula.cod_matricula and
 
