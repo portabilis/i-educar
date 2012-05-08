@@ -93,16 +93,30 @@ WHERE servidor_curso_ministra.ref_ref_cod_instituicao = $instituicaoId and servi
   {
 //    $s = "SELECT * from (SELECT ref_cod_disciplina as componente_curricular_id, cc.nome as componente_curricular_nome FROM pmieducar.servidor_disciplina, modules.componente_curricular as cc WHERE servidor_disciplina.ref_ref_cod_instituicao = $instituicaoId and servidor_disciplina.ref_cod_servidor = $this->userId and servidor_disciplina.ref_cod_curso = $cursoId and ref_cod_disciplina = cc.id) AS professor_disciplina";
 
-    $s = "select cc.id as componente_curricular_id, cc.nome as componente_curricular_nome from modules.componente_curricular_turma as cct, modules.componente_curricular as cc, pmieducar.escola_ano_letivo as al, pmieducar.servidor_disciplina as scc where cct.turma_id = $turmaId and cct.escola_id = $escolaId and cct.componente_curricular_id = cc.id and al.ano = $anoEscolar and cct.escola_id = al.ref_cod_escola and scc.ref_ref_cod_instituicao = $instituicaoId and scc.ref_cod_servidor = $this->userId and scc.ref_cod_curso = $cursoId and scc.ref_cod_disciplina = cc.id";
+    $existsComponenteCurricularForTurma = "select count(*) from modules.componente_curricular_turma as cct, modules.componente_curricular as cc, pmieducar.escola_ano_letivo as al where cct.turma_id = $turmaId and cct.escola_id = $escolaId and cct.componente_curricular_id = cc.id and al.ano = $anoEscolar and cct.escola_id = al.ref_cod_escola";
 
-    $componentes = $this->db->select($s);
-    if (count($componentes))
+    $existsComponenteCurricularForTurma = $this->db->selectField($existsComponenteCurricularForTurma) > 0;
+
+    if ($existsComponenteCurricularForTurma) {
+      $s = "select cc.id as componente_curricular_id, cc.nome as componente_curricular_nome from modules.componente_curricular_turma as cct, modules.componente_curricular as cc, pmieducar.escola_ano_letivo as al, pmieducar.servidor_disciplina as scc where cct.turma_id = $turmaId and cct.escola_id = $escolaId and cct.componente_curricular_id = cc.id and al.ano = $anoEscolar and cct.escola_id = al.ref_cod_escola and scc.ref_ref_cod_instituicao = $instituicaoId and scc.ref_cod_servidor = $this->userId and scc.ref_cod_curso = $cursoId and scc.ref_cod_disciplina = cc.id";
+
+      $componentes = $this->db->select($s);
+
+      if (count($componentes) < 1)
+        $componentes = array(array("componente_curricular_nome" => 'Sem componentes curriculares (da turma) adicionados as fun&#231;&#245;es do servidor.', "componente_curricular_id" => ''));
+
       return $componentes;
+    }
 
-    $s = "select cc.id as componente_curricular_id, cc.nome as componente_curricular_nome from pmieducar.turma as	t, pmieducar.escola_serie_disciplina as esd, modules.componente_curricular as cc, pmieducar.escola_ano_letivo as al, pmieducar.servidor_disciplina as scc where t.cod_turma = $turmaId and esd.ref_ref_cod_escola = $escolaId and t.ref_ref_cod_serie = esd.ref_ref_cod_serie and esd.ref_cod_disciplina = cc.id and al.ano = $anoEscolar and 
+    $s = "select cc.id as componente_curricular_id, cc.nome as componente_curricular_nome from pmieducar.turma as	t, pmieducar.escola_serie_disciplina as esd, modules.componente_curricular as cc, pmieducar.escola_ano_letivo as al, pmieducar.servidor_disciplina as scc where t.cod_turma = $turmaId and esd.ref_ref_cod_escola = $escolaId and t.ref_ref_cod_serie = esd.ref_ref_cod_serie and esd.ref_cod_disciplina = cc.id and al.ano = $anoEscolar and
 	esd.ref_ref_cod_escola = al.ref_cod_escola and t.ativo = 1 and esd.ativo = 1 and al.ativo = 1 and	scc.ref_ref_cod_instituicao = $instituicaoId and scc.ref_cod_servidor = $this->userId and scc.ref_cod_curso = $cursoId and scc.ref_cod_disciplina = cc.id";
 
-  return $this->db->select($s);
+    $componentes = $this->db->select($s);
+
+    if (count($componentes) < 1)
+      $componentes = array(array("componente_curricular_nome" => 'Sem componentes curriculares (do curso) adicionados as fun&#231;&#245;es do servidor.', "componente_curricular_id" => ''));
+
+    return $componentes;
   }
 }
 /*
@@ -123,7 +137,7 @@ if ($user->isLoggedIn() and $user->isProfessor())
     {
       echo "<br /><strong>Curso professor logged with user id '$user->userId':</strong> <br />";
       var_dump($c);
-      
+
       $componentes_curriculares = $p->getComponentesCurriculares($c['instituicao_id'], $c['curso_id'], $e['escola_id'], 36, 2011);
       echo "<br /><strong>Componentes curriculares professor logged with user id '$user->userId':</strong> <br />";
       var_dump($componentes_curriculares);
