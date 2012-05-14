@@ -60,10 +60,20 @@ class ApiCoreController extends Core_Controller_Page_EditController
     return $this->validator->validatesPresenceOf($this->getSession()->id_pessoa, '', false, 'Usuário deve estar logado');
   }
 
+  protected function validatesPresenceOfResource(){
+    return $this->validator->validatesPresenceOf($this->getRequest()->resource, 'resource');
+  }
+
+  protected function validatesPresenceOfOper(){
+    return $this->validator->validatesPresenceOf($this->getRequest()->oper, 'oper');
+  }
+
 
   protected function canAcceptRequest()
   {
-    return $this->validatesUserIsLoggedIn();
+    return $this->validatesUserIsLoggedIn() &&
+           $this->validatesPresenceOfOper() &&
+           $this->validatesPresenceOfResource();
   }
 
 
