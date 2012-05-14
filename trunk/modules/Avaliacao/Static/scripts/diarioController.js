@@ -78,7 +78,8 @@ var $j = jQuery.noConflict();
                                     .appendTo($resultTable.parent());
 
     var $orientationSearch = $('<p />')
-      .html('<strong>Obs:</strong>Caso n&atilde;o esteja sendo listado as op&ccedil;&otilde;es de filtro que voc&ecirc; espera, solicite a(o) secret&aacute;rio(a) da escola que verifique a aloca&ccedil;&atilde;o do seu usu&aacute;rio.')
+      .html('<strong>Obs:</strong> Caso n&atilde; estejam sendo listadas as op&ccedil;&otilde;es de filtro que voc&ecirc; esperava, solicite ao(&agrave;) secret&aacute;rio(a) da escola para verificar a aloca&ccedil;&atilde;o ou permiss&atilde;o do seu usu&aacute;rio.')
+
       .appendTo($('<td />').addClass('center').appendTo($('<tr />').appendTo($tableOrientationSearch)));
 
     function fixupFieldsWidth(){
@@ -614,7 +615,7 @@ var $j = jQuery.noConflict();
       $('<th />').html('Etapa').appendTo($linha);
       $('<th />').html('Comp. Curricular').appendTo($linha);
       $('<th />').html('Turma').appendTo($linha);
-      $('<th />').html('Serie').appendTo($linha);
+      $('<th />').html('Série').appendTo($linha);
       $('<th />').html('Ano').appendTo($linha);
       $('<th />').html('Escola').appendTo($linha);
       $('<th />').html('Regra avalia&#231;&#227;o').appendTo($linha);
@@ -688,14 +689,14 @@ var $j = jQuery.noConflict();
         if(! $.isArray(dataResponse.matriculas))
         {
            $('<td />')
-            .html('As matriculas n&#227;o poderam ser recuperadas, verifique as mensagens de erro ou tente <a alt="Recarregar página" href="/" style="text-decoration:underline">recarregar</a>.')
+            .html('As matrículas n&#227;o poderam ser recuperadas, verifique as mensagens de erro ou tente <a alt="Recarregar página" href="/" style="text-decoration:underline">recarregar</a>.')
             .addClass('center')
             .appendTo($('<tr />').appendTo($resultTable));
         }
         else if (dataResponse.matriculas.length < 1)
         {
            $('<td />')
-            .html('Sem matriculas em andamento nesta turma.')
+            .html('Sem matrículas em andamento nesta turma.')
             .addClass('center')
             .appendTo($('<tr />').appendTo($resultTable));
         }
@@ -708,7 +709,7 @@ var $j = jQuery.noConflict();
 
           //set headers
           var $linha = $('<tr />');
-          $('<th />').html('Matricula').appendTo($linha);
+          $('<th />').html('Matrícula').appendTo($linha);
           $('<th />').html('Aluno').appendTo($linha);
           $('<th />').html('Situa&#231;&#227;o').appendTo($linha);
 
@@ -822,7 +823,7 @@ var $j = jQuery.noConflict();
       catch(error){
         showSearchButton();
 
-        handleMessages([{type : 'error', msg : 'Ocorreu um erro ao exibir as matriculas, por favor tente novamente, detalhes: ' + error}], '');
+        handleMessages([{type : 'error', msg : 'Ocorreu um erro ao exibir as matrículas, por favor tente novamente, detalhes: ' + error}], '');
 
         safeLog(dataResponse);
       }

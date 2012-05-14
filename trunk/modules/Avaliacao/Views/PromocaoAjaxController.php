@@ -360,12 +360,12 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
         $this->setService() &&
         $this->validatesPresenceOfComponenteCurricularId(false)){
       if (is_null($this->getNotaAtual()))
-        $this->appendMsg('Nota matricula '. $this->getRequest()->matricula_id .' inexistente ou já removida.', 'notice');
+        $this->appendMsg('Nota matrícula '. $this->getRequest()->matricula_id .' inexistente ou já removida.', 'notice');
       else
       {
         $this->getService()->deleteNota($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id);
         $this->saveService();
-        $this->appendMsg('Nota matricula '. $this->getRequest()->matricula_id .' removida com sucesso.', 'success');
+        $this->appendMsg('Nota matrícula '. $this->getRequest()->matricula_id .' removida com sucesso.', 'success');
       }
     }
   }
@@ -384,12 +384,12 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
       $componenteCurricularId = null;
 
     if ($canDelete && is_null($this->getFaltaAtual())){
-      $this->appendMsg('Falta matricula '. $this->getRequest()->matricula_id .' inexistente ou já removida.', 'notice');
+      $this->appendMsg('Falta matrícula '. $this->getRequest()->matricula_id .' inexistente ou já removida.', 'notice');
     }
     elseif ($canDelete){
       $this->getService()->deleteFalta($this->getRequest()->etapa, $componenteCurricularId);
       $this->saveService();
-      $this->appendMsg('Falta matricula '. $this->getRequest()->matricula_id .' removida com sucesso.', 'success');
+      $this->appendMsg('Falta matrícula '. $this->getRequest()->matricula_id .' removida com sucesso.', 'success');
     }
   }
 
@@ -399,7 +399,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
       $parecerAtual = $this->getParecerAtual();
 
       if ((is_null($parecerAtual) || $parecerAtual == '')){
-        $this->appendMsg('Parecer descritivo matricula '. $this->getRequest()->matricula_id .' inexistente ou já removido.', 'notice');
+        $this->appendMsg('Parecer descritivo matrícula '. $this->getRequest()->matricula_id .' inexistente ou já removido.', 'notice');
       }
       else{
         $tpParecer = $this->getService()->getRegra()->get('parecerDescritivo');
@@ -411,7 +411,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
           $this->getService()->deleteParecer($this->getRequest()->etapa);
 
         $this->saveService();
-        $this->appendMsg('Parecer descritivo matricula '. $this->getRequest()->matricula_id .' removido com sucesso.', 'success');
+        $this->appendMsg('Parecer descritivo matrícula '. $this->getRequest()->matricula_id .' removido com sucesso.', 'success');
       }
     }
   }
@@ -428,7 +428,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
 
       $this->getService()->addNota($nota);
       $this->saveService();
-      $this->appendMsg('Nota matricula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
+      $this->appendMsg('Nota matrícula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
     }
   }
 
@@ -464,7 +464,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
 
       $this->getService()->addFalta($falta);
       $this->saveService();
-      $this->appendMsg('Falta matricula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
+      $this->appendMsg('Falta matrícula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
     }
   }
 
@@ -499,7 +499,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
 
       $this->getService()->addParecer($parecer);
       $this->saveService();
-      $this->appendMsg('Parecer descritivo matricula '. $this->getRequest()->matricula_id .' alterado com sucesso.', 'success');
+      $this->appendMsg('Parecer descritivo matrícula '. $this->getRequest()->matricula_id .' alterado com sucesso.', 'success');
     }
   }
 
@@ -560,7 +560,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
                 ));
 
             $this->getService()->addFalta($notaFalta);
-            $this->appendMsg("Lançado falta geral (valor $defaultValue) para etapa $etapa (matricula $matriculaId)", 'notice');
+            $this->appendMsg("Lançado falta geral (valor $defaultValue) para etapa $etapa (matrícula $matriculaId)", 'notice');
           }
         }
       }//for etapa
@@ -590,7 +590,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
 
     }
     else
-      throw new Exception("Tipo de presença desconhecido metodo lancarFaltasNaoLancadas");
+      throw new Exception("Tipo de presença desconhecido método lancarFaltasNaoLancadas");
 
   }
 
@@ -610,7 +610,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
           $proximoMatriculaId = $this->getProximoMatriculaId($matriculaId);
         }
         else
-          $this->appendMsg('Sem matriculas em andamento para a seleção informada.', 'notice');
+          $this->appendMsg('Sem matrículas em andamento para a seleção informada.', 'notice');
       }
 
       if($matriculaId != 0 && 
@@ -635,7 +635,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
         $novaSituacao = $this->getSituacaoArmazenadaMatricula($matriculaId);
 
         $type = 'success';
-        $msg = "Matricula $matriculaId";
+        $msg = "Matrícula $matriculaId";
         if($situacaoAnterior == $novaSituacao){
           $type = 'notice';
           $msg .= ' não mudou de situação';
@@ -663,7 +663,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
         $situacao = App_Model_MatriculaSituacao::getInstance()->getValue($service->getSituacaoComponentesCurriculares()->componentesCurriculares[$this->getRequest()->componente_curricular_id]->situacao);
       }
       catch (Exception $e){
-        $this->appendMsg("Erro ao recuperar situação matricula: " . $e->getMessage());
+        $this->appendMsg("Erro ao recuperar situação da matrícula: " . $e->getMessage());
       }
     }
     return utf8_encode($situacao);
