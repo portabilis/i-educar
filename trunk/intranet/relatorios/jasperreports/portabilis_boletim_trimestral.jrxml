@@ -756,13 +756,6 @@ ORDER BY nome_aluno, nome_disciplina]]>
 					<textFieldExpression><![CDATA[$F{total_faltas_et2}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="351" y="51" width="35" height="15" printWhenGroupChanges="matricula"/>
-					<textElement>
-						<font fontName="DejaVu Sans" size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[E-mail:]]></text>
-				</staticText>
-				<staticText>
 					<reportElement x="479" y="131" width="34" height="11" printWhenGroupChanges="matricula"/>
 					<textElement textAlignment="Center">
 						<font fontName="DejaVu Sans" size="8" isBold="false"/>
@@ -817,7 +810,7 @@ ORDER BY nome_aluno, nome_disciplina]]>
 					<text><![CDATA[NOTA]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement x="387" y="51" width="129" height="15" printWhenGroupChanges="matricula"/>
+					<reportElement x="351" y="51" width="165" height="15" printWhenGroupChanges="matricula"/>
 					<textElement>
 						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 					</textElement>
@@ -931,20 +924,24 @@ ORDER BY nome_aluno, nome_disciplina]]>
 					</textElement>
 					<text><![CDATA[04 - TURMA]]></text>
 				</staticText>
+				<image>
+					<reportElement x="22" y="10" width="57" height="46"/>
+					<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+				</image>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="57"/>
+			<band height="37"/>
 		</groupFooter>
 	</group>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band splitType="Stretch"/>
+		<band height="2" splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="22" splitType="Stretch"/>
+		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
 		<band splitType="Stretch"/>
