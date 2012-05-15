@@ -44,52 +44,52 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
  */
 class Portabilis_View_Helper_DynamicSelectMenu_Instituicao extends Portabilis_View_Helper_DynamicSelectMenu_Core {
 
+  public function hiddenInput($options = array()) {
+    $defaultOptions       = array('options' => array());
+    $options              = $this->mergeOptions($options, $defaultOptions);
 
-  public function instituicaoHidden($options = array()) {
-    if (! isset($options['value']) || ! $options['value'])
-      $options['value'] = $this->getPermissoes()->getInstituicao($this->viewInstance->getSession()->id_pessoa);
+    $defaultSelectOptions = array('id'    => 'ref_cod_instituicao',
+                                  'value' => $this->getInstituicaoId());
 
-    $defaultOptions = array('id'    => 'ref_cod_instituicao',
-                            'value' => null);
-
-    $options = $this->mergeOptions($options, $defaultOptions);
-    call_user_func_array(array($this->viewInstance, 'campoOculto'), $options);
+    $selectOptions = $this->mergeOptions($selectOptions, $defaultSelectOptions);
+    call_user_func_array(array($this->viewInstance, 'campoOculto'), $selectOptions);
   }
 
 
-  public function instituicaoSelect($options = array(), $instituicoes = array()) {
-    if (empty($instituicoes))
-      $instituicoes = App_Model_IedFinder::getInstituicoes();
+  protected function getOptions($resources) {
+    if (empty($resources))
+      $resources = App_Model_IedFinder::getInstituicoes();
 
-    $instituicoes = $this->insertInArray(null, "Selecione uma institui&ccedil;&atilde;o", $instituicoes);
-
-    $defaultOptions = array('id'           => 'ref_cod_instituicao',
-                            'label'        => 'Institui&ccedil;&atilde;o',
-                            'instituicoes' => $instituicoes,
-                            'value'        => null,
-                            'callback'     => '',
-                            'duplo'        => false,
-                            'label_hint'   => '',
-                            'input_hint'   => '',
-                            'disabled'     => false,
-                            'required'     => true,
-                            'multiple'     => false);
-
-    $options = $this->mergeOptions($options, $defaultOptions);
-    call_user_func_array(array($this->viewInstance, 'campoLista'), $options);
+    return $this->insertInArray(null, "Selecione uma institui&ccedil;&atilde;o", $resources);
   }
 
 
-  public function instituicao($options = array(), $instituicoes = array()) {
-    $nivelAcesso = $this->getPermissoes()->nivel_acesso($this->viewInstance->getSession()->id_pessoa);
+  public function selectInput($options = array()) {
+    $defaultOptions       = array('id' => null, 'options' => array(), 'resources' => array());
+    $options              = $this->mergeOptions($options, $defaultOptions);
 
-    // poli-institucional
-    $nivelAcessoMultiplasInstituicoes = 1;
+    $defaultSelectOptions = array('id'         => 'ref_cod_instituicao',
+                                  'label'      => 'Institui&ccedil;&atilde;o',
+                                  'resources'  => $this->getOptions($options['resources']),
+                                  'value'      => $this->getInstituicaoId($options['id']),
+                                  'callback'   => '',
+                                  'duplo'      => false,
+                                  'label_hint' => '',
+                                  'input_hint' => '',
+                                  'disabled'   => false,
+                                  'required'   => true,
+                                  'multiple'   => false);
 
-    if ($nivelAcesso == $nivelAcessoMultiplasInstituicoes)
-      $this->instituicaoSelect($options, $instituicoes);
+    $selectOptions = $this->mergeOptions($options['options'], $defaultSelectOptions);
+    call_user_func_array(array($this->viewInstance, 'campoLista'), $selectOptions);
+  }
+
+
+  public function instituicao($options = array()) {
+    if ($this->hasNivelAcesso('POLI_INSTITUCIONAL'))
+      $this->selectInput($options);
     else
-      $this->instituicaoHidden($options);
+      $this->hiddenInput($options);
   }
 }
 ?>

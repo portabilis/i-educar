@@ -1,4 +1,7 @@
 <?php
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
 	*	@author Prefeitura Municipal de Itajaí								 *
@@ -177,7 +180,10 @@ class indice extends clsCadastro
     #$dynamicSelectMenusHelper->instituicao (array('value'   => $this->ref_cod_instituicao   ));
     #$dynamicSelectMenusHelper->escola      (array('value'   => $this->ref_cod_escola        ));
     #$dynamicSelectMenusHelper->biblioteca  (array('value'   => $this->ref_cod_biblioteca    ));
-    $dynamicSelectMenusHelper->helperFor('tipoExemplar', $options);
+
+    $dynamicSelectMenus->helperFor('instituicao');
+    $dynamicSelectMenus->helperFor('escola');
+    $dynamicSelectMenus->helperFor('tipoExemplar');
 
 
 

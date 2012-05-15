@@ -64,13 +64,43 @@ class Portabilis_View_Helper_DynamicSelectMenu_Core {
     ApplicationHelper::embedJavascript($this->viewInstance, 'fixupFieldsWidth();');
   }
 
+  protected function getCurrentUserId() {
+    if (! isset($this->_currentUserId))
+      $this->_currentUserId = $this->viewInstance->getSession()->id_pessoa;
+
+    return $this->_currentUserId;
+  }
+
 
   protected function getPermissoes() {
-    if (! isset($this->permissoes))
-      $this->permissoes = new clsPermissoes();
+    if (! isset($this->_permissoes))
+      $this->_permissoes = new clsPermissoes();
 
-    return $this->permissoes;
+    return $this->_permissoes;
   }
+
+
+  protected function getNivelAcesso() {
+    if (! isset($this->_nivelAcesso))
+      $this->_nivelAcesso = $this->getPermissoes()->nivel_acesso($this->getCurrentUserId());
+
+    return $this->_nivelAcesso;
+  }
+
+
+  # TODO verificar se é possivel usar a logica de App_Model_NivelAcesso
+  protected function hasNivelAcesso($nivelAcessoType) {
+    $niveisAcesso = array('POLI_INSTITUCIONAL' => 1,
+                          'INSTITUCIONAL'      => 2,
+                          'SOMENTE_ESCOLA'     => 4,
+                          'SOMENTE_BIBLIOTECA' => 8);
+
+    if (! isset($niveisAcesso[$nivelAcessoType]))
+      throw new CoreExt_Exception("Nivel acesso '$nivelAcessoType' not defined.");
+
+    return $this->getNivelAcesso() == $niveisAcesso[$nivelAcessoType];
+  }
+
 
   // TODO mover funcao para classe especifica
   protected function getDataMapperFor($modelName){
@@ -104,9 +134,37 @@ class Portabilis_View_Helper_DynamicSelectMenu_Core {
   }
 
 
+  protected function getInstituicaoId($instituicaoId = null) {
+    if (! $instituicaoId && ! $this->viewInstance->ref_cod_instituicao)
+      $instituicaoId = $this->getPermissoes()->getInstituicao($this->getCurrentUserId());
+
+    elseif (! $instituicaoId)
+      $instituicaoId = $this->viewInstance->ref_cod_instituicao;
+
+    if (! $instituicaoId)
+      throw new CoreExt_Exception("getInstituicaoId chamado, porem nenhum id encontrado.");
+
+    return $instituicaoId;
+  }
+
+
+  protected function getEscolaId($escolaId = null) {
+    if (! $escolaId && ! $this->viewInstance->ref_cod_escola)
+      $escolaId = $this->getPermissoes()->getEscola($this->getCurrentUserId());
+
+    elseif (! $escolaId)
+      $escolaId = $this->viewInstance->ref_cod_escola;
+
+    if (! $escolaId)
+      throw new CoreExt_Exception("getEscolaId chamado, porem nenhum id encontrado.");
+
+    return $escolaId;
+  }
+
+
   protected function getBibliotecaId($bibliotecaId = null) {
     if (! $bibliotecaId && ! $this->viewInstance->ref_cod_biblioteca) {
-      $biblioteca = $this->getPermissoes()->getBiblioteca($this->viewInstance->getSession()->id_pessoa);
+      $biblioteca = $this->getPermissoes()->getBiblioteca($this->getCurrentUserId());
 
       if (is_array($biblioteca) && count($biblioteca) > 0)
         $bibliotecaId = $biblioteca[0]['ref_cod_biblioteca'];

@@ -44,7 +44,7 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
  */
 class Portabilis_View_Helper_DynamicSelectMenu_Escola extends Portabilis_View_Helper_DynamicSelectMenu_Core {
 
-  public function escolaText($options = array()) {
+  public function stringInput($options = array()) {
     if (! isset($options['value']) || ! $options['value'])
       $escolaId = $this->getPermissoes()->getEscola($this->viewInstance->getSession()->id_pessoa);
     else
@@ -70,44 +70,41 @@ class Portabilis_View_Helper_DynamicSelectMenu_Escola extends Portabilis_View_He
   }
 
 
-  public function escolaSelect($options = array(), $escolas = array()) {
-    if (empty($escolas)) {
-      $instituicaoId = $this->getPermissoes()->getInstituicao($this->viewInstance->getSession()->id_pessoa);
-      $escolas       = App_Model_IedFinder::getEscolas($instituicaoId);
-    }
+  protected function getOptions($resources) {
+    if (empty($resources))
+      $resources = App_Model_IedFinder::getEscolas($this->getInstituicaoId());
 
-    $escolas = $this->insertInArray(null, "Selecione uma escola", $escolas);
+    return $this->insertInArray(null, "Selecione uma escola", $resources);
+  }
 
-    $defaultOptions = array('id'           => 'ref_cod_escola',
-                            'label'        => 'Escola',
-                            'escolas'      => $escolas,
-                            'value'        => null,
-                            'callback'     => '',
-                            'duplo'        => false,
-                            'label_hint'   => '',
-                            'input_hint'   => '',
-                            'disabled'     => false,
-                            'required'     => true,
-                            'multiple'     => false);
 
-    $options = $this->mergeOptions($options, $defaultOptions);
-    call_user_func_array(array($this->viewInstance, 'campoLista'), $options);
+  public function selectInput($options = array()) {
+    $defaultOptions       = array('id' => null, 'options' => array(), 'resources' => array());
+    $options              = $this->mergeOptions($options, $defaultOptions);
+
+    $defaultSelectOptions = array('id'         => 'ref_cod_escola',
+                                  'label'      => 'Escola',
+                                  'resources'  => $this->getOptions($options['resources']),
+                                  'value'      => $this->getEscolaId($options['id']),
+                                  'callback'   => '',
+                                  'duplo'      => false,
+                                  'label_hint' => '',
+                                  'input_hint' => '',
+                                  'disabled'   => false,
+                                  'required'   => true,
+                                  'multiple'   => false);
+
+    $selectOptions = $this->mergeOptions($selectOptions, $defaultSelectOptions);
+    call_user_func_array(array($this->viewInstance, 'campoLista'), $selectOptions);
   }
 
 
   public function escola($options = array(), $escolas = array()) {
-    $nivelAcesso = $this->getPermissoes()->nivel_acesso($this->viewInstance->getSession()->id_pessoa);
+    if ($this->hasNivelAcesso('POLI_INSTITUCIONAL') || $this->hasNivelAcesso('INSTITUCIONAL'))
+      $this->selectInput($options);
 
-    // poli-institucional, institucional
-    $niveisAcessoMultiplasEscolas = array(1, 2);
-
-    // escola
-    $niveisAcessoEscola = array(4, 8);
-
-    if (in_array($nivelAcesso, $niveisAcessoMultiplasEscolas))
-      $this->escolaSelect($options, $escolas);
-    elseif (in_array($nivelAcesso, $niveisAcessoEscola))
-      $this->escolaText($options);
+    elseif($this->hasNivelAcesso('SOMENTE_ESCOLA') || $this->hasNivelAcesso('SOMENTE_BIBLIOTECA'))
+      $this->stringInput($options);
 
     ApplicationHelper::loadJavascript($this->viewInstance, '/modules/DynamicSelectMenus/Assets/Javascripts/DynamicEscolas.js');
   }

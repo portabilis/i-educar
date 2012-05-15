@@ -75,7 +75,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_TipoExemplar extends Portabilis_V
     // ou sem customizar opcoes, usando as opcoes padroes;
     $dynamicSelectMenusHelperInstance->tipoExemplar();
   */
-  public function tipoExemplar(array $options = array()) {
+  public function tipoExemplar($options = array()) {
 
     $defaultOptions           = array('bibliotecaId'  => null,
                                       'options'       => array(),
