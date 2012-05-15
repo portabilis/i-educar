@@ -94,7 +94,7 @@ class AlterarEmailController extends Core_Controller_Page_EditController
   {
     if ($this->_save())
       header("Location: /intranet/index.php");
-      
+
     return FALSE;
   }
 
@@ -123,4 +123,3 @@ class AlterarEmailController extends Core_Controller_Page_EditController
   }
 }
 ?>
-

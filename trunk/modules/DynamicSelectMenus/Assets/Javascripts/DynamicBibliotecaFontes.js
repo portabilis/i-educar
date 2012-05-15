@@ -12,7 +12,7 @@
       resetSelect($fonteField);
 
       if ($bibliotecaField.val() && $bibliotecaField.is(':enabled')) {
-        urlForGetFontes = getResourceUrlBuilder.buildUrl('educar_fonte_xml.php', '', {
+        var urlForGetFontes = getResourceUrlBuilder.buildUrl('educar_fonte_xml.php', '', {
                                                        bib : $bibliotecaField.attr('value') });
 
         var options = {

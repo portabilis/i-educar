@@ -33,10 +33,11 @@
  */
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
+require_once 'Biblioteca/Model/TipoExemplarDataMapper.php';
 
 class DynamicTiposExemplarController extends ApiCoreController
 {
-  protected $_dataMapper  = '';
+  protected $_dataMapper  = 'Biblioteca_Model_TipoExemplarDataMapper';
 
   #TODO definir este valor com mesmo código cadastro de tipo de exemplar?
   protected $_processoAp  = 0;
@@ -45,18 +46,37 @@ class DynamicTiposExemplarController extends ApiCoreController
   protected $_deleteOption  = FALSE;
   protected $_titulo   = '';
 
-  #protected function canAcceptRequest()
-  #{
-  #  return parent::canAcceptRequest();
-  #}
-
-
-  protected function getTiposExemplar() {
-    return "#TODO implementar getEscolas";
+  // #TODO mover validador (mover no apiReservaController tambem) para /lib/Portabilis/Validators/BibliotecaValidators.php
+  protected function validatesPresenceOfBibliotecaId(){
+    return $this->validator->validatesPresenceOf($this->getRequest()->biblioteca_id, 'biblioteca_id');
   }
 
 
- public function Gerar() {
+  protected function canAcceptRequest() {
+    return parent::canAcceptRequest() &&
+           $this->validatesPresenceOfBibliotecaId();
+  }
+
+
+  protected function getTiposExemplar() {
+    $resources = array();
+
+    $columns = array('cod_exemplar_tipo', 'nm_tipo');
+    $where   = array('ref_cod_biblioteca' => $this->getRequest()->biblioteca_id,
+                     'ativo'              => '1');
+
+    $tiposExemplar = $this->getDataMapper()->findAll($columns,
+                                                     $where,
+                                                     $orderBy = array('nm_tipo' => 'ASC'),
+                                                     $addColumnIdIfNotSet = false);
+
+    $resources = $this->filterRecords($tiposExemplar, array('cod_exemplar_tipo' => 'id', 'nm_tipo' => 'nome'));
+
+    return $resources;
+  }
+
+
+  public function Gerar() {
     if ($this->isRequestFor('get', 'tipos_exemplar'))
       $this->appendResponse('tipos_exemplar', $this->getTiposExemplar());
     else

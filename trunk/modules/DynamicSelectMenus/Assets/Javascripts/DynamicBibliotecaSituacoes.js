@@ -12,7 +12,7 @@
       resetSelect($situacaoField);
 
       if ($bibliotecaField.val() && $bibliotecaField.is(':enabled')) {
-        urlForGetSituacoes = getResourceUrlBuilder.buildUrl('educar_situacao_xml.php', '', {
+        var urlForGetSituacoes = getResourceUrlBuilder.buildUrl('educar_situacao_xml.php', '', {
                                                        bib : $bibliotecaField.attr('value') });
 
         var options = {

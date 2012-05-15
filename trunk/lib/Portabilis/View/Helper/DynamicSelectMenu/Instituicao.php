@@ -1,0 +1,95 @@
+<?php
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
+/**
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   Portabilis
+ * @since     Arquivo disponível desde a versão 1.1.0
+ * @version   $Id$
+ */
+
+require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
+
+
+/**
+ * Portabilis_View_Helper_DynamicSelectMenu_Instituicao class.
+ *
+ * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   Portabilis
+ * @since     Classe disponível desde a versão 1.1.0
+ * @version   @@package_version@@
+ */
+class Portabilis_View_Helper_DynamicSelectMenu_Instituicao extends Portabilis_View_Helper_DynamicSelectMenu_Core {
+
+
+  public function instituicaoHidden($options = array()) {
+    if (! isset($options['value']) || ! $options['value'])
+      $options['value'] = $this->getPermissoes()->getInstituicao($this->viewInstance->getSession()->id_pessoa);
+
+    $defaultOptions = array('id'    => 'ref_cod_instituicao',
+                            'value' => null);
+
+    $options = $this->mergeOptions($options, $defaultOptions);
+    call_user_func_array(array($this->viewInstance, 'campoOculto'), $options);
+  }
+
+
+  public function instituicaoSelect($options = array(), $instituicoes = array()) {
+    if (empty($instituicoes))
+      $instituicoes = App_Model_IedFinder::getInstituicoes();
+
+    $instituicoes = $this->insertInArray(null, "Selecione uma institui&ccedil;&atilde;o", $instituicoes);
+
+    $defaultOptions = array('id'           => 'ref_cod_instituicao',
+                            'label'        => 'Institui&ccedil;&atilde;o',
+                            'instituicoes' => $instituicoes,
+                            'value'        => null,
+                            'callback'     => '',
+                            'duplo'        => false,
+                            'label_hint'   => '',
+                            'input_hint'   => '',
+                            'disabled'     => false,
+                            'required'     => true,
+                            'multiple'     => false);
+
+    $options = $this->mergeOptions($options, $defaultOptions);
+    call_user_func_array(array($this->viewInstance, 'campoLista'), $options);
+  }
+
+
+  public function instituicao($options = array(), $instituicoes = array()) {
+    $nivelAcesso = $this->getPermissoes()->nivel_acesso($this->viewInstance->getSession()->id_pessoa);
+
+    // poli-institucional
+    $nivelAcessoMultiplasInstituicoes = 1;
+
+    if ($nivelAcesso == $nivelAcessoMultiplasInstituicoes)
+      $this->instituicaoSelect($options, $instituicoes);
+    else
+      $this->instituicaoHidden($options);
+  }
+}
+?>
