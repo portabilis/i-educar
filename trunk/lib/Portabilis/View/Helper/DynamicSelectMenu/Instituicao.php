@@ -45,14 +45,14 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
 class Portabilis_View_Helper_DynamicSelectMenu_Instituicao extends Portabilis_View_Helper_DynamicSelectMenu_Core {
 
   public function hiddenInput($options = array()) {
-    $defaultOptions       = array('options' => array());
+    $defaultOptions       = array('id' => null, 'options' => array());
     $options              = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultSelectOptions = array('id'    => 'ref_cod_instituicao',
-                                  'value' => $this->getInstituicaoId());
+    $defaultInputOptions = array('id'    => 'ref_cod_instituicao',
+                                 'value' => $this->getInstituicaoId($options['id']));
 
-    $selectOptions = $this->mergeOptions($selectOptions, $defaultSelectOptions);
-    call_user_func_array(array($this->viewInstance, 'campoOculto'), $selectOptions);
+    $inputOptions = $this->mergeOptions($inputOptions, $defaultInputOptions);
+    call_user_func_array(array($this->viewInstance, 'campoOculto'), $inputOptions);
   }
 
 
@@ -68,20 +68,20 @@ class Portabilis_View_Helper_DynamicSelectMenu_Instituicao extends Portabilis_Vi
     $defaultOptions       = array('id' => null, 'options' => array(), 'resources' => array());
     $options              = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultSelectOptions = array('id'         => 'ref_cod_instituicao',
-                                  'label'      => 'Institui&ccedil;&atilde;o',
-                                  'resources'  => $this->getOptions($options['resources']),
-                                  'value'      => $this->getInstituicaoId($options['id']),
-                                  'callback'   => '',
-                                  'duplo'      => false,
-                                  'label_hint' => '',
-                                  'input_hint' => '',
-                                  'disabled'   => false,
-                                  'required'   => true,
-                                  'multiple'   => false);
+    $defaultInputOptions = array('id'         => 'ref_cod_instituicao',
+                                 'label'      => 'Institui&ccedil;&atilde;o',
+                                 'resources'  => $this->getOptions($options['resources']),
+                                 'value'      => $this->getInstituicaoId($options['id']),
+                                 'callback'   => '',
+                                 'duplo'      => false,
+                                 'label_hint' => '',
+                                 'input_hint' => '',
+                                 'disabled'   => false,
+                                 'required'   => true,
+                                 'multiple'   => false);
 
-    $selectOptions = $this->mergeOptions($options['options'], $defaultSelectOptions);
-    call_user_func_array(array($this->viewInstance, 'campoLista'), $selectOptions);
+    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
+    call_user_func_array(array($this->viewInstance, 'campoLista'), $inputOptions);
   }
 
 

@@ -45,24 +45,27 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
 class Portabilis_View_Helper_DynamicSelectMenu_Escola extends Portabilis_View_Helper_DynamicSelectMenu_Core {
 
   public function stringInput($options = array()) {
-    if (! isset($options['value']) || ! $options['value'])
-      $escolaId = $this->getPermissoes()->getEscola($this->viewInstance->getSession()->id_pessoa);
+    $defaultOptions       = array('options' => array());
+    $options              = $this->mergeOptions($options, $defaultOptions);
+
+    // subescreve $options['options']['value'] com nome escola
+    if (isset($options['options']['value']) && $options['options']['value'])
+      $escolaId =  $options['options']['value'];
     else
-      $escolaId = $options['value'];
+      $escolaId = $this->getEscolaId($options['id']);
 
-    $escola = App_Model_IedFinder::getEscola($escolaId);
-    $options['value'] = $escola['nome'];
+    $escola   = App_Model_IedFinder::getEscola($escolaId);
+    $options['options']['value'] = $escola['nome'];
 
-    $defaultOptions = array('id'        => 'escola_nome',
-                            'label'     => 'Escola',
-                            'value'     => '',
-                            'duplo'     => false,
-                            'descricao' => '',
-                            'separador' => ':');
+    $defaultInputOptions = array('id'        => 'escola_nome',
+                                 'label'     => 'Escola',
+                                 'value'     => '',
+                                 'duplo'     => false,
+                                 'descricao' => '',
+                                 'separador' => ':');
 
-    $options = $this->mergeOptions($options, $defaultOptions);
-
-    call_user_func_array(array($this->viewInstance, 'campoRotulo'), $options);
+    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
+    call_user_func_array(array($this->viewInstance, 'campoRotulo'), $inputOptions);
 
     /* adicionado campo oculto manualmente, pois o metodo campoRotulo adiciona
        como value o nome da escola */
@@ -82,20 +85,20 @@ class Portabilis_View_Helper_DynamicSelectMenu_Escola extends Portabilis_View_He
     $defaultOptions       = array('id' => null, 'options' => array(), 'resources' => array());
     $options              = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultSelectOptions = array('id'         => 'ref_cod_escola',
-                                  'label'      => 'Escola',
-                                  'resources'  => $this->getOptions($options['resources']),
-                                  'value'      => $this->getEscolaId($options['id']),
-                                  'callback'   => '',
-                                  'duplo'      => false,
-                                  'label_hint' => '',
-                                  'input_hint' => '',
-                                  'disabled'   => false,
-                                  'required'   => true,
-                                  'multiple'   => false);
+    $defaultInputOptions = array('id'         => 'ref_cod_escola',
+                                 'label'      => 'Escola',
+                                 'resources'  => $this->getOptions($options['resources']),
+                                 'value'      => $this->getEscolaId($options['id']),
+                                 'callback'   => '',
+                                 'duplo'      => false,
+                                 'label_hint' => '',
+                                 'input_hint' => '',
+                                 'disabled'   => false,
+                                 'required'   => true,
+                                 'multiple'   => false);
 
-    $selectOptions = $this->mergeOptions($selectOptions, $defaultSelectOptions);
-    call_user_func_array(array($this->viewInstance, 'campoLista'), $selectOptions);
+    $inputOptions = $this->mergeOptions($inputOptions, $defaultInputOptions);
+    call_user_func_array(array($this->viewInstance, 'campoLista'), $inputOptions);
   }
 
 
