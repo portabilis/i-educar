@@ -477,7 +477,7 @@
 
 	if (isset($get_alunos_matriculados) && $get_alunos_matriculados)
   {
-    $this->campoLista( "ref_cod_matricula", "Matricula", array("" => "Selecione"), null, null, null, null, null, $alunos_matriculados_desabilitado, $alunos_matriculados_obrigatorio );
+    $this->campoLista( "ref_cod_matricula", "Matrícula", array("" => "Selecione"), null, null, null, null, null, $alunos_matriculados_desabilitado, $alunos_matriculados_obrigatorio );
   }
 
 	if (isset($get_cabecalho))
@@ -994,7 +994,7 @@ if ( $get_serie && $get_escola_serie)
 		}
 		else
 		{
-			campoSerie.options[0].text = 'O curso não possui nenhuma série ou todas as séries já estã associadas a essa escola';
+			campoSerie.options[0].text = 'O curso não possui nenhuma série ou todas as séries já estão associadas a essa escola';
 		}
 		campoSerie.disabled = false;
     if (campoSerie.afterchange)

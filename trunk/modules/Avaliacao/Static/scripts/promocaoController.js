@@ -278,7 +278,7 @@ var $j = jQuery.noConflict();
 
         handleMessages(dataResponse.msgs);
 
-        var $text = $('<p />').html('Quantidade matriculas em andamento: ' + 
+        var $text = $('<p />').html('Quantidade de matrículas em andamento: ' + 
                                     dataResponse.quantidade_matriculas + '<br />');
 
         $('<input />').attr('type', 'checkbox').attr('id', 'continuar-processo').attr('name', 'continuar-processo').appendTo($text);
@@ -323,7 +323,7 @@ var $j = jQuery.noConflict();
     function handleErrorMatriculasSearch(response){
       showSearchButton();
 
-      handleMessages([{type : 'error', msg : 'Ocorreu um erro ao carregar as matriculas, por favor tente novamente, detalhes:' + response.responseText}], '');
+      handleMessages([{type : 'error', msg : 'Ocorreu um erro ao carregar as matrículas, por favor tente novamente, detalhes:' + response.responseText}], '');
 
       safeLog(response);
     }

@@ -123,10 +123,10 @@ class indice extends clsCadastro
     }
 
     if ($result && empty($this->mensagem))
-      $this->mensagem = $count > 0 ? "<span class='success'>Rematrículado $count alunos com sucesso em $ano!</span>" : "<span class='notice'>Nenhum aluno rematrículado. Certifique-se que a turma possui alunos aprovados ou reprovados não matrículados em $ano.</span>";
+      $this->mensagem = $count > 0 ? "<span class='success'>Rematrículado $count alunos com sucesso em $ano!</span>" : "<span class='notice'>Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados não matriculados em $ano.</span>";
 
     elseif(empty($this->mensagem))
-      $this->mensagem = "Ocorreu algum erro inesperado durante rematrículas, por favor, tente novamente.";
+      $this->mensagem = "Ocorreu algum erro inesperado durante as rematrículas, por favor, tente novamente.";
 
     return $result;
   }
@@ -151,8 +151,8 @@ class indice extends clsCadastro
 
     }
     catch (Exception $e) {
-      $this->mensagem = "Erro ao selecionar matriculas ano anterior: $anoAnterior";
-      error_log("Erro ao selecionar matriculas ano anterior, no processo rematricula automatica:" . $e->getMessage());
+      $this->mensagem = "Erro ao selecionar matrículas ano anterior: $anoAnterior";
+      error_log("Erro ao selecionar matrículas ano anterior, no processo rematrícula automática:" . $e->getMessage());
       return false;
     }
 
@@ -171,7 +171,7 @@ class indice extends clsCadastro
       return $this->matricularAluno($escolaId, $nextCursoId, $nextSerieId, $ano, $alunoId);
     }
     else
-      $this->mensagem = "Não foi possivel obter a proxima série da sequencia de enturmação";
+      $this->mensagem = "Não foi possível obter a próxima série da sequência de enturmação";
 
     return false;
   }
@@ -190,7 +190,7 @@ class indice extends clsCadastro
     }
     catch (Exception $e) {
       $this->mensagem = "Erro durante matrícula do aluno: $alunoId";
-      error_log("Erro durante matricula do aluno $alunoId, no processo rematricula automatica:" . $e->getMessage());
+      error_log("Erro durante a matrícula do aluno $alunoId, no processo de rematrícula automática:" . $e->getMessage());
       return false;
     }
 

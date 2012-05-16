@@ -697,7 +697,7 @@ class indice extends clsDetalhe
     $db = new clsBanco();
 
     require_once 'include/portabilis/ml.php';
-    $div = new DIV(new P('<strong>Matriculas:</strong>'));
+    $div = new DIV(new P('<strong>Matrículas:</strong>'));
 
     $matriculas = new clsPmieducarMatricula();#null, null, null, null, null, null, $this->cod_aluno, null, null, null, 1);
     $matriculas->setOrderby('ano DESC, ref_ref_cod_serie DESC, aprovado, cod_matricula');
@@ -867,7 +867,7 @@ class indice extends clsDetalhe
         $div->append(new P('* Matrícula com solicitação de transferência interna em aberto. ', new A('matricular aluno', array('class' => 'decorated', 'href' => "educar_matricula_cad.php?ref_cod_aluno={$_GET['cod_aluno']}"))));
     }
     else
-      $div->append(new P('<strong>Este aluno não possui matrículas. </strong>', new A('matrícular aluno', array('class' => 'decorated', 'href' => "educar_matricula_cad.php?ref_cod_aluno={$_GET['cod_aluno']}"))));
+      $div->append(new P('Este aluno não possui matrículas.', new A('<strong>Clique aqui para matricular<strong>', array('class' => 'decorated', 'href' => "educar_matricula_cad.php?ref_cod_aluno={$_GET['cod_aluno']}"))));
 
     return $div->render();
   }

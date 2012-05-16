@@ -369,7 +369,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
       $notaExame = $this->getNotaAtual($etapa='Rc');
       if(! empty($notaExame) || is_numeric($notaExame)){
-        $this->messages->append('Nota da matricula '. $this->getRequest()->matricula_id .' somente pode ser removida, após remover nota de exame.', 'error');
+        $this->messages->append('Nota da matrícula '. $this->getRequest()->matricula_id .' somente pode ser removida, após remover nota do exame.', 'error');
         $canDelete = false;
       }
       else {
@@ -441,12 +441,12 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
       $nota = $this->getNotaAtual();
       if (empty($nota) && ! is_numeric($nota))
-        $this->messages->append('Nota matricula '. $this->getRequest()->matricula_id .' inexistente ou já removida.', 'notice');
+        $this->messages->append('Nota matrícula '. $this->getRequest()->matricula_id .' inexistente ou já removida.', 'notice');
       else
       {
         $this->getService()->deleteNota($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id);
         $this->saveService();
-        $this->messages->append('Nota matricula '. $this->getRequest()->matricula_id .' removida com sucesso.', 'success');
+        $this->messages->append('Nota matrícula '. $this->getRequest()->matricula_id .' removida com sucesso.', 'success');
       }
     }
   }
@@ -465,12 +465,12 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
       $componenteCurricularId = null;
 
     if ($canDelete && is_null($this->getFaltaAtual())){
-      $this->messages->append('Falta matricula '. $this->getRequest()->matricula_id .' inexistente ou já removida.', 'notice');
+      $this->messages->append('Falta matrícula '. $this->getRequest()->matricula_id .' inexistente ou já removida.', 'notice');
     }
     elseif ($canDelete){
       $this->getService()->deleteFalta($this->getRequest()->etapa, $componenteCurricularId);
       $this->saveService();
-      $this->messages->append('Falta matricula '. $this->getRequest()->matricula_id .' removida com sucesso.', 'success');
+      $this->messages->append('Falta matrícula '. $this->getRequest()->matricula_id .' removida com sucesso.', 'success');
     }
   }
 
@@ -480,7 +480,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
       $parecerAtual = $this->getParecerAtual();
 
       if ((is_null($parecerAtual) || $parecerAtual == '')){
-        $this->messages->append('Parecer descritivo matricula '. $this->getRequest()->matricula_id .' inexistente ou já removido.', 'notice');
+        $this->messages->append('Parecer descritivo matrícula '. $this->getRequest()->matricula_id .' inexistente ou já removido.', 'notice');
       }
       else{
         $tpParecer = $this->getService()->getRegra()->get('parecerDescritivo');
@@ -492,7 +492,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
           $this->getService()->deleteParecer($this->getRequest()->etapa);
 
         $this->saveService();
-        $this->messages->append('Parecer descritivo matricula '. $this->getRequest()->matricula_id .' removido com sucesso.', 'success');
+        $this->messages->append('Parecer descritivo matrícula '. $this->getRequest()->matricula_id .' removido com sucesso.', 'success');
       }
     }
   }
@@ -509,7 +509,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
       $this->getService()->addNota($nota);
       $this->saveService();
-      $this->messages->append('Nota matricula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
+      $this->messages->append('Nota matrícula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
     }
   }
 
@@ -555,7 +555,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
 
       $this->getService()->addFalta($falta);
       $this->saveService();
-      $this->messages->append('Falta matricula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
+      $this->messages->append('Falta matrícula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
     }
   }
 
@@ -603,7 +603,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
         $situacao = App_Model_MatriculaSituacao::getInstance()->getValue($service->getSituacaoComponentesCurriculares()->componentesCurriculares[$this->getRequest()->componente_curricular_id]->situacao);
       }
       catch (Exception $e){
-        $this->messages->append("Erro ao recuperar situação matricula: " . $e->getMessage());
+        $this->messages->append("Erro ao recuperar situação da matrícula: " . $e->getMessage());
       }
     }
     return utf8_encode($situacao);

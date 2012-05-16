@@ -2413,7 +2413,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     if($novaSituacaoMatricula == $situacaoMatricula)
-      $exceptionMsg = "Matricula ({$this->getOption('matricula')}) não precisou ser promovida, "
+      $exceptionMsg = "Matrícula ({$this->getOption('matricula')}) não precisou ser promovida, "
                       . "pois a nova situação continua a mesma da anterior ($novaSituacaoMatricula)";
 
     if ($exceptionMsg)
