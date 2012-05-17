@@ -123,7 +123,7 @@ class indice extends clsCadastro
     }
 
     if ($result && empty($this->mensagem))
-      $this->mensagem = $count > 0 ? "<span class='success'>Rematrículado $count alunos com sucesso em $ano!</span>" : "<span class='notice'>Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados não matriculados em $ano.</span>";
+      $this->mensagem = $count > 0 ? "<span class='success'>Rematriculado $count alunos com sucesso em $ano!</span>" : "<span class='notice'>Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados não matriculados em $ano.</span>";
 
     elseif(empty($this->mensagem))
       $this->mensagem = "Ocorreu algum erro inesperado durante as rematrículas, por favor, tente novamente.";

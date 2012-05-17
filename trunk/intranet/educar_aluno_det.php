@@ -867,7 +867,7 @@ class indice extends clsDetalhe
         $div->append(new P('* Matrícula com solicitação de transferência interna em aberto. ', new A('matricular aluno', array('class' => 'decorated', 'href' => "educar_matricula_cad.php?ref_cod_aluno={$_GET['cod_aluno']}"))));
     }
     else
-      $div->append(new P('Este aluno não possui matrículas.', new A('<strong>Clique aqui para matricular<strong>', array('class' => 'decorated', 'href' => "educar_matricula_cad.php?ref_cod_aluno={$_GET['cod_aluno']}"))));
+      $div->append(new P('Este aluno não possui matrículas. ', new A('<strong>Clique aqui para matricular<strong>', array('class' => 'decorated', 'href' => "educar_matricula_cad.php?ref_cod_aluno={$_GET['cod_aluno']}"))));
 
     return $div->render();
   }
