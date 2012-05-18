@@ -109,7 +109,7 @@ class indice extends clsListagem
 		$this->campoNumero("cod_aluno","C&oacute;digo Aluno",$this->cod_aluno,20,255,false);
 		$this->campoNumero("cod_ciasc","C&oacute;digo CIASC",$this->cod_ciasc,20,255,false);
 		$this->campoNumero("cod_inep","C&oacute;digo INEP",$this->cod_inep,20,255,false);
-		$this->campoTexto("nome_aluno","Nome do aluno",$this->nome_aluno,50,255,false);
+		$this->campoTexto("nome_aluno","Nome do aluno", $this->nome_aluno,50,255,false);
 //		if ($this->pessoa_logada == 184580) {
 			$this->campoData("data_nascimento", "Data de Nascimento", $this->data_nascimento);
 			$this->campoTexto("nome_pai", "Nome do Pai", $this->nome_pai, 50, 255);
@@ -340,6 +340,11 @@ class indice extends clsListagem
                                   } else {
                                       $registro['cod_inep'] = $alunoInep->alunoInep;
                                   }
+
+    $registro["nome_aluno"] = strtoupper($registro["nome_aluno"]);
+    $registro["nm_mae"] = strtoupper($registro["nm_mae"]);
+    $registro["nome_responsavel"] = strtoupper($registro["nome_responsavel"]);
+
 
 				$this->addLinhas( array(
 					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["cod_aluno"]}</a>",

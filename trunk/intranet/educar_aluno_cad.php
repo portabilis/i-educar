@@ -318,7 +318,7 @@ class indice extends clsCadastro
         $det_fisica_raca = $obj_fisica_raca->detalhe();
         $this->ref_cod_raca = $det_fisica_raca['ref_cod_raca'];
 
-        $this->nome  = $det_pessoa['nome'];
+        $this->nome  = strtoupper($det_pessoa['nome']);
 
         $this->email =  $det_pessoa['email'];
 

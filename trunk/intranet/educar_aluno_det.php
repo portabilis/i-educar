@@ -134,7 +134,7 @@ class indice extends clsDetalhe
         $det_raca = $obj_raca->detalhe();
       }
 
-      $registro['nome_aluno'] = $det_pessoa_fj['nome'];
+      $registro['nome_aluno'] = strtoupper($det_pessoa_fj['nome']);
       $registro['cpf']        = int2IdFederal($det_fisica['cpf']);
       $registro['data_nasc']  = dataToBrasil($det_fisica['data_nasc']);
       $registro['sexo']       = $det_fisica['sexo'] == 'F' ? 'Feminino' : 'Masculino';
