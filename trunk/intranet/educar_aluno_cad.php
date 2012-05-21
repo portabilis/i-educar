@@ -186,7 +186,8 @@ class indice extends clsCadastro
     $num_tit_eleitor,
     $zona_tit_eleitor,
     $secao_tit_eleitor,
-    $idorg_exp_rg;
+    $idorg_exp_rg,
+    $certidao_nascimento;
 
   var $sem_cpf;
 
@@ -1169,6 +1170,7 @@ class indice extends clsCadastro
       $this->num_termo = $detalheDocumento['num_termo'];
       $this->num_livro = $detalheDocumento['num_livro'];
       $this->num_folha = $detalheDocumento['num_folha'];
+      $this->certidao_nascimento = $detalheDocumento['certidao_nascimento'];
 
       if ($detalheDocumento['data_emissao_cert_civil']) {
         $this->data_emissao_cert_civil = date('d/m/Y',
@@ -1235,6 +1237,7 @@ class indice extends clsCadastro
     $this->campoTexto('num_termo', 'Termo', $this->num_termo, '8', '8', FALSE);
     $this->campoTexto('num_livro', 'Livro', $this->num_livro, '8', '8', FALSE);
     $this->campoTexto('num_folha', 'Folha', $this->num_folha, '4', '4', FALSE);
+    $this->campoTexto('certidao_nascimento', 'Certidão nascimento', $this->certidao_nascimento, '37', '40', FALSE);
 
     $this->campoData('data_emissao_cert_civil', 'Emissão Certidão Civil',
       $this->data_emissao_cert_civil, FALSE);
@@ -1605,7 +1608,7 @@ class indice extends clsCadastro
       $this->cartorio_cert_civil, $this->num_cart_trabalho, $this->serie_cart_trabalho,
       $this->data_emissao_cart_trabalho, $this->sigla_uf_cart_trabalho,
       $this->num_tit_eleitor, $this->zona_tit_eleitor, $this->secao_tit_eleitor,
-      $this->idorg_exp_rg);
+      $this->idorg_exp_rg, $this->certidao_nascimento);
 
     if ($ObjDocumento->detalhe()) {
       $ObjDocumento = new clsDocumento($this->ref_idpes, $this->rg, $this->data_exp_rg,
@@ -1614,11 +1617,10 @@ class indice extends clsCadastro
         $this->sigla_uf_cert_civil, $this->cartorio_cert_civil, $this->num_cart_trabalho,
         $this->serie_cart_trabalho, $this->data_emissao_cart_trabalho,
         $this->sigla_uf_cart_trabalho, $this->num_tit_eleitor, $this->zona_tit_eleitor,
-        $this->secao_tit_eleitor, $this->idorg_exp_rg);
+        $this->secao_tit_eleitor, $this->idorg_exp_rg, $this->certidao_nascimento);
 
-      if (!$ObjDocumento->edita()) {
+      if (! $ObjDocumento->edita())
         return FALSE;
-      }
     }
     else {
       $ObjDocumento = new clsDocumento($this->ref_idpes, $this->rg, $this->data_exp_rg,
@@ -1627,7 +1629,7 @@ class indice extends clsCadastro
         $this->sigla_uf_cert_civil, $this->cartorio_cert_civil, $this->num_cart_trabalho,
         $this->serie_cart_trabalho, $this->data_emissao_cart_trabalho,
         $this->sigla_uf_cart_trabalho, $this->num_tit_eleitor,
-        $this->zona_tit_eleitor, $this->secao_tit_eleitor, $this->idorg_exp_rg);
+        $this->zona_tit_eleitor, $this->secao_tit_eleitor, $this->idorg_exp_rg, $this->certidao_nascimento);
 
       if (!$ObjDocumento->cadastra()) {
         return FALSE;
