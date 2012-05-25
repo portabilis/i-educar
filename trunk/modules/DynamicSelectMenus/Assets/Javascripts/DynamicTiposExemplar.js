@@ -3,11 +3,8 @@
     var $bibliotecaField   = $('#ref_cod_biblioteca');
     var $tipoExemplarField = $('#ref_cod_exemplar_tipo');
 
-    var handleGetTiposExemplar = function(resources) {
-
-      // #FIXME criar metodo jsonResourcesToSelectOptions
-
-      var selectOptions = xmlResourcesToSelectOptions(resources, 'query', 'cod_biblioteca');
+    var handleGetTiposExemplar = function(response) {
+      var selectOptions = jsonResourcesToSelectOptions(response['tipos_exemplar'], 'id', 'nome');
       updateSelect($tipoExemplarField, selectOptions, "Selecione um tipo de exemplar");
     }
 
@@ -15,8 +12,9 @@
       resetSelect($tipoExemplarField);
 
       if ($bibliotecaField.val() && $bibliotecaField.is(':enabled')) {
-        var path = 'module/DynamicSelectMenus/DynamicTiposExemplar';
+        var path = '/module/DynamicSelectMenus/DynamicTiposExemplar';
         var urlForGetTipoExemplar = getResourceUrlBuilder.buildUrl(path, '', {
+                                                            resource      : 'tipos_exemplar',
                                                             biblioteca_id : $bibliotecaField.attr('value') });
 
         var options = {

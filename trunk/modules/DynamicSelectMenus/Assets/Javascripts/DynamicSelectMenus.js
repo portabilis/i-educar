@@ -49,6 +49,20 @@ function xmlResourcesToSelectOptions(resources, parentNodeName, optionIdAttrName
 }
 
 
+function jsonResourcesToSelectOptions(resources, attrIdName, attrValueName) {
+  var options = [];
+
+  $j.each(resources, function(index, resource){
+    var $option = $j('<option />');
+    $option.attr('value', resource[attrIdName]);
+    $option.html(resource[attrValueName]);
+    options.push($option);
+  });
+
+  return options;
+}
+
+
 function fixupFieldsWidth(){
   var maxWidth = 0;
   var $fields = $j('form select');
