@@ -141,22 +141,16 @@ class Portabilis_View_Helper_DynamicSelectMenu_Core {
     elseif (! $instituicaoId)
       $instituicaoId = $this->viewInstance->ref_cod_instituicao;
 
-    if (! $instituicaoId)
-      throw new CoreExt_Exception("getInstituicaoId chamado, porem nenhum id encontrado.");
-
     return $instituicaoId;
   }
 
 
-  protected function getEscolaId($escolaId = null, $throwExceptionIfNotFound = true) {
+  protected function getEscolaId($escolaId = null) {
     if (! $escolaId && ! $this->viewInstance->ref_cod_escola)
       $escolaId = $this->getPermissoes()->getEscola($this->getCurrentUserId());
 
     elseif (! $escolaId)
       $escolaId = $this->viewInstance->ref_cod_escola;
-
-    if ($throwExceptionIfNotFound && ! $escolaId)
-      throw new CoreExt_Exception("getEscolaId chamado, porem nenhum id encontrado.");
 
     return $escolaId;
   }
@@ -172,9 +166,6 @@ class Portabilis_View_Helper_DynamicSelectMenu_Core {
 
     elseif (! $bibliotecaId)
       $bibliotecaId = $this->viewInstance->ref_cod_biblioteca;
-
-    if (! $bibliotecaId)
-      throw new CoreExt_Exception("getBibliotecaId chamado, porem nenhum id encontrado.");
 
     return $bibliotecaId;
   }

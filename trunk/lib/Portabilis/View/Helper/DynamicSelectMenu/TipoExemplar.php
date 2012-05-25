@@ -45,19 +45,26 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
 class Portabilis_View_Helper_DynamicSelectMenu_TipoExemplar extends Portabilis_View_Helper_DynamicSelectMenu_Core {
 
   protected function getOptions($bibliotecaId, $tiposExemplar) {
+
+    // se $tiposExemplar vazio, seleciona tipos de exemplares da biblioteca (caso haja bibliotecaId)
     if (empty($tiposExemplar)) {
-      $columns = array('cod_exemplar_tipo', 'nm_tipo');
-      $where   = array('ref_cod_biblioteca' => $this->getBibliotecaId($bibliotecaId), 'ativo' => '1');
-      $orderBy = array('nm_tipo' => 'ASC');
+      if (! $bibliotecaId)
+        $bibliotecaId = $this->getBibliotecaId($bibliotecaId);
 
-      $tiposExemplar = $this->getDataMapperFor('tipoExemplar')->findAll($columns,
-                                                                        $where,
-                                                                        $orderBy,
-                                                                        $addColumnIdIfNotSet = false);
+      if ($bibliotecaId) {
+        $columns = array('cod_exemplar_tipo', 'nm_tipo');
+        $where   = array('ref_cod_biblioteca' => $bibliotecaId, 'ativo' => '1');
+        $orderBy = array('nm_tipo' => 'ASC');
 
-      $tiposExemplar = Portabilis_Object_Utils::filterKeyValue($tiposExemplar,
-                                                                 'cod_exemplar_tipo',
-                                                                 'nm_tipo');
+        $tiposExemplar = $this->getDataMapperFor('tipoExemplar')->findAll($columns,
+                                                                          $where,
+                                                                          $orderBy,
+                                                                          $addColumnIdIfNotSet = false);
+
+        $tiposExemplar = Portabilis_Object_Utils::filterKeyValue($tiposExemplar,
+                                                                   'cod_exemplar_tipo',
+                                                                   'nm_tipo');
+      }
     }
 
     return $this->insertInArray(null, "Selecione um tipo de exemplar", $tiposExemplar);

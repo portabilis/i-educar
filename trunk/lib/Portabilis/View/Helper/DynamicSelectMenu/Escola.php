@@ -74,8 +74,10 @@ class Portabilis_View_Helper_DynamicSelectMenu_Escola extends Portabilis_View_He
 
 
   protected function getOptions($resources) {
-    if (empty($resources))
-      $resources = App_Model_IedFinder::getEscolas($this->getInstituicaoId());
+    $instituicaoId = $this->getInstituicaoId();
+
+    if ($instituicaoId and empty($resources))
+      $resources = App_Model_IedFinder::getEscolas($instituicaoId);
 
     return $this->insertInArray(null, "Selecione uma escola", $resources);
   }

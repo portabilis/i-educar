@@ -73,10 +73,12 @@ class Portabilis_View_Helper_DynamicSelectMenu_Biblioteca extends Portabilis_Vie
 
 
   protected function getOptions($resources) {
-    if (empty($resources)) {
+    $instituicaoId = $this->getInstituicaoId();
+    $escolaId      = $this->getEscolaId();
+
+    if ($instituicaoId and $escolaId and empty($resources)) {
       // se possui id escola então filtra bibliotecas pelo id desta escola
-      $escolaId  = $this->getEscolaId($escolaId = null, $throwExceptionIfNotFound = false);
-      $resources = App_Model_IedFinder::getBibliotecas($this->getInstituicaoId(), $escolaId);
+      $resources = App_Model_IedFinder::getBibliotecas($instituicaoId, $escolaId);
     }
 
     return $this->insertInArray(null, "Selecione uma biblioteca", $resources);
