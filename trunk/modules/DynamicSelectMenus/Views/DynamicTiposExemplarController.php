@@ -34,6 +34,7 @@
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'Biblioteca/Model/TipoExemplarDataMapper.php';
+require_once 'lib/Portabilis/Object/Utils.php';
 
 class DynamicTiposExemplarController extends ApiCoreController
 {
@@ -62,6 +63,7 @@ class DynamicTiposExemplarController extends ApiCoreController
     $resources = array();
 
     $columns = array('cod_exemplar_tipo', 'nm_tipo');
+
     $where   = array('ref_cod_biblioteca' => $this->getRequest()->biblioteca_id,
                      'ativo'              => '1');
 
@@ -70,7 +72,9 @@ class DynamicTiposExemplarController extends ApiCoreController
                                                      $orderBy = array('nm_tipo' => 'ASC'),
                                                      $addColumnIdIfNotSet = false);
 
-    $resources = $this->filterRecords($tiposExemplar, array('cod_exemplar_tipo' => 'id', 'nm_tipo' => 'nome'));
+
+    $resources = Portabilis_Object_Utils::filter($tiposExemplar,
+                                                 array('cod_exemplar_tipo' => 'id', 'nm_tipo' => 'nome'));
 
     return $resources;
   }
