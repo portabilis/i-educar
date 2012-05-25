@@ -49,21 +49,25 @@ class Biblioteca_Model_TipoExemplarDataMapper extends CoreExt_DataMapper
   protected $_tableName   = 'exemplar_tipo';
   protected $_tableSchema = 'pmieducar';
 
-  #protected $_attributeMap = array(
-  #  'cod_exemplar_tipo'  => 'cod_exemplar_tipo',
-  #  'ref_cod_biblioteca' => 'ref_cod_biblioteca',
-  #  'ref_usuario_exc'    => 'ref_usuario_exc',
-  #  'ref_usuario_cad'    => 'ref_usuario_cad',
-  #  'nm_tipo'            => 'nm_tipo',
-  #  'descricao'          => 'descricao',
-  #  'data_cadastro'      => 'data_cadastro',
-  #  'data_exclusao'      => 'data_exclusao',
-  #  'ativo'              => 'ativo'
-  #);
+
+  protected $_attributeMap = array(
+    'cod_exemplar_tipo'  => 'cod_exemplar_tipo',
+    'ref_cod_biblioteca' => 'ref_cod_biblioteca',
+    'ref_usuario_exc'    => 'ref_usuario_exc',
+    'ref_usuario_cad'    => 'ref_usuario_cad',
+    'nm_tipo'            => 'nm_tipo',
+    'descricao'          => 'descricao',
+    'data_cadastro'      => 'data_cadastro',
+    'data_exclusao'      => 'data_exclusao',
+    'ativo'              => 'ativo'
+  );
+
 
   protected $_notPersistable = array();
 
+
   protected $_primaryKey = array('cod_exemplar_tipo');
+
 
   protected function _getFindStatment($pkey)
   {

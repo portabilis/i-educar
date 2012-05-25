@@ -61,12 +61,15 @@ class Biblioteca_Model_TipoExemplar extends CoreExt_Entity
     'ativo'              => NULL
   );
 
+
   protected $_dataTypes = array(
     'nm_tipo' => 'string'
   );
 
+
   protected $_references = array(
   );
+
 
   public function getDataMapper()
   {
@@ -77,10 +80,13 @@ class Biblioteca_Model_TipoExemplar extends CoreExt_Entity
     return parent::getDataMapper();
   }
 
+
   public function getDefaultValidatorCollection()
   {
+    #TODO adicionar validacoes;
     return array();
   }
+
 
   protected function _createIdentityField()
   {
