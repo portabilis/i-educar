@@ -97,12 +97,12 @@ class Portabilis_View_Helper_DynamicSelectMenu_Escola extends Portabilis_View_He
                                  'required'   => true,
                                  'multiple'   => false);
 
-    $inputOptions = $this->mergeOptions($inputOptions, $defaultInputOptions);
+    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
     call_user_func_array(array($this->viewInstance, 'campoLista'), $inputOptions);
   }
 
 
-  public function escola($options = array(), $escolas = array()) {
+  public function escola($options = array()) {
     if ($this->hasNivelAcesso('POLI_INSTITUCIONAL') || $this->hasNivelAcesso('INSTITUCIONAL'))
       $this->selectInput($options);
 

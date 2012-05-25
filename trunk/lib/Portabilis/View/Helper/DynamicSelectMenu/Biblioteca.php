@@ -43,22 +43,28 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
  */
 class Portabilis_View_Helper_DynamicSelectMenu_Biblioteca extends Portabilis_View_Helper_DynamicSelectMenu_Core {
 
-  public function bibliotecaText($options = array()) {
-    if (! isset($options['value']) || ! $options['value'])
-      $bibliotecaId = $this->getBibliotecaId();
+  public function stringInput($options = array()) {
+    $defaultOptions       = array('options' => array());
+    $options              = $this->mergeOptions($options, $defaultOptions);
+
+    // subescreve $options['options']['value'] com nome escola
+    if (isset($options['options']['value']) && $options['options']['value'])
+      $bibliotecaId =  $options['options']['value'];
     else
-      $bibliotecaId = $options['value'];
+      $bibliotecaId = $this->getBibliotecaId($options['id']);
 
     $biblioteca = App_Model_IedFinder::getBiblioteca($bibliotecaId);
-    $options['value'] = $biblioteca['nm_biblioteca'];
+    $options['options']['value'] = $biblioteca['nm_biblioteca'];
 
-    $defaultOptions = array('id'    => 'biblioteca_nome',
-                            'label' => 'Biblioteca',
-                            'value' => '');
+    $defaultInputOptions = array('id'        => 'biblioteca_nome',
+                                 'label'     => 'Biblioteca',
+                                 'value'     => '',
+                                 'duplo'     => false,
+                                 'descricao' => '',
+                                 'separador' => ':');
 
-    $options = $this->mergeOptions($options, $defaultOptions);
-
-    call_user_func_array(array($this->viewInstance, 'campoRotulo'), $options);
+    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
+    call_user_func_array(array($this->viewInstance, 'campoRotulo'), $inputOptions);
 
     /* adicionado campo oculto manualmente, pois o metodo campoRotulo adiciona
        como value o nome da biblioteca */
@@ -66,44 +72,41 @@ class Portabilis_View_Helper_DynamicSelectMenu_Biblioteca extends Portabilis_Vie
   }
 
 
-  public function bibliotecaSelect($options = array(), $bibliotecas = array()) {
-    if (empty($bibliotecas)) {
-      $instituicaoId = $this->getPermissoes()->getInstituicao($this->viewInstance->getSession()->id_pessoa);
-      $bibliotecas   = App_Model_IedFinder::getBibliotecas($instituicaoId);
-    }
+  protected function getOptions($resources) {
+    if (empty($resources))
+      $resources = App_Model_IedFinder::getBibliotecas($this->getInstituicaoId());
 
-    $bibliotecas = $this->insertInArray(null, "Selecione uma biblioteca", $bibliotecas);
-
-    $defaultOptions = array('id'           => 'ref_cod_biblioteca',
-                            'label'        => 'Biblioteca',
-                            'bibliotecas'  => $bibliotecas,
-                            'value'        => null,
-                            'callback'     => '',
-                            'duplo'        => false,
-                            'label_hint'   => '',
-                            'input_hint'   => '',
-                            'disabled'     => false,
-                            'required'     => true,
-                            'multiple'     => false);
-
-    $options = $this->mergeOptions($options, $defaultOptions);
-    call_user_func_array(array($this->viewInstance, 'campoLista'), $options);
+    return $this->insertInArray(null, "Selecione uma biblioteca", $resources);
   }
 
 
-  public function biblioteca($options = array(), $bibliotecas = array()) {
-    $nivelAcesso = $this->getPermissoes()->nivel_acesso($this->viewInstance->getSession()->id_pessoa);
+  public function selectInput($options = array()) { #, $bibliotecas = array()) {
+    $defaultOptions       = array('id' => null, 'options' => array(), 'resources' => array());
+    $options              = $this->mergeOptions($options, $defaultOptions);
 
-    // poli-institucional, institucional
-    $niveisAcessoMultiplasBibliotecas = array(1, 2);
+    $defaultInputOptions = array('id'         => 'ref_cod_biblioteca',
+                                 'label'      => 'Biblioteca',
+                                 'resources'  => $this->getOptions($options['resources']),
+                                 'value'      => $this->getBibliotecaId($options['id']),
+                                 'callback'   => '',
+                                 'duplo'      => false,
+                                 'label_hint' => '',
+                                 'input_hint' => '',
+                                 'disabled'   => false,
+                                 'required'   => true,
+                                 'multiple'   => false);
 
-    // escola, biblioteca
-    $niveisAcessoBiblioteca = array(4, 8);
+    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
+    call_user_func_array(array($this->viewInstance, 'campoLista'), $inputOptions);
+  }
 
-    if (in_array($nivelAcesso, $niveisAcessoMultiplasBibliotecas))
-      $this->bibliotecaSelect($options, $bibliotecas);
-    elseif(in_array($nivelAcesso, $niveisAcessoBiblioteca))
-      $this->bibliotecaText($options);
+
+  public function biblioteca($options = array()) {
+    if ($this->hasNivelAcesso('POLI_INSTITUCIONAL') || $this->hasNivelAcesso('INSTITUCIONAL'))
+      $this->selectInput($options);
+
+    elseif($this->hasNivelAcesso('SOMENTE_ESCOLA') || $this->hasNivelAcesso('SOMENTE_BIBLIOTECA'))
+      $this->stringInput($options);
 
     ApplicationHelper::loadJavascript($this->viewInstance, '/modules/DynamicSelectMenus/Assets/Javascripts/DynamicBibliotecas.js');
   }

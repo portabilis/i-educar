@@ -55,7 +55,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_TipoExemplar extends Portabilis_V
                                                                         $orderBy,
                                                                         $addColumnIdIfNotSet = false);
 
-      $tiposExemplar = Portabilis_Object_Utils::filter_key_value($tiposExemplar,
+      $tiposExemplar = Portabilis_Object_Utils::filterKeyValue($tiposExemplar,
                                                                  'cod_exemplar_tipo',
                                                                  'nm_tipo');
     }
