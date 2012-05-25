@@ -63,6 +63,46 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
+   * Retorna um array com as informações de escola a partir de seu código.
+   * @param  int $id
+   * @return array
+   */
+  public static function getEscola($id)
+  {
+    $escola = self::addClassToStorage('clsPmieducarEscola', NULL,
+      'include/pmieducar/clsPmieducarEscola.inc.php');
+    $escola->cod_escola = $id;
+    $escola = $escola->detalhe();
+
+    if (FALSE === $escola) {
+      throw new App_Model_Exception(
+        sprintf('Escola com o código "%d" não existe.', $id)
+      );
+    }
+
+    return $escola;
+  }
+
+  /**
+   * Retorna todas as escolas cadastradas na tabela pmieducar.escola, selecionando
+   * opcionalmente pelo código da instituição.
+   * @param int $instituicaoId
+   * @return array
+   */
+  public static function getEscolas($instituicaoId = NULL)
+  {
+    $_escolas = self::addClassToStorage('clsPmieducarEscola', NULL,
+      'include/pmieducar/clsPmieducarEscola.inc.php');
+
+    $escolas = array();
+    foreach ($_escolas->lista(NULL, NULL, NULL,  $instituicaoId) as $escola) {
+      $escolas[$escola['cod_escola']] = $escola['nome'];
+    }
+
+    return $escolas;
+  }
+
+  /**
    * Retorna um nome de curso, procurando pelo seu código.
    * @param  int $id
    * @return string|FALSE
@@ -538,6 +578,82 @@ class App_Model_IedFinder extends CoreExt_Entity
     $modulos = self::getModulo($codEscola, $codCurso, $codTurma);
 
     return $modulos['total'];
+  }
+
+  /**
+   * Retorna um array com as informações de biblioteca a partir de seu código.
+   * @param  int $id
+   * @return array
+   */
+  public static function getBiblioteca($id)
+  {
+    $biblioteca = self::addClassToStorage('clsPmieducarBiblioteca', NULL,
+      'include/pmieducar/clsPmieducarBiblioteca.inc.php');
+    $biblioteca->cod_biblioteca = $id;
+    $biblioteca = $biblioteca->detalhe();
+
+    if (FALSE === $biblioteca) {
+      throw new App_Model_Exception(
+        sprintf('Biblioteca com o código "%d" não existe.', $id)
+      );
+    }
+
+    return $biblioteca;
+  }
+
+  /**
+   * Retorna todas as bibliotecas cadastradas na tabela pmieducar.biblioteca, selecionando
+   * opcionalmente pelo código da instituição e/ ou escola.
+   * @param int $instituicaoId
+   * @return array
+   */
+  public static function getBibliotecas($instituicaoId = NULL, $escolaId = NULL)
+  {
+    $_bibliotecas = self::addClassToStorage('clsPmieducarBiblioteca', NULL,
+      'include/pmieducar/clsPmieducarBiblioteca.inc.php');
+
+    $bibliotecas = array();
+    foreach ($_bibliotecas->lista(NULL, $instituicaoId, $escolaId) as $biblioteca) {
+      $bibliotecas[$biblioteca['cod_biblioteca']] = $biblioteca['nm_biblioteca'];
+    }
+
+    return $bibliotecas;
+  }
+
+  /**
+   * Retorna todas as situações cadastradas para as bibliotecas na tabela pmieducar.situacao, selecionando
+   * opcionalmente pelo código da biblioteca.
+   * @param int $bibliotecaId
+   * @return array
+   */
+  public static function getBibliotecaSituacoes($bibliotecaId = NULL)
+  {
+    $_situacoes = self::addClassToStorage('clsPmieducarSituacao', NULL,
+      'include/pmieducar/clsPmieducarSituacao.inc.php');
+
+    $situacoes = array();
+    foreach ($_situacoes->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, $bibliotecaId) as $situacao) {
+      $situacoes[$situacao['cod_situacao']] = $situacao['nm_situacao'];
+    }
+    return $situacoes;
+  }
+
+  /**
+   * Retorna todas as fontes cadastradas para as bibliotecas na tabela pmieducar.fonte, selecionando
+   * opcionalmente pelo código da biblioteca.
+   * @param int $bibliotecaId
+   * @return array
+   */
+  public static function getBibliotecaFontes($bibliotecaId = NULL)
+  {
+    $_fontes = self::addClassToStorage('clsPmieducarFonte', NULL,
+      'include/pmieducar/clsPmieducarFonte.inc.php');
+
+    $fontes = array();
+    foreach ($_fontes->lista(null,null,null,null,null,null,null,null,null,1, $bibliotecaId) as $fonte) {
+      $fontes[$fonte['cod_fonte']] = $fonte['nm_fonte'];
+    }
+    return $fontes;
   }
 
   /**

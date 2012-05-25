@@ -1,4 +1,7 @@
 <?php
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
 	*	@author Prefeitura Municipal de Itajaí								 *
@@ -24,10 +27,11 @@
 	*	02111-1307, USA.													 *
 	*																		 *
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once "include/clsBase.inc.php";
+require_once "include/clsCadastro.inc.php";
+require_once "include/clsBanco.inc.php";
+require_once "include/pmieducar/geral.inc.php";
+require_once "lib/Portabilis/View/Helper/DynamicSelectMenus.php";
 
 class clsIndexBase extends clsBase
 {
@@ -84,6 +88,11 @@ class indice extends clsCadastro
 	var $editora;
 	var $idioma;
 	var $autor;
+
+  protected function setSelectionFields()
+  {
+
+  }
 
 	function Inicializar()
 	{
@@ -159,12 +168,26 @@ class indice extends clsCadastro
 		$this->campoOculto( "idioma", "" );
 		$this->campoOculto( "autor", "" );
 
-		$get_escola     = 1;
-		$escola_obrigatorio = false;
-		$get_biblioteca = 1;
-		$instituicao_obrigatorio = true;
-		$biblioteca_obrigatorio = true;
-		include("include/pmieducar/educar_campo_lista.php");
+		#$get_escola     = 1;
+		#$escola_obrigatorio = false;
+		#$get_biblioteca = 1;
+		#$instituicao_obrigatorio = true;
+		#$biblioteca_obrigatorio = true;
+		#include("include/pmieducar/educar_campo_lista.php");
+
+    $dynamicSelectMenus = new Portabilis_View_Helper_DynamicSelectMenus($this);
+
+    #$dynamicSelectMenusHelper->instituicao (array('value'   => $this->ref_cod_instituicao   ));
+    #$dynamicSelectMenusHelper->escola      (array('value'   => $this->ref_cod_escola        ));
+    #$dynamicSelectMenusHelper->biblioteca  (array('value'   => $this->ref_cod_biblioteca    ));
+
+    $dynamicSelectMenus->helperFor('instituicao');
+    $dynamicSelectMenus->helperFor('escola');
+    $dynamicSelectMenus->helperFor('tipoExemplar');
+
+
+
+    #TODO criar helpers para os outros campos seleção ? (Obra referência, Coleção, Idioma, Editora)
 
 		// foreign keys
 		/*$opcoes = array( "" => "Selecione" );
@@ -189,20 +212,20 @@ class indice extends clsCadastro
 		}*/
 		$opcoes = array( "NULL" => "Selecione" );
 
-		if( $this->ref_cod_biblioteca )
-		{
-			$objTemp = new clsPmieducarExemplarTipo();
-			$lista = $objTemp->lista(null,$this->ref_cod_biblioteca);
-			if ( is_array( $lista ) && count( $lista ) )
-			{
-				foreach ( $lista as $registro )
-				{
-					$opcoes["{$registro['cod_exemplar_tipo']}"] = "{$registro['nm_tipo']}";
-				}
-			}
-		}
+		#if( $this->ref_cod_biblioteca )
+		#{
+		#	$objTemp = new clsPmieducarExemplarTipo();
+		#	$lista = $objTemp->lista(null,$this->ref_cod_biblioteca);
+		#	if ( is_array( $lista ) && count( $lista ) )
+		#	{
+		#		foreach ( $lista as $registro )
+		#		{
+		#			$opcoes["{$registro['cod_exemplar_tipo']}"] = "{$registro['nm_tipo']}";
+		#		}
+		#	}
+		#}
 
-		$this->campoLista( "ref_cod_exemplar_tipo", "Exemplar Tipo", $opcoes, $this->ref_cod_exemplar_tipo );
+		#$this->campoLista( "ref_cod_exemplar_tipo", "Exemplar Tipo", $opcoes, $this->ref_cod_exemplar_tipo );
 
 		$opcoes = array( "NULL" => "Selecione" );
 
@@ -572,8 +595,8 @@ $pagina->MakeAll();
 ?>
 
 <script>
-document.getElementById('ref_cod_exemplar_tipo').disabled = true;
-document.getElementById('ref_cod_exemplar_tipo').options[0].text = 'Selecione uma biblioteca';
+/*document.getElementById('ref_cod_exemplar_tipo').disabled = true;
+document.getElementById('ref_cod_exemplar_tipo').options[0].text = 'Selecione uma biblioteca';*/
 
 document.getElementById('ref_cod_acervo_colecao').disabled = true;
 document.getElementById('ref_cod_acervo_colecao').options[0].text = 'Selecione uma biblioteca';
@@ -595,7 +618,7 @@ if(document.getElementById('ref_cod_biblioteca').value == "")
 	setVisibility(document.getElementById('img_editora'), false);
 	setVisibility(document.getElementById('img_idioma'), false);
 	setVisibility(document.getElementById('img_autor'), false);
-	tempExemplarTipo = null;
+	//tempExemplarTipo = null;
 	tempColecao = null;
 	tempIdioma = null;
 	tempEditora = null;
@@ -604,7 +627,7 @@ else
 {
 	ajaxBiblioteca('novo');
 }
-
+/*
 function getTipoExemplar(xml_exemplar_tipo)
 {
 	var campoExemplarTipo = document.getElementById('ref_cod_exemplar_tipo');
@@ -635,7 +658,7 @@ function getTipoExemplar(xml_exemplar_tipo)
 		}
 	}
 }
-
+*/
 function getColecao( xml_acervo_colecao )
 {
 	var campoColecao = document.getElementById('ref_cod_acervo_colecao');
@@ -646,7 +669,7 @@ function getColecao( xml_acervo_colecao )
 		campoColecao.length = 1;
 		campoColecao.options[0].text = 'Selecione uma coleção';
 		campoColecao.disabled = false;
-		
+
 		for( var i=0; i<DOM_array.length; i++)
 		{
 			campoColecao.options[campoColecao.options.length] = new Option(DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_colecao"), false, false);
@@ -680,7 +703,7 @@ function getEditora( xml_acervo_editora )
 		campoEditora.length = 1;
 		campoEditora.options[0].text = 'Selecione uma editora';
 		campoEditora.disabled = false;
-		
+
 		for( var i=0; i<DOM_array.length; i++)
 		{
 			campoEditora.options[campoEditora.options.length] = new Option(DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_editora"), false, false);
@@ -714,7 +737,7 @@ function getIdioma( xml_acervo_idioma )
 		campoIdioma.length = 1;
 		campoIdioma.options[0].text = 'Selecione uma idioma';
 		campoIdioma.disabled = false;
-		
+
 		for( var i=0; i<DOM_array.length; i++)
 		{
 			campoIdioma.options[campoIdioma.options.length] = new Option(DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_idioma"), false, false);
@@ -752,16 +775,16 @@ function ajaxBiblioteca(acao)
 	var campoBiblioteca = document.getElementById('ref_cod_biblioteca').value;
 
 	var campoExemplarTipo = document.getElementById('ref_cod_exemplar_tipo');
-	if(acao == 'novo')
+	/*if(acao == 'novo')
 	{
 		tempExemplarTipo = campoExemplarTipo.value;
 	}
 	campoExemplarTipo.length = 1;
 	campoExemplarTipo.disabled = true;
 	campoExemplarTipo.options[0].text = 'Carregando tipo de exemplar';
-	
+
 	var xml_exemplar_tipo = new ajax( getTipoExemplar );
-	xml_exemplar_tipo.envia( "educar_exemplar_tipo_xml.php?bib="+campoBiblioteca );
+	xml_exemplar_tipo.envia( "educar_exemplar_tipo_xml.php?bib="+campoBiblioteca );*/
 
 	var campoColecao = document.getElementById('ref_cod_acervo_colecao');
 	if(acao == 'novo')
@@ -773,8 +796,8 @@ function ajaxBiblioteca(acao)
 	campoColecao.options[0].text = 'Carregando coleções';
 
 	var xml_colecao = new ajax( getColecao );
-	xml_colecao.envia( "educar_colecao_xml.php?bib="+campoBiblioteca );	
-	
+	xml_colecao.envia( "educar_colecao_xml.php?bib="+campoBiblioteca );
+
 	var campoEditora = document.getElementById('ref_cod_acervo_editora');
 	if(acao == 'novo')
 	{
@@ -785,8 +808,8 @@ function ajaxBiblioteca(acao)
 	campoEditora.options[0].text = 'Carregando editoras';
 
 	var xml_editora = new ajax( getEditora );
-	xml_editora.envia( "educar_editora_xml.php?bib="+campoBiblioteca );	
-	
+	xml_editora.envia( "educar_editora_xml.php?bib="+campoBiblioteca );
+
 	var campoIdioma = document.getElementById('ref_cod_acervo_idioma');
 	if(acao == 'novo')
 	{
@@ -798,7 +821,7 @@ function ajaxBiblioteca(acao)
 
 	var xml_idioma = new ajax( getIdioma );
 	xml_idioma.envia( "educar_idioma_xml.php?bib="+campoBiblioteca );
-	
+
 }
 
 function pesquisa()
