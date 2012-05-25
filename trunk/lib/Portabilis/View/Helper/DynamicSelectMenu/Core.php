@@ -148,14 +148,14 @@ class Portabilis_View_Helper_DynamicSelectMenu_Core {
   }
 
 
-  protected function getEscolaId($escolaId = null) {
+  protected function getEscolaId($escolaId = null, $throwExceptionIfNotFound = true) {
     if (! $escolaId && ! $this->viewInstance->ref_cod_escola)
       $escolaId = $this->getPermissoes()->getEscola($this->getCurrentUserId());
 
     elseif (! $escolaId)
       $escolaId = $this->viewInstance->ref_cod_escola;
 
-    if (! $escolaId)
+    if ($throwExceptionIfNotFound && ! $escolaId)
       throw new CoreExt_Exception("getEscolaId chamado, porem nenhum id encontrado.");
 
     return $escolaId;
