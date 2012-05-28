@@ -238,6 +238,10 @@ class indice extends clsListagem
           $situacao = 'Em Andamento';
         elseif ($situacao == 4)
           $situacao = 'Transferido';
+        elseif ($situacao == 5)
+          $situacao = 'Reclassificado';
+        elseif ($situacao == 6)
+          $situacao = 'Abandono';
 
 				$lista_busca = array();
 
