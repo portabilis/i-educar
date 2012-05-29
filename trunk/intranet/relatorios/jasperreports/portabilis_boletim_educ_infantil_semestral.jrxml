@@ -989,7 +989,7 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{nota1} == "S" ? "Sempre" : $F{nota1} == "A" ? "As vezes" : "Em processo de construção" ]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nota1} == "S" ? "Sempre" : $F{nota1} == "A" ? "As vezes" : $F{nota1} == "C" ? "Em processo de construção" : ""]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="623" y="2" width="97" height="12">
@@ -998,7 +998,7 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{nota2} == "S" ? "Sempre" : $F{nota1} == "A" ? "As vezes" : "Em processo de construção" ]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nota2} == "S" ? "Sempre" : $F{nota2} == "A" ? "As vezes" : $F{nota2} == "C" ? "Em processo de construção" : ""]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

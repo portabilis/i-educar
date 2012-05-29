@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_boletim_primeiro_ano_trimestral" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.6105100000000079"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="472"/>
 	<property name="ireport.y" value="3"/>
 	<parameter name="ano" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
@@ -1006,7 +1006,7 @@ ORDER BY nome_aluno, area_conhecimento DESC, nome_disciplina]]>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{nota1} == "S" ? "Sempre" : $F{nota1} == "A" ? "As vezes" : "Em processo de construção" ]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nota1} == "S" ? "Sempre" : $F{nota1} == "A" ? "As vezes" : $F{nota1} == "C" ? "Em processo de construção" : ""]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="534" y="2" width="97" height="12">
@@ -1015,7 +1015,7 @@ ORDER BY nome_aluno, area_conhecimento DESC, nome_disciplina]]>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{nota2} == "S" ? "Sempre" : $F{nota1} == "A" ? "As vezes" : "Em processo de construção" ]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nota2} == "S" ? "Sempre" : $F{nota2} == "A" ? "As vezes" : $F{nota2} == "C" ? "Em processo de construção" : ""]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="636" y="2" width="97" height="12">
@@ -1024,7 +1024,7 @@ ORDER BY nome_aluno, area_conhecimento DESC, nome_disciplina]]>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{nota2} == "S" ? "Sempre" : $F{nota1} == "A" ? "As vezes" : "Em processo de construção" ]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nota3} == "S" ? "Sempre" : $F{nota3} == "A" ? "As vezes" : $F{nota3} == "C" ? "Em processo de construção" : ""]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
