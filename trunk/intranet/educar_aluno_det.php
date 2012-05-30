@@ -723,7 +723,7 @@ class indice extends clsDetalhe
 
         $turma = new clsPmieducarMatriculaTurma();
         $turma = $turma->lista($m['cod_matricula'], NULL, NULL,
-          NULL, NULL, NULL, NULL, NULL);
+          NULL, NULL, NULL, NULL, NULL, 1);
         if ($turma)
         {
           $turma = array_shift($turma);
@@ -737,7 +737,7 @@ class indice extends clsDetalhe
 
         $enturmacoes = new clsPmieducarMatriculaTurma();
         $enturmacoes = $enturmacoes->lista($m['cod_matricula'], NULL, NULL,
-                                           NULL, NULL, NULL, NULL, NULL);
+                                           NULL, NULL, NULL, NULL, NULL, 1);
         $nomesTurmas = array();
         foreach ($enturmacoes as $enturmacao) {
           $turma         = new clsPmieducarTurma($enturmacao['ref_cod_turma']);

@@ -158,7 +158,7 @@ class indice extends clsDetalhe
     // Nome da turma
     $enturmacoes = new clsPmieducarMatriculaTurma();
     $enturmacoes = $enturmacoes->lista($this->ref_cod_matricula, NULL, NULL,
-      NULL, NULL, NULL, NULL, NULL);
+      NULL, NULL, NULL, NULL, NULL, 1);
 
     $nomesTurmas = array();
     foreach ($enturmacoes as $enturmacao) {
