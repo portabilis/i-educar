@@ -183,6 +183,7 @@ class indice extends clsCadastro
 
     $dynamicSelectMenus->helperFor('instituicao');
     $dynamicSelectMenus->helperFor('escola');
+    $dynamicSelectMenus->helperFor('biblioteca');
     $dynamicSelectMenus->helperFor('tipoExemplar');
 
 
