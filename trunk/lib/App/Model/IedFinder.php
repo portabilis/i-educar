@@ -635,6 +635,7 @@ class App_Model_IedFinder extends CoreExt_Entity
     foreach ($_situacoes->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, $bibliotecaId) as $situacao) {
       $situacoes[$situacao['cod_situacao']] = $situacao['nm_situacao'];
     }
+
     return $situacoes;
   }
 
@@ -653,7 +654,32 @@ class App_Model_IedFinder extends CoreExt_Entity
     foreach ($_fontes->lista(null,null,null,null,null,null,null,null,null,1, $bibliotecaId) as $fonte) {
       $fontes[$fonte['cod_fonte']] = $fonte['nm_fonte'];
     }
+
     return $fontes;
+  }
+
+  /**
+   * Retorna uma obras cadastrada para uma biblioteca na tabela pmieducar.acervo, selecionando
+   * obrigatóriamente pelo código da biblioteca e opcionalmente pelo código da obra.
+   * @param int $bibliotecaId
+   * @return array
+   */
+  public static function getBibliotecaObra($bibliotecaId, $id = NULL)
+  {
+    $obra = self::addClassToStorage('clsPmieducarAcervo', NULL,
+                                    'include/pmieducar/clsPmieducarAcervo.inc.php');
+
+    $obra->ref_cod_biblioteca = $$bibliotecaId;
+    $obra->cod_acervo         = $id;
+    $obra                     = $obra->detalhe();
+
+    if (FALSE === $obra) {
+      throw new App_Model_Exception(
+        sprintf('Obra com o código "%d" não existe.', $id)
+      );
+    }
+
+    return $obra;
   }
 
   /**
