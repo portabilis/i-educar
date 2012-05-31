@@ -58,6 +58,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_Core {
     ApplicationHelper::embedJavascript($this->viewInstance, 'var $j = jQuery.noConflict();');
 
     $dependencies = array('/modules/Portabilis/Assets/Javascripts/ClientApi.js',
+                          '/modules/Portabilis/Assets/Javascripts/Validator.js',
                           '/modules/DynamicSelectMenus/Assets/Javascripts/DynamicSelectMenus.js');
 
     ApplicationHelper::loadJavascript($this->viewInstance, $dependencies);
