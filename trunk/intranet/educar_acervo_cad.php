@@ -1,6 +1,4 @@
 <?php
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
@@ -168,66 +166,16 @@ class indice extends clsCadastro
 		$this->campoOculto( "idioma", "" );
 		$this->campoOculto( "autor", "" );
 
-		#$get_escola     = 1;
-		#$escola_obrigatorio = false;
-		#$get_biblioteca = 1;
-		#$instituicao_obrigatorio = true;
-		#$biblioteca_obrigatorio = true;
-		#include("include/pmieducar/educar_campo_lista.php");
-
     $dynamicSelectMenus = new Portabilis_View_Helper_DynamicSelectMenus($this);
-
-    #$dynamicSelectMenusHelper->instituicao (array('value'   => $this->ref_cod_instituicao   ));
-    #$dynamicSelectMenusHelper->escola      (array('value'   => $this->ref_cod_escola        ));
-    #$dynamicSelectMenusHelper->biblioteca  (array('value'   => $this->ref_cod_biblioteca    ));
 
     $dynamicSelectMenus->helperFor('instituicao');
     $dynamicSelectMenus->helperFor('escola');
     $dynamicSelectMenus->helperFor('biblioteca');
     $dynamicSelectMenus->helperFor('tipoExemplar');
 
-
-
     #TODO criar helpers para os outros campos seleção ? (Obra referência, Coleção, Idioma, Editora)
 
-		// foreign keys
-		/*$opcoes = array( "" => "Selecione" );
-		if( class_exists( "clsPmieducarExemplarTipo" ) )
-		{
-			$objTemp = new clsPmieducarExemplarTipo();
-			$lista = $objTemp->lista(null,null);
-			if ( is_array( $lista ) && count( $lista ) )
-			{
-				$tipos = "tipos = new Array();\n";
-				foreach ( $lista as $registro )
-				{
-					$tipos .= "tipos[tipos.length] = new Array( {$registro["cod_exemplar_tipo"]}, '{$registro['nm_tipo']}', {$registro['ref_cod_biblioteca']});\n";
-
-				}
-				echo "<script>{$tipos}</script>";
-			}
-		}
-		else
-		{
-			echo "<!--\nErro\nClasse clsPmieducarExemplarTipo nao encontrada\n-->";
-		}*/
-		$opcoes = array( "NULL" => "Selecione" );
-
-		#if( $this->ref_cod_biblioteca )
-		#{
-		#	$objTemp = new clsPmieducarExemplarTipo();
-		#	$lista = $objTemp->lista(null,$this->ref_cod_biblioteca);
-		#	if ( is_array( $lista ) && count( $lista ) )
-		#	{
-		#		foreach ( $lista as $registro )
-		#		{
-		#			$opcoes["{$registro['cod_exemplar_tipo']}"] = "{$registro['nm_tipo']}";
-		#		}
-		#	}
-		#}
-
-		#$this->campoLista( "ref_cod_exemplar_tipo", "Exemplar Tipo", $opcoes, $this->ref_cod_exemplar_tipo );
-
+    // Obra referência
 		$opcoes = array( "NULL" => "Selecione" );
 
 		if( $this->ref_cod_acervo && $this->ref_cod_acervo != "NULL")
@@ -242,7 +190,10 @@ class indice extends clsCadastro
 
 		//campoListaPesq( $nome, $campo, $valor, $default, $caminho="", $acao = "" , $duplo=false, $descricao="", $descricao2="", $flag=null, $pag_cadastro = null, $disabled = "", $div = false, $serializedcampos = false, $obrigatorio = false )
 //		$this->campoListaPesq( "ref_cod_acervo", "Obra Refer&ecirc;ncia", $opcoes, $this->ref_cod_acervo,"educar_pesquisa_acervo_lst.php?campo1=ref_cod_acervo","","","","","","","",true );
+
 		$this->campoLista("ref_cod_acervo","Obra Refer&ecirc;ncia",$opcoes,$this->ref_cod_acervo,"",false,"","<img border=\"0\" onclick=\"pesquisa();\" id=\"ref_cod_acervo_lupa\" name=\"ref_cod_acervo_lupa\" src=\"imagens/lupa.png\"\/>",false,false);
+
+    // Coleção
 		$opcoes = array( "" => "Selecione" );
 		if( class_exists( "clsPmieducarAcervoColecao" ) )
 		{
@@ -264,6 +215,7 @@ class indice extends clsCadastro
 		$this->campoLista( "ref_cod_acervo_colecao", "Cole&ccedil;&atilde;o", $opcoes, $this->ref_cod_acervo_colecao,"",false,"","<img id='img_colecao' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(500, 200,'educar_acervo_colecao_cad_pop.php',[], 'Coleção')\" />",false,false );
 		//"<img id='imgLupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"pesquisa_valores_popless( 'pesquisa_funcionario_lst.php?campos=".$parametros->serializaCampos()."&importa_cpf=true&chave_campo='+/[0-9]+/.exec(this.previousSibling.previousSibling.id)[0], this.previousSibling.previousSibling.id ); \" />
 
+    // Idioma
 		$opcoes = array( "" => "Selecione" );
 		if( class_exists( "clsPmieducarAcervoIdioma" ) )
 		{
@@ -458,7 +410,7 @@ class indice extends clsCadastro
 		$this->campoNumero( "num_edicao", "N&uacute;mero Edic&atilde;o", $this->num_edicao, 20, 255, true );
 		$this->campoNumero( "ano", "Ano", $this->ano, 5, 4, true );
 		$this->campoNumero( "num_paginas", "N&uacute;mero P&aacute;ginas", $this->num_paginas, 5, 255, true );
-		$this->campoNumero( "isbn", "ISBN", $this->isbn, 20, 255, true );
+		$this->campoNumero( "isbn", "ISBN", $this->isbn, 20, 13, true );
 	}
 
 	function Novo()
@@ -596,6 +548,8 @@ $pagina->MakeAll();
 ?>
 
 <script>
+
+// TODO remover código comentado.
 /*document.getElementById('ref_cod_exemplar_tipo').disabled = true;
 document.getElementById('ref_cod_exemplar_tipo').options[0].text = 'Selecione uma biblioteca';*/
 
@@ -628,6 +582,8 @@ else
 {
 	ajaxBiblioteca('novo');
 }
+
+// TODO remover código comentado.
 /*
 function getTipoExemplar(xml_exemplar_tipo)
 {
@@ -776,6 +732,8 @@ function ajaxBiblioteca(acao)
 	var campoBiblioteca = document.getElementById('ref_cod_biblioteca').value;
 
 	var campoExemplarTipo = document.getElementById('ref_cod_exemplar_tipo');
+
+  // TODO remover código comentado.
 	/*if(acao == 'novo')
 	{
 		tempExemplarTipo = campoExemplarTipo.value;
