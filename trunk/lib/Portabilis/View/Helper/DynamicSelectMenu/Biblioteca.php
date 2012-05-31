@@ -85,7 +85,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_Biblioteca extends Portabilis_Vie
   }
 
 
-  public function selectInput($options = array()) { #, $bibliotecas = array()) {
+  public function selectInput($options = array()) {
     $defaultOptions       = array('id' => null, 'options' => array(), 'resources' => array());
     $options              = $this->mergeOptions($options, $defaultOptions);
 
