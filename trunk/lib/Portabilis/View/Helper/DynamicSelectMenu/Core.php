@@ -129,6 +129,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_Core {
 
 
   // wrapper for Portabilis_Array_Utils::insertIn
+  // TODO renomear para insertOption
   protected static function insertInArray($key, $value, $array) {
     return Portabilis_Array_Utils::insertIn($key, $value, $array);
   }

@@ -44,16 +44,33 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
  */
 class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaFonte extends Portabilis_View_Helper_DynamicSelectMenu_Core {
 
-  public function bibliotecaFonte($bibliotecaId = null, $options = array(), $fontes = array()) {
-    if (empty($fontes))
-      $fontes = App_Model_IedFinder::getBibliotecaFontes($this->getBibliotecaId($bibliotecaId));
 
-    $fontes = $this->insertInArray(null, "Selecione uma fonte", $fontes);
+  protected function getBibliotecaFonteId($id = null) {
+    if (! $id && $this->viewInstance->ref_cod_fonte)
+      $id = $this->viewInstance->ref_cod_fonte;
 
-    $defaultOptions = array('id'         => 'ref_cod_fonte',
+    return $id;
+  }
+
+
+  protected function getOptions($resources) {
+    $bibliotecaId  = $this->getBibliotecaId();
+
+    if ($bibliotecaId and empty($resources))
+      $resources = App_Model_IedFinder::getBibliotecaFontes($bibliotecaId);
+
+    return $this->insertInArray(null, "Selecione uma fonte", $resources);
+  }
+
+
+  public function bibliotecaFonte($options = array()) {
+    $defaultOptions       = array('id' => null, 'options' => array(), 'resources' => array());
+    $options              = $this->mergeOptions($options, $defaultOptions);
+
+    $defaultInputOptions = array('id'    => 'ref_cod_fonte',
                             'label'      => 'Fonte',
-                            'fontes'     => $fontes,
-                            'value'      => null,
+                            'fontes'     => $this->getOptions($options['resources']),
+                            'value'      => $this->getBibliotecaFonteId($options['id']),
                             'callback'   => '',
                             'duplo'      => false,
                             'label_hint' => '',
@@ -62,8 +79,8 @@ class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaFonte extends Portabili
                             'required'   => true,
                             'multiple'   => false);
 
-    $options = $this->mergeOptions($options, $defaultOptions);
-    call_user_func_array(array($this->viewInstance, 'campoLista'), $options);
+    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
+    call_user_func_array(array($this->viewInstance, 'campoLista'), $inputOptions);
 
     ApplicationHelper::loadJavascript($this->viewInstance, '/modules/DynamicSelectMenus/Assets/Javascripts/DynamicBibliotecaFontes.js');
   }

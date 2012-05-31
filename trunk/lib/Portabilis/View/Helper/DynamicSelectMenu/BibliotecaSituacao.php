@@ -44,16 +44,32 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
  */
 class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaSituacao extends Portabilis_View_Helper_DynamicSelectMenu_Core {
 
-  public function bibliotecaSituacao($bibliotecaId = null, $options = array(), $situacoes = array()) {
-    if (empty($situacoes))
-      $situacoes = App_Model_IedFinder::getBibliotecaSituacoes($this->getBibliotecaId($bibliotecaId));
+  protected function getBibliotecaSituacaoId($id = null) {
+    if (! $id && $this->viewInstance->ref_cod_situacao)
+      $id = $this->viewInstance->ref_cod_situacao;
 
-    $situacoes = $this->insertInArray(null, "Selecione uma situa&ccedil;&atilde;o", $situacoes);
+    return $id;
+  }
 
-    $defaultOptions = array('id'         => 'ref_cod_situacao',
+
+  protected function getOptions($resources) {
+    $bibliotecaId  = $this->getBibliotecaId();
+
+    if ($bibliotecaId and empty($resources))
+      $resources = App_Model_IedFinder::getBibliotecaSituacoes($bibliotecaId);
+
+    return $this->insertInArray(null, "Selecione uma situa&ccedil;&atilde;o", $resources);
+  }
+
+
+  public function bibliotecaSituacao($options = array()) {
+    $defaultOptions       = array('id' => null, 'options' => array(), 'resources' => array());
+    $options              = $this->mergeOptions($options, $defaultOptions);
+
+    $defaultInputOptions = array('id'    => 'ref_cod_situacao',
                             'label'      => 'Situa&ccedil;&atilde;o',
-                            'situacoes'  => $situacoes,
-                            'value'      => null,
+                            'situacoes'  => $this->getOptions($options['resources']),
+                            'value'      => $this->getBibliotecaSituacaoId($options['id']),
                             'callback'   => '',
                             'duplo'      => false,
                             'label_hint' => '',
@@ -62,11 +78,10 @@ class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaSituacao extends Portab
                             'required'   => true,
                             'multiple'   => false);
 
-    $options = $this->mergeOptions($options, $defaultOptions);
-    call_user_func_array(array($this->viewInstance, 'campoLista'), $options);
+    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
+    call_user_func_array(array($this->viewInstance, 'campoLista'), $inputOptions);
 
     ApplicationHelper::loadJavascript($this->viewInstance, '/modules/DynamicSelectMenus/Assets/Javascripts/DynamicBibliotecaSituacoes.js');
   }
-
 }
 ?>
