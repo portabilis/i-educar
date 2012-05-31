@@ -339,7 +339,7 @@ class indice extends clsCadastro
 					$det_acervo_autor = $obj_acervo_autor->detalhe();
 					$nm_autor = $det_acervo_autor["nm_autor"];
 					$this->campoTextoInv( "ref_cod_exemplar_tipo_{$autor["ref_cod_acervo_autor_"]}", "", $nm_autor, 30, 255, false, false, true );
-					$this->campoCheck( "principal_{$autor["ref_cod_acervo_autor_"]}", "", $autor['principal_'], "<a href='#' onclick=\"getElementById('excluir_autor').value = '{$autor["ref_cod_acervo_autor_"]}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>", false,false,true );
+					$this->campoCheck( "principal_{$autor["ref_cod_acervo_autor_"]}", "", $autor['principal_'], "<a href='#' onclick=\"getElementById('excluir_autor').value = '{$autor["ref_cod_acervo_autor_"]}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>", false, false, false );
 					$aux["ref_cod_acervo_autor_"] = $autor["ref_cod_acervo_autor_"];
 					$aux["principal_"] = $autor['principal_'];
 				}
@@ -375,7 +375,8 @@ class indice extends clsCadastro
 		{
 //			die("1");
 			$this->campoLista( "ref_cod_acervo_autor", "Autor", $opcoes, $this->ref_cod_acervo_autor,null,true,"","",false,true );
-		 	$this->campoCheck( "principal", "&nbsp;&nbsp;<img id='img_autor' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(500, 250,'educar_acervo_autor_cad_pop.php',[], 'Autor')\" /> Principal", $this->principal,"<a href='#' onclick=\"getElementById('incluir_autor').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>" );
+
+		 	$this->campoCheck( "principal", "&nbsp;&nbsp;<img id='img_autor' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(500, 250,'educar_acervo_autor_cad_pop.php',[], 'Autor')\" />", $this->principal,"<a href='#' onclick=\"getElementById('incluir_autor').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>" );
 		}
 		// não existe um autor principal, mas existe um autor
 		else if ( ($this->checked != 1) && ($qtd_autor > 0) )
@@ -386,7 +387,7 @@ class indice extends clsCadastro
 //
 //			die("2");
 			$this->campoLista( "ref_cod_acervo_autor", "Autor", $opcoes, $this->ref_cod_acervo_autor,null,true,null, null,null,false);
-		 	$this->campoCheck( "principal", "&nbsp;&nbsp;<img src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"pesquisa_valores_popless( 'educar_acervo_autor_cad_pop.php' )\" /> Principal", $this->principal,"<a href='#' onclick=\"getElementById('incluir_autor').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>" );
+		 	$this->campoCheck( "principal", "&nbsp;&nbsp;<img src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"pesquisa_valores_popless( 'educar_acervo_autor_cad_pop.php' )\" />", $this->principal,"<a href='#' onclick=\"getElementById('incluir_autor').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>" );
 		}
 		// existe um autor principal
 		else
@@ -431,10 +432,9 @@ class indice extends clsCadastro
 			//-----------------------CADASTRA AUTOR------------------------//
 				foreach ( $this->acervo_autor AS $autor )
 				{
-					if ($autor["principal_"] == 'on')
-						$autor["principal_"] = 1;
-					else
-						$autor["principal_"] = 0;
+          $autorPrincipal = $_POST["principal_{$autor['ref_cod_acervo_autor_']}"];
+          $autor["principal_"] = is_null($autorPrincipal) ? 0 : 1;
+
 					$obj = new clsPmieducarAcervoAcervoAutor( $autor["ref_cod_acervo_autor_"], $cadastrou, $autor["principal_"] );
 					$cadastrou2  = $obj->cadastra();
 					if ( !$cadastrou2 )
@@ -476,16 +476,16 @@ class indice extends clsCadastro
 			if( $editou )
 			{
 			//-----------------------EDITA AUTOR------------------------//
+
 				$obj  = new clsPmieducarAcervoAcervoAutor( null, $this->cod_acervo );
 				$excluiu = $obj->excluirTodos();
 				if ( $excluiu )
 				{
 					foreach ( $this->acervo_autor AS $autor )
 					{
-						if ($autor["principal_"] == 'on')
-							$autor["principal_"] = 1;
-						else
-							$autor["principal_"] = 0;
+            $autorPrincipal = $_POST["principal_{$autor['ref_cod_acervo_autor_']}"];
+            $autor["principal_"] = is_null($autorPrincipal) ? 0 : 1;
+
 						$obj = new clsPmieducarAcervoAcervoAutor( $autor["ref_cod_acervo_autor_"], $this->cod_acervo, $autor["principal_"] );
 						$cadastrou2  = $obj->cadastra();
 						if ( !$cadastrou2 )
@@ -795,4 +795,17 @@ function pesquisa()
 }
 
 //pesquisa_valores_popless('educar_pesquisa_acervo_lst.php?campo1=ref_cod_acervo', 'ref_cod_acervo')
+
+function fixupPrincipalCheckboxes() {
+  $j('#principal').hide();
+
+  var $checkboxes = $j("input[type='checkbox']").filter("input[id^='principal_']");
+
+  $checkboxes.change(function(){
+    $checkboxes.not(this).removeAttr('checked');
+  });
+}
+
+fixupPrincipalCheckboxes();
+
 </script>
