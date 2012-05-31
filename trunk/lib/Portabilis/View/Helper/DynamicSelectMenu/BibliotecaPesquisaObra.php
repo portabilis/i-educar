@@ -44,27 +44,53 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
  */
 class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaPesquisaObra extends Portabilis_View_Helper_DynamicSelectMenu_Core {
 
-  public function bibliotecaPesquisaObra($acervoId, $options = array()) {
-    $inputHint = "<img border='0' onclick='pesquisaObra();' id='lupa_pesquisa_obra' name='lupa_pesquisa_cliente' src='imagens/lupa.png' />";
+  protected function getAcervoId($id = null) {
+    if (! $id && $this->viewInstance->ref_cod_acervo)
+      $id = $this->viewInstance->ref_cod_acervo;
 
-    $defaultOptions = array('id'         => 'titulo_obra',
-                            'label'      => 'Obra',
-                            'value'      => '',
-                            'size'       => '30',
-                            'maxLength'  => '255',
-                            'required'   => false,
-                            'expressao'  => false,
-                            'duplo'      => false,
-                            'label_hint' => '',
-                            'input_hint' => $inputHint,
-                            'callback'   => '',
-                            'event'      => 'onKeyUp',
-                            'disabled'   => true);
+    return $id;
+  }
 
-    $options = $this->mergeOptions($options, $defaultOptions);
-    call_user_func_array(array($this->viewInstance, 'campoTexto'), $options);
 
-    $this->viewInstance->campoOculto("ref_cod_acervo", $acervoId);
+  protected function getObra($id) {
+    if (! $id)
+      $id = $this->getAcervoId($id);
+
+    // chama finder somente se possuir id, senão ocorrerá exception
+    $obra = empty($id) ? null : App_Model_IedFinder::getBibliotecaObra($bibliotecaId, $id);
+
+    return $obra;
+  }
+
+
+  public function bibliotecaPesquisaObra($options = array()) {
+    $defaultOptions = array('id' => null, 'options' => array());
+    $options        = $this->mergeOptions($options, $defaultOptions);
+
+    $inputHint  = "<img border='0' onclick='pesquisaObra();' id='lupa_pesquisa_obra' name='lupa_pesquisa_cliente' src='imagens/lupa.png' />";
+
+    // se não recuperar obra, deixa titulo em branco
+    $obra       = $this->getObra($options['id']);
+    $tituloObra = $obra ? $obra['titulo'] : '';
+
+    $defaultInputOptions = array('id'    => 'titulo_obra',
+                                 'label'      => 'Obra',
+                                 'value'      => $tituloObra,
+                                 'size'       => '30',
+                                 'maxLength'  => '255',
+                                 'required'   => false,
+                                 'expressao'  => false,
+                                 'duplo'      => false,
+                                 'label_hint' => '',
+                                 'input_hint' => $inputHint,
+                                 'callback'   => '',
+                                 'event'      => 'onKeyUp',
+                                 'disabled'   => true);
+
+    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
+    call_user_func_array(array($this->viewInstance, 'campoTexto'), $inputOptions);
+
+    $this->viewInstance->campoOculto("ref_cod_acervo", $this->getAcervoId($options['id']));
 
     // Ao selecionar obra, na pesquisa de obra é setado o value deste elemento
     $this->viewInstance->campoOculto("cod_biblioteca", "");
@@ -79,7 +105,10 @@ class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaPesquisaObra extends Po
 
     ApplicationHelper::embedJavascript($this->viewInstance, '
       function pesquisaObra() {
-        if (validatesPresenseOfValueInRequiredFields()) {
+
+        var requiredFields = [document.getElementById("ref_cod_biblioteca")];
+
+        if (validatesPresenseOfValueInRequiredFields(requiredFields)) {
   	      var bibliotecaId = document.getElementById("ref_cod_biblioteca").value;
           pesquisa_valores_popless("educar_pesquisa_obra_lst.php?campo1=ref_cod_acervo&campo2=titulo_obra&campo3="+bibliotecaId)
         }

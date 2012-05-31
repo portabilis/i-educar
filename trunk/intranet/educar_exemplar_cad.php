@@ -136,24 +136,7 @@ class indice extends clsCadastro
     $dynamicSelectMenus->helperFor('biblioteca');
     $dynamicSelectMenus->helperFor('bibliotecaSituacao');
     $dynamicSelectMenus->helperFor('bibliotecaFonte');
-
-    # TODO fix helper
-    #$dynamicSelectMenus->bibliotecaFonte($this->ref_cod_biblioteca, array('value' => $this->ref_cod_fonte));
-
-		$opcoes = array();
-		if( $this->ref_cod_acervo && $this->ref_cod_acervo != "NULL")
-		{
-			$objTemp = new clsPmieducarAcervo($this->ref_cod_acervo);
-			$detalhe = $objTemp->detalhe();
-			if ( $detalhe )
-			{
-				$opcoes["{$detalhe['cod_acervo']}"] = "{$detalhe['titulo']}";
-			}
-		}else{
-			$opcoes = array( "" => "Selecione" );
-		}
-
-		$this->campoLista("ref_cod_acervo","Obra",$opcoes,$this->ref_cod_acervo,"",false,"","<img border=\"0\" onclick=\"pesquisa();\" id=\"ref_cod_acervo_lupa\" name=\"ref_cod_acervo_lupa\" src=\"imagens/lupa.png\"\/>",false,true);
+    $dynamicSelectMenus->helperFor('bibliotecaPesquisaObra', array('options' => array ('required' => true)));
 
 		$opcoes = array( "" => "Selecione", "2" => "Sim", "1" => "N&atilde;o" );
 		$this->campoLista( "permite_emprestimo", "Permite Emprestimo", $opcoes, $this->permite_emprestimo );
@@ -283,18 +266,3 @@ $pagina->addForm( $miolo );
 // gera o html
 $pagina->MakeAll();
 ?>
-<script>
-
-function pesquisa()
-{
-	var biblioteca = document.getElementById('ref_cod_biblioteca').value;
-	if(!biblioteca)
-	{
-		alert('Por favor,\nselecione uma biblioteca!');
-		return;
-	}
-	pesquisa_valores_popless('educar_pesquisa_acervo_lst.php?campo1=ref_cod_acervo&ref_cod_biblioteca=' + biblioteca , 'ref_cod_acervo');
-}
-
-//pesquisa_valores_popless('educar_pesquisa_acervo_lst.php?campo1=ref_cod_acervo', 'ref_cod_acervo')
-</script>
