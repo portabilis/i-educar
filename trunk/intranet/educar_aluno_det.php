@@ -756,8 +756,12 @@ class indice extends clsDetalhe
         elseif ($situacao == 2)
           $situacao = 'Reprovado';
         elseif ($situacao == 3)
-        {
           $situacao = 'Em Andamento';
+        elseif ($situacao == 5)
+          $situacao = 'Reclassificado';
+        elseif ($situacao == 6)
+        {
+          $situacao = 'Abandono';
 
           if ($db->UnicoCampo("select count(cod_transferencia_solicitacao) from pmieducar.transferencia_solicitacao where ativo = 1 and ref_cod_matricula_saida = {$m['cod_matricula']} and ref_cod_matricula_entrada is null and data_transferencia is null") > 0)
           {

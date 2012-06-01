@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_boletim_primeiro_ano_trimestral" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.4641000000000064"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.zoom" value="1.6105100000000079"/>
+	<property name="ireport.x" value="472"/>
+	<property name="ireport.y" value="3"/>
 	<parameter name="ano" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
@@ -459,7 +459,7 @@
 
 	) AS etapa1
 GROUP BY id_disciplina, nome_disciplina, nome_aluno
-ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
+ORDER BY nome_aluno, area_conhecimento DESC, nome_disciplina]]>
 	</queryString>
 	<field name="ano" class="java.lang.Integer"/>
 	<field name="nome_responsavel" class="java.lang.String"/>
@@ -735,7 +735,7 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="92">
+			<band height="70">
 				<staticText>
 					<reportElement x="12" y="1" width="33" height="13"/>
 					<textElement>
@@ -744,27 +744,27 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 					<text><![CDATA[Parecer:]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement x="46" y="33" width="753" height="31"/>
+					<reportElement x="46" y="24" width="753" height="21"/>
 					<textElement>
 						<font fontName="DejaVu Sans" size="7"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{parecer_semestre2}]]></textFieldExpression>
 				</textField>
 				<line>
-					<reportElement x="310" y="78" width="192" height="1"/>
+					<reportElement x="310" y="55" width="192" height="1"/>
 					<graphicElement>
 						<pen lineWidth="0.25"/>
 					</graphicElement>
 				</line>
 				<staticText>
-					<reportElement x="355" y="80" width="100" height="12"/>
+					<reportElement x="355" y="57" width="100" height="12"/>
 					<textElement>
 						<font fontName="DejaVu Sans" size="7"/>
 					</textElement>
 					<text><![CDATA[Assinatura do Professor(a)]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement x="46" y="1" width="753" height="31"/>
+					<reportElement x="46" y="1" width="753" height="21"/>
 					<textElement>
 						<font fontName="DejaVu Sans" size="7"/>
 					</textElement>
@@ -785,14 +785,14 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 					<textFieldExpression><![CDATA["Área de conhecimento: "+$F{area_conhecimento}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="761" y="4" width="34" height="11" printWhenGroupChanges="matricula"/>
+					<reportElement x="761" y="1" width="34" height="9" printWhenGroupChanges="matricula"/>
 					<textElement textAlignment="Center">
 						<font fontName="DejaVu Sans" size="7" isBold="false"/>
 					</textElement>
 					<text><![CDATA[Freq. %]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement x="764" y="16" width="26" height="11" printWhenGroupChanges="matricula">
+					<reportElement x="764" y="14" width="26" height="11" printWhenGroupChanges="matricula">
 						<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Center">
@@ -801,7 +801,7 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 					<textFieldExpression><![CDATA[$F{frequencia}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="736" y="16" width="24" height="11" printWhenGroupChanges="matricula">
+					<reportElement x="736" y="14" width="24" height="11" printWhenGroupChanges="matricula">
 						<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Center">
@@ -810,116 +810,28 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 					<textFieldExpression><![CDATA[$F{total_faltas}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="736" y="5" width="24" height="11" printWhenGroupChanges="matricula"/>
+					<reportElement x="736" y="1" width="24" height="9" printWhenGroupChanges="matricula"/>
 					<textElement textAlignment="Center">
 						<font fontName="DejaVu Sans" size="7" isBold="false"/>
 					</textElement>
 					<text><![CDATA[Falt.]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="584" y="5" width="9" height="11" printWhenGroupChanges="matricula"/>
-					<textElement textAlignment="Center">
-						<font fontName="DejaVu Sans" size="7"/>
-					</textElement>
-					<text><![CDATA[F]]></text>
-				</staticText>
-				<textField isBlankWhenNull="true">
-					<reportElement x="584" y="16" width="12" height="11" printWhenGroupChanges="matricula">
-						<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
-					</reportElement>
-					<textElement textAlignment="Center">
-						<font fontName="DejaVu Sans" size="7"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{total_faltas_et2}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="527" y="5" width="52" height="11" printWhenGroupChanges="matricula"/>
-					<textElement textAlignment="Center">
-						<font fontName="DejaVu Sans" size="7"/>
-					</textElement>
-					<text><![CDATA[Em processo]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="531" y="16" width="52" height="11" printWhenGroupChanges="matricula"/>
-					<textElement>
-						<font fontName="DejaVu Sans" size="7"/>
-					</textElement>
-					<text><![CDATA[de construção]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="487" y="16" width="42" height="11" printWhenGroupChanges="matricula"/>
-					<textElement textAlignment="Center">
-						<font fontName="DejaVu Sans" size="7"/>
-					</textElement>
-					<text><![CDATA[As vezes]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="451" y="16" width="36" height="11" printWhenGroupChanges="matricula"/>
-					<textElement textAlignment="Center">
-						<font fontName="DejaVu Sans" size="7"/>
-					</textElement>
-					<text><![CDATA[Sempre]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="451" y="2" width="57" height="11" printWhenGroupChanges="matricula"/>
+					<reportElement x="534" y="14" width="14" height="11" printWhenGroupChanges="matricula"/>
 					<textElement>
 						<font fontName="DejaVu Sans" size="7" isBold="true"/>
 					</textElement>
-					<text><![CDATA[2º Trimestre]]></text>
-				</staticText>
-				<textField isBlankWhenNull="true">
-					<reportElement isPrintRepeatedValues="false" x="436" y="16" width="12" height="11" printWhenGroupChanges="matricula">
-						<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
-					</reportElement>
-					<textElement textAlignment="Center">
-						<font fontName="DejaVu Sans" size="7"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{total_faltas_et1}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="436" y="5" width="9" height="11" printWhenGroupChanges="matricula"/>
-					<textElement textAlignment="Center">
-						<font fontName="DejaVu Sans" size="7"/>
-					</textElement>
-					<text><![CDATA[F]]></text>
+					<text><![CDATA[2º ]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="312" y="16" width="35" height="11" printWhenGroupChanges="matricula"/>
-					<textElement textAlignment="Center">
-						<font fontName="DejaVu Sans" size="7"/>
-					</textElement>
-					<text><![CDATA[Sempre]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="348" y="16" width="36" height="11" printWhenGroupChanges="matricula"/>
-					<textElement textAlignment="Center">
-						<font fontName="DejaVu Sans" size="7"/>
-					</textElement>
-					<text><![CDATA[As vezes]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="384" y="5" width="51" height="11" isPrintWhenDetailOverflows="true" printWhenGroupChanges="matricula"/>
-					<textElement textAlignment="Center">
-						<font fontName="DejaVu Sans" size="7"/>
-					</textElement>
-					<text><![CDATA[Em processo]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="385" y="16" width="50" height="11" printWhenGroupChanges="matricula"/>
-					<textElement textAlignment="Center">
-						<font fontName="DejaVu Sans" size="7"/>
-					</textElement>
-					<text><![CDATA[de construção]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="313" y="2" width="58" height="11" printWhenGroupChanges="matricula"/>
+					<reportElement x="433" y="14" width="14" height="11" printWhenGroupChanges="matricula"/>
 					<textElement>
 						<font fontName="DejaVu Sans" size="7" isBold="true"/>
 					</textElement>
-					<text><![CDATA[1º Trimestre]]></text>
+					<text><![CDATA[1º ]]></text>
 				</staticText>
 				<line>
-					<reportElement x="583" y="0" width="1" height="26" printWhenGroupChanges="matricula"/>
+					<reportElement x="531" y="12" width="1" height="14" printWhenGroupChanges="matricula"/>
 					<graphicElement>
 						<pen lineWidth="0.25"/>
 					</graphicElement>
@@ -931,25 +843,7 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 					</graphicElement>
 				</line>
 				<line>
-					<reportElement x="435" y="-1" width="1" height="27" printWhenGroupChanges="matricula"/>
-					<graphicElement>
-						<pen lineWidth="0.25"/>
-					</graphicElement>
-				</line>
-				<line>
-					<reportElement x="311" y="-1" width="1" height="27" printWhenGroupChanges="matricula"/>
-					<graphicElement>
-						<pen lineWidth="0.25"/>
-					</graphicElement>
-				</line>
-				<line>
-					<reportElement x="449" y="0" width="1" height="26" printWhenGroupChanges="matricula"/>
-					<graphicElement>
-						<pen lineWidth="0.25"/>
-					</graphicElement>
-				</line>
-				<line>
-					<reportElement x="722" y="0" width="1" height="26" printWhenGroupChanges="matricula"/>
+					<reportElement x="431" y="0" width="1" height="26" printWhenGroupChanges="matricula"/>
 					<graphicElement>
 						<pen lineWidth="0.25"/>
 					</graphicElement>
@@ -961,7 +855,7 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 					</graphicElement>
 				</line>
 				<textField isBlankWhenNull="true">
-					<reportElement x="764" y="16" width="26" height="11" printWhenGroupChanges="matricula">
+					<reportElement x="764" y="14" width="26" height="11" printWhenGroupChanges="matricula">
 						<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Center">
@@ -976,38 +870,17 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 					</graphicElement>
 				</line>
 				<line>
-					<reportElement x="596" y="0" width="1" height="26" printWhenGroupChanges="matricula"/>
+					<reportElement x="633" y="12" width="1" height="14" printWhenGroupChanges="matricula"/>
 					<graphicElement>
 						<pen lineWidth="0.25"/>
 					</graphicElement>
 				</line>
 				<staticText>
-					<reportElement x="599" y="2" width="57" height="11" printWhenGroupChanges="matricula"/>
+					<reportElement x="636" y="14" width="14" height="11" printWhenGroupChanges="matricula"/>
 					<textElement>
 						<font fontName="DejaVu Sans" size="7" isBold="true"/>
 					</textElement>
-					<text><![CDATA[3º Trimestre]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="669" y="5" width="52" height="11" printWhenGroupChanges="matricula"/>
-					<textElement textAlignment="Center">
-						<font fontName="DejaVu Sans" size="7"/>
-					</textElement>
-					<text><![CDATA[Em processo]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="598" y="15" width="36" height="11" printWhenGroupChanges="matricula"/>
-					<textElement textAlignment="Center">
-						<font fontName="DejaVu Sans" size="7"/>
-					</textElement>
-					<text><![CDATA[Sempre]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="635" y="15" width="33" height="11" printWhenGroupChanges="matricula"/>
-					<textElement textAlignment="Center">
-						<font fontName="DejaVu Sans" size="7"/>
-					</textElement>
-					<text><![CDATA[As vezes]]></text>
+					<text><![CDATA[3º ]]></text>
 				</staticText>
 				<line>
 					<reportElement x="735" y="0" width="1" height="26" printWhenGroupChanges="matricula"/>
@@ -1015,29 +888,28 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 						<pen lineWidth="0.25"/>
 					</graphicElement>
 				</line>
+				<line>
+					<reportElement x="432" y="11" width="367" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.25" lineStyle="Solid"/>
+					</graphicElement>
+				</line>
 				<staticText>
-					<reportElement x="724" y="5" width="9" height="11" printWhenGroupChanges="matricula"/>
+					<reportElement x="549" y="1" width="69" height="9"/>
 					<textElement textAlignment="Center">
 						<font fontName="DejaVu Sans" size="7"/>
 					</textElement>
-					<text><![CDATA[F]]></text>
+					<text><![CDATA[Trimestre]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="669" y="16" width="52" height="11" printWhenGroupChanges="matricula"/>
-					<textElement>
-						<font fontName="DejaVu Sans" size="7"/>
-					</textElement>
-					<text><![CDATA[de construção]]></text>
-				</staticText>
-				<textField isBlankWhenNull="true">
-					<reportElement x="723" y="16" width="12" height="11" printWhenGroupChanges="matricula">
-						<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
+					<reportElement x="170" y="15" width="258" height="9">
+						<printWhenExpression><![CDATA[$P{manual}.intValue() == 1]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Center">
 						<font fontName="DejaVu Sans" size="7"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{total_faltas_et3}]]></textFieldExpression>
-				</textField>
+					<text><![CDATA[Legenda: (S – Sempre; A - Às vezes; C – Em processo de construção)]]></text>
+				</staticText>
 			</band>
 		</groupHeader>
 		<groupFooter>
@@ -1057,61 +929,31 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="24" splitType="Stretch">
+		<band height="17" splitType="Stretch">
 			<rectangle>
-				<reportElement mode="Opaque" x="15" y="2" width="783" height="19" isPrintWhenDetailOverflows="true" forecolor="#FFFFFF" backcolor="#F0F0F0">
+				<reportElement mode="Opaque" x="15" y="0" width="783" height="15" isPrintWhenDetailOverflows="true" forecolor="#FFFFFF" backcolor="#F0F0F0">
 					<printWhenExpression><![CDATA[new Boolean(($V{COLUMN_COUNT} % 2) == 1)]]></printWhenExpression>
 				</reportElement>
 			</rectangle>
-			<textField isBlankWhenNull="true">
-				<reportElement x="399" y="2" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
-					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" size="7"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{nota1} == 'C' ? "( X )" : ""]]></textFieldExpression>
-			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="15" y="2" width="295" height="12"/>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="15" y="2" width="415" height="12"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nome_disciplina}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="435" y="-2" width="1" height="26" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="431" y="-2" width="1" height="18" isPrintWhenDetailOverflows="true"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="449" y="-2" width="1" height="26" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="13" y="15" width="786" height="1" isPrintWhenDetailOverflows="true"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
-			<line>
-				<reportElement x="311" y="-2" width="1" height="26" isPrintWhenDetailOverflows="true"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="13" y="23" width="786" height="1" isPrintWhenDetailOverflows="true"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<textField isBlankWhenNull="true">
-				<reportElement x="584" y="2" width="12" height="12">
-					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" size="7"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{faltas_componente_et2}]]></textFieldExpression>
-			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="736" y="2" width="24" height="12">
 					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
@@ -1121,204 +963,72 @@ ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{total_faltas_componente}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="436" y="2" width="12" height="12" forecolor="#000000" backcolor="#FFFFFF">
-					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" size="7"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{faltas_componente_et1}]]></textFieldExpression>
-			</textField>
 			<line>
-				<reportElement x="722" y="-2" width="1" height="26" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="531" y="-2" width="1" height="18" isPrintWhenDetailOverflows="true"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="583" y="-2" width="1" height="26" isPrintWhenDetailOverflows="true"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<textField isBlankWhenNull="true">
-				<reportElement x="318" y="2" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
-					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" size="7"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{nota1} == 'S' ? "( X )" : ""]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="355" y="2" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
-					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" size="7"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{nota1} == 'A' ? "( X )" : ""]]></textFieldExpression>
-			</textField>
-			<line>
-				<reportElement x="760" y="-2" width="1" height="26" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="760" y="-2" width="1" height="18" isPrintWhenDetailOverflows="true"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="798" y="-1" width="1" height="24" isPrintWhenDetailOverflows="true"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<textField isBlankWhenNull="true">
-				<reportElement x="457" y="2" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
-					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" size="7"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{nota2} == 'S' ? "( X )" : ""]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="497" y="2" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
-					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" size="7"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{nota2} == 'A' ? "( X )" : ""]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="542" y="2" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
-					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" size="7"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{nota2} == 'C' ? "( X )" : ""]]></textFieldExpression>
-			</textField>
-			<line>
-				<reportElement x="12" y="-2" width="1" height="26" isPrintWhenDetailOverflows="true"/>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</line>
-			<staticText>
-				<reportElement x="318" y="2" width="26" height="12">
-					<printWhenExpression><![CDATA[$P{manual}.intValue() == 1]]></printWhenExpression>
-				</reportElement>
-				<textElement/>
-				<text><![CDATA[(     )]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="355" y="2" width="26" height="12">
-					<printWhenExpression><![CDATA[$P{manual}.intValue() == 1]]></printWhenExpression>
-				</reportElement>
-				<textElement/>
-				<text><![CDATA[(     )]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="457" y="2" width="26" height="12">
-					<printWhenExpression><![CDATA[$P{manual}.intValue() == 1]]></printWhenExpression>
-				</reportElement>
-				<textElement/>
-				<text><![CDATA[(     )]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="497" y="2" width="26" height="12">
-					<printWhenExpression><![CDATA[$P{manual}.intValue() == 1]]></printWhenExpression>
-				</reportElement>
-				<textElement/>
-				<text><![CDATA[(     )]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="543" y="2" width="26" height="12">
-					<printWhenExpression><![CDATA[$P{manual}.intValue() == 1]]></printWhenExpression>
-				</reportElement>
-				<textElement/>
-				<text><![CDATA[(     )]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="399" y="2" width="26" height="12">
-					<printWhenExpression><![CDATA[$P{manual}.intValue() == 1]]></printWhenExpression>
-				</reportElement>
-				<textElement/>
-				<text><![CDATA[(     )]]></text>
-			</staticText>
-			<line>
-				<reportElement x="596" y="-2" width="1" height="26" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="798" y="-2" width="1" height="18" isPrintWhenDetailOverflows="true"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="735" y="-2" width="1" height="26" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="12" y="-2" width="1" height="18" isPrintWhenDetailOverflows="true"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
-			<staticText>
-				<reportElement x="602" y="2" width="26" height="12">
-					<printWhenExpression><![CDATA[$P{manual}.intValue() == 1]]></printWhenExpression>
-				</reportElement>
-				<textElement/>
-				<text><![CDATA[(     )]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="637" y="2" width="26" height="12">
-					<printWhenExpression><![CDATA[$P{manual}.intValue() == 1]]></printWhenExpression>
-				</reportElement>
-				<textElement/>
-				<text><![CDATA[(     )]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="677" y="2" width="26" height="12">
-					<printWhenExpression><![CDATA[$P{manual}.intValue() == 1]]></printWhenExpression>
-				</reportElement>
-				<textElement/>
-				<text><![CDATA[(     )]]></text>
-			</staticText>
+			<line>
+				<reportElement x="633" y="-2" width="1" height="18" isPrintWhenDetailOverflows="true"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="735" y="-2" width="1" height="18" isPrintWhenDetailOverflows="true"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="676" y="2" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
+				<reportElement x="433" y="2" width="97" height="12">
 					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{nota3} == 'C' ? "( X )" : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nota1} == "S" ? "Sempre" : $F{nota1} == "A" ? "As vezes" : $F{nota1} == "C" ? "Em processo de construção" : ""]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="723" y="2" width="12" height="12">
+				<reportElement x="534" y="2" width="97" height="12">
 					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{faltas_componente_et3}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nota2} == "S" ? "Sempre" : $F{nota2} == "A" ? "As vezes" : $F{nota2} == "C" ? "Em processo de construção" : ""]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="636" y="2" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
+				<reportElement x="636" y="2" width="97" height="12">
 					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{nota3} == 'A' ? "( X )" : ""]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="601" y="2" width="26" height="12" forecolor="#000000" backcolor="#FFFFFF">
-					<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" size="7"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{nota3} == 'S' ? "( X )" : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nota3} == "S" ? "Sempre" : $F{nota3} == "A" ? "As vezes" : $F{nota3} == "C" ? "Em processo de construção" : ""]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<summary>
-		<band height="6"/>
+		<band height="4"/>
 	</summary>
 </jasperReport>

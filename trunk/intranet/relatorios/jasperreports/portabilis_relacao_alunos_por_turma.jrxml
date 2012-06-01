@@ -249,7 +249,7 @@ where  escola_ano_letivo.ano = $P{ano} AND
           matricula.aprovado = $P{situacao}
       END)
 
-ORDER BY nome_turma, nome_aluno]]>
+ORDER BY nome_curso, nome_serie, cod_turma, nome_turma, nome_aluno]]>
 	</queryString>
 	<field name="nm_instituicao" class="java.lang.String"/>
 	<field name="nm_responsavel" class="java.lang.String"/>
@@ -395,10 +395,6 @@ ORDER BY nome_turma, nome_aluno]]>
 				</textElement>
 				<textFieldExpression><![CDATA["Bairro: " +$F{bairro}]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="11" y="6" width="57" height="46"/>
-				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
-			</image>
 			<textField isBlankWhenNull="true">
 				<reportElement x="473" y="39" width="78" height="13"/>
 				<textElement>
@@ -413,6 +409,10 @@ ORDER BY nome_turma, nome_aluno]]>
 				</textElement>
 				<textFieldExpression><![CDATA["Relação de Alunos"]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="11" y="3" width="57" height="46"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>
