@@ -42,6 +42,11 @@ require_once 'CoreExt/View/Helper/Abstract.php';
  */
 class ApplicationHelper extends CoreExt_View_Helper_Abstract {
 
+  // Usado para evitar carregar mais de uma vez o mesmo arquivo js ou css
+  protected static $javascriptsLoaded = array();
+  protected static $stylesheetsLoaded = array();
+
+
   /**
    * Construtor singleton.
    */
@@ -81,8 +86,13 @@ class ApplicationHelper extends CoreExt_View_Helper_Abstract {
       $timestamp = '';
 
     foreach ($files as $file) {
-      $file .= $timestamp;
-      $viewInstance->appendOutput("<script type='text/javascript' src='$file'></script>");
+      // somente carrega o arquivo uma vez
+      if (! in_array($file, self::$javascriptsLoaded)) {
+        self::$javascriptsLoaded[] = $file;
+
+        $file .= $timestamp;
+        $viewInstance->appendOutput("<script type='text/javascript' src='$file'></script>");
+      }
     }
   }
 
@@ -130,8 +140,13 @@ class ApplicationHelper extends CoreExt_View_Helper_Abstract {
       $timestamp = '';
 
     foreach ($files as $file) {
-      $file .= $timestamp;
-      $viewInstance->appendOutput("<link type='text/css' rel='stylesheet' href='$file'></script>");
+      // somente carrega o arquivo uma vez
+      if (! in_array($file, self::$stylesheetsLoaded)) {
+        self::$stylesheetsLoaded[] = $file;
+
+        $file .= $timestamp;
+        $viewInstance->appendOutput("<link type='text/css' rel='stylesheet' href='$file'></script>");
+      }
     }
   }
 }
