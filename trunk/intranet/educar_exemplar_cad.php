@@ -70,8 +70,8 @@ class indice extends clsCadastro
 	var $ref_cod_escola;
 	var $ref_cod_biblioteca;
 
-	var $tombo_automarico;
-	var $combo_manual;
+	var $tombo_automatico;
+	var $tombo_manual;
 	var $qtd_livros;
 	var $eh_manual;
 
@@ -153,8 +153,8 @@ class indice extends clsCadastro
 		if (!is_numeric($this->cod_exemplar))
 		{
 			$this->campoNumero("qtd_livros", "Quantidade de Livros", 1, 5, 5, true);
-      // $this->campoBoolLista("tombo_automarico", "Tombo Automático", "t");
-			$this->campoNumero("combo_manual", "Combo", "", 5, 5, false);
+      // $this->campoBoolLista("tombo_automatico", "Tombo Automático", "t");
+			$this->campoNumero("tombo_manual", "Tombo", "", 10, 10, false);
 			$this->campoOculto("eh_manual", 0);
 		}
 	}
@@ -173,14 +173,14 @@ class indice extends clsCadastro
 
     $this->data_aquisicao = dataToBanco($this->data_aquisicao);
 
-		if (!$this->combo_manual)
+		if (!$this->tombo_manual)
 		{
 			$obj_exemplar = new clsPmieducarExemplar();
 			$max_tombo = $obj_exemplar->retorna_tombo_maximo() + 1;
 		}
 		else
 		{
-			$max_tombo = $this->combo_manual;
+			$max_tombo = $this->tombo_manual;
 		}
 
 		for ($i = 0; $i < $this->qtd_livros; $i++)
