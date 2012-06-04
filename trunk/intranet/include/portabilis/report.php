@@ -211,6 +211,7 @@ class Report extends clsCadastro
     }
   }
 
+
   function autoValidate($method = 'post')
   {
 
@@ -229,17 +230,20 @@ class Report extends clsCadastro
     }
   }
 
+
   function validate()
   {
     //colocar aqui as validacoes serverside, exemplo se histórico possui todos os campos...
     //retornar dict msgs, se nenhuma msg entao esta validado ex: $this->addValidationError('O cadastro x esta em y status');
   }
 
+
   function onValidationSuccess()
   {
     //defina aqui operacoes apos o sucesso da validacao (antes de imprimir) , como os argumentos ex: $this->addArg('id', 1); $this->addArg('id_2', 2);
     throw new Exception("The method 'onValidationSuccess' from class Report must be overridden!");
   }
+
 
   function onValidationError()
   {
@@ -252,6 +256,22 @@ class Report extends clsCadastro
     $msg = "<script type='text/javascript'>alert('$msg'); close();</script> ";
     print utf8_decode($msg);
   }
+
+
+  /* permite adicionar filtros ao formulário de emissão do relatório.
+     ex, subscrever metodo setForm para chamar:
+
+     $this->addFilterFor('instituicao'); ou
+     $this->addFilterFor(array('instituicao', 'escola', 'pesquisaAluno'));
+  */
+  function addFilterFor($filter) {
+    if (! is_array($filter))
+      $filter = array($filter);
+
+    foreach($filter as $f)
+      $this->dynamicSelectMenus->helperFor($f);
+  }
+
 
   function appendFixups()
   {

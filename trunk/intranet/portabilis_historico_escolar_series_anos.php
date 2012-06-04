@@ -5,24 +5,20 @@
 
 require_once("include/portabilis/report.php");
 
-class PortabilisHistoricoEscolarSerieAno extends Report
-{
-  function setForm()
-  {
-    $this->dynamicSelectMenus->helperFor('instituicao');
-    $this->dynamicSelectMenus->helperFor('escola');
-    $this->dynamicSelectMenus->helperFor('pesquisaAluno');
+class PortabilisHistoricoEscolarSerieAno extends Report {
+
+  function setForm() {
+    $this->addFilterFor(array('instituicao', 'escola', 'pesquisaAluno'));
   }
 
-  function onValidationSuccess()
-  {
+
+  function onValidationSuccess() {
     $this->addArg('instituicao', (int)$_POST['ref_cod_instituicao']);
-    $this->addArg('escola', (int)$_POST['ref_cod_escola']);
-    $this->addArg('aluno', (int)$_POST['ref_cod_aluno']);
+    $this->addArg('escola',      (int)$_POST['ref_cod_escola']);
+    $this->addArg('aluno',       (int)$_POST['ref_cod_aluno']);
   }
 
-# function validate()
-#  {
+# function validate() {
 
 #    $anos_historicos_sem_situacao = $this->db->select("select ano from pmieducar.historico_escolar where ref_cod_aluno = {$_POST3['ref_cod_aluno']} and aprovado is null");
 #
