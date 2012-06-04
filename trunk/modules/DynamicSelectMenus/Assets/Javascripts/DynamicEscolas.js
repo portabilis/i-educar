@@ -12,6 +12,8 @@
       resetSelect($escolaField);
 
       if ($instituicaoField.val() && $instituicaoField.is(':enabled')) {
+        $escolaField.children().first().html('Aguarde carregando...');
+
         var urlForGetEscolas = getResourceUrlBuilder.buildUrl('educar_escola_xml2.php', '', {
                                                        ins : $instituicaoField.attr('value') });
 

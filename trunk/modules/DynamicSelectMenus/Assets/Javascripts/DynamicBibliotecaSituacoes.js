@@ -12,6 +12,8 @@
       resetSelect($situacaoField);
 
       if ($bibliotecaField.val() && $bibliotecaField.is(':enabled')) {
+        $situacaoField.children().first().html('Aguarde carregando...');
+
         var urlForGetSituacoes = getResourceUrlBuilder.buildUrl('educar_situacao_xml.php', '', {
                                                        bib : $bibliotecaField.attr('value') });
 

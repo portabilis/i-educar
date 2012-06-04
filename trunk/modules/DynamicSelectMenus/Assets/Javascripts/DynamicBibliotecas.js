@@ -12,6 +12,8 @@
       resetSelect($bibliotecaField);
 
       if ($escolaField.val() && $escolaField.is(':enabled')) {
+        $bibliotecaField.children().first().html('Aguarde carregando...');
+
         var urlForGetBibliotecas = getResourceUrlBuilder.buildUrl('educar_biblioteca_xml.php', '', {
                                                        esc : $escolaField.attr('value') });
 

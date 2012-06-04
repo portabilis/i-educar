@@ -12,6 +12,8 @@
       resetSelect($tipoExemplarField);
 
       if ($bibliotecaField.val() && $bibliotecaField.is(':enabled')) {
+        $tipoExemplarField.children().first().html('Aguarde carregando...');
+
         var path = '/module/DynamicSelectMenus/DynamicTiposExemplar';
         var urlForGetTipoExemplar = getResourceUrlBuilder.buildUrl(path, '', {
                                                             resource      : 'tipos_exemplar',

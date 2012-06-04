@@ -12,6 +12,8 @@
       resetSelect($fonteField);
 
       if ($bibliotecaField.val() && $bibliotecaField.is(':enabled')) {
+        $fonteField.children().first().html('Aguarde carregando...');
+
         var urlForGetFontes = getResourceUrlBuilder.buildUrl('educar_fonte_xml.php', '', {
                                                        bib : $bibliotecaField.attr('value') });
 
