@@ -1,15 +1,20 @@
-function validatesPresenseOfValueInRequiredFields(requiredFields, additionalFields) {
+function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields) {
   var emptyFields = [];
-
-  if (! requiredFields)
-    requiredFields = document.getElementsByClassName('obrigatorio');
+  requiredFields = document.getElementsByClassName('obrigatorio');
 
   if (additionalFields)
     requiredFields = requiredFields.concat(additionalFields);
 
+  console.log(requiredFields);
+
   for (var i = 0; i < requiredFields.length; i++) {
     var requiredField = requiredFields[i];
-    if (requiredField.style.display != 'none' && ! requiredField.getAttribute('disabled') && ! requiredField.value) {
+
+    if (requiredField.style.display != 'none'    &&
+        ! requiredField.getAttribute('disabled') &&
+        ! requiredField.value                    &&
+        $j.inArray(requiredField, exceptFields) < 0) {
+
       emptyFields.push(requiredField);
 
       if (requiredField.className.indexOf('error') < 0)
