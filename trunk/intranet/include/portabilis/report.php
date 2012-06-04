@@ -280,24 +280,12 @@ class Report extends clsCadastro
 <script type="text/javascript">
   function printReport()
   {
-	  document.formcadastro.target = '_blank';
-	  document.formcadastro.submit();
-	  document.getElementById( 'btn_enviar' ).disabled = false;
-  }
-
-  var buttonSubmit = document.getElementById('btn_enviar');
-
-  if (! buttonSubmit)
-    var buttonSubmit = document.getElementById('botao_busca');
-
-  if (buttonSubmit)
-  {
-    var oldEvent = buttonSubmit.onclick;
-    buttonSubmit.onclick = function()
-    {
-      if (validatesPresenseOfValueInRequiredFields())
-        oldEvent();
+    if (validatesPresenseOfValueInRequiredFields()) {
+  	  document.formcadastro.target = '_blank';
+  	  document.formcadastro.submit();
     }
+
+	  document.getElementById( 'btn_enviar' ).disabled = false;
   }
 </script>
 
