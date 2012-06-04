@@ -130,8 +130,8 @@ class indice extends clsListagem
 			null,
 			null,
 			null,
-			null
-//			$this->ref_cod_escola
+			null,
+			$this->ref_cod_escola
 		);
 
 		$total = $obj_aluno->_total;
