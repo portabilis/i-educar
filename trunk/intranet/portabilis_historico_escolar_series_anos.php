@@ -9,24 +9,13 @@ class PortabilisHistoricoEscolarSerieAno extends Report
 {
   function setForm()
   {
-
-    $get_escola = true;
-    $instituicao_obrigatorio = true;
-    $get_aluno = true;
-    $escola_obrigatorio = true;
-    $aluno_obrigatorio = true;
-
-#    $this->ano = $ano_atual = date("Y");
-#    $this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true);
-
-    include("include/pmieducar/educar_campo_lista.php");
-
-
+    $this->dynamicSelectMenus->helperFor('instituicao');
+    $this->dynamicSelectMenus->helperFor('escola');
+    $this->dynamicSelectMenus->helperFor('pesquisaAluno');
   }
 
   function onValidationSuccess()
   {
-#    $this->addArg('ano', (int)$_POST['ano']);
     $this->addArg('instituicao', (int)$_POST['ref_cod_instituicao']);
     $this->addArg('escola', (int)$_POST['ref_cod_escola']);
     $this->addArg('aluno', (int)$_POST['ref_cod_aluno']);
@@ -54,7 +43,6 @@ class PortabilisHistoricoEscolarSerieAno extends Report
 
 $report = new PortabilisHistoricoEscolarSerieAno($name = 'Histórico Escolar (Séries/Anos)', $templateName = 'portabilis_historico_escolar_series_anos');
 
-#$report->addRequiredField('ano','ano');
 $report->addRequiredField('ref_cod_instituicao', 'instituicao');
 $report->addRequiredField('ref_cod_escola', 'escola');
 $report->addRequiredField('ref_cod_aluno', 'aluno');
