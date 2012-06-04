@@ -57,7 +57,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaPesquisaObra extends Po
       $id = $this->getAcervoId($id);
 
     // chama finder somente se possuir id, senão ocorrerá exception
-    $obra = empty($id) ? null : App_Model_IedFinder::getBibliotecaObra($bibliotecaId, $id);
+    $obra = empty($id) ? null : App_Model_IedFinder::getBibliotecaObra($this->getBibliotecaId(), $id);
 
     return $obra;
   }
@@ -67,18 +67,18 @@ class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaPesquisaObra extends Po
     $defaultOptions = array('id' => null, 'options' => array());
     $options        = $this->mergeOptions($options, $defaultOptions);
 
-    $inputHint  = "<img border='0' onclick='pesquisaObra();' id='lupa_pesquisa_obra' name='lupa_pesquisa_cliente' src='imagens/lupa.png' />";
+    $inputHint  = "<img border='0' onclick='pesquisaObra();' id='lupa_pesquisa_obra' name='lupa_pesquisa_obra' src='imagens/lupa.png' />";
 
     // se não recuperar obra, deixa titulo em branco
     $obra       = $this->getObra($options['id']);
     $tituloObra = $obra ? $obra['titulo'] : '';
 
-    $defaultInputOptions = array('id'    => 'titulo_obra',
+    $defaultInputOptions = array('id'         => 'titulo_obra',
                                  'label'      => 'Obra',
                                  'value'      => $tituloObra,
                                  'size'       => '30',
                                  'maxLength'  => '255',
-                                 'required'   => false,
+                                 'required'   => true,
                                  'expressao'  => false,
                                  'duplo'      => false,
                                  'label_hint' => '',
@@ -106,9 +106,10 @@ class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaPesquisaObra extends Po
     ApplicationHelper::embedJavascript($this->viewInstance, '
       function pesquisaObra() {
 
-        var requiredFields = [document.getElementById("ref_cod_biblioteca")];
+        var additionalFields = [document.getElementById("ref_cod_biblioteca")];
+        var exceptFields     = [document.getElementById("titulo_obra")];
 
-        if (validatesPresenseOfValueInRequiredFields(requiredFields)) {
+        if (validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields)) {
   	      var bibliotecaId = document.getElementById("ref_cod_biblioteca").value;
           pesquisa_valores_popless("educar_pesquisa_obra_lst.php?campo1=ref_cod_acervo&campo2=titulo_obra&campo3="+bibliotecaId)
         }
