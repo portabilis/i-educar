@@ -1,10 +1,11 @@
 <?php
 
-require_once("include_paths.php");
-require_once("include/clsBase.inc.php");
-require_once("include/clsCadastro.inc.php");
-require_once("include/pmieducar/geral.inc.php");
-require_once("portabilis/dal.php");
+require_once "include_paths.php";
+require_once "include/clsBase.inc.php";
+require_once "include/clsCadastro.inc.php";
+require_once "include/pmieducar/geral.inc.php";
+require_once "portabilis/dal.php";
+require_once "lib/Portabilis/View/Helper/DynamicSelectMenus.php";
 
 class clsIndexBase extends clsBase
 {
@@ -62,6 +63,54 @@ class RemoteReportJasperFactory extends RemoteReportFactory
 
 class Report extends clsCadastro
 {
+
+  function __construct($name, $templateName, $addLogoNameToArgs = True)
+  {
+
+		@session_start();
+		$this->_user_id = $_SESSION['id_pessoa'];
+		@session_write_close();
+
+    if (! $this->_user_id)
+      header('Location: logof.php');
+
+    $this->db = new Db();
+
+    $config = $GLOBALS['coreExt']['Config']->report->remote_factory;
+
+    $this->reportFactorySettings = array();
+    $this->reportFactorySettings['url'] = $config->url;
+    $this->reportFactorySettings['app_name'] = $config->this_app_name;
+    $this->reportFactorySettings['username'] = $config->username;
+    $this->reportFactorySettings['password'] = $config->password;
+    $this->reportFactorySettings['show_exceptions_msg'] = $config->show_exceptions_msg;
+
+    $this->reportFactory = new RemoteReportJasperFactory($settings = $this->reportFactorySettings);
+
+    $this->name = $name;
+    $this->templateName = $templateName;
+    $this->args = array();
+
+    $this->page = new clsIndexBase();
+    $this->validationErrors = array();
+    $this->requiredFields = array();
+
+    #variaveis usadas pelo modulo /intranet/include/pmieducar/educar_campo_lista.php
+    $this->verificar_campos_obrigatorios = True;
+    $this->add_onchange_events = True;
+
+    $this->acao_executa_submit = false;
+    $this->acao_enviar = 'printReport()';
+
+    if ($addLogoNameToArgs)
+    {
+      if (! $config->logo_name)
+        throw new Exception("Invalid logo_name, please check the ini file");
+      $this->addArg('logo_name', $config->logo_name);
+    }
+
+    $this->dynamicSelectMenus = new Portabilis_View_Helper_DynamicSelectMenus($this);
+  }
 
   function render()
   {
@@ -215,56 +264,25 @@ class Report extends clsCadastro
 	  document.formcadastro.submit();
 	  document.getElementById( 'btn_enviar' ).disabled = false;
   }
+
+  var buttonSubmit = document.getElementById('btn_enviar');
+
+  if (! buttonSubmit)
+    var buttonSubmit = document.getElementById('botao_busca');
+
+  if (buttonSubmit)
+  {
+    var oldEvent = buttonSubmit.onclick;
+    buttonSubmit.onclick = function()
+    {
+      if (validatesPresenseOfValueInRequiredFields())
+        oldEvent();
+    }
+  }
 </script>
 
 EOT;
     $this->appendOutput($js);
-  }
-
-  function __construct($name, $templateName, $addLogoNameToArgs = True)
-  {
-
-		@session_start();
-		$this->_user_id = $_SESSION['id_pessoa'];
-		@session_write_close();
-
-    if (! $this->_user_id)
-      header('Location: logof.php');
-
-    $this->db = new Db();
-
-    $config = $GLOBALS['coreExt']['Config']->report->remote_factory;
-
-    $this->reportFactorySettings = array();
-    $this->reportFactorySettings['url'] = $config->url;
-    $this->reportFactorySettings['app_name'] = $config->this_app_name;
-    $this->reportFactorySettings['username'] = $config->username;
-    $this->reportFactorySettings['password'] = $config->password;
-    $this->reportFactorySettings['show_exceptions_msg'] = $config->show_exceptions_msg;
-
-    $this->reportFactory = new RemoteReportJasperFactory($settings = $this->reportFactorySettings);
-
-    $this->name = $name;
-    $this->templateName = $templateName;
-    $this->args = array();
-
-    $this->page = new clsIndexBase();
-    $this->validationErrors = array();
-    $this->requiredFields = array();
-
-    #variaveis usadas pelo modulo /intranet/include/pmieducar/educar_campo_lista.php
-    $this->verificar_campos_obrigatorios = True;
-    $this->add_onchange_events = True;
-
-    $this->acao_executa_submit = false;
-    $this->acao_enviar = 'printReport()';
-
-    if ($addLogoNameToArgs)
-    {
-      if (! $config->logo_name)
-        throw new Exception("Invalid logo_name, please check the ini file");
-      $this->addArg('logo_name', $config->logo_name);
-    }
   }
 }
 ?>
