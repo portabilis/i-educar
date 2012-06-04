@@ -5,8 +5,6 @@ function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields
   if (additionalFields)
     requiredFields = requiredFields.concat(additionalFields);
 
-  console.log(requiredFields);
-
   for (var i = 0; i < requiredFields.length; i++) {
     var requiredField = requiredFields[i];
 
