@@ -29,7 +29,7 @@ function updateSelect($targetElement, options, emptyOptionHtml) {
 function resetSelect($targetElement) {
   $targetElement.children('[value^=""]').remove();
   $targetElement.children().first().attr('checked', 'checked');
-  $targetElement.attr('disabled', 'disabled');
+  //$targetElement.attr('disabled', 'disabled');
 }
 
 
