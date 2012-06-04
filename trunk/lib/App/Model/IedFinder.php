@@ -659,7 +659,7 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
-   * Retorna uma obras cadastrada para uma biblioteca na tabela pmieducar.acervo, selecionando
+   * Retorna uma obra cadastrada para uma biblioteca na tabela pmieducar.acervo, selecionando
    * obrigatóriamente pelo código da biblioteca e opcionalmente pelo código da obra.
    * @param int $bibliotecaId
    * @return array
@@ -680,6 +680,30 @@ class App_Model_IedFinder extends CoreExt_Entity
     }
 
     return $obra;
+  }
+
+  /**
+   * Retorna um aluno cadastrado para uma escola na tabela pmieducar.aluno, selecionando
+   * obrigatóriamente pelo código da escola e opcionalmente pelo código do aluno.
+   * @param int $id
+   * @return array
+   */
+  public static function getAluno($escolaId, $id)
+  {
+    $aluno = self::addClassToStorage('clsPmieducarAluno', NULL,
+                                    'include/pmieducar/clsPmieducarAluno.inc.php');
+    #$aluno->cod_aluno      = $id;
+    #$aluno                 = $aluno->detalhe();
+
+    $aluno = $aluno->lista($id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $escolaId);
+
+    if (FALSE === $aluno) {
+      throw new App_Model_Exception(
+        sprintf('Aluno com o código "%d" não existe.', $id)
+      );
+    }
+
+    return $aluno[0];
   }
 
   /**
