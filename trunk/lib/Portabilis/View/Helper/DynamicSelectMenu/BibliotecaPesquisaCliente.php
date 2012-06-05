@@ -89,7 +89,11 @@ class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaPesquisaCliente extends
 
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, "
       function pesquisaCliente() {
-        if (validatesPresenseOfValueInRequiredFields()) {
+
+        var additionalFields = [document.getElementById('ref_cod_biblioteca')];
+        var exceptFields     = [document.getElementById('nome_cliente')];
+
+        if (validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields)) {
 	        var bibliotecaId = document.getElementById('ref_cod_biblioteca').value;
 	        pesquisa_valores_popless('educar_pesquisa_cliente_lst.php?campo1=ref_cod_cliente&campo2=nome_cliente&ref_cod_biblioteca='+bibliotecaId);
         }
