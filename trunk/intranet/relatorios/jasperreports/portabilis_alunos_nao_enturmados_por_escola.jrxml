@@ -121,11 +121,13 @@
        to_char(CURRENT_DATE,'dd/mm/yyyy') AS data_atual,
        to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
        matricula.cod_matricula,
-       (SELECT pessoa.nome
+
+       (SELECT translate(pessoa.nome,'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ', 'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN')
           FROM cadastro.pessoa,
                cadastro.fisica
          WHERE aluno.ref_idpes = fisica.idpes AND
                fisica.idpes = pessoa.idpes) as nome_aluno,
+
        (SELECT CASE WHEN fisica.sexo = 'M' THEN
                     'Masculino'
                 ELSE
@@ -199,7 +201,7 @@ ORDER BY nm_escola, nome_aluno]]>
 					<textElement>
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{nm_escola}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="5" y="2" width="37" height="13"/>
@@ -227,49 +229,49 @@ ORDER BY nm_escola, nome_aluno]]>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Endereço: "+$F{logradouro}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Endereço: "+$F{logradouro}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="74" y="-109" width="306" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nm_escola}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nm_escola}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="74" y="-133" width="306" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="481" y="-85" width="85" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="321" y="-85" width="157" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="74" y="-73" width="242" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Fone/Fax: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Fone/Fax: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="321" y="-73" width="187" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="91" y="2" width="52" height="13"/>
@@ -304,7 +306,7 @@ ORDER BY nm_escola, nome_aluno]]>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="3" y="2" width="39" height="13"/>
@@ -322,14 +324,14 @@ ORDER BY nm_escola, nome_aluno]]>
 			</staticText>
 			<image>
 				<reportElement x="11" y="-133" width="57" height="46"/>
-				<imageExpression class="java.lang.String"><![CDATA[$P{logo}]]></imageExpression>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
 			<textField isBlankWhenNull="true">
 				<reportElement x="74" y="-85" width="242" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Bairro: " +$F{bairro}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Bairro: " +$F{bairro}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="449" y="2" width="49" height="13"/>
@@ -350,7 +352,7 @@ ORDER BY nm_escola, nome_aluno]]>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Nº: "+$F{numero}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Nº: "+$F{numero}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -372,49 +374,49 @@ ORDER BY nm_escola, nome_aluno]]>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome_aluno}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nome_aluno}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="91" y="3" width="79" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$F{cod_aluno_inep}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cod_aluno_inep}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="3" y="3" width="39" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{cod_aluno}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cod_aluno}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="509" y="3" width="73" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Em Andamento"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Em Andamento"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="449" y="3" width="57" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{serie}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{serie}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="323" y="3" width="125" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{curso}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{curso}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="44" y="3" width="39" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{cod_matricula}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cod_matricula}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -437,14 +439,14 @@ ORDER BY nm_escola, nome_aluno]]>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Página "+$V{PAGE_NUMBER}+" de "+ $V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de "+ $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="81" y="3" width="23" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>

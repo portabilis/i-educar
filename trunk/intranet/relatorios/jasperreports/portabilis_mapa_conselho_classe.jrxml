@@ -54,7 +54,7 @@
        matricula.cod_matricula,
        matricula.ref_cod_aluno AS cod_aluno,
 
-      (SELECT upper(pessoa.nome)
+      (SELECT translate(public.fcn_upper(pessoa.nome),'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ', 'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN')
 	       FROM cadastro.pessoa, cadastro.fisica, pmieducar.aluno
 	      WHERE pessoa.idpes = fisica.idpes AND
 	            fisica.idpes = aluno.ref_idpes AND

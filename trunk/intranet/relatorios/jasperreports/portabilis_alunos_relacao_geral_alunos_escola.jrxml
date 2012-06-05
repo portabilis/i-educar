@@ -30,6 +30,7 @@
        public.fcn_upper(ref_sigla_uf) AS uf_instituicao,
 
 	         (SELECT COALESCE((SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))
+
           FROM cadastro.pessoa ps,
                cadastro.juridica
          WHERE escola.ref_idpes = juridica.idpes AND
@@ -122,11 +123,13 @@
        to_char(CURRENT_DATE,'dd/mm/yyyy') AS data_atual,
        to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
 	   aluno.cod_aluno,
-       (SELECT public.fcn_upper(pessoa.nome)
+
+(SELECT translate(public.fcn_upper(pessoa.nome),'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ', 'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN')
           FROM cadastro.pessoa,
                cadastro.fisica
          WHERE aluno.ref_idpes = fisica.idpes AND
                fisica.idpes = pessoa.idpes) as nome_aluno,
+
        (SELECT CASE WHEN fisica.sexo = 'M' THEN
                     'Masculino'
                 ELSE

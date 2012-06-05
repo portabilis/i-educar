@@ -14,7 +14,7 @@
 	</parameter>
 	<parameter name="logo" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT fcn_upper(pessoa.nome) as nome_aluno,
+		<![CDATA[SELECT translate(public.fcn_upper(pessoa.nome),'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ', 'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN') as nome_aluno,
        matricula.cod_matricula,
        (SELECT municipio.nome || ' - ' || municipio.sigla_uf
           FROM public.municipio

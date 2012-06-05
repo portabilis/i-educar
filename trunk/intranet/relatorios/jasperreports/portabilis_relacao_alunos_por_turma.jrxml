@@ -34,7 +34,8 @@
        (SELECT cod_aluno_inep
           FROM modules.educacenso_cod_aluno
          WHERE educacenso_cod_aluno.cod_aluno = aluno.cod_aluno) as inep,
-               public.fcn_upper(pessoa.nome) as nome_aluno,
+
+      translate(public.fcn_upper(pessoa.nome),'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ', 'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN') as nome_aluno,
 
        (SELECT CASE WHEN fisica.sexo = 'M' THEN
                         'Mas'
