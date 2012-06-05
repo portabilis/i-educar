@@ -11,9 +11,11 @@ class clsIndexBase extends clsBase
 {
   function __construct()
   {
-    // código usado para verificação de autorização de acesso a página,
-    // ex, setar em instancia de Report: $instancia->page->processoAp = "123";
-		$this->processoAp = "0";
+    /* código usado para verificação de autorização de acesso a página,
+       ex, setar em instancia de Report: $instancia->page->processoAp = "123";
+       por padrão usa código da página de apresentação (index) do ieducar, para que seja exibido o menu.
+    */
+		$this->processoAp = "624";
 
     parent::__construct();
   }
@@ -135,7 +137,6 @@ class Report extends clsCadastro
 
   function renderForm()
   {
-
     $this->setForm();
     $this->nome_url_sucesso = "Exibir";
     $this->page->SetTitulo('Relat&oacute;rio - ' . $this->name);
