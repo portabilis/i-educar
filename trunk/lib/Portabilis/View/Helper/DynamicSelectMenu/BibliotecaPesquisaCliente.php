@@ -44,15 +44,27 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
  */
 class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaPesquisaCliente extends Portabilis_View_Helper_DynamicSelectMenu_Core {
 
-public function bibliotecaPesquisaCliente($clienteId, $options = array()) {
+
+  protected function getResourceId($id = null) {
+    if (! $id && $this->viewInstance->ref_cod_cliente)
+      $id = $this->viewInstance->ref_cod_cliente;
+
+    return $id;
+  }
+
+
+  public function bibliotecaPesquisaCliente($options = array()) {
+    $defaultOptions       = array('id' => null, 'options' => array());
+    $options              = $this->mergeOptions($options, $defaultOptions);
+
     $inputHint = "<img border='0' onclick='pesquisaCliente();' id='lupa_pesquisa_cliente' name='lupa_pesquisa_cliente' src='imagens/lupa.png' />";
 
-    $defaultOptions = array('id'         => 'nome_cliente',
+    $defaultInputOptions = array('id'    => 'nome_cliente',
                             'label'      => 'Cliente',
                             'value'      => '',
                             'size'       => '30',
                             'maxLength'  => '255',
-                            'required'   => false,
+                            'required'   => true,
                             'expressao'  => false,
                             'duplo'      => false,
                             'label_hint' => '',
@@ -62,10 +74,10 @@ public function bibliotecaPesquisaCliente($clienteId, $options = array()) {
                             'disabled'   => true);
 
 
-    $options = $this->mergeOptions($options, $defaultOptions);
-    call_user_func_array(array($this->viewInstance, 'campoTexto'), $options);
+    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
+    call_user_func_array(array($this->viewInstance, 'campoTexto'), $inputOptions);
 
-    $this->viewInstance->campoOculto("ref_cod_cliente", $clienteId);
+    $this->viewInstance->campoOculto("ref_cod_cliente", $this->getResourceId($options['id']));
 
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, '
       var resetCliente = function(){
