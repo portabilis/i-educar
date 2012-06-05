@@ -459,7 +459,7 @@
 
 	) AS etapa1
 GROUP BY id_disciplina, nome_disciplina, nome_aluno
-ORDER BY nome_aluno, area_conhecimento DESC, nome_disciplina]]>
+ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
 	</queryString>
 	<field name="ano" class="java.lang.Integer"/>
 	<field name="nome_responsavel" class="java.lang.String"/>
