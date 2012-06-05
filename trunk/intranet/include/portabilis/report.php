@@ -261,15 +261,15 @@ class Report extends clsCadastro
   /* permite adicionar filtros ao formulário de emissão do relatório.
      ex, subscrever metodo setForm para chamar:
 
-     $this->addFilterFor('instituicao'); ou
+     $this->addFilterFor('instituicao', array('required' => false)); ou
      $this->addFilterFor(array('instituicao', 'escola', 'pesquisaAluno'));
   */
-  function addFilterFor($filter) {
-    if (! is_array($filter))
-      $filter = array($filter);
+  function addFilterFor($filters, $input_options = array()) {
+    if (! is_array($filters))
+      $filters = array($filters);
 
-    foreach($filter as $f)
-      $this->dynamicSelectMenus->helperFor($f);
+    foreach($filters as $filter)
+      $this->dynamicSelectMenus->helperFor($filter, array('options' => $input_options));
   }
 
 
