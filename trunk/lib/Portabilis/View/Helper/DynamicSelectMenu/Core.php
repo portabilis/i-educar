@@ -104,6 +104,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_Core {
 
 
   // TODO mover funcao para classe especifica
+  // TODO quando só usado consulta, usar finders no lugar de data mappers especificos ?
   protected function getDataMapperFor($modelName){
     $dataMappers = array('tipoExemplar' => 'Biblioteca_Model_TipoExemplarDataMapper');
 
