@@ -33,7 +33,7 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
 
 
 /**
- * Portabilis_View_Helper_DynamicSelectMenu_Escola class.
+ * Portabilis_View_Helper_DynamicSelectMenu_Ano class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -48,6 +48,8 @@ class Portabilis_View_Helper_DynamicSelectMenu_Ano extends Portabilis_View_Helpe
   protected function getResourceValue($value = null) {
     if (! $value && $this->viewInstance->ano)
       $value = $this->viewInstance->ano;
+    else
+      $value = date('Y');
 
     return $value;
   }
@@ -56,18 +58,18 @@ class Portabilis_View_Helper_DynamicSelectMenu_Ano extends Portabilis_View_Helpe
     $defaultOptions       = array('options' => array());
     $options              = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultInputOptions = array('id'              => 'ano',
-                                 'label'           => 'Ano',
-                                 'value'           => date('Y'),
-                                 'tamanhovisivel'  => 4,
-                                 'tamanhomaximo'   => 4,
-                                 'obrigatorio'     => true,
-                                 'label_hint'      => '',
-                                 'input_hint'      => '',
-                                 'script'          => false,
-                                 'callback'        => false,
-                                 'duplo'           => false,
-                                 'disabled'        => false);
+    $defaultInputOptions = array('id'             => 'ano',
+                                 'label'          => 'Ano',
+                                 'value'          => $this->getResourceValue($options['options']['value']),
+                                 'tamanhovisivel' => 4,
+                                 'tamanhomaximo'  => 4,
+                                 'required'       => true,
+                                 'label_hint'     => '',
+                                 'input_hint'     => '',
+                                 'script'         => false,
+                                 'callback'       => false,
+                                 'duplo'          => false,
+                                 'disabled'       => false);
 
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
     call_user_func_array(array($this->viewInstance, 'campoNumero'), $inputOptions);
