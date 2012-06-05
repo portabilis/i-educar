@@ -33,18 +33,8 @@
  */
 
 require_once 'Core/Controller/Page/ListController.php';
-require_once 'lib/Portabilis/View/Helper/DynamicSelectMenusHelper.php';
-
-#TODO remover includes desnecessarios
-#require_once 'CoreExt/View/Helper/UrlHelper.php';
-#require_once 'CoreExt/View/Helper/TableHelper.php';
-#require_once 'App/Model/IedFinder.php';
-
-#require_once 'include/clsDetalhe.inc.php';
-#require_once 'include/clsBase.inc.php';
-#require_once 'include/clsListagem.inc.php';
-#require_once 'include/clsBanco.inc.php';
-#require_once 'include/pmieducar/geral.inc.php';
+require_once 'lib/Portabilis/View/Helper/Application.php';
+require_once 'lib/Portabilis/View/Helper/DynamicSelectMenus.php';
 
 class ReservaController extends Core_Controller_Page_ListController
 {
@@ -73,28 +63,19 @@ class ReservaController extends Core_Controller_Page_ListController
 
   protected function setSelectionFields()
   {
-    $dynamicSelectMenusHelper = new DynamicSelectMenusHelper($this);
+    $dynamicSelectMenus = new Portabilis_View_Helper_DynamicSelectMenus($this);
 
-    $dynamicSelectMenusHelper->instituicao(array('value' => $this->ref_cod_instituicao));
-    $dynamicSelectMenusHelper->escola(array('value' => $this->ref_cod_escola));
-    $dynamicSelectMenusHelper->biblioteca(array('value' => $this->ref_cod_biblioteca));
-
-    # TODO add field código cliente
-    # TODO add field senha cliente
-
-    #TODO enable required, add except_id in validates method
-    $dynamicSelectMenusHelper->bibliotecaPesquisaCliente(array('value' => $this->nm_cliente,
-                                                               'required' => true));
-
-    #TODO enable required, add except_id in validates method
-    $dynamicSelectMenusHelper->bibliotecaPesquisaObra(array('value' => $this->titulo_obra,
-                                                            'required' => true));
+    $dynamicSelectMenus->helperFor('instituicao');
+    $dynamicSelectMenus->helperFor('escola');
+    $dynamicSelectMenus->helperFor('biblioteca');
+    $dynamicSelectMenus->helperFor('bibliotecaPesquisaCliente');
+    $dynamicSelectMenus->helperFor('bibliotecaPesquisaObra');
   }
 
 
   public function Gerar()
   {
-    ApplicationHelper::loadStylesheet($this, '/modules/Portabilis/Assets/Stylesheets/FrontendApi.css');
+    Portabilis_View_Helper_Application::loadStylesheet($this, '/modules/Portabilis/Assets/Stylesheets/FrontendApi.css');
 
     $this->setVars();
     $this->setSelectionFields();
@@ -114,9 +95,11 @@ class ReservaController extends Core_Controller_Page_ListController
 
     $this->appendOutput($resourceOptionsTable);*/
 
-    ApplicationHelper::loadJavascript($this, 'scripts/jquery/jquery.form.js');
-    ApplicationHelper::loadJavascript($this, '/modules/Portabilis/Assets/Javascripts/FrontendApi.js');
-    ApplicationHelper::loadJavascript($this, '/modules/Biblioteca/Assets/Javascripts/reservaController.js');
+    Portabilis_View_Helper_Application::loadJavascript($this, 'scripts/jquery/jquery.form.js');
+
+    Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Portabilis/Assets/Javascripts/FrontendApi.js');
+
+    Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Biblioteca/Assets/Javascripts/reservaController.js');
   }
 }
 ?>
