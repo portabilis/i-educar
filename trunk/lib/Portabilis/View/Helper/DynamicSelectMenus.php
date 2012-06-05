@@ -46,18 +46,23 @@ class Portabilis_View_Helper_DynamicSelectMenus {
   }
 
 
-  public function helperFor($helperName, $options = array()) {
-    $helperClassName = "Portabilis_View_Helper_DynamicSelectMenu_" . ucfirst($helperName);
-    $classPath       = str_replace('_', '/', $helperClassName) . '.php';
+  public function helperFor($helperNames, $options = array()) {
+    if (! is_array($helperNames))
+      $helperNames = array($helperNames);
 
-    # usado include_once para continuar execução script mesmo que o path inexista.
-    include_once $classPath;
+    foreach($helperNames as $helperName) {
+      $helperClassName = "Portabilis_View_Helper_DynamicSelectMenu_" . ucfirst($helperName);
+      $classPath       = str_replace('_', '/', $helperClassName) . '.php';
 
-    if (! class_exists($helperClassName))
-      throw new CoreExt_Exception("Class '$helperClassName' not found in path $classPath.");
+      # usado include_once para continuar execução script mesmo que o path inexista.
+      include_once $classPath;
 
-    $helper = new $helperClassName($this->viewInstance);
-    return $helper->$helperName($options);
+      if (! class_exists($helperClassName))
+        throw new CoreExt_Exception("Class '$helperClassName' not found in path $classPath.");
+
+      $helper = new $helperClassName($this->viewInstance);
+      $helper->$helperName($options);
+    }
   }
 }
 ?>
