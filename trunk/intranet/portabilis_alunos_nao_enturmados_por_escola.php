@@ -9,25 +9,17 @@ class PortabilisRelacaoAlunosNaoEnturmados extends Report
 {
   function setForm()
   {
-
-    $get_escola = true;
-    $get_curso = true;
-    $instituicao_obrigatorio = true;
-    
-    $this->ano = $ano_atual = date("Y");
-    $this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true);
-
-    include("include/pmieducar/educar_campo_lista.php");
-    
+    $this->addFilterFor(array('ano', 'instituicao'));
+    $this->addFilterFor(array('escola', 'curso'), array('required' => false));
   }
 
   function onValidationSuccess()
   {
-    
+
     if (! isset($_POST['ref_cod_escola']))
       $this->addArg('escola', 0);
     else
-      $this->addArg('escola', (int)$_POST['ref_cod_escola']);     
+      $this->addArg('escola', (int)$_POST['ref_cod_escola']);
     $this->addArg('ano', (int)$_POST['ano']);
     $this->addArg('instituicao', (int)$_POST['ref_cod_instituicao']);
   }
