@@ -9,21 +9,7 @@ class PortabilisMovimentoAlunos extends Report
 {
   function setForm()
   {
-
-    $get_escola = true;
-    $get_curso = true;
-    $instituicao_obrigatorio = true;
-    $escola_obrigatorio = true;
-    
-    $this->ano = $ano_atual = date("Y");
-    $this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true);
-
-    include("include/pmieducar/educar_campo_lista.php");
-    
-		$this->campoData("data_inicial","Data inicial:",$this->data_inicial,true);
-		$this->campoData("data_final","Data final:",$this->data_final,true);
-    
-    
+    $this->addFilterFor(array('ano', 'instituicao', 'escola', 'curso', 'dataInicial', 'dataFinal'));
   }
 
   function onValidationSuccess()
