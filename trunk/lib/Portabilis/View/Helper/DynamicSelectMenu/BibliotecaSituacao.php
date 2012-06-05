@@ -81,7 +81,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaSituacao extends Portab
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
     call_user_func_array(array($this->viewInstance, 'campoLista'), $inputOptions);
 
-    ApplicationHelper::loadJavascript($this->viewInstance, '/modules/DynamicSelectMenus/Assets/Javascripts/DynamicBibliotecaSituacoes.js');
+    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicSelectMenus/Assets/Javascripts/DynamicBibliotecaSituacoes.js');
   }
 }
 ?>

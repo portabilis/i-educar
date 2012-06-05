@@ -40,7 +40,8 @@ require_once 'CoreExt/View/Helper/Abstract.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class ApplicationHelper extends CoreExt_View_Helper_Abstract {
+
+class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
 
   // Usado para evitar carregar mais de uma vez o mesmo arquivo js ou css
   protected static $javascriptsLoaded = array();

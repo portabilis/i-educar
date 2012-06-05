@@ -95,7 +95,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaPesquisaObra extends Po
     // Ao selecionar obra, na pesquisa de obra é setado o value deste elemento
     $this->viewInstance->campoOculto("cod_biblioteca", "");
 
-    ApplicationHelper::embedJavascript($this->viewInstance, '
+    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, '
       var resetObra = function(){
         $("#ref_cod_acervo").val("");
         $("#titulo_obra").val("");
@@ -103,7 +103,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaPesquisaObra extends Po
 
       $("#ref_cod_biblioteca").change(resetObra);', true);
 
-    ApplicationHelper::embedJavascript($this->viewInstance, '
+    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, '
       function pesquisaObra() {
 
         var additionalFields = [document.getElementById("ref_cod_biblioteca")];

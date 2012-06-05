@@ -67,7 +67,7 @@ public function bibliotecaPesquisaCliente($clienteId, $options = array()) {
 
     $this->viewInstance->campoOculto("ref_cod_cliente", $clienteId);
 
-    ApplicationHelper::embedJavascript($this->viewInstance, '
+    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, '
       var resetCliente = function(){
         $("#ref_cod_cliente").val("");
         $("#nome_cliente").val("");
@@ -75,7 +75,7 @@ public function bibliotecaPesquisaCliente($clienteId, $options = array()) {
 
       $("#ref_cod_biblioteca").change(resetCliente);', true);
 
-    ApplicationHelper::embedJavascript($this->viewInstance, "
+    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, "
       function pesquisaCliente() {
         if (validatesPresenseOfValueInRequiredFields()) {
 	        var bibliotecaId = document.getElementById('ref_cod_biblioteca').value;

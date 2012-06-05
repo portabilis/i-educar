@@ -94,7 +94,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_PesquisaAluno extends Portabilis_
 
     $this->viewInstance->campoOculto("ref_cod_aluno", $this->getResourceId($options['id']));
 
-    ApplicationHelper::embedJavascript($this->viewInstance, '
+    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, '
       var resetAluno = function(){
         $("#ref_cod_aluno").val("");
         $("#nm_aluno").val("");
@@ -102,7 +102,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_PesquisaAluno extends Portabilis_
 
       $("#ref_cod_escola").change(resetAluno);', true);
 
-    ApplicationHelper::embedJavascript($this->viewInstance, '
+    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, '
       function pesquisaAluno() {
 
         var additionalFields = [document.getElementById("ref_cod_escola")];

@@ -32,7 +32,7 @@
 require_once 'CoreExt/View/Helper/Abstract.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
 require_once 'App/Model/IedFinder.php';
-require_once 'lib/Portabilis/View/Helper/ApplicationHelper.php';
+require_once 'lib/Portabilis/View/Helper/Application.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/Object/Utils.php';
 
@@ -54,15 +54,15 @@ class Portabilis_View_Helper_DynamicSelectMenu_Core {
   public function __construct($viewInstance) {
     $this->viewInstance = $viewInstance;
 
-    ApplicationHelper::loadJavascript($this->viewInstance, 'scripts/jquery/jquery.js');
-    ApplicationHelper::embedJavascript($this->viewInstance, 'var $j = jQuery.noConflict();');
+    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, 'scripts/jquery/jquery.js');
+    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, 'var $j = jQuery.noConflict();');
 
     $dependencies = array('/modules/Portabilis/Assets/Javascripts/ClientApi.js',
                           '/modules/Portabilis/Assets/Javascripts/Validator.js',
                           '/modules/DynamicSelectMenus/Assets/Javascripts/DynamicSelectMenus.js');
 
-    ApplicationHelper::loadJavascript($this->viewInstance, $dependencies);
-    ApplicationHelper::embedJavascript($this->viewInstance, 'fixupFieldsWidth();');
+    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $dependencies);
+    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, 'fixupFieldsWidth();');
   }
 
   protected function getCurrentUserId() {
