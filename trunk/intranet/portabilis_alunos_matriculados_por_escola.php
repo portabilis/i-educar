@@ -9,14 +9,12 @@ class PortabilisRelacaoAlunosMatriculados extends Report
 {
   function setForm()
   {
-
-    $get_escola = true;
-    $instituicao_obrigatorio = true;
-    
+  
     $this->ano = $ano_atual = date("Y");
     $this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true);
 
-    include("include/pmieducar/educar_campo_lista.php");
+    $this->addFilterFor(array('instituicao', 'escola'));
+
     
     $opcoes[1] = "Aprovado";
 		$opcoes[2] = "Reprovado";

@@ -10,11 +10,8 @@ class PortabilisFichaAlunoBranco extends Report
   function setForm()
   {
 
-    $get_escola = true;
-    $instituicao_obrigatorio = true;
-    $escola_obrigatorio = true;
+    $this->addFilterFor(array('instituicao', 'escola'));
 
-    include("include/pmieducar/educar_campo_lista.php");
   }
 
   function onValidationSuccess()

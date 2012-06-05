@@ -10,20 +10,15 @@ class PortabilisFichaAluno extends Report
   function setForm()
   {
 
-    $get_escola = true;
-    $get_aluno = true;
-    $instituicao_obrigatorio = true;
-    $escola_obrigatorio = true;
-    $aluno_obrigatorio = true;
+    $this->addFilterFor(array('instituicao', 'escola', 'pesquisaAluno'));
 
-    include("include/pmieducar/educar_campo_lista.php");
   }
 
   function onValidationSuccess()
   {
     $this->addArg('instituicao', (int)$_POST['ref_cod_instituicao']);
-    $this->addArg('escola', (int)$_POST['ref_cod_escola']);
-    $this->addArg('aluno', (int)$_POST['ref_cod_aluno']);
+    $this->addArg('escola',      (int)$_POST['ref_cod_escola']);
+    $this->addArg('aluno',       (int)$_POST['ref_cod_aluno']);
 
   }
 }

@@ -8,20 +8,11 @@ require_once("include/portabilis/report.php");
 class PortabilisAtestadoVaga extends Report
 {
   function setForm()
-  {
-
-    $get_escola = true;
-    $get_aluno = true;
-    $instituicao_obrigatorio = true;
-    $escola_obrigatorio = true;
-    $aluno_obrigatorio = true;
-    
+  {    
     $this->ano = $ano_atual = date("Y");
     $this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true);
 
-    include("include/pmieducar/educar_campo_lista.php");  
- 
-    
+    $this->addFilterFor(array('instituicao', 'escola', 'pesquisaAluno'));    
   }
 
   function onValidationSuccess()
