@@ -9,9 +9,7 @@ class PortabilisMovimentoAlunos extends Report
 {
   function setForm()
   {
-    $this->addFilterFor(array('ano', 'instituicao', 'escola'));
-    $this->addFilterFor('curso', array('required' => false));
-    $this->addFilterFor(array('dataInicial', 'dataFinal'));
+    $this->addFilterFor(array('ano', 'instituicao', 'escola', 'curso', 'dataInicial', 'dataFinal'));
   }
 
   function onValidationSuccess()
