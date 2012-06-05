@@ -6,6 +6,7 @@ require_once "include/clsCadastro.inc.php";
 require_once "include/pmieducar/geral.inc.php";
 require_once "portabilis/dal.php";
 require_once "lib/Portabilis/View/Helper/DynamicSelectMenus.php";
+require_once 'lib/Portabilis/Array/Utils.php';
 
 class clsIndexBase extends clsBase
 {
@@ -259,18 +260,21 @@ class Report extends clsCadastro
   }
 
 
-  /* permite adicionar filtros ao formulário de emissão do relatório.
+  /* permite adicionar filtros ao formulário de emissão do relatório, sem precisar
+     chamar diretamente $this->dynamicSelectMenus->helperFor nem passsar um array
+     contendo um array de options.
+
      ex, subscrever metodo setForm para chamar:
 
      $this->addFilterFor('instituicao', array('required' => false)); ou
      $this->addFilterFor(array('instituicao', 'escola', 'pesquisaAluno'));
   */
-  function addFilterFor($filters, $input_options = array()) {
-    if (! is_array($filters))
-      $filters = array($filters);
+  function addFilterFor($filterNames, $inputOptions = array(), $options = array()) {
+    // se receber $inputOptions e $options['options'] ignora $inputOptions e usa $options['options']
+    $defaultOptions = array('options' => $inputOptions);
+    $options        = Portabilis_Array_Utils::merge($options, $defaultOptions);
 
-    foreach($filters as $filter)
-      $this->dynamicSelectMenus->helperFor($filter, array('options' => $input_options));
+    $this->dynamicSelectMenus->helperFor($filterNames, $options);
   }
 
 
