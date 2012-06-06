@@ -66,7 +66,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_PesquisaAluno extends Portabilis_
 
 
   public function pesquisaAluno($options = array()) {
-    $defaultOptions = array('id' => null, 'options' => array());
+    $defaultOptions = array('id' => null, 'options' => array(), 'filterByEscola' => false);
     $options        = $this->mergeOptions($options, $defaultOptions);
 
     $inputHint  = "<img border='0' onclick='pesquisaAluno();' id='lupa_pesquisa_aluno' name='lupa_pesquisa_aluno' src='imagens/lupa.png' />";
@@ -94,7 +94,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_PesquisaAluno extends Portabilis_
 
     $this->viewInstance->campoOculto("ref_cod_aluno", $this->getResourceId($options['id']));
 
-    ApplicationHelper::embedJavascript($this->viewInstance, '
+    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, '
       var resetAluno = function(){
         $("#ref_cod_aluno").val("");
         $("#nm_aluno").val("");
@@ -102,17 +102,30 @@ class Portabilis_View_Helper_DynamicSelectMenu_PesquisaAluno extends Portabilis_
 
       $("#ref_cod_escola").change(resetAluno);', true);
 
-    ApplicationHelper::embedJavascript($this->viewInstance, '
-      function pesquisaAluno() {
+    if ($options['filterByEscola']) {
+      $js = 'function pesquisaAluno() {
+          var additionalFields = [document.getElementById("ref_cod_escola")];
+          var exceptFields     = [document.getElementById("nm_aluno")];
 
-        var additionalFields = [document.getElementById("ref_cod_escola")];
-        var exceptFields     = [document.getElementById("nm_aluno")];
+          if (validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields)) {
 
-        if (validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields)) {
-  	      var escolaId = document.getElementById("ref_cod_escola").value;
-          pesquisa_valores_popless("/intranet/educar_pesquisa_aluno.php?ref_cod_escola="+escolaId)
-        }
-      }');
+    	      var escolaId = document.getElementById("ref_cod_escola").value;
+            pesquisa_valores_popless("/intranet/educar_pesquisa_aluno.php?ref_cod_escola="+escolaId);
+          }
+        }';
+    }
+
+    else {
+      $js = 'function pesquisaAluno() {
+          var exceptFields     = [document.getElementById("nm_aluno")];
+
+          if (validatesPresenseOfValueInRequiredFields([], exceptFields)) {
+            pesquisa_valores_popless("/intranet/educar_pesquisa_aluno.php");
+          }
+        }';
+    }
+
+    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js);
   }
 }
 ?>
