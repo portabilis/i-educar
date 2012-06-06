@@ -40,37 +40,51 @@
  */
 class Portabilis_Object_Utils {
 
-  /* Retorna um array [{key => value, key => value}, { key => value, key => value }]
+
+  /*
+    TODO mover referencias para filterSet e renomear filterOne para filter
+  */
+  public static function filter($objects, $attrs = array()){
+    return $this->filterObjects($objects, $attrs);
+  }
+
+
+  public static function filterSet($objects, $attrs = array()){
+    if (! is_array($objects))
+      $objects = array($objects);
+
+    $objectsFiltered = array();
+
+    foreach($objects as $object)
+      $objectsFiltered[] = $this->filterOne($object, $attrs);
+
+    return $objectsFiltered;
+  }
+
+
+  /* Retorna um array {key => value, key => value}
      de atributos filtrados de um objeto, podendo renomear nome dos attrs,
-     util para filtrar uma lista de objetos para ser retornado por uma api
+     util para filtrar um objetos a ser retornado por uma api
 
        $objects - objeto ou array de objetos a ser(em) filtrado(s)
        $attrs    - atributo ou array de atributos para filtrar objeto,
        ex: $attrs = array('cod_escola' => 'id', 'nome')
   */
-  public static function filter($objects, $attrs = array()){
-    $objectsFiltered = array();
-
-    if (! is_array($objects))
-      $objects = array($objects);
-
+  public static function filterOne($object, $attrs = array()){
     if (! is_array($attrs))
       $attrs = array($attrs);
 
+    $objectFiltered = array();
+
     // apply filter
-    foreach($objects as $object) {
-      $objectFiltered = array();
+    foreach($attrs as $attrName => $attrValueName) {
+      if (! $attrName)
+        $attrName = $attrValueName;
 
-      foreach($attrs as $attrName => $attrValueName) {
-        if (! $attrName)
-          $attrName = $attrValueName;
-
-        $objectFiltered[$attrValueName] = $object->$attrName;
-      }
-      $objectsFiltered[] = $objectFiltered;
+      $objectFiltered[$attrValueName] = $object->$attrName;
     }
 
-    return $objectsFiltered;
+    return $objectFiltered;
   }
 
 
