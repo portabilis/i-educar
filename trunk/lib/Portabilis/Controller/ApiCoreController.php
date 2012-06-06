@@ -69,6 +69,38 @@ class ApiCoreController extends Core_Controller_Page_EditController
   }
 
 
+  protected function validatesPresenceOf($requiredParamNames) {
+    if (! is_array($requiredParamNames))
+      $requiredParamNames = array($requiredParamNames);
+
+      $valid = true;
+
+      foreach($requiredParamNames as $param) {
+        if (! $this->validator->validatesPresenceOf($this->getRequest()->$param, $param) and $valid) {
+          $valid = false;
+        }
+      }
+
+    return $valid;
+  }
+
+
+  protected function validatesIsNumeric($expectedNumericParamNames) {
+    if (! is_array($expectedNumericParamNames))
+      $expectedNumericParamNames = array($expectedNumericParamNames);
+
+      $valid = true;
+
+      foreach($requiredParamNames as $param) {
+        if (! $this->validator->validatesValueIsNumeric($this->getRequest()->$param, $param) and $valid) {
+          $valid = false;
+        }
+      }
+
+    return $valid;
+  }
+
+
   protected function canAcceptRequest()
   {
     return $this->validatesUserIsLoggedIn() &&
