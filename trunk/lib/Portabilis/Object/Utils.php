@@ -45,7 +45,7 @@ class Portabilis_Object_Utils {
     TODO mover referencias para filterSet e renomear filterOne para filter
   */
   public static function filter($objects, $attrs = array()){
-    return $this->filterObjects($objects, $attrs);
+    return self::filterSet($objects, $attrs);
   }
 
 
@@ -56,7 +56,7 @@ class Portabilis_Object_Utils {
     $objectsFiltered = array();
 
     foreach($objects as $object)
-      $objectsFiltered[] = $this->filterOne($object, $attrs);
+      $objectsFiltered[] = self::filterOne($object, $attrs);
 
     return $objectsFiltered;
   }

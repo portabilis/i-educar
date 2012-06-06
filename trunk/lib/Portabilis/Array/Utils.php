@@ -71,7 +71,7 @@ class Portabilis_Array_Utils {
     $arraysFiltered = array();
 
     foreach($arrays as $array)
-      $arraysFiltered[] = $this->filter($array, $attrs);
+      $arraysFiltered[] = self::filter($array, $attrs);
 
     return $arraysFiltered;
   }
