@@ -62,5 +62,44 @@ class Portabilis_Array_Utils {
 
     return $newArray;
   }
+
+
+  public static function filterSet($arrays, $attrs = array()){
+    if (! is_array($arrays))
+      $arrays = array($arrays);
+
+    $arraysFiltered = array();
+
+    foreach($arrays as $array)
+      $arraysFiltered[] = $this->filter($array, $attrs);
+
+    return $arraysFiltered;
+  }
+
+
+  /* Retorna um array {key => value, key => value}
+     de atributos filtrados de um outro array, podendo renomear nome dos attrs,
+     util para filtrar um array a ser retornado por uma api
+
+       $arrays - array a ser(em) filtrado(s)
+       $attrs    - atributo ou array de atributos para filtrar objeto,
+       ex: $attrs = array('cod_escola' => 'id', 'nome')
+  */
+  public static function filter($array, $attrs = array()){
+    if (! is_array($attrs))
+      $attrs = array($attrs);
+
+    $arrayFiltered = array();
+
+    // apply filter
+    foreach($attrs as $attrName => $attrValueName) {
+      if (! $attrName)
+        $attrName = $attrValueName;
+
+      $arrayFiltered[$attrValueName] = $array[$attrName];
+    }
+
+    return $arrayFiltered;
+  }
 }
 ?>
