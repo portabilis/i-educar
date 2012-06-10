@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_biblioteca_recibo_devolucao_atraso" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true">
+	<property name="ireport.zoom" value="1.2100000000000013"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="instituicao" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="escola" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="cliente" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="exemplar" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dt_inicial" class="java.lang.String"/>
+	<parameter name="dt_final" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT public.fcn_upper(instituicao.nm_instituicao) as nm_instituicao,
+       exemplar_emprestimo.cod_emprestimo,
+       exemplar_emprestimo.ref_cod_cliente,
+       exemplar_emprestimo.ref_cod_exemplar,
+       acervo.titulo as titulo,
+       (select cadastro.pessoa.nome
+          from cadastro.pessoa,
+               cadastro.fisica,
+               pmieducar.cliente
+         where pessoa.idpes = fisica.idpes AND
+               fisica.idpes = cliente.ref_idpes AND
+               cliente.cod_cliente = exemplar_emprestimo.ref_cod_cliente) as cliente,
+
+       (select fisica.cpf
+          from cadastro.fisica,
+               pmieducar.cliente
+         where fisica.idpes = cliente.ref_idpes AND
+               cliente.cod_cliente = exemplar_emprestimo.ref_cod_cliente) as cpf_cliente,
+
+       to_char(data_retirada,'dd/mm/yyyy') as dt_retirada,
+       to_char(data_devolucao,'dd/mm/yyyy') as dt_devolucao,
+       exemplar_emprestimo.valor_multa,
+
+       (SELECT biblioteca.nm_biblioteca
+          FROM pmieducar.biblioteca
+         WHERE acervo.ref_cod_biblioteca = biblioteca.cod_biblioteca) as nm_biblioteca,
+
+      (SELECT COALESCE((SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))
+          FROM cadastro.pessoa ps,
+               cadastro.juridica
+         WHERE escola.ref_idpes = juridica.idpes AND
+               juridica.idpes = ps.idpes AND
+	     ps.idpes = escola.ref_idpes),(SELECT nm_escola
+                                               FROM pmieducar.escola_complemento
+                                              WHERE ref_cod_escola = escola.cod_escola))) AS nm_escola,
+
+       (SELECT COALESCE((SELECT COALESCE((SELECT logradouro.nome
+         FROM public.logradouro,
+              cadastro.juridica,
+              cadastro.pessoa ps,
+              cadastro.endereco_pessoa
+        WHERE juridica.idpes = ps.idpes AND
+              ps.idpes = endereco_pessoa.idpes AND
+              endereco_pessoa.idlog = logradouro.idlog AND
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.logradouro
+                                                    FROM cadastro.endereco_externo
+                                                   WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT logradouro FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS logradouro,
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT bairro.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.bairro FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT bairro FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS bairro,
+
+      (SELECT COALESCE((SELECT COALESCE ((SELECT municipio.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes), (SELECT endereco_externo.cidade FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT municipio FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS municipio,
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT endereco_pessoa.numero
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.numero FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT numero FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS numero,
+
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT municipio.sigla_uf
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.sigla_uf FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(select inst.ref_sigla_uf from pmieducar.instituicao inst where inst.cod_instituicao = instituicao.cod_instituicao))) AS uf_municipio,
+
+     (SELECT COALESCE((SELECT min(to_char(fone_pessoa.ddd,'99'))
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),COALESCE((SELECT min(to_char(ddd_telefone,'99')) FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola),''))) AS fone_ddd,
+
+     (SELECT COALESCE((SELECT COALESCE((SELECT to_char(endereco_pessoa.cep, '99999-999')
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT to_char(endereco_externo.cep,'99999-999') FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT to_char(escola_complemento.cep,'99999-999') FROM pmieducar.escola_complemento where escola_complemento.ref_cod_escola = escola.cod_escola))) AS cep,
+
+
+     (SELECT COALESCE((SELECT min(to_char(fone_pessoa.fone, '9999-9999'))
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),COALESCE((SELECT min(to_char(telefone, '9999-9999')) FROM pmieducar.escola_complemento where escola_complemento.ref_cod_escola = escola.cod_escola),''))) AS fone,
+
+   (SELECT COALESCE((SELECT ps.email
+         FROM cadastro.pessoa ps,
+              cadastro.juridica
+        WHERE juridica.idpes = ps.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT email FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS email,
+
+   (select acervo_autor.nm_autor
+      from pmieducar.acervo_autor,
+           pmieducar.acervo_acervo_autor
+     where acervo_acervo_autor.ref_cod_acervo_autor = acervo_autor.cod_acervo_autor AND
+           acervo_acervo_autor.ref_cod_acervo = acervo.cod_acervo AND
+           acervo_acervo_autor.principal = 1) as autor
+
+
+  FROM pmieducar.acervo,
+       pmieducar.biblioteca,
+       pmieducar.instituicao,
+       pmieducar.escola,
+       pmieducar.exemplar,
+       pmieducar.exemplar_emprestimo
+ WHERE instituicao.cod_instituicao = $P{instituicao} AND
+       instituicao.cod_instituicao = biblioteca.ref_cod_instituicao AND
+       acervo.ref_cod_biblioteca = biblioteca.cod_biblioteca AND
+       acervo.cod_acervo = exemplar.ref_cod_acervo AND
+       exemplar.ativo = 1 AND
+       acervo.ativo = 1 AND
+       exemplar_emprestimo.ref_cod_exemplar = exemplar.cod_exemplar AND
+       escola.cod_escola = $P{escola} AND
+       biblioteca.ref_cod_escola = escola.cod_escola AND
+       exemplar.ref_cod_acervo = acervo.cod_acervo AND
+       exemplar.cod_exemplar = exemplar_emprestimo.ref_cod_exemplar AND
+       (to_char(exemplar_emprestimo.data_retirada,'dd/mm/yyyy') >= $P{dt_inicial}) and
+       (to_char(exemplar_emprestimo.data_retirada,'dd/mm/yyyy') <= $P{dt_final}) and
+       exemplar_emprestimo.ref_cod_cliente = $P{cliente} AND
+       exemplar_emprestimo.ref_cod_exemplar = $P{exemplar} AND
+       exemplar_emprestimo.valor_multa is not null]]>
+	</queryString>
+	<field name="nm_instituicao" class="java.lang.String"/>
+	<field name="cod_emprestimo" class="java.lang.Integer"/>
+	<field name="ref_cod_cliente" class="java.lang.Integer"/>
+	<field name="ref_cod_exemplar" class="java.lang.Integer"/>
+	<field name="titulo" class="java.lang.String"/>
+	<field name="cliente" class="java.lang.String"/>
+	<field name="cpf_cliente" class="java.math.BigDecimal"/>
+	<field name="dt_retirada" class="java.lang.String"/>
+	<field name="dt_devolucao" class="java.lang.String"/>
+	<field name="valor_multa" class="java.lang.Double"/>
+	<field name="nm_biblioteca" class="java.lang.String"/>
+	<field name="nm_escola" class="java.lang.String"/>
+	<field name="logradouro" class="java.lang.String"/>
+	<field name="bairro" class="java.lang.String"/>
+	<field name="municipio" class="java.lang.String"/>
+	<field name="numero" class="java.math.BigDecimal"/>
+	<field name="uf_municipio" class="java.lang.String"/>
+	<field name="fone_ddd" class="java.lang.String"/>
+	<field name="cep" class="java.lang.String"/>
+	<field name="fone" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="autor" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="241" splitType="Stretch">
+			<rectangle>
+				<reportElement x="72" y="4" width="431" height="233"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="102" y="10" width="54" height="14"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RECIBO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="228" y="10" width="24" height="14"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nº]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="334" y="10" width="54" height="14"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VALOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="255" y="10" width="35" height="14" backcolor="#F2F1F0"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="389" y="10" width="83" height="14" backcolor="#F2F1F0"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="103" y="46" width="369" height="14"/>
+				<textElement markup="none">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Recebemos de "+$F{cliente}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="104" y="64" width="52" height="14"/>
+				<textElement markup="none">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[a quantia de ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="159" y="64" width="313" height="14" backcolor="#F2F1F0"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="105" y="83" width="367" height="14" backcolor="#F2F1F0"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="104" y="102" width="368" height="25"/>
+				<textElement markup="none">
+					<font fontName="DejaVu Sans" size="8"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Correspondente ao pagamento de multa devido ao ataso na devolução do exemplar "+$F{ref_cod_exemplar}+"-"+$F{titulo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="105" y="133" width="367" height="14"/>
+				<textElement markup="none">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[e para clareza, firmo(amos) o presente]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="105" y="156" width="367" height="14"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{municipio}+"-"+$F{uf_municipio}+",____de__________________de________"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="105" y="181" width="367" height="14"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Assinatura_________________________________________________________________________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="105" y="197" width="367" height="14"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Nome____________________________________________CPF/RG__________________________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="105" y="213" width="367" height="14"/>
+				<textElement markup="none">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Endereço____________________________________________________________________________]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="2" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="3" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="2" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="4"/>
+	</lastPageFooter>
+	<summary>
+		<band height="3" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_biblioteca_obra" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.2100000000000013"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="instituicao" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="escola" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT public.fcn_upper(instituicao.nm_instituicao) as nm_instituicao,
+       acervo.cod_acervo,
+       (select exemplar_tipo.nm_tipo
+          from pmieducar.exemplar_tipo
+         where exemplar_tipo.cod_exemplar_tipo = acervo.ref_cod_exemplar_tipo) as nm_tipo_exemplar,
+
+       (select acervo_colecao.nm_colecao
+          from pmieducar.acervo_colecao
+         where acervo_colecao.cod_acervo_colecao = acervo.ref_cod_acervo_colecao) as nm_colecao,
+
+       (select acervo_idioma.nm_idioma
+          from pmieducar.acervo_idioma
+         where acervo_idioma.cod_acervo_idioma = acervo.ref_cod_acervo_idioma) as nm_idioma,
+
+       (select acervo_editora.nm_editora
+          from pmieducar.acervo_editora
+         where acervo_editora.cod_acervo_editora = acervo.ref_cod_acervo_editora) as nm_editora,
+
+       acervo.titulo,
+       acervo.sub_titulo,
+       acervo.cdu,
+       acervo.cutter,
+       acervo.volume,
+       acervo.num_edicao,
+       acervo.ano,
+       acervo.num_paginas,
+       acervo.ref_cod_biblioteca,
+       acervo.isbn,
+
+       (SELECT biblioteca.nm_biblioteca
+          FROM pmieducar.biblioteca
+         WHERE acervo.ref_cod_biblioteca = biblioteca.cod_biblioteca) as nm_biblioteca,
+
+      (SELECT COALESCE((SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))
+          FROM cadastro.pessoa ps,
+               cadastro.juridica
+         WHERE escola.ref_idpes = juridica.idpes AND
+               juridica.idpes = ps.idpes AND
+	     ps.idpes = escola.ref_idpes),(SELECT nm_escola
+                                               FROM pmieducar.escola_complemento
+                                              WHERE ref_cod_escola = escola.cod_escola))) AS nm_escola,
+
+       (SELECT COALESCE((SELECT COALESCE((SELECT logradouro.nome
+         FROM public.logradouro,
+              cadastro.juridica,
+              cadastro.pessoa ps,
+              cadastro.endereco_pessoa
+        WHERE juridica.idpes = ps.idpes AND
+              ps.idpes = endereco_pessoa.idpes AND
+              endereco_pessoa.idlog = logradouro.idlog AND
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.logradouro
+                                                    FROM cadastro.endereco_externo
+                                                   WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT logradouro FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS logradouro,
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT bairro.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.bairro FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT bairro FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS bairro,
+
+      (SELECT COALESCE((SELECT COALESCE ((SELECT municipio.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes), (SELECT endereco_externo.cidade FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT municipio FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS municipio,
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT endereco_pessoa.numero
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.numero FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT numero FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS numero,
+
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT municipio.sigla_uf
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.sigla_uf FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(select inst.ref_sigla_uf from pmieducar.instituicao inst where inst.cod_instituicao = instituicao.cod_instituicao))) AS uf_municipio,
+
+     (SELECT COALESCE((SELECT min(to_char(fone_pessoa.ddd,'99'))
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),COALESCE((SELECT min(to_char(ddd_telefone,'99')) FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola),''))) AS fone_ddd,
+
+     (SELECT COALESCE((SELECT COALESCE((SELECT to_char(endereco_pessoa.cep, '99999-999')
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT to_char(endereco_externo.cep,'99999-999') FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT to_char(escola_complemento.cep,'99999-999') FROM pmieducar.escola_complemento where escola_complemento.ref_cod_escola = escola.cod_escola))) AS cep,
+
+
+     (SELECT COALESCE((SELECT min(to_char(fone_pessoa.fone, '9999-9999'))
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),COALESCE((SELECT min(to_char(telefone, '9999-9999')) FROM pmieducar.escola_complemento where escola_complemento.ref_cod_escola = escola.cod_escola),''))) AS fone,
+
+   (SELECT COALESCE((SELECT ps.email
+         FROM cadastro.pessoa ps,
+              cadastro.juridica
+        WHERE juridica.idpes = ps.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT email FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS email,
+
+   (select acervo_autor.nm_autor
+      from pmieducar.acervo_autor,
+           pmieducar.acervo_acervo_autor
+     where acervo_acervo_autor.ref_cod_acervo_autor = acervo_autor.cod_acervo_autor AND
+           acervo_acervo_autor.ref_cod_acervo = acervo.cod_acervo AND
+           acervo_acervo_autor.principal = 1) as autor
+
+
+  FROM pmieducar.acervo,
+       pmieducar.biblioteca,
+       pmieducar.instituicao,
+       pmieducar.escola
+ WHERE instituicao.cod_instituicao = $P{instituicao} AND
+       instituicao.cod_instituicao = biblioteca.ref_cod_instituicao AND
+       acervo.ref_cod_biblioteca = biblioteca.cod_biblioteca AND
+       escola.cod_escola = $P{escola} AND
+       biblioteca.ref_cod_escola = escola.cod_escola AND
+       acervo.ativo = 1]]>
+	</queryString>
+	<field name="nm_instituicao" class="java.lang.String"/>
+	<field name="cod_acervo" class="java.lang.Integer"/>
+	<field name="nm_tipo_exemplar" class="java.lang.String"/>
+	<field name="nm_colecao" class="java.lang.String"/>
+	<field name="nm_idioma" class="java.lang.String"/>
+	<field name="nm_editora" class="java.lang.String"/>
+	<field name="titulo" class="java.lang.String"/>
+	<field name="sub_titulo" class="java.lang.String"/>
+	<field name="cdu" class="java.lang.String"/>
+	<field name="cutter" class="java.lang.String"/>
+	<field name="volume" class="java.lang.Integer"/>
+	<field name="num_edicao" class="java.lang.Integer"/>
+	<field name="ano" class="java.math.BigDecimal"/>
+	<field name="num_paginas" class="java.lang.Integer"/>
+	<field name="ref_cod_biblioteca" class="java.lang.Integer"/>
+	<field name="isbn" class="java.math.BigDecimal"/>
+	<field name="nm_biblioteca" class="java.lang.String"/>
+	<field name="nm_escola" class="java.lang.String"/>
+	<field name="logradouro" class="java.lang.String"/>
+	<field name="bairro" class="java.lang.String"/>
+	<field name="municipio" class="java.lang.String"/>
+	<field name="numero" class="java.math.BigDecimal"/>
+	<field name="uf_municipio" class="java.lang.String"/>
+	<field name="fone_ddd" class="java.lang.String"/>
+	<field name="cep" class="java.lang.String"/>
+	<field name="fone" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="autor" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="97" splitType="Stretch">
+			<image>
+				<reportElement x="9" y="4" width="57" height="46"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="198" y="75" width="138" height="14"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Obras]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="15" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="75" y="-67" width="307" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Endereço: "+$F{logradouro}+", "+$F{numero}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="75" y="-95" width="307" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nm_instituicao}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="305" y="-43" width="233" height="13" forecolor="#000000"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="305" y="-55" width="141" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="449" y="-55" width="77" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="75" y="-81" width="307" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nm_escola}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="75" y="-55" width="228" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Bairro:" +$F{bairro}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="75" y="-43" width="201" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Telefone: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="11" y="1" width="292" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Biblioteca: "+$F{nm_biblioteca}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="18" splitType="Stretch">
+			<staticText>
+				<reportElement x="25" y="1" width="35" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Código]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="65" y="1" width="30" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Obra]]></text>
+			</staticText>
+			<line>
+				<reportElement x="7" y="15" width="544" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="213" y="1" width="59" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Subtítulo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="1" width="59" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Tipo exemplar]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="82" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="65" y="1" width="145" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{titulo}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="213" y="1" width="121" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sub_titulo}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="25" y="1" width="35" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cod_acervo}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="340" y="1" width="142" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nm_tipo_exemplar}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="65" y="15" width="40" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Coleção:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="106" y="15" width="103" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nm_colecao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="213" y="15" width="35" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Idioma:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="249" y="15" width="85" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nm_idioma}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="340" y="15" width="35" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Editora:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="376" y="15" width="106" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nm_editora}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="65" y="29" width="40" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Autor:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="106" y="29" width="196" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{autor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="65" y="43" width="40" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[CDU:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="169" y="43" width="31" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Cutter:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="65" y="57" width="40" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Volume:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="169" y="57" width="47" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Nº edição:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="251" y="57" width="20" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Ano:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="310" y="57" width="37" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Páginas:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="377" y="57" width="27" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[ISBN:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="106" y="43" width="58" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cdu}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="201" y="43" width="60" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cutter}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="106" y="57" width="55" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{volume}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="218" y="57" width="26" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{num_edicao}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="271" y="57" width="30" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ano}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="347" y="57" width="17" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{num_paginas}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="404" y="57" width="100" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{isbn}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="23" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="25" y="5" width="100" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total de obras: "+$V{COLUMN_COUNT}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="7" y="2" width="544" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="3" splitType="Stretch"/>
+	</summary>
+</jasperReport>
