@@ -1,7 +1,7 @@
 (function($){
   $(document).ready(function(){
-    var $escolaField     = $('#ref_cod_escola');
-    var $bibliotecaField = $('#ref_cod_biblioteca');
+    var $escolaField     = getElementFor('escola');
+    var $bibliotecaField = getElementFor('biblioteca');
 
     var handleGetBibliotecas = function(resources) {
       var selectOptions = xmlResourcesToSelectOptions(resources, 'query', 'cod_biblioteca');

@@ -1,7 +1,7 @@
 (function($){
   $(document).ready(function(){
-    var $bibliotecaField   = $('#ref_cod_biblioteca');
-    var $tipoExemplarField = $('#ref_cod_exemplar_tipo');
+    var $bibliotecaField   = getElementFor('biblioteca');
+    var $tipoExemplarField = getElementFor('exemplar_tipo');
 
     var handleGetTiposExemplar = function(response) {
       var selectOptions = jsonResourcesToSelectOptions(response['tipos_exemplar'], 'id', 'nome');

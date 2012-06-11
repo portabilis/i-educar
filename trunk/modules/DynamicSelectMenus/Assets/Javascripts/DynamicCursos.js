@@ -1,7 +1,7 @@
 (function($){
   $(document).ready(function(){
-    var $escolaField = $('#ref_cod_escola');
-    var $cursoField  = $('#ref_cod_curso');
+    var $escolaField = getElementFor('escola');
+    var $cursoField  = getElementFor('curso');
 
     var handleGetCursos = function(resources) {
       var selectOptions = xmlResourcesToSelectOptions(resources, 'query', 'cod_curso');

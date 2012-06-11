@@ -79,3 +79,31 @@ function fixupFieldsWidth(){
     $j(value).width(maxWidth);
   });
 };
+
+
+function getFirstDefined(attrIdNames) {
+  if (! $j.isArray(attrIdNames))
+    attrIdNames = [attrIdNames];
+
+  var $element = undefined;
+
+  $j.each(attrIdNames, function(index, attIdName){
+    $element = $j(buildId(attIdName));
+
+    if ($element.length > 0)
+      return false;
+  });
+
+  return $element;
+}
+
+function getElementFor(entityName) {
+  var $element = getFirstDefined([entityName    + "_id" ,
+                                 "ref_cod_"     + entityName,
+                                 "ref_ref_cod_" + entityName,
+                                 entityName]);
+  if ($element == undefined)
+    safeLog("Elemento não definido para '" + entityName + "'");
+
+  return $element;
+}
