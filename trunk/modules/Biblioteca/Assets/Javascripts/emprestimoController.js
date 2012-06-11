@@ -29,11 +29,10 @@ var postEmprestimo = function ($resourceCheckbox) {
     url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'emprestimo'),
     dataType : 'json',
     data : {
-      ref_cod_instituicao : $j('#ref_cod_instituicao').val(),
-      ref_cod_escola : $j('#ref_cod_escola').val(),
-      ref_cod_biblioteca : $j('#ref_cod_biblioteca').val(),
-      ref_cod_cliente : $j('#ref_cod_cliente').val(),
-      ref_cod_exemplar : $j('#ref_cod_exemplar').val(),
+      instituicao_id : $j('#instituicao_id').val(),
+      escola_id : $j('#escola_id').val(),
+      biblioteca_id : $j('#biblioteca_id').val(),
+      cliente_id : $j('#cliente_id').val(),
       exemplar_id : $resourceCheckbox.data('exemplar_id')
     },
 
@@ -79,11 +78,10 @@ var deleteEmprestimo = function($deleteLink) {
 
   var options = {
     url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, 'emprestimo', {
-      ref_cod_instituicao : $j('#ref_cod_instituicao').val(),
-      ref_cod_escola : $j('#ref_cod_escola').val(),
-      ref_cod_biblioteca : $j('#ref_cod_biblioteca').val(),
-      ref_cod_cliente : $j('#ref_cod_cliente').val(),
-      ref_cod_exemplar : $j('#ref_cod_exemplar').val(),
+      instituicao_id : $j('#instituicao_id').val(),
+      escola_id : $j('#escola_id').val(),
+      biblioteca_id : $j('#biblioteca_id').val(),
+      cliente_id : $j('#cliente_id').val(),
       exemplar_id : $deleteLink.data('exemplar_id'),
       emprestimo_id : $deleteLink.data('emprestimo_id')
     }),
@@ -123,25 +121,23 @@ function setTableSearchDetails($tableSearchDetails, dataDetails){
   var $linha = $j('<tr />');
   $j('<th />').html('Cliente').appendTo($linha);
   $j('<th />').html('Obra').appendTo($linha);
+  $j('<th />').html('Tombo exemplar').appendTo($linha);
   $j('<th />').html('Biblioteca').appendTo($linha);
-  $j('<th />').html('Escola').appendTo($linha);
 
   $linha.appendTo($tableSearchDetails);
 
   var $linha = $j('<tr />').addClass('even');
 
   $j('<td />').html($j('#nome_cliente').val()).appendTo($linha);
-  $j('<td />').html($j('#titulo_obra').val()).appendTo($linha);
+  $j('<td />').html('').attr('id', 'titulo_obra').appendTo($linha);
+  $j('<td />').html($j('#tombo_exemplar').val()).appendTo($linha);
 
+  // FIXME ver id nome_biblioteca
   //field biblioteca pode ser diferente de select caso usuario comum
-  var $htmlBibliotecaField = $j('#ref_cod_biblioteca').children("[selected='selected']").html() ||
-                         $j('#tr_nm_biblioteca span:last').html();
-  $j('<td />').html(safeToUpperCase($htmlBibliotecaField)).appendTo($linha);
+  var $htmlBibliotecaField = $j('#biblioteca_id').children("[selected='selected']").html() ||
+                             $j('#tr_nm_biblioteca span:last').html();
 
-  //field escola pode ser diferente de select caso usuario comum
-  var $htmlEscolaField = $j('#ref_cod_escola').children("[selected='selected']").html() ||
-                         $j('#tr_nm_escola span:last').html();
-  $j('<td />').html(safeToUpperCase($htmlEscolaField)).appendTo($linha);
+  $j('<td />').html(safeToUpperCase($htmlBibliotecaField)).appendTo($linha);
 
   $linha.appendTo($tableSearchDetails);
   $tableSearchDetails.show();
@@ -161,8 +157,13 @@ function handleSearch($resultTable, dataResponse) {
   $j('<th />').html('A&#231;&#227;o').addClass('center').appendTo($linha);
   $linha.appendTo($resultTable);
 
+  var setTituloObra = true;
+
   //set rows
   $j.each(dataResponse[RESOURCES_NAME], function(index, value){
+
+    if(setTituloObra)
+      $j('#titulo_obra').html(value.acervo.titulo);
 
     var $checkbox = $j('<input />')
                     .attr('type', 'checkbox')
@@ -221,7 +222,7 @@ function updateResourceRow(exemplar){
       $j('<p />').html(value.data || '-').appendTo($colDatas);
       $j('<p />').html(value.data_prevista_disponivel || '-').appendTo($colDatasPrevistaDisponivel);
 
-      if (value.situacao.flag == 'emprestimodo' && value.cliente && value.cliente.id == $j('#ref_cod_cliente').val()) {
+      if (value.situacao.flag == 'emprestimodo' && value.cliente && value.cliente.id == $j('#cliente_id').val()) {
         var $linkToDelete = $j("<a href='#' class='disable-on-apply-changes'>Cancelar emprestimo</a>").click(onClickCancelEvent).data('exemplar_id', exemplar.id).data('emprestimo_id', value.emprestimo_id);
         $j('<p />').html($linkToDelete).appendTo($colAcoes);
       }

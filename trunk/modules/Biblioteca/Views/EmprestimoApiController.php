@@ -283,7 +283,7 @@ class EmprestimoApiController extends ApiCoreController
       $emprestimo['data_prevista_disponivel'] = $this->getDataPrevistaDisponivelForExemplar($exemplar, $emprestimo['data_retirada'], 'd/m/Y');
     }
 
-    return $_emprestimo;
+    return $emprestimo;
   }
 
 
@@ -349,13 +349,62 @@ class EmprestimoApiController extends ApiCoreController
 
     $pendencias = array();
 
-    if (strpos($situacaoExemplar['flag'], 'emprestado') > -1)
-      $pendencias[] = $this->loadEmprestimoForExemplar($exemplar);
+    // get emprestimo
+    if (strpos($situacaoExemplar['flag'], 'emprestado') > -1) {
+      $emprestimo = $this->loadEmprestimoForExemplar($exemplar);
 
-    if (strpos($situacaoExemplar['flag'], 'reservado') > -1)
-      $pendencias = array_merge($pendencias, $this->loadReservasForExemplar($exemplar));
+      if($emprestimo != false)
+        $pendencias[] = $emprestimo;
+    }
+
+    // get reservas
+    if (strpos($situacaoExemplar['flag'], 'reservado') > -1) {
+      $reservas = $this->loadReservasForExemplar($exemplar);
+
+      if ($reservas != false)
+        $pendencias = array_merge($pendencias, $reservas);
+    }
 
     return $pendencias;
+  }
+
+
+  protected function loadAcervo($id = '', $reload = false) {
+    if (empty($id))
+      $id = $this->getRequest()->acervo_id;
+
+    if ($reload || ! isset($this->_acervos))
+      $this->_acervos = array();
+
+    if (! isset($this->_acervos[$id])) {
+      $acervo = new clsPmieducarAcervo($id);
+      $acervo = $acervo->detalhe();
+
+      if ($acervo) {
+        $acervo = Portabilis_Array_Utils::filter($acervo, array('cod_acervo'             => 'id',
+                                                                'ref_cod_exemplar_tipo'  => 'exemplar_tipo_id',
+                                                                'ref_cod_acervo'         => 'acervo_referencia_id',
+                                                                'ref_cod_acervo_colecao' => 'colecao_id',
+                                                                'ref_cod_acervo_idioma'  => 'idioma_id',
+                                                                'ref_cod_acervo_editora' => 'editora_id',
+                                                                'ref_cod_biblioteca'     => 'biblioteca_id',
+                                                                'titulo',
+                                                                'sub_titulo',
+                                                                'cdu',
+                                                                'cutter',
+                                                                'volume',
+                                                                'num_edicao',
+                                                                'ano',
+                                                                'num_paginas',
+                                                                'isbn',
+                                                                'data_cadastro'));
+      }
+
+
+      $this->_acervos[$id] = $acervo;
+    }
+
+    return $this->_acervos[$id];
   }
 
 
@@ -400,9 +449,14 @@ class EmprestimoApiController extends ApiCoreController
 
         // adiciona situacao e pendencias de cada exemplar
         foreach($exemplares as $index => $exemplar) {
-          $situacaoExemplar                 = $this->loadSituacaoForExemplar($exemplar);
-          $exemplares[$index]['situacao']   = $situacaoExemplar;
-          $exemplares[$index]['pendencias'] = $this->getPendenciasForExemplar($exemplar, $situacaoExemplar);
+          $situacaoExemplar                       = $this->loadSituacaoForExemplar($exemplar);
+          $exemplares[$index]['situacao']         = $situacaoExemplar;
+          $exemplares[$index]['pendencias']       = $this->getPendenciasForExemplar($exemplar, $situacaoExemplar);
+
+          $acervo                                 = $this->loadAcervo($exemplar['acervo_id']);
+          $exemplares[$index]['acervo']           = array();
+          $exemplares[$index]['acervo']['id']     = $exemplar['acervo_id'];
+          $exemplares[$index]['acervo']['titulo'] = $acervo['titulo'];
         }
       }
 
