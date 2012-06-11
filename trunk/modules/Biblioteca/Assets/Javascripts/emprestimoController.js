@@ -19,7 +19,7 @@ var onClickActionEvent = function(event){
     handleMessages([{type : 'error', msg : 'Selecione algum exemplar.'}], $this, true);
   else{
     $j('.disable-on-apply-changes').attr('disabled', 'disabled');
-    $this.val('Aguarde emprestimondo...');
+    $this.val('Aguarde emprestando exemplar...');
     postEmprestimo($firstChecked);
   }
 };
