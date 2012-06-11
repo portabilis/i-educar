@@ -1,10 +1,11 @@
+// TODO mover para arquivo especifico
 function safeLog(value)
 {
   if(typeof(console) != 'undefined' && typeof(console.log) == 'function')
     console.log(value);
 }
 
-
+// TODO mover para arquivo especifico
 function safeToUpperCase(value){
   if (typeof(value) == 'string')
     value = value.toUpperCase();

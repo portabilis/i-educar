@@ -64,7 +64,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaPesquisaObra extends Po
 
 
   public function bibliotecaPesquisaObra($options = array()) {
-    $defaultOptions = array('id' => null, 'options' => array());
+    $defaultOptions = array('id' => null, 'options' => array(), 'hiddenInputOptions' => array());
     $options        = $this->mergeOptions($options, $defaultOptions);
 
     $inputHint  = "<img border='0' onclick='pesquisaObra();' id='lupa_pesquisa_obra' name='lupa_pesquisa_obra' src='imagens/lupa.png' />";
@@ -90,7 +90,12 @@ class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaPesquisaObra extends Po
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
     call_user_func_array(array($this->viewInstance, 'campoTexto'), $inputOptions);
 
-    $this->viewInstance->campoOculto("ref_cod_acervo", $this->getAcervoId($options['id']));
+    // hidden input
+    $defaultHiddenInputOptions = array('id'    => 'ref_cod_acervo',
+                                       'value' => $this->getAcervoId($options['id']));
+
+    $hiddenInputOptions = $this->mergeOptions($options['hiddenInputOptions'], $defaultHiddenInputOptions);
+    call_user_func_array(array($this->viewInstance, 'campoOculto'), $hiddenInputOptions);
 
     // Ao selecionar obra, na pesquisa de obra é setado o value deste elemento
     $this->viewInstance->campoOculto("cod_biblioteca", "");
@@ -106,11 +111,12 @@ class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaPesquisaObra extends Po
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, '
       function pesquisaObra() {
 
-        var additionalFields = [document.getElementById("ref_cod_biblioteca")];
-        var exceptFields     = [document.getElementById("titulo_obra")];
+        var additionalFields = getElementFor("biblioteca");
+        var exceptFields     = getElementFor("titulo_obra");
 
         if (validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields)) {
-  	      var bibliotecaId = document.getElementById("ref_cod_biblioteca").value;
+  	      var bibliotecaId = getElementFor("biblioteca").val();
+
           pesquisa_valores_popless("educar_pesquisa_obra_lst.php?campo1=ref_cod_acervo&campo2=titulo_obra&campo3="+bibliotecaId)
         }
       }');
