@@ -48,16 +48,18 @@ class EmprestimoApiController extends ApiCoreController
   protected $_processoAp  = 0;
 
 
-  // validadores especificos emprestimo
+  // validadores regras negócio
 
-  protected function validatesExistenceOfExemplarByTombo() {
+  protected function validatesExistenceOfExemplar() {
     $valid = true;
 
-    $exemplares = $this->loadExemplares($reload = true);
+    $exemplares = $this->loadExemplar($reload = true);
 
     if (! is_array($exemplares) || count($exemplares) < 1) {
-      $this->messenger->append("Não existe um exemplar com tombo '{$this->getRequest()->tombo_exemplar}' " .
-                               "para a biblioteca informada.");
+      $id    = $this->getRequest()->exemplar_id;
+      $tombo = $this->getRequest()->tombo_exemplar;
+
+      $this->messenger->append("Aparentemente não existe um exemplar com id $id e/ou tombo $tombo, para a biblioteca informada.");
       $valid = false;
     }
 
@@ -78,35 +80,59 @@ class EmprestimoApiController extends ApiCoreController
   }
 
 
-  // validações negócio
+  protected function validatesClienteIsNotSuspenso() {
+    $cliente = $this->loadCliente();
+
+    if($cliente['suspenso']) {
+      $this->messenger->append("Operação não pode ser realizada, pois o cliente esta suspenso.", 'error');
+      return false;
+    }
+
+    return true;
+  }
+
+
+  protected function validatesSituacaoExemplarIsIn($expectedSituacoes) {
+    if (! is_array($expectedSituacoes))
+      $expectedSituacoes = array($expectedSituacoes);
+
+    $situacao = $this->getSituacaoExemplar();
+    $situacao = $situacao['flag'];
+    $msg = "Situação do exemplar deve estar em (" . implode(', ', $expectedSituacoes) . ") porem atualmente é $situacao.";
+
+    return $this->validator->validatesValueInSetOf($situacao, $expectedSituacoes, 'situação', false, $msg);
+  }
+
 
   protected function canAcceptRequest() {
     return parent::canAcceptRequest()
 
-           and $this->validatesPresenceOf(array('instituicao_id',
+           && $this->validatesPresenceOf(array('instituicao_id',
                                                 'escola_id',
                                                 'biblioteca_id',
                                                 'cliente_id',
                                                 'tombo_exemplar'))
 
-           and $this->validatesIsNumeric('tombo_exemplar')
-           and $this->validatesExistenceOfExemplarByTombo()
-           and $this->validatesExistenceOfCliente();
+           && $this->validatesIsNumeric('tombo_exemplar')
+           && $this->validatesExistenceOfExemplar()
+           && $this->validatesExistenceOfCliente();
   }
 
 
   protected function canPostEmprestimo() {
-    return $this->validatesPresenceOf(array('exemplar_id'));
+    return $this->validatesPresenceOf(array('exemplar_id'))
+           && $this->validatesExistenceOfExemplar()
+           && $this->validatesClienteIsNotSuspenso()
+           && $this->validatesSituacaoExemplarIsIn('disponivel');
 
 
            /*
 
-              TODO validates cliente is not suspenso
-              TODO validates presence of exemplar_id
-              TODO validates situacao exemplar is disponivel or is reservado cliente
               TODO qtd emprestimos em aberto do cliente <= limite biblioteca
               TODO valor R$ multas em aberto do cliente <= limite biblioteca
+
               TODO não existe outro exemplar mesma obra emprestado para cliente
+              TODO validates situacao exemplar is disponivel or is reservado cliente
 
            */
   }
@@ -309,6 +335,14 @@ class EmprestimoApiController extends ApiCoreController
   }
 
 
+  protected function getSituacaoExemplar($exemplar = null) {
+    if (is_null($exemplar))
+      $exemplar = $this->loadExemplar();
+
+    return $exemplar['situacao'];
+  }
+
+
   protected function getPendenciasForExemplar($exemplar, $situacaoExemplar = '') {
     if (empty($situacaoExemplar))
       $situacaoExemplar = $exemplar['situacao'];
@@ -383,7 +417,7 @@ class EmprestimoApiController extends ApiCoreController
     if (! $id)
       $id = $this->getRequest()->exemplar_id;
 
-    return $this->loadExemplares($reload, $id);
+    return array_shift($this->loadExemplares($reload, $id));
   }
 
 
