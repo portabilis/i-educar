@@ -9,7 +9,8 @@ var DELETE_LABEL = 'Devolver';
 
 var onClickSelectAllEvent = false;
 
-var onClickDeleteEvent = function(event){
+var onClickDeleteEvent = false;
+/*function(event){
   var $this = $j(this)
   var $firstChecked = getFirstCheckboxChecked($this);
 
@@ -18,7 +19,7 @@ var onClickDeleteEvent = function(event){
     $this.val('Aguarde devolvendo exemplar...');
     postDevolucao($firstChecked);
   }
-};
+};*/
 
 var onClickActionEvent = function(event){
   var $this = $j(this)
