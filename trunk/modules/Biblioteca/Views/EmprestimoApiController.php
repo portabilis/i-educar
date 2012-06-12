@@ -186,11 +186,11 @@ class EmprestimoApiController extends ApiCoreController
 
 
   protected function loadQtdDiasEmprestimoForExemplar($exemplar = null) {
-    $acervo             = $this->loadAcervo($exemplar['id']);
+    $acervo             = $this->loadAcervo($exemplar['acervo']['id']);
     $exemplarTipoId     = $acervo['exemplar_tipo_id'];
 
+    // obtem id tipo de cliente
 		$clienteTipoCliente = new clsPmieducarClienteTipoCliente();
-
     $clienteTipoCliente = $clienteTipoCliente->lista(null,
                                                      $this->getRequest()->cliente_id,
                                                      null,
@@ -201,12 +201,14 @@ class EmprestimoApiController extends ApiCoreController
                                                      null,
                                                      $this->getRequest()->biblioteca_id);
 
-    $clienteTipoId           = $clienteTipoCliente[0]['cliente_tipo_id'];
+    $clienteTipoId           = $clienteTipoCliente[0]['ref_cod_cliente_tipo'];
 
-		$clienteTipoExemplarTipo = new clsPmieducarClienteTipoExemplarTipo($clienteTipoId,
-                                                                       $exemplarTipoId);
-
+    // obtem quantidade dias emprestimo
+		$clienteTipoExemplarTipo = new clsPmieducarClienteTipoExemplarTipo($clienteTipoId, $exemplarTipoId);
 		$clienteTipoExemplarTipo = $clienteTipoExemplarTipo->detalhe();
+
+    if (! $clienteTipoExemplarTipo || ! is_numeric($clienteTipoExemplarTipo["dias_emprestimo"]))
+      throw new CoreExt_Exception("Aparentemente não foi definido a quantidade de dias de emprestimo para o tipo de cliente '$clienteTipoId' e tipo de exemplar '$exemplarTipoId'.");
 
 		return $clienteTipoExemplarTipo["dias_emprestimo"];
   }
@@ -296,18 +298,18 @@ class EmprestimoApiController extends ApiCoreController
 
     if($emprestimo) {
   	  $emprestimo = array_shift($emprestimo);
-      $emprestimo = Portabilis_Array_Utils::filterSet($emprestimo, array('cod_emprestimo' => 'id',
-                                                                         'data_retirada'   => 'data',
-                                                                         'ref_cod_cliente' => 'cliente_id'));
-
+      $emprestimo = Portabilis_Array_Utils::filter($emprestimo, array('cod_emprestimo'  => 'id',
+                                                                      'data_retirada'   => 'data',
+                                                                      'ref_cod_cliente' => 'cliente_id'));
       // adiciona informações adicionais ao emprestimo
       $cliente                                = $this->loadCliente($emprestimo["cliente_id"]);
 
       $emprestimo['cliente']                  = $cliente;
       $emprestimo['nome_cliente']             = $cliente['id'] . ' - ' . $cliente['nome'];
       $emprestimo['situacao']                 = $this->getSituacaoForFlag('emprestado');
+
       $emprestimo['data']                     = date('d/m/Y', strtotime($emprestimo['data']));
-      $emprestimo['data_prevista_disponivel'] = $this->getDataPrevistaDisponivelForExemplar($exemplar, $emprestimo['data_retirada'], 'd/m/Y');
+      $emprestimo['data_prevista_disponivel'] = $this->getDataPrevistaDisponivelForExemplar($exemplar, $emprestimo['data'], 'd/m/Y');
     }
 
     return $emprestimo;
@@ -477,13 +479,16 @@ class EmprestimoApiController extends ApiCoreController
                                                                            'tombo'));
         // adiciona situacao e pendencias de cada exemplar
         foreach($exemplares as $index => $exemplar) {
-          $exemplares[$index]['situacao']         = $this->loadSituacaoForExemplar($exemplar);
-          $exemplares[$index]['pendencias']       = $this->getPendenciasForExemplar($exemplares[$index]);
+          $acervo                                           = $this->loadAcervo($exemplar['acervo_id']);
+          $exemplares[$index]['acervo']                     = array();
+          $exemplares[$index]['acervo']['id']               = $exemplar['acervo_id'];
+          $exemplares[$index]['acervo']['titulo']           = $acervo['titulo'];
+          $exemplares[$index]['acervo']['exemplar_tipo_id'] = $acervo['exemplar_tipo_id'];
 
-          $acervo                                 = $this->loadAcervo($exemplar['acervo_id']);
-          $exemplares[$index]['acervo']           = array();
-          $exemplares[$index]['acervo']['id']     = $exemplar['acervo_id'];
-          $exemplares[$index]['acervo']['titulo'] = $acervo['titulo'];
+          $exemplares[$index]['exemplar_tipo_id']           = $acervo['exemplar_tipo_id'];
+
+          $exemplares[$index]['situacao']         = $this->loadSituacaoForExemplar($exemplares[$index]);
+          $exemplares[$index]['pendencias']       = $this->getPendenciasForExemplar($exemplares[$index]);
         }
       }
 
@@ -510,23 +515,75 @@ class EmprestimoApiController extends ApiCoreController
   }
 
 
+  protected function loadSituacaoEmprestimo(){
+    $situacao = new clsPmieducarSituacao();
+    $situacao = $situacao->lista(null,
+                                 null,
+                                 null,
+                                 null,
+                                 1,
+                                 null,
+                                 null,
+                                 1,
+                                 null,
+                                 null,
+                                 null,
+                                 null,
+                                 1,
+                                 $this->getRequest()->biblioteca_id,
+                                 $this->getRequest()->instituicao_id,
+                                 $this->getRequest()->escola_id);
+
+    if ($situacao) {
+      $situacao = Portabilis_Array_Utils::filter($situacao[0], array('cod_situacao'     => 'id',
+                                                                  'ref_cod_biblioteca'  => 'biblioteca_id',
+                                                                  'nm_situacao'         => 'label',
+                                                                  'situacao_padrao'     => 'padrao',
+                                                                  'situacao_emprestada' => 'emprestimo',
+                                                                  'permite_emprestimo',
+                                                                  'descricao'));
+    }
+
+    return $situacao;
+  }
+
+
+  protected function updateSituacaoExemplar($newSituacao){
+    if (! $newSituacao)
+      throw new CoreExt_Exception('$newSituacao não pode ser falso em updateSituacaoExemplar.');
+
+    $exemplar                   = new clsPmieducarExemplar();
+    $exemplar->cod_exemplar     = $this->getRequest()->exemplar_id;
+    $exemplar->ref_cod_acervo   = $this->getRequest()->acervo_id;
+    $exemplar->ref_cod_situacao = $newSituacao['id'];
+    $exemplar->ref_usuario_exc  = $this->getSession()->id_pessoa;
+
+		return $exemplar->edita();
+  }
+
+
   protected function postEmprestimo() {
     if ($this->canPostEmprestimo()) {
+      // altera situacao exemplar para emprestado
+      $situacaoEmprestimo = $this->loadSituacaoEmprestimo();
 
-      $emprestimo                   = new clsPmieducarExemplarEmprestimo();
-      $emprestimo->ref_usuario_cad  = $this->getSession()->id_pessoa;
-      $emprestimo->ref_cod_cliente  = $this->getRequest()->cliente_id;
-      $emprestimo->ref_cod_exemplar = $this->getRequest()->exemplar_id;
+      if($situacaoEmprestimo && ! $this->updateSituacaoExemplar($situacaoEmprestimo))
+        $this->messenger->append("Aparentemente a situação do exemplar não foi alterada para emprestado.", 'error');
+      elseif(! $situacaoEmprestimo)
+        $this->messenger->append("Não foi encontrado uma situação cadastrada para emprestimo.", 'error');
 
-		  if($emprestimo->cadastra())
-        $this->messenger->append("Emprestimo realizado com sucesso.", 'success');
-      else
-        $this->messenger->append("Aparentemente o realizado não foi cadastrado, por favor, tente novamente.", 'error');
+      // grava emprestimo
+		  if(! $this->messenger->hasMsgWithType('error')) {
+        $emprestimo                   = new clsPmieducarExemplarEmprestimo();
+        $emprestimo->ref_usuario_cad  = $this->getSession()->id_pessoa;
+        $emprestimo->ref_cod_cliente  = $this->getRequest()->cliente_id;
+        $emprestimo->ref_cod_exemplar = $this->getRequest()->exemplar_id;
 
-      /*TODO
-          mudar situacao exemplar, para situação emprestada
-          se não achar situação emprestada raise exception
-      */
+        if ($emprestimo->cadastra())
+          $this->messenger->append("Emprestimo realizado com sucesso.", 'success');
+        else
+          $this->messenger->append("Aparentemente o realizado não foi cadastrado, por favor, tente novamente.", 'error');
+      }
     }
 
     $this->appendResponse('exemplar', $this->loadExemplar($reload = true));
