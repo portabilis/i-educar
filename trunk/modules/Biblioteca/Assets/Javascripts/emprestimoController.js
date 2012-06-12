@@ -33,7 +33,8 @@ var postEmprestimo = function ($resourceCheckbox) {
       escola_id : $j('#escola_id').val(),
       biblioteca_id : $j('#biblioteca_id').val(),
       cliente_id : $j('#cliente_id').val(),
-      exemplar_id : $resourceCheckbox.data('exemplar_id')
+      exemplar_id : $resourceCheckbox.data('exemplar_id'),
+      tombo_exemplar : $j('#tombo_exemplar').val()
     },
 
     success : function(dataResponse){
@@ -49,7 +50,8 @@ var postEmprestimo = function ($resourceCheckbox) {
 var handlePost = function(dataResponse){
   console.log('#TODO handlePost');
   //try{
-    var $targetElement = $j('#exemplar-'+dataResponse.id).closest('tr').first();
+    var $targetElement = $j('#exemplar-' + dataResponse.exemplar.id).closest('tr').first();
+
     handleMessages(dataResponse.msgs, $targetElement);
     updateResourceRow(dataResponse);
 
@@ -167,13 +169,13 @@ function handleSearch($resultTable, dataResponse) {
 
     var $checkbox = $j('<input />')
                     .attr('type', 'checkbox')
-                    .attr('name', 'emprestimor-exempar')
+                    .attr('name', 'exemplar')
                     .attr('value', 'sim')
                     .attr('id', 'exemplar-' + value.id)
                     .attr('class', 'exemplar disable-on-apply-changes')
                     .data('exemplar_id', value.id);
 
-    var situacoesEmprestimoPermitida = ['disponivel', 'emprestado', 'emprestimodo', 'emprestado_e_emprestimodo'];
+    var situacoesEmprestimoPermitida = ['disponivel', 'emprestado', 'reservado', 'emprestado_e_reservado'];
 
     if ($j.inArray(value.situacao.flag, situacoesEmprestimoPermitida) < 0)
       $checkbox.attr('disabled', 'disabled').removeClass('disable-on-apply-changes');

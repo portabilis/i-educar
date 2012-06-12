@@ -446,7 +446,6 @@ class EmprestimoApiController extends ApiCoreController
                                                                            'ref_cod_situacao'     => 'situacao_id',
                                                                            'permite_emprestimo',
                                                                            'tombo'));
-
         // adiciona situacao e pendencias de cada exemplar
         foreach($exemplares as $index => $exemplar) {
           $situacaoExemplar                       = $this->loadSituacaoForExemplar($exemplar);
@@ -484,8 +483,12 @@ class EmprestimoApiController extends ApiCoreController
 
 
   protected function postEmprestimo() {
-    if ($this->canPostEmprestimo())
-      $this->appendResponse('exemplar', $this->loadExemplar($reload = true));
+    if ($this->canPostEmprestimo()) {
+      $this->messenger->append("#todo postEmprestimo.", 'notice');
+
+    }
+
+    $this->appendResponse('exemplar', $this->loadExemplar($reload = true));
   }
 
 
