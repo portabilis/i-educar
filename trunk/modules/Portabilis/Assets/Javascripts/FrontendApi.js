@@ -1,10 +1,11 @@
+// TODO mover para arquivo especifico
 function safeLog(value)
 {
   if(typeof(console) != 'undefined' && typeof(console.log) == 'function')
     console.log(value);
 }
 
-
+// TODO mover para arquivo especifico
 function safeToUpperCase(value){
   if (typeof(value) == 'string')
     value = value.toUpperCase();
@@ -45,6 +46,7 @@ function afterChangeResource($resourceElement){
 
   // change value of execute action button
   $j('input.execute-action').val(POST_LABEL);
+  $j('input.delete').val(DELETE_LABEL);
 }
 
 function handleMessages(messages, targetId, useDelayClassRemoval){
@@ -93,6 +95,19 @@ function handleMessages(messages, targetId, useDelayClassRemoval){
     }
   }
 }
+
+
+function getFirstCheckboxChecked($targetElement) {
+  var $firstChecked = $j('input.'+RESOURCE_NAME+':checked:first');
+
+  if ($firstChecked.length < 1) {
+    handleMessages([{type : 'error', msg : 'Selecione algum '+RESOURCE_NAME+'.'}], $targetElement, true);
+    $firstChecked = undefined;
+  }
+
+  return $firstChecked;
+}
+
 
 (function($){
   $(document).ready(function(){

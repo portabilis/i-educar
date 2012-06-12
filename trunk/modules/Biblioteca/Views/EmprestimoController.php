@@ -43,7 +43,7 @@ class EmprestimoController extends Core_Controller_Page_ListController
   protected $_formMap  = array();
 
   #TODO setar código processoAP, copiar da funcionalidade de emprestimo existente?
-  protected $_processoAp = 0;
+  protected $_processoAp = 610;
 
 
   protected function setVars()
@@ -65,13 +65,13 @@ class EmprestimoController extends Core_Controller_Page_ListController
   {
     $dynamicSelectMenus = new Portabilis_View_Helper_DynamicSelectMenus($this);
 
-    $dynamicSelectMenus->helperFor(array('instituicao',
-                                         'escola',
-                                         'biblioteca'));
+    $dynamicSelectMenus->helperFor('instituicao', array('options' => array('id' => 'instituicao_id')));
+    $dynamicSelectMenus->helperFor('escola',      array('options' => array('id' => 'escola_id')));
+    $dynamicSelectMenus->helperFor('biblioteca',  array('options' => array('id' => 'biblioteca_id')));
 
-    $this->campoNumero('tombo', 'Tombo exemplar', '', 13, 13, true);
+    $this->campoNumero('tombo_exemplar', 'Tombo exemplar', '', 13, 13, true);
 
-    $dynamicSelectMenus->helperFor('bibliotecaPesquisaCliente');
+    $dynamicSelectMenus->helperFor('bibliotecaPesquisaCliente', array('hiddenInputOptions' => array('id' => 'cliente_id')));
   }
 
 

@@ -346,6 +346,8 @@ class ReservaApiController extends ApiCoreController
 
       $this->_reservas   = array();
 
+
+      #TODO remover esta parte suspenso?
       $sql = "select 1 from pmieducar.cliente_suspensao where ref_cod_cliente = $1 and data_liberacao is null and data_suspensao + (dias||' day')::interval >= now()";
 
       $suspenso = $this->fetchPreparedQuery($sql, $params = array($id), true, 'first-field');

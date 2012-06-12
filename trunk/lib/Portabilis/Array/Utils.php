@@ -93,7 +93,7 @@ class Portabilis_Array_Utils {
 
     // apply filter
     foreach($attrs as $attrName => $attrValueName) {
-      if (! $attrName)
+      if (! is_string($attrName))
         $attrName = $attrValueName;
 
       $arrayFiltered[$attrValueName] = $array[$attrName];
