@@ -138,16 +138,12 @@ class EmprestimoApiController extends ApiCoreController
   }
 
 
-  protected function canDeleteEmprestimo() {
-    return false;
-
+  protected function canPostDevolucao() {
+    return $this->validatesPresenceOf(array('exemplar_id'))
+           && $this->validatesExistenceOfExemplar()
+           && $this->validatesSituacaoExemplarIsIn(array('emprestado', 'emprestado_e_reservado'));
     /*
-
-      TODO validates presence of exemplar_id
-      TODO validates presence of emprestimo_id
-      TODO validates situacao exemplar in emprestado, emprestado_e_reservado
-      TODO validates emprestado by cliente
-
+      TODO validates emprestado by cliente ?
     */
   }
 
@@ -594,10 +590,10 @@ class EmprestimoApiController extends ApiCoreController
   }
 
 
-  protected function deleteEmprestimo() {
+  protected function postDevolucao() {
 
-    if ($this->canDeleteEmprestimo())
-      $this->messenger->append("#todo deleteEmprestimo.", 'notice');
+    if ($this->canPostDevolucao())
+      $this->messenger->append("#todo postDevolucao.", 'notice');
 
       $this->appendResponse('exemplar', $this->loadExemplar($reload = true));
   }
@@ -610,8 +606,8 @@ class EmprestimoApiController extends ApiCoreController
     elseif ($this->isRequestFor('post', 'emprestimo'))
       $this->postEmprestimo();
 
-    elseif ($this->isRequestFor('delete', 'emprestimo'))
-      $this->deleteEmprestimo();
+    elseif ($this->isRequestFor('post', 'devolucao'))
+      $this->postDevolucao();
 
     else
       $this->notImplementedOperationError();
