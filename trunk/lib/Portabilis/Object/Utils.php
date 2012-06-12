@@ -78,7 +78,7 @@ class Portabilis_Object_Utils {
 
     // apply filter
     foreach($attrs as $attrName => $attrValueName) {
-      if (! $attrName)
+      if (! is_string($attrName))
         $attrName = $attrValueName;
 
       $objectFiltered[$attrValueName] = $object->$attrName;
