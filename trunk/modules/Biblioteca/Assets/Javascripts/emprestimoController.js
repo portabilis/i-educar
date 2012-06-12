@@ -154,9 +154,9 @@ function handleSearch($resultTable, dataResponse) {
   $j('<th />').html('Id').addClass('center').appendTo($linha);
   $j('<th />').html('Situa&#231;&#227;o').addClass('center').appendTo($linha);
   $j('<th />').html('Cliente').appendTo($linha);
-  $j('<th />').html('Data').addClass('center').appendTo($linha);
-  $j('<th />').html('Data prevista dispon&iacute;vel').addClass('center').appendTo($linha);
-  $j('<th />').html('A&#231;&#227;o').addClass('center').appendTo($linha);
+  $j('<th />').html('Data emprestimo').addClass('center').appendTo($linha);
+  $j('<th />').html('Data prevista devolu&#231;&#227;o').addClass('center').appendTo($linha);
+  //$j('<th />').html('A&#231;&#227;o').addClass('center').appendTo($linha);
   $linha.appendTo($resultTable);
 
   var setTituloObra = true;
@@ -188,13 +188,13 @@ function handleSearch($resultTable, dataResponse) {
     var $colClientes                = $j('<td />').attr('id', 'clientes-' + value.id);
     var $colDatas                   = $j('<td />').attr('id', 'datas-' + value.id).addClass('center');
     var $colDatasPrevistaDisponivel = $j('<td />').attr('id', 'datas-prevista-disponivel-' + value.id).addClass('center');
-    var $colAcoes                   = $j('<td />').attr('id', 'acoes-' + value.id).addClass('center');
+    //var $colAcoes                   = $j('<td />').attr('id', 'acoes-' + value.id).addClass('center');
 
     $colSituacoes.appendTo($linha);
     $colClientes.appendTo($linha);
     $colDatas.appendTo($linha);
     $colDatasPrevistaDisponivel.appendTo($linha);
-    $colAcoes.appendTo($linha);
+    //$colAcoes.appendTo($linha);
 
     $linha.appendTo($resultTable);
     updateResourceRow(value);
