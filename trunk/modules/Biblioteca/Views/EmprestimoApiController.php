@@ -277,7 +277,10 @@ class EmprestimoApiController extends ApiCoreController
   }
 
 
-  protected function loadEmprestimoForExemplar($exemplar) {
+  protected function loadEmprestimoForExemplar($exemplar = null) {
+    if(is_null($exemplar))
+      $exemplar = $this->loadExemplar();
+
     $emprestimo = new clsPmieducarExemplarEmprestimo();
 
     $emprestimo = $emprestimo->lista(null,
@@ -515,16 +518,22 @@ class EmprestimoApiController extends ApiCoreController
   }
 
 
-  protected function loadSituacaoEmprestimo(){
+  protected function loadSituacaoExemplar($permiteEmprestimo = true, $padrao = true, $emprestada = false){
+    $permiteEmprestimo = $permiteEmprestimo == true ? 2 : 1;
+    $emprestada        = $emprestada        == true ? 1 : 0;
+
+    if (! is_null($padrao))
+      $padrao = $padrao == true ? 1 : 0;
+
     $situacao = new clsPmieducarSituacao();
     $situacao = $situacao->lista(null,
                                  null,
                                  null,
                                  null,
-                                 1,
+                                 $permiteEmprestimo,
                                  null,
-                                 null,
-                                 1,
+                                 $padrao,
+                                 $emprestada,
                                  null,
                                  null,
                                  null,
@@ -539,7 +548,7 @@ class EmprestimoApiController extends ApiCoreController
                                                                   'ref_cod_biblioteca'  => 'biblioteca_id',
                                                                   'nm_situacao'         => 'label',
                                                                   'situacao_padrao'     => 'padrao',
-                                                                  'situacao_emprestada' => 'emprestimo',
+                                                                  'situacao_emprestada' => 'emprestada',
                                                                   'permite_emprestimo',
                                                                   'descricao'));
     }
@@ -565,7 +574,7 @@ class EmprestimoApiController extends ApiCoreController
   protected function postEmprestimo() {
     if ($this->canPostEmprestimo()) {
       // altera situacao exemplar para emprestado
-      $situacaoEmprestimo = $this->loadSituacaoEmprestimo();
+      $situacaoEmprestimo = $this->loadSituacaoExemplar($permiteEmprestimo = false, $padrao = null, $emprestada = true);
 
       if($situacaoEmprestimo && ! $this->updateSituacaoExemplar($situacaoEmprestimo))
         $this->messenger->append("Aparentemente a situação do exemplar não foi alterada para emprestado.", 'error');
@@ -592,10 +601,34 @@ class EmprestimoApiController extends ApiCoreController
 
   protected function postDevolucao() {
 
-    if ($this->canPostDevolucao())
-      $this->messenger->append("#todo postDevolucao.", 'notice');
+    if ($this->canPostDevolucao()) {
+      // altera situacao exemplar para disponivel
+      $situacaoDisponivel = $this->loadSituacaoExemplar($permiteEmprestimo = true, $padrao = true, $emprestada = false);
 
-      $this->appendResponse('exemplar', $this->loadExemplar($reload = true));
+      if($situacaoDisponivel && ! $this->updateSituacaoExemplar($situacaoDisponivel))
+        $this->messenger->append("Aparentemente a situação do exemplar não foi alterada para disponivel.", 'error');
+      elseif(! $situacaoDisponivel)
+        $this->messenger->append("Não foi encontrado uma situação padrão cadastrada para exemplar disponivel.", 'error');
+
+      // grava emprestimo
+		  if(! $this->messenger->hasMsgWithType('error')) {
+
+        $_emprestimo                        = $this->loadEmprestimoForExemplar();
+        $emprestimo                         = new clsPmieducarExemplarEmprestimo();
+        $emprestimo->cod_emprestimo         = $_emprestimo['id'];
+        $emprestimo->ref_usuario_devolucao  = $this->getSession()->id_pessoa;
+        $emprestimo->data_devolucao         = date("Y-m-d");
+
+        // TODO calcular / setar valor multa (se) devolução atrasada
+
+        if ($emprestimo->edita())
+          $this->messenger->append("Devolução realizada com sucesso.", 'success');
+        else
+          $this->messenger->append("Aparentemente a devolução não foi cadastrada, por favor, tente novamente.", 'error');
+      }
+    }
+
+    $this->appendResponse('exemplar', $this->loadExemplar($reload = true));
   }
 
 
