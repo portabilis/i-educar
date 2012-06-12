@@ -185,6 +185,33 @@ class EmprestimoApiController extends ApiCoreController
   }
 
 
+  protected function loadQtdDiasEmprestimoForExemplar($exemplar = null) {
+    $acervo             = $this->loadAcervo($exemplar['id']);
+    $exemplarTipoId     = $acervo['exemplar_tipo_id'];
+
+		$clienteTipoCliente = new clsPmieducarClienteTipoCliente();
+
+    $clienteTipoCliente = $clienteTipoCliente->lista(null,
+                                                     $this->getRequest()->cliente_id,
+                                                     null,
+                                                     null,
+                                                     null,
+                                                     null,
+                                                     null,
+                                                     null,
+                                                     $this->getRequest()->biblioteca_id);
+
+    $clienteTipoId           = $clienteTipoCliente[0]['cliente_tipo_id'];
+
+		$clienteTipoExemplarTipo = new clsPmieducarClienteTipoExemplarTipo($clienteTipoId,
+                                                                       $exemplarTipoId);
+
+		$clienteTipoExemplarTipo = $clienteTipoExemplarTipo->detalhe();
+
+		return $clienteTipoExemplarTipo["dias_emprestimo"];
+  }
+
+
   protected function getDataPrevistaDisponivelForExemplar($exemplar, $dataInicio, $format = 'd/m/Y') {
     $qtdDiasEmprestimo = $this->loadQtdDiasEmprestimoForExemplar($exemplar);
     $date              = date($format, strtotime("+$qtdDiasEmprestimo days", strtotime($dataInicio)));
@@ -210,9 +237,9 @@ class EmprestimoApiController extends ApiCoreController
                                    null,
                                    $exemplar['cod_exemplar'],
                                    1,
-                                   $this->getRequest()->ref_cod_biblioteca,
-                                   $this->getRequest()->ref_cod_instituicao,
-                                   $this->getRequest()->ref_cod_escola,
+                                   $this->getRequest()->biblioteca_id,
+                                   $this->getRequest()->instituicao_id,
+                                   $this->getRequest()->escola_id,
                                    $data_retirada_null = true);
 
       if($reservas) {
@@ -255,26 +282,26 @@ class EmprestimoApiController extends ApiCoreController
                                      null,
                                      null,
                                      null,
-                                     $exemplar['cod_exemplar'],
+                                     $exemplar['id'],
                                      null,
                                      null,
                                      null,
                                      null,
                                      null,
                                      $devolvido = false,
-                                     $this->getRequest()->ref_cod_biblioteca,
+                                     $this->getRequest()->biblioteca_id,
                                      null,
-                                     $this->getRequest()->ref_cod_instituicao,
-                                     $this->getRequest()->ref_cod_escola);
+                                     $this->getRequest()->instituicao_id,
+                                     $this->getRequest()->escola_id);
 
     if($emprestimo) {
   	  $emprestimo = array_shift($emprestimo);
       $emprestimo = Portabilis_Array_Utils::filterSet($emprestimo, array('cod_emprestimo' => 'id',
-                                                                        'data_retirada'   => 'data',
-                                                                        'ref_cod_cliente' => 'cliente_id'));
+                                                                         'data_retirada'   => 'data',
+                                                                         'ref_cod_cliente' => 'cliente_id'));
 
       // adiciona informações adicionais ao emprestimo
-      $cliente                                = $this->loadCliente($emprestimo["ref_cod_cliente"]);
+      $cliente                                = $this->loadCliente($emprestimo["cliente_id"]);
 
       $emprestimo['cliente']                  = $cliente;
       $emprestimo['nome_cliente']             = $cliente['id'] . ' - ' . $cliente['nome'];
@@ -309,6 +336,7 @@ class EmprestimoApiController extends ApiCoreController
 
 
   protected function loadSituacaoForExemplar($exemplar) {
+
     $situacao                  = new clsPmieducarSituacao($exemplar["situacao_id"]);
     $situacao                  = $situacao->detalhe();
 
@@ -343,11 +371,12 @@ class EmprestimoApiController extends ApiCoreController
   }
 
 
-  protected function getPendenciasForExemplar($exemplar, $situacaoExemplar = '') {
-    if (empty($situacaoExemplar))
-      $situacaoExemplar = $exemplar['situacao'];
+  protected function getPendenciasForExemplar($exemplar) {
+    if (! isset($exemplar['situacao']))
+      throw new CoreExt_Exception("Exemplar deve possuir uma chave 'situacao' para getPendenciasForExemplar.");
 
-    $pendencias = array();
+    $situacaoExemplar = $exemplar['situacao'];
+    $pendencias       = array();
 
     // get emprestimo
     if (strpos($situacaoExemplar['flag'], 'emprestado') > -1) {
@@ -431,10 +460,10 @@ class EmprestimoApiController extends ApiCoreController
                                        null,
                                        null,
                                        null,
-                                       $this->getRequest()->ref_cod_biblioteca,
+                                       $this->getRequest()->biblioteca_id,
                                        null,
-                                       $this->getRequest()->ref_cod_instituicao,
-                                       $this->getRequest()->ref_cod_escola,
+                                       $this->getRequest()->instituicao_id,
+                                       $this->getRequest()->escola_id,
                                        $this->getRequest()->tombo_exemplar);
 
       if ($exemplares) {
@@ -448,9 +477,8 @@ class EmprestimoApiController extends ApiCoreController
                                                                            'tombo'));
         // adiciona situacao e pendencias de cada exemplar
         foreach($exemplares as $index => $exemplar) {
-          $situacaoExemplar                       = $this->loadSituacaoForExemplar($exemplar);
-          $exemplares[$index]['situacao']         = $situacaoExemplar;
-          $exemplares[$index]['pendencias']       = $this->getPendenciasForExemplar($exemplar, $situacaoExemplar);
+          $exemplares[$index]['situacao']         = $this->loadSituacaoForExemplar($exemplar);
+          $exemplares[$index]['pendencias']       = $this->getPendenciasForExemplar($exemplares[$index]);
 
           $acervo                                 = $this->loadAcervo($exemplar['acervo_id']);
           $exemplares[$index]['acervo']           = array();
@@ -484,8 +512,21 @@ class EmprestimoApiController extends ApiCoreController
 
   protected function postEmprestimo() {
     if ($this->canPostEmprestimo()) {
-      $this->messenger->append("#todo postEmprestimo.", 'notice');
 
+      $emprestimo                   = new clsPmieducarExemplarEmprestimo();
+      $emprestimo->ref_usuario_cad  = $this->getSession()->id_pessoa;
+      $emprestimo->ref_cod_cliente  = $this->getRequest()->cliente_id;
+      $emprestimo->ref_cod_exemplar = $this->getRequest()->exemplar_id;
+
+		  if($emprestimo->cadastra())
+        $this->messenger->append("Emprestimo realizado com sucesso.", 'success');
+      else
+        $this->messenger->append("Aparentemente o realizado não foi cadastrado, por favor, tente novamente.", 'error');
+
+      /*TODO
+          mudar situacao exemplar, para situação emprestada
+          se não achar situação emprestada raise exception
+      */
     }
 
     $this->appendResponse('exemplar', $this->loadExemplar($reload = true));
