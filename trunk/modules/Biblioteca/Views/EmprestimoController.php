@@ -43,7 +43,7 @@ class EmprestimoController extends Core_Controller_Page_ListController
   protected $_formMap  = array();
 
   #TODO setar código processoAP, copiar da funcionalidade de emprestimo existente?
-  protected $_processoAp = 0;
+  protected $_processoAp = 610;
 
 
   protected function setVars()
