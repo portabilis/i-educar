@@ -46,6 +46,7 @@ function afterChangeResource($resourceElement){
 
   // change value of execute action button
   $j('input.execute-action').val(POST_LABEL);
+  $j('input.delete').val(DELETE_LABEL);
 }
 
 function handleMessages(messages, targetId, useDelayClassRemoval){
