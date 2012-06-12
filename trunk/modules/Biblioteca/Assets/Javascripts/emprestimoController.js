@@ -53,7 +53,7 @@ var handlePost = function(dataResponse){
     var $targetElement = $j('#exemplar-' + dataResponse.exemplar.id).closest('tr').first();
 
     handleMessages(dataResponse.msgs, $targetElement);
-    updateResourceRow(dataResponse);
+    updateResourceRow(dataResponse.exemplar);
 
   /*}
   catch(error){
