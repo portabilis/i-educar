@@ -216,9 +216,13 @@ class EmprestimoApiController extends ApiCoreController
 
   protected function getDataPrevistaDisponivelForExemplar($exemplar, $dataInicio, $format = 'd/m/Y') {
     $qtdDiasEmprestimo = $this->loadQtdDiasEmprestimoForExemplar($exemplar);
-    $date              = date($format, strtotime("+$qtdDiasEmprestimo days", strtotime($dataInicio)));
 
-    # TODO se data cair em feriado ou dia de não trabalho somando +1 dia
+    // reformada data
+    $dataInicio        = date('d/m/Y', strtotime($dataInicio));
+
+    //soma dias emprestimo
+    // TODO se data cair em feriado ou dia de não trabalho somando +1 dia
+    $date              = date($format, strtotime("+$qtdDiasEmprestimo days", strtotime($dataInicio)));
 
     return $date;
   }
