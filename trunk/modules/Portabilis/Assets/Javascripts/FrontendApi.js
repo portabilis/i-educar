@@ -95,6 +95,19 @@ function handleMessages(messages, targetId, useDelayClassRemoval){
   }
 }
 
+
+function getFirstCheckboxChecked($targetElement) {
+  var $firstChecked = $j('input.'+RESOURCE_NAME+':checked:first');
+
+  if ($firstChecked.length < 1) {
+    handleMessages([{type : 'error', msg : 'Selecione algum '+RESOURCE_NAME+'.'}], $targetElement, true);
+    $firstChecked = undefined;
+  }
+
+  return $firstChecked;
+}
+
+
 (function($){
   $(document).ready(function(){
 
