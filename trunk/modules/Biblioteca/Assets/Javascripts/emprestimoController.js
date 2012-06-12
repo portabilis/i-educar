@@ -5,23 +5,53 @@ var RESOURCE_NAME = 'exemplar';
 var RESOURCES_NAME = 'exemplares';
 
 var POST_LABEL = 'Emprestar';
-var DELETE_LABEL = 'Cancelar';
+var DELETE_LABEL = 'Devolver';
 
 var onClickSelectAllEvent = false;
 
-var onClickDeleteEvent = false;
+var onClickDeleteEvent = function(event){
+  var $this = $j(this)
+  var $firstChecked = getFirstCheckboxChecked($this);
+
+  if ($firstChecked){
+    $j('.disable-on-apply-changes').attr('disabled', 'disabled');
+    $this.val('Aguarde devolvendo exemplar...');
+    postDevolucao($firstChecked);
+  }
+};
 
 var onClickActionEvent = function(event){
-  var $this = $j(this);
-  var $firstChecked = $j('input.exemplar:checked:first');
+  var $this = $j(this)
+  var $firstChecked = getFirstCheckboxChecked($this);
 
-  if ($firstChecked.length < 1)
-    handleMessages([{type : 'error', msg : 'Selecione algum exemplar.'}], $this, true);
-  else{
+  if ($firstChecked){
     $j('.disable-on-apply-changes').attr('disabled', 'disabled');
     $this.val('Aguarde emprestando exemplar...');
     postEmprestimo($firstChecked);
   }
+};
+
+var postDevolucao = function ($resourceCheckbox) {
+  var options = {
+    url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'devolucao'),
+    dataType : 'json',
+    data : {
+      instituicao_id : $j('#instituicao_id').val(),
+      escola_id : $j('#escola_id').val(),
+      biblioteca_id : $j('#biblioteca_id').val(),
+      cliente_id : $j('#cliente_id').val(),
+      exemplar_id : $resourceCheckbox.data('exemplar_id'),
+      tombo_exemplar : $j('#tombo_exemplar').val()
+    },
+
+    success : function(dataResponse){
+      afterChangeResource($resourceCheckbox);
+      handlePost(dataResponse);
+    }
+  };
+
+  beforeChangeResource($resourceCheckbox);
+  postResource(options);
 };
 
 var postEmprestimo = function ($resourceCheckbox) {
@@ -50,7 +80,10 @@ var postEmprestimo = function ($resourceCheckbox) {
 var handlePost = function(dataResponse){
   console.log('#TODO handlePost');
   //try{
-    var $targetElement = $j('#exemplar-' + dataResponse.exemplar.id).closest('tr').first();
+    if (dataResponse.exemplar)
+      var $targetElement = $j('#exemplar-' + dataResponse.exemplar.id).closest('tr').first();
+    else
+      var $targetElement = undefined;
 
     handleMessages(dataResponse.msgs, $targetElement);
     updateResourceRow(dataResponse.exemplar);
@@ -65,56 +98,6 @@ var handlePost = function(dataResponse){
   }*/
 };
 
-var onClickCancelEvent = function(event) {
-  if (confirm("Confirma cancelamento da emprestimo?")) {
-    var $this = $j(this);
-
-    //var $checkbox = $this.closest('tr').find("input[type='checkbox']").first();
-    //console.log($checkbox);
-    deleteEmprestimo($this);
-  }
-}
-
-var deleteEmprestimo = function($deleteLink) {
-  console.log('#TODO delete emprestimo');
-
-  var options = {
-    url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, 'emprestimo', {
-      instituicao_id : $j('#instituicao_id').val(),
-      escola_id : $j('#escola_id').val(),
-      biblioteca_id : $j('#biblioteca_id').val(),
-      cliente_id : $j('#cliente_id').val(),
-      exemplar_id : $deleteLink.data('exemplar_id'),
-      emprestimo_id : $deleteLink.data('emprestimo_id')
-    }),
-    dataType : 'json',
-    data : {
-    },
-    success : function(dataResponse){
-      afterChangeResource($deleteLink);
-      handleDeleteEmprestimo(dataResponse);
-    }
-  };
-
-  beforeChangeResource($deleteLink);
-  deleteResource(options);
-}
-
-var handleDeleteEmprestimo = function(dataResponse) {
-  safeLog(dataResponse);
-
-  //try{
-    var $targetElement = $j('#exemplar-' + dataResponse.id).closest('tr').first();
-    handleMessages(dataResponse.msgs, $targetElement);
-    updateResourceRow(dataResponse);
-  //}
-  //catch(error){
-    //showNewSearchButton();
-    //handleMessages([{type : 'error', msg : 'Ocorreu um erro ao remover o recurso, por favor tente novamente, detalhes: ' + error}], '');
-
-    //safeLog(dataResponse);
-  //}
-}
 
 function setTableSearchDetails($tableSearchDetails, dataDetails){
   $j('<caption />').html('<strong>Emprestimo exemplares</strong>').appendTo($tableSearchDetails);
