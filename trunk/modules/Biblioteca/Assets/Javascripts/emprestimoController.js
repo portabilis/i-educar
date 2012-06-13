@@ -118,10 +118,8 @@ function setTableSearchDetails($tableSearchDetails, dataDetails){
   $j('<td />').html('').attr('id', 'titulo_obra').appendTo($linha);
   $j('<td />').html($j('#tombo_exemplar').val()).appendTo($linha);
 
-  // FIXME ver id nome_biblioteca
-  //field biblioteca pode ser diferente de select caso usuario comum
   var $htmlBibliotecaField = $j('#biblioteca_id').children("[selected='selected']").html() ||
-                             $j('#tr_nm_biblioteca span:last').html();
+                             $j('#tr_biblioteca_nome span:last').html();
 
   $j('<td />').html(safeToUpperCase($htmlBibliotecaField)).appendTo($linha);
 
