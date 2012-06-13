@@ -334,8 +334,11 @@ setVisibility ('tr_div_clientes', false);
 function getClienteTipo()
 {
 	var campoBiblioteca = document.getElementById('ref_cod_biblioteca').value;
+  var exemplarTipoId  = document.getElementById('cod_exemplar_tipo').value;
+
 	var xml1 = new ajax(getClienteTipo_XML);
-	strURL = "educar_cliente_tipo_xml.php?bib="+campoBiblioteca;
+
+	strURL = "educar_cliente_tipo_xml.php?bib="+campoBiblioteca+"&exemplar_tipo_id="+exemplarTipoId;
 	xml1.envia(strURL);
 }
 
@@ -378,7 +381,7 @@ function getClienteTipo_XML(xml)
 			nm_tipo_cliente.setAttribute( 'style', 'margin: 2px;' );
 //			nm_tipo_cliente.setAttribute( 'value', tipo_cliente[j][1] );
 			nm_tipo_cliente.setAttribute( 'value', tipo_cliente[j].firstChild.data );
-			
+
 			dias_tipo_cliente.setAttribute( "id", "tipo_"+tipo_cliente[j].getAttribute("cod_cliente_tipo") );
 			dias_tipo_cliente.setAttribute( 'type', 'text' );
 			dias_tipo_cliente.setAttribute( 'size', '3' );
