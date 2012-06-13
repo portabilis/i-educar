@@ -34,7 +34,7 @@ require_once('include/funcoes.inc.php');
 print '<?xml version="1.0" encoding="iso-8859-1"?>' . PHP_EOL;
 print '<query xmlns="sugestoes">' . PHP_EOL;
 
-if (is_numeric($_GET['bib']))
+if (is_numeric($_GET['bib']) && is_numeric($_GET['exemplar_tipo_id']))
 {
   $db = new clsBanco();
   $sql = "
@@ -46,11 +46,12 @@ if (is_numeric($_GET['bib']))
       pmieducar.cliente_tipo LEFT JOIN pmieducar.cliente_tipo_exemplar_tipo ON (cod_cliente_tipo = ref_cod_cliente_tipo)
     WHERE
       ref_cod_biblioteca = %s AND
+      ref_cod_exemplar_tipo = %s AND
       ativo = 1
     ORDER BY
       nm_tipo ASC";
 
-  $sql = sprintf($sql, $_GET['bib']);
+  $sql = sprintf($sql, $_GET['bib'], $_GET['exemplar_tipo_id']);
   $db->Consulta($sql);
 
   // Array com os códigos do resultado do SELECT
