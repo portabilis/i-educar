@@ -176,7 +176,9 @@ class indice extends clsCadastro
 		if ($this->titulo_obra)
 		{
 			$obj_exemplar = new clsPmieducarExemplar();
-			$lst_exemplar = $obj_exemplar->lista(null,null,null,$this->ref_cod_acervo,null,null,null,2,null,null,null,null,null,1,null,null,null,null,$this->ref_cod_biblioteca);
+			//$lst_exemplar = $obj_exemplar->lista(null,null,null,$this->ref_cod_acervo,null,null,null,2,null,null,null,null,null,1,null,null,null,null,$this->ref_cod_biblioteca);
+
+        $lst_exemplar = $obj_exemplar->lista(null,null,null,$this->ref_cod_acervo,null,null,null,null,null,null,null,null,null,1,null,null,null,null,$this->ref_cod_biblioteca);
 
 			// verifica se o exemplar pode ser emprestado
 			if( is_array( $lst_exemplar ) && count( $lst_exemplar ) )
@@ -197,7 +199,7 @@ class indice extends clsCadastro
 					// volta para o inicio da lista
 					reset($lst_exemplar);
 
-					$reservas = array();
+					$podeReservar = false;
 					foreach ( $lst_exemplar AS $exemplar )
 					{
 						$obj_situacao = new clsPmieducarSituacao($exemplar["ref_cod_situacao"]);
@@ -209,12 +211,16 @@ class indice extends clsCadastro
 						// verifica se a situacao do exemplar permite emprestimo
 						if ($situacao_permite_emprestimo == 2 && $situacao_emprestada == 0 && $situacao_padrao == 1)
 						{
-							unset($this->titulo_obra);
-							unset($this->ref_cod_acervo);
-							echo "<script> alert('Exemplar disponível para empréstimo!\\nNão é possivel realizar a reserva.\\n  TOMBO #{$exemplar["cod_exemplar"]}'); </script>";
+
+              echo "{$exemplar['cod_exemplar']} => if 1 ";
+
+							//unset($this->titulo_obra);
+							//unset($this->ref_cod_acervo);
+							//echo "<script> alert('Exemplar disponível para empréstimo!\\nNão é possivel realizar a reserva.\\nTombo: {$exemplar["cod_exemplar"]}'); </script>";
 						}// verifica se a situacao do exemplar esta como 'emprestado'
 						else if ($situacao_permite_emprestimo == 1 && $situacao_emprestada == 1 && $situacao_padrao == 0)
 						{
+              echo "{$exemplar['cod_exemplar']} => if 2 ";
 							$lst_reservas = $obj_reservas->lista(null,null,null,null,null,null,null,null,null,null,$exemplar["cod_exemplar"],1);
 
 							// verifica se existem reservas do exemplar
@@ -231,6 +237,7 @@ class indice extends clsCadastro
 						}
 						else
 						{
+              echo "{$exemplar['cod_exemplar']} => else ";
 							unset($this->titulo_obra);
 							unset($this->ref_cod_acervo);
 							echo "<script> alert('Situação atual do exemplar não permite reserva!'); </script>";
