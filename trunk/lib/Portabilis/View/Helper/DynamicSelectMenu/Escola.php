@@ -57,7 +57,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_Escola extends Portabilis_View_He
     $escola   = App_Model_IedFinder::getEscola($escolaId);
     $options['options']['value'] = $escola['nome'];
 
-    $defaultInputOptions = array('id'        => 'escola_nome',
+    $defaultInputOptions = array('id'        => 'ref_cod_escola',
                                  'label'     => 'Escola',
                                  'value'     => '',
                                  'duplo'     => false,
@@ -65,11 +65,11 @@ class Portabilis_View_Helper_DynamicSelectMenu_Escola extends Portabilis_View_He
                                  'separador' => ':');
 
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
-    call_user_func_array(array($this->viewInstance, 'campoRotulo'), $inputOptions);
 
-    /* adicionado campo oculto manualmente, pois o metodo campoRotulo adiciona
-       como value o nome da escola */
-    $this->viewInstance->campoOculto("ref_cod_escola", $escolaId);
+    $this->viewInstance->campoOculto($inputOptions['id'], $escolaId);
+
+    $inputOptions['id'] = 'escola_nome';
+    call_user_func_array(array($this->viewInstance, 'campoRotulo'), $inputOptions);
   }
 
 

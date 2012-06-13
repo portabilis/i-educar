@@ -56,7 +56,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_Biblioteca extends Portabilis_Vie
     $biblioteca = App_Model_IedFinder::getBiblioteca($bibliotecaId);
     $options['options']['value'] = $biblioteca['nm_biblioteca'];
 
-    $defaultInputOptions = array('id'        => 'biblioteca_nome',
+    $defaultInputOptions = array('id'        => 'ref_cod_biblioteca',
                                  'label'     => 'Biblioteca',
                                  'value'     => '',
                                  'duplo'     => false,
@@ -64,11 +64,11 @@ class Portabilis_View_Helper_DynamicSelectMenu_Biblioteca extends Portabilis_Vie
                                  'separador' => ':');
 
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
-    call_user_func_array(array($this->viewInstance, 'campoRotulo'), $inputOptions);
 
-    /* adicionado campo oculto manualmente, pois o metodo campoRotulo adiciona
-       como value o nome da biblioteca */
-    $this->viewInstance->campoOculto("ref_cod_biblioteca", $bibliotecaId);
+    $this->viewInstance->campoOculto($inputOptions['id'], $bibliotecaId);
+
+    $inputOptions['id'] = 'biblioteca_nome';
+    call_user_func_array(array($this->viewInstance, 'campoRotulo'), $inputOptions);
   }
 
 
