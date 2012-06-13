@@ -70,10 +70,8 @@ class indice extends clsCadastro
 	var $ref_cod_escola;
 	var $ref_cod_biblioteca;
 
-	var $tombo_automatico;
-	var $tombo_manual;
+	var $tombo;
 	var $qtd_livros;
-	var $eh_manual;
 
 	function Inicializar()
 	{
@@ -150,13 +148,10 @@ class indice extends clsCadastro
 
 		$this->campoData( "data_aquisicao", "Data Aquisic&atilde;o", $this->data_aquisicao, true );
 
+    $this->campoNumero("tombo", "Tombo", $this->tombo, 10, 10, false);
+
 		if (!is_numeric($this->cod_exemplar))
-		{
 			$this->campoNumero("qtd_livros", "Quantidade de Livros", 1, 5, 5, true);
-      // $this->campoBoolLista("tombo_automatico", "Tombo Automático", "t");
-			$this->campoNumero("tombo_manual", "Tombo", "", 10, 10, false);
-			$this->campoOculto("eh_manual", 0);
-		}
 	}
 
 	function Novo()
@@ -173,19 +168,9 @@ class indice extends clsCadastro
 
     $this->data_aquisicao = dataToBanco($this->data_aquisicao);
 
-		if (!$this->tombo_manual)
-		{
-			$obj_exemplar = new clsPmieducarExemplar();
-			$max_tombo = $obj_exemplar->retorna_tombo_maximo() + 1;
-		}
-		else
-		{
-			$max_tombo = $this->tombo_manual;
-		}
-
 		for ($i = 0; $i < $this->qtd_livros; $i++)
 		{
-			$obj = new clsPmieducarExemplar( $this->cod_exemplar, $this->ref_cod_fonte, $this->ref_cod_motivo_baixa, $this->ref_cod_acervo, $this->ref_cod_situacao, $this->pessoa_logada, $this->pessoa_logada, $this->permite_emprestimo, $this->preco, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->data_aquisicao, $max_tombo );
+			$obj = new clsPmieducarExemplar($this->cod_exemplar, $this->ref_cod_fonte, $this->ref_cod_motivo_baixa, $this->ref_cod_acervo, $this->ref_cod_situacao, $this->pessoa_logada, $this->pessoa_logada, $this->permite_emprestimo, $this->preco, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->data_aquisicao, $this->getTombo());
 			$cadastrou = $obj->cadastra();
 			if (!$cadastrou)
 			{
@@ -193,13 +178,13 @@ class indice extends clsCadastro
 				echo "<!--\nErro ao cadastrar clsPmieducarExemplar\nvalores obrigatorios\nis_numeric( $this->ref_cod_fonte ) && is_numeric( $this->ref_cod_acervo ) && is_numeric( $this->ref_cod_situacao ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->permite_emprestimo ) && is_numeric( $this->preco )\n-->";
 				return false;
 			}
-			$max_tombo++;
 		}
 		$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			header( "Location: educar_exemplar_lst.php" );
 			die();
 			return true;
 	}
+
 
 	function Editar()
 	{
@@ -216,7 +201,7 @@ class indice extends clsCadastro
 
     $this->data_aquisicao = dataToBanco($this->data_aquisicao);
 
-		$obj = new clsPmieducarExemplar($this->cod_exemplar, $this->ref_cod_fonte, $this->ref_cod_motivo_baixa, $this->ref_cod_acervo, $this->ref_cod_situacao, $this->pessoa_logada, $this->pessoa_logada, $this->permite_emprestimo, $this->preco, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->data_aquisicao);
+		$obj = new clsPmieducarExemplar($this->cod_exemplar, $this->ref_cod_fonte, $this->ref_cod_motivo_baixa, $this->ref_cod_acervo, $this->ref_cod_situacao, $this->pessoa_logada, $this->pessoa_logada, $this->permite_emprestimo, $this->preco, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->data_aquisicao, $this->getTombo());
 		$editou = $obj->edita();
 		if( $editou )
 		{
@@ -255,6 +240,21 @@ class indice extends clsCadastro
 		echo "<!--\nErro ao excluir clsPmieducarExemplar\nvalores obrigatorios\nif( is_numeric( $this->cod_exemplar ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
 		return false;
 	}
+
+  protected function getTombo(){
+		if (! $this->tombo) {
+			$exemplar = new clsPmieducarExemplar();
+			$tombo    = $exemplar->retorna_tombo_maximo() + 1;
+    }
+    else {
+      // após obter tombo reseta para na proxima chamada de getTombo buscar o proximo no banco
+      $tombo       = $this->tombo;
+      $this->tombo = null;
+    }
+
+    return $tombo;
+  }
+
 }
 
 // cria uma extensao da classe base
