@@ -1,4 +1,18 @@
+
+
+
+
+
+
+
 TRANSFERIR INTERNET / TESTAR PULL, PUSH, SSH SERVERS
+
+
+
+
+
+
+
 
 não desabilitar campo ao change
 
@@ -10,44 +24,28 @@ Se usuário nivel biblioteca ou escola e vinculado mais uma biblioteca, mostrar 
 
 ---
 
-INTERFACE
+RESERVAS
 
-  delete
-      remover link deletar, mover logica para botão
+  requerido cliente_id
+  requerido obra_id
+  validar se cliente informado
+  validar se obra informada
+  link para limpar cliente
+  link para limpar obra
 
-  post
-      adicionar coluna ação
-          adicionar link cancelar quando situação == reservado
-          implementar delete reserva botão cancelar
-      renomear botão execute action para reservar
 
-  tabela detalhes
-    exibir qtd reservas em aberto
-    exibir valor R$ multas em aberto
-
-  filtro
-      link para limpar cliente
-      link para limpar obra
-      validar (client side) se cliente informado
-      validar (client side) se obra informada
-
-API
   regras
-    verificar no metódo getDataPrevistaDisponivelForExemplar se data prevista disponivel cai em feriado...
-
-    can accept request
+    search exemplares
       - Cliente deve existir para biblioteca
+      - Cliente não pode estar suspenso
 
     post reserva
-      - exemplar mesma obra nao emprestado
+      - cliente deve existir para biblioteca
+      - cliente não pode estar suspenso
       - qtd reservas em aberto <(= ?) limite biblioteca
       - valor R$ multas em aberto <(= ?) limite biblioteca
-      - permitir reservar exemplares com situacao disponivel
-      - corrigir data_prevista_disponivel 1 exemplar grava data atual
+      - exemplar alocado (E não permite locação ?)
 
-    pendencias, data prevista disponivel ultima pendencia com situacao reservado mostrando errado, mostrar data gravada?
-
-  delete reserva (requer exemplar_id, cliente_id > inativar reservas em aberto do exemplar para o cliente )
-
-
-habilitar try's interface reserva e frontend, api
+  exibir tabela detalhes
+    qtd reservas em aberto
+    valor R$ multas em aberto
