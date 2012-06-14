@@ -134,13 +134,14 @@ class indice extends clsCadastro
     $dynamicSelectMenus->helperFor('biblioteca');
     $dynamicSelectMenus->helperFor('bibliotecaSituacao');
     $dynamicSelectMenus->helperFor('bibliotecaFonte');
-    $dynamicSelectMenus->helperFor('bibliotecaPesquisaObra', array('options' => array ('required' => true)));
 
 		$opcoes = array( "" => "Selecione", "2" => "Sim", "1" => "N&atilde;o" );
 		$this->campoLista( "permite_emprestimo", "Permite Emprestimo", $opcoes, $this->permite_emprestimo );
 
 		$this->preco = is_numeric($this->preco) ? number_format($this->preco, 2, ",", ".") : "";
 		$this->campoMonetario( "preco", "Preco", $this->preco, 10, 20, true );
+
+    $dynamicSelectMenus->helperFor('bibliotecaPesquisaObra', array('options' => array ('required' => true)));
 
 		// data
 		if(!$this->data_aquisicao)
