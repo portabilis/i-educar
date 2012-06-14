@@ -100,6 +100,7 @@ class indice extends clsListagem
 
 		$lista_busca = array(
 			"Cliente",
+			"Código exemplar",
 			"Tombo",
 			"Exemplar",
 			"Data Retirada"
@@ -120,7 +121,8 @@ class indice extends clsListagem
 		$this->campoTexto("nm_obra","Obra", $this->nm_obra, 30, 255, false, false, false, "", "<img border=\"0\" onclick=\"pesquisa_obra();\" id=\"ref_cod_exemplar_lupa\" name=\"ref_cod_exemplar_lupa\" src=\"imagens/lupa.png\"\/>");
 		$this->campoOculto("ref_cod_acervo", $this->ref_cod_acervo);
 
-		$this->campoNumero("ref_cod_exemplar","Tombo", $this->ref_cod_exemplar, 15, 50);
+		$this->campoNumero("ref_cod_exemplar","Código exemplar", $this->ref_cod_exemplar, 15, 10);
+		$this->campoNumero("tombo","Tombo", $this->tombo, 15, 10);
 
 		if ($this->ref_cod_biblioteca)
 		{
@@ -227,6 +229,7 @@ class indice extends clsListagem
 				$lista_busca = array(
 					"<a href=\"educar_exemplar_devolucao_det.php?cod_emprestimo={$registro["cod_emprestimo"]}\">{$registro["ref_cod_cliente"]}</a>",
 					"<a href=\"educar_exemplar_devolucao_det.php?cod_emprestimo={$registro["cod_emprestimo"]}\">{$registro["ref_cod_exemplar"]}</a>",
+					"<a href=\"educar_exemplar_devolucao_det.php?cod_emprestimo={$registro["cod_emprestimo"]}\">{$det_exemplar["tombo"]}</a>",
 					"<a href=\"educar_exemplar_devolucao_det.php?cod_emprestimo={$registro["cod_emprestimo"]}\">{$registro["titulo"]}</a>",
 					"<a href=\"educar_exemplar_devolucao_det.php?cod_emprestimo={$registro["cod_emprestimo"]}\">{$registro["data_retirada_br"]}</a>"
 				);

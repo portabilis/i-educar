@@ -51,7 +51,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_Instituicao extends Portabilis_Vi
     $defaultInputOptions = array('id'    => 'ref_cod_instituicao',
                                  'value' => $this->getInstituicaoId($options['id']));
 
-    $inputOptions = $this->mergeOptions($inputOptions, $defaultInputOptions);
+    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
     call_user_func_array(array($this->viewInstance, 'campoOculto'), $inputOptions);
   }
 

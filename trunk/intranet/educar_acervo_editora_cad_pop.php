@@ -93,7 +93,7 @@ class indice extends clsCadastro
 			$this->cep = int2CEP($this->cep);
 		}
 
-		$this->campoCep( "cep", "CEP", $this->cep, true );
+		$this->campoCep( "cep", "CEP", $this->cep, false );
 
 		$opcoes = array( "" => "Selecione" );
 		if( class_exists( "clsUf" ) )
@@ -113,10 +113,10 @@ class indice extends clsCadastro
 			echo "<!--\nErro\nClasse clsUf nao encontrada\n-->";
 			$opcoes = array( "" => "Erro na geracao" );
 		}
-		$this->campoLista( "ref_sigla_uf", "Estado", $opcoes, $this->ref_sigla_uf );
+		$this->campoLista( "ref_sigla_uf", "Estado", $opcoes, $this->ref_sigla_uf, '', false, '', '', false, false );
 
-		$this->campoTexto( "cidade", "Cidade", $this->cidade, 30, 60, true );
-		$this->campoTexto( "bairro", "Bairro", $this->bairro, 30, 60, true );
+		$this->campoTexto( "cidade", "Cidade", $this->cidade, 30, 60, false );
+		$this->campoTexto( "bairro", "Bairro", $this->bairro, 30, 60, false );
 
 		$opcoes = array( "" => "Selecione" );
 		if( class_exists( "clsTipoLogradouro" ) )
@@ -136,9 +136,9 @@ class indice extends clsCadastro
 			echo "<!--\nErro\nClasse clsUrbanoTipoLogradouro nao encontrada\n-->";
 			$opcoes = array( "" => "Erro na geracao" );
 		}
-		$this->campoLista( "ref_idtlog", "Tipo Logradouro", $opcoes, $this->ref_idtlog );
+		$this->campoLista( "ref_idtlog", "Tipo Logradouro", $opcoes, $this->ref_idtlog, '', false, '', '', false, false );
 
-		$this->campoTexto( "logradouro", "Logradouro", $this->logradouro, 30, 255, true );
+		$this->campoTexto( "logradouro", "Logradouro", $this->logradouro, 30, 255, false );
 
 		$this->campoNumero( "numero", "N&uacute;mero", $this->numero, 6, 6 );
 

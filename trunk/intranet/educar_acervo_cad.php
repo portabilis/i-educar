@@ -173,8 +173,6 @@ class indice extends clsCadastro
     $dynamicSelectMenus->helperFor('biblioteca');
     $dynamicSelectMenus->helperFor('tipoExemplar');
 
-    #TODO criar helpers para os outros campos seleção ? (Obra referência, Coleção, Idioma, Editora)
-
     // Obra referência
 		$opcoes = array( "NULL" => "Selecione" );
 
@@ -187,9 +185,6 @@ class indice extends clsCadastro
 				$opcoes["{$detalhe['cod_acervo']}"] = "{$detalhe['titulo']}";
 			}
 		}
-
-		//campoListaPesq( $nome, $campo, $valor, $default, $caminho="", $acao = "" , $duplo=false, $descricao="", $descricao2="", $flag=null, $pag_cadastro = null, $disabled = "", $div = false, $serializedcampos = false, $obrigatorio = false )
-//		$this->campoListaPesq( "ref_cod_acervo", "Obra Refer&ecirc;ncia", $opcoes, $this->ref_cod_acervo,"educar_pesquisa_acervo_lst.php?campo1=ref_cod_acervo","","","","","","","",true );
 
 		$this->campoLista("ref_cod_acervo","Obra Refer&ecirc;ncia",$opcoes,$this->ref_cod_acervo,"",false,"","<img border=\"0\" onclick=\"pesquisa();\" id=\"ref_cod_acervo_lupa\" name=\"ref_cod_acervo_lupa\" src=\"imagens/lupa.png\"\/>",false,false);
 
@@ -213,7 +208,6 @@ class indice extends clsCadastro
 			$opcoes = array( "" => "Erro na geracao" );
 		}
 		$this->campoLista( "ref_cod_acervo_colecao", "Cole&ccedil;&atilde;o", $opcoes, $this->ref_cod_acervo_colecao,"",false,"","<img id='img_colecao' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(500, 200,'educar_acervo_colecao_cad_pop.php',[], 'Coleção')\" />",false,false );
-		//"<img id='imgLupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"pesquisa_valores_popless( 'pesquisa_funcionario_lst.php?campos=".$parametros->serializaCampos()."&importa_cpf=true&chave_campo='+/[0-9]+/.exec(this.previousSibling.previousSibling.id)[0], this.previousSibling.previousSibling.id ); \" />
 
     // Idioma
 		$opcoes = array( "" => "Selecione" );
@@ -381,11 +375,6 @@ class indice extends clsCadastro
 		// não existe um autor principal, mas existe um autor
 		else if ( ($this->checked != 1) && ($qtd_autor > 0) )
 		{
-//			echo "principal ".$this->checked;
-//			echo "is_array($this->acervo_autor)";
-//			print_r($this->acervo_autor);
-//
-//			die("2");
 			$this->campoLista( "ref_cod_acervo_autor", "Autor", $opcoes, $this->ref_cod_acervo_autor,null,true,null, null,null,false);
 		 	$this->campoCheck( "principal", "&nbsp;&nbsp;<img src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"pesquisa_valores_popless( 'educar_acervo_autor_cad_pop.php' )\" />", $this->principal,"<a href='#' onclick=\"getElementById('incluir_autor').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>" );
 		}
@@ -397,7 +386,6 @@ class indice extends clsCadastro
 		}
 
 		$this->campoOculto( "incluir_autor", "" );
-//		$this->campoRotulo( "bt_incluir_autor", "Autor", "<a href='#' onclick=\"getElementById('incluir_autor').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_incluir2.gif' title='Incluir' border=0></a>" );
 
 		$this->campoQuebra();
 		//-----------------------FIM AUTOR------------------------//
@@ -405,7 +393,9 @@ class indice extends clsCadastro
 		// text
 		$this->campoTexto( "titulo", "T&iacute;tulo", $this->titulo, 40, 255, true );
 		$this->campoTexto( "sub_titulo", "Subt&iacute;tulo", $this->sub_titulo, 40, 255, false );
-		$this->campoTexto( "cdu", "Cdu", $this->cdu, 20, 15, false );
+		$this->campoTexto( "estante", "Estante", $this->estante, 20, 15, false );
+		$this->campoTexto( "cdd", "CDD", $this->cdd, 20, 15, false );
+		$this->campoTexto( "cdu", "CDU", $this->cdu, 20, 15, false );
 		$this->campoTexto( "cutter", "Cutter", $this->cutter, 20, 15, false );
 		$this->campoNumero( "volume", "Volume", $this->volume, 20, 255, true );
 		$this->campoNumero( "num_edicao", "N&uacute;mero Edic&atilde;o", $this->num_edicao, 20, 255, true );
@@ -425,7 +415,7 @@ class indice extends clsCadastro
 		$this->acervo_autor = unserialize( urldecode( $this->acervo_autor ) );
 		if ($this->acervo_autor)
 		{
-			$obj = new clsPmieducarAcervo( null, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo, null, $this->pessoa_logada, $this->ref_cod_acervo_colecao, $this->ref_cod_acervo_idioma, $this->ref_cod_acervo_editora, $this->titulo, $this->sub_titulo, $this->cdu, $this->cutter, $this->volume, $this->num_edicao, $this->ano, $this->num_paginas, $this->isbn, null, null, 1, $this->ref_cod_biblioteca );
+			$obj = new clsPmieducarAcervo( null, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo, null, $this->pessoa_logada, $this->ref_cod_acervo_colecao, $this->ref_cod_acervo_idioma, $this->ref_cod_acervo_editora, $this->titulo, $this->sub_titulo, $this->cdu, $this->cutter, $this->volume, $this->num_edicao, $this->ano, $this->num_paginas, $this->isbn, null, null, 1, $this->ref_cod_biblioteca, $this->cdd, $this->estante );
 			$cadastrou = $obj->cadastra();
 			if( $cadastrou )
 			{
@@ -471,7 +461,7 @@ class indice extends clsCadastro
 		$this->acervo_autor = unserialize( urldecode( $this->acervo_autor ) );
 		if ($this->acervo_autor)
 		{
-			$obj = new clsPmieducarAcervo($this->cod_acervo, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo, $this->pessoa_logada, null, $this->ref_cod_acervo_colecao, $this->ref_cod_acervo_idioma, $this->ref_cod_acervo_editora, $this->titulo, $this->sub_titulo, $this->cdu, $this->cutter, $this->volume, $this->num_edicao, $this->ano, $this->num_paginas, $this->isbn, null, null, 1, $this->ref_cod_biblioteca);
+			$obj = new clsPmieducarAcervo($this->cod_acervo, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo, $this->pessoa_logada, null, $this->ref_cod_acervo_colecao, $this->ref_cod_acervo_idioma, $this->ref_cod_acervo_editora, $this->titulo, $this->sub_titulo, $this->cdu, $this->cutter, $this->volume, $this->num_edicao, $this->ano, $this->num_paginas, $this->isbn, null, null, 1, $this->ref_cod_biblioteca, $this->cdd, $this->estante);
 			$editou = $obj->edita();
 			if( $editou )
 			{
@@ -549,10 +539,6 @@ $pagina->MakeAll();
 
 <script>
 
-// TODO remover código comentado.
-/*document.getElementById('ref_cod_exemplar_tipo').disabled = true;
-document.getElementById('ref_cod_exemplar_tipo').options[0].text = 'Selecione uma biblioteca';*/
-
 document.getElementById('ref_cod_acervo_colecao').disabled = true;
 document.getElementById('ref_cod_acervo_colecao').options[0].text = 'Selecione uma biblioteca';
 
@@ -583,39 +569,6 @@ else
 	ajaxBiblioteca('novo');
 }
 
-// TODO remover código comentado.
-/*
-function getTipoExemplar(xml_exemplar_tipo)
-{
-	var campoExemplarTipo = document.getElementById('ref_cod_exemplar_tipo');
-	var DOM_array = xml_exemplar_tipo.getElementsByTagName( "exemplar_tipo" );
-
-	if(DOM_array.length)
-	{
-		campoExemplarTipo.length = 1;
-		campoExemplarTipo.options[0].text = 'Selecione um tipo de exemplar';
-		campoExemplarTipo.disabled = false;
-
-		for( var i = 0; i < DOM_array.length; i++ )
-		{
-			campoExemplarTipo.options[campoExemplarTipo.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_exemplar_tipo"),false,false);
-		}
-		if(tempExemplarTipo != null)
-			campoExemplarTipo.value = tempExemplarTipo;
-	}
-	else
-	{
-		if(document.getElementById('ref_cod_biblioteca').value == "")
-		{
-			campoExemplarTipo.options[0].text = 'Selecione uma biblioteca';
-		}
-		else
-		{
-			campoExemplarTipo.options[0].text = 'A biblioteca não possui tipo de exemplar';
-		}
-	}
-}
-*/
 function getColecao( xml_acervo_colecao )
 {
 	var campoColecao = document.getElementById('ref_cod_acervo_colecao');
@@ -733,18 +686,6 @@ function ajaxBiblioteca(acao)
 
 	var campoExemplarTipo = document.getElementById('ref_cod_exemplar_tipo');
 
-  // TODO remover código comentado.
-	/*if(acao == 'novo')
-	{
-		tempExemplarTipo = campoExemplarTipo.value;
-	}
-	campoExemplarTipo.length = 1;
-	campoExemplarTipo.disabled = true;
-	campoExemplarTipo.options[0].text = 'Carregando tipo de exemplar';
-
-	var xml_exemplar_tipo = new ajax( getTipoExemplar );
-	xml_exemplar_tipo.envia( "educar_exemplar_tipo_xml.php?bib="+campoBiblioteca );*/
-
 	var campoColecao = document.getElementById('ref_cod_acervo_colecao');
 	if(acao == 'novo')
 	{
@@ -794,7 +735,6 @@ function pesquisa()
 	pesquisa_valores_popless('educar_pesquisa_acervo_lst.php?campo1=ref_cod_acervo&ref_cod_biblioteca=' + biblioteca , 'ref_cod_acervo')
 }
 
-//pesquisa_valores_popless('educar_pesquisa_acervo_lst.php?campo1=ref_cod_acervo', 'ref_cod_acervo')
 
 function fixupPrincipalCheckboxes() {
   $j('#principal').hide();
