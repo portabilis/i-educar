@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_boletim_primeiro_ano_trimestral" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.6105100000000079"/>
-	<property name="ireport.x" value="472"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="3"/>
 	<parameter name="ano" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
@@ -458,8 +458,8 @@
                END)
 
 	) AS etapa1
-GROUP BY id_disciplina, nome_disciplina, nome_aluno
-ORDER BY nome_aluno, area_conhecimento, nome_disciplina]]>
+GROUP BY area_conhecimento, id_disciplina, nome_aluno, nome_disciplina
+ORDER BY id_disciplina ASC, nome_aluno ASC]]>
 	</queryString>
 	<field name="ano" class="java.lang.Integer"/>
 	<field name="nome_responsavel" class="java.lang.String"/>
