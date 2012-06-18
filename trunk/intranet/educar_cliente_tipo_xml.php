@@ -66,6 +66,10 @@ if (is_numeric($_GET['bib'])) {
   {
     list($cod, $nome, $dias_emprestimo) = $db->Tupla();
 
+    // Evita trazer dias emprestimo de outros cadastros, no cadastro novo tipo de exemplar
+    if (! is_numeric($_GET['exemplar_tipo_id']))
+      $dias_emprestimo = '';
+
     // Se o código já foi utilizado, vai para o próximo resultado
     if (isset($codigos[$cod]))
       continue;

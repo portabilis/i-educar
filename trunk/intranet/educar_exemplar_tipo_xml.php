@@ -50,7 +50,7 @@
 			while ( $db->ProximoRegistro() )
 			{
 				list($cod) = $db->Tupla();
-				$nome = $db2->CampoUnico("SELECT nm_tipo FROM pmieducar.cliente_tipo_exemplar_tipo, pmieducar.exemplar_tipo WHERE ativo = '1' AND ref_cod_biblioteca = '{$_GET['bib']}' AND cod_exemplar_tipo = '$cod'");
+				$nome = $db2->CampoUnico("SELECT nm_tipo FROM pmieducar.exemplar_tipo WHERE ativo = '1' AND ref_cod_biblioteca = '{$_GET['bib']}' AND cod_exemplar_tipo = '$cod'");
 
         if (is_numeric($_GET['cod_tipo_cliente'])) {
   				$dias_emprestimo = $db2->CampoUnico("SELECT dias_emprestimo FROM pmieducar.cliente_tipo_exemplar_tipo, pmieducar.exemplar_tipo WHERE ativo = '1' AND cod_exemplar_tipo = ref_cod_exemplar_tipo AND ref_cod_biblioteca = '{$_GET['bib']}' AND cod_exemplar_tipo = '$cod' $cliente_tipo AND ref_cod_cliente_tipo = '{$_GET['cod_tipo_cliente']}'");
