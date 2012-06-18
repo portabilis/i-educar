@@ -44,7 +44,7 @@
 
   insert into portal.menu_submenu values(999622,57,3,'Recibo de Pagamento','portabilis_biblioteca_recibo_devolucao_atraso.php',NULL,3);
   insert into portal.menu_funcionario values(1,0,0,999622);
-  insert into pmicontrolesis.menu values(999622,999622,999614,'Recibo de Pagamento',8,'portabilis_biblioteca_recibo_devolucao_atraso','_self',1,16,1);
+  insert into pmicontrolesis.menu values(999622,999622,999614,'Recibo de Pagamento',8,'portabilis_biblioteca_recibo_devolucao_atraso.php','_self',1,16,1);
   insert into pmieducar.menu_tipo_usuario values(1,999622,1,0,1);
 
 	-- //@UNDO
