@@ -128,7 +128,7 @@ class indice extends clsCadastro
       $parametros->adicionaCampoSelect('ref_idpes', 'idpes', 'nome');
       $parametros->setPessoa('F');
       $parametros->setPessoaCPF('N');
-      $parametros->setCodSistema(1);
+      $parametros->setCodSistema(null);
       $parametros->setPessoaNovo('S');
       $parametros->setPessoaTela('frame');
 
