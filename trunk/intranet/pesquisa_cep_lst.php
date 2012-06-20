@@ -1,4 +1,8 @@
 <?php
+
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
 	*	@author Prefeitura Municipal de Itajaí								 *
@@ -83,8 +87,8 @@ class indice extends clsListagem
 		if ($cidade && $logradouro)
 		{
 			$obj_mun = new clsMunicipio();
-			$lista = $obj_mun->lista( $cidade );			
-				
+			$lista = $obj_mun->lista( $cidade );
+
 			$obj_logradouro    = new clsLogradouro();
 			$lista_logradouros = $obj_logradouro->lista( false, $logradouro, $lista[0]['idmun'], false, false );
 			if ( $lista_logradouros ) {
@@ -116,16 +120,22 @@ class indice extends clsListagem
 
 			if ( $lst_cepLogBai ) {
 				foreach ( $lst_cepLogBai as $juncao ) {
-					$det_bai 	   = $juncao['idbai']->detalhe();
-					$det_mun 	   = $det_bai['idmun']->detalhe();
-					$det_uf 	   = $det_mun['sigla_uf']->detalhe();
-					$det_cepLog    = $juncao['idlog']->detalhe();
-					$det_log	   = $det_cepLog['idlog']->detalhe();
-					$det_TLog 	   = $det_log['idtlog']->detalhe();
-					$cep_formatado = int2CEP( $det_cepLog["cep"] );
-					//$funcao 	   = "set_campo_pesquisa( 'cidade', '".$det_mun["nome"]."', 'bairro', '".$det_bai["nome"]."', 'idbai', '".$det_bai["idbai"]."', 'logradouro', '".$det_log["nome"]."', 'idlog', '".$det_log["idlog"]."', 'cep', '".$det_cepLog["cep"]."', 'cep_', '".$cep_formatado."', 'sigla_uf', '".$det_uf["sigla_uf"]."', 'idtlog', '".$det_TLog["idtlog"]."' )";
-					$funcao		   = "enviar( '{$det_cepLog["cep"]}', '{$det_bai["idbai"]}', '{$det_log["idlog"]}', '{$det_mun["nome"]}', '{$det_bai["nome"]}', '{$det_log["nome"]}', '{$det_uf["sigla_uf"]}', '{$det_TLog["idtlog"]}' )";
-					$this->addLinhas( array( "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$cep_formatado}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_log["nome"]}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_bai["nome"]}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_mun["nome"]}</a>" ) );
+					$det_bai   	   = $juncao['idbai']->detalhe();
+					$det_mun 	     = $det_bai['idmun']->detalhe();
+					$det_uf 	     = $det_mun['sigla_uf']->detalhe();
+
+					$cepLogradouro = $juncao['idlog'];
+          $_logradouro   = $cepLogradouro->detalhe();
+
+          if(! is_null($_logradouro['idlog']))
+            $_logradouro['idlog']->detalhe();
+
+          $_logradouro   = $_logradouro['idlog'];
+					$cepFormatado  = int2CEP( $cepLogradouro->cep );
+
+					$funcao		   = "enviar( '{$cepLogradouro->cep}', '{$det_bai["idbai"]}', '{$cepLogradouro->idlog}', '{$det_mun["nome"]}', '{$det_bai["nome"]}', '{$_logradouro->nome}', '{$det_uf["sigla_uf"]}', '{$_logradouro->idtlog}' )";
+
+					$this->addLinhas( array( "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$cepFormatado}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$_logradouro->nome}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_bai["nome"]}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_mun["nome"]}</a>" ) );
 					$total 		   = $juncao['total'];
 				}
 			}
@@ -199,7 +209,7 @@ class indice extends clsListagem
 				}
 			}
 		}
-		
+
 
 		// Paginador
 		$this->addPaginador2( "pesquisa_cep_lst.php", $total, $_GET, $this->nome, $limite );
