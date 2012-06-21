@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_biblioteca_autor" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_biblioteca_autor" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ff823efd-75fc-4ad7-ae5f-fa380463488d">
 	<property name="ireport.zoom" value="1.2100000000000013"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -10,10 +10,13 @@
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="logo" class="java.lang.String"/>
+	<parameter name="ordem" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT public.fcn_upper(instituicao.nm_instituicao) as nm_instituicao,
-       cod_acervo_autor,nm_autor,
-       descricao, ref_cod_biblioteca,
+       cod_acervo_autor,
+      translate(public.fcn_upper(nm_autor),'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ', 'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN') as nm_autor,
+       descricao,
+       ref_cod_biblioteca,
        (SELECT biblioteca.nm_biblioteca
           FROM pmieducar.biblioteca
          WHERE acervo_autor.ref_cod_biblioteca = biblioteca.cod_biblioteca) as nm_biblioteca,
@@ -101,7 +104,6 @@
         WHERE juridica.idpes = ps.idpes AND
               juridica.idpes = escola.ref_idpes),(SELECT email FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS email
 
-
   FROM pmieducar.acervo_autor,
        pmieducar.biblioteca,
        pmieducar.instituicao,
@@ -110,7 +112,8 @@
        instituicao.cod_instituicao = biblioteca.ref_cod_instituicao AND
        escola.cod_escola = $P{escola} AND
        biblioteca.ref_cod_escola = escola.cod_escola AND
-       acervo_autor.ativo = 1]]>
+       acervo_autor.ativo = 1
+ORDER BY nm_autor]]>
 	</queryString>
 	<field name="nm_instituicao" class="java.lang.String"/>
 	<field name="cod_acervo_autor" class="java.lang.Integer"/>
@@ -134,11 +137,11 @@
 	<title>
 		<band height="103" splitType="Stretch">
 			<image>
-				<reportElement x="9" y="3" width="57" height="46"/>
+				<reportElement uuid="92a8bbdb-0896-4749-a08c-1653a5a9c2e3" x="9" y="3" width="57" height="46"/>
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="188" y="79" width="138" height="14"/>
+				<reportElement uuid="9c36fbc4-ac0d-4a9a-9196-28797e2dc5f6" x="192" y="79" width="138" height="14"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
@@ -149,63 +152,63 @@
 	<pageHeader>
 		<band height="15" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement x="75" y="-72" width="307" height="13"/>
+				<reportElement uuid="fa6a8b45-b6f5-44b3-a146-aaf65df8edaf" x="75" y="-72" width="307" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Endereço: "+$F{logradouro}+", "+$F{numero}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="75" y="-100" width="307" height="13"/>
+				<reportElement uuid="ce19fa21-7328-4a02-b28f-17c82bbc03ae" x="75" y="-100" width="307" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nm_instituicao}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="305" y="-48" width="233" height="13" forecolor="#000000"/>
+				<reportElement uuid="636e13b9-bfff-4fa8-a18a-5fc3d5c181be" x="305" y="-48" width="233" height="13" forecolor="#000000"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="305" y="-60" width="141" height="13"/>
+				<reportElement uuid="fea0317c-b154-42a1-9666-798706fe5f3d" x="305" y="-60" width="141" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="449" y="-60" width="77" height="13"/>
+				<reportElement uuid="adcd0540-6f15-4f65-b545-5c7ab8598e03" x="449" y="-60" width="77" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="75" y="-86" width="307" height="13"/>
+				<reportElement uuid="e91902f9-34fa-4ccc-9321-bd98b920a44d" x="75" y="-86" width="307" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nm_escola}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="75" y="-60" width="228" height="13"/>
+				<reportElement uuid="d98a7f55-d02d-4f8e-b839-475d1f68d893" x="75" y="-60" width="228" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Bairro:" +$F{bairro}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="75" y="-48" width="201" height="13"/>
+				<reportElement uuid="c13381d9-31ae-4ae8-8a33-32510373b74d" x="75" y="-48" width="201" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Telefone: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="11" y="1" width="292" height="13"/>
+				<reportElement uuid="8da7af30-27b7-4349-8ba5-7d3e84108b0e" x="11" y="1" width="292" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
@@ -216,28 +219,28 @@
 	<columnHeader>
 		<band height="18" splitType="Stretch">
 			<staticText>
-				<reportElement x="279" y="1" width="100" height="13"/>
+				<reportElement uuid="c41b4b27-6e74-4418-8f84-60491741ae8a" x="279" y="1" width="100" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[Descrição]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="25" y="1" width="35" height="13"/>
+				<reportElement uuid="78437f30-d99b-472b-8bad-9e5c5e9bcdec" x="25" y="1" width="35" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[Código]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="67" y="1" width="100" height="13"/>
+				<reportElement uuid="c69233c2-5092-4152-85d6-72aeae300c67" x="67" y="1" width="100" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[Autor]]></text>
 			</staticText>
 			<line>
-				<reportElement x="7" y="15" width="544" height="1"/>
+				<reportElement uuid="000518be-eb1d-48ed-a65f-0e9c625a4ca9" x="7" y="15" width="544" height="1"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -247,21 +250,21 @@
 	<detail>
 		<band height="15" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement x="279" y="1" width="259" height="13"/>
+				<reportElement uuid="4f4b607f-d81e-4cf5-9b0e-77a7b46a7cd5" x="279" y="1" width="259" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{descricao}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="25" y="1" width="35" height="13"/>
+				<reportElement uuid="27bfe41c-f4c7-4ec0-873d-a695ac5edf1d" x="25" y="1" width="35" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cod_acervo_autor}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="67" y="1" width="209" height="13"/>
+				<reportElement uuid="95e7c80c-18d0-4024-ad0f-d615c8e10052" x="67" y="1" width="209" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
@@ -275,14 +278,14 @@
 	<pageFooter>
 		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="25" y="5" width="100" height="13"/>
+				<reportElement uuid="5df887b2-1c0b-47e2-93a7-500b1ea8c176" x="25" y="5" width="100" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Total de autores: "+$V{COLUMN_COUNT}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Total de autores: "+$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="7" y="2" width="544" height="1"/>
+				<reportElement uuid="43a64607-e174-47c0-93a7-e319ab53ae62" x="7" y="2" width="544" height="1"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
