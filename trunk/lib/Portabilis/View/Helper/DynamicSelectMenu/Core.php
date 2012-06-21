@@ -138,22 +138,37 @@ class Portabilis_View_Helper_DynamicSelectMenu_Core {
 
 
   protected function getInstituicaoId($instituicaoId = null) {
-    if (! $instituicaoId && ! $this->viewInstance->ref_cod_instituicao)
-      $instituicaoId = $this->getPermissoes()->getInstituicao($this->getCurrentUserId());
+    if (! $instituicaoId && is_numeric($this->viewInstance->ref_cod_instituicao))
+      $instituicaoId = $this->viewInstance->ref_cod_instituicao;
+
+    elseif (! $instituicaoId && is_numeric($this->viewInstance->ref_cod_escola)) {
+      $escola        = App_Model_IedFinder::getEscola($this->viewInstance->ref_cod_escola);
+      $instituicaoId = $escola['ref_cod_instituicao'];
+    }
+
+    elseif (! $instituicaoId && is_numeric($this->viewInstance->ref_cod_biblioteca)) {
+      $biblioteca    = App_Model_IedFinder::getBiblioteca($this->viewInstance->ref_cod_biblioteca);
+      $instituicaoId = $biblioteca['ref_cod_instituicao'];
+    }
 
     elseif (! $instituicaoId)
-      $instituicaoId = $this->viewInstance->ref_cod_instituicao;
+      $instituicaoId = $this->getPermissoes()->getInstituicao($this->getCurrentUserId());
 
     return $instituicaoId;
   }
 
 
   protected function getEscolaId($escolaId = null) {
-    if (! $escolaId && ! $this->viewInstance->ref_cod_escola)
-      $escolaId = $this->getPermissoes()->getEscola($this->getCurrentUserId());
+    if (! $escolaId && $this->viewInstance->ref_cod_escola)
+      $escolaId = $this->viewInstance->ref_cod_escola;
+
+    elseif (! $escolaId && is_numeric($this->viewInstance->ref_cod_biblioteca)) {
+      $biblioteca    = App_Model_IedFinder::getBiblioteca($this->viewInstance->ref_cod_biblioteca);
+      $escolaId = $biblioteca['ref_cod_escola'];
+    }
 
     elseif (! $escolaId)
-      $escolaId = $this->viewInstance->ref_cod_escola;
+      $escolaId = $this->getPermissoes()->getEscola($this->getCurrentUserId());
 
     return $escolaId;
   }
