@@ -29,7 +29,6 @@ require_once "include/clsBase.inc.php";
 require_once "include/clsCadastro.inc.php";
 require_once "include/clsBanco.inc.php";
 require_once "include/pmieducar/geral.inc.php";
-require_once "lib/Portabilis/View/Helper/DynamicSelectMenus.php";
 
 class clsIndexBase extends clsBase
 {
@@ -166,12 +165,7 @@ class indice extends clsCadastro
 		$this->campoOculto( "idioma", "" );
 		$this->campoOculto( "autor", "" );
 
-    $dynamicSelectMenus = new Portabilis_View_Helper_DynamicSelectMenus($this);
-
-    $dynamicSelectMenus->helperFor('instituicao');
-    $dynamicSelectMenus->helperFor('escola');
-    $dynamicSelectMenus->helperFor('biblioteca');
-    $dynamicSelectMenus->helperFor('tipoExemplar');
+    $this->addSelectInputFor(array('instituicao', 'escola', 'biblioteca', 'tipoExemplar'));
 
     // Obra referência
 		$opcoes = array( "NULL" => "Selecione" );

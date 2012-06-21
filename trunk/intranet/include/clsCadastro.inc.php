@@ -34,6 +34,8 @@ if (class_exists('clsPmiajudaPagina')) {
   require_once 'include/pmiajuda/clsPmiajudaPagina.inc.php';
 }
 
+require_once "lib/Portabilis/View/Helper/DynamicSelectMenus.php";
+
 /**
  * clsCadastro class.
  *
@@ -717,5 +719,13 @@ class clsCadastro extends clsCampos
       return sprintf($htmlError, $errors);
     }
     return NULL;
+  }
+
+
+  public function addSelectInputFor($inputNames, $options = array()) {
+    if (! isset($this->_dynamicSelectInputs))
+      $this->_dynamicSelectInputs = new Portabilis_View_Helper_DynamicSelectMenus($this);
+
+    $this->_dynamicSelectInputs->helperFor($inputNames, $options);
   }
 }
