@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_biblioteca_recibo_devolucao_atraso" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_biblioteca_recibo_devolucao_atraso" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="bf35394d-6acd-4bff-9793-367676b24e06">
 	<property name="ireport.zoom" value="1.2100000000000013"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -10,9 +10,6 @@
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="cliente" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
-	</parameter>
-	<parameter name="exemplar" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="dt_inicial" class="java.lang.String"/>
@@ -156,7 +153,6 @@
        (to_char(exemplar_emprestimo.data_retirada,'dd/mm/yyyy') >= $P{dt_inicial}) and
        (to_char(exemplar_emprestimo.data_retirada,'dd/mm/yyyy') <= $P{dt_final}) and
        exemplar_emprestimo.ref_cod_cliente = $P{cliente} AND
-       exemplar_emprestimo.ref_cod_exemplar = $P{exemplar} AND
        exemplar_emprestimo.valor_multa is not null]]>
 	</queryString>
 	<field name="nm_instituicao" class="java.lang.String"/>
@@ -187,73 +183,73 @@
 	<title>
 		<band height="241" splitType="Stretch">
 			<rectangle>
-				<reportElement x="72" y="4" width="431" height="233"/>
+				<reportElement uuid="b887f634-2f42-41f1-a030-25cc239e17b6" x="72" y="4" width="431" height="233"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="102" y="10" width="54" height="14"/>
+				<reportElement uuid="89683da1-3f48-4ea6-823b-af341492160d" x="102" y="10" width="54" height="14"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[RECIBO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="228" y="10" width="24" height="14"/>
+				<reportElement uuid="220f9b25-b09f-4b45-9517-f6309f78590f" x="228" y="10" width="24" height="14"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Nº]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="334" y="10" width="54" height="14"/>
+				<reportElement uuid="17c035cf-50a4-4ee3-a804-2a6978c026db" x="334" y="10" width="54" height="14"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[VALOR]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="255" y="10" width="35" height="14" backcolor="#F2F1F0"/>
+				<reportElement uuid="662b9e99-8ef5-405b-91be-1ec2685349cf" mode="Opaque" x="255" y="10" width="35" height="14" backcolor="#F2F1F0"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="389" y="10" width="83" height="14" backcolor="#F2F1F0"/>
+				<reportElement uuid="ebc22177-a6dd-4750-9a39-03be7b351897" mode="Opaque" x="389" y="10" width="83" height="14" backcolor="#F2F1F0"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="103" y="46" width="369" height="14"/>
+				<reportElement uuid="26514c86-f374-4f4e-ac47-3e37b8e7d523" x="103" y="46" width="369" height="14"/>
 				<textElement markup="none">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Recebemos de "+$F{cliente}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="104" y="64" width="52" height="14"/>
+				<reportElement uuid="1413d4ed-097b-42c2-86b9-56142faa6d84" x="104" y="64" width="52" height="14"/>
 				<textElement markup="none">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[a quantia de ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="159" y="64" width="313" height="14" backcolor="#F2F1F0"/>
+				<reportElement uuid="2472908f-6d26-461d-9211-630c2869f17a" mode="Opaque" x="159" y="64" width="313" height="14" backcolor="#F2F1F0"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="105" y="83" width="367" height="14" backcolor="#F2F1F0"/>
+				<reportElement uuid="56b2b857-1cca-456b-9a50-5e632bb0a075" mode="Opaque" x="105" y="83" width="367" height="14" backcolor="#F2F1F0"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="104" y="102" width="368" height="25"/>
+				<reportElement uuid="ae3b5503-0ce6-49d8-ab4f-470980139c29" x="104" y="102" width="368" height="25"/>
 				<textElement markup="none">
 					<font fontName="DejaVu Sans" size="8"/>
 					<paragraph lineSpacing="1_1_2"/>
@@ -261,35 +257,35 @@
 				<textFieldExpression><![CDATA["Correspondente ao pagamento de multa devido ao ataso na devolução do exemplar "+$F{ref_cod_exemplar}+"-"+$F{titulo}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="105" y="133" width="367" height="14"/>
+				<reportElement uuid="8df3fda0-31f1-42e2-8c30-26b90e479005" x="105" y="133" width="367" height="14"/>
 				<textElement markup="none">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[e para clareza, firmo(amos) o presente]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="105" y="156" width="367" height="14"/>
+				<reportElement uuid="a2869846-98ac-4c3d-bd0e-07c452455351" x="105" y="156" width="367" height="14"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{municipio}+"-"+$F{uf_municipio}+",____de__________________de________"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="105" y="181" width="367" height="14"/>
+				<reportElement uuid="b173ea2a-65af-455d-82de-57ff879cb663" x="105" y="181" width="367" height="14"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Assinatura_________________________________________________________________________]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="105" y="197" width="367" height="14"/>
+				<reportElement uuid="e5151350-44a1-4a72-9095-32ef70802293" x="105" y="197" width="367" height="14"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Nome____________________________________________CPF/RG__________________________]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="105" y="213" width="367" height="14"/>
+				<reportElement uuid="cfafb6f1-3091-41e0-b25b-2f419a6280bc" x="105" y="213" width="367" height="14"/>
 				<textElement markup="none">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>

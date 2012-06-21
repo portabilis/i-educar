@@ -10,7 +10,7 @@ class PortabilisBibliotecaDevolucao extends Report
   function setForm()
   {
     $this->addFilterFor(array('instituicao', 'escola', 'biblioteca')); 
-    $this->addFilterFor(array('BibliotecaPesquisaCliente', 'BibliotecaPesquisaObra', 'dataInicial','dataFinal'), array('required' => false));
+    $this->addFilterFor(array('BibliotecaPesquisaCliente', 'dataInicial','dataFinal'), array('required' => false));
    
   }
 
@@ -22,10 +22,6 @@ class PortabilisBibliotecaDevolucao extends Report
       $this->addArg('cliente', 0);
     else
     $this->addArg('cliente',     (int)$_POST['ref_cod_cliente']);
-    if (! isset($_POST['ref_cod_acervo']) || trim($_POST['ref_cod_acervo']) == '')
-      $this->addArg('exemplar', 0);
-    else
-    $this->addArg('exemplar',        (int)$_POST['ref_cod_acervo']);
     $this->addArg('dt_inicial',  $_POST['data_inicial']);
     $this->addArg('dt_final',    $_POST['data_final']);
   }
