@@ -42,7 +42,7 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicSelectMenu_TipoExemplar extends Portabilis_View_Helper_DynamicSelectMenu_Core {
+class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaTipoExemplar extends Portabilis_View_Helper_DynamicSelectMenu_Core {
 
   protected function getOptions($bibliotecaId, $tiposExemplar) {
 
@@ -82,7 +82,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_TipoExemplar extends Portabilis_V
     // ou sem customizar opcoes, usando as opcoes padroes;
     $dynamicSelectMenusHelperInstance->tipoExemplar();
   */
-  public function tipoExemplar($options = array()) {
+  public function bibliotecaTipoExemplar($options = array()) {
 
     $defaultOptions           = array('bibliotecaId'  => null,
                                       'options'       => array(),
