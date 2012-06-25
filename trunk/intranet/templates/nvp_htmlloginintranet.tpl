@@ -45,6 +45,8 @@
 
     <!--p style="min-height: 0px;" class="flash error"><strong>Importante, aviso de manuten&ccedil;&atilde;o:</strong> durante os dias 28 e 29 de abril (s&aacute;bado e domingo) os sistemas poder&atilde;o estar inst&aacute;veis ou indispon&iacute;veis, devido melhorias na infraestrutura.</p-->
 
+    <p style="min-height: 0px;" class="flash error"><strong>Aviso importante:</strong> no momento nosso suporte via telefone esta enfrentando dificuldades, devido um incidente na sede de nossa empresa, o suporte via e-mail funciona normalizado.</p>
+
     <!-- #&ERROLOGIN&# -->
 
   </div>
