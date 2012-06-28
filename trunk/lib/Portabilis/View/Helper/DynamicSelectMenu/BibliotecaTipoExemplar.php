@@ -33,7 +33,7 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
 
 
 /**
- * Portabilis_View_Helper_DynamicSelectMenu_TipoExemplar class.
+ * Portabilis_View_Helper_DynamicSelectMenu_BibliotecaTipoExemplar class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -106,7 +106,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaTipoExemplar extends Po
     $selectOptions = $this->mergeOptions($options['options'], $defaultSelectOptions);
     call_user_func_array(array($this->viewInstance, 'campoLista'), $selectOptions);
 
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicSelectMenus/Assets/Javascripts/DynamicTiposExemplar.js');
+    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicSelectMenus/Assets/Javascripts/DynamicBibliotecaTiposExemplar.js');
   }
 
 }
