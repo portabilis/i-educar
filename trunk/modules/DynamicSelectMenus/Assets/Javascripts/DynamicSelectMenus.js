@@ -33,14 +33,14 @@ function resetSelect($targetElement) {
 }
 
 
-function xmlResourcesToSelectOptions(resources, parentNodeName, optionIdAttrName) {
+function xmlResourcesToSelectOptions(resources, parentNodeName, nodeIdAttrName) {
   var options = [];
 
   $j.each($j(resources).find(parentNodeName).children(), function(index, value){
     $value = $j(value);
 
     var $option = $j('<option />');
-    $option.attr('value', $value.attr(optionIdAttrName));
+    $option.attr('value', $value.attr(nodeIdAttrName));
     $option.html($value.text());
     options.push($option);
   });

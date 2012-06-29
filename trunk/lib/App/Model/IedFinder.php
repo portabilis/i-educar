@@ -707,6 +707,25 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
+   * Retorna todos os tipos de cliente cadastrados para determinada biblioteca na tabela
+   * pmieducar.cliente_tipo, selecionando obrigatoriamente pelo código da biblioteca.
+   * @param int $bibliotecaId
+   * @return array
+   */
+  public static function getBibliotecaTiposCliente($bibliotecaId)
+  {
+    $resources = self::addClassToStorage('clsPmieducarClienteTipo', NULL,
+      'include/pmieducar/clsPmieducarClienteTipo.inc.php');
+
+    $filtered_resources = array();
+    foreach ($resources->lista(null, $bibliotecaId) as $resource) {
+      $filtered_resources[$resource['cod_cliente_tipo']] = $resource['nm_tipo'];
+    }
+
+    return $filtered_resources;
+  }
+
+  /**
    * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
    */
   public function getDefaultValidatorCollection()
