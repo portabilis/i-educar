@@ -128,9 +128,6 @@ class indice extends clsCadastro
 				if ( $lst_motivo_suspensao )
 				{
 					foreach ( $lst_motivo_suspensao as $motivo_suspensao ) {
-
-            var_dump($motivo_suspensao);
-
 						$todos_motivos .= "descricao[descricao.length] = new Array( {$motivo_suspensao["cod_motivo_suspensao"]}, '{$motivo_suspensao["descricao"]}' );\n";
 						$opcoes["{$motivo_suspensao["cod_motivo_suspensao"]}"] = "{$motivo_suspensao["nm_motivo"]}";
 					}
