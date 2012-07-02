@@ -24,7 +24,7 @@
  *	02111-1307, USA.
  *
  */
- 
+
 /**
  * @author Adriano Erik Weiguert Nagasava
  */
@@ -71,7 +71,7 @@ class indice extends clsCadastro
 	var $descricao;
 	var $dias;
 	var $sequencial;
-	
+
 	function Inicializar()
 	{
 		$retorno = "Novo";
@@ -110,7 +110,7 @@ class indice extends clsCadastro
 
 			$this->campoOculto("cod_cliente", $this->cod_cliente);
 			$this->campoOculto("ref_cod_biblioteca", $this->ref_cod_biblioteca);
-			
+
 			if ( $this->ref_idpes ) {
 
 				$objTemp = new clsPessoaFisica( $this->ref_idpes );
@@ -125,9 +125,12 @@ class indice extends clsCadastro
 				$todos_motivos = "";
 				$obj_motivo_suspensao = new clsPmieducarMotivoSuspensao();
 				$lst_motivo_suspensao = $obj_motivo_suspensao->listaClienteBiblioteca( $this->cod_cliente );
-				if ( $lst_motivo_suspensao ) 
+				if ( $lst_motivo_suspensao )
 				{
 					foreach ( $lst_motivo_suspensao as $motivo_suspensao ) {
+
+            var_dump($motivo_suspensao);
+
 						$todos_motivos .= "descricao[descricao.length] = new Array( {$motivo_suspensao["cod_motivo_suspensao"]}, '{$motivo_suspensao["descricao"]}' );\n";
 						$opcoes["{$motivo_suspensao["cod_motivo_suspensao"]}"] = "{$motivo_suspensao["nm_motivo"]}";
 					}
@@ -144,17 +147,15 @@ class indice extends clsCadastro
 
 								var campoMotivoSuspensao = document.getElementById( 'cod_motivo_suspensao' ).value;
 								var campoDescricao 		 = document.getElementById( 'descricao' );
-								for ( var j = 0; j < descricao.length; j++ )
-								{
-									if ( descricao[j][0] == campoMotivoSuspensao )
-									{
+								for ( var j = 0; j < descricao.length; j++ ) {
+									if ( descricao[j][0] == campoMotivoSuspensao ) {
 										campoDescricao.value = descricao[j][1];
+                    console.log(descricao);
 									}
 									else if ( campoMotivoSuspensao == '' )
-									{
-										campoDescricao.value = 'Sem descrição...';
-									}
+										campoDescricao.value = '';
 								}
+
 								if ( campoDescricao.length == 0 && campoMotivoSuspensao != '' ) {
 									campoDescricao.value = 'Sem descrição...';
 								}
@@ -163,7 +164,7 @@ class indice extends clsCadastro
 							}
 						 </script>";
 				}
-				else 
+				else
 				{
 					$this->campoLista( "cod_motivo_suspensao", "Motivo da Suspensão", array("" => "Não há motivo cadastrado"), "", "", false, "", "", true, true );
 				}
@@ -188,16 +189,16 @@ class indice extends clsCadastro
 		$obj_permissoes->permissao_cadastra( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
 
 		$obj = new clsPmieducarClienteSuspensao( null, $this->cod_cliente, $this->cod_motivo_suspensao, null, $this->pessoa_logada, $this->dias, null, null );
-		
+
 		// Caso suspensão tenha sido efetuada, envia para página de detalhes
-		if ($obj->cadastra()) 
+		if ($obj->cadastra())
 		{
 			$this->mensagem .= "Suspens&atilde;o efetuada com sucesso.<br>";
 			header("Location: educar_cliente_det.php?cod_cliente={$this->cod_cliente}&ref_cod_biblioteca={$this->ref_cod_biblioteca}");
 			die();
 			return true;
 		}
-		
+
 		$this->mensagem = "Suspens&atilde;o n&atilde;o realizada.<br>";
 		echo "<!--\nErro ao cadastrar clsPmieducarClienteSuspensao\nvalores obrigatorios\nis_numeric( $this->ref_cod_cliente_tipo ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_idpes ) && is_numeric( $this->login )\n-->";
 		return false;
