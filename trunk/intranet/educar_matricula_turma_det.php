@@ -256,12 +256,20 @@ class indice extends clsDetalhe
     ));
 
     if ($registro['max_aluno'] - $total_alunos <= 0) {
-      $msg = sprintf('Atenção! Turma sem vagas! Deseja continuar com a enturmação mesmo assim?');
-      $valida = sprintf('if (!confirm("%s")) return false;', $msg);
+
+      $escolaSerie = $this->getEscolaSerie($det_ref_cod_escola['cod_escola'], $det_ser['cod_serie']);
+
+      if($escolaSerie['bloquear_enturmacao_sem_vagas'] != 1) {
+        $msg = sprintf('Atenção! Turma sem vagas! Deseja continuar com a enturmação mesmo assim?');
+        $jsEnturmacao = sprintf('if (!confirm("%s")) return false;', $msg);
+      }
+      else {
+        $msg = sprintf('Enturmação não pode ser realizada,\n\no limite de vagas da turma já foi atingido e para esta série e escola foi definido bloqueio de enturmação após atingir tal limite.');
+        $jsEnturmacao = sprintf('alert("%s"); return false;', $msg);
+      }
     }
-    else {
-      $valida = 'if (!confirm("Confirma a enturmação?")) return false;';
-    }
+    else
+      $jsEnturmacao = 'if (!confirm("Confirma a enturmação?")) return false;';
 
     $script = sprintf('
       <script type="text/javascript">
@@ -297,7 +305,7 @@ class indice extends clsDetalhe
           document.formcadastro.submit();
         }
 
-      </script>', $valida);
+      </script>', $jsEnturmacao);
 
     print $script;
 
@@ -325,6 +333,15 @@ class indice extends clsDetalhe
 
     $this->largura = '100%';
   }
+
+  protected function getEscolaSerie($escolaId, $serieId) {
+    $escolaSerie = new clsPmieducarEscolaSerie();
+    $escolaSerie->ref_cod_escola = $escolaId;
+    $escolaSerie->ref_cod_serie  = $serieId;
+
+    return $escolaSerie->detalhe();
+  }
+
 }
 
 // Instancia objeto de página

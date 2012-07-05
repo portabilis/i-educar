@@ -212,6 +212,8 @@ class indice extends clsCadastro
     $this->campoHora('hora_fim_intervalo', 'Hora Fim Intervalo',
       $this->hora_fim_intervalo, TRUE);
 
+		$this->campoCheck("bloquear_enturmacao_sem_vagas", "Bloquear enturmação após atingir limite de vagas da turma", $this->bloquear_enturmacao_sem_vagas);
+
     $this->campoQuebra();
 
     // Inclui disciplinas
@@ -326,10 +328,12 @@ class indice extends clsCadastro
       return FALSE;
     }
 
+    $this->bloquear_enturmacao_sem_vagas = is_null($this->bloquear_enturmacao_sem_vagas) ? 0 : 1;
+
     $obj = new clsPmieducarEscolaSerie($this->ref_cod_escola, $this->ref_cod_serie,
       $this->pessoa_logada, $this->pessoa_logada, $this->hora_inicial,
       $this->hora_final, NULL, NULL, 1, $this->hora_inicio_intervalo,
-      $this->hora_fim_intervalo);
+      $this->hora_fim_intervalo, $this->bloquear_enturmacao_sem_vagas);
 
     if ($obj->existe()) {
       $cadastrou = $obj->edita();
@@ -399,9 +403,11 @@ class indice extends clsCadastro
       return FALSE;
     }
 
+    $this->bloquear_enturmacao_sem_vagas = is_null($this->bloquear_enturmacao_sem_vagas) ? 0 : 1;
+
     $obj = new clsPmieducarEscolaSerie($this->ref_cod_escola, $this->ref_cod_serie,
       $this->pessoa_logada, NULL, $this->hora_inicial, $this->hora_final,
-      NULL, NULL, 1, $this->hora_inicio_intervalo, $this->hora_fim_intervalo);
+      NULL, NULL, 1, $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->bloquear_enturmacao_sem_vagas);
 
     $editou = $obj->edita();
     $obj = new clsPmieducarEscolaSerieDisciplina($this->ref_cod_serie,
