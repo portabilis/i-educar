@@ -882,6 +882,8 @@ if(!$this->isEnderecoExterno){
 //
 //			}
 
+  		$this->campoCheck("bloquear_lancamento_diario_anos_letivos_encerrados", "Bloquear lançamento no diário para anos letivos encerrados", $this->bloquear_lancamento_diario_anos_letivos_encerrados);
+
 			if ( $_POST["escola_curso"] )
 				$this->escola_curso = unserialize( urldecode( $_POST["escola_curso"] ) );
 			if( is_numeric( $this->cod_escola ) && !$_POST )
@@ -989,6 +991,8 @@ if(!$this->isEnderecoExterno){
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 561, $this->pessoa_logada, 3, "educar_escola_lst.php" );
 
+    $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
+
 		if ($this->com_cnpj)
 		{
 //			echo "clsPessoa_( false, $this->fantasia, $this->pessoa_logada, $this->p_http, "J", false, false, $this->p_email )";
@@ -1002,7 +1006,7 @@ if(!$this->isEnderecoExterno){
 
 				if ($cadastrou)
 				{
-					$obj = new clsPmieducarEscola( null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1 );
+					$obj = new clsPmieducarEscola( null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, NULL, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
 					$cadastrou1 = $obj->cadastra();
 
 					if( $cadastrou1 )
@@ -1097,7 +1101,7 @@ if(!$this->isEnderecoExterno){
 		}
 		else if( $this->sem_cnpj )
 		{
-			$obj = new clsPmieducarEscola( null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, null, $this->sigla, null, null, 1 );
+			$obj = new clsPmieducarEscola( null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, null, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados );
 			$cadastrou = $obj->cadastra();
 
       
@@ -1155,18 +1159,21 @@ if(!$this->isEnderecoExterno){
 
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 561, $this->pessoa_logada, 3, "educar_escola_lst.php" );
+
+    $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
+
 //
 //		echo "<br>cep: ".$this->cep;
 //		echo "<br>cep_: ".$this->cep_;die;
 		if ($this->cod_escola)
 		{
-			$obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->cod_inep);
+			$obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->cod_inep, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
 			$editou = $obj->edita();
       
 		}
 		else
 		{
-			$obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->cod_inep);
+			$obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->cod_inep, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
 			$editou = $obj->cadastra();
 			$this->cod_escola = $editou;
       

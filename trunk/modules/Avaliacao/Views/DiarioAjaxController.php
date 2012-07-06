@@ -202,6 +202,27 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     return $this->validatesPresenceOf($this->getRequest()->componente_curricular_id, 'componente_curricular_id', $raiseExceptionOnEmpty, $msg = '', $addMsgOnEmpty);
   }
 
+
+  protected function validatesCanChangeDiarioForAno() {
+    $escola = App_Model_IedFinder::getEscola($this->getRequest()->escola_id);
+
+    $ano                 = new clsPmieducarEscolaAnoLetivo();
+    $ano->ref_cod_escola = $this->getRequest()->escola_id;
+    $ano->ano            = $this->getRequest()->ano;
+    $ano                 = $ano->detalhe();
+
+    $anoLetivoEncerrado = is_array($ano)     && count($ano) > 0    && 
+                          $ano['ativo'] == 1 && $ano['andamento'] == 2;
+
+    if ($escola['bloquear_lancamento_diario_anos_letivos_encerrados'] == '1' and $anoLetivoEncerrado) {
+      $this->messages->append("O ano letivo '{$this->getRequest()->ano}' está encerrado, esta escola está configurada para não permitir alterar o diário de anos letivos encerrados.");
+      return false;
+    }
+
+    return true;
+  }
+
+
   protected function canAcceptRequest()
   {
     try {
@@ -229,7 +250,8 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
     catch (Exception $e){
       return false;
     }
-    return true;
+
+    return $this->validatesCanChangeDiarioForAno();
   }
 
 
