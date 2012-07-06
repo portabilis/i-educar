@@ -46,6 +46,7 @@ class clsPmieducarEscolaSerie
 	var $hora_inicio_intervalo;
 	var $hora_fim_intervalo;
   var $bloquear_enturmacao_sem_vagas;
+  var $bloquear_cadastro_turma_para_serie_com_vagas;
 
 	// propriedades padrao
 
@@ -111,13 +112,13 @@ class clsPmieducarEscolaSerie
 	 *
 	 * @return object
 	 */
-	function clsPmieducarEscolaSerie( $ref_cod_escola = null, $ref_cod_serie = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $hora_inicial = null, $hora_final = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $hora_inicio_intervalo = null, $hora_fim_intervalo = null, $bloquear_enturmacao_sem_vagas = null )
+	function clsPmieducarEscolaSerie( $ref_cod_escola = null, $ref_cod_serie = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $hora_inicial = null, $hora_final = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $hora_inicio_intervalo = null, $hora_fim_intervalo = null, $bloquear_enturmacao_sem_vagas = null, $bloquear_cadastro_turma_para_serie_com_vagas = null )
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}escola_serie";
 
-		$this->_campos_lista = $this->_todos_campos = "es.ref_cod_escola, es.ref_cod_serie, es.ref_usuario_exc, es.ref_usuario_cad, es.hora_inicial, es.hora_final, es.data_cadastro, es.data_exclusao, es.ativo, es.hora_inicio_intervalo, es.hora_fim_intervalo, es.bloquear_enturmacao_sem_vagas";
+		$this->_campos_lista = $this->_todos_campos = "es.ref_cod_escola, es.ref_cod_serie, es.ref_usuario_exc, es.ref_usuario_cad, es.hora_inicial, es.hora_final, es.data_cadastro, es.data_exclusao, es.ativo, es.hora_inicio_intervalo, es.hora_fim_intervalo, es.bloquear_enturmacao_sem_vagas, es.bloquear_cadastro_turma_para_serie_com_vagas";
 
 		if( is_numeric( $ref_usuario_cad ) )
 		{
@@ -263,7 +264,7 @@ class clsPmieducarEscolaSerie
 		}
 
     $this->bloquear_enturmacao_sem_vagas = $bloquear_enturmacao_sem_vagas;
-
+    $this->bloquear_cadastro_turma_para_serie_com_vagas = $bloquear_cadastro_turma_para_serie_com_vagas;
 	}
 
 	/**
@@ -336,6 +337,12 @@ class clsPmieducarEscolaSerie
 				$gruda = ", ";
 			}
 
+			if(is_numeric($this->bloquear_cadastro_turma_para_serie_com_vagas)) {
+				$campos .= "{$gruda}bloquear_cadastro_turma_para_serie_com_vagas";
+				$valores .= "{$gruda}'{$this->bloquear_cadastro_turma_para_serie_com_vagas}'";
+				$gruda = ", ";
+			}
+
 			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
 			return true;
 		}
@@ -403,6 +410,11 @@ class clsPmieducarEscolaSerie
 				$gruda = ", ";
 			}
 
+			if(is_numeric( $this->bloquear_cadastro_turma_para_serie_com_vagas)) {
+				$set .= "{$gruda}bloquear_cadastro_turma_para_serie_com_vagas = '{$this->bloquear_cadastro_turma_para_serie_com_vagas}'";
+				$gruda = ", ";
+			}
+
 			if( $set )
 			{
 				$db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE ref_cod_escola = '{$this->ref_cod_escola}' AND ref_cod_serie = '{$this->ref_cod_serie}'" );
@@ -417,7 +429,7 @@ class clsPmieducarEscolaSerie
 	 *
 	 * @return array
 	 */
-	function lista( $int_ref_cod_escola = null, $int_ref_cod_serie = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_instituicao = null, $int_ref_cod_curso = null, $bloquear_enturmacao_sem_vagas = null )
+	function lista( $int_ref_cod_escola = null, $int_ref_cod_serie = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_instituicao = null, $int_ref_cod_curso = null, $bloquear_enturmacao_sem_vagas = null, $bloquear_cadastro_turma_para_serie_com_vagas = null )
 	{
 		$sql = "SELECT {$this->_campos_lista}, c.ref_cod_instituicao, s.ref_cod_curso, s.nm_serie FROM {$this->_tabela} es, {$this->_schema}serie s, {$this->_schema}curso c";
 
@@ -530,6 +542,10 @@ class clsPmieducarEscolaSerie
 			$whereAnd = " AND ";
 		}
 
+		if(is_numeric($bloquear_cadastro_turma_para_serie_com_vagas)) {
+			$filtros .= "{$whereAnd} s.bloquear_cadastro_turma_para_serie_com_vagas = '{$bloquear_cadastro_turma_para_serie_com_vagas}'";
+			$whereAnd = " AND ";
+		}
 
 		$db = new clsBanco();
 		$countCampos = count( explode( ",", $this->_campos_lista ) );

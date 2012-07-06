@@ -662,6 +662,9 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
+    if(! $this->canCreateTurma($this->ref_cod_escola, $this->ref_ref_cod_serie, $this->turma_turno_id))
+      return false;
+
     $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
 
     if (isset($this->multiseriada)) {
@@ -888,7 +891,7 @@ class indice extends clsCadastro
         $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
         $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
         $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
-        $this->visivel, $this->turma_turno_id); 
+        $this->visivel, $this->turma_turno_id);
 
       $editou = $obj->edita();
     }
@@ -976,6 +979,70 @@ class indice extends clsCadastro
 
     return FALSE;
   }
+
+
+  protected function getDb() {
+    if (! isset($this->db))
+      $this->db = new clsBanco();
+
+    return $this->db;
+  }
+
+  protected function getEscolaSerie($escolaId, $serieId) {
+    $escolaSerie = new clsPmieducarEscolaSerie();
+    $escolaSerie->ref_cod_escola = $escolaId;
+    $escolaSerie->ref_cod_serie  = $serieId;
+
+    return $escolaSerie->detalhe();
+  }
+
+
+  protected function getAnoEscolarEmAndamento($escolaId) {
+    return $this->getDb()->CampoUnico("select ano from pmieducar.escola_ano_letivo where ativo = 1 and andamento = 1 and ref_cod_escola = $escolaId");
+  }
+
+
+  protected function getCountMatriculas($escolaId, $turmaId) {
+    $ano = $this->getAnoEscolarEmAndamento($escolaId);
+
+    if (! is_numeric($ano)) {
+      $this->mensagem = "Não foi possivel obter um ano em andamento, por favor, inicie um ano para a escola ou desative a configuração (para série e escola) 'Bloquear cadastro de novas turmas antes de atingir limite de vagas (no mesmo turno)'.";
+
+      return false;
+    }
+
+    $sql = "select count(cod_matricula) as matriculas from pmieducar.matricula, pmieducar.matricula_turma where ano = $ano and matricula.ativo = 1 and matricula_turma.ativo = matricula.ativo and cod_matricula = ref_cod_matricula and ref_cod_turma = $turmaId";
+
+    return $this->getDb()->CampoUnico($sql);
+  }
+
+
+  protected function canCreateTurma($escolaId, $serieId, $turnoId) {
+    $escolaSerie = $this->getEscolaSerie($escolaId, $serieId);
+
+    if($escolaSerie['bloquear_cadastro_turma_para_serie_com_vagas'] == 1) {
+      $turmas = new clsPmieducarTurma();
+
+      $turmas = $turmas->lista(null, null, null, $serieId, $escolaId, null, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, true, $turnoId);
+
+      foreach($turmas as $turma) {
+        $countMatriculas = $this->getCountMatriculas($escolaId, $turma['cod_turma']);
+
+        // countMatriculas retorna false e adiciona mensagem, se não obter ano em andamento
+        if ($countMatriculas === false)
+          return false;
+
+        elseif($turma['max_aluno'] - $countMatriculas > 0) {
+          $vagas = $turma['max_aluno'] - $countMatriculas;
+          $this->mensagem = "Não é possivel cadastrar turmas, pois ainda existem $vagas vagas em aberto na turma '{$turma['nm_turma']}' desta serie e turno.\n\nTal limitação ocorre devido definição feita para esta escola e série.";
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
 }
 
 // Instancia objeto de página
@@ -1733,7 +1800,7 @@ function atualizaLstEscolaCursoSerie(xml)
 var _fieldInstituicao = document.getElementById('ref_cod_instituicao');
 if (_fieldInstituicao)
 {
-  var __old_event = _fieldInstituicao.onchange;  
+  var __old_event = _fieldInstituicao.onchange;
   document.getElementById('ref_cod_instituicao').onchange = function(){
     getTurmaTurno();
     __old_event();
@@ -1749,7 +1816,7 @@ function getTurmaTurno()
 	  clearSelect(entity = 'turma_turno_id', disable = true, text = 'Carregando turnos...', multipleId=false);
 
     var ajaxReq = new ajax(updateSelect);
-    ajaxReq.envia("portabilis_turma_turno_xml.php?instituicao_id="+instituicaoId);  
+    ajaxReq.envia("portabilis_turma_turno_xml.php?instituicao_id="+instituicaoId);
   }
   else
 	  clearSelect(entity = 'turma_turno_id', disable = true, text = '', multipleId=false);
