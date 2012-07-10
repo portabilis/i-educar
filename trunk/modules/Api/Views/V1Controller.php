@@ -48,6 +48,14 @@ class V1Controller extends ApiCoreController
   protected $_deleteOption  = FALSE;
   protected $_titulo   = '';
 
+
+  protected function validatesUserIsLoggedIn() {
+
+    #FIXME validar tokens API
+    return true;
+  }
+
+
   protected function canAcceptRequest() {
     return parent::canAcceptRequest() &&
            $this->validatesPresenceOf(array('aluno_id', 'escola_id'));
