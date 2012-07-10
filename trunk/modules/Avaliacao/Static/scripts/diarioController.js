@@ -78,7 +78,7 @@ var $j = jQuery.noConflict();
                                     .appendTo($resultTable.parent());
 
     var $orientationSearch = $('<p />')
-      .html('<strong>Obs:</strong> Caso n&atilde; estejam sendo listadas as op&ccedil;&otilde;es de filtro que voc&ecirc; esperava, solicite ao(&agrave;) secret&aacute;rio(a) da escola para verificar a aloca&ccedil;&atilde;o ou permiss&atilde;o do seu usu&aacute;rio.')
+      .html('<strong>Obs:</strong> Caso n&atilde;o seja listado as op&ccedil;&otilde;es de filtro que voc&ecirc; esperava, solicite ao(&agrave;) secret&aacute;rio(a) da escola para verificar a aloca&ccedil;&atilde;o ou permiss&atilde;o do seu usu&aacute;rio.')
 
       .appendTo($('<td />').addClass('center').appendTo($('<tr />').appendTo($tableOrientationSearch)));
 
@@ -630,7 +630,7 @@ var $j = jQuery.noConflict();
       $('<td />').html(safeToUpperCase($('#ref_cod_componente_curricular').children("[selected='selected']").html())).appendTo($linha);
       $('<td />').html(safeToUpperCase($('#ref_cod_turma').children("[selected='selected']").html())).appendTo($linha);
       $('<td />').html(safeToUpperCase($('#ref_ref_cod_serie').children("[selected='selected']").html())).appendTo($linha);
-      $('<td />').html($('#ano').children("[selected='selected']").html()).appendTo($linha);
+      $('<td />').html($('#ano').val()).appendTo($linha);
 
       //field escola pode ser diferente de select caso usuario comum 
       var $htmlEscolaField = $('#ref_cod_escola').children("[selected='selected']").html() ||
