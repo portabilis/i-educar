@@ -56,6 +56,13 @@ class V1Controller extends ApiCoreController
 
   // load resources
 
+  protected function loadNomeAluno() {
+    $sql = "select nome from cadastro.pessoa, pmieducar.aluno where idpes = ref_idpes and cod_aluno = $1";
+    $nome = $this->fetchPreparedQuery($sql, $this->getRequest()->aluno_id, false, 'first-field');
+
+    return ucwords(strtolower(utf8_encode($nome)));
+  }
+
   protected function loadNomeSerie($serieId){
     $sql = "select nm_serie from pmieducar.serie where cod_serie = $1";
     $nome = $this->fetchPreparedQuery($sql, $serieId, false, 'first-field');
@@ -133,11 +140,13 @@ class V1Controller extends ApiCoreController
   // api responder
 
   protected function getAluno() {
-    #TODO load nomeAluno
+    $aluno = array('id'         => $this->getRequest()->aluno_id, 
+                   'nome'       => $this->loadNomeAluno(), 
+                   'matriculas' => $this->loadMatriculas());
 
-    return $aluno = array('id'         => $this->getRequest()->aluno_id, 
-                          'nome'       => '#TODO load nomeAluno', 
-                          'matriculas' => $this->loadMatriculas());
+    $aluno['nome'] = ucwords(strtolower(utf8_encode($aluno['nome'])));
+
+    return $aluno;
   }
 
 
