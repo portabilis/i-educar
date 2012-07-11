@@ -34,7 +34,7 @@
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'include/pmieducar/clsPmieducarMatriculaTurma.inc.php';
-#require_once 'Biblioteca/Model/TipoExemplarDataMapper.php';
+require_once 'Avaliacao/Service/Boletim.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 
 class V1Controller extends ApiCoreController
@@ -62,20 +62,102 @@ class V1Controller extends ApiCoreController
   }
 
 
+  protected function serviceBoletimForMatricula($id) {
+    $service = null;
+
+    # FIXME get $this->getSession()->id_pessoa se usuario logado
+    # ou pegar id do ini config, se api request
+    $userId = 1;
+
+    try {
+      $service = new Avaliacao_Service_Boletim(array('matricula' => $id, 'usuario' => $userId));
+    }
+    catch (Exception $e){
+      $this->messenger->append('Erro ao instanciar serviço boletim: ' . $e->getMessage());
+    }
+
+    return $service;
+  }
+
+  
+  protected function reportBoletimTemplateForMatricula($id) {
+    $template = '';
+
+    $templates = array('bimestral'                     => 'portabilis_boletim',
+                       'trimestral'                    => 'portabilis_boletim_trimestral',
+                       'trimestral_conceitual'         => 'portabilis_boletim_primeiro_ano_trimestral',
+                       'semestral'                     => 'portabilis_boletim_semestral',
+                       'semestral_conceitual'          => 'portabilis_boletim_conceitual_semestral',
+                       'semestral_educacao_infantil'   => 'portabilis_boletim_educ_infantil_semestral',
+                       'parecer_descritivo_componente' => 'portabilis_boletim_parecer',
+                       'parecer_descritivo_geral'      => 'portabilis_boletim_parecer_geral');
+                        
+    $service                            = $this->serviceBoletimForMatricula($id);
+
+    if ($service != null) {
+      $regraAvaliacaoUsaParecerDescritivo = $service->getRegra()->get('parecerDescritivo') !=
+                                            RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM;
+      # FIXME perguntar service se nota é conceitual?
+      $notaConceitual                     = false;
+      $qtdEtapasModulo                    = $service->getOption('etapas');
+
+      # FIXME perguntar para quem se é edu inf?
+      $educacaoInfantil                   = false;
+
+
+      // decide qual templete usar
+
+      # TODO verificar se parecer_descritivo comp ou ger
+
+      # TODO verificar com ricardo a ordem de preferencia entre as regras
+
+      if ($qtdEtapasModulo > 5 && $educacaoInfantil)
+        $template = 'semestral_educacao_infantil';
+
+      elseif ($qtdEtapasModulo > 5 && $notaConceitual)
+        $template = 'semestral_conceitual';
+
+      elseif ($qtdEtapasModulo > 5)
+        $template = 'semestral';
+
+      elseif ($qtdEtapasModulo > 2 && $notaConceitual)
+        $template = 'trimestral_conceitual';
+
+      elseif ($qtdEtapasModulo > 2)
+        $template = 'trimestral';
+
+      else
+        $template = 'bimestral';
+
+      $template = $templates[$template];
+    }
+
+    return $template;
+  }
+
   // load resources
+
+  protected function loadNomeEscola() {
+    $sql = "select nome from cadastro.pessoa, pmieducar.escola where idpes = ref_idpes and cod_escola = $1";
+    $nome = $this->fetchPreparedQuery($sql, $this->getRequest()->escola_id, false, 'first-field');
+
+    return utf8_encode(strtoupper($nome));
+  }
+
 
   protected function loadNomeAluno() {
     $sql = "select nome from cadastro.pessoa, pmieducar.aluno where idpes = ref_idpes and cod_aluno = $1";
     $nome = $this->fetchPreparedQuery($sql, $this->getRequest()->aluno_id, false, 'first-field');
 
-    return ucwords(strtolower(utf8_encode($nome)));
+    return utf8_encode(ucwords(strtolower($nome)));
   }
+
 
   protected function loadNomeSerie($serieId){
     $sql = "select nm_serie from pmieducar.serie where cod_serie = $1";
     $nome = $this->fetchPreparedQuery($sql, $serieId, false, 'first-field');
 
-    return ucwords(strtolower(utf8_encode($nome)));
+    return utf8_encode(strtoupper($nome));
   }
 
 
@@ -103,21 +185,24 @@ class V1Controller extends ApiCoreController
     $matriculaTurma = $matriculaTurma[0];
 
     if (is_array($matriculaTurma) && count($matriculaTurma) > 0){
-      $attrs = array('ref_cod_instituicao' => 'instituicao_id',
+      $attrs = array('ref_cod_turma'       => 'turma_id',
+                     'ref_cod_instituicao' => 'instituicao_id',
                      'ref_ref_cod_escola'  => 'escola_id',
                      'ref_ref_cod_serie'   => 'serie_id',
-                     'ref_cod_matricula'   => 'matricula_id',
+                     'ref_cod_matricula'   => 'id',
                      'nm_curso'            => 'nome_instituicao',
-                     'nm_curso'            => 'nome_escola',
                      'nm_curso'            => 'nome_curso',
                      'nm_turma'            => 'nome_turma');
 
-      $matriculaTurma               = Portabilis_Array_Utils::filter($matriculaTurma, $attrs);
+      $matriculaTurma                            = Portabilis_Array_Utils::filter($matriculaTurma, $attrs);
 
-      $matriculaTurma['ano']        = $matricula['ano'];
-      $matriculaTurma['nome_serie'] = strtolower(utf8_decode($this->loadNomeSerie($matriculaTurma['serie_id'])));
-      $matriculaTurma['nome_curso'] = ucwords(strtolower($matriculaTurma['nome_curso']));
-      $matriculaTurma['nome_turma'] = ucwords(strtolower(utf8_decode($matriculaTurma['nome_turma'])));
+      $matriculaTurma['ano']                     = $matricula['ano'];
+      $matriculaTurma['curso_id']                = $matricula['curso_id'];
+      $matriculaTurma['nome_escola']             = $this->loadNomeEscola();
+      $matriculaTurma['nome_curso']              = utf8_decode(strtoupper($matriculaTurma['nome_curso']));
+      $matriculaTurma['nome_serie']              = $this->loadNomeSerie($matriculaTurma['serie_id']);
+      $matriculaTurma['nome_turma']              = utf8_decode(strtoupper($matriculaTurma['nome_turma']));
+      $matriculaTurma['report_boletim_template'] = $this->reportBoletimTemplateForMatricula($matricula['id']);
     }
     else{
       throw new Exception("Não foi possivel recuperar a matricula: {$matricula['id']}.");
@@ -130,15 +215,14 @@ class V1Controller extends ApiCoreController
   protected function loadMatriculas() {
     $matriculas = array();
 
-    $sql = "select ano, cod_matricula as id, ref_ref_cod_escola as escola_id, ref_cod_curso as curso_id, ref_ref_cod_serie as serie_id from pmieducar.matricula where ref_cod_aluno = $1 and ref_ref_cod_escola = $2 and ativo = 1 order by ano, id";
+    $sql = "select ano, cod_matricula as id, ref_ref_cod_escola as escola_id, ref_cod_curso as curso_id, ref_ref_cod_serie as serie_id from pmieducar.matricula where ref_cod_aluno = $1 and ref_ref_cod_escola = $2 and ativo = 1 order by ano desc, id";
     $params = array($this->getRequest()->aluno_id, $this->getRequest()->escola_id);
 
     $_matriculas = $this->fetchPreparedQuery($sql, $params, false);
 
     if (is_array($_matriculas)) {
-      foreach($_matriculas as $matricula) {
+      foreach($_matriculas as $matricula)
         $matriculas[] = $this->_loadDadosForMatricula($matricula);
-      }
     }
 
     return $matriculas;
@@ -151,8 +235,6 @@ class V1Controller extends ApiCoreController
     $aluno = array('id'         => $this->getRequest()->aluno_id, 
                    'nome'       => $this->loadNomeAluno(), 
                    'matriculas' => $this->loadMatriculas());
-
-    $aluno['nome'] = ucwords(strtolower(utf8_encode($aluno['nome'])));
 
     return $aluno;
   }
