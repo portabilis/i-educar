@@ -95,23 +95,36 @@ class V1Controller extends ApiCoreController
     $service                            = $this->serviceBoletimForMatricula($id);
 
     if ($service != null) {
-      $regraAvaliacaoUsaParecerDescritivo = $service->getRegra()->get('parecerDescritivo') !=
-                                            RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM;
       # FIXME perguntar service se nota é conceitual?
       $notaConceitual                     = false;
       $qtdEtapasModulo                    = $service->getOption('etapas');
 
-      # FIXME perguntar para quem se é edu inf?
+      # FIXME veriificar se é educação infantil?
       $educacaoInfantil                   = false;
+
+
+      // parecer
+
+      $flagParecerGeral          = array(RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL,                   
+                                     RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL);
+
+      $flagParecerComponente = array(RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE,
+                                     RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE);
+
+      $parecerAtual                = $service->getRegra()->get('parecerDescritivo');
+      $parecerDescritivoGeral      = in_array($parecerAtual, $flagParecerGeral);
+      $parecerDescritivoComponente = in_array($parecerAtual, $flagParecerComponente);
 
 
       // decide qual templete usar
 
-      # TODO verificar se parecer_descritivo comp ou ger
+      if ($parecerDescritivoGeral)
+        $template = 'parecer_descritivo_geral';
 
-      # TODO verificar com ricardo a ordem de preferencia entre as regras
+      elseif ($parecerDescritivoComponente)
+        $template = 'parecer_descritivo_componente';
 
-      if ($qtdEtapasModulo > 5 && $educacaoInfantil)
+      elseif ($qtdEtapasModulo > 5 && $educacaoInfantil)
         $template = 'semestral_educacao_infantil';
 
       elseif ($qtdEtapasModulo > 5 && $notaConceitual)
