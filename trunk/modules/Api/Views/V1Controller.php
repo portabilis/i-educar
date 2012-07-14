@@ -174,7 +174,7 @@ class V1Controller extends ApiCoreController
   }
 
 
-  protected function _loadDadosForMatricula($matricula) {
+  protected function loadMatriculaTurma($matricula) {
     $matriculaTurma = new clsPmieducarMatriculaTurma();
 
     // atualmente somente carrega as matriculas de determinada escola
@@ -225,20 +225,58 @@ class V1Controller extends ApiCoreController
   }
 
 
-  protected function loadMatriculas() {
-    $matriculas = array();
-
+  protected function loadMatriculas($loadMatriculaTurma = false) {
     $sql = "select ano, cod_matricula as id, ref_ref_cod_escola as escola_id, ref_cod_curso as curso_id, ref_ref_cod_serie as serie_id from pmieducar.matricula where ref_cod_aluno = $1 and ref_ref_cod_escola = $2 and ativo = 1 order by ano desc, id";
-    $params = array($this->getRequest()->aluno_id, $this->getRequest()->escola_id);
 
+    $params      = array($this->getRequest()->aluno_id, $this->getRequest()->escola_id);
     $_matriculas = $this->fetchPreparedQuery($sql, $params, false);
 
-    if (is_array($_matriculas)) {
+    if (is_array($_matriculas) && $loadMatriculaTurma) {
+      $matriculas = array();
+
       foreach($_matriculas as $matricula)
-        $matriculas[] = $this->_loadDadosForMatricula($matricula);
+        $matriculas[] = $this->loadMatriculaTurma($matricula);
     }
+    else
+      $matriculas = $_matriculas;
 
     return $matriculas;
+  }
+
+
+  protected function loadOcorrenciasDisciplinares() {
+    $ocorrenciasAluno              = array();
+    $matriculas                    = $this->loadMatriculas();
+
+    $attrsFilter                   = array('data_cadastro' => 'data_hora', 'observacao' => 'descricao');
+    $ocorrenciasMatriculaInstance  = new clsPmieducarMatriculaOcorrenciaDisciplinar();
+
+    foreach($matriculas as $matricula) {
+      $ocorrenciasMatricula = $ocorrenciasMatriculaInstance->lista($matricula['id'], 
+                                                                    null, 
+                                                                    null, 
+                                                                    null, 
+                                                                    null, 
+                                                                    null, 
+                                                                    null, 
+                                                                    null, 
+                                                                    null, 
+                                                                    null, 
+                                                                    1);
+
+      if (is_array($ocorrenciasMatricula)) {
+        $ocorrenciasMatricula = Portabilis_Array_Utils::filterSet($ocorrenciasMatricula, $attrsFilter);
+
+        foreach($ocorrenciasMatricula as $ocorrenciaMatricula) {
+          $ocorrenciaMatricula['data_hora']      = date('d/m/Y H:i:s', strtotime($ocorrenciaMatricula['data_hora']));
+          $ocorrenciaMatricula['descricao']      = utf8_encode($ocorrenciaMatricula['descricao']);
+        }
+
+        $ocorrenciasAluno[] = $ocorrenciaMatricula;
+      }
+    }  
+
+    return $ocorrenciasAluno;
   }
 
 
@@ -247,15 +285,22 @@ class V1Controller extends ApiCoreController
   protected function getAluno() {
     $aluno = array('id'         => $this->getRequest()->aluno_id, 
                    'nome'       => $this->loadNomeAluno(), 
-                   'matriculas' => $this->loadMatriculas());
+                   'matriculas' => $this->loadMatriculas(true));
 
     return $aluno;
+  }
+
+
+  protected function getOcorrenciasDisciplinares() {
+    return $this->loadOcorrenciasDisciplinares();
   }
 
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'aluno'))
       $this->appendResponse('aluno', $this->getAluno());
+    if ($this->isRequestFor('get', 'ocorrencias_disciplinares'))
+      $this->appendResponse('ocorrencias_disciplinares', $this->getOcorrenciasDisciplinares());
     else
       $this->notImplementedOperationError();
   }
