@@ -268,11 +268,10 @@ class V1Controller extends ApiCoreController
         $ocorrenciasMatricula = Portabilis_Array_Utils::filterSet($ocorrenciasMatricula, $attrsFilter);
 
         foreach($ocorrenciasMatricula as $ocorrenciaMatricula) {
-          $ocorrenciaMatricula['data_hora']      = date('d/m/Y H:i:s', strtotime($ocorrenciaMatricula['data_hora']));
-          $ocorrenciaMatricula['descricao']      = utf8_encode($ocorrenciaMatricula['descricao']);
+          $ocorrenciaMatricula['data_hora'] = date('d/m/Y H:i:s', strtotime($ocorrenciaMatricula['data_hora']));
+          $ocorrenciaMatricula['descricao'] = utf8_encode($ocorrenciaMatricula['descricao']);
+          $ocorrenciasAluno[]               = $ocorrenciaMatricula;
         }
-
-        $ocorrenciasAluno[] = $ocorrenciaMatricula;
       }
     }  
 
