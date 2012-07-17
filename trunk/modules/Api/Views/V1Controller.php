@@ -298,7 +298,7 @@ class V1Controller extends ApiCoreController
   public function Gerar() {
     if ($this->isRequestFor('get', 'aluno'))
       $this->appendResponse('aluno', $this->getAluno());
-    if ($this->isRequestFor('get', 'ocorrencias_disciplinares'))
+    elseif ($this->isRequestFor('get', 'ocorrencias_disciplinares'))
       $this->appendResponse('ocorrencias_disciplinares', $this->getOcorrenciasDisciplinares());
     else
       $this->notImplementedOperationError();
