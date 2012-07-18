@@ -18,9 +18,9 @@
 			}
 		</script>
 
-    <link rel=stylesheet type='text/css' href='styles/reset.css' />
-    <link rel=stylesheet type='text/css' href='styles/portabilis.css' />
-    <link rel=stylesheet type='text/css' href='styles/min-portabilis.css' />
+    <link rel=stylesheet type='text/css' href='styles/reset.css?rand=1' />
+    <link rel=stylesheet type='text/css' href='styles/portabilis.css?rand=1' />
+    <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=1' />
     <style rel=stylesheet type='text/css'>
 #flash-container, #menu, #corpo, #cabecalho #ccorpo, #rodape {
     width: 800px;
@@ -91,7 +91,7 @@
         <div id="notices">
           <p class="title">Not&iacute;cias</p>
           <ul class="unstyled">
-            <li><a class="decorated" target="_blank" href="http://www.estadao.com.br/noticias/impresso,fabrica-em-ceu-faz-bicicletas-de-bambu-para-alunos-,901184,0.htm">F&aacute;brica em CEU faz bicicletas de bambu para alunos</a></li>
+            <li><a class="decorated" href="http://www.estadao.com.br/noticias/impresso,fabrica-em-ceu-faz-bicicletas-de-bambu-para-alunos-,901184,0.htm">F&aacute;brica em CEU faz bicicletas de bambu para alunos</a></li>
           </ul>          
         </div>
 
