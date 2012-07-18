@@ -166,17 +166,9 @@ class V1Controller extends ApiCoreController
   }
 
 
-  protected function loadNomeSerie($serieId){
-    $sql = "select nm_serie from pmieducar.serie where cod_serie = $1";
-    $nome = $this->fetchPreparedQuery($sql, $serieId, false, 'first-field');
-
-    return utf8_encode(strtoupper($nome));
-  }
-
-
-  protected function loadNomeTurma($turmaId){
-    $sql = "select nm_turma from pmieducar.turma where cod_turma = $1";
-    $nome = $this->fetchPreparedQuery($sql, $turmaId, false, 'first-field');
+  protected function loadNameFor($resourceName, $id){
+    $sql = "select nm_{$resourceName} from pmieducar.{$resourceName} where cod_{$resourceName} = $1";
+    $nome = $this->fetchPreparedQuery($sql, $id, false, 'first-field');
 
     return utf8_encode(strtoupper($nome));
   }
@@ -190,7 +182,7 @@ class V1Controller extends ApiCoreController
     if (is_array($matriculaTurma) and count($matriculaTurma) > 0) {
       $attrs                                     = array('turma_id', 'nome_turma');
       $matriculaTurma                            = Portabilis_Array_Utils::filter($matriculaTurma, $attrs);
-      $matriculaTurma['nome_turma']              = $this->loadNomeTurma($matriculaTurma['turma_id']);
+      $matriculaTurma['nome_turma']              = $this->loadNameFor('turma', $matriculaTurma['turma_id']);
       $matriculaTurma['report_boletim_template'] = $this->reportBoletimTemplateForMatricula($matricula['id']);
     }
 
@@ -210,9 +202,9 @@ class V1Controller extends ApiCoreController
       $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
 
       foreach($matriculas as $key => $matricula) {
-        $matriculas[$key]['nome_curso']                = utf8_decode(strtoupper('#TODO get nome curso'));
+        $matriculas[$key]['nome_curso']                = $this->loadNameFor('curso', $matricula['curso_id']);
         $matriculas[$key]['nome_escola']               = $this->loadNomeEscola();
-        $matriculas[$key]['nome_serie']                = $this->loadNomeSerie($matricula['serie_id']);
+        $matriculas[$key]['nome_serie']                = $this->loadNameFor('serie', $matricula['serie_id']);
         $turma                                         = $this->tryLoadMatriculaTurma($matricula);
 
         if (is_array($turma) and count($turma) > 0) {
