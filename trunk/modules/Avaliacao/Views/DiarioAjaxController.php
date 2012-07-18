@@ -693,7 +693,7 @@ class DiarioAjaxController extends Core_Controller_Page_EditController
         foreach($requiredFields as $f)
           $matricula[$f[0]] = $aluno[$f[1]];
 
-        $matricula['nome'] = ucwords(strtolower(utf8_encode($aluno['nome_aluno'])));
+        $matricula['nome'] = utf8_encode(ucwords(strtolower($aluno['nome_aluno'])));
 
         $matriculas[] = $matricula;
       }
