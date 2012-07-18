@@ -8,4 +8,4 @@
  *
  */
 
-phpinfo();
+#phpinfo();

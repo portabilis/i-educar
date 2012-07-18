@@ -18,9 +18,9 @@
 			}
 		</script>
 
-    <link rel=stylesheet type='text/css' href='styles/reset.css' />
-    <link rel=stylesheet type='text/css' href='styles/portabilis.css' />
-    <link rel=stylesheet type='text/css' href='styles/min-portabilis.css' />
+    <link rel=stylesheet type='text/css' href='styles/reset.css?rand=1' />
+    <link rel=stylesheet type='text/css' href='styles/portabilis.css?rand=1' />
+    <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=1' />
     <style rel=stylesheet type='text/css'>
 #flash-container, #menu, #corpo, #cabecalho #ccorpo, #rodape {
     width: 800px;
@@ -39,16 +39,18 @@
     <p style="min-height: 32px;" class="flash update-browser"><strong>Seu navegador est&aacute desatualizado.</strong> Para melhor navega&ccedil;&atildeo  no sistema, por favor, atualize seu navegador.<a href="http://br.mozdev.org/download/" target="_blank"><img style="margin-top:4px;" src="http://www.mozilla.org/contribute/buttons/110x32bubble_r_pt.png" alt="Firefox" width="110" height="32" style="border-style:none;" title="Mozilla Firefox" /></a></p>
     <![endif]-->
 
-    <p style="min-height: 0px;" class="flash"><strong>Novo!</strong> acompanhe as &uacute;ltimas novidades do i-Educar em <a href="http://ieducar.com.br/wiki" class="decorated texto-normal">ieducar.com.br/wiki</a></p>
+    <p style="min-height: 0px;" class="flash box shadow"><strong>Novo!</strong> acompanhe as &uacute;ltimas novidades do i-Educar em <a href="http://ieducar.com.br/wiki" class="decorated texto-normal">ieducar.com.br/wiki</a></p>
 
     <!--p style="min-height: 0px;" class="flash error"><strong>Importante, aviso de manuten&ccedil;&atilde;o:</strong> No dia 28/02/2012 (ter&ccedil;a feira) a partir das 18hs os sistemas poder&atilde;o estar inst&aacute;veis ou indispon&iacute;veis, devido melhorias na infraestrutura.</p-->
 
     <!--p style="min-height: 0px;" class="flash error"><strong>Importante, aviso de manuten&ccedil;&atilde;o:</strong> durante os dias 28 e 29 de abril (s&aacute;bado e domingo) os sistemas poder&atilde;o estar inst&aacute;veis ou indispon&iacute;veis, devido melhorias na infraestrutura.</p-->
 
+    <!--p style="min-height: 0px;" class="flash error"><strong>Aviso importante:</strong> no momento nosso suporte via telefone esta enfrentando dificuldades, devido um incidente na sede de nossa empresa, o suporte via e-mail funciona normalizado.</p-->
+
     <!-- #&ERROLOGIN&# -->
 
   </div>
-      <div id="login-form">
+      <div id="login-form" class="box shadow">
         <h2>Entrar</h2>
         <p class="explication"></p>
 
@@ -84,15 +86,23 @@
 		    </form>
       </div>
 
-      <div id="service-info" class="texto-normal">
-        <p class="requiriments">Requisitos</p>
-        <p class="explication">Para melhor uso do sistema, recomendamos:</p>
-        <ul class="requiriments unstyled">
-          <li>- Navegador <a target="_blank" class="decorated" href="http://br.mozdev.org/download/">Mozilla Firefox</a></li>
-          <li>- Leitor PDF (para relat&oacute;rios) <a target="_blank" class="decorated" href="http://get.adobe.com/br/reader/download/">Adobe Reader</a> ou <a target="_blank" class="decorated" href="http://www.foxitsoftware.com/downloads#reader">Foxit</a></li>
-        </ul>
 
-      </div>
+      <div id="extra" class="texto-normal">
+        <div id="notices">
+          <p class="title">Not&iacute;cias</p>
+          <ul class="unstyled">
+            <li><a class="decorated" href="http://www.estadao.com.br/noticias/impresso,fabrica-em-ceu-faz-bicicletas-de-bambu-para-alunos-,901184,0.htm">F&aacute;brica em CEU faz bicicletas de bambu para alunos</a></li>
+          </ul>          
+        </div>
+
+        <div id="service-info">
+          <p class="requiriments title">Requisitos</p>
+          <p class="explication">Para melhor uso do sistema, recomendamos:</p>
+          <ul class="requiriments unstyled">
+            <li>- Navegador <a target="_blank" class="decorated" href="http://br.mozdev.org/download/">Mozilla Firefox</a></li>
+            <li>- Leitor PDF (para relat&oacute;rios) <a target="_blank" class="decorated" href="http://get.adobe.com/br/reader/download/">Adobe Reader</a> ou <a target="_blank" class="decorated" href="http://www.foxitsoftware.com/downloads#reader">Foxit</a></li>
+          </ul>
+        </div>
 
 		  <p id="rodape" class="texto-normal">
       Portabilis Tecnologia - suporte@portabilis.com.br - <a target="_blank" class="decorated" href="http://www.teamviewer.com/pt/download/index.aspx">suporte remoto</a>

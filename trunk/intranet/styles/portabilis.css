@@ -5,6 +5,7 @@ body {
 	margin: 0px;
 	color: #666;
 	text-align: left;
+  background-color: #FCFCFC;
 }
 
 
@@ -31,7 +32,7 @@ a:hover {
 	text-decoration: underline;
 }
 
-h1, h2, h3, h4, h5, h6, table caption, #service-info p.service, #service-info p.requiriments {
+h1, h2, h3, h4, h5, h6, table caption, #service-info p.service, #extra .title {
 	color: #184e7f;
 	font-weight: bold;			
 }
@@ -88,10 +89,9 @@ body {
 }
 
 #flash-container p {
-    margin-top: 5px;
-    padding: 5px;
-    padding-top: 7px;
-    padding-bottom: 7px;
+    /*margin-top: 5px;
+    padding: 5px;*/
+    padding: 10px;
 }
 
 #flash-container .flash {
@@ -292,6 +292,39 @@ input#senha, input#login {
 }
 
 #login-form {
+  background-color: #fff;
+  padding-top: 10px;
+}
+
+#login-form label {
+  float: right;
+}
+
+.shadow {
+  -moz-box-shadow: 0px 0px 5px #e6e6e6;
+  -webkit-box-shadow: 0px 0px 5px #E6E6E6;
+  box-shadow: 0px 0px 5px #E6E6E6;
+}
+
+.box {
+  padding-top: 10px;
+}
+
+.box, .bubble {
+  border: 1px solid #EEE;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  padding: 0 10px 10px 10px;
+  margin-bottom: 10px;
+}
+
+
+#extra {
+  margin-top: 40px;
+}
+
+#extra #notices {
   width:400px;
   float: left;
 }
@@ -300,7 +333,7 @@ input#senha, input#login {
   margin-left: 401px;
 }
 
-#service-info p.service, #service-info p.requiriments {
+#extra .title, #service-info p.service, #service-info p.requiriments {
   font-size: 125%;
 }
 
@@ -318,16 +351,7 @@ ul.unstyled, ol.unstyled {
   margin-bottom: 10px;
 }
 
-#service-info ul.service-about li{
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-#service-info ul.service-about li span {
-  font-weight: bold;
-  display: block;
-}
-
 #rodape {
   clear: left;
+  margin-top: 40px;
 }
