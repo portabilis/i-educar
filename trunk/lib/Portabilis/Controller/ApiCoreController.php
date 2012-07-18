@@ -212,7 +212,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
         while ($this->db->ProximoRegistro())
           $result[] = $this->db->Tupla();
 
-        if ($returnOnly == 'first-line' and isset($result[0]))
+        if (in_array($returnOnly, array('first-line', 'first-row', 'first-record')) and isset($result[0]))
           $result = $result[0];
         elseif ($returnOnly == 'first-field' and isset($result[0]) and isset($result[0][0]))
           $result = $result[0][0];
@@ -221,7 +221,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     catch(Exception $e)
     {
       if (! $hideExceptions)
-        $this->messages->append($e->getMessage(), "error", true);
+        $this->messenger->append($e->getMessage(), "error", true);
     }
     return $result;
   }
