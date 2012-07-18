@@ -29,7 +29,7 @@
  */
 
 /**
- * CoreExt_Session class.
+ * Portabilis_Object_Utils class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar

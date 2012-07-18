@@ -29,7 +29,7 @@
  */
 
 /**
- * CoreExt_Session class.
+ * Portabilis_Array_Utils class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -48,6 +48,26 @@ class Portabilis_Array_Utils {
     }
 
     return $defaultArray;
+  }
+
+
+  /* Mescla os valores de diferentes arrays, onde no array mesclado, cada valor (unico),
+     passa a ser a chave do array.
+     ex: mergeValues(array(array(1,2), array(2,3,4)) resulta em array(1=>1, 2=>2, 3=>3, 4=>4) */
+  public function mergeValues($arrays) {
+    if (! is_array($arrays))
+      $arrays = array($arrays);
+
+    $merge = array();
+
+    foreach($arrays as $array) {
+      foreach($array as $value) {
+        if (! in_array($value, $merge))
+          $merge[$value] = $value;
+      }
+    }
+
+    return $merge;
   }
 
 
