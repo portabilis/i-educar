@@ -35,6 +35,7 @@ require_once 'App/Model/IedFinder.php';
 require_once 'lib/Portabilis/View/Helper/Application.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/Object/Utils.php';
+require_once 'lib/Portabilis/DataMapper/Utils.php';
 
 // require_once 'App/Model/NivelAcesso.php';
 // require_once 'Usuario/Model/UsuarioDataMapper.php';
@@ -103,24 +104,8 @@ class Portabilis_View_Helper_DynamicSelectMenu_Core {
   }
 
 
-  // TODO mover funcao para classe especifica
-  // TODO quando só usado consulta, usar finders no lugar de data mappers especificos ?
-  protected function getDataMapperFor($modelName){
-    $dataMappers = array('tipoExemplar' => 'Biblioteca_Model_TipoExemplarDataMapper');
-
-    if (! array_key_exists($modelName, $dataMappers))
-      throw new CoreExt_Exception("The model '$modelName' not has a data mapper defined.");
-
-    $dataMapperClassName = $dataMappers[$modelName];
-    $classPath           = str_replace('_', '/', $dataMapperClassName) . '.php';
-
-    # usado include_once para continuar execução script mesmo que o path inexista.
-    include_once $classPath;
-
-    if (! class_exists($dataMapperClassName))
-      throw new CoreExt_Exception("Class '$dataMapperClassName' not found in path $classPath.");
-
-    return new $dataMapperClassName();
+  protected function getDataMapperFor($packageName, $modelName){
+    return Portabilis_DataMapper_Utils::getDataMapperFor($packageName, $modelName);
   }
 
 

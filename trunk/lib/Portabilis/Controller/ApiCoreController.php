@@ -37,6 +37,7 @@ require_once 'CoreExt/Exception.php';
 require_once 'lib/Portabilis/Messenger.php';
 require_once 'lib/Portabilis/Validator.php';
 require_once 'include/clsBanco.inc.php';
+require_once 'lib/Portabilis/DataMapper/Utils.php';
 
 class ApiCoreController extends Core_Controller_Page_EditController
 {
@@ -224,5 +225,27 @@ class ApiCoreController extends Core_Controller_Page_EditController
         $this->messenger->append($e->getMessage(), "error", true);
     }
     return $result;
+  }
+
+
+  /* wrapper para Portabilis_DataMapper_Utils::getDataMapperFor
+     ex: $resourceDataMapper = $this->getDataMapperFor('module_package', 'model_name');
+  
+      $columns = array('col_1', 'col_2');
+      $where   = array('col_3' => 'val_1', 'ativo' => '1');
+      $orderBy = array('col_4' => 'ASC');
+
+     $resources = $resourceDataMapper->findAll($columns, $where, $orderBy, $addColumnIdIfNotSet = false);
+  */
+  protected function getDataMapperFor($packageName, $modelName){
+    return Portabilis_DataMapper_Utils::getDataMapperFor($packageName, $modelName);
+  }
+
+
+  protected function safeString($str, $transform = true) {
+    if ($transform)
+      $str = ucwords(strtolower($str));
+
+    return utf8_encode($str);
   }
 }

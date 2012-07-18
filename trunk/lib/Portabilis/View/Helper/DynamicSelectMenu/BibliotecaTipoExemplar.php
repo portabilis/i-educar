@@ -56,7 +56,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaTipoExemplar extends Po
         $where   = array('ref_cod_biblioteca' => $bibliotecaId, 'ativo' => '1');
         $orderBy = array('nm_tipo' => 'ASC');
 
-        $tiposExemplar = $this->getDataMapperFor('tipoExemplar')->findAll($columns,
+        $tiposExemplar = $this->getDataMapperFor('biblioteca', 'tipoExemplar')->findAll($columns,
                                                                           $where,
                                                                           $orderBy,
                                                                           $addColumnIdIfNotSet = false);
