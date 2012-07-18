@@ -73,7 +73,7 @@ class V1Controller extends ApiCoreController
       $service = new Avaliacao_Service_Boletim(array('matricula' => $id, 'usuario' => $userId));
     }
     catch (Exception $e){
-      $this->messenger->append('Erro ao instanciar serviço boletim: ' . $e->getMessage());
+      $this->messenger->append("Erro ao instanciar serviço boletim para matricula {$id}: " . $e->getMessage());
     }
 
     return $service;
@@ -92,7 +92,7 @@ class V1Controller extends ApiCoreController
                        'parecer_descritivo_componente' => 'portabilis_boletim_parecer',
                        'parecer_descritivo_geral'      => 'portabilis_boletim_parecer_geral');
                         
-    $service                            = $this->serviceBoletimForMatricula($id);
+    $service = $this->serviceBoletimForMatricula($id);
 
     if ($service != null) {
       # FIXME perguntar service se nota é conceitual?
@@ -174,71 +174,54 @@ class V1Controller extends ApiCoreController
   }
 
 
-  protected function loadMatriculaTurma($matricula) {
-    $matriculaTurma = new clsPmieducarMatriculaTurma();
+  protected function loadNomeTurma($turmaId){
+    $sql = "select nm_turma from pmieducar.turma where cod_turma = $1";
+    $nome = $this->fetchPreparedQuery($sql, $turmaId, false, 'first-field');
 
-    // atualmente somente carrega as matriculas de determinada escola
-    $matriculaTurma = $matriculaTurma->lista(
-      $matricula['id'],
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      1,
-      $matricula['serie_id'],
-      $matricula['curso_id'],
-      $matricula['escola_id'],
-      null,
-      $matricula['aluno_id']
-    );
+    return utf8_encode(strtoupper($nome));
+  }
 
-    $matriculaTurma = $matriculaTurma[0];
 
-    if (is_array($matriculaTurma) && count($matriculaTurma) > 0){
-      $attrs = array('ref_cod_turma'       => 'turma_id',
-                     'ref_cod_instituicao' => 'instituicao_id',
-                     'ref_ref_cod_escola'  => 'escola_id',
-                     'ref_ref_cod_serie'   => 'serie_id',
-                     'ref_cod_matricula'   => 'id',
-                     'nm_curso'            => 'nome_instituicao',
-                     'nm_curso'            => 'nome_curso',
-                     'nm_turma'            => 'nome_turma');
+  protected function tryLoadMatriculaTurma($matricula) {
+    $sql = "select ref_cod_turma as turma_id from pmieducar.matricula_turma where ref_cod_matricula = $1 and matricula_turma.ativo = 1 limit 1";
 
+    $matriculaTurma = $this->fetchPreparedQuery($sql, $matricula['id'], false, 'first-row');
+
+    if (is_array($matriculaTurma) and count($matriculaTurma) > 0) {
+      $attrs                                     = array('turma_id', 'nome_turma');
       $matriculaTurma                            = Portabilis_Array_Utils::filter($matriculaTurma, $attrs);
-
-      $matriculaTurma['ano']                     = $matricula['ano'];
-      $matriculaTurma['curso_id']                = $matricula['curso_id'];
-      $matriculaTurma['nome_escola']             = $this->loadNomeEscola();
-      $matriculaTurma['nome_curso']              = utf8_decode(strtoupper($matriculaTurma['nome_curso']));
-      $matriculaTurma['nome_serie']              = $this->loadNomeSerie($matriculaTurma['serie_id']);
-      $matriculaTurma['nome_turma']              = utf8_decode(strtoupper($matriculaTurma['nome_turma']));
+      $matriculaTurma['nome_turma']              = $this->loadNomeTurma($matriculaTurma['turma_id']);
       $matriculaTurma['report_boletim_template'] = $this->reportBoletimTemplateForMatricula($matricula['id']);
-    }
-    else{
-      throw new Exception("Não foi possivel recuperar a matricula: {$matricula['id']}.");
     }
 
     return $matriculaTurma;
   }
 
 
-  protected function loadMatriculas($loadMatriculaTurma = false) {
-    $sql = "select ano, cod_matricula as id, ref_ref_cod_escola as escola_id, ref_cod_curso as curso_id, ref_ref_cod_serie as serie_id from pmieducar.matricula where ref_cod_aluno = $1 and ref_ref_cod_escola = $2 and ativo = 1 order by ano desc, id";
+  protected function loadMatriculas() {
+    #TODO mostrar o nome da situação da matricula
+    $sql = "select cod_matricula as id, ano, ref_cod_instituicao as instituicao_id, ref_ref_cod_escola as escola_id, ref_cod_curso as curso_id, ref_ref_cod_serie as serie_id from pmieducar.matricula, pmieducar.escola where cod_escola = ref_ref_cod_escola and ref_cod_aluno = $1 and ref_ref_cod_escola = $2 and matricula.ativo = 1 order by ano desc, id";
 
-    $params      = array($this->getRequest()->aluno_id, $this->getRequest()->escola_id);
-    $_matriculas = $this->fetchPreparedQuery($sql, $params, false);
+    $params     = array($this->getRequest()->aluno_id, $this->getRequest()->escola_id);
+    $matriculas = $this->fetchPreparedQuery($sql, $params, false);
 
-    if (is_array($_matriculas) && $loadMatriculaTurma) {
-      $matriculas = array();
+    if (is_array($matriculas) && count($matriculas) > 0) {
+      $attrs      = array('id', 'ano', 'instituicao_id', 'escola_id', 'curso_id', 'serie_id');
+      $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
 
-      foreach($_matriculas as $matricula)
-        $matriculas[] = $this->loadMatriculaTurma($matricula);
+      foreach($matriculas as $key => $matricula) {
+        $matriculas[$key]['nome_curso']                = utf8_decode(strtoupper('#TODO get nome curso'));
+        $matriculas[$key]['nome_escola']               = $this->loadNomeEscola();
+        $matriculas[$key]['nome_serie']                = $this->loadNomeSerie($matricula['serie_id']);
+        $turma                                         = $this->tryLoadMatriculaTurma($matricula);
+
+        if (is_array($turma) and count($turma) > 0) {
+          $matriculas[$key]['turma_id']                = $turma['turma_id'];
+          $matriculas[$key]['nome_turma']              = $turma['nome_turma'];
+          $matriculas[$key]['report_boletim_template'] = $turma['report_boletim_template'];
+        }
+      }
     }
-    else
-      $matriculas = $_matriculas;
 
     return $matriculas;
   }
