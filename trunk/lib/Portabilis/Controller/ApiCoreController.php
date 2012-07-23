@@ -61,14 +61,6 @@ class ApiCoreController extends Core_Controller_Page_EditController
     return $this->validator->validatesPresenceOf($this->getSession()->id_pessoa, '', false, 'Usuário deve estar logado');
   }
 
-  protected function validatesPresenceOfResource(){
-    return $this->validator->validatesPresenceOf($this->getRequest()->resource, 'resource');
-  }
-
-  protected function validatesPresenceOfOper(){
-    return $this->validator->validatesPresenceOf($this->getRequest()->oper, 'oper');
-  }
-
 
   protected function validatesPresenceOf($requiredParamNames) {
     if (! is_array($requiredParamNames))
@@ -105,8 +97,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
   protected function canAcceptRequest()
   {
     return $this->validatesUserIsLoggedIn() &&
-           $this->validatesPresenceOfOper() &&
-           $this->validatesPresenceOfResource();
+           $this->validatesPresenceOf(array('oper', 'resource'));
   }
 
 
@@ -204,6 +195,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
   }
 
 
+  #TODO mover funcao para /lib/Portabilis/Util/Db.php
   // wrapper para $this->db->execPreparedQuery($sql, $params)
   protected function fetchPreparedQuery($sql, $params = array(), $hideExceptions = true, $returnOnly = '') {
     try{
