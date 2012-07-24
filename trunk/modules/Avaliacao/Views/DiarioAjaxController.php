@@ -166,7 +166,7 @@ class DiarioAjaxController  extends ApiCoreController #extends Core_Controller_P
   }
 
 
-  // post nota validations
+  // post falta validations
 
   protected function validatesPreviousFaltasHasBeenSet() {
     $hasPreviousFaltas   = true;
@@ -196,7 +196,31 @@ class DiarioAjaxController  extends ApiCoreController #extends Core_Controller_P
   }
 
 
-  // responser validators
+  // post parecer validations
+
+  protected function validatesRegraAvaliacaoHasParecer() {
+    $tpParecer = $this->serviceBoletim()->getRegra()->get('parecerDescritivo');
+    $isValid   = $tpParecer != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM;
+
+    if (! $isValid)
+      $this->messenger->append("Parecer descritivo não lançado, pois a regra de avaliação não utiliza parecer.");
+
+    return $isValid;
+  }
+
+  
+  protected function validatesPresenceOfComponenteCurricularIdIfParecerComponente() {
+    $tiposParecerComponente = array(RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE,
+                                  RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE);
+
+    $parecerPorComponente   = in_array($this->serviceBoletim()->getRegra()->get('parecerDescritivo'), $tiposParecerComponente);
+
+    return (! $parecerPorComponente) || $this->validatesPresenceOf('componente_curricular_id');
+  }
+
+
+
+  // responders validations
 
 
   protected function canGetMatriculas() {
@@ -238,27 +262,6 @@ class DiarioAjaxController  extends ApiCoreController #extends Core_Controller_P
   }
 
 
-  protected function validatesRegraAvaliacaoHasParecer() {
-    $tpParecer = $this->serviceBoletim()->getRegra()->get('parecerDescritivo');
-    $isValid   = $tpParecer != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM;
-
-    if (! $isValid)
-      $this->messenger->append("Parecer descritivo não lançado, pois a regra de avaliação não utiliza parecer.");
-
-    return $isValid;
-  }
-
-  
-  protected function validatesPresenceOfComponenteCurricularIdIfParecerComponente() {
-    $tiposParecerComponente = array(RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE,
-                                  RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE);
-
-    $parecerPorComponente   = in_array($this->serviceBoletim()->getRegra()->get('parecerDescritivo'), $tiposParecerComponente);
-
-    return (! $parecerPorComponente) || $this->validatesPresenceOf('componente_curricular_id');
-  }
-
-
   protected function canPostParecer() {
 
     return $this->canPost() &&
@@ -270,47 +273,56 @@ class DiarioAjaxController  extends ApiCoreController #extends Core_Controller_P
 
 
   protected function canDelete() {
-    try {
-      $this->validatesPresenceOfEtapa(true);
+    return $this->validatesPresenceOf('etapa');
+  }
+
+
+  protected function validatesInexistenceOfNotaExame() {
+    $isValid = true;
+
+    if ($this->getRequest()->etapa != 'Rc') {
+      $notaExame = $this->getNotaAtual($etapa = 'Rc');
+      $isValid   = empty($notaExame) || ! is_numeric($notaExame);
+
+      if(! $isValid)
+        $this->messenger->append('Nota da matrícula '. $this->getRequest()->matricula_id .' somente pode ser removida, após remover nota do exame.', 'error');
     }
-    catch (Exception $e) {
-      return false;
+
+    return $isValid;
+  }
+
+
+  protected function validatesInexistenceNotasInNextEtapas() {
+    $isValid       = true;
+    $etapasComNota = array();
+
+    if ($this->getRequest()->etapa != 'Rc' && is_numeric($this->getRequest()->etapa)) {
+      $etapas    = $this->serviceBoletim()->getOption('etapas');
+      $nextEtapa = $this->getRequest()->etapa + 1;
+
+      for($nextEtapa; $nextEtapa <= $etapas; $nextEtapa++) {
+        $notaNextEtapa = $this->getNotaAtual($nextEtapa);
+        $isValid       = empty($notaNextEtapa) || ! is_numeric($notaNextEtapa);
+
+        if (! $isValid)
+          $etapasComNota[] = $nextEtapa;
+      }
+
+      if (! $isValid) {
+        $this->messenger->append("Nota somente pode ser removida, após remover as notas lançadas nas etapas posteriores: " .
+                                 join(', ', $etapasComNota) . '.', 'error');
+      }
     }
-    return true;
+
+    return $isValid;
   }
 
 
   protected function canDeleteNota() {
-    $canDelete = $this->canDelete() &&
-                 $this->setService() &&
-                 $this->validatesPresenceOfComponenteCurricularId(false);
-
-    if ($canDelete && $this->getRequest()->etapa != 'Rc' && is_numeric($this->getRequest()->etapa)) {
-
-      $notaExame = $this->getNotaAtual($etapa='Rc');
-      if(! empty($notaExame) || is_numeric($notaExame)) {
-        $this->messenger->append('Nota da matrícula '. $this->getRequest()->matricula_id .' somente pode ser removida, após remover nota do exame.', 'error');
-        $canDelete = false;
-      }
-      else {
-        $etapasComNota = array();
-        for($etapa = $this->getRequest()->etapa + 1;
-            $etapa <= $this->serviceBoletim()->getOption('etapas');
-            $etapa++) {
-          $notaNextEtapa = $this->getNotaAtual($etapa);
-          $this->messenger->append("Verificando nota etapa $etapa", 'notice');
-
-          if(! empty($notaNextEtapa) || is_numeric($notaNextEtapa)) {
-            $etapasComNota[] = $etapa;
-            $canDelete = false;
-          }
-        }
-        if (! empty($etapasComNota))
-          $this->messenger->append("Nota somente pode ser removida, após remover as notas lançadas nas etapas posteriores: " . join(', ', $etapasComNota) . '.', 'error');
-      }
-    }
-
-    return $canDelete;
+    return $this->canDelete() &&
+           $this->validatesPresenceOf('componente_curricular_id') &&
+           $this->validatesInexistenceOfNotaExame() &&
+           $this->validatesInexistenceNotasInNextEtapas();
   }
 
 
