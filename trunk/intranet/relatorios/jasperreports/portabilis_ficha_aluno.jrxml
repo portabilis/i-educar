@@ -45,8 +45,12 @@
        (select estado_civil.descricao from cadastro.estado_civil where estado_civil.ideciv = fisica.ideciv) as estado_civil,
        (select pessoa.nome from cadastro.pessoa ps where ps.idpes = fisica.idpes_mae) as nm_mae,
        (select pessoa.nome from cadastro.pessoa ps where ps.idpes = fisica.idpes_pai) as nm_pai,
-       (select fisica_cpf.cpf from cadastro.fisica_cpf where fisica_cpf.idpes = fisica.idpes_mae) as cpf_mae,
-       (select fisica_cpf.cpf from cadastro.fisica_cpf where fisica_cpf.idpes = fisica.idpes_pai) as cpf_pai,
+
+       (select COALESCE((select fisica_cpf.cpf from cadastro.fisica_cpf where fisica_cpf.idpes = fisica.idpes_mae),(select fs.cpf
+       from cadastro.fisica fs where fs.idpes = fisica.idpes_mae))) as cpf_mae,
+
+       (select COALESCE((select fisica_cpf.cpf from cadastro.fisica_cpf where fisica_cpf.idpes = fisica.idpes_mae),(select fs.cpf
+       from cadastro.fisica fs where fs.idpes = fisica.idpes_pai))) as cpf_pai,
 
        (select nm_beneficio
           from pmieducar.aluno_beneficio
@@ -645,7 +649,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nm_pai}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField pattern="###.###.###-##" isBlankWhenNull="true">
 				<reportElement uuid="4de7f54a-a4dd-423d-abdd-5c831df65a0f" x="381" y="132" width="100" height="12"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
