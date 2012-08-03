@@ -219,6 +219,73 @@ class DiarioAjaxController  extends ApiCoreController #extends Core_Controller_P
   }
 
 
+  // delete nota validations
+
+  protected function validatesInexistenceOfNotaExame() {
+    $isValid = true;
+
+    if ($this->getRequest()->etapa != 'Rc') {
+      $notaExame = $this->getNotaAtual($etapa = 'Rc');
+      $isValid   = empty($notaExame);
+
+      if(! $isValid)
+        $this->messenger->append('Nota da matrícula '. $this->getRequest()->matricula_id .' somente pode ser removida, após remover nota do exame.', 'error');
+    }
+
+    return $isValid;
+  }
+
+
+  protected function validatesInexistenceNotasInNextEtapas() {
+    $etapasComNota = array();
+
+    if (is_numeric($this->getRequest()->etapa)) {
+      $etapas = $this->serviceBoletim()->getOption('etapas');
+      $etapa  = $this->getRequest()->etapa + 1;
+
+      for($etapa; $etapa <= $etapas; $etapa++) {
+        $nota = $this->getNotaAtual($etapa);
+
+        if (! empty($nota))
+          $etapasComNota[] = $etapa;
+      }
+
+      if (! empty($etapasComNota)) {
+        $msg = "Nota somente pode ser removida, após remover as notas lançadas nas etapas posteriores: " .
+               join(', ', $etapasComNota) . '.';
+        $this->messenger->append($msg, 'error');
+      }
+    }
+
+    return empty($etapasComNota);
+  }
+
+
+  // delete falta validations
+
+
+  protected function validatesInexistenceFaltasInNextEtapas() {
+    $etapasComFalta = array();  
+
+    if (is_numeric($this->getRequest()->etapa)) {
+      $etapas = $this->serviceBoletim()->getOption('etapas');
+      $etapa  = $this->getRequest()->etapa + 1;
+
+      for($etapa; $etapa <= $etapas; $etapa++) {
+        $falta = $this->getFaltaAtual($etapa);
+
+        if(! empty($falta))
+          $etapasComFalta[] = $etapa;
+
+      }
+
+      if (! empty($etapasComFalta))
+        $this->messenger->append("Falta somente pode ser removida, após remover as faltas lançadas nas etapas posteriores: " . join(', ', $etapasComFalta) . '.', 'error');
+    }
+
+    return empty($etapasComFalta);
+  }
+
 
   // responders validations
 
@@ -277,47 +344,6 @@ class DiarioAjaxController  extends ApiCoreController #extends Core_Controller_P
   }
 
 
-  protected function validatesInexistenceOfNotaExame() {
-    $isValid = true;
-
-    if ($this->getRequest()->etapa != 'Rc') {
-      $notaExame = $this->getNotaAtual($etapa = 'Rc');
-      $isValid   = empty($notaExame) || ! is_numeric($notaExame);
-
-      if(! $isValid)
-        $this->messenger->append('Nota da matrícula '. $this->getRequest()->matricula_id .' somente pode ser removida, após remover nota do exame.', 'error');
-    }
-
-    return $isValid;
-  }
-
-
-  protected function validatesInexistenceNotasInNextEtapas() {
-    $isValid       = true;
-    $etapasComNota = array();
-
-    if ($this->getRequest()->etapa != 'Rc' && is_numeric($this->getRequest()->etapa)) {
-      $etapas    = $this->serviceBoletim()->getOption('etapas');
-      $nextEtapa = $this->getRequest()->etapa + 1;
-
-      for($nextEtapa; $nextEtapa <= $etapas; $nextEtapa++) {
-        $notaNextEtapa = $this->getNotaAtual($nextEtapa);
-        $isValid       = empty($notaNextEtapa) || ! is_numeric($notaNextEtapa);
-
-        if (! $isValid)
-          $etapasComNota[] = $nextEtapa;
-      }
-
-      if (! $isValid) {
-        $this->messenger->append("Nota somente pode ser removida, após remover as notas lançadas nas etapas posteriores: " .
-                                 join(', ', $etapasComNota) . '.', 'error');
-      }
-    }
-
-    return $isValid;
-  }
-
-
   protected function canDeleteNota() {
     return $this->canDelete() &&
            $this->validatesPresenceOf('componente_curricular_id') &&
@@ -325,29 +351,9 @@ class DiarioAjaxController  extends ApiCoreController #extends Core_Controller_P
            $this->validatesInexistenceNotasInNextEtapas();
   }
 
-
   protected function canDeleteFalta() {
-    $canDelete = $this->canDelete() && $this->setService();
-
-    if ($canDelete && is_numeric($this->getRequest()->etapa)) {
-      $etapasComFalta = array();
-      for($etapa = $this->getRequest()->etapa + 1;
-          $etapa <= $this->serviceBoletim()->getOption('etapas');
-          $etapa++) {
-        $faltaNextEtapa = $this->getFaltaAtual($etapa);
-
-        if(! empty($faltaNextEtapa) || is_numeric($faltaNextEtapa)) {
-          $etapasComFalta[] = $etapa;
-          $canDelete = false;
-        }
-
-      }
-
-      if (! empty($etapasComFalta))
-        $this->messenger->append("Falta somente pode ser removida, após remover as faltas lançadas nas etapas posteriores: " . join(', ', $etapasComFalta) . '.', 'error');
-    }
-
-    return $canDelete;
+    return $this->canDelete() &&
+           $this->validatesInexistenceFaltasInNextEtapas();
   }
 
 
