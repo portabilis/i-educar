@@ -43,7 +43,7 @@ require_once 'lib/Portabilis/Message.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 
-class DiarioAjaxController  extends ApiCoreController #extends Core_Controller_Page_EditController
+class DiarioAjaxController  extends ApiCoreController
 {
   protected $_dataMapper  = 'Avaliacao_Model_NotaComponenteDataMapper';
   protected $_processoAp  = 644;
@@ -211,9 +211,10 @@ class DiarioAjaxController  extends ApiCoreController #extends Core_Controller_P
   
   protected function validatesPresenceOfComponenteCurricularIdIfParecerComponente() {
     $tiposParecerComponente = array(RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE,
-                                  RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE);
+                                    RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE);
 
-    $parecerPorComponente   = in_array($this->serviceBoletim()->getRegra()->get('parecerDescritivo'), $tiposParecerComponente);
+    $parecerPorComponente   = in_array($this->serviceBoletim()->getRegra()->get('parecerDescritivo'),
+                                       $tiposParecerComponente);
 
     return (! $parecerPorComponente) || $this->validatesPresenceOf('componente_curricular_id');
   }
@@ -358,18 +359,9 @@ class DiarioAjaxController  extends ApiCoreController #extends Core_Controller_P
 
 
   protected function canDeleteParecer() {
-    $canDelete = $this->canDelete() &&
-                 $this->setService() &&
-                 $this->validatesValueOfEtapaForParecer();
-
-    if ($canDelete) {
-      $tpParecer = $this->serviceBoletim()->getRegra()->get('parecerDescritivo');
-      $cnsParecer = RegraAvaliacao_Model_TipoParecerDescritivo;
-
-      if (($tpParecer == $cnsParecer::ANUAL_COMPONENTE || $tpParecer == $cnsParecer::ETAPA_COMPONENTE))
-        $canDelete = $this->validatesPresenceOfComponenteCurricularId(false);
-    }
-    return $canDelete;
+    return $this->canDelete() &&
+           $this->validatesEtapaParecer() &&
+           $this->validatesPresenceOfComponenteCurricularIdIfParecerComponente();
   }
 
 
