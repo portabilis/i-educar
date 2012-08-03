@@ -55,31 +55,11 @@ class DiarioAjaxController  extends ApiCoreController
 
   // validations
 
-  protected function validatesEtapaParecer() {
-    $isValid           = false;
-    $etapa             = $this->getRequest()->etapa;    
+  // post nota validations
 
-    $tiposParecerAnual = array(RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE,
-                               RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL);
-
-    $parecerAnual      = in_array($this->serviceBoletim()->getRegra()->get('parecerDescritivo'), 
-                                  $tiposParecerAnual);
-    
-    if($parecerAnual && $etapa != 'An')
-      $this->messenger->append("Valor inválido para o atributo 'etapa', é esperado 'An' e foi recebido '{$etapa}'.");
-    elseif(! $parecerAnual && $etapa == 'An')
-      $this->messenger->append("Valor inválido para o atributo 'etapa', é esperado um valor diferente de 'An'.");
-    else
-      $isValid = true;
-
-    return $isValid;
-  }
-
-
-  # TODO refatorar para não receber parametro $raiseExceptionOnError
-  protected function validatesValueOfAttValueIsInOpcoesNotas($raiseExceptionOnError) {
+  protected function validatesValueOfAttValueIsInOpcoesNotas() {
     $expectedValues = array_keys($this->getOpcoesNotas());
-    return $this->validator->validatesValueInSetOf($this->getRequest()->att_value, $expectedValues, 'att_value', $raiseExceptionOnError);
+    return $this->validator->validatesValueInSetOf($this->getRequest()->att_value, $expectedValues, 'att_value');
   }
 
 
@@ -102,8 +82,6 @@ class DiarioAjaxController  extends ApiCoreController
     return true;
   }
 
-
-  // post nota validations
 
   protected function validatesRegraAvaliacaoHasNota() {
     $isValid = $this->serviceBoletim()->getRegra()->get('tipoNota') != RegraAvaliacao_Model_Nota_TipoValor::NENHUM;
@@ -197,6 +175,40 @@ class DiarioAjaxController  extends ApiCoreController
   }
 
 
+  // post/ delete parecer validations
+
+  protected function validatesEtapaParecer() {
+    $isValid           = false;
+    $etapa             = $this->getRequest()->etapa;    
+
+    $tiposParecerAnual = array(RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE,
+                               RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL);
+
+    $parecerAnual      = in_array($this->serviceBoletim()->getRegra()->get('parecerDescritivo'), 
+                                  $tiposParecerAnual);
+    
+    if($parecerAnual && $etapa != 'An')
+      $this->messenger->append("Valor inválido para o atributo 'etapa', é esperado 'An' e foi recebido '{$etapa}'.");
+    elseif(! $parecerAnual && $etapa == 'An')
+      $this->messenger->append("Valor inválido para o atributo 'etapa', é esperado um valor diferente de 'An'.");
+    else
+      $isValid = true;
+
+    return $isValid;
+  }
+
+
+  protected function validatesPresenceOfComponenteCurricularIdIfParecerComponente() {
+    $tiposParecerComponente = array(RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE,
+                                    RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE);
+
+    $parecerPorComponente   = in_array($this->serviceBoletim()->getRegra()->get('parecerDescritivo'),
+                                       $tiposParecerComponente);
+
+    return (! $parecerPorComponente) || $this->validatesPresenceOf('componente_curricular_id');
+  }
+
+
   // post parecer validations
 
   protected function validatesRegraAvaliacaoHasParecer() {
@@ -209,16 +221,6 @@ class DiarioAjaxController  extends ApiCoreController
     return $isValid;
   }
 
-  
-  protected function validatesPresenceOfComponenteCurricularIdIfParecerComponente() {
-    $tiposParecerComponente = array(RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE,
-                                    RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE);
-
-    $parecerPorComponente   = in_array($this->serviceBoletim()->getRegra()->get('parecerDescritivo'),
-                                       $tiposParecerComponente);
-
-    return (! $parecerPorComponente) || $this->validatesPresenceOf('componente_curricular_id');
-  }
 
 
   // delete nota validations
@@ -353,6 +355,7 @@ class DiarioAjaxController  extends ApiCoreController
            $this->validatesInexistenceNotasInNextEtapas();
   }
 
+
   protected function canDeleteFalta() {
     return $this->canDelete() &&
            $this->validatesInexistenceFaltasInNextEtapas();
@@ -367,6 +370,71 @@ class DiarioAjaxController  extends ApiCoreController
 
 
   // responders
+
+  // post
+
+  protected function postNota() {
+    if ($this->canPostNota()) {
+
+      $nota = new Avaliacao_Model_NotaComponente(array(
+                  'componenteCurricular' => $this->getRequest()->componente_curricular_id,
+                  'nota'                 => urldecode($this->getRequest()->att_value),
+                  'etapa'                => $this->getRequest()->etapa));
+
+      $this->serviceBoletim()->addNota($nota);
+      $this->saveService();
+      $this->messenger->append('Nota matrícula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
+    }
+
+    $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
+    $this->appendResponse('situacao',     $this->getSituacaoMatricula());
+  }
+
+
+  // TODO mover validacao para canPostFalta
+  protected function postFalta() {
+
+    $canPost = $this->canPostFalta();
+    if ($canPost && $this->serviceBoletim()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
+      $canPost = $this->validatesPresenceOfComponenteCurricularId(false);
+
+    if ($canPost) {
+      if ($this->serviceBoletim()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)        $falta = $this->getFaltaComponente();
+      elseif ($this->serviceBoletim()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL)
+        $falta = $this->getFaltaGeral();
+
+      $this->serviceBoletim()->addFalta($falta);
+      $this->saveService();
+      $this->messenger->append('Falta matrícula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
+    }
+
+    $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
+    $this->appendResponse('situacao',     $this->getSituacaoMatricula());
+  }
+
+
+  protected function postParecer() {
+
+    if ($this->canPostParecer()) {
+      $tpParecer = $this->serviceBoletim()->getRegra()->get('parecerDescritivo');
+      $cnsParecer = RegraAvaliacao_Model_TipoParecerDescritivo;
+
+      if ($tpParecer == $cnsParecer::ETAPA_COMPONENTE || $tpParecer == $cnsParecer::ANUAL_COMPONENTE)
+        $parecer = $this->getParecerComponente();
+      else
+        $parecer = $this->getParecerGeral();
+
+      $this->serviceBoletim()->addParecer($parecer);
+      $this->saveService();
+      $this->messenger->append('Parecer descritivo matricula '. $this->getRequest()->matricula_id .' alterado com sucesso.', 'success');
+    }
+
+    $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
+    $this->appendResponse('situacao',     $this->getSituacaoMatricula());
+  }
+
+
+  // delete
 
   protected function deleteNota() {
     if ($this->canDeleteNota()) {
@@ -439,128 +507,7 @@ class DiarioAjaxController  extends ApiCoreController
   }
 
 
-  protected function postNota() {
-    if ($this->canPostNota()) {
-
-      $nota = new Avaliacao_Model_NotaComponente(array(
-        'componenteCurricular' => $this->getRequest()->componente_curricular_id,
-        'nota' => urldecode($this->getRequest()->att_value),
-        'etapa' => $this->getRequest()->etapa
-        ));
-
-      $this->serviceBoletim()->addNota($nota);
-      $this->saveService();
-      $this->messenger->append('Nota matrícula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
-    }
-
-    $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-    $this->appendResponse('situacao',     $this->getSituacaoMatricula());
-  }
-
-
-  protected function getQuantidadeFalta() {
-    $quantidade = (int) $this->getRequest()->att_value;
-
-    if ($quantidade < 0)
-      $quantidade = 0;
-
-    return $quantidade;
-  }
-
-
-  protected function getFaltaGeral() {
-    return new Avaliacao_Model_FaltaGeral(array(
-        'quantidade' => $this->getQuantidadeFalta(),
-        'etapa' => $this->getRequest()->etapa
-    ));
-  }
-
-
-  protected function getFaltaComponente() {
-    return new Avaliacao_Model_FaltaComponente(array(
-            'componenteCurricular' => $this->getRequest()->componente_curricular_id,
-            'quantidade' => $this->getQuantidadeFalta(),
-            'etapa' => $this->getRequest()->etapa
-    ));
-  }
-
-
-  protected function postFalta() {
-
-    $canPost = $this->canPostFalta();
-    if ($canPost && $this->serviceBoletim()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
-      $canPost = $this->validatesPresenceOfComponenteCurricularId(false);
-
-    if ($canPost) {
-      if ($this->serviceBoletim()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
-        $falta = $this->getFaltaComponente();
-      elseif ($this->serviceBoletim()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL)
-        $falta = $this->getFaltaGeral();
-
-      $this->serviceBoletim()->addFalta($falta);
-      $this->saveService();
-      $this->messenger->append('Falta matrícula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
-    }
-
-    $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-    $this->appendResponse('situacao',     $this->getSituacaoMatricula());
-  }
-
-
-  protected function getParecerComponente() {
-    return new Avaliacao_Model_ParecerDescritivoComponente(array(
-              'componenteCurricular' => $this->getRequest()->componente_curricular_id,
-              'parecer'  => addslashes($this->getRequest()->att_value),
-              'etapa'  => $this->getRequest()->etapa
-    ));
-  }
-
-
-  protected function getParecerGeral() {
-    return new Avaliacao_Model_ParecerDescritivoGeral(array(
-              'parecer' => addslashes($this->getRequest()->att_value),
-              'etapa'   => $this->getRequest()->etapa
-    ));
-  }
-
-
-  protected function postParecer() {
-
-    if ($this->canPostParecer()) {
-      $tpParecer = $this->serviceBoletim()->getRegra()->get('parecerDescritivo');
-      $cnsParecer = RegraAvaliacao_Model_TipoParecerDescritivo;
-
-      if ($tpParecer == $cnsParecer::ETAPA_COMPONENTE || $tpParecer == $cnsParecer::ANUAL_COMPONENTE)
-        $parecer = $this->getParecerComponente();
-      else
-        $parecer = $this->getParecerGeral();
-
-      $this->serviceBoletim()->addParecer($parecer);
-      $this->saveService();
-      $this->messenger->append('Parecer descritivo matricula '. $this->getRequest()->matricula_id .' alterado com sucesso.', 'success');
-    }
-
-    $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-    $this->appendResponse('situacao',     $this->getSituacaoMatricula());
-  }
-
-
-  protected function getSituacaoMatricula() {
-    $situacao = 'Situação não recuperada';
-    $ccId     = $this->getRequest()->componente_curricular_id;
-
-    try {
-      $componente = $this->serviceBoletim()->getSituacaoComponentesCurriculares()->componentesCurriculares[$ccId];
-      $situacao   = App_Model_MatriculaSituacao::getInstance()->getValue($componente->situacao);
-    }
-    catch (Exception $e) {
-      $matriculaId = $this->getRequest()->matricula_id;
-      $this->messenger->append("Erro ao recuperar situação da matrícula '$matriculaId': " . $e->getMessage());
-    }
-
-    return $this->safeString($situacao);
-  }
-
+  // get
 
   protected function getMatriculas() {
     $matriculas = array();
@@ -641,6 +588,76 @@ class DiarioAjaxController  extends ApiCoreController
     $this->appendResponse('situacao',     $this->getSituacaoMatricula());
 
     return $matriculas;
+  }
+
+
+
+  // metodos auxiliares responders
+
+  // metodos auxiliares getFalta
+
+  protected function getQuantidadeFalta() {
+    $quantidade = (int) $this->getRequest()->att_value;
+
+    if ($quantidade < 0)
+      $quantidade = 0;
+
+    return $quantidade;
+  }
+
+
+  protected function getFaltaGeral() {
+    return new Avaliacao_Model_FaltaGeral(array(
+        'quantidade' => $this->getQuantidadeFalta(),
+        'etapa' => $this->getRequest()->etapa
+    ));
+  }
+
+
+  protected function getFaltaComponente() {
+    return new Avaliacao_Model_FaltaComponente(array(
+            'componenteCurricular' => $this->getRequest()->componente_curricular_id,
+            'quantidade' => $this->getQuantidadeFalta(),
+            'etapa' => $this->getRequest()->etapa
+    ));
+  }
+
+
+  // metodos auxiliares getParecer
+
+  protected function getParecerComponente() {
+    return new Avaliacao_Model_ParecerDescritivoComponente(array(
+              'componenteCurricular' => $this->getRequest()->componente_curricular_id,
+              'parecer'  => addslashes($this->getRequest()->att_value),
+              'etapa'  => $this->getRequest()->etapa
+    ));
+  }
+
+
+  protected function getParecerGeral() {
+    return new Avaliacao_Model_ParecerDescritivoGeral(array(
+              'parecer' => addslashes($this->getRequest()->att_value),
+              'etapa'   => $this->getRequest()->etapa
+    ));
+  }
+
+
+  // metodos auxiliares getSituacaoMatricula
+
+  protected function getSituacaoMatricula() {
+    $situacao = 'Situação não recuperada';
+    $ccId     = $this->getRequest()->componente_curricular_id;
+
+    try {
+      $componente = $this->serviceBoletim()->getSituacaoComponentesCurriculares()->componentesCurriculares[$ccId];
+      $situacao   = App_Model_MatriculaSituacao::getInstance()->getValue($componente->situacao);
+    }
+    catch (Exception $e) {
+      $matriculaId = $this->getRequest()->matricula_id;
+      $this->messenger->append("Erro ao recuperar situação da matrícula '$matriculaId': " . $e->getMessage());
+    }
+
+    return $this->safeString($situacao);
   }
 
 
