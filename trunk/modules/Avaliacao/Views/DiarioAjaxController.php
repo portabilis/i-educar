@@ -55,23 +55,24 @@ class DiarioAjaxController  extends ApiCoreController
 
   // validations
 
-  # TODO refatorar para não receber parametro $raiseExceptionOnError
-  protected function validatesEtapaParecer($raiseExceptionOnError) {
-    if($this->getRequest()->etapa != 'An' && ($this->serviceBoletim()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE || $this->serviceBoletim()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL)) {
-      $msg = "Valor inválido para o atributo 'etapa', é esperado o valor 'An' e foi recebido '{$this->getRequest()->etapa}'.";
-    }
-    elseif($this->getRequest()->etapa == 'An' && ($this->serviceBoletim()->getRegra()->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE && $this->serviceBoletim()->getRegra()->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL)) {
-      $msg = "Valor inválido para o atributo 'etapa', é esperado o valor diferente de 'An'.";
-    }
+  protected function validatesEtapaParecer() {
+    $isValid           = false;
+    $etapa             = $this->getRequest()->etapa;    
+
+    $tiposParecerAnual = array(RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE,
+                               RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL);
+
+    $parecerAnual      = in_array($this->serviceBoletim()->getRegra()->get('parecerDescritivo'), 
+                                  $tiposParecerAnual);
+    
+    if($parecerAnual && $etapa != 'An')
+      $this->messenger->append("Valor inválido para o atributo 'etapa', é esperado 'An' e foi recebido '{$etapa}'.");
+    elseif(! $parecerAnual && $etapa == 'An')
+      $this->messenger->append("Valor inválido para o atributo 'etapa', é esperado um valor diferente de 'An'.");
     else
-      return true;
+      $isValid = true;
 
-    $this->messenger->append($msg);
-
-    if ($raiseExceptionOnEmpty)
-       throw new Exception($msg);
-
-    return false;
+    return $isValid;
   }
 
 
