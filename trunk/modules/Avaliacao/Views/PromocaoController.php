@@ -82,9 +82,9 @@ class PromocaoController extends Core_Controller_Page_ListController
     $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery.js"></script>');
     $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery.form.js"></script>');
 
-    $this->appendOutput('<link type="text/css" rel="stylesheet" href="/modules/Avaliacao/Static/styles/promocaoController.css"></script>');
+    $this->appendOutput('<link type="text/css" rel="stylesheet" href="/modules/Avaliacao/Assets/Stylesheets/promocaoController.css"></script>');
 
-    $this->appendOutput('<script type="text/javascript" charset="utf-8" src="/modules/Avaliacao/Static/scripts/promocaoController.js?timestamp='.date('dmY').'"></script>');
+    $this->appendOutput('<script type="text/javascript" charset="utf-8" src="/modules/Avaliacao/Assets/Javascripts/promocaoController.js?timestamp='.date('dmY').'"></script>');
   }
 }
 ?>

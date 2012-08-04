@@ -43,7 +43,7 @@ require_once 'lib/Portabilis/Message.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 
-class DiarioAjaxController  extends ApiCoreController
+class DiarioApiController extends ApiCoreController
 {
   protected $_dataMapper  = 'Avaliacao_Model_NotaComponenteDataMapper';
   protected $_processoAp  = 644;
