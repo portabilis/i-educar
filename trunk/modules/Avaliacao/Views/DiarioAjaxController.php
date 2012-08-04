@@ -382,7 +382,7 @@ class DiarioAjaxController  extends ApiCoreController
                   'etapa'                => $this->getRequest()->etapa));
 
       $this->serviceBoletim()->addNota($nota);
-      $this->saveService();
+      $this->trySaveServiceBoletim();
       $this->messenger->append('Nota matrícula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
     }
 
@@ -396,7 +396,7 @@ class DiarioAjaxController  extends ApiCoreController
 
     $canPost = $this->canPostFalta();
     if ($canPost && $this->serviceBoletim()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
-      $canPost = $this->validatesPresenceOfComponenteCurricularId(false);
+      $canPost = $this->validatesPresenceOf('componente_curricular_id');
 
     if ($canPost) {
       if ($this->serviceBoletim()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)        $falta = $this->getFaltaComponente();
@@ -404,7 +404,7 @@ class DiarioAjaxController  extends ApiCoreController
         $falta = $this->getFaltaGeral();
 
       $this->serviceBoletim()->addFalta($falta);
-      $this->saveService();
+      $this->trySaveServiceBoletim();
       $this->messenger->append('Falta matrícula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
     }
 
@@ -425,7 +425,7 @@ class DiarioAjaxController  extends ApiCoreController
         $parecer = $this->getParecerGeral();
 
       $this->serviceBoletim()->addParecer($parecer);
-      $this->saveService();
+      $this->trySaveServiceBoletim();
       $this->messenger->append('Parecer descritivo matricula '. $this->getRequest()->matricula_id .' alterado com sucesso.', 'success');
     }
 
@@ -445,7 +445,7 @@ class DiarioAjaxController  extends ApiCoreController
       else
       {
         $this->serviceBoletim()->deleteNota($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id);
-        $this->saveService();
+        $this->trySaveServiceBoletim();
         $this->messenger->append('Nota matrícula '. $this->getRequest()->matricula_id .' removida com sucesso.', 'success');
       }
     }
@@ -461,7 +461,7 @@ class DiarioAjaxController  extends ApiCoreController
     $tpPresenca = $this->serviceBoletim()->getRegra()->get('tipoPresenca');
 
     if ($canDelete && $tpPresenca == $cnsPresenca::POR_COMPONENTE) {
-      $canDelete = $this->validatesPresenceOfComponenteCurricularId(false);
+      $canDelete              = $this->validatesPresenceOf('componente_curricular_id');
       $componenteCurricularId = $this->getRequest()->componente_curricular_id;
     }
     else
@@ -472,7 +472,7 @@ class DiarioAjaxController  extends ApiCoreController
     }
     elseif ($canDelete) {
       $this->serviceBoletim()->deleteFalta($this->getRequest()->etapa, $componenteCurricularId);
-      $this->saveService();
+      $this->trySaveServiceBoletim();
       $this->messenger->append('Falta matrícula '. $this->getRequest()->matricula_id .' removida com sucesso.', 'success');
     }
 
@@ -497,7 +497,7 @@ class DiarioAjaxController  extends ApiCoreController
         else
           $this->serviceBoletim()->deleteParecer($this->getRequest()->etapa);
 
-        $this->saveService();
+        $this->trySaveServiceBoletim();
         $this->messenger->append('Parecer descritivo matrícula '. $this->getRequest()->matricula_id .' removido com sucesso.', 'success');
       }
     }
@@ -561,7 +561,8 @@ class DiarioAjaxController  extends ApiCoreController
         $matricula   = array();
         $matriculaId = $aluno['ref_cod_matricula'];
 
-        $this->setService($matriculaId);
+        // seta id da matricula a ser usado pelo metodo serviceBoletim
+        $this->setCurrentMatriculaId($matriculaId);        
 
         $matricula['componentes_curriculares'] = $this->loadComponentesCurricularesForMatricula($matriculaId);
 
@@ -590,9 +591,63 @@ class DiarioAjaxController  extends ApiCoreController
     return $matriculas;
   }
 
-
-
   // metodos auxiliares responders
+
+
+  protected function setCurrentMatriculaId($matriculaId) {
+    $this->_currentMatriculaId = $matriculaId;
+  }
+
+
+  protected function getCurrentMatriculaId() {
+    // caso tenha setado _currentMatriculaId, ignora matricula_id recebido nos parametros
+    if(! is_null($this->_currentMatriculaId))
+      $matriculaId = $this->_currentMatriculaId;
+    elseif (! is_null($this->getRequest()->matricula_id))
+      $matriculaId = $this->getRequest()->matricula_id;
+    else
+      throw new CoreExt_Exception("Não foi possivel recuperar o id da matricula atual.");
+
+    return $matriculaId;
+  }
+
+
+  protected function serviceBoletim($reload = false) {
+    $matriculaId = $this->getCurrentMatriculaId();
+
+    if (! isset($this->_boletimServiceInstances))
+      $this->_boletimServiceInstances = array();
+
+    // set service
+    if (! isset($this->_boletimServiceInstances[$matriculaId]) || $reload) {
+      try {
+        $params = array('matricula' => $matriculaId, 'usuario' => $this->getSession()->id_pessoa);
+        $this->_boletimServiceInstances[$matriculaId] = new Avaliacao_Service_Boletim($params);
+      }
+      catch (Exception $e){
+        $this->messenger->append("Erro ao instanciar serviço boletim para matricula {$matriculaId}: " . $e->getMessage());
+      }
+    }
+
+    // validates service
+    if (is_null($this->_boletimServiceInstances[$matriculaId]))
+      throw new CoreExt_Exception("Não foi possivel instanciar o serviço boletim para a matricula $matriculaId.");
+
+    return $this->_boletimServiceInstances[$matriculaId];
+  }
+
+
+  protected function trySaveServiceBoletim() {
+    try {
+      $this->serviceBoletim()->save();
+    }
+    catch (CoreExt_Service_Exception $e) {
+      // excecoes ignoradas :( pois servico lanca excecoes de alertas, que não são exatamente erros.
+      // error_log('CoreExt_Service_Exception ignorada: ' . $e->getMessage());
+    }
+  }
+
+
 
   // metodos auxiliares getFalta
 
@@ -660,6 +715,8 @@ class DiarioAjaxController  extends ApiCoreController
     return $this->safeString($situacao);
   }
 
+
+  // outros metodos auxiliares
 
   protected function loadComponentesCurricularesForMatricula($matriculaId) {
     $componentesCurriculares = array();
@@ -806,7 +863,7 @@ class DiarioAjaxController  extends ApiCoreController
 
 
   protected function canGetOpcoesNotas() {
-    return $this->validatesPresenceOf('matricula_id');
+    return true;
   }
 
 
@@ -834,7 +891,7 @@ class DiarioAjaxController  extends ApiCoreController
 
 
   protected function canGetRegraAvaliacao() {
-    return $this->validatesPresenceOf('matricula_id');
+    return true;
   }
 
 
@@ -910,90 +967,6 @@ class DiarioAjaxController  extends ApiCoreController
     }
 
     return $itensRegra;
-  }
-
-
-  protected function serviceBoletim($matriculaId = null, $reload = false) {
-    // defaults
-    if (is_null($matriculaId))
-      $matriculaId = $this->getRequest()->matricula_id;
-
-    if (! isset($this->_boletimServiceInstances))
-      $this->_boletimServiceInstances = array();
-
-    // set service
-    if (! isset($this->_boletimServiceInstances[$matriculaId]) || $reload) {
-      try {
-        $params = array('matricula' => $matriculaId, 'usuario' => $this->getSession()->id_pessoa);
-        $this->_boletimServiceInstances[$matriculaId] = new Avaliacao_Service_Boletim($params);
-      }
-      catch (Exception $e){
-        $this->messenger->append("Erro ao instanciar serviço boletim para matricula {$matriculaId}: " . $e->getMessage());
-      }
-    }
-
-    // validates service
-    if (is_null($this->_boletimServiceInstances[$matriculaId]))
-      throw new CoreExt_Exception("Não foi possivel instanciar o serviço boletim para a matricula $matriculaId.");
-
-    return $this->_boletimServiceInstances[$matriculaId];
-  }
-
-
-  protected function trySaveService($service) {
-    try {
-      $service->save();
-    }
-    catch (CoreExt_Service_Exception $e) {
-      // excecoes ignoradas :( pois servico lanca excecoes de alertas, que não são exatamente erros.
-      // error_log('CoreExt_Service_Exception ignorada: ' . $e->getMessage());
-    }
-  }
-
-
-
-  protected function saveService() {
-    try {
-      $this->serviceBoletim()->save();
-    }
-    catch (CoreExt_Service_Exception $e) {
-      //excecoes ignoradas :( servico lanca excecoes de alertas, que não são exatamente erros.
-      //error_log('CoreExt_Service_Exception ignorada: ' . $e->getMessage());
-    }
-  }
-
-
-  protected function getService($raiseExceptionOnErrors = false, $appendMsgOnErrors = true) {
-    if (isset($this->service) && ! is_null($this->service))
-      return $this->service;
-
-    $msg = 'Erro ao recuperar serviço boletim: serviço não definido.';
-    if($appendMsgOnErrors)
-      $this->messenger->append($msg);
-
-    if ($raiseExceptionOnErrors)
-      throw new Exception($msg);
-
-    return null;
-  }
-
-
-  protected function setService($matriculaId = null) {
-    if (! $matriculaId)
-      $matriculaId = $this->getRequest()->matricula_id;
-
-    $params = array('matricula' => $matriculaId, 'usuario' => $this->getSession()->id_pessoa);
-
-    try {
-      $this->service = new Avaliacao_Service_Boletim($params);
-    }
-    catch (Exception $e) {
-      $this->messenger->append('Exception ao instanciar serviço boletim: ' . $e->getMessage(), 'error', $encodeToUtf8 = true);
-
-      return false;
-    }
-
-    return true;
   }
 
 
