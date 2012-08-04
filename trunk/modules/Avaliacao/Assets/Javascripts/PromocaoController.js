@@ -74,43 +74,14 @@ var $j = jQuery.noConflict();
     };
 
 
-    var deleteResourceUrlBuilder = {
-      buildUrl : function(urlBase, resourceName, additionalVars){
-
-        var vars = {
-          att : resourceName,
-          oper : 'delete',
-          instituicao_id : $('#ref_cod_instituicao').val(),
-          escola_id : $('#ref_cod_escola').val(),
-          curso_id : $('#ref_cod_curso').val(),
-          serie_id : $('#ref_ref_cod_serie').val(),
-          turma_id : $('#ref_cod_turma').val(),
-          ano_escolar : $('#ano_escolar').val(),
-          componente_curricular_id : $('#ref_cod_componente_curricular').val(),
-          etapa : $('#etapa').val()
-        };
-
-        return resourceUrlBuilder.buildUrl(urlBase, $.extend(vars, additionalVars));
-
-      }
-    };
-
-
     var postResourceUrlBuilder = {
       buildUrl : function(urlBase, resourceName, additionalVars){
 
         var vars = {
           att : resourceName,
-          oper : 'post',
-          instituicao_id : $('#ref_cod_instituicao').val(),
-          escola_id : $('#ref_cod_escola').val(),
-          curso_id : $('#ref_cod_curso').val(),
-          serie_id : $('#ref_ref_cod_serie').val(),
-          turma_id : $('#ref_cod_turma').val(),
+          instituicao_id : $('#instituicao_id').val(),
           ano_escolar : $('#ano_escolar').val(),
-          componente_curricular_id : $('#ref_cod_componente_curricular').val(),
-          etapa : $('#etapa').val(),
-          matricula_id : ''
+          oper : 'post'
         };
 
         return resourceUrlBuilder.buildUrl(urlBase, $.extend(vars, additionalVars));
@@ -124,15 +95,7 @@ var $j = jQuery.noConflict();
 
         var vars = {
           att : resourceName,
-          oper : 'get',
-          instituicao_id : $('#ref_cod_instituicao').val(),
-          escola_id : $('#ref_cod_escola').val(),
-          curso_id : $('#ref_cod_curso').val(),
-          serie_id : $('#ref_ref_cod_serie').val(),
-          turma_id : $('#ref_cod_turma').val(),
-          ano_escolar : $('#ano_escolar').val(),
-          componente_curricular_id : $('#ref_cod_componente_curricular').val(),
-          etapa : $('#etapa').val()
+          oper : 'get'          
         };
 
         return resourceUrlBuilder.buildUrl(urlBase, $.extend(vars, additionalVars));
@@ -189,19 +152,6 @@ var $j = jQuery.noConflict();
 
 
     //callback handlers
-
-    //delete
-    function handleDelete(dataResponse){
-      var targetId = dataResponse.att + '-matricula-' + dataResponse.matricula_id;
-      handleMessages(dataResponse.msgs, targetId);
-      updateFieldSituacaoMatricula(dataResponse.matricula_id, dataResponse.situacao);
-    }
-
-
-    function handleErrorDeleteResource(response){
-      handleMessages([{type : 'error', msg : 'Erro ao alterar recurso, detalhes:' + response.responseText}], '');
-      safeLog(response);
-    }
 
     //post
     function handleErrorPost(response){

@@ -32,16 +32,9 @@
  * @version   $Id$
  */
 
-require_once 'CoreExt/View/Helper/UrlHelper.php';
-require_once 'CoreExt/View/Helper/TableHelper.php';
 require_once 'Core/Controller/Page/ListController.php';
-require_once 'App/Model/IedFinder.php';
-
-require_once 'include/clsDetalhe.inc.php';
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsListagem.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
+require_once 'lib/Portabilis/View/Helper/Application.php';
+require_once 'lib/Portabilis/View/Helper/DynamicSelectMenus.php';
 
 class PromocaoController extends Core_Controller_Page_ListController
 {
@@ -50,42 +43,29 @@ class PromocaoController extends Core_Controller_Page_ListController
   protected $_processoAp = 644;
   protected $_formMap  = array();
 
-  protected function setSelectionFields()
-  {
+  protected function setSelectionFields() {
+    $dynamicSelectMenus = new Portabilis_View_Helper_DynamicSelectMenus($this);
 
-    #variaveis usadas pelo modulo /intranet/include/pmieducar/educar_campo_lista.php
-    $this->verificar_campos_obrigatorios = True;
-    $this->add_onchange_events = True;
-
-    $instituicao_obrigatorio = true;
-    $this->campoNumero('ano_escolar', 'ano_escolar', date('Y'), 4, 4, true, '');
-
-    #$get_escola  = $listar_escolas_alocacao_professor = TRUE;
-    #$get_curso = $listar_somente_cursos_funcao_professor = TRUE;
-    #$get_escola_curso_serie = TRUE;
-    #$get_turma = $listar_turmas_periodo_alocacao_professor = TRUE;
-    #$get_alunos_matriculados = true;
-
-    include 'include/pmieducar/educar_campo_lista.php';
+    $dynamicSelectMenus->helperFor('instituicao', array('options' => array('id' => 'instituicao_id')));
+    $dynamicSelectMenus->helperFor('ano', array('options' => array('id' => 'ano_escolar')));
   }
 
   
-  public function Gerar()
-  {
+  public function Gerar() {
+    Portabilis_View_Helper_Application::loadStylesheet($this, '/modules/Portabilis/Assets/Stylesheets/FrontendApi.css');
 
     $this->setSelectionFields();
 
-    $this->rodape = "";
-
+    $this->rodape  = "";
     $this->largura = '100%';
 
-    $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery.js"></script>');
-    $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery.form.js"></script>');
+    $scripts = array('scripts/jquery/jquery.form.js',
 
-    $this->appendOutput('<link type="text/css" rel="stylesheet" href="/modules/Avaliacao/Assets/Stylesheets/promocaoController.css"></script>');
+                     // TODO migrar PromocaoController.js para novo padrao
+                     //'/modules/Portabilis/Assets/Javascripts/FrontendApi.js',
+                     '/modules/Avaliacao/Assets/Javascripts/PromocaoController.js');
 
-    $this->appendOutput('<script type="text/javascript" charset="utf-8" src="/modules/Avaliacao/Assets/Javascripts/promocaoController.js?timestamp='.date('dmY').'"></script>');
+    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
   }
 }
 ?>
-
