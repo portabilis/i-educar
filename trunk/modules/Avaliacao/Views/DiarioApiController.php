@@ -583,7 +583,7 @@ class DiarioApiController extends ApiCoreController
 
     // adiciona regras de avaliacao
     if(! empty($matriculas))
-      $this->appendResponse('regra_avaliacao', $this->getRegraAvaliacao());
+      $this->appendResponse('details', $this->getRegraAvaliacao());
 
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
     $this->appendResponse('situacao',     $this->getSituacaoMatricula());
@@ -977,7 +977,7 @@ class DiarioApiController extends ApiCoreController
     if ($this->isRequestFor('get', 'matriculas'))
       $this->appendResponse('matriculas', $this->getMatriculas());
 
-    elseif ($this->isRequestFor('get', 'opcoes_notas'))
+    /*elseif ($this->isRequestFor('get', 'opcoes_notas'))
       $this->appendResponse('opcoes_notas', $this->getOpcoesNotas());
 
     elseif ($this->isRequestFor('get', 'opcoes_faltas'))
@@ -985,6 +985,7 @@ class DiarioApiController extends ApiCoreController
 
     elseif ($this->isRequestFor('get', 'regra_avaliacao'))
       $this->appendResponse('regra_avaliacao', $this->getRegraAvaliacao());
+    */
 
     elseif ($this->isRequestFor('post', 'nota') || $this->isRequestFor('post', 'nota_exame'))
       $this->postNota();

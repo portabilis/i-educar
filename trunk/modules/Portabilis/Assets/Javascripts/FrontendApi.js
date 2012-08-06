@@ -1,5 +1,6 @@
-function safeLog(value)
-{
+// metodos e variaveis acessiveis por outros modulos
+
+function safeLog(value) {
   if(typeof(console) != 'undefined' && typeof(console.log) == 'function')
     console.log(value);
 }
@@ -140,10 +141,20 @@ function getFirstCheckboxChecked($targetElement) {
 }
 
 
+var $formFilter = $j('#formcadastro');
+
+var $tableSearchDetails = $j('<table />').attr('id', 'search-details')
+                                        .addClass('styled')
+                                        .addClass('horizontal-expand')
+                                        .addClass('center')
+                                        .hide()
+                                        .prependTo($formFilter.parent());
+
+
+// metodos e variaveis não acessiveis por outros modulos
+
 (function($) {
   $(document).ready(function() {
-
-    var $formFilter = $('#formcadastro');
     var $submitButton = $('#botao_busca');
 
     // prepare result table
@@ -184,15 +195,11 @@ function getFirstCheckboxChecked($targetElement) {
     $navActions.prependTo($formFilter.parent());
 
 
-    // add table for search details
-    var $tableSearchDetails = $('<table />')
-                              .attr('id', 'search-details')
-                              .addClass('styled')
-                              .addClass('horizontal-expand')
-                              .addClass('center')
-                              .hide()
-                              .prependTo($formFilter.parent());
-
+    // add orientations about search
+    $('<p />').html(SEARCH_ORIENTATION)
+              .addClass('center')
+              .attr('id', 'orientation-search')
+              .appendTo($resultTable.parent());
 
     // add div for feedback messages
     $('<div />').attr('id', 'feedback-messages').appendTo($formFilter.parent());

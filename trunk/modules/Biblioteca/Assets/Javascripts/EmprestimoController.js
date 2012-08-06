@@ -7,6 +7,8 @@ var RESOURCES_NAME = 'exemplares';
 var POST_LABEL = 'Emprestar';
 var DELETE_LABEL = 'Devolver';
 
+var SEARCH_ORIENTATION = '';
+
 var onClickSelectAllEvent = false;
 
 var onClickDeleteEvent = false;
@@ -79,7 +81,7 @@ var postEmprestimo = function ($resourceCheckbox) {
 };
 
 var handlePost = function(dataResponse){
-  console.log('#TODO handlePost');
+
   //try{
     if (dataResponse.exemplar)
       var $targetElement = $j('#exemplar-' + dataResponse.exemplar.id).closest('tr').first();
