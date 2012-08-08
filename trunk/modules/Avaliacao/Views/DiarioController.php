@@ -32,16 +32,11 @@
  * @version   $Id$
  */
 
-require_once 'CoreExt/View/Helper/UrlHelper.php';
-require_once 'CoreExt/View/Helper/TableHelper.php';
 require_once 'Core/Controller/Page/ListController.php';
-require_once 'App/Model/IedFinder.php';
+require_once 'lib/Portabilis/View/Helper/Application.php';
 
-require_once 'include/clsDetalhe.inc.php';
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsListagem.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
+// incluido, pois em include/pmieducar/educar_campo_lista.php acessado tal classe
+require_once 'include/pmieducar/clsPermissoes.inc.php';
 
 class DiarioController extends Core_Controller_Page_ListController
 {
@@ -50,66 +45,48 @@ class DiarioController extends Core_Controller_Page_ListController
   protected $_processoAp = 644;
   protected $_formMap  = array();
 
-  protected function setVars()
-  {
-    $this->ref_cod_aluno = $_GET['aluno_id'];
-    $this->ref_cod_instituicao = $_GET['instituicao_id'];
-    $this->ref_cod_escola = $_GET['escola_id'];
-    $this->ref_cod_curso = $_GET['curso_id'];
-    $this->ref_cod_turma = $_GET['turma_id'];
-    $this->ref_ref_cod_serie = $this->ref_cod_serie = $_GET['serie_id'];
-    $this->ano = $_GET['ano'];
-    $this->ref_cod_componente_curricular = $_GET['componente_curricular_id'];
-    $this->etapa = $_GET['etapa'];
-
-    if ($this->ref_cod_aluno)
-    {
-      $nome_aluno_filtro = new clsPmieducarAluno();
-      $nome_aluno_filtro = $nome_aluno_filtro->lista($int_cod_aluno = $this->ref_cod_aluno);
-      $this->nm_aluno = $nome_aluno_filtro[0]['nome_aluno'];
-    }
-  }
-
-
-  protected function setSelectionFields()
-  {
-
+  // TODO migrar para novo padrão campos seleção
+  protected function setSelectionFields() {
     #variaveis usadas pelo modulo /intranet/include/pmieducar/educar_campo_lista.php
-    $this->verificar_campos_obrigatorios = True;
-    $this->add_onchange_events = True;
+    $this->verificar_campos_obrigatorios = true;
+    $this->add_onchange_events           = true;
 
     $this->campoNumero( "ano", "Ano", date("Y"), 4, 4, true);
-    $get_escola = $escola_obrigatorio = $listar_escolas_alocacao_professor = TRUE;
-    $get_curso = $curso_obrigatorio = $listar_somente_cursos_funcao_professor = TRUE;
-    $get_escola_curso_serie = $escola_curso_serie_obrigatorio = TRUE;
-    $get_turma = $turma_obrigatorio = $listar_turmas_periodo_alocacao_professor = TRUE;
-    $get_componente_curricular = $componente_curricular_obrigatorio = $listar_componentes_curriculares_professor = TRUE;
-    $get_etapa = $etapa_obrigatorio = TRUE;
-    $get_alunos_matriculados = true;
+    $get_escola = $escola_obrigatorio = $listar_escolas_alocacao_professor      = true;
+    $get_curso = $curso_obrigatorio = $listar_somente_cursos_funcao_professor   = true;
+    $get_escola_curso_serie = $escola_curso_serie_obrigatorio                   = true;
+    $get_turma = $turma_obrigatorio = $listar_turmas_periodo_alocacao_professor = true;
 
-    //TODO remover educar_campos_lista
-    //$get_ano_escolar = $ano_escolar_obrigatorio = TRUE;
+    $get_componente_curricular = $componente_curricular_obrigatorio =
+    $listar_componentes_curriculares_professor = true;
+
+    $get_etapa = $etapa_obrigatorio                                             = true;
+    $get_alunos_matriculados                                                    = true;
 
     include 'include/pmieducar/educar_campo_lista.php';
   }
 
   
-  public function Gerar()
-  {
+  public function Gerar() {
+    Portabilis_View_Helper_Application::loadStylesheet($this, '/modules/Portabilis/Assets/Stylesheets/FrontendApi.css');
 
-    $this->setVars();
     $this->setSelectionFields();
 
-    $this->rodape = "";
-
+    $this->rodape  = "";
     $this->largura = '100%';
 
-    $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery.js"></script>');
-    $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery.form.js"></script>');
+    /* TODO quando passar a usar o novo padrão de campos de seleção as chamadas abaixo 
+            poderão ser omitidas pois os novos helpers de campos de seleção já fazem tais chamadas. */
+    Portabilis_View_Helper_Application::loadJavascript($this,  'scripts/jquery/jquery.js');
+    Portabilis_View_Helper_Application::loadJavascript($this,  '/modules/Portabilis/Assets/Javascripts/ClientApi.js');
+    Portabilis_View_Helper_Application::embedJavascript($this, 'var $j = jQuery.noConflict();');
 
-    $this->appendOutput('<link type="text/css" rel="stylesheet" href="/modules/Avaliacao/Static/styles/diarioController.css"></script>');
+    $scripts = array('scripts/jquery/jquery.form.js',
+                     '/modules/Portabilis/Assets/Javascripts/Validator.js',
+                     '/modules/Portabilis/Assets/Javascripts/FrontendApi.js',
+                     '/modules/Avaliacao/Assets/Javascripts/DiarioController.js');
 
-    $this->appendOutput('<script type="text/javascript" charset="utf-8" src="/modules/Avaliacao/Static/scripts/diarioController.js?timestamp='.date('dmY').'"></script>');
+    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
   }
 }
 ?>

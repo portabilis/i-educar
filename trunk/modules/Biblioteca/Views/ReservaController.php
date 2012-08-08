@@ -45,24 +45,7 @@ class ReservaController extends Core_Controller_Page_ListController
   #TODO setar código processoAP, copiar da funcionalidade de reserva existente?
   protected $_processoAp = 0;
 
-
-  protected function setVars()
-  {
-    #$this->ref_cod_cliente = $_GET['cliente_id'];
-    #$this->ref_cod_instituicao = $_GET['instituicao_id'];
-    #$this->ref_cod_escola = $_GET['escola_id'];
-
-    #if ($this->ref_cod_cliente)
-    #{
-    #  $cliente = new clsPmieducarCliente();
-    #  $cliente = $cliente->lista();
-    #  $this->nm_cliente = $cliente[0]['nome_cliente'];
-    #}
-  }
-
-
-  protected function setSelectionFields()
-  {
+  protected function setSelectionFields() {
     $dynamicSelectMenus = new Portabilis_View_Helper_DynamicSelectMenus($this);
 
     $dynamicSelectMenus->helperFor('instituicao');
@@ -73,33 +56,19 @@ class ReservaController extends Core_Controller_Page_ListController
   }
 
 
-  public function Gerar()
-  {
+  public function Gerar() {
     Portabilis_View_Helper_Application::loadStylesheet($this, '/modules/Portabilis/Assets/Stylesheets/FrontendApi.css');
 
-    $this->setVars();
     $this->setSelectionFields();
 
-    $this->rodape = '';
+    $this->rodape  = '';
     $this->largura = '100%';
 
-    /*$resourceOptionsTable = "
-    <table id='resource-options' class='styled horizontal-expand hide-on-search disable-on-apply-changes'>
+    $scripts = array('scripts/jquery/jquery.form.js',
+                     '/modules/Portabilis/Assets/Javascripts/FrontendApi.js',
+                     '/modules/Biblioteca/Assets/Javascripts/reservaController.js');
 
-      <tr>
-        <td><label for=''>LabelName *</label></td>
-        <td colspan='2'><input type='text' id='' name='' class='obrigatorio disable-on-search validates-value-is-numeric'></input></td>
-      </tr>
-
-    </table>";
-
-    $this->appendOutput($resourceOptionsTable);*/
-
-    Portabilis_View_Helper_Application::loadJavascript($this, 'scripts/jquery/jquery.form.js');
-
-    Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Portabilis/Assets/Javascripts/FrontendApi.js');
-
-    Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Biblioteca/Assets/Javascripts/reservaController.js');
+    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
   }
 }
 ?>

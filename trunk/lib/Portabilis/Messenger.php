@@ -46,7 +46,7 @@ class Messenger {
   }
 
 
-  public function append($msg, $type="error", $encodeToUtf8 = true, $ignoreIfHasMsgWithType = '') {
+  public function append($msg, $type="error", $encodeToUtf8 = false, $ignoreIfHasMsgWithType = '') {
     if (empty($ignoreIfHasMsgWithType) || ! $this->hasMsgWithType($ignoreIfHasMsgWithType)) {
 
       if ($encodeToUtf8)
