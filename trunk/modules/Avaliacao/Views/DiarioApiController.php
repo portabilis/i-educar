@@ -874,12 +874,16 @@ class DiarioApiController extends ApiCoreController
 
       if ($tpNota != $cnsNota::NENHUM) {
         $tabela = $this->serviceBoletim()->getRegra()->tabelaArredondamento->findTabelaValor();
-
+      
         foreach ($tabela as $item) {
-          if ($tpNota == $cnsNota::NUMERICA)
-            $opcoes[(string) $item->nome] = (string) $item->nome;
-          else
-            $opcoes[(string) $item->valorMaximo] = $this->safeString($item->nome . ' (' . $item->descricao .  ')');
+          if ($tpNota == $cnsNota::NUMERICA) {
+            $nota = str_replace(',', '.', (string) $item->nome);
+            $opcoes[$nota] = $nota;
+          }
+          else {
+            $nota                   = str_replace(',', '.', (string) $item->valorMaximo);
+            $opcoes[$nota] = $this->safeString($item->nome . ' (' . $item->descricao .  ')');
+          }
         }
       }
     }
