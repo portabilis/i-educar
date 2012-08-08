@@ -183,17 +183,14 @@ var $tableSearchDetails = $j('<table />').attr('id', 'search-details')
     var $actionButton = $barActions.find('input.execute-action');
     var $deleteButton = $barActions.find('input.delete');
 
-
     // add resource options table
     var $resourceOptionsTable = $('#resource-options');
     $resourceOptionsTable.find('tr:even').addClass('even');
     $resourceOptionsTable.hide().prependTo($formFilter.parent());
 
-
     // add navigation actions
     var $navActions = $('<p />').attr('id', 'nav-actions');
-    $navActions.prependTo($formFilter.parent());
-
+    $navActions.insertAfter($tableSearchDetails);
 
     // add orientations about search
     $('<p />').html(SEARCH_ORIENTATION)
@@ -203,7 +200,6 @@ var $tableSearchDetails = $j('<table />').attr('id', 'search-details')
 
     // add div for feedback messages
     $('<div />').attr('id', 'feedback-messages').appendTo($formFilter.parent());
-
 
     // before search changes
     $('.disable-on-search').attr('disabled', 'disabled');
