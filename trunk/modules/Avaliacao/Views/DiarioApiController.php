@@ -556,21 +556,24 @@ class DiarioApiController extends ApiCoreController
         array('aluno_id', 'ref_cod_aluno'),
       );
 
-      foreach($alunos as $aluno)
-      {
+      foreach($alunos as $aluno) {
         $matricula   = array();
         $matriculaId = $aluno['ref_cod_matricula'];
 
         // seta id da matricula a ser usado pelo metodo serviceBoletim
         $this->setCurrentMatriculaId($matriculaId);        
 
-        $matricula['componentes_curriculares'] = $this->loadComponentesCurricularesForMatricula($matriculaId);
+        $matricula['situacao']      = $this->getSituacaoMatricula();
 
-        $matricula['situacao'] = $this->getSituacaoMatricula();
-        $matricula['nota_atual'] = '-1'; #$this->getNotaAtual();
-        $matricula['nota_exame'] = $this->getNotaExame();
-        $matricula['falta_atual'] = '-1';#$this->getFaltaAtual();
-        $matricula['parecer_atual'] = '-1'; #$this->getParecerAtual();
+        /* desabilitado load cc temporariamente pois front-end ainda não usa tais informações
+        //$matricula['componentes_curriculares'] = $this->loadComponentesCurricularesForMatricula($matriculaId);
+        
+        as notas atuais abaixo serão substituidas pelo load acima para cada cc */
+
+        $matricula['nota_atual']    = $this->getNotaAtual();
+        $matricula['nota_exame']    = $this->getNotaExame();
+        $matricula['falta_atual']   = $this->getFaltaAtual();
+        $matricula['parecer_atual'] = $this->getParecerAtual();
 
         foreach($requiredFields as $f)
           $matricula[$f[0]] = $aluno[$f[1]];
@@ -664,7 +667,7 @@ class DiarioApiController extends ApiCoreController
   protected function getFaltaGeral() {
     return new Avaliacao_Model_FaltaGeral(array(
         'quantidade' => $this->getQuantidadeFalta(),
-        'etapa' => $this->getRequest()->etapa
+        'etapa'      => $this->getRequest()->etapa
     ));
   }
 
@@ -672,8 +675,8 @@ class DiarioApiController extends ApiCoreController
   protected function getFaltaComponente() {
     return new Avaliacao_Model_FaltaComponente(array(
             'componenteCurricular' => $this->getRequest()->componente_curricular_id,
-            'quantidade' => $this->getQuantidadeFalta(),
-            'etapa' => $this->getRequest()->etapa
+            'quantidade'           => $this->getQuantidadeFalta(),
+            'etapa'                => $this->getRequest()->etapa
     ));
   }
 
@@ -683,8 +686,8 @@ class DiarioApiController extends ApiCoreController
   protected function getParecerComponente() {
     return new Avaliacao_Model_ParecerDescritivoComponente(array(
               'componenteCurricular' => $this->getRequest()->componente_curricular_id,
-              'parecer'  => addslashes($this->getRequest()->att_value),
-              'etapa'  => $this->getRequest()->etapa
+              'parecer'              => addslashes($this->getRequest()->att_value),
+              'etapa'                => $this->getRequest()->etapa
     ));
   }
 
@@ -775,19 +778,14 @@ class DiarioApiController extends ApiCoreController
     }
 
     $nota = urldecode($this->serviceBoletim()->getNotaComponente($componenteCurricularId, $etapa)->nota);
+
     return str_replace(',', '.', $nota);
   }
 
 
   protected function getNotaExame() {
-
-  /* removido checagem se usa nota e se a formula recuperacao é do tipo media recuperacao,
-     pois se existe nota lançada mostrará.
-
-    $this->serviceBoletim()->getRegra()->get('tipoNota') != RegraAvaliacao_Model_Nota_TipoValor::NENHUM &&
-    $this->serviceBoletim()->getRegra()->formulaRecuperacao->get('tipoFormula') == FormulaMedia_Model_TipoFormula::MEDIA_RECUPERACAO */
-
-    //se é a ultima etapa
+    // somente recupera nota de exame se estiver buscando as matriculas da ultima etapa
+    // se existe nota de exame, esta é recuperada mesmo que a regra de avaliação não use mais exame
     if($this->getRequest()->etapa == $this->serviceBoletim()->getOption('etapas'))
       $nota = $this->getNotaAtual($etapa='Rc');
     else
@@ -881,7 +879,7 @@ class DiarioApiController extends ApiCoreController
           if ($tpNota == $cnsNota::NUMERICA)
             $opcoes[(string) $item->nome] = (string) $item->nome;
           else
-            $opcoes[(string) $item->valorMaximo] = safeString($item->nome . ' (' . $item->descricao .  ')');
+            $opcoes[(string) $item->valorMaximo] = $this->safeString($item->nome . ' (' . $item->descricao .  ')');
         }
       }
     }
@@ -910,10 +908,8 @@ class DiarioApiController extends ApiCoreController
 
       if($tpPresenca == $cnsPresenca::GERAL)
         $itensRegra['tipo_presenca'] = 'geral';
-
       elseif($tpPresenca == $cnsPresenca::POR_COMPONENTE)
         $itensRegra['tipo_presenca'] = 'por_componente';
-
       else
         $itensRegra['tipo_presenca'] = $tpPresenca;
 
@@ -924,12 +920,9 @@ class DiarioApiController extends ApiCoreController
 
       if ($tpNota == $cnsNota::NENHUM)
         $itensRegra['tipo_nota'] = 'nenhum';
-
       elseif ($tpNota == $cnsNota::NUMERICA)
         $itensRegra['tipo_nota'] = 'numerica';
-
-      elseif ($tpNota == $cnsNota::CONCEITUAL)
-      {
+      elseif ($tpNota == $cnsNota::CONCEITUAL) {
         $itensRegra['tipo_nota'] = 'conceitual';
         //incluido opcoes notas, pois notas conceituais requer isto para visualizar os nomes
       }
@@ -939,23 +932,18 @@ class DiarioApiController extends ApiCoreController
 
       // tipo parecer
       $cnsParecer = RegraAvaliacao_Model_TipoParecerDescritivo;
-      $tpParecer = $this->serviceBoletim()->getRegra()->get('parecerDescritivo');
+      $tpParecer  = $this->serviceBoletim()->getRegra()->get('parecerDescritivo');
 
       if ($tpParecer == $cnsParecer::NENHUM)
         $itensRegra['tipo_parecer_descritivo'] = 'nenhum';
-
       elseif ($tpParecer == $cnsParecer::ETAPA_COMPONENTE)
         $itensRegra['tipo_parecer_descritivo'] = 'etapa_componente';
-
       elseif ($tpParecer == $cnsParecer::ETAPA_GERAL)
         $itensRegra['tipo_parecer_descritivo'] = 'etapa_geral';
-
       elseif ($tpParecer == $cnsParecer::ANUAL_COMPONENTE)
         $itensRegra['tipo_parecer_descritivo'] = 'anual_componente';
-
       elseif ($tpParecer == $cnsParecer::ANUAL_GERAL)
         $itensRegra['tipo_parecer_descritivo'] = 'anual_geral';
-
       else
         $itensRegra['tipo_parecer_descritivo'] = $tpParecer;
 
@@ -970,13 +958,16 @@ class DiarioApiController extends ApiCoreController
   }
 
 
-  // TODO implementar modo para informar responders oper
-  //      adicionar validacao em canAcceptRequest para ver se oper e resource match
-  //      nesta funcao (gerar) chamar $this->operResource(), se oper == get, appendResponse(resource, ...) && canOperResource
+  // TODO implementar modo para informar oper => resource menos verboso
+  //      validar em canAcceptRequest se responde para oper => resource
+  //      na classe core esta funcao Gerar(), pode chamar $this->canOperResource
+  //      e se válido chamar $this->operResource()
+  //      se oper == get, appendResponse(<resource>, retorno_funcao_para_oper_resource)
   public function Gerar() {
     if ($this->isRequestFor('get', 'matriculas'))
       $this->appendResponse('matriculas', $this->getMatriculas());
 
+    // TODO remover os responders abaixo, caso o front-end não os use
     /*elseif ($this->isRequestFor('get', 'opcoes_notas'))
       $this->appendResponse('opcoes_notas', $this->getOpcoesNotas());
 
