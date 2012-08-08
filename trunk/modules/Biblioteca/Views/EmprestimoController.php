@@ -38,31 +38,14 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenus.php';
 
 class EmprestimoController extends Core_Controller_Page_ListController
 {
-  protected $_dataMapper = ''; #Avaliacao_Model_NotaAlunoDataMapper';
+  protected $_dataMapper = '';
   protected $_titulo   = 'Emprestimo';
   protected $_formMap  = array();
 
   #TODO setar código processoAP, copiar da funcionalidade de emprestimo existente?
   protected $_processoAp = 610;
 
-
-  protected function setVars()
-  {
-    #$this->ref_cod_cliente = $_GET['cliente_id'];
-    #$this->ref_cod_instituicao = $_GET['instituicao_id'];
-    #$this->ref_cod_escola = $_GET['escola_id'];
-
-    #if ($this->ref_cod_cliente)
-    #{
-    #  $cliente = new clsPmieducarCliente();
-    #  $cliente = $cliente->lista();
-    #  $this->nm_cliente = $cliente[0]['nome_cliente'];
-    #}
-  }
-
-
-  protected function setSelectionFields()
-  {
+  protected function setSelectionFields() {
     $dynamicSelectMenus = new Portabilis_View_Helper_DynamicSelectMenus($this);
 
     $dynamicSelectMenus->helperFor('instituicao', array('options' => array('id' => 'instituicao_id')));
@@ -75,33 +58,19 @@ class EmprestimoController extends Core_Controller_Page_ListController
   }
 
 
-  public function Gerar()
-  {
+  public function Gerar() {
     Portabilis_View_Helper_Application::loadStylesheet($this, '/modules/Portabilis/Assets/Stylesheets/FrontendApi.css');
 
-    $this->setVars();
     $this->setSelectionFields();
 
-    $this->rodape = '';
+    $this->rodape  = '';
     $this->largura = '100%';
 
-    /*$resourceOptionsTable = "
-    <table id='resource-options' class='styled horizontal-expand hide-on-search disable-on-apply-changes'>
+    $scripts = array('scripts/jquery/jquery.form.js',
+                     '/modules/Portabilis/Assets/Javascripts/FrontendApi.js',
+                     '/modules/Biblioteca/Assets/Javascripts/EmprestimoController.js');
 
-      <tr>
-        <td><label for=''>LabelName *</label></td>
-        <td colspan='2'><input type='text' id='' name='' class='obrigatorio disable-on-search validates-value-is-numeric'></input></td>
-      </tr>
-
-    </table>";
-
-    $this->appendOutput($resourceOptionsTable);*/
-
-    Portabilis_View_Helper_Application::loadJavascript($this, 'scripts/jquery/jquery.form.js');
-
-    Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Portabilis/Assets/Javascripts/FrontendApi.js');
-
-    Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Biblioteca/Assets/Javascripts/emprestimoController.js');
+    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
   }
 }
 ?>

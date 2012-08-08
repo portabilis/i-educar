@@ -32,7 +32,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-  <title>Sistema de Gestão Escolar - i-Educar | Portabilis Tecnologia</title>
+  <title>i-Educar</title>
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 </head>
 <frameset rows="27,*" framespacing="2" border="0" frameborder="0" >

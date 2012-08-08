@@ -1,16 +1,48 @@
-// TODO mover para arquivo especifico
-function safeLog(value)
-{
+// metodos e variaveis acessiveis por outros modulos
+
+function safeLog(value) {
   if(typeof(console) != 'undefined' && typeof(console.log) == 'function')
     console.log(value);
 }
 
-// TODO mover para arquivo especifico
-function safeToUpperCase(value){
+
+function safeToUpperCase(value) {
   if (typeof(value) == 'string')
     value = value.toUpperCase();
 
   return value;
+}
+
+
+function safeSort(values) {
+  try{
+    var sortedValues = values.sort(function(a, b) {  
+      if (typeof(a) == 'string' && typeof(b) == 'string')
+        var isGreaterThan = a.toLowerCase() > b.toLowerCase();  
+      else
+        var isGreaterThan = a > b;
+
+     return isGreaterThan ? 1 : -1;
+    });
+    return sortedValues;
+  }
+  catch(e) {
+    safeLog('Erro ao ordenar valores: ' + e);
+    safeLog(values);
+    return values;
+  }
+}
+
+
+function safeUtf8Decode(s) {
+  try {
+    s = decodeURIComponent(escape(s));
+  }
+  catch(e) {
+    safeLog('Erro ao decodificar string utf8: ' + s);
+  }
+
+  return s;
 }
 
 
@@ -30,14 +62,14 @@ function appendImgLoadingTo($targetElement) {
 }
 
 
-function beforeChangeResource($resourceElement){
+function beforeChangeResource($resourceElement) {
   if ($resourceElement.is(':checkbox'))
     $j('.disable-on-apply-changes').attr('disabled', 'disabled');
 
   appendImgLoadingTo($resourceElement);
 }
 
-function afterChangeResource($resourceElement){
+function afterChangeResource($resourceElement) {
   if ($resourceElement.is(':checkbox'))
     $resourceElement.attr('checked', false);
 
@@ -49,7 +81,7 @@ function afterChangeResource($resourceElement){
   $j('input.delete').val(DELETE_LABEL);
 }
 
-function handleMessages(messages, targetId, useDelayClassRemoval){
+function handleMessages(messages, targetId, useDelayClassRemoval) {
 
   var $feedbackMessages = $j('#feedback-messages');
   var hasErrorMessages   = false;
@@ -60,7 +92,7 @@ function handleMessages(messages, targetId, useDelayClassRemoval){
   var $targetElement = buildId(targetId);
   var $targetElement = $j($targetElement);
 
-  for (var i = 0; i < messages.length; i++){
+  for (var i = 0; i < messages.length; i++) {
     if (messages[i].type == 'success')
       var delay = 2000;
     else if (messages[i].type != 'error')
@@ -68,7 +100,7 @@ function handleMessages(messages, targetId, useDelayClassRemoval){
     else
       var delay = 60000;
 
-    $j('<p />').addClass(messages[i].type).html(messages[i].msg).appendTo($feedbackMessages).delay(delay).fadeOut(function(){$j(this).remove()}).data('target_id', targetId);
+    $j('<p />').addClass(messages[i].type).html(messages[i].msg).appendTo($feedbackMessages).delay(delay).fadeOut(function() {$j(this).remove()}).data('target_id', targetId);
 
     if (! hasErrorMessages && messages[i].type == 'error')
       hasErrorMessages = true;
@@ -78,7 +110,7 @@ function handleMessages(messages, targetId, useDelayClassRemoval){
       hasNoticeMessages = true;
   }
 
-  if($targetElement){
+  if($targetElement) {
     if (hasErrorMessages)
       $targetElement.addClass('error').removeClass('success').removeClass('notice');
     else if (hasSuccessMessages)
@@ -90,8 +122,8 @@ function handleMessages(messages, targetId, useDelayClassRemoval){
 
     $j($targetElement.get(0)).focus();
 
-    if (useDelayClassRemoval){
-      window.setTimeout(function(){$targetElement.removeClass('success').removeClass('error').removeClass('notice');}, delayClassRemoval);
+    if (useDelayClassRemoval) {
+      window.setTimeout(function() {$targetElement.removeClass('success').removeClass('error').removeClass('notice');}, delayClassRemoval);
     }
   }
 }
@@ -109,10 +141,20 @@ function getFirstCheckboxChecked($targetElement) {
 }
 
 
-(function($){
-  $(document).ready(function(){
+var $formFilter = $j('#formcadastro');
 
-    var $formFilter = $('#formcadastro');
+var $tableSearchDetails = $j('<table />').attr('id', 'search-details')
+                                        .addClass('styled')
+                                        .addClass('horizontal-expand')
+                                        .addClass('center')
+                                        .hide()
+                                        .prependTo($formFilter.parent());
+
+
+// metodos e variaveis não acessiveis por outros modulos
+
+(function($) {
+  $(document).ready(function() {
     var $submitButton = $('#botao_busca');
 
     // prepare result table
@@ -141,31 +183,23 @@ function getFirstCheckboxChecked($targetElement) {
     var $actionButton = $barActions.find('input.execute-action');
     var $deleteButton = $barActions.find('input.delete');
 
-
     // add resource options table
     var $resourceOptionsTable = $('#resource-options');
     $resourceOptionsTable.find('tr:even').addClass('even');
     $resourceOptionsTable.hide().prependTo($formFilter.parent());
 
-
     // add navigation actions
     var $navActions = $('<p />').attr('id', 'nav-actions');
-    $navActions.prependTo($formFilter.parent());
+    $navActions.insertAfter($tableSearchDetails);
 
-
-    // add table for search details
-    var $tableSearchDetails = $('<table />')
-                              .attr('id', 'search-details')
-                              .addClass('styled')
-                              .addClass('horizontal-expand')
-                              .addClass('center')
-                              .hide()
-                              .prependTo($formFilter.parent());
-
+    // add orientations about search
+    $('<p />').html(SEARCH_ORIENTATION)
+              .addClass('center')
+              .attr('id', 'orientation-search')
+              .appendTo($resultTable.parent());
 
     // add div for feedback messages
     $('<div />').attr('id', 'feedback-messages').appendTo($formFilter.parent());
-
 
     // before search changes
     $('.disable-on-search').attr('disabled', 'disabled');
@@ -174,11 +208,11 @@ function getFirstCheckboxChecked($targetElement) {
 
     // functions, callbacks
 
-    function showSearchForm(event){
+    function showSearchForm(event) {
       $navActions.html('');
       $tableSearchDetails.children().remove();
       $resultTable.children().fadeOut('fast').remove();
-      $formFilter.fadeIn('fast', function(){
+      $formFilter.fadeIn('fast', function() {
         $(this).show()
       });
       $('.disable-on-search').attr('disabled', 'disabled');
@@ -188,7 +222,7 @@ function getFirstCheckboxChecked($targetElement) {
     }
 
 
-    function showNewSearchButton(){
+    function showNewSearchButton() {
       $navActions.html(
         $("<a href='#'>Nova consulta</a>")
         .bind('click', showSearchForm)
@@ -230,12 +264,12 @@ function getFirstCheckboxChecked($targetElement) {
     };
 
 
-    function _setTableSearchDetails(dataDetails){
+    function _setTableSearchDetails(dataDetails) {
       setTableSearchDetails($tableSearchDetails, dataDetails);
     }
 
 
-    function _handleSearch(dataResponse){
+    function _handleSearch(dataResponse) {
       showNewSearchButton();
 
       //try{
@@ -263,7 +297,7 @@ function getFirstCheckboxChecked($targetElement) {
           handleSearch($resultTable, dataResponse);
         }
       /*}
-      catch(error){
+      catch(error) {
         showNewSearchButton();
 
         handleMessages([{type : 'error', msg : 'Ocorreu um erro ao exibir o(a)s '+ RESOURCES_NAME +', por favor tente novamente, detalhes: ' + error}], '');
@@ -277,7 +311,7 @@ function getFirstCheckboxChecked($targetElement) {
     }
 
 
-    function handleSearchError(response){
+    function handleSearchError(response) {
       showNewSearchButton();
 
       handleMessages([{type : 'error', msg : 'Ocorreu um erro ao carregar o(a)s '+ RESOURCES_NAME +', por favor tente novamente, detalhes:' + response.responseText}], '');

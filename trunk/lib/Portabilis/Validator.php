@@ -49,6 +49,11 @@ class Validator {
   }
 
 
+  // TODO refatorar todos metodos, para não receber mais argumento $raiseException*
+
+  /* TODO refatorar todos metodos, para não receber mais argumento $addMsg*
+          caso $msg falso, pode-se não add a mensagem */              
+
   public function validatesPresenceOf(&$value, $name, $raiseExceptionOnFail = false, $msg = '', $addMsgOnEmpty = true){
     if (! isset($value) || (empty($value) && !is_numeric($value))){
       if ($addMsgOnEmpty)

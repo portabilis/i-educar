@@ -30,3 +30,41 @@ function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields
   $emptyFields.first().focus();
   return false;
 }
+
+
+function validatesIfValueIsInSet(value, targetId, set) {
+  if (set[value] == undefined) {
+    var s = [];
+
+    $j.each(set, function(index, value) {
+      s.push(value);
+    });
+
+    s = safeSort(s);
+    handleMessages([{type : 'error', msg : 'Informe um valor que pertença ao conjunto: ' + s.join(', ')}], targetId);
+
+    return false;
+  }
+
+  return true;
+}
+
+
+function validatesIfValueIsNumeric(value, targetId) {
+  if (! $j.isNumeric(value)) {
+    handleMessages([{type : 'error', msg : 'Informe um numero válido.'}], targetId);
+    return false;
+  }
+
+  return true;
+}  
+
+
+function validatesIfNumericValueIsInRange(value, targetId, initialRange, finalRange) {
+  if (! $j.isNumeric(value) || value < initialRange || value > finalRange) {
+    handleMessages([{type : 'error', msg : 'Informe um valor entre ' + initialRange + ' e ' + finalRange}], targetId);
+    return false;
+  }
+
+  return true;
+}
