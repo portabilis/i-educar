@@ -97,8 +97,8 @@ var getResourceUrlBuilder = {
       serie_id : $j('#ref_ref_cod_serie').val(),
       turma_id : $j('#ref_cod_turma').val(),
       ano_escolar : $j('#ano').val(),
-      componente_curricular_id : $j('#ref_cod_componente_curricular').val(),
-      etapa : $j('#etapa').val()
+      etapa : $j('#etapa').val(),
+      matricula_id : $j('#ref_cod_matricula').val()
     };
 
     return resourceUrlBuilder.buildUrl(urlBase, $j.extend(vars, additionalVars));
@@ -159,8 +159,7 @@ function afterChangeResource($resourceElement) {
   for(var nextTabIndex = resourceElementTabIndex + 1; nextTabIndex < lastElementTabIndex + 1; nextTabIndex++) {
     var $nextElement = $j($resourceElement.closest('form').find(':[tabindex="'+nextTabIndex+'"]')).first();
 
-    if($nextElement.is(':visible'))
-    {
+    if($nextElement.is(':visible')) {
       if(focusedElementTabIndex == resourceElementTabIndex)
         $nextElement.focus();
 
@@ -179,8 +178,13 @@ function postNota($notaFieldElement) {
   
     beforeChangeResource($notaFieldElement);
 
+    var additionalVars = {
+      matricula_id             : $notaFieldElement.data('matricula_id'),
+      componente_curricular_id : $notaFieldElement.data('componente_curricular_id')
+    };
+
     var options = {
-      url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'nota', {matricula_id : $notaFieldElement.data('matricula_id')}),
+      url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'nota', additionalVars),
       dataType : 'json',
       data : {att_value : $notaFieldElement.val()},
       success : function(dataResponse) {
@@ -205,8 +209,14 @@ function postNotaExame($notaExameFieldElement) {
 
     beforeChangeResource($notaExameFieldElement);
 
+    var additionalVars = {
+      matricula_id             : $notaExameFieldElement.data('matricula_id'),
+      componente_curricular_id : $notaExameFieldElement.data('componente_curricular_id'),
+      etapa : 'Rc'
+    };
+
     var options = {
-      url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'nota_exame', {matricula_id : $notaExameFieldElement.data('matricula_id'), etapa : 'Rc'}),
+      url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'nota_exame', additionalVars),
       dataType : 'json',
       data : {att_value : $notaExameFieldElement.val()},
       success : function(dataResponse) {
@@ -234,8 +244,13 @@ function postFalta($faltaFieldElement) {
 
     beforeChangeResource($faltaFieldElement);
 
+    var additionalVars = {
+      matricula_id             : $faltaFieldElement.data('matricula_id'),
+      componente_curricular_id : $faltaFieldElement.data('componente_curricular_id')
+    };
+
     var options = {
-      url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'falta', {matricula_id : $faltaFieldElement.data('matricula_id')}),
+      url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'falta', additionalVars),
       dataType : 'json',
       data : {att_value : $faltaFieldElement.val()},
       success : function(dataResponse) {
@@ -261,9 +276,14 @@ function getEtapaParecer() {
 
 
 function postParecer($parecerFieldElement) {
+  var additionalVars = {
+    matricula_id             : $parecerFieldElement.data('matricula_id'),
+    componente_curricular_id : $parecerFieldElement.data('componente_curricular_id'),
+    etapa : getEtapaParecer()
+  };
 
   var options = {
-    url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'parecer', {matricula_id : $parecerFieldElement.data('matricula_id'), etapa : getEtapaParecer()}),
+    url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'parecer', additionalVars),
     dataType : 'json',
     data : {att_value : $parecerFieldElement.val()},
     success : function(dataResponse) {
@@ -454,102 +474,40 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
   $tableSearchDetails.data('details', dataDetails);
 }
 
+var nextTabIndex = 1;
+function setNextTabIndex($element) {
+  $element.attr('tabindex', nextTabIndex);
+  nextTabIndex += 1;
+}
 
 function handleSearch($resultTable, dataResponse) { 
-  var useNota    = $tableSearchDetails.data('details').tipo_nota != 'nenhum';
-  var useParecer = $tableSearchDetails.data('details').tipo_parecer_descritivo != 'nenhum';
-
   //set headers
   var $linha = $j('<tr />');
   $j('<th />').html('Matrícula').appendTo($linha);
-  $j('<th />').html('Aluno').appendTo($linha);
+  $j('<th />').html('Aluno').attr('colspan', 2).appendTo($linha);
   $j('<th />').html('Situa&#231;&#227;o').appendTo($linha);
-
-  if(useNota) {
-    $j('<th />').html('Nota').appendTo($linha);
-
-    if ($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val())
-      $j('<th />').html('Nota exame').appendTo($linha);
-  }
-
-  $j('<th />').html('Falta').appendTo($linha);
-
-  if(useParecer)
-    $j('<th />').html('Parecer').appendTo($linha);
 
   $linha.appendTo($resultTable);
 
-  var nextTabIndex = 1;
-  var setNextTabIndex = function($element) {
-    $element.attr('tabindex', nextTabIndex);
-    nextTabIndex += 1;
-  };
-
   //set (result) rows
   $j.each(dataResponse.matriculas, function(index, value) {
-
     var $linha = $j('<tr />');
     
     $j('<td />').html(value.matricula_id).addClass('center').appendTo($linha);
-    $j('<td />').html(value.aluno_id + ' - ' +safeToUpperCase(value.nome)).appendTo($linha);
-    $j('<td />').addClass('situacao-matricula').attr('id', 'situacao-matricula-' + value.matricula_id).data('matricula_id', value.matricula_id).addClass('center').html(value.situacao).appendTo($linha);
 
-    //nota
-    var getFieldNota = function(notaAtual, klass, id) {
+    $j('<td />').html(value.aluno_id + ' - ' +safeToUpperCase(value.nome))
+                .attr('colspan', 2).appendTo($linha);
 
-      var opcoesNotas = $tableSearchDetails.data('details').opcoes_notas;
+    $j('<td />').addClass('situacao-matricula')
+                .attr('id', 'situacao-matricula-' + value.matricula_id)
+                .data('matricula_id', value.matricula_id)
+                .addClass('center')
+                .html(value.situacao)
+                .appendTo($linha);
 
-      if($tableSearchDetails.data('details').tipo_nota == 'conceitual') {
-        var $notaField = $j('<select />').addClass(klass).attr('id', id).data('matricula_id', value.matricula_id);
-
-        //adiciona options
-        var $option = $j('<option />').appendTo($notaField);
-        for(key in opcoesNotas) {
-          var $option = $j('<option />').val(key).html(opcoesNotas[key]);
-
-          if (notaAtual == key)
-            $option.attr('selected', 'selected');
-
-          $option.appendTo($notaField);
-        }
-      }
-      else {
-        var $notaField = $j('<input />').addClass(klass).attr('id', id).val(notaAtual).attr('maxlength', '4').attr('size', '4').data('matricula_id', value.matricula_id);
-      }
-
-      $notaField.data('old_value', $notaField.val());
-      setNextTabIndex($notaField);
-      return $notaField;
-    }
-
-    if(useNota) {
-      $j('<td />').html(getFieldNota(value.nota_atual, 'nota-matricula', 'nota-matricula-' + value.matricula_id)).addClass('center').appendTo($linha);
-
-      if ($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) {
-
-        var $fieldNotaExame = getFieldNota(value.nota_exame, 'nota-exame-matricula', 'nota-exame-matricula-' + value.matricula_id);
-        $j('<td />').html($fieldNotaExame).addClass('center').appendTo($linha);
-
-        if (value.nota_exame == '' && value.situacao.toLowerCase() != 'em exame')
-          $fieldNotaExame.hide();
-      }
-    }
-    
-    //falta
-    var $faltaField = $j('<input />').addClass('falta-matricula').attr('id', 'falta-matricula-' + value.matricula_id).val(value.falta_atual).attr('maxlength', '4').attr('size', '4').data('matricula_id', value.matricula_id);
-    $faltaField.data('old_value', $faltaField.val());
-    setNextTabIndex($faltaField);
-    $j('<td />').html($faltaField).addClass('center').appendTo($linha);
-
-    //parecer
-    if(useParecer) {
-      var $parecerField = $j('<textarea />').attr('cols', '40').attr('rows', '5').addClass('parecer-matricula').attr('id', 'parecer-matricula-' + value.matricula_id).val(safeUtf8Decode(value.parecer_atual)).data('matricula_id', value.matricula_id);
-      $parecerField.data('old_value', $parecerField.val());
-      setNextTabIndex($parecerField);
-      $j('<td />').addClass('center').html($parecerField).appendTo($linha);
-    }
-
-    $linha.fadeIn('slow').appendTo($resultTable);
+    //$linha.fadeIn('slow').appendTo($resultTable);
+    $linha.appendTo($resultTable);
+    updateComponenteCurriculares($resultTable, value.matricula_id, value.componentes_curriculares);
   });//fim each matriculas
 
   $resultTable.find('tr:even').addClass('even');
@@ -565,6 +523,124 @@ function handleSearch($resultTable, dataResponse) {
   $parecerFields.on('change', changeParecer);
 
   $resultTable.addClass('styled').find('input:first').focus();
+}
+
+function _notaField(matriculaId, componenteCurricularId, klass, id, value) {
+  if($tableSearchDetails.data('details').tipo_nota == 'conceitual') {
+    var opcoesNotas = $tableSearchDetails.data('details').opcoes_notas;
+
+    var $notaField = $j('<select />')
+                     .addClass(klass)
+                     .attr('id', id)
+                     .data('matricula_id', matriculaId)
+                     .data('componente_curricular_id', componenteCurricularId);
+
+    // adiciona opcoes notas ao select
+    var $option = $j('<option />').appendTo($notaField);
+    for(key in opcoesNotas) {
+      var $option = $j('<option />').val(key).html(opcoesNotas[key]);
+
+      if (value == key)
+        $option.attr('selected', 'selected');
+
+      $option.appendTo($notaField);
+    }
+  }
+  else {
+    var $notaField = $j('<input />')
+                     .addClass(klass)
+                     .attr('id', id)
+                     .val(value)
+                     .attr('maxlength', '4')
+                     .attr('size', '4')
+                     .data('matricula_id', matriculaId)
+                     .data('componente_curricular_id', componenteCurricularId);
+  }
+
+  $notaField.data('old_value', value);
+  setNextTabIndex($notaField);
+
+  return $j('<td />').html($notaField).addClass('center');
+}
+
+
+function notaField(matriculaId, componenteCurricularId, value) {
+  return _notaField(matriculaId,
+                    componenteCurricularId, 
+                    'nota-matricula',
+                    'nota-matricula-' + matriculaId, 
+                    value);
+}
+
+
+function notaExameField(matriculaId, componenteCurricularId, value) {
+  return _notaField(matriculaId,
+                    componenteCurricularId, 
+                    'nota-exame-matricula',
+                    'nota-exame-matricula-' + matriculaId, 
+                    value);
+}
+
+
+function faltaField(matriculaId, componenteCurricularId, value) {
+  var $faltaField = $j('<input />').addClass('falta-matricula')
+                                   .attr('id', 'falta-matricula-' + matriculaId)
+                                   .attr('maxlength', '4')
+                                   .attr('size', '4')
+                                   .val(value)
+                                   .data('old_value', value)
+                                   .data('matricula_id', matriculaId)
+                                   .data('componente_curricular_id', componenteCurricularId);
+
+  setNextTabIndex($faltaField);
+  return $j('<td />').html($faltaField).addClass('center');
+}
+
+function parecerField(matriculaId, componenteCurricularId, value) {
+  value = safeUtf8Decode(value);
+  var $parecerField = $j('<textarea />').attr('cols', '40')
+                                        .attr('rows', '5')
+                                        .addClass('parecer-matricula')
+                                        .attr('id', 'parecer-matricula-' + matriculaId)
+                                        .val(value)
+                                        .data('old_value', value)
+                                        .data('matricula_id', matriculaId)
+                                        .data('componente_curricular_id', componenteCurricularId);
+
+  setNextTabIndex($parecerField);
+  return $j('<td />').addClass('center').html($parecerField);
+}
+
+function updateComponenteCurriculares($targetElement, matriculaId, componentesCurriculares) {
+  var useNota    = $tableSearchDetails.data('details').tipo_nota != 'nenhum';
+  var useParecer = $tableSearchDetails.data('details').tipo_parecer_descritivo != 'nenhum';
+
+  $j.each(componentesCurriculares, function(index, cc) {
+    var $ccRow = $j('<tr />');
+
+    $j('<td />').addClass('center').html(cc.nome).appendTo($ccRow);
+
+    if(useNota) {
+      notaField(matriculaId, cc.id, cc.nota_atual).appendTo($ccRow);
+
+      // mostra nota exame caso estiver selecionado a ultima etapa
+      if ($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) {
+      notaExameField(matriculaId, cc.nota_exame).appendTo($ccRow);
+
+        // TODO ocultar campo se nao tiver nota exame e nao estiver em exame ne
+        //if (cc.nota_exame == '' && value.situacao.toLowerCase() != 'em exame')
+        //  $fieldNotaExame.hide();
+      }
+
+    }
+
+    faltaField(matriculaId, cc.id, cc.falta_atual).appendTo($ccRow);
+
+    if (useParecer)
+      parecerField(matriculaId, cc.id, cc.parecer_atual).appendTo($ccRow);
+
+    $ccRow.appendTo($targetElement);
+  });
 }
 
 

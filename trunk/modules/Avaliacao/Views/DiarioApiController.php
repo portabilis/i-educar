@@ -564,16 +564,12 @@ class DiarioApiController extends ApiCoreController
         $this->setCurrentMatriculaId($matriculaId);        
 
         $matricula['situacao']      = $this->getSituacaoMatricula();
+        $matricula['componentes_curriculares'] = $this->loadComponentesCurricularesForMatricula($matriculaId);
 
-        /* desabilitado load cc temporariamente pois front-end ainda não usa tais informações
-        //$matricula['componentes_curriculares'] = $this->loadComponentesCurricularesForMatricula($matriculaId);
-        
-        as notas atuais abaixo serão substituidas pelo load acima para cada cc */
-
-        $matricula['nota_atual']    = $this->getNotaAtual();
-        $matricula['nota_exame']    = $this->getNotaExame();
-        $matricula['falta_atual']   = $this->getFaltaAtual();
-        $matricula['parecer_atual'] = $this->getParecerAtual();
+        //$matricula['nota_atual']    = $this->getNotaAtual();
+        //$matricula['nota_exame']    = $this->getNotaExame();
+        //$matricula['falta_atual']   = $this->getFaltaAtual();
+        //$matricula['parecer_atual'] = $this->getParecerAtual();
 
         foreach($requiredFields as $f)
           $matricula[$f[0]] = $aluno[$f[1]];
@@ -970,17 +966,6 @@ class DiarioApiController extends ApiCoreController
   public function Gerar() {
     if ($this->isRequestFor('get', 'matriculas'))
       $this->appendResponse('matriculas', $this->getMatriculas());
-
-    // TODO remover os responders abaixo, caso o front-end não os use
-    /*elseif ($this->isRequestFor('get', 'opcoes_notas'))
-      $this->appendResponse('opcoes_notas', $this->getOpcoesNotas());
-
-    elseif ($this->isRequestFor('get', 'opcoes_faltas'))
-      $this->appendResponse('opcoes_faltas', $this->getOpcoesFaltas());
-
-    elseif ($this->isRequestFor('get', 'regra_avaliacao'))
-      $this->appendResponse('regra_avaliacao', $this->getRegraAvaliacao());
-    */
 
     elseif ($this->isRequestFor('post', 'nota') || $this->isRequestFor('post', 'nota_exame'))
       $this->postNota();
