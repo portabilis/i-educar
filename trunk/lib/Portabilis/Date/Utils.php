@@ -47,7 +47,7 @@ class Portabilis_Date_Utils
    * @param string $date
    */
   public static function BrToPgSQL($date) {
-    list($dia, $mes, $ano) = explode("/", $_POST['data_inicial']);
+    list($dia, $mes, $ano) = explode("/", $date);
     return "$ano-$mes-$dia";
   }
 }
