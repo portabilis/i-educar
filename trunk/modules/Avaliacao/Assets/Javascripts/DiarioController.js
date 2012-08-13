@@ -98,7 +98,8 @@ var getResourceUrlBuilder = {
       turma_id : $j('#ref_cod_turma').val(),
       ano_escolar : $j('#ano').val(),
       componente_curricular_id : $j('#ref_cod_componente_curricular').val(),
-      etapa : $j('#etapa').val()
+      etapa : $j('#etapa').val(),
+      matricula_id : $j('#ref_cod_matricula').val()
     };
 
     return resourceUrlBuilder.buildUrl(urlBase, $j.extend(vars, additionalVars));
