@@ -42,6 +42,7 @@ require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
 require_once 'lib/Portabilis/Message.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
+require_once 'lib/Portabilis/Array/Utils.php';
 
 class DiarioApiController extends ApiCoreController
 {
@@ -718,43 +719,31 @@ class DiarioApiController extends ApiCoreController
   // outros metodos auxiliares
 
   protected function loadComponentesCurricularesForMatricula($matriculaId) {
-    $componentesCurriculares = array();
+    $componentesCurriculares  = array();
+    $_componentesCurriculares = App_Model_IedFinder::getComponentesPorMatricula($matriculaId, $mapper);
 
-    // caso não receba, carrega componentes que possuem nota, falta ou parecer lançado para a matricula
-    if (! is_numeric($this->getRequest()->componente_curricular_id)) {
-      $componentesCurricularesNotas     = array_keys($this->serviceBoletim()->getNotasComponentes());
-      $componentesCurricularesFaltas    = array_keys($this->serviceBoletim()->getFaltasComponentes());
-      $componentesCurricularesPareceres = array_keys($this->serviceBoletim()->getPareceresComponentes());
+    foreach($_componentesCurriculares as $_componente) {
+      $requestCcId = $this->getRequest()->componente_curricular_id;
 
-      $componentesCurricularesIds       = array($componentesCurricularesNotas, 
-                                                $componentesCurricularesFaltas, 
-                                                $componentesCurricularesPareceres);
+      if(! is_numeric($requestCcId) || $requestCcId == $_componente->get('id')) {
+        $componente                  = array();
 
-      $componentesCurricularesIds = Portabilis_Array_Utils::mergeValues($componentesCurricularesIds);
-    }
-    else
-      $componentesCurricularesIds = array($this->getRequest()->componente_curricular_id);
+        $componente['id']            = $_componente->get('id');
+        $componente['nome']          = $this->safeString($_componente->get('nome'));
+        $componente['nota_atual']    = $this->getNotaAtual($etapa = null, $componente['id']);
+        $componente['falta_atual']   = $this->getFaltaAtual($etapa = null, $componente['id']);
+        $componente['parecer_atual'] = $this->getParecerAtual($componente['id']);
 
-
-    // monta lista de componentes curriculares
-    foreach($componentesCurricularesIds as $ccId) {
-      $componenteCurricular         = array();
-      $componenteCurricular['id']   = $ccId;
-
-      $ccDataMapper = $this->getDataMapperFor('componenteCurricular', 'componente');
-      $cc = $ccDataMapper->find($ccId);
-
-
-      $componenteCurricular['nome'] = $this->safeString($cc->get('nome'));
-
-      $componenteCurricular['nota_atual']    = $this->getNotaAtual($etapa = null, $ccId);
-      $componenteCurricular['falta_atual']   = $this->getFaltaAtual($etapa = null, $ccId);
-      $componenteCurricular['parecer_atual'] = $this->getParecerAtual($ccId);
-
-      $componentesCurriculares[] = $componenteCurricular;
+        $componentesCurriculares[]   = $componente;
+      }
     }
 
-    //print_r($componentesCurriculares);
+    // ordena componentes por nome
+    function sortByNome($array, $otherArray) {
+      return Portabilis_Array_Utils::keySorter('nome', $array, $otherArray);
+    }
+    
+    usort($componentesCurriculares, sortByNome);
     return $componentesCurriculares;
   }
 
