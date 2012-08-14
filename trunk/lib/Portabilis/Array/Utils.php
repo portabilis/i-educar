@@ -121,5 +121,27 @@ class Portabilis_Array_Utils {
 
     return $arrayFiltered;
   }
+
+  /* função auxiliar para ser usada com funções de ordenação do php como usort,
+     assim basta definir uma função que estenda esta, e passar a usort, ex:
+
+     function sortComponentesCurricularesByNome($componentesCurriculares) {
+        function sortByNome($array, $otherArray) {
+          return Portabilis_Array_Utils::keySorter('nome', $array, $otherArray);
+        }
+        
+        usort($componentesCurriculares, sortByNome);
+        return $componentesCurriculares;
+     }
+  */  
+  public static function keySorter($key, $array, $otherArray) {
+    $a = $array['nome'];
+    $b = $otherArray['nome'];
+
+    if ($a == $b)
+        return 0;
+
+    return ($a < $b) ? -1 : 1;
+  }
 }
 ?>
