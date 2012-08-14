@@ -45,7 +45,7 @@ class indice
 	{
 		return "
 				<table width='100%' style='height: 100%;'>
-					<tr align=center valign='top'><td><img src='imagens/i-educar/splashscreen.jpg' alt='i-educar' style='padding-top: 50px'></td></tr>
+					<tr align=center valign='top'><td></td></tr>
  				</table>
 			    ";
 	}

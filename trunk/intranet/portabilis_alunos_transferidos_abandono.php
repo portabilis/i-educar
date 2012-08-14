@@ -4,37 +4,51 @@
 #ini_set("display_errors", 1);
 
 require_once("include/portabilis/report.php");
+require_once 'lib/Portabilis/Date/Utils.php';
 
-class PortabilisRelacaoAlunosTransfAbandono extends Report
-{
-  function setForm()
-  {
+class PortabilisRelacaoAlunosTransfAbandono extends Report {
 
-    $this->ano = $ano_atual = date("Y");
-    $this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true);
+  function setForm() {
+    $this->addFilterFor('ano');
 
-    $this->addFilterFor(array('instituicao', 'escola'));
-     
-    $opcoes[1] = "Abandono";
-		$opcoes[2] = "Transferido";
-    $opcoes[9] = "Ambos";
+    // TODO usar novo padrao helpers, quando existir helper para serie e turma
+    // $this->addFilterFor(array('instituicao', 'escola', 'curso', 'serie', 'turma'), array('required' => false));
+
+    $instituicao_obrigatorio = true;
+    $get_escola = $get_curso = $get_escola_curso_serie = true;
+    include("include/pmieducar/educar_campo_lista.php");
     
-    $this->campoLista('situacao', 'Situação', $opcoes, $this->situacao);
-   
+    $opcoes[1] = "Abandono";
+    $opcoes[2] = "Transferido";
+    $opcoes[9] = "Ambos";    
+    $this->campoLista('situacao', 'Situação', $opcoes, 9);
+
+    $this->addFilterFor(array('dataInicial','dataFinal'), array('required' => false));   
   }
 
-  function onValidationSuccess()
-  {
+  function onValidationSuccess() {
     if (! isset($_POST['ref_cod_escola']))
       $this->addArg('escola', 0);
     else
       $this->addArg('escola', (int)$_POST['ref_cod_escola']);
-      
-    $this->addArg('ano', (int)$_POST['ano']);
-    $this->addArg('instituicao', (int)$_POST['ref_cod_instituicao']);    
-    $this->addArg('situacao', (int)$_POST['situacao']);
-  }
 
+    if (! isset($_POST['ref_cod_curso']) || trim($_POST['ref_cod_curso']) == '')
+      $this->addArg('curso', 0);
+    else
+      $this->addArg('curso', (int)$_POST['ref_cod_curso']);
+
+    if (! isset($_POST['ref_ref_cod_serie']) || trim($_POST['ref_ref_cod_serie']) == '')
+      $this->addArg('serie', 0);
+    else
+      $this->addArg('serie', (int)$_POST['ref_ref_cod_serie']);
+   
+    $this->addArg('ano',         (int)$_POST['ano']);
+    $this->addArg('instituicao', (int)$_POST['ref_cod_instituicao']);    
+    $this->addArg('situacao',    (int)$_POST['situacao']);
+
+    $this->addArg('dt_inicial',  Portabilis_Date_Utils::BrToPgSQL($_POST['data_inicial']));
+    $this->addArg('dt_final',    Portabilis_Date_Utils::BrToPgSQL($_POST['data_final'])); 
+  }
 }
 
 $report = new PortabilisRelacaoAlunosTransfAbandono($name = 'Relação de Alunos Transferidos/Abandono', $templateName = 'portabilis_alunos_transferidos_abandono');
