@@ -595,8 +595,30 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
   }
 
 
-  protected function postPromocaoMatricula()  {
+  protected function convertParecerToLatin1($matriculaId) {
+    $componentesCurriculares = $this->getComponentesCurriculares($matriculaId);
 
+    // verifica cada parecer de cada etapas em cada componente
+    foreach(range(1, $this->getService()->getOption('etapas')) as $etapa) {
+      foreach($componentesCurriculares as $cc){
+        $parecer = $this->getParecerDescritivo($etapa, $cc['id']);
+
+        if (! is_null($parecer)) {
+          $isUtf8 = (mb_detect_encoding($parecer->get('parecer'), 'utf-8, iso-8859-1') == 'UTF-8');
+
+          if ($isUtf8) {
+            $parecer->parecer = utf8_decode($parecer->get('parecer'));
+            $this->getService()->addParecer($parecer);
+
+            $this->appendMsg("Convertido para latin 1 parecer da etapa $etapa e componente curricular {$cc['id']} - {$cc['nome']} (matricula $matriculaId)", 'notice');
+          }
+        }
+      }
+    }
+  }
+
+
+  protected function postPromocaoMatricula() {
     if ($this->canPostPromocaoMatricula()){
 
       $matriculaId = $this->getRequest()->matricula_id;
@@ -613,41 +635,28 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
           $this->appendMsg('Sem matrículas em andamento para a seleção informada.', 'notice');
       }
 
-      if($matriculaId != 0 && 
-         is_numeric($matriculaId) &&
-         $this->setService($matriculaId)){
-
-         $situacaoAnterior = $this->getSituacaoArmazenadaMatricula($matriculaId);
-
-      /*
-
-        enquanto etapa 1 .. etapas regra
-          - setar falta como 0 caso não exista
-
-        recalcurar media
-
-      */
+      if($matriculaId != 0 &&  is_numeric($matriculaId) && $this->setService($matriculaId)) {
+        $situacaoAnterior = $this->getSituacaoArmazenadaMatricula($matriculaId);
 
         $this->lancarFaltasNaoLancadas($matriculaId);
-
+        $this->convertParecerToLatin1($matriculaId);
         $this->saveService();
 
         $novaSituacao = $this->getSituacaoArmazenadaMatricula($matriculaId);
 
-        $type = 'success';
-        $msg = "Matrícula $matriculaId";
-        if($situacaoAnterior == $novaSituacao){
-          $type = 'notice';
-          $msg .= ' não mudou de situação';
-        }
-        elseif($novaSituacao == 1)
-          $msg .= " foi aprovada (situaçao antiga $situacaoAnterior)";
-        elseif($novaSituacao == 2)
-          $msg .= " foi reprovada (situaçao antiga $situacaoAnterior)";
-        else
-          $msg .= " teve a situação alterada de $novaSituacao para $situacaoAnterior)";
+        if($situacaoAnterior != $novaSituacao) {
+          $type = 'success';
+          $msg = "Matrícula $matriculaId";
 
-        $this->appendMsg($msg, $type);
+          if($novaSituacao == 1)
+            $msg .= " foi aprovada (situaçao antiga $situacaoAnterior)";
+          elseif($novaSituacao == 2)
+            $msg .= " foi reprovada (situaçao antiga $situacaoAnterior)";
+          else
+            $msg .= " teve a situação alterada de $novaSituacao para $situacaoAnterior)";
+
+          $this->appendMsg($msg, $type);
+        }
       }
 
       return array('proximo_matricula_id' => $proximoMatriculaId, 'situacao_anterior' => $situacaoAnterior, 'nova_situacao' => $novaSituacao);
@@ -840,10 +849,10 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
   {
     if ($this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE or
       $this->getService()->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE){
-      return utf8_encode($this->getService()->getParecerDescritivo($this->getEtapaParecer($etapa), $componenteCurricularId));
+      return $this->getService()->getParecerDescritivo($this->getEtapaParecer($etapa), $componenteCurricularId);
     }
     else
-      return utf8_encode($this->getService()->getParecerDescritivo($this->getEtapaParecer($etapa)));
+      return $this->getService()->getParecerDescritivo($this->getEtapaParecer($etapa));
   }
 
 
