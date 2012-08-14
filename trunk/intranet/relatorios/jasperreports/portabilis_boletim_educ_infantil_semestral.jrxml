@@ -207,19 +207,19 @@
              area_conhecimento.instituicao_id = $P{instituicao} AND
              componente_curricular.id = escola_serie_disciplina.ref_cod_disciplina) as area_conhecimento_id,
 
-      convert((SELECT parecer
+      (SELECT parecer
          FROM modules.parecer_geral,
               modules.parecer_aluno
         WHERE parecer_aluno.matricula_id = matricula.cod_matricula AND
               parecer_geral.parecer_aluno_id = parecer_aluno.id AND
-              parecer_geral.etapa = 1 ) using utf8_to_iso_8859_1) AS parecer_semestre1,
+              parecer_geral.etapa = 1 ) AS parecer_semestre1,
 
-      convert((SELECT parecer
+      (SELECT parecer
          FROM modules.parecer_geral,
               modules.parecer_aluno
         WHERE parecer_aluno.matricula_id = matricula.cod_matricula AND
               parecer_geral.parecer_aluno_id = parecer_aluno.id AND
-              parecer_geral.etapa = 2 ) using utf8_to_iso_8859_1) AS parecer_semestre2,
+              parecer_geral.etapa = 2 ) AS parecer_semestre2,
 
                matricula.cod_matricula AS matricula,
 
