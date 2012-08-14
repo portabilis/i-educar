@@ -604,9 +604,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
         $parecer = $this->getParecerDescritivo($etapa, $cc['id']);
 
         if (! is_null($parecer)) {
-          $isUtf8 = (mb_detect_encoding($parecer->get('parecer'), 'utf-8, iso-8859-1') == 'UTF-8');
-
-          if ($isUtf8) {
+          if (mb_detect_encoding($parecer->get('parecer'), 'utf-8, iso-8859-1') == 'UTF-8') {
             $parecer->parecer = utf8_decode($parecer->get('parecer'));
             $this->getService()->addParecer($parecer);
 
