@@ -53,7 +53,6 @@ var deleteResourceUrlBuilder = {
       serie_id : $j('#ref_ref_cod_serie').val(),
       turma_id : $j('#ref_cod_turma').val(),
       ano_escolar : $j('#ano').val(),
-      componente_curricular_id : $j('#ref_cod_componente_curricular').val(),
       etapa : $j('#etapa').val()
     };
 
@@ -98,7 +97,8 @@ var getResourceUrlBuilder = {
       turma_id : $j('#ref_cod_turma').val(),
       ano_escolar : $j('#ano').val(),
       etapa : $j('#etapa').val(),
-      matricula_id : $j('#ref_cod_matricula').val()
+      matricula_id : $j('#ref_cod_matricula').val(),
+      componente_curricular_id : $j('#ref_cod_componente_curricular').val()
     };
 
     return resourceUrlBuilder.buildUrl(urlBase, $j.extend(vars, additionalVars));
@@ -326,7 +326,7 @@ function deleteNota($notaFieldElement) {
     serie_id : $j('#ref_ref_cod_serie').val(),
     turma_id : $j('#ref_cod_turma').val(),
     ano_escolar : $j('#ano').val(),
-    componente_curricular_id : $j('#ref_cod_componente_curricular').val(),
+    componente_curricular_id : $notaFieldElement.data('componente_curricular_id'),
     etapa : $j('#etapa').val(),
     matricula_id : $notaFieldElement.data('matricula_id')
    };
@@ -347,8 +347,14 @@ function deleteNota($notaFieldElement) {
 function deleteNotaExame($notaExameFieldElement) {
   var resourceName = 'nota_exame';
 
+  var additionalVars = { 
+    componente_curricular_id : $notaExameFieldElement.data('componente_curricular_id'),
+    etapa : 'Rc',
+    matricula_id : $notaExameFieldElement.data('matricula_id')
+   };
+
   var options = {
-    url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, resourceName, {matricula_id : $notaExameFieldElement.data('matricula_id'), etapa : 'Rc'}),
+    url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, resourceName, additionalVars),
     dataType : 'json',
     success : function(dataResponse) {
       afterChangeResource($notaExameFieldElement);
@@ -375,8 +381,13 @@ function deleteFalta($faltaFieldElement) {
     ) {      
     var resourceName = 'falta';
 
+    var additionalVars = { 
+      componente_curricular_id : $faltaFieldElement.data('componente_curricular_id'),
+      matricula_id : $faltaFieldElement.data('matricula_id')
+     };
+
     var options = {
-      url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, resourceName, {matricula_id : $faltaFieldElement.data('matricula_id')}),
+      url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, resourceName, additionalVars),
       dataType : 'json',
       success : function(dataResponse) {
         afterChangeResource($faltaFieldElement);
@@ -398,8 +409,14 @@ function deleteFalta($faltaFieldElement) {
 function deleteParecer($parecerFieldElement) {
   var resourceName = 'parecer';
 
+  var additionalVars = { 
+    componente_curricular_id : $parecerFieldElement.data('componente_curricular_id'),
+    matricula_id             : $parecerFieldElement.data('matricula_id'),
+    etapa                    : getEtapaParecer()
+   };
+
   var options = {
-    url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, resourceName, {matricula_id : $parecerFieldElement.data('matricula_id'), etapa : getEtapaParecer()}),
+    url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, resourceName, additionalVars),
     dataType : 'json',
     success : function(dataResponse) {
       afterChangeResource($parecerFieldElement);
