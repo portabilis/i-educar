@@ -387,6 +387,7 @@ class DiarioApiController extends ApiCoreController
       $this->messenger->append('Nota matrícula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
     }
 
+    $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
     $this->appendResponse('situacao',     $this->getSituacaoMatricula());
   }
@@ -409,6 +410,7 @@ class DiarioApiController extends ApiCoreController
       $this->messenger->append('Falta matrícula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
     }
 
+    $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
     $this->appendResponse('situacao',     $this->getSituacaoMatricula());
   }
@@ -430,6 +432,7 @@ class DiarioApiController extends ApiCoreController
       $this->messenger->append('Parecer descritivo matricula '. $this->getRequest()->matricula_id .' alterado com sucesso.', 'success');
     }
 
+    $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
     $this->appendResponse('situacao',     $this->getSituacaoMatricula());
   }
@@ -451,6 +454,7 @@ class DiarioApiController extends ApiCoreController
       }
     }
 
+    $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
     $this->appendResponse('situacao',     $this->getSituacaoMatricula());
   }
@@ -477,6 +481,7 @@ class DiarioApiController extends ApiCoreController
       $this->messenger->append('Falta matrícula '. $this->getRequest()->matricula_id .' removida com sucesso.', 'success');
     }
 
+    $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
     $this->appendResponse('situacao',     $this->getSituacaoMatricula());
   }
@@ -503,6 +508,7 @@ class DiarioApiController extends ApiCoreController
       }
     }
 
+    $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
     $this->appendResponse('situacao',     $this->getSituacaoMatricula());
   }
@@ -552,6 +558,7 @@ class DiarioApiController extends ApiCoreController
       if (! is_array($alunos))
         $alunos = array();
 
+      // TODO eliminar este array
       $requiredFields = array(
         array('matricula_id', 'ref_cod_matricula'),
         array('aluno_id', 'ref_cod_aluno'),
@@ -564,13 +571,8 @@ class DiarioApiController extends ApiCoreController
         // seta id da matricula a ser usado pelo metodo serviceBoletim
         $this->setCurrentMatriculaId($matriculaId);        
 
-        $matricula['situacao']      = $this->getSituacaoMatricula();
+        //$matricula['situacao']      = $this->getSituacaoMatricula();
         $matricula['componentes_curriculares'] = $this->loadComponentesCurricularesForMatricula($matriculaId);
-
-        //$matricula['nota_atual']    = $this->getNotaAtual();
-        //$matricula['nota_exame']    = $this->getNotaExame();
-        //$matricula['falta_atual']   = $this->getFaltaAtual();
-        //$matricula['parecer_atual'] = $this->getParecerAtual();
 
         foreach($requiredFields as $f)
           $matricula[$f[0]] = $aluno[$f[1]];
@@ -592,6 +594,15 @@ class DiarioApiController extends ApiCoreController
   }
 
   // metodos auxiliares responders
+
+
+  // TODO usar esta funcao onde é verificado se parecer geral
+  protected function parecerGeral() {
+    $tiposParecerGeral = array(RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
+                               RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL);
+
+    return in_array($this->serviceBoletim()->getRegra()->get('parecerDescritivo'), $tiposParecerGeral);
+  }
 
 
   protected function setCurrentMatriculaId($matriculaId) {
@@ -699,9 +710,11 @@ class DiarioApiController extends ApiCoreController
 
   // metodos auxiliares getSituacaoMatricula
 
-  protected function getSituacaoMatricula() {
+  protected function getSituacaoMatricula($ccId = null) {
+    if (is_null($ccId))
+      $ccId = $this->getRequest()->componente_curricular_id;
+
     $situacao = 'Situação não recuperada';
-    $ccId     = $this->getRequest()->componente_curricular_id;
 
     try {
       $componente = $this->serviceBoletim()->getSituacaoComponentesCurriculares()->componentesCurriculares[$ccId];
@@ -709,7 +722,8 @@ class DiarioApiController extends ApiCoreController
     }
     catch (Exception $e) {
       $matriculaId = $this->getRequest()->matricula_id;
-      $this->messenger->append("Erro ao recuperar situação da matrícula '$matriculaId': " . $e->getMessage());
+      $this->messenger->append("Erro ao recuperar situação da matrícula '$matriculaId': " . 
+                               $e->getMessage());
     }
 
     return $this->safeString($situacao);
@@ -731,8 +745,10 @@ class DiarioApiController extends ApiCoreController
         $componente['id']            = $_componente->get('id');
         $componente['nome']          = $this->safeString($_componente->get('nome'));
         $componente['nota_atual']    = $this->getNotaAtual($etapa = null, $componente['id']);
+        $componente['nota_exame']    = $this->getNotaExame($componente['id']);
         $componente['falta_atual']   = $this->getFaltaAtual($etapa = null, $componente['id']);
         $componente['parecer_atual'] = $this->getParecerAtual($componente['id']);
+        $componente['situacao']      = $this->getSituacaoMatricula($componente['id']);
 
         $componentesCurriculares[]   = $componente;
       }
@@ -762,11 +778,11 @@ class DiarioApiController extends ApiCoreController
   }
 
 
-  protected function getNotaExame() {
+  protected function getNotaExame($componenteCurricularId = null) {
     // somente recupera nota de exame se estiver buscando as matriculas da ultima etapa
     // se existe nota de exame, esta é recuperada mesmo que a regra de avaliação não use mais exame
     if($this->getRequest()->etapa == $this->serviceBoletim()->getOption('etapas'))
-      $nota = $this->getNotaAtual($etapa='Rc');
+      $nota = $this->getNotaAtual($etapa = 'Rc', $componenteCurricularId);
     else
       $nota = '';
 
@@ -782,13 +798,12 @@ class DiarioApiController extends ApiCoreController
     if (is_null($etapa))
       $etapa = $this->getRequest()->etapa;
 
-    // validacao
-    if (! is_numeric($componenteCurricularId))
-      throw new Exception('Não foi possivel obter a falta atual, pois não foi recebido o id do componente curricular.');
+    if ($this->serviceBoletim()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+      if (! is_numeric($componenteCurricularId))
+        throw new Exception('Não foi possivel obter a falta atual, pois não foi recebido o id do componente curricular.');
 
-
-    if ($this->serviceBoletim()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE)
-      $falta = $this->serviceBoletim()->getFalta($etapa, $this->getRequest()->componente_curricular_id)->quantidade;
+      $falta = $this->serviceBoletim()->getFalta($etapa, $componenteCurricularId)->quantidade;
+    }
 
     elseif ($this->serviceBoletim()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL)
       $falta = $this->serviceBoletim()->getFalta($etapa)->quantidade;
@@ -811,19 +826,18 @@ class DiarioApiController extends ApiCoreController
     if (is_null($componenteCurricularId))
       $componenteCurricularId = $this->getRequest()->componente_curricular_id;
 
-    // validacao
-    if (! is_numeric($componenteCurricularId))
-      throw new Exception('Não foi possivel obter o parecer descritivo atual, pois não foi recebido o id do componente curricular.');
-
-
     $etapaComponente = $this->serviceBoletim()->getRegra()->get('parecerDescritivo') ==
                        RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE;
 
     $anualComponente = $this->serviceBoletim()->getRegra()->get('parecerDescritivo') ==
                        RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE;
 
-    if ($etapaComponente or $anualComponente)
+    if ($etapaComponente or $anualComponente) {
+      if (! is_numeric($componenteCurricularId))
+        throw new Exception('Não foi possivel obter o parecer descritivo atual, pois não foi recebido o id do componente curricular.');
+
       return utf8_encode($this->serviceBoletim()->getParecerDescritivo($this->getEtapaParecer(), $componenteCurricularId));
+    }
     else
       return utf8_encode($this->serviceBoletim()->getParecerDescritivo($this->getEtapaParecer()));
   }
