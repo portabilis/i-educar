@@ -240,4 +240,12 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     return utf8_encode($str);
   }
+
+
+  protected function safeStringForDb($s) {
+    if (mb_detect_encoding($s, 'utf-8, iso-8859-1') == 'UTF-8')
+      return utf8_decode(addslashes($s));
+    else
+      return $s;
+  }
 }

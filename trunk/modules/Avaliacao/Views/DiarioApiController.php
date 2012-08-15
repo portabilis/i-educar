@@ -686,7 +686,7 @@ class DiarioApiController extends ApiCoreController
   protected function getParecerComponente() {
     return new Avaliacao_Model_ParecerDescritivoComponente(array(
               'componenteCurricular' => $this->getRequest()->componente_curricular_id,
-              'parecer'              => addslashes($this->getRequest()->att_value),
+              'parecer'              => $this->safeStringForDb($this->getRequest()->att_value),
               'etapa'                => $this->getRequest()->etapa
     ));
   }
@@ -694,7 +694,7 @@ class DiarioApiController extends ApiCoreController
 
   protected function getParecerGeral() {
     return new Avaliacao_Model_ParecerDescritivoGeral(array(
-              'parecer' => addslashes($this->getRequest()->att_value),
+              'parecer' => $this->safeStringForDb($this->getRequest()->att_value),
               'etapa'   => $this->getRequest()->etapa
     ));
   }

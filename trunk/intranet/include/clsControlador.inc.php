@@ -386,14 +386,14 @@ class clsControlador
   }
 
 
-  protected function atingiuTentativasLogin($value) {
+  protected function atingiuTentativasLogin() {
     return isset($_SESSION['tentativas_login_falhas']) &&
                  is_numeric($_SESSION['tentativas_login_falhas']) &&
                  $_SESSION['tentativas_login_falhas'] >= $this->_maximoTentativasFalhas;
   }
 
 
-  protected function incrementTentativasLogin($value) {
+  protected function incrementTentativasLogin() {
     @session_start();
     if (! isset($_SESSION['tentativas_login_falhas']) or ! is_numeric($_SESSION['tentativas_login_falhas']))
       $_SESSION['tentativas_login_falhas'] = 1;
