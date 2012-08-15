@@ -134,7 +134,7 @@ class Portabilis_Array_Utils {
 
 
   /* ordena array por uma chave usando função php usort, ex:
-      $ordenedResources = sortByKey($resources, 'resource_att_name');
+      $ordenedResources = Portabilis_Array_Utils::sortByKey($resources, 'resource_att_name');
   */  
   public static function sortByKey($key, $array) {
     usort($array, function ($a, $b) use ($key) {
