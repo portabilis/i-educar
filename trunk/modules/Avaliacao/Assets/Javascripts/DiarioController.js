@@ -631,7 +631,6 @@ function faltaField(matriculaId, componenteCurricularId, value) {
 }
 
 function parecerField(matriculaId, componenteCurricularId, value) {
-  value = safeUtf8Decode(value);
   var $parecerField = $j('<textarea />').attr('cols', '40')
                                         .attr('rows', '5')
                                         .addClass('parecer-matricula-cc')
