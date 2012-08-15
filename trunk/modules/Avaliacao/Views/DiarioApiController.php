@@ -738,13 +738,7 @@ class DiarioApiController extends ApiCoreController
       }
     }
 
-    // ordena componentes por nome
-    function sortByNome($array, $otherArray) {
-      return Portabilis_Array_Utils::keySorter('nome', $array, $otherArray);
-    }
-    
-    usort($componentesCurriculares, sortByNome);
-    return $componentesCurriculares;
+    return Portabilis_Array_Utils::sortByKey('nome', $componentesCurriculares);
   }
 
 
