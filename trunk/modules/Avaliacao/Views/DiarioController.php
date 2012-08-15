@@ -57,8 +57,7 @@ class DiarioController extends Core_Controller_Page_ListController
     $get_escola_curso_serie = $escola_curso_serie_obrigatorio                   = true;
     $get_turma = $turma_obrigatorio = $listar_turmas_periodo_alocacao_professor = true;
 
-    $get_componente_curricular = $componente_curricular_obrigatorio =
-    $listar_componentes_curriculares_professor = true;
+    $get_componente_curricular = $listar_componentes_curriculares_professor     = true;
 
     $get_etapa = $etapa_obrigatorio                                             = true;
     $get_alunos_matriculados                                                    = true;
