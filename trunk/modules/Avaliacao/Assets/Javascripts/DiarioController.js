@@ -176,15 +176,18 @@ var changeParecer = function(event) {
 
 function afterChangeResource($resourceElement) {
   $resourceElement.removeAttr('disabled').siblings('img').remove();
-  var resourceElementTabIndex = $resourceElement.attr('tabindex');
-  var focusedElementTabIndex  = $j('*:focus').first().attr('tabindex');
-  var lastElementTabIndex     = $resourceElement.closest('form').find(':last:[tabindex]').attr('tabindex');
 
+  var resourceElementTabIndex    = $resourceElement.attr('tabindex');
+  var focusedElementTabIndex = $j('.tabable:focus').first().attr('tabindex');
+  var lastElementTabIndex        = $resourceElement.closest('form').find('.tabable').last().attr('tabindex');
+
+  // percorre os proximos elementos enquanto não chegar no ultimo
   for(var nextTabIndex = resourceElementTabIndex + 1; nextTabIndex < lastElementTabIndex + 1; nextTabIndex++) {
-    var $nextElement = $j($resourceElement.closest('form').find(':[tabindex="'+nextTabIndex+'"]')).first();
-
+    var $nextElement = $j($resourceElement.closest('form').find('.tabable:[tabindex="'+nextTabIndex+'"]')).first();
+    
+    // seta foco no proximo elemento, caso este seja visivel e o elemento alterado ainda esteja focado
     if($nextElement.is(':visible')) {
-      if(focusedElementTabIndex == resourceElementTabIndex)
+      if(resourceElementTabIndex == focusedElementTabIndex)
         $nextElement.focus();
 
       break;
@@ -512,12 +515,17 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
 }
 
 var nextTabIndex = 1;
+
 function setNextTabIndex($element) {
   $element.attr('tabindex', nextTabIndex);
+  $element.addClass('tabable');
   nextTabIndex += 1;
 }
 
 function handleSearch($resultTable, dataResponse) { 
+  // resets next tabindex
+  nextTabIndex = 1;
+
   //set headers
   var $linha = $j('<tr />');
   $j('<th />').html('Matrícula').appendTo($linha);
@@ -556,7 +564,7 @@ function handleSearch($resultTable, dataResponse) {
   $faltaFields.on('change', changeFalta);
   $parecerFields.on('change', changeParecer);
 
-  $resultTable.addClass('styled').find('input:first').focus();
+  $resultTable.addClass('styled').find('.tabable:first').focus();
 }
 
 function _notaField(matriculaId, componenteCurricularId, klass, id, value) {
