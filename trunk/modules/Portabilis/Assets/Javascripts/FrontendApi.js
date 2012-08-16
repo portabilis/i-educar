@@ -275,7 +275,7 @@ var $tableSearchDetails = $j('<table />').attr('id', 'search-details')
     function _handleSearch(dataResponse) {
       showNewSearchButton();
 
-      //try{
+      try{
         handleMessages(dataResponse.msgs);
 
         var resources = dataResponse[RESOURCES_NAME];
@@ -299,26 +299,27 @@ var $tableSearchDetails = $j('<table />').attr('id', 'search-details')
           _setTableSearchDetails(dataResponse['details']);
           handleSearch($resultTable, dataResponse);
         }
-      /*}
+      }
       catch(error) {
         showNewSearchButton();
 
-        handleMessages([{type : 'error', msg : 'Ocorreu um erro ao exibir o(a)s '+ RESOURCES_NAME +', por favor tente novamente, detalhes: ' + error}], '');
+        handleMessages([{type : 'error', msg : 'Ocorreu um erro ao exibir o recurso '+ RESOURCES_NAME +', por favor tente novamente, detalhes: ' + error}], '');
 
         safeLog('Error details:');
         safeLog(error);
 
         safeLog('dataResponse details:');
         safeLog(dataResponse);
-      }*/
+      }
     }
 
 
     function handleSearchError(response) {
       showNewSearchButton();
 
-      handleMessages([{type : 'error', msg : 'Ocorreu um erro ao carregar o(a)s '+ RESOURCES_NAME +', por favor tente novamente, detalhes:' + response.responseText}], '');
+      handleMessages([{type : 'error', msg : 'Ocorreu um erro ao carregar o recurso '+ RESOURCES_NAME +', por favor tente novamente, detalhes:' + response.responseText}], '');
 
+      safeLog('response details:');
       safeLog(response);
     }
 
