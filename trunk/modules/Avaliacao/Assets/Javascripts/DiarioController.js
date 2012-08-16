@@ -472,9 +472,8 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
   //set headers table
   var $linha = $j('<tr />');
   $j('<th />').html('Etapa').appendTo($linha);
-  $j('<th />').html('Comp. Curricular').appendTo($linha);
   $j('<th />').html('Turma').appendTo($linha);
-  $j('<th />').html('Série').appendTo($linha);
+  $j('<th />').html(safeUtf8Decode('Série')).appendTo($linha);
   $j('<th />').html('Ano').appendTo($linha);
   $j('<th />').html('Escola').appendTo($linha);
   $j('<th />').html('Regra avalia&#231;&#227;o').appendTo($linha);
@@ -486,7 +485,6 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
 
   var $linha = $j('<tr />').addClass('even');
   $j('<td />').html(safeToUpperCase($j('#etapa').children("[selected='selected']").html())).appendTo($linha);
-  $j('<td />').html(safeToUpperCase($j('#ref_cod_componente_curricular').children("[selected='selected']").html())).appendTo($linha);
   $j('<td />').html(safeToUpperCase($j('#ref_cod_turma').children("[selected='selected']").html())).appendTo($linha);
   $j('<td />').html(safeToUpperCase($j('#ref_ref_cod_serie').children("[selected='selected']").html())).appendTo($linha);
   $j('<td />').html($j('#ano').val()).appendTo($linha);
@@ -502,7 +500,7 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
   var tipoNota = dataDetails.tipo_nota.replace('_', ' ');
   if (tipoNota == 'numerica')
     tipoNota = 'numérica';
-  $j('<td />').html(safeToUpperCase(tipoNota)).appendTo($linha);
+  $j('<td />').html(safeToUpperCase(safeUtf8Decode(tipoNota))).appendTo($linha);
 
   $j('<td />').html(safeToUpperCase(dataDetails.tipo_presenca.replace('_', ' '))).appendTo($linha);
   $j('<td />').html(safeToUpperCase(dataDetails.tipo_parecer_descritivo.replace('_', ' '))).appendTo($linha);
@@ -654,18 +652,12 @@ function parecerField(matriculaId, componenteCurricularId, value) {
 }
 
 function updateComponenteCurriculares($targetElement, matriculaId, componentesCurriculares) {
-  //var tiposParecerComponente = ['etapa_componente', 'anual_componente'];
-
   var useNota                = $tableSearchDetails.data('details').tipo_nota != 'nenhum';
   var useParecer             = $tableSearchDetails.data('details').tipo_parecer_descritivo != 'nenhum'
 
-  /*var faltaComponente        = $tableSearchDetails.data('details').tipo_presenca != 'geral';
-  var parecerComponente      = $j.inArray($tableSearchDetails.data('details').tipo_parecer_descritivo,
-                                          tiposParecerComponente) > -1;*/
-
   var $ccHeader = $j('<tr />');
   $j('<td />').addClass('center').html('Componente curricular').appendTo($ccHeader);
-  $j('<td />').addClass('center').html('Situação').appendTo($ccHeader);
+  $j('<td />').addClass('center').html(safeUtf8Decode('Situação')).appendTo($ccHeader);
 
   if (useNota) {
     $j('<td />').addClass('center').html('Nota').appendTo($ccHeader);
