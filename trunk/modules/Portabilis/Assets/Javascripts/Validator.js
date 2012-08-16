@@ -52,7 +52,7 @@ function validatesIfValueIsInSet(value, targetId, set) {
 
 function validatesIfValueIsNumeric(value, targetId) {
   if (! $j.isNumeric(value)) {
-    handleMessages([{type : 'error', msg : 'Informe um numero válido.'}], targetId);
+    handleMessages([{type : 'error', msg : safeUtf8Decode('Informe um numero válido.')}], targetId);
     return false;
   }
 
