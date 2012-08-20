@@ -94,11 +94,11 @@ function handleMessages(messages, targetId, useDelayClassRemoval) {
 
   for (var i = 0; i < messages.length; i++) {
     if (messages[i].type == 'success')
-      var delay = 2000;
+      var delay = 5000;
     else if (messages[i].type != 'error')
       var delay = 10000;
     else
-      var delay = 60000;
+      var delay = 20000;
 
     $j('<p />').addClass(messages[i].type).html(messages[i].msg).appendTo($feedbackMessages).delay(delay).fadeOut(function() {$j(this).remove()}).data('target_id', targetId);
 
@@ -111,16 +111,19 @@ function handleMessages(messages, targetId, useDelayClassRemoval) {
   }
 
   if($targetElement) {
-    if (hasErrorMessages)
+    if (hasErrorMessages) {
       $targetElement.addClass('error').removeClass('success').removeClass('notice');
+      $targetElement.focus();
+    }
+
     else if (hasSuccessMessages)
       $targetElement.addClass('success').removeClass('error').removeClass('notice');
+
     else if (hasNoticeMessages)
       $targetElement.addClass('notice').removeClass('error').removeClass('sucess');
+
     else
       $targetElement.removeClass('success').removeClass('error').removeClass('notice');
-
-    $j($targetElement.get(0)).focus();
 
     if (useDelayClassRemoval) {
       window.setTimeout(function() {$targetElement.removeClass('success').removeClass('error').removeClass('notice');}, delayClassRemoval);
@@ -272,7 +275,7 @@ var $tableSearchDetails = $j('<table />').attr('id', 'search-details')
     function _handleSearch(dataResponse) {
       showNewSearchButton();
 
-      //try{
+      try{
         handleMessages(dataResponse.msgs);
 
         var resources = dataResponse[RESOURCES_NAME];
@@ -296,26 +299,27 @@ var $tableSearchDetails = $j('<table />').attr('id', 'search-details')
           _setTableSearchDetails(dataResponse['details']);
           handleSearch($resultTable, dataResponse);
         }
-      /*}
+      }
       catch(error) {
         showNewSearchButton();
 
-        handleMessages([{type : 'error', msg : 'Ocorreu um erro ao exibir o(a)s '+ RESOURCES_NAME +', por favor tente novamente, detalhes: ' + error}], '');
+        handleMessages([{type : 'error', msg : 'Ocorreu um erro ao exibir o recurso '+ RESOURCES_NAME +', por favor tente novamente, detalhes: ' + error}], '');
 
         safeLog('Error details:');
         safeLog(error);
 
         safeLog('dataResponse details:');
         safeLog(dataResponse);
-      }*/
+      }
     }
 
 
     function handleSearchError(response) {
       showNewSearchButton();
 
-      handleMessages([{type : 'error', msg : 'Ocorreu um erro ao carregar o(a)s '+ RESOURCES_NAME +', por favor tente novamente, detalhes:' + response.responseText}], '');
+      handleMessages([{type : 'error', msg : 'Ocorreu um erro ao carregar o recurso '+ RESOURCES_NAME +', por favor tente novamente, detalhes:' + response.responseText}], '');
 
+      safeLog('response details:');
       safeLog(response);
     }
 
