@@ -483,7 +483,7 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
 
   $linha.appendTo($tableSearchDetails);
 
-  var $linha = $j('<tr />').addClass('even');
+  var $linha = $j('<tr />');
   $j('<td />').html(safeToUpperCase($j('#etapa').children("[selected='selected']").html())).appendTo($linha);
   $j('<td />').html(safeToUpperCase($j('#ref_cod_turma').children("[selected='selected']").html())).appendTo($linha);
   $j('<td />').html(safeToUpperCase($j('#ref_ref_cod_serie').children("[selected='selected']").html())).appendTo($linha);
@@ -526,14 +526,14 @@ function handleSearch($resultTable, dataResponse) {
 
   //set headers
   var $linha = $j('<tr />');
-  $j('<th />').html('Matrícula').appendTo($linha);
+  $j('<th />').html(safeUtf8Decode('Matrícula')).appendTo($linha);
   $j('<th />').html('Aluno').attr('colspan', 4).appendTo($linha);
 
   $linha.appendTo($resultTable);
 
   //set (result) rows
   $j.each(dataResponse.matriculas, function(index, value) {
-    var $linha = $j('<tr />');
+    var $linha = $j('<tr />').addClass('strong');
     
     $j('<td />').html(value.matricula_id).addClass('center').appendTo($linha);
 
@@ -550,7 +550,8 @@ function handleSearch($resultTable, dataResponse) {
     $resultTable.find(':[colspan]').attr('colspan', 5);
   }
 
-  $resultTable.find('tr:even').addClass('even');
+  if ($j('#ref_cod_componente_curricular').val() == '')
+    $resultTable.find('tr:even').addClass('even');
 
   //set onchange events
   var $notaFields = $resultTable.find('.nota-matricula-cc');
@@ -655,7 +656,7 @@ function updateComponenteCurriculares($targetElement, matriculaId, componentesCu
   var useNota                = $tableSearchDetails.data('details').tipo_nota != 'nenhum';
   var useParecer             = $tableSearchDetails.data('details').tipo_parecer_descritivo != 'nenhum'
 
-  var $ccHeader = $j('<tr />');
+  var $ccHeader = $j('<tr />').addClass('strong');
   $j('<td />').addClass('center').html('Componente curricular').appendTo($ccHeader);
   $j('<td />').addClass('center').html(safeUtf8Decode('Situação')).appendTo($ccHeader);
 
