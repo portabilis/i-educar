@@ -467,10 +467,16 @@ function handleChange(dataResponse) {
 
 
 function setTableSearchDetails($tableSearchDetails, dataDetails) {
+  var componenteCurricularSelected = ($j('#ref_cod_componente_curricular').val() != '');
+
   $j('<caption />').html('<strong>Lan&#231;amento de notas por turma</strong>').appendTo($tableSearchDetails);
 
   //set headers table
   var $linha = $j('<tr />');
+
+  if (componenteCurricularSelected)
+    $j('<th />').html('Componente curricular').appendTo($linha);
+
   $j('<th />').html('Etapa').appendTo($linha);
   $j('<th />').html('Turma').appendTo($linha);
   $j('<th />').html(safeUtf8Decode('Série')).appendTo($linha);
@@ -484,6 +490,10 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
   $linha.appendTo($tableSearchDetails);
 
   var $linha = $j('<tr />').addClass('cellColor');
+
+  if (componenteCurricularSelected)
+    $j('<td />').html(safeToUpperCase($j('#ref_cod_componente_curricular').children("[selected='selected']").html())).appendTo($linha);
+
   $j('<td />').html(safeToUpperCase($j('#etapa').children("[selected='selected']").html())).appendTo($linha);
   $j('<td />').html(safeToUpperCase($j('#ref_cod_turma').children("[selected='selected']").html())).appendTo($linha);
   $j('<td />').html(safeToUpperCase($j('#ref_ref_cod_serie').children("[selected='selected']").html())).appendTo($linha);
@@ -521,37 +531,47 @@ function setNextTabIndex($element) {
 }
 
 function handleSearch($resultTable, dataResponse) { 
+  var componenteCurricularSelected = ($j('#ref_cod_componente_curricular').val() != '');
+
   // resets next tabindex
-  nextTabIndex = 1;
+  var nextTabIndex = 1;
 
   //set headers
   var $linha = $j('<tr />');
   $j('<th />').html(safeUtf8Decode('Matrícula')).appendTo($linha);
-  $j('<th />').html('Aluno').attr('colspan', 4).appendTo($linha);
+  $j('<th />').attr('colspan', componenteCurricularSelected ? 0 : 4).html('Aluno').appendTo($linha);
+
+  if (componenteCurricularSelected)
+    updateComponenteCurricularHeaders($linha, $j('<th />'));
 
   $linha.appendTo($resultTable);
 
   //set (result) rows
   $j.each(dataResponse.matriculas, function(index, value) {
-    var $linha = $j('<tr />').addClass('strong');
-    
-    $j('<td />').html(value.matricula_id).addClass('center').appendTo($linha);
+    var $linha = $j('<tr />').addClass(componenteCurricularSelected ? '' : 'strong');
 
-    $j('<td />').html(value.aluno_id + ' - ' +safeToUpperCase(value.nome)).attr('colspan', 4).appendTo($linha);
+    $j('<td />').html(value.matricula_id).addClass('center').appendTo($linha);
+    $j('<td />').html(value.aluno_id + ' - ' +safeToUpperCase(value.nome))
+                .attr('colspan', componenteCurricularSelected ? 0 : 4)
+                .appendTo($linha);
+
+    if (componenteCurricularSelected && value.componentes_curriculares.length > 0)
+      updateComponenteCurricular($linha, value.matricula_id, value.componentes_curriculares[0]);
 
     $linha.fadeIn('slow').appendTo($resultTable);
     $linha.appendTo($resultTable);
-    updateComponenteCurriculares($resultTable, value.matricula_id, value.componentes_curriculares);
+
+    if (! componenteCurricularSelected)
+      updateComponenteCurriculares($resultTable, value.matricula_id, value.componentes_curriculares);
   });
 
   // seta colspan [th, td].aluno quando exibe nota exame
   if ($tableSearchDetails.data('details').tipo_nota != 'nenhum' && 
       $tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) {
-    $resultTable.find(':[colspan]').attr('colspan', 5);
+    $resultTable.find(':[colspan]').attr('colspan', componenteCurricularSelected ? 1 : 5);
   }
 
-  if ($j('#ref_cod_componente_curricular').val() == '')
-    $resultTable.find('tr:even').addClass('even');
+  $resultTable.find('tr:even').addClass('even');
 
   //set onchange events
   var $notaFields = $resultTable.find('.nota-matricula-cc');
@@ -652,25 +672,66 @@ function parecerField(matriculaId, componenteCurricularId, value) {
   return $j('<td />').addClass('center').html($parecerField);
 }
 
-function updateComponenteCurriculares($targetElement, matriculaId, componentesCurriculares) {
+function updateComponenteCurricular($targetElement, matriculaId, cc) {
   var useNota                = $tableSearchDetails.data('details').tipo_nota != 'nenhum';
-  var useParecer             = $tableSearchDetails.data('details').tipo_parecer_descritivo != 'nenhum'
+  var useParecer             = $tableSearchDetails.data('details').tipo_parecer_descritivo != 'nenhum';
 
-  var $ccHeader = $j('<tr />').addClass('strong');
-  $j('<td />').addClass('center').html('Componente curricular').appendTo($ccHeader);
-  $j('<td />').addClass('center').html(safeUtf8Decode('Situação')).appendTo($ccHeader);
+  $j('<td />').addClass('situacao-matricula-cc')
+              .attr('id', 'situacao-matricula-' + matriculaId + '-cc-' + cc.id)
+              .data('matricula_id', matriculaId)
+              .data('componente_curricular_id', cc.id)
+              .addClass('center')
+              .html(cc.situacao)
+              .appendTo($targetElement);
 
-  if (useNota) {
-    $j('<td />').addClass('center').html('Nota').appendTo($ccHeader);
+  if(useNota) {
+    notaField(matriculaId, cc.id, cc.nota_atual).appendTo($targetElement);
 
-    if ($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val())
-      $j('<td />').addClass('center').html('Nota exame').appendTo($ccHeader);
+    // mostra nota exame caso estiver selecionado a ultima etapa
+    if ($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) {
+      var $fieldNotaExame = notaExameField(matriculaId, cc.id, cc.nota_exame);
+
+      if (cc.nota_exame == '' && cc.situacao.toLowerCase() != 'em exame')
+        $fieldNotaExame.children().hide();
+
+      $fieldNotaExame.appendTo($targetElement);
+    }
+
   }
 
-  $j('<td />').addClass('center').html('Falta').appendTo($ccHeader);
+  faltaField(matriculaId, cc.id, cc.falta_atual).appendTo($targetElement);
 
   if (useParecer)
-    $j('<td />').addClass('center').html('Parecer descritivo').appendTo($ccHeader);
+    parecerField(matriculaId, cc.id, cc.parecer_atual).appendTo($targetElement);
+}
+
+function updateComponenteCurricularHeaders($targetElement, $tagElement) {
+  var useNota                = $tableSearchDetails.data('details').tipo_nota != 'nenhum';
+  var useParecer             = $tableSearchDetails.data('details').tipo_parecer_descritivo != 'nenhum';
+
+  $tagElement.clone().addClass('center').html(safeUtf8Decode('Situação')).appendTo($targetElement);
+
+  if (useNota) {
+    $tagElement.clone().addClass('center').html('Nota').appendTo($targetElement);
+
+    if ($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val())
+      $tagElement.clone().addClass('center').html('Nota exame').appendTo($targetElement);
+  }
+
+  $tagElement.clone().addClass('center').html('Falta').appendTo($targetElement);
+
+  if (useParecer)
+    $tagElement.clone().addClass('center').html('Parecer descritivo').appendTo($targetElement);
+}
+
+function updateComponenteCurriculares($targetElement, matriculaId, componentesCurriculares) {
+  var useNota                = $tableSearchDetails.data('details').tipo_nota != 'nenhum';
+  var useParecer             = $tableSearchDetails.data('details').tipo_parecer_descritivo != 'nenhum';
+
+  var $ccHeader = $j('<tr />').addClass('strong');
+
+  $j('<td />').addClass('center').html('Componente curricular').appendTo($ccHeader);
+  updateComponenteCurricularHeaders($ccHeader, $j('<td />'));
 
   $ccHeader.appendTo($targetElement);
 
@@ -678,34 +739,7 @@ function updateComponenteCurriculares($targetElement, matriculaId, componentesCu
     var $ccRow = $j('<tr />');
 
     $j('<td />').addClass('center').html(cc.nome).appendTo($ccRow);
-
-    $j('<td />').addClass('situacao-matricula-cc')
-                .attr('id', 'situacao-matricula-' + matriculaId + '-cc-' + cc.id)
-                .data('matricula_id', matriculaId)
-                .data('componente_curricular_id', cc.id)
-                .addClass('center')
-                .html(cc.situacao)
-                .appendTo($ccRow);
-
-    if(useNota) {
-      notaField(matriculaId, cc.id, cc.nota_atual).appendTo($ccRow);
-
-      // mostra nota exame caso estiver selecionado a ultima etapa
-      if ($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) {
-        var $fieldNotaExame = notaExameField(matriculaId, cc.id, cc.nota_exame);
-
-        if (cc.nota_exame == '' && cc.situacao.toLowerCase() != 'em exame')
-          $fieldNotaExame.children().hide();
-
-        $fieldNotaExame.appendTo($ccRow);
-      }
-
-    }
-
-    faltaField(matriculaId, cc.id, cc.falta_atual).appendTo($ccRow);
-
-    if (useParecer)
-      parecerField(matriculaId, cc.id, cc.parecer_atual).appendTo($ccRow);
+    updateComponenteCurricular($ccRow, matriculaId, cc);
 
     $ccRow.appendTo($targetElement);
   });
