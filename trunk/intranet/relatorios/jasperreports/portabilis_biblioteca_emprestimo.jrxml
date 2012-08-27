@@ -20,6 +20,7 @@
        exemplar_emprestimo.cod_emprestimo,
        exemplar_emprestimo.ref_cod_cliente,
        exemplar_emprestimo.ref_cod_exemplar,
+       exemplar.tombo,
        acervo.titulo as titulo,
       translate((select public.fcn_upper(cadastro.pessoa.nome)
           from cadastro.pessoa,
@@ -153,7 +154,58 @@
        cliente_tipo_cliente.ref_cod_cliente = exemplar_emprestimo.ref_cod_cliente AND
        cliente_tipo_cliente.ref_cod_cliente_tipo = cliente_tipo.cod_cliente_tipo AND
        cliente_tipo_exemplar_tipo.ref_cod_exemplar_tipo = exemplar_tipo.cod_exemplar_tipo AND
-       exemplar_tipo.cod_exemplar_tipo = acervo.ref_cod_exemplar_tipo)) as data_entrega
+       exemplar_tipo.cod_exemplar_tipo = acervo.ref_cod_exemplar_tipo)) as data_entrega,
+
+(SELECT pessoa.nome
+   FROM cadastro.pessoa,
+        cadastro.juridica,
+        pmieducar.escola
+  WHERE pessoa.idpes = juridica.idpes AND
+        juridica.idpes = escola.ref_idpes AND
+        escola.cod_escola = (SELECT min(matricula.ref_ref_cod_escola)
+                               FROM pmieducar.cliente,
+                                    pmieducar.aluno,
+                                    pmieducar.matricula
+                              WHERE cliente.ref_idpes = aluno.ref_idpes AND
+                                    aluno.cod_aluno = matricula.ref_cod_aluno AND
+                                    matricula.ultima_matricula = 1 AND
+                                    cliente.cod_cliente = exemplar_emprestimo.ref_cod_cliente)) as escola_aluno,
+
+(SELECT curso.nm_curso
+   FROM pmieducar.curso
+  WHERE curso.cod_curso = (SELECT min(matricula.ref_cod_curso)
+                            FROM pmieducar.cliente,
+                                 pmieducar.aluno,
+                                 pmieducar.matricula
+                           WHERE cliente.ref_idpes = aluno.ref_idpes AND
+                                 aluno.cod_aluno = matricula.ref_cod_aluno AND
+                                 matricula.ultima_matricula = 1 AND
+                                 cliente.cod_cliente = exemplar_emprestimo.ref_cod_cliente)) as curso_aluno,
+
+(SELECT COALESCE(serie.nm_serie,'')
+   FROM pmieducar.serie
+ WHERE serie.cod_serie = (SELECT min(matricula.ref_ref_cod_serie)
+                            FROM pmieducar.cliente,
+                                 pmieducar.aluno,
+                                 pmieducar.matricula
+                           WHERE cliente.ref_idpes = aluno.ref_idpes AND
+                                 aluno.cod_aluno = matricula.ref_cod_aluno AND
+                                 matricula.ultima_matricula = 1 AND
+                                 cliente.cod_cliente = exemplar_emprestimo.ref_cod_cliente)) as serie_aluno,
+
+(SELECT COALESCE(turma.nm_turma,'')
+   FROM pmieducar.turma,
+        pmieducar.matricula_turma
+  WHERE matricula_turma.ref_cod_turma = turma.cod_turma AND
+        matricula_turma.ativo = 1 AND
+        matricula_turma.ref_cod_matricula = (SELECT min(matricula.cod_matricula)
+                                               FROM pmieducar.cliente,
+                                                    pmieducar.aluno,
+                                                    pmieducar.matricula
+                                              WHERE cliente.ref_idpes = aluno.ref_idpes AND
+                                                    aluno.cod_aluno = matricula.ref_cod_aluno AND
+                                                    matricula.ultima_matricula = 1 AND
+                                                    cliente.cod_cliente = exemplar_emprestimo.ref_cod_cliente)) as aluno_turma
 
 
   FROM pmieducar.acervo,
@@ -190,6 +242,7 @@ ORDER BY cliente]]>
 	<field name="cod_emprestimo" class="java.lang.Integer"/>
 	<field name="ref_cod_cliente" class="java.lang.Integer"/>
 	<field name="ref_cod_exemplar" class="java.lang.Integer"/>
+	<field name="tombo" class="java.lang.Integer"/>
 	<field name="titulo" class="java.lang.String"/>
 	<field name="cliente" class="java.lang.String"/>
 	<field name="dt_retirada" class="java.lang.String"/>
@@ -209,11 +262,32 @@ ORDER BY cliente]]>
 	<field name="autor" class="java.lang.String"/>
 	<field name="dias" class="java.math.BigDecimal"/>
 	<field name="data_entrega" class="java.sql.Date"/>
+	<field name="escola_aluno" class="java.lang.String"/>
+	<field name="curso_aluno" class="java.lang.String"/>
+	<field name="serie_aluno" class="java.lang.String"/>
+	<field name="aluno_turma" class="java.lang.String"/>
+	<group name="cliente">
+		<groupExpression><![CDATA[$F{ref_cod_cliente}]]></groupExpression>
+		<groupHeader>
+			<band height="18">
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="61bb0a29-c07b-47cb-b112-1579bb1c1ed1" isPrintRepeatedValues="false" x="238" y="3" width="154" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{escola_aluno}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="102" splitType="Stretch">
+		<band height="106" splitType="Stretch">
 			<image>
 				<reportElement uuid="c06cead2-a5f1-4da2-b038-cb910d21d27e" x="9" y="2" width="57" height="46"/>
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
@@ -223,56 +297,56 @@ ORDER BY cliente]]>
 	<pageHeader>
 		<band height="15" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="14fd51e8-9220-44d7-b767-7f91cc3601e9" x="75" y="-72" width="307" height="13"/>
+				<reportElement uuid="14fd51e8-9220-44d7-b767-7f91cc3601e9" x="75" y="-76" width="307" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Endereço: "+$F{logradouro}+", "+$F{numero}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="9144263a-35de-4cfc-b311-dddeb06b74e0" x="75" y="-100" width="307" height="13"/>
+				<reportElement uuid="9144263a-35de-4cfc-b311-dddeb06b74e0" x="75" y="-104" width="307" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nm_instituicao}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="e9684eaf-2c27-49c7-b7f7-a5fe8d2af3e6" x="305" y="-48" width="233" height="13" forecolor="#000000"/>
+				<reportElement uuid="e9684eaf-2c27-49c7-b7f7-a5fe8d2af3e6" x="305" y="-52" width="233" height="13" forecolor="#000000"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="145861b8-6643-427c-babd-52e06b6c988d" x="305" y="-60" width="141" height="13"/>
+				<reportElement uuid="145861b8-6643-427c-babd-52e06b6c988d" x="305" y="-64" width="141" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="6cf1f241-aa4b-4c05-9f4f-9d846d5fcd8b" x="449" y="-60" width="77" height="13"/>
+				<reportElement uuid="6cf1f241-aa4b-4c05-9f4f-9d846d5fcd8b" x="449" y="-64" width="77" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="efef60f9-6e20-4467-90e5-c62f0952d86d" x="75" y="-86" width="307" height="13"/>
+				<reportElement uuid="efef60f9-6e20-4467-90e5-c62f0952d86d" x="75" y="-90" width="307" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nm_escola}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="b3a75340-1312-4353-892c-e34a5ae9eff3" x="75" y="-60" width="228" height="13"/>
+				<reportElement uuid="b3a75340-1312-4353-892c-e34a5ae9eff3" x="75" y="-64" width="228" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Bairro:" +$F{bairro}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="b17f9d6a-c0f5-48a1-a4fb-f8c5fae0e792" x="75" y="-48" width="201" height="13"/>
+				<reportElement uuid="b17f9d6a-c0f5-48a1-a4fb-f8c5fae0e792" x="75" y="-52" width="201" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
@@ -288,7 +362,7 @@ ORDER BY cliente]]>
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="18" splitType="Stretch">
+		<band height="33" splitType="Stretch">
 			<staticText>
 				<reportElement uuid="80637d27-b1e7-450d-b9dc-f2b11c2bf606" x="25" y="1" width="35" height="13"/>
 				<textElement>
@@ -304,96 +378,131 @@ ORDER BY cliente]]>
 				<text><![CDATA[Cliente]]></text>
 			</staticText>
 			<line>
-				<reportElement uuid="e218f938-23ae-4dc8-84e3-19945196d794" x="7" y="15" width="544" height="1"/>
+				<reportElement uuid="e218f938-23ae-4dc8-84e3-19945196d794" x="7" y="29" width="544" height="1"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement uuid="aa98baa1-6e0d-4353-b59f-d9fc6fd7f85e" x="234" y="1" width="30" height="13"/>
+				<reportElement uuid="aa98baa1-6e0d-4353-b59f-d9fc6fd7f85e" x="183" y="15" width="30" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[Tombo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="a76690b4-0953-4598-a8bb-309406bea737" x="270" y="1" width="40" height="13"/>
+				<reportElement uuid="a76690b4-0953-4598-a8bb-309406bea737" x="219" y="15" width="40" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[Exemplar]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="c1b46f35-cc9b-41bd-8d11-eb026a9bae41" x="443" y="1" width="37" height="13"/>
+				<reportElement uuid="c1b46f35-cc9b-41bd-8d11-eb026a9bae41" x="443" y="15" width="37" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[Retirada]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="c1e88cb5-b655-4168-96a8-82b472c0c6b2" x="206" y="-38" width="138" height="14"/>
+				<reportElement uuid="c1e88cb5-b655-4168-96a8-82b472c0c6b2" x="206" y="-34" width="138" height="14"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Empréstimos]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="c1b46f35-cc9b-41bd-8d11-eb026a9bae41" x="499" y="1" width="50" height="13"/>
+				<reportElement uuid="c1b46f35-cc9b-41bd-8d11-eb026a9bae41" x="499" y="15" width="50" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[Devolução]]></text>
 			</staticText>
+			<staticText>
+				<reportElement uuid="a76690b4-0953-4598-a8bb-309406bea737" x="402" y="1" width="40" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Série:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c1b46f35-cc9b-41bd-8d11-eb026a9bae41" x="492" y="1" width="37" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Turma]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="aa98baa1-6e0d-4353-b59f-d9fc6fd7f85e" x="238" y="1" width="30" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Escola]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="15" splitType="Stretch">
+		<band height="16" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="274b399b-9207-483e-83dd-86769e5e8bc7" isPrintRepeatedValues="false" x="25" y="1" width="35" height="13"/>
+				<reportElement uuid="274b399b-9207-483e-83dd-86769e5e8bc7" isPrintRepeatedValues="false" x="25" y="-16" width="35" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ref_cod_cliente}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="f3b92160-c930-474b-a610-c7585b1f7cfb" isPrintRepeatedValues="false" x="65" y="1" width="166" height="13"/>
+				<reportElement uuid="f3b92160-c930-474b-a610-c7585b1f7cfb" isPrintRepeatedValues="false" x="65" y="-16" width="166" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cliente}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement uuid="860b912b-dbb1-4e65-805f-94a8ce4ea0a9" x="234" y="1" width="30" height="13"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="860b912b-dbb1-4e65-805f-94a8ce4ea0a9" x="183" y="2" width="30" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ref_cod_exemplar}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tombo}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="3c247c45-92bf-4e67-84d3-ab5b13a23617" x="270" y="1" width="170" height="13"/>
+				<reportElement uuid="3c247c45-92bf-4e67-84d3-ab5b13a23617" x="219" y="2" width="170" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{titulo}]]></textFieldExpression>
 			</textField>
 			<textField pattern="MM/dd/yyyy" isBlankWhenNull="true">
-				<reportElement uuid="6df4cea6-efc9-4ebd-ac59-357083e991bd" x="443" y="1" width="52" height="13"/>
+				<reportElement uuid="6df4cea6-efc9-4ebd-ac59-357083e991bd" x="443" y="2" width="52" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dt_retirada}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement uuid="65098f98-29f0-4b6f-968e-801c481770a7" x="499" y="1" width="52" height="13"/>
+				<reportElement uuid="65098f98-29f0-4b6f-968e-801c481770a7" x="499" y="2" width="52" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{data_entrega}]]></textFieldExpression>
 			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="1bc36cdc-eac1-45ef-aecf-759e59835adf" isPrintRepeatedValues="false" x="402" y="-15" width="83" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{serie_aluno}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="90e32a12-fe4f-443a-929d-66e076f5ceac" isPrintRepeatedValues="false" x="492" y="-15" width="57" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{aluno_turma}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="3" splitType="Stretch"/>
+		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
 		<band height="20" splitType="Stretch">
