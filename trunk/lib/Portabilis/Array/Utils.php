@@ -121,5 +121,27 @@ class Portabilis_Array_Utils {
 
     return $arrayFiltered;
   }
+
+  public static function _keySorter($key, $array, $otherArray) {
+    $a = $array[$key];
+    $b = $otherArray[$key];
+
+    if ($a == $b)
+        return 0;
+
+    return ($a < $b) ? -1 : 1;
+  }
+
+
+  /* ordena array por uma chave usando função php usort, ex:
+      $ordenedResources = Portabilis_Array_Utils::sortByKey($resources, 'resource_att_name');
+  */  
+  public static function sortByKey($key, $array) {
+    usort($array, function ($a, $b) use ($key) {
+      return Portabilis_Array_Utils::_keySorter($key, $a, $b);
+    });
+
+    return $array;
+  }
 }
 ?>
