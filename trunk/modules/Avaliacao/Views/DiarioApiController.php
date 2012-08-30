@@ -1,5 +1,10 @@
 <?php
 
+// O tempo máximo default (30) pode ser atingido ao carregar as matriculas sem selecionar componente curricular,
+// o ideal seria fazer o caregamento assincrono das matriculas.
+if (ini_get("max_execution_time") < 120)
+  ini_set("max_execution_time", 120);
+
 #error_reporting(E_ALL);
 #ini_set("display_errors", 1);
 
