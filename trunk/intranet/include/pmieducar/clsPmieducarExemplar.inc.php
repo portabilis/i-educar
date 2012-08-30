@@ -681,7 +681,7 @@ class clsPmieducarExemplar
 
 	function retorna_tombo_maximo($bibliotecaId, $exceptExemplarId = null) {
     if (empty($bibliotecaId))
-      throw new Exception("Deve ser enviado um argumento '\$bibliotecaId' ao metódo 'retorna_tombo_maximo'");
+      throw new Exception("Deve ser enviado um argumento '\$bibliotecaId' ao método 'retorna_tombo_maximo'");
 
     // sem esta regra ao editar o ultimo exemplar sem informar o tombo, seria pego o proprio tombo.
     if (! empty($exceptExemplarId))
