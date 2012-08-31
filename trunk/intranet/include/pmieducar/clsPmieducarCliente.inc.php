@@ -638,7 +638,8 @@ class clsPmieducarCliente
               AND e.ref_cod_instituicao = i.cod_instituicao{$condicaoSuspenso}
               AND p.idpes               = c.ref_idpes
               AND c.ativo               = '{$int_ativo}'
-              AND ctc.ativo             = '{$int_ativo}'";
+              AND ctc.ativo             = '{$int_ativo}'
+              $filtros";
 
     $sql .= $this->getOrderby() . $this->getLimite();
     $db->Consulta($sql);
