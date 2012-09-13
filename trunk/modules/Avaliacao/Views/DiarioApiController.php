@@ -722,8 +722,8 @@ class DiarioApiController extends ApiCoreController
     $situacao = 'Situação não recuperada';
 
     try {
-      $componente = $this->serviceBoletim()->getSituacaoComponentesCurriculares()->componentesCurriculares[$ccId];
-      $situacao   = App_Model_MatriculaSituacao::getInstance()->getValue($componente->situacao);
+      $situacaoCc = $this->serviceBoletim()->getSituacaoComponentesCurriculares()->componentesCurriculares[$ccId];
+      $situacao   = App_Model_MatriculaSituacao::getInstance()->getValue($situacaoCc->situacao);
     }
     catch (Exception $e) {
       $matriculaId = $this->getRequest()->matricula_id;

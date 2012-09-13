@@ -238,7 +238,7 @@ class indice extends clsCadastro
   protected function getTombo(){
 		if (! $this->tombo) {
 			$exemplar = new clsPmieducarExemplar();
-			$tombo    = $exemplar->retorna_tombo_maximo() + 1;
+			$tombo    = $exemplar->retorna_tombo_maximo($this->ref_cod_biblioteca, $this->cod_exemplar) + 1;
     }
     else {
       // após obter tombo reseta para na proxima chamada de getTombo buscar o proximo no banco

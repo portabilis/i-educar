@@ -679,8 +679,18 @@ class clsPmieducarExemplar
 		return false;
 	}
 
-	function retorna_tombo_maximo() {
-		$sql = "SELECT MAX(tombo) as tombo_max FROM pmieducar.exemplar WHERE ativo = 1";
+	function retorna_tombo_maximo($bibliotecaId, $exceptExemplarId = null) {
+    if (empty($bibliotecaId))
+      throw new Exception("Deve ser enviado um argumento '\$bibliotecaId' ao método 'retorna_tombo_maximo'");
+
+    // sem esta regra ao editar o ultimo exemplar sem informar o tombo, seria pego o proprio tombo.
+    if (! empty($exceptExemplarId))
+      $exceptExemplar = " and exemplar.cod_exemplar !=  $exceptExemplarId";
+    else
+      $exceptExemplar = '';
+
+		$sql = "SELECT MAX(tombo) as tombo_max FROM pmieducar.exemplar, pmieducar.acervo WHERE exemplar.ativo = 1 and exemplar.ref_cod_acervo = acervo.cod_acervo and acervo.ref_cod_biblioteca = $bibliotecaId $exceptExemplar";
+
 		$db = new clsBanco();
 		return $db->CampoUnico($sql);
 	}

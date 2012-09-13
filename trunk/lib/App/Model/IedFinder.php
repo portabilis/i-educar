@@ -452,6 +452,7 @@ class App_Model_IedFinder extends CoreExt_Entity
     $matricula['curso_carga_horaria'] = $curso['carga_horaria'];
     $matricula['curso_hora_falta']    = $curso['hora_falta'];
     $matricula['serie_carga_horaria'] = $serie['carga_horaria'];
+    $matricula['serie_dias_letivos']  = $serie['dias_letivos'];
 
     $matricula['curso_nome']          = isset($curso['nm_curso']) ? $curso['nm_curso'] : NULL;
     $matricula['serie_nome']          = isset($serie['nm_serie']) ? $serie['nm_serie'] : NULL;
