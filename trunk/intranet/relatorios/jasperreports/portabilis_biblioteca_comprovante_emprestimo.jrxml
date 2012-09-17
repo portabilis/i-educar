@@ -164,8 +164,8 @@
        biblioteca.ref_cod_escola = escola.cod_escola AND
        exemplar.ref_cod_acervo = acervo.cod_acervo AND
        exemplar.cod_exemplar = exemplar_emprestimo.ref_cod_exemplar AND
-       (to_char(exemplar_emprestimo.data_retirada,'dd/mm/yyyy') >= $P{dt_inicial}) and
-       (to_char(exemplar_emprestimo.data_retirada,'dd/mm/yyyy') <= $P{dt_final}) and
+       (date(exemplar_emprestimo.data_retirada) >= (substr($P{dt_inicial},7,10) || '-' || substr($P{dt_inicial},4,2) || '-' || substr($P{dt_inicial},1,2))) AND
+       (date(exemplar_emprestimo.data_retirada) <= (substr($P{dt_final},7,10) || '-' || substr($P{dt_final},4,2) || '-' || substr($P{dt_final},1,2))) AND
        exemplar_emprestimo.ref_cod_cliente = $P{cliente} AND
        exemplar_emprestimo.ref_cod_exemplar = exemplar_emprestimo.ref_cod_exemplar and
        exemplar_emprestimo.data_devolucao is NULL]]>
@@ -329,7 +329,7 @@
 		<band height="3" splitType="Stretch"/>
 	</pageFooter>
 	<lastPageFooter>
-		<band height="631">
+		<band height="103">
 			<staticText>
 				<reportElement uuid="5cfe14d0-ef78-4390-9653-bf552aef450f" positionType="FixRelativeToBottom" stretchType="RelativeToBandHeight" x="103" y="60" width="99" height="14" isPrintWhenDetailOverflows="true"/>
 				<textElement>

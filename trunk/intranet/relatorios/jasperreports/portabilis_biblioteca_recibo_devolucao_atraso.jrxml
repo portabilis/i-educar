@@ -150,8 +150,8 @@
        biblioteca.ref_cod_escola = escola.cod_escola AND
        exemplar.ref_cod_acervo = acervo.cod_acervo AND
        exemplar.cod_exemplar = exemplar_emprestimo.ref_cod_exemplar AND
-       (to_char(exemplar_emprestimo.data_retirada,'dd/mm/yyyy') >= $P{dt_inicial}) and
-       (to_char(exemplar_emprestimo.data_retirada,'dd/mm/yyyy') <= $P{dt_final}) and
+       (date(exemplar_emprestimo.data_devolucao) >= (substr($P{dt_inicial},7,10) || '-' || substr($P{dt_inicial},4,2) || '-' || substr($P{dt_inicial},1,2))) AND
+       (date(exemplar_emprestimo.data_devolucao) <= (substr($P{dt_final},7,10) || '-' || substr($P{dt_final},4,2) || '-' || substr($P{dt_final},1,2))) AND
        exemplar_emprestimo.ref_cod_cliente = $P{cliente} AND
        exemplar_emprestimo.valor_multa is not null]]>
 	</queryString>

@@ -205,8 +205,45 @@
                                               WHERE cliente.ref_idpes = aluno.ref_idpes AND
                                                     aluno.cod_aluno = matricula.ref_cod_aluno AND
                                                     matricula.ultima_matricula = 1 AND
-                                                    cliente.cod_cliente = exemplar_emprestimo.ref_cod_cliente)) as aluno_turma
+                                                    cliente.cod_cliente = exemplar_emprestimo.ref_cod_cliente)) as aluno_turma,
 
+(select min(fone)
+   from cadastro.fone_pessoa,
+        cadastro.pessoa,
+        cadastro.fisica,
+        pmieducar.cliente
+  where fone_pessoa.idpes = pessoa.idpes AND
+        pessoa.idpes = fisica.idpes AND
+        fisica.idpes = cliente.ref_idpes AND
+        cliente.cod_cliente = exemplar_emprestimo.ref_cod_cliente) as telefone,
+
+(select coalesce((select logradouro.nome
+  from public.logradouro,
+       cadastro.endereco_pessoa,
+       cadastro.pessoa,
+       cadastro.fisica,
+       pmieducar.cliente
+ where logradouro.idlog = endereco_pessoa.idlog AND
+       endereco_pessoa.idpes = pessoa.idpes AND
+       pessoa.idpes = fisica.idpes AND
+       fisica.idpes = cliente.ref_idpes AND
+       cliente.cod_cliente = exemplar_emprestimo.ref_cod_cliente),(select logradouro
+   from cadastro.endereco_externo,
+        cadastro.pessoa,
+        cadastro.fisica,
+        pmieducar.cliente
+  where endereco_externo.idpes = pessoa.idpes AND
+        pessoa.idpes = fisica.idpes AND
+        fisica.idpes = cliente.ref_idpes AND
+        cliente.cod_cliente = exemplar_emprestimo.ref_cod_cliente))) as endereco,
+
+   (SELECT pessoa.email
+         FROM cadastro.pessoa,
+              cadastro.fisica,
+              pmieducar.cliente
+        WHERE fisica.idpes = pessoa.idpes AND
+              fisica.idpes = cliente.ref_idpes AND
+              cliente.cod_cliente = exemplar_emprestimo.ref_cod_cliente) AS email_cliente
 
   FROM pmieducar.acervo,
        pmieducar.biblioteca,
@@ -226,8 +263,8 @@
        acervo.ativo = 1 AND
        exemplar.ref_cod_acervo = acervo.cod_acervo AND
        exemplar.cod_exemplar = exemplar_emprestimo.ref_cod_exemplar AND
-       (to_char(exemplar_emprestimo.data_retirada,'dd/mm/yyyy') >= $P{dt_inicial}) AND
-       (to_char(exemplar_emprestimo.data_retirada,'dd/mm/yyyy') <= $P{dt_final}) AND
+       (date(exemplar_emprestimo.data_retirada) >= (substr($P{dt_inicial},7,10) || '-' || substr($P{dt_inicial},4,2) || '-' || substr($P{dt_inicial},1,2))) AND
+       (date(exemplar_emprestimo.data_retirada) <= (substr($P{dt_final},7,10) || '-' || substr($P{dt_final},4,2) || '-' || substr($P{dt_final},1,2))) AND
       (SELECT CASE WHEN $P{cliente} <> 0 THEN
                      exemplar_emprestimo.ref_cod_cliente = $P{cliente}
                    ELSE
@@ -266,16 +303,61 @@ ORDER BY cliente]]>
 	<field name="curso_aluno" class="java.lang.String"/>
 	<field name="serie_aluno" class="java.lang.String"/>
 	<field name="aluno_turma" class="java.lang.String"/>
+	<field name="telefone" class="java.math.BigDecimal"/>
+	<field name="endereco" class="java.lang.String"/>
+	<field name="email_cliente" class="java.lang.String"/>
 	<group name="cliente">
 		<groupExpression><![CDATA[$F{ref_cod_cliente}]]></groupExpression>
 		<groupHeader>
-			<band height="18">
+			<band height="33">
 				<textField isBlankWhenNull="true">
 					<reportElement uuid="61bb0a29-c07b-47cb-b112-1579bb1c1ed1" isPrintRepeatedValues="false" x="238" y="3" width="154" height="13"/>
 					<textElement>
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{escola_aluno}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="aa98baa1-6e0d-4353-b59f-d9fc6fd7f85e" x="66" y="17" width="40" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[Telefone: ]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="19686803-7553-4c3e-a1b9-ce35fb702e20" x="107" y="17" width="57" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{telefone}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="aa98baa1-6e0d-4353-b59f-d9fc6fd7f85e" x="168" y="17" width="49" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[Endereço:]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="3e6fa8b5-5266-4f2e-bfa9-428786945484" x="218" y="17" width="153" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{endereco}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="aa98baa1-6e0d-4353-b59f-d9fc6fd7f85e" x="373" y="17" width="31" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[e-mail:]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="d79cc696-20f1-462f-b74c-318b72e514c8" x="405" y="17" width="146" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{email_cliente}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -442,16 +524,16 @@ ORDER BY cliente]]>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="16" splitType="Stretch">
+		<band height="17" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="274b399b-9207-483e-83dd-86769e5e8bc7" isPrintRepeatedValues="false" x="25" y="-16" width="35" height="13"/>
+				<reportElement uuid="274b399b-9207-483e-83dd-86769e5e8bc7" isPrintRepeatedValues="false" x="25" y="-31" width="35" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ref_cod_cliente}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="f3b92160-c930-474b-a610-c7585b1f7cfb" isPrintRepeatedValues="false" x="65" y="-16" width="166" height="13"/>
+				<reportElement uuid="f3b92160-c930-474b-a610-c7585b1f7cfb" isPrintRepeatedValues="false" x="65" y="-31" width="166" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
@@ -486,14 +568,14 @@ ORDER BY cliente]]>
 				<textFieldExpression><![CDATA[$F{data_entrega}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="1bc36cdc-eac1-45ef-aecf-759e59835adf" isPrintRepeatedValues="false" x="402" y="-15" width="83" height="13"/>
+				<reportElement uuid="1bc36cdc-eac1-45ef-aecf-759e59835adf" isPrintRepeatedValues="false" x="402" y="-30" width="83" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{serie_aluno}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="90e32a12-fe4f-443a-929d-66e076f5ceac" isPrintRepeatedValues="false" x="492" y="-15" width="57" height="13"/>
+				<reportElement uuid="90e32a12-fe4f-443a-929d-66e076f5ceac" isPrintRepeatedValues="false" x="492" y="-30" width="57" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>

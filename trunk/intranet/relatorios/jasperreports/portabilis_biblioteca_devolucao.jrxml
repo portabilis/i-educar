@@ -132,7 +132,45 @@
            pmieducar.acervo_acervo_autor
      where acervo_acervo_autor.ref_cod_acervo_autor = acervo_autor.cod_acervo_autor AND
            acervo_acervo_autor.ref_cod_acervo = acervo.cod_acervo AND
-           acervo_acervo_autor.principal = 1) as autor
+           acervo_acervo_autor.principal = 1) as autor,
+
+(select min(fone)
+   from cadastro.fone_pessoa,
+        cadastro.pessoa,
+        cadastro.fisica,
+        pmieducar.cliente
+  where fone_pessoa.idpes = pessoa.idpes AND
+        pessoa.idpes = fisica.idpes AND
+        fisica.idpes = cliente.ref_idpes AND
+        cliente.cod_cliente = exemplar_emprestimo.ref_cod_cliente) as telefone,
+
+(select coalesce((select logradouro.nome
+  from public.logradouro,
+       cadastro.endereco_pessoa,
+       cadastro.pessoa,
+       cadastro.fisica,
+       pmieducar.cliente
+ where logradouro.idlog = endereco_pessoa.idlog AND
+       endereco_pessoa.idpes = pessoa.idpes AND
+       pessoa.idpes = fisica.idpes AND
+       fisica.idpes = cliente.ref_idpes AND
+       cliente.cod_cliente = exemplar_emprestimo.ref_cod_cliente),(select logradouro
+   from cadastro.endereco_externo,
+        cadastro.pessoa,
+        cadastro.fisica,
+        pmieducar.cliente
+  where endereco_externo.idpes = pessoa.idpes AND
+        pessoa.idpes = fisica.idpes AND
+        fisica.idpes = cliente.ref_idpes AND
+        cliente.cod_cliente = exemplar_emprestimo.ref_cod_cliente))) as endereco,
+
+   (SELECT pessoa.email
+         FROM cadastro.pessoa,
+              cadastro.fisica,
+              pmieducar.cliente
+        WHERE fisica.idpes = pessoa.idpes AND
+              fisica.idpes = cliente.ref_idpes AND
+              cliente.cod_cliente = exemplar_emprestimo.ref_cod_cliente) AS email_cliente
 
 
   FROM pmieducar.acervo,
@@ -149,8 +187,9 @@
        acervo.ativo = 1 AND
        exemplar.ref_cod_acervo = acervo.cod_acervo AND
        exemplar.cod_exemplar = exemplar_emprestimo.ref_cod_exemplar AND
-       (to_char(exemplar_emprestimo.data_retirada,'dd/mm/yyyy') >= $P{dt_inicial}) AND
-       (to_char(exemplar_emprestimo.data_retirada,'dd/mm/yyyy') <= $P{dt_final}) AND
+       (date(exemplar_emprestimo.data_devolucao) >= (substr($P{dt_inicial},7,10) || '-' || substr($P{dt_inicial},4,2) || '-' || substr($P{dt_inicial},1,2))) AND
+
+       (date(exemplar_emprestimo.data_devolucao) <= (substr($P{dt_final},7,10) || '-' || substr($P{dt_final},4,2) || '-' || substr($P{dt_final},1,2))) AND
         exemplar_emprestimo.data_devolucao is not null AND
        (SELECT CASE WHEN $P{cliente} <> 0 THEN
                      exemplar_emprestimo.ref_cod_cliente = $P{cliente}
@@ -179,6 +218,61 @@
 	<field name="fone" class="java.lang.String"/>
 	<field name="email" class="java.lang.String"/>
 	<field name="autor" class="java.lang.String"/>
+	<field name="telefone" class="java.math.BigDecimal"/>
+	<field name="endereco" class="java.lang.String"/>
+	<field name="email_cliente" class="java.lang.String"/>
+	<group name="cliente">
+		<groupExpression><![CDATA[$F{ref_cod_cliente}]]></groupExpression>
+		<groupHeader>
+			<band height="31">
+				<staticText>
+					<reportElement uuid="aa98baa1-6e0d-4353-b59f-d9fc6fd7f85e" x="168" y="16" width="49" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[Endereço:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="aa98baa1-6e0d-4353-b59f-d9fc6fd7f85e" x="65" y="16" width="40" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[Telefone: ]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="3e6fa8b5-5266-4f2e-bfa9-428786945484" x="218" y="16" width="147" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{endereco}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="19686803-7553-4c3e-a1b9-ce35fb702e20" x="106" y="16" width="57" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{telefone}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="aa98baa1-6e0d-4353-b59f-d9fc6fd7f85e" x="367" y="16" width="31" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<text><![CDATA[e-mail:]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="6c9635c7-ae92-4bb5-a38d-c2546421b7d4" x="400" y="16" width="151" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{email_cliente}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="4"/>
+		</groupFooter>
+	</group>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -324,16 +418,16 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="15" splitType="Stretch">
+		<band height="16" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="a1f68d22-3ede-47a1-b617-9fefd2653185" isPrintRepeatedValues="false" x="25" y="1" width="35" height="13"/>
+				<reportElement uuid="a1f68d22-3ede-47a1-b617-9fefd2653185" isPrintRepeatedValues="false" x="25" y="-29" width="35" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ref_cod_cliente}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="3939a799-035f-429f-af30-fc944b23eff3" isPrintRepeatedValues="false" x="65" y="1" width="149" height="13"/>
+				<reportElement uuid="3939a799-035f-429f-af30-fc944b23eff3" isPrintRepeatedValues="false" x="65" y="-29" width="149" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
@@ -377,7 +471,7 @@
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="3" splitType="Stretch"/>
+		<band height="4" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
 		<band height="20" splitType="Stretch">
