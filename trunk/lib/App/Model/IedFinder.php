@@ -117,6 +117,31 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
+   * Retorna todos os cursos cadastradas na tabela pmieducar.escola_curso, selecionando
+   * opcionalmente pelo código da escola.
+   * @param int $escolaId
+   * @return array
+   */
+  public static function getCursos($escolaId = NULL)
+  {
+    $escola_curso = self::addClassToStorage('clsPmieducarEscolaCurso', NULL,
+      'include/pmieducar/clsPmieducarEscolaCurso.inc.php');
+
+    // Carrega os cursos
+    $escola_curso->setOrderby('ref_cod_escola ASC, cod_curso ASC');
+    $escola_curso = $escola_curso->lista($escolaId);
+
+    $cursos = array();
+    foreach ($escola_curso as $key => $val) {
+      $nomeCurso = self::getCurso($val['ref_cod_curso']);
+      $cursos[$val['ref_cod_curso']] = $nomeCurso;
+    }
+
+    return $cursos;
+  }
+
+
+  /**
    * Retorna um array com as informações da série a partir de seu código.
    *
    * @param int $codSerie
