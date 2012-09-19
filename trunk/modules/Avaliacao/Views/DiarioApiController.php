@@ -841,10 +841,12 @@ class DiarioApiController extends ApiCoreController
       if (! is_numeric($componenteCurricularId))
         throw new Exception('Não foi possivel obter o parecer descritivo atual, pois não foi recebido o id do componente curricular.');
 
-      return $this->serviceBoletim()->getParecerDescritivo($this->getEtapaParecer(), $componenteCurricularId)->parecer;
+      $parecer =  $this->serviceBoletim()->getParecerDescritivo($this->getEtapaParecer(), $componenteCurricularId)->parecer;
     }
     else
-      return $this->serviceBoletim()->getParecerDescritivo($this->getEtapaParecer())->parecer;
+      $parecer = $this->serviceBoletim()->getParecerDescritivo($this->getEtapaParecer())->parecer;
+
+    return $this->safeString($parecer, $transform = false);
   }
 
 
