@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_boletim_parecer_geral" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c2151512-19f8-4f0b-984b-fa7c6449a052">
 	<property name="ireport.zoom" value="1.464100000000004"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="68"/>
+	<property name="ireport.y" value="20"/>
 	<parameter name="ano" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
@@ -169,8 +169,12 @@
 		MAX(total_faltas) AS total_faltas,
 		MAX(faltas_componente_et1) AS faltas_componente_et1,
 		MAX(total_faltas_componente) AS total_faltas_componente,
+                    MAX(total_geral_faltas_componente) AS total_geral_faltas_componente,
 		MAX(frequencia) AS frequencia,
-		MAX(frequencia_componente) AS frequencia_componente,
+		MAX(carga_horaria) AS carga_horaria,
+		MAX(curso_hora_falta) AS curso_hora_falta,
+                    MAX(carga_horaria_componente) AS carga_horaria_componente,
+                    MAX(carga_horaria_serie) AS carga_horaria_serie,
     MAX(parecer) AS parecer,
     MAX(nota) AS nota
   FROM (SELECT
@@ -258,19 +262,36 @@
                 falta_componente_curricular.etapa in ('1','2','3','4') AND
 				falta_aluno.tipo_falta = 2) as total_faltas_componente,
 
-  (SELECT to_number(100::float -  ((SELECT sum(falta_geral.quantidade)
-          FROM modules.falta_geral,
-               modules.falta_aluno
-         WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
-               falta_aluno.matricula_id = matricula.cod_matricula AND
-               falta_geral.etapa in('1','2','3','4'))::float / 800::float )::float * 100,'999')) AS frequencia,
 
-  (SELECT to_number(100::float -  ((SELECT sum(falta_componente_curricular.quantidade)
-          FROM modules.falta_componente_curricular,
-               modules.falta_aluno
-         WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
-               falta_aluno.matricula_id = matricula.cod_matricula AND
-               falta_componente_curricular.etapa in ('1','2','3','4'))::float / 800::float )::float * 100,'999')) AS frequencia_componente,
+       (SELECT sum(falta_componente_curricular.quantidade)
+           FROM modules.falta_componente_curricular,
+                modules.falta_aluno
+          WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
+                falta_aluno.matricula_id = matricula.cod_matricula AND
+                falta_componente_curricular.etapa in ('1','2','3','4') AND
+				falta_aluno.tipo_falta = 2) as total_geral_faltas_componente,
+
+  (SELECT to_number((((select serie.dias_letivos
+                       from pmieducar.serie
+                      where serie.cod_serie = matricula.ref_ref_cod_serie)::float -
+                   (SELECT sum(falta_geral.quantidade)
+                       FROM modules.falta_geral,
+                            modules.falta_aluno
+                      WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
+                            falta_aluno.matricula_id = matricula.cod_matricula AND
+                            falta_geral.etapa in('1','2','3','4')))::float * 100::float )::float / (select serie.dias_letivos from pmieducar.serie where serie.cod_serie = matricula.ref_ref_cod_serie) :: float,'999')) AS frequencia,
+
+    (SELECT sum(to_number(componente_curricular_ano_escolar.carga_horaria,'999'))
+       FROM modules.componente_curricular_ano_escolar
+     WHERE componente_curricular_ano_escolar.componente_curricular_id = componente_curricular.id) AS            carga_horaria,
+
+
+(select curso.hora_falta * 100 from pmieducar.curso where curso.cod_curso = matricula.ref_cod_curso) as curso_hora_falta,
+
+  (select carga_horaria :: int from modules.componente_curricular_ano_escolar where   componente_curricular_ano_escolar.componente_curricular_id = componente_curricular.id AND componente_curricular_ano_escolar.ano_escolar_id = matricula.ref_ref_cod_serie) as carga_horaria_componente,
+
+
+  (select serie.carga_horaria from pmieducar.serie where  serie.cod_serie = matricula.ref_ref_cod_serie) as carga_horaria_serie,
 
      (SELECT parecer_geral.parecer
         FROM modules.parecer_geral,
@@ -357,8 +378,12 @@ ORDER BY nome_aluno, nome_disciplina]]>
 	<field name="total_faltas" class="java.lang.Long"/>
 	<field name="faltas_componente_et1" class="java.lang.Long"/>
 	<field name="total_faltas_componente" class="java.lang.Long"/>
+	<field name="total_geral_faltas_componente" class="java.lang.Long"/>
 	<field name="frequencia" class="java.math.BigDecimal"/>
-	<field name="frequencia_componente" class="java.math.BigDecimal"/>
+	<field name="carga_horaria" class="java.math.BigDecimal"/>
+	<field name="curso_hora_falta" class="java.lang.Double"/>
+	<field name="carga_horaria_componente" class="java.lang.Integer"/>
+	<field name="carga_horaria_serie" class="java.lang.Double"/>
 	<field name="parecer" class="java.lang.String"/>
 	<field name="nota" class="java.lang.String"/>
 	<group name="matricula" isStartNewPage="true">
@@ -661,36 +686,54 @@ ORDER BY nome_aluno, nome_disciplina]]>
 				<textFieldExpression><![CDATA[$F{nome_responsavel}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="063db937-3c7d-439a-94ac-8b8738cb5dd6" x="473" y="139" width="26" height="11"/>
+				<reportElement uuid="063db937-3c7d-439a-94ac-8b8738cb5dd6" x="473" y="140" width="26" height="11"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{total_faltas}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement uuid="9870e51e-8a16-4371-aeff-a603d5c48fda" x="509" y="139" width="26" height="11"/>
-				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{frequencia_componente}]]></textFieldExpression>
-			</textField>
 			<image>
 				<reportElement uuid="4612b52b-2bb9-46e7-8985-779754716285" x="22" y="6" width="57" height="46"/>
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
-			<textField isBlankWhenNull="true">
-				<reportElement uuid="d8ab4a01-df1b-46ed-b50a-e31125e20aeb" x="509" y="139" width="26" height="11"/>
-				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{frequencia}]]></textFieldExpression>
-			</textField>
 			<textField>
 				<reportElement uuid="0202738b-40f2-415e-8f5b-fc510541de8b" x="345" y="131" width="109" height="14"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Etapa: "+$P{etapa}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="a186a095-592f-4305-9371-f71862d9c46a" x="511" y="140" width="26" height="11"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{frequencia}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="1017fdae-39da-41ac-a63d-2b175117bcd0" x="473" y="140" width="26" height="11" printWhenGroupChanges="matricula"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_geral_faltas_componente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1744a6f4-b690-402c-abdc-60c166c44957" x="511" y="140" width="26" height="11">
+					<printWhenExpression><![CDATA[100 - (($F{total_geral_faltas_componente} * $F{curso_hora_falta})/$F{carga_horaria_serie}) != 100.0]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[100 - (($F{total_geral_faltas_componente} * $F{curso_hora_falta})/$F{carga_horaria_serie})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1744a6f4-b690-402c-abdc-60c166c44957" x="511" y="140" width="26" height="11">
+					<printWhenExpression><![CDATA[100 - (($F{total_geral_faltas_componente} * $F{curso_hora_falta})/$F{carga_horaria_serie}) == 100.0]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[100]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -755,6 +798,24 @@ ORDER BY nome_aluno, nome_disciplina]]>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nota}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="7a070405-d463-4e82-bf5a-c6c99f075120" x="511" y="1" width="26" height="15">
+					<printWhenExpression><![CDATA[100 - (($F{total_faltas_componente} * $F{curso_hora_falta})/$F{carga_horaria_componente}) == 100.0]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[100]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0 ‰" isBlankWhenNull="true">
+				<reportElement uuid="aa8070c8-9947-428a-bf94-dc59f5ca9d54" x="511" y="1" width="26" height="15">
+					<printWhenExpression><![CDATA[100 - (($F{total_faltas_componente} * $F{curso_hora_falta})/$F{carga_horaria_componente}) != 100.0]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[100 - (($F{total_faltas_componente} * $F{curso_hora_falta})/$F{carga_horaria_componente})]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

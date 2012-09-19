@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_boletim_primeiro_ano_trimestral" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2a004eae-d897-4de6-8a61-b0ebdf3de862">
 	<property name="ireport.zoom" value="1.6105100000000079"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="3"/>
+	<property name="ireport.x" value="552"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="ano" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
@@ -167,9 +167,6 @@
 	MAX(nota_arredondada) AS nota1,
         MAX(nota_arredondada_etapa2) AS nota2,
         MAX(nota_arredondada_etapa3) AS nota3,
-        MAX(nota_arredondada_etapa4) AS nota4,
-		MAX(nota_exame) AS nota_exame,
-		MAX(media) AS media,
         MAX(nome_curso) AS nome_curso,
 	MAX(nome_serie) AS nome_serie,
         MAX(nome_turma) AS nome_turma,
@@ -179,12 +176,10 @@
 		MAX(total_faltas_et1) AS total_faltas_et1,
 		MAX(total_faltas_et2) AS total_faltas_et2,
 		MAX(total_faltas_et3) AS total_faltas_et3,
-		MAX(total_faltas_et4) AS total_faltas_et4,
 		MAX(total_faltas) AS total_faltas,
 		MAX(faltas_componente_et1) AS faltas_componente_et1,
 		MAX(faltas_componente_et2) AS faltas_componente_et2,
 		MAX(faltas_componente_et3) AS faltas_componente_et3,
-		MAX(faltas_componente_et4) AS faltas_componente_et4,
 		MAX(total_faltas_componente) AS total_faltas_componente,
 		MAX(frequencia) AS frequencia,
 		MAX(frequencia_componente) AS frequencia_componente,
@@ -235,7 +230,7 @@
                 FROM modules.componente_curricular
                WHERE componente_curricular.id = escola_serie_disciplina.ref_cod_disciplina) as id_disciplina,
 
- (SELECT et1.nota_arredondada
+ (SELECT distinct et1.nota_arredondada
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
                WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
@@ -243,7 +238,7 @@
                      nota_aluno.id  = et1.nota_aluno_id AND
                     nota_aluno.matricula_id = matricula.cod_matricula) AS nota_arredondada,
 
- (SELECT et1.nota_arredondada
+ (SELECT distinct et1.nota_arredondada
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
                WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
@@ -251,49 +246,13 @@
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula) AS nota_arredondada_etapa2,
 
- (SELECT et1.nota_arredondada
+ (SELECT distinct et1.nota_arredondada
                 FROM modules.nota_componente_curricular et1,
                      modules.nota_aluno
                WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
                      et1.etapa = 3 AND
                      nota_aluno.id  = et1.nota_aluno_id AND
                      nota_aluno.matricula_id = matricula.cod_matricula) AS nota_arredondada_etapa3,
-
- (SELECT et1.nota_arredondada
-                FROM modules.nota_componente_curricular et1,
-                     modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
-                     et1.etapa = 4 AND
-                     nota_aluno.id  = et1.nota_aluno_id AND
-                     nota_aluno.matricula_id = matricula.cod_matricula) AS nota_arredondada_etapa4,
-
-
-           (SELECT CASE  WHEN et1.nota_arredondada = 10 THEN
-			                   '10,0'
-			               WHEN char_length(et1.nota_arredondada) = 1 THEN
-			                   replace(et1.nota_arredondada,'.',',') || ',0'
-                           ELSE
-                               replace(et1.nota_arredondada,'.',',')
-                           END
-                FROM modules.nota_componente_curricular et1,
-                     modules.nota_aluno
-               WHERE et1.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
-					 et1.etapa = 'Rc' AND
-                     nota_aluno.id  = et1.nota_aluno_id AND
-                     nota_aluno.matricula_id = matricula.cod_matricula) AS nota_exame,
-
-
-             (SELECT CASE WHEN char_length(nota_componente_curricular_media.media_arredondada) = 1 THEN
-			                   replace(nota_componente_curricular_media.media_arredondada,'.',',') || ',0'
-                           ELSE
-                               replace(nota_componente_curricular_media.media_arredondada,'.',',')
-                           END
-		FROM modules.nota_componente_curricular_media,
-         modules.nota_aluno
-               WHERE nota_aluno.id = nota_componente_curricular_media.nota_aluno_id AND
-                     nota_componente_curricular_media.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
-                     nota_componente_curricular_media.etapa in('3','Rc') AND
-                     nota_aluno.matricula_id = matricula.cod_matricula) AS media,
 
 	         (SELECT curso.nm_curso
                 FROM pmieducar.curso
@@ -317,20 +276,12 @@
        (select turma_turno.nm_turno from pmieducar.turma_turno, pmieducar.turma where turma_turno.turma_turno_id = turma.turma_turno_id and turma.cod_turma = matricula_turma.ref_cod_turma and  instituicao_id = $P{instituicao} limit 1) as periodo,
 
 
-		(SELECT CASE WHEN (SELECT mt.aprovado
-		                     FROM pmieducar.matricula mt
-							WHERE mt.cod_matricula = matricula.cod_matricula) = 1 THEN 'Aprovado'
-                     WHEN (SELECT mt.aprovado
-					         FROM pmieducar.matricula mt
-							WHERE mt.cod_matricula = matricula.cod_matricula) = 2 THEN 'Reprovado'
-                     WHEN (SELECT mt.aprovado
-					         FROM pmieducar.matricula mt
-							WHERE mt.cod_matricula = matricula.cod_matricula) = 3 THEN 'Em Andamento'
-                     WHEN (SELECT mt.aprovado
-					         FROM pmieducar.matricula mt
-							WHERE mt.cod_matricula = matricula.cod_matricula) = 4 THEN 'Transferido'
-                ELSE 'Reclassificado'
-                END) AS situacao,
+(SELECT CASE matricula.aprovado WHEN 1 THEN 'Aprovado'
+                                WHEN 2 THEN 'Reprovado'
+                                WHEN 3 THEN 'Em Andamento'
+                                WHEN 4 THEN 'Transferido'
+                                ELSE 'Reclassificado'
+                                END) AS situacao,
 
 		(SELECT public.fcn_upper(pessoa.nome)
            FROM cadastro.pessoa,
@@ -369,15 +320,7 @@
                 modules.falta_aluno
           WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
-                falta_geral.etapa = 4 AND
-				falta_aluno.tipo_falta = 1) as total_faltas_et4,
-
-        (SELECT sum(falta_geral.quantidade)
-           FROM modules.falta_geral,
-                modules.falta_aluno
-          WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
-                falta_aluno.matricula_id = matricula.cod_matricula AND
-                falta_geral.etapa in ('1','2','3','4')) as total_faltas,
+                falta_geral.etapa in ('1','2','3')) as total_faltas,
 
        (SELECT sum(falta_componente_curricular.quantidade)
            FROM modules.falta_componente_curricular,
@@ -411,17 +354,8 @@
                 modules.falta_aluno
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
-                falta_componente_curricular.etapa = 4 AND
 				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
-				falta_aluno.tipo_falta = 2) as faltas_componente_et4,
-
-       (SELECT sum(falta_componente_curricular.quantidade)
-           FROM modules.falta_componente_curricular,
-                modules.falta_aluno
-          WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
-                falta_aluno.matricula_id = matricula.cod_matricula AND
-				falta_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
-                falta_componente_curricular.etapa in ('1','2','3','4') AND
+                falta_componente_curricular.etapa in ('1','2','3') AND
 				falta_aluno.tipo_falta = 2) as total_faltas_componente,
 
   (SELECT to_number(100::float -  ((SELECT sum(falta_geral.quantidade)
@@ -429,14 +363,14 @@
                modules.falta_aluno
          WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
                falta_aluno.matricula_id = matricula.cod_matricula AND
-               falta_geral.etapa in('1','2','3','4'))::float / 800::float )::float * 100,'999')) AS frequencia,
+               falta_geral.etapa in('1','2','3'))::float / 800::float )::float * 100,'999')) AS frequencia,
 
   (SELECT to_number(100::float -  ((SELECT sum(falta_componente_curricular.quantidade)
           FROM modules.falta_componente_curricular,
                modules.falta_aluno
          WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                falta_aluno.matricula_id = matricula.cod_matricula AND
-               falta_componente_curricular.etapa in ('1','2','3','4'))::float / 800::float )::float * 100,'999')) AS frequencia_componente,
+               falta_componente_curricular.etapa in ('1','2','3'))::float / 800::float )::float * 100,'999')) AS frequencia_componente,
 
     (SELECT sum(to_number(componente_curricular_ano_escolar.carga_horaria,'999'))
        FROM modules.componente_curricular_ano_escolar
@@ -497,9 +431,6 @@ ORDER BY nome_aluno, area_conhecimento_id, id_disciplina]]>
 	<field name="nota1" class="java.lang.String"/>
 	<field name="nota2" class="java.lang.String"/>
 	<field name="nota3" class="java.lang.String"/>
-	<field name="nota4" class="java.lang.String"/>
-	<field name="nota_exame" class="java.lang.String"/>
-	<field name="media" class="java.lang.String"/>
 	<field name="nome_curso" class="java.lang.String"/>
 	<field name="nome_serie" class="java.lang.String"/>
 	<field name="nome_turma" class="java.lang.String"/>
@@ -509,12 +440,10 @@ ORDER BY nome_aluno, area_conhecimento_id, id_disciplina]]>
 	<field name="total_faltas_et1" class="java.lang.Long"/>
 	<field name="total_faltas_et2" class="java.lang.Long"/>
 	<field name="total_faltas_et3" class="java.lang.Long"/>
-	<field name="total_faltas_et4" class="java.lang.Long"/>
 	<field name="total_faltas" class="java.lang.Long"/>
 	<field name="faltas_componente_et1" class="java.lang.Long"/>
 	<field name="faltas_componente_et2" class="java.lang.Long"/>
 	<field name="faltas_componente_et3" class="java.lang.Long"/>
-	<field name="faltas_componente_et4" class="java.lang.Long"/>
 	<field name="total_faltas_componente" class="java.lang.Long"/>
 	<field name="frequencia" class="java.math.BigDecimal"/>
 	<field name="frequencia_componente" class="java.math.BigDecimal"/>

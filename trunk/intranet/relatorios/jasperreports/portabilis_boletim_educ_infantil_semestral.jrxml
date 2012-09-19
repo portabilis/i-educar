@@ -177,9 +177,7 @@
 		MAX(faltas_componente_et1) AS faltas_componente_et1,
 		MAX(faltas_componente_et2) AS faltas_componente_et2,
 		MAX(total_faltas_componente) AS total_faltas_componente,
-		MAX(frequencia) AS frequencia,
-		MAX(frequencia_componente) AS frequencia_componente,
-		MAX(carga_horaria) AS carga_horaria
+                    MAX(frequencia) AS frequencia
   FROM (SELECT
              (SELECT componente_curricular.nome
                 FROM modules.componente_curricular
@@ -330,23 +328,15 @@
                 falta_componente_curricular.etapa in ('1','2') AND
 				falta_aluno.tipo_falta = 2) as total_faltas_componente,
 
-  (SELECT to_number(100::float -  ((SELECT sum(falta_geral.quantidade)
-          FROM modules.falta_geral,
-               modules.falta_aluno
-         WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
-               falta_aluno.matricula_id = matricula.cod_matricula AND
-               falta_geral.etapa in('1','2'))::float / 800::float )::float * 100,'999')) AS frequencia,
-
-  (SELECT to_number(100::float -  ((SELECT sum(falta_componente_curricular.quantidade)
-          FROM modules.falta_componente_curricular,
-               modules.falta_aluno
-         WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
-               falta_aluno.matricula_id = matricula.cod_matricula AND
-               falta_componente_curricular.etapa in ('1','2'))::float / 800::float )::float * 100,'999')) AS frequencia_componente,
-
-    (SELECT sum(to_number(componente_curricular_ano_escolar.carga_horaria,'999'))
-       FROM modules.componente_curricular_ano_escolar
-     WHERE componente_curricular_ano_escolar.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina) AS            carga_horaria
+  (SELECT to_number((((select serie.dias_letivos
+                       from pmieducar.serie
+                      where serie.cod_serie = matricula.ref_ref_cod_serie)::float -
+                   (SELECT sum(falta_geral.quantidade)
+                       FROM modules.falta_geral,
+                            modules.falta_aluno
+                      WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
+                            falta_aluno.matricula_id = matricula.cod_matricula AND
+                            falta_geral.etapa in('1','2')))::float * 100::float )::float / (select serie.dias_letivos from pmieducar.serie where serie.cod_serie = matricula.ref_ref_cod_serie) :: float,'999')) AS frequencia
 
  FROM  pmieducar.matricula,
 			 pmieducar.matricula_turma,
@@ -415,8 +405,6 @@ ORDER BY nome_aluno, area_conhecimento_id, id_disciplina]]>
 	<field name="faltas_componente_et2" class="java.lang.Long"/>
 	<field name="total_faltas_componente" class="java.lang.Long"/>
 	<field name="frequencia" class="java.math.BigDecimal"/>
-	<field name="frequencia_componente" class="java.math.BigDecimal"/>
-	<field name="carga_horaria" class="java.math.BigDecimal"/>
 	<group name="matricula" isStartNewPage="true">
 		<groupExpression><![CDATA[$F{matricula}]]></groupExpression>
 		<groupHeader>
@@ -700,15 +688,6 @@ ORDER BY nome_aluno, area_conhecimento_id, id_disciplina]]>
 					<text><![CDATA[Freq. %]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement uuid="a172d367-620e-4599-9f77-8f9545e872cc" x="764" y="15" width="26" height="11" printWhenGroupChanges="matricula">
-						<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
-					</reportElement>
-					<textElement textAlignment="Center">
-						<font fontName="DejaVu Sans" size="7"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{frequencia}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
 					<reportElement uuid="4edd2b61-9c41-40bd-b166-781c77fd7375" x="728" y="15" width="26" height="11" printWhenGroupChanges="matricula">
 						<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
 					</reportElement>
@@ -768,15 +747,6 @@ ORDER BY nome_aluno, area_conhecimento_id, id_disciplina]]>
 						<pen lineWidth="0.25"/>
 					</graphicElement>
 				</line>
-				<textField isBlankWhenNull="true">
-					<reportElement uuid="1f850d7d-81b5-4801-8e71-d2af9aa00163" x="764" y="15" width="26" height="11" printWhenGroupChanges="matricula">
-						<printWhenExpression><![CDATA[$P{manual}.intValue() != 1]]></printWhenExpression>
-					</reportElement>
-					<textElement textAlignment="Center">
-						<font fontName="DejaVu Sans" size="7"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{frequencia_componente}]]></textFieldExpression>
-				</textField>
 				<line>
 					<reportElement uuid="aed9f5f4-acee-49ea-86b5-8739c77869e3" x="12" y="-1" width="1" height="27" printWhenGroupChanges="matricula"/>
 					<graphicElement>
@@ -805,6 +775,13 @@ ORDER BY nome_aluno, area_conhecimento_id, id_disciplina]]>
 					</textElement>
 					<text><![CDATA[Legenda: (S – Sempre; A - Às vezes; C – Em processo de construção)]]></text>
 				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="a186a095-592f-4305-9371-f71862d9c46a" x="766" y="15" width="26" height="11"/>
+					<textElement textAlignment="Right">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{frequencia}]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupHeader>
 		<groupFooter>
