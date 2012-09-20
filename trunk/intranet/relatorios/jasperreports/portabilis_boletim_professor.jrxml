@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_boletim_professor" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="bee45616-9f88-4ff8-8f5d-640c268ac7e3">
 	<property name="ireport.zoom" value="1.1000000000000025"/>
-	<property name="ireport.x" value="117"/>
+	<property name="ireport.x" value="114"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="ano" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
@@ -345,7 +345,9 @@
 
 (select curso.hora_falta * 100 from pmieducar.curso where curso.cod_curso = matricula.ref_cod_curso) as curso_hora_falta,
 
-  (select distinct (carga_horaria) :: int from modules.componente_curricular_ano_escolar WHERE componente_curricular_ano_escolar.ano_escolar_id = matricula.ref_ref_cod_serie) as carga_horaria_componente,
+  (select distinct (carga_horaria) :: int from modules.componente_curricular_ano_escolar
+  WHERE componente_curricular_ano_escolar.ano_escolar_id = matricula.ref_ref_cod_serie AND
+        componente_curricular_ano_escolar.componente_curricular_id = $P{disciplina}) as carga_horaria_componente,
 
   serie.carga_horaria as carga_horaria_serie,
 
