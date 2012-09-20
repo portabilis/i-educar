@@ -54,14 +54,8 @@ class Portabilis_View_Helper_DynamicSelectMenu_Curso extends Portabilis_View_Hel
   protected function getOptions($escolaId, $resources) {
     $escolaId = $this->getEscolaId($escolaId);
 
-    echo($escolaId);
-
-    if ($escolaId && empty($resources)) {
-
-      throw new CoreExt_Exception("Metódo getOptions classe 'Portabilis_View_Helper_DynamicSelectMenu_Curso' não implementado.");
-
+    if ($escolaId && empty($resources))
       $resources = App_Model_IedFinder::getCursos($escolaId);
-    }
 
     return $this->insertInArray(null, "Selecione um curso", $resources);
   }
