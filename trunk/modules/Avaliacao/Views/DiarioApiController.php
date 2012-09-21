@@ -739,24 +739,22 @@ class DiarioApiController extends ApiCoreController
 
   protected function loadComponentesCurricularesForMatricula($matriculaId) {
     $componentesCurriculares  = array();
-    $_componentesCurriculares = App_Model_IedFinder::getComponentesPorMatricula($matriculaId, $mapper);
+    $componenteCurricularId   = $this->getRequest()->componente_curricular_id;
+   
+    $_componentesCurriculares = App_Model_IedFinder::getComponentesPorMatricula($matriculaId, null, null, $componenteCurricularId);
 
     foreach($_componentesCurriculares as $_componente) {
-      $requestCcId = $this->getRequest()->componente_curricular_id;
+      $componente                  = array();
 
-      if(! is_numeric($requestCcId) || $requestCcId == $_componente->get('id')) {
-        $componente                  = array();
+      $componente['id']            = $_componente->get('id');
+      $componente['nome']          = $this->safeString($_componente->get('nome'));
+      $componente['nota_atual']    = $this->getNotaAtual($etapa = null, $componente['id']);
+      $componente['nota_exame']    = $this->getNotaExame($componente['id']);
+      $componente['falta_atual']   = $this->getFaltaAtual($etapa = null, $componente['id']);
+      $componente['parecer_atual'] = $this->getParecerAtual($componente['id']);
+      $componente['situacao']      = $this->getSituacaoMatricula($componente['id']);
 
-        $componente['id']            = $_componente->get('id');
-        $componente['nome']          = $this->safeString($_componente->get('nome'));
-        $componente['nota_atual']    = $this->getNotaAtual($etapa = null, $componente['id']);
-        $componente['nota_exame']    = $this->getNotaExame($componente['id']);
-        $componente['falta_atual']   = $this->getFaltaAtual($etapa = null, $componente['id']);
-        $componente['parecer_atual'] = $this->getParecerAtual($componente['id']);
-        $componente['situacao']      = $this->getSituacaoMatricula($componente['id']);
-
-        $componentesCurriculares[]   = $componente;
-      }
+      $componentesCurriculares[]   = $componente;
     }
 
     return Portabilis_Array_Utils::sortByKey('nome', $componentesCurriculares);
