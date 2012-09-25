@@ -219,11 +219,30 @@ class V1Controller extends ApiCoreController
   }
 
 
+  protected function loadTipoOcorrenciaDisciplinar($id) {
+    if (! isset($this->_tiposOcorrenciasDisciplinares))
+      $this->_tiposOcorrenciasDisciplinares = array();
+
+    if (! isset($this->_tiposOcorrenciasDisciplinares[$id])) {
+      $ocorrencia                                  = new clsPmieducarTipoOcorrenciaDisciplinar;
+      $ocorrencia->cod_tipo_ocorrencia_disciplinar = $id;
+      $ocorrencia                                  = $ocorrencia->detalhe();
+
+      $this->_tiposOcorrenciasDisciplinares[$id]   = utf8_encode($ocorrencia['nm_tipo']);
+    }
+
+    return $this->_tiposOcorrenciasDisciplinares[$id];
+  }
+
+
   protected function loadOcorrenciasDisciplinares() {
     $ocorrenciasAluno              = array();
     $matriculas                    = $this->loadMatriculas();
 
-    $attrsFilter                   = array('data_cadastro' => 'data_hora', 'observacao' => 'descricao');
+    $attrsFilter                   = array('ref_cod_tipo_ocorrencia_disciplinar' => 'tipo', 
+                                           'data_cadastro'                       => 'data_hora',
+                                           'observacao'                          => 'descricao');
+
     $ocorrenciasMatriculaInstance  = new clsPmieducarMatriculaOcorrenciaDisciplinar();
 
     foreach($matriculas as $matricula) {
@@ -244,6 +263,7 @@ class V1Controller extends ApiCoreController
         $ocorrenciasMatricula = Portabilis_Array_Utils::filterSet($ocorrenciasMatricula, $attrsFilter);
 
         foreach($ocorrenciasMatricula as $ocorrenciaMatricula) {
+          $ocorrenciaMatricula['tipo']      = $this->loadTipoOcorrenciaDisciplinar($ocorrenciaMatricula['tipo']);
           $ocorrenciaMatricula['data_hora'] = date('d/m/Y H:i:s', strtotime($ocorrenciaMatricula['data_hora']));
           $ocorrenciaMatricula['descricao'] = utf8_encode($ocorrenciaMatricula['descricao']);
           $ocorrenciasAluno[]               = $ocorrenciaMatricula;
