@@ -237,7 +237,8 @@ class V1Controller extends ApiCoreController
                                                                     null, 
                                                                     null, 
                                                                     null, 
-                                                                    1);
+                                                                    1,
+                                                                    $visivel_pais = 1);
 
       if (is_array($ocorrenciasMatricula)) {
         $ocorrenciasMatricula = Portabilis_Array_Utils::filterSet($ocorrenciasMatricula, $attrsFilter);

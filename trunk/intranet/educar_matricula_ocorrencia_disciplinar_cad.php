@@ -224,6 +224,11 @@ class indice extends clsCadastro
 		// text
 		$this->campoMemo( "observacao", "Observac&atilde;o", $this->observacao, 60, 10, true );
 
+		$this->campoCheck("visivel_pais", 
+						  "Visível aos pais",
+						  $this->visivel_pais,
+						  "Marque este campo, caso deseje que os pais do aluno possam visualizar tal ocorrência disciplinar.");
+
 		// data
 
 	}
@@ -237,7 +242,9 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_matricula_ocorrencia_disciplinar_lst.php" );
 
-		$obj = new clsPmieducarMatriculaOcorrenciaDisciplinar( $this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, null, $this->pessoa_logada, $this->pessoa_logada, $this->observacao, $this->getDataHoraCadastro(), $this->data_exclusao, $this->ativo );
+		$this->visivel_pais = is_null($this->visivel_pais) ? 0 : 1;
+
+		$obj = new clsPmieducarMatriculaOcorrenciaDisciplinar( $this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, null, $this->pessoa_logada, $this->pessoa_logada, $this->observacao, $this->getDataHoraCadastro(), $this->data_exclusao, $this->ativo, $this->visivel_pais);
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
@@ -261,7 +268,9 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_matricula_ocorrencia_disciplinar_lst.php" );
 
-    $obj = new clsPmieducarMatriculaOcorrenciaDisciplinar($this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, $this->sequencial, $this->pessoa_logada, $this->pessoa_logada, $this->observacao, $this->getDataHoraCadastro(), $this->data_exclusao, $this->ativo);
+		$this->visivel_pais = is_null($this->visivel_pais) ? 0 : 1;
+
+    	$obj = new clsPmieducarMatriculaOcorrenciaDisciplinar($this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, $this->sequencial, $this->pessoa_logada, $this->pessoa_logada, $this->observacao, $this->getDataHoraCadastro(), $this->data_exclusao, $this->ativo, $this->visivel_pais);
 		$editou = $obj->edita();
 		if( $editou )
 		{
