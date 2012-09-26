@@ -146,10 +146,14 @@ class clsControlador
   protected function renderLoginPage() {
     $this->destroyLoginSession();
 
+    $googleAnalyticsDomainName = $_SERVER['HTTP_HOST'];
+
     $templateName = 'templates/nvp_htmlloginintranet.tpl';
     $templateFile  = fopen($templateName, "r");
     $templateText = fread($templateFile, filesize($templateName));
+
     $templateText = str_replace( "<!-- #&ERROLOGIN&# -->", $this->messages->toHtml('p'), $templateText);
+    $templateText = str_replace( "#&GOOGLE_ANALYTICS_DOMAIN_NAME&#", $googleAnalyticsDomainName, $templateText);
 
     $requiresHumanAccessValidation = isset($_SESSION['tentativas_login_falhas']) &&
                                      is_numeric($_SESSION['tentativas_login_falhas']) &&
