@@ -36,6 +36,7 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'include/pmieducar/clsPmieducarMatriculaTurma.inc.php';
 require_once 'Avaliacao/Service/Boletim.php';
 require_once 'lib/Portabilis/Array/Utils.php';
+require_once 'Portabilis/Model/Report/TipoBoletim.php';
 
 class V1Controller extends ApiCoreController
 {
@@ -79,75 +80,24 @@ class V1Controller extends ApiCoreController
     return $service;
   }
 
-  
-  protected function reportBoletimTemplateForMatricula($id) {
-    $template = '';
 
-    $templates = array('bimestral'                     => 'portabilis_boletim',
-                       'trimestral'                    => 'portabilis_boletim_trimestral',
-                       'trimestral_conceitual'         => 'portabilis_boletim_primeiro_ano_trimestral',
-                       'semestral'                     => 'portabilis_boletim_semestral',
-                       'semestral_conceitual'          => 'portabilis_boletim_conceitual_semestral',
-                       'semestral_educacao_infantil'   => 'portabilis_boletim_educ_infantil_semestral',
-                       'parecer_descritivo_componente' => 'portabilis_boletim_parecer',
-                       'parecer_descritivo_geral'      => 'portabilis_boletim_parecer_geral');
-                        
-    $service = $this->serviceBoletimForMatricula($id);
+  protected function reportBoletimTemplateFor($tipo_boletim) {
+    $tiposBoletim = Portabilis_Model_Report_TipoBoletim;
 
-    if ($service != null) {
-      # FIXME perguntar service se nota é conceitual?
-      $notaConceitual                     = false;
-      $qtdEtapasModulo                    = $service->getOption('etapas');
+    $templates = array($tiposBoletim::BIMESTRAL                     => 'portabilis_boletim',
+                       $tiposBoletim::TRIMESTRAL                    => 'portabilis_boletim_trimestral',
+                       $tiposBoletim::TRIMESTRAL_CONCEITUAL         => 'portabilis_boletim_primeiro_ano_trimestral',
+                       $tiposBoletim::SEMESTRAL                     => 'portabilis_boletim_semestral',
+                       $tiposBoletim::SEMESTRAL_CONCEITUAL          => 'portabilis_boletim_conceitual_semestral',
+                       $tiposBoletim::SEMESTRAL_EDUCACAO_INFANTIL   => 'portabilis_boletim_educ_infantil_semestral',
+                       $tiposBoletim::PARECER_DESCRITIVO_COMPONENTE => 'portabilis_boletim_parecer',
+                       $tiposBoletim::PARECER_DESCRITIVO_GERAL      => 'portabilis_boletim_parecer_geral');
 
-      # FIXME veriificar se é educação infantil?
-      $educacaoInfantil                   = false;
-
-
-      // parecer
-
-      $flagParecerGeral          = array(RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL,                   
-                                     RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL);
-
-      $flagParecerComponente = array(RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE,
-                                     RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE);
-
-      $parecerAtual                = $service->getRegra()->get('parecerDescritivo');
-      $parecerDescritivoGeral      = in_array($parecerAtual, $flagParecerGeral);
-      $parecerDescritivoComponente = in_array($parecerAtual, $flagParecerComponente);
-
-
-      // decide qual templete usar
-
-      if ($parecerDescritivoGeral)
-        $template = 'parecer_descritivo_geral';
-
-      elseif ($parecerDescritivoComponente)
-        $template = 'parecer_descritivo_componente';
-
-      elseif ($qtdEtapasModulo > 5 && $educacaoInfantil)
-        $template = 'semestral_educacao_infantil';
-
-      elseif ($qtdEtapasModulo > 5 && $notaConceitual)
-        $template = 'semestral_conceitual';
-
-      elseif ($qtdEtapasModulo > 5)
-        $template = 'semestral';
-
-      elseif ($qtdEtapasModulo > 2 && $notaConceitual)
-        $template = 'trimestral_conceitual';
-
-      elseif ($qtdEtapasModulo > 2)
-        $template = 'trimestral';
-
-      else
-        $template = 'bimestral';
-
-      $template = $templates[$template];
-    }
+    $template = is_null($tipo_boletim) ? '' : $templates[$tipo_boletim];
 
     return $template;
   }
-
+    
   // load resources
 
   protected function loadNomeEscola() {
@@ -175,15 +125,17 @@ class V1Controller extends ApiCoreController
 
 
   protected function tryLoadMatriculaTurma($matricula) {
-    $sql = "select ref_cod_turma as turma_id from pmieducar.matricula_turma where ref_cod_matricula = $1 and matricula_turma.ativo = 1 limit 1";
+    $sql            = "select ref_cod_turma as turma_id, turma.tipo_boletim from pmieducar.matricula_turma, pmieducar.turma where ref_cod_turma = cod_turma and ref_cod_matricula = $1 and matricula_turma.ativo = 1 limit 1";
 
+    //var_dump($sql);
     $matriculaTurma = $this->fetchPreparedQuery($sql, $matricula['id'], false, 'first-row');
 
     if (is_array($matriculaTurma) and count($matriculaTurma) > 0) {
-      $attrs                                     = array('turma_id', 'nome_turma');
+      $attrs                                     = array('turma_id', 'tipo_boletim');
+
       $matriculaTurma                            = Portabilis_Array_Utils::filter($matriculaTurma, $attrs);
       $matriculaTurma['nome_turma']              = $this->loadNameFor('turma', $matriculaTurma['turma_id']);
-      $matriculaTurma['report_boletim_template'] = $this->reportBoletimTemplateForMatricula($matricula['id']);
+      $matriculaTurma['report_boletim_template'] = $this->reportBoletimTemplateFor($matriculaTurma['tipo_boletim']);
     }
 
     return $matriculaTurma;
