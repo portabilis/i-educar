@@ -91,8 +91,7 @@ class Validator {
   public function validatesValueIsArray(&$value, $name, $raiseExceptionOnFail = false, $msg = '', $addMsgOnError = true){
 
     if (! is_array($value)){
-      if ($addMsgOnError)
-      {
+      if ($addMsgOnError) {
         $msg = empty($msg) ? "Deve ser recebido uma lista de '$name'" : $msg;
         $this->messenger->append($msg);
       }
@@ -121,16 +120,18 @@ class Validator {
 
 
   // TODO alterar para usar modelos
-  public function validatesValueIsInBd($fieldName, &$value, $schemaName, $tableName, $raiseExceptionOnFail = true){
+  public function validatesValueIsInBd($fieldName, &$value, $schemaName, $tableName, $raiseExceptionOnFail = true, $addMsgOnError = true){
     $sql = "select 1 as exists from $schemaName.$tableName where $fieldName = $1";
     $exists = $this->fetchPreparedQuery($sql, $value, true, 'first-field');
 
     if (! $exists == '1'){
-      $msg = "O valor informado {$value} para $tableName, não esta presente no banco de dados.";
-      $this->messenger->append($msg);
+      if ($addMsgOnError) {
+        $msg = "O valor informado {$value} para $tableName, não esta presente no banco de dados.";
+        $this->messenger->append($msg);
+      }
 
       if ($raiseExceptionOnFail)
-         throw new CoreExt_Exception($msg);
+        throw new CoreExt_Exception($msg);
 
       return false;
     }

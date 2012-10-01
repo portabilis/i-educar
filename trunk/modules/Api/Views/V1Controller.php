@@ -59,7 +59,9 @@ class V1Controller extends ApiCoreController
 
   protected function canAcceptRequest() {
     return parent::canAcceptRequest() &&
-           $this->validatesPresenceOf(array('aluno_id', 'escola_id'));
+           $this->validatesPresenceOf(array('aluno_id', 'escola_id')) && 
+           $this->validatesExistenceOf('escola', $this->getRequest()->escola_id);// && 
+           //$this->validatesExistenceOf('aluno', $this->getRequest()->aluno_id);
   }
 
 
@@ -230,11 +232,12 @@ class V1Controller extends ApiCoreController
   // api responder
 
   protected function getAluno() {
-    $aluno = array('id'         => $this->getRequest()->aluno_id, 
-                   'nome'       => $this->loadNomeAluno(), 
-                   'matriculas' => $this->loadMatriculas(true));
-
-    return $aluno;
+    if (! $this->validatesExistenceOf('aluno', $this->getRequest()->aluno_id, array('add_msg_on_error' => false)))
+      return null;
+    
+    return array('id'         => $this->getRequest()->aluno_id, 
+                 'nome'       => $this->loadNomeAluno(), 
+                 'matriculas' => $this->loadMatriculas(true));
   }
 
 
