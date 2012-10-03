@@ -28,6 +28,7 @@
  * @version   $Id$
  */
 
+require_once 'lib/Portabilis/Array/Utils.php';
 
 /**
  * CoreExt_Session class.
@@ -50,11 +51,16 @@ class Portabilis_Report_ReportFactory
 		$this->setSettings($this->config);
   }
 
+  // wrapper for Portabilis_Array_Utils::merge
+  protected static function mergeOptions($options, $defaultOptions) {
+    return Portabilis_Array_Utils::merge($options, $defaultOptions);
+  }
+
 	function setSettings($config) {
     throw new Exception("The method 'setSettings' from class Portabilis_Report_ReportFactory must be overridden!");		
 	}  
 
-  function dumps($report, $addLogoNameToArgs = true) {
+  function dumps($report, $options = array()) {
     throw new Exception("The method 'dumps' from class Portabilis_Report_ReportFactory must be overridden!");
   }
 }

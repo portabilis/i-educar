@@ -29,6 +29,7 @@
  */
 
 require_once 'lib/Portabilis/Report/ReportFactory.php';
+require_once 'include/portabilis/libs/XML/RPC2/Client.php';
 
 /**
  * CoreExt_Session class.
@@ -52,17 +53,19 @@ class Portabilis_Report_ReportFactoryRemote extends Portabilis_Report_ReportFact
 	  $this->settings['logo_name']           = $this->config->remote_factory->logo_name;
 	}
 
-  function dumps($report, $addLogoNameToArgs = true) {
+  function dumps($report, $options = array()) {
+    $defaultOptions = array('add_arg_logo_name' => true, 'encoding' => 'uncoded');
+    $options        = self::mergeOptions($options, $defaultOptions);
 
-    if ($addLogoNameToArgs and ! $this->settings['logo_name']) {
-    	throw new Exception("$$addLogoNameToArgs is set to true, but the logo_name wasn't defined" . 
-    		                  " in the configuration (.ini) file");
-    }
-		elseif ($addLogoNameToArgs)
+    // logo helper
+
+    if ($options['add_arg_logo_name'] and ! $this->settings['logo_name'])
+    	throw new Exception("The option 'add_arg_logo_name' is true, but no logo_name defined in configurations");
+		elseif ($options['add_arg_logo_name'])
       $report->addArg('logo_name', $this->settings['logo_name']);
 
 
-    require_once 'include/portabilis/libs/XML/RPC2/Client.php';
+    // api call
 
     $client = XML_RPC2_Client::create($this->settings['url']);
 
@@ -72,7 +75,20 @@ class Portabilis_Report_ReportFactoryRemote extends Portabilis_Report_ReportFact
                                            $password      = $this->settings['password'],
                                            $args          = $report->args);
 
-      return base64_decode($result['report']);
+
+    // report encoding
+
+    // the remote report factory returns report encoded to base64.
+    if ($options['encoding'] == 'base64')
+      $report = $result['report'];
+
+    elseif($options['encoding'] == 'uncoded')
+      $report = base64_decode($result['report']);
+
+    else
+      throw new Exception("Encoding {$options['encoding']} not implemented!");
+
+    return $report;
   }
 }
 

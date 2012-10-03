@@ -28,6 +28,8 @@
  * @version   $Id$
  */
 
+require_once 'lib/Portabilis/Report/ReportFactoryRemote.php';
+require_once 'lib/Portabilis/Array/Utils.php';
 
 /**
  * CoreExt_Session class.
@@ -43,16 +45,17 @@
 class Portabilis_Report_ReportCore
 {
 
- function __construct($templateName) {
-    $this->templateName = $templateName;
+ function __construct() {
     $this->requiredArgs = array();
     $this->args         = array();
+    $this->templateName = $this->templateName();
 
     $this->requiredArgs();
   }
 
-  function setTemplateName($name) {
-    $this->templateName = $name;
+  // wrapper for Portabilis_Array_Utils::merge
+  protected static function mergeOptions($options, $defaultOptions) {
+    return Portabilis_Array_Utils::merge($options, $defaultOptions);
   }
 
   function addArg($name, $value) {
@@ -74,7 +77,26 @@ class Portabilis_Report_ReportCore
     }
   }
 
+  function dumps($options = array()) {
+    $defaultOptions = array('report_factory' => null, 'options' => array());
+    $options        = self::mergeOptions($options, $defaultOptions);
+
+    $this->validatesPresenseOfRequiredArgs();
+
+    $reportFactory = ! is_null($options['report_factory']) ? $options['report_factory'] : $this->reportFactory();
+
+    return $reportFactory->dumps($this, $options['options']);
+  }
+
+  function reportFactory() {
+    return new Portabilis_Report_ReportFactoryRemote();
+  }
+
   // methods that must be overridden
+
+  function templateName() {
+    throw new Exception("The method 'templateName' must be overridden!");
+  }
 
   function requiredArgs() {
     throw new Exception("The method 'requiredArgs' must be overridden!");

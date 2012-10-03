@@ -32,7 +32,6 @@
 require_once 'Core/Controller/Page/EditController.php';
 require_once 'lib/Portabilis/View/Helper/DynamicSelectMenus.php';
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
-require_once 'lib/Portabilis/Report/ReportFactoryRemote.php';
 
 require_once 'include/pmieducar/clsPermissoes.inc.php';
 
@@ -112,7 +111,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
   function renderReport() {
     try {
       $this->headers();
-      echo $this->reportFactory()->dumps($this->report);
+      echo $this->report->dumps();
     }
     catch (Exception $e) {
 
@@ -125,11 +124,6 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
       echo "<body><div id='error'><h1>Relatório não emitido</h1><p class='explication'>Desculpe-nos ocorreu algum erro na geração do relatório, <strong>por favor tente novamente mais tarde</strong></p><ul class='unstyled'><li><a href='/intranet/index.php'>- Voltar para o sistema</a></li><li>- Tentou mais de uma vez e o erro persiste? Por favor, <a target='_blank' href='http://www.portabilis.com.br/site/suporte'>solicite suporte</a> ou envie um email para suporte@portabilis.com.br</li></ul>$details</div></body></html>";
     }
   }  
-
-
-  function reportFactory() {
-    return new Portabilis_Report_ReportFactoryRemote();
-  }
 
 
   // methods that must be overridden
