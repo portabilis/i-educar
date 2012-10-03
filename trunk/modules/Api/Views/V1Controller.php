@@ -60,8 +60,12 @@ class V1Controller extends ApiCoreController
   protected function canAcceptRequest() {
     return parent::canAcceptRequest() &&
            $this->validatesPresenceOf(array('aluno_id', 'escola_id')) && 
-           $this->validatesExistenceOf('escola', $this->getRequest()->escola_id);// && 
-           //$this->validatesExistenceOf('aluno', $this->getRequest()->aluno_id);
+           $this->validatesExistenceOf('escola', $this->getRequest()->escola_id);
+  }
+
+
+  protected function canGetOcorrenciasDisciplinares() {
+    return $this->validatesExistenceOf('aluno', $this->getRequest()->aluno_id);
   }
 
 
@@ -232,23 +236,24 @@ class V1Controller extends ApiCoreController
   // api responder
 
   protected function getAluno() {
-    if (! $this->validatesExistenceOf('aluno', $this->getRequest()->aluno_id, array('add_msg_on_error' => false)))
-      return null;
-    
-    return array('id'         => $this->getRequest()->aluno_id, 
-                 'nome'       => $this->loadNomeAluno(), 
-                 'matriculas' => $this->loadMatriculas(true));
+    if ($this->validatesExistenceOf('aluno', $this->getRequest()->aluno_id, array('add_msg_on_error' => false))) {
+      return array('id'         => $this->getRequest()->aluno_id, 
+                   'nome'       => $this->loadNomeAluno(), 
+                   'matriculas' => $this->loadMatriculas(true));
+    }
   }
 
 
   protected function getOcorrenciasDisciplinares() {
-    return $this->loadOcorrenciasDisciplinares();
+    if ($this->canGetOcorrenciasDisciplinares())
+      return $this->loadOcorrenciasDisciplinares();
   }
 
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'aluno'))
       $this->appendResponse('aluno', $this->getAluno());
+
     elseif ($this->isRequestFor('get', 'ocorrencias_disciplinares'))
       $this->appendResponse('ocorrencias_disciplinares', $this->getOcorrenciasDisciplinares());
     else
