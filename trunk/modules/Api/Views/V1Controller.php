@@ -298,7 +298,9 @@ class V1Controller extends ApiCoreController
       $dumpsOptions = array('options' => array('encoding' => $encoding));
       $encoded      = $boletimReport->dumps($dumpsOptions);
 
-      return array('encoding' => $encoding, 'encoded' => $encoded);
+      return array('matricula_id' => $this->getRequest()->matricula_id,
+                   'encoding'     => $encoding,
+                   'encoded'      => $encoded);
     }
   }
 
@@ -311,7 +313,7 @@ class V1Controller extends ApiCoreController
       $this->appendResponse('ocorrencias_disciplinares', $this->getOcorrenciasDisciplinares());
 
     elseif ($this->isRequestFor('get', 'relatorio_boletim'))
-      $this->appendResponse('report', $this->getRelatorioBoletim());    
+      $this->appendResponse('relatorio_boletim', $this->getRelatorioBoletim());    
 
     else
       $this->notImplementedOperationError();
