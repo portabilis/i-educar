@@ -37,6 +37,7 @@ require_once 'include/pmieducar/clsPmieducarMatriculaTurma.inc.php';
 require_once 'Avaliacao/Service/Boletim.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'Portabilis/Model/Report/TipoBoletim.php';
+require_once "Reports/Reports/BoletimReport.php";
 
 class V1Controller extends ApiCoreController
 {
@@ -59,13 +60,25 @@ class V1Controller extends ApiCoreController
 
   protected function canAcceptRequest() {
     return parent::canAcceptRequest() &&
-           $this->validatesPresenceOf(array('aluno_id', 'escola_id')) && 
+           $this->validatesPresenceOf('escola_id') && 
            $this->validatesExistenceOf('escola', $this->getRequest()->escola_id);
   }
 
 
+  protected function canGetAluno() {
+    return $this->validatesPresenceOf('aluno_id');
+  }
+
+
   protected function canGetOcorrenciasDisciplinares() {
-    return $this->validatesExistenceOf('aluno', $this->getRequest()->aluno_id);
+    return $this->validatesPresenceOf('aluno_id') &&
+           $this->validatesExistenceOf('aluno', $this->getRequest()->aluno_id);
+  }
+
+
+  protected function canGetRelatorioBoletim() {
+    return $this->validatesPresenceOf(array('matricula_id', 'escola_id')) &&
+           $this->validatesExistenceOf('matricula', $this->getRequest()->matricula_id);
   }
 
 
@@ -148,7 +161,22 @@ class V1Controller extends ApiCoreController
   }
 
 
-  protected function loadMatriculas() {
+  // carrega dados matricula (instituicao_id, escola_id, curso_id, serie_id e (first) turma_id, ano) de uma matricula.
+  protected function loadDadosForMatricula($matriculaId){
+    $sql            = "select cod_matricula as id, matricula.ano, escola.ref_cod_instituicao as instituicao_id, matricula.ref_ref_cod_escola as escola_id, matricula.ref_cod_curso as curso_id, matricula.ref_ref_cod_serie as serie_id, matricula_turma.ref_cod_turma as turma_id from pmieducar.matricula_turma, pmieducar.matricula, pmieducar.escola where escola.cod_escola = matricula.ref_ref_cod_escola and ref_cod_matricula = cod_matricula and ref_cod_matricula = $1 and matricula.ativo = matricula_turma.ativo and matricula_turma.ativo = 1 order by matricula_turma.sequencial limit 1";
+
+    $params         = array($matriculaId);
+    $dadosMatricula = $this->fetchPreparedQuery($sql, $params, false, 'first-row');
+
+    // filtra apenas chaves abaixo, deixando de fora os indices.
+    $attrs          = array('id', 'ano', 'instituicao_id', 'escola_id', 'curso_id', 'serie_id', 'turma_id');
+    $dadosMatricula = Portabilis_Array_Utils::filter($dadosMatricula, $attrs);
+
+    return $dadosMatricula;
+  }
+
+
+  protected function loadMatriculasAluno() {
     #TODO mostrar o nome da situação da matricula
     $sql = "select cod_matricula as id, ano, ref_cod_instituicao as instituicao_id, ref_ref_cod_escola as escola_id, ref_cod_curso as curso_id, ref_ref_cod_serie as serie_id from pmieducar.matricula, pmieducar.escola where cod_escola = ref_ref_cod_escola and ref_cod_aluno = $1 and ref_ref_cod_escola = $2 and matricula.ativo = 1 order by ano desc, id";
 
@@ -195,7 +223,7 @@ class V1Controller extends ApiCoreController
 
   protected function loadOcorrenciasDisciplinares() {
     $ocorrenciasAluno              = array();
-    $matriculas                    = $this->loadMatriculas();
+    $matriculas                    = $this->loadMatriculasAluno();
 
     $attrsFilter                   = array('ref_cod_tipo_ocorrencia_disciplinar' => 'tipo', 
                                            'data_cadastro'                       => 'data_hora',
@@ -236,10 +264,10 @@ class V1Controller extends ApiCoreController
   // api responder
 
   protected function getAluno() {
-    if ($this->validatesExistenceOf('aluno', $this->getRequest()->aluno_id, array('add_msg_on_error' => false))) {
+    if ($this->canGetAluno() && $this->validatesExistenceOf('aluno', $this->getRequest()->aluno_id, array('add_msg_on_error' => false))) {
       return array('id'         => $this->getRequest()->aluno_id, 
                    'nome'       => $this->loadNomeAluno(), 
-                   'matriculas' => $this->loadMatriculas(true));
+                   'matriculas' => $this->loadMatriculasAluno(true));
     }
   }
 
@@ -250,12 +278,41 @@ class V1Controller extends ApiCoreController
   }
 
 
+  protected function getRelatorioBoletim() {
+    if ($this->canGetRelatorioBoletim()) {
+      $dadosMatricula = $this->loadDadosForMatricula($this->getRequest()->matricula_id);
+
+      $boletimReport = new BoletimReport();
+      
+      $boletimReport->addArg('matricula',   (int)$dadosMatricula['id']);
+      $boletimReport->addArg('ano',         (int)$dadosMatricula['ano']);
+      $boletimReport->addArg('instituicao', (int)$dadosMatricula['instituicao_id']);
+      $boletimReport->addArg('escola',      (int)$dadosMatricula['escola_id']);
+      $boletimReport->addArg('curso',       (int)$dadosMatricula['curso_id']);
+      $boletimReport->addArg('serie',       (int)$dadosMatricula['serie_id']);
+      $boletimReport->addArg('turma',       (int)$dadosMatricula['turma_id']);
+
+
+      $encoding     = 'base64';
+
+      $dumpsOptions = array('options' => array('encoding' => $encoding));
+      $encoded      = $boletimReport->dumps($dumpsOptions);
+
+      return array('encoding' => $encoding, 'encoded' => $encoded);
+    }
+  }
+
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'aluno'))
       $this->appendResponse('aluno', $this->getAluno());
 
     elseif ($this->isRequestFor('get', 'ocorrencias_disciplinares'))
       $this->appendResponse('ocorrencias_disciplinares', $this->getOcorrenciasDisciplinares());
+
+    elseif ($this->isRequestFor('get', 'relatorio_boletim'))
+      $this->appendResponse('report', $this->getRelatorioBoletim());    
+
     else
       $this->notImplementedOperationError();
   }
