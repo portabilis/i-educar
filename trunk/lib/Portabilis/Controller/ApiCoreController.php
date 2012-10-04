@@ -185,7 +185,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
         $instance->Gerar();
     }
     catch (Exception $e){
-      $this->messenger->append('Exception: ' . $e->getMessage(), $type = 'error', $encodeToUtf8 = true);
+      $this->messenger->append('Exception: ' . $e->getMessage());
     }
 
     echo $this->prepareResponse();
@@ -237,7 +237,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     catch(Exception $e)
     {
       if (! $hideExceptions)
-        $this->messenger->append($e->getMessage(), "error", true);
+        $this->messenger->append($e->getMessage());
     }
     return $result;
   }
