@@ -36,7 +36,6 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'include/pmieducar/clsPmieducarMatriculaTurma.inc.php';
 require_once 'Avaliacao/Service/Boletim.php';
 require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'Portabilis/Model/Report/TipoBoletim.php';
 require_once "Reports/Reports/BoletimReport.php";
 
 class V1Controller extends ApiCoreController
@@ -99,24 +98,7 @@ class V1Controller extends ApiCoreController
     return $service;
   }
 
-
-  protected function reportBoletimTemplateFor($tipo_boletim) {
-    $tiposBoletim = Portabilis_Model_Report_TipoBoletim;
-
-    $templates = array($tiposBoletim::BIMESTRAL                     => 'portabilis_boletim',
-                       $tiposBoletim::TRIMESTRAL                    => 'portabilis_boletim_trimestral',
-                       $tiposBoletim::TRIMESTRAL_CONCEITUAL         => 'portabilis_boletim_primeiro_ano_trimestral',
-                       $tiposBoletim::SEMESTRAL                     => 'portabilis_boletim_semestral',
-                       $tiposBoletim::SEMESTRAL_CONCEITUAL          => 'portabilis_boletim_conceitual_semestral',
-                       $tiposBoletim::SEMESTRAL_EDUCACAO_INFANTIL   => 'portabilis_boletim_educ_infantil_semestral',
-                       $tiposBoletim::PARECER_DESCRITIVO_COMPONENTE => 'portabilis_boletim_parecer',
-                       $tiposBoletim::PARECER_DESCRITIVO_GERAL      => 'portabilis_boletim_parecer_geral');
-
-    $template = is_null($tipo_boletim) ? '' : $templates[$tipo_boletim];
-
-    return $template;
-  }
-    
+   
   // load resources
 
   protected function loadNomeEscola() {
@@ -154,7 +136,6 @@ class V1Controller extends ApiCoreController
 
       $matriculaTurma                            = Portabilis_Array_Utils::filter($matriculaTurma, $attrs);
       $matriculaTurma['nome_turma']              = $this->loadNameFor('turma', $matriculaTurma['turma_id']);
-      $matriculaTurma['report_boletim_template'] = $this->reportBoletimTemplateFor($matriculaTurma['tipo_boletim']);
     }
 
     return $matriculaTurma;
@@ -291,7 +272,6 @@ class V1Controller extends ApiCoreController
       $boletimReport->addArg('curso',       (int)$dadosMatricula['curso_id']);
       $boletimReport->addArg('serie',       (int)$dadosMatricula['serie_id']);
       $boletimReport->addArg('turma',       (int)$dadosMatricula['turma_id']);
-
 
       $encoding     = 'base64';
 

@@ -48,8 +48,8 @@ class Portabilis_Report_ReportCore
  function __construct() {
     $this->requiredArgs = array();
     $this->args         = array();
-    $this->templateName = $this->templateName();
 
+    // set required args on construct, because ReportCoreController access it args before call dumps
     $this->requiredArgs();
   }
 
@@ -72,7 +72,7 @@ class Portabilis_Report_ReportCore
   function validatesPresenseOfRequiredArgs() {
     foreach($this->requiredArgs as $requiredArg) {
 
-      if (! isset($this->args[$requiredArg]) || ! trim($this->args[$requiredArg]))
+      if (! isset($this->args[$requiredArg]) || trim($this->args[$requiredArg]) == '')
         throw new Exception("The required arg '{$requiredArg}' wasn't set or is empty!");
     }
   }

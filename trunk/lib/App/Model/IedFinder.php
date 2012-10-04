@@ -192,6 +192,32 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
+   * Retorna um array com as informações da turma a partir de seu código.
+   *
+   * @param int $codTurma
+   * @return array
+   * @throws App_Model_Exception
+   */
+  public static function getTurma($codTurma)
+  {
+    // Recupera clsPmieducarTurma do storage de classe estático
+    $turma = self::addClassToStorage('clsPmieducarTurma', NULL,
+      'include/pmieducar/clsPmieducarTurma.inc.php');
+
+    // Usa o atributo público para depois chamar o método detalhe()
+    $turma->cod_turma = $codTurma;
+    $turma = $turma->detalhe();
+
+    if (FALSE === $turma) {
+      throw new App_Model_Exception(
+        sprintf('Turma com o código "%d" não existe.', $codTurma)
+      );
+    }
+
+    return $turma;
+  }
+
+  /**
    * Retorna as turmas de uma escola.
    * @param  int   $escola
    * @return array (cod_turma => nm_turma)

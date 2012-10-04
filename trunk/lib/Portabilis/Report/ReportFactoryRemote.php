@@ -70,7 +70,7 @@ class Portabilis_Report_ReportFactoryRemote extends Portabilis_Report_ReportFact
     $client = XML_RPC2_Client::create($this->settings['url']);
 
     $result = $client->build_report_jasper($app_name      = $this->settings['app_name'],
-                                           $template_name = $report->templateName,
+                                           $template_name = $report->templateName(),
                                            $username      = $this->settings['username'],
                                            $password      = $this->settings['password'],
                                            $args          = $report->args);
