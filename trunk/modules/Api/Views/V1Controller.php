@@ -65,18 +65,29 @@ class V1Controller extends ApiCoreController
 
 
   protected function canGetAluno() {
-    return $this->validatesPresenceOf('aluno_id');
+    return $this->canAcceptRequest() &&
+           $this->validatesPresenceOf('aluno_id') &&
+           $this->validatesExistenceOf('aluno', $this->getRequest()->aluno_id, array('add_msg_on_error' => false));
+  }
+
+
+  protected function canGetMatricula() {
+    return $this->canAcceptRequest() &&
+           $this->validatesPresenceOf(array('matricula_id', 'escola_id')) &&
+           $this->validatesExistenceOf('matricula', $this->getRequest()->matricula_id);
   }
 
 
   protected function canGetOcorrenciasDisciplinares() {
-    return $this->validatesPresenceOf('aluno_id') &&
+    return $this->canAcceptRequest() &&
+           $this->validatesPresenceOf('aluno_id') &&
            $this->validatesExistenceOf('aluno', $this->getRequest()->aluno_id);
   }
 
 
   protected function canGetRelatorioBoletim() {
-    return $this->validatesPresenceOf(array('matricula_id', 'escola_id')) &&
+    return $this->canAcceptRequest() &&
+           $this->validatesPresenceOf(array('matricula_id', 'escola_id')) &&
            $this->validatesExistenceOf('matricula', $this->getRequest()->matricula_id);
   }
 
@@ -144,13 +155,13 @@ class V1Controller extends ApiCoreController
 
   // carrega dados matricula (instituicao_id, escola_id, curso_id, serie_id e (first) turma_id, ano) de uma matricula.
   protected function loadDadosForMatricula($matriculaId){
-    $sql            = "select cod_matricula as id, matricula.ano, escola.ref_cod_instituicao as instituicao_id, matricula.ref_ref_cod_escola as escola_id, matricula.ref_cod_curso as curso_id, matricula.ref_ref_cod_serie as serie_id, matricula_turma.ref_cod_turma as turma_id from pmieducar.matricula_turma, pmieducar.matricula, pmieducar.escola where escola.cod_escola = matricula.ref_ref_cod_escola and ref_cod_matricula = cod_matricula and ref_cod_matricula = $1 and matricula.ativo = matricula_turma.ativo and matricula_turma.ativo = 1 order by matricula_turma.sequencial limit 1";
+    $sql            = "select cod_matricula as id, ref_cod_aluno as aluno_id, matricula.ano, escola.ref_cod_instituicao as instituicao_id, matricula.ref_ref_cod_escola as escola_id, matricula.ref_cod_curso as curso_id, matricula.ref_ref_cod_serie as serie_id, matricula_turma.ref_cod_turma as turma_id from pmieducar.matricula_turma, pmieducar.matricula, pmieducar.escola where escola.cod_escola = matricula.ref_ref_cod_escola and ref_cod_matricula = cod_matricula and ref_cod_matricula = $1 and matricula.ativo = matricula_turma.ativo and matricula_turma.ativo = 1 order by matricula_turma.sequencial limit 1";
 
     $params         = array($matriculaId);
     $dadosMatricula = $this->fetchPreparedQuery($sql, $params, false, 'first-row');
 
     // filtra apenas chaves abaixo, deixando de fora os indices.
-    $attrs          = array('id', 'ano', 'instituicao_id', 'escola_id', 'curso_id', 'serie_id', 'turma_id');
+    $attrs          = array('id', 'aluno_id', 'ano', 'instituicao_id', 'escola_id', 'curso_id', 'serie_id', 'turma_id');
     $dadosMatricula = Portabilis_Array_Utils::filter($dadosMatricula, $attrs);
 
     return $dadosMatricula;
@@ -245,10 +256,16 @@ class V1Controller extends ApiCoreController
   // api responder
 
   protected function getAluno() {
-    if ($this->canGetAluno() && $this->validatesExistenceOf('aluno', $this->getRequest()->aluno_id, array('add_msg_on_error' => false))) {
+    if ($this->canGetAluno()) {
       return array('id'         => $this->getRequest()->aluno_id, 
                    'nome'       => $this->loadNomeAluno(), 
                    'matriculas' => $this->loadMatriculasAluno(true));
+    }
+  }
+
+  protected function getMatricula() {
+    if ($this->canGetMatricula()) {
+      return $this->loadDadosForMatricula($this->getRequest()->matricula_id);
     }
   }
 
@@ -288,6 +305,9 @@ class V1Controller extends ApiCoreController
   public function Gerar() {
     if ($this->isRequestFor('get', 'aluno'))
       $this->appendResponse('aluno', $this->getAluno());
+
+    elseif ($this->isRequestFor('get', 'matricula'))
+      $this->appendResponse('matricula', $this->getMatricula());    
 
     elseif ($this->isRequestFor('get', 'ocorrencias_disciplinares'))
       $this->appendResponse('ocorrencias_disciplinares', $this->getOcorrenciasDisciplinares());
