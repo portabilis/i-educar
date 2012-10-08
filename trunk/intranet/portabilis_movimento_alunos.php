@@ -18,8 +18,8 @@ class PortabilisMovimentoAlunos extends Report
     $this->addArg('instituicao', (int)$_POST['ref_cod_instituicao']);
     $this->addArg('escola', (int)$_POST['ref_cod_escola']);
     $this->addArg('curso', (int)$_POST['ref_cod_curso']);
-    $this->addArg('data_inicial', $_POST['data_inicial']);
-    $this->addArg('data_final', $_POST['data_final']);
+    $this->addArg('dt_inicial', $_POST['data_inicial']);
+    $this->addArg('dt_final', $_POST['data_final']);
   }
 }
 
