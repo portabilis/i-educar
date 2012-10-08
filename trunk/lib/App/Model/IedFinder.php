@@ -315,13 +315,14 @@ class App_Model_IedFinder extends CoreExt_Entity
    *   atribuídos ao ano escolar/série da escola.
    */
   public static function getEscolaSerieDisciplina($anoEscolar, $escola,
-    ComponenteCurricular_Model_ComponenteDataMapper $mapper = NULL)
+    ComponenteCurricular_Model_ComponenteDataMapper $mapper = NULL,
+    $disciplinaId = null)
   {
     // Disciplinas na série na escola
     $escolaSerieDisciplina = self::addClassToStorage('clsPmieducarEscolaSerieDisciplina',
       NULL, 'include/pmieducar/clsPmieducarEscolaSerieDisciplina.inc.php');
 
-    $disciplinas = $escolaSerieDisciplina->lista($anoEscolar, $escola, NULL, 1);
+    $disciplinas = $escolaSerieDisciplina->lista($anoEscolar, $escola, $disciplinaId, 1);
 
     if (FALSE === $disciplinas) {
       throw new App_Model_Exception(sprintf(
@@ -359,18 +360,24 @@ class App_Model_IedFinder extends CoreExt_Entity
    */
   public static function getComponentesTurma($anoEscolar, $escola, $turma,
     ComponenteCurricular_Model_TurmaDataMapper $mapper = NULL,
-    ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper = NULL)
+    ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper = NULL, 
+    $componenteCurricularId = null)
   {
     if (is_null($mapper)) {
       require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
       $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
     }
 
-    $componentesTurma = $mapper->findAll(array(), array('turma' => $turma));
+    $where = array('turma' => $turma);
+
+    if (is_numeric($componenteCurricularId))
+      $where['componente_curricular_id'] = $componenteCurricularId;
+
+    $componentesTurma = $mapper->findAll(array(), $where);
 
     // Não existem componentes específicos para a turma
     if (0 == count($componentesTurma)) {
-      return self::getEscolaSerieDisciplina($anoEscolar, $escola, $componenteMapper);
+      return self::getEscolaSerieDisciplina($anoEscolar, $escola, $componenteMapper, $componenteCurricularId);
     }
 
     $componentes = array();
@@ -524,7 +531,8 @@ class App_Model_IedFinder extends CoreExt_Entity
    */
   public static function getComponentesPorMatricula($codMatricula,
     ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper = NULL,
-    ComponenteCurricular_Model_TurmaDataMapper $turmaMapper = NULL)
+    ComponenteCurricular_Model_TurmaDataMapper $turmaMapper = NULL,
+    $componenteCurricularId = null)
   {
     $matricula = self::getMatricula($codMatricula);
 
@@ -536,7 +544,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     // Disciplinas da escola na série em que o aluno está matriculado
     $componentes = self::getComponentesTurma(
-      $codSerie, $codEscola, $turma, $turmaMapper, $componenteMapper
+      $codSerie, $codEscola, $turma, $turmaMapper, $componenteMapper, $componenteCurricularId
     );
 
     // Dispensas do aluno

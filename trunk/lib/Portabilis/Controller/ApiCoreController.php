@@ -38,6 +38,7 @@ require_once 'lib/Portabilis/Messenger.php';
 require_once 'lib/Portabilis/Validator.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'lib/Portabilis/DataMapper/Utils.php';
+require_once 'lib/Portabilis/Array/Utils.php';
 
 class ApiCoreController extends Core_Controller_Page_EditController
 {
@@ -54,6 +55,12 @@ class ApiCoreController extends Core_Controller_Page_EditController
     $this->validator = new Validator($this->messenger);
     $this->response = array();
     $this->db = new clsBanco();
+  }
+
+
+  // wrapper for Portabilis_Array_Utils::merge
+  protected static function mergeOptions($options, $defaultOptions) {
+    return Portabilis_Array_Utils::merge($options, $defaultOptions);
   }
 
 
@@ -75,6 +82,22 @@ class ApiCoreController extends Core_Controller_Page_EditController
       }
 
     return $valid;
+  }
+
+
+  protected function validatesExistenceOf($resourceName, $value, $options = array()) {
+    $defaultOptions = array('schema_name'      => 'pmieducar', 
+                            'field_name'       => "cod_{$resourceName}",
+                            'add_msg_on_error' => true);
+
+    $options        = $this->mergeOptions($options, $defaultOptions);
+
+    return $this->validator->validatesValueIsInBd($options['field_name'], 
+                                                  $value, 
+                                                  $options['schema_name'], 
+                                                  $resourceName, 
+                                                  $raiseExceptionOnFail = false,
+                                                  $addMsgOnError        = $options['add_msg_on_error']);
   }
 
 

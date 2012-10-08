@@ -324,24 +324,29 @@ class indice extends clsCadastro
 
     $this->campoHora( 'hora_fim_intervalo', 'Hora Fim Intervalo', $this->hora_fim_intervalo, FALSE);
 
-    #aquiiii
-
-    // Turma tipo
+    // turnos
     $turnos = array('' => 'Selecione');
 
-    // Editar
-    if ($this->ref_cod_instituicao)
-    {
+    if ($this->ref_cod_instituicao) {
       require_once 'include/pmieducar/clsPortabilisTurmaTurno.inc.php';
 
       $t = new clsPortabilisTurmaTurno($this->ref_cod_instituicao);
       $_turnos = $t->select();
+
       foreach ($_turnos as $_t)
         $turnos[$_t['turma_turno_id']] = $_t['nm_turno'];
     }
 
-    $this->campoLista('turma_turno_id', 'Turno', $turnos,
-      $this->turma_turno_id, '', FALSE, '', null);
+    $this->campoLista('turma_turno_id', 'Turno', $turnos, $this->turma_turno_id);
+
+    // modelos boletim
+    require_once 'Portabilis/Model/Report/TipoBoletim.php';
+    require_once 'Portabilis/Array/Utils.php';
+
+    $tiposBoletim = Portabilis_Model_Report_TipoBoletim::getInstance()->getEnums();
+    $tiposBoletim = Portabilis_Array_Utils::insertIn(null, "Selecione um modelo", $tiposBoletim);
+
+    $this->campoLista('tipo_boletim', 'Modelo relatório boletim', $tiposBoletim, $this->tipo_boletim);
 
     $this->campoQuebra2();
 
@@ -695,7 +700,7 @@ class indice extends clsCadastro
           $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
           $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
           $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
-          $this->visivel, $this->turma_turno_id);
+          $this->visivel, $this->turma_turno_id, $this->tipo_boletim);
 
         $cadastrou = $obj->cadastra();
 
@@ -760,7 +765,8 @@ class indice extends clsCadastro
         $this->hora_inicio_intervalo, $this->hora_fim_intervalo,
         $this->ref_cod_regente, $this->ref_cod_instituicao_regente,
         $this->ref_cod_instituicao, $this->ref_cod_curso,
-        $this->ref_ref_cod_serie_mult, $this->ref_cod_escola, $this->visivel, $this->turma_turno_id);
+        $this->ref_ref_cod_serie_mult, $this->ref_cod_escola, $this->visivel, 
+        $this->turma_turno_id, $this->tipo_boletim);
 
       $cadastrou = $obj->cadastra();
 
@@ -820,7 +826,8 @@ class indice extends clsCadastro
           $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
           $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
           $this->visivel,
-          $this->turma_turno_id);
+          $this->turma_turno_id,
+          $this->tipo_boletim);
 
         $editou = $obj->edita();
 
@@ -891,7 +898,7 @@ class indice extends clsCadastro
         $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
         $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
         $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
-        $this->visivel, $this->turma_turno_id);
+        $this->visivel, $this->turma_turno_id, $this->tipo_boletim);
 
       $editou = $obj->edita();
     }

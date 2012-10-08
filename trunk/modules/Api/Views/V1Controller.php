@@ -36,6 +36,8 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'include/pmieducar/clsPmieducarMatriculaTurma.inc.php';
 require_once 'Avaliacao/Service/Boletim.php';
 require_once 'lib/Portabilis/Array/Utils.php';
+require_once 'Portabilis/Model/Report/TipoBoletim.php';
+require_once "Reports/Reports/BoletimReport.php";
 
 class V1Controller extends ApiCoreController
 {
@@ -58,7 +60,25 @@ class V1Controller extends ApiCoreController
 
   protected function canAcceptRequest() {
     return parent::canAcceptRequest() &&
-           $this->validatesPresenceOf(array('aluno_id', 'escola_id'));
+           $this->validatesPresenceOf('escola_id') && 
+           $this->validatesExistenceOf('escola', $this->getRequest()->escola_id);
+  }
+
+
+  protected function canGetAluno() {
+    return $this->validatesPresenceOf('aluno_id');
+  }
+
+
+  protected function canGetOcorrenciasDisciplinares() {
+    return $this->validatesPresenceOf('aluno_id') &&
+           $this->validatesExistenceOf('aluno', $this->getRequest()->aluno_id);
+  }
+
+
+  protected function canGetRelatorioBoletim() {
+    return $this->validatesPresenceOf(array('matricula_id', 'escola_id')) &&
+           $this->validatesExistenceOf('matricula', $this->getRequest()->matricula_id);
   }
 
 
@@ -79,75 +99,24 @@ class V1Controller extends ApiCoreController
     return $service;
   }
 
-  
-  protected function reportBoletimTemplateForMatricula($id) {
-    $template = '';
 
-    $templates = array('bimestral'                     => 'portabilis_boletim',
-                       'trimestral'                    => 'portabilis_boletim_trimestral',
-                       'trimestral_conceitual'         => 'portabilis_boletim_primeiro_ano_trimestral',
-                       'semestral'                     => 'portabilis_boletim_semestral',
-                       'semestral_conceitual'          => 'portabilis_boletim_conceitual_semestral',
-                       'semestral_educacao_infantil'   => 'portabilis_boletim_educ_infantil_semestral',
-                       'parecer_descritivo_componente' => 'portabilis_boletim_parecer',
-                       'parecer_descritivo_geral'      => 'portabilis_boletim_parecer_geral');
-                        
-    $service = $this->serviceBoletimForMatricula($id);
+  protected function reportBoletimTemplateFor($tipo_boletim) {
+    $tiposBoletim = Portabilis_Model_Report_TipoBoletim;
 
-    if ($service != null) {
-      # FIXME perguntar service se nota é conceitual?
-      $notaConceitual                     = false;
-      $qtdEtapasModulo                    = $service->getOption('etapas');
+    $templates = array($tiposBoletim::BIMESTRAL                     => 'portabilis_boletim',
+                       $tiposBoletim::TRIMESTRAL                    => 'portabilis_boletim_trimestral',
+                       $tiposBoletim::TRIMESTRAL_CONCEITUAL         => 'portabilis_boletim_primeiro_ano_trimestral',
+                       $tiposBoletim::SEMESTRAL                     => 'portabilis_boletim_semestral',
+                       $tiposBoletim::SEMESTRAL_CONCEITUAL          => 'portabilis_boletim_conceitual_semestral',
+                       $tiposBoletim::SEMESTRAL_EDUCACAO_INFANTIL   => 'portabilis_boletim_educ_infantil_semestral',
+                       $tiposBoletim::PARECER_DESCRITIVO_COMPONENTE => 'portabilis_boletim_parecer',
+                       $tiposBoletim::PARECER_DESCRITIVO_GERAL      => 'portabilis_boletim_parecer_geral');
 
-      # FIXME veriificar se é educação infantil?
-      $educacaoInfantil                   = false;
-
-
-      // parecer
-
-      $flagParecerGeral          = array(RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL,                   
-                                     RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL);
-
-      $flagParecerComponente = array(RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE,
-                                     RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE);
-
-      $parecerAtual                = $service->getRegra()->get('parecerDescritivo');
-      $parecerDescritivoGeral      = in_array($parecerAtual, $flagParecerGeral);
-      $parecerDescritivoComponente = in_array($parecerAtual, $flagParecerComponente);
-
-
-      // decide qual templete usar
-
-      if ($parecerDescritivoGeral)
-        $template = 'parecer_descritivo_geral';
-
-      elseif ($parecerDescritivoComponente)
-        $template = 'parecer_descritivo_componente';
-
-      elseif ($qtdEtapasModulo > 5 && $educacaoInfantil)
-        $template = 'semestral_educacao_infantil';
-
-      elseif ($qtdEtapasModulo > 5 && $notaConceitual)
-        $template = 'semestral_conceitual';
-
-      elseif ($qtdEtapasModulo > 5)
-        $template = 'semestral';
-
-      elseif ($qtdEtapasModulo > 2 && $notaConceitual)
-        $template = 'trimestral_conceitual';
-
-      elseif ($qtdEtapasModulo > 2)
-        $template = 'trimestral';
-
-      else
-        $template = 'bimestral';
-
-      $template = $templates[$template];
-    }
+    $template = is_null($tipo_boletim) ? '' : $templates[$tipo_boletim];
 
     return $template;
   }
-
+    
   // load resources
 
   protected function loadNomeEscola() {
@@ -175,22 +144,39 @@ class V1Controller extends ApiCoreController
 
 
   protected function tryLoadMatriculaTurma($matricula) {
-    $sql = "select ref_cod_turma as turma_id from pmieducar.matricula_turma where ref_cod_matricula = $1 and matricula_turma.ativo = 1 limit 1";
+    $sql            = "select ref_cod_turma as turma_id, turma.tipo_boletim from pmieducar.matricula_turma, pmieducar.turma where ref_cod_turma = cod_turma and ref_cod_matricula = $1 and matricula_turma.ativo = 1 limit 1";
 
+    //var_dump($sql);
     $matriculaTurma = $this->fetchPreparedQuery($sql, $matricula['id'], false, 'first-row');
 
     if (is_array($matriculaTurma) and count($matriculaTurma) > 0) {
-      $attrs                                     = array('turma_id', 'nome_turma');
+      $attrs                                     = array('turma_id', 'tipo_boletim');
+
       $matriculaTurma                            = Portabilis_Array_Utils::filter($matriculaTurma, $attrs);
       $matriculaTurma['nome_turma']              = $this->loadNameFor('turma', $matriculaTurma['turma_id']);
-      $matriculaTurma['report_boletim_template'] = $this->reportBoletimTemplateForMatricula($matricula['id']);
+      $matriculaTurma['report_boletim_template'] = $this->reportBoletimTemplateFor($matriculaTurma['tipo_boletim']);
     }
 
     return $matriculaTurma;
   }
 
 
-  protected function loadMatriculas() {
+  // carrega dados matricula (instituicao_id, escola_id, curso_id, serie_id e (first) turma_id, ano) de uma matricula.
+  protected function loadDadosForMatricula($matriculaId){
+    $sql            = "select cod_matricula as id, matricula.ano, escola.ref_cod_instituicao as instituicao_id, matricula.ref_ref_cod_escola as escola_id, matricula.ref_cod_curso as curso_id, matricula.ref_ref_cod_serie as serie_id, matricula_turma.ref_cod_turma as turma_id from pmieducar.matricula_turma, pmieducar.matricula, pmieducar.escola where escola.cod_escola = matricula.ref_ref_cod_escola and ref_cod_matricula = cod_matricula and ref_cod_matricula = $1 and matricula.ativo = matricula_turma.ativo and matricula_turma.ativo = 1 order by matricula_turma.sequencial limit 1";
+
+    $params         = array($matriculaId);
+    $dadosMatricula = $this->fetchPreparedQuery($sql, $params, false, 'first-row');
+
+    // filtra apenas chaves abaixo, deixando de fora os indices.
+    $attrs          = array('id', 'ano', 'instituicao_id', 'escola_id', 'curso_id', 'serie_id', 'turma_id');
+    $dadosMatricula = Portabilis_Array_Utils::filter($dadosMatricula, $attrs);
+
+    return $dadosMatricula;
+  }
+
+
+  protected function loadMatriculasAluno() {
     #TODO mostrar o nome da situação da matricula
     $sql = "select cod_matricula as id, ano, ref_cod_instituicao as instituicao_id, ref_ref_cod_escola as escola_id, ref_cod_curso as curso_id, ref_ref_cod_serie as serie_id from pmieducar.matricula, pmieducar.escola where cod_escola = ref_ref_cod_escola and ref_cod_aluno = $1 and ref_ref_cod_escola = $2 and matricula.ativo = 1 order by ano desc, id";
 
@@ -219,11 +205,30 @@ class V1Controller extends ApiCoreController
   }
 
 
+  protected function loadTipoOcorrenciaDisciplinar($id) {
+    if (! isset($this->_tiposOcorrenciasDisciplinares))
+      $this->_tiposOcorrenciasDisciplinares = array();
+
+    if (! isset($this->_tiposOcorrenciasDisciplinares[$id])) {
+      $ocorrencia                                  = new clsPmieducarTipoOcorrenciaDisciplinar;
+      $ocorrencia->cod_tipo_ocorrencia_disciplinar = $id;
+      $ocorrencia                                  = $ocorrencia->detalhe();
+
+      $this->_tiposOcorrenciasDisciplinares[$id]   = utf8_encode($ocorrencia['nm_tipo']);
+    }
+
+    return $this->_tiposOcorrenciasDisciplinares[$id];
+  }
+
+
   protected function loadOcorrenciasDisciplinares() {
     $ocorrenciasAluno              = array();
-    $matriculas                    = $this->loadMatriculas();
+    $matriculas                    = $this->loadMatriculasAluno();
 
-    $attrsFilter                   = array('data_cadastro' => 'data_hora', 'observacao' => 'descricao');
+    $attrsFilter                   = array('ref_cod_tipo_ocorrencia_disciplinar' => 'tipo', 
+                                           'data_cadastro'                       => 'data_hora',
+                                           'observacao'                          => 'descricao');
+
     $ocorrenciasMatriculaInstance  = new clsPmieducarMatriculaOcorrenciaDisciplinar();
 
     foreach($matriculas as $matricula) {
@@ -237,12 +242,14 @@ class V1Controller extends ApiCoreController
                                                                     null, 
                                                                     null, 
                                                                     null, 
-                                                                    1);
+                                                                    1,
+                                                                    $visivel_pais = 1);
 
       if (is_array($ocorrenciasMatricula)) {
         $ocorrenciasMatricula = Portabilis_Array_Utils::filterSet($ocorrenciasMatricula, $attrsFilter);
 
         foreach($ocorrenciasMatricula as $ocorrenciaMatricula) {
+          $ocorrenciaMatricula['tipo']      = $this->loadTipoOcorrenciaDisciplinar($ocorrenciaMatricula['tipo']);
           $ocorrenciaMatricula['data_hora'] = date('d/m/Y H:i:s', strtotime($ocorrenciaMatricula['data_hora']));
           $ocorrenciaMatricula['descricao'] = utf8_encode($ocorrenciaMatricula['descricao']);
           $ocorrenciasAluno[]               = $ocorrenciaMatricula;
@@ -257,24 +264,55 @@ class V1Controller extends ApiCoreController
   // api responder
 
   protected function getAluno() {
-    $aluno = array('id'         => $this->getRequest()->aluno_id, 
+    if ($this->canGetAluno() && $this->validatesExistenceOf('aluno', $this->getRequest()->aluno_id, array('add_msg_on_error' => false))) {
+      return array('id'         => $this->getRequest()->aluno_id, 
                    'nome'       => $this->loadNomeAluno(), 
-                   'matriculas' => $this->loadMatriculas(true));
-
-    return $aluno;
+                   'matriculas' => $this->loadMatriculasAluno(true));
+    }
   }
 
 
   protected function getOcorrenciasDisciplinares() {
-    return $this->loadOcorrenciasDisciplinares();
+    if ($this->canGetOcorrenciasDisciplinares())
+      return $this->loadOcorrenciasDisciplinares();
+  }
+
+
+  protected function getRelatorioBoletim() {
+    if ($this->canGetRelatorioBoletim()) {
+      $dadosMatricula = $this->loadDadosForMatricula($this->getRequest()->matricula_id);
+
+      $boletimReport = new BoletimReport();
+      
+      $boletimReport->addArg('matricula',   (int)$dadosMatricula['id']);
+      $boletimReport->addArg('ano',         (int)$dadosMatricula['ano']);
+      $boletimReport->addArg('instituicao', (int)$dadosMatricula['instituicao_id']);
+      $boletimReport->addArg('escola',      (int)$dadosMatricula['escola_id']);
+      $boletimReport->addArg('curso',       (int)$dadosMatricula['curso_id']);
+      $boletimReport->addArg('serie',       (int)$dadosMatricula['serie_id']);
+      $boletimReport->addArg('turma',       (int)$dadosMatricula['turma_id']);
+
+
+      $encoding     = 'base64';
+
+      $dumpsOptions = array('options' => array('encoding' => $encoding));
+      $encoded      = $boletimReport->dumps($dumpsOptions);
+
+      return array('encoding' => $encoding, 'encoded' => $encoded);
+    }
   }
 
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'aluno'))
       $this->appendResponse('aluno', $this->getAluno());
+
     elseif ($this->isRequestFor('get', 'ocorrencias_disciplinares'))
       $this->appendResponse('ocorrencias_disciplinares', $this->getOcorrenciasDisciplinares());
+
+    elseif ($this->isRequestFor('get', 'relatorio_boletim'))
+      $this->appendResponse('report', $this->getRelatorioBoletim());    
+
     else
       $this->notImplementedOperationError();
   }

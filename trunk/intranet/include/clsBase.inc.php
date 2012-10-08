@@ -144,6 +144,8 @@ class clsBase extends clsConfig
       $saida = str_replace("<!-- #&SCRIPT_HEADER&# -->", "", $saida);
     }
 
+    $saida = str_replace( "#&GOOGLE_ANALYTICS_DOMAIN_NAME&#", $_SERVER['HTTP_HOST'], $saida);
+
     return $saida;
   }
 
