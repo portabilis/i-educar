@@ -7,30 +7,33 @@
 		<meta http-equiv="Pragma" content="no-cache" />
 		<meta http-equiv="Expires" content="-1" />
 
-		<script language="JavaScript" type="text/javascript">
-			function loginpage_onload()
-			{
-				loginObj = document.getElementById( "login" );
-				if( loginObj.value == "" )
-				{
-					loginObj.focus();
-				}
-			}
-		</script>
-
     <link rel=stylesheet type='text/css' href='styles/reset.css?rand=1' />
     <link rel=stylesheet type='text/css' href='styles/portabilis.css?rand=1' />
     <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=1' />
+
+  <script type='text/javascript' src='scripts/jquery/jquery.js'></script>
+
     <style rel=stylesheet type='text/css'>
-#flash-container, #menu, #corpo, #cabecalho #ccorpo, #rodape {
-    width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-}
+      #flash-container, #menu, #corpo, #cabecalho #ccorpo, #rodape {
+        width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+      }
     </style>
 
-
   <script type="text/javascript">
+    var $j = jQuery.noConflict();
+
+    function loginpage_onload() {
+      $j('#login').focus();
+
+      var domainName = window.location.hostname;
+
+      if (domainName.indexOf('treinamento') < 0)
+        $j('.only-for-clients').fadeIn('slow');
+    }
+
+    // set up google analytics
     var domainName = "#&GOOGLE_ANALYTICS_DOMAIN_NAME&#";
 
     // track only production requests.
@@ -53,13 +56,21 @@
 
 		<div id="corpo">
 
-
   <div id="flash-container">
     <!--[if lt IE 7]>
     <p style="min-height: 32px;" class="flash update-browser"><strong>Seu navegador est&aacute desatualizado.</strong> Para melhor navega&ccedil;&atildeo  no sistema, por favor, atualize seu navegador.<a href="http://br.mozdev.org/download/" target="_blank"><img style="margin-top:4px;" src="http://www.mozilla.org/contribute/buttons/110x32bubble_r_pt.png" alt="Firefox" width="110" height="32" style="border-style:none;" title="Mozilla Firefox" /></a></p>
     <![endif]-->
 
-    <p style="min-height: 0px;" class="flash box shadow"><strong>Novo!</strong> acompanhe as &uacute;ltimas novidades do i-Educar em <a href="http://ieducar.com.br/wiki" class="decorated texto-normal">ieducar.com.br/wiki</a></p>
+    <!--p style="min-height: 0px;" class="flash box shadow"><strong>Novo!</strong> acompanhe as &uacute;ltimas novidades do i-Educar em <a href="http://ieducar.com.br/wiki" class="decorated texto-normal">ieducar.com.br/wiki</a></p-->
+
+    <p style="min-height: 0px;" class="info box shadow only-for-clients hidden">
+
+      <strong>Novidade!</strong> <span class="decorated">Agora pais e alunos podem imprimir o boletim escolar de casa via internet!</span>
+
+      <br /><br />Al&eacute;m do boletim escolar os pais podem visualizar ocorr&ecirc;ncias disciplinares dos filhos, e em breve ser&aacute; poss&iacute;vel consultar o acervo das bibliotecas escolares, consultar lista de materiais escolares, pr&eacute;-reservar matriculas e enviar recados para os pais / alunos.
+
+      <br /><br /><strong>Ficou interessado?</strong> Entre em contato para saber como habilitar este servi&ccedil;o na sua escola: (48) 3055-3001.
+    </p>
 
     <!--p style="min-height: 0px;" class="flash error"><strong>Importante, aviso de manuten&ccedil;&atilde;o:</strong> No dia 28/02/2012 (ter&ccedil;a feira) a partir das 18hs os sistemas poder&atilde;o estar inst&aacute;veis ou indispon&iacute;veis, devido melhorias na infraestrutura.</p-->
 
@@ -112,7 +123,7 @@
           <p class="title">Not&iacute;cias</p>
           <ul class="unstyled">
             <li><a class="decorated" href="http://www.estadao.com.br/noticias/impresso,fabrica-em-ceu-faz-bicicletas-de-bambu-para-alunos-,901184,0.htm">F&aacute;brica em CEU faz bicicletas de bambu para alunos</a></li>
-          </ul>          
+          </ul>
         </div>
 
         <div id="service-info">
@@ -125,7 +136,11 @@
         </div>
 
 		  <p id="rodape" class="texto-normal">
-      Portabilis Tecnologia - suporte@portabilis.com.br - <a target="_blank" class="decorated" href="http://www.teamviewer.com/pt/download/index.aspx">suporte remoto</a>
+        Portabilis Tecnologia - suporte@portabilis.com.br -
+
+        <a target="_blank" class="decorated" href="http://www.teamviewer.com/pt/download/index.aspx">suporte remoto</a> -
+
+        <a href="http://ieducar.com.br/wiki" class="decorated">ajuda</a>
 		  </p>
     </div>
   </body>

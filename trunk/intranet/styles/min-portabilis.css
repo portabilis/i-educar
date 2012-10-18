@@ -2,7 +2,7 @@ ul.autocomplete {
   background-color: whiteSmoke;
   color: #3C3C3D;
   cursor: pointer;
-  list-style-type: none; 
+  list-style-type: none;
   margin: 0px;
   margin-left: 2px;
   margin-bottom: 10px;
@@ -40,7 +40,7 @@ ul.autocomplete li {
 }
 
 ul.autocomplete li:hover {
-	background: #ECECEC; 
+	background: #ECECEC;
 	color: #3C3C3D;
 	text-shadow: none;
 	text-decoration: none;
@@ -54,7 +54,7 @@ table.styled {
   border:           thin solid #e9e9e9;
   border-collapse:  collapse;
   margin-top: 5px;
-  
+
   font-family: arial, verdana, lucida, helvetica, sans-serif;
   font-size: 11px;
 }
@@ -94,7 +94,7 @@ table.styled th {
 }
 
 .texto-normal, .texto-normal a, a.texto-normal {
-	font-weight: normal;	
+	font-weight: normal;
 }
 
 table.nocellcolor th, .nocellcolor {
@@ -176,6 +176,12 @@ div#error div#detail {
   background-color: #feffce !important;
 }
 
+.info {
+  color: #3A87AD;
+  background-color: #D9EDF7;
+  border-color: #BCE8F1;
+}
+
 .error {
   color: #ff4e4e !important;
   border: 1px solid #ffe5e5 !important;
@@ -187,7 +193,7 @@ div#error div#detail {
 }
 
 .light {
-  font-weight: normal;  
+  font-weight: normal;
 }
 
 .small {
