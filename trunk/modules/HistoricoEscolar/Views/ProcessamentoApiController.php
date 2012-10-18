@@ -471,9 +471,11 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
   protected function getPercentualFrequencia(){
     if($this->getRequest()->percentual_frequencia == 'buscar-boletim')
-      return round($this->getService()->getSituacaoFaltas()->porcentagemPresenca, 2);
+      $percentual = round($this->getService()->getSituacaoFaltas()->porcentagemPresenca, 2);
     else
-      return $this->getRequest()->percentual_frequencia;
+      $percentual = $this->getRequest()->percentual_frequencia;
+
+    return str_replace(',', '.', $percentual);
   }
 
 
@@ -589,7 +591,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
   protected function _createHistoricoDisciplinas($fields){
     $historicoDisciplina = new clsPmieducarHistoricoDisciplinas(
-                              $fields['sequencial'], 
+                              $fields['sequencial'],
                               $fields['alunoId'],
                               $fields['historicoSequencial'],
                               $fields['nome'],
@@ -633,7 +635,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
           $nota = sprintf("%.1f", $nota);
 
         $this->_createHistoricoDisciplinas(array(
-          "sequencial" => $sequencial, 
+          "sequencial" => $sequencial,
           "alunoId" => $alunoId,
           "historicoSequencial" => $historicoSequencial,
           "nome" => $nome,
@@ -647,7 +649,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
 
         $this->_createHistoricoDisciplinas(array(
-          "sequencial" => $sequencial, 
+          "sequencial" => $sequencial,
           "alunoId" => $alunoId,
           "historicoSequencial" => $historicoSequencial,
           "nome" => utf8_decode($disciplina['nome']),
@@ -689,7 +691,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
     $sql = "select ref_ref_cod_serie as serie_id, ref_cod_curso as curso_id from pmieducar.matricula where cod_matricula = $matriculaId";
     $idsSerieCurso = $this->db->select($sql);
-    $idsSerieCurso = $idsSerieCurso[0];  
+    $idsSerieCurso = $idsSerieCurso[0];
 
     $matriculas = array();
 
@@ -774,7 +776,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
   protected function getSituacaoHistorico($alunoId, $ano, $matriculaId, $reload = false){
     if ($this->existsHistorico($alunoId, $ano, $matriculaId, 1, $reload))
         $situacao = 'Processado';
-    else 
+    else
         $situacao = 'Sem histórico';
 
     return utf8_encode($situacao);
@@ -785,10 +787,10 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     $sql = "select sequencial from pmieducar.historico_escolar where ref_cod_aluno = $alunoId and ano = $ano and ref_cod_instituicao = {$this->getRequest()->instituicao_id} and ref_cod_matricula = $matriculaId and ativo = 1";
 
     $sequencial = $this->db->selectField($sql);
-    
+
     if (is_numeric($sequencial))
         $link = "/intranet/educar_historico_escolar_det.php?ref_cod_aluno=$alunoId&sequencial=$sequencial";
-    else 
+    else
         $link = '';
 
     return $link;
@@ -800,7 +802,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
     if ($this->canGetMatriculas()){
 
-      
+
       $alunos = new clsPmieducarMatriculaTurma();
       $alunos->setOrderby('ref_cod_curso, ref_ref_cod_serie, ref_cod_turma, nome');
 
@@ -836,7 +838,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         NULL,
         NULL
       );
-      
+
 
       if (! is_array($alunos))
         $alunos = array();
@@ -874,8 +876,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
   protected function getObservacaoPadraoSerie(){
     if($this->validatesPresenceOfSerieId(false, false)){
       $sql = "select coalesce(observacao_historico, '') as observacao_historico from pmieducar.serie where cod_serie = {$this->getRequest()->serie_id}";
-      $observacao = $this->db->selectField($sql);      
-    }    
+      $observacao = $this->db->selectField($sql);
+    }
     else
       $observacao = '';
 
@@ -886,7 +888,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
   protected function saveService()
   {
     try {
-      $this->getService()->save();   
+      $this->getService()->save();
     }
     catch (CoreExt_Service_Exception $e){
       //excecoes ignoradas :( servico lanca excecoes de alertas, que não são exatamente erros.
@@ -945,7 +947,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
   protected function notImplementedError()
   {
-    $this->appendMsg("Operação '{$this->getRequest()->oper}' inválida para o att '{$this->getRequest()->att}'");    
+    $this->appendMsg("Operação '{$this->getRequest()->oper}' inválida para o att '{$this->getRequest()->att}'");
   }
 
 
@@ -979,7 +981,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             $this->postProcessamento();
           }
           else
-            $this->notImplementedError();  
+            $this->notImplementedError();
         }
         elseif ($this->getRequest()->oper == 'delete')
         {
