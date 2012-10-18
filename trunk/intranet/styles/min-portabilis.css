@@ -105,33 +105,6 @@ table.cellcolor th, table tr.cellcolor th, .cellcolor, tr.even {
   background-color: #E4E9ED;
 }
 
-select, input, textarea {
-  border: 1px solid #CACACA;
-}
-
-select, input, textarea{
-
-  -moz-border-radius-bottomleft: 2px;
-  border-bottom-left-radius: 2px;
-  -webkit-border-bottom-left-radius: 2px;
-
-  -moz-border-radius-topright: 2px;
-  border-top-right-radius: 2px;
-  -webkit-border-top-right-radius: 2px;
-
-  -moz-border-radius-bottomright: 2px;
-  border-bottom-right-radius: 2px;
-  -webkit-border-bottom-right-radius: 2px;
-
-  -moz-border-radius-topleft: 2px;
-  border-top-left-radius: 2px;
-  -webkit-border-top-right-radius: 2px;
-}
-
-select, input, textarea {
-  padding: 2px;
-}
-
 table.strong th , tr.strong th, tr.strong td{
   background-color: #A1B3BD;
 }
@@ -200,12 +173,42 @@ div#error div#detail {
   font-size: 90%;
 }
 
-#login-form a {
-  margin-left: 5px;
-}
 #recaptcha_widget_div a {
   margin-left: 0;
 }
+
 .spacer {
   padding: 2px;
+}
+
+.clear {
+  clear: both;
+}
+
+/* form */
+
+form input[type='submit'],
+form input[type='button'],
+.bar-buttons .button {
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+}
+
+input {
+  padding: 2px;
+}
+
+form input[type='submit'], form input[type='button'], a.button {
+  padding: 4px 14px;
+}
+
+form input[type='submit'], form input[type='button'] {
+  font-weight: bold;
+  font-style: normal;
+  cursor: pointer;
+}
+
+form select, input[type="text"], input[type="password"], textarea {
+  padding: 4px 6px;
 }

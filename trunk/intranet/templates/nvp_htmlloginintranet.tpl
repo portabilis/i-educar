@@ -7,19 +7,12 @@
 		<meta http-equiv="Pragma" content="no-cache" />
 		<meta http-equiv="Expires" content="-1" />
 
-    <link rel=stylesheet type='text/css' href='styles/reset.css?rand=1' />
-    <link rel=stylesheet type='text/css' href='styles/portabilis.css?rand=1' />
-    <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=1' />
+    <link rel=stylesheet type='text/css' href='styles/reset.css?rand=2' />
+    <link rel=stylesheet type='text/css' href='styles/portabilis.css?rand=2' />
+    <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=2' />
+    <link rel=stylesheet type='text/css' href='styles/login.css?rand=2' />
 
   <script type='text/javascript' src='scripts/jquery/jquery.js'></script>
-
-    <style rel=stylesheet type='text/css'>
-      #flash-container, #menu, #corpo, #cabecalho #ccorpo, #rodape {
-        width: 800px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-    </style>
 
   <script type="text/javascript">
     var $j = jQuery.noConflict();
@@ -30,7 +23,9 @@
       var domainName = window.location.hostname;
 
       if (domainName.indexOf('treinamento') < 0)
-        $j('.only-for-clients').fadeIn('slow');
+        $j('.only-for-clients').show();
+
+      $j('.fade-in').fadeIn('slow');
     }
 
     // set up google analytics
@@ -52,96 +47,88 @@
   </script>
 
 	</head>
-	<body onload="loginpage_onload();">
+	<body onload="loginpage_onload();" class="hidden fade-in">
+    <div id="flash-container">
+      <!--[if lt IE 7]>
+      <p style="min-height: 32px;" class="flash update-browser"><strong>Seu navegador est&aacute desatualizado.</strong> Para melhor navega&ccedil;&atildeo  no sistema, por favor, atualize seu navegador.<a href="http://br.mozdev.org/download/" target="_blank"><img style="margin-top:4px;" src="http://www.mozilla.org/contribute/buttons/110x32bubble_r_pt.png" alt="Firefox" width="110" height="32" style="border-style:none;" title="Mozilla Firefox" /></a></p>
+      <![endif]-->
 
-		<div id="corpo">
+      <p style="min-height: 0px;" class="info box shadow only-for-clients hidden">
+        <strong>Novidade!</strong> <span class="decorated">Agora pais e alunos podem imprimir o boletim escolar de casa via internet!</span>
 
-  <div id="flash-container">
-    <!--[if lt IE 7]>
-    <p style="min-height: 32px;" class="flash update-browser"><strong>Seu navegador est&aacute desatualizado.</strong> Para melhor navega&ccedil;&atildeo  no sistema, por favor, atualize seu navegador.<a href="http://br.mozdev.org/download/" target="_blank"><img style="margin-top:4px;" src="http://www.mozilla.org/contribute/buttons/110x32bubble_r_pt.png" alt="Firefox" width="110" height="32" style="border-style:none;" title="Mozilla Firefox" /></a></p>
-    <![endif]-->
+        <br /><br />Al&eacute;m do boletim escolar os pais podem visualizar ocorr&ecirc;ncias disciplinares dos filhos, e em breve ser&aacute; poss&iacute;vel consultar o acervo das bibliotecas escolares, consultar lista de materiais escolares, pr&eacute;-reservar matriculas e enviar recados para os pais / alunos.
 
-    <!--p style="min-height: 0px;" class="flash box shadow"><strong>Novo!</strong> acompanhe as &uacute;ltimas novidades do i-Educar em <a href="http://ieducar.com.br/wiki" class="decorated texto-normal">ieducar.com.br/wiki</a></p-->
+        <br /><br /><strong>Ficou interessado?</strong> Entre em contato para saber como habilitar este servi&ccedil;o na sua escola: (48) 3055-3001.
+      </p>
 
-    <p style="min-height: 0px;" class="info box shadow only-for-clients hidden">
+      <!--p style="min-height: 0px;" class="flash error"><strong>Importante, aviso de manuten&ccedil;&atilde;o:</strong> No dia 28/02/2012 (ter&ccedil;a feira) a partir das 18hs os sistemas poder&atilde;o estar inst&aacute;veis ou indispon&iacute;veis, devido melhorias na infraestrutura.</p-->
 
-      <strong>Novidade!</strong> <span class="decorated">Agora pais e alunos podem imprimir o boletim escolar de casa via internet!</span>
+      <!--p style="min-height: 0px;" class="flash error"><strong>Importante, aviso de manuten&ccedil;&atilde;o:</strong> durante os dias 28 e 29 de abril (s&aacute;bado e domingo) os sistemas poder&atilde;o estar inst&aacute;veis ou indispon&iacute;veis, devido melhorias na infraestrutura.</p-->
 
-      <br /><br />Al&eacute;m do boletim escolar os pais podem visualizar ocorr&ecirc;ncias disciplinares dos filhos, e em breve ser&aacute; poss&iacute;vel consultar o acervo das bibliotecas escolares, consultar lista de materiais escolares, pr&eacute;-reservar matriculas e enviar recados para os pais / alunos.
+      <!--p style="min-height: 0px;" class="flash error"><strong>Aviso importante:</strong> no momento nosso suporte via telefone esta enfrentando dificuldades, devido um incidente na sede de nossa empresa, o suporte via e-mail funciona normalizado.</p-->
 
-      <br /><br /><strong>Ficou interessado?</strong> Entre em contato para saber como habilitar este servi&ccedil;o na sua escola: (48) 3055-3001.
-    </p>
+      <!-- #&ERROLOGIN&# -->
+    </div>
 
-    <!--p style="min-height: 0px;" class="flash error"><strong>Importante, aviso de manuten&ccedil;&atilde;o:</strong> No dia 28/02/2012 (ter&ccedil;a feira) a partir das 18hs os sistemas poder&atilde;o estar inst&aacute;veis ou indispon&iacute;veis, devido melhorias na infraestrutura.</p-->
-
-    <!--p style="min-height: 0px;" class="flash error"><strong>Importante, aviso de manuten&ccedil;&atilde;o:</strong> durante os dias 28 e 29 de abril (s&aacute;bado e domingo) os sistemas poder&atilde;o estar inst&aacute;veis ou indispon&iacute;veis, devido melhorias na infraestrutura.</p-->
-
-    <!--p style="min-height: 0px;" class="flash error"><strong>Aviso importante:</strong> no momento nosso suporte via telefone esta enfrentando dificuldades, devido um incidente na sede de nossa empresa, o suporte via e-mail funciona normalizado.</p-->
-
-    <!-- #&ERROLOGIN&# -->
-
-  </div>
+    <div id="corpo">
       <div id="login-form" class="box shadow">
         <h2>Entrar</h2>
         <p class="explication"></p>
 
-		    <form action="" method="post">
+        <form action="" method="post">
         <table>
           <tbody><tr>
-			      <td>
+    		    <td>
               <label class="" for="login">Matr&iacute;cula:</label>
-				    </td>
-				    <td>
               <input type="text" name="login" id="login"></td>
-			    </tr>
+    	    </tr>
+
           <tr>
-				    <td>
+    		    <td>
               <label class="" for="senha">Senha:</label>
-				    </td>
-				    <td>
               <input type="password" name="senha" id="senha">
-              <a class="light block small" href="/module/Usuario/RedefinirSenha">Esqueceu sua senha?</a>
             </td>
           </tr>
           <tr>
-            <td class="spacer"></td>
             <td><!-- #&RECAPTCHA&# --></td>
           </tr>
           <tr>
-            <td></td>
-				    <td>
+    		    <td>
               <input type="submit" class="submit" src="imagens/nvp_bot_entra_webmail.jpg" value="Entrar">
             </td>
           </tr>
+          <tr>
+            <td>
+              <p class="forget-password"><a class="light small" href="/module/Usuario/RedefinirSenha">Esqueceu sua senha?</a></p>
+            </td>
+          </tr>
         </tbody></table>
-		    </form>
+        </form>
+
+      </div> <!-- end login-form -->
+
+      <div id="service-info">
+        <p class="requiriments title">Requisitos</p>
+        <p class="explication">Para melhor uso do sistema, recomendamos:</p>
+        <ul class="requiriments unstyled">
+          <li>- Navegador <a target="_blank" class="decorated" href="http://br.mozdev.org/download/">Mozilla Firefox</a></li>
+          <li>- Leitor PDF (para relat&oacute;rios) <a target="_blank" class="decorated" href="http://get.adobe.com/br/reader/download/">Adobe Reader</a> ou <a target="_blank" class="decorated" href="http://www.foxitsoftware.com/downloads#reader">Foxit</a></li>
+        </ul>
       </div>
 
+      <div class="clear"></div>
 
-      <div id="extra" class="texto-normal">
-        <div id="notices">
-          <p class="title">Not&iacute;cias</p>
-          <ul class="unstyled">
-            <li><a class="decorated" href="http://www.estadao.com.br/noticias/impresso,fabrica-em-ceu-faz-bicicletas-de-bambu-para-alunos-,901184,0.htm">F&aacute;brica em CEU faz bicicletas de bambu para alunos</a></li>
-          </ul>
-        </div>
+    </div> <!-- end corpo -->
 
-        <div id="service-info">
-          <p class="requiriments title">Requisitos</p>
-          <p class="explication">Para melhor uso do sistema, recomendamos:</p>
-          <ul class="requiriments unstyled">
-            <li>- Navegador <a target="_blank" class="decorated" href="http://br.mozdev.org/download/">Mozilla Firefox</a></li>
-            <li>- Leitor PDF (para relat&oacute;rios) <a target="_blank" class="decorated" href="http://get.adobe.com/br/reader/download/">Adobe Reader</a> ou <a target="_blank" class="decorated" href="http://www.foxitsoftware.com/downloads#reader">Foxit</a></li>
-          </ul>
-        </div>
-
-		  <p id="rodape" class="texto-normal">
+    <div id="rodape" class="texto-normal">
+		  <p>
         Portabilis Tecnologia - suporte@portabilis.com.br -
 
         <a target="_blank" class="decorated" href="http://www.teamviewer.com/pt/download/index.aspx">suporte remoto</a> -
 
         <a href="http://ieducar.com.br/wiki" class="decorated">ajuda</a>
 		  </p>
-    </div>
+    </div> <!-- end rodape -->
+
   </body>
 </html>
