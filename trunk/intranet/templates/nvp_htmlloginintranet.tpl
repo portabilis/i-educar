@@ -7,10 +7,10 @@
 		<meta http-equiv="Pragma" content="no-cache" />
 		<meta http-equiv="Expires" content="-1" />
 
-    <link rel=stylesheet type='text/css' href='styles/reset.css?rand=2' />
-    <link rel=stylesheet type='text/css' href='styles/portabilis.css?rand=2' />
-    <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=2' />
-    <link rel=stylesheet type='text/css' href='styles/login.css?rand=2' />
+    <link rel=stylesheet type='text/css' href='styles/reset.css?rand=3' />
+    <link rel=stylesheet type='text/css' href='styles/portabilis.css?rand=3' />
+    <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=3' />
+    <link rel=stylesheet type='text/css' href='styles/login.css?rand=3' />
 
   <script type='text/javascript' src='scripts/jquery/jquery.js'></script>
 

@@ -10,21 +10,9 @@ ul.autocomplete {
   border: 1px solid #CACACA;
   border-top: 0px;
 
-  -moz-border-radius-bottomleft: 2px;
-  border-bottom-left-radius: 2px;
-  -webkit-border-bottom-left-radius: 2px;
-
-  -moz-border-radius-topright: 2px;
-  border-top-right-radius: 2px;
-  -webkit-border-top-right-radius: 2px;
-
-  -moz-border-radius-bottomright: 2px;
-  border-bottom-right-radius: 2px;
-  -webkit-border-bottom-right-radius: 2px;
-
-  -moz-border-radius-topleft: 2px;
-  border-top-left-radius: 2px;
-  -webkit-border-top-right-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 3px;
+  -webkit-border-radius: 2px;
 }
 
 .decorated {
@@ -187,8 +175,12 @@ div#error div#detail {
 
 /* form */
 
-form input[type='submit'],
-form input[type='button'],
+select, input, textarea {
+  border: 1px solid #CACACA;
+}
+
+input[type='submit'],
+input[type='button'],
 .bar-buttons .button {
   -moz-border-radius: 3px;
   border-radius: 3px;
@@ -199,16 +191,16 @@ input {
   padding: 2px;
 }
 
-form input[type='submit'], form input[type='button'], a.button {
+input[type='submit'], input[type='button'], a.button {
   padding: 4px 14px;
 }
 
-form input[type='submit'], form input[type='button'] {
+input[type='submit'], input[type='button'] {
   font-weight: bold;
   font-style: normal;
   cursor: pointer;
 }
 
-form select, input[type="text"], input[type="password"], textarea {
+select, input[type="text"], input[type="password"], textarea {
   padding: 4px 6px;
 }
