@@ -134,12 +134,20 @@ class Portabilis_Array_Utils {
 
 
   /* ordena array por uma chave usando função php usort, ex:
-      $ordenedResources = Portabilis_Array_Utils::sortByKey($resources, 'resource_att_name');
-  */  
+      $ordenedResources = Portabilis_Array_Utils::sortByKey($resources, 'resource_att_name'); */
   public static function sortByKey($key, $array) {
     usort($array, function ($a, $b) use ($key) {
       return Portabilis_Array_Utils::_keySorter($key, $a, $b);
     });
+
+    return $array;
+  }
+
+  /* trim values for a given array */
+  public static function trim($array) {
+
+    foreach ($array as $i => $v)
+      $array[$i] = trim($v);
 
     return $array;
   }

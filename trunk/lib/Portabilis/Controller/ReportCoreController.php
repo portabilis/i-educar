@@ -75,7 +75,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
 
   public function Gerar() {
-    if (! count($_POST)) {
+    if (count($_POST) < 1) {
       $this->appendFixups();
       $this->renderForm();
     }
@@ -110,18 +110,16 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
   function renderReport() {
     try {
-      $this->headers();
       echo $this->report->dumps();
+      $this->headers();
     }
     catch (Exception $e) {
-
-      if ($this->reportFactorySettings['show_exceptions_msg'])
-        $details = "<div id='detail'><p><strong>Detalhes:</strong> {$e->getMessage()}</p></div>";
+      if ($this->report->reportFactory()->settings['show_exceptions_msg'])
+        $details = 'Detalhes: ' . $e->getMessage();
       else
-        $details = "<div id='detail'><p>Visualização dos detalhes sobre o erro desativada.</p></div>";
+        $details = "Visualização dos detalhes sobre o erro desativada.";
 
-      echo "<html><head><link rel='stylesheet' type='text/css' href='styles/reset.css'><link rel='stylesheet' type='text/css' href='styles/portabilis.css'><link rel='stylesheet' type='text/css' href='styles/min-portabilis.css'></head>";
-      echo "<body><div id='error'><h1>Relatório não emitido</h1><p class='explication'>Desculpe-nos ocorreu algum erro na geração do relatório, <strong>por favor tente novamente mais tarde</strong></p><ul class='unstyled'><li><a href='/intranet/index.php'>- Voltar para o sistema</a></li><li>- Tentou mais de uma vez e o erro persiste? Por favor, <a target='_blank' href='http://www.portabilis.com.br/site/suporte'>solicite suporte</a> ou envie um email para suporte@portabilis.com.br</li></ul>$details</div></body></html>";
+      $this->renderError($details);
     }
   }  
 
@@ -161,7 +159,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
   function validatesPresenseOfRequiredArgsInReport() {
     foreach($this->report->requiredArgs as $requiredArg) {
 
-      if (! isset($this->report->args[$requiredArg]) || ! trim($this->report->args[$requiredArg]))
+      if (! isset($this->report->args[$requiredArg]) || trim($this->report->args[$requiredArg]) == '')
         $this->addValidationError('Informe um valor no campo "' . $requiredArg . '"');
     }
   }
@@ -175,6 +173,16 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
     $msg = "<script type='text/javascript'>alert('$msg'); close();</script> ";
     print utf8_decode($msg);
   }
+
+
+  function renderError($details = "") {
+    $msg = 'Ocorreu um erro ao emitir o relatorio.\n\n' . $details;
+    $msg = "<script type='text/javascript'>alert('$msg'); close();</script> ";
+
+    //var_dump($msg);
+
+    print utf8_decode($msg);
+  }  
 
 
   /* permite adicionar filtros ao formulário de emissão do relatório, sem precisar

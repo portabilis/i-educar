@@ -16,13 +16,13 @@ body, table td{
 
 a {
 	font-weight: bold;
-	color: #054B80;	
+	color: #054B80;
 	text-decoration: none;
 }
 
 a.logout {
 	color: #ff8f00;
-}	
+}
 
 a.cadastro {
 	color: #42e112;
@@ -34,7 +34,7 @@ a:hover {
 
 h1, h2, h3, h4, h5, h6, table caption, #service-info p.service, #extra .title {
 	color: #184e7f;
-	font-weight: bold;			
+	font-weight: bold;
 }
 
 h1 {
@@ -51,11 +51,10 @@ h3 {
 
 #corpo {
   	margin-top: 10px;
-  	padding: 10px;
 }
 
 .explication {
-	font-style: italic;	
+	font-style: italic;
 }
 
 body {
@@ -80,11 +79,11 @@ body {
 #flash-container, #menu, #corpo, /*#cabecalho #ccorpo,*/ #rodape {
     width: 800px;
     margin-left: auto;
-    margin-right: auto;    
+    margin-right: auto;
 }
 
 #flash-container {
-    margin-top: 10px;    
+    margin-top: 10px;
     margin-bottom: 10px;
 }
 
@@ -127,11 +126,11 @@ body {
 
 #cabecalho #ccorpo #logo {
 	font-size: 175%;
-	font-weight: bold;	
+	font-weight: bold;
 }
 
 #cabecalho #ccorpo a#logo, #cabecalho #ccorpo #status a#user {
-	font-weight: bold;	
+	font-weight: bold;
 }
 
 #cabecalho #ccorpo a{
@@ -155,59 +154,8 @@ form {
     margin-bottom: 10px;
 }
 
-#rodape {
-	margin-top: 10px;
-	padding: 10px;
-  border-top: 1px solid #e9e9e9;
-  padding-left: 0px;
-  padding-right: 0px;
-	text-align: center;
-}
-
-#rodape .contact {
-	font-weight: bold;
-}
-
 input, textarea, .bar-buttons .button {
     border: 1px solid #CACACA;
-}
-
-input, textarea{
-
-  -moz-border-radius-bottomleft: 2px;
-  border-bottom-left-radius: 2px;
-  -webkit-border-bottom-left-radius: 2px;
-
-  -moz-border-radius-topright: 2px;
-  border-top-right-radius: 2px;
-  -webkit-border-top-right-radius: 2px;
-
-  -moz-border-radius-bottomright: 2px;
-  border-bottom-right-radius: 2px;
-  -webkit-border-bottom-right-radius: 2px;
-
-  -moz-border-radius-topleft: 2px;
-  border-top-left-radius: 2px;
-  -webkit-border-top-right-radius: 2px;
-}
-
-input[type='submit'], .bar-buttons .button {
-
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
-  -webkit-border-bottom-left-radius: 4px;
-
-  -moz-border-radius-topright: 4px;
-  border-top-right-radius: 4px;
-  -webkit-border-top-right-radius: 4px;
-
-  -moz-border-radius-bottomright: 4px;
-  border-bottom-right-radius: 4px;
-  -webkit-border-bottom-right-radius: 4px;
-
-  -moz-border-radius-topleft: 4px;
-  border-top-left-radius: 4px;
-  -webkit-border-top-right-radius: 4px;
 }
 
 a.button, input, textarea {
@@ -215,13 +163,13 @@ a.button, input, textarea {
 }
 
 input[type="submit"], input[type="button"], .bar-buttons .button  {
-  background-color: #f5f5f5;  
+  background-color: #f5f5f5;
   color: #3C3C3D;
   cursor: pointer;
 }
 
 input.submit, input.button  {
-  background-color: #f5f5f5;  
+  background-color: #f5f5f5;
   color: #3C3C3D;
   cursor: pointer;
 }
@@ -268,7 +216,7 @@ input:hover, textarea:hover {
 
 input[type="submit"]:hover, input[type="button"]:hover, .bar-buttons .button:hover {
 	border: 1px solid #CACACA;
-	background: #ECECEC; 
+	background: #ECECEC;
 	color: #3C3C3D;
 	text-shadow: none;
 	text-decoration: none;
@@ -276,7 +224,7 @@ input[type="submit"]:hover, input[type="button"]:hover, .bar-buttons .button:hov
 
 input.submit:hover, input.buton:hover  {
 	border: 1px solid #CACACA;
-	background: #ECECEC; 
+	background: #ECECEC;
 	color: #3C3C3D;
 	text-shadow: none;
 	text-decoration: none;
@@ -285,19 +233,6 @@ input.submit:hover, input.buton:hover  {
 input, textarea {
     margin-top:4px;
     margin-left:4px;
-}
-
-input#senha, input#login {
-  width: 180px;
-}
-
-#login-form {
-  background-color: #fff;
-  padding-top: 10px;
-}
-
-#login-form label {
-  float: right;
 }
 
 .shadow {
@@ -317,41 +252,4 @@ input#senha, input#login {
   -webkit-border-radius: 3px;
   padding: 0 10px 10px 10px;
   margin-bottom: 10px;
-}
-
-
-#extra {
-  margin-top: 40px;
-}
-
-#extra #notices {
-  width:400px;
-  float: left;
-}
-
-#service-info {
-  margin-left: 401px;
-}
-
-#extra .title, #service-info p.service, #service-info p.requiriments {
-  font-size: 125%;
-}
-
-#service-info ul.service-about {
-  margin-top: 10px;
-  margin-bottom: 20px;
-}
-
-ul.unstyled, ol.unstyled {
-  list-style: none;
-}
-
-#service-info ul.requiriments {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-#rodape {
-  clear: left;
-  margin-top: 40px;
 }

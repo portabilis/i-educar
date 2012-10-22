@@ -28,11 +28,10 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/Report/ReportFactoryRemote.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 
 /**
- * CoreExt_Session class.
+ * Portabilis_String_Utils class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -41,66 +40,41 @@ require_once 'lib/Portabilis/Array/Utils.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-
-class Portabilis_Report_ReportCore
-{
-
- function __construct() {
-    $this->requiredArgs = array();
-    $this->args         = array();
-
-    // set required args on construct, because ReportCoreController access it args before call dumps
-    $this->requiredArgs();
-  }
+class Portabilis_String_Utils {
 
   // wrapper for Portabilis_Array_Utils::merge
   protected static function mergeOptions($options, $defaultOptions) {
     return Portabilis_Array_Utils::merge($options, $defaultOptions);
   }
 
-  function addArg($name, $value) {
-    if (is_string($value))
-      $value = utf8_encode($value);
+  /* splits a string in a array, eg:
 
-    $this->args[$name] = $value;
-  }
+    $divisors = array('-', ' '); // or $divisors = '-';
+    $options = array('limit' => 2, 'trim' => true);
 
-  function addRequiredArg($name) {
-    $this->requiredArgs[] = $name;
-  }
+    Portabilis_String_Utils::split($divisors, '123 - Some value', $options);
+      => array([0] => '123', [1] => 'Some value');
+   */
+  public static function split($divisors, $string, $options = array()) {
+    $result         = array($string);
 
-  function validatesPresenseOfRequiredArgs() {
-    foreach($this->requiredArgs as $requiredArg) {
-
-      if (! isset($this->args[$requiredArg]) || trim($this->args[$requiredArg]) == '')
-        throw new Exception("The required arg '{$requiredArg}' wasn't set or is empty!");
-    }
-  }
-
-  function dumps($options = array()) {
-    $defaultOptions = array('report_factory' => null, 'options' => array());
+    $defaultOptions = array('limit' => -1, 'trim' => true);
     $options        = self::mergeOptions($options, $defaultOptions);
 
-    $this->validatesPresenseOfRequiredArgs();
+    if (! is_array($divisors))
+      $divisors = array($divisors);
 
-    $reportFactory = ! is_null($options['report_factory']) ? $options['report_factory'] : $this->reportFactory();
+    foreach ($divisors as $divisor) {
+      if (is_numeric(strpos($string, $divisor))) {
+        $result = split($divisor, $string, $options['limit']);
+        break;
+      }
+    }
 
-    return $reportFactory->dumps($this, $options['options']);
-  }
+    if ($options['trim'])
+      $result = Portabilis_Array_Utils::trim($result);
 
-  function reportFactory() {
-    return new Portabilis_Report_ReportFactoryRemote();
-  }
-
-  // methods that must be overridden
-
-  function templateName() {
-    throw new Exception("The method 'templateName' must be overridden!");
-  }
-
-  function requiredArgs() {
-    throw new Exception("The method 'requiredArgs' must be overridden!");
+    return $result;
   }
 }
-
 ?>
