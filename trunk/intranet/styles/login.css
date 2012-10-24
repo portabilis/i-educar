@@ -2,6 +2,10 @@ body {
   background-color: white;
 }
 
+#flash-container {
+  min-height: 41px;
+}
+
 #flash-container, #menu, #corpo, #rodape {
 
   /* login-form.widght + 42px */
