@@ -10,14 +10,9 @@ class PortabilisRelacaoHorasServidor extends Report
   function setForm()
   {
 
-    $get_escola = true;
-    $instituicao_obrigatorio = true;
-    $escola_obrigatorio = false;
-    $this->ano = $ano_atual = date("Y");
-    $this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true);
-
-    include("include/pmieducar/educar_campo_lista.php");
-    
+    $this->addFilterFor(array('ano', 'instituicao'));
+    $this->addFilterFor(array('escola'), array('required' => false));
+   
   }
 
   function onValidationSuccess()
