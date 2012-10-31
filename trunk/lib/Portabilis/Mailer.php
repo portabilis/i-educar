@@ -46,7 +46,9 @@
 */
 require_once 'Mail.php';
 
-class Mailer {
+class Portabilis_Mailer {
+
+  static $selfMailer;
 
   public function __construct() {
     /* Configurações podem ser alteradas em tempo de execução, ex:
@@ -74,5 +76,18 @@ class Mailer {
 
     return ! PEAR::isError($sendResult);
   }
+
+
+  static function mail($to, $subject, $message) {
+    if (! isset(self::$selfMailer))
+    self::$selfMailer = new Portabilis_Mailer();
+
+    return self::$selfMailer->sendMail($to, $subject, $message);
+  }
+}
+
+// deprecated Mailer class
+class Mailer extends Portabilis_Mailer {
 }
 ?>
+

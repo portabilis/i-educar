@@ -64,7 +64,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
     $this->acao_executa_submit           = false;
     $this->acao_enviar                   = 'printReport()';
 
-    // educar_campo_lista settings    
+    // educar_campo_lista settings
     $this->verificar_campos_obrigatorios = true;
     $this->add_onchange_events           = true;
     // include 'include/pmieducar/educar_campo_lista.php';
@@ -91,14 +91,14 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
       else
         $this->renderReport();
 
-    }    
+    }
   }
 
 
   function headers() {
     header('Content-type: application/pdf');
     //header("Content-Disposition: attachment; filename={$templateName}.pdf");
-    header("Content-Disposition: inline; filename={$templateName}.pdf");    
+    header("Content-Disposition: inline; filename={$templateName}.pdf");
   }
 
 
@@ -121,7 +121,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
       $this->renderError($details);
     }
-  }  
+  }
 
 
   // methods that must be overridden
@@ -182,7 +182,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
     //var_dump($msg);
 
     print utf8_decode($msg);
-  }  
+  }
 
 
   /* permite adicionar filtros ao formulário de emissão do relatório, sem precisar
@@ -219,5 +219,5 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
 EOT;
     $this->appendOutput($js);
-  }  
+  }
 }

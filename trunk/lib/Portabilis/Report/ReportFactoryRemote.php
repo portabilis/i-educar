@@ -29,6 +29,8 @@
  */
 
 require_once 'lib/Portabilis/Report/ReportFactory.php';
+
+set_include_path(get_include_path() . PATH_SEPARATOR . 'include/portabilis/libs');
 require_once 'include/portabilis/libs/XML/RPC2/Client.php';
 
 /**

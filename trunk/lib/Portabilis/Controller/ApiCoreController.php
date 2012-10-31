@@ -32,13 +32,16 @@
  * @version   $Id$
  */
 
+require_once 'include/clsBanco.inc.php';
+
 require_once 'Core/Controller/Page/EditController.php';
 require_once 'CoreExt/Exception.php';
+
 require_once 'lib/Portabilis/Messenger.php';
 require_once 'lib/Portabilis/Validator.php';
-require_once 'include/clsBanco.inc.php';
 require_once 'lib/Portabilis/DataMapper/Utils.php';
 require_once 'lib/Portabilis/Array/Utils.php';
+require_once 'lib/Portabilis/Utils/Database.php';
 
 class ApiCoreController extends Core_Controller_Page_EditController
 {
@@ -58,79 +61,23 @@ class ApiCoreController extends Core_Controller_Page_EditController
   }
 
 
-  // wrapper for Portabilis_Array_Utils::merge
-  protected static function mergeOptions($options, $defaultOptions) {
-    return Portabilis_Array_Utils::merge($options, $defaultOptions);
-  }
-
-
   protected function validatesUserIsLoggedIn(){
     return $this->validator->validatesPresenceOf($this->getSession()->id_pessoa, '', false, 'Usuário deve estar logado');
   }
 
 
-  protected function validatesPresenceOf($requiredParamNames) {
-    if (! is_array($requiredParamNames))
-      $requiredParamNames = array($requiredParamNames);
-
-      $valid = true;
-
-      foreach($requiredParamNames as $param) {
-        if (! $this->validator->validatesPresenceOf($this->getRequest()->$param, $param) and $valid) {
-          $valid = false;
-        }
-      }
-
-    return $valid;
-  }
-
-
-  protected function validatesExistenceOf($resourceName, $value, $options = array()) {
-    $defaultOptions = array('schema_name'      => 'pmieducar', 
-                            'field_name'       => "cod_{$resourceName}",
-                            'add_msg_on_error' => true);
-
-    $options        = $this->mergeOptions($options, $defaultOptions);
-
-    return $this->validator->validatesValueIsInBd($options['field_name'], 
-                                                  $value, 
-                                                  $options['schema_name'], 
-                                                  $resourceName, 
-                                                  $raiseExceptionOnFail = false,
-                                                  $addMsgOnError        = $options['add_msg_on_error']);
-  }
-
-
-  protected function validatesIsNumeric($expectedNumericParamNames) {
-    if (! is_array($expectedNumericParamNames))
-      $expectedNumericParamNames = array($expectedNumericParamNames);
-
-      $valid = true;
-
-      foreach($requiredParamNames as $param) {
-        if (! $this->validator->validatesValueIsNumeric($this->getRequest()->$param, $param) and $valid) {
-          $valid = false;
-        }
-      }
-
-    return $valid;
-  }
-
-
-  protected function canAcceptRequest()
-  {
+  protected function canAcceptRequest() {
     return $this->validatesUserIsLoggedIn() &&
            $this->validatesPresenceOf(array('oper', 'resource'));
   }
 
 
-  protected function notImplementedOperationError()
-  {
+  protected function notImplementedOperationError() {
     $this->messenger->append("Operação '{$this->getRequest()->oper}' não implementada para o recurso '{$this->getRequest()->resource}'");
   }
 
 
-  protected function appendResponse($name, $value = ''){
+  protected function appendResponse($name, $value = '') {
     if (is_array($name)) {
       foreach($name as $k => $v) {
         $this->response[$k] = $v;
@@ -218,45 +165,57 @@ class ApiCoreController extends Core_Controller_Page_EditController
   }
 
 
-  #TODO mover funcao para /lib/Portabilis/Util/Db.php
-  // wrapper para $this->db->execPreparedQuery($sql, $params)
-  protected function fetchPreparedQuery($sql, $params = array(), $hideExceptions = true, $returnOnly = '') {
-    try{
-      $result = array();
-      if ($this->db->execPreparedQuery($sql, $params) != false) {
+  // #TODO mover validadores para classe lib/Portabilis/Validator.php / adicionar wrapper para tais
 
-        while ($this->db->ProximoRegistro())
-          $result[] = $this->db->Tupla();
+  protected function validatesPresenceOf($requiredParamNames) {
+    if (! is_array($requiredParamNames))
+      $requiredParamNames = array($requiredParamNames);
 
-        if (in_array($returnOnly, array('first-line', 'first-row', 'first-record')) and isset($result[0]))
-          $result = $result[0];
-        elseif ($returnOnly == 'first-field' and isset($result[0]) and isset($result[0][0]))
-          $result = $result[0][0];
+      $valid = true;
+
+      foreach($requiredParamNames as $param) {
+        if (! $this->validator->validatesPresenceOf($this->getRequest()->$param, $param) and $valid) {
+          $valid = false;
+        }
       }
-    }
-    catch(Exception $e)
-    {
-      if (! $hideExceptions)
-        $this->messenger->append($e->getMessage());
-    }
-    return $result;
+
+    return $valid;
   }
 
 
-  /* wrapper para Portabilis_DataMapper_Utils::getDataMapperFor
-     ex: $resourceDataMapper = $this->getDataMapperFor('module_package', 'model_name');
-  
-      $columns = array('col_1', 'col_2');
-      $where   = array('col_3' => 'val_1', 'ativo' => '1');
-      $orderBy = array('col_4' => 'ASC');
+  protected function validatesExistenceOf($resourceName, $value, $options = array()) {
+    $defaultOptions = array('schema_name'      => 'pmieducar',
+                            'field_name'       => "cod_{$resourceName}",
+                            'add_msg_on_error' => true);
 
-     $resources = $resourceDataMapper->findAll($columns, $where, $orderBy, $addColumnIdIfNotSet = false);
-  */
-  protected function getDataMapperFor($packageName, $modelName){
-    return Portabilis_DataMapper_Utils::getDataMapperFor($packageName, $modelName);
+    $options        = $this->mergeOptions($options, $defaultOptions);
+
+    return $this->validator->validatesValueIsInBd($options['field_name'],
+                                                  $value,
+                                                  $options['schema_name'],
+                                                  $resourceName,
+                                                  $raiseExceptionOnFail = false,
+                                                  $addMsgOnError        = $options['add_msg_on_error']);
   }
 
 
+  protected function validatesIsNumeric($expectedNumericParamNames) {
+    if (! is_array($expectedNumericParamNames))
+      $expectedNumericParamNames = array($expectedNumericParamNames);
+
+      $valid = true;
+
+      foreach($requiredParamNames as $param) {
+        if (! $this->validator->validatesValueIsNumeric($this->getRequest()->$param, $param) and $valid) {
+          $valid = false;
+        }
+      }
+
+    return $valid;
+  }
+
+
+  // #TODO mover metodo para lib/Portabilis/String/Utils.php / adicionar wrapper para tal
   protected function safeString($str, $transform = true) {
     if ($transform)
       $str = ucwords(strtolower($str));
@@ -265,10 +224,33 @@ class ApiCoreController extends Core_Controller_Page_EditController
   }
 
 
+  // #TODO mover metodo para lib/Portabilis/Utils/Database.php / adicionar wrapper para tal
   protected function safeStringForDb($s) {
     if (mb_detect_encoding($s, 'utf-8, iso-8859-1') == 'UTF-8')
       return utf8_decode(addslashes($s));
     else
       return $s;
+  }
+
+
+  // wrappers for Portabilis_*Utils*
+
+
+  // #TODO nas classes filhas, migrar chamadas de fetchPreparedQuery para usar novo padrao com array de options
+  protected function fetchPreparedQuery($sql, $params = array(), $hideExceptions = true, $returnOnly = '') {
+    $options = array('params'      => $params,
+                     'show_errors' => ! $hideExceptions,
+                     'return_only' => $returnOnly,
+                     'messenger'   => $this->messenger);
+
+    return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
+  }
+
+  protected function getDataMapperFor($packageName, $modelName){
+    return Portabilis_DataMapper_Utils::getDataMapperFor($packageName, $modelName);
+  }
+
+  protected static function mergeOptions($options, $defaultOptions) {
+    return Portabilis_Array_Utils::merge($options, $defaultOptions);
   }
 }

@@ -40,11 +40,22 @@
  */
 class Portabilis_DataMapper_Utils {
 
+  /*
+    this method returns a data mapper loaded by module_package and model_name, eg:
+
+    $resourceDataMapper = $this->getDataMapperFor('module_package', 'model_name');
+    $columns            = array('col_1', 'col_2');
+    $where              = array('col_3' => 'val_1', 'ativo' => '1');
+    $orderBy            = array('col_4' => 'ASC');
+
+    $resources = $resourceDataMapper->findAll($columns, $where, $orderBy, $addColumnIdIfNotSet = false);
+
+  */
   public function getDataMapperFor($packageName, $modelName){
     $dataMapperClassName = ucfirst($packageName) . "_Model_" . ucfirst($modelName) . "DataMapper";
     $classPath           = str_replace('_', '/', $dataMapperClassName) . '.php';
 
-    # usado include_once para continuar execução script mesmo que o path inexista.
+    // don't raise any error if the file to be included not exists or it already included.
     include_once $classPath;
 
     if (! class_exists($dataMapperClassName))

@@ -23,7 +23,7 @@
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
- * @package   Avaliacao
+ * @package   Usuario
  * @subpackage  Modules
  * @since     Arquivo disponível desde a versão ?
  * @version   $Id$
