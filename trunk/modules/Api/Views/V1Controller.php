@@ -123,7 +123,7 @@ class V1Controller extends ApiCoreController
     $sql = "select nome from cadastro.pessoa, pmieducar.escola where idpes = ref_idpes and cod_escola = $1";
     $nome = $this->fetchPreparedQuery($sql, $this->getRequest()->escola_id, false, 'first-field');
 
-    return utf8_encode(strtoupper($nome));
+    return $this->safeString($nome);
   }
 
 
@@ -134,7 +134,7 @@ class V1Controller extends ApiCoreController
     $sql = "select nome from cadastro.pessoa, pmieducar.aluno where idpes = ref_idpes and cod_aluno = $1";
     $nome = $this->fetchPreparedQuery($sql, $alunoId, false, 'first-field');
 
-    return utf8_encode(ucwords(strtolower($nome)));
+    return $this->safeString($nome);
   }
 
 
@@ -142,7 +142,7 @@ class V1Controller extends ApiCoreController
     $sql = "select nm_{$resourceName} from pmieducar.{$resourceName} where cod_{$resourceName} = $1";
     $nome = $this->fetchPreparedQuery($sql, $id, false, 'first-field');
 
-    return utf8_encode(strtoupper($nome));
+    return $this->safeString($nome);
   }
 
 
@@ -179,8 +179,13 @@ class V1Controller extends ApiCoreController
 
 
   protected function loadMatriculasAluno() {
-    #TODO mostrar o nome da situação da matricula
-    $sql = "select cod_matricula as id, ano, ref_cod_instituicao as instituicao_id, ref_ref_cod_escola as escola_id, ref_cod_curso as curso_id, ref_ref_cod_serie as serie_id from pmieducar.matricula, pmieducar.escola where cod_escola = ref_ref_cod_escola and ref_cod_aluno = $1 and ref_ref_cod_escola = $2 and matricula.ativo = 1 order by ano desc, id";
+    // #TODO mostrar o nome da situação da matricula
+
+    // seleciona somente matriculas em andamento, aprovado, reprovado, em exame, aprovado apos exame e retido faltas
+    $sql = "select cod_matricula as id, ano, ref_cod_instituicao as instituicao_id, ref_ref_cod_escola as escola_id,
+           ref_cod_curso as curso_id, ref_ref_cod_serie as serie_id from pmieducar.matricula, pmieducar.escola where
+           cod_escola = ref_ref_cod_escola and ref_cod_aluno = $1 and ref_ref_cod_escola = $2 and matricula.ativo = 1 and
+           matricula.aprovado in (1, 2, 3, 7, 8, 9) order by ano desc, id";
 
     $params     = array($this->getRequest()->aluno_id, $this->getRequest()->escola_id);
     $matriculas = $this->fetchPreparedQuery($sql, $params, false);
@@ -193,6 +198,7 @@ class V1Controller extends ApiCoreController
         $matriculas[$key]['nome_curso']                = $this->loadNameFor('curso', $matricula['curso_id']);
         $matriculas[$key]['nome_escola']               = $this->loadNomeEscola();
         $matriculas[$key]['nome_serie']                = $this->loadNameFor('serie', $matricula['serie_id']);
+        $matriculas[$key]['situacao']                  = '#TODO';
         $turma                                         = $this->tryLoadMatriculaTurma($matricula);
 
         if (is_array($turma) and count($turma) > 0) {
