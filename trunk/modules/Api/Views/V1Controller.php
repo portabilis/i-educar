@@ -267,11 +267,14 @@ class V1Controller extends ApiCoreController
     $alunos       = array();
     $search_items = Portabilis_String_Utils::split(array('-', ' '), $query, array('limit' => 2));
 
+    // seleciona somente matriculas em andamento, aprovado, reprovado, em exame, aprovado apos exame e retido faltas
+
     if (is_numeric($search_items[0])) {
       $sql = "select distinct aluno.cod_aluno as id from pmieducar.matricula, pmieducar.aluno
               where aluno.cod_aluno = matricula.ref_cod_aluno and aluno.ativo = matricula.ativo
               and matricula.ativo = 1 and matricula.ref_ref_cod_escola = $1 and
-              (matricula.cod_matricula = $2 or matricula.ref_cod_aluno = $2) limit 15";
+              (matricula.cod_matricula = $2 or matricula.ref_cod_aluno = $2) and
+              matricula.aprovado in (1, 2, 3, 7, 8, 9) limit 15";
 
       $params  = array($escolaId, $search_items[0]);
     }
@@ -279,7 +282,8 @@ class V1Controller extends ApiCoreController
       $sql = "select distinct aluno.cod_aluno as id, pessoa.nome as a from pmieducar.matricula,
               pmieducar.aluno, cadastro.pessoa where aluno.cod_aluno = matricula.ref_cod_aluno and
               aluno.ativo = matricula.ativo and matricula.ativo = 1 and matricula.ref_ref_cod_escola = $1 and
-              pessoa.idpes = aluno.ref_idpes and lower(pessoa.nome) like $2 order by nome limit 15";
+              pessoa.idpes = aluno.ref_idpes and lower(pessoa.nome) like $2 and
+              matricula.aprovado in (1, 2, 3, 7, 8, 9) order by nome limit 15";
 
       $params  = array($escolaId, strtolower($query) ."%");
     }
