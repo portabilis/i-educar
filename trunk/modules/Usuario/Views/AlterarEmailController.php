@@ -29,31 +29,52 @@
  * @version   $Id$
  */
 
-require_once 'Core/Controller/Page/EditController.php';
+require_once 'lib/Portabilis/Controller/Page/EditController.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
+require_once 'Usuario/Mailers/UsuarioMailer.php';
 
-class AlterarEmailController extends Core_Controller_Page_EditController
+class AlterarEmailController extends Portabilis_Controller_Page_EditController
 {
   protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
-  protected $_titulo   = 'Alterar e-mail';
+  protected $_titulo     = 'Alterar e-mail';
   protected $_processoAp = 0;
 
-  protected $_formMap = array(
+  protected $_formMap    = array(
     'matricula' => array(
       'label'  => 'Matr&iacute;cula',
       'help'   => '',
     ),
     'email' => array(
       'label'  => 'E-mail',
-      'help'   => 'E-mail utilizado para recuperar senha.',
+      'help'   => 'E-mail utilizado para recuperar sua senha.',
     ),
   );
 
 
+  protected function _preConstruct()
+  {
+    $this->_options = $this->mergeOptions(array('edit_success' => 'intranet/index.php'), $this->_options);
+  }
+
+
+  // this controller always edit an existing resource
+  protected function _initNovo() {
+    return false;
+  }
+
+
+  protected function _initEditar() {
+    $this->setEntity($this->getDataMapper()->find($this->getOption('id_usuario')));
+    return true;
+  }
+
+
   public function Gerar()
   {
-    if (filter_var($this->getEntity()->email, FILTER_VALIDATE_EMAIL) == false)
-      $this->mensagem = "Por favor informe um e-mail v&aacute;lido, para ser usado caso voc&ecirc; esque&ccedil;a sua senha.";
+    $validEmail = filter_var($this->getEntity()->email, FILTER_VALIDATE_EMAIL) == true;
+
+    if (empty($this->getRequest()->email) &&  ! $validEmail)
+      $this->messenger()->append("Por favor informe um e-mail v&aacute;lido, para ser usado caso voc&ecirc; esque&ccedil;a sua senha.");
 
     $this->campoRotulo('matricula', $this->_getLabel('matricula'), $this->getEntity()->matricula);
     $this->campoTexto('email', $this->_getLabel('email'), $this->getEntity()->email,
@@ -61,65 +82,17 @@ class AlterarEmailController extends Core_Controller_Page_EditController
 
     $this->url_cancelar = '/intranet/index.php';
 
-    if (! $hasValidEmail)
+    if (! $validEmail)
       $this->nome_url_cancelar = 'Deixar para depois';
   }
 
 
-  protected function _initNovo()
+  public function save()
   {
-    return FALSE;
-  }
+    $this->_initEditar();
 
-
-  protected function _initEditar()
-  {
-    try {
-      $this->setEntity($this->getDataMapper()->find($this->getSession()->id_pessoa));
-    } catch(Exception $e) {
-      $this->mensagem = $e;
-      return FALSE;
-    }
-    return TRUE;
-  }
-
-
-  public function Novo()
-  {
-    return FALSE;
-  }
-
-
-  public function Editar()
-  {
-    if ($this->_save())
-      header("Location: /intranet/index.php");
-
-    return FALSE;
-  }
-
-
-  function Excluir()
-  {
-    return FALSE;
-  }
-
-
-  protected function _save()
-  {
-    $entity = $this->setEntity($this->getDataMapper()->find($this->getSession()->id_pessoa));
-
-    if (isset($entity))
-      $this->getEntity()->setOptions(array('email' => $_POST['email']));
-
-    try {
-      $this->getDataMapper()->save($this->getEntity());
-      return TRUE;
-    }
-    catch (Exception $e) {
-      $this->mensagem = "E-mail n&atilde;o alterado, por favor, tente novamente.";
-      return FALSE;
-    }
+    $this->getEntity()->setOptions(array('email' => $_POST['email']));
+    $this->getDataMapper()->save($this->getEntity());
   }
 }
 ?>

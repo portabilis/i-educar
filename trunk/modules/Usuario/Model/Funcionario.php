@@ -50,11 +50,12 @@ require_once 'CoreExt/Validate/Email.php';
 class Usuario_Model_Funcionario extends CoreExt_Entity
 {
   protected $_data = array(
-    'ref_cod_pessoa_fj' => NULL,
-    'matricula'  => NULL,
-    'email' => NULL,
-    'senha' => NULL,
-    'status_token' => NULL
+    #'ref_cod_pessoa_fj' => NULL,
+    'matricula'         => NULL,
+    'email'             => NULL,
+    'senha'             => NULL,
+    'data_troca_senha'  => NULL,
+    'status_token'      => NULL
   );
 
   protected $_dataTypes = array(

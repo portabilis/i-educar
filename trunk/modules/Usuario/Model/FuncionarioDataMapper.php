@@ -50,13 +50,14 @@ class Usuario_Model_FuncionarioDataMapper extends CoreExt_DataMapper
   protected $_tableSchema = 'portal';
 
   protected $_attributeMap = array(
-    'ref_cod_pessoa_fj' => 'ref_cod_pessoa_fj',
-    'matricula'  => 'matricula',
-    'email' => 'email'
+    #'ref_cod_pessoa_fj' => 'ref_cod_pessoa_fj',
+    #'matricula'         => 'matricula',
+    #'email'             => 'email',
+    #'data_troca_senha'  => 'data_troca_senha'
   );
 
   protected $_notPersistable = array(
-    'ippes'
+    #'ippes'
   );
 
   protected $_primaryKey = array('ref_cod_pessoa_fj');

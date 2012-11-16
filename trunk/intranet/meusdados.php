@@ -305,16 +305,18 @@ class indice extends clsCadastro
     // exibe o email definido pelo usuário ($this->email) no lugar do email da pessoa ($this->p_email)
     $this->campoRotulo('email', 'E-mail', $this->email . " <a href='/module/Usuario/AlterarEmail' class='decorated'>alterar e-mail</a>");
 
+    if (empty($_SESSION['convidado'])) {
+      $this->campoRotulo('senha', 'Senha', '********' . " <a href='/module/Usuario/AlterarSenha' class='decorated'>alterar senha</a>");
+
+      //$this->campoSenha("f_senha", "Senha",  $this->f_senha, FALSE);
+      //$this->campoOculto("confere_senha", $this->f_senha);
+    }
+
     $lista_sexos = array();
     $lista_sexos['']  = 'Escolha uma op&ccedil;&atilde;o...';
     $lista_sexos['M'] = 'Masculino';
     $lista_sexos['F'] = 'Feminino';
     $this->campoLista("p_sexo", "Sexo", $lista_sexos, $this->p_sexo);
-
-    if (empty($_SESSION['convidado'])) {
-      $this->campoSenha("f_senha", "Senha",  $this->f_senha, FALSE);
-      $this->campoOculto("confere_senha", $this->f_senha);
-    }
 
     $dba = new clsBanco();
     $opcoes = array();
@@ -407,17 +409,10 @@ class indice extends clsCadastro
       $sql = " ref_cod_setor_new = '{$setor}', ";
     }
 
-    if ($this->f_senha != $this->confere_senha) {
-      $sql_funcionario = "UPDATE funcionario SET senha=md5('{$this->f_senha}'), data_troca_senha = NOW(), ref_cod_funcionario_vinculo='{$this->ref_cod_funcionario_vinculo}', $sql ramal='{$this->f_ramal}', ref_ref_cod_pessoa_fj='{$pessoaFj}', tempo_expira_senha = 30 WHERE ref_cod_pessoa_fj={$this->p_cod_pessoa_fj}";
-    }
-    else {
-      if (empty($_SESSION['convidado'])) {
-        $sql_funcionario = "UPDATE funcionario SET $sql ramal='{$this->f_ramal}', ref_cod_funcionario_vinculo='{$this->ref_cod_funcionario_vinculo}', ref_ref_cod_pessoa_fj='{$pessoaFj}' WHERE ref_cod_pessoa_fj={$this->p_cod_pessoa_fj}";
-      }
-      else {
-        $sql_funcionario = "UPDATE funcionario SET $sql ramal='{$this->f_ramal}', ref_ref_cod_pessoa_fj='{$pessoaFj}' WHERE ref_cod_pessoa_fj={$this->p_cod_pessoa_fj}";
-      }
-    }
+    if (empty($_SESSION['convidado']))
+      $sql_funcionario = "UPDATE funcionario SET $sql ramal='{$this->f_ramal}', ref_cod_funcionario_vinculo='{$this->ref_cod_funcionario_vinculo}', ref_ref_cod_pessoa_fj='{$pessoaFj}' WHERE ref_cod_pessoa_fj={$this->p_cod_pessoa_fj}";
+    else
+      $sql_funcionario = "UPDATE funcionario SET $sql ramal='{$this->f_ramal}', ref_ref_cod_pessoa_fj='{$pessoaFj}' WHERE ref_cod_pessoa_fj={$this->p_cod_pessoa_fj}";
 
     $db = new clsBanco();
 

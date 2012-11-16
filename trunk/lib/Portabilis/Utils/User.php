@@ -94,11 +94,18 @@ class Portabilis_Utils_User {
     $user['expired_account'] = ! empty($user['tempo_expira_conta']) && ! empty($user['data_reativa_conta']) &&
                                time() - strtotime($user['data_reativa_conta']) > $user['tempo_expira_conta'] * 60 * 60 * 24;
 
-    /* considera como expirado caso data_troca_senha + tempo_expira_senha <= now */
-    $user['expired_password'] = ! empty($user['data_troca_senha']) && ! empty($user['tempo_expira_senha']) &&
-                                time() - strtotime($user['data_troca_senha']) > $user['tempo_expira_senha'] * 60 * 60 * 24;
 
-    $user['super']           = $GLOBALS['coreExt']['Config']->app->superuser == $user['matricula'];
+    // considera o periodo para expiração de senha definido nas configs, caso o tenha sido feito.
+    $tempoExpiraSenha = $GLOBALS['coreExt']['Config']->app->user_accounts->default_password_expiration_period;
+
+    if (! is_numeric($tempoExpiraSenha))
+      $tempoExpiraSenha = $user['tempo_expira_senha'];
+
+    /* considera como expirado caso data_troca_senha + tempo_expira_senha <= now */
+    $user['expired_password'] = ! empty($user['data_troca_senha']) && ! empty($tempoExpiraSenha) &&
+                                time() - strtotime($user['data_troca_senha']) > $tempoExpiraSenha * 60 * 60 * 24;
+
+    $user['super']            = $GLOBALS['coreExt']['Config']->app->superuser == $user['matricula'];
 
     return $user;
   }

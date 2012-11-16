@@ -72,11 +72,11 @@ class Portabilis_Messenger {
   }
 
 
-  public function toHtml($contentTag = 'p') {
+  public function toHtml($tag = 'p') {
     $msgs = '';
 
     foreach($this->getMsgs() as $m)
-      $msgs .= "<$contentTag class='{$m['type']}'>{$m['msg']}</$contentTag>";
+      $msgs .= "<$tag class='{$m['type']}'>{$m['msg']}</$tag>";
 
     return $msgs;
   }
@@ -91,6 +91,13 @@ class Portabilis_Messenger {
       $msgs[] = array('msg' => $m['msg'], 'type' => $m['type']);
 
     return $msgs;
+  }
+
+  // merge messages from another messenger with it self
+  public function merge($anotherMessenger) {
+    foreach($anotherMessenger->getMsgs() as $msg) {
+      $this->append($msg['msg'], $msg['type']);
+    }
   }
 }
 

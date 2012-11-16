@@ -25,10 +25,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'lib/Portabilis/Message.php';
 require_once 'lib/Portabilis/Mailer.php';
 require_once 'lib/Portabilis/Utils/User.php';
-
-/* requer Services_ReCaptcha:
- $ pear install Services_ReCaptcha */
-require_once 'Services/ReCaptcha.php';
+require_once 'lib/Portabilis/Utils/ReCaptcha.php';
 
 /**
  * clsControlador class.
@@ -96,9 +93,9 @@ class clsControlador
 
     session_write_close();
 
-    $this->messages = new Message();
-    $this->_maximoTentativasFalhas = 6;
-    $this->mailer = new Mailer();
+    $this->_maximoTentativasFalhas = 7;
+    $this->messages                = new Message();
+    $this->mailer                  = new Mailer();
   }
 
 
@@ -145,9 +142,9 @@ class clsControlador
   // valida se o usuário e senha informados, existem no banco de dados.
   protected function validateUserCredentials($username, $password) {
     if (! $this->validateHumanAccess()) {
-      $msg = "Parece que você errou a senha muitas vezes, por favor, preencha o campo de " .
+      $msg = "Você errou a senha muitas vezes, por favor, preencha o campo de " .
              "confirmação visual ou <a class='light decorated' href='/module/Usuario/Rede" .
-             "finirSenha'>tente redefinir sua senha</a>.";
+             "finirSenha'>redefina sua senha</a>.";
       $this->messages->append($msg, "error", false, "error");
     }
 
@@ -169,6 +166,9 @@ class clsControlador
 
 
   public function startLoginSession($user, $redirectTo = '') {
+    // unsetting login attempts here, because when the password is recovered the login attempts should be reseted.
+    $this->unsetTentativasLogin();
+
     @session_start();
     $_SESSION                 = array();
     $_SESSION['itj_controle'] = 'logado';
@@ -224,7 +224,7 @@ class clsControlador
                                      $_SESSION['tentativas_login_falhas'] >= $this->_maximoTentativasFalhas;
 
     if ($requiresHumanAccessValidation)
-      $templateText = str_replace( "<!-- #&RECAPTCHA&# -->", $this->getRecaptchaWidget(), $templateText);
+      $templateText = str_replace( "<!-- #&RECAPTCHA&# -->", Portabilis_Utils_ReCaptcha::getWidget(), $templateText);
 
     fclose($templateFile);
     die($templateText);
@@ -262,7 +262,7 @@ class clsControlador
 
   // #TODO mover metodo para helper, como em lib/Portabilis/Utils/ReCaptcha / reusar na recuperação de senha
   // see http://www.google.com/recaptcha && http://pear.php.net/package/Services_ReCaptcha
-  protected function getRecaptchaWidget() {
+  protected function __getRecaptchaWidget() {
     $recaptchaConfigs = $GLOBALS['coreExt']['Config']->app->recaptcha;
     $recaptcha = new Services_ReCaptcha($recaptchaConfigs->public_key,
                                         $recaptchaConfigs->private_key,
@@ -279,10 +279,11 @@ class clsControlador
     if (! $this->atingiuTentativasLogin())
       $result = true;
 
-    elseif ($this->getRecaptchaWidget()->validate()) {
+    elseif (Portabilis_Utils_ReCaptcha::getWidget()->validate()) {
       $this->unsetTentativasLogin();
       $result = true;
     }
+
     return $result;
   }
 

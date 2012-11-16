@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 #error_reporting(E_ALL);
 #ini_set("display_errors", 1);
@@ -32,40 +32,46 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/Controller/Page/EditCoreController.php';
+require_once 'lib/Portabilis/Controller/Page/EditController.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
 require_once 'Usuario/Mailers/UsuarioMailer.php';
 
-class AlterarSenhaController extends Portabilis_Controller_Page_EditCoreController
+class AlterarSenhaController extends Portabilis_Controller_Page_EditController
 {
   protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
-  protected $_titulo   = 'Redefinir senha';
+  protected $_titulo     = 'Alterar senha';
   protected $_processoAp = 0;
 
-  protected $_formMap = array(
-    'matricula' => array(
-      'label'  => 'Matr&iacute;cula',
-      'help'   => '',
-    ),
-    'nova_senha' => array(
-      'label'  => 'Nova senha',
-      'help'   => '',
-    ),
-    'confirmacao_senha' => array(
-      'label'  => 'Confirma&ccedil;&atilde;o de senha',
-      'help'   => '',
-    ),
+
+  protected $_formMap    = array(
+    'matricula'         => array('label' => 'Matr&iacute;cula',                   'help' => ''),
+    'nova_senha'        => array('label' => 'Nova senha',                         'help' => ''),
+    'confirmacao_senha' => array('label' => 'Confirma&ccedil;&atilde;o de senha', 'help' => ''),
   );
 
 
-  // Portabilis_Controller_Page_EditCoreController methods
-
-  public function render()
+  protected function _preConstruct()
   {
-    $this->messenger()->append('Por motivos de seguran&ccedil;a, periodicamente sua senha deve ser atualizada, por favor, informe uma nova senha.', 'info');
+    $this->_options = $this->mergeOptions(array('edit_success' => 'intranet/index.php'), $this->_options);
+  }
 
-    $this->loadCurrentUser();
-    //$superUser = $GLOBALS['coreExt']['Config']->app->superuser == $this->getEntity()->matricula;
+
+  // this controller always edit an existing resource
+  protected function _initNovo() {
+    return false;
+  }
+
+
+  protected function _initEditar() {
+    $this->setEntity($this->getDataMapper()->find($this->getOption('id_usuario')));
+    return true;
+  }
+
+
+  public function Gerar()
+  {
+    if (! isset($_POST['password']))
+      $this->messenger()->append('Para sua seguran&ccedil;a mude sua senha periodicamente, por favor, informe uma nova senha.', 'info');
 
     $this->campoRotulo('matricula', $this->_getLabel('matricula'), $this->getEntity()->matricula);
     $this->campoSenha('password', $this->_getLabel('nova_senha'), @$_POST['password'], TRUE);
@@ -74,45 +80,12 @@ class AlterarSenhaController extends Portabilis_Controller_Page_EditCoreControll
     $this->nome_url_sucesso  = 'Alterar';
     $this->nome_url_cancelar = 'Deixar para depois';
     $this->url_cancelar      = '/intranet/index.php';
-
-    $this->mensagem = $this->messenger()->toHtml();
   }
 
 
-  public function edit()
+  protected function canSave()
   {
-    $this->loadCurrentUser();
-
-    if (! $this->messenger()->hasMsgWithType('error') && $this->canUpdatePassword()) {
-      $this->updatePassword();
-      UsuarioMailer::UpdatedPassword($user  = $this->getEntity());
-    }
-  }
-
-
-  function afterSave()
-  {
-    $this->redirectTo('/intranet/index.php');
-  }
-
-
-  // custom methods
-
-  protected function loadCurrentUser() {
-    $user = $this->getDataMapper()->findAllUsingPreparedQuery(array(),
-                                                              array('ref_cod_pessoa_fj = $1'),
-                                                              array(Portabilis_Utils_User::currentUserId()),
-                                                              array(),
-                                                              false);
-
-    if(is_array($user) && count($user) > 0)
-      $this->setEntity($user[0]);
-    else
-      $this->messenger()->append('N&atilde;o foi possivel recuperar o usuário atual do banco de dados.', 'error', false, 'error');
-  }
-
-
-  protected function canUpdatePassword() {
+    $oldPassword          = $this->getEntity()->senha;
     $password             = $_POST['password'];
     $passwordConfirmation = $_POST['password_confirmation'];
 
@@ -121,29 +94,25 @@ class AlterarSenhaController extends Portabilis_Controller_Page_EditCoreControll
     elseif (strlen($password) < 8)
       $this->messenger()->append('Por favor informe uma senha segura, com pelo menos 8 caracteres.', 'error');
     elseif ($password != $passwordConfirmation)
-      $this->messenger()->append('A senha e confirma&ccedil;&atilde;o de senha devem ser as mesmas.', 'error');
+      $this->messenger()->append('A senha e confirma&ccedil;&atilde;o de senha devem ser iguais.', 'error');
     elseif ($password == $user->matricula)
       $this->messenger()->append('Informe uma senha diferente da matricula.', 'error');
+    elseif (md5($password) == $oldPassword)
+      $this->messenger()->append('Informe uma senha diferente da atual.', 'error');
 
     return ! $this->messenger()->hasMsgWithType('error');
   }
 
 
-  protected function updatePassword() {
-    $user     = $this->getEntity();
-    $password = $_POST['password'];
+  protected function save()
+  {
+    $this->_initEditar();
 
-    try {
-      $user->setOptions(array('senha' => md5($password)));
-      $this->getDataMapper()->save($user);
+    $this->getEntity()->setOptions(array('senha' => md5($_POST['password']), 'data_troca_senha' => 'now()'));
+    $this->getDataMapper()->save($this->getEntity());
 
-      $this->messenger()->append('Senha alterada com sucesso.', 'success');
-    }
-    catch (Exception $e) {
-      $this->messenger()->append('Erro ao atualizar de senha.', 'error');
-      error_log("Exception ocorrida ao atualizar senha, matricula: {$user->matricula}, erro: " .  $e->getMessage());
-    }
+    $linkToReset = $_SERVER['HTTP_HOST'] . $this->getRequest()->getBaseurl() . '/' . 'Usuario/AlterarSenha';
+    UsuarioMailer::updatedPassword($user = $this->getEntity(), $linkToReset);
   }
-
 }
 ?>
