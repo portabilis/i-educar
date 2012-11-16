@@ -89,8 +89,6 @@ class AlterarEmailController extends Portabilis_Controller_Page_EditController
 
   public function save()
   {
-    $this->_initEditar();
-
     $this->getEntity()->setOptions(array('email' => $_POST['email']));
     $this->getDataMapper()->save($this->getEntity());
   }

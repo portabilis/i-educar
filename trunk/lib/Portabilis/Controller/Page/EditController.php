@@ -85,6 +85,10 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
   {
     $result = false;
 
+    // try set or load entity before validation or save
+    if (! $this->_initNovo())
+      $this->_initEditar();
+
     if (! $this->messenger()->hasMsgWithType('error') && $this->canSave()) {
       try {
         $result = $this->save();

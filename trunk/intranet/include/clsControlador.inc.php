@@ -260,19 +260,6 @@ class clsControlador
   }
 
 
-  // #TODO mover metodo para helper, como em lib/Portabilis/Utils/ReCaptcha / reusar na recuperação de senha
-  // see http://www.google.com/recaptcha && http://pear.php.net/package/Services_ReCaptcha
-  protected function __getRecaptchaWidget() {
-    $recaptchaConfigs = $GLOBALS['coreExt']['Config']->app->recaptcha;
-    $recaptcha = new Services_ReCaptcha($recaptchaConfigs->public_key,
-                                        $recaptchaConfigs->private_key,
-                                        array('lang' => $recaptchaConfigs->options->lang,
-                                              'theme' => $recaptchaConfigs->options->theme,
-                                              'secure' => $recaptchaConfigs->options->secure == '1'));
-    return $recaptcha;
-  }
-
-
   protected function validateHumanAccess() {
     $result = false;
 

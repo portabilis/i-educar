@@ -214,7 +214,7 @@ class clsBase extends clsConfig
       }
 
       if ($processo_ap != 0) {
-        $this->db()->Consulta("SELECT 1 FROM menu_funcionario WHERE ref_cod_menu_submenu = 0 AND ref_ref_cod_pessoa_fj = {$this->currentUserId()}");
+        $this->db()->Consulta("SELECT 1 FROM menu_funcionario WHERE ref_cod_menu_submenu = 0 AND ref_ref_cod_pessoa_fj = {$this->_currentUserId()}");
         if ($this->db()->ProximoRegistro()) {
           list($aui) = $this->db()->Tupla();
           $sempermissao = FALSE;
@@ -224,7 +224,7 @@ class clsBase extends clsConfig
         //       permissão de acesso ao processo. Já a segunda, não existe
         //       sentido para nivel = 2 já que processoAp pode ser de níveis
         //       maiores que 2.
-        $this->db()->Consulta("SELECT 1 FROM menu_funcionario WHERE (ref_cod_menu_submenu = {$processo_ap} AND ref_ref_cod_pessoa_fj = {$this->currentUserId()}) OR (SELECT true FROM menu_submenu WHERE cod_menu_submenu = {$processo_ap} AND nivel = 2)");
+        $this->db()->Consulta("SELECT 1 FROM menu_funcionario WHERE (ref_cod_menu_submenu = {$processo_ap} AND ref_ref_cod_pessoa_fj = {$this->_currentUserId()}) OR (SELECT true FROM menu_submenu WHERE cod_menu_submenu = {$processo_ap} AND nivel = 2)");
         if ($this->db()->ProximoRegistro()) {
           list($aui) = $this->db()->Tupla();
           $sempermissao = FALSE;
@@ -252,8 +252,8 @@ class clsBase extends clsConfig
 
           $variaveis = "POST\n{$posts}GET\n{$gets}SESSION\n{$sessions}";
 
-          if ($this->currentUserId()) {
-            $this->db()->Consulta("INSERT INTO intranet_segur_permissao_negada (ref_ref_cod_pessoa_fj, ip_externo, ip_interno, data_hora, pagina, variaveis) VALUES('{$this->currentUserId()}', '$ip', '$ip_de_rede', NOW(), '$pagina', '$variaveis')");
+          if ($this->_currentUserId()) {
+            $this->db()->Consulta("INSERT INTO intranet_segur_permissao_negada (ref_ref_cod_pessoa_fj, ip_externo, ip_interno, data_hora, pagina, variaveis) VALUES('{$this->_currentUserId()}', '$ip', '$ip_de_rede', NOW(), '$pagina', '$variaveis')");
           }
           else {
             $this->db()->Consulta("INSERT INTO intranet_segur_permissao_negada (ref_ref_cod_pessoa_fj, ip_externo, ip_interno, data_hora, pagina, variaveis) VALUES(NULL, '$ip', '$ip_de_rede', NOW(), '$pagina', '$variaveis')");
@@ -539,7 +539,7 @@ class clsBase extends clsConfig
     $menu_dinamico = $this->makeBanner();
 
     $notificacao = "";
-    $this->db()->Consulta("SELECT cod_notificacao, titulo, conteudo, url FROM portal.notificacao WHERE ref_cod_funcionario = '{$this->currentUserId()}' AND data_hora_ativa < NOW()");
+    $this->db()->Consulta("SELECT cod_notificacao, titulo, conteudo, url FROM portal.notificacao WHERE ref_cod_funcionario = '{$this->_currentUserId()}' AND data_hora_ativa < NOW()");
 
     if ($this->db()->numLinhas()) {
       while ($this->db()->ProximoRegistro()) {
@@ -555,22 +555,23 @@ class clsBase extends clsConfig
         </div>";
       }
       $saida = str_replace( "<!-- #&NOTIFICACOES&# -->", $notificacao, $saida );
-      $this->db()->Consulta("UPDATE portal.notificacao SET visualizacoes = visualizacoes + 1 WHERE ref_cod_funcionario = '{$this->currentUserId()}' AND data_hora_ativa < NOW()");
+      $this->db()->Consulta("UPDATE portal.notificacao SET visualizacoes = visualizacoes + 1 WHERE ref_cod_funcionario = '{$this->_currentUserId()}' AND data_hora_ativa < NOW()");
       $this->db()->Consulta("DELETE FROM portal.notificacao WHERE visualizacoes > 10");
     }
 
     // nome completo usuario
     $nomePessoa       = new clsPessoaFisica();
-    list($nomePessoa) = $nomePessoa->queryRapida($this->currentUserId(), "nome");
+    list($nomePessoa) = $nomePessoa->queryRapida($this->_currentUserId(), "nome");
     $nomePessoa       = ($nomePessoa) ? $nomePessoa : "<span style='color: #DD0000; '>Convidado</span>";
 
 
     // data ultimo acesso
-    $ultimoAcesso     = $this->db()->UnicoCampo("SELECT data_hora FROM acesso WHERE cod_pessoa = {$this->currentUserId()} ORDER BY data_hora DESC LIMIT 1,1");
+    $ultimoAcesso     = $this->db()->UnicoCampo("SELECT data_hora FROM acesso WHERE cod_pessoa = {$this->_currentUserId()} ORDER BY data_hora DESC LIMIT 1,1");
 
     if($ultimoAcesso)
       $ultimoAcesso = date("d/m/Y H:i", strtotime(substr($ultimoAcesso,0,19)));
 
+    $this->checkUserExpirations();
 
     // substitui valores no template
     $saida = str_replace("<!-- #&ULTIMOACESSO&# -->", $ultimoAcesso,  $saida);
@@ -589,7 +590,7 @@ class clsBase extends clsConfig
       $ip_maquina = $_SERVER['REMOTE_ADDR'];
     }
 
-    $sql = "UPDATE funcionario SET ip_logado = '$ip_maquina' , data_login = NOW() WHERE ref_cod_pessoa_fj = {$this->currentUserId()}";
+    $sql = "UPDATE funcionario SET ip_logado = '$ip_maquina' , data_login = NOW() WHERE ref_cod_pessoa_fj = {$this->_currentUserId()}";
     $this->db()->Consulta($sql);
 
     return $saida;
@@ -809,18 +810,25 @@ class clsBase extends clsConfig
     }
   }
 
+  protected function checkUserExpirations() {
+    $user                = Portabilis_Utils_User::load('current_user');
+    $uri                 = $_SERVER['REQUEST_URI'];
+    $forcePasswordUpdate = $GLOBALS['coreExt']['Config']->app->user_accounts->force_password_update == true;
 
-  protected function checkAccountExpiration() {
-    // TODO redirecionar para logoff se conta expirou
+    if($user['expired_account'] || $user['proibido'] != '0' || $user['ativo'] != '1')
+      header("Location: /intranet/logof.php");
+
+    elseif($user['expired_password'] && $forcePasswordUpdate && $uri != '/module/Usuario/AlterarSenha')
+      header("Location: /module/Usuario/AlterarSenha");
   }
 
-    // wrappers for Portabilis_*Utils*
+  // wrappers for Portabilis_*Utils*
 
-    protected function db() {
-      return Portabilis_Utils_Database::db();
-    }
+  protected function db() {
+    return Portabilis_Utils_Database::db();
+  }
 
-    function currentUserId() {
-      return Portabilis_Utils_User::currentUserId();
-    }
+  function _currentUserId() {
+    return Portabilis_Utils_User::currentUserId();
+  }
 }

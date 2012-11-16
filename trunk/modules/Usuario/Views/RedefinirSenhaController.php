@@ -37,6 +37,7 @@ require_once 'Usuario/Model/FuncionarioDataMapper.php';
 require_once 'Usuario/Mailers/UsuarioMailer.php';
 require_once 'Portabilis/View/Helper/Application.php';
 require_once 'lib/Portabilis/Utils/ReCaptcha.php';
+require_once 'Usuario/Validators/UsuarioValidator.php';
 
 require_once 'include/clsControlador.inc.php';
 
@@ -159,49 +160,45 @@ class RedefinirSenhaController extends Portabilis_Controller_Page_EditController
 
   public function Editar()
   {
-    if (! $this->messenger()->hasMsgWithType('error') &&
-        $this->loadUserByStatusToken('redefinir_senha-' . $_GET['token']) &&
-        $this->updatePassword()) {
-
-      $linkToReset = $_SERVER['HTTP_HOST'] . $this->getRequest()->getBaseurl() . '/' . 'Usuario/RedefinirSenha';
-      UsuarioMailer::updatedPassword($user = $this->getEntity(), $linkToReset);
-      $this->logInUser();
-    }
+    if (! $this->messenger()->hasMsgWithType('error') && $this->loadUserByStatusToken('redefinir_senha-' . $_GET['token']))
+      $this->updatePassword();
 
     return ! $this->messenger()->hasMsgWithType('error');
   }
 
 
   protected function updatePassword() {
-    $result = false;
     $user = $this->getEntity();
 
     try {
-      $password = $_POST['password'];
-      $passwordConfirmation = $_POST['password_confirmation'];
-      $statusToken = '';
-
-      if (empty($password))
-        $this->messenger()->append('Por favor informe uma senha.', 'error');
-      elseif (strlen($password) < 8)
-        $this->messenger()->append('Por favor informe uma senha segura, com pelo menos 8 caracteres.', 'error');
-      elseif ($password != $passwordConfirmation)
-        $this->messenger()->append('A senha e confirma&ccedil;&atilde;o de senha devem ser as mesmas.', 'error');
-      elseif ($password == $user->matricula)
-        $this->messenger()->append('Informe uma senha diferente da matricula.', 'error');
-      else {
-        $user->setOptions(array('senha' => md5($password), 'status_token' => $statusToken));
+      if ($this->canUpdate($user)) {
+        $user->setOptions(array('senha' => md5($_POST['password']), 'status_token' => '', 'data_troca_senha' => 'now()'));
         $this->getDataMapper()->save($user);
 
+        $linkToReset = $_SERVER['HTTP_HOST'] . $this->getRequest()->getBaseurl() . '/' . 'Usuario/RedefinirSenha';
+        UsuarioMailer::updatedPassword($user = $this->getEntity(), $linkToReset);
+
+        // #FIXME it should be a flash (session) message...
         $this->messenger()->append('Senha alterada com sucesso.', 'success');
-        $result = true;
+
+        $this->logInUser();
       }
     }
     catch (Exception $e) {
       $this->messenger()->append('Erro ao atualizar de senha.', 'error');
       error_log("Exception ocorrida ao atualizar senha, matricula: {$user->matricula}, erro: " .  $e->getMessage());
     }
-    return $result;
+  }
+
+
+  protected function canUpdate($user)
+  {
+    return UsuarioValidator::validatePassword($this->messenger(),
+                                  $user->senha,
+                                  $_POST['password'],
+                                  $_POST['password_confirmation'],
+                                  md5($_POST['password']),
+                                  $user->matricula);
   }
 
 

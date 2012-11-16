@@ -35,6 +35,7 @@
 require_once 'lib/Portabilis/Controller/Page/EditController.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
 require_once 'Usuario/Mailers/UsuarioMailer.php';
+require_once 'Usuario/Validators/UsuarioValidator.php';
 
 class AlterarSenhaController extends Portabilis_Controller_Page_EditController
 {
@@ -79,35 +80,24 @@ class AlterarSenhaController extends Portabilis_Controller_Page_EditController
 
     $this->nome_url_sucesso  = 'Alterar';
     $this->nome_url_cancelar = 'Deixar para depois';
-    $this->url_cancelar      = '/intranet/index.php';
+
+    if ($GLOBALS['coreExt']['Config']->app->user_accounts->force_password_update != true)
+      $this->url_cancelar      = '/intranet/index.php';
   }
 
 
   protected function canSave()
   {
-    $oldPassword          = $this->getEntity()->senha;
-    $password             = $_POST['password'];
-    $passwordConfirmation = $_POST['password_confirmation'];
-
-    if (empty($password))
-      $this->messenger()->append('Por favor informe uma senha.', 'error');
-    elseif (strlen($password) < 8)
-      $this->messenger()->append('Por favor informe uma senha segura, com pelo menos 8 caracteres.', 'error');
-    elseif ($password != $passwordConfirmation)
-      $this->messenger()->append('A senha e confirma&ccedil;&atilde;o de senha devem ser iguais.', 'error');
-    elseif ($password == $user->matricula)
-      $this->messenger()->append('Informe uma senha diferente da matricula.', 'error');
-    elseif (md5($password) == $oldPassword)
-      $this->messenger()->append('Informe uma senha diferente da atual.', 'error');
-
-    return ! $this->messenger()->hasMsgWithType('error');
+    return UsuarioValidator::validatePassword($this->messenger(),
+                                  $this->getEntity()->senha,
+                                  $_POST['password'],
+                                  $_POST['password_confirmation'],
+                                  md5($_POST['password']),
+                                  $this->getEntity()->matricula);
   }
-
 
   protected function save()
   {
-    $this->_initEditar();
-
     $this->getEntity()->setOptions(array('senha' => md5($_POST['password']), 'data_troca_senha' => 'now()'));
     $this->getDataMapper()->save($this->getEntity());
 
