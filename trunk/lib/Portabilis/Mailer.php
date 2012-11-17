@@ -72,9 +72,20 @@ class Portabilis_Mailer {
                                          'debug'    => $this->configs->debug == '1',
                                          'persist'  => false));
 
-    $sendResult = $smtp->send($to, $headers, $message);
+    // if defined some allowed domain defined in config, check if $to is allowed
 
-    return ! PEAR::isError($sendResult);
+    if (! is_null($this->configs->allowed_domains)) {
+      foreach ($this->configs->allowed_domains as $domain) {
+        if (strpos($to, "@$domain") != false) {
+          $sendResult = ! PEAR::isError($smtp->send($to, $headers, $message));
+          break;
+        }
+      }
+    }
+    else
+      $sendResult = ! PEAR::isError($smtp->send($to, $headers, $message));
+
+    return $sendResult;
   }
 
 
