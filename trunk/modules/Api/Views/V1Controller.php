@@ -149,7 +149,6 @@ class V1Controller extends ApiCoreController
   protected function tryLoadMatriculaTurma($matricula) {
     $sql            = "select ref_cod_turma as turma_id, turma.tipo_boletim from pmieducar.matricula_turma, pmieducar.turma where ref_cod_turma = cod_turma and ref_cod_matricula = $1 and matricula_turma.ativo = 1 limit 1";
 
-    //var_dump($sql);
     $matriculaTurma = $this->fetchPreparedQuery($sql, $matricula['id'], false, 'first-row');
 
     if (is_array($matriculaTurma) and count($matriculaTurma) > 0) {

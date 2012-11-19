@@ -179,8 +179,6 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
     $msg = 'Ocorreu um erro ao emitir o relatorio.\n\n' . $details;
     $msg = "<script type='text/javascript'>alert('$msg'); close();</script> ";
 
-    //var_dump($msg);
-
     print utf8_decode($msg);
   }
 

@@ -657,7 +657,7 @@ class BoletimController extends Core_Controller_Page_ViewController
     }
   }
 
-  
+
   protected function getComponentesCurriculares(){
     if(! isset($this->_componentesCurriculares))
       $this->_componentesCurriculares = $this->_service->getComponentes();
@@ -665,7 +665,7 @@ class BoletimController extends Core_Controller_Page_ViewController
     return $this->_componentesCurriculares;
   }
 
-  
+
   protected function getNotasComponentesCurriculares(){
     if(! isset($this->_notasComponentesCurriculares))
       $this->_notasComponentesCurriculares = $this->_service->getNotasComponentes();
@@ -679,16 +679,15 @@ class BoletimController extends Core_Controller_Page_ViewController
       $this->_etapas = range(1, $this->_service->getOption('etapas'), 1);
 
     return $this->_etapas;
-  }    
+  }
 
 
   /**
-  * caso algum componente curricular e alguma etapa possua nota exame lançada, então o aluno possui nota exame  
+  * caso algum componente curricular e alguma etapa possua nota exame lançada, então o aluno possui nota exame
   */
   protected function alunoPossuiNotaRec(){
 
     $notasComponentesCurriculares = $this->getNotasComponentesCurriculares();
-    //var_dump($notasComponentesCurriculares);
 
     if (! isset($this->_alunoPossuiNotaRec)){
       foreach($this->getComponentesCurriculares() as $cc){
