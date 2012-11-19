@@ -149,6 +149,11 @@ div#error div#detail {
   background-color: #ffeeee !important;
 }
 
+.simple-block {
+  padding: 5px;
+  display: inline-block;
+}
+
 .block {
   display: block;
 }
