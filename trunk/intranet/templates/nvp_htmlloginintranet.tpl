@@ -53,13 +53,13 @@
       <p style="min-height: 32px;" class="flash update-browser"><strong>Seu navegador est&aacute desatualizado.</strong> Para melhor navega&ccedil;&atildeo  no sistema, por favor, atualize seu navegador.<a href="http://br.mozdev.org/download/" target="_blank"><img style="margin-top:4px;" src="http://www.mozilla.org/contribute/buttons/110x32bubble_r_pt.png" alt="Firefox" width="110" height="32" style="border-style:none;" title="Mozilla Firefox" /></a></p>
       <![endif]-->
 
-      <p style="min-height: 0px;" class="info box shadow only-for-clients hidden">
+      <!--p style="min-height: 0px;" class="info box shadow only-for-clients hidden">
         <strong>Novidade!</strong> <span class="decorated">Agora pais e alunos podem imprimir o boletim escolar de casa via internet!</span>
 
         <br /><br />Al&eacute;m do boletim escolar os pais podem visualizar ocorr&ecirc;ncias disciplinares dos filhos, e em breve ser&aacute; poss&iacute;vel consultar o acervo das bibliotecas escolares, consultar lista de materiais escolares, pr&eacute;-reservar matriculas e enviar recados para os pais / alunos.
 
         <br /><br /><strong>Ficou interessado?</strong> Entre em contato para saber como habilitar este servi&ccedil;o na sua escola: (48) 3055-3001.
-      </p>
+      </p-->
 
       <!--p style="min-height: 0px;" class="flash error"><strong>Importante, aviso de manuten&ccedil;&atilde;o:</strong> No dia 28/02/2012 (ter&ccedil;a feira) a partir das 18hs os sistemas poder&atilde;o estar inst&aacute;veis ou indispon&iacute;veis, devido melhorias na infraestrutura.</p-->
 
