@@ -217,7 +217,7 @@
                 FROM modules.componente_curricular
                WHERE componente_curricular.id = escola_serie_disciplina.ref_cod_disciplina) as id_disciplina,
 
- (SELECT nota_componente_curricular.nota_arredondada
+ (SELECT distinct nota_componente_curricular.nota_arredondada
                 FROM modules.nota_componente_curricular,
                      modules.nota_aluno
                WHERE nota_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
@@ -225,7 +225,7 @@
                      nota_aluno.id  = nota_componente_curricular.nota_aluno_id AND
                     nota_aluno.matricula_id = matricula.cod_matricula) AS nota_arredondada,
 
- (SELECT nota_componente_curricular.nota_arredondada
+ (SELECT distinct nota_componente_curricular.nota_arredondada
                 FROM modules.nota_componente_curricular,
                      modules.nota_aluno
                WHERE nota_componente_curricular.componente_curricular_id = escola_serie_disciplina.ref_cod_disciplina AND
@@ -254,20 +254,12 @@
 
        (select turma_turno.nm_turno from pmieducar.turma_turno, pmieducar.turma where turma_turno.turma_turno_id = turma.turma_turno_id and turma.cod_turma = matricula_turma.ref_cod_turma and  instituicao_id = $P{instituicao} limit 1) as periodo,
 
-		(SELECT CASE WHEN (SELECT mt.aprovado
-		                     FROM pmieducar.matricula mt
-							WHERE mt.cod_matricula = matricula.cod_matricula) = 1 THEN 'Aprovado'
-                     WHEN (SELECT mt.aprovado
-					         FROM pmieducar.matricula mt
-							WHERE mt.cod_matricula = matricula.cod_matricula) = 2 THEN 'Reprovado'
-                     WHEN (SELECT mt.aprovado
-					         FROM pmieducar.matricula mt
-							WHERE mt.cod_matricula = matricula.cod_matricula) = 3 THEN 'Em Andamento'
-                     WHEN (SELECT mt.aprovado
-					         FROM pmieducar.matricula mt
-							WHERE mt.cod_matricula = matricula.cod_matricula) = 4 THEN 'Transferido'
-                ELSE 'Reclassificado'
-                END) AS situacao,
+(SELECT CASE matricula.aprovado WHEN 1 THEN 'Aprovado'
+                                WHEN 2 THEN 'Reprovado'
+                                WHEN 3 THEN 'Em Andamento'
+                                WHEN 4 THEN 'Transferido'
+                                ELSE 'Reclassificado'
+                                END) AS situacao,
 
 		(SELECT public.fcn_upper(pessoa.nome)
            FROM cadastro.pessoa,
