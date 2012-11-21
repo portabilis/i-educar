@@ -77,7 +77,7 @@ class DiarioApiController extends ApiCoreController
     $ano->ano            = $this->getRequest()->ano;
     $ano                 = $ano->detalhe();
 
-    $anoLetivoEncerrado = is_array($ano)     && count($ano) > 0    && 
+    $anoLetivoEncerrado = is_array($ano)     && count($ano) > 0    &&
                           $ano['ativo'] == 1 && $ano['andamento'] == 2;
 
     if ($escola['bloquear_lancamento_diario_anos_letivos_encerrados'] == '1' && $anoLetivoEncerrado) {
@@ -143,7 +143,7 @@ class DiarioApiController extends ApiCoreController
     }
 
     if (! $hasPreviousNotas) {
-      $this->messenger->append("Nota somente pode ser lançada após lançar notas nas etapas: " . 
+      $this->messenger->append("Nota somente pode ser lançada após lançar notas nas etapas: " .
                                join(', ', $etapasWithoutNotas) . ' deste componente curricular.');
     }
 
@@ -168,7 +168,7 @@ class DiarioApiController extends ApiCoreController
 
     if (! $hasPreviousFaltas) {
       if ($this->serviceBoletim()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
-        $this->messenger->append("Falta somente pode ser lançada após lançar faltas nas etapas anteriores: " . 
+        $this->messenger->append("Falta somente pode ser lançada após lançar faltas nas etapas anteriores: " .
                                  join(', ', $etapasWithoutFaltas) . ' deste componente curricular.');
       }
       else{
@@ -185,14 +185,14 @@ class DiarioApiController extends ApiCoreController
 
   protected function validatesEtapaParecer() {
     $isValid           = false;
-    $etapa             = $this->getRequest()->etapa;    
+    $etapa             = $this->getRequest()->etapa;
 
     $tiposParecerAnual = array(RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE,
                                RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL);
 
-    $parecerAnual      = in_array($this->serviceBoletim()->getRegra()->get('parecerDescritivo'), 
+    $parecerAnual      = in_array($this->serviceBoletim()->getRegra()->get('parecerDescritivo'),
                                   $tiposParecerAnual);
-    
+
     if($parecerAnual && $etapa != 'An')
       $this->messenger->append("Valor inválido para o atributo 'etapa', é esperado 'An' e foi recebido '{$etapa}'.");
     elseif(! $parecerAnual && $etapa == 'An')
@@ -275,7 +275,7 @@ class DiarioApiController extends ApiCoreController
 
 
   protected function validatesInexistenceFaltasInNextEtapas() {
-    $etapasComFalta = array();  
+    $etapasComFalta = array();
 
     if (is_numeric($this->getRequest()->etapa)) {
       $etapas = $this->serviceBoletim()->getOption('etapas');
@@ -574,7 +574,7 @@ class DiarioApiController extends ApiCoreController
         $matriculaId = $aluno['ref_cod_matricula'];
 
         // seta id da matricula a ser usado pelo metodo serviceBoletim
-        $this->setCurrentMatriculaId($matriculaId);        
+        $this->setCurrentMatriculaId($matriculaId);
 
         //$matricula['situacao']      = $this->getSituacaoMatricula();
         $matricula['componentes_curriculares'] = $this->loadComponentesCurricularesForMatricula($matriculaId);
@@ -727,7 +727,7 @@ class DiarioApiController extends ApiCoreController
     }
     catch (Exception $e) {
       $matriculaId = $this->getRequest()->matricula_id;
-      $this->messenger->append("Erro ao recuperar situação da matrícula '$matriculaId': " . 
+      $this->messenger->append("Erro ao recuperar situação da matrícula '$matriculaId': " .
                                $e->getMessage());
     }
 
@@ -774,7 +774,6 @@ class DiarioApiController extends ApiCoreController
 
     // validacao
     if (! is_numeric($componenteCurricularId)) {
-      var_dump($componenteCurricularId);
       throw new Exception('Não foi possivel obter a nota atual, pois não foi recebido o id do componente curricular.');
     }
 
@@ -875,7 +874,7 @@ class DiarioApiController extends ApiCoreController
 
       if ($tpNota != $cnsNota::NENHUM) {
         $tabela = $this->serviceBoletim()->getRegra()->tabelaArredondamento->findTabelaValor();
-      
+
         foreach ($tabela as $item) {
           if ($tpNota == $cnsNota::NUMERICA) {
             $nota = str_replace(',', '.', (string) $item->nome);

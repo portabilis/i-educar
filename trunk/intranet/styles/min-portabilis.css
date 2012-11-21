@@ -149,6 +149,11 @@ div#error div#detail {
   background-color: #ffeeee !important;
 }
 
+.simple-block {
+  padding: 5px;
+  display: inline-block;
+}
+
 .block {
   display: block;
 }
@@ -203,4 +208,41 @@ input[type='submit'], input[type='button'] {
 
 select, input[type="text"], input[type="password"], textarea {
   padding: 4px 6px;
+}
+
+/* flash messages */
+
+#flash-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#flash-container p {
+    /*margin-top: 5px;
+    padding: 5px;*/
+    padding: 10px;
+}
+
+#flash-container .flash {
+    color: #b0af84;
+    border: 1px solid #fdffac;
+    background-color: #feffce;
+}
+
+#flash-container .success {
+    color: #157100;
+    border: 1px solid #e0f9d8;
+    background-color: #f0f9ee;
+}
+
+#flash-container .exclamation {
+    color: #ffba00;
+    border: 1px solid #fff3d3;
+    background-color: #fff7e2;
+}
+
+#flash-container .error {
+    color: #ff4e4e;
+    border: 1px solid #ffe5e5;
+    background-color: #ffeeee;
 }

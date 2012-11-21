@@ -1,10 +1,6 @@
 <?php
 
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
-
-require_once("include_paths.php");
-require_once("dal.php");
+require_once "intranet/include/portabilis/dal.php";
 
   class Educacenso
   {

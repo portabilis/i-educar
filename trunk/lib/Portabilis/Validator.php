@@ -41,7 +41,7 @@ require_once 'CoreExt/Exception.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Validator {
+class Portabilis_Validator {
 
   public function __construct(&$messenger) {
     $this->messenger = $messenger;
@@ -52,7 +52,7 @@ class Validator {
   // TODO refatorar todos metodos, para não receber mais argumento $raiseException*
 
   /* TODO refatorar todos metodos, para não receber mais argumento $addMsg*
-          caso $msg falso, pode-se não add a mensagem */              
+          caso $msg falso, pode-se não add a mensagem */
 
   public function validatesPresenceOf(&$value, $name, $raiseExceptionOnFail = false, $msg = '', $addMsgOnEmpty = true){
     if (! isset($value) || (empty($value) && !is_numeric($value))){
@@ -163,4 +163,8 @@ class Validator {
     }
     return $result;
   }
+}
+
+// deprecated Validator class
+class Validator extends Portabilis_Validator {
 }

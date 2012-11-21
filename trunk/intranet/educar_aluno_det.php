@@ -755,21 +755,22 @@ class indice extends clsDetalhe
           $situacao = 'Aprovado';
         elseif ($situacao == 2)
           $situacao = 'Reprovado';
-        elseif ($situacao == 3)
+        elseif ($situacao == 3) {
           $situacao = 'Em Andamento';
-        elseif ($situacao == 5)
-          $situacao = 'Reclassificado';
-        elseif ($situacao == 6)
-        {
-          $situacao = 'Abandono';
 
-          if ($db->UnicoCampo("select count(cod_transferencia_solicitacao) from pmieducar.transferencia_solicitacao where ativo = 1 and ref_cod_matricula_saida = {$m['cod_matricula']} and ref_cod_matricula_entrada is null and data_transferencia is null") > 0)
-          {
-            #$situacao = '* ' . $situacao;
+          $sql = "select count(cod_transferencia_solicitacao) from pmieducar.transferencia_solicitacao where
+                  ativo = 1 and ref_cod_matricula_saida = {$m['cod_matricula']} and ref_cod_matricula_entrada is null
+                  and data_transferencia is null";
+
+          if ($db->UnicoCampo($sql) > 0)          {
             $situacao .=  ' *';
             $possuiSolTransfEmAberto = true;
           }
         }
+        elseif ($situacao == 5)
+          $situacao = 'Reclassificado';
+        elseif ($situacao == 6)
+          $situacao = 'Abandono';
         elseif ($situacao == 4)
           $situacao = 'Transferido';
 
@@ -868,10 +869,14 @@ class indice extends clsDetalhe
       $div->append($t);
 
       if ($possuiSolTransfEmAberto)
-        $div->append(new P('* Matrícula com solicitação de transferência interna em aberto. ', new A('matricular aluno', array('class' => 'decorated', 'href' => "educar_matricula_cad.php?ref_cod_aluno={$_GET['cod_aluno']}"))));
+        $div->append(new P('* Matrícula com solicitação de transferência interna em aberto. ',
+                     new A('Matricular aluno.', array('class' => 'decorated', 'href' => "educar_matricula_cad.php?ref_cod_aluno={$_GET['cod_aluno']}")),
+                     array('class' => 'notice simple-block')));
     }
     else
-      $div->append(new P('Este aluno não possui matrículas. ', new A('<strong>Clique aqui para matricular<strong>', array('class' => 'decorated', 'href' => "educar_matricula_cad.php?ref_cod_aluno={$_GET['cod_aluno']}"))));
+      $div->append(new P('Este aluno não possui matrículas. ',
+                   new A('Matricular aluno.', array('class' => 'decorated', 'href' => "educar_matricula_cad.php?ref_cod_aluno={$_GET['cod_aluno']}")),
+                   array('class' => 'notice simple-block')));
 
     return $div->render();
   }

@@ -219,6 +219,14 @@ class clsCadastro extends clsCampos
     return FALSE;
   }
 
+  protected function flashMessage() {
+    if (empty($this->mensagem) && isset($_GET['mensagem']) && $_GET['mensagem'] == 'sucesso') {
+      $this->mensagem = 'Registro incluido com sucesso!';
+    }
+
+    return empty($this->mensagem) ? "" : "<p class='form_erro error'>$this->mensagem</p>";
+  }
+
   function RenderHTML()
   {
     $this->_preRender();
@@ -301,18 +309,10 @@ class clsCadastro extends clsCampos
 
     $retorno .= "<tr><td class='formdktd' colspan='2' height='24'>{$barra}</td></tr>";
 
-    if (empty($this->mensagem)) {
-      $this->mensagem = $_GET['mensagem'];
-      if ($this->mensagem == 'sucesso') {
-        $this->mensagem = 'Registro incluido com sucesso!';
-      }
-      else {
-        $this->mensagem = '';
-      }
-    }
+    $flashMessage = $this->flashMessage();
 
-    if (!empty($this->mensagem)) {
-      $retorno .=  "<tr><td class='formmdtd' colspan='2' height='24'><span class='form_erro error'>$this->mensagem</span></td></tr>";
+    if (! empty($flashMessage)) {
+      $retorno .=  "<tr><td class='formmdtd' colspan='2' height='24'><div id='flash-container'>{$flashMessage}</div></td></tr>";
     }
 
     if (empty($this->campos)) {

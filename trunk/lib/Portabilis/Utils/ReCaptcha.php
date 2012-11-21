@@ -28,8 +28,16 @@
  * @version   $Id$
  */
 
+/* this class requires the Services_ReCaptcha lib, in ubuntu it can be installed in pear, eg:
+   $ pear install Services_ReCaptcha
+
+  for more info about recaptcha see google.com/recaptcha and pear.php.net/package/Services_ReCaptcha
+*/
+
+require_once 'Services/ReCaptcha.php';
+
 /**
- * Portabilis_DataMapper_Utils class.
+ * Portabilis_Utils_ReCaptcha class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -38,30 +46,17 @@
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_DataMapper_Utils {
 
-  /*
-    this method returns a data mapper loaded by module_package and model_name, eg:
+class Portabilis_Utils_ReCaptcha {
 
-    $resourceDataMapper = $this->getDataMapperFor('module_package', 'model_name');
-    $columns            = array('col_1', 'col_2');
-    $where              = array('col_3' => 'val_1', 'ativo' => '1');
-    $orderBy            = array('col_4' => 'ASC');
-
-    $resources = $resourceDataMapper->findAll($columns, $where, $orderBy, $addColumnIdIfNotSet = false);
-
-  */
-  public function getDataMapperFor($packageName, $modelName){
-    $dataMapperClassName = ucfirst($packageName) . "_Model_" . ucfirst($modelName) . "DataMapper";
-    $classPath           = str_replace('_', '/', $dataMapperClassName) . '.php';
-
-    // don't raise any error if the file to be included not exists or it already included.
-    include_once $classPath;
-
-    if (! class_exists($dataMapperClassName))
-      throw new CoreExt_Exception("Class '$dataMapperClassName' not found in path $classPath.");
-
-    return new $dataMapperClassName();
+  static function getWidget() {
+    $recaptchaConfigs = $GLOBALS['coreExt']['Config']->app->recaptcha;
+    $recaptcha = new Services_ReCaptcha($recaptchaConfigs->public_key,
+                                        $recaptchaConfigs->private_key,
+                                        array('lang' => $recaptchaConfigs->options->lang,
+                                              'theme' => $recaptchaConfigs->options->theme,
+                                              'secure' => $recaptchaConfigs->options->secure == '1'));
+    return $recaptcha;
   }
 
 }

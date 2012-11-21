@@ -156,7 +156,7 @@ class indice extends clsCadastro
 		{
 			$obj_funcionario = new clsPessoaFj($this->ref_pessoa);
 			$det_funcionario = $obj_funcionario->detalhe();
-			
+
 			$this->nome = $det_funcionario["nome"];
 
 			$this->campoRotulo("nome", "Nome", $this->nome);
@@ -291,23 +291,21 @@ class indice extends clsCadastro
 						300 => "300",
 						365 => "365"
 						);
+
 		$this->campoLista("tempo_expira_conta", "Dias p/ expirar a conta", $opcoes, $this->tempo_expira_conta);
 
-		$opcoes = array("" => "Selecione",
-						 5 => "5",
-						 30 => "30",
-						 60 => "60",
-						 90 => "90",
-						120 => "120",
-						180 => "180"						);
-		$this->campoLista("tempo_expira_senha", "Dias p/ expirar a senha", $opcoes, $this->tempo_expira_senha);
+		$tempoExpiraSenha = $GLOBALS['coreExt']['Config']->app->user_accounts->default_password_expiration_period;
+
+		if (is_numeric($tempoExpiraSenha))
+			$this->campoOculto("tempo_expira_senha", $tempoExpiraSenha);
+		else {
+			$opcoes = array('' => 'Selecione', 5 => '5', 30 => '30', 60 => '60', 90 => '90', 120 => '120', 180 => '180');
+			$this->campoLista("tempo_expira_senha", "Dias p/ expirar a senha", $opcoes, $this->tempo_expira_senha);
+		}
 
 		$this->campoTexto("ramal", "Ramal", $this->ramal, 11, 30);
-
 		$this->campoCheck("super", "Super usu&aacute;rio", $this->super);
-
 		$this->campoCheck("proibido", "Banido", $this->proibido);
-
 		$this->campoCheck("matricula_permanente", "Matr&iacute;cula permanente", $this->matricula_permanente);
 
 		//-----------------------------------------------------------------------------------------------
@@ -338,16 +336,16 @@ class indice extends clsCadastro
 				$array_valores = array();
 				if($menu["cod_menu_menu"] != 1)
 				{
-/*					if( $menu['nm_menu'] == "i-Frotas") 
+/*					if( $menu['nm_menu'] == "i-Frotas")
 					{
 						echo $menu["cod_menu_menu"];
 					}*/
-					
+
 					$obj_submenu = new clsPortalMenuSubmenu();
 					$obj_submenu->setOrderby("nm_submenu ASC");
 					$lst_submenu = $obj_submenu->lista($menu["cod_menu_menu"], 2);
 					$opcoes = array("" => "Selecione");
-					
+
 					if( is_array($lst_submenu) && count($lst_submenu) )
 					{
 						foreach ($lst_submenu as $submenu)
@@ -355,7 +353,7 @@ class indice extends clsCadastro
 							$opcoes[$submenu["cod_menu_submenu"]] = $submenu["nm_submenu"];
 						}
 					}
-					
+
 					if( is_numeric($this->ref_pessoa) )
 					{
 						if(is_array($array_submenu) && count($array_submenu))
@@ -534,7 +532,7 @@ class indice extends clsCadastro
 		return false;
 	}
 
-  
+
   function validatesUniquenessOfMatricula($pessoaId, $matricula) {
     $sql = "select 1 from portal.funcionario where lower(matricula) = lower('$matricula') and ref_cod_pessoa_fj != $pessoaId";
     $db = new clsBanco();

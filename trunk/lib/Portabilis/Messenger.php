@@ -39,7 +39,8 @@
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Messenger {
+
+class Portabilis_Messenger {
 
   public function __construct() {
     $this->_msgs = array();
@@ -71,11 +72,11 @@ class Messenger {
   }
 
 
-  public function toHtml($contentTag = 'p') {
+  public function toHtml($tag = 'p') {
     $msgs = '';
 
     foreach($this->getMsgs() as $m)
-      $msgs .= "<$contentTag class='{$m['type']}'>{$m['msg']}</$contentTag>";
+      $msgs .= "<$tag class='{$m['type']}'>{$m['msg']}</$tag>";
 
     return $msgs;
   }
@@ -84,12 +85,24 @@ class Messenger {
   public function getMsgs() {
     $msgs = array();
 
-    // expoe explicitamente apenas as chaves 'msg' e 'type', evitando exposição 
+    // expoe explicitamente apenas as chaves 'msg' e 'type', evitando exposição
     // indesejada de chaves adicionadas futuramente ao array $this->_msgs
     foreach($this->_msgs as $m)
       $msgs[] = array('msg' => $m['msg'], 'type' => $m['type']);
 
     return $msgs;
   }
+
+  // merge messages from another messenger with it self
+  public function merge($anotherMessenger) {
+    foreach($anotherMessenger->getMsgs() as $msg) {
+      $this->append($msg['msg'], $msg['type']);
+    }
+  }
 }
+
+// deprecated Messenger class
+class Messenger extends Portabilis_Messenger {
+}
+
 ?>
