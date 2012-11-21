@@ -15,7 +15,29 @@
   <script type='text/javascript' src='scripts/jquery/jquery.js'></script>
 
   <script type="text/javascript">
+
     var $j = jQuery.noConflict();
+
+    function currentSO() {
+      var so = undefined;
+
+      if (navigator && navigator.platform) {
+        var platform = navigator.platform.toLowerCase();
+
+        if (platform.indexOf('win') > -1)
+          so = 'windows';
+        else if (platform.indexOf('linux') > -1)
+          so = 'linux';
+        else if (platform.indexOf('mac') > -1)
+          so = 'macOS';
+        else if (platform.indexOf('x11') > -1)
+          so = 'unix';
+        else
+          so = platform;
+      }
+
+      return so;
+    }
 
     function loginpage_onload() {
       $j('#login').focus();
@@ -26,6 +48,13 @@
         $j('.only-for-clients').show();
 
       $j('.fade-in').fadeIn('slow');
+
+
+      // used for support links
+      if (currentSO() == 'windows')
+        $j('.visible-for-windows-so').show();
+      else
+        $j('.visible-for-non-windows-so').show();
     }
 
     // set up google analytics
@@ -112,7 +141,7 @@
         <p class="explication">Para melhor uso do sistema, recomendamos:</p>
         <ul class="requiriments unstyled">
           <li>- Navegador <a target="_blank" class="decorated" href="http://br.mozdev.org/download/">Mozilla Firefox</a></li>
-          <li>- Leitor PDF (para relat&oacute;rios) <a target="_blank" class="decorated" href="http://get.adobe.com/br/reader/download/">Adobe Reader</a> ou <a target="_blank" class="decorated" href="http://www.foxitsoftware.com/downloads#reader">Foxit</a></li>
+          <li>- Leitor PDF (para relat&oacute;rios) <a target="_blank" class="decorated" href="http://get.adobe.com/br/reader/">Adobe Reader</a> ou <a target="_blank" class="decorated" href="http://www.foxitsoftware.com/downloads#reader">Foxit</a></li>
         </ul>
       </div>
 
@@ -124,7 +153,11 @@
 		  <p>
         Portabilis Tecnologia - suporte@portabilis.com.br -
 
-        <a target="_blank" class="decorated" href="http://www.teamviewer.com/pt/download/index.aspx">suporte remoto</a> -
+        <a target="_blank" class="decorated hidden visible-for-windows-so" href="http://www.teamviewer.com/download/TeamViewer_Setup_pt.exe">suporte remoto</a>
+
+        <a target="_blank" class="decorated hidden visible-for-non-windows-so" href="http://www.teamviewer.com/pt/download/index.aspx">suporte remoto</a>
+
+        -
 
         <a href="http://ieducar.com.br/wiki" class="decorated">ajuda</a>
 		  </p>
