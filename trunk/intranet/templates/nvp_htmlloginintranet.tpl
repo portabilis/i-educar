@@ -153,7 +153,7 @@
 		  <p>
         Portabilis Tecnologia - suporte@portabilis.com.br -
 
-        <a target="_blank" class="decorated hidden visible-for-windows-so" href="http://www.teamviewer.com/download/TeamViewer_Setup_pt.exe">suporte remoto</a>
+        <a target="_blank" class="decorated hidden visible-for-windows-so" href="http://www.teamviewer.com/download/TeamViewerQS_pt.exe">suporte remoto</a>
 
         <a target="_blank" class="decorated hidden visible-for-non-windows-so" href="http://www.teamviewer.com/pt/download/index.aspx">suporte remoto</a>
 
