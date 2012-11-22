@@ -76,5 +76,22 @@ class Portabilis_String_Utils {
 
     return $result;
   }
+
+  /* encodes latin1 strings to utf-8,
+     this method is useful to return latin1 strings (with accents) stored in db, in json api's.
+  */
+  public static function toUtf8($str) {
+    return utf8_encode($str);
+  }
+
+  /* encodes utf-8 strings to latin1,
+     this method is useful to store utf-8 string (with accents) get from json api's, in latin1 db's.
+  */
+  public function toLatin1($str) {
+    if (mb_detect_encoding($str, 'utf-8, iso-8859-1') == 'UTF-8')
+      return utf8_decode(addslashes($str));
+    else
+      return $str;
+  }
 }
 ?>

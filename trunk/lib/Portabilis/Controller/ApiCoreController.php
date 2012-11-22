@@ -42,6 +42,7 @@ require_once 'lib/Portabilis/Validator.php';
 require_once 'lib/Portabilis/DataMapper/Utils.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/Utils/Database.php';
+require_once 'lib/Portabilis/String/Utils.php';
 
 class ApiCoreController extends Core_Controller_Page_EditController
 {
@@ -215,24 +216,6 @@ class ApiCoreController extends Core_Controller_Page_EditController
   }
 
 
-  // #TODO mover metodo para lib/Portabilis/String/Utils.php / adicionar wrapper para tal
-  protected function safeString($str, $transform = true) {
-    if ($transform)
-      $str = ucwords(strtolower($str));
-
-    return utf8_encode($str);
-  }
-
-
-  // #TODO mover metodo para lib/Portabilis/Utils/Database.php / adicionar wrapper para tal
-  protected function safeStringForDb($s) {
-    if (mb_detect_encoding($s, 'utf-8, iso-8859-1') == 'UTF-8')
-      return utf8_decode(addslashes($s));
-    else
-      return $s;
-  }
-
-
   // wrappers for Portabilis_*Utils*
 
 
@@ -252,5 +235,27 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
   protected static function mergeOptions($options, $defaultOptions) {
     return Portabilis_Array_Utils::merge($options, $defaultOptions);
+  }
+
+  protected function toUtf8($str, $transform = true) {
+    if ($transform)
+      $str = ucwords(strtolower($str));
+
+    return Portabilis_String_Utils::toUtf8($str);
+  }
+
+  protected function toLatin1($str) {
+    return Portabilis_String_Utils::toLatin1($str);
+  }
+
+
+  // #TODO NAS CLASSES FILHAS MIGRAR safeString => toUtf8
+  protected function safeString($str, $transform = true) {
+    return $this->toUtf8($str);
+  }
+
+  // #TODO NAS CLASSES FILHAS MIGRAR safeStringForDb => toLatin1
+  protected function safeStringForDb($str) {
+    return $this->toLatin1($str);
   }
 }
