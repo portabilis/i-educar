@@ -40,8 +40,6 @@
     }
 
     function loginpage_onload() {
-      $j('#login').focus();
-
       var domainName = window.location.hostname;
 
       if (domainName.indexOf('treinamento') < 0)
@@ -49,6 +47,7 @@
 
       $j('.fade-in').fadeIn('slow');
 
+      $j('#login').focus();
 
       // used for support links
       if (currentSO() == 'windows')
