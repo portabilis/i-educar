@@ -757,10 +757,9 @@ class DiarioApiController extends ApiCoreController
       $componentesCurriculares[]   = $componente;
     }
 
-    // comentado sort by nome, para usar ordem padrão area conhecimento id / id
-    // return Portabilis_Array_Utils::sortByKey('nome', $componentesCurriculares);
-
-    return $componentesCurriculares;
+    // ordenado por id, da mesma maneira que nos boletins, obs: poderá ainda ocorrer diferença entre a ordem das areas de conhecimento?
+    // #TODO ordenar diretamente na consulta do banco?
+    return Portabilis_Array_Utils::sortByKey('id', $componentesCurriculares);
   }
 
 
