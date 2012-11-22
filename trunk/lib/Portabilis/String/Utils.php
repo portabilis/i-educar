@@ -87,35 +87,43 @@ class Portabilis_String_Utils {
      this method is useful to return latin1 strings (with accents) stored in db, in json api's.
   */
   public static function toUtf8($str, $options = array()) {
-    $defaultOptions = array('transform' => true, 'escape' => false);
+    $defaultOptions = array('transform' => false, 'escape' => false, 'convert_html_special_chars' => false);
     $options        = self::mergeOptions($options, $defaultOptions);
-
-    if ($options['transform'])
-      $str = ucwords(strtolower($str));
 
     if ($options['escape'])
       $str = self::escape($str);
 
-    return utf8_encode($str);
+    if ($options['transform'])
+      $str = ucwords(strtolower($str));
+
+    $str = utf8_encode($str);
+
+    if ($options['convert_html_special_chars'])
+      $str = htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+
+    return $str;
   }
 
   /* encodes utf-8 strings to latin1,
      this method is useful to store utf-8 string (with accents) get from json api's, in latin1 db's.
   */
   public function toLatin1($str, $options = array()) {
-    $defaultOptions = array('transform' => true, 'escape' => true);
+    $defaultOptions = array('transform' => false, 'escape' => true, 'convert_html_special_chars' => false);
     $options        = self::mergeOptions($options, $defaultOptions);
-
-    if ($options['transform'])
-      $str = ucwords(strtolower($str));
 
     if ($options['escape'])
       $str = self::escape($str);
 
+    if ($options['transform'])
+      $str = ucwords(strtolower($str));
+
     if (mb_detect_encoding($str, 'utf-8, iso-8859-1') == 'UTF-8')
-      return utf8_decode($str);
-    else
-      return $str;
+      $str = utf8_decode($str);
+
+    if ($options['convert_html_special_chars'])
+      $str = htmlspecialchars($str, ENT_QUOTES, 'ISO-8859-1');
+
+    return $str;
   }
 }
 ?>
