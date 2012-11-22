@@ -94,7 +94,7 @@ class Portabilis_String_Utils {
       $str = self::escape($str);
 
     if ($options['transform'])
-      $str = ucwords(strtolower($str));
+      $str = ucwords(mb_strtolower($str));
 
     $str = utf8_encode($str);
 
@@ -115,7 +115,7 @@ class Portabilis_String_Utils {
       $str = self::escape($str);
 
     if ($options['transform'])
-      $str = ucwords(strtolower($str));
+      $str = ucwords(mb_strtolower($str));
 
     if (mb_detect_encoding($str, 'utf-8, iso-8859-1') == 'UTF-8')
       $str = utf8_decode($str);
