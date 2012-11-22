@@ -77,19 +77,43 @@ class Portabilis_String_Utils {
     return $result;
   }
 
+  /* scapes a string, adding backslashes before characters that need to be quoted,
+     this method is useful to scape values to be inserted via database queries. */
+  public static function escape($str) {
+    return addslashes($str);
+  }
+
   /* encodes latin1 strings to utf-8,
      this method is useful to return latin1 strings (with accents) stored in db, in json api's.
   */
-  public static function toUtf8($str) {
+  public static function toUtf8($str, $options = array()) {
+    $defaultOptions = array('transform' => true, 'escape' => false);
+    $options        = self::mergeOptions($options, $defaultOptions);
+
+    if ($options['transform'])
+      $str = ucwords(strtolower($str));
+
+    if ($options['escape'])
+      $str = self::escape($str);
+
     return utf8_encode($str);
   }
 
   /* encodes utf-8 strings to latin1,
      this method is useful to store utf-8 string (with accents) get from json api's, in latin1 db's.
   */
-  public function toLatin1($str) {
+  public function toLatin1($str, $options = array()) {
+    $defaultOptions = array('transform' => true, 'escape' => true);
+    $options        = self::mergeOptions($options, $defaultOptions);
+
+    if ($options['transform'])
+      $str = ucwords(strtolower($str));
+
+    if ($options['escape'])
+      $str = self::escape($str);
+
     if (mb_detect_encoding($str, 'utf-8, iso-8859-1') == 'UTF-8')
-      return utf8_decode(addslashes($str));
+      return utf8_decode($str);
     else
       return $str;
   }

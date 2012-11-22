@@ -219,7 +219,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
   // wrappers for Portabilis_*Utils*
 
 
-  // #TODO nas classes filhas, migrar chamadas de fetchPreparedQuery para usar novo padrao com array de options
+  // DEPRECADO #TODO nas classes filhas, migrar chamadas de fetchPreparedQuery para usar novo padrao com array de options
   protected function fetchPreparedQuery($sql, $params = array(), $hideExceptions = true, $returnOnly = '') {
     $options = array('params'      => $params,
                      'show_errors' => ! $hideExceptions,
@@ -237,24 +237,20 @@ class ApiCoreController extends Core_Controller_Page_EditController
     return Portabilis_Array_Utils::merge($options, $defaultOptions);
   }
 
-  protected function toUtf8($str, $transform = true) {
-    if ($transform)
-      $str = ucwords(strtolower($str));
-
-    return Portabilis_String_Utils::toUtf8($str);
+  protected function toUtf8($str, $options = array()) {
+    return Portabilis_String_Utils::toUtf8($str, $options);
   }
 
-  protected function toLatin1($str) {
-    return Portabilis_String_Utils::toLatin1($str);
+  protected function toLatin1($str, $options = array()) {
+    return Portabilis_String_Utils::toLatin1($str, $options);
   }
 
-
-  // #TODO NAS CLASSES FILHAS MIGRAR safeString => toUtf8
+  // DEPRECADO #TODO nas classe filhas migrar de safeString => toUtf8
   protected function safeString($str, $transform = true) {
-    return $this->toUtf8($str);
+    return $this->toUtf8($str, array('transform' => $transform));
   }
 
-  // #TODO NAS CLASSES FILHAS MIGRAR safeStringForDb => toLatin1
+  // DEPRECADO #TODO nas classe filhas migrar de safeStringForDb => toLatin1
   protected function safeStringForDb($str) {
     return $this->toLatin1($str);
   }

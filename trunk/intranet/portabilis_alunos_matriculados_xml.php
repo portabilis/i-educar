@@ -48,8 +48,6 @@ if ($user->isLoggedIn())
   foreach ($records as $r) {
     #$nome = ucwords(strtolower(htmlspecialchars($r['nome'], ENT_QUOTES, 'ISO-8859-15')));
     $nome = Portabilis_String_Utils::toLatin1($r['nome']);
-    $nome = ucwords(strtolower($nome));
-
     $x .= "<matricula id='{$r['cod_matricula']}' value='$nome' />";
   }
 }
