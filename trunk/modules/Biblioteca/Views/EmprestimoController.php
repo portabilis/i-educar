@@ -67,6 +67,7 @@ class EmprestimoController extends Core_Controller_Page_ListController
     $this->largura = '100%';
 
     $scripts = array('scripts/jquery/jquery.form.js',
+                     '/modules/Portabilis/Assets/Javascripts/Utils.js',
                      '/modules/Portabilis/Assets/Javascripts/FrontendApi.js',
                      '/modules/Biblioteca/Assets/Javascripts/EmprestimoController.js');
 

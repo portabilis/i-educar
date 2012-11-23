@@ -65,7 +65,7 @@ class DiarioController extends Core_Controller_Page_ListController
     include 'include/pmieducar/educar_campo_lista.php';
   }
 
-  
+
   public function Gerar() {
     Portabilis_View_Helper_Application::loadStylesheet($this, '/modules/Portabilis/Assets/Stylesheets/FrontendApi.css');
 
@@ -74,7 +74,7 @@ class DiarioController extends Core_Controller_Page_ListController
     $this->rodape  = "";
     $this->largura = '100%';
 
-    /* TODO quando passar a usar o novo padrão de campos de seleção as chamadas abaixo 
+    /* TODO quando passar a usar o novo padrão de campos de seleção as chamadas abaixo
             poderão ser omitidas pois os novos helpers de campos de seleção já fazem tais chamadas. */
     Portabilis_View_Helper_Application::loadJavascript($this,  'scripts/jquery/jquery.js');
     Portabilis_View_Helper_Application::loadJavascript($this,  '/modules/Portabilis/Assets/Javascripts/ClientApi.js');
@@ -82,6 +82,7 @@ class DiarioController extends Core_Controller_Page_ListController
 
     $scripts = array('scripts/jquery/jquery.form.js',
                      '/modules/Portabilis/Assets/Javascripts/Validator.js',
+                     '/modules/Portabilis/Assets/Javascripts/Utils.js',
                      '/modules/Portabilis/Assets/Javascripts/FrontendApi.js',
                      '/modules/Avaliacao/Assets/Javascripts/DiarioController.js');
 

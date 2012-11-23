@@ -50,7 +50,7 @@ class PromocaoController extends Core_Controller_Page_ListController
     $dynamicSelectMenus->helperFor('ano', array('options' => array('id' => 'ano_escolar')));
   }
 
-  
+
   public function Gerar() {
     Portabilis_View_Helper_Application::loadStylesheet($this, '/modules/Portabilis/Assets/Stylesheets/FrontendApi.css');
 
@@ -60,7 +60,6 @@ class PromocaoController extends Core_Controller_Page_ListController
     $this->largura = '100%';
 
     $scripts = array('scripts/jquery/jquery.form.js',
-
                      // TODO migrar PromocaoController.js para novo padrao
                      //'/modules/Portabilis/Assets/Javascripts/FrontendApi.js',
                      '/modules/Avaliacao/Assets/Javascripts/PromocaoController.js');

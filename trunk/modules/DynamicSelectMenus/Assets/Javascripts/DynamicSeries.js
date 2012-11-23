@@ -15,7 +15,7 @@
     var updateSeries = function(){
       resetSelect($serieField);
 
-      if ($cursoField.val() && $cursoField.is(':enabled')) {
+      if ($escolaField.val() && $cursoField.val() && $cursoField.is(':enabled')) {
         $serieField.children().first().html('Aguarde carregando...');
 
         var urlForGetSeries = getResourceUrlBuilder.buildUrl('educar_escola_curso_serie_xml.php', '', {

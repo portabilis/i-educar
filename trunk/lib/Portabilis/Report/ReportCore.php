@@ -72,7 +72,7 @@ class Portabilis_Report_ReportCore
   function validatesPresenseOfRequiredArgs() {
     foreach($this->requiredArgs as $requiredArg) {
 
-      if (! isset($this->args[$requiredArg]) || trim($this->args[$requiredArg]) == '')
+      if (! isset($this->args[$requiredArg]) || empty($this->args[$requiredArg]))
         throw new Exception("The required arg '{$requiredArg}' wasn't set or is empty!");
     }
   }

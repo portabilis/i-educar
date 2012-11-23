@@ -32,8 +32,9 @@
 require_once 'Core/Controller/Page/EditController.php';
 require_once 'lib/Portabilis/View/Helper/DynamicSelectMenus.php';
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
+require_once 'lib/Portabilis/String/Utils.php';
 
-require_once 'include/pmieducar/clsPermissoes.inc.php';
+//require_once 'include/pmieducar/clsPermissoes.inc.php';
 
 /**
  * Portabilis_Controller_ReportCoreController class.
@@ -64,12 +65,6 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
     $this->acao_executa_submit           = false;
     $this->acao_enviar                   = 'printReport()';
 
-    // educar_campo_lista settings
-    $this->verificar_campos_obrigatorios = true;
-    $this->add_onchange_events           = true;
-    // include 'include/pmieducar/educar_campo_lista.php';
-
-    //$this->dynamicSelectMenus = new Portabilis_View_Helper_DynamicSelectMenus($this);
     parent::__construct();
   }
 
@@ -156,31 +151,39 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
     $this->validationErrors[] = array('message' => utf8_encode($message));
   }
 
+
   function validatesPresenseOfRequiredArgsInReport() {
     foreach($this->report->requiredArgs as $requiredArg) {
 
-      if (! isset($this->report->args[$requiredArg]) || trim($this->report->args[$requiredArg]) == '')
+      if (! isset($this->report->args[$requiredArg]) || empty($this->report->args[$requiredArg]))
         $this->addValidationError('Informe um valor no campo "' . $requiredArg . '"');
     }
   }
 
+
   function onValidationError() {
     $msg = 'O relatório não pode ser emitido, dica(s):\n\n';
+
     foreach ($this->validationErrors as $e) {
-      $msg .= '- ' . $e['message'] . '\n';
+      $error = Portabilis_String_Utils::escape($e['message']);
+      $msg .= '- ' . $error . '\n';
     }
+
     $msg .= '\nPor favor, verifique esta(s) situação(s) e tente novamente.';
-    $msg = "<script type='text/javascript'>alert('$msg'); close();</script> ";
-    print utf8_decode($msg);
+
+    $msg = Portabilis_String_Utils::toLatin1($msg, array('escape' => false));
+    echo "<script type='text/javascript'>alert('$msg'); close();</script> ";
   }
 
 
   function renderError($details = "") {
-    $msg = 'Ocorreu um erro ao emitir o relatorio.\n\n' . $details;
-    $msg = "<script type='text/javascript'>alert('$msg'); close();</script> ";
+    $details = Portabilis_String_Utils::escape($details);
+    $msg     = 'Ocorreu um erro ao emitir o relatorio.\n\n' . $details;
+    $msg     = "<script type='text/javascript'>alert('$msg'); close();</script>";
 
-    print utf8_decode($msg);
+    echo $msg;
   }
+
 
   function appendFixups() {
     $js = <<<EOT

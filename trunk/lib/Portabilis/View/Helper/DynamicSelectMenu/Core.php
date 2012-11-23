@@ -58,7 +58,8 @@ class Portabilis_View_Helper_DynamicSelectMenu_Core {
     Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, 'scripts/jquery/jquery.js');
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, 'var $j = jQuery.noConflict();');
 
-    $dependencies = array('/modules/Portabilis/Assets/Javascripts/ClientApi.js',
+    $dependencies = array('/modules/Portabilis/Assets/Javascripts/Utils.js',
+                          '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
                           '/modules/Portabilis/Assets/Javascripts/Validator.js',
                           '/modules/DynamicSelectMenus/Assets/Javascripts/DynamicSelectMenus.js');
 
@@ -180,5 +181,11 @@ class Portabilis_View_Helper_DynamicSelectMenu_Core {
     return $cursoId;
   }
 
+  protected function getSerieId($serieId = null) {
+    if (! $serieId && $this->viewInstance->ref_cod_serie)
+      $serieId = $this->viewInstance->ref_cod_serie;
+
+    return $serieId;
+  }
 }
 ?>

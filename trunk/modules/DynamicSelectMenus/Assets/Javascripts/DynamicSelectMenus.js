@@ -1,15 +1,3 @@
-function safeLog(value)
-{
-  if(typeof(console) != 'undefined' && typeof(console.log) == 'function')
-    console.log(value);
-}
-
-
-function buildId(id) {
-  return typeof(id) == 'string' && id.length > 0 && id[0] == '#' ? id : '#' + id;
-}
-
-
 function updateSelect($targetElement, options, emptyOptionHtml) {
   $targetElement.children('[value^=""]').remove();
 
@@ -33,15 +21,23 @@ function resetSelect($targetElement) {
 }
 
 
-function xmlResourcesToSelectOptions(resources, parentNodeName, nodeIdAttrName) {
+function xmlResourcesToSelectOptions(resources, parentNodeName, nodeIdAttrName, nodeValueAttrName) {
   var options = [];
 
   $j.each($j(resources).find(parentNodeName).children(), function(index, value){
-    $value = $j(value);
+    var $value = $j(value);
+    var text;
 
     var $option = $j('<option />');
     $option.attr('value', $value.attr(nodeIdAttrName));
-    $option.html($value.text());
+
+    // some xml like portabilis_alunos_matriculados_xml.php put the value in an attribute
+    if (typeof nodeValueAttrName != 'undefined')
+      text = safeCapitalize($value.attr(nodeValueAttrName));
+    else
+      text = safeCapitalize($value.text());
+
+    $option.html(text);
     options.push($option);
   });
 
@@ -55,7 +51,10 @@ function jsonResourcesToSelectOptions(resources, attrIdName, attrValueName) {
   $j.each(resources, function(index, resource){
     var $option = $j('<option />');
     $option.attr('value', resource[attrIdName]);
-    $option.html(resource[attrValueName]);
+
+    var text = safeCapitalize(resource[attrValueName]);
+    $option.html(text);
+
     options.push($option);
   });
 

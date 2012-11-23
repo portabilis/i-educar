@@ -731,6 +731,6 @@ class clsCadastro extends clsCampos
 
   // DEPRECADO #TODO nas classes filhas migrar para dynamicInputFor
   public function addSelectInputFor($inputNames, $options = array()) {
-    return $this->dynamicInputFor($inputNames, $options);
+    $this->dynamicInputFor($inputNames, $options);
   }
 }
