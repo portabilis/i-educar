@@ -260,6 +260,9 @@ class Report extends clsCadastro
   }
 
 
+  /* DEPRECADO #TODO Usar método dynamicInputFor herdado de clsCadastro,
+                     obs, o novo metodo aceita apenas 2 parametros ($inputNames e $options) */
+
   /* permite adicionar filtros ao formulário de emissão do relatório, sem precisar
      chamar diretamente $this->dynamicSelectMenus->helperFor nem passsar um array
      contendo um array de options.

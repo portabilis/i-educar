@@ -69,7 +69,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
     $this->add_onchange_events           = true;
     // include 'include/pmieducar/educar_campo_lista.php';
 
-    $this->dynamicSelectMenus = new Portabilis_View_Helper_DynamicSelectMenus($this);
+    //$this->dynamicSelectMenus = new Portabilis_View_Helper_DynamicSelectMenus($this);
     parent::__construct();
   }
 
@@ -181,25 +181,6 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
     print utf8_decode($msg);
   }
-
-
-  /* permite adicionar filtros ao formulário de emissão do relatório, sem precisar
-     chamar diretamente $this->dynamicSelectMenus->helperFor nem passsar um array
-     contendo um array de options.
-
-     ex, subscrever metodo setForm para chamar:
-
-     $this->addFilterFor('instituicao', array('required' => false)); ou
-     $this->addFilterFor(array('instituicao', 'escola', 'pesquisaAluno'));
-  */
-  function addFilterFor($filterNames, $inputOptions = array(), $options = array()) {
-    // se receber $inputOptions e $options['options'] ignora $inputOptions e usa $options['options']
-    $defaultOptions = array('options' => $inputOptions);
-    $options        = Portabilis_Array_Utils::merge($options, $defaultOptions);
-
-    $this->dynamicSelectMenus->helperFor($filterNames, $options);
-  }
-
 
   function appendFixups() {
     $js = <<<EOT

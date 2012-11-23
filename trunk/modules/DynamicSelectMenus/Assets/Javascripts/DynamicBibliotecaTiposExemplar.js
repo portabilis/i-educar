@@ -25,7 +25,7 @@
           success  : handleGetTiposExemplar
         };
 
-        getResources(options, handleGetTiposExemplar);
+        getResources(options);
       }
 
       $tipoExemplarField.change();

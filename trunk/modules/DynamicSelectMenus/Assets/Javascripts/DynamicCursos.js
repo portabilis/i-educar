@@ -5,7 +5,7 @@
 
     var handleGetCursos = function(resources) {
       var selectOptions = xmlResourcesToSelectOptions(resources, 'query', 'cod_curso');
-      updateSelect($cursoField, selectOptions, "Selecione uma curso");
+      updateSelect($cursoField, selectOptions, "Selecione um curso");
     }
 
     var updateCursos = function(){
@@ -23,7 +23,7 @@
           success  : handleGetCursos
         };
 
-        getResources(options, handleGetCursos);
+        getResources(options);
       }
 
       $cursoField.change();

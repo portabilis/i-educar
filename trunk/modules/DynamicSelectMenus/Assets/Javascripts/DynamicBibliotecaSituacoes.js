@@ -23,7 +23,7 @@
           success  : handleGetSituacoes
         };
 
-        getResources(options, handleGetSituacoes);
+        getResources(options);
       }
 
       $situacaoField.change();

@@ -23,7 +23,7 @@
           success  : handleGetFontes
         };
 
-        getResources(options, handleGetFontes);
+        getResources(options);
       }
 
       $fonteField.change();

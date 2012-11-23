@@ -169,19 +169,21 @@ class App_Model_IedFinder extends CoreExt_Entity
 
   /**
    * Retorna todas as séries cadastradas na tabela pmieducar.serie, selecionando
-   * opcionalmente pelo código da instituição.
+   * opcionalmente pelo código da instituição, da escola ou do curso.
    * @param int $instituicaoId
+   * @param int $escolaId
+   * @param int $cursoId
    * @return array
    */
-  public static function getSeries($instituicaoId = NULL)
+  public static function getSeries($instituicaoId = NULL, $escolaId = NULL, $cursoId = NULL)
   {
     $serie = self::addClassToStorage('clsPmieducarSerie', NULL,
       'include/pmieducar/clsPmieducarSerie.inc.php');
 
     // Carrega as séries
     $serie->setOrderby('ref_cod_curso ASC, cod_serie ASC, etapa_curso ASC');
-    $serie = $serie->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-      NULL, NULL, NULL, NULL, $instituicaoId);
+    $serie = $serie->lista(NULL, NULL, NULL, $cursoId, NULL, NULL, NULL, NULL, NULL,
+      NULL, NULL, NULL, NULL, $instituicaoId, NULL, NULL, NULL, $escolaId);
 
     $series = array();
     foreach ($serie as $key => $val) {
@@ -386,7 +388,7 @@ class App_Model_IedFinder extends CoreExt_Entity
    */
   public static function getComponentesTurma($anoEscolar, $escola, $turma,
     ComponenteCurricular_Model_TurmaDataMapper $mapper = NULL,
-    ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper = NULL, 
+    ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper = NULL,
     $componenteCurricularId = null)
   {
     if (is_null($mapper)) {

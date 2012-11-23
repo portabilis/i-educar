@@ -172,5 +172,13 @@ class Portabilis_View_Helper_DynamicSelectMenu_Core {
 
     return $bibliotecaId;
   }
+
+  protected function getCursoId($cursoId = null) {
+    if (! $cursoId && $this->viewInstance->ref_cod_curso)
+      $cursoId = $this->viewInstance->ref_cod_curso;
+
+    return $cursoId;
+  }
+
 }
 ?>

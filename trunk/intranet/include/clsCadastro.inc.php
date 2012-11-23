@@ -722,10 +722,15 @@ class clsCadastro extends clsCampos
   }
 
 
-  public function addSelectInputFor($inputNames, $options = array()) {
-    if (! isset($this->_dynamicSelectInputs))
-      $this->_dynamicSelectInputs = new Portabilis_View_Helper_DynamicSelectMenus($this);
+  public function dynamicInputFor($inputNames, $options = array()) {
+    if (! isset($this->_dynamicInputs))
+      $this->_dynamicInputs = new Portabilis_View_Helper_DynamicSelectMenus($this);
 
-    $this->_dynamicSelectInputs->helperFor($inputNames, $options);
+    $this->_dynamicInputs->helperFor($inputNames, $options);
+  }
+
+  // DEPRECADO #TODO nas classes filhas migrar para dynamicInputFor
+  public function addSelectInputFor($inputNames, $options = array()) {
+    return $this->dynamicInputFor($inputNames, $options);
   }
 }

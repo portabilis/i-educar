@@ -23,7 +23,7 @@
           success  : handleGetEscolas
         };
 
-        getResources(options, handleGetEscolas);
+        getResources(options);
       }
 
       $escolaField.change();

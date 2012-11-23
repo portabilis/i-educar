@@ -24,7 +24,7 @@
           success  : handleGetTiposCliente
         };
 
-        getResources(options, handleGetTiposCliente);
+        getResources(options);
       }
 
       $tipoClienteField.change();

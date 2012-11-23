@@ -23,7 +23,7 @@
           success  : handleGetBibliotecas
         };
 
-        getResources(options, handleGetBibliotecas);
+        getResources(options);
       }
 
       $bibliotecaField.change();

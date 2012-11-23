@@ -61,7 +61,7 @@ var deleteResourceUrlBuilder = {
 };
 
 var handleErrorOnGetResources = function(response){
-  alert('Erro ao alterar recurso, detalhes:' + response.responseText);
+  alert('Erro ao obter recurso, detalhes:' + response.responseText);
   safeLog(response);
 };
 
@@ -71,7 +71,7 @@ var handleErrorOnPostResource = function(response){
 };
 
 function handleErrorOnDeleteResource(response){
-  handleMessages([{type : 'error', msg : 'Erro ao alterar recurso, detalhes:' + response.responseText}], '');
+  handleMessages([{type : 'error', msg : 'Erro ao remover recurso, detalhes:' + response.responseText}], '');
   safeLog(response);
 }
 
