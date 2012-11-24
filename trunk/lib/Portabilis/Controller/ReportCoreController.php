@@ -178,8 +178,10 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
   function renderError($details = "") {
     $details = Portabilis_String_Utils::escape($details);
-    $msg     = 'Ocorreu um erro ao emitir o relatorio.\n\n' . $details;
-    $msg     = "<script type='text/javascript'>alert('$msg'); close();</script>";
+    $msg     = 'Ocorreu um erro ao emitir o relatório.\n\n' . $details;
+
+    $msg = Portabilis_String_Utils::toLatin1($msg, array('escape' => false));
+    $msg = "<script type='text/javascript'>alert('$msg'); close();</script>";
 
     echo $msg;
   }
