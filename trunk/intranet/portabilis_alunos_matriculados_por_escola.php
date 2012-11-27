@@ -9,31 +9,27 @@ class PortabilisRelacaoAlunosMatriculados extends Report
 {
   function setForm()
   {
-  
-    $this->ano = $ano_atual = date("Y");
-    $this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true);
+    $this->inputsHelper()->dynamicInput(array('ano', 'instituicao', 'escola'));
 
-    $this->addFilterFor(array('instituicao', 'escola'));
-
-    
+    $opcoes    = array();
     $opcoes[1] = "Aprovado";
 		$opcoes[2] = "Reprovado";
     $opcoes[3] = "Em Andamento";
     $opcoes[6] = "Abandono";
     $opcoes[4] = "Transferido";
 		$opcoes[9] = "Todas";
-		
-		$this->campoLista('situacao', 'Situação', $opcoes, $this->situacao, 6);
-    
+
+		$this->campoLista('situacao', 'Situação', $opcoes, 9);
   }
 
   function onValidationSuccess()
   {
-    
+
     if (! isset($_POST['ref_cod_escola']))
       $this->addArg('escola', 0);
     else
-      $this->addArg('escola', (int)$_POST['ref_cod_escola']);     
+      $this->addArg('escola', (int)$_POST['ref_cod_escola']);
+
     $this->addArg('ano', (int)$_POST['ano']);
     $this->addArg('instituicao', (int)$_POST['ref_cod_instituicao']);
     $this->addArg('situacao', (int)$_POST['situacao']);

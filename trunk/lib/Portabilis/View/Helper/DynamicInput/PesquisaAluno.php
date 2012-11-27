@@ -29,11 +29,11 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
+require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
 
 
 /**
- * Portabilis_View_Helper_DynamicSelectMenu_BibliotecaPesquisaObra class.
+ * Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaObra class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -42,7 +42,7 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicSelectMenu_PesquisaAluno extends Portabilis_View_Helper_DynamicSelectMenu_Core {
+class Portabilis_View_Helper_DynamicInput_PesquisaAluno extends Portabilis_View_Helper_DynamicInput_Core {
 
   # TODO criar este metodo na classe pai para ser subescrito nas (outras) classes filhas
   protected function getResourceId($id = null) {
@@ -79,7 +79,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_PesquisaAluno extends Portabilis_
                                  'label'      => 'Aluno',
                                  'value'      => $resourceLabel,
                                  'size'       => '30',
-                                 'maxLength'  => '255',
+                                 'max_length'  => '255',
                                  'required'   => true,
                                  'expressao'  => false,
                                  'duplo'      => false,

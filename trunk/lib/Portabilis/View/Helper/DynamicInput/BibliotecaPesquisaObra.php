@@ -29,11 +29,11 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
+require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
 
 
 /**
- * Portabilis_View_Helper_DynamicSelectMenu_BibliotecaPesquisaObra class.
+ * Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaObra class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -42,7 +42,7 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaPesquisaObra extends Portabilis_View_Helper_DynamicSelectMenu_Core {
+class Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaObra extends Portabilis_View_Helper_DynamicInput_Core {
 
   protected function getAcervoId($id = null) {
     if (! $id && $this->viewInstance->ref_cod_acervo)
@@ -77,7 +77,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaPesquisaObra extends Po
                                  'label'      => 'Obra',
                                  'value'      => $tituloObra,
                                  'size'       => '30',
-                                 'maxLength'  => '255',
+                                 'max_length'  => '255',
                                  'required'   => true,
                                  'expressao'  => false,
                                  'duplo'      => false,

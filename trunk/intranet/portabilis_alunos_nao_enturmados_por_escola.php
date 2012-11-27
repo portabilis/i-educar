@@ -9,8 +9,8 @@ class PortabilisRelacaoAlunosNaoEnturmados extends Report
 {
   function setForm()
   {
-    $this->addFilterFor(array('ano', 'instituicao'));
-    $this->addFilterFor(array('escola', 'curso'), array('required' => false));
+    $this->inputsHelper()->dynamicInput(array('ano', 'instituicao'));
+    $this->inputsHelper()->dynamicInput(array('escola', 'curso'), array('required' => false));
   }
 
   function onValidationSuccess()

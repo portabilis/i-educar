@@ -62,24 +62,6 @@ function jsonResourcesToSelectOptions(resources, attrIdName, attrValueName) {
 }
 
 
-function fixupFieldsWidth(){
-  var maxWidth = 0;
-  var $fields = $j('form select');
-
-  //get maxWidh
-  $j.each($fields, function(index, value){
-    $value = $j(value);
-    if ($value.outerWidth() > maxWidth)
-      maxWidth = $value.outerWidth();
-  });
-
-  //set maxWidth
-  $j.each($fields, function(index, value){
-    $j(value).width(maxWidth);
-  });
-};
-
-
 function getFirstDefined(attrIdNames) {
   if (! $j.isArray(attrIdNames))
     attrIdNames = [attrIdNames];

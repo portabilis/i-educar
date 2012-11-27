@@ -9,9 +9,8 @@ class PortabilisBibliotecaRecibo extends Report
 {
   function setForm()
   {
-    $this->addFilterFor(array('instituicao', 'escola', 'biblioteca', 'BibliotecaPesquisaCliente')); 
-    $this->addFilterFor(array('dataInicial','dataFinal'), array('required' => false));
-   
+    $this->inputsHelper()->dynamicInput(array('instituicao', 'escola', 'biblioteca', 'BibliotecaPesquisaCliente'));
+    $this->inputsHelper()->dynamicInput(array('dataInicial','dataFinal'), array('required' => false));
   }
 
   function onValidationSuccess()

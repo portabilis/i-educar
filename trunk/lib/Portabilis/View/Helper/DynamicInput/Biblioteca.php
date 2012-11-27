@@ -29,11 +29,10 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
-
+require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
 
 /**
- * Portabilis_View_Helper_DynamicSelectMenu_Escola class.
+ * Portabilis_View_Helper_DynamicInput_Biblioteca class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -42,7 +41,7 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicSelectMenu_Escola extends Portabilis_View_Helper_DynamicSelectMenu_Core {
+class Portabilis_View_Helper_DynamicInput_Biblioteca extends Portabilis_View_Helper_DynamicInput_Core {
 
   public function stringInput($options = array()) {
     $defaultOptions       = array('options' => array());
@@ -50,15 +49,15 @@ class Portabilis_View_Helper_DynamicSelectMenu_Escola extends Portabilis_View_He
 
     // subescreve $options['options']['value'] com nome escola
     if (isset($options['options']['value']) && $options['options']['value'])
-      $escolaId =  $options['options']['value'];
+      $bibliotecaId =  $options['options']['value'];
     else
-      $escolaId = $this->getEscolaId($options['id']);
+      $bibliotecaId = $this->getBibliotecaId($options['id']);
 
-    $escola   = App_Model_IedFinder::getEscola($escolaId);
-    $options['options']['value'] = $escola['nome'];
+    $biblioteca = App_Model_IedFinder::getBiblioteca($bibliotecaId);
+    $options['options']['value'] = $biblioteca['nm_biblioteca'];
 
-    $defaultInputOptions = array('id'        => 'ref_cod_escola',
-                                 'label'     => 'Escola',
+    $defaultInputOptions = array('id'        => 'ref_cod_biblioteca',
+                                 'label'     => 'Biblioteca',
                                  'value'     => '',
                                  'duplo'     => false,
                                  'descricao' => '',
@@ -66,20 +65,23 @@ class Portabilis_View_Helper_DynamicSelectMenu_Escola extends Portabilis_View_He
 
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
 
-    $this->viewInstance->campoOculto($inputOptions['id'], $escolaId);
+    $this->viewInstance->campoOculto($inputOptions['id'], $bibliotecaId);
 
-    $inputOptions['id'] = 'escola_nome';
+    $inputOptions['id'] = 'biblioteca_nome';
     call_user_func_array(array($this->viewInstance, 'campoRotulo'), $inputOptions);
   }
 
 
   protected function getOptions($resources) {
     $instituicaoId = $this->getInstituicaoId();
+    $escolaId      = $this->getEscolaId();
 
-    if ($instituicaoId and empty($resources))
-      $resources = App_Model_IedFinder::getEscolas($instituicaoId);
+    if ($instituicaoId and $escolaId and empty($resources)) {
+      // se possui id escola então filtra bibliotecas pelo id desta escola
+      $resources = App_Model_IedFinder::getBibliotecas($instituicaoId, $escolaId);
+    }
 
-    return $this->insertInArray(null, "Selecione uma escola", $resources);
+    return $this->insertInArray(null, "Selecione uma biblioteca", $resources);
   }
 
 
@@ -87,10 +89,10 @@ class Portabilis_View_Helper_DynamicSelectMenu_Escola extends Portabilis_View_He
     $defaultOptions       = array('id' => null, 'options' => array(), 'resources' => array());
     $options              = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultInputOptions = array('id'         => 'ref_cod_escola',
-                                 'label'      => 'Escola',
+    $defaultInputOptions = array('id'         => 'ref_cod_biblioteca',
+                                 'label'      => 'Biblioteca',
                                  'resources'  => $this->getOptions($options['resources']),
-                                 'value'      => $this->getEscolaId($options['id']),
+                                 'value'      => $this->getBibliotecaId($options['id']),
                                  'callback'   => '',
                                  'duplo'      => false,
                                  'label_hint' => '',
@@ -104,14 +106,14 @@ class Portabilis_View_Helper_DynamicSelectMenu_Escola extends Portabilis_View_He
   }
 
 
-  public function escola($options = array()) {
+  public function biblioteca($options = array()) {
     if ($this->hasNivelAcesso('POLI_INSTITUCIONAL') || $this->hasNivelAcesso('INSTITUCIONAL'))
       $this->selectInput($options);
 
     elseif($this->hasNivelAcesso('SOMENTE_ESCOLA') || $this->hasNivelAcesso('SOMENTE_BIBLIOTECA'))
       $this->stringInput($options);
 
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicSelectMenus/Assets/Javascripts/DynamicEscolas.js');
+    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInputs/Assets/Javascripts/DynamicBibliotecas.js');
   }
 }
 ?>

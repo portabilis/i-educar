@@ -34,7 +34,7 @@
 
 require_once 'Core/Controller/Page/ListController.php';
 require_once 'lib/Portabilis/View/Helper/Application.php';
-require_once 'lib/Portabilis/View/Helper/DynamicSelectMenus.php';
+require_once 'lib/Portabilis/View/Helper/Inputs.php';
 
 class PromocaoController extends Core_Controller_Page_ListController
 {
@@ -44,10 +44,10 @@ class PromocaoController extends Core_Controller_Page_ListController
   protected $_formMap  = array();
 
   protected function setSelectionFields() {
-    $dynamicSelectMenus = new Portabilis_View_Helper_DynamicSelectMenus($this);
+    $inputsHelper = new Portabilis_View_Helper_Inputs($this);
 
-    $dynamicSelectMenus->helperFor('instituicao', array('options' => array('id' => 'instituicao_id')));
-    $dynamicSelectMenus->helperFor('ano', array('options' => array('id' => 'ano_escolar')));
+    $inputsHelper->dynamic('instituicao', array('options' => array('id' => 'instituicao_id')));
+    $inputsHelper->dynamic('ano', array('options' => array('id' => 'ano_escolar')));
   }
 
 

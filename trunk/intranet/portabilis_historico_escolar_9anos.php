@@ -8,7 +8,7 @@ require_once("include/portabilis/report.php");
 class PortabilisHistoricoEscolarAnos extends Report
 {
   function setForm() {
-    $this->addFilterFor(array('instituicao', 'escola', 'pesquisaAluno'));
+    $this->inputsHelper()->dynamicInput(array('instituicao', 'escola', 'pesquisaAluno'));
   }
 
 

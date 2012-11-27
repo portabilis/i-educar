@@ -29,11 +29,11 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
+require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
 
 
 /**
- * Portabilis_View_Helper_DynamicSelectMenu_Serie class.
+ * Portabilis_View_Helper_DynamicInput_Matricula class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -42,36 +42,32 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicSelectMenu_Serie extends Portabilis_View_Helper_DynamicSelectMenu_Core {
+class Portabilis_View_Helper_DynamicInput_Matricula extends Portabilis_View_Helper_DynamicInput_Core {
 
   protected function getResourceId($id = null) {
-    if (! $id && $this->viewInstance->ref_cod_serie)
-      $id = $this->viewInstance->ref_cod_serie;
+    if (! $id && $this->viewInstance->ref_cod_matricula)
+      $id = $this->viewInstance->ref_cod_matricula;
 
     return $id;
   }
 
-  protected function getOptions($cursoId, $resources) {
-    $cursoId = $this->getCursoId($cursoId);
-
-    if ($cursoId && empty($resources))
-      $resources = App_Model_IedFinder::getSeries($cursoId);
-
-    return $this->insertInArray(null, "Selecione uma s&eacute;rie", $resources);
+  protected function getOptions($turmaId, $resources) {
+    // não implementado load resources ainda, por enquanto busca somente com ajax.
+    return $this->insertInArray(null, "Selecione uma matricula", $resources);
   }
 
 
-  public function serie($options = array()) {
+  public function matricula($options = array()) {
     $defaultOptions       = array('id'        => null,
-                                  'cursoId'  => null,
+                                  'turmaId'  => null,
                                   'options'   => array(),
                                   'resources' => array());
 
     $options              = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultSelectOptions = array('id'         => 'ref_cod_serie',
-                                  'label'      => 'Serie',
-                                  'series'     => $this->getOptions($options['cursoId'], $options['resources']),
+    $defaultSelectOptions = array('id'         => 'ref_cod_matricula',
+                                  'label'      => 'Matricula',
+                                  'matriculas'     => $this->getOptions($options['turmaId'], $options['resources']),
                                   'value'      => $this->getResourceId($options['resources']),
                                   'callback'   => '',
                                   'duplo'      => false,
@@ -84,7 +80,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_Serie extends Portabilis_View_Hel
     $selectOptions = $this->mergeOptions($options['options'], $defaultSelectOptions);
     call_user_func_array(array($this->viewInstance, 'campoLista'), $selectOptions);
 
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicSelectMenus/Assets/Javascripts/DynamicSeries.js');
+    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInputs/Assets/Javascripts/DynamicMatriculas.js');
   }
 }
 ?>

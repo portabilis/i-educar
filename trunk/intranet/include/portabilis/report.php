@@ -4,7 +4,6 @@ require_once "include/clsBase.inc.php";
 require_once "include/clsCadastro.inc.php";
 require_once "include/pmieducar/geral.inc.php";
 require_once "intranet/include/portabilis/dal.php";
-require_once "lib/Portabilis/View/Helper/DynamicSelectMenus.php";
 require_once 'lib/Portabilis/Array/Utils.php';
 
 set_include_path(get_include_path() . PATH_SEPARATOR . 'include/portabilis/libs');
@@ -111,8 +110,6 @@ class Report extends clsCadastro
         throw new Exception("Invalid logo_name, please check the ini file");
       $this->addArg('logo_name', $config->logo_name);
     }
-
-    $this->dynamicSelectMenus = new Portabilis_View_Helper_DynamicSelectMenus($this);
   }
 
   function render()
@@ -258,28 +255,6 @@ class Report extends clsCadastro
     $msg = "<script type='text/javascript'>alert('$msg'); close();</script> ";
     print utf8_decode($msg);
   }
-
-
-  /* DEPRECADO #TODO Usar método dynamicInputFor herdado de clsCadastro,
-                     obs, o novo metodo aceita apenas 2 parametros ($inputNames e $options) */
-
-  /* permite adicionar filtros ao formulário de emissão do relatório, sem precisar
-     chamar diretamente $this->dynamicSelectMenus->helperFor nem passsar um array
-     contendo um array de options.
-
-     ex, subscrever metodo setForm para chamar:
-
-     $this->addFilterFor('instituicao', array('required' => false)); ou
-     $this->addFilterFor(array('instituicao', 'escola', 'pesquisaAluno'));
-  */
-  function addFilterFor($filterNames, $inputOptions = array(), $options = array()) {
-    // se receber $inputOptions e $options['options'] ignora $inputOptions e usa $options['options']
-    $defaultOptions = array('options' => $inputOptions);
-    $options        = Portabilis_Array_Utils::merge($options, $defaultOptions);
-
-    $this->dynamicSelectMenus->helperFor($filterNames, $options);
-  }
-
 
   function appendFixups()
   {

@@ -8,11 +8,8 @@ require_once("include/portabilis/report.php");
 class PortabilisAtestadoVaga extends Report
 {
   function setForm()
-  {    
-    $this->ano = $ano_atual = date("Y");
-    $this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true);
-
-    $this->addFilterFor(array('instituicao', 'escola', 'pesquisaAluno'));    
+  {
+    $this->inputsHelper()->dynamicInput(array('ano', 'instituicao', 'escola', 'pesquisaAluno'));
   }
 
   function onValidationSuccess()

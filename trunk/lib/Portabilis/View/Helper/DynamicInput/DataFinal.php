@@ -29,8 +29,11 @@
  * @version   $Id$
  */
 
+require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
+
+
 /**
- * SelectMenusHelper class.
+ * Portabilis_View_Helper_DynamicInput_DataFinal class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -39,30 +42,33 @@
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicSelectMenus {
+class Portabilis_View_Helper_DynamicInput_DataFinal extends Portabilis_View_Helper_DynamicInput_Core {
 
-  public function __construct($viewInstance) {
-    $this->viewInstance = $viewInstance;
+  # TODO criar este metodo na classe pai para ser subescrito nas (outras) classes filhas
+  protected function getResourceValue($value = null) {
+    if (! $value && $this->viewInstance->data_final)
+      $value = $this->viewInstance->data_final;
+    else
+      $value = date('t/m/Y');
+
+    return $value;
   }
 
+  public function dataFinal($options = array()) {
+    $defaultOptions       = array('options' => array());
+    $options              = $this->mergeOptions($options, $defaultOptions);
 
-  public function helperFor($helperNames, $options = array()) {
-    if (! is_array($helperNames))
-      $helperNames = array($helperNames);
+    $defaultInputOptions = array('id'         => 'data_final',
+                                 'label'      => 'Data final',
+                                 'value'      => $this->getResourceValue($options['options']['value']),
+                                 'required'   => true,
+                                 'label_hint' => '',
+                                 'duplo'      => false,
+                                 'callback'   => false,
+                                 'disabled'   => false);
 
-    foreach($helperNames as $helperName) {
-      $helperClassName = "Portabilis_View_Helper_DynamicSelectMenu_" . ucfirst($helperName);
-      $classPath       = str_replace('_', '/', $helperClassName) . '.php';
-
-      # usado include_once para continuar execução script mesmo que o path inexista.
-      include_once $classPath;
-
-      if (! class_exists($helperClassName))
-        throw new CoreExt_Exception("Class '$helperClassName' not found in path $classPath.");
-
-      $helper = new $helperClassName($this->viewInstance);
-      $helper->$helperName($options);
-    }
+    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
+    call_user_func_array(array($this->viewInstance, 'campoData'), $inputOptions);
   }
 }
 ?>

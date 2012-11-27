@@ -9,9 +9,7 @@ class PortabilisFichaAluno extends Report
 {
   function setForm()
   {
-
-    $this->addFilterFor(array('instituicao', 'escola', 'pesquisaAluno'));
-
+    $this->inputsHelper()->dynamicInput(array('instituicao', 'escola', 'pesquisaAluno'));
   }
 
   function onValidationSuccess()
@@ -28,6 +26,6 @@ $report = new PortabilisFichaAluno($name = 'Ficha do Aluno', $templateName = 'po
 $report->addRequiredField('ref_cod_instituicao', 'instituicao');
 $report->addRequiredField('ref_cod_escola', 'escola');
 $report->addRequiredField('ref_cod_aluno', 'aluno');
-  
+
 $report->render();
 ?>

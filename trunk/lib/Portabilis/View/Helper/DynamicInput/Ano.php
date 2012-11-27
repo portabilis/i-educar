@@ -29,11 +29,11 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
+require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
 
 
 /**
- * Portabilis_View_Helper_DynamicSelectMenu_Instituicao class.
+ * Portabilis_View_Helper_DynamicInput_Ano class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -42,25 +42,52 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicSelectMenu_Instituicao extends Portabilis_View_Helper_DynamicSelectMenu_Core {
+class Portabilis_View_Helper_DynamicInput_Ano extends Portabilis_View_Helper_DynamicInput_Core {
 
-  public function hiddenInput($options = array()) {
-    $defaultOptions       = array('id' => null, 'options' => array());
+  # TODO criar este metodo na classe pai para ser subescrito nas (outras) classes filhas
+  protected function getResourceValue($value = null) {
+    if (! $value && $this->viewInstance->ano)
+      $value = $this->viewInstance->ano;
+    else
+      $value = date('Y');
+
+    return $value;
+  }
+
+  public function integerInput($options = array()) {
+    $defaultOptions       = array('options' => array());
     $options              = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultInputOptions = array('id'    => 'ref_cod_instituicao',
-                                 'value' => $this->getInstituicaoId($options['id']));
+    $defaultInputOptions = array('id'         => 'ano',
+                                 'label'      => 'Ano',
+                                 'value'      => $this->getResourceValue($options['options']['value']),
+                                 'size'       => 4,
+                                 'max_length'  => 4,
+                                 'required'   => true,
+                                 'label_hint' => '',
+                                 'input_hint' => '',
+                                 'script'     => false,
+                                 'callback'   => false,
+                                 'duplo'      => false,
+                                 'disabled'   => false);
 
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
-    call_user_func_array(array($this->viewInstance, 'campoOculto'), $inputOptions);
+    call_user_func_array(array($this->viewInstance, 'campoNumero'), $inputOptions);
   }
 
 
+  # TODO implementar metodo para buscar anos escolares escola não encerrados
   protected function getOptions($resources) {
-    if (empty($resources))
-      $resources = App_Model_IedFinder::getInstituicoes();
+    $escolaId = $this->getescolaId();
 
-    return $this->insertInArray(null, "Selecione uma institui&ccedil;&atilde;o", $resources);
+    if ($escolaId and empty($resources)) {
+
+      throw new CoreExt_Exception("Metódo getOptions classe 'Portabilis_View_Helper_DynamicInput_Ano' não implementado.");
+
+      $resources = array('#TODO');
+    }
+
+    return $this->insertInArray(null, "Selecione um ano", $resources);
   }
 
 
@@ -68,10 +95,10 @@ class Portabilis_View_Helper_DynamicSelectMenu_Instituicao extends Portabilis_Vi
     $defaultOptions       = array('id' => null, 'options' => array(), 'resources' => array());
     $options              = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultInputOptions = array('id'         => 'ref_cod_instituicao',
-                                 'label'      => 'Institui&ccedil;&atilde;o',
+    $defaultInputOptions = array('id'         => 'ano',
+                                 'label'      => 'Ano',
                                  'resources'  => $this->getOptions($options['resources']),
-                                 'value'      => $this->getInstituicaoId($options['id']),
+                                 'value'      => $this->getResourceValue($options['value']),
                                  'callback'   => '',
                                  'duplo'      => false,
                                  'label_hint' => '',
@@ -85,11 +112,13 @@ class Portabilis_View_Helper_DynamicSelectMenu_Instituicao extends Portabilis_Vi
   }
 
 
-  public function instituicao($options = array()) {
-    if ($this->hasNivelAcesso('POLI_INSTITUCIONAL'))
+  public function ano($options = array()) {
+    if ((isset($options['inputType'])  && $options['inputType'] == 'select') ||
+        (isset($options['input_type']) && $options['input_type'] == 'select'))
       $this->selectInput($options);
+
     else
-      $this->hiddenInput($options);
+      $this->integerInput($options);
   }
 }
 ?>

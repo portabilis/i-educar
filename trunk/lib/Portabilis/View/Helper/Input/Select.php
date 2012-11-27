@@ -29,11 +29,11 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
+require_once 'lib/Portabilis/View/Helper/Input/Core.php';
 
 
 /**
- * Portabilis_View_Helper_DynamicSelectMenu_BibliotecaFonte class.
+ * Portabilis_View_Helper_Input_Select class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -42,47 +42,33 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaFonte extends Portabilis_View_Helper_DynamicSelectMenu_Core {
+class Portabilis_View_Helper_Input_Select extends Portabilis_View_Helper_Input_Core {
 
-
-  protected function getBibliotecaFonteId($id = null) {
-    if (! $id && $this->viewInstance->ref_cod_fonte)
-      $id = $this->viewInstance->ref_cod_fonte;
-
-    return $id;
-  }
-
-
-  protected function getOptions($resources) {
-    $bibliotecaId  = $this->getBibliotecaId();
-
-    if ($bibliotecaId and empty($resources))
-      $resources = App_Model_IedFinder::getBibliotecaFontes($bibliotecaId);
-
-    return $this->insertInArray(null, "Selecione uma fonte", $resources);
-  }
-
-
-  public function bibliotecaFonte($options = array()) {
-    $defaultOptions       = array('id' => null, 'options' => array(), 'resources' => array());
+  public function selectInput($objectName, $attrName, $options = array()) {
+    $defaultOptions       = array('options' => array());
     $options              = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultInputOptions = array('id'    => 'ref_cod_fonte',
-                            'label'      => 'Fonte',
-                            'fontes'     => $this->getOptions($options['resources']),
-                            'value'      => $this->getBibliotecaFonteId($options['id']),
-                            'callback'   => '',
-                            'duplo'      => false,
-                            'label_hint' => '',
-                            'input_hint' => '',
-                            'disabled'   => false,
-                            'required'   => true,
-                            'multiple'   => false);
+    // O name do elemento é definido como objectName[attrName], o qual está certo.
+    // Porem o id do elemento é defino da mesma forma, quando o ideal seria objectName_attrName
+    $defaultInputOptions = array('id'         => $objectName. "[" . $attrName . "]",
+                                  'label'      => ucwords($attrName),
+                                  'resources'  => array(),
+                                  'value'      => '',
+                                  'callback'   => '',
+                                  'duplo'      => false,
+                                  'label_hint' => '',
+                                  'input_hint' => '',
+                                  'disabled'   => false,
+                                  'required'   => true,
+                                  'multiple'   => false);
 
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
     call_user_func_array(array($this->viewInstance, 'campoLista'), $inputOptions);
+  }
 
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicSelectMenus/Assets/Javascripts/DynamicBibliotecaFontes.js');
+
+  public function select($objectName, $attrName, $options = array()) {
+    $this->selectInput($objectName, $attrName, $options);
   }
 }
 ?>

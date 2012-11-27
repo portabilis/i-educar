@@ -29,11 +29,11 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
+require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
 
 
 /**
- * Portabilis_View_Helper_DynamicSelectMenu_Turma class.
+ * Portabilis_View_Helper_DynamicInput_Serie class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -42,36 +42,36 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicSelectMenu_Turma extends Portabilis_View_Helper_DynamicSelectMenu_Core {
+class Portabilis_View_Helper_DynamicInput_Serie extends Portabilis_View_Helper_DynamicInput_Core {
 
   protected function getResourceId($id = null) {
-    if (! $id && $this->viewInstance->ref_cod_turma)
-      $id = $this->viewInstance->ref_cod_turma;
+    if (! $id && $this->viewInstance->ref_cod_serie)
+      $id = $this->viewInstance->ref_cod_serie;
 
     return $id;
   }
 
-  protected function getOptions($serieId, $resources) {
-    $serieId = $this->getSerieId($serieId);
+  protected function getOptions($cursoId, $resources) {
+    $cursoId = $this->getCursoId($cursoId);
 
-    if ($serieId && empty($resources))
-      $resources = App_Model_IedFinder::getTurmas($serieId);
+    if ($cursoId && empty($resources))
+      $resources = App_Model_IedFinder::getSeries($cursoId);
 
-    return $this->insertInArray(null, "Selecione uma turma", $resources);
+    return $this->insertInArray(null, "Selecione uma s&eacute;rie", $resources);
   }
 
 
-  public function turma($options = array()) {
+  public function serie($options = array()) {
     $defaultOptions       = array('id'        => null,
-                                  'serieId'  => null,
+                                  'cursoId'  => null,
                                   'options'   => array(),
                                   'resources' => array());
 
     $options              = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultSelectOptions = array('id'         => 'ref_cod_turma',
-                                  'label'      => 'Turma',
-                                  'turmas'     => $this->getOptions($options['serieId'], $options['resources']),
+    $defaultSelectOptions = array('id'         => 'ref_cod_serie',
+                                  'label'      => 'Serie',
+                                  'series'     => $this->getOptions($options['cursoId'], $options['resources']),
                                   'value'      => $this->getResourceId($options['resources']),
                                   'callback'   => '',
                                   'duplo'      => false,
@@ -84,7 +84,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_Turma extends Portabilis_View_Hel
     $selectOptions = $this->mergeOptions($options['options'], $defaultSelectOptions);
     call_user_func_array(array($this->viewInstance, 'campoLista'), $selectOptions);
 
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicSelectMenus/Assets/Javascripts/DynamicTurmas.js');
+    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInputs/Assets/Javascripts/DynamicSeries.js');
   }
 }
 ?>

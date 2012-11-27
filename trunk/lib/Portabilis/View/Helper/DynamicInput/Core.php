@@ -29,7 +29,7 @@
  * @version   $Id$
  */
 
-require_once 'CoreExt/View/Helper/Abstract.php';
+#require_once 'CoreExt/View/Helper/Abstract.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
 require_once 'App/Model/IedFinder.php';
 require_once 'lib/Portabilis/View/Helper/Application.php';
@@ -50,7 +50,7 @@ require_once 'lib/Portabilis/DataMapper/Utils.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicSelectMenu_Core {
+class Portabilis_View_Helper_DynamicInput_Core {
 
   public function __construct($viewInstance) {
     $this->viewInstance = $viewInstance;
@@ -61,7 +61,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_Core {
     $dependencies = array('/modules/Portabilis/Assets/Javascripts/Utils.js',
                           '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
                           '/modules/Portabilis/Assets/Javascripts/Validator.js',
-                          '/modules/DynamicSelectMenus/Assets/Javascripts/DynamicSelectMenus.js');
+                          '/modules/DynamicInputs/Assets/Javascripts/DynamicInputs.js');
 
     Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $dependencies);
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, 'fixupFieldsWidth();');

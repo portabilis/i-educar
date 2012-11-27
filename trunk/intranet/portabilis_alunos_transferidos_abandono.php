@@ -9,21 +9,11 @@ require_once 'lib/Portabilis/Date/Utils.php';
 class PortabilisRelacaoAlunosTransfAbandono extends Report {
 
   function setForm() {
-    $this->addFilterFor('ano');
+    $this->inputsHelper()->dynamicInput(array('ano' ,'instituicao'));
+    $this->inputsHelper()->dynamicInput(array('escola', 'curso', 'serie', 'dataInicial','dataFinal'), array('required' => false));
 
-    // TODO usar novo padrao helpers, quando existir helper para serie e turma
-    // $this->addFilterFor(array('instituicao', 'escola', 'curso', 'serie', 'turma'), array('required' => false));
-
-    $instituicao_obrigatorio = true;
-    $get_escola = $get_curso = $get_escola_curso_serie = true;
-    include("include/pmieducar/educar_campo_lista.php");
-    
-    $opcoes[1] = "Abandono";
-    $opcoes[2] = "Transferido";
-    $opcoes[9] = "Ambos";    
+    $opcoes = array(1 => 'Abandono', 2 => 'Transferido', 9 => 'Ambos');
     $this->campoLista('situacao', 'Situação', $opcoes, 9);
-
-    $this->addFilterFor(array('dataInicial','dataFinal'), array('required' => false));   
   }
 
   function onValidationSuccess() {
@@ -41,13 +31,13 @@ class PortabilisRelacaoAlunosTransfAbandono extends Report {
       $this->addArg('serie', 0);
     else
       $this->addArg('serie', (int)$_POST['ref_ref_cod_serie']);
-   
+
     $this->addArg('ano',         (int)$_POST['ano']);
-    $this->addArg('instituicao', (int)$_POST['ref_cod_instituicao']);    
+    $this->addArg('instituicao', (int)$_POST['ref_cod_instituicao']);
     $this->addArg('situacao',    (int)$_POST['situacao']);
 
     $this->addArg('dt_inicial',  Portabilis_Date_Utils::BrToPgSQL($_POST['data_inicial']));
-    $this->addArg('dt_final',    Portabilis_Date_Utils::BrToPgSQL($_POST['data_final'])); 
+    $this->addArg('dt_final',    Portabilis_Date_Utils::BrToPgSQL($_POST['data_final']));
   }
 }
 
@@ -56,6 +46,6 @@ $report = new PortabilisRelacaoAlunosTransfAbandono($name = 'Relação de Alunos T
 $report->addRequiredField('ano', 'ano');
 $report->addRequiredField('ref_cod_instituicao', 'instituicao');
 $report->addRequiredField('situacao', 'situacao');
-  
+
 $report->render();
 ?>

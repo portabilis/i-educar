@@ -29,11 +29,11 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
+require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
 
 
 /**
- * Portabilis_View_Helper_DynamicSelectMenu_Ano class.
+ * Portabilis_View_Helper_DynamicInput_Escola class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -42,52 +42,44 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicSelectMenu_Ano extends Portabilis_View_Helper_DynamicSelectMenu_Core {
+class Portabilis_View_Helper_DynamicInput_Escola extends Portabilis_View_Helper_DynamicInput_Core {
 
-  # TODO criar este metodo na classe pai para ser subescrito nas (outras) classes filhas
-  protected function getResourceValue($value = null) {
-    if (! $value && $this->viewInstance->ano)
-      $value = $this->viewInstance->ano;
-    else
-      $value = date('Y');
-
-    return $value;
-  }
-
-  public function integerInput($options = array()) {
+  public function stringInput($options = array()) {
     $defaultOptions       = array('options' => array());
     $options              = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultInputOptions = array('id'             => 'ano',
-                                 'label'          => 'Ano',
-                                 'value'          => $this->getResourceValue($options['options']['value']),
-                                 'tamanhovisivel' => 4,
-                                 'tamanhomaximo'  => 4,
-                                 'required'       => true,
-                                 'label_hint'     => '',
-                                 'input_hint'     => '',
-                                 'script'         => false,
-                                 'callback'       => false,
-                                 'duplo'          => false,
-                                 'disabled'       => false);
+    // subescreve $options['options']['value'] com nome escola
+    if (isset($options['options']['value']) && $options['options']['value'])
+      $escolaId =  $options['options']['value'];
+    else
+      $escolaId = $this->getEscolaId($options['id']);
+
+    $escola   = App_Model_IedFinder::getEscola($escolaId);
+    $options['options']['value'] = $escola['nome'];
+
+    $defaultInputOptions = array('id'        => 'ref_cod_escola',
+                                 'label'     => 'Escola',
+                                 'value'     => '',
+                                 'duplo'     => false,
+                                 'descricao' => '',
+                                 'separador' => ':');
 
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
-    call_user_func_array(array($this->viewInstance, 'campoNumero'), $inputOptions);
+
+    $this->viewInstance->campoOculto($inputOptions['id'], $escolaId);
+
+    $inputOptions['id'] = 'escola_nome';
+    call_user_func_array(array($this->viewInstance, 'campoRotulo'), $inputOptions);
   }
 
 
-  # TODO implementar metodo para buscar anos escolares escola não encerrados
   protected function getOptions($resources) {
-    $escolaId = $this->getescolaId();
+    $instituicaoId = $this->getInstituicaoId();
 
-    if ($escolaId and empty($resources)) {
+    if ($instituicaoId and empty($resources))
+      $resources = App_Model_IedFinder::getEscolas($instituicaoId);
 
-      throw new CoreExt_Exception("Metódo getOptions classe 'Portabilis_View_Helper_DynamicSelectMenu_Ano' não implementado.");
-
-      $resources = array('#TODO');
-    }
-
-    return $this->insertInArray(null, "Selecione um ano", $resources);
+    return $this->insertInArray(null, "Selecione uma escola", $resources);
   }
 
 
@@ -95,10 +87,10 @@ class Portabilis_View_Helper_DynamicSelectMenu_Ano extends Portabilis_View_Helpe
     $defaultOptions       = array('id' => null, 'options' => array(), 'resources' => array());
     $options              = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultInputOptions = array('id'         => 'ano',
-                                 'label'      => 'Ano',
+    $defaultInputOptions = array('id'         => 'ref_cod_escola',
+                                 'label'      => 'Escola',
                                  'resources'  => $this->getOptions($options['resources']),
-                                 'value'      => $this->getResourceValue($options['value']),
+                                 'value'      => $this->getEscolaId($options['id']),
                                  'callback'   => '',
                                  'duplo'      => false,
                                  'label_hint' => '',
@@ -112,13 +104,14 @@ class Portabilis_View_Helper_DynamicSelectMenu_Ano extends Portabilis_View_Helpe
   }
 
 
-  public function ano($options = array()) {
-    if ((isset($options['inputType'])  && $options['inputType'] == 'select') ||
-        (isset($options['input_type']) && $options['input_type'] == 'select'))
+  public function escola($options = array()) {
+    if ($this->hasNivelAcesso('POLI_INSTITUCIONAL') || $this->hasNivelAcesso('INSTITUCIONAL'))
       $this->selectInput($options);
 
-    else
-      $this->integerInput($options);
+    elseif($this->hasNivelAcesso('SOMENTE_ESCOLA') || $this->hasNivelAcesso('SOMENTE_BIBLIOTECA'))
+      $this->stringInput($options);
+
+    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInputs/Assets/Javascripts/DynamicEscolas.js');
   }
 }
 ?>

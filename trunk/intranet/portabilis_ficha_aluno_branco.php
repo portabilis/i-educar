@@ -9,9 +9,7 @@ class PortabilisFichaAlunoBranco extends Report
 {
   function setForm()
   {
-
-    $this->addFilterFor(array('instituicao', 'escola'));
-
+    $this->inputsHelper()->dynamicInput(array('instituicao', 'escola'));
   }
 
   function onValidationSuccess()
@@ -26,6 +24,6 @@ $report = new PortabilisFichaAlunoBranco($name = 'Ficha do Aluno em Branco', $te
 
 $report->addRequiredField('ref_cod_instituicao', 'instituicao');
 $report->addRequiredField('ref_cod_escola', 'escola');
-  
+
 $report->render();
 ?>

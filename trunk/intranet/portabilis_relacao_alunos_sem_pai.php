@@ -9,17 +9,12 @@ class PortabilisRelacaoAlunosSemPai extends Report
 {
   function setForm()
   {
-
-    $this->ano = $ano_atual = date("Y");
-    $this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true);
-
-    $this->addFilterFor(array('instituicao', 'escola'));
-
+    $this->inputsHelper()->dynamicInput(array('ano', 'instituicao', 'escola'));
   }
 
   function onValidationSuccess()
   {
-  
+
     $this->addArg('ano', (int)$_POST['ano']);
     $this->addArg('instituicao', (int)$_POST['ref_cod_instituicao']);
     $this->addArg('escola', (int)$_POST['ref_cod_escola']);
@@ -32,6 +27,6 @@ $report = new PortabilisRelacaoAlunosSemPai($name = 'Relação de Alunos sem Pai',
 $report->addRequiredField('ano', 'ano');
 $report->addRequiredField('ref_cod_instituicao', 'instituicao');
 $report->addRequiredField('ref_cod_escola', 'escola');
-  
+
 $report->render();
 ?>

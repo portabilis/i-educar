@@ -29,11 +29,11 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
+require_once 'lib/Portabilis/View/Helper/Input/Core.php';
 
 
 /**
- * Portabilis_View_Helper_DynamicSelectMenu_DataFinal class.
+ * Portabilis_View_Helper_Input_Text class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -42,33 +42,35 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicSelectMenu_DataFinal extends Portabilis_View_Helper_DynamicSelectMenu_Core {
+class Portabilis_View_Helper_Input_Text extends Portabilis_View_Helper_Input_Core {
 
-  # TODO criar este metodo na classe pai para ser subescrito nas (outras) classes filhas
-  protected function getResourceValue($value = null) {
-    if (! $value && $this->viewInstance->data_final)
-      $value = $this->viewInstance->data_final;
-    else
-      $value = date('t/m/Y');
-
-    return $value;
-  }
-
-  public function dataFinal($options = array()) {
+  public function textInput($objectName, $attrName, $options = array()) {
     $defaultOptions       = array('options' => array());
     $options              = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultInputOptions = array('id'         => 'data_final',
-                                 'label'      => 'Data final',
-                                 'value'      => $this->getResourceValue($options['options']['value']),
-                                 'required'   => true,
-                                 'label_hint' => '',
-                                 'duplo'      => false,
-                                 'callback'   => false,
-                                 'disabled'   => false);
+    // O name do elemento é definido como objectName[attrName], o qual está certo.
+    // Porem o id do elemento é defino da mesma forma, quando o ideal seria objectName_attrName
+    $defaultInputOptions = array('id'             => $objectName. "[" . $attrName . "]",
+                                 'label'          => ucwords($attrName),
+                                 'value'          => '',
+                                 'size'           => 20,
+                                 'max_length'     => 20,
+                                 'required'       => true,
+                                 'script'         => false,
+                                 'duplo'          => false,
+                                 'label_hint'     => '',
+                                 'input_hint'     => '',
+                                 'callback'       => false,
+                                 'event'          => 'onKeyUp',
+                                 'disabled'       => false);
 
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
-    call_user_func_array(array($this->viewInstance, 'campoData'), $inputOptions);
+    call_user_func_array(array($this->viewInstance, 'campoTexto'), $inputOptions);
+  }
+
+
+  public function text($objectName, $attrName, $options = array()) {
+    $this->textInput($objectName, $attrName, $options);
   }
 }
 ?>

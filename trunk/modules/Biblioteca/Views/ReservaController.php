@@ -34,7 +34,7 @@
 
 require_once 'Core/Controller/Page/ListController.php';
 require_once 'lib/Portabilis/View/Helper/Application.php';
-require_once 'lib/Portabilis/View/Helper/DynamicSelectMenus.php';
+require_once 'lib/Portabilis/View/Helper/Inputs.php';
 
 class ReservaController extends Core_Controller_Page_ListController
 {
@@ -46,13 +46,13 @@ class ReservaController extends Core_Controller_Page_ListController
   protected $_processoAp = 0;
 
   protected function setSelectionFields() {
-    $dynamicSelectMenus = new Portabilis_View_Helper_DynamicSelectMenus($this);
+    $inputsHelper = new Portabilis_View_Helper_Inputs($this);
 
-    $dynamicSelectMenus->helperFor('instituicao');
-    $dynamicSelectMenus->helperFor('escola');
-    $dynamicSelectMenus->helperFor('biblioteca');
-    $dynamicSelectMenus->helperFor('bibliotecaPesquisaCliente');
-    $dynamicSelectMenus->helperFor('bibliotecaPesquisaObra');
+    $inputsHelper->dynamic('instituicao');
+    $inputsHelper->dynamic('escola');
+    $inputsHelper->dynamic('biblioteca');
+    $inputsHelper->dynamic('bibliotecaPesquisaCliente');
+    $inputsHelper->dynamic('bibliotecaPesquisaObra');
   }
 
 

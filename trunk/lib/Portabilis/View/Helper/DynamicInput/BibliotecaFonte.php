@@ -29,11 +29,11 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
+require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
 
 
 /**
- * Portabilis_View_Helper_DynamicSelectMenu_BibliotecaSituacao class.
+ * Portabilis_View_Helper_DynamicInput_BibliotecaFonte class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -42,11 +42,12 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaSituacao extends Portabilis_View_Helper_DynamicSelectMenu_Core {
+class Portabilis_View_Helper_DynamicInput_BibliotecaFonte extends Portabilis_View_Helper_DynamicInput_Core {
 
-  protected function getBibliotecaSituacaoId($id = null) {
-    if (! $id && $this->viewInstance->ref_cod_situacao)
-      $id = $this->viewInstance->ref_cod_situacao;
+
+  protected function getBibliotecaFonteId($id = null) {
+    if (! $id && $this->viewInstance->ref_cod_fonte)
+      $id = $this->viewInstance->ref_cod_fonte;
 
     return $id;
   }
@@ -56,20 +57,20 @@ class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaSituacao extends Portab
     $bibliotecaId  = $this->getBibliotecaId();
 
     if ($bibliotecaId and empty($resources))
-      $resources = App_Model_IedFinder::getBibliotecaSituacoes($bibliotecaId);
+      $resources = App_Model_IedFinder::getBibliotecaFontes($bibliotecaId);
 
-    return $this->insertInArray(null, "Selecione uma situa&ccedil;&atilde;o", $resources);
+    return $this->insertInArray(null, "Selecione uma fonte", $resources);
   }
 
 
-  public function bibliotecaSituacao($options = array()) {
+  public function bibliotecaFonte($options = array()) {
     $defaultOptions       = array('id' => null, 'options' => array(), 'resources' => array());
     $options              = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultInputOptions = array('id'    => 'ref_cod_situacao',
-                            'label'      => 'Situa&ccedil;&atilde;o',
-                            'situacoes'  => $this->getOptions($options['resources']),
-                            'value'      => $this->getBibliotecaSituacaoId($options['id']),
+    $defaultInputOptions = array('id'    => 'ref_cod_fonte',
+                            'label'      => 'Fonte',
+                            'fontes'     => $this->getOptions($options['resources']),
+                            'value'      => $this->getBibliotecaFonteId($options['id']),
                             'callback'   => '',
                             'duplo'      => false,
                             'label_hint' => '',
@@ -81,7 +82,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_BibliotecaSituacao extends Portab
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
     call_user_func_array(array($this->viewInstance, 'campoLista'), $inputOptions);
 
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicSelectMenus/Assets/Javascripts/DynamicBibliotecaSituacoes.js');
+    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInputs/Assets/Javascripts/DynamicBibliotecaFontes.js');
   }
 }
 ?>

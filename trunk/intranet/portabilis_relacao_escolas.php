@@ -7,8 +7,8 @@ require_once("include/portabilis/report.php");
 
 class PortabilisRelacaoEscolas extends Report {
   function setForm() {
-    $this->addFilterFor(array('ano', 'instituicao'));
-    $this->addFilterFor('escola', array('required' => false));
+    $this->inputsHelper()->dynamicInput(array('ano', 'instituicao'));
+    $this->inputsHelper()->dynamicInput('escola', array('required' => false));
   }
 
   function onValidationSuccess() {

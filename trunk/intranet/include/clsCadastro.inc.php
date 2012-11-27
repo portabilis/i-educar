@@ -34,7 +34,7 @@ if (class_exists('clsPmiajudaPagina')) {
   require_once 'include/pmiajuda/clsPmiajudaPagina.inc.php';
 }
 
-require_once "lib/Portabilis/View/Helper/DynamicSelectMenus.php";
+require_once "lib/Portabilis/View/Helper/Inputs.php";
 
 /**
  * clsCadastro class.
@@ -722,15 +722,10 @@ class clsCadastro extends clsCampos
   }
 
 
-  public function dynamicInputFor($inputNames, $options = array()) {
-    if (! isset($this->_dynamicInputs))
-      $this->_dynamicInputs = new Portabilis_View_Helper_DynamicSelectMenus($this);
+  public function inputsHelper() {
+    if (! isset($this->_inputsHelper))
+      $this->_inputsHelper = new Portabilis_View_Helper_Inputs($this);
 
-    $this->_dynamicInputs->helperFor($inputNames, $options);
-  }
-
-  // DEPRECADO #TODO nas classes filhas migrar para dynamicInputFor
-  public function addSelectInputFor($inputNames, $options = array()) {
-    $this->dynamicInputFor($inputNames, $options);
+    return $this->_inputsHelper;
   }
 }

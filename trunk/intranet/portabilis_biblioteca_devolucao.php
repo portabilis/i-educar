@@ -9,9 +9,8 @@ class PortabilisBibliotecaDevolucao extends Report
 {
   function setForm()
   {
-    $this->addFilterFor(array('instituicao', 'escola', 'biblioteca')); 
-    $this->addFilterFor(array('BibliotecaPesquisaCliente', 'dataInicial','dataFinal'), array('required' => false));
-   
+    $this->inputsHelper()->dynamicInput(array('instituicao', 'escola', 'biblioteca'));
+    $this->inputsHelper()->dynamicInput(array('BibliotecaPesquisaCliente', 'dataInicial','dataFinal'), array('required' => false));
   }
 
   function onValidationSuccess()

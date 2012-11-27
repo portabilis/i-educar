@@ -29,11 +29,11 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
+require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
 
 
 /**
- * Portabilis_View_Helper_DynamicSelectMenu_Curso class.
+ * Portabilis_View_Helper_DynamicInput_Curso class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -42,7 +42,7 @@ require_once 'lib/Portabilis/View/Helper/DynamicSelectMenu/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicSelectMenu_Curso extends Portabilis_View_Helper_DynamicSelectMenu_Core {
+class Portabilis_View_Helper_DynamicInput_Curso extends Portabilis_View_Helper_DynamicInput_Core {
 
   protected function getResourceId($id = null) {
     if (! $id && $this->viewInstance->ref_cod_curso)
@@ -84,7 +84,7 @@ class Portabilis_View_Helper_DynamicSelectMenu_Curso extends Portabilis_View_Hel
     $selectOptions = $this->mergeOptions($options['options'], $defaultSelectOptions);
     call_user_func_array(array($this->viewInstance, 'campoLista'), $selectOptions);
 
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicSelectMenus/Assets/Javascripts/DynamicCursos.js');
+    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInputs/Assets/Javascripts/DynamicCursos.js');
   }
 }
 ?>
