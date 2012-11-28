@@ -29,16 +29,9 @@
  * @version   $Id$
  */
 
-#require_once 'CoreExt/View/Helper/Abstract.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
-#require_once 'App/Model/IedFinder.php';
 require_once 'lib/Portabilis/View/Helper/Application.php';
 require_once 'lib/Portabilis/Array/Utils.php';
-#require_once 'lib/Portabilis/Object/Utils.php';
-#require_once 'lib/Portabilis/DataMapper/Utils.php';
-
-// require_once 'App/Model/NivelAcesso.php';
-// require_once 'Usuario/Model/UsuarioDataMapper.php';
 
 /**
  * SelectMenusHelper class.
@@ -51,11 +44,12 @@ require_once 'lib/Portabilis/Array/Utils.php';
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_Input_Core {
-  public function __construct($viewInstance) {
-    $this->viewInstance = $viewInstance;
+  public function __construct($viewInstance, $inputsHelper) {
+    $this->viewInstance  = $viewInstance;
+    $this->_inputsHelper = $inputsHelper;
 
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, 'scripts/jquery/jquery.js');
-    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, 'var $j = jQuery.noConflict();');
+    Portabilis_View_Helper_Application::loadJQueryLib($this->viewInstance);
+    Portabilis_View_Helper_Application::loadJQueryUiLib($this->viewInstance);
 
     $dependencies = array('/modules/Portabilis/Assets/Javascripts/Utils.js',
                           '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
@@ -68,6 +62,10 @@ class Portabilis_View_Helper_Input_Core {
   // wrapper for Portabilis_Array_Utils::merge
   protected static function mergeOptions($options, $defaultOptions) {
     return Portabilis_Array_Utils::merge($options, $defaultOptions);
+  }
+
+  protected function inputsHelper() {
+    return $this->_inputsHelper;
   }
 }
 ?>

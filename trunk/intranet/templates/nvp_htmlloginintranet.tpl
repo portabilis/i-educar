@@ -12,7 +12,7 @@
     <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=3' />
     <link rel=stylesheet type='text/css' href='styles/login.css?rand=3' />
 
-  <script type='text/javascript' src='scripts/jquery/jquery.js'></script>
+  <script type='text/javascript' src='//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>
 
   <script type="text/javascript">
 

@@ -43,7 +43,7 @@ require_once 'CoreExt/View/Helper/Abstract.php';
 
 class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
 
-  // Usado para evitar carregar mais de uma vez o mesmo arquivo js ou css
+  // previne carregar mais de uma vez o mesmo asset js ou css
   protected static $javascriptsLoaded = array();
   protected static $stylesheetsLoaded = array();
 
@@ -64,6 +64,7 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
   {
     return self::_getInstance(__CLASS__);
   }
+
 
 
   /**
@@ -87,7 +88,7 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
       $timestamp = '';
 
     foreach ($files as $file) {
-      // somente carrega o arquivo uma vez
+      // somente carrega o asset apenas uma vez
       if (! in_array($file, self::$javascriptsLoaded)) {
         self::$javascriptsLoaded[] = $file;
 
@@ -95,28 +96,6 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
         $viewInstance->appendOutput("<script type='text/javascript' src='$file'></script>");
       }
     }
-  }
-
-  /**
-   *
-   * <code>
-   * </code>
-   *
-   * @param   type ?
-   * @return  null
-   */
-  public static function embedJavascript($viewInstance, $script, $afterReady = false) {
-
-    if ($afterReady) {
-
-      $script = "(function($){
-        $(document).ready(function(){
-          $script
-        });
-      })(jQuery);";
-    }
-
-    $viewInstance->appendOutput("<script type='text/javascript'>$script</script>");
   }
 
 
@@ -141,7 +120,7 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
       $timestamp = '';
 
     foreach ($files as $file) {
-      // somente carrega o arquivo uma vez
+      // somente carrega o asset apenas uma vez
       if (! in_array($file, self::$stylesheetsLoaded)) {
         self::$stylesheetsLoaded[] = $file;
 
@@ -149,6 +128,47 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
         $viewInstance->appendOutput("<link type='text/css' rel='stylesheet' href='$file'></script>");
       }
     }
+  }
+
+
+  public static function embedJavascript($viewInstance, $script, $afterReady = false) {
+    if ($afterReady) {
+
+      $script = "(function($){
+        $(document).ready(function(){
+          $script
+        });
+      })(jQuery);";
+    }
+
+    $viewInstance->appendOutput("<script type='text/javascript'>$script</script>");
+  }
+
+
+  public static function embedStylesheet($viewInstance, $css) {
+    $viewInstance->appendOutput("<style type='text/css'>$css</style>");
+  }
+
+
+  // load lib helpers
+
+  public static function loadJQueryLib($viewInstance) {
+    self::loadJavascript($viewInstance, '//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js', false);
+    self::embedJavascript($viewInstance, "if (typeof(\$j) == 'undefined') { var \$j = jQuery.noConflict(); }");
+  }
+
+
+  public static function loadJQueryFormLib($viewInstance) {
+    self::loadJavascript($viewInstance, 'scripts/jquery/jquery.form.js', false);
+  }
+
+
+  public static function loadJQueryUiLib($viewInstance) {
+    self::loadJavascript($viewInstance, '//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js', false);
+    self::loadStylesheet($viewInstance, '//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/ui-lightness/jquery-ui.css', false);
+
+    // ui-autocomplete fixup
+    self::embedStylesheet($viewInstance, ".ui-autocomplete { font-size: 11px; }");
   }
 }
 ?>

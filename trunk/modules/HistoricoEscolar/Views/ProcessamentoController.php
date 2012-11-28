@@ -44,6 +44,8 @@ require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
+require_once 'lib/Portabilis/View/Helper/Application.php';
+
 class ProcessamentoController extends Core_Controller_Page_ListController
 {
   protected $_dataMapper = 'Avaliacao_Model_NotaAlunoDataMapper';
@@ -246,15 +248,12 @@ function getSelectGradeCurso(){
 
     $this->appendOutput($resourceOptionsTable);
 
-    $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery.js"></script>');
-    $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery.form.js"></script>');
-    $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery-ui.js"></script>');
+    Portabilis_View_Helper_Application::loadJQueryLib($this);
+    Portabilis_View_Helper_Application::loadJQueryFormLib($this);
+    Portabilis_View_Helper_Application::loadJQueryUiLib($this);
 
-    $this->appendOutput('<link type="text/css" rel="stylesheet" href="/modules/HistoricoEscolar/Static/styles/processamentoController.css"></script>');
-
-    $this->appendOutput('<link type="text/css" rel="stylesheet" href="/intranet/styles/jquery-ui/ui-lightness/jquery-ui.css"></script>');
-
-    $this->appendOutput('<script type="text/javascript" charset="utf-8" src="/modules/HistoricoEscolar/Static/scripts/processamentoController.js?timestamp='.date('dmY').'"></script>');
+    Portabilis_View_Helper_Application::loadJavascript($this, '/modules/HistoricoEscolar/Static/scripts/processamentoController.js');
+    Portabilis_View_Helper_Application::loadStylesheet($this, '/modules/HistoricoEscolar/Static/styles/processamentoController.css');
   }
 }
 ?>

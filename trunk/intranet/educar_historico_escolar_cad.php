@@ -30,6 +30,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'lib/Portabilis/View/Helper/Application.php';
 
 class clsIndexBase extends clsBase
 {
@@ -275,10 +276,8 @@ class indice extends clsCadastro
 		$this->campoQuebra();
 	//---------------------FIM INCLUI DISCIPLINAS---------------------//
 
-    $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery.js"></script>');
-    $this->appendOutput('<script type="text/javascript" src="scripts/jquery/jquery-ui.js"></script>');
-    $this->appendOutput('<link type="text/css" rel="stylesheet" href="/intranet/styles/jquery-ui/ui-lightness/jquery-ui.css"></script>');
-
+    Portabilis_View_Helper_Application::loadJQueryLib($this);
+    Portabilis_View_Helper_Application::loadJQueryUiLib($this);
 	}
 
 	function Novo()
@@ -492,70 +491,67 @@ $pagina->MakeAll();
 
 
 
-document.getElementById('idpais').onchange = function()
-{
-	var campoPais = document.getElementById( 'idpais' ).value;
-	var campoEstado = document.getElementById( 'escola_uf' );
+	document.getElementById('idpais').onchange = function() {
+		var campoPais = document.getElementById( 'idpais' ).value;
+		var campoEstado = document.getElementById( 'escola_uf' );
 
-	campoEstado.length = 1;
-	campoEstado.disabled = true;
-	campoEstado.options[0] = new Option( 'Carregando estados', '', false, false );
+		campoEstado.length = 1;
+		campoEstado.disabled = true;
+		campoEstado.options[0] = new Option( 'Carregando estados', '', false, false );
 
-	var xml1 = new ajax(getEstado_XML);
-	strURL = "public_uf_xml.php?pais="+campoPais;
-	xml1.envia(strURL);
-}
+		var xml1 = new ajax(getEstado_XML);
+		strURL = "public_uf_xml.php?pais="+campoPais;
+		xml1.envia(strURL);
+	}
 
-function getEstado_XML(xml)
-{
-
-
-	var campoEstado = document.getElementById( 'escola_uf' );
-
-
-	var estados = xml.getElementsByTagName( "estado" );
-
-	campoEstado.length = 1;
-	campoEstado.options[0] = new Option( 'Selecione um estado', '', false, false );
-	for ( var j = 0; j < estados.length; j++ )
+	function getEstado_XML(xml)
 	{
 
-		campoEstado.options[campoEstado.options.length] = new Option( estados[j].firstChild.nodeValue, estados[j].getAttribute('sigla_uf'), false, false );
 
+		var campoEstado = document.getElementById( 'escola_uf' );
+
+
+		var estados = xml.getElementsByTagName( "estado" );
+
+		campoEstado.length = 1;
+		campoEstado.options[0] = new Option( 'Selecione um estado', '', false, false );
+		for ( var j = 0; j < estados.length; j++ )
+		{
+
+			campoEstado.options[campoEstado.options.length] = new Option( estados[j].firstChild.nodeValue, estados[j].getAttribute('sigla_uf'), false, false );
+
+		}
+		if ( campoEstado.length == 1 ) {
+			campoEstado.options[0] = new Option( 'País não possui estados', '', false, false );
+		}
+
+		campoEstado.disabled = false;
 	}
-	if ( campoEstado.length == 1 ) {
-		campoEstado.options[0] = new Option( 'País não possui estados', '', false, false );
+
+
+  // set auto complete in all disciplina fields
+
+  function setAutoComplete() {
+		var $autoCompleteFields = $j('input[id^="nm_disciplina"]');
+
+		$j.each($autoCompleteFields, function(index, value) {
+			$j(value).autocomplete({
+        source: "/intranet/portabilis_auto_complete_componente_curricular_xml.php?instituicao_id=" +
+                $j('#ref_cod_instituicao').val() + "&limit=15",
+        minLength: 1,
+        autoFocus: true
+      })
+		});
 	}
 
-	campoEstado.disabled = false;
-}
+  setAutoComplete();
 
-var $j = jQuery.noConflict();
+  // bind event
 
-(function($){
+  var $addDisciplinaButton = $j('#btn_add_tab_add_1');
 
-  $(function(){
-
-    function resetAutoCompleteNomeDisciplinaEvent(){
-      $.each($('#tr_notas').find('input[type="text"]'), function(index, value){
-        $value = $j(value);
-
-        if($value.attr('id').split('[', 1) == 'nm_disciplina'){
-          $value.autocomplete({
-            source: "/intranet/portabilis_auto_complete_componente_curricular_xml.php?instituicao_id=" + $('#ref_cod_instituicao').val() + "&limit=15",
-            minLength: 2,
-            autoFocus: true
-          });
-        }
-      });
-
-    }
-    resetAutoCompleteNomeDisciplinaEvent();
-
-    var $newDisciplinaButton = $('#btn_add_tab_add_1');
-    $newDisciplinaButton.click(function(){
-      resetAutoCompleteNomeDisciplinaEvent();
-    });
+  $addDisciplinaButton.click(function(){
+    setAutoComplete();
   });
-})(jQuery);
+
 </script>

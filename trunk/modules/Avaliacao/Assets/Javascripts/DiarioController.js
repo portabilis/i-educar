@@ -28,7 +28,7 @@ function fixupFieldsWidth() {
   $j.each($fields, function(index, value) {
     $value = $j(value);
     if ($value.width() > maxWidth)
-      maxWidth = $value.width(); 
+      maxWidth = $value.width();
   });
 
   //set maxWidth
@@ -121,7 +121,7 @@ function setDefaultFaltaIfEmpty(matricula_id, componente_curricular_id) {
     $element.val(0);
     $element.change();
   }
-}    
+}
 
 
 var changeNota = function(event) {
@@ -183,8 +183,9 @@ function afterChangeResource($resourceElement) {
 
   // percorre os proximos elementos enquanto não chegar no ultimo
   for(var nextTabIndex = resourceElementTabIndex + 1; nextTabIndex < lastElementTabIndex + 1; nextTabIndex++) {
-    var $nextElement = $j($resourceElement.closest('form').find('.tabable:[tabindex="'+nextTabIndex+'"]')).first();
-    
+    //var $nextElement = $j($resourceElement.closest('form').find('.tabable:[tabindex="'+nextTabIndex+'"]')).first();
+    var $nextElement = $j($resourceElement.closest('form').find('.tabable[tabindex="'+nextTabIndex+'"]')).first();
+
     // seta foco no proximo elemento, caso este seja visivel e o elemento alterado ainda esteja focado
     if($nextElement.is(':visible')) {
       if(resourceElementTabIndex == focusedElementTabIndex)
@@ -200,9 +201,9 @@ function postNota($notaFieldElement) {
   $notaFieldElement.val($notaFieldElement.val().replace(',', '.'));
 
   if (validatesIfValueIsNumeric($notaFieldElement.val(), $notaFieldElement.attr('id')) &&
-      validatesIfNumericValueIsInRange($notaFieldElement.val(), $notaFieldElement.attr('id'), 0, 10) && 
+      validatesIfNumericValueIsInRange($notaFieldElement.val(), $notaFieldElement.attr('id'), 0, 10) &&
       validatesIfValueIsInSet($notaFieldElement.val(), $notaFieldElement.attr('id'), $tableSearchDetails.data('details').opcoes_notas)) {
-  
+
     beforeChangeResource($notaFieldElement);
 
     var additionalVars = {
@@ -231,7 +232,7 @@ function postNotaExame($notaExameFieldElement) {
   $notaExameFieldElement.val($notaExameFieldElement.val().replace(',', '.'));
 
   if (validatesIfValueIsNumeric($notaExameFieldElement.val(), $notaExameFieldElement.attr('id')) &&
-      validatesIfNumericValueIsInRange($notaExameFieldElement.val(), $notaExameFieldElement.attr('id'), 0, 10) && 
+      validatesIfNumericValueIsInRange($notaExameFieldElement.val(), $notaExameFieldElement.attr('id'), 0, 10) &&
       validatesIfValueIsInSet($notaExameFieldElement.val(), $notaExameFieldElement.attr('id'), $tableSearchDetails.data('details').opcoes_notas)) {
 
     beforeChangeResource($notaExameFieldElement);
@@ -260,7 +261,7 @@ function postNotaExame($notaExameFieldElement) {
 
 function postFalta($faltaFieldElement) {
   $faltaFieldElement.val($faltaFieldElement.val().replace(',', '.'));
-  
+
   //falta é persistida como inteiro
   if ($j.isNumeric($faltaFieldElement.val()))
     $faltaFieldElement.val(parseInt($faltaFieldElement.val()).toString());
@@ -345,7 +346,7 @@ function deleteResource(resourceName, $resourceElement, options, handleErrorOnDe
 function deleteNota($notaFieldElement) {
   var resourceName = 'nota';
 
-  var additionalVars = { 
+  var additionalVars = {
     instituicao_id : $j('#ref_cod_instituicao').val(),
     escola_id : $j('#ref_cod_escola').val(),
     curso_id : $j('#ref_cod_curso').val(),
@@ -373,7 +374,7 @@ function deleteNota($notaFieldElement) {
 function deleteNotaExame($notaExameFieldElement) {
   var resourceName = 'nota_exame';
 
-  var additionalVars = { 
+  var additionalVars = {
     componente_curricular_id : $notaExameFieldElement.data('componente_curricular_id'),
     etapa : 'Rc',
     matricula_id : $notaExameFieldElement.data('matricula_id')
@@ -393,7 +394,7 @@ function deleteNotaExame($notaExameFieldElement) {
 
 
 function deleteFalta($faltaFieldElement) {
-    
+
   //excluir falta se nota, nota exame e parecer (não existirem ou) estiverem sem valor
   var matriculaId = $faltaFieldElement.data('matricula_id');
   var ccId = $faltaFieldElement.data('componente_curricular_id');
@@ -405,10 +406,10 @@ function deleteFalta($faltaFieldElement) {
   if(($notaField.length < 1 || $notaField.val() == '') &&
      ($notaExameField.length < 1 || $notaExameField.val() == '') &&
      ($parecerField.length < 1 || $j.trim($parecerField.val()) == '')
-    ) {      
+    ) {
     var resourceName = 'falta';
 
-    var additionalVars = { 
+    var additionalVars = {
       componente_curricular_id : $faltaFieldElement.data('componente_curricular_id'),
       matricula_id : $faltaFieldElement.data('matricula_id')
      };
@@ -436,7 +437,7 @@ function deleteFalta($faltaFieldElement) {
 function deleteParecer($parecerFieldElement) {
   var resourceName = 'parecer';
 
-  var additionalVars = { 
+  var additionalVars = {
     componente_curricular_id : $parecerFieldElement.data('componente_curricular_id'),
     matricula_id             : $parecerFieldElement.data('matricula_id'),
     etapa                    : getEtapaParecer()
@@ -458,7 +459,7 @@ function deleteParecer($parecerFieldElement) {
 //callback handlers
 
 function handleChange(dataResponse) {
-  var targetId = dataResponse.resource + '-matricula-' + dataResponse.matricula_id + 
+  var targetId = dataResponse.resource + '-matricula-' + dataResponse.matricula_id +
                  '-cc-' + dataResponse.componente_curricular_id;
 
   handleMessages(dataResponse.msgs, targetId);
@@ -499,13 +500,13 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
   $j('<td />').html(safeToUpperCase($j('#ref_ref_cod_serie').children("[selected='selected']").html())).appendTo($linha);
   $j('<td />').html($j('#ano').val()).appendTo($linha);
 
-  //field escola pode ser diferente de select caso usuario comum 
+  //field escola pode ser diferente de select caso usuario comum
   var $htmlEscolaField = $j('#ref_cod_escola').children("[selected='selected']").html() ||
                          $j('#tr_nm_escola span:last').html();
 
   $j('<td />').html(safeToUpperCase($htmlEscolaField)).appendTo($linha);
   $j('<td />').html(dataDetails.id + ' - ' +safeToUpperCase(dataDetails.nome)).appendTo($linha);
- 
+
   //corrige acentuação
   var tipoNota = dataDetails.tipo_nota.replace('_', ' ');
   if (tipoNota == 'numerica')
@@ -530,7 +531,7 @@ function setNextTabIndex($element) {
   nextTabIndex += 1;
 }
 
-function handleSearch($resultTable, dataResponse) { 
+function handleSearch($resultTable, dataResponse) {
   var componenteCurricularSelected = ($j('#ref_cod_componente_curricular').val() != '');
 
   // resets next tabindex
@@ -566,9 +567,9 @@ function handleSearch($resultTable, dataResponse) {
   });
 
   // seta colspan [th, td].aluno quando exibe nota exame
-  if ($tableSearchDetails.data('details').tipo_nota != 'nenhum' && 
+  if ($tableSearchDetails.data('details').tipo_nota != 'nenhum' &&
       $tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) {
-    $resultTable.find(':[colspan]').attr('colspan', componenteCurricularSelected ? 1 : 5);
+    $resultTable.find('[colspan]').attr('colspan', componenteCurricularSelected ? 1 : 5);
   }
 
   $resultTable.find('tr:even').addClass('even');
@@ -626,18 +627,18 @@ function _notaField(matriculaId, componenteCurricularId, klass, id, value) {
 
 function notaField(matriculaId, componenteCurricularId, value) {
   return _notaField(matriculaId,
-                    componenteCurricularId, 
+                    componenteCurricularId,
                     'nota-matricula-cc',
-                    'nota-matricula-' + matriculaId + '-cc-' + componenteCurricularId, 
+                    'nota-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
                     value);
 }
 
 
 function notaExameField(matriculaId, componenteCurricularId, value) {
   return _notaField(matriculaId,
-                    componenteCurricularId, 
+                    componenteCurricularId,
                     'nota-exame-matricula-cc',
-                    'nota-exame-matricula-' + matriculaId + '-cc-' + componenteCurricularId, 
+                    'nota-exame-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
                     value);
 }
 
@@ -753,7 +754,7 @@ function updateResourceRow(dataResponse) {
   $j('#situacao-matricula-' + matriculaId + '-cc-' + ccId).html(dataResponse.situacao);
   $fieldNotaExame = $j('#nota-exame-matricula-' + matriculaId + '-cc-' + ccId);
 
-  if (! $fieldNotaExame.is(':visible') && 
+  if (! $fieldNotaExame.is(':visible') &&
      ($fieldNotaExame.val() != '' || dataResponse.situacao.toLowerCase() == 'em exame')) {
     $fieldNotaExame.show();
     $fieldNotaExame.focus();

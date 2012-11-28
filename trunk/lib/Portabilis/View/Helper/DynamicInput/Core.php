@@ -52,11 +52,11 @@ require_once 'lib/Portabilis/DataMapper/Utils.php';
  */
 class Portabilis_View_Helper_DynamicInput_Core {
 
-  public function __construct($viewInstance) {
-    $this->viewInstance = $viewInstance;
+  public function __construct($viewInstance, $inputsHelper) {
+    $this->viewInstance  = $viewInstance;
+    $this->_inputsHelper = $inputsHelper;
 
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, 'scripts/jquery/jquery.js');
-    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, 'var $j = jQuery.noConflict();');
+    Portabilis_View_Helper_Application::loadJQueryLib($this->viewInstance);
 
     $dependencies = array('/modules/Portabilis/Assets/Javascripts/Utils.js',
                           '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
@@ -66,6 +66,12 @@ class Portabilis_View_Helper_DynamicInput_Core {
     Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $dependencies);
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, 'fixupFieldsWidth();');
   }
+
+
+  protected function inputsHelper() {
+    return $this->_inputsHelper;
+  }
+
 
   protected function getCurrentUserId() {
     if (! isset($this->_currentUserId))

@@ -1,3 +1,4 @@
+
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
@@ -62,7 +63,7 @@ class indice extends clsDetalhe
 		session_write_close();
 
 		$this->titulo = "Software - Detalhe";
-		$this->addBanner( "http://ieducar.dccobra.com.br/intranet/imagens/nvp_top_intranet.jpg", "http://ieducar.dccobra.com.br/intranet/imagens/nvp_vert_intranet.jpg", "Intranet" );
+		$this->addBanner( "/intranet/imagens/nvp_top_intranet.jpg", "/intranet/imagens/nvp_vert_intranet.jpg", "Intranet" );
 
 		$this->cod_software=$_GET["cod_software"];
 

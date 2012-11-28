@@ -1,5 +1,3 @@
-var $j = jQuery.noConflict();
-
 (function($){
 
   $(function(){
@@ -141,7 +139,7 @@ var $j = jQuery.noConflict();
     });
 
     var $navActions = $('<p />').attr('id', 'nav-actions');
-    $navActions.prependTo($formFilter.parent()); 
+    $navActions.prependTo($formFilter.parent());
 
     var $tableSearchDetails = $('<table />')
                               .attr('id', 'search-details')
@@ -163,7 +161,7 @@ var $j = jQuery.noConflict();
       $.each($fields, function(index, value){
         $value = $(value);
         if ($value.width() > maxWidth)
-          maxWidth = $value.width(); 
+          maxWidth = $value.width();
       });
 
       //set maxWidth
@@ -255,7 +253,7 @@ var $j = jQuery.noConflict();
         handleMessages([{type : 'error', msg : 'Informe um numero válido.'}], targetId, true);
 
       return isNumeric;
-    }  
+    }
 
     function validatesIfNumericValueIsInRange(value, targetId, initialRange, finalRange){
 
@@ -267,7 +265,7 @@ var $j = jQuery.noConflict();
       return true;
     }
 
-    
+
     function postResource(options, errorCallback){
       $.ajax(options).error(errorCallback);
     }
@@ -281,7 +279,7 @@ var $j = jQuery.noConflict();
         $fieldSituacao.html(getLinkToHistorico(linkToHistorico, situacaoHistorico));
         $fieldSituacao.data('situacao_historico', situacaoHistorico);
       }
-    } 
+    }
 
 
     //callback handlers
@@ -383,7 +381,7 @@ var $j = jQuery.noConflict();
 
       $('<td />').html($('#ano').val()).appendTo($linha);
 
-      //field escola pode ser diferente de select caso usuario comum 
+      //field escola pode ser diferente de select caso usuario comum
       var $htmlEscolaField = $('#ref_cod_escola').children("[selected='selected']").html() ||
                              $j('#tr_nm_escola span:last').html();
       $('<td />').html(safeToUpperCase($htmlEscolaField)).appendTo($linha);
@@ -392,7 +390,7 @@ var $j = jQuery.noConflict();
       $('<td />').html(safeToUpperCase($('#ref_ref_cod_serie').children("[value!=''][selected='selected']").html()  || 'Todas')).appendTo($linha);
       $('<td />').html(safeToUpperCase($('#ref_cod_turma').children("[value!=''][selected='selected']").html()  || 'Todas')).appendTo($linha);
       $('<td />').html(safeToUpperCase($('#ref_cod_matricula').children("[value!=''][selected='selected']").html() || 'Todas')).appendTo($linha);
-     
+
       $linha.appendTo($tableSearchDetails);
       $tableSearchDetails.show();
 
@@ -432,11 +430,11 @@ var $j = jQuery.noConflict();
     }
 
 
-    function handleMatriculasSearch(dataResponse){ 
+    function handleMatriculasSearch(dataResponse){
 
       showNewSearchButton();
 
-      try{      
+      try{
         handleMessages(dataResponse.msgs);
 
         if(! $.isArray(dataResponse.matriculas))
@@ -564,7 +562,7 @@ var $j = jQuery.noConflict();
       else{
 
         var additionalFields = [$('#percentual-frequencia-manual').get(0),
-                                $('#notas-manual').get(0), 
+                                $('#notas-manual').get(0),
                                 $('#faltas-manual').get(0)
         ];
 
@@ -585,7 +583,7 @@ var $j = jQuery.noConflict();
 
           if (isValid && $('#disciplinas').val() != 'buscar-boletim'){
             $.each($('#disciplinas-manual').find('.falta'), function(index, field){
-              $field = $(field);  
+              $field = $(field);
               isValid = $.trim($field.val()) == '' || validatesIfNumericValueIsInRange($field.val(), $field, 0, 999);
             });
           }
@@ -714,7 +712,7 @@ var $j = jQuery.noConflict();
       $checked.attr('checked', false);
       $unchecked.attr('checked', true);
     };
-    
+
     var onClickDestroyEvent = function(event){
 
       var $firstChecked = $('input.matricula:checked:first');

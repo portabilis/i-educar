@@ -36,6 +36,8 @@ require_once 'Core/Controller/Page/ListController.php';
 require_once 'lib/Portabilis/View/Helper/Application.php';
 require_once 'lib/Portabilis/View/Helper/Inputs.php';
 
+// TODO migrar para novo padrao
+
 class PromocaoController extends Core_Controller_Page_ListController
 {
   protected $_dataMapper = 'Avaliacao_Model_NotaAlunoDataMapper';
@@ -59,12 +61,11 @@ class PromocaoController extends Core_Controller_Page_ListController
     $this->rodape  = "";
     $this->largura = '100%';
 
-    $scripts = array('scripts/jquery/jquery.form.js',
-                     // TODO migrar PromocaoController.js para novo padrao
-                     //'/modules/Portabilis/Assets/Javascripts/FrontendApi.js',
-                     '/modules/Avaliacao/Assets/Javascripts/PromocaoController.js');
+    $scripts = array('/modules/Avaliacao/Assets/Javascripts/PromocaoController.js');
 
     Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+
+    Portabilis_View_Helper_Application::loadJQueryFormLib($this->viewInstance);
   }
 }
 ?>

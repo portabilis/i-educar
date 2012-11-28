@@ -31,7 +31,7 @@ require_once ("include/clsBanco.inc.php");
 
 class clsIndex extends clsBase
 {
-	
+
 	function Formular()
 	{
 		$this->SetTitulo( "{$this->_instituicao} Publicações!" );
@@ -44,12 +44,12 @@ class indice extends clsDetalhe
 	function Gerar()
 	{
 		$this->titulo = "Detalhe de concurso";
-		$this->addBanner( "http://ieducar.dccobra.com.br/intranet/imagens/nvp_top_intranet.jpg", "http://ieducar.dccobra.com.br/intranet/imagens/nvp_vert_intranet.jpg", "Intranet" );
+		$this->addBanner( "/intranet/imagens/nvp_top_intranet.jpg", "/intranet/imagens/nvp_vert_intranet.jpg", "Intranet" );
 
 		$cod_portal_concurso = @$_GET['cod_portal_concurso'];
 
 		$objPessoa = new clsPessoaFisica();
-		
+
 		$db = new clsBanco();
 		$db->Consulta( "SELECT nm_concurso, descricao, data_hora, ref_ref_cod_pessoa_fj, caminho, tipo_arquivo FROM portal_concurso WHERE cod_portal_concurso = '{$cod_portal_concurso}'" );
 		if ($db->ProximoRegistro())
@@ -57,12 +57,12 @@ class indice extends clsDetalhe
 			list ( $nome, $descricao, $data, $pessoa, $caminho, $tipo ) = $db->Tupla();
 			//$pessoa = $db->CampoUnico( "SELECT nm_pessoa FROM pessoa_fj WHERE cod_pessoa_fj = '$pessoa'" );
 			list($pessoa) = $objPessoa->queryRapida($pessoa, "nome");
-			
+
 			$this->addDetalhe( array("Responsável", $pessoa ) );
 			$this->addDetalhe( array("Data", date( "d/m/Y H:i", strtotime(substr( $data,0,19) ) ) ) );
 			$this->addDetalhe( array("Nome", $nome) );
 			$this->addDetalhe( array("Descrição", $descricao) );
-			$this->addDetalhe( array("Arquivo", "<a href='arquivos/$caminho''><img src='http://ieducar.dccobra.com.br/intranet/imagens/nvp_icon_{$tipo}.gif' border='0'></a>") );
+			$this->addDetalhe( array("Arquivo", "<a href='arquivos/$caminho''><img src='/intranet/imagens/nvp_icon_{$tipo}.gif' border='0'></a>") );
 		}
 		$this->url_novo = "concursos_cad.php";
 		$this->url_editar = "concursos_cad.php?cod_portal_concurso=$cod_portal_concurso";

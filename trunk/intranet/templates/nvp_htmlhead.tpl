@@ -26,8 +26,9 @@
   <script type="text/javascript" src="scripts/menu.js?1"></script>
   <script type="text/javascript" src="scripts/ied/forms.js?1"></script>
   <script type="text/javascript" src="scripts/ied/phpjs.js?1"></script>
-  <script type="text/javascript" src="scripts/scriptaculous/prototype.js"></script>
-  <script type="text/javascript" src="scripts/scriptaculous/scriptaculous.js?load=effects"></script>
+
+  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js"></script>
+  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/scriptaculous/1.9.0/scriptaculous.js?load=effects"></script>
 
   <script type="text/javascript">
     var running = false;
@@ -106,7 +107,7 @@
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
     }
-  </script>  
+  </script>
 </head>
 <body <!-- #&BODYSCRIPTS&# -->>
   <div id="DOM_expansivel" class="DOM_expansivel"></div>

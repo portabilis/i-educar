@@ -1,5 +1,3 @@
-var $j = jQuery.noConflict();
-
 (function($){
 
   $(function(){
@@ -37,7 +35,7 @@ var $j = jQuery.noConflict();
     var promocaoAjaxUrlBase = 'promocaoAjax';
 
     var $navActions = $('<p />').attr('id', 'nav-actions');
-    $navActions.prependTo($formFilter.parent()); 
+    $navActions.prependTo($formFilter.parent());
 
     var $feedbackMessagesSuccess = $('<div />').attr('id', 'feedback-messages-success').appendTo($formFilter.parent());
     var $feedbackMessages = $('<div />').attr('id', 'feedback-messages').appendTo($formFilter.parent());
@@ -50,7 +48,7 @@ var $j = jQuery.noConflict();
       $.each($fields, function(index, value){
         $value = $(value);
         if ($value.width() > maxWidth)
-          maxWidth = $value.width(); 
+          maxWidth = $value.width();
       });
 
       //set maxWidth
@@ -95,7 +93,7 @@ var $j = jQuery.noConflict();
 
         var vars = {
           att : resourceName,
-          oper : 'get'          
+          oper : 'get'
         };
 
         return resourceUrlBuilder.buildUrl(urlBase, $.extend(vars, additionalVars));
@@ -122,14 +120,14 @@ var $j = jQuery.noConflict();
         handleMessages([{type : 'error', msg : 'Informe um numero válido.'}], targetId);
 
       return isNumeric;
-    }  
+    }
 
-    
+
     function postResource(options, errorCallback){
       $.ajax(options).error(errorCallback);
     }
 
- 
+
     var postPromocaoMatricula = function(){
 
       var $proximoMatriculaIdField = $('#proximo-matricula-id');
@@ -168,12 +166,12 @@ var $j = jQuery.noConflict();
       var $proximoMatriculaIdField = $('#proximo-matricula-id');
       $proximoMatriculaIdField.val(dataResponse.result.proximo_matricula_id);
 
-      if($('#continuar-processo').is(':checked') && 
+      if($('#continuar-processo').is(':checked') &&
          $.isNumeric($proximoMatriculaIdField.val()) &&
          $proximoMatriculaIdField.data('initial_matricula_id') != $proximoMatriculaIdField.val()){
         $('#promover-matricula').click();
       }
-      else if(($('#continuar-processo').is(':checked') && 
+      else if(($('#continuar-processo').is(':checked') &&
              $proximoMatriculaIdField.data('initial_matricula_id') == $proximoMatriculaIdField.val()) ||
              ! $.isNumeric($proximoMatriculaIdField.val())){
         alert('Processo finalizado');
@@ -220,15 +218,15 @@ var $j = jQuery.noConflict();
       );
     }
 
-    function handleMatriculasSearch(dataResponse){ 
+    function handleMatriculasSearch(dataResponse){
 
       showNewSearchButton();
 
-      try{      
+      try{
 
         handleMessages(dataResponse.msgs);
 
-        var $text = $('<p />').html('Quantidade de matrículas em andamento: ' + 
+        var $text = $('<p />').html('Quantidade de matrículas em andamento: ' +
                                     dataResponse.quantidade_matriculas + '<br />');
 
         $('<input />').attr('type', 'checkbox').attr('id', 'continuar-processo').attr('name', 'continuar-processo').appendTo($text);

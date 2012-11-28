@@ -16,7 +16,7 @@
 		</style>
 </head>
 	<body>
-	<img src="http://ieducar.dccobra.com.br/intranet/imagens/nvp_top_protocolo.jpg"><br>
+	<img src="/intranet/imagens/nvp_top_protocolo.jpg"><br>
 		<!-- #&CONTEUDO&# -->
 	</body>
 </html>
