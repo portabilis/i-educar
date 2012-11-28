@@ -48,6 +48,17 @@ class Portabilis_View_Helper_Input_Core {
     $this->viewInstance  = $viewInstance;
     $this->_inputsHelper = $inputsHelper;
 
+
+    // load styles
+
+    $styles = array('/modules/Portabilis/Assets/Stylesheets/FrontendApi.css',
+                    '/modules/Portabilis/Assets/Stylesheets/Utils.css');
+
+    Portabilis_View_Helper_Application::loadStylesheet($this->viewInstance, $styles);
+
+
+    // load js
+
     Portabilis_View_Helper_Application::loadJQueryLib($this->viewInstance);
     Portabilis_View_Helper_Application::loadJQueryUiLib($this->viewInstance);
 
@@ -56,6 +67,10 @@ class Portabilis_View_Helper_Input_Core {
                           '/modules/Portabilis/Assets/Javascripts/Validator.js');
 
     Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $dependencies);
+
+
+    // js fixups
+
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, 'fixupFieldsWidth();');
   }
 

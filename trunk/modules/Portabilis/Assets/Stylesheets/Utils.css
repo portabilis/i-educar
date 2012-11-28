@@ -1,0 +1,11 @@
+/* feedback messages utils */
+
+#feedback-messages {
+  position: fixed;
+  bottom: 0px;
+  background-color: #fff;
+}
+
+#feedback-messages p {
+  margin: 2;
+}

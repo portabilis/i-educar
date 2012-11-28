@@ -18,15 +18,3 @@ tr.rodape {
 #corpo {
   margin: 0
 }
-
-
-/* portabilis styles */
-#feedback-messages {
-  position: fixed;
-  bottom: 0px;
-  background-color: #fff;
-}
-
-#feedback-messages p {
-  margin: 2;
-}

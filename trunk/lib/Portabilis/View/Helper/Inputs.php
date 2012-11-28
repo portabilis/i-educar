@@ -75,7 +75,7 @@ class Portabilis_View_Helper_Inputs {
       $helperClassName = "Portabilis_View_Helper_DynamicInput_" . ucfirst($helperName);
       $this->includeHelper($helperClassName);
 
-      $helper = new $helperClassName($this->viewInstance);
+      $helper = new $helperClassName($this->viewInstance, $this);
       $helper->$helperName($options);
     }
   }
@@ -110,11 +110,27 @@ class Portabilis_View_Helper_Inputs {
   }
 
 
+  public function simpleSearchInput($objectName, $attrName, $inputOptions = array(), $helperOptions = array()) {
+    $helperName = 'simpleSearch';
+    $options    = $this->mergeInputOptions($inputOptions, $helperOptions);
+
+    $this->input($helperName, $objectName, $attrName, $options);
+  }
+
+
+  public function hiddenInput($objectName, $attrName, $inputOptions = array(), $helperOptions = array()) {
+    $helperName = 'hidden';
+    $options    = $this->mergeInputOptions($inputOptions, $helperOptions);
+
+    $this->input($helperName, $objectName, $attrName, $options);
+  }
+
+
   protected function input($helperName, $objectName, $attrName, $options = array()) {
     $helperClassName = "Portabilis_View_Helper_Input_" . ucfirst($helperName);
 
     $this->includeHelper($helperClassName);
-    $helper = new $helperClassName($this->viewInstance);
+    $helper = new $helperClassName($this->viewInstance, $this);
     $helper->$helperName($objectName, $attrName, $options);
   }
 

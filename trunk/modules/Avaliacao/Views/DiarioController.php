@@ -67,7 +67,10 @@ class DiarioController extends Core_Controller_Page_ListController
 
 
   public function Gerar() {
-    Portabilis_View_Helper_Application::loadStylesheet($this, '/modules/Portabilis/Assets/Stylesheets/FrontendApi.css');
+    $styles = array('/modules/Portabilis/Assets/Stylesheets/FrontendApi.css',
+                    '/modules/Portabilis/Assets/Stylesheets/Utils.css');
+
+    Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
     $this->setSelectionFields();
 

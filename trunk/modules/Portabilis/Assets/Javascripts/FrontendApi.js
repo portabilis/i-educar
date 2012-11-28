@@ -30,57 +30,6 @@ function afterChangeResource($resourceElement) {
   $j('input.delete').val(DELETE_LABEL);
 }
 
-function handleMessages(messages, targetId, useDelayClassRemoval) {
-
-  var $feedbackMessages = $j('#feedback-messages');
-  var hasErrorMessages   = false;
-  var hasSuccessMessages = false;
-  var hasNoticeMessages  = false;
-  var delayClassRemoval  = 20000;
-
-  var $targetElement = buildId(targetId);
-  var $targetElement = $j($targetElement);
-
-  for (var i = 0; i < messages.length; i++) {
-    if (messages[i].type == 'success')
-      var delay = 5000;
-    else if (messages[i].type != 'error')
-      var delay = 10000;
-    else
-      var delay = 20000;
-
-    $j('<p />').addClass(messages[i].type).html(messages[i].msg).appendTo($feedbackMessages).delay(delay).fadeOut(function() {$j(this).remove()}).data('target_id', targetId);
-
-    if (! hasErrorMessages && messages[i].type == 'error')
-      hasErrorMessages = true;
-    else if(! hasSuccessMessages && messages[i].type == 'success')
-      hasSuccessMessages = true;
-    else if(! hasNoticeMessages && messages[i].type == 'notice')
-      hasNoticeMessages = true;
-  }
-
-  if($targetElement) {
-    if (hasErrorMessages) {
-      $targetElement.addClass('error').removeClass('success').removeClass('notice');
-      $targetElement.focus();
-    }
-
-    else if (hasSuccessMessages)
-      $targetElement.addClass('success').removeClass('error').removeClass('notice');
-
-    else if (hasNoticeMessages)
-      $targetElement.addClass('notice').removeClass('error').removeClass('sucess');
-
-    else
-      $targetElement.removeClass('success').removeClass('error').removeClass('notice');
-
-    if (useDelayClassRemoval) {
-      window.setTimeout(function() {$targetElement.removeClass('success').removeClass('error').removeClass('notice');}, delayClassRemoval);
-    }
-  }
-}
-
-
 function getFirstCheckboxChecked($targetElement) {
   var $firstChecked = $j('input.'+RESOURCE_NAME+':checked:first');
 
@@ -149,9 +98,6 @@ var $tableSearchDetails = $j('<table />').attr('id', 'search-details')
               .addClass('center')
               .attr('id', 'orientation-search')
               .appendTo($resultTable.parent());
-
-    // add div for feedback messages
-    $('<div />').attr('id', 'feedback-messages').appendTo($formFilter.parent());
 
     // before search changes
     $('.disable-on-search').attr('disabled', 'disabled');

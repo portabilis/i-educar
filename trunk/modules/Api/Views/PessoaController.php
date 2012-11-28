@@ -161,7 +161,7 @@ class PessoaController extends ApiCoreController
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'pessoa-search'))
-      $this->appendResponse('pessoa-search', $this->search());
+      $this->appendResponse($this->search());
     else
       $this->notImplementedOperationError();
   }

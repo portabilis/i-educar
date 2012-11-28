@@ -33,7 +33,7 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
 
 
 /**
- * Portabilis_View_Helper_Input_Select class.
+ * Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaObra class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -42,26 +42,17 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Select extends Portabilis_View_Helper_Input_Core {
+class Portabilis_View_Helper_Input_Hidden extends Portabilis_View_Helper_Input_Core {
 
-  public function select($objectName, $attrName, $options = array()) {
-    $defaultOptions       = array('options' => array());
-    $options              = $this->mergeOptions($options, $defaultOptions);
+  public function hidden($objectName, $attrName, $options = array()) {
+    $defaultOptions = array('options' => array());
+    $options        = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultInputOptions = array('id'         => $objectName . '_' . $attrName,
-                                  'label'      => ucwords($attrName),
-                                  'resources'  => array(),
-                                  'value'      => '',
-                                  'callback'   => '',
-                                  'duplo'      => false,
-                                  'label_hint' => '',
-                                  'input_hint' => '',
-                                  'disabled'   => false,
-                                  'required'   => true,
-                                  'multiple'   => false);
+    $defaultInputOptions = array('id'    => $objectName . "_" . $attrName,
+                                 'value' => '');
 
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
-    call_user_func_array(array($this->viewInstance, 'campoLista'), $inputOptions);
+    call_user_func_array(array($this->viewInstance, 'campoOculto'), $inputOptions);
   }
 }
 ?>

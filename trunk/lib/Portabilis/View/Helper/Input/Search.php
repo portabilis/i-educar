@@ -44,9 +44,8 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
  */
 class Portabilis_View_Helper_Input_Search extends Portabilis_View_Helper_Input_Core {
 
-  public function searchInput($objectName, $attrName, $options = array()) {
-    $defaultOptions = array('id'                      => null,
-                            'options'                 => array(),
+  public function search($objectName, $attrName, $options = array()) {
+    $defaultOptions = array('options'                 => array(),
                             'validatesRequiredFields' => false,
                             'searchPath'              => "/intranet/educar_pesquisa_$objectName.php" );
 
@@ -55,7 +54,7 @@ class Portabilis_View_Helper_Input_Search extends Portabilis_View_Helper_Input_C
     $inputHint  = "<img border='0' onclick='pesquisa" . ucwords($objectName) . "();' id='lupa_pesquisa_" . $objectName .
                   "' name='lupa_pesquisa_" . $objectName . "' src='imagens/lupa.png' />";
 
-    $defaultInputOptions = array('id'         => $objectName . "[" . $attrName . "]",
+    $defaultInputOptions = array('id'         => $objectName . '_' . $attrName,
                                  'label'      => ucwords($attrName),
                                  'value'      => '',
                                  'size'       => '30',
@@ -76,7 +75,7 @@ class Portabilis_View_Helper_Input_Search extends Portabilis_View_Helper_Input_C
     $this->viewInstance->campoOculto($hiddenInputId, '');
 
     /*
-    # receive an option, to set depends_on ? (recebe id, elemento do qual depende,
+      #TODO receive an option, to set depends_on ? (recebe id, elemento do qual depende,
       e no evento change deste, reseta o campo pesquisa)
 
     // reset js
@@ -110,10 +109,6 @@ class Portabilis_View_Helper_Input_Search extends Portabilis_View_Helper_Input_C
     }
 
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js);
-  }
-
-  public function search($objectName, $attrName, $options = array()) {
-    $this->searchInput($objectName, $attrName, $options);
   }
 }
 ?>

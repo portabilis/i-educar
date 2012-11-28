@@ -44,17 +44,15 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
  */
 class Portabilis_View_Helper_Input_Text extends Portabilis_View_Helper_Input_Core {
 
-  public function textInput($objectName, $attrName, $options = array()) {
+  public function text($objectName, $attrName, $options = array()) {
     $defaultOptions       = array('options' => array());
     $options              = $this->mergeOptions($options, $defaultOptions);
 
-    // O name do elemento é definido como objectName[attrName], o qual está certo.
-    // Porem o id do elemento é defino da mesma forma, quando o ideal seria objectName_attrName
-    $defaultInputOptions = array('id'             => $objectName. "[" . $attrName . "]",
+    $defaultInputOptions = array('id'             => $objectName . '_' . $attrName,
                                  'label'          => ucwords($attrName),
                                  'value'          => '',
-                                 'size'           => 20,
-                                 'max_length'     => 20,
+                                 'size'           => 50,
+                                 'max_length'     => 50,
                                  'required'       => true,
                                  'script'         => false,
                                  'duplo'          => false,
@@ -66,11 +64,6 @@ class Portabilis_View_Helper_Input_Text extends Portabilis_View_Helper_Input_Cor
 
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
     call_user_func_array(array($this->viewInstance, 'campoTexto'), $inputOptions);
-  }
-
-
-  public function text($objectName, $attrName, $options = array()) {
-    $this->textInput($objectName, $attrName, $options);
   }
 }
 ?>
