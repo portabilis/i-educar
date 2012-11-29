@@ -39,7 +39,7 @@ require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 //require_once "Reports/Reports/BoletimReport.php";
 
-class PessoaController extends ApiCoreController
+class AlunoController extends ApiCoreController
 {
   protected $_dataMapper  = null;
 
@@ -62,9 +62,20 @@ class PessoaController extends ApiCoreController
   }*/
 
 
-  protected function canSearch() {
+  protected function canPost() {
     return $this->canAcceptRequest() &&
-           $this->validatesPresenceOf('query');
+           $this->validatesPresenceOf('pessoa_id');
+
+           // #TODO continuar validando
+  }
+
+
+  protected function canPut() {
+    return $this->canAcceptRequest()              &&
+           $this->validatesPresenceOf('aluno_id') &&
+           $this->validatesPresenceOf('pessoa_id');
+
+           // #TODO continuar validando
   }
 
 
@@ -89,79 +100,39 @@ class PessoaController extends ApiCoreController
   }
 
 
-  protected function loadPessoasBySearchQuery($query) {
-    $alunos       = array();
-    $numericQuery = preg_replace("/[^0-9]/", "", $query);
-
-    if (! empty($numericQuery))
-      $sqlQueries = $this->sqlQueriesForNumericSearch($numericQuery);
-    else
-      $sqlQueries = $this->sqlQueriesForStringSearch($query);
-
-    foreach($sqlQueries as $sqlQuery){
-      $_alunos = $this->fetchPreparedQuery($sqlQuery['sql'], $sqlQuery['params'], false);
-
-      foreach($_alunos as $aluno) {
-        $id = $aluno['id'];
-
-        if (! isset($alunos[$id]))
-          $alunos[$id] = $id . ' - ' . $this->toUtf8($aluno['nome'], array('transform' => true));
-      }
-    }
-
-    return $alunos;
-  }
-
-
-  protected function sqlQueriesForNumericSearch($numericQuery) {
-    $sqlQueries = array();
-
-    // search by idpes or cpf
-    $sql = "select distinct pessoa.idpes as id, pessoa.nome from cadastro.pessoa, cadastro.fisica
-            where fisica.idpes = pessoa.idpes and (pessoa.idpes like $1 or fisica.cpf like $2) order by nome limit 15";
-
-    $sqlQueries[] = array('sql' => $sql, 'params' => array($numericQuery . "%", $numericQuery . "%"));
-
-    // search by rg
-    $sql = "select distinct pessoa.idpes as id, pessoa.nome from cadastro.pessoa, cadastro.documento
-            where pessoa.idpes = documento.idpes and documento.rg like $1 order by nome limit 15";
-
-    $sqlQueries[] = array('sql' => $sql, 'params' => array($numericQuery . "%"));
-
-    return $sqlQueries;
-  }
-
-
-  protected function sqlQueriesForStringSearch($stringQuery) {
-    $sqlQueries = array();
-
-    // search by name
-    $sql = "select distinct pessoa.idpes as id, pessoa.nome from cadastro.pessoa
-            where lower(pessoa.nome) like $1 order by nome limit 15";
-
-    $sqlQueries[] = array('sql' => $sql, 'params' => array(strtolower($stringQuery) ."%"));
-
-    // TODO search by nome mae
-
-    return $sqlQueries;
-  }
-
-
   // api responders
 
-  protected function search() {
-      $alunos = array();
+  protected function post() {
+    $aluno = array();
 
-      if ($this->canSearch())
-        $alunos = $this->loadPessoasBySearchQuery($this->getRequest()->query);
-
-      return array('result' => $alunos);
+    if ($this->canPost()) {
+      // TODO do somenthing
     }
+
+    return $aluno;
+  }
+
+  protected function put() {
+    $aluno = array();
+
+    if ($this->canPut()) {
+      // TODO do somenthing
+    }
+
+    return $aluno;
+  }
 
 
   public function Gerar() {
-    if ($this->isRequestFor('get', 'pessoa-search'))
-      $this->appendResponse($this->search());
+
+    // creates a new resource
+    if ($this->isRequestFor('post', 'aluno'))
+      $this->appendResponse('aluno', $this->post());
+
+    // updates a resource
+    elseif ($this->isRequestFor('put', 'aluno'))
+      $this->appendResponse('aluno', $this->put());
+
     else
       $this->notImplementedOperationError();
   }

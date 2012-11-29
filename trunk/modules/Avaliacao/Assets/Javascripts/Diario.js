@@ -2,7 +2,7 @@
 $j('#form_resultado').submit(function(event) {event.preventDefault()});
 
 
-// variaveis usadas pelo modulo FrontendApi.js
+// variaveis usadas pelo modulo Frontend/Process.js
 var PAGE_URL_BASE = 'diario';
 var API_URL_BASE  = 'diarioApi';
 
@@ -14,7 +14,7 @@ var DELETE_LABEL = '';
 
 var SEARCH_ORIENTATION = '<strong>Obs:</strong> Caso n&atilde;o seja listado as op&ccedil;&otilde;es de filtro que voc&ecirc; esperava, solicite ao(&agrave;) secret&aacute;rio(a) da escola para verificar a aloca&ccedil;&atilde;o ou permiss&atilde;o do seu usu&aacute;rio.';
 
-// funcoes usados pelo modulo FrontendApi.js
+// funcoes usados pelo modulo Frontend/Process.js
 var onClickSelectAllEvent = false;
 var onClickActionEvent    = false;
 var onClickDeleteEvent    = false;

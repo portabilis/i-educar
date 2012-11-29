@@ -85,7 +85,7 @@ class DiarioController extends Core_Controller_Page_ListController
     $scripts = array('/modules/Portabilis/Assets/Javascripts/ClientApi.js',
                      '/modules/Portabilis/Assets/Javascripts/Validator.js',
                      '/modules/Portabilis/Assets/Javascripts/Utils.js',
-                     '/modules/Portabilis/Assets/Javascripts/FrontendApi.js',
+                     '/modules/Portabilis/Assets/Javascripts/Frontend/Process.js',
                      '/modules/Avaliacao/Assets/Javascripts/DiarioController.js');
 
     Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

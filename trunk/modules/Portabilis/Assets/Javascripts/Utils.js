@@ -28,6 +28,27 @@ function fixupFieldsWidth(){
   });
 };
 
+// options (hash) utils
+
+var optionsUtils = {
+  get : function(options, optionName) {
+    var value = options[optionName];
+
+    if (typeof value == 'undefined')
+      throw new Error("Option '" + optionName +  "' not defined in simpleSearchOptions.");
+    else if (typeof value == 'function')
+      value = value(selfOptions);
+
+    return value;
+  },
+
+  merge : function(defaultOptions, options) {
+    if (typeof options == 'undefined')
+      options = {};
+
+    return $j.extend(defaultOptions, options);
+  }
+}
 
 // string utils
 

@@ -40,6 +40,8 @@ require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'lib/Portabilis/DataMapper/Utils.php';
 
+require_once 'lib/Portabilis/View/Helper/Application.php';
+
 class Portabilis_Controller_Page_EditController extends Core_Controller_Page_EditController
 {
 
@@ -73,9 +75,10 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
     throw new Exception("The method 'Gerar' must be overwritten!");
   }
 
+
   protected function save()
   {
-    throw new Exception("The method '__save' must be overwritten!");
+    throw new Exception("The method 'save' must be overwritten!");
   }
 
 
@@ -147,6 +150,25 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
       $this->_mailer = new Mailer();
 
     return $this->_mailer;
+  }
+
+
+  protected function loadResourceAssets(){
+    Portabilis_View_Helper_Application::loadJQueryLib($this);
+    Portabilis_View_Helper_Application::loadJQueryFormLib($this);
+
+    $styles = array('/modules/Portabilis/Assets/Stylesheets/FrontendApi.css',
+                    '/modules/Portabilis/Assets/Stylesheets/Utils.css');
+
+    Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+
+
+    $scripts = array('/modules/Portabilis/Assets/Javascripts/ClientApi.js',
+                     '/modules/Portabilis/Assets/Javascripts/Validator.js',
+                     '/modules/Portabilis/Assets/Javascripts/Utils.js',
+                     '/modules/Portabilis/Assets/Javascripts/Frontend/Resource.js');
+
+    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
   }
 
 

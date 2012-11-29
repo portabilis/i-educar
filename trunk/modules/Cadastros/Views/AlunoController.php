@@ -109,39 +109,28 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     //$this->campoRotulo('pessoa', $this->_getLabel('pessoa'), '');
     $this->url_cancelar = '/intranet/educar_aluno_lst.php';
 
-
     // nome
-    //$this->inputsHelper()->textInput('pessoa', 'nome', $options);
-    //$this->inputsHelper()->hiddenInput('pessoa', 'id');
-
-    //$helperOptions = array('searchPath' => 'intranet/educar_pesquisa_aluno_lst2.php?campo1=campo_1&campo2=campo_2&campo3=campo_3&campo4=campo_4');
-    //$this->inputsHelper()->searchInput('pessoa', 'id', $options, $helperOptions);
-
-    //$helperOptions = array('searchPath' => "module/Api/Pessoa&resource=pessoa-search&query=");
-    //$helperOptions = array('targetElement' => "");
-
-    $options       = array('label' => $this->_getLabel('pessoa'));
-
     $helperOptions = array('addHiddenInput' => true);
+    $options       = array('label'          => $this->_getLabel('pessoa'));
     $this->inputsHelper()->simpleSearchInput('pessoa', 'nome', $options, $helperOptions);
 
     // rg
-    $options = array('label' => $this->_getLabel('rg'), 'disabled' => true);
+    $options = array('label' => $this->_getLabel('rg'), 'disabled' => true, 'required' => false);
     $this->inputsHelper()->textInput('aluno', 'rg', $options);
 
 
     // pai
-    $options = array('label' => $this->_getLabel('pai'), 'disabled' => true);
+    $options = array('label' => $this->_getLabel('pai'), 'disabled' => true, 'required' => false);
     $this->inputsHelper()->textInput('aluno', 'pai', $options);
 
 
     // mãe
-    $options = array('label' => $this->_getLabel('mae'), 'disabled' => true);
+    $options = array('label' => $this->_getLabel('mae'), 'disabled' => true, 'required' => false);
     $this->inputsHelper()->textInput('aluno', 'mae', $options);
 
 
     // responsável
-    $options = array('label' => $this->_getLabel('responsavel'), 'disabled' => true);
+    $options = array('label' => $this->_getLabel('responsavel'), 'disabled' => true, 'required' => false);
     $this->inputsHelper()->textInput('aluno', 'responsavel', $options);
 
 
@@ -157,18 +146,21 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
 
     // código rede de ensino municipal
-    $options = array('label' => $this->_getLabel('codigo_rede_ensino_municipal'), 'disabled' => true);
+    $options = array('label' => $this->_getLabel('codigo_rede_ensino_municipal'), 'disabled' => true, 'required' => false);
     $this->inputsHelper()->textInput('aluno', 'codigo_rede_ensino_municipal', $options);
 
 
     // código rede de ensino estadual
-    $options = array('label' => $this->_getLabel('codigo_rede_ensino_estadual'));
+    $options = array('label' => $this->_getLabel('codigo_rede_ensino_estadual'), 'required' => false);
     $this->inputsHelper()->textInput('aluno', 'codigo_rede_ensino_estadual', $options);
 
 
     // código inep
-    $options = array('label' => $this->_getLabel('codigo_inep'));
+    $options = array('label' => $this->_getLabel('codigo_inep'), 'required' => false);
     $this->inputsHelper()->textInput('aluno', 'codigo_inep', $options);
+
+    $this->loadResourceAssets();
+    Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Cadastros/Assets/Javascripts/Aluno.js');
   }
 }
 ?>

@@ -68,57 +68,25 @@ class Portabilis_View_Helper_Input_SimpleSearch extends Portabilis_View_Helper_I
 
     $this->inputsHelper()->textInput($objectName, $attrName, $options['options']);
 
-    // search js
+    // load simple search js
 
-    $js = "
-      var simpleSearch = {
+    $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs.js';
+    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
 
-        /* API returns result as {value : label, value2, label2}
-           but jquery autocomplete, expects [{value : label}, {value : label}]
-        */
-        fixResult :  function(result) {
-          var fixed = [];
+    // setup simple search
 
-          \$j.each(result, function(value, label) {
-            fixed.push({ value : value, label : label})
-          });
+    /*
+      all search options (including the option autocompleteOptions, that is passed for jquery autocomplete plugin),
+      can be overwritten.
 
-          return fixed;
-        },
+      Just adding a hash called simpleSearch<ObjectName>Options = {optionName : optionValue};
+      in the script file for the current controller.
+    */
+    $resourceOptions = "simpleSearch" . ucwords($objectName) . "Options";
 
-        handleSearch : function(dataResponse, response) {
-          handleMessages(dataResponse['msgs']);
+    $js = "simpleSearchHelper.setup('$objectName', '$attrName', '" . $options['searchPath'] . "', $resourceOptions);";
 
-          if (dataResponse.result) {
-            response(simpleSearch.fixResult(dataResponse.result));
-          }
-        },
-
-        search : function(request, response) {
-          \$j.get('" . $options['searchPath'] . "', { query : request.term }, function(dataResponse) {
-            simpleSearch.handleSearch(dataResponse, response);
-          });
-        },
-
-        handleSelect : function(event, ui) {
-          \$j(this).val(ui.item.label)
-          \$j('#" . $objectName . "_id').val(ui.item.value);
-
-          return false;
-        },
-      }
-
-      var autocompleteOptions = {
-        source    : simpleSearch.search,
-        minLength : 1,
-        autoFocus : true,
-        select    : simpleSearch.handleSelect
-      }
-
-      \$j('#{$objectName}_{$attrName}').autocomplete(autocompleteOptions);
-    ";
-
-    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js);
+    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
   }
 }
 ?>
