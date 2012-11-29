@@ -52,6 +52,11 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       'help'   => '',
     ),
 
+    'cpf' => array(
+      'label'  => 'CPF',
+      'help'   => '',
+    ),
+
     'pai' => array(
       'label'  => 'Pai',
       'help'   => '',
@@ -115,8 +120,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->simpleSearchInput('pessoa', 'nome', $options, $helperOptions);
 
     // rg
-    $options = array('label' => $this->_getLabel('rg'), 'disabled' => true, 'required' => false);
-    $this->inputsHelper()->textInput('aluno', 'rg', $options);
+    //$options = array('label' => $this->_getLabel('rg'), 'disabled' => true, 'required' => false);
+    //$this->inputsHelper()->textInput('aluno', 'rg', $options);
+
+    // cpf
+    //$options = array('label' => $this->_getLabel('cpf'), 'disabled' => true, 'required' => false);
+    //$this->inputsHelper()->textInput('aluno', 'cpf', $options);
 
 
     // pai

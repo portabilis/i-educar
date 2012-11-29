@@ -7,5 +7,6 @@
 }
 
 #feedback-messages p {
-  margin: 2;
+  margin: 2px 2px 0px 2px;
+  padding: 4px;
 }

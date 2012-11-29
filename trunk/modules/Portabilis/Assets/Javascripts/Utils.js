@@ -137,7 +137,14 @@ function handleMessages(messages, targetId, useDelayClassRemoval) {
     else
       var delay = 20000;
 
-    $j('<p />').addClass(messages[i].type).html(messages[i].msg).appendTo($feedbackMessages).delay(delay).fadeOut(function() {$j(this).remove()}).data('target_id', targetId);
+    $j('<p />').hide()
+               .addClass(messages[i].type)
+               .html(messages[i].msg)
+               .appendTo($feedbackMessages)
+               .fadeIn()
+               .delay(delay)
+               .fadeOut(function() { $j(this).remove() })
+               .data('target_id', targetId);
 
     if (! hasErrorMessages && messages[i].type == 'error')
       hasErrorMessages = true;
@@ -163,7 +170,9 @@ function handleMessages(messages, targetId, useDelayClassRemoval) {
       $targetElement.removeClass('success').removeClass('error').removeClass('notice');
 
     if (useDelayClassRemoval) {
-      window.setTimeout(function() {$targetElement.removeClass('success').removeClass('error').removeClass('notice');}, delayClassRemoval);
+      window.setTimeout(function() {
+        $targetElement.removeClass('success').removeClass('error').removeClass('notice');
+      }, delayClassRemoval);
     }
   }
 }

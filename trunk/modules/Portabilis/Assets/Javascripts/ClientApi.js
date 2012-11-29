@@ -60,7 +60,7 @@ var deleteResourceUrlBuilder = {
   }
 };
 
-var handleErrorOnGetResources = function(response){
+var handleErrorOnGetResource = function(response){
   alert('Erro ao obter recurso, detalhes:' + response.responseText);
   safeLog(response);
 };
@@ -75,8 +75,12 @@ function handleErrorOnDeleteResource(response){
   safeLog(response);
 }
 
+var getResource = function(options, errorCallback) {
+  $j.ajax(options).error(errorCallback || handleErrorOnGetResource);
+};
+
 var getResources = function(options, errorCallback) {
-  $j.ajax(options).error(errorCallback || handleErrorOnGetResources);
+  getResource(options, errorCallback);
 };
 
 var postResource = function(options, errorCallback){

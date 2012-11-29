@@ -67,25 +67,50 @@ class PessoaController extends ApiCoreController
            $this->validatesPresenceOf('query');
   }
 
-
-  // load resources
-
-  protected function loadNomeAluno($alunoId = null) {
-    if (is_null($alunoId))
-      $alunoId = $this->getRequest()->aluno_id;
-
-    $sql = "select nome from cadastro.pessoa, pmieducar.aluno where idpes = ref_idpes and cod_aluno = $1";
-    $nome = $this->fetchPreparedQuery($sql, $alunoId, false, 'first-field');
-
-    return $this->safeString($nome);
+  protected function canGet() {
+    return $this->canAcceptRequest() &&
+           $this->validatesPresenceOf('id');
   }
 
 
-  protected function loadNameFor($resourceName, $id){
-    $sql = "select nm_{$resourceName} from pmieducar.{$resourceName} where cod_{$resourceName} = $1";
-    $nome = $this->fetchPreparedQuery($sql, $id, false, 'first-field');
+  // load resources
 
-    return $this->safeString($nome);
+  protected function tryLoadAlunoId($pessoaId) {
+    $sql = "select cod_aluno as id from pmieducar.aluno where ref_idpes = $1";
+    return $this->fetchPreparedQuery($sql, $pessoaId, false, 'first-field');
+  }
+
+  protected function loadPessoa($id = null) {
+    $sql            = "select idpes as id, nome from cadastro.pessoa where idpes = $1";
+
+    $pessoa         = $this->fetchPreparedQuery($sql, $id, false, 'first-row');
+    $pessoa['nome'] = $this->toUtf8($pessoa['nome'], array('transform' => true));
+
+    return $pessoa;
+  }
+
+  protected function loadDetails($pessoaId = null) {
+    $alunoId = $this->tryLoadAlunoId($pessoaId);
+
+    $sql = "select cpf, idpes_pai as pai_id, idpes_mae as mae_id, idpes_responsavel as responsavel_id,
+            coalesce((select nome from cadastro.pessoa where idpes = fisica.idpes_pai),
+            (select nm_pai from pmieducar.aluno where cod_aluno = $1)) as nome_pai,
+            coalesce((select nome from cadastro.pessoa where idpes = fisica.idpes_mae),
+            (select nm_mae from pmieducar.aluno where cod_aluno = $1)) as nome_mae,
+              (select nome from cadastro.pessoa where idpes = fisica.idpes_responsavel) as nome_responsavel,
+            (select rg from cadastro.documento where documento.idpes = fisica.idpes) as rg
+            from cadastro.fisica where idpes = $2";
+
+    $details = $this->fetchPreparedQuery($sql, array($alunoId, $pessoaId), false, 'first-row');
+
+    $attrs   = array('cpf', 'rg', 'pai_id', 'mae_id', 'responsavel_id', 'nome_pai', 'nome_mae', 'nome_responsavel');
+    $details = Portabilis_Array_Utils::filter($details, $attrs);
+
+    $details['nome_mae']         = $this->toUtf8($details['nome_mae'], array('transform' => true));
+    $details['nome_pai']         = $this->toUtf8($details['nome_pai'], array('transform' => true));
+    $details['nome_responsavel'] = $this->toUtf8($details['nome_responsavel'], array('transform' => true));
+
+    return $details;
   }
 
 
@@ -150,18 +175,37 @@ class PessoaController extends ApiCoreController
   // api responders
 
   protected function search() {
-      $alunos = array();
+    $pessoas = array();
 
-      if ($this->canSearch())
-        $alunos = $this->loadPessoasBySearchQuery($this->getRequest()->query);
+    if ($this->canSearch())
+      $pessoas = $this->loadPessoasBySearchQuery($this->getRequest()->query);
 
-      return array('result' => $alunos);
+    return array('result' => $pessoas);
+  }
+
+
+  protected function get() {
+    $pessoa = array();
+
+    if ($this->canGet()) {
+      $attrs        = array('id', 'nome');
+
+      $pessoa  = $this->loadPessoa($this->getRequest()->id);
+      $pessoa  = Portabilis_Array_Utils::filter($pessoa, $attrs);
+
+      $details = $this->loadDetails($this->getRequest()->id);
+      $pessoa  = Portabilis_Array_Utils::merge($pessoa, $details);
     }
+
+    return $pessoa;
+  }
 
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'pessoa-search'))
       $this->appendResponse($this->search());
+    elseif ($this->isRequestFor('get', 'pessoa'))
+      $this->appendResponse($this->get());
     else
       $this->notImplementedOperationError();
   }
