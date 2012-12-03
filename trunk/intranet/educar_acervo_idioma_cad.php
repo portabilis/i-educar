@@ -100,7 +100,7 @@ class indice extends clsCadastro
 		$this->campoOculto( "cod_acervo_idioma", $this->cod_acervo_idioma );
 
     //foreign keys
-    $this->addSelectInputFor(array('instituicao', 'escola', 'biblioteca'));
+    $this->inputsHelper()->dynamicInput(array('instituicao', 'escola', 'biblioteca'));
 
 		// text
 		$this->campoTexto( "nm_idioma", "Idioma", $this->nm_idioma, 30, 255, true );

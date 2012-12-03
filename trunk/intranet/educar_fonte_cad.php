@@ -99,7 +99,7 @@ class indice extends clsCadastro
 		$this->campoOculto( "cod_fonte", $this->cod_fonte );
 
 		// foreign keys
-    $this->addSelectInputFor(array('instituicao', 'escola', 'biblioteca'));
+    $this->inputsHelper()->dynamicInput(array('instituicao', 'escola', 'biblioteca'));
 
 		// text
 		$this->campoTexto( "nm_fonte", "Fonte", $this->nm_fonte, 30, 255, true );
