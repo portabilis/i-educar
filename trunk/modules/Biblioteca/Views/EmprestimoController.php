@@ -48,13 +48,13 @@ class EmprestimoController extends Core_Controller_Page_ListController
   protected function setSelectionFields() {
     $inputsHelper = new Portabilis_View_Helper_Inputs($this);
 
-    $inputsHelper->dynamicInput('instituicao', array('options' => array('id' => 'instituicao_id')));
-    $inputsHelper->dynamicInput('escola',      array('options' => array('id' => 'escola_id')));
-    $inputsHelper->dynamicInput('biblioteca',  array('options' => array('id' => 'biblioteca_id')));
+    $inputsHelper->dynamicInput('instituicao', array('id' => 'instituicao_id'));
+    $inputsHelper->dynamicInput('escola',      array('id' => 'escola_id'));
+    $inputsHelper->dynamicInput('biblioteca',  array('id' => 'biblioteca_id'));
 
     $this->campoNumero('tombo_exemplar', 'Tombo exemplar', '', 13, 13, true);
 
-    $inputsHelper->dynamicInput('bibliotecaPesquisaCliente', array('hiddenInputOptions' => array('id' => 'cliente_id')));
+    $inputsHelper->dynamicInput('bibliotecaPesquisaCliente', array(), array('hiddenInputOptions' => array('id' => 'cliente_id')));
   }
 
 

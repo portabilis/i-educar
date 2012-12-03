@@ -46,8 +46,8 @@ class PromocaoController extends Core_Controller_Page_ListController
   protected function setSelectionFields() {
     $inputsHelper = new Portabilis_View_Helper_Inputs($this);
 
-    $inputsHelper->dynamicInput('instituicao', array('options' => array('id' => 'instituicao_id')));
-    $inputsHelper->dynamicInput('ano', array('options' => array('id' => 'ano_escolar')));
+    $inputsHelper->dynamicInput('instituicao', array('id' => 'instituicao_id'));
+    $inputsHelper->dynamicInput('ano', array('id' => 'ano_escolar'));
   }
 
 
