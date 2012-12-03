@@ -57,13 +57,12 @@ class Portabilis_View_Helper_DynamicInput_Turma extends Portabilis_View_Helper_D
     if ($serieId && empty($resources))
       $resources = App_Model_IedFinder::getTurmas($serieId);
 
-    return $this->insertInArray(null, "Selecione uma turma", $resources);
+    return $this->insertOption(null, "Selecione uma turma", $resources);
   }
-
 
   public function turma($options = array()) {
     $defaultOptions       = array('id'        => null,
-                                  'serieId'  => null,
+                                  'serieId'   => null,
                                   'options'   => array(),
                                   'resources' => array());
 
@@ -72,9 +71,9 @@ class Portabilis_View_Helper_DynamicInput_Turma extends Portabilis_View_Helper_D
     $defaultSelectOptions = array('id'         => 'ref_cod_turma',
                                   'label'      => 'Turma',
                                   'turmas'     => $this->getOptions($options['serieId'], $options['resources']),
-                                  'value'      => $this->getResourceId($options['resources']),
+                                  'value'      => $this->getResourceId($options['id']),
                                   'callback'   => '',
-                                  'duplo'      => false,
+                                  'inline'     => false,
                                   'label_hint' => '',
                                   'input_hint' => '',
                                   'disabled'   => false,

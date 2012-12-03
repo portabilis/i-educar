@@ -67,7 +67,7 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaTipoExemplar extends Portabi
       }
     }
 
-    return $this->insertInArray(null, "Selecione um tipo de exemplar", $tiposExemplar);
+    return $this->insertOption(null, "Selecione um tipo de exemplar", $tiposExemplar);
   }
 
 
@@ -96,7 +96,7 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaTipoExemplar extends Portabi
                                       'tipos_exemplar' => $options['tiposExemplar'],
                                       'value'          => $this->viewInstance->ref_cod_exemplar_tipo,
                                       'callback'       => '',
-                                      'duplo'          => false,
+                                      'inline'         => false,
                                       'label_hint'     => '',
                                       'input_hint'     => '',
                                       'disabled'       => false,

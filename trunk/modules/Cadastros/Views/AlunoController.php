@@ -72,6 +72,21 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       'help'   => '',
     ),
 
+    'religiao' => array(
+      'label'  => 'Religi&atilde;o',
+      'help'   => '',
+    ),
+
+    'beneficio' => array(
+      'label'  => 'Beneficio',
+      'help'   => '',
+    ),
+
+    'alfabetizado' => array(
+      'label'  => 'Alfabetizado',
+      'help'   => '',
+    ),
+
     'transporte_publico' => array(
       'label'  => 'Transporte p&uacute;blico',
       'help'   => '',
@@ -116,7 +131,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     // nome
     $helperOptions = array('addHiddenInput' => true);
-    $options       = array('label'          => $this->_getLabel('pessoa'));
+    $options       = array('label'          => $this->_getLabel('pessoa'), 'size' => 68);
     $this->inputsHelper()->simpleSearchInput('pessoa', 'nome', $options, $helperOptions);
 
     // rg
@@ -129,43 +144,80 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
 
     // pai
-    $options = array('label' => $this->_getLabel('pai'), 'disabled' => true, 'required' => false);
+    $options = array('label' => $this->_getLabel('pai'), 'disabled' => true, 'required' => false, 'size' => 68);
     $this->inputsHelper()->textInput('aluno', 'pai', $options);
 
 
     // mãe
-    $options = array('label' => $this->_getLabel('mae'), 'disabled' => true, 'required' => false);
+    $options = array('label' => $this->_getLabel('mae'), 'disabled' => true, 'required' => false, 'size' => 68);
     $this->inputsHelper()->textInput('aluno', 'mae', $options);
 
 
     // responsável
-    $options = array('label' => $this->_getLabel('responsavel'), 'disabled' => true, 'required' => false);
-    $this->inputsHelper()->textInput('aluno', 'responsavel', $options);
+
+    // tipo
+    $tiposResponsavel = array(null           => 'Selecione',
+                              'pai'          => 'Pai',
+                              'mae'          => 'M&atilde;e',
+                              'outra_pessoa' => 'Outra pessoa');
+
+    $options = array('label'     => $this->_getLabel('responsavel'),
+                     'resources' => $tiposResponsavel,
+                     'required'  => true,
+                     'inline'    => true);
+
+    $this->inputsHelper()->selectInput('responsavel', 'tipo', $options);
+
+
+    // nome
+    $options       = array('label'          => '', 'size' => 50, 'required' => true);
+    $helperOptions = array('addHiddenInput' => true,
+                           'searchPath'     => "/module/Api/Pessoa?oper=get&resource=pessoa-search");
+
+    $this->inputsHelper()->simpleSearchInput('responsavel', 'nome', $options, $helperOptions);
+
+
+    // religião
+    $options = array('label' => $this->_getLabel('religiao'));
+    $this->inputsHelper()->religiaoInput('aluno', $options);
+
+
+    // beneficio
+    $options = array('label' => $this->_getLabel('beneficio'));
+    $this->inputsHelper()->beneficioInput('aluno', $options);
 
 
     // transporte publico
-    $tiposTransportePublico = array('nenhum'    => 'N&atilde;o utiliza',
+    $tiposTransportePublico = array(null        => 'Selecione',
+                                    'nenhum'    => 'N&atilde;o utiliza',
                                     'municipal' => 'Municipal',
                                     'estadual'  => 'Estadual');
 
     $options = array('label'     => $this->_getLabel('transporte_publico'),
-                     'resources' => $tiposTransportePublico);
+                     'resources' => $tiposTransportePublico,
+                     'required'  => true);
 
     $this->inputsHelper()->selectInput('aluno', 'transporte_publico', $options);
 
 
+    // alfabetizado
+    $options = array('label' => $this->_getLabel('alfabetizado'));
+    $this->inputsHelper()->checkboxInput('aluno', 'alfabetizado', $options);
+
+
     // código rede de ensino municipal
-    $options = array('label' => $this->_getLabel('codigo_rede_ensino_municipal'), 'disabled' => true, 'required' => false);
+    $options = array('label'    => $this->_getLabel('codigo_rede_ensino_municipal'), 'disabled' => true,
+                     'required' => false, 'size' => 25);
     $this->inputsHelper()->textInput('aluno', 'codigo_rede_ensino_municipal', $options);
 
 
     // código rede de ensino estadual
-    $options = array('label' => $this->_getLabel('codigo_rede_ensino_estadual'), 'required' => false);
+    $options = array('label' => $this->_getLabel('codigo_rede_ensino_estadual'), 'required' => false, 'size' => 25);
     $this->inputsHelper()->textInput('aluno', 'codigo_rede_ensino_estadual', $options);
 
 
     // código inep
-    $options = array('label' => $this->_getLabel('codigo_inep'), 'required' => false);
+    $options = array('label' => $this->_getLabel('codigo_inep'), 'required' => false, 'size' => 25);
     $this->inputsHelper()->textInput('aluno', 'codigo_inep', $options);
 
     $this->loadResourceAssets();

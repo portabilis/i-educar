@@ -57,7 +57,7 @@ class Portabilis_View_Helper_DynamicInput_Curso extends Portabilis_View_Helper_D
     if ($escolaId && empty($resources))
       $resources = App_Model_IedFinder::getCursos($escolaId);
 
-    return $this->insertInArray(null, "Selecione um curso", $resources);
+    return $this->insertOption(null, "Selecione um curso", $resources);
   }
 
 
@@ -72,9 +72,9 @@ class Portabilis_View_Helper_DynamicInput_Curso extends Portabilis_View_Helper_D
     $defaultSelectOptions = array('id'         => 'ref_cod_curso',
                                   'label'      => 'Curso',
                                   'cursos'     => $this->getOptions($options['escolaId'], $options['resources']),
-                                  'value'      => $this->getResourceId($options['resources']),
+                                  'value'      => $this->getResourceId($options['id']),
                                   'callback'   => '',
-                                  'duplo'      => false,
+                                  'inline'     => false,
                                   'label_hint' => '',
                                   'input_hint' => '',
                                   'disabled'   => false,

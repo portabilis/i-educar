@@ -63,7 +63,7 @@ class Portabilis_View_Helper_DynamicInput_DataInicial extends Portabilis_View_He
                                  'value'      => $this->getResourceValue($options['options']['value']),
                                  'required'   => true,
                                  'label_hint' => '',
-                                 'duplo'      => false,
+                                 'inline'     => false,
                                  'callback'   => false,
                                  'disabled'   => false);
 

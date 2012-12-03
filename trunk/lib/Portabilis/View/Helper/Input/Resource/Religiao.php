@@ -29,7 +29,7 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/Input/Core.php';
+require_once 'lib/Portabilis/View/Helper/Input/Select.php';
 
 
 /**
@@ -42,26 +42,44 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Select extends Portabilis_View_Helper_Input_Core {
+class Portabilis_View_Helper_Input_Resource_Religiao extends Portabilis_View_Helper_Input_Select {
 
-  public function select($objectName, $attrName, $options = array()) {
-    $defaultOptions       = array('options' => array(), 'resources' => array(), 'value' => null);
-    $options              = $this->mergeOptions($options, $defaultOptions);
+  protected function getResourceId($id = null) {
+    return $id;
+  }
 
-    $defaultInputOptions = array('id'         => $objectName . '_' . $attrName,
-                                 'label'      => ucwords($attrName),
-                                 'resources'  => $options['resources'],
-                                 'value'      => $options['value'],
-                                 'callback'   => '',
-                                 'inline'      => false,
-                                 'label_hint' => '',
-                                 'input_hint' => '',
-                                 'disabled'   => false,
-                                 'required'   => true,
-                                 'multiple'   => false);
+  protected function getOptions($resources) {
+    if (empty($resources)) {
+      $resources = array();
 
-    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
-    call_user_func_array(array($this->viewInstance, 'campoLista'), $inputOptions);
+      $_resources = new clsPmieducarReligiao();
+      $_resources = $_resources->lista(null, null, null, null, null, null, null, null, 1);
+
+      foreach ($_resources as $resource) {
+        $resources[$resource['cod_religiao']] = $resource['nm_religiao'];
+      }
+    }
+
+    return $this->insertOption(null, "Selecione", $resources);
+  }
+
+  public function religiao($objectName, $options = array()) {
+    // options
+    $defaultOptions      = array('id'        => null,
+                                 'attrName'  => 'religiao',
+                                 'resources' => array(),
+                                 'options'   => array());
+
+    $options             = $this->mergeOptions($options, $defaultOptions);
+
+
+    // input options
+    $defaultInputOptions = array('value'     => $this->getResourceId($options['id']),
+                                 'resources' => $this->getOptions($options['resources']));
+
+    $inputOptions        = $this->mergeOptions($options['options'], $defaultInputOptions);
+
+    $this->inputsHelper()->selectInput($objectName, $defaultOptions['attrName'], $inputOptions);
   }
 }
 ?>

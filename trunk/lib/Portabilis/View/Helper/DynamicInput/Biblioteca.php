@@ -59,7 +59,7 @@ class Portabilis_View_Helper_DynamicInput_Biblioteca extends Portabilis_View_Hel
     $defaultInputOptions = array('id'        => 'ref_cod_biblioteca',
                                  'label'     => 'Biblioteca',
                                  'value'     => '',
-                                 'duplo'     => false,
+                                 'inline'    => false,
                                  'descricao' => '',
                                  'separador' => ':');
 
@@ -81,7 +81,7 @@ class Portabilis_View_Helper_DynamicInput_Biblioteca extends Portabilis_View_Hel
       $resources = App_Model_IedFinder::getBibliotecas($instituicaoId, $escolaId);
     }
 
-    return $this->insertInArray(null, "Selecione uma biblioteca", $resources);
+    return $this->insertOption(null, "Selecione uma biblioteca", $resources);
   }
 
 
@@ -94,7 +94,7 @@ class Portabilis_View_Helper_DynamicInput_Biblioteca extends Portabilis_View_Hel
                                  'resources'  => $this->getOptions($options['resources']),
                                  'value'      => $this->getBibliotecaId($options['id']),
                                  'callback'   => '',
-                                 'duplo'      => false,
+                                 'inline'      => false,
                                  'label_hint' => '',
                                  'input_hint' => '',
                                  'disabled'   => false,

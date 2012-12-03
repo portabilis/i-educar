@@ -29,11 +29,11 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
+require_once 'lib/Portabilis/View/Helper/Input/Core.php';
 
 
 /**
- * Portabilis_View_Helper_DynamicInput_DataFinal class.
+ * Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaObra class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -42,33 +42,20 @@ require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_DataFinal extends Portabilis_View_Helper_DynamicInput_Core {
+class Portabilis_View_Helper_Input_Checkbox extends Portabilis_View_Helper_Input_Core {
 
-  # TODO criar este metodo na classe pai para ser subescrito nas (outras) classes filhas
-  protected function getResourceValue($value = null) {
-    if (! $value && $this->viewInstance->data_final)
-      $value = $this->viewInstance->data_final;
-    else
-      $value = date('t/m/Y');
+  public function checkbox($objectName, $attrName, $options = array()) {
+    $defaultOptions = array('value' => null);
+    $options        = $this->mergeOptions($options, $defaultOptions);
 
-    return $value;
-  }
-
-  public function dataFinal($options = array()) {
-    $defaultOptions       = array('options' => array());
-    $options              = $this->mergeOptions($options, $defaultOptions);
-
-    $defaultInputOptions = array('id'         => 'data_final',
-                                 'label'      => 'Data final',
-                                 'value'      => $this->getResourceValue($options['options']['value']),
-                                 'required'   => true,
+    $defaultInputOptions = array('id'         => $objectName . "_" . $attrName,
+                                 'label'      => ucwords($attrName),
+                                 'value'      => $options['value'],
                                  'label_hint' => '',
-                                 'inline'     => false,
-                                 'callback'   => false,
-                                 'disabled'   => false);
+                                 'inline'     => false);
 
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
-    call_user_func_array(array($this->viewInstance, 'campoData'), $inputOptions);
+    call_user_func_array(array($this->viewInstance, 'campoCheck'), $inputOptions);
   }
 }
 ?>

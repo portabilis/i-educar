@@ -79,6 +79,11 @@ class Portabilis_View_Helper_Input_Core {
     return Portabilis_Array_Utils::merge($options, $defaultOptions);
   }
 
+  // wrapper for Portabilis_Array_Utils::insertIn
+  protected static function insertOption($key, $value, $array) {
+    return Portabilis_Array_Utils::insertIn($key, $value, $array);
+  }
+
   protected function inputsHelper() {
     return $this->_inputsHelper;
   }

@@ -246,3 +246,16 @@ select, input[type="text"], input[type="password"], textarea {
     border: 1px solid #ffe5e5;
     background-color: #ffeeee;
 }
+
+
+
+
+/* inputs not required */
+.geral {
+  background-color: #fff;
+}
+
+.disabled, *[disabled] {
+  cursor: not-allowed;
+  background-color: #EEE;
+}

@@ -62,13 +62,13 @@ class Portabilis_View_Helper_DynamicInput_Ano extends Portabilis_View_Helper_Dyn
                                  'label'      => 'Ano',
                                  'value'      => $this->getResourceValue($options['options']['value']),
                                  'size'       => 4,
-                                 'max_length'  => 4,
+                                 'max_length' => 4,
                                  'required'   => true,
                                  'label_hint' => '',
                                  'input_hint' => '',
                                  'script'     => false,
                                  'callback'   => false,
-                                 'duplo'      => false,
+                                 'inline'     => false,
                                  'disabled'   => false);
 
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
@@ -87,7 +87,7 @@ class Portabilis_View_Helper_DynamicInput_Ano extends Portabilis_View_Helper_Dyn
       $resources = array('#TODO');
     }
 
-    return $this->insertInArray(null, "Selecione um ano", $resources);
+    return $this->insertOption(null, "Selecione um ano", $resources);
   }
 
 
@@ -100,7 +100,7 @@ class Portabilis_View_Helper_DynamicInput_Ano extends Portabilis_View_Helper_Dyn
                                  'resources'  => $this->getOptions($options['resources']),
                                  'value'      => $this->getResourceValue($options['value']),
                                  'callback'   => '',
-                                 'duplo'      => false,
+                                 'inline'      => false,
                                  'label_hint' => '',
                                  'input_hint' => '',
                                  'disabled'   => false,

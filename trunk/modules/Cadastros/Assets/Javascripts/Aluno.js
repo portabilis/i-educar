@@ -1,3 +1,5 @@
+// resource options
+
 resourceOptions.name = 'aluno';
 resourceOptions.new  = true;
 
@@ -6,12 +8,12 @@ resourceOptions.handlePost = function(dataResponse) {
   console.log(dataResponse);
 }
 
+// ajax
+
 // TODO move *person* logic to /modudes/Cadastros/Assets/Javascripts/Person.js
 
 var handleGetPersonDetails = function(dataResponse) {
   handleMessages(dataResponse.msgs);
-
-  console.log(dataResponse);
 
   var nomePai = dataResponse.nome_pai;
   var nomeMae = dataResponse.nome_mae;
@@ -54,6 +56,29 @@ var updatePersonDetails = function() {
   getPersonDetails($j('#pessoa_id').val());
 }
 
+
+// simple search options
+
 var simpleSearchPessoaOptions = {
   autocompleteOptions : { close : updatePersonDetails }
 };
+
+var simpleSearchResponsavelOptions = {};
+
+
+// when page is ready
+
+(function($) {
+  $(document).ready(function() {
+
+    var checkTipoResponsavel = function(){
+      if ($j('#responsavel_tipo').val() == 'outra_pessoa')
+        $j('#responsavel_nome').show();
+      else
+        $j('#responsavel_nome').hide();
+    }
+
+    checkTipoResponsavel();
+    $j('#responsavel_tipo').change(checkTipoResponsavel);
+  }); // ready
+})(jQuery);

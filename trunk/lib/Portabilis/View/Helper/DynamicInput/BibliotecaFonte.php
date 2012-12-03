@@ -59,7 +59,7 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaFonte extends Portabilis_Vie
     if ($bibliotecaId and empty($resources))
       $resources = App_Model_IedFinder::getBibliotecaFontes($bibliotecaId);
 
-    return $this->insertInArray(null, "Selecione uma fonte", $resources);
+    return $this->insertOption(null, "Selecione uma fonte", $resources);
   }
 
 
@@ -72,7 +72,7 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaFonte extends Portabilis_Vie
                             'fontes'     => $this->getOptions($options['resources']),
                             'value'      => $this->getBibliotecaFonteId($options['id']),
                             'callback'   => '',
-                            'duplo'      => false,
+                            'inline'     => false,
                             'label_hint' => '',
                             'input_hint' => '',
                             'disabled'   => false,

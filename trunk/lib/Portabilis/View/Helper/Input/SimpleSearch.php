@@ -53,7 +53,8 @@ class Portabilis_View_Helper_Input_SimpleSearch extends Portabilis_View_Helper_I
     $defaultOptions = array('options'            => array(),
                             'searchPath'         => "/module/Api/" . ucwords($objectName) . "?oper=get&resource={$objectName}-search",
                             'addHiddenInput'     => false,
-                            'hiddenInputOptions' => array());
+                            'hiddenInputOptions' => array(),
+                            'value'              => null);
 
     $options = $this->mergeOptions($options, $defaultOptions);
 
@@ -66,7 +67,10 @@ class Portabilis_View_Helper_Input_SimpleSearch extends Portabilis_View_Helper_I
       $this->inputsHelper()->hiddenInput($objectName, 'id', $options['hiddenInputOptions']);
     }
 
-    $this->inputsHelper()->textInput($objectName, $attrName, $options['options']);
+    $defaultInputOptions = array('value' => $options['value']);
+    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
+
+    $this->inputsHelper()->textInput($objectName, $attrName, $inputOptions);
 
     // load simple search js
 

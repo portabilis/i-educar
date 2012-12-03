@@ -82,7 +82,7 @@ class Portabilis_View_Helper_DynamicInput_PesquisaAluno extends Portabilis_View_
                                  'max_length'  => '255',
                                  'required'   => true,
                                  'expressao'  => false,
-                                 'duplo'      => false,
+                                 'inline'     => false,
                                  'label_hint' => '',
                                  'input_hint' => $inputHint,
                                  'callback'   => '',

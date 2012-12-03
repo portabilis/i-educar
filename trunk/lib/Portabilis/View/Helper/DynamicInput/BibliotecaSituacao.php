@@ -58,7 +58,7 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaSituacao extends Portabilis_
     if ($bibliotecaId and empty($resources))
       $resources = App_Model_IedFinder::getBibliotecaSituacoes($bibliotecaId);
 
-    return $this->insertInArray(null, "Selecione uma situa&ccedil;&atilde;o", $resources);
+    return $this->insertOption(null, "Selecione uma situa&ccedil;&atilde;o", $resources);
   }
 
 
@@ -71,7 +71,7 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaSituacao extends Portabilis_
                             'situacoes'  => $this->getOptions($options['resources']),
                             'value'      => $this->getBibliotecaSituacaoId($options['id']),
                             'callback'   => '',
-                            'duplo'      => false,
+                            'inline'     => false,
                             'label_hint' => '',
                             'input_hint' => '',
                             'disabled'   => false,

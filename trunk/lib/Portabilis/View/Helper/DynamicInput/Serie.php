@@ -57,7 +57,7 @@ class Portabilis_View_Helper_DynamicInput_Serie extends Portabilis_View_Helper_D
     if ($cursoId && empty($resources))
       $resources = App_Model_IedFinder::getSeries($cursoId);
 
-    return $this->insertInArray(null, "Selecione uma s&eacute;rie", $resources);
+    return $this->insertOption(null, "Selecione uma s&eacute;rie", $resources);
   }
 
 
@@ -72,9 +72,9 @@ class Portabilis_View_Helper_DynamicInput_Serie extends Portabilis_View_Helper_D
     $defaultSelectOptions = array('id'         => 'ref_cod_serie',
                                   'label'      => 'Serie',
                                   'series'     => $this->getOptions($options['cursoId'], $options['resources']),
-                                  'value'      => $this->getResourceId($options['resources']),
+                                  'value'      => $this->getResourceId($options['id']),
                                   'callback'   => '',
-                                  'duplo'      => false,
+                                  'inline'     => false,
                                   'label_hint' => '',
                                   'input_hint' => '',
                                   'disabled'   => false,

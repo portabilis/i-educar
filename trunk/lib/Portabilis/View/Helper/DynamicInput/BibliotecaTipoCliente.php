@@ -58,7 +58,7 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaTipoCliente extends Portabil
     if ($bibliotecaId and empty($resources))
       $resources = App_Model_IedFinder::getBibliotecaTiposCliente($bibliotecaId);
 
-    return $this->insertInArray(null, "Selecione um tipo de cliente", $resources);
+    return $this->insertOption(null, "Selecione um tipo de cliente", $resources);
   }
 
 
@@ -71,7 +71,7 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaTipoCliente extends Portabil
                                       'resources'  => $this->getOptions($options['resources']),
                                       'value'      => $this->getResourceId($options['id']),
                                       'callback'   => '',
-                                      'duplo'      => false,
+                                      'inline'     => false,
                                       'label_hint' => '',
                                       'input_hint' => '',
                                       'disabled'   => false,

@@ -45,11 +45,11 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
 class Portabilis_View_Helper_Input_Hidden extends Portabilis_View_Helper_Input_Core {
 
   public function hidden($objectName, $attrName, $options = array()) {
-    $defaultOptions = array('options' => array());
+    $defaultOptions = array('options' => array(), 'value' => null);
     $options        = $this->mergeOptions($options, $defaultOptions);
 
     $defaultInputOptions = array('id'    => $objectName . "_" . $attrName,
-                                 'value' => '');
+                                 'value' => $options['value']);
 
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
     call_user_func_array(array($this->viewInstance, 'campoOculto'), $inputOptions);

@@ -65,6 +65,8 @@ class Portabilis_View_Helper_Inputs {
   }
 
 
+  // dynamic inputs helper
+
   public function dynamicInput($helperNames, $inputOptions = array(), $helperOptions = array()) {
     $options = $this->mergeInputOptions($inputOptions, $helperOptions);
 
@@ -81,50 +83,57 @@ class Portabilis_View_Helper_Inputs {
   }
 
 
+  // input helpers
+
   public function textInput($objectName, $attrNames, $inputOptions = array(), $helperOptions = array()) {
-    $helperName = 'text';
-    $options    = $this->mergeInputOptions($inputOptions, $helperOptions);
+    $options = $this->mergeInputOptions($inputOptions, $helperOptions);
 
     if (! is_array($attrNames))
       $attrNames = array($attrNames);
 
     foreach($attrNames as $attrName) {
-      $this->input($helperName, $objectName, $attrName, $options);
+      $this->input('text', $objectName, $attrName, $options);
     }
   }
 
 
   public function selectInput($objectName, $attrName, $inputOptions = array(), $helperOptions = array()) {
-    $helperName = 'select';
-    $options    = $this->mergeInputOptions($inputOptions, $helperOptions);
-
-    $this->input($helperName, $objectName, $attrName, $options);
+    $this->input('select', $objectName, $attrName, $this->mergeInputOptions($inputOptions, $helperOptions));
   }
 
 
   public function searchInput($objectName, $attrName, $inputOptions = array(), $helperOptions = array()) {
-    $helperName = 'search';
-    $options    = $this->mergeInputOptions($inputOptions, $helperOptions);
-
-    $this->input($helperName, $objectName, $attrName, $options);
+    $this->input('search', $objectName, $attrName, $this->mergeInputOptions($inputOptions, $helperOptions));
   }
 
 
   public function simpleSearchInput($objectName, $attrName, $inputOptions = array(), $helperOptions = array()) {
-    $helperName = 'simpleSearch';
-    $options    = $this->mergeInputOptions($inputOptions, $helperOptions);
-
-    $this->input($helperName, $objectName, $attrName, $options);
+    $this->input('simpleSearch', $objectName, $attrName, $this->mergeInputOptions($inputOptions, $helperOptions));
   }
 
 
   public function hiddenInput($objectName, $attrName, $inputOptions = array(), $helperOptions = array()) {
-    $helperName = 'hidden';
-    $options    = $this->mergeInputOptions($inputOptions, $helperOptions);
-
-    $this->input($helperName, $objectName, $attrName, $options);
+    $this->input('hidden', $objectName, $attrName, $this->mergeInputOptions($inputOptions, $helperOptions));
   }
 
+
+  public function checkboxInput($objectName, $attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->input('checkbox', $objectName, $attrName, $this->mergeInputOptions($inputOptions, $helperOptions));
+  }
+
+
+  // resource input helpers
+
+  public function religiaoInput($objectName, $inputOptions = array(), $helperOptions = array()) {
+    $this->resourceInput('religiao', $objectName, $this->mergeInputOptions($inputOptions, $helperOptions));
+  }
+
+  public function beneficioInput($objectName, $inputOptions = array(), $helperOptions = array()) {
+    $this->resourceInput('beneficio', $objectName, $this->mergeInputOptions($inputOptions, $helperOptions));
+  }
+
+
+  // protected methods
 
   protected function input($helperName, $objectName, $attrName, $options = array()) {
     $helperClassName = "Portabilis_View_Helper_Input_" . ucfirst($helperName);
@@ -134,6 +143,13 @@ class Portabilis_View_Helper_Inputs {
     $helper->$helperName($objectName, $attrName, $options);
   }
 
+  protected function resourceInput($helperName, $objectName, $options = array()) {
+    $helperClassName = "Portabilis_View_Helper_Input_Resource_" . ucfirst($helperName);
+
+    $this->includeHelper($helperClassName);
+    $helper = new $helperClassName($this->viewInstance, $this);
+    $helper->$helperName($objectName, $options);
+  }
 
   protected function includeHelper($helperClassName) {
     $classPath       = str_replace('_', '/', $helperClassName) . '.php';
@@ -142,7 +158,7 @@ class Portabilis_View_Helper_Inputs {
     include_once $classPath;
 
     if (! class_exists($helperClassName))
-      throw new CoreExt_Exception("Class '$helperClassName' not found in path $classPath.");
+      throw new CoreExt_Exception("Class '$helperClassName' not found in path '$classPath'");
   }
 
   protected function mergeInputOptions($inputOptions = array(), $helperOptions = array()) {

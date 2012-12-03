@@ -107,6 +107,8 @@ class AlunoController extends ApiCoreController
 
     if ($this->canPost()) {
       // TODO do somenthing
+
+      //pessoa_id, aluno_transporte_publico, aluno_codigo_inep / aluno_codigo_rede_ensino_estadual
     }
 
     return $aluno;

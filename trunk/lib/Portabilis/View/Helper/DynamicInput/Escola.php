@@ -60,7 +60,7 @@ class Portabilis_View_Helper_DynamicInput_Escola extends Portabilis_View_Helper_
     $defaultInputOptions = array('id'        => 'ref_cod_escola',
                                  'label'     => 'Escola',
                                  'value'     => '',
-                                 'duplo'     => false,
+                                 'inline'    => false,
                                  'descricao' => '',
                                  'separador' => ':');
 
@@ -79,7 +79,7 @@ class Portabilis_View_Helper_DynamicInput_Escola extends Portabilis_View_Helper_
     if ($instituicaoId and empty($resources))
       $resources = App_Model_IedFinder::getEscolas($instituicaoId);
 
-    return $this->insertInArray(null, "Selecione uma escola", $resources);
+    return $this->insertOption(null, "Selecione uma escola", $resources);
   }
 
 
@@ -92,7 +92,7 @@ class Portabilis_View_Helper_DynamicInput_Escola extends Portabilis_View_Helper_
                                  'resources'  => $this->getOptions($options['resources']),
                                  'value'      => $this->getEscolaId($options['id']),
                                  'callback'   => '',
-                                 'duplo'      => false,
+                                 'inline'      => false,
                                  'label_hint' => '',
                                  'input_hint' => '',
                                  'disabled'   => false,

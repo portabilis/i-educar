@@ -53,7 +53,7 @@ class Portabilis_View_Helper_DynamicInput_Matricula extends Portabilis_View_Help
 
   protected function getOptions($turmaId, $resources) {
     // não implementado load resources ainda, por enquanto busca somente com ajax.
-    return $this->insertInArray(null, "Selecione uma matricula", $resources);
+    return $this->insertOption(null, "Selecione uma matricula", $resources);
   }
 
 
@@ -70,7 +70,7 @@ class Portabilis_View_Helper_DynamicInput_Matricula extends Portabilis_View_Help
                                   'matriculas'     => $this->getOptions($options['turmaId'], $options['resources']),
                                   'value'      => $this->getResourceId($options['resources']),
                                   'callback'   => '',
-                                  'duplo'      => false,
+                                  'inline'     => false,
                                   'label_hint' => '',
                                   'input_hint' => '',
                                   'disabled'   => false,

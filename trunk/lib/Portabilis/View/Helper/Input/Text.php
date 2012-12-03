@@ -45,17 +45,17 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
 class Portabilis_View_Helper_Input_Text extends Portabilis_View_Helper_Input_Core {
 
   public function text($objectName, $attrName, $options = array()) {
-    $defaultOptions       = array('options' => array());
+    $defaultOptions       = array('options' => array(), 'value' => null);
     $options              = $this->mergeOptions($options, $defaultOptions);
 
     $defaultInputOptions = array('id'             => $objectName . '_' . $attrName,
                                  'label'          => ucwords($attrName),
-                                 'value'          => '',
+                                 'value'          => $options['value'],
                                  'size'           => 50,
                                  'max_length'     => 50,
                                  'required'       => true,
                                  'script'         => false,
-                                 'duplo'          => false,
+                                 'inline'         => false,
                                  'label_hint'     => '',
                                  'input_hint'     => '',
                                  'callback'       => false,
