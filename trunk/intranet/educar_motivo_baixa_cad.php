@@ -98,7 +98,7 @@ class indice extends clsCadastro
 		$this->campoOculto( "cod_motivo_baixa", $this->cod_motivo_baixa );
 
     //foreign keys
-    $this->addSelectInputFor(array('instituicao', 'escola', 'biblioteca'));
+    $this->inputsHelper()->dynamicInput(array('instituicao', 'escola', 'biblioteca'));
 
 		// text
 		$this->campoTexto( "nm_motivo_baixa", "Motivo Baixa", $this->nm_motivo_baixa, 30, 255, true );
