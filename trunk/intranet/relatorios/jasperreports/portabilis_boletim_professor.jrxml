@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_boletim_professor" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="bee45616-9f88-4ff8-8f5d-640c268ac7e3">
 	<property name="ireport.zoom" value="1.1000000000000025"/>
-	<property name="ireport.x" value="114"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="ano" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
@@ -353,22 +353,18 @@
 
        (SELECT sum(falta_componente_curricular.quantidade)
            FROM modules.falta_componente_curricular,
-                modules.falta_aluno,
-                modules.componente_curricular
+                modules.falta_aluno
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_componente_curricular.etapa in ('1','2','3','4') AND
-	      falta_aluno.tipo_falta = 2 AND
-                componente_curricular.id = falta_componente_curricular.componente_curricular_id)
-                as total_geral_faltas_componente,
+				falta_aluno.tipo_falta = 2) as total_geral_faltas_componente,
 
        (SELECT sum(falta_componente_curricular.quantidade)
            FROM modules.falta_componente_curricular,
-                modules.falta_aluno,
-                modules.componente_curricular
+                modules.falta_aluno
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
-				falta_componente_curricular.componente_curricular_id = componente_curricular.id AND
+				falta_componente_curricular.componente_curricular_id = $P{disciplina} AND
                 falta_componente_curricular.etapa in ('1','2','3','4') AND
 				falta_aluno.tipo_falta = 2) as total_faltas_componente
 
@@ -845,7 +841,7 @@ limit $P{linha}
 				</reportElement>
 			</rectangle>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="d7a319d0-709e-42c1-971f-5333ec22e00b" x="66" y="1" width="229" height="13"/>
+				<reportElement uuid="d7a319d0-709e-42c1-971f-5333ec22e00b" x="66" y="1" width="231" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
@@ -1065,16 +1061,16 @@ limit $P{linha}
 				<textFieldExpression><![CDATA[100]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0 ‰" isBlankWhenNull="true">
-				<reportElement uuid="aa8070c8-9947-428a-bf94-dc59f5ca9d54" x="621" y="0" width="26" height="15">
+				<reportElement uuid="aa8070c8-9947-428a-bf94-dc59f5ca9d54" x="621" y="-1" width="26" height="15">
 					<printWhenExpression><![CDATA[100 - (($F{total_faltas_componente} * $F{curso_hora_falta})/$F{carga_horaria_componente}) != 100.0]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[100 - (($F{total_faltas_componente} * $F{curso_hora_falta})/$F{carga_horaria_componente})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[100 - (($F{total_faltas_componente} * $F{curso_hora_falta})/$F{carga_horaria_componente}) < 0 ? (100 - (($F{total_faltas_componente} * $F{curso_hora_falta})/$F{carga_horaria_componente})) * -1 : 100 - (($F{total_faltas_componente} * $F{curso_hora_falta})/$F{carga_horaria_componente})]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="7a070405-d463-4e82-bf5a-c6c99f075120" x="621" y="1" width="26" height="15">
+				<reportElement uuid="7a070405-d463-4e82-bf5a-c6c99f075120" x="621" y="-1" width="26" height="15">
 					<printWhenExpression><![CDATA[100 - (($F{total_faltas_componente} * $F{curso_hora_falta})/$F{carga_horaria_componente}) == 100.0]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right">
