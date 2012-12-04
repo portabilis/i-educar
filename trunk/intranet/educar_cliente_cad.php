@@ -158,7 +158,7 @@ class indice extends clsCadastro
 			$this->ref_cod_cliente_tipo = $db->CampoUnico("SELECT ref_cod_cliente_tipo FROM pmieducar.cliente_tipo_cliente WHERE ref_cod_cliente = '$this->cod_cliente'");
 		}
 
-    $this->addSelectInputFor(array('instituicao', 'escola', 'biblioteca', 'bibliotecaTipoCliente'));
+    $this->inputsHelper()->dynamicInput(array('instituicao', 'escola', 'biblioteca', 'bibliotecaTipoCliente'));
 	}
 
 

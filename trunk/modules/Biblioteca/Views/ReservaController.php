@@ -48,11 +48,11 @@ class ReservaController extends Core_Controller_Page_ListController
   protected function setSelectionFields() {
     $inputsHelper = new Portabilis_View_Helper_Inputs($this);
 
-    $inputsHelper->dynamic('instituicao');
-    $inputsHelper->dynamic('escola');
-    $inputsHelper->dynamic('biblioteca');
-    $inputsHelper->dynamic('bibliotecaPesquisaCliente');
-    $inputsHelper->dynamic('bibliotecaPesquisaObra');
+    $inputsHelper->dynamicInput('instituicao');
+    $inputsHelper->dynamicInput('escola');
+    $inputsHelper->dynamicInput('biblioteca');
+    $inputsHelper->dynamicInput('bibliotecaPesquisaCliente');
+    $inputsHelper->dynamicInput('bibliotecaPesquisaObra');
   }
 
 
