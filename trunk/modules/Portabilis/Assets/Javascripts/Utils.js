@@ -93,3 +93,16 @@ function safeUtf8Decode(s) {
 
   return s;
 }
+
+// hash utils
+
+function hashLength(hash) {
+  var len = 0;
+
+  for (var key in hash) {
+    if (hash.hasOwnProperty(key))
+      len++;
+  }
+
+  return len;
+}

@@ -33,7 +33,7 @@ function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields
 
 
 function validatesIfValueIsInSet(value, targetId, set) {
-  if (set[value] == undefined) {
+  if (hashLength(set) > 0 && set[value] == undefined) {
     var s = [];
 
     $j.each(set, function(index, value) {
@@ -41,7 +41,8 @@ function validatesIfValueIsInSet(value, targetId, set) {
     });
 
     s = safeSort(s);
-    handleMessages([{type : 'error', msg : 'Informe um valor que pertença ao conjunto: ' + s.join(', ')}], targetId);
+    handleMessages([{type : 'error', msg : safeUtf8Decode('Informe um valor que pertença ao conjunto: ') +
+                                                          s.join(', ')}], targetId);
 
     return false;
   }
@@ -57,7 +58,7 @@ function validatesIfValueIsNumeric(value, targetId) {
   }
 
   return true;
-}  
+}
 
 
 function validatesIfNumericValueIsInRange(value, targetId, initialRange, finalRange) {

@@ -31,6 +31,7 @@
 
 require_once 'CoreExt/Entity.php';
 require_once 'App/Model/IedFinder.php';
+require_once 'lib/Portabilis/Utils/Float.php';
 
 /**
  * TabelaArredondamento_Model_Tabela class.
@@ -117,24 +118,32 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
                 . 'arredondamento deve estar entre 0 e 10.');
     }
 
-    if (0 == count($this->_tabelaValores)) {
+    /* Inicializa o retorno com o valor recebido (limitando a para uma casa decimal),
+       o qual será retornado caso não tenha sido definido opcoes na tabela de arredondamento,
+       do contrário será arredondado a nota conforme opções da tabela de arredondamento. */
+    $return = Portabilis_Utils_Float::limitDecimal($value, array('decimal_points' => 1));
+
+    // carrega tabela de arredondamento, caso ainda não tenha sido carregada.
+    if (0 == count($this->_tabelaValores))
       $this->_tabelaValores = $this->getDataMapper()->findTabelaValor($this);
-    }
 
-    // Multiplicador para transformar os números em uma escala inteira.
-    $scale = pow(10, $this->_precision);
+    // somente será arredondado a nota, caso tenha sido definido opções de arredondamento, na respectiva tabela.
+    if (count($this->_tabelaValores) > 0) {
+      // Multiplicador para transformar os números em uma escala inteira.
+      $scale = pow(10, $this->_precision);
 
-    // Escala o valor para se tornar comparável
-    $value = $this->getFloat($value) * $scale;
+      // Escala o valor para se tornar comparável
+      $value = $this->getFloat($value) * $scale;
 
-    $return = 0;
-    foreach ($this->_tabelaValores as $tabelaValor) {
-      if ($value >= ($tabelaValor->valorMinimo * $scale) &&
-          $value <= ($tabelaValor->valorMaximo * $scale)) {
+      $return = 0;
+      foreach ($this->_tabelaValores as $tabelaValor) {
+        if ($value >= ($tabelaValor->valorMinimo * $scale) &&
+            $value <= ($tabelaValor->valorMaximo * $scale)) {
+          $return = $tabelaValor->nome;
+          break;
+        }
         $return = $tabelaValor->nome;
-        break;
       }
-      $return = $tabelaValor->nome;
     }
 
     return $return;

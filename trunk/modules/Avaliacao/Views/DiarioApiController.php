@@ -744,17 +744,18 @@ class DiarioApiController extends ApiCoreController
     $_componentesCurriculares = App_Model_IedFinder::getComponentesPorMatricula($matriculaId, null, null, $componenteCurricularId);
 
     foreach($_componentesCurriculares as $_componente) {
-      $componente                  = array();
+      $componente                          = array();
 
-      $componente['id']            = $_componente->get('id');
-      $componente['nome']          = $this->safeString($_componente->get('nome'));
-      $componente['nota_atual']    = $this->getNotaAtual($etapa = null, $componente['id']);
-      $componente['nota_exame']    = $this->getNotaExame($componente['id']);
-      $componente['falta_atual']   = $this->getFaltaAtual($etapa = null, $componente['id']);
-      $componente['parecer_atual'] = $this->getParecerAtual($componente['id']);
-      $componente['situacao']      = $this->getSituacaoMatricula($componente['id']);
+      $componente['id']                    = $_componente->get('id');
+      $componente['nome']                  = $this->safeString($_componente->get('nome'));
+      $componente['nota_atual']            = $this->getNotaAtual($etapa = null, $componente['id']);
+      $componente['nota_exame']            = $this->getNotaExame($componente['id']);
+      //$componente['nota_necessaria_exame'] = $this->getNotaNecessariaExame($componente['id']);
+      $componente['falta_atual']           = $this->getFaltaAtual($etapa = null, $componente['id']);
+      $componente['parecer_atual']         = $this->getParecerAtual($componente['id']);
+      $componente['situacao']              = $this->getSituacaoMatricula($componente['id']);
 
-      $componentesCurriculares[]   = $componente;
+      $componentesCurriculares[]           = $componente;
     }
 
     // ordenado por id, da mesma maneira que nos boletins, obs: poderá ainda ocorrer diferença entre a ordem das areas de conhecimento?
@@ -791,6 +792,15 @@ class DiarioApiController extends ApiCoreController
       $nota = '';
 
     return $nota;
+  }
+
+  protected function getNotaNecessariaExame($componenteCurricularId = null) {
+    if (is_null($componenteCurricularId))
+      $componenteCurricularId = $this->getRequest()->componente_curricular_id;
+
+    $nota = urldecode($this->serviceBoletim()->preverNotaRecuperacao($componenteCurricularId));
+
+    return str_replace(',', '.', $nota);
   }
 
 
