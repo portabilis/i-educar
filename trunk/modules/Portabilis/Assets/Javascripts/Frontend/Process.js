@@ -205,6 +205,8 @@ var $tableSearchDetails = $j('<table />').attr('id', 'search-details')
 
         safeLog('dataResponse details:');
         safeLog(dataResponse);
+
+        throw error;
       }
     }
 

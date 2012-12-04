@@ -50,6 +50,23 @@ class AlunoController extends ApiCoreController
   protected $_deleteOption  = FALSE;
   protected $_titulo   = '';
 
+  protected function validatesValueOfResponsavelTipo() {
+    $expectedValues = array('mae', 'pai', 'outra_pessoa');
+    return $this->validator->validatesValueInSetOf($this->getRequest()->responsavel_tipo, $expectedValues, 'responsavel_tipo');
+  }
+
+  protected function validatesResponsavelId() {
+    $isValid = true;
+
+    if ($this->getRequest()->responsavel_tipo == 'outra_pessoa') {
+      $existenceOptions = array('schema_name' => 'cadastro', 'field_name' => 'idpes');
+
+      $isValid = $this->validatesPresenceOf('responsavel_id') &&
+                 $this->validatesExistenceOf('fisica', $this->getRequest()->responsavel_id, $existenceOptions);
+    }
+
+    return $isValid;
+  }
 
   /*protected function validatesUserIsLoggedIn() {
     #FIXME validar tokens API
@@ -63,8 +80,11 @@ class AlunoController extends ApiCoreController
 
 
   protected function canPost() {
-    return $this->canAcceptRequest() &&
-           $this->validatesPresenceOf('pessoa_id');
+    return $this->canAcceptRequest()                      &&
+           $this->validatesPresenceOf('pessoa_id')        &&
+           $this->validatesPresenceOf('responsavel_tipo') &&
+           $this->validatesValueOfResponsavelTipo()       &&
+           $this->validatesResponsavelId();
 
            // #TODO continuar validando
   }

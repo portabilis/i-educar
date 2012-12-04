@@ -36,8 +36,6 @@ var optionsUtils = {
 
     if (typeof value == 'undefined')
       throw new Error("Option '" + optionName +  "' not defined in simpleSearchOptions.");
-    else if (typeof value == 'function')
-      value = value(selfOptions);
 
     return value;
   },
@@ -139,7 +137,7 @@ function handleMessages(messages, targetId, useDelayClassRemoval) {
 
     $j('<p />').hide()
                .addClass(messages[i].type)
-               .html(messages[i].msg)
+               .html(safeUtf8Decode(messages[i].msg))
                .appendTo($feedbackMessages)
                .fadeIn()
                .delay(delay)

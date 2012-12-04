@@ -33,7 +33,7 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
 
 
 /**
- * Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaObra class.
+ * Portabilis_View_Helper_Input_Checkbox class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar

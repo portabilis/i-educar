@@ -33,7 +33,7 @@ require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
 
 
 /**
- * Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaObra class.
+ * Portabilis_View_Helper_DynamicInput_PesquisaAluno class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar

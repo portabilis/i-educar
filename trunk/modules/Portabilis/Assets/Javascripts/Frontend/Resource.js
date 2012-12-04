@@ -1,18 +1,9 @@
 // metodos e variaveis acessiveis por outros modulos
 
+
 var resourceOptions = {
-
   // options that cannot be overwritten in child
-  get           : function(optionName) {
-    var value = resourceOptions[optionName];
-
-    if (typeof value == 'undefined')
-      throw new Error("Option '" + optionName +  "' not defined.");
-    else if (typeof value == 'function')
-      value = value();
-
-    return value;
-  },
+  get           : function(optionName) { return optionsUtils.get(this, optionName) },
 
   // options that can be overwritten in child
   form         : $j('#formcadastro'),
@@ -51,7 +42,7 @@ var resourceOptions = {
         else
           urlBuilder = putResourceUrlBuilder;
 
-        submitOptions.url = urlBuilder.buildUrl(resourceOptions.get('api_url_base'),
+        submitOptions.url = urlBuilder.buildUrl(resourceOptions.get('api_url_base')(),
                                                 resourceOptions.get('name'),
                                                 {});
 
@@ -81,6 +72,8 @@ var resourceOptions = {
 
         safeLog('dataResponse details:');
         safeLog(dataResponse);
+
+        throw error;
       }
     }
 
