@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_boletim_primeiro_ano_trimestral" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2a004eae-d897-4de6-8a61-b0ebdf3de862">
 	<property name="ireport.zoom" value="1.6105100000000079"/>
-	<property name="ireport.x" value="552"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="68"/>
 	<parameter name="ano" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
@@ -674,7 +674,7 @@ ORDER BY nome_aluno, area_conhecimento_id, id_disciplina]]>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="70">
+			<band height="53">
 				<staticText>
 					<reportElement uuid="a15bde98-216a-4bf8-89f7-b53bf29bcf2a" x="12" y="1" width="33" height="13"/>
 					<textElement>
@@ -683,31 +683,25 @@ ORDER BY nome_aluno, area_conhecimento_id, id_disciplina]]>
 					<text><![CDATA[Parecer:]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement uuid="3fd273de-dda4-45aa-8096-19aea0940c8d" x="46" y="24" width="753" height="21"/>
+					<reportElement uuid="3fd273de-dda4-45aa-8096-19aea0940c8d" positionType="Float" x="46" y="19" width="753" height="13"/>
 					<textElement>
 						<font fontName="DejaVu Sans" size="7"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{parecer_semestre2}]]></textFieldExpression>
 				</textField>
-				<line>
-					<reportElement uuid="1e1bc6ef-bfc6-409b-b56e-93c9e097be8e" x="310" y="55" width="192" height="1"/>
-					<graphicElement>
-						<pen lineWidth="0.25"/>
-					</graphicElement>
-				</line>
-				<staticText>
-					<reportElement uuid="0ca7eadc-7241-43fb-9224-d55ccdcf5b69" x="355" y="57" width="100" height="12"/>
-					<textElement>
-						<font fontName="DejaVu Sans" size="7"/>
-					</textElement>
-					<text><![CDATA[Assinatura do Professor(a)]]></text>
-				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement uuid="cc9a07e0-3173-4406-a1db-efa36fbd112b" x="46" y="1" width="753" height="21"/>
+					<reportElement uuid="cc9a07e0-3173-4406-a1db-efa36fbd112b" positionType="Float" x="46" y="1" width="753" height="13"/>
 					<textElement>
 						<font fontName="DejaVu Sans" size="7"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{parecer_semestre1}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement uuid="3fd273de-dda4-45aa-8096-19aea0940c8d" positionType="Float" x="46" y="37" width="753" height="13"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{parecer_semestre3}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -968,6 +962,20 @@ ORDER BY nome_aluno, area_conhecimento_id, id_disciplina]]>
 		</band>
 	</detail>
 	<summary>
-		<band height="4"/>
+		<band height="19">
+			<staticText>
+				<reportElement uuid="0ca7eadc-7241-43fb-9224-d55ccdcf5b69" positionType="Float" x="347" y="6" width="100" height="12"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<text><![CDATA[Assinatura do Professor(a)]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="1e1bc6ef-bfc6-409b-b56e-93c9e097be8e" positionType="Float" x="311" y="5" width="192" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+		</band>
 	</summary>
 </jasperReport>
