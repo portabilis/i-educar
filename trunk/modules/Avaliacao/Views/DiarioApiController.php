@@ -2,8 +2,9 @@
 
 // O tempo máximo default (30) pode ser atingido ao carregar as matriculas sem selecionar componente curricular,
 // o ideal seria fazer o caregamento assincrono das matriculas.
-if (ini_get("max_execution_time") < 120)
+/*if (ini_get("max_execution_time") < 120)
   ini_set("max_execution_time", 120);
+*/
 
 #error_reporting(E_ALL);
 #ini_set("display_errors", 1);
@@ -297,6 +298,16 @@ class DiarioApiController extends ApiCoreController
   }
 
 
+  protected function validatesPresenceOfMatriculaIdOrComponenteCurricularId() {
+    if (empty($this->getRequest()->componente_curricular_id) && empty($this->getRequest()->matricula_id)) {
+      $this->messenger->append('É necessário receber matricula_id ou componente_curricular_id.', 'error');
+      return false;
+    }
+
+    return true;
+  }
+
+
   // responders validations
 
 
@@ -309,7 +320,7 @@ class DiarioApiController extends ApiCoreController
                                      'turma_id',
                                      'ano',
                                      'etapa')) &&
-
+          $this->validatesPresenceOfMatriculaIdOrComponenteCurricularId() &&
           $this->validatesCanChangeDiarioForAno();
   }
 
@@ -589,11 +600,12 @@ class DiarioApiController extends ApiCoreController
     }
 
     // adiciona regras de avaliacao
-    if(! empty($matriculas))
+    if(! empty($matriculas)) {
       $this->appendResponse('details', $this->getRegraAvaliacao());
+      $this->appendResponse('situacao', $this->getSituacaoMatricula());
+    }
 
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-    $this->appendResponse('situacao',     $this->getSituacaoMatricula());
 
     return $matriculas;
   }
@@ -641,7 +653,7 @@ class DiarioApiController extends ApiCoreController
         $this->_boletimServiceInstances[$matriculaId] = new Avaliacao_Service_Boletim($params);
       }
       catch (Exception $e){
-        $this->messenger->append("Erro ao instanciar serviço boletim para matricula {$matriculaId}: " . $e->getMessage());
+        $this->messenger->append("Erro ao instanciar serviço boletim para matricula {$matriculaId}: " . $e->getMessage(), 'error', true);
       }
     }
 

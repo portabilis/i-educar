@@ -102,6 +102,10 @@ var $tableSearchDetails = $j('<table />').attr('id', 'search-details')
                                         .hide()
                                         .prependTo($formFilter.parent());
 
+// called before search resources
+function canSearch(){
+  return true;
+}
 
 // metodos e variaveis não acessiveis por outros modulos
 
@@ -198,7 +202,7 @@ var $tableSearchDetails = $j('<table />').attr('id', 'search-details')
 
     // submit button callbacks
     var onClickSearchEvent = function(event) {
-      if (validatesPresenseOfValueInRequiredFields()) {
+      if (validatesPresenseOfValueInRequiredFields() && canSearch()) {
         searchOptions.url = getResourceUrlBuilder.buildUrl(API_URL_BASE, RESOURCES_NAME, {});
 
         if (window.history && window.history.pushState)

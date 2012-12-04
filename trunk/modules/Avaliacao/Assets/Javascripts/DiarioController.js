@@ -774,3 +774,14 @@ function colorizeSituacaoTd(tdElement, situacao) {
   else
     $j(tdElement).removeClass('error');
 }
+
+function canSearch(){
+
+  if ($j('#ref_cod_matricula').val() == '' &&  $j('#ref_cod_componente_curricular').val() == '') {
+    alert(safeUtf8Decode('Selecione um "componente curricular" ou uma "matrícula".\n\n' +
+          'Isto é necessário, para um rápido carregamento do diário.'));
+    return false;
+  }
+
+  return true;
+}
