@@ -47,35 +47,32 @@ class Portabilis_Utils_Float {
     return Portabilis_Array_Utils::merge($options, $defaultOptions);
   }
 
-  /* Limita as casas decimais de um numero floar, SEM arredonda-lo,
-     ex: para 4.96, usando decimal_points = 1, será retornado 4.9 e não 5.
-  */
-  public static function limitDecimal($value, $options = array()) {
 
+  /* Limita as casas decimais de um numero float, SEM arredonda-lo,
+     ex: para 4.96, usando limit = 1, retornará 4.9 e não 5. */
+  public static function limitDecimal($value, $options = array()) {
     if (! is_numeric($value))
       throw new Exception("Value must be numeric!");
-
     elseif(is_integer($value))
       return (float)$value;
 
-    $defaultOptions = array('decimal_points' => 2);
+    $locale         = localeconv();
+
+    $defaultOptions = array('limit'         => 2,
+                            'decimal_point' => $locale['decimal_point'],
+                            'thousands_sep' => $locale['thousands_sep']);
+
     $options        = self::mergeOptions($options, $defaultOptions);
 
-    // converts a float value to string, eg: 4.96789 will be '4,96789'
-    $newValue  = (string)$value;
 
-    // splits the values after and before de decimal point,
-    // eg: '4,96789', will be splited in '4' and '96789'
-    $digits    = explode(',', $newValue);
+    // split the values after and before the decimal point.
+    $digits    = explode($options['decimal_point'], (string)$value);
 
-    // limits the decimal points, using the decimal_points option (defaults to 2),
-    // eg: .96789 will be limited to .96
-    $digits[1] = substr($digits[1], 0, $options['decimal_points']);
+    // limit the decimal using the limit option (defaults to 2), eg: .96789 will be limited to .96
+    $digits[1] = substr($digits[1], 0, $options['limit']);
 
-    // joint the the digits into a float (string) value, eg: '4' and '96', will be '4.96'
-    $newValue  = $digits[0] . '.' . $digits[1];
-
-    return (float)$newValue;
+    // join the the digits and convert it to float, eg: '4' and '96', will be '4.96'
+    return (float)($digits[0] . '.' . $digits[1]);
   }
 }
 ?>

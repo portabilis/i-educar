@@ -121,7 +121,7 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
     /* Inicializa o retorno com o valor recebido (limitando a para uma casa decimal),
        o qual será retornado caso não tenha sido definido opcoes na tabela de arredondamento,
        do contrário será arredondado a nota conforme opções da tabela de arredondamento. */
-    $return = Portabilis_Utils_Float::limitDecimal($value, array('decimal_points' => 1));
+    $return = Portabilis_Utils_Float::limitDecimal($value, array('limit' => 1));
 
     // carrega tabela de arredondamento, caso ainda não tenha sido carregada.
     if (0 == count($this->_tabelaValores))
