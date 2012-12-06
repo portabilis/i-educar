@@ -92,8 +92,41 @@ function getFirstCheckboxChecked($targetElement) {
   return $firstChecked;
 }
 
+function clearSearchResult() {
+  $navActions.html('');
+  $tableSearchDetails.children().remove();
+  $resultTable.children().fadeOut('fast').remove();
 
-var $formFilter = $j('#formcadastro');
+  $j('.disable-on-search').attr('disabled', 'disabled');
+  $j('.hide-on-search').hide();
+  $j('.disable-on-apply-changes').removeAttr('disabled');
+}
+
+
+function showSearchForm(event) {
+  clearSearchResult()
+
+  $formFilter.fadeIn('fast', function() {
+    $(this).show()
+  });
+
+  //$actionButton.val(POST_LABEL);
+}
+
+// called before search resources
+function canSearch(){
+  return true;
+}
+
+
+function showNextSelectionButton() {
+}
+
+
+// vars
+
+var $formFilter   = $j('#formcadastro');
+var $submitButton = $j('#botao_busca');
 
 var $tableSearchDetails = $j('<table />').attr('id', 'search-details')
                                         .addClass('styled')
@@ -102,19 +135,17 @@ var $tableSearchDetails = $j('<table />').attr('id', 'search-details')
                                         .hide()
                                         .prependTo($formFilter.parent());
 
-// called before search resources
-function canSearch(){
-  return true;
-}
+var $navActions = $j('<p />').attr('id', 'nav-actions');
+$navActions.insertAfter($tableSearchDetails);
+
+var $resultTable = $j('#form_resultado .tablelistagem').addClass('horizontal-expand');
+
 
 // metodos e variaveis não acessiveis por outros modulos
 
 (function($) {
   $(document).ready(function() {
-    var $submitButton = $('#botao_busca');
-
     // prepare result table
-    var $resultTable = $('#form_resultado .tablelistagem').addClass('horizontal-expand');
     $resultTable.children().remove();
 
 
@@ -144,10 +175,6 @@ function canSearch(){
     $resourceOptionsTable.find('tr:even').addClass('even');
     $resourceOptionsTable.hide().prependTo($formFilter.parent());
 
-    // add navigation actions
-    var $navActions = $('<p />').attr('id', 'nav-actions');
-    $navActions.insertAfter($tableSearchDetails);
-
     // add orientations about search
     $('<p />').html(SEARCH_ORIENTATION)
               .addClass('center')
@@ -164,30 +191,21 @@ function canSearch(){
 
     // functions, callbacks
 
-    function showSearchForm(event) {
-      $navActions.html('');
-      $tableSearchDetails.children().remove();
-      $resultTable.children().fadeOut('fast').remove();
-      $formFilter.fadeIn('fast', function() {
-        $(this).show()
-      });
-      $('.disable-on-search').attr('disabled', 'disabled');
-      $('.hide-on-search').hide();
-      $('.disable-on-apply-changes').removeAttr('disabled');
-      //$actionButton.val(POST_LABEL);
-    }
-
-
     function showNewSearchButton() {
       $navActions.html(
-        $("<a href='#'>Nova consulta</a>")
+        $("<a href='#'><strong>Nova consulta</strong></a>")
         .bind('click', showSearchForm)
         .attr('style', 'text-decoration: underline')
       );
+    }
+
+    function showNewSearchActions() {
+      showNewSearchButton();
+      showNextSelectionButton();
+
       $('.disable-on-search').removeAttr('disabled');
       $('.hide-on-search').show();
     }
-
 
     // config search form
     var searchOptions = {
@@ -226,7 +244,7 @@ function canSearch(){
 
 
     function _handleSearch(dataResponse) {
-      showNewSearchButton();
+      showNewSearchActions();
 
       try{
         handleMessages(dataResponse.msgs);
@@ -254,7 +272,7 @@ function canSearch(){
         }
       }
       catch(error) {
-        showNewSearchButton();
+        showNewSearchActions();
 
         handleMessages([{type : 'error', msg : 'Ocorreu um erro ao exibir o recurso '+ RESOURCES_NAME +', por favor tente novamente, detalhes: ' + error}], '');
 

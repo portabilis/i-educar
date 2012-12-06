@@ -785,3 +785,44 @@ function canSearch(){
 
   return true;
 }
+
+function selectNextOption($selectElement){
+  var $nextOption = $selectElement.find('option:selected').next('option');
+
+  if ($nextOption.val() != undefined) {
+    $selectElement.val($nextOption.val());
+
+    clearSearchResult();
+    $j('#botao_busca').click();
+  }
+
+  else {
+    alert(safeUtf8Decode('Você chegou na ultima opção.'));
+    showSearchForm();
+  }
+}
+
+function nextComponenteCurricular(){
+  selectNextOption($j('#ref_cod_componente_curricular'));
+}
+
+function nextMatricula(){
+  selectNextOption($j('#ref_cod_matricula'));
+}
+
+function showNextSelectionButton() {
+  var $ccField        = $j('#ref_cod_componente_curricular');
+  var $matriculaField = $j('#ref_cod_matricula');
+
+  if ($ccField.val() != '') {
+    $j("<a href='#'>Proximo componente curricular</a>").bind('click', nextComponenteCurricular)
+                                .attr('style', 'text-decoration: underline')
+                                .appendTo($navActions);
+  }
+
+  if ($matriculaField.val() != '') {
+    $j("<a href='#'>Proxima matricula</a>").bind('click', nextMatricula)
+                                .attr('style', 'text-decoration: underline')
+                                .appendTo($navActions);
+  }
+}

@@ -30,3 +30,7 @@ tr.rodape {
 #feedback-messages p {
   margin: 2;
 }
+
+#nav-actions a {
+  margin-right: 10px;
+}
