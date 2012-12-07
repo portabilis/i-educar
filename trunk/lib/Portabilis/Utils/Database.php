@@ -70,8 +70,8 @@ class Portabilis_Utils_Database {
     $options        = self::mergeOptions($options, $defaultOptions);
 
     // options validations
-    if ($options['show_errors'] and is_null($options['messenger']))
-      throw new Exception("When 'show_errors' is true you must pass the option messenger too.");
+    //if ($options['show_errors'] and is_null($options['messenger']))
+    //  throw new Exception("When 'show_errors' is true you must pass the option messenger too.");
 
 
     try {
@@ -87,8 +87,10 @@ class Portabilis_Utils_Database {
       }
     }
     catch(Exception $e) {
-      if ($options['show_errors'])
+      if ($options['show_errors'] and ! is_null($options['messenger']))
         $options['messenger']->append($e->getMessage(), 'error');
+      else
+        throw $e;
     }
 
     return $result;
