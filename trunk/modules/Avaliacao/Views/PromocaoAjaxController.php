@@ -185,7 +185,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
     $result = $this->validatesPresenceOf($this->getRequest()->att, 'att', $raiseExceptionOnError);
 
     if ($result){
-      $expectedAtts = array('matriculas', 'quantidade_matriculas', 'promocao');
+      $expectedAtts = array('matriculas', 'quantidade_matriculas', 'promocao', 'old_componentes_curriculares');
       /*'nota', 'nota_exame', 'falta', 'parecer', 'opcoes_notas', 'opcoes_faltas', 'regra_avaliacao'*/
       $result = $this->validatesValueInSetOf($this->getRequest()->att, $expectedAtts, 'att', $raiseExceptionOnError);
     }
@@ -309,6 +309,11 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
     }
 
     return $canPost;
+  }
+
+
+  protected function canDeleteOldComponentesCurriculares() {
+    return $this->validatesPresenceOfAnoEscolar(false);
   }
 
 
@@ -617,20 +622,20 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
     }
   }
 
-  protected function cleanComponentesCurriculares() {
-    // ao desvincular componentes curriculares das turmas / séries, as notas, faltas lançadas permanecem
-    // no banco de dados, impedindo a promocao dos alunos que não tiveram todas faltas / notas lançadas nestes componentes
-    CleanComponentesCurriculares::destroyOldResources($this->getRequest()->ano_escolar);
+  protected function deleteOldComponentesCurriculares() {
+    if ($this->canDeleteOldComponentesCurriculares()) {
+      // ao desvincular componentes curriculares das turmas / séries, as notas, faltas lançadas permanecem
+      // no banco de dados, impedindo a promocao dos alunos que não tiveram todas faltas / notas lançadas nestes componentes
+      CleanComponentesCurriculares::destroyOldResources($this->getRequest()->ano_escolar);
 
-    $this->appendMsg("Removido notas, medias notas e faltas de antigos componentes curriculares, " .
-                     "vinculados a turmas / séries.", 'notice');
+      $this->appendMsg("Removido notas, medias notas e faltas de antigos componentes curriculares, " .
+                       "vinculados a turmas / séries.", 'notice');
+    }
   }
 
 
   protected function postPromocaoMatricula() {
     if ($this->canPostPromocaoMatricula()) {
-
-      $this->cleanComponentesCurriculares();
 
       $matriculaId = $this->getRequest()->matricula_id;
       $proximoMatriculaId = $this->getProximoMatriculaId($matriculaId);
@@ -1059,6 +1064,11 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
         }
         elseif ($this->getRequest()->oper == 'delete')
         {
+          if ($this->getRequest()->att == 'old_componentes_curriculares')
+          {
+            $this->appendResponse('result', $this->deleteOldComponentesCurriculares());
+          }
+          else
             $this->notImplementedError();
         }
       }
