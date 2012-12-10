@@ -28,6 +28,7 @@
  * @version   $Id$
  */
 
+require_once 'lib/Portabilis/Utils/Database.php';
 
 /**
  * CoreExt_Session class.
@@ -45,40 +46,15 @@
   para impedir isto, é removido as notas, medias e faltas lançadas para os componentes removidos.
 */
 
-class Portabilis_Hooks_Fixups_AfterAssignComponenteCurricular {
+class CleanComponentesCurriculares {
 
-  public static function destroyOldResources($anoLetivo = null, $escolaId = null) {
-    if (is_null($anoLetivo))
-      $anoLetivo = self::currentAnoLetivo($escolaId);
-
-    if (! is_null($anoLetivo)) {
-      self::destroyOldNotas($anoLetivo);
-      self::destroyOldNotasMedias($anoLetivo);
-      self::destroyOldFaltas($anoLetivo);
-    }
+  public static function destroyOldResources($anoEscolar) {
+    self::destroyOldNotas($anoEscolar);
+    self::destroyOldNotasMedias($anoEscolar);
+    self::destroyOldFaltas($anoEscolar);
   }
 
-  protected static function currentAnoLetivo($escolaId) {
-
-    if (is_null($escolaId))
-      throw new Exception("Cannot get currentAnoLetivo because escolaId is empty.");
-
-    $ano = new clsPmieducarEscolaAnoLetivo();
-    $ano = $ano->lista($escolaId,
-                       null,
-                       null,
-                       null,
-                       1, /* andamento */
-                       null,
-                       null,
-                       null,
-                       null,
-                       1);
-
-    return $ano[0]['ano'];
-  }
-
-  protected static function destroyOldNotas($anoLetivo) {
+  protected static function destroyOldNotas($anoEscolar) {
     $sql = "delete from modules.nota_componente_curricular where id in (
               select ncc.id from modules.nota_componente_curricular as ncc,
                      modules.nota_aluno as na,
@@ -108,10 +84,10 @@ class Portabilis_Hooks_Fixups_AfterAssignComponenteCurricular {
                     END
             );";
 
-    self::fetchPreparedQuery($sql, array('params' => $anoLetivo));
+    self::fetchPreparedQuery($sql, array('params' => $anoEscolar));
   }
 
-  protected static function destroyOldNotasMedias($anoLetivo) {
+  protected static function destroyOldNotasMedias($anoEscolar) {
     $sql = "delete from modules.nota_componente_curricular_media where nota_aluno_id||componente_curricular_id in (
               select nccm.nota_aluno_id|| nccm.componente_curricular_id from modules.nota_componente_curricular_media as nccm,
                      modules.nota_aluno as na,
@@ -141,10 +117,10 @@ class Portabilis_Hooks_Fixups_AfterAssignComponenteCurricular {
                     END
             );";
 
-    self::fetchPreparedQuery($sql, array('params' => $anoLetivo));
+    self::fetchPreparedQuery($sql, array('params' => $anoEscolar));
   }
 
-  protected static function destroyOldFaltas($anoLetivo) {
+  protected static function destroyOldFaltas($anoEscolar) {
     $sql = "delete from modules.falta_componente_curricular where id in (
               select fcc.id from modules.falta_componente_curricular as fcc,
                      modules.falta_aluno as fa,
@@ -173,7 +149,7 @@ class Portabilis_Hooks_Fixups_AfterAssignComponenteCurricular {
                     END
 
                     );";
-    self::fetchPreparedQuery($sql, array('params' => $anoLetivo));
+    self::fetchPreparedQuery($sql, array('params' => $anoEscolar));
   }
 
   // wrappers for Portabilis*Utils*
