@@ -1501,11 +1501,18 @@ function validatesPresenseOfValueInRequiredFields(additionalFields) {
   var emptyFields = [];
   var requiredFields = document.getElementsByClassName('obrigatorio');
 
-  if (additionalFields)
-    requiredFields = requiredFields.concat(additionalFields);
+  if (additionalFields) {
+  	// fixup to transform nodeList in array, because some methods like concat are not available in nodeList object.
+		requiredFields = Array.prototype.slice.call(requiredFields);
+
+		requiredFields = requiredFields.concat(additionalFields);
+   }
 
   for (var i = 0; i < requiredFields.length; i++) {
     var requiredField = requiredFields[i];
+
+    console.log(requiredField);
+
     if (requiredField.style.display != 'none' && ! requiredField.getAttribute('disabled') && ! requiredField.value) {
       emptyFields.push(requiredField);
 
