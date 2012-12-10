@@ -1,8 +1,5 @@
 <?php
 
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
-
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -34,7 +31,7 @@
 require_once 'lib/Portabilis/Array/Utils.php';
 
 /**
- * Portabilis_Utils_Database class.
+ * Portabilis_Utils_Float class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -43,57 +40,39 @@ require_once 'lib/Portabilis/Array/Utils.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_Utils_Database {
-
-  static $_db;
+class Portabilis_Utils_Float {
 
   // wrapper for Portabilis_Array_Utils::merge
   protected static function mergeOptions($options, $defaultOptions) {
     return Portabilis_Array_Utils::merge($options, $defaultOptions);
   }
 
-  public static function db() {
-    if (! isset(self::$_db))
-      self::$_db = new clsBanco();
 
-    return self::$_db;
-  }
+  /* Limita as casas decimais de um numero float, SEM arredonda-lo,
+     ex: para 4.96, usando limit = 1, retornará 4.9 e não 5. */
+  public static function limitDecimal($value, $options = array()) {
+    if (! is_numeric($value))
+      throw new Exception("Value must be numeric!");
+    elseif(is_integer($value))
+      return (float)$value;
 
-  public static function fetchPreparedQuery($sql, $options = array()) {
-    $result         = array();
+    $locale         = localeconv();
 
-    $defaultOptions = array('params'      => array(),
-                            'show_errors' => true,
-                            'return_only' => '',
-                            'messenger'   => null);
+    $defaultOptions = array('limit'         => 2,
+                            'decimal_point' => $locale['decimal_point'],
+                            'thousands_sep' => $locale['thousands_sep']);
 
     $options        = self::mergeOptions($options, $defaultOptions);
 
-    // options validations
-    //if ($options['show_errors'] and is_null($options['messenger']))
-    //  throw new Exception("When 'show_errors' is true you must pass the option messenger too.");
 
+    // split the values after and before the decimal point.
+    $digits    = explode($options['decimal_point'], (string)$value);
 
-    try {
-      if (self::db()->execPreparedQuery($sql, $options['params']) != false) {
+    // limit the decimal using the limit option (defaults to 2), eg: .96789 will be limited to .96
+    $digits[1] = substr($digits[1], 0, $options['limit']);
 
-        while (self::db()->ProximoRegistro())
-          $result[] = self::db()->Tupla();
-
-        if (in_array($options['return_only'], array('first-line', 'first-row', 'first-record')) and isset($result[0]))
-          $result = $result[0];
-        elseif ($options['return_only'] == 'first-field' and isset($result[0]) and isset($result[0][0]))
-          $result = $result[0][0];
-      }
-    }
-    catch(Exception $e) {
-      if ($options['show_errors'] and ! is_null($options['messenger']))
-        $options['messenger']->append($e->getMessage(), 'error');
-      else
-        throw $e;
-    }
-
-    return $result;
+    // join the the digits and convert it to float, eg: '4' and '96', will be '4.96'
+    return (float)($digits[0] . '.' . $digits[1]);
   }
 }
 ?>

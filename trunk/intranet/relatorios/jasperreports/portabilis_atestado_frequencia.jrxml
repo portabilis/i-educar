@@ -34,7 +34,7 @@
                    pmieducar.matricula_turma
 		 WHERE turma.cod_turma = matricula_turma.ref_cod_turma and
 		       matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
-                       matricula_turma.ativo = 1) as nm_turma,
+                       matricula_turma.ativo = 1 order by sequencial limit 1) as nm_turma,
        aluno.cod_aluno as cod_aluno,
        matricula.cod_matricula as cod_matricula,
        public.fcn_upper(pessoa.nome) as nome,

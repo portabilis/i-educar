@@ -1,5 +1,8 @@
 <?php
 
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -29,6 +32,7 @@
  */
 
 require_once 'CoreExt/View/Helper/Abstract.php';
+require_once 'Portabilis/Assets/Version.php';
 
 /**
  * ApplicationHelper class.
@@ -82,17 +86,15 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
     if (! is_array($files))
       $files = array($files);
 
-    if ($expireCacheDateFormat)
-      $timestamp = '?timestamp=' . date($expireCacheDateFormat);
-    else
-      $timestamp = '';
-
     foreach ($files as $file) {
       // somente carrega o asset apenas uma vez
       if (! in_array($file, self::$javascriptsLoaded)) {
         self::$javascriptsLoaded[] = $file;
 
-        $file .= $timestamp;
+        // cache controll
+        $file .= '?assets_version=' . Portabilis_Assets_Version::VERSION;
+        $file .= $expireCacheDateFormat ? '&timestamp=' . date($expireCacheDateFormat) : '';
+
         $viewInstance->appendOutput("<script type='text/javascript' src='$file'></script>");
       }
     }
@@ -114,17 +116,15 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
     if (! is_array($files))
       $files = array($files);
 
-    if ($expireCacheDateFormat)
-      $timestamp = '?timestamp=' . date($expireCacheDateFormat);
-    else
-      $timestamp = '';
-
     foreach ($files as $file) {
       // somente carrega o asset apenas uma vez
       if (! in_array($file, self::$stylesheetsLoaded)) {
         self::$stylesheetsLoaded[] = $file;
 
-        $file .= $timestamp;
+        // cache controll
+        $file .= '?assets_version=' . Portabilis_Assets_Version::VERSION;
+        $file .= $expireCacheDateFormat ? '&timestamp=' . date($expireCacheDateFormat) : '';
+
         $viewInstance->appendOutput("<link type='text/css' rel='stylesheet' href='$file'></script>");
       }
     }

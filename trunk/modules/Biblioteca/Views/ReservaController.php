@@ -70,7 +70,7 @@ class ReservaController extends Core_Controller_Page_ListController
     $scripts = array('scripts/jquery/jquery.form.js',
                      '/modules/Portabilis/Assets/Javascripts/Utils.js',
                      '/modules/Portabilis/Assets/Javascripts/Frontend/Process.js',
-                     '/modules/Biblioteca/Assets/Javascripts/reservaController.js');
+                     '/modules/Biblioteca/Assets/Javascripts/Reserva.js');
 
     Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
   }

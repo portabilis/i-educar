@@ -677,13 +677,15 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
   var useNota                = $tableSearchDetails.data('details').tipo_nota != 'nenhum';
   var useParecer             = $tableSearchDetails.data('details').tipo_parecer_descritivo != 'nenhum';
 
-  $j('<td />').addClass('situacao-matricula-cc')
-              .attr('id', 'situacao-matricula-' + matriculaId + '-cc-' + cc.id)
-              .data('matricula_id', matriculaId)
-              .data('componente_curricular_id', cc.id)
-              .addClass('center')
-              .html(cc.situacao)
-              .appendTo($targetElement);
+  var $situacaoTd = $j('<td />').addClass('situacao-matricula-cc')
+                                .attr('id', 'situacao-matricula-' + matriculaId + '-cc-' + cc.id)
+                                .data('matricula_id', matriculaId)
+                                .data('componente_curricular_id', cc.id)
+                                .addClass('center')
+                                .html(cc.situacao)
+                                .appendTo($targetElement);
+
+  colorizeSituacaoTd($situacaoTd, cc.situacao);
 
   if(useNota) {
     notaField(matriculaId, cc.id, cc.nota_atual).appendTo($targetElement);
@@ -748,17 +750,80 @@ function updateComponenteCurriculares($targetElement, matriculaId, componentesCu
 
 
 function updateResourceRow(dataResponse) {
-  var matriculaId = dataResponse.matricula_id;
-  var ccId        = dataResponse.componente_curricular_id;
+  var matriculaId     = dataResponse.matricula_id;
+  var ccId            = dataResponse.componente_curricular_id;
 
-  $j('#situacao-matricula-' + matriculaId + '-cc-' + ccId).html(dataResponse.situacao);
-  $fieldNotaExame = $j('#nota-exame-matricula-' + matriculaId + '-cc-' + ccId);
+  var $situacaoField  = $j('#situacao-matricula-' + matriculaId + '-cc-' + ccId);
+  var $fieldNotaExame = $j('#nota-exame-matricula-' + matriculaId + '-cc-' + ccId);
+
+  $situacaoField.html(dataResponse.situacao);
+  colorizeSituacaoTd($situacaoField.closest('td'), dataResponse.situacao);
 
   if (! $fieldNotaExame.is(':visible') &&
      ($fieldNotaExame.val() != '' || dataResponse.situacao.toLowerCase() == 'em exame')) {
+
     $fieldNotaExame.show();
     $fieldNotaExame.focus();
   }
   else if($fieldNotaExame.val() == '' && dataResponse.situacao.toLowerCase() != 'em exame')
     $fieldNotaExame.hide();
+}
+
+function colorizeSituacaoTd(tdElement, situacao) {
+  if (situacao.toLowerCase() == 'retido')
+    $j(tdElement).addClass('error');
+  else
+    $j(tdElement).removeClass('error');
+}
+
+function canSearch(){
+
+  if ($j('#ref_cod_matricula').val() == '' &&  $j('#ref_cod_componente_curricular').val() == '') {
+    alert(safeUtf8Decode('Selecione um "componente curricular" ou uma "matrícula".\n\n' +
+          'Isto é necessário, para um rápido carregamento do diário.'));
+    return false;
+  }
+
+  return true;
+}
+
+function selectNextOption($selectElement){
+  var $nextOption = $selectElement.find('option:selected').next('option');
+
+  if ($nextOption.val() != undefined) {
+    $selectElement.val($nextOption.val());
+
+    clearSearchResult();
+    $j('#botao_busca').click();
+  }
+
+  else {
+    alert(safeUtf8Decode('Você chegou na ultima opção.'));
+    showSearchForm();
+  }
+}
+
+function nextComponenteCurricular(){
+  selectNextOption($j('#ref_cod_componente_curricular'));
+}
+
+function nextMatricula(){
+  selectNextOption($j('#ref_cod_matricula'));
+}
+
+function showNextSelectionButton() {
+  var $ccField        = $j('#ref_cod_componente_curricular');
+  var $matriculaField = $j('#ref_cod_matricula');
+
+  if ($ccField.val() != '') {
+    $j("<a href='#'>Proximo componente curricular</a>").bind('click', nextComponenteCurricular)
+                                .attr('style', 'text-decoration: underline')
+                                .appendTo($navActions);
+  }
+
+  if ($matriculaField.val() != '') {
+    $j("<a href='#'>Proxima matricula</a>").bind('click', nextMatricula)
+                                .attr('style', 'text-decoration: underline')
+                                .appendTo($navActions);
+  }
 }

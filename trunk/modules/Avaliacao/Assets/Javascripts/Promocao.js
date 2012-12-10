@@ -102,6 +102,20 @@
     };
 
 
+    var deleteResourceUrlBuilder = {
+      buildUrl : function(urlBase, resourceName, additionalVars){
+
+        var vars = {
+          att : resourceName,
+          oper : 'delete'
+        };
+
+        return resourceUrlBuilder.buildUrl(urlBase, $.extend(vars, additionalVars));
+
+      }
+    };
+
+
     function changeResource($resourceElement, postFunction, deleteFunction){
       if ($.trim($resourceElement.val())  == '')
         deleteFunction($resourceElement);
@@ -128,6 +142,11 @@
     }
 
 
+    function deleteResource(options, errorCallback){
+      $.ajax(options).error(errorCallback);
+    }
+
+
     var postPromocaoMatricula = function(){
 
       var $proximoMatriculaIdField = $('#proximo-matricula-id');
@@ -143,25 +162,34 @@
           success : handlePostPromocaoMatricula
         };
 
-        postResource(options, handleErrorPost);
+        postResource(options, handleError);
 
       }
+    }
+
+
+    var deleteOldComponentesCurriculares = function() {
+        var options = {
+          url : deleteResourceUrlBuilder.buildUrl(promocaoAjaxUrlBase, 'old_componentes_curriculares', {ano_escolar : $('#ano_escolar').val()}),
+          dataType : 'json',
+          data : {},
+          success : handleDelete
+        };
+
+        deleteResource(options, handleError);
     }
 
 
     //callback handlers
 
     //post
-    function handleErrorPost(response){
-      handleMessages([{type : 'error', msg : 'Erro ao alterar recurso, detalhes:' + response.responseText}], '');
+    function handleError(response){
+      handleMessages([{type : 'error', msg : 'Erro ao realizar operacao, detalhes:' + response.responseText}], '');
       safeLog(response);
     }
 
 
     function handlePostPromocaoMatricula(dataResponse){
-
-      safeLog(dataResponse);
-
       handleMessages(dataResponse.msgs);
       var $proximoMatriculaIdField = $('#proximo-matricula-id');
       $proximoMatriculaIdField.val(dataResponse.result.proximo_matricula_id);
@@ -176,6 +204,11 @@
              ! $.isNumeric($proximoMatriculaIdField.val())){
         alert('Processo finalizado');
       }
+    }
+
+
+    function handleDelete(dataResponse){
+      handleMessages(dataResponse.msgs);
     }
 
 
@@ -246,6 +279,15 @@
 
         $('<span />').html(' ').appendTo($text);
 
+        $('<a />').attr('id', 'delete-old-componentes-curriculares')
+                  .attr('href', '#')
+                  .html('Limpar antigos componentes curriculares')
+                  .attr('style', 'text-decoration:underline')
+                  .bind('click', deleteOldComponentesCurriculares)
+                  .appendTo($text);
+
+        $('<span />').html(' ').appendTo($text);
+
         $('<a />').attr('id', 'clear-messages')
                   .attr('href', '#')
                   .html('Limpar mensagens')
@@ -263,16 +305,13 @@
         showSearchButton();
 
         handleMessages([{type : 'error', msg : 'Ocorreu um erro ao exibir as matriculas, por favor tente novamente, detalhes: ' + error}], '');
-
         safeLog(dataResponse);
       }
     }
 
     function handleErrorMatriculasSearch(response){
       showSearchButton();
-
       handleMessages([{type : 'error', msg : 'Ocorreu um erro ao carregar as matrículas, por favor tente novamente, detalhes:' + response.responseText}], '');
-
       safeLog(response);
     }
 

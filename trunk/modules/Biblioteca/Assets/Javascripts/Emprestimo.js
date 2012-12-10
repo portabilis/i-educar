@@ -222,3 +222,12 @@ function updateResourceRow(exemplar){
 
   $colSituacoes.data('situacao', exemplar.situacao_exemplar);
 }
+
+function canSearch() {
+  if ($j('#nome_cliente').val() == '') {
+    alert('Selecione um cliente para continuar.');
+    return false;
+  }
+
+  return true;
+}

@@ -133,7 +133,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
         $instance->Gerar();
     }
     catch (Exception $e){
-      $this->messenger->append('Exception: ' . $e->getMessage());
+      $this->messenger->append('Exception: ' . $e->getMessage(), 'error', $encodeToUtf8 = true);
     }
 
     echo $this->prepareResponse();

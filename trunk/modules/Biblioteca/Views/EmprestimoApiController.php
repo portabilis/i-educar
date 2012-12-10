@@ -98,7 +98,7 @@ class EmprestimoApiController extends ApiCoreController
 
     $situacao = $this->getSituacaoExemplar();
     $situacao = $situacao['flag'];
-    $msg = "Situação do exemplar deve estar em (" . implode(', ', $expectedSituacoes) . ") porem atualmente é $situacao.";
+    $msg = "Operação não realizada, pois a situação atual do exemplar é $situacao quando deveria ser " . implode(' ou ', $expectedSituacoes) . ".";
 
     return $this->validator->validatesValueInSetOf($situacao, $expectedSituacoes, 'situação', false, $msg);
   }
@@ -168,7 +168,7 @@ class EmprestimoApiController extends ApiCoreController
       // load pessoa
 		  $pessoa          = new clsPessoa_($cliente['pessoa_id']);
 		  $pessoa          = $pessoa->detalhe();
-      $cliente['nome'] = $pessoa["nome"];
+      $cliente['nome'] = $this->toUtf8($pessoa["nome"]);
 
       // load suspensao
       $sql = "select 1 from pmieducar.cliente_suspensao where ref_cod_cliente = $1 and data_liberacao is null and data_suspensao + (dias||' day')::interval >= now()";

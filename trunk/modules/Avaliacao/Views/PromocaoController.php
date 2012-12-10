@@ -64,7 +64,7 @@ class PromocaoController extends Core_Controller_Page_ListController
     $this->rodape  = "";
     $this->largura = '100%';
 
-    $scripts = array('/modules/Avaliacao/Assets/Javascripts/PromocaoController.js');
+    $scripts = array('/modules/Avaliacao/Assets/Javascripts/Promocao.js');
 
     Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
 

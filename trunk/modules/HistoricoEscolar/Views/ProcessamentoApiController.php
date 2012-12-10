@@ -43,6 +43,9 @@ require_once 'include/portabilis/dal.php';
 require_once 'include/pmieducar/clsPmieducarHistoricoEscolar.inc.php';
 require_once 'include/pmieducar/clsPmieducarHistoricoDisciplinas.inc.php';
 
+// remover require, ao migrar esta classe para novo padrao
+require_once 'lib/Portabilis/String/Utils.php';
+
 class ProcessamentoApiController extends Core_Controller_Page_EditController
 {
   protected $_dataMapper  = 'Avaliacao_Model_NotaComponenteDataMapper';
@@ -719,10 +722,10 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       $dadosMatricula['serie_id'] = $matriculaTurma['ref_ref_cod_serie'];
       $dadosMatricula['matricula_id'] = $matriculaTurma['ref_cod_matricula'];
       $dadosMatricula['aluno_id'] = $matriculaTurma['ref_cod_aluno'];
-      $dadosMatricula['nome'] = ucwords(strtolower(utf8_decode($matriculaTurma['nome_aluno'])));
-      $dadosMatricula['nome_curso'] = ucwords(strtolower($matriculaTurma['nm_curso']));
-      $dadosMatricula['nome_serie'] = strtolower(utf8_decode($this->getNomeSerie($matriculaTurma['ref_ref_cod_serie'])));
-      $dadosMatricula['nome_turma'] = ucwords(strtolower(utf8_decode($matriculaTurma['nm_turma'])));
+      $dadosMatricula['nome'] = $this->toUtf8($matriculaTurma['nome_aluno']);
+      $dadosMatricula['nome_curso'] = $this->toUtf8($matriculaTurma['nm_curso']);
+      $dadosMatricula['nome_serie'] = $this->getNomeSerie($matriculaTurma['ref_ref_cod_serie']);
+      $dadosMatricula['nome_turma'] = $this->toUtf8($matriculaTurma['nm_turma']);
       $dadosMatricula['situacao_historico'] = $this->getSituacaoHistorico($matriculaTurma['ref_cod_aluno'], $ano, $matriculaId);
       $dadosMatricula['link_to_historico'] = $this->getLinkToHistorico($matriculaTurma['ref_cod_aluno'], $ano, $matriculaId);
     }
@@ -751,7 +754,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
   protected function getNomeSerie($serieId){
     $sql = "select nm_serie from pmieducar.serie where cod_serie = $serieId";
     $nome = $this->db->select($sql);
-    return ucwords(strtolower(utf8_encode($nome[0]['nm_serie'])));
+    return $this->toUtf8($nome[0]['nm_serie']);
   }
 
 
@@ -779,7 +782,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     else
         $situacao = 'Sem histórico';
 
-    return utf8_encode($situacao);
+    return $this->toUtf8($situacao);
   }
 
 
@@ -858,10 +861,10 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
           $matriculaId = $aluno['ref_cod_matricula'];
           $matricula['matricula_id'] = $matriculaId;
           $matricula['aluno_id'] = $aluno['ref_cod_aluno'];
-          $matricula['nome'] = ucwords(strtolower(utf8_encode($aluno['nome_aluno'])));
-          $matricula['nome_curso'] = ucwords(strtolower(utf8_encode($aluno['nm_curso'])));
-          $matricula['nome_serie'] = ucwords(strtolower(utf8_encode($this->getNomeSerie($aluno['ref_ref_cod_serie']))));
-          $matricula['nome_turma'] = ucwords(strtolower(utf8_encode($aluno['nm_turma'])));
+          $matricula['nome'] = $this->toUtf8($aluno['nome_aluno']);
+          $matricula['nome_curso'] = $this->toUtf8($aluno['nm_curso']);
+          $matricula['nome_serie'] = $this->getNomeSerie($aluno['ref_ref_cod_serie']);
+          $matricula['nome_turma'] = $this->toUtf8($aluno['nm_turma']);
           $matricula['situacao_historico'] = $this->getSituacaoHistorico($aluno['ref_cod_aluno'], $this->getRequest()->ano, $matriculaId, $reload = true);
           $matricula['link_to_historico'] = $this->getLinkToHistorico($aluno['ref_cod_aluno'], $this->getRequest()->ano, $matriculaId);
           $matriculas[] = $matricula;
@@ -881,7 +884,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     else
       $observacao = '';
 
-    return utf8_encode($observacao);
+    return $this->toUtf8($observacao);
   }
 
 
@@ -1026,5 +1029,12 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
   public function generate(CoreExt_Controller_Page_Interface $instance){
     header('Content-type: application/json');
     $instance->Gerar();
+  }
+
+
+  // TODO remover metodo, ao migrar esta classe para novo padrao
+
+  protected function toUtf8($str, $options = array()) {
+    return Portabilis_String_Utils::toUtf8($str, $options);
   }
 }

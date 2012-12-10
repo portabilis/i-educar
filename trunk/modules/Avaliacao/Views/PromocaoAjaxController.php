@@ -41,6 +41,8 @@ require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
 require_once 'include/portabilis/dal.php';
 
+require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
+
 class PromocaoAjaxController extends Core_Controller_Page_EditController
 {
   protected $_dataMapper  = 'Avaliacao_Model_NotaComponenteDataMapper';
@@ -183,7 +185,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
     $result = $this->validatesPresenceOf($this->getRequest()->att, 'att', $raiseExceptionOnError);
 
     if ($result){
-      $expectedAtts = array('matriculas', 'quantidade_matriculas', 'promocao');
+      $expectedAtts = array('matriculas', 'quantidade_matriculas', 'promocao', 'old_componentes_curriculares');
       /*'nota', 'nota_exame', 'falta', 'parecer', 'opcoes_notas', 'opcoes_faltas', 'regra_avaliacao'*/
       $result = $this->validatesValueInSetOf($this->getRequest()->att, $expectedAtts, 'att', $raiseExceptionOnError);
     }
@@ -258,7 +260,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
   protected function canPostNota(){
 
     $canPost = $this->setService() &&
-               $this->canPost() &&                
+               $this->canPost() &&
                $this->validatesValueOfAttValueIsNumeric(false) &&
                $this->validatesPresenceOfComponenteCurricularId(false);
 
@@ -277,7 +279,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
       $canPost = false;
       $this->appendMsg("Nota de recuperação não lançada, pois a fórmula de recuperação é diferente do tipo média recuperação.");
     }
-    
+
     return $canPost;
   }
 
@@ -290,7 +292,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
   protected function canPostParecer(){
     $canPost = $this->canPost() &&
                $this->validatesPresenceOfAttValue(false) &&
-               $this->setService() && 
+               $this->setService() &&
                $this->validatesValueOfEtapaForParecer();
 
     if ($canPost){
@@ -300,13 +302,18 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
       if ($tpParecer == $cnsParecer::NENHUM){
         $canPost = false;
         $this->appendMsg("Parecer descritivo não lançado, pois a regra de avaliação não utiliza parecer.");
-      } 
+      }
       elseif ($tpParecer == $cnsParecer::ETAPA_COMPONENTE || $tpParecer == $cnsParecer::ANUAL_COMPONENTE){
         $canPost = $this->validatesPresenceOfComponenteCurricularId(false);
       }
     }
 
     return $canPost;
+  }
+
+
+  protected function canDeleteOldComponentesCurriculares() {
+    return $this->validatesPresenceOfAnoEscolar(false);
   }
 
 
@@ -340,7 +347,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
 
   protected function canDeleteParecer(){
     $canDelete = $this->canDelete() &&
-                 $this->setService() && 
+                 $this->setService() &&
                  $this->validatesValueOfEtapaForParecer();
 
     if ($canDelete)
@@ -517,7 +524,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
 
     $db = new Db();
     $componentesCurricularesTurma = $db->select($sqlTurma);
- 
+
   if (count($componentesCurricularesTurma))
     return $componentesCurricularesTurma;
 
@@ -571,7 +578,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
       foreach(range(1, $this->getService()->getOption('etapas')) as $etapa){
 
         foreach($componentesCurriculares as $cc){
-          
+
           $nota = $this->getNota($etapa, $cc['id']);
           $parecer = $this->getParecerDescritivo($etapa, $cc['id']);
 
@@ -615,9 +622,20 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
     }
   }
 
+  protected function deleteOldComponentesCurriculares() {
+    if ($this->canDeleteOldComponentesCurriculares()) {
+      // ao desvincular componentes curriculares das turmas / séries, as notas, faltas lançadas permanecem
+      // no banco de dados, impedindo a promocao dos alunos que não tiveram todas faltas / notas lançadas nestes componentes
+      CleanComponentesCurriculares::destroyOldResources($this->getRequest()->ano_escolar);
+
+      $this->appendMsg("Removido notas, medias notas e faltas de antigos componentes curriculares, " .
+                       "vinculados a turmas / séries.", 'notice');
+    }
+  }
+
 
   protected function postPromocaoMatricula() {
-    if ($this->canPostPromocaoMatricula()){
+    if ($this->canPostPromocaoMatricula()) {
 
       $matriculaId = $this->getRequest()->matricula_id;
       $proximoMatriculaId = $this->getProximoMatriculaId($matriculaId);
@@ -637,7 +655,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
         $situacaoAnterior = $this->getSituacaoArmazenadaMatricula($matriculaId);
 
         $this->lancarFaltasNaoLancadas($matriculaId);
-        $this->convertParecerToLatin1($matriculaId);
+        //$this->convertParecerToLatin1($matriculaId);
         $this->saveService();
 
         $novaSituacao = $this->getSituacaoArmazenadaMatricula($matriculaId);
@@ -692,7 +710,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
     {
 
       $sql = "select count(m.cod_matricula) from pmieducar.matricula as m, pmieducar.matricula_turma as mt where m.ano = {$this->getRequest()->ano_escolar} and m.ativo = 1 and m.aprovado = 3 and mt.ref_cod_matricula = m.cod_matricula and mt.ativo = 1";
-  
+
       $db = new Db();
       $quantidadeMatriculas = $db->select($sql);
 
@@ -724,7 +742,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
 
     if ($this->canGetMatriculas()){
 
-      
+
       $alunos = new clsPmieducarMatriculaTurma();
       $alunos->setOrderby('nome');
 
@@ -760,13 +778,13 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
         NULL,
         NULL
       );
-      
+
 
       if (! is_array($alunos))
         $alunos = array();
 
       $requiredFields = array(
-        array('matricula_id', 'ref_cod_matricula'), 
+        array('matricula_id', 'ref_cod_matricula'),
         array('aluno_id', 'ref_cod_aluno'),
       );
 
@@ -800,16 +818,16 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
 
 
   protected function getNotaExame(){
-  
+
   /* removido checagem se usa nota e se a formula recuperacao é do tipo media recuperacao,
      pois se existe nota lançada mostrará.
 
-    $this->getService()->getRegra()->get('tipoNota') != RegraAvaliacao_Model_Nota_TipoValor::NENHUM && 
+    $this->getService()->getRegra()->get('tipoNota') != RegraAvaliacao_Model_Nota_TipoValor::NENHUM &&
     $this->getService()->getRegra()->formulaRecuperacao->get('tipoFormula') == FormulaMedia_Model_TipoFormula::MEDIA_RECUPERACAO */
 
     //se é a ultima etapa
     if($this->getRequest()->etapa == $this->getService()->getOption('etapas'))
-      $nota = $this->getNotaAtual($etapa='Rc'); 
+      $nota = $this->getNotaAtual($etapa='Rc');
     else
       $nota = '';
 
@@ -866,7 +884,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
   protected function canGetOpcoesNotas()
   {
     return $this->validatesPresenceOfMatriculaId(false);
-  }  
+  }
 
 
   protected function getOpcoesNotas($useCurrentService = False)
@@ -889,7 +907,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
   protected function canGetRegraAvaliacao()
   {
     return $this->validatesPresenceOfMatriculaId(false);
-  }  
+  }
 
 
   protected function getRegraAvaliacao($useCurrentService = False)
@@ -942,7 +960,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
       $itensRegra['quantidade_etapas'] = $this->getService()->getOption('etapas');
 
     }
-    
+
     return $itensRegra;
   }
 
@@ -950,7 +968,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
   protected function saveService()
   {
     try {
-      $this->getService()->save();   
+      $this->getService()->save();
     }
     catch (CoreExt_Service_Exception $e){
       //excecoes ignoradas :( servico lanca excecoes de alertas, que não são exatamente erros.
@@ -1009,7 +1027,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
 
   protected function notImplementedError()
   {
-    $this->appendMsg("Operação '{$this->getRequest()->oper}' inválida para o att '{$this->getRequest()->att}'");    
+    $this->appendMsg("Operação '{$this->getRequest()->oper}' inválida para o att '{$this->getRequest()->att}'");
   }
 
 
@@ -1023,14 +1041,14 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
         {
           if ($this->getRequest()->att == 'matriculas')
           {
-            $matriculas = $this->getMatriculas();          
+            $matriculas = $this->getMatriculas();
             $this->appendResponse('matriculas', $matriculas);
           }
           if ($this->getRequest()->att == 'quantidade_matriculas')
           {
-            $matriculas = $this->getQuantidadeMatriculas();          
+            $matriculas = $this->getQuantidadeMatriculas();
             $this->appendResponse('quantidade_matriculas', $matriculas);
-          }    
+          }
           else
             $this->notImplementedError();
 
@@ -1042,10 +1060,15 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
             $this->appendResponse('result', $this->postPromocaoMatricula());
           }
           else
-            $this->notImplementedError();  
+            $this->notImplementedError();
         }
         elseif ($this->getRequest()->oper == 'delete')
         {
+          if ($this->getRequest()->att == 'old_componentes_curriculares')
+          {
+            $this->appendResponse('result', $this->deleteOldComponentesCurriculares());
+          }
+          else
             $this->notImplementedError();
         }
       }
@@ -1064,7 +1087,7 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
     $msgs = array();
     $this->appendResponse('att', isset($this->getRequest()->att) ? $this->getRequest()->att : '');
 
-    if (isset($this->getRequest()->matricula_id) && 
+    if (isset($this->getRequest()->matricula_id) &&
               $this->getRequest()->att != 'quantidade_matriculas' &&
               $this->getRequest()->att != 'promocao' &&
               $this->getRequest()->att != 'matriculas'){

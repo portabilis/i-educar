@@ -106,7 +106,7 @@ class Portabilis_Validator {
 
 
   public function validatesValueInSetOf(&$value, $setExpectedValues, $name, $raiseExceptionOnFail = false, $msg = ''){
-    if (! in_array($value, $setExpectedValues)){
+    if (! empty($setExpectedValues) && ! in_array($value, $setExpectedValues)){
       $msg = empty($msg) ? "Valor recebido na variavel '$name' é invalido" : $msg;
       $this->messenger->append($msg);
 
@@ -115,6 +115,7 @@ class Portabilis_Validator {
 
       return false;
     }
+
     return true;
   }
 

@@ -302,7 +302,7 @@ class clsControlador
   protected function checkForDisabledAccount($user) {
     if ($user['ativo'] != '1') {
       $this->messages->append("Sua conta de usuário foi desativada ou expirou, por favor, " .
-                              "entre em contato com o administrador do sistema.", "error", false, "error");
+                              "entre em contato com o responsável pelo sistema do seu município.", "error", false, "error");
     }
   }
 
@@ -310,7 +310,7 @@ class clsControlador
   protected function checkForBannedAccount($user) {
     if ($user['proibido'] != '0') {
       $this->messages->append("Sua conta de usuário não pode mais acessar o sistema, " .
-                              "por favor, entre em contato com o administrador do sistema.",
+                              "por favor, entre em contato com o responsável pelo sistema do seu município.",
                               "error", false, "error");
     }
   }
@@ -323,7 +323,7 @@ class clsControlador
         Portabilis_Utils_User::disableAccount($user['id']);
 
       $this->messages->append("Sua conta de usuário expirou, por favor, " .
-                              "entre em contato com o administrador do sistema.", "error", false, "error");
+                              "entre em contato com o responsável pelo sistema do seu município.", "error", false, "error");
     }
   }
 

@@ -113,7 +113,6 @@ function safeUtf8Decode(s) {
   return s;
 }
 
-
 // feedback messages
 
 function handleMessages(messages, targetId, useDelayClassRemoval) {
@@ -174,6 +173,21 @@ function handleMessages(messages, targetId, useDelayClassRemoval) {
     }
   }
 }
+
+
+// hash utils
+
+function hashLength(hash) {
+  var len = 0;
+
+  for (var key in hash) {
+    if (hash.hasOwnProperty(key))
+      len++;
+  }
+
+  return len;
+}
+
 
 // when page is ready
 

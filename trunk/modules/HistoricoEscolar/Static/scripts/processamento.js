@@ -364,7 +364,7 @@
 
 
     function setTableSearchDetails(dataDetails){
-      $('<caption />').html('<strong>Processamento dos históricos</strong>').appendTo($tableSearchDetails);
+      $('<caption />').html(utf8Decode('<strong>Processamento dos históricos</strong>')).appendTo($tableSearchDetails);
 
       //set headers table
       var $linha = $('<tr />');
@@ -458,7 +458,7 @@
           var $linha = $('<tr />');
           $('<th />').html('Selecionar').appendTo($linha);
           $('<th />').html('Curso').appendTo($linha);
-          $('<th />').html('Série').appendTo($linha);
+          $('<th />').html(utf8Decode('Série')).appendTo($linha);
           $('<th />').html('Turma').appendTo($linha);
           $('<th />').html('Matricula').appendTo($linha);
           $('<th />').html('Aluno').appendTo($linha);
@@ -559,11 +559,11 @@
 
       if ($firstChecked.length < 1)
         handleMessages([{type : 'error', msg : 'Selecione alguma matrícula.'}], $actionButton, true);
-      else{
-
-        var additionalFields = [$('#percentual-frequencia-manual').get(0),
-                                $('#notas-manual').get(0),
-                                $('#faltas-manual').get(0)
+      else {
+        var additionalFields = [
+          $('#percentual-frequencia-manual').get(0),
+          $('#notas-manual').get(0),
+          $('#faltas-manual').get(0)
         ];
 
         $.each($('#disciplinas-manual').find('.obrigatorio'), function(index, requiredElement){
@@ -699,7 +699,7 @@
       if ($firstChecked.length < 1){
         $('.disable-on-apply-changes').removeAttr('disabled');
         $actionButton.val('Processar');
-        window.setTimeout(function(){alert('Operação finalizada.');}, 1);
+        window.setTimeout(function(){alert(utf8Decode('Operação finalizada.'));}, 1);
       }
       else if (typeof(callbackContinueNextChange) == 'function')
         callbackContinueNextChange($firstChecked);
