@@ -42,7 +42,7 @@
     function loginpage_onload() {
       var domainName = window.location.hostname;
 
-      if (domainName.indexOf('treinamento') < 0)
+      if (domainName.indexOf('treinamento') < 0 && domainName.indexOf('demonstracao') < 0)
         $j('.only-for-clients').show();
 
       $j('.fade-in').fadeIn('slow');
@@ -94,6 +94,10 @@
       <!--p style="min-height: 0px;" class="flash error"><strong>Importante, aviso de manuten&ccedil;&atilde;o:</strong> durante os dias 28 e 29 de abril (s&aacute;bado e domingo) os sistemas poder&atilde;o estar inst&aacute;veis ou indispon&iacute;veis, devido melhorias na infraestrutura.</p-->
 
       <!--p style="min-height: 0px;" class="flash error"><strong>Aviso importante:</strong> no momento nosso suporte via telefone esta enfrentando dificuldades, devido um incidente na sede de nossa empresa, o suporte via e-mail funciona normalizado.</p-->
+
+      <p style="min-height: 0px;" class="info box shadow only-for-clients hidden">
+        Participe da nossa pesquisa de satisfa&ccedil;&atilde;o sobre o suporte e sistema <a class="decorated" target="_blank" href="https://docs.google.com/a/portabilis.com.br/spreadsheet/viewform?formkey=dFl0QmlMVElzMkpEUW9uM3hIMEF4WFE6MQ#gid=0">clicando aqui</a>.
+      </p>
 
       <!-- #&ERROLOGIN&# -->
     </div>
