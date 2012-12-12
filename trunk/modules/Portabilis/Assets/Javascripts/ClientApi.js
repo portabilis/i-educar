@@ -43,6 +43,23 @@ var postResourceUrlBuilder = {
   }
 };
 
+var putResourceUrlBuilder = {
+  buildUrl : function(urlBase, resourceName, additionalVars){
+
+    var vars = {
+      oper : 'put'
+    };
+
+    if (resourceName)
+      vars.resource = resourceName;
+
+    if (additionalVars)
+      vars = $j.extend(vars, additionalVars);
+
+    return resourceUrlBuilder.buildUrl(urlBase, vars);
+  }
+};
+
 var deleteResourceUrlBuilder = {
   buildUrl : function(urlBase, resourceName, additionalVars){
 

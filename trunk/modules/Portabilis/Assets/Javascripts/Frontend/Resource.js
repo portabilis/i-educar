@@ -3,14 +3,42 @@
 
 var resourceOptions = {
   // options that cannot be overwritten in child
-  get           : function(optionName) { return optionsUtils.get(this, optionName) },
+
+  get    : function(optionName) { return optionsUtils.get(this, optionName) },
+  is_new : function() { return this.id() != undefined },
+
+  id : function(){
+    var id;
+
+    if (window.location.search.indexOf('id=') > -1) {
+      id = window.location.search.split('id=');
+      id = id[id.length - 1];
+    }
+
+    return id;
+  },
+
 
   // options that can be overwritten in child
-  form         : $j('#formcadastro'),
-  api_url_base : function() { return '/module/Api/' + resourceOptions.get('name') },
 
-  // options that must be set in child
-  name         : undefined,
+  form         : $j('#formcadastro'),
+  api_url_base : function() { return '/module/Api/' + resourceOptions.get('name')() },
+
+  name : function() {
+    var name = window.location.pathname.split('/');
+        name = name[name.length - 1];
+
+    return name;
+  },
+
+  handlePost : function(dataResponse) {
+    if (dataResponse.id) {
+      if (window.history && window.history.pushState)
+        window.history.pushState('', '', window.location.href.split("?")[0] + "?id=" + dataResponse.id);
+    }
+  },
+
+  handlePut : function(dataResponse) {},
 };
 
 // metodos e variaveis não acessiveis por outros modulos
@@ -34,16 +62,15 @@ var resourceOptions = {
     // submit button callbacks
     var onClickSubmitEvent = function(event) {
       if (validatesPresenseOfValueInRequiredFields()) {
-
         var urlBuilder;
 
-        if (resourceOptions.get('new'))
+        if (resourceOptions.is_new())
           urlBuilder = postResourceUrlBuilder;
         else
           urlBuilder = putResourceUrlBuilder;
 
         submitOptions.url = urlBuilder.buildUrl(resourceOptions.get('api_url_base')(),
-                                                resourceOptions.get('name'),
+                                                resourceOptions.get('name')(),
                                                 {});
 
         // #TODO alterar texto $submitButton para Aguarde... enquanto estiver enviando ?
@@ -53,13 +80,13 @@ var resourceOptions = {
 
 
     function handleSuccess(dataResponse) {
-      try{
+      try {
         handleMessages(dataResponse.msgs);
 
-        if(! dataResponse[resourceOptions.get('name')])
-          throw new Error('Erro ao realizar operação, verifique as mensagens de erro e tente novamente.');
+        if(! dataResponse.any_error_msg && ! dataResponse[resourceOptions.get('name')()] && ! dataResponse.id)
+          throw new Error('A API não retornou o recurso nem seu id.');
 
-        if (resourceOptions.get('new'))
+        if (resourceOptions.is_new())
           resourceOptions.get('handlePost')(dataResponse);
         else
           resourceOptions.get('handlePut')(dataResponse);

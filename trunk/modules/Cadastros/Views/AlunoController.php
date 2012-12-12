@@ -178,13 +178,13 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
 
     // religião
-    $options = array('label' => $this->_getLabel('religiao'));
-    $this->inputsHelper()->religiaoInput('aluno', $options);
+    $options = array('label' => $this->_getLabel('religiao'), 'required' => false);
+    $this->inputsHelper()->religiaoInput($options);
 
 
     // beneficio
-    $options = array('label' => $this->_getLabel('beneficio'));
-    $this->inputsHelper()->beneficioInput('aluno', $options);
+    $options = array('label' => $this->_getLabel('beneficio'), 'required' => false);
+    $this->inputsHelper()->beneficioInput($options);
 
 
     // transporte publico
@@ -197,7 +197,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
                      'resources' => $tiposTransportePublico,
                      'required'  => true);
 
-    $this->inputsHelper()->selectInput('aluno', 'transporte_publico', $options);
+    $this->inputsHelper()->selectInput('transporte_publico', 'tipo', $options);
 
 
     // alfabetizado

@@ -1,13 +1,3 @@
-// resource options
-
-resourceOptions.name = 'aluno';
-resourceOptions.new  = true;
-
-resourceOptions.handlePost = function(dataResponse) {
-  console.log('#TODO handle post');
-  console.log(dataResponse);
-}
-
 // ajax
 
 // TODO move *person* logic to /modudes/Cadastros/Assets/Javascripts/Person.js

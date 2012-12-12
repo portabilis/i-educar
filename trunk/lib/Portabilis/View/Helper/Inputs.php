@@ -124,12 +124,12 @@ class Portabilis_View_Helper_Inputs {
 
   // resource input helpers
 
-  public function religiaoInput($objectName, $inputOptions = array(), $helperOptions = array()) {
-    $this->resourceInput('religiao', $objectName, $this->mergeInputOptions($inputOptions, $helperOptions));
+  public function religiaoInput($inputOptions = array(), $helperOptions = array()) {
+    $this->resourceInput('religiao', $this->mergeInputOptions($inputOptions, $helperOptions));
   }
 
-  public function beneficioInput($objectName, $inputOptions = array(), $helperOptions = array()) {
-    $this->resourceInput('beneficio', $objectName, $this->mergeInputOptions($inputOptions, $helperOptions));
+  public function beneficioInput($inputOptions = array(), $helperOptions = array()) {
+    $this->resourceInput('beneficio', $this->mergeInputOptions($inputOptions, $helperOptions));
   }
 
 
@@ -143,12 +143,12 @@ class Portabilis_View_Helper_Inputs {
     $helper->$helperName($objectName, $attrName, $options);
   }
 
-  protected function resourceInput($helperName, $objectName, $options = array()) {
+  protected function resourceInput($helperName, $options = array()) {
     $helperClassName = "Portabilis_View_Helper_Input_Resource_" . ucfirst($helperName);
 
     $this->includeHelper($helperClassName);
     $helper = new $helperClassName($this->viewInstance, $this);
-    $helper->$helperName($objectName, $options);
+    $helper->$helperName($options);
   }
 
   protected function includeHelper($helperClassName) {

@@ -77,7 +77,13 @@ class PessoaController extends ApiCoreController
 
   protected function tryLoadAlunoId($pessoaId) {
     $sql = "select cod_aluno as id from pmieducar.aluno where ref_idpes = $1";
-    return $this->fetchPreparedQuery($sql, $pessoaId, false, 'first-field');
+    $id  = $this->fetchPreparedQuery($sql, $pessoaId, false, 'first-field');
+
+    // when not exists, returns an empty array that causes error on loadDetails
+    if (empty($id))
+      $id = null;
+
+    return $id;
   }
 
   protected function loadPessoa($id = null) {

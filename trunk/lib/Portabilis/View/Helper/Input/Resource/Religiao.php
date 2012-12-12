@@ -63,12 +63,13 @@ class Portabilis_View_Helper_Input_Resource_Religiao extends Portabilis_View_Hel
     return $this->insertOption(null, "Selecione", $resources);
   }
 
-  public function religiao($objectName, $options = array()) {
+  public function religiao($options = array()) {
     // options
-    $defaultOptions      = array('id'        => null,
-                                 'attrName'  => 'religiao',
-                                 'resources' => array(),
-                                 'options'   => array());
+    $defaultOptions      = array('id'         => null,
+                                 'objectName' => 'religiao',
+                                 'attrName'   => 'id',
+                                 'resources'  => array(),
+                                 'options'    => array());
 
     $options             = $this->mergeOptions($options, $defaultOptions);
 
@@ -79,7 +80,7 @@ class Portabilis_View_Helper_Input_Resource_Religiao extends Portabilis_View_Hel
 
     $inputOptions        = $this->mergeOptions($options['options'], $defaultInputOptions);
 
-    $this->inputsHelper()->selectInput($objectName, $defaultOptions['attrName'], $inputOptions);
+    $this->inputsHelper()->selectInput($options['objectName'], $options['attrName'], $inputOptions);
   }
 }
 ?>

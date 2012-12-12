@@ -63,10 +63,11 @@ class Portabilis_View_Helper_Input_Resource_Beneficio extends Portabilis_View_He
     return $this->insertOption(null, "Selecione", $resources);
   }
 
-  public function beneficio($objectName, $options = array()) {
+  public function beneficio($options = array()) {
     // options
     $defaultOptions      = array('id'        => null,
-                                 'attrName'  => 'beneficio',
+                                 'objectName' => 'beneficio',
+                                 'attrName'  => 'id',
                                  'resources' => array(),
                                  'options'   => array());
 
@@ -79,7 +80,7 @@ class Portabilis_View_Helper_Input_Resource_Beneficio extends Portabilis_View_He
 
     $inputOptions        = $this->mergeOptions($options['options'], $defaultInputOptions);
 
-    $this->inputsHelper()->selectInput($objectName, $defaultOptions['attrName'], $inputOptions);
+    $this->inputsHelper()->selectInput($options['objectName'], $options['attrName'], $inputOptions);
   }
 }
 ?>
