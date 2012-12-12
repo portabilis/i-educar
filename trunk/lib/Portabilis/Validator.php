@@ -136,9 +136,28 @@ class Portabilis_Validator {
 
       return false;
     }
+
     return true;
   }
 
+  public function validatesValueNotInBd($fieldName, &$value, $schemaName, $tableName, $raiseExceptionOnFail = true, $addMsgOnError = true){
+    $sql = "select 1 as exists from $schemaName.$tableName where $fieldName = $1";
+    $exists = $this->fetchPreparedQuery($sql, $value, true, 'first-field');
+
+    if ($exists == '1'){
+      if ($addMsgOnError) {
+        $msg = "O valor informado {$value} para $tableName já existe no banco de dados.";
+        $this->messenger->append($msg);
+      }
+
+      if ($raiseExceptionOnFail)
+        throw new CoreExt_Exception($msg);
+
+      return false;
+    }
+
+    return true;
+  }
 
   // wrapper para $db->execPreparedQuery($sql, $params)
   protected function fetchPreparedQuery($sql, $params = array(), $hideExceptions = true, $returnOnly = '') {

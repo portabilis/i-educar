@@ -84,7 +84,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
         $this->response[$k] = $v;
       }
     }
-    else
+    elseif (! is_null($name))
       $this->response[$name] = $value;
   }
 
@@ -111,6 +111,8 @@ class ApiCoreController extends Core_Controller_Page_EditController
         $this->appendResponse('resource', $this->getRequest()->resource);
 
       $this->appendResponse('msgs', $this->messenger->getMsgs());
+      $this->appendResponse('any_error_msg', $this->messenger->hasMsgWithType('error'));
+
       $response = json_encode($this->response);
     }
     catch (Exception $e){
@@ -197,6 +199,21 @@ class ApiCoreController extends Core_Controller_Page_EditController
                                                   $resourceName,
                                                   $raiseExceptionOnFail = false,
                                                   $addMsgOnError        = $options['add_msg_on_error']);
+  }
+
+  protected function validatesUniquenessOf($resourceName, $value, $options = array()) {
+    $defaultOptions = array('schema_name'      => 'pmieducar',
+                            'field_name'       => "cod_{$resourceName}",
+                            'add_msg_on_error' => true);
+
+    $options        = $this->mergeOptions($options, $defaultOptions);
+
+    return $this->validator->validatesValueNotInBd($options['field_name'],
+                                                   $value,
+                                                   $options['schema_name'],
+                                                   $resourceName,
+                                                   $raiseExceptionOnFail = false,
+                                                   $addMsgOnError        = $options['add_msg_on_error']);
   }
 
 
