@@ -1,11 +1,11 @@
 // metodos e variaveis acessiveis por outros modulos
 
-
 var resourceOptions = {
   // options that cannot be overwritten in child
 
   get    : function(optionName) { return optionsUtils.get(this, optionName) },
-  is_new : function() { return this.id() != undefined },
+
+  isNew : function() { return this.id() == undefined },
 
   id : function(){
     var id;
@@ -22,7 +22,8 @@ var resourceOptions = {
   // options that can be overwritten in child
 
   form         : $j('#formcadastro'),
-  api_url_base : function() { return '/module/Api/' + resourceOptions.get('name')() },
+
+  apiUrlBase : function() { return '/module/Api/' + resourceOptions.get('name')() },
 
   name : function() {
     var name = window.location.pathname.split('/');
@@ -39,7 +40,26 @@ var resourceOptions = {
   },
 
   handlePut : function(dataResponse) {},
+
+  handleGet : function(dataResponse) {
+    throw new Error('The function resourceOptions.handleGet must be overwritten!');
+  },
+
+  getResource : function(id) {
+    var additionalVars = {
+      id : id,
+    };
+
+    var options = {
+      url      : getResourceUrlBuilder.buildUrl(this.apiUrlBase(), this.get('name')(), additionalVars),
+      dataType : 'json',
+      success  : this.handleGet,
+    };
+
+    getResource(options);
+  },
 };
+
 
 // metodos e variaveis não acessiveis por outros modulos
 
@@ -64,12 +84,12 @@ var resourceOptions = {
       if (validatesPresenseOfValueInRequiredFields()) {
         var urlBuilder;
 
-        if (resourceOptions.is_new())
+        if (resourceOptions.isNew())
           urlBuilder = postResourceUrlBuilder;
         else
           urlBuilder = putResourceUrlBuilder;
 
-        submitOptions.url = urlBuilder.buildUrl(resourceOptions.get('api_url_base')(),
+        submitOptions.url = urlBuilder.buildUrl(resourceOptions.get('apiUrlBase')(),
                                                 resourceOptions.get('name')(),
                                                 {});
 
@@ -86,7 +106,7 @@ var resourceOptions = {
         if(! dataResponse.any_error_msg && ! dataResponse[resourceOptions.get('name')()] && ! dataResponse.id)
           throw new Error('A API não retornou o recurso nem seu id.');
 
-        if (resourceOptions.is_new())
+        if (resourceOptions.isNew())
           resourceOptions.get('handlePost')(dataResponse);
         else
           resourceOptions.get('handlePut')(dataResponse);
@@ -120,5 +140,10 @@ var resourceOptions = {
 
     // bind events
     $submitButton.click(onClickSubmitEvent);
+
+
+    if (! resourceOptions.isNew())
+      resourceOptions.getResource(resourceOptions.id());
+
   }); // ready
 })(jQuery);

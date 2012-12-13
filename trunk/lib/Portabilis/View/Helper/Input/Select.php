@@ -44,11 +44,12 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
  */
 class Portabilis_View_Helper_Input_Select extends Portabilis_View_Helper_Input_Core {
 
-  public function select($objectName, $attrName, $options = array()) {
-    $defaultOptions       = array('options' => array(), 'resources' => array(), 'value' => null);
+  public function select($attrName, $options = array()) {
+    $defaultOptions       = array('objectName' => '', 'options' => array(), 'resources' => array(), 'value' => null);
     $options              = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultInputOptions = array('id'         => $objectName . '_' . $attrName,
+    $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
+    $defaultInputOptions = array('id'         => $options['objectName'] . $spacer . $attrName,
                                  'label'      => ucwords($attrName),
                                  'resources'  => $options['resources'],
                                  'value'      => $options['value'],

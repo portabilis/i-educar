@@ -85,40 +85,48 @@ class Portabilis_View_Helper_Inputs {
 
   // input helpers
 
-  public function textInput($objectName, $attrNames, $inputOptions = array(), $helperOptions = array()) {
+  public function textInput($attrNames, $inputOptions = array(), $helperOptions = array()) {
     $options = $this->mergeInputOptions($inputOptions, $helperOptions);
 
     if (! is_array($attrNames))
       $attrNames = array($attrNames);
 
     foreach($attrNames as $attrName) {
-      $this->input('text', $objectName, $attrName, $options);
+      $this->input('text', $attrName, $options);
     }
   }
 
 
-  public function selectInput($objectName, $attrName, $inputOptions = array(), $helperOptions = array()) {
-    $this->input('select', $objectName, $attrName, $this->mergeInputOptions($inputOptions, $helperOptions));
+  public function selectInput($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->input('select', $attrName, $this->mergeInputOptions($inputOptions, $helperOptions));
   }
 
 
-  public function searchInput($objectName, $attrName, $inputOptions = array(), $helperOptions = array()) {
-    $this->input('search', $objectName, $attrName, $this->mergeInputOptions($inputOptions, $helperOptions));
+  public function searchInput($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->input('search', $attrName, $this->mergeInputOptions($inputOptions, $helperOptions));
   }
 
+
+  public function hiddenInput($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->input('hidden', $attrName, $this->mergeInputOptions($inputOptions, $helperOptions));
+  }
+
+
+  public function checkboxInput($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->input('checkbox', $attrName, $this->mergeInputOptions($inputOptions, $helperOptions));
+  }
+
+
+  // simple search input helper
 
   public function simpleSearchInput($objectName, $attrName, $inputOptions = array(), $helperOptions = array()) {
-    $this->input('simpleSearch', $objectName, $attrName, $this->mergeInputOptions($inputOptions, $helperOptions));
-  }
+    $options = $this->mergeInputOptions($inputOptions, $helperOptions);
 
+    $helperClassName = 'Portabilis_View_Helper_Input_SimpleSearch';
+    $this->includeHelper($helperClassName);
 
-  public function hiddenInput($objectName, $attrName, $inputOptions = array(), $helperOptions = array()) {
-    $this->input('hidden', $objectName, $attrName, $this->mergeInputOptions($inputOptions, $helperOptions));
-  }
-
-
-  public function checkboxInput($objectName, $attrName, $inputOptions = array(), $helperOptions = array()) {
-    $this->input('checkbox', $objectName, $attrName, $this->mergeInputOptions($inputOptions, $helperOptions));
+    $helper = new $helperClassName($this->viewInstance, $this);
+    $helper->simpleSearch($objectName, $attrName, $options);
   }
 
 
@@ -135,12 +143,12 @@ class Portabilis_View_Helper_Inputs {
 
   // protected methods
 
-  protected function input($helperName, $objectName, $attrName, $options = array()) {
+  protected function input($helperName, $attrName, $options = array()) {
     $helperClassName = "Portabilis_View_Helper_Input_" . ucfirst($helperName);
 
     $this->includeHelper($helperClassName);
     $helper = new $helperClassName($this->viewInstance, $this);
-    $helper->$helperName($objectName, $attrName, $options);
+    $helper->$helperName($attrName, $options);
   }
 
   protected function resourceInput($helperName, $options = array()) {

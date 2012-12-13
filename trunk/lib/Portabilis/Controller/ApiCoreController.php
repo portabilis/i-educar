@@ -250,6 +250,44 @@ class ApiCoreController extends Core_Controller_Page_EditController
     return Portabilis_DataMapper_Utils::getDataMapperFor($packageName, $modelName);
   }
 
+  protected function getEntityOf($dataMapper, $id) {
+    return $dataMapper->find($id);
+  }
+
+  protected function createEntityOf($dataMapper, $data = array()) {
+    return $dataMapper->createNewEntityInstance($data);
+  }
+
+  protected function getOrCreateEntityOf($dataMapper, $id) {
+    try {
+      $entity = $this->getEntityOf($dataMapper, $id);
+    }
+    catch(Exception $e) {
+      $entity = $this->createEntityOf($dataMapper);
+    }
+
+    return $entity;
+  }
+
+  protected function saveEntity($dataMapper, $entity) {
+    if ($entity->isValid())
+      $dataMapper->save($entity);
+
+    else {
+      $errors = $entity->getErrors();
+      $msgs   = array();
+
+      foreach ($errors as $attr => $msg) {
+        if (! is_null($msg))
+          $msgs[] = "$attr => $msg";
+      }
+
+      //$msgs transporte_aluno
+      $msg = 'Erro ao salvar o recurso ' . $dataMapper->resourceName() . ': ' . join(', ', $msgs);
+      $this->messenger->append($msg, 'error', true);
+    }
+  }
+
   protected static function mergeOptions($options, $defaultOptions) {
     return Portabilis_Array_Utils::merge($options, $defaultOptions);
   }

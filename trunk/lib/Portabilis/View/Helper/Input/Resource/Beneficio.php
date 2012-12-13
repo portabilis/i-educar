@@ -65,22 +65,24 @@ class Portabilis_View_Helper_Input_Resource_Beneficio extends Portabilis_View_He
 
   public function beneficio($options = array()) {
     // options
-    $defaultOptions      = array('id'        => null,
-                                 'objectName' => 'beneficio',
-                                 'attrName'  => 'id',
-                                 'resources' => array(),
-                                 'options'   => array());
+    $defaultOptions      = array('id'         => null,
+                                 'objectName' => '',
+                                 'attrName'   => 'beneficio_id',
+                                 'resources'  => array(),
+                                 'options'    => array());
 
     $options             = $this->mergeOptions($options, $defaultOptions);
 
 
-    // input options
+    // text input
+
     $defaultInputOptions = array('value'     => $this->getResourceId($options['id']),
                                  'resources' => $this->getOptions($options['resources']));
 
-    $inputOptions        = $this->mergeOptions($options['options'], $defaultInputOptions);
+    $textInputOptions    = $this->mergeOptions($options['options'], $defaultInputOptions);
+    $textHelperOptions   = array('objectName' => $options['objectName']);
 
-    $this->inputsHelper()->selectInput($options['objectName'], $options['attrName'], $inputOptions);
+    $this->inputsHelper()->selectInput($options['attrName'], $textInputOptions, $textHelperOptions);
   }
 }
 ?>

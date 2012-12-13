@@ -201,6 +201,17 @@ abstract class CoreExt_DataMapper
   }
 
   /**
+   * Retorna o nome do recurso, isto é o nome da tabela sem '_',
+   * Ex: transporte_aluno => transporte aluno.
+   *
+   * @return string
+   */
+  public function resourceName()
+  {
+    return strtolower(str_replace('_', ' ', $this->_tableName));
+  }
+
+  /**
    * Retorna os nomes das colunas da tabela em um array, de acordo com o array
    * de dados associativo $data.
    *
@@ -520,7 +531,7 @@ abstract class CoreExt_DataMapper
    * @param  array $orderBy
    * @param  array $addColumnIdIfNotSet Se true, adiciona a coluna 'id' caso não esteja definido no array $columns
    * @return array
-   * @todo   
+   * @todo
    */
   public function findAllUsingPreparedQuery(array $columns = array(), array $where = array(), array $params = array(), array $orderBy = array(), $addColumnIdIfNotSet = true) {
 

@@ -37,6 +37,9 @@ require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
+require_once 'lib/Portabilis/Array/Utils.php';
+
+require_once 'Transporte/Model/Responsavel.php';
 
 class AlunoController extends ApiCoreController
 {
@@ -89,7 +92,7 @@ class AlunoController extends ApiCoreController
   protected function validatesResponsavelId() {
     $isValid = true;
 
-    if ($this->getRequest()->responsavel_tipo == 'outra_pessoa') {
+    if ($this->getRequest()->tipo_responsavel == 'outra_pessoa') {
       $existenceOptions = array('schema_name' => 'cadastro', 'field_name' => 'idpes');
 
       $isValid = $this->validatesPresenceOf('responsavel_id') &&
@@ -102,9 +105,9 @@ class AlunoController extends ApiCoreController
   protected function validatesResponsavelTipo() {
     $expectedValues = array('mae', 'pai', 'outra_pessoa');
 
-    return $this->validatesPresenceOf('responsavel_tipo') &&
-           $this->validator->validatesValueInSetOf($this->getRequest()->responsavel_tipo,
-                                                   $expectedValues, 'responsavel_tipo');
+    return $this->validatesPresenceOf('tipo_responsavel') &&
+           $this->validator->validatesValueInSetOf($this->getRequest()->tipo_responsavel,
+                                                   $expectedValues, 'tipo_responsavel');
   }
 
   protected function validatesResponsavel() {
@@ -112,12 +115,12 @@ class AlunoController extends ApiCoreController
            $this->validatesResponsavelId();
   }
 
-  protected function validatesTransportePublico() {
+  protected function validatesTransporte() {
     $expectedValues = array('nenhum', 'municipal', 'estadual');
 
-    return $this->validatesPresenceOf('transporte_publico_tipo') &&
-           $this->validator->validatesValueInSetOf($this->getRequest()->transporte_publico_tipo,
-                                                   $expectedValues, 'transporte_publico_tipo');
+    return $this->validatesPresenceOf('tipo_transporte') &&
+           $this->validator->validatesValueInSetOf($this->getRequest()->tipo_transporte,
+                                                   $expectedValues, 'tipo_transporte');
   }
 
   protected function validatesUniquenessOfAlunoByPessoaId() {
@@ -140,12 +143,15 @@ class AlunoController extends ApiCoreController
     return parent::canAcceptRequest();
   }*/
 
+  protected function canGet() {
+    return $this->validatesAlunoId();
+  }
 
   protected function _canChange() {
     return $this->canAcceptRequest()           &&
            $this->validatesPessoaId()          &&
            $this->validatesResponsavel()       &&
-           $this->validatesTransportePublico() &&
+           $this->validatesTransporte() &&
            $this->validatesReligiaoId()        &&
            $this->validatesBeneficioId();
   }
@@ -188,40 +194,121 @@ class AlunoController extends ApiCoreController
   }
 
 
+  protected function loadTransporte($alunoId) {
+    $tiposTransporte = array(
+      Transporte_Model_Responsavel::NENHUM    => 'nenhum',
+      Transporte_Model_Responsavel::MUNICIPAL => 'municipal',
+      Transporte_Model_Responsavel::ESTADUAL  =>'estadual'
+    );
+
+    $transporteDataMapper = $this->getDataMapperFor('transporte', 'aluno');
+    $transporte           = $this->getEntityOf($transporteDataMapper, $alunoId);
+
+    return $tiposTransporte[$transporte->get('responsavel')];
+  }
+
+
+  protected function createOrUpdateTransporte($alunoId) {
+    $tiposTransporte = array(
+      'nenhum'    => Transporte_Model_Responsavel::NENHUM,
+      'municipal' => Transporte_Model_Responsavel::MUNICIPAL,
+      'estadual'  => Transporte_Model_Responsavel::ESTADUAL
+    );
+
+    $data = array(
+      'aluno'       => $alunoId,
+      'responsavel' => $tiposTransporte[$this->getRequest()->tipo_transporte],
+      'user'        => $this->getSession()->id_pessoa,
+      'created_at'  => 'NOW()'
+    );
+
+    $transporteDataMapper = $this->getDataMapperFor('transporte', 'aluno');
+    $transporte           = $this->getOrCreateEntityOf($transporteDataMapper, $alunoId);
+    $transporte->setOptions($data);
+
+    return $this->saveEntity($transporteDataMapper, $transporte);
+  }
+
+
+  protected function loadResponsavel() {
+    $pessoa        = new clsFisica();
+    $pessoa->idpes = $this->getRequest()->pessoa_id;
+    $pessoa        = $pessoa->detalhe();
+
+    return $pessoa->idpes_responsavel;
+  }
+
+
+  protected function updateResponsavel() {
+    $pessoa                         = new clsFisica();
+    $pessoa->idpes                  = $this->getRequest()->pessoa_id;
+    $pessoa->idpes_responsavel      = $this->getRequest()->responsavel_id;
+
+    return $pessoa->edita();
+  }
+
+
+  protected function createOrUpdateAluno($id = null){
+    $tiposResponsavel               = array('pai' => 'p', 'mae' => 'm', 'outra_pessoa' => 'r');
+
+    $aluno                          = new clsPmieducarAluno();
+    $aluno->cod_aluno               = $id;
+    $aluno->ref_idpes               = $this->getRequest()->pessoa_id;
+    $aluno->ref_cod_aluno_beneficio = $this->getRequest()->beneficio_id;
+    $aluno->ref_cod_religiao        = $this->getRequest()->religiao_id;
+    $aluno->analfabeto              = ! is_null($this->getRequest()->alfabetizado) ? 0 : 1;
+    $aluno->tipo_responsavel        = $tiposResponsavel[$this->getRequest()->tipo_responsavel];
+
+    return (is_null($id) ? $aluno->cadastra() : $aluno->edita());
+  }
+
+
   // api responders
+
+  protected function get() {
+    if ($this->canGet()) {
+      $id               = $this->getRequest()->id;
+      $tiposResponsavel = array('p' => 'pai', 'm' => 'mae', 'r' => 'outra_pessoa');
+
+      $aluno            = new clsPmieducarAluno();
+      $aluno->cod_aluno = $id;
+      $aluno            = $aluno->detalhe();
+
+      $attrs  = array(
+        'cod_aluno'               => 'id',
+        'ref_cod_aluno_beneficio' => 'beneficio_id',
+        'ref_cod_religiao'        => 'religiao_id',
+        'ref_idpes'               => 'pessoa_id',
+        'tipo_responsavel'        => 'tipo_responsavel',
+        'analfabeto'
+      );
+
+      $aluno = Portabilis_Array_Utils::filter($aluno, $attrs);
+
+      $aluno['tipo_transporte']  = $this->loadTransporte($id);
+      $aluno['tipo_responsavel'] = $tiposResponsavel[$aluno['tipo_responsavel']];
+      $aluno['responsavel_id']   = $this->loadResponsavel();
+      $aluno['alfabetizado']     = $aluno['analfabeto'] == 1;
+
+      unset($aluno['analfabeto']);
+
+      return $aluno;
+    }
+  }
 
   protected function post() {
     if ($this->canPost()) {
-      // update pessoa
+      $id = $this->createOrUpdateAluno();
 
-      $pessoa                         = new clsFisica();
-      $pessoa->idpes                  = $this->getRequest()->pessoa_id;
-      $pessoa->idpes_responsavel      = $this->getRequest()->responsavel_id;
-      $pessoa->edita();
-
-
-      // create aluno
-
-      $aluno                          = new clsPmieducarAluno();
-
-      $aluno->ref_idpes               = $this->getRequest()->pessoa_id;
-      $aluno->ref_cod_aluno_beneficio = $this->getRequest()->beneficio_id;
-      $aluno->ref_cod_religiao        = $this->getRequest()->religiao_id;
-      $aluno->analfabeto              = is_null($this->getRequest()->alfabetizado) ? 1 : 0;
-
-      $tiposResponsavel               = array('pai' => 'p', 'mae' => 'm', 'outra_pessoa' => 'r');
-      $aluno->tipo_responsavel        = $tiposResponsavel[$this->getRequest()->responsavel_tipo];
+      $this->updateResponsavel();
+      $this->createOrUpdateTransporte($id);
 
       // #TODO set codigo_inep / codigo_rede_ensino_estadual
-
-
-      $id = $aluno->cadastra();
 
       if (is_numeric($id))
         $this->messenger->append('Aluno cadastrado com sucesso', 'success');
       else
         $this->messenger->append('Aparentemente o aluno não pode ser cadastrado, por favor, verifique.');
-
 
       return array('id' => $id);
     }
@@ -240,8 +327,11 @@ class AlunoController extends ApiCoreController
 
   public function Gerar() {
 
+    if ($this->isRequestFor('get', 'aluno'))
+      $this->appendResponse($this->get());
+
     // creates a new resource
-    if ($this->isRequestFor('post', 'aluno'))
+    elseif ($this->isRequestFor('post', 'aluno'))
       $this->appendResponse($this->post());
 
     // updates a resource

@@ -64,13 +64,16 @@ class Portabilis_View_Helper_Input_SimpleSearch extends Portabilis_View_Helper_I
                                     "must be different than 'id', because the hidden input will use it.");
       }
 
-      $this->inputsHelper()->hiddenInput($objectName, 'id', $options['hiddenInputOptions']);
+      $hiddenHelperOptions = array('objectName' => $objectName);
+      $this->inputsHelper()->hiddenInput('id', $options['hiddenInputOptions'], $hiddenHelperOptions);
     }
 
     $defaultInputOptions = array('value' => $options['value']);
-    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
 
-    $this->inputsHelper()->textInput($objectName, $attrName, $inputOptions);
+    $textInputOptions    = $this->mergeOptions($options['options'], $defaultInputOptions);
+    $textHelperOptions   = array('objectName' => $objectName);
+
+    $this->inputsHelper()->textInput($attrName, $textInputOptions, $textHelperOptions);
 
     // load simple search js
 

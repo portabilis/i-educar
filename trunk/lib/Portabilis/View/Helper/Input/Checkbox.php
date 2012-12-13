@@ -44,11 +44,12 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
  */
 class Portabilis_View_Helper_Input_Checkbox extends Portabilis_View_Helper_Input_Core {
 
-  public function checkbox($objectName, $attrName, $options = array()) {
-    $defaultOptions = array('value' => null);
+  public function checkbox($attrName, $options = array()) {
+    $defaultOptions = array('objectName' => '', 'value' => null);
     $options        = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultInputOptions = array('id'         => $objectName . "_" . $attrName,
+    $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
+    $defaultInputOptions = array('id'         => $options['objectName'] . $spacer . $attrName,
                                  'label'      => ucwords($attrName),
                                  'value'      => $options['value'],
                                  'label_hint' => '',

@@ -44,11 +44,17 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
  */
 class Portabilis_View_Helper_Input_Text extends Portabilis_View_Helper_Input_Core {
 
-  public function text($objectName, $attrName, $options = array()) {
-    $defaultOptions       = array('options' => array(), 'value' => null);
+  public function text($attrName, $options = array()) {
+    $defaultOptions       = array('objectName' => '', 'options' => array(), 'value' => null);
+
+    if ($options['options']['objectName'] == 'responsavel')
+      var_dump($options);
+
     $options              = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultInputOptions = array('id'             => $objectName . '_' . $attrName,
+    $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
+
+    $defaultInputOptions = array('id'             => $options['objectName'] . $spacer . $attrName,
                                  'label'          => ucwords($attrName),
                                  'value'          => $options['value'],
                                  'size'           => 50,
@@ -63,6 +69,7 @@ class Portabilis_View_Helper_Input_Text extends Portabilis_View_Helper_Input_Cor
                                  'disabled'       => false);
 
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
+
     call_user_func_array(array($this->viewInstance, 'campoTexto'), $inputOptions);
   }
 }

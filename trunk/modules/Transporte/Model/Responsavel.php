@@ -44,10 +44,12 @@ require_once 'CoreExt/Enum.php';
  */
 class Transporte_Model_Responsavel extends CoreExt_Enum
 {
+  const NENHUM    = 0;
   const ESTADUAL  = 1;
   const MUNICIPAL = 2;
 
   protected $_data = array(
+    self::NENHUM    => 'Não utiliza',
     self::ESTADUAL  => 'Estadual',
     self::MUNICIPAL => 'Municipal'
   );

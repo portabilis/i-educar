@@ -66,21 +66,23 @@ class Portabilis_View_Helper_Input_Resource_Religiao extends Portabilis_View_Hel
   public function religiao($options = array()) {
     // options
     $defaultOptions      = array('id'         => null,
-                                 'objectName' => 'religiao',
-                                 'attrName'   => 'id',
+                                 'objectName' => '',
+                                 'attrName'   => 'religiao_id',
                                  'resources'  => array(),
                                  'options'    => array());
 
     $options             = $this->mergeOptions($options, $defaultOptions);
 
 
-    // input options
+    // text input
+
     $defaultInputOptions = array('value'     => $this->getResourceId($options['id']),
                                  'resources' => $this->getOptions($options['resources']));
 
-    $inputOptions        = $this->mergeOptions($options['options'], $defaultInputOptions);
+    $textInputOptions    = $this->mergeOptions($options['options'], $defaultInputOptions);
+    $textHelperOptions   = array('objectName' => $options['objectName']);
 
-    $this->inputsHelper()->selectInput($options['objectName'], $options['attrName'], $inputOptions);
+    $this->inputsHelper()->selectInput($options['attrName'], $textInputOptions, $textHelperOptions);
   }
 }
 ?>

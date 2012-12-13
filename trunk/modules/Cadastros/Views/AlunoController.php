@@ -87,12 +87,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       'help'   => '',
     ),
 
-    'transporte_publico' => array(
+    'transporte' => array(
       'label'  => 'Transporte p&uacute;blico',
       'help'   => '',
     ),
 
-    'codigo_rede_ensino_municipal' => array(
+    'id' => array(
       'label'  => 'C&oacutedigo rede de ensino municipal',
       'help'   => '',
     ),
@@ -145,12 +145,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     // pai
     $options = array('label' => $this->_getLabel('pai'), 'disabled' => true, 'required' => false, 'size' => 68);
-    $this->inputsHelper()->textInput('aluno', 'pai', $options);
+    $this->inputsHelper()->textInput('pai', $options);
 
 
     // mãe
     $options = array('label' => $this->_getLabel('mae'), 'disabled' => true, 'required' => false, 'size' => 68);
-    $this->inputsHelper()->textInput('aluno', 'mae', $options);
+    $this->inputsHelper()->textInput('mae', $options);
 
 
     // responsável
@@ -166,7 +166,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
                      'required'  => true,
                      'inline'    => true);
 
-    $this->inputsHelper()->selectInput('responsavel', 'tipo', $options);
+    $this->inputsHelper()->selectInput('tipo_responsavel', $options);
 
 
     // nome
@@ -188,37 +188,37 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
 
     // transporte publico
-    $tiposTransportePublico = array(null        => 'Selecione',
-                                    'nenhum'    => 'N&atilde;o utiliza',
-                                    'municipal' => 'Municipal',
-                                    'estadual'  => 'Estadual');
+    $tiposTransporte = array(null => 'Selecione',
+                             'nenhum'    => 'N&atilde;o utiliza',
+                             'municipal' => 'Municipal',
+                             'estadual'  => 'Estadual');
 
-    $options = array('label'     => $this->_getLabel('transporte_publico'),
-                     'resources' => $tiposTransportePublico,
+    $options = array('label'     => $this->_getLabel('transporte'),
+                     'resources' => $tiposTransporte,
                      'required'  => true);
 
-    $this->inputsHelper()->selectInput('transporte_publico', 'tipo', $options);
+    $this->inputsHelper()->selectInput('tipo_transporte', $options);
 
 
     // alfabetizado
     $options = array('label' => $this->_getLabel('alfabetizado'));
-    $this->inputsHelper()->checkboxInput('aluno', 'alfabetizado', $options);
+    $this->inputsHelper()->checkboxInput('alfabetizado', $options);
 
 
     // código rede de ensino municipal
-    $options = array('label'    => $this->_getLabel('codigo_rede_ensino_municipal'), 'disabled' => true,
+    $options = array('label'    => $this->_getLabel('id'), 'disabled' => true,
                      'required' => false, 'size' => 25);
-    $this->inputsHelper()->textInput('aluno', 'codigo_rede_ensino_municipal', $options);
+    $this->inputsHelper()->textInput('id', $options);
 
 
     // código rede de ensino estadual
     $options = array('label' => $this->_getLabel('codigo_rede_ensino_estadual'), 'required' => false, 'size' => 25);
-    $this->inputsHelper()->textInput('aluno', 'codigo_rede_ensino_estadual', $options);
+    $this->inputsHelper()->textInput('codigo_rede_ensino_estadual', $options);
 
 
     // código inep
     $options = array('label' => $this->_getLabel('codigo_inep'), 'required' => false, 'size' => 25);
-    $this->inputsHelper()->textInput('aluno', 'codigo_inep', $options);
+    $this->inputsHelper()->textInput('codigo_inep', $options);
 
     $this->loadResourceAssets();
     Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Cadastros/Assets/Javascripts/Aluno.js');
