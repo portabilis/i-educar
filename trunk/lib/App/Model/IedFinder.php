@@ -283,13 +283,14 @@ class App_Model_IedFinder extends CoreExt_Entity
 
       // Pela restrição na criação de anos letivos, eu posso confiar no primeiro
       // e único resultado que deve ter retornado
-      if (FALSE !== $anosEmAndamento && 1 == count($anosEmAndamento)) {
-        $ano = array_shift($anosEmAndamento);
-        $ano = $ano['ano'];
-      }
-      else {
-        throw new App_Model_Exception('Existem vários anos escolares em andamento.');
-      }
+      if (FALSE == $anosEmAndamento || count($anosEmAndamento) < 1)
+        throw new App_Model_Exception('Não foi encontrado um ano escolar em andamento.');
+
+      elseif (count($anosEmAndamento) > 1)
+        throw new App_Model_Exception('Existe mais de um ano escolar em andamento.');
+
+      $ano = array_shift($anosEmAndamento);
+      $ano = $ano['ano'];
 
       $anoLetivoModulo = self::addClassToStorage('clsPmieducarAnoLetivoModulo',
         NULL, 'include/pmieducar/clsPmieducarAnoLetivoModulo.inc.php');
