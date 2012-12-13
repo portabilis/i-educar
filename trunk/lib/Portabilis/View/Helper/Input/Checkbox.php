@@ -57,6 +57,14 @@ class Portabilis_View_Helper_Input_Checkbox extends Portabilis_View_Helper_Input
 
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
     call_user_func_array(array($this->viewInstance, 'campoCheck'), $inputOptions);
+
+    // fixup para enviar um valor, junto ao param do checkbox.
+    $js = "\$j('#" . $inputOptions['id'] . "').change(function(){
+        var \$this = \$j(this);
+        \$this.val(\$this.is(':checked') ? true : '');
+    })";
+
+    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
   }
 }
 ?>

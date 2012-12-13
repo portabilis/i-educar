@@ -6,6 +6,7 @@ resourceOptions.handleGet = function(dataResponse) {
   getPersonDetails(dataResponse.pessoa_id);
 
   $j('#id').val(dataResponse.id);
+  $j('#inep_id').val(dataResponse.inep_id);
   $j('#tipo_responsavel').val(dataResponse.tipo_responsavel).change();
   $j('#religiao_id').val(dataResponse.religiao_id);
   $j('#beneficio_id').val(dataResponse.beneficio_id);

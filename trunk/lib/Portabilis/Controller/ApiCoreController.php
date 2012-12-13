@@ -254,19 +254,29 @@ class ApiCoreController extends Core_Controller_Page_EditController
     return $dataMapper->find($id);
   }
 
+  protected function tryGetEntityOf($dataMapper, $id) {
+    try {
+      $entity = $this->getEntityOf($dataMapper, $id);
+    }
+    catch(Exception $e) {
+      $entity = null;
+    }
+
+    return $entity;
+  }
+
   protected function createEntityOf($dataMapper, $data = array()) {
     return $dataMapper->createNewEntityInstance($data);
   }
 
   protected function getOrCreateEntityOf($dataMapper, $id) {
-    try {
-      $entity = $this->getEntityOf($dataMapper, $id);
-    }
-    catch(Exception $e) {
-      $entity = $this->createEntityOf($dataMapper);
-    }
+    $entity = $this->tryGetEntityOf($dataMapper, $id);
+    return (is_null($entity) ? $this->createEntityOf($dataMapper) : $entity);
+  }
 
-    return $entity;
+  protected function deleteEntityOf($dataMapper, $id) {
+    $entity = $this->tryGetEntityOf($dataMapper, $id);
+    return (is_null($entity) ? true : $dataMapper->delete($entity));
   }
 
   protected function saveEntity($dataMapper, $entity) {

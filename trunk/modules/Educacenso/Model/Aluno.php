@@ -45,6 +45,22 @@ require_once 'Educacenso/Model/CodigoReferencia.php';
  */
 class Educacenso_Model_Aluno extends Educacenso_Model_CodigoReferencia
 {
+   protected $_data = array(
+    'aluno'      => NULL,
+    'alunoInep'  => NULL,
+    'nomeInep'   => NULL,
+    'fonte'      => NULL,
+    'created_at' => NULL,
+    'updated_at' => NULL
+  );
+
+
+  public function __construct($options = array())
+  {
+    parent::__construct($options);
+    unset($this->_data['id']);
+  }
+
   public function getDefaultValidatorCollection()
   {
     $validators = array(
@@ -53,13 +69,5 @@ class Educacenso_Model_Aluno extends Educacenso_Model_CodigoReferencia
     );
 
     return array_merge($validators, parent::getDefaultValidatorCollection());
-  }
-
-  public function __construct(array $options = array())
-  {
-    $this->_data['aluno'] = NULL;
-    $this->_data['alunoInep'] = NULL;
-
-    parent::__construct($options);
   }
 }

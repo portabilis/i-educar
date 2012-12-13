@@ -97,7 +97,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       'help'   => '',
     ),
 
-    'codigo_inep' => array(
+    'inep_id' => array(
       'label'  => 'C&oacutedigo inep',
       'help'   => '',
     )
@@ -206,8 +206,8 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
 
     // código inep
-    $options = array('label' => $this->_getLabel('codigo_inep'), 'required' => false, 'size' => 25);
-    $this->inputsHelper()->textInput('codigo_inep', $options);
+    $options = array('label' => $this->_getLabel('inep_id'), 'required' => false, 'size' => 25);
+    $this->inputsHelper()->textInput('inep_id', $options);
 
     $this->loadResourceAssets();
     Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Cadastros/Assets/Javascripts/Aluno.js');

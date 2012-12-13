@@ -197,10 +197,10 @@ class AlunoController extends ApiCoreController
       Transporte_Model_Responsavel::ESTADUAL  =>'estadual'
     );
 
-    $transporteDataMapper = $this->getDataMapperFor('transporte', 'aluno');
-    $transporte           = $this->getEntityOf($transporteDataMapper, $alunoId);
+    $dataMapper = $this->getDataMapperFor('transporte', 'aluno');
+    $entity     = $this->getEntityOf($dataMapper, $alunoId);
 
-    return $tiposTransporte[$transporte->get('responsavel')];
+    return $tiposTransporte[$entity->get('responsavel')];
   }
 
 
@@ -215,14 +215,54 @@ class AlunoController extends ApiCoreController
       'aluno'       => $alunoId,
       'responsavel' => $tiposTransporte[$this->getRequest()->tipo_transporte],
       'user'        => $this->getSession()->id_pessoa,
-      'created_at'  => 'NOW()'
+
+      // always setting now...
+      'created_at'  => 'NOW()',
     );
 
-    $transporteDataMapper = $this->getDataMapperFor('transporte', 'aluno');
-    $transporte           = $this->getOrCreateEntityOf($transporteDataMapper, $alunoId);
-    $transporte->setOptions($data);
+    $dataMapper = $this->getDataMapperFor('transporte', 'aluno');
+    $entity      = $this->getOrCreateEntityOf($dataMapper, $alunoId);
+    $entity->setOptions($data);
 
-    return $this->saveEntity($transporteDataMapper, $transporte);
+    return $this->saveEntity($dataMapper, $entity);
+  }
+
+
+  protected function loadInepId($alunoId) {
+    $dataMapper = $this->getDataMapperFor('educacenso', 'aluno');
+    $entity     = $this->tryGetEntityOf($dataMapper, $alunoId);
+
+    return (is_null($entity) ? null : $entity->get('alunoInep'));
+  }
+
+
+  protected function createUpdateOrDestoyInepId($alunoId) {
+    $dataMapper = $this->getDataMapperFor('educacenso', 'aluno');
+
+    if (empty($this->getRequest()->inep_id)) {
+      $result = $entity = $this->deleteEntityOf($dataMapper, $alunoId);
+    }
+
+    else {
+      $data = array(
+        'aluno'      => $alunoId,
+        'alunoInep'  => $this->getRequest()->inep_id,
+
+        // campos deprecados?
+        'fonte'      => 'fonte',
+        'nomeInep'   => '-',
+
+        // always setting now...
+        'created_at' => 'NOW()',
+      );
+
+      $entity     = $this->getOrCreateEntityOf($dataMapper, $alunoId);
+      $entity->setOptions($data);
+
+      $result = $this->saveEntity($dataMapper, $entity);
+    }
+
+    return $result;
   }
 
 
@@ -252,7 +292,7 @@ class AlunoController extends ApiCoreController
     $aluno->ref_idpes               = $this->getRequest()->pessoa_id;
     $aluno->ref_cod_aluno_beneficio = $this->getRequest()->beneficio_id;
     $aluno->ref_cod_religiao        = $this->getRequest()->religiao_id;
-    $aluno->analfabeto              = ! is_null($this->getRequest()->alfabetizado) ? 0 : 1;
+    $aluno->analfabeto              = $this->getRequest()->alfabetizado ? 1 : 0;
     $aluno->tipo_responsavel        = $tiposResponsavel[$this->getRequest()->tipo_responsavel];
     $aluno->ref_usuario_exc         = $this->getSession()->id_pessoa;
 
@@ -286,6 +326,7 @@ class AlunoController extends ApiCoreController
       $aluno['tipo_responsavel'] = $tiposResponsavel[$aluno['tipo_responsavel']];
       $aluno['responsavel_id']   = $this->loadResponsavel();
       $aluno['alfabetizado']     = $aluno['analfabeto'] == 1;
+      $aluno['inep_id']          = $this->loadInepId($id);
 
       unset($aluno['analfabeto']);
 
@@ -300,7 +341,7 @@ class AlunoController extends ApiCoreController
       if (is_numeric($id)) {
         $this->updateResponsavel();
         $this->createOrUpdateTransporte($id);
-        // #TODO set codigo_inep
+        $this->createUpdateOrDestoyInepId($id);
 
         $this->messenger->append('Cadastrado realizado com sucesso', 'success', false, 'error');
       }
@@ -317,8 +358,7 @@ class AlunoController extends ApiCoreController
     if ($this->canPut() && $this->createOrUpdateAluno($id)) {
       $this->updateResponsavel();
       $this->createOrUpdateTransporte($id);
-
-      // #TODO set codigo_inep
+      $this->createUpdateOrDestoyInepId($id);
 
       $this->messenger->append('Cadastro alterado com sucesso', 'success', false, 'error');
     }
