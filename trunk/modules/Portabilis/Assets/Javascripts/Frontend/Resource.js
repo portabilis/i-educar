@@ -83,15 +83,18 @@ var resourceOptions = {
     var onClickSubmitEvent = function(event) {
       if (validatesPresenseOfValueInRequiredFields()) {
         var urlBuilder;
+        var additionalVars = {};
 
         if (resourceOptions.isNew())
           urlBuilder = postResourceUrlBuilder;
-        else
+        else {
           urlBuilder = putResourceUrlBuilder;
+          additionalVars.id = resourceOptions.id();
+        }
 
         submitOptions.url = urlBuilder.buildUrl(resourceOptions.get('apiUrlBase')(),
                                                 resourceOptions.get('name')(),
-                                                {});
+                                                additionalVars);
 
         // #TODO alterar texto $submitButton para Aguarde... enquanto estiver enviando ?
         resourceOptions.form.submit();
@@ -101,7 +104,7 @@ var resourceOptions = {
 
     function handleSuccess(dataResponse) {
       try {
-        handleMessages(dataResponse.msgs);
+        handleMessages(dataResponse.msgs, 'btn_enviar');
 
         if(! dataResponse.any_error_msg && ! dataResponse[resourceOptions.get('name')()] && ! dataResponse.id)
           throw new Error('A API não retornou o recurso nem seu id.');

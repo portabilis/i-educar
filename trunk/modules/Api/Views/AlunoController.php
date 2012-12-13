@@ -160,16 +160,12 @@ class AlunoController extends ApiCoreController
   protected function canPost() {
     return $this->_canChange() &&
            $this->validatesUniquenessOfAlunoByPessoaId();
-
-           // #TODO continuar validando
   }
 
 
   protected function canPut() {
     return $this->_canChange() &&
            $this->validatesAlunoId();
-
-           // #TODO continuar validando
   }
 
 
@@ -240,9 +236,9 @@ class AlunoController extends ApiCoreController
 
 
   protected function updateResponsavel() {
-    $pessoa                         = new clsFisica();
-    $pessoa->idpes                  = $this->getRequest()->pessoa_id;
-    $pessoa->idpes_responsavel      = $this->getRequest()->responsavel_id;
+    $pessoa                    = new clsFisica();
+    $pessoa->idpes             = $this->getRequest()->pessoa_id;
+    $pessoa->idpes_responsavel = $this->getRequest()->responsavel_id;
 
     return $pessoa->edita();
   }
@@ -258,6 +254,7 @@ class AlunoController extends ApiCoreController
     $aluno->ref_cod_religiao        = $this->getRequest()->religiao_id;
     $aluno->analfabeto              = ! is_null($this->getRequest()->alfabetizado) ? 0 : 1;
     $aluno->tipo_responsavel        = $tiposResponsavel[$this->getRequest()->tipo_responsavel];
+    $aluno->ref_usuario_exc         = $this->getSession()->id_pessoa;
 
     return (is_null($id) ? $aluno->cadastra() : $aluno->edita());
   }
@@ -300,28 +297,36 @@ class AlunoController extends ApiCoreController
     if ($this->canPost()) {
       $id = $this->createOrUpdateAluno();
 
-      $this->updateResponsavel();
-      $this->createOrUpdateTransporte($id);
+      if (is_numeric($id)) {
+        $this->updateResponsavel();
+        $this->createOrUpdateTransporte($id);
+        // #TODO set codigo_inep
 
-      // #TODO set codigo_inep / codigo_rede_ensino_estadual
-
-      if (is_numeric($id))
-        $this->messenger->append('Aluno cadastrado com sucesso', 'success');
+        $this->messenger->append('Cadastrado realizado com sucesso', 'success', false, 'error');
+      }
       else
         $this->messenger->append('Aparentemente o aluno não pode ser cadastrado, por favor, verifique.');
-
-      return array('id' => $id);
     }
+
+    return array('id' => $id);
   }
 
   protected function put() {
-    $aluno = array();
+    $id = $this->getRequest()->id;
 
-    if ($this->canPut()) {
-      // TODO do somenthing
+    if ($this->canPut() && $this->createOrUpdateAluno($id)) {
+      $this->updateResponsavel();
+      $this->createOrUpdateTransporte($id);
+
+      // #TODO set codigo_inep
+
+      $this->messenger->append('Cadastro alterado com sucesso', 'success', false, 'error');
     }
+    else
+      $this->messenger->append('Aparentemente o aluno não pode ser alterado, por favor, verifique.',
+                               'error', false, 'error');
 
-    return $aluno;
+    return array('id' => $id);
   }
 
 

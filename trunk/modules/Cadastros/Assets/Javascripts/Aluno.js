@@ -1,21 +1,21 @@
 // ajax
 
 resourceOptions.handleGet = function(dataResponse) {
-    handleMessages(dataResponse.msgs);
+  handleMessages(dataResponse.msgs);
 
-    getPersonDetails(dataResponse.pessoa_id);
+  getPersonDetails(dataResponse.pessoa_id);
 
-    $j('#id').val(dataResponse.id);
-    $j('#tipo_responsavel').val(dataResponse.tipo_responsavel).change();
-    $j('#religiao_id').val(dataResponse.religiao_id);
-    $j('#beneficio_id').val(dataResponse.beneficio_id);
-    $j('#tipo_transporte').val(dataResponse.tipo_transporte);
-    $j('#alfabetizado').attr('checked', dataResponse.alfabetizado);
+  $j('#id').val(dataResponse.id);
+  $j('#tipo_responsavel').val(dataResponse.tipo_responsavel).change();
+  $j('#religiao_id').val(dataResponse.religiao_id);
+  $j('#beneficio_id').val(dataResponse.beneficio_id);
+  $j('#tipo_transporte').val(dataResponse.tipo_transporte);
+  $j('#alfabetizado').attr('checked', dataResponse.alfabetizado);
 };
 
 var clearPersonDetails = function() {
   $j('#pessoa_id').val('');
-  $j('#pessoa_nome').val('');
+  //$j('#pessoa_nome').val('');
   $j('#pai').val('');
   $j('#mae').val('');
   $j('#responsavel_nome').val('');

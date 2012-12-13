@@ -93,12 +93,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     ),
 
     'id' => array(
-      'label'  => 'C&oacutedigo rede de ensino municipal',
-      'help'   => '',
-    ),
-
-    'codigo_rede_ensino_estadual' => array(
-      'label'  => 'C&oacutedigo rede de ensino estadual',
+      'label'  => 'C&oacutedigo aluno',
       'help'   => '',
     ),
 
@@ -141,7 +136,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     // cpf
     //$options = array('label' => $this->_getLabel('cpf'), 'disabled' => true, 'required' => false);
     //$this->inputsHelper()->textInput('aluno', 'cpf', $options);
-
 
     // pai
     $options = array('label' => $this->_getLabel('pai'), 'disabled' => true, 'required' => false, 'size' => 68);
@@ -209,11 +203,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $options = array('label'    => $this->_getLabel('id'), 'disabled' => true,
                      'required' => false, 'size' => 25);
     $this->inputsHelper()->textInput('id', $options);
-
-
-    // código rede de ensino estadual
-    $options = array('label' => $this->_getLabel('codigo_rede_ensino_estadual'), 'required' => false, 'size' => 25);
-    $this->inputsHelper()->textInput('codigo_rede_ensino_estadual', $options);
 
 
     // código inep
