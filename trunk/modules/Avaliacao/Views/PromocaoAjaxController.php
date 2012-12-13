@@ -1018,7 +1018,8 @@ class PromocaoAjaxController extends Core_Controller_Page_EditController
       return true;
       }
       catch (Exception $e){
-        $this->appendMsg('Exception ao instanciar serviço boletim: ' . $e->getMessage(), 'error', $encodeToUtf8 = true);
+        $this->appendMsg("Exception ao instanciar serviço boletim (matricula $matriculaId): " .
+                          $e->getMessage(), 'error', $encodeToUtf8 = true);
       }
     }
     return false;

@@ -19,11 +19,17 @@
 	<parameter name="curso" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
-	<parameter name="dt_inicial" class="java.lang.String">
+	<parameter name="serie" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="turma" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="data_inicial" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="dt_final" class="java.lang.String">
+	<parameter name="data_final" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<parameter name="logo" class="java.lang.String"/>
@@ -154,7 +160,7 @@ to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
         matricula.ref_ref_cod_escola = turma.ref_ref_cod_escola AND
         matricula.ref_ref_cod_serie = turma.ref_ref_cod_serie AND
         matricula.ref_cod_curso = turma.ref_cod_curso AND
-        (date(matricula.data_cadastro) < (substr($P{dt_inicial},7,10) || '-' || substr($P{dt_inicial},4,2) || '-' || substr($P{dt_inicial},1,2)))) as qtd_matr_masc,
+        (date(matricula.data_cadastro) < (substr($P{data_inicial},7,10) || '-' || substr($P{data_inicial},4,2) || '-' || substr($P{data_inicial},1,2)))) as qtd_matr_masc,
 
 (select count(*)
    from pmieducar.aluno,
@@ -175,8 +181,8 @@ to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
         matricula.ref_ref_cod_escola = turma.ref_ref_cod_escola AND
         matricula.ref_ref_cod_serie = turma.ref_ref_cod_serie AND
         matricula.ref_cod_curso = turma.ref_cod_curso AND
-(date(matricula.data_cadastro) >= (substr($P{dt_inicial},7,10) || '-' || substr($P{dt_inicial},4,2) || '-' || substr($P{dt_inicial},1,2))) AND
-(date(matricula.data_cadastro) <= (substr($P{dt_final},7,10) || '-' || substr($P{dt_final},4,2) || '-' || substr($P{dt_final},1,2)))) as total_matr_masc,
+(date(matricula.data_cadastro) >= (substr($P{data_inicial},7,10) || '-' || substr($P{data_inicial},4,2) || '-' || substr($P{data_inicial},1,2))) AND
+(date(matricula.data_cadastro) <= (substr($P{data_final},7,10) || '-' || substr($P{data_final},4,2) || '-' || substr($P{data_final},1,2)))) as total_matr_masc,
 
 (select count(*)
    from pmieducar.aluno,
@@ -197,7 +203,7 @@ to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
         matricula.ref_ref_cod_escola = turma.ref_ref_cod_escola AND
         matricula.ref_ref_cod_serie = turma.ref_ref_cod_serie AND
         matricula.ref_cod_curso = turma.ref_cod_curso AND
-        (date(matricula.data_cadastro) < (substr($P{dt_inicial},7,10) || '-' || substr($P{dt_inicial},4,2) || '-' || substr($P{dt_inicial},1,2)))) as qtd_matr_femi,
+        (date(matricula.data_cadastro) < (substr($P{data_inicial},7,10) || '-' || substr($P{data_inicial},4,2) || '-' || substr($P{data_inicial},1,2)))) as qtd_matr_femi,
 
 (select count(*)
    from pmieducar.aluno,
@@ -218,8 +224,8 @@ to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
         matricula.ref_ref_cod_escola = turma.ref_ref_cod_escola AND
         matricula.ref_ref_cod_serie = turma.ref_ref_cod_serie AND
         matricula.ref_cod_curso = turma.ref_cod_curso AND
-(date(matricula.data_cadastro) >= (substr($P{dt_inicial},7,10) || '-' || substr($P{dt_inicial},4,2) || '-' || substr($P{dt_inicial},1,2))) AND
-(date(matricula.data_cadastro) <= (substr($P{dt_final},7,10) || '-' || substr($P{dt_final},4,2) || '-' || substr($P{dt_final},1,2)))) as total_matr_fem,
+(date(matricula.data_cadastro) >= (substr($P{data_inicial},7,10) || '-' || substr($P{data_inicial},4,2) || '-' || substr($P{data_inicial},1,2))) AND
+(date(matricula.data_cadastro) <= (substr($P{data_final},7,10) || '-' || substr($P{data_final},4,2) || '-' || substr($P{data_final},1,2)))) as total_matr_fem,
 
 
 ((select count(*)
@@ -233,7 +239,7 @@ to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
         matricula.ref_cod_aluno = aluno.cod_aluno AND
         matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
         matricula_turma.ref_cod_turma = turma.cod_turma AND
-        matricula_turma.ativo = 1 AND
+        (matricula_turma.ativo = 1 or exists( select 1 from pmieducar.transferencia_solicitacao where ref_cod_matricula_saida = matricula.cod_matricula and ativo = 1 limit 1)) and
         fisica.sexo = 'M' AND
         matricula.ativo = 1 AND
         matricula.aprovado = 4 AND
@@ -241,8 +247,8 @@ to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
         matricula.ref_ref_cod_escola = turma.ref_ref_cod_escola AND
         matricula.ref_ref_cod_serie = turma.ref_ref_cod_serie AND
         matricula.ref_cod_curso = turma.ref_cod_curso AND
-(date(matricula.data_cadastro) >= (substr($P{dt_inicial},7,10) || '-' || substr($P{dt_inicial},4,2) || '-' || substr($P{dt_inicial},1,2))) AND
-(date(matricula.data_cadastro) <= (substr($P{dt_final},7,10) || '-' || substr($P{dt_final},4,2) || '-' || substr($P{dt_final},1,2)))) +
+(date(matricula.data_cadastro) >= (substr($P{data_inicial},7,10) || '-' || substr($P{data_inicial},4,2) || '-' || substr($P{data_inicial},1,2))) AND
+(date(matricula.data_cadastro) <= (substr($P{data_final},7,10) || '-' || substr($P{data_final},4,2) || '-' || substr($P{data_final},1,2)))) +
 (select count(*)
    from pmieducar.aluno,
         cadastro.fisica,
@@ -254,7 +260,7 @@ to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
         matricula.ref_cod_aluno = aluno.cod_aluno AND
         matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
         matricula_turma.ref_cod_turma = turma.cod_turma AND
-        matricula_turma.ativo = 1 AND
+        (matricula_turma.ativo = 1 or exists( select 1 from pmieducar.transferencia_solicitacao where ref_cod_matricula_saida = matricula.cod_matricula and ativo = 1 limit 1)) and
         fisica.sexo = 'M' AND
         matricula.ativo = 1 AND
         matricula.aprovado = 4 AND
@@ -262,7 +268,7 @@ to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
         matricula.ref_ref_cod_escola = turma.ref_ref_cod_escola AND
         matricula.ref_ref_cod_serie = turma.ref_ref_cod_serie AND
         matricula.ref_cod_curso = turma.ref_cod_curso AND
-(date(matricula.data_cadastro) < (substr($P{dt_inicial},7,10) || '-' || substr($P{dt_inicial},4,2) || '-' || substr($P{dt_inicial},1,2))))) as qtd_tran_masc,
+(date(matricula.data_cadastro) < (substr($P{data_inicial},7,10) || '-' || substr($P{data_inicial},4,2) || '-' || substr($P{data_inicial},1,2))))) as qtd_tran_masc,
 
 ((select count(*)
    from pmieducar.aluno,
@@ -275,7 +281,7 @@ to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
         matricula.ref_cod_aluno = aluno.cod_aluno AND
         matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
         matricula_turma.ref_cod_turma = turma.cod_turma AND
-        matricula_turma.ativo = 1 AND
+        (matricula_turma.ativo = 1 or exists( select 1 from pmieducar.transferencia_solicitacao where ref_cod_matricula_saida = matricula.cod_matricula and ativo = 1 limit 1)) and
         fisica.sexo = 'F' AND
         matricula.ativo = 1 AND
         matricula.aprovado = 4 AND
@@ -283,8 +289,8 @@ to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
         matricula.ref_ref_cod_escola = turma.ref_ref_cod_escola AND
         matricula.ref_ref_cod_serie = turma.ref_ref_cod_serie AND
         matricula.ref_cod_curso = turma.ref_cod_curso AND
-(date(matricula.data_cadastro) >= (substr($P{dt_inicial},7,10) || '-' || substr($P{dt_inicial},4,2) || '-' || substr($P{dt_inicial},1,2))) AND
-(date(matricula.data_cadastro) <= (substr($P{dt_final},7,10) || '-' || substr($P{dt_final},4,2) || '-' || substr($P{dt_final},1,2)))) +
+(date(matricula.data_cadastro) >= (substr($P{data_inicial},7,10) || '-' || substr($P{data_inicial},4,2) || '-' || substr($P{data_inicial},1,2))) AND
+(date(matricula.data_cadastro) <= (substr($P{data_final},7,10) || '-' || substr($P{data_final},4,2) || '-' || substr($P{data_final},1,2)))) +
 
 (select count(*)
    from pmieducar.aluno,
@@ -297,7 +303,7 @@ to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
         matricula.ref_cod_aluno = aluno.cod_aluno AND
         matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
         matricula_turma.ref_cod_turma = turma.cod_turma AND
-        matricula_turma.ativo = 1 AND
+        (matricula_turma.ativo = 1 or exists( select 1 from pmieducar.transferencia_solicitacao where ref_cod_matricula_saida = matricula.cod_matricula and ativo = 1 limit 1)) and
         fisica.sexo = 'F' AND
         matricula.ativo = 1 AND
         matricula.aprovado = 4 AND
@@ -305,7 +311,7 @@ to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
         matricula.ref_ref_cod_escola = turma.ref_ref_cod_escola AND
         matricula.ref_ref_cod_serie = turma.ref_ref_cod_serie AND
         matricula.ref_cod_curso = turma.ref_cod_curso AND
-(date(matricula.data_cadastro) < (substr($P{dt_inicial},7,10) || '-' || substr($P{dt_inicial},4,2) || '-' || substr($P{dt_inicial},1,2))))) as qtd_tran_femi,
+(date(matricula.data_cadastro) < (substr($P{data_inicial},7,10) || '-' || substr($P{data_inicial},4,2) || '-' || substr($P{data_inicial},1,2))))) as qtd_tran_femi,
 
 ((select count(*)
    from pmieducar.aluno,
@@ -326,8 +332,8 @@ to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
         matricula.ref_ref_cod_escola = turma.ref_ref_cod_escola AND
         matricula.ref_ref_cod_serie = turma.ref_ref_cod_serie AND
         matricula.ref_cod_curso = turma.ref_cod_curso AND
-(date(matricula.data_cadastro) >= (substr($P{dt_inicial},7,10) || '-' || substr($P{dt_inicial},4,2) || '-' || substr($P{dt_inicial},1,2))) AND
-(date(matricula.data_cadastro) <= (substr($P{dt_final},7,10) || '-' || substr($P{dt_final},4,2) || '-' || substr($P{dt_final},1,2)))) +
+(date(matricula.data_cadastro) >= (substr($P{data_inicial},7,10) || '-' || substr($P{data_inicial},4,2) || '-' || substr($P{data_inicial},1,2))) AND
+(date(matricula.data_cadastro) <= (substr($P{data_final},7,10) || '-' || substr($P{data_final},4,2) || '-' || substr($P{data_final},1,2)))) +
 (select count(*)
    from pmieducar.aluno,
         cadastro.fisica,
@@ -347,7 +353,7 @@ to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
         matricula.ref_ref_cod_escola = turma.ref_ref_cod_escola AND
         matricula.ref_ref_cod_serie = turma.ref_ref_cod_serie AND
         matricula.ref_cod_curso = turma.ref_cod_curso AND
-(date(matricula.data_cadastro) < (substr($P{dt_inicial},7,10) || '-' || substr($P{dt_inicial},4,2) || '-' || substr($P{dt_inicial},1,2))))) as qtd_aban_masc,
+(date(matricula.data_cadastro) < (substr($P{data_inicial},7,10) || '-' || substr($P{data_inicial},4,2) || '-' || substr($P{data_inicial},1,2))))) as qtd_aban_masc,
 
 ((select count(*)
    from pmieducar.aluno,
@@ -368,8 +374,8 @@ to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
         matricula.ref_ref_cod_escola = turma.ref_ref_cod_escola AND
         matricula.ref_ref_cod_serie = turma.ref_ref_cod_serie AND
         matricula.ref_cod_curso = turma.ref_cod_curso AND
-(date(matricula.data_cadastro) >= (substr($P{dt_inicial},7,10) || '-' || substr($P{dt_inicial},4,2) || '-' || substr($P{dt_inicial},1,2))) AND
-(date(matricula.data_cadastro) <= (substr($P{dt_final},7,10) || '-' || substr($P{dt_final},4,2) || '-' || substr($P{dt_final},1,2)))) +
+(date(matricula.data_cadastro) >= (substr($P{data_inicial},7,10) || '-' || substr($P{data_inicial},4,2) || '-' || substr($P{data_inicial},1,2))) AND
+(date(matricula.data_cadastro) <= (substr($P{data_final},7,10) || '-' || substr($P{data_final},4,2) || '-' || substr($P{data_final},1,2)))) +
 (select count(*)
    from pmieducar.aluno,
         cadastro.fisica,
@@ -389,7 +395,7 @@ to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
         matricula.ref_ref_cod_escola = turma.ref_ref_cod_escola AND
         matricula.ref_ref_cod_serie = turma.ref_ref_cod_serie AND
         matricula.ref_cod_curso = turma.ref_cod_curso AND
-(date(matricula.data_cadastro) < (substr($P{dt_inicial},7,10) || '-' || substr($P{dt_inicial},4,2) || '-' || substr($P{dt_inicial},1,2))))) as qtd_aban_femi,
+(date(matricula.data_cadastro) < (substr($P{data_inicial},7,10) || '-' || substr($P{data_inicial},4,2) || '-' || substr($P{data_inicial},1,2))))) as qtd_aban_femi,
 
 
 (select count(*)
@@ -411,8 +417,8 @@ to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
         matricula.ref_ref_cod_escola = turma.ref_ref_cod_escola AND
         matricula.ref_ref_cod_serie = turma.ref_ref_cod_serie AND
         matricula.ref_cod_curso = turma.ref_cod_curso AND
-(date(matricula.data_cadastro) >= (substr($P{dt_inicial},7,10) || '-' || substr($P{dt_inicial},4,2) || '-' || substr($P{dt_inicial},1,2))) AND
-(date(matricula.data_cadastro) <= (substr($P{dt_final},7,10) || '-' || substr($P{dt_final},4,2) || '-' || substr($P{dt_final},1,2)))) as qtd_admitidos_masc,
+(date(matricula.data_cadastro) >= (substr($P{data_inicial},7,10) || '-' || substr($P{data_inicial},4,2) || '-' || substr($P{data_inicial},1,2))) AND
+(date(matricula.data_cadastro) <= (substr($P{data_final},7,10) || '-' || substr($P{data_final},4,2) || '-' || substr($P{data_final},1,2)))) as qtd_admitidos_masc,
 
 (select count(*)
    from pmieducar.aluno,
@@ -433,8 +439,8 @@ to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
         matricula.ref_ref_cod_escola = turma.ref_ref_cod_escola AND
         matricula.ref_ref_cod_serie = turma.ref_ref_cod_serie AND
         matricula.ref_cod_curso = turma.ref_cod_curso AND
-(date(matricula.data_cadastro) >= (substr($P{dt_inicial},7,10) || '-' || substr($P{dt_inicial},4,2) || '-' || substr($P{dt_inicial},1,2))) AND
-(date(matricula.data_cadastro) <= (substr($P{dt_final},7,10) || '-' || substr($P{dt_final},4,2) || '-' || substr($P{dt_final},1,2)))) as qtd_admitidos_femin,
+(date(matricula.data_cadastro) >= (substr($P{data_inicial},7,10) || '-' || substr($P{data_inicial},4,2) || '-' || substr($P{data_inicial},1,2))) AND
+(date(matricula.data_cadastro) <= (substr($P{data_final},7,10) || '-' || substr($P{data_final},4,2) || '-' || substr($P{data_final},1,2)))) as qtd_admitidos_femin,
 
 
 (select count(*)
@@ -456,8 +462,8 @@ to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
         matricula.ref_ref_cod_escola = turma.ref_ref_cod_escola AND
         matricula.ref_ref_cod_serie = turma.ref_ref_cod_serie AND
         matricula.ref_cod_curso = turma.ref_cod_curso AND
-(date(matricula.data_cadastro) >= (substr($P{dt_inicial},7,10) || '-' || substr($P{dt_inicial},4,2) || '-' || substr($P{dt_inicial},1,2))) AND
-(date(matricula.data_cadastro) <= (substr($P{dt_final},7,10) || '-' || substr($P{dt_final},4,2) || '-' || substr($P{dt_final},1,2)))) as qtd_aprovado_masc,
+(date(matricula.data_cadastro) >= (substr($P{data_inicial},7,10) || '-' || substr($P{data_inicial},4,2) || '-' || substr($P{data_inicial},1,2))) AND
+(date(matricula.data_cadastro) <= (substr($P{data_final},7,10) || '-' || substr($P{data_final},4,2) || '-' || substr($P{data_final},1,2)))) as qtd_aprovado_masc,
 
 (select count(*)
    from pmieducar.aluno,
@@ -478,8 +484,8 @@ to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
         matricula.ref_ref_cod_escola = turma.ref_ref_cod_escola AND
         matricula.ref_ref_cod_serie = turma.ref_ref_cod_serie AND
         matricula.ref_cod_curso = turma.ref_cod_curso AND
-(date(matricula.data_cadastro) >= (substr($P{dt_inicial},7,10) || '-' || substr($P{dt_inicial},4,2) || '-' || substr($P{dt_inicial},1,2))) AND
-(date(matricula.data_cadastro) <= (substr($P{dt_final},7,10) || '-' || substr($P{dt_final},4,2) || '-' || substr($P{dt_final},1,2)))) as qtd_aprovado_fem,
+(date(matricula.data_cadastro) >= (substr($P{data_inicial},7,10) || '-' || substr($P{data_inicial},4,2) || '-' || substr($P{data_inicial},1,2))) AND
+(date(matricula.data_cadastro) <= (substr($P{data_final},7,10) || '-' || substr($P{data_final},4,2) || '-' || substr($P{data_final},1,2)))) as qtd_aprovado_fem,
 
 (select count(*)
    from pmieducar.aluno,
@@ -500,8 +506,8 @@ to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
         matricula.ref_ref_cod_escola = turma.ref_ref_cod_escola AND
         matricula.ref_ref_cod_serie = turma.ref_ref_cod_serie AND
         matricula.ref_cod_curso = turma.ref_cod_curso AND
-(date(matricula.data_cadastro) >= (substr($P{dt_inicial},7,10) || '-' || substr($P{dt_inicial},4,2) || '-' || substr($P{dt_inicial},1,2))) AND
-(date(matricula.data_cadastro) <= (substr($P{dt_final},7,10) || '-' || substr($P{dt_final},4,2) || '-' || substr($P{dt_final},1,2)))) as qtd_reprovado_masc,
+(date(matricula.data_cadastro) >= (substr($P{data_inicial},7,10) || '-' || substr($P{data_inicial},4,2) || '-' || substr($P{data_inicial},1,2))) AND
+(date(matricula.data_cadastro) <= (substr($P{data_final},7,10) || '-' || substr($P{data_final},4,2) || '-' || substr($P{data_final},1,2)))) as qtd_reprovado_masc,
 
 (select count(*)
    from pmieducar.aluno,
@@ -522,8 +528,8 @@ to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
         matricula.ref_ref_cod_escola = turma.ref_ref_cod_escola AND
         matricula.ref_ref_cod_serie = turma.ref_ref_cod_serie AND
         matricula.ref_cod_curso = turma.ref_cod_curso AND
-(date(matricula.data_cadastro) >= (substr($P{dt_inicial},7,10) || '-' || substr($P{dt_inicial},4,2) || '-' || substr($P{dt_inicial},1,2))) AND
-(date(matricula.data_cadastro) <= (substr($P{dt_final},7,10) || '-' || substr($P{dt_final},4,2) || '-' || substr($P{dt_final},1,2)))) as qtd_reprovado_fem,
+(date(matricula.data_cadastro) >= (substr($P{data_inicial},7,10) || '-' || substr($P{data_inicial},4,2) || '-' || substr($P{data_inicial},1,2))) AND
+(date(matricula.data_cadastro) <= (substr($P{data_final},7,10) || '-' || substr($P{data_final},4,2) || '-' || substr($P{data_final},1,2)))) as qtd_reprovado_fem,
 
 (SELECT ps.nome
    FROM cadastro.pessoa ps,
@@ -555,19 +561,31 @@ to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
        instituicao.cod_instituicao = $P{instituicao} AND
        escola.cod_escola = $P{escola} AND
        curso.cod_curso = $P{curso}  AND
-       escola_serie.ref_cod_escola = escola.cod_escola AND
-       escola_serie.ref_cod_serie = serie.cod_serie AND
-       escola_curso.ref_cod_curso = curso.cod_curso AND
-       escola_curso.ref_cod_escola = escola.cod_escola AND
-       escola.ref_cod_instituicao = instituicao.cod_instituicao AND
+       escola_ano_letivo.ref_cod_escola = escola.cod_escola AND
+       escola.ativo = 1 AND
+       instituicao.ativo = 1 AND
        turma.ref_ref_cod_escola = escola_serie.ref_cod_escola and
        turma.ref_ref_cod_serie = escola_serie.ref_cod_serie AND
        turma.ref_cod_curso = curso.cod_curso AND
        turma.ativo = 1 AND
        turma.ref_cod_instituicao = instituicao.cod_instituicao AND
-       escola_ano_letivo.ref_cod_escola = escola.cod_escola AND
-       escola.ativo = 1 AND
-       instituicao.ativo = 1
+       escola_serie.ref_cod_escola = escola.cod_escola AND
+       escola_serie.ref_cod_serie = serie.cod_serie AND
+       escola_curso.ref_cod_curso = curso.cod_curso AND
+       escola_curso.ref_cod_escola = escola.cod_escola AND
+       escola.ref_cod_instituicao = instituicao.cod_instituicao AND
+       (SELECT CASE WHEN $P{serie} = 0 THEN
+                  escola_serie.ref_cod_serie = serie.cod_serie
+               ELSE
+                   escola_serie.ref_cod_serie = serie.cod_serie AND
+	         serie.cod_serie = $P{serie}
+               END)	AND
+
+       (SELECT CASE WHEN $P{turma} = 0 THEN
+                  turma.ref_ref_cod_escola = escola_serie.ref_cod_escola
+               ELSE
+                  turma.cod_turma = $P{turma}
+               END)
 
 order by nm_serie, nm_turma]]>
 	</queryString>
@@ -656,16 +674,16 @@ order by nm_serie, nm_turma]]>
 		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
 	</variable>
 	<variable name="soma10" class="java.lang.Integer" calculation="Sum">
-		<variableExpression><![CDATA[(($F{qtd_matr_masc} + $F{qtd_admitidos_masc}) - ($F{qtd_tran_masc} + $F{qtd_aban_masc}))]]></variableExpression>
+		<variableExpression><![CDATA[((($F{qtd_matr_masc} + $F{qtd_admitidos_masc}) - $F{qtd_tran_masc}) - $F{qtd_aban_masc})]]></variableExpression>
 		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
 	</variable>
 	<variable name="soma11" class="java.lang.Integer" calculation="Sum">
-		<variableExpression><![CDATA[(($F{qtd_matr_femi} + $F{qtd_admitidos_femin}) - ($F{qtd_tran_femi} + $F{qtd_aban_femi}))]]></variableExpression>
+		<variableExpression><![CDATA[((($F{qtd_matr_femi} + $F{qtd_admitidos_femin}) - $F{qtd_tran_femi}) - $F{qtd_aban_femi})]]></variableExpression>
 		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
 	</variable>
 	<variable name="soma12" class="java.lang.Integer" calculation="Sum">
-		<variableExpression><![CDATA[((($F{qtd_matr_masc} + $F{qtd_admitidos_masc}) - ($F{qtd_tran_masc} + $F{qtd_aban_masc})) +
-(($F{qtd_matr_femi} + $F{qtd_admitidos_femin}) - ($F{qtd_tran_femi} + $F{qtd_aban_femi})))]]></variableExpression>
+		<variableExpression><![CDATA[(((($F{qtd_matr_masc} + $F{qtd_admitidos_masc}) - $F{qtd_tran_masc}) - $F{qtd_aban_masc}) +
+((($F{qtd_matr_femi} + $F{qtd_admitidos_femin}) - $F{qtd_tran_femi}) - $F{qtd_aban_femi}))]]></variableExpression>
 		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
 	</variable>
 	<variable name="soma13" class="java.lang.Integer" calculation="Sum">
@@ -736,7 +754,7 @@ order by nm_serie, nm_turma]]>
 				<textFieldExpression><![CDATA[$F{nome_instituicao}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="7821224c-fed6-439a-8df4-7dd6d2fc73eb" x="501" y="-64" width="83" height="13"/>
+				<reportElement uuid="7821224c-fed6-439a-8df4-7dd6d2fc73eb" x="501" y="-70" width="83" height="13"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
@@ -1163,14 +1181,14 @@ order by nm_serie, nm_turma]]>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[(($F{qtd_matr_masc} + $F{qtd_admitidos_masc}) - ($F{qtd_tran_masc} + $F{qtd_aban_masc}))]]></textFieldExpression>
+				<textFieldExpression><![CDATA[((($F{qtd_matr_masc} + $F{qtd_admitidos_masc}) - $F{qtd_tran_masc}) - $F{qtd_aban_masc})]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="6f858445-7eb2-4b2d-a5ab-3196987825bb" x="546" y="2" width="28" height="13"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[(($F{qtd_matr_femi} + $F{qtd_admitidos_femin}) - ($F{qtd_tran_femi} + $F{qtd_aban_femi}))]]></textFieldExpression>
+				<textFieldExpression><![CDATA[((($F{qtd_matr_femi} + $F{qtd_admitidos_femin}) - $F{qtd_tran_femi}) - $F{qtd_aban_femi})]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="d39a60d8-0260-4d67-be11-4d5024fb3300" x="437" y="2" width="28" height="13"/>
@@ -1194,8 +1212,8 @@ order by nm_serie, nm_turma]]>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[((($F{qtd_matr_masc} + $F{qtd_admitidos_masc}) - ($F{qtd_tran_masc} + $F{qtd_aban_masc})) +
-(($F{qtd_matr_femi} + $F{qtd_admitidos_femin}) - ($F{qtd_tran_femi} + $F{qtd_aban_femi})))]]></textFieldExpression>
+				<textFieldExpression><![CDATA[(((($F{qtd_matr_masc} + $F{qtd_admitidos_masc}) - $F{qtd_tran_masc}) - $F{qtd_aban_masc}) +
+((($F{qtd_matr_femi} + $F{qtd_admitidos_femin}) - $F{qtd_tran_femi}) - $F{qtd_aban_femi}))]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement uuid="feaf3a53-fd9f-459f-a3eb-750d413e8af1" x="654" y="2" width="1" height="14"/>
@@ -1264,13 +1282,6 @@ order by nm_serie, nm_turma]]>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{soma11}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement uuid="3007ce1c-f794-48cf-b0f5-705189f04f62" x="510" y="2" width="28" height="13"/>
-				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{soma10}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="3b97cf32-de0c-4e78-8f59-3bfefc0ac624" x="402" y="2" width="28" height="13"/>
@@ -1534,6 +1545,15 @@ order by nm_serie, nm_turma]]>
   new Double(((($V{soma13} * 100) / ($V{soma13} + $V{soma15}))))
 ).replace(".",",") + "%"]]></textFieldExpression>
 			</textField>
+			<elementGroup>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="3007ce1c-f794-48cf-b0f5-705189f04f62" x="510" y="2" width="28" height="13"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{soma10}]]></textFieldExpression>
+				</textField>
+			</elementGroup>
 		</band>
 	</summary>
 </jasperReport>
