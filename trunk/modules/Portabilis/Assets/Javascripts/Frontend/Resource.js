@@ -58,6 +58,10 @@ var resourceOptions = {
 
     getResource(options);
   },
+
+  beforeSave : function () {
+    simpleSearch.validatesRequiredFields();
+  }
 };
 
 
@@ -81,6 +85,8 @@ var resourceOptions = {
 
     // submit button callbacks
     var onClickSubmitEvent = function(event) {
+      resourceOptions.beforeSave();
+
       if (validatesPresenseOfValueInRequiredFields()) {
         var urlBuilder;
         var additionalVars = {};

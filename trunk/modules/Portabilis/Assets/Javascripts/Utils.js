@@ -44,7 +44,7 @@ var optionsUtils = {
     if (typeof options == 'undefined')
       options = {};
 
-    return $j.extend(defaultOptions, options);
+    return $j.extend({}, defaultOptions, options);
   }
 }
 

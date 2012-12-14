@@ -276,11 +276,13 @@ class AlunoController extends ApiCoreController
 
 
   protected function updateResponsavel() {
-    $pessoa                    = new clsFisica();
-    $pessoa->idpes             = $this->getRequest()->pessoa_id;
-    $pessoa->idpes_responsavel = $this->getRequest()->responsavel_id;
+    if ($this->getRequest()->tipo_responsavel == 'outra_pessoa') {
+      $pessoa                    = new clsFisica();
+      $pessoa->idpes             = $this->getRequest()->pessoa_id;
+      $pessoa->idpes_responsavel = $this->getRequest()->responsavel_id;
 
-    return $pessoa->edita();
+      return $pessoa->edita();
+    }
   }
 
 

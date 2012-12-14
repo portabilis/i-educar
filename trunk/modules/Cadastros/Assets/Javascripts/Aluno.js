@@ -14,15 +14,6 @@ resourceOptions.handleGet = function(dataResponse) {
   $j('#alfabetizado').attr('checked', dataResponse.alfabetizado);
 };
 
-var clearPersonDetails = function() {
-  $j('#pessoa_id').val('');
-  //$j('#pessoa_nome').val('');
-  $j('#pai').val('');
-  $j('#mae').val('');
-  $j('#responsavel_nome').val('');
-  $j('#responsavel_id').val('');
-}
-
 var handleGetPersonDetails = function(dataResponse) {
   handleMessages(dataResponse.msgs);
 
@@ -74,6 +65,14 @@ var updatePersonDetails = function() {
     clearPersonDetails();
 }
 
+var clearPersonDetails = function() {
+  $j('#pessoa_id').val('');
+  //$j('#pessoa_nome').val('');
+  $j('#pai').val('');
+  $j('#mae').val('');
+  $j('#responsavel_nome').val('');
+  $j('#responsavel_id').val('');
+}
 
 // simple search options
 
