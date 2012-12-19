@@ -32,92 +32,33 @@
  * @version   $Id$
  */
 
-#TODO remover includes desnecessarios
-require_once 'CoreExt/View/Helper/UrlHelper.php';
-require_once 'CoreExt/View/Helper/TableHelper.php';
-require_once 'Core/Controller/Page/ListController.php';
-require_once 'App/Model/IedFinder.php';
+require_once 'Portabilis/Controller/Page/ListController.php';
 
-require_once 'include/clsDetalhe.inc.php';
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsListagem.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-
-require_once 'lib/Portabilis/View/Helper/Application.php';
-
-class ProcessamentoController extends Core_Controller_Page_ListController
+// #TODO migrar funcionalidade para novo padrão
+class ProcessamentoController extends Portabilis_Controller_Page_ListController
 {
   protected $_dataMapper = 'Avaliacao_Model_NotaAlunoDataMapper';
-  protected $_titulo   = 'Processamento histórico';
+  protected $_titulo     = 'Processamento histórico';
   protected $_processoAp = 999613;
-  protected $_formMap  = array();
-
-  protected function setVars()
-  {
-
-    $this->ref_cod_aluno = $_GET['aluno_id'];
-    $this->ref_cod_instituicao = $_GET['instituicao_id'];
-    $this->ref_cod_escola = $_GET['escola_id'];
-    $this->ref_cod_curso = $_GET['curso_id'];
-    $this->ref_cod_turma = $_GET['turma_id'];
-    $this->ref_ref_cod_serie = $this->ref_cod_serie = $_GET['serie_id'];
-    $this->ano = $_GET['ano'];
-
-    if ($this->ref_cod_aluno)
-    {
-      $nome_aluno_filtro = new clsPmieducarAluno();
-      $nome_aluno_filtro = $nome_aluno_filtro->lista($int_cod_aluno = $this->ref_cod_aluno);
-      $this->nm_aluno = $nome_aluno_filtro[0]['nome_aluno'];
-    }
-  }
-
-
-  protected function setSelectionFields()
-  {
-
-    #variaveis usadas pelo modulo /intranet/include/pmieducar/educar_campo_lista.php
-    $this->verificar_campos_obrigatorios = true;
-    $this->add_onchange_events = true;
-
-    $this->campoNumero( "ano", "Ano", date("Y"), 4, 4, true);
-    $instituicao_obrigatorio = true;
-    $get_escola = $escola_obrigatorio = true;
-    $get_curso = true;
-    $get_escola_curso_serie = true;
-    $get_turma = true;
-    $get_alunos_matriculados = true;
-    include 'include/pmieducar/educar_campo_lista.php';
-  }
-
-
-function getSelectGradeCurso(){
-
-    $db = new clsBanco();
-    $sql = "select * from pmieducar.historico_grade_curso where ativo = 1";
-    $db->Consulta($sql);
-
-    $select = "<select id='grade-curso' class='obrigatorio disable-on-search clear-on-change-curso'>";
-    $select .= "<option value=''>Selecione</option>";
-
-    while ($db->ProximoRegistro()){
-      $record = $db->Tupla();
-      $select .= "<option value='{$record['id']}'>{$record['descricao_etapa']}</option>";
-    }
-
-    $select .= '</select>';
-    return $select;
-  }
+  protected $_formMap    = array();
 
   public function Gerar()
   {
+    Portabilis_View_Helper_Application::loadStylesheet($this, '/modules/HistoricoEscolar/Static/styles/processamento.css');
 
-    $this->setVars();
-    $this->setSelectionFields();
+    Portabilis_View_Helper_Application::loadJQueryLib($this);
+    Portabilis_View_Helper_Application::loadJQueryFormLib($this);
+    Portabilis_View_Helper_Application::loadJQueryUiLib($this);
 
-    $this->rodape = "";
+    $scripts = array(
+      '/modules/Portabilis/Assets/Javascripts/Validator.js',
+      '/modules/Portabilis/Assets/Javascripts/Utils.js',
+    );
 
-    $this->largura = '100%';
+    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+
+    $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
+    $this->inputsHelper()->dynamic(array('curso', 'serie', 'turma', 'matricula'), array('required' => false));
 
     $resourceOptionsTable = "<table id='resource-options' class='styled horizontal-expand hide-on-search disable-on-apply-changes'>
 
@@ -248,13 +189,24 @@ function getSelectGradeCurso(){
 
     $this->appendOutput($resourceOptionsTable);
 
-    Portabilis_View_Helper_Application::loadJQueryLib($this);
-    Portabilis_View_Helper_Application::loadJQueryFormLib($this);
-    Portabilis_View_Helper_Application::loadJQueryUiLib($this);
-
     Portabilis_View_Helper_Application::loadJavascript($this, '/modules/HistoricoEscolar/Static/scripts/processamento.js');
-    Portabilis_View_Helper_Application::loadStylesheet($this, '/modules/HistoricoEscolar/Static/styles/processamento.css');
+  }
+
+  function getSelectGradeCurso(){
+    $db = new clsBanco();
+    $sql = "select * from pmieducar.historico_grade_curso where ativo = 1";
+    $db->Consulta($sql);
+
+    $select = "<select id='grade-curso' class='obrigatorio disable-on-search clear-on-change-curso'>";
+    $select .= "<option value=''>Selecione</option>";
+
+    while ($db->ProximoRegistro()){
+      $record = $db->Tupla();
+      $select .= "<option value='{$record['id']}'>{$record['descricao_etapa']}</option>";
+    }
+
+    $select .= '</select>';
+    return $select;
   }
 }
 ?>
-

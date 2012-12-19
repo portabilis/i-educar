@@ -32,11 +32,9 @@
  * @version   $Id$
  */
 
-require_once 'Core/Controller/Page/ListController.php';
-require_once 'lib/Portabilis/View/Helper/Application.php';
-require_once 'lib/Portabilis/View/Helper/Inputs.php';
+require_once 'Portabilis/Controller/Page/ListController.php';
 
-class EmprestimoController extends Core_Controller_Page_ListController
+class EmprestimoController extends Portabilis_Controller_Page_ListController
 {
   protected $_dataMapper = '';
   protected $_titulo   = 'Emprestimo';
@@ -46,15 +44,14 @@ class EmprestimoController extends Core_Controller_Page_ListController
   protected $_processoAp = 610;
 
   protected function setSelectionFields() {
-    $inputsHelper = new Portabilis_View_Helper_Inputs($this);
-
-    $inputsHelper->dynamicInput('instituicao', array('id' => 'instituicao_id'));
-    $inputsHelper->dynamicInput('escola',      array('id' => 'escola_id'));
-    $inputsHelper->dynamicInput('biblioteca',  array('id' => 'biblioteca_id'));
+    $this->inputsHelper()->dynamic('instituicao', array('id' => 'instituicao_id'));
+    $this->inputsHelper()->dynamic('escola',      array('id' => 'escola_id'));
+    $this->inputsHelper()->dynamic('biblioteca',  array('id' => 'biblioteca_id'));
 
     $this->campoNumero('tombo_exemplar', 'Tombo exemplar', '', 13, 13, true);
-
-    $inputsHelper->dynamicInput('bibliotecaPesquisaCliente', array(), array('hiddenInputOptions' => array('id' => 'cliente_id')));
+    $this->inputsHelper()->dynamic('bibliotecaPesquisaCliente',
+                                   array(),
+                                   array('hiddenInputOptions' => array('id' => 'cliente_id')));
   }
 
 

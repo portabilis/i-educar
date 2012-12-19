@@ -32,11 +32,9 @@
  * @version   $Id$
  */
 
-require_once 'Core/Controller/Page/ListController.php';
-require_once 'lib/Portabilis/View/Helper/Application.php';
-require_once 'lib/Portabilis/View/Helper/Inputs.php';
+require_once 'Portabilis/Controller/Page/ListController.php';
 
-class ReservaController extends Core_Controller_Page_ListController
+class ReservaController extends Portabilis_Controller_Page_ListController
 {
   protected $_dataMapper = ''; #Avaliacao_Model_NotaAlunoDataMapper';
   protected $_titulo   = 'Reserva';
@@ -46,13 +44,13 @@ class ReservaController extends Core_Controller_Page_ListController
   protected $_processoAp = 0;
 
   protected function setSelectionFields() {
-    $inputsHelper = new Portabilis_View_Helper_Inputs($this);
-
-    $inputsHelper->dynamicInput('instituicao');
-    $inputsHelper->dynamicInput('escola');
-    $inputsHelper->dynamicInput('biblioteca');
-    $inputsHelper->dynamicInput('bibliotecaPesquisaCliente');
-    $inputsHelper->dynamicInput('bibliotecaPesquisaObra');
+    $this->inputsHelper()->dynamic(array(
+      'instituicao',
+      'escola',
+      'biblioteca',
+      'bibliotecaPesquisaCliente',
+      'bibliotecaPesquisaObra'
+    ));
   }
 
 
