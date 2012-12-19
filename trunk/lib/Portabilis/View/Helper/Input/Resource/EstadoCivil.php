@@ -42,7 +42,7 @@ require_once 'lib/Portabilis/View/Helper/Input/Select.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Resource_Religiao extends Portabilis_View_Helper_Input_Select {
+class Portabilis_View_Helper_Input_Resource_EstadoCivil extends Portabilis_View_Helper_Input_Select {
 
   protected function getResourceId($id = null) {
     return $id;
@@ -52,27 +52,27 @@ class Portabilis_View_Helper_Input_Resource_Religiao extends Portabilis_View_Hel
     if (empty($resources)) {
       $resources = array();
 
-      $_resources = new clsPmieducarReligiao();
-      $_resources = $_resources->lista(null, null, null, null, null, null, null, null, 1);
+      $_resources = new clsEstadoCivil();
+      $_resources = $_resources->lista();
 
       foreach ($_resources as $resource) {
-        $resources[$resource['cod_religiao']] = $resource['nm_religiao'];
+        $resources[$resource['ideciv']] = $resource['descricao'];
       }
     }
 
     return $this->insertOption(null, "Selecione", $resources);
   }
 
-  public function religiao($options = array()) {
+  public function estadoCivil($options = array()) {
     // options
     $defaultOptions      = array('objectName' => '',
-                                 'attrName'   => 'religiao_id',
+                                 'attrName'   => 'estado_civil_id',
                                  'resources'  => array(),
                                  'options'    => array());
 
     $options             = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultInputOptions = array('label' => 'Religi&atilde;o', 'value' => $this->viewInstance->{$options['attrName']});
+    $defaultInputOptions = array('label' => 'Estado civil', 'value' => $this->viewInstance->{$options['attrName']});
     $options['options']  = $this->mergeOptions($options['options'], $defaultInputOptions);
 
     // text input

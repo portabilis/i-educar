@@ -145,15 +145,18 @@ class indice extends clsCadastro
         $this->http, $this->tipo_pessoa, $this->sexo, $this->cidade,
         $this->bairro, $this->logradouro, $this->cep, $this->idlog, $this->idbai,
         $this->idtlog, $this->sigla_uf, $this->complemento, $this->numero,
-        $this->bloco, $this->apartamento, $this->andar, $this->zona_localizacao
+        $this->bloco, $this->apartamento, $this->andar, $this->zona_localizacao, $this->estado_civil_id
       ) =
+
       $objPessoa->queryRapida(
         $this->cod_pessoa_fj, 'nome', 'cpf', 'data_nasc',  'ddd_1', 'fone_1',
         'ddd_2', 'fone_2', 'ddd_mov', 'fone_mov', 'ddd_fax', 'fone_fax', 'email',
         'url', 'tipo', 'sexo', 'cidade', 'bairro', 'logradouro', 'cep', 'idlog',
         'idbai', 'idtlog', 'sigla_uf', 'complemento', 'numero', 'bloco', 'apartamento',
-        'andar', 'zona_localizacao'
+        'andar', 'zona_localizacao', 'ideciv'
       );
+
+      $this->estado_civil_id = $this->estado_civil_id->ideciv;
 
       // Cor/Raça.
       $raca = new clsCadastroFisicaRaca($this->cod_pessoa_fj);
@@ -226,6 +229,7 @@ class indice extends clsCadastro
       $lista_sexos['F'] = 'Feminino';
       $this->campoLista('sexo', 'Sexo', $lista_sexos, $this->sexo);
 
+      $this->inputsHelper()->estadoCivil(array('required' => false));
 
       // pai, mãe
 
@@ -449,13 +453,13 @@ class indice extends clsCadastro
 
     if ($this->id_federal) {
       $objFisica = new clsFisica($idpes, $this->data_nasc, $this->sexo, FALSE,
-        FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
+        FALSE, FALSE, FALSE, $this->estado_civil_id, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
         FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
         $ref_cod_sistema, $this->id_federal);
     }
     else {
       $objFisica = new clsFisica($idpes, $this->data_nasc, $this->sexo, FALSE,
-        FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
+        FALSE, FALSE, FALSE, $this->estado_civil_id, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
         FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
         $ref_cod_sistema);
     }
@@ -548,13 +552,13 @@ class indice extends clsCadastro
     if ($this->id_federal) {
       $this->id_federal = idFederal2Int($this->id_federal);
       $objFisica = new clsFisica($this->cod_pessoa_fj, $this->data_nasc,
-        $this->sexo, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
+        $this->sexo, FALSE, FALSE, FALSE, FALSE, $this->estado_civil_id, FALSE, FALSE, FALSE,
         FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
         FALSE, FALSE, FALSE, $ref_cod_sistema, $this->id_federal);
     }
     else {
       $objFisica = new clsFisica($this->cod_pessoa_fj, $this->data_nasc,
-        $this->sexo, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
+        $this->sexo, FALSE, FALSE, FALSE, FALSE, $this->estado_civil_id, FALSE, FALSE, FALSE,
         FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
         FALSE, FALSE, FALSE, $ref_cod_sistema);
     }

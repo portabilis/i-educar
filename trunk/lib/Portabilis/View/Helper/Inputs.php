@@ -146,6 +146,9 @@ class Portabilis_View_Helper_Inputs {
     $this->resourceInput('beneficio', $this->mergeInputOptions($inputOptions, $helperOptions));
   }
 
+  public function estadoCivil($inputOptions = array(), $helperOptions = array()) {
+    $this->resourceInput('estadoCivil', $this->mergeInputOptions($inputOptions, $helperOptions));
+  }
 
   // protected methods
 

@@ -72,16 +72,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       'help'   => '',
     ),
 
-    'religiao' => array(
-      'label'  => 'Religi&atilde;o',
-      'help'   => '',
-    ),
-
-    'beneficio' => array(
-      'label'  => 'Beneficio',
-      'help'   => '',
-    ),
-
     'alfabetizado' => array(
       'label'  => 'Alfabetizado',
       'help'   => '',
@@ -183,13 +173,10 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
 
     // religião
-    $options = array('label' => $this->_getLabel('religiao'), 'required' => false);
-    $this->inputsHelper()->religiao($options);
-
+    $this->inputsHelper()->religiao(array('required' => false));
 
     // beneficio
-    $options = array('label' => $this->_getLabel('beneficio'), 'required' => false);
-    $this->inputsHelper()->beneficio($options);
+    $this->inputsHelper()->beneficio(array('required' => false));
 
 
     // alfabetizado
