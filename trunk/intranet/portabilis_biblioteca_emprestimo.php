@@ -9,8 +9,8 @@ class PortabilisBibliotecaEmprestimo extends Report
 {
   function setForm()
   {
-    $this->inputsHelper()->dynamicInput(array('instituicao', 'escola', 'biblioteca'));
-    $this->inputsHelper()->dynamicInput(array('BibliotecaPesquisaCliente', 'dataInicial','dataFinal'), array('required' => false));
+    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'biblioteca'));
+    $this->inputsHelper()->dynamic(array('BibliotecaPesquisaCliente', 'dataInicial','dataFinal'), array('required' => false));
   }
 
   function onValidationSuccess()

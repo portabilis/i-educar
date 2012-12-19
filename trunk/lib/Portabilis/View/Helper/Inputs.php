@@ -41,23 +41,6 @@
  */
 
 
-/* permite adicionar inputs de seleção dinamica ao formulário,
-   recebendo diretamente as opcoes do input, sem necessidade de passar
-   um array com um array de opções, ex:
-
-   Ao invés de:
-     $this->inputsHelper()->dynamicInput('instituicao', array('options' => array(required' => false)));
-
-   Pode-se usar:
-     $this->inputsHelper()->dynamicInput('instituicao', array(required' => false));
-
-     Ou
-     $this->inputsHelper()->dynamicInput('instituicao', array(), array('options' => array(required' => false)));
-
-     Ou
-     $this->inputsHelper()->dynamicInput(array('instituicao', 'escola', 'pesquisaAluno'));
-*/
-
 class Portabilis_View_Helper_Inputs {
 
   public function __construct($viewInstance) {
@@ -67,7 +50,23 @@ class Portabilis_View_Helper_Inputs {
 
   // dynamic inputs helper
 
-  public function dynamicInput($helperNames, $inputOptions = array(), $helperOptions = array()) {
+  /* adiciona inputs de seleção dinamica ao formulário, recebendo diretamente as opcoes do input,
+     sem necessidade de passar um array com um array de opções, ex:
+
+     Ao invés de:
+     $this->inputsHelper()->dynamic('instituicao', array('options' => array(required' => false)));
+
+     Pode-se usar:
+     $this->inputsHelper()->dynamic('instituicao', array(required' => false));
+
+     Ou
+     $this->inputsHelper()->dynamic('instituicao', array(), array('options' => array(required' => false)));
+
+     Ou
+     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'pesquisaAluno'));
+  */
+
+  public function dynamic($helperNames, $inputOptions = array(), $helperOptions = array()) {
     $options = $this->mergeInputOptions($inputOptions, $helperOptions);
 
     if (! is_array($helperNames))
@@ -85,7 +84,7 @@ class Portabilis_View_Helper_Inputs {
 
   // input helpers
 
-  public function textInput($attrNames, $inputOptions = array(), $helperOptions = array()) {
+  public function text($attrNames, $inputOptions = array(), $helperOptions = array()) {
     $options = $this->mergeInputOptions($inputOptions, $helperOptions);
 
     if (! is_array($attrNames))
@@ -97,29 +96,29 @@ class Portabilis_View_Helper_Inputs {
   }
 
 
-  public function selectInput($attrName, $inputOptions = array(), $helperOptions = array()) {
+  public function select($attrName, $inputOptions = array(), $helperOptions = array()) {
     $this->input('select', $attrName, $this->mergeInputOptions($inputOptions, $helperOptions));
   }
 
 
-  public function searchInput($attrName, $inputOptions = array(), $helperOptions = array()) {
+  public function search($attrName, $inputOptions = array(), $helperOptions = array()) {
     $this->input('search', $attrName, $this->mergeInputOptions($inputOptions, $helperOptions));
   }
 
 
-  public function hiddenInput($attrName, $inputOptions = array(), $helperOptions = array()) {
+  public function hidden($attrName, $inputOptions = array(), $helperOptions = array()) {
     $this->input('hidden', $attrName, $this->mergeInputOptions($inputOptions, $helperOptions));
   }
 
 
-  public function checkboxInput($attrName, $inputOptions = array(), $helperOptions = array()) {
+  public function checkbox($attrName, $inputOptions = array(), $helperOptions = array()) {
     $this->input('checkbox', $attrName, $this->mergeInputOptions($inputOptions, $helperOptions));
   }
 
 
   // simple search input helper
 
-  public function simpleSearchInput($objectName, $attrName, $inputOptions = array(), $helperOptions = array()) {
+  public function simpleSearch($objectName, $attrName, $inputOptions = array(), $helperOptions = array()) {
     $options = $this->mergeInputOptions($inputOptions, $helperOptions);
 
     $helperClassName = 'Portabilis_View_Helper_Input_SimpleSearch';
@@ -130,13 +129,20 @@ class Portabilis_View_Helper_Inputs {
   }
 
 
+  // simple search resource input helper
+
+  public function simpleSearchPessoa($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->simpleSearchResourceInput('simpleSearchPessoa', $attrName, $inputOptions, $helperOptions);
+  }
+
+
   // resource input helpers
 
-  public function religiaoInput($inputOptions = array(), $helperOptions = array()) {
+  public function religiao($inputOptions = array(), $helperOptions = array()) {
     $this->resourceInput('religiao', $this->mergeInputOptions($inputOptions, $helperOptions));
   }
 
-  public function beneficioInput($inputOptions = array(), $helperOptions = array()) {
+  public function beneficio($inputOptions = array(), $helperOptions = array()) {
     $this->resourceInput('beneficio', $this->mergeInputOptions($inputOptions, $helperOptions));
   }
 
@@ -157,6 +163,16 @@ class Portabilis_View_Helper_Inputs {
     $this->includeHelper($helperClassName);
     $helper = new $helperClassName($this->viewInstance, $this);
     $helper->$helperName($options);
+  }
+
+  protected function simpleSearchResourceInput($helperName, $attrName, $inputOptions = array(), $helperOptions = array()) {
+    $options = $this->mergeInputOptions($inputOptions, $helperOptions);
+
+    $helperClassName = 'Portabilis_View_Helper_Input_Resource_' . ucfirst($helperName);
+    $this->includeHelper($helperClassName);
+
+    $helper = new $helperClassName($this->viewInstance, $this);
+    $helper->$helperName($attrName, $options);
   }
 
   protected function includeHelper($helperClassName) {

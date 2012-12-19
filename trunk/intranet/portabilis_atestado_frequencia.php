@@ -9,7 +9,7 @@ class PortabilisAtestadoFrequencia extends Report
 {
   function setForm()
   {
-    $this->inputsHelper()->dynamicInput(array('ano', 'instituicao', 'escola', 'pesquisaAluno'));
+    $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola', 'pesquisaAluno'));
   }
 
   function onValidationSuccess()

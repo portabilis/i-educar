@@ -9,7 +9,7 @@ class PortabilisRelacaoAlunosSemPai extends Report
 {
   function setForm()
   {
-    $this->inputsHelper()->dynamicInput(array('ano', 'instituicao', 'escola'));
+    $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
   }
 
   function onValidationSuccess()

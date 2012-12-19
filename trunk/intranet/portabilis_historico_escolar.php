@@ -8,7 +8,7 @@ require_once("include/portabilis/report.php");
 class PortabilisHistoricoEscolarSeries extends Report
 {
   function setForm() {
-    $this->inputsHelper()->dynamicInput(array('instituicao', 'escola', 'pesquisaAluno'));
+    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'pesquisaAluno'));
   }
 
 

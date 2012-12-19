@@ -44,41 +44,72 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
  */
 class Portabilis_View_Helper_Input_SimpleSearch extends Portabilis_View_Helper_Input_Core {
 
+  protected function resourceValue($id) {
+    throw new Exception("You are trying to get the resource value, but this is a generic class, " .
+                        "please, define the method resourceValue in a resource subclass.");
+  }
+
   public function simpleSearch($objectName, $attrName, $options = array()) {
     /* #TODO adicionar opção 'dependsOn' => array()
              e via js resetar campos pesquisa quando mudar alguma dependencia e
              antes de efetuar pesquisa validar se dependencias estão com valores informados.
     */
 
+    // add placeholder option, via js
+
     $defaultOptions = array('options'            => array(),
-                            'searchPath'         => "/module/Api/" . ucwords($objectName) . "?oper=get&resource={$objectName}-search",
-                            'addHiddenInput'     => false,
-                            'hiddenInputOptions' => array(),
-                            'value'              => null);
+                            'api_module'         => ucwords($objectName),
+                            'api_resource'       => $objectName . '-search',
+                            'searchPath'         => '',
+                            'addHiddenInput'     => true,
+                            'hiddenInputOptions' => array());
 
     $options = $this->mergeOptions($options, $defaultOptions);
 
+    if (empty($options['searchPath']))
+      $options['searchPath'] = "/module/Api/" . $options['api_module'] . "?oper=get&resource=" . $options['api_resource'];
+
+
+    // load value if received an resource id
+    $resourceId = $options['hiddenInputOptions']['options']['value'];
+
+    if ($resourceId && ! $options['options']['value'])
+      $options['options']['value'] = $resourceId . " - ". $this->resourceValue($resourceId);
+
+    $this->hiddenInput($objectName, $attrName, $options);
+    $this->textInput($objectName, $attrName, $options);
+    $this->js($objectName, $attrName, $options);
+  }
+
+
+  protected function hiddenInput($objectName, $attrName, $options) {
     if ($options['addHiddenInput']) {
       if ($attrName == 'id') {
         throw new CoreExt_Exception("When \$addHiddenInput is true the \$attrName (of the visible input) " .
                                     "must be different than 'id', because the hidden input will use it.");
       }
 
-      $hiddenHelperOptions = array('objectName' => $objectName);
-      $this->inputsHelper()->hiddenInput('id', $options['hiddenInputOptions'], $hiddenHelperOptions);
+      $defaultHiddenInputOptions = array('options' => array(), 'objectName' => $objectName);
+      $hiddenInputOptions        = $this->mergeOptions($options['hiddenInputOptions'], $defaultHiddenInputOptions);
+
+      $this->inputsHelper()->hidden('id', array(), $hiddenInputOptions);
     }
+  }
 
-    $defaultInputOptions = array('value' => $options['value']);
 
-    $textInputOptions    = $this->mergeOptions($options['options'], $defaultInputOptions);
-    $textHelperOptions   = array('objectName' => $objectName);
+  protected function textInput($objectName, $attrName, $options) {
+    $textHelperOptions = array('objectName' => $objectName);
 
-    $this->inputsHelper()->textInput($attrName, $textInputOptions, $textHelperOptions);
+    $this->inputsHelper()->text($attrName, $options['options'], $textHelperOptions);
+  }
 
+
+  protected function js($objectName, $attrName, $options) {
     // load simple search js
 
     $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs.js';
     Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
+
 
     // setup simple search
 
@@ -91,7 +122,8 @@ class Portabilis_View_Helper_Input_SimpleSearch extends Portabilis_View_Helper_I
     */
     $resourceOptions = "simpleSearch" . ucwords($objectName) . "Options";
 
-    $js = "simpleSearchHelper.setup('$objectName', '$attrName', '" . $options['searchPath'] . "', $resourceOptions);";
+    $js = "$resourceOptions = typeof $resourceOptions == 'undefined' ? {} : $resourceOptions;
+           simpleSearchHelper.setup('$objectName', '$attrName', '" . $options['searchPath'] . "', $resourceOptions);";
 
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
   }

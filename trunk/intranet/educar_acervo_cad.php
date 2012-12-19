@@ -165,7 +165,7 @@ class indice extends clsCadastro
 		$this->campoOculto( "idioma", "" );
 		$this->campoOculto( "autor", "" );
 
-    $this->inputsHelper()->dynamicInput(array('instituicao', 'escola', 'biblioteca', 'bibliotecaTipoExemplar'));
+    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'biblioteca', 'bibliotecaTipoExemplar'));
 
     // Obra referência
 		$opcoes = array( "NULL" => "Selecione" );

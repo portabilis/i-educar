@@ -239,10 +239,8 @@ class AlunoController extends ApiCoreController
   protected function createUpdateOrDestoyInepId($alunoId) {
     $dataMapper = $this->getDataMapperFor('educacenso', 'aluno');
 
-    if (empty($this->getRequest()->inep_id)) {
-      $result = $entity = $this->deleteEntityOf($dataMapper, $alunoId);
-    }
-
+    if (empty($this->getRequest()->inep_id))
+      $result = $this->deleteEntityOf($dataMapper, $alunoId);
     else {
       $data = array(
         'aluno'      => $alunoId,
@@ -256,7 +254,7 @@ class AlunoController extends ApiCoreController
         'created_at' => 'NOW()',
       );
 
-      $entity     = $this->getOrCreateEntityOf($dataMapper, $alunoId);
+      $entity = $this->getOrCreateEntityOf($dataMapper, $alunoId);
       $entity->setOptions($data);
 
       $result = $this->saveEntity($dataMapper, $entity);

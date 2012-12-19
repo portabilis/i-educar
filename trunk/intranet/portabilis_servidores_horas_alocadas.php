@@ -10,8 +10,8 @@ class PortabilisRelacaoHorasServidor extends Report
   function setForm()
   {
 
-    $this->inputsHelper()->dynamicInput(array('ano', 'instituicao'));
-    $this->inputsHelper()->dynamicInput(array('escola'), array('required' => false));
+    $this->inputsHelper()->dynamic(array('ano', 'instituicao'));
+    $this->inputsHelper()->dynamic(array('escola'), array('required' => false));
 
   }
 

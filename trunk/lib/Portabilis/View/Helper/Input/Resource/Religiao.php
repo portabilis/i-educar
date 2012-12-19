@@ -82,7 +82,7 @@ class Portabilis_View_Helper_Input_Resource_Religiao extends Portabilis_View_Hel
     $textInputOptions    = $this->mergeOptions($options['options'], $defaultInputOptions);
     $textHelperOptions   = array('objectName' => $options['objectName']);
 
-    $this->inputsHelper()->selectInput($options['attrName'], $textInputOptions, $textHelperOptions);
+    $this->inputsHelper()->select($options['attrName'], $textInputOptions, $textHelperOptions);
   }
 }
 ?>

@@ -9,8 +9,8 @@ require_once 'lib/Portabilis/Date/Utils.php';
 class PortabilisRelacaoAlunosTransfAbandono extends Report {
 
   function setForm() {
-    $this->inputsHelper()->dynamicInput(array('ano' ,'instituicao'));
-    $this->inputsHelper()->dynamicInput(array('escola', 'curso', 'serie', 'dataInicial','dataFinal'), array('required' => false));
+    $this->inputsHelper()->dynamic(array('ano' ,'instituicao'));
+    $this->inputsHelper()->dynamic(array('escola', 'curso', 'serie', 'dataInicial','dataFinal'), array('required' => false));
 
     $opcoes = array(1 => 'Abandono', 2 => 'Transferido', 9 => 'Ambos');
     $this->campoLista('situacao', 'Situação', $opcoes, 9);

@@ -9,7 +9,7 @@ class PortabilisBibliotecaEditora extends Report
 {
   function setForm()
   {
-   $this->inputsHelper()->dynamicInput(array('instituicao', 'escola'));
+   $this->inputsHelper()->dynamic(array('instituicao', 'escola'));
   }
 
   function onValidationSuccess()
