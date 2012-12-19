@@ -125,26 +125,25 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $this->url_cancelar = '/intranet/educar_aluno_lst.php';
 
     // nome
-    $helperOptions = array('addHiddenInput' => true);
-    $options       = array('label'          => $this->_getLabel('pessoa'), 'size' => 68);
-    $this->inputsHelper()->simpleSearchInput('pessoa', 'nome', $options, $helperOptions);
+    $options = array('label' => $this->_getLabel('pessoa'), 'size' => 68);
+    $this->inputsHelper()->simpleSearchPessoa('nome', $options);
 
     // rg
     //$options = array('label' => $this->_getLabel('rg'), 'disabled' => true, 'required' => false);
-    //$this->inputsHelper()->textInput('aluno', 'rg', $options);
+    //$this->inputsHelper()->text('aluno', 'rg', $options);
 
     // cpf
     //$options = array('label' => $this->_getLabel('cpf'), 'disabled' => true, 'required' => false);
-    //$this->inputsHelper()->textInput('aluno', 'cpf', $options);
+    //$this->inputsHelper()->text('aluno', 'cpf', $options);
 
     // pai
     $options = array('label' => $this->_getLabel('pai'), 'disabled' => true, 'required' => false, 'size' => 68);
-    $this->inputsHelper()->textInput('pai', $options);
+    $this->inputsHelper()->text('pai', $options);
 
 
     // mãe
     $options = array('label' => $this->_getLabel('mae'), 'disabled' => true, 'required' => false, 'size' => 68);
-    $this->inputsHelper()->textInput('mae', $options);
+    $this->inputsHelper()->text('mae', $options);
 
 
     // responsável
@@ -160,29 +159,18 @@ class AlunoController extends Portabilis_Controller_Page_EditController
                      'required'  => true,
                      'inline'    => true);
 
-    $this->inputsHelper()->selectInput('tipo_responsavel', $options);
+    $this->inputsHelper()->select('tipo_responsavel', $options);
 
 
     // nome
-    $options       = array('label'          => '', 'size' => 50, 'required' => true);
-    $helperOptions = array('addHiddenInput' => true,
-                           'searchPath'     => "/module/Api/Pessoa?oper=get&resource=pessoa-search");
+    $helperOptions = array('objectName' => 'responsavel');
+    $options       = array('label' => '', 'size' => 50, 'required' => true);
 
-    $this->inputsHelper()->simpleSearchInput('responsavel', 'nome', $options, $helperOptions);
-
-
-    // religião
-    $options = array('label' => $this->_getLabel('religiao'), 'required' => false);
-    $this->inputsHelper()->religiaoInput($options);
-
-
-    // beneficio
-    $options = array('label' => $this->_getLabel('beneficio'), 'required' => false);
-    $this->inputsHelper()->beneficioInput($options);
+    $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
 
 
     // transporte publico
-    $tiposTransporte = array(null => 'Selecione',
+    $tiposTransporte = array(null        => 'Selecione',
                              'nenhum'    => 'N&atilde;o utiliza',
                              'municipal' => 'Municipal',
                              'estadual'  => 'Estadual');
@@ -191,23 +179,33 @@ class AlunoController extends Portabilis_Controller_Page_EditController
                      'resources' => $tiposTransporte,
                      'required'  => true);
 
-    $this->inputsHelper()->selectInput('tipo_transporte', $options);
+    $this->inputsHelper()->select('tipo_transporte', $options);
+
+
+    // religião
+    $options = array('label' => $this->_getLabel('religiao'), 'required' => false);
+    $this->inputsHelper()->religiao($options);
+
+
+    // beneficio
+    $options = array('label' => $this->_getLabel('beneficio'), 'required' => false);
+    $this->inputsHelper()->beneficio($options);
 
 
     // alfabetizado
     $options = array('label' => $this->_getLabel('alfabetizado'));
-    $this->inputsHelper()->checkboxInput('alfabetizado', $options);
+    $this->inputsHelper()->checkbox('alfabetizado', $options);
 
 
     // código rede de ensino municipal
     $options = array('label'    => $this->_getLabel('id'), 'disabled' => true,
                      'required' => false, 'size' => 25);
-    $this->inputsHelper()->textInput('id', $options);
+    $this->inputsHelper()->text('id', $options);
 
 
     // código inep
     $options = array('label' => $this->_getLabel('inep_id'), 'required' => false, 'size' => 25);
-    $this->inputsHelper()->textInput('inep_id', $options);
+    $this->inputsHelper()->text('inep_id', $options);
 
     $this->loadResourceAssets();
     Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Cadastros/Assets/Javascripts/Aluno.js');

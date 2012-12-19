@@ -80,9 +80,6 @@ var simpleSearchPessoaOptions = {
   autocompleteOptions : { change : updatePersonDetails, close : updatePersonDetails }
 };
 
-var simpleSearchResponsavelOptions = {};
-
-
 // when page is ready
 
 (function($) {

@@ -33,7 +33,7 @@ function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields
 
 
 function validatesIfValueIsInSet(value, targetId, set) {
-  if (hashLength(set) > 0 && set[value] == undefined) {
+  if (objectUtils.length(set) > 0 && set[value] == undefined) {
     var s = [];
 
     $j.each(set, function(index, value) {

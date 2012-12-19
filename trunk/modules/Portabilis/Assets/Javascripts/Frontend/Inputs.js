@@ -27,6 +27,9 @@ var defaultSimpleSearchOptions = {
   objectName    : undefined,
   attrName      : undefined,
   searchPath    : undefined,
+
+  // options that can be overwritten
+  placeholder   : 'Informe um valor'
 };
 
 
@@ -94,13 +97,14 @@ var simpleSearch = {
     var $input        = $j(inputId);
     var $hiddenInput  = $j(hiddenInputId);
 
+    $input.data('simple_search_options', { 'hidden_input_id' : hiddenInputId, 'search_path' : options.get('searchPath') });
+    $input.attr('placeholder', options.get('placeholder'));
+
     $hiddenInput.addClass('simple-search-id');
+    $hiddenInput.attr('data-for', $input.attr('id'));
 
     if ($input.hasClass('obrigatorio'))
       $hiddenInput.addClass('obrigatorio required');
-
-    $input.data('simple_search_options', { 'hidden_input_id' : hiddenInputId, 'search_path' : options.get('searchPath') });
-    $hiddenInput.attr('data-for', $input.attr('id'));
 
     $input.autocomplete(options.get('autocompleteOptions'));
   }

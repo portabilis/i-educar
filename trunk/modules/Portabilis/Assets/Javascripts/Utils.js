@@ -5,11 +5,16 @@ function buildId(id) {
   return typeof(id) == 'string' && id.length > 0 && id[0] != '#' ? '#' + id : id;
 }
 
+
+// console utils
+
 function safeLog(value) {
   if(typeof(console) != 'undefined' && typeof(console.log) == 'function')
     console.log(value);
 }
 
+
+// form utils
 
 function fixupFieldsWidth(){
   var maxWidth = 0;
@@ -27,6 +32,7 @@ function fixupFieldsWidth(){
     $j(value).width(maxWidth);
   });
 };
+
 
 // options (hash) utils
 
@@ -47,6 +53,59 @@ var optionsUtils = {
     return $j.extend({}, defaultOptions, options);
   }
 }
+
+// key-value object (hash) utils
+
+var objectUtils = {
+  length : function(hash) {
+    return Object.getOwnPropertyNames(hash).length;
+  },
+
+  join : function(object, glue, separator) {
+    if (glue == undefined)
+      glue = '=';
+
+    if (separator == undefined)
+      separator = ' ';
+
+    return $j.map(Object.getOwnPropertyNames(object), function(k) { return [k, object[k]].join(glue) }).join(separator)
+  },
+
+}
+
+// window utils
+
+var windowUtils = {
+
+  // open a new window, for more information see developer.mozilla.org/en-US/docs/DOM/window.open
+  open : function(url, name, options) {
+    var defaultOptions = {
+      name : 'new_window',
+      options : {},
+    };
+
+    var defaultWindowOptions = {
+      top         : 0,
+      left        : 0,
+      height      : $j(window).height(),
+      width       : $j(window).width(),
+
+      resizable   : 'yes',
+      scrollbars  : 'yes',
+
+      menubar     : 'no',
+      toolbar     : 'no',
+      location    : 'no',
+      personalbar : 'no',
+      status      : 'no',
+    };
+
+    options         = optionsUtils.merge(defaultOptions, options);
+    options.options = optionsUtils.merge(defaultWindowOptions, options.options);
+
+    window.open(url, options.name,  objectUtils.join(options.options)).focus();
+  }
+};
 
 // string utils
 
@@ -154,7 +213,7 @@ function handleMessages(messages, targetId, useDelayClassRemoval) {
   if($targetElement) {
     if (hasErrorMessages) {
       $targetElement.addClass('error').removeClass('success').removeClass('notice');
-      $targetElement.focus();
+      $targetElement.first().focus();
     }
 
     else if (hasSuccessMessages)
@@ -172,20 +231,6 @@ function handleMessages(messages, targetId, useDelayClassRemoval) {
       }, delayClassRemoval);
     }
   }
-}
-
-
-// hash utils
-
-function hashLength(hash) {
-  var len = 0;
-
-  for (var key in hash) {
-    if (hash.hasOwnProperty(key))
-      len++;
-  }
-
-  return len;
 }
 
 

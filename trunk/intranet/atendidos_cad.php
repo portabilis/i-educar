@@ -33,6 +33,8 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/pessoa/clsCadastroRaca.inc.php';
 require_once 'include/pessoa/clsCadastroFisicaRaca.inc.php';
+require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
+require_once 'lib/Portabilis/String/Utils.php';
 
 require_once 'App/Model/ZonaLocalizacao.php';
 
@@ -224,6 +226,12 @@ class indice extends clsCadastro
       $lista_sexos['F'] = 'Feminino';
       $this->campoLista('sexo', 'Sexo', $lista_sexos, $this->sexo);
 
+
+      // pai, mãe
+
+      $this->addPaiInput();
+      $this->addMaeInput();
+
       // Cor/raça.
       $opcoes_raca = array('' => 'Selecione');
       $obj_raca = new clsCadastroRaca();
@@ -400,7 +408,7 @@ class indice extends clsCadastro
 
       if ($this->cod_pessoa_fj) {
         $this->campoRotulo('documentos', '<b><i>Documentos</i></b>',
-          "<a href='#' onclick=\"openPage('adicionar_documentos_cad.php?id_pessoa={$this->cod_pessoa_fj}', '400', '400', 'yes', '10', '10'); \"><img src='imagens/nvp_bot_ad_doc.png' border='0'></a>");
+          "<a href='#' onclick=\"windowUtils.open('adicionar_documentos_cad.php?id_pessoa={$this->cod_pessoa_fj}'); \"><img src='imagens/nvp_bot_ad_doc.png' border='0'></a>");
 
         $this->campoCheck('alterado', 'Alterado', $this->alterado);
       }
@@ -642,6 +650,51 @@ class indice extends clsCadastro
     }
 
     return $raca->cadastra();
+  }
+
+  protected function loadPessoaFisica($id) {
+    $pessoa = new clsFisica($id);
+    return $pessoa->detalhe();
+  }
+
+  protected function loadAluno($id) {
+    $aluno = new clsPmieducarAluno($id);
+    return $aluno->detalhe();
+  }
+
+  protected function addPaiInput() {
+    $this->addParentsInput('pai');
+  }
+
+  protected function addMaeInput() {
+    $this->addParentsInput('mae', 'mãe');
+  }
+
+  protected function addParentsInput($parentType, $parentTypeLabel = '') {
+    if (! $parentTypeLabel)
+      $parentTypeLabel = $parentType;
+
+    if (! isset($this->_pessoaFisica))
+      $this->_pessoaFisica = $this->loadPessoaFisica($this->cod_pessoa_fj);
+
+    if (! isset($this->_aluno))
+      $this->_aluno = $this->loadAluno($this->cod_pessoa_fj);
+
+    // mostra uma dica nos casos em que foi informado apenas o nome dos pais, pela antiga interface do cadastro de alunos.
+    if (! $this->_pessoaFisica['idpes_' . $parentType] && $this->_aluno['nm_' . $parentType]) {
+      $nome      = Portabilis_String_Utils::toLatin1($this->_aluno['nm_' . $parentType], array('transform' => true, 'escape' => false));
+      $inputHint = '<b>Dica:</b> Foi informado o nome "' . $nome . '" no cadastro de aluno, tente pesquisar esta pessoa pelo CPF ou RG.';
+    }
+
+    $hiddenInputOptions = array('options' => array('value' => $this->_pessoaFisica['idpes_' . $parentType]));
+    $helperOptions      = array('objectName' => $parentType, 'hiddenInputOptions' => $hiddenInputOptions);
+
+    $options            = array('label'      => 'Pessoa ' . $parentTypeLabel,
+                                'size'       => 50,
+                                'required'   => false,
+                                'input_hint' => $inputHint);
+
+    $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
   }
 }
 
