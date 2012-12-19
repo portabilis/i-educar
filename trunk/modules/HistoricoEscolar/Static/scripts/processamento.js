@@ -1,31 +1,6 @@
 (function($){
 
   $(function(){
-
-    function safeToUpperCase(value){
-
-      if (typeof(value) == 'string')
-        value = value.toUpperCase();
-
-      return value;
-    }
-
-    function safeLog(value)
-    {
-      if(typeof(console) != 'undefined' && typeof(console.log) == 'function')
-        console.log(value);
-    }
-
-    function utf8Decode(s){
-      try{
-          return decodeURIComponent(escape(s));
-      }
-      catch(e){
-          //safeLog('Erro ao decodificar string utf8: ' + s);
-          return s;
-      }
-    }
-
     var $formFilter = $('#formcadastro');
     var $submitButton = $('#botao_busca');
     var $resultTable = $('#form_resultado .tablelistagem').addClass('horizontal-expand');
@@ -223,7 +198,7 @@
           instituicao_id : $('#ref_cod_instituicao').val(),
           escola_id : $('#ref_cod_escola').val(),
           curso_id : $('#ref_cod_curso').val(),
-          serie_id : $('#ref_ref_cod_serie').val(),
+          serie_id : $('#ref_cod_serie').val(),
           turma_id : $('#ref_cod_turma').val(),
           ano : $('#ano').val(),
           etapa : $('#etapa').val()
@@ -246,25 +221,6 @@
       changeResource($(this), postFalta, deleteFalta);
     };
 
-    function validatesIfValueIsNumeric(value, targetId){
-      var isNumeric = $.isNumeric(value);
-
-      if (! isNumeric)
-        handleMessages([{type : 'error', msg : 'Informe um numero válido.'}], targetId, true);
-
-      return isNumeric;
-    }
-
-    function validatesIfNumericValueIsInRange(value, targetId, initialRange, finalRange){
-
-      if (! $.isNumeric(value) || value < initialRange || value > finalRange)
-      {
-        handleMessages([{type : 'error', msg : 'Informe um valor entre ' + initialRange + ' e ' + finalRange}], targetId, true);
-        return false;
-      }
-      return true;
-    }
-
 
     function postResource(options, errorCallback){
       $.ajax(options).error(errorCallback);
@@ -274,7 +230,7 @@
     function updateFieldSituacao(linkToHistorico, matricula_id, situacao){
       if(situacao){
         var $fieldSituacao = $('#situacao-matricula-' + matricula_id);
-        var situacaoHistorico = utf8Decode(situacao);
+        var situacaoHistorico = safeUtf8Decode(situacao);
 
         $fieldSituacao.html(getLinkToHistorico(linkToHistorico, situacaoHistorico));
         $fieldSituacao.data('situacao_historico', situacaoHistorico);
@@ -312,59 +268,8 @@
     }
 
 
-    function handleMessages(messages, targetId, useDelayClassRemoval){
-
-      var hasErrorMessages = false;
-      var hasSuccessMessages = false;
-      var hasNoticeMessages = false;
-      var delayClassRemoval = 20000;
-
-      //se nao é um elemento (é uma string) e o id nao inicia com #
-      if (targetId && typeof(targetId) == 'string' && targetId[0] != '#')
-        var $targetElement = $('#'+targetId);
-      else
-        var $targetElement = $(targetId || '');
-
-      for (var i = 0; i < messages.length; i++){
-
-        if (messages[i].type == 'success')
-          var delay = 2000;
-        else if (messages[i].type != 'error')
-          var delay = 10000;
-        else
-          var delay = 60000;
-
-        $('<p />').addClass(messages[i].type).html(messages[i].msg).appendTo($feedbackMessages).delay(delay).fadeOut(function(){$(this).remove()}).data('target_id', targetId);
-
-        if (! hasErrorMessages && messages[i].type == 'error')
-          hasErrorMessages = true;
-        else if(! hasSuccessMessages && messages[i].type == 'success')
-          hasSuccessMessages = true;
-        else if(! hasNoticeMessages && messages[i].type == 'notice')
-          hasNoticeMessages = true;
-      }
-
-      if($targetElement){
-        if (hasErrorMessages)
-          $targetElement.addClass('error').removeClass('success').removeClass('notice');
-        else if (hasSuccessMessages)
-          $targetElement.addClass('success').removeClass('error').removeClass('notice');
-        else if (hasNoticeMessages)
-          $targetElement.addClass('notice').removeClass('error').removeClass('sucess');
-        else
-          $targetElement.removeClass('success').removeClass('error').removeClass('notice');
-
-        $($targetElement.get(0)).focus();
-
-        if (useDelayClassRemoval){
-          window.setTimeout(function(){$targetElement.removeClass('success').removeClass('error').removeClass('notice');}, delayClassRemoval);
-        }
-      }
-    }
-
-
     function setTableSearchDetails(dataDetails){
-      $('<caption />').html(utf8Decode('<strong>Processamento dos históricos</strong>')).appendTo($tableSearchDetails);
+      $('<caption />').html(safeUtf8Decode('<strong>Processamento dos históricos</strong>')).appendTo($tableSearchDetails);
 
       //set headers table
       var $linha = $('<tr />');
@@ -387,7 +292,7 @@
       $('<td />').html(safeToUpperCase($htmlEscolaField)).appendTo($linha);
 
       $('<td />').html(safeToUpperCase($('#ref_cod_curso').children("[value!=''][selected='selected']").html()  || 'Todos')).appendTo($linha);
-      $('<td />').html(safeToUpperCase($('#ref_ref_cod_serie').children("[value!=''][selected='selected']").html()  || 'Todas')).appendTo($linha);
+      $('<td />').html(safeToUpperCase($('#ref_cod_serie').children("[value!=''][selected='selected']").html()  || 'Todas')).appendTo($linha);
       $('<td />').html(safeToUpperCase($('#ref_cod_turma').children("[value!=''][selected='selected']").html()  || 'Todas')).appendTo($linha);
       $('<td />').html(safeToUpperCase($('#ref_cod_matricula').children("[value!=''][selected='selected']").html() || 'Todas')).appendTo($linha);
 
@@ -458,7 +363,7 @@
           var $linha = $('<tr />');
           $('<th />').html('Selecionar').appendTo($linha);
           $('<th />').html('Curso').appendTo($linha);
-          $('<th />').html(utf8Decode('Série')).appendTo($linha);
+          $('<th />').html(safeUtf8Decode('Série')).appendTo($linha);
           $('<th />').html('Turma').appendTo($linha);
           $('<th />').html('Matricula').appendTo($linha);
           $('<th />').html('Aluno').appendTo($linha);
@@ -479,12 +384,12 @@
             var $linha = $('<tr />');
             $('<td />').html($checkbox).addClass('center').appendTo($linha);
             $('<td />').html(value.nome_curso).addClass('center').appendTo($linha);
-            $('<td />').html(utf8Decode(value.nome_serie)).addClass('center').appendTo($linha);
-            $('<td />').html(utf8Decode(value.nome_turma)).addClass('center').appendTo($linha);
+            $('<td />').html(safeUtf8Decode(value.nome_serie)).addClass('center').appendTo($linha);
+            $('<td />').html(safeUtf8Decode(value.nome_turma)).addClass('center').appendTo($linha);
             $('<td />').html(value.matricula_id).addClass('center').appendTo($linha);
             $('<td />').html(value.aluno_id + " - " + safeToUpperCase(value.nome)).appendTo($linha);
 
-            var situacaoHistorico = utf8Decode(value.situacao_historico);
+            var situacaoHistorico = safeUtf8Decode(value.situacao_historico);
             var $htmlSituacao = getLinkToHistorico(value.link_to_historico, situacaoHistorico);
             $('<td />').html($htmlSituacao).data('situacao_historico', situacaoHistorico).attr('id', 'situacao-matricula-' + value.matricula_id).addClass('situacao').addClass('center').appendTo($linha);
 
@@ -699,7 +604,7 @@
       if ($firstChecked.length < 1){
         $('.disable-on-apply-changes').removeAttr('disabled');
         $actionButton.val('Processar');
-        window.setTimeout(function(){alert(utf8Decode('Operação finalizada.'));}, 1);
+        window.setTimeout(function(){alert(safeUtf8Decode('Operação finalizada.'));}, 1);
       }
       else if (typeof(callbackContinueNextChange) == 'function')
         callbackContinueNextChange($firstChecked);
