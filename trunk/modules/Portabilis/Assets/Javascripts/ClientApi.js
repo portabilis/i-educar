@@ -11,7 +11,6 @@ var resourceUrlBuilder = {
 
 var getResourceUrlBuilder = {
   buildUrl : function(urlBase, resourceName, additionalVars){
-
     var vars = {
       oper : 'get'
     };

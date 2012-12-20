@@ -1,7 +1,6 @@
 // TODO verificar o motivo de preventDefault, eh para nao submeter o formulario ao pressionar enter?
 $j('#form_resultado').submit(function(event) {event.preventDefault()});
 
-
 // variaveis usadas pelo modulo Frontend/Process.js
 var PAGE_URL_BASE = 'diario';
 var API_URL_BASE  = 'diarioApi';

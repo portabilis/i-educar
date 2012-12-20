@@ -1,15 +1,13 @@
-var PAGE_URL_BASE = 'reserva';
-var API_URL_BASE = 'reservaApi';
-
-var RESOURCE_NAME = 'exemplar';
-var RESOURCES_NAME = 'exemplares';
-
-var POST_LABEL = 'Reservar';
-var DELETE_LABEL = 'Cancelar';
+var PAGE_URL_BASE      = 'reserva';
+var API_URL_BASE       = 'reservaApi';
+var RESOURCE_NAME      = 'exemplar';
+var RESOURCES_NAME     = 'exemplares';
+var POST_LABEL         = 'Reservar';
+var DELETE_LABEL       = 'Cancelar';
+var SEARCH_ORIENTATION = '';
 
 var onClickSelectAllEvent = false;
-
-var onClickDeleteEvent = false;
+var onClickDeleteEvent    = false;
 
 var onClickActionEvent = function(event){
   var $this = $j(this);

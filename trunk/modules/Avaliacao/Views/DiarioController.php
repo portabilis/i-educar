@@ -32,21 +32,21 @@
  * @version   $Id$
  */
 
-require_once 'Core/Controller/Page/ListController.php';
+require_once 'Portabilis/Controller/Page/ListController.php';
 require_once 'lib/Portabilis/View/Helper/Application.php';
 
 // incluido, pois em include/pmieducar/educar_campo_lista.php acessado tal classe
 require_once 'include/pmieducar/clsPermissoes.inc.php';
 
-class DiarioController extends Core_Controller_Page_ListController
+class DiarioController extends Portabilis_Controller_Page_ListController
 {
   protected $_dataMapper = 'Avaliacao_Model_NotaAlunoDataMapper';
   protected $_titulo   = 'Lan&ccedil;amento por turma';
   protected $_processoAp = 644;
   protected $_formMap  = array();
 
-  // TODO migrar para novo padrão campos seleção
-  protected function setSelectionFields() {
+  // TODO migrar para novo padrão campos seleção, usando "$this->inputsHelper()->..."
+  protected function inputs() {
     #variaveis usadas pelo modulo /intranet/include/pmieducar/educar_campo_lista.php
     $this->verificar_campos_obrigatorios = true;
     $this->add_onchange_events           = true;
@@ -67,28 +67,10 @@ class DiarioController extends Core_Controller_Page_ListController
 
 
   public function Gerar() {
-    $styles = array('/modules/Portabilis/Assets/Stylesheets/FrontendApi.css',
-                    '/modules/Portabilis/Assets/Stylesheets/Utils.css');
+    $this->inputs();
 
-    Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
-
-    $this->setSelectionFields();
-
-    $this->rodape  = "";
-    $this->largura = '100%';
-
-    /* TODO quando passar a usar o novo padrão de campos de seleção as chamadas abaixo
-            poderão ser omitidas pois os novos helpers de campos de seleção já fazem tais chamadas. */
-    Portabilis_View_Helper_Application::loadJQueryLib($this);
-    Portabilis_View_Helper_Application::loadJQueryFormLib($this);
-
-    $scripts = array('/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-                     '/modules/Portabilis/Assets/Javascripts/Validator.js',
-                     '/modules/Portabilis/Assets/Javascripts/Utils.js',
-                     '/modules/Portabilis/Assets/Javascripts/Frontend/Process.js',
-                     '/modules/Avaliacao/Assets/Javascripts/Diario.js');
-
-    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+    // assets
+    $this->loadResourceAssets($this->getDispatcher());
   }
 }
 ?>

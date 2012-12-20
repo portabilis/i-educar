@@ -194,8 +194,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $options = array('label' => $this->_getLabel('inep_id'), 'required' => false, 'size' => 25);
     $this->inputsHelper()->text('inep_id', $options);
 
-    $this->loadResourceAssets();
-    Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Cadastros/Assets/Javascripts/Aluno.js');
+    $this->loadResourceAssets($this->getDispatcher());
   }
 }
 ?>

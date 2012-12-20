@@ -43,34 +43,13 @@ class ReservaController extends Portabilis_Controller_Page_ListController
   #TODO setar código processoAP, copiar da funcionalidade de reserva existente?
   protected $_processoAp = 0;
 
-  protected function setSelectionFields() {
-    $this->inputsHelper()->dynamic(array(
-      'instituicao',
-      'escola',
-      'biblioteca',
-      'bibliotecaPesquisaCliente',
-      'bibliotecaPesquisaObra'
-    ));
-  }
-
-
   public function Gerar() {
-    $styles = array('/modules/Portabilis/Assets/Stylesheets/FrontendApi.css',
-                    '/modules/Portabilis/Assets/Stylesheets/Utils.css');
+    // inputs
+    $inputs = array('instituicao', 'escola', 'biblioteca', 'bibliotecaPesquisaCliente', 'bibliotecaPesquisaObra');
+    $this->inputsHelper()->dynamic($inputs);
 
-    Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
-
-    $this->setSelectionFields();
-
-    $this->rodape  = '';
-    $this->largura = '100%';
-
-    $scripts = array('scripts/jquery/jquery.form.js',
-                     '/modules/Portabilis/Assets/Javascripts/Utils.js',
-                     '/modules/Portabilis/Assets/Javascripts/Frontend/Process.js',
-                     '/modules/Biblioteca/Assets/Javascripts/Reserva.js');
-
-    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+    // assets
+    $this->loadResourceAssets($this->getDispatcher());
   }
 }
 ?>

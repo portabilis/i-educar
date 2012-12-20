@@ -33,17 +33,54 @@
  */
 
 require_once 'Core/Controller/Page/ListController.php';
-
 require_once 'lib/Portabilis/View/Helper/Application.php';
 require_once "lib/Portabilis/View/Helper/Inputs.php";
 
 class Portabilis_Controller_Page_ListController extends Core_Controller_Page_ListController
 {
+
+  protected $backwardCompatibility = false;
+
+  public function __construct() {
+    $this->rodape  = "";
+    $this->largura = '100%';
+
+    $this->loadAssets();
+    parent::__construct();
+  }
+
   protected function inputsHelper() {
     if (! isset($this->_inputsHelper))
       $this->_inputsHelper = new Portabilis_View_Helper_Inputs($this);
 
     return $this->_inputsHelper;
+  }
+
+  protected function loadResourceAssets($dispatcher){
+    $controllerName = ucwords($dispatcher->getControllerName());
+    $actionName     = ucwords($dispatcher->getActionName());
+
+    $script         = "/modules/$controllerName/Assets/Javascripts/$actionName.js";
+    Portabilis_View_Helper_Application::loadJavascript($this, $script);
+  }
+
+  protected function loadAssets(){
+    Portabilis_View_Helper_Application::loadJQueryLib($this);
+    Portabilis_View_Helper_Application::loadJQueryFormLib($this);
+
+    $styles = array('/modules/Portabilis/Assets/Stylesheets/Frontend.css');
+    Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+
+    $scripts = array(
+      '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
+      '/modules/Portabilis/Assets/Javascripts/Validator.js',
+      '/modules/Portabilis/Assets/Javascripts/Utils.js'
+    );
+
+    if (! $this->backwardCompatibility)
+      $scripts[] = '/modules/Portabilis/Assets/Javascripts/Frontend/Process.js';
+
+    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
   }
 }
 ?>

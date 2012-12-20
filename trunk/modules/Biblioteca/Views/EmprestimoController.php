@@ -43,35 +43,18 @@ class EmprestimoController extends Portabilis_Controller_Page_ListController
   #TODO setar código processoAP, copiar da funcionalidade de emprestimo existente?
   protected $_processoAp = 610;
 
-  protected function setSelectionFields() {
+  public function Gerar() {
+    // inputs
     $this->inputsHelper()->dynamic('instituicao', array('id' => 'instituicao_id'));
     $this->inputsHelper()->dynamic('escola',      array('id' => 'escola_id'));
     $this->inputsHelper()->dynamic('biblioteca',  array('id' => 'biblioteca_id'));
-
     $this->campoNumero('tombo_exemplar', 'Tombo exemplar', '', 13, 13, true);
-    $this->inputsHelper()->dynamic('bibliotecaPesquisaCliente',
-                                   array(),
-                                   array('hiddenInputOptions' => array('id' => 'cliente_id')));
-  }
 
+    $helperOptions = array('hiddenInputOptions' => array('id' => 'cliente_id'));
+    $this->inputsHelper()->dynamic('bibliotecaPesquisaCliente', array(), $helperOptions);
 
-  public function Gerar() {
-    $styles = array('/modules/Portabilis/Assets/Stylesheets/FrontendApi.css',
-                    '/modules/Portabilis/Assets/Stylesheets/Utils.css');
-
-    Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
-
-    $this->setSelectionFields();
-
-    $this->rodape  = '';
-    $this->largura = '100%';
-
-    $scripts = array('scripts/jquery/jquery.form.js',
-                     '/modules/Portabilis/Assets/Javascripts/Utils.js',
-                     '/modules/Portabilis/Assets/Javascripts/Frontend/Process.js',
-                     '/modules/Biblioteca/Assets/Javascripts/Emprestimo.js');
-
-    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+    // assets
+    $this->loadResourceAssets($this->getDispatcher());
   }
 }
 ?>

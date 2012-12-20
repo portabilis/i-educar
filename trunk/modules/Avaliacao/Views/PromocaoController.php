@@ -32,43 +32,24 @@
  * @version   $Id$
  */
 
-require_once 'Core/Controller/Page/ListController.php';
+require_once 'Portabilis/Controller/Page/ListController.php';
 require_once 'lib/Portabilis/View/Helper/Application.php';
 require_once 'lib/Portabilis/View/Helper/Inputs.php';
 
 // TODO migrar para novo padrao
 
-class PromocaoController extends Core_Controller_Page_ListController
+class PromocaoController extends Portabilis_Controller_Page_ListController
 {
   protected $_dataMapper = 'Avaliacao_Model_NotaAlunoDataMapper';
-  protected $_titulo   = 'Lan&ccedil;amento por turma';
+  protected $_titulo     = 'Lan&ccedil;amento por turma';
   protected $_processoAp = 644;
-  protected $_formMap  = array();
-
-  protected function setSelectionFields() {
-    $inputsHelper = new Portabilis_View_Helper_Inputs($this);
-
-    $inputsHelper->dynamic('instituicao', array('id' => 'instituicao_id'));
-    $inputsHelper->dynamic('ano', array('id' => 'ano_escolar'));
-  }
-
+  protected $_formMap    = array();
 
   public function Gerar() {
-    $styles = array('/modules/Portabilis/Assets/Stylesheets/FrontendApi.css',
-                    '/modules/Portabilis/Assets/Stylesheets/Utils.css');
+    $this->inputsHelper()->dynamic('instituicao', array('id' => 'instituicao_id'));
+    $this->inputsHelper()->dynamic('ano', array('id' => 'ano_escolar'));
 
-    Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
-
-    $this->setSelectionFields();
-
-    $this->rodape  = "";
-    $this->largura = '100%';
-
-    $scripts = array('/modules/Avaliacao/Assets/Javascripts/Promocao.js');
-
-    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
-
-    Portabilis_View_Helper_Application::loadJQueryFormLib($this->viewInstance);
+    $this->loadResourceAssets($this->getDispatcher());
   }
 }
 ?>

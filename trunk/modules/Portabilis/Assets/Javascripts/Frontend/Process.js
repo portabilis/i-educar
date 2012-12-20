@@ -1,5 +1,14 @@
 // metodos e variaveis acessiveis por outros modulos
 
+
+// #TODO migrar para opcoes todas variaveis / funcoes subescritas nos scripts de cada controlador/action.
+var processOptions = {
+
+  // options that can be overwritten in child
+
+  validatesResourcesAfterSearch : true,
+};
+
 function removeImgLoadingFor($targetElement) {
   $targetElement.siblings('img').remove();
 }
@@ -194,25 +203,23 @@ var $resultTable = $j('#form_resultado .tablelistagem').addClass('horizontal-exp
 
       try{
         handleMessages(dataResponse.msgs);
-
         var resources = dataResponse[RESOURCES_NAME];
 
-        if(! $.isArray(resources))
-        {
+        console.log(resources);
+
+        if(processOptions.validatesResourcesAfterSearch && ! $.isArray(resources)) {
            $('<td />')
             .html('O(a)s '+ RESOURCES_NAME +' n&#227;o poderam ser recuperado(a)s, verifique as mensagens de erro ou tente <a alt="Recarregar página" href="/" style="text-decoration:underline">recarregar</a>.')
             .addClass('center')
             .appendTo($('<tr />').appendTo($resultTable));
         }
-        else if (resources.length < 1)
-        {
+        else if (processOptions.validatesResourcesAfterSearch && resources.length < 1) {
            $('<td />')
             .html('Busca de '+ RESOURCES_NAME +' sem resultados.')
             .addClass('center')
             .appendTo($('<tr />').appendTo($resultTable));
         }
-        else
-        {
+        else {
           _setTableSearchDetails(dataResponse['details']);
           handleSearch($resultTable, dataResponse);
         }
@@ -250,7 +257,7 @@ var $resultTable = $j('#form_resultado .tablelistagem').addClass('horizontal-exp
 
     onClickSelectAllEvent ? $selectAllButton.click(onClickSelectAllEvent) : $selectAllButton.hide();
     onClickActionEvent    ? $actionButton.click(onClickActionEvent)       : $actionButton.hide();
-    onClickDeleteEvent   ? $deleteButton.click(onClickDeleteEvent)     : $deleteButton.hide();
+    onClickDeleteEvent    ? $deleteButton.click(onClickDeleteEvent)       : $deleteButton.hide();
 
   }); // ready
 })(jQuery);

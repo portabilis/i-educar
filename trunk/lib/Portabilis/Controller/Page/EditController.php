@@ -60,6 +60,11 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
   protected $_titulo       = '';
 
 
+  public function __construct(){
+    parent::__construct();
+    $this->loadAssets();
+  }
+
   // methods that can be overwritten
 
   protected function canSave()
@@ -153,13 +158,19 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
   }
 
 
-  protected function loadResourceAssets(){
+  protected function loadResourceAssets($dispatcher){
+    $controllerName = ucwords($dispatcher->getControllerName());
+    $actionName     = ucwords($dispatcher->getActionName());
+
+    $script         = "/modules/$controllerName/Assets/Javascripts/$actionName.js";
+    Portabilis_View_Helper_Application::loadJavascript($this, $script);
+  }
+
+  protected function loadAssets(){
     Portabilis_View_Helper_Application::loadJQueryLib($this);
     Portabilis_View_Helper_Application::loadJQueryFormLib($this);
 
-    $styles = array('/modules/Portabilis/Assets/Stylesheets/FrontendApi.css',
-                    '/modules/Portabilis/Assets/Stylesheets/Utils.css');
-
+    $styles = array('/modules/Portabilis/Assets/Stylesheets/Frontend.css');
     Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
 

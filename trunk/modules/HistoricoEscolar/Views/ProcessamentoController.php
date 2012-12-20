@@ -34,7 +34,6 @@
 
 require_once 'Portabilis/Controller/Page/ListController.php';
 
-// #TODO migrar funcionalidade para novo padrão
 class ProcessamentoController extends Portabilis_Controller_Page_ListController
 {
   protected $_dataMapper = 'Avaliacao_Model_NotaAlunoDataMapper';
@@ -42,20 +41,12 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
   protected $_processoAp = 999613;
   protected $_formMap    = array();
 
+  // #TODO migrar funcionalidade para novo padrão
+  protected $backwardCompatibility = true;
+
   public function Gerar()
   {
     Portabilis_View_Helper_Application::loadStylesheet($this, '/modules/HistoricoEscolar/Static/styles/processamento.css');
-
-    Portabilis_View_Helper_Application::loadJQueryLib($this);
-    Portabilis_View_Helper_Application::loadJQueryFormLib($this);
-    Portabilis_View_Helper_Application::loadJQueryUiLib($this);
-
-    $scripts = array(
-      '/modules/Portabilis/Assets/Javascripts/Validator.js',
-      '/modules/Portabilis/Assets/Javascripts/Utils.js',
-    );
-
-    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
 
     $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
     $this->inputsHelper()->dynamic(array('curso', 'serie', 'turma', 'matricula'), array('required' => false));
@@ -189,6 +180,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
 
     $this->appendOutput($resourceOptionsTable);
 
+    Portabilis_View_Helper_Application::loadJQueryUiLib($this);
     Portabilis_View_Helper_Application::loadJavascript($this, '/modules/HistoricoEscolar/Static/scripts/processamento.js');
   }
 

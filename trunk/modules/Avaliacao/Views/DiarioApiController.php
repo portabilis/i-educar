@@ -38,15 +38,18 @@
  * @version   $Id$
  */
 
-require_once 'Core/Controller/Page/EditController.php';
+//require_once 'Core/Controller/Page/EditController.php';
+
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
 require_once 'Avaliacao/Service/Boletim.php';
 require_once 'App/Model/MatriculaSituacao.php';
 require_once 'RegraAvaliacao/Model/TipoPresenca.php';
 require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
+
 require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
-require_once 'lib/Portabilis/Message.php';
+
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
+require_once 'lib/Portabilis/Message.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/Object/Utils.php';
 

@@ -19,7 +19,15 @@ tr.rodape {
   margin: 0
 }
 
-/* portabilis styles */
+
+/* portabilis style */
+
+#nav-actions a {
+  margin-right: 10px;
+}
+
+/* feedback messages utils */
+
 #feedback-messages {
   position: fixed;
   bottom: 0px;
@@ -27,9 +35,6 @@ tr.rodape {
 }
 
 #feedback-messages p {
-  margin: 2;
-}
-
-#nav-actions a {
-  margin-right: 10px;
+  margin: 2px 2px 0px 2px;
+  padding: 4px;
 }

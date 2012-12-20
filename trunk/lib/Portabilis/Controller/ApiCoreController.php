@@ -43,6 +43,7 @@ require_once 'lib/Portabilis/DataMapper/Utils.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'lib/Portabilis/String/Utils.php';
+require_once 'lib/Portabilis/Utils/User.php';
 
 class ApiCoreController extends Core_Controller_Page_EditController
 {
@@ -61,9 +62,23 @@ class ApiCoreController extends Core_Controller_Page_EditController
     $this->db = new clsBanco();
   }
 
+  protected function currentUser() {
+    return Portabilis_Utils_User::load($this->getSession()->id_pessoa);
+  }
 
   protected function validatesUserIsLoggedIn(){
     return $this->validator->validatesPresenceOf($this->getSession()->id_pessoa, '', false, 'Usuário deve estar logado');
+  }
+
+  protected function validatesUserIsAdmin() {
+    $user = $this->currentUser();
+
+    if(! $user['super']) {
+      $this->messenger->append("O usuário logado deve ser o admin");
+      return false;
+    }
+
+    return true;
   }
 
 
@@ -164,7 +179,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
         $this->notImplementedError();
   */
   public function Gerar(){
-    throw new CoreExt_Exception('É necessário sobrescrever o método "ApiCoreController()" de ApiCoreController.');
+    throw new CoreExt_Exception('É necessário sobrescrever o método "Gerar()" de ApiCoreController.');
   }
 
 

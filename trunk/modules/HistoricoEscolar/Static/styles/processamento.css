@@ -1,34 +1,3 @@
-/* fixups ieducar */
-table#tablenum1 {
-  border: 0px;
-}
-
-td.formdktd {
-  background-color: #fff;
-}
-
-#form_resultado {
-  margin-bottom: 70px;
-}
-
-tr.rodape {
-  display: none;
-}
-
-#corpo {
-  margin: 0
-}
-
-#feedback-messages {
-  position: fixed;
-  bottom: 0px;
-  background-color: #fff;
-}
-
-#feedback-messages p {
-  margin: 2;
-}
-
 #disciplinas-manual {
   border: 1px solid #fff;
 }

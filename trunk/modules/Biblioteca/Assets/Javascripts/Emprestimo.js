@@ -1,27 +1,13 @@
-var PAGE_URL_BASE = 'emprestimo';
-var API_URL_BASE = 'emprestimoApi';
-
-var RESOURCE_NAME = 'exemplar';
-var RESOURCES_NAME = 'exemplares';
-
-var POST_LABEL = 'Emprestar';
-var DELETE_LABEL = 'Devolver';
-
+var PAGE_URL_BASE      = 'emprestimo';
+var API_URL_BASE       = 'emprestimoApi';
+var RESOURCE_NAME      = 'exemplar';
+var RESOURCES_NAME     = 'exemplares';
+var POST_LABEL         = 'Emprestar';
+var DELETE_LABEL       = 'Devolver';
 var SEARCH_ORIENTATION = '';
 
 var onClickSelectAllEvent = false;
-
-var onClickDeleteEvent = false;
-/*function(event){
-  var $this = $j(this)
-  var $firstChecked = getFirstCheckboxChecked($this);
-
-  if ($firstChecked){
-    $j('.disable-on-apply-changes').attr('disabled', 'disabled');
-    $this.val('Aguarde devolvendo exemplar...');
-    postDevolucao($firstChecked);
-  }
-};*/
+var onClickDeleteEvent    = false;
 
 var onClickActionEvent = function(event){
   var $this = $j(this)

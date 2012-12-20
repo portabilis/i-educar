@@ -5,9 +5,9 @@ var resourceOptions = {
 
   get    : function(optionName) { return optionsUtils.get(this, optionName) },
 
-  isNew : function() { return this.id() == undefined },
+  isNew  : function() { return this.id() == undefined },
 
-  id : function(){
+  id     : function(){
     var id;
 
     if (window.location.search.indexOf('id=') > -1) {
