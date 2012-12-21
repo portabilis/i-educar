@@ -87,6 +87,10 @@ class ApiCoreController extends Core_Controller_Page_EditController
            $this->validatesPresenceOf(array('oper', 'resource'));
   }
 
+  protected function canSearch() {
+    return $this->canAcceptRequest() &&
+           $this->validatesPresenceOf('query');
+  }
 
   protected function notImplementedOperationError() {
     $this->messenger->append("Operação '{$this->getRequest()->oper}' não implementada para o recurso '{$this->getRequest()->resource}'");
@@ -179,7 +183,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
         $this->notImplementedError();
   */
   public function Gerar(){
-    throw new CoreExt_Exception('É necessário sobrescrever o método "Gerar()" de ApiCoreController.');
+    throw new CoreExt_Exception("The method 'Gerar' must be overwritten!");
   }
 
 
@@ -333,5 +337,111 @@ class ApiCoreController extends Core_Controller_Page_EditController
   // DEPRECADO #TODO nas classe filhas migrar de safeStringForDb => toLatin1
   protected function safeStringForDb($str) {
     return $this->toLatin1($str);
+  }
+
+
+  // search
+
+  protected function defaultSearchOptions() {
+    $resourceName = strtolower($this->getDispatcher()->getActionName());
+
+    return array('namespace' => 'pmieducar',
+                 'table'     => $resourceName,
+                 'idAttr'    => "cod_$resourceName",
+                 'labelAttr' => 'nome');
+  }
+
+  // overwrite in subclass to chande search options
+  protected function searchOptions() {
+    return array();
+  }
+
+  protected function sqlsForNumericSearch() {
+    $searchOptions = $this->mergeOptions($this->searchOptions(), $this->defaultSearchOptions());
+
+    $namespace = $searchOptions['namespace'];
+    $table     = $searchOptions['table'];
+    $idAttr    = $searchOptions['idAttr'];
+    $labelAttr = $searchOptions['labelAttr'];
+
+    return "select distinct $idAttr as id, $labelAttr as name
+            from $namespace.$table
+            where $idAttr like $1 order by $labelAttr limit 15";
+  }
+
+
+  protected function sqlsForStringSearch() {
+    $searchOptions = $this->mergeOptions($this->searchOptions(), $this->defaultSearchOptions());
+
+    $namespace = $searchOptions['namespace'];
+    $table     = $searchOptions['table'];
+    $idAttr    = $searchOptions['idAttr'];
+    $labelAttr = $searchOptions['labelAttr'];
+
+    return "select distinct $idAttr as id, $labelAttr as name from $namespace.$table
+            where lower($labelAttr) like $1 order by $labelAttr limit 15";
+  }
+
+  protected function sqlQueriesForNumericSearch($numericQuery) {
+    $queries = array();
+    $sqls    = $this->sqlsForNumericSearch();
+
+    if (! is_array($sqls))
+      $sqls = array($sqls);
+
+    foreach ($sqls as $sql) {
+      $queries[] = array('sql' => $sql, 'params' => array($numericQuery . "%"));
+    }
+
+    return $queries;
+  }
+
+  protected function sqlQueriesForStringSearch($stringQuery) {
+    $queries = array();
+    $sqls       = $this->sqlsForStringSearch();
+
+    if (! is_array($sqls))
+      $sqls = array($sqls);
+
+    foreach ($sqls as $sql) {
+      $queries[] = array('sql' => $sql, 'params' => array(strtolower($stringQuery) ."%"));
+    }
+
+    return $queries;
+  }
+
+  protected function loadResourcesBySearchQuery($query) {
+    $resources    = array();
+    $numericQuery = preg_replace("/[^0-9]/", "", $query);
+
+    if (! empty($numericQuery))
+      $sqlQueries = $this->sqlQueriesForNumericSearch($numericQuery);
+    else
+      $sqlQueries = $this->sqlQueriesForStringSearch($query);
+
+    foreach($sqlQueries as $sqlQuery){
+      $_resources = $this->fetchPreparedQuery($sqlQuery['sql'], $sqlQuery['params'], false);
+
+      foreach($_resources as $resource) {
+        $id = $resource['id'];
+
+        if (! isset($resources[$id]))
+          $resources[$id] = $id . ' - ' . $this->toUtf8($resource['name'], array('transform' => true));
+      }
+    }
+
+    return $resources;
+  }
+
+
+  // default api responders
+
+  protected function search() {
+    $resources = array();
+
+    if ($this->canSearch())
+      $resources = $this->loadResourcesBySearchQuery($this->getRequest()->query);
+
+    return array('result' => $resources);
   }
 }

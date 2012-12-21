@@ -251,6 +251,31 @@ class indice extends clsCadastro
       $this->campoLista('cor_raca', 'Raça', $opcoes_raca,
         $this->cod_raca, '', FALSE, '', '', '', FALSE);
 
+      // nacionalidade
+
+      // tipos
+      $tiposNacionalidade = array(null                      => 'Selecione',
+                                  'brasileiro'              => 'Brasileiro',
+                                  'naturalizado_brasileiro' => 'Naturalizado brasileiro',
+                                  'estrangeiro'             => 'Estrangeiro');
+
+      $options = array('label'     => 'Nacionalidade',
+                       'resources' => $tiposNacionalidade,
+                       #'required'  => false,
+                       'inline'    => true);
+
+      $this->inputsHelper()->select('tipo_nacionalidade', $options);
+
+      $helperOptions = array('objectName'    => 'pais_origem',
+                             'apiController' => 'Pais',
+                             'apiResource'   => 'pais-search');
+
+      $options       = array('label' => '', 'size' => 50, 'required' => true);
+
+      // search
+      $this->inputsHelper()->simpleSearch('pais_origem', 'nome', $options, $helperOptions);
+
+
       // Detalhes do Endereço
       $objTipoLog   = new clsTipoLogradouro();
       $listaTipoLog = $objTipoLog->lista();
@@ -418,6 +443,9 @@ class indice extends clsCadastro
         $this->campoCheck('alterado', 'Alterado', $this->alterado);
       }
     }
+
+    $script = "/modules/Cadastros/Assets/Javascripts/PessoaFisica.js";
+    Portabilis_View_Helper_Application::loadJavascript($this, $script);
   }
 
   function Novo()

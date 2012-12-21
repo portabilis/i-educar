@@ -56,7 +56,10 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchPessoa extends Portabili
   }
 
   public function simpleSearchPessoa($attrName, $options = array()) {
-    $defaultOptions = array('objectName' => 'pessoa', 'api_module' => 'Pessoa', 'api_resource' => 'pessoa-search');
+    $defaultOptions = array('objectName'    => 'pessoa',
+                            'apiController' => 'Pessoa',
+                            'apiResource'   => 'pessoa-search');
+
     $options        = $this->mergeOptions($options, $defaultOptions);
 
     $this->placeholderJs($options);

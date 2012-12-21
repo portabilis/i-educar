@@ -58,8 +58,9 @@ class Portabilis_View_Helper_Input_SimpleSearch extends Portabilis_View_Helper_I
     // add placeholder option, via js
 
     $defaultOptions = array('options'            => array(),
-                            'api_module'         => ucwords($objectName),
-                            'api_resource'       => $objectName . '-search',
+                            'apiModule'         => 'Api',
+                            'apiController'     => ucwords($objectName),
+                            'apiResource'       => $objectName . '-search',
                             'searchPath'         => '',
                             'addHiddenInput'     => true,
                             'hiddenInputOptions' => array());
@@ -67,7 +68,8 @@ class Portabilis_View_Helper_Input_SimpleSearch extends Portabilis_View_Helper_I
     $options = $this->mergeOptions($options, $defaultOptions);
 
     if (empty($options['searchPath']))
-      $options['searchPath'] = "/module/Api/" . $options['api_module'] . "?oper=get&resource=" . $options['api_resource'];
+      $options['searchPath'] = "/module/" . $options['apiModule'] . "/" . $options['apiController'] .
+                               "?oper=get&resource=" . $options['apiResource'];
 
 
     // load value if received an resource id

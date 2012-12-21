@@ -39,6 +39,9 @@ require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once "Reports/Reports/BoletimReport.php";
 
+// #TODO migrar controlador para novo padrão (um para cada resource)
+//       ao migrar metodos aluno para AlunoController, migrar search para novo padrão.
+
 class V1Controller extends ApiCoreController
 {
   protected $_dataMapper  = null;

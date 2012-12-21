@@ -33,11 +33,8 @@
  */
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-//require_once 'include/pmieducar/clsPmieducarMatriculaTurma.inc.php';
-//require_once 'Avaliacao/Service/Boletim.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
-//require_once "Reports/Reports/BoletimReport.php";
 
 class PessoaController extends ApiCoreController
 {
@@ -120,75 +117,27 @@ class PessoaController extends ApiCoreController
   }
 
 
-  protected function loadPessoasBySearchQuery($query) {
-    $alunos       = array();
-    $numericQuery = preg_replace("/[^0-9]/", "", $query);
+  // search
 
-    if (! empty($numericQuery))
-      $sqlQueries = $this->sqlQueriesForNumericSearch($numericQuery);
-    else
-      $sqlQueries = $this->sqlQueriesForStringSearch($query);
-
-    foreach($sqlQueries as $sqlQuery){
-      $_alunos = $this->fetchPreparedQuery($sqlQuery['sql'], $sqlQuery['params'], false);
-
-      foreach($_alunos as $aluno) {
-        $id = $aluno['id'];
-
-        if (! isset($alunos[$id]))
-          $alunos[$id] = $id . ' - ' . $this->toUtf8($aluno['nome'], array('transform' => true));
-      }
-    }
-
-    return $alunos;
+  protected function searchOptions() {
+    return array('namespace' => 'cadastro', 'idAttr' => 'idpes');
   }
 
-
-  protected function sqlQueriesForNumericSearch($numericQuery) {
-    $sqlQueries = array();
+  protected function sqlsForNumericSearch() {
+    $sqls = array();
 
     // search by idpes or cpf
-    $sql = "select distinct pessoa.idpes as id, pessoa.nome from cadastro.pessoa, cadastro.fisica
-            where fisica.idpes = pessoa.idpes and (pessoa.idpes like $1 or fisica.cpf like $2) order by nome limit 15";
-
-    $sqlQueries[] = array('sql' => $sql, 'params' => array($numericQuery . "%", $numericQuery . "%"));
+    $sqls[] = "select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa, cadastro.fisica
+               where fisica.idpes = pessoa.idpes and (pessoa.idpes like $1 or fisica.cpf like $1) order by nome limit 15";
 
     // search by rg
-    $sql = "select distinct pessoa.idpes as id, pessoa.nome from cadastro.pessoa, cadastro.documento
-            where pessoa.idpes = documento.idpes and documento.rg like $1 order by nome limit 15";
+    $sqls[] = "select distinct pessoa.idpes as id, pessoa.nome from cadastro.pessoa, cadastro.documento
+               where pessoa.idpes = documento.idpes and documento.rg like $1 order by nome limit 15";
 
-    $sqlQueries[] = array('sql' => $sql, 'params' => array($numericQuery . "%"));
-
-    return $sqlQueries;
+    return $sqls;
   }
-
-
-  protected function sqlQueriesForStringSearch($stringQuery) {
-    $sqlQueries = array();
-
-    // search by name
-    $sql = "select distinct pessoa.idpes as id, pessoa.nome from cadastro.pessoa
-            where lower(pessoa.nome) like $1 order by nome limit 15";
-
-    $sqlQueries[] = array('sql' => $sql, 'params' => array(strtolower($stringQuery) ."%"));
-
-    // TODO search by nome mae
-
-    return $sqlQueries;
-  }
-
 
   // api responders
-
-  protected function search() {
-    $pessoas = array();
-
-    if ($this->canSearch())
-      $pessoas = $this->loadPessoasBySearchQuery($this->getRequest()->query);
-
-    return array('result' => $pessoas);
-  }
-
 
   protected function get() {
     $pessoa = array();
@@ -210,6 +159,7 @@ class PessoaController extends ApiCoreController
   public function Gerar() {
     if ($this->isRequestFor('get', 'pessoa-search'))
       $this->appendResponse($this->search());
+
     elseif ($this->isRequestFor('get', 'pessoa'))
       $this->appendResponse($this->get());
     else
