@@ -145,7 +145,8 @@ class indice extends clsCadastro
         $this->http, $this->tipo_pessoa, $this->sexo, $this->cidade,
         $this->bairro, $this->logradouro, $this->cep, $this->idlog, $this->idbai,
         $this->idtlog, $this->sigla_uf, $this->complemento, $this->numero,
-        $this->bloco, $this->apartamento, $this->andar, $this->zona_localizacao, $this->estado_civil_id
+        $this->bloco, $this->apartamento, $this->andar, $this->zona_localizacao, $this->estado_civil,
+        $this->pai_id, $this->mae_id
       ) =
 
       $objPessoa->queryRapida(
@@ -153,10 +154,10 @@ class indice extends clsCadastro
         'ddd_2', 'fone_2', 'ddd_mov', 'fone_mov', 'ddd_fax', 'fone_fax', 'email',
         'url', 'tipo', 'sexo', 'cidade', 'bairro', 'logradouro', 'cep', 'idlog',
         'idbai', 'idtlog', 'sigla_uf', 'complemento', 'numero', 'bloco', 'apartamento',
-        'andar', 'zona_localizacao', 'ideciv'
+        'andar', 'zona_localizacao', 'ideciv', 'idpes_pai', 'idpes_mae'
       );
 
-      $this->estado_civil_id = $this->estado_civil_id->ideciv;
+      $this->estado_civil_id = $this->estado_civil->ideciv;
 
       // Cor/Raça.
       $raca = new clsCadastroFisicaRaca($this->cod_pessoa_fj);
@@ -453,16 +454,20 @@ class indice extends clsCadastro
 
     if ($this->id_federal) {
       $objFisica = new clsFisica($idpes, $this->data_nasc, $this->sexo, FALSE,
-        FALSE, FALSE, FALSE, $this->estado_civil_id, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
+        FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
         FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
         $ref_cod_sistema, $this->id_federal);
     }
     else {
       $objFisica = new clsFisica($idpes, $this->data_nasc, $this->sexo, FALSE,
-        FALSE, FALSE, FALSE, $this->estado_civil_id, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
+        FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
         FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
         $ref_cod_sistema);
     }
+
+    $objFisica->ideciv    = $this->estado_civil_id;
+    $objFisica->idpes_pai = $this->pai_id;
+    $objFisica->idpes_mae = $this->mae_id;
 
     $objFisica->cadastra();
 
@@ -552,16 +557,20 @@ class indice extends clsCadastro
     if ($this->id_federal) {
       $this->id_federal = idFederal2Int($this->id_federal);
       $objFisica = new clsFisica($this->cod_pessoa_fj, $this->data_nasc,
-        $this->sexo, FALSE, FALSE, FALSE, FALSE, $this->estado_civil_id, FALSE, FALSE, FALSE,
+        $this->sexo, FALSE, FALSE, FALSE, FALSE, NULL, FALSE, FALSE,
         FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
         FALSE, FALSE, FALSE, $ref_cod_sistema, $this->id_federal);
     }
     else {
       $objFisica = new clsFisica($this->cod_pessoa_fj, $this->data_nasc,
-        $this->sexo, FALSE, FALSE, FALSE, FALSE, $this->estado_civil_id, FALSE, FALSE, FALSE,
+        $this->sexo, FALSE, FALSE, FALSE, FALSE, NULL, FALSE, FALSE, FALSE,
         FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
         FALSE, FALSE, FALSE, $ref_cod_sistema);
     }
+
+    $objFisica->ideciv    = $this->estado_civil_id;
+    $objFisica->idpes_pai = $this->pai_id;
+    $objFisica->idpes_mae = $this->mae_id;
 
     $objFisica->edita();
 
@@ -656,11 +665,6 @@ class indice extends clsCadastro
     return $raca->cadastra();
   }
 
-  protected function loadPessoaFisica($id) {
-    $pessoa = new clsFisica($id);
-    return $pessoa->detalhe();
-  }
-
   protected function loadAluno($id) {
     $aluno = new clsPmieducarAluno($id);
     return $aluno->detalhe();
@@ -678,19 +682,18 @@ class indice extends clsCadastro
     if (! $parentTypeLabel)
       $parentTypeLabel = $parentType;
 
-    if (! isset($this->_pessoaFisica))
-      $this->_pessoaFisica = $this->loadPessoaFisica($this->cod_pessoa_fj);
-
     if (! isset($this->_aluno))
       $this->_aluno = $this->loadAluno($this->cod_pessoa_fj);
 
+    $parentId = $this->{$parentType . '_id'};
+
     // mostra uma dica nos casos em que foi informado apenas o nome dos pais, pela antiga interface do cadastro de alunos.
-    if (! $this->_pessoaFisica['idpes_' . $parentType] && $this->_aluno['nm_' . $parentType]) {
+    if (! $parentId && $this->_aluno['nm_' . $parentType]) {
       $nome      = Portabilis_String_Utils::toLatin1($this->_aluno['nm_' . $parentType], array('transform' => true, 'escape' => false));
       $inputHint = '<b>Dica:</b> Foi informado o nome "' . $nome . '" no cadastro de aluno, tente pesquisar esta pessoa pelo CPF ou RG.';
     }
 
-    $hiddenInputOptions = array('options' => array('value' => $this->_pessoaFisica['idpes_' . $parentType]));
+    $hiddenInputOptions = array('options' => array('value' => $parentId));
     $helperOptions      = array('objectName' => $parentType, 'hiddenInputOptions' => $hiddenInputOptions);
 
     $options            = array('label'      => 'Pessoa ' . $parentTypeLabel,
