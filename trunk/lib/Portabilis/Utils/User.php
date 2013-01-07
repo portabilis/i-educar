@@ -85,13 +85,15 @@ class Portabilis_Utils_User {
                 ativo, proibido, tempo_expira_conta, data_reativa_conta, tempo_expira_senha, data_troca_senha,
                 ip_logado as ip_ultimo_acesso, data_login FROM portal.funcionario WHERE ref_cod_pessoa_fj = $1";
 
-    $options = array('params' => array($id), 'show_errors' => false, 'return_only' => 'first-line');
-    $user    = self::fetchPreparedQuery($sql, $options);
+    $options       = array('params' => array($id), 'show_errors' => false, 'return_only' => 'first-line');
+    $user          = self::fetchPreparedQuery($sql, $options);
+    $user['super'] = $GLOBALS['coreExt']['Config']->app->superuser == $user['matricula'];
 
 
-    /* considera como expirado caso data_reativa_conta + tempo_expira_conta <= now
+    /* considera como expirado caso usuario não admin e data_reativa_conta + tempo_expira_conta <= now
        obs: ao salvar drh > cadastro funcionario, seta data_reativa_conta = now */
-    $user['expired_account'] = ! empty($user['tempo_expira_conta']) && ! empty($user['data_reativa_conta']) &&
+    $user['expired_account'] = ! $user['super'] && ! empty($user['tempo_expira_conta']) &&
+                               ! empty($user['data_reativa_conta']) &&
                                time() - strtotime($user['data_reativa_conta']) > $user['tempo_expira_conta'] * 60 * 60 * 24;
 
 
@@ -104,8 +106,6 @@ class Portabilis_Utils_User {
     /* considera como expirado caso data_troca_senha + tempo_expira_senha <= now */
     $user['expired_password'] = ! empty($user['data_troca_senha']) && ! empty($tempoExpiraSenha) &&
                                 time() - strtotime($user['data_troca_senha']) > $tempoExpiraSenha * 60 * 60 * 24;
-
-    $user['super']            = $GLOBALS['coreExt']['Config']->app->superuser == $user['matricula'];
 
     return $user;
   }
