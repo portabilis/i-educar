@@ -95,10 +95,6 @@
 
       <!--p style="min-height: 0px;" class="flash error"><strong>Aviso importante:</strong> no momento nosso suporte via telefone esta enfrentando dificuldades, devido um incidente na sede de nossa empresa, o suporte via e-mail funciona normalizado.</p-->
 
-      <p style="min-height: 0px;" class="info box shadow only-for-clients hidden">
-        Participe da nossa pesquisa de satisfa&ccedil;&atilde;o sobre o suporte e sistema <a class="decorated" target="_blank" href="https://docs.google.com/a/portabilis.com.br/spreadsheet/viewform?formkey=dFl0QmlMVElzMkpEUW9uM3hIMEF4WFE6MQ#gid=0">clicando aqui</a>.
-      </p>
-
       <!-- #&ERROLOGIN&# -->
     </div>
 
