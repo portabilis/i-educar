@@ -248,13 +248,9 @@
              serie.cod_serie = $P{serie}) AS nome_serie,
 
 	    (SELECT turma.nm_turma
-	       FROM pmieducar.turma,
-                    pmieducar.matricula_turma
-              WHERE turma.cod_turma = $P{turma} AND
-                    matricula_turma.ref_cod_turma = turma.cod_turma AND
-                    matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
-                    turma.ativo = 1 AND
-		matricula_turma.ativo = 1) AS nome_turma,
+	       FROM pmieducar.turma
+              WHERE turma.cod_turma = matricula_turma.ref_cod_turma AND
+                    turma.ativo = 1) AS nome_turma,
 
        (select turma_turno.nm_turno from pmieducar.turma_turno, pmieducar.turma where turma_turno.turma_turno_id = turma.turma_turno_id and turma.cod_turma = matricula_turma.ref_cod_turma and  instituicao_id = $P{instituicao} limit 1) as periodo
 

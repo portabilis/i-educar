@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_historico_escolar" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3c39d8d9-add0-4926-ad4d-ee994e3e2ef3">
 	<property name="ireport.zoom" value="1.331000000000004"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="348"/>
+	<property name="ireport.y" value="333"/>
 	<style name="Crosstab Data Text" hAlign="Center"/>
 	<subDataset name="dataset1" uuid="313893e9-1b7e-4385-bf8e-5c2a758be64c"/>
 	<subDataset name="dataset2" uuid="0035192e-ba5e-4390-8dc5-9e6117f92a80"/>
@@ -257,55 +257,100 @@ FROM   pmieducar.aluno
 FROM (
 SELECT nm_disciplina,
 		nota,
-       (select hd.nota
+
+       (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
+                      '10,0'
+                    ELSE
+                       replace(substring(trim(hd.nota),1,3),'.',',')
+                    END
           from pmieducar.historico_disciplinas hd
          where  hd.sequencial = historico_disciplinas.sequencial AND
                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                substring(nm_serie,1,1) = 1) as nota_1serie,
-       (select hd.nota
+
+       (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
+                      '10,0'
+                    ELSE
+                       replace(substring(trim(hd.nota),1,3),'.',',')
+                    END
           from pmieducar.historico_disciplinas hd
          where  hd.sequencial = historico_disciplinas.sequencial AND
                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                substring(nm_serie,1,1) = 2) as nota_2serie,
-       (select hd.nota
+
+       (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
+                      '10,0'
+                    ELSE
+                       replace(substring(trim(hd.nota),1,3),'.',',')
+                    END
           from pmieducar.historico_disciplinas hd
          where  hd.sequencial = historico_disciplinas.sequencial AND
                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                substring(nm_serie,1,1) = 3) as nota_3serie,
-       (select hd.nota
+
+       (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
+                      '10,0'
+                    ELSE
+                       replace(substring(trim(hd.nota),1,3),'.',',')
+                    END
           from pmieducar.historico_disciplinas hd
          where  hd.sequencial = historico_disciplinas.sequencial AND
                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                substring(nm_serie,1,1) = 4) as nota_4serie,
-       (select hd.nota
+
+       (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
+                      '10,0'
+                    ELSE
+                       replace(substring(trim(hd.nota),1,3),'.',',')
+                    END
           from pmieducar.historico_disciplinas hd
          where  hd.sequencial = historico_disciplinas.sequencial AND
                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                substring(nm_serie,1,1) = 5) as nota_5serie,
-       (select hd.nota
+
+       (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
+                      '10,0'
+                    ELSE
+                       replace(substring(trim(hd.nota),1,3),'.',',')
+                    END
           from pmieducar.historico_disciplinas hd
          where  hd.sequencial = historico_disciplinas.sequencial AND
                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                substring(nm_serie,1,1) = 6) as nota_6serie,
-       (select hd.nota
+
+       (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
+                      '10,0'
+                    ELSE
+                       replace(substring(trim(hd.nota),1,3),'.',',')
+                    END
           from pmieducar.historico_disciplinas hd
          where  hd.sequencial = historico_disciplinas.sequencial AND
                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                substring(nm_serie,1,1) = 7) as nota_7serie,
-       (select hd.nota
+
+       (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
+                      '10,0'
+                    ELSE
+                       replace(substring(trim(hd.nota),1,3),'.',',')
+                    END
           from pmieducar.historico_disciplinas hd
          where  hd.sequencial = historico_disciplinas.sequencial AND
                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                substring(nm_serie,1,1) = 8) as nota_8serie,
-       (select hd.nota
+
+       (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
+                      '10,0'
+                    ELSE
+                       replace(substring(trim(hd.nota),1,3),'.',',')
+                    END
           from pmieducar.historico_disciplinas hd
          where  hd.sequencial = historico_disciplinas.sequencial AND
                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
@@ -694,7 +739,7 @@ SELECT nm_disciplina,
           where instituicao.cod_instituicao = historico_escolar.ref_cod_instituicao) as nm_responsavel,
 
 
-        (select he.observacao
+        (select trim(he.observacao)
           from  pmieducar.historico_escolar he,
                 pmieducar.historico_disciplinas hd
          where  hd.sequencial = historico_disciplinas.sequencial AND
@@ -704,7 +749,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = he.sequencial AND
                 substring(nm_serie,1,1) = 1) as obs1,
 
-        (select he.observacao
+        (select trim(he.observacao)
           from  pmieducar.historico_escolar he,
                 pmieducar.historico_disciplinas hd
          where  hd.sequencial = historico_disciplinas.sequencial AND
@@ -714,7 +759,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = he.sequencial AND
                 substring(nm_serie,1,1) = 2) as obs2,
 
-        (select he.observacao
+        (select trim(he.observacao)
           from  pmieducar.historico_escolar he,
                 pmieducar.historico_disciplinas hd
          where  hd.sequencial = historico_disciplinas.sequencial AND
@@ -724,7 +769,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = he.sequencial AND
                 substring(nm_serie,1,1) = 3) as obs3,
 
-        (select he.observacao
+        (select trim(he.observacao)
           from  pmieducar.historico_escolar he,
                 pmieducar.historico_disciplinas hd
          where  hd.sequencial = historico_disciplinas.sequencial AND
@@ -734,7 +779,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = he.sequencial AND
                 substring(nm_serie,1,1) = 4) as obs4,
 
-        (select he.observacao
+        (select trim(he.observacao)
           from  pmieducar.historico_escolar he,
                 pmieducar.historico_disciplinas hd
          where  hd.sequencial = historico_disciplinas.sequencial AND
@@ -744,7 +789,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = he.sequencial AND
                 substring(nm_serie,1,1) = 5) as obs5,
 
-        (select he.observacao
+        (select trim(he.observacao)
           from  pmieducar.historico_escolar he,
                 pmieducar.historico_disciplinas hd
          where  hd.sequencial = historico_disciplinas.sequencial AND
@@ -754,7 +799,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = he.sequencial AND
                 substring(nm_serie,1,1) = 6) as obs6,
 
-        (select he.observacao
+        (select trim(he.observacao)
           from  pmieducar.historico_escolar he,
                 pmieducar.historico_disciplinas hd
          where  hd.sequencial = historico_disciplinas.sequencial AND
@@ -764,7 +809,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = he.sequencial AND
                 substring(nm_serie,1,1) = 7) as obs7,
 
-        (select he.observacao
+        (select trim(he.observacao)
           from  pmieducar.historico_escolar he,
                 pmieducar.historico_disciplinas hd
          where  hd.sequencial = historico_disciplinas.sequencial AND
@@ -774,7 +819,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = he.sequencial AND
                 substring(nm_serie,1,1) = 8) as obs8,
 
-        (select he.observacao
+        (select trim(he.observacao)
           from  pmieducar.historico_escolar he,
                 pmieducar.historico_disciplinas hd
          where  hd.sequencial = historico_disciplinas.sequencial AND
@@ -1476,7 +1521,7 @@ ORDER BY 1 ASC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nota_1serie}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField pattern="#.#" isBlankWhenNull="true">
 				<reportElement uuid="7e13ab91-ffed-4044-8e34-5163d01946dc" x="239" y="1" width="36" height="13" isRemoveLineWhenBlank="true"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="8"/>
@@ -2116,60 +2161,11 @@ ORDER BY 1 ASC]]>
 				<text><![CDATA[Obs.:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="22ac6c51-a98a-48b0-82a3-81c9db4ec6d7" positionType="Float" x="41" y="198" width="506" height="13"/>
+				<reportElement uuid="22ac6c51-a98a-48b0-82a3-81c9db4ec6d7" positionType="Float" x="40" y="198" width="508" height="10"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{obs1}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="ca7e2e87-3b1a-4fec-b78a-db03294e7b29" positionType="Float" x="41" y="215" width="506" height="13"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{obs2}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="41e2cfc9-e2f9-4dfd-9016-f5679ddab5e3" positionType="Float" x="41" y="232" width="506" height="13"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{obs3}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="c76ca5a0-be06-4129-ae31-b926d27abdc9" positionType="Float" x="41" y="250" width="506" height="13"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{obs4}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="ab18f4da-e433-4d0f-8153-24cd42209716" positionType="Float" x="41" y="268" width="506" height="13"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{obs5}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="6ad7569d-9f54-4c38-bdd3-026167368782" positionType="Float" x="41" y="286" width="506" height="13"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{obs6}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="35e53bf8-7330-4f25-910c-c7e705656ec7" positionType="Float" x="41" y="304" width="506" height="13"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{obs7}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="23ef157a-0435-4aaf-b201-6815ef705787" positionType="Float" x="41" y="321" width="506" height="13"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{obs8}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement uuid="a12d5989-40dc-4358-977d-6d1b0f60c392" x="5" y="336" width="545" height="1"/>
@@ -2264,6 +2260,55 @@ ORDER BY 1 ASC]]>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{num_folha}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="22ac6c51-a98a-48b0-82a3-81c9db4ec6d7" positionType="Float" x="40" y="208" width="508" height="10" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{obs2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="22ac6c51-a98a-48b0-82a3-81c9db4ec6d7" positionType="Float" x="40" y="216" width="508" height="10" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{obs3}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="22ac6c51-a98a-48b0-82a3-81c9db4ec6d7" positionType="Float" x="40" y="226" width="508" height="10" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{obs4}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="22ac6c51-a98a-48b0-82a3-81c9db4ec6d7" positionType="Float" x="40" y="236" width="508" height="10" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{obs5}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="22ac6c51-a98a-48b0-82a3-81c9db4ec6d7" positionType="Float" x="40" y="244" width="508" height="10" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{obs6}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="22ac6c51-a98a-48b0-82a3-81c9db4ec6d7" positionType="Float" x="40" y="254" width="508" height="10" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{obs7}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="22ac6c51-a98a-48b0-82a3-81c9db4ec6d7" positionType="Float" x="40" y="262" width="508" height="10" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{obs8}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>
