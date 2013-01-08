@@ -107,7 +107,7 @@ class Portabilis_String_Utils {
   /* encodes utf-8 strings to latin1,
      this method is useful to store utf-8 string (with accents) get from json api's, in latin1 db's.
   */
-  public function toLatin1($str, $options = array()) {
+  public static function toLatin1($str, $options = array()) {
     $defaultOptions = array('transform' => false, 'escape' => true, 'convert_html_special_chars' => false);
     $options        = self::mergeOptions($options, $defaultOptions);
 
@@ -124,6 +124,10 @@ class Portabilis_String_Utils {
       $str = htmlspecialchars($str, ENT_QUOTES, 'ISO-8859-1');
 
     return $str;
+  }
+
+  public static function camelize($str) {
+    return str_replace(' ', '', ucwords(str_replace('_', ' ', $str)));
   }
 }
 ?>

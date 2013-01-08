@@ -117,16 +117,17 @@ class Portabilis_View_Helper_Input_SimpleSearch extends Portabilis_View_Helper_I
 
     /*
       all search options (including the option autocompleteOptions, that is passed for jquery autocomplete plugin),
-      can be overwritten.
-
-      Just adding a hash called simpleSearch<ObjectName>Options = {optionName : optionValue};
+      can be overwritten adding "var = simpleSearch<ObjectName>Options = { placeholder : '...', optionName : '...' };"
       in the script file for the current controller.
     */
-    $resourceOptions = "simpleSearch" . ucwords($objectName) . "Options";
+
+    $resourceOptions = "simpleSearch" . Portabilis_String_Utils::camelize($objectName) . "Options";
 
     $js = "$resourceOptions = typeof $resourceOptions == 'undefined' ? {} : $resourceOptions;
            simpleSearchHelper.setup('$objectName', '$attrName', '" . $options['searchPath'] . "', $resourceOptions);";
 
+
+    // this script will be executed after the script for the current controller (if it was loaded in the view);
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
   }
 }

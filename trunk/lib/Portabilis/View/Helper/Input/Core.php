@@ -32,6 +32,7 @@
 require_once 'include/pmieducar/clsPermissoes.inc.php';
 require_once 'lib/Portabilis/View/Helper/Application.php';
 require_once 'lib/Portabilis/Array/Utils.php';
+require_once 'lib/Portabilis/String/Utils.php';
 
 /**
  * SelectMenusHelper class.

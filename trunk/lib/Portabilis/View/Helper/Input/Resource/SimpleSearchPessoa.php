@@ -68,7 +68,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchPessoa extends Portabili
   }
 
   protected function placeholderJs($options) {
-    $optionsVarName = "simpleSearch" . ucwords($options['objectName']) . "Options";
+    $optionsVarName = "simpleSearch" . Portabilis_String_Utils::camelize($options['objectName']) . "Options";
     $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
                        $optionsVarName.placeholder = safeUtf8Decode('Informe o nome, código, CPF ou RG da pessoa');";
 
