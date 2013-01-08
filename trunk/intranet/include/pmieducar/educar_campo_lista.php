@@ -1526,7 +1526,7 @@ function validatesPresenseOfValueInRequiredFields(additionalFields) {
   if (emptyFields.length == 0)
     return true;
 
-  alert('Preencha todos campos obrigat\u00F3rios, antes de continuar.');
+  alert('Preencha os campos obrigat\u00F3rios, antes de continuar.');
   emptyFields[0].focus();
   return false;
 }
