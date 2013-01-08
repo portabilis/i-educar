@@ -34,9 +34,11 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/pessoa/clsCadastroRaca.inc.php';
 require_once 'include/pessoa/clsCadastroFisicaRaca.inc.php';
 require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
-require_once 'lib/Portabilis/String/Utils.php';
 
 require_once 'App/Model/ZonaLocalizacao.php';
+
+require_once 'lib/Portabilis/String/Utils.php';
+require_once 'lib/Portabilis/View/Helper/Application.php';
 
 /**
  * clsIndex class.
@@ -254,23 +256,28 @@ class indice extends clsCadastro
       // nacionalidade
 
       // tipos
-      $tiposNacionalidade = array(null                      => 'Selecione',
-                                  'brasileiro'              => 'Brasileiro',
-                                  'naturalizado_brasileiro' => 'Naturalizado brasileiro',
-                                  'estrangeiro'             => 'Estrangeiro');
+      $tiposNacionalidade = array(null => 'Selecione',
+                                  '1'  => 'Brasileiro',
+                                  '2'  => 'Naturalizado brasileiro',
+                                  '3'  => 'Estrangeiro');
 
-      $options = array('label'     => 'Nacionalidade',
-                       'resources' => $tiposNacionalidade,
-                       #'required'  => false,
-                       'inline'    => true);
+      $options       = array('label'       => 'Nacionalidade',
+                             'resources'   => $tiposNacionalidade,
+                             #'required'   => false,
+                             'inline'      => true,
+                             'value'       => 2);
 
       $this->inputsHelper()->select('tipo_nacionalidade', $options);
 
-      $helperOptions = array('objectName'    => 'pais_origem',
-                             'apiController' => 'Pais',
-                             'apiResource'   => 'pais-search');
+      $helperOptions = array('objectName'         => 'pais_origem',
+                             'apiController'      => 'Pais',
+                             'apiResource'        => 'pais-search',
+                             'hiddenInputOptions' => array('options' => array('value' => 45)));
 
-      $options       = array('label' => '', 'size' => 50, 'required' => true);
+      $options       = array('label'    => '',
+                             'size'     => 50,
+                             'required' => true,
+                             'value'    => 'bla');
 
       // search
       $this->inputsHelper()->simpleSearch('pais_origem', 'nome', $options, $helperOptions);
@@ -444,6 +451,9 @@ class indice extends clsCadastro
       }
     }
 
+    $styles = array('/modules/Portabilis/Assets/Stylesheets/Frontend.css');
+    Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+
     $script = "/modules/Cadastros/Assets/Javascripts/PessoaFisica.js";
     Portabilis_View_Helper_Application::loadJavascript($this, $script);
   }
@@ -557,7 +567,6 @@ class indice extends clsCadastro
     session_write_close();
 
     if ($this->id_federal) {
-      $ref_cod_sistema  = 'null';
       $this->id_federal = idFederal2int($this->id_federal);
 
       $objFisicaCpf   = new clsFisica($this->cod_pessoa_fj);
@@ -575,32 +584,29 @@ class indice extends clsCadastro
       }
     }
 
+    // pessoa
+
     $objPessoa = new clsPessoa_($this->cod_pessoa_fj, $this->nm_pessoa, FALSE,
       $this->p_http, FALSE, $pessoaFj, date('Y-m-d H:i:s', time()), $this->email);
 
     $objPessoa->edita();
 
-    $this->data_nasc = dataToBanco($this->data_nasc);
+    // pessoa fisica
 
-    if ($this->id_federal) {
-      $this->id_federal = idFederal2Int($this->id_federal);
-      $objFisica = new clsFisica($this->cod_pessoa_fj, $this->data_nasc,
-        $this->sexo, FALSE, FALSE, FALSE, FALSE, NULL, FALSE, FALSE,
-        FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
-        FALSE, FALSE, FALSE, $ref_cod_sistema, $this->id_federal);
-    }
-    else {
-      $objFisica = new clsFisica($this->cod_pessoa_fj, $this->data_nasc,
-        $this->sexo, FALSE, FALSE, FALSE, FALSE, NULL, FALSE, FALSE, FALSE,
-        FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
-        FALSE, FALSE, FALSE, $ref_cod_sistema);
-    }
+    $fisica                     = new clsFisica();
 
-    $objFisica->ideciv    = $this->estado_civil_id;
-    $objFisica->idpes_pai = $this->pai_id;
-    $objFisica->idpes_mae = $this->mae_id;
+    $fisica->idpes              = $this->cod_pessoa_fj;
+    $fisica->data_nasc          = dataToBanco($this->data_nasc);
+    $fisica->sexo               = $this->sexo;
+    $fisica->ref_cod_sistema    = 'NULL';
+    $fisica->cpf                = $this->id_federal;
+    $fisica->ideciv             = $this->estado_civil_id;
+    $fisica->idpes_pai          = $this->pai_id;
+    $fisica->idpes_mae          = $this->mae_id;
+    $fisica->nacionalidade      = $_REQUEST['tipo_nacionalidade'];
+    $fisica->idpais_estrangeiro = $_REQUEST['pais_origem_id'];
 
-    $objFisica->edita();
+    $fisica->edita();
 
     if ($this->alterado) {
       $db = new clsBanco();

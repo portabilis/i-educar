@@ -261,13 +261,21 @@ class indice extends clsCadastro
     $editou = $obj->edita();
     if ($editou) {
       if($this->permissoes) {
+
         $obj_menu_usuario = new clsPmieducarMenuTipoUsuario($this->cod_tipo_usuario,$key,$valor['cadastra'],$valor['visualiza'],$valor['exclui']);
         $obj_menu_usuario->excluirTudo();
 
         foreach ($this->permissoes as $key => $valor) {
+
           $valor['cadastra']  = $valor['cadastra']  == 'on' ? 1 : 0;
           $valor['visualiza'] = $valor['visualiza'] == 'on' ? 1 : 0;
           $valor['exclui']    = $valor['exclui']    == 'on' ? 1 : 0;
+
+          $valor['cadastra'] = is_null($valor['cadastra']) ? 0 : 1;
+          $valor['visualiza'] = is_null($valor['visualiza']) ? 0 : 1;
+          $valor['exclui'] = is_null($valor['exclui']) ? 0 : 1;
+
+          die("{$valor['visualiza']} - ${$valor['visualiza']} - {$valor['exclui']}");
 
           if ($valor['cadastra'] || $valor['visualiza'] || $valor['exclui']) {
             $this->cod_tipo_usuario = $this->cod_tipo_usuario == FALSE ? '0' : $this->cod_tipo_usuario;
@@ -340,7 +348,6 @@ $pagina->MakeAll();
  */
 function selAction(menu_pai, tipo, acao)
 {
-  console.log(menu_pai + ' | ' + tipo + ' | ' +  acao);
   var element = document.getElementsByTagName('input');
   var state;
 
