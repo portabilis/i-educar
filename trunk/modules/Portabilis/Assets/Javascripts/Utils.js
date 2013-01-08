@@ -174,6 +174,22 @@ function safeUtf8Decode(s) {
 
 // feedback messages
 
+// # TODO migrar todas referencias de "handleMessages([{type*" para "messageUtils.<type>"
+
+var messageUtils = {
+  error : function(msg, targetId) {
+    handleMessages([{type : 'error', msg : safeUtf8Decode(msg)}], targetId);
+  },
+
+  success : function(msg, targetId) {
+    handleMessages([{type : 'success', msg : safeUtf8Decode(msg)}], targetId);
+  },
+
+  notice : function(msg, targetId) {
+    handleMessages([{type : 'notice', msg : safeUtf8Decode(msg)}], targetId);
+  },
+};
+
 function handleMessages(messages, targetId, useDelayClassRemoval) {
 
   var $feedbackMessages = $j('#feedback-messages');
