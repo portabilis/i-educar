@@ -1,3 +1,31 @@
+
+// #TODO rename this file to Validation.js and move functions validates* to object validationUtils
+
+var validationUtils = {
+  validatesDate : function(date) {
+    return /(((0[1-9]|[12][0-9])\/(02))|((0[1-9]|[12][0-9]|(30))\/(0[4689]|(11)))|((0[1-9]|[12][0-9]|3[01])\/(0[13578]|(10)|(12))))\/[1-2][0-9]{3}/.test(date);
+  },
+
+  validatesDateFields : function() {
+    var allValid = true;
+    var fields   = $j("input[id^='data_'], input[id^='dt_']");
+
+    $j.each(fields, function(index, field) {
+      allValid = validationUtils.validatesDate(field.value);
+    });
+
+    if (! allValid)
+      messageUtils.error('Informe a data corretamente.', fields.first());
+
+    return allValid;
+  },
+
+  validatesFields : function (){
+    return validatesPresenseOfValueInRequiredFields() &&
+           validationUtils.validatesDateFields();
+  }
+};
+
 function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields) {
   var $emptyFields = [];
   requiredFields = document.getElementsByClassName('obrigatorio');
@@ -26,7 +54,7 @@ function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields
   if ($emptyFields.length == 0)
     return true;
 
-  alert('Preencha todos campos obrigat\u00F3rios, antes de continuar.');
+  alert('Preencha os campos obrigat\u00F3rios, antes de continuar.');
   $emptyFields.first().focus();
   return false;
 }
@@ -41,8 +69,7 @@ function validatesIfValueIsInSet(value, targetId, set) {
     });
 
     s = safeSort(s);
-    handleMessages([{type : 'error', msg : safeUtf8Decode('Informe um valor que pertença ao conjunto: ') +
-                                                          s.join(', ')}], targetId);
+    messageUtils.error('Informe um valor que pertença ao conjunto: ' + s.join(', '), targetId);
 
     return false;
   }
@@ -53,7 +80,7 @@ function validatesIfValueIsInSet(value, targetId, set) {
 
 function validatesIfValueIsNumeric(value, targetId) {
   if (! $j.isNumeric(value)) {
-    handleMessages([{type : 'error', msg : safeUtf8Decode('Informe um numero válido.')}], targetId);
+    messageUtils.error('Informe um numero válido.', targetId);
     return false;
   }
 
@@ -63,7 +90,7 @@ function validatesIfValueIsNumeric(value, targetId) {
 
 function validatesIfNumericValueIsInRange(value, targetId, initialRange, finalRange) {
   if (! $j.isNumeric(value) || value < initialRange || value > finalRange) {
-    handleMessages([{type : 'error', msg : 'Informe um valor entre ' + initialRange + ' e ' + finalRange}], targetId);
+    messageUtils.error('Informe um valor entre ' + initialRange + ' e ' + finalRange, targetId);
     return false;
   }
 

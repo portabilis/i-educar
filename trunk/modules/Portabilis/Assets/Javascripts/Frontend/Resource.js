@@ -60,7 +60,7 @@ var resourceOptions = {
   },
 
   beforeSave : function () {
-    simpleSearch.validatesRequiredFields();
+    simpleSearch.fixupRequiredFieldsValidation();
   }
 };
 

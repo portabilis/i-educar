@@ -79,7 +79,10 @@ var simpleSearch = {
     return false;
   },
 
-  validatesRequiredFields : function() {
+  /* limpa o texto dos inputs simple search, cujo hidden id é obrigatorio porem está vazio,
+     para que ao tentar gravar o formulário o campo de texto obrigatório (e vazio) seja validado
+     isto ocorre quando é informado qualquer valor, sem selecionar um resultado. */
+  fixupRequiredFieldsValidation : function() {
     $j('input[type=hidden].simple-search-id.obrigatorio').each(function(index, element){
       var $element = $j(element);
 
