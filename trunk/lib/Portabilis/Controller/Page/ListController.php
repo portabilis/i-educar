@@ -36,6 +36,7 @@ require_once 'Core/Controller/Page/ListController.php';
 require_once 'lib/Portabilis/View/Helper/Application.php';
 require_once "lib/Portabilis/View/Helper/Inputs.php";
 
+// Process controller
 class Portabilis_Controller_Page_ListController extends Core_Controller_Page_ListController
 {
 
@@ -68,7 +69,8 @@ class Portabilis_Controller_Page_ListController extends Core_Controller_Page_Lis
     Portabilis_View_Helper_Application::loadJQueryLib($this);
     Portabilis_View_Helper_Application::loadJQueryFormLib($this);
 
-    $styles = array('/modules/Portabilis/Assets/Stylesheets/Frontend.css');
+    $styles = array('/modules/Portabilis/Assets/Stylesheets/Frontend.css',
+                    '/modules/Portabilis/Assets/Stylesheets/Frontend/Process.css');
     Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
     $scripts = array(

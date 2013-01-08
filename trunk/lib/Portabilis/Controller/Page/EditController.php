@@ -42,6 +42,7 @@ require_once 'lib/Portabilis/DataMapper/Utils.php';
 
 require_once 'lib/Portabilis/View/Helper/Application.php';
 
+// Resource controller
 class Portabilis_Controller_Page_EditController extends Core_Controller_Page_EditController
 {
 
