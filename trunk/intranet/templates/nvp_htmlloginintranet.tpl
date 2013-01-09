@@ -128,6 +128,8 @@
           <tr>
             <td>
               <p class="forget-password"><a class="light small" href="/module/Usuario/RedefinirSenha">Esqueceu sua senha?</a></p>
+
+              <p><a target="_blank" class="light small" href="http://educacao.portabilis.com.br/">Acesso professores, pais e alunos</a></p>
             </td>
           </tr>
         </tbody></table>
@@ -139,8 +141,8 @@
         <p class="requiriments title">Requisitos</p>
         <p class="explication">Para melhor uso do sistema, recomendamos:</p>
         <ul class="requiriments unstyled">
-          <li>- Navegador <a target="_blank" class="decorated" href="http://br.mozdev.org/download/">Mozilla Firefox</a></li>
-          <li>- Leitor PDF (para relat&oacute;rios) <a target="_blank" class="decorated" href="http://get.adobe.com/br/reader/">Adobe Reader</a> ou <a target="_blank" class="decorated" href="http://www.foxitsoftware.com/downloads#reader">Foxit</a></li>
+          <li>- Navegador <a target="_blank" class="light decorated" href="http://br.mozdev.org/download/">Mozilla Firefox</a></li>
+          <li>- Leitor PDF (para relat&oacute;rios) <a target="_blank" class="light decorated" href="http://get.adobe.com/br/reader/">Adobe Reader</a> ou <a target="_blank" class="light decorated" href="http://www.foxitsoftware.com/downloads#reader">Foxit</a></li>
         </ul>
       </div>
 
