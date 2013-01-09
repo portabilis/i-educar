@@ -16,7 +16,7 @@ body {
   float: left;
   background-color: #fcfcfc;
   padding: 20px 40px;
-  width: 250px;
+  width: 255px;
 
   -moz-box-shadow: 0px 0px 5px #d9d9d9;
   -webkit-box-shadow: 0px 0px 5px #d9d9d9;
@@ -38,7 +38,7 @@ body {
 }
 
 input#senha, input#login {
-  width: 236px;
+  width: 241px;
 }
 
 input.submit, input#senha, input#login {
