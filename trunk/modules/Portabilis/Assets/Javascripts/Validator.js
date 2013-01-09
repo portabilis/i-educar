@@ -8,7 +8,7 @@ var validationUtils = {
 
   validatesDateFields : function() {
     var allValid = true;
-    var fields   = $j("input[id^='data_'], input[id^='dt_']");
+    var fields   = $j("input[id^='data_'][value!=''], input[id^='dt_'][value!='']");
 
     $j.each(fields, function(index, field) {
       allValid = validationUtils.validatesDate(field.value);

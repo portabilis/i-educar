@@ -1,9 +1,9 @@
 
 // simple search options
 
-var simpleSearchPaisOrigemOptions = {
+/*var simpleSearchPaisOrigemOptions = {
   placeholder : safeUtf8Decode('Informe o código ou nome do pais de origem')
-};
+};*/
 
 // when page is ready
 

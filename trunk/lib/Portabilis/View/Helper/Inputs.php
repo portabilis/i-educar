@@ -135,6 +135,9 @@ class Portabilis_View_Helper_Inputs {
     $this->simpleSearchResourceInput('simpleSearchPessoa', $attrName, $inputOptions, $helperOptions);
   }
 
+  public function simpleSearchPais($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->simpleSearchResourceInput('simpleSearchPais', $attrName, $inputOptions, $helperOptions);
+  }
 
   // resource input helpers
 

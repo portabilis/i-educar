@@ -148,7 +148,7 @@ class indice extends clsCadastro
         $this->bairro, $this->logradouro, $this->cep, $this->idlog, $this->idbai,
         $this->idtlog, $this->sigla_uf, $this->complemento, $this->numero,
         $this->bloco, $this->apartamento, $this->andar, $this->zona_localizacao, $this->estado_civil,
-        $this->pai_id, $this->mae_id
+        $this->pai_id, $this->mae_id, $this->tipo_nacionalidade, $this->pais_origem
       ) =
 
       $objPessoa->queryRapida(
@@ -156,7 +156,8 @@ class indice extends clsCadastro
         'ddd_2', 'fone_2', 'ddd_mov', 'fone_mov', 'ddd_fax', 'fone_fax', 'email',
         'url', 'tipo', 'sexo', 'cidade', 'bairro', 'logradouro', 'cep', 'idlog',
         'idbai', 'idtlog', 'sigla_uf', 'complemento', 'numero', 'bloco', 'apartamento',
-        'andar', 'zona_localizacao', 'ideciv', 'idpes_pai', 'idpes_mae'
+        'andar', 'zona_localizacao', 'ideciv', 'idpes_pai', 'idpes_mae', 'nacionalidade',
+        'idpais_estrangeiro'
       );
 
       $this->estado_civil_id = $this->estado_civil->ideciv;
@@ -265,22 +266,15 @@ class indice extends clsCadastro
                              'resources'   => $tiposNacionalidade,
                              #'required'   => false,
                              'inline'      => true,
-                             'value'       => 2);
+                             'value'       => $this->tipo_nacionalidade);
 
       $this->inputsHelper()->select('tipo_nacionalidade', $options);
 
+      $options       = array('label' => '');
       $helperOptions = array('objectName'         => 'pais_origem',
-                             'apiController'      => 'Pais',
-                             'apiResource'        => 'pais-search',
-                             'hiddenInputOptions' => array('options' => array('value' => 45)));
+                             'hiddenInputOptions' => array('options' => array('value' => $this->pais_origem->idpais)));
 
-      $options       = array('label'    => '',
-                             'size'     => 50,
-                             'required' => true,
-                             'value'    => 'bla');
-
-      // search
-      $this->inputsHelper()->simpleSearch('pais_origem', 'nome', $options, $helperOptions);
+      $this->inputsHelper()->simpleSearchPais('nome', $options, $helperOptions);
 
 
       // Detalhes do Endereço
@@ -483,31 +477,31 @@ class indice extends clsCadastro
       }
     }
 
+    // pessoa
+
     $objPessoa = new clsPessoa_(FALSE, $this->nm_pessoa, $pessoaFj, $this->http,
       'F', FALSE, FALSE, $this->email);
 
     $idpes = $objPessoa->cadastra();
 
-    $this->data_nasc = dataToBanco($this->data_nasc);
 
-    if ($this->id_federal) {
-      $objFisica = new clsFisica($idpes, $this->data_nasc, $this->sexo, FALSE,
-        FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
-        FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
-        $ref_cod_sistema, $this->id_federal);
-    }
-    else {
-      $objFisica = new clsFisica($idpes, $this->data_nasc, $this->sexo, FALSE,
-        FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
-        FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
-        $ref_cod_sistema);
-    }
+    // pessoa fisica
 
-    $objFisica->ideciv    = $this->estado_civil_id;
-    $objFisica->idpes_pai = $this->pai_id;
-    $objFisica->idpes_mae = $this->mae_id;
+    $fisica                     = new clsFisica();
 
-    $objFisica->cadastra();
+    $fisica->idpes              = $idpes;
+    $fisica->data_nasc          = dataToBanco($this->data_nasc);
+    $fisica->sexo               = $this->sexo;
+    $fisica->ref_cod_sistema    = 'NULL';
+    $fisica->cpf                = $this->id_federal;
+    $fisica->ideciv             = $this->estado_civil_id;
+    $fisica->idpes_pai          = $this->pai_id;
+    $fisica->idpes_mae          = $this->mae_id;
+    $fisica->nacionalidade      = $_REQUEST['tipo_nacionalidade'];
+    $fisica->idpais_estrangeiro = $_REQUEST['pais_origem_id'];
+
+    $fisica->cadastra();
+
 
     $objTelefone = new clsPessoaTelefone($idpes, 1, $this->telefone_1, $this->ddd_telefone_1);
     $objTelefone->cadastra();
