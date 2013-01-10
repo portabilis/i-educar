@@ -83,9 +83,8 @@ header("HTTP/1.1 503 Service Unavailable");
   <body>
     <div id="error">
       <div class="content">
-        <h1>Erro inesperado</h1>
-        <p class="explication">Desculpe-nos, estamos passando por dificuldades em nosso servidor de banco de dados, <strong>por favor tente novamente mais tarde.</strong></p>
-
+        <h1>Erro inesperado no banco de dados</h1>
+        <p class="explication">Desculpe-nos, estamos passando por dificuldades em nosso servidor de banco de dados, <strong>por favor tente novamente mais tarde.</strong>
         <ul class='unstyled'><li><a href='/intranet/index.php'>- Voltar para o sistema</a></li><li>- Tentou mais de uma vez e o erro persiste ? Por favor, <a target='_blank' href='http://www.portabilis.com.br/site/suporte'>solicite suporte</a> ou envie um email para suporte@portabilis.com.br</li></ul>
       </div>
     </div>

@@ -32,6 +32,9 @@ require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsCronometro.inc.php';
 require_once 'include/clsEmail.inc.php';
 
+require_once 'modules/ErrorNotification/Mailers/ErrorMailer.php';
+
+
 $routesConfigs = $GLOBALS['coreExt']['Config']->app->routes;
 if ($routesConfigs->redirect_to)
 {
@@ -152,11 +155,6 @@ abstract class clsBancoSQL_
    * @var array
    */
   var $savePoints          = array();
-
-  /**
-   * @var bool
-   */
-  var $showReportarErro    = TRUE;
 
   /**
    * @var bool
@@ -370,16 +368,10 @@ abstract class clsBancoSQL_
     // Verifica se o link de conexão está inativo e conecta
     if (0 == $this->bLink_ID) {
       $this->FraseConexao();
-
-      if ($this->bDepurar) {
-        printf("<br>Depurar: Frase de Conex&atilde;o : %s<br>\n", $this->strFraseConexao);
-      }
-
       $this->bLink_ID = pg_connect($this->strFraseConexao);
 
-      if (!$this->bLink_ID) {
-        $this->Interrompe("Link inv&aacute;lido, conex&atilde;o falhou!");
-      }
+      if (! $this->bLink_ID)
+        $this->Interrompe("N&atilde;o foi possivel conectar ao banco de dados");
     }
   }
 
@@ -822,59 +814,12 @@ abstract class clsBancoSQL_
    * @param  string $msg
    * @param  bool   $getError
    */
-  function Interrompe($msg, $getError = FALSE)
+  function Interrompe($appErrorMsg, $getError = FALSE)
   {
-    if ($getError) {
-      $this->strErro = pg_result_error($this->bConsulta_ID);
-      $this->bErro_no = ($this->strErro == '') ? FALSE : TRUE;
-    }
+    $pgErrorMsg = $getError ? pg_result_error($this->bConsulta_ID) : '';
 
-    $erro1 = substr(md5('1erro'), 0, 10);
-    $erro2 = substr(md5('2erro'), 0, 10);
-
-    function show($data, $func = 'var_dump') {
-      ob_start();
-      $func($data);
-      $output = ob_get_contents();
-      ob_end_clean();
-      return $output;
-    }
-
-    @session_start();
-    $_SESSION['vars_session'] = show($_SESSION);
-    $_SESSION['vars_post']    = show($_POST);
-    $_SESSION['vars_get']     = show($_GET);
-    $_SESSION['vars_cookie']  = show($_COOKIE);
-    $_SESSION['vars_erro1']   = $msg;
-    $_SESSION['vars_erro2']   = $this->strErro;
-    $_SESSION['vars_server']  = show($_SERVER);
-    $id_pessoa = $_SESSION['id_pessoa'];
-
-    session_write_close();
-
-    if ($this->showReportarErro) {
-      $array_idpes_erro_total = array();
-      $array_idpes_erro_total[4910] = TRUE;
-      $array_idpes_erro_total[2151] = TRUE;
-      $array_idpes_erro_total[8194] = TRUE;
-      $array_idpes_erro_total[7470] = TRUE;
-      $array_idpes_erro_total[4637] = TRUE;
-      $array_idpes_erro_total[4702] = TRUE;
-      $array_idpes_erro_total[1801] = TRUE;
-
-      if (! $array_idpes_erro_total[$id_pessoa]) {
-        die( "<script>document.location.href = 'erro_banco.php';</script>" );
-      }
-      else {
-        printf("</td></tr></table><b>Erro de Banco de Dados:</b> %s<br><br>\n", $msg);
-        printf("<b>SQL:</b> %s<br><br>\n", $this->strStringSQL );
-        printf("<b>Erro do PgSQL </b>: %s (%s)<br><br>\n", $this->bErro_no, $this->strErro);
-        die("Sessão Interrompida.");
-      }
-    }
-    else {
-      die($this->strErro . "\n");
-    }
+    ErrorMailer::unexpectedDataBaseError($appErrorMsg, $pgErrorMsg, $this->strStringSQL);
+    die("<script>document.location.href = 'erro_banco.php';</script>");
   }
 
 

@@ -56,8 +56,4 @@ class UsuarioMailer extends Portabilis_Mailer
 
     return self::mail($to, $subject, $message);
   }
-
-  static protected function host() {
-    return $_SERVER['HTTP_HOST'];
-  }
 }

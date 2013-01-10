@@ -50,6 +50,8 @@ class Portabilis_Mailer {
 
   static $selfMailer;
 
+  // #TODO refatorar classe para ser singleton ?
+
   public function __construct() {
     /* Configurações podem ser alteradas em tempo de execução, ex:
        $mailerInstance->configs->smtp->username = 'new_username'; */
@@ -85,6 +87,9 @@ class Portabilis_Mailer {
     else
       $sendResult = ! PEAR::isError($smtp->send($to, $headers, $message));
 
+    error_log("** Sending email from: $from, to: $to, subject: $subject, message: $message");
+    error_log("sendResult: $sendResult");
+
     return $sendResult;
   }
 
@@ -94,6 +99,11 @@ class Portabilis_Mailer {
     self::$selfMailer = new Portabilis_Mailer();
 
     return self::$selfMailer->sendMail($to, $subject, $message);
+  }
+
+
+  static protected function host() {
+    return $_SERVER['HTTP_HOST'];
   }
 }
 
