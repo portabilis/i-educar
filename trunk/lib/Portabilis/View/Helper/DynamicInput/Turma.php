@@ -86,4 +86,3 @@ class Portabilis_View_Helper_DynamicInput_Turma extends Portabilis_View_Helper_D
     Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInputs/Assets/Javascripts/DynamicTurmas.js');
   }
 }
-?>

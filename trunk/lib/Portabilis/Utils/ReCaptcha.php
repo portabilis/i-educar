@@ -60,4 +60,3 @@ class Portabilis_Utils_ReCaptcha {
   }
 
 }
-?>

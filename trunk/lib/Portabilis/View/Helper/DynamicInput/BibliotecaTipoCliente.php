@@ -84,4 +84,3 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaTipoCliente extends Portabil
     Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInputs/Assets/Javascripts/DynamicBibliotecaTiposCliente.js');
   }
 }
-?>

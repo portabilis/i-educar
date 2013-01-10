@@ -110,5 +110,4 @@ class Portabilis_Mailer {
 // deprecated Mailer class
 class Mailer extends Portabilis_Mailer {
 }
-?>
 

@@ -80,4 +80,3 @@ class Portabilis_View_Helper_Input_Core {
     return $this->_inputsHelper;
   }
 }
-?>

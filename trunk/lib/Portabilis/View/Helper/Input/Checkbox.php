@@ -67,4 +67,3 @@ class Portabilis_View_Helper_Input_Checkbox extends Portabilis_View_Helper_Input
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
   }
 }
-?>

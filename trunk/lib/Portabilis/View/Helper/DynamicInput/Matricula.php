@@ -83,4 +83,3 @@ class Portabilis_View_Helper_DynamicInput_Matricula extends Portabilis_View_Help
     Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInputs/Assets/Javascripts/DynamicMatriculas.js');
   }
 }
-?>

@@ -116,4 +116,3 @@ class Portabilis_View_Helper_DynamicInput_Biblioteca extends Portabilis_View_Hel
     Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInputs/Assets/Javascripts/DynamicBibliotecas.js');
   }
 }
-?>

@@ -65,4 +65,3 @@ class Portabilis_DataMapper_Utils {
   }
 
 }
-?>

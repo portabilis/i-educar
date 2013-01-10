@@ -86,4 +86,3 @@ class Portabilis_View_Helper_Input_Resource_EstadoCivil extends Portabilis_View_
     $this->inputsHelper()->select($options['attrName'], $textInputOptions, $textHelperOptions);
   }
 }
-?>

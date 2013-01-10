@@ -131,4 +131,3 @@ class Portabilis_View_Helper_Input_SimpleSearch extends Portabilis_View_Helper_I
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
   }
 }
-?>

@@ -85,4 +85,3 @@ class Portabilis_Controller_Page_ListController extends Core_Controller_Page_Lis
     Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
   }
 }
-?>

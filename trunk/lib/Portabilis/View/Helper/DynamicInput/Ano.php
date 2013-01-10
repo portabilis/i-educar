@@ -121,4 +121,3 @@ class Portabilis_View_Helper_DynamicInput_Ano extends Portabilis_View_Helper_Dyn
       $this->integerInput($options);
   }
 }
-?>

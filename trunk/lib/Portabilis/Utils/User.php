@@ -144,6 +144,4 @@ class Portabilis_Utils_User {
   protected static function fetchPreparedQuery($sql, $options = array()) {
     return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
   }
-
 }
-?>

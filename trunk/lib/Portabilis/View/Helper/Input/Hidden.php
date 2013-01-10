@@ -57,4 +57,3 @@ class Portabilis_View_Helper_Input_Hidden extends Portabilis_View_Helper_Input_C
     call_user_func_array(array($this->viewInstance, 'campoOculto'), $inputOptions);
   }
 }
-?>

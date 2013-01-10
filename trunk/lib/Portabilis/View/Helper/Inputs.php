@@ -205,4 +205,3 @@ class Portabilis_View_Helper_Inputs {
     return $options;
   }
 }
-?>

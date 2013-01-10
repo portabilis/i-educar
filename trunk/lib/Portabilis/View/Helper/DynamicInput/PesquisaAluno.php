@@ -128,4 +128,3 @@ class Portabilis_View_Helper_DynamicInput_PesquisaAluno extends Portabilis_View_
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js);
   }
 }
-?>

@@ -71,4 +71,3 @@ class Portabilis_View_Helper_DynamicInput_DataInicial extends Portabilis_View_He
     call_user_func_array(array($this->viewInstance, 'campoData'), $inputOptions);
   }
 }
-?>

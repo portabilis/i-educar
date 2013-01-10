@@ -84,4 +84,3 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaSituacao extends Portabilis_
     Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInputs/Assets/Javascripts/DynamicBibliotecaSituacoes.js');
   }
 }
-?>

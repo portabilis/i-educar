@@ -86,4 +86,3 @@ class Portabilis_View_Helper_Input_Resource_Beneficio extends Portabilis_View_He
     $this->inputsHelper()->select($options['attrName'], $textInputOptions, $textHelperOptions);
   }
 }
-?>

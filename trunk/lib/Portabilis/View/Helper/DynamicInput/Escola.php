@@ -114,4 +114,3 @@ class Portabilis_View_Helper_DynamicInput_Escola extends Portabilis_View_Helper_
     Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInputs/Assets/Javascripts/DynamicEscolas.js');
   }
 }
-?>

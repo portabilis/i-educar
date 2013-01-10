@@ -93,5 +93,3 @@ class Portabilis_Report_ReportFactoryRemote extends Portabilis_Report_ReportFact
     return $report;
   }
 }
-
-?>

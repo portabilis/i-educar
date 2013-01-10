@@ -96,4 +96,3 @@ class Portabilis_Utils_Database {
     return $result;
   }
 }
-?>

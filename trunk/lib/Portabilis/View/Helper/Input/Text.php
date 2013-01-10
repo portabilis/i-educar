@@ -69,4 +69,3 @@ class Portabilis_View_Helper_Input_Text extends Portabilis_View_Helper_Input_Cor
     call_user_func_array(array($this->viewInstance, 'campoTexto'), $inputOptions);
   }
 }
-?>

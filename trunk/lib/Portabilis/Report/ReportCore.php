@@ -102,5 +102,3 @@ class Portabilis_Report_ReportCore
     throw new Exception("The method 'requiredArgs' must be overridden!");
   }
 }
-
-?>

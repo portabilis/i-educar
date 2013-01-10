@@ -193,4 +193,3 @@ class Portabilis_View_Helper_DynamicInput_Core {
     return $serieId;
   }
 }
-?>

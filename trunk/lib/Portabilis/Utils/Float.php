@@ -75,4 +75,3 @@ class Portabilis_Utils_Float {
     return (float)($digits[0] . '.' . $digits[1]);
   }
 }
-?>

@@ -86,4 +86,3 @@ class Portabilis_View_Helper_Input_Resource_Religiao extends Portabilis_View_Hel
     $this->inputsHelper()->select($options['attrName'], $textInputOptions, $textHelperOptions);
   }
 }
-?>

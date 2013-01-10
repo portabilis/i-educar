@@ -75,4 +75,3 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchPessoa extends Portabili
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
   }
 }
-?>

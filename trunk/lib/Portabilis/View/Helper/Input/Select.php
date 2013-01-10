@@ -65,4 +65,3 @@ class Portabilis_View_Helper_Input_Select extends Portabilis_View_Helper_Input_C
     call_user_func_array(array($this->viewInstance, 'campoLista'), $inputOptions);
   }
 }
-?>

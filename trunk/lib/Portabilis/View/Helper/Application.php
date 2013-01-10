@@ -171,4 +171,3 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
     self::embedStylesheet($viewInstance, ".ui-autocomplete { font-size: 11px; }");
   }
 }
-?>

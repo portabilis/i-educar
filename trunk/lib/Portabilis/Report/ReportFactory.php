@@ -57,12 +57,10 @@ class Portabilis_Report_ReportFactory
   }
 
 	function setSettings($config) {
-    throw new Exception("The method 'setSettings' from class Portabilis_Report_ReportFactory must be overridden!");		
-	}  
+    throw new Exception("The method 'setSettings' from class Portabilis_Report_ReportFactory must be overridden!");
+	}
 
   function dumps($report, $options = array()) {
     throw new Exception("The method 'dumps' from class Portabilis_Report_ReportFactory must be overridden!");
   }
 }
-
-?>

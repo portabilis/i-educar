@@ -85,4 +85,3 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaFonte extends Portabilis_Vie
     Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInputs/Assets/Javascripts/DynamicBibliotecaFontes.js');
   }
 }
-?>

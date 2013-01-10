@@ -108,4 +108,3 @@ class Portabilis_Object_Utils {
     return $objectsFiltered;
   }
 }
-?>

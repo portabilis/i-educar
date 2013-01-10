@@ -130,4 +130,3 @@ class Portabilis_String_Utils {
     return str_replace(' ', '', ucwords(str_replace('_', ' ', $str)));
   }
 }
-?>
