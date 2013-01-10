@@ -60,7 +60,8 @@ var resourceOptions = {
   },
 
   beforeSave : function () {
-    simpleSearch.fixupRequiredFieldsValidation();
+    if (typeof simpleSearch != 'undefined')
+      simpleSearch.fixupRequiredFieldsValidation();
   }
 };
 

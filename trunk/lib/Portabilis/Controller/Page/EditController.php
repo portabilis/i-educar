@@ -58,8 +58,8 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
   # protected $_saveOption   = FALSE;
   # protected $_deleteOption = FALSE;
 
-  protected $_titulo       = '';
-
+  protected $_titulo               = '';
+  protected $backwardCompatibility = false;
 
   public function __construct(){
     parent::__construct();
@@ -177,8 +177,10 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
 
     $scripts = array('/modules/Portabilis/Assets/Javascripts/ClientApi.js',
                      '/modules/Portabilis/Assets/Javascripts/Validator.js',
-                     '/modules/Portabilis/Assets/Javascripts/Utils.js',
-                     '/modules/Portabilis/Assets/Javascripts/Frontend/Resource.js');
+                     '/modules/Portabilis/Assets/Javascripts/Utils.js');
+
+    if (! $this->backwardCompatibility)
+      $scripts[] = '/modules/Portabilis/Assets/Javascripts/Frontend/Resource.js';
 
     Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
   }
