@@ -76,17 +76,38 @@ class UnexpectedController extends Core_Controller_Page_ViewController
   public function Gerar() {
     $linkToSupport = $GLOBALS['coreExt']['Config']->modules->error->link_to_support;
 
+    if ($GLOBALS['coreExt']['Config']->modules->error->show_details) {
+      $detail = $this->getSession()->last_error_message;
+      unset($this->getSession()->last_error_message);
+
+      if (! $detail) { $detail = 'Sem detalhes do erro.'; };
+
+      $detail = "<h2>Detalhes:</h2>
+                  <p>$detail</p>";
+    }
+    else
+      $detail = '<p>Visualiza&ccedil;&atilde;o de detalhes do erro desativada.</p>';
+
     echo "
-      <div id='error'>
+      <div id='error' class='small'>
         <div class='content'>
          <h1>Erro inesperado</h1>
 
-         <p class='explanation'>Desculpe-nos, algum erro inesperado ocorreu, <strong>por favor tente novamente mais tarde.</strong>
-          <ul>
-            <li><a href='/intranet/index.php'>Voltar para o sistema</a></li>
+         <p class='explanation'>
+          Desculpe-nos, algum erro inesperado ocorreu,
+          <strong> tente seguir as etapas abaixo:</strong>
+
+          <ol>
+            <li><a href='/intranet/index.php'>Tente novamente</a></li>
+            <li><a href='/intranet/logof.php'>Fa&ccedil;a logoff do sistema</a> e tente novamente</li>
             <li>Caso o erro persista, por favor, <a target='_blank' href='$linkToSupport'>solicite suporte</a>.</li>
-          </ul>
+          </ol>
         </p>
+
+        <div class='detail'>
+          $detail
+        </div>
+
         </div>
       </div>";
   }
@@ -94,10 +115,10 @@ class UnexpectedController extends Core_Controller_Page_ViewController
   protected function loadAssets() {
 
     $styles = array(
-      '/modules/Error/Assets/Stylesheets/Error.css',
       'styles/reset.css',
       'styles/portabilis.css',
-      'styles/min-portabilis.css'
+      'styles/min-portabilis.css',
+      '/modules/Error/Assets/Stylesheets/Error.css'
     );
 
     Portabilis_View_Helper_Application::loadStylesheet($this, $styles);

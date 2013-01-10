@@ -802,6 +802,11 @@ class clsBase extends clsConfig
     catch (Exception $e) {
       error_log("Erro inesperado (pego em clsBase): " . $e->getMessage());
       NotificationMailer::unexpectedError($e->getMessage());
+
+      @session_start();
+      $_SESSION['last_error_message'] = $e->getMessage();
+      @session_write_close();
+
       die("<script>document.location.href = '/module/Error/unexpected';</script>");
     }
   }

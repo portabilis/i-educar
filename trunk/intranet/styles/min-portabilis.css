@@ -97,30 +97,6 @@ table.strong th , tr.strong th, tr.strong td{
   background-color: #A1B3BD;
 }
 
-div#error h1 {
-  font-size: 300%;
-}
-
-div#error {
-  margin-top: 20px;
-  /*border: 1px solid;*/
-  width: 800px;
-  margin-right: auto;
-  margin-left: auto;
-  padding: 20px;
-}
-
-div#error ul {
-  margin: 0px;
-  margin-top: 10px;
-  padding: 0px;
-}
-
-div#error div#detail {
-  margin-top: 40px;
-  border-top: 1px solid;
-}
-
 .hidden {
   display: none;
 }

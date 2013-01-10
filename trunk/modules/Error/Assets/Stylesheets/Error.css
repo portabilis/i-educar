@@ -1,6 +1,6 @@
 * {
   margin: 0;
-  padding: 0
+  padding: 0;
 }
 
 body {
@@ -14,18 +14,24 @@ div#error {
   position: absolute;
   left: 250px;
   top: 35px;
-  border: 1px solid #666
+  border: 1px solid #666;
+  width: 800px;
 }
 
 div.content {
-  padding: 25px
+  padding: 25px;
+}
+
+div.detail {
+  margin-top: 25px;
 }
 
 h1 {
-  padding-bottom: 15px
+  padding-bottom: 15px;
+  font-size: 300%;
 }
 
-ul {
+ol {
+  list-style-position: inside;
   margin-top: 20px;
-  list-style-position: inside
 }
