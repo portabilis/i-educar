@@ -47,6 +47,8 @@ require_once 'include/funcoes.inc.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'lib/Portabilis/Utils/User.php';
 
+require_once 'modules/Error/Mailers/NotificationMailer.php';
+
 /**
  * clsBase class.
  *
@@ -798,8 +800,9 @@ class clsBase extends clsConfig
       }
     }
     catch (Exception $e) {
-      echo "<html><head><link rel='stylesheet' type='text/css' href='styles/reset.css'><link rel='stylesheet' type='text/css' href='styles/portabilis.css'><link rel='stylesheet' type='text/css' href='styles/min-portabilis.css'></head>";
-      echo "<body><div id='error'><h1>Erro inesperado</h1><p class='explication'>Descupe-nos ocorreu algum erro no sistema, <strong>por favor tente novamente mais tarde</strong></p><ul class='unstyled'><li><a href='/intranet/index.php'>- Voltar para o sistema</a></li><li>- Tentou mais de uma vez e o erro persiste ? Por favor, <a target='_blank' href='http://www.portabilis.com.br/site/suporte'>solicite suporte</a> ou envie um email para suporte@portabilis.com.br</li></ul><div id='detail'><p><strong>Detalhes:</strong> {$e->getMessage()}</p></div></div></body></html>";
+      error_log("Erro inesperado (pego em clsBase): " . $e->getMessage());
+      NotificationMailer::unexpectedError($e->getMessage());
+      die("<script>document.location.href = '/module/Error/unexpected';</script>");
     }
   }
 

@@ -101,7 +101,7 @@
     <div id="corpo">
       <div id="login-form" class="box shadow">
         <h2>Entrar</h2>
-        <p class="explication"></p>
+        <p class="explanation"></p>
 
         <form action="" method="post">
         <table>
@@ -140,7 +140,7 @@
 
       <div id="service-info">
         <p class="requiriments title">Requisitos</p>
-        <p class="explication">Para melhor uso do sistema, recomendamos:</p>
+        <p class="explanation">Para melhor uso do sistema, recomendamos:</p>
         <ul class="requiriments unstyled">
           <li>- Navegador <a target="_blank" class="light decorated" href="http://br.mozdev.org/download/">Mozilla Firefox</a></li>
           <li>- Leitor PDF (para relat&oacute;rios) <a target="_blank" class="light decorated" href="http://get.adobe.com/br/reader/">Adobe Reader</a> ou <a target="_blank" class="light decorated" href="http://www.foxitsoftware.com/downloads#reader">Foxit</a></li>

@@ -32,15 +32,13 @@ require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsCronometro.inc.php';
 require_once 'include/clsEmail.inc.php';
 
-require_once 'modules/ErrorNotification/Mailers/ErrorMailer.php';
+require_once 'modules/Error/Mailers/NotificationMailer.php';
 
-
-$routesConfigs = $GLOBALS['coreExt']['Config']->app->routes;
-if ($routesConfigs->redirect_to)
-{
+// redireciona as requisições para uma rota, caso esta caso tenha sido definida.
+if ($GLOBALS['coreExt']['Config']->app->routes &&
+    $GLOBALS['coreExt']['Config']->app->routes->redirect_to) {
   header('HTTP/1.1 503 Service Temporarily Unavailable');
-  header('Status: 503 Service Temporarily Unavailable');
-  header("Location: $routesConfigs->redirect_to");
+  header("Location: {$GLOBALS['coreExt']['Config']->app->routes->redirect_to}");
 }
 
 /**
@@ -818,8 +816,8 @@ abstract class clsBancoSQL_
   {
     $pgErrorMsg = $getError ? pg_result_error($this->bConsulta_ID) : '';
 
-    ErrorMailer::unexpectedDataBaseError($appErrorMsg, $pgErrorMsg, $this->strStringSQL);
-    die("<script>document.location.href = 'erro_banco.php';</script>");
+    NotificationMailer::unexpectedDataBaseError($appErrorMsg, $pgErrorMsg, $this->strStringSQL);
+    die("<script>document.location.href = '/module/Error/unexpected';</script>");
   }
 
 

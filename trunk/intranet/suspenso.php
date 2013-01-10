@@ -79,7 +79,7 @@
     <div id="error">
       <div class="content">
         <h1>Acesso suspenso</h1>
-        <p class="explication">Desculpe-nos, o acesso ao sistema foi suspenso, por favor, entre em contato com o responsável pelo sistema em sua entidade, e tente novamente.</strong>
+        <p class="explanation">Desculpe-nos, o acesso ao sistema foi suspenso, por favor, entre em contato com o responsável pelo sistema em sua entidade, e tente novamente.</strong>
         </p>
       </div>
     </div>
