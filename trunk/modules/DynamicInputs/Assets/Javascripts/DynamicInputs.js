@@ -1,5 +1,5 @@
 function updateSelect($targetElement, options, emptyOptionHtml) {
-  $targetElement.children('[value^=""]').remove();
+  $targetElement.children().not('[value=""]').remove();
 
   $j.each(options, function(index, value){
     $j(value).appendTo($targetElement);
@@ -15,7 +15,7 @@ function updateSelect($targetElement, options, emptyOptionHtml) {
 
 
 function resetSelect($targetElement) {
-  $targetElement.children('[value^=""]').remove();
+  $targetElement.children().not('[value=""]').remove();
   $targetElement.children().first().attr('checked', 'checked');
   //$targetElement.attr('disabled', 'disabled');
 }
