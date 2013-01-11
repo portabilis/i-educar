@@ -345,10 +345,11 @@ class ApiCoreController extends Core_Controller_Page_EditController
   protected function defaultSearchOptions() {
     $resourceName = strtolower($this->getDispatcher()->getActionName());
 
-    return array('namespace' => 'pmieducar',
-                 'table'     => $resourceName,
-                 'idAttr'    => "cod_$resourceName",
-                 'labelAttr' => 'nome');
+    return array('namespace'    => 'pmieducar',
+                 'table'        => $resourceName,
+                 'idAttr'       => "cod_$resourceName",
+                 'labelAttr'    => 'nome',
+                 'selectFields' => array());
   }
 
   // overwrite in subclass to chande search options
@@ -359,13 +360,15 @@ class ApiCoreController extends Core_Controller_Page_EditController
   protected function sqlsForNumericSearch() {
     $searchOptions = $this->mergeOptions($this->searchOptions(), $this->defaultSearchOptions());
 
-    $namespace = $searchOptions['namespace'];
-    $table     = $searchOptions['table'];
-    $idAttr    = $searchOptions['idAttr'];
-    $labelAttr = $searchOptions['labelAttr'];
+    $namespace     = $searchOptions['namespace'];
+    $table         = $searchOptions['table'];
+    $idAttr        = $searchOptions['idAttr'];
+    $labelAttr     = $searchOptions['labelAttr'];
 
-    return "select distinct $idAttr as id, $labelAttr as name
-            from $namespace.$table
+    $searchOptions['selectFields'][] = "$idAttr as id, $labelAttr as name";
+    $selectFields                    = join(', ', $searchOptions['selectFields']);
+
+    return "select distinct $selectFields from $namespace.$table
             where $idAttr like $1 order by $labelAttr limit 15";
   }
 
@@ -373,12 +376,15 @@ class ApiCoreController extends Core_Controller_Page_EditController
   protected function sqlsForStringSearch() {
     $searchOptions = $this->mergeOptions($this->searchOptions(), $this->defaultSearchOptions());
 
-    $namespace = $searchOptions['namespace'];
-    $table     = $searchOptions['table'];
-    $idAttr    = $searchOptions['idAttr'];
-    $labelAttr = $searchOptions['labelAttr'];
+    $namespace     = $searchOptions['namespace'];
+    $table         = $searchOptions['table'];
+    $idAttr        = $searchOptions['idAttr'];
+    $labelAttr     = $searchOptions['labelAttr'];
 
-    return "select distinct $idAttr as id, $labelAttr as name from $namespace.$table
+    $searchOptions['selectFields'][] = "$idAttr as id, $labelAttr as name";
+    $selectFields                    = join(', ', $searchOptions['selectFields']);
+
+    return "select distinct $selectFields from $namespace.$table
             where lower($labelAttr) like $1 order by $labelAttr limit 15";
   }
 
@@ -410,6 +416,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     return $queries;
   }
 
+
   protected function loadResourcesBySearchQuery($query) {
     $resources    = array();
     $numericQuery = preg_replace("/[^0-9]/", "", $query);
@@ -423,14 +430,17 @@ class ApiCoreController extends Core_Controller_Page_EditController
       $_resources = $this->fetchPreparedQuery($sqlQuery['sql'], $sqlQuery['params'], false);
 
       foreach($_resources as $resource) {
-        $id = $resource['id'];
-
-        if (! isset($resources[$id]))
-          $resources[$id] = $id . ' - ' . $this->toUtf8($resource['name'], array('transform' => true));
+        if (! isset($resources[$resource['id']]))
+          $resources[$resource['id']] = $this->formatResourceValue($resource);
       }
     }
 
     return $resources;
+  }
+
+  // formats the value of each resource, that will be returned in api as a label.
+  protected function formatResourceValue($resource) {
+    return $resource['id'] . ' - ' . $this->toUtf8($resource['name'], array('transform' => true));
   }
 
 

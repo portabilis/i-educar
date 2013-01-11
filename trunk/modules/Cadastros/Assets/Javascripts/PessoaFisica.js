@@ -22,6 +22,8 @@
     checkTipoNacionalidade();
     $j('#tipo_nacionalidade').change(checkTipoNacionalidade);
 
+    // style fixup
+    $('#pais_origem_nome').css('width', '150px');
 
     var onClickSubmitEvent = function(event) {
       simpleSearch.fixupRequiredFieldsValidation();
