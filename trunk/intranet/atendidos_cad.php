@@ -266,7 +266,7 @@ class indice extends clsCadastro
 
       $options       = array('label'       => 'Nacionalidade',
                              'resources'   => $tiposNacionalidade,
-                             #'required'   => false,
+                             'required'   => false,
                              'inline'      => true,
                              'value'       => $this->tipo_nacionalidade);
 
@@ -274,7 +274,7 @@ class indice extends clsCadastro
 
       // pais origem
 
-      $options       = array('label' => '');
+      $options       = array('label' => '', 'required'   => false);
       $helperOptions = array('objectName'         => 'pais_origem',
                              'hiddenInputOptions' => array('options' => array('value' => $this->pais_origem_id)));
 
@@ -283,7 +283,7 @@ class indice extends clsCadastro
 
       // naturalidade
 
-      $options       = array('label' => 'Naturalidade');
+      $options       = array('label' => 'Naturalidade', 'required'   => false);
       $helperOptions = array('objectName'         => 'naturalidade',
                              'hiddenInputOptions' => array('options' => array('value' => $this->naturalidade_id)));
 
