@@ -92,9 +92,12 @@ var simpleSearch = {
   },
 
   for : function(options) {
-    options           = defaultSimpleSearchOptions.mergeWith(options);
+    options      = defaultSimpleSearchOptions.mergeWith(options);
 
-    var inputId       = buildId(options.get('objectName') + '_' + options.get('attrName'));
+    var attrName = options.get('attrName');
+    if (attrName) { attrName = '_' + attrName; }
+
+    var inputId = buildId(options.get('objectName') + attrName);
     var hiddenInputId = buildId(options.get('objectName') + '_id');
 
     var $input        = $j(inputId);
@@ -113,15 +116,16 @@ var simpleSearch = {
   }
 };
 
+
 var simpleSearchHelper = {
-  setup : function(objectName, attrName, searchPath, simpleSearchResourceOptions) {
+  setup : function(objectName, attrName, searchPath, searchResourceOptions) {
     var defaultOptions = {
       searchPath : searchPath,
       objectName : objectName,
       attrName   : attrName,
     };
 
-    var options = optionsUtils.merge(defaultOptions, simpleSearchResourceOptions);
+    var options = optionsUtils.merge(defaultOptions, searchResourceOptions);
     simpleSearch.for(options);
   },
 };

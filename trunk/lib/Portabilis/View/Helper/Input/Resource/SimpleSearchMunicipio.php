@@ -34,7 +34,7 @@ require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'lib/Portabilis/String/Utils.php';
 
 /**
- * Portabilis_View_Helper_Input_SimpleSearch class.
+ * Portabilis_View_Helper_Input_SimpleSearchMunicipio class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar

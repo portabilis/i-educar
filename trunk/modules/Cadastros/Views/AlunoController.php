@@ -1,4 +1,6 @@
 <?php
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
 
 /**
  * i-Educar - Sistema de gestão escolar
@@ -87,6 +89,11 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     'inep_id' => array(
       'label'  => 'C&oacutedigo inep',
       'help'   => '',
+    ),
+
+    'deficiencias' => array(
+      'label'  => 'Deficiências / habilidades especiais',
+      'help'   => '',
     )
   );
 
@@ -110,6 +117,17 @@ class AlunoController extends Portabilis_Controller_Page_EditController
   {
     //$this->campoRotulo('pessoa', $this->_getLabel('pessoa'), '');
     $this->url_cancelar = '/intranet/educar_aluno_lst.php';
+
+    // código rede de ensino municipal
+    $options = array('label'    => $this->_getLabel('id'), 'disabled' => true,
+                     'required' => false, 'size' => 25);
+    $this->inputsHelper()->text('id', $options);
+
+
+    // código inep
+    $options = array('label' => $this->_getLabel('inep_id'), 'required' => false, 'size' => 25);
+    $this->inputsHelper()->text('inep_id', $options);
+
 
     // nome
     $options = array('label' => $this->_getLabel('pessoa'), 'size' => 68);
@@ -181,15 +199,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->checkbox('alfabetizado', $options);
 
 
-    // código rede de ensino municipal
-    $options = array('label'    => $this->_getLabel('id'), 'disabled' => true,
-                     'required' => false, 'size' => 25);
-    $this->inputsHelper()->text('id', $options);
+    // Deficiências / habilidades especiais
+    $helperOptions = array('objectName' => 'deficiencias');
+    $options       = array('label' => $this->_getLabel('deficiencias'), 'size' => 50, 'required' => false);
 
+    $this->inputsHelper()->multipleSearchDeficiencias('', $options, $helperOptions);
 
-    // código inep
-    $options = array('label' => $this->_getLabel('inep_id'), 'required' => false, 'size' => 25);
-    $this->inputsHelper()->text('inep_id', $options);
 
     $this->loadResourceAssets($this->getDispatcher());
   }

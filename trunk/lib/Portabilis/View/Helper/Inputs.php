@@ -143,6 +143,13 @@ class Portabilis_View_Helper_Inputs {
     $this->simpleSearchResourceInput('simpleSearchMunicipio', $attrName, $inputOptions, $helperOptions);
   }
 
+  // multiple search resource input helper
+
+  public function multipleSearchDeficiencias($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchDeficiencias', $attrName, $inputOptions, $helperOptions);
+  }
+
+
   // resource input helpers
 
   public function religiao($inputOptions = array(), $helperOptions = array()) {
@@ -183,6 +190,10 @@ class Portabilis_View_Helper_Inputs {
 
     $helper = new $helperClassName($this->viewInstance, $this);
     $helper->$helperName($attrName, $options);
+  }
+
+  protected function multipleSearchResourceInput($helperName, $attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->simpleSearchResourceInput($helperName, $attrName, $inputOptions, $helperOptions);
   }
 
   protected function includeHelper($helperClassName) {
