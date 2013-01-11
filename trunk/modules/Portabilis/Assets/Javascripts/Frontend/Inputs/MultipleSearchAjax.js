@@ -23,11 +23,9 @@ var defaultMultipleSearchAjaxOptions = {
   // options that must be overwritten
   objectName    : undefined,
   attrName      : undefined,
-  searchPath    : undefined,
-
-  // options that can be overwritten
-  placeholder   : 'Informe um valor'
+  searchPath    : undefined
 };
+
 
 var multipleSearchAjax = {
   handleSearch : function(dataResponse) {
@@ -47,17 +45,13 @@ var multipleSearchAjax = {
     var attrName = options.get('attrName');
     if (attrName) { attrName = '_' + attrName; }
 
-    var inputId = buildId(options.get('objectName') + attrName);
+    var $input  = $j(buildId(options.get('objectName') + attrName));
 
     // fixups for chosen
-    $j(inputId).css('width', '430px');
-    $j(inputId).attr('multiple', '');
+    //$input.css('width', '430px');
+    $input.attr('multiple', '');
 
-    // jquery scope
-    (function($) {
-      $(inputId).ajaxChosen(options.get('ajaxChosenOptions'), multipleSearchAjax.handleSearch);
-    })(jQuery);
-
+    $input.ajaxChosen(options.get('ajaxChosenOptions'), multipleSearchAjax.handleSearch);
   }
 };
 

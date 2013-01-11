@@ -145,10 +145,14 @@ class Portabilis_View_Helper_Inputs {
 
   // multiple search resource input helper
 
+
+  /*public function multipleSearchDeficienciasAjax($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchDeficiencias', $attrName, $inputOptions, $helperOptions);
+  }*/
+
   public function multipleSearchDeficiencias($attrName, $inputOptions = array(), $helperOptions = array()) {
     $this->multipleSearchResourceInput('multipleSearchDeficiencias', $attrName, $inputOptions, $helperOptions);
   }
-
 
   // resource input helpers
 

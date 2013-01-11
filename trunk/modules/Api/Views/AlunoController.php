@@ -256,14 +256,7 @@ class AlunoController extends ApiCoreController
   }
 
 
-  protected function loadResponsavel() {
-    $pessoa        = new clsFisica();
-    $pessoa->idpes = $this->getRequest()->pessoa_id;
-    $pessoa        = $pessoa->detalhe();
-
-    return $pessoa->idpes_responsavel;
-  }
-
+  // #TODO mover updateResponsavel e updateDeficiencias para API pessoa ?
 
   protected function updateResponsavel() {
     if ($this->getRequest()->tipo_responsavel == 'outra_pessoa') {
@@ -272,6 +265,19 @@ class AlunoController extends ApiCoreController
       $pessoa->idpes_responsavel = $this->getRequest()->responsavel_id;
 
       return $pessoa->edita();
+    }
+  }
+
+
+  protected function updateDeficiencias() {
+    $sql = "delete from cadastro.fisica_deficiencia where ref_idpes = $1";
+    $this->fetchPreparedQuery($sql, $this->getRequest()->pessoa_id, false);
+
+    foreach ($this->getRequest()->deficiencias as $id) {
+      if (! empty($id)) {
+        $deficiencia = new clsCadastroFisicaDeficiencia($this->getRequest()->pessoa_id, $id);
+        $deficiencia->cadastra();
+      }
     }
   }
 
@@ -316,7 +322,6 @@ class AlunoController extends ApiCoreController
 
       $aluno['tipo_transporte']  = $this->loadTransporte($id);
       $aluno['tipo_responsavel'] = $tiposResponsavel[$aluno['tipo_responsavel']];
-      $aluno['responsavel_id']   = $this->loadResponsavel();
       $aluno['alfabetizado']     = $aluno['analfabeto'] == 1;
       $aluno['inep_id']          = $this->loadInepId($id);
 
@@ -351,6 +356,7 @@ class AlunoController extends ApiCoreController
       $this->updateResponsavel();
       $this->createOrUpdateTransporte($id);
       $this->createUpdateOrDestoyInepId($id);
+      $this->updateDeficiencias();
 
       $this->messenger->append('Cadastro alterado com sucesso', 'success', false, 'error');
     }

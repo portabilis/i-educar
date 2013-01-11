@@ -92,7 +92,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     ),
 
     'deficiencias' => array(
-      'label'  => 'Deficiências / habilidades especiais',
+      'label'  => 'Defici&ecirc;ncias / habilidades especiais',
       'help'   => '',
     )
   );
@@ -201,7 +201,8 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     // Deficiências / habilidades especiais
     $helperOptions = array('objectName' => 'deficiencias');
-    $options       = array('label' => $this->_getLabel('deficiencias'), 'size' => 50, 'required' => false);
+    $options       = array('label' => $this->_getLabel('deficiencias'), 'size' => 50, 'required' => false,
+                           'options' => array('value' => null));
 
     $this->inputsHelper()->multipleSearchDeficiencias('', $options, $helperOptions);
 

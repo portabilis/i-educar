@@ -29,7 +29,7 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/Input/MultipleSearchAjax.php';
+require_once 'lib/Portabilis/View/Helper/Input/MultipleSearch.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'lib/Portabilis/String/Utils.php';
 
@@ -43,9 +43,9 @@ require_once 'lib/Portabilis/String/Utils.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Resource_MultipleSearchDeficiencias extends Portabilis_View_Helper_Input_MultipleSearchAjax {
+class Portabilis_View_Helper_Input_Resource_MultipleSearchDeficiencias extends Portabilis_View_Helper_Input_MultipleSearch {
 
-  protected function resourceValue($id) {
+  /*protected function resourceValue($id) {
     if ($id) {
       $sql     = "select nm_deficiencia from cadastro.deficiencia where cod_deficiencia = $1";
       $options = array('params' => $id, 'return_only' => 'first-field');
@@ -53,6 +53,21 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchDeficiencias extends P
 
       return Portabilis_String_Utils::toLatin1($nome, array('transform' => true, 'escape' => false));
     }
+  }*/
+
+  protected function getOptions($resources) {
+    if (empty($resources)) {
+      $resources = array();
+
+      $_resources = new clsCadastroDeficiencia();
+      $_resources = $_resources->lista();
+
+      foreach ($_resources as $resource) {
+        $resources[$resource['cod_deficiencia']] = $resource['nm_deficiencia'];
+      }
+    }
+
+    return $this->insertOption(null, '', $resources);
   }
 
   public function multipleSearchDeficiencias($attrName, $options = array()) {
@@ -60,16 +75,20 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchDeficiencias extends P
                             'apiController' => 'Deficiencia',
                             'apiResource'   => 'deficiencia-search');
 
-    $options        = $this->mergeOptions($options, $defaultOptions);
+    $options                         = $this->mergeOptions($options, $defaultOptions);
+    $options['options']['resources'] = $this->getOptions($options['options']['resources']);
+
+    //var_dump($options['options']['options']);
+
     $this->placeholderJs($options);
 
-    parent::multipleSearchAjax($options['objectName'], $attrName, $options);
+    parent::multipleSearch($options['objectName'], $attrName, $options);
   }
 
   protected function placeholderJs($options) {
     $optionsVarName = "multipleSearch" . Portabilis_String_Utils::camelize($options['objectName']) . "Options";
     $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
-                       $optionsVarName.placeholder = safeUtf8Decode('Informe o código ou nome da deficiência');";
+                       $optionsVarName.placeholder = safeUtf8Decode('Selecione as deficiências');";
 
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
   }

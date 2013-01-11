@@ -45,13 +45,6 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
 class Portabilis_View_Helper_Input_MultipleSearchAjax extends Portabilis_View_Helper_Input_Core {
 
   public function multipleSearchAjax($objectName, $attrName, $options = array()) {
-    /* #TODO adicionar opção 'dependsOn' => array()
-             e via js resetar campos pesquisa quando mudar alguma dependencia e
-             antes de efetuar pesquisa validar se dependencias estão com valores informados.
-    */
-
-    // add placeholder option, via js
-
     $defaultOptions = array('options'            => array(),
                             'apiModule'         => 'Api',
                             'apiController'     => ucwords($objectName),
@@ -64,13 +57,15 @@ class Portabilis_View_Helper_Input_MultipleSearchAjax extends Portabilis_View_He
       $options['searchPath'] = "/module/" . $options['apiModule'] . "/" . $options['apiController'] .
                                "?oper=get&resource=" . $options['apiResource'];
 
+    // #TODO load resources value?
 
+    /*
     // load value if received an resource id
     $resourceId = $options['hiddenInputOptions']['options']['value'];
 
-    // #TODO load options?
-    //if ($resourceId && ! $options['options']['value'])
-      //$options['options']['value'] = $resourceId . " - ". $this->resourceValue($resourceId);
+    if ($resourceId && ! $options['options']['value'])
+    $options['options']['value'] = $resourceId . " - ". $this->resourcesValue($resourceId);
+    */
 
     $this->selectInput($objectName, $attrName, $options);
 
@@ -106,15 +101,14 @@ class Portabilis_View_Helper_Input_MultipleSearchAjax extends Portabilis_View_He
 
     /*
       all search options (including the option ajaxChosenOptions, that is passed for ajaxChosen plugin),
-      can be overwritten adding "var = multipleSearch<ObjectName>Options = { 'options' : 'val', option2 : '_' };"
+      can be overwritten adding "var = multipleSearchAjax<ObjectName>Options = { 'options' : 'val', option2 : '_' };"
       in the script file for the resource controller.
     */
 
-    $resourceOptions = "multipleSearch" . Portabilis_String_Utils::camelize($objectName) . "Options";
+    $resourceOptions = "multipleSearchAjax" . Portabilis_String_Utils::camelize($objectName) . "Options";
 
     $js = "$resourceOptions = typeof $resourceOptions == 'undefined' ? {} : $resourceOptions;
            multipleSearchAjaxHelper.setup('$objectName', '$attrName', '" . $options['searchPath'] . "', $resourceOptions);";
-
 
     // this script will be executed after the script for the current controller (if it was loaded in the view);
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
