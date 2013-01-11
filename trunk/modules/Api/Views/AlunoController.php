@@ -171,7 +171,7 @@ class AlunoController extends ApiCoreController
 
   // load resources
 
-  protected function loadNomeAluno($alunoId = null) {
+  /*protected function loadNomeAluno($alunoId = null) {
     if (is_null($alunoId))
       $alunoId = $this->getRequest()->aluno_id;
 
@@ -179,15 +179,7 @@ class AlunoController extends ApiCoreController
     $nome = $this->fetchPreparedQuery($sql, $alunoId, false, 'first-field');
 
     return $this->safeString($nome);
-  }
-
-
-  protected function loadNameFor($resourceName, $id){
-    $sql = "select nm_{$resourceName} from pmieducar.{$resourceName} where cod_{$resourceName} = $1";
-    $nome = $this->fetchPreparedQuery($sql, $id, false, 'first-field');
-
-    return $this->safeString($nome);
-  }
+  }*/
 
 
   protected function loadTransporte($alunoId) {
