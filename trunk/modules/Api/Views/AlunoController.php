@@ -38,6 +38,7 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'lib/Portabilis/Array/Utils.php';
+require_once 'lib/Portabilis/Date/Utils.php';
 
 require_once 'Transporte/Model/Responsavel.php';
 
@@ -144,6 +145,10 @@ class AlunoController extends ApiCoreController
   }*/
 
   protected function canGet() {
+    return $this->validatesAlunoId();
+  }
+
+  protected function canEnable() {
     return $this->validatesAlunoId();
   }
 
@@ -291,7 +296,7 @@ class AlunoController extends ApiCoreController
     $aluno->ref_idpes               = $this->getRequest()->pessoa_id;
     $aluno->ref_cod_aluno_beneficio = $this->getRequest()->beneficio_id;
     $aluno->ref_cod_religiao        = $this->getRequest()->religiao_id;
-    $aluno->analfabeto              = $this->getRequest()->alfabetizado ? 1 : 0;
+    $aluno->analfabeto              = $this->getRequest()->alfabetizado ? 0 : 1;
     $aluno->tipo_responsavel        = $tiposResponsavel[$this->getRequest()->tipo_responsavel];
     $aluno->ref_usuario_exc         = $this->getSession()->id_pessoa;
 
@@ -347,17 +352,28 @@ class AlunoController extends ApiCoreController
         'ref_cod_religiao'        => 'religiao_id',
         'ref_idpes'               => 'pessoa_id',
         'tipo_responsavel'        => 'tipo_responsavel',
-        'analfabeto'
+        'ref_usuario_exc'         => 'destroyed_by',
+        'data_exclusao'           => 'destroyed_at',
+        'analfabeto',
+        'ativo'
       );
 
       $aluno = Portabilis_Array_Utils::filter($aluno, $attrs);
 
       $aluno['tipo_transporte']  = $this->loadTransporte($id);
       $aluno['tipo_responsavel'] = $tiposResponsavel[$aluno['tipo_responsavel']];
-      $aluno['alfabetizado']     = $aluno['analfabeto'] == 1;
       $aluno['inep_id']          = $this->loadInepId($id);
+      $aluno['ativo']            = $aluno['ativo'] == 1;
 
+      $aluno['alfabetizado']     = $aluno['analfabeto'] == 0;
       unset($aluno['analfabeto']);
+
+      // destroyed_by username
+      $dataMapper            = $this->getDataMapperFor('usuario', 'funcionario');
+      $entity                = $this->tryGetEntityOf($dataMapper, $aluno['destroyed_by']);
+      $aluno['destroyed_by'] = is_null($entity) ? null : $entity->get('matricula');
+
+      $aluno['destroyed_at'] = Portabilis_Date_Utils::pgSQLToBr($aluno['destroyed_at']);
 
       return $aluno;
     }
@@ -393,15 +409,34 @@ class AlunoController extends ApiCoreController
       $this->messenger->append('Cadastro alterado com sucesso', 'success', false, 'error');
     }
     else
-      $this->messenger->append('Aparentemente o aluno não pode ser alterado, por favor, verifique.',
+      $this->messenger->append('Aparentemente o cadastro não pode ser alterado, por favor, verifique.',
                                'error', false, 'error');
 
     return array('id' => $id);
   }
 
 
-  public function Gerar() {
+  protected function enable() {
+    $id = $this->getRequest()->id;
 
+    if ($this->canEnable()) {
+      $aluno                  = new clsPmieducarAluno();
+      $aluno->cod_aluno       = $id;
+      $aluno->ref_usuario_exc = $this->getSession()->id_pessoa;
+      $aluno->ativo           = 1;
+
+      if($aluno->edita())
+        $this->messenger->append('Cadastro ativado com sucesso', 'success', false, 'error');
+      else
+        $this->messenger->append('Aparentemente o cadastro não pode ser ativado, por favor, verifique.',
+                                 'error', false, 'error');
+    }
+
+    return array('id' => $id);
+  }
+
+
+  public function Gerar() {
     if ($this->isRequestFor('get', 'aluno'))
       $this->appendResponse($this->get());
 
@@ -415,6 +450,9 @@ class AlunoController extends ApiCoreController
     // updates a resource
     elseif ($this->isRequestFor('put', 'aluno'))
       $this->appendResponse($this->put());
+
+    elseif ($this->isRequestFor('enable', 'aluno'))
+      $this->appendResponse($this->enable());
 
     else
       $this->notImplementedOperationError();

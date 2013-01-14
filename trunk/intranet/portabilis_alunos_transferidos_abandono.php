@@ -36,8 +36,8 @@ class PortabilisRelacaoAlunosTransfAbandono extends Report {
     $this->addArg('instituicao', (int)$_POST['ref_cod_instituicao']);
     $this->addArg('situacao',    (int)$_POST['situacao']);
 
-    $this->addArg('dt_inicial',  Portabilis_Date_Utils::BrToPgSQL($_POST['data_inicial']));
-    $this->addArg('dt_final',    Portabilis_Date_Utils::BrToPgSQL($_POST['data_final']));
+    $this->addArg('dt_inicial',  Portabilis_Date_Utils::brToPgSQL($_POST['data_inicial']));
+    $this->addArg('dt_final',    Portabilis_Date_Utils::brToPgSQL($_POST['data_final']));
   }
 }
 

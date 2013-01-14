@@ -1,21 +1,41 @@
 // before page is ready
 
+var $idField        = $j('#id');
 var $nomeField      = $j('#pessoa_nome');
 
 var $resourceNotice = $j('<span>').html('')
                                   .addClass('notice resource-notice')
                                   .hide()
-                                  .appendTo($nomeField.parent());
+                                  .width($nomeField.outerWidth() - 12)
+                                  .insertBefore($idField.parent());
 
+var $pessoaNotice = $resourceNotice.clone()
+                                   .appendTo($nomeField.parent());
 
 // ajax
 
 resourceOptions.handleGet = function(dataResponse) {
   handleMessages(dataResponse.msgs);
+  $resourceNotice.hide();
+
+  if (! dataResponse.ativo) {
+    $j('#btn_enviar').hide();
+
+    var msg = "Este cadastro foi desativado em <b>"+ dataResponse.destroyed_at +
+              " </b><br/>pelo usuário <b>" + dataResponse.destroyed_by + "</b>, ";
+
+    $resourceNotice.html(stringUtils.toUtf8(msg)).slideDown('fast');
+
+    $j('<a>').addClass('decorated')
+             .attr('href', '#')
+             .click(resourceOptions.enable)
+             .html('reativar cadastro.')
+             .appendTo($resourceNotice);
+  }
 
   getPersonDetails(dataResponse.pessoa_id);
 
-  $j('#id').val(dataResponse.id);
+  $idField.val(dataResponse.id);
   $j('#inep_id').val(dataResponse.inep_id);
   $j('#tipo_responsavel').val(dataResponse.tipo_responsavel).change();
   $j('#religiao_id').val(dataResponse.religiao_id);
@@ -27,22 +47,21 @@ resourceOptions.handleGet = function(dataResponse) {
 var handleGetPersonDetails = function(dataResponse) {
   handleMessages(dataResponse.msgs);
 
-  $resourceNotice.hide();
-
+  $pessoaNotice.hide();
 
   // verifica se já existe um aluno para a pessoa
 
   var alunoId = dataResponse.aluno_id;
 
   if (alunoId && alunoId != resource.id()) {
-    $resourceNotice.html(stringUtils.toUtf8('Já existe o aluno '+ alunoId +' cadastrado para esta pessoa. ' ))
+    $pessoaNotice.html(stringUtils.toUtf8('Esta pessoa já possui o aluno código '+ alunoId +' cadastrado, ' ))
                    .slideDown('fast');
 
     $j('<a>').addClass('decorated')
              .attr('href', resource.url(alunoId))
-             .attr('target', '__blank')
-             .html('Visualizar cadastro.')
-             .appendTo($resourceNotice);
+             .attr('target', '_blank')
+             .html('acessar cadastro.')
+             .appendTo($pessoaNotice);
   }
 
   else {

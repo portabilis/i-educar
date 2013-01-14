@@ -40,14 +40,25 @@
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
+
 class Portabilis_Date_Utils
 {
   /**
    * Recebe uma data no formato dd/mm/yyyy e retorna no formato postgres yyyy-mm-dd.
    * @param string $date
    */
-  public static function BrToPgSQL($date) {
+  public static function brToPgSQL($date) {
+    // #TODO usar classe nativa datetime http://www.phptherightway.com/#date_and_time ?
     list($dia, $mes, $ano) = explode("/", $date);
     return "$ano-$mes-$dia";
+  }
+
+  /**
+   * Recebe uma data no formato postgres yyyy-mm-dd hh:mm:ss.uuuu e retorna no formato br dd/mm/yyyy hh:mm:ss.
+   * @param string $timestamp
+   */
+  public static function pgSQLToBr($timestamp) {
+      $d = DateTime::createFromFormat('Y-m-d H:i:s.u', $timestamp);
+      return ($d ? $d->format('d/m/Y H:i:s') : null);
   }
 }

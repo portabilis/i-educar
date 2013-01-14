@@ -53,7 +53,14 @@ var resourceOptions = {
     }
   },
 
-  handlePut : function(dataResponse) {},
+  handlePut : function(dataResponse) {
+  },
+
+  handleEnable : function(dataResponse) {
+    handleMessages(dataResponse.msgs);
+    $resourceNotice.slideUp('fast');
+    $j('#btn_enviar').removeAttr('disabled').show();
+  },
 
   handleGet : function(dataResponse) {
     throw new Error('The function resourceOptions.handleGet must be overwritten!');
@@ -65,12 +72,30 @@ var resourceOptions = {
     };
 
     var options = {
-      url      : getResourceUrlBuilder.buildUrl(this.apiUrlBase(), this.get('name')(), additionalVars),
+      url      : getResourceUrlBuilder.buildUrl(resourceOptions.apiUrlBase(), resourceOptions.get('name')(), additionalVars),
       dataType : 'json',
       success  : this.handleGet,
     };
 
     getResource(options);
+  },
+
+  enable : function() {
+    if (confirm(stringUtils.toUtf8('Confirma reativação do cadastro?'))) {
+
+      var additionalVars = {
+        id   : resource.id(),
+        oper : 'enable'
+      };
+
+      var options = {
+        url      : postResourceUrlBuilder.buildUrl(resourceOptions.apiUrlBase(), resourceOptions.get('name')(), additionalVars),
+        dataType : 'json',
+        success  : resourceOptions.handleEnable,
+      };
+
+      postResource(options);
+    }
   },
 
   beforeSave : function () {

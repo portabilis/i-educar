@@ -203,7 +203,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
 
     // alfabetizado
-    $options = array('label' => $this->_getLabel('alfabetizado'));
+    $options = array('label' => $this->_getLabel('alfabetizado'), 'value' => 'checked');
     $this->inputsHelper()->checkbox('alfabetizado', $options);
 
 
