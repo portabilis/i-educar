@@ -17,5 +17,3 @@ var simpleSearchAlunoOptions = {
     return true;
  }
 };
-
-console.log('aluno');
