@@ -29,56 +29,59 @@ var handleGetPersonDetails = function(dataResponse) {
 
   $resourceNotice.hide();
 
-  $j('#pessoa_id').val(dataResponse.id);
-  $nomeField.val(dataResponse.id + ' - ' + dataResponse.nome);
-
-  var nomePai = dataResponse.nome_pai;
-  var nomeMae = dataResponse.nome_mae;
-  var nomeResponsavel = dataResponse.nome_responsavel;
-
-  if (dataResponse.pai_id)
-    nomePai = dataResponse.pai_id + ' - ' + nomePai;
-
-  if (dataResponse.mae_id)
-    nomeMae = dataResponse.mae_id + ' - ' + nomeMae;
-
-  if (dataResponse.responsavel_id)
-    nomeResponsavel = dataResponse.responsavel_id + ' - ' + nomeResponsavel;
-
-  //$j('#rg').val(dataResponse.rg);
-  //$j('#cpf').val(dataResponse.cpf);
-  $j('#pai').val(nomePai);
-  $j('#mae').val(nomeMae);
-  $j('#responsavel_nome').val(nomeResponsavel);
-  $j('#responsavel_id').val(dataResponse.responsavel_id);
-
-  // deficiencias
-
-  $deficiencias = $j('#deficiencias');
-
-  $j.each(dataResponse.deficiencias, function(id, nome) {
-    $deficiencias.children("[value=" + id + "]").attr('selected', '');
-  });
-
-  $deficiencias.trigger('liszt:updated');
-
 
   // verifica se já existe um aluno para a pessoa
 
   var alunoId = dataResponse.aluno_id;
 
-  if (alunoId) {
+  if (alunoId && alunoId != resource.id()) {
     $resourceNotice.html(stringUtils.toUtf8('Já existe o aluno '+ alunoId +' cadastrado para esta pessoa. ' ))
                    .slideDown('fast');
 
     $j('<a>').addClass('decorated')
              .attr('href', resource.url(alunoId))
+             .attr('target', '__blank')
              .html('Visualizar cadastro.')
              .appendTo($resourceNotice);
   }
 
-  // # TODO show aluno photo
-  //$j('#aluno_foto').val(dataResponse.url_foto);
+  else {
+    $j('#pessoa_id').val(dataResponse.id);
+    $nomeField.val(dataResponse.id + ' - ' + dataResponse.nome);
+
+    var nomePai = dataResponse.nome_pai;
+    var nomeMae = dataResponse.nome_mae;
+    var nomeResponsavel = dataResponse.nome_responsavel;
+
+    if (dataResponse.pai_id)
+      nomePai = dataResponse.pai_id + ' - ' + nomePai;
+
+    if (dataResponse.mae_id)
+      nomeMae = dataResponse.mae_id + ' - ' + nomeMae;
+
+    if (dataResponse.responsavel_id)
+      nomeResponsavel = dataResponse.responsavel_id + ' - ' + nomeResponsavel;
+
+    //$j('#rg').val(dataResponse.rg);
+    //$j('#cpf').val(dataResponse.cpf);
+    $j('#pai').val(nomePai);
+    $j('#mae').val(nomeMae);
+    $j('#responsavel_nome').val(nomeResponsavel);
+    $j('#responsavel_id').val(dataResponse.responsavel_id);
+
+    // deficiencias
+
+    $deficiencias = $j('#deficiencias');
+
+    $j.each(dataResponse.deficiencias, function(id, nome) {
+      $deficiencias.children("[value=" + id + "]").attr('selected', '');
+    });
+
+    $deficiencias.trigger('liszt:updated');
+
+    // # TODO show aluno photo
+    //$j('#aluno_foto').val(dataResponse.url_foto);
+  }
 }
 
 var getPersonDetails = function(personId) {

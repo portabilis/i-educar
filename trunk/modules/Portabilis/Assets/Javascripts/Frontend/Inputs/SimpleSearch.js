@@ -31,6 +31,9 @@ var defaultSimpleSearchOptions = {
   // options that can be overwritten
   placeholder   : 'Informe um valor',
 
+  // additional search params to send to api
+  params        : {},
+
   // #TODO implementar validacao dependencia
   // elements that presence is required to do the search
   // requiresPresenceOf : [ /* $j('#someElement') */ ],
@@ -64,7 +67,7 @@ var simpleSearch = {
 
       // inject additional params
       $j.each($element.data('simple-search-options').params, function(name, value) {
-        params[name] = typeof value == 'function' ? value() : value; 
+        params[name] = typeof value == 'function' ? value() : value;
       });
 
       // clear the hidden id, because it will be set when the user select another result.
