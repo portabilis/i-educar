@@ -183,6 +183,7 @@ class AlunoController extends ApiCoreController
 
 
   protected function loadTransporte($alunoId) {
+
     $tiposTransporte = array(
       Transporte_Model_Responsavel::NENHUM    => 'nenhum',
       Transporte_Model_Responsavel::MUNICIPAL => 'municipal',
@@ -190,9 +191,9 @@ class AlunoController extends ApiCoreController
     );
 
     $dataMapper = $this->getDataMapperFor('transporte', 'aluno');
-    $entity     = $this->getEntityOf($dataMapper, $alunoId);
+    $entity     = $this->tryGetEntityOf($dataMapper, $alunoId);
 
-    return $tiposTransporte[$entity->get('responsavel')];
+    return (is_null($entity) ? null : $tiposTransporte[$entity->get('responsavel')]);
   }
 
 
@@ -306,11 +307,11 @@ class AlunoController extends ApiCoreController
 
   protected function sqlsForNumericSearch() {
 
-    return "select distinct ON (aluno.cod_aluno) aluno.cod_aluno as id, 
-            matricula.cod_matricula as matricula_id, pessoa.nome as name from pmieducar.matricula, 
+    return "select distinct ON (aluno.cod_aluno) aluno.cod_aluno as id,
+            matricula.cod_matricula as matricula_id, pessoa.nome as name from pmieducar.matricula,
             pmieducar.aluno, cadastro.pessoa where aluno.cod_aluno = matricula.ref_cod_aluno and
-            pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and 
-            matricula.ativo = 1 and 
+            pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and
+            matricula.ativo = 1 and
             (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else 1=1 end) and
             (matricula.cod_matricula like $1 or matricula.ref_cod_aluno like $1) and
             matricula.aprovado in (1, 2, 3, 7, 8, 9) limit 15";
@@ -318,10 +319,10 @@ class AlunoController extends ApiCoreController
 
 
   protected function sqlsForStringSearch() {
-    return "select distinct ON (aluno.cod_aluno) aluno.cod_aluno as id, 
-            matricula.cod_matricula as matricula_id, pessoa.nome as name from pmieducar.matricula, 
+    return "select distinct ON (aluno.cod_aluno) aluno.cod_aluno as id,
+            matricula.cod_matricula as matricula_id, pessoa.nome as name from pmieducar.matricula,
             pmieducar.aluno, cadastro.pessoa where aluno.cod_aluno = matricula.ref_cod_aluno and
-            pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and 
+            pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and
             matricula.ativo = 1 and
             (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else 1=1 end) and
             lower(pessoa.nome) like $1 and matricula.aprovado in (1, 2, 3, 7, 8, 9) limit 15";
