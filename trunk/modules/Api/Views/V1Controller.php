@@ -370,6 +370,8 @@ class V1Controller extends ApiCoreController
     if ($this->isRequestFor('get', 'aluno'))
       $this->appendResponse('aluno', $this->getAluno());
 
+    
+    // TODO migrar clientes para usar search-aluno da API Aluno(Controller) 
     elseif ($this->isRequestFor('get', 'aluno-search'))
       $this->appendResponse('aluno-search', $this->getAlunoSearch());
 

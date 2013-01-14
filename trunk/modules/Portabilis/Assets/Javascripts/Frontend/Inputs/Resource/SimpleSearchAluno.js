@@ -1,21 +1,13 @@
-var simpleSearchMatriculaOptions = {
+var simpleSearchAlunoOptions = {
 
   params : { 
     escola_id : function() { 
       return $j('#ref_cod_escola').val() 
     },
 
-    ano : function() {
-      return $j('#ano').val() 
-    } 
   },
 
   canSearch : function() { 
-
-    if (! $j('#ano').val()) {
-      alert('Informe o ano.');
-      return false;
-    }
 
     if (! $j('#ref_cod_escola').val()) {
       alert('Selecione uma escola.');
@@ -25,3 +17,5 @@ var simpleSearchMatriculaOptions = {
     return true;
  }
 };
+
+console.log('aluno');

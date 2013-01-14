@@ -297,6 +297,37 @@ class AlunoController extends ApiCoreController
     return (is_null($id) ? $aluno->cadastra() : $aluno->edita());
   }
 
+  // search options
+
+  protected function searchOptions() {
+    return array('sqlParams'    => array($this->getRequest()->escola_id),
+                 'selectFields' => array('matricula_id'));
+  }
+
+  protected function sqlsForNumericSearch() {
+
+    return "select distinct ON (aluno.cod_aluno) aluno.cod_aluno as id, 
+            matricula.cod_matricula as matricula_id, pessoa.nome as name from pmieducar.matricula, 
+            pmieducar.aluno, cadastro.pessoa where aluno.cod_aluno = matricula.ref_cod_aluno and
+            pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and 
+            matricula.ativo = 1 and 
+            (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else 1=1 end) and
+            (matricula.cod_matricula like $1 or matricula.ref_cod_aluno like $1) and
+            matricula.aprovado in (1, 2, 3, 7, 8, 9) limit 15";
+  }
+
+
+  protected function sqlsForStringSearch() {
+    return "select distinct ON (aluno.cod_aluno) aluno.cod_aluno as id, 
+            matricula.cod_matricula as matricula_id, pessoa.nome as name from pmieducar.matricula, 
+            pmieducar.aluno, cadastro.pessoa where aluno.cod_aluno = matricula.ref_cod_aluno and
+            pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and 
+            matricula.ativo = 1 and
+            (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else 1=1 end) and
+            lower(pessoa.nome) like $1 and matricula.aprovado in (1, 2, 3, 7, 8, 9) limit 15";
+  }
+
+
 
   // api responders
 
@@ -372,6 +403,9 @@ class AlunoController extends ApiCoreController
 
     if ($this->isRequestFor('get', 'aluno'))
       $this->appendResponse($this->get());
+
+    elseif ($this->isRequestFor('get', 'aluno-search'))
+      $this->appendResponse($this->search());
 
     // creates a new resource
     elseif ($this->isRequestFor('post', 'aluno'))

@@ -147,6 +147,10 @@ class Portabilis_View_Helper_Inputs {
     $this->simpleSearchResourceInput('simpleSearchMatricula', $attrName, $inputOptions, $helperOptions);
   }
 
+  public function simpleSearchAluno($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->simpleSearchResourceInput('simpleSearchAluno', $attrName, $inputOptions, $helperOptions);
+  }
+
   // multiple search resource input helper
 
 

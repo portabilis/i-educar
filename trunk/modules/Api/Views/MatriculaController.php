@@ -50,7 +50,8 @@ class MatriculaController extends ApiCoreController
   // search options
 
   protected function searchOptions() {
-    return array('sqlParams' => array($this->getRequest()->escola_id));
+    return array('sqlParams'    => array($this->getRequest()->escola_id, $this->getRequest()->ano),
+                 'selectFields' => array('aluno_id'));
   }
 
   protected function sqlsForNumericSearch() {
@@ -61,7 +62,7 @@ class MatriculaController extends ApiCoreController
             pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and 
             matricula.ativo = 1 and matricula.ref_ref_cod_escola = $2 and
             (matricula.cod_matricula like $1 or matricula.ref_cod_aluno like $1) and
-            matricula.aprovado in (1, 2, 3, 7, 8, 9) limit 15";
+            matricula.aprovado in (1, 2, 3, 7, 8, 9) and ano = $3 limit 15";
   }
 
 
@@ -71,7 +72,15 @@ class MatriculaController extends ApiCoreController
             pmieducar.aluno, cadastro.pessoa where aluno.cod_aluno = matricula.ref_cod_aluno and
             pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and 
             matricula.ativo = 1 and matricula.ref_ref_cod_escola = $2 and
-            lower(pessoa.nome) like $1 and matricula.aprovado in (1, 2, 3, 7, 8, 9) limit 15";
+            lower(pessoa.nome) like $1 and matricula.aprovado in (1, 2, 3, 7, 8, 9) and ano = $3 limit 15";
+  }
+
+
+  protected function formatResourceValue($resource) {
+    $alunoId = $resource['aluno_id'];
+    $nome    = $this->toUtf8($resource['name'], array('transform' => true));
+
+    return $resource['id'] . " - ($alunoId) $nome";
   }
 
 
