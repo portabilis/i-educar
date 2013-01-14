@@ -50,11 +50,6 @@ class Portabilis_View_Helper_Input_SimpleSearch extends Portabilis_View_Helper_I
   }
 
   public function simpleSearch($objectName, $attrName, $options = array()) {
-    /* #TODO adicionar opção 'dependsOn' => array()
-             e via js resetar campos pesquisa quando mudar alguma dependencia e
-             antes de efetuar pesquisa validar se dependencias estão com valores informados.
-    */
-
     $defaultOptions = array('options'            => array(),
                             'apiModule'         => 'Api',
                             'apiController'     => ucwords($objectName),

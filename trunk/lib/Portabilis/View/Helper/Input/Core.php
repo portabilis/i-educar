@@ -64,6 +64,8 @@ class Portabilis_View_Helper_Input_Core {
     // js fixups
 
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, 'fixupFieldsWidth();');
+
+    $this->loadAssets();
   }
 
   // wrapper for Portabilis_Array_Utils::merge
@@ -79,4 +81,7 @@ class Portabilis_View_Helper_Input_Core {
   protected function inputsHelper() {
     return $this->_inputsHelper;
   }
+
+  // to overwrite in childs
+  protected function loadAssets() { }
 }

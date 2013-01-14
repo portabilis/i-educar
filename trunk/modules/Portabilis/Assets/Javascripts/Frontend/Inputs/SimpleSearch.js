@@ -29,7 +29,13 @@ var defaultSimpleSearchOptions = {
   searchPath    : undefined,
 
   // options that can be overwritten
-  placeholder   : 'Informe um valor'
+  placeholder   : 'Informe um valor',
+
+  // #TODO implementar validacao dependencia
+  // elements that presence is required to do the search
+  // requiresPresenceOf : [ /* $j('#someElement') */ ],
+
+  canSearch : function() { return true; },
 };
 
 
@@ -50,15 +56,24 @@ var simpleSearch = {
 
   search : function(element, request, response) {
     var $element      = $j(element);
-    var hiddenInputId = $element.data('simple_search_options').hidden_input_id;
-    var searchPath    = $element.data('simple_search_options').search_path;
 
-    // clear the hidden id, because it will be set when the user select another result.
-    $j(hiddenInputId).val('');
+    if ($element.data('simple-search-options').canSearch()) {
+      var hiddenInputId = $element.data('hidden-input-id');
+      var searchPath    = $element.data('simple-search-options').searchPath;
+      var params        = { query : request.term };
 
-    $j.get(searchPath, { query : request.term }, function(dataResponse) {
-      simpleSearch.handleSearch(dataResponse, response);
-    });
+      // inject additional params
+      $j.each($element.data('simple-search-options').params, function(name, value) {
+        params[name] = typeof value == 'function' ? value() : value; 
+      });
+
+      // clear the hidden id, because it will be set when the user select another result.
+      $j(hiddenInputId).val('');
+
+      $j.get(searchPath, params, function(dataResponse) {
+        simpleSearch.handleSearch(dataResponse, response);
+      });
+   }
   },
 
   handleSearch : function(dataResponse, response) {
@@ -71,7 +86,7 @@ var simpleSearch = {
 
   handleSelect : function(event, ui) {
     var $element      = $j(event.target);
-    var hiddenInputId = $element.data('simple_search_options').hidden_input_id;
+    var hiddenInputId = $element.data('hidden-input-id');
 
     $element.val(ui.item.label);
     $j(hiddenInputId).val(ui.item.value);
@@ -103,7 +118,9 @@ var simpleSearch = {
     var $input        = $j(inputId);
     var $hiddenInput  = $j(hiddenInputId);
 
-    $input.data('simple_search_options', { 'hidden_input_id' : hiddenInputId, 'search_path' : options.get('searchPath') });
+    $input.data('simple-search-options', options);
+    $input.data('hidden-input-id', $hiddenInput);
+
     $input.attr('placeholder', options.get('placeholder'));
 
     $hiddenInput.addClass('simple-search-id');

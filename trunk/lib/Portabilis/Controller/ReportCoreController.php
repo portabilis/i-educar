@@ -186,6 +186,22 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
     echo $msg;
   }
 
+  protected function loadResourceAssets($dispatcher) {
+    $rootPath       = dirname(dirname(dirname(dirname(__FILE__))));
+
+    $controllerName = ucwords($dispatcher->getControllerName());
+    $actionName     = ucwords($dispatcher->getActionName());
+
+    $style          = "/modules/$controllerName/Assets/Stylesheets/$actionName.css";
+    $script         = "/modules/$controllerName/Assets/Javascripts/$actionName.js";
+
+    if (file_exists($rootPath . $style))
+      Portabilis_View_Helper_Application::loadStylesheet($this, $style);
+
+    if (file_exists($rootPath . $script))
+      Portabilis_View_Helper_Application::loadJavascript($this, $script);
+  }
+
 
   function appendFixups() {
     $js = <<<EOT
