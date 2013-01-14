@@ -109,6 +109,21 @@ var windowUtils = {
 
 // string utils
 
+var stringUtils = {
+  toUtf8 : function(s) {
+    try {
+      s = decodeURIComponent(escape(s));
+    }
+    catch(e) {
+      safeLog('Erro ao decodificar string utf8: ' + s);
+    }
+
+    return s;
+  }
+};
+
+// #TODO migrar restante funcoes string utils para hash stringUtils / migrar referencias a estas.
+
 function safeToUpperCase(value) {
   if (typeof(value) == 'string')
     value = value.toUpperCase();
@@ -162,19 +177,12 @@ function safeSort(values) {
 
 
 function safeUtf8Decode(s) {
-  try {
-    s = decodeURIComponent(escape(s));
-  }
-  catch(e) {
-    safeLog('Erro ao decodificar string utf8: ' + s);
-  }
-
-  return s;
+  return stringUtils.toUtf8(s);
 }
 
 // feedback messages
 
-// # TODO migrar todas referencias de "handleMessages([{type*" para "messageUtils.<type>"
+// #TODO migrar todas referencias de "handleMessages([{type*" para "messageUtils.<type>"
 
 var messageUtils = {
   error : function(msg, targetId) {
