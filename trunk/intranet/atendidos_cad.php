@@ -148,7 +148,7 @@ class indice extends clsCadastro
         $this->bairro, $this->logradouro, $this->cep, $this->idlog, $this->idbai,
         $this->idtlog, $this->sigla_uf, $this->complemento, $this->numero,
         $this->bloco, $this->apartamento, $this->andar, $this->zona_localizacao, $this->estado_civil,
-        $this->pai_id, $this->mae_id, $this->tipo_nacionalidade, $this->pais_origem
+        $this->pai_id, $this->mae_id, $this->tipo_nacionalidade, $this->pais_origem, $this->naturalidade
       ) =
 
       $objPessoa->queryRapida(
@@ -157,10 +157,12 @@ class indice extends clsCadastro
         'url', 'tipo', 'sexo', 'cidade', 'bairro', 'logradouro', 'cep', 'idlog',
         'idbai', 'idtlog', 'sigla_uf', 'complemento', 'numero', 'bloco', 'apartamento',
         'andar', 'zona_localizacao', 'ideciv', 'idpes_pai', 'idpes_mae', 'nacionalidade',
-        'idpais_estrangeiro'
+        'idpais_estrangeiro', 'idmun_nascimento'
       );
 
       $this->estado_civil_id = $this->estado_civil->ideciv;
+      $this->pais_origem_id  = $this->pais_origem->idpais;
+      $this->naturalidade_id = $this->naturalidade->idmun;
 
       // Cor/Raça.
       $raca = new clsCadastroFisicaRaca($this->cod_pessoa_fj);
@@ -264,20 +266,32 @@ class indice extends clsCadastro
 
       $options       = array('label'       => 'Nacionalidade',
                              'resources'   => $tiposNacionalidade,
-                             #'required'   => false,
+                             'required'   => false,
                              'inline'      => true,
                              'value'       => $this->tipo_nacionalidade);
 
       $this->inputsHelper()->select('tipo_nacionalidade', $options);
 
-      $options       = array('label' => '');
+      // pais origem
+
+      $options       = array('label' => '', 'required'   => false);
       $helperOptions = array('objectName'         => 'pais_origem',
-                             'hiddenInputOptions' => array('options' => array('value' => $this->pais_origem->idpais)));
+                             'hiddenInputOptions' => array('options' => array('value' => $this->pais_origem_id)));
 
       $this->inputsHelper()->simpleSearchPais('nome', $options, $helperOptions);
 
 
+      // naturalidade
+
+      $options       = array('label' => 'Naturalidade', 'required'   => false);
+      $helperOptions = array('objectName'         => 'naturalidade',
+                             'hiddenInputOptions' => array('options' => array('value' => $this->naturalidade_id)));
+
+      $this->inputsHelper()->simpleSearchMunicipio('nome', $options, $helperOptions);
+
+
       // Detalhes do Endereço
+
       $objTipoLog   = new clsTipoLogradouro();
       $listaTipoLog = $objTipoLog->lista();
       $listaTLog    = array('0' => 'Selecione');
@@ -499,6 +513,7 @@ class indice extends clsCadastro
     $fisica->idpes_mae          = $this->mae_id;
     $fisica->nacionalidade      = $_REQUEST['tipo_nacionalidade'];
     $fisica->idpais_estrangeiro = $_REQUEST['pais_origem_id'];
+    $fisica->idmun_nascimento   = $_REQUEST['naturalidade_id'];
 
     $fisica->cadastra();
 
@@ -599,6 +614,7 @@ class indice extends clsCadastro
     $fisica->idpes_mae          = $this->mae_id;
     $fisica->nacionalidade      = $_REQUEST['tipo_nacionalidade'];
     $fisica->idpais_estrangeiro = $_REQUEST['pais_origem_id'];
+    $fisica->idmun_nascimento   = $_REQUEST['naturalidade_id'];
 
     $fisica->edita();
 

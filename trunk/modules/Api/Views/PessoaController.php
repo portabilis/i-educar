@@ -116,6 +116,23 @@ class PessoaController extends ApiCoreController
     return $details;
   }
 
+  protected function loadDeficiencias($pessoaId) {
+    $sql = "select cod_deficiencia as id, nm_deficiencia as nome from cadastro.fisica_deficiencia,
+            cadastro.deficiencia where cod_deficiencia = ref_cod_deficiencia and ref_idpes = $1";
+
+    $deficiencias = $this->fetchPreparedQuery($sql, $pessoaId, false);
+
+    // transforma array de arrays em array chave valor
+    $_deficiencias = array();
+
+    foreach ($deficiencias as $deficiencia) {
+      $nome = $this->toUtf8($deficiencia['nome'], array('transform' => true));
+      $_deficiencias[$deficiencia['id']] = $nome;
+    }
+
+    return $_deficiencias;
+  }
+
 
   // search
 
@@ -150,6 +167,8 @@ class PessoaController extends ApiCoreController
 
       $details = $this->loadDetails($this->getRequest()->id);
       $pessoa  = Portabilis_Array_Utils::merge($pessoa, $details);
+
+      $pessoa['deficiencias'] = $this->loadDeficiencias($this->getRequest()->id);
     }
 
     return $pessoa;

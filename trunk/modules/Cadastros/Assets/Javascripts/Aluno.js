@@ -40,6 +40,16 @@ var handleGetPersonDetails = function(dataResponse) {
   $j('#responsavel_nome').val(nomeResponsavel);
   $j('#responsavel_id').val(dataResponse.responsavel_id);
 
+  // deficiencias
+
+  $deficiencias = $j('#deficiencias');
+
+  $j.each(dataResponse.deficiencias, function(id, nome) {
+    $deficiencias.children("[value=" + id + "]").attr('selected', '');
+  });
+
+  $deficiencias.trigger('liszt:updated');
+
   //$j('#aluno_foto').val(dataResponse.url_foto);
 }
 

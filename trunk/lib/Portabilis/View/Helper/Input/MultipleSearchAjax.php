@@ -33,7 +33,7 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
 
 
 /**
- * Portabilis_View_Helper_Input_SimpleSearch class.
+ * Portabilis_View_Helper_Input_MultipleSearchAjax class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -42,26 +42,14 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_SimpleSearch extends Portabilis_View_Helper_Input_Core {
+class Portabilis_View_Helper_Input_MultipleSearchAjax extends Portabilis_View_Helper_Input_Core {
 
-  protected function resourceValue($id) {
-    throw new Exception("You are trying to get the resource value, but this is a generic class, " .
-                        "please, define the method resourceValue in a resource subclass.");
-  }
-
-  public function simpleSearch($objectName, $attrName, $options = array()) {
-    /* #TODO adicionar opção 'dependsOn' => array()
-             e via js resetar campos pesquisa quando mudar alguma dependencia e
-             antes de efetuar pesquisa validar se dependencias estão com valores informados.
-    */
-
+  public function multipleSearchAjax($objectName, $attrName, $options = array()) {
     $defaultOptions = array('options'            => array(),
                             'apiModule'         => 'Api',
                             'apiController'     => ucwords($objectName),
                             'apiResource'       => $objectName . '-search',
-                            'searchPath'         => '',
-                            'addHiddenInput'     => true,
-                            'hiddenInputOptions' => array());
+                            'searchPath'         => '');
 
     $options = $this->mergeOptions($options, $defaultOptions);
 
@@ -69,61 +57,58 @@ class Portabilis_View_Helper_Input_SimpleSearch extends Portabilis_View_Helper_I
       $options['searchPath'] = "/module/" . $options['apiModule'] . "/" . $options['apiController'] .
                                "?oper=get&resource=" . $options['apiResource'];
 
+    // #TODO load resources value?
 
+    /*
     // load value if received an resource id
     $resourceId = $options['hiddenInputOptions']['options']['value'];
 
     if ($resourceId && ! $options['options']['value'])
-      $options['options']['value'] = $resourceId . " - ". $this->resourceValue($resourceId);
+    $options['options']['value'] = $resourceId . " - ". $this->resourcesValue($resourceId);
+    */
 
-    $this->hiddenInput($objectName, $attrName, $options);
-    $this->textInput($objectName, $attrName, $options);
+    $this->selectInput($objectName, $attrName, $options);
+
+    $this->loadAssets();
     $this->js($objectName, $attrName, $options);
   }
 
+  protected function selectInput($objectName, $attrName, $options) {
+    $textHelperOptions = array('objectName' => $objectName);
 
-  protected function hiddenInput($objectName, $attrName, $options) {
-    if ($options['addHiddenInput']) {
-      if ($attrName == 'id') {
-        throw new CoreExt_Exception("When \$addHiddenInput is true the \$attrName (of the visible input) " .
-                                    "must be different than 'id', because the hidden input will use it.");
-      }
-
-      $defaultHiddenInputOptions = array('options' => array(), 'objectName' => $objectName);
-      $hiddenInputOptions        = $this->mergeOptions($options['hiddenInputOptions'], $defaultHiddenInputOptions);
-
-      $this->inputsHelper()->hidden('id', array(), $hiddenInputOptions);
-    }
+    $this->inputsHelper()->select($attrName, $options['options'], $textHelperOptions);
   }
 
 
-  protected function textInput($objectName, $attrName, $options) {
-    $textHelperOptions = array('objectName' => $objectName);
+  protected function loadAssets() {
+    $cssFile = '/modules/Portabilis/Assets/Plugins/Chosen/chosen.css';
+    Portabilis_View_Helper_Application::loadStylesheet($this->viewInstance, $cssFile);
 
-    $this->inputsHelper()->text($attrName, $options['options'], $textHelperOptions);
+    // AjaxChosen requires this fixup, see https://github.com/meltingice/ajax-chosen
+    $fixupCss = ".chzn-container .chzn-results .group-result { display: list-item; }";
+    Portabilis_View_Helper_Application::embedStylesheet($this->viewInstance, $fixupCss);
+
+
+    $jsFiles = array('/modules/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js',
+                     '/modules/Portabilis/Assets/Plugins/AjaxChosen/ajax-chosen.min.js',
+                     '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearchAjax.js');
+    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFiles);
   }
 
 
   protected function js($objectName, $attrName, $options) {
-    // load simple search js
-
-    $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js';
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
-
-
-    // setup simple search
+    // setup multiple search
 
     /*
-      all search options (including the option autocompleteOptions, that is passed for jquery autocomplete plugin),
-      can be overwritten adding "var = simpleSearch<ObjectName>Options = { placeholder : '...', optionName : '...' };"
+      all search options (including the option ajaxChosenOptions, that is passed for ajaxChosen plugin),
+      can be overwritten adding "var = multipleSearchAjax<ObjectName>Options = { 'options' : 'val', option2 : '_' };"
       in the script file for the resource controller.
     */
 
-    $resourceOptions = "simpleSearch" . Portabilis_String_Utils::camelize($objectName) . "Options";
+    $resourceOptions = "multipleSearchAjax" . Portabilis_String_Utils::camelize($objectName) . "Options";
 
     $js = "$resourceOptions = typeof $resourceOptions == 'undefined' ? {} : $resourceOptions;
-           simpleSearchHelper.setup('$objectName', '$attrName', '" . $options['searchPath'] . "', $resourceOptions);";
-
+           multipleSearchAjaxHelper.setup('$objectName', '$attrName', '" . $options['searchPath'] . "', $resourceOptions);";
 
     // this script will be executed after the script for the current controller (if it was loaded in the view);
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
