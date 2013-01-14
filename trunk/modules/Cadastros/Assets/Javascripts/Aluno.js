@@ -145,6 +145,7 @@ var simpleSearchPessoaOptions = {
 
 (function($) {
   $(document).ready(function() {
+    $nomeField.focus();
 
     var checkTipoResponsavel = function(){
       if ($j('#tipo_responsavel').val() == 'outra_pessoa')
