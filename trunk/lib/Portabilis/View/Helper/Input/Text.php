@@ -50,8 +50,11 @@ class Portabilis_View_Helper_Input_Text extends Portabilis_View_Helper_Input_Cor
     $options             = $this->mergeOptions($options, $defaultOptions);
     $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
 
+    $label = ! empty($attrName) ? $attrName : $options['objectName'];
+    $label = str_replace('_id', '', $label);  
+
     $defaultInputOptions = array('id'             => $options['objectName'] . $spacer . $attrName,
-                                 'label'          => ucwords($attrName),
+                                 'label'          => ucwords($label),
                                  'value'          => null,
                                  'size'           => 50,
                                  'max_length'     => 50,

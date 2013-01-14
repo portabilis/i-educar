@@ -349,7 +349,8 @@ class ApiCoreController extends Core_Controller_Page_EditController
                  'table'        => $resourceName,
                  'idAttr'       => "cod_$resourceName",
                  'labelAttr'    => 'nome',
-                 'selectFields' => array());
+                 'selectFields' => array(),
+                 'sqlParams'    => array());
   }
 
   // overwrite in subclass to chande search options
@@ -389,29 +390,46 @@ class ApiCoreController extends Core_Controller_Page_EditController
   }
 
   protected function sqlQueriesForNumericSearch($numericQuery) {
+    $searchOptions = $this->mergeOptions($this->searchOptions(), $this->defaultSearchOptions());
+
     $queries = array();
     $sqls    = $this->sqlsForNumericSearch();
 
     if (! is_array($sqls))
       $sqls = array($sqls);
 
-    foreach ($sqls as $sql) {
-      $queries[] = array('sql' => $sql, 'params' => array($numericQuery . "%"));
-    }
+    // set params
+    // no sql deve-se usar 'like' para o primeiro param ($1) ao invez de '='
+    $params = array($numericQuery . "%");
+
+    foreach($searchOptions['sqlParams'] as $param)
+      $params[] = $param;  
+
+    // set queries 
+    foreach ($sqls as $sql)
+      $queries[] = array('sql' => $sql, 'params' => $params);
 
     return $queries;
   }
 
   protected function sqlQueriesForStringSearch($stringQuery) {
+    $searchOptions = $this->mergeOptions($this->searchOptions(), $this->defaultSearchOptions());
+
     $queries = array();
     $sqls       = $this->sqlsForStringSearch();
 
     if (! is_array($sqls))
       $sqls = array($sqls);
 
-    foreach ($sqls as $sql) {
-      $queries[] = array('sql' => $sql, 'params' => array(strtolower($stringQuery) ."%"));
-    }
+    // set params
+    // no sql deve-se usar 'like' para o primeiro param ($1) ao invez de '='
+    $params = array(strtolower($stringQuery) ."%");
+
+    foreach($searchOptions['sqlParams'] as $param)
+      $params[] = $param;  
+
+    foreach ($sqls as $sql)
+      $queries[] = array('sql' => $sql, 'params' => $params);
 
     return $queries;
   }
@@ -426,7 +444,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     else
       $sqlQueries = $this->sqlQueriesForStringSearch($query);
 
-    foreach($sqlQueries as $sqlQuery){
+    foreach($sqlQueries as $sqlQuery) {
       $_resources = $this->fetchPreparedQuery($sqlQuery['sql'], $sqlQuery['params'], false);
 
       foreach($_resources as $resource) {
