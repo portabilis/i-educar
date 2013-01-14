@@ -1,9 +1,18 @@
 // metodos e variaveis acessiveis por outros modulos
 
-var resourceOptions = {
-  // options that cannot be overwritten in child
+var resource = {
+  // options that cannot be overwritten
 
   get    : function(optionName) { return optionsUtils.get(this, optionName) },
+
+  url    : function(id) {
+     var url = window.location.href.split("?")[0]
+
+     if (id != undefined)
+      url += '?id=' + id;
+
+     return url;
+  },
 
   isNew  : function() { return this.id() == undefined },
 
@@ -17,11 +26,16 @@ var resourceOptions = {
 
     return id;
   },
+}
 
+var resourceOptions = {
+  // options that cannot be overwritten in child
+
+  get        : function(optionName) { return optionsUtils.get(this, optionName) },
 
   // options that can be overwritten in child
 
-  form         : $j('#formcadastro'),
+  form       : $j('#formcadastro'),
 
   apiUrlBase : function() { return '/module/Api/' + resourceOptions.get('name')() },
 
@@ -92,11 +106,11 @@ var resourceOptions = {
         var urlBuilder;
         var additionalVars = {};
 
-        if (resourceOptions.isNew())
+        if (resource.isNew())
           urlBuilder = postResourceUrlBuilder;
         else {
           urlBuilder = putResourceUrlBuilder;
-          additionalVars.id = resourceOptions.id();
+          additionalVars.id = resource.id();
         }
 
         submitOptions.url = urlBuilder.buildUrl(resourceOptions.get('apiUrlBase')(),
@@ -116,7 +130,7 @@ var resourceOptions = {
         if(! dataResponse.any_error_msg && ! dataResponse[resourceOptions.get('name')()] && ! dataResponse.id)
           throw new Error('A API não retornou o recurso nem seu id.');
 
-        if (resourceOptions.isNew())
+        if (resource.isNew())
           resourceOptions.get('handlePost')(dataResponse);
         else
           resourceOptions.get('handlePut')(dataResponse);
@@ -152,8 +166,8 @@ var resourceOptions = {
     $submitButton.click(onClickSubmitEvent);
 
 
-    if (! resourceOptions.isNew())
-      resourceOptions.getResource(resourceOptions.id());
+    if (! resource.isNew())
+      resourceOptions.getResource(resource.id());
 
   }); // ready
 })(jQuery);

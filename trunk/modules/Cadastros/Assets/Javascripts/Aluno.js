@@ -1,3 +1,13 @@
+// before page is ready
+
+var $nomeField      = $j('#pessoa_nome');
+
+var $resourceNotice = $j('<span>').html('')
+                                  .addClass('notice resource-notice')
+                                  .hide()
+                                  .appendTo($nomeField.parent());
+
+
 // ajax
 
 resourceOptions.handleGet = function(dataResponse) {
@@ -17,8 +27,10 @@ resourceOptions.handleGet = function(dataResponse) {
 var handleGetPersonDetails = function(dataResponse) {
   handleMessages(dataResponse.msgs);
 
+  $resourceNotice.hide();
+
   $j('#pessoa_id').val(dataResponse.id);
-  $j('#pessoa_nome').val(dataResponse.id + ' - ' + dataResponse.nome);
+  $nomeField.val(dataResponse.id + ' - ' + dataResponse.nome);
 
   var nomePai = dataResponse.nome_pai;
   var nomeMae = dataResponse.nome_mae;
@@ -50,6 +62,22 @@ var handleGetPersonDetails = function(dataResponse) {
 
   $deficiencias.trigger('liszt:updated');
 
+
+  // verifica se já existe um aluno para a pessoa
+
+  var alunoId = dataResponse.aluno_id;
+
+  if (alunoId) {
+    $resourceNotice.html(stringUtils.toUtf8('Já existe o aluno '+ alunoId +' cadastrado para esta pessoa. ' ))
+                   .slideDown('fast');
+
+    $j('<a>').addClass('decorated')
+             .attr('href', resource.url(alunoId))
+             .html('Visualizar cadastro.')
+             .appendTo($resourceNotice);
+  }
+
+  // # TODO show aluno photo
   //$j('#aluno_foto').val(dataResponse.url_foto);
 }
 
@@ -87,8 +115,9 @@ var clearPersonDetails = function() {
 // simple search options
 
 var simpleSearchPessoaOptions = {
-  autocompleteOptions : { change : updatePersonDetails, close : updatePersonDetails }
+  autocompleteOptions : { close : updatePersonDetails /*, change : updatePersonDetails*/ }
 };
+
 
 // when page is ready
 

@@ -194,17 +194,17 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->beneficio(array('required' => false));
 
 
-    // alfabetizado
-    $options = array('label' => $this->_getLabel('alfabetizado'));
-    $this->inputsHelper()->checkbox('alfabetizado', $options);
-
-
     // Deficiências / habilidades especiais
     $helperOptions = array('objectName' => 'deficiencias');
     $options       = array('label' => $this->_getLabel('deficiencias'), 'size' => 50, 'required' => false,
                            'options' => array('value' => null));
 
     $this->inputsHelper()->multipleSearchDeficiencias('', $options, $helperOptions);
+
+
+    // alfabetizado
+    $options = array('label' => $this->_getLabel('alfabetizado'));
+    $this->inputsHelper()->checkbox('alfabetizado', $options);
 
 
     $this->loadResourceAssets($this->getDispatcher());

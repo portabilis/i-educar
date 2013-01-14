@@ -109,6 +109,7 @@ class PessoaController extends ApiCoreController
     $attrs   = array('cpf', 'rg', 'pai_id', 'mae_id', 'responsavel_id', 'nome_pai', 'nome_mae', 'nome_responsavel');
     $details = Portabilis_Array_Utils::filter($details, $attrs);
 
+    $details['aluno_id']         = $alunoId;
     $details['nome_mae']         = $this->toUtf8($details['nome_mae'], array('transform' => true));
     $details['nome_pai']         = $this->toUtf8($details['nome_pai'], array('transform' => true));
     $details['nome_responsavel'] = $this->toUtf8($details['nome_responsavel'], array('transform' => true));
