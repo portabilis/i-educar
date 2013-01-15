@@ -1,5 +1,8 @@
 // metodos e variaveis acessiveis por outros modulos
 
+var $submitButton = $j('#btn_enviar');
+var $deleteButton = $j('.botaolistagem:not([id=btn_enviar])').first();
+
 var resource = {
   // options that cannot be overwritten
 
@@ -61,14 +64,24 @@ var resourceOptions = {
   handlePut : function(dataResponse) {
   },
 
-  handleEnable : function(dataResponse) {
-    handleMessages(dataResponse.msgs);
-    $resourceNotice.slideUp('fast');
-    $j('#btn_enviar').removeAttr('disabled').show();
-  },
 
   handleGet : function(dataResponse) {
     throw new Error('The function resourceOptions.handleGet must be overwritten!');
+  },
+
+
+  handleEnable : function(dataResponse) {
+    handleMessages(dataResponse.msgs);
+    $resourceNotice.slideUp('fast');
+    $submitButton.removeAttr('disabled').show();
+    $deleteButton.removeAttr('disabled').show();
+  },
+
+
+  handleDelete : function(dataResponse) {
+    handleMessages(dataResponse.msgs);
+    // reload resource
+    resourceOptions.getResource(resource.id());
   },
 
   getResource : function(id) {
@@ -85,9 +98,24 @@ var resourceOptions = {
     getResource(options);
   },
 
+  delete : function() {
+    if (confirm(stringUtils.toUtf8('Confirma remoção do cadastro?'))) {
+      var additionalVars = {
+        id   : resource.id(),
+      };
+
+      var options = {
+        url      : deleteResourceUrlBuilder.buildUrl(resourceOptions.apiUrlBase(), resourceOptions.get('name')(), additionalVars),
+        dataType : 'json',
+        success  : resourceOptions.handleDelete,
+      };
+
+      deleteResource(options);
+    }
+  },
+
   enable : function() {
     if (confirm(stringUtils.toUtf8('Confirma reativação do cadastro?'))) {
-
       var additionalVars = {
         id   : resource.id(),
         oper : 'enable'
@@ -114,8 +142,6 @@ var resourceOptions = {
 
 (function($) {
   $(document).ready(function() {
-
-    var $submitButton = $('#btn_enviar');
 
     // config resource form
     var submitOptions = {
@@ -187,14 +213,18 @@ var resourceOptions = {
     }
 
     $submitButton.val('Gravar');
+    $deleteButton.val('Desabilitar cadastro');
 
-    // remove event attrs
+    $deleteButton.hide().attr('disabled', 'disabled');
+
+    // unbind events
     $submitButton.removeAttr('onclick');
+    $deleteButton.removeAttr('onclick');
     resourceOptions.form.removeAttr('onsubmit');
 
     // bind events
     $submitButton.click(onClickSubmitEvent);
-
+    $deleteButton.click(resourceOptions.delete);
 
     if (! resource.isNew())
       resourceOptions.getResource(resource.id());

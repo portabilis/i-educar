@@ -1733,6 +1733,8 @@ class indice extends clsCadastro
 
   function Excluir()
   {
+    die('Exclusão desabilitada em educar_aluno_cad!');
+
     session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();

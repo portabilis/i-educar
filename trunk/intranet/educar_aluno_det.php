@@ -679,12 +679,6 @@ class indice extends clsDetalhe
         sprintf('go("educar_historico_escolar_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno']),
         sprintf('showExpansivelImprimir(400, 200, "educar_relatorio_aluno_dados.php?ref_cod_aluno=%d", [], "Relatório i-Educar")', $registro['cod_aluno'])
       );
-
-      $this->array_botao[] = 'Remover aluno';
-      $script = sprintf('if(confirm("Tem certeza que deseja remover o aluno?\n\nEsta operação removerá também as matriculas, enturmações, notas e históricos do aluno e não poderá ser desfeita.")){go("educar_aluno_cad.php?excluir=true&cod_aluno=%d");}', $registro['cod_aluno']);
-
-      $this->array_botao_url_script[] = $script;
-
     }
 
     $this->url_cancelar = 'educar_aluno_lst.php';

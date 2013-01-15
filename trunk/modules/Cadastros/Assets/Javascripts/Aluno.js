@@ -32,7 +32,8 @@ resourceOptions.handleGet = function(dataResponse) {
   $resourceNotice.hide();
 
   if (dataResponse.id && ! dataResponse.ativo) {
-    $j('#btn_enviar').hide();
+    $submitButton.attr('disabled', 'disabled').hide();
+    $deleteButton.attr('disabled', 'disabled').hide();
 
     var msg = "Este cadastro foi desativado em <b>"+ dataResponse.destroyed_at +
               " </b><br/>pelo usuário <b>" + dataResponse.destroyed_by + "</b>, ";
@@ -45,6 +46,8 @@ resourceOptions.handleGet = function(dataResponse) {
              .html('reativar cadastro.')
              .appendTo($resourceNotice);
   }
+  else
+    $deleteButton.removeAttr('disabled').show();
 
   if (dataResponse.pessoa_id)
     getPersonDetails(dataResponse.pessoa_id);

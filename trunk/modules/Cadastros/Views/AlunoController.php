@@ -117,6 +117,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
   {
     //$this->campoRotulo('pessoa', $this->_getLabel('pessoa'), '');
     $this->url_cancelar = '/intranet/educar_aluno_lst.php';
+    $this->fexcluir     = true;
 
     // código rede de ensino municipal
     $options = array('label'    => $this->_getLabel('id'), 'disabled' => true,

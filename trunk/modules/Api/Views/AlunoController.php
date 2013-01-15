@@ -148,9 +148,6 @@ class AlunoController extends ApiCoreController
     return $this->validatesAlunoId();
   }
 
-  protected function canEnable() {
-    return $this->validatesAlunoId();
-  }
 
   protected function _canChange() {
     return $this->canAcceptRequest()           &&
@@ -173,6 +170,15 @@ class AlunoController extends ApiCoreController
            $this->validatesAlunoId();
   }
 
+
+  protected function canEnable() {
+    return $this->validatesAlunoId();
+  }
+
+
+  protected function canDelete() {
+    return $this->validatesAlunoId();
+  }
 
   // load resources
 
@@ -436,6 +442,24 @@ class AlunoController extends ApiCoreController
     return array('id' => $id);
   }
 
+  protected function delete() {
+    $id = $this->getRequest()->id;
+
+    if ($this->canDelete()) {
+      $aluno                  = new clsPmieducarAluno();
+      $aluno->cod_aluno       = $id;
+      $aluno->ref_usuario_exc = $this->getSession()->id_pessoa;
+
+      if($aluno->excluir())
+        $this->messenger->append('Cadastro removido com sucesso', 'success', false, 'error');
+      else
+        $this->messenger->append('Aparentemente o cadastro não pode ser removido, por favor, verifique.',
+                                 'error', false, 'error');
+    }
+
+    return array('id' => $id);
+  }
+
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'aluno'))
@@ -454,6 +478,9 @@ class AlunoController extends ApiCoreController
 
     elseif ($this->isRequestFor('enable', 'aluno'))
       $this->appendResponse($this->enable());
+
+    elseif ($this->isRequestFor('delete', 'aluno'))
+      $this->appendResponse($this->delete());
 
     else
       $this->notImplementedOperationError();
