@@ -690,8 +690,8 @@ class indice extends clsCadastro
 
   function afterChangePessoa($id) {
     Portabilis_View_Helper_Application::embedJavascript($this, "
-      if(window.opener &&  window.opener.afterUpdatePessoa)
-         window.opener.afterUpdatePessoa(self, $id);
+      if(window.opener &&  window.opener.afterChangePessoa)
+         window.opener.afterChangePessoa(self, $id);
       else
         document.location = 'atendidos_lst.php';
     ");

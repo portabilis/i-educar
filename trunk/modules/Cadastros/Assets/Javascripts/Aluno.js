@@ -17,6 +17,14 @@ var $pessoaNotice = $resourceNotice.clone()
 resourceOptions.handlePost = function(dataResponse) {
   $nomeField.attr('disabled', 'disabled');
   $j('.pessoa-links .cadastrar-pessoa').hide();
+
+  if (! dataResponse.any_error_msg)
+    window.setTimeout(function() { document.location = '/intranet/educar_aluno_lst.php'; }, 500);
+}
+
+resourceOptions.handlePut = function(dataResponse) {
+  if (! dataResponse.any_error_msg)
+    window.setTimeout(function() { document.location = '/intranet/educar_aluno_lst.php'; }, 500);
 }
 
 resourceOptions.handleGet = function(dataResponse) {
@@ -148,16 +156,20 @@ var simpleSearchPessoaOptions = {
 
 // children callbacks
 
-function afterUpdatePessoa(targetWindow, pessoaId) {
+function afterChangePessoa(targetWindow, pessoaId) {
   targetWindow.close();
 
-  $j('#pessoa_id').val(pessoaId);
-  getPersonDetails(pessoaId);
+  // timeout para usuario perceber mudança
+  window.setTimeout(function() {
+    messageUtils.success('Pessoa alterada com sucesso', $nomeField);
 
-  messageUtils.success('Pessoa alterada com sucesso', $nomeField);
-  window.setTimeout(function() { $nomeField.removeClass('success'); }, 10000);
+    $j('#pessoa_id').val(pessoaId);
+    getPersonDetails(pessoaId);
 
-  $nomeField.focus();
+    window.setTimeout(function() { $nomeField.removeClass('success'); }, 10000);
+    $nomeField.focus();
+
+  }, 500);
 }
 
 
