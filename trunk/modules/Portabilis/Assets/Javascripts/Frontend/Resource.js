@@ -43,14 +43,19 @@ var resourceOptions = {
     var name = window.location.pathname.split('/');
         name = name[name.length - 1];
 
-    return name;
+    return name.toLowerCase();
   },
 
   handlePost : function(dataResponse) {
+  },
+
+  _handlePost : function(dataResponse) {
     if (dataResponse.id) {
       if (window.history && window.history.pushState)
         window.history.pushState('', '', window.location.href.split("?")[0] + "?id=" + dataResponse.id);
     }
+
+    resourceOptions.handlePost(dataResponse);
   },
 
   handlePut : function(dataResponse) {
@@ -156,7 +161,7 @@ var resourceOptions = {
           throw new Error('A API não retornou o recurso nem seu id.');
 
         if (resource.isNew())
-          resourceOptions.get('handlePost')(dataResponse);
+          resourceOptions.get('_handlePost')(dataResponse);
         else
           resourceOptions.get('handlePut')(dataResponse);
       }

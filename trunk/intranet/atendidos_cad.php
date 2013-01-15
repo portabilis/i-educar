@@ -517,7 +517,6 @@ class indice extends clsCadastro
 
     $fisica->cadastra();
 
-
     $objTelefone = new clsPessoaTelefone($idpes, 1, $this->telefone_1, $this->ddd_telefone_1);
     $objTelefone->cadastra();
 
@@ -565,7 +564,7 @@ class indice extends clsCadastro
     // Cadastra raça.
     $this->_cadastraRaca($idpes, $this->cor_raca);
 
-    echo '<script>document.location="atendidos_lst.php";</script>';
+    $this->afterChangePessoa($idpes);
     return TRUE;
   }
 
@@ -610,6 +609,7 @@ class indice extends clsCadastro
     $fisica->ref_cod_sistema    = 'NULL';
     $fisica->cpf                = $this->id_federal;
     $fisica->ideciv             = $this->estado_civil_id;
+
     $fisica->idpes_pai          = $this->pai_id;
     $fisica->idpes_mae          = $this->mae_id;
     $fisica->nacionalidade      = $_REQUEST['tipo_nacionalidade'];
@@ -677,7 +677,8 @@ class indice extends clsCadastro
     // Atualizada raça.
     $this->_cadastraRaca($this->cod_pessoa_fj, $this->cor_raca);
 
-    echo '<script>document.location="atendidos_lst.php";</script>';
+    $this->afterChangePessoa($this->cod_pessoa_fj);
+
     return TRUE;
   }
 
@@ -685,6 +686,15 @@ class indice extends clsCadastro
   {
     echo '<script>document.location="atendidos_lst.php";</script>';
     return TRUE;
+  }
+
+  function afterChangePessoa($id) {
+    Portabilis_View_Helper_Application::embedJavascript($this, "
+      if(window.opener &&  window.opener.afterUpdatePessoa)
+         window.opener.afterUpdatePessoa(self, $id);
+      else
+        document.location = 'atendidos_lst.php';
+    ");
   }
 
   /**
@@ -709,8 +719,10 @@ class indice extends clsCadastro
     return $raca->cadastra();
   }
 
-  protected function loadAluno($id) {
-    $aluno = new clsPmieducarAluno($id);
+  protected function loadAlunoByPessoaId($id) {
+    $aluno            = new clsPmieducarAluno();
+    $aluno->ref_idpes = $id;
+
     return $aluno->detalhe();
   }
 
@@ -727,7 +739,7 @@ class indice extends clsCadastro
       $parentTypeLabel = $parentType;
 
     if (! isset($this->_aluno))
-      $this->_aluno = $this->loadAluno($this->cod_pessoa_fj);
+      $this->_aluno = $this->loadAlunoByPessoaId($this->cod_pessoa_fj);
 
     $parentId = $this->{$parentType . '_id'};
 

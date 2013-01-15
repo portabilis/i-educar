@@ -387,6 +387,7 @@ class AlunoController extends ApiCoreController
         $this->updateResponsavel();
         $this->createOrUpdateTransporte($id);
         $this->createUpdateOrDestoyInepId($id);
+        $this->updateDeficiencias();
 
         $this->messenger->append('Cadastrado realizado com sucesso', 'success', false, 'error');
       }

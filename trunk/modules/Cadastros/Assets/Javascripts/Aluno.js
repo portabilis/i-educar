@@ -4,7 +4,7 @@ var $idField        = $j('#id');
 var $nomeField      = $j('#pessoa_nome');
 
 var $resourceNotice = $j('<span>').html('')
-                                  .addClass('notice resource-notice')
+                                  .addClass('error resource-notice')
                                   .hide()
                                   .width($nomeField.outerWidth() - 12)
                                   .insertBefore($idField.parent());
@@ -14,11 +14,16 @@ var $pessoaNotice = $resourceNotice.clone()
 
 // ajax
 
+resourceOptions.handlePost = function(dataResponse) {
+  $nomeField.attr('disabled', 'disabled');
+  $j('.pessoa-links .cadastrar-pessoa').hide();
+}
+
 resourceOptions.handleGet = function(dataResponse) {
   handleMessages(dataResponse.msgs);
   $resourceNotice.hide();
 
-  if (! dataResponse.ativo) {
+  if (dataResponse.id && ! dataResponse.ativo) {
     $j('#btn_enviar').hide();
 
     var msg = "Este cadastro foi desativado em <b>"+ dataResponse.destroyed_at +
@@ -33,7 +38,8 @@ resourceOptions.handleGet = function(dataResponse) {
              .appendTo($resourceNotice);
   }
 
-  getPersonDetails(dataResponse.pessoa_id);
+  if (dataResponse.pessoa_id)
+    getPersonDetails(dataResponse.pessoa_id);
 
   $idField.val(dataResponse.id);
   $j('#inep_id').val(dataResponse.inep_id);
@@ -46,16 +52,13 @@ resourceOptions.handleGet = function(dataResponse) {
 
 var handleGetPersonDetails = function(dataResponse) {
   handleMessages(dataResponse.msgs);
-
   $pessoaNotice.hide();
-
-  // verifica se já existe um aluno para a pessoa
 
   var alunoId = dataResponse.aluno_id;
 
   if (alunoId && alunoId != resource.id()) {
     $pessoaNotice.html(stringUtils.toUtf8('Esta pessoa já possui o aluno código '+ alunoId +' cadastrado, ' ))
-                   .slideDown('fast');
+                 .slideDown('fast');
 
     $j('<a>').addClass('decorated')
              .attr('href', resource.url(alunoId))
@@ -65,42 +68,46 @@ var handleGetPersonDetails = function(dataResponse) {
   }
 
   else {
-    $j('#pessoa_id').val(dataResponse.id);
-    $nomeField.val(dataResponse.id + ' - ' + dataResponse.nome);
-
-    var nomePai = dataResponse.nome_pai;
-    var nomeMae = dataResponse.nome_mae;
-    var nomeResponsavel = dataResponse.nome_responsavel;
-
-    if (dataResponse.pai_id)
-      nomePai = dataResponse.pai_id + ' - ' + nomePai;
-
-    if (dataResponse.mae_id)
-      nomeMae = dataResponse.mae_id + ' - ' + nomeMae;
-
-    if (dataResponse.responsavel_id)
-      nomeResponsavel = dataResponse.responsavel_id + ' - ' + nomeResponsavel;
-
-    //$j('#rg').val(dataResponse.rg);
-    //$j('#cpf').val(dataResponse.cpf);
-    $j('#pai').val(nomePai);
-    $j('#mae').val(nomeMae);
-    $j('#responsavel_nome').val(nomeResponsavel);
-    $j('#responsavel_id').val(dataResponse.responsavel_id);
-
-    // deficiencias
-
-    $deficiencias = $j('#deficiencias');
-
-    $j.each(dataResponse.deficiencias, function(id, nome) {
-      $deficiencias.children("[value=" + id + "]").attr('selected', '');
-    });
-
-    $deficiencias.trigger('liszt:updated');
-
-    // # TODO show aluno photo
-    //$j('#aluno_foto').val(dataResponse.url_foto);
+    $j('.pessoa-links .editar-pessoa').attr('href', '/intranet/atendidos_cad.php?cod_pessoa_fj=' + dataResponse.id)
+                                      .show();
   }
+
+  $j('#pessoa_id').val(dataResponse.id);
+  $nomeField.val(dataResponse.id + ' - ' + dataResponse.nome);
+
+  var nomePai         = dataResponse.nome_pai;
+  var nomeMae         = dataResponse.nome_mae;
+  var nomeResponsavel = dataResponse.nome_responsavel;
+
+  if (dataResponse.pai_id)
+    nomePai = dataResponse.pai_id + ' - ' + nomePai;
+
+  if (dataResponse.mae_id)
+    nomeMae = dataResponse.mae_id + ' - ' + nomeMae;
+
+  if (dataResponse.responsavel_id)
+    nomeResponsavel = dataResponse.responsavel_id + ' - ' + nomeResponsavel;
+
+  //$j('#rg').val(dataResponse.rg);
+  //$j('#cpf').val(dataResponse.cpf);
+
+  $j('#pai').val(nomePai);
+  $j('#mae').val(nomeMae);
+  $j('#responsavel_nome').val(nomeResponsavel);
+  $j('#responsavel_id').val(dataResponse.responsavel_id);
+
+  // deficiencias
+
+  $deficiencias = $j('#deficiencias');
+
+  $j.each(dataResponse.deficiencias, function(id, nome) {
+    $deficiencias.children("[value=" + id + "]").attr('selected', '');
+  });
+
+  $deficiencias.trigger('liszt:updated');
+
+  // # TODO show aluno photo
+  //$j('#aluno_foto').val(dataResponse.url_foto);
 }
 
 var getPersonDetails = function(personId) {
@@ -127,11 +134,9 @@ var updatePersonDetails = function() {
 
 var clearPersonDetails = function() {
   $j('#pessoa_id').val('');
-  //$j('#pessoa_nome').val('');
   $j('#pai').val('');
   $j('#mae').val('');
-  $j('#responsavel_nome').val('');
-  $j('#responsavel_id').val('');
+  $j('.pessoa-links .editar-pessoa').hide();
 }
 
 // simple search options
@@ -141,11 +146,53 @@ var simpleSearchPessoaOptions = {
 };
 
 
+// children callbacks
+
+function afterUpdatePessoa(targetWindow, pessoaId) {
+  targetWindow.close();
+
+  $j('#pessoa_id').val(pessoaId);
+  getPersonDetails(pessoaId);
+
+  messageUtils.success('Pessoa alterada com sucesso', $nomeField);
+  window.setTimeout(function() { $nomeField.removeClass('success'); }, 10000);
+
+  $nomeField.focus();
+}
+
+
 // when page is ready
 
 (function($) {
   $(document).ready(function() {
-    $nomeField.focus();
+
+    // pessoa
+
+    var $pessoaActionBar  = $j('<span>').html('')
+                                        .addClass('pessoa-links')
+                                        .width($nomeField.outerWidth() - 12)
+                                        .appendTo($nomeField.parent());
+
+    $j('<a>').hide()
+             .addClass('cadastrar-pessoa decorated')
+             .attr('href', '/intranet/atendidos_cad.php')
+             .attr('target', '_blank')
+             .html('Cadastrar pessoa')
+             .appendTo($pessoaActionBar);
+
+    $j('<a>').hide()
+             .addClass('editar-pessoa decorated')
+             .attr('href', '#')
+             .attr('target', '_blank')
+             .html('Editar pessoa')
+             .appendTo($pessoaActionBar);
+
+    if (resource.isNew()) {
+      $nomeField.focus();
+      $j('.pessoa-links .cadastrar-pessoa').show();
+    }
+
+    // responsavel
 
     var checkTipoResponsavel = function(){
       if ($j('#tipo_responsavel').val() == 'outra_pessoa')
@@ -156,5 +203,6 @@ var simpleSearchPessoaOptions = {
 
     checkTipoResponsavel();
     $j('#tipo_responsavel').change(checkTipoResponsavel);
+
   }); // ready
 })(jQuery);

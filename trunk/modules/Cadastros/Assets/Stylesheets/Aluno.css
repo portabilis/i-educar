@@ -1,0 +1,9 @@
+.pessoa-links {
+  display: block;
+  padding: 5px;
+  margin: 2px;
+}
+
+.pessoa-links a {
+  margin-right: 5px;
+}
