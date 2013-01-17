@@ -56,10 +56,10 @@ class MatriculaController extends ApiCoreController
 
   protected function sqlsForNumericSearch() {
 
-    return "select distinct ON (aluno.cod_aluno) aluno.cod_aluno as aluno_id, 
-            matricula.cod_matricula as id, pessoa.nome as name from pmieducar.matricula, 
+    return "select distinct ON (aluno.cod_aluno) aluno.cod_aluno as aluno_id,
+            matricula.cod_matricula as id, pessoa.nome as name from pmieducar.matricula,
             pmieducar.aluno, cadastro.pessoa where aluno.cod_aluno = matricula.ref_cod_aluno and
-            pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and 
+            pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and
             matricula.ativo = 1 and matricula.ref_ref_cod_escola = $2 and
             (matricula.cod_matricula like $1 or matricula.ref_cod_aluno like $1) and
             matricula.aprovado in (1, 2, 3, 7, 8, 9) and ano = $3 limit 15";
@@ -67,12 +67,13 @@ class MatriculaController extends ApiCoreController
 
 
   protected function sqlsForStringSearch() {
-    return "select distinct ON (aluno.cod_aluno) aluno.cod_aluno as aluno_id, 
-            matricula.cod_matricula as id, pessoa.nome as name from pmieducar.matricula, 
+    return "select distinct ON (aluno.cod_aluno) aluno.cod_aluno as aluno_id,
+            matricula.cod_matricula as id, pessoa.nome as name from pmieducar.matricula,
             pmieducar.aluno, cadastro.pessoa where aluno.cod_aluno = matricula.ref_cod_aluno and
-            pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and 
+            pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and
             matricula.ativo = 1 and matricula.ref_ref_cod_escola = $2 and
-            lower(pessoa.nome) like $1 and matricula.aprovado in (1, 2, 3, 7, 8, 9) and ano = $3 limit 15";
+            lower(to_ascii(pessoa.nome)) like lower(to_ascii($1))||'%' and matricula.aprovado in (1, 2, 3, 7, 8, 9)
+            and ano = $3 limit 15";
   }
 
 

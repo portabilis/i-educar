@@ -386,7 +386,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     $selectFields                    = join(', ', $searchOptions['selectFields']);
 
     return "select distinct $selectFields from $namespace.$table
-            where lower($labelAttr) like $1 order by $labelAttr limit 15";
+            where lower(to_ascii($labelAttr)) like lower(to_ascii($1))||'%' order by $labelAttr limit 15";
   }
 
   protected function sqlQueriesForNumericSearch($numericQuery) {
@@ -403,9 +403,9 @@ class ApiCoreController extends Core_Controller_Page_EditController
     $params = array($numericQuery . "%");
 
     foreach($searchOptions['sqlParams'] as $param)
-      $params[] = $param;  
+      $params[] = $param;
 
-    // set queries 
+    // set queries
     foreach ($sqls as $sql)
       $queries[] = array('sql' => $sql, 'params' => $params);
 
@@ -423,10 +423,10 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     // set params
     // no sql deve-se usar 'like' para o primeiro param ($1) ao invez de '='
-    $params = array(strtolower($stringQuery) ."%");
+    $params = array($stringQuery);
 
     foreach($searchOptions['sqlParams'] as $param)
-      $params[] = $param;  
+      $params[] = $param;
 
     foreach ($sqls as $sql)
       $queries[] = array('sql' => $sql, 'params' => $params);
@@ -441,8 +441,12 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     if (! empty($numericQuery))
       $sqlQueries = $this->sqlQueriesForNumericSearch($numericQuery);
-    else
+    else {
+      // convertido query para latin1, para que pesquisas com acentuação funcionem.
+      $query = Portabilis_String_Utils::toLatin1($query, array('escape' => false));
+
       $sqlQueries = $this->sqlQueriesForStringSearch($query);
+    }
 
     foreach($sqlQueries as $sqlQuery) {
       $_resources = $this->fetchPreparedQuery($sqlQuery['sql'], $sqlQuery['params'], false);
@@ -465,8 +469,6 @@ class ApiCoreController extends Core_Controller_Page_EditController
   // default api responders
 
   protected function search() {
-    $resources = array();
-
     if ($this->canSearch())
       $resources = $this->loadResourcesBySearchQuery($this->getRequest()->query);
 

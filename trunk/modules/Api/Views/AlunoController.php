@@ -336,7 +336,7 @@ class AlunoController extends ApiCoreController
             pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and
             matricula.ativo = 1 and
             (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else 1=1 end) and
-            lower(pessoa.nome) like $1 and matricula.aprovado in (1, 2, 3, 7, 8, 9) limit 15";
+            lower(to_ascii(pessoa.nome)) like lower(to_ascii($1))||'%' and matricula.aprovado in (1, 2, 3, 7, 8, 9) limit 15";
   }
 
 
