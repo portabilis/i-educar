@@ -9,7 +9,7 @@
 
     var handleGetTurmas = function(resources) {
       var selectOptions = xmlResourcesToSelectOptions(resources, 'query', 'cod_turma');
-      updateSelect($turmaField, selectOptions, "Selecione uma s&eacute;rie");
+      updateSelect($turmaField, selectOptions, "Selecione uma turma");
     }
 
     var updateTurmas = function(){
