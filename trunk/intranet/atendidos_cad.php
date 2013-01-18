@@ -462,7 +462,7 @@ class indice extends clsCadastro
     $styles = array('/modules/Portabilis/Assets/Stylesheets/Frontend.css');
     Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
-    $script = "/modules/Cadastros/Assets/Javascripts/PessoaFisica.js";
+    $script = "/modules/Cadastro/Assets/Javascripts/PessoaFisica.js";
     Portabilis_View_Helper_Application::loadJavascript($this, $script);
   }
 
