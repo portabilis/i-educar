@@ -370,7 +370,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     $selectFields                    = join(', ', $searchOptions['selectFields']);
 
     return "select distinct $selectFields from $namespace.$table
-            where $idAttr like $1 order by $labelAttr limit 15";
+            where $idAttr like $1||'%' order by $idAttr limit 15";
   }
 
 
@@ -389,78 +389,51 @@ class ApiCoreController extends Core_Controller_Page_EditController
             where lower(to_ascii($labelAttr)) like lower(to_ascii($1))||'%' order by $labelAttr limit 15";
   }
 
-  protected function sqlQueriesForNumericSearch($numericQuery) {
+  protected function sqlParams($query) {
     $searchOptions = $this->mergeOptions($this->searchOptions(), $this->defaultSearchOptions());
 
-    $queries = array();
-    $sqls    = $this->sqlsForNumericSearch();
-
-    if (! is_array($sqls))
-      $sqls = array($sqls);
-
-    // set params
-    // no sql deve-se usar 'like' para o primeiro param ($1) ao invez de '='
-    $params = array($numericQuery . "%");
+    $params = array($query);
 
     foreach($searchOptions['sqlParams'] as $param)
       $params[] = $param;
 
-    // set queries
-    foreach ($sqls as $sql)
-      $queries[] = array('sql' => $sql, 'params' => $params);
-
-    return $queries;
+    return $params;
   }
-
-  protected function sqlQueriesForStringSearch($stringQuery) {
-    $searchOptions = $this->mergeOptions($this->searchOptions(), $this->defaultSearchOptions());
-
-    $queries = array();
-    $sqls       = $this->sqlsForStringSearch();
-
-    if (! is_array($sqls))
-      $sqls = array($sqls);
-
-    // set params
-    // no sql deve-se usar 'like' para o primeiro param ($1) ao invez de '='
-    $params = array($stringQuery);
-
-    foreach($searchOptions['sqlParams'] as $param)
-      $params[] = $param;
-
-    foreach ($sqls as $sql)
-      $queries[] = array('sql' => $sql, 'params' => $params);
-
-    return $queries;
-  }
-
 
   protected function loadResourcesBySearchQuery($query) {
-    $resources    = array();
+    $results      = array();
     $numericQuery = preg_replace("/[^0-9]/", "", $query);
 
-    if (! empty($numericQuery))
-      $sqlQueries = $this->sqlQueriesForNumericSearch($numericQuery);
+    if (! empty($numericQuery)) {
+      $sqls   = $this->sqlsForNumericSearch();
+      $params = $this->sqlParams($numericQuery);
+    }
     else {
-      // convertido query para latin1, para que pesquisas com acentuação funcionem.
-      $query = Portabilis_String_Utils::toLatin1($query, array('escape' => false));
 
-      $sqlQueries = $this->sqlQueriesForStringSearch($query);
+      // convertido query para latin1, para que pesquisas com acentuação funcionem.
+      $query     = Portabilis_String_Utils::toLatin1($query, array('escape' => false));
+
+      $sqls   = $this->sqlsForStringSearch();
+      $params = $this->sqlParams($query);
     }
 
-    foreach($sqlQueries as $sqlQuery) {
-      $_resources = $this->fetchPreparedQuery($sqlQuery['sql'], $sqlQuery['params'], false);
+    if (! is_array($sqls))
+      $sqls = array($sqls);
 
-      foreach($_resources as $resource) {
-        if (! isset($resources[$resource['id']]))
-          $resources[$resource['id']] = $this->formatResourceValue($resource);
+    foreach($sqls as $sql) {
+      $_results = $this->fetchPreparedQuery($sql, $params, false);
+
+      foreach($_results as $result) {
+        if (! isset($results[$result['id']]))
+          $results[$result['id']] = $this->formatResourceValue($result);
       }
     }
 
-    return $resources;
+    return $results;
   }
 
   // formats the value of each resource, that will be returned in api as a label.
+
   protected function formatResourceValue($resource) {
     return $resource['id'] . ' - ' . $this->toUtf8($resource['name'], array('transform' => true));
   }
@@ -471,6 +444,9 @@ class ApiCoreController extends Core_Controller_Page_EditController
   protected function search() {
     if ($this->canSearch())
       $resources = $this->loadResourcesBySearchQuery($this->getRequest()->query);
+
+    if (empty($resources))
+      $resources = array('' => 'Sem resultados.');
 
     return array('result' => $resources);
   }
