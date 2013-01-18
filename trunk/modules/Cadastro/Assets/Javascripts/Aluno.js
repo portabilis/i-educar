@@ -53,7 +53,8 @@ resourceOptions.handleGet = function(dataResponse) {
     getPersonDetails(dataResponse.pessoa_id);
 
   $idField.val(dataResponse.id);
-  $j('#inep_id').val(dataResponse.inep_id);
+  $j('#aluno_inep_id').val(dataResponse.aluno_inep_id);
+  $j('#aluno_estado_id').val(dataResponse.aluno_estado_id);
   $j('#tipo_responsavel').val(dataResponse.tipo_responsavel).change();
   $j('#religiao_id').val(dataResponse.religiao_id);
   $j('#beneficio_id').val(dataResponse.beneficio_id);
@@ -206,6 +207,8 @@ function afterChangePessoa(targetWindow, pessoaId) {
       $nomeField.focus();
       $j('.pessoa-links .cadastrar-pessoa').show();
     }
+    else
+      $nomeField.attr('disabled', 'disabled');
 
     // responsavel
 

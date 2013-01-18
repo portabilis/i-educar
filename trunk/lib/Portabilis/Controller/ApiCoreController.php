@@ -391,8 +391,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
   protected function sqlParams($query) {
     $searchOptions = $this->mergeOptions($this->searchOptions(), $this->defaultSearchOptions());
-
-    $params = array($query);
+    $params        = array($query);
 
     foreach($searchOptions['sqlParams'] as $param)
       $params[] = $param;

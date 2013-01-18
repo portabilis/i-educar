@@ -229,7 +229,7 @@ class RedefinirSenhaController extends Portabilis_Controller_Page_EditController
         $this->messenger()->append('Deve ser recebido um token.', 'error');
       else {
         $user = $this->getDataMapper()->findAllUsingPreparedQuery(array(),
-                                                               array('status_token = $1'),
+                                                               array('status_token' => '$1'),
                                                                array($statusToken),
                                                                array(),
                                                                false);
@@ -263,7 +263,7 @@ class RedefinirSenhaController extends Portabilis_Controller_Page_EditController
         $this->messenger()->append('Informe uma matr&iacute;cula.', 'error');
       else {
         $user = $this->getDataMapper()->findAllUsingPreparedQuery(array(),
-                                                               array('matricula = $1'),
+                                                               array('matricula' => '$1'),
                                                                array($matricula),
                                                                array(),
                                                                false);

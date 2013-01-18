@@ -86,8 +86,13 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       'help'   => '',
     ),
 
-    'inep_id' => array(
+    'aluno_inep_id' => array(
       'label'  => 'C&oacutedigo inep',
+      'help'   => '',
+    ),
+
+    'aluno_estado_id' => array(
+      'label'  => 'C&oacutedigo rede estadual',
       'help'   => '',
     ),
 
@@ -125,10 +130,13 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->text('id', $options);
 
 
-    // código inep
-    $options = array('label' => $this->_getLabel('inep_id'), 'required' => false, 'size' => 25);
-    $this->inputsHelper()->text('inep_id', $options);
+    // código aluno inep
+    $options = array('label' => $this->_getLabel('aluno_inep_id'), 'required' => false, 'size' => 25);
+    $this->inputsHelper()->text('aluno_inep_id', $options);
 
+    // código aluno rede estadual
+    $options = array('label' => $this->_getLabel('aluno_estado_id'), 'required' => false, 'size' => 25);
+    $this->inputsHelper()->text('aluno_estado_id', $options);
 
     // nome
     $options = array('label' => $this->_getLabel('pessoa'), 'size' => 68);
