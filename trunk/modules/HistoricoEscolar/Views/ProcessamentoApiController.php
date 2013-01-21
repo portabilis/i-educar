@@ -46,6 +46,8 @@ require_once 'include/pmieducar/clsPmieducarHistoricoDisciplinas.inc.php';
 // remover require, ao migrar esta classe para novo padrao
 require_once 'lib/Portabilis/String/Utils.php';
 
+
+// TODO migrar classe novo padrao
 class ProcessamentoApiController extends Core_Controller_Page_EditController
 {
   protected $_dataMapper  = 'Avaliacao_Model_NotaComponenteDataMapper';

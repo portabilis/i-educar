@@ -62,7 +62,7 @@ class AlunoController extends ApiCoreController
 
   protected function validatesAlunoId() {
     return  $this->validatesPresenceOf('id') &&
-            $this->validatesExistenceOf('aluno', $this->getRequest()->id, $existenceOptions);
+            $this->validatesExistenceOf('aluno', $this->getRequest()->id);
   }
 
   protected function validatesReligiaoId() {
@@ -126,23 +126,68 @@ class AlunoController extends ApiCoreController
 
   protected function validatesUniquenessOfAlunoByPessoaId() {
     $existenceOptions = array('schema_name' => 'pmieducar', 'field_name' => 'ref_idpes', 'add_msg_on_error' => false);
-    $isValid          = $this->validatesUniquenessOf('aluno', $this->getRequest()->pessoa_id, $existenceOptions);
 
-    if (! $isValid)
+    if( ! $this->validatesUniquenessOf('aluno', $this->getRequest()->pessoa_id, $existenceOptions)) {
       $this->messenger->append("Já existe um aluno cadastrado para a pessoa {$this->getRequest()->pessoa_id}.");
+      return false;
+    }
 
-    return $isValid;
+    return true;
   }
+
 
   /*protected function validatesUserIsLoggedIn() {
     #FIXME validar tokens API
     return true;
   }*/
 
+  protected function validatesUniquenessOfAlunoInepId() {
+    if ($this->getRequest()->aluno_inep_id) {
+      $where  = array('alunoInep' => '$1');
+      $params = array($this->getRequest()->aluno_inep_id);
 
-  /*protected function canAcceptRequest() {
-    return parent::canAcceptRequest();
-  }*/
+      if ($this->getRequest()->id) {
+        $where['aluno'] = '!= $2';
+        $params[]       = $this->getRequest()->id;
+      }
+
+      $dataMapper = $this->getDataMapperFor('educacenso', 'aluno');
+      $entity     = $dataMapper->findAllUsingPreparedQuery(array('aluno'), $where, $params, array(), false);
+
+      if (count($entity) && $entity[0]->get('aluno')) {
+        $this->messenger->append("Já existe o aluno {$entity[0]->get('aluno')} cadastrado com código inep ".
+                                 "{$this->getRequest()->aluno_inep_id}.");
+
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+
+  protected function validatesUniquenessOfAlunoEstadoId() {
+    if ($this->getRequest()->aluno_estado_id) {
+      $sql    = "select cod_aluno from pmieducar.aluno where aluno_estado_id = $1";
+      $params = array($this->getRequest()->aluno_estado_id);
+
+      if($this->getRequest()->id) {
+        $sql     .= " and cod_aluno != $2";
+        $params[] = $this->getRequest()->id;
+      }
+
+      $alunoId = $this->fetchPreparedQuery($sql, $params, true, 'first-field');
+
+      if ($alunoId) {
+        $this->messenger->append("Já existe o aluno $alunoId cadastrado com código estado ".
+                                 "{$this->getRequest()->aluno_estado_id}.");
+
+        return false;
+      }
+    }
+
+    return true;
+  }
 
   protected function canGet() {
     return $this->validatesAlunoId();
@@ -150,12 +195,13 @@ class AlunoController extends ApiCoreController
 
 
   protected function _canChange() {
-    return $this->canAcceptRequest()           &&
-           $this->validatesPessoaId()          &&
-           $this->validatesResponsavel()       &&
-           $this->validatesTransporte() &&
-           $this->validatesReligiaoId()        &&
-           $this->validatesBeneficioId();
+    return $this->validatesPessoaId()     &&
+           $this->validatesResponsavel()  &&
+           $this->validatesTransporte()   &&
+           $this->validatesReligiaoId()   &&
+           $this->validatesBeneficioId()  &&
+           $this->validatesUniquenessOfAlunoInepId()  &&
+           $this->validatesUniquenessOfAlunoEstadoId();
   }
 
 
@@ -232,7 +278,7 @@ class AlunoController extends ApiCoreController
   }
 
 
-  protected function loadInepId($alunoId) {
+  protected function loadAlunoInepId($alunoId) {
     $dataMapper = $this->getDataMapperFor('educacenso', 'aluno');
     $entity     = $this->tryGetEntityOf($dataMapper, $alunoId);
 
@@ -240,15 +286,15 @@ class AlunoController extends ApiCoreController
   }
 
 
-  protected function createUpdateOrDestoyInepId($alunoId) {
+  protected function createUpdateOrDestoyEducacensoAluno($alunoId) {
     $dataMapper = $this->getDataMapperFor('educacenso', 'aluno');
 
-    if (empty($this->getRequest()->inep_id))
+    if (empty($this->getRequest()->aluno_inep_id))
       $result = $this->deleteEntityOf($dataMapper, $alunoId);
     else {
       $data = array(
         'aluno'      => $alunoId,
-        'alunoInep'  => $this->getRequest()->inep_id,
+        'alunoInep'  => $this->getRequest()->aluno_inep_id,
 
         // campos deprecados?
         'fonte'      => 'fonte',
@@ -299,7 +345,12 @@ class AlunoController extends ApiCoreController
 
     $aluno                          = new clsPmieducarAluno();
     $aluno->cod_aluno               = $id;
-    $aluno->ref_idpes               = $this->getRequest()->pessoa_id;
+    $aluno->aluno_estado_id         = $this->getRequest()->aluno_estado_id;
+
+    // após cadastro não muda mais id pessoa
+    if (is_null($id))
+      $aluno->ref_idpes             = $this->getRequest()->pessoa_id;
+
     $aluno->ref_cod_aluno_beneficio = $this->getRequest()->beneficio_id;
     $aluno->ref_cod_religiao        = $this->getRequest()->religiao_id;
     $aluno->analfabeto              = $this->getRequest()->alfabetizado ? 0 : 1;
@@ -361,14 +412,15 @@ class AlunoController extends ApiCoreController
         'ref_usuario_exc'         => 'destroyed_by',
         'data_exclusao'           => 'destroyed_at',
         'analfabeto',
-        'ativo'
+        'ativo',
+        'aluno_estado_id'
       );
 
       $aluno = Portabilis_Array_Utils::filter($aluno, $attrs);
 
       $aluno['tipo_transporte']  = $this->loadTransporte($id);
       $aluno['tipo_responsavel'] = $tiposResponsavel[$aluno['tipo_responsavel']];
-      $aluno['inep_id']          = $this->loadInepId($id);
+      $aluno['aluno_inep_id']    = $this->loadAlunoInepId($id);
       $aluno['ativo']            = $aluno['ativo'] == 1;
 
       $aluno['alfabetizado']     = $aluno['analfabeto'] == 0;
@@ -392,7 +444,7 @@ class AlunoController extends ApiCoreController
       if (is_numeric($id)) {
         $this->updateResponsavel();
         $this->createOrUpdateTransporte($id);
-        $this->createUpdateOrDestoyInepId($id);
+        $this->createUpdateOrDestoyEducacensoAluno($id);
         $this->updateDeficiencias();
 
         $this->messenger->append('Cadastrado realizado com sucesso', 'success', false, 'error');
@@ -410,7 +462,7 @@ class AlunoController extends ApiCoreController
     if ($this->canPut() && $this->createOrUpdateAluno($id)) {
       $this->updateResponsavel();
       $this->createOrUpdateTransporte($id);
-      $this->createUpdateOrDestoyInepId($id);
+      $this->createUpdateOrDestoyEducacensoAluno($id);
       $this->updateDeficiencias();
 
       $this->messenger->append('Cadastro alterado com sucesso', 'success', false, 'error');

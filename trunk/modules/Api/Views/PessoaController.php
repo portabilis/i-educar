@@ -48,25 +48,11 @@ class PessoaController extends ApiCoreController
   protected $_titulo   = '';
 
 
-  /*protected function validatesUserIsLoggedIn() {
-    #FIXME validar tokens API
-    return true;
-  }*/
-
-
-  /*protected function canAcceptRequest() {
-    return parent::canAcceptRequest();
-  }*/
-
-
-  protected function canSearch() {
-    return $this->canAcceptRequest() &&
-           $this->validatesPresenceOf('query');
-  }
-
   protected function canGet() {
-    return $this->canAcceptRequest() &&
-           $this->validatesPresenceOf('id');
+    $existenceOptions = array('schema_name' => 'cadastro', 'field_name' => 'idpes');
+
+    return $this->validatesPresenceOf('id') &&
+           $this->validatesExistenceOf('fisica', $this->getRequest()->id, $existenceOptions);
   }
 
 

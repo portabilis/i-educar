@@ -66,6 +66,9 @@ class ApiCoreController extends Core_Controller_Page_EditController
     return Portabilis_Utils_User::load($this->getSession()->id_pessoa);
   }
 
+
+  // validators
+
   protected function validatesUserIsLoggedIn(){
     return $this->validator->validatesPresenceOf($this->getSession()->id_pessoa, '', false, 'Usuário deve estar logado');
   }
@@ -82,14 +85,15 @@ class ApiCoreController extends Core_Controller_Page_EditController
   }
 
 
+  // validation
+
   protected function canAcceptRequest() {
     return $this->validatesUserIsLoggedIn() &&
            $this->validatesPresenceOf(array('oper', 'resource'));
   }
 
   protected function canSearch() {
-    return $this->canAcceptRequest() &&
-           $this->validatesPresenceOf('query');
+    return $this->validatesPresenceOf('query');
   }
 
   protected function notImplementedOperationError() {
