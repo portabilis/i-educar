@@ -28,8 +28,8 @@ var resource = {
     }
 
     return id;
-  },
-}
+  }
+};
 
 var resourceOptions = {
   // options that cannot be overwritten in child
@@ -86,28 +86,28 @@ var resourceOptions = {
 
   getResource : function(id) {
     var additionalVars = {
-      id : id,
+      id : id
     };
 
     var options = {
       url      : getResourceUrlBuilder.buildUrl(resourceOptions.apiUrlBase(), resourceOptions.get('name')(), additionalVars),
       dataType : 'json',
-      success  : this.handleGet,
+      success  : this.handleGet
     };
 
     getResource(options);
   },
 
-  delete : function() {
+  deleteResource : function() {
     if (confirm(stringUtils.toUtf8('Confirma remoção do cadastro?'))) {
       var additionalVars = {
-        id   : resource.id(),
+        id : resource.id()
       };
 
       var options = {
         url      : deleteResourceUrlBuilder.buildUrl(resourceOptions.apiUrlBase(), resourceOptions.get('name')(), additionalVars),
         dataType : 'json',
-        success  : resourceOptions.handleDelete,
+        success  : resourceOptions.handleDelete
       };
 
       deleteResource(options);
@@ -124,7 +124,7 @@ var resourceOptions = {
       var options = {
         url      : postResourceUrlBuilder.buildUrl(resourceOptions.apiUrlBase(), resourceOptions.get('name')(), additionalVars),
         dataType : 'json',
-        success  : resourceOptions.handleEnable,
+        success  : resourceOptions.handleEnable
       };
 
       postResource(options);
@@ -158,7 +158,7 @@ var resourceOptions = {
     var onClickSubmitEvent = function(event) {
       resourceOptions.beforeSave();
 
-      if (validatesPresenseOfValueInRequiredFields()) {
+      if (validationUtils.validatesFields()) {
         var urlBuilder;
         var additionalVars = {};
 
@@ -222,7 +222,7 @@ var resourceOptions = {
 
     // bind events
     $submitButton.click(onClickSubmitEvent);
-    $deleteButton.click(resourceOptions.delete);
+    $deleteButton.click(resourceOptions.deleteResource);
 
     if (! resource.isNew())
       resourceOptions.getResource(resource.id());

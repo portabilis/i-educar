@@ -124,14 +124,14 @@ var handleGetPersonDetails = function(dataResponse) {
 
 var getPersonDetails = function(personId) {
   var additionalVars = {
-    id : personId,
+    id : personId
   };
 
   var options = {
     url      : getResourceUrlBuilder.buildUrl('/module/Api/pessoa', 'pessoa', additionalVars),
     dataType : 'json',
     data     : {},
-    success  : handleGetPersonDetails,
+    success  : handleGetPersonDetails
   };
 
   getResource(options);

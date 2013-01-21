@@ -25,7 +25,7 @@ var defaultMultipleSearchOptions = {
 };
 
 var multipleSearch = {
-  for : function(options) {
+  setup : function(options) {
     options = defaultMultipleSearchOptions.mergeWith(options);
     options.chosenOptions.url = options.get('searchPath');
 
@@ -51,10 +51,10 @@ var multipleSearchHelper = {
     var defaultOptions = {
       searchPath : searchPath,
       objectName : objectName,
-      attrName   : attrName,
+      attrName   : attrName
     };
 
     var options = optionsUtils.merge(defaultOptions, searchResourceOptions);
-    multipleSearch.for(options);
-  },
+    multipleSearch.setup(options);
+  }
 };

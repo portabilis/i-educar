@@ -63,7 +63,7 @@ var deleteResourceUrlBuilder = {
   buildUrl : function(urlBase, resourceName, additionalVars){
 
     var vars = {
-      oper : 'delete',
+      oper : 'delete'
     };
 
     if (resourceName)

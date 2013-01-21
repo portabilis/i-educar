@@ -4,7 +4,7 @@ var defaultJQueryAutocompleteOptions = {
   minLength   : 1,
   autoFocus   : true,
   source      : function(request, response) { return simpleSearch.search(this.element, request, response) },
-  select      : function(event, ui) { return simpleSearch.handleSelect(event, ui) },
+  select      : function(event, ui) { return simpleSearch.handleSelect(event, ui) }
 
   // options that can be overwritten
   // change      : function (event, ui) {},
@@ -38,7 +38,7 @@ var defaultSimpleSearchOptions = {
   // elements that presence is required to do the search
   // requiresPresenceOf : [ /* $j('#someElement') */ ],
 
-  canSearch : function() { return true; },
+  canSearch : function() { return true; }
 };
 
 
@@ -109,7 +109,7 @@ var simpleSearch = {
     });
   },
 
-  for : function(options) {
+  setup : function(options) {
     options      = defaultSimpleSearchOptions.mergeWith(options);
 
     var attrName = options.get('attrName');
@@ -142,10 +142,10 @@ var simpleSearchHelper = {
     var defaultOptions = {
       searchPath : searchPath,
       objectName : objectName,
-      attrName   : attrName,
+      attrName   : attrName
     };
 
     var options = optionsUtils.merge(defaultOptions, searchResourceOptions);
-    simpleSearch.for(options);
-  },
+    simpleSearch.setup(options);
+  }
 };
