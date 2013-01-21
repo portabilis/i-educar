@@ -38,7 +38,10 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 {
   protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
   protected $_titulo     = 'Cadastro de aluno';
-  protected $_processoAp = 0;
+
+  protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
+  protected $_processoAp        = 578;
+  protected $_deleteOption      = true;
 
   protected $_formMap    = array(
     'pessoa' => array(
@@ -120,9 +123,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
   public function Gerar()
   {
-    //$this->campoRotulo('pessoa', $this->_getLabel('pessoa'), '');
     $this->url_cancelar = '/intranet/educar_aluno_lst.php';
-    $this->fexcluir     = true;
 
     // código rede de ensino municipal
     $options = array('label'    => $this->_getLabel('id'), 'disabled' => true,

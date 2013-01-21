@@ -34,48 +34,32 @@ ini_set("display_errors", 1);
 
 require_once 'lib/Portabilis/Controller/ErrorCoreController.php';
 
-class UnexpectedController extends Portabilis_Controller_ErrorCoreController
+class UnauthorizedController extends Portabilis_Controller_ErrorCoreController
 {
-  protected $_titulo = 'Erro inesperado';
+  protected $_titulo = 'Acesso n&atilde;o autorizado';
 
   protected function setHeader() {
-    header("HTTP/1.1 500 Internal Server Error");
+    header("HTTP/1.1 403 Forbidden");
   }
 
   public function Gerar() {
     $linkToSupport = $GLOBALS['coreExt']['Config']->modules->error->link_to_support;
 
-    if ($GLOBALS['coreExt']['Config']->modules->error->show_details) {
-      $detail = $this->getSession()->last_error_message;
-      unset($this->getSession()->last_error_message);
-
-      if (! $detail) { $detail = 'Sem detalhes do erro.'; };
-
-      $detail = "<h2>Detalhes:</h2>
-                  <p>$detail</p>";
-    }
-    else
-      $detail = '<p>Visualiza&ccedil;&atilde;o de detalhes do erro desativada.</p>';
-
     echo "
       <div id='error' class='small'>
         <div class='content'>
-         <h1>Erro inesperado</h1>
+         <h1>Acesso n&atilde;o autorizado</h1>
 
          <p class='explanation'>
-          Desculpe-nos, algum erro inesperado ocorreu,
+          Seu usu&aacute;rio n&atilde;o possui autoriza&ccedil;&atilde;o para realizar esta a&ccedil;&atilde;o,
           <strong> tente seguir as etapas abaixo:</strong>
 
           <ol>
-            <li><a href='/intranet/index.php'>Tente novamente</a></li>
-            <li><a href='/intranet/logof.php'>Fa&ccedil;a logoff do sistema</a> e tente novamente</li>
+            <li><a href='/intranet/index.php'>Volte para o sistema</a></li>
+            <li>Solicite ao respons&aacute;vel pelo sistema, para adicionar ao seu usu&aacute;rio a permiss&atilde;o necess&aacute;ria e tente novamente</li>
             <li>Caso o erro persista, por favor, <a target='_blank' href='$linkToSupport'>solicite suporte</a>.</li>
           </ol>
         </p>
-
-        <div class='detail'>
-          $detail
-        </div>
 
         </div>
       </div>";

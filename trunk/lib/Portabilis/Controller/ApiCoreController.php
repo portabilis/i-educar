@@ -47,12 +47,15 @@ require_once 'lib/Portabilis/Utils/User.php';
 
 class ApiCoreController extends Core_Controller_Page_EditController
 {
-  protected $_dataMapper  = ''; #Avaliacao_Model_NotaComponenteDataMapper';
-  protected $_processoAp  = 0;
-  protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
-  protected $_saveOption  = FALSE;
-  protected $_deleteOption  = FALSE;
-  protected $_titulo   = '';
+  protected $_dataMapper        = null; #Avaliacao_Model_NotaComponenteDataMapper';
+
+  protected $_processoAp        = 0;
+  protected $_nivelAcessoOption = App_Model_NivelAcesso::INSTITUCIONAL;
+
+  protected $_saveOption        = FALSE;
+  protected $_deleteOption      = FALSE;
+
+  protected $_titulo            = '';
 
 
   public function __construct() {
@@ -73,6 +76,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     return $this->validator->validatesPresenceOf($this->getSession()->id_pessoa, '', false, 'Usuário deve estar logado');
   }
 
+
   protected function validatesUserIsAdmin() {
     $user = $this->currentUser();
 
@@ -85,6 +89,36 @@ class ApiCoreController extends Core_Controller_Page_EditController
   }
 
 
+  // subescrever nos controladores cujo recurso difere do padrao (schema pmieducar, tabela <resource>, pk cod_<resource>)
+  protected function validatesResourceId() {
+    return  $this->validatesPresenceOf('id') &&
+            $this->validatesExistenceOf($this->getRequest()->resource, $this->getRequest()->id);
+  }
+
+
+  protected function validatesAuthorizationToDestroy() {
+    $can = $this->getClsPermissoes()->permissao_excluir($this->getBaseProcessoAp(),
+                                                        $this->getSession()->id_pessoa,
+                                                        $this->_nivelAcessoOption);
+
+    if (! $can)
+      $this->messenger->append("Usuário sem permissão para excluir '{$this->getRequest()->resource}'.");
+
+    return $can;
+  }
+
+  protected function validatesAuthorizationToChange() {
+    $can = $this->getClsPermissoes()->permissao_cadastra($this->getBaseProcessoAp(),
+                                                         $this->getSession()->id_pessoa,
+                                                         $this->_nivelAcessoOption);
+
+    if (! $can)
+      $this->messenger->append("Usuário sem permissão para cadastrar '{$this->getRequest()->resource}'.");
+
+    return $can;
+  }
+
+
   // validation
 
   protected function canAcceptRequest() {
@@ -92,9 +126,48 @@ class ApiCoreController extends Core_Controller_Page_EditController
            $this->validatesPresenceOf(array('oper', 'resource'));
   }
 
+
+  protected function canGet() {
+    return $this->validatesResourceId();
+  }
+
+
+  protected function canChange() {
+    throw new Exception('canChange must be overwritten!');
+  }
+
+
+  protected function canPost() {
+    return $this->canChange() &&
+           $this->validatesAuthorizationToChange();
+  }
+
+
+  protected function canPut() {
+    return $this->canChange() &&
+           $this->validatesResourceId() &&
+           $this->validatesAuthorizationToChange();
+  }
+
+
   protected function canSearch() {
     return $this->validatesPresenceOf('query');
   }
+
+
+  protected function canDelete() {
+    return $this->validatesResourceId() &&
+           $this->validatesAuthorizationToDestroy();
+  }
+
+
+  protected function canEnable() {
+    return $this->validatesResourceId() &&
+           $this->validatesAuthorizationToChange();
+  }
+
+
+  // api
 
   protected function notImplementedOperationError() {
     $this->messenger->append("Operação '{$this->getRequest()->oper}' não implementada para o recurso '{$this->getRequest()->resource}'");

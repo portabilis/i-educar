@@ -1,7 +1,7 @@
 // metodos e variaveis acessiveis por outros modulos
 
 var $submitButton = $j('#btn_enviar');
-var $deleteButton = $j('.botaolistagem:not([id=btn_enviar])').first();
+var $deleteButton = $j('.botaolistagem[value=" Excluir "]');
 
 var resource = {
   // options that cannot be overwritten
@@ -213,8 +213,6 @@ var resourceOptions = {
     }
 
     $submitButton.val('Gravar');
-    $deleteButton.val('Desabilitar cadastro');
-
     $deleteButton.hide().attr('disabled', 'disabled');
 
     // unbind events

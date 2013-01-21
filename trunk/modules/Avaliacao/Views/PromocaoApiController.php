@@ -45,12 +45,8 @@ require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
 
 class PromocaoApiController extends ApiCoreController
 {
-  protected $_dataMapper        = 'Avaliacao_Model_NotaComponenteDataMapper';
-  protected $_processoAp        = 644;
-  protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
-  protected $_saveOption        = FALSE;
-  protected $_deleteOption      = FALSE;
-  protected $_titulo            = '';
+  protected $_dataMapper = 'Avaliacao_Model_NotaComponenteDataMapper';
+  protected $_processoAp = 644;
 
   protected function canAcceptRequest() {
     return parent::canAcceptRequest()    &&

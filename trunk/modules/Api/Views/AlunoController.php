@@ -44,14 +44,11 @@ require_once 'Transporte/Model/Responsavel.php';
 
 class AlunoController extends ApiCoreController
 {
-  protected $_dataMapper  = null;
-
-  #TODO definir este valor com mesmo código cadastro de tipo de exemplar?
-  protected $_processoAp  = 0;
+  protected $_processoAp        = 578;
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
-  protected $_saveOption  = FALSE;
-  protected $_deleteOption  = FALSE;
-  protected $_titulo   = '';
+
+
+  // validators
 
   protected function validatesPessoaId() {
     $existenceOptions = array('schema_name' => 'cadastro', 'field_name' => 'idpes');
@@ -60,10 +57,6 @@ class AlunoController extends ApiCoreController
             $this->validatesExistenceOf('fisica', $this->getRequest()->pessoa_id, $existenceOptions);
   }
 
-  protected function validatesAlunoId() {
-    return  $this->validatesPresenceOf('id') &&
-            $this->validatesExistenceOf('aluno', $this->getRequest()->id);
-  }
 
   protected function validatesReligiaoId() {
     $isValid = true;
@@ -90,6 +83,7 @@ class AlunoController extends ApiCoreController
     return $isValid;
   }
 
+
   protected function validatesResponsavelId() {
     $isValid = true;
 
@@ -103,6 +97,7 @@ class AlunoController extends ApiCoreController
     return $isValid;
   }
 
+
   protected function validatesResponsavelTipo() {
     $expectedValues = array('mae', 'pai', 'outra_pessoa');
 
@@ -111,10 +106,12 @@ class AlunoController extends ApiCoreController
                                                    $expectedValues, 'tipo_responsavel');
   }
 
+
   protected function validatesResponsavel() {
     return $this->validatesResponsavelTipo() &&
            $this->validatesResponsavelId();
   }
+
 
   protected function validatesTransporte() {
     $expectedValues = array('nenhum', 'municipal', 'estadual');
@@ -123,6 +120,7 @@ class AlunoController extends ApiCoreController
            $this->validator->validatesValueInSetOf($this->getRequest()->tipo_transporte,
                                                    $expectedValues, 'tipo_transporte');
   }
+
 
   protected function validatesUniquenessOfAlunoByPessoaId() {
     $existenceOptions = array('schema_name' => 'pmieducar', 'field_name' => 'ref_idpes', 'add_msg_on_error' => false);
@@ -189,12 +187,9 @@ class AlunoController extends ApiCoreController
     return true;
   }
 
-  protected function canGet() {
-    return $this->validatesAlunoId();
-  }
+  // validations
 
-
-  protected function _canChange() {
+  protected function canChange() {
     return $this->validatesPessoaId()     &&
            $this->validatesResponsavel()  &&
            $this->validatesTransporte()   &&
@@ -204,27 +199,11 @@ class AlunoController extends ApiCoreController
            $this->validatesUniquenessOfAlunoEstadoId();
   }
 
-
   protected function canPost() {
-    return $this->_canChange() &&
+    return parent::canPost() &&
            $this->validatesUniquenessOfAlunoByPessoaId();
   }
 
-
-  protected function canPut() {
-    return $this->_canChange() &&
-           $this->validatesAlunoId();
-  }
-
-
-  protected function canEnable() {
-    return $this->validatesAlunoId();
-  }
-
-
-  protected function canDelete() {
-    return $this->validatesAlunoId();
-  }
 
   // load resources
 

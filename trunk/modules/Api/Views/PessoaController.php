@@ -38,21 +38,15 @@ require_once 'lib/Portabilis/String/Utils.php';
 
 class PessoaController extends ApiCoreController
 {
-  protected $_dataMapper  = null;
 
-  #TODO definir este valor com mesmo código cadastro de tipo de exemplar?
-  protected $_processoAp  = 0;
-  protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
-  protected $_saveOption  = FALSE;
-  protected $_deleteOption  = FALSE;
-  protected $_titulo   = '';
+  // validators
 
-
-  protected function canGet() {
+  // overwrite api core validator
+  protected function validatesResourceId() {
     $existenceOptions = array('schema_name' => 'cadastro', 'field_name' => 'idpes');
 
-    return $this->validatesPresenceOf('id') &&
-           $this->validatesExistenceOf('fisica', $this->getRequest()->id, $existenceOptions);
+    return  $this->validatesPresenceOf('id') &&
+            $this->validatesExistenceOf('fisica', $this->getRequest()->id, $existenceOptions);
   }
 
 
