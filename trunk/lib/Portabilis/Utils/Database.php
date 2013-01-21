@@ -76,13 +76,12 @@ class Portabilis_Utils_Database {
 
     try {
       if (self::db()->execPreparedQuery($sql, $options['params']) != false) {
-
         while (self::db()->ProximoRegistro())
           $result[] = self::db()->Tupla();
 
-        if (in_array($options['return_only'], array('first-line', 'first-row', 'first-record')) and isset($result[0]))
+        if (in_array($options['return_only'], array('first-line', 'first-row', 'first-record')) and count($result) > 0)
           $result = $result[0];
-        elseif ($options['return_only'] == 'first-field' and isset($result[0]) and isset($result[0][0]))
+        elseif ($options['return_only'] == 'first-field' and count($result) > 0 and count($result[0]) > 0)
           $result = $result[0][0];
       }
     }
