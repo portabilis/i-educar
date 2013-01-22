@@ -29,7 +29,7 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
+require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
 
 
 /**
@@ -42,17 +42,15 @@ require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_Serie extends Portabilis_View_Helper_DynamicInput_Core {
+class Portabilis_View_Helper_DynamicInput_Serie extends Portabilis_View_Helper_DynamicInput_CoreSelect {
 
-  protected function getResourceId($id = null) {
-    if (! $id && $this->viewInstance->ref_cod_serie)
-      $id = $this->viewInstance->ref_cod_serie;
-
-    return $id;
+  protected function inputName() {
+    return 'ref_cod_serie';
   }
 
-  protected function getOptions($cursoId, $resources) {
-    $cursoId = $this->getCursoId($cursoId);
+  protected function inputOptions($options) {
+    $resources = $options['resources'];
+    $cursoId   = $this->getCursoId($options['cursoId']);
 
     if ($cursoId && empty($resources))
       $resources = App_Model_IedFinder::getSeries($cursoId);
@@ -60,30 +58,7 @@ class Portabilis_View_Helper_DynamicInput_Serie extends Portabilis_View_Helper_D
     return $this->insertOption(null, "Selecione uma s&eacute;rie", $resources);
   }
 
-
   public function serie($options = array()) {
-    $defaultOptions       = array('id'        => null,
-                                  'cursoId'  => null,
-                                  'options'   => array(),
-                                  'resources' => array());
-
-    $options              = $this->mergeOptions($options, $defaultOptions);
-
-    $defaultSelectOptions = array('id'         => 'ref_cod_serie',
-                                  'label'      => 'Serie',
-                                  'series'     => $this->getOptions($options['cursoId'], $options['resources']),
-                                  'value'      => $this->getResourceId($options['id']),
-                                  'callback'   => '',
-                                  'inline'     => false,
-                                  'label_hint' => '',
-                                  'input_hint' => '',
-                                  'disabled'   => false,
-                                  'required'   => true,
-                                  'multiple'   => false);
-
-    $selectOptions = $this->mergeOptions($options['options'], $defaultSelectOptions);
-    call_user_func_array(array($this->viewInstance, 'campoLista'), $selectOptions);
-
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInputs/Assets/Javascripts/DynamicSeries.js');
+    parent::select($options);
   }
 }

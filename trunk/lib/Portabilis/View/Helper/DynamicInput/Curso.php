@@ -29,7 +29,7 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
+require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
 
 
 /**
@@ -42,17 +42,15 @@ require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_Curso extends Portabilis_View_Helper_DynamicInput_Core {
+class Portabilis_View_Helper_DynamicInput_Curso extends Portabilis_View_Helper_DynamicInput_CoreSelect {
 
-  protected function getResourceId($id = null) {
-    if (! $id && $this->viewInstance->ref_cod_curso)
-      $id = $this->viewInstance->ref_cod_curso;
-
-    return $id;
+  protected function inputName() {
+    return 'ref_cod_curso';
   }
 
-  protected function getOptions($escolaId, $resources) {
-    $escolaId = $this->getEscolaId($escolaId);
+  protected function inputOptions($options) {
+    $resources = $options['resources'];
+    $escolaId  = $this->getEscolaId($options['escolaId']);
 
     if ($escolaId && empty($resources))
       $resources = App_Model_IedFinder::getCursos($escolaId);
@@ -60,30 +58,7 @@ class Portabilis_View_Helper_DynamicInput_Curso extends Portabilis_View_Helper_D
     return $this->insertOption(null, "Selecione um curso", $resources);
   }
 
-
   public function curso($options = array()) {
-    $defaultOptions       = array('id'        => null,
-                                  'escolaId'  => null,
-                                  'options'   => array(),
-                                  'resources' => array());
-
-    $options              = $this->mergeOptions($options, $defaultOptions);
-
-    $defaultSelectOptions = array('id'         => 'ref_cod_curso',
-                                  'label'      => 'Curso',
-                                  'cursos'     => $this->getOptions($options['escolaId'], $options['resources']),
-                                  'value'      => $this->getResourceId($options['id']),
-                                  'callback'   => '',
-                                  'inline'     => false,
-                                  'label_hint' => '',
-                                  'input_hint' => '',
-                                  'disabled'   => false,
-                                  'required'   => true,
-                                  'multiple'   => false);
-
-    $selectOptions = $this->mergeOptions($options['options'], $defaultSelectOptions);
-    call_user_func_array(array($this->viewInstance, 'campoLista'), $selectOptions);
-
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInputs/Assets/Javascripts/DynamicCursos.js');
+    parent::select($options);
   }
 }

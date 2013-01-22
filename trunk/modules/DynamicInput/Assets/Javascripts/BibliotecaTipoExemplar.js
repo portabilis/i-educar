@@ -14,7 +14,7 @@
       if ($bibliotecaField.val() && $bibliotecaField.is(':enabled')) {
         $tipoExemplarField.children().first().html('Aguarde carregando...');
 
-        var path = '/module/DynamicInputs/DynamicTiposExemplar';
+        var path = '/module/DynamicInput/TipoExemplar';
         var urlForGetTipoExemplar = getResourceUrlBuilder.buildUrl(path, '', {
                                                             resource      : 'tipos_exemplar',
                                                             biblioteca_id : $bibliotecaField.attr('value') });

@@ -29,7 +29,7 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
+require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
 
 
 /**
@@ -42,44 +42,18 @@ require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_Matricula extends Portabilis_View_Helper_DynamicInput_Core {
+class Portabilis_View_Helper_DynamicInput_Matricula extends Portabilis_View_Helper_DynamicInput_CoreSelect {
 
-  protected function getResourceId($id = null) {
-    if (! $id && $this->viewInstance->ref_cod_matricula)
-      $id = $this->viewInstance->ref_cod_matricula;
-
-    return $id;
+  protected function inputName() {
+    return 'ref_cod_matricula';
   }
 
-  protected function getOptions($turmaId, $resources) {
+  protected function inputOptions($options) {
     // não implementado load resources ainda, por enquanto busca somente com ajax.
     return $this->insertOption(null, "Selecione uma matricula", $resources);
   }
 
-
   public function matricula($options = array()) {
-    $defaultOptions       = array('id'        => null,
-                                  'turmaId'  => null,
-                                  'options'   => array(),
-                                  'resources' => array());
-
-    $options              = $this->mergeOptions($options, $defaultOptions);
-
-    $defaultSelectOptions = array('id'         => 'ref_cod_matricula',
-                                  'label'      => 'Matricula',
-                                  'matriculas'     => $this->getOptions($options['turmaId'], $options['resources']),
-                                  'value'      => $this->getResourceId($options['resources']),
-                                  'callback'   => '',
-                                  'inline'     => false,
-                                  'label_hint' => '',
-                                  'input_hint' => '',
-                                  'disabled'   => false,
-                                  'required'   => true,
-                                  'multiple'   => false);
-
-    $selectOptions = $this->mergeOptions($options['options'], $defaultSelectOptions);
-    call_user_func_array(array($this->viewInstance, 'campoLista'), $selectOptions);
-
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInputs/Assets/Javascripts/DynamicMatriculas.js');
+    parent::select($options);
   }
 }

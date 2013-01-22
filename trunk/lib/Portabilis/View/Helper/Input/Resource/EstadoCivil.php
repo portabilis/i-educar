@@ -29,7 +29,7 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/Input/Select.php';
+require_once 'lib/Portabilis/View/Helper/Input/CoreSelect.php';
 
 
 /**
@@ -42,13 +42,11 @@ require_once 'lib/Portabilis/View/Helper/Input/Select.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Resource_EstadoCivil extends Portabilis_View_Helper_Input_Select {
+class Portabilis_View_Helper_Input_Resource_EstadoCivil extends Portabilis_View_Helper_Input_CoreSelect {
 
-  protected function getResourceId($id = null) {
-    return $id;
-  }
+  protected function inputOptions($options) {
+    $resources = $options['resources'];
 
-  protected function getOptions($resources) {
     if (empty($resources)) {
       $resources = array();
 
@@ -64,25 +62,6 @@ class Portabilis_View_Helper_Input_Resource_EstadoCivil extends Portabilis_View_
   }
 
   public function estadoCivil($options = array()) {
-    // options
-    $defaultOptions      = array('objectName' => '',
-                                 'attrName'   => 'estado_civil_id',
-                                 'resources'  => array(),
-                                 'options'    => array());
-
-    $options             = $this->mergeOptions($options, $defaultOptions);
-
-    $defaultInputOptions = array('label' => 'Estado civil', 'value' => $this->viewInstance->{$options['attrName']});
-    $options['options']  = $this->mergeOptions($options['options'], $defaultInputOptions);
-
-    // text input
-
-    $defaultInputOptions = array('value'     => $this->getResourceId($options['id']),
-                                 'resources' => $this->getOptions($options['resources']));
-
-    $textInputOptions    = $this->mergeOptions($options['options'], $defaultInputOptions);
-    $textHelperOptions   = array('objectName' => $options['objectName']);
-
-    $this->inputsHelper()->select($options['attrName'], $textInputOptions, $textHelperOptions);
+    parent::select($options);
   }
 }

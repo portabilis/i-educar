@@ -36,7 +36,7 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'Biblioteca/Model/TipoExemplarDataMapper.php';
 require_once 'lib/Portabilis/Object/Utils.php';
 
-class DynamicTiposExemplarController extends ApiCoreController
+class TipoExemplarController extends ApiCoreController
 {
   protected $_dataMapper  = 'Biblioteca_Model_TipoExemplarDataMapper';
 

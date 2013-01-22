@@ -29,7 +29,7 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
+require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
 
 
 /**
@@ -42,18 +42,15 @@ require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_BibliotecaTipoCliente extends Portabilis_View_Helper_DynamicInput_Core {
+class Portabilis_View_Helper_DynamicInput_BibliotecaTipoCliente extends Portabilis_View_Helper_DynamicInput_CoreSelect {
 
-  protected function getResourceId($id = null) {
-    if (! $id && $this->viewInstance->ref_cod_cliente_tipo)
-      $id = $this->viewInstance->ref_cod_cliente_tipo;
-
-    return $id;
+  protected function inputName() {
+    return 'ref_cod_cliente_tipo';
   }
 
-
-  protected function getOptions($resources) {
-      $bibliotecaId  = $this->getBibliotecaId();
+  protected function inputOptions($options) {
+    $resources    = $options['resources'];
+    $bibliotecaId = $this->getBibliotecaId();
 
     if ($bibliotecaId and empty($resources))
       $resources = App_Model_IedFinder::getBibliotecaTiposCliente($bibliotecaId);
@@ -61,26 +58,11 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaTipoCliente extends Portabil
     return $this->insertOption(null, "Selecione um tipo de cliente", $resources);
   }
 
+  protected function defaultOptions(){
+    return array('options' => array('label' => 'Tipo cliente'));
+  }
 
   public function bibliotecaTipoCliente($options = array()) {
-    $defaultOptions       = array('id' => null, 'options' => array(), 'resources' => array());
-    $options              = $this->mergeOptions($options, $defaultOptions);
-
-    $defaultSelectOptions     = array('id'         => 'ref_cod_cliente_tipo',
-                                      'label'      => 'Tipo de cliente',
-                                      'resources'  => $this->getOptions($options['resources']),
-                                      'value'      => $this->getResourceId($options['id']),
-                                      'callback'   => '',
-                                      'inline'     => false,
-                                      'label_hint' => '',
-                                      'input_hint' => '',
-                                      'disabled'   => false,
-                                      'required'   => true,
-                                      'multiple'   => false);
-
-    $selectOptions = $this->mergeOptions($options['options'], $defaultSelectOptions);
-    call_user_func_array(array($this->viewInstance, 'campoLista'), $selectOptions);
-
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInputs/Assets/Javascripts/DynamicBibliotecaTiposCliente.js');
+    parent::select($options);
   }
 }

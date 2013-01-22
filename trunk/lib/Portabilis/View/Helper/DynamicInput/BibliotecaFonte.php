@@ -29,7 +29,7 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
+require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
 
 
 /**
@@ -42,19 +42,15 @@ require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_BibliotecaFonte extends Portabilis_View_Helper_DynamicInput_Core {
+class Portabilis_View_Helper_DynamicInput_BibliotecaFonte extends Portabilis_View_Helper_DynamicInput_CoreSelect {
 
-
-  protected function getBibliotecaFonteId($id = null) {
-    if (! $id && $this->viewInstance->ref_cod_fonte)
-      $id = $this->viewInstance->ref_cod_fonte;
-
-    return $id;
+  protected function inputName() {
+    return 'ref_cod_fonte';
   }
 
-
-  protected function getOptions($resources) {
-    $bibliotecaId  = $this->getBibliotecaId();
+  protected function inputOptions($options) {
+    $resources    = $options['resources'];
+    $bibliotecaId = $this->getBibliotecaId();
 
     if ($bibliotecaId and empty($resources))
       $resources = App_Model_IedFinder::getBibliotecaFontes($bibliotecaId);
@@ -62,26 +58,7 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaFonte extends Portabilis_Vie
     return $this->insertOption(null, "Selecione uma fonte", $resources);
   }
 
-
   public function bibliotecaFonte($options = array()) {
-    $defaultOptions       = array('id' => null, 'options' => array(), 'resources' => array());
-    $options              = $this->mergeOptions($options, $defaultOptions);
-
-    $defaultInputOptions = array('id'    => 'ref_cod_fonte',
-                            'label'      => 'Fonte',
-                            'fontes'     => $this->getOptions($options['resources']),
-                            'value'      => $this->getBibliotecaFonteId($options['id']),
-                            'callback'   => '',
-                            'inline'     => false,
-                            'label_hint' => '',
-                            'input_hint' => '',
-                            'disabled'   => false,
-                            'required'   => true,
-                            'multiple'   => false);
-
-    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
-    call_user_func_array(array($this->viewInstance, 'campoLista'), $inputOptions);
-
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInputs/Assets/Javascripts/DynamicBibliotecaFontes.js');
+    parent::select($options);
   }
 }

@@ -29,11 +29,10 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/Input/CoreSelect.php';
-
+require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
 
 /**
- * Portabilis_View_Helper_Input_Select class.
+ * Portabilis_View_Helper_DynamicInput_AnoLetivo class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -42,26 +41,26 @@ require_once 'lib/Portabilis/View/Helper/Input/CoreSelect.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Resource_Beneficio extends Portabilis_View_Helper_Input_CoreSelect {
+class Portabilis_View_Helper_DynamicInput_AnoLetivo extends Portabilis_View_Helper_DynamicInput_CoreSelect {
 
-  protected function inputOptions($options) {
-    $resources = $options['resources'];
-
-    if (empty($resources)) {
-      $resources = array();
-
-      $_resources = new clsPmieducarAlunoBeneficio();
-      $_resources = $_resources->lista(null, null, null, null, null, null, null, null, null, 1);
-
-      foreach ($_resources as $resource) {
-        $resources[$resource['cod_aluno_beneficio']] = $resource['nm_beneficio'];
-      }
-    }
-
-    return $this->insertOption(null, "Selecione", $resources);
+  // subscreve para não acrescentar '_id' no final
+  protected function inputName() {
+    return 'ano';
   }
 
-  public function beneficio($options = array()) {
+  protected function inputOptions($options) {
+    # TODO buscar anos letivos da escola, por enquanto buscando apenas via ajax
+    return $this->insertOption(null, "Selecione um ano letivo", $options['resources']);
+  }
+
+  protected function defaultOptions() {
+    return array('escolaId' => null, 'andamentoIn' => '');
+  }
+
+  public function anoLetivo($options = array()) {
     parent::select($options);
+
+    if($this->options['andamentoIn'])
+      $this->inputsHelper()->hidden('ano_escolar_andamento_in', $this->options['andamentoIn']);
   }
 }
