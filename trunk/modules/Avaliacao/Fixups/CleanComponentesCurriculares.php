@@ -31,7 +31,7 @@
 require_once 'lib/Portabilis/Utils/Database.php';
 
 /**
- * CoreExt_Session class.
+ * CleanComponentesCurriculares class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar

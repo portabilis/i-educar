@@ -31,7 +31,7 @@
 require_once 'lib/Portabilis/Array/Utils.php';
 
 /**
- * CoreExt_Session class.
+ * Portabilis_Report_ReportFactory class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -45,7 +45,7 @@ class Portabilis_Report_ReportFactory
 {
 
   function __construct() {
-		$this->config   = $GLOBALS['coreExt']['Config']->report;
+		$this->config   = $GLOBALS['coreExt']['Config'];
 		$this->settings = array();
 
 		$this->setSettings($this->config);

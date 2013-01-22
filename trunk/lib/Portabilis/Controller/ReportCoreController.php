@@ -90,10 +90,10 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
   }
 
 
-  function headers() {
+  function headers($result) {
     header('Content-type: application/pdf');
-    //header("Content-Disposition: attachment; filename={$templateName}.pdf");
-    header("Content-Disposition: inline; filename={$templateName}.pdf");
+    header('Content-Length: ' . strlen($result));
+    header('Content-Disposition: inline; filename=report.pdf');
   }
 
 
@@ -105,11 +105,16 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
   function renderReport() {
     try {
-      echo $this->report->dumps();
-      $this->headers();
+      $result = $this->report->dumps();
+
+      if (! $result)
+        throw new Exception('No report result to render!');
+
+      $this->headers($result);
+      echo $result;
     }
     catch (Exception $e) {
-      if ($this->report->reportFactory()->settings['show_exceptions_msg'])
+      if ($GLOBALS['coreExt']['Config']->report->show_error_details == true)
         $details = 'Detalhes: ' . $e->getMessage();
       else
         $details = "Visualização dos detalhes sobre o erro desativada.";
