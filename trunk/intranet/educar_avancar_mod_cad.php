@@ -59,23 +59,13 @@ class indice extends clsCadastro
     return $retorno;
   }
 
-  function Gerar()
-  {
-    #$this->campoNumero( "ano", "Ano (atual)", date("Y"), 4, 4, true);
+  function Gerar() {
+    // inputs
 
-    $instituicao_obrigatorio                                  = TRUE;
-    $get_escola = $escola_obrigatorio                         = TRUE;
-    $get_curso  = $curso_obrigatorio                          = TRUE;
-    $get_escola_curso_serie = $escola_curso_serie_obrigatorio = TRUE;
-    $get_turma  = $turma_obrigatorio                          = TRUE;
-    $get_cursos_nao_padrao                                    = FALSE;
+    $anoLetivoHelperOptions = array('situacoes' => array('em_andamento', 'nao_iniciado'));
 
-    $this->verificar_campos_obrigatorios                      = TRUE;
-    $this->add_onchange_events                                = TRUE;
-    $get_ano = $ano_obrigatorio                               = TRUE;
-    $ano_andamento_in                                         = '0,1';
-
-    include 'include/pmieducar/educar_campo_lista.php';
+    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie', 'turma'));
+    $this->inputsHelper()->dynamic('anoLetivo', array('label' => 'Ano destino'), $anoLetivoHelperOptions);
   }
 
   /**
@@ -90,8 +80,11 @@ class indice extends clsCadastro
     $this->db  = new clsBanco();
     $this->db2 = new clsBanco();
 
+    echo "$this->ref_cod_escola, $this->ref_cod_curso,
+                                        $this->ref_cod_serie, $this->ref_cod_turma, {$_POST['ano']}";
+
     $result = $this->rematricularALunos($this->ref_cod_escola, $this->ref_cod_curso,
-                                        $this->ref_ref_cod_serie, $this->ref_cod_turma, $_POST['ano']);
+                                        $this->ref_cod_serie, $this->ref_cod_turma, $_POST['ano']);
 
     return $result;
   }
@@ -148,7 +141,6 @@ class indice extends clsCadastro
      			           m2.ano = $ano AND
      			           m2.ativo = 1 AND
      			           m2.ref_ref_cod_escola = m.ref_ref_cod_escola)");
-
     }
     catch (Exception $e) {
       $this->mensagem = "Erro ao selecionar matrículas ano anterior: $anoAnterior";

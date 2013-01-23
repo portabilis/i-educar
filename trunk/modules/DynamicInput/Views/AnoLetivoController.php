@@ -1,11 +1,13 @@
 <?php
+
 #error_reporting(E_ALL);
 #ini_set("display_errors", 1);
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
  * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
+ *     <ctima@itajai.sc.gov.br>
  *
  * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
  * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
@@ -24,29 +26,39 @@
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
- * @package   Portabilis
- * @since     Arquivo disponível desde a versão 1.1.0
+ * @package   Avaliacao
+ * @subpackage  Modules
+ * @since   Arquivo disponível desde a versão ?
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
-require_once 'lib/Portabilis/Utils/Database.php';
+require_once 'lib/Portabilis/Controller/ApiCoreController.php';
+require_once 'Biblioteca/Model/TipoExemplarDataMapper.php';
+require_once 'lib/Portabilis/Object/Utils.php';
+
 
 /**
- * Portabilis_View_Helper_DynamicInput_AnoLetivo class.
+ * AnoLetivoController class.
  *
- * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   Portabilis
- * @since     Classe disponível desde a versão 1.1.0
- * @version   @@package_version@@
+ * @author      Lucas D'Avila <lucasdavila@portabilis.com.br>
+ * @category    i-Educar
+ * @license     @@license@@
+ * @package     Avaliacao
+ * @subpackage  Modules
+ * @since       Classe disponível desde a versão 1.1.0
+ * @version     @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_AnoLetivo extends Portabilis_View_Helper_DynamicInput_CoreSelect {
+class AnoLetivoController extends ApiCoreController
+{
+  #protected $_dataMapper  = 'Biblioteca_Model_TipoExemplarDataMapper';
 
-  // subscreve para não acrescentar '_id' no final
-  protected function inputName() {
-    return 'ano';
+  protected function validatesEscolaId() {
+    return  $this->validatesPresenceOf('escola_id') &&
+            $this->validatesExistenceOf('escola', $this->getRequest()->escola_id);
+  }
+
+  protected function canGetAnosLetivos() {
+    return $this->validatesEscolaId();
   }
 
   protected function filtroSituacao() {
@@ -54,39 +66,33 @@ class Portabilis_View_Helper_DynamicInput_AnoLetivo extends Portabilis_View_Help
     $situacaoIn     = array();
 
     foreach ($tiposSituacao as $nome => $flag) {
-      if (in_array("$nome", $this->options['situacoes']))
+      if ($this->getRequest()->{"situacao_$nome"} == true)
         $situacaoIn[] = $flag;
     }
 
     return (empty($situacaoIn) ? '' : 'and andamento in ('. implode(',', $situacaoIn) . ')');
   }
 
-  protected function inputOptions($options) {
-    $resources = $options['resources'];
-    $escolaId  = $this->getEscolaId($options['escolaId']);
-
-    if ($escolaId && empty($resources)) {
+  protected function getAnosLetivos() {
+    if ($this->canGetAnosLetivos()) {
+      $params       = array($this->getRequest()->escola_id);
       $sql          = "select ano from pmieducar.escola_ano_letivo as al where ref_cod_escola = $1
                        and ativo = 1 {$this->filtroSituacao()} order by ano desc";
 
-      $records = Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => $escolaId));
-      $resources = array();
+      $records = $this->fetchPreparedQuery($sql, $params);
+      $options = array();
 
       foreach ($records as $record)
-        $resources[$record['ano']] = $record['ano'];
+        $options[$record['ano']] = $record['ano'];
+
+      return array('options' => $options);
     }
-
-    return $this->insertOption(null, "Selecione um ano letivo", $resources);
   }
 
-  protected function defaultOptions() {
-    return array('escolaId' => null, 'situacoes' => array('em_andamento', 'nao_iniciado', 'finalizado'));
-  }
-
-  public function anoLetivo($options = array()) {
-    parent::select($options);
-
-    foreach ($this->options['situacoes'] as $situacao)
-      $this->viewInstance->appendOutput("<input type='hidden' name='situacoes_ano_letivo' value='$situacao' />");
+  public function Gerar() {
+    if ($this->isRequestFor('get', 'anos_letivos'))
+      $this->appendResponse($this->getAnosLetivos());
+    else
+      $this->notImplementedOperationError();
   }
 }

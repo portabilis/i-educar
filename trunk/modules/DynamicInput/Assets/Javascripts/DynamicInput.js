@@ -45,17 +45,11 @@ function xmlResourcesToSelectOptions(resources, parentNodeName, nodeIdAttrName, 
 }
 
 
-function jsonResourcesToSelectOptions(resources, attrIdName, attrValueName) {
+function jsonResourcesToSelectOptions(resources) {
   var options = [];
 
-  $j.each(resources, function(index, resource){
-    var $option = $j('<option />');
-    $option.attr('value', resource[attrIdName]);
-
-    var text = safeCapitalize(resource[attrValueName]);
-    $option.html(text);
-
-    options.push($option);
+  $j.each(resources, function(id, value) {
+    options.push($j('<option />').attr('value', id).html(safeCapitalize(value)));
   });
 
   return options;

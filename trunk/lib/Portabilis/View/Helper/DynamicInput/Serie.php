@@ -50,10 +50,11 @@ class Portabilis_View_Helper_DynamicInput_Serie extends Portabilis_View_Helper_D
 
   protected function inputOptions($options) {
     $resources = $options['resources'];
+    $escolaId  = $this->getEscolaId($options['escolaId']);
     $cursoId   = $this->getCursoId($options['cursoId']);
 
-    if ($cursoId && empty($resources))
-      $resources = App_Model_IedFinder::getSeries($cursoId);
+    if ($escolaId && $cursoId && empty($resources))
+      $resources = App_Model_IedFinder::getSeries($instituicaoId = null, $escolaId, $cursoId);
 
     return $this->insertOption(null, "Selecione uma s&eacute;rie", $resources);
   }

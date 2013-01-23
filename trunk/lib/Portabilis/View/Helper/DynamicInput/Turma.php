@@ -50,10 +50,11 @@ class Portabilis_View_Helper_DynamicInput_Turma extends Portabilis_View_Helper_D
 
   protected function inputOptions($options) {
     $resources = $options['resources'];
-    $serieId = $this->getSerieId($options['serieId']);
+    $escolaId  = $this->getEscolaId($options['escolaId']);
+    $serieId   = $this->getSerieId($options['serieId']);
 
-    if ($serieId && empty($resources))
-      $resources = App_Model_IedFinder::getTurmas($serieId);
+    if ($escolaId && $serieId && empty($resources))
+      $resources = App_Model_IedFinder::getTurmas($escolaId, $serieId);
 
     return $this->insertOption(null, "Selecione uma turma", $resources);
   }

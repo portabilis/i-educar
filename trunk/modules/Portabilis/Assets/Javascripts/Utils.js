@@ -16,6 +16,19 @@ function safeLog(value) {
 
 // form utils
 
+var formUtils = {
+  submit : function(form) {
+
+    if (form == undefined)
+      form = $j('form:first');
+
+    form.removeAttr('onsubmit');
+
+    if (validationUtils.validatesFields())
+      form.submit();
+  }
+};
+
 function fixupFieldsWidth(){
   var maxWidth = 0;
   var $fields = $j('form select');
