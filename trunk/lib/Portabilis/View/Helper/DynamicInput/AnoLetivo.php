@@ -54,13 +54,13 @@ class Portabilis_View_Helper_DynamicInput_AnoLetivo extends Portabilis_View_Help
   }
 
   protected function defaultOptions() {
-    return array('escolaId' => null, 'andamentoIn' => '');
+    return array('escolaId' => null, 'situacoes' => array('iniciado', 'nao_iniciado', 'finalizado'));
   }
 
   public function anoLetivo($options = array()) {
     parent::select($options);
 
-    if($this->options['andamentoIn'])
-      $this->inputsHelper()->hidden('ano_escolar_andamento_in', $this->options['andamentoIn']);
+    foreach ($this->options['situacoes'] as $situacao)
+      $this->viewInstance->appendOutput("<input type='hidden' name='situacoes_ano_letivo' value='$situacao' />");
   }
 }
