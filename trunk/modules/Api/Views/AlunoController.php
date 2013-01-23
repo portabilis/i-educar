@@ -229,7 +229,15 @@ class AlunoController extends ApiCoreController
     $dataMapper = $this->getDataMapperFor('transporte', 'aluno');
     $entity     = $this->tryGetEntityOf($dataMapper, $alunoId);
 
-    return (is_null($entity) ? null : $tiposTransporte[$entity->get('responsavel')]);
+    // no cadastro de alunos antigo considerava como não utiliza transporte,
+    // quando não existia dados, para o novo cadastro foi adicionado a opcao 0 (nenhum),
+    // então por compatibilidade é retornado nenhum, quando não foi encontrado dados.
+    if (is_null($entity))
+      $tipo = $tiposTransporte[Transporte_Model_Responsavel::NENHUM];
+    else
+      $tipo = $tiposTransporte[$entity->get('responsavel')];
+
+    return $tipo;
   }
 
 
