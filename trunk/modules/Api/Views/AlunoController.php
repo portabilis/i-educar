@@ -229,9 +229,9 @@ class AlunoController extends ApiCoreController
     $dataMapper = $this->getDataMapperFor('transporte', 'aluno');
     $entity     = $this->tryGetEntityOf($dataMapper, $alunoId);
 
-    // no cadastro de alunos antigo considerava como não utiliza transporte,
+    // no antigo cadastro de alunos era considerado como não utiliza transporte,
     // quando não existia dados, para o novo cadastro foi adicionado a opcao 0 (nenhum),
-    // então por compatibilidade é retornado nenhum, quando não foi encontrado dados.
+    // então por compatibilidade esta API retorna nenhum, quando não foi encontrado dados.
     if (is_null($entity))
       $tipo = $tiposTransporte[Transporte_Model_Responsavel::NENHUM];
     else
@@ -304,13 +304,16 @@ class AlunoController extends ApiCoreController
   // #TODO mover updateResponsavel e updateDeficiencias para API pessoa ?
 
   protected function updateResponsavel() {
-    if ($this->getRequest()->tipo_responsavel == 'outra_pessoa') {
-      $pessoa                    = new clsFisica();
-      $pessoa->idpes             = $this->getRequest()->pessoa_id;
-      $pessoa->idpes_responsavel = $this->getRequest()->responsavel_id;
+    $pessoa                   = new clsFisica();
+    $pessoa->idpes            = $this->getRequest()->pessoa_id;
+    $pessoa->nome_responsavel = '';
 
-      return $pessoa->edita();
-    }
+    if ($this->getRequest()->tipo_responsavel == 'outra_pessoa')
+      $pessoa->idpes_responsavel = $this->getRequest()->responsavel_id;
+    else
+      $pessoa->idpes_responsavel = 'NULL';
+
+    return $pessoa->edita();
   }
 
 
@@ -381,10 +384,34 @@ class AlunoController extends ApiCoreController
 
   // api responders
 
+  protected function tipoResponsavel($aluno) {
+    $tipos = array('p' => 'pai', 'm' => 'mae', 'r' => 'outra_pessoa');
+    $tipo  = $tipos[$aluno['tipo_responsavel']];
+
+    // no antigo cadastro de aluno, caso não fosse encontrado um tipo de responsavel
+    // verificava se a pessoa possua responsavel, pai ou mãe, considerando como
+    // responsavel um destes, na respectiva ordem, sendo assim esta api mantem
+    // compatibilidade com o antigo cadastro.
+    if (! $tipo) {
+      $pessoa        = new clsFisica();
+      $pessoa->idpes = $aluno['pessoa_id'];
+      $pessoa        = $pessoa->detalhe();
+
+      if ($pessoa['idpes_responsavel'] || $pessoa['nome_responsavel'])
+        $tipo = $tipos['r'];
+      elseif ($pessoa['idpes_pai'] || $pessoa['nome_pai'])
+        $tipo = $tipos['p'];
+      elseif ($pessoa['idpes_mae'] || $pessoa['nome_mae'])
+        $tipo = $tipos['m'];
+    }
+
+    return $tipo;
+  }
+
   protected function get() {
     if ($this->canGet()) {
       $id               = $this->getRequest()->id;
-      $tiposResponsavel = array('p' => 'pai', 'm' => 'mae', 'r' => 'outra_pessoa');
+
 
       $aluno            = new clsPmieducarAluno();
       $aluno->cod_aluno = $id;
@@ -406,7 +433,7 @@ class AlunoController extends ApiCoreController
       $aluno = Portabilis_Array_Utils::filter($aluno, $attrs);
 
       $aluno['tipo_transporte']  = $this->loadTransporte($id);
-      $aluno['tipo_responsavel'] = $tiposResponsavel[$aluno['tipo_responsavel']];
+      $aluno['tipo_responsavel'] = $this->tipoResponsavel($aluno);
       $aluno['aluno_inep_id']    = $this->loadAlunoInepId($id);
       $aluno['ativo']            = $aluno['ativo'] == 1;
 
