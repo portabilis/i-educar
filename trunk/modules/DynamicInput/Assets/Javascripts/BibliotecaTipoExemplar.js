@@ -4,7 +4,7 @@
     var $tipoExemplarField = getElementFor('exemplar_tipo');
 
     var handleGetTiposExemplar = function(response) {
-      var selectOptions = jsonResourcesToSelectOptions(response['tipos_exemplar'], 'id', 'nome');
+      var selectOptions = jsonResourcesToSelectOptions(response['options']);
       updateSelect($tipoExemplarField, selectOptions, "Selecione um tipo de exemplar");
     }
 
@@ -14,11 +14,13 @@
       if ($bibliotecaField.val() && $bibliotecaField.is(':enabled')) {
         $tipoExemplarField.children().first().html('Aguarde carregando...');
 
-        var path = '/module/DynamicInputs/DynamicTiposExemplar';
-        var urlForGetTipoExemplar = getResourceUrlBuilder.buildUrl(path, '', {
-                                                            resource      : 'tipos_exemplar',
-                                                            biblioteca_id : $bibliotecaField.attr('value') });
+        var data = {
+          resource      : 'tipos_exemplar',
+          biblioteca_id : $bibliotecaField.attr('value')
+        };
 
+        var urlForGetTipoExemplar = getResourceUrlBuilder.buildUrl('/module/DynamicInput/TipoExemplar',
+                                                                   'tipos_exemplar', data);
         var options = {
           url : urlForGetTipoExemplar,
           dataType : 'json',

@@ -87,7 +87,7 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
       $files = array($files);
 
     foreach ($files as $file) {
-      // somente carrega o asset apenas uma vez
+      // somente carrega o asset uma vez
       if (! in_array($file, self::$javascriptsLoaded)) {
         self::$javascriptsLoaded[] = $file;
 
@@ -117,7 +117,7 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
       $files = array($files);
 
     foreach ($files as $file) {
-      // somente carrega o asset apenas uma vez
+      // somente carrega o asset uma vez
       if (! in_array($file, self::$stylesheetsLoaded)) {
         self::$stylesheetsLoaded[] = $file;
 

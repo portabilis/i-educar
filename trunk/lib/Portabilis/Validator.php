@@ -32,7 +32,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'CoreExt/Exception.php';
 
 /**
- * CoreExt_Session class.
+ * Portabilis_Validator class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar

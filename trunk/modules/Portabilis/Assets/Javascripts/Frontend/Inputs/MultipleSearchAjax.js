@@ -38,7 +38,7 @@ var multipleSearchAjax = {
     return results;
   },
 
-  for : function(options) {
+  setup : function(options) {
     options = defaultMultipleSearchAjaxOptions.mergeWith(options);
     options.ajaxChosenOptions.url = options.get('searchPath');
 
@@ -60,12 +60,12 @@ var multipleSearchAjaxHelper = {
     var defaultOptions = {
       searchPath : searchPath,
       objectName : objectName,
-      attrName   : attrName,
+      attrName   : attrName
     };
 
     var options = optionsUtils.merge(defaultOptions, searchResourceOptions);
-    multipleSearchAjax.for(options);
-  },
+    multipleSearchAjax.setup(options);
+  }
 };
 
 // # TODO implementar 'load' options

@@ -29,7 +29,7 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/Input/Select.php';
+require_once 'lib/Portabilis/View/Helper/Input/CoreSelect.php';
 
 
 /**
@@ -42,15 +42,14 @@ require_once 'lib/Portabilis/View/Helper/Input/Select.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Resource_Religiao extends Portabilis_View_Helper_Input_Select {
 
-  protected function getResourceId($id = null) {
-    return $id;
-  }
+class Portabilis_View_Helper_Input_Resource_Religiao extends Portabilis_View_Helper_Input_CoreSelect {
 
-  protected function getOptions($resources) {
-    if (empty($resources)) {
-      $resources = array();
+  protected function inputOptions($options) {
+    $resources = $options['resources'];
+
+    if (empty($options['resources'])) {
+      $resources  = array();
 
       $_resources = new clsPmieducarReligiao();
       $_resources = $_resources->lista(null, null, null, null, null, null, null, null, 1);
@@ -63,26 +62,8 @@ class Portabilis_View_Helper_Input_Resource_Religiao extends Portabilis_View_Hel
     return $this->insertOption(null, "Selecione", $resources);
   }
 
+
   public function religiao($options = array()) {
-    // options
-    $defaultOptions      = array('objectName' => '',
-                                 'attrName'   => 'religiao_id',
-                                 'resources'  => array(),
-                                 'options'    => array());
-
-    $options             = $this->mergeOptions($options, $defaultOptions);
-
-    $defaultInputOptions = array('label' => 'Religi&atilde;o', 'value' => $this->viewInstance->{$options['attrName']});
-    $options['options']  = $this->mergeOptions($options['options'], $defaultInputOptions);
-
-    // text input
-
-    $defaultInputOptions = array('value'     => $this->getResourceId($options['id']),
-                                 'resources' => $this->getOptions($options['resources']));
-
-    $textInputOptions    = $this->mergeOptions($options['options'], $defaultInputOptions);
-    $textHelperOptions   = array('objectName' => $options['objectName']);
-
-    $this->inputsHelper()->select($options['attrName'], $textInputOptions, $textHelperOptions);
+    parent::select($options);
   }
 }

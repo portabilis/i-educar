@@ -34,7 +34,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . 'include/portabilis/libs'
 require_once 'include/portabilis/libs/XML/RPC2/Client.php';
 
 /**
- * CoreExt_Session class.
+ * Portabilis_Report_ReportFactoryRemote class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -47,23 +47,23 @@ require_once 'include/portabilis/libs/XML/RPC2/Client.php';
 class Portabilis_Report_ReportFactoryRemote extends Portabilis_Report_ReportFactory
 {
 	function setSettings($config) {
-	  $this->settings['url'] 								 = $this->config->remote_factory->url;
-	  $this->settings['app_name']					 	 = $this->config->remote_factory->this_app_name;
-		$this->settings['username'] 					 = $this->config->remote_factory->username;
-	  $this->settings['password'] 					 = $this->config->remote_factory->password;
-	  $this->settings['show_exceptions_msg'] = $this->config->remote_factory->show_exceptions_msg;
-	  $this->settings['logo_name']           = $this->config->remote_factory->logo_name;
+	  $this->settings['url'] 			 = $config->report->remote_factory->url;
+	  $this->settings['app_name']	 = $config->report->remote_factory->this_app_name;
+		$this->settings['username']  = $config->report->remote_factory->username;
+	  $this->settings['password']  = $config->report->remote_factory->password;
+	  $this->settings['logo_name'] = $config->report->remote_factory->logo_name;
 	}
 
   function dumps($report, $options = array()) {
-    $defaultOptions = array('add_arg_logo_name' => true, 'encoding' => 'uncoded');
+    $defaultOptions = array('add_logo_name_arg' => true, 'encoding' => 'uncoded');
     $options        = self::mergeOptions($options, $defaultOptions);
 
     // logo helper
 
-    if ($options['add_arg_logo_name'] and ! $this->settings['logo_name'])
-    	throw new Exception("The option 'add_arg_logo_name' is true, but no logo_name defined in configurations");
-		elseif ($options['add_arg_logo_name'])
+    if ($options['add_logo_name_arg'] and ! $this->settings['logo_name'])
+    	throw new Exception("The option 'add_logo_name_arg' is true, but no logo_name defined in configurations!");
+
+		elseif ($options['add_logo_name_arg'])
       $report->addArg('logo_name', $this->settings['logo_name']);
 
 
@@ -88,7 +88,7 @@ class Portabilis_Report_ReportFactoryRemote extends Portabilis_Report_ReportFact
       $report = base64_decode($result['report']);
 
     else
-      throw new Exception("Encoding {$options['encoding']} not implemented!");
+      throw new Exception("Encoding {$options['encoding']} not supported!");
 
     return $report;
   }

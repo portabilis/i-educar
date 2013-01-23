@@ -88,11 +88,11 @@ class indice extends clsListagem
 	var $inativado;
 	var $nome_responsavel;
 	var $cpf_responsavel;
-	
+
 	var $nome_pai;
 	var $nome_mae;
 	var $data_nascimento;
-	
+
 	function Gerar()
 	{
 		@session_start();
@@ -225,11 +225,11 @@ class indice extends clsListagem
 					$ref_cod_escola
 				);
 		}*/
-		
+
 		$total = $obj_aluno->_total;
 
 		// monta a lista
-		if( is_array( $lista ) && count( $lista ) ) 
+		if( is_array( $lista ) && count( $lista ) )
 		{
 			foreach ( $lista AS $registro )
 			{
@@ -328,13 +328,13 @@ class indice extends clsListagem
 
                                   $inepMapper = new Educacenso_Model_AlunoDataMapper();
                                   $alunoInep = NULL;
-                                  
+
                                   try {
                                     $alunoInep = $inepMapper->find(array('cod_aluno' => $registro["cod_aluno"]));
                                   }
                                   catch(Exception $e) {
                                   }
-                                  
+
                                   if (empty($alunoInep->alunoInep)){
                                       $registro['cod_inep'] = '-';
                                   } else {
@@ -357,18 +357,18 @@ class indice extends clsListagem
 				) );
 			}
 		}
-		
+
 		$this->addPaginador2( "educar_aluno_lst.php", $total, $_GET, $this->nome, $this->limite );
 
 
 		//** Verificacao de permissao para cadastro
 		if($obj_permissoes->permissao_cadastra(578, $this->pessoa_logada,7))
 		{
-			$this->acao = "go(\"educar_aluno_cad.php\")";
+			$this->acao = "go(\"/module/Cadastro/aluno\")";
 			$this->nome_acao = "Novo";
 
-			$this->array_botao = array("Ficha do Aluno (em branco)");
-			$this->array_botao_script = array( "showExpansivelImprimir(400, 200,  \"educar_relatorio_aluno_dados.php\",\"\", \"Relatório i-Educar\" )" );
+			/*$this->array_botao = array("Ficha do Aluno (em branco)");
+			$this->array_botao_script = array( "showExpansivelImprimir(400, 200,  \"educar_relatorio_aluno_dados.php\",\"\", \"Relatório i-Educar\" )" );*/
 		}
 		//**
 		$this->largura = "100%";

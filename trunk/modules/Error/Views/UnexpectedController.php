@@ -32,45 +32,14 @@ ini_set("display_errors", 1);
  * @version   $Id$
  */
 
-require_once 'Core/View.php';
-require_once 'Core/Controller/Page/ViewController.php';
-require_once 'lib/Portabilis/View/Helper/Application.php';
+require_once 'lib/Portabilis/Controller/ErrorCoreController.php';
 
-class UnexpectedController extends Core_Controller_Page_ViewController
+class UnexpectedController extends Portabilis_Controller_ErrorCoreController
 {
-  protected $_dataMapper  = ''; #Avaliacao_Model_NotaComponenteDataMapper';
-  protected $_processoAp  = 0;
-  #protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
-  protected $_saveOption  = FALSE;
-  protected $_deleteOption  = FALSE;
-  protected $_titulo   = '';
+  protected $_titulo = 'Erro inesperado';
 
-
-  public function __construct() {
-    parent::__construct();
-    $this->loadAssets();
-  }
-
-  /* overwrite Core/Controller/Page/Abstract.php para renderizar html
-     sem necessidade de usuário estar logado */
-  public function generate(CoreExt_Controller_Page_Interface $instance)
-  {
+  protected function setHeader() {
     header("HTTP/1.1 500 Internal Server Error");
-
-    $viewBase         = new Core_View($instance);
-    $viewBase->titulo = 'i-Educar - Erro inesperado';
-    $viewBase->addForm($instance);
-
-    $html = $viewBase->MakeHeadHtml();
-
-    foreach ($viewBase->clsForm as $form) {
-      $html .= $form->Gerar();
-    }
-
-    $html .= $form->getAppendedOutput();
-    $html .= $viewBase->MakeFootHtml();
-
-    echo $html;
   }
 
   public function Gerar() {
@@ -110,17 +79,5 @@ class UnexpectedController extends Core_Controller_Page_ViewController
 
         </div>
       </div>";
-  }
-
-  protected function loadAssets() {
-
-    $styles = array(
-      'styles/reset.css',
-      'styles/portabilis.css',
-      'styles/min-portabilis.css',
-      '/modules/Error/Assets/Stylesheets/Error.css'
-    );
-
-    Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
   }
 }

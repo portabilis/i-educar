@@ -38,15 +38,7 @@ require_once 'lib/Portabilis/Array/Utils.php';
 
 class EmprestimoApiController extends ApiCoreController
 {
-  protected $_dataMapper  = '';#Avaliacao_Model_NotaComponenteDataMapper';
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_BIBLIOTECA;
-  protected $_saveOption  = FALSE;
-  protected $_deleteOption  = FALSE;
-  protected $_titulo   = '';
-
-  #TODO setar código processoAP, copiar da funcionalidade de emprestimo existente?
-  protected $_processoAp  = 0;
-
 
   // validadores regras negócio
 

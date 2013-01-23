@@ -129,4 +129,18 @@ class Portabilis_String_Utils {
   public static function camelize($str) {
     return str_replace(' ', '', ucwords(str_replace('_', ' ', $str)));
   }
+
+  public static function underscore($str) {
+    $words = preg_split('/(?=[A-Z])/', $str, -1, PREG_SPLIT_NO_EMPTY);
+    return strtolower(implode('_', $words));
+  }
+
+  public static function humanize($str) {
+    $robotWords = array('_id', 'ref_cod_', 'ref_ref_cod_');
+
+    foreach ($robotWords as $word)
+      $str = str_replace($word, '', $str);
+
+    return str_replace('_', ' ', ucwords($str));
+  }
 }

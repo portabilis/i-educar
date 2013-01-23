@@ -35,16 +35,11 @@
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'include/pmieducar/clsPmieducarExemplar.inc.php';
 
+// TODO migrar novo padrao api controller
+
 class ReservaApiController extends ApiCoreController
 {
-  protected $_dataMapper  = '';#Avaliacao_Model_NotaComponenteDataMapper';
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_BIBLIOTECA;
-  protected $_saveOption  = FALSE;
-  protected $_deleteOption  = FALSE;
-  protected $_titulo   = '';
-
-  #TODO setar código processoAP, copiar da funcionalidade de reserva existente?
-  protected $_processoAp  = 0;
 
   // validadores especificos reserva
 

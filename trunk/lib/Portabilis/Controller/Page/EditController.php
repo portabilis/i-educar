@@ -46,17 +46,20 @@ require_once 'lib/Portabilis/View/Helper/Application.php';
 class Portabilis_Controller_Page_EditController extends Core_Controller_Page_EditController
 {
 
+  protected $_dataMapper = null;
+
   # vars that must be overwritten in subclasses
-
-  # protected $_dataMapper        = 'Avaliacao_Model_NotaComponenteDataMapper';
-  # protected $_processoAp        = 0;
-  # protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
-
+    # protected $_processoAp        = 0;
+    # protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
 
   # vars that can be overwritten
+    # protected $_dataMapper   = 'Avaliacao_Model_NotaComponenteDataMapper';
+    # protected $_saveOption   = FALSE;
+    # protected $_deleteOption = FALSE;
+    # protected $_titulo       = 'Cadastro de aluno';
 
-  # protected $_saveOption   = FALSE;
-  # protected $_deleteOption = FALSE;
+  protected $_nivelAcessoInsuficiente = "/module/Error/unauthorized";
+
 
   protected $_titulo               = '';
   protected $backwardCompatibility = false;

@@ -85,7 +85,6 @@ class Report extends clsCadastro
     $this->reportFactorySettings['app_name'] = $config->this_app_name;
     $this->reportFactorySettings['username'] = $config->username;
     $this->reportFactorySettings['password'] = $config->password;
-    $this->reportFactorySettings['show_exceptions_msg'] = $config->show_exceptions_msg;
 
     $this->reportFactory = new RemoteReportJasperFactory($settings = $this->reportFactorySettings);
 
@@ -151,7 +150,7 @@ class Report extends clsCadastro
     catch (Exception $e)
     {
 
-      if ($this->reportFactorySettings['show_exceptions_msg'])
+      if ($GLOBALS['coreExt']['Config']->report->show_error_details == true)
         $details = "<div id='detail'><p><strong>Detalhes:</strong> {$e->getMessage()}</p></div>";
       else
         $details = "<div id='detail'><p>Visualização dos detalhes sobre o erro desativada.</p></div>";

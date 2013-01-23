@@ -669,9 +669,9 @@ class indice extends clsDetalhe
     //$this->addDetalhe(array('Matrícula', $this->montaTabelaMatricula()));
 
     if ($this->obj_permissao->permissao_cadastra(578, $this->pessoa_logada, 7)) {
-      $this->url_novo   = 'educar_aluno_cad.php';
-      $this->url_editar = 'educar_aluno_cad.php?cod_aluno=' . $registro['cod_aluno'];
-      $this->url_deleta = 'educar_aluno_cad.php?cod_aluno=' . $registro['cod_aluno'];
+      $this->url_novo   = '/module/Cadastro/aluno';
+      $this->url_editar = '/module/Cadastro/aluno?id=' . $registro['cod_aluno'];
+      //$this->url_deleta = 'educar_aluno_cad.php?cod_aluno=' . $registro['cod_aluno'];
 
       $this->array_botao = array('Matrícula', 'Atualizar Histórico', 'Ficha do Aluno');
       $this->array_botao_url_script = array(

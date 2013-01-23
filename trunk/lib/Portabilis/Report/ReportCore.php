@@ -32,7 +32,7 @@ require_once 'lib/Portabilis/Report/ReportFactoryRemote.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 
 /**
- * CoreExt_Session class.
+ * Portabilis_Report_ReportCore class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -89,7 +89,19 @@ class Portabilis_Report_ReportCore
   }
 
   function reportFactory() {
-    return new Portabilis_Report_ReportFactoryRemote();
+    $factoryClassName = $GLOBALS['coreExt']['Config']->report->default_factory;
+    $factoryClassPath = str_replace('_', '/', $factoryClassName) . '.php';
+
+    if (! $factoryClassName)
+      throw new CoreExt_Exception("No report.default_factory defined in configurations!");
+
+    // don't fail if path not exists.
+    include_once $factoryClassPath;
+
+    if (! class_exists($factoryClassName))
+      throw new CoreExt_Exception("Class '$factoryClassName' not found in path '$factoryClassPath'");
+
+    return new $factoryClassName();
   }
 
   // methods that must be overridden

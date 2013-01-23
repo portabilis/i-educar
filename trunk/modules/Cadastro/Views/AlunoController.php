@@ -38,7 +38,10 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 {
   protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
   protected $_titulo     = 'Cadastro de aluno';
-  protected $_processoAp = 0;
+
+  protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
+  protected $_processoAp        = 578;
+  protected $_deleteOption      = true;
 
   protected $_formMap    = array(
     'pessoa' => array(
@@ -86,8 +89,13 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       'help'   => '',
     ),
 
-    'inep_id' => array(
+    'aluno_inep_id' => array(
       'label'  => 'C&oacutedigo inep',
+      'help'   => '',
+    ),
+
+    'aluno_estado_id' => array(
+      'label'  => 'C&oacutedigo rede estadual',
       'help'   => '',
     ),
 
@@ -115,9 +123,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
   public function Gerar()
   {
-    //$this->campoRotulo('pessoa', $this->_getLabel('pessoa'), '');
     $this->url_cancelar = '/intranet/educar_aluno_lst.php';
-    $this->fexcluir     = true;
 
     // código rede de ensino municipal
     $options = array('label'    => $this->_getLabel('id'), 'disabled' => true,
@@ -125,10 +131,13 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->text('id', $options);
 
 
-    // código inep
-    $options = array('label' => $this->_getLabel('inep_id'), 'required' => false, 'size' => 25);
-    $this->inputsHelper()->text('inep_id', $options);
+    // código aluno inep
+    $options = array('label' => $this->_getLabel('aluno_inep_id'), 'required' => false, 'size' => 25);
+    $this->inputsHelper()->text('aluno_inep_id', $options);
 
+    // código aluno rede estadual
+    $options = array('label' => $this->_getLabel('aluno_estado_id'), 'required' => false, 'size' => 25);
+    $this->inputsHelper()->text('aluno_estado_id', $options);
 
     // nome
     $options = array('label' => $this->_getLabel('pessoa'), 'size' => 68);

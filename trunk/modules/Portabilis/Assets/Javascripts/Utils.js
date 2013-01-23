@@ -16,6 +16,19 @@ function safeLog(value) {
 
 // form utils
 
+var formUtils = {
+  submit : function(form) {
+
+    if (form == undefined)
+      form = $j('form:first');
+
+    form.removeAttr('onsubmit');
+
+    if (validationUtils.validatesFields())
+      form.submit();
+  }
+};
+
 function fixupFieldsWidth(){
   var maxWidth = 0;
   var $fields = $j('form select');
@@ -52,7 +65,7 @@ var optionsUtils = {
 
     return $j.extend({}, defaultOptions, options);
   }
-}
+};
 
 // key-value object (hash) utils
 
@@ -69,9 +82,8 @@ var objectUtils = {
       separator = ' ';
 
     return $j.map(Object.getOwnPropertyNames(object), function(k) { return [k, object[k]].join(glue) }).join(separator)
-  },
-
-}
+  }
+};
 
 // window utils
 
@@ -81,7 +93,7 @@ var windowUtils = {
   open : function(url, name, options) {
     var defaultOptions = {
       name : 'new_window',
-      options : {},
+      options : {}
     };
 
     var defaultWindowOptions = {
@@ -97,7 +109,7 @@ var windowUtils = {
       toolbar     : 'no',
       location    : 'no',
       personalbar : 'no',
-      status      : 'no',
+      status      : 'no'
     };
 
     options         = optionsUtils.merge(defaultOptions, options);
@@ -195,7 +207,7 @@ var messageUtils = {
 
   notice : function(msg, targetId) {
     handleMessages([{type : 'notice', msg : safeUtf8Decode(msg)}], targetId);
-  },
+  }
 };
 
 function handleMessages(messages, targetId, useDelayClassRemoval) {

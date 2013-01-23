@@ -37,7 +37,8 @@ function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields
     var $requiredField     = $j(requiredFields[i]);
 
     if ($requiredField.length > 0 &&
-        $requiredField.css('display') != 'none' &&
+        /*$requiredField.css('display') != 'none' &&*/
+        $requiredField.is(':visible')           &&
         $requiredField.is(':enabled')           &&
         $requiredField.val() == ''              &&
         $j.inArray($requiredField[0], exceptFields) < 0) {

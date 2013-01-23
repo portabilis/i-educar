@@ -47,12 +47,15 @@ require_once 'lib/Portabilis/Utils/User.php';
 
 class ApiCoreController extends Core_Controller_Page_EditController
 {
-  protected $_dataMapper  = ''; #Avaliacao_Model_NotaComponenteDataMapper';
-  protected $_processoAp  = 0;
-  protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
-  protected $_saveOption  = FALSE;
-  protected $_deleteOption  = FALSE;
-  protected $_titulo   = '';
+  protected $_dataMapper        = null; #Avaliacao_Model_NotaComponenteDataMapper';
+
+  protected $_processoAp        = 0;
+  protected $_nivelAcessoOption = App_Model_NivelAcesso::INSTITUCIONAL;
+
+  protected $_saveOption        = FALSE;
+  protected $_deleteOption      = FALSE;
+
+  protected $_titulo            = '';
 
 
   public function __construct() {
@@ -66,9 +69,13 @@ class ApiCoreController extends Core_Controller_Page_EditController
     return Portabilis_Utils_User::load($this->getSession()->id_pessoa);
   }
 
+
+  // validators
+
   protected function validatesUserIsLoggedIn(){
     return $this->validator->validatesPresenceOf($this->getSession()->id_pessoa, '', false, 'Usuário deve estar logado');
   }
+
 
   protected function validatesUserIsAdmin() {
     $user = $this->currentUser();
@@ -82,15 +89,85 @@ class ApiCoreController extends Core_Controller_Page_EditController
   }
 
 
+  // subescrever nos controladores cujo recurso difere do padrao (schema pmieducar, tabela <resource>, pk cod_<resource>)
+  protected function validatesResourceId() {
+    return  $this->validatesPresenceOf('id') &&
+            $this->validatesExistenceOf($this->getRequest()->resource, $this->getRequest()->id);
+  }
+
+
+  protected function validatesAuthorizationToDestroy() {
+    $can = $this->getClsPermissoes()->permissao_excluir($this->getBaseProcessoAp(),
+                                                        $this->getSession()->id_pessoa,
+                                                        $this->_nivelAcessoOption);
+
+    if (! $can)
+      $this->messenger->append("Usuário sem permissão para excluir '{$this->getRequest()->resource}'.");
+
+    return $can;
+  }
+
+  protected function validatesAuthorizationToChange() {
+    $can = $this->getClsPermissoes()->permissao_cadastra($this->getBaseProcessoAp(),
+                                                         $this->getSession()->id_pessoa,
+                                                         $this->_nivelAcessoOption);
+
+    if (! $can)
+      $this->messenger->append("Usuário sem permissão para cadastrar '{$this->getRequest()->resource}'.");
+
+    return $can;
+  }
+
+
+  // validation
+
   protected function canAcceptRequest() {
     return $this->validatesUserIsLoggedIn() &&
            $this->validatesPresenceOf(array('oper', 'resource'));
   }
 
-  protected function canSearch() {
-    return $this->canAcceptRequest() &&
-           $this->validatesPresenceOf('query');
+
+  protected function canGet() {
+    return $this->validatesResourceId();
   }
+
+
+  protected function canChange() {
+    throw new Exception('canChange must be overwritten!');
+  }
+
+
+  protected function canPost() {
+    return $this->canChange() &&
+           $this->validatesAuthorizationToChange();
+  }
+
+
+  protected function canPut() {
+    return $this->canChange() &&
+           $this->validatesResourceId() &&
+           $this->validatesAuthorizationToChange();
+  }
+
+
+  protected function canSearch() {
+    return $this->validatesPresenceOf('query');
+  }
+
+
+  protected function canDelete() {
+    return $this->validatesResourceId() &&
+           $this->validatesAuthorizationToDestroy();
+  }
+
+
+  protected function canEnable() {
+    return $this->validatesResourceId() &&
+           $this->validatesAuthorizationToChange();
+  }
+
+
+  // api
 
   protected function notImplementedOperationError() {
     $this->messenger->append("Operação '{$this->getRequest()->oper}' não implementada para o recurso '{$this->getRequest()->resource}'");
@@ -370,7 +447,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     $selectFields                    = join(', ', $searchOptions['selectFields']);
 
     return "select distinct $selectFields from $namespace.$table
-            where $idAttr like $1 order by $labelAttr limit 15";
+            where $idAttr like $1||'%' order by $idAttr limit 15";
   }
 
 
@@ -386,77 +463,53 @@ class ApiCoreController extends Core_Controller_Page_EditController
     $selectFields                    = join(', ', $searchOptions['selectFields']);
 
     return "select distinct $selectFields from $namespace.$table
-            where lower($labelAttr) like $1 order by $labelAttr limit 15";
+            where lower(to_ascii($labelAttr)) like lower(to_ascii($1))||'%' order by $labelAttr limit 15";
   }
 
-  protected function sqlQueriesForNumericSearch($numericQuery) {
+  protected function sqlParams($query) {
     $searchOptions = $this->mergeOptions($this->searchOptions(), $this->defaultSearchOptions());
-
-    $queries = array();
-    $sqls    = $this->sqlsForNumericSearch();
-
-    if (! is_array($sqls))
-      $sqls = array($sqls);
-
-    // set params
-    // no sql deve-se usar 'like' para o primeiro param ($1) ao invez de '='
-    $params = array($numericQuery . "%");
+    $params        = array($query);
 
     foreach($searchOptions['sqlParams'] as $param)
-      $params[] = $param;  
+      $params[] = $param;
 
-    // set queries 
-    foreach ($sqls as $sql)
-      $queries[] = array('sql' => $sql, 'params' => $params);
-
-    return $queries;
+    return $params;
   }
-
-  protected function sqlQueriesForStringSearch($stringQuery) {
-    $searchOptions = $this->mergeOptions($this->searchOptions(), $this->defaultSearchOptions());
-
-    $queries = array();
-    $sqls       = $this->sqlsForStringSearch();
-
-    if (! is_array($sqls))
-      $sqls = array($sqls);
-
-    // set params
-    // no sql deve-se usar 'like' para o primeiro param ($1) ao invez de '='
-    $params = array(strtolower($stringQuery) ."%");
-
-    foreach($searchOptions['sqlParams'] as $param)
-      $params[] = $param;  
-
-    foreach ($sqls as $sql)
-      $queries[] = array('sql' => $sql, 'params' => $params);
-
-    return $queries;
-  }
-
 
   protected function loadResourcesBySearchQuery($query) {
-    $resources    = array();
+    $results      = array();
     $numericQuery = preg_replace("/[^0-9]/", "", $query);
 
-    if (! empty($numericQuery))
-      $sqlQueries = $this->sqlQueriesForNumericSearch($numericQuery);
-    else
-      $sqlQueries = $this->sqlQueriesForStringSearch($query);
+    if (! empty($numericQuery)) {
+      $sqls   = $this->sqlsForNumericSearch();
+      $params = $this->sqlParams($numericQuery);
+    }
+    else {
 
-    foreach($sqlQueries as $sqlQuery) {
-      $_resources = $this->fetchPreparedQuery($sqlQuery['sql'], $sqlQuery['params'], false);
+      // convertido query para latin1, para que pesquisas com acentuação funcionem.
+      $query     = Portabilis_String_Utils::toLatin1($query, array('escape' => false));
 
-      foreach($_resources as $resource) {
-        if (! isset($resources[$resource['id']]))
-          $resources[$resource['id']] = $this->formatResourceValue($resource);
+      $sqls   = $this->sqlsForStringSearch();
+      $params = $this->sqlParams($query);
+    }
+
+    if (! is_array($sqls))
+      $sqls = array($sqls);
+
+    foreach($sqls as $sql) {
+      $_results = $this->fetchPreparedQuery($sql, $params, false);
+
+      foreach($_results as $result) {
+        if (! isset($results[$result['id']]))
+          $results[$result['id']] = $this->formatResourceValue($result);
       }
     }
 
-    return $resources;
+    return $results;
   }
 
   // formats the value of each resource, that will be returned in api as a label.
+
   protected function formatResourceValue($resource) {
     return $resource['id'] . ' - ' . $this->toUtf8($resource['name'], array('transform' => true));
   }
@@ -465,10 +518,11 @@ class ApiCoreController extends Core_Controller_Page_EditController
   // default api responders
 
   protected function search() {
-    $resources = array();
-
     if ($this->canSearch())
       $resources = $this->loadResourcesBySearchQuery($this->getRequest()->query);
+
+    if (empty($resources))
+      $resources = array('' => 'Sem resultados.');
 
     return array('result' => $resources);
   }

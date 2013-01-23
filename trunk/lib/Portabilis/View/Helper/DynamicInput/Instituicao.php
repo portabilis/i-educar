@@ -29,7 +29,7 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
+require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
 
 
 /**
@@ -42,7 +42,35 @@ require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_Instituicao extends Portabilis_View_Helper_DynamicInput_Core {
+class Portabilis_View_Helper_DynamicInput_Instituicao extends Portabilis_View_Helper_DynamicInput_CoreSelect {
+
+  protected function inputValue($value = null) {
+    return $this->getInstituicaoId($value);
+  }
+
+  protected function inputName() {
+    return 'ref_cod_instituicao';
+  }
+
+  protected function inputOptions($options) {
+    $resources     = $options['resources'];
+
+    if (empty($resources))
+      $resources = App_Model_IedFinder::getInstituicoes();
+
+    return $this->insertOption(null, "Selecione uma institui&ccedil;&atilde;o", $resources);
+  }
+
+
+  protected function defaultOptions(){
+    return array('options' => array('label' => 'Institui&ccedil;&atilde;o'));
+  }
+
+
+  public function selectInput($options = array()) {
+    parent::select($options);
+  }
+
 
   public function hiddenInput($options = array()) {
     $defaultOptions       = array('id' => null, 'options' => array());
@@ -56,39 +84,14 @@ class Portabilis_View_Helper_DynamicInput_Instituicao extends Portabilis_View_He
   }
 
 
-  protected function getOptions($resources) {
-    if (empty($resources))
-      $resources = App_Model_IedFinder::getInstituicoes();
-
-    return $this->insertOption(null, "Selecione uma institui&ccedil;&atilde;o", $resources);
-  }
-
-
-  public function selectInput($options = array()) {
-    $defaultOptions       = array('id' => null, 'options' => array(), 'resources' => array());
-    $options              = $this->mergeOptions($options, $defaultOptions);
-
-    $defaultInputOptions = array('id'         => 'ref_cod_instituicao',
-                                 'label'      => 'Institui&ccedil;&atilde;o',
-                                 'resources'  => $this->getOptions($options['resources']),
-                                 'value'      => $this->getInstituicaoId($options['id']),
-                                 'callback'   => '',
-                                 'inline'     => false,
-                                 'label_hint' => '',
-                                 'input_hint' => '',
-                                 'disabled'   => false,
-                                 'required'   => true,
-                                 'multiple'   => false);
-
-    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
-    call_user_func_array(array($this->viewInstance, 'campoLista'), $inputOptions);
-  }
-
-
   public function instituicao($options = array()) {
     if ($this->hasNivelAcesso('POLI_INSTITUCIONAL'))
       $this->selectInput($options);
     else
       $this->hiddenInput($options);
+  }
+
+
+  protected function loadAssets() {
   }
 }

@@ -277,6 +277,7 @@ abstract class CoreExt_DataMapper
 
   /**
    * Retorna uma query SQL de recuperação de todos os registros de uma tabela.
+   *
    * @param array $data
    * @param array $where
    * @param array $orderBy
@@ -291,13 +292,21 @@ abstract class CoreExt_DataMapper
 
     if (0 < count($whereArg)) {
       foreach ($whereArg as $key => $value) {
-        //consultas preparadas passam $where = array("col1 = $1", "col2 = $2");
-        if(! empty($key)) {
-          $whereName = $this->_getTableColumn($key);
-          $where[] = sprintf("%s = '%s'", $whereName, $value);
-        }
+        $whereName = $this->_getTableColumn($key);
+
+        preg_match('/[<,=,>]/', $value, $matches);
+        $hasComparisonSign = ! empty($matches);
+
+        // Caso $value contenha <, > ou =, ex: '> $1', não adiciona sinal de igual.
+        if($hasComparisonSign)
+          $where[] = sprintf("%s %s", $whereName, $value);
+
+        // Caso $value contenha parametros para consulta preparada ($1, $2...), não adiciona $value entre aspas.
+        elseif(strpos($value, '$') > -1)
+          $where[] = sprintf("%s = %s", $whereName, $value);
+
         else
-          $where[] = $value;
+          $where[] = sprintf("%s = '%s'", $whereName, $value);
       }
     }
     else {
@@ -534,7 +543,6 @@ abstract class CoreExt_DataMapper
    * @todo
    */
   public function findAllUsingPreparedQuery(array $columns = array(), array $where = array(), array $params = array(), array $orderBy = array(), $addColumnIdIfNotSet = true) {
-
     $list = array();
 
     // Inverte chave valor, permitindo array simples como array('nome')

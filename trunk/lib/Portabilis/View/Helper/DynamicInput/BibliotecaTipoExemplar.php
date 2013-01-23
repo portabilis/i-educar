@@ -29,7 +29,7 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
+require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
 
 
 /**
@@ -42,71 +42,40 @@ require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_BibliotecaTipoExemplar extends Portabilis_View_Helper_DynamicInput_Core {
+class Portabilis_View_Helper_DynamicInput_BibliotecaTipoExemplar extends Portabilis_View_Helper_DynamicInput_CoreSelect {
 
-  protected function getOptions($bibliotecaId, $tiposExemplar) {
-
-    // se $tiposExemplar vazio, seleciona tipos de exemplares da biblioteca (caso haja bibliotecaId)
-    if (empty($tiposExemplar)) {
-      if (! $bibliotecaId)
-        $bibliotecaId = $this->getBibliotecaId($bibliotecaId);
-
-      if ($bibliotecaId) {
-        $columns = array('cod_exemplar_tipo', 'nm_tipo');
-        $where   = array('ref_cod_biblioteca' => $bibliotecaId, 'ativo' => '1');
-        $orderBy = array('nm_tipo' => 'ASC');
-
-        $tiposExemplar = $this->getDataMapperFor('biblioteca', 'tipoExemplar')->findAll($columns,
-                                                                          $where,
-                                                                          $orderBy,
-                                                                          $addColumnIdIfNotSet = false);
-
-        $tiposExemplar = Portabilis_Object_Utils::filterKeyValue($tiposExemplar,
-                                                                   'cod_exemplar_tipo',
-                                                                   'nm_tipo');
-      }
-    }
-
-    return $this->insertOption(null, "Selecione um tipo de exemplar", $tiposExemplar);
+  protected function inputName() {
+    return 'ref_cod_exemplar_tipo';
   }
 
+  protected function inputOptions($options) {
+    $bibliotecaId = $this->getBibliotecaId($bibliotecaId);
+    $resources    = $options['resources'];
 
-  /* retornar um campo select com opções de tipos de exemplar, ex:
+    if (empty($resources) && $bibliotecaId) {
+      $columns = array('cod_exemplar_tipo', 'nm_tipo');
+      $where   = array('ref_cod_biblioteca' => $bibliotecaId, 'ativo' => '1');
+      $orderBy = array('nm_tipo' => 'ASC');
 
-    // customizando opcoes
-    $selectOptions = array('id' => 'html_element_id', 'value' => $this->ref_cod_exemplar_tipo));
-    $helperOptions = array('bibliotecaId' => $this->ref_cod_biblioteca, 'options' => $selectOptions);
-    $inputsHelperHelperInstance->tipoExemplar($helperOptions);
+      $resources = $this->getDataMapperFor('biblioteca', 'tipoExemplar')->findAll($columns,
+                                                                                  $where,
+                                                                                  $orderBy,
+                                                                                  $addColumnIdIfNotSet = false);
 
+      $resources = Portabilis_Object_Utils::filterKeyValue($resources,
+                                                           'cod_exemplar_tipo',
+                                                           'nm_tipo');
+    }
 
-    // ou sem customizar opcoes, usando as opcoes padroes;
-    $inputsHelperHelperInstance->tipoExemplar();
-  */
+    return $this->insertOption(null, "Selecione um tipo de exemplar", $resources);
+  }
+
+  protected function defaultOptions(){
+    return array('options' => array('label' => 'Tipo exemplar'));
+  }
+
   public function bibliotecaTipoExemplar($options = array()) {
-
-    $defaultOptions           = array('bibliotecaId'  => null,
-                                      'options'       => array(),
-                                      'tiposExemplar' => array());
-
-    $options                  = $this->mergeOptions($options, $defaultOptions);
-    $options['tiposExemplar'] = $this->getOptions($options['bibliotecaId'], $options['tiposExemplar']);
-
-    $defaultSelectOptions     = array('id'             => 'ref_cod_exemplar_tipo',
-                                      'label'          => 'Tipo de exemplar',
-                                      'tipos_exemplar' => $options['tiposExemplar'],
-                                      'value'          => $this->viewInstance->ref_cod_exemplar_tipo,
-                                      'callback'       => '',
-                                      'inline'         => false,
-                                      'label_hint'     => '',
-                                      'input_hint'     => '',
-                                      'disabled'       => false,
-                                      'required'       => true,
-                                      'multiple'       => false);
-
-    $selectOptions = $this->mergeOptions($options['options'], $defaultSelectOptions);
-    call_user_func_array(array($this->viewInstance, 'campoLista'), $selectOptions);
-
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInputs/Assets/Javascripts/DynamicBibliotecaTiposExemplar.js');
+    parent::select($options);
   }
 
 }

@@ -177,20 +177,21 @@ class App_Model_IedFinder extends CoreExt_Entity
    */
   public static function getSeries($instituicaoId = NULL, $escolaId = NULL, $cursoId = NULL)
   {
-    $serie = self::addClassToStorage('clsPmieducarSerie', NULL,
-      'include/pmieducar/clsPmieducarSerie.inc.php');
+    $series = self::addClassToStorage('clsPmieducarSerie', NULL,
+                                       'include/pmieducar/clsPmieducarSerie.inc.php');
 
-    // Carrega as séries
-    $serie->setOrderby('ref_cod_curso ASC, cod_serie ASC, etapa_curso ASC');
-    $serie = $serie->lista(NULL, NULL, NULL, $cursoId, NULL, NULL, NULL, NULL, NULL,
-      NULL, NULL, NULL, NULL, $instituicaoId, NULL, NULL, NULL, $escolaId);
+    $series->setOrderby('ref_cod_curso ASC, cod_serie ASC, etapa_curso ASC');
+    $series = $series->lista(NULL, NULL, NULL, $cursoId, NULL, NULL, NULL, NULL, NULL,
+                             NULL, NULL, NULL, NULL, $instituicaoId, NULL, NULL, NULL, $escolaId);
 
-    $series = array();
-    foreach ($serie as $key => $val) {
-      $series[$val['cod_serie']] = $val;
+    $_series = array();
+
+    foreach ($series as $serie) {
+      //$series[$val['cod_serie']] = $val;
+      $_series[$serie['cod_serie']] = $serie['nm_serie'];
     }
 
-    return $series;
+    return $_series;
   }
 
   /**
@@ -221,17 +222,18 @@ class App_Model_IedFinder extends CoreExt_Entity
 
   /**
    * Retorna as turmas de uma escola, selecionando opcionalmente pelo código da série.
-   * @param  int   $escola
+   * @param  int   $escolaId
+   * @param  int   $serieId
    * @return array (cod_turma => nm_turma)
    */
-  public static function getTurmas($escola, $serieId = NULL)
+  public static function getTurmas($escolaId, $serieId = NULL)
   {
     $turma = self::addClassToStorage('clsPmieducarTurma', NULL,
       'include/pmieducar/clsPmieducarTurma.inc.php');
 
     // Carrega as turmas da escola
     $turma->setOrderBy('nm_turma ASC');
-    $turmas = $turma->lista(NULL, NULL, NULL, $serieId, $escola);
+    $turmas = $turma->lista(NULL, NULL, NULL, $serieId, $escolaId);
 
     $ret = array();
     foreach ($turmas as $turma) {

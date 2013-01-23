@@ -153,22 +153,13 @@ class indice extends clsCadastro
         'Caso seja transfência externa por favor marque esta opção.');
     }
 
-    // foreign keys
-    $instituicao_obrigatorio  = TRUE;
-    $get_escola = $escola_obrigatorio = TRUE;
-    $get_curso = $curso_obrigatorio = TRUE;
-    $get_escola_curso_serie = $escola_curso_serie_obrigatorio = TRUE;
-#    $get_matricula            = TRUE;
-#    $sem_padrao               = TRUE;
+    // inputs
 
+    $anoLetivoHelperOptions = array('situacoes' => array('em_andamento', 'nao_iniciado'));
 
-    #variaveis usadas pelo modulo /intranet/include/pmieducar/educar_campo_lista.php
-    $this->verificar_campos_obrigatorios = TRUE;
-    $this->add_onchange_events = TRUE;
-    $get_ano = $ano_obrigatorio = TRUE;
-    $ano_andamento_in = '0,1';
+    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie'));
+    $this->inputsHelper()->dynamic('anoLetivo', array('label' => 'Ano destino'), $anoLetivoHelperOptions);
 
-    include 'include/pmieducar/educar_campo_lista.php';
 
     if (is_numeric($this->ref_cod_curso)) {
       $obj_curso = new clsPmieducarCurso($this->ref_cod_curso);
@@ -184,7 +175,7 @@ class indice extends clsCadastro
       $this->ref_ref_cod_escola = $this->ref_cod_escola;
     }
 
-    $this->acao_enviar = 'valida()';
+    $this->acao_enviar = 'formUtils.submit()';
   }
 
   protected function getCurso($id) {
@@ -676,123 +667,3 @@ $pagina->addForm($miolo);
 // Gera o código HTML
 $pagina->MakeAll();
 ?>
-<script type="text/javascript">
-function getCursoMatricula()
-{
-  var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
-  var cod_aluno        = <?php print $_GET['ref_cod_aluno'] ?>;
-  var campoCurso       = document.getElementById('ref_cod_curso');
-
-  campoCurso.length          = 1;
-  campoCurso.disabled        = true;
-  campoCurso.options[0].text = 'Carregando curso';
-
-  var xml_curso_matricula = new ajax(atualizaCursoMatricula);
-
-  var url = 'educar_curso_matricula_xml.php?ins=' + campoInstituicao + '&alu=' + cod_aluno;
-  xml_curso_matricula.envia(url);
-}
-
-function atualizaCursoMatricula(xml_curso_matricula)
-{
-  var campoCurso = document.getElementById('ref_cod_curso');
-  var DOM_array  = xml_curso_matricula.getElementsByTagName('curso');
-
-  if (DOM_array.length) {
-    campoCurso.length          = 1;
-    campoCurso.options[0].text = 'Selecione um curso';
-    campoCurso.disabled        = false;
-
-    for (var i = 0; i < DOM_array.length; i++) {
-      campoCurso.options[campoCurso.options.length] = new Option(
-        DOM_array[i].firstChild.data, DOM_array[i].getAttribute('cod_curso'),
-        false, false
-      );
-    }
-  }
-  else {
-    campoCurso.options[0].text = 'A instituição não possui nenhum curso';
-  }
-}
-
-/*function getSerieMatricula()
-{
-  var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
-  var campoEscola      = document.getElementById('ref_cod_escola').value;
-  var campoCurso       = document.getElementById('ref_cod_curso').value;
-  var cod_aluno        = <?php print $_GET['ref_cod_aluno'] ?>;
-  var campoSerie       = document.getElementById('ref_ref_cod_serie');
-
-  campoSerie.length          = 1;
-  campoSerie.disabled        = true;
-  campoSerie.options[0].text = 'Carregando série';
-
-  var xml_serie_matricula = new ajax(atualizaSerieMatricula);
-
-  var url = 'educar_serie_matricula_xml.php?ins=' + campoInstituicao + '&cur=' + campoCurso
-          + '&esc=' + campoEscola + '&alu=' + cod_aluno;
-
-  xml_serie_matricula.envia(url);
-}
-
-function atualizaSerieMatricula(xml_serie_matricula)
-{
-  var campoSerie = document.getElementById('ref_ref_cod_serie');
-  var DOM_array  = xml_serie_matricula.getElementsByTagName('serie');
-
-  if (DOM_array.length) {
-    campoSerie.length          = 1;
-    campoSerie.options[0].text = 'Selecione uma série';
-    campoSerie.disabled        = false;
-
-    var series = new Array();
-
-    for (var i = 0; i < DOM_array.length; i++) {
-      if (! series[DOM_array[i].getAttribute('cod_serie') + '_']) {
-        campoSerie.options[campoSerie.options.length] = new Option(
-          DOM_array[i].firstChild.data, DOM_array[i].getAttribute('cod_serie'),
-          false, false
-        );
-
-        series[DOM_array[i].getAttribute('cod_serie') + '_'] = true;
-      }
-    }
-  }
-  else {
-    campoSerie.options[0].text = 'A escola/curso não possui nenhuma série';
-  }
-}*/
-
-document.getElementById('ref_cod_escola').onchange = function()
-{
-  if (document.getElementById('ref_cod_escola').value == '') {
-    getCursoMatricula();
-  }
-  else {
-    getEscolaCurso();
-  }
-}
-/*
-document.getElementById('ref_cod_curso').onchange = function()
-{
-//  getSerieMatricula();
-  getEscolaCursoSerie();
-}*/
-
-function valida()
-{
-  if (document.getElementById('ref_cod_escola').value) {
-    if (!document.getElementById('ref_ref_cod_serie').value) {
-      alert('O campo "Série" deve ser preenchido corretamente!');
-      document.getElementById('ref_ref_cod_serie').focus();
-      return false;
-    }
-  }
-
-  if (! acao()) {
-    return false;
-  }
-
-  document.forms[0].submit();
-}
-</script>

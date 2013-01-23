@@ -44,16 +44,6 @@ require_once "Reports/Reports/BoletimReport.php";
 
 class V1Controller extends ApiCoreController
 {
-  protected $_dataMapper  = null;
-
-  #TODO definir este valor com mesmo código cadastro de tipo de exemplar?
-  protected $_processoAp  = 0;
-  protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
-  protected $_saveOption  = FALSE;
-  protected $_deleteOption  = FALSE;
-  protected $_titulo   = '';
-
-
   protected function validatesUserIsLoggedIn() {
 
     #FIXME validar tokens API
@@ -69,35 +59,30 @@ class V1Controller extends ApiCoreController
 
 
   protected function canGetAluno() {
-    return $this->canAcceptRequest() &&
-           $this->validatesPresenceOf('aluno_id') &&
+    return $this->validatesPresenceOf('aluno_id') &&
            $this->validatesExistenceOf('aluno', $this->getRequest()->aluno_id, array('add_msg_on_error' => false));
   }
 
 
   protected function canGetAlunoSearch() {
-    return $this->canAcceptRequest() &&
-           $this->validatesPresenceOf('query');
+    return $this->validatesPresenceOf('query');
   }
 
 
   protected function canGetMatricula() {
-    return $this->canAcceptRequest() &&
-           $this->validatesPresenceOf(array('matricula_id', 'escola_id')) &&
+    return $this->validatesPresenceOf(array('matricula_id', 'escola_id')) &&
            $this->validatesExistenceOf('matricula', $this->getRequest()->matricula_id);
   }
 
 
   protected function canGetOcorrenciasDisciplinares() {
-    return $this->canAcceptRequest() &&
-           $this->validatesPresenceOf('aluno_id') &&
+    return $this->validatesPresenceOf('aluno_id') &&
            $this->validatesExistenceOf('aluno', $this->getRequest()->aluno_id);
   }
 
 
   protected function canGetRelatorioBoletim() {
-    return $this->canAcceptRequest() &&
-           $this->validatesPresenceOf(array('matricula_id', 'escola_id')) &&
+    return $this->validatesPresenceOf(array('matricula_id', 'escola_id')) &&
            $this->validatesExistenceOf('matricula', $this->getRequest()->matricula_id);
   }
 
@@ -370,8 +355,8 @@ class V1Controller extends ApiCoreController
     if ($this->isRequestFor('get', 'aluno'))
       $this->appendResponse('aluno', $this->getAluno());
 
-    
-    // TODO migrar clientes para usar search-aluno da API Aluno(Controller) 
+
+    // TODO migrar clientes para usar search-aluno da API Aluno(Controller)
     elseif ($this->isRequestFor('get', 'aluno-search'))
       $this->appendResponse('aluno-search', $this->getAlunoSearch());
 

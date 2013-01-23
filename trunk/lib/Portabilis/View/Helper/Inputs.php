@@ -30,7 +30,7 @@
  */
 
 /**
- * SelectMenusHelper class.
+ * Portabilis_View_Helper_Inputs class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -85,34 +85,41 @@ class Portabilis_View_Helper_Inputs {
   // input helpers
 
   public function text($attrNames, $inputOptions = array(), $helperOptions = array()) {
-    $options = $this->mergeInputOptions($inputOptions, $helperOptions);
-
     if (! is_array($attrNames))
       $attrNames = array($attrNames);
 
     foreach($attrNames as $attrName) {
-      $this->input('text', $attrName, $options);
+      $this->input('text', $attrName, $inputOptions, $helperOptions);
     }
   }
 
 
   public function select($attrName, $inputOptions = array(), $helperOptions = array()) {
-    $this->input('select', $attrName, $this->mergeInputOptions($inputOptions, $helperOptions));
+    $this->input('select', $attrName, $inputOptions, $helperOptions);
   }
 
 
   public function search($attrName, $inputOptions = array(), $helperOptions = array()) {
-    $this->input('search', $attrName, $this->mergeInputOptions($inputOptions, $helperOptions));
+    $this->input('search', $attrName, $inputOptions, $helperOptions);
   }
 
 
   public function hidden($attrName, $inputOptions = array(), $helperOptions = array()) {
-    $this->input('hidden', $attrName, $this->mergeInputOptions($inputOptions, $helperOptions));
+    $this->input('hidden', $attrName, $inputOptions, $helperOptions);
   }
 
 
   public function checkbox($attrName, $inputOptions = array(), $helperOptions = array()) {
-    $this->input('checkbox', $attrName, $this->mergeInputOptions($inputOptions, $helperOptions));
+    $this->input('checkbox', $attrName, $inputOptions, $helperOptions);
+  }
+
+
+  public function input($helperName, $attrName, $inputOptions = array(), $helperOptions = array()) {
+    $helperClassName = "Portabilis_View_Helper_Input_" . ucfirst($helperName);
+
+    $this->includeHelper($helperClassName);
+    $helper = new $helperClassName($this->viewInstance, $this);
+    $helper->$helperName($attrName, $this->mergeInputOptions($inputOptions, $helperOptions));
   }
 
 
@@ -177,14 +184,6 @@ class Portabilis_View_Helper_Inputs {
   }
 
   // protected methods
-
-  protected function input($helperName, $attrName, $options = array()) {
-    $helperClassName = "Portabilis_View_Helper_Input_" . ucfirst($helperName);
-
-    $this->includeHelper($helperClassName);
-    $helper = new $helperClassName($this->viewInstance, $this);
-    $helper->$helperName($attrName, $options);
-  }
 
   protected function resourceInput($helperName, $options = array()) {
     $helperClassName = "Portabilis_View_Helper_Input_Resource_" . ucfirst($helperName);

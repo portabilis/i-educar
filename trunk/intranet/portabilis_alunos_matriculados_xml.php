@@ -28,6 +28,7 @@ function getRecords($turmaId, $ano)
 			AND aprovado IN (1,2,3)
 			AND mt.ativo 	= 1
 			AND m.ativo   = 1
+      AND a.ativo   = 1
       AND m.ano = $ano
 		ORDER BY p.nome ASC";
 

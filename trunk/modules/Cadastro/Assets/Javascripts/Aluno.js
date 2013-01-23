@@ -19,12 +19,12 @@ resourceOptions.handlePost = function(dataResponse) {
   $j('.pessoa-links .cadastrar-pessoa').hide();
 
   if (! dataResponse.any_error_msg)
-    window.setTimeout(function() { document.location = '/intranet/educar_aluno_lst.php'; }, 500);
+    window.setTimeout(function() { document.location = '/intranet/educar_aluno_det.php?cod_aluno=' + resource.id(); }, 500);
 }
 
 resourceOptions.handlePut = function(dataResponse) {
   if (! dataResponse.any_error_msg)
-    window.setTimeout(function() { document.location = '/intranet/educar_aluno_lst.php'; }, 500);
+    window.setTimeout(function() { document.location = '/intranet/educar_aluno_det.php?cod_aluno=' + resource.id(); }, 500);
 }
 
 resourceOptions.handleGet = function(dataResponse) {
@@ -53,7 +53,8 @@ resourceOptions.handleGet = function(dataResponse) {
     getPersonDetails(dataResponse.pessoa_id);
 
   $idField.val(dataResponse.id);
-  $j('#inep_id').val(dataResponse.inep_id);
+  $j('#aluno_inep_id').val(dataResponse.aluno_inep_id);
+  $j('#aluno_estado_id').val(dataResponse.aluno_estado_id);
   $j('#tipo_responsavel').val(dataResponse.tipo_responsavel).change();
   $j('#religiao_id').val(dataResponse.religiao_id);
   $j('#beneficio_id').val(dataResponse.beneficio_id);
@@ -123,14 +124,14 @@ var handleGetPersonDetails = function(dataResponse) {
 
 var getPersonDetails = function(personId) {
   var additionalVars = {
-    id : personId,
+    id : personId
   };
 
   var options = {
     url      : getResourceUrlBuilder.buildUrl('/module/Api/pessoa', 'pessoa', additionalVars),
     dataType : 'json',
     data     : {},
-    success  : handleGetPersonDetails,
+    success  : handleGetPersonDetails
   };
 
   getResource(options);
@@ -206,6 +207,8 @@ function afterChangePessoa(targetWindow, pessoaId) {
       $nomeField.focus();
       $j('.pessoa-links .cadastrar-pessoa').show();
     }
+    else
+      $nomeField.attr('disabled', 'disabled');
 
     // responsavel
 
@@ -218,6 +221,30 @@ function afterChangePessoa(targetWindow, pessoaId) {
 
     checkTipoResponsavel();
     $j('#tipo_responsavel').change(checkTipoResponsavel);
+
+
+    // back to old version
+
+    var backToOldVersion = function() {
+      var $this = $j(this);
+      var url   = '/intranet/educar_aluno_cad.php';
+
+      if(resource.id())
+        url += '?cod_aluno=' + resource.id();
+
+      $this.attr('href', url);
+    }
+
+    $j('<p>').addClass('back-to-old-version right-top-notice notice')
+             .html(stringUtils.toUtf8('Você está acessando o <b>novo cadastro de alunos</b>,<br />'))
+             .appendTo($j('#id').closest('td'));
+
+    $j('<a>').attr('href', '#')
+             .attr('target', '_blank')
+             .click(backToOldVersion)
+             .addClass('decorated')
+             .html(stringUtils.toUtf8('acessar versão antiga.'))
+             .appendTo($j('.back-to-old-version'));
 
   }); // ready
 })(jQuery);

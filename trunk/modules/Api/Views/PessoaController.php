@@ -38,35 +38,15 @@ require_once 'lib/Portabilis/String/Utils.php';
 
 class PessoaController extends ApiCoreController
 {
-  protected $_dataMapper  = null;
 
-  #TODO definir este valor com mesmo código cadastro de tipo de exemplar?
-  protected $_processoAp  = 0;
-  protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
-  protected $_saveOption  = FALSE;
-  protected $_deleteOption  = FALSE;
-  protected $_titulo   = '';
+  // validators
 
+  // overwrite api core validator
+  protected function validatesResourceId() {
+    $existenceOptions = array('schema_name' => 'cadastro', 'field_name' => 'idpes');
 
-  /*protected function validatesUserIsLoggedIn() {
-    #FIXME validar tokens API
-    return true;
-  }*/
-
-
-  /*protected function canAcceptRequest() {
-    return parent::canAcceptRequest();
-  }*/
-
-
-  protected function canSearch() {
-    return $this->canAcceptRequest() &&
-           $this->validatesPresenceOf('query');
-  }
-
-  protected function canGet() {
-    return $this->canAcceptRequest() &&
-           $this->validatesPresenceOf('id');
+    return  $this->validatesPresenceOf('id') &&
+            $this->validatesExistenceOf('fisica', $this->getRequest()->id, $existenceOptions);
   }
 
 
@@ -100,7 +80,7 @@ class PessoaController extends ApiCoreController
             (select nm_pai from pmieducar.aluno where cod_aluno = $1)) as nome_pai,
             coalesce((select nome from cadastro.pessoa where idpes = fisica.idpes_mae),
             (select nm_mae from pmieducar.aluno where cod_aluno = $1)) as nome_mae,
-              (select nome from cadastro.pessoa where idpes = fisica.idpes_responsavel) as nome_responsavel,
+            (select nome from cadastro.pessoa where idpes = fisica.idpes_responsavel) as nome_responsavel,
             (select rg from cadastro.documento where documento.idpes = fisica.idpes) as rg
             from cadastro.fisica where idpes = $2";
 
@@ -145,12 +125,15 @@ class PessoaController extends ApiCoreController
     $sqls = array();
 
     // search by idpes or cpf
-    $sqls[] = "select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa, cadastro.fisica
-               where fisica.idpes = pessoa.idpes and (pessoa.idpes like $1 or fisica.cpf like $1) order by nome limit 15";
+    $sqls[] = "select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa,
+               cadastro.fisica where fisica.idpes = pessoa.idpes and (pessoa.idpes like $1||'%' or
+               trim(leading '0' from fisica.cpf) like trim(leading '0' from $1)||'%' or
+               fisica.cpf like $1||'%') order by id limit 15";
 
     // search by rg
-    $sqls[] = "select distinct pessoa.idpes as id, pessoa.nome from cadastro.pessoa, cadastro.documento
-               where pessoa.idpes = documento.idpes and documento.rg like $1 order by nome limit 15";
+    $sqls[] = "select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa, cadastro.documento
+               where pessoa.idpes = documento.idpes and ((documento.rg like $1||'%') or
+               trim(leading '0' from documento.rg) like trim(leading '0' from $1)||'%') order by id limit 15";
 
     return $sqls;
   }
