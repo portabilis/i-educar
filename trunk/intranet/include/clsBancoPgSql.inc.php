@@ -814,9 +814,18 @@ abstract class clsBancoSQL_
    */
   function Interrompe($appErrorMsg, $getError = FALSE)
   {
-    $pgErrorMsg = $getError ? pg_result_error($this->bConsulta_ID) : '';
+    $lastError = error_get_last();
 
+    @session_start();
+    $_SESSION['last_error_message']     = $e->getMessage();
+    $_SESSION['last_php_error_message'] = $lastError['message'];
+    $_SESSION['last_php_error_line']    = $lastError['line'];
+    $_SESSION['last_php_error_file']    = $lastError['file'];
+    @session_write_close();
+
+    $pgErrorMsg = $getError ? pg_result_error($this->bConsulta_ID) : '';
     NotificationMailer::unexpectedDataBaseError($appErrorMsg, $pgErrorMsg, $this->strStringSQL);
+
     die("<script>document.location.href = '/module/Error/unexpected';</script>");
   }
 

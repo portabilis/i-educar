@@ -74,12 +74,17 @@ try
   print $frontController->getViewContents();
 }
 catch (Exception $e) {
-  error_log("Erro inesperado (pego em /module/index.php): " . $e->getMessage());
-  NotificationMailer::unexpectedError($e->getMessage());
+  $lastError = error_get_last();
 
   @session_start();
-  $_SESSION['last_error_message'] = $e->getMessage();
+  $_SESSION['last_error_message']     = $e->getMessage();
+  $_SESSION['last_php_error_message'] = $lastError['message'];
+  $_SESSION['last_php_error_line']    = $lastError['line'];
+  $_SESSION['last_php_error_file']    = $lastError['file'];
   @session_write_close();
+
+  error_log("Erro inesperado (pego em /module/index.php): " . $e->getMessage());
+  NotificationMailer::unexpectedError($e->getMessage());
 
   die("<script>document.location.href = '/module/Error/unexpected';</script>");
 }

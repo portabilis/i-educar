@@ -46,10 +46,18 @@ class UnexpectedController extends Portabilis_Controller_ErrorCoreController
     $linkToSupport = $GLOBALS['coreExt']['Config']->modules->error->link_to_support;
 
     if ($GLOBALS['coreExt']['Config']->modules->error->show_details) {
-      $detail = $this->getSession()->last_error_message;
-      unset($this->getSession()->last_error_message);
+      $detail  = "<br /><h3>Erro app</h3>{$this->getSession()->last_error_message}";
+      $detail .= "<br /><h3>Erro php</h3>{$this->getSession()->last_php_error_message}";
+      $detail .= "<br /><h3>Arquivo</h3>(linha: {$this->getSession()->last_php_error_line}) ";
+      $detail .= "{$this->getSession()->last_php_error_file}";
 
-      if (! $detail) { $detail = 'Sem detalhes do erro.'; };
+      unset($this->getSession()->last_error_message);
+      unset($this->getSession()->last_php_error_message);
+      unset($this->getSession()->last_php_error_line);
+      unset($this->getSession()->last_php_error_file);
+
+      if (! $detail)
+        $detail = 'Sem detalhes do erro.';
 
       $detail = "<h2>Detalhes:</h2>
                   <p>$detail</p>";
