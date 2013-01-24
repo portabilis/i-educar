@@ -35,6 +35,8 @@
 require_once 'Portabilis/Controller/Page/ListController.php';
 require_once 'lib/Portabilis/View/Helper/Application.php';
 
+require_once 'Portabilis/Business/Professor.php';
+
 // incluido, pois em include/pmieducar/educar_campo_lista.php acessado tal classe
 require_once 'include/pmieducar/clsPermissoes.inc.php';
 
@@ -47,6 +49,8 @@ class DiarioController extends Portabilis_Controller_Page_ListController
 
   // TODO migrar para novo padrão campos seleção, usando "$this->inputsHelper()->..."
   protected function inputs() {
+
+    /*
     #variaveis usadas pelo modulo /intranet/include/pmieducar/educar_campo_lista.php
     $this->verificar_campos_obrigatorios = true;
     $this->add_onchange_events           = true;
@@ -63,6 +67,14 @@ class DiarioController extends Portabilis_Controller_Page_ListController
     $get_alunos_matriculados                                                    = true;
 
     include 'include/pmieducar/educar_campo_lista.php';
+
+    //var_dump(Portabilis_Business_Professor::turmasAlocado(1, 13102, 1180, 6, 14869));
+    */
+
+    $this->inputsHelper()->input('ano');
+
+    $inputs = array('instituicao', 'escola', 'curso', 'serie', 'turma', 'etapa', 'matricula', 'componenteCurricular');
+    $this->inputsHelper()->dynamic($inputs);
   }
 
 

@@ -693,7 +693,7 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
     if ($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) {
       var $fieldNotaExame = notaExameField(matriculaId, cc.id, cc.nota_exame);
 
-      if (cc.nota_exame == '' && cc.situacao.toLowerCase() != 'em exame')
+      if (cc.nota_exame == '' && safeToLowerCase(cc.situacao) != 'em exame')
         $fieldNotaExame.children().hide();
 
       $fieldNotaExame.appendTo($targetElement);
@@ -759,17 +759,17 @@ function updateResourceRow(dataResponse) {
   colorizeSituacaoTd($situacaoField.closest('td'), dataResponse.situacao);
 
   if (! $fieldNotaExame.is(':visible') &&
-     ($fieldNotaExame.val() != '' || dataResponse.situacao.toLowerCase() == 'em exame')) {
+     ($fieldNotaExame.val() != '' || safeToLowerCase(dataResponse.situacao) == 'em exame')) {
 
     $fieldNotaExame.show();
     $fieldNotaExame.focus();
   }
-  else if($fieldNotaExame.val() == '' && dataResponse.situacao.toLowerCase() != 'em exame')
+  else if($fieldNotaExame.val() == '' && safeToLowerCase(dataResponse.situacao) != 'em exame')
     $fieldNotaExame.hide();
 }
 
 function colorizeSituacaoTd(tdElement, situacao) {
-  if (situacao.toLowerCase() == 'retido')
+  if (safeToLowerCase(situacao) == 'retido')
     $j(tdElement).addClass('error');
   else
     $j(tdElement).removeClass('error');

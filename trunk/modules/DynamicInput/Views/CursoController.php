@@ -33,9 +33,10 @@
  */
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
+require_once 'Portabilis/Business/Professor.php';
 
 /**
- * AnoLetivoController class.
+ * CursoController class.
  *
  * @author      Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category    i-Educar
@@ -45,44 +46,44 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
  * @since       Classe disponível desde a versão 1.1.0
  * @version     @@package_version@@
  */
-class AnoLetivoController extends ApiCoreController
+class CursoController extends ApiCoreController
 {
 
-  protected function canGetAnosLetivos() {
-    return $this->validatesId('escola');
+  protected function canGetCursos() {
+    return $this->validatesId('instituicao') &&
+           $this->validatesId('escola');
   }
 
-  protected function filtroSituacao() {
-    $tiposSituacao  = array('nao_iniciado' => 0, 'em_andamento' => 1, 'finalizado' => 2);
-    $situacaoIn     = array();
+  protected function getCursos() {
+    if ($this->canGetCursos()) {
+      $userId        = $this->getSession()->id_pessoa;
+      $instituicaoId = $this->getRequest()->instituicao_id;
+      $escolaId      = $this->getRequest()->escola_id;
 
-    foreach ($tiposSituacao as $nome => $flag) {
-      if ($this->getRequest()->{"situacao_$nome"} == true)
-        $situacaoIn[] = $flag;
-    }
+      $isProfessor   = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
 
-    return (empty($situacaoIn) ? '' : 'and andamento in ('. implode(',', $situacaoIn) . ')');
-  }
+      if ($isProfessor)
+        $cursos = Portabilis_Business_Professor::cursosAlocado($instituicaoId, $escolaId, $userId);
 
-  protected function getAnosLetivos() {
-    if ($this->canGetAnosLetivos()) {
-      $params       = array($this->getRequest()->escola_id);
-      $sql          = "select ano from pmieducar.escola_ano_letivo as al where ref_cod_escola = $1
-                       and ativo = 1 {$this->filtroSituacao()} order by ano desc";
+      else {
+        $sql    = "select c.cod_curso as id, c.nm_curso as nome FROM pmieducar.curso c,
+                   pmieducar.escola_curso ec WHERE ec.ref_cod_escola = $1 AND ec.ref_cod_curso =
+                   c.cod_curso AND ec.ativo = 1 AND c.ativo = 1 ORDER BY c.nm_curso ASC";
 
-      $records = $this->fetchPreparedQuery($sql, $params);
+        $cursos = $this->fetchPreparedQuery($sql, $escolaId);
+      }
+
       $options = array();
-
-      foreach ($records as $record)
-        $options[$record['ano']] = $record['ano'];
+      foreach ($cursos as $curso)
+        $options['__' . $curso['id']] = $this->toUtf8($curso['nome']);
 
       return array('options' => $options);
     }
   }
 
   public function Gerar() {
-    if ($this->isRequestFor('get', 'anos_letivos'))
-      $this->appendResponse($this->getAnosLetivos());
+    if ($this->isRequestFor('get', 'cursos'))
+      $this->appendResponse($this->getCursos());
     else
       $this->notImplementedOperationError();
   }

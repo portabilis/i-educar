@@ -30,10 +30,10 @@
  */
 
 require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
-require_once 'Portabilis/Business/Professor.php';
+
 
 /**
- * Portabilis_View_Helper_DynamicInput_Curso class.
+ * Portabilis_View_Helper_DynamicInput_Etapa class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -42,30 +42,19 @@ require_once 'Portabilis/Business/Professor.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_Curso extends Portabilis_View_Helper_DynamicInput_CoreSelect {
+class Portabilis_View_Helper_DynamicInput_Etapa extends Portabilis_View_Helper_DynamicInput_CoreSelect {
 
+  // subscreve para não acrescentar '_id' no final
   protected function inputName() {
-    return 'ref_cod_curso';
+    return 'etapa';
   }
 
   protected function inputOptions($options) {
-    $resources     = $options['resources'];
-    $instituicaoId = $this->getInstituicaoId($options['instituicaoId']);
-    $escolaId      = $this->getEscolaId($options['escolaId']);
-    $userId        = $this->getCurrentUserId();
-    $isProfessor   = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
-
-    if ($instituicaoId and $escolaId and  empty($resources) and $isProfessor) {
-      $cursos    = Portabilis_Business_Professor::cursosAlocado($instituicaoId, $escolaId, $userId);
-      $resources = Portabilis_Array_Utils::setAsIdValue($cursos, 'id', 'nome');
-    }
-    elseif ($escolaId && empty($resources))
-      $resources = App_Model_IedFinder::getCursos($escolaId);
-
-    return $this->insertOption(null, "Selecione um curso", $resources);
+    // não implementado load resources ainda, por enquanto busca somente com ajax.
+    return $this->insertOption(null, "Selecione uma etapa", $resources);
   }
 
-  public function curso($options = array()) {
+  public function etapa($options = array()) {
     parent::select($options);
   }
 }

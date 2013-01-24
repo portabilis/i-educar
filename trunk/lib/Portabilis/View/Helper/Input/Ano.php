@@ -29,7 +29,7 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
+require_once 'lib/Portabilis/View/Helper/Input/Core.php';
 
 
 /**
@@ -42,7 +42,7 @@ require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Ano extends Portabilis_View_Helper_DynamicInput_Core {
+class Portabilis_View_Helper_Input_Ano extends Portabilis_View_Helper_Input_Core {
 
   # TODO criar este metodo na classe pai para ser subescrito nas (outras) classes filhas
   protected function getResourceValue($value = null) {
