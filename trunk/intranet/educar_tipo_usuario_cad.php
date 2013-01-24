@@ -271,11 +271,12 @@ class indice extends clsCadastro
           $valor['visualiza'] = $valor['visualiza'] == 'on' ? 1 : 0;
           $valor['exclui']    = $valor['exclui']    == 'on' ? 1 : 0;
 
-          $valor['cadastra'] = is_null($valor['cadastra']) ? 0 : 1;
+          $valor['cadastra']  = is_null($valor['cadastra']) ? 0 : 1;
           $valor['visualiza'] = is_null($valor['visualiza']) ? 0 : 1;
-          $valor['exclui'] = is_null($valor['exclui']) ? 0 : 1;
+          $valor['exclui']    = is_null($valor['exclui']) ? 0 : 1;
 
-          die("{$valor['visualiza']} - ${$valor['visualiza']} - {$valor['exclui']}");
+          // TODO verificar possivel erro
+          //die("{$valor['visualiza']} - ${$valor['visualiza']} - {$valor['exclui']}");
 
           if ($valor['cadastra'] || $valor['visualiza'] || $valor['exclui']) {
             $this->cod_tipo_usuario = $this->cod_tipo_usuario == FALSE ? '0' : $this->cod_tipo_usuario;
