@@ -31,7 +31,6 @@ function xmlResourcesToSelectOptions(resources, parentNodeName, nodeIdAttrName, 
     var $option = $j('<option />');
     $option.attr('value', $value.attr(nodeIdAttrName));
 
-    // some xml like portabilis_alunos_matriculados_xml.php put the value in an attribute
     if (typeof nodeValueAttrName != 'undefined')
       text = safeCapitalize($value.attr(nodeValueAttrName));
     else

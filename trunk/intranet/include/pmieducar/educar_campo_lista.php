@@ -29,8 +29,6 @@
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 ?>
 <?
-  require_once 'include/portabilis_utils.php';
-
 	$pessoa_logada = $_SESSION['id_pessoa'];
 
   if (! isset($listar_escolas_alocacao_professor))
