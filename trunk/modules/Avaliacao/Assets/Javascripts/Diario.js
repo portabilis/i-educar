@@ -11,7 +11,7 @@ var RESOURCES_NAME = 'matriculas';
 var POST_LABEL   = '';
 var DELETE_LABEL = '';
 
-var SEARCH_ORIENTATION = '<strong>Obs:</strong> Caso n&atilde;o seja listado as op&ccedil;&otilde;es de filtro que voc&ecirc; esperava, solicite ao(&agrave;) secret&aacute;rio(a) da escola para verificar a aloca&ccedil;&atilde;o ou permiss&atilde;o do seu usu&aacute;rio.';
+var SEARCH_ORIENTATION = '';
 
 // funcoes usados pelo modulo Frontend/Process.js
 var onClickSelectAllEvent = false;
@@ -778,8 +778,7 @@ function colorizeSituacaoTd(tdElement, situacao) {
 function canSearch(){
 
   if ($j('#ref_cod_matricula').val() == '' &&  $j('#ref_cod_componente_curricular').val() == '') {
-    alert(safeUtf8Decode('Selecione um "componente curricular" ou uma "matrícula".\n\n' +
-          'Isto é necessário, para um rápido carregamento do diário.'));
+    alert(safeUtf8Decode('Selecione um Componente curricular e/ou uma Matrícula'));
     return false;
   }
 

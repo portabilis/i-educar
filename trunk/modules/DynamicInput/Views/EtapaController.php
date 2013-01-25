@@ -82,6 +82,7 @@ class EtapaController extends ApiCoreController
         $etapas = $this->fetchPreparedQuery($sql, $this->getRequest()->turma_id);
       }
 
+      $options = array();
       foreach ($etapas as $etapa)
         $options['__' . $etapa['etapa']] = $etapa['etapa'] . 'º ' . $this->toUtf8($etapa['nome']);
 

@@ -91,48 +91,42 @@ class Portabilis_Business_Professor {
   }
 
 
-  public static function componentesCurricularesAlocado($instituicaoId, $escolaId, $cursoId, $serieId, $turmaId,
-                                                        $anoLetivo, $userId){
-
-    $componentes = self::componentesCurricularesTurmaAlocado($instituicaoId, $escolaId, $cursoId, $turmaId,
-                                                             $anoLetivo, $userId);
+  public static function componentesCurricularesAlocado($turmaId, $anoLetivo, $userId) {
+    $componentes = self::componentesCurricularesTurmaAlocado($turmaId, $anoLetivo, $userId);
 
     if (empty($componentes))
-      $componentes = self::componentesCurricularesCursoAlocado($instituicaoId, $escolaId, $serieId, $anoLetivo, $userId);
+      $componentes = self::componentesCurricularesCursoAlocado($turmaId, $anoLetivo, $userId);
 
     return $componentes;
   }
 
 
-  protected static function componentesCurricularesTurmaAlocado($instituicaoId, $escolaId, $cursoId, $turmaId,
-                                                                $anoLetivo, $userId) {
-
-    $sql = "select cc.id as id, cc.nome as nome
-            from modules.componente_curricular_turma as cct, modules.componente_curricular as cc,
+  protected static function componentesCurricularesTurmaAlocado($turmaId, $anoLetivo, $userId) {
+    $sql = "select cc.id, cc.nome
+            from modules.componente_curricular_turma as cct, pmieducar.turma, modules.componente_curricular as cc,
             pmieducar.escola_ano_letivo as al, pmieducar.servidor_disciplina as scc
-            where cct.turma_id = $1 and cct.escola_id = $2 and cct.componente_curricular_id = cc.id and
-            al.ano = $3 and cct.escola_id = al.ref_cod_escola and scc.ref_ref_cod_instituicao = $4 and
-            scc.ref_cod_servidor = $5 and scc.ref_cod_curso = $6 and scc.ref_cod_disciplina = cc.id";
+            where turma.cod_turma = $1  and cct.turma_id = turma.cod_turma and cct.escola_id = turma.ref_ref_cod_escola
+            and cct.componente_curricular_id = cc.id and al.ano = $2 and cct.escola_id = al.ref_cod_escola and
+            scc.ref_ref_cod_instituicao = turma.ref_cod_instituicao and scc.ref_cod_servidor = $3 and
+            scc.ref_cod_curso = turma.ref_cod_curso and scc.ref_cod_disciplina = cc.id";
 
-    $options = array('params' => array($turmaId, $escolaId, $anoLetivo, $instituicaoId, $userId, $cursoId));
+    $options = array('params' => array($turmaId, $anoLetivo, $userId));
 
     return self::fetchPreparedQuery($sql, $options);
   }
 
 
-  protected static function componentesCurricularesCursoAlocado($instituicaoId, $escolaId, $serieId,
-                                                                $anoLetivo, $userId) {
+  protected static function componentesCurricularesCursoAlocado($turmaId, $anoLetivo, $userId) {
+    $sql = "select cc.id as id, cc.nome as nome from pmieducar.serie, pmieducar.escola_serie_disciplina as esd,
+            pmieducar.turma, modules.componente_curricular as cc, pmieducar.escola_ano_letivo as al,
+            pmieducar.servidor_disciplina as scc where turma.cod_turma = $1 and serie.cod_serie =
+            turma.ref_ref_cod_serie and esd.ref_ref_cod_escola = turma.ref_ref_cod_escola and esd.ref_ref_cod_serie =
+            serie.cod_serie and esd.ref_cod_disciplina = cc.id and al.ano = $2 and esd.ref_ref_cod_escola =
+            al.ref_cod_escola and serie.ativo = 1 and esd.ativo = 1 and al.ativo = 1 and scc.ref_ref_cod_instituicao =
+            turma.ref_cod_instituicao and scc.ref_cod_servidor = $3 and scc.ref_cod_curso = serie.ref_cod_curso and
+            scc.ref_cod_disciplina = cc.id";
 
-    $sql = "select cc.id as id, cc.nome as nome from
-            pmieducar.serie, pmieducar.escola_serie_disciplina as esd, modules.componente_curricular as cc,
-            pmieducar.escola_ano_letivo as al, pmieducar.servidor_disciplina as scc
-
-            where serie.cod_serie = $1 and esd.ref_ref_cod_escola = $2 and esd.ref_ref_cod_serie = serie.cod_serie and
-            esd.ref_cod_disciplina = cc.id and al.ano = $3 and esd.ref_ref_cod_escola = al.ref_cod_escola and
-            serie.ativo = 1 and esd.ativo = 1 and al.ativo = 1 and scc.ref_ref_cod_instituicao = $4 and
-            scc.ref_cod_servidor = $5 and scc.ref_cod_curso = serie.ref_cod_curso and scc.ref_cod_disciplina = cc.id";
-
-    $options = array('params' => array($serieId, $escolaId, $anoLetivo, $instituicaoId, $userId));
+    $options = array('params' => array($turmaId, $anoLetivo, $userId));
 
     return self::fetchPreparedQuery($sql, $options);
   }
