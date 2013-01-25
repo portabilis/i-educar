@@ -40,15 +40,6 @@
  */
 class Portabilis_Object_Utils {
 
-
-  /*
-    TODO mover referencias para filterSet e renomear filterOne para filter
-  */
-  public static function filter($objects, $attrs = array()){
-    return self::filterSet($objects, $attrs);
-  }
-
-
   public static function filterSet($objects, $attrs = array()){
     if (! is_array($objects))
       $objects = array($objects);
@@ -56,7 +47,7 @@ class Portabilis_Object_Utils {
     $objectsFiltered = array();
 
     foreach($objects as $object)
-      $objectsFiltered[] = self::filterOne($object, $attrs);
+      $objectsFiltered[] = self::filter($object, $attrs);
 
     return $objectsFiltered;
   }
@@ -70,18 +61,18 @@ class Portabilis_Object_Utils {
        $attrs    - atributo ou array de atributos para filtrar objeto,
        ex: $attrs = array('cod_escola' => 'id', 'nome')
   */
-  public static function filterOne($object, $attrs = array()){
+  public static function filter($object, $attrs = array()){
     if (! is_array($attrs))
       $attrs = array($attrs);
 
     $objectFiltered = array();
 
     // apply filter
-    foreach($attrs as $attrName => $attrValueName) {
-      if (! is_string($attrName))
-        $attrName = $attrValueName;
+    foreach($attrs as $keyAttr => $valueAtt) {
+      if (! is_string($keyAttr))
+        $keyAttr = $valueAtt;
 
-      $objectFiltered[$attrValueName] = $object->$attrName;
+      $objectFiltered[$valueAtt] = $object->$keyAttr;
     }
 
     return $objectFiltered;
@@ -91,19 +82,18 @@ class Portabilis_Object_Utils {
   /* Retorna um array { key => value, key2 => value2 }, filtrados de um array (lista) de objetos,
      util para filtar uma lista de objetos a ser usado para criar um input select.
        $objects         - objeto ou array de objetos a ser(em) filtrado(s)
-       $attrKeyName   - nome do atributo respectivo a chave, a filtrar no objeto,
-       $attrValueName - nome do atributo respectivo ao valor a filtrar no objeto,
+       $keyAttr   - nome do atributo respectivo a chave, a filtrar no objeto,
+       $valueAtt - nome do atributo respectivo ao valor a filtrar no objeto,
   */
-  public static function filterKeyValue($objects, $attrKeyName, $attrValueName){
+  public static function asIdValue($objects, $keyAttr, $valueAtt){
     $objectsFiltered = array();
 
     if (! is_array($objects))
       $objects = array($objects);
 
     // apply filter
-    foreach($objects as $object) {
-      $objectsFiltered[$object->$attrKeyName] = $object->$attrValueName;
-    }
+    foreach($objects as $object)
+      $objectsFiltered[$object->$keyAttr] = $object->$valueAtt;
 
     return $objectsFiltered;
   }
