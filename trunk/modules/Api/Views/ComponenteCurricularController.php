@@ -36,25 +36,27 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 
-class MunicipioController extends ApiCoreController
+class ComponenteCurricularController extends ApiCoreController
 {
   // search options
 
   protected function searchOptions() {
-    return array('namespace' => 'public', 'idAttr' => 'idmun', 'selectFields' => array('sigla_uf'));
+    return array('namespace' => 'modules', 'idAttr' => 'id');
   }
 
-  // subscreve formatResourceValue para adicionar a sigla do estado ao final do valor,
-  // "<id_municipio> - <nome_municipio> (<sigla_uf>)", ex: "1 - Içara (SC)"
-  protected function formatResourceValue($resource) {
-    $siglaUf = $resource['sigla_uf'];
-    $nome    = $this->toUtf8($resource['name'], array('transform' => true));
+  // subescreve para pesquisar %query%, e nao query% como por padrão
+  protected function sqlsForStringSearch() {
+    return "select distinct id, nome as name from modules.componente_curricular
+            where lower(to_ascii(nome)) like '%'||lower(to_ascii($1))||'%' order by nome limit 15";
+  }
 
-    return $resource['id'] . " - $nome ($siglaUf)";
+  // subscreve formatResourceValue para não adicionar 'id -' a frente do resultado
+  protected function formatResourceValue($resource) {
+    return $this->toUtf8(mb_strtoupper($resource['name']));
   }
 
   public function Gerar() {
-    if ($this->isRequestFor('get', 'municipio-search'))
+    if ($this->isRequestFor('get', 'componente_curricular-search'))
       $this->appendResponse($this->search());
     else
       $this->notImplementedOperationError();

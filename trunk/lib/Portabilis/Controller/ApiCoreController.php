@@ -425,7 +425,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
   // search
 
   protected function defaultSearchOptions() {
-    $resourceName = strtolower($this->getDispatcher()->getActionName());
+    $resourceName = Portabilis_String_Utils::underscore($this->getDispatcher()->getActionName());
 
     return array('namespace'    => 'pmieducar',
                  'table'        => $resourceName,

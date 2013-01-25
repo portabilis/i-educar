@@ -105,7 +105,7 @@ class indice extends clsCadastro
 			$registro  = $obj->detalhe();
 			if( $registro )
 			{
-				foreach( $registro AS $campo => $val )	// passa todos os valores obtidos no registro para atributos do objeto
+				foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
 					$this->$campo = $val;
 
 				if (!$this->origem)
@@ -210,7 +210,7 @@ class indice extends clsCadastro
 
 		$this->campoTexto( "nm_curso", "Curso", $this->nm_curso, 30, 255, false );
 
-    $opcoesGradeCurso = getOpcoesGradeCurso();
+		$opcoesGradeCurso = getOpcoesGradeCurso();
 		$this->campoLista( "historico_grade_curso_id", "Grade curso", $opcoesGradeCurso, $this->historico_grade_curso_id );
 
 
@@ -262,12 +262,12 @@ class indice extends clsCadastro
 
 		$this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas"),$this->historico_disciplinas);
 
-    //$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', 'autoCompleteComponentesCurricular(this)', 'onfocus' );
-    $this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', '', 'onfocus' );
+		//$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', 'autoCompleteComponentesCurricular(this)', 'onfocus' );
+		$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', '', 'onfocus' );
 
-			$this->campoTexto( "nota", "Nota", $this->nota, 10, 255, false );
-			$this->campoNumero( "faltas", "Faltas", $this->faltas, 3, 3, false );
-			//$this->campoOculto("sequencial","");
+		$this->campoTexto( "nota", "Nota", $this->nota, 10, 255, false );
+		$this->campoNumero( "faltas", "Faltas", $this->faltas, 3, 3, false );
+		//$this->campoOculto("sequencial","");
 
 		$this->campoTabelaFim();
 
@@ -276,8 +276,15 @@ class indice extends clsCadastro
 		$this->campoQuebra();
 	//---------------------FIM INCLUI DISCIPLINAS---------------------//
 
-    Portabilis_View_Helper_Application::loadJQueryLib($this);
-    Portabilis_View_Helper_Application::loadJQueryUiLib($this);
+		Portabilis_View_Helper_Application::loadJQueryLib($this);
+		Portabilis_View_Helper_Application::loadJQueryUiLib($this);
+
+		Portabilis_View_Helper_Application::loadJavascript(
+			$this,
+			array('/modules/Portabilis/Assets/Javascripts/Utils.js',
+						'/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js')
+		);
+
 	}
 
 	function Novo()
@@ -289,7 +296,7 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
 
-/*		$this->historico_disciplinas = unserialize( urldecode( $this->historico_disciplinas ) );
+/*    $this->historico_disciplinas = unserialize( urldecode( $this->historico_disciplinas ) );
 		if ($this->historico_disciplinas)
 		{
 		*/
@@ -303,7 +310,7 @@ class indice extends clsCadastro
 			else
 				$this->extra_curricular = 0;
 
-//				echo "clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, null, null, $this->pessoa_logada, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, null, $this->ref_cod_instituicao, 1, $this->extra_curricular )";
+//        echo "clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, null, null, $this->pessoa_logada, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, null, $this->ref_cod_instituicao, 1, $this->extra_curricular )";
 			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, null, null, $this->pessoa_logada, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha, $this->nm_curso, $this->historico_grade_curso_id, $this->aceleracao);
 			$cadastrou = $obj->cadastra();
 			if( $cadastrou )
@@ -339,7 +346,7 @@ class indice extends clsCadastro
 			$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
 			echo "<!--\nErro ao cadastrar clsPmieducarHistoricoEscolar\nvalores obrigatorios\nis_numeric( $this->ref_cod_aluno ) && is_numeric( $this->pessoa_logada ) && is_string( $this->nm_serie ) && is_numeric( $this->ano ) && is_numeric( $this->carga_horaria ) && is_numeric( $this->dias_letivos ) && is_string( $this->escola ) && is_string( $this->escola_cidade ) && is_string( $this->escola_uf ) && is_numeric( $this->aprovado ) && is_numeric( $this->ref_cod_instituicao ) && is_numeric( $this->extra_curricular )\n-->";
 			return false;
-/*		}
+/*    }
 		echo "<script> alert('É necessário adicionar pelo menos 1 Disciplina!') </script>";
 		$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
 		return false;
@@ -355,7 +362,7 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
 
-/*		$this->historico_disciplinas = unserialize( urldecode( $this->historico_disciplinas ) );
+/*    $this->historico_disciplinas = unserialize( urldecode( $this->historico_disciplinas ) );
 		if ($this->historico_disciplinas)
 		{
 		*/
@@ -372,7 +379,7 @@ class indice extends clsCadastro
 			if($this->cb_faltas_globalizadas != 'on')
 				$this->faltas_globalizadas = 'NULL';
 
-      $this->aceleracao = is_null($this->aceleracao) ? 0 : 1;
+			$this->aceleracao = is_null($this->aceleracao) ? 0 : 1;
 
 			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, $this->sequencial, $this->pessoa_logada, null, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha, $this->nm_curso, $this->historico_grade_curso_id, $this->aceleracao);
 			$editou = $obj->edita();
@@ -415,7 +422,7 @@ class indice extends clsCadastro
 			$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
 			echo "<!--\nErro ao editar clsPmieducarHistoricoEscolar\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_aluno ) && is_numeric( $this->sequencial ) && is_numeric( $this->pessoa_logada ) )\n-->";
 			return false;
-/*		}
+/*    }
 		echo "<script> alert('É necessário adicionar pelo menos 1 Disciplina!') </script>";
 		$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
 		return false;
@@ -456,18 +463,18 @@ class indice extends clsCadastro
 
 function getOpcoesGradeCurso(){
 
-    $db = new clsBanco();
-    $sql = "select * from pmieducar.historico_grade_curso where ativo = 1";
-    $db->Consulta($sql);
+		$db = new clsBanco();
+		$sql = "select * from pmieducar.historico_grade_curso where ativo = 1";
+		$db->Consulta($sql);
 
-    $opcoes = array("" => "Selecione");
-    while ($db->ProximoRegistro()){
-      $record = $db->Tupla();
-      $opcoes[$record['id']] = $record['descricao_etapa'];
-    }
+		$opcoes = array("" => "Selecione");
+		while ($db->ProximoRegistro()){
+			$record = $db->Tupla();
+			$opcoes[$record['id']] = $record['descricao_etapa'];
+		}
 
-    return $opcoes;
-  }
+		return $opcoes;
+	}
 
 // cria uma extensao da classe base
 $pagina = new clsIndexBase();
@@ -484,7 +491,7 @@ $pagina->MakeAll();
 	document.getElementById('cb_faltas_globalizadas').onclick =function()
 	{
 		setVisibility('tr_faltas_globalizadas',this.checked);
-    this.setAttribute('value', this.checked ? 'on' : '');
+		this.setAttribute('value', this.checked ? 'on' : '');
 	}
 
 	document.getElementById('cb_faltas_globalizadas').onclick();
@@ -529,29 +536,43 @@ $pagina->MakeAll();
 	}
 
 
-  // set auto complete in all disciplina fields
+	// autocomplete disciplina fields
 
-  function setAutoComplete() {
-		var $autoCompleteFields = $j('input[id^="nm_disciplina"]');
+  var handleSelect = function(event, ui){
+		$j(event.target).val(ui.item.label);
+		return false;
+	};
 
-		$j.each($autoCompleteFields, function(index, value) {
-			$j(value).autocomplete({
-        source: "/intranet/portabilis_auto_complete_componente_curricular_xml.php?instituicao_id=" +
-                $j('#ref_cod_instituicao').val() + "&limit=15",
-        minLength: 1,
-        autoFocus: true
-      })
+	var search = function(request, response) {
+		var searchPath = '/module/Api/ComponenteCurricular?oper=get&resource=componente_curricular-search';
+		var params     = { query : request.term };
+
+		$j.get(searchPath, params, function(dataResponse) {
+			simpleSearch.handleSearch(dataResponse, response);
+		});
+	};
+
+	function setAutoComplete() {
+		$j.each($j('input[id^="nm_disciplina"]'), function(index, field) {
+
+			$j(field).autocomplete({
+				source    : search,
+				select    : handleSelect,
+				minLength : 1,
+				autoFocus : true
+			});
+
 		});
 	}
 
-  setAutoComplete();
+	setAutoComplete();
 
-  // bind event
+	// bind event
 
-  var $addDisciplinaButton = $j('#btn_add_tab_add_1');
+	var $addDisciplinaButton = $j('#btn_add_tab_add_1');
 
-  $addDisciplinaButton.click(function(){
-    setAutoComplete();
-  });
+	$addDisciplinaButton.click(function(){
+		setAutoComplete();
+	});
 
 </script>
