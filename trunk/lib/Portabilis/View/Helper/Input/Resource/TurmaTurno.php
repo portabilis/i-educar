@@ -33,7 +33,7 @@ require_once 'lib/Portabilis/View/Helper/Input/CoreSelect.php';
 
 
 /**
- * Portabilis_View_Helper_Input_Resource_EstadoCivil class.
+ * Portabilis_View_Helper_Input_Resource_TurmaTurno class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -42,21 +42,26 @@ require_once 'lib/Portabilis/View/Helper/Input/CoreSelect.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Resource_EstadoCivil extends Portabilis_View_Helper_Input_CoreSelect {
+
+class Portabilis_View_Helper_Input_Resource_TurmaTurno extends Portabilis_View_Helper_Input_CoreSelect {
 
   protected function inputOptions($options) {
     $resources = $options['resources'];
 
-    if (empty($resources)) {
-      $resources = new clsEstadoCivil();
-      $resources = $resources->lista();
-      $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'ideciv', 'descricao');
+    if (empty($options['resources'])) {
+      $sql       = "select id, nome from pmieducar.turma_turno where ativo = 1 order by id DESC";
+      $resources = Portabilis_Utils_Database::fetchPreparedQuery($sql);
+      $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'id', 'nome');
     }
 
     return $this->insertOption(null, "Selecione", $resources);
   }
 
-  public function estadoCivil($options = array()) {
+  protected function defaultOptions() {
+    return array('options' => array('label' => 'Turno'));
+  }
+
+  public function turmaTurno($options = array()) {
     parent::select($options);
   }
 }

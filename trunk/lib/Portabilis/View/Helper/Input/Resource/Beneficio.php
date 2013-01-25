@@ -33,7 +33,7 @@ require_once 'lib/Portabilis/View/Helper/Input/CoreSelect.php';
 
 
 /**
- * Portabilis_View_Helper_Input_Select class.
+ * Portabilis_View_Helper_Input_Resource_Beneficio class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -48,14 +48,9 @@ class Portabilis_View_Helper_Input_Resource_Beneficio extends Portabilis_View_He
     $resources = $options['resources'];
 
     if (empty($resources)) {
-      $resources = array();
-
-      $_resources = new clsPmieducarAlunoBeneficio();
-      $_resources = $_resources->lista(null, null, null, null, null, null, null, null, null, 1);
-
-      foreach ($_resources as $resource) {
-        $resources[$resource['cod_aluno_beneficio']] = $resource['nm_beneficio'];
-      }
+      $resources = new clsPmieducarAlunoBeneficio();
+      $resources = $resources->lista(null, null, null, null, null, null, null, null, null, 1);
+      $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'cod_aluno_beneficio', 'nm_beneficio');
     }
 
     return $this->insertOption(null, "Selecione", $resources);

@@ -33,7 +33,7 @@ require_once 'lib/Portabilis/View/Helper/Input/CoreSelect.php';
 
 
 /**
- * Portabilis_View_Helper_Input_Select class.
+ * Portabilis_View_Helper_Input_Resource_Religiao class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -49,14 +49,9 @@ class Portabilis_View_Helper_Input_Resource_Religiao extends Portabilis_View_Hel
     $resources = $options['resources'];
 
     if (empty($options['resources'])) {
-      $resources  = array();
-
-      $_resources = new clsPmieducarReligiao();
-      $_resources = $_resources->lista(null, null, null, null, null, null, null, null, 1);
-
-      foreach ($_resources as $resource) {
-        $resources[$resource['cod_religiao']] = $resource['nm_religiao'];
-      }
+      $resources = new clsPmieducarReligiao();
+      $resources = $resources->lista(null, null, null, null, null, null, null, null, 1);
+      $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'cod_religiao', 'nm_religiao');
     }
 
     return $this->insertOption(null, "Selecione", $resources);

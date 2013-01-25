@@ -324,20 +324,7 @@ class indice extends clsCadastro
 
     $this->campoHora( 'hora_fim_intervalo', 'Hora Fim Intervalo', $this->hora_fim_intervalo, FALSE);
 
-    // turnos
-    $turnos = array('' => 'Selecione');
-
-    if ($this->ref_cod_instituicao) {
-      require_once 'include/pmieducar/clsPortabilisTurmaTurno.inc.php';
-
-      $t = new clsPortabilisTurmaTurno($this->ref_cod_instituicao);
-      $_turnos = $t->select();
-
-      foreach ($_turnos as $_t)
-        $turnos[$_t['turma_turno_id']] = $_t['nm_turno'];
-    }
-
-    $this->campoLista('turma_turno_id', 'Turno', $turnos, $this->turma_turno_id);
+    $this->inputsHelper()->turmaTurno();
 
     // modelos boletim
     require_once 'Portabilis/Model/Report/TipoBoletim.php';
@@ -765,7 +752,7 @@ class indice extends clsCadastro
         $this->hora_inicio_intervalo, $this->hora_fim_intervalo,
         $this->ref_cod_regente, $this->ref_cod_instituicao_regente,
         $this->ref_cod_instituicao, $this->ref_cod_curso,
-        $this->ref_ref_cod_serie_mult, $this->ref_cod_escola, $this->visivel, 
+        $this->ref_ref_cod_serie_mult, $this->ref_cod_escola, $this->visivel,
         $this->turma_turno_id, $this->tipo_boletim);
 
       $cadastrou = $obj->cadastra();
@@ -1803,30 +1790,4 @@ function atualizaLstEscolaCursoSerie(xml)
     campoSerie.options[0].text = 'A escola/curso não possui nenhuma série';
   }
 }
-
-var _fieldInstituicao = document.getElementById('ref_cod_instituicao');
-if (_fieldInstituicao)
-{
-  var __old_event = _fieldInstituicao.onchange;
-  document.getElementById('ref_cod_instituicao').onchange = function(){
-    getTurmaTurno();
-    __old_event();
-  }
-}
-
-
-function getTurmaTurno()
-{
-	var instituicaoId = document.getElementById('ref_cod_instituicao').value;
-  if (instituicaoId)
-  {
-	  clearSelect(entity = 'turma_turno_id', disable = true, text = 'Carregando turnos...', multipleId=false);
-
-    var ajaxReq = new ajax(updateSelect);
-    ajaxReq.envia("portabilis_turma_turno_xml.php?instituicao_id="+instituicaoId);
-  }
-  else
-	  clearSelect(entity = 'turma_turno_id', disable = true, text = '', multipleId=false);
-}
-
 </script>

@@ -80,9 +80,6 @@ class indice extends clsCadastro
     $this->db  = new clsBanco();
     $this->db2 = new clsBanco();
 
-    echo "$this->ref_cod_escola, $this->ref_cod_curso,
-                                        $this->ref_cod_serie, $this->ref_cod_turma, {$_POST['ano']}";
-
     $result = $this->rematricularALunos($this->ref_cod_escola, $this->ref_cod_curso,
                                         $this->ref_cod_serie, $this->ref_cod_turma, $_POST['ano']);
 
