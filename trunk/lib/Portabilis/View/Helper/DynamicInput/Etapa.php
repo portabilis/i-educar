@@ -29,11 +29,11 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/Input/CoreSelect.php';
+require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
 
 
 /**
- * Portabilis_View_Helper_Input_Resource_EstadoCivil class.
+ * Portabilis_View_Helper_DynamicInput_Etapa class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -42,21 +42,19 @@ require_once 'lib/Portabilis/View/Helper/Input/CoreSelect.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Resource_EstadoCivil extends Portabilis_View_Helper_Input_CoreSelect {
+class Portabilis_View_Helper_DynamicInput_Etapa extends Portabilis_View_Helper_DynamicInput_CoreSelect {
 
-  protected function inputOptions($options) {
-    $resources = $options['resources'];
-
-    if (empty($resources)) {
-      $resources = new clsEstadoCivil();
-      $resources = $resources->lista();
-      $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'ideciv', 'descricao');
-    }
-
-    return $this->insertOption(null, "Selecione", $resources);
+  // subscreve para não acrescentar '_id' no final
+  protected function inputName() {
+    return 'etapa';
   }
 
-  public function estadoCivil($options = array()) {
+  protected function inputOptions($options) {
+    // não implementado load resources ainda, por enquanto busca somente com ajax.
+    return $this->insertOption(null, "Selecione uma etapa", $resources);
+  }
+
+  public function etapa($options = array()) {
     parent::select($options);
   }
 }

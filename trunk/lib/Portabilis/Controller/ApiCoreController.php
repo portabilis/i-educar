@@ -88,13 +88,18 @@ class ApiCoreController extends Core_Controller_Page_EditController
     return true;
   }
 
+  protected function validatesId($resourceName, $options = array()) {
+    $attrName = $resourceName . ($resourceName ? '_id' : 'id');
+
+    return  $this->validatesPresenceOf($attrName) &&
+            $this->validatesExistenceOf($resourceName, $this->getRequest()->$attrName, $options);
+  }
 
   // subescrever nos controladores cujo recurso difere do padrao (schema pmieducar, tabela <resource>, pk cod_<resource>)
   protected function validatesResourceId() {
     return  $this->validatesPresenceOf('id') &&
             $this->validatesExistenceOf($this->getRequest()->resource, $this->getRequest()->id);
   }
-
 
   protected function validatesAuthorizationToDestroy() {
     $can = $this->getClsPermissoes()->permissao_excluir($this->getBaseProcessoAp(),
@@ -420,7 +425,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
   // search
 
   protected function defaultSearchOptions() {
-    $resourceName = strtolower($this->getDispatcher()->getActionName());
+    $resourceName = Portabilis_String_Utils::underscore($this->getDispatcher()->getActionName());
 
     return array('namespace'    => 'pmieducar',
                  'table'        => $resourceName,

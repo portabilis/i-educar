@@ -122,14 +122,31 @@ class Portabilis_Array_Utils {
     return $arrayFiltered;
   }
 
-  public static function _keySorter($key, $array, $otherArray) {
-    $a = $array[$key];
-    $b = $otherArray[$key];
 
-    if ($a == $b)
-        return 0;
+  /* transforma um conjunto de arrays "chave => valor, chave => valor" em um array "id => value",
+     ex: (('id' => 1, 'nome' => 'lucas'), ('id' => 2, 'nome' => 'davila'))
+     é transformado em (1 => 'lucas', 2 => davila), caso uma mesma chave se repita em mais de um array,
+     será mantido a chave => valor do ultimo array que a contem.
+  */
+  public static function setAsIdValue($arrays, $keyAttr, $valueAtt) {
+    if (! is_array($arrays))
+      $arrays = array($arrays);
 
-    return ($a < $b) ? -1 : 1;
+    $idValueArray = array();
+
+    foreach ($arrays as $array) {
+      $idValueArray = self::merge($idValueArray, self::asIdValue($array, $keyAttr, $valueAtt));
+//      var_dump($idValueArray);
+    }
+
+    return $idValueArray;
+  }
+
+
+  /* transforma um array "chave => valor, chave => valor" em um array "id => value",
+     ex: ('id' => 1, 'nome' => 'lucas') é transformado em (1 => 'lucas') */
+  public static function asIdValue($array, $keyAttr, $valueAtt) {
+    return array($array[$keyAttr] => $array[$valueAtt]);
   }
 
 
@@ -142,6 +159,18 @@ class Portabilis_Array_Utils {
 
     return $array;
   }
+
+
+  public static function _keySorter($key, $array, $otherArray) {
+    $a = $array[$key];
+    $b = $otherArray[$key];
+
+    if ($a == $b)
+        return 0;
+
+    return ($a < $b) ? -1 : 1;
+  }
+
 
   /* trim values for a given array */
   public static function trim($array) {

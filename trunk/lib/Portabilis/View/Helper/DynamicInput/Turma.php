@@ -49,11 +49,19 @@ class Portabilis_View_Helper_DynamicInput_Turma extends Portabilis_View_Helper_D
   }
 
   protected function inputOptions($options) {
-    $resources = $options['resources'];
-    $escolaId  = $this->getEscolaId($options['escolaId']);
-    $serieId   = $this->getSerieId($options['serieId']);
+    $resources     = $options['resources'];
+    $instituicaoId = $this->getInstituicaoId($options['instituicaoId']);
+    $escolaId      = $this->getEscolaId($options['escolaId']);
+    $serieId       = $this->getSerieId($options['serieId']);
+    //$cursoId       = $this->getCursoId($options['cursoId']);
+    $userId        = $this->getCurrentUserId();
+    $isProfessor   = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
 
-    if ($escolaId && $serieId && empty($resources))
+    if ($escolaId and $serieId and empty($resources) and $isProfessor) {
+      $turmas    = Portabilis_Business_Professor::turmasAlocado($escolaId, $serieId, $userId);
+      $resources = Portabilis_Array_Utils::setAsIdValue($turmas, 'id', 'nome');
+    }
+    elseif ($escolaId && $serieId && empty($resources))
       $resources = App_Model_IedFinder::getTurmas($escolaId, $serieId);
 
     return $this->insertOption(null, "Selecione uma turma", $resources);

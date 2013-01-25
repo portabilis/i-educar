@@ -33,9 +33,10 @@
  */
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
+require_once 'Portabilis/Business/Professor.php';
 
 /**
- * AnoLetivoController class.
+ * CursoController class.
  *
  * @author      Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category    i-Educar
@@ -45,44 +46,46 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
  * @since       Classe disponível desde a versão 1.1.0
  * @version     @@package_version@@
  */
-class AnoLetivoController extends ApiCoreController
+class TurmaController extends ApiCoreController
 {
 
-  protected function canGetAnosLetivos() {
-    return $this->validatesId('escola');
+  protected function canGetTurmas() {
+    return $this->validatesId('instituicao') &&
+           $this->validatesId('escola') &&
+           $this->validatesId('serie');
   }
 
-  protected function filtroSituacao() {
-    $tiposSituacao  = array('nao_iniciado' => 0, 'em_andamento' => 1, 'finalizado' => 2);
-    $situacaoIn     = array();
+  protected function getTurmas() {
+    if ($this->canGetTurmas()) {
+      $userId        = $this->getSession()->id_pessoa;
+      $instituicaoId = $this->getRequest()->instituicao_id;
+      $escolaId      = $this->getRequest()->escola_id;
+      $serieId       = $this->getRequest()->serie_id;
 
-    foreach ($tiposSituacao as $nome => $flag) {
-      if ($this->getRequest()->{"situacao_$nome"} == true)
-        $situacaoIn[] = $flag;
-    }
+      $isProfessor   = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
 
-    return (empty($situacaoIn) ? '' : 'and andamento in ('. implode(',', $situacaoIn) . ')');
-  }
+      if ($isProfessor)
+        $turmas = Portabilis_Business_Professor::turmasAlocado($escolaId, $serieId, $userId);
 
-  protected function getAnosLetivos() {
-    if ($this->canGetAnosLetivos()) {
-      $params       = array($this->getRequest()->escola_id);
-      $sql          = "select ano from pmieducar.escola_ano_letivo as al where ref_cod_escola = $1
-                       and ativo = 1 {$this->filtroSituacao()} order by ano desc";
+      else {
+        $sql    = "select cod_turma as id, nm_turma as nome  from pmieducar.turma where ref_ref_cod_escola = $1
+                   and (ref_ref_cod_serie = $2 or ref_ref_cod_serie_mult = $2) and ativo = 1 and
+                   visivel != 'f' order by nm_turma asc";
 
-      $records = $this->fetchPreparedQuery($sql, $params);
+        $turmas = $this->fetchPreparedQuery($sql, array($escolaId, $serieId));
+      }
+
       $options = array();
-
-      foreach ($records as $record)
-        $options[$record['ano']] = $record['ano'];
+      foreach ($turmas as $turma)
+        $options['__' . $turma['id']] = $this->toUtf8($turma['nome']);
 
       return array('options' => $options);
     }
   }
 
   public function Gerar() {
-    if ($this->isRequestFor('get', 'anos_letivos'))
-      $this->appendResponse($this->getAnosLetivos());
+    if ($this->isRequestFor('get', 'turmas'))
+      $this->appendResponse($this->getTurmas());
     else
       $this->notImplementedOperationError();
   }

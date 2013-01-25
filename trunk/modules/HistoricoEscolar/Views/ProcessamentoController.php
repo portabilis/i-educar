@@ -181,7 +181,13 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
     $this->appendOutput($resourceOptionsTable);
 
     Portabilis_View_Helper_Application::loadJQueryUiLib($this);
-    Portabilis_View_Helper_Application::loadJavascript($this, '/modules/HistoricoEscolar/Static/scripts/processamento.js');
+
+    Portabilis_View_Helper_Application::loadJavascript(
+      $this,
+      array('/modules/Portabilis/Assets/Javascripts/Utils.js',
+            '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js',
+            '/modules/HistoricoEscolar/Static/scripts/processamento.js')
+    );
   }
 
   function getSelectGradeCurso(){
