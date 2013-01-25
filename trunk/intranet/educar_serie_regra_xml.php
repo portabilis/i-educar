@@ -38,6 +38,9 @@ header('Content-type: text/xml; charset=ISO-8859-1');
 require_once 'include/clsBanco.inc.php';
 require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
 
+require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
+Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
+
 print "<?xml version=\"1.0\" encoding=\"ISO-8859-15\"?>\n<query xmlns=\"sugestoes\">\n";
 
 if (isset($_GET['ins']) && is_numeric($_GET['ins'])) {

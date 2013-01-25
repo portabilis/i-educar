@@ -25,38 +25,41 @@
 	*																		 *
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	header( 'Content-type: text/xml' );
-	
+
+	require_once '../includes/bootstrap.php';
+  require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
+  Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryForDisabledApi();
+
 	echo "<?xml version=\"1.0\" encoding=\"ISO-8859-15\"?>\n<query xmlns=\"sugestoes\">\n";
-//	echo "<item>1</item>";
-//	echo "<item>2</item>";
+
 	require_once ("include/clsBanco.inc.php");
 	require_once ("include/pmiacervo/geral.inc.php");
 	require_once( "include/Geral.inc.php" );
-	
+
 	if($_GET['ref_cod_fundo'])
 	{
-		$fundo = @$_GET['ref_cod_fundo'];	
+		$fundo = @$_GET['ref_cod_fundo'];
 	}
 	if($_GET['ref_cod_grupo'])
 	{
-		$grupo = @$_GET['ref_cod_grupo'];	
+		$grupo = @$_GET['ref_cod_grupo'];
 	}
 	if($_GET['ref_cod_serie'])
 	{
-		$serie = @$_GET['ref_cod_serie'];	
+		$serie = @$_GET['ref_cod_serie'];
 	}
-	
+
 	if($serie)
 	{
 		$Objcaixa = new clsPmiacervoCaixa();
 		$ListaCaixas = $Objcaixa->lista(null, $serie, $fundo, $grupo);
 		if($ListaCaixas)
 		{
-			foreach ($ListaCaixas as $campo) 
+			foreach ($ListaCaixas as $campo)
 			{
-				echo "<item>{$campo['cod_caixa']}</item>"; 
+				echo "<item>{$campo['cod_caixa']}</item>";
 				echo "<item>{$campo['identificacao_caixa']}</item>";
-				
+
 			}
 		}
 	}
@@ -66,22 +69,22 @@
 		$Listaserie = $Objserie->lista(null,$grupo, $fundo);
 		if($Listaserie)
 		{
-			foreach ($Listaserie as $campo) 
+			foreach ($Listaserie as $campo)
 			{
-				echo "<item>{$campo['cod_serie']}</item>"; 
+				echo "<item>{$campo['cod_serie']}</item>";
 				echo "<item>{$campo['sigla_serie']} - {$campo['nm_serie']}</item>";
 			}
-		}			
+		}
 	}
-	elseif(!isset($_GET['ref_cod_grupo']) && $fundo) 
+	elseif(!isset($_GET['ref_cod_grupo']) && $fundo)
 	{
 		$ObjGrupo = new clsPmiacervoGrupo();
-		$ListaGrupo = $ObjGrupo->lista(null, $fundo);	
+		$ListaGrupo = $ObjGrupo->lista(null, $fundo);
 		if($ListaGrupo)
 		{
-			foreach ($ListaGrupo as $campo) 
+			foreach ($ListaGrupo as $campo)
 			{
-				echo "<item>{$campo['cod_grupo']}</item>"; 
+				echo "<item>{$campo['cod_grupo']}</item>";
 				echo "<item>{$campo['sigla_grupo']} - {$campo['nm_grupo']}</item>";
 			}
 		}
