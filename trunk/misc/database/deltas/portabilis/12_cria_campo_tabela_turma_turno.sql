@@ -40,8 +40,8 @@
 
 	-- //@UNDO
 
-	ALTER TABLE pmieducar.turma DROP COLUMN turma_turno_id;
 	ALTER TABLE pmieducar.turma DROP CONSTRAINT turma_turno_id_fkey;
+	ALTER TABLE pmieducar.turma DROP COLUMN turma_turno_id;
 	DROP TABLE pmieducar.turma_turno;
 	DROP SEQUENCE pmieducar.turma_turno_id_seq;
 
