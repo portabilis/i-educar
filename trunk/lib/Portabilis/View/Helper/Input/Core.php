@@ -53,17 +53,7 @@ class Portabilis_View_Helper_Input_Core {
     $this->viewInstance  = $viewInstance;
     $this->_inputsHelper = $inputsHelper;
 
-    Portabilis_View_Helper_Application::loadJQueryLib($this->viewInstance);
-
-    $dependencies = array('/modules/Portabilis/Assets/Javascripts/Utils.js',
-                          '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-                          '/modules/Portabilis/Assets/Javascripts/Validator.js');
-
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $dependencies);
-
-    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, 'fixupFieldsWidth();');
-
-    $this->_loadCoreAssets();
+    $this->loadCoreAssets();
     $this->loadAssets();
   }
 
@@ -91,16 +81,29 @@ class Portabilis_View_Helper_Input_Core {
   }
 
 
-  protected function _loadCoreAssets() {
+  protected function loadCoreAssets() {
+    Portabilis_View_Helper_Application::loadJQueryLib($this->viewInstance);
     Portabilis_View_Helper_Application::loadJQueryUiLib($this->viewInstance);
 
-    //$dependencies = array('/modules/DynamicInput/Assets/Javascripts/DynamicInput.js');
-    //Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $dependencies);
+    $dependencies = array('/modules/Portabilis/Assets/Javascripts/Utils.js',
+                          '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
+                          '/modules/Portabilis/Assets/Javascripts/Validator.js');
+
+    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $dependencies);
+    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, 'fixupFieldsWidth();', $afterReady = true);
   }
 
 
-  // overwrite in childs when need to load assets
   protected function loadAssets() {
+    $rootPath = $_SERVER['DOCUMENT_ROOT'];
+    $style    = "/modules/DynamicInput/Assets/Stylesheets/{$this->helperName()}.css";
+    $script   = "/modules/DynamicInput/Assets/Javascripts/{$this->helperName()}.js";
+
+    if (file_exists($rootPath . $style))
+      Portabilis_View_Helper_Application::loadStylesheet($this->viewInstance, $style);
+
+    if (file_exists($rootPath . $script))
+      Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $script);
   }
 
 
