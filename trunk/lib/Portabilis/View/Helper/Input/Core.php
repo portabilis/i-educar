@@ -90,7 +90,6 @@ class Portabilis_View_Helper_Input_Core {
                           '/modules/Portabilis/Assets/Javascripts/Validator.js');
 
     Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $dependencies);
-    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, 'fixupFieldsWidth();', $afterReady = true);
   }
 
 

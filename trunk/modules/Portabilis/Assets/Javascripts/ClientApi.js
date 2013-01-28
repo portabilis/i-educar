@@ -86,6 +86,11 @@ var handleErrorOnPostResource = function(response){
   safeLog(response);
 };
 
+var handleErrorOnPutResource = function(response){
+  handleMessages([{type : 'error', msg : 'Erro ao alterar recurso, detalhes:' + response.responseText}], '');
+  safeLog(response);
+};
+
 function handleErrorOnDeleteResource(response){
   handleMessages([{type : 'error', msg : 'Erro ao remover recurso, detalhes:' + response.responseText}], '');
   safeLog(response);
@@ -101,6 +106,10 @@ var getResources = function(options, errorCallback) {
 
 var postResource = function(options, errorCallback){
   $j.ajax(options).error(errorCallback || handleErrorOnPostResource);
+};
+
+var putResource = function(options, errorCallback){
+  $j.ajax(options).error(errorCallback || handleErrorOnPutResource);
 };
 
 function deleteResource(options, errorCallback){

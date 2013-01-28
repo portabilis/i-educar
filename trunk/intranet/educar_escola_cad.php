@@ -32,7 +32,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
-require_once 'include/portabilis/educacenso.php';
+require_once 'Portabilis/View/Helper/Application.php';
 
 class clsIndexBase extends clsBase
 {
@@ -358,19 +358,23 @@ class indice extends clsCadastro
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_escola_det.php?cod_escola={$registro["cod_escola"]}" : "educar_escola_lst.php";
 		$this->nome_url_cancelar = "Cancelar";
 
-    if (isset($_GET['cod_escola']))
-    {
-      $educacensoEscola = new EducacensoEscola();
-      $this->cod_inep = $educacensoEscola->getCodInep($codIeducar = $_GET['cod_escola']);
-    }
-    else
-      $this->cod_inep = '';
-
   	return $retorno;
 	}
 
 	function Gerar()
 	{
+
+		// js
+		Portabilis_View_Helper_Application::loadJQueryLib($this);
+
+		$scripts = array(
+			'/modules/Portabilis/Assets/Javascripts/Utils.js',
+			'/modules/Portabilis/Assets/Javascripts/ClientApi.js',
+			'/modules/Cadastro/Assets/Javascripts/Escola.js'
+			);
+
+		Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+
 
 		$obj_permissoes = new clsPermissoes();
 //		echo "<pre>";print_r($_POST);die;
@@ -398,8 +402,7 @@ class indice extends clsCadastro
 		}
 		else
 		{
-
-  		$this->campoNumero( "cod_inep", "Código Inep", $this->cod_inep);
+  		$this->inputsHelper()->numeric('escola_inep_id', array('label' => 'Código inep', 'required' => false));
 
 			if( $_POST )
 			foreach( $_POST AS $campo => $val )
@@ -491,7 +494,7 @@ class indice extends clsCadastro
 						}
 						$script = "<img id='img_rede_ensino' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
 					}
-					else 
+					else
 					{
 						$script = "<img id='img_rede_ensino' style='display: none;'  src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
 					}
@@ -532,7 +535,7 @@ class indice extends clsCadastro
 						}
 						$script = "<img id='img_localizacao' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
 					}
-					else 
+					else
 					{
 						$script = "<img id='img_localizacao' style='display: none;'  src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
 					}
@@ -677,7 +680,7 @@ class indice extends clsCadastro
 							}
 							$script = "<img id='img_rede_ensino' style='display:\'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
 						}
-						else 
+						else
 						{
 							$script = "<img id='img_rede_ensino' style='display: none;'  src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
 						}
@@ -719,7 +722,7 @@ class indice extends clsCadastro
 							}
 							$script = "<img id='img_localizacao' style='display:\'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
 						}
-						else 
+						else
 						{
 							$script = "<img id='img_localizacao' style='display: none;' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
 						}
@@ -1104,7 +1107,7 @@ if(!$this->isEnderecoExterno){
 			$obj = new clsPmieducarEscola( null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, null, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados );
 			$cadastrou = $obj->cadastra();
 
-      
+
 
 			if ($cadastrou)
 			{
@@ -1167,16 +1170,16 @@ if(!$this->isEnderecoExterno){
 //		echo "<br>cep_: ".$this->cep_;die;
 		if ($this->cod_escola)
 		{
-			$obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->cod_inep, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
+			$obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
 			$editou = $obj->edita();
-      
+
 		}
 		else
 		{
-			$obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->cod_inep, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
+			$obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
 			$editou = $obj->cadastra();
 			$this->cod_escola = $editou;
-      
+
 		}
 		if( $editou )
 		{
@@ -1564,7 +1567,7 @@ if ( document.getElementById('ref_cod_instituicao') )
 
 		var xml_curso = new ajax( getCurso );
 		xml_curso.envia( "educar_curso_xml2.php?ins="+campoInstituicao );
-		
+
 		if (this.value == '')
 		{
 			$('img_rede_ensino').style.display = 'none;';
@@ -1575,7 +1578,7 @@ if ( document.getElementById('ref_cod_instituicao') )
 			$('img_rede_ensino').style.display = '';
 			$('img_localizacao').style.display = '';
 		}
-		
+
 	}
 }
 

@@ -93,6 +93,15 @@ class Portabilis_View_Helper_Inputs {
     }
   }
 
+  public function numeric($attrNames, $inputOptions = array(), $helperOptions = array()) {
+    if (! is_array($attrNames))
+      $attrNames = array($attrNames);
+
+    foreach($attrNames as $attrName) {
+      $this->input('numeric', $attrName, $inputOptions, $helperOptions);
+    }
+  }
+
 
   public function select($attrName, $inputOptions = array(), $helperOptions = array()) {
     $this->input('select', $attrName, $inputOptions, $helperOptions);

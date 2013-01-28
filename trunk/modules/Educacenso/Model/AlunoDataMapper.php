@@ -57,8 +57,8 @@ class Educacenso_Model_AlunoDataMapper extends Educacenso_Model_CodigoReferencia
     'updated_at' => 'updated_at'
   );
 
-  # o campo alunoInep não deve fazer parte da chave primaria, pois este pode ser alterado no cadastro do aluno.
-  # TODO criar migracao para remover PK de tal campo.
+  // aparentemente o campo alunoInep não deveria fazer parte da chave primaria, pois este pode
+  // ser alterado no cadastro de aluno, #TODO criar migracao para remover PK de tal campo.
   protected $_primaryKey = array(
     'aluno' #, 'alunoInep'
   );

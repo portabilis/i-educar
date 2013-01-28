@@ -55,12 +55,6 @@ class Educacenso_Model_Aluno extends Educacenso_Model_CodigoReferencia
   );
 
 
-  public function __construct($options = array())
-  {
-    parent::__construct($options);
-    unset($this->_data['id']);
-  }
-
   public function getDefaultValidatorCollection()
   {
     $validators = array(

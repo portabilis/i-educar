@@ -18,26 +18,6 @@ var onClickSelectAllEvent = false;
 var onClickActionEvent    = false;
 var onClickDeleteEvent    = false;
 
-// TODO remover funcao, quando passar a usar novo padrao campos seleção
-function fixupFieldsWidth() {
-  var maxWidth = 0;
-  var $fields = $j('#formcadastro select');
-
-  //get maxWidh
-  $j.each($fields, function(index, value) {
-    $value = $j(value);
-    if ($value.width() > maxWidth)
-      maxWidth = $value.width();
-  });
-
-  //set maxWidth
-  $j.each($fields, function(index, value) {
-    $j(value).width(maxWidth);
-  });
-};
-
-fixupFieldsWidth();
-
 //url builders
 
 var deleteResourceUrlBuilder = {

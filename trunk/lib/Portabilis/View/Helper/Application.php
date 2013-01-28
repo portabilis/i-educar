@@ -133,6 +133,7 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
 
   public static function embedJavascript($viewInstance, $script, $afterReady = false) {
     if ($afterReady) {
+      self::loadJQueryLib($viewInstance);
 
       $script = "(function($){
         $(document).ready(function(){

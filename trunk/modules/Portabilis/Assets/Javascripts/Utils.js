@@ -29,21 +29,30 @@ var formUtils = {
   }
 };
 
-function fixupFieldsWidth(){
-  var maxWidth = 0;
-  var $fields = $j('form select');
+function fixupFieldsWidth(additionalFields, force){
+  if (! $j(document).data('fixed-fields-width') || force) {
+    var maxWidth = 0;
+    var $fields = $j('form select');
 
-  //get maxWidh
-  $j.each($fields, function(index, value){
-    $value = $j(value);
-    if ($value.outerWidth() > maxWidth)
-      maxWidth = $value.outerWidth();
-  });
+    if (additionalFields)
+      $j.merge($fields, additionalFields);
 
-  //set maxWidth
-  $j.each($fields, function(index, value){
-    $j(value).width(maxWidth);
-  });
+    //get maxWidh
+    $j.each($fields, function(index, field){
+      $field = $j(field);
+      if ($field.outerWidth() > maxWidth)
+        maxWidth = $field.outerWidth();
+    });
+
+    //set maxWidth
+    $j.each($fields, function(index, field){
+      $j(field).width(maxWidth);
+    });
+
+    $j(document).data('fixed-fields-width', true);
+  }
+  else
+    safeLog('fixupFieldsWidth already called, skipping!');
 };
 
 

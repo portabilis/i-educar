@@ -141,25 +141,8 @@
 
     var $feedbackMessages = $('<div />').attr('id', 'feedback-messages').appendTo($formFilter.parent());
 
-    function fixupFieldsWidth(){
-      var maxWidth = 0;
-      var $fields = $('#formcadastro select');
-      $.merge($fields, $('#resource-options select'));
-      $.merge($fields, $('#resource-options input[type="text"]'));
-
-      //get maxWidh
-      $.each($fields, function(index, value){
-        $value = $(value);
-        if ($value.width() > maxWidth)
-          maxWidth = $value.width();
-      });
-
-      //set maxWidth
-      $.each($fields, function(index, value){
-        $(value).width(maxWidth);
-      });
-    };
-    fixupFieldsWidth();
+    var $additionalFields = $j('#resource-options select, #resource-options input[type="text"]');
+    fixupFieldsWidth($additionalFields);
 
     //url builders
     var resourceUrlBuilder = {

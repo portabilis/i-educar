@@ -273,7 +273,7 @@ class AlunoController extends ApiCoreController
   }
 
 
-  protected function createUpdateOrDestoyEducacensoAluno($alunoId) {
+  protected function createUpdateOrDestroyEducacensoAluno($alunoId) {
     $dataMapper = $this->getDataMapperFor('educacenso', 'aluno');
 
     if (empty($this->getRequest()->aluno_inep_id))
@@ -458,7 +458,7 @@ class AlunoController extends ApiCoreController
       if (is_numeric($id)) {
         $this->updateResponsavel();
         $this->createOrUpdateTransporte($id);
-        $this->createUpdateOrDestoyEducacensoAluno($id);
+        $this->createUpdateOrDestroyEducacensoAluno($id);
         $this->updateDeficiencias();
 
         $this->messenger->append('Cadastrado realizado com sucesso', 'success', false, 'error');
@@ -476,7 +476,7 @@ class AlunoController extends ApiCoreController
     if ($this->canPut() && $this->createOrUpdateAluno($id)) {
       $this->updateResponsavel();
       $this->createOrUpdateTransporte($id);
-      $this->createUpdateOrDestoyEducacensoAluno($id);
+      $this->createUpdateOrDestroyEducacensoAluno($id);
       $this->updateDeficiencias();
 
       $this->messenger->append('Cadastro alterado com sucesso', 'success', false, 'error');
@@ -534,11 +534,11 @@ class AlunoController extends ApiCoreController
     elseif ($this->isRequestFor('get', 'aluno-search'))
       $this->appendResponse($this->search());
 
-    // creates a new resource
+    // create
     elseif ($this->isRequestFor('post', 'aluno'))
       $this->appendResponse($this->post());
 
-    // updates a resource
+    // update
     elseif ($this->isRequestFor('put', 'aluno'))
       $this->appendResponse($this->put());
 
