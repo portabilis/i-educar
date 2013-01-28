@@ -34,20 +34,28 @@
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'Biblioteca/Model/TipoExemplarDataMapper.php';
-require_once 'lib/Portabilis/Object/Utils.php';
 
+/**
+ * TipoExemplarController class.
+ *
+ * @author      Lucas D'Avila <lucasdavila@portabilis.com.br>
+ * @category    i-Educar
+ * @license     @@license@@
+ * @package     Avaliacao
+ * @subpackage  Modules
+ * @since       Classe disponível desde a versão 1.1.0
+ * @version     @@package_version@@
+ */
 class TipoExemplarController extends ApiCoreController
 {
   protected $_dataMapper  = 'Biblioteca_Model_TipoExemplarDataMapper';
 
   protected function canGetTiposExemplar() {
-    return $this->validator->validatesPresenceOf($this->getRequest()->biblioteca_id, 'biblioteca_id');
+    return $this->validatesId('biblioteca');
   }
 
   protected function getTiposExemplar() {
     if ($this->canGetTiposExemplar()) {
-      $resources = array();
-
       $columns = array('cod_exemplar_tipo', 'nm_tipo');
 
       $where   = array('ref_cod_biblioteca' => $this->getRequest()->biblioteca_id,

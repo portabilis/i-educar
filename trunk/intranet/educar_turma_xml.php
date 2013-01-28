@@ -25,32 +25,21 @@
 	*	02111-1307, USA.													 *
 	*																		 *
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-  
-  $turno = '';
-  if (isset($_GET['somente_turno_alocado_professor']) && $_GET['somente_turno_alocado_professor'] == 'true' && isset($_GET['inst']) && isset($_GET['esc']))
-  {
-    require_once( "include/portabilis_utils.php" );
-    $user = new User();
-    require_once 'include/pmieducar/clsPmieducarServidorAlocacao.inc.php';
-    $aloc = new ClsPmieducarServidorAlocacao();
-    $aloc = $aloc->lista(null, $_GET['inst'], null, null, $_GET['esc'], $user->userId);
-    $turnos = array();
-    foreach ($aloc as $a)
-      $turnos[] = $a['periodo'];
-    if (count($turnos))  
-      $turno = "and turma_turno_id in (". implode(",", $turnos) . ")";
-  }
 
 	header( 'Content-type: text/xml' );
 
 	require_once( "include/clsBanco.inc.php" );
 	require_once( "include/funcoes.inc.php" );
+
+  require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
+  Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
+
 	echo "<?xml version=\"1.0\" encoding=\"ISO-8859-15\"?>\n<query xmlns=\"sugestoes\">\n";
 	if( is_numeric( $_GET["esc"] ) && is_numeric( $_GET["ser"] ) )
 	{
 		$db = new clsBanco();
 //		$db->Consulta( "SELECT cod_turma, nm_turma FROM pmieducar.turma WHERE ref_ref_cod_escola = {$_GET["esc"]} AND ref_ref_cod_serie = {$_GET["ser"]} AND ativo = 1 ORDER BY nm_turma ASC" );
-		$db->Consulta( "SELECT cod_turma, nm_turma FROM pmieducar.turma WHERE ref_ref_cod_escola = {$_GET["esc"]} AND (ref_ref_cod_serie = {$_GET["ser"]}  OR ref_ref_cod_serie_mult = {$_GET["ser"]}) AND ativo = 1 and visivel != 'f' $turno ORDER BY nm_turma ASC" );
+		$db->Consulta( "SELECT cod_turma, nm_turma FROM pmieducar.turma WHERE ref_ref_cod_escola = {$_GET["esc"]} AND (ref_ref_cod_serie = {$_GET["ser"]}  OR ref_ref_cod_serie_mult = {$_GET["ser"]}) AND ativo = 1 ORDER BY nm_turma ASC" );
 		while ( $db->ProximoRegistro() )
 		{
 			list( $cod, $nome ) = $db->Tupla();
@@ -58,7 +47,7 @@
 		}
 	}elseif (is_numeric( $_GET["ins"] ) && is_numeric( $_GET["cur"] ) ) {
 		$db = new clsBanco();
-		$db->Consulta( "SELECT cod_turma, nm_turma FROM pmieducar.turma WHERE ref_cod_instituicao = {$_GET["ins"]} AND ref_cod_curso = {$_GET["cur"]} AND ref_ref_cod_escola is null AND ref_ref_cod_serie is null AND ativo = 1 and visivel != 'f' $turno ORDER BY nm_turma ASC" );
+		$db->Consulta( "SELECT cod_turma, nm_turma FROM pmieducar.turma WHERE ref_cod_instituicao = {$_GET["ins"]} AND ref_cod_curso = {$_GET["cur"]} AND ref_ref_cod_escola is null AND ref_ref_cod_serie is null AND ativo = 1 ORDER BY nm_turma ASC" );
 		while ( $db->ProximoRegistro() )
 		{
 			list( $cod, $nome ) = $db->Tupla();
@@ -68,4 +57,3 @@
 	echo "</query>";
 
 ?>
-

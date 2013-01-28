@@ -43,14 +43,10 @@ require_once 'lib/Portabilis/View/Helper/Input/CoreSelect.php';
  */
 class Portabilis_View_Helper_DynamicInput_CoreSelect extends Portabilis_View_Helper_Input_CoreSelect {
 
-  protected function _loadCoreAssets() {
+  protected function loadCoreAssets() {
+    parent::loadCoreAssets();
+
     $dependencies = array('/modules/DynamicInput/Assets/Javascripts/DynamicInput.js');
     Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $dependencies);
   }
-
-  protected function loadAssets() {
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance,
-                                                       "/modules/DynamicInput/Assets/Javascripts/{$this->helperName()}.js");
-  }
-
 }

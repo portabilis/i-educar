@@ -34,6 +34,9 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/funcoes.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
+require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
+Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
+
 if ($_GET['cpf'] || $_GET['idpes']) {
   $xml  = '<?xml version="1.0" encoding="ISO-8859-15"?>' . PHP_EOL;
   $xml .= '<query xmlns="sugestoes">' . PHP_EOL;

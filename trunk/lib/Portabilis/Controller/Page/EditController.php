@@ -163,8 +163,7 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
 
 
   protected function loadResourceAssets($dispatcher){
-    $rootPath       = dirname(dirname(dirname(dirname(dirname(__FILE__)))));
-
+    $rootPath       = $_SERVER['DOCUMENT_ROOT'];
     $controllerName = ucwords($dispatcher->getControllerName());
     $actionName     = ucwords($dispatcher->getActionName());
 

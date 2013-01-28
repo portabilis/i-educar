@@ -29,15 +29,18 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/Mailer.php';
-require_once 'lib/Portabilis/String/Utils.php';
+require_once 'Portabilis/Mailer.php';
+require_once 'Portabilis/String/Utils.php';
+require_once 'Portabilis/Utils/User.php';
+require_once 'Portabilis/Utils/Database.php';
 
 class NotificationMailer extends Portabilis_Mailer
 {
   static function unexpectedDataBaseError($appError, $pgError, $sql) {
-    $lastError = error_get_last();
-
     if (self::canSendEmail()) {
+      $lastError = error_get_last();
+      $userId = Portabilis_Utils_User::currentUserId();
+
       $to      = self::notificationEmail();
       $subject = "[Erro inesperado bd] i-Educar - " . self::host();
       $message = "Olá!\n\n"                                                             .
@@ -46,7 +49,8 @@ class NotificationMailer extends Portabilis_Mailer
                  "  ERRO PHP: ' . {$lastError['message']}\n"                            .
                  "  ERRO POSTGRES: $pgError\n"                                          .
                  "  LINHA {$lastError['line']} em {$lastError['file']}\n"               .
-                 "  SQL: $sql"                                                          .
+                 "  SQL: {$sql}\n"                                                      .
+                 "  ID USUÁRIO {$userId}\n"                                             .
                  "\n\n-\n\n"                                                            .
                  "Você recebeu este email pois seu email foi configurado para receber " .
                  "notificações de erros.";
@@ -57,16 +61,18 @@ class NotificationMailer extends Portabilis_Mailer
   }
 
   static function unexpectedError($appError) {
-    $lastError = error_get_last();
-
     if (self::canSendEmail()) {
+      $lastError = error_get_last();
+      $user      = self::tryLoadUser();
+
       $to      = self::notificationEmail();
       $subject = "[Erro inesperado] i-Educar - " . self::host();
       $message = "Olá!\n\n"                                                             .
-                 "Ocorreu um erro inesperado, detalhes abaixo:\n\n"   .
+                 "Ocorreu um erro inesperado, detalhes abaixo:\n\n"                     .
                  "  ERRO APP: ' . $appError\n"                                          .
                  "  ERRO PHP: ' . {$lastError['message']}\n"                            .
                  "  LINHA {$lastError['line']} em {$lastError['file']}\n"               .
+                 "  USUÁRIO {$user['matricula']} email {$user['email']}\n"              .
                  "\n\n-\n\n"                                                            .
                  "Você recebeu este email pois seu email foi configurado para receber " .
                  "notificações de erros.";
@@ -93,5 +99,19 @@ class NotificationMailer extends Portabilis_Mailer
     }
 
     return $email;
+  }
+
+  protected static function tryLoadUser() {
+    try {
+
+      $sql     = 'select matricula, email from portal.funcionario WHERE ref_cod_pessoa_fj = $1 ';
+      $options = array('params' => Portabilis_Utils_User::currentUserId(), 'return_only' => 'first-row');
+      $user    = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
+
+    } catch (Exception $e) {
+      $user = array('matricula' => 'Erro ao obter', 'email' => 'Erro ao obter');
+    }
+
+    return $user;
   }
 }

@@ -58,8 +58,7 @@ class Portabilis_Controller_Page_ListController extends Core_Controller_Page_Lis
   }
 
   protected function loadResourceAssets($dispatcher){
-    $rootPath       = dirname(dirname(dirname(dirname(dirname(__FILE__)))));
-
+    $rootPath       = $_SERVER['DOCUMENT_ROOT'];
     $controllerName = ucwords($dispatcher->getControllerName());
     $actionName     = ucwords($dispatcher->getActionName());
 

@@ -5,8 +5,8 @@
     var $turmaField     = getElementFor('turma');
     var $matriculaField = getElementFor('matricula');
 
-    var handleGetMatriculas = function(resources) {
-      var selectOptions = xmlResourcesToSelectOptions(resources, 'matriculas', 'id', 'value');
+    var handleGetMatriculas = function(response) {
+      var selectOptions = jsonResourcesToSelectOptions(response['options']);
       updateSelect($matriculaField, selectOptions, "Selecione uma matricula");
     }
 
@@ -16,13 +16,17 @@
       if ($anoField.val() && $turmaField.val() && $turmaField.is(':enabled')) {
         $matriculaField.children().first().html('Aguarde carregando...');
 
-        var urlForGetMatriculas = getResourceUrlBuilder.buildUrl('portabilis_alunos_matriculados_xml.php', '', {
-                                                       ano_escolar : $anoField.attr('value'),
-                                                       turma_id    : $turmaField.attr('value') });
+        var data = {
+          ano      : $anoField.attr('value'),
+          turma_id : $turmaField.attr('value')
+        };
+
+        var urlForGetMatriculas = getResourceUrlBuilder.buildUrl('/module/DynamicInput/Matricula',
+                                                                 'matriculas', data);
 
         var options = {
-          url : urlForGetMatriculas,
-          dataType : 'xml',
+          url      : urlForGetMatriculas,
+          dataType : 'json',
           success  : handleGetMatriculas
         };
 

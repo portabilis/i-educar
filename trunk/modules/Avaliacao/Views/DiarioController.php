@@ -34,42 +34,30 @@
 
 require_once 'Portabilis/Controller/Page/ListController.php';
 require_once 'lib/Portabilis/View/Helper/Application.php';
+require_once 'Portabilis/Business/Professor.php';
 
-// incluido, pois em include/pmieducar/educar_campo_lista.php acessado tal classe
-require_once 'include/pmieducar/clsPermissoes.inc.php';
+/**
+ * DiarioController class.
+ *
+ * @author      Lucas D'Avila <lucasdavila@portabilis.com.br>
+ * @category    i-Educar
+ * @license     @@license@@
+ * @package     Avaliacao
+ * @subpackage  Modules
+ * @since       Classe disponível desde a versão 1.1.0
+ * @version     @@package_version@@
+ */
 
 class DiarioController extends Portabilis_Controller_Page_ListController
 {
-  protected $_dataMapper = 'Avaliacao_Model_NotaAlunoDataMapper';
-  protected $_titulo   = 'Lan&ccedil;amento por turma';
+  protected $_titulo     = 'Lan&ccedil;amento por turma';
   protected $_processoAp = 644;
-  protected $_formMap  = array();
-
-  // TODO migrar para novo padrão campos seleção, usando "$this->inputsHelper()->..."
-  protected function inputs() {
-    #variaveis usadas pelo modulo /intranet/include/pmieducar/educar_campo_lista.php
-    $this->verificar_campos_obrigatorios = true;
-    $this->add_onchange_events           = true;
-
-    $this->campoNumero( "ano", "Ano", date("Y"), 4, 4, true);
-    $get_escola = $escola_obrigatorio = $listar_escolas_alocacao_professor      = true;
-    $get_curso = $curso_obrigatorio = $listar_somente_cursos_funcao_professor   = true;
-    $get_escola_curso_serie = $escola_curso_serie_obrigatorio                   = true;
-    $get_turma = $turma_obrigatorio = $listar_turmas_periodo_alocacao_professor = true;
-
-    $get_componente_curricular = $listar_componentes_curriculares_professor     = true;
-
-    $get_etapa = $etapa_obrigatorio                                             = true;
-    $get_alunos_matriculados                                                    = true;
-
-    include 'include/pmieducar/educar_campo_lista.php';
-  }
-
 
   public function Gerar() {
-    $this->inputs();
+    $this->inputsHelper()->input('ano');
+    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie', 'turma', 'etapa'));
+    $this->inputsHelper()->dynamic(array('componenteCurricular', 'matricula'), array('required' => false));
 
-    // assets
     $this->loadResourceAssets($this->getDispatcher());
   }
 }

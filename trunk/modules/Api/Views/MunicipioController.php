@@ -44,7 +44,7 @@ class MunicipioController extends ApiCoreController
     return array('namespace' => 'public', 'idAttr' => 'idmun', 'selectFields' => array('sigla_uf'));
   }
 
-  // subscreve formatResourceValue para adiiconar a sigla do estado ao final do valor,
+  // subscreve formatResourceValue para adicionar a sigla do estado ao final do valor,
   // "<id_municipio> - <nome_municipio> (<sigla_uf>)", ex: "1 - Içara (SC)"
   protected function formatResourceValue($resource) {
     $siglaUf = $resource['sigla_uf'];

@@ -39,6 +39,8 @@ class AlterarEmailController extends Portabilis_Controller_Page_EditController
   protected $_titulo     = 'Alterar e-mail';
   protected $_processoAp = 0;
 
+  protected $backwardCompatibility = true;
+
   protected $_formMap    = array(
     'matricula' => array(
       'label'  => 'Matr&iacute;cula',

@@ -66,14 +66,11 @@ class Portabilis_View_Helper_DynamicInput_AnoLetivo extends Portabilis_View_Help
     $escolaId  = $this->getEscolaId($options['escolaId']);
 
     if ($escolaId && empty($resources)) {
-      $sql          = "select ano from pmieducar.escola_ano_letivo as al where ref_cod_escola = $1
-                       and ativo = 1 {$this->filtroSituacao()} order by ano desc";
+      $sql       = "select ano from pmieducar.escola_ano_letivo as al where ref_cod_escola = $1
+                    and ativo = 1 {$this->filtroSituacao()} order by ano desc";
 
-      $records = Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => $escolaId));
-      $resources = array();
-
-      foreach ($records as $record)
-        $resources[$record['ano']] = $record['ano'];
+      $resources = Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => $escolaId));
+      $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'ano', 'ano');
     }
 
     return $this->insertOption(null, "Selecione um ano letivo", $resources);

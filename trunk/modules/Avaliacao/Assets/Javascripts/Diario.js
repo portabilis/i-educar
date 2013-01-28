@@ -11,7 +11,7 @@ var RESOURCES_NAME = 'matriculas';
 var POST_LABEL   = '';
 var DELETE_LABEL = '';
 
-var SEARCH_ORIENTATION = '<strong>Obs:</strong> Caso n&atilde;o seja listado as op&ccedil;&otilde;es de filtro que voc&ecirc; esperava, solicite ao(&agrave;) secret&aacute;rio(a) da escola para verificar a aloca&ccedil;&atilde;o ou permiss&atilde;o do seu usu&aacute;rio.';
+var SEARCH_ORIENTATION = '';
 
 // funcoes usados pelo modulo Frontend/Process.js
 var onClickSelectAllEvent = false;
@@ -693,7 +693,7 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
     if ($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) {
       var $fieldNotaExame = notaExameField(matriculaId, cc.id, cc.nota_exame);
 
-      if (cc.nota_exame == '' && cc.situacao.toLowerCase() != 'em exame')
+      if (cc.nota_exame == '' && safeToLowerCase(cc.situacao) != 'em exame')
         $fieldNotaExame.children().hide();
 
       $fieldNotaExame.appendTo($targetElement);
@@ -759,17 +759,17 @@ function updateResourceRow(dataResponse) {
   colorizeSituacaoTd($situacaoField.closest('td'), dataResponse.situacao);
 
   if (! $fieldNotaExame.is(':visible') &&
-     ($fieldNotaExame.val() != '' || dataResponse.situacao.toLowerCase() == 'em exame')) {
+     ($fieldNotaExame.val() != '' || safeToLowerCase(dataResponse.situacao) == 'em exame')) {
 
     $fieldNotaExame.show();
     $fieldNotaExame.focus();
   }
-  else if($fieldNotaExame.val() == '' && dataResponse.situacao.toLowerCase() != 'em exame')
+  else if($fieldNotaExame.val() == '' && safeToLowerCase(dataResponse.situacao) != 'em exame')
     $fieldNotaExame.hide();
 }
 
 function colorizeSituacaoTd(tdElement, situacao) {
-  if (situacao.toLowerCase() == 'retido')
+  if (safeToLowerCase(situacao) == 'retido')
     $j(tdElement).addClass('error');
   else
     $j(tdElement).removeClass('error');
@@ -778,8 +778,7 @@ function colorizeSituacaoTd(tdElement, situacao) {
 function canSearch(){
 
   if ($j('#ref_cod_matricula').val() == '' &&  $j('#ref_cod_componente_curricular').val() == '') {
-    alert(safeUtf8Decode('Selecione um "componente curricular" ou uma "matrícula".\n\n' +
-          'Isto é necessário, para um rápido carregamento do diário.'));
+    alert(safeUtf8Decode('Selecione um Componente curricular e/ou uma Matrícula'));
     return false;
   }
 

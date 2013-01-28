@@ -78,8 +78,5 @@ class Portabilis_View_Helper_DynamicInput_ComponenteCurricular extends Portabili
 
     $selectOptions = $this->mergeOptions($options['options'], $defaultSelectOptions);
     call_user_func_array(array($this->viewInstance, 'campoLista'), $selectOptions);
-
-    $js = '/modules/DynamicInputs/Assets/Javascripts/DynamicComponenteCurriculares.js';
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $js);
   }
 }

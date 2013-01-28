@@ -90,8 +90,4 @@ class Portabilis_View_Helper_DynamicInput_Instituicao extends Portabilis_View_He
     else
       $this->hiddenInput($options);
   }
-
-
-  protected function loadAssets() {
-  }
 }

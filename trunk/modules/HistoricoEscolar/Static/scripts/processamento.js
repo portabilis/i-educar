@@ -43,10 +43,25 @@
     });
 
     function resetAutoCompleteNomeDisciplinaEvent($element){
+      var handleSelect = function(event, ui){
+        $j(event.target).val(ui.item.label);
+        return false;
+      };
+
+      var search = function(request, response) {
+        var searchPath = '/module/Api/ComponenteCurricular?oper=get&resource=componente_curricular-search';
+        var params     = { query : request.term };
+
+        $j.get(searchPath, params, function(dataResponse) {
+          simpleSearch.handleSearch(dataResponse, response);
+        });
+      };
+
       $element.autocomplete({
-        source: "/intranet/portabilis_auto_complete_componente_curricular_xml.php?instituicao_id=" + $('#ref_cod_instituicao').val() + "&limit=15",
-        minLength: 2,
-        autoFocus: true
+        source    : search,
+        select    : handleSelect,
+        minLength : 1,
+        autoFocus : true
       });
     }
 

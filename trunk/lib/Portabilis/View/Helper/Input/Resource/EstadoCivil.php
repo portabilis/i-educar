@@ -33,7 +33,7 @@ require_once 'lib/Portabilis/View/Helper/Input/CoreSelect.php';
 
 
 /**
- * Portabilis_View_Helper_Input_Select class.
+ * Portabilis_View_Helper_Input_Resource_EstadoCivil class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -48,14 +48,9 @@ class Portabilis_View_Helper_Input_Resource_EstadoCivil extends Portabilis_View_
     $resources = $options['resources'];
 
     if (empty($resources)) {
-      $resources = array();
-
-      $_resources = new clsEstadoCivil();
-      $_resources = $_resources->lista();
-
-      foreach ($_resources as $resource) {
-        $resources[$resource['ideciv']] = $resource['descricao'];
-      }
+      $resources = new clsEstadoCivil();
+      $resources = $resources->lista();
+      $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'ideciv', 'descricao');
     }
 
     return $this->insertOption(null, "Selecione", $resources);

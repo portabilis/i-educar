@@ -31,7 +31,6 @@ function xmlResourcesToSelectOptions(resources, parentNodeName, nodeIdAttrName, 
     var $option = $j('<option />');
     $option.attr('value', $value.attr(nodeIdAttrName));
 
-    // some xml like portabilis_alunos_matriculados_xml.php put the value in an attribute
     if (typeof nodeValueAttrName != 'undefined')
       text = safeCapitalize($value.attr(nodeValueAttrName));
     else
@@ -49,6 +48,15 @@ function jsonResourcesToSelectOptions(resources) {
   var options = [];
 
   $j.each(resources, function(id, value) {
+
+    // como arrays com chave numerica são ordenados pela chave pode-se enviar
+    // arrays como { __123 : 'value a', __111 : 'value b'} com a chave iniciando com '__'
+    // para que seja respeitado a posição dos elementos da lista e não pela chave
+    // assim o '__' do inicio do id será removido antes de usa-lo.
+
+    if (id.indexOf && id.substr && id.indexOf('__') == 0)
+      id = id.substr(2);
+
     options.push($j('<option />').attr('value', id).html(safeCapitalize(value)));
   });
 

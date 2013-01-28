@@ -107,7 +107,4 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaCliente extends Port
       }
     ");
   }
-
-  protected function loadAssets() {
-  }
 }

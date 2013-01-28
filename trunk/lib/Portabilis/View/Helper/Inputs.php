@@ -183,6 +183,10 @@ class Portabilis_View_Helper_Inputs {
     $this->resourceInput('estadoCivil', $this->mergeInputOptions($inputOptions, $helperOptions));
   }
 
+  public function turmaTurno($inputOptions = array(), $helperOptions = array()) {
+    $this->resourceInput('turmaTurno', $this->mergeInputOptions($inputOptions, $helperOptions));
+  }
+
   // protected methods
 
   protected function resourceInput($helperName, $options = array()) {

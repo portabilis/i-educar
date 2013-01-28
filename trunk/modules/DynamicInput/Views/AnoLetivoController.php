@@ -33,9 +33,6 @@
  */
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'Biblioteca/Model/TipoExemplarDataMapper.php';
-require_once 'lib/Portabilis/Object/Utils.php';
-
 
 /**
  * AnoLetivoController class.
@@ -50,15 +47,9 @@ require_once 'lib/Portabilis/Object/Utils.php';
  */
 class AnoLetivoController extends ApiCoreController
 {
-  #protected $_dataMapper  = 'Biblioteca_Model_TipoExemplarDataMapper';
-
-  protected function validatesEscolaId() {
-    return  $this->validatesPresenceOf('escola_id') &&
-            $this->validatesExistenceOf('escola', $this->getRequest()->escola_id);
-  }
 
   protected function canGetAnosLetivos() {
-    return $this->validatesEscolaId();
+    return $this->validatesId('escola');
   }
 
   protected function filtroSituacao() {
