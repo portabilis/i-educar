@@ -38,16 +38,16 @@ require_once 'Avaliacao/Service/Boletim.php';
 require_once 'App/Model/MatriculaSituacao.php';
 require_once 'RegraAvaliacao/Model/TipoPresenca.php';
 require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
+
 require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
-require_once 'include/portabilis/dal.php';
 require_once 'include/pmieducar/clsPmieducarHistoricoEscolar.inc.php';
 require_once 'include/pmieducar/clsPmieducarHistoricoDisciplinas.inc.php';
 
-// remover require, ao migrar esta classe para novo padrao
 require_once 'lib/Portabilis/String/Utils.php';
+require_once 'Portabilis/Utils/Database.php';
 
 
-// TODO migrar classe novo padrao
+// TODO migrar classe novo padrao api controller
 class ProcessamentoApiController extends Core_Controller_Page_EditController
 {
   protected $_dataMapper  = 'Avaliacao_Model_NotaComponenteDataMapper';
@@ -150,9 +150,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
   }
 
   protected function validatesValueIsInBd($fieldName, &$value, $schemaName, $tableName, $raiseExceptionOnError = true){
-
-    $sql = "select 1 from $schemaName.$tableName where $fieldName = $value";
-    $isValid = $this->db->selectField($sql) == '1';
+    $sql     = "select 1 from $schemaName.$tableName where $fieldName = $1";
+    $isValid = Portabilis_Utils_DataBase::selectField($sql, $value) == '1';
 
     if (! $isValid){
       $msg = "O valor informado {$value} para $tableName, não esta presente no banco de dados.";
@@ -163,6 +162,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
       return false;
     }
+
     return true;
   }
 
@@ -314,19 +314,19 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       $canPost = $this->validatesPresenceOfNotas(false) && $this->validatesPresenceAndValueOfFaltas(false);
 
     if($canPost){
-      $sql = "select 1 from pmieducar.matricula where cod_matricula = {$this->getRequest()->matricula_id} and ativo = 1";
+      $sql = "select 1 from pmieducar.matricula where cod_matricula = $1 and ativo = 1";
 
-      if(! $this->db->selectField($sql)){
+      if(! Portabilis_Utils_Database::selectField($sql, $this->getRequest()->matricula_id)){
         $this->appendMsg("A matricula {$this->getRequest()->matricula_id} não existe ou esta desativa", 'error');
         $canPost = false;
       }
     }
 
     if($canPost){
-      $sql = "select 1 from pmieducar.matricula_turma where ref_cod_matricula = {$this->getRequest()->matricula_id} and ativo = 1 limit 1";
+      $sql = "select 1 from pmieducar.matricula_turma where ref_cod_matricula = $1 and ativo = 1 limit 1";
 
-      if(! $this->db->selectField($sql)){
-        $this->appendMsg("A matricula {$this->getRequest()->matricula_id} não esta enturmada.", 'error');
+      if(! Portabilis_Utils_Database::selectField($sql, $this->getRequest()->matricula_id)){
+        $this->appendMsg("A matricula {$this->getRequest()->matricula_id} não está enturmada.", 'error');
         $canPost = false;
       }
     }
@@ -342,7 +342,6 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
 
   protected function deleteHistorico(){
-
     if ($this->canDeleteHistorico()){
 
       $matriculaId = $this->getRequest()->matricula_id;
@@ -351,12 +350,12 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       $ano = $dadosMatricula['ano'];
 
       if ($this->existsHistorico($alunoId, $ano, $matriculaId)){
-        $dadosHistoricoEscolar = $this->getDadosHistorico($alunoId, $ano, $matriculaId);
-        $this->deleteHistoricoDisplinas($alunoId, $dadosHistoricoEscolar['sequencial']);
+        $sequencial = $this->getSequencial($alunoId, $ano, $matriculaId);
+        $this->deleteHistoricoDisplinas($alunoId, $sequencial);
 
         $historicoEscolar =  new clsPmieducarHistoricoEscolar(
                                     $ref_cod_aluno = $alunoId,
-                                    $sequencial = $dadosHistoricoEscolar['sequencial'],
+                                    $sequencial,
                                     $ref_usuario_exc = $this->getSession()->id_pessoa,
                                     $ref_usuario_cad = null,
                                     #TODO nm_curso
@@ -396,75 +395,71 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
   protected function getdadosEscola($escolaId){
 
-    $sql = "select (select pes.nome from pmieducar.escola esc, cadastro.pessoa pes where esc.ref_cod_instituicao = {$this->getRequest()->instituicao_id} and esc.cod_escola = $escolaId and pes.idpes = esc.ref_idpes) as nome,
+    $sql = "select
 
-(SELECT COALESCE((SELECT COALESCE((SELECT municipio.nome
-        FROM public.municipio,
-             cadastro.endereco_pessoa,
-             cadastro.juridica,
-             public.bairro,
-             pmieducar.escola
-       WHERE endereco_pessoa.idbai = bairro.idbai AND
-             bairro.idmun = municipio.idmun AND
-             juridica.idpes = endereco_pessoa.idpes AND
-             juridica.idpes = escola.ref_idpes AND
-             escola.cod_escola = $escolaId),(SELECT endereco_externo.cidade FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $escolaId))),(SELECT municipio FROM pmieducar.escola_complemento where ref_cod_escola = $escolaId))) AS cidade,
+            (select pes.nome from pmieducar.escola esc, cadastro.pessoa pes
+            where esc.ref_cod_instituicao = $1 and esc.cod_escola = $2
+            and pes.idpes = esc.ref_idpes) as nome,
 
-(SELECT COALESCE((SELECT COALESCE((SELECT municipio.sigla_uf
-        FROM public.municipio,
-             cadastro.endereco_pessoa,
-             cadastro.juridica,
-             public.bairro,
-             pmieducar.escola
-       WHERE endereco_pessoa.idbai = bairro.idbai AND
-             bairro.idmun = municipio.idmun AND
-             juridica.idpes = endereco_pessoa.idpes AND
-             juridica.idpes = escola.ref_idpes AND
-             escola.cod_escola = $escolaId),(SELECT endereco_externo.sigla_uf FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $escolaId))),(select inst.ref_sigla_uf from pmieducar.instituicao inst where inst.cod_instituicao = {$this->getRequest()->instituicao_id}))) as uf";
+            (select coalesce((select coalesce((select municipio.nome from public.municipio,
+            cadastro.endereco_pessoa, cadastro.juridica, public.bairro, pmieducar.escola
+            where endereco_pessoa.idbai = bairro.idbai and bairro.idmun = municipio.idmun and
+            juridica.idpes = endereco_pessoa.idpes and juridica.idpes = escola.ref_idpes and
+            escola.cod_escola = $2),(select endereco_externo.cidade from cadastro.endereco_externo,
+            pmieducar.escola where endereco_externo.idpes = escola.ref_idpes and escola.cod_escola = $2))),
+            (select municipio from pmieducar.escola_complemento where ref_cod_escola = $2))) as cidade,
 
-    $dadosEscola = $this->db->select($sql);
+            (select coalesce((select coalesce((select municipio.sigla_uf from public.municipio,
+            cadastro.endereco_pessoa, cadastro.juridica, public.bairro, pmieducar.escola
+            where endereco_pessoa.idbai = bairro.idbai and bairro.idmun = municipio.idmun and
+            juridica.idpes = endereco_pessoa.idpes and juridica.idpes = escola.ref_idpes and
+            escola.cod_escola = $2),(select endereco_externo.sigla_uf from cadastro.endereco_externo,
+            pmieducar.escola where endereco_externo.idpes = escola.ref_idpes and escola.cod_escola = $2))),
+            (select inst.ref_sigla_uf from pmieducar.instituicao inst where inst.cod_instituicao = $1))) as uf";
 
-    return $dadosEscola[0];
+    $params = array('params' => array($this->getrequest()->instituicao_id, $escolaId), 'return_only' => 'first-line');
+    return Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
   }
 
 
   protected function getNextHistoricoSequencial($alunoId){
-
     //A consulta leva em consideração historicos inativos pois o sequencial é chave composta com ref_cod_aluno id
-    $sql = "select coalesce(max(sequencial), 0) + 1 from pmieducar.historico_escolar where ref_cod_aluno = $alunoId";
+    $sql = "select coalesce(max(sequencial), 0) + 1 from pmieducar.historico_escolar where ref_cod_aluno = $1";
 
-    return $this->db->selectField($sql);
+    return Portabilis_Utils_Database::selectField($sql, $alunoId);
   }
 
 
   protected function getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId){
+    $sql = "select coalesce(max(sequencial), 0) + 1 from pmieducar.historico_disciplinas where
+            ref_sequencial = $1 and ref_ref_cod_aluno = $2";
 
-    $sql = "select coalesce(max(sequencial), 0) + 1 from pmieducar.historico_disciplinas where ref_sequencial = $historicoSequencial and ref_ref_cod_aluno = $alunoId";
-
-    return $this->db->selectField($sql);
+    return Portabilis_Utils_Database::selectField($sql, array($historicoSequencial, $alunoId));
   }
 
 
-  protected function getSituacaoMatricula($matriculaId = null){
+  protected function getSituacaoMatricula($matriculaId = null) {
+    if (! is_null($matriculaId)) {
 
-    if (! is_null($matriculaId)){
-      if (! is_null($this->getService(false, false))){
+      if (! is_null($this->getService(false, false)))
         $situacao = $this->getService()->getOption('aprovado');
+      else {
+        $sql = "select aprovado from pmieducar.matricula where cod_matricula = $1";
+        $situacao = Portabilis_Utils_Database::selectField($sql, $matriculaId);
       }
-      else{
-        $sql = "select aprovado from pmieducar.matricula where cod_matricula = $matriculaId";
-        $situacao = $this->db->selectField($sql);
-      }
+
     }
-    else if($this->getRequest()->situacao == 'buscar-matricula'){
+
+    else if($this->getRequest()->situacao == 'buscar-matricula')
       $situacao = $this->getService()->getOption('aprovado');
-    }
-    else{
-      $situacoes = array('aprovado' => App_Model_MatriculaSituacao::APROVADO,
-                         'reprovado' => App_Model_MatriculaSituacao::REPROVADO,
-                         'em-andamento' => App_Model_MatriculaSituacao::EM_ANDAMENTO,
-                         'transferido' => App_Model_MatriculaSituacao::TRANSFERIDO
-                 );
+
+    else {
+      $situacoes = array(
+        'aprovado'     => App_Model_MatriculaSituacao::APROVADO,
+        'reprovado'    => App_Model_MatriculaSituacao::REPROVADO,
+        'em-andamento' => App_Model_MatriculaSituacao::EM_ANDAMENTO,
+        'transferido'  => App_Model_MatriculaSituacao::TRANSFERIDO
+      );
 
       $situacao = $situacoes[$this->getRequest()->situacao];
     }
@@ -543,13 +538,13 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         }
         else{
 
-          $dadosHistoricoEscolar = $this->getDadosHistorico($alunoId, $ano, $matriculaId);
+          $sequencial = $this->getSequencial($alunoId, $ano, $matriculaId);
 
           $historicoEscolar =  new clsPmieducarHistoricoEscolar(
                                   $alunoId,
-                                  $dadosHistoricoEscolar['sequencial'],
+                                  $sequencial,
                                   $this->getSession()->id_pessoa,
-                                  $dadosHistoricoEscolar['ref_usuario_cad'],
+                                  $ref_usuario_cad = null,
                                   $dadosMatricula['nome_serie'],
                                   $ano,
                                   $this->getService()->getOption('serieCargaHoraria'),
@@ -691,14 +686,14 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
 
   protected function getDadosMatricula($matriculaId){
+    $ano           = $this->getAnoMatricula($matriculaId);
+    $sql           = "select ref_ref_cod_serie as serie_id, ref_cod_curso as curso_id from pmieducar.matricula
+                      where cod_matricula = $1";
 
-    $ano = $this->getAnoMatricula($matriculaId);
+    $params        = array('params' => $matriculaId, 'return_only' => 'first-line');
+    $idsSerieCurso = Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
 
-    $sql = "select ref_ref_cod_serie as serie_id, ref_cod_curso as curso_id from pmieducar.matricula where cod_matricula = $matriculaId";
-    $idsSerieCurso = $this->db->select($sql);
-    $idsSerieCurso = $idsSerieCurso[0];
-
-    $matriculas = array();
+    $matriculas     = array();
 
     $matriculaTurma = new clsPmieducarMatriculaTurma();
     $matriculaTurma = $matriculaTurma->lista(
@@ -714,6 +709,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       $idsSerieCurso['serie_id'],
       $idsSerieCurso['curso_id']
     );
+
     $matriculaTurma = $matriculaTurma[0];
 
     $dadosMatricula = array();
@@ -731,7 +727,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       $dadosMatricula['situacao_historico'] = $this->getSituacaoHistorico($matriculaTurma['ref_cod_aluno'], $ano, $matriculaId);
       $dadosMatricula['link_to_historico'] = $this->getLinkToHistorico($matriculaTurma['ref_cod_aluno'], $ano, $matriculaId);
     }
-    else{
+    else {
       throw new Exception("Não foi possivel recuperar os dados da matricula: $matriculaId.");
     }
 
@@ -740,38 +736,42 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
 
   protected function getAlunoIdByMatriculaId($matriculaId){
-    $sql = "select ref_cod_aluno from pmieducar.matricula where cod_matricula = $matriculaId";
+    $sql = "select ref_cod_aluno from pmieducar.matricula where cod_matricula = $1";
 
-    return $this->db->selectField($sql);
+    return Portabilis_Utils_Database::selectField($sql, $matriculaId);
   }
 
 
   protected function getAnoMatricula($matriculaId){
-    $sql = "select ano from pmieducar.matricula where cod_matricula = $matriculaId";
+    $sql = "select ano from pmieducar.matricula where cod_matricula = $1";
 
-    return $this->db->selectField($sql);
+    return Portabilis_Utils_Database::selectField($sql, $matriculaId);
   }
 
 
   protected function getNomeSerie($serieId){
-    $sql = "select nm_serie from pmieducar.serie where cod_serie = $serieId";
-    $nome = $this->db->select($sql);
-    return $this->toUtf8($nome[0]['nm_serie']);
+    $sql = "select nm_serie from pmieducar.serie where cod_serie = $1";
+
+    return Portabilis_String_Utils::toLatin1(Portabilis_Utils_Database::selectField($sql, $serieId));
   }
 
 
-  protected function getDadosHistorico($alunoId, $ano, $matriculaId){
-    $sql = "select sequencial from pmieducar.historico_escolar where ref_cod_aluno = $alunoId and ano = $ano and ref_cod_instituicao = {$this->getRequest()->instituicao_id} and ref_cod_matricula = $matriculaId and ativo = 1 limit 1";
-    $record = $this->db->select($sql);
-    return $record[0];
+  protected function getSequencial($alunoId, $ano, $matriculaId){
+    $sql = "select sequencial from pmieducar.historico_escolar where ref_cod_aluno = $1 and ano = $2
+            and ref_cod_instituicao = $3 and ref_cod_matricula = $4 and ativo = 1 limit 1";
+
+    $params = array($alunoId, $ano, $this->getRequest()->instituicao_id, $matriculaId);
+    return Portabilis_Utils_Database::selectField($sql, $params);
   }
 
 
   protected function existsHistorico($alunoId, $ano, $matriculaId, $ativo = 1, $reload = false){
-
     if(! isset($this->existsHistorico) || $reload){
-      $sql = "select 1 from pmieducar.historico_escolar where ref_cod_aluno = $alunoId and ano = $ano and ref_cod_instituicao = {$this->getRequest()->instituicao_id} and ref_cod_matricula = $matriculaId and ativo = $ativo";
-      $this->existsHistorico = ($this->db->selectField($sql) == '1');
+      $sql = "select 1 from pmieducar.historico_escolar where ref_cod_aluno = $1 and ano = $2
+              and ref_cod_instituicao = $3 and ref_cod_matricula = $4 and ativo = $5";
+
+      $params = array($alunoId, $ano, $this->getRequest()->instituicao_id, $matriculaId, $ativo);
+      $this->existsHistorico = Portabilis_Utils_Database::selectField($sql, $params) == 1;
     }
 
     return $this->existsHistorico;
@@ -789,9 +789,11 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
 
   protected function getLinkToHistorico($alunoId, $ano, $matriculaId){
-    $sql = "select sequencial from pmieducar.historico_escolar where ref_cod_aluno = $alunoId and ano = $ano and ref_cod_instituicao = {$this->getRequest()->instituicao_id} and ref_cod_matricula = $matriculaId and ativo = 1";
+    $sql = "select sequencial from pmieducar.historico_escolar where ref_cod_aluno = $1 and
+            ano = $2 and ref_cod_instituicao = $3 and ref_cod_matricula = $4 and ativo = 1";
 
-    $sequencial = $this->db->selectField($sql);
+    $params     = array($alunoId, $ano, $this->getRequest()->instituicao_id, $matriculaId);
+    $sequencial = Portabilis_Utils_DataBase::selectField($sql, $params);
 
     if (is_numeric($sequencial))
         $link = "/intranet/educar_historico_escolar_det.php?ref_cod_aluno=$alunoId&sequencial=$sequencial";
@@ -880,8 +882,10 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
   protected function getObservacaoPadraoSerie(){
     if($this->validatesPresenceOfSerieId(false, false)){
-      $sql = "select coalesce(observacao_historico, '') as observacao_historico from pmieducar.serie where cod_serie = {$this->getRequest()->serie_id}";
-      $observacao = $this->db->selectField($sql);
+      $sql        = "select coalesce(observacao_historico, '') as observacao_historico from pmieducar.serie
+                     where cod_serie = $1";
+
+      $observacao = Portabilis_Utils_DataBase::selectField($sql, $this->getRequest()->serie_id);
     }
     else
       $observacao = '';
@@ -959,7 +963,6 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
   public function Gerar(){
     $this->msgs = array();
     $this->response = array();
-    $this->db = new Db();
 
     if ($this->canAcceptRequest()){
       try {

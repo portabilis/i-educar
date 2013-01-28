@@ -94,4 +94,17 @@ class Portabilis_Utils_Database {
 
     return $result;
   }
+
+  // helper para consultas que buscam apenas um campo, retornando o primeiro campo,
+  // considera o segundo argumento o array de options esperado por fetchPreparedQuery
+  // a menos que este não possua um chave params, ou não seja um array, neste caso
+  // considera o array (sem a chave params) ou o valor não array como params
+  public static function selectField($sql, $paramsOrOptions = array()) {
+
+    if (! is_array($paramsOrOptions) || ! isset($paramsOrOptions['params']))
+      $paramsOrOptions = array('params' => $paramsOrOptions);
+
+    $paramsOrOptions['return_only'] = 'first-field';
+    return self::fetchPreparedQuery($sql, $paramsOrOptions);
+  }
 }
