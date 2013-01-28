@@ -817,7 +817,6 @@ abstract class clsBancoSQL_
     $lastError = error_get_last();
 
     @session_start();
-    $_SESSION['last_error_message']     = $e->getMessage();
     $_SESSION['last_php_error_message'] = $lastError['message'];
     $_SESSION['last_php_error_line']    = $lastError['line'];
     $_SESSION['last_php_error_file']    = $lastError['file'];
