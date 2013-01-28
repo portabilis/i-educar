@@ -7,8 +7,6 @@ var submitForm = function(){
 var handleGetEscola = function(dataResponse) {
   handleMessages(dataResponse.msgs);
 
-  console.log(dataResponse);
-
   $j('#escola_inep_id').val(dataResponse.escola_inep_id);
 }
 

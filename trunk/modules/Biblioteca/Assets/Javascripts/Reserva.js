@@ -46,7 +46,6 @@ var postReserva = function ($resourceCheckbox) {
 };
 
 var handlePost = function(dataResponse){
-  console.log('#TODO handlePost');
   //try{
     var $targetElement = $j('#exemplar-'+dataResponse.id).closest('tr').first();
     handleMessages(dataResponse.msgs, $targetElement);
@@ -67,14 +66,11 @@ var onClickCancelEvent = function(event) {
     var $this = $j(this);
 
     //var $checkbox = $this.closest('tr').find("input[type='checkbox']").first();
-    //console.log($checkbox);
     deleteReserva($this);
   }
 }
 
 var deleteReserva = function($deleteLink) {
-  console.log('#TODO delete reserva');
-
   var options = {
     url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, 'reserva', {
       ref_cod_instituicao : $j('#ref_cod_instituicao').val(),

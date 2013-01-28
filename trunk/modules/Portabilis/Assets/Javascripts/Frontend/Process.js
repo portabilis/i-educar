@@ -205,8 +205,6 @@ var $resultTable = $j('#form_resultado .tablelistagem').addClass('horizontal-exp
         handleMessages(dataResponse.msgs);
         var resources = dataResponse[RESOURCES_NAME];
 
-        console.log(resources);
-
         if(processOptions.validatesResourcesAfterSearch && ! $.isArray(resources)) {
            $('<td />')
             .html('O(a)s '+ RESOURCES_NAME +' n&#227;o poderam ser recuperado(a)s, verifique as mensagens de erro ou tente <a alt="Recarregar página" href="/" style="text-decoration:underline">recarregar</a>.')

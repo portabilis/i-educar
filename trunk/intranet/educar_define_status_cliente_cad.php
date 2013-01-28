@@ -147,7 +147,6 @@ class indice extends clsCadastro
 								for ( var j = 0; j < descricao.length; j++ ) {
 									if ( descricao[j][0] == campoMotivoSuspensao ) {
 										campoDescricao.value = descricao[j][1];
-                    console.log(descricao);
 									}
 									else if ( campoMotivoSuspensao == '' )
 										campoDescricao.value = '';
