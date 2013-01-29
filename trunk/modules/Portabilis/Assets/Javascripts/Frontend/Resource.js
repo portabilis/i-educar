@@ -129,11 +129,6 @@ var resourceOptions = {
 
       postResource(options);
     }
-  },
-
-  beforeSave : function () {
-    if (typeof simpleSearch != 'undefined')
-      simpleSearch.fixupRequiredFieldsValidation();
   }
 };
 
@@ -155,9 +150,7 @@ var resourceOptions = {
 
 
     // submit button callbacks
-    var onClickSubmitEvent = function(event) {
-      resourceOptions.beforeSave();
-
+    var submitForm = function(event) {
       if (validationUtils.validatesFields()) {
         var urlBuilder;
         var additionalVars = {};
@@ -221,7 +214,7 @@ var resourceOptions = {
     resourceOptions.form.removeAttr('onsubmit');
 
     // bind events
-    $submitButton.click(onClickSubmitEvent);
+    $submitButton.click(submitForm);
     $deleteButton.click(resourceOptions.deleteResource);
 
     if (! resource.isNew())

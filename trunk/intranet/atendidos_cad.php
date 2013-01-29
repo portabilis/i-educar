@@ -274,7 +274,7 @@ class indice extends clsCadastro
 
       // pais origem
 
-      $options       = array('label' => '', 'required'   => false);
+      $options       = array('label' => '', 'required'   => true);
       $helperOptions = array('objectName'         => 'pais_origem',
                              'hiddenInputOptions' => array('options' => array('value' => $this->pais_origem_id)));
 

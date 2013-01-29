@@ -25,16 +25,13 @@
     // style fixup
     $('#pais_origem_nome').css('width', '150px');
 
-    var onClickSubmitEvent = function(event) {
-      simpleSearch.fixupRequiredFieldsValidation();
-
-      if (validationUtils.validatesFields())
-        document.formcadastro.submit();
+    var submitForm = function(event) {
+      formUtils.submit();
     };
 
     // bind events
     $j('#btn_enviar').removeAttr('onclick');
-    $j('#btn_enviar').click(onClickSubmitEvent);
+    $j('#btn_enviar').click(submitForm);
 
   }); // ready
 })(jQuery);
