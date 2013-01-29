@@ -28,10 +28,10 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/Report/ReportFactory.php';
+// requer a biblioteca XML_RPC2, ver /scripts/install_pear_packages.sh
+require_once 'XML/RPC2/Client.php';
 
-set_include_path(get_include_path() . PATH_SEPARATOR . 'include/portabilis/libs');
-require_once 'include/portabilis/libs/XML/RPC2/Client.php';
+require_once 'lib/Portabilis/Report/ReportFactory.php';
 
 /**
  * Portabilis_Report_ReportFactoryRemote class.

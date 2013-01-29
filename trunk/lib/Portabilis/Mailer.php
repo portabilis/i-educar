@@ -40,10 +40,7 @@
  * @version   @@package_version@@
  */
 
-/* requer instalação Mail, Net_SMTP:
-  $ pear install Mail
-  $ pear install Net_SMTP
-*/
+// requer bibliotecas Mail e Net_SMTP, ver /scripts/install_pear_packages.sh
 require_once 'Mail.php';
 
 class Portabilis_Mailer {

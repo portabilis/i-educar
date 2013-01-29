@@ -28,12 +28,7 @@
  * @version   $Id$
  */
 
-/* this class requires the Services_ReCaptcha lib, in ubuntu it can be installed in pear, eg:
-   $ pear install Services_ReCaptcha
-
-  for more info about recaptcha see google.com/recaptcha and pear.php.net/package/Services_ReCaptcha
-*/
-
+// requer a biblioteca Services_ReCaptcha, ver /scripts/install_pear_packages.sh
 require_once 'Services/ReCaptcha.php';
 
 /**
