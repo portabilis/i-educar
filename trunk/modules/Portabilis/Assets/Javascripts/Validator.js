@@ -33,7 +33,7 @@ function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields
   if (additionalFields)
     requiredFields = $j.merge(requiredFields, additionalFields);
 
-  if (simpleSearch && typeof(simpleSearch.fixupRequiredFieldsValidation) == 'function')
+  if (typeof(simpleSearch) != 'undefined' && typeof(simpleSearch.fixupRequiredFieldsValidation) == 'function')
     simpleSearch.fixupRequiredFieldsValidation();
 
   for (var i = 0; i < requiredFields.length; i++) {
