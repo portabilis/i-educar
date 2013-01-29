@@ -51,7 +51,9 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 {
 
   // setado qualquer dataMapper pois é obrigatório.
-  protected $_dataMapper  = 'Avaliacao_Model_NotaComponenteDataMapper';
+  protected $_dataMapper = 'Avaliacao_Model_NotaComponenteDataMapper';
+
+  # 624 código permissão página index, por padrão todos usuários tem permissão.
   protected $_processoAp = 624;
 
   protected $_titulo     = 'Relat&oacute;rio';
@@ -62,8 +64,8 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
     $this->validationErrors   = array();
 
     // clsCadastro settings
-    $this->acao_executa_submit           = false;
-    $this->acao_enviar                   = 'printReport()';
+    $this->acao_executa_submit = false;
+    $this->acao_enviar         = 'printReport()';
 
     parent::__construct();
   }
@@ -100,6 +102,8 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
   function renderForm() {
     $this->form();
     $this->nome_url_sucesso = "Exibir";
+
+    Portabilis_View_Helper_Application::embedJavascript($this, 'fixupFieldsWidth();', $afterReady = true);
   }
 
 
