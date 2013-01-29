@@ -27,67 +27,81 @@ fixupTabelaMatriculas();
 // api client
 
 var handleGetMatriculas = function(dataResponse) {
-  handleMessages(dataResponse.msgs);
+  try{
+    handleMessages(dataResponse.msgs);
 
-  var $matriculasTable      = $j('#matriculas');
-  var transferenciaEmAberto = false;
+    var $matriculasTable      = $j('#matriculas');
+    var transferenciaEmAberto = false;
 
-  $j.each(dataResponse.matriculas, function(index, matricula) {
-    var $tr = $j('<tr>');
+    $j.each(dataResponse.matriculas, function(index, matricula) {
+      var $tr = $j('<tr>');
 
-    if (matricula.user_can_access) {
-      var linkToMatricula = $j('<a>').attr('href', 'educar_matricula_det.php?cod_matricula=' + matricula.id)
-                                     .html('Visualizar')
-                                     .addClass('decorated');
+      if (matricula.user_can_access) {
+        var linkToMatricula = $j('<a>').attr('href', 'educar_matricula_det.php?cod_matricula=' + matricula.id)
+                                       .html('Visualizar')
+                                       .addClass('decorated');
 
+      }
+      else
+        var linkToMatricula = '';
+
+      $j('<td>').html(linkToMatricula).appendTo($tr).addClass('center');
+      $j('<td>').html(matricula.ano).appendTo($tr);
+      $j('<td>').html(matricula.situacao).appendTo($tr);
+      $j('<td>').html(matricula.turma_nome).appendTo($tr);
+      $j('<td>').html(matricula.serie_nome).appendTo($tr);
+      $j('<td>').html(matricula.curso_nome).appendTo($tr);
+      $j('<td>').html(matricula.escola_nome).appendTo($tr);
+      $j('<td>').html(matricula.data_entrada).appendTo($tr);
+      $j('<td>').html(matricula.data_saida).appendTo($tr);
+
+      if (matricula.transferencia_em_aberto) {
+        transferenciaEmAberto = true;
+        $tr.addClass('notice');
+      }
+
+      $tr.appendTo($matriculasTable);
+    });
+
+
+    if(dataResponse.matriculas.length < 1) {
+      var $p = $j('<p>').html(stringUtils.toUtf8('Aluno sem matrículas, ')).addClass('notice simple-block');
+
+      $j('<a>').attr('href', 'educar_matricula_cad.php?ref_cod_aluno=' + $j('#aluno_id').val())
+               .html('matricular aluno.')
+               .addClass('decorated')
+               .appendTo($p);
+
+      $p.appendTo($matriculasTable.parent());
     }
-    else
-      var linkToMatricula = '';
+    else if (transferenciaEmAberto) {
+      var $p = $j('<p>').html(stringUtils.toUtf8('* Matrícula com solicitação de transferência interna em aberto, '))
+                        .addClass('notice simple-block');
 
-    $j('<td>').html(linkToMatricula).appendTo($tr).addClass('center');
-    $j('<td>').html(matricula.ano).appendTo($tr);
-    $j('<td>').html(matricula.situacao).appendTo($tr);
-    $j('<td>').html(matricula.turma_nome).appendTo($tr);
-    $j('<td>').html(matricula.serie_nome).appendTo($tr);
-    $j('<td>').html(matricula.curso_nome).appendTo($tr);
-    $j('<td>').html(matricula.escola_nome).appendTo($tr);
-    $j('<td>').html(matricula.data_entrada).appendTo($tr);
-    $j('<td>').html(matricula.data_saida).appendTo($tr);
+      $j('<a>').attr('href', 'educar_matricula_cad.php?ref_cod_aluno=' + $j('#aluno_id').val())
+               .html('matricular aluno.')
+               .addClass('decorated')
+               .appendTo($p);
 
-    if (matricula.transferencia_em_aberto) {
-      transferenciaEmAberto = true;
-      $tr.addClass('notice');
+      $p.appendTo($matriculasTable.parent());
     }
 
-    $tr.appendTo($matriculasTable);
-  });
+    $matriculasTable.fadeIn('slow');
+    $j('body').animate({scrollTop: $j('#matriculas').offset().top }, 900);
 
-  if(dataResponse.matriculas.length < 1) {
-    var $p = $j('<p>').html(stringUtils.toUtf8('Aluno sem matrículas, ')).addClass('notice simple-block');
-
-    $j('<a>').attr('href', 'educar_matricula_cad.php?ref_cod_aluno=' + $j('#aluno_id').val())
-             .html('matricular aluno.')
-             .addClass('decorated')
-             .appendTo($p);
-
-    $p.appendTo($matriculasTable.parent());
+    $matriculasTable.find('tr:even').addClass('even');
   }
-  else if (transferenciaEmAberto) {
-    var $p = $j('<p>').html(stringUtils.toUtf8('* Matrícula com solicitação de transferência interna em aberto, '))
-                      .addClass('notice simple-block');
+  catch(error) {
+    alert('Erro ao carregar matriculas, detalhes:\n\n' + error);
 
-    $j('<a>').attr('href', 'educar_matricula_cad.php?ref_cod_aluno=' + $j('#aluno_id').val())
-             .html('matricular aluno.')
-             .addClass('decorated')
-             .appendTo($p);
+    safeLog('Error details:');
+    safeLog(error);
 
-    $p.appendTo($matriculasTable.parent());
+    safeLog('dataResponse details:');
+    safeLog(dataResponse);
+
+    throw error;
   }
-
-  $matriculasTable.fadeIn('slow');
-  $j('body').animate({scrollTop: $j('#matriculas').offset().top }, 900);
-
-  $matriculasTable.find('tr:even').addClass('even');
 }
 
 var getMatriculas = function() {
