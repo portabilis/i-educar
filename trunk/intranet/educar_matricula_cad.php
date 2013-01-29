@@ -101,11 +101,11 @@ class indice extends clsCadastro
     $obj_aluno = new clsPmieducarAluno($this->ref_cod_aluno);
 
     if (! $obj_aluno->existe()) {
-      header('Location: educar_matricula_lst.php');
+      header('Location: educar_aluno_lst.php');
       die;
     }
 
-    $url = 'educar_matricula_lst.php?ref_cod_aluno=' . $this->ref_cod_aluno;
+    $url = 'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno;
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, $url);
@@ -118,12 +118,12 @@ class indice extends clsCadastro
 
     $this->url_cancelar = $url;
     $this->nome_url_cancelar = 'Cancelar';
+
     return $retorno;
   }
 
   function Gerar()
   {
-
     // primary keys
     $this->campoOculto("cod_matricula", $this->cod_matricula);
     $this->campoOculto("ref_cod_aluno", $this->ref_cod_aluno);
@@ -171,10 +171,6 @@ class indice extends clsCadastro
       }
     }
 
-    if ($this->ref_cod_escola) {
-      $this->ref_ref_cod_escola = $this->ref_cod_escola;
-    }
-
     $this->acao_enviar = 'formUtils.submit()';
   }
 
@@ -186,13 +182,16 @@ class indice extends clsCadastro
   function Novo()
   {
 
+    $this->url_cancelar = 'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno;
+    $this->nome_url_cancelar = 'Cancelar';
+
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7,
-      'educar_matricula_lst.php?ref_cod_aluno=' . $this->ref_cod_aluno);
+      'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
 
     //novas regras matricula aluno
     $this->ano = $_POST['ano'];
@@ -222,7 +221,7 @@ class indice extends clsCadastro
 
         $curso = $this->getCurso($this->ref_cod_curso);
 
-        if ($m['ref_ref_cod_serie'] == $this->ref_ref_cod_serie) {
+        if ($m['ref_ref_cod_serie'] == $this->ref_cod_serie) {
           $this->mensagem .= "Este aluno já está matriculado nesta série e curso, não é possivel matricular um aluno mais de uma vez na mesma série.<br />";
 
           return false;
@@ -289,7 +288,7 @@ class indice extends clsCadastro
 
       $obj_reserva_vaga = new clsPmieducarReservaVaga();
       $lst_reserva_vaga = $obj_reserva_vaga->lista(NULL, $this->ref_cod_escola,
-        $this->ref_ref_cod_serie, NULL, NULL,$this->ref_cod_aluno, NULL, NULL,
+        $this->ref_cod_serie, NULL, NULL,$this->ref_cod_aluno, NULL, NULL,
         NULL, NULL, 1);
 
       // Verifica se existe reserva de vaga para o aluno
@@ -311,7 +310,7 @@ class indice extends clsCadastro
 
       if (! $this->ref_cod_reserva_vaga) {
         $obj_turmas = new clsPmieducarTurma();
-        $lst_turmas = $obj_turmas->lista(NULL, NULL, NULL, $this->ref_ref_cod_serie,
+        $lst_turmas = $obj_turmas->lista(NULL, NULL, NULL, $this->ref_cod_serie,
           $this->ref_cod_escola, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
           NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
           NULL, NULL, NULL, NULL, NULL, TRUE);
@@ -329,7 +328,7 @@ class indice extends clsCadastro
 
         $obj_matricula = new clsPmieducarMatricula();
         $lst_matricula = $obj_matricula->lista(NULL, NULL, $this->ref_cod_escola,
-          $this->ref_ref_cod_serie, NULL, NULL, NULL, 3, NULL, NULL, NULL, NULL, 1,
+          $this->ref_cod_serie, NULL, NULL, NULL, 3, NULL, NULL, NULL, NULL, 1,
           $this->ano, $this->ref_cod_curso, $this->ref_cod_instituicao, 1);
 
         if (is_array($lst_matricula)) {
@@ -338,7 +337,7 @@ class indice extends clsCadastro
 
         $obj_reserva_vaga = new clsPmieducarReservaVaga();
         $lst_reserva_vaga = $obj_reserva_vaga->lista(NULL, $this->ref_cod_escola,
-          $this->ref_ref_cod_serie, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1,
+          $this->ref_cod_serie, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1,
           $this->ref_cod_instituicao, $this->ref_cod_curso);
 
         if (is_array($lst_reserva_vaga)) {
@@ -359,7 +358,7 @@ class indice extends clsCadastro
             msg += \'Deseja mesmo assim realizar a Matrícula?\';
 
             if (! confirm(msg)) {
-              window.location = \'educar_matricula_lst.php?ref_cod_aluno=%d\';
+              window.location = \'educar_aluno_det.php?cod_aluno=%d\';
             }
           </script>',
           $matriculados, $reservados, $total_vagas, $this->ref_cod_aluno
@@ -388,7 +387,7 @@ class indice extends clsCadastro
       }
 
       $obj = new clsPmieducarMatricula(NULL, $this->ref_cod_reserva_vaga,
-        $this->ref_cod_escola, $this->ref_ref_cod_serie, NULL,
+        $this->ref_cod_escola, $this->ref_cod_serie, NULL,
         $this->pessoa_logada, $this->ref_cod_aluno, 3, NULL, NULL, 1, $this->ano,
         1, NULL, NULL, NULL, NULL, $this->ref_cod_curso,
         $this->matricula_transferencia, $this->semestre);
@@ -452,14 +451,14 @@ class indice extends clsCadastro
               $det_matricula = $obj_matricula->detalhe();
 
               // Caso a solicitação seja para uma mesma série
-              if ($det_matricula['ref_ref_cod_serie'] == $this->ref_ref_cod_serie) {
+              if ($det_matricula['ref_ref_cod_serie'] == $this->ref_cod_serie) {
                 $ref_cod_transferencia = $transferencia['cod_transferencia_solicitacao'];
                 break;
               }
               // Caso a solicitação seja para a série da sequência
               else {
                 $obj_sequencia = new clsPmieducarSequenciaSerie(
-                  $det_matricula['ref_ref_cod_serie'], $this->ref_ref_cod_serie,
+                  $det_matricula['ref_ref_cod_serie'], $this->ref_cod_serie,
                   NULL, NULL, NULL, NULL, 1
                 );
 
@@ -524,7 +523,7 @@ class indice extends clsCadastro
 
         #TODO set in $_SESSION['flash'] 'Aluno matriculado com sucesso'
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-        header('Location: educar_matricula_lst.php?ref_cod_aluno=' . $this->ref_cod_aluno);
+        header('Location: educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
         #die();
         #return true;
       }
@@ -575,7 +574,7 @@ class indice extends clsCadastro
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7,
-      'educar_matricula_lst.php?ref_cod_aluno=' . $this->ref_cod_aluno);
+      'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
 
     if (! $this->desativaEnturmacoesMatricula($this->cod_matricula))
       return false;
@@ -627,7 +626,7 @@ class indice extends clsCadastro
 
     if ($excluiu) {
       $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
-      header('Location: educar_matricula_lst.php?ref_cod_aluno=' . $this->ref_cod_aluno);
+      header('Location: educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
       die();
     }
 
