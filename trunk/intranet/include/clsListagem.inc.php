@@ -34,6 +34,8 @@ if (class_exists('clsPmiajudaPagina')) {
   require_once 'include/pmiajuda/clsPmiajudaPagina.inc.php';
 }
 
+require_once 'Portabilis/View/Helper/Application.php';
+
 define('alTopLeft', 'valign=top align=left');
 define('alTopCenter', 'valign=top align=center');
 define('alTopRight', 'valign=top align=right');
@@ -728,6 +730,8 @@ class clsListagem extends clsCampos
         </table>
       ";
     }
+
+    Portabilis_View_Helper_Application::embedJavascriptToFixupFieldsWidth($this);
 
     return $retorno;
   }

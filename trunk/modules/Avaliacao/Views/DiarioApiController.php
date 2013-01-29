@@ -569,6 +569,7 @@ class DiarioApiController extends ApiCoreController
         NULL,
         NULL
       );
+
       if (! is_array($alunos))
         $alunos = array();
 

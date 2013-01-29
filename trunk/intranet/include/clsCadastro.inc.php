@@ -34,7 +34,8 @@ if (class_exists('clsPmiajudaPagina')) {
   require_once 'include/pmiajuda/clsPmiajudaPagina.inc.php';
 }
 
-require_once "lib/Portabilis/View/Helper/Inputs.php";
+require_once 'Portabilis/View/Helper/Application.php';
+require_once 'Portabilis/View/Helper/Inputs.php';
 
 /**
  * clsCadastro class.
@@ -656,6 +657,8 @@ class clsCadastro extends clsCampos
     if ($this->executa_script) {
       $retorno .= "<script type=\"text/javascript\">{$this->executa_script}</script>";
     }
+
+    Portabilis_View_Helper_Application::embedJavascriptToFixupFieldsWidth($this);
 
     return $retorno;
   }

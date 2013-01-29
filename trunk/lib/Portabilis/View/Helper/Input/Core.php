@@ -105,63 +105,33 @@ class Portabilis_View_Helper_Input_Core {
       Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $script);
   }
 
-
-  // ieducar helpers
+  // wrappers
 
   protected function getCurrentUserId() {
-    if (! isset($this->_currentUserId))
-      $this->_currentUserId = $this->viewInstance->getSession()->id_pessoa;
-
-    return $this->_currentUserId;
+    return Portabilis_Utils_User::currentUserId();
   }
-
 
   protected function getPermissoes() {
-    if (! isset($this->_permissoes))
-      $this->_permissoes = new clsPermissoes();
-
-    return $this->_permissoes;
+    return Portabilis_Utils_User::getClsPermissoes();
   }
 
-
-  protected function getNivelAcesso() {
-    if (! isset($this->_nivelAcesso))
-      $this->_nivelAcesso = $this->getPermissoes()->nivel_acesso($this->getCurrentUserId());
-
-    return $this->_nivelAcesso;
-  }
-
-
-  # TODO verificar se é possivel usar a logica de App_Model_NivelAcesso
   protected function hasNivelAcesso($nivelAcessoType) {
-    $niveisAcesso = array('POLI_INSTITUCIONAL' => 1,
-                          'INSTITUCIONAL'      => 2,
-                          'SOMENTE_ESCOLA'     => 4,
-                          'SOMENTE_BIBLIOTECA' => 8);
-
-    if (! isset($niveisAcesso[$nivelAcessoType]))
-      throw new CoreExt_Exception("Nivel acesso '$nivelAcessoType' not defined.");
-
-    return $this->getNivelAcesso() == $niveisAcesso[$nivelAcessoType];
+    return Portabilis_Utils_User::hasNivelAcesso($nivelAcessoType);
   }
-
 
   protected function getDataMapperFor($packageName, $modelName){
     return Portabilis_DataMapper_Utils::getDataMapperFor($packageName, $modelName);
   }
 
-
-  // wrapper for Portabilis_Array_Utils::merge
   protected static function mergeOptions($options, $defaultOptions) {
     return Portabilis_Array_Utils::merge($options, $defaultOptions);
   }
 
-
-  // wrapper for Portabilis_Array_Utils::insertIn
   protected static function insertOption($key, $value, $array) {
     return Portabilis_Array_Utils::insertIn($key, $value, $array);
   }
 
+  // ieducar helpers
 
   protected function getInstituicaoId($instituicaoId = null) {
     if (! $instituicaoId && is_numeric($this->viewInstance->ref_cod_instituicao))

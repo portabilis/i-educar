@@ -97,7 +97,7 @@ class indice extends clsDetalhe
     }
 
     if (! $registro) {
-      header("Location: educar_matricula_lst.php?ref_cod_aluno=" . $registro['ref_cod_aluno']);
+      header("Location: educar_aluno_det.php?cod_aluno=" . $registro['ref_cod_aluno']);
       die();
     }
 
@@ -276,7 +276,7 @@ class indice extends clsDetalhe
         }
       }
 
-      if($registro['aprovado'] == 4 && 
+      if($registro['aprovado'] == 4 &&
          $this->canCancelTransferenciaExterna($registro['cod_matricula'], $registro['ref_cod_aluno'])) {
         $this->array_botao[]            = 'Cancelar transferência (escola externa)';
 
@@ -291,11 +291,11 @@ class indice extends clsDetalhe
       }
     }
 
-    $this->url_cancelar = 'educar_matricula_lst.php?ref_cod_aluno=' . $registro['ref_cod_aluno'];
+    $this->url_cancelar = 'educar_aluno_det.php?cod_aluno=' . $registro['ref_cod_aluno'];
     $this->largura      = '100%';
   }
 
-  
+
   function canCancelTransferenciaExterna($matriculaId, $alunoId) {
     $sql = "select 1 from pmieducar.matricula where ativo = 1 and cod_matricula > $matriculaId and ref_cod_aluno = $alunoId limit 1";
 

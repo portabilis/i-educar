@@ -34,11 +34,13 @@
 
 require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'lib/Portabilis/String/Utils.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'lib/Portabilis/Date/Utils.php';
+require_once 'App/Model/MatriculaSituacao.php';
+
+require_once 'Portabilis/Controller/ApiCoreController.php';
+require_once 'Portabilis/Array/Utils.php';
+require_once 'Portabilis/String/Utils.php';
+require_once 'Portabilis/Array/Utils.php';
+require_once 'Portabilis/Date/Utils.php';
 
 require_once 'Transporte/Model/Responsavel.php';
 
@@ -188,6 +190,10 @@ class AlunoController extends ApiCoreController
   }
 
   // validations
+
+  protected function canGetMatriculas() {
+    return $this->validatesId('aluno');
+  }
 
   protected function canChange() {
     return $this->validatesPessoaId()     &&
@@ -350,6 +356,63 @@ class AlunoController extends ApiCoreController
     return (is_null($id) ? $aluno->cadastra() : $aluno->edita());
   }
 
+  protected function loadTurmaByMatriculaId($matriculaId) {
+    $sql           = 'select ref_cod_turma as id, turma.nm_turma as nome from pmieducar.matricula_turma,
+                      pmieducar.turma where ref_cod_matricula = $1 and matricula_turma.ativo = 1 and
+                      turma.cod_turma = ref_cod_turma limit 1';
+
+    $turma         = Portabilis_Utils_Database::selectRow($sql, $matriculaId);
+    $turma['nome'] = $this->toUtf8($turma['nome'], array('transform' => true));
+
+    return $turma;
+  }
+
+  protected function loadEscolaNome($id) {
+    $escola             = new clsPmieducarEscola();
+    $escola->cod_escola = $id;
+    $escola             = $escola->detalhe();
+
+    return $this->toUtf8($escola['nome'], array('transform' => true));
+  }
+
+  protected function loadCursoNome($id) {
+    $curso            = new clsPmieducarCurso();
+    $curso->cod_curso = $id;
+    $curso            = $curso->detalhe();
+
+    return $this->toUtf8($curso['nm_curso'], array('transform' => true));
+  }
+
+  protected function loadSerieNome($id) {
+    $serie            = new clsPmieducarSerie();
+    $serie->cod_serie = $id;
+    $serie            = $serie->detalhe();
+
+    return $this->toUtf8($serie['nm_serie'], array('transform' => true));
+  }
+
+  protected function loadTransferenciaDataEntrada($matriculaId) {
+    $sql = "select to_char(data_transferencia, 'DD/MM/YYYY') from
+            pmieducar.transferencia_solicitacao where ref_cod_matricula_entrada = $1 and ativo = 1";
+
+    return Portabilis_Utils_Database::selectField($sql, $matriculaId);
+  }
+
+  protected function loadTransferenciaDataSaida($matriculaId) {
+    $sql = "select to_char(data_transferencia, 'DD/MM/YYYY') from
+            pmieducar.transferencia_solicitacao where ref_cod_matricula_saida = $1 and ativo = 1";
+
+    return Portabilis_Utils_Database::selectField($sql, $matriculaId);
+  }
+
+  protected function possuiTransferenciaEmAberto($matriculaId) {
+    $sql = "select count(cod_transferencia_solicitacao) from pmieducar.transferencia_solicitacao where
+            ativo = 1 and ref_cod_matricula_saida = $1 and ref_cod_matricula_entrada is null and
+            data_transferencia is null";
+
+    return (Portabilis_Utils_Database::selectField($sql, $matriculaId) > 0);
+  }
+
   // search options
 
   protected function searchOptions() {
@@ -379,8 +442,6 @@ class AlunoController extends ApiCoreController
             lower(to_ascii(pessoa.nome)) like lower(to_ascii($1))||'%' and matricula.aprovado in
             (1, 2, 3, 7, 8, 9) limit 15) as alunos order by name";
   }
-
-
 
   // api responders
 
@@ -448,6 +509,66 @@ class AlunoController extends ApiCoreController
       $aluno['destroyed_at'] = Portabilis_Date_Utils::pgSQLToBr($aluno['destroyed_at']);
 
       return $aluno;
+    }
+  }
+
+  protected function getMatriculas() {
+    if ($this->canGetMatriculas()) {
+      $matriculas = new clsPmieducarMatricula();
+      $matriculas->setOrderby('ano DESC, ref_ref_cod_serie DESC, cod_matricula DESC, aprovado');
+
+      $matriculas = $matriculas->lista(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        $this->getRequest()->aluno_id,
+        null,
+        null,
+        null,
+        null,
+        null,
+        1
+      );
+
+      $attrs = array(
+        'cod_matricula'       => 'id',
+        'ref_cod_instituicao' => 'instituicao_id',
+        'ref_ref_cod_escola'  => 'escola_id',
+        'ref_cod_curso'       => 'curso_id',
+        'ref_ref_cod_serie'   => 'serie_id',
+        'ref_cod_aluno'       => 'aluno_id',
+        'nome'                => 'aluno_nome',
+        'aprovado'            => 'situacao',
+        'ano'
+      );
+
+      $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
+
+      foreach ($matriculas as $index => $matricula) {
+        $turma = $this->loadTurmaByMatriculaId($matricula['id']);
+
+        $matriculas[$index]['aluno_nome']   = $this->toUtf8($matricula['aluno_nome'], array('transform' => true));
+        $matriculas[$index]['turma_id']     = $turma['id'];
+        $matriculas[$index]['turma_nome']   = $turma['nome'];
+        $matriculas[$index]['escola_nome']  = $this->loadEscolaNome($matricula['escola_id']);
+        $matriculas[$index]['curso_nome']   = $this->loadCursoNome($matricula['curso_id']);
+        $matriculas[$index]['serie_nome']   = $this->loadSerieNome($matricula['serie_id']);
+
+        $matriculas[$index]['data_entrada'] = $this->loadTransferenciaDataEntrada($matricula['id']);
+        $matriculas[$index]['data_saida']   = $this->loadTransferenciaDataSaida($matricula['id']);
+
+        $matriculas[$index]['situacao']     = App_Model_MatriculaSituacao::getInstance()->getValue(
+          $matricula['situacao']
+        );
+
+        $matriculas[$index]['user_can_access']         = Portabilis_Utils_User::canAccessEscola($matricula['escola_id']);
+        $matriculas[$index]['transferencia_em_aberto'] = $this->possuiTransferenciaEmAberto($matricula['id']);
+      }
+
+      return array('matriculas' => $matriculas);
     }
   }
 
@@ -533,6 +654,9 @@ class AlunoController extends ApiCoreController
 
     elseif ($this->isRequestFor('get', 'aluno-search'))
       $this->appendResponse($this->search());
+
+    elseif ($this->isRequestFor('get', 'matriculas'))
+      $this->appendResponse($this->getMatriculas());
 
     // create
     elseif ($this->isRequestFor('post', 'aluno'))

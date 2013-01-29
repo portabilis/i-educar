@@ -85,6 +85,9 @@ class Portabilis_Array_Utils {
 
 
   public static function filterSet($arrays, $attrs = array()){
+    if (empty($arrays))
+      return array();
+
     if (! is_array($arrays))
       $arrays = array($arrays);
 
@@ -129,15 +132,16 @@ class Portabilis_Array_Utils {
      será mantido a chave => valor do ultimo array que a contem.
   */
   public static function setAsIdValue($arrays, $keyAttr, $valueAtt) {
+    if (empty($arrays))
+      return array();
+
     if (! is_array($arrays))
       $arrays = array($arrays);
 
     $idValueArray = array();
 
-    foreach ($arrays as $array) {
+    foreach ($arrays as $array)
       $idValueArray = self::merge($idValueArray, self::asIdValue($array, $keyAttr, $valueAtt));
-//      var_dump($idValueArray);
-    }
 
     return $idValueArray;
   }

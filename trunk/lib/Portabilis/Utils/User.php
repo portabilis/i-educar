@@ -41,6 +41,8 @@
 class Portabilis_Utils_User {
 
   static $_currentUserId;
+  static $_nivelAcesso;
+  static $_permissoes;
 
   static function currentUserId() {
     if (! isset(self::$_currentUserId)) {
@@ -136,6 +138,46 @@ class Portabilis_Utils_User {
     $options = array('params' => array($userId), 'show_errors' => false);
 
     self::fetchPreparedQuery($sql, $options);
+  }
+
+
+
+  // permissões
+
+  static function getClsPermissoes() {
+    if (! isset(self::$_permissoes))
+      self::$_permissoes = new clsPermissoes();
+
+    return self::$_permissoes;
+  }
+
+
+  static function getNivelAcesso() {
+    if (! isset(self::$_nivelAcesso))
+      self::$_nivelAcesso = self::getClsPermissoes()->nivel_acesso(self::currentUserId());
+
+    return self::$_nivelAcesso;
+  }
+
+
+  # TODO verificar se é possivel usar a logica de App_Model_NivelAcesso
+  static function hasNivelAcesso($nivelAcessoType) {
+    $niveisAcesso = array('POLI_INSTITUCIONAL' => 1,
+                          'INSTITUCIONAL'      => 2,
+                          'SOMENTE_ESCOLA'     => 4,
+                          'SOMENTE_BIBLIOTECA' => 8);
+
+    if (! isset($niveisAcesso[$nivelAcessoType]))
+      throw new CoreExt_Exception("Nivel acesso '$nivelAcessoType' não definido.");
+
+    return self::getNivelAcesso() == $niveisAcesso[$nivelAcessoType];
+  }
+
+
+  static function canAccessEscola($id) {
+    return (self::hasNivelAcesso('POLI_INSTITUCIONAL') ||
+            self::hasNivelAcesso('INSTITUCIONAL')      ||
+            self::getClsPermissoes()->getEscola(self::currentUserId()) == $id);
   }
 
 

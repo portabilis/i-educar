@@ -102,8 +102,6 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
   function renderForm() {
     $this->form();
     $this->nome_url_sucesso = "Exibir";
-
-    Portabilis_View_Helper_Application::embedJavascript($this, 'fixupFieldsWidth();', $afterReady = true);
   }
 
 

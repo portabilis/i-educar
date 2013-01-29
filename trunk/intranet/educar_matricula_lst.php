@@ -249,7 +249,7 @@ class indice extends clsListagem
    			$lista_busca[] = "<a href=\"educar_matricula_det.php?cod_matricula={$registro["cod_matricula"]}\">{$registro["cod_matricula"]}</a>";
    			$lista_busca[] = "<a href=\"educar_matricula_det.php?cod_matricula={$registro["cod_matricula"]}\">$situacao</a>";
 
-				if ($nomesTurmas) {          
+				if ($nomesTurmas) {
 					$lista_busca[] = "<a href=\"educar_matricula_det.php?cod_matricula={$registro["cod_matricula"]}\">$nomesTurmas</a>";
         }
 				else
