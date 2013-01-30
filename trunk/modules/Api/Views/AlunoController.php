@@ -135,11 +135,10 @@ class AlunoController extends ApiCoreController
     return true;
   }
 
-
-  /*protected function validatesUserIsLoggedIn() {
-    #FIXME validar tokens API
-    return true;
-  }*/
+  // #FIXME implementar validacao token
+  protected function validatesUserIsLoggedIn() {
+    return true || parent::validatesUserIsLoggedIn();
+  }
 
   protected function validatesUniquenessOfAlunoInepId() {
     if ($this->getRequest()->aluno_inep_id) {
@@ -211,17 +210,19 @@ class AlunoController extends ApiCoreController
   }
 
 
+  protected function canGetOcorrenciasDisciplinares() {
+    return $this->validatesId('escola') &&
+           $this->validatesId('aluno');
+  }
+
   // load resources
 
-  /*protected function loadNomeAluno($alunoId = null) {
-    if (is_null($alunoId))
-      $alunoId = $this->getRequest()->aluno_id;
-
-    $sql = "select nome from cadastro.pessoa, pmieducar.aluno where idpes = ref_idpes and cod_aluno = $1";
+  protected function loadNomeAluno($alunoId) {
+    $sql  = "select nome from cadastro.pessoa, pmieducar.aluno where idpes = ref_idpes and cod_aluno = $1";
     $nome = $this->fetchPreparedQuery($sql, $alunoId, false, 'first-field');
 
-    return $this->safeString($nome);
-  }*/
+    return $this->toUtf8($nome, array('transform' => true));
+  }
 
 
   protected function loadTransporte($alunoId) {
@@ -413,6 +414,71 @@ class AlunoController extends ApiCoreController
     return (Portabilis_Utils_Database::selectField($sql, $matriculaId) > 0);
   }
 
+  protected function loadTipoOcorrenciaDisciplinar($id) {
+    if (! isset($this->_tiposOcorrenciasDisciplinares))
+      $this->_tiposOcorrenciasDisciplinares = array();
+
+    if (! isset($this->_tiposOcorrenciasDisciplinares[$id])) {
+      $ocorrencia                                  = new clsPmieducarTipoOcorrenciaDisciplinar;
+      $ocorrencia->cod_tipo_ocorrencia_disciplinar = $id;
+      $ocorrencia                                  = $ocorrencia->detalhe();
+
+      $this->_tiposOcorrenciasDisciplinares[$id]   = $this->toUtf8(
+        $ocorrencia['nm_tipo'],
+        array('transform' => true)
+      );
+
+    }
+
+    return $this->_tiposOcorrenciasDisciplinares[$id];
+  }
+
+
+  protected function loadOcorrenciasDisciplinares() {
+    $ocorrenciasAluno              = array();
+
+    $sql = "select cod_matricula as id from pmieducar.matricula, pmieducar.escola where
+            cod_escola = ref_ref_cod_escola and ref_cod_aluno = $1 and ref_ref_cod_escola =
+            $2 and matricula.ativo = 1 order by ano desc, id";
+
+    $params     = array($this->getRequest()->aluno_id, $this->getRequest()->escola_id);
+    $matriculas = $this->fetchPreparedQuery($sql, $params);
+
+    $_ocorrenciasMatricula  = new clsPmieducarMatriculaOcorrenciaDisciplinar();
+
+    foreach($matriculas as $matricula) {
+      $ocorrenciasMatricula = $_ocorrenciasMatricula->lista($matricula['id'],
+                                                            null,
+                                                            null,
+                                                            null,
+                                                            null,
+                                                            null,
+                                                            null,
+                                                            null,
+                                                            null,
+                                                            null,
+                                                            1,
+                                                            $visivel_pais = 1);
+
+      if (is_array($ocorrenciasMatricula)) {
+        $attrsFilter                   = array('ref_cod_tipo_ocorrencia_disciplinar' => 'tipo',
+                                               'data_cadastro'                       => 'data_hora',
+                                               'observacao'                          => 'descricao');
+
+        $ocorrenciasMatricula = Portabilis_Array_Utils::filterSet($ocorrenciasMatricula, $attrsFilter);
+
+        foreach($ocorrenciasMatricula as $ocorrenciaMatricula) {
+          $ocorrenciaMatricula['tipo']      = $this->loadTipoOcorrenciaDisciplinar($ocorrenciaMatricula['tipo']);
+          $ocorrenciaMatricula['data_hora'] = Portabilis_Date_Utils::pgSQLToBr($ocorrenciaMatricula['data_hora']);
+          $ocorrenciaMatricula['descricao'] = $this->toUtf8($ocorrenciaMatricula['descricao']);
+          $ocorrenciasAluno[]               = $ocorrenciaMatricula;
+        }
+      }
+    }
+
+    return array('ocorrencias_disciplinares' => $ocorrenciasAluno);
+  }
+
   // search options
 
   protected function searchOptions() {
@@ -443,7 +509,7 @@ class AlunoController extends ApiCoreController
             (1, 2, 3, 7, 8, 9) limit 15) as alunos order by name";
   }
 
-  // api responders
+  // api
 
   protected function tipoResponsavel($aluno) {
     $tipos = array('p' => 'pai', 'm' => 'mae', 'r' => 'outra_pessoa');
@@ -473,7 +539,6 @@ class AlunoController extends ApiCoreController
     if ($this->canGet()) {
       $id               = $this->getRequest()->id;
 
-
       $aluno            = new clsPmieducarAluno();
       $aluno->cod_aluno = $id;
       $aluno            = $aluno->detalhe();
@@ -493,6 +558,7 @@ class AlunoController extends ApiCoreController
 
       $aluno = Portabilis_Array_Utils::filter($aluno, $attrs);
 
+      $aluno['nome']             = $this->loadNomeAluno($id);
       $aluno['tipo_transporte']  = $this->loadTransporte($id);
       $aluno['tipo_responsavel'] = $this->tipoResponsavel($aluno);
       $aluno['aluno_inep_id']    = $this->loadAlunoInepId($id);
@@ -570,6 +636,11 @@ class AlunoController extends ApiCoreController
 
       return array('matriculas' => $matriculas);
     }
+  }
+
+  protected function getOcorrenciasDisciplinares() {
+    if ($this->canGetOcorrenciasDisciplinares())
+      return $this->loadOcorrenciasDisciplinares();
   }
 
   protected function post() {
@@ -657,6 +728,9 @@ class AlunoController extends ApiCoreController
 
     elseif ($this->isRequestFor('get', 'matriculas'))
       $this->appendResponse($this->getMatriculas());
+
+    elseif ($this->isRequestFor('get', 'ocorrencias_disciplinares'))
+      $this->appendResponse($this->getOcorrenciasDisciplinares());
 
     // create
     elseif ($this->isRequestFor('post', 'aluno'))
