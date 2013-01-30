@@ -135,10 +135,6 @@ class AlunoController extends ApiCoreController
     return true;
   }
 
-  // #FIXME implementar validacao token
-  protected function validatesUserIsLoggedIn() {
-    return true || parent::validatesUserIsLoggedIn();
-  }
 
   protected function validatesUniquenessOfAlunoInepId() {
     if ($this->getRequest()->aluno_inep_id) {
@@ -491,8 +487,8 @@ class AlunoController extends ApiCoreController
 
     // caso nao receba id da escola, pesquisa por codigo aluno em todas as escolas
     if (! $this->getRequest()->escola_id) {
-      $sqls[] = "select distinct aluno.cod_aluno as id, pessoa.nome as name from 
-                 pmieducar.aluno, cadastro.pessoa where pessoa.idpes = aluno.ref_idpes 
+      $sqls[] = "select distinct aluno.cod_aluno as id, pessoa.nome as name from
+                 pmieducar.aluno, cadastro.pessoa where pessoa.idpes = aluno.ref_idpes
                  and aluno.ativo = 1 and aluno.cod_aluno like $1||'%' and $2 = $2 order by cod_aluno limit 15";
     }
 
@@ -518,7 +514,7 @@ class AlunoController extends ApiCoreController
      $sqls[] = "select distinct aluno.cod_aluno as id,
                 pessoa.nome as name from pmieducar.aluno, cadastro.pessoa where
                 pessoa.idpes = aluno.ref_idpes and aluno.ativo = 1 and
-                lower(to_ascii(pessoa.nome)) like lower(to_ascii($1))||'%' and $2 = $2 
+                lower(to_ascii(pessoa.nome)) like lower(to_ascii($1))||'%' and $2 = $2
                 order by nome limit 15";
     }
 
@@ -527,7 +523,7 @@ class AlunoController extends ApiCoreController
             matricula.cod_matricula as matricula_id, pessoa.nome as name from pmieducar.matricula,
             pmieducar.aluno, cadastro.pessoa where aluno.cod_aluno = matricula.ref_cod_aluno and
             pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and
-            matricula.ativo = 1 and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 
+            matricula.ativo = 1 and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2
             else 1=1 end) and
             lower(to_ascii(pessoa.nome)) like lower(to_ascii($1))||'%' and matricula.aprovado in
             (1, 2, 3, 7, 8, 9) limit 15) as alunos order by name";

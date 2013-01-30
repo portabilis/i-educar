@@ -39,11 +39,6 @@ require_once 'lib/Portabilis/String/Utils.php';
 class MatriculaController extends ApiCoreController
 {
 
-  // #FIXME implementar validacao token
-  protected function validatesUserIsLoggedIn() {
-    return true || parent::validatesUserIsLoggedIn();
-  }
-
   protected function canGetMatriculas() {
     return $this->validatesId('escola') &&
            $this->validatesId('aluno');

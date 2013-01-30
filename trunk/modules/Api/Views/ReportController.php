@@ -38,13 +38,6 @@ require_once "Reports/Reports/BoletimReport.php";
 class ReportController extends ApiCoreController
 {
 
-  // validators
-
-  // #FIXME implementar validacao token
-  protected function validatesUserIsLoggedIn() {
-    return true || parent::validatesUserIsLoggedIn();
-  }
-
   // validations
 
   protected function canGetBoletim() {
