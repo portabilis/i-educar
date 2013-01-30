@@ -49,21 +49,26 @@ class Portabilis_View_Helper_Input_Checkbox extends Portabilis_View_Helper_Input
     $options        = $this->mergeOptions($options, $defaultOptions);
 
     $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
-    $defaultInputOptions = array('id'         => $options['objectName'] . $spacer . $attrName,
-                                 'label'      => ucwords($attrName),
-                                 'value'      => '',
-                                 'label_hint' => '',
-                                 'inline'     => false);
+
+    $defaultInputOptions = array(
+      'id'         => $options['objectName'] . $spacer . $attrName,
+      'label'      => ucwords($attrName),
+      'value'      => '',
+      'label_hint' => '',
+      'inline'     => false,
+      'script'     => 'fixupCheckboxValue(this)',
+      'disabled'   => false
+    );
 
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
-    call_user_func_array(array($this->viewInstance, 'campoCheck'), $inputOptions);
 
     // fixup para enviar um valor, junto ao param do checkbox.
-    $js = "\$j('#" . $inputOptions['id'] . "').change(function(){
-        var \$this = \$j(this);
-        \$this.val(\$this.is(':checked') ? true : '');
-    })";
+    $js = "var fixupCheckboxValue = function(input) {
+      var \$this = \$j(input);
+      \$this.val(\$this.is(':checked') ? 'on' : '');
+    }";
 
-    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
+    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = false);
+    call_user_func_array(array($this->viewInstance, 'campoCheck'), $inputOptions);
   }
 }
