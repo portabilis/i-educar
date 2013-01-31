@@ -33,6 +33,9 @@ header('Content-type: text/xml');
 require_once 'include/clsBanco.inc.php';
 require_once 'include/funcoes.inc.php';
 
+require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
+Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
+
 require_once 'App/Model/MatriculaSituacao.php';
 
 print '<?xml version="1.0" encoding="ISO-8859-1"?>' . "\n";

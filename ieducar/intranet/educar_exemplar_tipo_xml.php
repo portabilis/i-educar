@@ -28,33 +28,18 @@
 
 	require_once( "include/clsBanco.inc.php" );
 	require_once( "include/funcoes.inc.php" );
+
+  require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
+  Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
+
 	echo "<?xml version=\"1.0\" encoding=\"ISO-8859-15\"?>\n<query xmlns=\"sugestoes\">\n";
 
-	$cliente_tipo = "";
-	if( is_numeric($_GET['cod_tipo_cliente']))
-	{
-		$cliente_tipo = "AND ref_cod_cliente_tipo = '{$_GET['cod_tipo_cliente']}'";
-	}
-//			, pmieducar.cliente_tipo ct
-	
 	if( is_numeric( $_GET["bib"] ) )
 	{
 		$db = new clsBanco();
 		$db2 = new clsBanco();
-		/*$db->Consulta( "
-		SELECT
-			cod_exemplar_tipo
-			, nm_tipo
-			, dias_emprestimo
-		FROM
-			pmieducar.exemplar_tipo LEFT OUTER JOIN pmieducar.cliente_tipo_exemplar_tipo ON ( cod_exemplar_tipo = ref_cod_exemplar_tipo )
-		WHERE
-			et.ativo = 1
-			AND et.ref_cod_biblioteca = '{$_GET["bib"]}'
-		ORDER BY
-			nm_tipo ASC
-		");*/
-		$db->Consulta("SELECT 
+
+		$db->Consulta("SELECT
 							DISTINCT cod_exemplar_tipo
 						FROM
 							pmieducar.exemplar_tipo
@@ -69,8 +54,14 @@
 			while ( $db->ProximoRegistro() )
 			{
 				list($cod) = $db->Tupla();
-				$nome = $db2->CampoUnico("SELECT nm_tipo FROM pmieducar.cliente_tipo_exemplar_tipo, pmieducar.exemplar_tipo WHERE ativo = '1' AND ref_cod_biblioteca = '{$_GET['bib']}' AND cod_exemplar_tipo = '$cod'");
-				$dias_emprestimo = $db2->CampoUnico("SELECT dias_emprestimo FROM pmieducar.cliente_tipo_exemplar_tipo, pmieducar.exemplar_tipo WHERE ativo = '1' AND cod_exemplar_tipo = ref_cod_exemplar_tipo AND ref_cod_biblioteca = '{$_GET['bib']}' AND cod_exemplar_tipo = '$cod' $cliente_tipo");
+				$nome = $db2->CampoUnico("SELECT nm_tipo FROM pmieducar.exemplar_tipo WHERE ativo = '1' AND ref_cod_biblioteca = '{$_GET['bib']}' AND cod_exemplar_tipo = '$cod'");
+
+        if (is_numeric($_GET['cod_tipo_cliente'])) {
+  				$dias_emprestimo = $db2->CampoUnico("SELECT dias_emprestimo FROM pmieducar.cliente_tipo_exemplar_tipo, pmieducar.exemplar_tipo WHERE ativo = '1' AND cod_exemplar_tipo = ref_cod_exemplar_tipo AND ref_cod_biblioteca = '{$_GET['bib']}' AND cod_exemplar_tipo = '$cod' $cliente_tipo AND ref_cod_cliente_tipo = '{$_GET['cod_tipo_cliente']}'");
+        }
+        else
+          $dias_emprestimo = '';
+
 				echo "	<exemplar_tipo cod_exemplar_tipo=\"{$cod}\" dias_emprestimo=\"{$dias_emprestimo}\">{$nome}</exemplar_tipo>\n";
 			}
 		}

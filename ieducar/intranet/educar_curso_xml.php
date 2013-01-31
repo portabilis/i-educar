@@ -28,6 +28,10 @@
 
 	require_once( "include/clsBanco.inc.php" );
 	require_once( "include/funcoes.inc.php" );
+
+  require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
+  Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
+
 	echo "<?xml version=\"1.0\" encoding=\"ISO-8859-15\"?>\n<query xmlns=\"sugestoes\">\n";
 	if( is_numeric( $_GET["ins"] ) && ( $_GET["sem"] == "true" ) )
 	{
@@ -71,21 +75,21 @@
 				$sql_padrao_ano_escolar = " AND c.padrao_ano_escolar = 0";
 		}
 		$db = new clsBanco();
-		$db->Consulta( "SELECT 
+		$db->Consulta( "SELECT
 							c.cod_curso
-							, c.nm_curso 
-						FROM 
+							, c.nm_curso
+						FROM
 							pmieducar.curso c
-							, pmieducar.escola_curso ec 
-						WHERE 
-							ec.ref_cod_escola = {$_GET["esc"]} 
-							AND ec.ref_cod_curso = c.cod_curso 
-							AND ec.ativo = 1 
+							, pmieducar.escola_curso ec
+						WHERE
+							ec.ref_cod_escola = {$_GET["esc"]}
+							AND ec.ref_cod_curso = c.cod_curso
+							AND ec.ativo = 1
 							AND c.ativo = 1
 							{$sql_padrao_ano_escolar}
-						ORDER BY 
+						ORDER BY
 							c.nm_curso ASC" );
-		
+
 		while ( $db->ProximoRegistro() )
 		{
 			list( $cod, $nome) = $db->Tupla();
