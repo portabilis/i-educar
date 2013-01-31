@@ -25,11 +25,19 @@
  * @license   @@license@@
  * @package   iEd_Include
  * @since     Arquivo disponível desde a versão 1.0.0
- * @version   $Id$
+ * @version   $Id: clsBase.inc.php 773 2010-12-19 20:46:49Z eriksencosta@gmail.com $
  */
 
 // Inclui arquivo de bootstrapping
-require_once '../includes/bootstrap.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/bootstrap.php';
+
+// redireciona requisições, caso configurado
+if ($GLOBALS['coreExt']['Config']->app->routes &&
+    $GLOBALS['coreExt']['Config']->app->routes->redirect_to) {
+
+  header('HTTP/1.1 503 Service Temporarily Unavailable');
+  header("Location: {$GLOBALS['coreExt']['Config']->app->routes->redirect_to}");
+}
 
 require_once 'include/clsCronometro.inc.php';
 require_once 'clsConfigItajai.inc.php';
@@ -40,6 +48,11 @@ require_once 'include/clsLogAcesso.inc.php';
 require_once 'include/Geral.inc.php';
 require_once 'include/pmicontrolesis/geral.inc.php';
 require_once 'include/funcoes.inc.php';
+
+require_once 'lib/Portabilis/Utils/Database.php';
+require_once 'lib/Portabilis/Utils/User.php';
+
+require_once 'modules/Error/Mailers/NotificationMailer.php';
 
 /**
  * clsBase class.
@@ -199,10 +212,6 @@ class clsBase extends clsConfig
   function VerificaPermicaoNumerico($processo_ap)
   {
     if (is_numeric($processo_ap)) {
-      @session_start();
-      $id_usuario = $_SESSION['id_pessoa'];
-      session_write_close();
-
       $sempermissao = TRUE;
 
       if ($processo_ap == 0) {
@@ -210,11 +219,9 @@ class clsBase extends clsConfig
       }
 
       if ($processo_ap != 0) {
-        $db = new clsBanco();
-
-        $db->Consulta("SELECT 1 FROM menu_funcionario WHERE ref_cod_menu_submenu = 0 AND ref_ref_cod_pessoa_fj = {$id_usuario}");
-        if ($db->ProximoRegistro()) {
-          list($aui) = $db->Tupla();
+        $this->db()->Consulta("SELECT 1 FROM menu_funcionario WHERE ref_cod_menu_submenu = 0 AND ref_ref_cod_pessoa_fj = {$this->_currentUserId()}");
+        if ($this->db()->ProximoRegistro()) {
+          list($aui) = $this->db()->Tupla();
           $sempermissao = FALSE;
         }
 
@@ -222,9 +229,9 @@ class clsBase extends clsConfig
         //       permissão de acesso ao processo. Já a segunda, não existe
         //       sentido para nivel = 2 já que processoAp pode ser de níveis
         //       maiores que 2.
-        $db->Consulta("SELECT 1 FROM menu_funcionario WHERE (ref_cod_menu_submenu = {$processo_ap} AND ref_ref_cod_pessoa_fj = {$id_usuario}) OR (SELECT true FROM menu_submenu WHERE cod_menu_submenu = {$processo_ap} AND nivel = 2)");
-        if ($db->ProximoRegistro()) {
-          list($aui) = $db->Tupla();
+        $this->db()->Consulta("SELECT 1 FROM menu_funcionario WHERE (ref_cod_menu_submenu = {$processo_ap} AND ref_ref_cod_pessoa_fj = {$this->_currentUserId()}) OR (SELECT true FROM menu_submenu WHERE cod_menu_submenu = {$processo_ap} AND nivel = 2)");
+        if ($this->db()->ProximoRegistro()) {
+          list($aui) = $this->db()->Tupla();
           $sempermissao = FALSE;
         }
 
@@ -250,11 +257,11 @@ class clsBase extends clsConfig
 
           $variaveis = "POST\n{$posts}GET\n{$gets}SESSION\n{$sessions}";
 
-          if ($id_usuario) {
-            $db->Consulta("INSERT INTO intranet_segur_permissao_negada (ref_ref_cod_pessoa_fj, ip_externo, ip_interno, data_hora, pagina, variaveis) VALUES('$id_usuario', '$ip', '$ip_de_rede', NOW(), '$pagina', '$variaveis')");
+          if ($this->_currentUserId()) {
+            $this->db()->Consulta("INSERT INTO intranet_segur_permissao_negada (ref_ref_cod_pessoa_fj, ip_externo, ip_interno, data_hora, pagina, variaveis) VALUES('{$this->_currentUserId()}', '$ip', '$ip_de_rede', NOW(), '$pagina', '$variaveis')");
           }
           else {
-            $db->Consulta("INSERT INTO intranet_segur_permissao_negada (ref_ref_cod_pessoa_fj, ip_externo, ip_interno, data_hora, pagina, variaveis) VALUES(NULL, '$ip', '$ip_de_rede', NOW(), '$pagina', '$variaveis')");
+            $this->db()->Consulta("INSERT INTO intranet_segur_permissao_negada (ref_ref_cod_pessoa_fj, ip_externo, ip_interno, data_hora, pagina, variaveis) VALUES(NULL, '$ip', '$ip_de_rede', NOW(), '$pagina', '$variaveis')");
           }
 
           return FALSE;
@@ -298,35 +305,33 @@ class clsBase extends clsConfig
     $menu_tutor = '';
 
     if ($this->processoAp) {
-      $db = new clsBanco();
-      $menu_atual = $db->UnicoCampo("SELECT ref_cod_menu_menu FROM menu_submenu WHERE cod_menu_submenu = '{$this->processoAp}'");
+      $menu_atual = $this->db()->UnicoCampo("SELECT ref_cod_menu_menu FROM menu_submenu WHERE cod_menu_submenu = '{$this->processoAp}'");
 
       if ($menu_atual) {
-        $db->Consulta("SELECT cod_menu_submenu FROM menu_submenu WHERE ref_cod_menu_menu = '{$menu_atual}'");
-        while ($db->ProximoRegistro()) {
-          $tupla = $db->Tupla();
+        $this->db()->Consulta("SELECT cod_menu_submenu FROM menu_submenu WHERE ref_cod_menu_menu = '{$menu_atual}'");
+        while ($this->db()->ProximoRegistro()) {
+          $tupla = $this->db()->Tupla();
           $submenu[] = $tupla['cod_menu_submenu'];
         }
         $where = implode(" OR ref_cod_menu_submenu = ", $submenu);
         $where = "ref_cod_menu_submenu = $where";
-        $menu_tutor = $db->UnicoCampo("SELECT ref_cod_tutormenu FROM pmicontrolesis.menu WHERE $where LIMIT 1 OFFSET 0");
+        $menu_tutor = $this->db()->UnicoCampo("SELECT ref_cod_tutormenu FROM pmicontrolesis.menu WHERE $where LIMIT 1 OFFSET 0");
       }
       else {
         $this->prog_alert .= "O menu pai do processo AP {$this->processoAp} está voltando vazio (cod_menu inexistente?).<br>";
       }
     }
     elseif ($_SESSION['menu_atual']) {
-      $db = new clsBanco();
-      $db->Consulta("SELECT cod_menu_submenu FROM menu_submenu WHERE ref_cod_menu_menu = '{$_SESSION['menu_atual']}'");
+      $this->db()->Consulta("SELECT cod_menu_submenu FROM menu_submenu WHERE ref_cod_menu_menu = '{$_SESSION['menu_atual']}'");
 
-      while ($db->ProximoRegistro()) {
-        $tupla = $db->Tupla();
+      while ($this->db()->ProximoRegistro()) {
+        $tupla = $this->db()->Tupla();
         $submenu[] = $tupla['cod_menu_submenu'];
       }
 
       $where = implode(" OR ref_cod_menu_submenu = ", $submenu);
       $where = "ref_cod_menu_submenu = $where";
-      $menu_tutor = $db->UnicoCampo("SELECT ref_cod_tutormenu FROM pmicontrolesis.menu WHERE $where LIMIT 1 OFFSET 0");
+      $menu_tutor = $this->db()->UnicoCampo("SELECT ref_cod_tutormenu FROM pmicontrolesis.menu WHERE $where LIMIT 1 OFFSET 0");
     }
 
     if ($menu_tutor) {
@@ -353,15 +358,13 @@ class clsBase extends clsConfig
         $saida  = '<script type="text/javascript">';
         $saida .= 'array_menu = new Array(); array_id = new Array();';
 
-        $banco = new clsBanco();
         foreach ($lista_menu as $menu_suspenso) {
            $ico_menu = '';
 
           if (is_numeric($menu_suspenso['ref_cod_ico'])) {
-            $db = new clsBanco();
-            $db->Consulta("SELECT caminho FROM portal.imagem WHERE cod_imagem = {$menu_suspenso['ref_cod_ico']} ");
-            if ($db->ProximoRegistro()) {
-              list($ico_menu) = $db->Tupla();
+            $this->db()->Consulta("SELECT caminho FROM portal.imagem WHERE cod_imagem = {$menu_suspenso['ref_cod_ico']} ");
+            if ($this->db()->ProximoRegistro()) {
+              list($ico_menu) = $this->db()->Tupla();
               $ico_menu = "imagens/banco_imagens/$ico_menu";
             }
           }
@@ -540,61 +543,12 @@ class clsBase extends clsConfig
 
     $menu_dinamico = $this->makeBanner();
 
-    @session_start();
-    $id_usuario = $_SESSION['id_pessoa'];
-    session_write_close();
-    $db = new clsBanco();
-
-    $objPessoa = new clsPessoaFisica();
-    list($nome_user) = $objPessoa->queryRapida($id_usuario, "nome");
-
-    $ultimoAcesso = $db->UnicoCampo("SELECT data_hora FROM acesso WHERE cod_pessoa = $id_usuario ORDER BY data_hora DESC LIMIT 1,1");
-    $nome_user = ($nome_user) ? $nome_user : "<span style='color: #DD0000; '>Convidado</span>";
-
-    if($ultimoAcesso) {
-      $ultimoAcesso = date("d/m/Y H:i", strtotime(substr($ultimoAcesso,0,19)));
-    }
-
-    /***********************/
-    //Verificar se senha expira dentro de 5 dias.
-    $expirando = FALSE;
-    $mensagem_expirar = '';
-    $db = new clsBanco();
-    $db->Consulta("SELECT tempo_expira_senha, data_troca_senha FROM funcionario WHERE ref_cod_pessoa_fj = '{$id_usuario}' ");
-    if ($db->ProximoRegistro()) {
-      list($tempo_senha, $data_senha) = $db->Tupla();
-
-      if (!empty($tempo_senha) && !empty($data_senha)) {
-        if (time() - strtotime($data_senha) > ($tempo_senha-10) * 60 * 60 * 24) {
-          // senha vai expirar dentro de 10 dias
-          $expirando = TRUE;
-          $days_left = $tempo_senha - (int)((time() - strtotime( $data_senha )) / 86400);
-          $mensagem_expirar = "Sua senha expirará em $days_left dias, atualize sua senha em 'Meus dados' no menu 'Principal' !";
-          $mensagem_expirar .= "<script>showExpansivelIframe(800, 270, 'troca_senha_pop.php', 1);</script>";
-        }
-      }
-    }
-
-    // somente para programadores
-    // @todo Essa linha pode afetar o uso de usuários comuns?
-    if (($id_usuario == 49659 || $id_usuario == 2151 ||  $id_usuario == 4637 || $id_usuario == 21330|| $id_usuario == 21317|| $id_usuario == 25109|| $id_usuario == 4702)) {
-      if($expirando || $this->prog_alert) {
-        $mensagem = $expirando ? "<b style='color:red'>$mensagem_expirar</b><br />" : "";
-        $mensagem .= $this->prog_alert ? $this->prog_alert : "";
-        $saida = str_replace("<!-- #&PROG_ALERT&# -->", "<div class=\"prog_alert\" align=\"center\">$mensagem</div>", $saida);
-      }
-    }
-    elseif($expirando) {
-      $saida = str_replace("<!-- #&PROG_ALERT&# -->", "<div class=\"prog_alert\" align=\"center\" style='color: red; font-weight:bold;'>{$mensagem_expirar}</div>", $saida);
-    }
-
     $notificacao = "";
-    $db = new clsBanco();
-    $db->Consulta("SELECT cod_notificacao, titulo, conteudo, url FROM portal.notificacao WHERE ref_cod_funcionario = '{$id_usuario}' AND data_hora_ativa < NOW()");
+    $this->db()->Consulta("SELECT cod_notificacao, titulo, conteudo, url FROM portal.notificacao WHERE ref_cod_funcionario = '{$this->_currentUserId()}' AND data_hora_ativa < NOW()");
 
-    if ($db->numLinhas()) {
-      while ($db->ProximoRegistro()) {
-        list($cod_notificacao, $titulo, $conteudo, $url) = $db->Tupla();
+    if ($this->db()->numLinhas()) {
+      while ($this->db()->ProximoRegistro()) {
+        list($cod_notificacao, $titulo, $conteudo, $url) = $this->db()->Tupla();
 
         $titulo = ($url) ? "<a href=\"{$url}\">{$titulo}</a>": $titulo;
 
@@ -606,14 +560,29 @@ class clsBase extends clsConfig
         </div>";
       }
       $saida = str_replace( "<!-- #&NOTIFICACOES&# -->", $notificacao, $saida );
-      $db->Consulta("UPDATE portal.notificacao SET visualizacoes = visualizacoes + 1 WHERE ref_cod_funcionario = '{$id_usuario}' AND data_hora_ativa < NOW()");
-      $db->Consulta("DELETE FROM portal.notificacao WHERE visualizacoes > 10");
+      $this->db()->Consulta("UPDATE portal.notificacao SET visualizacoes = visualizacoes + 1 WHERE ref_cod_funcionario = '{$this->_currentUserId()}' AND data_hora_ativa < NOW()");
+      $this->db()->Consulta("DELETE FROM portal.notificacao WHERE visualizacoes > 10");
     }
 
-    $saida = str_replace("<!-- #&ULTIMOACESSO&# -->", $ultimoAcesso, $saida);
-    $saida = str_replace("<!-- #&USERLOGADO&# -->", $nome_user, $saida);
-    $saida = str_replace("<!-- #&CORPO&# -->", $corpo, $saida);
-    $saida = str_replace("<!-- #&ANUNCIO&# -->", $menu_dinamico, $saida);
+    // nome completo usuario
+    $nomePessoa       = new clsPessoaFisica();
+    list($nomePessoa) = $nomePessoa->queryRapida($this->_currentUserId(), "nome");
+    $nomePessoa       = ($nomePessoa) ? $nomePessoa : "<span style='color: #DD0000; '>Convidado</span>";
+
+
+    // data ultimo acesso
+    $ultimoAcesso     = $this->db()->UnicoCampo("SELECT data_hora FROM acesso WHERE cod_pessoa = {$this->_currentUserId()} ORDER BY data_hora DESC LIMIT 1,1");
+
+    if($ultimoAcesso)
+      $ultimoAcesso = date("d/m/Y H:i", strtotime(substr($ultimoAcesso,0,19)));
+
+    $this->checkUserExpirations();
+
+    // substitui valores no template
+    $saida = str_replace("<!-- #&ULTIMOACESSO&# -->", $ultimoAcesso,  $saida);
+    $saida = str_replace("<!-- #&USERLOGADO&# -->",   $nomePessoa,    $saida);
+    $saida = str_replace("<!-- #&CORPO&# -->",        $corpo,         $saida);
+    $saida = str_replace("<!-- #&ANUNCIO&# -->",      $menu_dinamico, $saida);
 
     // Pega o endereço IP do host, primeiro com HTTP_X_FORWARDED_FOR (para pegar o IP real
     // caso o host esteja atrás de um proxy)
@@ -626,9 +595,8 @@ class clsBase extends clsConfig
       $ip_maquina = $_SERVER['REMOTE_ADDR'];
     }
 
-    $sql = "UPDATE funcionario SET ip_logado = '$ip_maquina' , data_login = NOW() WHERE ref_cod_pessoa_fj = {$id_usuario}";
-    $db2 = new clsBanco();
-    $db2->Consulta($sql);
+    $sql = "UPDATE funcionario SET ip_logado = '$ip_maquina' , data_login = NOW() WHERE ref_cod_pessoa_fj = {$this->_currentUserId()}";
+    $this->db()->Consulta($sql);
 
     return $saida;
   }
@@ -652,11 +620,10 @@ class clsBase extends clsConfig
   {
     $retorno = '';
     $listaBanners = array();
-    $db = new clsBanco();
-    $db->Consulta("SELECT caminho, title, prioridade, link FROM portal_banner WHERE lateral=1 ORDER BY prioridade, title");
+    $this->db()->Consulta("SELECT caminho, title, prioridade, link FROM portal_banner WHERE lateral=1 ORDER BY prioridade, title");
 
-    while ($db->ProximoRegistro()) {
-      list($caminho, $title, $prioridade, $link) = $db->Tupla();
+    while ($this->db()->ProximoRegistro()) {
+      list($caminho, $title, $prioridade, $link) = $this->db()->Tupla();
       $listaBanners[] = array("titulo"=>$title, "caminho"=>$caminho, "prioridade"=>$prioridade, "link"=>$link, "controle_inicio"=>0, "controle_fim"=>0);
     }
 
@@ -727,111 +694,128 @@ class clsBase extends clsConfig
 
   function MakeAll ()
   {
-    $cronometro = new clsCronometro();
-    $cronometro->marca('inicio');
-    $liberado = TRUE;
+    try {
+      $cronometro = new clsCronometro();
+      $cronometro->marca('inicio');
+      $liberado = TRUE;
 
-    $saida_geral = '';
+      $saida_geral = '';
 
-    if ($this->convidado) {
-      @session_start();
-      $_SESSION['convidado'] = TRUE;
-      $_SESSION['id_pessoa'] = '0';
-      session_write_close();
-    }
-
-    $controlador = new clsControlador();
-    if ($controlador->Logado() && $liberado || $this->convidado) {
-      $this->Formular();
-      $this->VerificaPermicao();
-      $this->CadastraAcesso();
-      $saida_geral = $this->MakeHeadHtml();
-
-      // @todo else ruim, colocar abre e fecha colchetes ao redor de foreach.
-      if ($this->renderMenu) {
-        $saida_geral .= $this->MakeBody();
-      }
-      else {
-        foreach ($this->clsForm as $form) {
-          $saida_geral .= $form->RenderHTML();
-        }
+      if ($this->convidado) {
+        @session_start();
+        $_SESSION['convidado'] = TRUE;
+        $_SESSION['id_pessoa'] = '0';
+        session_write_close();
       }
 
-      $saida_geral .= $this->MakeFootHtml();
-
-      if ($_GET['suspenso'] == 1 || $_SESSION['suspenso'] == 1 || $_SESSION["tipo_menu"] == 1) {
-        if ($this->renderMenuSuspenso) {
-          $saida_geral = str_replace("<!-- #&MENUSUSPENSO&# -->", $this->makeMenuSuspenso(), $saida_geral);
-        }
-
-        if ($_GET['suspenso'] == 1) {
-          @session_start();
-          $_SESSION['suspenso'] = 1;
-          @session_write_close();
-        }
-      }
-    }
-    elseif ((empty($_POST['login'])) || (empty($_POST['senha'])) && $liberado) {
-      $saida_geral .= $this->MakeHeadHtml();
-      $controlador->Logar(FALSE);
-      $saida_geral .= $this->MakeFootHtml();
-    }
-    else {
-      $controlador->Logar(TRUE);
-      if ($controlador->Logado() && $liberado) {
+      $controlador = new clsControlador();
+      if ($controlador->Logado() && $liberado || $this->convidado) {
         $this->Formular();
         $this->VerificaPermicao();
         $this->CadastraAcesso();
         $saida_geral = $this->MakeHeadHtml();
-        $saida_geral .= $this->MakeBody();
+
+        // @todo else ruim, colocar abre e fecha colchetes ao redor de foreach.
+        if ($this->renderMenu) {
+          $saida_geral .= $this->MakeBody();
+        }
+        else {
+          foreach ($this->clsForm as $form) {
+            $saida_geral .= $form->RenderHTML();
+          }
+        }
+
+        $saida_geral .= $this->MakeFootHtml();
+
+        if ($_GET['suspenso'] == 1 || $_SESSION['suspenso'] == 1 || $_SESSION["tipo_menu"] == 1) {
+          if ($this->renderMenuSuspenso) {
+            $saida_geral = str_replace("<!-- #&MENUSUSPENSO&# -->", $this->makeMenuSuspenso(), $saida_geral);
+          }
+
+          if ($_GET['suspenso'] == 1) {
+            @session_start();
+            $_SESSION['suspenso'] = 1;
+            @session_write_close();
+          }
+        }
+      }
+      elseif ((empty($_POST['login'])) || (empty($_POST['senha'])) && $liberado) {
+        $saida_geral .= $this->MakeHeadHtml();
+        $controlador->Logar(FALSE);
         $saida_geral .= $this->MakeFootHtml();
       }
       else {
-        $saida_geral = $this->MakeHeadHtml();
-        $controlador->Logar  (false);
-        $saida_geral .= $this->MakeFootHtml();
+        $controlador->Logar(TRUE);
+        if ($controlador->Logado() && $liberado) {
+          $this->Formular();
+          $this->VerificaPermicao();
+          $this->CadastraAcesso();
+          $saida_geral = $this->MakeHeadHtml();
+          $saida_geral .= $this->MakeBody();
+          $saida_geral .= $this->MakeFootHtml();
+        }
+        else {
+          $saida_geral = $this->MakeHeadHtml();
+          $controlador->Logar  (false);
+          $saida_geral .= $this->MakeFootHtml();
+        }
+      }
+
+      echo $saida_geral;
+
+      $cronometro->marca('fim');
+      $tempoTotal = $cronometro->getTempoTotal();
+      $tempoTotal += 0;
+      $objConfig  = new clsConfig();
+
+      if ($tempoTotal > $objConfig->arrayConfig["intSegundosProcessaPagina"]) {
+        $conteudo = "<table border=\"1\" width=\"100%\">";
+        $conteudo .= "<tr><td><b>Data</b>:</td><td>" . date( "d/m/Y H:i:s", time() ) . "</td></tr>";
+        $conteudo .= "<tr><td><b>Script</b>:</td><td>{$_SERVER["PHP_SELF"]}</td></tr>";
+        $conteudo .= "<tr><td><b>Tempo de processamento</b>:</td><td>{$tempoTotal} segundos</td></tr>";
+        $conteudo .= "<tr><td><b>Tempo max permitido</b>:</td><td>{$objConfig->arrayConfig["intSegundosProcessaPagina"]} segundos</td></tr>";
+        $conteudo .= "<tr><td><b>URL get</b>:</td><td>{$_SERVER['QUERY_STRING']}</td></tr>";
+        $conteudo .= "<tr><td><b>Metodo</b>:</td><td>{$_SERVER["REQUEST_METHOD"]}</td></tr>";
+
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+          $conteudo .= "<tr><td><b>POST vars</b>:</td><td>";
+          foreach ($_POST as $var => $val) {
+            $conteudo .= "{$var} => {$val}<br>";
+          }
+          $conteudo .= "</td></tr>";
+        }
+        elseif ($_SERVER["REQUEST_METHOD"] == "GET") {
+          $conteudo .= "<tr><td><b>GET vars</b>:</td><td>";
+          foreach ($_GET as $var => $val) {
+            $conteudo .= "{$var} => {$val}<br>";
+          }
+          $conteudo .= "</td></tr>";
+        }
+
+        if ($_SERVER['HTTP_REFERER']) {
+          $conteudo .= "<tr><td><b>Referrer</b>:</td><td>{$_SERVER["HTTP_REFERER"]}</td></tr>";
+        }
+
+        $conteudo .= "</table>";
+
+        $objMail = new clsEmail($objConfig->arrayConfig['ArrStrEmailsAdministradores'], "[INTRANET - PMI] Desempenho de pagina", $conteudo);
+        $objMail->envia();
       }
     }
+    catch (Exception $e) {
+      $lastError = error_get_last();
 
-    echo $saida_geral;
+      @session_start();
+      $_SESSION['last_error_message']     = $e->getMessage();
+      $_SESSION['last_php_error_message'] = $lastError['message'];
+      $_SESSION['last_php_error_line']    = $lastError['line'];
+      $_SESSION['last_php_error_file']    = $lastError['file'];
+      @session_write_close();
 
-    $cronometro->marca('fim');
-    $tempoTotal = $cronometro->getTempoTotal();
-    $tempoTotal += 0;
-    $objConfig  = new clsConfig();
+      error_log("Erro inesperado (pego em clsBase): " . $e->getMessage());
+      NotificationMailer::unexpectedError($e->getMessage());
 
-    if ($tempoTotal > $objConfig->arrayConfig["intSegundosProcessaPagina"]) {
-      $conteudo = "<table border=\"1\" width=\"100%\">";
-      $conteudo .= "<tr><td><b>Data</b>:</td><td>" . date( "d/m/Y H:i:s", time() ) . "</td></tr>";
-      $conteudo .= "<tr><td><b>Script</b>:</td><td>{$_SERVER["PHP_SELF"]}</td></tr>";
-      $conteudo .= "<tr><td><b>Tempo de processamento</b>:</td><td>{$tempoTotal} segundos</td></tr>";
-      $conteudo .= "<tr><td><b>Tempo max permitido</b>:</td><td>{$objConfig->arrayConfig["intSegundosProcessaPagina"]} segundos</td></tr>";
-      $conteudo .= "<tr><td><b>URL get</b>:</td><td>{$_SERVER['QUERY_STRING']}</td></tr>";
-      $conteudo .= "<tr><td><b>Metodo</b>:</td><td>{$_SERVER["REQUEST_METHOD"]}</td></tr>";
-
-      if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $conteudo .= "<tr><td><b>POST vars</b>:</td><td>";
-        foreach ($_POST as $var => $val) {
-          $conteudo .= "{$var} => {$val}<br>";
-        }
-        $conteudo .= "</td></tr>";
-      }
-      elseif ($_SERVER["REQUEST_METHOD"] == "GET") {
-        $conteudo .= "<tr><td><b>GET vars</b>:</td><td>";
-        foreach ($_GET as $var => $val) {
-          $conteudo .= "{$var} => {$val}<br>";
-        }
-        $conteudo .= "</td></tr>";
-      }
-
-      if ($_SERVER['HTTP_REFERER']) {
-        $conteudo .= "<tr><td><b>Referrer</b>:</td><td>{$_SERVER["HTTP_REFERER"]}</td></tr>";
-      }
-
-      $conteudo .= "</table>";
-
-      $objMail = new clsEmail($objConfig->arrayConfig['ArrStrEmailsAdministradores'], "[INTRANET - PMI] Desempenho de pagina", $conteudo);
-      $objMail->envia();
+      die("<script>document.location.href = '/module/Error/unexpected';</script>");
     }
   }
 
@@ -840,5 +824,27 @@ class clsBase extends clsConfig
     if (is_string($string) && $string) {
       $this->prog_alert = $string;
     }
+  }
+
+  protected function checkUserExpirations() {
+    $user                = Portabilis_Utils_User::load('current_user');
+    $uri                 = $_SERVER['REQUEST_URI'];
+    $forcePasswordUpdate = $GLOBALS['coreExt']['Config']->app->user_accounts->force_password_update == true;
+
+    if($user['expired_account'] || $user['proibido'] != '0' || $user['ativo'] != '1')
+      header("Location: /intranet/logof.php");
+
+    elseif($user['expired_password'] && $forcePasswordUpdate && $uri != '/module/Usuario/AlterarSenha')
+      header("Location: /module/Usuario/AlterarSenha");
+  }
+
+  // wrappers for Portabilis_*Utils*
+
+  protected function db() {
+    return Portabilis_Utils_Database::db();
+  }
+
+  function _currentUserId() {
+    return Portabilis_Utils_User::currentUserId();
   }
 }
