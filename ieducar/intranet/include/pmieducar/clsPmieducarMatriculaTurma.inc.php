@@ -1053,7 +1053,11 @@ class clsPmieducarMatriculaTurma
   {
     if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_turma)) {
       $db = new clsBanco();
-      $max = $db->CampoUnico("SELECT COALESCE(MAX(sequencial),0) + 1 AS MAX FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_turma = '{$this->ref_cod_turma}'");
+      $max = $db->CampoUnico("SELECT COALESCE(MAX(sequencial),0) + 1 AS MAX FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}'"); 
+
+      //removido filtro pois tornou-se possivel enturmar uma matricula em mais de uma turma       
+      //AND ref_cod_turma = '{$this->ref_cod_turma}'");
+
       return $max;
     }
 

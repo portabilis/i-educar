@@ -121,13 +121,14 @@ class clsPmieducarSerie
     $ref_usuario_cad = NULL, $ref_cod_curso = NULL, $nm_serie = NULL,
     $etapa_curso = NULL, $concluinte = NULL, $carga_horaria = NULL,
     $data_cadastro = NULL, $data_exclusao = NULL, $ativo = NULL, $intervalo = NULL,
-    $idade_inicial = NULL, $idade_final = NULL, $regra_avaliacao_id = NULL)
+    $idade_inicial = NULL, $idade_final = NULL, $regra_avaliacao_id = NULL, $observacao_historico = null,
+    $dias_letivos = null)
   {
     $db = new clsBanco();
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}serie";
 
-    $this->_campos_lista = $this->_todos_campos = "s.cod_serie, s.ref_usuario_exc, s.ref_usuario_cad, s.ref_cod_curso, s.nm_serie, s.etapa_curso, s.concluinte, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.intervalo, s.idade_inicial, s.idade_final, s.regra_avaliacao_id ";
+    $this->_campos_lista = $this->_todos_campos = "s.cod_serie, s.ref_usuario_exc, s.ref_usuario_cad, s.ref_cod_curso, s.nm_serie, s.etapa_curso, s.concluinte, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.intervalo, s.idade_inicial, s.idade_final, s.regra_avaliacao_id, s.observacao_historico, s.dias_letivos";
 
     if (is_numeric($ref_cod_curso)) {
       if (class_exists("clsPmieducarCurso")) {
@@ -252,6 +253,9 @@ class clsPmieducarSerie
     if (is_numeric($idade_final)) {
       $this->idade_final = $idade_final;
     }
+
+    $this->observacao_historico = $observacao_historico;
+    $this->dias_letivos         = $dias_letivos;
   }
 
   /**
@@ -263,7 +267,7 @@ class clsPmieducarSerie
     if (is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_curso) &&
       is_string($this->nm_serie) && is_numeric($this->etapa_curso) &&
       is_numeric($this->concluinte) && is_numeric($this->carga_horaria) &&
-      is_numeric($this->intervalo))
+      is_numeric($this->intervalo) && is_numeric($this->dias_letivos))
     {
       $db = new clsBanco();
 
@@ -336,6 +340,18 @@ class clsPmieducarSerie
       if (is_numeric($this->intervalo)) {
         $campos  .= "{$gruda}intervalo";
         $valores .= "{$gruda}'{$this->intervalo}'";
+        $gruda    = ", ";
+      }
+
+      if(is_string($this->observacao_historico)){
+        $campos .= "{$gruda}observacao_historico";
+        $valores .= "{$gruda}'{$this->observacao_historico}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dias_letivos)) {
+        $campos  .= "{$gruda}dias_letivos";
+        $valores .= "{$gruda}'{$this->dias_letivos}'";
         $gruda    = ", ";
       }
 
@@ -429,6 +445,16 @@ class clsPmieducarSerie
 
       if (is_numeric($this->regra_avaliacao_id)) {
         $set .= "{$gruda}regra_avaliacao_id = '{$this->regra_avaliacao_id}'";
+        $gruda = ", ";
+      }
+
+      if(is_string($this->observacao_historico)){
+        $set .= "{$gruda}observacao_historico = '{$this->observacao_historico}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dias_letivos)) {
+        $set .= "{$gruda}dias_letivos = '{$this->dias_letivos}'";
         $gruda = ", ";
       }
 

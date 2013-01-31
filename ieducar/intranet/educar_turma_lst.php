@@ -110,6 +110,7 @@ class indice extends clsListagem
 
 		$lista_busca = array(
 			"Turma",
+      "Turno",
 			"S&eacute;rie",
 			"Curso"
 		);
@@ -252,6 +253,15 @@ class indice extends clsListagem
 					"<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$registro["nm_turma"]}</a>"
 				);
 
+        if ($registro["turma_turno_id"]) {
+        	$options = array('params' => $registro["turma_turno_id"], 'return_only' => 'first-field');
+				  $turno   = Portabilis_Utils_Database::fetchPreparedQuery("select nome from pmieducar.turma_turno where id = $1", $options);
+
+				  $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">$turno</a>";
+        }
+        else
+				  $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\"></a>";
+
 				if ($registro["nm_serie"])
 					$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$registro["nm_serie"]}</a>";
 				else
@@ -279,7 +289,7 @@ class indice extends clsListagem
 				{
 					$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">Ativo</a>";
 				}
-				else 
+				else
 				{
 					$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">Desativo</a>";
 				}

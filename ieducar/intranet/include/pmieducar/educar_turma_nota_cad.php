@@ -138,7 +138,7 @@ class indice extends clsCadastro
 			}
 			else
 			{
-				$this->mensagem = "N&atilde;o existe nenhuma matricula cadastrada nesta turma.<br>";
+				$this->mensagem = "N&atilde;o existe nenhuma matrícula cadastrada nesta turma.<br>";
 			}
 		}
 		else
@@ -1071,12 +1071,12 @@ class indice extends clsCadastro
 											$obj_matricula = new clsPmieducarMatricula( $det_matricula["cod_matricula"], null, null, null, $this->pessoa_logada, null, null, 2 );
 											if ( !( $obj_matricula->edita() ) )
 											{
-												$this->mensagem = "Falha ao alterar a matricula!<br>";
+												$this->mensagem = "Falha ao alterar a matrícula!<br>";
 											}
 										}
 										else
 										{
-											$this->mensagem = "Falha ao cadastrar o historico!<br>";
+											$this->mensagem = "Falha ao cadastrar o histórico!<br>";
 										}
 									}
 								}
@@ -1153,7 +1153,7 @@ class indice extends clsCadastro
 
 									if ( !$obj_falta_aluno->cadastra() )
 									{
-										$this->mensagem = "Erro no cadastro de falta!<br>";
+										$this->mensagem = "Erro no cadastro da falta!<br>";
 									}
 								}
 							}
@@ -1294,12 +1294,12 @@ class indice extends clsCadastro
 											$obj_matricula = new clsPmieducarMatricula( $det_matricula["cod_matricula"], null, null, null, $this->pessoa_logada, null, null, 1 );
 											if ( $obj_matricula->edita() )
 											{
-												$this->mensagem = "Falha ao editar a matricula!<br>";
+												$this->mensagem = "Falha ao editar a matrícula!<br>";
 											}
 										}
 										else
 										{
-											$this->mensagem = "Falha ao cadastrar o historico!<br>";
+											$this->mensagem = "Falha ao cadastrar o histórico!<br>";
 										}
 									}
 
@@ -1310,7 +1310,7 @@ class indice extends clsCadastro
 
 										if ( !$obj_matricula->edita() )
 										{
-											$this->mensagem = "Falha ao editar a matricula!<br>";
+											$this->mensagem = "Falha ao editar a matrícula!<br>";
 										}
 									}
 								}
@@ -1347,12 +1347,12 @@ class indice extends clsCadastro
 										$obj_matricula = new clsPmieducarMatricula( $det_matricula["cod_matricula"], null, null, null, $this->pessoa_logada, null, null, 2 );
 										if ( $obj_matricula->edita() )
 										{
-											$this->mensagem = "Falha ao editar a matricula!<br>";
+											$this->mensagem = "Falha ao editar a matrícula!<br>";
 										}
 									}
 									else
 									{
-										$this->mensagem = "Falha ao cadastrar o historico!<br>";
+										$this->mensagem = "Falha ao cadastrar o histórico!<br>";
 									}
 								}
 							}
@@ -1401,7 +1401,7 @@ class indice extends clsCadastro
 
 							if ( !$obj_nota_aluno->cadastra() )
 							{
-								$this->mensagem = "Erro no cadastro de nota!<br>";
+								$this->mensagem = "Erro no cadastro da nota!<br>";
 							}
 
 							$obj_nota_aluno = new clsPmieducarNotaAluno();
@@ -1555,12 +1555,12 @@ class indice extends clsCadastro
 													$obj_matricula = new clsPmieducarMatricula( $det_matricula["cod_matricula"], null, null, null, $this->pessoa_logada, null, null, 1 );
 													if ( $obj_matricula->edita() )
 													{
-														$this->mensagem = "Falha ao editar a matricula!<br>";
+														$this->mensagem = "Falha ao editar a matrícula!<br>";
 													}
 												}
 												else
 												{
-													$this->mensagem = "Falha ao cadastrar o historico!<br>";
+													$this->mensagem = "Falha ao cadastrar o histórico!<br>";
 												}
 											}
 										}
@@ -1593,12 +1593,12 @@ class indice extends clsCadastro
 											$obj_matricula = new clsPmieducarMatricula( $matricula, null, null, null, $this->pessoa_logada, null, null, 2 );
 											if ( !( $obj_matricula->edita() ) )
 											{
-												$this->mensagem = "Falha ao alterar a matricula!<br>";
+												$this->mensagem = "Falha ao alterar a matrícula!<br>";
 											}
 										}
 										else
 										{
-											$this->mensagem = "Falha ao cadastrar o historico!<br>";
+											$this->mensagem = "Falha ao cadastrar o histórico!<br>";
 										}
 									}
 								}
