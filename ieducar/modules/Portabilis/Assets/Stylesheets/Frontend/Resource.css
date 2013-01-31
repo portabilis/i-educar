@@ -1,0 +1,14 @@
+.resource-notice {
+  display: block;
+  padding: 5px;
+  margin: 2px;
+}
+
+.right-top-notice {
+  float: right;
+  padding: 5px;
+  position: absolute;
+  right: 0;
+  top: 24px;
+  margin-right: 10px;
+}

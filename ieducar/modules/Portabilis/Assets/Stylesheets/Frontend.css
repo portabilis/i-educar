@@ -1,0 +1,18 @@
+/* portabilis style */
+
+#nav-actions a {
+  margin-right: 10px;
+}
+
+/* feedback messages utils */
+
+#feedback-messages {
+  position: fixed;
+  bottom: 0px;
+  background-color: #fff;
+}
+
+#feedback-messages p {
+  margin: 2px 2px 0px 2px;
+  padding: 4px;
+}
