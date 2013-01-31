@@ -115,13 +115,17 @@ class miolo1 extends clsListagem
     foreach ($lst_uf as $uf) {
       $array_uf[$uf['sigla_uf']] = $uf['nome'];
     }
-
     if (! $_GET['ref_sigla_uf']) {
       $_GET['ref_sigla_uf'] = $coreExt['Config']->app->locale->province;
     }
-
-    $this->campoLista('ref_sigla_uf', 'UF', $array_uf, $_GET['ref_sigla_uf'],
+     /* Portabilis: Foi comentada a linha abaixo e adicionado 'SC' no lugar de $_GET['ref_sigla_uf'], 
+	    para trazer o estado como defaut */
+    /*$this->campoLista('ref_sigla_uf', 'UF', $array_uf, $_GET['ref_sigla_uf'],
+      '', FALSE, '');*/
+	  
+	      $this->campoLista('ref_sigla_uf', 'UF', $array_uf, 'SC',
       '', FALSE, '');
+
 
     $this->addCabecalhos(array('Bairro', 'CEP', 'Logradouro', 'UF', 'Cidade'));
 
