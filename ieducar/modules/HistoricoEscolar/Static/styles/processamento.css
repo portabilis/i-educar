@@ -1,0 +1,8 @@
+#disciplinas-manual {
+  border: 1px solid #fff;
+}
+
+#disciplinas-manual th, #disciplinas-manual td {
+  border: 0px;
+  padding: 2px;
+}
