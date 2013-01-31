@@ -156,35 +156,51 @@ class clsDetalhe extends Core_Controller_Page_Abstract
     if (empty($this->detalhe)) {
       $retorno .= "<tr><td class='tableDetalheLinhaSim' colspan='2'>N&atilde;o h&aacute; informa&ccedil;&atilde;o a ser apresentada.</td></tr>\n";
     }
-    else {
-      if (is_array($this->detalhe)) {
+    else
+    {
+      if (is_array($this->detalhe))
+      {
         reset($this->detalhe);
 
         $campo_anterior = "";
         $md = TRUE;
 
-        foreach ($this->detalhe as $pardetalhe) {
-          $campo = $pardetalhe[0].":";
-          $texto = $pardetalhe[1];
+        foreach ($this->detalhe as $pardetalhe)
+        {
+          if (is_array($pardetalhe))
+          {
+            $campo = $pardetalhe[0].":";
+            $texto = $pardetalhe[1];
 
-          if ($campo == $campo_anterior) {
-            $campo = "";
-          }
-          else {
-            $campo_anterior = $campo;
-            $md = !$md;
-          }
-
-          if ($campo == "-:") {
-            if (empty($texto)) {
-              $texto = '&nbsp;';
+            if ($campo == $campo_anterior)
+            {
+              $campo = "";
+            }
+            else
+            {
+              $campo_anterior = $campo;
+              $md = !$md;
             }
 
-            $retorno .= "<tr><td colspan='2' class='' width='20%'><span class='form'><b>$texto</b></span></td></tr>\n";
+            if ($campo == "-:")
+            {
+              if (empty($texto))
+              {
+                $texto = '&nbsp;';
+              }
+              $retorno .= "<tr><td colspan='2' class='' width='20%'><span class='form'><b>$texto</b></span></td></tr>\n";
+            }
+            else
+            {
+              $classe = $md ? 'formmdtd' : 'formlttd';
+              $retorno .= "<tr><td class='$classe' width='20%'>$campo</td><td class='$classe'>$texto</td></tr>\n";
+            }
           }
-          else {
-            $classe = $md ? 'formmdtd' : 'formlttd';
-            $retorno .= "<tr><td class='$classe' width='20%'>$campo</td><td class='$classe'>$texto</td></tr>\n";
+          else
+          {
+
+            $retorno .= "<tr><td colspan='2'>$pardetalhe</td></tr>";
+
           }
         }
       }
