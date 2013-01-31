@@ -25,9 +25,12 @@
 	*																		 *
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	header( 'Content-type: text/xml' );
-	
+
 	require_once( "include/pmieducar/geral.inc.php" );
-	
+
+  require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
+  Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
+
 	echo "<?xml version=\"1.0\" encoding=\"ISO-8859-15\"?>\n<query xmlns=\"sugestoes\">\n";
 	if( isset( $_GET["cod_instituicao"] )  )
 	{
@@ -36,10 +39,10 @@
 		$lista = $obj->lista(null, null, null, $_GET["cod_instituicao"], null, null, null, null, null, null,1);
 		if( $lista )
 		{
-			foreach ( $lista as $linha ) 
+			foreach ( $lista as $linha )
 			{
 				echo "	<item cod_escola='{$linha['cod_escola']}'>{$linha['nome']}</item>\n";
-			}	
+			}
 		}
 	}
 	echo "</query>";

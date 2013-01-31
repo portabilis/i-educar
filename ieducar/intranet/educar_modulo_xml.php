@@ -33,6 +33,9 @@ require_once 'include/funcoes.inc.php';
 
 header('Content-type: text/xml');
 
+require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
+Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
+
 print '<?xml version="1.0" encoding="ISO-8859-1"?>' . "\n";
 print '<query xmlns="sugestoes">' . "\n";
 

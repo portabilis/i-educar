@@ -25,9 +25,13 @@
 	*																		 *
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	header( 'Content-type: text/xml' );
-	
+
+  require_once '../includes/bootstrap.php';
+  require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
+  Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryForDisabledApi();
+
 	require_once( "include/protocol/geral.inc.php" );
-	
+
 	echo "<?xml version=\"1.0\" encoding=\"ISO-8859-15\"?>\n<query xmlns=\"sugestoes\">\n";
 	if( isset( $_GET["setor_pai"] )  )
 	{
@@ -37,11 +41,11 @@
 		$lista = $obj->lista(null, $_GET["setor_pai"] ,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,$not_in);
 		if( $lista )
 		{
-			foreach ( $lista as $linha ) 
+			foreach ( $lista as $linha )
 			{
 				echo "	<item>{$linha['sgl_setor']}</item>\n";
 				echo "	<item>{$linha['cod_setor']}</item>\n";
-			}	
+			}
 		}
 	}
 	echo "</query>";
