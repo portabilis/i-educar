@@ -119,7 +119,6 @@ class indice extends clsCadastro
 
   function Gerar()
   {
-
     if ($_POST) {
       foreach ($_POST as $campo => $val) {
         $this->$campo = $this->$campo ? $this->$campo : $val;
@@ -262,14 +261,9 @@ class indice extends clsCadastro
     }
 
     $this->campoOculto('incluir_modulo', '');
-
     $this->campoRotulo('bt_incluir_modulo', 'Módulo',
      '<a href="#" id="add_module"><img src="imagens/nvp_bot_adiciona.gif" title="Incluir" border="0" /></a>'
     );
-
-    /*$this->campoRotulo('bt_incluir_modulo', 'Módulo',
-     '<a href="#" onclick="incluir();"><img src="imagens/nvp_bot_adiciona.gif" title="Incluir" border="0" /></a>'
-    );*/
 
     $this->campoQuebra();
   }
@@ -454,12 +448,10 @@ $pagina->addForm($miolo);
 // Gera o código HTML
 $pagina->MakeAll();
 ?>
-
 <script type="text/javascript">
 /**
  * Realiza validação client-side do formulário.
  */
-
 function incluir()
 {
   var phpjs     = ied_phpjs.getInstance();
@@ -501,6 +493,7 @@ function incluir()
   acao();
 }
 
+// Fixup para erro "Refused to execute a JavaScript script. Source code of script found within request."
+// que ocorre no navegador chrome.
 document.getElementById('add_module').onclick = incluir;
-
 </script>
