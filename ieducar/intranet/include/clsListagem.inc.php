@@ -34,6 +34,8 @@ if (class_exists('clsPmiajudaPagina')) {
   require_once 'include/pmiajuda/clsPmiajudaPagina.inc.php';
 }
 
+require_once 'Portabilis/View/Helper/Application.php';
+
 define('alTopLeft', 'valign=top align=left');
 define('alTopCenter', 'valign=top align=center');
 define('alTopRight', 'valign=top align=right');
@@ -95,6 +97,8 @@ class clsListagem extends clsCampos
   var $ordenacao;
   var $campos_ordenacao;
   var $fonte;
+
+  var $exibirBotaoSubmit = true;
 
   function Gerar()
   {
@@ -413,11 +417,13 @@ class clsListagem extends clsCampos
 
         $retorno .=  "</script>";
 
-        if ($this->botao_submit) {
-          $retorno .=  "&nbsp;<input type='submit' class='botaolistagem' value='busca' id='botao_busca'>&nbsp;";
-        }
-        else {
-          $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:acao{$this->funcAcaoNome}();' value='busca' id='botao_busca'>&nbsp;";
+        if ($this->exibirBotaoSubmit) {
+          if ($this->botao_submit) {
+            $retorno .=  "&nbsp;<input type='submit' class='botaolistagem' value='busca' id='botao_busca'>&nbsp;";
+          }
+          else {
+            $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:acao{$this->funcAcaoNome}();' value='busca' id='botao_busca'>&nbsp;";
+          }
         }
 
         $retorno .=  "
@@ -724,6 +730,8 @@ class clsListagem extends clsCampos
         </table>
       ";
     }
+
+    Portabilis_View_Helper_Application::embedJavascriptToFixupFieldsWidth($this);
 
     return $retorno;
   }
