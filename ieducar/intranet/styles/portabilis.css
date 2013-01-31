@@ -1,0 +1,220 @@
+body {
+  font-family: Verdana, Geneva, Arial, sans-serif;
+  font-size: small;
+  line-height: 1.5;
+	margin: 0px;
+	color: #666;
+	text-align: left;
+  background-color: #FCFCFC;
+}
+
+
+body, table td{
+    font-family: Verdana, Geneva, Arial, sans-serif;
+    font-size: small;
+}
+
+a {
+	font-weight: bold;
+	color: #054B80;
+	text-decoration: none;
+}
+
+a.logout {
+	color: #ff8f00;
+}
+
+a.cadastro {
+	color: #42e112;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+h1, h2, h3, h4, h5, h6, table caption, #service-info p.service, #extra .title {
+	color: #184e7f;
+	font-weight: bold;
+}
+
+h1 {
+  font-size: 150%;
+}
+
+h2 {
+  font-size: 150%;
+}
+
+h3 {
+  font-size: 110%;
+}
+
+#corpo {
+  	margin-top: 10px;
+}
+
+.explanation {
+	font-style: italic;
+}
+
+body {
+  font-family: Verdana, Geneva, Arial, sans-serif;
+  font-size: 13px;/*small;*/
+  line-height: 1.5;
+	margin: 0px;
+	color: #666;
+  padding: 0px;
+}
+
+#cabecalho {
+	color: #fff;
+/*  padding-top: 6px;
+  padding-bottom: 6px;*/
+}
+
+#cabecalho, #ccorpo {
+	background-color: #184e7f;
+}
+
+#flash-container, #menu, #corpo, /*#cabecalho #ccorpo,*/ #rodape {
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#cabecalho #ccorpo {
+  line-height: 1.2;
+	padding: 0px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+#cabecalho #ccorpo #logo {
+	font-size: 175%;
+	font-weight: bold;
+}
+
+#cabecalho #ccorpo a#logo, #cabecalho #ccorpo #status a#user {
+	font-weight: bold;
+}
+
+#cabecalho #ccorpo a{
+	color: #fff;
+	text-decoration: none;
+}
+
+#cabecalho #ccorpo #status {
+	float: right;
+  text-align: right;
+	margin-top: 6px;
+}
+
+.erro{
+  color: red;
+    padding: 4px;
+}
+
+form {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+input, textarea, .bar-buttons .button {
+    border: 1px solid #CACACA;
+}
+
+a.button, input, textarea {
+    padding: 4px;
+}
+
+input[type="submit"], input[type="button"], .bar-buttons .button  {
+  background-color: #f5f5f5;
+  color: #3C3C3D;
+  cursor: pointer;
+}
+
+input.submit, input.button  {
+  background-color: #f5f5f5;
+  color: #3C3C3D;
+  cursor: pointer;
+}
+
+a.button, input[type="submit"], input[type="button"], .bar-buttons .button {
+    padding: 4px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-right: 3px;
+}
+
+input.submit, input.button {
+    padding: 4px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-right: 3px;
+}
+
+a.button, input[type="button"], .bar-buttons a.button  {
+	font-weight: normal;
+	font-style: normal;
+}
+
+a[class="button"].primary, input[type="submit"], input[type="button"].primary, .bar-buttons .button.primary {
+  font-weight: bold;
+  font-style: normal;
+}
+
+input.submit, input.button {
+  font-weight: bold;
+  font-style: normal;
+}
+
+input:focus, textarea:focus, .bar-buttons .button:focus {
+	border: 1px solid #666;
+/*    outline: #054B80 solid 1px;
+    outline-offset: -2px;*/
+    outline-width: 0px;
+}
+
+input:hover, textarea:hover {
+	border: 1px solid #666;
+}
+
+input[type="submit"]:hover, input[type="button"]:hover, .bar-buttons .button:hover {
+	border: 1px solid #CACACA;
+	background: #ECECEC;
+	color: #3C3C3D;
+	text-shadow: none;
+	text-decoration: none;
+}
+
+input.submit:hover, input.buton:hover  {
+	border: 1px solid #CACACA;
+	background: #ECECEC;
+	color: #3C3C3D;
+	text-shadow: none;
+	text-decoration: none;
+}
+
+input, textarea {
+    margin-top:4px;
+    margin-left:4px;
+}
+
+.shadow {
+  -moz-box-shadow: 0px 0px 5px #e6e6e6;
+  -webkit-box-shadow: 0px 0px 5px #E6E6E6;
+  box-shadow: 0px 0px 5px #E6E6E6;
+}
+
+.box {
+  padding-top: 10px;
+}
+
+.box, .bubble {
+  border: 1px solid #EEE;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  padding: 0 10px 10px 10px;
+  margin-bottom: 10px;
+}
