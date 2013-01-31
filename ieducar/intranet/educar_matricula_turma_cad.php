@@ -32,6 +32,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
 
 /**
  * clsIndexBase class.
@@ -87,7 +88,7 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
-    if (!$_POST) {
+    if (! $_POST) {
       header('Location: educar_matricula_lst.php');
       die;
     }
@@ -99,58 +100,91 @@ class indice extends clsCadastro
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, 'educar_matricula_lst.php');
 
+    //nova lógica
     if (is_numeric($this->ref_cod_matricula)) {
-      if (is_numeric($this->ref_cod_turma_origem)) {
-        $obj_matricula_turma = new clsPmieducarMatriculaTurma();
-        $lst_matricula_turma = $obj_matricula_turma->lista($this->ref_cod_matricula,
-          NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
 
-        if ($lst_matricula_turma) {
-          foreach ($lst_matricula_turma as $matricula) {
-            $obj = new clsPmieducarMatriculaTurma($this->ref_cod_matricula,
-              $matricula['ref_cod_turma'], $this->pessoa_logada, NULL, NULL,
-              NULL, 0, NULL, $matricula['sequencial']);
-
-            $registro  = $obj->detalhe();
-            if ($registro) {
-              if (!$obj->edita()) {
-                echo "erro ao cadastrar";
-                die;
-              }
-            }
-          }
-        }
-
-        $obj = new clsPmieducarMatriculaTurma($this->ref_cod_matricula,
-          $this->ref_cod_turma_destino, $this->pessoa_logada, $this->pessoa_logada,
-          NULL, NULL, 1);
-
-        $cadastrou = $obj->cadastra();
-
-        if ($cadastrou) {
-          $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-          header('Location: educar_matricula_det.php?cod_matricula=' . $this->ref_cod_matricula);
-          die();
-        }
-      }
+      if ($this->ref_cod_turma_origem == 'remover-enturmacao-destino')
+        $this->removerEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma_destino);
+      elseif (! is_numeric($this->ref_cod_turma_origem))
+        $this->novaEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma_destino);
       else {
-        $obj = new clsPmieducarMatriculaTurma($this->ref_cod_matricula,
-          $this->ref_cod_turma_destino, $this->pessoa_logada, $this->pessoa_logada,
-          NULL, NULL, 1);
-
-        $cadastrou = $obj->cadastra();
-
-        if ($cadastrou) {
-          $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-          header('Location: educar_matricula_det.php?cod_matricula=' . $this->ref_cod_matricula);
-          die();
-        }
+        $this->transferirEnturmacao($this->ref_cod_matricula, 
+                                    $this->ref_cod_turma_origem, 
+                                    $this->ref_cod_turma_destino);
       }
-    }
 
-    header('Location: educar_matricula_lst.php');
-    die;
+      header('Location: educar_matricula_det.php?cod_matricula=' . $this->ref_cod_matricula);
+      die();
+    }
+    else {
+      header('Location: /intranet/educar_aluno_lst.php');
+      die();
+    }
   }
+
+  function novaEnturmacao($matriculaId, $turmaDestinoId) {
+
+    $enturmacaoExists = new clsPmieducarMatriculaTurma();
+    $enturmacaoExists = $enturmacaoExists->lista($matriculaId,
+                                                 $turmaDestinoId,
+                                                 NULL, 
+                                                 NULL,
+                                                 NULL, 
+                                                 NULL,
+                                                 NULL,
+                                                 NULL,
+                                                 1);
+
+    $enturmacaoExists = is_array($enturmacaoExists) && count($enturmacaoExists) > 0;
+    if (! $enturmacaoExists) {
+      $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
+                                                   $turmaDestinoId,
+                                                   $this->pessoa_logada, 
+                                                   $this->pessoa_logada, 
+                                                   NULL,
+                                                   NULL, 
+                                                   1);
+      return $enturmacao->cadastra();
+    }
+    return false;
+  }
+
+  
+  function transferirEnturmacao($matriculaId, $turmaOrigemId, $turmaDestinoId) {
+    if($this->removerEnturmacao($matriculaId, $turmaOrigemId))
+      return $this->novaEnturmacao($matriculaId, $turmaDestinoId);
+    return false;
+  }
+
+
+  function removerEnturmacao($matriculaId, $turmaId) {
+    $sequencialEnturmacao = $this->getSequencialEnturmacaoByTurmaId($matriculaId, $turmaId);
+    $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
+                                                 $turmaId,
+                                                 $this->pessoa_logada, 
+                                                 NULL, 
+                                                 NULL,
+                                                 NULL, 
+                                                 0,
+                                                 NULL,
+                                                 $sequencialEnturmacao);
+
+    return $enturmacao->edita();
+  }
+
+
+  function getSequencialEnturmacaoByTurmaId($matriculaId, $turmaId) {
+    $db = new clsBanco();
+    $sql = 'select coalesce(max(sequencial), 1) from pmieducar.matricula_turma where ativo = 1 and ref_cod_matricula = $1 and ref_cod_turma = $2';
+
+    if ($db->execPreparedQuery($sql, array($matriculaId, $turmaId)) != false) {
+      $db->ProximoRegistro();
+      $sequencial = $db->Tupla();
+      return $sequencial[0];
+    }
+    return 1;
+  }
+
 
   function Gerar()
   {

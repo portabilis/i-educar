@@ -97,7 +97,7 @@ class indice extends clsDetalhe
     }
 
     if (! $registro) {
-      header("Location: educar_matricula_lst.php?ref_cod_aluno=" . $registro['ref_cod_aluno']);
+      header("Location: educar_aluno_det.php?cod_aluno=" . $registro['ref_cod_aluno']);
       die();
     }
 
@@ -131,18 +131,6 @@ class indice extends clsDetalhe
       $nm_aluno = $det_aluno['nome_aluno'];
     }
 
-    // Nome da turma
-    $obj_mat_turma = new clsPmieducarMatriculaTurma();
-    $det_mat_turma = $obj_mat_turma->lista($this->ref_cod_matricula, NULL, NULL,
-      NULL, NULL, NULL, NULL, NULL, 1);
-
-    if ($det_mat_turma){
-      $det_mat_turma = array_shift($det_mat_turma);
-      $obj_turma     = new clsPmieducarTurma($det_mat_turma['ref_cod_turma']);
-      $det_turma     = $obj_turma->detalhe();
-      $nm_turma      = $det_turma['nm_turma'];
-    }
-
     if ($registro['cod_matricula']) {
       $this->addDetalhe(array('Número Matrícula', $registro['cod_matricula']));
     }
@@ -167,9 +155,23 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Série', $registro['ref_ref_cod_serie']));
     }
 
-    if ($nm_turma) {
-      $this->addDetalhe(array('Turma', $nm_turma));
+    // Nome da turma
+    $enturmacoes = new clsPmieducarMatriculaTurma();
+    $enturmacoes = $enturmacoes->lista($this->ref_cod_matricula, NULL, NULL,
+      NULL, NULL, NULL, NULL, NULL, 1);
+
+    $nomesTurmas = array();
+    foreach ($enturmacoes as $enturmacao) {
+      $turma         = new clsPmieducarTurma($enturmacao['ref_cod_turma']);
+      $turma         = $turma->detalhe();
+      $nomesTurmas[] = $turma['nm_turma'];
     }
+    $nomesTurmas = implode('<br />', $nomesTurmas);
+
+    if ($nomesTurmas)
+      $this->addDetalhe(array('Turma', $nomesTurmas));
+    else
+      $this->addDetalhe(array('Turma', ''));
 
     if ($registro['ref_cod_reserva_vaga']) {
       $this->addDetalhe(array('Número Reserva Vaga', $registro['ref_cod_reserva_vaga']));
@@ -250,7 +252,7 @@ class indice extends clsDetalhe
 
       if ($registro['aprovado'] != 4 && $registro['aprovado'] != 6) {
         if (is_array($lst_transferencia) && !isset($data_transferencia)) {
-          $this->array_botao[]            = 'Cancelar Solicitação Transferência';
+          $this->array_botao[]            = 'Cancelar Solicitação Transferência (escola do sistema)';
           $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true\")";
         }
         else {
@@ -274,14 +276,33 @@ class indice extends clsDetalhe
         }
       }
 
+      if($registro['aprovado'] == 4 &&
+         $this->canCancelTransferenciaExterna($registro['cod_matricula'], $registro['ref_cod_aluno'])) {
+        $this->array_botao[]            = 'Cancelar transferência (escola externa)';
+
+
+        # TODO ver se código, seta matricula como em andamento, ativa ultima matricula_turma for matricula, e desativa transferencia solicitacao
+        $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true&reabrir_matricula=true\")";
+      }
+
       if ($registro['aprovado'] == 4 || $det_transferencia) {
         $this->array_botao[]            = 'Imprimir Atestado Frequência';
         $this->array_botao_url_script[] = "showExpansivelImprimir(400, 200,  \"educar_relatorio_atestado_frequencia.php?cod_matricula={$registro['cod_matricula']}\",[], \"Relatório Atestado de Freqüência\")";
       }
     }
 
-    $this->url_cancelar = 'educar_matricula_lst.php?ref_cod_aluno=' . $registro['ref_cod_aluno'];
+    $this->url_cancelar = 'educar_aluno_det.php?cod_aluno=' . $registro['ref_cod_aluno'];
     $this->largura      = '100%';
+  }
+
+
+  function canCancelTransferenciaExterna($matriculaId, $alunoId) {
+    $sql = "select 1 from pmieducar.matricula where ativo = 1 and cod_matricula > $matriculaId and ref_cod_aluno = $alunoId limit 1";
+
+    $db = new clsBanco();
+    $existeNovaMatricula = $db->CampoUnico($sql) == '1';
+
+    return ! $existeNovaMatricula;
   }
 }
 
