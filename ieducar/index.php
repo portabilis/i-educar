@@ -33,11 +33,10 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
   <title>Sistema de gestão escolar | i-Educar</title>
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 </head>
-<frameset rows="115,*" frameborder="1" framespacing="2" border="0">
+<frameset rows="27,*" framespacing="2" border="0" frameborder="0" >
   <frame src="intranet/topo.php"  name="superior" noresize scrolling="no">
-  <frame src="intranet/index.php" name="central" marginwidth="2" marginheight="3" noresize scrolling="yes">
+  <frame src="intranet/index.php" name="central" marginwidth="0" marginheight="0" noresize scrolling="yes">
 </frameset>
 <noframes>
   <body>
