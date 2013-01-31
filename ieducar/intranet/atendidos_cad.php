@@ -33,8 +33,12 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/pessoa/clsCadastroRaca.inc.php';
 require_once 'include/pessoa/clsCadastroFisicaRaca.inc.php';
+require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
 
 require_once 'App/Model/ZonaLocalizacao.php';
+
+require_once 'lib/Portabilis/String/Utils.php';
+require_once 'lib/Portabilis/View/Helper/Application.php';
 
 /**
  * clsIndex class.
@@ -143,15 +147,22 @@ class indice extends clsCadastro
         $this->http, $this->tipo_pessoa, $this->sexo, $this->cidade,
         $this->bairro, $this->logradouro, $this->cep, $this->idlog, $this->idbai,
         $this->idtlog, $this->sigla_uf, $this->complemento, $this->numero,
-        $this->bloco, $this->apartamento, $this->andar, $this->zona_localizacao
+        $this->bloco, $this->apartamento, $this->andar, $this->zona_localizacao, $this->estado_civil,
+        $this->pai_id, $this->mae_id, $this->tipo_nacionalidade, $this->pais_origem, $this->naturalidade
       ) =
+
       $objPessoa->queryRapida(
         $this->cod_pessoa_fj, 'nome', 'cpf', 'data_nasc',  'ddd_1', 'fone_1',
         'ddd_2', 'fone_2', 'ddd_mov', 'fone_mov', 'ddd_fax', 'fone_fax', 'email',
         'url', 'tipo', 'sexo', 'cidade', 'bairro', 'logradouro', 'cep', 'idlog',
         'idbai', 'idtlog', 'sigla_uf', 'complemento', 'numero', 'bloco', 'apartamento',
-        'andar', 'zona_localizacao'
+        'andar', 'zona_localizacao', 'ideciv', 'idpes_pai', 'idpes_mae', 'nacionalidade',
+        'idpais_estrangeiro', 'idmun_nascimento'
       );
+
+      $this->estado_civil_id = $this->estado_civil->ideciv;
+      $this->pais_origem_id  = $this->pais_origem->idpais;
+      $this->naturalidade_id = $this->naturalidade->idmun;
 
       // Cor/Raça.
       $raca = new clsCadastroFisicaRaca($this->cod_pessoa_fj);
@@ -224,6 +235,13 @@ class indice extends clsCadastro
       $lista_sexos['F'] = 'Feminino';
       $this->campoLista('sexo', 'Sexo', $lista_sexos, $this->sexo);
 
+      $this->inputsHelper()->estadoCivil(array('required' => false));
+
+      // pai, mãe
+
+      $this->addPaiInput();
+      $this->addMaeInput();
+
       // Cor/raça.
       $opcoes_raca = array('' => 'Selecione');
       $obj_raca = new clsCadastroRaca();
@@ -238,7 +256,42 @@ class indice extends clsCadastro
       $this->campoLista('cor_raca', 'Raça', $opcoes_raca,
         $this->cod_raca, '', FALSE, '', '', '', FALSE);
 
+      // nacionalidade
+
+      // tipos
+      $tiposNacionalidade = array(null => 'Selecione',
+                                  '1'  => 'Brasileiro',
+                                  '2'  => 'Naturalizado brasileiro',
+                                  '3'  => 'Estrangeiro');
+
+      $options       = array('label'       => 'Nacionalidade',
+                             'resources'   => $tiposNacionalidade,
+                             'required'   => false,
+                             'inline'      => true,
+                             'value'       => $this->tipo_nacionalidade);
+
+      $this->inputsHelper()->select('tipo_nacionalidade', $options);
+
+      // pais origem
+
+      $options       = array('label' => '', 'required'   => true);
+      $helperOptions = array('objectName'         => 'pais_origem',
+                             'hiddenInputOptions' => array('options' => array('value' => $this->pais_origem_id)));
+
+      $this->inputsHelper()->simpleSearchPais('nome', $options, $helperOptions);
+
+
+      // naturalidade
+
+      $options       = array('label' => 'Naturalidade', 'required'   => false);
+      $helperOptions = array('objectName'         => 'naturalidade',
+                             'hiddenInputOptions' => array('options' => array('value' => $this->naturalidade_id)));
+
+      $this->inputsHelper()->simpleSearchMunicipio('nome', $options, $helperOptions);
+
+
       // Detalhes do Endereço
+
       $objTipoLog   = new clsTipoLogradouro();
       $listaTipoLog = $objTipoLog->lista();
       $listaTLog    = array('0' => 'Selecione');
@@ -400,11 +453,17 @@ class indice extends clsCadastro
 
       if ($this->cod_pessoa_fj) {
         $this->campoRotulo('documentos', '<b><i>Documentos</i></b>',
-          "<a href='#' onclick=\"openPage('adicionar_documentos_cad.php?id_pessoa={$this->cod_pessoa_fj}', '400', '400', 'yes', '10', '10'); \"><img src='imagens/nvp_bot_ad_doc.png' border='0'></a>");
+          "<a href='#' onclick=\"windowUtils.open('adicionar_documentos_cad.php?id_pessoa={$this->cod_pessoa_fj}'); \"><img src='imagens/nvp_bot_ad_doc.png' border='0'></a>");
 
         $this->campoCheck('alterado', 'Alterado', $this->alterado);
       }
     }
+
+    $styles = array('/modules/Portabilis/Assets/Stylesheets/Frontend.css');
+    Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+
+    $script = "/modules/Cadastro/Assets/Javascripts/PessoaFisica.js";
+    Portabilis_View_Helper_Application::loadJavascript($this, $script);
   }
 
   function Novo()
@@ -432,27 +491,31 @@ class indice extends clsCadastro
       }
     }
 
+    // pessoa
+
     $objPessoa = new clsPessoa_(FALSE, $this->nm_pessoa, $pessoaFj, $this->http,
       'F', FALSE, FALSE, $this->email);
 
     $idpes = $objPessoa->cadastra();
 
-    $this->data_nasc = dataToBanco($this->data_nasc);
 
-    if ($this->id_federal) {
-      $objFisica = new clsFisica($idpes, $this->data_nasc, $this->sexo, FALSE,
-        FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
-        FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
-        $ref_cod_sistema, $this->id_federal);
-    }
-    else {
-      $objFisica = new clsFisica($idpes, $this->data_nasc, $this->sexo, FALSE,
-        FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
-        FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
-        $ref_cod_sistema);
-    }
+    // pessoa fisica
 
-    $objFisica->cadastra();
+    $fisica                     = new clsFisica();
+
+    $fisica->idpes              = $idpes;
+    $fisica->data_nasc          = dataToBanco($this->data_nasc);
+    $fisica->sexo               = $this->sexo;
+    $fisica->ref_cod_sistema    = 'NULL';
+    $fisica->cpf                = $this->id_federal;
+    $fisica->ideciv             = $this->estado_civil_id;
+    $fisica->idpes_pai          = $this->pai_id;
+    $fisica->idpes_mae          = $this->mae_id;
+    $fisica->nacionalidade      = $_REQUEST['tipo_nacionalidade'];
+    $fisica->idpais_estrangeiro = $_REQUEST['pais_origem_id'];
+    $fisica->idmun_nascimento   = $_REQUEST['naturalidade_id'];
+
+    $fisica->cadastra();
 
     $objTelefone = new clsPessoaTelefone($idpes, 1, $this->telefone_1, $this->ddd_telefone_1);
     $objTelefone->cadastra();
@@ -501,7 +564,7 @@ class indice extends clsCadastro
     // Cadastra raça.
     $this->_cadastraRaca($idpes, $this->cor_raca);
 
-    echo '<script>document.location="atendidos_lst.php";</script>';
+    $this->afterChangePessoa($idpes);
     return TRUE;
   }
 
@@ -512,7 +575,6 @@ class indice extends clsCadastro
     session_write_close();
 
     if ($this->id_federal) {
-      $ref_cod_sistema  = 'null';
       $this->id_federal = idFederal2int($this->id_federal);
 
       $objFisicaCpf   = new clsFisica($this->cod_pessoa_fj);
@@ -530,28 +592,31 @@ class indice extends clsCadastro
       }
     }
 
+    // pessoa
+
     $objPessoa = new clsPessoa_($this->cod_pessoa_fj, $this->nm_pessoa, FALSE,
       $this->p_http, FALSE, $pessoaFj, date('Y-m-d H:i:s', time()), $this->email);
 
     $objPessoa->edita();
 
-    $this->data_nasc = dataToBanco($this->data_nasc);
+    // pessoa fisica
 
-    if ($this->id_federal) {
-      $this->id_federal = idFederal2Int($this->id_federal);
-      $objFisica = new clsFisica($this->cod_pessoa_fj, $this->data_nasc,
-        $this->sexo, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
-        FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
-        FALSE, FALSE, FALSE, $ref_cod_sistema, $this->id_federal);
-    }
-    else {
-      $objFisica = new clsFisica($this->cod_pessoa_fj, $this->data_nasc,
-        $this->sexo, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
-        FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
-        FALSE, FALSE, FALSE, $ref_cod_sistema);
-    }
+    $fisica                     = new clsFisica();
 
-    $objFisica->edita();
+    $fisica->idpes              = $this->cod_pessoa_fj;
+    $fisica->data_nasc          = dataToBanco($this->data_nasc);
+    $fisica->sexo               = $this->sexo;
+    $fisica->ref_cod_sistema    = 'NULL';
+    $fisica->cpf                = $this->id_federal;
+    $fisica->ideciv             = $this->estado_civil_id;
+
+    $fisica->idpes_pai          = $this->pai_id;
+    $fisica->idpes_mae          = $this->mae_id;
+    $fisica->nacionalidade      = $_REQUEST['tipo_nacionalidade'];
+    $fisica->idpais_estrangeiro = $_REQUEST['pais_origem_id'];
+    $fisica->idmun_nascimento   = $_REQUEST['naturalidade_id'];
+
+    $fisica->edita();
 
     if ($this->alterado) {
       $db = new clsBanco();
@@ -612,7 +677,8 @@ class indice extends clsCadastro
     // Atualizada raça.
     $this->_cadastraRaca($this->cod_pessoa_fj, $this->cor_raca);
 
-    echo '<script>document.location="atendidos_lst.php";</script>';
+    $this->afterChangePessoa($this->cod_pessoa_fj);
+
     return TRUE;
   }
 
@@ -620,6 +686,15 @@ class indice extends clsCadastro
   {
     echo '<script>document.location="atendidos_lst.php";</script>';
     return TRUE;
+  }
+
+  function afterChangePessoa($id) {
+    Portabilis_View_Helper_Application::embedJavascript($this, "
+      if(window.opener &&  window.opener.afterChangePessoa)
+         window.opener.afterChangePessoa(self, $id);
+      else
+        document.location = 'atendidos_lst.php';
+    ");
   }
 
   /**
@@ -642,6 +717,47 @@ class indice extends clsCadastro
     }
 
     return $raca->cadastra();
+  }
+
+  protected function loadAlunoByPessoaId($id) {
+    $aluno            = new clsPmieducarAluno();
+    $aluno->ref_idpes = $id;
+
+    return $aluno->detalhe();
+  }
+
+  protected function addPaiInput() {
+    $this->addParentsInput('pai');
+  }
+
+  protected function addMaeInput() {
+    $this->addParentsInput('mae', 'mãe');
+  }
+
+  protected function addParentsInput($parentType, $parentTypeLabel = '') {
+    if (! $parentTypeLabel)
+      $parentTypeLabel = $parentType;
+
+    if (! isset($this->_aluno))
+      $this->_aluno = $this->loadAlunoByPessoaId($this->cod_pessoa_fj);
+
+    $parentId = $this->{$parentType . '_id'};
+
+    // mostra uma dica nos casos em que foi informado apenas o nome dos pais, pela antiga interface do cadastro de alunos.
+    if (! $parentId && $this->_aluno['nm_' . $parentType]) {
+      $nome      = Portabilis_String_Utils::toLatin1($this->_aluno['nm_' . $parentType], array('transform' => true, 'escape' => false));
+      $inputHint = '<b>Dica:</b> Foi informado o nome "' . $nome . '" no cadastro de aluno, tente pesquisar esta pessoa pelo CPF ou RG.';
+    }
+
+    $hiddenInputOptions = array('options' => array('value' => $parentId));
+    $helperOptions      = array('objectName' => $parentType, 'hiddenInputOptions' => $hiddenInputOptions);
+
+    $options            = array('label'      => 'Pessoa ' . $parentTypeLabel,
+                                'size'       => 50,
+                                'required'   => false,
+                                'input_hint' => $inputHint);
+
+    $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
   }
 }
 
