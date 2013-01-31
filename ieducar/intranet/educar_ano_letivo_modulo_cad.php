@@ -262,7 +262,7 @@ class indice extends clsCadastro
 
     $this->campoOculto('incluir_modulo', '');
     $this->campoRotulo('bt_incluir_modulo', 'Módulo',
-     '<a href="#" onclick="incluir();"><img src="imagens/nvp_bot_adiciona.gif" title="Incluir" border="0" /></a>'
+     '<a href="#" id="add_module"><img src="imagens/nvp_bot_adiciona.gif" title="Incluir" border="0" /></a>'
     );
 
     $this->campoQuebra();
@@ -492,4 +492,8 @@ function incluir()
   document.getElementById('tipoacao').value = '';
   acao();
 }
+
+// Fixup para erro "Refused to execute a JavaScript script. Source code of script found within request."
+// que ocorre no navegador chrome.
+document.getElementById('add_module').onclick = incluir;
 </script>

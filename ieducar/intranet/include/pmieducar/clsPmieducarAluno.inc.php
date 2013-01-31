@@ -114,13 +114,13 @@ class clsPmieducarAluno
     $ref_cod_religiao = NULL, $ref_usuario_exc = NULL, $ref_usuario_cad = NULL,
     $ref_idpes = NULL, $data_cadastro = NULL, $data_exclusao = NULL, $ativo = NULL,
     $caminho_foto = NULL,$analfabeto = NULL, $nm_pai = NULL, $nm_mae = NULL,
-    $tipo_responsavel = NULL)
+    $tipo_responsavel = NULL, $aluno_estado_id = NULL)
   {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'aluno';
 
-    $this->_campos_lista = $this->_todos_campos = 'cod_aluno, ref_cod_aluno_beneficio, ref_cod_religiao, ref_usuario_exc, ref_usuario_cad, ref_idpes, data_cadastro, data_exclusao, ativo, caminho_foto, analfabeto, nm_pai, nm_mae,tipo_responsavel';
+    $this->_campos_lista = $this->_todos_campos = 'cod_aluno, ref_cod_aluno_beneficio, ref_cod_religiao, ref_usuario_exc, ref_usuario_cad, ref_idpes, data_cadastro, data_exclusao, ativo, caminho_foto, analfabeto, nm_pai, nm_mae,tipo_responsavel, aluno_estado_id';
 
     if (is_numeric($ref_cod_aluno_beneficio)) {
       if (class_exists('clsPmieducarAlunoBeneficio')) {
@@ -240,6 +240,8 @@ class clsPmieducarAluno
     if (is_string($tipo_responsavel)) {
       $this->tipo_responsavel = $tipo_responsavel;
     }
+
+    $this->aluno_estado_id = $aluno_estado_id;
   }
 
   /**
@@ -314,6 +316,12 @@ class clsPmieducarAluno
       if (is_string($this->tipo_responsavel ) && sizeof($this->tipo_responsavel) <= 1) {
         $campos  .= "{$gruda}tipo_responsavel";
         $valores .= "{$gruda}'{$this->tipo_responsavel}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->aluno_estado_id)) {
+        $campos  .= "{$gruda}aluno_estado_id";
+        $valores .= "{$gruda}'{$this->aluno_estado_id}'";
         $gruda = ', ';
       }
 
@@ -410,6 +418,15 @@ class clsPmieducarAluno
       }
       elseif ($this->tipo_responsavel == '') {
         $set .= "{$gruda}tipo_responsavel = NULL";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->aluno_estado_id)) {
+        $set .= "{$gruda}aluno_estado_id = '{$this->aluno_estado_id}'";
+        $gruda = ', ';
+      }
+      elseif ($this->aluno_estado_id == '') {
+        $set .= "{$gruda}aluno_estado_id = NULL";
         $gruda = ', ';
       }
 
@@ -658,7 +675,7 @@ class clsPmieducarAluno
     $str_nome_aluno = NULL, $str_nome_responsavel = NULL, $int_cpf_responsavel = NULL,
     $int_analfabeto = NULL, $str_nm_pai = NULL, $str_nm_mae = NULL,
     $int_ref_cod_escola = NULL, $str_tipo_responsavel = NULL, $data_nascimento = NULL,
-    $str_nm_pai2 = NULL, $str_nm_mae2 = NULL, $str_nm_responsavel2 = NULL)
+    $str_nm_pai2 = NULL, $str_nm_mae2 = NULL, $str_nm_responsavel2 = NULL, $cod_inep = NULL)
   {
     $filtros = '';
     $this->resetCamposLista();
@@ -837,6 +854,11 @@ class clsPmieducarAluno
 
     if (!empty($data_nascimento)) {
       $filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM cadastro.fisica f WHERE f.idpes = ref_idpes AND TO_CHAR(data_nasc,'DD/MM/YYYY') = '{$data_nascimento}')";
+      $whereAnd = ' AND ';
+    }
+
+    if (!empty($cod_inep) && is_numeric($cod_inep)) {
+      $filtros .= "{$whereAnd} cod_aluno = ( SELECT cod_aluno FROM modules.educacenso_cod_aluno WHERE cod_aluno_inep = '{$cod_inep}')";
       $whereAnd = ' AND ';
     }
 

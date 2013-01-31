@@ -134,7 +134,8 @@ class indice extends clsDetalhe
 		$this->addDetalhe( array("Ramal", $det_funcionario["ramal"]) );
 
 		$this->addDetalhe( array("Site", $det_pessoa["url"]) );
-		$this->addDetalhe( array("E-mail", $det_pessoa["email"]) );
+		//$this->addDetalhe( array("E-mail", $det_pessoa["email"]) );
+		$this->addDetalhe( array("E-mail usuário", $det_funcionario["email"]) );
 
 		$obj_fisica = new clsFisica($cod_pessoa);
 		$det_fisica = $obj_fisica->detalhe();

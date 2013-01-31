@@ -1,3 +1,4 @@
+
 <?php
 
 /**
@@ -124,6 +125,8 @@ class indice extends clsCadastro
     $this->campoRotulo('listagem_menu', '<b>Permiss&otilde;es de acesso aos menus</b>', '');
     $objTemp = new clsBanco();
 
+    // cod menu 55 = ieducar, 57 = biblioteca (ambos sistema = ieducar (2) )
+
     $objTemp->Consulta('
       SELECT
         sub.cod_menu_submenu,
@@ -187,108 +190,117 @@ class indice extends clsCadastro
 
         $script .= "menu['$id_pai'][menu['$id_pai'].length] = $id; \n";
 
-        $this->campoCheck("permissoes[{$id}][visualiza]", $submenu,
-          $obj_det['visualiza'], 'Visualizar', TRUE, FALSE);
+        $this->campoOculto("permissoes[{$id}][id]", $id);
 
-        $this->campoCheck("permissoes[{$id}][cadastra]", $submenu,
-          $obj_det["cadastra"], 'Cadastrar', TRUE);
+        /* alterado para campos não usar inline, pois por algum motivo os dois primeiros checkboxes
+           não estavam funcionando devidamente */
 
-        $this->campoCheck("permissoes[{$id}][exclui]", $submenu,
-          $obj_det['exclui'], 'Excluir', FALSE);
+        // visualiza
 
-        $this->campoOculto("permissoes[{$id}][id]",$id);
+        $options = array(
+          'label'      => $submenu,
+          'value'      => $obj_det['visualiza'],
+          'label_hint' => 'Visualizar',
+          'inline'     => true
+          );
+
+        $this->inputsHelper()->checkbox("permissoes[{$id}][visualiza]", $options);
+
+
+        // cadastra
+
+        $options = array(
+          'label'      => $submenu,
+          'value'      => $obj_det['cadastra'],
+          'label_hint' => 'Cadastrar',
+          'inline'     => true
+          );
+
+        $this->inputsHelper()->checkbox("permissoes[{$id}][cadastra]", $options);
+
+
+        // excluir
+
+        $options = array(
+          'label'      => $submenu,
+          'value'      => $obj_det['exclui'],
+          'label_hint' => 'Excluir'
+          );
+
+        $this->inputsHelper()->checkbox("permissoes[{$id}][exclui]", $options);
       }
 
     }
+
     echo '<script type="text/javascript">'. $script . '</script>';
   }
 
-  function Novo()
-  {
+  function Novo() {
     session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $obj = new clsPmieducarTipoUsuario($this->cod_tipo_usuario, $this->pessoa_logada,
-      NULL, $this->nm_tipo, $this->descricao, $this->nivel, NULL, NULL, 1);
+    $tipoUsuario = new clsPmieducarTipoUsuario($this->cod_tipo_usuario, $this->pessoa_logada, NULL,
+                                               $this->nm_tipo, $this->descricao, $this->nivel, NULL, NULL, 1);
+    $this->cod_tipo_usuario = $tipoUsuario->cadastra();
 
-    $cadastrou = $obj->cadastra();
-    if ($cadastrou) {
-      $this->cod_tipo_usuario =  $cadastrou;
-
-      if ($this->permissoes) {
-        // Apaga todos as permissões (itens de menu) cadastradaos a este usuário.
-        $obj_menu_usuario = new clsPmieducarMenuTipoUsuario($this->cod_tipo_usuario,
-          $key, $valor['cadastra'], $valor['visualiza'], $valor['exclui']);
-        $obj_menu_usuario->excluirTudo();
-
-        foreach ($this->permissoes as $key => $valor) {
-          $valor['cadastra']  = $valor['cadastra']  == 'on' ? 1 : 0;
-          $valor['visualiza'] = $valor['visualiza'] == 'on' ? 1 : 0;
-          $valor['exclui']    = $valor['exclui']    == 'on' ? 1 : 0;
-
-          if ($valor['cadastra'] || $valor['visualiza'] || $valor['exclui']) {
-            // Instancia novo objeto clsPmieducarMenuTipoUsuario.
-            $obj_menu_usuario = new clsPmieducarMenuTipoUsuario($this->cod_tipo_usuario,
-              $key,$valor['cadastra'], $valor['visualiza'], $valor['exclui']);
-
-            if (! $obj_menu_usuario->cadastra()) {
-              $this->mensagem .= 'Erro ao cadastrar acessos aos menus.<br>';
-              return FALSE;
-            }
-          }
-        }
-      }
-
-      $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-      header('Location: educar_tipo_usuario_lst.php');
-      die();
-    }
+    if ($this->cod_tipo_usuario)
+      $this->createMenuTipoUsuario();
 
     $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
     return FALSE;
   }
 
-  function Editar()
-  {
+  function Editar() {
     session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $obj = new clsPmieducarTipoUsuario($this->cod_tipo_usuario, NULL, $this->pessoa_logada,
-      $this->nm_tipo, $this->descricao, $this->nivel, NULL, NULL, 1);
+    $tipoUsuario = new clsPmieducarTipoUsuario($this->cod_tipo_usuario, NULL, $this->pessoa_logada,
+                                               $this->nm_tipo, $this->descricao, $this->nivel, NULL, NULL, 1);
 
-    $editou = $obj->edita();
-    if ($editou) {
-      if($this->permissoes) {
-        $obj_menu_usuario = new clsPmieducarMenuTipoUsuario($this->cod_tipo_usuario,$key,$valor['cadastra'],$valor['visualiza'],$valor['exclui']);
-        $obj_menu_usuario->excluirTudo();
-
-        foreach ($this->permissoes as $key => $valor) {
-          $valor['cadastra']  = $valor['cadastra']  == 'on' ? 1 : 0;
-          $valor['visualiza'] = $valor['visualiza'] == 'on' ? 1 : 0;
-          $valor['exclui']    = $valor['exclui']    == 'on' ? 1 : 0;
-
-          if ($valor['cadastra'] || $valor['visualiza'] || $valor['exclui']) {
-            $this->cod_tipo_usuario = $this->cod_tipo_usuario == FALSE ? '0' : $this->cod_tipo_usuario;
-            $obj_menu_usuario = new clsPmieducarMenuTipoUsuario($this->cod_tipo_usuario,
-              $key, $valor['cadastra'], $valor['visualiza'], $valor['exclui']);
-
-            if (! $obj_menu_usuario->cadastra()) {
-              $this->mensagem .= "Erro ao cadastrar acessos aos menus.<br>";
-              return FALSE;
-            }
-          }
-        }
-      }
-
-      $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
-      header('Location: educar_tipo_usuario_lst.php');
-      die();
-    }
+    if ($tipoUsuario->edita())
+      $this->createMenuTipoUsuario();
 
     $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
     return FALSE;
+  }
+
+  protected function createMenuTipoUsuario() {
+    if ($this->permissoes) {
+
+      // remove todos menus vinculados ao tipo de usuário.
+      $menuTipoUsuario = new clsPmieducarMenuTipoUsuario($this->cod_tipo_usuario);
+      $menuTipoUsuario->excluirTudo();
+
+      // vinvula ao tipo de usuário, menus com alguma permissão marcada
+      foreach ($this->permissoes as $menuSubmenuId => $permissao) {
+        if ($permissao['cadastra'] || $permissao['visualiza'] || $permissao['exclui']) {
+
+          // recebe código falso em algum momento?
+          if ($this->cod_tipo_usuario == FALSE)
+             $this->cod_tipo_usuario = '0';
+
+          $menuTipoUsuario = new clsPmieducarMenuTipoUsuario(
+            $this->cod_tipo_usuario,
+            $menuSubmenuId,
+            $permissao['cadastra']  ? 1 : 0,
+            $permissao['visualiza'] ? 1 : 0,
+            $permissao['exclui']    ? 1 : 0
+          );
+
+          if (! $menuTipoUsuario->cadastra()) {
+            $this->mensagem .= "Erro ao cadastrar acessos aos menus.<br>";
+            return FALSE;
+          }
+
+        }
+      } //for
+    }
+
+    $this->mensagem .= 'Altera&ccedil;&atilde;o efetuada com sucesso.<br>';
+    header('Location: educar_tipo_usuario_lst.php');
+    die();
   }
 
   function Excluir()
@@ -297,16 +309,13 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $obj = new clsPmieducarTipoUsuario($this->cod_tipo_usuario, NULL, $this->pessoa_logada,
-      $this->nm_tipo, $this->descricao, $this->nivel, NULL, NULL, 0);
+    $tipoUsuario = new clsPmieducarTipoUsuario($this->cod_tipo_usuario, NULL, $this->pessoa_logada);
 
-    $excluiu = $obj->excluir();
-    if ($excluiu) {
+    if ($tipoUsuario->excluir()) {
       $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
 
-      $obj_menu_usuario = new clsPmieducarMenuTipoUsuario($this->cod_tipo_usuario,
-        $key, $valor['cadastra'], $valor['visualiza'], $valor['exclui']);
-      $obj_menu_usuario->excluirTudo();
+      $menuTipoUsuario = new clsPmieducarMenuTipoUsuario($this->cod_tipo_usuario);
+      $menuTipoUsuario->excluirTudo();
 
       header('Location: educar_tipo_usuario_lst.php');
       die();
@@ -340,7 +349,6 @@ $pagina->MakeAll();
  */
 function selAction(menu_pai, tipo, acao)
 {
-  console.log(menu_pai + ' | ' + tipo + ' | ' +  acao);
   var element = document.getElementsByTagName('input');
   var state;
 

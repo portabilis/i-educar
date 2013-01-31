@@ -221,31 +221,31 @@ class indice extends clsListagem
 				}
 
 				$lista_busca = array(
-					"<a href=\"educar_matriculas_turma_det.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["nm_turma"]}</a>"
+					"<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["nm_turma"]}</a>"
 				);
 
 				if ($registro["ref_ref_cod_serie"])
-					$lista_busca[] = "<a href=\"educar_matriculas_turma_det.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["nm_serie"]}</a>";
+					$lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["nm_serie"]}</a>";
 				else
-					$lista_busca[] = "<a href=\"educar_matriculas_turma_det.php?ref_cod_turma={$registro["cod_turma"]}\">-</a>";
+					$lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">-</a>";
 
-				$lista_busca[] = "<a href=\"educar_matriculas_turma_det.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["nm_curso"]}</a>";
+				$lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["nm_curso"]}</a>";
 
 				if ($nivel_usuario == 1)
 				{
 					if ($registro["ref_ref_cod_escola"])
-						$lista_busca[] = "<a href=\"educar_matriculas_turma_det.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["nm_escola"]}</a>";
+						$lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["nm_escola"]}</a>";
 					else
-						$lista_busca[] = "<a href=\"educar_matriculas_turma_det.php?ref_cod_turma={$registro["cod_turma"]}\">-</a>";
+						$lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">-</a>";
 
-					$lista_busca[] = "<a href=\"educar_matriculas_turma_det.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["nm_instituicao"]}</a>";
+					$lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["nm_instituicao"]}</a>";
 				}
 				else if ($nivel_usuario == 2)
 				{
 					if ($registro["ref_ref_cod_escola"])
-						$lista_busca[] = "<a href=\"educar_matriculas_turma_det.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["nm_escola"]}</a>";
+						$lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["nm_escola"]}</a>";
 					else
-						$lista_busca[] = "<a href=\"educar_matriculas_turma_det.php?ref_cod_turma={$registro["cod_turma"]}\">-</a>";
+						$lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">-</a>";
 				}
 				$this->addLinhas($lista_busca);
 			}

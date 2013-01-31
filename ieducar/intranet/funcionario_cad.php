@@ -156,7 +156,7 @@ class indice extends clsCadastro
 		{
 			$obj_funcionario = new clsPessoaFj($this->ref_pessoa);
 			$det_funcionario = $obj_funcionario->detalhe();
-			
+
 			$this->nome = $det_funcionario["nome"];
 
 			$this->campoRotulo("nome", "Nome", $this->nome);
@@ -180,7 +180,7 @@ class indice extends clsCadastro
 
 		$this->campoTexto("matricula", "Matr&iacute;cula", $this->matricula, 12, 12, true);
 		$this->campoSenha("_senha", "Senha", $this->_senha, true);
-
+		$this->campoEmail("email", "E-mail usuário", $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o usúario esqueça<br />Este campo pode ser gravado em branco, neste caso será solicitado um e-mail ao usuário, após entrar no sistema.');
 
 		$obj_setor = new clsSetor();
 		$lst_setor = $obj_setor->lista(null, null, null, null, null, null, null, null, null, 1, 0);
@@ -193,7 +193,7 @@ class indice extends clsCadastro
 				$opcoes[$setor["cod_setor"]] = $setor["sgl_setor"];
 			}
 		}
-		$this->campoLista("setor_0", "Setor", $opcoes, $this->setor_0, "oproDocumentoNextLvl( this.value, '1' )");
+		$this->campoLista("setor_0", "Setor", $opcoes, $this->setor_0, "oproDocumentoNextLvl( this.value, '1' )", NULL, NULL, NULL, NULL, FALSE);
 
 		$lst_setor = $obj_setor->lista($this->setor_0);
 
@@ -291,14 +291,21 @@ class indice extends clsCadastro
 						300 => "300",
 						365 => "365"
 						);
+
 		$this->campoLista("tempo_expira_conta", "Dias p/ expirar a conta", $opcoes, $this->tempo_expira_conta);
 
+		$tempoExpiraSenha = $GLOBALS['coreExt']['Config']->app->user_accounts->default_password_expiration_period;
+
+		if (is_numeric($tempoExpiraSenha))
+			$this->campoOculto("tempo_expira_senha", $tempoExpiraSenha);
+		else {
+			$opcoes = array('' => 'Selecione', 5 => '5', 30 => '30', 60 => '60', 90 => '90', 120 => '120', 180 => '180');
+			$this->campoLista("tempo_expira_senha", "Dias p/ expirar a senha", $opcoes, $this->tempo_expira_senha);
+		}
+
 		$this->campoTexto("ramal", "Ramal", $this->ramal, 11, 30);
-
 		$this->campoCheck("super", "Super usu&aacute;rio", $this->super);
-
 		$this->campoCheck("proibido", "Banido", $this->proibido);
-
 		$this->campoCheck("matricula_permanente", "Matr&iacute;cula permanente", $this->matricula_permanente);
 
 		//-----------------------------------------------------------------------------------------------
@@ -329,16 +336,16 @@ class indice extends clsCadastro
 				$array_valores = array();
 				if($menu["cod_menu_menu"] != 1)
 				{
-/*					if( $menu['nm_menu'] == "i-Frotas") 
+/*					if( $menu['nm_menu'] == "i-Frotas")
 					{
 						echo $menu["cod_menu_menu"];
 					}*/
-					
+
 					$obj_submenu = new clsPortalMenuSubmenu();
 					$obj_submenu->setOrderby("nm_submenu ASC");
 					$lst_submenu = $obj_submenu->lista($menu["cod_menu_menu"], 2);
 					$opcoes = array("" => "Selecione");
-					
+
 					if( is_array($lst_submenu) && count($lst_submenu) )
 					{
 						foreach ($lst_submenu as $submenu)
@@ -346,7 +353,7 @@ class indice extends clsCadastro
 							$opcoes[$submenu["cod_menu_submenu"]] = $submenu["nm_submenu"];
 						}
 					}
-					
+
 					if( is_numeric($this->ref_pessoa) )
 					{
 						if(is_array($array_submenu) && count($array_submenu))
@@ -437,7 +444,13 @@ class indice extends clsCadastro
 			}
 		}
 
-		$obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, md5($this->_senha), $this->ativo, null, $this->ramal, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, 30, $this->tempo_expira_conta, "NOW()", "NOW()", $this->pessoa_logada, empty($this->proibido) ? 0 : 1, $this->ref_cod_setor_new, null, empty($this->matricula_permanente)? 0 : 1);
+    if (! $this->validatesUniquenessOfMatricula($this->ref_pessoa, $this->matricula))
+      return false;
+
+    if (! $this->validatesPassword($this->matricula, $this->_senha))
+      return false;
+
+		$obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, md5($this->_senha), $this->ativo, null, $this->ramal, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->tempo_expira_conta, "NOW()", "NOW()", $this->pessoa_logada, empty($this->proibido) ? 0 : 1, $this->ref_cod_setor_new, null, empty($this->matricula_permanente)? 0 : 1, 1, $this->email);
 		if( $obj_funcionario->cadastra() )
 		{
 			if($this->cadastrarTabelas())
@@ -471,13 +484,20 @@ class indice extends clsCadastro
 				$this->ref_cod_setor_new = $this->$nmvar;
 			}
 		}
+
+    if (! $this->validatesUniquenessOfMatricula($this->ref_pessoa, $this->matricula))
+      return false;
+
+    if (! $this->validatesPassword($this->matricula, $this->_senha))
+      return false;
+
 		//verifica se a senha ja esta criptografada
 		if($this->_senha != $this->confere_senha)
 		{
 			$this->_senha = md5($this->_senha);
 		}
 
-		$obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $this->_senha, $this->ativo, null, $this->ramal, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, 30, $this->tempo_expira_conta, "NOW()", "NOW()", $this->pessoa_logada, empty($this->proibido) ? 0 : 1, $this->ref_cod_setor_new, null, empty($this->matricula_permanente) ? 0 : 1);
+		$obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $this->_senha, $this->ativo, null, $this->ramal, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->tempo_expira_conta, "NOW()", "NOW()", $this->pessoa_logada, empty($this->proibido) ? 0 : 1, $this->ref_cod_setor_new, null, empty($this->matricula_permanente) ? 0 : 1, 1, $this->email);
 		if( $obj_funcionario->edita() )
 		{
 			$obj_menu_funcionario = new clsPortalMenuFuncionario($this->ref_pessoa);
@@ -511,6 +531,33 @@ class indice extends clsCadastro
 		echo "<!--\nErro ao excluir clsPortalFuncionario\n-->";
 		return false;
 	}
+
+
+  function validatesUniquenessOfMatricula($pessoaId, $matricula) {
+    $sql = "select 1 from portal.funcionario where lower(matricula) = lower('$matricula') and ref_cod_pessoa_fj != $pessoaId";
+    $db = new clsBanco();
+
+		if ($db->CampoUnico($sql) == '1') {
+      $this->mensagem = "A matrícula '$matricula' já foi usada, por favor, informe outra.";
+      return false;
+    }
+    return true;
+  }
+
+  function validatesPassword($matricula, $password) {
+    $msg = '';
+
+		if ($password == $matricula)
+      $msg = 'Informe uma senha diferente da matricula.';
+    elseif (strlen($password) < 8)
+      $msg = 'Por favor informe uma senha segura, com pelo menos 8 caracteres.';
+
+    if ($msg) {
+      $this->mensagem = $msg;
+      return false;
+    }
+    return true;
+  }
 }
 
 // cria uma extensao da classe base

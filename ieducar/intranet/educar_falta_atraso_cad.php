@@ -183,7 +183,7 @@ class indice extends clsCadastro
     }
     elseif ($this->tipo == 2) {
       $db = new clsBanco();
-      $dia_semana = $db->CampoUnico(sprintf('SELECT EXTRACT (DOW FROM (date "%s") + 1 )', dataToBanco($this->data_falta_atraso)));
+      $dia_semana = $db->CampoUnico(sprintf('(SELECT EXTRACT (DOW FROM date \'%s\') + 1 )', dataToBanco($this->data_falta_atraso)));
 
       $obj_ser = new clsPmieducarServidor();
       $horas   = $obj_ser->qtdhoras( $this->ref_cod_servidor, $this->ref_cod_escola, $this->ref_cod_instituicao, $dia_semana );

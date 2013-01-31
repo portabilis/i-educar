@@ -155,8 +155,14 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Carga Hor&aacute;ria', $registro['carga_horaria']));
     }
 
+    $this->addDetalhe(array('Dias letivos', $registro['dias_letivos']));
+
     if ($registro['intervalo']) {
       $this->addDetalhe(array('Intervalo', $registro['intervalo']));
+    }
+
+    if ($registro['observacao_historico']) {
+      $this->addDetalhe(array('Observação histórico', $registro['observacao_historico']));
     }
 
     if ($obj_permissoes->permissao_cadastra(583, $this->pessoa_logada, 3)) {

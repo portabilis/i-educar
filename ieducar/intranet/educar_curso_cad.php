@@ -92,6 +92,8 @@ class indice extends clsCadastro
   var $habilitacao_curso;
   var $curso_sem_avaliacao  = true;
 
+  var $multi_seriado;
+
   function Inicializar()
   {
     $retorno = 'Novo';
@@ -339,8 +341,9 @@ class indice extends clsCadastro
     $this->campoQuebra();
 
     // Padrão ano escolar
-    $this->campoCheck('padrao_ano_escolar', 'Padr&atilde;o Ano Escolar',
-      $this->padrao_ano_escolar);
+    $this->campoCheck('padrao_ano_escolar', 'Padr&atilde;o Ano Escolar', $this->padrao_ano_escolar);
+
+    $this->campoCheck('multi_seriado', 'Multi seriado', $this->multi_seriado);
 
     // Objetivo do curso
     $this->campoMemo('objetivo_curso', 'Objetivo Curso', $this->objetivo_curso,
@@ -363,12 +366,8 @@ class indice extends clsCadastro
       $this->hora_falta        = str_replace('.', '', $this->hora_falta);
       $this->hora_falta        = str_replace(',', '.', $this->hora_falta);
 
-      if ($this->padrao_ano_escolar == 'on') {
-        $this->padrao_ano_escolar = 1;
-      }
-      else {
-        $this->padrao_ano_escolar = 0;
-      }
+      $this->padrao_ano_escolar = is_null($this->padrao_ano_escolar) ? 0 : 1;
+      $this->multi_seriado = is_null($this->multi_seriado) ? 0 : 1;
 
       $obj = new clsPmieducarCurso(NULL, $this->pessoa_logada,
         $this->ref_cod_tipo_regime, $this->ref_cod_nivel_ensino,
@@ -376,7 +375,7 @@ class indice extends clsCadastro
         $this->qtd_etapas, NULL, NULL, NULL, NULL, $this->carga_horaria,
         $this->ato_poder_publico, NULL, $this->objetivo_curso,
         $this->publico_alvo, NULL, NULL, 1, NULL, $this->ref_cod_instituicao,
-        $this->padrao_ano_escolar, $this->hora_falta, NULL);
+        $this->padrao_ano_escolar, $this->hora_falta, NULL, $this->multi_seriado);
 
       $cadastrou = $obj->cadastra();
       if ($cadastrou) {
@@ -423,12 +422,8 @@ class indice extends clsCadastro
       $this->hora_falta        = str_replace('.', '', $this->hora_falta);
       $this->hora_falta        = str_replace(',', '.', $this->hora_falta);
 
-      if ($this->padrao_ano_escolar == 'on') {
-        $this->padrao_ano_escolar = 1;
-      }
-      else {
-        $this->padrao_ano_escolar = 0;
-      }
+      $this->padrao_ano_escolar = is_null($this->padrao_ano_escolar) ? 0 : 1;
+      $this->multi_seriado = is_null($this->multi_seriado) ? 0 : 1;
 
       $obj = new clsPmieducarCurso($this->cod_curso, NULL, $this->ref_cod_tipo_regime,
         $this->ref_cod_nivel_ensino, $this->ref_cod_tipo_ensino, NULL,
@@ -436,7 +431,7 @@ class indice extends clsCadastro
         NULL, $this->carga_horaria, $this->ato_poder_publico, NULL,
         $this->objetivo_curso, $this->publico_alvo, NULL, NULL, 1,
         $this->pessoa_logada, $this->ref_cod_instituicao,
-        $this->padrao_ano_escolar, $this->hora_falta, NULL);
+        $this->padrao_ano_escolar, $this->hora_falta, NULL, $this->multi_seriado);
 
       $editou = $obj->edita();
       if ($editou) {

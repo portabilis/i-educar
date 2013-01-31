@@ -91,8 +91,8 @@ class indice extends clsCadastro
 		$this->ref_cod_matricula=$_GET["ref_cod_matricula"];
 		$this->ref_cod_tipo_ocorrencia_disciplinar=$_GET["ref_cod_tipo_ocorrencia_disciplinar"];
 
-		if (is_numeric($this->ref_cod_matricula) && 
-		    is_numeric($this->ref_cod_tipo_ocorrencia_disciplinar) && 
+		if (is_numeric($this->ref_cod_matricula) &&
+		    is_numeric($this->ref_cod_tipo_ocorrencia_disciplinar) &&
 		    is_numeric($this->sequencial))
 		{
 			$obj = new clsPmieducarMatriculaOcorrenciaDisciplinar($this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, $this->sequencial);
@@ -224,6 +224,11 @@ class indice extends clsCadastro
 		// text
 		$this->campoMemo( "observacao", "Observac&atilde;o", $this->observacao, 60, 10, true );
 
+		$this->campoCheck("visivel_pais", 
+						  "Visível aos pais",
+						  $this->visivel_pais,
+						  "Marque este campo, caso deseje que os pais do aluno possam visualizar tal ocorrência disciplinar.");
+
 		// data
 
 	}
@@ -237,11 +242,9 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_matricula_ocorrencia_disciplinar_lst.php" );
 
-//echo "<pre>";print_r($this);
-//echo aki.dataToBanco($this->data_cadastro);die;
-		$this->data_cadastro = "{$this->data_cadastro} {$this->hora_cadastro}";
+		$this->visivel_pais = is_null($this->visivel_pais) ? 0 : 1;
 
-		$obj = new clsPmieducarMatriculaOcorrenciaDisciplinar( $this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, null, $this->pessoa_logada, $this->pessoa_logada, $this->observacao, $this->data_cadastro, $this->data_exclusao, $this->ativo );
+		$obj = new clsPmieducarMatriculaOcorrenciaDisciplinar( $this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, null, $this->pessoa_logada, $this->pessoa_logada, $this->observacao, $this->getDataHoraCadastro(), $this->data_exclusao, $this->ativo, $this->visivel_pais);
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
@@ -265,9 +268,9 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_matricula_ocorrencia_disciplinar_lst.php" );
 
-    $this->data_cadastro = "{$this->data_cadastro} {$this->hora_cadastro}";
-    
-		$obj = new clsPmieducarMatriculaOcorrenciaDisciplinar($this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, $this->sequencial, $this->pessoa_logada, $this->pessoa_logada, $this->observacao, $this->data_cadastro, $this->data_exclusao, $this->ativo);
+		$this->visivel_pais = is_null($this->visivel_pais) ? 0 : 1;
+
+    	$obj = new clsPmieducarMatriculaOcorrenciaDisciplinar($this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, $this->sequencial, $this->pessoa_logada, $this->pessoa_logada, $this->observacao, $this->getDataHoraCadastro(), $this->data_exclusao, $this->ativo, $this->visivel_pais);
 		$editou = $obj->edita();
 		if( $editou )
 		{
@@ -306,6 +309,10 @@ class indice extends clsCadastro
 		echo "<!--\nErro ao excluir clsPmieducarMatriculaOcorrenciaDisciplinar\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_tipo_ocorrencia_disciplinar ) && is_numeric( $this->sequencial ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
 		return false;
 	}
+
+  protected function getDataHoraCadastro() {
+    return $this->data_cadastro = dataToBanco($this->data_cadastro) . " " . $this->hora_cadastro;
+  }
 }
 
 // cria uma extensao da classe base
