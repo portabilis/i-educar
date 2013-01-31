@@ -675,8 +675,7 @@ class clsPmieducarAluno
     $str_nome_aluno = NULL, $str_nome_responsavel = NULL, $int_cpf_responsavel = NULL,
     $int_analfabeto = NULL, $str_nm_pai = NULL, $str_nm_mae = NULL,
     $int_ref_cod_escola = NULL, $str_tipo_responsavel = NULL, $data_nascimento = NULL,
-    $str_nm_pai2 = NULL, $str_nm_mae2 = NULL, $str_nm_responsavel2 = NULL,
-    $cod_ciasc = NULL, $cod_inep = NULL)
+    $str_nm_pai2 = NULL, $str_nm_mae2 = NULL, $str_nm_responsavel2 = NULL, $cod_inep = NULL)
   {
     $filtros = '';
     $this->resetCamposLista();
@@ -858,15 +857,10 @@ class clsPmieducarAluno
       $whereAnd = ' AND ';
     }
 
-      if (!empty($cod_ciasc) && is_numeric($cod_ciasc)) {
-        $filtros .= "{$whereAnd} cod_aluno = ( SELECT cod_aluno FROM serieciasc.aluno_cod_aluno WHERE cod_ciasc = '{$cod_ciasc}')";
-        $whereAnd = ' AND ';
-      }
-
-      if (!empty($cod_inep) && is_numeric($cod_inep)) {
-        $filtros .= "{$whereAnd} cod_aluno = ( SELECT cod_aluno FROM modules.educacenso_cod_aluno WHERE cod_aluno_inep = '{$cod_inep}')";
-        $whereAnd = ' AND ';
-      }
+    if (!empty($cod_inep) && is_numeric($cod_inep)) {
+      $filtros .= "{$whereAnd} cod_aluno = ( SELECT cod_aluno FROM modules.educacenso_cod_aluno WHERE cod_aluno_inep = '{$cod_inep}')";
+      $whereAnd = ' AND ';
+    }
 
     if (!empty($str_nm_pai2) || !empty($str_nm_mae2) || !empty($str_nm_responsavel2)) {
       $complemento_letf_outer = '';

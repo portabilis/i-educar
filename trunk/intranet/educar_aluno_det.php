@@ -36,7 +36,6 @@ require_once 'include/pmieducar/geral.inc.php';
 require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'Educacenso/Model/AlunoDataMapper.php';
 require_once 'Transporte/Model/AlunoDataMapper.php';
-require_once 'Ciasc/Model/CodigoAlunoDataMapper.php';
 
 require_once 'Portabilis/View/Helper/Application.php';
 
@@ -169,8 +168,8 @@ class indice extends clsDetalhe
       $this->idpes_pai = $det_fisica['idpes_pai'];
       $this->idpes_mae = $det_fisica['idpes_mae'];
 
-      $this->nm_pai = $detalhe_aluno['nm_pai'];
-      $this->nm_mae = $detalhe_aluno['nm_mae'];
+      $this->nm_pai = $registro['nm_pai'];
+      $this->nm_mae = $registro['nm_mae'];
 
       if ($this->idpes_pai) {
         $obj_pessoa_pai = new clsPessoaFj($this->idpes_pai);
@@ -350,6 +349,21 @@ class indice extends clsDetalhe
     if ($registro['cod_aluno']) {
       $this->addDetalhe(array('Código Aluno', $registro['cod_aluno']));
     }
+
+    // código inep
+
+    $alunoMapper = new Educacenso_Model_AlunoDataMapper();
+    $alunoInep   = NULL;
+    try {
+      $alunoInep = $alunoMapper->find(array('aluno' => $this->cod_aluno));
+      $this->addDetalhe(array('Código inep', $alunoInep->alunoInep));
+    }
+    catch(Exception $e) {
+    }
+
+    // código estado
+
+    $this->addDetalhe(array('Código estado', $registro['aluno_estado_id']));
 
     if ($registro['caminho_foto']) {
       $this->addDetalhe(array(
@@ -632,39 +646,6 @@ class indice extends clsDetalhe
     $this->addDetalhe(array('Transporte escolar', isset($transporteAluno) ? 'Sim' : 'Não'));
     if ($transporteAluno) {
       $this->addDetalhe(array('Responsável transporte', $transporteAluno->responsavel));
-    }
-
-    // Adiciona uma aba com dados do Inep/Educacenso caso aluno tenha código Inep.
-    if (isset($this->cod_aluno)) {
-      $alunoMapper = new Educacenso_Model_AlunoDataMapper();
-
-      $alunoInep = NULL;
-      try {
-        $alunoInep = $alunoMapper->find(array('aluno' => $this->cod_aluno));
-      }
-      catch(Exception $e) {
-      }
-
-      if ($alunoInep) {
-        $this->addDetalhe(array('Código do aluno no Educacenso/Inep', $alunoInep->alunoInep));
-
-        if (isset($alunoInep->nomeInep)) {
-          $this->addDetalhe(array('Nome do aluno no Educacenso/Inep', $alunoInep->nomeInep));
-        }
-      }
-    }
-
-    //informação seriesciasc
-    $SerieciascMapper = new Ciasc_Model_CodigoAlunoDataMapper();
-
-    try {
-        $ciasc = $SerieciascMapper->find(array('cod_aluno' => $this->cod_aluno));
-    }
-    catch(Exception $e) {
-    }
-
-    if (!empty($ciasc)){
-        $this->addDetalhe(array('Matrícula Série/CIASC', $ciasc->cod_ciasc));
     }
 
     if ($this->obj_permissao->permissao_cadastra(578, $this->pessoa_logada, 7)) {

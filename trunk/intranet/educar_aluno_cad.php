@@ -38,7 +38,6 @@ require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'Educacenso/Model/AlunoDataMapper.php';
 require_once 'Transporte/Model/AlunoDataMapper.php';
 require_once 'Transporte/Model/Responsavel.php';
-require_once 'Ciasc/Model/CodigoAlunoDataMapper.php';
 
 /**
  * clsIndexBase class.
@@ -1260,36 +1259,18 @@ class indice extends clsCadastro
 
     // Adiciona uma aba com dados do Inep/Educacenso caso aluno tenha código Inep.
 
-      $alunoMapper = new Educacenso_Model_AlunoDataMapper();
+    $alunoMapper = new Educacenso_Model_AlunoDataMapper();
+    $alunoInep   = NULL;
 
-      $alunoInep = NULL;
-      try {
-        $alunoInep = $alunoMapper->find(array('aluno' => $this->cod_aluno));
-      }
-      catch(Exception $e) {
-      }
+    try {
+      $alunoInep = $alunoMapper->find(array('aluno' => $this->cod_aluno));
+    }
+    catch(Exception $e) {
+    }
 
-      $this->campoAdicionaTab('Educacenso/Inep', $this->tab_habilitado);
-
-      $this->campoNumero('cod_inep', 'Código INEP', $alunoInep->alunoInep, 20, 20, FALSE);
-      $this->campoTexto('nome_inep', 'Nome Inep', $alunoInep->nomeInep, 40, 255, FALSE);
-
-     // Adiciona uma aba com dados do Serieciasc caso aluno tenha código Inep.
-    if (isset($this->cod_aluno)) {
-
-      $alunoMapper = new Ciasc_Model_CodigoAlunoDataMapper();
-
-      $serie = NULL;
-      try {
-        $serie = $alunoMapper->find(array('cod_aluno' => $this->cod_aluno));
-      }
-      catch(Exception $e) {
-      }
-
-      $this->campoAdicionaTab('Serie/CIASC', $this->tab_habilitado);
-
-      $this->campoNumero('cod_ciasc', 'Matricula Série', $serie->cod_ciasc, 20, 20, FALSE);
-   }
+    $this->campoAdicionaTab('Educacenso/Inep', $this->tab_habilitado);
+    $this->campoNumero('cod_inep', 'Código INEP', $alunoInep->alunoInep, 20, 20, FALSE);
+    $this->campoTexto('nome_inep', 'Nome Inep', $alunoInep->nomeInep, 40, 255, FALSE);
 
     $this->campoTabFim();
   }
@@ -1719,9 +1700,6 @@ class indice extends clsCadastro
 
     $this->_cadastraInep($this->cod_aluno, $this->cod_inep, $this->nome_inep);
 
-    //atualiza/cadastra serieciasc
-    $this->_cadastraCiesc($this->cod_aluno, $this->cod_ciasc, $this->pessoa_logada);
-
     header('Location: educar_aluno_det.php?cod_aluno=' . $this->cod_aluno);
     die();
   }
@@ -1971,76 +1949,34 @@ class indice extends clsCadastro
     $alunoMapper = new Educacenso_Model_AlunoDataMapper();
 
     try {
-        $aluno = $alunoMapper->find(array('aluno' => $this->cod_aluno));
+      $aluno = $alunoMapper->find(array('aluno' => $this->cod_aluno));
+    }
+    catch(Exception $e) {
+    }
+
+    if (!empty($aluno->aluno)) {
+      $mapperDelete = new Educacenso_Model_AlunoDataMapper();
+      $mapperDelete->delete($aluno);
+    }
+
+    if (!empty($cod_inep)) {
+      $mapperSave = new Educacenso_Model_Aluno();
+      $mapperSave->aluno = $cod_aluno;
+      $mapperSave->alunoInep = $cod_inep;
+
+      $mapperSave->nomeInep = $nome_inep;
+      $mapperSave->fonte ='fonte';
+
+      if (empty($aluno->alunoInep)) {
+         $mapperSave->created_at = 'NOW()';
       }
-      catch(Exception $e) {
+      else {
+         $mapperSave->created_at = $aluno->created_at;
+         $mapperSave->updated_at = 'NOW()';
       }
 
-      if (!empty($aluno->aluno))
-      {
-        $mapperDelete = new Educacenso_Model_AlunoDataMapper();
-        $mapperDelete->delete($aluno);
-      }
-
-      if (!empty($cod_inep))
-      {
-        $mapperSave = new Educacenso_Model_Aluno();
-        $mapperSave->aluno = $cod_aluno;
-        $mapperSave->alunoInep = $cod_inep;
-
-         $mapperSave->nomeInep = $nome_inep;
-         $mapperSave->fonte ='fonte';
-
-        if (empty($aluno->alunoInep))//se não existe não bd, adiciona
-        {
-           $mapperSave->created_at = 'NOW()';
-        }
-        else
-        {
-           $mapperSave->created_at = $aluno->created_at;
-           $mapperSave->updated_at = 'NOW()';
-        }
-
-        $alunoMapper->save($mapperSave);
-      }
-  }
-
-  function _cadastraCiesc($cod_aluno, $cod_ciasc, $user)
-  {
-
-    $ciascMapperSave = new Ciasc_Model_CodigoAluno();
-    $ciascMapperSave->cod_aluno = $cod_aluno;
-    $ciascMapperSave->cod_ciasc = $cod_ciasc;
-    $ciascMapperSave->user = $user;
-
-    $ciascMapper = new Ciasc_Model_CodigoAlunoDataMapper();
-    try {
-        $cad = $ciascMapper->find(array('cod_aluno' => $cod_aluno));
-     }
-     catch (Exception $e)
-     {}
-
-     if (!empty($cad->cod_aluno))//remove o dado existente
-     {
-        $ciascMapperDelete = new Ciasc_Model_CodigoAluno();
-        $ciascMapper->delete($cad);
-
-     }
-
-     if (!empty($cod_ciasc)) //foi informado um valor
-     {
-        if (empty($cad->cod_ciasc))//se não existe não bd, adiciona
-        {
-           $ciascMapperSave->created_at = 'NOW()';
-        }
-        else
-        {
-           $ciascMapperSave->created_at = $cad->created_at;
-           $ciascMapperSave->updated_at = 'NOW()';
-        }
-        $ciascMapper->save($ciascMapperSave);
-     }
-    return TRUE;
+      $alunoMapper->save($mapperSave);
+    }
   }
 }
 
