@@ -102,10 +102,8 @@ class PromocaoApiController extends ApiCoreController
   }
 
 
+  #TODO substituir este metodo por service->getComponentes()?
   protected function loadComponentesCurriculares($matriculaId){
-
-    #TODO substituir este metodo por service->getComponentes()?
-
     $dadosMatricula = $this->loadDadosMatricula($matriculaId);
 
     $anoEscolar = $dadosMatricula['ano'];

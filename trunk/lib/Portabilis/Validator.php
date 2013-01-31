@@ -30,6 +30,7 @@
 
 require_once 'include/clsBanco.inc.php';
 require_once 'CoreExt/Exception.php';
+require_once 'lib/Portabilis/Utils/Database.php';
 
 /**
  * Portabilis_Validator class.
@@ -45,14 +46,13 @@ class Portabilis_Validator {
 
   public function __construct(&$messenger) {
     $this->messenger = $messenger;
-    $this->db        = new clsBanco();
   }
 
 
   // TODO refatorar todos metodos, para não receber mais argumento $raiseException*
 
   /* TODO refatorar todos metodos, para não receber mais argumento $addMsg*
-          caso $msg falso, pode-se não add a mensagem */
+          caso $msg falso pode-se disparar erro */
 
   public function validatesPresenceOf(&$value, $name, $raiseExceptionOnFail = false, $msg = '', $addMsgOnEmpty = true){
     if (! isset($value) || (empty($value) && !is_numeric($value))){
@@ -119,13 +119,10 @@ class Portabilis_Validator {
     return true;
   }
 
-
-  // TODO alterar para usar modelos
   public function validatesValueIsInBd($fieldName, &$value, $schemaName, $tableName, $raiseExceptionOnFail = true, $addMsgOnError = true){
-    $sql = "select 1 as exists from $schemaName.$tableName where $fieldName = $1";
-    $exists = $this->fetchPreparedQuery($sql, $value, true, 'first-field');
+    $sql = "select 1 from $schemaName.$tableName where $fieldName = $1 limit 1";
 
-    if (! $exists == '1'){
+    if (Portabilis_Utils_Database::selectField($sql, $value) != 1){
       if ($addMsgOnError) {
         $msg = "O valor informado {$value} para $tableName, não esta presente no banco de dados.";
         $this->messenger->append($msg);
@@ -141,10 +138,9 @@ class Portabilis_Validator {
   }
 
   public function validatesValueNotInBd($fieldName, &$value, $schemaName, $tableName, $raiseExceptionOnFail = true, $addMsgOnError = true){
-    $sql = "select 1 as exists from $schemaName.$tableName where $fieldName = $1";
-    $exists = $this->fetchPreparedQuery($sql, $value, true, 'first-field');
+    $sql = "select 1 from $schemaName.$tableName where $fieldName = $1 limit 1";
 
-    if ($exists == '1'){
+    if (Portabilis_Utils_Database::selectField($sql, $value) == 1) {
       if ($addMsgOnError) {
         $msg = "O valor informado {$value} para $tableName já existe no banco de dados.";
         $this->messenger->append($msg);
@@ -158,33 +154,4 @@ class Portabilis_Validator {
 
     return true;
   }
-
-  // wrapper para $db->execPreparedQuery($sql, $params)
-  protected function fetchPreparedQuery($sql, $params = array(), $hideExceptions = true, $returnOnly = '') {
-    try {
-      $result = array();
-      $db = new clsBanco();
-      if ($db->execPreparedQuery($sql, $params) != false) {
-
-        while ($db->ProximoRegistro())
-          $result[] = $db->Tupla();
-
-        if ($returnOnly == 'first-line' and isset($result[0]))
-          $result = $result[0];
-        elseif ($returnOnly == 'first-field' and isset($result[0]) and isset($result[0][0]))
-          $result = $result[0][0];
-        else
-          $result = null;
-      }
-    }
-    catch(Exception $e) {
-      if (! $hideExceptions)
-        $this->messenger->append($e->getMessage(), "error", true);
-    }
-    return $result;
-  }
-}
-
-// deprecated Validator class
-class Validator extends Portabilis_Validator {
 }

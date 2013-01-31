@@ -83,7 +83,6 @@ class Biblioteca_Model_TipoExemplar extends CoreExt_Entity
 
   public function getDefaultValidatorCollection()
   {
-    #TODO adicionar validacoes;
     return array();
   }
 

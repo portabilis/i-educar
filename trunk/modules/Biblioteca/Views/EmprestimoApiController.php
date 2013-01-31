@@ -59,7 +59,6 @@ class EmprestimoApiController extends ApiCoreController
   }
 
 
-  # TODO validar se cliente vinculado a biblioteca? (vinculo pelo tipo de cliente ?)
   protected function validatesExistenceOfCliente() {
     $valid = true;
 
@@ -117,15 +116,13 @@ class EmprestimoApiController extends ApiCoreController
            && $this->validatesClienteIsNotSuspenso()
            && $this->validatesSituacaoExemplarIsIn('disponivel');
 
-
            /*
+            #TODO validar:
+              qtd emprestimos em aberto do cliente <= limite biblioteca
+              valor R$ multas em aberto do cliente <= limite biblioteca
 
-              TODO qtd emprestimos em aberto do cliente <= limite biblioteca
-              TODO valor R$ multas em aberto do cliente <= limite biblioteca
-
-              TODO não existe outro exemplar mesma obra emprestado para cliente
-              TODO validates situacao exemplar is disponivel or is reservado cliente
-
+              não existe outro exemplar mesma obra emprestado para cliente
+              validates situacao exemplar is disponivel or is reservado cliente
            */
   }
 
@@ -134,9 +131,6 @@ class EmprestimoApiController extends ApiCoreController
     return $this->validatesPresenceOf(array('exemplar_id'))
            && $this->validatesExistenceOfExemplar()
            && $this->validatesSituacaoExemplarIsIn(array('emprestado', 'emprestado_e_reservado'));
-    /*
-      TODO validates emprestado by cliente ?
-    */
   }
 
 
@@ -213,9 +207,10 @@ class EmprestimoApiController extends ApiCoreController
       $dataInicio = "$mesInicio/$diaInicio/$anoInicio";
     }
 
-    //soma dias emprestimo
-    // TODO se data cair em feriado ou dia de não trabalho somando +1 dia
-    $date              = date($format, strtotime("+$qtdDiasEmprestimo days", strtotime($dataInicio)));
+
+    // #TODO se data cair em feriado ou dia de não trabalho somar +1 dia ?
+    // soma dias emprestimo
+    $date = date($format, strtotime("+$qtdDiasEmprestimo days", strtotime($dataInicio)));
 
     return $date;
   }
@@ -616,7 +611,7 @@ class EmprestimoApiController extends ApiCoreController
         $emprestimo->ref_usuario_devolucao  = $this->getSession()->id_pessoa;
         $emprestimo->data_devolucao         = date("Y-m-d");
 
-        // TODO calcular / setar valor multa (se) devolução atrasada
+        // TODO calcular / setar valor multa (se) devolução atrasada?
 
         if ($emprestimo->edita())
           $this->messenger->append("Devolução realizada com sucesso.", 'success');

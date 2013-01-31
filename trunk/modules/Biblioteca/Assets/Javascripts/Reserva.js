@@ -46,19 +46,9 @@ var postReserva = function ($resourceCheckbox) {
 };
 
 var handlePost = function(dataResponse){
-  //try{
-    var $targetElement = $j('#exemplar-'+dataResponse.id).closest('tr').first();
-    handleMessages(dataResponse.msgs, $targetElement);
-    updateResourceRow(dataResponse);
-
-  /*}
-  catch(error){
-    //TODO causar excessao dentro do try, corrigir erro não declaração showNewSearchButton
-    showNewSearchButton();
-    handleMessages([{type : 'error', msg : 'Ocorreu um erro ao enviar o processamento, por favor tente novamente, detalhes: ' + error}], '');
-
-    safeLog(dataResponse);
-  }*/
+  var $targetElement = $j('#exemplar-'+dataResponse.id).closest('tr').first();
+  handleMessages(dataResponse.msgs, $targetElement);
+  updateResourceRow(dataResponse);
 };
 
 var onClickCancelEvent = function(event) {

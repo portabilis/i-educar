@@ -44,8 +44,7 @@ require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
  */
 class Portabilis_View_Helper_DynamicInput_PesquisaAluno extends Portabilis_View_Helper_DynamicInput_Core {
 
-  # TODO criar este metodo na classe pai para ser subescrito nas (outras) classes filhas
-  protected function getResourceId($id = null) {
+  protected function inputValue($id = null) {
     if (! $id && $this->viewInstance->ref_cod_aluno)
       $id = $this->viewInstance->ref_cod_aluno;
 
@@ -53,10 +52,9 @@ class Portabilis_View_Helper_DynamicInput_PesquisaAluno extends Portabilis_View_
   }
 
 
-  # TODO criar este metodo na classe pai para ser subescrito nas (outras) classes filhas
   protected function getResource($id) {
     if (! $id)
-      $id = $this->getResourceId($id);
+      $id = $this->inputValue($id);
 
     // chama finder somente se possuir id, senão ocorrerá exception
     $resource = empty($id) ? null : App_Model_IedFinder::getAluno($this->getEscolaId(), $id);
@@ -92,7 +90,7 @@ class Portabilis_View_Helper_DynamicInput_PesquisaAluno extends Portabilis_View_
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
     call_user_func_array(array($this->viewInstance, 'campoTexto'), $inputOptions);
 
-    $this->viewInstance->campoOculto("ref_cod_aluno", $this->getResourceId($options['id']));
+    $this->viewInstance->campoOculto("ref_cod_aluno", $this->inputValue($options['id']));
 
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, '
       var resetAluno = function(){

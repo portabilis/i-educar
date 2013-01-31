@@ -1112,8 +1112,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $situacao->situacao = App_Model_MatriculaSituacao::REPROVADO;
 
     return $situacao;
-  }  
-  
+  }
+
 
   /**
    * Retorna a situação geral do aluno, levando em consideração as situações
@@ -1204,8 +1204,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       return $situacao;
     }
 
-    #TODO Carrega as médias pois este método pode ser chamado após a chamada a
-    // saveNotas().
+    // Carrega as médias pois este método pode ser chamado após a chamada a saveNotas()
     $mediasComponentes = $this->_loadNotaComponenteCurricularMedia()
                               ->getMediasComponentes();
 
@@ -1476,13 +1475,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $situacao                          = new stdClass();
     $situacao->situacao                = App_Model_MatriculaSituacao::APROVADO;
     $situacao->componentesCurriculares = array();
-  
+
     $situacaoNotas  = $this->getSituacaoNotas();
     $situacaoFaltas = $this->getSituacaofaltas();
 
     foreach($situacaoNotas->componentesCurriculares as $ccId => $situacaoNotaCc) {
       // seta tipos nota, falta
-      $tipoNotaNenhum         = $this->getRegra()->get('tipoNota')  == 
+      $tipoNotaNenhum         = $this->getRegra()->get('tipoNota')  ==
                                 RegraAvaliacao_Model_Nota_TipoValor::NENHUM;
 
       $tipoFaltaPorComponente = $this->getRegra()->get('tipoPresenca') ==
@@ -1511,11 +1510,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $situacao->componentesCurriculares[$ccId] = $this->getSituacaoNotaFalta($situacaoNota, $situacaoFalta);
     }
 
-    #FIXME verificar porque para regras sem nota, não é retornado a situacao.
+    // #FIXME verificar porque para regras sem nota, não é retornado a situacao.
 
     return $situacao;
   }
-  
+
   /**
    * Verifica se uma determinada situação tem prioridade sobre a outra.
    *
@@ -2385,7 +2384,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     $notaAluno = $this->_getNotaAluno();
     $notas = $this->getNotas();
-  
+
     foreach ($notas as $nota) {
       $nota->notaAluno = $notaAluno;
       $nota->id = $this->_getNotaIdEtapa($nota);
@@ -2439,16 +2438,16 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $matriculaSituacao = null;
 
     //se a situacao da matricula não é aprovado e a situacao da nota e falta estão aprovadas, aprova a matricula
-    if (($this->getOption('aprovado') != App_Model_MatriculaSituacao::APROVADO) && 
+    if (($this->getOption('aprovado') != App_Model_MatriculaSituacao::APROVADO) &&
         ($situacaoNotasFaltas->aprovado && ! $situacaoNotasFaltas->andamento))
     {
       $matriculaSituacao = App_Model_MatriculaSituacao::APROVADO;
     }
     //se a situacao da matricula não é reprovado e a situacao da nota e falta não estão aprovadas e nem em andamento, reprova a matricula
-    elseif (($this->getOption('aprovado') != App_Model_MatriculaSituacao::REPROVADO) && 
+    elseif (($this->getOption('aprovado') != App_Model_MatriculaSituacao::REPROVADO) &&
             (! $situacaoNotasFaltas->aprovado && ! $situacaoNotasFaltas->andamento))
     {
-      $matriculaSituacao = App_Model_MatriculaSituacao::REPROVADO;  
+      $matriculaSituacao = App_Model_MatriculaSituacao::REPROVADO;
     }
     elseif ($this->getOption('aprovado') != App_Model_MatriculaSituacao::EM_ANDAMENTO)
     {
@@ -2514,13 +2513,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       }
     }
 
-    // TODO não parece uma boa ideia disparar uma exception apenas para informar isto
-    // talvez apenas logar no php?
     if($novaSituacaoMatricula == $situacaoMatricula)
-      $exceptionMsg = "Matrícula ({$this->getOption('matricula')}) não precisou ser promovida, "
-                      . "pois a nova situação continua a mesma da anterior ($novaSituacaoMatricula)";
+      $exceptionMsg = "Matrícula ({$this->getOption('matricula')}) não precisou ser promovida, " .
+                      "pois a nova situação continua a mesma da anterior ($novaSituacaoMatricula)";
 
-    if ($exceptionMsg) { 
+    if ($exceptionMsg) {
       require_once 'CoreExt/Service/Exception.php';
       throw new CoreExt_Service_Exception($exceptionMsg);
     }
@@ -2599,10 +2596,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   public function deleteNota($etapa, $ComponenteCurricularId)
   {
-    /*
-      #TODO verificar outra forma de calcular media sem ter que zerar nota antes
-      (zerado nota, antes de deletar, para recalcular media)
-    */
+    // zera nota antes de deletar, para que a media seja recalculada
     try {
       $nota = new Avaliacao_Model_NotaComponente(array(
         'componenteCurricular' => $ComponenteCurricularId,

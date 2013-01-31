@@ -58,7 +58,7 @@ class Educacenso_Model_EscolaDataMapper extends Educacenso_Model_CodigoReferenci
   );
 
   // aparentemente o campo escolaInep não deveria fazer parte da chave primaria, pois este pode
-  // ser alterado no cadastro de escola, #TODO criar migracao para remover PK de tal campo.
+  // ser alterado no cadastro de escola, #TODO criar migracao para remover PK de tal campo ?
   protected $_primaryKey = array(
     'escola' #, 'escolaInep'
   );

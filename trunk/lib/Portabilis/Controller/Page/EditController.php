@@ -140,7 +140,7 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
 
   protected function validator() {
     if (! isset($this->_validator))
-      $this->_validator = new Validator();
+      $this->_validator = new Portabilis_Validator();
 
     return $this->_validator;
   }
@@ -148,7 +148,7 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
 
   protected function messenger() {
     if (! isset($this->_messenger))
-      $this->_messenger = new Messenger();
+      $this->_messenger = new Portabilis_Messenger();
 
     return $this->_messenger;
   }
@@ -156,7 +156,7 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
 
   protected function mailer() {
     if (! isset($this->_mailer))
-      $this->_mailer = new Mailer();
+      $this->_mailer = new Portabilis_Mailer();
 
     return $this->_mailer;
   }

@@ -22,10 +22,10 @@
  */
 
 require_once 'include/clsBanco.inc.php';
-require_once 'lib/Portabilis/Message.php';
-require_once 'lib/Portabilis/Mailer.php';
-require_once 'lib/Portabilis/Utils/User.php';
-require_once 'lib/Portabilis/Utils/ReCaptcha.php';
+require_once 'Portabilis/Messenger.php';
+require_once 'Portabilis/Mailer.php';
+require_once 'Portabilis/Utils/User.php';
+require_once 'Portabilis/Utils/ReCaptcha.php';
 
 /**
  * clsControlador class.
@@ -94,8 +94,7 @@ class clsControlador
     session_write_close();
 
     $this->_maximoTentativasFalhas = 7;
-    $this->messages                = new Message();
-    $this->mailer                  = new Mailer();
+    $this->messenger = new Portabilis_Messenger();
   }
 
 
@@ -145,14 +144,14 @@ class clsControlador
       $msg = "Você errou a senha muitas vezes, por favor, preencha o campo de " .
              "confirmação visual ou <a class='light decorated' href='/module/Usuario/Rede" .
              "finirSenha'>redefina sua senha</a>.";
-      $this->messages->append($msg, "error", false, "error");
+      $this->messenger->append($msg, "error", false, "error");
     }
 
     else {
       $user = Portabilis_Utils_User::loadUsingCredentials($username, $password);
 
       if (is_null($user)) {
-        $this->messages->append("Usuário ou senha incorreta.", "error");
+        $this->messenger->append("Usuário ou senha incorreta.", "error");
         $this->incrementTentativasLogin();
       }
       else {
@@ -182,7 +181,7 @@ class clsControlador
     Portabilis_Utils_User::destroyStatusTokenFor($user['id'], 'redefinir_senha');
 
     $this->logado = true;
-    $this->messages->append("Usuário logado com sucesso.", "success");
+    $this->messenger->append("Usuário logado com sucesso.", "success");
 
     // solicita email para recuperação de senha, caso usuário ainda não tenha informado.
     if (! filter_var($user['email'], FILTER_VALIDATE_EMAIL))
@@ -197,7 +196,7 @@ class clsControlador
 
 
   public function canStartLoginSession($user) {
-    if (! $this->messages->hasMsgWithType("error")) {
+    if (! $this->messenger->hasMsgWithType("error")) {
       $this->checkForDisabledAccount($user);
       $this->checkForBannedAccount($user);
       $this->checkForExpiredAccount($user);
@@ -205,7 +204,7 @@ class clsControlador
       // #TODO verificar se conta nunca usada (exibir "Sua conta n&atilde;o est&aacute; ativa. Use a op&ccedil;&atilde;o 'Nunca usei a intrenet'." ?)
     }
 
-    return ! $this->messages->hasMsgWithType("error");
+    return ! $this->messenger->hasMsgWithType("error");
   }
 
 
@@ -216,7 +215,7 @@ class clsControlador
     $templateName = 'templates/nvp_htmlloginintranet.tpl';
     $templateFile = fopen($templateName, "r");
     $templateText = fread($templateFile, filesize($templateName));
-    $templateText = str_replace( "<!-- #&ERROLOGIN&# -->", $this->messages->toHtml('p'), $templateText);
+    $templateText = str_replace( "<!-- #&ERROLOGIN&# -->", $this->messenger->toHtml('p'), $templateText);
     $templateText = str_replace( "#&GOOGLE_ANALYTICS_DOMAIN_NAME&#", $_SERVER['HTTP_HOST'], $templateText);
 
     $requiresHumanAccessValidation = isset($_SESSION['tentativas_login_falhas']) &&
@@ -244,7 +243,7 @@ class clsControlador
     @session_write_close();
 
     if ($addMsg)
-      $this->messages->append("Usuário deslogado com sucesso.", "success");
+      $this->messenger->append("Usuário deslogado com sucesso.", "success");
   }
 
 
@@ -301,7 +300,7 @@ class clsControlador
 
   protected function checkForDisabledAccount($user) {
     if ($user['ativo'] != '1') {
-      $this->messages->append("Sua conta de usuário foi desativada ou expirou, por favor, " .
+      $this->messenger->append("Sua conta de usuário foi desativada ou expirou, por favor, " .
                               "entre em contato com o responsável pelo sistema do seu município.", "error", false, "error");
     }
   }
@@ -309,7 +308,7 @@ class clsControlador
 
   protected function checkForBannedAccount($user) {
     if ($user['proibido'] != '0') {
-      $this->messages->append("Sua conta de usuário não pode mais acessar o sistema, " .
+      $this->messenger->append("Sua conta de usuário não pode mais acessar o sistema, " .
                               "por favor, entre em contato com o responsável pelo sistema do seu município.",
                               "error", false, "error");
     }
@@ -322,7 +321,7 @@ class clsControlador
       if ($user['ativo'] == 1)
         Portabilis_Utils_User::disableAccount($user['id']);
 
-      $this->messages->append("Sua conta de usuário expirou, por favor, " .
+      $this->messenger->append("Sua conta de usuário expirou, por favor, " .
                               "entre em contato com o responsável pelo sistema do seu município.", "error", false, "error");
     }
   }
@@ -337,6 +336,9 @@ class clsControlador
                       $user['ip_ultimo_acesso'] != $this->getClientIP();
 
     if ($multiploAcesso and $user['super']) {
+
+      // #TODO mover lógica email, para mailer especifico
+
       $subject = "Conta do super usuário {$_SERVER['HTTP_HOST']} acessada em mais de um local";
 
       $message = ("Aparentemente a conta do super usuário {$user['matricula']} foi acessada em " .
@@ -345,11 +347,12 @@ class clsControlador
                   "Endereço IP último acesso: {$user['ip_ultimo_acesso']}\n".
                   "Endereço IP acesso atual: {$this->getClientIP()}");
 
-      $this->mailer->sendMail($user['email'], $subject, $message);
+      $mailer = new Portabilis_Mailer();
+      $mailer->sendMail($user['email'], $subject, $message);
     }
     elseif ($multiploAcesso) {
       $minutosEmEspera = round($tempoMultiploAcesso - $tempoEmEspera) + 1;
-      $this->messages->append("Aparentemente sua conta foi acessada em outro computador nos últimos " .
+      $this->messenger->append("Aparentemente sua conta foi acessada em outro computador nos últimos " .
                               "$tempoMultiploAcesso minutos, caso não tenha sido você, " .
                               "por favor, altere sua senha ou tente novamente em $minutosEmEspera minutos",
                               "error", false, "error");

@@ -100,7 +100,3 @@ class Portabilis_Messenger {
     }
   }
 }
-
-// deprecated Messenger class
-class Messenger extends Portabilis_Messenger {
-}

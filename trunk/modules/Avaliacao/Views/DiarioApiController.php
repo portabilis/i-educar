@@ -48,10 +48,9 @@ require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 
 require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'lib/Portabilis/Message.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'lib/Portabilis/Object/Utils.php';
+require_once 'Portabilis/Controller/ApiCoreController.php';
+require_once 'Portabilis/Array/Utils.php';
+require_once 'Portabilis/Object/Utils.php';
 
 class DiarioApiController extends ApiCoreController
 {
@@ -573,12 +572,6 @@ class DiarioApiController extends ApiCoreController
       if (! is_array($alunos))
         $alunos = array();
 
-      // TODO eliminar este array
-      $requiredFields = array(
-        array('matricula_id', 'ref_cod_matricula'),
-        array('aluno_id', 'ref_cod_aluno'),
-      );
-
       foreach($alunos as $aluno) {
         $matricula   = array();
         $matriculaId = $aluno['ref_cod_matricula'];
@@ -586,13 +579,10 @@ class DiarioApiController extends ApiCoreController
         // seta id da matricula a ser usado pelo metodo serviceBoletim
         $this->setCurrentMatriculaId($matriculaId);
 
-        //$matricula['situacao']      = $this->getSituacaoMatricula();
         $matricula['componentes_curriculares'] = $this->loadComponentesCurricularesForMatricula($matriculaId);
-
-        foreach($requiredFields as $f)
-          $matricula[$f[0]] = $aluno[$f[1]];
-
-        $matricula['nome'] = $this->safeString($aluno['nome_aluno']);
+        $matricula['matricula_id']             = $aluno['ref_cod_matricula'];
+        $matricula['aluno_id']                 = $aluno['ref_cod_aluno'];
+        $matricula['nome']                     = $this->safeString($aluno['nome_aluno']);
 
         $matriculas[] = $matricula;
       }
@@ -769,8 +759,8 @@ class DiarioApiController extends ApiCoreController
       $componentesCurriculares[]           = $componente;
     }
 
-    // ordenado por id, da mesma maneira que nos boletins, obs: poderá ainda ocorrer diferença entre a ordem das areas de conhecimento?
-    // #TODO ordenar diretamente na consulta do banco?
+    // ordenado por id, da mesma maneira que nos boletins,
+    // obs: poderá ainda ocorrer diferença entre a ordem das areas de conhecimento?
     return Portabilis_Array_Utils::sortByKey('id', $componentesCurriculares);
   }
 
@@ -981,12 +971,6 @@ class DiarioApiController extends ApiCoreController
     return $itensRegra;
   }
 
-
-  // TODO implementar modo para informar oper => resource menos verboso
-  //      validar em canAcceptRequest se responde para oper => resource
-  //      na classe core esta funcao Gerar(), pode chamar $this->canOperResource
-  //      e se válido chamar $this->operResource()
-  //      se oper == get, appendResponse(<resource>, retorno_funcao_para_oper_resource)
   public function Gerar() {
     if ($this->isRequestFor('get', 'matriculas'))
       $this->appendResponse('matriculas', $this->getMatriculas());

@@ -101,8 +101,9 @@ class ReservaApiController extends ApiCoreController
 
            $this->validatesNotExistsReservaEmAbertoForCliente();
 
-           // TODO qtd reservas em aberto do cliente <= limite biblioteca
-           // TODO valor R$ multas em aberto do cliente <= limite biblioteca
+           // TODO validar ?
+            // qtd reservas em aberto do cliente <= limite biblioteca
+            // valor R$ multas em aberto do cliente <= limite biblioteca
   }
 
 
@@ -339,13 +340,7 @@ class ReservaApiController extends ApiCoreController
       if (is_null($exemplar))
         $exemplar = $this->loadExemplar();
 
-      $this->_reservas   = array();
-
-
-      #TODO remover esta parte suspenso?
-      $sql = "select 1 from pmieducar.cliente_suspensao where ref_cod_cliente = $1 and data_liberacao is null and data_suspensao + (dias||' day')::interval >= now()";
-
-      $suspenso = $this->fetchPreparedQuery($sql, $params = array($id), true, 'first-field');
+      $this->_reservas = array();
 
 		  $reservas = new clsPmieducarReservas();
 		  $reservas = $reservas->lista(null,
@@ -425,7 +420,7 @@ class ReservaApiController extends ApiCoreController
     $qtdDiasEmprestimo = $this->loadQtdDiasEmprestimoForExemplar($exemplar);
     $date = date($format, strtotime("+$qtdDiasEmprestimo days", strtotime($dataInicio)));
 
-    # TODO ver se data cai em feriado ou dia de não trabalho somando +1 dia
+    // #TODO se data cair em feriado ou dia de não trabalho somar +1 dia ?
 
     return $date;
   }
@@ -524,10 +519,7 @@ class ReservaApiController extends ApiCoreController
 
   protected function postReserva() {
     if ($this->canPostReserva()) {
-      //TODO try pegar excessoes no post, se pegar add msg erro inesperado
-
-      $exemplar = $this->loadExemplar();
-
+      $exemplar               = $this->loadExemplar();
       $dataPrevistaDisponivel = $this->getDataPrevistaDisponivelForExemplarAfterLastPendencia($exemplar);
 
   		$reserva = new clsPmieducarReservas(null,
@@ -544,8 +536,6 @@ class ReservaApiController extends ApiCoreController
         $this->messenger->append("Reserva realizada com sucesso.", 'success');
       else
         $this->messenger->append("Aparentemente a reserva não foi cadastrada, por favor, tente novamente.", 'error');
-
-      //TODO fim try
     }
 
     $this->appendResponse($this->loadExemplar($this->getRequest()->exemplar_id, $reload = true));
@@ -554,8 +544,6 @@ class ReservaApiController extends ApiCoreController
   protected function deleteReserva() {
 
     if ($this->canDeleteReserva()) {
-      $this->messenger->append("#todo desabilitar reserva.", 'notice');
-
       $exemplar = $this->loadExemplar();
 
       // chamado list para assegurar que esta excluindo a reserva do cliente, biblioteca, instituicao e escola

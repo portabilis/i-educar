@@ -37,10 +37,8 @@ require_once 'Portabilis/Controller/Page/ListController.php';
 class EmprestimoController extends Portabilis_Controller_Page_ListController
 {
   protected $_dataMapper = '';
-  protected $_titulo   = 'Emprestimo';
-  protected $_formMap  = array();
-
-  #TODO setar código processoAP, copiar da funcionalidade de emprestimo existente?
+  protected $_titulo     = 'Emprestimo';
+  protected $_formMap    = array();
   protected $_processoAp = 610;
 
   public function Gerar() {

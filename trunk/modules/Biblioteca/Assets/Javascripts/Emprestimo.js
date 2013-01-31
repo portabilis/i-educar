@@ -67,24 +67,13 @@ var postEmprestimo = function ($resourceCheckbox) {
 };
 
 var handlePost = function(dataResponse){
+  if (dataResponse.exemplar)
+    var $targetElement = $j('#exemplar-' + dataResponse.exemplar.id).closest('tr').first();
+  else
+    var $targetElement = undefined;
 
-  //try{
-    if (dataResponse.exemplar)
-      var $targetElement = $j('#exemplar-' + dataResponse.exemplar.id).closest('tr').first();
-    else
-      var $targetElement = undefined;
-
-    handleMessages(dataResponse.msgs, $targetElement);
-    updateResourceRow(dataResponse.exemplar);
-
-  /*}
-  catch(error){
-    //TODO causar excessao dentro do try, corrigir erro não declaração showNewSearchButton
-    showNewSearchButton();
-    handleMessages([{type : 'error', msg : 'Ocorreu um erro ao enviar o processamento, por favor tente novamente, detalhes: ' + error}], '');
-
-    safeLog(dataResponse);
-  }*/
+  handleMessages(dataResponse.msgs, $targetElement);
+  updateResourceRow(dataResponse.exemplar);
 };
 
 

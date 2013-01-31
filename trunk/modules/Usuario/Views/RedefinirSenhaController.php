@@ -180,7 +180,7 @@ class RedefinirSenhaController extends Portabilis_Controller_Page_EditController
         $linkToReset = $_SERVER['HTTP_HOST'] . $this->getRequest()->getBaseurl() . '/' . 'Usuario/RedefinirSenha';
         UsuarioMailer::updatedPassword($user = $this->getEntity(), $linkToReset);
 
-        // #FIXME it should be a flash (session) message...
+        // #FIXME adicionar flash ao session, para persistr ao redirecionar ?
         $this->messenger()->append('Senha alterada com sucesso.', 'success');
 
         $this->logInUser();

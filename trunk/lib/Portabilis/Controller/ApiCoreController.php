@@ -47,22 +47,30 @@ require_once 'lib/Portabilis/Utils/User.php';
 
 class ApiCoreController extends Core_Controller_Page_EditController
 {
-  protected $_dataMapper        = null; #Avaliacao_Model_NotaComponenteDataMapper';
 
-  protected $_processoAp        = 0;
-  protected $_nivelAcessoOption = App_Model_NivelAcesso::INSTITUCIONAL;
+  // variaveis usadas apenas em formulários, desnecesário subescrever nos filhos.
 
   protected $_saveOption        = FALSE;
   protected $_deleteOption      = FALSE;
-
   protected $_titulo            = '';
 
 
+  // adicionar classe do data mapper que se deseja usar, em tais casos.
+  protected $_dataMapper        = null;
+
+
+  /* Variaveis utilizadas pelos validadores validatesAuthorizationToDestroy e validatesAuthorizationToChange.
+     Notar que todos usuários tem autorização para o processo 0,
+     nos controladores em que se deseja verificar permissões, adicionar o processo AP da funcionalidade.
+  */
+  protected $_processoAp        = 0;
+  protected $_nivelAcessoOption = App_Model_NivelAcesso::INSTITUCIONAL;
+
+
   public function __construct() {
-    $this->messenger = new Messenger();
-    $this->validator = new Validator($this->messenger);
-    $this->response = array();
-    $this->db = new clsBanco();
+    $this->messenger = new Portabilis_Messenger();
+    $this->validator = new Portabilis_Validator($this->messenger);
+    $this->response  = array();
   }
 
   protected function currentUser() {
@@ -366,7 +374,8 @@ class ApiCoreController extends Core_Controller_Page_EditController
   // wrappers for Portabilis_*Utils*
 
 
-  // DEPRECADO #TODO nas classes filhas, migrar chamadas de fetchPreparedQuery para usar novo padrao com array de options
+  // DEPRECADO
+  // #TODO nas classes filhas, migrar chamadas de fetchPreparedQuery para usar novo padrao com array de options
   protected function fetchPreparedQuery($sql, $params = array(), $hideExceptions = true, $returnOnly = '') {
     $options = array('params'      => $params,
                      'show_errors' => ! $hideExceptions,

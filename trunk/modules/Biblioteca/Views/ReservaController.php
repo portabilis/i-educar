@@ -37,11 +37,9 @@ require_once 'Portabilis/Controller/Page/ListController.php';
 class ReservaController extends Portabilis_Controller_Page_ListController
 {
   protected $_dataMapper = ''; #Avaliacao_Model_NotaAlunoDataMapper';
-  protected $_titulo   = 'Reserva';
-  protected $_formMap  = array();
-
-  #TODO setar código processoAP, copiar da funcionalidade de reserva existente?
-  protected $_processoAp = 0;
+  protected $_titulo     = 'Reserva';
+  protected $_formMap    = array();
+  protected $_processoAp = 609;
 
   public function Gerar() {
     // inputs

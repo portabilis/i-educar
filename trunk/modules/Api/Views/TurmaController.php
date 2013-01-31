@@ -40,15 +40,6 @@ require_once "App/Model/IedFinder.php";
 
 class TurmaController extends ApiCoreController
 {
-  protected $_dataMapper  = null;
-
-  #TODO definir este valor com mesmo código cadastro de tipo de exemplar?
-  protected $_processoAp  = 0;
-  protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
-  protected $_saveOption  = FALSE;
-  protected $_deleteOption  = FALSE;
-  protected $_titulo   = '';
-
   // validators
 
   protected function validatesTurmaId() {
@@ -62,7 +53,7 @@ class TurmaController extends ApiCoreController
     return $this->canAcceptRequest() &&
            $this->validatesTurmaId();
   }
-  
+
   // api
 
   protected function getTipoBoletim() {
@@ -71,7 +62,7 @@ class TurmaController extends ApiCoreController
 
     $tiposBoletim = Portabilis_Model_Report_TipoBoletim;
 
-    $tipos = array(null                                         => 'indefinido', 
+    $tipos = array(null                                         => 'indefinido',
                    $tiposBoletim::BIMESTRAL                     => 'portabilis_boletim',
                    $tiposBoletim::TRIMESTRAL                    => 'portabilis_boletim_trimestral',
                    $tiposBoletim::TRIMESTRAL_CONCEITUAL         => 'portabilis_boletim_primeiro_ano_trimestral',

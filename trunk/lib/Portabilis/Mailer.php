@@ -103,8 +103,3 @@ class Portabilis_Mailer {
     return $_SERVER['HTTP_HOST'];
   }
 }
-
-// deprecated Mailer class
-class Mailer extends Portabilis_Mailer {
-}
-

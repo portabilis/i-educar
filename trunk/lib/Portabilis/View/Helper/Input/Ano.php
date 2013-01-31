@@ -43,9 +43,7 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_Input_Ano extends Portabilis_View_Helper_Input_Core {
-
-  # TODO criar este metodo na classe pai para ser subescrito nas (outras) classes filhas
-  protected function getResourceValue($value = null) {
+  protected function inputValue($value = null) {
     if (! $value && $this->viewInstance->ano)
       $value = $this->viewInstance->ano;
     else
@@ -60,7 +58,7 @@ class Portabilis_View_Helper_Input_Ano extends Portabilis_View_Helper_Input_Core
 
     $defaultInputOptions = array('id'         => 'ano',
                                  'label'      => 'Ano',
-                                 'value'      => $this->getResourceValue($options['options']['value']),
+                                 'value'      => $this->inputValue($options['options']['value']),
                                  'size'       => 4,
                                  'max_length' => 4,
                                  'required'   => true,

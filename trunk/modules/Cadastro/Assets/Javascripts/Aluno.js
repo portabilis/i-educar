@@ -69,6 +69,8 @@ var handleGetPersonDetails = function(dataResponse) {
   var alunoId = dataResponse.aluno_id;
 
   if (alunoId && alunoId != resource.id()) {
+    $submitButton.attr('disabled', 'disabled').hide();
+
     $pessoaNotice.html(stringUtils.toUtf8('Esta pessoa já possui o aluno código '+ alunoId +' cadastrado, ' ))
                  .slideDown('fast');
 
@@ -82,6 +84,8 @@ var handleGetPersonDetails = function(dataResponse) {
   else {
     $j('.pessoa-links .editar-pessoa').attr('href', '/intranet/atendidos_cad.php?cod_pessoa_fj=' + dataResponse.id)
                                       .show();
+
+    $submitButton.removeAttr('disabled').show();
   }
 
   $j('#pessoa_id').val(dataResponse.id);

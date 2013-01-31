@@ -166,7 +166,6 @@ var resourceOptions = {
                                                 resourceOptions.get('name')(),
                                                 additionalVars);
 
-        // #TODO alterar texto $submitButton para Aguarde... enquanto estiver enviando ?
         resourceOptions.form.submit();
       }
     };

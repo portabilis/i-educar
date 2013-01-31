@@ -43,9 +43,7 @@ require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_DynamicInput_DataInicial extends Portabilis_View_Helper_DynamicInput_Core {
-
-  # TODO criar este metodo na classe pai para ser subescrito nas (outras) classes filhas
-  protected function getResourceValue($value = null) {
+  protected function inputValue($value = null) {
     if (! $value && $this->viewInstance->data_inicial)
       $value = $this->viewInstance->data_inicial;
     else
@@ -60,7 +58,7 @@ class Portabilis_View_Helper_DynamicInput_DataInicial extends Portabilis_View_He
 
     $defaultInputOptions = array('id'         => 'data_inicial',
                                  'label'      => 'Data inicial',
-                                 'value'      => $this->getResourceValue($options['options']['value']),
+                                 'value'      => $this->inputValue($options['options']['value']),
                                  'required'   => true,
                                  'label_hint' => '',
                                  'inline'     => false,
