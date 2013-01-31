@@ -24,10 +24,11 @@
 	*	02111-1307, USA.													 *
 	*																		 *
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsListagem.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
+require_once 'Educacenso/Model/AlunoDataMapper.php';
 
 class clsIndexBase extends clsBase
 {
@@ -85,11 +86,11 @@ class indice extends clsListagem
 	var $inativado;
 	var $nome_responsavel;
 	var $cpf_responsavel;
-	
+
 	var $nome_pai;
 	var $nome_mae;
 	var $data_nascimento;
-	
+
 	function Gerar()
 	{
 		@session_start();
@@ -104,13 +105,12 @@ class indice extends clsListagem
 		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
 
 		$this->campoNumero("cod_aluno","C&oacute;digo Aluno",$this->cod_aluno,20,255,false);
-		$this->campoTexto("nome_aluno","Nome do aluno",$this->nome_aluno,50,255,false);
-//		if ($this->pessoa_logada == 184580) {
-			$this->campoData("data_nascimento", "Data de Nascimento", $this->data_nascimento);
-			$this->campoTexto("nome_pai", "Nome do Pai", $this->nome_pai, 50, 255);
-			$this->campoTexto("nome_mae", "Nome da Mãe", $this->nome_mae, 50, 255);
-			$this->campoTexto("nome_responsavel", "Nome do Responsável", $this->nome_responsavel, 50, 255);
-//		}
+		$this->campoNumero("cod_inep","C&oacute;digo INEP",$this->cod_inep,20,255,false);
+		$this->campoTexto("nome_aluno","Nome do aluno", $this->nome_aluno,50,255,false);
+		$this->campoData("data_nascimento", "Data de Nascimento", $this->data_nascimento);
+		$this->campoTexto("nome_pai", "Nome do Pai", $this->nome_pai, 50, 255);
+		$this->campoTexto("nome_mae", "Nome da Mãe", $this->nome_mae, 50, 255);
+		$this->campoTexto("nome_responsavel", "Nome do Responsável", $this->nome_responsavel, 50, 255);
 
 		$obj_permissoes = new clsPermissoes();
 		$cod_escola = $obj_permissoes->getEscola( $this->pessoa_logada );
@@ -131,7 +131,9 @@ class indice extends clsListagem
 
 		$this->addCabecalhos( array(
 			"C&oacute;digo Aluno",
+      "Código INEP",
 			"Nome do Aluno",
+			"Nome da Mãe",
 			"Nome do Respons&aacute;vel",
 			"CPF Respons&aacute;vel",
 		) );
@@ -141,85 +143,40 @@ class indice extends clsListagem
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
 		$obj_aluno = new clsPmieducarAluno();
-//		$obj_aluno->setOrderby( "cod_aluno DESC" );
 		$obj_aluno->setLimite( $this->limite, $this->offset );
 
-		/*$lista = $obj_aluno->lista(
-					$this->cod_aluno,
-					null,
-					null,
-					null,
-					null,
-					null,
-					null,
-					null,
-					null,
-					null,
-					1,
-					null,
-					$this->nome_aluno,
-					$this->nome_responsavel,
-					idFederal2int($this->cpf_responsavel),
-					null,
-					$this->nome_pai,
-					$this->nome_mae,
-					$ref_cod_escola
-				);*/
-//		if ($this->pessoa_logada == 184580) {
-			$lista = $obj_aluno->lista2(
-						$this->cod_aluno,
-						null,
-						null,
-						null,
-						null,
-						null,
-						null,
-						null,
-						null,
-						null,
-						1,
-						null,
-						$this->nome_aluno,
-						null,
-						idFederal2int($this->cpf_responsavel),
-						null,
-						null,
-						null,
-						$ref_cod_escola,
-						null,
-						$this->data_nascimento,
-						$this->nome_pai,
-						$this->nome_mae,
-						$this->nome_responsavel
-					);
-		/*} else {
-			$lista = $obj_aluno->lista(
-					$this->cod_aluno,
-					null,
-					null,
-					null,
-					null,
-					null,
-					null,
-					null,
-					null,
-					null,
-					1,
-					null,
-					$this->nome_aluno,
-					null,
-					idFederal2int($this->cpf_responsavel),
-					null,
-					null,
-					null,
-					$ref_cod_escola
-				);
-		}*/
-		
+		$lista = $obj_aluno->lista2(
+			$this->cod_aluno,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			1,
+			null,
+			$this->nome_aluno,
+			null,
+			idFederal2int($this->cpf_responsavel),
+			null,
+			null,
+			null,
+			$ref_cod_escola,
+			null,
+			$this->data_nascimento,
+			$this->nome_pai,
+			$this->nome_mae,
+			$this->nome_responsavel,
+      $this->cod_inep
+		);
+
 		$total = $obj_aluno->_total;
 
 		// monta a lista
-		if( is_array( $lista ) && count( $lista ) ) 
+		if( is_array( $lista ) && count( $lista ) )
 		{
 			foreach ( $lista AS $registro )
 			{
@@ -304,27 +261,47 @@ class indice extends clsListagem
 					}
 				}
 
+        $inepMapper = new Educacenso_Model_AlunoDataMapper();
+        $alunoInep = NULL;
+
+        try {
+          $alunoInep = $inepMapper->find(array('cod_aluno' => $registro["cod_aluno"]));
+        }
+        catch(Exception $e) {
+        }
+
+        if (empty($alunoInep->alunoInep)){
+            $registro['cod_inep'] = '-';
+        } else {
+            $registro['cod_inep'] = $alunoInep->alunoInep;
+        }
+
+		    $registro["nome_aluno"]       = strtoupper($registro["nome_aluno"]);
+		    $registro["nm_mae"]           = strtoupper($registro["nm_mae"]);
+		    $registro["nome_responsavel"] = strtoupper($registro["nome_responsavel"]);
 
 				$this->addLinhas( array(
 					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["cod_aluno"]}</a>",
+					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["cod_inep"]}</a>",
 					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["nome_aluno"]}</a>",
+					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["nm_mae"]}</a>",
 					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["nome_responsavel"]}</a>",
 					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["cpf_responsavel"]}</a>"
 				) );
 			}
 		}
-		
+
 		$this->addPaginador2( "educar_aluno_lst.php", $total, $_GET, $this->nome, $this->limite );
 
 
 		//** Verificacao de permissao para cadastro
 		if($obj_permissoes->permissao_cadastra(578, $this->pessoa_logada,7))
 		{
-			$this->acao = "go(\"educar_aluno_cad.php\")";
+			$this->acao = "go(\"/module/Cadastro/aluno\")";
 			$this->nome_acao = "Novo";
 
-			$this->array_botao = array("Ficha do Aluno (em branco)");
-			$this->array_botao_script = array( "showExpansivelImprimir(400, 200,  \"educar_relatorio_aluno_dados.php\",\"\", \"Relatório i-Educar\" )" );
+			/*$this->array_botao = array("Ficha do Aluno (em branco)");
+			$this->array_botao_script = array( "showExpansivelImprimir(400, 200,  \"educar_relatorio_aluno_dados.php\",\"\", \"Relatório i-Educar\" )" );*/
 		}
 		//**
 		$this->largura = "100%";
