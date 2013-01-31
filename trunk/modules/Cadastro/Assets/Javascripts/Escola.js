@@ -17,9 +17,9 @@ var handlePutEscola = function(dataResponse) {
   acao();
 }
 
-var getEscola = function() {
+var getEscola = function(escolaId) {
   var data = {
-    id : $j('#cod_escola').val()
+    id : escolaId
   };
 
   var options = {
@@ -48,7 +48,10 @@ var putEscola = function() {
   putResource(options);
 }
 
-getEscola();
+var escolaId = $j('#cod_escola').val();
+
+if (escolaId)
+  getEscola(escolaId);
 
 // unbind events
 $submitButton.removeAttr('onclick');
