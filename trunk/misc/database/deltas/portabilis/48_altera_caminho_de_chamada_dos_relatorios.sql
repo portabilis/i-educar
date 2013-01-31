@@ -9,6 +9,8 @@
   update portal.menu_submenu set arquivo = 'module/Reports/MovimentoAlunos' where cod_menu_submenu = 999201;
   update pmicontrolesis.menu set caminho = 'module/Reports/MovimentoAlunos' where ref_cod_menu_submenu = 999201;
 
+  -- Remove formulários antigos que foram unificados  
+
   delete from pmieducar.menu_tipo_usuario where ref_cod_menu_submenu = 999104;
   delete from pmicontrolesis.menu where cod_menu = 999104;
   delete from portal.menu_funcionario where ref_cod_menu_submenu = 999104;
@@ -77,6 +79,9 @@
   update portal.menu_submenu set arquivo = 'module/Reports/AtestadoVaga' where cod_menu_submenu = 999100;
   update pmicontrolesis.menu set caminho = 'module/Reports/AtestadoVaga' where ref_cod_menu_submenu = 999100;
 
+  update portal.menu_submenu set arquivo = 'module/Reports/AtestadoTransferencia' where cod_menu_submenu = 999216;
+  update pmicontrolesis.menu set caminho = 'module/Reports/AtestadoTransferencia' where ref_cod_menu_submenu = 999216;
+
   update portal.menu_submenu set arquivo = 'module/Reports/MapaConselhoClasse' where cod_menu_submenu = 999609;
   update pmicontrolesis.menu set caminho = 'module/Reports/MapaConselhoClasse' where ref_cod_menu_submenu = 999609;
 
@@ -117,6 +122,34 @@
   update pmicontrolesis.menu set caminho = 'module/Reports/HistoricoEscolar', tt_menu = 'Histórico Escolar' where   ref_cod_menu_submenu = 999200;
 
   update pmicontrolesis.menu set ord_menu = 8 where cod_menu = 999605;
+
+  -- TODO Adicionar UNDO para updates abaixo
+
+  update portal.menu_submenu set arquivo = 'module/Reports/BibliotecaAutor' where cod_menu_submenu = 999615;
+  update pmicontrolesis.menu set caminho = 'module/Reports/BibliotecaAutor' where ref_cod_menu_submenu = 999615;
+
+  update portal.menu_submenu set arquivo = 'module/Reports/BibliotecaEditora' where cod_menu_submenu = 999616;
+  update pmicontrolesis.menu set caminho = 'module/Reports/BibliotecaEditora' where ref_cod_menu_submenu = 999616;
+
+  update portal.menu_submenu set arquivo = 'module/Reports/BibliotecaObra' where cod_menu_submenu = 999617;
+  update pmicontrolesis.menu set caminho = 'module/Reports/BibliotecaObra' where ref_cod_menu_submenu = 999617;
+
+  update portal.menu_submenu set arquivo = 'module/Reports/BibliotecaEmprestimo' where cod_menu_submenu = 999618;
+  update pmicontrolesis.menu set caminho = 'module/Reports/BibliotecaEmprestimo' where ref_cod_menu_submenu = 999618;
+
+  update portal.menu_submenu set arquivo = 'module/Reports/BibliotecaDevolucao' where cod_menu_submenu = 999619;
+  update pmicontrolesis.menu set caminho = 'module/Reports/BibliotecaDevolucao' where ref_cod_menu_submenu = 999619;
+
+  update portal.menu_submenu set arquivo = 'module/Reports/BibliotecaComprovanteEmprestimo' where cod_menu_submenu = 999620;
+  update pmicontrolesis.menu set caminho = 'module/Reports/BibliotecaComprovanteEmprestimo' where ref_cod_menu_submenu = 999620;
+
+update portal.menu_submenu set arquivo = 'module/Reports/BibliotecaComprovanteDevolucao' where cod_menu_submenu = 999621;
+  update pmicontrolesis.menu set caminho = 'module/Reports/BibliotecaComprovanteDevolucao' where ref_cod_menu_submenu = 999621;
+
+  update portal.menu_submenu set arquivo = 'module/Reports/BibliotecaReciboPagamento' where cod_menu_submenu = 999622;
+  update pmicontrolesis.menu set caminho = 'module/Reports/BibliotecaReciboPagamento' where ref_cod_menu_submenu = 999622;
+
+update portal.menu_submenu set cod_sistema = 2 where cod_menu_submenu in(999616,999617,999618,999619,999620,999621,999622);
 
   	-- //@UNDO
   
