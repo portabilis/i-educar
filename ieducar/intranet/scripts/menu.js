@@ -1352,7 +1352,7 @@ function MontaMenu()
 				}
 				else
 				{
-					link = "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" height=\"100%\"><tr><td valign=\"middle\" width=\"18\"><img src='http://nat-bp-spo.cobra.com.br/imagens/transp.gif' height='16' width='16' ></td><td valign=\"middle\"><a href='#'>" + menu_formatado[i][1] + "</a></td></tr></table>";
+					link = "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" height=\"100%\"><tr><td valign=\"middle\" width=\"18\"><img src='/intranet/imagens/transp.gif' height='16' width='16' ></td><td valign=\"middle\"><a href='#'>" + menu_formatado[i][1] + "</a></td></tr></table>";
 					oCMenu.makeMenu(menu_formatado[i][0]+"_",menu_formatado[i][5]+"_", link, menu_formatado[i][8],menu_formatado[i][9],menu_formatado[i][6],'','','','','','','','',menu_formatado[i][10]);
 				}
 			}else
