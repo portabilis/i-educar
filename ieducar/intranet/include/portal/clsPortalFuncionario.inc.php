@@ -150,13 +150,13 @@ class clsPortalFuncionario
 	 *
 	 * @return object
 	 */
-	function clsPortalFuncionario( $ref_cod_pessoa_fj = null, $matricula = null, $senha = null, $ativo = null, $ref_sec = null, $ramal = null, $sequencial = null, $opcao_menu = null, $ref_cod_administracao_secretaria = null, $ref_ref_cod_administracao_secretaria = null, $ref_cod_departamento = null, $ref_ref_ref_cod_administracao_secretaria = null, $ref_ref_cod_departamento = null, $ref_cod_setor = null, $ref_cod_funcionario_vinculo = null, $tempo_expira_senha = null, $tempo_expira_conta = null, $data_troca_senha = null, $data_reativa_conta = null, $ref_ref_cod_pessoa_fj = null, $proibido = null, $ref_cod_setor_new = null, $matricula_new = null, $matricula_permanente = null, $tipo_menu = null )
+	function clsPortalFuncionario( $ref_cod_pessoa_fj = null, $matricula = null, $senha = null, $ativo = null, $ref_sec = null, $ramal = null, $sequencial = null, $opcao_menu = null, $ref_cod_administracao_secretaria = null, $ref_ref_cod_administracao_secretaria = null, $ref_cod_departamento = null, $ref_ref_ref_cod_administracao_secretaria = null, $ref_ref_cod_departamento = null, $ref_cod_setor = null, $ref_cod_funcionario_vinculo = null, $tempo_expira_senha = null, $tempo_expira_conta = null, $data_troca_senha = null, $data_reativa_conta = null, $ref_ref_cod_pessoa_fj = null, $proibido = null, $ref_cod_setor_new = null, $matricula_new = null, $matricula_permanente = null, $tipo_menu = null, $email = null )
 	{
 		$db = new clsBanco();
 		$this->_schema = "portal.";
 		$this->_tabela = "{$this->_schema}funcionario";
 
-		$this->_campos_lista = $this->_todos_campos = "ref_cod_pessoa_fj, matricula, senha, ativo, ref_sec, ramal, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, tempo_expira_conta, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, proibido, ref_cod_setor_new, matricula_new, matricula_permanente, tipo_menu";
+		$this->_campos_lista = $this->_todos_campos = "ref_cod_pessoa_fj, matricula, senha, ativo, ref_sec, ramal, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, tempo_expira_conta, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, proibido, ref_cod_setor_new, matricula_new, matricula_permanente, tipo_menu, email";
 
 		if( is_numeric( $ref_ref_cod_pessoa_fj ) )
 		{
@@ -402,6 +402,9 @@ class clsPortalFuncionario
 			$this->tipo_menu = $tipo_menu;
 		}
 
+		if(is_string($email))
+			$this->email = $email;
+
 	}
 
 	/**
@@ -567,6 +570,12 @@ class clsPortalFuncionario
 				$gruda = ", ";
 			}
 
+			if(is_string($this->email))
+			{
+				$campos .= "{$gruda}email";
+				$valores .= "{$gruda}'{$this->email}'";
+				$gruda = ", ";
+			}
 
 			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
 			return true;//$db->InsertId( "{$this->_tabela}_ref_cod_pessoa_fj_seq");
@@ -708,6 +717,11 @@ class clsPortalFuncionario
 				$gruda = ", ";
 			}
 
+			if(is_string($this->email))
+			{
+				$set .= "{$gruda}email = '{$this->email}'";
+				$gruda = ", ";
+			}
 
 			if( $set )
 			{
