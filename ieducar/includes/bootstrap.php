@@ -74,8 +74,12 @@ else {
   define('CORE_EXT_CONFIGURATION_ENV', 'production');
 }
 
-// Arquivo de configuração INI
-$configFile = realpath(dirname(__FILE__) . '/../') . '/configuration/ieducar.ini';
+// por padrão busca uma configuração para o ambiente atual definido em CORE_EXT_CONFIGURATION_ENV
+$configFile = realpath(dirname(__FILE__) . '/../') . '/configuration/' . CORE_EXT_CONFIGURATION_ENV . '.ini';
+
+// caso não exista o ini para o ambiente atual, usa o arquivo padrão ieducar.ini
+if (! file_exists($configFile))
+  $configFile = realpath(dirname(__FILE__) . '/../') . '/configuration/ieducar.ini';
 
 // Classe de configuração
 require_once 'CoreExt/Config.class.php';
@@ -96,6 +100,13 @@ $coreExt['Locale'] = $locale;
 
 // Timezone
 date_default_timezone_set($coreExt['Config']->app->locale->timezone);
+
+$tenantEnv = $_SERVER['HTTP_HOST'];
+
+// tenta carregar as configurações da seção especifica do tenant,
+// ex: ao acessar http://tenant.ieducar.com.br será carregado a seção tenant.ieducar.com.br caso exista
+if ($coreExt['Config']->hasEnviromentSection($tenantEnv))
+  $coreExt['Config']->changeEnviroment($tenantEnv);
 
 /**
  * Altera o diretório da aplicação. chamadas a fopen() na aplicação não
