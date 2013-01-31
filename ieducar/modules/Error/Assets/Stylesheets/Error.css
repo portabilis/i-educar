@@ -1,0 +1,37 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  align: center;
+  font-size: 85%;
+  font-family: verdana, arial, sans-serif;
+  line-height: 160%
+}
+
+div#error {
+  position: absolute;
+  left: 250px;
+  top: 35px;
+  border: 1px solid #666;
+  width: 800px;
+}
+
+div.content {
+  padding: 25px;
+}
+
+div.detail {
+  margin-top: 25px;
+}
+
+h1 {
+  padding-bottom: 15px;
+  font-size: 300%;
+}
+
+ol {
+  list-style-position: inside;
+  margin-top: 20px;
+}
