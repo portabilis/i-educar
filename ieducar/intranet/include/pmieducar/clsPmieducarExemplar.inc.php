@@ -480,6 +480,11 @@ class clsPmieducarExemplar
 				$gruda = ", ";
 			}
 
+			if(is_numeric($this->tombo))
+			{
+				$set .= "{$gruda}tombo = '{$this->tombo}'";
+				$gruda = ", ";
+			}
 
 			if( $set )
 			{
@@ -673,18 +678,28 @@ class clsPmieducarExemplar
 		}
 		return false;
 	}
-	
-	function retorna_tombo_maximo() {
-		$sql = "SELECT MAX(tombo) as tombo_max FROM pmieducar.exemplar WHERE ativo = 1";
+
+	function retorna_tombo_maximo($bibliotecaId, $exceptExemplarId = null) {
+    if (empty($bibliotecaId))
+      throw new Exception("Deve ser enviado um argumento '\$bibliotecaId' ao método 'retorna_tombo_maximo'");
+
+    // sem esta regra ao editar o ultimo exemplar sem informar o tombo, seria pego o proprio tombo.
+    if (! empty($exceptExemplarId))
+      $exceptExemplar = " and exemplar.cod_exemplar !=  $exceptExemplarId";
+    else
+      $exceptExemplar = '';
+
+		$sql = "SELECT MAX(tombo) as tombo_max FROM pmieducar.exemplar, pmieducar.acervo WHERE exemplar.ativo = 1 and exemplar.ref_cod_acervo = acervo.cod_acervo and acervo.ref_cod_biblioteca = $bibliotecaId $exceptExemplar";
+
 		$db = new clsBanco();
 		return $db->CampoUnico($sql);
 	}
-	
+
 	/**
 	 * Retorna uma lista filtrados de acordo com os parametros
 	 *
 	 * @return array
-	 */										
+	 */
 	function lista_com_acervos( $int_cod_exemplar = null, $int_ref_cod_fonte = null, $int_ref_cod_motivo_baixa = null, $int_ref_cod_acervo = null, $int_ref_cod_situacao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_permite_emprestimo = null, $int_preco = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $date_data_aquisicao_ini = null, $date_data_aquisicao_fim = null, $int_ref_exemplar_tipo = null, $str_titulo_livro = null,$int_ref_cod_biblioteca = null, $str_titulo = null, $int_ref_cod_instituicao = null, $int_ref_cod_escola = null, $int_ref_cod_acervo_colecao = null, $int_ref_cod_acervo_editora = null)	{
 		$sql = "SELECT {$this->_campos_lista}, a.ref_cod_biblioteca, a.titulo FROM {$this->_tabela} e, {$this->_schema}acervo a, {$this->_schema}biblioteca b";
 

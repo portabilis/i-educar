@@ -71,7 +71,7 @@ class indice extends clsCadastro
 	var $biblioteca_feriado;
 	var $incluir_feriado;
 	var $excluir_feriado;
-	
+
 	var $tombo_automatico;
 
 	function Inicializar()
@@ -148,10 +148,10 @@ class indice extends clsCadastro
 //		$this->campoLista( "requisita_senha", "Requisita Senha", $opcoes, $this->requisita_senha );
 		$this->campoCheck( "requisita_senha", "Requisita Senha", $this->requisita_senha );
 		$this->campoNumero( "dias_espera", "Dias Espera", $this->dias_espera, 2, 2, true );
-		
+
 		if ($this->tombo_automatico)
 			$this->campoBoolLista("tombo_automatico", "Biblioteca possui tombo automático", $this->tombo_automatico);
-		else 
+		else
 			$this->campoBoolLista("tombo_automatico", "Biblioteca possui tombo automático", "t");
 
 	//-----------------------INCLUI DIA SEMANA------------------------//
@@ -300,10 +300,7 @@ class indice extends clsCadastro
 		$this->valor_maximo_multa = str_replace(".","",$this->valor_maximo_multa);
 		$this->valor_maximo_multa = str_replace(",",".",$this->valor_maximo_multa);
 
-		if ($this->requisita_senha == 'on')
-			$this->requisita_senha = 1;
-		else
-			$this->requisita_senha = 0;
+    $this->requisita_senha = is_null($this->requisita_senha) ? 0 : 1;
 
 		$obj = new clsPmieducarBiblioteca( $this->cod_biblioteca, null, null, null, $this->valor_multa, $this->max_emprestimo, $this->valor_maximo_multa, null, null, $this->requisita_senha, 1, $this->dias_espera, $this->tombo_automatico );
 		$editou = $obj->edita();

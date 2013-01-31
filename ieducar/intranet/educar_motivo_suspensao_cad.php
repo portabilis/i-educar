@@ -95,30 +95,10 @@ class indice extends clsCadastro
 	{
 		// primary keys
 		$this->campoOculto( "cod_motivo_suspensao", $this->cod_motivo_suspensao );
-		
-		/*$obj_pessoa_bib = new clsPmieducarBibliotecaUsuario();
-		$lst_pessoa_bib = $obj_pessoa_bib->lista(null, $this->pessoa_logada);
 
-		$opcoes = array("" => "Selecione");
-		if(is_array($lst_pessoa_bib))
-		{
-			foreach ($lst_pessoa_bib as $bib)
-			{
-				$obj_biblioteca = new clsPmieducarBiblioteca($bib['ref_cod_biblioteca']);
-				$det_biblioteca = $obj_biblioteca->detalhe();
-				
-				$opcoes[$det_biblioteca['cod_biblioteca']] = $det_biblioteca['nm_biblioteca'];
-			}
-		}
-		$this->campoLista("ref_cod_biblioteca", "Biblioteca", $opcoes, $this->ref_cod_biblioteca);*/
+    //foreign keys
+    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'biblioteca'));
 
-		$get_escola     = 1;
-		$escola_obrigatorio = false;
-		$get_biblioteca = 1;
-		$instituicao_obrigatorio = true;
-		$biblioteca_obrigatorio = true;
-		include("include/pmieducar/educar_campo_lista.php");
-		
 		// text
 		$this->campoTexto( "nm_motivo", "Motivo Suspens&atilde;o", $this->nm_motivo, 30, 255, true );
 		$this->campoMemo( "descricao", "Descri&ccedil;&atilde;o", $this->descricao, 60, 5, false );

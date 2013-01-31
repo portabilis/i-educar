@@ -128,7 +128,7 @@ class indice extends clsCadastro
       $parametros->adicionaCampoSelect('ref_idpes', 'idpes', 'nome');
       $parametros->setPessoa('F');
       $parametros->setPessoaCPF('N');
-      $parametros->setCodSistema(1);
+      $parametros->setCodSistema(null);
       $parametros->setPessoaNovo('S');
       $parametros->setPessoaTela('frame');
 
@@ -144,22 +144,6 @@ class indice extends clsCadastro
 		$this->campoNumero( "login", "Login", $this->login_, 9, 9, false );
 		$this->campoSenha( "senha", "Senha", $this->senha_, false );
 
-		$get_escola     = 1;
-		$get_biblioteca = 1;
-		$instituicao_obrigatorio = true;
-		$escola_obrigatorio = false;
-		$biblioteca_obrigatorio = true;
-		include("include/pmieducar/educar_campo_lista.php");
-
-		//$instituicao_obrigatorio  = true;
-		//$escola_obrigatorio		  = false;
-		//$biblioteca_obrigatorio	  = true;
-		$cliente_tipo_obrigatorio = true;
-		$get_instituicao 		  = true;
-		$get_escola		 		  = true;
-		//$get_biblioteca  		  = true;
-		$get_cliente_tipo		  = true;
-
 		if($this->cod_cliente && $this->ref_cod_biblioteca)
 		{
 			$db = new clsBanco();
@@ -168,12 +152,13 @@ class indice extends clsCadastro
 			$this->ref_cod_biblioteca_atual = $this->ref_cod_biblioteca;
 			$this->campoOculto("ref_cod_biblioteca_atual", $this->ref_cod_biblioteca_atual);
 
-			$this->ref_cod_instituicao  = $db->CampoUnico("SELECT ref_cod_instituicao  FROM pmieducar.biblioteca, pmieducar.cliente_tipo_cliente ctc, pmieducar.cliente_tipo ct WHERE ref_cod_cliente = '$this->cod_cliente' AND ref_cod_cliente_tipo = cod_cliente_tipo AND ct.ref_cod_biblioteca = cod_biblioteca AND ctc.ref_cod_biblioteca = {$this->ref_cod_biblioteca}");
-			$this->ref_cod_escola       = $db->CampoUnico("SELECT ref_cod_escola  FROM pmieducar.biblioteca, pmieducar.cliente_tipo_cliente ctc, pmieducar.cliente_tipo ct WHERE ref_cod_cliente = '$this->cod_cliente' AND ref_cod_cliente_tipo = cod_cliente_tipo AND ct.ref_cod_biblioteca = cod_biblioteca AND ctc.ref_cod_biblioteca = {$this->ref_cod_biblioteca}");
-			$this->ref_cod_biblioteca   = $db->CampoUnico("SELECT cod_biblioteca  FROM pmieducar.biblioteca, pmieducar.cliente_tipo_cliente ctc, pmieducar.cliente_tipo ct WHERE ref_cod_cliente = '$this->cod_cliente' AND ref_cod_cliente_tipo = cod_cliente_tipo AND ct.ref_cod_biblioteca = cod_biblioteca AND ctc.ref_cod_biblioteca = {$this->ref_cod_biblioteca}");
-			$this->ref_cod_cliente_tipo = $db->CampoUnico("SELECT ref_cod_cliente_tipo FROM pmieducar.cliente_tipo_cliente WHERE ref_cod_cliente = '$this->cod_cliente'");// AND ref_cod_cliente_tipo IN (SELECT cod_cliente_tipo FROM pmieducar.cliente_tipo WHERE ref_cod_biblioteca = )");//IN (SELECT ref_cod_biblioteca FROM pmieducar.biblioteca_usuario WHERE ref_cod_usuario = '$this->pessoa_logada'))");
+			//$this->ref_cod_biblioteca   = $db->CampoUnico("SELECT cod_biblioteca  FROM pmieducar.biblioteca, pmieducar.cliente_tipo_cliente ctc, pmieducar.cliente_tipo ct WHERE ref_cod_cliente = '$this->cod_cliente' AND ref_cod_cliente_tipo = cod_cliente_tipo AND ct.ref_cod_biblioteca = cod_biblioteca AND ctc.ref_cod_biblioteca = {$this->ref_cod_biblioteca}");
+
+      // obtem o codigo do tipo de cliente, apartir da tabela cliente_tipo_cliente
+			$this->ref_cod_cliente_tipo = $db->CampoUnico("SELECT ref_cod_cliente_tipo FROM pmieducar.cliente_tipo_cliente WHERE ref_cod_cliente = '$this->cod_cliente'");
 		}
-		include( "include/pmieducar/educar_campo_lista.php" );
+
+    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'biblioteca', 'bibliotecaTipoCliente'));
 	}
 
 
@@ -369,35 +354,6 @@ $pagina->addForm( $miolo );
 $pagina->MakeAll();
 ?>
 <script>
-/*
-if(document.getElementById('ref_cod_biblioteca').type == 'select-one')
-{
-	var campoTipo = document.getElementById('ref_cod_cliente_tipo');
-	campoTipo.length = 1;
-	campoTipo.options[0].text = 'Selecione uma biblioteca';
-	campoTipo.disabled = true;
-}*/
-
-function getClienteTipo(xml_cliente_tipo)
-{
-	var campoTipo = document.getElementById('ref_cod_cliente_tipo');
-	var DOM_array = xml_cliente_tipo.getElementsByTagName( "cliente_tipo" );
-
-	if(DOM_array.length)
-	{
-		campoTipo.length = 1;
-		campoTipo.options[0].text = 'Selecione um tipo';
-		campoTipo.disabled = false;
-
-		for( var i = 0; i < DOM_array.length; i++ )
-		{
-			campoTipo.options[campoTipo.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_cliente_tipo"),false,false);
-		}
-	}
-	else
-		campoTipo.options[0].text = 'A biblioteca não possui tipos';
-}
-
 document.getElementById('ref_cod_biblioteca').onchange = function()
 {
 	ajaxBiblioteca();
@@ -407,18 +363,10 @@ if(document.getElementById('ref_cod_biblioteca').value != '')
 {
 	ajaxBiblioteca();
 }
+
 function ajaxBiblioteca()
 {
 	var campoBiblioteca = document.getElementById('ref_cod_biblioteca').value;
-	var campoTipo = document.getElementById('ref_cod_cliente_tipo');
-
-	campoTipo.length = 1;
-	campoTipo.disabled = true;
-	campoTipo.options[0].text = 'Carregando situação';
-
-	var xml_cliente_tipo = new ajax( getClienteTipo );
-	xml_cliente_tipo.envia( "educar_cliente_tipo_xml.php?bib="+campoBiblioteca );
-
 	var xml_biblioteca = new ajax( requisitaSenha );
 	xml_biblioteca.envia( "educar_biblioteca_xml.php?bib="+campoBiblioteca );
 }

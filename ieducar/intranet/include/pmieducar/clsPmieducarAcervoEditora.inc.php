@@ -208,6 +208,7 @@ class clsPmieducarAcervoEditora
 				}
 			}
 		}
+
 		if( is_string( $ref_sigla_uf ) )
 		{
 			if( class_exists( "clsUf" ) )
@@ -298,10 +299,8 @@ class clsPmieducarAcervoEditora
 	 *
 	 * @return bool
 	 */
-	function cadastra()
-	{
-		if( is_numeric( $this->ref_usuario_cad ) && is_string( $this->ref_idtlog ) && is_string( $this->ref_sigla_uf ) && is_string( $this->nm_editora ) && is_numeric( $this->cep ) && is_string( $this->cidade ) && is_string( $this->bairro ) && is_string( $this->logradouro ) && is_numeric($this->ref_cod_biblioteca) )
-		{
+	function cadastra() {
+		if(is_numeric($this->ref_usuario_cad ) && is_string( $this->nm_editora ) && is_numeric($this->ref_cod_biblioteca)) {
 			$db = new clsBanco();
 
 			$campos = "";
@@ -417,16 +416,25 @@ class clsPmieducarAcervoEditora
 				$set .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";
 				$gruda = ", ";
 			}
-			if( is_string( $this->ref_idtlog ) )
-			{
-				$set .= "{$gruda}ref_idtlog = '{$this->ref_idtlog}'";
-				$gruda = ", ";
-			}
-			if( is_string( $this->ref_sigla_uf ) )
-			{
-				$set .= "{$gruda}ref_sigla_uf = '{$this->ref_sigla_uf}'";
-				$gruda = ", ";
-			}
+
+			if(is_string($this->ref_idtlog )){
+			  $set .= "{$gruda}ref_idtlog = '{$this->ref_idtlog}'";
+  			$gruda = ", ";
+      }
+      else {
+			  $set .= "{$gruda}ref_idtlog = null";
+  			$gruda = ", ";
+      }
+
+			if(is_string($this->ref_sigla_uf)){
+			  $set .= "{$gruda}ref_sigla_uf = '{$this->ref_sigla_uf}'";
+  			$gruda = ", ";
+      }
+      else {
+			  $set .= "{$gruda}ref_sigla_uf = null";
+  			$gruda = ", ";
+      }
+
 			if( is_string( $this->nm_editora ) )
 			{
 				$set .= "{$gruda}nm_editora = '{$this->nm_editora}'";
