@@ -32,6 +32,8 @@ require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsCronometro.inc.php';
 require_once 'include/clsEmail.inc.php';
 
+require_once 'modules/Error/Mailers/NotificationMailer.php';
+
 /**
  * clsBancoSQL_ abstract class.
  *
@@ -144,11 +146,6 @@ abstract class clsBancoSQL_
    * @var array
    */
   var $savePoints          = array();
-
-  /**
-   * @var bool
-   */
-  var $showReportarErro    = TRUE;
 
   /**
    * @var bool
@@ -362,16 +359,10 @@ abstract class clsBancoSQL_
     // Verifica se o link de conexão está inativo e conecta
     if (0 == $this->bLink_ID) {
       $this->FraseConexao();
-
-      if ($this->bDepurar) {
-        printf("<br>Depurar: Frase de Conex&atilde;o : %s<br>\n", $this->strFraseConexao);
-      }
-
       $this->bLink_ID = pg_connect($this->strFraseConexao);
 
-      if (!$this->bLink_ID) {
-        $this->Interrompe("Link inv&aacute;lido, conex&atilde;o falhou!");
-      }
+      if (! $this->bLink_ID)
+        $this->Interrompe("N&atilde;o foi possivel conectar ao banco de dados");
     }
   }
 
@@ -447,23 +438,17 @@ abstract class clsBancoSQL_
 
     if (!$this->bConsulta_ID) {
       if ($this->getThrowException()) {
-        $message = $this->bErro_no ? "($this->bErro_no) " . $this->strErro :
-          pg_last_error($this->bLink_ID);
+        $message  = $this->bErro_no ? "($this->bErro_no) " . $this->strErro :
+                                      pg_last_error($this->bLink_ID);
 
         $message .= PHP_EOL . $this->strStringSQL;
 
         throw new Exception($message);
       }
-      else {
+      else
+      {
         $erroMsg = "SQL invalido: {$this->strStringSQL}<br>\n";
-        die($erroMsg);
-
-        if ($this->transactionBlock) {
-          // Nada.
-        }
-
-        $this->Interrompe($erroMsg);
-        return FALSE;
+        throw new Exception("Erro ao executar uma ação no banco de dados: $erroMsg");
       }
     }
 
@@ -810,58 +795,55 @@ abstract class clsBancoSQL_
    * @param  string $msg
    * @param  bool   $getError
    */
-  function Interrompe($msg, $getError = FALSE)
+  function Interrompe($appErrorMsg, $getError = FALSE)
   {
-    if ($getError) {
-      $this->strErro = pg_result_error($this->bConsulta_ID);
-      $this->bErro_no = ($this->strErro == '') ? FALSE : TRUE;
-    }
-
-    $erro1 = substr(md5('1erro'), 0, 10);
-    $erro2 = substr(md5('2erro'), 0, 10);
-
-    function show($data, $func = 'var_dump') {
-      ob_start();
-      $func($data);
-      $output = ob_get_contents();
-      ob_end_clean();
-      return $output;
-    }
+    $lastError = error_get_last();
 
     @session_start();
-    $_SESSION['vars_session'] = show($_SESSION);
-    $_SESSION['vars_post']    = show($_POST);
-    $_SESSION['vars_get']     = show($_GET);
-    $_SESSION['vars_cookie']  = show($_COOKIE);
-    $_SESSION['vars_erro1']   = $msg;
-    $_SESSION['vars_erro2']   = $this->strErro;
-    $_SESSION['vars_server']  = show($_SERVER);
-    $id_pessoa = $_SESSION['id_pessoa'];
+    $_SESSION['last_php_error_message'] = $lastError['message'];
+    $_SESSION['last_php_error_line']    = $lastError['line'];
+    $_SESSION['last_php_error_file']    = $lastError['file'];
+    @session_write_close();
 
-    session_write_close();
+    $pgErrorMsg = $getError ? pg_result_error($this->bConsulta_ID) : '';
+    NotificationMailer::unexpectedDataBaseError($appErrorMsg, $pgErrorMsg, $this->strStringSQL);
 
-    if ($this->showReportarErro) {
-      $array_idpes_erro_total = array();
-      $array_idpes_erro_total[4910] = TRUE;
-      $array_idpes_erro_total[2151] = TRUE;
-      $array_idpes_erro_total[8194] = TRUE;
-      $array_idpes_erro_total[7470] = TRUE;
-      $array_idpes_erro_total[4637] = TRUE;
-      $array_idpes_erro_total[4702] = TRUE;
-      $array_idpes_erro_total[1801] = TRUE;
+    die("<script>document.location.href = '/module/Error/unexpected';</script>");
+  }
 
-      if (! $array_idpes_erro_total[$id_pessoa]) {
-        die( "<script>document.location.href = 'erro_banco.php';</script>" );
+
+  /**
+   * Executa uma consulta SQL preparada ver: http://php.net/manual/en/function.pg-prepare.php
+   * ex: $db->execPreparedQuery("select * from portal.funcionario where matricula = $1 and senha = $2", array('admin', '123'))
+   *
+   * @param  string $name    nome da consulta
+   * @param  string $query   sql para ser preparado
+   * @param  array  $params  parametros para consulta
+   *
+   * @return bool|resource FALSE em caso de erro ou o identificador da consulta
+   *   em caso de sucesso.
+   */
+  public function execPreparedQuery($query, $params = array()) {
+    try {
+      $errorMsgs = '';
+      $this->Conecta();
+      $dbConn = $this->bLink_ID;
+
+      if (! is_array($params))
+        $params = array($params);
+
+      $this->bConsulta_ID = @pg_query_params($dbConn, $query, $params);
+      $resultError = @pg_result_error($this->bConsulta_ID);
+      $errorMsgs .= trim($resultError) != '' ? $resultError : @pg_last_error($this->bConsulta_ID);
+
       }
-      else {
-        printf("</td></tr></table><b>Erro de Banco de Dados:</b> %s<br><br>\n", $msg);
-        printf("<b>SQL:</b> %s<br><br>\n", $this->strStringSQL );
-        printf("<b>Erro do PgSQL </b>: %s (%s)<br><br>\n", $this->bErro_no, $this->strErro);
-        die("Sessão Interrompida.");
+      catch(Exception $e) {
+        $errorMsgs .= "Exception: " . $e->getMessage();
       }
-    }
-    else {
-      die($this->strErro . "\n");
-    }
+
+      if ($this->bConsulta_ID == false || trim($errorMsgs) != '')
+        throw new Exception("Erro ao preparar consulta ($query) no banco de dados: $errorMsgs");
+
+      return $this->bConsulta_ID;
   }
 }
