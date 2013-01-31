@@ -99,36 +99,11 @@ class indice extends clsCadastro
 		// primary keys
 		$this->campoOculto( "cod_acervo_idioma", $this->cod_acervo_idioma );
 
-		// foreign keys
-		/*$obj_pessoa_bib = new clsPmieducarBibliotecaUsuario();
-		$lst_pessoa_bib = $obj_pessoa_bib->lista(null, $this->pessoa_logada);
+    //foreign keys
+    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'biblioteca'));
 
-		$opcoes = array("" => "Selecione");
-		if(is_array($lst_pessoa_bib))
-		{
-			foreach ($lst_pessoa_bib as $bib)
-			{
-				$obj_biblioteca = new clsPmieducarBiblioteca($bib['ref_cod_biblioteca']);
-				$det_biblioteca = $obj_biblioteca->detalhe();
-				
-				$opcoes[$det_biblioteca['cod_biblioteca']] = $det_biblioteca['nm_biblioteca'];
-			}
-		}
-		$this->campoLista("ref_cod_biblioteca", "Biblioteca", $opcoes, $this->ref_cod_biblioteca);
-		*/
-		$get_escola     = 1;
-		$escola_obrigatorio = false;
-		$get_biblioteca = 1;
-		$instituicao_obrigatorio = true;
-		$biblioteca_obrigatorio = true;
-		include("include/pmieducar/educar_campo_lista.php");
-		
-		
 		// text
 		$this->campoTexto( "nm_idioma", "Idioma", $this->nm_idioma, 30, 255, true );
-
-		// data
-
 	}
 
 	function Novo()

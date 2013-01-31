@@ -187,10 +187,10 @@ class indice extends clsDetalhe
 		{
 			$this->addDetalhe( array( "Obra", "{$titulo_exemplar}") );
 		}
-		if( $registro["ref_cod_exemplar"] )
-		{
-			$this->addDetalhe( array( "Tombo", "{$registro["ref_cod_exemplar"]}") );
-		}
+
+  	$this->addDetalhe( array( "Código exemplar", "{$registro["ref_cod_exemplar"]}") );
+    $this->addDetalhe( array( "Tombo", "{$det_ref_cod_exemplar["tombo"]}") );
+
 		if( $registro["data_retirada"] )
 		{
 			$this->addDetalhe( array( "Data Retirada", dataFromPgToBr( $registro["data_retirada"], "d/m/Y" ) ) );

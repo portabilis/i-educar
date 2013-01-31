@@ -433,16 +433,15 @@ class clsPmieducarMotivoSuspensao
 		}
 		return false;
 	}
-	
+
 	function listaClienteBiblioteca($int_cod_cliente)
 	{
 		if(is_numeric($int_cod_cliente))
 		{
 			$db = new clsBanco();
 			$db->Consulta("
-							SELECT 
-								cod_motivo_suspensao
-								, nm_motivo
+							SELECT
+								cod_motivo_suspensao, nm_motivo, descricao
 							FROM
 							    pmieducar.motivo_suspensao
 							WHERE

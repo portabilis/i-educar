@@ -216,15 +216,8 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 602, $this->pessoa_logada, 11,  "educar_situacao_lst.php" );
 
-		if ($this->situacao_padrao == 'on')
-			$this->situacao_padrao = 1;
-		else
-			$this->situacao_padrao = 0;
-
-		if ($this->situacao_emprestada == 'on')
-			$this->situacao_emprestada = 1;
-		else
-			$this->situacao_emprestada = 0;
+    $this->situacao_padrao = is_null($this->situacao_padrao) ? 0 : 1;
+    $this->situacao_emprestada = is_null($this->situacao_emprestada) ? 0 : 1;
 
 		$obj = new clsPmieducarSituacao( null, null, $this->pessoa_logada, $this->nm_situacao, $this->permite_emprestimo, $this->descricao, $this->situacao_padrao, $this->situacao_emprestada, null, null, 1, $this->ref_cod_biblioteca );
 		$cadastrou = $obj->cadastra();
@@ -250,15 +243,8 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 602, $this->pessoa_logada, 11,  "educar_situacao_lst.php" );
 
-		if ($this->situacao_padrao == 'on')
-			$this->situacao_padrao = 1;
-		else
-			$this->situacao_padrao = 0;
-
-		if ($this->situacao_emprestada == 'on')
-			$this->situacao_emprestada = 1;
-		else
-			$this->situacao_emprestada = 0;
+    $this->situacao_padrao = is_null($this->situacao_padrao) ? 0 : 1;
+    $this->situacao_emprestada = is_null($this->situacao_emprestada) ? 0 : 1;
 
 		$obj = new clsPmieducarSituacao($this->cod_situacao, $this->pessoa_logada, null, $this->nm_situacao, $this->permite_emprestimo, $this->descricao, $this->situacao_padrao, $this->situacao_emprestada, null, null, 1, $this->ref_cod_biblioteca);
 		$editou = $obj->edita();

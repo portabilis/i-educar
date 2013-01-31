@@ -280,6 +280,13 @@ class indice extends clsDetalhe
 		{
 			$this->addDetalhe( array( "Autor", "{$tabela}") );
 		}
+
+		if($registro["estante"])
+			$this->addDetalhe( array( "Estante", "{$registro["estante"]}") );
+
+		if($registro["cdd"])
+			$this->addDetalhe( array( "Cdd", "{$registro["cdd"]}") );
+
 		if( $registro["cdu"] )
 		{
 			$this->addDetalhe( array( "Cdu", "{$registro["cdu"]}") );

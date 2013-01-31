@@ -478,6 +478,7 @@ class clsPmieducarCliente
 				$resultado[] = $tupla[$this->_campos_lista];
 			}
 		}
+
 		if( count( $resultado ) )
 		{
 			return $resultado;
@@ -499,98 +500,7 @@ class clsPmieducarCliente
     $int_cod_cliente_tipo = NULL, $int_cod_escola = NULL, $int_cod_biblioteca = NULL,
     $int_cod_instituicao = NULL) {
 
-    $tab_adicional  = '';
-    $condicao       = '';
-    $camp_adicional = '';
-
-    // Executa filtragem por clientes suspensos somente quando houver registros na tabela
-    $clienteSuspenso = new clsPmieducarClienteSuspensao();
     $db = new clsBanco();
-
-    // Se suspenso não for nulo e existirem cliente suspensos, seleciona-os
-    // quando ainda estiverem no prazo de suspensão
-    if ($db->doCountFromObj($clienteSuspenso) > 0) {
-      if (!is_null($str_suspenso)) {
-        $camp_adicional .= ', pmieducar.cliente_suspensao cs ';
-        $condicao       .= ' AND c.cod_cliente = cs.ref_cod_cliente AND
-                           (cs.data_suspensao < current_date - cs.dias)';
-      }
-      else {
-        $camp_adicional .= ', pmieducar.cliente_suspensao cs ';
-        $condicao       .= ' AND (c.cod_cliente <> cs.ref_cod_cliente OR
-                             (cs.data_suspensao > current_date - cs.dias))';
-      }
-    }
-
-    $sql1 = "
-            SELECT
-              c.cod_cliente,
-              c.ref_idpes,
-              c.ref_usuario_cad,
-              c.login,
-              p.nome,
-              ct.nm_tipo,
-              ct.cod_cliente_tipo,
-              b.nm_biblioteca,
-              b.cod_biblioteca,
-              e.cod_escola as cod_escola,
-              i.cod_instituicao,
-              (SELECT 'S'::text
-                FROM pmieducar.cliente_suspensao cs
-                WHERE cs.ref_cod_cliente = c.cod_cliente
-                AND cs.data_liberacao IS NULL) AS id_suspensao
-            FROM
-              pmieducar.cliente                c,
-              pmieducar.cliente_tipo_cliente ctc,
-              pmieducar.cliente_tipo          ct,
-              pmieducar.biblioteca             b,
-              pmieducar.escola                 e,
-              pmieducar.instituicao            i,
-              cadastro.pessoa                  p{$camp_adicional}
-            WHERE
-              c.cod_cliente             = ctc.ref_cod_cliente
-              AND ct.cod_cliente_tipo   = ctc.ref_cod_cliente_tipo
-              AND b.cod_biblioteca      = ct.ref_cod_biblioteca
-              AND e.cod_escola          = b.ref_cod_escola
-              AND i.cod_instituicao     = b.ref_cod_instituicao
-              AND e.ref_cod_instituicao = i.cod_instituicao{$condicao}
-              AND p.idpes               = c.ref_idpes
-              AND c.ativo               = '{$int_ativo}'
-              AND ctc.ativo             = '{$int_ativo}'";
-
-    $sql2 = "
-            SELECT
-              c.cod_cliente,
-              c.ref_idpes,
-              c.ref_usuario_cad,
-              c.login,
-              p.nome,
-              ct.nm_tipo,
-              ct.cod_cliente_tipo,
-              b.nm_biblioteca,
-              b.cod_biblioteca,
-              null as cod_escola,
-              i.cod_instituicao,
-              (SELECT 'S'::text
-                FROM pmieducar.cliente_suspensao cs
-                WHERE cs.ref_cod_cliente = c.cod_cliente
-                AND cs.data_liberacao IS NULL) AS id_suspensao
-            FROM
-              pmieducar.cliente                c,
-              pmieducar.cliente_tipo_cliente ctc,
-              pmieducar.cliente_tipo          ct,
-              pmieducar.biblioteca             b,
-              pmieducar.instituicao            i,
-              cadastro.pessoa                  p{$camp_adicional}
-            WHERE c.cod_cliente         = ctc.ref_cod_cliente
-              AND ct.cod_cliente_tipo   = ctc.ref_cod_cliente_tipo
-              AND b.cod_biblioteca      = ct.ref_cod_biblioteca
-              AND i.cod_instituicao     = b.ref_cod_instituicao
-              AND b.ref_cod_escola      IS NULL
-              AND ct.ref_cod_biblioteca = b.cod_biblioteca{$condicao}
-              AND p.idpes               = c.ref_idpes
-              AND c.ativo               = '{$int_ativo}'
-              AND ctc.ativo             = '{$int_ativo}'";
 
     $filtros  = '';
     $whereAnd = ' AND ';
@@ -685,46 +595,65 @@ class clsPmieducarCliente
       $whereAnd = " AND ";
     }
 
-    if (is_string($str_suspenso)) {
-      $filtros .= "{$whereAnd} cs.data_liberacao IS NULL";
-      $whereAnd = " AND ";
+    // se S(suspenso) ou R(egular), filtra por tal situacao
+    if(in_array($str_suspenso, array('S', 'R'))) {
+      $existencia       = $str_suspenso == 'R' ? 'not' : '';
+      $condicaoSuspenso = " AND $existencia exists (select 1 from pmieducar.cliente_suspensao where ref_cod_cliente = c.cod_cliente and data_liberacao is null and data_suspensao + (dias||' day')::interval >= now())";
     }
 
     $db = new clsBanco();
     $resultado = array();
 
-    $sql1 .= $filtros;
-    $sql2 .= $filtros;
+    $sql = "
+            SELECT
+              c.cod_cliente,
+              c.ref_idpes,
+              c.ref_usuario_cad,
+              c.login,
+              p.nome,
+              ct.nm_tipo,
+              ct.cod_cliente_tipo,
+              b.nm_biblioteca,
+              b.cod_biblioteca,
+              e.cod_escola as cod_escola,
+              i.cod_instituicao,
+              (SELECT 'S'::text
+                FROM pmieducar.cliente_suspensao cs
+                WHERE cs.ref_cod_cliente = c.cod_cliente
+                AND cs.data_liberacao IS NULL) AS id_suspensao
+            FROM
+              pmieducar.cliente                c,
+              pmieducar.cliente_tipo_cliente ctc,
+              pmieducar.cliente_tipo          ct,
+              pmieducar.biblioteca             b,
+              pmieducar.escola                 e,
+              pmieducar.instituicao            i,
+              cadastro.pessoa                  p
+            WHERE
+              c.cod_cliente             = ctc.ref_cod_cliente
+              AND ct.cod_cliente_tipo   = ctc.ref_cod_cliente_tipo
+              AND b.cod_biblioteca      = ct.ref_cod_biblioteca
+              AND e.cod_escola          = b.ref_cod_escola
+              AND i.cod_instituicao     = b.ref_cod_instituicao
+              AND e.ref_cod_instituicao = i.cod_instituicao{$condicaoSuspenso}
+              AND p.idpes               = c.ref_idpes
+              AND c.ativo               = '{$int_ativo}'
+              AND ctc.ativo             = '{$int_ativo}'
+              $filtros";
 
-    if (is_numeric($int_cod_escola)) {
-      $this->_total = $db->CampoUnico("SELECT count(0) FROM ({$sql1}) AS SUBQUERY");
-    }
-    else {
-      $this->_total = $db->CampoUnico("SELECT count(0) FROM (" . $sql1 . " UNION " . $sql2 . ") AS SUBQUERY");
-    }
-
-    // Aplica ordenação e limite
-    $sql2 .= $this->getOrderby() . $this->getLimite();
-
-    if (is_numeric($int_cod_escola)) {
-      $sql = $sql1;
-    }
-    else {
-      $sql = $sql1 . ' UNION ' . $sql2;
-    }
-
+    $sql .= $this->getOrderby() . $this->getLimite();
     $db->Consulta($sql);
+
+    $this->_total = 0;
 
     while ($db->ProximoRegistro()) {
       $tupla = $db->Tupla();
-
-      $tupla["_total"] = $this->_total;
       $resultado[] = $tupla;
+      $this->_total += 1;
     }
 
-    if (count($resultado) > 0) {
+    if (count($resultado) > 0)
       return $resultado;
-    }
 
     return FALSE;
   }

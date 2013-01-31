@@ -267,15 +267,20 @@ class indice extends clsCadastro
 				foreach ( $array_tipos AS $exemplar_tipo => $dias_emprestimo )
 				{
 					$obj = new clsPmieducarClienteTipoExemplarTipo( $this->cod_cliente_tipo, $exemplar_tipo, $dias_emprestimo );
-					$editou2  = $obj->edita();
-					if ( !$editou2 )
+
+          if($obj->existe() == false)
+  					$result = $obj->cadastra();
+          else
+  					$result = $obj->edita();
+
+					if (! $result)
 					{
-						$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-						echo "<!--\nErro ao editar clsPmieducarClienteTipoExemplarTipo\nvalores obrigat&oacute;rios\nis_numeric( $this->cod_cliente_tipo ) && is_numeric( {$this->pessoa_logada} )\n-->";
+						$this->mensagem = "Aparentemente ocorreu um erro ao gravar os dias de emprestimo.<br>";
 						return false;
 					}
 				}
 			}
+
 		//-----------------------FIM EDITA EXEMPLAR TIPO------------------------//
 
 			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
@@ -388,7 +393,7 @@ function getExemplarTipo_XML(xml)
 			dias_tipo_exemplar.setAttribute( 'value', tipo_exemplar[j].getAttribute("dias_emprestimo"));
 		else
 			dias_tipo_exemplar.setAttribute( 'value', '');
-		
+
 		dias_tipo_exemplar.setAttribute( 'class', 'obrigatorio' );
 
 		exemplares.innerHTML += aux;

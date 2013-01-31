@@ -129,11 +129,9 @@ class indice extends clsDetalhe
 			echo "<!--\nErro\nClasse nao existente: clsPmieducarSituacao\n-->";
 		}
 
+		$this->addDetalhe(array("Código", "{$registro["cod_exemplar"]}"));
+		$this->addDetalhe(array("Tombo",  "{$registro["tombo"]}"));
 
-		if( $registro["cod_exemplar"] )
-		{
-			$this->addDetalhe( array( "Tombo", "{$registro["cod_exemplar"]}") );
-		}
 		if( $registro["ref_cod_acervo"] )
 		{
 			$this->addDetalhe( array( "Obra Refer&eacute;ncia", "{$registro["ref_cod_acervo"]}") );
