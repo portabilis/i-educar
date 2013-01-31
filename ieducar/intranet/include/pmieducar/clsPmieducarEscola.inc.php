@@ -1,5 +1,8 @@
 <?php
 
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -107,17 +110,23 @@ class clsPmieducarEscola
   /**
    * Construtor.
    */
-  function clsPmieducarEscola($cod_escola = NULL, $ref_usuario_cad = NULL,
-    $ref_usuario_exc = NULL, $ref_cod_instituicao = NULL,
-    $ref_cod_escola_localizacao = NULL, $ref_cod_escola_rede_ensino = NULL,
-    $ref_idpes = NULL, $sigla = NULL, $data_cadastro = NULL, $data_exclusao = NULL,
-    $ativo = NULL
-  ) {
+  function clsPmieducarEscola($cod_escola = NULL,
+                              $ref_usuario_cad = NULL,
+                              $ref_usuario_exc = NULL,
+                              $ref_cod_instituicao = NULL,
+                              $ref_cod_escola_localizacao = NULL,
+                              $ref_cod_escola_rede_ensino = NULL,
+                              $ref_idpes = NULL,
+                              $sigla = NULL,
+                              $data_cadastro = NULL,
+                              $data_exclusao = NULL,
+                              $ativo = NULL,
+                              $bloquear_lancamento_diario_anos_letivos_encerrados = NULL) {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'escola';
 
-    $this->_campos_lista = $this->_todos_campos = 'e.cod_escola, e.ref_usuario_cad, e.ref_usuario_exc, e.ref_cod_instituicao, e.ref_cod_escola_localizacao, e.ref_cod_escola_rede_ensino, e.ref_idpes, e.sigla, e.data_cadastro, e.data_exclusao, e.ativo';
+    $this->_campos_lista = $this->_todos_campos = 'e.cod_escola, e.ref_usuario_cad, e.ref_usuario_exc, e.ref_cod_instituicao, e.ref_cod_escola_localizacao, e.ref_cod_escola_rede_ensino, e.ref_idpes, e.sigla, e.data_cadastro, e.data_exclusao, e.ativo, e.bloquear_lancamento_diario_anos_letivos_encerrados';
 
     if (is_numeric($ref_usuario_cad)) {
       if (class_exists("clsPmieducarUsuario")) {
@@ -265,6 +274,8 @@ class clsPmieducarEscola
     if (is_numeric($ativo)) {
       $this->ativo = $ativo;
     }
+
+    $this->bloquear_lancamento_diario_anos_letivos_encerrados = $bloquear_lancamento_diario_anos_letivos_encerrados;
   }
 
   /**
@@ -325,6 +336,12 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
+      if (is_numeric($this->bloquear_lancamento_diario_anos_letivos_encerrados)) {
+        $campos .= "{$gruda}bloquear_lancamento_diario_anos_letivos_encerrados";
+        $valores .= "{$gruda}'{$this->bloquear_lancamento_diario_anos_letivos_encerrados}'";
+        $gruda = ", ";
+      }
+
       $campos .= "{$gruda}data_cadastro";
       $valores .= "{$gruda}NOW()";
       $gruda = ", ";
@@ -333,7 +350,9 @@ class clsPmieducarEscola
       $valores .= "{$gruda}'1'";
 
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
-      return $db->InsertId("{$this->_tabela}_cod_escola_seq");
+      $recordId = $db->InsertId("{$this->_tabela}_cod_escola_seq");
+
+      return $recordId;
     }
     else {
       echo "<br><br>is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_instituicao) && is_numeric($this->ref_cod_escola_localizacao) && is_numeric($this->ref_cod_escola_rede_ensino) && is_string($this->sigla )";
@@ -397,6 +416,11 @@ class clsPmieducarEscola
 
       if (is_numeric($this->ativo)) {
         $set .= "{$gruda}ativo = '{$this->ativo}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->bloquear_lancamento_diario_anos_letivos_encerrados)) {
+        $set .= "{$gruda}bloquear_lancamento_diario_anos_letivos_encerrados = '{$this->bloquear_lancamento_diario_anos_letivos_encerrados}'";
         $gruda = ", ";
       }
 
