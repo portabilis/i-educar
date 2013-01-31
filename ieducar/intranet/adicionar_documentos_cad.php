@@ -97,9 +97,7 @@ class indice extends clsCadastro
 		$this->zona_tit_eleitor = $detalheDocumento['zona_tit_eleitor'];
 		$this->secao_tit_eleitor = $detalheDocumento['secao_tit_eleitor'];
 		$this->idorg_exp_rg = $detalheDocumento['idorg_exp_rg'];
-
-
-
+		$this->certidao_nascimento = $detalheDocumento['certidao_nascimento'];
 
 		$ObjDocumento = new clsDocumento($this->idpes);
 
@@ -155,6 +153,8 @@ class indice extends clsCadastro
 		$this->campoTexto("num_termo", "Termo", $this->num_termo, "8", "8", false);
 		$this->campoTexto("num_livro", "Livro", $this->num_livro, "8", "8", false);
 		$this->campoTexto("num_folha", "Folha", $this->num_folha, "4", "4", false);
+		$this->campoTexto('certidao_nascimento', 'Certidão nascimento', $this->certidao_nascimento, '37', '40', FALSE);
+
 		$this->campoData("data_emissao_cert_civil", "Emissão Certidão Civil", $this->data_emissao_cert_civil, false);
 		$this->campoLista("sigla_uf_cert_civil", "Sigla Certidão Civil", $listaEstado, $this->sigla_uf_cert_civil, false, false, false, false, false);
 		$this->campoMemo("cartorio_cert_civil", "Cartório", $this->cartorio_cert_civil, "35", "4", false);
@@ -169,27 +169,28 @@ class indice extends clsCadastro
 
 	}
 
-	function Novo()
-	{
-		if($this->data_emissao_cart_trabalho)
-		{
+	function Novo() {
+		if($this->data_emissao_cart_trabalho) {
 			$this->data_emissao_cart_trabalho = explode("/",$this->data_emissao_cart_trabalho);
 			$this->data_emissao_cart_trabalho = "{$this->data_emissao_cart_trabalho[2]}/{$this->data_emissao_cart_trabalho[1]}/{$this->data_emissao_cart_trabalho[0]}";
 		}
-		if($this->data_emissao_cert_civil)
-		{
+
+		if($this->data_emissao_cert_civil) {
 			$this->data_emissao_cert_civil = explode("/",$this->data_emissao_cert_civil);
 			$this->data_emissao_cert_civil = "{$this->data_emissao_cert_civil[2]}/{$this->data_emissao_cert_civil[1]}/{$this->data_emissao_cert_civil[0]}";
 		}
-		if($this->data_exp_rg)
-		{
+
+		if($this->data_exp_rg) {
 			$this->data_exp_rg = explode("/",$this->data_exp_rg);
 			$this->data_exp_rg = "{$this->data_exp_rg[2]}/{$this->data_exp_rg[1]}/{$this->data_exp_rg[0]}";
-
 		}
-		$ObjDocumento = new clsDocumento($this->idpes, $this->rg, $this->data_exp_rg, $this->sigla_uf_exp_rg, $this->tipo_cert_civil, $this->num_termo, $this->num_livro, $this->num_folha, $this->data_emissao_cert_civil, $this->sigla_uf_cert_civil, $this->cartorio_cert_civil, $this->num_cart_trabalho, $this->serie_cart_trabalho, $this->data_emissao_cart_trabalho, $this->sigla_uf_cart_trabalho, $this->num_tit_eleitor, $this->zona_tit_eleitor, $this->secao_tit_eleitor, $this->idorg_exp_rg );
-		if( $ObjDocumento->cadastra() )
-		{
+
+		// remove caracteres não numericos
+		$this->rg = preg_replace("/[^0-9]/", "", $this->rg);
+
+		$ObjDocumento = new clsDocumento($this->idpes, $this->rg, $this->data_exp_rg, $this->sigla_uf_exp_rg, $this->tipo_cert_civil, $this->num_termo, $this->num_livro, $this->num_folha, $this->data_emissao_cert_civil, $this->sigla_uf_cert_civil, $this->cartorio_cert_civil, $this->num_cart_trabalho, $this->serie_cart_trabalho, $this->data_emissao_cart_trabalho, $this->sigla_uf_cart_trabalho, $this->num_tit_eleitor, $this->zona_tit_eleitor, $this->secao_tit_eleitor, $this->idorg_exp_rg, $this->certidao_nascimento );
+
+		if( $ObjDocumento->cadastra() ) {
 			echo "<script>window.close()</script>";
 			return true;
 		}
@@ -197,25 +198,26 @@ class indice extends clsCadastro
 		return false;
 	}
 
-	function Editar()
-	{
-		if($this->data_emissao_cart_trabalho)
-		{
+	function Editar() {
+		if($this->data_emissao_cart_trabalho) {
 			$this->data_emissao_cart_trabalho = explode("/",$this->data_emissao_cart_trabalho);
 			$this->data_emissao_cart_trabalho = "{$this->data_emissao_cart_trabalho[2]}/{$this->data_emissao_cart_trabalho[1]}/{$this->data_emissao_cart_trabalho[0]}";
 		}
-		if($this->data_emissao_cert_civil)
-		{
+
+		if($this->data_emissao_cert_civil) {
 			$this->data_emissao_cert_civil = explode("/",$this->data_emissao_cert_civil);
 			$this->data_emissao_cert_civil = "{$this->data_emissao_cert_civil[2]}/{$this->data_emissao_cert_civil[1]}/{$this->data_emissao_cert_civil[0]}";
 		}
-		if($this->data_exp_rg)
-		{
+
+		if($this->data_exp_rg) {
 			$this->data_exp_rg = explode("/",$this->data_exp_rg);
 			$this->data_exp_rg = "{$this->data_exp_rg[2]}/{$this->data_exp_rg[1]}/{$this->data_exp_rg[0]}";
-
 		}
-		$ObjDocumento = new clsDocumento($this->idpes, $this->rg, $this->data_exp_rg, $this->sigla_uf_exp_rg, $this->tipo_cert_civil, $this->num_termo, $this->num_livro, $this->num_folha, $this->data_emissao_cert_civil, $this->sigla_uf_cert_civil, $this->cartorio_cert_civil, $this->num_cart_trabalho, $this->serie_cart_trabalho, $this->data_emissao_cart_trabalho, $this->sigla_uf_cart_trabalho, $this->num_tit_eleitor, $this->zona_tit_eleitor, $this->secao_tit_eleitor, $this->idorg_exp_rg );
+
+		// remove caracteres não numericos
+		$this->rg = preg_replace("/[^0-9]/", "", $this->rg);
+
+		$ObjDocumento = new clsDocumento($this->idpes, $this->rg, $this->data_exp_rg, $this->sigla_uf_exp_rg, $this->tipo_cert_civil, $this->num_termo, $this->num_livro, $this->num_folha, $this->data_emissao_cert_civil, $this->sigla_uf_cert_civil, $this->cartorio_cert_civil, $this->num_cart_trabalho, $this->serie_cart_trabalho, $this->data_emissao_cart_trabalho, $this->sigla_uf_cart_trabalho, $this->num_tit_eleitor, $this->zona_tit_eleitor, $this->secao_tit_eleitor, $this->idorg_exp_rg, $this->certidao_nascimento );
 
     if ($ObjDocumento->edita()) {
       echo '<script>window.close()</script>';
