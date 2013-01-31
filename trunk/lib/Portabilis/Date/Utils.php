@@ -58,7 +58,13 @@ class Portabilis_Date_Utils
    * @param string $timestamp
    */
   public static function pgSQLToBr($timestamp) {
-      $d = DateTime::createFromFormat('Y-m-d H:i:s.u', $timestamp);
-      return ($d ? $d->format('d/m/Y H:i:s') : null);
+    $format          = 'Y-m-d H:i:s';
+    $hasMicroseconds = strpos($timestamp, '.') > -1;
+
+    if ($hasMicroseconds)
+      $format .= '.u';
+
+    $d = DateTime::createFromFormat($format, $timestamp);
+    return ($d ? $d->format('d/m/Y H:i:s') : null);
   }
 }

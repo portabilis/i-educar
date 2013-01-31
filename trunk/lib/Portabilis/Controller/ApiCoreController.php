@@ -72,8 +72,37 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
   // validators
 
+  protected function validatesAccessKey() {
+    $valid = false;
+
+    if (! is_null($this->getRequest()->access_key)) {
+      $accessKey = $GLOBALS['coreExt']['Config']->apis->access_key;
+      $valid     = $accessKey == $this->getRequest()->access_key;
+
+      if (! $valid)
+        $this->messenger->append('Chave de acesso inválida!');
+    }
+
+    return $valid;
+  }
+
+  protected function validatesSignature() {
+    // #TODO implementar validação urls assinadas
+    return true;
+  }
+
   protected function validatesUserIsLoggedIn(){
-    return $this->validator->validatesPresenceOf($this->getSession()->id_pessoa, '', false, 'Usuário deve estar logado');
+    $canAccess = is_numeric($this->getSession()->id_pessoa);
+
+    if (! $canAccess)
+      $canAccess = ($this->validatesAccessKey() && $this->validatesSignature());
+
+    if (! $canAccess) {
+      $msg = 'Usuário deve estar logado ou a chave de acesso deve ser enviada!';
+      $this->messenger->append($msg, 'error', $encodeToUtf8 = false, $ignoreIfHasMsgWithType = 'error');
+    }
+
+    return $canAccess;
   }
 
 
