@@ -20,28 +20,28 @@ class indice extends clsDetalhe
 	 * @var int
 	 */
 	var $titulo;
-	
+
 	#inicia_variaveis#
-	
+
 	function Gerar()
 	{
 		@session_start();
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
-		
+
 		$this->titulo = "#nome_pagina# - Detalhe";
-		$this->addBanner( "http://ieducar.dccobra.com.br/intranet/imagens/nvp_top_intranet.jpg", "http://ieducar.dccobra.com.br/intranet/imagens/nvp_vert_intranet.jpg", "Intranet" );
+		$this->addBanner( "/intranet/imagens/nvp_top_intranet.jpg", "/intranet/imagens/nvp_vert_intranet.jpg", "Intranet" );
 
 #get_pk_from_get#
 		$tmp_obj = new #nome_classe#( #pk_obj_params# );
 		$registro = $tmp_obj->detalhe();
-		
+
 		if( ! $registro )
 		{
 			header( "location: #nome_schema_limpo#_#nome_tabela#_lst.php" );
 			die();
 		}
-		
+
 #foreign_detalhes_det#
 #adiciona_detalhes#
 #verificacao_especial_det_ini#
