@@ -31,7 +31,7 @@
 				font-weight: bold;
 				font-size: 12px;
 				color: #4c4d44;
-				background-image: url('http://ieducar.dccobra.com.br/intranet/imagens/nvp_icon_openbee.gif');
+				background-image: url('/intranet/imagens/nvp_icon_openbee.gif');
 				background-repeat: no-repeat;
 				background-position: 0 1;
 				margin-left: 0px;
@@ -45,17 +45,17 @@
 				font-size:11;
 			}
 			.topo1 {
-				background-image:url('http://ieducar.dccobra.com.br/intranet/imagens/top_01.jpg');
+				background-image:url('/intranet/imagens/top_01.jpg');
 				width:184px;
 				height:148px;
 			}
 			.topo2 {
-				background-image:url('http://ieducar.dccobra.com.br/intranet/imagens/top_02.jpg');
+				background-image:url('/intranet/imagens/top_02.jpg');
 				width:439px;
 				height:148px;
 			}
 			.topo3 {
-				background-image:url('http://ieducar.dccobra.com.br/intranet/imagens/top_03.jpg');
+				background-image:url('/intranet/imagens/top_03.jpg');
 				width:145px;
 				height:148px;
 			}
@@ -63,7 +63,7 @@
 	</head>
 	<body>
 		<table width="100%" border="0" cellpadding="0" style="background-color:#FFFFFF" cellspacing="0">
-			<tr><td><img src="http://ieducar.dccobra.com.br/intranet/imagens/nvp_top_openbee.jpg" border="0" align="right"></tr></td>
+			<tr><td><img src="/intranet/imagens/nvp_top_openbee.jpg" border="0" align="right"></tr></td>
 			<!-- #&CONTEUDO&# -->
 		</table>
 	</body>

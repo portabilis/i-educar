@@ -24,13 +24,13 @@
 				font-size: 12px;
 				color: #6688CC;
 				text-decoration: underline;
-			 } 
+			 }
 		</style>
 </head>
 	<body>
 		<table border="0" cellpadding="0" cellspacing="0">
 			<tr>
-				<td><img src="http://ieducar.dccobra.com.br/intranet/imagens/email_head_call.jpg" border="0"></td>
+				<td><img src="/intranet/imagens/email_head_call.jpg" border="0"></td>
 			</tr>
 			<tr>
 				<td><!-- #&CONTEUDO&# --></td>

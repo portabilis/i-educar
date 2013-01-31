@@ -25,7 +25,7 @@
 	<body>
 		<table cellSpacing="1" cellPadding="4" width="640" border="0" Align="Center">
 			<tr>
-				<td><img width="640"  src='http://ieducar.dccobra.com.br/intranet/imagens/nvp_top_opentopic.jpg'><br><br>
+				<td><img width="640"  src='/intranet/imagens/nvp_top_opentopic.jpg'><br><br>
 				<!-- #&CONTEUDO&# -->
 				<br><br><br>
 				<!-- #&FOOTER&# --></td>

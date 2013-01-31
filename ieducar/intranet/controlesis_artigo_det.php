@@ -46,33 +46,33 @@ class indice extends clsDetalhe
 	 * @var int
 	 */
 	var $titulo;
-	
+
 	var $cod_artigo;
 	var $texto;
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
-	
+
 	function Gerar()
 	{
 		@session_start();
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
-		
+
 		$this->titulo = "Artigo - Detalhe";
-		$this->addBanner( "http://ieducar.dccobra.com.br/intranet/imagens/nvp_top_intranet.jpg", "http://ieducar.dccobra.com.br/intranet/imagens/nvp_vert_intranet.jpg", "Intranet" );
+		$this->addBanner( "/intranet/imagens/nvp_top_intranet.jpg", "/intranet/imagens/nvp_vert_intranet.jpg", "Intranet" );
 
 		$this->cod_artigo=$_GET["cod_artigo"];
 
 		$tmp_obj = new clsPmicontrolesisArtigo( $this->cod_artigo );
 		$registro = $tmp_obj->detalhe();
-		
+
 		if( ! $registro )
 		{
 			header( "location: controlesis_artigo_lst.php" );
 			die();
 		}
-		
+
 
 //		if( $registro["cod_artigo"] )
 //		{
