@@ -5,7 +5,6 @@
 
 echo "Instalando dependencias"
 
-# remote factory
 sudo pear install XML_RPC2
 
 # mailer
