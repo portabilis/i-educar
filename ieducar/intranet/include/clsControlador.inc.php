@@ -216,7 +216,6 @@ class clsControlador
     $templateFile = fopen($templateName, "r");
     $templateText = fread($templateFile, filesize($templateName));
     $templateText = str_replace( "<!-- #&ERROLOGIN&# -->", $this->messenger->toHtml('p'), $templateText);
-    $templateText = str_replace( "#&GOOGLE_ANALYTICS_DOMAIN_NAME&#", $_SERVER['HTTP_HOST'], $templateText);
 
     $requiresHumanAccessValidation = isset($_SESSION['tentativas_login_falhas']) &&
                                      is_numeric($_SESSION['tentativas_login_falhas']) &&
