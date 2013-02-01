@@ -194,7 +194,7 @@ class NotaController extends Core_Controller_Page_EditController
 
     // Caso o parecer seja por etapa e por componente
     if ($this->_regra->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE) {
-      $this->campoMemo('parecer', 'Parecer', $this->_parecer, 40, 10, TRUE);
+      $this->campoMemo('parecer', 'Parecer', $this->_parecer, 40, 10, false);
     }
   }
 
@@ -221,7 +221,7 @@ class NotaController extends Core_Controller_Page_EditController
       $this->_service->addFalta($falta);
     }
 
-    if ($this->_regra->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE) {
+    if (trim($this->getRequest()->parecer) != '' && $this->_regra->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE) {
       $parecer = new Avaliacao_Model_ParecerDescritivoComponente(array(
         'componenteCurricular' => $this->getRequest()->componenteCurricular,
         'parecer'              => $this->getRequest()->parecer,
