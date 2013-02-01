@@ -1053,6 +1053,10 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
       case 'numeric':
         $return = $this->getFloat($cmpVal);
         break;
+
+      case 'string':
+        $return = (string)$cmpVal;
+        break;
     }
     return $return;
   }
