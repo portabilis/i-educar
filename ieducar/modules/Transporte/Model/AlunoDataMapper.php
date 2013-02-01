@@ -58,4 +58,13 @@ class Transporte_Model_AlunoDataMapper extends CoreExt_DataMapper
   );
 
   protected $_primaryKey = array('aluno');
+
+  // fixup para find funcionar em tabelas cujo PK não se chama id
+  protected function _getFindStatment($pkey)
+  {
+    if (! is_array($pkey))
+      $pkey = array('aluno_id' => $pkey);
+
+    return parent::_getFindStatment($pkey);
+  }
 }
