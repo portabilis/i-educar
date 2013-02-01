@@ -54,6 +54,7 @@ class ViewController extends Core_Controller_Page_ViewController
     'Tabela de arredondamento' => 'tabelaArredondamento',
     'Progressão' => 'tipoProgressao',
     'Média para promoção' => 'media',
+    'Média exame para promoção' => 'mediaRecuperacao',
     'Fórmula de cálculo de média final' => 'formulaMedia',
     'Fórmula de cálculo de recuperação' => 'formulaRecuperacao',
     'Porcentagem presença' => 'porcentagemPresenca',
