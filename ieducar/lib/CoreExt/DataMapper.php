@@ -201,6 +201,17 @@ abstract class CoreExt_DataMapper
   }
 
   /**
+   * Retorna o nome do recurso, isto é o nome da tabela sem '_',
+   * Ex: transporte_aluno => transporte aluno.
+   *
+   * @return string
+   */
+  public function resourceName()
+  {
+    return strtolower(str_replace('_', ' ', $this->_tableName));
+  }
+
+  /**
    * Retorna os nomes das colunas da tabela em um array, de acordo com o array
    * de dados associativo $data.
    *
@@ -266,6 +277,7 @@ abstract class CoreExt_DataMapper
 
   /**
    * Retorna uma query SQL de recuperação de todos os registros de uma tabela.
+   *
    * @param array $data
    * @param array $where
    * @param array $orderBy
@@ -281,7 +293,20 @@ abstract class CoreExt_DataMapper
     if (0 < count($whereArg)) {
       foreach ($whereArg as $key => $value) {
         $whereName = $this->_getTableColumn($key);
-        $where[] = sprintf("%s = '%s'", $whereName, $value);
+
+        preg_match('/[<,=,>]/', $value, $matches);
+        $hasComparisonSign = ! empty($matches);
+
+        // Caso $value contenha <, > ou =, ex: '> $1', não adiciona sinal de igual.
+        if($hasComparisonSign)
+          $where[] = sprintf("%s %s", $whereName, $value);
+
+        // Caso $value contenha parametros para consulta preparada ($1, $2...), não adiciona $value entre aspas.
+        elseif(strpos($value, '$') > -1)
+          $where[] = sprintf("%s = %s", $whereName, $value);
+
+        else
+          $where[] = sprintf("%s = '%s'", $whereName, $value);
       }
     }
     else {
@@ -450,7 +475,8 @@ abstract class CoreExt_DataMapper
     if ($instance instanceof CoreExt_Entity) {
       foreach ($this->_primaryKey as $pk) {
         $whereName = $this->_getTableColumn($pk);
-        $where[] = sprintf("%s = '%d'", $whereName, $instance->get($pk));
+        //$where[] = sprintf("%s = '%d'", $whereName, $instance->get($pk)); estoura o decimal. valor 9801762824 retornando 1211828232
+        $where[] = sprintf("%s = '%s'", $whereName, $instance->get($pk));
       }
     }
     elseif (is_numeric($instance)) {
@@ -473,15 +499,16 @@ abstract class CoreExt_DataMapper
    * @param  array $columns Atributos a serem carregados. O atributo id é sempre carregado.
    * @param  array $where
    * @param  array $orderBy
+   * @param  array $addColumnIdIfNotSet Se true, adiciona a coluna 'id' caso não esteja definido no array $columns
    * @return array
    * @todo   Problema potencial com busca em registros com compount key. Testar.
    */
-  public function findAll(array $columns = array(), array $where = array(), array $orderBy = array())
+  public function findAll(array $columns = array(), array $where = array(), array $orderBy = array(), $addColumnIdIfNotSet = true)
   {
     // Inverte chave valor, permitindo array simples como array('nome')
     if (0 < count($columns)) {
       $columns = array_flip($columns);
-      if (!isset($columns['id'])) {
+      if (!isset($columns['id']) && $addColumnIdIfNotSet) {
         $columns['id'] = TRUE;
       }
     }
@@ -501,6 +528,48 @@ abstract class CoreExt_DataMapper
 
     return $list;
   }
+
+
+  /**
+   * Retorna todos os registros como objetos CoreExt_Entity retornados pela
+   * query de _getFindAllStatment() (usando consulta preparada, util para evitar sql injection).
+   *
+   * @param  array $columns Atributos a serem carregados. O atributo id é sempre carregado.
+   * @param  array $where   Condicoes preparadas ex: array('arg1 = $1', 'arg2 = $2');
+   * @param  array $params  Valor das condiçoes ($1, $2 ...) ex: array('1', '3');
+   * @param  array $orderBy
+   * @param  array $addColumnIdIfNotSet Se true, adiciona a coluna 'id' caso não esteja definido no array $columns
+   * @return array
+   * @todo
+   */
+  public function findAllUsingPreparedQuery(array $columns = array(), array $where = array(), array $params = array(), array $orderBy = array(), $addColumnIdIfNotSet = true) {
+    $list = array();
+
+    // Inverte chave valor, permitindo array simples como array('nome')
+    if (0 < count($columns)) {
+      $columns = array_flip($columns);
+      if (!isset($columns['id']) && $addColumnIdIfNotSet) {
+        $columns['id'] = TRUE;
+      }
+    }
+
+    // Reseta o locale para o default (en_US)
+    $this->getLocale()->resetLocale();
+
+    $sql = $this->_getFindAllStatment($columns, $where, $orderBy);
+
+    if ($this->_getDbAdapter()->execPreparedQuery($sql, $params) != false) {
+      // Retorna o locale para o usado no restante da aplicação
+      $this->getLocale()->setLocale();
+
+      while ($this->_getDbAdapter()->ProximoRegistro()) {
+        $list[] = $this->_createEntityObject($this->_getDbAdapter()->Tupla());
+      }
+    }
+
+    return $list;
+  }
+
 
   /**
    * Retorna um registro que tenha como identificador (chave única ou composta)
@@ -591,7 +660,7 @@ abstract class CoreExt_DataMapper
    */
   public function delete($instance)
   {
-    return $this->_getDbAdapter()->Consulta($this->_getDeleteStatment($instance));
+      return $this->_getDbAdapter()->Consulta($this->_getDeleteStatment($instance));
   }
 
   /**
