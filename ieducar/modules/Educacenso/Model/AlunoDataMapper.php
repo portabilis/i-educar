@@ -48,14 +48,27 @@ class Educacenso_Model_AlunoDataMapper extends Educacenso_Model_CodigoReferencia
   protected $_entityClass = 'Educacenso_Model_Aluno';
   protected $_tableName   = 'educacenso_cod_aluno';
 
-  protected $_primaryKey = array(
-    'aluno', 'alunoInep'
+  protected $_attributeMap = array(
+    'aluno'      => 'cod_aluno',
+    'alunoInep'  => 'cod_aluno_inep',
+    'nomeInep'   => 'nome_inep',
+    'fonte'      => 'fonte',
+    'created_at' => 'created_at',
+    'updated_at' => 'updated_at'
   );
 
-  public function __construct(clsBanco $db = NULL)
+  // aparentemente o campo alunoInep não deveria fazer parte da chave primaria, pois este pode
+  // ser alterado no cadastro de aluno, #TODO criar migracao para remover PK de tal campo ?
+  protected $_primaryKey = array(
+    'aluno' #, 'alunoInep'
+  );
+
+  // fixup para find funcionar em tabelas cujo PK não se chama id
+  protected function _getFindStatment($pkey)
   {
-    $this->_attributeMap['aluno']     = 'cod_aluno';
-    $this->_attributeMap['alunoInep'] = 'cod_aluno_inep';
-    parent::__construct($db);
+    if (! is_array($pkey))
+      $pkey = array('cod_aluno' => $pkey);
+
+    return parent::_getFindStatment($pkey);
   }
 }
