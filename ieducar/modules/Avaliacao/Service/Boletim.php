@@ -815,12 +815,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $matricula = App_Model_IedFinder::getMatricula($codMatricula);
 
     $etapas = App_Model_IedFinder::getQuantidadeDeModulosMatricula($codMatricula);
-    $this->setOption('matriculaData', $matricula);
-    $this->setOption('aprovado', $matricula['aprovado']);
-    $this->setOption('cursoHoraFalta', $matricula['curso_hora_falta']);
+    $this->setOption('matriculaData',     $matricula);
+    $this->setOption('aprovado',          $matricula['aprovado']);
+    $this->setOption('cursoHoraFalta',    $matricula['curso_hora_falta']);
     $this->setOption('cursoCargaHoraria', $matricula['curso_carga_horaria']);
     $this->setOption('serieCargaHoraria', $matricula['serie_carga_horaria']);
-    $this->setOption('etapas', $etapas);
+    $this->setOption('serieDiasLetivos',  $matricula['serie_dias_letivos']);
+    $this->setOption('etapas',            $etapas);
 
     return $this;
   }
@@ -1052,6 +1053,68 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return FALSE;
   }
 
+
+  function getSituacaoNotaFalta($flagSituacaoNota, $flagSituacaoFalta)
+  {
+    $situacao              = new stdClass();
+    $situacao->situacao    = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+    $situacao->aprovado    = TRUE;
+    $situacao->andamento   = FALSE;
+    $situacao->recuperacao = FALSE;
+    $situacao->retidoFalta = FALSE;
+
+    switch ($flagSituacaoNota) {
+      case App_Model_MatriculaSituacao::EM_ANDAMENTO:
+        $situacao->aprovado  = FALSE;
+        $situacao->andamento = TRUE;
+        break;
+      case App_Model_MatriculaSituacao::APROVADO_APOS_EXAME:
+        $situacao->recuperacao = TRUE;
+        break;
+      case App_Model_MatriculaSituacao::EM_EXAME:
+        $situacao->aprovado    = FALSE;
+        $situacao->andamento   = TRUE;
+        $situacao->recuperacao = TRUE;
+        break;
+      case App_Model_MatriculaSituacao::REPROVADO:
+        $situacao->aprovado    = FALSE;
+        break;
+    }
+
+    switch ($flagSituacaoFalta) {
+      case App_Model_MatriculaSituacao::EM_ANDAMENTO:
+        $situacao->aprovado  = FALSE;
+        $situacao->andamento = TRUE;
+        break;
+      case App_Model_MatriculaSituacao::REPROVADO:
+        $situacao->retidoFalta = TRUE;
+        $situacao->aprovado    = FALSE;
+
+        // Se reprovado por falta, mesmo que falte lançar a nota de exame, considera como reprovado.
+        $situacao->andamento   = FALSE;
+        break;
+      case App_Model_MatriculaSituacao::APROVADO:
+        $situacao->retidoFalta = FALSE;
+        break;
+    }
+
+    // seta situacao geral
+    if ($situacao->andamento and $situacao->recuperacao)
+      $situacao->situacao = App_Model_MatriculaSituacao::EM_EXAME;
+
+    elseif (! $situacao->andamento and $situacao->aprovado and $situacao->recuperacao)
+      $situacao->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
+
+    elseif (! $situacao->andamento and $situacao->aprovado)
+      $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
+
+    elseif (! $situacao->andamento and (! $situacao->aprovado || $situacao->retidoFalta))
+      $situacao->situacao = App_Model_MatriculaSituacao::REPROVADO;
+
+    return $situacao;
+  }
+
+
   /**
    * Retorna a situação geral do aluno, levando em consideração as situações
    * das notas (médias) e faltas. O retorno é baseado em booleanos, indicando
@@ -1077,57 +1140,18 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function getSituacaoAluno()
   {
-    $situacao = new stdClass();
-    $situacao->aprovado    = TRUE;
-    $situacao->andamento   = FALSE;
-    $situacao->recuperacao = FALSE;
-    $situacao->retidoFalta = FALSE;
-    $situacao->nota        = NULL;
-    $situacao->falta       = NULL;
+    $situacaoNotas  = $this->getSituacaoNotas();
+    $situacaoFaltas = $this->getSituacaoFaltas();
 
-    $nota  = $this->getSituacaoComponentesCurriculares();
-    $falta = $this->getSituacaoFaltas();
-
-    switch ($nota->situacao) {
-      case App_Model_MatriculaSituacao::EM_ANDAMENTO:
-        $situacao->aprovado  = FALSE;
-        $situacao->andamento = TRUE;
-        break;
-      case App_Model_MatriculaSituacao::APROVADO_APOS_EXAME:
-        $situacao->recuperacao = TRUE;
-        break;
-      case App_Model_MatriculaSituacao::EM_EXAME:
-        $situacao->aprovado    = FALSE;
-        $situacao->andamento   = TRUE;
-        $situacao->recuperacao = TRUE;
-        break;
-      case App_Model_MatriculaSituacao::REPROVADO:
-        $situacao->aprovado    = FALSE;
-        break;
-    }
-
-    switch ($falta->situacao) {
-      case App_Model_MatriculaSituacao::EM_ANDAMENTO:
-        $situacao->aprovado  = FALSE;
-        $situacao->andamento = TRUE;
-        break;
-      case App_Model_MatriculaSituacao::REPROVADO:
-        $situacao->retidoFalta = TRUE;
-        $situacao->aprovado    = FALSE;
-        break;
-      case App_Model_MatriculaSituacao::APROVADO:
-        $situacao->retidoFalta = FALSE;
-        break;
-    }
-
-    $situacao->nota  = $nota;
-    $situacao->falta = $falta;
+    $situacao        = $this->getSituacaoNotaFalta($situacaoNotas->situacao, $situacaoFaltas->situacao);
+    $situacao->nota  = $situacaoNotas;
+    $situacao->falta = $situacaoFaltas;
 
     return $situacao;
   }
 
   /**
-   * Retorna a situação dos componentes curriculares cursados pelo aluno. Possui
+   * Retorna a situação das notas lançadas para os componentes curriculares cursados pelo aluno. Possui
    * uma flag "situacao" global, que indica a situação global do aluno, podendo
    * ser:
    *
@@ -1155,13 +1179,19 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    * $situacao->componentesCurriculares[1]->situacao = App_Model_MatriculaSituacao::APROVADO;
    * </code>
    *
-   * Esses valores são definidos através da verificação SOMENTE das médias dos
+   * Esses valores são definidos SOMENTE através da verificação das médias dos
    * componentes curriculares já avaliados.
+   *
+   * Obs: Anteriormente este metódo se chamava getSituacaoComponentesCurriculares, porem na verdade não retornava a
+   *      situação dos componentes curriculares (que seria a situação baseada nas notas e das faltas lançadas) e sim
+   *      então foi renomeado este metodo para getSituacaoNotas, para que no metódo getSituacaoComponentesCurriculares
+   *      fosse retornado a situação do baseada nas notas e faltas lançadas.
+   *
    *
    * @return stdClass|NULL Retorna NULL caso não
    * @see App_Model_MatriculaSituacao
    */
-  public function getSituacaoComponentesCurriculares()
+  public function getSituacaoNotas()
   {
     $situacao = new stdClass();
     $situacao->situacao = 0;
@@ -1174,8 +1204,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       return $situacao;
     }
 
-    // Carrega as médias pois este método pode ser chamado após a chamada a
-    // saveNotas().
+    // Carrega as médias pois este método pode ser chamado após a chamada a saveNotas()
     $mediasComponentes = $this->_loadNotaComponenteCurricularMedia()
                               ->getMediasComponentes();
 
@@ -1203,11 +1232,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           $this->hasRecuperacao()) {
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
       }
-      elseif (($etapa == $this->getOption('etapas') || $etapa == 'Rc') &&
-               $media < $this->getRegra()->media) {
+      elseif ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media) {
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
       }
-      elseif ($etapa == 'Rc' && $media >= $this->getRegra()->media && $this->hasRecuperacao()) {
+      elseif ($etapa == 'Rc' && $media < $this->getRegra()->mediaRecuperacao) {
+        $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
+      }
+      elseif ($etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRecuperacao()) {
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
       }
       elseif ($etapa < $this->getOption('etapas') && $etapa != 'Rc') {
@@ -1275,40 +1306,31 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function getSituacaoFaltas()
   {
-    $presenca = new stdClass();
-    $presenca->situacao                 = 0;
-    $presenca->tipoFalta                = 0;
-    $presenca->cargaHoraria             = 0;
-    $presenca->cursoHoraFalta           = 0;
+    $presenca                           = new stdClass();
     $presenca->totalFaltas              = 0;
     $presenca->horasFaltas              = 0;
     $presenca->porcentagemFalta         = 0;
     $presenca->porcentagemPresenca      = 0;
-    $presenca->porcentagemPresencaRegra = 0;
-    $presenca->componentesCurriculares  = array();
-
-    // Tipo de falta do aluno
-    $tipoFalta = $this->_getFaltaAluno();
-    $tipoFalta = $tipoFalta->get('tipoFalta');
-
-    $presenca->tipoFalta                = $tipoFalta;
-    $presenca->cursoHoraFalta           = $this->getOption('cursoHoraFalta');
     $presenca->porcentagemPresencaRegra = $this->getRegra()->porcentagemPresenca;
+
+    $presenca->tipoFalta                = $this->getRegra()->get('tipoPresenca');
     $presenca->cargaHoraria             = $this->getOption('serieCargaHoraria');
+    $presenca->diasLetivos              = $this->getOption('serieDiasLetivos');
 
-    // A situação é "aprovado" por padrão
-    $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
+    $presenca->cursoHoraFalta           = $this->getOption('cursoHoraFalta');
+    $presenca->componentesCurriculares  = array();
+    $presenca->situacao                 = App_Model_MatriculaSituacao::EM_ANDAMENTO;
 
-    // Faltas
-    $faltasComponentes = array();
+    $etapa                              = 0;
+    $faltasComponentes                  = array();
 
-    // Etapa padrão
-    $etapa = 0;
-
-    // Faltas lançadas (persistidas)
+    // Carrega faltas lançadas (persistidas)
     $this->_loadFalta();
 
-    if ($presenca->tipoFalta == RegraAvaliacao_Model_TipoPresenca::GERAL) {
+    $tipoFaltaGeral         = $presenca->tipoFalta == RegraAvaliacao_Model_TipoPresenca::GERAL;
+    $tipoFaltaPorComponente = $presenca->tipoFalta == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
+
+    if ($tipoFaltaGeral) {
       $faltas = $this->_faltasGerais;
 
       if (0 == count($faltas)) {
@@ -1316,12 +1338,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $etapa = 0;
       }
       else {
-        $total  = array_sum(CoreExt_Entity::entityFilterAttr($faltas, 'id', 'quantidade'));
-        $falta  = (array_pop($faltas));
-        $etapa  = $falta->etapa;
+        $total = array_sum(CoreExt_Entity::entityFilterAttr($faltas, 'id', 'quantidade'));
+        $etapa = array_pop($faltas)->etapa;
       }
     }
-    elseif ($presenca->tipoFalta == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+
+    elseif ($tipoFaltaPorComponente) {
       $faltas = $this->_faltasComponentes;
       $total   = 0;
       $etapasComponentes = array();
@@ -1334,8 +1356,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         // Pega o id de ComponenteCurricular_Model_Componente da última etapa do array
         $componenteEtapa = array_pop($falta);
-        $id = $componenteEtapa->get('componenteCurricular');
-        $etapa = $componenteEtapa->etapa;
+        $id              = $componenteEtapa->get('componenteCurricular');
+        $etapa           = $componenteEtapa->etapa;
 
         // Etapas lançadas
         $etapasComponentes[$etapa] = $etapa;
@@ -1346,6 +1368,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $faltasComponentes[$id]->horasFaltas = NULL;
         $faltasComponentes[$id]->porcentagemFalta = NULL;
         $faltasComponentes[$id]->porcentagemPresenca = NULL;
+        $faltasComponentes[$id]->total = $componenteTotal;
+        //$faltasComponentes[$id]->componenteCurricular = $componenteEtapa;
 
         // Calcula a quantidade de horas/faltas no componente
         $faltasComponentes[$id]->horasFaltas =
@@ -1360,10 +1384,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $faltasComponentes[$id]->porcentagemPresenca =
           100 - $faltasComponentes[$id]->porcentagemFalta;
 
+        // Na última etapa seta situação presença como aprovado ou reprovado.
         if ($etapa == $this->getOption('etapas') || $etapa == 'Rc') {
           $aprovado = ($faltasComponentes[$id]->porcentagemPresenca >= $this->getRegra()->porcentagemPresenca);
-          $faltasComponentes[$id]->situacao = $aprovado ?
-            App_Model_MatriculaSituacao::APROVADO : App_Model_MatriculaSituacao::REPROVADO;
+          $faltasComponentes[$id]->situacao = $aprovado ? App_Model_MatriculaSituacao::APROVADO :
+                                                          App_Model_MatriculaSituacao::REPROVADO;
         }
 
         // Adiciona a quantidade de falta do componente ao total geral de faltas
@@ -1377,37 +1402,117 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       else {
         $etapa = min($etapasComponentes);
       }
-    }
+    } // fim if por_componente
 
-    // Total de faltas
     $presenca->totalFaltas = $total;
-
-    // Horas faltas total
     $presenca->horasFaltas = $this->_calculateHoraFalta($total, $presenca->cursoHoraFalta);
 
-    // Porcentagem de faltas
-    $presenca->porcentagemFalta = $this->_calculatePorcentagem($presenca->cargaHoraria,
-        $presenca->horasFaltas, FALSE);
+    if ($tipoFaltaGeral) {
+      $presenca->porcentagemFalta = $this->_calculatePorcentagem($presenca->diasLetivos,
+                                                                 $presenca->totalFaltas, FALSE);
+    }
+    elseif ($tipoFaltaPorComponente) {
+      $presenca->porcentagemFalta = $this->_calculatePorcentagem($presenca->cargaHoraria,
+                                                                 $presenca->horasFaltas, FALSE);
+    }
 
-    // Porcentagem de presença geral
-    $presenca->porcentagemPresenca = 100 - $presenca->porcentagemFalta;
-
-    // Componentes curriculares
+    $presenca->porcentagemPresenca     = 100 - $presenca->porcentagemFalta;
     $presenca->componentesCurriculares = $faltasComponentes;
 
-    // Situação geral. Última verificação pois somente ao fim é possível saber
-    // se está em andamento ou se pode estabelecer como aprovado ou reprovado
+    // Na última etapa seta situação presença como aprovado ou reprovado.
     if ($etapa == $this->getOption('etapas') || $etapa === 'Rc') {
-      $aprovado = ($presenca->porcentagemPresenca >= $this->getRegra()->porcentagemPresenca);
-      $presenca->situacao = $aprovado ?
-        App_Model_MatriculaSituacao::APROVADO :
-        App_Model_MatriculaSituacao::REPROVADO;
-    }
-    else {
-      $presenca->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+      $aprovado           = ($presenca->porcentagemPresenca >= $this->getRegra()->porcentagemPresenca);
+      $presenca->situacao = $aprovado ? App_Model_MatriculaSituacao::APROVADO :
+                                        App_Model_MatriculaSituacao::REPROVADO;
     }
 
     return $presenca;
+  }
+
+
+  /**
+   * Retorna a situação dos componentes curriculares cursados pelo aluno. Possui
+   * uma flag "situacao" global, que indica a situação global do aluno, podendo
+   * ser:
+   *
+   * - Em andamento
+   * - Em exame
+   * - Aprovado
+   * - Reprovado
+   *
+   * Esses valores são definidos no enum App_Model_MatriculaSituacao.
+   *
+   * Para cada componente curricular, será indicado a situação do aluno no
+   * componente.
+   *
+   * Esses resultados são retornados como um objeto stdClass que possui dois
+   * atributos: "situacao" e "componentesCurriculares". O primeiro é um tipo
+   * inteiro e o segundo um array indexado pelo id do componente e com um
+   * atributo inteiro "situacao":
+   *
+   * <code>
+   * <?php
+   * $situacao = new stdClass();
+   * $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
+   * $situacao->componentesCurriculares = array();
+   * $situacao->componentesCurriculares[1] = new stdClass();
+   * $situacao->componentesCurriculares[1]->situacao = App_Model_MatriculaSituacao::APROVADO;
+   * </code>
+   *
+   * Esses valores são definidos através da verificação das médias dos
+   * componentes curriculares já avaliados e das faltas lançadas.
+   *
+   * Obs: Anteriormente este metódo SOMENTE verificava a situação baseando-se nas médias lançadas,
+   *      porem o mesmo foi alterado para verificar a situação baseada nas notas e faltas lançadas.
+   *
+   *      A implementa antiga deste metodo esta contida no metodo getSituacaoNotas
+   *
+   * @return stdClass|NULL Retorna NULL caso não
+   * @see App_Model_MatriculaSituacao
+   */
+  public function getSituacaoComponentesCurriculares()
+  {
+    $situacao                          = new stdClass();
+    $situacao->situacao                = App_Model_MatriculaSituacao::APROVADO;
+    $situacao->componentesCurriculares = array();
+
+    $situacaoNotas  = $this->getSituacaoNotas();
+    $situacaoFaltas = $this->getSituacaofaltas();
+
+    foreach($situacaoNotas->componentesCurriculares as $ccId => $situacaoNotaCc) {
+      // seta tipos nota, falta
+      $tipoNotaNenhum         = $this->getRegra()->get('tipoNota')  ==
+                                RegraAvaliacao_Model_Nota_TipoValor::NENHUM;
+
+      $tipoFaltaPorComponente = $this->getRegra()->get('tipoPresenca') ==
+                                RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
+
+      // inicializa situacaoFaltaCc a ser usado caso tipoFaltaPorComponente
+      $situacaoFaltaCc           = new stdClass();
+      $situacaoFaltaCc->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+
+      // caso possua situacaoFalta para o componente substitui situacao inicializada
+      if ($tipoFaltaPorComponente and isset($situacaoFaltas->componentesCurriculares[$ccId]))
+        $situacaoFaltaCc = $situacaoFaltas->componentesCurriculares[$ccId];
+
+      // pega situação nota geral ou do componente
+      if ($tipoNotaNenhum)
+        $situacaoNota = $situacaoNotas->situacao;
+      else
+        $situacaoNota = $situacaoNotaCc->situacao;
+
+      // pega situacao da falta componente ou geral.
+      if($tipoFaltaPorComponente)
+        $situacaoFalta = $situacaoFaltas->componentesCurriculares[$ccId]->situacao;
+      else
+        $situacaoFalta = $situacaoFaltas->situacao;
+
+      $situacao->componentesCurriculares[$ccId] = $this->getSituacaoNotaFalta($situacaoNota, $situacaoFalta);
+    }
+
+    // #FIXME verificar porque para regras sem nota, não é retornado a situacao.
+
+    return $situacao;
   }
 
   /**
@@ -1529,6 +1634,14 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   protected function _setFaltaAluno(Avaliacao_Model_FaltaAluno $falta)
   {
     $this->_faltaAluno = $falta;
+    $tipoFaltaAtual = $this->_faltaAluno->get('tipoFalta');
+    $tipoFaltaRegraAvaliacao = $this->getRegra()->get('tipoPresenca');
+
+    if ($tipoFaltaAtual != $tipoFaltaRegraAvaliacao){
+      $this->_faltaAluno->tipoFalta = $tipoFaltaRegraAvaliacao;
+      $this->getFaltaAlunoDataMapper()->save($this->_faltaAluno);
+    }
+
     return $this;
   }
 
@@ -2320,6 +2433,31 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return $this;
   }
 
+  protected function updateSituacaoMatricula($situacaoNotasFaltas)
+  {
+    $matriculaSituacao = null;
+
+    //se a situacao da matricula não é aprovado e a situacao da nota e falta estão aprovadas, aprova a matricula
+    if (($this->getOption('aprovado') != App_Model_MatriculaSituacao::APROVADO) &&
+        ($situacaoNotasFaltas->aprovado && ! $situacaoNotasFaltas->andamento))
+    {
+      $matriculaSituacao = App_Model_MatriculaSituacao::APROVADO;
+    }
+    //se a situacao da matricula não é reprovado e a situacao da nota e falta não estão aprovadas e nem em andamento, reprova a matricula
+    elseif (($this->getOption('aprovado') != App_Model_MatriculaSituacao::REPROVADO) &&
+            (! $situacaoNotasFaltas->aprovado && ! $situacaoNotasFaltas->andamento))
+    {
+      $matriculaSituacao = App_Model_MatriculaSituacao::REPROVADO;
+    }
+    elseif ($this->getOption('aprovado') != App_Model_MatriculaSituacao::EM_ANDAMENTO)
+    {
+      $matriculaSituacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+    }
+
+    if ($matriculaSituacao)
+      $this->_updateMatricula($this->getOption('matricula'), $this->getOption('usuario'), $matriculaSituacao);
+  }
+
   /**
    * Promove o aluno de etapa escolar caso esteja aprovado de acordo com o
    * necessário estabelecido por tipoProgressao de
@@ -2329,51 +2467,64 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    *   confirmação externa para a promoção do aluno.
    * @return bool
    */
-  public function promover($ok = NULL)
+
+  public function promover($novaSituacaoMatricula = NULL)
   {
-    $situacao = $this->getSituacaoAluno();
-
-    if (TRUE == $situacao->andamento) {
-      require_once 'CoreExt/Service/Exception.php';
-      throw new CoreExt_Service_Exception('Não é possível promover uma matrícula em andamento.');
-    }
-
-    // Se a matrícula já foi alterada (aluno aprovado ou reprovado), lança exceção.
-    if (App_Model_MatriculaSituacao::EM_ANDAMENTO > $this->getOption('aprovado')) {
-      require_once 'CoreExt/Service/Exception.php';
-      throw new CoreExt_Service_Exception('A matrícula já foi promovida.');
-    }
-
     $tipoProgressao = $this->getRegra()->get('tipoProgressao');
+    $situacaoMatricula = $this->getOption('aprovado');
+    $situacaoBoletim = $this->getSituacaoAluno();
+    $exceptionMsg = '';
 
-    switch ($tipoProgressao) {
-      case RegraAvaliacao_Model_TipoProgressao::CONTINUADA:
-        $promover = TRUE;
-        break;
-      case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_AUTO_MEDIA_PRESENCA:
-        $promover = $situacao->aprovado && !$situacao->retidoFalta;
-        break;
-      case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_AUTO_SOMENTE_MEDIA:
-        $promover = $situacao->aprovado;
-        break;
-      case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL:
-        if (is_null($ok)) {
-          $enum = RegraAvaliacao_Model_TipoProgressao::getInstance();
-          $message = sprintf('Para atualizar a matrícula em uma regra %s é '
-                   . 'necessário confirmação externa no argumento "$ok".',
-                   $enum->getValue($tipoProgressao));
+    if ($situacaoBoletim->andamento)
+        $novaSituacaoMatricula = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+    else
+    {
 
-          require_once 'CoreExt/Service/Exception.php';
-          throw new CoreExt_Service_Exception($message);
-        }
+      switch ($tipoProgressao) {
+        case RegraAvaliacao_Model_TipoProgressao::CONTINUADA:
 
-        $promover = $ok;
-        break;
+          $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO;
+          break;
+
+        case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_AUTO_MEDIA_PRESENCA:
+
+          if ($situacaoBoletim->aprovado && !$situacaoBoletim->retidoFalta)
+            $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO;
+          else
+            $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
+          break;
+
+        case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_AUTO_SOMENTE_MEDIA:
+
+          if ($situacaoBoletim->aprovado)
+            $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO;
+          else
+            $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
+
+          break;
+
+        case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL && is_null($novaSituacaoMatricula):
+
+          $tipoProgressaoInstance = RegraAvaliacao_Model_TipoProgressao::getInstance();
+          $exceptionMsg = sprintf('Para atualizar a matrícula em uma regra %s é '
+                                  . 'necessário passar o valor do argumento "$novaSituacaoMatricula".',
+                                  $tipoProgressaoInstance->getValue($tipoProgressao));
+          break;
+      }
     }
 
-    return $this->_updateMatricula($this->getOption('matricula'), $this->getOption('usuario'),
-      $promover);
+    if($novaSituacaoMatricula == $situacaoMatricula)
+      $exceptionMsg = "Matrícula ({$this->getOption('matricula')}) não precisou ser promovida, " .
+                      "pois a nova situação continua a mesma da anterior ($novaSituacaoMatricula)";
+
+    if ($exceptionMsg) {
+      require_once 'CoreExt/Service/Exception.php';
+      throw new CoreExt_Service_Exception($exceptionMsg);
+    }
+
+    return $this->_updateMatricula($this->getOption('matricula'), $this->getOption('usuario'), $novaSituacaoMatricula);
   }
+
 
   /**
    * Atualiza a média dos componentes curriculares.
@@ -2441,4 +2592,46 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   {
     return App_Model_Matricula::atualizaMatricula($matricula, $usuario, $promover);
   }
+
+
+  public function deleteNota($etapa, $ComponenteCurricularId)
+  {
+    // zera nota antes de deletar, para que a media seja recalculada
+    try {
+      $nota = new Avaliacao_Model_NotaComponente(array(
+        'componenteCurricular' => $ComponenteCurricularId,
+        'nota' => 0,
+        'etapa' => $etapa
+      ));
+      $this->addNota($nota);
+      $this->save();
+    }
+    catch (Exception $e) {
+      error_log("Excessao ignorada ao zerar nota a ser removida: " . $e->getMessage());
+    }
+
+    $nota = $this->getNotaComponente($ComponenteCurricularId, $etapa);
+    $this->getNotaComponenteDataMapper()->delete($nota);
+
+    return $this;
+  }
+
+
+  public function deleteFalta($etapa, $ComponenteCurricularId)
+  {
+    $nota = $this->getFalta($etapa, $ComponenteCurricularId);
+    $this->getFaltaAbstractDataMapper()->delete($nota);
+
+    return $this;
+  }
+
+
+  public function deleteParecer($etapa, $ComponenteCurricularId)
+  {
+    $parecer = $this->getParecerDescritivo($etapa, $ComponenteCurricularId);
+    $this->getParecerDescritivoAbstractDataMapper()->delete($parecer);
+
+    return $this;
+  }
+
 }
