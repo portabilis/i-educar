@@ -185,8 +185,7 @@ class indice extends clsCadastro
     $num_tit_eleitor,
     $zona_tit_eleitor,
     $secao_tit_eleitor,
-    $idorg_exp_rg,
-    $certidao_nascimento;
+    $idorg_exp_rg;
 
   var $sem_cpf;
 
@@ -254,28 +253,10 @@ class indice extends clsCadastro
     }
 
     if (!$this->cod_aluno) {
-  		$obj_permissao = new clsPermissoes();
-		  if($obj_permissao->permissao_cadastra(578, $this->pessoa_logada,7))
-		  {
-			  $onClick = "document.getElementById(\"cpf\").disabled = true;
-						     document.getElementById(\"cpf_\").value = \"\";
-						     document.getElementById(\"cpf_2\").disabled = true;
-						     document.getElementById(\"cpf_2\").value = \"\";
-						     document.getElementById(\"ref_idpes\").value = \"\";
-						     document.getElementById(\"cpf\").value = \"\";
-						     document.getElementById(\"cpf\").disabled = true;
-						     document.getElementById(\"cpf\").value = \"\";
-						     document.getElementById(\"bloqueado\").value = \"0\";
-						     passaPagina();
-                ";
-        $botaoNovoSemCpf = "<input id='btn_cad_aluno_sem_cpf' type='button' onclick='$onClick' value='Cadastrar aluno sem CPF' />";
-		  }
-
-
-      $this->campoAdicionaTab('Buscar por CPF', $this->tab_habilitado);
+      $this->campoAdicionaTab('CPF', $this->tab_habilitado);
       $opcoes = array('' => 'Pesquise a pessoa clicando na lupa ao lado');
       $this->campoCpf('cpf_', 'CPF', $cpf, FALSE,
-        '<img border="0" onclick="pesquisa_valores_popless(\'educar_pesquisa_aluno_lst2.php?campo1=ref_idpes&campo3=cpf&campo4=cpf_\', \'nome\')" src="imagens/lupa.png" /> '. $botaoNovoSemCpf);
+        '<img border="0" onclick="pesquisa_valores_popless(\'educar_pesquisa_aluno_lst2.php?campo1=ref_idpes&campo3=cpf&campo4=cpf_\', \'nome\')" src="imagens/lupa.png">');
     }
 
     $this->campoOculto('ref_idpes', $this->ref_idpes);
@@ -318,7 +299,7 @@ class indice extends clsCadastro
         $det_fisica_raca = $obj_fisica_raca->detalhe();
         $this->ref_cod_raca = $det_fisica_raca['ref_cod_raca'];
 
-        $this->nome  = strtoupper($det_pessoa['nome']);
+        $this->nome  = $det_pessoa['nome'];
 
         $this->email =  $det_pessoa['email'];
 
@@ -670,7 +651,7 @@ class indice extends clsCadastro
     $this->campoNumero('numero', 'N&uacute;mero', $this->numero, 4, 6, FALSE, '',
       '', FALSE, FALSE, TRUE);
     $this->campoTexto('letra', ' &nbsp; Letra', $this->letra, 4, 1, FALSE);
-    $this->campoTexto('complemento', 'Complemento', $this->complemento, 30, 20, FALSE);
+    $this->campoTexto('complemento', 'Complemento', $this->complemento, 30, 50, FALSE);
     $this->campoTexto('bloco', 'Bloco', $this->bloco, 30, 50, FALSE);
     $this->campoNumero('andar', 'Andar', $this->andar, 4, 2, FALSE, '', '',
       FALSE, FALSE, TRUE);
@@ -993,7 +974,7 @@ class indice extends clsCadastro
 
     $this->campoTexto('letra', ' &nbsp; Letra', $this->letra, 4, 1, FALSE);
 
-    $this->campoTexto('complemento', 'Complemento', $this->complemento, 30, 20, FALSE);
+    $this->campoTexto('complemento', 'Complemento', $this->complemento, 30, 50, FALSE);
 
     $this->campoTexto('bloco', 'Bloco', $this->bloco, 30, 50, FALSE);
 
@@ -1169,7 +1150,6 @@ class indice extends clsCadastro
       $this->num_termo = $detalheDocumento['num_termo'];
       $this->num_livro = $detalheDocumento['num_livro'];
       $this->num_folha = $detalheDocumento['num_folha'];
-      $this->certidao_nascimento = $detalheDocumento['certidao_nascimento'];
 
       if ($detalheDocumento['data_emissao_cert_civil']) {
         $this->data_emissao_cert_civil = date('d/m/Y',
@@ -1236,7 +1216,6 @@ class indice extends clsCadastro
     $this->campoTexto('num_termo', 'Termo', $this->num_termo, '8', '8', FALSE);
     $this->campoTexto('num_livro', 'Livro', $this->num_livro, '8', '8', FALSE);
     $this->campoTexto('num_folha', 'Folha', $this->num_folha, '4', '4', FALSE);
-    $this->campoTexto('certidao_nascimento', 'Certidão nascimento', $this->certidao_nascimento, '37', '40', FALSE);
 
     $this->campoData('data_emissao_cert_civil', 'Emissão Certidão Civil',
       $this->data_emissao_cert_civil, FALSE);
@@ -1258,19 +1237,28 @@ class indice extends clsCadastro
       '10', '10', FALSE);
 
     // Adiciona uma aba com dados do Inep/Educacenso caso aluno tenha código Inep.
+    if (isset($this->cod_aluno)) {
+      $alunoMapper = new Educacenso_Model_AlunoDataMapper();
 
-    $alunoMapper = new Educacenso_Model_AlunoDataMapper();
-    $alunoInep   = NULL;
+      $alunoInep = NULL;
+      try {
+        $alunoInep = $alunoMapper->find(array('aluno' => $this->cod_aluno));
+      }
+      catch(Exception $e) {
+      }
 
-    try {
-      $alunoInep = $alunoMapper->find(array('aluno' => $this->cod_aluno));
+      if ($alunoInep) {
+        $this->campoAdicionaTab('Educacenso/Inep', $this->tab_habilitado);
+
+        $this->campoRotulo('_inep_cod_aluno', 'Código do aluno no Educacenso/Inep',
+          $alunoInep->alunoInep);
+
+        if (isset($alunoInep->nomeInep)) {
+          $this->campoRotulo('_inep_nome_aluno', 'Nome do aluno no Educacenso/Inep',
+            $alunoInep->nomeInep);
+        }
+      }
     }
-    catch(Exception $e) {
-    }
-
-    $this->campoAdicionaTab('Educacenso/Inep', $this->tab_habilitado);
-    $this->campoNumero('cod_inep', 'Código INEP', $alunoInep->alunoInep, 20, 20, FALSE);
-    $this->campoTexto('nome_inep', 'Nome Inep', $alunoInep->nomeInep, 40, 255, FALSE);
 
     $this->campoTabFim();
   }
@@ -1589,7 +1577,7 @@ class indice extends clsCadastro
       $this->cartorio_cert_civil, $this->num_cart_trabalho, $this->serie_cart_trabalho,
       $this->data_emissao_cart_trabalho, $this->sigla_uf_cart_trabalho,
       $this->num_tit_eleitor, $this->zona_tit_eleitor, $this->secao_tit_eleitor,
-      $this->idorg_exp_rg, $this->certidao_nascimento);
+      $this->idorg_exp_rg);
 
     if ($ObjDocumento->detalhe()) {
       $ObjDocumento = new clsDocumento($this->ref_idpes, $this->rg, $this->data_exp_rg,
@@ -1598,10 +1586,11 @@ class indice extends clsCadastro
         $this->sigla_uf_cert_civil, $this->cartorio_cert_civil, $this->num_cart_trabalho,
         $this->serie_cart_trabalho, $this->data_emissao_cart_trabalho,
         $this->sigla_uf_cart_trabalho, $this->num_tit_eleitor, $this->zona_tit_eleitor,
-        $this->secao_tit_eleitor, $this->idorg_exp_rg, $this->certidao_nascimento);
+        $this->secao_tit_eleitor, $this->idorg_exp_rg);
 
-      if (! $ObjDocumento->edita())
+      if (!$ObjDocumento->edita()) {
         return FALSE;
+      }
     }
     else {
       $ObjDocumento = new clsDocumento($this->ref_idpes, $this->rg, $this->data_exp_rg,
@@ -1610,7 +1599,7 @@ class indice extends clsCadastro
         $this->sigla_uf_cert_civil, $this->cartorio_cert_civil, $this->num_cart_trabalho,
         $this->serie_cart_trabalho, $this->data_emissao_cart_trabalho,
         $this->sigla_uf_cart_trabalho, $this->num_tit_eleitor,
-        $this->zona_tit_eleitor, $this->secao_tit_eleitor, $this->idorg_exp_rg, $this->certidao_nascimento);
+        $this->zona_tit_eleitor, $this->secao_tit_eleitor, $this->idorg_exp_rg);
 
       if (!$ObjDocumento->cadastra()) {
         return FALSE;
@@ -1698,8 +1687,6 @@ class indice extends clsCadastro
     $this->_cadastraTransporte($this->cod_aluno, $this->transporte_aluno,
       $this->transporte_responsavel, $this->pessoa_logada);
 
-    $this->_cadastraInep($this->cod_aluno, $this->cod_inep, $this->nome_inep);
-
     header('Location: educar_aluno_det.php?cod_aluno=' . $this->cod_aluno);
     die();
   }
@@ -1711,89 +1698,25 @@ class indice extends clsCadastro
 
   function Excluir()
   {
-    die('Exclusão desabilitada em educar_aluno_cad!');
-
     session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $alunoId = $_GET['cod_aluno'];
+    $obj = new clsPmieducarAluno($this->cod_aluno, $this->ref_cod_aluno_beneficio,
+      $this->ref_cod_religiao, $this->pessoa_logada, $this->pessoa_logada,
+      $this->ref_idpes, $this->data_cadastro, $this->data_exclusao, 0);
 
-    $aluno = new clsPmieducarAluno($alunoId, NULL, NULL, $this->pessoa_logada);
+    $excluiu = $obj->excluir();
 
-    if (! $this->desativarMatriculas($alunoId) || ! $this->desativarHistoricos($alunoId))
-      return false;
-
-    if (! $aluno->excluir()) {
-      $this->mensagem = "Erro ao desativar aluno.";
-      return false;
+    if ($excluiu) {
+      $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
+      header("Location: educar_aluno_lst.php");
+      die();
     }
 
-    $this->mensagem = "Exclus&atilde;o efetuada com sucesso.";
-    header("Location: educar_aluno_lst.php");
-    die();
-  }
-
-
-  function desativarMatriculas($alunoId) {
-
-    $matriculas = new clsPmieducarMatricula();
-    $matriculas = $matriculas->lista(NULL, NULL, NULL, NULL, NULL, NULL, $alunoId);
-
-    foreach($matriculas as $matricula) {
-      $matriculaId = $matricula['cod_matricula'];
-      $matricula = new clsPmieducarMatricula($matriculaId, NULL, NULL, NULL, $this->pessoa_logada);
-
-      if (! $this->desativarEnturmacoes($matriculaId))
-        return false;
-      elseif (! $matricula->excluir()) {
-        $this->mensagem = "Erro ao desativar matriculas";
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-
-  function desativarEnturmacoes($matriculaId) {
-    $enturmacoes = new clsPmieducarMatriculaTurma();
-    $enturmacoes = $enturmacoes->lista($matriculaId);
-    foreach($enturmacoes as $enturmacao) {
-      $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
-                                                   $enturmacao['ref_cod_turma'],
-                                                   $this->pessoa_logada,
-                                                   NULL,
-                                                   NULL,
-                                                   NULL,
-                                                   NULL,
-                                                   NULL,
-                                                   $enturmacao['sequencial']);
-
-      if (! $enturmacao->excluir()) {
-        $this->mensagem = "Erro ao desativar enturmações";
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-
-  function desativarHistoricos($alunoId) {
-    #TODO desativar historicos
-    $historicos = new clsPmieducarHistoricoEscolar();
-    $historicos = $historicos->lista($alunoId);
-
-    foreach($historicos as $historico) {
-      $historico = new clsPmieducarHistoricoEscolar($alunoId, $historico['sequencial'], $this->pessoa_logada);
-
-      if (! $historico->excluir()) {
-        $this->mensagem = "Erro ao desativar históricos";
-        return false;
-      }
-    }
-    return true;
+    $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+    echo "<!--\nErro ao excluir clsPmieducarAluno\nvalores obrigatorios\nif( is_numeric( $this->cod_aluno ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+    return false;
   }
 
   function geraFotos($fotoOriginal)
@@ -1810,9 +1733,9 @@ class indice extends clsCadastro
 
     $extensao = $img_type == 2 ? '.jpg' : (($img_type == 3) ? '.png' : '');
 
-    $nome_do_arquivo       = array_pop(explode(DIRECTORY_SEPARATOR, $fotoOriginal)) . $extensao;
-    $caminhoDaBig          = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'arquivos' . DIRECTORY_SEPARATOR . 'educar' . DIRECTORY_SEPARATOR . 'aluno' . DIRECTORY_SEPARATOR .'big' . DIRECTORY_SEPARATOR . $nome_do_arquivo;
-    $caminhoDaFotoOriginal = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'arquivos' . DIRECTORY_SEPARATOR . 'educar' . DIRECTORY_SEPARATOR . 'aluno' . DIRECTORY_SEPARATOR . 'original' . DIRECTORY_SEPARATOR . $nome_do_arquivo;
+    $nome_do_arquivo       = array_pop(explode('/', $fotoOriginal)) . $extensao;
+    $caminhoDaBig          = 'arquivos/educar/aluno/big/' . $nome_do_arquivo;
+    $caminhoDaFotoOriginal = 'arquivos/educar/aluno/original/' . $nome_do_arquivo;
 
     if ($imagewidth > 700) {
       $new_w = 700;
@@ -1842,8 +1765,7 @@ class indice extends clsCadastro
     }
     else {
       if (!file_exists($caminhoDaBig)) {
-
-          copy($fotoOriginal, $caminhoDaBig);
+        copy($fotoOriginal, $caminhoDaBig);
 
         if ($img_type == 2) {
           $src_img_original = @imagecreatefromjpeg($fotoOriginal);
@@ -1858,7 +1780,7 @@ class indice extends clsCadastro
     $ratio = ($imagewidth / $new_w);
     $new_h = round($imageheight / $ratio);
 
-    $caminhoDaSmall = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'arquivos'. DIRECTORY_SEPARATOR . 'educar'. DIRECTORY_SEPARATOR . 'aluno'. DIRECTORY_SEPARATOR .'small' . DIRECTORY_SEPARATOR .  $nome_do_arquivo;
+    $caminhoDaSmall = 'arquivos/educar/aluno/small/' . $nome_do_arquivo;
 
     if (file_exists($caminhoDaBig)) {
       if ($img_type == 2) {
@@ -1942,41 +1864,6 @@ class indice extends clsCadastro
     }
 
     return TRUE;
-  }
-
-  function _cadastraInep($cod_aluno, $cod_inep, $nome_inep)
-  {
-    $alunoMapper = new Educacenso_Model_AlunoDataMapper();
-
-    try {
-      $aluno = $alunoMapper->find(array('aluno' => $this->cod_aluno));
-    }
-    catch(Exception $e) {
-    }
-
-    if (!empty($aluno->aluno)) {
-      $mapperDelete = new Educacenso_Model_AlunoDataMapper();
-      $mapperDelete->delete($aluno);
-    }
-
-    if (!empty($cod_inep)) {
-      $mapperSave = new Educacenso_Model_Aluno();
-      $mapperSave->aluno = $cod_aluno;
-      $mapperSave->alunoInep = $cod_inep;
-
-      $mapperSave->nomeInep = $nome_inep;
-      $mapperSave->fonte ='fonte';
-
-      if (empty($aluno->alunoInep)) {
-         $mapperSave->created_at = 'NOW()';
-      }
-      else {
-         $mapperSave->created_at = $aluno->created_at;
-         $mapperSave->updated_at = 'NOW()';
-      }
-
-      $alunoMapper->save($mapperSave);
-    }
   }
 }
 
@@ -2309,9 +2196,5 @@ function transporteResponsavel()
   else {
     obj2.disabled = true;
   }
-
-  var b = document.getElementById('btn_cad_aluno_sem_cpf');
-  if (b) b.click();
-
 }
 </script>

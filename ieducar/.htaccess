@@ -43,7 +43,7 @@
 # Protege arquivos e diretórios de serem listados ou servidos. Arquivo info.php
 # e arquivos SQL são protegidos assim como os diretórios misc, test e
 # diretórios comuns a SCMs como CVS e SVN (para proteger deployments desse tipo).
-<FilesMatch "\.(.*sql|ini|sh|svn-base|tpl)$|^(misc|tests|configuration|scripts|spikes|Entries.*|Repository|Root|Tag|Template|all-wcprops|entries|format)$|^info\.php$">
+<FilesMatch "\.(.*sql|ini|svn-base)$|^(misc|tests|configuration|spikes|Entries.*|Repository|Root|Tag|Template|all-wcprops|entries|format)$|^info\.php$">
   Order allow,deny
 </FilesMatch>
 
@@ -76,9 +76,9 @@ DirectoryIndex index.php index.html index.htm
 #
 # @link http://php.net/configuration.changes
 <IfModule mod_php5.c>
-# php_value memory_limit                32M
+  php_value memory_limit                64M
   php_value error_reporting             1
-  php_flag  display_errors              on
+  php_flag  display_errors              off
   php_flag  magic_quotes_gpc            off
   php_flag  register_globals            off
   php_flag  session.auto_start          off

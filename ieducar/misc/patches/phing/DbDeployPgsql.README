@@ -1,0 +1,21 @@
+--
+-- @author   Eriksen Costa <eriksencosta@gmail.com>
+-- @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+-- @link     http://phing.info/trac/ticket/603  Ticket 603 no Trac do Phing
+--
+
+Patch para o Phing para adicionar suporte ao PostgreSQL no DbDeployTask.
+
+Esse patch foi criado para a versão 2.4.3 do Phing e foi enviado para os
+desenvolvedores do projeto através do Trac, anexado ao ticket 603:
+
+http://phing.info/trac/ticket/603
+
+Após aplicar esse patch em sua cópia local do Phing, você poderá utilizar a task
+"migrate" do misc/build.xml:
+
+phinf -f misc/build.xml migrate
+
+Mais detalhes sobre os migrations de banco de dados em:
+
+http://svn.softwarepublico.gov.br/trac/ieducar/wiki/Dev/1.X/BancoDeDados

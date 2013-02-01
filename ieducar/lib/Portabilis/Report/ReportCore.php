@@ -28,7 +28,6 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/Report/ReportFactoryRemote.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 
 /**

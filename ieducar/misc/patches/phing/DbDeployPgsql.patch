@@ -1,0 +1,80 @@
+diff --git tasks/ext/dbdeploy/DbmsSyntaxFactory.php tasks/ext/dbdeploy/DbmsSyntaxFactory.php
+index ffa601e..e9ef75b 100644
+--- tasks/ext/dbdeploy/DbmsSyntaxFactory.php
++++ tasks/ext/dbdeploy/DbmsSyntaxFactory.php
+@@ -18,7 +18,7 @@
+  * and is licensed under the LGPL. For more information please see
+  * <http://phing.info>.
+  */
+- 
++
+ require_once 'phing/Task.php';
+ require_once 'phing/tasks/ext/dbdeploy/DbmsSyntax.php';
+ 
+@@ -33,12 +33,12 @@ require_once 'phing/tasks/ext/dbdeploy/DbmsSyntax.php';
+ class DbmsSyntaxFactory
+ {
+     private $dbms;
+-    
++
+     public function __construct($dbms)
+     {
+         $this->dbms = $dbms;
+     }
+-    
++
+     public function getDbmsSyntax()
+     {
+         switch ($this->dbms){
+@@ -51,6 +51,9 @@ class DbmsSyntaxFactory
+             case('mssql'):
+                 require_once 'phing/tasks/ext/dbdeploy/DbmsSyntaxMsSql.php';
+                 return new DbmsSyntaxMsSql();
++            case('pgsql'):
++                require_once 'phing/tasks/ext/dbdeploy/DbmsSyntaxPgsql.php';
++                return new DbmsSyntaxPgsql();
+             default:
+                 throw new Exception($this->dbms . ' is not supported by dbdeploy task.');
+         }
+diff --git tasks/ext/dbdeploy/DbmsSyntaxPgsql.php tasks/ext/dbdeploy/DbmsSyntaxPgsql.php
+new file mode 100644
+index 0000000..4fe8f36
+--- /dev/null
++++ tasks/ext/dbdeploy/DbmsSyntaxPgsql.php
+@@ -0,0 +1,36 @@
++<?php
++/*
++ *  $Id$
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ *
++ * This software consists of voluntary contributions made by many individuals
++ * and is licensed under the LGPL. For more information please see
++ * <http://phing.info>.
++ */
++
++/**
++ *  Utility class for generating necessary server-specific SQL commands
++ *
++ *  @author   Eriksen Costa <eriksen.costa@infranology.com.br>
++ *  @version  $Revision$
++ *  @package  phing.tasks.ext.dbdeploy
++ */
++
++class DbmsSyntaxPgsql extends DbmsSyntax
++{
++    public function generateTimestamp()
++    {
++        return "current_timestamp";
++    }
++}
