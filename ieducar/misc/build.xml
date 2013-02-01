@@ -19,7 +19,7 @@
  * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @link     http://phing.info/docs/guide/current/  Phing Documentation
  * @todo     Incluir tarefas de geração de API (PhpDocumentorTask)
- * @version  $Id$
+ * @version  $Id: build.xml 768 2010-12-09 02:20:10Z eriksencosta@gmail.com $
  */
 -->
 <project name="i-Educar" description="Sistema de gestão escolar" default="release" basedir="../">
