@@ -63,6 +63,46 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
+   * Retorna um array com as informações de escola a partir de seu código.
+   * @param  int $id
+   * @return array
+   */
+  public static function getEscola($id)
+  {
+    $escola = self::addClassToStorage('clsPmieducarEscola', NULL,
+      'include/pmieducar/clsPmieducarEscola.inc.php');
+    $escola->cod_escola = $id;
+    $escola = $escola->detalhe();
+
+    if (FALSE === $escola) {
+      throw new App_Model_Exception(
+        sprintf('Escola com o código "%d" não existe.', $id)
+      );
+    }
+
+    return $escola;
+  }
+
+  /**
+   * Retorna todas as escolas cadastradas na tabela pmieducar.escola, selecionando
+   * opcionalmente pelo código da instituição.
+   * @param int $instituicaoId
+   * @return array
+   */
+  public static function getEscolas($instituicaoId = NULL)
+  {
+    $_escolas = self::addClassToStorage('clsPmieducarEscola', NULL,
+      'include/pmieducar/clsPmieducarEscola.inc.php');
+
+    $escolas = array();
+    foreach ($_escolas->lista(NULL, NULL, NULL,  $instituicaoId) as $escola) {
+      $escolas[$escola['cod_escola']] = $escola['nome'];
+    }
+
+    return $escolas;
+  }
+
+  /**
    * Retorna um nome de curso, procurando pelo seu código.
    * @param  int $id
    * @return string|FALSE
@@ -75,6 +115,31 @@ class App_Model_IedFinder extends CoreExt_Entity
     $curso = $curso->detalhe();
     return $curso['nm_curso'];
   }
+
+  /**
+   * Retorna todos os cursos cadastradas na tabela pmieducar.escola_curso, selecionando
+   * opcionalmente pelo código da escola.
+   * @param int $escolaId
+   * @return array
+   */
+  public static function getCursos($escolaId = NULL)
+  {
+    $escola_curso = self::addClassToStorage('clsPmieducarEscolaCurso', NULL,
+      'include/pmieducar/clsPmieducarEscolaCurso.inc.php');
+
+    // Carrega os cursos
+    $escola_curso->setOrderby('ref_cod_escola ASC, cod_curso ASC');
+    $escola_curso = $escola_curso->lista($escolaId);
+
+    $cursos = array();
+    foreach ($escola_curso as $key => $val) {
+      $nomeCurso = self::getCurso($val['ref_cod_curso']);
+      $cursos[$val['ref_cod_curso']] = $nomeCurso;
+    }
+
+    return $cursos;
+  }
+
 
   /**
    * Retorna um array com as informações da série a partir de seu código.
@@ -104,41 +169,71 @@ class App_Model_IedFinder extends CoreExt_Entity
 
   /**
    * Retorna todas as séries cadastradas na tabela pmieducar.serie, selecionando
-   * opcionalmente pelo código da instituição.
+   * opcionalmente pelo código da instituição, da escola ou do curso.
    * @param int $instituicaoId
+   * @param int $escolaId
+   * @param int $cursoId
    * @return array
    */
-  public static function getSeries($instituicaoId = NULL)
+  public static function getSeries($instituicaoId = NULL, $escolaId = NULL, $cursoId = NULL)
   {
-    $serie = self::addClassToStorage('clsPmieducarSerie', NULL,
-      'include/pmieducar/clsPmieducarSerie.inc.php');
+    $series = self::addClassToStorage('clsPmieducarSerie', NULL,
+                                       'include/pmieducar/clsPmieducarSerie.inc.php');
 
-    // Carrega as séries
-    $serie->setOrderby('ref_cod_curso ASC, cod_serie ASC, etapa_curso ASC');
-    $serie = $serie->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-      NULL, NULL, NULL, NULL, $instituicaoId);
+    $series->setOrderby('ref_cod_curso ASC, cod_serie ASC, etapa_curso ASC');
+    $series = $series->lista(NULL, NULL, NULL, $cursoId, NULL, NULL, NULL, NULL, NULL,
+                             NULL, NULL, NULL, NULL, $instituicaoId, NULL, NULL, NULL, $escolaId);
 
-    $series = array();
-    foreach ($serie as $key => $val) {
-      $series[$val['cod_serie']] = $val;
+    $_series = array();
+
+    foreach ($series as $serie) {
+      //$series[$val['cod_serie']] = $val;
+      $_series[$serie['cod_serie']] = $serie['nm_serie'];
     }
 
-    return $series;
+    return $_series;
   }
 
   /**
-   * Retorna as turmas de uma escola.
-   * @param  int   $escola
+   * Retorna um array com as informações da turma a partir de seu código.
+   *
+   * @param int $codTurma
+   * @return array
+   * @throws App_Model_Exception
+   */
+  public static function getTurma($codTurma)
+  {
+    // Recupera clsPmieducarTurma do storage de classe estático
+    $turma = self::addClassToStorage('clsPmieducarTurma', NULL,
+      'include/pmieducar/clsPmieducarTurma.inc.php');
+
+    // Usa o atributo público para depois chamar o método detalhe()
+    $turma->cod_turma = $codTurma;
+    $turma = $turma->detalhe();
+
+    if (FALSE === $turma) {
+      throw new App_Model_Exception(
+        sprintf('Turma com o código "%d" não existe.', $codTurma)
+      );
+    }
+
+    return $turma;
+  }
+
+  /**
+   * Retorna as turmas de uma escola, selecionando opcionalmente pelo código da série.
+   * @param  int   $escolaId
+   * @param  int   $serieId
    * @return array (cod_turma => nm_turma)
    */
-  public static function getTurmas($escola)
+  public static function getTurmas($escolaId, $serieId = NULL)
   {
     $turma = self::addClassToStorage('clsPmieducarTurma', NULL,
       'include/pmieducar/clsPmieducarTurma.inc.php');
 
     // Carrega as turmas da escola
     $turma->setOrderBy('nm_turma ASC');
-    $turmas = $turma->lista(NULL, NULL, NULL, NULL, $escola);
+    $turmas = $turma->lista(NULL, NULL, NULL, $serieId, $escolaId);
 
     $ret = array();
     foreach ($turmas as $turma) {
@@ -190,13 +285,14 @@ class App_Model_IedFinder extends CoreExt_Entity
 
       // Pela restrição na criação de anos letivos, eu posso confiar no primeiro
       // e único resultado que deve ter retornado
-      if (FALSE !== $anosEmAndamento && 1 == count($anosEmAndamento)) {
-        $ano = array_shift($anosEmAndamento);
-        $ano = $ano['ano'];
-      }
-      else {
-        throw new App_Model_Exception('Existem vários anos escolares em andamento.');
-      }
+      if (FALSE == $anosEmAndamento || count($anosEmAndamento) < 1)
+        throw new App_Model_Exception('Não foi encontrado um ano escolar em andamento.');
+
+      elseif (count($anosEmAndamento) > 1)
+        throw new App_Model_Exception('Existe mais de um ano escolar em andamento.');
+
+      $ano = array_shift($anosEmAndamento);
+      $ano = $ano['ano'];
 
       $anoLetivoModulo = self::addClassToStorage('clsPmieducarAnoLetivoModulo',
         NULL, 'include/pmieducar/clsPmieducarAnoLetivoModulo.inc.php');
@@ -250,13 +346,14 @@ class App_Model_IedFinder extends CoreExt_Entity
    *   atribuídos ao ano escolar/série da escola.
    */
   public static function getEscolaSerieDisciplina($anoEscolar, $escola,
-    ComponenteCurricular_Model_ComponenteDataMapper $mapper = NULL)
+    ComponenteCurricular_Model_ComponenteDataMapper $mapper = NULL,
+    $disciplinaId = null)
   {
     // Disciplinas na série na escola
     $escolaSerieDisciplina = self::addClassToStorage('clsPmieducarEscolaSerieDisciplina',
       NULL, 'include/pmieducar/clsPmieducarEscolaSerieDisciplina.inc.php');
 
-    $disciplinas = $escolaSerieDisciplina->lista($anoEscolar, $escola, NULL, 1);
+    $disciplinas = $escolaSerieDisciplina->lista($anoEscolar, $escola, $disciplinaId, 1);
 
     if (FALSE === $disciplinas) {
       throw new App_Model_Exception(sprintf(
@@ -294,18 +391,24 @@ class App_Model_IedFinder extends CoreExt_Entity
    */
   public static function getComponentesTurma($anoEscolar, $escola, $turma,
     ComponenteCurricular_Model_TurmaDataMapper $mapper = NULL,
-    ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper = NULL)
+    ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper = NULL,
+    $componenteCurricularId = null)
   {
     if (is_null($mapper)) {
       require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
       $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
     }
 
-    $componentesTurma = $mapper->findAll(array(), array('turma' => $turma));
+    $where = array('turma' => $turma);
+
+    if (is_numeric($componenteCurricularId))
+      $where['componente_curricular_id'] = $componenteCurricularId;
+
+    $componentesTurma = $mapper->findAll(array(), $where);
 
     // Não existem componentes específicos para a turma
     if (0 == count($componentesTurma)) {
-      return self::getEscolaSerieDisciplina($anoEscolar, $escola, $componenteMapper);
+      return self::getEscolaSerieDisciplina($anoEscolar, $escola, $componenteMapper, $componenteCurricularId);
     }
 
     $componentes = array();
@@ -412,6 +515,7 @@ class App_Model_IedFinder extends CoreExt_Entity
     $matricula['curso_carga_horaria'] = $curso['carga_horaria'];
     $matricula['curso_hora_falta']    = $curso['hora_falta'];
     $matricula['serie_carga_horaria'] = $serie['carga_horaria'];
+    $matricula['serie_dias_letivos']  = $serie['dias_letivos'];
 
     $matricula['curso_nome']          = isset($curso['nm_curso']) ? $curso['nm_curso'] : NULL;
     $matricula['serie_nome']          = isset($serie['nm_serie']) ? $serie['nm_serie'] : NULL;
@@ -458,7 +562,8 @@ class App_Model_IedFinder extends CoreExt_Entity
    */
   public static function getComponentesPorMatricula($codMatricula,
     ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper = NULL,
-    ComponenteCurricular_Model_TurmaDataMapper $turmaMapper = NULL)
+    ComponenteCurricular_Model_TurmaDataMapper $turmaMapper = NULL,
+    $componenteCurricularId = null)
   {
     $matricula = self::getMatricula($codMatricula);
 
@@ -470,7 +575,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     // Disciplinas da escola na série em que o aluno está matriculado
     $componentes = self::getComponentesTurma(
-      $codSerie, $codEscola, $turma, $turmaMapper, $componenteMapper
+      $codSerie, $codEscola, $turma, $turmaMapper, $componenteMapper, $componenteCurricularId
     );
 
     // Dispensas do aluno
@@ -538,6 +643,151 @@ class App_Model_IedFinder extends CoreExt_Entity
     $modulos = self::getModulo($codEscola, $codCurso, $codTurma);
 
     return $modulos['total'];
+  }
+
+  /**
+   * Retorna um array com as informações de biblioteca a partir de seu código.
+   * @param  int $id
+   * @return array
+   */
+  public static function getBiblioteca($id)
+  {
+    $biblioteca = self::addClassToStorage('clsPmieducarBiblioteca', NULL,
+      'include/pmieducar/clsPmieducarBiblioteca.inc.php');
+    $biblioteca->cod_biblioteca = $id;
+    $biblioteca = $biblioteca->detalhe();
+
+    if (FALSE === $biblioteca) {
+      throw new App_Model_Exception(
+        sprintf('Biblioteca com o código "%d" não existe.', $id)
+      );
+    }
+
+    return $biblioteca;
+  }
+
+  /**
+   * Retorna todas as bibliotecas cadastradas na tabela pmieducar.biblioteca, selecionando
+   * opcionalmente pelo código da instituição e/ ou escola.
+   * @param int $instituicaoId
+   * @return array
+   */
+  public static function getBibliotecas($instituicaoId = NULL, $escolaId = NULL)
+  {
+    $_bibliotecas = self::addClassToStorage('clsPmieducarBiblioteca', NULL,
+      'include/pmieducar/clsPmieducarBiblioteca.inc.php');
+
+    $bibliotecas = array();
+    foreach ($_bibliotecas->lista(NULL, $instituicaoId, $escolaId) as $biblioteca) {
+      $bibliotecas[$biblioteca['cod_biblioteca']] = $biblioteca['nm_biblioteca'];
+    }
+
+    return $bibliotecas;
+  }
+
+  /**
+   * Retorna todas as situações cadastradas para as bibliotecas na tabela pmieducar.situacao, selecionando
+   * opcionalmente pelo código da biblioteca.
+   * @param int $bibliotecaId
+   * @return array
+   */
+  public static function getBibliotecaSituacoes($bibliotecaId = NULL)
+  {
+    $_situacoes = self::addClassToStorage('clsPmieducarSituacao', NULL,
+      'include/pmieducar/clsPmieducarSituacao.inc.php');
+
+    $situacoes = array();
+    foreach ($_situacoes->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, $bibliotecaId) as $situacao) {
+      $situacoes[$situacao['cod_situacao']] = $situacao['nm_situacao'];
+    }
+
+    return $situacoes;
+  }
+
+  /**
+   * Retorna todas as fontes cadastradas para as bibliotecas na tabela pmieducar.fonte, selecionando
+   * opcionalmente pelo código da biblioteca.
+   * @param int $bibliotecaId
+   * @return array
+   */
+  public static function getBibliotecaFontes($bibliotecaId = NULL)
+  {
+    $_fontes = self::addClassToStorage('clsPmieducarFonte', NULL,
+      'include/pmieducar/clsPmieducarFonte.inc.php');
+
+    $fontes = array();
+    foreach ($_fontes->lista(null,null,null,null,null,null,null,null,null,1, $bibliotecaId) as $fonte) {
+      $fontes[$fonte['cod_fonte']] = $fonte['nm_fonte'];
+    }
+
+    return $fontes;
+  }
+
+  /**
+   * Retorna uma obra cadastrada para uma biblioteca na tabela pmieducar.acervo, selecionando
+   * obrigatóriamente pelo código da biblioteca e opcionalmente pelo código da obra.
+   * @param int $bibliotecaId
+   * @return array
+   */
+  public static function getBibliotecaObra($bibliotecaId, $id = NULL)
+  {
+    $obra = self::addClassToStorage('clsPmieducarAcervo', NULL,
+                                    'include/pmieducar/clsPmieducarAcervo.inc.php');
+
+    $obra->ref_cod_biblioteca = $$bibliotecaId;
+    $obra->cod_acervo         = $id;
+    $obra                     = $obra->detalhe();
+
+    if (FALSE === $obra) {
+      throw new App_Model_Exception(
+        sprintf('Obra com o código "%d" não existe.', $id)
+      );
+    }
+
+    return $obra;
+  }
+
+  /**
+   * Retorna um aluno cadastrado para uma escola na tabela pmieducar.aluno, selecionando
+   * obrigatóriamente pelo código da escola e opcionalmente pelo código do aluno.
+   * @param int $id
+   * @return array
+   */
+  public static function getAluno($escolaId, $id)
+  {
+    $aluno = self::addClassToStorage('clsPmieducarAluno', NULL,
+                                    'include/pmieducar/clsPmieducarAluno.inc.php');
+    #$aluno->cod_aluno      = $id;
+    #$aluno                 = $aluno->detalhe();
+
+    $aluno = $aluno->lista($id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $escolaId);
+
+    if (FALSE === $aluno) {
+      throw new App_Model_Exception(
+        sprintf('Aluno com o código "%d" não existe.', $id)
+      );
+    }
+
+    return $aluno[0];
+  }
+
+  /**
+   * Retorna todos os tipos de cliente cadastrados para determinada biblioteca na tabela
+   * pmieducar.cliente_tipo, selecionando obrigatoriamente pelo código da biblioteca.
+   * @param int $bibliotecaId
+   * @return array
+   */
+  public static function getBibliotecaTiposCliente($bibliotecaId)
+  {
+    $resources = self::addClassToStorage('clsPmieducarClienteTipo', NULL,
+      'include/pmieducar/clsPmieducarClienteTipo.inc.php');
+
+    $filtered_resources = array();
+    foreach ($resources->lista(null, $bibliotecaId) as $resource) {
+      $filtered_resources[$resource['cod_cliente_tipo']] = $resource['nm_tipo'];
+    }
+
+    return $filtered_resources;
   }
 
   /**
