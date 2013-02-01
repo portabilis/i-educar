@@ -55,6 +55,23 @@
       else
         $j('.visible-for-non-windows-so').show();
     }
+
+    // set up google analytics
+    var domainName = "#&GOOGLE_ANALYTICS_DOMAIN_NAME&#";
+
+    // track only production requests.
+    if (domainName.indexOf('local.') < 0 && domainName.indexOf('test.') < 0) {
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', '***REMOVED***']);
+      _gaq.push(['_setDomainName', domainName]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    }
   </script>
 
 	</head>
@@ -64,6 +81,8 @@
       <!--[if lt IE 7]>
       <p style="min-height: 32px;" class="flash update-browser"><strong>Seu navegador est&aacute desatualizado.</strong> Para melhor navega&ccedil;&atildeo  no sistema, por favor, atualize seu navegador.<a href="http://br.mozdev.org/download/" target="_blank"><img style="margin-top:4px;" src="http://www.mozilla.org/contribute/buttons/110x32bubble_r_pt.png" alt="Firefox" width="110" height="32" style="border-style:none;" title="Mozilla Firefox" /></a></p>
       <![endif]-->
+
+      <p style="min-height: 0px;" class="flash notice"><strong>Novidade:</strong> Experimente o novo cadastro de alunos.</p>
 
       <!-- #&ERROLOGIN&# -->
     </div>
@@ -123,7 +142,15 @@
 
     <div id="rodape" class="texto-normal">
 		  <p>
-        <!--Portabilis Tecnologia-->
+        Portabilis Tecnologia - suporte@portabilis.com.br -
+
+        <a target="_blank" class="decorated hidden visible-for-windows-so" href="http://www.teamviewer.com/download/TeamViewerQS_pt.exe">suporte remoto</a>
+
+        <a target="_blank" class="decorated hidden visible-for-non-windows-so" href="http://www.teamviewer.com/pt/download/index.aspx">suporte remoto</a>
+
+        -
+
+        <a href="http://ieducar.com.br/wiki" class="decorated">ajuda</a>
 		  </p>
     </div> <!-- end rodape -->
 
