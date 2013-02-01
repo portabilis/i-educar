@@ -31,8 +31,8 @@ header('Content-type: text/xml; charset=iso-8859-1');
 require_once('include/clsBanco.inc.php');
 require_once('include/funcoes.inc.php');
 
-  require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
-  Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
+require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
+Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
 print '<?xml version="1.0" encoding="iso-8859-1"?>' . PHP_EOL;
 print '<query xmlns="sugestoes">' . PHP_EOL;

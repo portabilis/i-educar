@@ -1,8 +1,5 @@
 <?php
 
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
-
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -33,6 +30,14 @@
 
 // Inclui arquivo de bootstrapping
 require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/bootstrap.php';
+
+// redireciona requisições, caso configurado
+if ($GLOBALS['coreExt']['Config']->app->routes &&
+    $GLOBALS['coreExt']['Config']->app->routes->redirect_to) {
+
+  header('HTTP/1.1 503 Service Temporarily Unavailable');
+  header("Location: {$GLOBALS['coreExt']['Config']->app->routes->redirect_to}");
+}
 
 require_once 'include/clsCronometro.inc.php';
 require_once 'clsConfigItajai.inc.php';
@@ -141,8 +146,6 @@ class clsBase extends clsConfig
     else {
       $saida = str_replace("<!-- #&SCRIPT_HEADER&# -->", "", $saida);
     }
-
-    $saida = str_replace( "#&GOOGLE_ANALYTICS_DOMAIN_NAME&#", $_SERVER['HTTP_HOST'], $saida);
 
     return $saida;
   }

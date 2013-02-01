@@ -107,7 +107,7 @@ class indice extends clsDetalhe
 				$tipo = 1;
 				$endereco_lst = $obj_endereco->lista($registro["ref_idpes"]);
 				if ( $endereco_lst )
-				{
+				{			
 					foreach ($endereco_lst as $endereco)
 					{
 						$cep = $endereco["cep"]->cep;
@@ -237,7 +237,6 @@ class indice extends clsDetalhe
 		{
 			$this->addDetalhe( array( "Institui&ccedil;&atilde;o", "{$registro["ref_cod_instituicao"]}") );
 		}
-
 		if( $nm_escola )
 		{
 			$this->addDetalhe( array( "Escola", "{$nm_escola}") );
@@ -393,7 +392,7 @@ class indice extends clsDetalhe
 			{
 				$this->addDetalhe( array( "Fax", "{$telefone_fax}") );
 			}
-
+			
 		}
 		else if ($tipo == 3)
 		{

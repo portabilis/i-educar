@@ -34,13 +34,6 @@ require_once 'include/clsEmail.inc.php';
 
 require_once 'modules/Error/Mailers/NotificationMailer.php';
 
-// redireciona as requisições para uma rota, caso esta caso tenha sido definida.
-if ($GLOBALS['coreExt']['Config']->app->routes &&
-    $GLOBALS['coreExt']['Config']->app->routes->redirect_to) {
-  header('HTTP/1.1 503 Service Temporarily Unavailable');
-  header("Location: {$GLOBALS['coreExt']['Config']->app->routes->redirect_to}");
-}
-
 /**
  * clsBancoSQL_ abstract class.
  *
@@ -445,8 +438,8 @@ abstract class clsBancoSQL_
 
     if (!$this->bConsulta_ID) {
       if ($this->getThrowException()) {
-        $message = $this->bErro_no ? "($this->bErro_no) " . $this->strErro :
-          pg_last_error($this->bLink_ID);
+        $message  = $this->bErro_no ? "($this->bErro_no) " . $this->strErro :
+                                      pg_last_error($this->bLink_ID);
 
         $message .= PHP_EOL . $this->strStringSQL;
 
@@ -454,17 +447,7 @@ abstract class clsBancoSQL_
       }
       else
       {
-
-          $erroMsg = "SQL invalido: {$this->strStringSQL}<br>\n";
-        /*
-          die($erroMsg);
-          if ($this->transactionBlock) {
-            // Nada.
-          }
-
-          $this->Interrompe($erroMsg);
-          return FALSE;
-        */
+        $erroMsg = "SQL invalido: {$this->strStringSQL}<br>\n";
         throw new Exception("Erro ao executar uma ação no banco de dados: $erroMsg");
       }
     }
