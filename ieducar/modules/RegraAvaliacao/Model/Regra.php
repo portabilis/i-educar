@@ -59,12 +59,14 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     'formulaRecuperacao'   => NULL,
     'porcentagemPresenca'  => NULL,
     'parecerDescritivo'    => NULL,
-    'tipoPresenca'         => NULL
+    'tipoPresenca'         => NULL,
+    'mediaRecuperacao'     => NULL
   );
 
   protected $_dataTypes = array(
     'media' => 'numeric',
-    'porcentagemPresenca' => 'numeric'
+    'porcentagemPresenca' => 'numeric',
+    'mediaRecuperacao' => 'numeric'
   );
 
   protected $_references = array(
@@ -202,7 +204,13 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
       ),
       'porcentagemPresenca' => new CoreExt_Validate_Numeric(array(
         'min' => 1, 'max' => 100
-      ))
+      )),
+      'mediaRecuperacao' => $this->validateIfEquals(
+        'tipoProgressao', RegraAvaliacao_Model_TipoProgressao::CONTINUADA,
+        'CoreExt_Validate_Numeric',
+        array('required' => $isMediaRequired, 'min' => 1, 'max' => 10),
+        array('required' => $isMediaRequired, 'min' => 0, 'max' => 10)
+      ),
     );
   }
 
