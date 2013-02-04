@@ -47,30 +47,37 @@ class MatriculaController extends ApiCoreController
   // search options
 
   protected function searchOptions() {
-    return array('sqlParams'    => array($this->getRequest()->escola_id, $this->getRequest()->ano),
+    $escolaId = $this->getRequest()->escola_id ? $this->getRequest()->escola_id : 0;
+    $ano      = $this->getRequest()->ano       ? $this->getRequest()->ano       : 0;
+
+    return array('sqlParams'    => array($escolaId, $ano),
                  'selectFields' => array('aluno_id'));
   }
 
   protected function sqlsForNumericSearch() {
-
+    // seleciona por (codigo matricula ou codigo aluno), opcionalmente por codigo escola e
+    // opcionalmente por ano.
     return "select distinct ON (aluno.cod_aluno) aluno.cod_aluno as aluno_id,
             matricula.cod_matricula as id, pessoa.nome as name from pmieducar.matricula,
             pmieducar.aluno, cadastro.pessoa where aluno.cod_aluno = matricula.ref_cod_aluno and
             pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and
-            matricula.ativo = 1 and matricula.ref_ref_cod_escola = $2 and
-            (matricula.cod_matricula like $1 or matricula.ref_cod_aluno like $1) and
-            matricula.aprovado in (1, 2, 3, 7, 8, 9) and ano = $3 limit 15";
+            matricula.ativo = 1 and matricula.aprovado in (1, 2, 3, 4, 7, 8, 9) and
+            (matricula.cod_matricula like $1||'%' or matricula.ref_cod_aluno like $1||'%') and
+            (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else 1=1 end) and
+            (select case when $3 != 0 then matricula.ano = $3 else 1=1 end) limit 15";
   }
 
 
   protected function sqlsForStringSearch() {
+    // seleciona por nome aluno, opcionalmente por codigo escola e opcionalmente por ano.
     return "select distinct ON (aluno.cod_aluno) aluno.cod_aluno as aluno_id,
             matricula.cod_matricula as id, pessoa.nome as name from pmieducar.matricula,
             pmieducar.aluno, cadastro.pessoa where aluno.cod_aluno = matricula.ref_cod_aluno and
             pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and
-            matricula.ativo = 1 and matricula.ref_ref_cod_escola = $2 and
-            lower(to_ascii(pessoa.nome)) like lower(to_ascii($1))||'%' and matricula.aprovado in (1, 2, 3, 7, 8, 9)
-            and ano = $3 limit 15";
+            matricula.ativo = 1 and matricula.aprovado in (1, 2, 3, 4, 7, 8, 9) and
+            lower(to_ascii(pessoa.nome)) like lower(to_ascii($1))||'%' and
+            (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else 1=1 end) and
+            (select case when $3 != 0 then matricula.ano = $3 else 1=1 end) limit 15";
   }
 
 
