@@ -112,10 +112,11 @@ class AnoController extends Core_Controller_Page_EditController
     $series = App_Model_IedFinder::getSeries($this->getEntity()->instituicao);
     $cursos = array();
 
-    foreach ($series as $serie) {
+    foreach ($series as $id => $nome) {
+      $serie    = App_Model_IedFinder::getSerie($id);
       $codCurso = $serie['ref_cod_curso'];
-      $codSerie = $serie['cod_serie'];
-      $cursos[$codCurso][$codSerie] = $serie['nm_serie'];
+
+      $cursos[$codCurso][$id] = $nome;
     }
 
     return $cursos;

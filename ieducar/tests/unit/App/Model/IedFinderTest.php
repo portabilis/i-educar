@@ -199,6 +199,8 @@ class App_Model_IedFinderTest extends UnitBaseTest
 
   public function testGetSeries()
   {
+    // # FIXME corrigir teste uma vez que App_Model_IedFinder::getSeries não retorna
+    // mais um array de arrays (id => objeto), e sim (id => nome serie)
     $returnValue = array(
       1 => array('cod_serie' => 1, 'ref_ref_cod_instituicao' => 1, 'nm_serie' => 'Pré'),
       2 => array('cod_serie' => 2, 'ref_ref_cod_instituicao' => 2, 'nm_serie' => 'Pré')
