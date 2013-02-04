@@ -478,21 +478,26 @@ class AlunoController extends ApiCoreController
   // search options
 
   protected function searchOptions() {
-    return array('sqlParams'    => array($this->getRequest()->escola_id),
+    $escolaId = $this->getRequest()->escola_id ? $this->getRequest()->escola_id : 0;
+
+    return array('sqlParams'    => array($escolaId),
                  'selectFields' => array('matricula_id'));
   }
 
   protected function sqlsForNumericSearch() {
     $sqls = array();
 
-    // caso nao receba id da escola, pesquisa por codigo aluno em todas as escolas
+    // caso nao receba id da escola, pesquisa por codigo aluno em todas as escolas,
+    // alunos com e sem matricula são selecionados.
     if (! $this->getRequest()->escola_id) {
       $sqls[] = "select distinct aluno.cod_aluno as id, pessoa.nome as name from
                  pmieducar.aluno, cadastro.pessoa where pessoa.idpes = aluno.ref_idpes
-                 and aluno.ativo = 1 and aluno.cod_aluno like $1||'%' and $2 = $2 order by cod_aluno limit 15";
+                 and aluno.ativo = 1 and aluno.cod_aluno like $1||'%' and $2 = $2
+                 order by cod_aluno limit 15";
     }
 
-    // seleciona por (codigo matricula ou codigo aluno) e/ou codigo escola
+    // seleciona por (codigo matricula ou codigo aluno) e opcionalmente por codigo escola,
+    // apenas alunos com matricula são selecionados.
     $sqls[] = "select * from (select distinct ON (aluno.cod_aluno) aluno.cod_aluno as id,
                matricula.cod_matricula as matricula_id, pessoa.nome as name from pmieducar.matricula,
                pmieducar.aluno, cadastro.pessoa where aluno.cod_aluno = matricula.ref_cod_aluno and
@@ -500,7 +505,7 @@ class AlunoController extends ApiCoreController
                matricula.ativo = 1 and
                (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else 1=1 end) and
                (matricula.cod_matricula like $1||'%' or matricula.ref_cod_aluno like $1||'%') and
-               matricula.aprovado in (1, 2, 3, 7, 8, 9) limit 15) as alunos order by id";
+               matricula.aprovado in (1, 2, 3, 4, 7, 8, 9) limit 15) as alunos order by id";
 
     return $sqls;
   }
@@ -509,7 +514,8 @@ class AlunoController extends ApiCoreController
   protected function sqlsForStringSearch() {
     $sqls = array();
 
-    // caso nao receba id da escola, pesquisa por codigo aluno em todas as escolas
+    // caso nao receba id da escola, pesquisa por nome aluno em todas as escolas,
+    // alunos com e sem matricula são selecionados.
     if (! $this->getRequest()->escola_id) {
      $sqls[] = "select distinct aluno.cod_aluno as id,
                 pessoa.nome as name from pmieducar.aluno, cadastro.pessoa where
@@ -518,7 +524,8 @@ class AlunoController extends ApiCoreController
                 order by nome limit 15";
     }
 
-    // seleciona por nome aluno e/ou codigo escola
+    // seleciona por nome aluno e e opcionalmente  por codigo escola,
+    // apenas alunos com matricula são selecionados.
     $sqls[] = "select * from(select distinct ON (aluno.cod_aluno) aluno.cod_aluno as id,
             matricula.cod_matricula as matricula_id, pessoa.nome as name from pmieducar.matricula,
             pmieducar.aluno, cadastro.pessoa where aluno.cod_aluno = matricula.ref_cod_aluno and
@@ -526,7 +533,7 @@ class AlunoController extends ApiCoreController
             matricula.ativo = 1 and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2
             else 1=1 end) and
             lower(to_ascii(pessoa.nome)) like lower(to_ascii($1))||'%' and matricula.aprovado in
-            (1, 2, 3, 7, 8, 9) limit 15) as alunos order by name";
+            (1, 2, 3, 4, 7, 8, 9) limit 15) as alunos order by name";
 
     return $sqls;
   }
