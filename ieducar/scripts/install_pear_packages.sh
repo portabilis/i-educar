@@ -3,7 +3,7 @@
 # para instalar o pear no ubuntu: sudo apt-get install php-pear
 # ou para atualizar uma instalação já existente: sudo pear upgrade pear
 
-echo "Instalando dependencias"
+echo -e "\n\n** Instalando dependencias i-Educar"
 
 sudo pear install XML_RPC2
 
