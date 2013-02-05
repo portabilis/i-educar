@@ -8,8 +8,8 @@ Para solicitar uma demonstração, nos envie uma mensagem ou nos ligue por meio 
 Para solicitar serviço de migração de dados, instalação, atualização, correções ou desenvolvimento de alterações, entre em contato por meio da nossa [página de contato](http://goo.gl/O0JBs).  
 
 ### Instalação e atualização
-[Instruções para instalação](http://goo.gl/thhmv)  
-[Instruções para atualização](http://goo.gl/EBDPt)  
+Na wiki você encontra Instruções para [instalação](http://goo.gl/thhmv) e [atualização](http://goo.gl/EBDPt)  
     
 --  
+
 [Portabilis Tecnologia](http://www.portabilis.com.br/)
