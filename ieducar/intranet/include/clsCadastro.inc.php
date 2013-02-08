@@ -725,7 +725,7 @@ class clsCadastro extends clsCampos
   }
 
 
-  public function inputsHelper() {
+  protected function inputsHelper() {
     if (! isset($this->_inputsHelper))
       $this->_inputsHelper = new Portabilis_View_Helper_Inputs($this);
 
