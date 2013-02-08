@@ -7,6 +7,7 @@
 
     var $serieField = getElementFor('serie');
     var $turmaField = getElementFor('turma');
+    var $ano        = getElementFor('ano');
 
     var handleGetTurmas = function(response) {
       var selectOptions = jsonResourcesToSelectOptions(response['options']);
@@ -20,9 +21,10 @@
         $turmaField.children().first().html('Aguarde carregando...');
 
         var urlForGetTurmas = getResourceUrlBuilder.buildUrl('/module/DynamicInput/turma', 'turmas', {
-          instituicao_id : $instituicaoField.attr('value'),
-          escola_id      : $escolaField.attr('value'),
-          serie_id       : $serieField.attr('value')
+          instituicao_id : $instituicaoField.val(),
+          escola_id      : $escolaField.val(),
+          serie_id       : $serieField.val(),
+          ano            : $ano.val()
         });
 
         var options = {

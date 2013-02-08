@@ -226,6 +226,10 @@ class indice extends clsCadastro
     $this->campoLista('ref_ref_cod_serie', 'Série', $opcoes_serie, $this->ref_ref_cod_serie,
       '', FALSE, '', $script);
 
+    // o campo ano somente é exibido para turmas novas  ou cadastradas após inclusão deste campo.
+    if (! isset($this->cod_turma) || isset($this->ano))
+      $this->inputsHelper()->dynamic('anoLetivo');
+
     // Infra prédio cômodo
     $opcoes = array('' => 'Selecione');
 
@@ -302,7 +306,8 @@ class indice extends clsCadastro
 
     $this->campoNumero('max_aluno', 'Máximo de Alunos', $this->max_aluno, 3, 3, TRUE);
 
-    $this->campoCheck('visivel', 'Ativo', dbBool($this->visivel));
+    $ativo = isset($this->cod_turma) ? dbBool($this->visivel) : true;
+    $this->campoCheck('visivel', 'Ativo', $ativo);
 
     $this->campoCheck('multiseriada', 'Multi-Seriada', $this->multiseriada, '',
       FALSE, FALSE);
@@ -687,7 +692,7 @@ class indice extends clsCadastro
           $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
           $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
           $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
-          $this->visivel, $this->turma_turno_id, $this->tipo_boletim);
+          $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano);
 
         $cadastrou = $obj->cadastra();
 
@@ -753,7 +758,7 @@ class indice extends clsCadastro
         $this->ref_cod_regente, $this->ref_cod_instituicao_regente,
         $this->ref_cod_instituicao, $this->ref_cod_curso,
         $this->ref_ref_cod_serie_mult, $this->ref_cod_escola, $this->visivel,
-        $this->turma_turno_id, $this->tipo_boletim);
+        $this->turma_turno_id, $this->tipo_boletim, $this->ano);
 
       $cadastrou = $obj->cadastra();
 
@@ -814,7 +819,8 @@ class indice extends clsCadastro
           $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
           $this->visivel,
           $this->turma_turno_id,
-          $this->tipo_boletim);
+          $this->tipo_boletim,
+          $this->ano);
 
         $editou = $obj->edita();
 
@@ -885,7 +891,7 @@ class indice extends clsCadastro
         $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
         $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
         $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
-        $this->visivel, $this->turma_turno_id, $this->tipo_boletim);
+        $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano);
 
       $editou = $obj->edita();
     }

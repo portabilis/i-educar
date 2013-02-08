@@ -109,6 +109,7 @@ class indice extends clsListagem
 		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
 
 		$lista_busca = array(
+			"Ano",
 			"Turma",
       "Turno",
 			"S&eacute;rie",
@@ -121,7 +122,7 @@ class indice extends clsListagem
 		if ($nivel_usuario == 1)
 		{
 			$lista_busca[] = "Escola";
-			$lista_busca[] = "Institui&ccedil;&atilde;o";
+			//$lista_busca[] = "Institui&ccedil;&atilde;o";
 		}
 		else if ($nivel_usuario == 2)
 		{
@@ -142,8 +143,11 @@ class indice extends clsListagem
 			$this->ref_ref_cod_escola = $this->ref_cod_escola;
 		}
 
+    $helperOptions = array();
+    $this->inputsHelper()->dynamic('anoLetivo', array(), $helperOptions);
+
 		$this->campoTexto( "nm_turma", "Turma", $this->nm_turma, 30, 255, false );
-		$this->campoLista("visivel", "Situação", array("" => "Selecione", "1" => "Visível", "2" => "Invisível"), $this->visivel);
+		$this->campoLista("visivel", "Situação", array("" => "Selecione", "1" => "Ativo", "2" => "Inativo"), $this->visivel);
 		// Paginador
 		$this->limite = 20;
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
@@ -187,7 +191,7 @@ class indice extends clsListagem
 			null,
 			$this->ref_cod_curso,
 			$this->ref_cod_instituicao,
-			null, null, null, null, null, $visivel
+			null, null, null, null, null, $visivel, null, null, $this->ano
 		);
 
 		$total = $obj_turma->_total;
@@ -250,6 +254,7 @@ class indice extends clsListagem
 
 
 				$lista_busca = array(
+					"<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$registro["ano"]}</a>",
 					"<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$registro["nm_turma"]}</a>"
 				);
 
@@ -276,7 +281,7 @@ class indice extends clsListagem
 					else
 						$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">-</a>";
 
-					$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$registro["nm_instituicao"]}</a>";
+					//$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$registro["nm_instituicao"]}</a>";
 				}
 				else if ($nivel_usuario == 2)
 				{
@@ -291,7 +296,7 @@ class indice extends clsListagem
 				}
 				else
 				{
-					$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">Desativo</a>";
+					$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">Inativo</a>";
 				}
 				$this->addLinhas($lista_busca);
 			}

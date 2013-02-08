@@ -256,7 +256,5 @@ var $resultTable = $j('#form_resultado .tablelistagem').addClass('horizontal-exp
     onClickSelectAllEvent ? $selectAllButton.click(onClickSelectAllEvent) : $selectAllButton.hide();
     onClickActionEvent    ? $actionButton.click(onClickActionEvent)       : $actionButton.hide();
     onClickDeleteEvent    ? $deleteButton.click(onClickDeleteEvent)       : $deleteButton.hide();
-
-    fixupFieldsWidth();
   }); // ready
 })(jQuery);
