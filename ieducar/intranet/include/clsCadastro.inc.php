@@ -36,6 +36,7 @@ if (class_exists('clsPmiajudaPagina')) {
 
 require_once 'Portabilis/View/Helper/Application.php';
 require_once 'Portabilis/View/Helper/Inputs.php';
+require_once 'Portabilis/Utils/User.php';
 
 /**
  * clsCadastro class.
@@ -730,5 +731,9 @@ class clsCadastro extends clsCampos
       $this->_inputsHelper = new Portabilis_View_Helper_Inputs($this);
 
     return $this->_inputsHelper;
+  }
+
+  protected function currentUserId() {
+    return Portabilis_Utils_User::currentUserId();
   }
 }

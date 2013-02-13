@@ -288,7 +288,7 @@ class clsFisica
 				$campos .= ", nome_conjuge";
 				$valores .= ", '$this->nome_conjuge' ";
 			}
-			if(is_string($this->nome-responsavel))
+			if(is_string($this->nome_responsavel))
 			{
 				$campos .= ", nome_responsavel";
 				$valores .= ", '$this->nome_responsavel' ";
@@ -459,20 +459,18 @@ class clsFisica
 			   $set .= "$gruda idpes_rev = '{$this->idpes_rev}'";
 			   $gruda = ", ";
 			}
-			if($this->cpf)
-			{
-			   $set .= "$gruda cpf = '{$this->cpf}'";
+
+			if($this->cpf) {
+			   $set .= "$gruda cpf = {$this->cpf}";
 			   $gruda = ", ";
 			}
 
-			if(is_numeric($this->ref_cod_sistema) || $this->ref_cod_sistema == "NULL")
-			{
+			if(is_numeric($this->ref_cod_sistema) || $this->ref_cod_sistema == "NULL") {
 				$set .= "$gruda ref_cod_sistema = {$this->ref_cod_sistema}";
 				$gruda = ", ";
 			}
 
-			if(is_numeric($this->ref_cod_religiao))
-			{
+			if(is_numeric($this->ref_cod_religiao)) {
 				$set .= "$gruda ref_cod_religiao = {$this->ref_cod_religiao}";
 				$gruda = ", ";
 			}
