@@ -1,6 +1,5 @@
 <?php
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -29,12 +28,11 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/Input/SimpleSearch.php';
-require_once 'lib/Portabilis/Utils/Database.php';
-require_once 'lib/Portabilis/String/Utils.php';
+require_once 'lib/Portabilis/View/Helper/Input/Numeric.php';
+
 
 /**
- * Portabilis_View_Helper_Input_SimpleSearchPais class.
+ * Portabilis_View_Helper_Input_Integer class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -43,29 +41,26 @@ require_once 'lib/Portabilis/String/Utils.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Resource_SimpleSearchPais extends Portabilis_View_Helper_Input_SimpleSearch {
+class Portabilis_View_Helper_Input_Integer extends Portabilis_View_Helper_Input_Numeric {
 
-  protected function resourceValue($id) {
-    if ($id) {
-      $sql     = "select nome from public.pais where idpais = $1";
-      $options = array('params' => $id, 'return_only' => 'first-field');
-      $nome    = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
+  protected function fixupValidation($inputOptions) {
+    // fixup para remover caracteres não numericos
+    // inclusive pontos '.', não removidos pela super classe
+    $js = " \$j('#" . $inputOptions['id'] . "').keyup(function(){
+      var oldValue = this.value;
 
-      return Portabilis_String_Utils::toLatin1($nome, array('transform' => true, 'escape' => false));
-    }
+      this.value = this.value.replace(/[^0-9\.]/g, '');
+      this.value = this.value.replace('.', '');
+
+      if (oldValue != this.value)
+        messageUtils.error('Informe apenas números.', this);
+
+    });";
+
+    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = false);
   }
 
-  public function simpleSearchPais($attrName, $options = array()) {
-    $defaultOptions = array('objectName'    => 'pais',
-                            'apiController' => 'Pais',
-                            'apiResource'   => 'pais-search');
-
-    $options        = $this->mergeOptions($options, $defaultOptions);
-
-    parent::simpleSearch($options['objectName'], $attrName, $options);
-  }
-
-  protected function inputPlaceholder($inputOptions) {
-    return 'Informe o código ou nome do pais de origem';
+  public function integer($attrName, $options = array()) {
+    parent::numeric($attrName, $options);
   }
 }

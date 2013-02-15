@@ -44,6 +44,20 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
  */
 class Portabilis_View_Helper_Input_Numeric extends Portabilis_View_Helper_Input_Core {
 
+  protected function fixupValidation($inputOptions) {
+    // fixup para remover caracteres não numericos
+    $js = " \$j(#'" . $inputOptions['id'] . "').keyup(function(){
+      var oldValue = this.value;
+      this.value = this.value.replace(/[^0-9\.]/g, '');
+
+      if (oldValue != this.value)
+        messageUtils.error('Informe apenas números.', this);
+
+    });";
+
+    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = false);
+  }
+
   public function numeric($attrName, $options = array()) {
     $defaultOptions = array('options' => array(), 'objectName' => '');
 
@@ -59,7 +73,7 @@ class Portabilis_View_Helper_Input_Numeric extends Portabilis_View_Helper_Input_
                                  'size'       => 15,
                                  'max_length' => 15,
                                  'required'   => true,
-                                 'label_hint' => '',
+                                 'label_hint' => ' ',
                                  'input_hint' => '',
                                  'script'     => false,
                                  'event'      => 'onKeyUp',
@@ -67,7 +81,10 @@ class Portabilis_View_Helper_Input_Numeric extends Portabilis_View_Helper_Input_
                                  'disabled'   => false);
 
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
+    $inputOptions['label'] = Portabilis_String_Utils::toLatin1($inputOptions['label'], array('escape' => false));
 
     call_user_func_array(array($this->viewInstance, 'campoNumero'), $inputOptions);
+    $this->fixupPlaceholder($inputOptions);
+    $this->fixupValidation($inputOptions);
   }
 }

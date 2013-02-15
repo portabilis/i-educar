@@ -80,8 +80,31 @@ class Portabilis_View_Helper_Input_Core {
     return $value;
   }
 
+  protected function inputPlaceholder($inputOptions) {
+    return isset($inputOptions['placeholder']) ? $inputOptions['placeholder'] : $inputOptions['label'];
+  }
+
+  protected function fixupPlaceholder($inputOptions) {
+    $id          = $inputOptions['id'];
+    $placeholder = $this->inputPlaceholder($inputOptions);
+
+    $script = "
+      var \$input = \$j('#" . $id . "');
+      if (\$input.is(':enabled'))
+        \$input.attr('placeholder', '" . $placeholder . "');
+    ";
+    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $script, $afterReady = true);
+  }
+
 
   protected function loadCoreAssets() {
+    // carrega estilo para feedback messages, devido algumas validações de inuts
+    // adicionarem mensagens
+
+    $style = "/modules/Portabilis/Assets/Stylesheets/Frontend.css";
+    Portabilis_View_Helper_Application::loadStylesheet($this->viewInstance, $style);
+
+
     Portabilis_View_Helper_Application::loadJQueryLib($this->viewInstance);
     Portabilis_View_Helper_Application::loadJQueryUiLib($this->viewInstance);
 

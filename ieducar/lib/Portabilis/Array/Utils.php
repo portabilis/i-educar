@@ -128,8 +128,12 @@ class Portabilis_Array_Utils {
 
   /* transforma um conjunto de arrays "chave => valor, chave => valor" em um array "id => value",
      ex: (('id' => 1, 'nome' => 'lucas'), ('id' => 2, 'nome' => 'davila'))
-     é transformado em (1 => 'lucas', 2 => davila), caso uma mesma chave se repita em mais de um array,
+     é transformado em (1 => 'lucas', 2 => davila),
+
+     caso uma mesma chave se repita em mais de um array,
      será mantido a chave => valor do ultimo array que a contem.
+
+     o array retornado, será ordenado por valor.
   */
   public static function setAsIdValue($arrays, $keyAttr, $valueAtt) {
     if (empty($arrays))
@@ -143,7 +147,7 @@ class Portabilis_Array_Utils {
     foreach ($arrays as $array)
       $idValueArray = self::merge($idValueArray, self::asIdValue($array, $keyAttr, $valueAtt));
 
-    return $idValueArray;
+    return Portabilis_Array_Utils::sortByValue($idValueArray);
   }
 
 
@@ -164,6 +168,14 @@ class Portabilis_Array_Utils {
     return $array;
   }
 
+  /* ordena array por valor mantendo as chaves associativas, usando função php uasort. */
+  public static function sortByValue($array) {
+    uasort($array, function ($a, $b) {
+      return Portabilis_Array_Utils::_valueSorter($a, $b);
+    });
+
+    return $array;
+  }
 
   public static function _keySorter($key, $array, $otherArray) {
     $a = $array[$key];
@@ -175,6 +187,18 @@ class Portabilis_Array_Utils {
     return ($a < $b) ? -1 : 1;
   }
 
+  public static function _valueSorter($a, $b) {
+    if (is_string($a))
+      $a = Portabilis_String_Utils::unaccent($a);
+
+    if (is_string($b))
+      $b = Portabilis_String_Utils::unaccent($b);
+
+    if ($a == $b)
+        return 0;
+
+    return ($a < $b) ? -1 : 1;
+  }
 
   /* trim values for a given array */
   public static function trim($array) {
