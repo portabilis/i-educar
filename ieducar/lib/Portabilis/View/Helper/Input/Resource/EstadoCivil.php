@@ -53,7 +53,7 @@ class Portabilis_View_Helper_Input_Resource_EstadoCivil extends Portabilis_View_
       $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'ideciv', 'descricao');
     }
 
-    return $this->insertOption(null, "Selecione", $resources);
+    return $this->insertOption(null, "Estado civil", $resources);
   }
 
   public function estadoCivil($options = array()) {

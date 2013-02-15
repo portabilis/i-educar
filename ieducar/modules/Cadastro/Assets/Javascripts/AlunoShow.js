@@ -87,7 +87,7 @@ var handleGetMatriculas = function(dataResponse) {
     }
 
     $matriculasTable.fadeIn('slow');
-    $j('body').animate({scrollTop: $j('#matriculas').offset().top }, 900);
+    $j('body,html').animate({scrollTop: $j('#matriculas').offset().top }, 900);
 
     $matriculasTable.find('tr:even').addClass('even');
   }

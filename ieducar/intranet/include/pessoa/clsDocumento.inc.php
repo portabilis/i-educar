@@ -67,7 +67,7 @@ class clsDocumento
 	 * @return Object:clsDocumento
 	 */
 	function clsDocumento( $int_idpes = false, $int_rg = false, $str_data_exp_rg = false, $str_sigla_uf_exp_rg = false, $int_tipo_cert_civil = false, $int_num_termo = false, $int_num_livro = false, $int_num_folha = false, $str_data_emissao_cert_civil = false, $str_sigla_uf_cert_civil = false, $str_cartorio_cert_civil = false, $int_num_cart_trabalho = false, $int_serie_cart_trabalho = false, $str_data_emissao_cart_trabalho = false, $str_sigla_uf_cart_trabalho = false, $int_num_tit_eleitor = false, $int_zona_tit_eleitor = false, $int_secao_tit_eleitor = false, $int_idorg_exp_rg = false, $str_certidao_nascimento = null)
-	{ 
+	{
 		$objPessoa = new clsFisica($int_idpes);
 		if($objPessoa->detalhe())
 		{
@@ -448,16 +448,10 @@ class clsDocumento
 			$set .= $gruda."certidao_nascimento = '{$this->certidao_nascimento}'";
 			$gruda = ", ";
 		}
-		#else
-		#{
-		#	$set .= $gruda."certidao_nascimento = NULL";
-		#	$gruda = ", ";
-		#}
 
 		if($set)
 		{
 			$db = new clsBanco();
-//			ECHO  "UPDATE {$this->schema}.{$this->tabela} $set WHERE idpes = '$this->idpes'" ;DIE;
 			$db->Consulta( "UPDATE {$this->schema}.{$this->tabela} $set WHERE idpes = '$this->idpes'" );
 			return true;
 		}

@@ -83,7 +83,7 @@ var handleGetPersonDetails = function(dataResponse) {
 
   else {
     $j('.pessoa-links .editar-pessoa').attr('href', '/intranet/atendidos_cad.php?cod_pessoa_fj=' + dataResponse.id)
-                                      .show();
+                                      .show().css('display', 'inline');
 
     $submitButton.removeAttr('disabled').show();
   }
@@ -174,8 +174,8 @@ function afterChangePessoa(targetWindow, pessoaId) {
     $j('#pessoa_id').val(pessoaId);
     getPersonDetails(pessoaId);
 
-    window.setTimeout(function() { $nomeField.removeClass('success'); }, 10000);
-    $nomeField.focus();
+    if ($nomeField.is(':active'))
+      $nomeField.focus();
 
   }, 500);
 }
@@ -209,7 +209,7 @@ function afterChangePessoa(targetWindow, pessoaId) {
 
     if (resource.isNew()) {
       $nomeField.focus();
-      $j('.pessoa-links .cadastrar-pessoa').show();
+      $j('.pessoa-links .cadastrar-pessoa').show().css('display', 'inline');
     }
     else
       $nomeField.attr('disabled', 'disabled');

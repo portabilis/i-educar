@@ -95,6 +95,11 @@ class Portabilis_View_Helper_Input_SimpleSearch extends Portabilis_View_Helper_I
   protected function textInput($objectName, $attrName, $options) {
     $textHelperOptions = array('objectName' => $objectName);
 
+    $options['options']['placeholder'] = Portabilis_String_Utils::toLatin1(
+      $this->inputPlaceholder(),
+      array('escape' => false)
+    );
+
     $this->inputsHelper()->text($attrName, $options['options'], $textHelperOptions);
   }
 
@@ -110,7 +115,7 @@ class Portabilis_View_Helper_Input_SimpleSearch extends Portabilis_View_Helper_I
 
     /*
       all search options (including the option autocompleteOptions, that is passed for jquery autocomplete plugin),
-      can be overwritten adding "var = simpleSearch<ObjectName>Options = { placeholder : '...', optionName : '...' };"
+      can be overwritten adding "var = simpleSearch<ObjectName>Options = { option : '...', optionName : '...' };"
       in the script file for the resource controller.
     */
 

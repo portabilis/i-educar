@@ -1,6 +1,5 @@
 <?php
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -29,11 +28,11 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/Input/Core.php';
-
+require_once 'Portabilis/View/Helper/Input/Core.php';
+require_once 'Portabilis/Date/Utils.php';
 
 /**
- * Portabilis_View_Helper_Input_Text class.
+ * Portabilis_View_Helper_Input_Date class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
@@ -42,9 +41,9 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Text extends Portabilis_View_Helper_Input_Core {
+class Portabilis_View_Helper_Input_Date extends Portabilis_View_Helper_Input_Core {
 
-  public function text($attrName, $options = array()) {
+  public function date($attrName, $options = array()) {
     $defaultOptions = array('options' => array(), 'objectName' => '');
 
     $options             = $this->mergeOptions($options, $defaultOptions);
@@ -56,21 +55,20 @@ class Portabilis_View_Helper_Input_Text extends Portabilis_View_Helper_Input_Cor
     $defaultInputOptions = array('id'             => $options['objectName'] . $spacer . $attrName,
                                  'label'          => ucwords($label),
                                  'value'          => null,
-                                 'size'           => 50,
-                                 'max_length'     => 50,
                                  'required'       => true,
-                                 'script'         => false,
-                                 'inline'         => false,
                                  'label_hint'     => '',
-                                 'input_hint'     => '',
+                                 'inline'         => false,
                                  'callback'       => false,
-                                 'event'          => 'onKeyUp',
                                  'disabled'       => false);
 
-    $inputOptions          = $this->mergeOptions($options['options'], $defaultInputOptions);
-    $inputOptions['label'] = Portabilis_String_Utils::toLatin1($inputOptions['label'], array('escape' => false));
+    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
 
-    call_user_func_array(array($this->viewInstance, 'campoTexto'), $inputOptions);
+    $isDbFormated = strrpos($inputOptions['value'], '-') > -1;
+
+    if ($isDbFormated)
+      $inputOptions['value'] = Portabilis_Date_Utils::pgSQLToBr($inputOptions['value']);
+
+    call_user_func_array(array($this->viewInstance, 'campoData'), $inputOptions);
     $this->fixupPlaceholder($inputOptions);
   }
 }
