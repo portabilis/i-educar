@@ -791,6 +791,9 @@ function cv_set_campo(campo1, valor1, campo2, valor2, campo3, valor3, campo4,
   }
 
   window.parent.fechaExpansivel('div_dinamico_' + (parent.DOM_divs.length * 1 - 1));
+
+  if(parent.afterSetSearchFields)
+    parent.afterSetSearchFields(self);
 }
 
 function cv_libera_campos(campo1, campo2, campo3, campo4, campo5, campo6, campo7, campo8)
@@ -819,6 +822,9 @@ function cv_libera_campos(campo1, campo2, campo3, campo4, campo5, campo6, campo7
     parent.document.getElementById(campo8).disabled = false;
     parent.document.getElementById(campo8).value    = '1';
   }
+
+  if(parent.afterUnsetSearchFields)
+    parent.afterUnsetSearchFields(self);
 }
 
 // Função a ser executada antes de fechar a janela.

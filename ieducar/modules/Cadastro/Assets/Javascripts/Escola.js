@@ -1,7 +1,8 @@
 var $submitButton = $j('#btn_enviar');
 
 var submitForm = function(){
-  putEscola();
+  if (validationUtils.validatesFields())
+    putEscola();
 }
 
 var handleGetEscola = function(dataResponse) {

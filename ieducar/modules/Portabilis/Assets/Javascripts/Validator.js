@@ -11,11 +11,14 @@ var validationUtils = {
     var fields   = $j("input[id^='data_'][value!=''], input[id^='dt_'][value!='']");
 
     $j.each(fields, function(index, field) {
-      allValid = validationUtils.validatesDate(field.value);
-    });
+      if (! validationUtils.validatesDate(field.value)) {
+        messageUtils.error('Informe a data corretamente.', field);
+        allValid = false;
 
-    if (! allValid)
-      messageUtils.error('Informe a data corretamente.', fields.first());
+        // break jquery loop
+        return false;
+      }
+    });
 
     return allValid;
   },
@@ -69,7 +72,7 @@ var validationUtils = {
 
 function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields) {
   var $emptyFields = [];
-  requiredFields = document.getElementsByClassName('obrigatorio');
+  requiredFields = $j('.obrigatorio:not(.skip-presence-validation)');
 
   if (additionalFields)
     requiredFields = $j.merge(requiredFields, additionalFields);
@@ -78,7 +81,7 @@ function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields
     simpleSearch.fixupRequiredFieldsValidation();
 
   for (var i = 0; i < requiredFields.length; i++) {
-    var $requiredField     = $j(requiredFields[i]);
+    var $requiredField = $j(requiredFields[i]);
 
     if ($requiredField.length > 0 &&
         /*$requiredField.css('display') != 'none' &&*/
@@ -91,6 +94,8 @@ function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields
 
       if (! $requiredField.hasClass('error'))
         $requiredField.addClass('error');
+
+      messageUtils.removeStyle($requiredField);
     }
     else if ($requiredField.length > 0)
       $requiredField.removeClass('error');

@@ -47,6 +47,7 @@ class Portabilis_String_Utils {
     return Portabilis_Array_Utils::merge($options, $defaultOptions);
   }
 
+
   /* splits a string in a array, eg:
 
     $divisors = array('-', ' '); // or $divisors = '-';
@@ -77,11 +78,13 @@ class Portabilis_String_Utils {
     return $result;
   }
 
+
   /* scapes a string, adding backslashes before characters that need to be quoted,
      this method is useful to scape values to be inserted via database queries. */
   public static function escape($str) {
     return addslashes($str);
   }
+
 
   /* encodes latin1 strings to utf-8,
      this method is useful to return latin1 strings (with accents) stored in db, in json api's.
@@ -96,6 +99,7 @@ class Portabilis_String_Utils {
     if ($options['transform'])
       $str = ucwords(mb_strtolower($str));
 
+
     $str = utf8_encode($str);
 
     if ($options['convert_html_special_chars'])
@@ -103,6 +107,7 @@ class Portabilis_String_Utils {
 
     return $str;
   }
+
 
   /* encodes utf-8 strings to latin1,
      this method is useful to store utf-8 string (with accents) get from json api's, in latin1 db's.
@@ -117,7 +122,11 @@ class Portabilis_String_Utils {
     if ($options['transform'])
       $str = ucwords(mb_strtolower($str));
 
-    if (mb_detect_encoding($str, 'utf-8, iso-8859-1') == 'UTF-8')
+
+    // apenas converte para latin1, strings utf-8
+    // impedindo assim, converter para latin1 strings que já sejam latin1
+
+    if (Portabilis_String_Utils::encoding($str) == 'UTF-8')
       $str = utf8_decode($str);
 
     if ($options['convert_html_special_chars'])
@@ -126,14 +135,26 @@ class Portabilis_String_Utils {
     return $str;
   }
 
+  public static function unaccent($str) {
+    $fromEncoding = Portabilis_String_Utils::encoding($str);
+    return iconv($fromEncoding, 'US-ASCII//TRANSLIT', $str);
+  }
+
+
+  public static function encoding($str) {
+    return mb_detect_encoding($str, 'UTF-8, ISO-8859-1', $strict = true);
+  }
+
   public static function camelize($str) {
     return str_replace(' ', '', ucwords(str_replace('_', ' ', $str)));
   }
+
 
   public static function underscore($str) {
     $words = preg_split('/(?=[A-Z])/', $str, -1, PREG_SPLIT_NO_EMPTY);
     return strtolower(implode('_', $words));
   }
+
 
   public static function humanize($str) {
     $robotWords = array('_id', 'ref_cod_', 'ref_ref_cod_');
