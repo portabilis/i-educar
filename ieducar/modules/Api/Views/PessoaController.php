@@ -39,6 +39,20 @@ require_once 'lib/Portabilis/String/Utils.php';
 class PessoaController extends ApiCoreController
 {
 
+  protected function canGet() {
+    $can = true;
+
+    if (! $this->getRequest()->id && ! $this->getRequest()->cpf) {
+      $can = false;
+      $this->messenger->append("É necessário receber uma variavel 'id' ou 'cpf'");
+    }
+
+    elseif ($this->getRequest()->id)
+      $can = $this->validatesResourceId();
+
+    return $can;
+  }
+
   // validators
 
   // overwrite api core validator
@@ -67,6 +81,21 @@ class PessoaController extends ApiCoreController
     $sql            = "select idpes as id, nome from cadastro.pessoa where idpes = $1";
 
     $pessoa         = $this->fetchPreparedQuery($sql, $id, false, 'first-row');
+    $pessoa['nome'] = $this->toUtf8($pessoa['nome'], array('transform' => true));
+
+    return $pessoa;
+  }
+
+  protected function loadPessoaByCpf($cpf = null) {
+    $cpf = preg_replace('/[^0-9]/', '', (string)$cpf);
+
+    if (! $cpf)
+      throw new Exception("CPF deve conter caracteres numéricos");
+
+    $sql            = "select pessoa.idpes as id, nome from cadastro.pessoa, fisica
+                       where fisica.idpes = pessoa.idpes and cpf = $1 limit 1";
+
+    $pessoa         = $this->fetchPreparedQuery($sql, $cpf, false, 'first-row');
     $pessoa['nome'] = $this->toUtf8($pessoa['nome'], array('transform' => true));
 
     return $pessoa;
@@ -144,9 +173,13 @@ class PessoaController extends ApiCoreController
     $pessoa = array();
 
     if ($this->canGet()) {
-      $attrs        = array('id', 'nome');
 
-      $pessoa  = $this->loadPessoa($this->getRequest()->id);
+      if ($this->getRequest()->id)
+        $pessoa  = $this->loadPessoa($this->getRequest()->id);
+      else
+        $pessoa  = $this->loadPessoaByCpf($this->getRequest()->cpf);
+
+      $attrs   = array('id', 'nome');
       $pessoa  = Portabilis_Array_Utils::filter($pessoa, $attrs);
 
       $details = $this->loadDetails($this->getRequest()->id);
