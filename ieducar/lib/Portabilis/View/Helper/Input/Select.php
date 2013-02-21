@@ -61,7 +61,9 @@ class Portabilis_View_Helper_Input_Select extends Portabilis_View_Helper_Input_C
                                  'required'   => true,
                                  'multiple'   => false);
 
-    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
+    $inputOptions          = $this->mergeOptions($options['options'], $defaultInputOptions);
+    $inputOptions['label'] = Portabilis_String_Utils::toLatin1($inputOptions['label'], array('escape' => false));
+
     call_user_func_array(array($this->viewInstance, 'campoLista'), $inputOptions);
   }
 }

@@ -28,9 +28,6 @@ var defaultSimpleSearchOptions = {
   attrName      : undefined,
   searchPath    : undefined,
 
-  // options that can be overwritten
-  placeholder   : 'Informe um valor',
-
   // additional search params to send to api
   params        : {},
 
@@ -123,8 +120,6 @@ var simpleSearch = {
 
     $input.data('simple-search-options', options);
     $input.data('hidden-input-id', $hiddenInput);
-
-    $input.attr('placeholder', options.get('placeholder'));
 
     $hiddenInput.addClass('simple-search-id');
     $hiddenInput.attr('data-for', $input.attr('id'));

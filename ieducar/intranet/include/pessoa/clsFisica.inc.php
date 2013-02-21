@@ -193,16 +193,28 @@ class clsFisica
 		{
 			$campos = "";
 			$valores = "";
-			if(is_string($this->data_nasc))
-			{
-				$campos .= ", data_nasc";
+
+
+			// data_nasc
+
+			$campos  .= ", data_nasc";
+
+			if($this->data_nasc)
 				$valores .= ", '{$this->data_nasc}'";
-			}
-			if(is_string($this->sexo))
-			{
-				$campos .= ", sexo";
+			else
+				$valores .= ", NULL";
+
+
+			// sexo
+
+			$campos .= ", sexo";
+
+			if($this->sexo)
 				$valores .= ", '$this->sexo' ";
-			}
+			else
+				$valores .= ", NULL";
+
+
 			if(is_numeric($this->idpes_mae))
 			{
 				$campos .= ", idpes_mae";

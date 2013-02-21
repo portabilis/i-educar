@@ -54,7 +54,7 @@ class Portabilis_View_Helper_Input_Resource_Religiao extends Portabilis_View_Hel
       $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'cod_religiao', 'nm_religiao');
     }
 
-    return $this->insertOption(null, "Selecione", $resources);
+    return $this->insertOption(null, Portabilis_String_Utils::toLatin1("Religião"), $resources);
   }
 
 

@@ -48,6 +48,9 @@ class Portabilis_Date_Utils
    * @param string $date
    */
   public static function brToPgSQL($date) {
+    if (! $date)
+      return $date;
+
     // #TODO usar classe nativa datetime http://www.phptherightway.com/#date_and_time ?
     list($dia, $mes, $ano) = explode("/", $date);
     return "$ano-$mes-$dia";
@@ -58,13 +61,23 @@ class Portabilis_Date_Utils
    * @param string $timestamp
    */
   public static function pgSQLToBr($timestamp) {
-    $format          = 'Y-m-d H:i:s';
-    $hasMicroseconds = strpos($timestamp, '.') > -1;
+    $pgFormat = 'Y-m-d';
+    $brFormat = 'd/m/Y';
 
-    if ($hasMicroseconds)
-      $format .= '.u';
+    $hasTime  = strpos($timestamp, ':') > -1;
 
-    $d = DateTime::createFromFormat($format, $timestamp);
-    return ($d ? $d->format('d/m/Y H:i:s') : null);
+    if ($hasTime) {
+      $pgFormat .= ' H:i:s';
+      $brFormat .= ' H:i:s';
+
+      $hasMicroseconds = strpos($timestamp, '.') > -1;
+
+      if ($hasMicroseconds)
+        $pgFormat .= '.u';
+    }
+
+    $d = DateTime::createFromFormat($pgFormat, $timestamp);
+
+    return ($d ? $d->format($brFormat) : null);
   }
 }

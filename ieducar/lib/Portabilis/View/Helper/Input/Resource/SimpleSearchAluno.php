@@ -50,17 +50,11 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchAluno extends Portabilis
 
     $options        = $this->mergeOptions($options, $defaultOptions);
 
-    $this->placeholderJs($options);
-
     parent::simpleSearch($options['objectName'], $attrName, $options);
   }
 
-  protected function placeholderJs($options) {
-    $optionsVarName = "simpleSearch" . Portabilis_String_Utils::camelize($options['objectName']) . "Options";
-    $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
-                       $optionsVarName.placeholder = stringUtils.toUtf8('Informe o nome do aluno ou código');";
-
-    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
+  protected function inputPlaceholder($inputOptions) {
+    return 'Informe o código ou nome do aluno';
   }
 
   protected function loadAssets() {

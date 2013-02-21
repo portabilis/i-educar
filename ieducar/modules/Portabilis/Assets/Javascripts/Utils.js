@@ -2,7 +2,7 @@
 // jquery utils
 
 function buildId(id) {
-  return typeof(id) == 'string' && id.length > 0 && id[0] != '#' ? '#' + id : id;
+  return typeof(id) == 'string' && id.length > 0 && id.charAt(0) != '#' ? '#' + id : id;
 }
 
 
@@ -216,67 +216,57 @@ var messageUtils = {
 
   notice : function(msg, targetId) {
     handleMessages([{type : 'notice', msg : safeUtf8Decode(msg)}], targetId);
+  },
+
+  removeStyle : function(targetElementOrId, delay) {
+    // 30 seconds, by default
+    if (delay == undefined)
+      delay = 30000;
+
+    var $targetElement = $j(buildId(targetElementOrId));
+
+    window.setTimeout(function() {
+      $targetElement.removeClass('success').removeClass('error').removeClass('notice');
+    }, delay);
+
+  },
+
+  handleMessages : function(messages, targetElementOrId) {
+
+    var $feedbackMessages = $j('#feedback-messages');
+    var $targetElement    = $j(buildId(targetElementOrId));
+    var messagesType      = [];
+
+    for (var i = 0; i < messages.length; i++) {
+      var delay = messages[i].type == 'success' ? 5000 : 10000;
+
+      $j('<p />').hide()
+                 .data('target_id', $targetElement.attr('id'))
+                 .addClass(messages[i].type)
+                 .html(stringUtils.toUtf8(messages[i].msg))
+                 .appendTo($feedbackMessages)
+                 .fadeIn().delay(delay).fadeOut(function() {
+                    $j(this).remove()
+                  });
+
+      if (messagesType.indexOf(messages[i].type < 0))
+        messagesType.push(messages[i].type);
+    }
+
+    if ($targetElement) {
+      $targetElement.removeClass('error').removeClass('success').removeClass('notice');
+
+      $targetElement.addClass(messagesType.join(' '));
+      messageUtils.removeStyle($targetElement);
+
+      if (messagesType.indexOf('error') > -1)
+        $targetElement.first().focus();
+    }
   }
 };
 
-function handleMessages(messages, targetId, useDelayClassRemoval) {
-
-  var $feedbackMessages = $j('#feedback-messages');
-  var hasErrorMessages   = false;
-  var hasSuccessMessages = false;
-  var hasNoticeMessages  = false;
-  var delayClassRemoval  = 20000;
-
-  var $targetElement = buildId(targetId);
-  var $targetElement = $j($targetElement);
-
-  for (var i = 0; i < messages.length; i++) {
-    if (messages[i].type == 'success')
-      var delay = 5000;
-    else if (messages[i].type != 'error')
-      var delay = 10000;
-    else
-      var delay = 20000;
-
-    $j('<p />').hide()
-               .addClass(messages[i].type)
-               .html(safeUtf8Decode(messages[i].msg))
-               .appendTo($feedbackMessages)
-               .fadeIn()
-               .delay(delay)
-               .fadeOut(function() { $j(this).remove() })
-               .data('target_id', targetId);
-
-    if (! hasErrorMessages && messages[i].type == 'error')
-      hasErrorMessages = true;
-    else if(! hasSuccessMessages && messages[i].type == 'success')
-      hasSuccessMessages = true;
-    else if(! hasNoticeMessages && messages[i].type == 'notice')
-      hasNoticeMessages = true;
-  }
-
-  if($targetElement) {
-    if (hasErrorMessages) {
-      $targetElement.addClass('error').removeClass('success').removeClass('notice');
-      $targetElement.first().focus();
-    }
-
-    else if (hasSuccessMessages)
-      $targetElement.addClass('success').removeClass('error').removeClass('notice');
-
-    else if (hasNoticeMessages)
-      $targetElement.addClass('notice').removeClass('error').removeClass('sucess');
-
-    else
-      $targetElement.removeClass('success').removeClass('error').removeClass('notice');
-
-    if (useDelayClassRemoval) {
-      window.setTimeout(function() {
-        $targetElement.removeClass('success').removeClass('error').removeClass('notice');
-      }, delayClassRemoval);
-    }
-  }
-}
+// backward compatibility
+var handleMessages = messageUtils.handleMessages;
 
 
 // when page is ready
