@@ -136,8 +136,8 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->integer('aluno_inep_id', $options);
 
     // código aluno rede estadual
-    $options = array('label' => $this->_getLabel('aluno_estado_id'), 'required' => false, 'size' => 25, 'max_length' => 9);
-    $this->inputsHelper()->integer('aluno_estado_id', $options);
+    $options = array('label' => $this->_getLabel('aluno_estado_id'), 'required' => false, 'size' => 25, 'max_length' => 25);
+    $this->inputsHelper()->text('aluno_estado_id', $options);
 
     // nome
     $options = array('label' => $this->_getLabel('pessoa'), 'size' => 68);
