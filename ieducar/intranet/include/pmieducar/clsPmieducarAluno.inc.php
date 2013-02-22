@@ -319,7 +319,7 @@ class clsPmieducarAluno
         $gruda = ', ';
       }
 
-      if (is_numeric($this->aluno_estado_id)) {
+      if ($this->aluno_estado_id) {
         $campos  .= "{$gruda}aluno_estado_id";
         $valores .= "{$gruda}'{$this->aluno_estado_id}'";
         $gruda = ', ';
@@ -421,11 +421,11 @@ class clsPmieducarAluno
         $gruda = ', ';
       }
 
-      if (is_numeric($this->aluno_estado_id)) {
+      if ($this->aluno_estado_id) {
         $set .= "{$gruda}aluno_estado_id = '{$this->aluno_estado_id}'";
         $gruda = ', ';
       }
-      elseif ($this->aluno_estado_id == '') {
+      else {
         $set .= "{$gruda}aluno_estado_id = NULL";
         $gruda = ', ';
       }
