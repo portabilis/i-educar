@@ -51,6 +51,7 @@ require_once 'include/funcoes.inc.php';
 
 require_once 'Portabilis/Utils/Database.php';
 require_once 'Portabilis/Utils/User.php';
+require_once 'Portabilis/String/Utils.php';
 
 require_once 'modules/Error/Mailers/NotificationMailer.php';
 
@@ -256,6 +257,7 @@ class clsBase extends clsConfig
           }
 
           $variaveis = "POST\n{$posts}GET\n{$gets}SESSION\n{$sessions}";
+          $variaveis = Portabilis_String_Utils::toLatin1($variaveis, array('escape' => true));
 
           if ($this->currentUserId()) {
             $this->db()->Consulta("INSERT INTO intranet_segur_permissao_negada (ref_ref_cod_pessoa_fj, ip_externo, ip_interno, data_hora, pagina, variaveis) VALUES('{$this->currentUserId()}', '$ip', '$ip_de_rede', NOW(), '$pagina', '$variaveis')");
