@@ -50,8 +50,7 @@ class ComponenteCurricularController extends ApiCoreController
 {
 
   protected function canGetComponentesCurriculares() {
-    return $this->validatesId('escola') &&
-           $this->validatesId('turma') &&
+    return $this->validatesId('turma') &&
            $this->validatesPresenceOf('ano');
   }
 
