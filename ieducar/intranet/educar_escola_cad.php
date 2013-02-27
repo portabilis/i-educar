@@ -118,7 +118,7 @@ class indice extends clsCadastro
 		@session_write_close();
 
 		$obj_permissoes = new clsPermissoes();
-		$obj_permissoes->permissao_cadastra( 561, $this->pessoa_logada, 3, "educar_escola_lst.php" );
+		$obj_permissoes->permissao_cadastra( 561, $this->pessoa_logada, 7, "educar_escola_lst.php" );
 
 		$this->cod_escola = $_GET["cod_escola"];
 
@@ -617,7 +617,7 @@ class indice extends clsCadastro
 
 					// text
 					$this->campoTexto( "fantasia", "Escola", $this->fantasia, 30, 255, true );
-					$this->campoTexto( "sigla", "Sigla", $this->sigla, 30, 255, true );
+					$this->campoTexto( "sigla", "Sigla", $this->sigla, 30, 20, true );
 
 					// foreign keys
 					$nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
@@ -1161,7 +1161,7 @@ if(!$this->isEnderecoExterno){
 		@session_write_close();
 
 		$obj_permissoes = new clsPermissoes();
-		$obj_permissoes->permissao_cadastra( 561, $this->pessoa_logada, 3, "educar_escola_lst.php" );
+		$obj_permissoes->permissao_cadastra( 561, $this->pessoa_logada, 7, "educar_escola_lst.php" );
 
     $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
 
