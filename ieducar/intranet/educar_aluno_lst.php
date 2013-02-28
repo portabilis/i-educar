@@ -142,10 +142,10 @@ class indice extends clsListagem
 		$this->limite = 20;
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-		$obj_aluno = new clsPmieducarAluno();
-		$obj_aluno->setLimite( $this->limite, $this->offset );
+		$aluno = new clsPmieducarAluno();
+		$aluno->setLimite( $this->limite, $this->offset );
 
-		$lista = $obj_aluno->lista2(
+		$alunos = $aluno->lista2(
 			$this->cod_aluno,
 			null,
 			null,
@@ -173,122 +173,26 @@ class indice extends clsListagem
       $this->cod_inep
 		);
 
-		$total = $obj_aluno->_total;
+		$total = $aluno->_total;
 
-		// monta a lista
-		if( is_array( $lista ) && count( $lista ) )
-		{
-			foreach ( $lista AS $registro )
-			{
+		foreach ( $alunos AS $registro ) {
+	    $alunoInepId      = $this->tryLoadAlunoInepId($registro["cod_aluno"]);
+	    $nomeAluno        = strtoupper($registro["nome_aluno"]);
+	    $nomeMae          = strtoupper($this->loadNomeMae($registro));
 
-				$registro["nome_responsavel"] = null;
-				$det_fisica_aluno = null;
+	    // responsavel
+			$aluno->cod_aluno = $registro["cod_aluno"];
+	    $responsavel      = $aluno->getResponsavelAluno();
+	    $nomeResponsavel  = strtoupper($responsavel["nome_responsavel"]);
 
-				if($registro['tipo_responsavel'] == 'p'  || (!$registro["nome_responsavel"] && $registro['tipo_responsavel'] == null))
-				{
-					$obj_fisica= new clsFisica($registro["ref_idpes"]);
-					$det_fisica_aluno = $obj_fisica->detalhe();
-					if($det_fisica_aluno["idpes_pai"] )
-					{
-						$obj_ref_idpes = new clsPessoa_( $det_fisica_aluno["idpes_pai"] );
-						$det_ref_idpes = $obj_ref_idpes->detalhe();
-						$obj_fisica= new clsFisica($det_fisica_aluno["idpes_pai"]);
-						$det_fisica = $obj_fisica->detalhe();
-						$registro["nome_responsavel"] = $det_ref_idpes['nome'];
-
-						if( $det_fisica["cpf"] )
-							$registro["cpf_responsavel"] = int2CPF($det_fisica["cpf"]);
-					}
-
-				}
-
-				if($registro['tipo_responsavel'] == 'm' || ($registro["nome_responsavel"] == null && $registro['tipo_responsavel'] == null))
-				{
-					if(!$det_fisica_aluno)
-					{
-						$obj_fisica= new clsFisica($registro["ref_idpes"]);
-						$det_fisica_aluno = $obj_fisica->detalhe();
-					}
-
-					if($det_fisica_aluno["idpes_mae"] )
-					{
-						$obj_ref_idpes = new clsPessoa_( $det_fisica_aluno["idpes_mae"] );
-						$det_ref_idpes = $obj_ref_idpes->detalhe();
-						$obj_fisica= new clsFisica($det_fisica_aluno["idpes_mae"]);
-						$det_fisica = $obj_fisica->detalhe();
-						$registro["nome_responsavel"] = $det_ref_idpes["nome"];
-
-						if($det_fisica["cpf"])
-							$registro["cpf_responsavel"] = int2CPF($det_fisica["cpf"]);
-					}
-				}
-
-				if($registro['tipo_responsavel'] == 'r' || ($registro["nome_responsavel"] == null && $registro['tipo_responsavel'] == null))
-				{
-					if(!$det_fisica_aluno)
-					{
-						$obj_fisica= new clsFisica($registro["ref_idpes"]);
-						$det_fisica_aluno = $obj_fisica->detalhe();
-					}
-
-					if( $det_fisica_aluno["idpes_responsavel"] )
-					{
-						$obj_ref_idpes = new clsPessoa_( $det_fisica_aluno["idpes_responsavel"] );
-						$obj_fisica = new clsFisica( $det_fisica_aluno["idpes_responsavel"] );
-						$det_ref_idpes = $obj_ref_idpes->detalhe();
-						$det_fisica = $obj_fisica->detalhe();
-						$registro["nome_responsavel"] = $det_ref_idpes["nome"];
-						if($det_fisica["cpf"])
-							$registro["cpf_responsavel"] = int2CPF($det_fisica["cpf"]);
-					}
-				}
-
-				if(!$registro["nome_responsavel"])
-				{
-					if($registro['tipo_responsavel'] != null)
-					{
-						if($registro['tipo_responsavel'] == 'p')
-							$registro["nome_responsavel"] = $registro["nm_pai"];
-						else
-							$registro["nome_responsavel"] = $registro["nm_mae"];
-					}
-					else
-					{
-						if($registro["nm_pai"])
-							$registro["nome_responsavel"] = $registro["nm_pai"];
-						else
-							$registro["nome_responsavel"] = $registro["nm_mae"];
-					}
-				}
-
-        $inepMapper = new Educacenso_Model_AlunoDataMapper();
-        $alunoInep = NULL;
-
-        try {
-          $alunoInep = $inepMapper->find(array('cod_aluno' => $registro["cod_aluno"]));
-        }
-        catch(Exception $e) {
-        }
-
-        if (empty($alunoInep->alunoInep)){
-            $registro['cod_inep'] = '-';
-        } else {
-            $registro['cod_inep'] = $alunoInep->alunoInep;
-        }
-
-		    $registro["nome_aluno"]       = strtoupper($registro["nome_aluno"]);
-		    $registro["nm_mae"]           = strtoupper($registro["nm_mae"]);
-		    $registro["nome_responsavel"] = strtoupper($registro["nome_responsavel"]);
-
-				$this->addLinhas( array(
-					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["cod_aluno"]}</a>",
-					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["cod_inep"]}</a>",
-					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["nome_aluno"]}</a>",
-					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["nm_mae"]}</a>",
-					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["nome_responsavel"]}</a>",
-					"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["cpf_responsavel"]}</a>"
-				) );
-			}
+			$this->addLinhas( array(
+				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["cod_aluno"]}</a>",
+				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$alunoInepId}</a>",
+				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$nomeAluno}</a>",
+				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$nomeMae}</a>",
+				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$nomeResponsavel}</a>",
+				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$responsavel["cpf_responsavel"]}</a>"
+			) );
 		}
 
 		$this->addPaginador2( "educar_aluno_lst.php", $total, $_GET, $this->nome, $this->limite );
@@ -305,6 +209,35 @@ class indice extends clsListagem
 		}
 		//**
 		$this->largura = "100%";
+	}
+
+	protected function loadNomeMae($aluno) {
+		$nome        = $aluno['nm_mae'];
+
+  	$pessoaAluno = new clsFisica($aluno['ref_idpes']);
+  	$pessoaAluno = $pessoaAluno->detalhe();
+
+  	if ($pessoaAluno['idpes_mae']) {
+    	$pessoaMae   = new clsPessoaFj($pessoaAluno['idpes_mae']);
+    	$pessoaMae   = $pessoaMae->detalhe();
+    	$nome        = $pessoaMae['nome'];
+    }
+
+    return $nome;
+	}
+
+	protected function tryLoadAlunoInepId($alunoId) {
+    $dataMapper  = new Educacenso_Model_AlunoDataMapper();
+
+    try {
+      $alunoInep = $dataMapper->find(array('cod_aluno' => $alunoId));
+	    $id        = $alunoInep->alunoInep;
+    }
+    catch(Exception $e) {
+    	$id = '';
+    }
+
+    return $id;
 	}
 }
 // cria uma extensao da classe base
