@@ -220,7 +220,7 @@ class indice extends clsCadastro
 		$this->campoCheck( "cb_faltas_globalizadas", "Faltas Globalizadas", is_numeric($this->faltas_globalizadas) ? 'on' : '');
 		$this->campoNumero( "faltas_globalizadas", "Faltas Globalizadas", $this->faltas_globalizadas, 4, 4, false );
 		$this->campoNumero( "dias_letivos", "Dias Letivos", $this->dias_letivos, 3, 3, true );
-		$this->campoMonetario( "frequencia", "Frequência", $this->frequencia, 8, 8, true );
+		$this->campoMonetario( "frequencia", "Frequência", $this->frequencia, 8, 6, true );
 		$this->campoCheck( "extra_curricular", "Extra-Curricular", $this->extra_curricular );
 		$this->campoCheck( "aceleracao", "Aceleração", $this->aceleracao );
 		$this->campoMemo( "observacao", "Observa&ccedil;&atilde;o", $this->observacao, 60, 5, false );
@@ -302,8 +302,11 @@ class indice extends clsCadastro
 		*/
 			$this->carga_horaria = str_replace(".","",$this->carga_horaria);
 			$this->carga_horaria = str_replace(",",".",$this->carga_horaria);
-			$this->frequencia = str_replace(".","",$this->frequencia);
-			$this->frequencia = str_replace(",",".",$this->frequencia);
+
+			$this->frequencia = $this->fixupFrequencia($this->frequencia);
+
+			if (! $this->validatesFrequencia($this->frequencia))
+				return false;
 
 			if ($this->extra_curricular == 'on')
 				$this->extra_curricular = 1;
@@ -366,10 +369,14 @@ class indice extends clsCadastro
 		if ($this->historico_disciplinas)
 		{
 		*/
+
 			$this->carga_horaria = str_replace(".","",$this->carga_horaria);
 			$this->carga_horaria = str_replace(",",".",$this->carga_horaria);
-			$this->frequencia = str_replace(".","",$this->frequencia);
-			$this->frequencia = str_replace(",",".",$this->frequencia);
+
+			$this->frequencia = $this->fixupFrequencia($this->frequencia);
+
+			if (! $this->validatesFrequencia($this->frequencia))
+				return false;
 
 			if ($this->extra_curricular == 'on')
 				$this->extra_curricular = 1;
@@ -458,6 +465,25 @@ class indice extends clsCadastro
 		echo "<!--\nErro ao excluir clsPmieducarHistoricoEscolar\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_aluno ) && is_numeric( $this->sequencial ) && is_numeric( $this->pessoa_logada ) )\n-->";
 		return false;
 	}
+
+	protected function fixupFrequencia($frequencia) {
+		if (strpos($frequencia, ',')) {
+			$frequencia = str_replace('.', '',  $frequencia);
+			$frequencia = str_replace(',', '.', $frequencia);
+		}
+
+		return $frequencia;
+	}
+
+	protected function validatesFrequencia($frequencia) {
+		if ($frequencia < 0 || $frequencia > 100) {
+			$this->mensagem = "Frequência inválida, informe um valor entre 0 e 100.";
+			return false;
+		}
+
+		return true;
+	}
+
 }
 
 

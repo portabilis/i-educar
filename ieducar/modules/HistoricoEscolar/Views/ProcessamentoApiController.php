@@ -713,19 +713,16 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     $matriculaTurma = $matriculaTurma[0];
 
     $dadosMatricula = array();
+
     if (is_array($matriculaTurma) && count($matriculaTurma) > 0){
-      $dadosMatricula['ano'] = $ano;
-      $dadosMatricula['instituicao_id'] = $matriculaTurma['ref_cod_instituicao'];
-      $dadosMatricula['escola_id'] = $matriculaTurma['ref_ref_cod_escola'];
-      $dadosMatricula['serie_id'] = $matriculaTurma['ref_ref_cod_serie'];
-      $dadosMatricula['matricula_id'] = $matriculaTurma['ref_cod_matricula'];
-      $dadosMatricula['aluno_id'] = $matriculaTurma['ref_cod_aluno'];
-      $dadosMatricula['nome'] = $this->toUtf8($matriculaTurma['nome_aluno']);
-      $dadosMatricula['nome_curso'] = $this->toUtf8($matriculaTurma['nm_curso']);
-      $dadosMatricula['nome_serie'] = $this->getNomeSerie($matriculaTurma['ref_ref_cod_serie']);
-      $dadosMatricula['nome_turma'] = $this->toUtf8($matriculaTurma['nm_turma']);
-      $dadosMatricula['situacao_historico'] = $this->getSituacaoHistorico($matriculaTurma['ref_cod_aluno'], $ano, $matriculaId);
-      $dadosMatricula['link_to_historico'] = $this->getLinkToHistorico($matriculaTurma['ref_cod_aluno'], $ano, $matriculaId);
+      $dadosMatricula['ano']                = $ano;
+      $dadosMatricula['instituicao_id']     = $matriculaTurma['ref_cod_instituicao'];
+      $dadosMatricula['escola_id']          = $matriculaTurma['ref_ref_cod_escola'];
+      $dadosMatricula['nome_serie']         = $this->getNomeSerie($matriculaTurma['ref_ref_cod_serie']);
+
+      $dadosMatricula['nome_curso']         = Portabilis_String_Utils::toLatin1(
+        $matriculaTurma['nm_curso']
+      );
     }
     else {
       throw new Exception("Não foi possivel recuperar os dados da matricula: $matriculaId.");
