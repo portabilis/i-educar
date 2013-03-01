@@ -228,7 +228,7 @@ function afterChangePessoa(targetWindow, pessoaId) {
 
 
     var msg = 'Bem vindo ao novo cadastro de alunos,<br />' +
-              '<b>Duvidas?</b> Entre em contato com o suporte.';
+              '<b>Dúvidas?</b> Entre em contato com o suporte.';
 
     $j('<p>').addClass('back-to-old-version right-top-notice notice')
              .html(stringUtils.toUtf8(msg))
