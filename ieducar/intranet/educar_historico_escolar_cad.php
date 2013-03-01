@@ -220,7 +220,7 @@ class indice extends clsCadastro
 		$this->campoCheck( "cb_faltas_globalizadas", "Faltas Globalizadas", is_numeric($this->faltas_globalizadas) ? 'on' : '');
 		$this->campoNumero( "faltas_globalizadas", "Faltas Globalizadas", $this->faltas_globalizadas, 4, 4, false );
 		$this->campoNumero( "dias_letivos", "Dias Letivos", $this->dias_letivos, 3, 3, true );
-		$this->campoMonetario( "frequencia", "Frequência", $this->frequencia, 8, 8, true );
+		$this->campoMonetario( "frequencia", "Frequência", $this->frequencia, 8, 6, true );
 		$this->campoCheck( "extra_curricular", "Extra-Curricular", $this->extra_curricular );
 		$this->campoCheck( "aceleracao", "Aceleração", $this->aceleracao );
 		$this->campoMemo( "observacao", "Observa&ccedil;&atilde;o", $this->observacao, 60, 5, false );
@@ -276,13 +276,20 @@ class indice extends clsCadastro
 		$this->campoQuebra();
 	//---------------------FIM INCLUI DISCIPLINAS---------------------//
 
+    // carrega estilo para feedback messages, para exibir msg validação frequencia.
+
+    $style = "/modules/Portabilis/Assets/Stylesheets/Frontend.css";
+    Portabilis_View_Helper_Application::loadStylesheet($this, $style);
+
+
 		Portabilis_View_Helper_Application::loadJQueryLib($this);
 		Portabilis_View_Helper_Application::loadJQueryUiLib($this);
 
 		Portabilis_View_Helper_Application::loadJavascript(
 			$this,
 			array('/modules/Portabilis/Assets/Javascripts/Utils.js',
-						'/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js')
+						'/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js',
+						'/modules/Portabilis/Assets/Javascripts/Validator.js')
 		);
 
 	}
@@ -302,8 +309,8 @@ class indice extends clsCadastro
 		*/
 			$this->carga_horaria = str_replace(".","",$this->carga_horaria);
 			$this->carga_horaria = str_replace(",",".",$this->carga_horaria);
-			$this->frequencia = str_replace(".","",$this->frequencia);
-			$this->frequencia = str_replace(",",".",$this->frequencia);
+
+			$this->frequencia = $this->fixupFrequencia($this->frequencia);
 
 			if ($this->extra_curricular == 'on')
 				$this->extra_curricular = 1;
@@ -366,10 +373,11 @@ class indice extends clsCadastro
 		if ($this->historico_disciplinas)
 		{
 		*/
+
 			$this->carga_horaria = str_replace(".","",$this->carga_horaria);
 			$this->carga_horaria = str_replace(",",".",$this->carga_horaria);
-			$this->frequencia = str_replace(".","",$this->frequencia);
-			$this->frequencia = str_replace(",",".",$this->frequencia);
+
+			$this->frequencia = $this->fixupFrequencia($this->frequencia);
 
 			if ($this->extra_curricular == 'on')
 				$this->extra_curricular = 1;
@@ -457,6 +465,15 @@ class indice extends clsCadastro
 		$this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
 		echo "<!--\nErro ao excluir clsPmieducarHistoricoEscolar\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_aluno ) && is_numeric( $this->sequencial ) && is_numeric( $this->pessoa_logada ) )\n-->";
 		return false;
+	}
+
+	protected function fixupFrequencia($frequencia) {
+		if (strpos($frequencia, ',')) {
+			$frequencia = str_replace('.', '',  $frequencia);
+			$frequencia = str_replace(',', '.', $frequencia);
+		}
+
+		return $frequencia;
 	}
 }
 
@@ -567,12 +584,32 @@ $pagina->MakeAll();
 
 	setAutoComplete();
 
-	// bind event
+	var submitForm = function(event) {
+		var $frequenciaField = $j('#frequencia');
+		var frequencia       = $frequenciaField.val();
+
+		if (frequencia.indexOf(',') > -1)
+			frequencia = frequencia.replace('.', '').replace(',', '.');
+
+	  if (validatesIfNumericValueIsInRange(frequencia, $frequenciaField, 0, 100))
+	    formUtils.submit();
+	}
+
+
+	// bind events
 
 	var $addDisciplinaButton = $j('#btn_add_tab_add_1');
 
 	$addDisciplinaButton.click(function(){
 		setAutoComplete();
 	});
+
+
+	// submit button
+
+	var $submitButton = $j('#btn_enviar');
+
+  $submitButton.removeAttr('onclick');
+  $submitButton.click(submitForm);
 
 </script>
