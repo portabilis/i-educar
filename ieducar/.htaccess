@@ -91,7 +91,12 @@ DirectoryIndex index.php index.html index.htm
   Deny from all
 </IfModule>
 
+
+# Configura√ß√£o desabilitada (uma vez que o ambiente padr√£o j√° √© production), permitindo definir o ambiente via virtual host.
+
 # Configura o ambiente de execuÁ„o do i-Educar (production|development|testing).
 # Essa vari·vel define qual seÁ„o de configuraÁ„o do arquivo
 # configuration/ieducar.ini ser· carregada pelo arquivo includes/bootstrap.php
-SetEnv CORE_EXT_CONFIGURATION_ENV production
+
+# comentado defini√ß√£o (uma vez que o ambiente padr√£o j√° √© production), permitindo assim definir o ambiente via virtual host.
+#SetEnv CORE_EXT_CONFIGURATION_ENV production
