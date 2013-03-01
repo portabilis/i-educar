@@ -82,7 +82,7 @@
       <p style="min-height: 32px;" class="flash update-browser"><strong>Seu navegador est&aacute desatualizado.</strong> Para melhor navega&ccedil;&atildeo  no sistema, por favor, atualize seu navegador.<a href="http://br.mozdev.org/download/" target="_blank"><img style="margin-top:4px;" src="http://www.mozilla.org/contribute/buttons/110x32bubble_r_pt.png" alt="Firefox" width="110" height="32" style="border-style:none;" title="Mozilla Firefox" /></a></p>
       <![endif]-->
 
-      <p style="min-height: 0px;" class="flash error"><strong>Aviso interrup&ccedil;&atilde;o:</strong> O acesso ao sistema ser&aacute; interrompido nesta <b>sexta-feira (01/03/2013) das 17hs &agrave;s 18hs</b>, devido &agrave; manuten&ccedil;&atilde;o preventiva em nossos servidores.</p>
+      <!--p style="min-height: 0px;" class="flash error"><strong>Aviso interrup&ccedil;&atilde;o:</strong> O acesso ao sistema ser&aacute; interrompido nesta <b>sexta-feira (01/03/2013) das 17hs &agrave;s 18hs</b>, devido &agrave; manuten&ccedil;&atilde;o preventiva em nossos servidores.</p-->
 
       <!-- #&ERROLOGIN&# -->
     </div>
