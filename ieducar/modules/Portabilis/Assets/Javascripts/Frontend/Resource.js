@@ -166,6 +166,7 @@ var resourceOptions = {
                                                 resourceOptions.get('name')(),
                                                 additionalVars);
 
+        $submitButton.attr('disabled', 'disabled').val('Aguarde...');
         resourceOptions.form.submit();
       }
     };
