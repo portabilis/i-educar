@@ -1,14 +1,26 @@
-var $submitButton = $j('#btn_enviar');
+var $submitButton      = $j('#btn_enviar');
+var $escolaInepIdField = $j('#escola_inep_id').hide();
+var $escolaIdField     = $j('#cod_escola');
 
 var submitForm = function(){
-  if (validationUtils.validatesFields())
+  var canSubmit = validationUtils.validatesFields();
+
+  // O campo escolaInepId somente é atualizado ao cadastrar escola,  uma vez que este
+  // é atualizado via ajax, e durante o (novo) cadastro a escola ainda não possui id.
+  //
+  // #TODO refatorar cadastro de escola para que todos campos sejam enviados via ajax,
+  // podendo então definir o código escolaInepId ao cadastrar a escola.
+
+  if (canSubmit && $escolaIdField.val())
     putEscola();
+  else if (canSubmit)
+    acao();
 }
 
 var handleGetEscola = function(dataResponse) {
   handleMessages(dataResponse.msgs);
 
-  $j('#escola_inep_id').val(dataResponse.escola_inep_id);
+  $escolaInepIdField.val(dataResponse.escola_inep_id);
 }
 
 var handlePutEscola = function(dataResponse) {
@@ -35,8 +47,8 @@ var getEscola = function(escolaId) {
 
 var putEscola = function() {
   var data = {
-    id             : $j('#cod_escola').val(),
-    escola_inep_id : $j('#escola_inep_id').val()
+    id             : $escolaIdField.val(),
+    escola_inep_id : $escolaInepIdField.val()
   };
 
   var options = {
@@ -49,10 +61,10 @@ var putEscola = function() {
   putResource(options);
 }
 
-var escolaId = $j('#cod_escola').val();
-
-if (escolaId)
-  getEscola(escolaId);
+if ($escolaIdField.val()) {
+  getEscola($escolaIdField.val());
+  $escolaInepIdField.show();
+}
 
 // unbind events
 $submitButton.removeAttr('onclick');
