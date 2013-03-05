@@ -177,7 +177,7 @@ class clsControlador
     $_SESSION['tipo_menu']    = $user['tipo_menu'];
     @session_write_close();
 
-    Portabilis_Utils_User::logAccessFor($user['id']);
+    Portabilis_Utils_User::logAccessFor($user['id'], $this->getClientIP());
     Portabilis_Utils_User::destroyStatusTokenFor($user['id'], 'redefinir_senha');
 
     $this->logado = true;
@@ -254,6 +254,7 @@ class clsControlador
     }
     else
       $ip = $_SERVER['REMOTE_ADDR'];
+
     return $ip;
   }
 
