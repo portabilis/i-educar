@@ -170,11 +170,27 @@ class indice extends clsCadastro
     $this->campoOculto('cod_pessoa_fj', $this->cod_pessoa_fj);
     $this->campoTexto('nm_pessoa', 'Nome', $this->nm_pessoa, '50', '255', TRUE);
 
+
+    // ao cadastrar pessoa do pai ou mãe apartir do cadastro de outra pessoa,
+    // é enviado o tipo de cadastro (pai ou mae).
+    $parentType = isset($_REQUEST['parent_type']) ? $_REQUEST['parent_type'] : '';
+
+
      // sexo
+
+    $sexo = $this->sexo;
+
+    // sugere sexo quando cadastrando o pai ou mãe
+
+    if (! $sexo && $parentType == 'pai')
+      $sexo = 'M';
+    elseif (! $sexo && $parentType == 'mae')
+      $sexo = 'F';
+
 
     $options = array(
       'label'       => 'Sexo / Estado civil',
-      'value'     => $this->sexo,
+      'value'     => $sexo,
       'resources' => array(
         '' => 'Sexo',
         'M' => 'Masculino',
@@ -187,14 +203,15 @@ class indice extends clsCadastro
 
     // estado civil
 
-    $this->inputsHelper()->estadoCivil(array('label' => ''));
+    $this->inputsHelper()->estadoCivil(array('label' => '', 'required' => empty($parentType)));
 
 
     // data nascimento
 
     $options = array(
       'label'       => 'Data nascimento',
-      'value'       => $this->data_nasc
+      'value'       => $this->data_nasc,
+      'required'    => empty($parentType)
     );
 
     $this->inputsHelper()->date('data_nasc', $options);
@@ -214,14 +231,22 @@ class indice extends clsCadastro
 
     // rg
 
+    // o rg é obrigatorio ao cadastrar pai ou mãe, exceto se configurado como opcional.
+
+    $required = (! empty($parentType));
+
+    if ($required && $GLOBALS['coreExt']['Config']->app->rg_pessoa_fisica_pais_opcional) {
+      $required = false;
+    }
+
     $options = array(
-      'required'   => false,
-      'label'      => 'RG / Data emissão',
+      'required'    => $required,
+      'label'       => 'RG / Data emissão',
       'placeholder' => 'Documento identidade',
-      'value'      => $documentos['rg'],
-      'max_length' => 20,
-      'size'       => 27,
-      'inline'     => true
+      'value'       => $documentos['rg'],
+      'max_length'  => 20,
+      'size'        => 27,
+      'inline'      => true
     );
 
     $this->inputsHelper()->integer('rg', $options);
@@ -570,6 +595,10 @@ class indice extends clsCadastro
     $this->campoOculto('id_cidade', $this->cidade);
 
 
+    // o endereçamento é opcional ao cadastrar pai ou mãe.
+    $enderecamentoObrigatorio = empty($parentType);
+
+
     // considera como endereço localizado por CEP quando alguma das variaveis de instancia
     // idbai (bairro) ou idlog (logradouro) estão definidas, neste caso desabilita a edição
     // dos campos definidos via CEP.
@@ -579,7 +608,7 @@ class indice extends clsCadastro
       'cep_',
       'CEP',
       $this->cep,
-      TRUE,
+      $enderecamentoObrigatorio,
       '-',
       "&nbsp;<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel(500, 550, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=bairro&campo2=idbai&campo3=cep&campo4=logradouro&campo5=idlog&campo6=ref_sigla_uf&campo7=cidade&campo8=ref_idtlog&campo9=isEnderecoExterno&campo10=cep_&campo11=sigla_uf&campo12=idtlog&campo13=id_cidade&campo14=zona_localizacao\'></iframe>');\">",
       $desativarCamposDefinidosViaCep
@@ -592,7 +621,8 @@ class indice extends clsCadastro
       'label'    => 'Estado / Cidade',
       'value'    => $this->sigla_uf,
       'disabled' => $desativarCamposDefinidosViaCep,
-      'inline'   => true
+      'inline'   => true,
+      'required' => $enderecamentoObrigatorio
     );
 
     $helperOptions = array(
@@ -609,7 +639,8 @@ class indice extends clsCadastro
       'placeholder' => 'Cidade',
       'value'       => $this->cidade,
       'max_length'  => 60,
-      'disabled' => $desativarCamposDefinidosViaCep
+      'disabled'    => $desativarCamposDefinidosViaCep,
+      'required'    => $enderecamentoObrigatorio
     );
 
     $this->inputsHelper()->text('cidade', $options);
@@ -623,7 +654,8 @@ class indice extends clsCadastro
       'value'       => $this->bairro,
       'max_length'  => 40,
       'disabled'    => $desativarCamposDefinidosViaCep,
-      'inline'      => true
+      'inline'      => true,
+      'required'    => $enderecamentoObrigatorio
     );
 
     $this->inputsHelper()->text('bairro', $options);
@@ -640,7 +672,8 @@ class indice extends clsCadastro
       'placeholder' => 'Zona localização',
       'value'       => $this->zona_localizacao,
       'disabled'    => $desativarCamposDefinidosViaCep,
-      'resources'   => $zonas
+      'resources'   => $zonas,
+      'required'    => $enderecamentoObrigatorio
     );
 
     $this->inputsHelper()->select('zona_localizacao', $options);
@@ -652,7 +685,8 @@ class indice extends clsCadastro
       'label'       => 'Tipo / Logradouro',
       'value'       => $this->idtlog,
       'disabled'    => $desativarCamposDefinidosViaCep,
-      'inline'      => true
+      'inline'      => true,
+      'required'    => $enderecamentoObrigatorio
     );
 
     $helperOptions = array(
@@ -669,7 +703,8 @@ class indice extends clsCadastro
       'placeholder' => 'Logradouro',
       'value'       => $this->logradouro,
       'max_length'  => 150,
-      'disabled'    => $desativarCamposDefinidosViaCep
+      'disabled'    => $desativarCamposDefinidosViaCep,
+      'required'    => $enderecamentoObrigatorio
     );
 
     $this->inputsHelper()->text('logradouro', $options);
@@ -777,8 +812,8 @@ class indice extends clsCadastro
 
     // after change pessoa pai / mae
 
-    if (isset($_REQUEST['parent_type']))
-      $this->inputsHelper()->hidden('parent_type', array('value' => $_REQUEST['parent_type']));
+    if ($parentType)
+      $this->inputsHelper()->hidden('parent_type', array('value' => $parentType));
 
 
     $styles = array(
