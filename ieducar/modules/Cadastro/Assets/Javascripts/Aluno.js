@@ -104,8 +104,8 @@ var handleGetPersonDetails = function(dataResponse) {
   if (dataResponse.responsavel_id)
     nomeResponsavel = dataResponse.responsavel_id + ' - ' + nomeResponsavel;
 
-  //$j('#rg').val(dataResponse.rg);
-  //$j('#cpf').val(dataResponse.cpf);
+  $j('#data_nascimento').val(dataResponse.data_nascimento);
+  $j('#rg').val(dataResponse.rg);
 
   $j('#pai').val(nomePai);
   $j('#mae').val(nomeMae);
