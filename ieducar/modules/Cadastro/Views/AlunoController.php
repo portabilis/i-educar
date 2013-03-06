@@ -50,12 +50,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     ),
 
     'rg' => array(
-      'label'  => 'Documento de identidade (rg)',
-      'help'   => '',
-    ),
-
-    'cpf' => array(
-      'label'  => 'CPF',
+      'label'  => 'Documento de identidade (RG)',
       'help'   => '',
     ),
 
@@ -143,13 +138,13 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $options = array('label' => $this->_getLabel('pessoa'), 'size' => 68);
     $this->inputsHelper()->simpleSearchPessoa('nome', $options);
 
-    // rg
-    //$options = array('label' => $this->_getLabel('rg'), 'disabled' => true, 'required' => false);
-    //$this->inputsHelper()->text('aluno', 'rg', $options);
+    // data nascimento
+    $options = array('label' => 'Data nascimento', 'disabled' => true, 'required' => false, 'size' => 25, 'placeholder' => '');
+    $this->inputsHelper()->date('data_nascimento', $options);
 
-    // cpf
-    //$options = array('label' => $this->_getLabel('cpf'), 'disabled' => true, 'required' => false);
-    //$this->inputsHelper()->text('aluno', 'cpf', $options);
+    // rg
+    $options = array('label' => $this->_getLabel('rg'), 'disabled' => true, 'required' => false, 'size' => 25);
+    $this->inputsHelper()->integer('rg', $options);
 
     // pai
     $options = array('label' => $this->_getLabel('pai'), 'disabled' => true, 'required' => false, 'size' => 68);

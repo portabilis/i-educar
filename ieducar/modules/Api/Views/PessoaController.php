@@ -35,6 +35,7 @@
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
+require_once 'lib/Portabilis/Date/Utils.php';
 
 class PessoaController extends ApiCoreController
 {
@@ -70,7 +71,8 @@ class PessoaController extends ApiCoreController
     $sql = "select cod_aluno as id from pmieducar.aluno where ref_idpes = $1";
     $id  = $this->fetchPreparedQuery($sql, $pessoaId, false, 'first-field');
 
-    // when not exists, returns an empty array that causes error on loadDetails
+    // caso um array vazio seja retornado, seta resultado como null,
+    // evitando erro em loadDetails
     if (empty($id))
       $id = null;
 
@@ -104,7 +106,8 @@ class PessoaController extends ApiCoreController
   protected function loadDetails($pessoaId = null) {
     $alunoId = $this->tryLoadAlunoId($pessoaId);
 
-    $sql = "select cpf, idpes_pai as pai_id, idpes_mae as mae_id, idpes_responsavel as responsavel_id,
+    $sql = "select cpf, data_nasc as data_nascimento, idpes_pai as pai_id,
+            idpes_mae as mae_id, idpes_responsavel as responsavel_id,
             coalesce((select nome from cadastro.pessoa where idpes = fisica.idpes_pai),
             (select nm_pai from pmieducar.aluno where cod_aluno = $1)) as nome_pai,
             coalesce((select nome from cadastro.pessoa where idpes = fisica.idpes_mae),
@@ -115,13 +118,15 @@ class PessoaController extends ApiCoreController
 
     $details = $this->fetchPreparedQuery($sql, array($alunoId, $pessoaId), false, 'first-row');
 
-    $attrs   = array('cpf', 'rg', 'pai_id', 'mae_id', 'responsavel_id', 'nome_pai', 'nome_mae', 'nome_responsavel');
+    $attrs   = array('cpf', 'rg', 'data_nascimento', 'pai_id', 'mae_id', 'responsavel_id', 'nome_pai', 'nome_mae', 'nome_responsavel');
     $details = Portabilis_Array_Utils::filter($details, $attrs);
 
     $details['aluno_id']         = $alunoId;
     $details['nome_mae']         = $this->toUtf8($details['nome_mae'], array('transform' => true));
     $details['nome_pai']         = $this->toUtf8($details['nome_pai'], array('transform' => true));
     $details['nome_responsavel'] = $this->toUtf8($details['nome_responsavel'], array('transform' => true));
+
+    $details['data_nascimento']  = Portabilis_Date_Utils::pgSQLToBr($details['data_nascimento']);
 
     return $details;
   }
@@ -141,6 +146,28 @@ class PessoaController extends ApiCoreController
     }
 
     return $_deficiencias;
+  }
+
+  protected function loadRg($pessoaId) {
+    $sql = "select rg from cadastro.documento where idpes = $1";
+    $rg  = $this->fetchPreparedQuery($sql, $pessoaId, false, 'first-field');
+
+    // caso um array vazio seja retornado, seta resultado como null
+    if (empty($rg))
+      $rg = null;
+
+    return $rg;
+  }
+
+  protected function loadDataNascimento($pessoaId) {
+    $sql        = "select data_nasc from cadastro.fisica where idpes = $1";
+    $nascimento = $this->fetchPreparedQuery($sql, $pessoaId, false, 'first-field');
+
+    // caso um array vazio seja retornado, seta resultado como null
+    if (empty($nascimento))
+      $nascimento = null;
+
+    return $nascimento;
   }
 
 
@@ -165,6 +192,27 @@ class PessoaController extends ApiCoreController
                trim(leading '0' from documento.rg) like trim(leading '0' from $1)||'%') order by id limit 15";
 
     return $sqls;
+  }
+
+  // subscreve formatResourceValue para adicionar o rg da pessoa, ao final do valor,
+  // "<id_pessoa> - <nome_pessoa> (RG: <rg>)", ex: "1 - Lucas D'Avila (RG: 1234567)"
+  protected function formatResourceValue($resource) {
+    $nome       = $this->toUtf8($resource['name'], array('transform' => true));
+    $rg         = $this->loadRg($resource['id']);
+    $nascimento = $this->loadDataNascimento($resource['id']);
+
+    // Quando informado, inclui detalhes extra sobre a pessoa, como RG e Data nascimento.
+    $details = array();
+
+    if ($nascimento)
+      $details[] = 'Nascimento: ' . Portabilis_Date_Utils::pgSQLToBr($nascimento);
+
+    if ($rg)
+      $details[] = "RG: $rg";
+
+    $details = $details ? ' (' . implode(', ', $details) . ')' : '';
+
+    return $resource['id'] . " - $nome$details";
   }
 
   // api responders
