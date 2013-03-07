@@ -97,6 +97,9 @@
   update portal.menu_submenu set arquivo = 'module/Reports/Boletim', nm_submenu = 'Boletim Escolar' where cod_menu_submenu in (999202);
   update pmicontrolesis.menu set caminho = 'module/Reports/Boletim', tt_menu = 'Boletim Escolar' where ref_cod_menu_submenu in(999202);
 
+  update portal.menu_submenu set arquivo = 'module/Reports/BoletimProfessor', nm_submenu = 'Boletim do Professor' where cod_menu_submenu in (999205);
+  update pmicontrolesis.menu set caminho = 'module/Reports/BoletimProfessor', tt_menu = 'Boletim do Professor' where ref_cod_menu_submenu in(999205);
+
   update portal.menu_submenu set arquivo = 'module/Reports/RegistroAvaliacaoAnosIniciais' where cod_menu_submenu in(999501);
   update pmicontrolesis.menu set caminho = 'module/Reports/RegistroAvaliacaoAnosIniciais' where ref_cod_menu_submenu in(999501);
 
@@ -143,13 +146,13 @@
   update portal.menu_submenu set arquivo = 'module/Reports/BibliotecaComprovanteEmprestimo' where cod_menu_submenu = 999620;
   update pmicontrolesis.menu set caminho = 'module/Reports/BibliotecaComprovanteEmprestimo' where ref_cod_menu_submenu = 999620;
 
-update portal.menu_submenu set arquivo = 'module/Reports/BibliotecaComprovanteDevolucao' where cod_menu_submenu = 999621;
+  update portal.menu_submenu set arquivo = 'module/Reports/BibliotecaComprovanteDevolucao' where cod_menu_submenu = 999621;
   update pmicontrolesis.menu set caminho = 'module/Reports/BibliotecaComprovanteDevolucao' where ref_cod_menu_submenu = 999621;
 
   update portal.menu_submenu set arquivo = 'module/Reports/BibliotecaReciboPagamento' where cod_menu_submenu = 999622;
   update pmicontrolesis.menu set caminho = 'module/Reports/BibliotecaReciboPagamento' where ref_cod_menu_submenu = 999622;
 
-update portal.menu_submenu set cod_sistema = 2 where cod_menu_submenu in(999616,999617,999618,999619,999620,999621,999622);
+  update portal.menu_submenu set cod_sistema = 2 where cod_menu_submenu in(999616,999617,999618,999619,999620,999621,999622);
 
   	-- //@UNDO
   
