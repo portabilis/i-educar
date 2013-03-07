@@ -24,8 +24,10 @@ var formUtils = {
 
     form.removeAttr('onsubmit');
 
-    if (validationUtils.validatesFields())
+    if (validationUtils.validatesFields()) {
+      $j('form:first').find('#btn_enviar').attr('disabled', 'disabled').val('Aguarde...');
       form.submit();
+    }
   }
 };
 

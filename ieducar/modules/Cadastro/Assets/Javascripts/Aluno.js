@@ -104,8 +104,8 @@ var handleGetPersonDetails = function(dataResponse) {
   if (dataResponse.responsavel_id)
     nomeResponsavel = dataResponse.responsavel_id + ' - ' + nomeResponsavel;
 
-  //$j('#rg').val(dataResponse.rg);
-  //$j('#cpf').val(dataResponse.cpf);
+  $j('#data_nascimento').val(dataResponse.data_nascimento);
+  $j('#rg').val(dataResponse.rg);
 
   $j('#pai').val(nomePai);
   $j('#mae').val(nomeMae);
@@ -227,28 +227,12 @@ function afterChangePessoa(targetWindow, pessoaId) {
     $j('#tipo_responsavel').change(checkTipoResponsavel);
 
 
-    // back to old version
-
-    var backToOldVersion = function() {
-      var $this = $j(this);
-      var url   = '/intranet/educar_aluno_cad.php';
-
-      if(resource.id())
-        url += '?cod_aluno=' + resource.id();
-
-      $this.attr('href', url);
-    }
+    var msg = 'Bem vindo ao novo cadastro de alunos,<br />' +
+              '<b>Dúvidas?</b> Entre em contato com o suporte.';
 
     $j('<p>').addClass('back-to-old-version right-top-notice notice')
-             .html(stringUtils.toUtf8('Você está acessando o <b>novo cadastro de alunos</b>,<br />'))
+             .html(stringUtils.toUtf8(msg))
              .appendTo($j('#id').closest('td'));
-
-    $j('<a>').attr('href', '#')
-             .attr('target', '_blank')
-             .click(backToOldVersion)
-             .addClass('decorated')
-             .html(stringUtils.toUtf8('acessar versão antiga.'))
-             .appendTo($j('.back-to-old-version'));
 
   }); // ready
 })(jQuery);
