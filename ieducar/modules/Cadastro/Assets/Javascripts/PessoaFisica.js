@@ -190,24 +190,6 @@ $j(document).ready(function() {
   $j('#tr_uf_emissao_certidao_civil td').removeClass('formmdtd');
   $j('#tr_carteira_trabalho td').removeClass('formlttd').addClass('formmdtd');
 
-
-  // remove obrigatoriedade de determinados campos, ao criar pessoa pai ou mãe
-  // para agilizar o cadastro do filho;
-
-  if ($j.inArray($j('#parent_type').val(), ['pai', 'mae']) > -1) {
-
-    var $elements = $j('#sexo, #estado_civil_id, #data_nasc, #cep_, #sigla_uf, #cidade, #bairro,\
-        #zona_localizacao, #idtlog, #logradouro').filter('[value=]');
-
-    $elements.addClass('skip-presence-validation');
-
-    // remove '*' obrigatório ao lado do label.
-    $elements.each(function(index, element) {
-      $j(element).closest('tr').find('.campo_obrigatorio').hide();
-    });
-
-  }
-
   // bind events
 
   checkTipoNacionalidade();
