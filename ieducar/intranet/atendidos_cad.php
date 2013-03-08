@@ -94,7 +94,6 @@ class indice extends clsCadastro
   var $ddd_telefone_fax;
   var $telefone_fax;
   var $email;
-  var $http;
   var $tipo_pessoa;
   var $sexo;
   var $busca_pessoa;
@@ -110,8 +109,6 @@ class indice extends clsCadastro
   var $caminho_det;
   var $caminho_lst;
 
-  var $alterado;
-
   function Inicializar()
   {
     $this->cod_pessoa_fj = @$_GET['cod_pessoa_fj'];
@@ -125,7 +122,7 @@ class indice extends clsCadastro
         $this->ddd_telefone_1, $this->telefone_1, $this->ddd_telefone_2,
         $this->telefone_2, $this->ddd_telefone_mov, $this->telefone_mov,
         $this->ddd_telefone_fax, $this->telefone_fax, $this->email,
-        $this->http, $this->tipo_pessoa, $this->sexo, $this->cidade,
+        $this->tipo_pessoa, $this->sexo, $this->cidade,
         $this->bairro, $this->logradouro, $this->cep, $this->idlog, $this->idbai,
         $this->idtlog, $this->sigla_uf, $this->complemento, $this->numero,
         $this->bloco, $this->apartamento, $this->andar, $this->zona_localizacao, $this->estado_civil,
@@ -136,7 +133,7 @@ class indice extends clsCadastro
       $objPessoa->queryRapida(
         $this->cod_pessoa_fj, 'nome', 'cpf', 'data_nasc',  'ddd_1', 'fone_1',
         'ddd_2', 'fone_2', 'ddd_mov', 'fone_mov', 'ddd_fax', 'fone_fax', 'email',
-        'url', 'tipo', 'sexo', 'cidade', 'bairro', 'logradouro', 'cep', 'idlog',
+        'tipo', 'sexo', 'cidade', 'bairro', 'logradouro', 'cep', 'idlog',
         'idbai', 'idtlog', 'sigla_uf', 'complemento', 'numero', 'bloco', 'apartamento',
         'andar', 'zona_localizacao', 'ideciv', 'idpes_pai', 'idpes_mae', 'nacionalidade',
         'idpais_estrangeiro', 'idmun_nascimento', 'letra'
@@ -798,16 +795,7 @@ class indice extends clsCadastro
     $this->inputTelefone('2', 'Telefone adicional');
     $this->inputTelefone('fax', 'Fax');
 
-    $this->campoTexto('http', 'Site', $this->http, '50', '255', FALSE);
-
     $this->campoTexto('email', 'E-mail', $this->email, '50', '255', FALSE);
-
-    /*if ($this->cod_pessoa_fj) {
-      $this->campoRotulo('documentos', '<b><i>Documentos</i></b>',
-        "<a href='#' onclick=\"windowUtils.open('adicionar_documentos_cad.php?id_pessoa={$this->cod_pessoa_fj}'); \"><img src='imagens/nvp_bot_ad_doc.png' border='0'></a>");
-
-      $this->campoCheck('alterado', 'Alterado', $this->alterado);
-    }*/
 
 
     // after change pessoa pai / mae
@@ -828,189 +816,15 @@ class indice extends clsCadastro
     Portabilis_View_Helper_Application::loadJavascript($this, $script);
   }
 
-  function Novo()
-  {
-
-    if (! $this->validatesCpf($this->id_federal))
-      return false;
-
-    // pessoa
-
-    $objPessoa = new clsPessoa_(FALSE, $this->nm_pessoa, $this->currentUserId(), $this->http,
-                                'F', FALSE, FALSE, $this->email);
-
-    $idpes = $objPessoa->cadastra();
-
-    // pessoa fisica
-
-    $fisica                     = new clsFisica();
-
-    $fisica->idpes              = $idpes;
-    $fisica->data_nasc          = Portabilis_Date_Utils::brToPgSQL($this->data_nasc);
-    $fisica->sexo               = $this->sexo;
-    $fisica->ref_cod_sistema    = 'NULL';
-    $fisica->cpf                = idFederal2int($this->id_federal);
-    $fisica->ideciv             = $this->estado_civil_id;
-    $fisica->idpes_pai          = $this->pai_id;
-    $fisica->idpes_mae          = $this->mae_id;
-    $fisica->nacionalidade      = $_REQUEST['tipo_nacionalidade'];
-    $fisica->idpais_estrangeiro = $_REQUEST['pais_origem_id'];
-    $fisica->idmun_nascimento   = $_REQUEST['naturalidade_id'];
-
-    $fisica->cadastra();
-
-    $this->createOrUpdateDocumentos($idpes);
-
-    $objTelefone = new clsPessoaTelefone($idpes, 1, $this->telefone_1, $this->ddd_telefone_1);
-    $objTelefone->cadastra();
-
-    $objTelefone = new clsPessoaTelefone($idpes, 2, $this->telefone_2, $this->ddd_telefone_2);
-    $objTelefone->cadastra();
-
-    $objTelefone = new clsPessoaTelefone($idpes, 3, $this->telefone_mov, $this->ddd_telefone_mov);
-    $objTelefone->cadastra();
-
-    $objTelefone = new clsPessoaTelefone($idpes, 4, $this->telefone_fax, $this->ddd_telefone_fax);
-    $objTelefone->cadastra();
-
-    if ($this->cep && $this->idbai && $this->idlog) {
-      $this->cep    = idFederal2Int($this->cep);
-      $objEndereco  = new clsPessoaEndereco($idpes);
-      $objEndereco2 = new clsPessoaEndereco($idpes, $this->cep, $this->idlog,
-        $this->idbai, $this->numero, $this->complemento, FALSE, $this->letra,
-        $this->bloco, $this->apartamento, $this->andar);
-
-      if ($objEndereco->detalhe()) {
-        $objEndereco2->edita();
-      }
-      else {
-        $objEndereco2->cadastra();
-      }
-    }
-    elseif($this->cep_) {
-      $this->cep_  = idFederal2int($this->cep_);
-
-      $objEnderecoExterno  = new clsEnderecoExterno($idpes);
-      $objEnderecoExterno2 = new clsEnderecoExterno($idpes, '1', $this->idtlog,
-        $this->logradouro, $this->numero, $this->letra, $this->complemento,
-        $this->bairro, $this->cep_, $this->cidade, $this->sigla_uf, FALSE,
-        $this->bloco, $this->apartamento, $this->andar, FALSE, FALSE,
-        $this->zona_localizacao);
-
-      if ($objEnderecoExterno->detalhe()) {
-        $objEnderecoExterno2->edita();
-      }
-      else {
-        $objEnderecoExterno2->cadastra();
-      }
-    }
-
-    // Cadastra raça.
-    $this->_cadastraRaca($idpes, $this->cor_raca);
-
-    $this->afterChangePessoa($idpes);
-    return TRUE;
+  function Novo() {
+    return $this->createOrUpdate();
   }
 
-  function Editar()
-  {
-    if (! $this->validatesCpf($this->id_federal))
-      return false;
-
-    // pessoa
-
-    $objPessoa = new clsPessoa_($this->cod_pessoa_fj, $this->nm_pessoa, FALSE,
-                                $this->p_http, FALSE, $this->currentUserId(),
-                                date('Y-m-d H:i:s', time()), $this->email);
-
-    $objPessoa->edita();
-
-    // pessoa fisica
-
-    $fisica                     = new clsFisica();
-
-    $fisica->idpes              = $this->cod_pessoa_fj;
-    $fisica->data_nasc          = Portabilis_Date_Utils::brToPgSQL($this->data_nasc);
-    $fisica->sexo               = $this->sexo;
-    $fisica->ref_cod_sistema    = 'NULL';
-    $fisica->cpf                = $this->id_federal ? idFederal2int($this->id_federal) : 'NULL';
-    $fisica->ideciv             = $this->estado_civil_id;
-    $fisica->idpes_pai          = $this->pai_id ? $this->pai_id : "NULL";
-    $fisica->idpes_mae          = $this->mae_id ? $this->mae_id : "NULL";
-    $fisica->nacionalidade      = $_REQUEST['tipo_nacionalidade'];
-    $fisica->idpais_estrangeiro = $_REQUEST['pais_origem_id'];
-    $fisica->idmun_nascimento   = $_REQUEST['naturalidade_id'];
-
-    $fisica->edita();
-
-    $this->createOrUpdateDocumentos($this->cod_pessoa_fj);
-
-    if ($this->alterado) {
-      $db = new clsBanco();
-      $db->Consulta("UPDATE cadastro.fisica SET alterado = 'TRUE' WHERE idpes = '$this->cod_pessoa_fj'");
-    }
-
-    $objTelefone = new clsPessoaTelefone($this->cod_pessoa_fj, 1,
-      $this->telefone_1, $this->ddd_telefone_1);
-    $objTelefone->cadastra();
-
-    $objTelefone = new clsPessoaTelefone($this->cod_pessoa_fj, 2,
-      $this->telefone_2, $this->ddd_telefone_2);
-    $objTelefone->cadastra();
-
-    $objTelefone = new clsPessoaTelefone($this->cod_pessoa_fj, 3,
-      $this->telefone_mov, $this->ddd_telefone_mov);
-    $objTelefone->cadastra();
-
-    $objTelefone = new clsPessoaTelefone($this->cod_pessoa_fj, 4,
-      $this->telefone_fax, $this->ddd_telefone_fax);
-    $objTelefone->cadastra();
-
-    $objEndereco = new clsPessoaEndereco($this->cod_pessoa_fj);
-
-    $this->cep = idFederal2Int($this->cep);
-
-    $objEndereco2 = new clsPessoaEndereco($this->cod_pessoa_fj, $this->cep,
-      $this->idlog, $this->idbai, $this->numero, $this->complemento, FALSE,
-      $this->letra, $this->bloco, $this->apartamento,$this->andar);
-
-    if ($objEndereco->detalhe() && $this->cep && $this->idlog && $this->idbai) {
-      $objEndereco2->edita();
-    }
-    elseif ($this->cep && $this->idlog && $this->idbai) {
-      $objEndereco2->cadastra();
-    }
-    elseif ($objEndereco->detalhe()) {
-      $objEndereco2->exclui();
-    }
-    else {
-      $this->cep_ = idFederal2int($this->cep_);
-      $objEnderecoExterno = new clsEnderecoExterno($this->cod_pessoa_fj);
-
-      $objEnderecoExterno2 = new clsEnderecoExterno($this->cod_pessoa_fj, '1',
-        $this->idtlog, $this->logradouro, $this->numero, $this->letra,
-        $this->complemento, $this->bairro, $this->cep_, $this->cidade,
-        $this->sigla_uf, FALSE, $this->bloco, $this->apartamento, $this->andar,
-        FALSE, FALSE, $this->zona_localizacao);
-
-      if ($objEnderecoExterno->detalhe()) {
-        $objEnderecoExterno2->edita();
-      }
-      else {
-        $objEnderecoExterno2->cadastra();
-      }
-    }
-
-    // Atualizada raça.
-    $this->_cadastraRaca($this->cod_pessoa_fj, $this->cor_raca);
-
-    $this->afterChangePessoa($this->cod_pessoa_fj);
-
-    return TRUE;
+  function Editar() {
+    return $this->createOrUpdate($this->cod_pessoa_fj);
   }
 
-  function Excluir()
-  {
+  function Excluir() {
     echo '<script>document.location="atendidos_lst.php";</script>';
     return TRUE;
   }
@@ -1030,28 +844,6 @@ class indice extends clsCadastro
         document.location = 'atendidos_lst.php';
 
     ", $afterReady = true);
-  }
-
-  /**
-   * Cadastra ou atualiza a raça de uma pessoa.
-   *
-   * @access protected
-   * @param  int $pessoaId
-   * @param  int $corRaca
-   * @return bool
-   * @since  Método disponível desde a versão 1.2.0
-   */
-  function _cadastraRaca($pessoaId, $corRaca)
-  {
-    $pessoaId = (int) $pessoaId;
-    $corRaca  = (int) $corRaca;
-
-    $raca = new clsCadastroFisicaRaca($pessoaId, $corRaca);
-    if ($raca->existe()) {
-      return $raca->edita();
-    }
-
-    return $raca->cadastra();
   }
 
   protected function loadAlunoByPessoaId($id) {
@@ -1127,6 +919,79 @@ class indice extends clsCadastro
     return $isValid;
   }
 
+  protected function createOrUpdate($pessoaIdOrNull = null) {
+    if (! $this->validatesCpf($this->id_federal))
+      return false;
+
+    $pessoaId = $this->createOrUpdatePessoa($pessoaIdOrNull);
+
+    $this->createOrUpdatePessoaFisica($pessoaId);
+    $this->createOrUpdateDocumentos($pessoaId);
+    $this->createOrUpdateTelefones($pessoaId);
+    $this->createOrUpdateEndereco($pessoaId);
+
+    $this->afterChangePessoa($pessoaId);
+    return true;
+  }
+
+  protected function createOrUpdatePessoa($pessoaId = null) {
+    $pessoa        = new clsPessoa_();
+    $pessoa->idpes = $pessoaId;
+    $pessoa->nome  = Portabilis_String_Utils::toLatin1($this->nm_pessoa);
+    $pessoa->email = Portabilis_String_Utils::toLatin1($this->email);
+
+    $sql = "select 1 from cadastro.pessoa WHERE idpes = $1 limit 1";
+
+    if (! $pessoaId || Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1) {
+      $pessoa->tipo      = 'F';
+      $pessoa->idpes_cad = $this->currentUserId();
+      $pessoaId          = $pessoa->cadastra();
+    }
+    else {
+      $pessoa->idpes_rev = $this->currentUserId();
+      $pessoa->data_rev  = date('Y-m-d H:i:s', time());
+      $pessoa->edita();
+    }
+
+    return $pessoaId;
+  }
+
+  protected function createOrUpdatePessoaFisica($pessoaId) {
+    $fisica                     = new clsFisica();
+    $fisica->idpes              = $pessoaId;
+    $fisica->data_nasc          = Portabilis_Date_Utils::brToPgSQL($this->data_nasc);
+    $fisica->sexo               = $this->sexo;
+    $fisica->ref_cod_sistema    = 'NULL';
+    $fisica->cpf                = $this->id_federal ? idFederal2int($this->id_federal) : 'NULL';
+    $fisica->ideciv             = $this->estado_civil_id;
+    $fisica->idpes_pai          = $this->pai_id ? $this->pai_id : "NULL";
+    $fisica->idpes_mae          = $this->mae_id ? $this->mae_id : "NULL";
+    $fisica->nacionalidade      = $_REQUEST['tipo_nacionalidade'];
+    $fisica->idpais_estrangeiro = $_REQUEST['pais_origem_id'];
+    $fisica->idmun_nascimento   = $_REQUEST['naturalidade_id'];
+
+    $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
+
+    if (Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1)
+      $fisica->cadastra();
+    else
+      $fisica->edita();
+
+    $this->createOrUpdateRaca($pessoaId, $this->cor_raca);
+  }
+
+  function createOrUpdateRaca($pessoaId, $corRaca) {
+    $pessoaId = (int) $pessoaId;
+    $corRaca  = (int) $corRaca;
+
+    $raca = new clsCadastroFisicaRaca($pessoaId, $corRaca);
+
+    if ($raca->existe())
+      return $raca->edita();
+
+    return $raca->cadastra();
+  }
+
   protected function createOrUpdateDocumentos($pessoaId) {
     $documentos                             = new clsDocumento();
     $documentos->idpes                      = $pessoaId;
@@ -1171,7 +1036,9 @@ class indice extends clsCadastro
     );
 
     $documentos->sigla_uf_cert_civil        = $_REQUEST['uf_emissao_certidao_civil'];
-    $documentos->cartorio_cert_civil        = $_REQUEST['cartorio_emissao_certidao_civil'];
+    $documentos->cartorio_cert_civil        = Portabilis_String_Utils::toLatin1(
+      $_REQUEST['cartorio_emissao_certidao_civil']
+    );
 
 
 
@@ -1205,6 +1072,77 @@ class indice extends clsCadastro
       $documentos->cadastra();
     else
       $documentos->edita();
+  }
+
+  protected function _createOrUpdatePessoaEndereco($pessoaId) {
+    $endereco = new clsPessoaEndereco(
+      $pessoaId,
+      idFederal2Int($this->cep),
+      $this->idlog,
+      $this->idbai,
+      $this->numero,
+      Portabilis_String_Utils::toLatin1($this->complemento),
+      FALSE,
+      Portabilis_String_Utils::toLatin1($this->letra),
+      Portabilis_String_Utils::toLatin1($this->bloco),
+      $this->apartamento,
+      $this->andar
+    );
+
+    // forçado exclusão, assim ao cadastrar endereco_pessoa novamente,
+    // será excluido endereco_externo (por meio da trigger fcn_aft_ins_endereco_pessoa).
+    $endereco->exclui();
+    $endereco->cadastra();
+  }
+
+  protected function _createOrUpdateEnderecoExterno($pessoaId) {
+    $endereco = new clsEnderecoExterno(
+      $pessoaId,
+      '1',
+      $this->idtlog,
+      $this->logradouro,
+      $this->numero,
+      Portabilis_String_Utils::toLatin1($this->letra),
+      Portabilis_String_Utils::toLatin1($this->complemento),
+      $this->bairro,
+      idFederal2int($this->cep_),
+      $this->cidade,
+      $this->sigla_uf,
+      FALSE,
+      Portabilis_String_Utils::toLatin1($this->bloco),
+      $this->apartamento,
+      $this->andar,
+      FALSE,
+      FALSE,
+      $this->zona_localizacao
+    );
+
+    // forçado exclusão, assim ao cadastrar endereco_externo novamente,
+    // será excluido endereco_pessoa (por meio da trigger fcn_aft_ins_endereco_externo).
+    $endereco->exclui();
+    $endereco->cadastra();
+  }
+
+  protected function createOrUpdateEndereco($pessoaId) {
+    $enderecoExterno = ! empty($this->cep_);
+
+    if (! $enderecoExterno && $this->cep && $this->idbai && $this->idlog)
+      $this->_createOrUpdatePessoaEndereco($pessoaId);
+
+    elseif($enderecoExterno)
+      $this->_createOrUpdateEnderecoExterno($pessoaId);
+  }
+
+  protected function createOrUpdateTelefones($pessoaId) {
+    $telefones   = array();
+
+    $telefones[] = new clsPessoaTelefone($pessoaId, 1, $this->telefone_1,   $this->ddd_telefone_1);
+    $telefones[] = new clsPessoaTelefone($pessoaId, 2, $this->telefone_2,   $this->ddd_telefone_2);
+    $telefones[] = new clsPessoaTelefone($pessoaId, 3, $this->telefone_mov, $this->ddd_telefone_mov);
+    $telefones[] = new clsPessoaTelefone($pessoaId, 4, $this->telefone_fax, $this->ddd_telefone_fax);
+
+    foreach ($telefones as $telefone)
+      $telefone->cadastra();
   }
 
   // inputs usados em Gerar,

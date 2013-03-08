@@ -50,6 +50,8 @@ var resourceOptions = {
   },
 
   handlePost : function(dataResponse) {
+    if (dataResponse && dataResponse.any_error_msg)
+      $submitButton.removeAttr('disabled').val('Gravar');
   },
 
   _handlePost : function(dataResponse) {
@@ -62,6 +64,8 @@ var resourceOptions = {
   },
 
   handlePut : function(dataResponse) {
+    if (dataResponse && dataResponse.any_error_msg)
+      $submitButton.removeAttr('disabled').val('Gravar');
   },
 
 
@@ -193,6 +197,8 @@ var resourceOptions = {
         safeLog('dataResponse details:');
         safeLog(dataResponse);
 
+        $submitButton.removeAttr('disabled').val('Gravar');
+
         throw error;
       }
     }
@@ -200,6 +206,8 @@ var resourceOptions = {
 
     function handleError(response) {
       handleMessages([{type : 'error', msg : 'Erro ao realizar operação, por favor tente novamente, detalhes:' + response.responseText}], '');
+
+      $submitButton.removeAttr('disabled').val('Gravar');
 
       safeLog('response details:');
       safeLog(response);
