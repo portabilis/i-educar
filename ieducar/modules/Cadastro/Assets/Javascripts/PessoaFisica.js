@@ -183,8 +183,6 @@ $j(document).ready(function() {
 
   // style fixup
 
-  $j('#pais_origem_nome').css('width', '150px');
-
   // agrupado zebra por tipo documento, branco => .formlttd, colorido => .formmdtd
 
   $j('#tr_uf_emissao_certidao_civil td').removeClass('formmdtd');

@@ -50,13 +50,6 @@ class Portabilis_Controller_Page_ListController extends Core_Controller_Page_Lis
     parent::__construct();
   }
 
-  protected function inputsHelper() {
-    if (! isset($this->_inputsHelper))
-      $this->_inputsHelper = new Portabilis_View_Helper_Inputs($this);
-
-    return $this->_inputsHelper;
-  }
-
   protected function loadResourceAssets($dispatcher){
     $rootPath       = $_SERVER['DOCUMENT_ROOT'];
     $controllerName = ucwords($dispatcher->getControllerName());
