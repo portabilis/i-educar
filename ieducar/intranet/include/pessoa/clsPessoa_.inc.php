@@ -84,13 +84,11 @@ class clsPessoa_
 				$valores .= ", '$this->idpes_cad' ";
 			}
 
-			$this->nome = str_replace("'", "", $this->nome);
-
 			$db = new clsBanco();
 
 			$db->Consulta("INSERT INTO {$this->schema_cadastro}.{$this->tabela_pessoa} (nome, data_cad,tipo,situacao,origem_gravacao,  idsis_cad, operacao $campos) VALUES ('$this->nome', NOW(), '$this->tipo', 'P', 'U', 17, 'I' $valores)");
 			$this->idpes = $db->InsertId("{$this->schema_cadastro}.seq_pessoa");
-			
+
 			return $this->idpes;
 		}
 	}
@@ -115,7 +113,6 @@ class clsPessoa_
 			}
 			if($this->nome || $this->nome==="")
 			{
-				$this->nome = eregi_replace( " +\$", "", $this->nome );
 				$set .= "$gruda nome = '$this->nome' ";
 				$gruda = ", ";
 			}
@@ -390,7 +387,7 @@ class clsPessoa_
 				list($this->idpes, $this->nome, $this->idpes_cad, $this->data_cad, $this->url, $this->tipo, $this->idpes_rev, $this->data_rev, $this->situacao, $this->origem_gravacao, $this->email ) = $tupla;
 				return $tupla;
 			}
-		} 
+		}
 		return false;
 	}
 }
