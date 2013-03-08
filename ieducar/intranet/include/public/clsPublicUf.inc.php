@@ -100,7 +100,7 @@ class clsPublicUf
 
 	/**
 	 * Construtor (PHP 4)
-	 * 
+	 *
 	 * @param string sigla_uf
 	 * @param string nome
 	 * @param string geom
@@ -185,7 +185,7 @@ class clsPublicUf
 			if( is_string( $this->nome ) )
 			{
 				$campos .= "{$gruda}nome";
-				$valores .= "{$gruda}'{$this->nome}'";
+				$valores .= "{$gruda}'" . addslashes($this->nome) . "'";
 				$gruda = ", ";
 			}
 			if( is_string( $this->geom ) )
@@ -223,7 +223,7 @@ class clsPublicUf
 
 			if( is_string( $this->nome ) )
 			{
-				$set .= "{$gruda}nome = '{$this->nome}'";
+				$set .= "{$gruda}nome = '" . addslashes($this->nome) . "'";
 				$gruda = ", ";
 			}
 			if( is_string( $this->geom ) )
@@ -249,7 +249,7 @@ class clsPublicUf
 
 	/**
 	 * Retorna uma lista filtrados de acordo com os parametros
-	 * 
+	 *
 	 * @param string str_nome
 	 * @param string str_geom
 	 * @param integer int_idpais
@@ -270,7 +270,7 @@ class clsPublicUf
 		}
 		if( is_string( $str_nome ) )
 		{
-			$filtros .= "{$whereAnd} uf.nome LIKE '%{$str_nome}%'";
+			$filtros .= "{$whereAnd} uf.nome LIKE E'%" . addslashes($str_nome) . "%'";
 			$whereAnd = " AND ";
 		}
 		if( is_string( $str_geom ) )

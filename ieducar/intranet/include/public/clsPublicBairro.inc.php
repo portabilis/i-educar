@@ -319,7 +319,7 @@ class clsPublicBairro
 
       if (is_string($this->nome)) {
         $campos  .= "{$gruda}nome";
-        $valores .= "{$gruda}'{$this->nome}'";
+        $valores .= "{$gruda}'" . addslashes($this->nome) . "'";
         $gruda    = ', ';
       }
 
@@ -407,7 +407,7 @@ class clsPublicBairro
       }
 
       if (is_string($this->nome)) {
-        $set .= "{$gruda}nome = '{$this->nome}'";
+        $set .= "{$gruda}nome = '" . addslashes($this->nome) . "'";
         $gruda = ', ';
       }
 
@@ -522,7 +522,7 @@ class clsPublicBairro
     }
 
     if (is_string($str_nome)) {
-      $filtros .= "{$whereAnd} b.nome LIKE '%{$str_nome}%'";
+      $filtros .= "{$whereAnd} b.nome LIKE E'%" . addslashes($str_nome) . "%'";
       $whereAnd = ' AND ';
     }
 
