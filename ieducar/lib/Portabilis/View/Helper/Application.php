@@ -82,7 +82,7 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
    * @param   array ou string  $files  Lista de scripts a serem carregados.
    * @return  null
    */
-  public static function loadJavascript($viewInstance, $files, $expireCacheDateFormat = 'dmY') {
+  public static function loadJavascript($viewInstance, $files, $appendAssetsVersionParam = true) {
     if (! is_array($files))
       $files = array($files);
 
@@ -91,9 +91,8 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
       if (! in_array($file, self::$javascriptsLoaded)) {
         self::$javascriptsLoaded[] = $file;
 
-        // cache controll
-        $file .= '?assets_version=' . Portabilis_Assets_Version::VERSION;
-        $file .= $expireCacheDateFormat ? '&timestamp=' . date($expireCacheDateFormat) : '';
+        if ($appendAssetsVersionParam)
+          $file .= '?assets_version=' . Portabilis_Assets_Version::VERSION;
 
         $viewInstance->appendOutput("<script type='text/javascript' src='$file'></script>");
       }
@@ -112,7 +111,7 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
    * @param   array ou string  $files  Lista de estilos a serem carregados.
    * @return  null
    */
-  public static function loadStylesheet($viewInstance, $files, $expireCacheDateFormat = 'dmY') {
+  public static function loadStylesheet($viewInstance, $files, $appendAssetsVersionParam = true) {
     if (! is_array($files))
       $files = array($files);
 
@@ -121,9 +120,8 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
       if (! in_array($file, self::$stylesheetsLoaded)) {
         self::$stylesheetsLoaded[] = $file;
 
-        // cache controll
-        $file .= '?assets_version=' . Portabilis_Assets_Version::VERSION;
-        $file .= $expireCacheDateFormat ? '&timestamp=' . date($expireCacheDateFormat) : '';
+        if ($appendAssetsVersionParam)
+          $file .= '?assets_version=' . Portabilis_Assets_Version::VERSION;
 
         $viewInstance->appendOutput("<link type='text/css' rel='stylesheet' href='$file'></script>");
       }
@@ -182,5 +180,18 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
 
     // ui-autocomplete fixup
     self::embedStylesheet($viewInstance, ".ui-autocomplete { font-size: 11px; }");
+  }
+
+  public static function loadChosenLib($viewInstance) {
+    self::loadStylesheet($viewInstance, '/modules/Portabilis/Assets/Plugins/Chosen/chosen.css', false);
+    self::loadJavascript($viewInstance, '/modules/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js', false);
+  }
+
+  public static function loadAjaxChosenLib($viewInstance) {
+    // AjaxChosen requires this fixup, see https://github.com/meltingice/ajax-chosen
+    $fixupCss = ".chzn-container .chzn-results .group-result { display: list-item; }";
+    Portabilis_View_Helper_Application::embedStylesheet($viewInstance, $fixupCss);
+
+    self::loadJavascript($viewInstance, '/modules/Portabilis/Assets/Plugins/AjaxChosen/ajax-chosen.min.js', false);
   }
 }
