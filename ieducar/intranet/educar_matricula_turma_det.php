@@ -294,7 +294,7 @@ class indice extends clsDetalhe
 
         function removerEnturmacao(ref_cod_matricula, ref_cod_turma_destino) {
 
-          if (! confirm("Tem certeza que deseja remover a enturmação (da turma destino)?"))
+          if (! confirm("Confirma remoção da enturmação?"))
             return false;
 
           document.formcadastro.ref_cod_turma_origem.value = "remover-enturmacao-destino";
