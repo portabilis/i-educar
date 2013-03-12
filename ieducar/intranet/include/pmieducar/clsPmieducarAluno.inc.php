@@ -759,6 +759,11 @@ class clsPmieducarAluno
     }
 
     if (is_string($str_nome_aluno)) {
+
+      // remove aspa simples evitando erro sql, isto seria desnecessário,
+      // caso a pesquisa utilizasse consulta preparada.
+      $str_nome_aluno = str_replace("'", '%', $str_nome_aluno);
+
       $filtros .= "{$whereAnd} EXISTS (
                      SELECT
                        1
@@ -868,18 +873,33 @@ class clsPmieducarAluno
       $and_where              = '';
 
       if (!empty($str_nm_pai2)) {
+
+        // remove aspa simples evitando erro sql, isto seria desnecessário,
+        // caso a pesquisa utilizasse consulta preparada.
+        $str_nm_pai2 = str_replace("'", '%', $str_nm_pai2);
+
         $complemento_sql   .= ' LEFT OUTER JOIN cadastro.pessoa AS pessoa_pai ON (pessoa_pai.idpes = f.idpes_pai)';
         $complemento_where .= "{$and_where} (nm_pai ILIKE ('%{$str_nm_pai2}%') OR pessoa_pai.nome ILIKE ('%{$str_nm_pai2}%'))";
         $and_where          = ' AND ';
       }
 
       if (!empty($str_nm_mae2)) {
+
+        // remove aspa simples evitando erro sql, isto seria desnecessário,
+        // caso a pesquisa utilizasse consulta preparada.
+        $str_nm_mae2 = str_replace("'", '%', $str_nm_mae2);
+
         $complemento_sql   .= ' LEFT OUTER JOIN cadastro.pessoa AS pessoa_mae ON (pessoa_mae.idpes = f.idpes_mae)';
         $complemento_where .= "{$and_where} (nm_mae ILIKE ('%{$str_nm_mae2}%') OR pessoa_mae.nome ILIKE ('%{$str_nm_mae2}%'))";
         $and_where          = ' AND ';
       }
 
       if (!empty($str_nm_responsavel2)) {
+
+        // remove aspa simples evitando erro sql, isto seria desnecessário,
+        // caso a pesquisa utilizasse consulta preparada.
+        $str_nm_responsavel2 = str_replace("'", '%', $str_nm_responsavel2);
+
         $complemento_sql .= " LEFT OUTER JOIN cadastro.pessoa AS pessoa_responsavel ON (pessoa_responsavel.idpes = f.idpes_responsavel)";
         $complemento_where .= "{$and_where} (pessoa_responsavel.nome ILIKE ('%{$str_nm_responsavel2}%'))";
         $and_where = " AND ";
