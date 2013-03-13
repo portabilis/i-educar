@@ -33,6 +33,9 @@ require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
+require_once 'App/Model/MatriculaSituacao.php';
+require_once 'Portabilis/View/Helper/Application.php';
+
 /**
  * clsIndexBase class.
  *
@@ -80,6 +83,12 @@ class indice extends clsDetalhe
 
   function Gerar()
   {
+
+    // carrega estilo para feedback messages, exibindo msgs da api.
+
+    $style = "/modules/Portabilis/Assets/Stylesheets/Frontend.css";
+    Portabilis_View_Helper_Application::loadStylesheet($this, $style);
+
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
@@ -285,14 +294,25 @@ class indice extends clsDetalhe
         $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true&reabrir_matricula=true\")";
       }
 
-      if ($registro['aprovado'] == 4 || $det_transferencia) {
-        $this->array_botao[]            = 'Imprimir Atestado Frequência';
-        $this->array_botao_url_script[] = "showExpansivelImprimir(400, 200,  \"educar_relatorio_atestado_frequencia.php?cod_matricula={$registro['cod_matricula']}\",[], \"Relatório Atestado de Freqüência\")";
+      if ($registro['aprovado'] == App_Model_MatriculaSituacao::ABANDONO) {
+        $this->array_botao[]            = "Desfazer abandono";
+        $this->array_botao_url_script[] = "deleteAbandono({$registro['cod_matricula']})";
       }
     }
 
     $this->url_cancelar = 'educar_aluno_det.php?cod_aluno=' . $registro['ref_cod_aluno'];
     $this->largura      = '100%';
+
+    // js
+    Portabilis_View_Helper_Application::loadJQueryLib($this);
+
+    $scripts = array(
+      '/modules/Portabilis/Assets/Javascripts/Utils.js',
+      '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
+      '/modules/Cadastro/Assets/Javascripts/MatriculaShow.js'
+    );
+
+    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
   }
 
 
