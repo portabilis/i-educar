@@ -277,7 +277,7 @@ var handleMessages = messageUtils.handleMessages;
   $(document).ready(function() {
 
     // add div for feedback messages
-    $j('<div />').attr('id', 'feedback-messages').appendTo($j('form').last().parent());
+    $j('<div />').attr('id', 'feedback-messages').appendTo($j('#corpo'));
 
   }); // ready
 })(jQuery);
