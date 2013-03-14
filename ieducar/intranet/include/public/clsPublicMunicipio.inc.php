@@ -114,7 +114,7 @@ class clsPublicMunicipio
 
 	/**
 	 * Construtor (PHP 4)
-	 * 
+	 *
 	 * @param integer idmun
 	 * @param string nome
 	 * @param string sigla_uf
@@ -407,7 +407,7 @@ class clsPublicMunicipio
 			if( is_string( $this->nome ) )
 			{
 				$campos .= "{$gruda}nome";
-				$valores .= "{$gruda}'{$this->nome}'";
+				$valores .= "{$gruda}'" . addslashes($this->nome) . "'";
 				$gruda = ", ";
 			}
 			if( is_string( $this->sigla_uf ) )
@@ -526,7 +526,7 @@ class clsPublicMunicipio
 
 			if( is_string( $this->nome ) )
 			{
-				$set .= "{$gruda}nome = '{$this->nome}'";
+				$set .= "{$gruda}nome = '" . addslashes($this->nome) . "'";
 				$gruda = ", ";
 			}
 			if( is_string( $this->sigla_uf ) )
@@ -622,7 +622,7 @@ class clsPublicMunicipio
 
 	/**
 	 * Retorna uma lista filtrados de acordo com os parametros
-	 * 
+	 *
 	 * @param string str_nome
 	 * @param string str_sigla_uf
 	 * @param integer int_area_km2
@@ -659,7 +659,7 @@ class clsPublicMunicipio
 		}
 		if( is_string( $str_nome ) )
 		{
-			$filtros .= "{$whereAnd} nome LIKE '%{$str_nome}%'";
+			$filtros .= "{$whereAnd} nome LIKE E'%" . addslashes($str_nome) . "%'";
 			$whereAnd = " AND ";
 		}
 		if( is_string( $str_sigla_uf ) )

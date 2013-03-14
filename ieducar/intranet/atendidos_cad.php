@@ -937,8 +937,8 @@ class indice extends clsCadastro
   protected function createOrUpdatePessoa($pessoaId = null) {
     $pessoa        = new clsPessoa_();
     $pessoa->idpes = $pessoaId;
-    $pessoa->nome  = Portabilis_String_Utils::toLatin1($this->nm_pessoa);
-    $pessoa->email = Portabilis_String_Utils::toLatin1($this->email);
+    $pessoa->nome  = addslashes($this->nm_pessoa);
+    $pessoa->email = addslashes($this->email);
 
     $sql = "select 1 from cadastro.pessoa WHERE idpes = $1 limit 1";
 
@@ -1036,10 +1036,7 @@ class indice extends clsCadastro
     );
 
     $documentos->sigla_uf_cert_civil        = $_REQUEST['uf_emissao_certidao_civil'];
-    $documentos->cartorio_cert_civil        = Portabilis_String_Utils::toLatin1(
-      $_REQUEST['cartorio_emissao_certidao_civil']
-    );
-
+    $documentos->cartorio_cert_civil        = addslashes($_REQUEST['cartorio_emissao_certidao_civil']);
 
 
     // carteira de trabalho
@@ -1081,10 +1078,10 @@ class indice extends clsCadastro
       $this->idlog,
       $this->idbai,
       $this->numero,
-      Portabilis_String_Utils::toLatin1($this->complemento),
+      addslashes($this->complemento),
       FALSE,
-      Portabilis_String_Utils::toLatin1($this->letra),
-      Portabilis_String_Utils::toLatin1($this->bloco),
+      addslashes($this->letra),
+      addslashes($this->bloco),
       $this->apartamento,
       $this->andar
     );
@@ -1100,16 +1097,16 @@ class indice extends clsCadastro
       $pessoaId,
       '1',
       $this->idtlog,
-      $this->logradouro,
+      addslashes($this->logradouro),
       $this->numero,
-      Portabilis_String_Utils::toLatin1($this->letra),
-      Portabilis_String_Utils::toLatin1($this->complemento),
-      $this->bairro,
+      addslashes($this->letra),
+      addslashes($this->complemento),
+      addslashes($this->bairro),
       idFederal2int($this->cep_),
-      $this->cidade,
+      addslashes($this->cidade),
       $this->sigla_uf,
       FALSE,
-      Portabilis_String_Utils::toLatin1($this->bloco),
+      addslashes($this->bloco),
       $this->apartamento,
       $this->andar,
       FALSE,

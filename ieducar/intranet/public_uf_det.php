@@ -46,18 +46,18 @@ class indice extends clsDetalhe
 	 * @var int
 	 */
 	var $titulo;
-	
+
 	var $sigla_uf;
 	var $nome;
 	var $geom;
 	var $idpais;
-	
+
 	function Gerar()
 	{
 		@session_start();
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
-		
+
 		$this->titulo = "Uf - Detalhe";
 		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
 
@@ -65,13 +65,13 @@ class indice extends clsDetalhe
 
 		$tmp_obj = new clsPublicUf( $this->sigla_uf );
 		$registro = $tmp_obj->detalhe();
-		
+
 		if( ! $registro )
 		{
 			header( "location: public_uf_lst.php" );
 			die();
 		}
-		
+
 		if( class_exists( "clsPais" ) )
 		{
 			$obj_idpais = new clsPais( $registro["idpais"] );

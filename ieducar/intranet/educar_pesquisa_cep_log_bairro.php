@@ -108,26 +108,27 @@ class miolo1 extends clsListagem
     $this->campoTexto('nm_logradouro', 'Logradouro', $_GET['nm_logradouro'], 50, 255);
     $this->campoTexto('cidade', 'Cidade', $_GET['cidade'], 60, 60);
 
-    $obj_uf = new clsUf(FALSE, FALSE, 1);
-    $lst_uf = $obj_uf->lista(FALSE, FALSE, FALSE, FALSE, FALSE, 'sigla_uf');
+    // uf
 
-    $array_uf;
-    foreach ($lst_uf as $uf) {
-      $array_uf[$uf['sigla_uf']] = $uf['nome'];
-    }
-    if (! $_GET['ref_sigla_uf']) {
-      $_GET['ref_sigla_uf'] = $coreExt['Config']->app->locale->province;
-    }
-     /* Portabilis: Foi comentada a linha abaixo e adicionado 'SC' no lugar de $_GET['ref_sigla_uf'], 
-	    para trazer o estado como defaut */
-    /*$this->campoLista('ref_sigla_uf', 'UF', $array_uf, $_GET['ref_sigla_uf'],
-      '', FALSE, '');*/
-	  
-	      $this->campoLista('ref_sigla_uf', 'UF', $array_uf, 'SC',
-      '', FALSE, '');
+    $defaultProvince = isset($_GET['ref_sigla_uf']) ? $_GET['ref_sigla_uf'] : $coreExt['Config']->app->locale->province;
+
+    $options = array(
+      'required' => false,
+      'label'    => 'Estado',
+      'value'    => $defaultProvince
+    );
+
+    $helperOptions = array(
+      'attrName' => 'ref_sigla_uf'
+    );
+
+    $this->inputsHelper()->uf($options, $helperOptions);
 
 
     $this->addCabecalhos(array('Bairro', 'CEP', 'Logradouro', 'UF', 'Cidade'));
+
+
+    // consulta dados
 
     $select = '
       SELECT
@@ -143,111 +144,71 @@ class miolo1 extends clsListagem
         l.idtlog = t.idtlog AND
         m.sigla_uf = u.sigla_uf';
 
-    $select_count = '
-      SELECT
-        COUNT(*)
-      FROM
-        urbano.cep_logradouro_bairro c, public.bairro b, public.logradouro l,
-        public.municipio m, public.uf u, urbano.tipo_logradouro t
-      WHERE
-        c.idlog = l.idlog AND
-        c.idbai = b.idbai AND
-        l.idmun = b.idmun AND
-        l.idmun = m.idmun AND
-        l.idtlog = t.idtlog AND
-        m.sigla_uf = u.sigla_uf';
+    $params = array();
 
-    if (
-      $_GET['nm_bairro'] || $_GET['nr_cep'] || $_GET['nm_logradouro'] ||
-      $_GET['ref_sigla_uf'] || $_GET['cidade']
-    ) {
-      if ($_GET['nr_cep']) {
-        $num_cep       = idFederal2int($_GET['nr_cep']);
-        $select       .= sprintf(' AND c.cep ILIKE \'%%%s%%\'', $num_cep);
-        $select_count .= sprintf(' AND c.cep ILIKE \'%%%s%%\'', $num_cep);
-      }
+    if (isset($_GET['nr_cep']))
+      $params['c.cep'] = idFederal2int($_GET['nr_cep']);
 
-      if ($_GET['nm_bairro']) {
-        $select       .= sprintf(' AND b.nome ILIKE \'%%%s%%\'', $_GET['nm_bairro']);
-        $select_count .= sprintf(' AND b.nome ILIKE \'%%%s%%\'', $_GET['nm_bairro']);
-      }
+    if (isset($_GET['nm_bairro']))
+      $params['b.nome'] = $_GET['nm_bairro'];
 
-      if ($_GET['nm_logradouro']) {
-        $select       .= sprintf(' AND l.nome ILIKE \'%%%s%%\'', $_GET['nm_logradouro']);
-        $select_count .= sprintf(' AND l.nome ILIKE \'%%%s%%\'', $_GET['nm_logradouro']);
-      }
+    if (isset($_GET['nm_logradouro']))
+      $params['l.nome'] = $_GET['nm_logradouro'];
 
-      if ($_GET['ref_sigla_uf']) {
-        $select       .= sprintf(' AND u.sigla_uf ILIKE \'%%%s%%\'', $_GET['ref_sigla_uf']);
-        $select_count .= sprintf(' AND u.sigla_uf ILIKE \'%%%s%%\'', $_GET['ref_sigla_uf']);
-      }
+    if (isset($_GET['ref_sigla_uf']))
+      $params['u.sigla_uf'] = $_GET['ref_sigla_uf'];
 
-      if ($_GET['cidade']) {
-        $select       .= sprintf(' AND m.nome ILIKE \'%%%s%%\'', $_GET['cidade']);
-        $select_count .= sprintf(' AND m.nome ILIKE \'%%%s%%\'', $_GET['cidade']);
-      }
+    if (isset($_GET['cidade']))
+      $params['m.nome'] = $_GET['cidade'];
+
+    $paramCount = 1;
+
+    foreach ($params as $name => $value) {
+      $select .= " AND $name ILIKE '%'||\$$paramCount||'%'";
+      $paramCount++;
     }
 
     $select .= sprintf(' LIMIT %s OFFSET %s', $limite, $iniciolimit);
 
-    $db    = new clsBanco();
-    $total = $db->CampoUnico($select_count);
+    $result = Portabilis_Utils_Database::fetchPreparedQuery($select, array('params' => array_values($params)));
+    $total  = count($result);
 
-    $db->Consulta($select);
+    foreach ($result as $record) {
+      list($idlog, $cep, $idbai, $uf, $cidade, $tipoLogradouroId, $id_mun, $zona) = $record;
 
-    while ($db->ProximoRegistro()) {
-      list($idlog, $cep, $idbai, $uf, $cidade, $descricao,$id_mun, $zona) =
-        array('', '', '', '', '', '', '', '');
+      $cidade     = addslashes($cidade);
 
-      list($idlog, $cep, $idbai, $uf, $cidade, $descricao, $id_mun, $zona) = $db->Tupla();
+      $logradouro = new clsLogradouro($idlog);
+      $logradouro = $logradouro->detalhe();
+      $logradouro = addslashes($logradouro['nome']);
 
-      $logradouro         = new clsLogradouro($idlog);
-      $detalhe_logradouro = $logradouro->detalhe();
-
-      $bairro         = new clsBairro($idbai);
-      $detalhe_bairro = $bairro->detalhe();
+      $bairro     = new clsBairro($idbai);
+      $bairro     = $bairro->detalhe();
+      $bairro     = addslashes($bairro['nome']);
 
       $cep2  = int2CEP($cep);
       $s_end = '0';
 
-      $descricao = urlencode($descricao);
+      $url = sprintf(
+        '<a href="javascript:void(0);" onclick="cv_set_campo(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\');">%%s</a>',
+        $_SESSION['campo1'], $bairro, $_SESSION['campo2'],
+        $idbai, $_SESSION['campo3'], $cep,
+        $_SESSION['campo4'], $logradouro,
+        $_SESSION['campo5'], $idlog,
+        $_SESSION['campo6'], $uf, $_SESSION['campo7'], $cidade,
+        $_SESSION['campo8'], $tipoLogradouroId, $_SESSION['campo9'], $s_end,
+        $_SESSION['campo10'], $cep2, $_SESSION['campo11'], $uf,
+        $_SESSION['campo12'], $_SESSION['campo13'], $id_mun,
+        $_SESSION['campo14'], $zona
+      );
 
-      if ($_GET['param']) {
-        $url = sprintf(
-          '<a href="javascript:void(0);" onclick="setaCamposOuvidoria(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\')">%%s</a>',
-          $cep, $cep2, $uf, $uf, $id_mun, $cidade, $detalhe_bairro['idbai'], $detalhe_bairro['nome'], $descricao, $descricao, $detalhe_logradouro['idlog'], $detalhe_logradouro['nome']
-        );
-
-        $this->addLinhas(array(
-          sprintf($url, $detalhe_bairro['nome']),
-          sprintf($url, $cep2),
-          sprintf($url, $detalhe_logradouro["nome"]),
-          sprintf($url, $uf),
-          sprintf($url, $cidade)
-        ));
-      }
-      else {
-        $url = sprintf(
-          '<a href="javascript:void(0);" onclick="cv_set_campo(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\');">%%s</a>',
-          $_SESSION['campo1'], $detalhe_bairro["nome"], $_SESSION['campo2'],
-          $detalhe_bairro["idbai"], $_SESSION['campo3'], $cep,
-          $_SESSION['campo4'], $detalhe_logradouro["nome"],
-          $_SESSION['campo5'], $detalhe_logradouro["idlog"],
-          $_SESSION['campo6'], $uf, $_SESSION['campo7'], $cidade,
-          $_SESSION['campo8'], $descricao, $_SESSION['campo9'], $s_end,
-          $_SESSION['campo10'], $cep2, $_SESSION['campo11'], $uf,
-          $_SESSION['campo12'], $_SESSION['campo13'], $id_mun,
-          $_SESSION['campo14'], $zona
-        );
-
-        $this->addLinhas(array(
-          sprintf($url, $detalhe_bairro['nome']),
-          sprintf($url, $cep2),
-          sprintf($url, $detalhe_logradouro['nome']),
-          sprintf($url, $uf),
-          sprintf($url, $cidade)
-        ));
-      }
+      $this->addLinhas(array(
+        sprintf($url, $bairro),
+        sprintf($url, $cep2),
+        sprintf($url, $logradouro),
+        sprintf($url, $uf),
+        sprintf($url, $cidade)
+      ));
     }
 
     $this->largura = '100%';

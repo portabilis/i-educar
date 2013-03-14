@@ -601,6 +601,7 @@ class AlunoController extends ApiCoreController
       $aluno['tipo_responsavel'] = $this->tipoResponsavel($aluno);
       $aluno['aluno_inep_id']    = $this->loadAlunoInepId($id);
       $aluno['ativo']            = $aluno['ativo'] == 1;
+      $aluno['aluno_estado_id']  = Portabilis_String_Utils::toUtf8($aluno['aluno_estado_id']);
 
       $aluno['alfabetizado']     = $aluno['analfabeto'] == 0;
       unset($aluno['analfabeto']);
