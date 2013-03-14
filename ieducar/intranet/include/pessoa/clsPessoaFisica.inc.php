@@ -153,13 +153,17 @@ class clsPessoaFisica extends clsPessoaFj
     $where    = '';
 
     if (is_string($str_nome) && $str_nome != '') {
+      $str_nome = addslashes($str_nome);
       $str_nome = str_replace(' ', '%', $str_nome);
-      $where   .= "{$whereAnd} nome ILIKE '%{$str_nome}%' ";
+
+      $where   .= "{$whereAnd} nome ILIKE E'%{$str_nome}%' ";
       $whereAnd = ' AND ';
     }
 
     if (is_string($numeric_cpf)) {
-      $where   .= "{$whereAnd} cpf ILIKE '%{$numeric_cpf}%' ";
+      $numeric_cpf = addslashes($numeric_cpf);
+
+      $where   .= "{$whereAnd} cpf ILIKE E'%{$numeric_cpf}%' ";
       $whereAnd = ' AND ';
     }
 

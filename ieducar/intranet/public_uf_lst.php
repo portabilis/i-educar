@@ -98,9 +98,9 @@ class indice extends clsListagem
 		{
 			$objTemp = new clsPais();
 			$lista = $objTemp->lista( false, false, false, false, false, "nome ASC" );
-			if ( is_array( $lista ) && count( $lista ) ) 
+			if ( is_array( $lista ) && count( $lista ) )
 			{
-				foreach ( $lista as $registro ) 
+				foreach ( $lista as $registro )
 				{
 					$opcoes["{$registro['idpais']}"] = "{$registro['nome']}";
 				}
@@ -129,7 +129,8 @@ class indice extends clsListagem
 		$lista = $obj_uf->lista(
 			$this->nome,
 			$this->geom,
-			$this->idpais
+			$this->idpais,
+			$this->sigla_uf
 		);
 
 		$total = $obj_uf->_total;
