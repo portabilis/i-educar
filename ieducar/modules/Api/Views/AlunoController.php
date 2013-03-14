@@ -311,17 +311,8 @@ class AlunoController extends ApiCoreController
     $pessoa->idpes            = $this->getRequest()->pessoa_id;
     $pessoa->nome_responsavel = '';
 
-    $_pessoa                  = $pessoa->detalhe();
-
     if ($this->getRequest()->tipo_responsavel == 'outra_pessoa')
       $pessoa->idpes_responsavel = $this->getRequest()->responsavel_id;
-
-    elseif($this->getRequest()->tipo_responsavel == 'pai' && $_pessoa['idpes_pai'])
-      $pessoa->idpes_responsavel = $_pessoa['idpes_pai'];
-
-    elseif($this->getRequest()->tipo_responsavel == 'mae' && $_pessoa['idpes_mae'])
-      $pessoa->idpes_responsavel = $_pessoa['idpes_mae'];
-
     else
       $pessoa->idpes_responsavel = 'NULL';
 
@@ -347,7 +338,7 @@ class AlunoController extends ApiCoreController
 
     $aluno                          = new clsPmieducarAluno();
     $aluno->cod_aluno               = $id;
-    $aluno->aluno_estado_id         = Portabilis_String_Utils::toLatin1($this->getRequest()->aluno_estado_id);
+    $aluno->aluno_estado_id         = $this->getRequest()->aluno_estado_id;
 
     // após cadastro não muda mais id pessoa
     if (is_null($id))
@@ -714,6 +705,7 @@ class AlunoController extends ApiCoreController
     else
       $this->messenger->append('Aparentemente o cadastro não pode ser alterado, por favor, verifique.',
                                'error', false, 'error');
+
     return array('id' => $id);
   }
 

@@ -153,22 +153,12 @@ class clsPessoaFisica extends clsPessoaFj
     $where    = '';
 
     if (is_string($str_nome) && $str_nome != '') {
-
-      // remove aspa simples evitando erro sql, isto seria desnecessário,
-      // caso a pesquisa utilizasse consulta preparada.
-      $str_nome = str_replace("'", '%', $str_nome);
-
       $str_nome = str_replace(' ', '%', $str_nome);
       $where   .= "{$whereAnd} nome ILIKE '%{$str_nome}%' ";
       $whereAnd = ' AND ';
     }
 
     if (is_string($numeric_cpf)) {
-
-      // remove aspa simples evitando erro sql, isto seria desnecessário,
-      // caso a pesquisa utilizasse consulta preparada.
-      $numeric_cpf = str_replace("'", '', $numeric_cpf);
-
       $where   .= "{$whereAnd} cpf ILIKE '%{$numeric_cpf}%' ";
       $whereAnd = ' AND ';
     }
