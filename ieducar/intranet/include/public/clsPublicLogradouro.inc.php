@@ -110,7 +110,7 @@ class clsPublicLogradouro
 
 	/**
 	 * Construtor (PHP 4)
-	 * 
+	 *
 	 * @param integer idlog
 	 * @param string idtlog
 	 * @param string nome
@@ -341,7 +341,7 @@ class clsPublicLogradouro
 			if( is_string( $this->nome ) )
 			{
 				$campos .= "{$gruda}nome";
-				$valores .= "{$gruda}'{$this->nome}'";
+				$valores .= "{$gruda}'" . addslashes($this->nome) . "'";
 				$gruda = ", ";
 			}
 			if( is_numeric( $this->idmun ) )
@@ -435,7 +435,7 @@ class clsPublicLogradouro
 			}
 			if( is_string( $this->nome ) )
 			{
-				$set .= "{$gruda}nome = '{$this->nome}'";
+				$set .= "{$gruda}nome = '" . addslashes($this->nome) . "'";
 				$gruda = ", ";
 			}
 			if( is_numeric( $this->idmun ) )
@@ -506,7 +506,7 @@ class clsPublicLogradouro
 
 	/**
 	 * Retorna uma lista filtrados de acordo com os parametros
-	 * 
+	 *
 	 * @param string str_idtlog
 	 * @param string str_nome
 	 * @param integer int_idmun
@@ -529,7 +529,7 @@ class clsPublicLogradouro
 	{
 		$select  = ", m.nome AS nm_municipio, m.sigla_uf, u.nome AS nm_estado, u.idpais, p.nome AS nm_pais ";
 		$from = "l, public.municipio m, public.uf u, public.pais p ";
-		
+
 		$sql = "SELECT {$this->_campos_lista}{$select} FROM {$this->_tabela} {$from}";
 		$whereAnd = " AND ";
 
@@ -547,7 +547,7 @@ class clsPublicLogradouro
 		}
 		if( is_string( $str_nome ) )
 		{
-			$filtros .= "{$whereAnd} l.nome LIKE '%{$str_nome}%'";
+			$filtros .= "{$whereAnd} l.nome LIKE E'%" . addslashes($str_nome) . "%'";
 			$whereAnd = " AND ";
 		}
 		if( is_numeric( $int_idmun ) )

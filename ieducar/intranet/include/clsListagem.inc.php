@@ -35,6 +35,7 @@ if (class_exists('clsPmiajudaPagina')) {
 }
 
 require_once 'Portabilis/View/Helper/Application.php';
+require_once 'Portabilis/View/Helper/Inputs.php';
 
 define('alTopLeft', 'valign=top align=left');
 define('alTopCenter', 'valign=top align=center');
@@ -744,5 +745,12 @@ class clsListagem extends clsCampos
   function erro($msg, $redir = 'index.php')
   {
     die("<div style='width: 300px; height: 100px; font: 700 11px Arial,Helv,Sans; background-color: #f6f6f6; color: #e11; position: absolute; left: 50%; top: 50%; margin-top: -20px; margin-left: -100px; text-align: center; border: solid 1px #a1a1f1;'>{$msg}</div><script>setTimeout('window.location=\'$redir\'',5000);</script>");
+  }
+
+  public function inputsHelper() {
+    if (! isset($this->_inputsHelper))
+      $this->_inputsHelper = new Portabilis_View_Helper_Inputs($this);
+
+    return $this->_inputsHelper;
   }
 }
