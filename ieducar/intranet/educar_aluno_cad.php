@@ -262,11 +262,6 @@ class indice extends clsCadastro
     $this->campoOculto('ref_idpes', $this->ref_idpes);
     $this->campoAdicionaTab('Dados Pessoais', $this->tab_habilitado);
 
-    if ($this->cod_aluno) {
-      $obj_matricula = new clsPmieducarMatricula();
-      $lst_matricula = $obj_matricula->lista(NULL, NULL, NULL, NULL, NULL, NULL, $this->cod_aluno);
-    }
-
     if (!empty($this->ref_idpes)) {
       $obj_aluno = new clsPmieducarAluno();
       $lista_aluno = $obj_aluno->lista(NULL, NULL, NULL, NULL, NULL,
