@@ -700,7 +700,7 @@ class clsPmieducarExemplar
 	 *
 	 * @return array
 	 */
-	function lista_com_acervos( $int_cod_exemplar = null, $int_ref_cod_fonte = null, $int_ref_cod_motivo_baixa = null, $int_ref_cod_acervo = null, $int_ref_cod_situacao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_permite_emprestimo = null, $int_preco = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $date_data_aquisicao_ini = null, $date_data_aquisicao_fim = null, $int_ref_exemplar_tipo = null, $str_titulo_livro = null,$int_ref_cod_biblioteca = null, $str_titulo = null, $int_ref_cod_instituicao = null, $int_ref_cod_escola = null, $int_ref_cod_acervo_colecao = null, $int_ref_cod_acervo_editora = null)	{
+	function lista_com_acervos( $int_cod_exemplar = null, $int_ref_cod_fonte = null, $int_ref_cod_motivo_baixa = null, $int_ref_cod_acervo = null, $int_ref_cod_situacao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_permite_emprestimo = null, $int_preco = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $date_data_aquisicao_ini = null, $date_data_aquisicao_fim = null, $int_ref_exemplar_tipo = null, $str_titulo_livro = null,$int_ref_cod_biblioteca = null, $int_ref_cod_instituicao = null, $int_ref_cod_escola = null, $int_ref_cod_acervo_colecao = null, $int_ref_cod_acervo_editora = null, $tombo)	{
 		$sql = "SELECT {$this->_campos_lista}, a.ref_cod_biblioteca, a.titulo FROM {$this->_tabela} e, {$this->_schema}acervo a, {$this->_schema}biblioteca b";
 
 		$whereAnd = " AND";
@@ -791,24 +791,22 @@ class clsPmieducarExemplar
 			$filtros .= "{$whereAnd} e.data_aquisicao <= '{$date_data_aquisicao_fim}'";
 			$whereAnd = " AND ";
 		}
-		if( is_string( $str_titulo ) )
+		if( is_string( $str_titulo_livro ) )
 		{
-			$filtros .= "{$whereAnd} a.titulo LIKE '%{$str_titulo}%'";
+			$filtros .= "{$whereAnd} to_ascii(a.titulo) LIKE to_ascii('%{$str_titulo_livro}%')";
 			$whereAnd = " AND ";
 		}
 
+		if (is_numeric($tombo)) {
+			$filtros .= "{$whereAnd} e.tombo = $tombo";
+			$whereAnd = " AND ";
+		}
 
 		/**
 		 * INICIO  - PESQUISAS EXTRAS
 		 */
 		$whereAnd2 = " AND ";
 		$filtros_extra = null;
-
-		if( is_string( $str_titulo_livro ) )
-		{
-			$filtros_extra .= "{$whereAnd2} to_ascii(a.titulo) ilike to_ascii('%{$date_data_aquisicao_fim}%') ";
-			$whereAnd2 = " AND ";
-		}
 
 		if( is_numeric( $int_ref_exemplar_tipo ) )
 		{

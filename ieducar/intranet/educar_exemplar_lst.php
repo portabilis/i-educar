@@ -85,7 +85,7 @@ class indice extends clsListagem
 	var $ref_cod_biblioteca;
 	var $ref_cod_instituicao;
 	var $ref_cod_escola;
-	
+
 	var $ref_cod_acervo_colecao;
 	var $ref_cod_acervo_editora;
 
@@ -157,7 +157,7 @@ class indice extends clsListagem
 
 				}
 			}
-			
+
 			$obj_colecao = new clsPmieducarAcervoColecao();
 			$obj_colecao->setOrderby("nm_colecao ASC");
 			$obj_colecao->setCamposLista("cod_acervo_colecao, nm_colecao");
@@ -169,7 +169,7 @@ class indice extends clsListagem
 					$opcoes_colecao[$colecao["cod_acervo_colecao"]] = $colecao["nm_colecao"];
 				}
 			}
-			
+
 			$obj_editora = new clsPmieducarAcervoEditora();
 			$obj_editora->setCamposLista("cod_acervo_editora, nm_editora");
 			$obj_editora->setOrderby("nm_editora ASC");
@@ -182,7 +182,7 @@ class indice extends clsListagem
 					$opcoes_editora[$editora["cod_acervo_editora"]] = $editora["nm_editora"];
 				}
 			}
-			
+
 			$obj_fonte = new clsPmieducarFonte();
 			$obj_fonte->setOrderby("nm_fonte ASC");
 			$obj_fonte->setCamposLista("cod_fonte, nm_fonte");
@@ -197,12 +197,12 @@ class indice extends clsListagem
 		}
 
 		$this->campoLista( "ref_cod_exemplar_tipo", "Exemplar Tipo", $opcoes, $this->ref_cod_exemplar_tipo,null,null,null,null,null,false );
-		
+
 		$this->campoLista("ref_cod_acervo_colecao", "Acervo Coleção", $opcoes_colecao, $this->ref_cod_acervo_colecao, "", false, "", "", false, false);
 		$this->campoLista("ref_cod_acervo_editora", "Editora", $opcoes_editora, $this->ref_cod_acervo_editora, "", false, "", "", false, false);
 		$this->campoLista("ref_cod_fonte", "Fonte", $opcoes_fonte, $this->ref_cod_fonte, "", false, "", "", false, false);
-		
-		
+
+
 		$this->campoTexto("titulo_livro","T&iacute;tulo da Obra",$this->titulo_livro,25,255,false);
 		$this->campoNumero("cod_exemplar","Tombo",$this->cod_exemplar,10,50,false);
 
@@ -228,7 +228,7 @@ class indice extends clsListagem
 		$obj_exemplar->setLimite( $this->limite, $this->offset );
 
 		$lista = $obj_exemplar->lista_com_acervos(
-			$this->cod_exemplar,
+			null,
 			$this->ref_cod_fonte,
 			null,
 			null,
@@ -247,11 +247,11 @@ class indice extends clsListagem
 			$this->ref_cod_exemplar_tipo,
 			$this->titulo_livro,
 			$this->ref_cod_biblioteca,
-			null,
 			$this->ref_cod_instituicao,
 			$this->ref_cod_escola,
 			$this->ref_cod_acervo_colecao,
-			$this->ref_cod_acervo_editora
+			$this->ref_cod_acervo_editora,
+			$this->cod_exemplar
 		);
 
 		$total = $obj_exemplar->_total;
@@ -472,7 +472,7 @@ function getAcervoEditora(xml_acervo_editora)
 		}
 	}
 	else
-		campoEditora.options[0].text = 'A biblioteca não possui nenhuma editora';	
+		campoEditora.options[0].text = 'A biblioteca não possui nenhuma editora';
 }
 
 
@@ -492,7 +492,7 @@ function getFonte(xml_fonte)
 		}
 	}
 	else
-		campoFonte.options[0].text = 'A biblioteca não possui nenhuma editora';	
+		campoFonte.options[0].text = 'A biblioteca não possui nenhuma editora';
 }
 
 document.getElementById('ref_cod_biblioteca').onchange = function()
@@ -508,29 +508,29 @@ document.getElementById('ref_cod_biblioteca').onchange = function()
 
 	var xml_exemplar_tipo = new ajax( getExemplarTipo );
 	xml_exemplar_tipo.envia( "educar_exemplar_tipo_xml.php?bib="+campoBiblioteca );
-	
-	
+
+
 	var campoColecao = document.getElementById('ref_cod_acervo_colecao');
 	campoColecao.length = 1;
 	campoColecao.disabled = true;
 	campoColecao.options[0].text = 'Carregando coleção';
 	var xml_acervo_colecao = new ajax(getAcervoColecao);
 	xml_acervo_colecao.envia("educar_acervo_colecao_xml.php?bib="+campoBiblioteca);
-	
+
 	var campoEditora = document.getElementById('ref_cod_acervo_editora');
 	campoEditora.length = 1;
 	campoEditora.disabled = true;
 	campoEditora.options[0].text = 'Carregando editora';
 	var xml_acervo_editora = new ajax(getAcervoEditora);
 	xml_acervo_editora.envia("educar_acervo_editora_xml.php?bib="+campoBiblioteca);
-	
+
 	var campoFonte = document.getElementById('ref_cod_fonte');
 	campoFonte.length = 1;
 	campoFonte.disabled = true;
 	campoFonte.options[0].text = 'Carregando fonte';
 	var xml_acervo_fonte = new ajax(getFonte);
 	xml_acervo_fonte.envia("educar_fonte_xml.php?bib="+campoBiblioteca);
-	
+
 };
 
 function pesquisa()
