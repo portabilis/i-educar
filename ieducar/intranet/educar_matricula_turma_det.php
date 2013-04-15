@@ -204,6 +204,15 @@ class indice extends clsDetalhe
     $this->possuiEnturmacaoTurmaDestino = false;
     $this->turmaOrigemMesmaDestino = false;
 
+    $this->addDetalhe(array('<b>Turma selecionada</b>' , '<b>' . $registro['nm_turma'] . '</b>'));
+
+    $this->addDetalhe(array('Total de vagas', $registro['max_aluno']));
+
+    if (is_numeric($total_alunos)) {
+      $this->addDetalhe(array('Alunos enturmados', $total_alunos));
+      $this->addDetalhe(array('Vagas disponíveis', $registro['max_aluno'] - $total_alunos));
+    }
+
     if ($this->possuiEnturmacao) {
       //se possui uma enturmacao mostra o nome, se mais de uma mostra select para selecionar
       if (count($enturmacoes) > 1) {
@@ -227,23 +236,7 @@ class indice extends clsDetalhe
         $selectEnturmacoes = "<input id='ref_cod_turma_origem' type='hidden' value = '{$enturmacoes[0]['ref_cod_turma']}'/>{$enturmacoes[0]['nm_turma']}";
       }
 
-      $this->addDetalhe(array('Turma atual (origem)', $selectEnturmacoes));
-    }
-    else
-      $this->addDetalhe(array('Turma atual (origem)', 'Sem enturmações'));
-
-
-    if ($registro['nm_turma']) {
-      $this->addDetalhe(array('Turma destino' , $registro['nm_turma']));
-    }
-
-    if ($registro['max_aluno']) {
-      $this->addDetalhe(array('Total de vagas', $registro['max_aluno']));
-    }
-
-    if (is_numeric($total_alunos)) {
-      $this->addDetalhe(array('Alunos nesta turma', $total_alunos));
-      $this->addDetalhe(array('Vagas restantes', $registro['max_aluno'] - $total_alunos));
+      $this->addDetalhe(array('<b>Enturmação</b>', $selectEnturmacoes));
     }
 
     $this->addDetalhe(array(
@@ -287,7 +280,7 @@ class indice extends clsDetalhe
             if (turmaOrigemId && turmaOrigemId.value)
               document.formcadastro.ref_cod_turma_origem.value = turmaOrigemId.value;
             else {
-              alert("Por favor selecione a turma atual (que será transferida).");
+              alert("Por favor, selecione a enturmação a ser transferida.");
               return false;
             }
           }
@@ -301,7 +294,7 @@ class indice extends clsDetalhe
 
         function removerEnturmacao(ref_cod_matricula, ref_cod_turma_destino) {
 
-          if (! confirm("Tem certeza que deseja remover a enturmação (da turma destino)?"))
+          if (! confirm("Confirma remoção da enturmação?"))
             return false;
 
           document.formcadastro.ref_cod_turma_origem.value = "remover-enturmacao-destino";
@@ -314,22 +307,25 @@ class indice extends clsDetalhe
 
     print $script;
 
-    $obj_permissoes = new clsPermissoes();
-    if (! $this->turmaOrigemMesmaDestino && $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7)) {
+    $canCreate = new clsPermissoes();
+    $canCreate = $canCreate->permissao_cadastra(578, $this->pessoa_logada, 7);
 
+    if ($this->possuiEnturmacaoTurmaDestino && $canCreate){
+      $this->array_botao            = array('Remover (enturmação) da turma selecionada');
+      $this->array_botao_url_script = array("removerEnturmacao({$this->ref_cod_matricula}, {$this->ref_cod_turma})");
+    }
+
+    if (! $this->turmaOrigemMesmaDestino && $canCreate) {
+      //mover enturmação
       if ($this->possuiEnturmacao) {
-        //mover enturmação
-        $this->array_botao = array('Transferir (turma atual) para turma destino');
-        $this->array_botao_url_script = array("enturmar({$this->ref_cod_matricula}, {$this->ref_cod_turma}, \"transferir\")");
+        $this->array_botao[]            = 'Transferir para turma selecionada';
+        $this->array_botao_url_script[] = "enturmar({$this->ref_cod_matricula}, {$this->ref_cod_turma}, \"transferir\")";
       }
 
       //nova enturmação
-      $this->array_botao[] = 'Nova enturmação (na turma destino)';
-      $this->array_botao_url_script[] = "enturmar({$this->ref_cod_matricula}, {$this->ref_cod_turma}, \"nova\")";
-
-      if ($this->possuiEnturmacaoTurmaDestino){
-        $this->array_botao[] = 'Remover enturmação (turma destino)';
-        $this->array_botao_url_script[] = "removerEnturmacao({$this->ref_cod_matricula}, {$this->ref_cod_turma})";
+      if (! $this->possuiEnturmacaoTurmaDestino && $canCreate) {
+        $this->array_botao[]            = 'Enturmar na turma selecionada';
+        $this->array_botao_url_script[] = "enturmar({$this->ref_cod_matricula}, {$this->ref_cod_turma}, \"nova\")";
       }
     }
 

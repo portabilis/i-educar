@@ -1,8 +1,5 @@
 <?php
 
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
-
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -35,6 +32,7 @@
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
+require_once 'App/Model/MatriculaSituacao.php';
 
 class MatriculaController extends ApiCoreController
 {
@@ -42,6 +40,11 @@ class MatriculaController extends ApiCoreController
   protected function canGetMatriculas() {
     return $this->validatesId('escola') &&
            $this->validatesId('aluno');
+  }
+
+  protected function canDeleteAbandono() {
+    return  $this->validatesPresenceOf('id') &&
+            $this->validatesExistenceOf('matricula', $this->getRequest()->id);
   }
 
   // search options
@@ -189,6 +192,17 @@ class MatriculaController extends ApiCoreController
     }
   }
 
+  protected function deleteAbandono() {
+    if ($this->canDeleteAbandono()) {
+      $matriculaId       = $this->getRequest()->id;
+      $situacaoAndamento = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+
+      $sql = 'update pmieducar.matricula set aprovado = $1 where cod_matricula = $2';
+      $this->fetchPreparedQuery($sql, array($situacaoAndamento, $matriculaId));
+
+      $this->messenger->append('Abandono desfeito.', 'success');
+    }
+  }
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'matricula'))
@@ -199,6 +213,9 @@ class MatriculaController extends ApiCoreController
 
     elseif ($this->isRequestFor('get', 'matricula-search'))
       $this->appendResponse($this->search());
+
+    elseif ($this->isRequestFor('delete', 'abandono'))
+      $this->appendResponse($this->deleteAbandono());
 
     else
       $this->notImplementedOperationError();

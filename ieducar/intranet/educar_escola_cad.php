@@ -402,7 +402,7 @@ class indice extends clsCadastro
 		}
 		else
 		{
-  		$this->inputsHelper()->integer('escola_inep_id', array('label' => 'Código inep', 'required' => false));
+  		$this->inputsHelper()->integer('escola_inep_id', array('label' => 'Código inep', 'required' => false, 'max_length' => 14));
 
 			if( $_POST )
 			foreach( $_POST AS $campo => $val )
