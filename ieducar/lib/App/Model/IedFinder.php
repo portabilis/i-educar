@@ -335,8 +335,8 @@ class App_Model_IedFinder extends CoreExt_Entity
    * Retorna array com as referências de pmieducar.escola_serie_disciplina
    * a modules.componente_curricular ('ref_ref_cod_disciplina').
    *
-   * @param  int $anoEscolar O código do ano escolar/série.
-   * @param  int $escola     O código da escola.
+   * @param  int $serieId O código do ano escolar/série.
+   * @param  int $escola  O código da escola.
    * @param  ComponenteCurricular_Model_ComponenteDataMapper $mapper (Opcional)
    *   Instância do mapper para recuperar todas as instâncias persistidas de
    *   ComponenteCurricular_Model_Componente atribuídas no ano escolar/série da
@@ -345,20 +345,26 @@ class App_Model_IedFinder extends CoreExt_Entity
    * @throws App_Model_Exception caso não existam componentes curriculares
    *   atribuídos ao ano escolar/série da escola.
    */
-  public static function getEscolaSerieDisciplina($anoEscolar, $escola,
+  public static function getEscolaSerieDisciplina($serieId, $escolaId,
     ComponenteCurricular_Model_ComponenteDataMapper $mapper = NULL,
     $disciplinaId = null)
   {
+    if (is_null($serieId))
+      throw new App_Model_Exception('O parametro serieId não pode ser nulo');
+
+    if (is_null($escolaId))
+      throw new App_Model_Exception('O parametro escolaId não pode ser nulo');
+
     // Disciplinas na série na escola
     $escolaSerieDisciplina = self::addClassToStorage('clsPmieducarEscolaSerieDisciplina',
       NULL, 'include/pmieducar/clsPmieducarEscolaSerieDisciplina.inc.php');
 
-    $disciplinas = $escolaSerieDisciplina->lista($anoEscolar, $escola, $disciplinaId, 1);
+    $disciplinas = $escolaSerieDisciplina->lista($serieId, $escolaId, $disciplinaId, 1);
 
     if (FALSE === $disciplinas) {
       throw new App_Model_Exception(sprintf(
           'Nenhuma disciplina para a série (%d) e a escola (%d) informados',
-          $anoEscolar, $escola
+          $serieId, $escolaId
       ));
     }
 
@@ -372,15 +378,15 @@ class App_Model_IedFinder extends CoreExt_Entity
       $componentes[] = $componente;
     }
 
-    return self::_hydrateComponentes($componentes, $anoEscolar, $mapper);
+    return self::_hydrateComponentes($componentes, $serieId, $mapper);
   }
 
   /**
    * Retorna as instâncias de ComponenteCurricular_Model_Componente de uma turma.
    *
-   * @param int $anoEscolar O código do ano escolar/série da turma.
-   * @param int $escola     O código da escola da turma.
-   * @param int $turma      O código da turma.
+   * @param int $serieId O código do ano escolar/série da turma.
+   * @param int $escola  O código da escola da turma.
+   * @param int $turma   O código da turma.
    * @param ComponenteCurricular_Model_TurmaDataMapper $mapper (Opcional) Instância
    *   do mapper para selecionar todas as referências de
    *   ComponenteCurricular_Model_Componente persistidas para a turma.
@@ -389,7 +395,7 @@ class App_Model_IedFinder extends CoreExt_Entity
    *   ComponenteCurricular_Model_Componente recuperadas por $mapper.
    * @return array
    */
-  public static function getComponentesTurma($anoEscolar, $escola, $turma,
+  public static function getComponentesTurma($serieId, $escola, $turma,
     ComponenteCurricular_Model_TurmaDataMapper $mapper = NULL,
     ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper = NULL,
     $componenteCurricularId = null)
@@ -408,7 +414,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     // Não existem componentes específicos para a turma
     if (0 == count($componentesTurma)) {
-      return self::getEscolaSerieDisciplina($anoEscolar, $escola, $componenteMapper, $componenteCurricularId);
+      return self::getEscolaSerieDisciplina($serieId, $escola, $componenteMapper, $componenteCurricularId);
     }
 
     $componentes = array();
@@ -421,7 +427,7 @@ class App_Model_IedFinder extends CoreExt_Entity
       $componentes[] = $componente;
     }
 
-    return self::_hydrateComponentes($componentes, $anoEscolar, $componenteMapper);
+    return self::_hydrateComponentes($componentes, $serieId, $componenteMapper);
   }
 
   /**
