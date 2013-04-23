@@ -89,7 +89,7 @@ class ComponenteCurricular_Model_Componente extends CoreExt_Entity
 
     return array(
       'instituicao' => new CoreExt_Validate_Choice(array('choices' => $instituicoes)),
-      'nome' => new CoreExt_Validate_String(array('min' => 5, 'max' => 100)),
+      'nome' => new CoreExt_Validate_String(array('min' => 5, 'max' => 200)),
       'abreviatura' => new CoreExt_Validate_String(array('min' => 2, 'max' => 15)),
       'tipo_base' => new CoreExt_Validate_Choice(array('choices' => $tipos)),
       'area_conhecimento' => new CoreExt_Validate_Choice(array('choices' => $areas)),
