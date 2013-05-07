@@ -7,10 +7,10 @@
   -- @license  @@license@@
   -- @version  $Id$
 
-  ALTER TABLE modules.componente_curricular ALTER COLUMN nome type character(200);
+  ALTER TABLE modules.componente_curricular ALTER COLUMN nome type character varying(200);
 
   -- //@UNDO
 
-  ALTER TABLE modules.componente_curricular ALTER COLUMN nome type character(100);
+  ALTER TABLE modules.componente_curricular ALTER COLUMN nome type character varying(100);
 
   -- //
