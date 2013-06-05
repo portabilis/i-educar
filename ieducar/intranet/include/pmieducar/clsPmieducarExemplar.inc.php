@@ -395,13 +395,22 @@ class clsPmieducarExemplar
 			$campos .= "{$gruda}ativo";
 			$valores .= "{$gruda}'1'";
 			$gruda = ", ";
-			if( is_string( $this->data_aquisicao ) )
+			
+                        if( is_string( $this->data_aquisicao ) )
 			{
 				$campos .= "{$gruda}data_aquisicao";
 				$valores .= "{$gruda}'{$this->data_aquisicao}'";
 				$gruda = ", ";
 			}
-
+                        
+                        if($this->tombo != NULL){
+                            $sql = "SELECT * FROM pmieducar.exemplar WHERE tombo = {$this->tombo}";
+                            $consulta = new clsBanco();
+                            $tombo = $consulta->CampoUnico($sql);
+                            if($tombo != NULL){
+                                return false;
+                            }
+                        }
 
 			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
 			return $db->InsertId( "{$this->_tabela}_cod_exemplar_seq");
