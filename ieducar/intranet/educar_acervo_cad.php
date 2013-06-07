@@ -395,7 +395,7 @@ class indice extends clsCadastro
 		$this->campoNumero( "num_edicao", "N&uacute;mero Edic&atilde;o", $this->num_edicao, 20, 255, true );
 		$this->campoNumero( "ano", "Ano", $this->ano, 5, 4, true );
 		$this->campoNumero( "num_paginas", "N&uacute;mero P&aacute;ginas", $this->num_paginas, 5, 255, true );
-		$this->campoNumero( "isbn", "ISBN", $this->isbn, 20, 13, true );
+		$this->campoNumero( "isbn", "ISBN", $this->isbn, 20, 13, false );
 	}
 
 	function Novo()
