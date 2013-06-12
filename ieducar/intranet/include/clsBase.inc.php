@@ -718,7 +718,6 @@ class clsBase extends clsConfig
         $this->CadastraAcesso();
         $saida_geral = $this->MakeHeadHtml();
 
-        // @todo else ruim, colocar abre e fecha colchetes ao redor de foreach.
         if ($this->renderMenu) {
           $saida_geral .= $this->MakeBody();
         }
