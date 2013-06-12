@@ -299,7 +299,8 @@ class clsListagem extends clsCampos
         $tipo = 'cad';
       }
 
-      $barra = '<b>Filtros de busca</b>';
+      $barra = '<b>Caminho: '. $_SERVER['SCRIPT_NAME']. '</b><br>';
+      $barra .= '<b>Filtros de busca</b>';
 
       if (class_exists('clsPmiajudaPagina')) {
         $ajudaPagina = new clsPmiajudaPagina();
