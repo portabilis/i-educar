@@ -59,7 +59,10 @@ class Portabilis_View_Helper_Input_Date extends Portabilis_View_Helper_Input_Cor
                                  'label_hint'     => '',
                                  'inline'         => false,
                                  'callback'       => false,
-                                 'disabled'       => false);
+                                 'disabled'       => false,
+
+                                 // opcoes suportadas pelo elemento, mas não pelo helper ieducar
+                                 'size'           => 9);
 
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
 
@@ -70,5 +73,23 @@ class Portabilis_View_Helper_Input_Date extends Portabilis_View_Helper_Input_Cor
 
     call_user_func_array(array($this->viewInstance, 'campoData'), $inputOptions);
     $this->fixupPlaceholder($inputOptions);
+
+    // implementado fixup via js, pois algumas opções não estão sendo verificadas pelo helper ieducar.
+    $this->fixupOptions($inputOptions);
+  }
+
+  protected function fixupOptions($inputOptions) {
+    $id           = $inputOptions['id'];
+
+    $sizeFixup    = "\$input.attr('size', " . $inputOptions['size'] . ");";
+    $disableFixup = $inputOptions['disabled'] ? "\$input.attr('disabled', 'disabled');" : '';
+
+    $script = "
+      var \$input = \$j('#" . $id . "');
+      $sizeFixup
+      $disableFixup
+    ";
+
+    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $script, $afterReady = true);
   }
 }

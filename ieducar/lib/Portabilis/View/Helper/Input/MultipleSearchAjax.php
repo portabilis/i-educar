@@ -81,18 +81,11 @@ class Portabilis_View_Helper_Input_MultipleSearchAjax extends Portabilis_View_He
 
 
   protected function loadAssets() {
-    $cssFile = '/modules/Portabilis/Assets/Plugins/Chosen/chosen.css';
-    Portabilis_View_Helper_Application::loadStylesheet($this->viewInstance, $cssFile);
+    Portabilis_View_Helper_Application::loadChosenLib($this->viewInstance);
+    Portabilis_View_Helper_Application::loadAjaxChosenLib($this->viewInstance);
 
-    // AjaxChosen requires this fixup, see https://github.com/meltingice/ajax-chosen
-    $fixupCss = ".chzn-container .chzn-results .group-result { display: list-item; }";
-    Portabilis_View_Helper_Application::embedStylesheet($this->viewInstance, $fixupCss);
-
-
-    $jsFiles = array('/modules/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js',
-                     '/modules/Portabilis/Assets/Plugins/AjaxChosen/ajax-chosen.min.js',
-                     '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearchAjax.js');
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFiles);
+    $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearchAjax.js';
+    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
   }
 
 

@@ -84,7 +84,7 @@ class Portabilis_Business_Professor {
     $sql = "select cod_turma as id, nm_turma as nome from pmieducar.turma where ref_ref_cod_escola = $1
             and (ref_ref_cod_serie = $2 or ref_ref_cod_serie_mult = $2) and ativo = 1 and
             visivel != 'f' and turma_turno_id in ( select periodo from servidor_alocacao where
-            ref_cod_escola = ref_ref_cod_escola and ref_cod_servidor = $3 and ativo = 1 limit 1)
+            ref_cod_escola = ref_ref_cod_escola and ref_cod_servidor = $3 and ativo = 1)
             order by nm_turma asc";
 
     return self::fetchPreparedQuery($sql, array('params' => array($escolaId, $serieId, $userId)));

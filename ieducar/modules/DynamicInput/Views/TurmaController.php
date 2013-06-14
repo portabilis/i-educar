@@ -55,12 +55,22 @@ class TurmaController extends ApiCoreController
            $this->validatesId('serie');
   }
 
+  protected function turmasPorAno($escolaId, $ano) {
+    $anoLetivo                 = new clsPmieducarEscolaAnoLetivo();
+    $anoLetivo->ref_cod_escola = $escolaId;
+    $anoLetivo->ano            = $ano;
+    $anoLetivo                 = $anoLetivo->detalhe();
+
+    return ($anoLetivo['turmas_por_ano'] == 1);
+  }
+
   protected function getTurmas() {
     if ($this->canGetTurmas()) {
       $userId        = $this->getSession()->id_pessoa;
       $instituicaoId = $this->getRequest()->instituicao_id;
       $escolaId      = $this->getRequest()->escola_id;
       $serieId       = $this->getRequest()->serie_id;
+      $ano           = $this->getRequest()->ano;
 
       $isProfessor   = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
 
@@ -68,11 +78,25 @@ class TurmaController extends ApiCoreController
         $turmas = Portabilis_Business_Professor::turmasAlocado($escolaId, $serieId, $userId);
 
       else {
-        $sql    = "select cod_turma as id, nm_turma as nome  from pmieducar.turma where ref_ref_cod_escola = $1
+        $sql    = "select cod_turma as id, nm_turma as nome from pmieducar.turma where ref_ref_cod_escola = $1
                    and (ref_ref_cod_serie = $2 or ref_ref_cod_serie_mult = $2) and ativo = 1 and
                    visivel != 'f' order by nm_turma asc";
 
         $turmas = $this->fetchPreparedQuery($sql, array($escolaId, $serieId));
+      }
+
+      // caso no ano letivo esteja definido para filtrar turmas por ano,
+      // somente retorna as turmas do ano letivo.
+
+      if ($ano && $this->turmasPorAno($escolaId, $ano)) {
+        foreach ($turmas as $index => $t) {
+          $turma            = new clsPmieducarTurma();
+          $turma->cod_turma = $t['id'];
+          $turma            = $turma->detalhe();
+
+          if ($turma['ano'] != $ano)
+            unset($turmas[$index]);
+        }
       }
 
       $options = array();
