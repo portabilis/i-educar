@@ -93,7 +93,7 @@ class EditController extends Core_Controller_Page_EditController
 
     // Nome
     $this->campoTexto('nome', $this->_getLabel('nome'), $this->getEntity()->nome,
-      50, 100, TRUE, FALSE, FALSE, $this->_getHelp('nome'));
+      50, 200, TRUE, FALSE, FALSE, $this->_getHelp('nome'));
 
     // Abreviatura
     $this->campoTexto('abreviatura', $this->_getLabel('abreviatura'),
