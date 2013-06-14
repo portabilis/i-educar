@@ -253,6 +253,26 @@ class clsListagem extends clsCampos
 
     return NULL;
   }
+  
+  function breadcrumbs($separator = ' &raquo; ', $home = 'Home') {
+    
+    $path = array_filter(explode('/', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)));
+    $base_url = ($_SERVER['HTTPS'] ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/';
+    $breadcrumbs = array("<a href=\"$base_url\">$home</a>");
+ 
+    $last = end(array_keys($path));
+ 
+    foreach ($path AS $x => $crumb) {
+        $title = ucwords(str_replace(array('.php', '_'), Array('', ' '), $crumb));
+        if ($x != $last){
+            $breadcrumbs[] = '<a href="$base_url$crumb">$title</a>';
+        }else{
+            $breadcrumbs[] = $title;
+        }
+    }
+ 
+    return implode($separator, $breadcrumbs);
+} 
 
   function RenderHTML()
   {
@@ -298,8 +318,13 @@ class clsListagem extends clsCampos
       else {
         $tipo = 'cad';
       }
-
-      $barra = '<b>Caminho: '. $_SERVER['SCRIPT_NAME']. '</b><br>';
+      
+      $server = $_SERVER['SERVER_NAME'];
+      $endereco = $_SERVER ['REQUEST_URI'];
+      $enderecoPagina = $_SERVER['PHP_SELF'];
+      
+      //$barra = '<b>Localizacao: http://'.$server.$endereco.'</b><br>';
+      $barra = '<b>Localizacao:'. $enderecoPagina .'</b><br>';
       $barra .= '<b>Filtros de busca</b>';
 
       if (class_exists('clsPmiajudaPagina')) {
