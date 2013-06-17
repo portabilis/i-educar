@@ -307,7 +307,7 @@ nome_disciplina,
                     turma.ativo = 1 AND
 		matricula_turma.ativo = 1) AS nome_turma,
 
-       (select turma_turno.nm_turno from pmieducar.turma_turno, pmieducar.turma where turma_turno.turma_turno_id = turma.turma_turno_id and turma.cod_turma = matricula_turma.ref_cod_turma and  instituicao_id = $P{instituicao} limit 1) as periodo,
+       (select turma_turno.nome from pmieducar.turma_turno, pmieducar.turma where turma_turno.id = turma.turma_turno_id and turma.cod_turma = matricula_turma.ref_cod_turma limit 1) as periodo,
 
 		(SELECT CASE WHEN (SELECT mt.aprovado
 		                     FROM pmieducar.matricula mt

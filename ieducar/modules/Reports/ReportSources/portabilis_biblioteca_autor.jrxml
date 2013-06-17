@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_biblioteca_autor" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ff823efd-75fc-4ad7-ae5f-fa380463488d">
+	<property name="ireport.zoom" value="1.2100000000000013"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="instituicao" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="escola" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.lang.String"/>
+	<parameter name="ordem" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT public.fcn_upper(instituicao.nm_instituicao) as nm_instituicao,
+       cod_acervo_autor,
+      translate(public.fcn_upper(nm_autor),'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ', 'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN') as nm_autor,
+       descricao,
+       ref_cod_biblioteca,
+       (SELECT biblioteca.nm_biblioteca
+          FROM pmieducar.biblioteca
+         WHERE acervo_autor.ref_cod_biblioteca = biblioteca.cod_biblioteca) as nm_biblioteca,
+
+      (SELECT COALESCE((SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))
+          FROM cadastro.pessoa ps,
+               cadastro.juridica
+         WHERE escola.ref_idpes = juridica.idpes AND
+               juridica.idpes = ps.idpes AND
+	     ps.idpes = escola.ref_idpes),(SELECT nm_escola
+                                               FROM pmieducar.escola_complemento
+                                              WHERE ref_cod_escola = escola.cod_escola))) AS nm_escola,
+
+       (SELECT COALESCE((SELECT COALESCE((SELECT logradouro.nome
+         FROM public.logradouro,
+              cadastro.juridica,
+              cadastro.pessoa ps,
+              cadastro.endereco_pessoa
+        WHERE juridica.idpes = ps.idpes AND
+              ps.idpes = endereco_pessoa.idpes AND
+              endereco_pessoa.idlog = logradouro.idlog AND
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.logradouro
+                                                    FROM cadastro.endereco_externo
+                                                   WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT logradouro FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS logradouro,
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT bairro.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.bairro FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT bairro FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS bairro,
+
+      (SELECT COALESCE((SELECT COALESCE ((SELECT municipio.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes), (SELECT endereco_externo.cidade FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT municipio FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS municipio,
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT endereco_pessoa.numero
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.numero FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT numero FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS numero,
+
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT municipio.sigla_uf
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro
+        WHERE endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.sigla_uf FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(select inst.ref_sigla_uf from pmieducar.instituicao inst where inst.cod_instituicao = instituicao.cod_instituicao))) AS uf_municipio,
+
+     (SELECT COALESCE((SELECT min(to_char(fone_pessoa.ddd,'99'))
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),COALESCE((SELECT min(to_char(ddd_telefone,'99')) FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola),''))) AS fone_ddd,
+
+     (SELECT COALESCE((SELECT COALESCE((SELECT to_char(endereco_pessoa.cep, '99999-999')
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT to_char(endereco_externo.cep,'99999-999') FROM cadastro.endereco_externo WHERE endereco_externo.idpes = escola.ref_idpes))),(SELECT to_char(escola_complemento.cep,'99999-999') FROM pmieducar.escola_complemento where escola_complemento.ref_cod_escola = escola.cod_escola))) AS cep,
+
+
+     (SELECT COALESCE((SELECT min(to_char(fone_pessoa.fone, '9999-9999'))
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica
+        WHERE juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),COALESCE((SELECT min(to_char(telefone, '9999-9999')) FROM pmieducar.escola_complemento where escola_complemento.ref_cod_escola = escola.cod_escola),''))) AS fone,
+
+   (SELECT COALESCE((SELECT ps.email
+         FROM cadastro.pessoa ps,
+              cadastro.juridica
+        WHERE juridica.idpes = ps.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT email FROM pmieducar.escola_complemento where ref_cod_escola = escola.cod_escola))) AS email
+
+  FROM pmieducar.acervo_autor,
+       pmieducar.biblioteca,
+       pmieducar.instituicao,
+       pmieducar.escola
+ WHERE instituicao.cod_instituicao = $P{instituicao} AND
+       instituicao.cod_instituicao = biblioteca.ref_cod_instituicao AND
+       escola.cod_escola = $P{escola} AND
+       biblioteca.ref_cod_escola = escola.cod_escola AND
+       acervo_autor.ativo = 1
+ORDER BY nm_autor]]>
+	</queryString>
+	<field name="nm_instituicao" class="java.lang.String"/>
+	<field name="cod_acervo_autor" class="java.lang.Integer"/>
+	<field name="nm_autor" class="java.lang.String"/>
+	<field name="descricao" class="java.lang.String"/>
+	<field name="ref_cod_biblioteca" class="java.lang.Integer"/>
+	<field name="nm_biblioteca" class="java.lang.String"/>
+	<field name="nm_escola" class="java.lang.String"/>
+	<field name="logradouro" class="java.lang.String"/>
+	<field name="bairro" class="java.lang.String"/>
+	<field name="municipio" class="java.lang.String"/>
+	<field name="numero" class="java.math.BigDecimal"/>
+	<field name="uf_municipio" class="java.lang.String"/>
+	<field name="fone_ddd" class="java.lang.String"/>
+	<field name="cep" class="java.lang.String"/>
+	<field name="fone" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="4" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="131" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="fa6a8b45-b6f5-44b3-a146-aaf65df8edaf" x="75" y="31" width="307" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Endereço: "+$F{logradouro}+", "+$F{numero}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="ce19fa21-7328-4a02-b28f-17c82bbc03ae" x="75" y="3" width="307" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nm_instituicao}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="636e13b9-bfff-4fa8-a18a-5fc3d5c181be" x="305" y="55" width="233" height="13" forecolor="#000000"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="fea0317c-b154-42a1-9666-798706fe5f3d" x="305" y="43" width="141" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="adcd0540-6f15-4f65-b545-5c7ab8598e03" x="449" y="43" width="77" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="e91902f9-34fa-4ccc-9321-bd98b920a44d" x="75" y="17" width="307" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nm_escola}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="d98a7f55-d02d-4f8e-b839-475d1f68d893" x="75" y="43" width="228" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Bairro:" +$F{bairro}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="c13381d9-31ae-4ae8-8a33-32510373b74d" x="75" y="55" width="201" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Telefone: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8da7af30-27b7-4349-8ba5-7d3e84108b0e" x="67" y="116" width="383" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nm_biblioteca}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="9c36fbc4-ac0d-4a9a-9196-28797e2dc5f6" x="189" y="86" width="138" height="14"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Autores]]></text>
+			</staticText>
+			<image>
+				<reportElement uuid="92a8bbdb-0896-4749-a08c-1653a5a9c2e3" x="10" y="3" width="57" height="46"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="18" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="c41b4b27-6e74-4418-8f84-60491741ae8a" x="279" y="1" width="100" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Descrição]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="78437f30-d99b-472b-8bad-9e5c5e9bcdec" x="25" y="1" width="35" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Código]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c69233c2-5092-4152-85d6-72aeae300c67" x="67" y="1" width="100" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Autor]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="000518be-eb1d-48ed-a65f-0e9c625a4ca9" x="7" y="15" width="544" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="78437f30-d99b-472b-8bad-9e5c5e9bcdec" x="12" y="-15" width="48" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Biblioteca:]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="4f4b607f-d81e-4cf5-9b0e-77a7b46a7cd5" x="279" y="1" width="259" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descricao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="27bfe41c-f4c7-4ec0-873d-a695ac5edf1d" x="25" y="1" width="35" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cod_acervo_autor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="95e7c80c-18d0-4024-ad0f-d615c8e10052" x="67" y="1" width="209" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nm_autor}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="2" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<line>
+				<reportElement uuid="43a64607-e174-47c0-93a7-e319ab53ae62" x="7" y="2" width="544" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="3" splitType="Stretch"/>
+	</summary>
+</jasperReport>

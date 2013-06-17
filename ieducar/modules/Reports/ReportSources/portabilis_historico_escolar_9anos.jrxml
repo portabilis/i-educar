@@ -1,0 +1,2334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_historico_escolar" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b207692a-3e84-4d74-845d-329366699ea8">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="38"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<subDataset name="dataset1" uuid="5d8785c2-e4e7-4276-8f51-0b774abc773f"/>
+	<subDataset name="dataset2" uuid="921a3d0c-00bb-41a8-af22-5f75c89e8523"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Xampp\\xampp\\htdocs\\PHPJasperXML\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="instituicao" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="escola" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="aluno" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select nm_disciplina,
+	MAX(nota) AS NOTA,
+	MAX(nota_1serie) AS NOTA_1SERIE,
+	MAX(nota_2serie) AS NOTA_2SERIE,
+	MAX(nota_3serie) AS NOTA_3SERIE,
+	MAX(nota_4serie) AS NOTA_4SERIE,
+	MAX(nota_5serie) AS NOTA_5SERIE,
+	MAX(nota_6serie) AS NOTA_6SERIE,
+	MAX(nota_7serie) AS NOTA_7SERIE,
+	MAX(nota_8serie) AS NOTA_8SERIE,
+	MAX(nota_9serie) AS NOTA_9SERIE,
+        MAX(ano_1serie) AS ano_1serie,
+        MAX(escola_1serie) AS escola_1serie,
+        MAX(escola_cidade_1serie) AS escola_cidade_1serie,
+        MAX(escola_uf_1serie) AS escola_uf_1serie,
+	MAX(ano_2serie) AS ano_2serie,
+        MAX(escola_2serie) AS escola_2serie,
+        MAX(escola_cidade_2serie) AS escola_cidade_2serie,
+        MAX(escola_uf_2serie) AS escola_uf_2serie,
+        MAX(ano_3serie) AS ano_3serie,
+        MAX(escola_3serie) AS escola_3serie,
+        MAX(escola_cidade_3serie) AS escola_cidade_3serie,
+        MAX(escola_uf_3serie) AS escola_uf_3serie,
+        MAX(ano_4serie) AS ano_4serie,
+        MAX(escola_4serie) AS escola_4serie,
+        MAX(escola_cidade_4serie) AS escola_cidade_4serie,
+        MAX(escola_uf_4serie) AS escola_uf_4serie,
+	MAX(ano_5serie) AS ano_5serie,
+        MAX(escola_5serie) AS escola_5serie,
+        MAX(escola_cidade_5serie) AS escola_cidade_5serie,
+        MAX(escola_uf_5serie) AS escola_uf_5serie,
+        MAX(ano_6serie) AS ano_6serie,
+        MAX(escola_6serie) AS escola_6serie,
+        MAX(escola_cidade_6serie) AS escola_cidade_6serie,
+        MAX(escola_uf_6serie) AS escola_uf_6serie,
+	MAX(ano_7serie) AS ano_7serie,
+        MAX(escola_7serie) AS escola_7serie,
+        MAX(escola_cidade_7serie) AS escola_cidade_7serie,
+        MAX(escola_uf_7serie) AS escola_uf_7serie,
+        MAX(ano_8serie) AS ano_8serie,
+        MAX(escola_8serie) AS escola_8serie,
+        MAX(escola_cidade_8serie) AS escola_cidade_8serie,
+        MAX(escola_uf_8serie) AS escola_uf_8serie,
+	MAX(ano_9serie) AS ano_9serie,
+        MAX(escola_9serie) AS escola_9serie,
+        MAX(escola_cidade_9serie) AS escola_cidade_9serie,
+        MAX(escola_uf_9serie) AS escola_uf_9serie,
+        MAX(data_atual) AS data_atual,
+        MAX(cod_aluno) AS cod_aluno,
+        MAX(nm_instituicao) AS nm_instituicao,
+		MAX(nm_responsavel) AS nm_responsavel,
+        MAX(num_termo) AS nm_termo,
+        MAX(num_livro) AS nm_livro,
+        MAX(num_folha) AS num_folha,
+        MAX(nome_serie_aux) AS nome_serie_aux,
+        MAx(nome_curso) AS nome_curso,
+        MAX(obs1) AS obs1,
+        MAX(obs2) AS obs2,
+        MAX(obs3) AS obs3,
+        MAX(obs4) AS obs4,
+        MAX(obs5) AS obs5,
+        MAX(obs6) AS obs6,
+        MAX(obs7) AS obs7,
+        MAX(obs8) AS obs8,
+        MAX(obs9) AS obs9,
+		MAX(freq1) AS freq1,
+		MAX(freq2) AS freq2,
+		MAX(freq3) AS freq3,
+		MAX(freq4) AS freq4,
+		MAX(freq5) AS freq5,
+		MAX(freq6) AS freq6,
+		MAX(freq7) AS freq7,
+		MAX(freq8) AS freq8,
+		MAX(freq8) AS freq9,
+        MAX(status_serie1) AS status_serie1,
+        MAX(status_serie2) AS status_serie2,
+        MAX(status_serie3) AS status_serie3,
+        MAX(status_serie4) AS status_serie4,
+        MAX(status_serie5) AS status_serie5,
+        MAX(status_serie6) AS status_serie6,
+        MAX(status_serie7) AS status_serie7,
+        MAX(status_serie8) AS status_serie8,
+        MAX(status_serie9) AS status_serie9,
+        MAX(quebra) AS quebra,
+
+      (SELECT COALESCE((SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))
+          FROM cadastro.pessoa ps,
+               cadastro.juridica,
+			   pmieducar.escola
+         WHERE escola.cod_escola = $P{escola} AND
+		       escola.ref_idpes = juridica.idpes AND
+               juridica.idpes = ps.idpes AND
+			   ps.idpes = escola.ref_idpes),(SELECT nm_escola FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS nm_escola,
+
+
+             (SELECT fcn_upper(substring(logradouro.idtlog from 1 for 1)) ||
+              lower(substring(logradouro.idtlog, 2))
+         FROM public.logradouro,
+              cadastro.juridica,
+              cadastro.pessoa ps,
+              cadastro.endereco_pessoa,
+			   pmieducar.escola
+        WHERE escola.cod_escola = $P{escola} AND
+		      juridica.idpes = ps.idpes AND
+              ps.idpes = endereco_pessoa.idpes AND
+              endereco_pessoa.idlog = logradouro.idlog AND
+              juridica.idpes = escola.ref_idpes) AS tipo_logradouro,
+
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT logradouro.nome
+         FROM public.logradouro,
+              cadastro.juridica,
+              cadastro.pessoa ps,
+              cadastro.endereco_pessoa,
+			  pmieducar.escola
+        WHERE escola.cod_escola = $P{escola} AND
+		      juridica.idpes = ps.idpes AND
+              ps.idpes = endereco_pessoa.idpes AND
+              endereco_pessoa.idlog = logradouro.idlog AND
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.logradouro FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(SELECT logradouro FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS logradouro,
+
+
+      (SELECT COALESCE((SELECT COALESCE ((SELECT municipio.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro,
+			  pmieducar.escola
+        WHERE escola.cod_escola = $P{escola} AND
+		      endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes), (SELECT endereco_externo.cidade FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(SELECT municipio FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS municipio,
+
+
+(SELECT COALESCE((SELECT COALESCE((SELECT bairro.nome
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro,
+			   pmieducar.escola
+        WHERE escola.cod_escola = $P{escola} AND
+		      endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.bairro FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(SELECT bairro FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS bairro,
+
+(SELECT COALESCE((SELECT COALESCE((SELECT municipio.sigla_uf
+         FROM public.municipio,
+              cadastro.endereco_pessoa,
+              cadastro.juridica,
+              public.bairro,
+			  pmieducar.escola
+        WHERE escola.cod_escola = $P{escola} AND
+		      endereco_pessoa.idbai = bairro.idbai AND
+              bairro.idmun = municipio.idmun AND
+              juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.sigla_uf FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(select inst.ref_sigla_uf from pmieducar.instituicao inst where inst.cod_instituicao = $P{instituicao}))) AS uf_municipio,
+
+      (SELECT COALESCE((SELECT COALESCE((SELECT endereco_pessoa.numero
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica,
+			  pmieducar.escola
+        WHERE escola.cod_escola = $P{escola} AND
+		      juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT endereco_externo.numero FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(SELECT numero FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS numero,
+
+     (SELECT COALESCE((SELECT COALESCE((SELECT to_char(endereco_pessoa.cep, '99999-999')
+         FROM cadastro.endereco_pessoa,
+              cadastro.juridica,
+			  pmieducar.escola
+        WHERE escola.cod_escola = $P{escola} AND
+		      juridica.idpes = endereco_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT to_char(endereco_externo.cep,'99999-999') FROM cadastro.endereco_externo, pmieducar.escola WHERE endereco_externo.idpes = escola.ref_idpes AND escola.cod_escola = $P{escola}))),(SELECT to_char(escola_complemento.cep,'99999-999') FROM pmieducar.escola_complemento where escola_complemento.ref_cod_escola = $P{escola}))) AS cep,
+
+    (SELECT COALESCE((SELECT min(fone_pessoa.ddd)
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica,
+			  pmieducar.escola
+        WHERE escola.cod_escola = $P{escola} AND
+		      juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT min(ddd_telefone) FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS fone_ddd,
+
+
+     (SELECT COALESCE((SELECT min(to_char(fone_pessoa.fone, '9999-9999'))
+         FROM cadastro.fone_pessoa,
+              cadastro.juridica,
+			  pmieducar.escola
+        WHERE escola.cod_escola = $P{escola} AND
+		      juridica.idpes = fone_pessoa.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT min(to_char(telefone, '9999-9999')) FROM pmieducar.escola_complemento where escola_complemento.ref_cod_escola = $P{escola} ))) AS fone,
+
+
+   (SELECT COALESCE((SELECT ps.email
+         FROM cadastro.pessoa ps,
+              cadastro.juridica,
+			  pmieducar.escola
+        WHERE escola.cod_escola = $P{escola} AND
+		      juridica.idpes = ps.idpes AND
+              juridica.idpes = escola.ref_idpes),(SELECT email FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS email,
+
+       to_char(CURRENT_DATE,'dd/mm/yyyy') AS data_atual,
+       to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
+
+(SELECT public.fcn_upper(pessoa.nome)
+  FROM pmieducar.aluno,
+       cadastro.fisica,
+       cadastro.pessoa
+ WHERE pessoa.idpes = fisica.idpes AND
+       fisica.idpes = aluno.ref_idpes AND
+       aluno.cod_aluno = $P{aluno}) as nome_aluno,
+
+
+(SELECT municipio.nome || '/' || municipio.sigla_uf
+  FROM  public.municipio,
+        cadastro.fisica,
+        pmieducar.aluno
+  where fisica.idmun_nascimento = municipio.idmun AND
+        fisica.idpes = aluno.ref_idpes AND
+        aluno.cod_aluno = $P{aluno}) as cidade_nascimento_uf,
+
+
+(SELECT to_char(fisica.data_nasc,'DD/MM/YYYY')
+FROM   pmieducar.aluno,
+       cadastro.fisica,
+       cadastro.pessoa
+ WHERE pessoa.idpes = fisica.idpes AND
+       fisica.idpes = aluno.ref_idpes AND
+       aluno.cod_aluno = $P{aluno}) as data_nasc,
+
+(SELECT public.fcn_upper(COALESCE(aluno.nm_pai,'NAO INFORMADO')) || ' e ' || public.fcn_upper(COALESCE(aluno.nm_mae,'NAO INFORMADO'))
+FROM   pmieducar.aluno
+ WHERE aluno.cod_aluno = $P{aluno}) as nome_dos_pais
+
+FROM (
+SELECT nm_disciplina,
+		nota,
+
+       (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
+                      '10,0'
+                    ELSE
+                       replace(substring(trim(hd.nota),1,3),'.',',')
+                    END
+          from pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+               substring(nm_serie,1,1) = 1) as nota_1serie,
+
+       (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
+                      '10,0'
+                    ELSE
+                       replace(substring(trim(hd.nota),1,3),'.',',')
+                    END
+          from pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+               substring(nm_serie,1,1) = 2) as nota_2serie,
+
+       (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
+                      '10,0'
+                    ELSE
+                       replace(substring(trim(hd.nota),1,3),'.',',')
+                    END
+          from pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+               substring(nm_serie,1,1) = 3) as nota_3serie,
+
+       (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
+                      '10,0'
+                    ELSE
+                       replace(substring(trim(hd.nota),1,3),'.',',')
+                    END
+          from pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+               substring(nm_serie,1,1) = 4) as nota_4serie,
+
+       (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
+                      '10,0'
+                    ELSE
+                       replace(substring(trim(hd.nota),1,3),'.',',')
+                    END
+          from pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+               substring(nm_serie,1,1) = 5) as nota_5serie,
+
+       (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
+                      '10,0'
+                    ELSE
+                       replace(substring(trim(hd.nota),1,3),'.',',')
+                    END
+          from pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+               substring(nm_serie,1,1) = 6) as nota_6serie,
+
+       (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
+                      '10,0'
+                    ELSE
+                       replace(substring(trim(hd.nota),1,3),'.',',')
+                    END
+          from pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+               substring(nm_serie,1,1) = 7) as nota_7serie,
+
+       (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
+                      '10,0'
+                    ELSE
+                       replace(substring(trim(hd.nota),1,3),'.',',')
+                    END
+          from pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+               substring(nm_serie,1,1) = 8) as nota_8serie,
+
+       (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
+                      '10,0'
+                    ELSE
+                       replace(substring(trim(hd.nota),1,3),'.',',')
+                    END
+          from pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+               hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+               hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+               substring(nm_serie,1,1) = 9) as nota_9serie,
+
+        (select ano
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 1) as ano_1serie,
+
+        (select escola
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 1) as escola_1serie,
+
+        (select escola_cidade
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 1) as escola_cidade_1serie,
+
+
+        (select escola_uf
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 1) as escola_uf_1serie,
+
+        (select ano
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 2) as ano_2serie,
+
+        (select escola
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 2) as escola_2serie,
+
+        (select escola_cidade
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 2) as escola_cidade_2serie,
+
+
+        (select escola_uf
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 2) as escola_uf_2serie,
+
+        (select ano
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 3) as ano_3serie,
+
+        (select escola
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 3) as escola_3serie,
+
+        (select escola_cidade
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 3) as escola_cidade_3serie,
+
+
+        (select escola_uf
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 3) as escola_uf_3serie,
+
+		(select ano
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 4) as ano_4serie,
+
+        (select escola
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 4) as escola_4serie,
+
+        (select escola_cidade
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 4) as escola_cidade_4serie,
+
+
+        (select escola_uf
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 4) as escola_uf_4serie,
+
+        (select ano
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 5) as ano_5serie,
+
+        (select escola
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 5) as escola_5serie,
+
+        (select escola_cidade
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 5) as escola_cidade_5serie,
+
+
+        (select escola_uf
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 5) as escola_uf_5serie,
+
+		(select ano
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 6) as ano_6serie,
+
+        (select escola
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 6) as escola_6serie,
+
+        (select escola_cidade
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 6) as escola_cidade_6serie,
+
+
+        (select escola_uf
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 6) as escola_uf_6serie,
+
+		(select ano
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 7) as ano_7serie,
+
+        (select escola
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 7) as escola_7serie,
+
+        (select escola_cidade
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 7) as escola_cidade_7serie,
+
+
+        (select escola_uf
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 7) as escola_uf_7serie,
+
+        (select ano
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 8) as ano_8serie,
+
+        (select escola
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 8) as escola_8serie,
+
+        (select escola_cidade
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 8) as escola_cidade_8serie,
+
+
+        (select escola_uf
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 8) as escola_uf_8serie,
+
+        (select ano
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 9) as ano_9serie,
+
+        (select escola
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 9) as escola_9serie,
+
+        (select escola_cidade
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 9) as escola_cidade_9serie,
+
+
+        (select escola_uf
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 9) as escola_uf_9serie,
+
+        to_char(CURRENT_DATE,'dd/mm/yyyy') as data_atual,
+
+        historico_escolar.ref_cod_aluno as cod_aluno,
+
+        (select public.fcn_upper(nm_instituicao)
+           from pmieducar.instituicao
+          where instituicao.cod_instituicao = historico_escolar.ref_cod_instituicao) as nm_instituicao,
+
+	    (select public.fcn_upper(nm_responsavel)
+           from pmieducar.instituicao
+          where instituicao.cod_instituicao = historico_escolar.ref_cod_instituicao) as nm_responsavel,
+
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 1) as obs1,
+
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 2) as obs2,
+
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 3) as obs3,
+
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 4) as obs4,
+
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 5) as obs5,
+
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 6) as obs6,
+
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 7) as obs7,
+
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 8) as obs8,
+
+        (select he.observacao
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 9) as obs9,
+
+        (select he.frequencia
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 1) as freq1,
+
+        (select he.frequencia
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 2) as freq2,
+
+        (select he.frequencia
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 3) as freq3,
+
+        (select he.frequencia
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 4) as freq4,
+
+        (select he.frequencia
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 5) as freq5,
+
+        (select he.frequencia
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 6) as freq6,
+
+        (select he.frequencia
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 7) as freq7,
+
+        (select he.frequencia
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 8) as freq8,
+
+        (select he.frequencia
+          from  pmieducar.historico_escolar he,
+                pmieducar.historico_disciplinas hd
+         where  hd.sequencial = historico_disciplinas.sequencial AND
+                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
+                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
+                hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
+                hd.ref_sequencial = he.sequencial AND
+                substring(nm_serie,1,1) = 9) as freq9,
+
+       (SELECT distinct
+         (CASE WHEN he.aceleracao = 1 THEN
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END) || ' AC'
+	  ELSE
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END)
+          END)
+
+          from pmieducar.historico_escolar he
+          where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+            he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+				    he.ativo = 1 AND
+            he.ano = historico_escolar.ano AND
+            substring(nm_serie,1,1) = 1 AND
+            he.sequencial = historico_escolar.sequencial) as status_serie1,
+
+
+       (SELECT distinct
+         (CASE WHEN he.aceleracao = 1 THEN
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END) || ' AC'
+	  ELSE
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END)
+          END)
+          from pmieducar.historico_escolar he
+          where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+            he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+				    he.ativo = 1 AND
+            he.ano = historico_escolar.ano AND
+            substring(nm_serie,1,1) = 2 AND
+            he.sequencial = historico_escolar.sequencial) as status_serie2,
+
+
+       (SELECT distinct
+         (CASE WHEN he.aceleracao = 1 THEN
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END) || ' AC'
+	  ELSE
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END)
+          END)
+          from pmieducar.historico_escolar he
+          where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+            he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+				    he.ativo = 1 AND
+            he.ano = historico_escolar.ano AND
+            substring(nm_serie,1,1) = 3 AND
+            he.sequencial = historico_escolar.sequencial) as status_serie3,
+
+
+       (SELECT distinct
+         (CASE WHEN he.aceleracao = 1 THEN
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END) || ' AC'
+	  ELSE
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END)
+          END)
+          from pmieducar.historico_escolar he
+          where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+            he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+				    he.ativo = 1 AND
+            he.ano = historico_escolar.ano AND
+            substring(nm_serie,1,1) = 4 AND
+            he.sequencial = historico_escolar.sequencial) as status_serie4,
+
+
+       (SELECT distinct
+         (CASE WHEN he.aceleracao = 1 THEN
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END) || ' AC'
+	  ELSE
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END)
+          END)
+          from pmieducar.historico_escolar he
+          where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+            he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+				    he.ativo = 1 AND
+            he.ano = historico_escolar.ano AND
+            substring(nm_serie,1,1) = 5 AND
+            he.sequencial = historico_escolar.sequencial) as status_serie5,
+
+
+       (SELECT distinct
+         (CASE WHEN he.aceleracao = 1 THEN
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END) || ' AC'
+	  ELSE
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END)
+          END)
+          from pmieducar.historico_escolar he
+          where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+            he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+				    he.ativo = 1 AND
+            he.ano = historico_escolar.ano AND
+            substring(nm_serie,1,1) = 6 AND
+            he.sequencial = historico_escolar.sequencial) as status_serie6,
+
+
+       (SELECT distinct
+         (CASE WHEN he.aceleracao = 1 THEN
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END) || ' AC'
+	  ELSE
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END)
+          END)
+          from pmieducar.historico_escolar he
+          where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+            he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+				    he.ativo = 1 AND
+            he.ano = historico_escolar.ano AND
+            substring(nm_serie,1,1) = 7 AND
+            he.sequencial = historico_escolar.sequencial) as status_serie7,
+
+
+       (SELECT distinct
+         (CASE WHEN he.aceleracao = 1 THEN
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END) || ' AC'
+	  ELSE
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END)
+          END)
+          from pmieducar.historico_escolar he
+          where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+            he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+				    he.ativo = 1 AND
+            he.ano = historico_escolar.ano AND
+            substring(nm_serie,1,1) = 8 AND
+            he.sequencial = historico_escolar.sequencial) as status_serie8,
+
+
+       (SELECT distinct
+         (CASE WHEN he.aceleracao = 1 THEN
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END) || ' AC'
+	  ELSE
+	    (CASE WHEN he.aprovado = 1 THEN 'Apro' WHEN he.aprovado = 2 THEN 'Repr' WHEN he.aprovado = 3  THEN 'Anda' ELSE 'Tran' END)
+          END)
+          from pmieducar.historico_escolar he
+          where he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+            he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+				    he.ativo = 1 AND
+            he.ano = historico_escolar.ano AND
+            substring(nm_serie,1,1) = 9 AND
+            he.sequencial = historico_escolar.sequencial) as status_serie9,
+
+
+  (SELECT 1 WHERE 1 = 1) AS quebra,
+
+  (SELECT registro
+     FROM pmieducar.historico_escolar
+    WHERE ref_cod_aluno = $P{aluno} and
+          historico_escolar.sequencial = (SELECT max(sequencial)
+                                            FROM pmieducar.historico_escolar he
+                                           WHERE he.ref_cod_aluno = $P{aluno})) AS num_termo,
+
+  (SELECT livro
+     FROM pmieducar.historico_escolar
+    WHERE ref_cod_aluno = $P{aluno} and
+          historico_escolar.sequencial = (SELECT max(sequencial)
+                                            FROM pmieducar.historico_escolar he
+                                           WHERE he.ref_cod_aluno = $P{aluno})) AS num_livro,
+
+  (SELECT folha
+     FROM pmieducar.historico_escolar
+    WHERE ref_cod_aluno = $P{aluno} and
+          historico_escolar.sequencial = (SELECT max(sequencial)
+                                            FROM pmieducar.historico_escolar he
+                                           WHERE he.ref_cod_aluno = $P{aluno})) AS num_folha,
+
+( select CASE WHEN ((substring(nm_serie,1,1) = 8) or (substring(nm_serie,1,1) = 9)) THEN
+                 'concluiu o ENSINO FUNDAMENTAL (8 ANOS)'
+             ELSE
+                 'concluiu o ' || substring(nm_serie,1,1) || ' ano'
+             END
+
+          from pmieducar.historico_escolar he
+         where he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+               he.sequencial = historico_escolar.sequencial AND
+               he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+               he.ano = historico_escolar.ano and ativo = 1 limit 1) as nome_serie_aux,
+
+         (SELECT COALESCE(fcn_upper(nm_curso),'')
+           FROM pmieducar.historico_escolar
+          WHERE historico_escolar.ref_cod_aluno = $P{aluno} AND
+                historico_escolar.ativo = 1 AND
+                historico_escolar.sequencial = (SELECT max(he.sequencial)
+           FROM pmieducar.historico_escolar he
+          WHERE he.ref_cod_instituicao = 1 AND
+                he.ref_cod_aluno = historico_escolar.ref_cod_aluno and he.ativo = 1))  as nome_curso
+
+
+  FROM pmieducar.historico_escolar,
+       pmieducar.historico_disciplinas,
+       pmieducar.instituicao,
+       pmieducar.escola
+WHERE  instituicao.cod_instituicao = $P{instituicao} AND
+       escola.ref_cod_instituicao = instituicao.cod_instituicao AND
+       historico_escolar.ref_cod_instituicao = instituicao.cod_instituicao AND
+       historico_disciplinas.ref_ref_cod_aluno = historico_escolar.ref_cod_aluno AND
+       historico_disciplinas.ref_sequencial = historico_escolar.sequencial AND
+       historico_escolar.ref_cod_aluno = $P{aluno} AND
+       instituicao.ativo = 1 AND
+       historico_escolar.ativo = 1 AND
+       historico_escolar.sequencial = (SELECT max(he.sequencial)
+       FROM pmieducar.historico_escolar he
+       WHERE he.ref_cod_instituicao = historico_escolar.ref_cod_instituicao AND
+       substring(he.nm_serie,1,1) = substring(historico_escolar.nm_serie,1,1) AND
+       he.ref_cod_aluno = historico_escolar.ref_cod_aluno and ativo = 1)
+)  AS T
+GROUP BY nm_disciplina
+ORDER BY 1 ASC]]>
+	</queryString>
+	<field name="nm_disciplina" class="java.lang.String"/>
+	<field name="nota" class="java.lang.String"/>
+	<field name="nota_1serie" class="java.lang.String"/>
+	<field name="nota_2serie" class="java.lang.String"/>
+	<field name="nota_3serie" class="java.lang.String"/>
+	<field name="nota_4serie" class="java.lang.String"/>
+	<field name="nota_5serie" class="java.lang.String"/>
+	<field name="nota_6serie" class="java.lang.String"/>
+	<field name="nota_7serie" class="java.lang.String"/>
+	<field name="nota_8serie" class="java.lang.String"/>
+	<field name="nota_9serie" class="java.lang.String"/>
+	<field name="ano_1serie" class="java.lang.Integer"/>
+	<field name="escola_1serie" class="java.lang.String"/>
+	<field name="escola_cidade_1serie" class="java.lang.String"/>
+	<field name="escola_uf_1serie" class="java.lang.String"/>
+	<field name="ano_2serie" class="java.lang.Integer"/>
+	<field name="escola_2serie" class="java.lang.String"/>
+	<field name="escola_cidade_2serie" class="java.lang.String"/>
+	<field name="escola_uf_2serie" class="java.lang.String"/>
+	<field name="ano_3serie" class="java.lang.Integer"/>
+	<field name="escola_3serie" class="java.lang.String"/>
+	<field name="escola_cidade_3serie" class="java.lang.String"/>
+	<field name="escola_uf_3serie" class="java.lang.String"/>
+	<field name="ano_4serie" class="java.lang.Integer"/>
+	<field name="escola_4serie" class="java.lang.String"/>
+	<field name="escola_cidade_4serie" class="java.lang.String"/>
+	<field name="escola_uf_4serie" class="java.lang.String"/>
+	<field name="ano_5serie" class="java.lang.Integer"/>
+	<field name="escola_5serie" class="java.lang.String"/>
+	<field name="escola_cidade_5serie" class="java.lang.String"/>
+	<field name="escola_uf_5serie" class="java.lang.String"/>
+	<field name="ano_6serie" class="java.lang.Integer"/>
+	<field name="escola_6serie" class="java.lang.String"/>
+	<field name="escola_cidade_6serie" class="java.lang.String"/>
+	<field name="escola_uf_6serie" class="java.lang.String"/>
+	<field name="ano_7serie" class="java.lang.Integer"/>
+	<field name="escola_7serie" class="java.lang.String"/>
+	<field name="escola_cidade_7serie" class="java.lang.String"/>
+	<field name="escola_uf_7serie" class="java.lang.String"/>
+	<field name="ano_8serie" class="java.lang.Integer"/>
+	<field name="escola_8serie" class="java.lang.String"/>
+	<field name="escola_cidade_8serie" class="java.lang.String"/>
+	<field name="escola_uf_8serie" class="java.lang.String"/>
+	<field name="ano_9serie" class="java.lang.Integer"/>
+	<field name="escola_9serie" class="java.lang.String"/>
+	<field name="escola_cidade_9serie" class="java.lang.String"/>
+	<field name="escola_uf_9serie" class="java.lang.String"/>
+	<field name="data_atual" class="java.lang.String"/>
+	<field name="cod_aluno" class="java.lang.Integer"/>
+	<field name="nm_instituicao" class="java.lang.String"/>
+	<field name="nm_responsavel" class="java.lang.String"/>
+	<field name="nm_termo" class="java.lang.String"/>
+	<field name="nm_livro" class="java.lang.String"/>
+	<field name="num_folha" class="java.lang.String"/>
+	<field name="nome_serie_aux" class="java.lang.String"/>
+	<field name="nome_curso" class="java.lang.String"/>
+	<field name="obs1" class="java.lang.String"/>
+	<field name="obs2" class="java.lang.String"/>
+	<field name="obs3" class="java.lang.String"/>
+	<field name="obs4" class="java.lang.String"/>
+	<field name="obs5" class="java.lang.String"/>
+	<field name="obs6" class="java.lang.String"/>
+	<field name="obs7" class="java.lang.String"/>
+	<field name="obs8" class="java.lang.String"/>
+	<field name="obs9" class="java.lang.String"/>
+	<field name="freq1" class="java.lang.Double"/>
+	<field name="freq2" class="java.lang.Double"/>
+	<field name="freq3" class="java.lang.Double"/>
+	<field name="freq4" class="java.lang.Double"/>
+	<field name="freq5" class="java.lang.Double"/>
+	<field name="freq6" class="java.lang.Double"/>
+	<field name="freq7" class="java.lang.Double"/>
+	<field name="freq8" class="java.lang.Double"/>
+	<field name="freq9" class="java.lang.Double"/>
+	<field name="status_serie1" class="java.lang.String"/>
+	<field name="status_serie2" class="java.lang.String"/>
+	<field name="status_serie3" class="java.lang.String"/>
+	<field name="status_serie4" class="java.lang.String"/>
+	<field name="status_serie5" class="java.lang.String"/>
+	<field name="status_serie6" class="java.lang.String"/>
+	<field name="status_serie7" class="java.lang.String"/>
+	<field name="status_serie8" class="java.lang.String"/>
+	<field name="status_serie9" class="java.lang.String"/>
+	<field name="quebra" class="java.lang.Integer"/>
+	<field name="nm_escola" class="java.lang.String"/>
+	<field name="tipo_logradouro" class="java.lang.String"/>
+	<field name="logradouro" class="java.lang.String"/>
+	<field name="municipio" class="java.lang.String"/>
+	<field name="bairro" class="java.lang.String"/>
+	<field name="uf_municipio" class="java.lang.String"/>
+	<field name="numero" class="java.math.BigDecimal"/>
+	<field name="cep" class="java.lang.String"/>
+	<field name="fone_ddd" class="java.math.BigDecimal"/>
+	<field name="fone" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="hora_atual" class="java.lang.String"/>
+	<field name="nome_aluno" class="java.lang.String"/>
+	<field name="cidade_nascimento_uf" class="java.lang.String"/>
+	<field name="data_nasc" class="java.lang.String"/>
+	<field name="nome_dos_pais" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="215" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="ea6d44cc-fe24-4446-98d7-0449a3397858" x="5" y="193" width="545" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="b0685dfc-fddb-49b8-be3f-810ff9ecb2d8" x="507" y="198" width="36" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[9º Ano]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a2e51f0c-21d2-440e-9318-c2fa18f1892c" x="192" y="198" width="36" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[2º Ano]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="29b246ed-2065-4401-b2ca-6763599b7aa7" x="237" y="198" width="36" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[3º Ano]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c6a21768-f8e5-4e77-8d8d-893b26d7a9c1" x="282" y="198" width="36" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[4º Ano]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="201cc03d-25eb-4016-a8e1-4cf80d1e7643" x="327" y="198" width="36" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[5º Ano]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="635180f8-e6e3-44c0-9fca-39fe926f6e72" x="371" y="198" width="36" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[6º Ano]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c596b2fc-898e-4fdc-b794-fd66c795dcd5" x="418" y="198" width="36" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[7º Ano]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="541a7ee9-e32f-4324-a53e-037477aa5148" x="148" y="198" width="36" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[1º Ano]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="024a97ae-1e11-47d6-8d9c-2c15027b0f62" x="145" y="193" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="2fd7441e-23e3-4e03-b655-6d8f9debaae4" x="188" y="193" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="ba9b8591-1531-431c-b186-4dd08d05d57e" x="233" y="193" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="9bd900b2-50df-45a6-bfbe-b9faf9e79e8d" x="279" y="193" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="d36a2018-4960-4019-bebc-1ed224f80c3b" x="322" y="193" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="3357f870-d895-4566-b0b9-ddef92fce118" x="368" y="193" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="37debec6-b016-40df-a013-136e45a4260c" x="414" y="193" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="dbdb5518-ffb4-431b-9eef-616466f1c63e" x="463" y="198" width="36" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[8º Ano]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="d661a6ab-67f4-4cad-a3a9-c384052ed27c" x="503" y="193" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<rectangle>
+				<reportElement uuid="7105e560-82f0-4c6f-9d82-bed6636acd45" x="5" y="4" width="545" height="167"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<line>
+				<reportElement uuid="32372275-e19b-4b88-ac16-056d33a74c8d" x="457" y="193" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="46e6985a-ed40-421e-8a6a-680bcba77662" x="369" y="5" width="1" height="100"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="82c80571-f4b2-4d3f-b37d-224ae138f5bc" x="6" y="105" width="544" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="ae3c310e-f2ed-4e0a-acc6-1ace83f0ad0a" x="6" y="126" width="544" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="349c0d29-bb6c-4a8b-9a8c-9beb66d6f298" x="10" y="198" width="53" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DISCIPLINA]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="093ef8e8-cdf2-4819-aeb4-4e7e434354da" x="10" y="129" width="533" height="17"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Certificamos que "+$F{nome_aluno}+ ", matrícula "+$F{cod_aluno}+ ", natural de "+$F{cidade_nascimento_uf}+" nascido em "+$F{data_nasc}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="f3937df4-d00f-4da0-95ac-8cf4c606de63" x="72" y="43" width="296" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Endereço: "+$F{logradouro}+" "+$F{numero}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="90637f7a-13f9-48e0-9a09-d6e416466dca" x="278" y="79" width="88" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Tel.: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="af04960c-8fef-40d5-94fe-0ea1a94048e0" x="72" y="7" width="296" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nm_instituicao}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="a5674be7-6d9e-4d96-bfb3-90a1d7e18d05" x="278" y="67" width="88" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CEP: "+$F{cep}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="15d042b7-b161-4bfe-aae1-d2cf648f5917" x="72" y="67" width="178" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{municipio}+" - "+$F{uf_municipio}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cda7d9f6-8213-4559-8f4e-c9dc875bccea" x="72" y="31" width="296" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nm_escola}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="a5ebd7ee-8fc0-4767-a169-59a3518e486e" x="72" y="79" width="205" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["E-mail: "+$F{email}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="fb82b8e6-ad73-4cc7-999a-e5dce10ce0c5" x="72" y="19" width="296" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nm_responsavel}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="70ab51f0-539c-42bf-baf3-7f04b148e4a2" x="72" y="55" width="296" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Bairro: " +$F{bairro}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement uuid="6656dabf-80a8-4bc7-aaf0-a660f90b97e9" x="11" y="7" width="57" height="46"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="f05c03e0-3dab-4a25-8b6a-db0d644b3436" x="10" y="109" width="517" height="15"/>
+				<textElement textAlignment="Center" markup="none">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CERTIFICADO DE CONCLUSÃO DE SÉRIE E/OU ANO DO ENSINO FUNDAMENTAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="fa7a9cff-76c2-4065-8373-f23811f18f8e" x="30" y="174" width="396" height="16"/>
+				<textElement textAlignment="Right" markup="none">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HISTÓRICO ESCOLAR DO ENSINO FUNDAMENTAL]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="093ef8e8-cdf2-4819-aeb4-4e7e434354da" x="11" y="148" width="533" height="17"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<textFieldExpression><![CDATA["filho de "+$F{nome_dos_pais}+" concluíu os anos do ensino fundamental conforme Histórico Escolar."]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="22bc594c-3a91-4a59-8b2a-513562283e6c" mode="Opaque" x="7" y="-1" width="541" height="13" forecolor="#FFFFFF" backcolor="#F0F0F0">
+					<printWhenExpression><![CDATA[new Boolean(($V{COLUMN_COUNT} % 2) == 1)]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="d838c1cd-587a-4902-9764-adb61c630fe9" x="149" y="1" width="36" height="13" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nota_1serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="370b36a9-c901-4c21-8f6d-aab57527a001" x="194" y="1" width="36" height="13" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nota_2serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="c7398cbb-e3a2-4194-b181-81f5318edda3" x="238" y="1" width="36" height="13" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nota_3serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="39a059b6-42bf-4172-87d7-c235f0caf018" x="282" y="1" width="36" height="13" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nota_4serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="169bc2f9-f8b5-4668-9141-f76c299fc219" x="327" y="1" width="36" height="13" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nota_5serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="40c7d2c2-7e4c-4a11-b8b9-870b88bad31a" x="371" y="1" width="36" height="13" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nota_6serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="c183421b-a182-4d18-ad1c-6311344b37b2" x="418" y="1" width="36" height="13" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nota_7serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="3e9e57bd-48b3-48cf-a805-1c7707e110fe" x="464" y="1" width="36" height="13" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nota_8serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="0a15f8d7-1190-41c1-a104-3594a8411d47" x="508" y="1" width="36" height="13" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nota_9serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="53661c8e-23c8-4f4b-8d90-ae4b10cc0c49" x="7" y="1" width="138" height="13" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nm_disciplina}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="404" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="adc2655b-4f6a-43c5-843e-bef1f7a3e91d" x="5" y="3" width="545" height="39"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="92ab7d33-d5ad-48cc-acff-c9b75685dc71" x="10" y="6" width="100" height="15"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[% FREQUÊNCIA]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="8cf591b2-75d7-4add-8783-abdeb331962f" x="149" y="7" width="36" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{freq1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="98eb227e-6f26-4017-8f1d-8969a2d8eb93" x="194" y="7" width="36" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{freq2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="aacf8c37-60f5-41b3-8b54-ac222bffcdec" x="238" y="7" width="36" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{freq3}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="92dda2f4-fc11-4e65-87fb-0413e439b78e" x="282" y="7" width="36" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{freq4}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="0a88f57a-a5be-496c-aa26-586a7a2827c1" x="327" y="6" width="36" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{freq5}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="8ddfd8cd-1e16-4437-9733-72e4cc014a38" x="371" y="6" width="36" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{freq6}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="336e766b-df4a-4d0e-bd98-649f6bc0b17c" x="418" y="6" width="36" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{freq7}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="f4d72fd6-9772-424c-bf79-1b5b1ae549ae" x="464" y="6" width="36" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{freq8}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="0e366b15-5460-4726-bcc0-2455a41963d6" x="508" y="6" width="36" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{freq9}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="25f361dc-3688-475c-96d3-3620d2495985" x="149" y="26" width="35" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{status_serie1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="fa2b5d01-edcf-4874-aef0-7debfc315ecc" x="194" y="26" width="35" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{status_serie2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="5ed4d9a8-80e4-4c5d-afdb-ac16ce607451" x="238" y="26" width="35" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{status_serie3}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="3ab2de74-10b0-4313-8832-9ed424117cdd" x="282" y="26" width="35" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{status_serie4}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="7aa269e6-53b8-409c-becb-7fa5cd5e2665" x="5" y="23" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="a2720361-54b0-4d9e-8140-8bd8382a9e7a" x="10" y="26" width="100" height="15"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RESULTADO FINAL]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="7edcad6b-de75-411d-90af-fba2993da146" x="327" y="26" width="35" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{status_serie5}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="77336a5e-a297-463f-aa0a-1bac937a6441" x="371" y="26" width="35" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{status_serie6}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="0e753959-9cee-44a2-b63a-bb38a58b43d5" x="418" y="26" width="35" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{status_serie7}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cb7df797-6ae9-47e6-ab58-a3de0323eb9e" x="464" y="26" width="35" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{status_serie8}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="d68a6114-5520-4403-ba23-fe0a7926f368" x="508" y="26" width="35" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{status_serie9}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement uuid="8338d812-0ef5-4a47-91cd-256955ee7001" x="5" y="49" width="545" height="354"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<line>
+				<reportElement uuid="bdbf13c6-341c-4e60-8dc4-eaaa049eab6e" x="5" y="212" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="b1659632-9cba-47e9-b31b-7ce7e6c080c4" x="5" y="66" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="202c2f99-b5c9-44f9-922f-c8392bdf4eb4" x="54" y="49" width="1" height="17"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="06ae0b46-dcda-49f7-9f1d-0126b60b8670" x="9" y="50" width="45" height="15"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ANO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a1e351d3-3675-4b07-9daf-e112a218f1f7" x="58" y="50" width="56" height="15"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ANO LETIVO]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="9757ab07-a037-4c5d-a481-d55091c2fc3c" x="114" y="49" width="1" height="17"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="1716ee42-17e4-4f6b-becd-3c4cabe79d80" x="117" y="50" width="245" height="15"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESTABELECIMENTO DE ENSINO]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="5c85e41c-0908-42b8-8fc6-d183abc6e8f3" x="365" y="49" width="1" height="17"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="a3a5fa19-ce7a-4110-ae2d-f37ddd4a09a8" x="367" y="50" width="59" height="15"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MUNICÍPIO]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="8d5ac822-469d-46cc-b24a-3daec3b12c3b" x="523" y="49" width="1" height="17"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="41bdfeb1-bbf8-4f21-b137-c1e5ce9e37fe" x="527" y="50" width="20" height="15"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UF]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="c9558c2a-36df-40b5-8bb9-25fd7d11a74f" x="5" y="82" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="e8f3bc12-34a6-4f6f-a751-0ba86fba7ae0" x="9" y="68" width="45" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[1º Ano]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="c7d262d4-f363-4df2-b893-ab16f525f25d" x="69" y="68" width="34" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ano_1serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="f957c5fe-8f0e-44a9-a42e-e6c93899479b" x="367" y="68" width="149" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_cidade_1serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="c7242983-4441-4737-89dc-6145b0922aa7" x="117" y="68" width="245" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_1serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="a6c81a93-a4c1-4294-b2a0-9d6122ce0b03" x="527" y="68" width="20" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_uf_1serie}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="1babccd1-6c2f-4344-8445-d0c176859442" x="5" y="98" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="776f3a04-c4db-4ead-a7d4-cd9e89f29bb6" x="9" y="84" width="45" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[2º Ano]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="482eb2c4-f998-4839-a0b1-e9eade42ec43" x="69" y="84" width="34" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ano_2serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="7d644432-7bbe-404d-bc01-197c717d8058" x="117" y="84" width="245" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_2serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="b00be1f9-5cfe-468f-85a1-70ebf8361d28" x="367" y="84" width="149" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_cidade_2serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="e1783dc5-44fa-4697-a42f-947b4aa06564" x="527" y="84" width="20" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_uf_2serie}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="d4401d49-e082-4060-b229-51dc8376f90a" x="9" y="100" width="45" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[3º Ano]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="e423657f-777c-435c-9934-739ff9223d9e" x="5" y="114" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="87a084bd-37ba-486c-9ed6-3e4c4b6fb7c3" x="69" y="100" width="34" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ano_3serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="47199244-73df-42d0-b102-cd649452a0e6" x="117" y="100" width="245" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_3serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="4429b95e-5290-4306-b8f7-c3d805c1c6cc" x="367" y="100" width="149" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_cidade_3serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="01a60fa3-75c1-424a-9ad9-ae90dcd1aa28" x="527" y="100" width="20" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_uf_3serie}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="ff8581c7-a2a3-434b-98ad-8d3bdd78b64d" x="9" y="117" width="45" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[4º Ano]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="a9d1d4cc-755d-4583-8b5d-d34a7aa071dc" x="69" y="117" width="34" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ano_4serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="620f9279-f15d-460c-b533-9b09a2efd0a9" x="117" y="117" width="245" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_4serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="68fc4006-a131-4585-a1f1-b320fec16c58" x="367" y="117" width="149" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_cidade_4serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="4054ea26-e399-4f55-aba4-3f226749d587" x="527" y="117" width="20" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_uf_4serie}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="27bd2189-149d-46b8-9cae-9b6a98b1578e" x="5" y="131" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="848cb82b-3422-4091-9fba-c83d3183dd2f" x="9" y="133" width="45" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[5º Ano]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="3555f7ef-f1ba-4b40-b01b-9ab6b0cad029" x="69" y="133" width="34" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ano_5serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="6892a19c-9126-48d6-abe3-6da4b0f65cb2" x="117" y="133" width="245" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_5serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="db954329-e485-4fbc-824a-0823bbb262f7" x="367" y="133" width="149" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_cidade_5serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="f8047782-5abd-4d73-8e19-a019ff876b6e" x="527" y="133" width="20" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_uf_5serie}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="23bd8f5e-8e35-4c57-a133-0d15aa11c793" x="5" y="147" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="940f582a-580f-46b9-8306-5dd0e138508a" x="9" y="149" width="45" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[6º Ano]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="1d6a34aa-6542-4ebf-84c9-1fd9bc79042c" x="69" y="149" width="34" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ano_6serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="4e8b55f9-1496-4ae4-aff8-0ae8b2144f5c" x="117" y="149" width="245" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_6serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="fcd23502-5a24-459d-8958-917a1366b7ed" x="367" y="149" width="149" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_cidade_6serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="7c58b24d-5146-4913-8f84-daa703cc04c8" x="527" y="149" width="20" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_uf_6serie}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="4dff900b-6bc3-40f0-84b9-4835b05db876" x="5" y="163" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="5d41416b-042a-4220-b743-f0699dd6a139" x="9" y="165" width="45" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[7º Ano]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="8c1a07a0-f7cf-4bd1-8e88-c7c93674186f" x="69" y="165" width="34" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ano_7serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="d4110ed4-e1f7-45eb-b4b5-1b4a1ac8fb17" x="117" y="181" width="245" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_8serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="b7b2d9a8-0732-47c0-aa27-45b525283fb7" x="367" y="165" width="149" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_cidade_7serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="181a8ad7-a741-40cc-99e3-be64cf2b5315" x="527" y="165" width="20" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_uf_7serie}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="656e0363-01d4-4d36-b504-3e024f3dfef2" x="5" y="179" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="64b0d9bc-edc7-448c-8b3b-6735068ec8ca" x="9" y="181" width="45" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[8º Ano]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="9e80ee0b-a889-401a-a5f8-3fbd4d4f9f8d" x="69" y="181" width="34" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ano_8serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="a54e8299-8db7-4723-8d39-300822e3955d" x="117" y="165" width="245" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_7serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="ef4a7949-883c-4c59-a9c0-0bf2571f5299" x="367" y="181" width="149" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_cidade_8serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="fa245a5f-6bb4-41d7-9783-558fc03cf4ca" x="527" y="181" width="20" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_uf_8serie}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="6ba4f329-b5db-44d2-a7a1-b804d9985920" x="5" y="195" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="cbda5ed2-21b7-4685-b69d-84774f9c2954" x="9" y="197" width="45" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[9º Ano]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="f7ee4bb4-380b-45cc-b512-8bd078e2c2ce" x="69" y="197" width="34" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ano_9serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="558c6381-a0ed-456e-af2d-a77f1d6235ca" x="117" y="197" width="245" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_9serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="71e95f5e-9192-438f-8d33-120e75216765" x="367" y="197" width="149" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_cidade_9serie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cfd646b7-8248-43ed-925e-c9eefa790aeb" x="527" y="197" width="20" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{escola_uf_9serie}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="36608e7a-f2c1-43c6-8981-0b97823d7058" x="9" y="214" width="24" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Obs.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="cbf15860-59f4-4932-b50a-c519fd5d5b8c" positionType="Float" x="33" y="215" width="514" height="11"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{obs1}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="65fb67a9-da3e-49c5-afd2-b320e3c73346" positionType="Float" x="33" y="227" width="514" height="11"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{obs2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="21c52843-5167-476a-9104-b25958400822" positionType="Float" x="33" y="238" width="514" height="11"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{obs3}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="2693f231-0841-4023-910b-3f321736f194" positionType="Float" x="33" y="250" width="514" height="11"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{obs4}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="34c92e33-5d61-42e1-956a-4cc75ef04f01" positionType="Float" x="33" y="262" width="514" height="11"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{obs5}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="cba990e9-9939-4ff4-a4f0-27f4a63d15b9" positionType="Float" x="33" y="274" width="514" height="11"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{obs6}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="6a920308-bc5c-4b63-bed7-f47848d8ca9a" positionType="Float" x="33" y="286" width="514" height="11"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{obs7}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="c6d31fa5-3592-45f9-af4c-21e42bbc88d3" positionType="Float" x="33" y="298" width="514" height="11"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{obs8}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="a15338bb-c29e-4b0f-b59a-d50ed5e7b8fc" x="5" y="368" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="a9f286d4-df60-435a-a4c4-1f9f041eb269" positionType="Float" x="33" y="310" width="514" height="11"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{obs9}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="1a96712b-7b31-4030-8f34-f9c4fa256dec" x="9" y="371" width="76" height="14"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Município e Data:]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="d75e9264-4ad7-44a9-9aba-306eda511445" x="5" y="386" width="545" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement uuid="d418fc40-085e-41e4-b13b-fd7eb7712e0e" x="85" y="371" width="122" height="14"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{municipio}+", "+$F{data_atual}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="2450bdc2-1cb2-4d28-a7b3-97ff124d056f" x="210" y="369" width="1" height="34"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="06c3f161-142a-4879-9764-84a2c128168b" x="378" y="369" width="1" height="34"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="81728d84-64a0-4ebd-ace7-f90c9e71a3be" x="7" y="388" width="51" height="14"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Registro Nº:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="8c7cb090-370b-47ca-b321-01c8d6466c1a" x="58" y="388" width="112" height="14"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nm_termo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="108c3383-8e3f-4f78-b232-fa0036539f55" x="213" y="371" width="55" height="14"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Secretário(a):]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="50631f24-4daf-4290-8278-6b317d123736" x="214" y="388" width="27" height="14"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Livro:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="a87bc405-7d2d-4e64-bb6d-704f6d21bdbf" x="241" y="388" width="84" height="14"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nm_livro}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="ff533ae9-abcd-4b5c-a891-e4491f22e2b4" x="382" y="371" width="55" height="14"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Diretor(a):]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4ae72c5d-edb5-496e-b6b8-b1000952e108" x="382" y="388" width="32" height="14"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Folha:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="a24fda2a-41ee-45f9-b9d2-db0bea9cee8a" x="415" y="388" width="78" height="13"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{num_folha}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Immediate"/>
+	</summary>
+</jasperReport>
