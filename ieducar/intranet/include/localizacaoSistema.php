@@ -58,7 +58,7 @@ class LocalizacaoSistema {
         foreach( $this->localizacao as $link => $inner ) {
             $href .= ( $i === 1 ) ? $this->protocolo . $link : "/$link";
             if( $i === $localizacao_count ) {
-                $this->html .= "<li><a>$inner</a><li>";
+                $this->html .= "<li><a>$inner</a></li>";
             } else {
                 $this->html .= "<li><a href=\"$href\" title=\"$inner\">$inner</a></li> {$this->separador} ";
             }
@@ -68,7 +68,8 @@ class LocalizacaoSistema {
     }
 
     public function montar() {
-        echo $this->html;
+        return $this->html;
     }
+    
 }
 ?>

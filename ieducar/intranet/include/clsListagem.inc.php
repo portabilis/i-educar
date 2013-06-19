@@ -307,13 +307,14 @@ class clsListagem extends clsCampos
       //$barra = '<b>Localizacao: http://'.$server.$endereco.'</b><br>';
       //$barra = '<tr><td><b>Localizacao:'. $enderecoPagina .'</b><br></tr></td>';
       $barra = '<b>Filtros de busca</b>';
-      //$localizacao = '<b>LOCALIZACAO</b>';
+      $teste = '<b>LOCALIZACAO</b>';
+      
       $localizacao = new LocalizacaoSistema();
       $localizacao->entradaCaminhos( array(
-                        "www.google.com.br" => "i-Educar",
-                        "imghp?hl=pt-BR&tab=wi"           => "Escola",
+                        "localhost" => "i-Educar",
+                        "intranet/educar_index.php"           => "Escola",
                         ""                   => "Cadastro de Aluno"
-    ));
+      ));
 
       if (class_exists('clsPmiajudaPagina')) {
         $ajudaPagina = new clsPmiajudaPagina();
@@ -406,7 +407,7 @@ class clsListagem extends clsCampos
         
         $retorno .=  "
             <tr>
-              <td class='' colspan='2' height='24'>{$localizacao->montar()}</td>
+              <td class='fundoLocalizacao' colspan='2' height='24'>{$localizacao->montar()}</td>
             </tr>";
               
         $retorno .=  "
