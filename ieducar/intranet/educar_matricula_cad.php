@@ -32,6 +32,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/pmieducar/clsPmieducarMatriculaTurma.inc.php';
 
 /**
  * clsIndexBase class.
@@ -82,6 +83,7 @@ class indice extends clsCadastro
   var $ref_cod_instituicao;
   var $ref_cod_curso;
   var $ref_cod_escola;
+  var $ref_cod_turma;
 
   var $matricula_transferencia;
   var $semestre;
@@ -97,7 +99,7 @@ class indice extends clsCadastro
 
     $this->cod_matricula = $_GET['cod_matricula'];
     $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
-
+    
     $obj_aluno = new clsPmieducarAluno($this->ref_cod_aluno);
 
     if (! $obj_aluno->existe()) {
@@ -157,7 +159,7 @@ class indice extends clsCadastro
 
     $anoLetivoHelperOptions = array('situacoes' => array('em_andamento', 'nao_iniciado'));
 
-    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie'));
+    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie', 'turma'));
     $this->inputsHelper()->dynamic('anoLetivo', array('label' => 'Ano destino'), $anoLetivoHelperOptions);
 
 
@@ -258,6 +260,14 @@ class indice extends clsCadastro
             $serie = $serie['nm_serie'];
           else
             $serie = '';
+          
+//          $turma = new clsPmieducarTurma($m['ref_cod_turma'], null, null, $m['ref_ref_cod_serie'], null, null,  $m['ref_cod_curso']);
+//          $turma = $turma->detalhe();
+//          if (is_array($turma) && count($turma))
+//              $turma = $turma['nm_turma'];
+//              else 
+//                $turma = '';                  
+             
 
           $escola = new clsPmieducarEscola($m['ref_ref_cod_escola']);
           $escola = $escola->detalhe();
@@ -284,7 +294,7 @@ class indice extends clsCadastro
 
           return false;
         }
-    }
+      }
 
       $obj_reserva_vaga = new clsPmieducarReservaVaga();
       $lst_reserva_vaga = $obj_reserva_vaga->lista(NULL, $this->ref_cod_escola,
@@ -385,7 +395,7 @@ class indice extends clsCadastro
       if (! $this->removerFlagUltimaMatricula($this->ref_cod_aluno)) {
         return false;
       }
-
+      
       $obj = new clsPmieducarMatricula(NULL, $this->ref_cod_reserva_vaga,
         $this->ref_cod_escola, $this->ref_cod_serie, NULL,
         $this->pessoa_logada, $this->ref_cod_aluno, 3, NULL, NULL, 1, $this->ano,
@@ -393,6 +403,9 @@ class indice extends clsCadastro
         $this->matricula_transferencia, $this->semestre);
 
       $cadastrou = $obj->cadastra();
+      
+      $this->ref_cod_turma = $_POST['ref_cod_turma'];
+      $this->enturmacaoMatricula($this->cod_matricula, $this->ref_cod_turma);
       if ($cadastrou) {
 
         $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
@@ -527,7 +540,7 @@ class indice extends clsCadastro
         #die();
         #return true;
       }
-
+      
       $this->mensagem = 'Cadastro não realizado.<br />';
       return FALSE;
     }
@@ -651,6 +664,33 @@ class indice extends clsCadastro
     }
 
     return true;
+  }
+  
+   function enturmacaoMatricula($matriculaId, $turmaDestinoId) {
+
+    $enturmacaoExists = new clsPmieducarMatriculaTurma();
+    $enturmacaoExists = $enturmacaoExists->lista($matriculaId,
+                                                 $turmaDestinoId,
+                                                 NULL, 
+                                                 NULL,
+                                                 NULL, 
+                                                 NULL,
+                                                 NULL,
+                                                 NULL,
+                                                 1);
+
+    $enturmacaoExists = is_array($enturmacaoExists) && count($enturmacaoExists) > 0;
+    if (! $enturmacaoExists) {
+      $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
+                                                   $turmaDestinoId,
+                                                   $this->pessoa_logada, 
+                                                   $this->pessoa_logada, 
+                                                   NULL,
+                                                   NULL, 
+                                                   1);
+      return $enturmacao->cadastra();
+    }
+    return false;
   }
 }
 
