@@ -29,6 +29,7 @@
  */
 
 require_once 'include/clsCampos.inc.php';
+require_once 'include/localizacaoSistema.php';
 
 if (class_exists('clsPmiajudaPagina')) {
   require_once 'include/pmiajuda/clsPmiajudaPagina.inc.php';
@@ -252,27 +253,7 @@ class clsListagem extends clsCampos
       'pos_atual', -1, TRUE);
 
     return NULL;
-  }
-  
-  function breadcrumbs($separator = ' &raquo; ', $home = 'Home') {
-    
-    $path = array_filter(explode('/', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)));
-    $base_url = ($_SERVER['HTTPS'] ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/';
-    $breadcrumbs = array("<a href=\"$base_url\">$home</a>");
- 
-    $last = end(array_keys($path));
- 
-    foreach ($path AS $x => $crumb) {
-        $title = ucwords(str_replace(array('.php', '_'), Array('', ' '), $crumb));
-        if ($x != $last){
-            $breadcrumbs[] = '<a href="$base_url$crumb">$title</a>';
-        }else{
-            $breadcrumbs[] = $title;
-        }
-    }
- 
-    return implode($separator, $breadcrumbs);
-} 
+  } 
 
   function RenderHTML()
   {
@@ -324,8 +305,15 @@ class clsListagem extends clsCampos
       $enderecoPagina = $_SERVER['PHP_SELF'];
       
       //$barra = '<b>Localizacao: http://'.$server.$endereco.'</b><br>';
-      $barra = '<b>Localizacao:'. $enderecoPagina .'</b><br>';
-      $barra .= '<b>Filtros de busca</b>';
+      //$barra = '<tr><td><b>Localizacao:'. $enderecoPagina .'</b><br></tr></td>';
+      $barra = '<b>Filtros de busca</b>';
+      //$localizacao = '<b>LOCALIZACAO</b>';
+      $localizacao = new LocalizacaoSistema();
+      $localizacao->entradaCaminhos( array(
+                        "www.google.com.br" => "i-Educar",
+                        "imghp?hl=pt-BR&tab=wi"           => "Escola",
+                        ""                   => "Cadastro de Aluno"
+    ));
 
       if (class_exists('clsPmiajudaPagina')) {
         $ajudaPagina = new clsPmiajudaPagina();
@@ -358,7 +346,7 @@ class clsListagem extends clsCampos
           }
         }
 
-        $janela .=  "<tr><td class='formdktd' colspan='2' height='24'>{$barra}</td></tr>";
+        $janela .= "<tr><td class='formdktd' colspan='2' height='24'>{$barra}</td></tr>";
 
         if (empty($this->campos)) {
           $janela .=  "<tr><td class='formlttd' colspan='2'><span class='form'>N&atilde;o existem campos definidos para o formul&aacute;rio</span></td></tr>";
@@ -411,6 +399,16 @@ class clsListagem extends clsCampos
         $retorno .=  "
           <table class='tablelistagem' $width border='0' cellpadding='2' cellspacing='1'>";
 
+        /*$retorno .=  "
+            <tr>
+              <td class='' colspan='2' height='24'><ul><li>teste</li></ul></td>
+            </tr>";*/
+        
+        $retorno .=  "
+            <tr>
+              <td class='' colspan='2' height='24'>{$localizacao->montar()}</td>
+            </tr>";
+              
         $retorno .=  "
             <tr>
               <td class='formdktd' colspan='2' height='24'>{$barra}</td>
