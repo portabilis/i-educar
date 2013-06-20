@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once ("include/localizacaoSistema.php");
 
 class clsIndexBase extends clsBase
 {
@@ -196,7 +197,16 @@ class indice extends clsListagem
 		}
 
 		$this->largura = "100%";
+                $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos( array(
+            "localhost" => "i-Educar",
+            "intranet/educar_biblioteca_index.php"           => "Biblioteca",
+            ""                   => "Cadastro de Biblioteca"
+        ));
+    
+        $this->enviaLocalizacao($localizacao->montar());
 	}
+        
 }
 // cria uma extensao da classe base
 $pagina = new clsIndexBase();

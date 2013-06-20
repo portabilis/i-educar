@@ -81,6 +81,7 @@ class clsListagem extends clsCampos
   var $funcAcao = '';
   var $funcAcaoNome = '';
   var $rotulo_anterior;
+  var $locale = "<b>=> PAGINA SEM LOCALIZACAO, COLOQUE POR GENTILEZA. <=</b>";
 
   var $array_botao;
   var $array_botao_url;
@@ -121,6 +122,11 @@ class clsListagem extends clsCampos
     }
 
     $this->bannerClose = $boolFechaBanner;
+  }
+  
+  function enviaLocalizacao($localizao){
+      if($localizao)
+        $this->locale = $localizao;
   }
 
   function addCabecalhos($coluna)
@@ -309,12 +315,7 @@ class clsListagem extends clsCampos
       $barra = '<b>Filtros de busca</b>';
       $teste = '<b>LOCALIZACAO</b>';
       
-      $localizacao = new LocalizacaoSistema();
-      $localizacao->entradaCaminhos( array(
-                        "localhost" => "i-Educar",
-                        "intranet/educar_index.php"           => "Escola",
-                        ""                   => "Cadastro de Aluno"
-      ));
+      
 
       if (class_exists('clsPmiajudaPagina')) {
         $ajudaPagina = new clsPmiajudaPagina();
@@ -407,7 +408,7 @@ class clsListagem extends clsCampos
         
         $retorno .=  "
             <tr>
-              <td class='fundoLocalizacao' colspan='2' height='24'>{$localizacao->montar()}</td>
+              <td class='fundoLocalizacao' colspan='2' height='24'>{$this->locale}</td>
             </tr>";
               
         $retorno .=  "
