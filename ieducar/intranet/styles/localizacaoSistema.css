@@ -9,17 +9,18 @@
 }
 
 #localizacao a{
-  font-family: tahoma,verdana,sans-serif;
-  font-size: 12px;
+  font-family: arial, verdana, sans-serif, "Times New Roman";
+  font-size: 11px;
   font-style: normal;
   font-variant: normal;
+  font-weight: bold;
   letter-spacing: 0pt;
   line-height: normal;
-  background: #BECCD6;
-  padding: .7em 1em;
+  background: #A1B3BD;
+  padding: .4em 1em;
   float: left;
   text-decoration: none;
-  color: #ffffff;
+  color: #fff;
   text-shadow: 0 1px 0 rgba(255,255,255,.5); 
   position: relative;
 }
@@ -31,11 +32,11 @@
 #localizacao a::before{
   content: "";
   position: absolute;
-  top: 50%; 
+  top: 50%; $this->addEstilo( "localizacaoSistema" );
   margin-top: -1.5em;   
   border-width: 1.5em 0 1.5em 1em;
   border-style: solid;
-  border-color: #BECCD6 #BECCD6 #BECCD6 transparent;
+  border-color: #A1B3BD #A1B3BD #A1B3BD transparent;
   left: -1em;
 }
 
@@ -50,12 +51,13 @@
   margin-top: -1.5em;   
   border-top: 1.5em solid transparent;
   border-bottom: 1.5em solid transparent;
-  border-left: 1em solid #BECCD6;
+  border-left: 1em solid #A1B3BD;
   right: -1em;
 }
 
 #localizacao a:hover::after{
   border-left-color: #184e7f;
+  content: "";
 }
 
 #localizacao .current,
@@ -67,4 +69,7 @@
 #localizacao .current::after,
 #localizacao .current::before{
   content: normal;
+}
+.fundoLocalizacao {
+   background-color: #E4E9ED; 
 }
