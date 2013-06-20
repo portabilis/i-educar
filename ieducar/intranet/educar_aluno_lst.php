@@ -29,6 +29,7 @@ require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'Educacenso/Model/AlunoDataMapper.php';
+require_once 'include/localizacaoSistema.php';
 
 class clsIndexBase extends clsBase
 {
@@ -36,7 +37,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Aluno" );
 		$this->processoAp = "578";
-	}
+        }
 }
 
 class indice extends clsListagem
@@ -112,7 +113,9 @@ class indice extends clsListagem
 		$this->campoTexto("nome_mae", "Nome da Mãe", $this->nome_mae, 50, 255);
 		$this->campoTexto("nome_responsavel", "Nome do Responsável", $this->nome_responsavel, 50, 255);
 
-		$obj_permissoes = new clsPermissoes();
+		
+                
+                $obj_permissoes = new clsPermissoes();
 		$cod_escola = $obj_permissoes->getEscola( $this->pessoa_logada );
 		if ($cod_escola)
 		{
@@ -237,9 +240,22 @@ class indice extends clsListagem
     	$id = '';
     }
 
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+            "localhost" => "i-Educar",
+            "intranet/educar_index.php"           => "Escola",
+            ""                   => "Cadastro de Aluno"
+    ));
+    
+    $this->enviaLocalizacao($localizacao->montar());
+                
     return $id;
-	}
-}
+      
+    }
+
+        
+    }
+      
 // cria uma extensao da classe base
 $pagina = new clsIndexBase();
 // cria o conteudo
