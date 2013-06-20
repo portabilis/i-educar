@@ -37,6 +37,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Aluno" );
 		$this->processoAp = "578";
+                $this->addEstilo( "localizacaoSistema" );
         }
 }
 
@@ -134,7 +135,7 @@ class indice extends clsListagem
 
 		$this->addCabecalhos( array(
 			"C&oacute;digo Aluno",
-      "Código INEP",
+                        "Código INEP",
 			"Nome do Aluno",
 			"Nome da Mãe",
 			"Nome do Respons&aacute;vel",
@@ -173,7 +174,7 @@ class indice extends clsListagem
 			$this->nome_pai,
 			$this->nome_mae,
 			$this->nome_responsavel,
-      $this->cod_inep
+                        $this->cod_inep
 		);
 
 		$total = $aluno->_total;
@@ -212,7 +213,16 @@ class indice extends clsListagem
 		}
 		//**
 		$this->largura = "100%";
-	}
+	
+                $localizacao = new LocalizacaoSistema();
+                $localizacao->entradaCaminhos( array(
+                    $_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
+                    "educar_index.php"                  => "Escola",
+                    ""                                  => "Cadastro de Aluno"
+                ));
+                $this->enviaLocalizacao($localizacao->montar());
+    
+        }
 
 	protected function loadNomeMae($aluno) {
 		$nome        = $aluno['nm_mae'];
@@ -224,8 +234,8 @@ class indice extends clsListagem
     	$pessoaMae   = new clsPessoaFj($pessoaAluno['idpes_mae']);
     	$pessoaMae   = $pessoaMae->detalhe();
     	$nome        = $pessoaMae['nome'];
-    }
-
+         }
+         
     return $nome;
 	}
 
@@ -239,15 +249,6 @@ class indice extends clsListagem
     catch(Exception $e) {
     	$id = '';
     }
-
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-            "localhost" => "i-Educar",
-            "intranet/educar_index.php"           => "Escola",
-            ""                   => "Cadastro de Aluno"
-    ));
-    
-    $this->enviaLocalizacao($localizacao->montar());
                 
     return $id;
       

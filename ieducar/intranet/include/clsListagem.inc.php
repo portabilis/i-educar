@@ -312,10 +312,7 @@ class clsListagem extends clsCampos
       
       //$barra = '<b>Localizacao: http://'.$server.$endereco.'</b><br>';
       //$barra = '<tr><td><b>Localizacao:'. $enderecoPagina .'</b><br></tr></td>';
-      $barra = '<b>Filtros de busca</b>';
-      $teste = '<b>LOCALIZACAO</b>';
-      
-      
+      $barra = '<b>Filtros de busca</b>';  
 
       if (class_exists('clsPmiajudaPagina')) {
         $ajudaPagina = new clsPmiajudaPagina();
@@ -400,11 +397,6 @@ class clsListagem extends clsCampos
 
         $retorno .=  "
           <table class='tablelistagem' $width border='0' cellpadding='2' cellspacing='1'>";
-
-        /*$retorno .=  "
-            <tr>
-              <td class='' colspan='2' height='24'><ul><li>teste</li></ul></td>
-            </tr>";*/
         
         $retorno .=  "
             <tr>
