@@ -32,7 +32,7 @@
 #localizacao a::before{
   content: "";
   position: absolute;
-  top: 50%; $this->addEstilo( "localizacaoSistema" );
+  top: 50%;
   margin-top: -1.5em;   
   border-width: 1.5em 0 1.5em 1em;
   border-style: solid;
