@@ -77,6 +77,49 @@ class indice extends clsDetalhe
 
 		$tmp_obj = new clsPmieducarAcervoEditora( $this->cod_acervo_editora );
 		$registro = $tmp_obj->detalhe();
+                
+                if( class_exists( "clsPmieducarBiblioteca" ) )
+		{
+			$obj_ref_cod_biblioteca = new clsPmieducarBiblioteca( $registro["ref_cod_biblioteca"] );
+			$det_ref_cod_biblioteca = $obj_ref_cod_biblioteca->detalhe();
+			$registro["ref_cod_biblioteca"] = $det_ref_cod_biblioteca["nm_biblioteca"];
+			if( class_exists( "clsPmieducarInstituicao" ) )
+			{
+				$registro["ref_cod_instituicao"] = $det_ref_cod_biblioteca["ref_cod_instituicao"];
+				$obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
+				$det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
+				$registro["ref_cod_instituicao"] = $det_ref_cod_instituicao["nm_instituicao"];
+			}
+			else
+			{
+				$registro["ref_cod_instituicao"] = "Erro na geracao";
+				echo "<!--\nErro\nClasse nao existente: clsPmieducarInstituicao\n-->";
+			}
+                }
+                
+               if( class_exists( "clsPmieducarEscola" ) )
+	       {
+				$registro["ref_cod_escola"] = $det_ref_cod_biblioteca["ref_cod_escola"];
+				$obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
+				$det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
+				$idpes = $det_ref_cod_escola["ref_idpes"];
+			if ($idpes)
+			{
+					$obj_escola = new clsPessoaJuridica( $idpes );
+					$obj_escola_det = $obj_escola->detalhe();
+					$registro["ref_cod_escola"] = $obj_escola_det["fantasia"];
+			}
+			else
+			{
+					$obj_escola = new clsPmieducarEscolaComplemento( $registro["ref_cod_escola"] );
+					$obj_escola_det = $obj_escola->detalhe();
+					$registro["ref_cod_escola"] = $obj_escola_det["nm_escola"];
+			}
+		}
+                
+                $obj_permissoes = new clsPermissoes();
+		$nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+		
 
 		if( ! $registro )
 		{
@@ -112,6 +155,28 @@ class indice extends clsDetalhe
 		{
 			$this->addDetalhe( array( "Editora", "{$registro["nm_editora"]}") );
 		}
+                
+                 if ($nivel_usuario == 1)
+		{
+			if( $registro["ref_cod_instituicao"] )
+			{
+				$this->addDetalhe( array( "Institui&ccedil;&atilde;o", "{$registro["ref_cod_instituicao"]}") );
+			}
+		}
+                
+                if ($nivel_usuario == 1 || $nivel_usuario == 2)
+		{
+			if( $registro["ref_cod_escola"] )
+			{
+				$this->addDetalhe( array( "Escola", "{$registro["ref_cod_escola"]}") );
+			}
+		}
+
+                   if( $registro["ref_cod_biblioteca"] )
+		{
+				$this->addDetalhe( array( "Biblioteca", "{$registro["ref_cod_biblioteca"]}") );
+		}
+                
 		if( $registro["cep"] )
 		{
 			$registro["cep"] = int2CEP($registro["cep"]);
