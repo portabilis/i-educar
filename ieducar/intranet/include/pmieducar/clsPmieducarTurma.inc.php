@@ -1689,6 +1689,283 @@ and  e.cod_escola = t.ref_ref_cod_escola
 		return false;
 	}
 
+/**
+	 * Retorna uma lista filtrados de acordo com os parametros
+	 * (Modificação da lista2, agora trazendo somente turmas do ano atual)
+	 * @return array
+	 */
+	function lista3( $int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null )
+	{
+
+		/*$nm_escola = "(
+	SELECT c.nm_escola AS nm_escola
+	FROM  pmieducar.escola_complemento c
+	WHERE c.ref_cod_escola = t.ref_ref_cod_escola
+AND e.cod_escola = t.ref_ref_cod_escola
+
+UNION
+	SELECT j.fantasia AS nm_escola
+	FROM  cadastro.juridica j
+	WHERE j.idpes = e.ref_idpes
+and  e.cod_escola = t.ref_ref_cod_escola
+					)  AS nm_escola ";a*/
+		$sql = "SELECT {$this->_campos_lista},c.nm_curso,s.nm_serie,i.nm_instituicao FROM {$this->_tabela} t left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c, {$this->_schema}instituicao i ";
+		$filtros = "";
+
+		$whereAnd = " WHERE t.ref_cod_curso = c.cod_curso AND c.ref_cod_instituicao = i.cod_instituicao AND ";
+
+		if( is_numeric( $int_cod_turma ) )
+		{
+			$filtros .= "{$whereAnd} t.cod_turma = '{$int_cod_turma}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_ref_usuario_exc ) )
+		{
+			$filtros .= "{$whereAnd} t.ref_usuario_exc = '{$int_ref_usuario_exc}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_ref_usuario_cad ) )
+		{
+			$filtros .= "{$whereAnd} t.ref_usuario_cad = '{$int_ref_usuario_cad}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_ref_ref_cod_serie ) )
+		{
+			$filtros .= "{$whereAnd} t.ref_ref_cod_serie = '{$int_ref_ref_cod_serie}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_ref_ref_cod_escola ) )
+		{
+			$filtros .= "{$whereAnd} t.ref_ref_cod_escola = '{$int_ref_ref_cod_escola}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_ref_cod_infra_predio_comodo ) )
+		{
+			$filtros .= "{$whereAnd} t.ref_cod_infra_predio_comodo = '{$int_ref_cod_infra_predio_comodo}'";
+			$whereAnd = " AND ";
+		}
+		if( is_string( $str_nm_turma ) )
+		{
+			$filtros .= "{$whereAnd} t.nm_turma LIKE '%{$str_nm_turma}%'";
+			$whereAnd = " AND ";
+		}
+		if( is_string( $str_sgl_turma ) )
+		{
+			$filtros .= "{$whereAnd} t.sgl_turma LIKE '%{$str_sgl_turma}%'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_max_aluno ) )
+		{
+			$filtros .= "{$whereAnd} t.max_aluno = '{$int_max_aluno}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_multiseriada ) )
+		{
+			$filtros .= "{$whereAnd} t.multiseriada = '{$int_multiseriada}'";
+			$whereAnd = " AND ";
+		}
+		if( is_string( $date_data_cadastro_ini ) )
+		{
+			$filtros .= "{$whereAnd} t.data_cadastro >= '{$date_data_cadastro_ini}'";
+			$whereAnd = " AND ";
+		}
+		if( is_string( $date_data_cadastro_fim ) )
+		{
+			$filtros .= "{$whereAnd} t.data_cadastro <= '{$date_data_cadastro_fim}'";
+			$whereAnd = " AND ";
+		}
+		if( is_string( $date_data_exclusao_ini ) )
+		{
+			$filtros .= "{$whereAnd} t.data_exclusao >= '{$date_data_exclusao_ini}'";
+			$whereAnd = " AND ";
+		}
+		if( is_string( $date_data_exclusao_fim ) )
+		{
+			$filtros .= "{$whereAnd} t.data_exclusao <= '{$date_data_exclusao_fim}'";
+			$whereAnd = " AND ";
+		}
+		if( is_null( $int_ativo ) || $int_ativo )
+		{
+			$filtros .= "{$whereAnd} t.ativo = '1'";
+			$whereAnd = " AND ";
+		}
+		else
+		{
+			$filtros .= "{$whereAnd} t.ativo = '0'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_ref_cod_turma_tipo ) )
+		{
+			$filtros .= "{$whereAnd} t.ref_cod_turma_tipo = '{$int_ref_cod_turma_tipo}'";
+			$whereAnd = " AND ";
+		}
+		if( ( $time_hora_inicial_ini ) )
+		{
+			$filtros .= "{$whereAnd} t.hora_inicial >= '{$time_hora_inicial_ini}'";
+			$whereAnd = " AND ";
+		}
+		if( ( $time_hora_inicial_fim ) )
+		{
+			$filtros .= "{$whereAnd} t.hora_inicial <= '{$time_hora_inicial_fim}'";
+			$whereAnd = " AND ";
+		}
+		if( ( $time_hora_final_ini ) )
+		{
+			$filtros .= "{$whereAnd} t.hora_final >= '{$time_hora_final_ini}'";
+			$whereAnd = " AND ";
+		}
+		if( ( $time_hora_final_fim ) )
+		{
+			$filtros .= "{$whereAnd} t.hora_final <= '{$time_hora_final_fim}'";
+			$whereAnd = " AND ";
+		}
+		if( ( $time_hora_inicio_intervalo_ini ) )
+		{
+			$filtros .= "{$whereAnd} t.hora_inicio_intervalo >= '{$time_hora_inicio_intervalo_ini}'";
+			$whereAnd = " AND ";
+		}
+		if( ( $time_hora_inicio_intervalo_fim ) )
+		{
+			$filtros .= "{$whereAnd} t.hora_inicio_intervalo <= '{$time_hora_inicio_intervalo_fim}'";
+			$whereAnd = " AND ";
+		}
+		if( ( $time_hora_fim_intervalo_ini ) )
+		{
+			$filtros .= "{$whereAnd} t.hora_fim_intervalo >= '{$time_hora_fim_intervalo_ini}'";
+			$whereAnd = " AND ";
+		}
+		if( ( $time_hora_fim_intervalo_fim ) )
+		{
+			$filtros .= "{$whereAnd} t.hora_fim_intervalo <= '{$time_hora_fim_intervalo_fim}'";
+			$whereAnd = " AND ";
+		}
+	/*	if( is_numeric( $int_ref_cod_curso ) )
+		{
+			$filtros .= "{$whereAnd} s.ref_cod_curso = '{$int_ref_cod_curso}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_ref_cod_instituicao ) )
+		{
+			$filtros .= "{$whereAnd} e.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
+			$whereAnd = " AND ";
+		}*/
+		if( is_numeric( $int_ref_cod_regente ) )
+		{
+			$filtros .= "{$whereAnd} t.ref_cod_regente = '{$int_ref_cod_regente}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_ref_cod_instituicao_regente ) )
+		{
+			$filtros .= "{$whereAnd} t.ref_cod_instituicao_regente = '{$int_ref_cod_instituicao_regente}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_ref_cod_instituicao ) )
+		{
+			$filtros .= "{$whereAnd} t.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_ref_cod_curso ) )
+		{
+			$filtros .= "{$whereAnd} t.ref_cod_curso = '{$int_ref_cod_curso}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_ref_ref_cod_escola_mult ) )
+		{
+			$filtros .= "{$whereAnd} t.ref_ref_cod_escola_mult = '{$int_ref_ref_cod_escola_mult}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_ref_ref_cod_serie_mult ) )
+		{
+			$filtros .= "{$whereAnd} t.int_ref_ref_cod_serie_mult = '{$int_ref_ref_cod_serie_mult}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric($int_qtd_min_alunos_matriculados) )
+		{
+			$filtros .= "{$whereAnd} (SELECT COUNT(0) FROM pmieducar.matricula_turma WHERE ref_cod_turma = t.cod_turma) >= '{$int_qtd_min_alunos_matriculados}' ";
+			$whereAnd = " AND ";
+		}
+		if (is_bool($visivel))
+		{
+			if ($visivel)
+			{
+				$filtros .= "{$whereAnd} t.visivel = TRUE";
+				$whereAnd = " AND ";
+			}
+			else
+			{
+				$filtros .= "{$whereAnd} t.visivel = FALSE";
+				$whereAnd = " AND ";
+			}
+		}
+		elseif (is_array($visivel) && count($visivel))
+		{
+			$filtros .= "{$whereAnd} t.visivel IN (".implode(",", $visivel).")";
+			$whereAnd = " AND ";
+		}
+		else
+		{
+			$filtros .= "{$whereAnd} t.visivel = TRUE";
+			$whereAnd = " AND ";
+		}
+
+		if( is_numeric( $turma_turno_id ) ) {
+			$filtros .= "{$whereAnd} t.turma_turno_id = '{$turma_turno_id}'";
+			$whereAnd = " AND ";
+		}
+
+		if( is_numeric( $tipo_boletim ) ) {
+			$filtros .= "{$whereAnd} t.tipo_boletim = '{$tipo_boletim}'";
+			$whereAnd = " AND ";
+		}
+
+		if( is_numeric( $ano ) ) {
+			$filtros .= "{$whereAnd} t.ano = '{$ano}'";
+			$whereAnd = " AND ";
+		}
+
+		$filtros .= "{$whereAnd} (ano = (SELECT max(ano)
+  FROM pmieducar.escola_ano_letivo mat	        
+  WHERE ativo = 1 and mat.andamento = 1) or ((t.ano is null) AND (select 1 from pmieducar.matricula_turma 
+  where ativo = 1 and date_part('year',data_cadastro) = (SELECT max(ano)
+  FROM pmieducar.escola_ano_letivo
+  WHERE ativo = 1 and andamento = 1 and t.cod_turma = ref_cod_turma)limit 1) is not null))";
+
+		$db = new clsBanco();
+		$countCampos = count( explode( ",", $this->_campos_lista ) );
+		$resultado = array();
+
+		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
+//		echo "<!--{$sql}-->";
+
+//		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} t, {$this->_schema}escola_serie es, {$this->_schema}serie s, {$this->_schema}escola e {$filtros}" );
+	 	$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} t left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c , {$this->_schema}instituicao i {$filtros}" );
+
+		$db->Consulta( $sql );
+
+		if( $countCampos > 1 )
+		{
+			while ( $db->ProximoRegistro() )
+			{
+				$tupla = $db->Tupla();
+
+				$tupla["_total"] = $this->_total;
+				$resultado[] = $tupla;
+			}
+		}
+		else
+		{
+			while ( $db->ProximoRegistro() )
+			{
+				$tupla = $db->Tupla();
+				$resultado[] = $tupla[$this->_campos_lista];
+			}
+		}
+		if( count( $resultado ) )
+		{
+			return $resultado;
+		}
+		return false;
+	}
 	/**
 	 * Retorna um array com os dados de um registro
 	 *
