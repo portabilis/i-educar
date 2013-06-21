@@ -29,6 +29,7 @@ $desvio_diretorio = "";
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
+require_once 'include/localizacaoSistema.php';
 
 class clsIndex extends clsBase
 {
@@ -37,6 +38,7 @@ class clsIndex extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} Vínculo Funcionários!" );
 		$this->processoAp = "190";
+                $this->addEstilo( "localizacaoSistema" );
 	}
 }
 
@@ -83,6 +85,14 @@ class indice extends clsListagem
 			$this->addLinhas( array( "<img src='imagens/noticia.jpg' border=0> <a href='funcionario_vinculo_det.php?cod_func=$cod_func_vinculo'>$nome</a>") );
 		}
 		$this->largura = "100%";
+                
+                $localizacao = new LocalizacaoSistema();
+                $localizacao->entradaCaminhos( array(
+                    $_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
+                    ""                                  => "Vínculos"
+                ));
+                $this->enviaLocalizacao($localizacao->montar());
+                
 		// Paginador
 		$this->addPaginador2( "funcionario_vinculo_lst.php", $total, $_GET, $this->nome, $limite );
 		$this->acao = "go(\"funcionario_vinculo_cad.php\")";
