@@ -32,7 +32,6 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/pmieducar/clsPmieducarMatriculaTurma.inc.php';
 
 /**
  * clsIndexBase class.
@@ -259,15 +258,7 @@ class indice extends clsCadastro
           if (is_array($serie) && count($serie))
             $serie = $serie['nm_serie'];
           else
-            $serie = '';
-          
-//          $turma = new clsPmieducarTurma($m['ref_cod_turma'], null, null, $m['ref_ref_cod_serie'], null, null,  $m['ref_cod_curso']);
-//          $turma = $turma->detalhe();
-//          if (is_array($turma) && count($turma))
-//              $turma = $turma['nm_turma'];
-//              else 
-//                $turma = '';                  
-             
+            $serie = '';             
 
           $escola = new clsPmieducarEscola($m['ref_ref_cod_escola']);
           $escola = $escola->detalhe();
@@ -404,8 +395,10 @@ class indice extends clsCadastro
 
       $cadastrou = $obj->cadastra();
       
-      $this->ref_cod_turma = $_POST['ref_cod_turma'];
-      $this->enturmacaoMatricula($this->cod_matricula, $this->ref_cod_turma);
+      // turma
+      $cod_matricula = $cadastrou;
+      $this->enturmacaoMatricula($cod_matricula, $this->ref_cod_turma);
+      
       if ($cadastrou) {
 
         $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
