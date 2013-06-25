@@ -296,6 +296,9 @@ class indice extends clsDetalhe
 		{
 			$this->addDetalhe( array( "Disciplina", "{$tabela}") );
 		}
+	
+
+		$this->addBotao('Copiar Histórico',"educar_historico_escolar_cad.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}&copia=true");
 
 		$obj_permissoes = new clsPermissoes();
 		if( $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7 ) )
