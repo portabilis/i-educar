@@ -1036,7 +1036,7 @@ class clsPmieducarMatricula
       if (trim($obs)=='')
         $obs = "Não informado";
       $db = new clsBanco();
-      $consulta = "UPDATE {$this->_tabela} SET aprovado = 6, obs_aprovado = '$obs' WHERE cod_matricula = $this->cod_matricula";
+      $consulta = "UPDATE {$this->_tabela} SET aprovado = 6, observacao = '$obs' WHERE cod_matricula = $this->cod_matricula";
       $db->Consulta($consulta);
 
       return TRUE;

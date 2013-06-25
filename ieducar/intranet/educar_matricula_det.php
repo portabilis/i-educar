@@ -215,7 +215,7 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Situação', $aprovado));
     }
     if ($campoObs)
-      $this->addDetalhe(array('Observação',$registro['obs_aprovado']));
+      $this->addDetalhe(array('Observação',$registro['observacao']));
 
     $this->addDetalhe(array('Formando', $registro['formando'] == 0 ? 'N&atilde;o' : 'Sim'));
 
