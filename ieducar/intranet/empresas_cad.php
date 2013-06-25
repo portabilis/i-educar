@@ -283,6 +283,7 @@ class indice extends clsCadastro
 	 		if( $this->telefone_1 )
 			{
 				$this->telefone_1 = str_replace( "-", "", $this->telefone_1 );
+				$this->telefone_1 = str_replace( " ", "", $this->telefone_1 );
 				if( is_numeric( $this->telefone_1 ) )
 				{
 					$objTelefone = new clsPessoaTelefone($this->cod_pessoa_fj,1,$this->telefone_1,$this->ddd_telefone_1);
@@ -292,6 +293,7 @@ class indice extends clsCadastro
 			if( $this->telefone_2 )
 			{
 				$this->telefone_2 = str_replace( "-", "", $this->telefone_2 );
+				$this->telefone_2 = str_replace( " ", "", $this->telefone_2 );
 				if( is_numeric( $this->telefone_2 ) )
 				{
 					$objTelefone = new clsPessoaTelefone($this->cod_pessoa_fj,2,$this->telefone_2,$this->ddd_telefone_2);
@@ -301,6 +303,7 @@ class indice extends clsCadastro
 			if( $this->telefone_mov )
 			{
 				$this->telefone_mov = str_replace( "-", "", $this->telefone_mov );
+				$this->telefone_mov = str_replace( " ", "", $this->telefone_mov );
 				if( is_numeric( $this->telefone_mov ) )
 				{
 					$objTelefone = new clsPessoaTelefone($this->cod_pessoa_fj,3,$this->telefone_mov,$this->ddd_telefone_mov);
@@ -310,6 +313,7 @@ class indice extends clsCadastro
 			if( $this->telefone_fax )
 			{
 				$this->telefone_fax = str_replace( "-", "", $this->telefone_fax );
+				$this->telefone_fax = str_replace( " ", "", $this->telefone_fax );
 				if( is_numeric( $this->telefone_fax ) )
 				{
 					$objTelefone = new clsPessoaTelefone($this->cod_pessoa_fj,4,$this->telefone_fax,$this->ddd_telefone_fax);
