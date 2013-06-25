@@ -242,7 +242,7 @@ class indice extends clsCadastro
 
 
 			// Telefones
-
+			/*
 			$this->campoTexto( "ddd_telefone_1", "DDD Telefone 1",  $this->ddd_telefone_1, "3", "2", false );
 			$this->campoTexto( "telefone_1", "Telefone 1",  $this->telefone_1, "10", "15", false );
 			$this->campoTexto( "ddd_telefone_2", "DDD Telefone 2",  $this->ddd_telefone_2, "3", "2", false );
@@ -251,6 +251,12 @@ class indice extends clsCadastro
 			$this->campoTexto( "telefone_mov", "Celular",  $this->telefone_mov, "10", "15", false );
 			$this->campoTexto( "ddd_telefone_fax", "DDD Fax",  $this->ddd_telefone_fax, "3", "2", false );
 			$this->campoTexto( "telefone_fax", "Fax",  $this->telefone_fax, "10", "15", false );
+			*/
+
+			$this->inputTelefone('1', 'Telefone 1');
+         	$this->inputTelefone('2', 'Telefone 2');
+         	$this->inputTelefone('mov', 'Celular');
+            $this->inputTelefone('fax', 'Fax');
 
 			// Dados da Empresa
 
@@ -455,6 +461,38 @@ class indice extends clsCadastro
 		header("LOCATION: empresas_lst.php");
 		return true;
 	}
+
+  protected function inputTelefone($type, $typeLabel = '') {
+    if (! $typeLabel)
+      $typeLabel = "Telefone {$type}";
+
+    // ddd
+
+    $options = array(
+      'required'    => false,
+      'label'       => "(ddd) / {$typeLabel}",
+      'placeholder' => 'ddd',
+      'value'       => $this->{"ddd_telefone_{$type}"},
+      'max_length'  => 3,
+      'size'        => 3,
+      'inline'      => true
+    );
+
+    $this->inputsHelper()->integer("ddd_telefone_{$type}", $options);
+
+
+   // telefone
+
+    $options = array(
+      'required'    => false,
+      'label'       => '',
+      'placeholder' => $typeLabel,
+      'value'       => $this->{"telefone_{$type}"},
+      'max_length'  => 11
+    );
+
+    $this->inputsHelper()->integer("telefone_{$type}", $options);
+  }
 
 }
 
