@@ -643,8 +643,8 @@ class indice extends clsDetalhe
     catch (Exception $e) {
     }
 
-    $this->addDetalhe(array('Transporte escolar', isset($transporteAluno) ? 'Sim' : 'Não'));
-    if ($transporteAluno) {
+    $this->addDetalhe(array('Transporte escolar', isset($transporteAluno) && $transporteAluno->responsavel!='Não utiliza'  ? 'Sim' : 'Não'));
+    if ($transporteAluno && $transporteAluno->responsavel!='Não utiliza') {
       $this->addDetalhe(array('Responsável transporte', $transporteAluno->responsavel));
     }
 
