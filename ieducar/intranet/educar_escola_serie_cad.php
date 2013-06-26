@@ -203,14 +203,14 @@ class indice extends clsCadastro
     $this->hora_fim_intervalo    = substr($this->hora_fim_intervalo, 0, 5);
 
     // hora
-    $this->campoHora('hora_inicial', 'Hora Inicial', $this->hora_inicial, TRUE);
-    $this->campoHora('hora_final', 'Hora Final', $this->hora_final, TRUE);
+    $this->campoHora('hora_inicial', 'Hora Inicial', $this->hora_inicial, false);
+    $this->campoHora('hora_final', 'Hora Final', $this->hora_final, false);
 
     $this->campoHora('hora_inicio_intervalo', 'Hora In&iacute;cio Intervalo',
-      $this->hora_inicio_intervalo, TRUE);
+      $this->hora_inicio_intervalo, false);
 
     $this->campoHora('hora_fim_intervalo', 'Hora Fim Intervalo',
-      $this->hora_fim_intervalo, TRUE);
+      $this->hora_fim_intervalo, false);
 
 		$this->campoCheck("bloquear_enturmacao_sem_vagas", "Bloquear enturmação após atingir limite de vagas", $this->bloquear_enturmacao_sem_vagas);
 
@@ -371,7 +371,7 @@ class indice extends clsCadastro
       die();
     }
 
-    $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+    $this->mensagem = 'Cadastro n&atilde;o rrealizado.<br>';
     echo "<!--\nErro ao cadastrar clsPmieducarEscolaSerie\nvalores obrigatorios\nis_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->pessoa_logada ) && ( $this->hora_inicial ) && ( $this->hora_final ) && ( $this->hora_inicio_intervalo ) && ( $this->hora_fim_intervalo )\n-->";
     return FALSE;
   }

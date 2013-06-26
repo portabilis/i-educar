@@ -274,7 +274,7 @@ class clsPmieducarEscolaSerie
 	 */
 	function cadastra()
 	{
-		if( is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_usuario_cad ) && ( $this->hora_inicial ) && ( $this->hora_final ) && ( $this->hora_inicio_intervalo ) && ( $this->hora_fim_intervalo ) )
+		if( is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_usuario_cad ) )
 		{
 			$db = new clsBanco();
 
