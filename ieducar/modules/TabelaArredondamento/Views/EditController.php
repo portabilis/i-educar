@@ -158,6 +158,11 @@ class EditController extends Core_Controller_Page_EditController
     unset($notaTipos[RegraAvaliacao_Model_Nota_TipoValor::NENHUM]);
     $this->campoRadio('tipoNota', $this->_getLabel('tipoNota'), $notaTipos,
       $this->getEntity()->get('tipoNota'), '', $this->_getHelp('tipoNota'));
+    if ($this->getEntity()->id!='')
+      $this->campoTexto('tipNota',$this->_getLabel('tipoNota'),$notaTipos[$this->getEntity()->get('tipoNota')],40,40,false,false,false,'','','','',true);
+    else
+      $this->campoRadio('tipoNota', $this->_getLabel('tipoNota'), $notaTipos,
+        $this->getEntity()->get('tipoNota'), '', $this->_getHelp('tipoNota'));
 
     // Parte condicional
     if (!$this->getEntity()->isNew()) {
