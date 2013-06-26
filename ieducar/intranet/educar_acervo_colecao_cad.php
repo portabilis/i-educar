@@ -79,6 +79,16 @@ class indice extends clsCadastro
 				foreach( $registro AS $campo => $val )	// passa todos os valores obtidos no registro para atributos do objeto
 					$this->$campo = $val;
 
+                                $obj_obra = new clsPmieducarAcervoColecao($this->cod_acervo_colecao);
+				$det_obra = $obj_obra->detalhe();
+
+				$obj_biblioteca = new clsPmieducarBiblioteca($det_obra["ref_cod_biblioteca"]);
+				$obj_det = $obj_biblioteca->detalhe();
+
+				$this->ref_cod_instituicao = $obj_det["ref_cod_instituicao"];
+				$this->ref_cod_escola = $obj_det["ref_cod_escola"];
+				$this->ref_cod_biblioteca = $obj_det["cod_biblioteca"];
+                           
 			$obj_permissoes = new clsPermissoes();
 			if( $obj_permissoes->permissao_excluir( 593, $this->pessoa_logada, 11 ) )
 			{

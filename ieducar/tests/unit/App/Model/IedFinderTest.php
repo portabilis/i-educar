@@ -207,10 +207,11 @@ class App_Model_IedFinderTest extends UnitBaseTest
     );
 
     $mock = $this->getCleanMock('clsPmieducarSerie');
+    
     $mock->expects($this->exactly(2))
          ->method('lista')
          ->will($this->onConsecutiveCalls($returnValue, array($returnValue[1])));
-
+    
     // Registra a instância no repositório de classes de CoreExt_Entity
     $instance = CoreExt_Entity::addClassToStorage(
       'clsPmieducarSerie', $mock, NULL, TRUE);
