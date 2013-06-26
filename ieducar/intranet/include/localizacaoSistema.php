@@ -67,6 +67,7 @@ class LocalizacaoSistema {
         }
         $this->html .= '</ul>';
     }
+    
 
     public function montar() {
         return $this->html;
