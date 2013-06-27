@@ -720,7 +720,7 @@ class indice extends clsCadastro
               return FALSE;
             }
           }
-
+          if ($this->turma_dia_semana){
           // Cadastra dia semana
           foreach ($this->turma_dia_semana as $campo) {
             $obj = new clsPmieducarTurmaDiaSemana($campo["dia_semana_"],
@@ -734,6 +734,7 @@ class indice extends clsCadastro
 
               return FALSE;
             }
+          }
           }
 
           $this->mensagem .= 'Cadastro efetuado com sucesso.';
@@ -852,7 +853,6 @@ class indice extends clsCadastro
               }
             }
           }
-
           // Edita o dia da semana
           $obj  = new clsPmieducarTurmaDiaSemana(NULL, $this->cod_turma);
           $excluiu = $obj->excluirTodos();
