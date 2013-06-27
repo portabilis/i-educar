@@ -223,7 +223,7 @@ class indice extends clsCadastro
                   $script);
     }
 
-    $this->campoLista('ref_ref_cod_serie', 'Série', $opcoes_serie, $this->ref_ref_cod_serie,
+    $this->campoLista('ref_ref_cod_serie', 'S&eacute;rie', $opcoes_serie, $this->ref_ref_cod_serie,
       '', FALSE, '', $script); 
 
   // o campo ano somente é exibido para turmas novas  ou cadastradas após inclusão deste campo.
@@ -304,7 +304,7 @@ class indice extends clsCadastro
 
     $this->campoTexto('sgl_turma', 'Sigla', $this->sgl_turma, 15, 15, FALSE);
 
-    $this->campoNumero('max_aluno', 'Máximo de Alunos', $this->max_aluno, 3, 3, TRUE);
+    $this->campoNumero('max_aluno', 'M&aacute;ximo de Alunos', $this->max_aluno, 3, 3, TRUE);
 
     $ativo = isset($this->cod_turma) ? dbBool($this->visivel) : true;
     $this->campoCheck('visivel', 'Ativo', $ativo);
@@ -312,7 +312,7 @@ class indice extends clsCadastro
     $this->campoCheck('multiseriada', 'Multi-Seriada', $this->multiseriada, '',
       FALSE, FALSE);
 
-    $this->campoLista('ref_ref_cod_serie_mult','Série', array('' => 'Selecione'),
+    $this->campoLista('ref_ref_cod_serie_mult','S&eacute;rie', array('' => 'Selecione'),
       '', '', FALSE, '', '', '', FALSE);
 
     $this->campoOculto('ref_ref_cod_serie_mult_',$this->ref_ref_cod_serie_mult);
@@ -1335,7 +1335,7 @@ function atualizaMultiSerie(xml)
   var campoSerie      = document.getElementById('ref_ref_cod_serie');
 
   campoSerieMult.length = 1;
-  campoSerieMult.options[0] = new Option('Selecione uma série', '', false, false);
+  campoSerieMult.options[0] = new Option('Selecione uma s&eacute;rie', '', false, false);
 
   var multi_serie = xml.getElementsByTagName('serie');
 
@@ -1348,7 +1348,7 @@ function atualizaMultiSerie(xml)
   }
 
   if (campoSerieMult.length == 1 && campoCurso != '') {
-    campoSerieMult.options[0] = new Option('O curso não possui nenhuma série', '', false, false);
+    campoSerieMult.options[0] = new Option('O curso não possui nenhuma s&eacute;rie', '', false, false);
   }
 
   document.getElementById('ref_ref_cod_serie_mult').value = document.getElementById('ref_ref_cod_serie_mult_').value;
@@ -1766,7 +1766,7 @@ function getEscolaCursoSerie()
 
   if (campoEscola && campoCurso) {
     campoSerie.disabled = true;
-    campoSerie.options[0].text = 'Carregando séries';
+    campoSerie.options[0].text = 'Carregando s&eacute;ries';
 
     var xml = new ajax(atualizaLstEscolaCursoSerie);
     xml.envia('educar_escola_curso_serie_xml.php?esc=' + campoEscola + '&cur=' + campoCurso);
@@ -1780,7 +1780,7 @@ function atualizaLstEscolaCursoSerie(xml)
 {
   var campoSerie             = document.getElementById('ref_ref_cod_serie');
   campoSerie.length          = 1;
-  campoSerie.options[0].text = 'Selecione uma série';
+  campoSerie.options[0].text = 'Selecione uma s&eacute;rie';
   campoSerie.disabled        = false;
 
   series = xml.getElementsByTagName('serie');
@@ -1793,7 +1793,7 @@ function atualizaLstEscolaCursoSerie(xml)
     }
   }
   else {
-    campoSerie.options[0].text = 'A escola/curso não possui nenhuma série';
+    campoSerie.options[0].text = 'A escola/curso não possui nenhuma s&eacute;rie';
   }
 }
 </script>
