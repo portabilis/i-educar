@@ -536,7 +536,7 @@ class DiarioApiController extends ApiCoreController
       $alunos = new clsPmieducarMatriculaTurma();
       $alunos->setOrderby('nome');
 
-      $alunos = $alunos->lista4(
+      $alunos = $alunos->lista(
         $this->getRequest()->matricula_id,
         $this->getRequest()->turma_id,
         NULL,
