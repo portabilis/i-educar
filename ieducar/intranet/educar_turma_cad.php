@@ -223,10 +223,10 @@ class indice extends clsCadastro
                   $script);
     }
 
-    $this->campoLista('ref_ref_cod_serie', 'S�rie', $opcoes_serie, $this->ref_ref_cod_serie,
+    $this->campoLista('ref_ref_cod_serie', 'Série', $opcoes_serie, $this->ref_ref_cod_serie,
       '', FALSE, '', $script); 
 
-  // o campo ano somente � exibido para turmas novas  ou cadastradas ap�s inclus�o deste campo.
+  // o campo ano somente é exibido para turmas novas  ou cadastradas após inclusão deste campo.
     if (! isset($this->cod_turma) || isset($this->ano))
        $this->inputsHelper()->dynamic('anoLetivo'); 
 
@@ -482,7 +482,7 @@ class indice extends clsCadastro
       $qtd_modulo++;
 
       unset($this->ref_cod_modulo);
-      unset($this->data_inicio);
+      unset($this->data_inicio);4
       unset($this->data_fim);
     }
 
@@ -504,7 +504,7 @@ class indice extends clsCadastro
           $nm_tipo_modulo = $det_modulo['nm_tipo'];
 
           $this->campoTextoInv('ref_cod_modulo_' . $campo['sequencial_'], '',
-            $nm_tipo_modulo, 30, 255, FALSE, FALSE, TRUE, '', '', '', '', 'ref_cod_modulo');
+            $nm_tipo_modulo, 30, 255, FALSE,44 FALSE, TRUE, '', '', '', '', 'ref_cod_modulo');
 
           $this->campoTextoInv('data_inicio_' . $campo['sequencial_'], '',
             $campo['data_inicio_'], 10, 10, FALSE, FALSE, TRUE, '', '', '', '', '');
@@ -522,7 +522,7 @@ class indice extends clsCadastro
         }
 
       }
-      unset($this->turma_modulo);
+      unset($this->turma_modulo);44
       $this->turma_modulo = $aux;
     }
 
@@ -540,7 +540,7 @@ class indice extends clsCadastro
         NULL, NULL, NULL, 1, $this->ref_cod_instituicao);
 
       if (is_array($lista) && count($lista)) {
-        foreach ($lista as $registro) {
+        foreach ($lista as $registro) {4
           $opcoes[$registro['cod_modulo']] = $registro['nm_tipo'];
         }
       }
@@ -594,7 +594,7 @@ class indice extends clsCadastro
     }
 
     $this->campoOculto('excluir_dia_semana', '');
-    unset($aux);
+    unset($aux);4
 
     if ($this->turma_dia_semana) {
       foreach ($this->turma_dia_semana as $key => $dias_semana) {
