@@ -816,7 +816,7 @@ class indice extends clsCadastro
       $this->turma_modulo = unserialize(urldecode($this->turma_modulo));
       $this->turma_dia_semana = unserialize(urldecode($this->turma_dia_semana));
 
-      if ($this->turma_modulo && $this->turma_dia_semana) {
+      if ($this->turma_modulo) {
         $obj = new clsPmieducarTurma($this->cod_turma, $this->pessoa_logada, NULL,
           $this->ref_ref_cod_serie, $this->ref_cod_escola,
           $this->ref_cod_infra_predio_comodo, $this->nm_turma, $this->sgl_turma,
@@ -883,7 +883,7 @@ class indice extends clsCadastro
         }
       }
       else {
-        echo '<script type="text/javascript">alert("É necessário adicionar pelo menos 1 módulo e 1 dia da semana!")</script>';
+        echo '<script type="text/javascript">alert("É necessário adicionar pelo menos 1 módulo!")</script>';
         $this->mensagem = 'Edição não realizada.';
 
         return FALSE;
