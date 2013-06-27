@@ -691,7 +691,7 @@ class indice extends clsCadastro
       $this->turma_modulo = unserialize(urldecode($this->turma_modulo));
       $this->turma_dia_semana = unserialize(urldecode($this->turma_dia_semana));
 
-      if ($this->turma_modulo && $this->turma_dia_semana) {
+      if ($this->turma_modulo) {
         $obj = new clsPmieducarTurma(NULL, NULL, $this->pessoa_logada,
           $this->ref_ref_cod_serie, $this->ref_cod_escola,
           $this->ref_cod_infra_predio_comodo, $this->nm_turma, $this->sgl_turma,
@@ -749,7 +749,7 @@ class indice extends clsCadastro
         return FALSE;
       }
 
-      echo '<script type="text/javascript">alert("É necessário adicionar pelo menos 1 módulo e 1 dia da semana!")</script>';
+      echo '<script type="text/javascript">alert("É necessário adicionar pelo menos 1 módulo!")</script>';
       $this->mensagem = "Cadastro não realizado.";
 
       return FALSE;
@@ -1701,12 +1701,12 @@ function valida_xml(xml)
       document.getElementById('ref_cod_modulo').focus();
       return false;
     }
-
+    /*
     if (qtdDiaSemana == 1) {
       alert("ATENÇÂO! \n É necessário incluir um 'Dia da Semana'!");
       document.getElementById('dia_semana').focus();
       return false;
-    }
+    }*/
   }
 
   if (document.getElementById('padrao_ano_escolar') == 1) {
