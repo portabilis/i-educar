@@ -123,7 +123,7 @@ function validatesIfValueIsInSet(value, targetId, set) {
 
     return false;
   }*/
-  if (value<0 || value>10 || value.length>3){
+  if (value<0 || value>10){
     messageUtils.error('Informe um valor entre 0 à 10', targetId);
     return false;
   }else
