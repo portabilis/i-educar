@@ -222,17 +222,13 @@ class indice extends clsCadastro
       $script = sprintf("<img id='img_colecao' style='display: none;' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick='%s'>",
                   $script);
     }
-      $obj_matriculas_turma = new clsPmieducarMatriculaTurma();
-      $lst_matriculas_turma = $obj_matriculas_turma->lista(null,$this->cod_turma,null,null,null,null,null,null,1,null,null,null,null,null,false,null,null,null,null,null,null,false,null,1,true );
--   
-     $this->campoLista('ref_ref_cod_serie', 'S�rie', $opcoes_serie, $this->ref_ref_cod_serie,
--      '', FALSE, '', $script);
- 
--    // o campo ano somente � exibido para turmas novas  ou cadastradas ap�s inclus�o deste campo.
--    if (! isset($this->cod_turma) || isset($this->ano))
--      $this->inputsHelper()->dynamic('anoLetivo'); 
 
+    $this->campoLista('ref_ref_cod_serie', 'S�rie', $opcoes_serie, $this->ref_ref_cod_serie,
+      '', FALSE, '', $script); 
 
+  // o campo ano somente � exibido para turmas novas  ou cadastradas ap�s inclus�o deste campo.
+    if (! isset($this->cod_turma) || isset($this->ano))
+       $this->inputsHelper()->dynamic('anoLetivo'); 
 
     // Infra prédio cômodo
     $opcoes = array('' => 'Selecione');
@@ -718,7 +714,7 @@ class indice extends clsCadastro
               return FALSE;
             }
           }
-          if ($this->turma_dia_semana){
+
           // Cadastra dia semana
           foreach ($this->turma_dia_semana as $campo) {
             $obj = new clsPmieducarTurmaDiaSemana($campo["dia_semana_"],
@@ -732,7 +728,6 @@ class indice extends clsCadastro
 
               return FALSE;
             }
-          }
           }
 
           $this->mensagem .= 'Cadastro efetuado com sucesso.';
@@ -851,6 +846,7 @@ class indice extends clsCadastro
               }
             }
           }
+
           // Edita o dia da semana
           $obj  = new clsPmieducarTurmaDiaSemana(NULL, $this->cod_turma);
           $excluiu = $obj->excluirTodos();
