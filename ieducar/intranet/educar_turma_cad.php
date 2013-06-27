@@ -224,16 +224,14 @@ class indice extends clsCadastro
     }
       $obj_matriculas_turma = new clsPmieducarMatriculaTurma();
       $lst_matriculas_turma = $obj_matriculas_turma->lista(null,$this->cod_turma,null,null,null,null,null,null,1,null,null,null,null,null,false,null,null,null,null,null,null,false,null,1,true );
-      if (is_array($lst_matriculas_turma))
-      { 
-        $this->campoLista('ref_ref_cod_serie', 'Série', $opcoes_serie, $this->ref_ref_cod_serie,
-        '', FALSE, '', $script, true);
-      } else {
-        // o campo ano somente é exibido para turmas novas  ou cadastradas após inclusão deste campo.
-        if (! isset($this->cod_turma) || isset($this->ano))
+
+      if (!isset($this->cod_turma)){
         $this->inputsHelper()->dynamic('anoLetivo');
         $this->campoLista('ref_ref_cod_serie', 'Série', $opcoes_serie, $this->ref_ref_cod_serie,
-        '', FALSE, '', $script, false);
+          '', FALSE, '', $script, false);          
+      }else {
+        $this->campoLista('ref_ref_cod_serie', 'Série', $opcoes_serie, $this->ref_ref_cod_serie,
+        '', FALSE, '', $script, true);       
       }
 
 
