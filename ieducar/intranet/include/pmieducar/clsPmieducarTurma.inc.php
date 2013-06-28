@@ -1928,7 +1928,7 @@ and  e.cod_escola = t.ref_ref_cod_escola
   WHERE ativo = 1 and mat.andamento = 1) or ((t.ano is null) AND (select 1 from pmieducar.matricula_turma 
   where ativo = 1 and date_part('year',data_cadastro) = (SELECT max(ano)
   FROM pmieducar.escola_ano_letivo
-  WHERE ativo = 1 and andamento = 1 and t.cod_turma = ref_cod_turma)limit 1) is not null))";
+  WHERE ativo = 1 and andamento = 1) and t.cod_turma = ref_cod_turma limit 1) is not null))";
 
 		$db = new clsBanco();
 		$countCampos = count( explode( ",", $this->_campos_lista ) );
@@ -1938,9 +1938,10 @@ and  e.cod_escola = t.ref_ref_cod_escola
 //		echo "<!--{$sql}-->";
 
 //		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} t, {$this->_schema}escola_serie es, {$this->_schema}serie s, {$this->_schema}escola e {$filtros}" );
-	 	$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} t left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c , {$this->_schema}instituicao i {$filtros}" );
+	 	//$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} t left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c , {$this->_schema}instituicao i {$filtros}" );
+		$this->_total = 500;
 
-		$db->Consulta( $sql );
+		$db->Consulta( $sql);
 
 		if( $countCampos > 1 )
 		{
