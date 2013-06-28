@@ -367,7 +367,7 @@ class clsPmieducarMatriculaTurma
                     ) as nome_aluno";
       $tab_aluno = ", {$this->_schema}aluno a";
 
-      $where_nm_aluno = " AND a.cod_aluno = m.ref_cod_aluno AND a.ativo=1";
+      $where_nm_aluno = " AND a.cod_aluno = m.ref_cod_aluno";
     }
 
     if ( $bool_escola_andamento) {
