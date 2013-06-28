@@ -572,8 +572,6 @@ class clsPmieducarMatriculaTurma
     $db = new clsBanco();
     $countCampos = count(explode(',', $this->_campos_lista));
     $resultado = array();
-
-    $filtros .= " AND m.aprovado <> 6 AND m.aprovado <> 4 ";
     $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
     if ($parar) {
@@ -602,7 +600,7 @@ class clsPmieducarMatriculaTurma
       return $resultado;
     }
 
-    return FALSE;
+    return FALSE; 
   }
 
   function lista2($int_ref_cod_matricula = NULL, $int_ref_cod_turma = NULL,
