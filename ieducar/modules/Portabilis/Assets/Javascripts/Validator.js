@@ -1,4 +1,4 @@
-validatesIfValueIsInSet
+
 // #TODO rename this file to Validation.js and move functions validates* to object validationUtils
 
 var validationUtils = {
@@ -111,7 +111,7 @@ function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields
 
 
 function validatesIfValueIsInSet(value, targetId, set) {
-  /*if (objectUtils.length(set) > 0 && set[value] == undefined) {
+  if (objectUtils.length(set) > 0 && set[value] == undefined) {
     var s = [];
 
     $j.each(set, function(index, value) {
@@ -122,12 +122,9 @@ function validatesIfValueIsInSet(value, targetId, set) {
     messageUtils.error('Informe um valor que pertença ao conjunto: ' + s.join(', '), targetId);
 
     return false;
-  }*/
-  if (value<0 || value>10){
-    messageUtils.error('Informe um valor entre 0 à 10', targetId);
-    return false;
-  }else
-    return true;
+  }
+
+  return true;
 }
 
 
