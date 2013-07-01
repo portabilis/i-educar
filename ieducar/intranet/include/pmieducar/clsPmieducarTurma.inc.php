@@ -1938,8 +1938,8 @@ and  e.cod_escola = t.ref_ref_cod_escola
 //		echo "<!--{$sql}-->";
 
 //		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} t, {$this->_schema}escola_serie es, {$this->_schema}serie s, {$this->_schema}escola e {$filtros}" );
-	 	//$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} t left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c , {$this->_schema}instituicao i {$filtros}" );
-		$this->_total = 500;
+		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} t left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c , {$this->_schema}instituicao i {$filtros}" );
+
 
 		$db->Consulta( $sql);
 
