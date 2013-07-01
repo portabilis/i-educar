@@ -192,7 +192,7 @@ class indice extends clsCadastro
 
     $bloqueia = false;
     $anoVisivel = false;
-    if (! isset($this->ano) && !isset($this->cod_turma) ){
+    if (! isset($this->ano) || isset($this->cod_turma) ){
       $anoVisivel=true;
     }
     if(! isset($this->cod_turma)){
@@ -207,6 +207,7 @@ class indice extends clsCadastro
 
         if (is_array($lst_matriculas_turma) && count($lst_matriculas_turma)>0) {
             $bloqueia = true;
+            $anoVisivel=false; 
         }
       }
     }
