@@ -191,9 +191,9 @@ class indice extends clsCadastro
     $get_curso                = TRUE;
 
     $bloqueia = false;
-    $ano = false;
-    if (! isset($this->ano) || isset($this->cod_turma)){
-      $ano=true;
+    $anoVisivel = false;
+    if (! isset($this->ano) && !isset($this->cod_turma) ){
+      $anoVisivel=true;
     }
     if(! isset($this->cod_turma)){
       $bloqueia = false;
@@ -249,7 +249,7 @@ class indice extends clsCadastro
     $this->campoLista('ref_ref_cod_serie', 'S&eacute;rie', $opcoes_serie, $this->ref_ref_cod_serie,
       '', FALSE, '', $script, $bloqueia); 
 
-    if ($ano)
+    if ($anoVisivel)
       $this->inputsHelper()->dynamic('anoLetivo'); 
 
     // Infra prédio cômodo
