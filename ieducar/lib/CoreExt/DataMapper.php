@@ -597,9 +597,10 @@ abstract class CoreExt_DataMapper
    */
   public function save(CoreExt_Entity $instance)
   {
+    /*
     if (!$instance->isValid()) {
       throw new Exception('A instânca de "' . get_class($instance) . '" contém erros de validação.');
-    }
+    }*/
 
     // Coumpound key, todos os valores precisam estar setados, seja para
     // INSERT ou UPDATE. A instância precisa ser marcada explicitamente
