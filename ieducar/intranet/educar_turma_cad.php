@@ -223,12 +223,29 @@ class indice extends clsCadastro
                   $script);
     }
 
-    $this->campoLista('ref_ref_cod_serie', 'S&eacute;rie', $opcoes_serie, $this->ref_ref_cod_serie,
-      '', FALSE, '', $script); 
 
-  // o campo ano somente é exibido para turmas novas  ou cadastradas após inclusão deste campo.
-    if (! isset($this->cod_turma) || isset($this->ano))
-       $this->inputsHelper()->dynamic('anoLetivo'); 
+    $bloqueia = false;
+    if (! isset($this->ano) || isset($this->cod_turma)){
+         $this->inputsHelper()->dynamic('anoLetivo'); 
+    }
+    if(! isset($this->cod_turma)){
+      $bloqueia = false;
+    }else{
+      if (is_numeric($this->cod_turma)) {
+        $obj_matriculas_turma = new clsPmieducarMatriculaTurma();
+        $obj_matriculas_turma->setOrderby('nome_aluno');
+        $lst_matriculas_turma = $obj_matriculas_turma->lista(NULL, $this->cod_turma,
+         NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL,
+         array(1, 2, 3), NULL, NULL, NULL, NULL, TRUE, NULL, 1, TRUE);
+
+        if (is_array($lst_matriculas_turma) && count($lst_matriculas_turma)>0) {
+            $bloqueia = true;
+        }
+      }
+    }
+
+    $this->campoLista('ref_ref_cod_serie', 'S&eacute;rie', $opcoes_serie, $this->ref_ref_cod_serie,
+      '', FALSE, '', $script, $bloqueia); 
 
     // Infra prédio cômodo
     $opcoes = array('' => 'Selecione');
