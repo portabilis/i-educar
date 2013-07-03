@@ -13,5 +13,5 @@ if (!defined('awsSecretKey')) define('awsSecretKey', '***REMOVED***');
 //instantiate the class
 $s3 = new S3('***REMOVED***', '***REMOVED***');
 
-$s3->putBucket($bucket); //, S3::ACL_PUBLIC_READ)
+$s3->putBucket($bucket, S3::ACL_PUBLIC_READ);
 ?>
