@@ -83,7 +83,7 @@ class PictureController {
         if($s3->putObjectFile($tmp, $bucket , $actual_image_name, S3::ACL_PUBLIC_READ) )
         {
                                                 
-            $s3file='http://s3.amazonaws.com/'.$bucket.'/'.$actual_image_name;
+            $s3file='http://'.$bucket.'.s3.amazonaws.com/'.$actual_image_name;
             return $s3file;
         }
         else{
