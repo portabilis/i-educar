@@ -117,7 +117,7 @@ class PictureController {
                     return true;   
                 }
                 else{
-                    $this->errorMessage = "Fotos com mais de 200KB.";
+                    $this->errorMessage = "Não é permitido fotos com mais de 200KB.";
                     return false;
                 }
             }
