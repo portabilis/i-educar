@@ -117,7 +117,7 @@ class PictureController {
                     return true;   
                 }
                 else{
-                    $this->errorMessage = "Não é permitido fotos com mais de 200KB.";
+                    $this->errorMessage = "N&atilde;o &eacute; permitido fotos com mais de 200KB.";
                     return false;
                 }
             }
@@ -130,7 +130,7 @@ class PictureController {
             $this->errorMessage = "Selecione uma imagem."; 
             return false;
         }
-        $this->errorMessage = "Imagem inválida."; 
+        $this->errorMessage = "Imagem inv&aacute;lida."; 
         return false;
     }
     /**
