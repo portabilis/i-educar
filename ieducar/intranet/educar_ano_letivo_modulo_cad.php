@@ -147,7 +147,7 @@ class indice extends clsCadastro
     }
 
     $qtd_modulo = count($this->ano_letivo_modulo) == 0 ?
-      1 : count($this->ano_letivo_modulo) + 1;
+      0 : count($this->ano_letivo_modulo) + 1;
 
     if (is_numeric($this->ref_ano) &&
       is_numeric($this->ref_ref_cod_escola) &&
