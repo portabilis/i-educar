@@ -214,7 +214,7 @@ class clsControlador
     require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/bootstrap.php';
     $parceiro = $GLOBALS['coreExt']['Config']->app->template;
 
-    $templateName = (trim($parceiro)=='' ? 'templates/nvp_htmlloginintranet.tpl' : 'templates/'.$parceiro); 
+    $templateName = (trim($parceiro)=='' ? 'templates/nvp_htmlloginintranet.tpl' : 'templates/'.trim($parceiro)); 
     $templateFile = fopen($templateName, "r");
     $templateText = fread($templateFile, filesize($templateName));
     $templateText = str_replace( "<!-- #&ERROLOGIN&# -->", $this->messenger->toHtml('p'), $templateText);
