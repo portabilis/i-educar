@@ -169,6 +169,7 @@ class indice extends clsDetalhe
     $enturmacoes = $enturmacoes->lista($this->ref_cod_matricula, NULL, NULL,
       NULL, NULL, NULL, NULL, NULL, 1);
 
+    $existeTurma = false;
     $nomesTurmas = array();
     foreach ($enturmacoes as $enturmacao) {
       $turma         = new clsPmieducarTurma($enturmacao['ref_cod_turma']);
@@ -177,9 +178,10 @@ class indice extends clsDetalhe
     }
     $nomesTurmas = implode('<br />', $nomesTurmas);
 
-    if ($nomesTurmas)
+    if ($nomesTurmas){
       $this->addDetalhe(array('Turma', $nomesTurmas));
-    else
+      $existeTurma = true;
+    }else
       $this->addDetalhe(array('Turma', ''));
 
     if ($registro['ref_cod_reserva_vaga']) {
@@ -247,7 +249,8 @@ class indice extends clsDetalhe
         $this->array_botao_url_script[] = "go(\"educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
 
         // Apenas libera a dispensa de disciplina quando o aluno estiver enturmado
-        if ($registro['ref_ref_cod_serie'] && isset($nm_turma)) {
+        //
+        if ($registro['ref_ref_cod_serie'] && $existeTurma) {
           $this->array_botao[]            = 'Dispensa de Componentes Curriculares';
           $this->array_botao_url_script[] = "go(\"educar_dispensa_disciplina_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
         }
