@@ -156,7 +156,6 @@ class indice extends clsCadastro
       $obj = new clsPmieducarAnoLetivoModulo();
       $obj->setOrderBy('sequencial ASC');
       $registros = $obj->lista($this->ref_ano, $this->ref_ref_cod_escola);
-
       if ($registros) {
         foreach ($registros as $campo) {
           $this->ano_letivo_modulo[$campo[$qtd_modulo]]['sequencial_']     = $campo['sequencial'];
@@ -164,6 +163,7 @@ class indice extends clsCadastro
           $this->ano_letivo_modulo[$campo[$qtd_modulo]]['data_inicio_']    = dataFromPgToBr($campo['data_inicio']);
           $this->ano_letivo_modulo[$campo[$qtd_modulo]]['data_fim_']       = dataFromPgToBr($campo['data_fim']);
           $qtd_modulo++;
+
         }
       }
     }
@@ -185,6 +185,7 @@ class indice extends clsCadastro
     $this->campoOculto('excluir_modulo', '');
     $qtd_modulo = 1;
     unset($aux);
+    $i=0;
     if ($this->ano_letivo_modulo) {
       foreach ($this->ano_letivo_modulo as $campo) {
         if ($this->excluir_modulo == $campo['sequencial_']) {
@@ -192,6 +193,8 @@ class indice extends clsCadastro
           $this->excluir_modulo = NULL;
         }
         else {
+          $i++;
+          //echo "<script>alert('".$i."')</script>";
           $obj_modulo = new clsPmieducarModulo($campo['ref_cod_modulo_']);
           $det_modulo = $obj_modulo->detalhe();
           $nm_tipo_modulo = $det_modulo['nm_tipo'];
