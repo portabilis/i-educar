@@ -213,6 +213,7 @@ class clsControlador
     $this->destroyLoginSession();
     require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/bootstrap.php';
     $parceiro = $GLOBALS['coreExt']['Config']->app->template;
+    echo "<script>alert('templates/".trim($parceiro)."')</script>";
     $templateName = (trim($parceiro)=='' ? 'templates/nvp_htmlloginintranet.tpl' : 'templates/'.trim($parceiro)); 
     $templateFile = fopen($templateName, "r");
     $templateText = fread($templateFile, filesize($templateName));
