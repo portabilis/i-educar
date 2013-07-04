@@ -185,7 +185,6 @@ class indice extends clsCadastro
     $this->campoOculto('excluir_modulo', '');
     $qtd_modulo = 1;
     unset($aux);
-    $i=0;
     if ($this->ano_letivo_modulo) {
       foreach ($this->ano_letivo_modulo as $campo) {
         if ($this->excluir_modulo == $campo['sequencial_']) {
@@ -193,8 +192,6 @@ class indice extends clsCadastro
           $this->excluir_modulo = NULL;
         }
         else {
-          $i++;
-          //echo "<script>alert('".$i."')</script>";
           $obj_modulo = new clsPmieducarModulo($campo['ref_cod_modulo_']);
           $det_modulo = $obj_modulo->detalhe();
           $nm_tipo_modulo = $det_modulo['nm_tipo'];
