@@ -142,9 +142,9 @@
 
     <div id="rodape" class="texto-normal">
       <p>
-        Portabilis Tecnologia - suporte@portabilis.com.br - (99) 9999-9999 - Obter Suporte(
+        Portabilis Tecnologia - suporte@portabilis.com.br - (99) 9999-9999 - 
 
-        <a target="_blank" class="light" href="http://suporte.portabilis.com.br"> link </a>)
+        <a target="_blank" class="light" href="http://suporte.portabilis.com.br"> Obter Suporte </a>
       </p>
     </div> <!-- end rodape -->
 
