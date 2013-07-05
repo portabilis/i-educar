@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once ("include/localizacaoSistema.php");
 
 class clsIndexBase extends clsBase
 {
@@ -35,6 +36,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Fun&ccedil;&atilde;o C&ocirc;modo" );
 		$this->processoAp = "572";
+                $this->addEstilo( "localizacaoSistema" );
 	}
 }
 
@@ -196,6 +198,14 @@ class indice extends clsListagem
 		}
 
 		$this->largura = "100%";
+                
+                $localizacao = new LocalizacaoSistema();
+                $localizacao->entradaCaminhos( array(
+                    $_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
+                    "educar_index.php"                  => "Escola",
+                    ""                                  => "Listagem de Função Cômodo"
+                ));
+                $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 // cria uma extensao da classe base
