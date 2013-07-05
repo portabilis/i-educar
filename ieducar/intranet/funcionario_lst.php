@@ -81,7 +81,11 @@ class indice extends clsListagem
                 $localizacao = new LocalizacaoSistema();
                 $localizacao->entradaCaminhos( array(
                     $_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
+<<<<<<< HEAD
                     ""                  => "Cadastro de Funcionários"
+=======
+                    ""                  => "Lista de Funcionários"
+>>>>>>> 691e3ffa3b5f4c6dd70c0728bccfc00e665bf077
                 ));
                 $this->enviaLocalizacao($localizacao->montar());
 	}
