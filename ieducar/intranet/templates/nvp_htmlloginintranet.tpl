@@ -142,7 +142,7 @@
 
     <div id="rodape" class="texto-normal">
       <p>
-        Portabilis Tecnologia - suporte@portabilis.com.br - (99) 9999-9999 - 
+        Portabilis Tecnologia - suporte@portabilis.com.br - 
 
         <a target="_blank" class="light" href="http://suporte.portabilis.com.br"> Obter Suporte </a>
       </p>
