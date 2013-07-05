@@ -35,6 +35,7 @@ require_once 'include/public/geral.inc.php';
 
 require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'CoreExt/View/Helper/UrlHelper.php';
+require_once 'include/localizacaoSistema.php';
 
 /**
  * clsIndexBase class.
@@ -52,6 +53,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' Bairro');
     $this->processoAp = 756;
+    $this->addEstilo( "localizacaoSistema" );
   }
 }
 
@@ -240,6 +242,13 @@ class indice extends clsListagem
     $this->nome_acao = 'Novo';
 
     $this->largura = '100%';
+    
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+        $_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
+        ""                                  => "Bairro"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());
   }
 }
 

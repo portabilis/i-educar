@@ -44,17 +44,16 @@ class indice
 	function RenderHTML()
 	{
 		return "
-				<table width='100%' style='height: 100%;'>
-					<tr align=center valign='top'><td></td></tr>
- 				</table>
-			    ";
+                        <table width='100%' style='height: 100%;'>
+                                <tr align=center valign='top'><td></td></tr>
+                        </table>";
 	}
 }
-
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
+
 $pagina->addForm( $miolo );
 
 $pagina->MakeAll();

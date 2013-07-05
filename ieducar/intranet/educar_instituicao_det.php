@@ -113,7 +113,7 @@ class indice extends clsDetalhe
 			$this->url_editar = "educar_instituicao_cad.php?cod_instituicao={$registro["cod_instituicao"]}";
 		}
 		$this->url_cancelar = "educar_instituicao_lst.php";
-		$this->largura = "100%";
+		$this->largura = "100%";                
 	}
 }
 

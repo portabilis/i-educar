@@ -11,7 +11,7 @@
 
     var handleGetTurmas = function(response) {
       var selectOptions = jsonResourcesToSelectOptions(response['options']);
-      updateSelect($turmaField, selectOptions, "Selecione uma turma");
+      updateSelect($turmaField, selectOptions, "Enturmar depois");
     }
 
     var updateTurmas = function(){
