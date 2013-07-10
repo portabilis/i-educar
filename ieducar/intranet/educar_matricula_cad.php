@@ -82,6 +82,7 @@ class indice extends clsCadastro
   var $ref_cod_instituicao;
   var $ref_cod_curso;
   var $ref_cod_escola;
+  var $ref_cod_turma;
 
   var $matricula_transferencia;
   var $semestre;
@@ -158,6 +159,7 @@ class indice extends clsCadastro
     $anoLetivoHelperOptions = array('situacoes' => array('em_andamento', 'nao_iniciado'));
 
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie'));
+    $this->inputsHelper()->dynamic('turma', array('required' => false, 'option value' => 'Selecione uma turma'));
     $this->inputsHelper()->dynamic('anoLetivo', array('label' => 'Ano destino'), $anoLetivoHelperOptions);
 
 
@@ -393,6 +395,10 @@ class indice extends clsCadastro
         $this->matricula_transferencia, $this->semestre);
 
       $cadastrou = $obj->cadastra();
+      
+      $cod_matricula = $cadastrou;
+      $this->enturmacaoMatricula($cod_matricula, $this->ref_cod_turma); 
+      
       if ($cadastrou) {
 
         $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
@@ -652,6 +658,34 @@ class indice extends clsCadastro
 
     return true;
   }
+
+function enturmacaoMatricula($matriculaId, $turmaDestinoId) {
+
+    $enturmacaoExists = new clsPmieducarMatriculaTurma();
+    $enturmacaoExists = $enturmacaoExists->lista($matriculaId,
+                                                 $turmaDestinoId,
+                                                NULL, 
+                                                 NULL,
+                                                 NULL, 
+                                                 NULL,
+                                                 NULL,
+                                                NULL,
+                                                 1);
+
+    $enturmacaoExists = is_array($enturmacaoExists) && count($enturmacaoExists) > 0;
+    if (! $enturmacaoExists) {
+      $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
+                                                   $turmaDestinoId,
+                                                  $this->pessoa_logada, 
+                                                   $this->pessoa_logada, 
+                                                   NULL,
+                                                   NULL, 
+                                                   1);
+      return $enturmacao->cadastra();
+    }
+    return false;
+  } 
+
 }
 
 // Instancia objeto de página
