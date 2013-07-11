@@ -80,7 +80,7 @@ class PictureController {
         include('s3_config.php');
         //Rename image name.
 
-        $actual_image_name = $this->imageName; //.$ext;
+        $actual_image_name = $directory.$this->imageName; 
         if($s3->putObjectFile($tmp, $bucket , $actual_image_name, S3::ACL_PUBLIC_READ) )
         {
                                                 

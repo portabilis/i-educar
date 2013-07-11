@@ -291,7 +291,7 @@ document.getElementById('idpais').onchange = function()
 function getUf( xml_uf )
 {
 	var campoUf = document.getElementById('sigla_uf');
-	var DOM_array = xml_uf.getElementsByTagName( "uf" );
+	var DOM_array = xml_uf.getElementsByTagName( "estado" );
 
 	if(DOM_array.length)
 	{
