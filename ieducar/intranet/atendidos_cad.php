@@ -36,7 +36,9 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/pessoa/clsCadastroRaca.inc.php';
 require_once 'include/pessoa/clsCadastroFisicaRaca.inc.php';
+require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
+require_once 'image_check.php';
 
 require_once 'App/Model/ZonaLocalizacao.php';
 
@@ -106,6 +108,10 @@ class indice extends clsCadastro
   var $zona_localizacao;
   var $cor_raca;
 
+  // Variáveis para controle da foto
+  var $objPhoto;
+  var $arquivoFoto;
+
   var $caminho_det;
   var $caminho_lst;
 
@@ -166,6 +172,21 @@ class indice extends clsCadastro
 
     $this->campoOculto('cod_pessoa_fj', $this->cod_pessoa_fj);
     $this->campoTexto('nm_pessoa', 'Nome', $this->nm_pessoa, '50', '255', TRUE);
+
+    $foto = false;
+    if (is_numeric($this->cod_pessoa_fj)){
+        $objFoto = new ClsCadastroFisicaFoto($this->cod_pessoa_fj);
+        $detalheFoto = $objFoto->detalhe();
+        if(count($detalheFoto))
+          $foto = $detalheFoto['caminho'];
+    } else 
+      $foto=false;
+
+    if ($foto!=false){
+      $this->campoRotulo('fotoAtual_','Foto atual','<img height="117" src="'.$foto.'"/>');
+      $this->campoArquivo('file','Trocar foto',$this->arquivoFoto,40,'<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 150KB</span>');
+    }else
+      $this->campoArquivo('file','Foto',$this->arquivoFoto,40,'<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 150KB</span>');
 
 
     // ao cadastrar pessoa do pai ou mãe apartir do cadastro de outra pessoa,
@@ -817,6 +838,17 @@ class indice extends clsCadastro
 
     $script = '/modules/Cadastro/Assets/Javascripts/PessoaFisica.js';
     Portabilis_View_Helper_Application::loadJavascript($this, $script);
+
+    $this->campoCep(
+      'cep_',
+      'CEP',
+      $this->cep,
+      $enderecamentoObrigatorio,
+      '-',
+      "&nbsp;<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel(500, 550, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=bairro&campo2=idbai&campo3=cep&campo4=logradouro&campo5=idlog&campo6=ref_sigla_uf&campo7=cidade&campo8=ref_idtlog&campo9=isEnderecoExterno&campo10=cep_&campo11=sigla_uf&campo12=idtlog&campo13=id_cidade&campo14=zona_localizacao\'></iframe>');\">",
+      $desativarCamposDefinidosViaCep
+    );
+
   }
 
   function Novo() {
@@ -925,17 +957,65 @@ class indice extends clsCadastro
   protected function createOrUpdate($pessoaIdOrNull = null) {
     if (! $this->validatesCpf($this->id_federal))
       return false;
+    
+
+    if (!$this->validatePhoto())
+      return false;
 
     $pessoaId = $this->createOrUpdatePessoa($pessoaIdOrNull);
-
+    $this->savePhoto($pessoaId);
     $this->createOrUpdatePessoaFisica($pessoaId);
     $this->createOrUpdateDocumentos($pessoaId);
     $this->createOrUpdateTelefones($pessoaId);
     $this->createOrUpdateEndereco($pessoaId);
-
     $this->afterChangePessoa($pessoaId);
+
     return true;
   }
+
+  //envia foto e salva caminha no banco
+  protected function savePhoto($id){
+
+    if ($this->objPhoto!=null){
+      
+      $caminhoFoto = $this->objPhoto->sendPicture($id);
+      if ($caminhoFoto!=''){
+        //new clsCadastroFisicaFoto($id)->exclui();
+        $obj = new clsCadastroFisicaFoto($id,$caminhoFoto);
+        $detalheFoto = $obj->detalhe();
+        if (is_array($detalheFoto) && count($detalheFoto)>0)
+         $obj->edita();
+        else
+         $obj->cadastra();
+      
+        return true;
+      } else{
+        echo '<script>alert(\'Foto não salva.\')</script>';
+        return false;
+      }  
+    }
+  }
+
+  // Retorna true caso a foto seja válida
+  protected function validatePhoto(){
+
+    $this->arquivoFoto = $_FILES["file"];
+    if (!empty($this->arquivoFoto["name"])){      
+      $this->objPhoto = new PictureController($this->arquivoFoto);
+      if ($this->objPhoto->validatePicture()){
+        return TRUE;
+      } else {        
+        $this->mensagem = $this->objPhoto->getErrorMessage();
+        return false;
+      }
+      return false;
+    }else{
+      $this->objPhoto = null;
+      return true;
+    }
+    
+  }
+
 
   protected function createOrUpdatePessoa($pessoaId = null) {
     $pessoa        = new clsPessoa_();

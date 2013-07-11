@@ -166,7 +166,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
                               'pai'          => 'Pai',
                               'mae'          => 'M&atilde;e',
                               'outra_pessoa' => 'Outra pessoa');*/
-    $tiposResponsavel = array(null           => 'Cadastre um aluno');
+    $tiposResponsavel = array(null           => 'Informe uma Pessoa primeiro');
 
     $options = array('label'     => $this->_getLabel('responsavel'),
                      'resources' => $tiposResponsavel,

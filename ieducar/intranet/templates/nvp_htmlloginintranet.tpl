@@ -141,17 +141,11 @@
     </div> <!-- end corpo -->
 
     <div id="rodape" class="texto-normal">
-		  <p>
-        Portabilis Tecnologia - suporte@portabilis.com.br -
+      <p>
+        Portabilis Tecnologia - suporte@portabilis.com.br - 
 
-        <a target="_blank" class="decorated hidden visible-for-windows-so" href="http://www.teamviewer.com/download/TeamViewerQS_pt.exe">suporte remoto</a>
-
-        <a target="_blank" class="decorated hidden visible-for-non-windows-so" href="http://www.teamviewer.com/pt/download/index.aspx">suporte remoto</a>
-
-        -
-
-        <a href="http://ieducar.com.br/wiki" class="decorated">ajuda</a>
-		  </p>
+        <a target="_blank" class="light" href="http://suporte.portabilis.com.br"> Obter Suporte </a>
+      </p>
     </div> <!-- end rodape -->
 
   </body>
