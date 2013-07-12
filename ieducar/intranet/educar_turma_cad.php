@@ -720,7 +720,7 @@ class indice extends clsCadastro
           $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
           $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
           $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
-          $this->visivel, $this->turma_turno_id, $this->tipo_boletim, (is_numeric($this->ano) ? $this->ano : NULL));
+          $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano);
 
         $cadastrou = $obj->cadastra();
 
@@ -786,7 +786,7 @@ class indice extends clsCadastro
         $this->ref_cod_regente, $this->ref_cod_instituicao_regente,
         $this->ref_cod_instituicao, $this->ref_cod_curso,
         $this->ref_ref_cod_serie_mult, $this->ref_cod_escola, $this->visivel,
-        $this->turma_turno_id, $this->tipo_boletim, (is_numeric($this->ano) ? $this->ano : NULL));
+        $this->turma_turno_id, $this->tipo_boletim, $this->ano);
 
       $cadastrou = $obj->cadastra();
 
