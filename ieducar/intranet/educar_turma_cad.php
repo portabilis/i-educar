@@ -89,6 +89,9 @@ class indice extends clsCadastro
   var $ref_cod_curso;
   var $ref_cod_escola;
 
+  var $serie_param;
+  var $escola_param;
+
   var $padrao_ano_escolar;
 
   var $ref_cod_regente;
@@ -240,6 +243,11 @@ class indice extends clsCadastro
         }
       }
     }
+    if ($bloqueia){
+      $this->campoOculto('serie_param',$this->serie_param = $this->ref_ref_cod_serie);
+      $this->campoOculto('escola_param',$this->escola_param = $this->ref_cod_escola);  
+    }
+    
 
     $script = "javascript:showExpansivelIframe(520, 550, 'educar_serie_cad_pop.php?ref_ref_cod_serie=sim');";
 
@@ -929,7 +937,7 @@ class indice extends clsCadastro
     }
 
     $this->atualizaComponentesCurriculares(
-      $this->ref_ref_cod_serie, $this->ref_cod_escola, $this->cod_turma,
+      $this->serie_param, $this->escola_param, $this->cod_turma,
       $this->disciplinas, $this->carga_horaria, $this->usar_componente
     );
 
