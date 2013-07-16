@@ -938,7 +938,7 @@ class indice extends clsCadastro
     }
 
     $this->atualizaComponentesCurriculares(
-      $this->serie_param, $this->escola_param, $this->cod_turma,
+      (trim($this->serie_param)==''?$this->ref_ref_cod_serie : $this->serie_param), (trim($this->escola_param)=='' ? $this->ref_cod_escola : $this->escola_param ), $this->cod_turma,
       $this->disciplinas, $this->carga_horaria, $this->usar_componente
     );
 
