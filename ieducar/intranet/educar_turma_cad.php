@@ -89,6 +89,7 @@ class indice extends clsCadastro
   var $ref_cod_curso;
   var $ref_cod_escola;
 
+
   var $serie_param;
   var $escola_param;
 
