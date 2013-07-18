@@ -89,6 +89,10 @@ class indice extends clsCadastro
   var $ref_cod_curso;
   var $ref_cod_escola;
 
+
+  var $serie_param;
+  var $escola_param;
+
   var $padrao_ano_escolar;
 
   var $ref_cod_regente;
@@ -192,6 +196,7 @@ class indice extends clsCadastro
 
     $bloqueia = false;
     $anoVisivel = false;
+
     if (! isset($this->ano) || isset($this->cod_turma) ){
       $anoVisivel=true;
     }
@@ -211,6 +216,10 @@ class indice extends clsCadastro
         }
       }
     }
+    if (!$anoVisivel) 
+        $this->campoOculto('anoLetivo', $this->ano);
+
+
 
     $desabilitado = $bloqueia;
 
@@ -235,6 +244,11 @@ class indice extends clsCadastro
         }
       }
     }
+    if ($bloqueia){
+      $this->campoOculto('serie_param',$this->serie_param = $this->ref_ref_cod_serie);
+      $this->campoOculto('escola_param',$this->escola_param = $this->ref_cod_escola);  
+    }
+    
 
     $script = "javascript:showExpansivelIframe(520, 550, 'educar_serie_cad_pop.php?ref_ref_cod_serie=sim');";
 
@@ -670,7 +684,7 @@ class indice extends clsCadastro
     $this->campoRotulo('bt_incluir_dia_semana', 'Dia Semana',
       "<a href='#' onclick=\"document.getElementById('incluir_dia_semana').value = 'S'; document.getElementById('tipoacao').value = ''; acao();\"><img src='imagens/nvp_bot_adiciona.gif' alt='adicionar' title='Incluir' border=0></a>"
     );
-
+    
     $this->campoOculto('padrao_ano_escolar', $this->padrao_ano_escolar);
 
     $this->acao_enviar = 'valida()';
@@ -785,6 +799,7 @@ class indice extends clsCadastro
 
       $cadastrou = $obj->cadastra();
 
+      
 
       if ($cadastrou) {
         $this->mensagem .= 'Cadastro efetuado com sucesso.';
@@ -806,6 +821,8 @@ class indice extends clsCadastro
 
   function Editar()
   {
+
+   
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
@@ -826,6 +843,7 @@ class indice extends clsCadastro
       $this->visivel = FALSE;
     }
 
+    
     // Não segue o padrão do curso
     if ($this->padrao_ano_escolar == 0) {
       $this->turma_modulo = unserialize(urldecode($this->turma_modulo));
@@ -843,7 +861,7 @@ class indice extends clsCadastro
           $this->visivel,
           $this->turma_turno_id,
           $this->tipo_boletim,
-          $this->ano);
+          (is_numeric($this->ano) ? $this->ano : $_POST['anoLetivo']));
 
         $editou = $obj->edita();
 
@@ -914,13 +932,13 @@ class indice extends clsCadastro
         $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
         $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
         $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
-        $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano);
+        $this->visivel, $this->turma_turno_id, $this->tipo_boletim, (is_numeric($this->ano) ? $this->ano : $_POST['anoLetivo']));
 
       $editou = $obj->edita();
     }
 
     $this->atualizaComponentesCurriculares(
-      $this->ref_ref_cod_serie, $this->ref_cod_escola, $this->cod_turma,
+      (trim($this->serie_param)==''?$this->ref_ref_cod_serie : $this->serie_param), (trim($this->escola_param)=='' ? $this->ref_cod_escola : $this->escola_param ), $this->cod_turma,
       $this->disciplinas, $this->carga_horaria, $this->usar_componente
     );
 
