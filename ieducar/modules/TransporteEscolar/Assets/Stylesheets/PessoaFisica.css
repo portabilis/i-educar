@@ -1,0 +1,57 @@
+/* Por alguma razão, no chrome ao mudar o width dos elementos eles recuam 2px */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  select,
+  #data_emissao_certidao_civil,
+  #termo_certidao_civil,
+  #certidao_nascimento,
+  #carteira_trabalho,
+  #data_emissao_carteira_trabalho,
+  #titulo_eleitor,
+  #data_nasc,
+  #complemento {
+    margin-left: 2px;
+  }
+}
+
+select {
+  width: 184px !important;
+}
+
+#estado_civil_id {
+  width: 133px !important;
+}
+
+#data_emissao_rg, #uf_emissao_rg {
+  width: 135px !important;
+}
+
+#data_emissao_certidao_civil, #data_emissao_carteira_trabalho, #data_nasc {
+  width: 98px;
+}
+
+#termo_certidao_civil {
+  width: 121px !important;
+}
+
+#carteira_trabalho, #titulo_eleitor, #complemento {
+  width: 170px;
+}
+
+#zona_localizacao {
+  width: 182px !important;
+}
+
+.pessoa-links {
+  display: block;
+  padding: 5px;
+  margin: 2px;
+}
+
+.pessoa-links a {
+  /*
+    obs: no firefox, ao mostrar o elemento (.show, jquery), é setado display como block,
+         para reparar isto, após chamar .show(), chamar .css('display', 'inline');
+  */
+
+  margin-right: 5px;
+}
