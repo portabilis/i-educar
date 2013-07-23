@@ -1,0 +1,193 @@
+<?php
+
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
+
+/**
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ * @category  i-Educar
+ * @license   @@license@@
+ * @package   Api
+ * @subpackage  Modules
+ * @since   07/2013
+ * @version   $Id$
+ */
+
+require_once 'include/modules/clsModulesVeiculo.inc.php';
+
+require_once 'Portabilis/Controller/ApiCoreController.php';
+require_once 'Portabilis/Array/Utils.php';
+require_once 'Portabilis/String/Utils.php';
+require_once 'Portabilis/Array/Utils.php';
+require_once 'Portabilis/Date/Utils.php';
+
+class VeiculoController extends ApiCoreController
+{
+  protected $_processoAp        = 578; //verificar
+  protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA; // verificar
+
+  protected function loadNomeEmpresa($id) {
+    $sql  = "select nome from cadastro.pessoa, modules.empresa_transporte_escolar emp where idpes = emp.ref_idpes and emp.cod_empresa_transporte_escolar = $1";
+    $nome = $this->fetchPreparedQuery($sql, $id, false, 'first-field');
+
+    return $this->toUtf8($nome, array('transform' => true));
+  }  
+
+  protected function loadNomeMotorista($id) {
+    $sql  = "select nome from cadastro.pessoa, modules.motorista where idpes = ref_idpes and cod_motorista = $1";
+    $nome = $this->fetchPreparedQuery($sql, $id, false, 'first-field');
+
+    return $this->toUtf8($nome, array('transform' => true));
+  }    
+
+  protected function createOrUpdateVeiculo($id = null){
+    
+
+    $veiculo                                     = new clsModulesVeiculo();
+    $veiculo->cod_veiculo = $id;
+    // após cadastro não muda mais id pessoa
+
+    $veiculo->descricao                          = $this->getRequest()->descricao;
+    $veiculo->placa                              = $this->getRequest()->placa;
+    $veiculo->renavam                            = $this->getRequest()->renavam;
+    $veiculo->chassi                             = $this->getRequest()->chassi;
+    $veiculo->marca                              = $this->getRequest()->marca;
+    $veiculo->passageiros                        = $this->getRequest()->passageiros; 
+    $veiculo->ano_fabricacao                     = $this->getRequest()->ano_fabricacao;
+    $veiculo->ano_modelo                         = $this->getRequest()->ano_modelo; 
+    $veiculo->malha                              = $this->getRequest()->malha; 
+    $veiculo->ref_cod_tipo_veiculo               = $this->getRequest()->tipo; 
+    $veiculo->exclusivo_transporte_escolar       = ($this->getRequest()->exclusivo_transporte_escolar == 'on' ? 'S' : 'N'); 
+    $veiculo->adaptado_necessidades_especiais    = ($this->getRequest()->adaptado_necessidades_especiais == 'on' ? 'S' : 'N'); 
+    $veiculo->ativo                              = ($this->getRequest()->ativo == 'on' ? 'S' : 'N');   
+    $veiculo->descricao_inativo                  = $this->getRequest()->descricao_inativo;
+    $veiculo->ref_cod_empresa_transporte_escolar = $this->getRequest()->empresa_id; 
+    $veiculo->ref_cod_motorista                  = $this->getRequest()->motorista_id; 
+    $veiculo->observacao                         = $this->getRequest()->observacao;
+
+    return (is_null($id) ? $veiculo->cadastra() : $veiculo->edita());
+  }
+
+
+  protected function get() {
+    
+      $id                                      = $this->getRequest()->id;
+      $veiculo                                 = new clsModulesVeiculo();
+      $veiculo->cod_veiculo                    = $id;
+      $veiculo                                 = $veiculo->detalhe();
+
+      $attrs  = array(
+        'cod_veiculo'     => 'id',
+        'descricao'         => 'descricao',
+        'placa'          => 'placa',
+        'renavam' => 'renavam',
+        'chassi'               => 'chassi',
+        'marca'        => 'marca',
+        'ano_fabricacao'    => 'ano_fabricacao',
+        'ano_modelo'    => 'ano_modelo',
+        'passageiros'   =>  'passageiros',
+        'malha'   =>  'malha',
+        'ref_cod_tipo_veiculo'   =>  'tipo',
+        'exclusivo_transporte_escolar'   =>  'exclusivo_transporte_escolar',
+        'adaptado_necessidades_especiais'   =>  'adaptado_necessidades_especiais',
+        'ativo'   =>  'ativo',
+        'descricao_inativo'   =>  'descricao_inativo',
+        'ref_cod_empresa_transporte_escolar'   =>  'empresa',
+        'ref_cod_motorista'   =>  'motorista',
+        'observacao'  =>  'observacao'
+      );
+
+      $veiculo = Portabilis_Array_Utils::filter($veiculo, $attrs);
+
+      $veiculo['empresaNome']                   = $this->loadNomeEmpresa($veiculo['empresa']);
+
+      $veiculo['motoristaNome']                 = $this->loadNomeMotorista($veiculo['motorista']);
+    
+      return $veiculo;
+
+  }
+
+  protected function post() {
+
+      $id = $this->createOrUpdateVeiculo();
+
+      if (is_numeric($id)) {
+
+        $this->messenger->append('Cadastro realizado com sucesso', 'success', false, 'error');
+      }
+      else
+        $this->messenger->append('Aparentemente o veículo não pode ser cadastrado, por favor, verifique.');
+   
+
+    return array('id' => $id);
+  }
+
+  protected function put() {
+
+     $id = $this->getRequest()->id;
+     $editou = $this->createOrUpdateVeiculo($id);
+
+     if ($editou) {
+       $this->messenger->append('Alteração realizada com sucesso', 'success', false, 'error');
+     }
+     else
+      $this->messenger->append('Aparentemente o cadastro não pode ser alterado, por favor, verifique.');
+   
+
+    return array('id' => $id);
+  }
+
+  protected function delete() {
+    $id = $this->getRequest()->id;
+
+
+    $veiculo                      = new clsModulesVeiculo();
+    $veiculo->cod_veiculo       = $id;
+      
+    if($veiculo->excluir()){
+      $this->messenger->append('Cadastro removido com sucesso', 'success', false, 'error');
+    }else
+      $this->messenger->append('Aparentemente o cadastro não pode ser removido, por favor, verifique.','error', false, 'error');
+
+    return array('id' => $id);
+  }
+
+
+  public function Gerar() {
+    
+    if ($this->isRequestFor('get', 'veiculo'))
+      $this->appendResponse($this->get());
+
+    // create
+    elseif ($this->isRequestFor('post', 'veiculo'))
+      $this->appendResponse($this->post());
+
+    // update
+    elseif ($this->isRequestFor('put', 'veiculo'))
+      $this->appendResponse($this->put());
+
+    elseif ($this->isRequestFor('delete', 'veiculo'))
+      $this->appendResponse($this->delete());
+    else
+      $this->notImplementedOperationError();
+  }
+}

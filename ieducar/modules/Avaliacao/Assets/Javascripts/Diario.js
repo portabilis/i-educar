@@ -475,7 +475,7 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
 
   $j('<td />').html(safeToUpperCase($j('#etapa').children("[selected='selected']").html())).appendTo($linha);
   $j('<td />').html(safeToUpperCase($j('#ref_cod_turma').children("[selected='selected']").html())).appendTo($linha);
-  $j('<td />').html(safeToUpperCase($j('#ref_ref_cod_serie').children("[selected='selected']").html())).appendTo($linha);
+  $j('<td />').html(safeToUpperCase($j('#ref_cod_serie').children("[selected='selected']").html())).appendTo($linha);
   $j('<td />').html($j('#ano').val()).appendTo($linha);
 
   //field escola pode ser diferente de select caso usuario comum

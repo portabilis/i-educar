@@ -59,6 +59,10 @@ class Portabilis_View_Helper_DynamicInput_Serie extends Portabilis_View_Helper_D
     return $this->insertOption(null, "Selecione uma s&eacute;rie", $resources);
   }
 
+  protected function defaultOptions(){
+    return array('options' => array('label' => 'S&eacute;rie'));
+  }  
+
   public function serie($options = array()) {
     parent::select($options);
   }

@@ -169,6 +169,20 @@ class Portabilis_View_Helper_Inputs {
     $this->simpleSearchResourceInput('simpleSearchAluno', $attrName, $inputOptions, $helperOptions);
   }
 
+  public function simpleSearchEmpresa($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->simpleSearchResourceInput('simpleSearchEmpresa', $attrName, $inputOptions, $helperOptions);
+  }
+
+  public function simpleSearchPessoaj($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->simpleSearchResourceInput('simpleSearchPessoaj', $attrName, $inputOptions, $helperOptions);
+  }  
+
+  public function simpleSearchMotorista($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchMotorista', $attrName, $inputOptions, $helperOptions);
+
+  }    
+
   // multiple search resource input helper
 
 
@@ -217,13 +231,18 @@ class Portabilis_View_Helper_Inputs {
   }
 
   protected function simpleSearchResourceInput($helperName, $attrName, $inputOptions = array(), $helperOptions = array()) {
+
     $options = $this->mergeInputOptions($inputOptions, $helperOptions);
 
     $helperClassName = 'Portabilis_View_Helper_Input_Resource_' . ucfirst($helperName);
+
     $this->includeHelper($helperClassName);
 
     $helper = new $helperClassName($this->viewInstance, $this);
+
     $helper->$helperName($attrName, $options);
+    
+
   }
 
   protected function multipleSearchResourceInput($helperName, $attrName, $inputOptions = array(), $helperOptions = array()) {

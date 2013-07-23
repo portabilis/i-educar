@@ -1,0 +1,18 @@
+.pessoa-links {
+  display: block;
+  padding: 5px;
+  margin: 2px;
+}
+
+.pessoa-links a {
+  /*
+    obs: no firefox, ao mostrar o elemento (.show, jquery), é setado display como block,
+         para reparar isto, após chamar .show(), chamar .css('display', 'inline');
+  */
+
+  margin-right: 5px;
+}
+
+#deficiencias_chzn ul {
+  width: 307px;
+}
