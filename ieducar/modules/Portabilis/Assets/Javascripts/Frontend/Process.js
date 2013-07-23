@@ -207,7 +207,7 @@ var $resultTable = $j('#form_resultado .tablelistagem').addClass('horizontal-exp
 
         if(processOptions.validatesResourcesAfterSearch && ! $.isArray(resources)) {
            $('<td />')
-            .html('O(a)s '+ RESOURCES_NAME +' n&#227;o poderam ser recuperado(a)s, verifique as mensagens de erro ou tente <a alt="Recarregar página" href="/" style="text-decoration:underline">recarregar</a>.')
+            .html('O(a)s '+ RESOURCES_NAME +' n&#227;o puderam ser recuperado(a)s, verifique as mensagens de erro ou tente <a alt="Recarregar página" href="/" style="text-decoration:underline">recarregar</a>.')
             .addClass('center')
             .appendTo($('<tr />').appendTo($resultTable));
         }

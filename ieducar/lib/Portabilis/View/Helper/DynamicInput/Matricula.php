@@ -50,8 +50,12 @@ class Portabilis_View_Helper_DynamicInput_Matricula extends Portabilis_View_Help
 
   protected function inputOptions($options) {
     // não implementado load resources ainda, por enquanto busca somente com ajax.
-    return $this->insertOption(null, "Selecione uma matricula", $resources);
+    return $this->insertOption(null, "Selecione uma matr&iacute;cula", $resources);
   }
+
+  protected function defaultOptions(){
+    return array('options' => array('label' => 'Matr&iacute;cula'));
+  }  
 
   public function matricula($options = array()) {
     parent::select($options);
