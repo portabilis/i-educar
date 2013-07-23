@@ -775,7 +775,7 @@ function selectNextOption($selectElement){
   }
 
   else {
-    alert(safeUtf8Decode('Você chegou na última opção.'));
+    alert(safeUtf8Decode('Você chegou à última opção.'));
     showSearchForm();
   }
 }
