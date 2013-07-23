@@ -40,11 +40,13 @@ resourceOptions.handleGet = function(dataResponse) {
   if (dataResponse.pessoa)
     getPersonDetails(dataResponse.pessoa);
 
+
   $idField.val(dataResponse.id);
   $j('#observacao').val(dataResponse.observacao);
-
-  $j('#pessoaj_pessoaj').val(dataResponse.pessoaj+' - '+dataResponse.pessoajnome);  
-  $j('#pessoaj_id').val(dataResponse.pessoaj);  
+  $j('#descricao').val(dataResponse.descricao);
+  $j('#pessoaj_id').val(dataResponse.pessoaj);
+  $j('#pessoaj_ref_idpes_destino').val(dataResponse.pessoaj+' - '+dataResponse.pessoajNome);
+  $j('#ref_idpes_destino').val(dataResponse.ref_idpes_destino);
 
 };
 

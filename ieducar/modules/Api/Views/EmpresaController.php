@@ -61,6 +61,13 @@ class EmpresaController extends ApiCoreController
     return $this->toUtf8($nome, array('transform' => true));
   }
 
+  protected function loadNomePessoaj($id) {
+    $sql  = "select nome from cadastro.pessoa, modules.empresa_transporte_escolar emp where idpes = emp.ref_idpes and cod_empresa_transporte_escolar = $1";
+    $nome = $this->fetchPreparedQuery($sql, $id, false, 'first-field');
+
+    return $this->toUtf8($nome, array('transform' => true));
+  }    
+
 
 
   protected function createOrUpdateEmpresa($id = null){
@@ -70,9 +77,8 @@ class EmpresaController extends ApiCoreController
     $empresa->cod_empresa_transporte_escolar = $id;
 
 
-    // após cadastro não muda mais id pessoa
     $empresa->ref_resp_idpes                 = $this->getRequest()->pessoa_id;
-    $empresa->ref_idpes                      = $this->getRequest()->pessoaj;
+    $empresa->ref_idpes                      = $this->getRequest()->pessoaj_id;
     $empresa->observacao                     = $this->getRequest()->observacao;
 
     return (is_null($id) ? $empresa->cadastra() : $empresa->edita());
@@ -96,11 +102,31 @@ class EmpresaController extends ApiCoreController
       $empresa = Portabilis_Array_Utils::filter($empresa, $attrs);
 
       $empresa['nome']             = $this->loadNomePessoa($id);
+      $empresa['pessoajnome']      = $this->loadNomePessoaj($id);
       return $empresa;
     }
 
   }
 
+
+  protected function sqlsForNumericSearch() {
+
+    $sqls[] = "select distinct cod_empresa_transporte_escolar as id, nome as name from
+                 modules.empresa_transporte_escolar, cadastro.pessoa where idpes = ref_idpes
+                 and cod_empresa_transporte_escolar like $1||'%'";
+
+    return $sqls;
+  }
+
+
+  protected function sqlsForStringSearch() {
+
+    $sqls[] = "select distinct cod_empresa_transporte_escolar as id, nome as name from
+                 modules.empresa_transporte_escolar, cadastro.pessoa where idpes = ref_idpes
+                 and lower(to_ascii(nome)) like '%'||lower(to_ascii($1))||'%'";
+
+    return $sqls;
+  }
 
   protected function canGet(){
 
@@ -119,10 +145,10 @@ class EmpresaController extends ApiCoreController
 
       if (is_numeric($id)) {
 
-        $this->messenger->append('Cadastrado realizado com sucesso', 'success', false, 'error');
+        $this->messenger->append('Cadastro realizado com sucesso', 'success', false, 'error');
       }
       else
-        $this->messenger->append('Aparentemente o aluno não pode ser cadastrado, por favor, verifique.');
+        $this->messenger->append('Aparentemente a empresa não pode ser cadastrada, por favor, verifique.');
    
 
     return array('id' => $id);
@@ -130,38 +156,20 @@ class EmpresaController extends ApiCoreController
 
   protected function put() {
       $id = $this->getRequest()->id;
-      $editou = $this->createOrUpdateEmpresa();
+      $editou = $this->createOrUpdateEmpresa($id);
 
       if ($editou) {
 
         $this->messenger->append('Alteração realizada com sucesso', 'success', false, 'error');
       }
       else
-        $this->messenger->append('Aparentemente o aluno não pode ser alterado, por favor, verifique.');
+        $this->messenger->append('Aparentemente a empresa não pode ser alterado, por favor, verifique.');
    
 
     return array('id' => $id);
   }
 
 
-  protected function enable() {
-    $id = $this->getRequest()->id;
-
-    if ($this->canEnable()) {
-      $aluno                  = new clsPmieducarAluno();
-      $aluno->cod_aluno       = $id;
-      $aluno->ref_usuario_exc = $this->getSession()->id_pessoa;
-      $aluno->ativo           = 1;
-
-      if($aluno->edita())
-        $this->messenger->append('Cadastro ativado com sucesso', 'success', false, 'error');
-      else
-        $this->messenger->append('Aparentemente o cadastro não pode ser ativado, por favor, verifique.',
-                                 'error', false, 'error');
-    }
-
-    return array('id' => $id);
-  }
 
   protected function delete() {
     $id = $this->getRequest()->id;
@@ -185,7 +193,8 @@ class EmpresaController extends ApiCoreController
   public function Gerar() {
     if ($this->isRequestFor('get', 'empresa'))
       $this->appendResponse($this->get());
-
+    elseif($this->isRequestFor('get', 'empresa-search'))
+      $this->appendResponse($this->search());
     // create
     elseif ($this->isRequestFor('post', 'empresa'))
       $this->appendResponse($this->post());

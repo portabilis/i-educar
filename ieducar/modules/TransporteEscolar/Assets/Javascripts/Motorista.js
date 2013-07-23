@@ -19,14 +19,14 @@ resourceOptions.handlePost = function(dataResponse) {
   $j('.pessoa-links .cadastrar-pessoa').hide();
 
   if (! dataResponse.any_error_msg)
-    window.setTimeout(function() { document.location = '/intranet/transporte_empresa_det.php?cod_empresa=' + resource.id(); }, 500);
+    window.setTimeout(function() { document.location = '/intranet/transporte_motorista_det.php?cod_motorista=' + resource.id(); }, 500);
   else
     $submitButton.removeAttr('disabled').val('Gravar');
 }
 
 resourceOptions.handlePut = function(dataResponse) {
   if (! dataResponse.any_error_msg)
-    window.setTimeout(function() { document.location = '/intranet/transporte_empresa_det.php?cod_empresa=' + resource.id(); }, 500);
+    window.setTimeout(function() { document.location = '/intranet/transporte_motorista_det.php?cod_motorista=' + resource.id(); }, 500);
   else
     $submitButton.removeAttr('disabled').val('Gravar');
 }
@@ -41,10 +41,17 @@ resourceOptions.handleGet = function(dataResponse) {
     getPersonDetails(dataResponse.pessoa);
 
   $idField.val(dataResponse.id);
-  $j('#observacao').val(dataResponse.observacao);
+  $j('#cnh').val(dataResponse.cnh);
+  $j('#tipo_cnh').val(dataResponse.tipo_cnh);  
+  
+  $j('#dt_habilitacao').val(dataResponse.dt_habilitacao);  
+  $j('#vencimento_cnh').val(dataResponse.vencimento_cnh);  
+  $j('#observacao').val(dataResponse.observacao);  
 
-  $j('#pessoaj_pessoaj').val(dataResponse.pessoaj+' - '+dataResponse.pessoajnome);  
-  $j('#pessoaj_id').val(dataResponse.pessoaj);  
+  $j('#empresa_ref_cod_empresa_transporte_escolarf').val(dataResponse.ref_cod_empresa_transporte_escolar+' - '+dataResponse.empresa);  
+  $j('#empresa_id').val(dataResponse.ref_cod_empresa_transporte_escolar);  
+  
+  
 
 };
 

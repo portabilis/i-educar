@@ -52,7 +52,7 @@ class indice extends clsDetalhe
 
 		$cod_acesso = @$_GET['cod_permissao'];
 		$db = new clsBanco();
-		$db->Consulta( "SELECT ref_ref_cod_pessoa_fj, ip_externo, ip_interno, data_hora, pagina, variaveis FROM 				intranet_segur_permissao_negada WHERE  cod_intranet_segur_permissao_negada = '$cod_acesso' " );
+		$db->Consulta( "SELECT ref_ref_cod_pessoa_fj, ip_externo, ip_interno, data_hora, pagina, variaveis FROM intranet_segur_permissao_negada WHERE  cod_intranet_segur_permissao_negada = '$cod_acesso' " );
 		$objPessoa = new clsPessoaFisica();
 		if( $db->ProximoRegistro() )
 		{

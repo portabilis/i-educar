@@ -19,14 +19,14 @@ resourceOptions.handlePost = function(dataResponse) {
   $j('.pessoa-links .cadastrar-pessoa').hide();
 
   if (! dataResponse.any_error_msg)
-    window.setTimeout(function() { document.location = '/intranet/transporte_empresa_det.php?cod_empresa=' + resource.id(); }, 500);
+    window.setTimeout(function() { document.location = '/intranet/transporte_veiculo_det.php?cod_veiculo=' + resource.id(); }, 500);
   else
     $submitButton.removeAttr('disabled').val('Gravar');
 }
 
 resourceOptions.handlePut = function(dataResponse) {
   if (! dataResponse.any_error_msg)
-    window.setTimeout(function() { document.location = '/intranet/transporte_empresa_det.php?cod_empresa=' + resource.id(); }, 500);
+    window.setTimeout(function() { document.location = '/intranet/transporte_veiculo_det.php?cod_veiculo=' + resource.id(); }, 500);
   else
     $submitButton.removeAttr('disabled').val('Gravar');
 }
@@ -41,10 +41,41 @@ resourceOptions.handleGet = function(dataResponse) {
     getPersonDetails(dataResponse.pessoa);
 
   $idField.val(dataResponse.id);
-  $j('#observacao').val(dataResponse.observacao);
+  $j('#descricao').val(dataResponse.descricao);
+  $j('#placa').val(dataResponse.placa);  
+  $j('#renavam').val(dataResponse.renavam);  
+  $j('#chassi').val(dataResponse.chassi);  
+  $j('#marca').val(dataResponse.marca);  
+  $j('#ano_fabricacao').val(dataResponse.ano_fabricacao);  
+  $j('#ano_modelo').val(dataResponse.ano_modelo);  
+  $j('#passageiros').val(dataResponse.passageiros);  
+  $j('#malha').val(dataResponse.malha);  
+  $j('#tipo').val(dataResponse.tipo);  
+  if (dataResponse.exclusivo_transporte_escolar == 'S'){
+    $j('#exclusivo_transporte_escolar').attr('checked',true);  
+    $j('#exclusivo_transporte_escolar').val('on');  
+  }
+  if (dataResponse.adaptado_necessidades_especiais == 'S'){
+    $j('#adaptado_necessidades_especiais').attr('checked',true);  
+    $j('#adaptado_necessidades_especiais').val('on');   
+  }
 
-  $j('#pessoaj_pessoaj').val(dataResponse.pessoaj+' - '+dataResponse.pessoajnome);  
-  $j('#pessoaj_id').val(dataResponse.pessoaj);  
+  if (dataResponse.ativo == 'N'){
+    $j('#ativo').attr('checked',false);  
+    $j('#ativo').val('');   
+  }  
+  
+  $j('#motorista_motorista').val(dataResponse.motorista+' - '+dataResponse.motoristaNome);  
+  $j('#motorista_id').val(dataResponse.motorista);  
+  
+  $j('#descricao_ativo').val(dataResponse.descricao_ativo);  
+  $j('#empresa_empresa').val(dataResponse.empresa+' - '+dataResponse.empresaNome);  
+  $j('#empresa_id').val(data.response.empresa);
+
+  $j('#observacao').val(dataResponse.observacao);  
+
+  
+  
 
 };
 

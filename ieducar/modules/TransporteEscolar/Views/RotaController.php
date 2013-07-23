@@ -34,33 +34,31 @@
 require_once 'lib/Portabilis/Controller/Page/EditController.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
 
-class EmpresaController extends Portabilis_Controller_Page_EditController
+class RotaController extends Portabilis_Controller_Page_EditController
 {
   protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
-  protected $_titulo     = 'Cadastro de Empresa de Transporte';
+  protected $_titulo     = 'Cadastro de Rota';
 
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
   protected $_processoAp        = 578;
   protected $_deleteOption      = true;
 
   protected $_formMap    = array(
-    'pessoa' => array(
-      'label'  => 'Pessoa Responsável',
-      'help'   => '',
-    ),
-
-    'observacao' => array(
-      'label'  => 'Observações',
-      'help'   => '',
-    ),
 
     'id' => array(
-      'label'  => 'Código da Empresa',
+      'label'  => 'Código da rota',
       'help'   => '',
     ),
-
-    'pessoaj' => array(
-      'label'  => 'Pessoa Jurídica',
+    'descricao' => array(
+      'label'  => 'Descrição',
+      'help'   => '',
+    ),
+    'ref_idpes_destino' => array(
+      'label'  => 'Instituição Destino',
+      'help'   => '',
+    ),
+    'ano' => array(
+      'label'  => 'Ano',
       'help'   => '',
     )
   );
@@ -86,25 +84,22 @@ class EmpresaController extends Portabilis_Controller_Page_EditController
   {
     $this->url_cancelar = '/intranet/transporte_empresa_lst.php';
 
-    // Código da empresa
+    // Código da rota
     $options = array('label'    => $this->_getLabel('id'), 'disabled' => true,
                      'required' => false, 'size' => 25);
     $this->inputsHelper()->integer('id', $options);
 
+    // descricao
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('descricao')), 'required' => false, 'size' => 50, 'max_length' => 255);
+    $this->inputsHelper()->textArea('descricao', $options);
 
-    $options = array('label' => $this->_getLabel('pessoaj'), 'required' => true);
-//    $this->inputsHelper()->integer('pessoaj', $options);
-    $this->inputsHelper()->simpleSearchPessoaj('pessoaj', $options);
-
-       // nome
-    $options = array('label' => $this->_getLabel('pessoa'), 'size' => 68);
-    $this->inputsHelper()->simpleSearchPessoa('nome', $options);
-
+    // Destino
+    $options = array('label' => $this->_getLabel('ref_idpes_destino'), 'required' => true, 'size' => 51);
+    $this->inputsHelper()->simpleSearchPessoaj('ref_idpes_destino', $options);
 
     // observações
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('observacao')), 'required' => false, 'size' => 50, 'max_length' => 255);
-    $this->inputsHelper()->textArea('observacao', $options);
-    
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('ano')), 'required' => true, 'size' => 5, 'max_length' => 4);
+    $this->inputsHelper()->integer('ano', $options);
     $this->loadResourceAssets($this->getDispatcher());
   }
 
