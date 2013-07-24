@@ -41,7 +41,7 @@ class RotaController extends Portabilis_Controller_Page_EditController
 
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
   protected $_processoAp        = 578;
-  protected $_deleteOption      = true;
+  protected $_deleteOption      = false;
 
   protected $_formMap    = array(
 
@@ -54,11 +54,31 @@ class RotaController extends Portabilis_Controller_Page_EditController
       'help'   => '',
     ),
     'ref_idpes_destino' => array(
-      'label'  => 'Instituição Destino',
+      'label'  => 'Instituição destino',
       'help'   => '',
     ),
     'ano' => array(
       'label'  => 'Ano',
+      'help'   => '',
+    ),
+    'tipo_rota' => array(
+      'label'  => 'Tipo da rota',
+      'help'   => '',
+    ),
+    'km_pav' => array(
+      'label'  => 'Km pavimentados',
+      'help'   => '',
+    ),
+    'km_npav' => array(
+      'label'  => 'Km não pavimentados',
+      'help'   => '',
+    ),
+    'ref_cod_empresa_transporte_escolar' => array(
+      'label'  => 'Empresa',
+      'help'   => '',
+    ),
+    'tercerizado' => array(
+      'label'  => 'Tercerizado',
       'help'   => '',
     )
   );
@@ -66,7 +86,7 @@ class RotaController extends Portabilis_Controller_Page_EditController
 
   protected function _preConstruct()
   {
-    $this->_options = $this->mergeOptions(array('edit_success' => '/intranet/transporte_empresa_lst.php','delete_sucess' => '/intranet/transporte_empresa_lst.php'), $this->_options);
+    $this->_options = $this->mergeOptions(array('edit_success' => '/intranet/transporte_rota_lst.php','delete_sucess' => '/intranet/transporte_rota_lst.php'), $this->_options);
   }
 
 
@@ -82,7 +102,11 @@ class RotaController extends Portabilis_Controller_Page_EditController
 
   public function Gerar()
   {
-    $this->url_cancelar = '/intranet/transporte_empresa_lst.php';
+    $this->url_cancelar = '/intranet/transporte_rota_lst.php';
+
+    // ano
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('ano')), 'required' => true, 'size' => 5, 'max_length' => 4);
+    $this->inputsHelper()->integer('ano', $options);
 
     // Código da rota
     $options = array('label'    => $this->_getLabel('id'), 'disabled' => true,
@@ -90,16 +114,41 @@ class RotaController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->integer('id', $options);
 
     // descricao
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('descricao')), 'required' => false, 'size' => 50, 'max_length' => 255);
-    $this->inputsHelper()->textArea('descricao', $options);
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('descricao')), 'required' => true, 'size' => 50, 'max_length' => 50);
+    $this->inputsHelper()->text('descricao', $options);
 
     // Destino
-    $options = array('label' => $this->_getLabel('ref_idpes_destino'), 'required' => true, 'size' => 51);
+    $options = array('label' => $this->_getLabel('ref_idpes_destino'), 'required' => true, 'size' => 50);
     $this->inputsHelper()->simpleSearchPessoaj('ref_idpes_destino', $options);
 
-    // observações
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('ano')), 'required' => true, 'size' => 5, 'max_length' => 4);
-    $this->inputsHelper()->integer('ano', $options);
+
+    // Empresa rota
+    $options = array('label' => $this->_getLabel('ref_cod_empresa_transporte_escolar'), 'required' => true, 'size' => 50);
+    $this->inputsHelper()->simpleSearchEmpresa('ref_cod_empresa_transporte_escolar', $options);    
+
+    // Tipo
+    $tipos = array(null           => 'Selecione um tipo', 'U' => 'Urbana',
+       'R' => 'Rural');
+
+    $options = array('label'     => $this->_getLabel('tipo_rota'),
+                     'resources' => $tipos,
+                     'required'  => true);
+
+    $this->inputsHelper()->select('tipo_rota', $options);
+
+    // km pavimentados
+    $options = array('label' => $this->_getLabel('km_pav'), 'required' => false, 'size' => 9, 'max_length' => 10);
+    $this->inputsHelper()->numeric('km_pav', $options);
+
+    // km não pavimentados
+    $options = array('label' => $this->_getLabel('km_npav'), 'required' => false, 'size' => 9, 'max_length' => 10);
+    $this->inputsHelper()->numeric('km_npav', $options);
+
+     // Tercerizado
+    $options = array('label' => $this->_getLabel('tercerizado'));
+    $this->inputsHelper()->checkbox('tercerizado', $options);        
+
+
     $this->loadResourceAssets($this->getDispatcher());
   }
 

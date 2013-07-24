@@ -32,7 +32,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/modules/clsModulesMotorista.inc.php';
+require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
 
 require_once 'Portabilis/Date/Utils.php';
 require_once 'Portabilis/View/Helper/Application.php';
@@ -52,7 +52,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Motoristas');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Rotas');
     $this->processoAp = 578;
   }
 }
@@ -82,32 +82,34 @@ class indice extends clsDetalhe
 
     $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
 
-    $this->titulo = 'Motorista - Detalhe';
+    $this->titulo = 'Rota - Detalhe';
     $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
 
-    $cod_motorista = $_GET['cod_motorista'];
+    $cod_rota_transporte_escolar = $_GET['cod_rota'];
 
-    $tmp_obj = new clsModulesMotorista($cod_motorista);
+    $tmp_obj = new clsModulesRotaTransporteEscolar($cod_rota_transporte_escolar);
     $registro = $tmp_obj->detalhe();
 
     if (! $registro) {
-      header('Location: transporte_motorista_lst.php');
+      header('Location: transporte_rota_lst.php');
       die();
     }
-    
-    $this->addDetalhe( array("Código do Motorista", $cod_motorista));
-    $this->addDetalhe( array("Nome", $registro['nome_motorista'].'&nbsp&nbsp <a target=\'_blank\' href=\'atendidos_det.php?cod_pessoa='.$registro['ref_idpes'].'\'>Ver pessoa</a>') );
-    $this->addDetalhe( array("CNH", $registro['cnh']) );
-    $this->addDetalhe( array("Categoria", $registro['tipo_cnh']) );
-    if (trim($registro['dt_habilitacao'])!='')
-      $this->addDetalhe( array("Data de Habilitação", Portabilis_Date_Utils::pgSQLToBr($registro['dt_habilitacao']) ));
-    if (trim($registro['vencimento_cnh'])!='')
-      $this->addDetalhe( array("Vencimento da Habilitação", Portabilis_Date_Utils::pgSQLToBr($registro['vencimento_cnh']) ) );
 
-    $this->addDetalhe( array("Observa&ccedil;&atilde;o", $registro['observacao']));
-    $this->url_novo = "../module/TransporteEscolar/Motorista";
-    $this->url_editar = "../module/TransporteEscolar/motorista?id={$cod_motorista}";
-    $this->url_cancelar = "transporte_motorista_lst.php";
+    $this->addDetalhe( array("Ano", $registro['ano']) );
+    $this->addDetalhe( array("Código da rota", $cod_rota_transporte_escolar));
+    $this->addDetalhe( array("Descrição", $registro['descricao']) );
+    $this->addDetalhe( array("Destino", $registro['nome_destino']));
+    $this->addDetalhe( array("Empresa", $registro['nome_empresa']));
+    $this->addDetalhe( array("Tipo da rota", ($registro['tipo_rota'] == 'U' ? 'Urbana' : 'Rural' )));
+    if (trim($registro['km_pav'])!='')
+      $this->addDetalhe( array("Percurso pavimentado", $registro['km_pav'].' km'));
+    if (trim($registro['km_npav'])!='')
+      $this->addDetalhe( array("Percurso não pavimentado", $registro['km_npav'].' km'));
+
+    $this->addDetalhe( array("Tercerizado", ($registro['tipo_rota'] == 'S' ? 'Sim' : 'Não' )));
+    $this->url_novo = "../module/TransporteEscolar/Veiculo";
+    $this->url_editar = "../module/TransporteEscolar/Rota?id={$cod_rota_transporte_escolar}";
+    $this->url_cancelar = "transporte_rota_lst.php";
 
     $this->largura = "100%";
   }

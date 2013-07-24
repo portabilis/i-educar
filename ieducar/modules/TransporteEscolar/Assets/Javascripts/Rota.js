@@ -19,14 +19,14 @@ resourceOptions.handlePost = function(dataResponse) {
   $j('.pessoa-links .cadastrar-pessoa').hide();
 
   if (! dataResponse.any_error_msg)
-    window.setTimeout(function() { document.location = '/intranet/transporte_empresa_det.php?cod_empresa=' + resource.id(); }, 500);
+    window.setTimeout(function() { document.location = '/intranet/transporte_rota_det.php?cod_rota=' + resource.id(); }, 500);
   else
     $submitButton.removeAttr('disabled').val('Gravar');
 }
 
 resourceOptions.handlePut = function(dataResponse) {
   if (! dataResponse.any_error_msg)
-    window.setTimeout(function() { document.location = '/intranet/transporte_empresa_det.php?cod_empresa=' + resource.id(); }, 500);
+    window.setTimeout(function() { document.location = '/intranet/transporte_rota_det.php?cod_rota=' + resource.id(); }, 500);
   else
     $submitButton.removeAttr('disabled').val('Gravar');
 }
@@ -40,13 +40,21 @@ resourceOptions.handleGet = function(dataResponse) {
   if (dataResponse.pessoa)
     getPersonDetails(dataResponse.pessoa);
 
-
   $idField.val(dataResponse.id);
-  $j('#observacao').val(dataResponse.observacao);
   $j('#descricao').val(dataResponse.descricao);
-  $j('#pessoaj_id').val(dataResponse.pessoaj);
-  $j('#pessoaj_ref_idpes_destino').val(dataResponse.pessoaj+' - '+dataResponse.pessoajNome);
-  $j('#ref_idpes_destino').val(dataResponse.ref_idpes_destino);
+  $j('#pessoaj_id').val(dataResponse.ref_idpes_destino);
+  $j('#pessoaj_ref_idpes_destino').val(dataResponse.ref_idpes_destino+' - '+dataResponse.nomeDestino);
+  $j('#empresa_id').val(dataResponse.ref_cod_empresa_transporte_escolar);
+  $j('#empresa_ref_cod_empresa_transporte_escolar').val(dataResponse.ref_cod_empresa_transporte_escolar+' - '+dataResponse.nomeEmpresa);
+  $j('#ano').val(dataResponse.ano);
+  $j('#tipo_rota').val(dataResponse.tipo_rota);
+  $j('#km_pav').val(dataResponse.km_pav);
+  $j('#km_npav').val(dataResponse.km_npav);
+  $j('#km_npav').val(dataResponse.km_npav);
+  if (dataResponse.tercerizado == 'S'){
+    $j('#tercerizado').attr('checked',true);  
+    $j('#tercerizado').val('on');   
+  }  
 
 };
 
