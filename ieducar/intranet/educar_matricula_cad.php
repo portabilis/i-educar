@@ -608,7 +608,7 @@ class indice extends clsCadastro
           $obj_mat = new clsPmieducarMatricula($transf['ref_cod_matricula_saida'],null,null
             ,null,$this->pessoa_logada,null,null,3);
           $obj_mat->edita();
-          $obj_transf  = new clsPmieducarTransferenciaSolicitacao($trans['cod_transferencia_solicitacao']);
+          $obj_transf  = new clsPmieducarTransferenciaSolicitacao($transf['cod_transferencia_solicitacao']);
           $obj_transf->desativaEntradaTransferencia();
         }
       }
