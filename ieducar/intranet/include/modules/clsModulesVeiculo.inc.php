@@ -458,14 +458,7 @@ class clsModulesVeiculo
             modules.empresa_transporte_escolar emp,cadastro.pessoa p
           WHERE
             ref_cod_empresa_transporte_escolar = cod_empresa_transporte_escolar AND p.idpes = emp.ref_idpes
-         ) AS nome_empresa, (
-          SELECT
-            nome
-          FROM
-            modules.motorista m,cadastro.pessoa p
-          WHERE
-            ref_cod_motorista = cod_motorista AND p.idpes = m.ref_idpes
-         ) AS nome_motorista FROM {$this->_tabela}";
+         ) AS nome_empresa FROM {$this->_tabela}";
     $filtros = "";
     $whereNomes = '';
     $whereAnd = " WHERE ";

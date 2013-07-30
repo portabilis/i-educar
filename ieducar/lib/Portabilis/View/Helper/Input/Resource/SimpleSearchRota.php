@@ -41,11 +41,11 @@ require_once 'lib/Portabilis/View/Helper/Input/SimpleSearch.php';
  * @since     07/2013
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Resource_SimpleSearchPonto extends Portabilis_View_Helper_Input_SimpleSearch {
+class Portabilis_View_Helper_Input_Resource_SimpleSearchRota extends Portabilis_View_Helper_Input_SimpleSearch {
 
   protected function resourceValue($id) {
     if ($id) {
-      $sql       = "select descricao from modules.ponto_transporte_escolar where cod_ponto_transporte_escolar = $1";
+      $sql       = "select descricao from modules.rota_transporte_escolar where cod_rota_transporte_escolar = $1";
       $options = array('params' => $id, 'return_only' => 'first-field');
       $nome    = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
 
@@ -53,10 +53,10 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchPonto extends Portabilis
     }
   }
 
-  public function simpleSearchPonto($attrName = '', $options = array()) {
-    $defaultOptions = array('objectName'    => 'ponto',
-                            'apiController' => 'Ponto',
-                            'apiResource'   => 'ponto-search');
+  public function simpleSearchRota($attrName = '', $options = array()) {
+    $defaultOptions = array('objectName'    => 'rota',
+                            'apiController' => 'Rota',
+                            'apiResource'   => 'rota-search');
 
     $options        = $this->mergeOptions($options, $defaultOptions);
 
@@ -64,7 +64,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchPonto extends Portabilis
   }
 
   protected function inputPlaceholder($inputOptions) {
-    return 'Informe o código ou a descrição do ponto';
+    return 'Informe o código ou a descrição da rota';
   }
 
 }

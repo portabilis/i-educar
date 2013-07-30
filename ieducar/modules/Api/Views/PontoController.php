@@ -85,6 +85,23 @@ class PontoController extends ApiCoreController
     return array('id' => $id);
  }
 
+  protected function sqlsForNumericSearch() {
+
+    $sqls[] = "select distinct cod_ponto_transporte_escolar as id, descricao as name from
+                 modules.ponto_transporte_escolar where cod_ponto_transporte_escolar like $1||'%'";
+
+    return $sqls;
+  }
+
+
+  protected function sqlsForStringSearch() {
+
+    $sqls[] = "select distinct cod_ponto_transporte_escolar as id, descricao as name  from
+                 modules.ponto_transporte_escolar where lower(to_ascii(descricao)) like '%'||lower(to_ascii($1))||'%'";
+
+    return $sqls;
+  }
+
   protected function put() {
       $id = $this->getRequest()->id;
       $editou = $this->createOrUpdatePonto($id);
@@ -94,7 +111,7 @@ class PontoController extends ApiCoreController
         $this->messenger->append('Alteração realizada com sucesso', 'success', false, 'error');
       }
       else
-        $this->messenger->append('Aparentemente a rota não pode ser alterado, por favor, verifique.');
+        $this->messenger->append('Aparentemente o ponto não pode ser alterado, por favor, verifique.');
    
 
     return array('id' => $id);
@@ -122,6 +139,9 @@ class PontoController extends ApiCoreController
     
     if ($this->isRequestFor('get', 'ponto'))
       $this->appendResponse($this->get());
+
+    elseif ($this->isRequestFor('get', 'ponto-search'))
+      $this->appendResponse($this->search());
 
     // create
     elseif ($this->isRequestFor('post', 'ponto'))

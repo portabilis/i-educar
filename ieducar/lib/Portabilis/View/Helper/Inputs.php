@@ -191,7 +191,7 @@ class Portabilis_View_Helper_Inputs {
 
   public function simpleSearchRota($attrName, $inputOptions = array(), $helperOptions = array()) {
 
-    $this->simpleSearchResourceInput('simpleSearchPonto', $attrName, $inputOptions, $helperOptions);
+    $this->simpleSearchResourceInput('simpleSearchRota', $attrName, $inputOptions, $helperOptions);
 
   }    
 
