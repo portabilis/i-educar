@@ -33,6 +33,9 @@ require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
+require_once 'include/modules/clsModulesItinerarioTransporteEscolar.inc.php';
+require_once 'include/modules/clsModulesPontoTransporteEscolar.inc.php';
+require_once 'include/modules/clsModulesVeiculo.inc.php';
 
 require_once 'Portabilis/Date/Utils.php';
 require_once 'Portabilis/View/Helper/Application.php';
@@ -107,7 +110,67 @@ class indice extends clsDetalhe
       $this->addDetalhe( array("Percurso não pavimentado", $registro['km_npav'].' km'));
 
     $this->addDetalhe( array("Tercerizado", ($registro['tipo_rota'] == 'S' ? 'Sim' : 'Não' )));
-    $this->url_novo = "../module/TransporteEscolar/Veiculo";
+
+    // Itinerário
+
+      $obj = new clsModulesItinerarioTransporteEscolar();
+      $obj->setOrderby('seq ASC');
+      $lst = $obj->lista(null, $cod_rota_transporte_escolar );
+
+      if ($lst) {
+        $tabela = '
+          <table>
+          <tr colspan=\'5\'><td><a href=\'/module/TransporteEscolar/Itinerario?id='.$cod_rota_transporte_escolar.'\'>Editar Itinerario</a></td></tr>
+            <tr align="center">
+              <td bgcolor="#A1B3BD"><b>Sequencial</b></td>
+              <td bgcolor="#A1B3BD"><b>Ponto</b></td>
+              <td bgcolor="#A1B3BD"><b>Hora</b></td>
+              <td bgcolor="#A1B3BD"><b>Tipo</b></td>
+              <td bgcolor="#A1B3BD"><b>Veículo</b></td>
+            </tr>';
+
+        $cont = 0;
+
+        foreach ($lst as $valor) {
+          if (($cont % 2) == 0) {
+            $color = ' bgcolor="#E4E9ED" ';
+          }
+          else {
+            $color = ' bgcolor="#FFFFFF" ';
+          }
+
+          $obj_veiculo = new clsModulesVeiculo($valor['ref_cod_veiculo']);
+          $obj_veiculo = $obj_veiculo->detalhe();
+          $valor_veiculo = $obj_veiculo['descricao'].' - Placa: '.$obj_veiculo['placa'];
+
+          $obj_ponto = new clsModulesPontoTransporteEscolar($valor['ref_cod_ponto_transporte_escolar']);
+          $obj_ponto = $obj_ponto->detalhe();
+          $valor_ponto = $obj_ponto['descricao'];
+
+          $tabela .= sprintf('
+            <tr>
+              <td %s align=left>%s</td>
+              <td %s align=left>%s</td>
+              <td %s align=left>%s</td>
+              <td %s align=left>%s</td>
+              <td %s align=left>%s</td>
+            </tr>',
+            $color, $valor['seq'], $color, $valor_ponto, $color, $valor['hora'],$color, ($valor['tipo'] == 'V' ? 'Volta' : 'Ida'),$color, $valor_veiculo
+          );
+
+          $cont++;
+        }
+
+        $tabela .= '</table>';
+
+  
+    }
+      if ($tabela) {
+        $this->addDetalhe(array('Itinerário', $tabela));
+      } else{ 
+        $this->addDetalhe(array('Itinerário', '<a href=\'/module/TransporteEscolar/Itinerario?id='.$cod_rota_transporte_escolar.'\'>Editar Itinerario</a>'));
+      }
+    $this->url_novo = "../module/TransporteEscolar/Rota";
     $this->url_editar = "../module/TransporteEscolar/Rota?id={$cod_rota_transporte_escolar}";
     $this->url_cancelar = "transporte_rota_lst.php";
 

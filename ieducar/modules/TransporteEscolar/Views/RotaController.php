@@ -149,6 +149,8 @@ class RotaController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->checkbox('tercerizado', $options);        
 
 
+
+
     $this->loadResourceAssets($this->getDispatcher());
   }
 

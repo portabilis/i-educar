@@ -104,7 +104,7 @@ class clsModulesItinerarioTransporteEscolar
   /**
    * Construtor.
    */
-  function clsModulesRotaTransporteEscolar($cod_itinerario_transporte_escolar = NULL, $ref_cod_rota_transporte_escolar = NULL
+  function clsModulesItinerarioTransporteEscolar($cod_itinerario_transporte_escolar = NULL, $ref_cod_rota_transporte_escolar = NULL
     , $seq = NULL,  $ref_cod_ponto_transporte_escolar = NULL, $ref_cod_veiculo = NULL,
      $hora = NULL, $tipo = NULL)
   {
@@ -299,6 +299,55 @@ class clsModulesItinerarioTransporteEscolar
       $filtros .= "{$whereAnd} tipo = '{$tipo}'";
       $whereAnd = " AND ";
     }
+
+    $db = new clsBanco();
+    $countCampos = count(explode(',', $this->_campos_lista))+2;
+    $resultado = array();
+
+    $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+    $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
+
+    $db->Consulta($sql);
+
+    if ($countCampos > 1) {
+      while ($db->ProximoRegistro()) {
+        $tupla = $db->Tupla();
+        $tupla["_total"] = $this->_total;
+        $resultado[] = $tupla;
+      }
+    }
+    else {
+      while ($db->ProximoRegistro()) {
+        $tupla = $db->Tupla();
+        $resultado[] = $tupla[$this->_campos_lista];
+      }
+    }
+    if (count($resultado)) {
+      return $resultado;
+    }
+
+    return FALSE;
+  }
+
+
+  function listaPontos($ref_cod_rota_transporte_escolar = NULL)
+  {
+    $sql = "SELECT ref_cod_ponto_transporte_escolar,
+     (SELECT descricao
+       FROM modules.ponto_transporte_escolar
+       WHERE ref_cod_ponto_transporte_escolar = cod_ponto_transporte_escolar) as descricao,
+       (SELECT tipo
+       FROM modules.ponto_transporte_escolar
+       WHERE ref_cod_ponto_transporte_escolar = cod_ponto_transporte_escolar) as tipo FROM {$this->_tabela}";
+    $filtros = "";
+
+    $whereAnd = " WHERE ";
+
+    if (is_numeric($ref_cod_rota_transporte_escolar)) {
+      $filtros .= "{$whereAnd} ref_cod_rota_transporte_escolar = '{$ref_cod_rota_transporte_escolar}'";
+      $whereAnd = " AND ";
+    }  
 
     $db = new clsBanco();
     $countCampos = count(explode(',', $this->_campos_lista))+2;

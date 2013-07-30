@@ -80,6 +80,22 @@ class RotaController extends ApiCoreController
     return (is_null($id) ? $rota->cadastra() : $rota->edita());
   }
 
+  protected function sqlsForNumericSearch() {
+
+    $sqls[] = "select distinct cod_rota_transporte_escolar as id, descricao as name from
+                 modules.rota_transporte_escolar where cod_rota_transporte_escolar like $1||'%'";
+
+    return $sqls;
+  }
+
+
+  protected function sqlsForStringSearch() {
+
+    $sqls[] = "select distinct cod_rota_transporte_escolar as id, descricao as name  from
+                 modules.rota_transporte_escolar where lower(to_ascii(descricao)) like '%'||lower(to_ascii($1))||'%'";
+
+    return $sqls;
+  }
 
   protected function get() {
 
@@ -165,6 +181,9 @@ class RotaController extends ApiCoreController
     
     if ($this->isRequestFor('get', 'rota'))
       $this->appendResponse($this->get());
+
+    elseif ($this->isRequestFor('get', 'rota-search'))
+      $this->appendResponse($this->search());    
 
     // create
     elseif ($this->isRequestFor('post', 'rota'))
