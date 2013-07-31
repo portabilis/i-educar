@@ -151,7 +151,7 @@ class clsModulesItinerarioTransporteEscolar
   function cadastra()
   {
     
-    if (is_numeric($this->cod_itinerario_transporte_escolar) && is_numeric($this->ref_cod_rota_transporte_escolar)
+    if ( is_numeric($this->ref_cod_rota_transporte_escolar)
      && is_numeric($this->seq) && is_numeric($this->ref_cod_ponto_transporte_escolar) 
       && is_string($this->tipo))
     {
@@ -160,12 +160,6 @@ class clsModulesItinerarioTransporteEscolar
       $campos  = '';
       $valores = '';
       $gruda   = '';
-
-    if (is_numeric($this->cod_itinerario_transporte_escolar)) {
-      $campos .= "{$gruda}cod_itinerario_transporte_escolar";
-      $valores .= "{$gruda}'{$this->cod_itinerario_transporte_escolar}'";
-      $gruda = ", ";
-    }
 
     if (is_numeric($this->ref_cod_rota_transporte_escolar)) {
       $campos .= "{$gruda}ref_cod_rota_transporte_escolar";
@@ -191,11 +185,11 @@ class clsModulesItinerarioTransporteEscolar
       $gruda = ", ";
     }   
 
-    if (is_string($this->hora)) {
+    if ($this->checktime($this->hora)) {
       $campos .= "{$gruda}hora";
       $valores .= "{$gruda}'{$this->hora}'";
       $gruda = ", ";
-    }  
+    } 
 
     if (is_string($this->tipo)) {
       $campos .= "{$gruda}tipo";
@@ -271,7 +265,13 @@ class clsModulesItinerarioTransporteEscolar
   function lista($cod_itinerario_transporte_escolar = NULL, $ref_cod_rota_transporte_escolar = NULL,
    $seq = NULL , $ref_cod_veiculo = NULL, $tipo = NULL)
   {
-    $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
+    $sql = "SELECT {$this->_campos_lista},
+     (SELECT descricao
+       FROM modules.ponto_transporte_escolar
+       WHERE ref_cod_ponto_transporte_escolar = cod_ponto_transporte_escolar) as descricao,
+     (SELECT descricao || ', Placa: ' || placa
+       FROM modules.veiculo
+       WHERE ref_cod_veiculo = cod_veiculo) as nome_onibus FROM {$this->_tabela}";
     $filtros = "";
 
     $whereAnd = " WHERE ";
@@ -431,7 +431,7 @@ class clsModulesItinerarioTransporteEscolar
   function excluir()
   {
     if (is_numeric($this->cod_rota_transporte_escolar)) {
-      $sql = "DELETE FROM {$this->_tabela} WHERE cod_rota_transporte_escolar = '{$this->cod_rota_transporte_escolar}'";
+      $sql = "DELETE FROM {$this->_tabela} WHERE ref_cod_rota_transporte_escolar = '{$this->ref_cod_rota_transporte_escolar}'";
       $db = new clsBanco();
       $db->Consulta($sql);
       return true;
@@ -439,6 +439,33 @@ class clsModulesItinerarioTransporteEscolar
 
     return FALSE;
   }
+
+  /**
+   * Exclui todos registros.
+   * @return bool
+   */
+  function excluirTodos($ref_cod_rota_transporte_escolar)
+  {
+    if (is_numeric($ref_cod_rota_transporte_escolar)) {
+      $sql = "DELETE FROM {$this->_tabela} WHERE ref_cod_rota_transporte_escolar = '{$ref_cod_rota_transporte_escolar}'";
+      $db = new clsBanco();
+      $db->Consulta($sql);
+      return true;
+    }
+
+    return FALSE;
+  } 
+
+  function checktime($time)
+  { 
+    list($hour,$minute) = explode(':',$time);
+ 
+    if ($hour > -1 && $hour < 24 && $minute > -1 && $minute < 60)
+    {
+      return true;
+    } else 
+        return false;
+  } 
 
   /**
    * Define quais campos da tabela serão selecionados no método Lista().

@@ -87,6 +87,22 @@ class VeiculoController extends ApiCoreController
     return (is_null($id) ? $veiculo->cadastra() : $veiculo->edita());
   }
 
+  protected function sqlsForNumericSearch() {
+
+    $sqls[] = "select distinct cod_veiculo as id, (descricao || ', Placa: ' || placa) as name from
+                 modules.veiculo where (cod_veiculo like $1||'%') OR (lower(to_ascii(placa)) like '%'||lower(to_ascii($1))||'%')";
+
+    return $sqls;
+  }
+
+
+  protected function sqlsForStringSearch() {
+
+    $sqls[] = "select distinct cod_veiculo as id, (descricao || ', Placa: ' || placa ) as name from
+                 modules.veiculo where (lower(to_ascii(descricao)) like '%'||lower(to_ascii($1))||'%') OR (lower(to_ascii(placa)) like '%'||lower(to_ascii($1))||'%')";
+
+    return $sqls;
+  }
 
   protected function get() {
     
@@ -176,6 +192,9 @@ class VeiculoController extends ApiCoreController
     
     if ($this->isRequestFor('get', 'veiculo'))
       $this->appendResponse($this->get());
+
+    elseif ($this->isRequestFor('get', 'veiculo-search'))
+      $this->appendResponse($this->search());  
 
     // create
     elseif ($this->isRequestFor('post', 'veiculo'))
