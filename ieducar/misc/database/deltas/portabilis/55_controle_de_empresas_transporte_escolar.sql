@@ -85,7 +85,7 @@
     );
 
 
-  CREATE SEQUENCE modules.veiculo_seq
+    CREATE SEQUENCE modules.veiculo_seq
     INCREMENT 1
     MINVALUE 1
     MAXVALUE 9223372036854775807
@@ -124,7 +124,6 @@
     WITH (
     OIDS=TRUE
     );
-
 
   -- //@UNDO
 

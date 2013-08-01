@@ -27,7 +27,7 @@
  * @license   @@license@@
  * @package   TransporteEscolar
  * @subpackage  Modules
- * @since     Arquivo disponível desde a versão ?
+ * @since     Arquivo disponível desde a versão ?21238
  * @version   $Id$
  */
 
@@ -40,7 +40,7 @@ class RotaController extends Portabilis_Controller_Page_EditController
   protected $_titulo     = 'Cadastro de Rota';
 
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
-  protected $_processoAp        = 578;
+  protected $_processoAp        = 21238;
   protected $_deleteOption      = false;
 
   protected $_formMap    = array(

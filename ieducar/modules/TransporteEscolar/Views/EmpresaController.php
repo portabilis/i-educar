@@ -40,7 +40,7 @@ class EmpresaController extends Portabilis_Controller_Page_EditController
   protected $_titulo     = 'Cadastro de Empresa de Transporte';
 
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
-  protected $_processoAp        = 578;
+  protected $_processoAp        = 21235;
   protected $_deleteOption      = true;
 
   protected $_formMap    = array(

@@ -38,7 +38,7 @@
 	CONSTRAINT rota_transporte_escolar_ref_cod_empresa_transporte_escolar_fkey FOREIGN KEY (ref_cod_empresa_transporte_escolar)
 	REFERENCES modules.empresa_transporte_escolar (cod_empresa_transporte_escolar) MATCH SIMPLE
 	ON UPDATE RESTRICT ON DELETE RESTRICT
-	)
+	)	
 	WITH (
 	OIDS=TRUE
 	);
@@ -74,8 +74,7 @@
 	)
 	WITH (
 	OIDS=TRUE
-	);
-	
+	);	
 	
 	-- Sequence: modules.ponto_transporte_escolar_seq
 	CREATE SEQUENCE modules.ponto_transporte_escolar_seq
@@ -93,8 +92,7 @@
 	(
 	cod_ponto_transporte_escolar integer NOT NULL DEFAULT nextval('ponto_transporte_escolar_seq'::regclass),
 	descricao varchar(70) not null,
-	CONSTRAINT ponto_transporte_escolar_cod_ponto_transporte_escolar_pkey PRIMARY KEY (cod_ponto_transporte_escolar ),
-	ON UPDATE RESTRICT ON DELETE RESTRICT
+	CONSTRAINT ponto_transporte_escolar_cod_ponto_transporte_escolar_pkey PRIMARY KEY (cod_ponto_transporte_escolar )
 	)
 	WITH (
 	OIDS=TRUE
@@ -116,6 +114,7 @@
 	CREATE TABLE modules.pessoa_transporte
 	(
 	cod_pessoa_transporte integer NOT NULL DEFAULT nextval('pessoa_transporte_seq'::regclass),
+	ref_idpes integer not null,
 	ref_cod_rota_transporte_escolar integer not null,
 	ref_cod_ponto_transporte_escolar integer,
 	ref_idpes_destino integer,
@@ -126,7 +125,9 @@
 	CONSTRAINT pessoa_transporte_ref_cod_ponto_transporte_escolar_fkey FOREIGN KEY (ref_cod_ponto_transporte_escolar)
 	REFERENCES modules.ponto_transporte_escolar (cod_ponto_transporte_escolar) MATCH SIMPLE,
 	CONSTRAINT pessoa_transporte_ref_idpes_destino_fkey FOREIGN KEY (ref_idpes_destino)
-	REFERENCES cadastro.juridica (idpes) MATCH SIMPLE
+	REFERENCES cadastro.juridica (idpes) MATCH SIMPLE,
+	CONSTRAINT pessoa_transporte_ref_idpes_fkey FOREIGN KEY (ref_idpes)
+	REFERENCES cadastro.fisica (idpes) MATCH SIMPLE
 	ON UPDATE RESTRICT ON DELETE RESTRICT
 	)
 	WITH (
