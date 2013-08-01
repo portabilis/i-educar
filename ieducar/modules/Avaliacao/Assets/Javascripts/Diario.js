@@ -775,7 +775,7 @@ function selectNextOption($selectElement){
   }
 
   else {
-    alert(safeUtf8Decode('Você chegou na ultima opção.'));
+    alert(safeUtf8Decode('Você chegou à última opção.'));
     showSearchForm();
   }
 }
@@ -793,13 +793,13 @@ function showNextSelectionButton() {
   var $matriculaField = $j('#ref_cod_matricula');
 
   if ($ccField.val() != '') {
-    $j("<a href='#'>Proximo componente curricular</a>").bind('click', nextComponenteCurricular)
+    $j("<a href='#'>Pr&#243;ximo componente curricular</a>").bind('click', nextComponenteCurricular)
                                 .attr('style', 'text-decoration: underline')
                                 .appendTo($navActions);
   }
 
   if ($matriculaField.val() != '') {
-    $j("<a href='#'>Proxima matricula</a>").bind('click', nextMatricula)
+    $j("<a href='#'>Pr&#243;xima matr&#237;cula</a>").bind('click', nextMatricula)
                                 .attr('style', 'text-decoration: underline')
                                 .appendTo($navActions);
   }

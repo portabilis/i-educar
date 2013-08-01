@@ -20,11 +20,11 @@
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
- * @package   Module
- * @since     07/2013
+ * @package   iEd_Pmieducar
+ * @since     Arquivo disponível desde a versão 1.0.0
  * @version   $Id$
  */
 
@@ -32,9 +32,8 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/modules/clsModulesMotorista.inc.php';
+require_once 'include/modules/clsModulesPessoaTransporte.inc.php';
 
-require_once 'Portabilis/Date/Utils.php';
 require_once 'Portabilis/View/Helper/Application.php';
 
 
@@ -52,7 +51,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Motoristas');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Vinculo pessoa transporte');
     $this->processoAp = 578;
   }
 }
@@ -82,32 +81,29 @@ class indice extends clsDetalhe
 
     $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
 
-    $this->titulo = 'Motorista - Detalhe';
+    $this->titulo = 'Vínculo pessoa transporte - Detalhe';
     $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
 
-    $cod_motorista = $_GET['cod_motorista'];
+    $cod_pt = $_GET['cod_pt'];
 
-    $tmp_obj = new clsModulesMotorista($cod_motorista);
+    $tmp_obj = new clsModulesPessoaTransporte($cod_pt);
     $registro = $tmp_obj->detalhe();
 
     if (! $registro) {
-      header('Location: transporte_motorista_lst.php');
+      header('Location: transporte_empresa_lst.php');
       die();
     }
     
-    $this->addDetalhe( array("Código do Motorista", $cod_motorista));
-    $this->addDetalhe( array("Nome", $registro['nome_motorista'].'&nbsp&nbsp <a target=\'_blank\' href=\'atendidos_det.php?cod_pessoa='.$registro['ref_idpes'].'\'>Ver pessoa</a>') );
-    $this->addDetalhe( array("CNH", $registro['cnh']) );
-    $this->addDetalhe( array("Categoria", $registro['tipo_cnh']) );
-    if (trim($registro['dt_habilitacao'])!='')
-      $this->addDetalhe( array("Data de Habilitação", Portabilis_Date_Utils::pgSQLToBr($registro['dt_habilitacao']) ));
-    if (trim($registro['vencimento_cnh'])!='')
-      $this->addDetalhe( array("Vencimento da Habilitação", Portabilis_Date_Utils::pgSQLToBr($registro['vencimento_cnh']) ) );
-
-    $this->addDetalhe( array("Observa&ccedil;&atilde;o", $registro['observacao']));
-    $this->url_novo = "../module/TransporteEscolar/Motorista";
-    $this->url_editar = "../module/TransporteEscolar/motorista?id={$cod_motorista}";
-    $this->url_cancelar = "transporte_motorista_lst.php";
+    $this->addDetalhe( array("Código do vinculo", $cod_pt));
+    $this->addDetalhe( array("Pessoa", $registro['nome_pessoa']) );
+    $this->addDetalhe( array("Rota", $registro['nome_rota']) );
+    $this->addDetalhe( array("Destino", (trim($registro['nome_destino'])=='' ? $registro['nome_destino2'] : $registro['nome_destino'])) );
+    $this->addDetalhe( array("Ponto de embarque", $registro['nome_ponto'] ));
+    $this->addDetalhe( array("Observa&ccedil;&atilde;o", $registro['observacao']) );
+    
+    $this->url_novo = "../module/TransporteEscolar/Pessoatransporte";
+    $this->url_editar = "../module/TransporteEscolar/Pessoatransporte?id={$cod_pt}";
+    $this->url_cancelar = "transporte_pessoa_lst.php";
 
     $this->largura = "100%";
   }

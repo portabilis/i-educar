@@ -41,12 +41,10 @@ require_once 'include/pmieducar/geral.inc.php';
  * @since   07/2013
  * @version   $Id$
  */
-class clsModulesRota
+class clsModulesPontoTransporteEscolar
 {
-  var $cod_rota;
+  var $cod_ponto_transporte_escolar;
   var $descricao;
-  var $ref_idpes_destino;
-  var $ano;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -101,30 +99,23 @@ class clsModulesRota
   /**
    * Construtor.
    */
-  function clsModulesRota($cod_rota = NULL, $descricao = NULL, $ref_idpes_destino = NULL, $ano = NULL)
+  function clsModulesPontoTransporteEscolar($cod_ponto_transporte_escolar = NULL, $descricao = NULL)
   {
 
     $db = new clsBanco();
     $this->_schema = "modules.";
-    $this->_tabela = "{$this->_schema}rota";
+    $this->_tabela = "{$this->_schema}ponto_transporte_escolar";
 
-    $this->_campos_lista = $this->_todos_campos = " cod_tipo_veiculo, descricao"; 
+    $this->_campos_lista = $this->_todos_campos = " cod_ponto_transporte_escolar, descricao"; 
 
-    if (is_numeric($cod_tipo_veiculo)) {
-      $this->cod_tipo_veiculo = $cod_tipo_veiculo;
+    if (is_numeric($cod_ponto_transporte_escolar)) {
+      $this->cod_ponto_transporte_escolar = $cod_ponto_transporte_escolar;
     }
 
     if (is_string($descricao)) {
       $this->descricao = $descricao;
     }
 
-    if (is_numeric($ref_idpes_destino)) {
-      $this->ref_idpes_destino = $ref_idpes_destino;
-    }
-
-    if (is_numeric($ano)) {
-      $this->ano = $ano;
-    }
   }
 
   /**
@@ -133,30 +124,20 @@ class clsModulesRota
    */
   function cadastra()
   {
-
-    if (is_string($this->descricao) && is_numeric($this->ref_idpes_destino) && is_numeric($this->ano))
+    
+    if (is_string($this->descricao))
     {
-
       $db = new clsBanco();
 
       $campos  = '';
       $valores = '';
       $gruda   = '';
 
-      
+    if (is_string($this->descricao)) {
       $campos .= "{$gruda}descricao";
       $valores .= "{$gruda}'{$this->descricao}'";
       $gruda = ", ";
-
-      $campos .= "{$gruda}ref_idpes_destino";
-      $valores .= "{$gruda}'{$this->ref_idpes_destino}'";
-      $gruda = ", ";
-
-                  $campos .= "{$gruda}ano";
-      $valores .= "{$gruda}'{$this->ano}'";
-      $gruda = ", ";
-      
-
+    }
 
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
       return $db->InsertId("{$this->_tabela}_seq");
@@ -172,28 +153,18 @@ class clsModulesRota
   function edita()
   {
 
-    if (is_string($this->cod_rota)) {
+    if (is_string($this->cod_ponto_transporte_escolar)) {
       $db  = new clsBanco();
       $set = '';
       $gruda = '';
 
-      if (is_numeric($this->ref_idpes_destino)) {
-        $set .= "{$gruda}ref_idpes_destino = '{$this->ref_idpes_destino}'";
-        $gruda = ", ";
-      }
-
-      if (is_string($this->descricao)) {
+    if (is_string($this->descricao)) {
         $set .= "{$gruda}descricao = '{$this->descricao}'";
         $gruda = ", ";
-      }
-
-      if (is_numeric($this->ano)) {
-        $set .= "{$gruda}ano = '{$this->ano}'";
-        $gruda = ", ";
-      }
+    }
 
       if ($set) {
-        $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_rota = '{$this->cod_rota}'");
+        $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_ponto_transporte_escolar = '{$this->cod_ponto_transporte_escolar}'");
         return TRUE;
       }
     }
@@ -205,22 +176,15 @@ class clsModulesRota
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
    * @return array
    */
-  function lista($cod_rota = NULL, $descricao = NULL, $ref_idpes_destino = NULL , $nome_destino = NULL, $ano = NULL)
+  function lista($cod_ponto_transporte_escolar = NULL, $descricao = NULL)
   {
-    $sql = "SELECT {$this->_campos_lista}, (
-          SELECT
-            nome
-          FROM
-            cadastro.pessoa
-          WHERE
-            idpes = ref_idpes_destino
-         ) AS nome_destino FROM {$this->_tabela}";
+    $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
     $filtros = "";
 
     $whereAnd = " WHERE ";
 
-    if (is_numeric($cod_rota)) {
-      $filtros .= "{$whereAnd} cod_rota = '{$cod_rota}'";
+    if (is_numeric($cod_ponto_transporte_escolar)) {
+      $filtros .= "{$whereAnd} cod_ponto_transporte_escolar = '{$cod_ponto_transporte_escolar}'";
       $whereAnd = " AND ";
     }
 
@@ -228,33 +192,6 @@ class clsModulesRota
       $filtros .= "{$whereAnd} TO_ASCII(LOWER(descricao)) LIKE TO_ASCII(LOWER('%{$descricao}%'))";
       $whereAnd = " AND ";
     }
-
-    if (is_numeric($ref_idpes_destino)) {
-      $filtros .= "{$whereAnd} ref_idpes_destino = '{$ref_idpes_destino}'";
-      $whereAnd = " AND ";
-    }
-    if (is_string($nome_destino)) {
-      $filtros .= "
-        {$whereAnd} exists (
-          SELECT
-            1
-          FROM
-            cadastro.pessoa
-          WHERE
-            cadastro.pessoa.idpes = ref_idpes_destino
-            AND TO_ASCII(LOWER(nome)) LIKE TO_ASCII(LOWER('%{$nome_destino}%'))
-        )";
-
-      $whereAnd = ' AND ';
-    }  
-
-    if (is_numeric($ano)) {
-      $filtros .= "{$whereAnd} ano = '{$ano}'";
-      $whereAnd = " AND ";
-    }
-
-
-
 
     $db = new clsBanco();
     $countCampos = count(explode(',', $this->_campos_lista))+2;
@@ -292,20 +229,13 @@ class clsModulesRota
    */
   function detalhe()
   {
-    if (is_numeric($this->cod_rota)) {
+
+    if (is_numeric($this->cod_ponto_transporte_escolar)) {
       $db = new clsBanco();
-      $db->Consulta("SELECT {$this->_todos_campos}, (
-          SELECT
-            nome
-          FROM
-            cadastro.pessoa
-          WHERE
-            idpes = ref_idpes
-         ) AS nome_empresa , (SELECT nome FROM cadastro.pessoa WHERE idpes = ref_resp_idpes) AS nome_responsavel FROM {$this->_tabela} WHERE cod_rota = '{$this->cod_rota}'");
+      $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_ponto_transporte_escolar = '{$this->cod_ponto_transporte_escolar}'");
       $db->ProximoRegistro();
       return $db->Tupla();
     }
-
     return FALSE;
   }
 
@@ -315,9 +245,9 @@ class clsModulesRota
    */
   function existe()
   {
-    if (is_numeric($this->cod_rota)) {
+    if (is_numeric($this->cod_ponto_transporte_escolar)) {
       $db = new clsBanco();
-      $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_rota = '{$this->cod_rota}'");
+      $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_ponto_transporte_escolar = '{$this->cod_ponto_transporte_escolar}'");
       $db->ProximoRegistro();
       return $db->Tupla();
     }
@@ -331,8 +261,8 @@ class clsModulesRota
    */
   function excluir()
   {
-    if (is_numeric($this->cod_rota)) {
-      $sql = "DELETE FROM {$this->_tabela} WHERE cod_rota = '{$this->cod_rota}'";
+    if (is_numeric($this->cod_ponto_transporte_escolar)) {
+      $sql = "DELETE FROM {$this->_tabela} WHERE cod_ponto_transporte_escolar = '{$this->cod_ponto_transporte_escolar}'";
       $db = new clsBanco();
       $db->Consulta($sql);
       return true;

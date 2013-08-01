@@ -32,12 +32,11 @@
  * @version   $Id$
  */
 
-require_once 'include/modules/clsModulesRota.inc.php';
+require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
 
 require_once 'Portabilis/Controller/ApiCoreController.php';
 require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/Date/Utils.php';
 
 class RotaController extends ApiCoreController
@@ -46,68 +45,107 @@ class RotaController extends ApiCoreController
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA; // verificar
 
   protected function loadNomePessoaj($id) {
-    $sql  = "select nome from cadastro.pessoa, modules.empresa_transporte_escolar emp where idpes = emp.ref_idpes and cod_empresa_transporte_escolar = $1";
+    $sql  = "select nome from cadastro.pessoa, modules.rota_transporte_escolar rt where idpes = rt.ref_idpes_destino and cod_rota_transporte_escolar = $1";
     $nome = $this->fetchPreparedQuery($sql, $id, false, 'first-field');
 
     return $this->toUtf8($nome, array('transform' => true));
   }    
 
+  protected function loadNomeEmpresa($id) {
+    $sql  = "select nome from cadastro.pessoa, modules.empresa_transporte_escolar emp, modules.rota_transporte_escolar rt where idpes = emp.ref_idpes and emp.cod_empresa_transporte_escolar = rt.ref_cod_empresa_transporte_escolar and rt.cod_rota_transporte_escolar = $1";
+    $nome = $this->fetchPreparedQuery($sql, $id, false, 'first-field');
+
+    return $this->toUtf8($nome, array('transform' => true));
+  }       
+
+  protected function validatesValueIsNumeric($value){
+      return (is_numeric($value) || empty($value));
+  }
+
   protected function createOrUpdateRota($id = null){
     
-
-    $rota                          = new clsModulesRota();
-    $rota->cod_rota = $id;
-
+    $rota                          = new clsModulesRotaTransporteEscolar();
+    $rota->cod_rota_transporte_escolar = $id;
 
     // após cadastro não muda mais id pessoa
-    $rota->descricao                     = $this->getRequest()->descricao;
-    $rota->ref_idpes_destino                 = $this->getRequest()->pessoaj_id;
-    $rota->ano                     = $this->getRequest()->ano;
+    $rota->descricao                     = Portabilis_String_Utils::toLatin1($this->getRequest()->descricao);
+    $rota->ref_idpes_destino             = $this->getRequest()->pessoaj_id;
+    $rota->ano                           = $this->getRequest()->ano;
+    $rota->tipo_rota                     = $this->getRequest()->tipo_rota;
+    $rota->km_pav                        = $this->getRequest()->km_pav;
+    $rota->km_npav                       = $this->getRequest()->km_npav;
+    $rota->ref_cod_empresa_transporte_escolar = $this->getRequest()->empresa_id;
+    $rota->tercerizado                   = ($this->getRequest()->tercerizado == 'on' ? 'S' : 'N');
 
     return (is_null($id) ? $rota->cadastra() : $rota->edita());
   }
 
+  protected function sqlsForNumericSearch() {
+
+    $sqls[] = "select distinct cod_rota_transporte_escolar as id, descricao as name from
+                 modules.rota_transporte_escolar where cod_rota_transporte_escolar like $1||'%'";
+
+    return $sqls;
+  }
+
+
+  protected function sqlsForStringSearch() {
+
+    $sqls[] = "select distinct cod_rota_transporte_escolar as id, descricao as name  from
+                 modules.rota_transporte_escolar where lower(to_ascii(descricao)) like '%'||lower(to_ascii($1))||'%'";
+
+    return $sqls;
+  }
 
   protected function get() {
 
-
-      $id               = $this->getRequest()->id;
-      $rota            = new clsModulesRota();
-      $rota->cod_rota = $id;
-      $rota            = $rota->detalhe();
+      $id                   = $this->getRequest()->id;
+      $rota                 = new clsModulesRotaTransporteEscolar();
+      $rota->cod_rota_transporte_escolar       = $id;
+      $rota                 = $rota->detalhe();
 
       $attrs  = array(
-        'cod_rota'  => 'id',
+        'cod_rota_transporte_escolar'  => 'id',
         'descricao' => 'descricao',
-        'ref_idpes_destino'        => 'ref_idpes_destino',
-        'ano' => 'ano'
+        'ref_idpes_destino' => 'ref_idpes_destino',
+        'ano' => 'ano',
+        'tipo_rota' => 'tipo_rota',
+        'km_pav' => 'km_pav',
+        'km_npav' => 'km_npav',
+        'ref_cod_empresa_transporte_escolar' => 'ref_cod_empresa_transporte_escolar',
+        'tercerizado' => 'tercerizado'
       );
 
       $rota = Portabilis_Array_Utils::filter($rota, $attrs);
 
+      $rota['nomeEmpresa']   = $this->loadNomeEmpresa($id);
+      $rota['nomeDestino']   = $this->loadNomePessoaj($id);
+
       return $rota;
-
-
   }
 
   protected function post() {
 
-    $id = $this->createOrUpdateRota();
+    if ($this->validatesValueIsNumeric($this->getRequest()->km_pav) && $this->validatesValueIsNumeric($this->getRequest()->km_npav)){
+      
+      $id = $this->createOrUpdateRota();
+      if (is_numeric($id)) {
 
-    if (is_numeric($id)) {
-
-      $this->messenger->append('Cadastro realizado com sucesso', 'success', false, 'error');
-    }
-    else
-      $this->messenger->append('Aparentemente a rota não pode ser cadastrada, por favor, verifique.');
+        $this->messenger->append('Cadastro realizado com sucesso', 'success', false, 'error');
+      }
+      else
+        $this->messenger->append('Aparentemente a rota não pode ser cadastrada, por favor, verifique.');
    
 
-    return array('id' => $id);
+      return array('id' => $id);
+    }else{
+      $this->messenger->append('Os dados para Km devem ser númericos (ex: 23.3 ou 55)');
+    }
   }
 
   protected function put() {
       $id = $this->getRequest()->id;
-      $editou = $this->createOrUpdateRota();
+      $editou = $this->createOrUpdateRota($id);
 
       if ($editou) {
 
@@ -124,8 +162,8 @@ class RotaController extends ApiCoreController
     $id = $this->getRequest()->id;
 
 
-      $rota                  = new clsModulesRota();
-      $rota->cod_rota       = $id;
+      $rota                  = new clsModulesRotaTransporteEscolar();
+      $rota->cod_rota_transporte_escolar       = $id;
       
 
       if($rota->excluir()){
@@ -141,9 +179,11 @@ class RotaController extends ApiCoreController
 
   public function Gerar() {
     
-
     if ($this->isRequestFor('get', 'rota'))
       $this->appendResponse($this->get());
+
+    elseif ($this->isRequestFor('get', 'rota-search'))
+      $this->appendResponse($this->search());    
 
     // create
     elseif ($this->isRequestFor('post', 'rota'))
@@ -153,10 +193,13 @@ class RotaController extends ApiCoreController
     elseif ($this->isRequestFor('put', 'rota'))
       $this->appendResponse($this->put());
 
-    elseif ($this->isRequestFor('delete', 'rota'))
-      $this->appendResponse($this->delete());
-
-    else
+    elseif ($this->isRequestFor('delete', 'rota')){
+        $this->appendResponse($this->delete());
+        // Gambi para o caso de não conseguir redirencionar pelo recurso
+       /* echo "<script language= \"JavaScript\">
+                location.href=\"intranet/transporte_rota_lst.php\";
+              </script>";*/ 
+    }else
       $this->notImplementedOperationError();
   }
 }

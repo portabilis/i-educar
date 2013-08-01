@@ -20,11 +20,11 @@
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
- * @package   Module
- * @since     07/2013
+ * @package   iEd_Pmieducar
+ * @since     Arquivo disponível desde a versão 1.0.0
  * @version   $Id$
  */
 
@@ -32,9 +32,8 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/modules/clsModulesMotorista.inc.php';
+require_once 'include/modules/clsModulesPontoTransporteEscolar.inc.php';
 
-require_once 'Portabilis/Date/Utils.php';
 require_once 'Portabilis/View/Helper/Application.php';
 
 
@@ -52,7 +51,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Motoristas');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Ponto');
     $this->processoAp = 578;
   }
 }
@@ -60,7 +59,7 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.scclsModulesPontoTransporteEscolar.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
@@ -82,32 +81,24 @@ class indice extends clsDetalhe
 
     $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
 
-    $this->titulo = 'Motorista - Detalhe';
+    $this->titulo = 'Ponto - Detalhe';
     $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
 
-    $cod_motorista = $_GET['cod_motorista'];
-
-    $tmp_obj = new clsModulesMotorista($cod_motorista);
+    $cod_ponto_transporte_escolar = $_GET['cod_ponto'];
+    $tmp_obj = new clsModulesPontoTransporteEscolar($cod_ponto_transporte_escolar);
     $registro = $tmp_obj->detalhe();
 
     if (! $registro) {
-      header('Location: transporte_motorista_lst.php');
+      header('Location: transporte_ponto_lst.php');
       die();
     }
     
-    $this->addDetalhe( array("Código do Motorista", $cod_motorista));
-    $this->addDetalhe( array("Nome", $registro['nome_motorista'].'&nbsp&nbsp <a target=\'_blank\' href=\'atendidos_det.php?cod_pessoa='.$registro['ref_idpes'].'\'>Ver pessoa</a>') );
-    $this->addDetalhe( array("CNH", $registro['cnh']) );
-    $this->addDetalhe( array("Categoria", $registro['tipo_cnh']) );
-    if (trim($registro['dt_habilitacao'])!='')
-      $this->addDetalhe( array("Data de Habilitação", Portabilis_Date_Utils::pgSQLToBr($registro['dt_habilitacao']) ));
-    if (trim($registro['vencimento_cnh'])!='')
-      $this->addDetalhe( array("Vencimento da Habilitação", Portabilis_Date_Utils::pgSQLToBr($registro['vencimento_cnh']) ) );
-
-    $this->addDetalhe( array("Observa&ccedil;&atilde;o", $registro['observacao']));
-    $this->url_novo = "../module/TransporteEscolar/Motorista";
-    $this->url_editar = "../module/TransporteEscolar/motorista?id={$cod_motorista}";
-    $this->url_cancelar = "transporte_motorista_lst.php";
+    $this->addDetalhe( array("Código do Ponto", $cod_ponto_transporte_escolar));
+    $this->addDetalhe( array("Descrição", $registro['descricao']) );
+   
+    $this->url_novo = "../module/TransporteEscolar/Ponto";
+    $this->url_editar = "../module/TransporteEscolar/Ponto?id={$cod_ponto_transporte_escolar}";
+    $this->url_cancelar = "transporte_ponto_lst.php";
 
     $this->largura = "100%";
   }

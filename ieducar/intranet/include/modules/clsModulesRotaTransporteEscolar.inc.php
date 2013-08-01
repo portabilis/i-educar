@@ -41,12 +41,17 @@ require_once 'include/pmieducar/geral.inc.php';
  * @since   07/2013
  * @version   $Id$
  */
-class clsModulesRota
+class clsModulesRotaTransporteEscolar
 {
-  var $cod_rota;
-  var $descricao;
+  var $cod_rota_transporte_escolar;
   var $ref_idpes_destino;
+  var $descricao;
   var $ano;
+  var $tipo_rota;
+  var $km_pav;
+  var $km_npav;
+  var $ref_cod_empresa_transporte_escolar;
+  var $tercerizado;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -101,30 +106,50 @@ class clsModulesRota
   /**
    * Construtor.
    */
-  function clsModulesRota($cod_rota = NULL, $descricao = NULL, $ref_idpes_destino = NULL, $ano = NULL)
+  function clsModulesRotaTransporteEscolar($cod_rota_transporte_escolar = NULL, $ref_idpes_destino = NULL, $descricao = NULL,  $ano = NULL, $tipo_rota = NULL, $km_pav = NULL, $km_npav = NULL, $ref_cod_empresa_transporte_escolar=NULL, $tercerizado = NULL)
   {
+
     $db = new clsBanco();
     $this->_schema = "modules.";
-    $this->_tabela = "{$this->_schema}rota";
+    $this->_tabela = "{$this->_schema}rota_transporte_escolar";
 
-    $this->_campos_lista = $this->_todos_campos = " cod_tipo_veiculo, descricao"; 
+    $this->_campos_lista = $this->_todos_campos = " cod_rota_transporte_escolar, ref_idpes_destino, descricao, ano, tipo_rota, km_pav, km_npav, ref_cod_empresa_transporte_escolar, tercerizado"; 
 
-    if (is_numeric($cod_tipo_veiculo)) {
-      $this->cod_tipo_veiculo = $cod_tipo_veiculo;
-    }
-
-    if (is_string($descricao)) {
-      $this->descricao = $descricao;
+    if (is_numeric($cod_rota_transporte_escolar)) {
+      $this->cod_rota_transporte_escolar = $cod_rota_transporte_escolar;
     }
 
     if (is_numeric($ref_idpes_destino)) {
       $this->ref_idpes_destino = $ref_idpes_destino;
+    }    
+
+    if (is_string($descricao)) {
+      $this->descricao = $descricao;
     }
 
     if (is_numeric($ano)) {
       $this->ano = $ano;
     }
 
+    if (is_string($tipo_rota)) {
+      $this->tipo_rota = $tipo_rota;
+    }    
+
+    if (is_numeric($km_pav)) {
+      $this->km_pav = $km_pav;
+    }
+
+    if (is_numeric($km_npav)) {
+      $this->km_npav = $km_npav;
+    }    
+
+    if (is_numeric($ref_cod_empresa_transporte_escolar)) {
+      $this->ref_cod_empresa_transporte_escolar = $ref_cod_empresa_transporte_escolar;
+    }    
+
+    if (is_string($tercerizado)) {
+      $this->tercerizado = $tercerizado;
+    }    
   }
 
   /**
@@ -133,27 +158,64 @@ class clsModulesRota
    */
   function cadastra()
   {
-    if (is_string($this->descricao) && is_numeric($ref_idpes_destino) && is_numeric($ano))
+    
+    if (is_numeric($this->ref_idpes_destino) && is_numeric($this->ano) && is_string($this->descricao) 
+      && is_string($this->tipo_rota) && is_numeric($this->ref_cod_empresa_transporte_escolar) 
+      && is_string($this->tercerizado))
     {
       $db = new clsBanco();
 
       $campos  = '';
       $valores = '';
       $gruda   = '';
-
       
-      $campos .= "{$gruda}descricao";
-      $valores .= "{$gruda}'{$this->descricao}'";
-      $gruda = ", ";
-
+    if (is_numeric($this->ref_idpes_destino)) {
       $campos .= "{$gruda}ref_idpes_destino";
       $valores .= "{$gruda}'{$this->ref_idpes_destino}'";
       $gruda = ", ";
+    }    
 
-                  $campos .= "{$gruda}ano";
+    if (is_string($this->descricao)) {
+      $campos .= "{$gruda}descricao";
+      $valores .= "{$gruda}'{$this->descricao}'";
+      $gruda = ", ";
+    }
+
+    if (is_numeric($this->ano)) {
+      $campos .= "{$gruda}ano";
       $valores .= "{$gruda}'{$this->ano}'";
       $gruda = ", ";
-      
+    }
+
+    if (is_string($this->tipo_rota)) {
+      $campos .= "{$gruda}tipo_rota";
+      $valores .= "{$gruda}'{$this->tipo_rota}'";
+      $gruda = ", ";
+    }    
+
+    if (is_numeric($this->km_pav)) {
+      $campos .= "{$gruda}km_pav";
+      $valores .= "{$gruda}'{$this->km_pav}'";
+      $gruda = ", ";
+    }
+
+    if (is_numeric($this->km_npav)) {
+      $campos .= "{$gruda}km_npav";
+      $valores .= "{$gruda}'{$this->km_npav}'";
+      $gruda = ", ";
+    }    
+
+    if (is_numeric($this->ref_cod_empresa_transporte_escolar)) {
+      $campos .= "{$gruda}ref_cod_empresa_transporte_escolar";
+      $valores .= "{$gruda}'{$this->ref_cod_empresa_transporte_escolar}'";
+      $gruda = ", ";
+    }    
+
+    if (is_string($this->tercerizado)) {
+      $campos .= "{$gruda}tercerizado";
+      $valores .= "{$gruda}'{$this->tercerizado}'";
+      $gruda = ", ";
+    }    
 
 
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
@@ -169,28 +231,54 @@ class clsModulesRota
    */
   function edita()
   {
-    if (is_string($this->cod_rota)) {
+
+    if (is_string($this->cod_rota_transporte_escolar)) {
       $db  = new clsBanco();
       $set = '';
       $gruda = '';
 
-      if (is_numeric($this->ref_idpes_destino)) {
+    if (is_numeric($this->ref_idpes_destino)) {
         $set .= "{$gruda}ref_idpes_destino = '{$this->ref_idpes_destino}'";
         $gruda = ", ";
-      }
+    }    
 
-      if (is_string($this->descricao)) {
+    if (is_string($this->descricao)) {
         $set .= "{$gruda}descricao = '{$this->descricao}'";
         $gruda = ", ";
-      }
+    }
 
-      if (is_numeric($this->ano)) {
+    if (is_numeric($this->ano)) {
         $set .= "{$gruda}ano = '{$this->ano}'";
         $gruda = ", ";
-      }
+    }
+
+    if (is_string($this->tipo_rota)) {
+        $set .= "{$gruda}tipo_rota = '{$this->tipo_rota}'";
+        $gruda = ", ";
+    }    
+
+    if (is_numeric($this->km_pav)) {
+        $set .= "{$gruda}km_pav = '{$this->km_pav}'";
+        $gruda = ", ";
+    }
+
+    if (is_numeric($this->km_npav)) {
+        $set .= "{$gruda}km_npav = '{$this->km_npav}'";
+        $gruda = ", ";
+    }    
+
+    if (is_numeric($this->ref_cod_empresa_transporte_escolar)) {
+        $set .= "{$gruda}ref_cod_empresa_transporte_escolar = '{$this->ref_cod_empresa_transporte_escolar}'";
+        $gruda = ", ";
+    }    
+
+    if (is_string($this->tercerizado)) {
+        $set .= "{$gruda}tercerizado = '{$this->tercerizado}'";
+        $gruda = ", ";
+    }   
 
       if ($set) {
-        $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_rota = '{$this->cod_rota}'");
+        $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_rota_transporte_escolar = '{$this->cod_rota_transporte_escolar}'");
         return TRUE;
       }
     }
@@ -202,7 +290,8 @@ class clsModulesRota
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
    * @return array
    */
-  function lista($cod_rota = NULL, $descricao = NULL, $ref_idpes_destino = NULL , $nome_destino = NULL, $ano = NULL)
+  function lista($cod_rota_transporte_escolar = NULL, $descricao = NULL, $ref_idpes_destino = NULL , $nome_destino = NULL,
+   $ano = NULL, $ref_cod_empresa_transporte_escolar = NULL, $nome_empresa = NULL, $tercerizado = NULL)
   {
     $sql = "SELECT {$this->_campos_lista}, (
           SELECT
@@ -211,13 +300,20 @@ class clsModulesRota
             cadastro.pessoa
           WHERE
             idpes = ref_idpes_destino
-         ) AS nome_destino FROM {$this->_tabela}";
+         ) AS nome_destino , (
+          SELECT
+            nome
+          FROM
+            cadastro.pessoa, modules.empresa_transporte_escolar
+          WHERE
+            idpes = ref_idpes and cod_empresa_transporte_escolar = ref_cod_empresa_transporte_escolar
+         ) AS nome_empresa FROM {$this->_tabela}";
     $filtros = "";
 
     $whereAnd = " WHERE ";
 
-    if (is_numeric($cod_rota)) {
-      $filtros .= "{$whereAnd} cod_rota = '{$cod_rota}'";
+    if (is_numeric($cod_rota_transporte_escolar)) {
+      $filtros .= "{$whereAnd} cod_rota_transporte_escolar = '{$cod_rota_transporte_escolar}'";
       $whereAnd = " AND ";
     }
 
@@ -249,9 +345,30 @@ class clsModulesRota
       $filtros .= "{$whereAnd} ano = '{$ano}'";
       $whereAnd = " AND ";
     }
+    if (is_string($ref_cod_empresa_transporte_escolar)){
+      $filtros .= "{$whereAnd} ref_cod_empresa_transporte_escolar = '{$ref_cod_empresa_transporte_escolar}'";
+      $whereAnd = " AND ";
+    }
 
+    if (is_string($nome_empresa)) {
+      $filtros .= "
+        {$whereAnd} exists (
+          SELECT
+            nome
+          FROM
+            cadastro.pessoa, modules.empresa_transporte_escolar
+          WHERE
+            idpes = ref_idpes and cod_empresa_transporte_escolar = ref_cod_empresa_transporte_escolar 
+            AND TO_ASCII(LOWER(nome)) LIKE TO_ASCII(LOWER('%{$nome_empresa}%'))
+        )";
 
+      $whereAnd = ' AND ';
+    }  
 
+    if (is_string($tercerizado)){
+      $filtros .= "{$whereAnd} tercerizado = '{$tercerizado}'";
+      $whereAnd = " AND ";
+    }
 
     $db = new clsBanco();
     $countCampos = count(explode(',', $this->_campos_lista))+2;
@@ -289,7 +406,7 @@ class clsModulesRota
    */
   function detalhe()
   {
-    if (is_numeric($this->cod_rota)) {
+    if (is_numeric($this->cod_rota_transporte_escolar)) {
       $db = new clsBanco();
       $db->Consulta("SELECT {$this->_todos_campos}, (
           SELECT
@@ -297,12 +414,18 @@ class clsModulesRota
           FROM
             cadastro.pessoa
           WHERE
-            idpes = ref_idpes
-         ) AS nome_empresa , (SELECT nome FROM cadastro.pessoa WHERE idpes = ref_resp_idpes) AS nome_responsavel FROM {$this->_tabela} WHERE cod_rota = '{$this->cod_rota}'");
+            idpes = ref_idpes_destino
+         ) AS nome_destino , (
+          SELECT
+            nome
+          FROM
+            cadastro.pessoa, modules.empresa_transporte_escolar
+          WHERE
+            idpes = ref_idpes and cod_empresa_transporte_escolar = ref_cod_empresa_transporte_escolar
+         ) AS nome_empresa FROM {$this->_tabela} WHERE cod_rota_transporte_escolar = '{$this->cod_rota_transporte_escolar}'");
       $db->ProximoRegistro();
       return $db->Tupla();
     }
-
     return FALSE;
   }
 
@@ -312,9 +435,9 @@ class clsModulesRota
    */
   function existe()
   {
-    if (is_numeric($this->cod_rota)) {
+    if (is_numeric($this->cod_rota_transporte_escolar)) {
       $db = new clsBanco();
-      $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_rota = '{$this->cod_rota}'");
+      $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_rota_transporte_escolar = '{$this->cod_rota_transporte_escolar}'");
       $db->ProximoRegistro();
       return $db->Tupla();
     }
@@ -328,8 +451,8 @@ class clsModulesRota
    */
   function excluir()
   {
-    if (is_numeric($this->cod_rota)) {
-      $sql = "DELETE FROM {$this->_tabela} WHERE cod_rota = '{$this->cod_rota}'";
+    if (is_numeric($this->cod_rota_transporte_escolar)) {
+      $sql = "DELETE FROM {$this->_tabela} WHERE cod_rota_transporte_escolar = '{$this->cod_rota_transporte_escolar}'";
       $db = new clsBanco();
       $db->Consulta($sql);
       return true;

@@ -133,7 +133,7 @@ function validatesIfValueIsInSet(value, targetId, set) {
 
 function validatesIfValueIsNumeric(value, targetId) {
   if (! $j.isNumeric(value)) {
-    messageUtils.error('Informe um numero válido.', targetId);
+    messageUtils.error('Informe um número válido.', targetId);
     return false;
   }
 

@@ -181,6 +181,18 @@ class Portabilis_View_Helper_Inputs {
 
     $this->simpleSearchResourceInput('simpleSearchMotorista', $attrName, $inputOptions, $helperOptions);
 
+  }  
+
+  public function simpleSearchPonto($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchPonto', $attrName, $inputOptions, $helperOptions);
+
+  }  
+
+  public function simpleSearchRota($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchRota', $attrName, $inputOptions, $helperOptions);
+
   }    
 
   // multiple search resource input helper

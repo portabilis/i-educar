@@ -1,3 +1,47 @@
+document.getElementById('rota').onchange = function()
+{
+  chamaGetPonto();
+}
+
+var valPonto = 0;
+
+function chamaGetPonto(){
+
+  var campoRota = document.getElementById('rota').value;
+
+  var campoPonto= document.getElementById('ponto');
+  campoPonto.length = 1;
+  campoPonto.disabled = true;
+  campoPonto.options[0].text = 'Carregando pontos...';
+  
+  var xml_ponto = new ajax( getPonto );
+  xml_ponto.envia( "ponto_xml.php?rota="+campoRota ); 
+
+}
+
+function getPonto( xml_ponto )
+{
+  var campoPonto = document.getElementById('ponto');
+  var DOM_array = xml_ponto.getElementsByTagName( "ponto" );
+
+  if(DOM_array.length)
+  {
+    campoPonto.length = 1;
+    campoPonto.options[0].text = 'Selecione um ponto';
+    campoPonto.disabled = false;
+
+    for( var i = 0; i < DOM_array.length; i++ )
+    {
+      campoPonto.options[campoPonto.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_ponto"),false,false);
+    }
+    $j('#ponto').val(valPonto);
+  }
+  else
+    campoPonto.options[0].text = 'Rota sem pontos';
+
+  
+}
+
 // before page is ready
 
 var $idField        = $j('#id');
@@ -19,42 +63,42 @@ resourceOptions.handlePost = function(dataResponse) {
   $j('.pessoa-links .cadastrar-pessoa').hide();
 
   if (! dataResponse.any_error_msg)
-    window.setTimeout(function() { document.location = '/intranet/transporte_rota_det.php?cod_rota=' + resource.id(); }, 500);
+    window.setTimeout(function() { document.location = '/intranet/transporte_pessoa_det.php?cod_pt=' + resource.id(); }, 500);
   else
     $submitButton.removeAttr('disabled').val('Gravar');
 }
 
 resourceOptions.handlePut = function(dataResponse) {
   if (! dataResponse.any_error_msg)
-    window.setTimeout(function() { document.location = '/intranet/transporte_rota_det.php?cod_rota=' + resource.id(); }, 500);
+    window.setTimeout(function() { document.location = '/intranet/transporte_pessoa_det.php?cod_pt=' + resource.id(); }, 500);
   else
     $submitButton.removeAttr('disabled').val('Gravar');
 }
 
 resourceOptions.handleGet = function(dataResponse) {
+  valPonto = dataResponse.ponto;
   handleMessages(dataResponse.msgs);
   $resourceNotice.hide();
 
   $deleteButton.removeAttr('disabled').show();
-
   if (dataResponse.pessoa)
     getPersonDetails(dataResponse.pessoa);
 
   $idField.val(dataResponse.id);
-  $j('#descricao').val(dataResponse.descricao);
-  $j('#pessoaj_id').val(dataResponse.ref_idpes_destino);
-  $j('#pessoaj_ref_idpes_destino').val(dataResponse.ref_idpes_destino+' - '+dataResponse.nomeDestino);
-  $j('#empresa_id').val(dataResponse.ref_cod_empresa_transporte_escolar);
-  $j('#empresa_ref_cod_empresa_transporte_escolar').val(dataResponse.ref_cod_empresa_transporte_escolar+' - '+dataResponse.nomeEmpresa);
-  $j('#ano').val(dataResponse.ano);
-  $j('#tipo_rota').val(dataResponse.tipo_rota);
-  $j('#km_pav').val(dataResponse.km_pav);
-  $j('#km_npav').val(dataResponse.km_npav);
-  $j('#km_npav').val(dataResponse.km_npav);
-  if (dataResponse.tercerizado == 'S'){
-    $j('#tercerizado').attr('checked',true);  
-    $j('#tercerizado').val('on');   
-  }  
+    
+  $j('#rota').val(dataResponse.rota);
+  chamaGetPonto();
+
+  $j('#observacao').val(dataResponse.observacao);  
+
+  $j('#nome').val(dataResponse.pessoa+' - '+dataResponse.pessoa_nome);  
+  $j('#pessoa_id').val(dataResponse.pessoa);  
+
+  if (dataResponse.pessoaj){
+    $j('#pessoaj_destino').val(dataResponse.pessoaj+' - '+dataResponse.pessoaj_nome);  
+    $j('#pessoaj_id').val(dataResponse.ref_cod_empresa_transporte_escolar);    
+  }
+  
 
 };
 

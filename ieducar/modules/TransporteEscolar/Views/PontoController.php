@@ -34,33 +34,23 @@
 require_once 'lib/Portabilis/Controller/Page/EditController.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
 
-class EmpresaController extends Portabilis_Controller_Page_EditController
+class PontoController extends Portabilis_Controller_Page_EditController
 {
   protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
-  protected $_titulo     = 'Cadastro de Empresa para Transporte Escolar';
+  protected $_titulo     = 'Cadastro de Ponto';
 
-  protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA; // Verificar depois
-  protected $_processoAp        = 578; // Verificar depois
-  protected $_deleteOption      = true;
+  protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
+  protected $_processoAp        = 578;
+  protected $_deleteOption      = false;
 
   protected $_formMap    = array(
-    'pessoa' => array(
-      'label'  => 'Pessoa Responsável',
-      'help'   => '',
-    ),
-
-    'observacao' => array(
-      'label'  => 'Observação',
-      'help'   => '',
-    ),
 
     'id' => array(
-      'label'  => 'Código da Empresa',
+      'label'  => 'Código do ponto',
       'help'   => '',
     ),
-
-    'pessoaj' => array(
-      'label'  => 'Pessoa Jurídica',
+    'descricao' => array(
+      'label'  => 'Descrição',
       'help'   => '',
     )
   );
@@ -68,6 +58,7 @@ class EmpresaController extends Portabilis_Controller_Page_EditController
 
   protected function _preConstruct()
   {
+    $this->_options = $this->mergeOptions(array('edit_success' => '/intranet/transporte_ponto_lst.php','delete_sucess' => '/intranet/transporte_ponto_lst.php'), $this->_options);
   }
 
 
@@ -83,26 +74,20 @@ class EmpresaController extends Portabilis_Controller_Page_EditController
 
   public function Gerar()
   {
-    $this->url_cancelar = '/intranet/educar_aluno_lst.php';
+    $this->url_cancelar = '/intranet/transporte_ponto_lst.php';
 
-    // código aluno
+    // Código do ponto
     $options = array('label'    => $this->_getLabel('id'), 'disabled' => true,
                      'required' => false, 'size' => 25);
     $this->inputsHelper()->integer('id', $options);
-    // Pessoa júridica
-    $options = array('label' => $this->_getLabel('pessoaj'), 'size' => 10, 'required' = true);
-    $this->inputsHelper()->integer('pessoaj', $options);
 
-    // nome
-    $options = array('label' => $this->_getLabel('pessoa'), 'size' => 68);
-    $this->inputsHelper()->simpleSearchPessoa('nome', $options);
+    // descricao
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('descricao')), 'required' => true, 'size' => 50, 'max_length' => 70);
+    $this->inputsHelper()->text('descricao', $options);
 
-
-    // observações
-    $options = array('label' => $this->_getLabel('observacao'), 'required' => false, 'size' => 50, 'max_length' => 255);
-    $this->inputsHelper()->text('observacao', $options);
 
     $this->loadResourceAssets($this->getDispatcher());
   }
+
 }
 ?>
