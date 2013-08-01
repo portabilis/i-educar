@@ -49,7 +49,7 @@
     cod_motorista integer NOT NULL DEFAULT nextval('motorista_seq'::regclass),
     ref_idpes integer NOT NULL,
     cnh character varying(15) NOT NULL,
-    tipo_cnh character varying(2) NOT NUL,
+    tipo_cnh character varying(2) NOT NULL,
     dt_habilitacao date,
     vencimento_cnh date,
     ref_cod_empresa_transporte_escolar integer NOT NULL,
