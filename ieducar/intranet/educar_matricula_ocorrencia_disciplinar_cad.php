@@ -295,7 +295,7 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_excluir( 578, $this->pessoa_logada, 7,  "educar_matricula_ocorrencia_disciplinar_lst.php" );
 
-		$this->data_cadastro = Portabilis_Date_Utils::brToPgSQL($this->data_cadastro));
+		$this->data_cadastro = Portabilis_Date_Utils::brToPgSQL($this->data_cadastro);
 		$obj = new clsPmieducarMatriculaOcorrenciaDisciplinar($this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, $this->sequencial, $this->pessoa_logada, $this->pessoa_logada, $this->observacao, $this->data_cadastro, $this->data_exclusao, 0);
 		$excluiu = $obj->excluir();
 		if( $excluiu )
