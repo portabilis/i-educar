@@ -44,7 +44,7 @@ class MotoristaController extends Portabilis_Controller_Page_EditController
 
   protected $_formMap    = array(
     'id' => array(
-      'label'  => 'Código do Motorista',
+      'label'  => 'Código do motorista',
       'help'   => '',
     ),
 
@@ -59,22 +59,22 @@ class MotoristaController extends Portabilis_Controller_Page_EditController
     ),
 
     'tipo_cnh' =>array(
-      'label'  => 'Categoria',
+      'label'  => 'Categoria CNH',
       'help'   => '',
     ),
 
     'dt_habilitacao' =>array(
-      'label'  => 'Data de Habilitação',
+      'label'  => 'Data de habilitação',
       'help'   => '',
     ),
 
     'vencimento_cnh' =>array(
-      'label'  => 'Vencimento',
+      'label'  => 'Vencimento da habilitação',
       'help'   => '',
     ),
 
     'ref_cod_empresa_transporte_escolar' =>array(
-      'label'  => 'Código da Empresa',
+      'label'  => 'Código da empresa',
       'help'   => '',
     ),
 
@@ -128,7 +128,7 @@ class MotoristaController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->date('dt_habilitacao',$options);
 
     // Habilitação
-    $options = array('label' =>$this->_getLabel('vencimento_cnh'), 'required' => false, 'size' => 10,);
+    $options = array('label' =>Portabilis_String_Utils::toLatin1($this->_getLabel('vencimento_cnh')), 'required' => false, 'size' => 10,);
     $this->inputsHelper()->date('vencimento_cnh',$options);  
 
     // Codigo da empresa

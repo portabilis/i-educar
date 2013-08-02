@@ -33,13 +33,13 @@
 	VALUES (21236, 69, 2, 'Motoristas', 'transporte_motorista_lst.php',null,3); 
 
 	INSERT INTO portal.menu_submenu 
-	VALUES (21237, 69, 2, 'Pontos', 'transporte_ponto_lst.php',null,3); 
+	VALUES (21237, 69, 2, 'Veículos', 'transporte_veiculo_lst.php',null,3); 
 
 	INSERT INTO portal.menu_submenu 
 	VALUES (21238, 69, 2, 'Rotas', 'transporte_rota_lst.php',null,3); 
 
 	INSERT INTO portal.menu_submenu 
-	VALUES (21239, 69, 2, 'Veículos', 'transporte_veiculo_lst.php',null,3); 
+	VALUES (21239, 69, 2, 'Pontos', 'transporte_ponto_lst.php',null,3); 
 
 	INSERT INTO portal.menu_submenu 
 	VALUES (21240, 69, 2, 'Vincula pessoa à rota', 'transporte_pessoa_lst.php',null,3);
@@ -51,16 +51,23 @@
 	VALUES(21236,21236,20710,'Motoristas',2,'transporte_motorista_lst.php','_self',1,17,192);
 
 	INSERT INTO pmicontrolesis.menu 
-	VALUES(21237,21237,20710,'Pontos',3,'transporte_ponto_lst.php','_self',1,17,192);
+	VALUES(21237,21237,20710,'Veículos',3,'transporte_veiculo_lst.php','_self',1,17,192);
 
 	INSERT INTO pmicontrolesis.menu 
-	VALUES(21238,21238,20710,'Rotas',4,'transporte_rota_lst.php','_self',1,17,192);
+	VALUES(21238,21238,20710,'Pontos',4,'transporte_ponto_lst.php','_self',1,17,192);
 
 	INSERT INTO pmicontrolesis.menu 
-	VALUES(21239,21239,20710,'Veículos',5,'transporte_veiculo_lst.php','_self',1,17,192);
+	VALUES(21239,21239,20710,'Rotas',5,'transporte_rota_lst.php','_self',1,17,192);
+
 
 	INSERT INTO pmicontrolesis.menu 
 	VALUES(21240,21240,20711,'Vincula pessoa à rota',5,'transporte_pessoa_lst.php','_self',1,17,192);
+
+	INSERT INTO portal.menu_submenu 
+	VALUES (21241, 69, 2, 'Vincula pessoa à rota', 'module/Reports/TransporteCarteira',null,3);	
+
+	INSERT INTO pmicontrolesis.menu 
+	VALUES(21241,21241,20712,'Vincula pessoa à rota',5,'module/Reports/TransporteCarteira','_self',1,17,192);	
 
   -- //@UNDO
 

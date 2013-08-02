@@ -101,7 +101,8 @@ class indice extends clsListagem
 		$this->addCabecalhos( array(
 			"C&oacute;digo da empresa",
 			"Nome fantasia",
-			"Nome do respons&aacute;vel"
+			"Nome do respons&aacute;vel",
+			"Telefone"
 		) );
 
 		// Paginador
@@ -112,7 +113,7 @@ class indice extends clsListagem
 		$obj_empresa = new clsModulesEmpresaTransporteEscolar();
 		$obj_empresa->setLimite($this->limite,$this->offset);
 
-		$empresas = $obj_empresa->lista();
+		$empresas = $obj_empresa->lista($this->cod_empresa,null,null,$this->nome_empresa, $this->nome_responsavel);
 		$total = $empresas->_total;
 
 		foreach ( $empresas AS $registro ) {
@@ -121,6 +122,7 @@ class indice extends clsListagem
 				"<a href=\"transporte_empresa_det.php?cod_empresa={$registro["cod_empresa_transporte_escolar"]}\">{$registro["cod_empresa_transporte_escolar"]}</a>",
 				"<a href=\"transporte_empresa_det.php?cod_empresa={$registro["cod_empresa_transporte_escolar"]}\">{$registro["nome_empresa"]}</a>",
 				"<a href=\"transporte_empresa_det.php?cod_empresa={$registro["cod_empresa_transporte_escolar"]}\">{$registro["nome_responsavel"]}</a>",
+				"<a href=\"transporte_empresa_det.php?cod_empresa={$registro["cod_empresa_transporte_escolar"]}\">{$registro["telefone"]}</a>"
 			) );
 		}
 
