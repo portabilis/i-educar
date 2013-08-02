@@ -96,7 +96,7 @@ class indice extends clsDetalhe
     }
     
     $this->addDetalhe( array("Código do motorista", $cod_motorista));
-    $this->addDetalhe( array("Nome", $registro['nome_motorista'].'<br/><br/> <a target=\'_blank\' href=\'atendidos_det.php?cod_pessoa='.$registro['ref_idpes'].'\'>Visualizar pessoa</a>') );
+    $this->addDetalhe( array("Nome", $registro['nome_motorista'].'<br/> <a target=\'_blank\' style=\' text-decoration: underline;\' href=\'atendidos_det.php?cod_pessoa='.$registro['ref_idpes'].'\'>Visualizar pessoa</a>') );
     $this->addDetalhe( array("CNH", $registro['cnh']) );
     $this->addDetalhe( array("Categoria", $registro['tipo_cnh']) );
     if (trim($registro['dt_habilitacao'])!='')

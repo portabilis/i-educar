@@ -166,6 +166,8 @@ class EmpresaController extends ApiCoreController
   }
 
   protected function put() {
+
+    if ($this->validateSizeOfObservacao()){
       $id = $this->getRequest()->id;
       $editou = $this->createOrUpdateEmpresa($id);
 
@@ -175,6 +177,8 @@ class EmpresaController extends ApiCoreController
       }
       else
         $this->messenger->append('Aparentemente a empresa não pode ser alterado, por favor, verifique.');
+      }else
+       $this->messenger->append('O campo observação não pode ter mais que 255 caracteres.');
    
 
     return array('id' => $id);

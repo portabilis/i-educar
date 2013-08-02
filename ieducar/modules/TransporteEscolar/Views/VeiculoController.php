@@ -111,7 +111,7 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
     ),                                    
 
     'adaptado_necessidades_especiais' => array(
-      'label'  => 'Adaptado à pessoas com necessidades especiais',
+      'label'  => 'Adaptado para pessoas com necessidades especiais',
       'help'   => '',
     ),
 

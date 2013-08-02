@@ -164,6 +164,7 @@ class MotoristaController extends ApiCoreController
 
   protected function put() {
 
+    if ($this->validateSizeOfObservacao()){
      $id = $this->getRequest()->id;
      $editou = $this->createOrUpdateMotorista($id);
 
@@ -172,7 +173,8 @@ class MotoristaController extends ApiCoreController
      }
      else
       $this->messenger->append('Aparentemente o aluno não pode ser alterado, por favor, verifique.');
-   
+    }else
+       $this->messenger->append('O campo observação não pode ter mais que 255 caracteres.');   
 
     return array('id' => $id);
   }

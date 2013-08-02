@@ -97,9 +97,9 @@ class indice extends clsDetalhe
     $objPessoaJuridica = new clsPessoaJuridica();
     list ($id_federal, $endereco, $cep, $nm_bairro, $cidade, $ddd_telefone_1, $telefone_1, $ddd_telefone_2, $telefone_2, $ddd_telefone_mov, $telefone_mov, $ddd_telefone_fax, $telefone_fax, $email, $ins_est) = $objPessoaJuridica->queryRapida($registro['ref_idpes'], "cnpj","logradouro","cep","bairro","cidade", "ddd_1","fone_1","ddd_2","fone_2","ddd_mov","fone_mov","ddd_fax","fone_fax", "email","insc_estadual");    
     
-    $this->addDetalhe( array("Código da Empresa", $cod_empresa_transporte_escolar));
-    $this->addDetalhe( array("Nome Fantasia", $registro['nome_empresa']) );
-    $this->addDetalhe( array("Nome do Responsável", $registro['nome_responsavel']) );
+    $this->addDetalhe( array("Código da empresa", $cod_empresa_transporte_escolar));
+    $this->addDetalhe( array("Nome fantasia", $registro['nome_empresa']) );
+    $this->addDetalhe( array("Nome do responsável", $registro['nome_responsavel']) );
     $this->addDetalhe( array("CNPJ", int2CNPJ($id_federal)) );
     $this->addDetalhe( array("Endere&ccedil;o", $endereco) );
     $this->addDetalhe( array("CEP", $cep) );
@@ -117,7 +117,7 @@ class indice extends clsDetalhe
     $this->addDetalhe( array("E-mail", $email) );
 
     if( ! $ins_est ) $ins_est = "isento";
-      $this->addDetalhe( array("Inscri&ccedil;&atilde;o Estadual", $ins_est) );
+      $this->addDetalhe( array("Inscri&ccedil;&atilde;o estadual", $ins_est) );
     $this->addDetalhe( array("Observa&ccedil;&atilde;o", $registro['observacao']));
     $this->url_novo = "../module/TransporteEscolar/Empresa";
     $this->url_editar = "../module/TransporteEscolar/Empresa?id={$cod_empresa_transporte_escolar}";
