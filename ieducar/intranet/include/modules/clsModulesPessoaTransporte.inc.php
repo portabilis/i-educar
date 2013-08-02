@@ -339,14 +339,7 @@ class clsModulesPessoaTransporte
             nome
           FROM
             cadastro.pessoa
-          WHERESELECT {$this->_campos_lista}, (
-          SELECT
-            nome
-          FROM
-            cadastro.pessoa
           WHERE
-            idpes = ref_idpes_destino
-         ) AS nome_destino,
             idpes = ref_idpes_destino
          ))) LIKE TO_ASCII(LOWER('%{$nome_destino}%')) ";
       $whereAnd = " AND ";

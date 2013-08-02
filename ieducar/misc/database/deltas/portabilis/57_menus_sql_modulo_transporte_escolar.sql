@@ -18,7 +18,7 @@
 	VALUES (17,'Transporte Escolar');
 	
 	INSERT INTO pmicontrolesis.menu (cod_menu,tt_menu,ord_menu,alvo,suprime_menu,ref_cod_tutormenu,ref_cod_ico)
-	VALUES(20710,'Cadastro',1,'_self',1,17,1);
+	VALUES(20710,'Cadastros',1,'_self',1,17,1);
 
 	INSERT INTO pmicontrolesis.menu (cod_menu,tt_menu,ord_menu,alvo,suprime_menu,ref_cod_tutormenu,ref_cod_ico) 
 	VALUES(20711,'Movimentação',2,'_self',1,17,1);
@@ -42,7 +42,7 @@
 	VALUES (21239, 69, 2, 'Pontos', 'transporte_ponto_lst.php',null,3); 
 
 	INSERT INTO portal.menu_submenu 
-	VALUES (21240, 69, 2, 'Vincula pessoa à rota', 'transporte_pessoa_lst.php',null,3);
+	VALUES (21240, 69, 2, 'Usuários de Transporte', 'transporte_pessoa_lst.php',null,3);
 
 	INSERT INTO pmicontrolesis.menu 
 	VALUES(21235,21235,20710,'Empresas',1,'transporte_empresa_lst.php','_self',1,17,192);
@@ -61,13 +61,13 @@
 
 
 	INSERT INTO pmicontrolesis.menu 
-	VALUES(21240,21240,20711,'Vincula pessoa à rota',5,'transporte_pessoa_lst.php','_self',1,17,192);
+	VALUES(21240,21240,20711,'Usuários de Transporte',5,'transporte_pessoa_lst.php','_self',1,17,192);
 
 	INSERT INTO portal.menu_submenu 
-	VALUES (21241, 69, 2, 'Vincula pessoa à rota', 'module/Reports/TransporteCarteira',null,3);	
+	VALUES (21241, 69, 2, 'Carteira de Transporte', 'module/Reports/TransporteCarteira',null,3);	
 
 	INSERT INTO pmicontrolesis.menu 
-	VALUES(21241,21241,20712,'Vincula pessoa à rota',5,'module/Reports/TransporteCarteira','_self',1,17,192);	
+	VALUES(21241,21241,20712,'Carteira de Transporte',5,'module/Reports/TransporteCarteira','_self',1,17,192);	
 
   -- //@UNDO
 

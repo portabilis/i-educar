@@ -73,7 +73,6 @@ class indice extends clsListagem
 	 */
 	var $__offset;
 
-	var $cod_rota_transporte_escolar;
 	var $descricao;
 	var $ref_idpes_destino;
 	var $ano;
@@ -99,11 +98,11 @@ class indice extends clsListagem
 
 		$this->addCabecalhos( array(
 			"Ano",
-			"Código Rota",
+			"Código rota",
 			"Descrição",
 			"Destino",
 			"Empresa",
-			"Tercerizado"
+			"Terceirizado"
 		) );
 
 		// Filtros de Foreign Keys
@@ -122,7 +121,7 @@ class indice extends clsListagem
 			$opcoes = array( "" => "Sem empresas cadastradas" );
 		}
 
-		$this->campoLista( "cod_empresa", "Empresa", $opcoes, $this->ref_cod_empresa_transporte_escolar, "", false, "", "", false, false );
+		$this->campoLista( "ref_cod_empresa_transporte_escolar", "Empresa", $opcoes, $this->ref_cod_empresa_transporte_escolar, "", false, "", "", false, false );
 		$this->campoTexto('descricao','Descrição',$this->descricao,50,30);
 		$this->campoNumero('ano','Ano',$this->cnh,4,5);
 		$this->campoTexto('nome_destino','Destino',$this->nome_destino,50,30);
@@ -137,7 +136,7 @@ class indice extends clsListagem
 		$obj_rota->setLimite( $this->__limite, $this->__offset );
 
 		$lista = $obj_rota->lista(
-			$this->cod_rota_transporte_escolar,
+			null,
 			$this->descricao,
 			null,
 			$this->nome_destino,

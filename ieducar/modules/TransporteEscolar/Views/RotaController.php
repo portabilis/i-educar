@@ -78,7 +78,7 @@ class RotaController extends Portabilis_Controller_Page_EditController
       'help'   => '',
     ),
     'tercerizado' => array(
-      'label'  => 'Tercerizado',
+      'label'  => 'Terceirizado',
       'help'   => '',
     )
   );

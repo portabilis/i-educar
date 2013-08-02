@@ -154,13 +154,13 @@ class indice extends clsCadastro
 		$this->campoNumero( "faltas", "Faltas", $this->faltas, 3, 3, false );
 		*/
 
-		$this->campoTabelaInicio("pontos","Itinerário",array("Ponto (Requer pré-cadastro)<br/> <spam style=\" font-weight: normal; font-size: 10px;\">Digite o código ou nome do<br/> ponto, e selecione o na lista</spam>","Hora","Tipo","Veículo (Requer pré-cadastro)<br/> <spam style=\" font-weight: normal; font-size: 10px;\">Digite o código,nome ou placa<br/> do veículo, e selecione o na lista</spam>" ),$this->pontos);
+		$this->campoTabelaInicio("pontos","Itinerário",array("Ponto (Requer pré-cadastro)<br/> <spam style=\" font-weight: normal; font-size: 10px;\">Digite o código ou nome do ponto e selecione o na lista</spam>","Hora","Tipo","Veículo (Requer pré-cadastro)<br/> <spam style=\" font-weight: normal; font-size: 10px;\">Digite o código,nome ou placa do veículo e selecione o na lista</spam>" ),$this->pontos);
 
-		$this->campoTexto( "ref_cod_ponto_transporte_escolar", "Ponto (Requer pré-cadastro)", $this->ref_cod_ponto_transporte_escolar, 30, 255, false, true, false, '', '', '', 'onfocus' );
+		$this->campoTexto( "ref_cod_ponto_transporte_escolar", "Ponto (Requer pré-cadastro)", $this->ref_cod_ponto_transporte_escolar, 50, 255, false, true, false, '', '', '', 'onfocus' );
 
 		$this->campoHora( "hora", "Hora", $this->hora);
 		$this->campoLista( "tipo", "Tipo", array( '' => "Selecione", 'I' => 'Ida', 'V' => 'Volta'),$this->tipo );
-		$this->campoTexto( "ref_cod_veiculo", "Veículo", $this->ref_cod_veiculo, 30, 255, false, false, false, '', '', '', 'onfocus' );
+		$this->campoTexto( "ref_cod_veiculo", "Veículo", $this->ref_cod_veiculo, 50, 255, false, false, false, '', '', '', 'onfocus' );
 		$this->campoTabelaFim();
 
 		$this->campoQuebra();
@@ -168,8 +168,8 @@ class indice extends clsCadastro
 
     // carrega estilo para feedback messages, para exibir msg validação frequencia.
 
-    $style = "/modules/Portabilis/Assets/Stylesheets/Frontend.css";
-    Portabilis_View_Helper_Application::loadStylesheet($this, $style);
+ 	   $style = "/modules/Portabilis/Assets/Stylesheets/Frontend.css";
+ 	   Portabilis_View_Helper_Application::loadStylesheet($this, $style);
 
 
 		Portabilis_View_Helper_Application::loadJQueryLib($this);
@@ -186,7 +186,7 @@ class indice extends clsCadastro
 
 	function Novo()
 	{
-		
+		return true;
 	}
 
 	function Editar()
@@ -231,7 +231,7 @@ class indice extends clsCadastro
 
 	function Excluir()
 	{
-		
+		 return true;
 	}
 	
 	protected function retornaCodigo($palavra){

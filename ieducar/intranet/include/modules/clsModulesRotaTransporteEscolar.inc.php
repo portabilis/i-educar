@@ -293,6 +293,7 @@ class clsModulesRotaTransporteEscolar
   function lista($cod_rota_transporte_escolar = NULL, $descricao = NULL, $ref_idpes_destino = NULL , $nome_destino = NULL,
    $ano = NULL, $ref_cod_empresa_transporte_escolar = NULL, $nome_empresa = NULL, $tercerizado = NULL)
   {
+    
     $sql = "SELECT {$this->_campos_lista}, (
           SELECT
             nome

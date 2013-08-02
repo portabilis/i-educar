@@ -40,7 +40,7 @@ class PontoController extends Portabilis_Controller_Page_EditController
   protected $_titulo     = 'Cadastro de Ponto';
 
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
-  protected $_processoAp        = 21237;
+  protected $_processoAp        = 21239;
   protected $_deleteOption      = false;
 
   protected $_formMap    = array(

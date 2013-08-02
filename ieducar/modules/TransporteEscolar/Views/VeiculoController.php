@@ -40,7 +40,7 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
   protected $_titulo     = 'Cadastro de Motorista';
 
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
-  protected $_processoAp        = 21239;
+  protected $_processoAp        = 21237;
   protected $_deleteOption      = true;
 
   protected $_formMap    = array(

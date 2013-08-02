@@ -51,7 +51,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Vinculo pessoa transporte');
+    $this->SetTitulo($this->_instituicao . ' Usuário de transporte');
     $this->processoAp = 21240;
   }
 }
@@ -81,7 +81,7 @@ class indice extends clsDetalhe
 
     $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
 
-    $this->titulo = 'Vínculo pessoa transporte - Detalhe';
+    $this->titulo = 'Usuário de transporte - Detalhe';
     $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
 
     $cod_pt = $_GET['cod_pt'];
@@ -94,7 +94,7 @@ class indice extends clsDetalhe
       die();
     }
     
-    $this->addDetalhe( array("Código do vinculo", $cod_pt));
+    $this->addDetalhe( array("Código", $cod_pt));
     $this->addDetalhe( array("Pessoa", $registro['nome_pessoa']) );
     $this->addDetalhe( array("Rota", $registro['nome_rota']) );
     $this->addDetalhe( array("Destino", (trim($registro['nome_destino'])=='' ? $registro['nome_destino2'] : $registro['nome_destino'])) );

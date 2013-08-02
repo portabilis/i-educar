@@ -460,7 +460,7 @@ class clsModulesItinerarioTransporteEscolar
   { 
     list($hour,$minute) = explode(':',$time);
  
-    if ($hour > -1 && $hour < 24 && $minute > -1 && $minute < 60)
+    if ($hour > -1 && $hour < 24 && $minute > -1 && $minute < 60 && is_numeric($hour) && is_numeric($minute))
     {
       return true;
     } else 

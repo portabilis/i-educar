@@ -39,7 +39,7 @@ require_once ("include/clsBanco.inc.php");
 class PessoatransporteController extends Portabilis_Controller_Page_EditController
 {
   protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
-  protected $_titulo     = 'Vincula Pessoa à Rota';
+  protected $_titulo     = 'Usuário de transporte';
 
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
   protected $_processoAp        = 21240;
@@ -48,7 +48,7 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
   protected $_formMap    = array(
 
     'id' => array(
-      'label'  => 'Código do Vinculo',
+      'label'  => 'Código',
       'help'   => '',
     ),
     'pessoa' => array(
@@ -64,7 +64,7 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
       'help'   => '',
     ),    
     'destino' => array(
-      'label'  => 'Destino (Se diferente da rota)',
+      'label'  => 'Destino (Caso for diferente da rota)',
       'help'   => '',
     ),        
     'observacao' => array(

@@ -102,7 +102,7 @@
     renavam character varying(15) NOT NULL,
     chassi character varying(30),
     marca character varying(50),
-    ano_fabricacao integer,
+    ano_fabricacao integer, Aquaviário/Embarcação - Capacidade entre 5 a 15 Alunos: 0 - Não/1 - Sim
     ano_modelo integer,
     passageiros integer NOT NULL,
     malha char(1) NOT NULL,
@@ -125,6 +125,18 @@
     OIDS=TRUE
     );
 
+    INSERT INTO modules.tipo_veiculo (cod_tipo_veiculo,descricao) values (1,'Vans/Kombis');
+    INSERT INTO modules.tipo_veiculo (cod_tipo_veiculo,descricao) values (2,'Microônibus');
+    INSERT INTO modules.tipo_veiculo (cod_tipo_veiculo,descricao) values (3,'Ônibus');
+    INSERT INTO modules.tipo_veiculo (cod_tipo_veiculo,descricao) values (4,'Bicicleta');
+    INSERT INTO modules.tipo_veiculo (cod_tipo_veiculo,descricao) values (5,'Tração Animal');
+    INSERT INTO modules.tipo_veiculo (cod_tipo_veiculo,descricao) values (6,'Outro');
+    INSERT INTO modules.tipo_veiculo (cod_tipo_veiculo,descricao) values (7,'Capacidade de até 5 Alunos');
+    INSERT INTO modules.tipo_veiculo (cod_tipo_veiculo,descricao) values (8,'Capacidade entre 5 a 15 Alunos');
+    INSERT INTO modules.tipo_veiculo (cod_tipo_veiculo,descricao) values (9,'Capacidade entre 15 a 35 Alunos');
+    INSERT INTO modules.tipo_veiculo (cod_tipo_veiculo,descricao) values (10,'Capacidade acima de 35 Alunos');
+    INSERT INTO modules.tipo_veiculo (cod_tipo_veiculo,descricao) values (11,'Trem/Metrô');
+
   -- //@UNDO
 
   DROP TABLE modules.veiculo;
@@ -135,6 +147,8 @@
   DROP SEQUENCE modules.motorista_seq;
   DROP TABLE modules.empresa_transporte_escolar;  
   DROP SEQUENCE modules.empresa_transporte_escolar_seq;  
+
+  DELETE FROM modules.tipo_veiculo WHERE cod_tipo_veiculo IN (1,2,3,4,5,6,7,8,9,10,11);
 
 
   -- //
