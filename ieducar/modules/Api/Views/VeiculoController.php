@@ -108,7 +108,7 @@ class VeiculoController extends ApiCoreController
     if (strlen($this->getRequest()->observacao)<=255)
       return true;
     else{
-      $this->messenger->append('O campo observação não pode ter mais que 255 caracteres.');
+      $this->messenger->append('O campo Observações não pode ter mais que 255 caracteres.');
       return false;
     }
 
@@ -118,7 +118,7 @@ class VeiculoController extends ApiCoreController
     if (strlen($this->getRequest()->descricao_inativo)<=255)
       return true;
     else{
-      $this->messenger->append('O campo descrição de inatividade não pode ter mais que 255 caracteres.');
+      $this->messenger->append('O campo Descrição de inatividade não pode ter mais que 255 caracteres.');
       return false;
     }
 

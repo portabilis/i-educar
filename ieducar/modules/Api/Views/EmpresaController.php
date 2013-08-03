@@ -141,7 +141,13 @@ class EmpresaController extends ApiCoreController
 
     protected function validateSizeOfObservacao(){
 
-      return (strlen($this->getRequest()->observacao)<=255);
+      if (strlen($this->getRequest()->observacao)<=255)
+        return true;
+      else{
+       $this->messenger->append('O campo Observações não pode ter mais que 255 caracteres.');
+       return false;
+      }
+      
 
     }
 
@@ -158,8 +164,7 @@ class EmpresaController extends ApiCoreController
       }
       else
         $this->messenger->append('Aparentemente a empresa não pode ser cadastrada, por favor, verifique.');
-    }else
-       $this->messenger->append('O campo observação não pode ter mais que 255 caracteres.');
+    }
    
 
     return array('id' => $id);
@@ -177,8 +182,7 @@ class EmpresaController extends ApiCoreController
       }
       else
         $this->messenger->append('Aparentemente a empresa não pode ser alterado, por favor, verifique.');
-      }else
-       $this->messenger->append('O campo observação não pode ter mais que 255 caracteres.');
+      }
    
 
     return array('id' => $id);
