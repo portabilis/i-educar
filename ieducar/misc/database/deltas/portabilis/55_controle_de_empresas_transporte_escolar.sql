@@ -19,7 +19,7 @@
 
     CREATE TABLE modules.empresa_transporte_escolar
     (
-    cod_empresa_transporte_escolar integer NOT NULL DEFAULT nextval('empresa_transporte_escolar_seq'::regclass),
+    cod_empresa_transporte_escolar integer NOT NULL DEFAULT nextval('modules.empresa_transporte_escolar_seq'::regclass),
     ref_idpes integer NOT NULL,
     ref_resp_idpes character varying(50) NOT NULL,
     observacao character varying(255),
@@ -46,7 +46,7 @@
   
     CREATE TABLE modules.motorista
     (
-    cod_motorista integer NOT NULL DEFAULT nextval('motorista_seq'::regclass),
+    cod_motorista integer NOT NULL DEFAULT nextval('modules.motorista_seq'::regclass),
     ref_idpes integer NOT NULL,
     cnh character varying(15) NOT NULL,
     tipo_cnh character varying(2) NOT NULL,
@@ -76,7 +76,7 @@
 
     CREATE TABLE modules.tipo_veiculo
     (
-    cod_tipo_veiculo integer NOT NULL DEFAULT nextval('tipo_veiculo_seq'::regclass),
+    cod_tipo_veiculo integer NOT NULL DEFAULT nextval('modules.tipo_veiculo_seq'::regclass),
     descricao character varying(60),
     CONSTRAINT tipo_veiculo_pkey PRIMARY KEY (cod_tipo_veiculo)
     )
@@ -96,13 +96,13 @@
     
     CREATE TABLE modules.veiculo
     (
-    cod_veiculo integer NOT NULL DEFAULT nextval('veiculo_seq'::regclass),
+    cod_veiculo integer NOT NULL DEFAULT nextval('modules.veiculo_seq'::regclass),
     descricao character varying(255) NOT NULL,
     placa character varying(10) NOT NULL,
     renavam character varying(15) NOT NULL,
     chassi character varying(30),
     marca character varying(50),
-    ano_fabricacao integer, Aquaviário/Embarcação - Capacidade entre 5 a 15 Alunos: 0 - Não/1 - Sim
+    ano_fabricacao integer,
     ano_modelo integer,
     passageiros integer NOT NULL,
     malha char(1) NOT NULL,

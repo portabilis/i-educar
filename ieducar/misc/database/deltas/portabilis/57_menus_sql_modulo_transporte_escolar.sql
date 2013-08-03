@@ -8,10 +8,10 @@
   -- @license  @@license@@
   -- @version  $Id$
 
-	INSERT INTO menu_menu (cod_menu_menu, nm_menu) 
+	INSERT INTO portal.menu_menu (cod_menu_menu, nm_menu) 
 	VALUES (69,'Transporte Escolar');
 
-	INSERT INTO menu_submenu ( ref_cod_menu_menu, cod_sistema, nm_submenu, arquivo, nivel) 
+	INSERT INTO portal.menu_submenu ( ref_cod_menu_menu, cod_sistema, nm_submenu, arquivo, nivel) 
 	VALUES (69, 2, 'Apresentação', 'transporte_index.php', '2');
 	
 	INSERT INTO pmicontrolesis.tutormenu (cod_tutormenu,nm_tutormenu) 

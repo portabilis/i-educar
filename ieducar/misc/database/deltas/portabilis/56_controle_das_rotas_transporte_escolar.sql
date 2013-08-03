@@ -23,7 +23,7 @@
 	-- Table: modules.rota_transporte_escolar
 	CREATE TABLE modules.rota_transporte_escolar
 	(
-	cod_rota_transporte_escolar integer NOT NULL DEFAULT nextval('rota_transporte_escolar_seq'::regclass),
+	cod_rota_transporte_escolar integer NOT NULL DEFAULT nextval('modules.rota_transporte_escolar_seq'::regclass),
 	ref_idpes_destino integer NOT NULL,
 	descricao character varying(50) NOT NULL,
 	ano integer NOT NULL,
@@ -58,7 +58,7 @@
 	-- Table: modules.itinerario_transporte_escolar
 	CREATE TABLE modules.itinerario_transporte_escolar
 	(
-	cod_itinerario_transporte_escolar integer NOT NULL DEFAULT nextval('itinerario_transporte_escolar_seq'::regclass),
+	cod_itinerario_transporte_escolar integer NOT NULL DEFAULT nextval('modules.itinerario_transporte_escolar_seq'::regclass),
 	ref_cod_rota_transporte_escolar integer not null,
 	seq integer not null,
 	ref_cod_ponto_transporte_escolar integer not null,
@@ -90,7 +90,7 @@
 	-- Table: modules.ponto_transporte_escolar
 	CREATE TABLE modules.ponto_transporte_escolar
 	(
-	cod_ponto_transporte_escolar integer NOT NULL DEFAULT nextval('ponto_transporte_escolar_seq'::regclass),
+	cod_ponto_transporte_escolar integer NOT NULL DEFAULT nextval('modules.ponto_transporte_escolar_seq'::regclass),
 	descricao varchar(70) not null,
 	CONSTRAINT ponto_transporte_escolar_cod_ponto_transporte_escolar_pkey PRIMARY KEY (cod_ponto_transporte_escolar )
 	)
@@ -113,7 +113,7 @@
 	-- Table: modules.pessoa_transporte
 	CREATE TABLE modules.pessoa_transporte
 	(
-	cod_pessoa_transporte integer NOT NULL DEFAULT nextval('pessoa_transporte_seq'::regclass),
+	cod_pessoa_transporte integer NOT NULL DEFAULT nextval('modules.pessoa_transporte_seq'::regclass),
 	ref_idpes integer not null,
 	ref_cod_rota_transporte_escolar integer not null,
 	ref_cod_ponto_transporte_escolar integer,
