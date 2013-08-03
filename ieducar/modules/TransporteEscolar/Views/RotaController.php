@@ -49,7 +49,7 @@ class RotaController extends Portabilis_Controller_Page_EditController
       'label'  => 'Código da rota',
       'help'   => '',
     ),
-    'descricao' => array(
+    'desc' => array(
       'label'  => 'Descrição',
       'help'   => '',
     ),
@@ -114,8 +114,8 @@ class RotaController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->integer('id', $options);
 
     // descricao
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('descricao')), 'required' => true, 'size' => 50, 'max_length' => 50);
-    $this->inputsHelper()->text('descricao', $options);
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc')), 'required' => true, 'size' => 50, 'max_length' => 50);
+    $this->inputsHelper()->text('desc', $options);
 
     // Destino
     $options = array('label' => $this->_getLabel('ref_idpes_destino'), 'required' => true, 'size' => 50);

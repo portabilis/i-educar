@@ -41,7 +41,7 @@ resourceOptions.handleGet = function(dataResponse) {
     getPersonDetails(dataResponse.pessoa);
 
   $idField.val(dataResponse.id);
-  $j('#descricao').val(dataResponse.descricao);
+  $j('#desc').val(dataResponse.desc);
   $j('#pessoaj_id').val(dataResponse.ref_idpes_destino);
   $j('#pessoaj_ref_idpes_destino').val(dataResponse.ref_idpes_destino+' - '+dataResponse.nomeDestino);
   $j('#empresa_id').val(dataResponse.ref_cod_empresa_transporte_escolar);

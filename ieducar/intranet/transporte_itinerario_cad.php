@@ -312,6 +312,16 @@ $pagina->MakeAll();
 
 	setAutoComplete();
 
+	document.onclick = function(event) {
+	    var targetElement = event.target;
+	    if ( targetElement.className == "botaolistagem" ) {
+        
+	       	var cod_rota = $j('#cod_rota').val();
+	       	location.href="transporte_rota_det.php?cod_rota="+cod_rota;
+	    }   
+
+	};
+
 	var submitForm = function(event) {
 		// Esse formUtils.submit() chama o Editar(); 
 		// Mais à frente bolar uma validação aqui

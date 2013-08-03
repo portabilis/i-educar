@@ -21,7 +21,7 @@
     (
     cod_empresa_transporte_escolar integer NOT NULL DEFAULT nextval('modules.empresa_transporte_escolar_seq'::regclass),
     ref_idpes integer NOT NULL,
-    ref_resp_idpes character varying(50) NOT NULL,
+    ref_resp_idpes integer NOT NULL,
     observacao character varying(255),
     CONSTRAINT empresa_transporte_escolar_cod_empresa_transporte_escolar_pkey PRIMARY KEY (cod_empresa_transporte_escolar ),
     CONSTRAINT empresa_transporte_escolar_ref_idpes_fkey FOREIGN KEY (ref_idpes)
