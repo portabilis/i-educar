@@ -118,7 +118,7 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
     $this->inputsHelper()->select('rota',$options); 
 
     // Ponto de Embarque
-    $options = array('label' =>Portabilis_String_Utils::toLatin1($this->_getLabel('ponto')), 'required' => false, 'resources' => array("" => "Selecione uma rota /\\"));
+    $options = array('label' =>Portabilis_String_Utils::toLatin1($this->_getLabel('ponto')), 'required' => false, 'resources' => array("" => "Selecione uma rota acima"));
     $this->inputsHelper()->select('ponto',$options);     
 
     // Destino

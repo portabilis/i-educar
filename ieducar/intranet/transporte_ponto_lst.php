@@ -108,6 +108,7 @@ class indice extends clsListagem
 
 		
 		$obj_ponto = new clsModulesPontoTransporteEscolar();
+		$obj_ponto->setOrderBy(' descricao asc ');
 		$obj_ponto->setLimite($this->limite,$this->offset);
 
 		$pontos = $obj_ponto->lista($this->cod_ponto,$this->descricao);

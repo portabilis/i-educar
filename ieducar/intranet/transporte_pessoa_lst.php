@@ -112,7 +112,7 @@ class indice extends clsListagem
 
 		$this->addCabecalhos( array(
 			"C&oacute;digo",
-			"Nome da Pessoa",
+			"Nome da pessoa",
 			"Rota",
 			"Destino",
 			"Ponto de embarque"

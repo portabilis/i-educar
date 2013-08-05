@@ -8,15 +8,21 @@ var valPonto = 0;
 function chamaGetPonto(){
 
   var campoRota = document.getElementById('rota').value;
-
   var campoPonto= document.getElementById('ponto');
-  campoPonto.length = 1;
-  campoPonto.disabled = true;
-  campoPonto.options[0].text = 'Carregando pontos...';
-  
-  var xml_ponto = new ajax( getPonto );
-  xml_ponto.envia( "ponto_xml.php?rota="+campoRota ); 
 
+  if (campoRota==''){
+    campoPonto.length = 1;
+    campoPonto.options[0].text = 'Selecione uma rota acima';
+
+  }else{
+    
+    campoPonto.length = 1;
+    campoPonto.disabled = true;
+    campoPonto.options[0].text = 'Carregando pontos...';
+    
+    var xml_ponto = new ajax( getPonto );
+    xml_ponto.envia( "ponto_xml.php?rota="+campoRota ); 
+  }
 }
 
 function getPonto( xml_ponto )
