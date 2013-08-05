@@ -144,15 +144,6 @@ class indice extends clsCadastro
 				}
 			}
 		}
-		//Trecho era assim
-		/*
-		$this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas"),$this->historico_disciplinas);
-
-		$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', '', 'onfocus' );
-
-		$this->campoTexto( "nota", "Nota", $this->nota, 10, 255, false );
-		$this->campoNumero( "faltas", "Faltas", $this->faltas, 3, 3, false );
-		*/
 
 		$this->campoTabelaInicio("pontos","Itinerário",array("Ponto (Requer pré-cadastro)<br/> <spam style=\" font-weight: normal; font-size: 10px;\">Digite o código ou nome do ponto e selecione o desejado</spam>","Hora","Tipo","Veículo (Requer pré-cadastro)<br/> <spam style=\" font-weight: normal; font-size: 10px;\">Digite o código, nome ou placa do veículo e selecione o desejado</spam>" ),$this->pontos);
 
@@ -181,7 +172,7 @@ class indice extends clsCadastro
 						'/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js',
 						'/modules/Portabilis/Assets/Javascripts/Validator.js')
 		);
-		$this->addBotao('Excluir itinerário',"transporte_itinerario_del.php?cod_rota={$this->cod_rota}");
+		$this->addBotao('Excluir todos',"transporte_itinerario_del.php?cod_rota={$this->cod_rota}");
 
 	}
 
@@ -321,9 +312,11 @@ $pagina->MakeAll();
         
 	       	var cod_rota = $j('#cod_rota').val();
 	       	location.href="transporte_rota_det.php?cod_rota="+cod_rota;
-	    } else if(targetElement.value == "Excluir itinerário"){
+	    } else if(targetElement.value == "Excluir todos"){
 	    	var cod_rota = $j('#cod_rota').val();
-	    	location.href="transporte_itinerario_del.php?cod_rota="+cod_rota;
+	    	if(confirm('Este procedimento irá excluir todos os pontos do itinerário. Tem certeza que deseja continuar?')){
+	    		location.href="transporte_itinerario_del.php?cod_rota="+cod_rota;
+	    	}
 	    }
 	};
 

@@ -120,7 +120,7 @@ class indice extends clsDetalhe
       if ($lst) {
         $tabela = '
           <table>
-          <tr colspan=\'5\'><td><a href=\'/intranet/transporte_itinerario_cad.php?cod_rota='.$cod_rota_transporte_escolar.'\'>Editar itinerário</a></td></tr>
+          <tr colspan=\'5\'><td><a style=\' text-decoration: underline;\' href=\'/intranet/transporte_itinerario_cad.php?cod_rota='.$cod_rota_transporte_escolar.'\'>Editar itinerário</a></td></tr>
             <tr align="center">
               <td bgcolor="#A1B3BD"><b>Sequencial</b></td>
               <td bgcolor="#A1B3BD"><b>Ponto</b></td>
@@ -168,7 +168,7 @@ class indice extends clsDetalhe
       if ($tabela) {
         $this->addDetalhe(array('Itinerário', $tabela));
       } else{ 
-        $this->addDetalhe(array('Itinerário', '<a href=\'/intranet/transporte_itinerario_cad.php?cod_rota='.$cod_rota_transporte_escolar.'\'>Editar itinerário</a>'));
+        $this->addDetalhe(array('Itinerário', '<a style=\' text-decoration: underline;\' href=\'/intranet/transporte_itinerario_cad.php?cod_rota='.$cod_rota_transporte_escolar.'\'>Editar itinerário</a>'));
       }
     $this->url_novo = "../module/TransporteEscolar/Rota";
     $this->url_editar = "../module/TransporteEscolar/Rota?id={$cod_rota_transporte_escolar}";
