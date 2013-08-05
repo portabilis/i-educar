@@ -168,7 +168,7 @@ class indice extends clsDetalhe
       if ($tabela) {
         $this->addDetalhe(array('Itinerário', $tabela));
       } else{ 
-        $this->addDetalhe(array('Itinerário', '<a style=\' text-decoration: underline;\' href=\'/intranet/transporte_itinerario_cad.php?cod_rota='.$cod_rota_transporte_escolar.'\'>Editar itinerário</a>'));
+        $this->addDetalhe(array('Itinerário', '<a style=\' text-decoration: underline; font-size: 12px;\' href=\'/intranet/transporte_itinerario_cad.php?cod_rota='.$cod_rota_transporte_escolar.'\'>Editar itinerário</a>'));
       }
     $this->url_novo = "../module/TransporteEscolar/Rota";
     $this->url_editar = "../module/TransporteEscolar/Rota?id={$cod_rota_transporte_escolar}";
