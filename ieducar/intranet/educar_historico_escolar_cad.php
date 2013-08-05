@@ -180,13 +180,14 @@ class indice extends clsCadastro
 		$this->campoTexto( "escola", "Escola", $this->escola, 30, 255, true );
 		$this->campoTexto( "escola_cidade", "Cidade da Escola", $this->escola_cidade, 30, 255, true );
 
-
+		$det_uf[] = array();
 		if($this->escola_uf)
 		{
 			//busca pais do estado
 			$obj_uf = new clsUf($this->escola_uf);
 			$det_uf = $obj_uf->detalhe();
 		}
+
 		$lista_pais_origem = array('45' => "País da escola");
 		$obj_pais = new clsPais();
 		$obj_pais_lista = $obj_pais->lista(null,null,null,"","","nome asc");
@@ -197,10 +198,10 @@ class indice extends clsCadastro
 				$lista_pais_origem[$pais["idpais"]] = $pais["nome"];
 			}
 		}
-		$this->campoLista("idpais", "Pa&iacute;s da Escola", $lista_pais_origem, $det_uf['45'] );
+		$this->campoLista("idpais", "Pa&iacute;s da Escola", $lista_pais_origem, $det_uf['int_idpais'] );
 
 		$obj_uf = new clsUf();
-		$lista_uf = $obj_uf->lista( false,false,$det_uf['idpais'],false,false, "sigla_uf" );
+		$lista_uf = $obj_uf->lista( false,false,$det_uf['int_idpais'],false,false, "sigla_uf" );
 		$lista_estado = array( "SC" => "Selecione um pa&iacute;s" );
 		if( $lista_uf )
 		{
