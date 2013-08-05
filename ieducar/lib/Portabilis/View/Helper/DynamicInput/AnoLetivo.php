@@ -70,7 +70,7 @@ class Portabilis_View_Helper_DynamicInput_AnoLetivo extends Portabilis_View_Help
                     and ativo = 1 {$this->filtroSituacao()} order by ano desc";
 
       $resources = Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => $escolaId));
-      $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'z', 'ano');
+      $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'ano', 'ano');
     }
 
     return $this->insertOption(null, "Selecione um ano letivo", $resources);
