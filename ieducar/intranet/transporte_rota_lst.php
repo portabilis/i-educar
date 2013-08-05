@@ -38,7 +38,7 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} Rotas" );
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Rotas" );
 		$this->processoAp = "21238";
 	}
 }
@@ -98,7 +98,7 @@ class indice extends clsListagem
 
 		$this->addCabecalhos( array(
 			"Ano",
-			"Código rota",
+			"Código da rota",
 			"Descrição",
 			"Destino",
 			"Empresa",

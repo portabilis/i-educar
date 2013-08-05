@@ -154,7 +154,7 @@ class indice extends clsCadastro
 		$this->campoNumero( "faltas", "Faltas", $this->faltas, 3, 3, false );
 		*/
 
-		$this->campoTabelaInicio("pontos","Itinerário",array("Ponto (Requer pré-cadastro)<br/> <spam style=\" font-weight: normal; font-size: 10px;\">Digite o código ou nome do ponto e selecione o na lista</spam>","Hora","Tipo","Veículo (Requer pré-cadastro)<br/> <spam style=\" font-weight: normal; font-size: 10px;\">Digite o código,nome ou placa do veículo e selecione o na lista</spam>" ),$this->pontos);
+		$this->campoTabelaInicio("pontos","Itinerário",array("Ponto (Requer pré-cadastro)<br/> <spam style=\" font-weight: normal; font-size: 10px;\">Digite o código ou nome do ponto e selecione o desejado</spam>","Hora","Tipo","Veículo (Requer pré-cadastro)<br/> <spam style=\" font-weight: normal; font-size: 10px;\">Digite o código, nome ou placa do veículo e selecione o desejado</spam>" ),$this->pontos);
 
 		$this->campoTexto( "ref_cod_ponto_transporte_escolar", "Ponto (Requer pré-cadastro)", $this->ref_cod_ponto_transporte_escolar, 50, 255, false, true, false, '', '', '', 'onfocus' );
 
@@ -181,6 +181,7 @@ class indice extends clsCadastro
 						'/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js',
 						'/modules/Portabilis/Assets/Javascripts/Validator.js')
 		);
+		$this->addBotao('Excluir itinerário',"transporte_itinerario_del.php?cod_rota={$this->cod_rota}");
 
 	}
 
@@ -191,6 +192,8 @@ class indice extends clsCadastro
 
 	function Editar()
 	{
+
+
 		@session_start();
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
@@ -314,12 +317,14 @@ $pagina->MakeAll();
 
 	document.onclick = function(event) {
 	    var targetElement = event.target;
-	    if ( targetElement.className == "botaolistagem" ) {
+	    if ( targetElement.value == " Cancelar " ) {
         
 	       	var cod_rota = $j('#cod_rota').val();
 	       	location.href="transporte_rota_det.php?cod_rota="+cod_rota;
-	    }   
-
+	    } else if(targetElement.value == "Excluir itinerário"){
+	    	var cod_rota = $j('#cod_rota').val();
+	    	location.href="transporte_itinerario_del.php?cod_rota="+cod_rota;
+	    }
 	};
 
 	var submitForm = function(event) {
@@ -332,7 +337,7 @@ $pagina->MakeAll();
 			frequencia = frequencia.replace('.', '').replace(',', '.');
 
 	  if (validatesIfNumericValueIsInRange(frequencia, $frequenciaField, 0, 100))*/
-	    formUtils.submit();
+	  	formUtils.submit();
 	}
 
 
