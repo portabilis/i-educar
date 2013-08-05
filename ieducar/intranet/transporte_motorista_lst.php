@@ -39,7 +39,7 @@ class clsIndexBase extends clsBase
 	function Formular()
 	{
 		$this->SetTitulo( "{$this->_instituicao} Motoristas" );
-		$this->processoAp = "754";
+		$this->processoAp = "21236";
 	}
 }
 
@@ -93,7 +93,7 @@ class indice extends clsListagem
 		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
 
 		$this->addCabecalhos( array(
-			"Código Motorista",
+			"Código motorista",
 			"Nome",
 			"CNH",
 			"Categoria CNH",
@@ -117,7 +117,7 @@ class indice extends clsListagem
 		}
 
 		$this->campoLista( "cod_empresa", "Empresa", $opcoes, $this->cod_empresa, "", false, "", "", false, false );
-		$this->campoNumero('cod_motorista','Código do Motorista',$this->cod_motorista,29,15);
+		$this->campoNumero('cod_motorista','Código do motorista',$this->cod_motorista,29,15);
 		$this->campoNumero('cnh','CNH',$this->cnh,29,15);
 		$this->campoTexto( "tipo_cnh", "Categoria", $this->tipo_cnh, 2, 2, false );
 		$this->campoTexto( "nome_motorista", "Nome", $this->nome_motorista, 29, 30, false );

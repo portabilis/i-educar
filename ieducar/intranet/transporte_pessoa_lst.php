@@ -37,8 +37,8 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Pessoa Transporte" );
-		$this->processoAp = "578";
+		$this->SetTitulo( "{$this->_instituicao} Usuário de transporte" );
+		$this->processoAp = "21240";
 	}
 }
 
@@ -85,7 +85,7 @@ class indice extends clsListagem
 			$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
 
-		$this->titulo = "Pessoa Transporte - Listagem";
+		$this->titulo = "Usuário de transporte - Listagem";
 
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
@@ -101,7 +101,7 @@ class indice extends clsListagem
 			$select_rota["{$reg['cod_rota_transporte_escolar']}"] = "{$reg['descricao']}";
 		}
 
-		$this->campoNumero("cod_pessoa_transporte","C&oacute;digo da pessoa transporte",$this->cod_pessoa_transporte,20,255,false);
+		$this->campoNumero("cod_pessoa_transporte","C&oacute;digo",$this->cod_pessoa_transporte,20,255,false);
 		$this->campoTexto("nome_pessoa","Nome da pessoa", $this->nome_pessoa,50,255,false);
 		$this->campoTexto("nome_destino","Nome do destino", $this->nome_destino,70,255,false);
 		$this->campoLista( "ref_cod_rota_transporte_escolar", "Rota", $select_rota, $this->ref_cod_rota_transporte_escolar, "", false, "", "", false, false );
@@ -111,8 +111,8 @@ class indice extends clsListagem
 		$nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
 		$this->addCabecalhos( array(
-			"C&oacute;digo pessoa transporte",
-			"Nome da Pessoa",
+			"C&oacute;digo",
+			"Nome da pessoa",
 			"Rota",
 			"Destino",
 			"Ponto de embarque"

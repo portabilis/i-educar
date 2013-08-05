@@ -40,12 +40,12 @@ class EmpresaController extends Portabilis_Controller_Page_EditController
   protected $_titulo     = 'Cadastro de Empresa de Transporte';
 
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
-  protected $_processoAp        = 578;
+  protected $_processoAp        = 21235;
   protected $_deleteOption      = true;
 
   protected $_formMap    = array(
     'pessoa' => array(
-      'label'  => 'Pessoa Responsável',
+      'label'  => 'Pessoa responsável',
       'help'   => '',
     ),
 
@@ -55,12 +55,12 @@ class EmpresaController extends Portabilis_Controller_Page_EditController
     ),
 
     'id' => array(
-      'label'  => 'Código da Empresa',
+      'label'  => 'Código da empresa',
       'help'   => '',
     ),
 
     'pessoaj' => array(
-      'label'  => 'Pessoa Jurídica',
+      'label'  => 'Pessoa jurídica',
       'help'   => '',
     )
   );
@@ -102,7 +102,7 @@ class EmpresaController extends Portabilis_Controller_Page_EditController
 
 
     // observações
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('observacao')), 'required' => false, 'size' => 50, 'max_length' => 255);
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('observacao')), 'required' => false, 'size' => 50, 'max_length' => 253);
     $this->inputsHelper()->textArea('observacao', $options);
     
     $this->loadResourceAssets($this->getDispatcher());

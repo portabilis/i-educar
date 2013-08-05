@@ -39,7 +39,7 @@ class clsIndexBase extends clsBase
 	function Formular()
 	{
 		$this->SetTitulo( "{$this->_instituicao} Veículos" );
-		$this->processoAp = "754";
+		$this->processoAp = "21237";
 	}
 }
 
@@ -136,7 +136,7 @@ class indice extends clsListagem
 		$this->__offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->__limite-$this->__limite: 0;
 
 		$obj = new clsModulesVeiculo();
-		$obj->setOrderby( " cod_veiculo ASC" );
+		$obj->setOrderby( " descricao ASC" );
 		$obj->setLimite( $this->__limite, $this->__offset );
 
 		$lista = $obj->lista(

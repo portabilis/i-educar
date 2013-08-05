@@ -79,14 +79,50 @@ class VeiculoController extends ApiCoreController
     $veiculo->exclusivo_transporte_escolar       = ($this->getRequest()->exclusivo_transporte_escolar == 'on' ? 'S' : 'N'); 
     $veiculo->adaptado_necessidades_especiais    = ($this->getRequest()->adaptado_necessidades_especiais == 'on' ? 'S' : 'N'); 
     $veiculo->ativo                              = ($this->getRequest()->ativo == 'on' ? 'S' : 'N');   
-    $veiculo->descricao_inativo                  = $this->getRequest()->descricao_inativo;
+    $veiculo->descricao_inativo                  = Portabilis_String_Utils::toLatin1($this->getRequest()->descricao_inativo);
     $veiculo->ref_cod_empresa_transporte_escolar = $this->getRequest()->empresa_id; 
     $veiculo->ref_cod_motorista                  = $this->getRequest()->motorista_id; 
-    $veiculo->observacao                         = $this->getRequest()->observacao;
+    $veiculo->observacao                         = Portabilis_String_Utils::toLatin1($this->getRequest()->observacao);
 
     return (is_null($id) ? $veiculo->cadastra() : $veiculo->edita());
   }
 
+  protected function sqlsForNumericSearch() {
+
+    $sqls[] = "select distinct cod_veiculo as id, (descricao || ', Placa: ' || placa) as name from
+                 modules.veiculo where (cod_veiculo like $1||'%') OR (lower(to_ascii(placa)) like '%'||lower(to_ascii($1))||'%')";
+
+    return $sqls;
+  }
+
+
+  protected function sqlsForStringSearch() {
+
+    $sqls[] = "select distinct cod_veiculo as id, (descricao || ', Placa: ' || placa ) as name from
+                 modules.veiculo where (lower(to_ascii(descricao)) like '%'||lower(to_ascii($1))||'%') OR (lower(to_ascii(placa)) like '%'||lower(to_ascii($1))||'%')";
+
+    return $sqls;
+  }
+
+  protected function validateSizeOfObservacao(){
+    if (strlen($this->getRequest()->observacao)<=255)
+      return true;
+    else{
+      $this->messenger->append('O campo Observações não pode ter mais que 255 caracteres.');
+      return false;
+    }
+
+  }
+
+  protected function validateSizeOfDescricaoInativo(){
+    if (strlen($this->getRequest()->descricao_inativo)<=255)
+      return true;
+    else{
+      $this->messenger->append('O campo Descrição de inatividade não pode ter mais que 255 caracteres.');
+      return false;
+    }
+
+  }      
 
   protected function get() {
     
@@ -128,6 +164,7 @@ class VeiculoController extends ApiCoreController
 
   protected function post() {
 
+    if ($this->validateSizeOfDescricaoInativo() && $this->validateSizeOfObservacao()){
       $id = $this->createOrUpdateVeiculo();
 
       if (is_numeric($id)) {
@@ -136,13 +173,14 @@ class VeiculoController extends ApiCoreController
       }
       else
         $this->messenger->append('Aparentemente o veículo não pode ser cadastrado, por favor, verifique.');
-   
+    }   
 
     return array('id' => $id);
   }
 
   protected function put() {
 
+    if ($this->validateSizeOfDescricaoInativo() && $this->validateSizeOfObservacao()){
      $id = $this->getRequest()->id;
      $editou = $this->createOrUpdateVeiculo($id);
 
@@ -151,6 +189,7 @@ class VeiculoController extends ApiCoreController
      }
      else
       $this->messenger->append('Aparentemente o cadastro não pode ser alterado, por favor, verifique.');
+  }
    
 
     return array('id' => $id);
@@ -176,6 +215,9 @@ class VeiculoController extends ApiCoreController
     
     if ($this->isRequestFor('get', 'veiculo'))
       $this->appendResponse($this->get());
+
+    elseif ($this->isRequestFor('get', 'veiculo-search'))
+      $this->appendResponse($this->search());  
 
     // create
     elseif ($this->isRequestFor('post', 'veiculo'))

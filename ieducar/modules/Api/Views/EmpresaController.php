@@ -79,7 +79,7 @@ class EmpresaController extends ApiCoreController
 
     $empresa->ref_resp_idpes                 = $this->getRequest()->pessoa_id;
     $empresa->ref_idpes                      = $this->getRequest()->pessoaj_id;
-    $empresa->observacao                     = $this->getRequest()->observacao;
+    $empresa->observacao                     = Portabilis_String_Utils::toLatin1($this->getRequest()->observacao);
 
     return (is_null($id) ? $empresa->cadastra() : $empresa->edita());
   }
@@ -139,7 +139,22 @@ class EmpresaController extends ApiCoreController
       return false;
   }
 
+    protected function validateSizeOfObservacao(){
+
+      if (strlen($this->getRequest()->observacao)<=255)
+        return true;
+      else{
+       $this->messenger->append('O campo Observações não pode ter mais que 255 caracteres.');
+       return false;
+      }
+      
+
+    }
+
   protected function post() {
+
+
+    if ($this->validateSizeOfObservacao()){
 
       $id = $this->createOrUpdateEmpresa();
 
@@ -149,12 +164,15 @@ class EmpresaController extends ApiCoreController
       }
       else
         $this->messenger->append('Aparentemente a empresa não pode ser cadastrada, por favor, verifique.');
+    }
    
 
     return array('id' => $id);
   }
 
   protected function put() {
+
+    if ($this->validateSizeOfObservacao()){
       $id = $this->getRequest()->id;
       $editou = $this->createOrUpdateEmpresa($id);
 
@@ -164,6 +182,7 @@ class EmpresaController extends ApiCoreController
       }
       else
         $this->messenger->append('Aparentemente a empresa não pode ser alterado, por favor, verifique.');
+      }
    
 
     return array('id' => $id);

@@ -52,7 +52,7 @@ class clsIndexBase extends clsBase
   function Formular()
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Ponto');
-    $this->processoAp = 578;
+    $this->processoAp = 21239;
   }
 }
 
@@ -93,7 +93,7 @@ class indice extends clsDetalhe
       die();
     }
     
-    $this->addDetalhe( array("Código do Ponto", $cod_ponto_transporte_escolar));
+    $this->addDetalhe( array("Código do ponto", $cod_ponto_transporte_escolar));
     $this->addDetalhe( array("Descrição", $registro['descricao']) );
    
     $this->url_novo = "../module/TransporteEscolar/Ponto";

@@ -93,7 +93,7 @@ class MotoristaController extends ApiCoreController
     $motorista->dt_habilitacao                     = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->dt_habilitacao);  
     $motorista->vencimento_cnh                     = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->vencimento_cnh);
     $motorista->ref_cod_empresa_transporte_escolar = $this->getRequest()->empresa_id; 
-    $motorista->observacao                         = $this->getRequest()->observacao;
+    $motorista->observacao                         = Portabilis_String_Utils::toLatin1($this->getRequest()->observacao);
 
 
     return (is_null($id) ? $motorista->cadastra() : $motorista->edita());
@@ -127,6 +127,15 @@ class MotoristaController extends ApiCoreController
 
   }
 
+    protected function validateSizeOfObservacao(){
+      if (strlen($this->getRequest()->observacao)<=255)
+        return true;
+      else{
+        $this->messenger->append('O campo Observações não pode ter mais que 255 caracteres.');
+        return false;
+      }
+
+    }
 
   protected function canGet(){
 /*
@@ -141,6 +150,8 @@ class MotoristaController extends ApiCoreController
 
   protected function post() {
 
+    if ($this->validateSizeOfObservacao()){
+
       $id = $this->createOrUpdateMotorista();
 
       if (is_numeric($id)) {
@@ -149,13 +160,15 @@ class MotoristaController extends ApiCoreController
       }
       else
         $this->messenger->append('Aparentemente o motorista não pode ser cadastrado, por favor, verifique.');
-   
+    }
+       
 
     return array('id' => $id);
   }
 
   protected function put() {
 
+    if ($this->validateSizeOfObservacao()){
      $id = $this->getRequest()->id;
      $editou = $this->createOrUpdateMotorista($id);
 
@@ -164,7 +177,7 @@ class MotoristaController extends ApiCoreController
      }
      else
       $this->messenger->append('Aparentemente o aluno não pode ser alterado, por favor, verifique.');
-   
+    }
 
     return array('id' => $id);
   }

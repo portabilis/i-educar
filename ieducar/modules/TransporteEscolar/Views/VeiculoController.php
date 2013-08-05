@@ -40,12 +40,12 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
   protected $_titulo     = 'Cadastro de Motorista';
 
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
-  protected $_processoAp        = 578;
+  protected $_processoAp        = 21237;
   protected $_deleteOption      = true;
 
   protected $_formMap    = array(
     'id' => array(
-      'label'  => 'Código do Veículo',
+      'label'  => 'Código do veículo',
       'help'   => '',
     ),
 
@@ -75,22 +75,22 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
     ),
 
     'ano_fabricacao' => array(
-      'label'  => 'Ano de Fabricação',
+      'label'  => 'Ano fabricação',
       'help'   => '',
     ),
 
     'ano_modelo' => array(
-      'label'  => 'Ano Modelo',
+      'label'  => 'Ano modelo',
       'help'   => '',
     ),
 
     'passageiros' => array(
-      'label'  => 'Limite de Passageiros',
+      'label'  => 'Limite de passageiros',
       'help'   => '',
     ),
 
     'tipo' => array(
-      'label'  => 'Tipo',
+      'label'  => 'Categoria',
       'help'   => '',
     ),
 
@@ -111,7 +111,7 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
     ),                                    
 
     'adaptado_necessidades_especiais' => array(
-      'label'  => 'Adapatado à pessoas com necessidades especiais',
+      'label'  => 'Adaptado para pessoas com necessidades especiais',
       'help'   => '',
     ),
 
@@ -126,7 +126,7 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
     ),
 
     'descricao_inativo' =>array(
-      'label'  => 'Descrição de Inatividade',
+      'label'  => 'Descrição de inatividade',
       'help'   => '',
     ),
 
@@ -136,7 +136,7 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
     ),
 
     'motorista' =>array(
-      'label'  => 'Motorista Responsável',
+      'label'  => 'Motorista responsável',
       'help'   => '',
     ),
 
@@ -183,7 +183,7 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
 
     //renavam
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('renavam')), 'required' => false, 'size' => 15, 'max_length' => 15);
-    $this->inputsHelper()->text('renavam', $options);   
+    $this->inputsHelper()->integer('renavam', $options);   
 
     //chassi
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('chassi')), 'required' => false, 'size' => 30, 'max_length' => 30);
@@ -194,15 +194,15 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->text('marca', $options);                    
 
     //Ano de fabricacao
-    $options = array('label' => $this->_getLabel('ano_fabricacao'), 'max_length' => 4, 'size' => 5, 'required' => false);
+    $options = array('label' => $this->_getLabel('ano_fabricacao'), 'max_length' => 4, 'size' => 5, 'required' => false, 'placeholder' => '');
     $this->inputsHelper()->integer('ano_fabricacao',$options);
 
     // Ano do modelo
-    $options = array('label' => $this->_getLabel('ano_modelo'), 'max_length' => 4, 'size' => 5, 'required' => false);
+    $options = array('label' => $this->_getLabel('ano_modelo'), 'max_length' => 4, 'size' => 5, 'required' => false, 'placeholder' => '');
     $this->inputsHelper()->integer('ano_modelo',$options);
 
     // Passageiros
-    $options = array('label' => $this->_getLabel('passageiros'), 'max_length' => 3, 'size' => 5, 'required' => true);
+    $options = array('label' => $this->_getLabel('passageiros'), 'max_length' => 3, 'size' => 5, 'required' => true, 'placeholder' => '');
     $this->inputsHelper()->integer('passageiros',$options);    
 
     // Malha

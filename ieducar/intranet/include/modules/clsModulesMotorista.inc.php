@@ -300,14 +300,13 @@ class clsModulesMotorista
     $filtros = "";
 
     $whereAnd = " WHERE ";
-    $whereNomes = '';
     if (is_numeric($cod_motorista)) {
       $filtros .= "{$whereAnd} cod_motorista = '{$cod_motorista}'";
       $whereAnd = " AND ";
     }
 
     if (is_string($nome_motorista)) {
-      $whereNomes .= "
+      $filtros .= "
         {$whereAnd} TO_ASCII(LOWER((SELECT nome FROM cadastro.pessoa WHERE idpes = ref_idpes))) LIKE TO_ASCII(LOWER('%{$nome_motorista}%')) ";
 
       $whereAnd = ' AND ';
@@ -332,7 +331,7 @@ class clsModulesMotorista
     $countCampos = count(explode(',', $this->_campos_lista))+2;
     $resultado = array();
 
-    $sql .= $filtros . $whereNomes. $this->getOrderby() . $this->getLimite();
+    $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
     $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
 

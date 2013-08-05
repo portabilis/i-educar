@@ -39,12 +39,12 @@ class MotoristaController extends Portabilis_Controller_Page_EditController
   protected $_titulo     = 'Cadastro de Motorista';
 
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
-  protected $_processoAp        = 578;
+  protected $_processoAp        = 21236;
   protected $_deleteOption      = true;
 
   protected $_formMap    = array(
     'id' => array(
-      'label'  => 'Código do Motorista',
+      'label'  => 'Código do motorista',
       'help'   => '',
     ),
 
@@ -59,22 +59,22 @@ class MotoristaController extends Portabilis_Controller_Page_EditController
     ),
 
     'tipo_cnh' =>array(
-      'label'  => 'Categoria',
+      'label'  => 'Categoria CNH',
       'help'   => '',
     ),
 
     'dt_habilitacao' =>array(
-      'label'  => 'Data de Habilitação',
+      'label'  => 'Data da habilitação',
       'help'   => '',
     ),
 
     'vencimento_cnh' =>array(
-      'label'  => 'Vencimento',
+      'label'  => 'Vencimento da habilitação',
       'help'   => '',
     ),
 
     'ref_cod_empresa_transporte_escolar' =>array(
-      'label'  => 'Código da Empresa',
+      'label'  => 'Empresa',
       'help'   => '',
     ),
 
@@ -124,11 +124,11 @@ class MotoristaController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->text('tipo_cnh',$options);    
 
     // Vencimento
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('dt_habilitacao')), 'required' => false, 'size' => 10,);
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('dt_habilitacao')), 'required' => false, 'size' => 10, 'placeholder' => '');
     $this->inputsHelper()->date('dt_habilitacao',$options);
 
     // Habilitação
-    $options = array('label' =>$this->_getLabel('vencimento_cnh'), 'required' => false, 'size' => 10,);
+    $options = array('label' =>Portabilis_String_Utils::toLatin1($this->_getLabel('vencimento_cnh')), 'required' => false, 'size' => 10,'placeholder' => '');
     $this->inputsHelper()->date('vencimento_cnh',$options);  
 
     // Codigo da empresa

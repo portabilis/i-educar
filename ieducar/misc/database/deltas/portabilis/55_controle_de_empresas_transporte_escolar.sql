@@ -19,9 +19,9 @@
 
     CREATE TABLE modules.empresa_transporte_escolar
     (
-    cod_empresa_transporte_escolar integer NOT NULL DEFAULT nextval('empresa_transporte_escolar_seq'::regclass),
+    cod_empresa_transporte_escolar integer NOT NULL DEFAULT nextval('modules.empresa_transporte_escolar_seq'::regclass),
     ref_idpes integer NOT NULL,
-    ref_resp_idpes character varying(50) NOT NULL,
+    ref_resp_idpes integer NOT NULL,
     observacao character varying(255),
     CONSTRAINT empresa_transporte_escolar_cod_empresa_transporte_escolar_pkey PRIMARY KEY (cod_empresa_transporte_escolar ),
     CONSTRAINT empresa_transporte_escolar_ref_idpes_fkey FOREIGN KEY (ref_idpes)
@@ -46,10 +46,10 @@
   
     CREATE TABLE modules.motorista
     (
-    cod_motorista integer NOT NULL DEFAULT nextval('motorista_seq'::regclass),
+    cod_motorista integer NOT NULL DEFAULT nextval('modules.motorista_seq'::regclass),
     ref_idpes integer NOT NULL,
     cnh character varying(15) NOT NULL,
-    tipo_cnh character varying(2) NOT NUL,
+    tipo_cnh character varying(2) NOT NULL,
     dt_habilitacao date,
     vencimento_cnh date,
     ref_cod_empresa_transporte_escolar integer NOT NULL,
@@ -76,7 +76,7 @@
 
     CREATE TABLE modules.tipo_veiculo
     (
-    cod_tipo_veiculo integer NOT NULL DEFAULT nextval('tipo_veiculo_seq'::regclass),
+    cod_tipo_veiculo integer NOT NULL DEFAULT nextval('modules.tipo_veiculo_seq'::regclass),
     descricao character varying(60),
     CONSTRAINT tipo_veiculo_pkey PRIMARY KEY (cod_tipo_veiculo)
     )
@@ -85,7 +85,7 @@
     );
 
 
-  CREATE SEQUENCE modules.veiculo_seq
+    CREATE SEQUENCE modules.veiculo_seq
     INCREMENT 1
     MINVALUE 1
     MAXVALUE 9223372036854775807
@@ -96,7 +96,7 @@
     
     CREATE TABLE modules.veiculo
     (
-    cod_veiculo integer NOT NULL DEFAULT nextval('veiculo_seq'::regclass),
+    cod_veiculo integer NOT NULL DEFAULT nextval('modules.veiculo_seq'::regclass),
     descricao character varying(255) NOT NULL,
     placa character varying(10) NOT NULL,
     renavam character varying(15) NOT NULL,
@@ -125,6 +125,17 @@
     OIDS=TRUE
     );
 
+    INSERT INTO modules.tipo_veiculo (cod_tipo_veiculo,descricao) values (1,'Vans/Kombis');
+    INSERT INTO modules.tipo_veiculo (cod_tipo_veiculo,descricao) values (2,'Microônibus');
+    INSERT INTO modules.tipo_veiculo (cod_tipo_veiculo,descricao) values (3,'Ônibus');
+    INSERT INTO modules.tipo_veiculo (cod_tipo_veiculo,descricao) values (4,'Bicicleta');
+    INSERT INTO modules.tipo_veiculo (cod_tipo_veiculo,descricao) values (5,'Tração Animal');
+    INSERT INTO modules.tipo_veiculo (cod_tipo_veiculo,descricao) values (6,'Outro');
+    INSERT INTO modules.tipo_veiculo (cod_tipo_veiculo,descricao) values (7,'Capacidade de até 5 Alunos');
+    INSERT INTO modules.tipo_veiculo (cod_tipo_veiculo,descricao) values (8,'Capacidade entre 5 a 15 Alunos');
+    INSERT INTO modules.tipo_veiculo (cod_tipo_veiculo,descricao) values (9,'Capacidade entre 15 a 35 Alunos');
+    INSERT INTO modules.tipo_veiculo (cod_tipo_veiculo,descricao) values (10,'Capacidade acima de 35 Alunos');
+    INSERT INTO modules.tipo_veiculo (cod_tipo_veiculo,descricao) values (11,'Trem/Metrô');
 
   -- //@UNDO
 
@@ -136,6 +147,8 @@
   DROP SEQUENCE modules.motorista_seq;
   DROP TABLE modules.empresa_transporte_escolar;  
   DROP SEQUENCE modules.empresa_transporte_escolar_seq;  
+
+  DELETE FROM modules.tipo_veiculo WHERE cod_tipo_veiculo IN (1,2,3,4,5,6,7,8,9,10,11);
 
 
   -- //

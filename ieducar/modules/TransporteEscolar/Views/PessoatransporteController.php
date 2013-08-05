@@ -39,16 +39,16 @@ require_once ("include/clsBanco.inc.php");
 class PessoatransporteController extends Portabilis_Controller_Page_EditController
 {
   protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
-  protected $_titulo     = 'Vincula Pessoa à Rota';
+  protected $_titulo     = 'Usuário de transporte';
 
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
-  protected $_processoAp        = 578;
+  protected $_processoAp        = 21240;
   protected $_deleteOption      = false;
 
   protected $_formMap    = array(
 
     'id' => array(
-      'label'  => 'Código do Vinculo',
+      'label'  => 'Código',
       'help'   => '',
     ),
     'pessoa' => array(
@@ -64,7 +64,7 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
       'help'   => '',
     ),    
     'destino' => array(
-      'label'  => 'Destino (Se diferente da rota)',
+      'label'  => 'Destino (Caso for diferente da rota)',
       'help'   => '',
     ),        
     'observacao' => array(
@@ -118,7 +118,7 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
     $this->inputsHelper()->select('rota',$options); 
 
     // Ponto de Embarque
-    $options = array('label' =>Portabilis_String_Utils::toLatin1($this->_getLabel('ponto')), 'required' => false, 'resources' => array("" => "Selecione uma rota /\\"));
+    $options = array('label' =>Portabilis_String_Utils::toLatin1($this->_getLabel('ponto')), 'required' => false, 'resources' => array("" => "Selecione uma rota acima"));
     $this->inputsHelper()->select('ponto',$options);     
 
     // Destino

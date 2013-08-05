@@ -37,7 +37,7 @@ class clsIndexBase extends clsBase
 	function Formular()
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Ponto" );
-		$this->processoAp = "578";
+		$this->processoAp = "21239";
 	}
 }
 
@@ -89,7 +89,7 @@ class indice extends clsListagem
 
 		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
 
-		$this->campoNumero("cod_ponto","C&oacute;digo do Ponto",$this->cod_ponto,20,255,false);
+		$this->campoNumero("cod_ponto","C&oacute;digo do ponto",$this->cod_ponto,20,255,false);
 		$this->campoTexto("descricao","Descrição", $this->descricao,50,255,false);
 	
 
@@ -98,7 +98,7 @@ class indice extends clsListagem
 		$nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
 		$this->addCabecalhos( array(
-			"C&oacute;digo do Ponto",
+			"C&oacute;digo do ponto",
 			"Descrição"
 		) );
 
@@ -108,9 +108,10 @@ class indice extends clsListagem
 
 		
 		$obj_ponto = new clsModulesPontoTransporteEscolar();
+		$obj_ponto->setOrderBy(' descricao asc ');
 		$obj_ponto->setLimite($this->limite,$this->offset);
 
-		$pontos = $obj_ponto->lista();
+		$pontos = $obj_ponto->lista($this->cod_ponto,$this->descricao);
 		$total = $pontos->_total;
 
 		foreach ( $pontos AS $registro ) {

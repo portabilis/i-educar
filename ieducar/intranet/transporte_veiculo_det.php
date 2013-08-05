@@ -39,7 +39,7 @@ require_once 'Portabilis/View/Helper/Application.php';
 
 
 /**
- * clsIndexBase class.
+ * clsIndexBase class.21239
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @category  i-Educar
@@ -53,7 +53,7 @@ class clsIndexBase extends clsBase
   function Formular()
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Veiculos');
-    $this->processoAp = 578;
+    $this->processoAp = 21237;
   }
 }
 
@@ -98,12 +98,12 @@ class indice extends clsDetalhe
     $this->addDetalhe( array("Código do veículo", $cod_veiculo));
     $this->addDetalhe( array("Descrição", $registro['descricao']) );
     $this->addDetalhe( array("Placa", $registro['placa']) );
-    $this->addDetalhe( array("Categoria", $registro['renavam']) );
+    $this->addDetalhe( array("Renavam", $registro['renavam']) );
     $this->addDetalhe( array("Chassi", $registro['chassi']) );
     $this->addDetalhe( array("Marca", $registro['marca']) );
-    $this->addDetalhe( array("Ano de fabricação", $registro['ano_fabricacao']) );
-    $this->addDetalhe( array("Ano do modelo", $registro['ano_modelo']) );
-    $this->addDetalhe( array("Limite de Passageiros", $registro['passageiros']) );
+    $this->addDetalhe( array("Ano fabricação", $registro['ano_fabricacao']) );
+    $this->addDetalhe( array("Ano modelo", $registro['ano_modelo']) );
+    $this->addDetalhe( array("Limite de passageiros", $registro['passageiros']) );
     $malha ='';
     switch ($registro['malha']){
       case 'A':
@@ -118,13 +118,13 @@ class indice extends clsDetalhe
     }
     $this->addDetalhe( array("Malha", $malha) );
     $this->addDetalhe( array("Categoria", $registro['descricao_tipo']) );
-    $this->addDetalhe( array("Exclusivo para Transporte Escolar", ($registro['exclusivo_transporte_escolar'] == 'S' ? 'Sim' : 'Não')) );
-    $this->addDetalhe( array("Adaptado para pessoas com Necessidades Especiais", ($registro['adaptado_necessidades_especiais'] == 'S' ? 'Sim' : 'Não')) );
+    $this->addDetalhe( array("Exclusivo para transporte escolar", ($registro['exclusivo_transporte_escolar'] == 'S' ? 'Sim' : 'Não')) );
+    $this->addDetalhe( array("Adaptado para pessoas com necessidades especiais", ($registro['adaptado_necessidades_especiais'] == 'S' ? 'Sim' : 'Não')) );
     $this->addDetalhe( array("Ativo", ($registro['ativo'] == 'S' ? 'Sim' : 'Não')) );
     if ($registro['ativo']=='N')
-      $this->addDetalhe( array("Descrição Inativo", $registro['descricao_inativo']) );
+      $this->addDetalhe( array("Descrição inativo", $registro['descricao_inativo']) );
     $this->addDetalhe( array("Empresa", $registro['nome_empresa']) );
-    $this->addDetalhe( array("Motorista Responsável", $registro['nome_motorista']) );
+    $this->addDetalhe( array("Motorista responsável", $registro['nome_motorista']) );
     $this->addDetalhe( array("Observa&ccedil;&atilde;o", $registro['observacao']));
     $this->url_novo = "../module/TransporteEscolar/Veiculo";
     $this->url_editar = "../module/TransporteEscolar/Veiculo?id={$cod_veiculo}";

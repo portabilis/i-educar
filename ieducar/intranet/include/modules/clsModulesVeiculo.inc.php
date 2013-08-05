@@ -258,13 +258,13 @@ class clsModulesVeiculo
         $gruda = ", ";
     }    
 
-    if (is_string($this->ano_fabricacao)) {
+    if (is_numeric($this->ano_fabricacao)) {
         $campos .= "{$gruda}ano_fabricacao";
         $valores .= "{$gruda}'{$this->ano_fabricacao}'";
         $gruda = ", ";
     }
 
-   if (is_string($this->ano_modelo)) {
+   if (is_numeric($this->ano_modelo)) {
         $campos .= "{$gruda}ano_modelo";
         $valores .= "{$gruda}'{$this->ano_modelo}'";
         $gruda = ", ";
@@ -374,12 +374,12 @@ class clsModulesVeiculo
         $gruda = ", ";
     }
 
-    if (is_string($this->ano_fabricacao)) {
+    if (is_numeric($this->ano_fabricacao)) {
         $set .= "{$gruda}ano_fabricacao = '{$this->ano_fabricacao}'";
         $gruda = ", ";
     }
 
-   if (is_string($this->ano_modelo)) {
+   if (is_numeric($this->ano_modelo)) {
         $set .= "{$gruda}ano_modelo = '{$this->ano_modelo}'";
         $gruda = ", ";
     }

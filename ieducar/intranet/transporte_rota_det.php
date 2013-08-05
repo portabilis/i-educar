@@ -56,7 +56,7 @@ class clsIndexBase extends clsBase
   function Formular()
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Rotas');
-    $this->processoAp = 578;
+    $this->processoAp = 21238;
   }
 }
 
@@ -109,7 +109,7 @@ class indice extends clsDetalhe
     if (trim($registro['km_npav'])!='')
       $this->addDetalhe( array("Percurso não pavimentado", $registro['km_npav'].' km'));
 
-    $this->addDetalhe( array("Tercerizado", ($registro['tipo_rota'] == 'S' ? 'Sim' : 'Não' )));
+    $this->addDetalhe( array("Terceirizado", ($registro['tipo_rota'] == 'S' ? 'Sim' : 'Não' )));
 
     // Itinerário
 
@@ -120,7 +120,7 @@ class indice extends clsDetalhe
       if ($lst) {
         $tabela = '
           <table>
-          <tr colspan=\'5\'><td><a href=\'/module/TransporteEscolar/Itinerario?id='.$cod_rota_transporte_escolar.'\'>Editar Itinerario</a></td></tr>
+          <tr colspan=\'5\'><td><a href=\'/intranet/transporte_itinerario_cad.php?cod_rota='.$cod_rota_transporte_escolar.'\'>Editar Itinerário</a></td></tr>
             <tr align="center">
               <td bgcolor="#A1B3BD"><b>Sequencial</b></td>
               <td bgcolor="#A1B3BD"><b>Ponto</b></td>
@@ -141,7 +141,7 @@ class indice extends clsDetalhe
 
           $obj_veiculo = new clsModulesVeiculo($valor['ref_cod_veiculo']);
           $obj_veiculo = $obj_veiculo->detalhe();
-          $valor_veiculo = $obj_veiculo['descricao'].' - Placa: '.$obj_veiculo['placa'];
+          $valor_veiculo = $obj_veiculo['descricao']==''?'':$obj_veiculo['descricao'].' - Placa: '.$obj_veiculo['placa'];
 
           $obj_ponto = new clsModulesPontoTransporteEscolar($valor['ref_cod_ponto_transporte_escolar']);
           $obj_ponto = $obj_ponto->detalhe();
@@ -168,7 +168,7 @@ class indice extends clsDetalhe
       if ($tabela) {
         $this->addDetalhe(array('Itinerário', $tabela));
       } else{ 
-        $this->addDetalhe(array('Itinerário', '<a href=\'/module/TransporteEscolar/Itinerario?id='.$cod_rota_transporte_escolar.'\'>Editar Itinerario</a>'));
+        $this->addDetalhe(array('Itinerário', '<a href=\'/intranet/transporte_itinerario_cad.php?cod_rota='.$cod_rota_transporte_escolar.'\'>Editar Itinerário</a>'));
       }
     $this->url_novo = "../module/TransporteEscolar/Rota";
     $this->url_editar = "../module/TransporteEscolar/Rota?id={$cod_rota_transporte_escolar}";

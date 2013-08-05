@@ -96,38 +96,39 @@ class PessoatransporteController extends ApiCoreController
       $pt = Portabilis_Array_Utils::filter($pt, $attrs);
       $pt['pessoaj_nome']     = $this->loadNomePessoaj($id);
       $pt['pessoa_nome']     = $this->loadNomePessoa($id);
-/*
-      $objPonto = new clsModulesItinerarioTransporteEscolar();
-      $objPonto->setOrderBy(' seq asc ');
-      $objPonto = $objPonto->listaPontos($pt['rota']);  
-
-      foreach ($objPonto as $reg ) {
-        $valPonto[] =$reg['ref_cod_ponto_transporte_escolar'];
-        $descPonto[] =$reg['descricao'];
-        $tipoPonto[] =$reg['tipo'];
-      }
-      $pt['valpontos']  = $valPonto; 
-      $pt['dpontos']  = $descPonto; 
-      $pt['tipopontos']  = $tipoPonto;
-
-      die('-'.$pt['dpontos'][2].'-'.$pt['tipopontos'][2]); */
 
       return $pt;
   }
 
+    protected function validateSizeOfObservacao(){
+
+      if (strlen($this->getRequest()->observacao)<=255)
+        return true;
+      else{
+        $this->messenger->append('O campo Observações não pode ter mais que 255 caracteres.');
+        return false;
+      }
+
+    }
+
   protected function post() {
 
+    if ($this->validateSizeOfObservacao()){
     $id = $this->createOrUpdatePessoaTransporte();
     if (is_numeric($id)) {
       $this->messenger->append('Cadastro realizado com sucesso', 'success', false, 'error');
     }
     else
       $this->messenger->append('Aparentemente o vinculo não pode ser cadastrada, por favor, verifique.');
+    }
    
     return array('id' => $id);
  }
 
   protected function put() {
+
+    if ($this->validateSizeOfObservacao()){
+
       $id = $this->getRequest()->id;
       $editou = $this->createOrUpdatePessoaTransporte($id);
 
@@ -137,7 +138,8 @@ class PessoatransporteController extends ApiCoreController
       }
       else
         $this->messenger->append('Aparentemente o vinculo não pode ser alterado, por favor, verifique.');
-   
+
+    }
 
     return array('id' => $id);
   }

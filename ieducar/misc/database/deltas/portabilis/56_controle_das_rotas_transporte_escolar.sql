@@ -23,7 +23,7 @@
 	-- Table: modules.rota_transporte_escolar
 	CREATE TABLE modules.rota_transporte_escolar
 	(
-	cod_rota_transporte_escolar integer NOT NULL DEFAULT nextval('rota_transporte_escolar_seq'::regclass),
+	cod_rota_transporte_escolar integer NOT NULL DEFAULT nextval('modules.rota_transporte_escolar_seq'::regclass),
 	ref_idpes_destino integer NOT NULL,
 	descricao character varying(50) NOT NULL,
 	ano integer NOT NULL,
@@ -38,7 +38,7 @@
 	CONSTRAINT rota_transporte_escolar_ref_cod_empresa_transporte_escolar_fkey FOREIGN KEY (ref_cod_empresa_transporte_escolar)
 	REFERENCES modules.empresa_transporte_escolar (cod_empresa_transporte_escolar) MATCH SIMPLE
 	ON UPDATE RESTRICT ON DELETE RESTRICT
-	)
+	)	
 	WITH (
 	OIDS=TRUE
 	);
@@ -58,7 +58,7 @@
 	-- Table: modules.itinerario_transporte_escolar
 	CREATE TABLE modules.itinerario_transporte_escolar
 	(
-	cod_itinerario_transporte_escolar integer NOT NULL DEFAULT nextval('itinerario_transporte_escolar_seq'::regclass),
+	cod_itinerario_transporte_escolar integer NOT NULL DEFAULT nextval('modules.itinerario_transporte_escolar_seq'::regclass),
 	ref_cod_rota_transporte_escolar integer not null,
 	seq integer not null,
 	ref_cod_ponto_transporte_escolar integer not null,
@@ -74,8 +74,7 @@
 	)
 	WITH (
 	OIDS=TRUE
-	);
-	
+	);	
 	
 	-- Sequence: modules.ponto_transporte_escolar_seq
 	CREATE SEQUENCE modules.ponto_transporte_escolar_seq
@@ -91,10 +90,9 @@
 	-- Table: modules.ponto_transporte_escolar
 	CREATE TABLE modules.ponto_transporte_escolar
 	(
-	cod_ponto_transporte_escolar integer NOT NULL DEFAULT nextval('ponto_transporte_escolar_seq'::regclass),
+	cod_ponto_transporte_escolar integer NOT NULL DEFAULT nextval('modules.ponto_transporte_escolar_seq'::regclass),
 	descricao varchar(70) not null,
-	CONSTRAINT ponto_transporte_escolar_cod_ponto_transporte_escolar_pkey PRIMARY KEY (cod_ponto_transporte_escolar ),
-	ON UPDATE RESTRICT ON DELETE RESTRICT
+	CONSTRAINT ponto_transporte_escolar_cod_ponto_transporte_escolar_pkey PRIMARY KEY (cod_ponto_transporte_escolar )
 	)
 	WITH (
 	OIDS=TRUE
@@ -115,7 +113,8 @@
 	-- Table: modules.pessoa_transporte
 	CREATE TABLE modules.pessoa_transporte
 	(
-	cod_pessoa_transporte integer NOT NULL DEFAULT nextval('pessoa_transporte_seq'::regclass),
+	cod_pessoa_transporte integer NOT NULL DEFAULT nextval('modules.pessoa_transporte_seq'::regclass),
+	ref_idpes integer not null,
 	ref_cod_rota_transporte_escolar integer not null,
 	ref_cod_ponto_transporte_escolar integer,
 	ref_idpes_destino integer,
@@ -126,7 +125,9 @@
 	CONSTRAINT pessoa_transporte_ref_cod_ponto_transporte_escolar_fkey FOREIGN KEY (ref_cod_ponto_transporte_escolar)
 	REFERENCES modules.ponto_transporte_escolar (cod_ponto_transporte_escolar) MATCH SIMPLE,
 	CONSTRAINT pessoa_transporte_ref_idpes_destino_fkey FOREIGN KEY (ref_idpes_destino)
-	REFERENCES cadastro.juridica (idpes) MATCH SIMPLE
+	REFERENCES cadastro.juridica (idpes) MATCH SIMPLE,
+	CONSTRAINT pessoa_transporte_ref_idpes_fkey FOREIGN KEY (ref_idpes)
+	REFERENCES cadastro.fisica (idpes) MATCH SIMPLE
 	ON UPDATE RESTRICT ON DELETE RESTRICT
 	)
 	WITH (

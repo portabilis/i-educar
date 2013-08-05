@@ -217,7 +217,14 @@ class clsModulesEmpresaTransporteEscolar
             cadastro.pessoa
           WHERE
             idpes = ref_idpes
-         ) AS nome_empresa , (SELECT nome FROM cadastro.pessoa WHERE idpes = ref_resp_idpes) AS nome_responsavel   FROM {$this->_tabela}";
+         ) AS nome_empresa , (SELECT nome FROM cadastro.pessoa WHERE idpes = ref_resp_idpes) AS nome_responsavel, (
+          SELECT
+            nome
+          FROM
+            cadastro.pessoa
+          WHERE
+            idpes = ref_idpes
+         ) AS nome_empresa , (SELECT '(' || ddd || ')' || fone  FROM cadastro.fone_pessoa WHERE idpes = ref_idpes limit 1) AS telefone  FROM {$this->_tabela}";
     $filtros = "";
 
     $whereAnd = " WHERE ";
@@ -260,7 +267,7 @@ class clsModulesEmpresaTransporteEscolar
           FROM
             cadastro.pessoa
           WHERE
-            cadastro.pessoa.idpes = ref_idpes
+            cadastro.pessoa.idpes = ref_resp_idpes
             AND TO_ASCII(LOWER(nome)) LIKE TO_ASCII(LOWER('%{$nm_resp_idpes}%'))
         )";
 

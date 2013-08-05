@@ -53,7 +53,7 @@ class clsIndexBase extends clsBase
   function Formular()
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Motoristas');
-    $this->processoAp = 578;
+    $this->processoAp = 21236;
   }
 }
 
@@ -95,14 +95,14 @@ class indice extends clsDetalhe
       die();
     }
     
-    $this->addDetalhe( array("Código do Motorista", $cod_motorista));
-    $this->addDetalhe( array("Nome", $registro['nome_motorista'].'&nbsp&nbsp <a target=\'_blank\' href=\'atendidos_det.php?cod_pessoa='.$registro['ref_idpes'].'\'>Ver pessoa</a>') );
+    $this->addDetalhe( array("Código do motorista", $cod_motorista));
+    $this->addDetalhe( array("Nome", $registro['nome_motorista'].'<br/> <a target=\'_blank\' style=\' text-decoration: underline;\' href=\'atendidos_det.php?cod_pessoa='.$registro['ref_idpes'].'\'>Visualizar pessoa</a>') );
     $this->addDetalhe( array("CNH", $registro['cnh']) );
     $this->addDetalhe( array("Categoria", $registro['tipo_cnh']) );
     if (trim($registro['dt_habilitacao'])!='')
-      $this->addDetalhe( array("Data de Habilitação", Portabilis_Date_Utils::pgSQLToBr($registro['dt_habilitacao']) ));
+      $this->addDetalhe( array("Data da habilitação", Portabilis_Date_Utils::pgSQLToBr($registro['dt_habilitacao']) ));
     if (trim($registro['vencimento_cnh'])!='')
-      $this->addDetalhe( array("Vencimento da Habilitação", Portabilis_Date_Utils::pgSQLToBr($registro['vencimento_cnh']) ) );
+      $this->addDetalhe( array("Vencimento da habilitação", Portabilis_Date_Utils::pgSQLToBr($registro['vencimento_cnh']) ) );
 
     $this->addDetalhe( array("Observa&ccedil;&atilde;o", $registro['observacao']));
     $this->url_novo = "../module/TransporteEscolar/Motorista";
