@@ -721,8 +721,3 @@ $pagina->addForm($miolo);
 // Gera o código HTML
 $pagina->MakeAll();
 ?>
-<script>
-window.onload = function(){
-  document.getElementById("ano").options[document.getElementById("ano").selectedIndex].value = document.getElementById("ano").options[document.getElementById("ano").selectedIndex].text;
-}
-</script>

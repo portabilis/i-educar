@@ -36,7 +36,7 @@ require_once 'Usuario/Model/FuncionarioDataMapper.php';
 class MotoristaController extends Portabilis_Controller_Page_EditController
 {
   protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
-  protected $_titulo     = 'Cadastro de Motorista';
+  protected $_titulo     = 'i-Educar - Motoristas';
 
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
   protected $_processoAp        = 21236;

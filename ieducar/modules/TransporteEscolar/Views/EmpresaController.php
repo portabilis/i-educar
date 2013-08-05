@@ -37,7 +37,7 @@ require_once 'Usuario/Model/FuncionarioDataMapper.php';
 class EmpresaController extends Portabilis_Controller_Page_EditController
 {
   protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
-  protected $_titulo     = 'Cadastro de Empresa de Transporte';
+  protected $_titulo     = 'i-Educar - Empresas';
 
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
   protected $_processoAp        = 21235;

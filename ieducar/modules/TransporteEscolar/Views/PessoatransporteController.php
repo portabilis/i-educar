@@ -39,7 +39,7 @@ require_once ("include/clsBanco.inc.php");
 class PessoatransporteController extends Portabilis_Controller_Page_EditController
 {
   protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
-  protected $_titulo     = 'Usuário de transporte';
+  protected $_titulo     = 'i-Educar - Usuários de transporte';
 
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
   protected $_processoAp        = 21240;

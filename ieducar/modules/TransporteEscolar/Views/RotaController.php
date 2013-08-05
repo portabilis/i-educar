@@ -37,7 +37,7 @@ require_once 'Usuario/Model/FuncionarioDataMapper.php';
 class RotaController extends Portabilis_Controller_Page_EditController
 {
   protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
-  protected $_titulo     = 'Cadastro de Rota';
+  protected $_titulo     = 'i-Educar - Rotas';
 
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
   protected $_processoAp        = 21238;
@@ -137,11 +137,11 @@ class RotaController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->select('tipo_rota', $options);
 
     // km pavimentados
-    $options = array('label' => $this->_getLabel('km_pav'), 'required' => false, 'size' => 9, 'max_length' => 10);
+    $options = array('label' => $this->_getLabel('km_pav'), 'required' => false, 'size' => 9, 'max_length' => 10, 'placeholder' => '');
     $this->inputsHelper()->numeric('km_pav', $options);
 
     // km não pavimentados
-    $options = array('label' => $this->_getLabel('km_npav'), 'required' => false, 'size' => 9, 'max_length' => 10);
+    $options = array('label' => $this->_getLabel('km_npav'), 'required' => false, 'size' => 9, 'max_length' => 10, 'placeholder' => '');
     $this->inputsHelper()->numeric('km_npav', $options);
 
      // Tercerizado
