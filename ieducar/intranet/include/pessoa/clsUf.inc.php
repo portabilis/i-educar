@@ -234,7 +234,7 @@ class clsUf
 				$this->nome = $tupla["nome"];
 				$this->geom = $tupla["geom"];
 				$this->idpais = $tupla["idpais"];
-
+				$tupla["int_idpais"] = $tupla["idpais"];
 				$tupla["idpais"] = new clsPais(  $tupla["idpais"] );
 
 				return $tupla;
