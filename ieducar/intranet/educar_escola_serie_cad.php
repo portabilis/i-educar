@@ -254,6 +254,11 @@ class indice extends clsCadastro
         $conteudo .= '  <span style="display: block; float: left">Usar padrão do componente?</span>';
         $conteudo .= '</div>';
         $conteudo .= '<br style="clear: left" />';
+        $conteudo .= '<div style="margin-bottom: 10px; float: left">';
+        $conteudo .= "  <label style='display: block; float: left; width: 350px;'><input type='checkbox' name='CheckTodos' onClick='marcarCheck(".'"disciplinas[]"'.");'/>Marcar Todos</label>";
+        $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='checkbox' name='CheckTodos2' onClick='marcarCheck(".'"usar_componente[]"'.");';/>Marcar Todos</label>";
+        $conteudo .= '</div>';
+        $conteudo .= '<br style="clear: left" />';         
 
         foreach ($lista as $registro) {
           $checked = '';
@@ -276,7 +281,8 @@ class indice extends clsCadastro
           $conteudo .= '<div style="margin-bottom: 10px; float: left">';
           $conteudo .= "  <label style='display: block; float: left; width: 250px'><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</label>";
           $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7'></label>";
-          $conteudo .= "  <label style='display: block; float: left'><input type='checkbox' name='usar_componente[$registro->id]' value='1' ". ($usarComponente == TRUE ? $checked : '') .">($cargaComponente h)</label>";
+          $conteudo .= "  <label style='display: block; float: left'><input type='checkbox' id='usar_componente[]' name='usar_componente[$registro->id]' value='1' ". ($usarComponente == TRUE ? $checked : '') .">($cargaComponente h)</label>";
+
           $conteudo .= '</div>';
           $conteudo .= '<br style="clear: left" />';
 
@@ -534,6 +540,11 @@ function getDisciplina(xml_disciplina)
     conteudo += '  <label span="display: block; float: left">Usar padrão do componente?</span>';
     conteudo += '</div>';
     conteudo += '<br style="clear: left" />';
+    conteudo += '<div style="margin-bottom: 10px; float: left">';
+    conteudo += "  <label style='display: block; float: left; width: 350px;'><input type='checkbox' name='CheckTodos' onClick='marcarCheck("+'"disciplinas[]"'+");'/>Marcar Todos</label>";
+    conteudo += "  <label style='display: block; float: left; width: 100px;'><input type='checkbox' name='CheckTodos2' onClick='marcarCheck("+'"usar_componente[]"'+");';/>Marcar Todos</label>";
+    conteudo += '</div>';
+    conteudo += '<br style="clear: left" />';    
 
     for (var i = 0; i < DOM_array.length; i++) {
       id = DOM_array[i].getAttribute("cod_disciplina");
@@ -541,7 +552,7 @@ function getDisciplina(xml_disciplina)
       conteudo += '<div style="margin-bottom: 10px; float: left">';
       conteudo += '  <label style="display: block; float: left; width: 250px;"><input type="checkbox" name="disciplinas['+ id +']" id="disciplinas[]" value="'+ id +'">'+ DOM_array[i].firstChild.data +'</label>';
       conteudo += '  <label style="display: block; float: left; width: 100px;"><input type="text" name="carga_horaria['+ id +']" value="" size="5" maxlength="7"></label>';
-      conteudo += '  <label style="display: block; float: left"><input type="checkbox" name="usar_componente['+ id +']" value="1">('+ DOM_array[i].getAttribute("carga_horaria") +' h)</label>';
+      conteudo += '  <label style="display: block; float: left"><input type="checkbox" id="usar_componente[]" name="usar_componente['+ id +']" value="1">('+ DOM_array[i].getAttribute("carga_horaria") +' h)</label>';    
       conteudo += '</div>';
       conteudo += '<br style="clear: left" />';
     }
@@ -624,4 +635,28 @@ function atualizaLstSerie(xml)
     campoSerie.disabled = true;
   }
 }
+
+function marcarCheck(idValue) {
+    // testar com formcadastro
+    var contaForm = document.formcadastro.elements.length;
+    var campo = document.formcadastro;
+    var i;
+    if (idValue == 'disciplinas[]'){
+      for (i=0; i<contaForm; i++) {
+          if (campo.elements[i].id == idValue) {
+
+              campo.elements[i].checked = campo.CheckTodos.checked;
+          }
+      }
+    }else {
+      for (i=0; i<contaForm; i++) {
+          if (campo.elements[i].id == idValue) {
+
+              campo.elements[i].checked = campo.CheckTodos2.checked;
+           }
+       }
+
+    }
+     
+} 
 </script>
