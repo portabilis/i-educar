@@ -171,6 +171,7 @@ class indice extends clsCadastro
     // ao cadastrar pessoa do pai ou mãe apartir do cadastro de outra pessoa,
     // é enviado o tipo de cadastro (pai ou mae).
     $parentType = isset($_REQUEST['parent_type']) ? $_REQUEST['parent_type'] : '';
+    $naturalidadeObrigatoria = ($parentType == '' ? true : false);
 
 
      // sexo
@@ -574,7 +575,8 @@ class indice extends clsCadastro
 
     // naturalidade
 
-    $options       = array('label' => 'Naturalidade', 'required'   => true);
+    //$options       = array('label' => 'Naturalidade', 'required'   => true);
+    $options       = array('label' => 'Naturalidade', 'required'   => $naturalidadeObrigatoria); 
 
     $helperOptions = array('objectName'         => 'naturalidade',
                            'hiddenInputOptions' => array('options' => array('value' => $this->naturalidade_id)));
