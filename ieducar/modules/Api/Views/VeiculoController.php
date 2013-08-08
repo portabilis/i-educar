@@ -66,11 +66,11 @@ class VeiculoController extends ApiCoreController
     $veiculo->cod_veiculo = $id;
     // após cadastro não muda mais id pessoa
 
-    $veiculo->descricao                          = $this->getRequest()->descricao;
-    $veiculo->placa                              = $this->getRequest()->placa;
+    $veiculo->descricao                          = Portabilis_String_Utils::toLatin1($this->getRequest()->descricao);
+    $veiculo->placa                              = Portabilis_String_Utils::toLatin1($this->getRequest()->placa);
     $veiculo->renavam                            = $this->getRequest()->renavam;
     $veiculo->chassi                             = $this->getRequest()->chassi;
-    $veiculo->marca                              = $this->getRequest()->marca;
+    $veiculo->marca                              = Portabilis_String_Utils::toLatin1($this->getRequest()->marca);
     $veiculo->passageiros                        = $this->getRequest()->passageiros; 
     $veiculo->ano_fabricacao                     = $this->getRequest()->ano_fabricacao;
     $veiculo->ano_modelo                         = $this->getRequest()->ano_modelo; 
