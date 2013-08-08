@@ -159,7 +159,7 @@ class indice extends clsCadastro
     $anoLetivoHelperOptions = array('situacoes' => array('em_andamento', 'nao_iniciado'));
 
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie'));
-    $this->inputsHelper()->dynamic('turma', array('required' => false, 'option value' => 'Enturmar depois'));
+    $this->inputsHelper()->dynamic('turma', array('required' => false, 'option value' => 'Selecione uma turma'));
     $this->inputsHelper()->dynamic('anoLetivo', array('label' => 'Ano destino'), $anoLetivoHelperOptions);
     
 

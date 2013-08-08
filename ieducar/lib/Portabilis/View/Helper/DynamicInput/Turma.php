@@ -80,7 +80,7 @@ class Portabilis_View_Helper_DynamicInput_Turma extends Portabilis_View_Helper_D
       }
     }
 
-    return $this->insertOption(null, "Enturmar depois", $resources);
+    return $this->insertOption(null, "Selecione uma turma", $resources);
   }
 
   protected function turmasPorAno($escolaId, $ano) {
