@@ -29,7 +29,8 @@
  */
 
 // Inclui arquivo de bootstrapping
-require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/bootstrap.php';
+//require_once '/home/rafael/ieducar/ieducar/includes/bootstrap.php';
+require_once '../includes/bootstrap.php';
 
 // redireciona requisições, caso configurado
 if ($GLOBALS['coreExt']['Config']->app->routes &&
@@ -717,7 +718,6 @@ class clsBase extends clsConfig
         $this->CadastraAcesso();
         $saida_geral = $this->MakeHeadHtml();
 
-        // @todo else ruim, colocar abre e fecha colchetes ao redor de foreach.
         if ($this->renderMenu) {
           $saida_geral .= $this->MakeBody();
         }

@@ -574,7 +574,7 @@ class indice extends clsCadastro
 
     // naturalidade
 
-    $options       = array('label' => 'Naturalidade', 'required'   => false);
+    $options       = array('label' => 'Naturalidade', 'required'   => true);
 
     $helperOptions = array('objectName'         => 'naturalidade',
                            'hiddenInputOptions' => array('options' => array('value' => $this->naturalidade_id)));

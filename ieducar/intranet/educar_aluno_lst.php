@@ -29,6 +29,7 @@ require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'Educacenso/Model/AlunoDataMapper.php';
+require_once 'include/localizacaoSistema.php';
 
 class clsIndexBase extends clsBase
 {
@@ -36,7 +37,8 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Aluno" );
 		$this->processoAp = "578";
-	}
+                $this->addEstilo( "localizacaoSistema" );
+        }
 }
 
 class indice extends clsListagem
@@ -112,7 +114,9 @@ class indice extends clsListagem
 		$this->campoTexto("nome_mae", "Nome da Mãe", $this->nome_mae, 50, 255);
 		$this->campoTexto("nome_responsavel", "Nome do Responsável", $this->nome_responsavel, 50, 255);
 
-		$obj_permissoes = new clsPermissoes();
+		
+                
+                $obj_permissoes = new clsPermissoes();
 		$cod_escola = $obj_permissoes->getEscola( $this->pessoa_logada );
 		if ($cod_escola)
 		{
@@ -131,7 +135,7 @@ class indice extends clsListagem
 
 		$this->addCabecalhos( array(
 			"C&oacute;digo Aluno",
-      "Código INEP",
+                        "Código INEP",
 			"Nome do Aluno",
 			"Nome da Mãe",
 			"Nome do Respons&aacute;vel",
@@ -170,7 +174,7 @@ class indice extends clsListagem
 			$this->nome_pai,
 			$this->nome_mae,
 			$this->nome_responsavel,
-      $this->cod_inep
+                        $this->cod_inep
 		);
 
 		$total = $aluno->_total;
@@ -209,7 +213,16 @@ class indice extends clsListagem
 		}
 		//**
 		$this->largura = "100%";
-	}
+	
+                $localizacao = new LocalizacaoSistema();
+                $localizacao->entradaCaminhos( array(
+                    $_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
+                    "educar_index.php"                  => "Escola",
+                    ""                                  => "Lista de Aluno"
+                ));
+                $this->enviaLocalizacao($localizacao->montar());
+    
+        }
 
 	protected function loadNomeMae($aluno) {
 		$nome        = $aluno['nm_mae'];
@@ -221,8 +234,8 @@ class indice extends clsListagem
     	$pessoaMae   = new clsPessoaFj($pessoaAluno['idpes_mae']);
     	$pessoaMae   = $pessoaMae->detalhe();
     	$nome        = $pessoaMae['nome'];
-    }
-
+         }
+         
     return $nome;
 	}
 
@@ -236,10 +249,14 @@ class indice extends clsListagem
     catch(Exception $e) {
     	$id = '';
     }
-
+                
     return $id;
-	}
-}
+      
+    }
+
+        
+    }
+      
 // cria uma extensao da classe base
 $pagina = new clsIndexBase();
 // cria o conteudo
