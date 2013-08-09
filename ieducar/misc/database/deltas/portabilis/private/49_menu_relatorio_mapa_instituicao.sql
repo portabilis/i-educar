@@ -1,8 +1,8 @@
  	-- //
   
  	--
- 	-- Cria o relatório: Boletim Escolar - Ed. Infantil Semestral e exclui modelo Boletim Professor - Educação Infantil
-	-- @author   Ricardo Bortolotto Dagostim <ricardo@portabilis.com.br>
+ 	-- Cria o menu para o relatório Mapa Quantitativo de Matrículas
+	-- @author   Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  	-- @license  @@license@@
  	-- @version  $Id$  
   
