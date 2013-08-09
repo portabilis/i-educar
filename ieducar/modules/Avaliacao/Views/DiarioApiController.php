@@ -50,6 +50,7 @@ require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
 
 require_once 'Portabilis/Controller/ApiCoreController.php';
 require_once 'Portabilis/Array/Utils.php';
+require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Object/Utils.php';
 
 class DiarioApiController extends ApiCoreController
@@ -535,7 +536,8 @@ class DiarioApiController extends ApiCoreController
 
     if ($this->canGetMatriculas()) {
       $alunos = new clsPmieducarMatriculaTurma();
-      $alunos->setOrderby('nome');
+      $alunos->setOrderby("translate(pessoa.nome,'".Portabilis_String_Utils::toLatin1(åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ)."', '".Portabilis_String_Utils::toLatin1(aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN)."')
+");
 
       $alunos = $alunos->lista(
         $this->getRequest()->matricula_id,
