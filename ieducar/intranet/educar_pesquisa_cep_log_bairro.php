@@ -214,7 +214,8 @@ class miolo1 extends clsListagem
     $this->largura = '100%';
     $this->addPaginador2('educar_pesquisa_cep_log_bairro.php', $total, $_GET,
       $this->nome, $limite);
-
+    
+/*
     if ($_GET['param']) {
       $this->rodape = '
         <table border="0" cellspacing="0" cellpadding="0" width="100%" align="center">
@@ -236,7 +237,7 @@ class miolo1 extends clsListagem
         </table>',
         $this->funcao_js
       );
-    }
+    }*/
 
     @session_write_close();
   }

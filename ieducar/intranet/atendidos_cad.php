@@ -623,7 +623,8 @@ class indice extends clsCadastro
     // considera como endereço localizado por CEP quando alguma das variaveis de instancia
     // idbai (bairro) ou idlog (logradouro) estão definidas, neste caso desabilita a edição
     // dos campos definidos via CEP.
-    $desativarCamposDefinidosViaCep = ($this->idbai || $this->idlog);
+    //$desativarCamposDefinidosViaCep = ($this->idbai || $this->idlog);
+    $desativarCamposDefinidosViaCep = true;
 
     $this->campoCep(
       'cep_',
