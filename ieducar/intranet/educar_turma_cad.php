@@ -235,20 +235,20 @@ class indice extends clsCadastro
         }
       }
     }
-    /*
+    
     $script = "javascript:showExpansivelIframe(520, 550, 'educar_serie_cad_pop.php?ref_ref_cod_serie=sim');";
 
     if ($this->ref_cod_instituicao && $this->ref_cod_escola   && $this->ref_cod_curso) {
-      $script = sprintf("<img id='img_colecao' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick='%s'>",
+      $script = sprintf("<div id='img_colecao' border='0' onclick='%s'>",
                   $script);
     }
     else {
-      $script = sprintf("<img id='img_colecao' style='display: none;' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick='%s'>",
+      $script = sprintf("<div id='img_colecao' border='0' onclick='%s'>",
                   $script);
-    }*/
+    }
 
     $this->campoLista('ref_ref_cod_serie', 'S&eacute;rie', $opcoes_serie, $this->ref_ref_cod_serie,
-      '', FALSE, '', NULL, $bloqueia); 
+      '', FALSE, '', $script, $bloqueia); 
 
     if ($anoVisivel)
       $this->inputsHelper()->dynamic('anoLetivo'); 
@@ -309,19 +309,19 @@ class indice extends clsCadastro
       }
     }
 
-    /*$script = "javascript:showExpansivelIframe(520, 170, 'educar_turma_tipo_cad_pop.php');";
+    $script = "javascript:showExpansivelIframe(520, 170, 'educar_turma_tipo_cad_pop.php');";
 
     if ($this->ref_cod_instituicao && $this->ref_cod_escola && $this->ref_cod_curso) {
-      $script = sprintf("<img id='img_turma' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick='%s'>",
+      $script = sprintf("<div id='img_turma' border='0' onclick='%s'>",
                   $script);
     }
     else {
-      $script = sprintf("<img id='img_turma' style='display: none;' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick='%s'>",
+      $script = sprintf("<div id='img_turma' border='0' onclick='%s'>",
                   $script);
-    }*/
+    }
 
     $this->campoLista('ref_cod_turma_tipo', 'Tipo de Turma', $opcoes,
-      $this->ref_cod_turma_tipo, '', FALSE, '', null);
+      $this->ref_cod_turma_tipo, '', FALSE, '', $script);
 
     $this->campoTexto('nm_turma', 'Turma', $this->nm_turma, 30, 255, TRUE);
 
