@@ -252,6 +252,8 @@ class indice extends clsCadastro
 
     if ($anoVisivel)
       $this->inputsHelper()->dynamic('anoLetivo'); 
+    else
+      $this->campoOculto('ano',$this->ano);
 
     // Infra prédio cômodo
     $opcoes = array('' => 'Selecione');
