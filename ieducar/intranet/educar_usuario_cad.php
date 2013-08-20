@@ -248,8 +248,9 @@ class indice extends clsCadastro
 
 		// cadastra os menus que o usuario tem acesso
 		$obj_menu_func = new clsMenuFuncionario($this->cod_usuario);
-		$obj_menu_func->exclui_todos(55);
-		$obj_menu_func->exclui_todos(57);
+		//$obj_menu_func->exclui_todos(55);
+		//$obj_menu_func->exclui_todos(57);
+		$obj_menu_func->exclui_todos();
 
 		//echo $this->cod_usuario;
 
