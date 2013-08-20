@@ -50,6 +50,8 @@ function getPonto( xml_ponto )
 
 // before page is ready
 
+$deleteButton = $j('<input value=" Excluir " type="button" style="display: inline; margin-left: 6px;">').html('')
+                              .addClass('botaolistagem').insertAfter('#btn_enviar');
 var $idField        = $j('#id');
 var $nomeField      = $j('#pessoa_nome');
 
@@ -87,6 +89,8 @@ resourceOptions.handleGet = function(dataResponse) {
   $resourceNotice.hide();
 
   $deleteButton.removeAttr('disabled').show();
+  
+  $('<input>');
   if (dataResponse.pessoa)
     getPersonDetails(dataResponse.pessoa);
 

@@ -263,7 +263,7 @@ class clsModulesItinerarioTransporteEscolar
    * @return array
    */
   function lista($cod_itinerario_transporte_escolar = NULL, $ref_cod_rota_transporte_escolar = NULL,
-   $seq = NULL , $ref_cod_veiculo = NULL, $tipo = NULL)
+   $seq = NULL , $ref_cod_veiculo = NULL, $tipo = NULL, $ref_cod_ponto_transporte_escolar = NULL)
   {
     $sql = "SELECT {$this->_campos_lista},
      (SELECT descricao
@@ -299,6 +299,11 @@ class clsModulesItinerarioTransporteEscolar
       $filtros .= "{$whereAnd} tipo = '{$tipo}'";
       $whereAnd = " AND ";
     }
+
+    if (is_numeric($ref_cod_ponto_transporte_escolar)){
+      $filtros .= "{$whereAnd} ref_cod_ponto_transporte_escolar = '{$ref_cod_ponto_transporte_escolar}'";
+      $whereAnd = " AND ";
+    }    
 
     $db = new clsBanco();
     $countCampos = count(explode(',', $this->_campos_lista))+2;

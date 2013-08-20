@@ -202,8 +202,7 @@ class EmpresaController extends ApiCoreController
         $this->messenger->append('Cadastro removido com sucesso', 'success', false, 'error');
       }else
         $this->messenger->append('Aparentemente o cadastro não pode ser removido, por favor, verifique.',
-                                 'error', false, 'error');
-    
+                                 'error', false, 'error');    
 
     return array('id' => $id);
   }

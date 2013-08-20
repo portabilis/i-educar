@@ -41,7 +41,7 @@ class PontoController extends Portabilis_Controller_Page_EditController
 
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
   protected $_processoAp        = 21239;
-  protected $_deleteOption      = false;
+  protected $_deleteOption      = true;
 
   protected $_formMap    = array(
 
@@ -49,7 +49,7 @@ class PontoController extends Portabilis_Controller_Page_EditController
       'label'  => 'Código do ponto',
       'help'   => '',
     ),
-    'descricao' => array(
+    'desc' => array(
       'label'  => 'Descrição',
       'help'   => '',
     )
@@ -58,7 +58,7 @@ class PontoController extends Portabilis_Controller_Page_EditController
 
   protected function _preConstruct()
   {
-    $this->_options = $this->mergeOptions(array('edit_success' => '/intranet/transporte_ponto_lst.php','delete_sucess' => '/intranet/transporte_ponto_lst.php'), $this->_options);
+    $this->_options = $this->mergeOptions(array('edit_success' => '/intranet/transporte_ponto_lst.php','delete_success' => '/intranet/transporte_ponto_lst.php'), $this->_options);
   }
 
 
@@ -82,8 +82,8 @@ class PontoController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->integer('id', $options);
 
     // descricao
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('descricao')), 'required' => true, 'size' => 50, 'max_length' => 70);
-    $this->inputsHelper()->text('descricao', $options);
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc')), 'required' => true, 'size' => 50, 'max_length' => 70);
+    $this->inputsHelper()->text('desc', $options);
 
 
     $this->loadResourceAssets($this->getDispatcher());

@@ -88,7 +88,7 @@ class MotoristaController extends Portabilis_Controller_Page_EditController
 
   protected function _preConstruct()
   {
-    $this->_options = $this->mergeOptions(array('edit_success' => '/intranet/transporte_motorista_lst.php','delete_sucess' => '/intranet/transporte_motorista_lst.php'), $this->_options);
+    $this->_options = $this->mergeOptions(array('edit_success' => '/intranet/transporte_motorista_lst.php','delete_success' => '/intranet/transporte_motorista_lst.php'), $this->_options);
   }
 
 
@@ -132,18 +132,9 @@ class MotoristaController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->date('vencimento_cnh',$options);  
 
     // Codigo da empresa
-
-
-     $options       = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('ref_cod_empresa_transporte_escolar')), 'required'   => true);  
-
-    //$helperOptions = array('objectName'         => 'ref_cod_empresa_transporte_escolar',
-    //                       'hiddenInputOptions' => array('options' => array('value' => 'ref_cod_empresa_transporte_escolar')));
-
+    $options       = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('ref_cod_empresa_transporte_escolar')), 'required'   => true);  
     $this->inputsHelper()->simpleSearchEmpresa('ref_cod_empresa_transporte_escolarf', $options);
-/*
-    $options = array('label' =>Portabilis_String_Utils::toLatin1($this->_getLabel('ref_cod_empresa_transporte_escolar')), 'required' => true, 'size' => 10,);
-    $this->inputsHelper()->integer('ref_cod_empresa_transporte_escolar',$options);        
-*/
+
     // observações    
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('observacao')), 'required' => false, 'size' => 50, 'max_length' => 255);
     $this->inputsHelper()->textArea('observacao', $options);

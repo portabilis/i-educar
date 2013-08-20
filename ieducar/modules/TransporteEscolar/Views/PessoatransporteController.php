@@ -43,7 +43,7 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
 
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
   protected $_processoAp        = 21240;
-  protected $_deleteOption      = false;
+  protected $_deleteOption      = true;
 
   protected $_formMap    = array(
 
@@ -76,7 +76,7 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
 
   protected function _preConstruct()
   {
-    $this->_options = $this->mergeOptions(array('edit_success' => '/intranet/transporte_pessoa_lst.php','delete_sucess' => '/intranet/transporte_pessoa_lst.php'), $this->_options);
+    $this->_options = $this->mergeOptions(array('edit_success' => '/intranet/transporte_pessoa_lst.php','delete_success' => '/intranet/transporte_pessoa_lst.php'), $this->_options);
   }
 
 
@@ -131,6 +131,10 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
 
 
     $this->loadResourceAssets($this->getDispatcher());
+  }
+
+  function Excluir(){
+    die( $this->getOption('delete_success') );
   }
 
 }
