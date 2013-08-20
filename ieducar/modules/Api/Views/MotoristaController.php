@@ -143,7 +143,7 @@ class MotoristaController extends ApiCoreController
   protected function validateIfMotoristaIsNotInUse(){
 
       $v = new clsModulesVeiculo();
-      $lista = $v->lista(null,null,null,null,$this->getRequest()->id);
+      $lista = $v->lista(null,null,null,null,null,null,null,null,$this->getRequest()->id);
       if(is_array($lista) && count($lista)>0){
         $this->messenger->append('Não é possível excluir uma motorista responsável por um veículo.',
                                  'error', false, 'error');

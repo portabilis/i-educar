@@ -33,6 +33,8 @@
  */
 
 require_once 'include/modules/clsModulesEmpresaTransporteEscolar.inc.php';
+require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
+require_once 'include/modules/clsModulesMotorista.inc.php';
 
 require_once 'Portabilis/Controller/ApiCoreController.php';
 require_once 'Portabilis/Array/Utils.php';
@@ -103,11 +105,34 @@ class EmpresaController extends ApiCoreController
 
       $empresa['nome']             = $this->loadNomePessoa($id);
       $empresa['pessoajnome']      = $this->loadNomePessoaj($id);
+      $empresa['observacao']       = Portabilis_String_Utils::toUtf8($empresa['observacao']);
       return $empresa;
     }
 
   }
 
+  protected function validateIfEmpresaIsNotInUse(){
+
+      $id = $this->getRequest()->id;
+
+      $pt = new clsModulesRotaTransporteEscolar();
+      $lista = $pt->lista(null,null,null,null,null,$id );
+      if(is_array($lista) && count($lista)>0){
+        $this->messenger->append('Não é possível excluir uma empresa que está vinculada a uma rota.',
+                                 'error', false, 'error');
+        return false;
+      }else{
+        $motorista = new clsModulesMotorista();
+        $lst = $motorista->lista(null,null,null,null,$id );
+
+        if(is_array($lst) && count($lst)>0){
+          $this->messenger->append('Não é possível excluir uma empresa que está vinculada a um motorista.',
+                                 'error', false, 'error');
+          return false;
+        }else
+          return true;
+      }
+  }
 
   protected function sqlsForNumericSearch() {
 
@@ -221,10 +246,16 @@ class EmpresaController extends ApiCoreController
     elseif ($this->isRequestFor('put', 'empresa'))
       $this->appendResponse($this->put());
 
-    elseif ($this->isRequestFor('delete', 'empresa'))
-      $this->appendResponse($this->delete());
-
-    else
+    elseif ($this->isRequestFor('delete', 'empresa')){
+        if ($this->validateIfEmpresaIsNotInUse()){
+          $this->appendResponse($this->delete());
+          echo "<script language= \"JavaScript\">
+                location.href=\"intranet/transporte_empresa_lst.php\";
+              </script>";
+          die();
+        }                
+        
+    }else
       $this->notImplementedOperationError();
   }
 }
