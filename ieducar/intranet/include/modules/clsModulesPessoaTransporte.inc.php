@@ -220,6 +220,9 @@ class clsModulesPessoaTransporte
     if (is_numeric($this->ref_cod_ponto_transporte_escolar)) {
         $set .= "{$gruda}ref_cod_ponto_transporte_escolar = '{$this->ref_cod_ponto_transporte_escolar}'";
         $gruda = ", ";
+    }else{
+        $set .= "{$gruda}ref_cod_ponto_transporte_escolar = null";
+        $gruda = ", ";
     }
 
     if (is_numeric($this->ref_idpes_destino)) {
@@ -447,8 +450,7 @@ class clsModulesPessoaTransporte
    * @return bool
    */
   function excluir()
-  {
-    
+  {    
     if (is_numeric($this->cod_pessoa_transporte)) {
       $sql = "DELETE FROM {$this->_tabela} WHERE cod_pessoa_transporte = '{$this->cod_pessoa_transporte}'";
       $db = new clsBanco();

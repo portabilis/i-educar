@@ -1,5 +1,8 @@
 // before page is ready
 
+$deleteButton = $j('<input value=" Excluir " type="button" style="display: inline; margin-left: 6px;">').html('')
+                              .addClass('botaolistagem').insertAfter('#btn_enviar');
+
 var $idField        = $j('#id');
 var $nomeField      = $j('#pessoa_nome');
 
@@ -41,7 +44,7 @@ resourceOptions.handleGet = function(dataResponse) {
     getPersonDetails(dataResponse.pessoa);
 
   $idField.val(dataResponse.id);
-  $j('#descricao').val(dataResponse.descricao);
+  $j('#desc').val(dataResponse.desc);
 
 };
 
