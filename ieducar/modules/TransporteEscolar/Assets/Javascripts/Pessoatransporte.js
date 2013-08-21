@@ -102,7 +102,7 @@ resourceOptions.handleGet = function(dataResponse) {
 
   if (dataResponse.pessoaj){
     $j('#pessoaj_destino').val(dataResponse.pessoaj+' - '+dataResponse.pessoaj_nome);  
-    $j('#pessoaj_id').val(dataResponse.ref_cod_empresa_transporte_escolar);    
+    $j('#pessoaj_id').val(dataResponse.pessoaj);    
   }
   
 
