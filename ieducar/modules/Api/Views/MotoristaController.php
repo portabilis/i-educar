@@ -33,6 +33,7 @@
  */
 
 require_once 'include/modules/clsModulesMotorista.inc.php';
+require_once 'include/modules/clsModulesVeiculo.inc.php';
 
 require_once 'Portabilis/Controller/ApiCoreController.php';
 require_once 'Portabilis/Array/Utils.php';
@@ -119,23 +120,38 @@ class MotoristaController extends ApiCoreController
 
       $motorista = Portabilis_Array_Utils::filter($motorista, $attrs);
 
-      $motorista['nome']             = $this->loadNomePessoa($id);
-      $motorista['empresa']          = $this->loadNomeEmpresa($id);
+      $motorista['nome']             = Portabilis_String_Utils::toUtf8($this->loadNomePessoa($id));
+      $motorista['empresa']          = Portabilis_String_Utils::toUtf8($this->loadNomeEmpresa($id));
       $motorista['dt_habilitacao']   = Portabilis_Date_Utils::pgSQLToBr($motorista['dt_habilitacao']);
       $motorista['vencimento_cnh']   = Portabilis_Date_Utils::pgSQLToBr($motorista['vencimento_cnh']);      
+      $motorista['cnh']              = Portabilis_String_Utils::toUtf8($motorista['cnh']);
+      $motorista['observacao']              = Portabilis_String_Utils::toUtf8($motorista['observacao']);
       return $motorista;
 
   }
 
-    protected function validateSizeOfObservacao(){
-      if (strlen($this->getRequest()->observacao)<=255)
-        return true;
-      else{
-        $this->messenger->append('O campo Observações não pode ter mais que 255 caracteres.');
-        return false;
-      }
-
+  protected function validateSizeOfObservacao(){
+    if (strlen($this->getRequest()->observacao)<=255)
+      return true;
+    else{
+      $this->messenger->append('O campo Observações não pode ter mais que 255 caracteres.');
+      return false;
     }
+
+  }
+
+  protected function validateIfMotoristaIsNotInUse(){
+
+      $v = new clsModulesVeiculo();
+      $lista = $v->lista(null,null,null,null,null,null,null,null,$this->getRequest()->id);
+      if(is_array($lista) && count($lista)>0){
+        $this->messenger->append('Não é possível excluir uma motorista responsável por um veículo.',
+                                 'error', false, 'error');
+        return false;
+      }else{
+        return true;
+      }
+  }
 
   protected function canGet(){
 /*
@@ -214,9 +230,16 @@ class MotoristaController extends ApiCoreController
     elseif ($this->isRequestFor('put', 'motorista'))
       $this->appendResponse($this->put());
 
-    elseif ($this->isRequestFor('delete', 'motorista'))
-      $this->appendResponse($this->delete());
-    else
+    elseif ($this->isRequestFor('delete', 'motorista')){
+        if ($this->validateIfMotoristaIsNotInUse()){
+          $this->appendResponse($this->delete());
+          echo "<script language= \"JavaScript\">
+                location.href=\"intranet/transporte_motorista_lst.php\";
+              </script>";
+          die();
+        }                
+        
+    }else
       $this->notImplementedOperationError();
   }
 }

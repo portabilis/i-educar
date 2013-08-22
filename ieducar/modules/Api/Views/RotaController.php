@@ -31,8 +31,9 @@
  * @since   Arquivo disponível desde a versão ?
  * @version   $Id$
  */
-
+require_once 'include/modules/clsModulesPessoaTransporte.inc.php';
 require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
+require_once 'include/modules/clsModulesItinerarioTransporteEscolar.inc.php';
 
 require_once 'Portabilis/Controller/ApiCoreController.php';
 require_once 'Portabilis/Array/Utils.php';
@@ -41,7 +42,7 @@ require_once 'Portabilis/Date/Utils.php';
 
 class RotaController extends ApiCoreController
 {
-  protected $_processoAp        = 578; //verificar
+  protected $_processoAp        = 21238; //verificar
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA; // verificar
 
   protected function loadNomePessoaj($id) {
@@ -118,10 +119,23 @@ class RotaController extends ApiCoreController
 
       $rota = Portabilis_Array_Utils::filter($rota, $attrs);
       
-      $rota['nomeEmpresa']   = $this->loadNomeEmpresa($id);
-      $rota['nomeDestino']   = $this->loadNomePessoaj($id);
-
+      $rota['nomeEmpresa']   = Portabilis_String_Utils::toUtf8($this->loadNomeEmpresa($id));
+      $rota['nomeDestino']   = Portabilis_String_Utils::toUtf8($this->loadNomePessoaj($id));
+      $rota['desc']          = Portabilis_String_Utils::toUtf8($rota['desc']);
       return $rota;
+  }
+
+  protected function validateIfRotaIsNotInUse(){
+
+      $pt = new clsModulesPessoaTransporte();
+      $lista = $pt->lista(null,null,$this->getRequest()->id);
+      if(is_array($lista) && count($lista)>0){
+        $this->messenger->append('Não é possível excluir uma rota que está vinculada a uma pessoa.',
+                                 'error', false, 'error');
+        return false;
+      }else{
+        return true;
+      }
   }
 
   protected function post() {
@@ -161,17 +175,17 @@ class RotaController extends ApiCoreController
   protected function delete() {
     $id = $this->getRequest()->id;
 
+    $itinerario          = new clsModulesItinerarioTransporteEscolar();
+    $itinerario->excluirTodos($id);
 
-      $rota                  = new clsModulesRotaTransporteEscolar();
-      $rota->cod_rota_transporte_escolar       = $id;
+    $rota                  = new clsModulesRotaTransporteEscolar();
+    $rota->cod_rota_transporte_escolar       = $id;
       
-
-      if($rota->excluir()){
-        $this->messenger->append('Cadastro removido com sucesso', 'success', false, 'error');
-      }else
-        $this->messenger->append('Aparentemente o cadastro não pode ser removido, por favor, verifique.',
-                                 'error', false, 'error');
-    
+    if($rota->excluir()){
+      $this->messenger->append('Cadastro removido com sucesso', 'success', false, 'error');
+    }else
+      $this->messenger->append('Aparentemente o cadastro não pode ser removido, por favor, verifique.',
+                                 'error', false, 'error');   
 
     return array('id' => $id);
   }
@@ -194,11 +208,14 @@ class RotaController extends ApiCoreController
       $this->appendResponse($this->put());
 
     elseif ($this->isRequestFor('delete', 'rota')){
-        $this->appendResponse($this->delete());
-        // Gambi para o caso de não conseguir redirencionar pelo recurso
-       /* echo "<script language= \"JavaScript\">
+        if ($this->validateIfRotaIsNotInUse()){
+          $this->appendResponse($this->delete());
+          echo "<script language= \"JavaScript\">
                 location.href=\"intranet/transporte_rota_lst.php\";
-              </script>";*/ 
+              </script>";
+          die();
+        }                
+        
     }else
       $this->notImplementedOperationError();
   }

@@ -41,7 +41,7 @@ class RotaController extends Portabilis_Controller_Page_EditController
 
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
   protected $_processoAp        = 21238;
-  protected $_deleteOption      = false;
+  protected $_deleteOption      = true;
 
   protected $_formMap    = array(
 
@@ -86,7 +86,7 @@ class RotaController extends Portabilis_Controller_Page_EditController
 
   protected function _preConstruct()
   {
-    $this->_options = $this->mergeOptions(array('edit_success' => '/intranet/transporte_rota_lst.php','delete_sucess' => '/intranet/transporte_rota_lst.php'), $this->_options);
+    $this->_options = $this->mergeOptions(array('edit_success' => '/intranet/transporte_rota_lst.php','delete_success' => '/intranet/transporte_rota_lst.php'), $this->_options);
   }
 
 

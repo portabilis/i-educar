@@ -42,7 +42,7 @@ require_once 'Portabilis/Date/Utils.php';
 
 class PessoatransporteController extends ApiCoreController
 {
-  protected $_processoAp        = 578; //verificar
+  protected $_processoAp        = 21240; //verificar
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA; // verificar
    
   protected function loadNomePessoaj($id) {
@@ -147,17 +147,19 @@ class PessoatransporteController extends ApiCoreController
   protected function delete() {
     $id = $this->getRequest()->id;
 
+    
 
     $pt                  = new clsModulesPessoaTransporte();
     $pt->cod_pessoa_transporte       = $id;
       
-    if($ponto->excluir()){
+    if($pt->excluir()){
+
      $this->messenger->append('Cadastro removido com sucesso', 'success', false, 'error');
     }else
       $this->messenger->append('Aparentemente o cadastro não pode ser removido, por favor, verifique.',
                                'error', false, 'error');
     
-
+  
     return array('id' => $id);
   }
 
@@ -177,10 +179,10 @@ class PessoatransporteController extends ApiCoreController
 
     elseif ($this->isRequestFor('delete', 'pessoatransporte')){
         $this->appendResponse($this->delete());
-        // Gambi para o caso de não conseguir redirencionar pelo recurso
-       /* echo "<script language= \"JavaScript\">
-                location.href=\"intranet/transporte_ponto_lst.php\";
-              </script>";*/ 
+        echo "<script language= \"JavaScript\">
+                location.href=\"intranet/transporte_pessoa_lst.php\";
+              </script>";
+        die();
     }else
       $this->notImplementedOperationError();
   }

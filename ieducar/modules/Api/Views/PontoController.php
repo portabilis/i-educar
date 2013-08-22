@@ -32,6 +32,8 @@
  * @version   $Id$
  */
 
+require_once 'include/modules/clsModulesPessoaTransporte.inc.php';
+require_once 'include/modules/clsModulesItinerarioTransporteEscolar.inc.php';
 require_once 'include/modules/clsModulesPontoTransporteEscolar.inc.php';
 
 require_once 'Portabilis/Controller/ApiCoreController.php';
@@ -50,7 +52,7 @@ class PontoController extends ApiCoreController
     $ponto->cod_ponto_transporte_escolar = $id;
 
     // após cadastro não muda mais id pessoa
-    $ponto->descricao                     = Portabilis_String_Utils::toLatin1($this->getRequest()->descricao);
+    $ponto->descricao                     = Portabilis_String_Utils::toLatin1($this->getRequest()->desc);
 
     return (is_null($id) ? $ponto->cadastra() : $ponto->edita());
   }
@@ -65,13 +67,26 @@ class PontoController extends ApiCoreController
 
       $attrs  = array(
         'cod_ponto_transporte_escolar'  => 'id',
-        'descricao' => 'descricao'
       );
 
-      $ponto = Portabilis_Array_Utils::filter($ponto, $attrs);
+      $pt = Portabilis_Array_Utils::filter($ponto, $attrs);
+      $pt['desc'] = Portabilis_String_Utils::toUtf8($ponto['descricao']);
 
-      return $ponto;
+      return $pt;
   }
+
+  protected function validateIfPontoIsNotInUse(){
+      $itinerario          = new clsModulesItinerarioTransporteEscolar();
+      $lista = $itinerario->lista(NULL,NULL,NULL,NULL,NULL,$this->getRequest()->id);
+      if(is_array($lista) && count($lista)>0){
+        $this->messenger->append('Não é possível excluir um ponto que está vinculado a um itinerário.',
+                                 'error', false, 'error');
+        return false;
+      }else{
+        return true;
+      }
+  }
+
 
   protected function post() {
 
@@ -120,6 +135,15 @@ class PontoController extends ApiCoreController
   protected function delete() {
     $id = $this->getRequest()->id;
 
+    $pessoas = new clsModulesPessoaTransporte();
+    $lista = $pessoas->lista(NULL,NULL,NULL,$id);
+    
+    foreach($lista as $registro){
+      $editaPessoa = new clsModulesPessoaTransporte($registro['cod_pessoa_transporte'],
+        $registro['ref_cod_rota_transporte_escolar'],$registro['ref_idpes'],
+        null,$registro['ref_idpes_destino'],$registro['observacao']);
+      $editaPessoa->edita();
+    }
 
     $ponto                  = new clsModulesPontoTransporteEscolar();
     $ponto->cod_ponto_transporte_escolar       = $id;
@@ -152,11 +176,13 @@ class PontoController extends ApiCoreController
       $this->appendResponse($this->put());
 
     elseif ($this->isRequestFor('delete', 'ponto')){
+      if($this->validateIfPontoIsNotInUse()){
         $this->appendResponse($this->delete());
-        // Gambi para o caso de não conseguir redirencionar pelo recurso
-       /* echo "<script language= \"JavaScript\">
+        echo "<script language= \"JavaScript\">
                 location.href=\"intranet/transporte_ponto_lst.php\";
-              </script>";*/ 
+              </script>";
+        die();
+      }
     }else
       $this->notImplementedOperationError();
   }

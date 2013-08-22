@@ -158,6 +158,10 @@ class clsMenuFuncionario
         $db = new clsBanco();
         $db->Consulta("DELETE FROM menu_funcionario WHERE ref_ref_cod_pessoa_fj = '{$this->ref_ref_cod_pessoa_fj}' AND ref_cod_menu_submenu IN (SELECT cod_menu_submenu FROM menu_submenu WHERE ref_cod_menu_menu IN (SELECT cod_menu_menu FROM menu_menu WHERE cod_menu_menu = '{$int_cod_menu_menu}' OR ref_cod_menu_pai ='{$int_cod_menu_menu}'))");
         return TRUE;
+      }else{
+        $db = new clsBanco();
+        $db->Consulta("DELETE FROM menu_funcionario WHERE ref_ref_cod_pessoa_fj = '{$this->ref_ref_cod_pessoa_fj}' ");
+        return TRUE;
       }
     }
 

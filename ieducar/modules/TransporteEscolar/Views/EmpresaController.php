@@ -68,7 +68,7 @@ class EmpresaController extends Portabilis_Controller_Page_EditController
 
   protected function _preConstruct()
   {
-    $this->_options = $this->mergeOptions(array('edit_success' => '/intranet/transporte_empresa_lst.php','delete_sucess' => '/intranet/transporte_empresa_lst.php'), $this->_options);
+    $this->_options = $this->mergeOptions(array('edit_success' => '/intranet/transporte_empresa_lst.php','delete_success' => '/intranet/transporte_empresa_lst.php'), $this->_options);
   }
 
 

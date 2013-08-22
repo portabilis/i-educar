@@ -152,7 +152,7 @@ class clsDocumento
 				$campos .= ", tipo_cert_civil";
 				$values .= ", '{$this->tipo_cert_civil}'";
 			}
-			if( is_numeric( $this->num_termo ) and (!empty($this->num_termo)))
+			if( is_numeric( $this->num_termo ) and (!empty($this->num_termo))) 
 			{
 				$campos .= ", num_termo";
 				$values .= ", '{$this->num_termo}'";
@@ -162,7 +162,7 @@ class clsDocumento
 				$campos .= ", num_livro";
 				$values .= ", '{$this->num_livro}'";
 			}
-			if( is_numeric( $this->num_folha ) and (!empty($this->num_folha)))
+			if( is_numeric( $this->num_folha ) and (!empty($this->num_folha))) 
 			{
 				$campos .= ", num_folha";
 				$values .= ", '{$this->num_folha}'";
@@ -288,16 +288,16 @@ class clsDocumento
 			$gruda = ", ";
 		}
 
-		if( is_numeric( $this->num_termo ) and (!empty($this->num_termo)))
+		if( is_numeric( $this->num_termo ) and (!empty($this->num_termo))) 
 		{
 			$set .= $gruda."num_termo = '{$this->num_termo}'";
 			$gruda = ", ";
 		}
-		else
-		{
-			$set .= $gruda."num_termo = NULL";
-			$gruda = ", ";
-		}
+	    else
+    	{
+      		$set .= $gruda."num_termo = NULL";
+      		$gruda = ", ";
+    	} 		
 
 		if( is_string( $this->num_livro ) and (!empty($this->num_livro)))
 		{
@@ -310,16 +310,16 @@ class clsDocumento
 			$gruda = ", ";
 		}
 
-		if( is_numeric( $this->num_folha ) and (!empty($this->num_folha)))
+		if( is_numeric( $this->num_folha ) and (!empty($this->num_folha))) 
 		{
 			$set .= $gruda."num_folha = '{$this->num_folha}'";
 			$gruda = ", ";
 		}
-		else
-		{
-			$set .= $gruda."num_folha = NULL";
-			$gruda = ", ";
-		}
+	    else
+	    {
+		    $set .= $gruda."num_folha = NULL";
+		    $gruda = ", ";
+	    } 		
 
 		if( is_string( $this->data_emissao_cert_civil ) and (!empty($this->data_emissao_cert_civil)))
 		{

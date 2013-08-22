@@ -449,7 +449,7 @@ class clsModulesVeiculo
    */
   function lista($cod_veiculo = NULL, $descricao = NULL,
     $placa = NULL, $renavam = NULL,
-    $nome_motorista = NULL, $ref_cod_empresa_transporte_escolar = NULL, $marca = null, $ativo = null)
+    $nome_motorista = NULL, $ref_cod_empresa_transporte_escolar = NULL, $marca = null, $ativo = null, $ref_cod_motorista = NULL)
   {
     $sql = "SELECT {$this->_campos_lista}, (
           SELECT
@@ -499,6 +499,11 @@ class clsModulesVeiculo
 
     if (is_numeric($ref_cod_empresa_transporte_escolar)) {
       $filtros .= "{$whereAnd} ref_cod_empresa_transporte_escolar = '{$ref_cod_empresa_transporte_escolar}'";
+      $whereAnd = " AND ";
+    } 
+
+    if (is_numeric($ref_cod_motorista)) {
+      $filtros .= "{$whereAnd} ref_cod_motorista = '{$ref_cod_motorista}'";
       $whereAnd = " AND ";
     } 
 
