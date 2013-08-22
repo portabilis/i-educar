@@ -362,7 +362,7 @@ class indice extends clsCadastro
       'inline'      => true
     );
 
-    $this->inputsHelper()->text('termo_certidao_civil', $options);
+    $this->inputsHelper()->integer('termo_certidao_civil', $options);
 
 
     // livro certidao civil
@@ -391,7 +391,7 @@ class indice extends clsCadastro
       'inline'      => true
     );
 
-    $this->inputsHelper()->text('folha_certidao_civil', $options);
+    $this->inputsHelper()->integer('folha_certidao_civil', $options);
 
 
     // certidao nascimento (novo padrão)
