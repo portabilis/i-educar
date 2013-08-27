@@ -10,7 +10,7 @@
   VALUES (21242, 69, 2, 'Rotas de Transporte', 'module/Reports/RelatorioRota',null,3);  
 
   INSERT INTO pmicontrolesis.menu 
-  VALUES(21242,21242,20712,'Rotas de Transporte',5,'module/Reports/RelatorioRota','_self',2,17,192);  
+  VALUES(21242,21242,20712,'Rotas de Transporte',5,'module/Reports/RelatorioRota','_self',1,17,192);  
 
 	-- //@UNDO
   
