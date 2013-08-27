@@ -624,7 +624,7 @@
         handleMessages([{type : 'error', msg : 'Selecione alguma matrícula.'}], $actionButton, true);
       else{
 
-        if (confirm("Confirma remoção dos históricos selecionados?")){
+        if (confirm("Confirma remo\u00e7\u00e3o dos hist\u00f3ricos selecionados?")){
 
           $.each($('input.matricula:checked').closest('tr').find('.situacao'), function(indice, fieldSituacao){
             var $fieldSituacao = $(fieldSituacao);
