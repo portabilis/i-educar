@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once 'Portabilis/Date/Utils.php';
 
 class clsIndexBase extends clsBase
 {
@@ -85,6 +86,8 @@ class indice extends clsListagem
 	var $ref_cod_escola;
 	var $cod_biblioteca;
 
+	var $tipo_reserva;
+
 	function Gerar()
 	{
 		@session_start();
@@ -103,7 +106,8 @@ class indice extends clsListagem
 		$lista_busca = array(
 			"Cliente",
 			"Obra",
-			"Data Reserva"
+			"Data reserva",
+			"Data retirada"
 		);
 
 		// Filtros de Foreign Keys
@@ -124,7 +128,15 @@ class indice extends clsListagem
 		$this->campoOculto("ref_cod_exemplar", $this->ref_cod_exemplar);
 		$this->campoOculto("ref_cod_acervo", $this->ref_cod_acervo);
 
-		$this->campoData( "data_reserva", "Data Reserva", $this->data_reserva, false );
+		// Filtro verificando se ouve retirada
+		$resources = array( 1 => 'Todas',
+                       2 => 'Sem retirada',
+                       3 => 'Com retirada');
+
+    	$options = array('label' => 'Tipo de reserva', 'resources' => $resources, 'value' => $this->tipo_reserva);
+    	$this->inputsHelper()->select('tipo_reserva', $options);
+
+		$this->campoData( "data_reserva", "Data reserva", $this->data_reserva, false );
 
 		if ($this->ref_cod_biblioteca)
 		{
@@ -160,7 +172,8 @@ class indice extends clsListagem
 			1,
 			$this->ref_cod_biblioteca,
 			$this->ref_cod_instituicao,
-			$this->ref_cod_escola
+			$this->ref_cod_escola,
+			($this->tipo_reserva == 1 ? null : ($this->tipo_reserva == 2 ? true : false))
 		);
 
 		$total = $obj_reservas->_total;
@@ -173,6 +186,7 @@ class indice extends clsListagem
 				// muda os campos data
 				$registro["data_reserva_time"] = strtotime( substr( $registro["data_reserva"], 0, 16 ) );
 				$registro["data_reserva_br"] = date( "d/m/Y", $registro["data_reserva_time"] );
+				$registro["data_retirada_br"] = ($registro["data_retirada"] == null ? '-' :  Portabilis_Date_Utils::PgSqltoBr(substr($registro["data_retirada"],0,10) ));
 
 				// pega detalhes de foreign_keys
 				if( class_exists( "clsPmieducarExemplar" ) )
@@ -225,20 +239,21 @@ class indice extends clsListagem
 				}
 
 				$lista_busca = array(
-					"<a href=\"educar_reservas_det.php?cod_reserva={$registro["cod_reserva"]}\">{$registro["ref_cod_cliente"]}</a>",
-					"<a href=\"educar_reservas_det.php?cod_reserva={$registro["cod_reserva"]}\">{$registro["ref_cod_exemplar"]}</a>",
-					"<a href=\"educar_reservas_det.php?cod_reserva={$registro["cod_reserva"]}\">{$registro["data_reserva_br"]}</a>"
+					"<a href=\"\">{$registro["ref_cod_cliente"]}</a>",
+					"<a href=\"\">{$registro["ref_cod_exemplar"]}</a>",
+					"<a href=\"\">{$registro["data_reserva_br"]}</a>",
+					"<a href=\"\">{$registro["data_retirada_br"] }</a>"
 				);
 
 
 				if ($qtd_bibliotecas > 1 && ($nivel_usuario == 4 || $nivel_usuario == 8))
-					$lista_busca[] = "<a href=\"educar_reservas_det.php?cod_reserva={$registro["cod_reserva"]}\">{$registro["ref_cod_biblioteca"]}</a>";
+					$lista_busca[] = "<a href=\"\">{$registro["ref_cod_biblioteca"]}</a>";
 				else if ($nivel_usuario == 1 || $nivel_usuario == 2 || $nivel_usuario == 4)
-					$lista_busca[] = "<a href=\"educar_reservas_det.php?cod_reserva={$registro["cod_reserva"]}\">{$registro["ref_cod_biblioteca"]}</a>";
+					$lista_busca[] = "<a href=\"\">{$registro["ref_cod_biblioteca"]}</a>";
 				if ($nivel_usuario == 1 || $nivel_usuario == 2)
-					$lista_busca[] = "<a href=\"educar_reservas_det.php?cod_reserva={$registro["cod_reserva"]}\">{$registro["ref_cod_escola"]}</a>";
+					$lista_busca[] = "<a href=\"\">{$registro["ref_cod_escola"]}</a>";
 				if ($nivel_usuario == 1)
-					$lista_busca[] = "<a href=\"educar_reservas_det.php?cod_reserva={$registro["cod_reserva"]}\">{$registro["ref_cod_instituicao"]}</a>";
+					$lista_busca[] = "<a href=\"\">{$registro["ref_cod_instituicao"]}</a>";
 
 				$this->addLinhas($lista_busca);
 			}
@@ -247,7 +262,7 @@ class indice extends clsListagem
 		$obj_permissoes = new clsPermissoes();
 		if( $obj_permissoes->permissao_cadastra( 609, $this->pessoa_logada, 11 ) )
 		{
-			$this->acao = "go(\"educar_reservas_login_cad.php\")";
+			$this->acao = "go(\"/module/Biblioteca/Reserva\")";
 			$this->nome_acao = "Novo";
 		}
 
