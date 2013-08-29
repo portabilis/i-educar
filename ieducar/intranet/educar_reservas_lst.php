@@ -239,21 +239,21 @@ class indice extends clsListagem
 				}
 
 				$lista_busca = array(
-					"<a href=\"\">{$registro["ref_cod_cliente"]}</a>",
-					"<a href=\"\">{$registro["ref_cod_exemplar"]}</a>",
-					"<a href=\"\">{$registro["data_reserva_br"]}</a>",
-					"<a href=\"\">{$registro["data_retirada_br"] }</a>"
+					"{$registro["ref_cod_cliente"]}",
+					"{$registro["ref_cod_exemplar"]}",
+					"{$registro["data_reserva_br"]}",
+					"{$registro["data_retirada_br"] }"
 				);
 
 
 				if ($qtd_bibliotecas > 1 && ($nivel_usuario == 4 || $nivel_usuario == 8))
-					$lista_busca[] = "<a href=\"\">{$registro["ref_cod_biblioteca"]}</a>";
+					$lista_busca[] = "{$registro["ref_cod_biblioteca"]}";
 				else if ($nivel_usuario == 1 || $nivel_usuario == 2 || $nivel_usuario == 4)
-					$lista_busca[] = "<a href=\"\">{$registro["ref_cod_biblioteca"]}</a>";
+					$lista_busca[] = "{$registro["ref_cod_biblioteca"]}";
 				if ($nivel_usuario == 1 || $nivel_usuario == 2)
-					$lista_busca[] = "<a href=\"\">{$registro["ref_cod_escola"]}</a>";
+					$lista_busca[] = "{$registro["ref_cod_escola"]}";
 				if ($nivel_usuario == 1)
-					$lista_busca[] = "<a href=\"\">{$registro["ref_cod_instituicao"]}</a>";
+					$lista_busca[] = "{$registro["ref_cod_instituicao"]}";
 
 				$this->addLinhas($lista_busca);
 			}
