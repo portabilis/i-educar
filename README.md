@@ -1,7 +1,7 @@
 # i-Educar  
 i-Educar é um software público para gestão escolar, desenvolvido originalmente pela Prefeitura de Itajai-SC, o qual foi disponibilizado e apoiado pelo Governo Federal por meio do [Portal do Software Público Brasileiro](http://www.softwarepublico.gov.br/).  
   
-### Solicite demonstração do software c  
+### Solicite demonstração do software  
 Para solicitar uma demonstração, nos envie uma mensagem ou nos ligue por meio da nossa [página de contato](http://goo.gl/O0JBs).  
   
 ### Solicite prestação de serviço
