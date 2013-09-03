@@ -8,7 +8,7 @@
   
   
   insert into portal.menu_submenu values(999218,55,2,'Mapa Quantitativo das Matrículas','module/Reports/MapaQuantitativoMatriculas',NULL,3);
-  insert into pmicontrolesis.menu values(999218,999218,999300,'Mapa Quantitativo das Matrículas',2,'module/Reports/MapaQuantitativoMatriculas','_self',1,15,192);
+  insert into pmicontrolesis.menu values(999218,999218,999300,'Mapa Quantitativo das Matrículas',9,'module/Reports/MapaQuantitativoMatriculas','_self',1,15,192);
 
 
 	-- //@UNDO
