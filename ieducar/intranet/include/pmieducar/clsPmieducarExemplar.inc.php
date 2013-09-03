@@ -694,6 +694,33 @@ class clsPmieducarExemplar
 		$db = new clsBanco();
 		return $db->CampoUnico($sql);
 	}
+	
+	/**
+	 * Verifica se o tombo a ser cadastrado já não foi cadastrado
+	 *
+	 * @return boolean
+	 */
+	function retorna_tombo_valido($bibliotecaId, $exceptExemplarId = null, $tombo=null) {
+    		if (empty($bibliotecaId))
+    			  throw new Exception("Deve ser enviado um argumento '\$bibliotecaId' ao método 'retorna_tombo_maximo'");
+		if (empty($tombo))
+			return true;
+		 // Sem essa regra ao editar e salvar com o mesmo tombo retornaria falso
+   		 if (! empty($exceptExemplarId))
+   			   $exceptExemplar = " and exemplar.cod_exemplar !=  $exceptExemplarId";
+   		 else
+     			 $exceptExemplar = '';
+
+		$sql = "SELECT tombo FROM pmieducar.exemplar, pmieducar.acervo WHERE exemplar.ativo = 1 and exemplar.ref_cod_acervo = 			acervo.cod_acervo and tombo = $tombo and acervo.ref_cod_biblioteca = $bibliotecaId $exceptExemplar";
+
+		$db = new clsBanco();
+		$consulta = $db->CampoUnico($sql);
+		if ($consulta==$tombo){
+			return false;
+		} else {
+			return true;
+		}
+	}	
 
 	/**
 	 * Retorna uma lista filtrados de acordo com os parametros
