@@ -456,6 +456,12 @@ class indice extends clsCadastro
 
               $det_matricula = $obj_matricula->detalhe();
 
+              // Se a matrícula anterior estava em andamento, copia as notas/faltas/pareceres
+              if ($det_matricula['aprovado']=3){
+                $db->Consulta(" SELECT modules.copia_notas_transf({$det_matricula['cod_matricula']},{$cod_matricula})");
+              }
+            
+
               // Caso a solicitação seja para uma mesma série
               if ($det_matricula['ref_ref_cod_serie'] == $this->ref_cod_serie) {
                 $ref_cod_transferencia = $transferencia['cod_transferencia_solicitacao'];
