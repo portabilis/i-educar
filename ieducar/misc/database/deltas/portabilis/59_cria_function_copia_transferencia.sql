@@ -32,9 +32,9 @@
   /* VERIFICA SE AS MATRICULAS FAZEM PARTE DO MESMO ANO LETIVO*/
   IF ((SELECT eal.ano FROM pmieducar.escola_ano_letivo eal
         INNER JOIN pmieducar.matricula mat ON (mat.ref_ref_cod_escola = eal.ref_cod_escola)
-         WHERE mat.cod_matricula = old_matricula_id) = (SELECT eal.ano FROM pmieducar.escola_ano_letivo eal
+         WHERE mat.cod_matricula = old_matricula_id and eal.andamento = 1 limit 1) = (SELECT eal.ano FROM pmieducar.escola_ano_letivo eal
                                         INNER JOIN pmieducar.matricula mat ON (mat.ref_ref_cod_escola = eal.ref_cod_escola)
-                                         WHERE mat.cod_matricula = new_matricula_id ) ) THEN
+                                         WHERE mat.cod_matricula = new_matricula_id and eal.andamento = 1 limit 1) ) THEN
   
     /* VERIFICA SE POSSUEM MESMA QUANTIDADE DE ETAPAS*/
     IF ((select max(sequencial) as qtd_etapa from pmieducar.ano_letivo_modulo mod
