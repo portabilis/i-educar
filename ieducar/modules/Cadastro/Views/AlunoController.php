@@ -97,7 +97,102 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     'deficiencias' => array(
       'label'  => 'Deficiências / habilidades especiais',
       'help'   => '',
-    )
+      ),
+
+      /* *******************
+         ** Dados médicos **
+         ******************* */
+
+      'idade' => array('label' => 'Idade'),
+
+      'altura' => array('label' => 'Altura'),
+
+      'peso' => array('label' => 'Peso'),
+
+      'grupo_sanguineo' => array('label' => 'Grupo sanguíneo'),
+
+      'fator_rh' => array('label' => 'Fator RH'),
+
+      'alergia_medicamento' => array('label' => 'O aluno é alérgico a algum medicamento?'),
+
+      'desc_alergia_medicamento' => array('label' => 'Quais?'),
+
+      'alergia_alimento' => array('label' => 'O aluno é alérgico a algum alimento?'),
+
+      'desc_alergia_alimento' => array('label' => 'Quais?'),
+
+      'doenca_congenita' => array('label' => 'O aluno possui doença congênita?'),
+
+      'desc_doenca_congenita' => array('label' => 'Quais?'),
+
+      'fumante' => array('label' => 'O aluno é fumante?'),
+
+      'doenca_caxumba' => array('label' => 'O aluno já contraiu caxumba?'),
+
+      'doenca_sarampo' => array('label' => 'O aluno já contraiu sarampo?'),
+
+      'doenca_rubeola' => array('label' => 'O aluno já contraiu rubeola?'),
+
+      'doenca_catapora' => array('label' => 'O aluno já contraiu catapora?'),
+
+      'doenca_escarlatina' => array('label' => 'O aluno já contraiu escarlatina?'),
+
+      'doenca_coqueluche' => array('label' => 'O aluno já contraiu coqueluche?'),
+
+      'doenca_outras' => array('label' => 'Outras doenças que o aluno já contraiu'),
+
+      'epiletico' => array('label' => 'O aluno é epilético?'),
+
+      'epiletico_tratamento' => array('label' => 'Está em tratamento?'),
+
+      'hemofilico' => array('label' => 'O aluno é hemofílico?'),
+
+      'hipertenso' => array('label' => 'O aluno tem hipertensão?'),
+
+      'asmatico' => array('label' => 'O aluno é asmático?'),
+
+      'diabetico' => array('label' => 'O aluno é diabético?'),
+
+      'insulina' => array('label' => 'Depende de insulina?'),
+
+      'tratamento_medico' => array('label' => 'O aluno faz algum tratamento médico?'),
+
+      'desc_tratamento_medico' => array('label' => 'Qual?'),
+
+      'medicacao_especifica' => array('label' => 'O aluno está ingerindo medicação específica?'),
+
+      'desc_medicacao_especifica' => array('label' => 'Qual?'),
+
+      'acomp_medico_psicologico' => array('label' => 'O aluno tem acompanhamento médico ou psicológico?'),
+
+      'desc_acomp_medico_psicologico' => array('label' => 'Motivo?'),
+
+      'restricao_atividade_fisica' => array('label' => 'O aluno tem restrição a alguma atividade física?'),
+      
+      'desc_restricao_atividade_fisica' => array('label' => 'Qual?'),
+
+      'fratura_trauma' => array('label' => 'O aluno sofreu alguma fratura ou trauma?'),
+
+      'desc_fratura_trauma' => array('label' => 'Qual?'),
+
+      'plano_saude' => array('label' => 'O aluno possui algum plano de saúde?'),
+
+      'desc_plano_saude' => array('label' => 'Qual?'),
+
+      'hospital_clinica' => array('label' => 'Nome'),
+
+      'hospital_clinica_endereco' => array('label' => 'Endereço'),
+
+      'hospital_clinica_telefone' => array('label' => 'Telefone'),
+
+      'responsavel' => array('label' => 'Nome'),
+
+      'responsavel_parentesco' => array('label' => 'Parentesco'),
+
+      'responsavel_parentesco_telefone' => array('label' => 'Telefone'),
+
+      'responsavel_parentesco_celular' => array('label' => 'Celular'),
+
   );
 
 
@@ -120,11 +215,13 @@ class AlunoController extends Portabilis_Controller_Page_EditController
   {
     $this->url_cancelar = '/intranet/educar_aluno_lst.php';
 
+    $this->campoRotulo('dados_pessoais','Dados pessoais');
+    $this->campoRotulo('ficha_medica','Ficha medica');
+
     // código aluno
     $options = array('label'    => $this->_getLabel('id'), 'disabled' => true,
                      'required' => false, 'size' => 25);
     $this->inputsHelper()->integer('id', $options);
-
 
     // código aluno inep
     $options = array('label' => $this->_getLabel('aluno_inep_id'), 'required' => false, 'size' => 25, 'max_length' => 14);
@@ -218,6 +315,161 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $options = array('label' => $this->_getLabel('alfabetizado'), 'value' => 'checked');
     $this->inputsHelper()->checkbox('alfabetizado', $options);
 
+
+    /* *************************************
+       ** Dados para a Aba 'Ficha médica' **
+       ************************************* */
+
+    /*
+    *** CAMPO É NECESSÁRIO? 
+    *** ANALISAR COM O RICARDO, POIS A IDADE SERÁ ALTERADA A CADA ANO, E JÁ EXISTE O CAMPO DATA DE NASCIMENTO
+    // idade
+    $options = array('label' => $this->_getLabel('idade'), 'size' => 5, 'max_length' => 3, 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->integer('idade',$options);
+    */
+    // altura
+    $options = array('label' => $this->_getLabel('altura'), 'size' => 5, 'max_length' => 4, 'required' => false, 'placeholder' => '' );
+    $this->inputsHelper()->numeric('altura',$options);
+
+    // peso
+    $options = array('label' => $this->_getLabel('peso'), 'size' => 5, 'max_length' => 6, 'required' => false, 'placeholder' => '' );
+    $this->inputsHelper()->numeric('peso',$options);    
+
+    // grupo_sanguineo
+    $options = array('label' => $this->_getLabel('grupo_sanguineo'), 'size' => 5, 'max_length' => 2, 'required' => false, 'placeholder' => '' );
+    $this->inputsHelper()->text('grupo_sanguineo',$options);        
+
+    // fator_rh
+    $options = array('label' => $this->_getLabel('fator_rh'), 'size' => 5, 'max_length' => 1, 'required' => false, 'placeholder' => '' );
+    $this->inputsHelper()->text('fator_rh',$options);            
+
+    // alergia_medicamento
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('alergia_medicamento') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('alergia_medicamento',$options);            
+
+    // desc_alergia_medicamento
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc_alergia_medicamento') ), 'size' => 50, 'max_length' => 100,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('desc_alergia_medicamento',$options);                
+
+    // alergia_alimento
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('alergia_alimento') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('alergia_alimento',$options);            
+
+    // desc_alergia_alimento
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc_alergia_alimento') ), 'size' => 50, 'max_length' => 100,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('desc_alergia_alimento',$options);                
+
+    // doenca_congenita
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('doenca_congenita') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('doenca_congenita',$options);            
+
+    // desc_doenca_congenita
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc_doenca_congenita') ), 'size' => 50, 'max_length' => 100,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('desc_doenca_congenita',$options);      
+
+    // fumante
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('fumante') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('fumante',$options); 
+
+    // doenca_caxumba
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('doenca_caxumba') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('doenca_caxumba',$options); 
+
+    // doenca_sarampo
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('doenca_sarampo') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('doenca_sarampo',$options); 
+
+    // doenca_rubeola
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('doenca_rubeola') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('doenca_rubeola',$options); 
+
+    // doenca_catapora
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('doenca_catapora') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('doenca_catapora',$options); 
+
+    // doenca_escarlatina
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('doenca_escarlatina') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('doenca_escarlatina',$options); 
+
+    // doenca_outras
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('doenca_outras') ), 'size' => 50, 'max_length' => 100,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('doenca_outras',$options);      
+
+    // epiletico
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('epiletico') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('epiletico',$options);     
+
+    // epiletico_tratamento
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('epiletico_tratamento') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('epiletico_tratamento',$options);  
+
+    // hemofilico
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('hemofilico') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('hemofilico',$options);      
+
+    // hipertenso
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('hipertenso') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('hipertenso',$options);      
+
+    // asmatico
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('asmatico') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('asmatico',$options);   
+
+    // diabetico
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('diabetico') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('diabetico',$options);
+
+    // insulina
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('insulina') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('insulina',$options);                  
+
+    // tratamento_medico
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('tratamento_medico') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('tratamento_medico',$options);   
+
+    // desc_tratamento_medico
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc_tratamento_medico') ), 'size' => 50, 'max_length' => 100,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('desc_tratamento_medico',$options);                            
+
+    // medicacao_especifica
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('medicacao_especifica') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('medicacao_especifica',$options);   
+
+    // desc_medicacao_especifica
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc_medicacao_especifica') ), 'size' => 50, 'max_length' => 100,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('desc_medicacao_especifica',$options);         
+
+    // acomp_medico_psicologico
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('acomp_medico_psicologico') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('acomp_medico_psicologico',$options);   
+
+    // desc_acomp_medico_psicologico
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc_acomp_medico_psicologico') ), 'size' => 50, 'max_length' => 100,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('desc_acomp_medico_psicologico',$options);       
+
+    // restricao_atividade_fisica
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('restricao_atividade_fisica') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('restricao_atividade_fisica',$options);   
+
+    // desc_restricao_atividade_fisica
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc_restricao_atividade_fisica') ), 'size' => 50, 'max_length' => 100,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('desc_restricao_atividade_fisica',$options);           
+
+    // fratura_trauma
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('fratura_trauma') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('fratura_trauma',$options);   
+
+    // desc_fratura_trauma
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc_fratura_trauma') ), 'size' => 50, 'max_length' => 100,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('desc_fratura_trauma',$options);       
+
+    // plano_saude
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('plano_saude') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('plano_saude',$options);   
+
+    // desc_plano_saude
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc_plano_saude') ), 'size' => 50, 'max_length' => 100,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('desc_plano_saude',$options);       
 
     $this->loadResourceAssets($this->getDispatcher());
   }
