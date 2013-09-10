@@ -19,14 +19,13 @@ var $pessoaNotice = $resourceNotice.clone()
 
 // hide nos campos da ficha médica
 $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-  if (index>16){
+  if (index>14 && index!=52){
     row.hide();
-  }else{
-    //if (row.is(':visible')){
-      //row.addClass(".novaClass");
-    //}
   }
 });
+
+// Adiciona classe para que os campos de descrição possam ser desativados
+$j('#restricao_atividade_fisica, #acomp_medico_psicologico, #medicacao_especifica, #tratamento_medico, #doenca_congenita, #alergia_alimento, #alergia_medicamento, #fratura_trauma, #plano_saude').addClass('temDescricao');
 
 // ajax
 
@@ -264,117 +263,58 @@ function afterChangePessoa(targetWindow, pessoaId) {
 
 
     var msg = 'Bem vindo ao novo cadastro de alunos,<br />' +
+              'Agora você pode navegar entre as abas! <br />'+
               '<b>Dúvidas?</b> Entre em contato com o suporte.';
 
     $j('<p>').addClass('back-to-old-version right-top-notice notice')
              .html(stringUtils.toUtf8(msg))
-             .appendTo($j('#id').closest('td'));
+             .appendTo($j('#tab1').closest('td'));
+  
 
-
-    $j('#tr_dados_pessoais').click( 
+    $j('#tab1').click( 
       function(){
+
+        $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
+        $j('#tab1').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-          if (index>16){
+          if (index>16 && index!=52){
             row.hide();
           }else{
             row.show();
           }
         });        
       }
-    );
+    );  
 
     // Quando for clicado em ficha médica, Exibir as linhas da tabela referente.
-    $j('#tr_ficha_medica').click( 
+    $j('#tab2').click( 
       function(){
+        $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
+        $j('#tab2').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-          if (index>16){
+          if (index>14){
             row.show();
-          }else{
-            if (index>2)
-              row.hide();
+          }else if (index>0){
+            row.hide();
           }
         });
-        if ($j('#alergia_medicamento').prop('checked'))
-          $j('#desc_alergia_medicamento').removeAttr('disabled');
-        else
-          $j('#desc_alergia_medicamento').attr('disabled','disabled');
 
-        if ($j('#alergia_alimento').prop('checked'))
-          $j('#desc_alergia_alimento').removeAttr('disabled');
-        else
-          $j('#desc_alergia_alimento').attr('disabled','disabled');
+        // Esse loop desativa/ativa os campos de descrição, conforme os checkbox    
+        $j('.temDescricao').each(function(i, obj) {
+            $j('#desc_'+obj.id).prop('disabled', !$j('#'+obj.id).prop('checked'));                  
+        });
+      
+      });    
 
-        if ($j('#doenca_congenita').prop('checked'))
-          $j('#desc_doenca_congenita').removeAttr('disabled');
-        else
-          $j('#desc_doenca_congenita').attr('disabled','disabled');                  
-      }
-    );    
+    /* A seguinte função habilitam/desabilitam o campo de descrição quando for clicado 
+    nos referentes checkboxs */         
 
-    /*************************************************************************************
-     As seguintes funções habilitam/desabilitam o campo de descrição quando for clicado
-     nos referentes checkboxs 
-     **************************************************************************************/
-
-    $j('#alergia_medicamento').click(
-      function(){
-        if ($j('#alergia_medicamento').prop('checked')){           
-          $j('#desc_alergia_medicamento').removeAttr('disabled');          
-        }
+    $j('.temDescricao').click(function(){
+        if ($j('#'+this.id).prop('checked'))
+          $j('#desc_'+this.id).removeAttr('disabled');          
         else
-          $j('#desc_alergia_medicamento').attr('disabled','disabled');          
-      }
-    );
-
-    $j('#alergia_alimento').click(
-      function(){
-        if ($j('#alergia_alimento').prop('checked')){           
-          $j('#desc_alergia_alimento').removeAttr('disabled');          
-        }
-        else
-          $j('#desc_alergia_alimento').attr('disabled','disabled');          
-      }
-    );    
-
-    $j('#doenca_congenita').click(
-      function(){
-        if ($j('#doenca_congenita').prop('checked')){           
-          $j('#desc_doenca_congenita').removeAttr('disabled');          
-        }
-        else
-          $j('#desc_doenca_congenita').attr('disabled','disabled');          
-      }
-    );        
-
-    $j('#tratamento_medico').click(
-      function(){
-        if ($j('#tratamento_medico').prop('checked')){           
-          $j('#desc_tratamento_medico').removeAttr('disabled');          
-        }
-        else
-          $j('#desc_tratamento_medico').attr('disabled','disabled');          
-      }
-    ); 
-
-    $j('#medicacao_especifica').click(
-      function(){
-        if ($j('#medicacao_especifica').prop('checked')){           
-          $j('#desc_medicacao_especifica').removeAttr('disabled');          
-        }
-        else
-          $j('#desc_medicacao_especifica').attr('disabled','disabled');          
-      }
-    );     
-
-    $j('#acomp_medico_psicologico').click(
-      function(){
-        if ($j('#acomp_medico_psicologico').prop('checked')){           
-          $j('#desc_acomp_medico_psicologico').removeAttr('disabled');          
-        }
-        else
-          $j('#desc_acomp_medico_psicologico').attr('disabled','disabled');          
-      }
-    );     
+          $j('#desc_'+this.id).attr('disabled','disabled');          
+    });
 
   }); // ready
 })(jQuery);

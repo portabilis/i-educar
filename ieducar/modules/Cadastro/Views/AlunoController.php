@@ -215,9 +215,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
   {
     $this->url_cancelar = '/intranet/educar_aluno_lst.php';
 
-    $this->campoRotulo('dados_pessoais','Dados pessoais');
-    $this->campoRotulo('ficha_medica','Ficha medica');
-
     // código aluno
     $options = array('label'    => $this->_getLabel('id'), 'disabled' => true,
                      'required' => false, 'size' => 25);
