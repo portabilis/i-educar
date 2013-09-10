@@ -1,5 +1,9 @@
 // before page is ready
 
+$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab"> <span class="tabText">Outros dados</span></div></li></ul></div>');
+
+$j('#tab1').addClass('alunoTab-active').removeClass('alunoTab');
+
 var $idField        = $j('#id');
 var $nomeField      = $j('#pessoa_nome');
 
