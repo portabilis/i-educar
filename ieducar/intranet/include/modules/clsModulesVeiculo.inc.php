@@ -20,24 +20,24 @@
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @package   Module
+ * @since     07/2013
  * @version   $Id$
  */
 
 require_once 'include/pmieducar/geral.inc.php';
 
 /**
- * clsPmieducarInstituicao class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * clsModulesVeiculo class.
+ * 
+ * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @package   Module
+ * @since     07/2013
  * @version   @@package_version@@
  */
 class clsModulesVeiculo
