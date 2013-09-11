@@ -33,6 +33,7 @@
  */
 
 require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
+require_once 'include/modules/clsModulesFichaMedicaAluno.inc.php';
 
 require_once 'App/Model/MatriculaSituacao.php';
 
@@ -266,6 +267,59 @@ class AlunoController extends ApiCoreController
 
     return $this->saveEntity($dataMapper, $entity);
   }
+
+  protected function createOrUpdateFichaMedica($id) {
+    
+    $obj                    = new clsModulesFichaMedicaAluno();
+
+    $obj->ref_cod_aluno                         = $id;
+    $obj->altura                                = $this->getRequest()->altura;
+    $obj->peso                                  = $this->getRequest()->peso;
+    $obj->grupo_sanguineo                       = $this->getRequest()->grupo_sanguineo;
+    $obj->fator_rh                              = $this->getRequest()->fator_rh;
+    $obj->alergia_medicamento                   = $this->getRequest()->alergia_medicamento == 'on' ? 'S' : 'N');
+    $obj->desc_alergia_medicamento              = $this->getRequest()->desc_alergia_medicamento;
+    $obj->alergia_alimento                      = ($this->getRequest()->alergia_alimento == 'on' ? 'S' : 'N');
+    $obj->desc_alergia_alimento                 = $this->getRequest()->desc_alergia_alimento;
+    $obj->doenca_congenita                      = ($this->getRequest()->doenca_congenita == 'on' ? 'S' : 'N');
+    $obj->desc_doenca_congenita                 = $this->getRequest()->desc_doenca_congenita;
+    $obj->fumante                               = ($this->getRequest()->fumante == 'on' ? 'S' : 'N');
+    $obj->doenca_caxumba                        = ($this->getRequest()->doenca_caxumba == 'on' ? 'S' : 'N');
+    $obj->doenca_sarampo                        = ($this->getRequest()->doenca_sarampo == 'on' ? 'S' : 'N');
+    $obj->doenca_rubeola                        = ($this->getRequest()->doenca_rubeola == 'on' ? 'S' : 'N');
+    $obj->doenca_catapora                       = ($this->getRequest()->doenca_catapora == 'on' ? 'S' : 'N');
+    $obj->doenca_escarlatina                    = ($this->getRequest()->doenca_escarlatina == 'on' ? 'S' : 'N');
+    $obj->doenca_coqueluche                     = ($this->getRequest()->doenca_coqueluche == 'on' ? 'S' : 'N');
+    $obj->doenca_outras                         = $this->getRequest()->doenca_outras;
+    $obj->epiletico                             = ($this->getRequest()->epiletico == 'on' ? 'S' : 'N');
+    $obj->epiletico_tratamento                  = $this->getRequest()->epiletico_tratamento;
+    $obj->hemofilico                            = ($this->getRequest()->hemofilico == 'on' ? 'S' : 'N');
+    $obj->hipertenso                            = ($this->getRequest()->hipertenso == 'on' ? 'S' : 'N');
+    $obj->asmatico                              = ($this->getRequest()->asmatico == 'on' ? 'S' : 'N');
+    $obj->diabetico                             = ($this->getRequest()->diabetico == 'on' ? 'S' : 'N');
+    $obj->insulina                              = ($this->getRequest()->insulina == 'on' ? 'S' : 'N');
+    $obj->tratamento_medico                     = ($this->getRequest()->tratamento_medico == 'on' ? 'S' : 'N');
+    $obj->desc_tratamento_medico                = $this->getRequest()->desc_tratamento_medico;
+    $obj->acomp_medico_psicologico              = ($this->getRequest()->acomp_medico_psicologico == 'on' ? 'S' : 'N');
+    $obj->desc_acomp_medico_psicologico         = $this->getRequest()->desc_acomp_medico_psicologico;
+    $obj->acomp_medico_psicologico              = ($this->getRequest()->acomp_medico_psicologico == 'on' ? 'S' : 'N');
+    $obj->desc_acomp_medico_psicologico         = $this->getRequest()->desc_acomp_medico_psicologico;
+    $obj->restricao_atividade_fisica            = ($this->getRequest()->restricao_atividade_fisica == 'on' ? 'S' : 'N');
+    $obj->desc_restricao_atividade_fisica       = $this->getRequest()->desc_restricao_atividade_fisica;
+    $obj->fratura_trauma                        = ($this->getRequest()->fratura_trauma == 'on' ? 'S' : 'N');
+    $obj->desc_fratura_trauma                   = $this->getRequest()->desc_fratura_trauma;
+    $obj->plano_saude                           = ($this->getRequest()->plano_saude == 'on' ? 'S' : 'N');
+    $obj->desc_plano_saude                      = $this->getRequest()->desc_plano_saude;
+    $obj->hospital_clinica                      = $this->getRequest()->hospital_clinica;
+    $obj->hospital_clinica_endereco             = $this->getRequest()->hospital_clinica_endereco;
+    $obj->hospital_clinica_telefone             = $this->getRequest()->hospital_clinica_telefone;
+    $obj->responsavel                           = $this->getRequest()->responsavel;
+    $obj->responsavel_parentesco                = $this->getRequest()->responsavel_parentesco;
+    $obj->responsavel_parentesco_telefone       = $this->getRequest()->responsavel_parentesco_telefone;
+    $obj->responsavel_parentesco_celular        = $this->getRequest()->responsavel_parentesco_celular;
+
+    return (is_null($obj->existe()) ? $obj->cadastra() : $obj->edita());
+  }  
 
 
   protected function loadAlunoInepId($alunoId) {
@@ -696,6 +750,7 @@ class AlunoController extends ApiCoreController
         $this->createOrUpdateTransporte($id);
         $this->createUpdateOrDestroyEducacensoAluno($id);
         $this->updateDeficiencias();
+        $this->createOrUpdateFichaMedica($id);
 
         $this->messenger->append('Cadastrado realizado com sucesso', 'success', false, 'error');
       }
@@ -714,6 +769,7 @@ class AlunoController extends ApiCoreController
       $this->createOrUpdateTransporte($id);
       $this->createUpdateOrDestroyEducacensoAluno($id);
       $this->updateDeficiencias();
+      $this->createOrUpdateFichaMedica($id);
 
       $this->messenger->append('Cadastro alterado com sucesso', 'success', false, 'error');
     }

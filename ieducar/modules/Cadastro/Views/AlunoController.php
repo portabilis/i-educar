@@ -103,8 +103,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
          ** Dados médicos **
          ******************* */
 
-      'idade' => array('label' => 'Idade'),
-
       'altura' => array('label' => 'Altura'),
 
       'peso' => array('label' => 'Peso'),
@@ -317,13 +315,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
        ** Dados para a Aba 'Ficha médica' **
        ************************************* */
 
-    /*
-    *** CAMPO É NECESSÁRIO? 
-    *** ANALISAR COM O RICARDO, POIS A IDADE SERÁ ALTERADA A CADA ANO, E JÁ EXISTE O CAMPO DATA DE NASCIMENTO
-    // idade
-    $options = array('label' => $this->_getLabel('idade'), 'size' => 5, 'max_length' => 3, 'required' => false, 'placeholder' => '');
-    $this->inputsHelper()->integer('idade',$options);
-    */
     // altura
     $options = array('label' => $this->_getLabel('altura'), 'size' => 5, 'max_length' => 4, 'required' => false, 'placeholder' => '' );
     $this->inputsHelper()->numeric('altura',$options);
