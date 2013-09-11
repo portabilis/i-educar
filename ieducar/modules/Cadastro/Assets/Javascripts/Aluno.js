@@ -82,6 +82,149 @@ resourceOptions.handleGet = function(dataResponse) {
   $j('#beneficio_id').val(dataResponse.beneficio_id);
   $j('#tipo_transporte').val(dataResponse.tipo_transporte);
   $j('#alfabetizado').attr('checked', dataResponse.alfabetizado);
+
+  /***********************************************
+      CAMPOS DA FICHA MÉDICA
+  ************************************************/
+
+  //campos checkbox
+   if (dataResponse.alergia_medicamento == 'S'){
+    $j('#alergia_medicamento').attr('checked',true);  
+    $j('#alergia_medicamento').val('on');   
+  }   
+
+   if (dataResponse.alergia_alimento == 'S'){
+    $j('#alergia_alimento').attr('checked',true);  
+    $j('#alergia_alimento').val('on');   
+  }   
+
+   if (dataResponse.doenca_congenita == 'S'){
+    $j('#doenca_congenita').attr('checked',true);  
+    $j('#doenca_congenita').val('on');   
+  }   
+
+   if (dataResponse.fumante == 'S'){
+    $j('#fumante').attr('checked',true);  
+    $j('#fumante').val('on');   
+  }   
+
+   if (dataResponse.doenca_caxumba == 'S'){
+    $j('#doenca_caxumba').attr('checked',true);  
+    $j('#doenca_caxumba').val('on');   
+  }   
+
+   if (dataResponse.doenca_sarampo == 'S'){
+    $j('#doenca_sarampo').attr('checked',true);  
+    $j('#doenca_sarampo').val('on');   
+  }   
+
+   if (dataResponse.doenca_rubeola == 'S'){
+    $j('#doenca_rubeola').attr('checked',true);  
+    $j('#doenca_rubeola').val('on');   
+  }   
+
+   if (dataResponse.doenca_catapora == 'S'){
+    $j('#doenca_catapora').attr('checked',true);  
+    $j('#doenca_catapora').val('on');   
+  }   
+
+   if (dataResponse.doenca_escarlatina == 'S'){
+    $j('#doenca_escarlatina').attr('checked',true);  
+    $j('#doenca_escarlatina').val('on');   
+  }   
+
+   if (dataResponse.doenca_coqueluche == 'S'){
+    $j('#doenca_coqueluche').attr('checked',true);  
+    $j('#doenca_coqueluche').val('on');   
+  }   
+
+   if (dataResponse.epiletico == 'S'){
+    $j('#epiletico').attr('checked',true);  
+    $j('#epiletico').val('on');   
+  }   
+
+   if (dataResponse.epiletico_tratamento == 'S'){
+    $j('#epiletico_tratamento').attr('checked',true);  
+    $j('#epiletico_tratamento').val('on');   
+  }   
+
+   if (dataResponse.hemofilico == 'S'){
+    $j('#hemofilico').attr('checked',true);  
+    $j('#hemofilico').val('on');   
+  }   
+
+   if (dataResponse.hipertenso == 'S'){
+    $j('#hipertenso').attr('checked',true);  
+    $j('#hipertenso').val('on');   
+  }   
+
+   if (dataResponse.asmatico == 'S'){
+    $j('#asmatico').attr('checked',true);  
+    $j('#asmatico').val('on');   
+  }   
+
+   if (dataResponse.diabetico == 'S'){
+    $j('#diabetico').attr('checked',true);  
+    $j('#diabetico').val('on');   
+  }   
+
+   if (dataResponse.insulina == 'S'){
+    $j('#insulina').attr('checked',true);  
+    $j('#insulina').val('on');   
+  }   
+
+   if (dataResponse.tratamento_medico == 'S'){
+    $j('#tratamento_medico').attr('checked',true);  
+    $j('#tratamento_medico').val('on');   
+  }   
+
+   if (dataResponse.medicacao_especifica == 'S'){
+    $j('#medicacao_especifica').attr('checked',true);  
+    $j('#medicacao_especifica').val('on');   
+  }   
+
+   if (dataResponse.acomp_medico_psicologico == 'S'){
+    $j('#acomp_medico_psicologico').attr('checked',true);  
+    $j('#acomp_medico_psicologico').val('on');   
+  }   
+
+   if (dataResponse.restricao_atividade_fisica == 'S'){
+    $j('#restricao_atividade_fisica').attr('checked',true);  
+    $j('#restricao_atividade_fisica').val('on');   
+  }   
+
+   if (dataResponse.fratura_trauma == 'S'){
+    $j('#fratura_trauma').attr('checked',true);  
+    $j('#fratura_trauma').val('on');   
+  }   
+   if (dataResponse.plano_saude == 'S'){
+    $j('#plano_saude').attr('checked',true);  
+    $j('#plano_saude').val('on');   
+  }   
+
+  // campos texto
+  $j('#altura').val(dataResponse.altura);
+  $j('#peso').val(dataResponse.peso);
+  $j('#grupo_sanguineo').val(dataResponse.grupo_sanguineo);
+  $j('#fator_rh').val(dataResponse.fator_rh);
+  $j('#desc_alergia_medicamento').val(dataResponse.desc_alergia_medicamento);
+  $j('#desc_alergia_alimento').val(dataResponse.desc_alergia_alimento);
+  $j('#desc_doenca_congenita').val(dataResponse.desc_doenca_congenita);
+  $j('#doencas_outras').val(dataResponse.doencas_outras);
+  $j('#desc_tratamento_medico').val(dataResponse.desc_tratamento_medico);
+  $j('#desc_medicacao_especifica').val(dataResponse.desc_medicacao_especifica);
+  $j('#desc_acomp_medico_psicologico').val(dataResponse.desc_acomp_medico_psicologico);
+  $j('#desc_restricao_atividade_fisica').val(dataResponse.desc_restricao_atividade_fisica);
+  $j('#desc_fratura_trauma').val(dataResponse.desc_fratura_trauma);
+  $j('#desc_plano_saude').val(dataResponse.desc_plano_saude);
+  $j('#hospital_clinica').val(dataResponse.hospital_clinica);
+  $j('#hospital_clinica_endereco').val(dataResponse.hospital_clinica_endereco);
+  $j('#hospital_clinica_telefone').val(dataResponse.hospital_clinica_telefone);
+  $j('#responsavel').val(dataResponse.responsavel);
+  $j('#responsavel_parentesco').val(dataResponse.responsavel_parentesco);
+  $j('#responsavel_parentesco_telefone').val(dataResponse.responsavel_parentesco_telefone);
+  $j('#responsavel_parentesco_celular').val(dataResponse.responsavel_parentesco_celular);
+
 };
 
 var handleGetPersonDetails = function(dataResponse) {

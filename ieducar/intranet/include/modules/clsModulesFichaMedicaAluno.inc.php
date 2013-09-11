@@ -358,13 +358,17 @@ class clsModulesFichaMedicaAluno
    */
   function cadastra()
   {
-    if (is_string($this->descricao))
+    if (is_numeric($this->ref_cod_aluno))
     {
       $db = new clsBanco();
 
       $campos  = '';
       $valores = '';
       $gruda   = '';    
+
+      $campos .= "{$gruda}ref_cod_aluno";
+      $valores .= "{$gruda}{$this->ref_cod_aluno}";
+      $gruda = ", ";
 
       $campos .= "{$gruda}altura";
       $valores .= "{$gruda}'{$this->altura}'";
@@ -543,7 +547,7 @@ class clsModulesFichaMedicaAluno
       $gruda = ", ";
       
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
-      return $db->InsertId("{$this->_tabela}_seq");
+      return $this->ref_cod_aluno;
     }
 
     return FALSE;
@@ -561,89 +565,91 @@ class clsModulesFichaMedicaAluno
 
       $set .= "altura = '{$this->altura}'";
   
-      $set .= "peso = '{$this->peso}'";
+      $set .= ",peso = '{$this->peso}'";
   
-      $set .= "grupo_sanguineo = '{$this->grupo_sanguineo}'";
+      $set .= ",grupo_sanguineo = '{$this->grupo_sanguineo}'";
   
-      $set .= "fator_rh = '{$this->fator_rh}'";
+      $set .= ",fator_rh = '{$this->fator_rh}'";
   
-      $set .= "alergia_medicamento = '{$this->alergia_medicamento}'";
+      $set .= ",alergia_medicamento = '{$this->alergia_medicamento}'";
   
-      $set .= "desc_alergia_medicamento = '{$this->desc_alergia_medicamento}'";
+      $set .= ",desc_alergia_medicamento = '{$this->desc_alergia_medicamento}'";
   
-      $set .= "alergia_alimento = '{$this->alergia_alimento}'";
+      $set .= ",alergia_alimento = '{$this->alergia_alimento}'";
   
-      $set .= "desc_alergia_alimento = '{$this->desc_alergia_alimento}'";
+      $set .= ",desc_alergia_alimento = '{$this->desc_alergia_alimento}'";
   
-      $set .= "doenca_congenita = '{$this->doenca_congenita}'";
+      $set .= ",doenca_congenita = '{$this->doenca_congenita}'";
   
-      $set .= "desc_doenca_congenita = '{$this->desc_doenca_congenita}'";
+      $set .= ",desc_doenca_congenita = '{$this->desc_doenca_congenita}'";
   
-      $set .= "fumante = '{$this->fumante}'";
+      $set .= ",fumante = '{$this->fumante}'";
   
-      $set .= "doenca_caxumba = '{$this->doenca_caxumba}'";
+      $set .= ",doenca_caxumba = '{$this->doenca_caxumba}'";
   
-      $set .= "doenca_sarampo = '{$this->doenca_sarampo}'";
+      $set .= ",doenca_sarampo = '{$this->doenca_sarampo}'";
   
-      $set .= "doenca_rubeola = '{$this->doenca_rubeola}'";
+      $set .= ",doenca_rubeola = '{$this->doenca_rubeola}'";
   
-      $set .= "doenca_catapora = '{$this->doenca_catapora}'";
+      $set .= ",doenca_catapora = '{$this->doenca_catapora}'";
   
-      $set .= "doenca_escarlatina = '{$this->doenca_escarlatina}'";
+      $set .= ",doenca_escarlatina = '{$this->doenca_escarlatina}'";
   
-      $set .= "doenca_coqueluche = '{$this->doenca_coqueluche}'";
+      $set .= ",doenca_coqueluche = '{$this->doenca_coqueluche}'";
   
-      $set .= "doenca_outras = '{$this->doenca_outras}'";
+      $set .= ",doenca_outras = '{$this->doenca_outras}'";
   
-      $set .= "epiletico_tratamento = '{$this->epiletico_tratamento}'";
+      $set .= ",epiletico = '{$this->epiletico}'";
+
+      $set .= ",epiletico_tratamento = '{$this->epiletico_tratamento}'";
   
-      $set .= "hemofilico = '{$this->hemofilico}'";
+      $set .= ",hemofilico = '{$this->hemofilico}'";
   
-      $set .= "hipertenso = '{$this->hipertenso}'";
+      $set .= ",hipertenso = '{$this->hipertenso}'";
   
-      $set .= "asmatico = '{$this->asmatico}'";
+      $set .= ",asmatico = '{$this->asmatico}'";
   
-      $set .= "diabetico = '{$this->diabetico}'";
+      $set .= ",diabetico = '{$this->diabetico}'";
   
-      $set .= "insulina = '{$this->insulina}'";
+      $set .= ",insulina = '{$this->insulina}'";
   
-      $set .= "tratamento_medico = '{$this->tratamento_medico}'";
+      $set .= ",tratamento_medico = '{$this->tratamento_medico}'";
   
-      $set .= "desc_tratamento_medico = '{$this->desc_tratamento_medico}'";
+      $set .= ",desc_tratamento_medico = '{$this->desc_tratamento_medico}'";
   
-      $set .= "medicacao_especifica = '{$this->medicacao_especifica}'";
+      $set .= ",medicacao_especifica = '{$this->medicacao_especifica}'";
   
-      $set .= "desc_medicacao_especifica = '{$this->desc_medicacao_especifica}'";
+      $set .= ",desc_medicacao_especifica = '{$this->desc_medicacao_especifica}'";
   
-      $set .= "acomp_medico_psicologico = '{$this->acomp_medico_psicologico}'";
+      $set .= ",acomp_medico_psicologico = '{$this->acomp_medico_psicologico}'";
   
-      $set .= "desc_acomp_medico_psicologico = '{$this->desc_acomp_medico_psicologico}'";
+      $set .= ",desc_acomp_medico_psicologico = '{$this->desc_acomp_medico_psicologico}'";
   
-      $set .= "restricao_atividade_fisica = '{$this->restricao_atividade_fisica}'";
+      $set .= ",restricao_atividade_fisica = '{$this->restricao_atividade_fisica}'";
   
-      $set .= "desc_restricao_atividade_fisica = '{$this->desc_restricao_atividade_fisica}'";
+      $set .= ",desc_restricao_atividade_fisica = '{$this->desc_restricao_atividade_fisica}'";
   
-      $set .= "fratura_trauma = '{$this->fratura_trauma}'";
+      $set .= ",fratura_trauma = '{$this->fratura_trauma}'";
   
-      $set .= "desc_fratura_trauma = '{$this->desc_fratura_trauma}'";
+      $set .= ",desc_fratura_trauma = '{$this->desc_fratura_trauma}'";
   
-      $set .= "plano_saude = '{$this->plano_saude}'";
+      $set .= ",plano_saude = '{$this->plano_saude}'";
   
-      $set .= "desc_plano_saude = '{$this->desc_plano_saude}'";
+      $set .= ",desc_plano_saude = '{$this->desc_plano_saude}'";
   
-      $set .= "hospital_clinica = '{$this->hospital_clinica}'";
+      $set .= ",hospital_clinica = '{$this->hospital_clinica}'";
   
-      $set .= "hospital_clinica_endereco = '{$this->hospital_clinica_endereco}'";
+      $set .= ",hospital_clinica_endereco = '{$this->hospital_clinica_endereco}'";
   
-      $set .= "hospital_clinica_telefone = '{$this->hospital_clinica_telefone}'";
+      $set .= ",hospital_clinica_telefone = '{$this->hospital_clinica_telefone}'";
   
-      $set .= "responsavel = '{$this->responsavel}'";
+      $set .= ",responsavel = '{$this->responsavel}'";
   
-      $set .= "responsavel_parentesco = '{$this->responsavel_parentesco}'";
+      $set .= ",responsavel_parentesco = '{$this->responsavel_parentesco}'";
   
-      $set .= "responsavel_parentesco_telefone = '{$this->responsavel_parentesco_telefone}'";
+      $set .= ",responsavel_parentesco_telefone = '{$this->responsavel_parentesco_telefone}'";
   
-      $set .= "responsavel_parentesco_celular = '{$this->responsavel_parentesco_celular}'";
+      $set .= ",responsavel_parentesco_celular = '{$this->responsavel_parentesco_celular}'";
   
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_aluno = '{$this->ref_cod_aluno}'");
