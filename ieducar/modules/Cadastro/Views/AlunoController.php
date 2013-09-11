@@ -466,7 +466,39 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     // desc_plano_saude
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc_plano_saude') ), 'size' => 50, 'max_length' => 100,'required' => false, 'placeholder' => '');
-    $this->inputsHelper()->text('desc_plano_saude',$options);       
+    $this->inputsHelper()->text('desc_plano_saude',$options);    
+
+    $this->campoRotulo('tit_dados_hospital',Portabilis_String_Utils::toLatin1('Em caso de emergencia, levar para hospital ou clinica')); 
+
+    // hospital_clinica
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('hospital_clinica') ), 'size' => 50, 'max_length' => 100,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('hospital_clinica',$options);    
+
+    // hospital_clinica_endereco
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('hospital_clinica_endereco') ), 'size' => 50, 'max_length' => 50,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('hospital_clinica_endereco',$options);    
+
+    // hospital_clinica_telefone
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('hospital_clinica_telefone') ), 'size' => 20, 'max_length' => 20,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('hospital_clinica_telefone',$options);            
+
+    $this->campoRotulo('tit_dados_responsavel',Portabilis_String_Utils::toLatin1('Em caso de emergencia, caso não seja encontrado pais ou responsáveis, avisar')); 
+
+    // responsavel
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('responsavel') ), 'size' => 50, 'max_length' => 50,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('responsavel',$options);    
+
+    // responsavel_parentesco
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('responsavel_parentesco') ), 'size' => 20, 'max_length' => 20,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('responsavel_parentesco',$options);            
+
+    // responsavel_parentesco_telefone
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('responsavel_parentesco_telefone') ), 'size' => 20, 'max_length' => 20,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('responsavel_parentesco_telefone',$options);            
+
+    // responsavel_parentesco_celular
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('responsavel_parentesco_celular') ), 'size' => 20, 'max_length' => 20,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('responsavel_parentesco_celular',$options);                 
 
     $this->loadResourceAssets($this->getDispatcher());
   }

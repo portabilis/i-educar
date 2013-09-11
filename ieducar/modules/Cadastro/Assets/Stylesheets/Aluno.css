@@ -36,9 +36,6 @@
   width: 307px;
 }
 
-
-
-
 #tabControl ul{
   display: inline;
   list-style-type: none;
@@ -105,4 +102,5 @@
 
 #tr_tit_dados_hospital, #tr_tit_dados_responsavel{
   font-weight: bold;
+  font-size: 12px;
 }

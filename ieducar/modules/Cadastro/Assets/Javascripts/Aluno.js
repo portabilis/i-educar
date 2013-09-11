@@ -1,9 +1,5 @@
 // before page is ready
 
-$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab"> <span class="tabText">Outros dados</span></div></li></ul></div>');
-
-$j('#tab1').addClass('alunoTab-active').removeClass('alunoTab');
-
 var $idField        = $j('#id');
 var $nomeField      = $j('#pessoa_nome');
 
@@ -16,15 +12,20 @@ var $resourceNotice = $j('<span>').html('')
 var $pessoaNotice = $resourceNotice.clone()
                                    .appendTo($nomeField.parent());
 
+// Adiciona abas na página
+$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab"> <span class="tabText">Ficha m\u00e9dica</span></div></li></ul></div>');
 
-// hide nos campos da ficha médica
+// Adiciona estilo de aba selecionada a primeira aba
+$j('#tab1').addClass('alunoTab-active').removeClass('alunoTab');
+
+// hide nos campos das outras abas (deixando só os campos da primeira aba)
 $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-  if (index>14 && index!=52){
+  if (index>14 && index<60){
     row.hide();
   }
 });
 
-// Adiciona classe para que os campos de descrição possam ser desativados
+// Adiciona classe para que os campos de descrição possam ser desativados (checkboxs)
 $j('#restricao_atividade_fisica, #acomp_medico_psicologico, #medicacao_especifica, #tratamento_medico, #doenca_congenita, #alergia_alimento, #alergia_medicamento, #fratura_trauma, #plano_saude').addClass('temDescricao');
 
 // ajax
@@ -271,13 +272,18 @@ function afterChangePessoa(targetWindow, pessoaId) {
              .appendTo($j('#tab1').closest('td'));
   
 
+    /***********************
+    EVENTOS DE CLICK EM ABAS
+    ************************/
+
+    // DADOS PESSOAIS
     $j('#tab1').click( 
       function(){
 
         $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
         $j('#tab1').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-          if (index>16 && index!=52){
+          if (index>14 && index<60){
             row.hide();
           }else{
             row.show();
@@ -286,7 +292,7 @@ function afterChangePessoa(targetWindow, pessoaId) {
       }
     );  
 
-    // Quando for clicado em ficha médica, Exibir as linhas da tabela referente.
+    // FICHA MÉDICA
     $j('#tab2').click( 
       function(){
         $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
@@ -298,7 +304,6 @@ function afterChangePessoa(targetWindow, pessoaId) {
             row.hide();
           }
         });
-
         // Esse loop desativa/ativa os campos de descrição, conforme os checkbox    
         $j('.temDescricao').each(function(i, obj) {
             $j('#desc_'+obj.id).prop('disabled', !$j('#'+obj.id).prop('checked'));                  
@@ -312,8 +317,10 @@ function afterChangePessoa(targetWindow, pessoaId) {
     $j('.temDescricao').click(function(){
         if ($j('#'+this.id).prop('checked'))
           $j('#desc_'+this.id).removeAttr('disabled');          
-        else
+        else{
           $j('#desc_'+this.id).attr('disabled','disabled');          
+          $j('#desc_'+this.id).val('');          
+        }
     });
 
   }); // ready
