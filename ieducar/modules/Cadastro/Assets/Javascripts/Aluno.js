@@ -201,7 +201,6 @@ resourceOptions.handleGet = function(dataResponse) {
     $j('#plano_saude').attr('checked',true);  
     $j('#plano_saude').val('on');   
   }   
-
   // campos texto
   $j('#altura').val(dataResponse.altura);
   $j('#peso').val(dataResponse.peso);
@@ -210,7 +209,7 @@ resourceOptions.handleGet = function(dataResponse) {
   $j('#desc_alergia_medicamento').val(dataResponse.desc_alergia_medicamento);
   $j('#desc_alergia_alimento').val(dataResponse.desc_alergia_alimento);
   $j('#desc_doenca_congenita').val(dataResponse.desc_doenca_congenita);
-  $j('#doencas_outras').val(dataResponse.doencas_outras);
+  $j('#doenca_outras').val(dataResponse.doenca_outras);
   $j('#desc_tratamento_medico').val(dataResponse.desc_tratamento_medico);
   $j('#desc_medicacao_especifica').val(dataResponse.desc_medicacao_especifica);
   $j('#desc_acomp_medico_psicologico').val(dataResponse.desc_acomp_medico_psicologico);
