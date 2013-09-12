@@ -103,9 +103,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
          ** Dados médicos **
          ******************* */
 
-      'altura' => array('label' => 'Altura'),
+      'altura' => array('label' => 'Altura/Metro'),
 
-      'peso' => array('label' => 'Peso'),
+      'peso' => array('label' => 'Peso/Kg'),
 
       'grupo_sanguineo' => array('label' => 'Grupo sanguíneo'),
 
