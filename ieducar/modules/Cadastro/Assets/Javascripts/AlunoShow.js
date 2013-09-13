@@ -123,17 +123,25 @@ var getMatriculas = function() {
 
 $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
 
-var possui_ficha_medica = $j('.tableDetalhe >tbody tr').length>24;
+// Verifica se possui ficha médica, verificando se existe o primeiro campo
+var possui_ficha_medica = $j('#fmedica').length>0;
 
 // Adiciona abas na página
 $j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab2"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab2"> <span class="tabText">Ficha m\u00e9dica</span></div></li></ul></div>');
 $j('td .formdktd b').remove();
 $j('#tab1').addClass('alunoTab-active2').removeClass('alunoTab2');
+var linha_inicial_fmedica = 0;
 
 if(possui_ficha_medica){
+  // Atribui um id a linha, para identificar até onde/a partir de onde esconder os campos
+  $j('#fmedica').closest('tr').attr('id','tfmedica');
+
+  // Pega o número dessa linha
+  linha_inicial_fmedica = $j('#tfmedica').index();
+
   // hide nos campos das outras abas (deixando só os campos da primeira aba)
   $j('.tableDetalhe >tbody  > tr').each(function(index, row) {
-    if (index>15){
+    if (index>=linha_inicial_fmedica){
       if (row.id!='stop')
         row.hide();    
       else
@@ -144,7 +152,6 @@ if(possui_ficha_medica){
 
 
 // when page is ready
-
 $j(document).ready(function() {
 
   // on click das abas
@@ -156,7 +163,7 @@ $j(document).ready(function() {
         $j('.alunoTab-active2').toggleClass('alunoTab-active2 alunoTab2');
         $j('#tab1').toggleClass('alunoTab2 alunoTab-active2')
         $j('.tableDetalhe >tbody  > tr').each(function(index, row) {
-          if (index>15){
+          if (index>=linha_inicial_fmedica){
             if (row.id!='stop')
               row.hide();    
             else
@@ -175,7 +182,7 @@ $j(document).ready(function() {
           $j('.alunoTab-active2').toggleClass('alunoTab-active2 alunoTab2');
           $j('#tab2').toggleClass('alunoTab2 alunoTab-active2')
           $j('.tableDetalhe >tbody  > tr').each(function(index, row) {
-            if (index>15){
+            if (index>=linha_inicial_fmedica){
               row.show();
             }else if (index>0){
               row.hide();

@@ -678,7 +678,7 @@ class indice extends clsDetalhe
 
     if($reg){    
 
-      if (trim($reg['altura'])!='') $this->addDetalhe(array('Altura/metro', $reg['altura']));
+      $this->addDetalhe(array('<span id="fmedica"></span>Altura/metro', $reg['altura']));
       if (trim($reg['peso'])!='') $this->addDetalhe(array('Peso/kg', $reg['peso']));    
       if (trim($reg['grupo_sanguineo'])!='') $this->addDetalhe(array('Grupo sanguíneo', $reg['grupo_sanguineo']));    
       if (trim($reg['fator_rh'])!='') $this->addDetalhe(array('Fator RH', $reg['fator_rh']));    
