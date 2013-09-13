@@ -32,6 +32,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/modules/clsModulesFichaMedicaAluno.inc.php';
 
 require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'Educacenso/Model/AlunoDataMapper.php';
@@ -40,6 +41,7 @@ require_once 'Transporte/Model/AlunoDataMapper.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 
 require_once 'Portabilis/View/Helper/Application.php';
+
 
 /**
  * clsIndexBase class.
@@ -671,6 +673,60 @@ class indice extends clsDetalhe
       );
     }
 
+    $objFichaMedica       = new clsModulesFichaMedicaAluno($this->cod_aluno);
+    $reg                  = $objFichaMedica->detalhe();
+
+    if($reg){    
+
+      if (trim($reg['altura'])!='') $this->addDetalhe(array('Altura/metro', $reg['altura']));
+      if (trim($reg['peso'])!='') $this->addDetalhe(array('Peso/kg', $reg['peso']));    
+      if (trim($reg['grupo_sanguineo'])!='') $this->addDetalhe(array('Grupo sanguíneo', $reg['grupo_sanguineo']));    
+      if (trim($reg['fator_rh'])!='') $this->addDetalhe(array('Fator RH', $reg['fator_rh']));    
+      $this->addDetalhe(array('Possui alergia a algum medicamento', ($reg['alergia_medicamento'] == 'S' ? 'Sim': 'Não') ));    
+      if (trim($reg['desc_alergia_medicamento'])!='') $this->addDetalhe(array('Quais', $reg['desc_alergia_medicamento']));    
+      $this->addDetalhe(array('Possui alergia a algum alimento', ($reg['alergia_alimento'] == 'S' ? 'Sim': 'Não') ));      
+      if (trim($reg['desc_alergia_alimento'])!='') $this->addDetalhe(array('Quais', $reg['desc_alergia_alimento']));    
+      $this->addDetalhe(array('Possui alguma doenca congênita', ($reg['doenca_congenita'] == 'S' ? 'Sim': 'Não') ));    
+      if (trim($reg['desc_doenca_congenita'])!='') $this->addDetalhe(array('Quais', $reg['desc_doenca_congenita']));    
+      $this->addDetalhe(array('É fumante', ($reg['fumante'] == 'S' ? 'Sim': 'Não') ));  
+      $this->addDetalhe(array('Já contraiu caxumba', ($reg['doenca_caxumba'] == 'S' ? 'Sim': 'Não') ));  
+      $this->addDetalhe(array('Já contraiu sarampo', ($reg['doenca_sarampo'] == 'S' ? 'Sim': 'Não') ));  
+      $this->addDetalhe(array('Já contraiu rubeola', ($reg['doenca_rubeola'] == 'S' ? 'Sim': 'Não') ));  
+      $this->addDetalhe(array('Já contraiu catapora', ($reg['doenca_catapora'] == 'S' ? 'Sim': 'Não') ));  
+      $this->addDetalhe(array('Já contraiu escarlatina', ($reg['doenca_escarlatina'] == 'S' ? 'Sim': 'Não') ));  
+      $this->addDetalhe(array('Já contraiu coqueluche', ($reg['doenca_coqueluche'] == 'S' ? 'Sim': 'Não') ));  
+      if (trim($reg['doenca_outras'])!='') $this->addDetalhe(array('Outras doenças que o aluno já contraiu', $reg['doenca_outras']));    
+      $this->addDetalhe(array('Epilético', ($reg['epiletico'] == 'S' ? 'Sim': 'Não') ));  
+      $this->addDetalhe(array('Está em tratamento', ($reg['epiletico_tratamento'] == 'S' ? 'Sim': 'Não') ));  
+      $this->addDetalhe(array('Hemofílico', ($reg['hemofilico'] == 'S' ? 'Sim': 'Não') ));  
+      $this->addDetalhe(array('Hipertenso', ($reg['hipertenso'] == 'S' ? 'Sim': 'Não') ));  
+      $this->addDetalhe(array('Asmático', ($reg['asmatico'] == 'S' ? 'Sim': 'Não') ));  
+      $this->addDetalhe(array('Diabético', ($reg['diabetico'] == 'S' ? 'Sim': 'Não') ));  
+      $this->addDetalhe(array('Depende de insulina', ($reg['insulina'] == 'S' ? 'Sim': 'Não') ));  
+      $this->addDetalhe(array('Faz tratamento médico', ($reg['tratamento_medico'] == 'S' ? 'Sim': 'Não') ));        
+      if (trim($reg['desc_tratamento_medico'])!='') $this->addDetalhe(array('Qual', $reg['desc_tratamento_medico']));    
+      $this->addDetalhe(array('Ingere medicação específica', ($reg['medicacao_especifica'] == 'S' ? 'Sim': 'Não') ));        
+      if (trim($reg['desc_medicacao_especifica'])!='') $this->addDetalhe(array('Qual', $reg['desc_medicacao_especifica']));    
+      $this->addDetalhe(array('Acompanhamento médico ou psicologico', ($reg['acomp_medico_psicologico'] == 'S' ? 'Sim': 'Não') ));              
+      if (trim($reg['desc_acomp_medico_psicologico'])!='') $this->addDetalhe(array('Motivo', $reg['desc_acomp_medico_psicologico']));    
+      $this->addDetalhe(array('Restrição para atividades físicas', ($reg['restricao_atividade_fisica'] == 'S' ? 'Sim': 'Não') ));        
+      if (trim($reg['desc_restricao_atividade_fisica'])!='') $this->addDetalhe(array('Qual', $reg['desc_restricao_atividade_fisica']));    
+      $this->addDetalhe(array('Teve alguma fratura ou trauma', ($reg['fratura_trauma'] == 'S' ? 'Sim': 'Não') ));        
+      if (trim($reg['desc_fratura_trauma'])!='') $this->addDetalhe(array('Qual', $reg['desc_fratura_trauma']));                      
+      $this->addDetalhe(array('Tem plano de saúde', ($reg['plano_saude'] == 'S' ? 'Sim': 'Não') ));        
+      if (trim($reg['desc_plano_saude'])!='') $this->addDetalhe(array('Qual', $reg['desc_plano_saude']));   
+      $this->addDetalhe(array('<span id="tit_dados_hospital">Em caso de emergencia, levar para hospital ou clinica</span>'));   
+      $this->addDetalhe(array('Nome', $reg['hospital_clinica'])); 
+      $this->addDetalhe(array('Endereco', $reg['hospital_clinica_endereco']));    
+      $this->addDetalhe(array('Telefone', $reg['hospital_clinica_telefone']));    
+      $this->addDetalhe(array('<span id="tit_dados_responsavel">Em caso de emergencia, se não for possível contatar os responsáveis, comunicar</span>'));         
+      $this->addDetalhe(array('Nome', $reg['responsavel_nome']));    
+      $this->addDetalhe(array('Parentesco', $reg['responsavel_parentesco']));    
+      $this->addDetalhe(array('Telefone', $reg['responsavel_parentesco_telefone']));    
+      $this->addDetalhe(array('Celular', $reg['responsavel_parentesco_celular']));          
+
+    }
+
     $this->url_cancelar = 'educar_aluno_lst.php';
     $this->largura      = '100%';
 
@@ -688,6 +744,10 @@ class indice extends clsDetalhe
       );
 
     Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+
+    $styles = array ('/modules/Cadastro/Assets/Stylesheets/Aluno.css');
+
+    Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
   }
 }
 
