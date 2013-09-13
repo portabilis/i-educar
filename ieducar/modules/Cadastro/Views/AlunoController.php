@@ -379,6 +379,10 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('doenca_escarlatina') ), 'required' => false, 'placeholder' => '');
     $this->inputsHelper()->checkbox('doenca_escarlatina',$options); 
 
+    // doenca_coqueluche
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('doenca_coqueluche') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('doenca_coqueluche',$options);     
+
     // doenca_outras
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('doenca_outras') ), 'size' => 50, 'max_length' => 100,'required' => false, 'placeholder' => '');
     $this->inputsHelper()->text('doenca_outras',$options);      
