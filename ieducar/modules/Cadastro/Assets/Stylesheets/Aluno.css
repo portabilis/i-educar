@@ -68,6 +68,7 @@
   height: 25px;
   background-color: white;
   text-align: center;
+  cursor: pointer;
 }
 
 .alunoTab2{
@@ -91,6 +92,7 @@
   height: 25px;
   background-color: #e4e9ed;
   text-align: center;
+  cursor: pointer;
 }
 
 .alunoTab-active{
