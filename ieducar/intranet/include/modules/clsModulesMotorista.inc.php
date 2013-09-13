@@ -30,13 +30,13 @@
 require_once 'include/pmieducar/geral.inc.php';
 
 /**
- * clsPmieducarInstituicao class.
- *require_once 'include/modules/clsModulesMotorista.inc.php';
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * clsModulesMotorista class.
+ * 
+ * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @package   Module
+ * @since     07/2013
  * @version   @@package_version@@
  */
 class clsModulesMotorista

@@ -12,6 +12,22 @@ var $resourceNotice = $j('<span>').html('')
 var $pessoaNotice = $resourceNotice.clone()
                                    .appendTo($nomeField.parent());
 
+// Adiciona abas na página
+$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab"> <span class="tabText">Ficha m\u00e9dica</span></div></li></ul></div>');
+
+// Adiciona estilo de aba selecionada a primeira aba
+$j('#tab1').addClass('alunoTab-active').removeClass('alunoTab');
+
+// hide nos campos das outras abas (deixando só os campos da primeira aba)
+$j('.tablecadastro >tbody  > tr').each(function(index, row) {
+  if (index>14 && index<60){
+    row.hide();
+  }
+});
+
+// Adiciona classe para que os campos de descrição possam ser desativados (checkboxs)
+$j('#restricao_atividade_fisica, #acomp_medico_psicologico, #medicacao_especifica, #tratamento_medico, #doenca_congenita, #alergia_alimento, #alergia_medicamento, #fratura_trauma, #plano_saude').addClass('temDescricao');
+
 // ajax
 
 resourceOptions.handlePost = function(dataResponse) {
@@ -66,6 +82,148 @@ resourceOptions.handleGet = function(dataResponse) {
   $j('#beneficio_id').val(dataResponse.beneficio_id);
   $j('#tipo_transporte').val(dataResponse.tipo_transporte);
   $j('#alfabetizado').attr('checked', dataResponse.alfabetizado);
+
+  /***********************************************
+      CAMPOS DA FICHA MÉDICA
+  ************************************************/
+
+  //campos checkbox
+   if (dataResponse.alergia_medicamento == 'S'){
+    $j('#alergia_medicamento').attr('checked',true);  
+    $j('#alergia_medicamento').val('on');   
+  }   
+
+   if (dataResponse.alergia_alimento == 'S'){
+    $j('#alergia_alimento').attr('checked',true);  
+    $j('#alergia_alimento').val('on');   
+  }   
+
+   if (dataResponse.doenca_congenita == 'S'){
+    $j('#doenca_congenita').attr('checked',true);  
+    $j('#doenca_congenita').val('on');   
+  }   
+
+   if (dataResponse.fumante == 'S'){
+    $j('#fumante').attr('checked',true);  
+    $j('#fumante').val('on');   
+  }   
+
+   if (dataResponse.doenca_caxumba == 'S'){
+    $j('#doenca_caxumba').attr('checked',true);  
+    $j('#doenca_caxumba').val('on');   
+  }   
+
+   if (dataResponse.doenca_sarampo == 'S'){
+    $j('#doenca_sarampo').attr('checked',true);  
+    $j('#doenca_sarampo').val('on');   
+  }   
+
+   if (dataResponse.doenca_rubeola == 'S'){
+    $j('#doenca_rubeola').attr('checked',true);  
+    $j('#doenca_rubeola').val('on');   
+  }   
+
+   if (dataResponse.doenca_catapora == 'S'){
+    $j('#doenca_catapora').attr('checked',true);  
+    $j('#doenca_catapora').val('on');   
+  }   
+
+   if (dataResponse.doenca_escarlatina == 'S'){
+    $j('#doenca_escarlatina').attr('checked',true);  
+    $j('#doenca_escarlatina').val('on');   
+  }   
+
+   if (dataResponse.doenca_coqueluche == 'S'){
+    $j('#doenca_coqueluche').attr('checked',true);  
+    $j('#doenca_coqueluche').val('on');   
+  }   
+
+   if (dataResponse.epiletico == 'S'){
+    $j('#epiletico').attr('checked',true);  
+    $j('#epiletico').val('on');   
+  }   
+
+   if (dataResponse.epiletico_tratamento == 'S'){
+    $j('#epiletico_tratamento').attr('checked',true);  
+    $j('#epiletico_tratamento').val('on');   
+  }   
+
+   if (dataResponse.hemofilico == 'S'){
+    $j('#hemofilico').attr('checked',true);  
+    $j('#hemofilico').val('on');   
+  }   
+
+   if (dataResponse.hipertenso == 'S'){
+    $j('#hipertenso').attr('checked',true);  
+    $j('#hipertenso').val('on');   
+  }   
+
+   if (dataResponse.asmatico == 'S'){
+    $j('#asmatico').attr('checked',true);  
+    $j('#asmatico').val('on');   
+  }   
+
+   if (dataResponse.diabetico == 'S'){
+    $j('#diabetico').attr('checked',true);  
+    $j('#diabetico').val('on');   
+  }   
+
+   if (dataResponse.insulina == 'S'){
+    $j('#insulina').attr('checked',true);  
+    $j('#insulina').val('on');   
+  }   
+
+   if (dataResponse.tratamento_medico == 'S'){
+    $j('#tratamento_medico').attr('checked',true);  
+    $j('#tratamento_medico').val('on');   
+  }   
+
+   if (dataResponse.medicacao_especifica == 'S'){
+    $j('#medicacao_especifica').attr('checked',true);  
+    $j('#medicacao_especifica').val('on');   
+  }   
+
+   if (dataResponse.acomp_medico_psicologico == 'S'){
+    $j('#acomp_medico_psicologico').attr('checked',true);  
+    $j('#acomp_medico_psicologico').val('on');   
+  }   
+
+   if (dataResponse.restricao_atividade_fisica == 'S'){
+    $j('#restricao_atividade_fisica').attr('checked',true);  
+    $j('#restricao_atividade_fisica').val('on');   
+  }   
+
+   if (dataResponse.fratura_trauma == 'S'){
+    $j('#fratura_trauma').attr('checked',true);  
+    $j('#fratura_trauma').val('on');   
+  }   
+   if (dataResponse.plano_saude == 'S'){
+    $j('#plano_saude').attr('checked',true);  
+    $j('#plano_saude').val('on');   
+  }   
+  // campos texto
+  $j('#altura').val(dataResponse.altura);
+  $j('#peso').val(dataResponse.peso);
+  $j('#grupo_sanguineo').val(dataResponse.grupo_sanguineo);
+  $j('#fator_rh').val(dataResponse.fator_rh);
+  $j('#desc_alergia_medicamento').val(dataResponse.desc_alergia_medicamento);
+  $j('#desc_alergia_alimento').val(dataResponse.desc_alergia_alimento);
+  $j('#desc_doenca_congenita').val(dataResponse.desc_doenca_congenita);
+  $j('#doenca_outras').val(dataResponse.doenca_outras);
+  $j('#desc_tratamento_medico').val(dataResponse.desc_tratamento_medico);
+  $j('#desc_medicacao_especifica').val(dataResponse.desc_medicacao_especifica);
+  $j('#desc_acomp_medico_psicologico').val(dataResponse.desc_acomp_medico_psicologico);
+  $j('#desc_restricao_atividade_fisica').val(dataResponse.desc_restricao_atividade_fisica);
+  $j('#desc_fratura_trauma').val(dataResponse.desc_fratura_trauma);
+  $j('#desc_plano_saude').val(dataResponse.desc_plano_saude);
+  $j('#hospital_clinica').val(dataResponse.hospital_clinica);
+  $j('#hospital_clinica_endereco').val(dataResponse.hospital_clinica_endereco);
+  $j('#hospital_clinica_telefone').val(dataResponse.hospital_clinica_telefone);
+  $j('#responsavel').val(dataResponse.responsavel);
+  $j('#responsavel_parentesco').val(dataResponse.responsavel_parentesco);
+  $j('#responsavel_parentesco_telefone').val(dataResponse.responsavel_parentesco_telefone);
+  $j('#responsavel_parentesco_celular').val(dataResponse.responsavel_parentesco_celular);
+
 };
 
 var handleGetPersonDetails = function(dataResponse) {
@@ -247,15 +405,68 @@ function afterChangePessoa(targetWindow, pessoaId) {
     }
 
     checkTipoResponsavel();
-    $j('#tipo_responsavel').change(checkTipoResponsavel);
+    $j('#tipo_responsavel').change(checkTipoResponsavel);  
 
 
     var msg = 'Bem vindo ao novo cadastro de alunos,<br />' +
+              'Agora você pode navegar entre as abas! <br />'+
               '<b>Dúvidas?</b> Entre em contato com o suporte.';
 
     $j('<p>').addClass('back-to-old-version right-top-notice notice')
              .html(stringUtils.toUtf8(msg))
-             .appendTo($j('#id').closest('td'));
+             .appendTo($j('#tab1').closest('td'));
+  
+
+    /***********************
+    EVENTOS DE CLICK EM ABAS
+    ************************/
+
+    // DADOS PESSOAIS
+    $j('#tab1').click( 
+      function(){
+
+        $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
+        $j('#tab1').toggleClass('alunoTab alunoTab-active')
+        $j('.tablecadastro >tbody  > tr').each(function(index, row) {
+          if (index>14 && index<60){
+            row.hide();
+          }else{
+            row.show();
+          }
+        });        
+      }
+    );  
+
+    // FICHA MÉDICA
+    $j('#tab2').click( 
+      function(){
+        $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
+        $j('#tab2').toggleClass('alunoTab alunoTab-active')
+        $j('.tablecadastro >tbody  > tr').each(function(index, row) {
+          if (index>14){
+            row.show();
+          }else if (index>0){
+            row.hide();
+          }
+        });
+        // Esse loop desativa/ativa os campos de descrição, conforme os checkbox    
+        $j('.temDescricao').each(function(i, obj) {
+            $j('#desc_'+obj.id).prop('disabled', !$j('#'+obj.id).prop('checked'));                  
+        });
+      
+      });    
+
+    /* A seguinte função habilitam/desabilitam o campo de descrição quando for clicado 
+    nos referentes checkboxs */         
+
+    $j('.temDescricao').click(function(){
+        if ($j('#'+this.id).prop('checked'))
+          $j('#desc_'+this.id).removeAttr('disabled');          
+        else{
+          $j('#desc_'+this.id).attr('disabled','disabled');          
+          $j('#desc_'+this.id).val('');          
+        }
+    });
 
   }); // ready
 })(jQuery);

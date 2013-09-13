@@ -33,6 +33,7 @@
  */
 
 require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
+require_once 'include/modules/clsModulesFichaMedicaAluno.inc.php';
 
 require_once 'App/Model/MatriculaSituacao.php';
 
@@ -266,6 +267,61 @@ class AlunoController extends ApiCoreController
 
     return $this->saveEntity($dataMapper, $entity);
   }
+
+  protected function createOrUpdateFichaMedica($id) {
+    
+    $obj                    = new clsModulesFichaMedicaAluno();
+
+    $obj->ref_cod_aluno                         = $id;
+    $obj->altura                                = Portabilis_String_Utils::toLatin1($this->getRequest()->altura);
+    $obj->peso                                  = Portabilis_String_Utils::toLatin1($this->getRequest()->peso);
+    $obj->grupo_sanguineo                       = Portabilis_String_Utils::toLatin1($this->getRequest()->grupo_sanguineo);
+    $obj->fator_rh                              = Portabilis_String_Utils::toLatin1($this->getRequest()->fator_rh);
+    $obj->alergia_medicamento                   = ($this->getRequest()->alergia_medicamento == 'on' ? 'S' : 'N');
+    $obj->desc_alergia_medicamento              = Portabilis_String_Utils::toLatin1($this->getRequest()->desc_alergia_medicamento);
+    $obj->alergia_alimento                      = ($this->getRequest()->alergia_alimento == 'on' ? 'S' : 'N');
+    $obj->desc_alergia_alimento                 = Portabilis_String_Utils::toLatin1($this->getRequest()->desc_alergia_alimento);    
+    $obj->doenca_congenita                      = ($this->getRequest()->doenca_congenita == 'on' ? 'S' : 'N');
+    $obj->desc_doenca_congenita                 = Portabilis_String_Utils::toLatin1($this->getRequest()->desc_doenca_congenita);
+    $obj->fumante                               = ($this->getRequest()->fumante == 'on' ? 'S' : 'N');
+    $obj->doenca_caxumba                        = ($this->getRequest()->doenca_caxumba == 'on' ? 'S' : 'N');
+    $obj->doenca_sarampo                        = ($this->getRequest()->doenca_sarampo == 'on' ? 'S' : 'N');
+    $obj->doenca_rubeola                        = ($this->getRequest()->doenca_rubeola == 'on' ? 'S' : 'N');
+    $obj->doenca_catapora                       = ($this->getRequest()->doenca_catapora == 'on' ? 'S' : 'N');
+    $obj->doenca_escarlatina                    = ($this->getRequest()->doenca_escarlatina == 'on' ? 'S' : 'N');
+    $obj->doenca_coqueluche                     = ($this->getRequest()->doenca_coqueluche == 'on' ? 'S' : 'N');
+    $obj->doenca_outras                         = Portabilis_String_Utils::toLatin1($this->getRequest()->doenca_outras);
+    $obj->epiletico                             = ($this->getRequest()->epiletico == 'on' ? 'S' : 'N');
+    $obj->epiletico_tratamento                  = ($this->getRequest()->epiletico_tratamento == 'on' ? 'S' : 'N');
+    $obj->hemofilico                            = ($this->getRequest()->hemofilico == 'on' ? 'S' : 'N');
+    $obj->hipertenso                            = ($this->getRequest()->hipertenso == 'on' ? 'S' : 'N');
+    $obj->asmatico                              = ($this->getRequest()->asmatico == 'on' ? 'S' : 'N');
+    $obj->diabetico                             = ($this->getRequest()->diabetico == 'on' ? 'S' : 'N');
+    $obj->insulina                              = ($this->getRequest()->insulina == 'on' ? 'S' : 'N');
+    $obj->tratamento_medico                     = ($this->getRequest()->tratamento_medico == 'on' ? 'S' : 'N');
+    $obj->desc_tratamento_medico                = Portabilis_String_Utils::toLatin1($this->getRequest()->desc_tratamento_medico);
+    $obj->medicacao_especifica                  = ($this->getRequest()->medicacao_especifica == 'on' ? 'S' : 'N');
+    $obj->desc_medicacao_especifica             = Portabilis_String_Utils::toLatin1($this->getRequest()->desc_medicacao_especifica);
+    $obj->acomp_medico_psicologico              = ($this->getRequest()->acomp_medico_psicologico == 'on' ? 'S' : 'N');
+    $obj->desc_acomp_medico_psicologico         = Portabilis_String_Utils::toLatin1($this->getRequest()->desc_acomp_medico_psicologico);
+    $obj->acomp_medico_psicologico              = ($this->getRequest()->acomp_medico_psicologico == 'on' ? 'S' : 'N');
+    $obj->desc_acomp_medico_psicologico         = Portabilis_String_Utils::toLatin1($this->getRequest()->desc_acomp_medico_psicologico);
+    $obj->restricao_atividade_fisica            = ($this->getRequest()->restricao_atividade_fisica == 'on' ? 'S' : 'N');
+    $obj->desc_restricao_atividade_fisica       = Portabilis_String_Utils::toLatin1($this->getRequest()->desc_restricao_atividade_fisica);
+    $obj->fratura_trauma                        = ($this->getRequest()->fratura_trauma == 'on' ? 'S' : 'N');
+    $obj->desc_fratura_trauma                   = Portabilis_String_Utils::toLatin1($this->getRequest()->desc_fratura_trauma);
+    $obj->plano_saude                           = ($this->getRequest()->plano_saude == 'on' ? 'S' : 'N');
+    $obj->desc_plano_saude                      = Portabilis_String_Utils::toLatin1($this->getRequest()->desc_plano_saude);
+    $obj->hospital_clinica                      = Portabilis_String_Utils::toLatin1($this->getRequest()->hospital_clinica);
+    $obj->hospital_clinica_endereco             = Portabilis_String_Utils::toLatin1($this->getRequest()->hospital_clinica_endereco);
+    $obj->hospital_clinica_telefone             = Portabilis_String_Utils::toLatin1($this->getRequest()->hospital_clinica_telefone);
+    $obj->responsavel                           = Portabilis_String_Utils::toLatin1($this->getRequest()->responsavel);
+    $obj->responsavel_parentesco                = Portabilis_String_Utils::toLatin1($this->getRequest()->responsavel_parentesco);
+    $obj->responsavel_parentesco_telefone       = Portabilis_String_Utils::toLatin1($this->getRequest()->responsavel_parentesco_telefone);
+    $obj->responsavel_parentesco_celular        = Portabilis_String_Utils::toLatin1($this->getRequest()->responsavel_parentesco_celular);
+
+    return ($obj->existe() ? $obj->edita() : $obj->cadastra());
+  }  
 
 
   protected function loadAlunoInepId($alunoId) {
@@ -618,6 +674,15 @@ class AlunoController extends ApiCoreController
 
       $aluno['destroyed_at'] = Portabilis_Date_Utils::pgSQLToBr($aluno['destroyed_at']);
 
+      $objFichaMedica                    = new clsModulesFichaMedicaAluno($id);
+      if ($objFichaMedica->existe()){
+        $objFichaMedica         = $objFichaMedica->detalhe();
+        foreach ($objFichaMedica as $chave => $value) {
+          $objFichaMedica[$chave]  = Portabilis_String_Utils::toUtf8($value);
+        }
+        $aluno = Portabilis_Array_Utils::merge($objFichaMedica,$aluno);
+      }
+
       return $aluno;
     }
   }
@@ -696,6 +761,7 @@ class AlunoController extends ApiCoreController
         $this->createOrUpdateTransporte($id);
         $this->createUpdateOrDestroyEducacensoAluno($id);
         $this->updateDeficiencias();
+        $this->createOrUpdateFichaMedica($id);
 
         $this->messenger->append('Cadastrado realizado com sucesso', 'success', false, 'error');
       }
@@ -714,6 +780,7 @@ class AlunoController extends ApiCoreController
       $this->createOrUpdateTransporte($id);
       $this->createUpdateOrDestroyEducacensoAluno($id);
       $this->updateDeficiencias();
+      $this->createOrUpdateFichaMedica($id);
 
       $this->messenger->append('Cadastro alterado com sucesso', 'success', false, 'error');
     }

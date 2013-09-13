@@ -31,13 +31,13 @@
 require_once 'include/pmieducar/geral.inc.php';
 
 /**
- * clsPmieducarInstituicao class.
+ * clsModulesEmpresaTransporteEscolar class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @package   Module
+ * @since     07/2013
  * @version   @@package_version@@
  */
 class clsModulesEmpresaTransporteEscolar
