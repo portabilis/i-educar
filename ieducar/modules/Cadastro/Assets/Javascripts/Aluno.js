@@ -20,7 +20,7 @@ $j('#tab1').addClass('alunoTab-active').removeClass('alunoTab');
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
 $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-  if (index>14 && index<60){
+  if (index>14 && index<61){
     row.hide();
   }
 });
@@ -428,7 +428,7 @@ function afterChangePessoa(targetWindow, pessoaId) {
         $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
         $j('#tab1').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-          if (index>14 && index<60){
+          if (index>14 && index<61){
             row.hide();
           }else{
             row.show();

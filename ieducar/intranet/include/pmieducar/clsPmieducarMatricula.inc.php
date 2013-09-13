@@ -638,7 +638,7 @@ class clsPmieducarMatricula
     }
 
     if ($int_ativo) {
-      $filtros .= "{$whereAnd} m.ativo = '1'";
+      $filtros .= "{$whereAnd} m.ativo = '1' AND a.ativo = '1' ";
       $whereAnd = " AND ";
     }
     elseif (!is_null($int_ativo) && is_numeric($int_ativo)) {

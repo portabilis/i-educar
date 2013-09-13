@@ -143,6 +143,8 @@ class indice extends clsCadastro
             (m.cod_menu_menu = 7 OR m.ref_cod_menu_pai = 7) OR   
             (m.cod_menu_menu = 23 OR m.ref_cod_menu_pai = 23) OR  
             (m.cod_menu_menu = 5 OR m.ref_cod_menu_pai = 5) OR                                                
+            (m.cod_menu_menu = 25 OR m.ref_cod_menu_pai = 25) OR                                                
+            (m.cod_menu_menu = 38 OR m.ref_cod_menu_pai = 38) OR                                                
             (m.cod_menu_menu = 57 OR m.ref_cod_menu_pai = 57) OR
             (m.cod_menu_menu = 56 OR m.ref_cod_menu_pai = 56))
       ORDER BY
