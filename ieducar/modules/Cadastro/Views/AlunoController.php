@@ -191,6 +191,54 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
       'responsavel_parentesco_celular' => array('label' => 'Celular'),
 
+      /*************************
+      **** UNIFORME ESCOLAR ****
+      **************************/
+
+      'recebeu_uniforme' => array('label' => 'Recebeu uniforme escolar?'),
+
+      'label_camiseta' => array('label' => 'Camiseta'),
+
+      'quantidade_camiseta' => array('label' => 'Quantidade'),
+
+      'tamanho_camiseta' => array('label' => 'Tamanho'),
+
+      'label_blusa_jaqueta' => array('label' => 'Blusa/Jaqueta'),
+
+      'quantidade_blusa_jaqueta' => array('label' => 'Quantidade'),
+
+      'tamanho_blusa_jaqueta' => array('label' => 'Tamanho'),
+
+      'label_bermuda' => array('label' => 'Bermuda'),
+
+      'quantidade_bermuda' => array('label' => 'Quantidade'),
+
+      'tamanho_bermuda' => array('label' => 'Tamanho'),      
+
+      'label_calca' => array('label' => 'Calça'),
+
+      'quantidade_calca' => array('label' => 'Quantidade'),
+
+      'tamanho_calca' => array('label' => 'Tamanho'),
+
+      'label_saia' => array('label' => 'Saia'),
+
+      'quantidade_saia' => array('label' => 'Quantidade'),
+
+      'tamanho_saia' => array('label' => 'Tamanho'),
+
+      'label_calcado' => array('label' => 'Calçado'),
+
+      'quantidade_calcado' => array('label' => 'Quantidade'),
+
+      'tamanho_calcado' => array('label' => 'Tamanho'),
+
+      'label_meia' => array('label' => 'Meia'),
+
+      'quantidade_meia' => array('label' => 'Quantidade'),
+
+      'tamanho_meia' => array('label' => 'Tamanho'),
+
   );
 
 
