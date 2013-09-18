@@ -12,16 +12,21 @@ var $resourceNotice = $j('<span>').html('')
 var $pessoaNotice = $resourceNotice.clone()
                                    .appendTo($nomeField.parent());
 
+// adiciona id 'stop' na linha separadora
+$j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
 // Adiciona abas na página
-$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab"> <span class="tabText">Ficha m\u00e9dica</span></div></li></ul></div>');
+$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab"> <span class="tabText">Ficha m\u00e9dica</span></div></li><li><div id="tab3" class="alunoTab"> <span class="tabText">Uniforme escolar</span></div></li></ul></div>');
 
 // Adiciona estilo de aba selecionada a primeira aba
 $j('#tab1').addClass('alunoTab-active').removeClass('alunoTab');
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
 $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-  if (index>14 && index<61){
-    row.hide();
+  if (index>14){
+    if (row.id!='stop')
+      row.hide();
+    else
+      return false;
   }
 });
 
@@ -428,8 +433,11 @@ function afterChangePessoa(targetWindow, pessoaId) {
         $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
         $j('#tab1').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-          if (index>14 && index<61){
-            row.hide();
+          if (index>14){
+            if (row.id!='stop')
+              row.hide();
+            else
+              return false;            
           }else{
             row.show();
           }
