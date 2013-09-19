@@ -7,8 +7,8 @@
  	-- @version  $Id$  
   
   
-  insert into portal.menu_submenu values(999221,55,2,'Ficha Médica do Aluno','module/Reports/LivroMatricula',NULL,3);
-  insert into pmicontrolesis.menu values(999221,999221,999300,'Ficha Médica do Aluno',6,'module/Reports/LivroMatricula','_self',1,15,192);
+  insert into portal.menu_submenu values(999221,55,2,'Livro de Matrícula','module/Reports/LivroMatricula',NULL,3);
+  insert into pmicontrolesis.menu values(999221,999221,999300,'Livro de Matrícula',5,'module/Reports/LivroMatricula','_self',1,15,192);
 
 
 	-- //@UNDO
