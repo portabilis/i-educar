@@ -405,6 +405,7 @@ class DiarioApiController extends ApiCoreController
     $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
     $this->appendResponse('situacao',     $this->getSituacaoMatricula());
+    $this->appendResponse('nota_necessaria_exame', $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
   }
 
 
@@ -753,11 +754,11 @@ class DiarioApiController extends ApiCoreController
       $componente['id']                    = $_componente->get('id');
       $componente['nome']                  = $this->safeString($_componente->get('nome'));
       $componente['nota_atual']            = $this->getNotaAtual($etapa = null, $componente['id']);
-      $componente['nota_exame']            = $this->getNotaExame($componente['id']);
-      //$componente['nota_necessaria_exame'] = $this->getNotaNecessariaExame($componente['id']);
+      $componente['nota_exame']            = $this->getNotaExame($componente['id']);      
       $componente['falta_atual']           = $this->getFaltaAtual($etapa = null, $componente['id']);
       $componente['parecer_atual']         = $this->getParecerAtual($componente['id']);
       $componente['situacao']              = $this->getSituacaoMatricula($componente['id']);
+      $componente['nota_necessaria_exame'] = ($componente['situacao'] != 'Em andamento' ? $this->getNotaNecessariaExame($componente['id']) : null );
 
       $componentesCurriculares[]           = $componente;
     }
