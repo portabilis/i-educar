@@ -34,6 +34,7 @@
 
 require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
 require_once 'include/modules/clsModulesFichaMedicaAluno.inc.php';
+require_once 'include/modules/clsModulesUniformeAluno.inc.php';
 
 require_once 'App/Model/MatriculaSituacao.php';
 
@@ -323,6 +324,36 @@ class AlunoController extends ApiCoreController
     return ($obj->existe() ? $obj->edita() : $obj->cadastra());
   }  
 
+protected function createOrUpdateUniforme($id) {
+    
+    $obj                                        = new clsModulesUniformeAluno();
+
+    $obj->ref_cod_aluno                         = $id;
+    $obj->recebeu_uniforme                      = ($this->getRequest()->recebeu_uniforme == 'on' ? 'S' : 'N');
+    
+    $obj->quantidade_camiseta                   = $this->getRequest()->quantidade_camiseta;
+    $obj->tamanho_camiseta                      = Portabilis_String_Utils::toLatin1($this->getRequest()->tamanho_camiseta);
+
+    $obj->quantidade_calca                      = $this->getRequest()->quantidade_calca;
+    $obj->tamanho_calca                         = Portabilis_String_Utils::toLatin1($this->getRequest()->tamanho_calca);
+
+    $obj->quantidade_bermuda                    = $this->getRequest()->quantidade_bermuda;
+    $obj->tamanho_bermuda                       = Portabilis_String_Utils::toLatin1($this->getRequest()->tamanho_bermuda);
+
+    $obj->quantidade_meia                       = $this->getRequest()->quantidade_meia;
+    $obj->tamanho_meia                          = Portabilis_String_Utils::toLatin1($this->getRequest()->tamanho_meia);
+
+    $obj->quantidade_saia                       = $this->getRequest()->quantidade_saia;
+    $obj->tamanho_saia                          = Portabilis_String_Utils::toLatin1($this->getRequest()->tamanho_saia);
+
+    $obj->quantidade_calcado                    = $this->getRequest()->quantidade_calcado;
+    $obj->tamanho_calcado                       = Portabilis_String_Utils::toLatin1($this->getRequest()->tamanho_calcado);
+
+    $obj->quantidade_blusa_jaqueta              = $this->getRequest()->quantidade_blusa_jaqueta;
+    $obj->tamanho_blusa_jaqueta                 = Portabilis_String_Utils::toLatin1($this->getRequest()->tamanho_blusa_jaqueta);    
+
+    return ($obj->existe() ? $obj->edita() : $obj->cadastra());
+  }  
 
   protected function loadAlunoInepId($alunoId) {
     $dataMapper = $this->getDataMapperFor('educacenso', 'aluno');
@@ -683,6 +714,15 @@ class AlunoController extends ApiCoreController
         $aluno = Portabilis_Array_Utils::merge($objFichaMedica,$aluno);
       }
 
+      $objUniforme                    = new clsModulesUniformeAluno($id);
+      if ($objUniforme->existe()){
+        $objUniforme         = $objUniforme->detalhe();
+        foreach ($objUniforme as $chave => $value) {
+          $objUniforme[$chave]  = Portabilis_String_Utils::toUtf8($value);
+        }
+        $aluno = Portabilis_Array_Utils::merge($objUniforme,$aluno);
+      }
+
       return $aluno;
     }
   }
@@ -762,6 +802,7 @@ class AlunoController extends ApiCoreController
         $this->createUpdateOrDestroyEducacensoAluno($id);
         $this->updateDeficiencias();
         $this->createOrUpdateFichaMedica($id);
+        $this->createOrUpdateUniforme($id);
 
         $this->messenger->append('Cadastrado realizado com sucesso', 'success', false, 'error');
       }
@@ -781,6 +822,7 @@ class AlunoController extends ApiCoreController
       $this->createUpdateOrDestroyEducacensoAluno($id);
       $this->updateDeficiencias();
       $this->createOrUpdateFichaMedica($id);
+      $this->createOrUpdateUniforme($id);
 
       $this->messenger->append('Cadastro alterado com sucesso', 'success', false, 'error');
     }

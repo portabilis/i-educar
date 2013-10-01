@@ -33,6 +33,8 @@ $j('.tablecadastro >tbody  > tr').each(function(index, row) {
 // Adiciona classe para que os campos de descrição possam ser desativados (checkboxs)
 $j('#restricao_atividade_fisica, #acomp_medico_psicologico, #medicacao_especifica, #tratamento_medico, #doenca_congenita, #alergia_alimento, #alergia_medicamento, #fratura_trauma, #plano_saude').addClass('temDescricao');
 
+$j('#quantidade_camiseta, #tamanho_camiseta, #quantidade_calca, #tamanho_calca, #quantidade_calcado, #tamanho_calcado, #quantidade_bermuda, #tamanho_bermuda, #quantidade_saia, #tamanho_saia, #quantidade_meia, #tamanho_meia, #tamanho_blusa_jaqueta, #quantidade_blusa_jaqueta').addClass('uniforme');
+
 // ajax
 
 resourceOptions.handlePost = function(dataResponse) {
@@ -228,6 +230,30 @@ resourceOptions.handleGet = function(dataResponse) {
   $j('#responsavel_parentesco').val(dataResponse.responsavel_parentesco);
   $j('#responsavel_parentesco_telefone').val(dataResponse.responsavel_parentesco_telefone);
   $j('#responsavel_parentesco_celular').val(dataResponse.responsavel_parentesco_celular);
+
+    /***********************************************
+      CAMPOS DO UNIFORME ESCOLAR
+    ************************************************/
+
+  if (dataResponse.recebeu_uniforme == 'S'){
+    $j('#recebeu_uniforme').attr('checked',true);  
+    $j('#recebeu_uniforme').val('on');   
+  }   
+  $j('#tamanho_camiseta').val(dataResponse.tamanho_camiseta);
+  $j('#tamanho_calcado').val(dataResponse.tamanho_calcado);
+  $j('#tamanho_saia').val(dataResponse.tamanho_saia);
+  $j('#tamanho_calca').val(dataResponse.tamanho_calca);
+  $j('#tamanho_meia').val(dataResponse.tamanho_meia);
+  $j('#tamanho_bermuda').val(dataResponse.tamanho_bermuda);
+  $j('#tamanho_blusa_jaqueta').val(dataResponse.tamanho_blusa_jaqueta);
+  $j('#quantidade_camiseta').val(dataResponse.quantidade_camiseta);
+  $j('#quantidade_calcado').val(dataResponse.quantidade_calcado);
+  $j('#quantidade_saia').val(dataResponse.quantidade_saia);
+  $j('#quantidade_calca').val(dataResponse.quantidade_calca);
+  $j('#quantidade_calcado').val(dataResponse.quantidade_calcado);
+  $j('#quantidade_bermuda').val(dataResponse.quantidade_bermuda);
+  $j('#quantidade_meia').val(dataResponse.quantidade_meia);  
+  $j('#quantidade_blusa_jaqueta').val(dataResponse.quantidade_blusa_jaqueta); 
 
 };
 
@@ -451,11 +477,14 @@ function afterChangePessoa(targetWindow, pessoaId) {
         $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
         $j('#tab2').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-          if (index>14){
-            row.show();
-          }else if (index>0){
-            row.hide();
-          }
+          if (row.id!='stop'){
+            if (index>14 && index<62){
+              row.show();
+            }else if (index>0){
+              row.hide();
+            }
+          }else
+            return false;
         });
         // Esse loop desativa/ativa os campos de descrição, conforme os checkbox    
         $j('.temDescricao').each(function(i, obj) {
@@ -463,6 +492,23 @@ function afterChangePessoa(targetWindow, pessoaId) {
         });
       
       });    
+    // UNIFORME
+    $j('#tab3').click( 
+      function(){
+        $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
+        $j('#tab3').toggleClass('alunoTab alunoTab-active')
+        $j('.tablecadastro >tbody  > tr').each(function(index, row) {
+
+          if (index<62 && index!=0){
+            row.hide();
+          }else{
+            row.show();
+          }          
+        });
+        $j('.uniforme').prop('disabled',!$j('#recebeu_uniforme').prop('checked'));
+      });        
+
+
 
     /* A seguinte função habilitam/desabilitam o campo de descrição quando for clicado 
     nos referentes checkboxs */         
@@ -474,6 +520,15 @@ function afterChangePessoa(targetWindow, pessoaId) {
           $j('#desc_'+this.id).attr('disabled','disabled');          
           $j('#desc_'+this.id).val('');          
         }
+    });
+
+    $j('#recebeu_uniforme').click(function(){
+      if ($j('#recebeu_uniforme').prop('checked'))
+        $j('.uniforme').removeAttr('disabled');          
+      else{
+        $j('.uniforme').attr('disabled','disabled');          
+        $j('.uniforme').val('');          
+      }
     });
 
   }); // ready

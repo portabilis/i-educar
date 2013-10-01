@@ -541,7 +541,80 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     // responsavel_parentesco_celular
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('responsavel_parentesco_celular') ), 'size' => 20, 'max_length' => 20,'required' => false, 'placeholder' => '');
-    $this->inputsHelper()->text('responsavel_parentesco_celular',$options);                 
+    $this->inputsHelper()->text('responsavel_parentesco_celular',$options);       
+
+    // recebeu_uniforme
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recebeu_uniforme') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('recebeu_uniforme',$options);                    
+
+    $this->campoRotulo('label_camiseta',Portabilis_String_Utils::toLatin1($this->_getLabel('label_camiseta'))); 
+
+    // quantidade_camiseta
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('quantidade_camiseta') ), 'size' => 2, 'max_length' => 3,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->integer('quantidade_camiseta',$options);  
+
+    // tamanho_camiseta
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('tamanho_camiseta') ), 'size' => 2, 'max_length' => 2,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('tamanho_camiseta',$options);   
+
+    $this->campoRotulo('label_bermuda',Portabilis_String_Utils::toLatin1($this->_getLabel('label_bermuda'))); 
+
+    // quantidade_bermuda
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('quantidade_bermuda') ), 'size' => 2, 'max_length' => 3,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->integer('quantidade_bermuda',$options);  
+
+    // tamanho_bermuda
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('tamanho_bermuda') ), 'size' => 2, 'max_length' => 2,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('tamanho_bermuda',$options);   
+
+    $this->campoRotulo('label_calca',Portabilis_String_Utils::toLatin1($this->_getLabel('label_calca'))); 
+
+    // quantidade_calca
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('quantidade_calca') ), 'size' => 2, 'max_length' => 3,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->integer('quantidade_calca',$options);  
+
+    // tamanho_calca
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('tamanho_calca') ), 'size' => 2, 'max_length' => 2,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('tamanho_calca',$options);   
+
+    $this->campoRotulo('label_saia',Portabilis_String_Utils::toLatin1($this->_getLabel('label_saia'))); 
+
+    // quantidade_saia
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('quantidade_saia') ), 'size' => 2, 'max_length' => 3,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->integer('quantidade_saia',$options);  
+
+    // tamanho_saia
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('tamanho_saia') ), 'size' => 2, 'max_length' => 2,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('tamanho_saia',$options);   
+
+    $this->campoRotulo('label_calcado',Portabilis_String_Utils::toLatin1($this->_getLabel('label_calcado'))); 
+
+    // quantidade_calcado
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('quantidade_calcado') ), 'size' => 2, 'max_length' => 3,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->integer('quantidade_calcado',$options);  
+
+    // tamanho_calcado
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('tamanho_calcado') ), 'size' => 2, 'max_length' => 2,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('tamanho_calcado',$options);                          
+
+    $this->campoRotulo('label_meia',Portabilis_String_Utils::toLatin1($this->_getLabel('label_meia'))); 
+
+    // quantidade_meia
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('quantidade_meia') ), 'size' =>2, 'max_length' => 3,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->integer('quantidade_meia',$options);  
+
+    // tamanho_meia
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('tamanho_meia') ), 'size' => 2, 'max_length' => 2,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('tamanho_meia',$options);                              
+
+    // quantidade_blusa_jaqueta
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('quantidade_blusa_jaqueta') ), 'size' =>2, 'max_length' => 3,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->integer('quantidade_blusa_jaqueta',$options);  
+
+    // tamanho_blusa_jaqueta
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('tamanho_blusa_jaqueta') ), 'size' => 2, 'max_length' => 2,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->text('tamanho_blusa_jaqueta',$options);                              
+
 
     $this->loadResourceAssets($this->getDispatcher());
   }

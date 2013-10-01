@@ -187,7 +187,7 @@ class clsModulesUniformeAluno
       $this->quantidade_meia = $quantidade_meia;
     }
     
-    if (is_string($tamanho_meia) {
+    if (is_string($tamanho_meia)) {
       $this->tamanho_meia = $tamanho_meia;
     }    
    
@@ -307,7 +307,7 @@ class clsModulesUniformeAluno
   
       if (is_numeric($this->quantidade_camiseta))
         $set .= ",quantidade_camiseta = '{$this->quantidade_camiseta}'";
-      }else{
+      else{
         $set .= ",quantidade_camiseta = NULL";
       }
   
@@ -315,7 +315,7 @@ class clsModulesUniformeAluno
   
       if (is_numeric($this->quantidade_blusa_jaqueta))
         $set .= ",quantidade_blusa_jaqueta = '{$this->quantidade_blusa_jaqueta}'";
-      }else{
+      else{
         $set .= ",quantidade_blusa_jaqueta = NULL";
       }
   
@@ -323,7 +323,7 @@ class clsModulesUniformeAluno
   
       if (is_numeric($this->quantidade_bermuda))
         $set .= ",quantidade_bermuda = '{$this->quantidade_bermuda}'";
-      }else{
+      else{
         $set .= ",quantidade_bermuda = NULL";
       }
   
@@ -331,7 +331,7 @@ class clsModulesUniformeAluno
   
       if (is_numeric($this->quantidade_calca))
         $set .= ",quantidade_calca = '{$this->quantidade_calca}'";
-      }else{
+      else{
         $set .= ",quantidade_calca = NULL";
       }
   
@@ -339,7 +339,7 @@ class clsModulesUniformeAluno
   
       if (is_numeric($this->quantidade_saia))
         $set .= ",quantidade_saia = '{$this->quantidade_saia}'";
-      }else{
+      else{
         $set .= ",quantidade_saia = NULL";
       }
   
@@ -347,7 +347,7 @@ class clsModulesUniformeAluno
   
       if (is_numeric($this->quantidade_calcado))
         $set .= ",quantidade_calcado = '{$this->quantidade_calcado}'";
-      }else{
+      else{
         $set .= ",quantidade_calcado = NULL";
       }
   
@@ -355,7 +355,7 @@ class clsModulesUniformeAluno
   
       if (is_numeric($this->quantidade_meia))
         $set .= ",quantidade_meia = '{$this->quantidade_meia}'";
-      }else{
+      else{
         $set .= ",quantidade_meia = NULL";
       }
   
