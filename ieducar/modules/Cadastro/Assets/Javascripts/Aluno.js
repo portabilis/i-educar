@@ -478,7 +478,7 @@ function afterChangePessoa(targetWindow, pessoaId) {
         $j('#tab2').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index>14 && index<62){
+            if (index>14 && index<61){
               row.show();
             }else if (index>0){
               row.hide();
@@ -499,7 +499,7 @@ function afterChangePessoa(targetWindow, pessoaId) {
         $j('#tab3').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
 
-          if (index<62 && index!=0){
+          if (index<61 && index!=0){
             row.hide();
           }else{
             row.show();

@@ -33,6 +33,7 @@ require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/modules/clsModulesFichaMedicaAluno.inc.php';
+require_once 'include/modules/clsModulesUniformeAluno.inc.php';
 
 require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'Educacenso/Model/AlunoDataMapper.php';
@@ -726,6 +727,35 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Celular', $reg['responsavel_parentesco_celular']));          
 
     }
+
+    $objUniforme       = new clsModulesUniformeAluno($this->cod_aluno);
+    $reg               = $objUniforme->detalhe();
+
+    if($reg){    
+
+      $this->addDetalhe(array('<span id="funiforme"></span>Recebeu uniforme escolar', ($reg['recebeu_uniforme'] == 'S' ? 'Sim': 'Não') ));       
+      $this->addDetalhe(array('<span class="tit_uniforme">Camiseta</span>'));   
+      $this->addDetalhe(array('Quantidade', $reg['quantidade_camiseta'])); 
+      $this->addDetalhe(array('Tamanho', $reg['tamanho_camiseta']));  
+      $this->addDetalhe(array('<span class="tit_uniforme">Blusa/Jaqueta</span>'));   
+      $this->addDetalhe(array('Quantidade', $reg['quantidade_blusa_jaqueta'])); 
+      $this->addDetalhe(array('Tamanho', $reg['tamanho_blusa_jaqueta']));  
+      $this->addDetalhe(array('<span class="tit_uniforme">Bermuda</span>'));   
+      $this->addDetalhe(array('Quantidade', $reg['quantidade_bermuda'])); 
+      $this->addDetalhe(array('Tamanho', $reg['tamanho_bermuda']));  
+      $this->addDetalhe(array('<span class="tit_uniforme">Calça</span>'));   
+      $this->addDetalhe(array('Quantidade', $reg['quantidade_calca'])); 
+      $this->addDetalhe(array('Tamanho', $reg['tamanho_calca']));  
+      $this->addDetalhe(array('<span class="tit_uniforme">Saia</span>'));   
+      $this->addDetalhe(array('Quantidade', $reg['quantidade_saia'])); 
+      $this->addDetalhe(array('Tamanho', $reg['tamanho_saia']));  
+      $this->addDetalhe(array('<span class="tit_uniforme">Calçado</span>'));   
+      $this->addDetalhe(array('Quantidade', $reg['quantidade_calcado'])); 
+      $this->addDetalhe(array('Tamanho', $reg['tamanho_calcado']));  
+      $this->addDetalhe(array('<span class="tit_uniforme">Meia</span>'));   
+      $this->addDetalhe(array('Quantidade', $reg['quantidade_meia'])); 
+      $this->addDetalhe(array('Tamanho', $reg['tamanho_meia']));                                              
+    }      
 
     $this->url_cancelar = 'educar_aluno_lst.php';
     $this->largura      = '100%';

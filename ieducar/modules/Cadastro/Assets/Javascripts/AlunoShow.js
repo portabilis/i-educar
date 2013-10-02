@@ -126,8 +126,10 @@ $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
 // Verifica se possui ficha médica, verificando se existe o primeiro campo
 var possui_ficha_medica = $j('#fmedica').length>0;
 
+var possui_uniforme_escolar = $j('#fmedica').length>0;
+
 // Adiciona abas na página
-$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab2"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab2"> <span class="tabText">Ficha m\u00e9dica</span></div></li></ul></div>');
+$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab2"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab2"> <span class="tabText">Ficha m\u00e9dica</span></div></li><li><div id="tab3" class="alunoTab2"> <span class="tabText">Uniforme escolar</span></div></li></ul></div>');
 $j('td .formdktd b').remove();
 $j('#tab1').addClass('alunoTab-active2').removeClass('alunoTab2');
 var linha_inicial_fmedica = 0;
@@ -142,6 +144,24 @@ if(possui_ficha_medica){
   // hide nos campos das outras abas (deixando só os campos da primeira aba)
   $j('.tableDetalhe >tbody  > tr').each(function(index, row) {
     if (index>=linha_inicial_fmedica){
+      if (row.id!='stop')
+        row.hide();    
+      else
+        return false;
+    }
+  });
+}
+
+if(possui_uniforme_escolar){
+  // Atribui um id a linha, para identificar até onde/a partir de onde esconder os campos
+  $j('#funiforme').closest('tr').attr('id','tfuniforme');
+
+  // Pega o número dessa linha
+  linha_inicial_funiforme = $j('#tfuniforme').index();
+
+  // hide nos campos das outras abas (deixando só os campos da primeira aba)
+  $j('.tableDetalhe >tbody  > tr').each(function(index, row) {
+    if (index>=linha_inicial_funiforme){
       if (row.id!='stop')
         row.hide();    
       else
@@ -182,16 +202,40 @@ $j(document).ready(function() {
           $j('.alunoTab-active2').toggleClass('alunoTab-active2 alunoTab2');
           $j('#tab2').toggleClass('alunoTab2 alunoTab-active2')
           $j('.tableDetalhe >tbody  > tr').each(function(index, row) {
-            if (index>=linha_inicial_fmedica){
-              row.show();
-            }else if (index>0){
-              row.hide();
-            }
+            if (row.id!='stop'){
+              if (index>=linha_inicial_fmedica && index<linha_inicial_funiforme){
+                row.show();
+              }else if (index>0){
+                row.hide();
+              }
+            }else
+              return false;
           });
         }else
           alert('Dados da ficha m\u00e9dica n\u00e2o foram cadastrados para esse aluno.');
       
-      });    
+      });
+
+      // FICHA MÉDICA
+      $j('#tab3').click( 
+        function(){
+          if (possui_uniforme_escolar){
+            $j('.alunoTab-active2').toggleClass('alunoTab-active2 alunoTab2');
+            $j('#tab3').toggleClass('alunoTab2 alunoTab-active2')
+            $j('.tableDetalhe >tbody  > tr').each(function(index, row) {
+              if (row.id!='stop'){
+                if (index>=linha_inicial_funiforme){
+                  row.show();
+                }else if (index>0){
+                  row.hide();
+                }
+              }else
+                return false;
+            });
+          }else
+            alert('Dados do uniforme escolar n\u00e2o foram cadastrados para esse aluno.');
+        
+        });          
 
   getMatriculas();
 
