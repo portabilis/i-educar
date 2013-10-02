@@ -607,6 +607,8 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('tamanho_meia') ), 'size' => 2, 'max_length' => 2,'required' => false, 'placeholder' => '');
     $this->inputsHelper()->text('tamanho_meia',$options);                              
 
+    $this->campoRotulo('label_blusa_jaqueta',Portabilis_String_Utils::toLatin1($this->_getLabel('label_blusa_jaqueta'))); 
+    
     // quantidade_blusa_jaqueta
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('quantidade_blusa_jaqueta') ), 'size' =>2, 'max_length' => 3,'required' => false, 'placeholder' => '');
     $this->inputsHelper()->integer('quantidade_blusa_jaqueta',$options);  

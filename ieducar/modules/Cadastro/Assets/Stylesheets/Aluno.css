@@ -155,7 +155,7 @@
 
 #tit_dados_hospital, #tit_dados_responsavel, #tr_label_calca, 
 #tr_label_calcado, #tr_label_saia, #tr_label_camiseta, 
-#tr_label_meia, #tr_label_bermuda{
+#tr_label_meia, #tr_label_bermuda, #tr_label_blusa_jaqueta{
   font-weight: bold;
   font-size: 10px;
 }
