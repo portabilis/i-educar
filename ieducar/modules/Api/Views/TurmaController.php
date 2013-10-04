@@ -73,7 +73,8 @@ class TurmaController extends ApiCoreController
                    $tiposBoletim::PARECER_SEMESTRAL_MODELO1     => 'portabilis_boletim_parecer_semestral_modelo1',
                    $tiposBoletim::PARECER_DESCRITIVO_COMPONENTE => 'portabilis_boletim_parecer',
                    $tiposBoletim::PARECER_DESCRITIVO_GERAL      => 'portabilis_boletim_parecer_geral',
-                   $tiposBoletim::BIMESTRAL_PACAJA              => 'portabilis_boletim_bimestral_pacaja');
+                   $tiposBoletim::BIMESTRAL_PACAJA              => 'portabilis_boletim_bimestral_pacaja',
+                   $tiposBoletim::ANUAL                         => 'portabilis_boletim_anual');
 
     return array('tipo-boletim' => $tipos[$tipo]);
   }
