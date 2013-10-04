@@ -56,7 +56,7 @@ require_once 'Portabilis/Object/Utils.php';
 class DiarioApiController extends ApiCoreController
 {
   protected $_dataMapper  = 'Avaliacao_Model_NotaComponenteDataMapper';
-  protected $_processoAp  = 644;
+  protected $_processoAp  = 642;
 
   // validations
 
