@@ -13,6 +13,7 @@ function fixupTabelaMatriculas() {
   $j('<th>').html('Ano').appendTo($tr);
   $j('<th>').html(stringUtils.toUtf8('Situação')).appendTo($tr);
   $j('<th>').html('Turma').appendTo($tr);
+  $j('<th>').html('\u00daltima enturma\u00e7\u00e3o').appendTo($tr);
   $j('<th>').html(stringUtils.toUtf8('Série')).appendTo($tr);
   $j('<th>').html('Curso').appendTo($tr);
   $j('<th>').html('Escola').appendTo($tr);
@@ -31,6 +32,7 @@ fixupTabelaMatriculas();
 var handleGetMatriculas = function(dataResponse) {
   try{
     handleMessages(dataResponse.msgs);
+
 
     var $matriculasTable      = $j('#matriculas');
     var transferenciaEmAberto = false;
@@ -51,6 +53,7 @@ var handleGetMatriculas = function(dataResponse) {
       $j('<td>').html(matricula.ano).appendTo($tr);
       $j('<td>').html(matricula.situacao).appendTo($tr);
       $j('<td>').html(matricula.turma_nome).appendTo($tr);
+      $j('<td>').html(matricula.ultima_enturmacao).appendTo($tr);
       $j('<td>').html(matricula.serie_nome).appendTo($tr);
       $j('<td>').html(matricula.curso_nome).appendTo($tr);
       $j('<td>').html(matricula.escola_nome).appendTo($tr);
