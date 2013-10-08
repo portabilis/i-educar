@@ -88,3 +88,12 @@ ul.unstyled, ol.unstyled {
 #rodape .contact {
   font-weight: bold;
 }
+#div-outubro-rosa {
+  position: absolute;
+  top: 65px;
+  left: 170px;
+}
+
+#div-outubro-rosa img{
+  height: 180px;
+}
