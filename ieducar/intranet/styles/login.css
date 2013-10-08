@@ -91,9 +91,10 @@ ul.unstyled, ol.unstyled {
 #div-outubro-rosa {
   position: relative;
   top: -300px;
-  left: -430px;
+  left: -130px;
+  width: 100px;
 }
 
-#div-outubro-rosa img{
+#div-outubro-rosa img{  
   height: 180px;
 }
