@@ -494,6 +494,15 @@ protected function createOrUpdateUniforme($id) {
     return Portabilis_Utils_Database::selectField($sql, $matriculaId);
   }
 
+  protected function loadNomeTurmaOrigem($matriculaId) {
+    $sql = "select nm_turma from pmieducar.matricula_turma mt 
+            left join pmieducar.turma t on (t.cod_turma = mt.ref_cod_turma) 
+            where ref_cod_matricula = $1 and mt.ativo = 0 and mt.ref_cod_turma <> COALESCE((select ref_cod_turma from pmieducar.matricula_turma
+              where ref_cod_matricula = $1 and ativo = 1 limit 1),0) order by mt.data_exclusao desc limit 1";
+
+    return $this->toUtf8(Portabilis_Utils_Database::selectField($sql, $matriculaId), array('transform' => true));
+  }
+
   protected function loadTransferenciaDataSaida($matriculaId) {
     /*$sql = "select to_char(data_transferencia, 'DD/MM/YYYY') from
             pmieducar.transferencia_solicitacao where ref_cod_matricula_saida = $1 and ativo = 1";*/
@@ -771,6 +780,7 @@ protected function createOrUpdateUniforme($id) {
         $matriculas[$index]['escola_nome']  = $this->loadEscolaNome($matricula['escola_id']);
         $matriculas[$index]['curso_nome']   = $this->loadCursoNome($matricula['curso_id']);
         $matriculas[$index]['serie_nome']   = $this->loadSerieNome($matricula['serie_id']);
+        $matriculas[$index]['ultima_enturmacao']   = $this->loadNomeTurmaOrigem($matricula['id']);
 
         $matriculas[$index]['data_entrada'] = $this->loadTransferenciaDataEntrada($matricula['id']);
         $matriculas[$index]['data_saida']   = $this->loadTransferenciaDataSaida($matricula['id']);
