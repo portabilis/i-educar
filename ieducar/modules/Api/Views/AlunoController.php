@@ -497,7 +497,8 @@ protected function createOrUpdateUniforme($id) {
   protected function loadNomeTurmaOrigem($matriculaId) {
     $sql = "select nm_turma from pmieducar.matricula_turma mt 
             left join pmieducar.turma t on (t.cod_turma = mt.ref_cod_turma) 
-            where ref_cod_matricula = $1 and mt.ativo = 0 order by mt.data_exclusao desc limit 1";
+            where ref_cod_matricula = $1 and mt.ativo = 0 and mt.ref_cod_turma <> (select ref_cod_turma from pmieducar.matricula_turma
+              where ref_cod_matricula = $1 and ativo = 1 limit 1) order by mt.data_exclusao desc limit 1";
 
     return $this->toUtf8(Portabilis_Utils_Database::selectField($sql, $matriculaId), array('transform' => true));
   }
