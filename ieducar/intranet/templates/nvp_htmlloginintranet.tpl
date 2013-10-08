@@ -137,9 +137,7 @@
       </div>
 
       <div class="clear"></div>
-      <div id="div-outubro-rosa">
-        <img src="https://s3.amazonaws.com/apps-ieducar-images/outubro-rosa/outubro-rosa.png"/>
-      </div>
+      
     </div> <!-- end corpo -->
 
     <div id="rodape" class="texto-normal">
@@ -148,7 +146,10 @@
 
         <a target="_blank" class="light" href="http://suporte.portabilis.com.br"> Obter Suporte </a>
       </p>
+       <div id="div-outubro-rosa">
+        <img src="https://s3.amazonaws.com/apps-ieducar-images/outubro-rosa/outubro-rosa.png"/>
+      </div>
     </div> <!-- end rodape -->
-
+     
   </body>
 </html>

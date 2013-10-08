@@ -137,9 +137,7 @@
       </div>
 
       <div class="clear"></div>
-      <div id="div-outubro-rosa">
-        <img src="https://s3.amazonaws.com/apps-ieducar-images/outubro-rosa/outubro-rosa.png"/>
-      </div>
+     
 
     </div> <!-- end corpo -->
 
@@ -151,6 +149,9 @@
       </p>
        <div style=" position: relative; left: 70px; top: -136px"><img height="100px" src="http://apps-ieducar-images.s3.amazonaws.com/lagoagrande/logo-prefeitura"/></div>
        <div style=" position: relative; left: 260px; top: -205px"><img height="60px" src="http://apps-ieducar-images.s3.amazonaws.com/lagoagrande/logo-secretaria"/></div>
+     <div id="div-outubro-rosa" style="top: -480px;">
+        <img src="https://s3.amazonaws.com/apps-ieducar-images/outubro-rosa/outubro-rosa.png"/>
+      </div>       
     </div> <!-- end rodape -->
 
   </body>
