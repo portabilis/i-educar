@@ -10,7 +10,7 @@
     <link rel=stylesheet type='text/css' href='styles/reset.css?rand=3' />
     <link rel=stylesheet type='text/css' href='styles/portabilis.css?rand=3' />
     <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=3' />
-    <link rel=stylesheet type='text/css' href='styles/login.css?rand=4' />
+    <link rel=stylesheet type='text/css' href='styles/login.css?rand=5' />
 
   <script type='text/javascript' src='//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>
 
