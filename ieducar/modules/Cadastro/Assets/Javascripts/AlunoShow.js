@@ -129,7 +129,7 @@ $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
 // Verifica se possui ficha médica, verificando se existe o primeiro campo
 var possui_ficha_medica = $j('#fmedica').length>0;
 
-var possui_uniforme_escolar = $j('#fmedica').length>0;
+var possui_uniforme_escolar = $j('#funiforme').length>0;
 
 // Adiciona abas na página
 $j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab2"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab2"> <span class="tabText">Ficha m\u00e9dica</span></div></li><li><div id="tab3" class="alunoTab2"> <span class="tabText">Uniforme escolar</span></div></li></ul></div>');
