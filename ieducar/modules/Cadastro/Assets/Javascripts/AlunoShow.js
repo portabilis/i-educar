@@ -215,7 +215,7 @@ $j(document).ready(function() {
               return false;
           });
         }else
-          alert('Dados da ficha m\u00e9dica n\u00e2o foram cadastrados para esse aluno.');
+          alert('Dados da ficha m\u00e9dica n\u00e2o foram adicionados ainda. \n Voc\u00ea pode adicion\u00e1-los clicando em editar.');
       
       });
 
@@ -236,7 +236,7 @@ $j(document).ready(function() {
                 return false;
             });
           }else
-            alert('Dados do uniforme escolar n\u00e2o foram cadastrados para esse aluno.');
+            alert('Dados do uniforme escolar n\u00e2o foram adicionados ainda. \n Voc\u00ea pode adicion\u00e1-los clicando em editar.');
         
         });          
 
