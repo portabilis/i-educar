@@ -15,7 +15,7 @@ var $pessoaNotice = $resourceNotice.clone()
 // adiciona id 'stop' na linha separadora
 $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
 // Adiciona abas na página
-$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab"> <span class="tabText">Ficha m\u00e9dica</span></div></li><li><div id="tab3" class="alunoTab"> <span class="tabText">Uniforme escolar</span></div></li></ul></div>');
+$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab"> <span class="tabText">Ficha m\u00e9dica</span></div></li><li><div id="tab3" class="alunoTab"> <span class="tabText">Uniforme escolar</span></div></li><li><div id="tab4" class="alunoTab"> <span class="tabText">Moradia</span></div></li></ul></div>');
 
 // Adiciona estilo de aba selecionada a primeira aba
 $j('#tab1').addClass('alunoTab-active').removeClass('alunoTab');
@@ -55,6 +55,7 @@ resourceOptions.handlePut = function(dataResponse) {
 }
 
 var tipo_resp;
+
 
 resourceOptions.handleGet = function(dataResponse) {
   handleMessages(dataResponse.msgs);
@@ -255,6 +256,95 @@ resourceOptions.handleGet = function(dataResponse) {
   $j('#quantidade_meia').val(dataResponse.quantidade_meia);  
   $j('#quantidade_blusa_jaqueta').val(dataResponse.quantidade_blusa_jaqueta); 
 
+    /***********************************************
+      CAMPOS DA MORADIA
+    ************************************************/  
+
+  if (dataResponse.empregada_domestica == 'S'){
+    $j('#empregada_domestica').attr('checked',true);  
+    $j('#empregada_domestica').val('on');   
+  }     
+  if (dataResponse.automovel == 'S'){
+    $j('#automovel').attr('checked',true);  
+    $j('#automovel').val('on');   
+  }     
+  if (dataResponse.motocicleta == 'S'){
+    $j('#motocicleta').attr('checked',true);  
+    $j('#motocicleta').val('on');   
+  }     
+  if (dataResponse.computador == 'S'){
+    $j('#computador').attr('checked',true);  
+    $j('#computador').val('on');   
+  }     
+  if (dataResponse.geladeira == 'S'){
+    $j('#geladeira').attr('checked',true);  
+    $j('#geladeira').val('on');   
+  }     
+  if (dataResponse.fogao == 'S'){
+    $j('#fogao').attr('checked',true);  
+    $j('#fogao').val('on');   
+  }     
+  if (dataResponse.maquina_lavar == 'S'){
+    $j('#maquina_lavar').attr('checked',true);  
+    $j('#maquina_lavar').val('on');   
+  }     
+  if (dataResponse.microondas == 'S'){
+    $j('#microondas').attr('checked',true);  
+    $j('#microondas').val('on');   
+  }     
+  if (dataResponse.video_dvd == 'S'){
+    $j('#video_dvd').attr('checked',true);  
+    $j('#video_dvd').val('on');   
+  }     
+  if (dataResponse.televisao == 'S'){
+    $j('#televisao').attr('checked',true);  
+    $j('#televisao').val('on');   
+  }  
+  if (dataResponse.telefone == 'S'){
+    $j('#telefone').attr('checked',true);  
+    $j('#telefone').val('on');   
+  }  
+  if (dataResponse.celular == 'S'){
+    $j('#celular').attr('checked',true);  
+    $j('#celular').val('on');   
+  }         
+  if (dataResponse.agua_encanada == 'S'){
+    $j('#agua_encanada').attr('checked',true);  
+    $j('#agua_encanada').val('on');   
+  }  
+  if (dataResponse.poco == 'S'){
+    $j('#poco').attr('checked',true);  
+    $j('#poco').val('on');   
+  }  
+  if (dataResponse.energia == 'S'){
+    $j('#energia').attr('checked',true);  
+    $j('#energia').val('on');   
+  }  
+  if (dataResponse.esgoto == 'S'){
+    $j('#esgoto').attr('checked',true);  
+    $j('#esgoto').val('on');   
+  }  
+  if (dataResponse.foca == 'S'){
+    $j('#foca').attr('checked',true);  
+    $j('#foca').val('on');   
+  }         
+  if (dataResponse.lixo == 'S'){
+    $j('#lixo').attr('checked',true);  
+    $j('#lixo').val('on');   
+  }         
+
+  $j('#quartos').val(dataResponse.quartos);   
+  $j('#sala').val(dataResponse.sala);   
+  $j('#copa').val(dataResponse.copa);   
+  $j('#banheiro').val(dataResponse.banheiro);   
+  $j('#garagem').val(dataResponse.garagem);  
+  $j('#casa_outra').val(dataResponse.casa_outra);  
+  $j('#quant_pessoas').val(dataResponse.quant_pessoas);  
+  $j('#renda').val(dataResponse.renda);  
+  $j('#moradia').val(dataResponse.moradia).change();
+  $j('#material').val(dataResponse.material).change(); 
+  $j('#moradia_situacao').val(dataResponse.moradia_situacao).change(); 
+  
 };
 
 var handleGetPersonDetails = function(dataResponse) {
@@ -436,7 +526,23 @@ function afterChangePessoa(targetWindow, pessoaId) {
     }
 
     checkTipoResponsavel();
-    $j('#tipo_responsavel').change(checkTipoResponsavel);  
+    $j('#tipo_responsavel').change(checkTipoResponsavel); 
+
+    
+    var checkMoradia = function(){
+      if($j('#moradia').val() == 'C'){
+        $j('#material').show();    
+        $j('#casa_outra').hide();
+      }else if($j('#moradia').val() == 'O'){
+        $j('#material').hide();
+        $j('#casa_outra').show();
+      }else{
+        $j('#casa_outra').hide();
+        $j('#material').hide();        
+      }
+    } 
+    checkMoradia();
+    $j('#moradia').change(checkMoradia); 
 
 
     var msg = 'Bem vindo ao novo cadastro de alunos,<br />' +
@@ -498,16 +604,32 @@ function afterChangePessoa(targetWindow, pessoaId) {
         $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
         $j('#tab3').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
+          if (row.id!='stop'){
+            if (index>60 && index<83){
+              row.show();
+            }else if (index>0){
+              row.hide();
+            }       
+          }
+        });
+        $j('.uniforme').prop('disabled',!$j('#recebeu_uniforme').prop('checked'));
+      });     
 
-          if (index<61 && index!=0){
+    // MORADIA
+    $j('#tab4').click( 
+      function(){
+        $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
+        $j('#tab4').toggleClass('alunoTab alunoTab-active')
+        $j('.tablecadastro >tbody  > tr').each(function(index, row) {
+
+          if (index<83 && index!=0){
             row.hide();
           }else{
             row.show();
           }          
         });
         $j('.uniforme').prop('disabled',!$j('#recebeu_uniforme').prop('checked'));
-      });        
-
+      });   
 
 
     /* A seguinte função habilitam/desabilitam o campo de descrição quando for clicado 

@@ -35,6 +35,7 @@
 require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
 require_once 'include/modules/clsModulesFichaMedicaAluno.inc.php';
 require_once 'include/modules/clsModulesUniformeAluno.inc.php';
+require_once 'include/modules/clsModulesMoradiaAluno.inc.php';
 
 require_once 'App/Model/MatriculaSituacao.php';
 
@@ -354,6 +355,45 @@ protected function createOrUpdateUniforme($id) {
 
     return ($obj->existe() ? $obj->edita() : $obj->cadastra());
   }  
+
+  protected function createOrUpdateMoradia($id) {
+    
+    $obj                                        = new clsModulesMoradiaAluno();
+
+    $obj->ref_cod_aluno                         = $id;
+    
+    $obj->moradia                               = $this->getRequest()->moradia;
+    $obj->material                              = $this->getRequest()->material;
+    $obj->casa_outra                            = Portabilis_String_Utils::toLatin1($this->getRequest()->casa_outra);
+    $obj->moradia_situacao                      = $this->getRequest()->moradia_situacao;
+    $obj->quartos                               = $this->getRequest()->quartos;
+    $obj->sala                                  = $this->getRequest()->sala;
+    $obj->copa                                  = $this->getRequest()->copa;
+    $obj->banheiro                              = $this->getRequest()->banheiro;
+    $obj->garagem                               = $this->getRequest()->garagem;
+    $obj->empregada_domestica                   = ($this->getRequest()->empregada_domestica == 'on' ? 'S' : 'N');
+    $obj->automovel                             = ($this->getRequest()->automovel == 'on' ? 'S' : 'N');
+    $obj->motocicleta                           = ($this->getRequest()->motocicleta == 'on' ? 'S' : 'N');
+    $obj->computador                            = ($this->getRequest()->computador == 'on' ? 'S' : 'N');
+    $obj->geladeira                             = ($this->getRequest()->geladeira == 'on' ? 'S' : 'N');
+    $obj->fogao                                 = ($this->getRequest()->fogao == 'on' ? 'S' : 'N');
+    $obj->maquina_lavar                         = ($this->getRequest()->maquina_lavar == 'on' ? 'S' : 'N');
+    $obj->microondas                            = ($this->getRequest()->microondas == 'on' ? 'S' : 'N');
+    $obj->video_dvd                             = ($this->getRequest()->video_dvd == 'on' ? 'S' : 'N');
+    $obj->televisao                             = ($this->getRequest()->televisao == 'on' ? 'S' : 'N');
+    $obj->celular                               = ($this->getRequest()->celular == 'on' ? 'S' : 'N');
+    $obj->telefone                              = ($this->getRequest()->telefone == 'on' ? 'S' : 'N');
+    $obj->quant_pessoas                         = $this->getRequest()->quant_pessoas;
+    $obj->renda                                 = floatval(preg_replace("/[^0-9\.]/", "", str_replace(",", ".", $this->getRequest()->renda)));
+    $obj->agua_encanada                         = ($this->getRequest()->agua_encanada == 'on' ? 'S' : 'N');
+    $obj->poco                                  = ($this->getRequest()->poco == 'on' ? 'S' : 'N');
+    $obj->energia                               = ($this->getRequest()->energia == 'on' ? 'S' : 'N');
+    $obj->esgoto                                = ($this->getRequest()->esgoto == 'on' ? 'S' : 'N');
+    $obj->foca                                  = ($this->getRequest()->foca == 'on' ? 'S' : 'N');
+    $obj->lixo                                  = ($this->getRequest()->lixo == 'on' ? 'S' : 'N');
+
+    return ($obj->existe() ? $obj->edita() : $obj->cadastra());
+  }    
 
   protected function loadAlunoInepId($alunoId) {
     $dataMapper = $this->getDataMapperFor('educacenso', 'aluno');
@@ -732,6 +772,16 @@ protected function createOrUpdateUniforme($id) {
         $aluno = Portabilis_Array_Utils::merge($objUniforme,$aluno);
       }
 
+      $objMoradia                    = new clsModulesMoradiaAluno($id);
+      if ($objMoradia->existe()){
+        $objMoradia         = $objMoradia->detalhe();
+        foreach ($objMoradia as $chave => $value) {
+          $objMoradia[$chave]  = Portabilis_String_Utils::toUtf8($value);
+        }
+        $aluno = Portabilis_Array_Utils::merge($objMoradia,$aluno);
+      }
+
+
       return $aluno;
     }
   }
@@ -813,6 +863,7 @@ protected function createOrUpdateUniforme($id) {
         $this->updateDeficiencias();
         $this->createOrUpdateFichaMedica($id);
         $this->createOrUpdateUniforme($id);
+        $this->createOrUpdateMoradia($id);
 
         $this->messenger->append('Cadastrado realizado com sucesso', 'success', false, 'error');
       }
@@ -833,6 +884,7 @@ protected function createOrUpdateUniforme($id) {
       $this->updateDeficiencias();
       $this->createOrUpdateFichaMedica($id);
       $this->createOrUpdateUniforme($id);
+      $this->createOrUpdateMoradia($id);
 
       $this->messenger->append('Cadastro alterado com sucesso', 'success', false, 'error');
     }

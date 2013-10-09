@@ -239,6 +239,68 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
       'tamanho_meia' => array('label' => 'Tamanho'),
 
+    /************
+      MORADIA    
+    ************/
+
+      'moradia' => array('label' => 'Moradia'),
+
+      'material' => array('label' => 'Material'),
+
+      'casa_outra' => array('label' => 'Outro'),
+
+      'moradia_situacao' => array('label' => 'Situação'),
+
+      'quartos' => array('label' => 'Número de quartos'),
+
+      'sala' => array('label' => 'Número de salas'),
+
+      'copa' => array('label' => 'Número de copas'),
+
+      'banheiro' => array('label' => 'Número de banheiros'),
+
+      'garagem' => array('label' => 'Número de garagens'),
+
+      'empregada_domestica' => array('label' => 'Possui empregada doméstica?'),
+
+      'automovel' => array('label' => 'Possui automóvel?'),
+
+      'motocicleta' => array('label' => 'Possui motocicleta?'),
+
+      'computador' => array('label' => 'Possui computador?'),
+
+      'geladeira' => array('label' => 'Possui geladeira?'),
+
+      'fogao' => array('label' => 'Possui fogão?'),
+
+      'maquina_lavar' => array('label' => 'Possui máquina de lavar?'),
+
+      'microondas' => array('label' => 'Possui microondas?'),
+
+      'video_dvd' => array('label' => 'Possui vídeo/DVD?'),
+
+      'televisao' => array('label' => 'Possui televisão?'),
+
+      'celular' => array('label' => 'Possui celular?'),
+
+      'telefone' => array('label' => 'Possui telefone?'),
+
+      'quant_pessoas' => array('label' => 'Quantidades de pessoas residentes no lar'),
+
+      'renda' => array('label' => 'Renda familiar'),
+
+      'agua_encanada' => array('label' => 'Possuí água encanada?'),
+
+      'poco' => array('label' => 'Possui poço?'),
+
+      'energia' => array('label' => 'Possui energia?'),
+
+      'esgoto' => array('label' => 'Possui esgoto?'),
+
+      'foca' => array('label' => 'Possui foça?'),
+
+      'lixo' => array('label' => 'Possui lixo?'),
+
   );
 
 
@@ -615,8 +677,120 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     // tamanho_blusa_jaqueta
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('tamanho_blusa_jaqueta') ), 'size' => 2, 'max_length' => 2,'required' => false, 'placeholder' => '');
-    $this->inputsHelper()->text('tamanho_blusa_jaqueta',$options);                              
+    $this->inputsHelper()->text('tamanho_blusa_jaqueta',$options);   
 
+    $moradias = array(null   => 'Selecione',
+                        'A'  => 'Apartamento',
+                        'C'  => 'Casa',
+                        'O'  => 'Outro'); 
+
+    $options = array('label'     => $this->_getLabel('moradia'),
+                     'resources' => $moradias,
+                     'required'  => false,
+                     'inline'   => true);
+
+    $this->inputsHelper()->select('moradia', $options);
+
+    $materiais_moradia = array( 'A' => 'Alvenaria',
+                                'M' => 'Madeira',
+                                'I' => 'Mista');
+
+    $options = array('label'     => null,
+                     'resources' => $materiais_moradia,
+                     'required'  => false,
+                      'inline'   => true);
+
+    $this->inputsHelper()->select('material', $options);         
+
+    $options = array('label' => null, 'size' => 20, 'max_length' => 20,'required' => false, 'placeholder' => 'Descreva');
+    $this->inputsHelper()->text('casa_outra',$options);     
+
+    $situacoes = array( '1' => 'Alugado',
+                        '2' => Portabilis_String_Utils::toLatin1('Próprio'),
+                        '3' => 'Cedido',
+                        '4' => 'Financiado',
+                        '5' => 'Outros');
+
+    $options = array('label'     => $this->_getLabel('moradia_situacao'),
+                     'resources' => $situacoes,
+                     'required'  => false);
+
+    $this->inputsHelper()->select('moradia_situacao', $options);      
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('quartos') ), 'size' =>2, 'max_length' => 2,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->integer('quartos',$options);       
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('sala') ), 'size' =>2, 'max_length' => 2,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->integer('sala',$options);       
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('copa') ), 'size' =>2, 'max_length' => 2,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->integer('copa',$options);       
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('banheiro') ), 'size' =>2, 'max_length' => 2,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->integer('banheiro',$options);       
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('garagem') ), 'size' =>2, 'max_length' => 2,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->integer('garagem',$options);      
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('empregada_domestica') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('empregada_domestica',$options);   
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('automovel') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('automovel',$options);   
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('motocicleta') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('motocicleta',$options);   
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('computador') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('computador',$options);   
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('geladeira') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('geladeira',$options);   
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('fogao') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('fogao',$options);   
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('maquina_lavar') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('maquina_lavar',$options);   
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('microondas') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('microondas',$options);   
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('video_dvd') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('video_dvd',$options);   
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('televisao') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('televisao',$options);   
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('telefone') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('telefone',$options);   
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('celular') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('celular',$options);           
+                                          
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('quant_pessoas') ), 'size' =>5, 'max_length' => 2,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->integer('quant_pessoas',$options);  
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('renda') ), 'size' =>5, 'max_length' => 10,'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->numeric('renda',$options); 
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('agua_encanada') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('agua_encanada',$options);   
+              
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('poco') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('poco',$options);   
+              
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('energia') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('energia',$options);   
+              
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('esgoto') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('esgoto',$options);   
+              
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('foca') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('foca',$options);   
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('lixo') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('lixo',$options);   
 
     $this->loadResourceAssets($this->getDispatcher());
   }
