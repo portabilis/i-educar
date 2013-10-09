@@ -344,7 +344,7 @@ resourceOptions.handleGet = function(dataResponse) {
   $j('#moradia').val(dataResponse.moradia).change();
   $j('#material').val(dataResponse.material).change(); 
   $j('#moradia_situacao').val(dataResponse.moradia_situacao).change(); 
-  
+
 };
 
 var handleGetPersonDetails = function(dataResponse) {
@@ -610,7 +610,8 @@ function afterChangePessoa(targetWindow, pessoaId) {
             }else if (index>0){
               row.hide();
             }       
-          }
+          }else
+            return false;
         });
         $j('.uniforme').prop('disabled',!$j('#recebeu_uniforme').prop('checked'));
       });     
