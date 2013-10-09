@@ -287,7 +287,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
       'quant_pessoas' => array('label' => 'Quantidades de pessoas residentes no lar'),
 
-      'renda' => array('label' => 'Renda familiar'),
+      'renda' => array('label' => 'Renda familiar em R$'),
 
       'agua_encanada' => array('label' => 'Possuí água encanada?'),
 
