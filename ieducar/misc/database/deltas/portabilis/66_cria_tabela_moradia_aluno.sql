@@ -13,7 +13,7 @@
   moradia character(1),
   material character(1) DEFAULT ('A'),
   casa_outra character varying(20),
-  moradia_situacao integer DEFAULT (2),
+  moradia_situacao integer,
   quartos integer,
   sala integer,
   copa integer,

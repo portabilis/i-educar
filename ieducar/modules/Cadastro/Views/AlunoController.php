@@ -705,7 +705,8 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $options = array('label' => null, 'size' => 20, 'max_length' => 20,'required' => false, 'placeholder' => 'Descreva');
     $this->inputsHelper()->text('casa_outra',$options);     
 
-    $situacoes = array( '1' => 'Alugado',
+    $situacoes = array( null => 'Selecione',
+                        '1' => 'Alugado',
                         '2' => Portabilis_String_Utils::toLatin1('Próprio'),
                         '3' => 'Cedido',
                         '4' => 'Financiado',

@@ -850,7 +850,7 @@ class indice extends clsDetalhe
     $scripts = array(
       '/modules/Portabilis/Assets/Javascripts/Utils.js',
       '/modules/Portabilis/Assets/Javascripts/ClientApi.js',  
-      '/modules/Cadastro/Assets/Javascripts/AlunoShow.js?version=2'
+      '/modules/Cadastro/Assets/Javascripts/AlunoShow.js?version=3'
       );
 
     Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
