@@ -198,7 +198,7 @@ class indice extends clsCadastro
     if ($_POST['matriculas_turma']) {
       $this->matriculas_turma = unserialize(urldecode($_POST['matriculas_turma']));
     }
-
+    $alunosEnturmados = false;
     if (is_numeric($this->ref_cod_turma) && !$_POST) {
       $obj_matriculas_turma = new clsPmieducarMatriculaTurma();
       $obj_matriculas_turma->setOrderby('nome_aluno');
@@ -207,6 +207,7 @@ class indice extends clsCadastro
          array(1, 2, 3), NULL, NULL, $ano_letivo, NULL, TRUE, NULL, 1, TRUE);
 
       if (is_array($lst_matriculas_turma)) {
+        $alunosEnturmados = true;
         foreach ($lst_matriculas_turma as $key => $campo) {
           $this->matriculas_turma[$campo['ref_cod_matricula']]['sequencial_'] = $campo['sequencial'];
         }
@@ -266,8 +267,10 @@ class indice extends clsCadastro
           $aluno, NULL, NULL, NULL);
       }
     }
-    else {
+    else if ($alunosEnturmados){
       $this->campoRotulo('rotulo_1', '-', 'Todos os alunos matriculados na série já se encontram enturmados.');
+    }else{
+      $this->campoRotulo('rotulo_1', '-', 'Não há alunos enturmados.');
     }
 
     $this->campoQuebra();
