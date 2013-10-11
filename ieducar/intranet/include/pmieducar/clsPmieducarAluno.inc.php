@@ -693,7 +693,7 @@ class clsPmieducarAluno
     $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
     $whereAnd = ' WHERE ';
 
-    if(is_numeric($int_cod_aluno)) {
+    if(is_numeric($int_cod_aluno) && $int_cod_aluno < 2147483647) {
       $filtros .= "{$whereAnd} cod_aluno = '{$int_cod_aluno}'";
       $whereAnd = ' AND ';
     }
