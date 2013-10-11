@@ -137,7 +137,9 @@
       </div>
 
       <div class="clear"></div>
-
+      <div id="div-outubro-rosa">
+        <img src="https://s3.amazonaws.com/apps-ieducar-images/outubro-rosa/outubro-rosa.png"/>
+      </div>
     </div> <!-- end corpo -->
 
     <div id="rodape" class="texto-normal">
