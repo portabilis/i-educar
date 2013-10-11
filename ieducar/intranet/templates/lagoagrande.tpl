@@ -10,7 +10,7 @@
     <link rel=stylesheet type='text/css' href='styles/reset.css?rand=3' />
     <link rel=stylesheet type='text/css' href='styles/portabilis.css?rand=3' />
     <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=3' />
-    <link rel=stylesheet type='text/css' href='styles/login.css?rand=4' />
+    <link rel=stylesheet type='text/css' href='styles/login.css?rand=5' />
 
   <script type='text/javascript' src='//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>
 
@@ -137,9 +137,7 @@
       </div>
 
       <div class="clear"></div>
-      <div id="div-outubro-rosa">
-        <img src="https://s3.amazonaws.com/apps-ieducar-images/outubro-rosa/outubro-rosa.png"/>
-      </div>
+     
 
     </div> <!-- end corpo -->
 
@@ -151,6 +149,9 @@
       </p>
        <div style=" position: relative; left: 70px; top: -136px"><img height="100px" src="http://apps-ieducar-images.s3.amazonaws.com/lagoagrande/logo-prefeitura"/></div>
        <div style=" position: relative; left: 260px; top: -205px"><img height="60px" src="http://apps-ieducar-images.s3.amazonaws.com/lagoagrande/logo-secretaria"/></div>
+     <div id="div-outubro-rosa" style="top: -480px;">
+        <a href="https://www.google.com.br/#q=Campanha+Outubro+rosa" target="_blank"><img src="https://s3.amazonaws.com/apps-ieducar-images/outubro-rosa/outubro-rosa.png"/></a>
+      </div>       
     </div> <!-- end rodape -->
 
   </body>

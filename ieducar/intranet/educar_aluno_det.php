@@ -34,6 +34,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/modules/clsModulesFichaMedicaAluno.inc.php';
 require_once 'include/modules/clsModulesUniformeAluno.inc.php';
+require_once 'include/modules/clsModulesMoradiaAluno.inc.php';
 
 require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'Educacenso/Model/AlunoDataMapper.php';
@@ -755,7 +756,86 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('<span class="tit_uniforme">Meia</span>'));   
       $this->addDetalhe(array('Quantidade', $reg['quantidade_meia'])); 
       $this->addDetalhe(array('Tamanho', $reg['tamanho_meia']));                                              
-    }      
+    }  
+
+    $objMoradia        = new clsModulesMoradiaAluno($this->cod_aluno);
+    $reg               = $objMoradia->detalhe();
+
+    if($reg){    
+
+      $moradia = '';
+      switch ($reg['moradia']) {
+        case 'A':
+          $moradia = 'Apartamento';
+          break;
+        case 'C':
+          $moradia = 'Casa';
+            switch ($reg['material']) {
+              case 'A':
+                $moradia.= ' de alvenaria';
+                break;
+              case 'M':
+                $moradia.= ' de madeira';
+                break;
+              case 'I':
+                $moradia.= ' mista';
+                break;                                
+            }
+          break;
+        case 'O':
+          $moradia = 'Outra: '.$reg['casa_outra'];
+          break;
+        default: 
+          $moradia = 'Não informado';
+      }
+
+      $this->addDetalhe(array('<span id="fmoradia"></span>Moradia', $moradia ));       
+      $situacao;
+      switch ($reg['moradia_situacao']) {
+        case 1:
+          $situacao = 'Alugado';
+          break;      
+        case 2:
+          $situacao = 'Próprio';
+          break;      
+        case 3:
+          $situacao = 'Cedido';
+          break;      
+        case 4:
+          $situacao = 'Financiado';
+          break;      
+        case 5:
+          $situacao = 'Outra';
+          break;                                              
+      }
+      $this->addDetalhe(array('Situação', $situacao)); 
+      $this->addDetalhe(array('Quantidade de quartos', $reg['quartos'])); 
+      $this->addDetalhe(array('Quantidade de salas', $reg['sala']));       
+      $this->addDetalhe(array('Quantidade de copas', $reg['copa']));       
+      $this->addDetalhe(array('Quantidade de banheiros', $reg['banheiro']));       
+      $this->addDetalhe(array('Quantidade de garagens', $reg['garagem']));       
+      $this->addDetalhe(array('Possui empregada doméstica', $reg['empregada_domestica']));       
+      $this->addDetalhe(array('Possui automóvel', $reg['automovel']));       
+      $this->addDetalhe(array('Possui motocicleta', $reg['motocicleta']));       
+      $this->addDetalhe(array('Possui computador', $reg['computador']));       
+      $this->addDetalhe(array('Possui geladeira', $reg['geladeira']));       
+      $this->addDetalhe(array('Possui fogão', $reg['fogao']));       
+      $this->addDetalhe(array('Possui máquina de lavar', $reg['maquina_lavar']));       
+      $this->addDetalhe(array('Possui microondas', $reg['microondas']));       
+      $this->addDetalhe(array('Possui vídeo/dvd', $reg['video_dvd']));       
+      $this->addDetalhe(array('Possui televisão', $reg['televisao']));       
+      $this->addDetalhe(array('Possui celular', $reg['celular']));       
+      $this->addDetalhe(array('Possui telefone', $reg['telefone']));       
+      $this->addDetalhe(array('Quantidade de pessoas', $reg['quant_pessoas']));       
+      $this->addDetalhe(array('Renda familiar', 'R$ '.$reg['renda']));       
+      $this->addDetalhe(array('Possui água encanada', $reg['agua_encanada']));       
+      $this->addDetalhe(array('Possui poço', $reg['poco']));       
+      $this->addDetalhe(array('Possui energia elétrica', $reg['energia']));       
+      $this->addDetalhe(array('Possui tratamento de esgoto', $reg['esgoto']));       
+      $this->addDetalhe(array('Possui foça', $reg['foca']));       
+      $this->addDetalhe(array('Possui coleta de lixo', $reg['lixo']));       
+
+    }          
 
     $this->url_cancelar = 'educar_aluno_lst.php';
     $this->largura      = '100%';

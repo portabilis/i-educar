@@ -89,11 +89,12 @@ ul.unstyled, ol.unstyled {
   font-weight: bold;
 }
 #div-outubro-rosa {
-  position: absolute;
-  top: 65px;
-  left: 170px;
+  position: relative;
+  top: -300px;
+  left: -130px;
+  width: 100px;
 }
 
-#div-outubro-rosa img{
+#div-outubro-rosa img{  
   height: 180px;
 }

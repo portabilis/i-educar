@@ -10,7 +10,7 @@
     <link rel=stylesheet type='text/css' href='styles/reset.css?rand=3' />
     <link rel=stylesheet type='text/css' href='styles/portabilis.css?rand=3' />
     <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=3' />
-    <link rel=stylesheet type='text/css' href='styles/login.css?rand=4' />
+    <link rel=stylesheet type='text/css' href='styles/login.css?rand=5' />
 
   <script type='text/javascript' src='//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>
 
@@ -137,9 +137,7 @@
       </div>
 
       <div class="clear"></div>
-      <div id="div-outubro-rosa">
-        <img src="https://s3.amazonaws.com/apps-ieducar-images/outubro-rosa/outubro-rosa.png"/>
-      </div>
+      
     </div> <!-- end corpo -->
 
     <div id="rodape" class="texto-normal">
@@ -148,7 +146,10 @@
 
         <a target="_blank" class="light" href="http://suporte.portabilis.com.br"> Obter Suporte </a>
       </p>
+       <div id="div-outubro-rosa">
+        <a href="https://www.google.com.br/#q=Campanha+Outubro+rosa" target="_blank"><img src="https://s3.amazonaws.com/apps-ieducar-images/outubro-rosa/outubro-rosa.png"/></a>
+      </div>
     </div> <!-- end rodape -->
-
+     
   </body>
 </html>
