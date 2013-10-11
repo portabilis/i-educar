@@ -104,7 +104,7 @@ class indice extends clsListagem
 
 		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
 
-		$this->campoNumero("cod_aluno","C&oacute;digo Aluno",$this->cod_aluno,20,10,false);
+		$this->campoNumero("cod_aluno","C&oacute;digo Aluno",$this->cod_aluno,20,9,false);
 		$this->campoNumero("cod_inep","C&oacute;digo INEP",$this->cod_inep,20,255,false);
 		$this->campoTexto("nome_aluno","Nome do aluno", $this->nome_aluno,50,255,false);
 		$this->campoData("data_nascimento", "Data de Nascimento", $this->data_nascimento);
