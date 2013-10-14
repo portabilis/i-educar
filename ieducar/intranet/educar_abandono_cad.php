@@ -27,7 +27,8 @@
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once( "include/pmieducar/geral.inc.php");
+require_once 'lib/Portabilis/Date/Utils.php';
 
 class clsIndexBase extends clsBase
 {
@@ -58,6 +59,7 @@ class indice extends clsCadastro
 	var $data_exclusao;
 	var $ativo;
 	var $data_transferencia;
+	var $data_cancel;
 
 	var $ref_cod_matricula;
 	var $transferencia_tipo;
@@ -69,7 +71,7 @@ class indice extends clsCadastro
 		$retorno = "Novo";
 		@session_start();
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
+		@session_write_close(require_once 'lib/Portabilis/Date/Utils.php';);
 
 		$this->ref_cod_matricula=$_GET["ref_cod_matricula"];
 		$this->ref_cod_aluno=$_GET["ref_cod_aluno"];
@@ -90,7 +92,7 @@ class indice extends clsCadastro
 	function Gerar()
 	{
 				// primary keys
-		$this->campoOculto( "ref_cod_aluno", $this->ref_cod_aluno );
+		$this->campoOculto( "require_once 'lib/Portabilis/Date/Utils.php';require_once 'lib/Portabilis/Date/Utils.php';ref_cod_aluno", $this->ref_cod_aluno );
 		$this->campoOculto( "ref_cod_matricula", $this->ref_cod_matricula );
 
 		$obj_aluno = new clsPmieducarAluno();
@@ -102,6 +104,7 @@ class indice extends clsCadastro
 			$this->campoTexto( "nm_aluno", "Aluno", $this->nm_aluno, 30, 255, false,false,false,"","","","",true );
 		}
 
+		$this->inputsHelper()->date('data_cancel', array('label' => 'Data do abandono', 'placeholder' => 'dd/mm/yyyy'));
 		// text
 		$this->campoMemo( "observacao", "Observa&ccedil;&atilde;o", $this->observacao, 60, 5, false );
 	}
@@ -116,6 +119,7 @@ class indice extends clsCadastro
 		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
 
 		$obj_matricula = new clsPmieducarMatricula( $this->ref_cod_matricula,null,null,null,$this->pessoa_logada,null,null,6 );
+		$obj_matricula->data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
 
 		$det_matricula = $obj_matricula->detalhe();
 
@@ -139,41 +143,6 @@ class indice extends clsCadastro
 
 	}
 
-	function Excluir()
-	{
-		@session_start();
-			$this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
-
-		$obj_permissoes = new clsPermissoes();
-		$obj_permissoes->permissao_excluir( 578, $this->pessoa_logada, 7,  "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
-
-		$obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
-		$lst_transferencia = $obj_transferencia->lista( null,null,null,null,null,$this->ref_cod_matricula,null,null,null,null,null,1,null,null,$this->ref_cod_aluno,false );
-		if ( is_array($lst_transferencia) )
-		{
-			$det_transferencia = array_shift($lst_transferencia);
-			$this->cod_transferencia_solicitacao = $det_transferencia["cod_transferencia_solicitacao"];
-			$obj = new clsPmieducarTransferenciaSolicitacao($this->cod_transferencia_solicitacao, null, $this->pessoa_logada, null,null,null,null,null,null,0 );
-			$excluiu = $obj->excluir();
-			if( $excluiu )
-			{
-				$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-				header( "Location: educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
-				die();
-				return true;
-			}
-		}
-		else
-		{
-			$this->mensagem = "N&atilde;o foi poss&iacute;vel encontrar a Solicita&ccedil;&atilde;o de Transfer&ecirc;ncia do Aluno.<br>";
-			return false;
-		}
-
-		$this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-		echo "<!--\nErro ao excluir clsPmieducarTransferenciaSolicitacao\nvalores obrigatorios\nif( is_numeric( $this->cod_transferencia_solicitacao ) && is_numeric( $this->pessoa_logada ) )\n-->";
-		return false;
-	}
 }
 
 // cria uma extensao da classe base

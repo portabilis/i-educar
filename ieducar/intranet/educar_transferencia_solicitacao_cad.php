@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once 'lib/Portabilis/Date/Utils.php';
 
 class clsIndexBase extends clsBase
 {
@@ -58,6 +59,7 @@ class indice extends clsCadastro
 	var $data_exclusao;
 	var $ativo;
 	var $data_transferencia;
+	var $data_cancel;
 
 	var $ref_cod_matricula;
 	var $transferencia_tipo;
@@ -156,7 +158,7 @@ class indice extends clsCadastro
 			$opcoes = array( "" => "Erro na geracao" );
 		}
 		$this->campoLista( "ref_cod_transferencia_tipo", "Transfer&ecirc;ncia Motivo", $opcoes, $this->ref_cod_transferencia_tipo );
-
+		$this->inputsHelper()->date('data_cancel', array('label' => 'Data da transferência', 'placeholder' => 'dd/mm/yyyy'));
 		// text
 		$this->campoMemo( "observacao", "Observa&ccedil;&atilde;o", $this->observacao, 60, 5, false );
 	}
@@ -179,6 +181,12 @@ class indice extends clsCadastro
 
   
     // escola externa
+		$this->data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
+		$obj = new clsPmieducarMatricula( $this->ref_cod_matricula, null,null,null,$this->pessoa_logada);
+		$obj->data_cancel = $this->data_cancel;
+		$editou = $obj->edita();
+
+		$obj->data_cancel = $this->data_cancel;
 		if ($this->transferencia_tipo == 2)
 		{
 			$this->data_transferencia = date("Y-m-d");
@@ -190,7 +198,7 @@ class indice extends clsCadastro
 
 			if ($aprovado == 3)
 			{
-				$obj = new clsPmieducarMatricula( $this->ref_cod_matricula, null,null,null,$this->pessoa_logada,null,null,4,null,null,1 );
+				$obj = new clsPmieducarMatricula( $this->ref_cod_matricula, null,null,null,$this->pessoa_logada,null,null,4,null,null,1 );				
 				$editou = $obj->edita();
 				if( !$editou )
 				{
@@ -203,8 +211,8 @@ class indice extends clsCadastro
 
 				if($enturmacoes) 
 				{
-          // foreach necessário pois metodo edita e exclui da classe clsPmieducarMatriculaTurma, necessitam do
-          // código da turma e do sequencial
+          			// foreach necessário pois metodo edita e exclui da classe clsPmieducarMatriculaTurma, necessitam do
+          			// código da turma e do sequencial
 					foreach ($enturmacoes as $enturmacao) {
 					  $enturmacao = new clsPmieducarMatriculaTurma( $this->ref_cod_matricula, $enturmacao['ref_cod_turma'], $this->pessoa_logada, null, null, null, 0, null, $enturmacao['sequencial']);
 
@@ -213,7 +221,7 @@ class indice extends clsCadastro
     				  $this->mensagem = "N&atilde;o foi poss&iacute;vel desativar as enturma&ccedil;&otilde;es da matr&iacute;cula.";
 						  return false;
 					  }
-          }
+          			}
 				}
 			}
 		}

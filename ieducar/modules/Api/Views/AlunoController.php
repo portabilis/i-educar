@@ -528,7 +528,7 @@ protected function createOrUpdateUniforme($id) {
     /*
     $sql = "select to_char(data_transferencia, 'DD/MM/YYYY') from
             pmieducar.transferencia_solicitacao where ref_cod_matricula_entrada = $1 and ativo = 1";*/
-    $sql = "select to_char(data_cadastro, 'DD/MM/YYYY') from pmieducar.matricula
+    $sql = "select COALESCE(to_char(data_matricula,'DD/MM/YYYY'), to_char(data_cadastro, 'DD/MM/YYYY')) from pmieducar.matricula
               where cod_matricula=$1 and ativo = 1";
 
     return Portabilis_Utils_Database::selectField($sql, $matriculaId);
@@ -546,8 +546,8 @@ protected function createOrUpdateUniforme($id) {
   protected function loadTransferenciaDataSaida($matriculaId) {
     /*$sql = "select to_char(data_transferencia, 'DD/MM/YYYY') from
             pmieducar.transferencia_solicitacao where ref_cod_matricula_saida = $1 and ativo = 1";*/
-    $sql = "select to_char(data_exclusao, 'DD/MM/YYYY') from pmieducar.matricula
-              where cod_matricula=$1 and ativo = 1 and (aprovado=4 or aprovado=6)";
+    $sql = "select COALESCE(to_char(data_cancel,'DD/MM/YYYY'), to_char(data_exclusao, 'DD/MM/YYYY')) from pmieducar.matricula
+              where cod_matricula=$1 and ativo = 1 and ((aprovado=4 or aprovado=6) OR data_cancel is not null)";
 
     return Portabilis_Utils_Database::selectField($sql, $matriculaId);
   }
@@ -824,18 +824,18 @@ protected function createOrUpdateUniforme($id) {
       foreach ($matriculas as $index => $matricula) {
         $turma = $this->loadTurmaByMatriculaId($matricula['id']);
 
-        $matriculas[$index]['aluno_nome']   = $this->toUtf8($matricula['aluno_nome'], array('transform' => true));
-        $matriculas[$index]['turma_id']     = $turma['id'];
-        $matriculas[$index]['turma_nome']   = $turma['nome'];
-        $matriculas[$index]['escola_nome']  = $this->loadEscolaNome($matricula['escola_id']);
-        $matriculas[$index]['curso_nome']   = $this->loadCursoNome($matricula['curso_id']);
-        $matriculas[$index]['serie_nome']   = $this->loadSerieNome($matricula['serie_id']);
+        $matriculas[$index]['aluno_nome']          = $this->toUtf8($matricula['aluno_nome'], array('transform' => true));
+        $matriculas[$index]['turma_id']            = $turma['id'];
+        $matriculas[$index]['turma_nome']          = $turma['nome'];
+        $matriculas[$index]['escola_nome']         = $this->loadEscolaNome($matricula['escola_id']);
+        $matriculas[$index]['curso_nome']          = $this->loadCursoNome($matricula['curso_id']);
+        $matriculas[$index]['serie_nome']          = $this->loadSerieNome($matricula['serie_id']);
         $matriculas[$index]['ultima_enturmacao']   = $this->loadNomeTurmaOrigem($matricula['id']);
 
-        $matriculas[$index]['data_entrada'] = $this->loadTransferenciaDataEntrada($matricula['id']);
-        $matriculas[$index]['data_saida']   = $this->loadTransferenciaDataSaida($matricula['id']);
+        $matriculas[$index]['data_entrada']        = $this->loadTransferenciaDataEntrada($matricula['id']);
+        $matriculas[$index]['data_saida']          = $this->loadTransferenciaDataSaida($matricula['id']);
 
-        $matriculas[$index]['situacao']     = App_Model_MatriculaSituacao::getInstance()->getValue(
+        $matriculas[$index]['situacao']            = App_Model_MatriculaSituacao::getInstance()->getValue(
           $matricula['situacao']
         );
 

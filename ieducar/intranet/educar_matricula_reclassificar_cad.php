@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once 'lib/Portabilis/Date/Utils.php';
 
 class clsIndexBase extends clsBase
 {
@@ -59,6 +60,7 @@ class indice extends clsCadastro
 	var $data_exclusao;
 	var $ativo;
 	var $ano;
+	var $data_cancel;
 
 	var $ref_cod_instituicao;
 	var $ref_cod_curso;
@@ -219,6 +221,7 @@ class indice extends clsCadastro
 		$this->campoLista("ref_cod_curso","Curso",$cursos,$this->ref_cod_curso,"getSerie();");
 		$this->campoLista("ref_ref_cod_serie","S&eacute;rie",array('' => 'Selecione uma série'),'');
 		//$this->campoOculto("ref_ref_cod_serie_antiga",$this->ref_ref_cod_serie);
+		$this->inputsHelper()->date('data_cancel', array('label' => 'Data da reclassifica&ccedil;&atilde;o', 'placeholder' => 'dd/mm/yyyy'));
 		$this->campoMemo("descricao_reclassificacao","Descri&ccedil;&atilde;o",$this->descricao_reclassificacao,100,10,true);
 
 		$this->acao_enviar = 'if(confirm("Deseja reclassificar está matrícula?"))acao();';
@@ -234,6 +237,8 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7, "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
 
+		$this->data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
+
 		if($this->ref_ref_cod_serie == $this->ref_ref_cod_serie_antiga)
 			header("location: educar_matricula_det.php?cod_matricula={$this->cod_matricula}");
 
@@ -244,6 +249,7 @@ class indice extends clsCadastro
 			header("location: educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
 		$obj_matricula = new clsPmieducarMatricula($this->cod_matricula,null,null,null,$this->pessoa_logada,null,null,5,null,null,1,null,0,null,null,$this->descricao_reclassificacao);
+		$obj_matricula->data_cancel = $this->data_cancel;
 		if(!$obj_matricula->edita())
 		{
 			echo "<script>alert('Erro ao reclassificar matrícula'); window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';</script>";
@@ -253,6 +259,7 @@ class indice extends clsCadastro
 		$det_serie = $obj_serie->detalhe();
 
 		$obj_matricula = new clsPmieducarMatricula(null,null,$this->ref_cod_escola,$this->ref_ref_cod_serie,null,$this->pessoa_logada,$this->ref_cod_aluno,3,null,null,1,$det_matricula['ano'],1,null,null,null,1,$det_serie["ref_cod_curso"] );
+		$obj_matricula->data_matricula = $this->data_cancel;
 		$cadastrou = $obj_matricula->cadastra();
 
 		if(!$cadastrou){

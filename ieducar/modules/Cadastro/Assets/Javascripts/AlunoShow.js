@@ -49,6 +49,9 @@ var handleGetMatriculas = function(dataResponse) {
       else
         var linkToMatricula = '';
 
+      if (!matricula.transferencia_em_aberto && matricula.situacao=='Em andamento')
+        matricula.data_saida = '';
+
       $j('<td>').html(linkToMatricula).appendTo($tr).addClass('center');
       $j('<td>').html(matricula.ano).appendTo($tr);
       $j('<td>').html(matricula.situacao).appendTo($tr);
