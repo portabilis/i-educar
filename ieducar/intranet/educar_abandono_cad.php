@@ -71,7 +71,7 @@ class indice extends clsCadastro
 		$retorno = "Novo";
 		@session_start();
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close(require_once 'lib/Portabilis/Date/Utils.php';);
+		@session_write_close();
 
 		$this->ref_cod_matricula=$_GET["ref_cod_matricula"];
 		$this->ref_cod_aluno=$_GET["ref_cod_aluno"];
