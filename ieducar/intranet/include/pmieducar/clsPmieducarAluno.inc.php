@@ -693,7 +693,7 @@ class clsPmieducarAluno
     $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
     $whereAnd = ' WHERE ';
 
-    if(is_numeric($int_cod_aluno) && $int_cod_aluno < 2147483647) {
+    if(is_numeric($int_cod_aluno) && $int_cod_aluno < 2147483647  && $int_cod_aluno > -2147483648) {
       $filtros .= "{$whereAnd} cod_aluno = '{$int_cod_aluno}'";
       $whereAnd = ' AND ';
     }
@@ -859,7 +859,7 @@ class clsPmieducarAluno
       $whereAnd = ' AND ';
     }
 
-    if (!empty($cod_inep) && is_numeric($cod_inep)) {
+    if (!empty($cod_inep) && is_numeric($cod_inep) && $cod_inep < 2147483647  && $cod_inep > -2147483648) {
       $filtros .= "{$whereAnd} cod_aluno = ( SELECT cod_aluno FROM modules.educacenso_cod_aluno WHERE cod_aluno_inep = '{$cod_inep}')";
       $whereAnd = ' AND ';
     }
