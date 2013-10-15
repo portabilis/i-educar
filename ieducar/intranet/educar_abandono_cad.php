@@ -104,7 +104,7 @@ class indice extends clsCadastro
 			$this->campoTexto( "nm_aluno", "Aluno", $this->nm_aluno, 30, 255, false,false,false,"","","","",true );
 		}
 
-		$this->inputsHelper()->date('data_cancel', array('label' => 'Data do abandono', 'placeholder' => 'dd/mm/yyyy'));
+		$this->inputsHelper()->date('data_cancel', array('label' => 'Data do abandono', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')));
 		// text
 		$this->campoMemo( "observacao", "Observa&ccedil;&atilde;o", $this->observacao, 60, 5, false );
 	}

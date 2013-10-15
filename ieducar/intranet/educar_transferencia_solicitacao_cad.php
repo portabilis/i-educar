@@ -158,7 +158,7 @@ class indice extends clsCadastro
 			$opcoes = array( "" => "Erro na geracao" );
 		}
 		$this->campoLista( "ref_cod_transferencia_tipo", "Transfer&ecirc;ncia Motivo", $opcoes, $this->ref_cod_transferencia_tipo );
-		$this->inputsHelper()->date('data_cancel', array('label' => 'Data da transferência', 'placeholder' => 'dd/mm/yyyy'));
+		$this->inputsHelper()->date('data_cancel', array('label' => 'Data da transferência', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')));
 		// text
 		$this->campoMemo( "observacao", "Observa&ccedil;&atilde;o", $this->observacao, 60, 5, false );
 	}
