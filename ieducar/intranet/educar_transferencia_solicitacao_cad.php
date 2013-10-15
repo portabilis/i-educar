@@ -183,6 +183,24 @@ class indice extends clsCadastro
     // escola externa
 		$this->data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
 		$obj = new clsPmieducarMatricula( $this->ref_cod_matricula, null,null,null,$this->pessoa_logada);
+		$det_matricula = $obj->detalhe();
+
+		if(is_null($det_matricula['data_matricula'])){
+
+			if(substr($det_matricula['data_cadastro'], 0, 10) > $this->data_cancel){
+
+				$this->mensagem = "Data de abandono não pode ser inferior a data da matrícula.<br>";
+				return false;	
+				die();							
+			} 
+		}else{
+			if(substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel){
+				$this->mensagem = "Data de abandono não pode ser inferior a data da matrícula.<br>";
+				return false;
+				die();
+			}
+		}			
+
 		$obj->data_cancel = $this->data_cancel;
 		$editou = $obj->edita();
 

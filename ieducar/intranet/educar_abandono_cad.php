@@ -92,7 +92,7 @@ class indice extends clsCadastro
 	function Gerar()
 	{
 				// primary keys
-		$this->campoOculto( "require_once 'lib/Portabilis/Date/Utils.php';require_once 'lib/Portabilis/Date/Utils.php';ref_cod_aluno", $this->ref_cod_aluno );
+		$this->campoOculto( "ref_cod_aluno", $this->ref_cod_aluno );
 		$this->campoOculto( "ref_cod_matricula", $this->ref_cod_matricula );
 
 		$obj_aluno = new clsPmieducarAluno();
@@ -123,6 +123,20 @@ class indice extends clsCadastro
 
 		$det_matricula = $obj_matricula->detalhe();
 
+		if(is_null($det_matricula['data_matricula'])){
+
+			if(substr($det_matricula['data_cadastro'], 0, 10) > $obj_matricula->data_cancel){
+
+				$this->mensagem = "Data de abandono não pode ser inferior a data da matrícula.<br>";
+				return false;								
+			} 
+		}else{
+			if(substr($det_matricula['data_matricula'], 0, 10) > $obj_matricula->data_cancel){
+				$this->mensagem = "Data de abandono não pode ser inferior a data da matrícula.<br>";
+				return false;
+			}
+		}
+
 		if($obj_matricula->edita())
 		{
 
@@ -130,7 +144,6 @@ class indice extends clsCadastro
 			{
 				$this->mensagem .= "Abandono realizado com sucesso.<br>";
 				header( "Location: educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
-				//die();
 				return true;
 			}
 
@@ -142,6 +155,17 @@ class indice extends clsCadastro
 		return false;
 
 	}
+
+   function Excluir()
+   {
+     @session_start();
+       $this->pessoa_logada = $_SESSION['id_pessoa'];
+     @session_write_close();
+ 
+     $obj_permissoes = new clsPermissoes();
+     $obj_permissoes->permissao_excluir( 578, $this->pessoa_logada, 7,  "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
+   }
+
 
 }
 

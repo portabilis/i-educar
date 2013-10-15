@@ -245,6 +245,22 @@ class indice extends clsCadastro
 		$obj_matricula = new clsPmieducarMatricula($this->cod_matricula);
 		$det_matricula = $obj_matricula->detalhe();
 
+		if(is_null($det_matricula['data_matricula'])){
+
+			if(substr($det_matricula['data_cadastro'], 0, 10) > $this->data_cancel){
+
+				$this->mensagem = "Data de abandono não pode ser inferior a data da matrícula.<br>";
+				return false;	
+				die();							
+			} 
+		}else{
+			if(substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel){
+				$this->mensagem = "Data de abandono não pode ser inferior a data da matrícula.<br>";
+				return false;
+				die();
+			}
+		}			
+
 		if(!$det_matricula || $det_matricula['aprovado'] != 3)
 			header("location: educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
@@ -256,7 +272,7 @@ class indice extends clsCadastro
 			die("Erro ao reclassificar matrícula");
 		}
 		$obj_serie = new clsPmieducarSerie( $this->ref_ref_cod_serie );
-		$det_serie = $obj_serie->detalhe();
+		$det_serie = $obj_serie->detalhe();substr(
 
 		$obj_matricula = new clsPmieducarMatricula(null,null,$this->ref_cod_escola,$this->ref_ref_cod_serie,null,$this->pessoa_logada,$this->ref_cod_aluno,3,null,null,1,$det_matricula['ano'],1,null,null,null,1,$det_serie["ref_cod_curso"] );
 		$obj_matricula->data_matricula = $this->data_cancel;
