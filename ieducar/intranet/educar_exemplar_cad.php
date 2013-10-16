@@ -132,7 +132,7 @@ class indice extends clsCadastro
 		$this->campoLista( "permite_emprestimo", "Permite Emprestimo", $opcoes, $this->permite_emprestimo );
 
 		$this->preco = is_numeric($this->preco) ? number_format($this->preco, 2, ",", ".") : "";
-		$this->campoMonetario( "preco", "Preco", $this->preco, 10, 20, true );
+		$this->campoMonetario( "preco", "Preco", $this->preco, 10, 20, false );
 
     $this->inputsHelper()->dynamic('bibliotecaPesquisaObra', array('required' => true));
 
@@ -140,7 +140,7 @@ class indice extends clsCadastro
 		if(!$this->data_aquisicao)
 			$this->data_aquisicao = date("d/m/Y");
 
-		$this->campoData( "data_aquisicao", "Data Aquisic&atilde;o", $this->data_aquisicao, true );
+		$this->campoData( "data_aquisicao", "Data de entrada", $this->data_aquisicao, false );
 
     $this->campoNumero("tombo", "Tombo", $this->tombo, 10, 10, false);
 
