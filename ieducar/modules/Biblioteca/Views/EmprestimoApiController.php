@@ -34,6 +34,8 @@
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'include/pmieducar/clsPmieducarExemplar.inc.php';
+require_once 'include/pmieducar/clsPmieducarBibliotecaDia.inc.php';
+require_once 'include/pmieducar/clsPmieducarBibliotecaFeriados.inc.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 
 class EmprestimoApiController extends ApiCoreController
@@ -207,12 +209,59 @@ class EmprestimoApiController extends ApiCoreController
       $dataInicio = "$mesInicio/$diaInicio/$anoInicio";
     }
 
-
-    // #TODO se data cair em feriado ou dia de não trabalho somar +1 dia ?
     // soma dias emprestimo
-    $date = date($format, strtotime("+$qtdDiasEmprestimo days", strtotime($dataInicio)));
+    $date = date('Y-m-d', strtotime("+$qtdDiasEmprestimo days", strtotime($dataInicio)));
 
-    return $date;
+    // #TODO Caso seja a devolução seja refatorada, separar esse trecho num método para reutilizar código
+    $dias_da_semana = array( 'Sun' => 1, 'Mon' => 2, 'Tue' => 3, 'Wed' => 4, 'Thu' => 5, 'Fri' => 6, 'Sat' => 7 );
+
+    $obj_biblioteca_dia = new clsPmieducarBibliotecaDia();
+    $lst_biblioteca_dia = $obj_biblioteca_dia->lista($this->getRequest()->biblioteca_id);
+    if( is_array( $lst_biblioteca_dia ) && count( $lst_biblioteca_dia ) )
+    {
+      foreach ($lst_biblioteca_dia AS $dia_semana)
+      {
+        // dias de funcionamento da biblioteca
+        $biblioteca_dias_semana[] = $dia_semana["dia"];
+      }
+    }
+    // Array de dias de não funcionamento
+    $biblioteca_dias_folga = array_diff($dias_da_semana, $biblioteca_dias_semana);
+    // inverte as relacoes entre chaves e valores ( de $variavel["Sun"] => 1, para $variavel[1] => "Sun")
+    $biblioteca_dias_folga = array_flip($biblioteca_dias_folga);    
+
+    $obj_biblioteca_feriado = new clsPmieducarBibliotecaFeriados();
+    $lst_biblioteca_feriado = $obj_biblioteca_feriado->lista( null, $this->getRequest()->biblioteca_id );
+    if( is_array( $lst_biblioteca_feriado ) && count( $lst_biblioteca_feriado ) )
+    {
+      foreach ($lst_biblioteca_feriado AS $dia_feriado)
+      {
+        // dias de feriado da biblioteca
+        $biblioteca_dias_feriado[] = dataFromPgToBr($dia_feriado["data_feriado"], "D Y-m-d");
+      }
+    }    
+
+    $data_entrega = dataFromPgToBr($date, "D Y-m-d");
+
+    if(!is_array($biblioteca_dias_folga))
+    {
+      $biblioteca_dias_folga = array(null);
+    }
+    if(!is_array($biblioteca_dias_feriado))
+    {
+      $biblioteca_dias_feriado = array(null);
+    }
+
+    // verifica se a data cai em algum dia que a biblioteca n funciona
+    while( in_array(substr($data_entrega,0,3), $biblioteca_dias_folga) || in_array($data_entrega, $biblioteca_dias_feriado) )
+    {
+      $data_entrega = date("D Y-m-d ",strtotime("$data_entrega +1 day"));
+      $data_entrega = dataFromPgToBr($data_entrega, "D Y-m-d");
+    }
+
+    $data_entrega = dataFromPgToBr($data_entrega, $format);  
+
+    return $data_entrega;
   }
 
 
