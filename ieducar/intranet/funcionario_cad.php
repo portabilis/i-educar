@@ -308,10 +308,10 @@ class indice extends clsCadastro
 		$opcoes = array(null => "Não", 'S' => "Sim");
 		$this->campoLista("super", "Super usu&aacute;rio", $opcoes, $this->super, '',false,'','',false,false);
 
-		$opcoes = array(null => "Não", 'S' => "Sim");
+		$opcoes = array(null => "Não", 1 => "Sim");
 		$this->campoLista("proibido", "Banido", $opcoes, $this->proibido, '',false,'','',false,false);
 
-		$opcoes = array(null => "Não", 'S' => "Sim");
+		$opcoes = array(null => "Não", 1 => "Sim");
 		$this->campoLista("matricula_permanente", "Matr&iacute;cula permanente", $opcoes, $this->matricula_permanente, '',false,'','',false,false);				
 
 		//-----------------------------------------------------------------------------------------------
