@@ -272,7 +272,7 @@ class indice extends clsCadastro
 			die("Erro ao reclassificar matrícula");
 		}
 		$obj_serie = new clsPmieducarSerie( $this->ref_ref_cod_serie );
-		$det_serie = $obj_serie->detalhe();substr(
+		$det_serie = $obj_serie->detalhe();
 
 		$obj_matricula = new clsPmieducarMatricula(null,null,$this->ref_cod_escola,$this->ref_ref_cod_serie,null,$this->pessoa_logada,$this->ref_cod_aluno,3,null,null,1,$det_matricula['ano'],1,null,null,null,1,$det_serie["ref_cod_curso"] );
 		$obj_matricula->data_matricula = $this->data_cancel;

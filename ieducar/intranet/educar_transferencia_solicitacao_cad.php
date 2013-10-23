@@ -200,8 +200,7 @@ class indice extends clsCadastro
 				die();
 			}
 		}			
-
-		$obj->data_cancel = $this->data_cancel;
+		
 		$editou = $obj->edita();
 
 		$obj->data_cancel = $this->data_cancel;
@@ -217,6 +216,7 @@ class indice extends clsCadastro
 			if ($aprovado == 3)
 			{
 				$obj = new clsPmieducarMatricula( $this->ref_cod_matricula, null,null,null,$this->pessoa_logada,null,null,4,null,null,1 );				
+				$obj->data_cancel = $this->data_cancel;
 				$editou = $obj->edita();
 				if( !$editou )
 				{
@@ -248,6 +248,10 @@ class indice extends clsCadastro
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
+			$obj = new clsPmieducarMatricula( $this->ref_cod_matricula, null,null,null,$this->pessoa_logada);
+			$det_matricula = $obj->detalhe();
+			$obj->data_cancel = $this->data_cancel;
+			$obj->edita();
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			header( "Location: educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
 			die();
