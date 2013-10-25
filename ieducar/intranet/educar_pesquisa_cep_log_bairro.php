@@ -170,7 +170,7 @@ class miolo1 extends clsListagem
       $paramCount++;
     }
 
-    $total  = Portabilis_Utils_Database::selectField(' SELECT COUNT(0) '.$select);
+    $total  = Portabilis_Utils_Database::selectField(' SELECT COUNT(0) '.$select, array('params' => array_values($params)));
 
     $select .= sprintf(' LIMIT %s OFFSET %s', $limite, $iniciolimit);
 
