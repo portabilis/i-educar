@@ -386,6 +386,7 @@ function selAction(menu_pai, tipo, acao)
 
   for (var ct=0; ct < menu[menu_pai].length; ct++){
     document.getElementsByName('permissoes[' + menu[menu_pai][ct]  + '][' + tipo + ']')[0].checked = state;    
+    document.getElementsByName('permissoes[' + menu[menu_pai][ct]  + '][' + tipo + ']')[0].value = ( state ? 'on' : '');    
   }
 }
 </script>
