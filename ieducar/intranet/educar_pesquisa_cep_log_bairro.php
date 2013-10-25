@@ -130,9 +130,11 @@ class miolo1 extends clsListagem
 
     // consulta dados
 
-    $select = '
+    $pre_select = '
       SELECT
-        c.idlog, c.cep, c.idbai, u.sigla_uf, m.nome, t.idtlog, m.idmun, b.zona_localizacao
+        c.idlog, c.cep, c.idbai, u.sigla_uf, m.nome, t.idtlog, m.idmun, b.zona_localizacao ';
+        
+    $select = '    
       FROM
         urbano.cep_logradouro_bairro c, public.bairro b, public.logradouro l,
         public.municipio m, public.uf u, urbano.tipo_logradouro t
@@ -168,10 +170,12 @@ class miolo1 extends clsListagem
       $paramCount++;
     }
 
+    $total  = Portabilis_Utils_Database::selectField(' SELECT COUNT(0) '.$select);
+
     $select .= sprintf(' LIMIT %s OFFSET %s', $limite, $iniciolimit);
 
-    $result = Portabilis_Utils_Database::fetchPreparedQuery($select, array('params' => array_values($params)));
-    $total  = count($result);
+    $result = Portabilis_Utils_Database::fetchPreparedQuery($pre_select.$select, array('params' => array_values($params)));
+    
 
     foreach ($result as $record) {
       list($idlog, $cep, $idbai, $uf, $cidade, $tipoLogradouroId, $id_mun, $zona) = $record;
