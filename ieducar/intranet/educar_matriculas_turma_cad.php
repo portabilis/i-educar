@@ -32,6 +32,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'lib/Portabilis/Date/Utils.php';
 
 /**
  * clsIndexBase class.
@@ -83,6 +84,7 @@ class indice extends clsCadastro
 
   var $matriculas_turma;
   var $incluir_matricula;
+  var $data_enturmacao;
 
   function Inicializar()
   {
@@ -261,6 +263,7 @@ class indice extends clsCadastro
     }
 
     if (count($opcoes)) {
+      $this->inputsHelper()->date('data_enturmacao', array('label' => 'Data da enturmação', 'value' => date('Y-m-d')));
       asort($opcoes);
       foreach ($opcoes as $key => $aluno) {
         $this->campoCheck('ref_cod_matricula[' . $key . ']', 'Aluno', $key,
@@ -284,16 +287,18 @@ class indice extends clsCadastro
   {
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
+    $this->data_enturmacao = Portabilis_Date_Utils::brToPgSQL($this->data_enturmacao);
     @session_write_close();
 
     if ($this->matriculas_turma) {
       foreach ($this->ref_cod_matricula as $matricula => $campo) {
         $obj = new clsPmieducarMatriculaTurma($matricula, $this->ref_cod_turma,
-          NULL, $this->pessoa_logada, NULL, NULL, 1, NULL, $campo['sequencial_']);
+          NULL, $this->pessoa_logada, NULL, NULL, 1, NULL, $campo['sequencial_']);        
 
         $existe = $obj->existe();
 
         if (!$existe) {
+          $obj->data_enturmacao = $this->data_enturmacao;
           $cadastrou = $obj->cadastra();
 
           if (!$cadastrou) {
