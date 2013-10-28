@@ -77,17 +77,11 @@ class indice extends clsListagem
 		$this->nome_acao = "Novo";
 
 		$this->largura = "100%";
-                
-                $localizacao = new LocalizacaoSistema();
-                $localizacao->entradaCaminhos( array(
-                    $_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
-<<<<<<< HEAD
-                    ""                  => "Cadastro de Funcionários"
-=======
-                    ""                  => "Lista de Funcionários"
->>>>>>> 691e3ffa3b5f4c6dd70c0728bccfc00e665bf077
-                ));
-                $this->enviaLocalizacao($localizacao->montar());
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos(array($_SERVER['SERVER_NAME'] . '/intranet' => 'i-Educar', '' => 'Lista de Funcionários'));
+
+    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 
