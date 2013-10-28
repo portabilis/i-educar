@@ -203,7 +203,7 @@ class indice extends clsCadastro
     $alunosEnturmados = false;
     if (is_numeric($this->ref_cod_turma) && !$_POST) {
       $obj_matriculas_turma = new clsPmieducarMatriculaTurma();
-      $obj_matriculas_turma->setOrderby('nome_aluno');
+      $obj_matriculas_turma->setOrderby('sequencial_fechamento, nome_aluno');
       $lst_matriculas_turma = $obj_matriculas_turma->lista(NULL, $this->ref_cod_turma,
          NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL,
          array(1, 2, 3), NULL, NULL, $ano_letivo, NULL, TRUE, NULL, 1, TRUE);

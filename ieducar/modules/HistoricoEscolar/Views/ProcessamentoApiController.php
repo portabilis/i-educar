@@ -808,7 +808,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
 
       $alunos = new clsPmieducarMatriculaTurma();
-      $alunos->setOrderby('ref_cod_curso, ref_ref_cod_serie, ref_cod_turma, nome');
+      $alunos->setOrderby('ref_cod_curso, ref_ref_cod_serie, ref_cod_turma, sequencial_fechamento, nome');
 
       $alunos = $alunos->lista(
         $this->getRequest()->matricula_id,
