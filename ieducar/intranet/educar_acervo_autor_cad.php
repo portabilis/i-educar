@@ -81,26 +81,28 @@ class indice extends clsCadastro
 				foreach( $registro AS $campo => $val )	// passa todos os valores obtidos no registro para atributos do objeto
 					$this->$campo = $val;
 
-			$obj_permissoes = new clsPermissoes();
-			if( $obj_permissoes->permissao_excluir( 594, $this->pessoa_logada, 11 ) )
-			{
-				$this->fexcluir = true;
-			}
+				$this->nm_autor = stripslashes($this->nm_autor);
 
-			if( class_exists( "clsPmieducarBiblioteca" ) )
-			{
-				$obj_ref_cod_biblioteca = new clsPmieducarBiblioteca( $registro["ref_cod_biblioteca"] );
-				$det_ref_cod_biblioteca = $obj_ref_cod_biblioteca->detalhe();
-				$this->ref_cod_instituicao = $det_ref_cod_biblioteca["ref_cod_instituicao"];
-				$this->ref_cod_escola = $det_ref_cod_biblioteca["ref_cod_escola"];
+				$obj_permissoes = new clsPermissoes();
+				if( $obj_permissoes->permissao_excluir( 594, $this->pessoa_logada, 11 ) )
+				{
+					$this->fexcluir = true;
+				}
 
-			}
-			else
-			{
-				$registro["ref_cod_biblioteca"] = "Erro na gera&ccedil;&atilde;o";
-			}
+				if( class_exists( "clsPmieducarBiblioteca" ) )
+				{
+					$obj_ref_cod_biblioteca = new clsPmieducarBiblioteca( $registro["ref_cod_biblioteca"] );
+					$det_ref_cod_biblioteca = $obj_ref_cod_biblioteca->detalhe();
+					$this->ref_cod_instituicao = $det_ref_cod_biblioteca["ref_cod_instituicao"];
+					$this->ref_cod_escola = $det_ref_cod_biblioteca["ref_cod_escola"];
 
-				$retorno = "Editar";
+				}
+				else
+				{
+					$registro["ref_cod_biblioteca"] = "Erro na gera&ccedil;&atilde;o";
+				}
+
+					$retorno = "Editar";
 			}
 		}
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_acervo_autor_det.php?cod_acervo_autor={$registro["cod_acervo_autor"]}" : "educar_acervo_autor_lst.php";
@@ -137,6 +139,8 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
+		$this->nm_autor = addslashes($this->nm_autor);
+
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 594, $this->pessoa_logada, 11,  "educar_acervo_autor_lst.php" );
 
@@ -162,6 +166,8 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
+		$this->nm_autor = addslashes($this->nm_autor);
+		
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 594, $this->pessoa_logada, 11,  "educar_acervo_autor_lst.php" );
 
