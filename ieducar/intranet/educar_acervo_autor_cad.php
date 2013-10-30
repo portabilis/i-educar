@@ -82,6 +82,7 @@ class indice extends clsCadastro
 					$this->$campo = $val;
 
 				$this->nm_autor = stripslashes($this->nm_autor);
+				$this->nm_autor = htmlspecialchars($this->nm_autor);
 
 				$obj_permissoes = new clsPermissoes();
 				if( $obj_permissoes->permissao_excluir( 594, $this->pessoa_logada, 11 ) )
