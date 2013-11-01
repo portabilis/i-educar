@@ -7,8 +7,8 @@
   -- @version  $Id$  
   
   
-  insert into portal.menu_submenu values(999226,55,2,'Autorização de Foto de Menor','module/Reports/AutorizacaoAluno',NULL,3);
-  insert into pmicontrolesis.menu values(999226,999226,999400,'Autorização de Foto de Menor',5,'module/Reports/AutorizacaoAluno','_self',1,15,192);
+  insert into portal.menu_submenu values(999226,55,2,'Utilização da imagem do Aluno','module/Reports/AutorizacaoAluno',NULL,3);
+  insert into pmicontrolesis.menu values(999226,999226,999400,'Utilização da imagem do Aluno',5,'module/Reports/AutorizacaoAluno','_self',1,15,192);
 
   -- //@UNDO
   
