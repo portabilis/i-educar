@@ -711,6 +711,7 @@ function enturmacaoMatricula($matriculaId, $turmaDestinoId) {
                                                    NULL,
                                                    NULL, 
                                                    1);
+      $enturmacao->data_enturmacao = $this->data_matricula;
       return $enturmacao->cadastra();
     }
     return false;
