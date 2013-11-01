@@ -146,9 +146,9 @@
 
         <a target="_blank" class="light" href="http://suporte.portabilis.com.br"> Obter Suporte </a>
       </p>
-       <div id="div-outubro-rosa">
+        <!--div id="div-outubro-rosa">
         <a href="https://www.google.com.br/#q=Campanha+Outubro+rosa" target="_blank"><img src="https://s3.amazonaws.com/apps-ieducar-images/outubro-rosa/outubro-rosa.png"/></a>
-      </div>
+      </div-->
     </div> <!-- end rodape -->
      
   </body>
