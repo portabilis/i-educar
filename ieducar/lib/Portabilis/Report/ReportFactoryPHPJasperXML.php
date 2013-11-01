@@ -88,6 +88,8 @@ class Portabilis_Report_ReportFactoryPHPJasperXML extends Portabilis_Report_Repo
     if ($options['add_logo_arg'])
       $report->addArg('logo', $this->logoPath());
 
+    $report->addArg('SUBREPORT_DIR', ($GLOBALS['coreExt']['Config']->app->database->dbname=="test" ? "/sites_media_root/services-test/reports/jasper/" : "/sites_media_root/services/reports/jasper/" ));
+
     $xml                     = $this->loadReportSource($report->templateName());
 
     $builder                 = new PHPJasperXML();
