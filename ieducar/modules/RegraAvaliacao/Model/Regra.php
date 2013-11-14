@@ -208,8 +208,8 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
       'mediaRecuperacao' => $this->validateIfEquals(
         'tipoProgressao', RegraAvaliacao_Model_TipoProgressao::CONTINUADA,
         'CoreExt_Validate_Numeric',
-        array('required' => $isMediaRequired, 'min' => 1, 'max' => 10),
-        array('required' => $isMediaRequired, 'min' => 0, 'max' => 10)
+        array('required' => $isMediaRequired, 'min' => 1, 'max' => 14),
+        array('required' => $isMediaRequired, 'min' => 0, 'max' => 14)
       ),
     );
   }
