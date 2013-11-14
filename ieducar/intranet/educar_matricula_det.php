@@ -186,6 +186,7 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Número Reserva Vaga', $registro['ref_cod_reserva_vaga']));
     }
 
+    $campoObs = false;
     if ($registro['aprovado']) {
       if ($registro['aprovado'] == 1) {
         $aprovado = 'Aprovado';
@@ -204,6 +205,7 @@ class indice extends clsDetalhe
       }
       elseif ($registro['aprovado'] == 6) {
         $aprovado = 'Abandono';
+        $campoObs = true;
       }
       elseif ($registro['aprovado'] == 7) {
         $aprovado = 'Em Exame';
@@ -211,6 +213,9 @@ class indice extends clsDetalhe
 
       $this->addDetalhe(array('Situação', $aprovado));
     }
+
+    if($campoObs)
+      $this->addDetalhe(array('Observação',$registro['observacao']));
 
     $this->addDetalhe(array('Formando', $registro['formando'] == 0 ? 'N&atilde;o' : 'Sim'));
 
@@ -251,7 +256,7 @@ class indice extends clsDetalhe
         $this->array_botao_url_script[] = "go(\"educar_matricula_turma_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
 
         $this->array_botao[]            = 'Abandono';
-        $this->array_botao_url_script[] = "if(confirm(\"Deseja confirmar o abandono desta matrícula?\"))go(\"educar_matricula_abandono_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\");";
+        $this->array_botao_url_script[] = "go(\"educar_abandono_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\");";
 
         if ($registro['ref_ref_cod_serie']) {
           $this->array_botao[]            = 'Reclassificar';
