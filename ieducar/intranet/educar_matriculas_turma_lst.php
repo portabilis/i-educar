@@ -128,7 +128,7 @@ class indice extends clsListagem
 		$obj_turma->setOrderby( "nm_turma ASC" );
 		$obj_turma->setLimite( $this->limite, $this->offset );
 
-		$lista = $obj_turma->lista2(
+		$lista = $obj_turma->lista3(
 			$this->ref_cod_turma,
 			null,
 			null,

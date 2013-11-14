@@ -138,7 +138,7 @@ class indice extends clsListagem
 
     // Opções de turma
     $objTemp = new clsPmieducarTurma();
-    $lista = $objTemp->lista(NULL, NULL, NULL, $this->ref_cod_serie,
+    $lista = $objTemp->lista3(NULL, NULL, NULL, $this->ref_cod_serie,
       $this->ref_cod_escola, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
       $this->ref_cod_curso);
@@ -169,7 +169,7 @@ class indice extends clsListagem
     $obj_matricula_turma->setOrderby('data_cadastro ASC');
     $obj_matricula_turma->setLimite($this->limite, $this->offset);
 
-    $lista = $obj_matricula_turma->lista($this->ref_cod_turma, NULL, NULL,
+    $lista = $obj_matricula_turma->lista3($this->ref_cod_turma, NULL, NULL,
       $this->ref_cod_serie,$this->ref_cod_escola, NULL, NULL, NULL, NULL, NULL,
       NULL, NULL, NULL, NULL,1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
       NULL,$this->ref_cod_curso, NULL, NULL, NULL, NULL, NULL, NULL, TRUE);
@@ -216,7 +216,7 @@ WHERE
     }
 
     $enturmacoesMatricula = new clsPmieducarMatriculaTurma();
-    $enturmacoesMatricula = $enturmacoesMatricula->lista($this->ref_cod_matricula, NULL, NULL,
+    $enturmacoesMatricula = $enturmacoesMatricula->lista3($this->ref_cod_matricula, NULL, NULL,
                                                          NULL, NULL, NULL, NULL, NULL, 1);
 
     $turmasThisSerie = $lista;
