@@ -276,29 +276,10 @@ class indice extends clsCadastro
       $this->campoTexto("andar", "Andar", $this->andar, "2","2", FALSE);
     }
 
-    $this->campoTexto("p_ddd_telefone_1", "DDD Telefone 1",
-      $this->p_ddd_telefone_1, "2", "2", FALSE);
-
-    $this->campoTexto("p_telefone_1", "Telefone 1",  $this->p_telefone_1,
-      "10", "15", FALSE);
-
-    $this->campoTexto("p_ddd_telefone_2", "DDD Telefone 2",
-      $this->p_ddd_telefone_2, "2", "2", FALSE);
-
-    $this->campoTexto("p_telefone_2", "Telefone",  $this->p_telefone_2, "10",
-      "15", FALSE);
-
-    $this->campoTexto("p_ddd_telefone_mov", "DDD Celular", $this->p_ddd_telefone_mov,
-      "2", "2", FALSE);
-
-    $this->campoTexto("p_telefone_mov", "Celular",  $this->p_telefone_mov, "10",
-      "15", FALSE);
-
-    $this->campoTexto("p_ddd_telefone_fax", "DDD Fax", $this->p_ddd_telefone_fax,
-      "2", "2", FALSE);
-
-    $this->campoTexto("p_telefone_fax", "Fax", $this->p_telefone_fax, "10", "15",
-      FALSE);
+    $this->inputTelefone('1', 'Telefone 1');
+    $this->inputTelefone('2', 'Telefone 2');
+    $this->inputTelefone('mov', 'Celular');
+    $this->inputTelefone('fax', 'Fax');
 
     $this->campoTexto("p_http", "Site", $this->p_http, "50", "255", FALSE);
 
@@ -433,6 +414,38 @@ class indice extends clsCadastro
 
     header('Location: index.php');
   }
+
+  protected function inputTelefone($type, $typeLabel = '') {
+     if (! $typeLabel)
+       $typeLabel = "Telefone {$type}";
+ 
+     // ddd
+ 
+     $options = array(
+       'required'    => false,
+       'label'       => "(ddd) / {$typeLabel}",
+       'placeholder' => 'ddd',
+       'value'       => $this->{"p_ddd_telefone_{$type}"},
+       'max_length'  => 3,
+       'size'        => 3,
+       'inline'      => true
+     );
+ 
+     $this->inputsHelper()->integer("p_ddd_telefone_{$type}", $options);
+ 
+ 
+    // telefone
+ 
+     $options = array(
+       'required'    => false,
+       'label'       => '',
+       'placeholder' => $typeLabel,
+       'value'       => $this->{"p_telefone_{$type}"},
+       'max_length'  => 11
+     );
+ 
+     $this->inputsHelper()->integer("p_telefone_{$type}", $options);
+   }  
 }
 
 
