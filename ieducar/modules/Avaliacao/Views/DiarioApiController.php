@@ -552,7 +552,7 @@ class DiarioApiController extends ApiCoreController
         $this->getRequest()->instituicao_id,
         $this->getRequest()->aluno_id,
         NULL,
-        NULL,
+        3,
         NULL,
         NULL,
         $this->getRequest()->ano,
