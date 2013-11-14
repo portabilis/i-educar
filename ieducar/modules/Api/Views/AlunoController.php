@@ -398,15 +398,15 @@ class AlunoController extends ApiCoreController
   }
 
   protected function loadTransferenciaDataEntrada($matriculaId) {
-    $sql = "select to_char(data_transferencia, 'DD/MM/YYYY') from
-            pmieducar.transferencia_solicitacao where ref_cod_matricula_entrada = $1 and ativo = 1";
+    $sql = "select to_char(data_cadastro, 'DD/MM/YYYY') from pmieducar.matricula
+               where cod_matricula=$1 and ativo = 1";
 
     return Portabilis_Utils_Database::selectField($sql, $matriculaId);
   }
 
   protected function loadTransferenciaDataSaida($matriculaId) {
-    $sql = "select to_char(data_transferencia, 'DD/MM/YYYY') from
-            pmieducar.transferencia_solicitacao where ref_cod_matricula_saida = $1 and ativo = 1";
+    $sql = "select to_char(data_exclusao, 'DD/MM/YYYY') from pmieducar.matricula
+               where cod_matricula=$1 and ativo = 1 and (aprovado=4 or aprovado=6)";
 
     return Portabilis_Utils_Database::selectField($sql, $matriculaId);
   }
