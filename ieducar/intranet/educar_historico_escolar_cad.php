@@ -118,7 +118,11 @@ class indice extends clsCadastro
 				{
 					$this->fexcluir = true;
 				}
-				$retorno = "Editar";
+				
+		        if(!isset($_GET['copia']))
+		          $retorno = "Editar";
+		        else 
+		          $this->fexcluir = false;
 			}
 		}
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_historico_escolar_det.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}" : "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}";
