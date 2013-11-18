@@ -89,6 +89,7 @@ class indice extends clsListagem
 	var $data_exclusao;
 	var $ativo;
 	var $ref_cod_biblioteca;
+	var $ref_cod_assunto_acervo;
 
 	function Gerar()
 	{
@@ -121,6 +122,7 @@ class indice extends clsListagem
 		$opcoes_exemplar[""] = "Selecione";
 		$opcoes_editora = array();
 		$opcoes_editora[""] = "Selecione";
+
 		if (is_numeric($this->ref_cod_biblioteca))
 		{
 			$obj_colecao = new clsPmieducarAcervoColecao();
@@ -162,7 +164,18 @@ class indice extends clsListagem
 		$this->campoLista("ref_cod_acervo_colecao", "Acervo Coleção", $opcoes_colecao, $this->ref_cod_acervo_colecao, "", false, "", "", false, false);
 		$this->campoLista("ref_cod_exemplar_tipo", "Tipo Exemplar", $opcoes_exemplar, $this->ref_cod_exemplar_tipo, "", false, "", "", false, false);
 		$this->campoLista("ref_cod_acervo_editora", "Editora", $opcoes_editora, $this->ref_cod_acervo_editora, "", false, "", "", false, false);
-		
+
+        $objTemp = new clsPmieducarAcervoAssunto();
+        $lista = $objTemp->lista();
+
+        if (is_array($lista) && count($lista)) {
+          foreach ($lista as $registro) {
+            $opcoes[$registro['cod_acervo_assunto']] = $registro['nm_assunto'];
+          }
+        }		
+
+        $this->campoLista('ref_cod_assunto_acervo', 'Assunto', $opcoes, $this->ref_cod_assunto_acervo, '', FALSE, '',
+    	  '', FALSE, FALSE);		
 		
 		$this->campoTexto( "titulo_livro", "Titulo", $this->titulo_livro, 30, 255, false );
 
@@ -180,6 +193,7 @@ class indice extends clsListagem
 		$obj_acervo = new clsPmieducarAcervo();
 		$obj_acervo->setOrderby( "titulo ASC" );
 		$obj_acervo->setLimite( $this->limite, $this->offset );
+		$obj_acervo->ref_cod_acervo_assunto = $this->ref_cod_assunto_acervo;
 		
 				
 		
