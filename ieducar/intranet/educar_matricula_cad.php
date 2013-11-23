@@ -254,7 +254,7 @@ class indice extends clsCadastro
         $db->ProximoRegistro();
         $m = $db->Tupla();
         if (is_array($m) && count($m)){
-          if ($m['ref_cod_curso'] == $this->ref_cod_curso){
+          if ($m['ref_cod_curso'] == $this->ref_cod_curso || $GLOBALS['coreExt']['Config']->app->matricula->multiplas_matriculas == 0){
             require_once 'include/pmieducar/clsPmieducarEscola.inc.php';
             require_once 'include/pessoa/clsJuridica.inc.php';
 
