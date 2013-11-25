@@ -388,6 +388,13 @@ class indice extends clsCadastro
 		$this->campoTexto( "titulo", "T&iacute;tulo", $this->titulo, 40, 255, true );
 		$this->campoTexto( "sub_titulo", "Subt&iacute;tulo", $this->sub_titulo, 40, 255, false );
 		$this->campoTexto( "estante", "Estante", $this->estante, 20, 15, false );
+
+   		$helperOptions = array('objectName' => 'assuntos');
+    	$options       = array('label' => 'Assuntos', 'size' => 50, 'required' => false,
+                           'options' => array('value' => null));
+
+   		$this->inputsHelper()->multipleSearchAssuntos('', $options, $helperOptions);
+
 		$this->campoTexto( "cdd", "CDD", $this->cdd, 20, 15, false );
 		$this->campoTexto( "cdu", "CDU", $this->cdu, 20, 15, false );
 		$this->campoTexto( "cutter", "Cutter", $this->cutter, 20, 15, false );
@@ -396,6 +403,7 @@ class indice extends clsCadastro
 		$this->campoNumero( "ano", "Ano", $this->ano, 5, 4, true );
 		$this->campoNumero( "num_paginas", "N&uacute;mero P&aacute;ginas", $this->num_paginas, 5, 255, true );
 		$this->campoNumero( "isbn", "ISBN", $this->isbn, 20, 13, false );
+
 	}
 
 	function Novo()
@@ -412,12 +420,15 @@ class indice extends clsCadastro
 			$obj = new clsPmieducarAcervo( null, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo, null, $this->pessoa_logada, $this->ref_cod_acervo_colecao, $this->ref_cod_acervo_idioma, $this->ref_cod_acervo_editora, $this->titulo, $this->sub_titulo, $this->cdu, $this->cutter, $this->volume, $this->num_edicao, $this->ano, $this->num_paginas, $this->isbn, null, null, 1, $this->ref_cod_biblioteca, $this->cdd, $this->estante );
 			$cadastrou = $obj->cadastra();
 			if( $cadastrou )
-			{
-			//-----------------------CADASTRA AUTOR------------------------//
+			{			
+				#cadastra assuntos para a obra
+				$this->gravaAssuntos($cadastrou);
+
+				//-----------------------CADASTRA AUTOR------------------------//
 				foreach ( $this->acervo_autor AS $autor )
 				{
-          $autorPrincipal = $_POST["principal_{$autor['ref_cod_acervo_autor_']}"];
-          $autor["principal_"] = is_null($autorPrincipal) ? 0 : 1;
+          			$autorPrincipal = $_POST["principal_{$autor['ref_cod_acervo_autor_']}"];
+         			$autor["principal_"] = is_null($autorPrincipal) ? 0 : 1;
 
 					$obj = new clsPmieducarAcervoAcervoAutor( $autor["ref_cod_acervo_autor_"], $cadastrou, $autor["principal_"] );
 					$cadastrou2  = $obj->cadastra();
@@ -448,7 +459,7 @@ class indice extends clsCadastro
 		@session_start();
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
-
+		
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 598, $this->pessoa_logada, 11,  "educar_acervo_lst.php" );
 
@@ -459,7 +470,11 @@ class indice extends clsCadastro
 			$editou = $obj->edita();
 			if( $editou )
 			{
-			//-----------------------EDITA AUTOR------------------------//
+
+				#cadastra assuntos para a obra
+				$this->gravaAssuntos($this->cod_acervo);
+
+				//-----------------------EDITA AUTOR------------------------//
 
 				$obj  = new clsPmieducarAcervoAcervoAutor( null, $this->cod_acervo );
 				$excluiu = $obj->excluirTodos();
@@ -519,6 +534,18 @@ class indice extends clsCadastro
 		echo "<!--\nErro ao excluir clsPmieducarAcervo\nvalores obrigatorios\nif( is_numeric( $this->cod_acervo ) && is_numeric( $this->pessoa_logada ) )\n-->";
 		return false;
 	}
+
+	function gravaAssuntos($cod_acervo){
+		$objAssunto = new clsPmieducarAcervoAssunto();
+		$objAssunto->deletaAssuntosDaObra($cod_acervo);
+		foreach ($this->getRequest()->assuntos as $assuntoId) {
+			if (! empty($assuntoId)) {
+				$objAssunto = new clsPmieducarAcervoAssunto();
+				$objAssunto->cadastraAssuntoParaObra($cod_acervo, $assuntoId);
+			}
+		}
+	}
+
 }
 
 // cria uma extensao da classe base
@@ -741,5 +768,52 @@ function fixupPrincipalCheckboxes() {
 }
 
 fixupPrincipalCheckboxes();
+
+function fixupAssuntosSize(){
+
+	$j('#assuntos_chzn ul').css('width', '307px');	
+	
+}
+
+fixupAssuntosSize();
+
+  $assuntos = $j('#assuntos');
+
+  $assuntos.trigger('liszt:updated');
+  var testezin;
+
+var handleGetAssuntos = function(dataResponse) {
+  testezin = dataResponse['assuntos'];
+  
+  $j.each(dataResponse['assuntos'], function(id, value) {
+  	
+    $assuntos.children("[value=" + value + "]").attr('selected', '');
+  });
+
+  $assuntos.trigger('liszt:updated');
+}
+
+var getAssuntos = function() {
+	    
+  var $cod_acervo = $j('#cod_acervo').val();
+  
+  if ($j('#cod_acervo').val()!='') {    
+
+    var additionalVars = {
+      id : $j('#cod_acervo').val(),
+    };
+
+    var options = {
+      url      : getResourceUrlBuilder.buildUrl('/module/Api/assunto', 'assunto', additionalVars),
+      dataType : 'json',
+      data     : {},
+      success  : handleGetAssuntos,
+    };
+
+    getResource(options);
+  }
+}
+
+getAssuntos();
 
 </script>

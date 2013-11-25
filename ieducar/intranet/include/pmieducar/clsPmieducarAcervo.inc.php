@@ -40,6 +40,7 @@ class clsPmieducarAcervo
 	var $ref_usuario_exc;
 	var $ref_usuario_cad;
 	var $ref_cod_acervo_colecao;
+	var $ref_cod_acervo_assunto;
 	var $ref_cod_acervo_idioma;
 	var $ref_cod_acervo_editora;
 	var $titulo;
@@ -897,6 +898,12 @@ class clsPmieducarAcervo
 			$filtros .= "{$whereAnd} ref_cod_biblioteca = '{$int_ref_cod_biblioteca}'";
 			$whereAnd = " AND ";
 		}
+
+		if( is_numeric( $this->ref_cod_acervo_assunto ) )
+		{		
+			$filtros .= "{$whereAnd} (SELECT 1 FROM pmieducar.acervo_acervo_assunto WHERE ref_cod_acervo = cod_acervo AND ref_cod_acervo_assunto = {$this->ref_cod_acervo_assunto} ) IS NOT NULL";
+			$whereAnd = " AND ";
+		}	
 
 		if(is_string($str_titulo))
 		{

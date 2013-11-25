@@ -254,40 +254,42 @@ class indice extends clsCadastro
         $db->ProximoRegistro();
         $m = $db->Tupla();
         if (is_array($m) && count($m)){
-          require_once 'include/pmieducar/clsPmieducarEscola.inc.php';
-          require_once 'include/pessoa/clsJuridica.inc.php';
+          if ($m['ref_cod_curso'] == $this->ref_cod_curso || $GLOBALS['coreExt']['Config']->app->matricula->multiplas_matriculas == 0){
+            require_once 'include/pmieducar/clsPmieducarEscola.inc.php';
+            require_once 'include/pessoa/clsJuridica.inc.php';
 
-          $serie = new clsPmieducarSerie($m['ref_ref_cod_serie'], null, null, $m['ref_cod_curso']);
-          $serie = $serie->detalhe();
-          if (is_array($serie) && count($serie))
-            $serie = $serie['nm_serie'];
-          else
-            $serie = '';
+            $serie = new clsPmieducarSerie($m['ref_ref_cod_serie'], null, null, $m['ref_cod_curso']);          
+            $serie = $serie->detalhe();
+            if (is_array($serie) && count($serie))
+              $serie = $serie['nm_serie'];
+            else
+              $serie = '';
 
-          $escola = new clsPmieducarEscola($m['ref_ref_cod_escola']);
-          $escola = $escola->detalhe();
-          if (is_array($escola) && count($escola))
-          {
-            $escola = new clsJuridica($escola['ref_idpes']);
+            $escola = new clsPmieducarEscola($m['ref_ref_cod_escola']);
             $escola = $escola->detalhe();
             if (is_array($escola) && count($escola))
-              $escola = $escola['fantasia'];
+            {
+              $escola = new clsJuridica($escola['ref_idpes']);
+              $escola = $escola->detalhe();
+              if (is_array($escola) && count($escola))
+                $escola = $escola['fantasia'];
+              else
+                $escola = '';
+            }
             else
               $escola = '';
+
+            $curso = new clsPmieducarCurso($m['ref_cod_curso']);
+            $curso = $curso->detalhe();
+            if (is_array($curso) && count($curso))
+              $curso = $curso['nm_curso'];
+            else
+              $curso = '';
+
+            $this->mensagem .= "Este aluno já está matriculado no(a) '$serie' do curso '$curso' na escola '$escola', para matricular este aluno na sua escola solicite transferência ao secretário(a) da escola citada.<br />";
+
+            return false;
           }
-          else
-            $escola = '';
-
-          $curso = new clsPmieducarCurso($m['ref_cod_curso']);
-          $curso = $curso->detalhe();
-          if (is_array($curso) && count($curso))
-            $curso = $curso['nm_curso'];
-          else
-            $curso = '';
-
-          $this->mensagem .= "Este aluno já está matriculado no(a) '$serie' do curso '$curso' na escola '$escola', para matricular este aluno na sua escola solicite transferência ao secretário(a) da escola citada.<br />";
-
-          return false;
         }
     }
 
