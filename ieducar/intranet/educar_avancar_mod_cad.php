@@ -177,7 +177,7 @@ class indice extends clsCadastro
   protected function matricularAluno($escolaId, $cursoId, $serieId, $ano, $alunoId) {
     try {
       $this->db2->Consulta(sprintf("INSERT INTO pmieducar.matricula
-        (ref_ref_cod_escola, ref_ref_cod_serie, ref_usuario_cad, ref_cod_aluno, aprovado, data_cadastro, ano, ref_cod_curso, ultima_matricula, data_matricula) VALUES ('%d', '%d', '%d', '%d', '3', 'NOW()', '%d', '%d', '1','%d')",
+        (ref_ref_cod_escola, ref_ref_cod_serie, ref_usuario_cad, ref_cod_aluno, aprovado, data_cadastro, ano, ref_cod_curso, ultima_matricula, data_matricula) VALUES ('%d', '%d', '%d', '%d', '3', 'NOW()', '%d', '%d', '1','%')",
       $escolaId, $serieId, $this->pessoa_logada, $alunoId, $ano, $cursoId,$this->data_matricula));
     }
     catch (Exception $e) {
