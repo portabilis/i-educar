@@ -165,6 +165,7 @@ class indice extends clsCadastro
 		}
 		else
 		{
+			/*
 			// lista todos alunos desse Escola que tem a ultima matricula no ano anterior e situacao APROVADO
 			$obj_matricula = new clsPmieducarMatricula();
 			$lst_matricula = $obj_matricula->lista( null,null,$this->ref_cod_escola,null,null,null,null,1,null,null,null,null,1,$this->ano-1,null,null,1 );
@@ -210,7 +211,8 @@ class indice extends clsCadastro
 					}
 				}
 			}
-
+			*/
+			/*
 			// lista todos alunos desse Escola que tem a ultima matricula no ano anterior e situacao REPROVADO
 			$obj_matricula = new clsPmieducarMatricula();
 			$lst_matricula = $obj_matricula->lista( null,null,$this->ref_cod_escola,null,null,null,null,2,null,null,null,null,1,$this->ano-1,null,null,1 );
@@ -238,7 +240,7 @@ class indice extends clsCadastro
 					}
 				}
 			}
-
+			*/
 			echo "<script>
 					alert('Ano letivo inicializado com sucesso!');
 					window.location = 'educar_escola_det.php?cod_escola={$this->ref_cod_escola}#ano_letivo';
