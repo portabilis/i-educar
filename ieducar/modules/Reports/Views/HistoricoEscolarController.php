@@ -55,13 +55,6 @@ class HistoricoEscolarController extends Portabilis_Controller_ReportCoreControl
     $this->inputsHelper()->dynamic(array('instituicao', 'escola'));
     $this->inputsHelper()->simpleSearchAluno();
 
-    $resources = array(1 => '9 anos',
-                       2 => '8 anos',
-                       3 => 'S&eacute;rie/Anos');
-
-    $options = array('label' => 'Modelo', 'resources' => $resources, 'value' => 1);
-		$this->inputsHelper()->select('modelo', $options);
-
     // carrega javascript HistoricoEscolar.js para listar alunos de todas as escolas
     $this->loadResourceAssets($this->getDispatcher());
   }
@@ -73,9 +66,7 @@ class HistoricoEscolarController extends Portabilis_Controller_ReportCoreControl
   function beforeValidation() {
     $this->report->addArg('instituicao',  (int)$this->getRequest()->ref_cod_instituicao);
     $this->report->addArg('escola',       (int)$this->getRequest()->ref_cod_escola);
-    $this->report->addArg('aluno',        (int)$this->getRequest()->aluno_id);
-    $this->report->addArg('aluno',        (int)$this->getRequest()->aluno_id);
-    $this->report->addArg('modelo',       (int)$this->getRequest()->modelo);
+    $this->report->addArg('aluno',        (int)$this->getRequest()->aluno_id);    
   }
 }
 
