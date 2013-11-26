@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -37,11 +37,11 @@ require_once 'lib/Portabilis/Date/Utils.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
@@ -56,11 +56,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -85,6 +85,8 @@ class indice extends clsCadastro
   var $matriculas_turma;
   var $incluir_matricula;
   var $data_enturmacao;
+
+  var $check_desenturma;
 
   function Inicializar()
   {
@@ -182,7 +184,7 @@ class indice extends clsCadastro
         $ano_letivo = $det_ano_letivo['ano'];
       }
       else {
-        $this->mensagem = 'N„o foi possÌvel encontrar o ano letivo em andamento da escola.';
+        $this->mensagem = 'N√£o foi poss√≠vel encontrar o ano letivo em andamento da escola.';
         return FALSE;
       }
     }
@@ -227,6 +229,7 @@ class indice extends clsCadastro
     }
 
     if ($this->matriculas_turma) {
+      $this->campoRotulo('titulo', 'Matr&iacute;culas', "<b>&nbsp;Alunos matriculados&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Marque alunos para desenturmar</b><label style='display: block; width: 350px; margin-left: 196px;'><input type='checkbox' name='CheckTodos' onClick='marcarCheck(".'"check_desenturma[]"'.");'/>Marcar Todos</label>");
       foreach ($this->matriculas_turma as $matricula => $campo) {
         $obj_matricula = new clsPmieducarMatricula($matricula);
         $det_matricula = $obj_matricula->detalhe();
@@ -237,7 +240,9 @@ class indice extends clsCadastro
         $nm_aluno = $det_aluno['nome_aluno'];
 
         $this->campoTextoInv('ref_cod_matricula_' . $matricula, '', $nm_aluno,
-          30, 255, FALSE, FALSE, FALSE, '', '', '', '', 'ref_cod_matricula');
+          30, 255, FALSE, FALSE, TRUE, '', '', '', '', 'ref_cod_matricula');
+
+        $this->campoCheck('check_desenturma['.$matricula.']','',$matricula);
       }
     }
 
@@ -263,7 +268,7 @@ class indice extends clsCadastro
     }
 
     if (count($opcoes)) {
-      $this->inputsHelper()->date('data_enturmacao', array('label' => 'Data da enturmaÁ„o', 'value' => date('Y-m-d')));
+      $this->inputsHelper()->date('data_enturmacao', array('label' => 'Data da enturma&ccedil;&acirc;o', 'value' => date('Y-m-d')));
       asort($opcoes);
       foreach ($opcoes as $key => $aluno) {
         $this->campoCheck('ref_cod_matricula[' . $key . ']', 'Aluno', $key,
@@ -271,9 +276,9 @@ class indice extends clsCadastro
       }
     }
     else if ($alunosEnturmados){
-      $this->campoRotulo('rotulo_1', '-', 'Todos os alunos matriculados na sÈrie j· se encontram enturmados.');
+      $this->campoRotulo('rotulo_1', '-', 'Todos os alunos matriculados na s&eacute;rie j&aacute; se encontram enturmados.');
     }else{
-      $this->campoRotulo('rotulo_1', '-', 'N„o h· alunos enturmados.');
+      $this->campoRotulo('rotulo_1', '-', 'N√£o h√° alunos enturmados.');
     }
 
     $this->campoQuebra();
@@ -289,6 +294,11 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     $this->data_enturmacao = Portabilis_Date_Utils::brToPgSQL($this->data_enturmacao);
     @session_write_close();
+
+    // realiza desenturma√ß√µes
+    foreach ($this->check_desenturma as $matricula) {
+      $this->removerEnturmacao($matricula,$this->ref_cod_turma);
+    }
 
     if ($this->matriculas_turma) {
       foreach ($this->ref_cod_matricula as $matricula => $campo) {
@@ -320,16 +330,71 @@ class indice extends clsCadastro
   function Excluir()
   {
   }
+
+  function removerEnturmacao($matriculaId, $turmaId) {
+    $sequencialEnturmacao = $this->getSequencialEnturmacaoByTurmaId($matriculaId, $turmaId);
+    $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
+                                                 $turmaId,
+                                                 $this->pessoa_logada, 
+                                                 NULL, 
+                                                 NULL,
+                                                 NULL, 
+                                                 0,
+                                                 NULL,
+                                                 $sequencialEnturmacao);
+
+    return $enturmacao->edita();
+  }
+
+
+  function getSequencialEnturmacaoByTurmaId($matriculaId, $turmaId) {
+    $db = new clsBanco();
+    $sql = 'select coalesce(max(sequencial), 1) from pmieducar.matricula_turma where ativo = 1 and ref_cod_matricula = $1 and ref_cod_turma = $2';
+
+    if ($db->execPreparedQuery($sql, array($matriculaId, $turmaId)) != false) {
+      $db->ProximoRegistro();
+      $sequencial = $db->Tupla();
+      return $sequencial[0];
+    }
+    return 1;
+  }  
 }
 
-// Instancia objeto de p·gina
+// Instancia objeto de p√°gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conte˙do
+// Instancia objeto de conte√∫do
 $miolo = new indice();
 
-// Atribui o conte˙do ‡  p·gina
+// Atribui o conte√∫do √†  p√°gina
 $pagina->addForm($miolo);
 
-// Gera o cÛdigo HTML
+// Gera o c√≥digo HTML
 $pagina->MakeAll();
+
+?>
+
+<script type="text/javascript">
+
+  function fixUpCheckBoxes(){
+    $j('input[name^=check_desenturma]').each(function(index, element){
+      element.id = 'check_desenturma[]';
+      element.checked = false;
+    });
+  }
+
+  fixUpCheckBoxes();
+
+  function marcarCheck(idValue) {
+      // testar com formcadastro
+      var contaForm = document.formcadastro.elements.length;
+      var campo = document.formcadastro;
+      var i;
+        for (i=0; i<contaForm; i++) {
+            if (campo.elements[i].id == idValue) {
+
+                campo.elements[i].checked = campo.CheckTodos.checked;
+            }
+        }
+  }
+</script>
