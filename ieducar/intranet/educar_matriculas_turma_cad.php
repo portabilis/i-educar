@@ -184,7 +184,7 @@ class indice extends clsCadastro
         $ano_letivo = $det_ano_letivo['ano'];
       }
       else {
-        $this->mensagem = 'Não foi possível encontrar o ano letivo em andamento da escola.';
+        $this->mensagem = 'N&acirc;o foi possível encontrar o ano letivo em andamento da escola.';
         return FALSE;
       }
     }
@@ -278,7 +278,7 @@ class indice extends clsCadastro
     else if ($alunosEnturmados){
       $this->campoRotulo('rotulo_1', '-', 'Todos os alunos matriculados na s&eacute;rie j&aacute; se encontram enturmados.');
     }else{
-      $this->campoRotulo('rotulo_1', '-', 'Não há alunos enturmados.');
+      $this->campoRotulo('rotulo_1', '-', 'N&acirc;o h&aacute; alunos enturmados.');
     }
 
     $this->campoQuebra();
