@@ -39,7 +39,7 @@
 	{
 		$db = new clsBanco();
 //		$db->Consulta( "SELECT cod_turma, nm_turma FROM pmieducar.turma WHERE ref_ref_cod_escola = {$_GET["esc"]} AND ref_ref_cod_serie = {$_GET["ser"]} AND ativo = 1 ORDER BY nm_turma ASC" );
-		$db->Consulta( "SELECT cod_turma, nm_turma FROM pmieducar.turma WHERE ref_ref_cod_escola = {$_GET["esc"]} AND (ref_ref_cod_serie = {$_GET["ser"]}  OR ref_ref_cod_serie_mult = {$_GET["ser"]}) AND ativo = 1 ORDER BY nm_turma ASC" );
+		$db->Consulta( "SELECT cod_turma, nm_turma FROM pmieducar.turma WHERE ref_ref_cod_escola = {$_GET["esc"]} AND (ref_ref_cod_serie = {$_GET["ser"]}  OR ref_ref_cod_serie_mult = {$_GET["ser"]}) AND ativo = 1 AND turma.ano = ( SELECT ano FROM pmieducar.escola_ano_letivo enl WHERE enl.ref_cod_escola = turma.ref_ref_cod_escola AND andamento = 1) ORDER BY nm_turma ASC" );
 		while ( $db->ProximoRegistro() )
 		{
 			list( $cod, $nome ) = $db->Tupla();
