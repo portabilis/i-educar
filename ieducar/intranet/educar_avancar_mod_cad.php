@@ -150,7 +150,7 @@ class indice extends clsCadastro
                    WHERE aprovado in (1, 2) AND m.ativo = 1 AND ref_ref_cod_escola = $escolaId AND
                      ref_ref_cod_serie = $serieId AND ref_cod_curso = $cursoId AND
                      cod_matricula = ref_cod_matricula AND ref_cod_turma = $turmaId AND
-                     matricula_turma.ultima_matricula = 1 AND
+                     matricula_turma.ativo = 1 AND
                      ano  = $anoAnterior AND
                      NOT EXISTS(select 1 from pmieducar.matricula m2 where
                      m2.ref_cod_aluno = m.ref_cod_aluno AND
