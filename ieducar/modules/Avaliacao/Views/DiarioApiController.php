@@ -47,6 +47,7 @@ require_once 'RegraAvaliacao/Model/TipoPresenca.php';
 require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 
 require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
+require_once 'include/modules/clsModulesNotaExame.inc.php';
 
 require_once 'Portabilis/Controller/ApiCoreController.php';
 require_once 'Portabilis/Array/Utils.php';
@@ -405,7 +406,12 @@ class DiarioApiController extends ApiCoreController
     $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
     $this->appendResponse('situacao',     $this->getSituacaoMatricula());
-    $this->appendResponse('nota_necessaria_exame', $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
+    $this->appendResponse('nota_necessaria_exame', $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
+
+    if (!empty($notaNecessariaExame) && $this->getSituacaoMatricula()=='Em Exame')
+      $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
+    else
+      $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
   }
 
 
@@ -758,7 +764,12 @@ class DiarioApiController extends ApiCoreController
       $componente['falta_atual']           = $this->getFaltaAtual($etapa = null, $componente['id']);
       $componente['parecer_atual']         = $this->getParecerAtual($componente['id']);
       $componente['situacao']              = $this->getSituacaoMatricula($componente['id']);
-      $componente['nota_necessaria_exame'] = ($componente['situacao'] != 'Em andamento' ? $this->getNotaNecessariaExame($componente['id']) : null );
+      $componente['nota_necessaria_exame'] = ($componente['situacao'] == 'Em Exame' ? $this->getNotaNecessariaExame($componente['id']) : null );
+
+      if (!empty($componente['nota_necessaria_exame']))
+        $this->createOrUpdateNotaExame($matriculaId, $componente['id'], $componente['nota_necessaria_exame']);
+      else
+        $this->deleteNotaExame($matriculaId, $componente['id']);
 
       $componentesCurriculares[]           = $componente;
     }
@@ -766,6 +777,18 @@ class DiarioApiController extends ApiCoreController
     // ordenado por id, da mesma maneira que nos boletins,
     // obs: poderá ainda ocorrer diferença entre a ordem das areas de conhecimento?
     return Portabilis_Array_Utils::sortByKey('id', $componentesCurriculares);
+  }
+
+  protected function createOrUpdateNotaExame($matriculaId, $componenteCurricularId, $notaExame) {
+    
+    $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId, $notaExame);
+
+    return ($obj->existe() ? $obj->edita() : $obj->cadastra());
+  }     
+
+  protected function deleteNotaExame($matriculaId, $componenteCurricularId){
+    $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId);
+    return ($obj->excluir());
   }
 
 
