@@ -219,7 +219,7 @@ class indice extends clsCadastro
 			echo "<!--\nErro\nClasse clsPmieducarTipoOcorrenciaDisciplinar nao encontrada\n-->";
 			$opcoes = array( "" => "Erro na geracao" );
 		}
-		$this->campoLista( "ref_cod_tipo_ocorrencia_disciplinar", "Tipo Ocorrencia Disciplinar", $opcoes, $this->ref_cod_tipo_ocorrencia_disciplinar );
+		$this->campoLista( "ref_cod_tipo_ocorrencia_disciplinar", "Tipo Ocorr&ecirc;ncia Disciplinar", $opcoes, $this->ref_cod_tipo_ocorrencia_disciplinar );
 
 
 		// text

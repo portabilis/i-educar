@@ -709,7 +709,7 @@ class indice extends clsDetalhe
       if (trim($reg['desc_tratamento_medico'])!='') $this->addDetalhe(array('Qual', $reg['desc_tratamento_medico']));    
       $this->addDetalhe(array('Ingere medicação específica', ($reg['medicacao_especifica'] == 'S' ? 'Sim': 'Não') ));        
       if (trim($reg['desc_medicacao_especifica'])!='') $this->addDetalhe(array('Qual', $reg['desc_medicacao_especifica']));    
-      $this->addDetalhe(array('Acompanhamento médico ou psicologico', ($reg['acomp_medico_psicologico'] == 'S' ? 'Sim': 'Não') ));              
+      $this->addDetalhe(array('Acompanhamento médico ou psicológico', ($reg['acomp_medico_psicologico'] == 'S' ? 'Sim': 'Não') ));              
       if (trim($reg['desc_acomp_medico_psicologico'])!='') $this->addDetalhe(array('Motivo', $reg['desc_acomp_medico_psicologico']));    
       $this->addDetalhe(array('Restrição para atividades físicas', ($reg['restricao_atividade_fisica'] == 'S' ? 'Sim': 'Não') ));        
       if (trim($reg['desc_restricao_atividade_fisica'])!='') $this->addDetalhe(array('Qual', $reg['desc_restricao_atividade_fisica']));    
@@ -717,11 +717,11 @@ class indice extends clsDetalhe
       if (trim($reg['desc_fratura_trauma'])!='') $this->addDetalhe(array('Qual', $reg['desc_fratura_trauma']));                      
       $this->addDetalhe(array('Tem plano de saúde', ($reg['plano_saude'] == 'S' ? 'Sim': 'Não') ));        
       if (trim($reg['desc_plano_saude'])!='') $this->addDetalhe(array('Qual', $reg['desc_plano_saude']));   
-      $this->addDetalhe(array('<span id="tit_dados_hospital">Em caso de emergencia, levar para hospital ou clinica</span>'));   
+      $this->addDetalhe(array('<span id="tit_dados_hospital">Em caso de emergência, levar para hospital ou clínica</span>'));   
       $this->addDetalhe(array('Nome', $reg['hospital_clinica'])); 
-      $this->addDetalhe(array('Endereco', $reg['hospital_clinica_endereco']));    
+      $this->addDetalhe(array('Endereço', $reg['hospital_clinica_endereco']));    
       $this->addDetalhe(array('Telefone', $reg['hospital_clinica_telefone']));    
-      $this->addDetalhe(array('<span id="tit_dados_responsavel">Em caso de emergencia, se não for possível contatar os responsáveis, comunicar</span>'));         
+      $this->addDetalhe(array('<span id="tit_dados_responsavel">Em caso de emergência, se não for possível contatar os responsáveis, comunicar</span>'));         
       $this->addDetalhe(array('Nome', $reg['responsavel_nome']));    
       $this->addDetalhe(array('Parentesco', $reg['responsavel_parentesco']));    
       $this->addDetalhe(array('Telefone', $reg['responsavel_parentesco_telefone']));    
@@ -832,7 +832,7 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Possui poço', $reg['poco']));       
       $this->addDetalhe(array('Possui energia elétrica', $reg['energia']));       
       $this->addDetalhe(array('Possui tratamento de esgoto', $reg['esgoto']));       
-      $this->addDetalhe(array('Possui foça', $reg['foca']));       
+      $this->addDetalhe(array('Possui fossa', $reg['fossa']));       
       $this->addDetalhe(array('Possui coleta de lixo', $reg['lixo']));       
 
     }          

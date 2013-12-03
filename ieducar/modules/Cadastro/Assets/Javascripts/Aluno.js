@@ -324,9 +324,9 @@ resourceOptions.handleGet = function(dataResponse) {
     $j('#esgoto').attr('checked',true);  
     $j('#esgoto').val('on');   
   }  
-  if (dataResponse.foca == 'S'){
-    $j('#foca').attr('checked',true);  
-    $j('#foca').val('on');   
+  if (dataResponse.fossa == 'S'){
+    $j('#fossa').attr('checked',true);  
+    $j('#fossa').val('on');   
   }         
   if (dataResponse.lixo == 'S'){
     $j('#lixo').attr('checked',true);  

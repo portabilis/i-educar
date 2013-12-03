@@ -70,7 +70,7 @@ class clsModulesMoradiaAluno
   var $poco;
   var $energia;
   var $esgoto;
-  var $foca;
+  var $fossa;
   var $lixo;
 
   /**
@@ -136,7 +136,7 @@ class clsModulesMoradiaAluno
      $computador = NULL, $geladeira = NULL,
      $fogao = NULL, $maquina_lavar = NULL, $microondas = NULL, $video_dvd = NULL,
      $televisao = NULL, $celular = NULL, $telefone = NULL, $quant_pessoas = NULL, $renda = NULL, $agua_encanada = NULL, $poco = NULL,
-     $energia = NULL, $esgoto = NULL, $foca = NULL, $lixo = NULL) {
+     $energia = NULL, $esgoto = NULL, $fossa = NULL, $lixo = NULL) {
 
     $db = new clsBanco();
     $this->_schema = "modules.";
@@ -145,7 +145,7 @@ class clsModulesMoradiaAluno
     $this->_campos_lista = $this->_todos_campos = "ref_cod_aluno,
         moradia, material, casa_outra, moradia_situacao,
         quartos, sala, copa, banheiro, garagem, empregada_domestica,
-      automovel, motocicleta, computador, geladeira, fogao, maquina_lavar, microondas, video_dvd,televisao, celular, telefone, quant_pessoas, renda, agua_encanada, poco, energia, esgoto, foca, lixo"; 
+      automovel, motocicleta, computador, geladeira, fogao, maquina_lavar, microondas, video_dvd,televisao, celular, telefone, quant_pessoas, renda, agua_encanada, poco, energia, esgoto, fossa, lixo"; 
 
     if (is_numeric($ref_cod_aluno)) {
       $this->ref_cod_aluno = $ref_cod_aluno;
@@ -256,8 +256,8 @@ class clsModulesMoradiaAluno
       $this->esgoto = $esgoto;
     }         
 
-    if (is_string($foca)) {
-      $this->foca = $foca;
+    if (is_string($fossa)) {
+      $this->fossa = $fossa;
     }         
 
     if (is_string($lixo)) {
@@ -448,9 +448,9 @@ class clsModulesMoradiaAluno
         $gruda = ", ";
     }
 
-    if (is_string($this->foca)) {
-        $campos .= "{$gruda}foca";
-        $valores .= "{$gruda}'{$this->foca}'";
+    if (is_string($this->fossa)) {
+        $campos .= "{$gruda}fossa";
+        $valores .= "{$gruda}'{$this->fossa}'";
         $gruda = ", ";
     }
 
@@ -619,8 +619,8 @@ class clsModulesMoradiaAluno
         $gruda = ", ";
     }
 
-    if (is_string($this->foca)) {
-        $set .= "{$gruda}foca = '{$this->foca}'";
+    if (is_string($this->fossa)) {
+        $set .= "{$gruda}fossa = '{$this->fossa}'";
         $gruda = ", ";
     }
 

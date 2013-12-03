@@ -297,7 +297,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
       'esgoto' => array('label' => 'Possui esgoto?'),
 
-      'foca' => array('label' => 'Possui foça?'),
+      'fossa' => array('label' => 'Possui fossa?'),
 
       'lixo' => array('label' => 'Possui lixo?'),
 
@@ -787,8 +787,8 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('esgoto') ), 'required' => false, 'placeholder' => '');
     $this->inputsHelper()->checkbox('esgoto',$options);   
               
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('foca') ), 'required' => false, 'placeholder' => '');
-    $this->inputsHelper()->checkbox('foca',$options);   
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('fossa') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('fossa',$options);   
 
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('lixo') ), 'required' => false, 'placeholder' => '');
     $this->inputsHelper()->checkbox('lixo',$options);   

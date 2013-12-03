@@ -389,7 +389,7 @@ protected function createOrUpdateUniforme($id) {
     $obj->poco                                  = ($this->getRequest()->poco == 'on' ? 'S' : 'N');
     $obj->energia                               = ($this->getRequest()->energia == 'on' ? 'S' : 'N');
     $obj->esgoto                                = ($this->getRequest()->esgoto == 'on' ? 'S' : 'N');
-    $obj->foca                                  = ($this->getRequest()->foca == 'on' ? 'S' : 'N');
+    $obj->fossa                                  = ($this->getRequest()->fossa == 'on' ? 'S' : 'N');
     $obj->lixo                                  = ($this->getRequest()->lixo == 'on' ? 'S' : 'N');
 
     return ($obj->existe() ? $obj->edita() : $obj->cadastra());

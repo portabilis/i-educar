@@ -64,7 +64,7 @@ class indice extends clsDetalhe
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
 
-		$this->titulo = "Tipo Ocorrencia Disciplinar - Detalhe";
+		$this->titulo = "Tipo Ocorr&ecirc;ncia Disciplinar - Detalhe";
 		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
 
 		$this->cod_tipo_ocorrencia_disciplinar=$_GET["cod_tipo_ocorrencia_disciplinar"];

@@ -90,7 +90,7 @@ class indice extends clsListagem
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
 
-		$this->titulo = "Matricula Ocorrencia Disciplinar - Listagem";
+		$this->titulo = "Matricula Ocorr&ecirc;ncia Disciplinar - Listagem";
 
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
@@ -103,7 +103,7 @@ class indice extends clsListagem
 		$this->campoOculto("ref_cod_matricula",$this->ref_cod_matricula);
 
 		$this->addCabecalhos( array(
-			"Tipo Ocorrencia Disciplinar",
+			"Tipo Ocorr&ecirc;ncia Disciplinar",
 			"Série ",
 			"Turma"
 		) );
@@ -149,7 +149,7 @@ class indice extends clsListagem
 			echo "<!--\nErro\nClasse clsPmieducarTipoOcorrenciaDisciplinar nao encontrada\n-->";
 			$opcoes = array( "" => "Erro na geracao" );
 		}
-		$this->campoLista( "ref_cod_tipo_ocorrencia_disciplinar", "Tipo Ocorrencia Disciplinar", $opcoes, $this->ref_cod_tipo_ocorrencia_disciplinar );
+		$this->campoLista( "ref_cod_tipo_ocorrencia_disciplinar", "Tipo Ocorr&ecirc;ncia Disciplinar", $opcoes, $this->ref_cod_tipo_ocorrencia_disciplinar );
 
 		if ( $this->ref_cod_escola )
 		{
