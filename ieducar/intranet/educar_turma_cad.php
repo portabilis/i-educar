@@ -520,6 +520,7 @@ class indice extends clsCadastro
     $qtd_modulo = 1;
 
     unset($aux);
+    $scriptExcluir = "";
 
     if ($this->turma_modulo) {
       foreach ($this->turma_modulo as $campo) {
@@ -540,8 +541,19 @@ class indice extends clsCadastro
 
           $this->campoTextoInv('data_fim_' . $campo['sequencial_'], '', $campo['data_fim_'],
             10, 10, FALSE, FALSE, FALSE, '',
-            "<a href='#' onclick=\"document.getElementById('excluir_modulo').value = '{$campo["sequencial_"]}'; document.getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>",
+            "<a href='#' id=\"event_excluir_modulo_{$qtd_modulo}\" ><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>",
             '', '', '');
+
+          $scriptExcluir.= "<script type=\"text/javascript\"> 
+                    document.getElementById('event_excluir_modulo_{$qtd_modulo}').onclick = excluirModulo{$qtd_modulo};
+                    
+                    function excluirModulo{$qtd_modulo}(){
+                      document.getElementById('excluir_modulo').value = '{$campo["sequencial_"]}'; 
+                      document.getElementById('tipoacao').value = ''; 
+                      {$this->__nome}.submit();
+                    }
+
+               </script>";                                          
 
           $aux[$qtd_modulo]['sequencial_']     = $qtd_modulo;
           $aux[$qtd_modulo]['ref_cod_modulo_'] = $campo['ref_cod_modulo_'];
@@ -584,7 +596,7 @@ class indice extends clsCadastro
     $this->campoOculto('incluir_modulo', '');
 
     $this->campoRotulo('bt_incluir_modulo', 'M&oacute;dulo',
-      "<a href='#' onclick=\"document.getElementById('incluir_modulo').value = 'S'; document.getElementById('tipoacao').value = ''; acao();\"><img src='imagens/nvp_bot_adiciona.gif' alt='adicionar' title='Incluir' border=0></a>"
+      "<a href='#' id=\"event_incluir_modulo\" ><img src='imagens/nvp_bot_adiciona.gif' alt='adicionar' title='Incluir' border=0></a>"
     );
 
     $this->campoQuebra2();
@@ -679,6 +691,8 @@ class indice extends clsCadastro
 
     $this->campoOculto('padrao_ano_escolar', $this->padrao_ano_escolar);
 
+    $this->campoTextoInv('scripts', $scriptExcluir);
+    
     $this->acao_enviar = 'valida()';
   }
 
@@ -1829,4 +1843,14 @@ function atualizaLstEscolaCursoSerie(xml)
     campoSerie.options[0].text = 'A escola/curso nao possui nenhuma serie';
   }
 }
+
+document.getElementById('event_incluir_modulo').onclick = incluirModulo;
+
+function incluirModulo(){
+  document.getElementById('incluir_modulo').value = 'S'; 
+  document.getElementById('tipoacao').value = ''; 
+  acao();
+}
+
+
 </script>
