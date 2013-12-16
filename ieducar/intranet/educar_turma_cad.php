@@ -691,6 +691,7 @@ class indice extends clsCadastro
 
     $this->campoOculto('padrao_ano_escolar', $this->padrao_ano_escolar);
 
+    // Colocado o script com esse campo pois tentando dar um 'print' ou 'echo' o script não funcionava
     $this->campoTextoInv('scripts', $scriptExcluir);
     
     $this->acao_enviar = 'valida()';
@@ -1851,6 +1852,10 @@ function incluirModulo(){
   document.getElementById('tipoacao').value = ''; 
   acao();
 }
+
+$j(document).ready( function(){
+  $j('#scripts').closest('tr').hide();
+});
 
 
 </script>
