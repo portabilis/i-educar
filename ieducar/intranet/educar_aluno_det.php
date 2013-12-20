@@ -61,6 +61,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Aluno');
     $this->processoAp = 578;
+    $this->addEstilo("localizacaoSistema");
   }
 }
 
@@ -839,6 +840,14 @@ class indice extends clsDetalhe
 
     $this->url_cancelar = 'educar_aluno_lst.php';
     $this->largura      = '100%';
+
+      $localizacao = new LocalizacaoSistema();
+      $localizacao->entradaCaminhos( array(
+           $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+           "educar_index.php"                  => "M&oacute;dulo Escola",
+           ""                                  => "Detalhe do aluno"
+      ));
+      $this->enviaLocalizacao($localizacao->montar());      
 
     $this->addDetalhe("<input type='hidden' id='escola_id' name='aluno_id' value='{$registro['ref_cod_escola']}' />");
     $this->addDetalhe("<input type='hidden' id='aluno_id' name='aluno_id' value='{$registro['cod_aluno']}' />");

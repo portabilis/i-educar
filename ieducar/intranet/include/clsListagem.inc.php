@@ -37,6 +37,8 @@ if (class_exists('clsPmiajudaPagina')) {
 require_once 'Portabilis/View/Helper/Application.php';
 require_once 'Portabilis/View/Helper/Inputs.php';
 
+require_once 'include/localizacaoSistema.php';
+
 define('alTopLeft', 'valign=top align=left');
 define('alTopCenter', 'valign=top align=center');
 define('alTopRight', 'valign=top align=right');
@@ -80,6 +82,7 @@ class clsListagem extends clsCampos
   var $funcAcao = '';
   var $funcAcaoNome = '';
   var $rotulo_anterior;
+  var $locale = null;
 
   var $array_botao;
   var $array_botao_url;
@@ -121,7 +124,10 @@ class clsListagem extends clsCampos
 
     $this->bannerClose = $boolFechaBanner;
   }
-
+  function enviaLocalizacao($localizao){
+    if($localizao)
+      $this->locale = $localizao;
+  }
   function addCabecalhos($coluna)
   {
     $this->cabecalho = $coluna;
@@ -299,7 +305,11 @@ class clsListagem extends clsCampos
         $tipo = 'cad';
       }
 
-      $barra = '<b>Filtros de busca</b>';
+      $server = $_SERVER['SERVER_NAME'];
+      $endereco = $_SERVER ['REQUEST_URI'];
+      $enderecoPagina = $_SERVER['PHP_SELF'];            
+      
+      $barra = '<b>Filtros de busca</b>';  
 
       if (class_exists('clsPmiajudaPagina')) {
         $ajudaPagina = new clsPmiajudaPagina();
@@ -382,8 +392,22 @@ class clsListagem extends clsCampos
           }
         }
 
+        if ($this->locale){
+
+          $retorno .=  "
+            <table class='tablelistagem' $width border='0'  cellpadding='0' cellspacing='0'>";
+
+          $retorno .=  "<tr height='10px'>
+                          <td class='fundoLocalizacao' colspan='2'>{$this->locale}</td>
+                        </tr>";
+
+          $retorno .= "</table>";
+        }
+
         $retorno .=  "
           <table class='tablelistagem' $width border='0' cellpadding='2' cellspacing='1'>";
+
+
 
         $retorno .=  "
             <tr>

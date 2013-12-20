@@ -37,6 +37,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Ocorr&ecirc;ncia Disciplinar" );
 		$this->processoAp = "578";
+		$this->addEstilo("localizacaoSistema");
 	}
 }
 
@@ -200,6 +201,14 @@ class indice extends clsDetalhe
 
 		$this->url_cancelar = "educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$registro["ref_cod_matricula"]}";
 		$this->largura = "100%";
+
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         "educar_index.php"                  => "M&oacute;dulo Escola",
+	         ""                                  => "Detalhe da ocorr&ecirc;ncia disciplinar da matr&iacute;cula"
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());				
 	}
 }
 
