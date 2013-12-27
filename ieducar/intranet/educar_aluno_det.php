@@ -37,6 +37,8 @@ require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'Educacenso/Model/AlunoDataMapper.php';
 require_once 'Transporte/Model/AlunoDataMapper.php';
 
+require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
+
 require_once 'Portabilis/View/Helper/Application.php';
 
 /**
@@ -135,6 +137,11 @@ class indice extends clsDetalhe
         $det_raca = $obj_raca->detalhe();
       }
 
+      $objFoto = new clsCadastroFisicaFoto($this->ref_idpes);
+      $detalheFoto = $objFoto->detalhe();
+      if ($detalheFoto)
+        $caminhoFoto  = $detalheFoto['caminho'];
+ 
       $registro['nome_aluno'] = strtoupper($det_pessoa_fj['nome']);
       $registro['cpf']        = int2IdFederal($det_fisica['cpf']);
       $registro['data_nasc']  = dataToBrasil($det_fisica['data_nasc']);
@@ -376,7 +383,10 @@ class indice extends clsDetalhe
     }
 
     if ($registro['nome_aluno']) {
-      $this->addDetalhe(array('Nome Aluno', $registro['nome_aluno']));
+      if ($caminhoFoto!=null and $caminhoFoto!='')
+        $this->addDetalhe(array('Nome Aluno', $registro['nome_aluno'].'<p><img height="117" src="'.$caminhoFoto.'"/></p>'));
+      else
+        $this->addDetalhe(array('Nome Aluno', $registro['nome_aluno'])); 
     }
 
     if (idFederal2int($registro['cpf'])) {
