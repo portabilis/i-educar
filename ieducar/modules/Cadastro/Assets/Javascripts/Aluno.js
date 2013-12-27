@@ -31,6 +31,8 @@ resourceOptions.handlePut = function(dataResponse) {
     $submitButton.removeAttr('disabled').val('Gravar');
 }
 
+var tipo_resp;
+
 resourceOptions.handleGet = function(dataResponse) {
   handleMessages(dataResponse.msgs);
   $resourceNotice.hide();
@@ -59,7 +61,7 @@ resourceOptions.handleGet = function(dataResponse) {
   $idField.val(dataResponse.id);
   $j('#aluno_inep_id').val(dataResponse.aluno_inep_id);
   $j('#aluno_estado_id').val(dataResponse.aluno_estado_id);
-  $j('#tipo_responsavel').val(dataResponse.tipo_responsavel).change();
+  tipo_resp = dataResponse.tipo_responsavel;
   $j('#religiao_id').val(dataResponse.religiao_id);
   $j('#beneficio_id').val(dataResponse.beneficio_id);
   $j('#tipo_transporte').val(dataResponse.tipo_transporte);
@@ -126,6 +128,23 @@ var handleGetPersonDetails = function(dataResponse) {
 
   $deficiencias.trigger('liszt:updated');
 
+  $j('#tipo_responsavel').find('option').remove().end();
+  if ( $j('#pai').val()=='' && $j('#mae').val()==''){
+    $j('#tipo_responsavel').append('<option value="outra_pessoa" selected >Outra pessoa</option>');
+    $j('#responsavel_nome').show();
+  }else if ($j('#pai').val()==''){
+    $j('#tipo_responsavel').append('<option value="mae" selected >M&atilde;e</option>');
+    $j('#tipo_responsavel').append('<option value="outra_pessoa" >Outra pessoa</option>');
+  } else if ($j('#mae').val()==''){
+    $j('#tipo_responsavel').append('<option value="pai" selected >Pai</option>');
+    $j('#tipo_responsavel').append('<option value="outra_pessoa" >Outra pessoa</option>');
+  } else{
+    $j('#tipo_responsavel').append('<option value="mae" selected >M&atilde;e</option>');
+    $j('#tipo_responsavel').append('<option value="pai" selected >Pai</option>');
+    $j('#tipo_responsavel').append('<option value="outra_pessoa" >Outra pessoa</option>');
+  }
+  $j('#tipo_responsavel').val(tipo_resp).change();
+ 
   // # TODO show aluno photo
   //$j('#aluno_foto').val(dataResponse.url_foto);
 }
