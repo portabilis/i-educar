@@ -41,6 +41,9 @@
 	INSERT INTO portal.menu_submenu 
 	VALUES (21239, 69, 2, 'Pontos', 'transporte_ponto_lst.php',null,3); 
 
+	INSERT INTO portal.menu_submenu 
+	VALUES (21240, 69, 2, 'Usuários de Transporte', 'transporte_pessoa_lst.php',null,3);
+
 	INSERT INTO pmicontrolesis.menu 
 	VALUES(21235,21235,20710,'Empresas',1,'transporte_empresa_lst.php','_self',1,17,192);
 
@@ -55,6 +58,10 @@
 
 	INSERT INTO pmicontrolesis.menu 
 	VALUES(21239,21239,20710,'Rotas',5,'transporte_rota_lst.php','_self',1,17,192);
+
+	INSERT INTO pmicontrolesis.menu 
+	VALUES(21240,21240,20711,'Usuários de Transporte',5,'transporte_pessoa_lst.php','_self',1,17,192);
+
 
   -- //@UNDO
 
