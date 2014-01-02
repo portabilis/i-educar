@@ -332,7 +332,7 @@ class clsFisica
 			if(!empty($this->sus))
 			{
 				$campos .= ", sus";
-				$valores .= ", $this->sus";
+				$valores .= ", '$this->sus'";
 			}	
 
 			if(is_numeric($this->nis_pis_pasep))
@@ -492,7 +492,7 @@ class clsFisica
 			}
 
 			if($this->sus) {
-			   $set .= "$gruda sus = {$this->sus}";
+			   $set .= "$gruda sus = '{$this->sus}'";
 			   $gruda = ", ";
 			}	
 
