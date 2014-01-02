@@ -94,6 +94,7 @@ class indice extends clsDetalhe
   var $nm_pai;
   var $nm_mae;
   var $ref_cod_raca;
+  var $sus;
 
   function Gerar()
   {
@@ -149,7 +150,7 @@ class indice extends clsDetalhe
       $registro['nome_aluno'] = strtoupper($det_pessoa_fj['nome']);
       $registro['cpf']        = int2IdFederal($det_fisica['cpf']);
       $registro['data_nasc']  = dataToBrasil($det_fisica['data_nasc']);
-      $registro['sexo']       = $det_fisica['sexo'] == 'F' ? 'Feminino' : 'Masculino';
+      $registro['sexo']       = $det_fisica['sexo'] == 'F' ? 'Feminino' : 'Masculino';  
 
       $obj_estado_civil       = new clsEstadoCivil();
       $obj_estado_civil_lista = $obj_estado_civil->lista();
@@ -178,6 +179,8 @@ class indice extends clsDetalhe
 
       $this->idpes_pai = $det_fisica['idpes_pai'];
       $this->idpes_mae = $det_fisica['idpes_mae'];
+
+      $this->sus = $det_fisica['sus'];
 
       $this->nm_pai = $registro['nm_pai'];
       $this->nm_mae = $registro['nm_mae'];
@@ -678,12 +681,15 @@ class indice extends clsDetalhe
     $objFichaMedica       = new clsModulesFichaMedicaAluno($this->cod_aluno);
     $reg                  = $objFichaMedica->detalhe();
 
+
+
     if($reg){    
 
       $this->addDetalhe(array('<span id="fmedica"></span>Altura/metro', $reg['altura']));
       if (trim($reg['peso'])!='') $this->addDetalhe(array('Peso/kg', $reg['peso']));    
       if (trim($reg['grupo_sanguineo'])!='') $this->addDetalhe(array('Grupo sanguíneo', $reg['grupo_sanguineo']));    
       if (trim($reg['fator_rh'])!='') $this->addDetalhe(array('Fator RH', $reg['fator_rh']));    
+      if (trim($this->sus)!='') $this->addDetalhe(array('Número do cartão do SUS', $this->sus));    
       $this->addDetalhe(array('Possui alergia a algum medicamento', ($reg['alergia_medicamento'] == 'S' ? 'Sim': 'Não') ));    
       if (trim($reg['desc_alergia_medicamento'])!='') $this->addDetalhe(array('Quais', $reg['desc_alergia_medicamento']));    
       $this->addDetalhe(array('Possui alergia a algum alimento', ($reg['alergia_alimento'] == 'S' ? 'Sim': 'Não') ));      

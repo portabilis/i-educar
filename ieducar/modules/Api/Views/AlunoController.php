@@ -246,6 +246,14 @@ class AlunoController extends ApiCoreController
     return $tipo;
   }
 
+  protected function saveSus($pessoaId){
+
+    $sus = Portabilis_String_Utils::toLatin1($this->getRequest()->sus);
+
+    $sql = 'update cadastro.fisica set sus = $1 where idpes = $2';
+    return $this->fetchPreparedQuery($sql, array($sus, $pessoaId));
+  }
+
 
   protected function createOrUpdateTransporte($alunoId) {
     $tiposTransporte = array(
@@ -781,6 +789,8 @@ protected function createOrUpdateUniforme($id) {
         $aluno = Portabilis_Array_Utils::merge($objMoradia,$aluno);
       }
 
+      $sql = "select sus from cadastro.fisica where idpes = $1";
+      $aluno['sus'] = Portabilis_String_Utils::toUtf8($this->fetchPreparedQuery($sql, $aluno['pessoa_id'], false, 'first-field'));
 
       return $aluno;
     }
@@ -855,9 +865,11 @@ protected function createOrUpdateUniforme($id) {
   protected function post() {
     if ($this->canPost()) {
       $id = $this->createOrUpdateAluno();
+      $pessoaId = $this->getRequest()->pessoa_id;
 
       if (is_numeric($id)) {
         $this->updateResponsavel();
+        $this->saveSus($pessoaId);
         $this->createOrUpdateTransporte($id);
         $this->createUpdateOrDestroyEducacensoAluno($id);
         $this->updateDeficiencias();
@@ -876,9 +888,11 @@ protected function createOrUpdateUniforme($id) {
 
   protected function put() {
     $id = $this->getRequest()->id;
+    $pessoaId = $this->getRequest()->pessoa_id;
 
     if ($this->canPut() && $this->createOrUpdateAluno($id)) {
       $this->updateResponsavel();
+      $this->saveSus($pessoaId);
       $this->createOrUpdateTransporte($id);
       $this->createUpdateOrDestroyEducacensoAluno($id);
       $this->updateDeficiencias();

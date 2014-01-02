@@ -95,6 +95,8 @@ resourceOptions.handleGet = function(dataResponse) {
       CAMPOS DA FICHA MÉDICA
   ************************************************/
 
+  $j('#sus').val(dataResponse.sus);
+
   //campos checkbox
    if (dataResponse.alergia_medicamento == 'S'){
     $j('#alergia_medicamento').attr('checked',true);  
@@ -584,7 +586,7 @@ function afterChangePessoa(targetWindow, pessoaId) {
         $j('#tab2').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index>14 && index<61){
+            if (index>14 && index<62){
               row.show();
             }else if (index>0){
               row.hide();
@@ -605,7 +607,7 @@ function afterChangePessoa(targetWindow, pessoaId) {
         $j('#tab3').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index>60 && index<83){
+            if (index>61 && index<84){
               row.show();
             }else if (index>0){
               row.hide();
@@ -623,7 +625,7 @@ function afterChangePessoa(targetWindow, pessoaId) {
         $j('#tab4').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
 
-          if (index<83 && index!=0){
+          if (index<84 && index!=0){
             row.hide();
           }else{
             row.show();

@@ -296,6 +296,7 @@ class clsPessoaFisica extends clsPessoaFj
         $this->justificativa_provisorio = $detalhe_fisica['justificativa_provisorio'];
         $this->cpf                      = $detalhe_fisica['cpf'];
         $this->ref_cod_religiao         = $detalhe_fisica['ref_cod_religiao'];
+        $this->sus                      = $detalhe_fisica['sus'];
 
         $tupla['idpes'] = $this->idpes;
         $tupla[]        = & $tupla['idpes'];
