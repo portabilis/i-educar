@@ -85,7 +85,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     ),
 
     'aluno_inep_id' => array(
-      'label'  => 'Código inep',
+      'label'  => 'Código INEP',
       'help'   => '',
     ),
 
@@ -290,7 +290,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
       'renda' => array('label' => 'Renda familiar em R$'),
 
-      'agua_encanada' => array('label' => 'Possuí água encanada?'),
+      'agua_encanada' => array('label' => 'Possui água encanada?'),
 
       'poco' => array('label' => 'Possui poço?'),
 
@@ -342,7 +342,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->simpleSearchPessoa('nome', $options);
 
     // data nascimento
-    $options = array('label' => 'Data nascimento', 'disabled' => true, 'required' => false, 'size' => 25, 'placeholder' => '');
+    $options = array('label' => 'Data de nascimento', 'disabled' => true, 'required' => false, 'size' => 25, 'placeholder' => '');
     $this->inputsHelper()->date('data_nascimento', $options);
 
     // rg
@@ -403,10 +403,10 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
 
     // religião
-    $this->inputsHelper()->religiao(array('required' => false));
+    $this->inputsHelper()->religiao(array('required' => false, 'label' => Portabilis_String_Utils::toLatin1('Religião') ));
 
     // beneficio
-    $this->inputsHelper()->beneficio(array('required' => false));
+    $this->inputsHelper()->beneficio(array('required' => false, 'label' => Portabilis_String_Utils::toLatin1('Benefício')));
 
 
     // Deficiências / habilidades especiais
