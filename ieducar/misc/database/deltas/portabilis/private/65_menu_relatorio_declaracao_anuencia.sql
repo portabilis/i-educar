@@ -7,12 +7,12 @@
   -- @version  $Id$  
   
   
-  insert into portal.menu_submenu values(999227,55,2,'Declaração de Anuência para Ensino Noturno','module/Reports/DeclaracaoAnuencia',NULL,3);
-  insert into pmicontrolesis.menu values(999227,999227,999400,'Declaração de Anuência para Ensino Noturno',5,'module/Reports/DeclaracaoAnuencia','_self',1,15,192);
+  insert into portal.menu_submenu values(999228,55,2,'Declaração de Anuência para Ensino Noturno','module/Reports/DeclaracaoAnuencia',NULL,3);
+  insert into pmicontrolesis.menu values(999228,999227,999400,'Declaração de Anuência para Ensino Noturno',5,'module/Reports/DeclaracaoAnuencia','_self',1,15,192);
 
   -- //@UNDO
   
-  delete from pmicontrolesis.menu where cod_menu = 999227;
-  delete from portal.menu_submenu where cod_menu_submenu = 999227;
+  delete from pmicontrolesis.menu where cod_menu = 999228;
+  delete from portal.menu_submenu where cod_menu_submenu = 999228;
   
   -- //
