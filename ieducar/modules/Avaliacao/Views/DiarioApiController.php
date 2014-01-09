@@ -748,20 +748,57 @@ class DiarioApiController extends ApiCoreController
       $componente                          = array();
 
       $componente['id']                    = $_componente->get('id');
-      $componente['nome']                  = $this->safeString($_componente->get('nome'));
+      $componente['nome']                  = $this->safeString(strtoupper($_componente->get('nome')), false);
       $componente['nota_atual']            = $this->getNotaAtual($etapa = null, $componente['id']);
       $componente['nota_exame']            = $this->getNotaExame($componente['id']);
       //$componente['nota_necessaria_exame'] = $this->getNotaNecessariaExame($componente['id']);
       $componente['falta_atual']           = $this->getFaltaAtual($etapa = null, $componente['id']);
       $componente['parecer_atual']         = $this->getParecerAtual($componente['id']);
       $componente['situacao']              = $this->getSituacaoMatricula($componente['id']);
+      
+      //buscando pela área do conhecimento
+      $area                                = $this->getAreaConhecimento($componente['id']);
+      $componente['area_id']               = $area->id;
+      $componente['area_nome']             = $this->safeString(strtoupper($area->nome), false);
+      
+      //criando chave para ordenamento temporário
+      //área de conhecimento + componente curricular
+      $componente['my_order']              = Portabilis_String_Utils::unaccent(strtoupper($area->nome)) . Portabilis_String_Utils::unaccent(strtoupper($_componente->get('nome')));
 
       $componentesCurriculares[]           = $componente;
     }
 
-    // ordenado por id, da mesma maneira que nos boletins,
-    // obs: poderá ainda ocorrer diferença entre a ordem das areas de conhecimento?
-    return Portabilis_Array_Utils::sortByKey('id', $componentesCurriculares);
+    //ordenando pela chave temporária criada
+    $componentesCurriculares = Portabilis_Array_Utils::sortByKey('my_order', $componentesCurriculares);
+    
+    //removendo chave temporária
+    $len = count($componentesCurriculares);
+    for ($i = 0; $i < $len; $i++) {
+    	unset($componentesCurriculares[$i]['my_order']);
+    }
+    return $componentesCurriculares;
+  }
+  
+  protected function getAreaConhecimento($componenteCurricularId = null) {
+  	if (is_null($componenteCurricularId))
+  		$componenteCurricularId = $this->getRequest()->componente_curricular_id;
+
+  	if (! is_numeric($componenteCurricularId)) {
+  		throw new Exception('Não foi possível obter a área de conhecimento pois não foi recebido o id do componente curricular.');
+  	}
+  	
+  	require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
+  	$mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+  	
+    $where = array('id' => $componenteCurricularId);
+    
+    $area = $mapper->findAll(array('area_conhecimento'), $where);
+    
+    $areaConhecimento       = new stdClass();
+    $areaConhecimento->id   = $area[0]->area_conhecimento->id;
+    $areaConhecimento->nome = $area[0]->area_conhecimento->nome;
+    
+    return $areaConhecimento;
   }
 
 
