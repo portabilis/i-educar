@@ -56,7 +56,7 @@ class AreaConhecimento_Model_Area extends CoreExt_Entity
 
     return array(
       'instituicao' => new CoreExt_Validate_Choice(array('choices' => $instituicoes)),
-      'nome' => new CoreExt_Validate_String(array('min' => 5, 'max' => 40))
+      'nome' => new CoreExt_Validate_String(array('min' => 5, 'max' => 60))
     );
   }
 
