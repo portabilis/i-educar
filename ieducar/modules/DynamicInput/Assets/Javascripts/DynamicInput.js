@@ -1,9 +1,26 @@
 function updateSelect($targetElement, options, emptyOptionHtml) {
   $targetElement.children().not('[value=""]').remove();
-
+  
+  var groups = new Array();
+  var optgroup = null;
+  
   $j.each(options, function(index, value){
-    $j(value).appendTo($targetElement);
+    if ($j(value).data('group')) {
+      if (groups.indexOf($j(value).data('group')) == -1) {
+        if (optgroup != null) {
+          optgroup.appendTo($targetElement);
+        }
+        optgroup = $j('<optgroup />').attr('label', $j(value).data('group'));
+        groups.push($j(value).data('group'));
+      }
+      $j(value).appendTo(optgroup);
+    } else {
+      $j(value).appendTo($targetElement);
+    }
   });
+  if (optgroup != null) {
+    optgroup.appendTo($targetElement);
+  }
 
   if (options.length > 0) {
     $targetElement.removeAttr('disabled');
@@ -56,8 +73,23 @@ function jsonResourcesToSelectOptions(resources) {
 
     if (id.indexOf && id.substr && id.indexOf('__') == 0)
       id = id.substr(2);
-
-    options.push($j('<option />').attr('value', id).html(safeCapitalize(value)));
+    
+    var opt = $j('<option />').attr('value', id);
+    
+    var newValue = value;
+    if (typeof(value) == 'object') {
+    	$j.each(value, function(optId, optValue) {
+    		if (optId != 'value') {
+    			opt.data(optId, optValue);
+    		} else {
+    			newValue = optValue;
+    		}
+    	});
+    }
+    
+    opt.html(safeCapitalize(newValue));
+    
+    options.push(opt);
   });
 
   return options;

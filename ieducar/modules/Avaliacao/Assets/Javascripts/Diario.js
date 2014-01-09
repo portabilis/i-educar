@@ -453,8 +453,10 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
   //set headers table
   var $linha = $j('<tr />');
 
-  if (componenteCurricularSelected)
+  if (componenteCurricularSelected) {
+	$j('<th />').html('&Aacute;rea de Conhecimento').appendTo($linha);
     $j('<th />').html('Componente curricular').appendTo($linha);
+  }
 
   $j('<th />').html('Etapa').appendTo($linha);
   $j('<th />').html('Turma').appendTo($linha);
@@ -470,8 +472,10 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
 
   var $linha = $j('<tr />').addClass('cellColor');
 
-  if (componenteCurricularSelected)
-    $j('<td />').html(safeToUpperCase($j('#ref_cod_componente_curricular').children("[selected='selected']").html())).appendTo($linha);
+  if (componenteCurricularSelected) {
+    $j('<td />').html(safeToUpperCase($j('#ref_cod_componente_curricular optgroup').children("[selected='selected']").parent().attr('label'))).appendTo($linha);
+    $j('<td />').html(safeToUpperCase($j('#ref_cod_componente_curricular optgroup').children("[selected='selected']").html())).appendTo($linha);
+  }
 
   $j('<td />').html(safeToUpperCase($j('#etapa').children("[selected='selected']").html())).appendTo($linha);
   $j('<td />').html(safeToUpperCase($j('#ref_cod_turma').children("[selected='selected']").html())).appendTo($linha);
@@ -547,7 +551,7 @@ function handleSearch($resultTable, dataResponse) {
   // seta colspan [th, td].aluno quando exibe nota exame
   if ($tableSearchDetails.data('details').tipo_nota != 'nenhum' &&
       $tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) {
-    $resultTable.find('[colspan]').attr('colspan', componenteCurricularSelected ? 1 : 5);
+    $resultTable.find('[colspan]:not(.area-conhecimento)').attr('colspan', componenteCurricularSelected ? 1 : 5);
   }
 
   $resultTable.find('tr:even').addClass('even');
@@ -709,14 +713,29 @@ function updateComponenteCurriculares($targetElement, matriculaId, componentesCu
   var useNota                = $tableSearchDetails.data('details').tipo_nota != 'nenhum';
   var useParecer             = $tableSearchDetails.data('details').tipo_parecer_descritivo != 'nenhum';
 
+  var areas = new Array();
+  
   var $ccHeader = $j('<tr />').addClass('strong');
 
   $j('<td />').addClass('center').html('Componente curricular').appendTo($ccHeader);
   updateComponenteCurricularHeaders($ccHeader, $j('<td />'));
 
   $ccHeader.appendTo($targetElement);
+  
+  var areaColspan = $j('td', $ccHeader).length;
+
 
   $j.each(componentesCurriculares, function(index, cc) {
+    if (areas.indexOf(cc.area_id) == -1) {
+      areas.push(cc.area_id);
+      
+      var $areaRow = $j('<tr />');
+      
+      $j('<td />').addClass('area-conhecimento').attr('colspan', areaColspan).html(cc.area_nome).appendTo($areaRow);
+      
+      $areaRow.appendTo($targetElement);
+    }
+	    
     var $ccRow = $j('<tr />');
 
     $j('<td />').addClass('center').html(cc.nome).appendTo($ccRow);
@@ -764,9 +783,23 @@ function canSearch(){
   return true;
 }
 
+function myNextValid($selectElement) {
+    var a = $selectElement.find('option:selected');
+    if (a.next('option').length == 0) {
+        b = a.parent();
+        if (b.prop('tagName').toUpperCase() == 'SELECT') {
+            return null;
+        } else {
+            return b.next().children('option:first');
+        }
+    } else {
+        return a.next('option');
+    }
+}
+	
 function selectNextOption($selectElement){
-  var $nextOption = $selectElement.find('option:selected').next('option');
-
+  var $nextOption = myNextValid($selectElement);
+  
   if ($nextOption.val() != undefined) {
     $selectElement.val($nextOption.val());
 
