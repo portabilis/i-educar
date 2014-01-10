@@ -17,6 +17,7 @@
   <!--link rel=stylesheet type='text/css' href='styles/reset.css' />
   <link rel=stylesheet type='text/css' href='styles/portabilis.css' /-->
   <link rel=stylesheet type='text/css' href='styles/min-portabilis.css' />
+  <link rel=stylesheet type='text/css' href='styles/mytdt.css' />
 
   <!-- #&ESTILO&# -->
 
