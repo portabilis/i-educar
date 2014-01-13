@@ -91,6 +91,11 @@ var simpleSearch = {
     $element.val(ui.item.label);
     $j(hiddenInputId).val(ui.item.value);
 
+    /* Alterar valor de hiddenInputs no jQuery não chama o método 'change' por padrão, então forçamos
+       o elemento a disparar esse método (caso estiver implementado) através do método trigger */
+    $j(hiddenInputId).trigger('change');
+
+
     return false;
   },
 
