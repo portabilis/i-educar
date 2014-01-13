@@ -61,7 +61,12 @@ class EditController extends Core_Controller_Page_EditController
       'label'  => 'Nome',
       'help'   => 'O nome da área de conhecimento. Exemplo: "<em>Ciências da natureza</em>".',
       'entity' => 'nome'
-    )
+    ),
+    'secao' => array(
+      'label'  => 'Seção',
+      'help'   => 'A seção que abrange a área de conhecimento. Exemplo: "<em>Lógico Matemático</em>".',
+      'entity' => 'secao'
+    ),    
   );
 
   /**
@@ -79,5 +84,9 @@ class EditController extends Core_Controller_Page_EditController
     // Nome
     $this->campoTexto('nome', $this->_getLabel('nome'), $this->getEntity()->nome,
       60, 60, TRUE, FALSE, FALSE, $this->_getHelp('nome'));
+
+    // Seção
+    $this->campoTexto('secao', $this->_getLabel('secao'), $this->getEntity()->secao,
+      50, 50, FALSE, FALSE, FALSE, $this->_getHelp('secao'));    
   }
 }

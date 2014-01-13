@@ -49,6 +49,7 @@ class ViewController extends Core_Controller_Page_ViewController
   protected $_titulo     = 'Detalhes de área de conhecimento';
   protected $_processoAp = 945;
   protected $_tableMap   = array(
-    'Nome' => 'nome'
+    'Nome' => 'nome',
+    'Seção' => 'secao',
   );
 }
