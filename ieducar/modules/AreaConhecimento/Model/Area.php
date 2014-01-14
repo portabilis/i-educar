@@ -48,6 +48,7 @@ class AreaConhecimento_Model_Area extends CoreExt_Entity
   protected $_data = array(
     'instituicao' => NULL,
     'nome' => NULL,
+    'secao' => NULL
   );
 
   public function getDefaultValidatorCollection()
@@ -56,7 +57,8 @@ class AreaConhecimento_Model_Area extends CoreExt_Entity
 
     return array(
       'instituicao' => new CoreExt_Validate_Choice(array('choices' => $instituicoes)),
-      'nome' => new CoreExt_Validate_String(array('min' => 5, 'max' => 60))
+      'nome' => new CoreExt_Validate_String(array('min' => 5, 'max' => 60)),
+      'secao' => new CoreExt_Validate_String(array('min' => 0, 'max' => 50))
     );
   }
 
