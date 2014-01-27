@@ -54,6 +54,7 @@ class clsPessoaEndereco
   function cadastra()
   {
 
+
     if ($this->idpes && $this->cep && $this->idlog && $this->idbai &&
       $this->idpes_cad) {      
 
@@ -101,7 +102,7 @@ class clsPessoaEndereco
         '\'%s\', \'%s\', \'%d\', \'M\', 17, NOW(), \'I\', \'%d\' %s)',
         $this->schema_cadastro, $this->tabela, $campos, $this->idpes,
         $this->cep, $this->idlog, $this->idbai, $this->idpes_cad, $valores
-      );
+      );      
 
       $db = new clsBanco();
       $db->Consulta($sql);
