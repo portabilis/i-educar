@@ -53,8 +53,9 @@ class clsPessoaEndereco
 
   function cadastra()
   {
+
     if ($this->idpes && $this->cep && $this->idlog && $this->idbai &&
-      $this->idpes_cad) {
+      $this->idpes_cad) {      
 
       $campos  = '';
       $valores = '';
@@ -346,11 +347,11 @@ class clsPessoaEndereco
         $cep = $tupla['cep'];
 
         $tupla['cep']   = new clsCepLogradouro($cep, $tupla['idlog']);
-        $tupla['idlog'] = new clsCepLogradouro($cep, $tupla['idlog']);
+        #$tupla['idlog'] = new clsCepLogradouro($cep, $tupla['idlog']);
 
-        $tupla['idbai'] = new clsPublicBairro(NULL, NULL, $tupla['idbai']);
+        #$tupla['idbai'] = new clsPublicBairro(NULL, NULL, $tupla['idbai']);
 
-        $bairro = $tupla['idbai']->detalhe();
+        #$bairro = $tupla['idbai']->detalhe();
 
         $tupla['zona_localizacao'] = $bairro['zona_localizacao'];
 

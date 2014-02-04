@@ -1,0 +1,16 @@
+/*
+ * Module: Avaliacao
+ * Controller: Diario
+ *
+ * Referente a linha adicionada na tabela de Lançamentos
+ * de Faltas/Notas para a Área de Conhecimento
+ *
+ * @author  Thieres Tembra
+ * @company MyTDT Corporation [http://www.mytdt.com.br] 
+ */
+td.area-conhecimento {
+  background-color: #546C76;
+  color: #FFF;
+  font-weight: bold;
+  text-align: left;
+}

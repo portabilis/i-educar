@@ -9,6 +9,8 @@
     var $turmaField = getElementFor('turma');
     var $ano        = getElementFor('ano');
 
+    var $naoFiltrarAno        = getElementFor('nao_filtrar_ano') || null;
+
     var handleGetTurmas = function(response) {
       var selectOptions = jsonResourcesToSelectOptions(response['options']);
       updateSelect($turmaField, selectOptions, "Selecione uma turma");
@@ -24,7 +26,8 @@
           instituicao_id : $instituicaoField.val(),
           escola_id      : $escolaField.val(),
           serie_id       : $serieField.val(),
-          ano            : $ano.val()
+          ano            : $naoFiltrarAno ? null : $ano.val(),
+          nao_filtrar_ano  :  $naoFiltrarAno ? 1 : null
         });
 
         var options = {
