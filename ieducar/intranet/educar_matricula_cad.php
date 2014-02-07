@@ -571,6 +571,8 @@ class indice extends clsCadastro
                                                      $enturmacao['sequencial']);
         if ($result && ! $enturmacao->edita())
           $result = false;
+        else
+          $enturmacao->marcaAlunoTransferido($this->data_matricula);
       }
     }
 
