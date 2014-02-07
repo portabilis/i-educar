@@ -218,6 +218,8 @@ class indice extends clsCadastro
 
     include 'include/pmieducar/educar_campo_lista.php';
 
+    $this->campoOculto('ref_cod_escola', $this->ref_cod_escola);
+    
     if ($this->ref_cod_escola) {
       $this->ref_ref_cod_escola = $this->ref_cod_escola;
     }
@@ -251,6 +253,8 @@ class indice extends clsCadastro
 
     $this->campoLista('ref_ref_cod_serie', 'S&eacute;rie', $opcoes_serie, $this->ref_ref_cod_serie,
       '', FALSE, '', $script, $bloqueia); 
+
+    $this->campoOculto('ref_ref_cod_serie',$this->ref_ref_cod_serie);
 
     if ($anoVisivel)
       $this->inputsHelper()->dynamic('anoLetivo'); 
