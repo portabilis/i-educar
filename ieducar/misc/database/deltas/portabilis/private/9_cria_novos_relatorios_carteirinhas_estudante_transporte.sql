@@ -7,6 +7,8 @@
  	-- @license  @@license@@
  	-- @version  $Id$
 	
+	INSERT INTO pmicontrolesis.menu VALUES (999301,null,21126, 'Movimentos', 2, null, '_self', 1, 15, 31);
+	
 	insert into pmicontrolesis.menu values(999600,NULL,21127,'Carteiras',2,NULL,'_self',1,15,20);
 
 	insert into portal.menu_submenu values(999601,55,2,'Carteira de Transporte','portabilis_carteira_transporte.php',NULL,3);

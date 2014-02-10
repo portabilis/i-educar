@@ -5,22 +5,6 @@
 	-- @author   Ricardo Bortolotto Dagostim <ricardo@portabilis.com.br>
  	-- @license  @@license@@
  	-- @version  $Id$  
-  
-  insert into pmicontrolesis.menu values(999614,NULL,NULL,'Relatórios',3,NULL,'_self',1,16,1);
-  insert into portal.menu_submenu values(999615,57,2,'Autores','portabilis_biblioteca_autor.php',NULL,3);
-  insert into portal.menu_funcionario values(1,0,0,999615);
-  insert into pmicontrolesis.menu values    (999615,999615,999614,'Autores',2,'portabilis_biblioteca_autor.php','_self',1,16,1);
-  insert into pmieducar.menu_tipo_usuario values(1,999615,1,0,1);
-
-  insert into portal.menu_submenu values(999616,57,3,'Editoras','portabilis_biblioteca_editora.php',NULL,3);
-  insert into portal.menu_funcionario values(1,0,0,999616);
-  insert into pmicontrolesis.menu values  (999616,999616,999614,'Editoras',3,'portabilis_biblioteca_editora.php','_self',1,16,1);
-  insert into pmieducar.menu_tipo_usuario values(1,999616,1,0,1);
-
-  insert into portal.menu_submenu values(999617,57,3,'Obras','portabilis_biblioteca_obra.php',NULL,3);
-  insert into portal.menu_funcionario values(1,0,0,999617);
-  insert into pmicontrolesis.menu values(999617,999617,999614,'Obras',4,'portabilis_biblioteca_obra.php','_self',1,16,1);
-  insert into pmieducar.menu_tipo_usuario values(1,999617,1,0,1);
 
   insert into portal.menu_submenu values(999618,57,3,'Empréstimos','portabilis_biblioteca_emprestimo.php',NULL,3);
   insert into portal.menu_funcionario values(1,0,0,999618);
