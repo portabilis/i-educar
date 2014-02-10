@@ -71,6 +71,7 @@ class indice extends clsCadastro
   var $ref_usuario_exc;
   var $ref_usuario_cad;
   var $ref_ref_cod_serie;
+  var $ref_ref_cod_serie_;
   var $ref_ref_cod_escola;
   var $ref_cod_infra_predio_comodo;
   var $nm_turma;
@@ -89,7 +90,7 @@ class indice extends clsCadastro
 
   var $ref_cod_instituicao;
   var $ref_cod_curso;
-  var $ref_cod_escola;
+  var $ref_cod_escola_;
 
   var $padrao_ano_escolar;
 
@@ -218,7 +219,8 @@ class indice extends clsCadastro
 
     include 'include/pmieducar/educar_campo_lista.php';
 
-    $this->campoOculto('ref_cod_escola', $this->ref_cod_escola);
+    $this->ref_cod_escola_ = $this->ref_cod_escola;
+    $this->campoOculto('ref_cod_escola_', $this->ref_cod_escola_);
     
     if ($this->ref_cod_escola) {
       $this->ref_ref_cod_escola = $this->ref_cod_escola;
@@ -253,6 +255,9 @@ class indice extends clsCadastro
 
     $this->campoLista('ref_ref_cod_serie', 'S&eacute;rie', $opcoes_serie, $this->ref_ref_cod_serie,
       '', FALSE, '', $script, $bloqueia); 
+    
+    $this->ref_ref_cod_serie_ = $this->ref_ref_cod_serie;
+    $this->campoOculto('ref_ref_cod_serie_',$this->ref_ref_cod_serie_);
 
     $this->campoOculto('ref_ref_cod_serie',$this->ref_ref_cod_serie);
 
@@ -949,7 +954,7 @@ class indice extends clsCadastro
     }
 
     $this->atualizaComponentesCurriculares(
-      $this->ref_ref_cod_serie, $this->ref_cod_escola, $this->cod_turma,
+      $this->ref_ref_cod_serie_, $this->ref_cod_escola_, $this->cod_turma,
       $this->disciplinas, $this->carga_horaria, $this->usar_componente
     );
 
