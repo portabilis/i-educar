@@ -852,6 +852,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $notasComponentes[$nota->get('componenteCurricular')][] = $nota;
     }
 
+    
+
     $this->_notasComponentes = $notasComponentes;
 
     if (FALSE == $loadMedias) {
