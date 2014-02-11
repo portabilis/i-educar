@@ -29,6 +29,7 @@
  */
 
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
 
 /**
  * clsPmieducarMatriculaTurma class.
@@ -308,6 +309,8 @@ class clsPmieducarMatriculaTurma
 
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
 
+      $this->limpaComponentesCurriculares();
+
       return TRUE;
     }
 
@@ -364,6 +367,7 @@ class clsPmieducarMatriculaTurma
 
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_turma = '{$this->ref_cod_turma}' and sequencial = '$this->sequencial' ");
+        $this->limpaComponentesCurriculares();      
         return TRUE;
       }
     }
@@ -1337,4 +1341,12 @@ class clsPmieducarMatriculaTurma
     }else
       return 0;
   }
+
+  function limpaComponentesCurriculares(){
+    $db = new clsBanco();
+    $ano = $db->CampoUnico("SELECT ano FROM pmieducar.matricula WHERE cod_matricula = {$this->ref_cod_matricula}");
+    echo "$ano --";
+    CleanComponentesCurriculares::destroyOldResources($ano, $this->ref_cod_matricula);
+  }
+
 }
