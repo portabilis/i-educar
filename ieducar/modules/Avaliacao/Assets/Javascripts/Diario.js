@@ -555,11 +555,14 @@ function handleSearch($resultTable, dataResponse) {
                                   .css('color', '#FF6600')                                
                                   .html(value.situacao_deslocamento)
                                   .appendTo($linha);
-        $j('<td />').html('-').addClass('center').appendTo($linha);
-        $j('<td />').html('-').addClass('center').appendTo($linha);
-        $j('<td />').html('-').addClass('center').appendTo($linha);
-        $j('<td />').html('-').addClass('center').appendTo($linha);
 
+        var colCount = 0;
+        $resultTable.find('tr:nth-child(1) th').each(function () {
+          colCount++;
+        });
+        for (var i = 0; i < colCount - 3; i++) {
+          $j('<td />').html('-').addClass('center').appendTo($linha);
+        };
       }
     }
 
