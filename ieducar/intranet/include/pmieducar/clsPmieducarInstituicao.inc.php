@@ -476,14 +476,20 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }
 
-      if (is_string($this->data_base_transferencia)) {
+      if (is_string($this->data_base_transferencia) AND !empty($this->data_base_transferencia)) {
         $set .= "{$gruda}data_base_transferencia = '{$this->data_base_transferencia}'";
         $gruda = ", ";
+      }else{
+        $set .= "{$gruda}data_base_transferencia = NULL ";
+        $gruda = ", ";        
       }
 
-      if (is_string($this->data_base_remanejamento)) {
+      if (is_string($this->data_base_remanejamento) AND !empty($this->data_base_remanejamento) ) {
         $set .= "{$gruda}data_base_remanejamento = '{$this->data_base_remanejamento}'";
         $gruda = ", ";
+      }else{
+        $set .= "{$gruda}data_base_remanejamento = NULL ";
+        $gruda = ", ";        
       }            
 
       if ($set) {

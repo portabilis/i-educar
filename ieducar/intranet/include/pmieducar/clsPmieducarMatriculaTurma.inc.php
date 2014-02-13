@@ -1173,17 +1173,44 @@ class clsPmieducarMatriculaTurma
     return FALSE;
   }
 
+  function getInstituicao(){
+    if (is_numeric($this->ref_cod_matricula)){
+      $db = new clsBanco();
+      return $db->CampoUnico("SELECT ref_cod_instituicao from pmieducar.escola
+                                              INNER JOIN pmieducar.matricula ON (ref_ref_cod_escola = cod_escola)
+                                              WHERE cod_matricula = {$this->ref_cod_matricula}");
+    }
+    return false;
+  }
+
+  function getDataBaseRemanejamento(){
+    if ($this->ref_cod_matricula){
+      $cod_instituicao = $this->getInstituicao();
+      $db = new clsBanco();
+      return $db->CampoUnico("SELECT data_base_remanejamento 
+                                                    FROM pmieducar.instituicao WHERE cod_instituicao = {$cod_instituicao}");
+    }
+    return false;
+  }
+
+  function getDataBaseTransferencia(){
+    if ($this->ref_cod_matricula){
+      $cod_instituicao = $this->getInstituicao();
+      $db = new clsBanco();      
+      return $db->CampoUnico("SELECT data_base_transferencia 
+                                                  FROM pmieducar.instituicao WHERE cod_instituicao = {$cod_instituicao}");
+    }
+    return false;
+  }  
+
   function marcaAlunoRemanejado($data = null){
     
     if ($this->ref_cod_matricula && $this->sequencial){
-      $db = new clsBanco();  
-      $cod_instituicao = $db->CampoUnico("SELECT ref_cod_instituicao from pmieducar.escola
-                                            INNER JOIN pmieducar.matricula ON (ref_ref_cod_escola = cod_escola)
-                                            WHERE cod_matricula = {$this->ref_cod_matricula}");
-      $dataBaseRemanejamento = $db->CampoUnico("SELECT data_base_remanejamento 
-                                                  FROM pmieducar.instituicao WHERE cod_instituicao = {$cod_instituicao}");
+      
+      $dataBaseRemanejamento = $this->getDataBaseRemanejamento();
       $data = $data ? $data : date('Y-m-d');
       if ($dataBaseRemanejamento && strtotime($dataBaseRemanejamento) < strtotime($data) ) {
+        $db = new clsBanco();  
         $db->CampoUnico("UPDATE pmieducar.matricula_turma SET remanejado = TRUE WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
       }
     }
@@ -1192,14 +1219,12 @@ class clsPmieducarMatriculaTurma
   function marcaAlunoTransferido($data = null){
     
     if ($this->ref_cod_matricula && $this->sequencial){
-      $db = new clsBanco();  
-      $cod_instituicao = $db->CampoUnico("SELECT ref_cod_instituicao from pmieducar.escola
-                                            INNER JOIN pmieducar.matricula ON (ref_ref_cod_escola = cod_escola)
-                                            WHERE cod_matricula = {$this->ref_cod_matricula}");
-      $dataBaseRemanejamento = $db->CampoUnico("SELECT data_base_transferencia 
-                                                  FROM pmieducar.instituicao WHERE cod_instituicao = {$cod_instituicao}");
+      
+      $dataBaseTransferencia = $this->getDataBaseTransferencia();
+
       $data = $data ? $data : date('Y-m-d');
-      if ($dataBaseRemanejamento && strtotime($dataBaseRemanejamento) < strtotime($data) ) {
+      if ($dataBaseTransferencia && strtotime($dataBaseTransferencia) < strtotime($data) ) {
+        $db = new clsBanco();
         $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = TRUE WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
       }
     }
@@ -1330,23 +1355,59 @@ class clsPmieducarMatriculaTurma
     return FALSE;
   }
 
+  function existeMatriculaTransferidaAno(){
+    if(is_numeric($this->ref_cod_matricula)){
+      $db = new clsBanco();
+
+      $cod_aluno = $db->CampoUnico("SELECT ref_cod_aluno FROM pmieducar.matricula WHERE cod_matricula = {$this->ref_cod_matricula}");
+      $ano = $this->getAnoMatricula();
+      if($cod_aluno)
+        return $db->CampoUnico("SELECT 1 FROM pmieducar.matricula WHERE ref_cod_aluno = {$cod_aluno} AND ano = {$ano} AND 
+          aprovado = 4") == 1 ? TRUE : FALSE;
+    }
+  }
+
   function getSequencialFechamento($matriculaId, $turmaId, $dataEnturmacao){
+
+    $getSequencial = FALSE;
     $db = new clsBanco();
     $possui_fechamento = $db->CampoUnico("SELECT data_fechamento FROM pmieducar.turma WHERE cod_turma = {$turmaId}");
     if (is_string($possui_fechamento)){
       if (strtotime($possui_fechamento) < strtotime($dataEnturmacao))
-        return $db->CampoUnico("SELECT MAX(sequencial_fechamento)+1 FROM {$this->_tabela} where ref_cod_turma = {$turmaId}");
-      else
-        return 0;
-    }else
+        $getSequencial = true;      
+    }
+
+    $dataBaseTransferencia = $this->getDataBaseTransferencia();
+
+    if ($dataBaseTransferencia && $this->existeMatriculaTransferidaAno()){
+      if (strtotime($dataBaseTransferencia) < strtotime($dataEnturmacao))
+        $getSequencial = true;
+    }
+
+    $dataBaseRemanejamento = $this->getDataBaseRemanejamento();
+
+    if($dataBaseRemanejamento){
+      if (strtotime($dataBaseRemanejamento) < strtotime($dataEnturmacao))
+        $getSequencial = true; 
+    }
+
+
+    if ($getSequencial)
+      return $db->CampoUnico("SELECT MAX(sequencial_fechamento)+1 FROM {$this->_tabela} where ref_cod_turma = {$turmaId}");
+    else
       return 0;
   }
 
-  function limpaComponentesCurriculares(){
-    $db = new clsBanco();
-    $ano = $db->CampoUnico("SELECT ano FROM pmieducar.matricula WHERE cod_matricula = {$this->ref_cod_matricula}");
-    echo "$ano --";
+  function limpaComponentesCurriculares(){    
+    $ano = $this->getAnoMatricula();
     CleanComponentesCurriculares::destroyOldResources($ano, $this->ref_cod_matricula);
+  }
+
+  function getAnoMatricula(){
+    if (is_numeric($this->ref_cod_matricula)){
+      $db = new clsBanco();
+      return $db->CampoUnico("SELECT ano FROM pmieducar.matricula WHERE cod_matricula = {$this->ref_cod_matricula}");
+    }
   }
 
 }
