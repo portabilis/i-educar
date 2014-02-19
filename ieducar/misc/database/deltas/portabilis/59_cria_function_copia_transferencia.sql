@@ -110,7 +110,7 @@ $BODY$
             v_falta_id := (SELECT max(id)+1 AS id FROM modules.falta_aluno);
             IF (v_falta_id is null) THEN
               v_falta_id := 1;
-      END IF;            
+            END IF;            
             INSERT INTO modules.falta_aluno VALUES (v_falta_id, new_matricula_id,2);
           v_old_falta_id := (SELECT id FROM modules.falta_aluno WHERE matricula_id = old_matricula_id);
 
@@ -122,6 +122,9 @@ $BODY$
 
         IF (v_tipo_parecer = 2) THEN
             v_parecer_id := (SELECT max(id)+1 AS id FROM modules.parecer_aluno);
+            IF (v_parecer_id is null) THEN
+              v_parecer_id := 1;
+            END IF;            
             INSERT INTO modules.parecer_aluno VALUES (v_parecer_id, new_matricula_id,2);
           v_old_parecer_id := (SELECT id FROM modules.parecer_aluno WHERE matricula_id = old_matricula_id);
 
@@ -133,6 +136,9 @@ $BODY$
 
         IF (v_tipo_parecer = 3) THEN
             v_parecer_id := (SELECT max(id)+1 AS id FROM modules.parecer_aluno);
+            IF (v_parecer_id is null) THEN
+              v_parecer_id := 1;
+            END IF;             
             INSERT INTO modules.parecer_aluno VALUES (v_parecer_id, new_matricula_id,3);
           v_old_parecer_id := (SELECT id FROM modules.parecer_aluno WHERE matricula_id = old_matricula_id);
 
