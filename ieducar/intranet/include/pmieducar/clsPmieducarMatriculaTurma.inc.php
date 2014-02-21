@@ -998,7 +998,7 @@ class clsPmieducarMatriculaTurma
     if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_turma) &&
       is_numeric($this->sequencial)) {
       $db = new clsBanco();
-      $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_turma = '{$this->ref_cod_turma}' AND sequencial = '{$this->sequencial}'" );
+      $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_turma = '{$this->ref_cod_turma}' AND sequencial = '{$this->sequencial}' AND ativo = 1 " );
       $db->ProximoRegistro();
       return $db->Tupla();
     }
