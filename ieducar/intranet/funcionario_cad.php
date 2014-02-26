@@ -183,7 +183,7 @@ class indice extends clsCadastro
 		$this->campoSenha("_senha", "Senha", $this->_senha, true);
 		$this->campoEmail("email", "E-mail usuário", $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o usúario esqueça<br />Este campo pode ser gravado em branco, neste caso será solicitado um e-mail ao usuário, após entrar no sistema.');
 
-		$this->campoTexto('matricula_interna', 'Matr&iacute;cula interna', $this->matricula_interna, 30, 30, false, false, false , 'Utilizado somente para registro, caso a institui&ccedil;&atilde;o deseje que a matr&iacute;cula interna desses funcion&aacute;rios sejam registradas no sistema.');
+		$this->campoTexto('matricula_interna', 'Matr&iacute;cula interna', $this->matricula_interna, 30, 30, false, false, false , 'Utilizado somente para registro, caso a institui&ccedil;&atilde;o deseje que a matr&iacute;cula interna deste funcion&aacute;rio seja registrada no sistema.');
 
 		$obj_setor = new clsSetor();
 		$lst_setor = $obj_setor->lista(null, null, null, null, null, null, null, null, null, 1, 0);
