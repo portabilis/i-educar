@@ -285,7 +285,7 @@ class indice extends clsDetalhe
       $obj_endereco = new clsPessoaEndereco($this->ref_idpes);
 
       if ($obj_endereco_det = $obj_endereco->detalhe()) {
-        $registro['id_cep']        = $obj_endereco_det['cep'];
+        $registro['id_cep']        = $obj_endereco_det['cep']->cep;
         $registro['id_bairro']     = $obj_endereco_det['idbai'];
         $registro['id_logradouro'] = $obj_endereco_det['idlog'];
         $registro['numero']        = $obj_endereco_det['numero'];

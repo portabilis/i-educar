@@ -462,15 +462,14 @@ class PessoaController extends ApiCoreController
       $this->_createOrUpdatePessoaEndereco($pessoaId);
     else if($this->getRequest()->cep && is_numeric($this->getRequest()->municipio_id)){
       
-      if (!is_numeric($this->bairro_id)){
-
+      if (!is_numeric($this->getRequest()->bairro_id)){
         if ($this->canCreateBairro())
           $this->getRequest()->bairro_id = $this->createBairro();
         else
           return;
       }      
       
-      if (!is_numeric($this->logradouro_id)){
+      if (!is_numeric($this->getRequest()->logradouro_id)){
         if($this->canCreateLogradouro())
           $this->getRequest()->logradouro_id = $this->createLogradouro();
         else
