@@ -84,7 +84,7 @@
 
            <p style="min-height: 0px;" class="flash exclamation"><strong>Aviso de atendimento diferenciado</strong><br/>Prezados clientes, comunicamos que no feriad&atilde;o de carnaval, de 03 &agrave; 04 de mar&ccedil;o, iremos atender em car&aacute;ter de plant&atilde;o. Se voc&ecirc; precisar de ajuda, entre em contato atrav&eacute;s dos telefones (48) 9811-3030 (TIM), (48) 9187-6262 (Vivo ou (48) 8835-3082 (Claro). Atenderemos via e-mail suporte@portabilis.com.br e help-desk <a target="_blank" href="http://suporte.portabilis.com.br">http://suporte.portabilis.com.br</a> normalmente.<strong> <br/> Obrigado pela compreens&atilde;o e bom descanso para os que n&atilde;o precisar&atilde;o trabalhar. :)</strong></p>
       <br/>
-     <p style="min-height: 0px;" class="flash error">Desejamos a todos os nossos clientes e amigos um Feliz Natal e boas festas! Obrigado pela oportunidade de trabalharmos juntos neste ano e nos reencontramos em 2014 com muito mais garra ainda para continuar apoiando voc&ecirc;s nos seus trabalhos. :)</p-->
+     <!--p style="min-height: 0px;" class="flash error">Desejamos a todos os nossos clientes e amigos um Feliz Natal e boas festas! Obrigado pela oportunidade de trabalharmos juntos neste ano e nos reencontramos em 2014 com muito mais garra ainda para continuar apoiando voc&ecirc;s nos seus trabalhos. :)</p-->
 
       <!-- #&ERROLOGIN&# -->
     </div>
