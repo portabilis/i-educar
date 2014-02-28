@@ -285,9 +285,9 @@ class indice extends clsDetalhe
       $obj_endereco = new clsPessoaEndereco($this->ref_idpes);
 
       if ($obj_endereco_det = $obj_endereco->detalhe()) {
-        $registro['id_cep']        = $obj_endereco_det['cep']->cep;
-        $registro['id_bairro']     = $obj_endereco_det['idbai']->idbai;
-        $registro['id_logradouro'] = $obj_endereco_det['idlog']->idlog;
+        $registro['id_cep']        = $obj_endereco_det['cep'];
+        $registro['id_bairro']     = $obj_endereco_det['idbai'];
+        $registro['id_logradouro'] = $obj_endereco_det['idlog'];
         $registro['numero']        = $obj_endereco_det['numero'];
         $registro['letra']         = $obj_endereco_det['letra'];
         $registro['complemento']   = $obj_endereco_det['complemento'];
@@ -295,7 +295,7 @@ class indice extends clsDetalhe
         $registro['apartamento']   = $obj_endereco_det['apartamento'];
         $registro['bloco']         = $obj_endereco_det['bloco'];
         $registro['nm_logradouro'] = $obj_endereco_det['logradouro'];
-        $registro['cep_']          = int2CEP($registro['id_cep']);
+        $registro['cep_']          = int2CEP($registro['id_cep']);      
 
         $obj_bairro     = new clsBairro($registro['id_bairro']);
         $obj_bairro_det = $obj_bairro->detalhe();
@@ -351,14 +351,6 @@ class indice extends clsDetalhe
         }
       }
     }
-
-    // Adiciona a informação de zona de localização junto ao bairro do
-    // endereço.
-    $zona = App_Model_ZonaLocalizacao::getInstance();
-    $registro['nm_bairro'] = sprintf(
-      '%s (Zona %s)',
-      $registro['nm_bairro'], $zona->getValue($obj_endereco_det['zona_localizacao'])
-    );
 
     if ($registro['cod_aluno']) {
       $this->addDetalhe(array('Código Aluno', $registro['cod_aluno']));

@@ -404,8 +404,8 @@ class PessoaController extends ApiCoreController
     $fisica->sexo               = $this->getRequest()->sexo;
     $fisica->ref_cod_sistema    = 'NULL';
     $fisica->ideciv             = $this->getRequest()->estadocivil;
-    $fisica->idpes_pai          = "NULL";
-    $fisica->idpes_mae          = "NULL";
+    //$fisica->idpes_pai          = "NULL";
+    //$fisica->idpes_mae          = "NULL";
     $fisica->idmun_nascimento   = $this->getRequest()->naturalidade;
 
     $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
