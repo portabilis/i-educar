@@ -923,7 +923,7 @@ function canShowParentsFields(){
           bValid = bValid && checkLength( name, "nome", 3, 255 );
           bValid = bValid && checkSelect( sexo, "sexo");
           bValid = bValid && checkSelect( estadocivil, "estado civil");                
-          bValid = bValid && checkRegexp( datanasc, /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/[12][0-9]{3}$/i, "O campo data de nascimento deve ser preenchido no formato dd/mm/yyyy." );
+          bValid = bValid && checkRegexp( datanasc, /(^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$)/i, "O campo data de nascimento deve ser preenchido no formato dd/mm/yyyy." );
           bValid = bValid && checkSimpleSearch( municipio, municipio_id, "munic\u00edpio");
           bValid = bValid && ($j('#cep_').val() == '' ? true : validateEndereco());
   

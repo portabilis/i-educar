@@ -271,12 +271,12 @@ class indice extends clsCadastro
       'label'       => 'RG / Data emissão',
       'placeholder' => 'Documento identidade',
       'value'       => $documentos['rg'],
-      'max_length'  => 20,
+      'max_length'  => 25,
       'size'        => 27,
       'inline'      => true
     );
 
-    $this->inputsHelper()->integer('rg', $options);
+    $this->inputsHelper()->text('rg', $options);
 
 
     // data emissão rg

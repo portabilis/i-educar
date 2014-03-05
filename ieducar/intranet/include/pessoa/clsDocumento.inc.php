@@ -132,7 +132,7 @@ class clsDocumento
 			$campos = "";
 			$values = "";
 
-			if( is_numeric( $this->rg ) and (!empty($this->rg)) )
+			if( is_string( $this->rg ) and (!empty($this->rg)) )
 			{
 				$campos .= ", rg";
 				$values .= ", '{$this->rg}'";
@@ -245,7 +245,7 @@ class clsDocumento
 		$set = "";
 		$gruda = "SET ";
 		//die($this->rg."<-");
-		if( is_numeric( $this->rg ) and (!empty($this->rg)))
+		if( is_string( $this->rg ) and (!empty($this->rg)))
 		{	//die("aki");
 			$set = "SET rg = '{$this->rg}'";
 			$gruda = ", ";
@@ -491,7 +491,7 @@ class clsDocumento
 			$whereAnd = " AND ";
 		}
 
-		if( is_numeric( $this->rg ) )
+		if( is_string( $this->rg ) )
 		{
 			$where .= "{$whereAnd}rg = '$int_rg'";
 			$whereAnd = " AND ";

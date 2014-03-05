@@ -404,8 +404,8 @@ class PessoaController extends ApiCoreController
     $fisica->sexo               = $this->getRequest()->sexo;
     $fisica->ref_cod_sistema    = 'NULL';
     $fisica->ideciv             = $this->getRequest()->estadocivil;
-    $fisica->idpes_pai          = "NULL";
-    $fisica->idpes_mae          = "NULL";
+    //$fisica->idpes_pai          = "NULL";
+    //$fisica->idpes_mae          = "NULL";
     $fisica->idmun_nascimento   = $this->getRequest()->naturalidade;
 
     $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
@@ -462,15 +462,14 @@ class PessoaController extends ApiCoreController
       $this->_createOrUpdatePessoaEndereco($pessoaId);
     else if($this->getRequest()->cep && is_numeric($this->getRequest()->municipio_id)){
       
-      if (!is_numeric($this->bairro_id)){
-
+      if (!is_numeric($this->getRequest()->bairro_id)){
         if ($this->canCreateBairro())
           $this->getRequest()->bairro_id = $this->createBairro();
         else
           return;
       }      
       
-      if (!is_numeric($this->logradouro_id)){
+      if (!is_numeric($this->getRequest()->logradouro_id)){
         if($this->canCreateLogradouro())
           $this->getRequest()->logradouro_id = $this->createLogradouro();
         else
