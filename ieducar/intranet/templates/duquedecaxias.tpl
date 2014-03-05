@@ -90,7 +90,9 @@
       <p style="min-height: 32px;" class="flash update-browser"><strong>Seu navegador est&aacute desatualizado.</strong> Para melhor navega&ccedil;&atildeo  no sistema, por favor, atualize seu navegador.<a href="http://br.mozdev.org/download/" target="_blank"><img style="margin-top:4px;" src="http://www.mozilla.org/contribute/buttons/110x32bubble_r_pt.png" alt="Firefox" width="110" height="32" style="border-style:none;" title="Mozilla Firefox" /></a></p>
       <![endif]-->
 
-      <p style="min-height: 0px;" class="flash exclamation"><strong>Aviso de atendimento diferenciado</strong><br/>Prezados clientes, comunicamos que no feriad&atilde;o de carnaval, de 03 &agrave; 04 de mar&ccedil;o, iremos atender em car&aacute;ter de plant&atilde;o. Se voc&ecirc; precisar de ajuda, entre em contato atrav&eacute;s dos telefones (48) 9811-3030 (TIM), (48) 9187-6262 (Vivo ou (48) 8835-3082 (Claro). Atenderemos via e-mail suporte@portabilis.com.br e help-desk <a target="_blank" href="http://suporte.portabilis.com.br">http://suporte.portabilis.com.br</a> normalmente.<strong> <br/> Obrigado pela compreens&atilde;o e bom descanso para os que n&atilde;o precisar&atilde;o trabalhar. :)</strong></p>
+      <!--p style="min-height: 0px;" class="flash exclamation"><strong>Caros clientes,</strong><br/> De 24/12 &agrave; 31/12 nosso atendimento de suporte ter&aacute; hor&aacute;rio de funcionamento especial. Sendo assim, pedimos que todos os contatos sejam feitos atrav&eacute;s do e-mail, pois ser&atilde;o atendidos normalmente. Se o contato for urgente, temos plant&atilde;o nos seguintes n&uacute;meros: (48) 9811-3030 (TIM), (48) 9187-6262 (Vivo) e (48) 8835-3082 (Claro). <strong>Obrigado pela compreens&atilde;o.</strong></p>
+      <br/>
+     <p style="min-height: 0px;" class="flash error">Desejamos a todos os nossos clientes e amigos um Feliz Natal e boas festas! Obrigado pela oportunidade de trabalharmos juntos neste ano e nos reencontramos em 2014 com muito mais garra ainda para continuar apoiando voc&ecirc;s nos seus trabalhos. :)</p-->
 
       <!-- #&ERROLOGIN&# -->
     </div>
