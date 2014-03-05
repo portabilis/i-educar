@@ -143,7 +143,7 @@ class indice extends clsCadastro
     if ($registros) {
 
       $tabela = "<table border=0 style='' cellpadding=2 width='100%'>";
-      $tabela .= "<tr bgcolor=$cor><td colspan='2'><b>Modulos do ano anterior (".($this->ref_ano - 1).")</b></td></tr><tr><td>";
+      $tabela .= "<tr bgcolor=$cor><td colspan='2'><b>M&oacute;dulos do ano anterior (".($this->ref_ano - 1).")</b></td></tr><tr><td>";
       $tabela .= "<table cellpadding=\"2\" cellspacing=\"2\" border=\"0\" align=\"left\" width='300px'>";
       $tabela .= "<tr bgcolor='#A1B3BD'><th width='100px'>Etapa<a name='ano_letivo'/></th><th width='200px'>Período</th></tr>";
       
