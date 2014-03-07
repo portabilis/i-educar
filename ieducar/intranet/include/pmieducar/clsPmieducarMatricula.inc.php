@@ -864,6 +864,7 @@ class clsPmieducarMatricula
   {
     if (is_numeric($this->cod_matricula) && is_numeric($this->ref_usuario_exc)) {
       $this->ativo = 0;
+      $this->ultima_matricula = 0;
       return $this->edita();
     }
 

@@ -680,12 +680,14 @@ class indice extends clsCadastro
 
 
     foreach ($matriculas as $matricula) {
-      $matricula = new clsPmieducarMatricula($matricula['cod_matricula'], NULL, NULL, NULL,
-                                             $this->pessoa_logada, NULL, $alunoId, NULL, NULL,
-                                             NULL, 1, NULL, 0);
-      if (! $matricula->edita()) {
-        $this->mensagem = 'Erro ao remover flag ultima matricula das matriculas anteriores.';
-        return false;
+      if (!$matricula['aprovado']==3){
+        $matricula = new clsPmieducarMatricula($matricula['cod_matricula'], NULL, NULL, NULL,
+                                               $this->pessoa_logada, NULL, $alunoId, NULL, NULL,
+                                               NULL, 1, NULL, 0);
+        if (! $matricula->edita()) {
+          $this->mensagem = 'Erro ao remover flag ultima matricula das matriculas anteriores.';
+          return false;
+        }
       }
     }
 
