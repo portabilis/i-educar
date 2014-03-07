@@ -789,8 +789,8 @@ protected function createOrUpdateUniforme($id) {
         $aluno = Portabilis_Array_Utils::merge($objMoradia,$aluno);
       }
 
-      $sql = "select sus, idpes_mae, idpes_pai from cadastro.fisica where idpes = $1";
-      $camposFisica = Portabilis_String_Utils::toUtf8($this->fetchPreparedQuery($sql, $aluno['pessoa_id'], false, 'first-row'));
+      $sql = "select sus from cadastro.fisica where idpes = $1";
+      $camposFisica = $this->fetchPreparedQuery($sql, $aluno['pessoa_id'], false, 'first-row');
       $aluno['sus'] = $camposFisica['sus'];
 
       return $aluno;
