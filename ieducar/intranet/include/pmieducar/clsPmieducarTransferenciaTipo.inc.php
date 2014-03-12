@@ -42,7 +42,7 @@ class clsPmieducarTransferenciaTipo
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
-	var $ref_cod_escola;
+	var $ref_cod_instituicao;
 
 	// propriedades padrao
 
@@ -108,39 +108,39 @@ class clsPmieducarTransferenciaTipo
 	 *
 	 * @return object
 	 */
-	function clsPmieducarTransferenciaTipo( $cod_transferencia_tipo = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_tipo = null, $desc_tipo = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_escola = null )
+	function clsPmieducarTransferenciaTipo( $cod_transferencia_tipo = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_tipo = null, $desc_tipo = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_instituicao = null )
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}transferencia_tipo";
 
-		$this->_campos_lista = $this->_todos_campos = "tt.cod_transferencia_tipo, tt.ref_usuario_exc, tt.ref_usuario_cad, tt.nm_tipo, tt.desc_tipo, tt.data_cadastro, tt.data_exclusao, tt.ativo, tt.ref_cod_escola";
+		$this->_campos_lista = $this->_todos_campos = "tt.cod_transferencia_tipo, tt.ref_usuario_exc, tt.ref_usuario_cad, tt.nm_tipo, tt.desc_tipo, tt.data_cadastro, tt.data_exclusao, tt.ativo, tt.ref_cod_instituicao";
 
-		if( is_numeric( $ref_cod_escola ) )
+		if( is_numeric( $ref_cod_instituicao ) )
 		{
 			if( class_exists( "clsPmieducarEscola" ) )
 			{
-				$tmp_obj = new clsPmieducarEscola( $ref_cod_escola );
+				$tmp_obj = new clsPmieducarInstituicao( $ref_cod_instituicao );
 				if( method_exists( $tmp_obj, "existe") )
 				{
 					if( $tmp_obj->existe() )
 					{
-						$this->ref_cod_escola = $ref_cod_escola;
+						$this->ref_cod_instituicao = $ref_cod_instituicao;
 					}
 				}
 				else if( method_exists( $tmp_obj, "detalhe") )
 				{
 					if( $tmp_obj->detalhe() )
 					{
-						$this->ref_cod_escola = $ref_cod_escola;
+						$this->ref_cod_instituicao = $ref_cod_instituicao;
 					}
 				}
 			}
 			else
 			{
-				if( $db->CampoUnico( "SELECT 1 FROM pmieducar.escola WHERE cod_escola = '{$ref_cod_escola}'" ) )
+				if( $db->CampoUnico( "SELECT 1 FROM pmieducar.instituicao WHERE cod_instituicao = '{$ref_cod_instituicao}'" ) )
 				{
-					$this->ref_cod_escola = $ref_cod_escola;
+					$this->ref_cod_instituicao = $ref_cod_instituicao;
 				}
 			}
 		}
@@ -236,7 +236,7 @@ class clsPmieducarTransferenciaTipo
 	 */
 	function cadastra()
 	{
-		if( is_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_tipo ) && is_numeric( $this->ref_cod_escola ) )
+		if( is_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_tipo ) && is_numeric( $this->ref_cod_instituicao ) )
 		{
 			$db = new clsBanco();
 
@@ -268,10 +268,10 @@ class clsPmieducarTransferenciaTipo
 			$campos .= "{$gruda}ativo";
 			$valores .= "{$gruda}'1'";
 			$gruda = ", ";
-			if( is_numeric( $this->ref_cod_escola ) )
+			if( is_numeric( $this->ref_cod_instituicao ) )
 			{
-				$campos .= "{$gruda}ref_cod_escola";
-				$valores .= "{$gruda}'{$this->ref_cod_escola}'";
+				$campos .= "{$gruda}ref_cod_instituicao";
+				$valores .= "{$gruda}'{$this->ref_cod_instituicao}'";
 				$gruda = ", ";
 			}
 
@@ -327,9 +327,9 @@ class clsPmieducarTransferenciaTipo
 				$set .= "{$gruda}ativo = '{$this->ativo}'";
 				$gruda = ", ";
 			}
-			if( is_numeric( $this->ref_cod_escola ) )
+			if( is_numeric( $this->ref_cod_instituicao ) )
 			{
-				$set .= "{$gruda}ref_cod_escola = '{$this->ref_cod_escola}'";
+				$set .= "{$gruda}ref_cod_instituicao = '{$this->ref_cod_instituicao}'";
 				$gruda = ", ";
 			}
 
@@ -348,12 +348,12 @@ class clsPmieducarTransferenciaTipo
 	 *
 	 * @return array
 	 */
-	function lista( $int_cod_transferencia_tipo = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_tipo = null, $str_desc_tipo = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_escola = null, $int_ref_cod_instituicao = null )
+	function lista( $int_cod_transferencia_tipo = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_tipo = null, $str_desc_tipo = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_instituicao = null )
 	{
-		$sql = "SELECT {$this->_campos_lista}, e.ref_cod_instituicao FROM {$this->_tabela} tt, {$this->_schema}escola e";
+		$sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} tt";
 
-		$whereAnd = " AND ";
-		$filtros = " WHERE tt.ref_cod_escola = e.cod_escola ";
+		$whereAnd = " WHERE ";
+		$filtros = "";
 
 		if( is_numeric( $int_cod_transferencia_tipo ) )
 		{
@@ -410,11 +410,6 @@ class clsPmieducarTransferenciaTipo
 			$filtros .= "{$whereAnd} tt.ativo = '0'";
 			$whereAnd = " AND ";
 		}
-		if( is_numeric( $int_ref_cod_escola ) )
-		{
-			$filtros .= "{$whereAnd} tt.ref_cod_escola = '{$int_ref_cod_escola}'";
-			$whereAnd = " AND ";
-		}
 		if( is_numeric( $int_ref_cod_instituicao ) )
 		{
 			$filtros .= "{$whereAnd} ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
@@ -428,7 +423,7 @@ class clsPmieducarTransferenciaTipo
 
 		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} tt, {$this->_schema}escola e {$filtros}" );
+		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} tt {$filtros}" );
 
 		$db->Consulta( $sql );
 

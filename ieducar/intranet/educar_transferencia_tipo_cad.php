@@ -55,7 +55,6 @@ class indice extends clsCadastro
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
-	var $ref_cod_escola;
 	var $ref_cod_instituicao;
 
 	function Inicializar()
@@ -95,7 +94,6 @@ class indice extends clsCadastro
 		$this->campoOculto( "cod_transferencia_tipo", $this->cod_transferencia_tipo );
 
 		$obrigatorio = true;
-		$get_escola = true;
 		include("include/pmieducar/educar_campo_lista.php");
 
 		// text
@@ -109,7 +107,7 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-		$obj = new clsPmieducarTransferenciaTipo( null,null,$this->pessoa_logada,$this->nm_tipo,$this->desc_tipo,null,null,1,$this->ref_cod_escola );
+		$obj = new clsPmieducarTransferenciaTipo( null,null,$this->pessoa_logada,$this->nm_tipo,$this->desc_tipo,null,null,1,$this->ref_cod_instituicao );
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
@@ -120,7 +118,7 @@ class indice extends clsCadastro
 		}
 
 		$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-		echo "<!--\nErro ao cadastrar clsPmieducarTransferenciaTipo\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_escola ) && is_string( $this->nm_tipo )\n-->";
+		echo "<!--\nErro ao cadastrar clsPmieducarTransferenciaTipo\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_instituicao ) && is_string( $this->nm_tipo )\n-->";
 		return false;
 	}
 
@@ -130,7 +128,7 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-		$obj = new clsPmieducarTransferenciaTipo( $this->cod_transferencia_tipo,$this->pessoa_logada,null,$this->nm_tipo,$this->desc_tipo,null,null,1,$this->ref_cod_escola );
+		$obj = new clsPmieducarTransferenciaTipo( $this->cod_transferencia_tipo,$this->pessoa_logada,null,$this->nm_tipo,$this->desc_tipo,null,null,1,$this->ref_cod_instituicao );
 		$editou = $obj->edita();
 		if( $editou )
 		{

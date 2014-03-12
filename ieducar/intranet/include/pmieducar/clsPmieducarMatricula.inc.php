@@ -811,7 +811,7 @@ class clsPmieducarMatricula
   function detalhe()
   {
     if (is_numeric($this->cod_matricula)) {
-      $sql = "SELECT {$this->_todos_campos}, p.nome,(p.nome) as nome_upper FROM {$this->_tabela} m, {$this->_schema}aluno a, cadastro.pessoa p WHERE m.cod_matricula = '{$this->cod_matricula}' AND a.cod_aluno = m.ref_cod_aluno AND p.idpes = a.ref_idpes ";
+      $sql = "SELECT {$this->_todos_campos}, p.nome,(p.nome) as nome_upper, e.ref_cod_instituicao FROM {$this->_tabela} m, {$this->_schema}aluno a, cadastro.pessoa p, {$this->_schema}escola e WHERE m.cod_matricula = '{$this->cod_matricula}' AND a.cod_aluno = m.ref_cod_aluno AND p.idpes = a.ref_idpes AND m.ref_ref_cod_escola = e.cod_escola ";
       if ($this->ativo) {
         $sql .= " AND m.ativo = {$this->ativo}";
       }

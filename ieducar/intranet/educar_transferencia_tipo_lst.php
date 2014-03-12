@@ -76,7 +76,6 @@ class indice extends clsListagem
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
-	var $ref_cod_escola;
 	var $ref_cod_instituicao;
 
 	function Gerar()
@@ -100,18 +99,12 @@ class indice extends clsListagem
 		$nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
 		if ($nivel_usuario == 1)
 		{
-			$lista_busca[] = "Escola";
 			$lista_busca[] = "Institui&ccedil;&atilde;o";
-		}
-		else if ($nivel_usuario == 2)
-		{
-			$lista_busca[] = "Escola";
 		}
 
 		$this->addCabecalhos($lista_busca);
 
 		// Filtros de Foreign Keys
-		$get_escola = true;
 		include("include/pmieducar/educar_campo_lista.php");
 
 		// outros Filtros
@@ -136,7 +129,6 @@ class indice extends clsListagem
 			null,
 			null,
 			1,
-			$this->ref_cod_escola,
 			$this->ref_cod_instituicao
 		);
 
@@ -158,17 +150,6 @@ class indice extends clsListagem
 					$registro["ref_cod_instituicao"] = "Erro na gera&ccedil;&atilde;o";
 					echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarInstituicao\n-->";
 				}
-				if( class_exists( "clsPmieducarEscola" ) )
-				{
-					$obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
-					$det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-					$registro["ref_cod_escola"] = $det_ref_cod_escola["nome"];
-				}
-				else
-				{
-					$registro["ref_cod_escola"] = "Erro na gera&ccedil;&atilde;o";
-					echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
-				}
 
 				$lista_busca = array(
 					"<a href=\"educar_transferencia_tipo_det.php?cod_transferencia_tipo={$registro["cod_transferencia_tipo"]}\">{$registro["nm_tipo"]}</a>"
@@ -176,13 +157,8 @@ class indice extends clsListagem
 
 				if ($nivel_usuario == 1)
 				{
-					$lista_busca[] = "<a href=\"educar_transferencia_tipo_det.php?cod_transferencia_tipo={$registro["cod_transferencia_tipo"]}\">{$registro["ref_cod_escola"]}</a>";
 					$lista_busca[] = "<a href=\"educar_transferencia_tipo_det.php?cod_transferencia_tipo={$registro["cod_transferencia_tipo"]}\">{$registro["ref_cod_instituicao"]}</a>";
-				}
-				else if ($nivel_usuario == 2)
-				{
-					$lista_busca[] = "<a href=\"educar_transferencia_tipo_det.php?cod_transferencia_tipo={$registro["cod_transferencia_tipo"]}\">{$registro["ref_cod_escola"]}</a>";
-				}
+				}				
 				$this->addLinhas($lista_busca);
 			}
 		}
