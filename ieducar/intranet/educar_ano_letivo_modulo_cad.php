@@ -243,8 +243,8 @@ class indice extends clsCadastro
       if ($cadastrou) {
 
         foreach ($this->ref_cod_modulo as $key => $campo) {
-          $data_inicio[$key] = dataToBanco($data_inicio[$key]);
-          $data_fim[$key]    = dataToBanco($data_fim[$key]);
+          $this->data_inicio[$key] = dataToBanco($this->data_inicio[$key]);
+          $this->data_fim[$key]    = dataToBanco($this->data_fim[$key]);
 
           $obj = new clsPmieducarAnoLetivoModulo($this->ref_ano,
             $this->ref_ref_cod_escola, $key+1,
@@ -292,8 +292,8 @@ class indice extends clsCadastro
       if ($excluiu) {
 
         foreach ($this->ref_cod_modulo as $key => $campo) {
-          $data_inicio[$key] = dataToBanco($data_inicio[$key]);
-          $data_fim[$key]    = dataToBanco($data_fim[$key]);
+          $this->data_inicio[$key] = dataToBanco($this->data_inicio[$key]);
+          $this->data_fim[$key]    = dataToBanco($this->data_fim[$key]);
 
           $obj = new clsPmieducarAnoLetivoModulo($this->ref_ano,
             $this->ref_ref_cod_escola, $key+1,
