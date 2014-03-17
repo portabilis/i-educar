@@ -150,7 +150,7 @@ class indice extends clsCadastro
     // text
     $this->campoTexto('nome', 'Nome', $this->nome, 30, 60, TRUE);
 
-    $this->campoNumero('cod_ibge', 'C&oacute;digo INEP', $this->cod_ibge);
+    $this->campoNumero('cod_ibge', 'C&oacute;digo INEP', $this->cod_ibge, 6, 6);
   }
 
   function Novo()
