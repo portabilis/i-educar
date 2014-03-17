@@ -20,11 +20,11 @@
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
  * @license   http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package   Ied_Public
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     ?
  * @version   $Id$
  */
 
@@ -34,36 +34,35 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
 require_once 'include/public/clsPublicDistrito.inc.php';
 
-require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'CoreExt/View/Helper/UrlHelper.php';
 
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Public
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     ?
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' Bairro');
-    $this->processoAp = 756;
+    $this->SetTitulo($this->_instituicao . ' Distrito');
+    $this->processoAp = 759;
   }
 }
 
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Public
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     ?
  * @version   @@package_version@@
  */
 class indice extends clsListagem
@@ -95,7 +94,7 @@ class indice extends clsListagem
     $this->__pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->__titulo = 'Bairro - Listagem';
+    $this->__titulo = 'Distrito - Listagem';
 
     // Passa todos os valores obtidos no GET para atributos do objeto
     foreach ($_GET as $var => $val) {
@@ -107,7 +106,6 @@ class indice extends clsListagem
 
     $this->addCabecalhos(array(
       'Nome',
-      'Zona Localização',
       'Município',
       'Estado',
       'Pais'
@@ -180,31 +178,6 @@ class indice extends clsListagem
     $this->campoLista('idmun', 'Município', $opcoes, $this->idmun, '', FALSE,
       '', '', FALSE, FALSE);
 
-    if (class_exists('clsPublicDistrito')) {
-      if ($this->idmun) {
-        $objTemp = new clsPublicDistrito();
-        $objTemp->setOrderby(' nome ASC ');
-
-        $lista = $objTemp->lista($this->idmun);
-        
-        if (is_array($lista) && count($lista)) {
-          $opcoesTemp = array('' => 'Selecione');
-          foreach ($lista as $registro) {
-            $opcoesTemp[$registro['iddis']] = $registro['nome'];
-          }
-        }else{
-          $opcoesTemp = array('' => 'Não existem distritos para este município.');
-        }
-      }
-    }
-    else {
-      echo "<!--\nErro\nClasse clsPublicDistrito nao encontrada\n-->";
-      $opcoesTemp = array('' => 'Erro na geração');
-    }
-
-    $this->campoLista('iddis', 'Distrito', $opcoesTemp, $this->iddis, '', FALSE,
-      '', '', FALSE, FALSE);
-
     // Outros filtros
     $this->campoTexto('nome', 'Nome', $this->nome, 30, 255, FALSE);
 
@@ -212,12 +185,12 @@ class indice extends clsListagem
     $this->__limite = 20;
     $this->__offset = ($_GET['pagina_' . $this->nome]) ?
       ($_GET['pagina_' . $this->nome] * $this->__limite - $this->__limite) : 0;
+    
+    $obj_distrito = new clsPublicDistrito();
+    $obj_distrito->setOrderby('nome ASC');
+    $obj_distrito->setLimite($this->__limite, $this->__offset);
 
-    $obj_bairro = new clsPublicBairro();
-    $obj_bairro->setOrderby('nome ASC');
-    $obj_bairro->setLimite($this->__limite, $this->__offset);
-
-    $lista = $obj_bairro->lista(
+    $lista = $obj_distrito->lista(
       $this->idmun,
       NULL,
       $this->nome,
@@ -232,40 +205,33 @@ class indice extends clsListagem
       NULL,
       NULL,
       $this->idpais,
-      $this->sigla_uf,
-      NULL,
-      NULL,
-      $this->iddis
+      $this->sigla_uf
     );
 
-    $total = $obj_bairro->_total;
-
-    // Zona Localização.
-    $zona = App_Model_ZonaLocalizacao::getInstance();
+    $total = $obj_distrito->_total;
 
     // UrlHelper.
     $url = CoreExt_View_Helper_UrlHelper::getInstance();
-    $options = array('query' => array('idbai' => NULL));
+    $options = array('query' => array('iddis' => NULL));
 
     // Monta a lista.
     if (is_array($lista) && count($lista)) {
       foreach ($lista as $registro) {
-        $zl = $zona->getValue($registro['zona_localizacao']);
-        $options['query']['idbai'] = $registro['idbai'];
+
+        $options['query']['iddis'] = $registro['iddis'];
 
         $this->addLinhas(array(
-          $url->l($registro['nome'], 'public_bairro_det.php', $options),
-          $url->l($zl, 'public_bairro_det.php', $options),
-          $url->l($registro['nm_municipio'], 'public_bairro_det.php', $options),
-          $url->l($registro['nm_estado'], 'public_bairro_det.php', $options),
-          $url->l($registro['nm_pais'], 'public_bairro_det.php', $options)
+          $url->l($registro['nome'], 'public_distrito_det.php', $options),
+          $url->l($registro['nm_municipio'], 'public_distrito_det.php', $options),
+          $url->l($registro['nm_estado'], 'public_distrito_det.php', $options),
+          $url->l($registro['nm_pais'], 'public_distrito_det.php', $options)
         ));
       }
     }
 
-    $this->addPaginador2('public_bairro_lst.php', $total, $_GET, $this->nome, $this->__limite);
+    $this->addPaginador2('public_distrito_lst.php', $total, $_GET, $this->nome, $this->__limite);
 
-    $this->acao      = 'go("public_bairro_cad.php")';
+    $this->acao      = 'go("public_distrito_cad.php")';
     $this->nome_acao = 'Novo';
 
     $this->largura = '100%';
@@ -353,43 +319,6 @@ function getMunicipio(xml_municipio)
   }
   else {
     campoMunicipio.options[0].text = 'O estado não possui nenhum município';
-  }
-}
-
-document.getElementById('idmun').onchange = function()
-{
-  var campoMunicipio = document.getElementById('idmun').value;
-
-  var campoDistrito      = document.getElementById('iddis');
-  campoDistrito.length   = 1;
-  campoDistrito.disabled = true;
-
-  campoDistrito.options[0].text = 'Carregando distritos...';
-
-  var xml_distrito = new ajax(getDistrito);
-  xml_distrito.envia('public_distrito_xml.php?idmun=' + campoMunicipio);
-}
-
-function getDistrito(xml_distrito)
-{
-  var campoDistrito = document.getElementById('iddis');
-  var DOM_array      = xml_distrito.getElementsByTagName( "distrito" );
-  console.log(DOM_array);
-
-  if (DOM_array.length) {
-    campoDistrito.length          = 1;
-    campoDistrito.options[0].text = 'Selecione um distrito';
-    campoDistrito.disabled        = false;
-
-    for (var i = 0; i < DOM_array.length; i++) {
-      campoDistrito.options[campoDistrito.options.length] = new Option(
-        DOM_array[i].firstChild.data, DOM_array[i].getAttribute('iddis'),
-        false, false
-      );
-    }
-  }
-  else {
-    campoDistrito.options[0].text = 'O município não possui nenhum distrito';
   }
 }
 </script>

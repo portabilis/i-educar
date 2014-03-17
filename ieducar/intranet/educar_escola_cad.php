@@ -102,6 +102,10 @@ class indice extends clsCadastro
 	var $numero;
 	var $andar;
 
+	var $situacao_funcionamento;
+	var $dependencia_administrativa;
+	var $regulamentacao;
+
 	var $incluir_curso;
 	var $excluir_curso;
 
@@ -887,6 +891,30 @@ if(!$this->isEnderecoExterno){
 
   		$this->campoCheck("bloquear_lancamento_diario_anos_letivos_encerrados", "Bloquear lançamento no diário para anos letivos encerrados", $this->bloquear_lancamento_diario_anos_letivos_encerrados);
 
+
+  		$resources = array(1 => 'Em atividade',
+	                       2 => 'Paralisada',
+	                       3 => 'Extinta');
+
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Situação de funcionamento'), 'resources' => $resources, 'value' => $this->situacao_funcionamento);
+	    $this->inputsHelper()->select('situacao_funcionamento', $options);	   	   
+
+  		$resources = array(1 => 'Federal',
+	                       2 => 'Estadual',
+	                       3 => 'Municipal',
+	                       4 => 'Privada');
+
+  		$options = array('label' => Portabilis_String_Utils::toLatin1('Dependência administrativa'), 'resources' => $resources, 'value' => $this->dependencia_administrativa);
+	    $this->inputsHelper()->select('dependencia_administrativa', $options);
+
+  		$resources = array(0 => Portabilis_String_Utils::toLatin1('Não'),
+		                   1 => 'Sim',
+		                   2 => Portabilis_String_Utils::toLatin1('Em tramitação'));
+
+  		$options = array('label' => Portabilis_String_Utils::toLatin1('Regulamentação/ Autorização no conselho ou órgão público de educação'), 'resources' => $resources, 'value' => $this->regulamentacao);
+	    $this->inputsHelper()->select('regulamentacao', $options);
+
+
 			if ( $_POST["escola_curso"] )
 				$this->escola_curso = unserialize( urldecode( $_POST["escola_curso"] ) );
 			if( is_numeric( $this->cod_escola ) && !$_POST )
@@ -1010,6 +1038,9 @@ if(!$this->isEnderecoExterno){
 				if ($cadastrou)
 				{
 					$obj = new clsPmieducarEscola( null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, NULL, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
+					$obj->situacao_funcionamento = $this->situacao_funcionamento;
+					$obj->dependencia_administrativa = $this->dependencia_administrativa;
+					$obj->regulamentacao = $this->regulamentacao;
 					$cadastrou1 = $obj->cadastra();
 
 					if( $cadastrou1 )
@@ -1105,6 +1136,9 @@ if(!$this->isEnderecoExterno){
 		else if( $this->sem_cnpj )
 		{
 			$obj = new clsPmieducarEscola( null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, null, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados );
+			$obj->dependencia_administrativa = $this->dependencia_administrativa;
+			$obj->regulamentacao = $this->regulamentacao;
+			$obj->situacao_funcionamento = $this->situacao_funcionamento;
 			$cadastrou = $obj->cadastra();
 
 
@@ -1171,12 +1205,18 @@ if(!$this->isEnderecoExterno){
 		if ($this->cod_escola)
 		{
 			$obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
+			$obj->dependencia_administrativa = $this->dependencia_administrativa;
+			$obj->regulamentacao = $this->regulamentacao;
+			$obj->situacao_funcionamento = $this->situacao_funcionamento;
 			$editou = $obj->edita();
 
 		}
 		else
 		{
 			$obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
+			$obj->situacao_funcionamento = $this->situacao_funcionamento;
+			$obj->dependencia_administrativa = $this->dependencia_administrativa;
+			$obj->regulamentacao = $this->regulamentacao;
 			$editou = $obj->cadastra();
 			$this->cod_escola = $editou;
 

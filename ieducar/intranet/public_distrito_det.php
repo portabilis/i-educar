@@ -20,11 +20,11 @@
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
  * @license   http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package   Ied_Public
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     ?
  * @version   $Id$
  */
 
@@ -32,13 +32,12 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
-
-require_once 'App/Model/ZonaLocalizacao.php';
+require_once 'include/public/clsPublicDistrito.inc.php';
 
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Public
@@ -49,15 +48,15 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' Bairro');
-    $this->processoAp = 756;
+    $this->SetTitulo($this->_instituicao . ' Distrito');
+    $this->processoAp = 759;
   }
 }
 
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Public
@@ -70,7 +69,7 @@ class indice extends clsDetalhe
 
   var $idmun;
   var $geom;
-  var $idbai;
+  var $iddis;
   var $nome;
   var $idpes_rev;
   var $data_rev;
@@ -87,34 +86,26 @@ class indice extends clsDetalhe
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->titulo = 'Bairro - Detalhe';
+    $this->titulo = 'Distrito - Detalhe';
     $this->addBanner('imagens/nvp_top_intranet.jpg',
       'imagens/nvp_vert_intranet.jpg', 'Intranet');
 
-    $this->idbai = $_GET['idbai'];
+    $this->iddis = $_GET['iddis'];
 
-    $tmp_obj = new clsPublicBairro();
-    $lst_bairro = $tmp_obj->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->idbai);
+    $tmp_obj = new clsPublicDistrito();
+    $lst_distrito = $tmp_obj->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->iddis);
 
-    if (! $lst_bairro) {
-      header('Location: public_bairro_lst.php');
+    if (! $lst_distrito) {
+      header('Location: public_distrito_lst.php');
       die();
     }
     else {
-      $registro = $lst_bairro[0];
+      $registro = $lst_distrito[0];
     }
 
     if ($registro['nome']) {
       $this->addDetalhe(array('Nome', $registro['nome']));
-    }
-
-    $zona = App_Model_ZonaLocalizacao::getInstance();
-    $zona = $zona->getValue($registro['zona_localizacao']);
-    $this->addDetalhe(array('Zona Localização', $zona));
-
-    if ($registro['nm_distrito']) {
-      $this->addDetalhe(array('Distrito', $registro['nm_distrito']));
     }
 
     if ($registro['nm_municipio']) {
@@ -129,10 +120,14 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Pais', $registro['nm_pais']));
     }
 
-    $this->url_novo   = 'public_bairro_cad.php';
-    $this->url_editar = 'public_bairro_cad.php?idbai=' . $registro['idbai'];
+    if ($registro['cod_ibge']) {
+      $this->addDetalhe(array('C&oacute;digo INEP', $registro['cod_ibge']));
+    }
 
-    $this->url_cancelar = 'public_bairro_lst.php';
+    $this->url_novo   = 'public_distrito_cad.php';
+    $this->url_editar = 'public_distrito_cad.php?iddis=' . $registro['iddis'];
+
+    $this->url_cancelar = 'public_distrito_lst.php';
     $this->largura      = '100%';
   }
 }

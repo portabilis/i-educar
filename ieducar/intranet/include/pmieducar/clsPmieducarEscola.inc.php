@@ -57,6 +57,10 @@ class clsPmieducarEscola
   var $data_exclusao;
   var $ativo;
 
+  var $situacao_funcionamento;
+  var $dependencia_administrativa;
+  var $regulamentacao;
+
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
    * @var int
@@ -126,7 +130,7 @@ class clsPmieducarEscola
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'escola';
 
-    $this->_campos_lista = $this->_todos_campos = 'e.cod_escola, e.ref_usuario_cad, e.ref_usuario_exc, e.ref_cod_instituicao, e.ref_cod_escola_localizacao, e.ref_cod_escola_rede_ensino, e.ref_idpes, e.sigla, e.data_cadastro, e.data_exclusao, e.ativo, e.bloquear_lancamento_diario_anos_letivos_encerrados';
+    $this->_campos_lista = $this->_todos_campos = 'e.cod_escola, e.ref_usuario_cad, e.ref_usuario_exc, e.ref_cod_instituicao, e.ref_cod_escola_localizacao, e.ref_cod_escola_rede_ensino, e.ref_idpes, e.sigla, e.data_cadastro, e.data_exclusao, e.ativo, e.bloquear_lancamento_diario_anos_letivos_encerrados, e.situacao_funcionamento, e.dependencia_administrativa, e.regulamentacao ';
 
     if (is_numeric($ref_usuario_cad)) {
       if (class_exists("clsPmieducarUsuario")) {
@@ -342,6 +346,24 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
+      if (is_numeric($this->situacao_funcionamento)) {
+        $campos .= "{$gruda}situacao_funcionamento";
+        $valores .= "{$gruda}'{$this->situacao_funcionamento}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_administrativa)) {
+        $campos .= "{$gruda}dependencia_administrativa";
+        $valores .= "{$gruda}'{$this->dependencia_administrativa}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->regulamentacao)) {
+        $campos .= "{$gruda}regulamentacao";
+        $valores .= "{$gruda}'{$this->regulamentacao}'";
+        $gruda = ", ";
+      }
+
       $campos .= "{$gruda}data_cadastro";
       $valores .= "{$gruda}NOW()";
       $gruda = ", ";
@@ -421,6 +443,21 @@ class clsPmieducarEscola
 
       if (is_numeric($this->bloquear_lancamento_diario_anos_letivos_encerrados)) {
         $set .= "{$gruda}bloquear_lancamento_diario_anos_letivos_encerrados = '{$this->bloquear_lancamento_diario_anos_letivos_encerrados}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->situacao_funcionamento)) {
+        $set .= "{$gruda}situacao_funcionamento = '{$this->situacao_funcionamento}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_administrativa)) {
+        $set .= "{$gruda}dependencia_administrativa = '{$this->dependencia_administrativa}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->regulamentacao)) {
+        $set .= "{$gruda}regulamentacao = '{$this->regulamentacao}'";
         $gruda = ", ";
       }
 

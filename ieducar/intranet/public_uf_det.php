@@ -101,6 +101,10 @@ class indice extends clsDetalhe
 		{
 			$this->addDetalhe( array( "Pais", "{$registro["idpais"]}") );
 		}
+		if( $registro["cod_ibge"] )
+		{
+			$this->addDetalhe( array( "C&oacute;digo INEP", "{$registro["cod_ibge"]}") );
+		}
 
 
 		$this->url_novo = "public_uf_cad.php";
