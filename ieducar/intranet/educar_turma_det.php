@@ -34,6 +34,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
 require_once 'App/Model/IedFinder.php';
+require_once 'Portabilis/View/Helper/Application.php';
 
 /**
  * clsIndexBase class.
@@ -427,6 +428,19 @@ class indice extends clsDetalhe
 
     $this->url_cancelar = 'educar_turma_lst.php';
     $this->largura      = '100%';
+
+    $this->array_botao[]            = 'Reclassificar alunos alfabeticamente';
+    $this->array_botao_url_script[] = "if(confirm(\"Deseja realmente reclassificar os alunos alfabeticamente?\\nAVISO: NAO SER\u00c1 POSSIVEL RECUPERAR O SEQUENCIAL\"))reclassifica_matriculas({$registro['cod_turma']})";
+
+    Portabilis_View_Helper_Application::loadJQueryLib($this);
+
+    $scripts = array(
+      '/modules/Portabilis/Assets/Javascripts/Utils.js',
+      '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
+      '/modules/Cadastro/Assets/Javascripts/TurmaDet.js'
+    );
+
+    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
   }
 }
 
