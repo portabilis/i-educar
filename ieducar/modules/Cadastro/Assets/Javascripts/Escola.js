@@ -74,3 +74,95 @@ $j(document.formcadastro).removeAttr('onsubmit');
 
 // bind events
 $submitButton.click(submitForm);
+
+
+//abas
+
+$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="escolaTab"> <span class="tabText">Dados gerais</span></div></li><li><div id="tab2" class="escolaTab"> <span class="tabText">Infraestrutura</span></div></li><li><div id="tab3" class="escolaTab"> <span class="tabText">Deped\u00eancias</span></div></li></ul></div>');
+$j('td .formdktd b').remove();
+$j('#tab1').addClass('escolaTab-active').removeClass('escolaTab');
+
+// Atribui um id a linha, para identificar até onde/a partir de onde esconder os campos
+$j('#condicao').closest('tr').attr('id','tcondicao');
+$j('#dependencia_sala_diretoria').closest('tr').attr('id','tdependencia_sala_diretoria');
+
+// Adiciona um ID à linha que termina o formulário para parar de esconder os campos
+$j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
+
+// Pega o número dessa linha
+linha_inicial_infra = $j('#tcondicao').index()-1;
+linha_inicial_dependencia = $j('#tdependencia_sala_diretoria').index()-1;
+
+// hide nos campos das outras abas (deixando só os campos da primeira aba)
+$j('.tablecadastro >tbody  > tr').each(function(index, row) {
+  if (index>=linha_inicial_infra){
+    if (row.id!='stop')
+      row.hide();    
+    else{
+      return false;
+    }
+  }
+});
+
+$j(document).ready(function() {
+
+  // on click das abas
+
+  // DADOS GERAIS
+  $j('#tab1').click( 
+    function(){
+
+      $j('.escolaTab-active').toggleClass('escolaTab-active escolaTab');
+      $j('#tab1').toggleClass('escolaTab escolaTab-active')
+      $j('.tablecadastro >tbody  > tr').each(function(index, row) {
+        if (index>=linha_inicial_infra){
+          if (row.id!='stop')
+            row.hide();    
+          else
+            return false;
+        }else{
+          row.show();
+        }
+      });        
+    }
+  );  
+
+  // INFRA
+  $j('#tab2').click( 
+    function(){
+      $j('.escolaTab-active').toggleClass('escolaTab-active escolaTab');
+      $j('#tab2').toggleClass('escolaTab escolaTab-active')
+      $j('.tablecadastro >tbody  > tr').each(function(index, row) {
+        if (row.id!='stop'){
+          if (index>=linha_inicial_infra && index < linha_inicial_dependencia){
+            row.show();
+          }else if (index>0){
+            row.hide();
+          }
+        }else
+          return false;
+      });
+    });
+
+  // INFRA
+  $j('#tab3').click( 
+    function(){
+      $j('.escolaTab-active').toggleClass('escolaTab-active escolaTab');
+      $j('#tab3').toggleClass('escolaTab escolaTab-active')
+      $j('.tablecadastro >tbody  > tr').each(function(index, row) {
+        if (row.id!='stop'){
+          if (index>=linha_inicial_dependencia){
+            row.show();
+          }else if (index>0){
+            row.hide();
+          }
+        }else
+          return false;
+      });
+    });
+
+  
+
+  // fix checkboxs
+  $j('input:checked').val('on');
+});

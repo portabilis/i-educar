@@ -105,6 +105,59 @@ class indice extends clsCadastro
 	var $situacao_funcionamento;
 	var $dependencia_administrativa;
 	var $regulamentacao;
+	var $acesso;
+	var $gestor_id;
+	var $cargo_gestor;	
+	var $condicao;	
+	var $decreto_criacao;	
+	var $area_terreno_total;	
+	var $area_construida;	
+	var $area_disponivel;	
+	var $num_pavimentos;	
+	var $tipo_piso;	
+	var $medidor_energia;	
+	var $agua_consumida;	
+	var $agua_rede_publica;	
+	var $agua_poco_artesiano;	
+	var $agua_cacimba_cisterna_poco;	
+	var $agua_fonte_rio;	
+	var $agua_inexistente;	
+	var $energia_rede_publica;	
+	var $energia_gerador;	
+	var $energia_outros;	
+	var $energia_inexistente;	
+	var $esgoto_rede_publica;	
+	var $esgoto_fossa;	
+	var $esgoto_inexistente;	
+	var $lixo_coleta_periodica;	
+	var $lixo_queima;	
+	var $lixo_joga_outra_area;	
+	var $lixo_recicla;	
+	var $lixo_enterra;	
+	var $lixo_outros;	
+	var $dependencia_sala_diretoria;
+    var $dependencia_sala_professores;
+    var $dependencia_sala_secretaria;
+    var $dependencia_laboratorio_informatica;
+    var $dependencia_laboratorio_ciencias;
+    var $dependencia_sala_aee;
+    var $dependencia_quadra_coberta;
+    var $dependencia_quadra_descoberta;
+    var $dependencia_cozinha;
+    var $dependencia_biblioteca;
+    var $dependencia_sala_leitura;
+    var $dependencia_parque_infantil;
+    var $dependencia_bercario;
+    var $dependencia_banheiro_fora;
+    var $dependencia_banheiro_dentro;
+    var $dependencia_banheiro_infantil;
+    var $dependencia_banheiro_deficiente;
+    var $dependencia_banheiro_chuveiro;
+    var $dependencia_refeitorio;
+    var $dependencia_dispensa;
+    var $dependencia_aumoxarifado;
+    var $dependencia_auditorio;
+    var $dependencia_patio_coberto;
 
 	var $incluir_curso;
 	var $excluir_curso;
@@ -116,7 +169,7 @@ class indice extends clsCadastro
 
 	function Inicializar()
 	{
-		$retorno = "";
+		$retorno = "Novo";
 		@session_start();
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
@@ -186,7 +239,7 @@ class indice extends clsCadastro
 			else
 			{
 //				die("novo");
-				$retorno = "Novo";
+				$retorno = "Editar";
 			}
 		}// cadastro Editar
 		if (is_numeric( $this->cod_escola ) && !$_POST["passou"])
@@ -379,6 +432,9 @@ class indice extends clsCadastro
 
 		Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
 
+	    $styles = array ('/modules/Cadastro/Assets/Stylesheets/Escola.css');
+
+	    Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
 		$obj_permissoes = new clsPermissoes();
 //		echo "<pre>";print_r($_POST);die;
@@ -772,7 +828,7 @@ class indice extends clsCadastro
 					$this->campoOculto( "logradouro_", $this->logradouro_ );
 					$this->campoOculto( "idlog", $this->idlog );
 					$this->campoOculto( "idtlog_", $this->idtlog_ );
-$disabled = $this->isEnderecoExterno ? false : true ;
+					$disabled = $this->isEnderecoExterno ? false : true ;
 					if($this->idlog && $this->idbai && $this->cep && $this->ref_idpes)
 					{
 						$this->campoOculto( "cep_", $this->cep );
@@ -911,8 +967,24 @@ if(!$this->isEnderecoExterno){
 		                   1 => 'Sim',
 		                   2 => Portabilis_String_Utils::toLatin1('Em tramitação'));
 
-  		$options = array('label' => Portabilis_String_Utils::toLatin1('Regulamentação/ Autorização no conselho ou órgão público de educação'), 'resources' => $resources, 'value' => $this->regulamentacao);
-	    $this->inputsHelper()->select('regulamentacao', $options);
+  		$options = array('label' => Portabilis_String_Utils::toLatin1('Regulamentação/ Autorização no conselho ou órgão público de educação'), 'resources' => $resources, 'value' => $this->regulamentacao, 'size' => 70,);
+	    $this->inputsHelper()->select('regulamentacao', $options);  		
+
+	    $hiddenInputOptions = array('options' => array('value' => $this->gestor_id));
+	    $helperOptions      = array('objectName' => 'gestor', 'hiddenInputOptions' => $hiddenInputOptions);
+
+	    $options            = array('label'      => 'Gestor Escolar',
+	                                'size'       => 50,
+	                                'required'   => false);
+
+	    $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
+
+
+	    $resources = array( 1    => 'Diretor',
+		                    2    => 'Outro cargo');
+
+  		$options = array('label' => Portabilis_String_Utils::toLatin1('Cargo do Gestor Escolar'), 'resources' => $resources, 'value' => $this->cargo_gestor, 'required' => false, 'size' => 50,);
+	    $this->inputsHelper()->select('cargo_gestor', $options);
 
 
 			if ( $_POST["escola_curso"] )
@@ -1009,6 +1081,187 @@ if(!$this->isEnderecoExterno){
 
 			$this->campoOculto( "incluir_curso", "" );
 			$this->campoQuebra();
+
+			$resources = array(0 => 'Alugado',
+			                   1 => Portabilis_String_Utils::toLatin1('Próprio'),
+			                   2 => 'Cedido');
+
+	  		$options = array('label' => Portabilis_String_Utils::toLatin1('Condição'), 'resources' => $resources, 'value' => $this->condicao, 'size' => 70, 'required' => false);
+		    $this->inputsHelper()->select('condicao', $options);
+
+			$resources = array( null => 'Selecione',
+			                    1    => Portabilis_String_Utils::toLatin1('Difícil'),
+			                    2    => 'Dificílimo');
+
+	  		$options = array('label' => Portabilis_String_Utils::toLatin1('Acesso à escola'), 'resources' => $resources, 'value' => $this->acesso, 'required' => false, 'size' => 50,);
+		    $this->inputsHelper()->select('acesso', $options);
+
+	  		$options = array('label' => Portabilis_String_Utils::toLatin1('Decreto de criação de unidade'), 'resources' => $resources, 'value' => $this->decreto_criacao, 'required' => false, 'size' => 50,);
+		    $this->inputsHelper()->text('decreto_criacao', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Área do terreno total'), 'resources' => $resources, 'value' => $this->area_terreno_total, 'required' => false, 'size' => 10, 'placeholder' => '');
+		    $this->inputsHelper()->text('area_terreno_total', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Área construída'), 'resources' => $resources, 'value' => $this->area_construida, 'required' => false, 'size' => 10, 'placeholder' => '');
+		    $this->inputsHelper()->text('area_construida', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Área disponível'), 'resources' => $resources, 'value' => $this->area_disponivel, 'required' => false, 'size' => 10, 'placeholder' => '');
+		    $this->inputsHelper()->text('area_disponivel', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Número de pavimentos'), 'resources' => $resources, 'value' => $this->num_pavimentos, 'required' => false, 'size' => 5, 'placeholder' => '');
+		    $this->inputsHelper()->integer('num_pavimentos', $options);
+
+		    $resources = array( null => 'Selecione',
+			                    1    => Portabilis_String_Utils::toLatin1('Cerâmica'),
+			                    2    => 'Acimentado',
+			                    3    => 'Madeira',
+			                    4    => 'Outros',);
+
+	  		$options = array('label' => 'Tipo de piso', 'resources' => $resources, 'value' => $this->tipo_piso, 'required' => false, 'size' => 70,);
+		    $this->inputsHelper()->select('tipo_piso', $options);
+
+		    $resources = array( null => 'Selecione',
+			                    1    => Portabilis_String_Utils::toLatin1('Monofásico'),
+			                    2    => Portabilis_String_Utils::toLatin1('Bifásico'),
+			                    3    => Portabilis_String_Utils::toLatin1('Trifásico'),
+			                    4   => Portabilis_String_Utils::toLatin1('Não'),);
+
+	  		$options = array('label' => 'Medidor de energia', 'resources' => $resources, 'value' => $this->medidor_energia, 'required' => false, 'size' => 70,);
+		    $this->inputsHelper()->select('medidor_energia', $options);
+
+		    $resources = array( null => 'Selecione',
+			                    1    => Portabilis_String_Utils::toLatin1('Não filtrada'),
+			                    2    => 'Filtrada',);
+
+	  		$options = array('label' => Portabilis_String_Utils::toLatin1('Água consumida pelos alunos'), 'resources' => $resources, 'value' => $this->agua_consumida, 'required' => false, 'size' => 70,);
+		    $this->inputsHelper()->select('agua_consumida', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de água - Rede pública'), 'value' => $this->agua_rede_publica);
+		    $this->inputsHelper()->checkbox('agua_rede_publica', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de água - Poço artesiano'), 'value' => $this->agua_poco_artesiano);
+		    $this->inputsHelper()->checkbox('agua_poco_artesiano', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de água - Cacimba / cisterna / poço'), 'value' => $this->agua_cacimba_cisterna_poco);
+		    $this->inputsHelper()->checkbox('agua_cacimba_cisterna_poco', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de água - Fonte / rio / igarapé / riacho / corrégo'), 'value' => $this->agua_fonte_rio);
+		    $this->inputsHelper()->checkbox('agua_fonte_rio', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de água - Inexistente'), 'value' => $this->agua_inexistente);
+		    $this->inputsHelper()->checkbox('agua_inexistente', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de energia elétrica - Rede pública'), 'value' => $this->energia_rede_publica);
+		    $this->inputsHelper()->checkbox('energia_rede_publica', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de energia elétrica - Gerador'), 'value' => $this->energia_gerador);
+		    $this->inputsHelper()->checkbox('energia_gerador', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de energia elétrica - Outros'), 'value' => $this->energia_outros);
+		    $this->inputsHelper()->checkbox('energia_outros', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de energia elétrica - Inexistente'), 'value' => $this->energia_inexistente);
+		    $this->inputsHelper()->checkbox('energia_inexistente', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Esgoto sanitário - Rede pública'), 'value' => $this->esgoto_rede_publica);
+		    $this->inputsHelper()->checkbox('esgoto_rede_publica', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Esgoto sanitário - Fossa'), 'value' => $this->esgoto_fossa);
+		    $this->inputsHelper()->checkbox('esgoto_fossa', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Esgoto sanitário - Inexistente'), 'value' => $this->esgoto_inexistente);
+		    $this->inputsHelper()->checkbox('esgoto_inexistente', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Destinação do lixo - Coleta periódica'), 'value' => $this->lixo_coleta_periodica);
+		    $this->inputsHelper()->checkbox('lixo_coleta_periodica', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Destinação do lixo - Queima'), 'value' => $this->lixo_queima);
+		    $this->inputsHelper()->checkbox('lixo_queima', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Destinação do lixo - Joga em outra área'), 'value' => $this->lixo_joga_outra_area);
+		    $this->inputsHelper()->checkbox('lixo_joga_outra_area', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Destinação do lixo - Recicla'), 'value' => $this->lixo_recicla);
+		    $this->inputsHelper()->checkbox('lixo_recicla', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Destinação do lixo - Enterra'), 'value' => $this->lixo_enterra);
+		    $this->inputsHelper()->checkbox('lixo_enterra', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Destinação do lixo - Outros'), 'value' => $this->lixo_outros);
+		    $this->inputsHelper()->checkbox('lixo_outros', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Sala de diretoria'), 'value' => $this->dependencia_sala_diretoria);
+		    $this->inputsHelper()->checkbox('dependencia_sala_diretoria', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Sala de diretoria'), 'value' => $this->dependencia_sala_diretoria);
+		    $this->inputsHelper()->checkbox('dependencia_sala_diretoria', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Sala de professores'), 'value' => $this->dependencia_sala_professores);
+		    $this->inputsHelper()->checkbox('dependencia_sala_professores', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Sala de secretaria'), 'value' => $this->dependencia_sala_secretaria);
+		    $this->inputsHelper()->checkbox('dependencia_sala_secretaria', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Laboratório de informática'), 'value' => $this->dependencia_laboratorio_informatica);
+		    $this->inputsHelper()->checkbox('dependencia_laboratorio_informatica', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Laboratório de ciências'), 'value' => $this->dependencia_laboratorio_ciencias);
+		    $this->inputsHelper()->checkbox('dependencia_laboratorio_ciencias', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Sala de recursos multifuncionais para atendimento educacional especializado - AEE'), 'value' => $this->dependencia_sala_aee);
+		    $this->inputsHelper()->checkbox('dependencia_sala_aee', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Quadra de esportes coberta'), 'value' => $this->dependencia_quadra_coberta);
+		    $this->inputsHelper()->checkbox('dependencia_quadra_coberta', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Quadra de esportes descoberta'), 'value' => $this->dependencia_quadra_descoberta);
+		    $this->inputsHelper()->checkbox('dependencia_quadra_descoberta', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Cozinha'), 'value' => $this->dependencia_cozinha);
+		    $this->inputsHelper()->checkbox('dependencia_cozinha', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Biblioteca'), 'value' => $this->dependencia_biblioteca);
+		    $this->inputsHelper()->checkbox('dependencia_biblioteca', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Sala de leitura'), 'value' => $this->dependencia_sala_leitura);
+		    $this->inputsHelper()->checkbox('dependencia_sala_leitura', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Parque infantil'), 'value' => $this->dependencia_parque_infantil);
+		    $this->inputsHelper()->checkbox('dependencia_parque_infantil', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Berçario'), 'value' => $this->dependencia_bercario);
+		    $this->inputsHelper()->checkbox('dependencia_bercario', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Banheiro fora do prédio'), 'value' => $this->dependencia_banheiro_fora);
+		    $this->inputsHelper()->checkbox('dependencia_banheiro_fora', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Banheiro dentro do prédio'), 'value' => $this->dependencia_banheiro_dentro);
+		    $this->inputsHelper()->checkbox('dependencia_banheiro_dentro', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Banheiro adequado a Educação Infantil'), 'value' => $this->dependencia_banheiro_infantil);
+		    $this->inputsHelper()->checkbox('dependencia_banheiro_infantil', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Banheiro adequado a deficientes'), 'value' => $this->dependencia_banheiro_deficiente);
+		    $this->inputsHelper()->checkbox('dependencia_banheiro_deficiente', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Banheiro com chuveiro'), 'value' => $this->dependencia_banheiro_chuveiro);
+		    $this->inputsHelper()->checkbox('dependencia_banheiro_chuveiro', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Refeitório'), 'value' => $this->dependencia_refeitorio);
+		    $this->inputsHelper()->checkbox('dependencia_refeitorio', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Despensa'), 'value' => $this->dependencia_dispensa);
+		    $this->inputsHelper()->checkbox('dependencia_dispensa', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Aumoxarifado'), 'value' => $this->dependencia_aumoxarifado);
+		    $this->inputsHelper()->checkbox('dependencia_aumoxarifado', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Auditório'), 'value' => $this->dependencia_auditorio);
+		    $this->inputsHelper()->checkbox('dependencia_auditorio', $options);
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Pátio coberto'), 'value' => $this->dependencia_patio_coberto);
+		    $this->inputsHelper()->checkbox('dependencia_patio_coberto', $options);
+
 		}
 	}
 
@@ -1041,6 +1294,59 @@ if(!$this->isEnderecoExterno){
 					$obj->situacao_funcionamento = $this->situacao_funcionamento;
 					$obj->dependencia_administrativa = $this->dependencia_administrativa;
 					$obj->regulamentacao = $this->regulamentacao;
+					$obj->acesso = $this->acesso;
+					$obj->ref_idpes_gestor = $this->gestor_id;
+					$obj->cargo_gestor = $this->cargo_gestor;
+					$obj->condicao = $this->condicao;
+					$obj->decreto_criacao = $this->decreto_criacao;
+					$obj->area_terreno_total = $this->area_terreno_total;
+					$obj->area_construida = $this->area_construida;
+					$obj->area_disponivel = $this->area_disponivel;
+					$obj->num_pavimentos = $this->num_pavimentos;
+					$obj->tipo_piso = $this->tipo_piso;
+					$obj->medidor_energia = $this->medidor_energia;
+					$obj->agua_consumida = $this->agua_consumida == 'on' ? 1 : 0;
+					$obj->agua_rede_publica = $this->agua_rede_publica == 'on' ? 1 : 0;
+					$obj->agua_poco_artesiano = $this->agua_poco_artesiano == 'on' ? 1 : 0;
+					$obj->agua_cacimba_cisterna_poco = $this->agua_cacimba_cisterna_poco == 'on' ? 1 : 0;
+					$obj->agua_fonte_rio = $this->agua_fonte_rio == 'on' ? 1 : 0;
+					$obj->agua_inexistente = $this->agua_inexistente == 'on' ? 1 : 0;
+					$obj->energia_rede_publica = $this->energia_rede_publica == 'on' ? 1 : 0;
+					$obj->energia_gerador = $this->energia_gerador == 'on' ? 1 : 0;
+					$obj->energia_outros = $this->energia_outros == 'on' ? 1 : 0;
+					$obj->energia_inexistente = $this->energia_inexistente == 'on' ? 1 : 0;
+					$obj->esgoto_rede_publica = $this->esgoto_rede_publica == 'on' ? 1 : 0;
+					$obj->esgoto_fossa = $this->esgoto_fossa == 'on' ? 1 : 0;
+					$obj->esgoto_inexistente = $this->esgoto_inexistente == 'on' ? 1 : 0;
+					$obj->lixo_coleta_periodica = $this->lixo_coleta_periodica == 'on' ? 1 : 0;
+					$obj->lixo_queima = $this->lixo_queima == 'on' ? 1 : 0;
+					$obj->lixo_joga_outra_area = $this->lixo_joga_outra_area == 'on' ? 1 : 0;
+					$obj->lixo_recicla = $this->lixo_recicla == 'on' ? 1 : 0;
+					$obj->lixo_enterra = $this->lixo_enterra == 'on' ? 1 : 0;
+					$obj->lixo_outros = $this->lixo_outros == 'on' ? 1 : 0;
+					$obj->dependencia_sala_diretoria = $this->dependencia_sala_diretoria == 'on' ? 1 : 0;
+					$obj->dependencia_sala_professores = $this->dependencia_sala_professores == 'on' ? 1 : 0;
+					$obj->dependencia_sala_secretaria = $this->dependencia_sala_secretaria == 'on' ? 1 : 0;
+					$obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
+					$obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
+					$obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
+					$obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
+					$obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
+					$obj->dependencia_cozinha = $this->dependencia_cozinha == 'on' ? 1 : 0;
+					$obj->dependencia_biblioteca = $this->dependencia_biblioteca == 'on' ? 1 : 0;
+					$obj->dependencia_sala_leitura = $this->dependencia_sala_leitura == 'on' ? 1 : 0;
+					$obj->dependencia_parque_infantil = $this->dependencia_parque_infantil == 'on' ? 1 : 0;
+					$obj->dependencia_bercario = $this->dependencia_bercario == 'on' ? 1 : 0;
+					$obj->dependencia_banheiro_fora = $this->dependencia_banheiro_fora == 'on' ? 1 : 0;
+					$obj->dependencia_banheiro_dentro = $this->dependencia_banheiro_dentro == 'on' ? 1 : 0;
+					$obj->dependencia_banheiro_infantil = $this->dependencia_banheiro_infantil == 'on' ? 1 : 0;
+					$obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
+					$obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
+					$obj->dependencia_refeitorio = $this->dependencia_refeitorio == 'on' ? 1 : 0;
+					$obj->dependencia_dispensa = $this->dependencia_dispensa == 'on' ? 1 : 0;
+					$obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
+					$obj->dependencia_auditorio = $this->dependencia_auditorio == 'on' ? 1 : 0;
+					$obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;					
 					$cadastrou1 = $obj->cadastra();
 
 					if( $cadastrou1 )
@@ -1139,6 +1445,59 @@ if(!$this->isEnderecoExterno){
 			$obj->dependencia_administrativa = $this->dependencia_administrativa;
 			$obj->regulamentacao = $this->regulamentacao;
 			$obj->situacao_funcionamento = $this->situacao_funcionamento;
+			$obj->acesso = $this->acesso;
+			$obj->ref_idpes_gestor = $this->gestor_id;
+			$obj->cargo_gestor = $this->cargo_gestor;
+			$obj->condicao = $this->condicao;
+			$obj->decreto_criacao = $this->decreto_criacao;
+			$obj->area_terreno_total = $this->area_terreno_total;
+			$obj->area_construida = $this->area_construida;
+			$obj->area_disponivel = $this->area_disponivel;
+			$obj->num_pavimentos = $this->num_pavimentos;		
+			$obj->tipo_piso = $this->tipo_piso;
+			$obj->medidor_energia = $this->medidor_energia;
+			$obj->agua_consumida = $this->agua_consumida == 'on' ? 1 : 0;
+			$obj->agua_rede_publica = $this->agua_rede_publica == 'on' ? 1 : 0;
+			$obj->agua_poco_artesiano = $this->agua_poco_artesiano == 'on' ? 1 : 0;
+			$obj->agua_cacimba_cisterna_poco = $this->agua_cacimba_cisterna_poco == 'on' ? 1 : 0;
+			$obj->agua_fonte_rio = $this->agua_fonte_rio == 'on' ? 1 : 0;
+			$obj->agua_inexistente = $this->agua_inexistente == 'on' ? 1 : 0;	
+			$obj->energia_rede_publica = $this->energia_rede_publica == 'on' ? 1 : 0;
+			$obj->energia_gerador = $this->energia_gerador == 'on' ? 1 : 0;
+			$obj->energia_outros = $this->energia_outros == 'on' ? 1 : 0;
+			$obj->energia_inexistente = $this->energia_inexistente == 'on' ? 1 : 0;
+			$obj->esgoto_rede_publica = $this->esgoto_rede_publica == 'on' ? 1 : 0;
+			$obj->esgoto_fossa = $this->esgoto_fossa == 'on' ? 1 : 0;
+			$obj->esgoto_inexistente = $this->esgoto_inexistente == 'on' ? 1 : 0;
+			$obj->lixo_coleta_periodica = $this->lixo_coleta_periodica == 'on' ? 1 : 0;
+			$obj->lixo_queima = $this->lixo_queima == 'on' ? 1 : 0;
+			$obj->lixo_joga_outra_area = $this->lixo_joga_outra_area == 'on' ? 1 : 0;
+			$obj->lixo_recicla = $this->lixo_recicla == 'on' ? 1 : 0;
+			$obj->lixo_enterra = $this->lixo_enterra == 'on' ? 1 : 0;
+			$obj->lixo_outros = $this->lixo_outros == 'on' ? 1 : 0;
+			$obj->dependencia_sala_diretoria = $this->dependencia_sala_diretoria == 'on' ? 1 : 0;
+			$obj->dependencia_sala_professores = $this->dependencia_sala_professores == 'on' ? 1 : 0;
+			$obj->dependencia_sala_secretaria = $this->dependencia_sala_secretaria == 'on' ? 1 : 0;
+			$obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
+			$obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
+			$obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
+			$obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
+			$obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
+			$obj->dependencia_cozinha = $this->dependencia_cozinha == 'on' ? 1 : 0;
+			$obj->dependencia_biblioteca = $this->dependencia_biblioteca == 'on' ? 1 : 0;
+			$obj->dependencia_sala_leitura = $this->dependencia_sala_leitura == 'on' ? 1 : 0;
+			$obj->dependencia_parque_infantil = $this->dependencia_parque_infantil == 'on' ? 1 : 0;
+			$obj->dependencia_bercario = $this->dependencia_bercario == 'on' ? 1 : 0;
+			$obj->dependencia_banheiro_fora = $this->dependencia_banheiro_fora == 'on' ? 1 : 0;
+			$obj->dependencia_banheiro_dentro = $this->dependencia_banheiro_dentro == 'on' ? 1 : 0;
+			$obj->dependencia_banheiro_infantil = $this->dependencia_banheiro_infantil == 'on' ? 1 : 0;
+			$obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
+			$obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
+			$obj->dependencia_refeitorio = $this->dependencia_refeitorio == 'on' ? 1 : 0;
+			$obj->dependencia_dispensa = $this->dependencia_dispensa == 'on' ? 1 : 0;
+			$obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
+			$obj->dependencia_auditorio = $this->dependencia_auditorio == 'on' ? 1 : 0;
+			$obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;
 			$cadastrou = $obj->cadastra();
 
 
@@ -1208,6 +1567,59 @@ if(!$this->isEnderecoExterno){
 			$obj->dependencia_administrativa = $this->dependencia_administrativa;
 			$obj->regulamentacao = $this->regulamentacao;
 			$obj->situacao_funcionamento = $this->situacao_funcionamento;
+			$obj->acesso = $this->acesso;
+			$obj->ref_idpes_gestor = $this->gestor_id;
+			$obj->cargo_gestor = $this->cargo_gestor;
+			$obj->condicao = $this->condicao;
+			$obj->decreto_criacao = $this->decreto_criacao;
+			$obj->area_terreno_total = $this->area_terreno_total;
+			$obj->area_construida = $this->area_construida;
+			$obj->area_disponivel = $this->area_disponivel;
+			$obj->num_pavimentos = $this->num_pavimentos;			
+			$obj->tipo_piso = $this->tipo_piso;
+			$obj->medidor_energia = $this->medidor_energia;
+			$obj->agua_consumida = $this->agua_consumida == 'on' ? 1 : 0;
+			$obj->agua_rede_publica = $this->agua_rede_publica == 'on' ? 1 : 0;
+			$obj->agua_poco_artesiano = $this->agua_poco_artesiano == 'on' ? 1 : 0;
+			$obj->agua_cacimba_cisterna_poco = $this->agua_cacimba_cisterna_poco == 'on' ? 1 : 0;
+			$obj->agua_fonte_rio = $this->agua_fonte_rio == 'on' ? 1 : 0;
+			$obj->agua_inexistente = $this->agua_inexistente == 'on' ? 1 : 0;
+			$obj->energia_rede_publica = $this->energia_rede_publica == 'on' ? 1 : 0;
+			$obj->energia_gerador = $this->energia_gerador == 'on' ? 1 : 0;
+			$obj->energia_outros = $this->energia_outros == 'on' ? 1 : 0;
+			$obj->energia_inexistente = $this->energia_inexistente == 'on' ? 1 : 0;
+			$obj->esgoto_rede_publica = $this->esgoto_rede_publica == 'on' ? 1 : 0;
+			$obj->esgoto_fossa = $this->esgoto_fossa == 'on' ? 1 : 0;
+			$obj->esgoto_inexistente = $this->esgoto_inexistente == 'on' ? 1 : 0;
+			$obj->lixo_coleta_periodica = $this->lixo_coleta_periodica == 'on' ? 1 : 0;
+			$obj->lixo_queima = $this->lixo_queima == 'on' ? 1 : 0;
+			$obj->lixo_joga_outra_area = $this->lixo_joga_outra_area == 'on' ? 1 : 0;
+			$obj->lixo_recicla = $this->lixo_recicla == 'on' ? 1 : 0;
+			$obj->lixo_enterra = $this->lixo_enterra == 'on' ? 1 : 0;
+			$obj->lixo_outros = $this->lixo_outros == 'on' ? 1 : 0;	
+			$obj->dependencia_sala_diretoria = $this->dependencia_sala_diretoria == 'on' ? 1 : 0;
+			$obj->dependencia_sala_professores = $this->dependencia_sala_professores == 'on' ? 1 : 0;
+			$obj->dependencia_sala_secretaria = $this->dependencia_sala_secretaria == 'on' ? 1 : 0;
+			$obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
+			$obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
+			$obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
+			$obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
+			$obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
+			$obj->dependencia_cozinha = $this->dependencia_cozinha == 'on' ? 1 : 0;
+			$obj->dependencia_biblioteca = $this->dependencia_biblioteca == 'on' ? 1 : 0;
+			$obj->dependencia_sala_leitura = $this->dependencia_sala_leitura == 'on' ? 1 : 0;
+			$obj->dependencia_parque_infantil = $this->dependencia_parque_infantil == 'on' ? 1 : 0;
+			$obj->dependencia_bercario = $this->dependencia_bercario == 'on' ? 1 : 0;
+			$obj->dependencia_banheiro_fora = $this->dependencia_banheiro_fora == 'on' ? 1 : 0;
+			$obj->dependencia_banheiro_dentro = $this->dependencia_banheiro_dentro == 'on' ? 1 : 0;
+			$obj->dependencia_banheiro_infantil = $this->dependencia_banheiro_infantil == 'on' ? 1 : 0;
+			$obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
+			$obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
+			$obj->dependencia_refeitorio = $this->dependencia_refeitorio == 'on' ? 1 : 0;
+			$obj->dependencia_dispensa = $this->dependencia_dispensa == 'on' ? 1 : 0;
+			$obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
+			$obj->dependencia_auditorio = $this->dependencia_auditorio == 'on' ? 1 : 0;
+			$obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;		
 			$editou = $obj->edita();
 
 		}
@@ -1217,6 +1629,59 @@ if(!$this->isEnderecoExterno){
 			$obj->situacao_funcionamento = $this->situacao_funcionamento;
 			$obj->dependencia_administrativa = $this->dependencia_administrativa;
 			$obj->regulamentacao = $this->regulamentacao;
+			$obj->acesso = $this->acesso;
+			$obj->ref_idpes_gestor = $this->gestor_id;
+			$obj->cargo_gestor = $this->cargo_gestor;
+			$obj->condicao = $this->condicao;
+			$obj->decreto_criacao = $this->decreto_criacao;
+			$obj->area_terreno_total = $this->area_terreno_total;
+			$obj->area_construida = $this->area_construida;
+			$obj->area_disponivel = $this->area_disponivel;
+			$obj->num_pavimentos = $this->num_pavimentos;	
+			$obj->tipo_piso = $this->tipo_piso;
+			$obj->medidor_energia = $this->medidor_energia;
+			$obj->agua_consumida = $this->agua_consumida == 'on' ? 1 : 0;
+			$obj->agua_rede_publica = $this->agua_rede_publica == 'on' ? 1 : 0;
+			$obj->agua_poco_artesiano = $this->agua_poco_artesiano == 'on' ? 1 : 0;
+			$obj->agua_cacimba_cisterna_poco = $this->agua_cacimba_cisterna_poco == 'on' ? 1 : 0;
+			$obj->agua_fonte_rio = $this->agua_fonte_rio == 'on' ? 1 : 0;
+			$obj->agua_inexistente = $this->agua_inexistente == 'on' ? 1 : 0;		
+			$obj->energia_rede_publica = $this->energia_rede_publica == 'on' ? 1 : 0;
+			$obj->energia_gerador = $this->energia_gerador == 'on' ? 1 : 0;
+			$obj->energia_outros = $this->energia_outros == 'on' ? 1 : 0;
+			$obj->energia_inexistente = $this->energia_inexistente == 'on' ? 1 : 0;
+			$obj->esgoto_rede_publica = $this->esgoto_rede_publica == 'on' ? 1 : 0;
+			$obj->esgoto_fossa = $this->esgoto_fossa == 'on' ? 1 : 0;
+			$obj->esgoto_inexistente = $this->esgoto_inexistente == 'on' ? 1 : 0;
+			$obj->lixo_coleta_periodica = $this->lixo_coleta_periodica == 'on' ? 1 : 0;
+			$obj->lixo_queima = $this->lixo_queima == 'on' ? 1 : 0;
+			$obj->lixo_joga_outra_area = $this->lixo_joga_outra_area == 'on' ? 1 : 0;
+			$obj->lixo_recicla = $this->lixo_recicla == 'on' ? 1 : 0;
+			$obj->lixo_enterra = $this->lixo_enterra == 'on' ? 1 : 0;
+			$obj->lixo_outros = $this->lixo_outros == 'on' ? 1 : 0;		
+			$obj->dependencia_sala_diretoria = $this->dependencia_sala_diretoria == 'on' ? 1 : 0;
+			$obj->dependencia_sala_professores = $this->dependencia_sala_professores == 'on' ? 1 : 0;
+			$obj->dependencia_sala_secretaria = $this->dependencia_sala_secretaria == 'on' ? 1 : 0;
+			$obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
+			$obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
+			$obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
+			$obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
+			$obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
+			$obj->dependencia_cozinha = $this->dependencia_cozinha == 'on' ? 1 : 0;
+			$obj->dependencia_biblioteca = $this->dependencia_biblioteca == 'on' ? 1 : 0;
+			$obj->dependencia_sala_leitura = $this->dependencia_sala_leitura == 'on' ? 1 : 0;
+			$obj->dependencia_parque_infantil = $this->dependencia_parque_infantil == 'on' ? 1 : 0;
+			$obj->dependencia_bercario = $this->dependencia_bercario == 'on' ? 1 : 0;
+			$obj->dependencia_banheiro_fora = $this->dependencia_banheiro_fora == 'on' ? 1 : 0;
+			$obj->dependencia_banheiro_dentro = $this->dependencia_banheiro_dentro == 'on' ? 1 : 0;
+			$obj->dependencia_banheiro_infantil = $this->dependencia_banheiro_infantil == 'on' ? 1 : 0;
+			$obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
+			$obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
+			$obj->dependencia_refeitorio = $this->dependencia_refeitorio == 'on' ? 1 : 0;
+			$obj->dependencia_dispensa = $this->dependencia_dispensa == 'on' ? 1 : 0;
+			$obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
+			$obj->dependencia_auditorio = $this->dependencia_auditorio == 'on' ? 1 : 0;
+			$obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;
 			$editou = $obj->cadastra();
 			$this->cod_escola = $editou;
 
@@ -1352,10 +1817,10 @@ if(!$this->isEnderecoExterno){
 							}
 						}
 						//-----------------------FIM EDITA CURSO------------------------//
-					$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-					header( "Location: educar_escola_lst.php" );
-					die();
-				return true;
+						$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
+						header( "Location: educar_escola_lst.php" );
+						die();
+						return true;
 					}
 
 				/*if($this->cep && $this->idbai && $this->idlog)

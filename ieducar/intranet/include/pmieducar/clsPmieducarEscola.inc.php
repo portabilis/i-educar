@@ -60,6 +60,59 @@ class clsPmieducarEscola
   var $situacao_funcionamento;
   var $dependencia_administrativa;
   var $regulamentacao;
+  var $acesso;
+  var $ref_idpes_gestor;
+  var $cargo_gestor;
+  var $condicao;
+  var $decreto_criacao;
+  var $area_terreno_total;
+  var $area_disponivel;
+  var $area_construida;
+  var $num_pavimentos;
+  var $tipo_piso;
+  var $medidor_energia;
+  var $agua_consumida;
+  var $agua_rede_publica;
+  var $agua_poco_artesiano;
+  var $agua_cacimba_cisterna_poco;
+  var $agua_fonte_rio;
+  var $agua_inexistente;
+  var $energia_rede_publica;
+  var $energia_gerador;
+  var $energia_outros;
+  var $energia_inexistente;
+  var $esgoto_rede_publica;
+  var $esgoto_fossa;
+  var $esgoto_inexistente;
+  var $lixo_coleta_periodica;
+  var $lixo_queima;
+  var $lixo_joga_outra_area;
+  var $lixo_recicla;
+  var $lixo_enterra;
+  var $lixo_outros;
+  var $dependencia_sala_diretoria;
+  var $dependencia_sala_professores;
+  var $dependencia_sala_secretaria;
+  var $dependencia_laboratorio_informatica;
+  var $dependencia_laboratorio_ciencias;
+  var $dependencia_sala_aee;
+  var $dependencia_quadra_coberta;
+  var $dependencia_quadra_descoberta;
+  var $dependencia_cozinha;
+  var $dependencia_biblioteca;
+  var $dependencia_sala_leitura;
+  var $dependencia_parque_infantil;
+  var $dependencia_bercario;
+  var $dependencia_banheiro_fora;
+  var $dependencia_banheiro_dentro;
+  var $dependencia_banheiro_infantil;
+  var $dependencia_banheiro_deficiente;
+  var $dependencia_banheiro_chuveiro;
+  var $dependencia_refeitorio;
+  var $dependencia_dispensa;
+  var $dependencia_aumoxarifado;
+  var $dependencia_auditorio;
+  var $dependencia_patio_coberto;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -130,7 +183,17 @@ class clsPmieducarEscola
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'escola';
 
-    $this->_campos_lista = $this->_todos_campos = 'e.cod_escola, e.ref_usuario_cad, e.ref_usuario_exc, e.ref_cod_instituicao, e.ref_cod_escola_localizacao, e.ref_cod_escola_rede_ensino, e.ref_idpes, e.sigla, e.data_cadastro, e.data_exclusao, e.ativo, e.bloquear_lancamento_diario_anos_letivos_encerrados, e.situacao_funcionamento, e.dependencia_administrativa, e.regulamentacao ';
+    $this->_campos_lista = $this->_todos_campos = 'e.cod_escola, e.ref_usuario_cad, e.ref_usuario_exc, e.ref_cod_instituicao, e.ref_cod_escola_localizacao, e.ref_cod_escola_rede_ensino, e.ref_idpes, e.sigla, e.data_cadastro, 
+          e.data_exclusao, e.ativo, e.bloquear_lancamento_diario_anos_letivos_encerrados, e.situacao_funcionamento, e.dependencia_administrativa, e.regulamentacao, e.acesso, e.cargo_gestor, e.ref_idpes_gestor, e.area_terreno_total,
+          e.condicao, e.area_construida, e.area_disponivel, e.num_pavimentos, e.decreto_criacao, e.tipo_piso, e.medidor_energia, e.agua_consumida, e.agua_rede_publica, e.agua_poco_artesiano, e.agua_cacimba_cisterna_poco, e.agua_fonte_rio, 
+          e.agua_inexistente, e.energia_rede_publica, e.energia_outros, e.energia_gerador, e.energia_inexistente, e.esgoto_rede_publica, e.esgoto_fossa, e.esgoto_inexistente, e.lixo_coleta_periodica, e.lixo_queima, e.lixo_joga_outra_area, 
+          e.lixo_recicla, e.lixo_enterra, e.lixo_outros, e.dependencia_sala_diretoria, e.dependencia_sala_professores, e.dependencia_sala_secretaria, e.dependencia_laboratorio_informatica, e.dependencia_laboratorio_ciencias, e.dependencia_sala_aee,
+          e.dependencia_quadra_coberta, e.dependencia_quadra_descoberta, e.dependencia_cozinha, e.dependencia_biblioteca, e.dependencia_sala_leitura, e.dependencia_parque_infantil, e.dependencia_bercario, e.dependencia_banheiro_fora, 
+          e.dependencia_banheiro_dentro, e.dependencia_banheiro_infantil, e.dependencia_banheiro_deficiente, e.dependencia_banheiro_chuveiro, e.dependencia_refeitorio, e.dependencia_dispensa, e.dependencia_aumoxarifado, e.dependencia_auditorio, 
+          e.dependencia_patio_coberto
+
+
+           ';
 
     if (is_numeric($ref_usuario_cad)) {
       if (class_exists("clsPmieducarUsuario")) {
@@ -364,6 +427,330 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
+      if (is_numeric($this->acesso)) {
+        $campos .= "{$gruda}acesso";
+        $valores .= "{$gruda}'{$this->acesso}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->ref_idpes_gestor)) {
+        $campos .= "{$gruda}ref_idpes_gestor";
+        $valores .= "{$gruda}'{$this->ref_idpes_gestor}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->cargo_gestor)) {
+        $campos .= "{$gruda}cargo_gestor";
+        $valores .= "{$gruda}'{$this->cargo_gestor}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->condicao)) {
+        $campos .= "{$gruda}condicao";
+        $valores .= "{$gruda}'{$this->condicao}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->num_pavimentos)) {
+        $campos .= "{$gruda}num_pavimentos";
+        $valores .= "{$gruda}'{$this->num_pavimentos}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->decreto_criacao)) {
+        $campos .= "{$gruda}decreto_criacao";
+        $valores .= "{$gruda}'{$this->decreto_criacao}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->area_terreno_total)) {
+        $campos .= "{$gruda}area_terreno_total";
+        $valores .= "{$gruda}'{$this->area_terreno_total}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->area_disponivel)) {
+        $campos .= "{$gruda}area_disponivel";
+        $valores .= "{$gruda}'{$this->area_disponivel}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->area_construida)) {
+        $campos .= "{$gruda}area_construida";
+        $valores .= "{$gruda}'{$this->area_construida}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->tipo_piso)) {
+        $campos .= "{$gruda}tipo_piso";
+        $valores .= "{$gruda}'{$this->tipo_piso}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->medidor_energia)) {
+        $campos .= "{$gruda}medidor_energia";
+        $valores .= "{$gruda}'{$this->medidor_energia}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->agua_consumida)) {
+        $campos .= "{$gruda}agua_consumida";
+        $valores .= "{$gruda}'{$this->agua_consumida}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->agua_rede_publica)) {
+        $campos .= "{$gruda}agua_rede_publica";
+        $valores .= "{$gruda}'{$this->agua_rede_publica}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->agua_poco_artesiano)) {
+        $campos .= "{$gruda}agua_poco_artesiano";
+        $valores .= "{$gruda}'{$this->agua_poco_artesiano}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->agua_cacimba_cisterna_poco)) {
+        $campos .= "{$gruda}agua_cacimba_cisterna_poco";
+        $valores .= "{$gruda}'{$this->agua_cacimba_cisterna_poco}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->agua_fonte_rio)) {
+        $campos .= "{$gruda}agua_fonte_rio";
+        $valores .= "{$gruda}'{$this->agua_fonte_rio}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->agua_inexistente)) {
+        $campos .= "{$gruda}agua_inexistente";
+        $valores .= "{$gruda}'{$this->agua_inexistente}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->energia_rede_publica)) {
+        $campos .= "{$gruda}energia_rede_publica";
+        $valores .= "{$gruda}'{$this->energia_rede_publica}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->energia_gerador)) {
+        $campos .= "{$gruda}energia_gerador";
+        $valores .= "{$gruda}'{$this->energia_gerador}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->energia_outros)) {
+        $campos .= "{$gruda}energia_outros";
+        $valores .= "{$gruda}'{$this->energia_outros}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->energia_inexistente)) {
+        $campos .= "{$gruda}energia_inexistente";
+        $valores .= "{$gruda}'{$this->energia_inexistente}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->esgoto_rede_publica)) {
+        $campos .= "{$gruda}esgoto_rede_publica";
+        $valores .= "{$gruda}'{$this->esgoto_rede_publica}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->esgoto_fossa)) {
+        $campos .= "{$gruda}esgoto_fossa";
+        $valores .= "{$gruda}'{$this->esgoto_fossa}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->esgoto_inexistente)) {
+        $campos .= "{$gruda}esgoto_inexistente";
+        $valores .= "{$gruda}'{$this->esgoto_inexistente}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->lixo_coleta_periodica)) {
+        $campos .= "{$gruda}lixo_coleta_periodica";
+        $valores .= "{$gruda}'{$this->lixo_coleta_periodica}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->lixo_queima)) {
+        $campos .= "{$gruda}lixo_queima";
+        $valores .= "{$gruda}'{$this->lixo_queima}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->lixo_joga_outra_area)) {
+        $campos .= "{$gruda}lixo_joga_outra_area";
+        $valores .= "{$gruda}'{$this->lixo_joga_outra_area}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->lixo_recicla)) {
+        $campos .= "{$gruda}lixo_recicla";
+        $valores .= "{$gruda}'{$this->lixo_recicla}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->lixo_enterra)) {
+        $campos .= "{$gruda}lixo_enterra";
+        $valores .= "{$gruda}'{$this->lixo_enterra}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->lixo_outros)) {
+        $campos .= "{$gruda}lixo_outros";
+        $valores .= "{$gruda}'{$this->lixo_outros}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_sala_diretoria)) {
+        $campos .= "{$gruda}dependencia_sala_diretoria";
+        $valores .= "{$gruda}'{$this->dependencia_sala_diretoria}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_sala_professores)) {
+        $campos .= "{$gruda}dependencia_sala_professores";
+        $valores .= "{$gruda}'{$this->dependencia_sala_professores}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_sala_secretaria)) {
+        $campos .= "{$gruda}dependencia_sala_secretaria";
+        $valores .= "{$gruda}'{$this->dependencia_sala_secretaria}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_laboratorio_informatica)) {
+        $campos .= "{$gruda}dependencia_laboratorio_informatica";
+        $valores .= "{$gruda}'{$this->dependencia_laboratorio_informatica}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_laboratorio_ciencias)) {
+        $campos .= "{$gruda}dependencia_laboratorio_ciencias";
+        $valores .= "{$gruda}'{$this->dependencia_laboratorio_ciencias}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_sala_aee)) {
+        $campos .= "{$gruda}dependencia_sala_aee";
+        $valores .= "{$gruda}'{$this->dependencia_sala_aee}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_quadra_coberta)) {
+        $campos .= "{$gruda}dependencia_quadra_coberta";
+        $valores .= "{$gruda}'{$this->dependencia_quadra_coberta}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_quadra_descoberta)) {
+        $campos .= "{$gruda}dependencia_quadra_descoberta";
+        $valores .= "{$gruda}'{$this->dependencia_quadra_descoberta}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_cozinha)) {
+        $campos .= "{$gruda}dependencia_cozinha";
+        $valores .= "{$gruda}'{$this->dependencia_cozinha}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_biblioteca)) {
+        $campos .= "{$gruda}dependencia_biblioteca";
+        $valores .= "{$gruda}'{$this->dependencia_biblioteca}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_sala_leitura)) {
+        $campos .= "{$gruda}dependencia_sala_leitura";
+        $valores .= "{$gruda}'{$this->dependencia_sala_leitura}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_parque_infantil)) {
+        $campos .= "{$gruda}dependencia_parque_infantil";
+        $valores .= "{$gruda}'{$this->dependencia_parque_infantil}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_bercario)) {
+        $campos .= "{$gruda}dependencia_bercario";
+        $valores .= "{$gruda}'{$this->dependencia_bercario}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_banheiro_fora)) {
+        $campos .= "{$gruda}dependencia_banheiro_fora";
+        $valores .= "{$gruda}'{$this->dependencia_banheiro_fora}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_banheiro_dentro)) {
+        $campos .= "{$gruda}dependencia_banheiro_dentro";
+        $valores .= "{$gruda}'{$this->dependencia_banheiro_dentro}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_banheiro_infantil)) {
+        $campos .= "{$gruda}dependencia_banheiro_infantil";
+        $valores .= "{$gruda}'{$this->dependencia_banheiro_infantil}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_banheiro_deficiente)) {
+        $campos .= "{$gruda}dependencia_banheiro_deficiente";
+        $valores .= "{$gruda}'{$this->dependencia_banheiro_deficiente}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_banheiro_deficiente)) {
+        $campos .= "{$gruda}dependencia_banheiro_deficiente";
+        $valores .= "{$gruda}'{$this->dependencia_banheiro_deficiente}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_banheiro_chuveiro)) {
+        $campos .= "{$gruda}dependencia_banheiro_chuveiro";
+        $valores .= "{$gruda}'{$this->dependencia_banheiro_chuveiro}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_refeitorio)) {
+        $campos .= "{$gruda}dependencia_refeitorio";
+        $valores .= "{$gruda}'{$this->dependencia_refeitorio}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_dispensa)) {
+        $campos .= "{$gruda}dependencia_dispensa";
+        $valores .= "{$gruda}'{$this->dependencia_dispensa}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_aumoxarifado)) {
+        $campos .= "{$gruda}dependencia_aumoxarifado";
+        $valores .= "{$gruda}'{$this->dependencia_aumoxarifado}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_auditorio)) {
+        $campos .= "{$gruda}dependencia_auditorio";
+        $valores .= "{$gruda}'{$this->dependencia_auditorio}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_patio_coberto)) {
+        $campos .= "{$gruda}dependencia_patio_coberto";
+        $valores .= "{$gruda}'{$this->dependencia_patio_coberto}'";
+        $gruda = ", ";
+      }
+
       $campos .= "{$gruda}data_cadastro";
       $valores .= "{$gruda}NOW()";
       $gruda = ", ";
@@ -458,6 +845,271 @@ class clsPmieducarEscola
 
       if (is_numeric($this->regulamentacao)) {
         $set .= "{$gruda}regulamentacao = '{$this->regulamentacao}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->acesso)) {
+        $set .= "{$gruda}acesso = '{$this->acesso}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->ref_idpes_gestor)) {
+        $set .= "{$gruda}ref_idpes_gestor = '{$this->ref_idpes_gestor}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->cargo_gestor)) {
+        $set .= "{$gruda}cargo_gestor = '{$this->cargo_gestor}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->num_pavimentos)) {
+        $set .= "{$gruda}num_pavimentos = '{$this->num_pavimentos}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->condicao)) {
+        $set .= "{$gruda}condicao = '{$this->condicao}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->area_terreno_total)) {
+        $set .= "{$gruda}area_terreno_total = '{$this->area_terreno_total}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->area_construida)) {
+        $set .= "{$gruda}area_construida = '{$this->area_construida}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->area_disponivel)) {
+        $set .= "{$gruda}area_disponivel = '{$this->area_disponivel}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->decreto_criacao)) {
+        $set .= "{$gruda}decreto_criacao = '{$this->decreto_criacao}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->tipo_piso)) {
+        $set .= "{$gruda}tipo_piso = '{$this->tipo_piso}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->medidor_energia)) {
+        $set .= "{$gruda}medidor_energia = '{$this->medidor_energia}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->agua_consumida)) {
+        $set .= "{$gruda}agua_consumida = '{$this->agua_consumida}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->agua_rede_publica)) {
+        $set .= "{$gruda}agua_rede_publica = '{$this->agua_rede_publica}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->agua_poco_artesiano)) {
+        $set .= "{$gruda}agua_poco_artesiano = '{$this->agua_poco_artesiano}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->agua_cacimba_cisterna_poco)) {
+        $set .= "{$gruda}agua_cacimba_cisterna_poco = '{$this->agua_cacimba_cisterna_poco}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->agua_fonte_rio)) {
+        $set .= "{$gruda}agua_fonte_rio = '{$this->agua_fonte_rio}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->agua_inexistente)) {
+        $set .= "{$gruda}agua_inexistente = '{$this->agua_inexistente}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->energia_rede_publica)) {
+        $set .= "{$gruda}energia_rede_publica = '{$this->energia_rede_publica}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->energia_gerador)) {
+        $set .= "{$gruda}energia_gerador = '{$this->energia_gerador}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->energia_inexistente)) {
+        $set .= "{$gruda}energia_inexistente = '{$this->energia_inexistente}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->energia_outros)) {
+        $set .= "{$gruda}energia_outros = '{$this->energia_outros}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->esgoto_rede_publica)) {
+        $set .= "{$gruda}esgoto_rede_publica = '{$this->esgoto_rede_publica}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->esgoto_fossa)) {
+        $set .= "{$gruda}esgoto_fossa = '{$this->esgoto_fossa}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->esgoto_inexistente)) {
+        $set .= "{$gruda}esgoto_inexistente = '{$this->esgoto_inexistente}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->lixo_coleta_periodica)) {
+        $set .= "{$gruda}lixo_coleta_periodica = '{$this->lixo_coleta_periodica}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->lixo_queima)) {
+        $set .= "{$gruda}lixo_queima = '{$this->lixo_queima}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->lixo_joga_outra_area)) {
+        $set .= "{$gruda}lixo_joga_outra_area = '{$this->lixo_joga_outra_area}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->lixo_recicla)) {
+        $set .= "{$gruda}lixo_recicla = '{$this->lixo_recicla}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->lixo_enterra)) {
+        $set .= "{$gruda}lixo_enterra = '{$this->lixo_enterra}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->lixo_outros)) {
+        $set .= "{$gruda}lixo_outros = '{$this->lixo_outros}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_sala_diretoria)) {
+        $set .= "{$gruda}dependencia_sala_diretoria = '{$this->dependencia_sala_diretoria}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_sala_professores)) {
+        $set .= "{$gruda}dependencia_sala_professores = '{$this->dependencia_sala_professores}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_sala_secretaria)) {
+        $set .= "{$gruda}dependencia_sala_secretaria = '{$this->dependencia_sala_secretaria}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_laboratorio_informatica)) {
+        $set .= "{$gruda}dependencia_laboratorio_informatica = '{$this->dependencia_laboratorio_informatica}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_laboratorio_ciencias)) {
+        $set .= "{$gruda}dependencia_laboratorio_ciencias = '{$this->dependencia_laboratorio_ciencias}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_sala_aee)) {
+        $set .= "{$gruda}dependencia_sala_aee = '{$this->dependencia_sala_aee}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_quadra_coberta)) {
+        $set .= "{$gruda}dependencia_quadra_coberta = '{$this->dependencia_quadra_coberta}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_quadra_descoberta)) {
+        $set .= "{$gruda}dependencia_quadra_descoberta = '{$this->dependencia_quadra_descoberta}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_cozinha)) {
+        $set .= "{$gruda}dependencia_cozinha = '{$this->dependencia_cozinha}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_biblioteca)) {
+        $set .= "{$gruda}dependencia_biblioteca = '{$this->dependencia_biblioteca}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_sala_leitura)) {
+        $set .= "{$gruda}dependencia_sala_leitura = '{$this->dependencia_sala_leitura}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_parque_infantil)) {
+        $set .= "{$gruda}dependencia_parque_infantil = '{$this->dependencia_parque_infantil}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_bercario)) {
+        $set .= "{$gruda}dependencia_bercario = '{$this->dependencia_bercario}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_banheiro_fora)) {
+        $set .= "{$gruda}dependencia_banheiro_fora = '{$this->dependencia_banheiro_fora}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_banheiro_dentro)) {
+        $set .= "{$gruda}dependencia_banheiro_dentro = '{$this->dependencia_banheiro_dentro}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_banheiro_infantil)) {
+        $set .= "{$gruda}dependencia_banheiro_infantil = '{$this->dependencia_banheiro_infantil}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_banheiro_deficiente)) {
+        $set .= "{$gruda}dependencia_banheiro_deficiente = '{$this->dependencia_banheiro_deficiente}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_banheiro_chuveiro)) {
+        $set .= "{$gruda}dependencia_banheiro_chuveiro = '{$this->dependencia_banheiro_chuveiro}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_refeitorio)) {
+        $set .= "{$gruda}dependencia_refeitorio = '{$this->dependencia_refeitorio}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_dispensa)) {
+        $set .= "{$gruda}dependencia_dispensa = '{$this->dependencia_dispensa}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_aumoxarifado)) {
+        $set .= "{$gruda}dependencia_aumoxarifado = '{$this->dependencia_aumoxarifado}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_auditorio)) {
+        $set .= "{$gruda}dependencia_auditorio = '{$this->dependencia_auditorio}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_patio_coberto)) {
+        $set .= "{$gruda}dependencia_patio_coberto = '{$this->dependencia_patio_coberto}'";
         $gruda = ", ";
       }
 
