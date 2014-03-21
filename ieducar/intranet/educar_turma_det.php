@@ -430,7 +430,7 @@ class indice extends clsDetalhe
     $this->largura      = '100%';
 
     $this->array_botao[]            = 'Reclassificar alunos alfabeticamente';
-    $this->array_botao_url_script[] = "if(confirm(\"Deseja realmente reclassificar os alunos alfabeticamente?\\nAVISO: NAO SER\u00c1 POSSIVEL RECUPERAR O SEQUENCIAL\"))reclassifica_matriculas({$registro['cod_turma']})";
+    $this->array_botao_url_script[] = "if(confirm(\"Deseja realmente reclassificar os alunos alfabeticamente?\\nAo utilizar esta opção para esta turma, a ordenação dos alunos no diário e em relatórios que é controlada por ordem de chegada após a data de fechamento da turma (campo Data de fechamento), passará a ter o controle novamente alfabético, desconsiderando a data de fechamento.\"))reclassifica_matriculas({$registro['cod_turma']})";
 
     Portabilis_View_Helper_Application::loadJQueryLib($this);
 
