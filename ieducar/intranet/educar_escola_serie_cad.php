@@ -90,7 +90,6 @@ class indice extends clsCadastro
 
   var $ref_cod_instituicao;
   var $ref_cod_curso;
-  var $intervalo;
 
   var $escola_serie_disciplina;
   var $ref_cod_disciplina;
