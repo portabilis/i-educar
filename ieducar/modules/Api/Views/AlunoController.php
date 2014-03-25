@@ -966,21 +966,30 @@ protected function createOrUpdateUniforme($id) {
   protected function delete() {
     $id = $this->getRequest()->id;
 
-    if ($this->canDelete()) {
-      $aluno                  = new clsPmieducarAluno();
-      $aluno->cod_aluno       = $id;
-      $aluno->ref_usuario_exc = $this->getSession()->id_pessoa;
+    if (!$this->possuiMatriculaAtiva($id)){
 
-      if($aluno->excluir())
-        $this->messenger->append('Cadastro removido com sucesso', 'success', false, 'error');
-      else
-        $this->messenger->append('Aparentemente o cadastro não pode ser removido, por favor, verifique.',
-                                 'error', false, 'error');
+      if ($this->canDelete()) {
+        $aluno                  = new clsPmieducarAluno();
+        $aluno->cod_aluno       = $id;
+        $aluno->ref_usuario_exc = $this->getSession()->id_pessoa;
+
+        if($aluno->excluir())
+          $this->messenger->append('Cadastro removido com sucesso', 'success', false, 'error');
+        else
+          $this->messenger->append('Aparentemente o cadastro não pode ser removido, por favor, verifique.',
+                                   'error', false, 'error');
+      }
+    }else{
+      $this->messenger->append('O cadastro não pôde ser removido, o aluno posuui matricula ativa.',
+                               'error', false, 'error');
     }
-
     return array('id' => $id);
   }
 
+  protected function possuiMatriculaAtiva($alunoId){
+    $sql = "select count(ativo) from pmieducar.matricula where ref_cod_aluno = $1";
+    return (Portabilis_Utils_Database::selectField($sql, $alunoId) > 0);
+  }
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'aluno'))
