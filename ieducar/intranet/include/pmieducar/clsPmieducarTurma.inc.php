@@ -1941,7 +1941,7 @@ and  e.cod_escola = t.ref_ref_cod_escola
 		}
 
 		// Retirar OR quando todas turmas tiverem a coluna ANO definido.
-		$filtros .= "{$whereAnd} t.ano = ( SELECT ano FROM pmieducar.escola_ano_letivo enl WHERE enl.ref_cod_escola = t.ref_ref_cod_escola AND andamento = 1)";
+		$filtros .= "{$whereAnd} t.ano = ( SELECT ano FROM pmieducar.escola_ano_letivo enl WHERE enl.ref_cod_escola = t.ref_ref_cod_escola AND andamento = 1 and ativo = 1)";
 
 		$db = new clsBanco();
 		$countCampos = count( explode( ",", $this->_campos_lista ) );
