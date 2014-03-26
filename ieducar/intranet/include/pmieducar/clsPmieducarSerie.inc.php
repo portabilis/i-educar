@@ -58,7 +58,6 @@ class clsPmieducarSerie
   var $data_cadastro;
   var $data_exclusao;
   var $ativo;
-  var $intervalo;
   var $regra_avaliacao_id;
 
   var $idade_inicial;
@@ -120,15 +119,14 @@ class clsPmieducarSerie
   function clsPmieducarSerie($cod_serie = NULL, $ref_usuario_exc = NULL,
     $ref_usuario_cad = NULL, $ref_cod_curso = NULL, $nm_serie = NULL,
     $etapa_curso = NULL, $concluinte = NULL, $carga_horaria = NULL,
-    $data_cadastro = NULL, $data_exclusao = NULL, $ativo = NULL, $intervalo = NULL,
+    $data_cadastro = NULL, $data_exclusao = NULL, $ativo = NULL,
     $idade_inicial = NULL, $idade_final = NULL, $regra_avaliacao_id = NULL, $observacao_historico = null,
     $dias_letivos = null)
   {
     $db = new clsBanco();
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}serie";
-
-    $this->_campos_lista = $this->_todos_campos = "s.cod_serie, s.ref_usuario_exc, s.ref_usuario_cad, s.ref_cod_curso, s.nm_serie, s.etapa_curso, s.concluinte, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.intervalo, s.idade_inicial, s.idade_final, s.regra_avaliacao_id, s.observacao_historico, s.dias_letivos";
+    $this->_campos_lista = $this->_todos_campos = "s.cod_serie, s.ref_usuario_exc, s.ref_usuario_cad, s.ref_cod_curso, s.nm_serie, s.etapa_curso, s.concluinte, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.idade_inicial, s.idade_final, s.regra_avaliacao_id, s.observacao_historico, s.dias_letivos";
 
     if (is_numeric($ref_cod_curso)) {
       if (class_exists("clsPmieducarCurso")) {
@@ -242,10 +240,6 @@ class clsPmieducarSerie
       $this->ativo = $ativo;
     }
 
-    if (is_numeric($intervalo)) {
-      $this->intervalo = $intervalo;
-    }
-
     if (is_numeric($idade_inicial)) {
       $this->idade_inicial = $idade_inicial;
     }
@@ -267,7 +261,7 @@ class clsPmieducarSerie
     if (is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_curso) &&
       is_string($this->nm_serie) && is_numeric($this->etapa_curso) &&
       is_numeric($this->concluinte) && is_numeric($this->carga_horaria) &&
-      is_numeric($this->intervalo) && is_numeric($this->dias_letivos))
+      is_numeric($this->dias_letivos))
     {
       $db = new clsBanco();
 
@@ -336,12 +330,6 @@ class clsPmieducarSerie
       $campos .= "{$gruda}ativo";
       $valores .= "{$gruda}'1'";
       $gruda = ", ";
-
-      if (is_numeric($this->intervalo)) {
-        $campos  .= "{$gruda}intervalo";
-        $valores .= "{$gruda}'{$this->intervalo}'";
-        $gruda    = ", ";
-      }
 
       if(is_string($this->observacao_historico)){
         $campos .= "{$gruda}observacao_historico";
@@ -420,11 +408,6 @@ class clsPmieducarSerie
         $gruda = ", ";
       }
 
-      if (is_numeric($this->intervalo)) {
-        $set .= "{$gruda}intervalo = '{$this->intervalo}'";
-        $gruda = ", ";
-      }
-
       if (is_numeric($this->idade_inicial)) {
         $set .= "{$gruda}idade_inicial = '{$this->idade_inicial}'";
         $gruda = ", ";
@@ -476,7 +459,7 @@ class clsPmieducarSerie
     $int_etapa_curso = NULL, $int_concluinte = NULL, $int_carga_horaria = NULL,
     $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL,
     $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL,
-    $int_ativo = NULL, $int_ref_cod_instituicao = NULL, $int_intervalo = NULL,
+    $int_ativo = NULL, $int_ref_cod_instituicao = NULL,
     $int_idade_inicial = NULL, $int_idade_final = NULL, $int_ref_cod_escola = NULL,
     $regra_avaliacao_id = NULL)
   {
@@ -561,11 +544,6 @@ class clsPmieducarSerie
 
     if (is_numeric($int_ref_cod_instituicao)) {
       $filtros .= "{$whereAnd} c.ref_cod_instituicao = '$int_ref_cod_instituicao'";
-      $whereAnd = " AND ";
-    }
-
-    if (is_numeric($int_intervalo)) {
-      $filtros .= "{$whereAnd} intervalo = '{$int_intervalo}'";
       $whereAnd = " AND ";
     }
 
