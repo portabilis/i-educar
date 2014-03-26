@@ -289,6 +289,8 @@ class indice extends clsCadastro
 				foreach( $registro AS $campo => $val )	// passa todos os valores obtidos no registro para atributos do objeto
 					$this->$campo = $val;
 
+				$this->gestor_id = $registro['ref_idpes_gestor'];
+
 				$objEndereco = new clsPessoaEndereco( $this->ref_idpes );
 						$detEndereco = $objEndereco->detalhe();
 
