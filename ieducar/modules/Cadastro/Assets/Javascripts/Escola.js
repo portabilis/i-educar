@@ -78,13 +78,14 @@ $submitButton.click(submitForm);
 
 //abas
 
-$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="escolaTab"> <span class="tabText">Dados gerais</span></div></li><li><div id="tab2" class="escolaTab"> <span class="tabText">Infraestrutura</span></div></li><li><div id="tab3" class="escolaTab"> <span class="tabText">Deped\u00eancias</span></div></li></ul></div>');
+$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="escolaTab"> <span class="tabText">Dados gerais</span></div></li><li><div id="tab2" class="escolaTab"> <span class="tabText">Infraestrutura</span></div></li><li><div id="tab3" class="escolaTab"> <span class="tabText">Deped\u00eancias</span></div></li><li><div id="tab4" class="escolaTab"> <span class="tabText">Dados do ensino</span></div></li></ul></div>');
 $j('td .formdktd b').remove();
 $j('#tab1').addClass('escolaTab-active').removeClass('escolaTab');
 
 // Atribui um id a linha, para identificar até onde/a partir de onde esconder os campos
 $j('#condicao').closest('tr').attr('id','tcondicao');
 $j('#dependencia_sala_diretoria').closest('tr').attr('id','tdependencia_sala_diretoria');
+$j('#atendimento_aee').closest('tr').attr('id','tatendimento_aee');
 
 // Adiciona um ID à linha que termina o formulário para parar de esconder os campos
 $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
@@ -92,6 +93,7 @@ $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
 // Pega o número dessa linha
 linha_inicial_infra = $j('#tcondicao').index()-1;
 linha_inicial_dependencia = $j('#tdependencia_sala_diretoria').index()-1;
+linha_inicial_dados = $j('#tatendimento_aee').index()-1;
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
 $j('.tablecadastro >tbody  > tr').each(function(index, row) {
@@ -151,7 +153,24 @@ $j(document).ready(function() {
       $j('#tab3').toggleClass('escolaTab escolaTab-active')
       $j('.tablecadastro >tbody  > tr').each(function(index, row) {
         if (row.id!='stop'){
-          if (index>=linha_inicial_dependencia){
+          if (index>=linha_inicial_dependencia && index < linha_inicial_dados){
+            row.show();
+          }else if (index>0){
+            row.hide();
+          }
+        }else
+          return false;
+      });
+    });
+
+  // Dados educacionais
+  $j('#tab4').click( 
+    function(){
+      $j('.escolaTab-active').toggleClass('escolaTab-active escolaTab');
+      $j('#tab4').toggleClass('escolaTab escolaTab-active')
+      $j('.tablecadastro >tbody  > tr').each(function(index, row) {
+        if (row.id!='stop'){
+          if (index>=linha_inicial_dados){
             row.show();
           }else if (index>0){
             row.hide();

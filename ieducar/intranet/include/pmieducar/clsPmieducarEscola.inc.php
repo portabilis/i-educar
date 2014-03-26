@@ -113,6 +113,33 @@ class clsPmieducarEscola
   var $dependencia_aumoxarifado;
   var $dependencia_auditorio;
   var $dependencia_patio_coberto;
+  var $dependencia_patio_descoberto;
+  var $dependencia_alojamento_aluno;
+  var $dependencia_alojamento_professor;
+  var $dependencia_area_verde;
+  var $dependencia_lavanderia;
+  var $dependencia_unidade_climatizada;
+  var $dependencia_quantidade_ambiente_climatizado;
+  var $dependencia_nenhuma_relacionada;
+  var $dependencia_numero_salas_existente;
+  var $dependencia_numero_salas_utilizadas;
+  var $porte_quadra_descoberta;
+  var $porte_quadra_coberta;
+  var $tipo_cobertura_patio;
+  var $total_funcionario;
+  var $atendimento_aee;
+  var $atividade_complementar;
+  var $fundamental_ciclo;
+  var $localizacao_diferenciada;
+  var $didatico_nao_utiliza;
+  var $didatico_quilombola;
+  var $didatico_indigena;
+  var $educacao_indigena;
+  var $lingua_ministrada;
+  var $espaco_brasil_aprendizado;
+  var $abre_final_semana;
+  var $codigo_lingua_indigena;
+  var $proposta_pedagogica;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -190,10 +217,11 @@ class clsPmieducarEscola
           e.lixo_recicla, e.lixo_enterra, e.lixo_outros, e.dependencia_sala_diretoria, e.dependencia_sala_professores, e.dependencia_sala_secretaria, e.dependencia_laboratorio_informatica, e.dependencia_laboratorio_ciencias, e.dependencia_sala_aee,
           e.dependencia_quadra_coberta, e.dependencia_quadra_descoberta, e.dependencia_cozinha, e.dependencia_biblioteca, e.dependencia_sala_leitura, e.dependencia_parque_infantil, e.dependencia_bercario, e.dependencia_banheiro_fora, 
           e.dependencia_banheiro_dentro, e.dependencia_banheiro_infantil, e.dependencia_banheiro_deficiente, e.dependencia_banheiro_chuveiro, e.dependencia_refeitorio, e.dependencia_dispensa, e.dependencia_aumoxarifado, e.dependencia_auditorio, 
-          e.dependencia_patio_coberto
-
-
-           ';
+          e.dependencia_patio_coberto, e.dependencia_patio_descoberto, e.dependencia_alojamento_aluno, e.dependencia_alojamento_professor, e.dependencia_area_verde, e.dependencia_lavanderia, e.dependencia_unidade_climatizada, 
+          e.dependencia_quantidade_ambiente_climatizado, e.dependencia_nenhuma_relacionada, e.dependencia_numero_salas_existente, dependencia_numero_salas_utilizadas, e.porte_quadra_descoberta, e.porte_quadra_coberta, e.tipo_cobertura_patio,
+          e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.localizacao_diferenciada, e.didatico_nao_utiliza, e.didatico_quilombola, e.didatico_indigena, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado, 
+          e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica
+          ';
 
     if (is_numeric($ref_usuario_cad)) {
       if (class_exists("clsPmieducarUsuario")) {
@@ -751,6 +779,168 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
+      if (is_numeric($this->dependencia_patio_descoberto)) {
+        $campos .= "{$gruda}dependencia_patio_descoberto";
+        $valores .= "{$gruda}'{$this->dependencia_patio_descoberto}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_alojamento_aluno)) {
+        $campos .= "{$gruda}dependencia_alojamento_aluno";
+        $valores .= "{$gruda}'{$this->dependencia_alojamento_aluno}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_alojamento_professor)) {
+        $campos .= "{$gruda}dependencia_alojamento_professor";
+        $valores .= "{$gruda}'{$this->dependencia_alojamento_professor}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_area_verde)) {
+        $campos .= "{$gruda}dependencia_area_verde";
+        $valores .= "{$gruda}'{$this->dependencia_area_verde}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_lavanderia)) {
+        $campos .= "{$gruda}dependencia_lavanderia";
+        $valores .= "{$gruda}'{$this->dependencia_lavanderia}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_unidade_climatizada)) {
+        $campos .= "{$gruda}dependencia_unidade_climatizada";
+        $valores .= "{$gruda}'{$this->dependencia_unidade_climatizada}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_quantidade_ambiente_climatizado)) {
+        $campos .= "{$gruda}dependencia_quantidade_ambiente_climatizado";
+        $valores .= "{$gruda}'{$this->dependencia_quantidade_ambiente_climatizado}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_nenhuma_relacionada)) {
+        $campos .= "{$gruda}dependencia_nenhuma_relacionada";
+        $valores .= "{$gruda}'{$this->dependencia_nenhuma_relacionada}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_numero_salas_existente)) {
+        $campos .= "{$gruda}dependencia_numero_salas_existente";
+        $valores .= "{$gruda}'{$this->dependencia_numero_salas_existente}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_numero_salas_utilizadas)) {
+        $campos .= "{$gruda}dependencia_numero_salas_utilizadas";
+        $valores .= "{$gruda}'{$this->dependencia_numero_salas_utilizadas}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->porte_quadra_descoberta)) {
+        $campos .= "{$gruda}porte_quadra_descoberta";
+        $valores .= "{$gruda}'{$this->porte_quadra_descoberta}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->porte_quadra_coberta)) {
+        $campos .= "{$gruda}porte_quadra_coberta";
+        $valores .= "{$gruda}'{$this->porte_quadra_coberta}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->tipo_cobertura_patio)) {
+        $campos .= "{$gruda}tipo_cobertura_patio";
+        $valores .= "{$gruda}'{$this->tipo_cobertura_patio}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->total_funcionario)) {
+        $campos .= "{$gruda}total_funcionario";
+        $valores .= "{$gruda}'{$this->total_funcionario}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->atendimento_aee)) {
+        $campos .= "{$gruda}atendimento_aee";
+        $valores .= "{$gruda}'{$this->atendimento_aee}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->atividade_complementar)) {
+        $campos .= "{$gruda}atividade_complementar";
+        $valores .= "{$gruda}'{$this->atividade_complementar}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->fundamental_ciclo)) {
+        $campos .= "{$gruda}fundamental_ciclo";
+        $valores .= "{$gruda}'{$this->fundamental_ciclo}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->localizacao_diferenciada)) {
+        $campos .= "{$gruda}localizacao_diferenciada";
+        $valores .= "{$gruda}'{$this->localizacao_diferenciada}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->didatico_nao_utiliza)) {
+        $campos .= "{$gruda}didatico_nao_utiliza";
+        $valores .= "{$gruda}'{$this->didatico_nao_utiliza}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->didatico_quilombola)) {
+        $campos .= "{$gruda}didatico_quilombola";
+        $valores .= "{$gruda}'{$this->didatico_quilombola}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->didatico_indigena)) {
+        $campos .= "{$gruda}didatico_indigena";
+        $valores .= "{$gruda}'{$this->didatico_indigena}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->educacao_indigena)) {
+        $campos .= "{$gruda}educacao_indigena";
+        $valores .= "{$gruda}'{$this->educacao_indigena}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->lingua_ministrada)) {
+        $campos .= "{$gruda}lingua_ministrada";
+        $valores .= "{$gruda}'{$this->lingua_ministrada}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->espaco_brasil_aprendizado)) {
+        $campos .= "{$gruda}espaco_brasil_aprendizado";
+        $valores .= "{$gruda}'{$this->espaco_brasil_aprendizado}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->abre_final_semana)) {
+        $campos .= "{$gruda}abre_final_semana";
+        $valores .= "{$gruda}'{$this->abre_final_semana}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->codigo_lingua_indigena)) {
+        $campos .= "{$gruda}codigo_lingua_indigena";
+        $valores .= "{$gruda}'{$this->codigo_lingua_indigena}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->proposta_pedagogica)) {
+        $campos .= "{$gruda}proposta_pedagogica";
+        $valores .= "{$gruda}'{$this->proposta_pedagogica}'";
+        $gruda = ", ";
+      }
+
       $campos .= "{$gruda}data_cadastro";
       $valores .= "{$gruda}NOW()";
       $gruda = ", ";
@@ -1113,6 +1303,141 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
+      if (is_numeric($this->dependencia_patio_descoberto)) {
+        $set .= "{$gruda}dependencia_patio_descoberto = '{$this->dependencia_patio_descoberto}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_alojamento_aluno)) {
+        $set .= "{$gruda}dependencia_alojamento_aluno = '{$this->dependencia_patio_coberto}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_alojamento_professor)) {
+        $set .= "{$gruda}dependencia_alojamento_professor = '{$this->dependencia_alojamento_professor}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_area_verde)) {
+        $set .= "{$gruda}dependencia_area_verde = '{$this->dependencia_area_verde}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_lavanderia)) {
+        $set .= "{$gruda}dependencia_lavanderia = '{$this->dependencia_lavanderia}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_unidade_climatizada)) {
+        $set .= "{$gruda}dependencia_unidade_climatizada = '{$this->dependencia_unidade_climatizada}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_quantidade_ambiente_climatizado)) {
+        $set .= "{$gruda}dependencia_quantidade_ambiente_climatizado = '{$this->dependencia_quantidade_ambiente_climatizado}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_nenhuma_relacionada)) {
+        $set .= "{$gruda}dependencia_nenhuma_relacionada = '{$this->dependencia_nenhuma_relacionada}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_numero_salas_existente)) {
+        $set .= "{$gruda}dependencia_numero_salas_existente = '{$this->dependencia_numero_salas_existente}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_numero_salas_utilizadas)) {
+        $set .= "{$gruda}dependencia_numero_salas_utilizadas = '{$this->dependencia_numero_salas_utilizadas}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->porte_quadra_descoberta)) {
+        $set .= "{$gruda}porte_quadra_descoberta = '{$this->porte_quadra_descoberta}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->porte_quadra_coberta)) {
+        $set .= "{$gruda}porte_quadra_coberta = '{$this->porte_quadra_coberta}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->tipo_cobertura_patio)) {
+        $set .= "{$gruda}tipo_cobertura_patio = '{$this->tipo_cobertura_patio}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->total_funcionario)) {
+        $set .= "{$gruda}total_funcionario = '{$this->total_funcionario}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->atendimento_aee)) {
+        $set .= "{$gruda}atendimento_aee = '{$this->atendimento_aee}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->atividade_complementar)) {
+        $set .= "{$gruda}atividade_complementar = '{$this->atividade_complementar}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->fundamental_ciclo)) {
+        $set .= "{$gruda}fundamental_ciclo = '{$this->fundamental_ciclo}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->localizacao_diferenciada)) {
+        $set .= "{$gruda}localizacao_diferenciada = '{$this->localizacao_diferenciada}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->didatico_nao_utiliza)) {
+        $set .= "{$gruda}didatico_nao_utiliza = '{$this->didatico_nao_utiliza}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->didatico_quilombola)) {
+        $set .= "{$gruda}didatico_quilombola = '{$this->didatico_quilombola}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->didatico_indigena)) {
+        $set .= "{$gruda}didatico_indigena = '{$this->didatico_indigena}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->educacao_indigena)) {
+        $set .= "{$gruda}educacao_indigena = '{$this->educacao_indigena}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->lingua_ministrada)) {
+        $set .= "{$gruda}lingua_ministrada = '{$this->lingua_ministrada}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->espaco_brasil_aprendizado)) {
+        $set .= "{$gruda}espaco_brasil_aprendizado = '{$this->espaco_brasil_aprendizado}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->abre_final_semana)) {
+        $set .= "{$gruda}abre_final_semana = '{$this->abre_final_semana}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->codigo_lingua_indigena)) {
+        $set .= "{$gruda}codigo_lingua_indigena = '{$this->codigo_lingua_indigena}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->proposta_pedagogica)) {
+        $set .= "{$gruda}proposta_pedagogica = '{$this->proposta_pedagogica}'";
+        $gruda = ", ";
+      }
+      
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_escola = '{$this->cod_escola}'");
         return TRUE;
