@@ -61,7 +61,6 @@ class indice extends clsCadastro
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
-	var $intervalo;
 
 	var $ref_cod_instituicao;
 
@@ -158,7 +157,6 @@ class indice extends clsCadastro
 		$opcoes = array( "" => "Selecione", 1 => "n&atilde;o", 2 => "sim");
 		$this->campoLista( "concluinte", "Concluinte", $opcoes, $this->concluinte);
 		$this->campoMonetario( "carga_horaria", "Carga Hor&aacute;ria", $this->carga_horaria, 7, 7, true );
-		$this->campoNumero( "intervalo", "Intervalo", $this->intervalo, 2, 2, true );
 		$this->media_especial = dbBool($this->media_especial) ? 'true' : '';
 		$this->campoCheck('media_especial','M&eacute;dia Especial',$this->media_especial);
 
@@ -231,7 +229,7 @@ class indice extends clsCadastro
 //		$this->disciplina_serie = unserialize( urldecode( $this->disciplina_serie ) );
 		if ($this->disciplinas)
 		{
-			$obj = new clsPmieducarSerie( null, null, $this->pessoa_logada, $this->ref_cod_curso, $this->nm_serie, $this->etapa_curso, $this->concluinte, $this->carga_horaria, null, null, 1, $this->intervalo, $this->idade_inicial, $this->idade_final, $this->media_especial );
+			$obj = new clsPmieducarSerie( null, null, $this->pessoa_logada, $this->ref_cod_curso, $this->nm_serie, $this->etapa_curso, $this->concluinte, $this->carga_horaria, null, null, 1, $this->idade_inicial, $this->idade_final, $this->media_especial );
 			$cadastrou = $obj->cadastra();
 			if( $cadastrou )
 			{
@@ -263,7 +261,7 @@ class indice extends clsCadastro
 			//-----------------------FIM CADASTRA DISCIPLINA------------------------//
 			}
 			$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-			echo "<!--\nErro ao cadastrar clsPmieducarSerie\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_curso ) && is_string( $this->nm_serie ) && is_numeric( $this->etapa_curso ) && is_numeric( $this->concluinte ) && is_numeric( $this->carga_horaria ) && is_numeric( $this->intervalo )\n-->";
+			echo "<!--\nErro ao cadastrar clsPmieducarSerie\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_curso ) && is_string( $this->nm_serie ) && is_numeric( $this->etapa_curso ) && is_numeric( $this->concluinte ) && is_numeric( $this->carga_horaria )\n-->";
 			return false;
 		}
 		echo "<script> alert('É necessário adicionar pelo menos 1 Disciplina!') </script>";
