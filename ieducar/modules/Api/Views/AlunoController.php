@@ -965,8 +965,9 @@ protected function createOrUpdateUniforme($id) {
 
   protected function delete() {
     $id = $this->getRequest()->id;
+    $anoUltimaMatricula = $this->possuiMatriculaAtiva($id);
 
-    if (!$this->possuiMatriculaAtiva($id)){
+    if (!$anoUltimaMatricula){
 
       if ($this->canDelete()) {
         $aluno                  = new clsPmieducarAluno();
@@ -980,15 +981,21 @@ protected function createOrUpdateUniforme($id) {
                                    'error', false, 'error');
       }
     }else{
-      $this->messenger->append('O cadastro não pôde ser removido, o aluno posuui matricula ativa.',
+      $this->messenger->append('O cadastro não pode ser removido, pois existe uma matrícula no ano de '. $anoUltimaMatricula .'. '.
+                               'Cancele a matrícula para posteriormente efetuar a exclusão do aluno.',
                                'error', false, 'error');
     }
     return array('id' => $id);
   }
 
   protected function possuiMatriculaAtiva($alunoId){
-    $sql = "select count(ativo) from pmieducar.matricula where ref_cod_aluno = $1";
-    return (Portabilis_Utils_Database::selectField($sql, $alunoId) > 0);
+    $sql = "select ano 
+              from pmieducar.matricula 
+             where ref_cod_aluno = $1 
+               and ativo = 1 
+             order by ano desc 
+             limit 1";
+    return (Portabilis_Utils_Database::selectField($sql, $alunoId));
   }
 
   public function Gerar() {
