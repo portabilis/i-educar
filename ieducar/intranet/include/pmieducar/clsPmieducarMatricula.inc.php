@@ -49,6 +49,7 @@ class clsPmieducarMatricula
   var $ref_usuario_exc;
   var $ref_usuario_cad;
   var $ref_cod_aluno;
+  var $ref_cod_abandono;
   var $aprovado;
   var $data_cadastro;
   var $data_exclusao;
@@ -130,17 +131,18 @@ class clsPmieducarMatricula
    */
   function clsPmieducarMatricula($cod_matricula = NULL, $ref_cod_reserva_vaga = NULL,
     $ref_ref_cod_escola = NULL, $ref_ref_cod_serie = NULL, $ref_usuario_exc = NULL,
-    $ref_usuario_cad = NULL, $ref_cod_aluno = NULL, $aprovado = NULL,
+    $ref_usuario_cad = NULL, $ref_cod_aluno = NULL, $ref_cod_abandono = NULL, $aprovado = NULL,
     $data_cadastro = NULL, $data_exclusao = NULL, $ativo = NULL, $ano = NULL,
     $ultima_matricula = NULL, $modulo = NULL, $formando = NULL,
     $descricao_reclassificacao = NULL, $matricula_reclassificacao = NULL,
-    $ref_cod_curso = NULL, $matricula_transferencia = NULL, $semestre = NULL, $data_matricula = NULL, $data_cancel = NULL
+    $ref_cod_curso = NULL, $matricula_transferencia = NULL, $semestre = NULL, 
+    $data_matricula = NULL, $data_cancel = NULL
   ) {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'matricula';
 
-    $this->_campos_lista = $this->_todos_campos = "m.cod_matricula, m.ref_cod_reserva_vaga, m.ref_ref_cod_escola, m.ref_ref_cod_serie, m.ref_usuario_exc, m.ref_usuario_cad, m.ref_cod_aluno, m.aprovado, m.data_cadastro, m.data_exclusao, m.ativo, m.ano, m.ultima_matricula, m.modulo,formando,descricao_reclassificacao,matricula_reclassificacao, m.ref_cod_curso,m.matricula_transferencia,m.semestre, m.data_matricula, m.data_cancel";
+    $this->_campos_lista = $this->_todos_campos = "m.cod_matricula, m.ref_cod_reserva_vaga, m.ref_ref_cod_escola, m.ref_ref_cod_serie, m.ref_usuario_exc, m.ref_usuario_cad, m.ref_cod_aluno, m.ref_cod_abandono, m.aprovado, m.data_cadastro, m.data_exclusao, m.ativo, m.ano, m.ultima_matricula, m.modulo,formando,descricao_reclassificacao,matricula_reclassificacao, m.ref_cod_curso,m.matricula_transferencia,m.semestre, m.data_matricula, m.data_cancel";
 
     if (is_numeric($ref_usuario_exc)) {
       if (class_exists("clsPmieducarUsuario")) {
@@ -362,6 +364,12 @@ class clsPmieducarMatricula
         $gruda = ", ";
       }
 
+      if (is_numeric($this->ref_cod_abandono)) {
+        $campos .= "{$gruda}ref_cod_abandono";
+        $valores .= "{$gruda}'{$this->ref_cod_abandono}'";
+        $gruda = ", ";
+      }
+
       if (is_numeric($this->aprovado)) {
         $campos .= "{$gruda}aprovado";
         $valores .= "{$gruda}'{$this->aprovado}'";
@@ -502,6 +510,11 @@ class clsPmieducarMatricula
         $gruda = ", ";
       }
 
+      if (is_numeric($this->ref_cod_abandono)) {
+        $set .= "{$gruda}ref_cod_abandono = '{$this->ref_cod_abandono}'";
+        $gruda = ", ";
+      }
+
       if (is_numeric($this->aprovado)) {
         $set .= "{$gruda}aprovado = '{$this->aprovado}'";
         $gruda = ", ";
@@ -581,14 +594,15 @@ class clsPmieducarMatricula
   function lista($int_cod_matricula = NULL, $int_ref_cod_reserva_vaga = NULL,
     $int_ref_ref_cod_escola = NULL, $int_ref_ref_cod_serie = NULL,
     $int_ref_usuario_exc = NULL, $int_ref_usuario_cad = NULL,
-    $int_ref_cod_aluno = NULL, $int_aprovado = NULL, $date_data_cadastro_ini = NULL,
-    $date_data_cadastro_fim = NULL, $date_data_exclusao_ini = NULL,
-    $date_data_exclusao_fim = NULL, $int_ativo = NULL, $int_ano = NULL,
-    $int_ref_cod_curso2 = NULL, $int_ref_cod_instituicao = NULL,
-    $int_ultima_matricula = NULL, $int_modulo = NULL,
-    $int_padrao_ano_escolar = NULL, $int_analfabeto = NULL, $int_formando = NULL,
-    $str_descricao_reclassificacao = NULL, $int_matricula_reclassificacao = NULL,
-    $boo_com_deficiencia = NULL, $int_ref_cod_curso = NULL, $bool_curso_sem_avaliacao = NULL,
+    $int_ref_cod_aluno = NULL, $int_ref_cod_abandono = NULL, $int_aprovado = NULL,
+    $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL, 
+    $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL, 
+    $int_ativo = NULL, $int_ano = NULL, $int_ref_cod_curso2 = NULL,
+    $int_ref_cod_instituicao = NULL, $int_ultima_matricula = NULL,
+    $int_modulo = NULL, $int_padrao_ano_escolar = NULL, 
+    $int_analfabeto = NULL, $int_formando = NULL, $str_descricao_reclassificacao = NULL,
+    $int_matricula_reclassificacao = NULL, $boo_com_deficiencia = NULL, 
+    $int_ref_cod_curso = NULL, $bool_curso_sem_avaliacao = NULL,
     $arr_int_cod_matricula = NULL, $int_mes_defasado = NULL, $boo_data_nasc = NULL,
     $boo_matricula_transferencia = NULL, $int_semestre = NULL, $int_ref_cod_turma = NULL)
   {
