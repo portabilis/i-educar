@@ -202,11 +202,12 @@ class MatriculaController extends ApiCoreController
 
   protected function deleteAbandono() {
     if ($this->canDeleteAbandono()) {
-      $matriculaId       = $this->getRequest()->id;
-      $situacaoAndamento = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+      $matriculaId        = $this->getRequest()->id;
+      $tipoSemAbandono    = null;
+      $situacaoAndamento  = App_Model_MatriculaSituacao::EM_ANDAMENTO;
 
-      $sql = 'update pmieducar.matricula set aprovado = $1 where cod_matricula = $2';
-      $this->fetchPreparedQuery($sql, array($situacaoAndamento, $matriculaId));
+      $sql = 'update pmieducar.matricula set aprovado = $1, ref_cod_abandono_tipo = $2 where cod_matricula = $3';
+      $this->fetchPreparedQuery($sql, array($situacaoAndamento, $tipoSemAbandono, $matriculaId));
 
       $this->messenger->append('Abandono desfeito.', 'success');
     }
