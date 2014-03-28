@@ -111,7 +111,7 @@
 
         IF (v_tipo_parecer = 2) THEN
           
-          INSERT INTO modules.parecer_aluno (matricula_id, tipo_parecer)VALUES (new_matricula_id,2);
+          INSERT INTO modules.parecer_aluno (matricula_id, parecer_descritivo)VALUES (new_matricula_id,2);
           v_parecer_id := (SELECT id FROM modules.parecer_aluno WHERE matricula_id = new_matricula_id);
           v_old_parecer_id := (SELECT id FROM modules.parecer_aluno WHERE matricula_id = old_matricula_id);
 
@@ -123,7 +123,7 @@
 
         IF (v_tipo_parecer = 3) THEN
           
-          INSERT INTO modules.parecer_aluno (matricula_id, tipo_parecer)VALUES (new_matricula_id,3);
+          INSERT INTO modules.parecer_aluno (matricula_id, parecer_descritivo)VALUES (new_matricula_id,3);
           v_parecer_id := (SELECT id FROM modules.parecer_aluno WHERE matricula_id = new_matricula_id);
           v_old_parecer_id := (SELECT id FROM modules.parecer_aluno WHERE matricula_id = old_matricula_id);
 

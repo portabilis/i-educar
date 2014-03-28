@@ -78,7 +78,6 @@ class indice extends clsCadastro
   var $data_cadastro;
   var $data_exclusao;
   var $ativo;
-  var $intervalo;
 
   var $ref_cod_instituicao;
 
@@ -192,8 +191,6 @@ class indice extends clsCadastro
 
     $this->campoNumero('dias_letivos', 'Dias letivos', $this->dias_letivos, 3, 3, TRUE);
 
-    $this->campoNumero('intervalo', 'Intervalo', $this->intervalo, 2, 2, TRUE);
-
     $this->campoNumero('idade_inicial', 'Faixa et&aacute;ria', $this->idade_inicial,
       2, 2, FALSE, '', '', FALSE, FALSE, TRUE);
 
@@ -213,7 +210,7 @@ class indice extends clsCadastro
 
     $obj = new clsPmieducarSerie(NULL, NULL, $this->pessoa_logada, $this->ref_cod_curso,
       $this->nm_serie, $this->etapa_curso, $this->concluinte, $this->carga_horaria,
-      NULL, NULL, 1, $this->intervalo, $this->idade_inicial, $this->idade_final,
+      NULL, NULL, 1, $this->idade_inicial, $this->idade_final,
       $this->regra_avaliacao_id, $this->observacao_historico, $this->dias_letivos);
 
     $cadastrou = $obj->cadastra();
@@ -225,7 +222,7 @@ class indice extends clsCadastro
     }
 
     $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-    echo "<!--\nErro ao cadastrar clsPmieducarSerie\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_curso ) && is_string( $this->nm_serie ) && is_numeric( $this->etapa_curso ) && is_numeric( $this->concluinte ) && is_numeric( $this->carga_horaria ) && is_numeric( $this->intervalo )\n-->";
+    echo "<!--\nErro ao cadastrar clsPmieducarSerie\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_curso ) && is_string( $this->nm_serie ) && is_numeric( $this->etapa_curso ) && is_numeric( $this->concluinte ) && is_numeric( $this->carga_horaria ) \n-->";
     return FALSE;
   }
 
@@ -240,7 +237,7 @@ class indice extends clsCadastro
 
     $obj = new clsPmieducarSerie($this->cod_serie, $this->pessoa_logada, NULL,
       $this->ref_cod_curso, $this->nm_serie, $this->etapa_curso, $this->concluinte,
-      $this->carga_horaria, NULL, NULL, 1, $this->intervalo, $this->idade_inicial,
+      $this->carga_horaria, NULL, NULL, 1, $this->idade_inicial,
       $this->idade_final, $this->regra_avaliacao_id, $this->observacao_historico, $this->dias_letivos);
 
     $editou = $obj->edita();
