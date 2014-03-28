@@ -131,18 +131,17 @@ class clsPmieducarMatricula
    */
   function clsPmieducarMatricula($cod_matricula = NULL, $ref_cod_reserva_vaga = NULL,
     $ref_ref_cod_escola = NULL, $ref_ref_cod_serie = NULL, $ref_usuario_exc = NULL,
-    $ref_usuario_cad = NULL, $ref_cod_aluno = NULL, $ref_cod_abandono = NULL, $aprovado = NULL,
+    $ref_usuario_cad = NULL, $ref_cod_aluno = NULL, $aprovado = NULL,
     $data_cadastro = NULL, $data_exclusao = NULL, $ativo = NULL, $ano = NULL,
     $ultima_matricula = NULL, $modulo = NULL, $formando = NULL,
     $descricao_reclassificacao = NULL, $matricula_reclassificacao = NULL,
     $ref_cod_curso = NULL, $matricula_transferencia = NULL, $semestre = NULL, 
-    $data_matricula = NULL, $data_cancel = NULL
-  ) {
+    $data_matricula = NULL, $data_cancel = NULL, $ref_cod_abandono = NULL) {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'matricula';
 
-    $this->_campos_lista = $this->_todos_campos = "m.cod_matricula, m.ref_cod_reserva_vaga, m.ref_ref_cod_escola, m.ref_ref_cod_serie, m.ref_usuario_exc, m.ref_usuario_cad, m.ref_cod_aluno, m.ref_cod_abandono, m.aprovado, m.data_cadastro, m.data_exclusao, m.ativo, m.ano, m.ultima_matricula, m.modulo,formando,descricao_reclassificacao,matricula_reclassificacao, m.ref_cod_curso,m.matricula_transferencia,m.semestre, m.data_matricula, m.data_cancel";
+    $this->_campos_lista = $this->_todos_campos = "m.cod_matricula, m.ref_cod_reserva_vaga, m.ref_ref_cod_escola, m.ref_ref_cod_serie, m.ref_usuario_exc, m.ref_usuario_cad, m.ref_cod_aluno, m.aprovado, m.data_cadastro, m.data_exclusao, m.ativo, m.ano, m.ultima_matricula, m.modulo,formando,descricao_reclassificacao,matricula_reclassificacao, m.ref_cod_curso,m.matricula_transferencia,m.semestre, m.data_matricula, m.data_cancel, m.ref_cod_abandono_tipo";
 
     if (is_numeric($ref_usuario_exc)) {
       if (class_exists("clsPmieducarUsuario")) {
@@ -594,7 +593,7 @@ class clsPmieducarMatricula
   function lista($int_cod_matricula = NULL, $int_ref_cod_reserva_vaga = NULL,
     $int_ref_ref_cod_escola = NULL, $int_ref_ref_cod_serie = NULL,
     $int_ref_usuario_exc = NULL, $int_ref_usuario_cad = NULL,
-    $int_ref_cod_aluno = NULL, $int_ref_cod_abandono = NULL, $int_aprovado = NULL,
+    $int_ref_cod_aluno = NULL, $int_aprovado = NULL,
     $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL, 
     $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL, 
     $int_ativo = NULL, $int_ano = NULL, $int_ref_cod_curso2 = NULL,
@@ -604,7 +603,8 @@ class clsPmieducarMatricula
     $int_matricula_reclassificacao = NULL, $boo_com_deficiencia = NULL, 
     $int_ref_cod_curso = NULL, $bool_curso_sem_avaliacao = NULL,
     $arr_int_cod_matricula = NULL, $int_mes_defasado = NULL, $boo_data_nasc = NULL,
-    $boo_matricula_transferencia = NULL, $int_semestre = NULL, $int_ref_cod_turma = NULL)
+    $boo_matricula_transferencia = NULL, $int_semestre = NULL, $int_ref_cod_turma = NULL,
+    $int_ref_cod_abandono = NULL)
   {
     if ($boo_data_nasc) {
       $this->_campos_lista .= " ,(SELECT data_nasc
@@ -1077,13 +1077,17 @@ class clsPmieducarMatricula
   * @author lucassch
   * @return boolean
   */
-  function cadastraObs($obs){
+  function cadastraObs($obs, $tipoAbandono){
       
     if (is_numeric($this->cod_matricula)){
       if (trim($obs)=='')
         $obs = "Não informado";
       $db = new clsBanco();
-      $consulta = "UPDATE {$this->_tabela} SET aprovado = 6, observacao = '$obs' WHERE cod_matricula = $this->cod_matricula";
+      $consulta = "UPDATE {$this->_tabela} 
+                      SET aprovado = 6, 
+                          observacao = '$obs', 
+                          ref_cod_abandono_tipo = '$tipoAbandono' 
+                    WHERE cod_matricula = $this->cod_matricula";
       $db->Consulta($consulta);
 
       return TRUE;

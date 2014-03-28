@@ -73,6 +73,7 @@ class indice extends clsDetalhe
   var $ref_cod_reserva_vaga;
   var $ref_ref_cod_escola;
   var $ref_ref_cod_serie;
+  var $ref_cod_abandono_tipo;
   var $ref_usuario_exc;
   var $ref_usuario_cad;
   var $ref_cod_aluno;
@@ -216,8 +217,14 @@ class indice extends clsDetalhe
 
       $this->addDetalhe(array('Situação', $aprovado));
     }
-    if ($campoObs)
+    if ($campoObs){
+
+      $tipoAbandono = new clsPmieducarAbandonoTipo($registro['ref_cod_abandono_tipo']);
+      $tipoAbandono = $tipoAbandono->detalhe();
+
+      $this->addDetalhe(array('Motivo do Abandono',$tipoAbandono['nome']));
       $this->addDetalhe(array('Observação',$registro['observacao']));
+    }
 
     $this->addDetalhe(array('Formando', $registro['formando'] == 0 ? 'N&atilde;o' : 'Sim'));
 
