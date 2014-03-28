@@ -34,7 +34,7 @@ class clsIndexBase extends clsBase
 	function Formular()
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Abandono" );
-		$this->processoAp = "575";
+		$this->processoAp = "950";
 	}
 }
 
@@ -100,7 +100,7 @@ class indice extends clsDetalhe
 		{
 			$this->addDetalhe( array( "Motivo Abandono", "{$registro["nome"]}") );
 		}
-		if( $obj_permissoes->permissao_cadastra( 575, $this->pessoa_logada, 7 ) )
+		if( $obj_permissoes->permissao_cadastra( 950, $this->pessoa_logada, 7 ) )
 		{
 			$this->url_novo = "educar_abandono_tipo_cad.php";
 			$this->url_editar = "educar_abandono_tipo_cad.php?cod_abandono_tipo={$registro["cod_abandono_tipo"]}";

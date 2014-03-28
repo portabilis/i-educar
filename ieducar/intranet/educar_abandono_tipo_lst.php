@@ -34,7 +34,7 @@ class clsIndexBase extends clsBase
 	function Formular()
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Abandono" );
-		$this->processoAp = "575";
+		$this->processoAp = "950";
 	}
 }
 
@@ -162,7 +162,7 @@ class indice extends clsListagem
 		}
 		$this->addPaginador2( "educar_abandono_tipo_lst.php", $total, $_GET, $this->nome, $this->limite );
 
-		if( $obj_permissoes->permissao_cadastra( 575, $this->pessoa_logada, 7 ) )
+		if( $obj_permissoes->permissao_cadastra( 950, $this->pessoa_logada, 7 ) )
 		{
 			$this->acao = "go(\"educar_abandono_tipo_cad.php\")";
 			$this->nome_acao = "Novo";
