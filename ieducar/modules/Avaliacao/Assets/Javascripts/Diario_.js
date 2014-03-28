@@ -577,7 +577,7 @@ function handleSearch($resultTable, dataResponse) {
   // seta colspan [th, td].aluno quando exibe nota exame
   if ($tableSearchDetails.data('details').tipo_nota != 'nenhum' &&
       $tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) {
-    $resultTable.find('[colspan]:not(.area-conhecimento)').attr('colspan', componenteCurricularSelected ? 1 : 6);
+    $resultTable.find('[colspan]:not(.area-conhecimento)').attr('colspan', componenteCurricularSelected ? 1 : 5);
   }
 
   $resultTable.find('tr:even').addClass('even');
@@ -783,7 +783,6 @@ function updateComponenteCurriculares($targetElement, matriculaId, componentesCu
       $j('<td />').addClass('area-conhecimento').attr('colspan', areaColspan).html(conteudo).appendTo($areaRow);
  
       //por fim adicionando primeiro a área depois o heade 
-      $areaRow.appendTo($targetElement);
       $ccHeader.appendTo($targetElement);
      }
 
