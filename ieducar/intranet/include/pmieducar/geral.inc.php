@@ -134,6 +134,7 @@ require_once 'include/pmieducar/clsPmieducarCategoriaNivel.inc.php';
 require_once 'include/pmieducar/clsPmieducarNivel.inc.php';
 require_once 'include/pmieducar/clsPmieducarSubnivel.inc.php';
 require_once 'include/pmieducar/clsPmieducarServidorCursoMinistra.inc.php';
+require_once 'include/pmieducar/clsPmieducarAbandonoTipo.inc.php';
 
 //Biblioteca
 require_once 'include/pmieducar/clsPmieducarBiblioteca.inc.php';
