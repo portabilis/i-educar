@@ -577,7 +577,7 @@ function handleSearch($resultTable, dataResponse) {
   // seta colspan [th, td].aluno quando exibe nota exame
   if ($tableSearchDetails.data('details').tipo_nota != 'nenhum' &&
       $tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) {
-    $resultTable.find('[colspan]:not(.area-conhecimento)').attr('colspan', componenteCurricularSelected ? 1 : 5);
+    $resultTable.find('[colspan]:not(.area-conhecimento)').attr('colspan', componenteCurricularSelected ? 1 : 6);
   }
 
   $resultTable.find('tr:even').addClass('even');
@@ -762,33 +762,62 @@ function updateComponenteCurriculares($targetElement, matriculaId, componentesCu
   
   var areas = new Array();
   
-  var $ccHeader = $j('<tr />').addClass('strong');
-
-  $j('<td />').addClass('center').html('Componente curricular').appendTo($ccHeader);
-  updateComponenteCurricularHeaders($ccHeader, $j('<td />'));
-
-  $ccHeader.appendTo($targetElement);
-
-  var areaColspan = $j('td', $ccHeader).length;
+  var setaDireita = "<img src=\"imagens/mytdt/seta-preta-direita.png\" align=\"top\" class=\"area-conhecimento-seta seta-direita\" />";
+  var setaBaixo   = "<img src=\"imagens/mytdt/seta-branca-baixo.png\" align=\"top\" class=\"area-conhecimento-seta seta-baixo\" />";
 
   $j.each(componentesCurriculares, function(index, cc) {
 
     if (areas.indexOf(cc.area_id) == -1) {
       areas.push(cc.area_id);
+
+      //primeiro o header para calcular o colspan
+      var $ccHeader = $j('<tr />').addClass('strong').addClass('tr-componente-curricular').data('areaid', cc.area_id);
+      $j('<td />').addClass('center').html('Componente curricular').appendTo($ccHeader);
+      updateComponenteCurricularHeaders($ccHeader, $j('<td />'));
        
-      var $areaRow = $j('<tr />');
-       
-      $j('<td />').addClass('area-conhecimento').attr('colspan', areaColspan).html(cc.area_nome).appendTo($areaRow);
-       
+      //pegando o colspan
+      var areaColspan = $j('td', $ccHeader).length;
+      
+      var $areaRow = $j('<tr />').addClass('tr-area-conhecimento').data('areaid', cc.area_id);
+      var conteudo = setaDireita + setaBaixo + " " + cc.area_nome;
+      $j('<td />').addClass('area-conhecimento').attr('colspan', areaColspan).html(conteudo).appendTo($areaRow);
+ 
+      //por fim adicionando primeiro a área depois o heade 
       $areaRow.appendTo($targetElement);
+      $ccHeader.appendTo($targetElement);
      }
 
-    var $ccRow = $j('<tr />');
+    var $ccRow = $j('<tr />').addClass('tr-componente-curricular').data('areaid', cc.area_id);
 
     $j('<td />').addClass('center').html(cc.nome).appendTo($ccRow);
     updateComponenteCurricular($ccRow, matriculaId, cc);
 
     $ccRow.appendTo($targetElement);
+  });
+
+  $j('.tr-area-conhecimento').bind('click', function() {
+    
+    $j('td', this).toggleClass('area-conhecimento-destaque');
+  
+    var fechado = $j('.seta-baixo', this).is(':hidden');
+    if (fechado) {
+      $j('.seta-baixo', this).css('display', 'inline');
+      $j('.seta-direita', this).css('display', 'none');
+    } else {
+      $j('.seta-baixo', this).css('display', 'none');
+      $j('.seta-direita', this).css('display', 'inline');
+    }
+    
+    var id = $j(this).data('areaid');
+    $j('.tr-componente-curricular').each(function() {
+      if ($j(this).data('areaid') == id) {
+        if ($j(this).is(':hidden')) {
+          $j(this).slideRow('down');
+        } else {
+          $j(this).slideRow('up');
+        }
+      }
+    });
   });
 }
 
@@ -889,3 +918,112 @@ function showNextSelectionButton() {
                                 .appendTo($navActions);
   }
 }
+
+(function($) {
+  var sR = {
+      defaults: {
+          slideSpeed: 400,
+          easing: false,
+          callback: false     
+      },
+      thisCallArgs: {
+          slideSpeed: 400,
+          easing: false,
+          callback: false
+      },
+      methods: {
+          up: function (arg1,arg2,arg3) {
+              if(typeof arg1 == 'object') {
+                  for(p in arg1) {
+                      sR.thisCallArgs.eval(p) = arg1[p];
+                  }
+              }else if(typeof arg1 != 'undefined' && (typeof arg1 == 'number' || arg1 == 'slow' || arg1 == 'fast')) {
+                  sR.thisCallArgs.slideSpeed = arg1;
+              }else{
+                  sR.thisCallArgs.slideSpeed = sR.defaults.slideSpeed;
+              }
+
+              if(typeof arg2 == 'string'){
+                  sR.thisCallArgs.easing = arg2;
+              }else if(typeof arg2 == 'function'){
+                  sR.thisCallArgs.callback = arg2;
+              }else if(typeof arg2 == 'undefined') {
+                  sR.thisCallArgs.easing = sR.defaults.easing;    
+              }
+              if(typeof arg3 == 'function') {
+                  sR.thisCallArgs.callback = arg3;
+              }else if(typeof arg3 == 'undefined' && typeof arg2 != 'function'){
+                  sR.thisCallArgs.callback = sR.defaults.callback;    
+              }
+              var $cells = $(this).find('td');
+              $cells.wrapInner('<div class="slideRowUp" />');
+              var currentPadding = $cells.css('padding');
+              $cellContentWrappers = $(this).find('.slideRowUp');
+              $cellContentWrappers.slideUp(sR.thisCallArgs.slideSpeed,sR.thisCallArgs.easing).parent().animate({
+                                                                                                                  paddingTop: '0px',
+                                                                                                                  paddingBottom: '0px'},{
+                                                                                                                  complete: function () {
+                                                                                                                      $(this).children('.slideRowUp').replaceWith($(this).children('.slideRowUp').contents());
+                                                                                                                      $(this).parent().css({'display':'none'});
+                                                                                                                      $(this).css({'padding': currentPadding});
+                                                                                                                  }});
+              var wait = setInterval(function () {
+                  if($cellContentWrappers.is(':animated') === false) {
+                      clearInterval(wait);
+                      if(typeof sR.thisCallArgs.callback == 'function') {
+                          sR.thisCallArgs.callback.call(this);
+                      }
+                  }
+              }, 100);                                                                                                    
+              return $(this);
+          },
+          down: function (arg1,arg2,arg3) {
+              if(typeof arg1 == 'object') {
+                  for(p in arg1) {
+                      sR.thisCallArgs.eval(p) = arg1[p];
+                  }
+              }else if(typeof arg1 != 'undefined' && (typeof arg1 == 'number' || arg1 == 'slow' || arg1 == 'fast')) {
+                  sR.thisCallArgs.slideSpeed = arg1;
+              }else{
+                  sR.thisCallArgs.slideSpeed = sR.defaults.slideSpeed;
+              }
+
+              if(typeof arg2 == 'string'){
+                  sR.thisCallArgs.easing = arg2;
+              }else if(typeof arg2 == 'function'){
+                  sR.thisCallArgs.callback = arg2;
+              }else if(typeof arg2 == 'undefined') {
+                  sR.thisCallArgs.easing = sR.defaults.easing;    
+              }
+              if(typeof arg3 == 'function') {
+                  sR.thisCallArgs.callback = arg3;
+              }else if(typeof arg3 == 'undefined' && typeof arg2 != 'function'){
+                  sR.thisCallArgs.callback = sR.defaults.callback;    
+              }
+              var $cells = $(this).find('td');
+              $cells.wrapInner('<div class="slideRowDown" style="display:none;" />');
+              $cellContentWrappers = $cells.find('.slideRowDown');
+              $(this).show();
+              $cellContentWrappers.slideDown(sR.thisCallArgs.slideSpeed, sR.thisCallArgs.easing, function() { $(this).replaceWith( $(this).contents()); });
+
+              var wait = setInterval(function () {
+                  if($cellContentWrappers.is(':animated') === false) {
+                      clearInterval(wait);
+                      if(typeof sR.thisCallArgs.callback == 'function') {
+                          sR.thisCallArgs.callback.call(this);
+                      }
+                  }
+              }, 100);
+              return $(this);
+          }
+      }
+  };
+
+  $.fn.slideRow = function(method,arg1,arg2,arg3) {
+      if(typeof method != 'undefined') {
+          if(sR.methods[method]) {
+              return sR.methods[method].apply(this, Array.prototype.slice.call(arguments,1));
+          }
+      }
+  };
+})(jQuery);
