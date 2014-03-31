@@ -215,7 +215,10 @@ class MatriculaController extends ApiCoreController
   }
 
   protected function deleteReclassificacao(){
-    $matriculaId  = $this->getRequest()->id;
+    $matriculaId = $this->getRequest()->id;
+    $matricula   = new clsPmieducarMatricula($matriculaId);
+    $matricula   = $matricula->detalhe();
+    $alunoId     = $matricula['ref_cod_aluno'];
     $situacaoAndamento  = App_Model_MatriculaSituacao::EM_ANDAMENTO;
   
     $sql = 'update pmieducar.matricula_turma set ativo = 1 where ref_cod_matricula = $1';
@@ -223,6 +226,8 @@ class MatriculaController extends ApiCoreController
     
     $sql = 'update pmieducar.matricula set matricula_reclassificacao = 0, aprovado = $1 where cod_matricula = $2';
     $this->fetchPreparedQuery($sql, array($situacaoAndamento, $matriculaId));
+
+    return array('aluno_id' => $alunoId);
   }
 
   public function Gerar() {

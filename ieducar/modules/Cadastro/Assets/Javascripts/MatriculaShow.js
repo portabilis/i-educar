@@ -6,7 +6,7 @@ var handleDeleteAbandono = function(dataResponse) {
 }
 var handleDeleteReclassificacao = function(dataResponse){
   alert(stringUtils.toUtf8("Reclassificação cancelada com sucesso!\nLembre-se de cancelar a matrícula gerada pela reclassificação."));
-  location.reload();
+  location.assign("educar_aluno_det.php?cod_aluno="+dataResponse.aluno_id);
 }
 
 function deleteAbandono(matriculaId) {
