@@ -9,8 +9,29 @@
  * @company MyTDT Corporation [http://www.mytdt.com.br] 
  */
 td.area-conhecimento {
-  background-color: #546C76;
-  color: #FFF;
+  background-color: #A1B3BD;
+  color: #000;
   font-weight: bold;
   text-align: left;
+  cursor: pointer;
+}
+
+td.area-conhecimento-destaque {
+  background-color: #546C76 !important;
+  color: #FFF !important;
+}
+
+td.area-conhecimento img.area-conhecimento-seta {
+  -moz-user-select: none;
+  outline: none;
+  border: 0;
+  margin-top: -1px;
+}
+
+td.area-conhecimento img.seta-baixo {
+  display: none;
+}
+
+.tr-componente-curricular {
+  display: none;
 }
