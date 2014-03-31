@@ -34,6 +34,7 @@ require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'App/Model/MatriculaSituacao.php';
 require_once 'intranet/include/clsBanco.inc.php';
+require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
 
 class MatriculaController extends ApiCoreController
 {
@@ -213,6 +214,17 @@ class MatriculaController extends ApiCoreController
     }
   }
 
+  protected function deleteReclassificacao(){
+    $matriculaId  = $this->getRequest()->id;
+    $situacaoAndamento  = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+  
+    $sql = 'update pmieducar.matricula_turma set ativo = 1 where ref_cod_matricula = $1';
+    $this->fetchPreparedQuery($sql, array($matriculaId));
+    
+    $sql = 'update pmieducar.matricula set matricula_reclassificacao = 0, aprovado = $1 where cod_matricula = $2';
+    $this->fetchPreparedQuery($sql, array($situacaoAndamento, $matriculaId));
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'matricula'))
       $this->appendResponse($this->get());
@@ -228,6 +240,9 @@ class MatriculaController extends ApiCoreController
 
     elseif ($this->isRequestFor('delete', 'abandono'))
       $this->appendResponse($this->deleteAbandono());
+
+    elseif ($this->isRequestFor('delete', 'reclassificacao'))
+      $this->appendResponse($this->deleteReclassificacao());
 
     else
       $this->notImplementedOperationError();
