@@ -454,13 +454,15 @@ class indice extends clsCadastro
         $conteudo .= '<div style="margin-bottom: 10px;">';
         $conteudo .= '  <span style="display: block; float: left; width: 250px;">Nome</span>';
         $conteudo .= '  <span style="display: block; float: left; width: 100px;">Carga hor&aacute;ria</span>';
-        $conteudo .= '  <span style="display: block; float: left">Usar padr&atilde;o do componente?</span>';
+        $conteudo .= '  <span style="display: block; float: left;width: 200px;">Usar padr&atilde;o do componente?</span>';
+        $conteudo .= '  <span style="display: block; float: left">Possui docente v&iacute;nculado?</span>';
         $conteudo .= '</div>';
         $conteudo .= '<br style="clear: left" />';
 
         foreach ($lista as $registro) {
           $checked = '';
           $usarComponente = FALSE;
+          $docenteVinculado = FALSE;
 
           if (isset($componentes[$registro->id])) {
             $checked = 'checked="checked"';
@@ -475,10 +477,15 @@ class indice extends clsCadastro
           }
           $cargaComponente = $registro->cargaHoraria;
 
+          if (1 == $componentes[$registro->id]->docenteVinculado) {
+            $docenteVinculado = TRUE;            
+          }
+
           $conteudo .= '<div style="margin-bottom: 10px; float: left">';
           $conteudo .= "  <label style='display: block; float: left; width: 250px'><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</label>";
           $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7'></label>";
-          $conteudo .= "  <label style='display: block; float: left'><input type='checkbox' name='usar_componente[$registro->id]' value='1' ". ($usarComponente == TRUE ? $checked : '') .">($cargaComponente h)</label>";
+          $conteudo .= "  <label style='display: block; float: left; width: 200px;'><input type='checkbox' name='usar_componente[$registro->id]' value='1' ". ($usarComponente == TRUE ? $checked : '') .">($cargaComponente h)</label>";
+          $conteudo .= "  <label style='display: block; float: left'><input type='checkbox' name='docente_vinculado[$registro->id]' value='1' ". ($docenteVinculado == TRUE ? $checked : '') ."></label>";
           $conteudo .= '</div>';
           $conteudo .= '<br style="clear: left" />';
 
@@ -898,7 +905,7 @@ class indice extends clsCadastro
         $obj->cod_curso_profissional = $this->cod_curso_profissional;
         $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;      
 
-        $cadastrou = $obj->cadastra();
+        $this->cod_turma = $cadastrou = $obj->cadastra();
 
         if ($cadastrou) {
           // Cadastra módulo
@@ -933,6 +940,10 @@ class indice extends clsCadastro
               return FALSE;
             }
           }
+          $this->atualizaComponentesCurriculares(
+            $this->ref_ref_cod_serie, $this->ref_cod_escola, $this->cod_turma,
+            $this->disciplinas, $this->carga_horaria, $this->usar_componente, $this->docente_vinculado
+          );          
 
           $this->mensagem .= 'Cadastro efetuado com sucesso.';
           header('Location: educar_turma_lst.php');
@@ -986,7 +997,7 @@ class indice extends clsCadastro
       $obj->cod_curso_profissional = $this->cod_curso_profissional;
       $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;      
 
-      $cadastrou = $obj->cadastra();
+      $this->cod_turma = $cadastrou = $obj->cadastra();
 
 
       if ($cadastrou) {
@@ -1005,6 +1016,10 @@ class indice extends clsCadastro
             return FALSE;
           }
         }        
+        $this->atualizaComponentesCurriculares(
+          $this->ref_ref_cod_serie, $this->ref_cod_escola, $this->cod_turma,
+          $this->disciplinas, $this->carga_horaria, $this->usar_componente, $this->docente_vinculado
+        );
         $this->mensagem .= 'Cadastro efetuado com sucesso.';
         header('Location: educar_turma_lst.php');
         die();
@@ -1016,10 +1031,6 @@ class indice extends clsCadastro
       return FALSE;
     }
 
-    $this->atualizaComponentesCurriculares(
-      $this->ref_ref_cod_serie, $this->ref_cod_escola, $this->cod_turma,
-      $this->disciplinas, $this->carga_horaria, $this->usar_componente
-    );
   }
 
   function Editar()
@@ -1186,7 +1197,7 @@ class indice extends clsCadastro
 
     $this->atualizaComponentesCurriculares(
       $this->ref_ref_cod_serie_, $this->ref_cod_escola_, $this->cod_turma,
-      $this->disciplinas, $this->carga_horaria, $this->usar_componente
+      $this->disciplinas, $this->carga_horaria, $this->usar_componente, $this->docente_vinculado
     );
 
     // Caso tenham sido selecionadas discplinas, como se trata de uma edição de turma será rodado uma consulta
@@ -1230,7 +1241,7 @@ class indice extends clsCadastro
     }
   }
 
-  function atualizaComponentesCurriculares($codSerie, $codEscola, $codTurma, $componentes, $cargaHoraria, $usarComponente)
+  function atualizaComponentesCurriculares($codSerie, $codEscola, $codTurma, $componentes, $cargaHoraria, $usarComponente, $docente)
   {
     require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
     $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
@@ -1241,9 +1252,13 @@ class indice extends clsCadastro
       $carga = isset($usarComponente[$key]) ?
         NULL : $cargaHoraria[$key];
 
+      $docente_ = isset($docente[$key]) ?
+        1 : 0;        
+
       $componentesTurma[] = array(
         'id'           => $value,
-        'cargaHoraria' => $carga
+        'cargaHoraria' => $carga,
+        'docenteVinculado' => $docente_
       );
     }
 
@@ -1713,8 +1728,9 @@ function parseComponentesCurriculares(xml_disciplina)
   if (DOM_array.length) {
     conteudo += '<div style="margin-bottom: 10px; float: left">';
     conteudo += '  <span style="display: block; float: left; width: 250px;">Nome</span>';
-    conteudo += '  <label span="display: block; float: left; width: 100px">Carga hor&aacute;ria</span>';
-    conteudo += '  <label span="display: block; float: left">Usar padr&atilde;o do componente?</span>';
+    conteudo += '  <label> <span style="display: block; float: left; width: 100px">Carga hor&aacute;ria </span></label>';
+    conteudo += '  <label> <span style="display: block; float: left; width: 200px">Usar padr&atilde;o do componente?</span></label>';
+    conteudo += '  <label> <span style="display: block; float: left">Possui docente v&iacute;nculado?</span></label>';
     conteudo += '</div>';
     conteudo += '<br style="clear: left" />';
 
@@ -1724,7 +1740,8 @@ function parseComponentesCurriculares(xml_disciplina)
       conteudo += '<div style="margin-bottom: 10px; float: left">';
       conteudo += '  <label style="display: block; float: left; width: 250px;"><input type="checkbox" name="disciplinas['+ id +']" id="disciplinas[]" value="'+ id +'">'+ DOM_array[i].firstChild.data +'</label>';
       conteudo += '  <label style="display: block; float: left; width: 100px;"><input type="text" name="carga_horaria['+ id +']" value="" size="5" maxlength="7"></label>';
-      conteudo += '  <label style="display: block; float: left"><input type="checkbox" name="usar_componente['+ id +']" value="1">('+ DOM_array[i].getAttribute("carga_horaria") +' h)</label>';
+      conteudo += '  <label style="display: block; float: left;width: 200px;"><input type="checkbox" name="usar_componente['+ id +']" value="1">('+ DOM_array[i].getAttribute("carga_horaria") +' h)</label>';
+      conteudo += '  <label style="display: block; float: left;"><input type="checkbox" name="docente_vinculado['+ id +']" value="1"></label>';
       conteudo += '</div>';
       conteudo += '<br style="clear: left" />';
     }

@@ -74,5 +74,9 @@ $j(document).ready(function() {
     });
 
   // fix checkboxs
-  $j('input:checked').val('on');
+  $j('.tablecadastro >tbody  > tr').each(function(index, row) {
+    if (index>=linha_inicial_tipo){
+      $j('#'+row.id).find('input:checked').val('on');
+    }
+  });
 });

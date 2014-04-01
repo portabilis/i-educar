@@ -62,8 +62,8 @@ if (is_numeric($_GET['esc']) && is_numeric($_GET['ser'])) {
 }
 
 foreach ($componentes as $componente) {
-  print sprintf(' <disciplina cod_disciplina="%d" carga_horaria="%d">%s</disciplina>%s',
-    $componente->id, $componente->cargaHoraria, $componente, PHP_EOL);
+  print sprintf(' <disciplina cod_disciplina="%d" carga_horaria="%d" docente_vinculado="%d">%s</disciplina>%s',
+    $componente->id, $componente->cargaHoraria, $componente->docenteVinculado, $componente, PHP_EOL);
 }
 
 echo "</query>";

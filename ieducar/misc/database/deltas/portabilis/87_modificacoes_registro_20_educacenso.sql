@@ -29,7 +29,11 @@
   ALTER TABLE pmieducar.turma ADD COLUMN cod_curso_profissional INTEGER;
   ALTER TABLE pmieducar.turma ADD COLUMN turma_sem_professor SMALLINT;
 
+  ALTER TABLE pmieducar.turma ADD CONSTRAINT turma_etapa_id_fk FOREIGN KEY (etapa_id)
+  REFERENCES modules.etapas_educacenso (id) MATCH SIMPLE;
+
   ALTER TABLE modules.componente_curricular ADD COLUMN codigo_educacenso SMALLINT;
+  ALTER TABLE modules.componente_curricular_turma ADD COLUMN docente_vinculado SMALLINT;
 
   -- //@UNDO
   
@@ -57,5 +61,7 @@
   ALTER TABLE pmieducar.turma DROP COLUMN turma_sem_professor;
 
   ALTER TABLE modules.componente_curricular DROP COLUMN codigo_educacenso;
+
+  ALTER TABLE modules.componente_curricular_turma DROP COLUMN docente_vinculado;
 
   -- //
