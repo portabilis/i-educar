@@ -63,6 +63,29 @@ class clsPmieducarTurma
     var $ref_ref_cod_escola_mult;
     var $visivel;
     var $data_fechamento;
+
+    var $tipo_atendimento;
+    var $turma_mais_educacao;
+    var $atividade_complementar_1;
+    var $atividade_complementar_2;
+    var $atividade_complementar_3;
+    var $atividade_complementar_4;
+    var $atividade_complementar_5;
+    var $atividade_complementar_6;
+    var $aee_braille;
+    var $aee_recurso_optico;
+    var $aee_estrategia_desenvolvimento;
+    var $aee_tecnica_mobilidade;
+    var $aee_libras;
+    var $aee_caa;
+    var $aee_curricular;
+    var $aee_soroban;
+    var $aee_informatica;
+    var $aee_lingua_escrita;
+    var $aee_autonomia;
+    var $etapa_id;
+    var $cod_curso_profissional;
+    var $turma_sem_professor;
 	// propriedades padrao
 
 	/**
@@ -133,7 +156,8 @@ class clsPmieducarTurma
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}turma";
 
-		$this->_campos_lista = $this->_todos_campos = "t.cod_turma, t.ref_usuario_exc, t.ref_usuario_cad, t.ref_ref_cod_serie, t.ref_ref_cod_escola, t.ref_cod_infra_predio_comodo, t.nm_turma, t.sgl_turma, t.max_aluno, t.multiseriada, t.data_cadastro, t.data_exclusao, t.ativo, t.ref_cod_turma_tipo, t.hora_inicial, t.hora_final, t.hora_inicio_intervalo, t.hora_fim_intervalo, t.ref_cod_regente, t.ref_cod_instituicao_regente,t.ref_cod_instituicao, t.ref_cod_curso, t.ref_ref_cod_serie_mult, t.ref_ref_cod_escola_mult, t.visivel, t.turma_turno_id, t.tipo_boletim, t.ano, t.data_fechamento ";
+		$this->_campos_lista = $this->_todos_campos = "t.cod_turma, t.ref_usuario_exc, t.ref_usuario_cad, t.ref_ref_cod_serie, t.ref_ref_cod_escola, t.ref_cod_infra_predio_comodo, t.nm_turma, t.sgl_turma, t.max_aluno, t.multiseriada, t.data_cadastro, t.data_exclusao, t.ativo, t.ref_cod_turma_tipo, t.hora_inicial, t.hora_final, t.hora_inicio_intervalo, t.hora_fim_intervalo, t.ref_cod_regente, t.ref_cod_instituicao_regente,t.ref_cod_instituicao, t.ref_cod_curso, t.ref_ref_cod_serie_mult, t.ref_ref_cod_escola_mult, t.visivel, t.turma_turno_id, t.tipo_boletim, t.ano, t.data_fechamento,
+		t.tipo_atendimento, t.turma_mais_educacao, t.atividade_complementar_1, t.atividade_complementar_2, t.atividade_complementar_3, t.atividade_complementar_4, t.atividade_complementar_5, t.atividade_complementar_6, t.aee_braille, t.aee_recurso_optico, t.aee_estrategia_desenvolvimento, t.aee_tecnica_mobilidade, t.aee_libras, t.aee_caa, t.aee_curricular, t.aee_soroban, t.aee_informatica, t.aee_lingua_escrita, t.aee_autonomia, t.etapa_id, t.cod_curso_profissional, t.turma_sem_professor ";
 
 		if( is_numeric( $ref_cod_turma_tipo ) )
 		{
@@ -622,7 +646,139 @@ class clsPmieducarTurma
 				$campos  .= "{$gruda}data_fechamento";
 				$valores .= "{$gruda}'{$this->data_fechamento}'";
 				$gruda    = ", ";
-			}			
+			}
+
+			if(is_numeric($this->tipo_atendimento)){
+				$campos  .= "{$gruda}tipo_atendimento";
+				$valores .= "{$gruda}'{$this->tipo_atendimento}'";
+				$gruda    = ", ";
+			}
+
+			if(is_numeric($this->turma_mais_educacao)){
+				$campos  .= "{$gruda}turma_mais_educacao";
+				$valores .= "{$gruda}'{$this->turma_mais_educacao}'";
+				$gruda    = ", ";
+			}
+
+			if(is_numeric($this->atividade_complementar_1)){
+				$campos  .= "{$gruda}atividade_complementar_1";
+				$valores .= "{$gruda}'{$this->atividade_complementar_1}'";
+				$gruda    = ", ";
+			}
+
+			if(is_numeric($this->atividade_complementar_2)){
+				$campos  .= "{$gruda}atividade_complementar_2";
+				$valores .= "{$gruda}'{$this->atividade_complementar_2}'";
+				$gruda    = ", ";
+			}
+
+			if(is_numeric($this->atividade_complementar_3)){
+				$campos  .= "{$gruda}atividade_complementar_3";
+				$valores .= "{$gruda}'{$this->atividade_complementar_3}'";
+				$gruda    = ", ";
+			}
+
+			if(is_numeric($this->atividade_complementar_4)){
+				$campos  .= "{$gruda}atividade_complementar_4";
+				$valores .= "{$gruda}'{$this->atividade_complementar_4}'";
+				$gruda    = ", ";
+			}
+
+			if(is_numeric($this->atividade_complementar_5)){
+				$campos  .= "{$gruda}atividade_complementar_5";
+				$valores .= "{$gruda}'{$this->atividade_complementar_5}'";
+				$gruda    = ", ";
+			}
+
+			if(is_numeric($this->atividade_complementar_6)){
+				$campos  .= "{$gruda}atividade_complementar_6";
+				$valores .= "{$gruda}'{$this->atividade_complementar_6}'";
+				$gruda    = ", ";
+			}
+
+			if(is_numeric($this->aee_braille)){
+				$campos  .= "{$gruda}aee_braille";
+				$valores .= "{$gruda}'{$this->aee_braille}'";
+				$gruda    = ", ";
+			}
+
+			if(is_numeric($this->aee_recurso_optico)){
+				$campos  .= "{$gruda}aee_recurso_optico";
+				$valores .= "{$gruda}'{$this->aee_recurso_optico}'";
+				$gruda    = ", ";
+			}
+
+			if(is_numeric($this->aee_estrategia_desenvolvimento)){
+				$campos  .= "{$gruda}aee_estrategia_desenvolvimento";
+				$valores .= "{$gruda}'{$this->aee_estrategia_desenvolvimento}'";
+				$gruda    = ", ";
+			}
+
+			if(is_numeric($this->aee_tecnica_mobilidade)){
+				$campos  .= "{$gruda}aee_tecnica_mobilidade";
+				$valores .= "{$gruda}'{$this->aee_tecnica_mobilidade}'";
+				$gruda    = ", ";
+			}
+
+			if(is_numeric($this->aee_libras)){
+				$campos  .= "{$gruda}aee_libras";
+				$valores .= "{$gruda}'{$this->aee_libras}'";
+				$gruda    = ", ";
+			}
+
+			if(is_numeric($this->aee_caa)){
+				$campos  .= "{$gruda}aee_caa";
+				$valores .= "{$gruda}'{$this->aee_caa}'";
+				$gruda    = ", ";
+			}				
+
+			if(is_numeric($this->aee_curricular)){
+				$campos  .= "{$gruda}aee_curricular";
+				$valores .= "{$gruda}'{$this->aee_curricular}'";
+				$gruda    = ", ";
+			}
+
+			if(is_numeric($this->aee_soroban)){
+				$campos  .= "{$gruda}aee_soroban";
+				$valores .= "{$gruda}'{$this->aee_soroban}'";
+				$gruda    = ", ";
+			}
+
+			if(is_numeric($this->aee_informatica)){
+				$campos  .= "{$gruda}aee_informatica";
+				$valores .= "{$gruda}'{$this->aee_informatica}'";
+				$gruda    = ", ";
+			}
+
+			if(is_numeric($this->aee_lingua_escrita)){
+				$campos  .= "{$gruda}aee_lingua_escrita";
+				$valores .= "{$gruda}'{$this->aee_lingua_escrita}'";
+				$gruda    = ", ";
+			}
+
+			if(is_numeric($this->aee_autonomia)){
+				$campos  .= "{$gruda}aee_autonomia";
+				$valores .= "{$gruda}'{$this->aee_autonomia}'";
+				$gruda    = ", ";
+			}
+
+			if(is_numeric($this->etapa_id)){
+				$campos  .= "{$gruda}etapa_id";
+				$valores .= "{$gruda}'{$this->etapa_id}'";
+				$gruda    = ", ";
+			}
+
+			if(is_numeric($this->cod_curso_profissional)){
+				$campos  .= "{$gruda}cod_curso_profissional";
+				$valores .= "{$gruda}'{$this->cod_curso_profissional}'";
+				$gruda    = ", ";
+			}
+
+			if(is_numeric($this->turma_sem_professor)){
+				$campos  .= "{$gruda}turma_sem_professor";
+				$valores .= "{$gruda}'{$this->turma_sem_professor}'";
+				$gruda    = ", ";
+			}
 
 			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
 			return $db->InsertId( "{$this->_tabela}_cod_turma_seq");
@@ -818,6 +974,122 @@ class clsPmieducarTurma
 				$gruda = ", ";
 			}			
 
+			if(is_numeric($this->tipo_atendimento)) {
+				$set  .= "{$gruda}tipo_atendimento = '{$this->tipo_atendimento}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->turma_mais_educacao)) {
+				$set  .= "{$gruda}turma_mais_educacao = '{$this->turma_mais_educacao}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->atividade_complementar_1)) {
+				$set  .= "{$gruda}atividade_complementar_1 = '{$this->atividade_complementar_1}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->atividade_complementar_2)) {
+				$set  .= "{$gruda}atividade_complementar_2 = '{$this->atividade_complementar_2}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->atividade_complementar_3)) {
+				$set  .= "{$gruda}atividade_complementar_3 = '{$this->atividade_complementar_3}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->atividade_complementar_4)) {
+				$set  .= "{$gruda}atividade_complementar_4 = '{$this->atividade_complementar_4}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->atividade_complementar_5)) {
+				$set  .= "{$gruda}atividade_complementar_5 = '{$this->atividade_complementar_5}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->atividade_complementar_6)) {
+				$set  .= "{$gruda}atividade_complementar_6 = '{$this->atividade_complementar_6}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->aee_braille)) {
+				$set  .= "{$gruda}aee_braille = '{$this->aee_braille}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->aee_recurso_optico)) {
+				$set  .= "{$gruda}aee_recurso_optico = '{$this->aee_recurso_optico}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->aee_estrategia_desenvolvimento)) {
+				$set  .= "{$gruda}aee_estrategia_desenvolvimento = '{$this->aee_estrategia_desenvolvimento}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->aee_tecnica_mobilidade)) {
+				$set  .= "{$gruda}aee_tecnica_mobilidade = '{$this->aee_tecnica_mobilidade}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->aee_libras)) {
+				$set  .= "{$gruda}aee_libras = '{$this->aee_libras}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->aee_caa)) {
+				$set  .= "{$gruda}aee_caa = '{$this->aee_caa}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->aee_curricular)) {
+				$set  .= "{$gruda}aee_curricular = '{$this->aee_curricular}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->aee_soroban)) {
+				$set  .= "{$gruda}aee_soroban = '{$this->aee_soroban}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->aee_informatica)) {
+				$set  .= "{$gruda}aee_informatica = '{$this->aee_informatica}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->aee_lingua_escrita)) {
+				$set  .= "{$gruda}aee_lingua_escrita = '{$this->aee_lingua_escrita}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->aee_autonomia)) {
+				$set  .= "{$gruda}aee_autonomia = '{$this->aee_autonomia}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->etapa_id)) {
+				$set  .= "{$gruda}etapa_id = '{$this->etapa_id}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->cod_curso)) {
+				$set  .= "{$gruda}cod_curso = '{$this->cod_curso}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->turma_sem_professor)) {
+				$set  .= "{$gruda}turma_sem_professor = '{$this->turma_sem_professor}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->cod_curso_profissional)) {
+				$set  .= "{$gruda}cod_curso_profissional = '{$this->cod_curso_profissional}'";
+				$gruda = ", ";
+			}
+		
+		
 			if( $set )
 			{
 				$db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cod_turma = '{$this->cod_turma}'" );

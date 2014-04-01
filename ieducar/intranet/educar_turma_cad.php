@@ -34,6 +34,8 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/Date/Utils.php';
 require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
+require_once 'Portabilis/View/Helper/Application.php';
+require_once 'Portabilis/String/Utils.php';
 
 /**
  * clsIndexBase class.
@@ -114,6 +116,29 @@ class indice extends clsCadastro
   var $excluir_dia_semana;
   var $visivel;
 
+  var $tipo_atendimento;
+  var $turma_mais_educacao;
+  var $atividade_complementar_1;
+  var $atividade_complementar_2;
+  var $atividade_complementar_3;
+  var $atividade_complementar_4;
+  var $atividade_complementar_5;
+  var $atividade_complementar_6;
+  var $aee_braille;
+  var $aee_recurso_optico;
+  var $aee_estrategia_desenvolvimento;
+  var $aee_tecnica_mobilidade;
+  var $aee_libras;
+  var $aee_caa;
+  var $aee_curricular;
+  var $aee_soroban;
+  var $aee_informatica;
+  var $aee_lingua_escrita;
+  var $aee_autonomia;
+  var $etapa_id;
+  var $cod_curso_profissional;
+  var $turma_sem_professor;  
+
   var $dias_da_semana = array(
     '' => 'Selecione',
     1  => 'Domingo',
@@ -176,6 +201,19 @@ class indice extends clsCadastro
 
   function Gerar()
   {
+
+    Portabilis_View_Helper_Application::loadJQueryLib($this);
+
+    $scripts = array(
+      '/modules/Cadastro/Assets/Javascripts/Turma.js'
+      );
+
+    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+
+    $styles = array ('/modules/Cadastro/Assets/Stylesheets/Turma.css');
+
+    Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+
     if ($_POST) {
       foreach ($_POST as $campo => $val) {
         $this->$campo = $this->$campo ? $this->$campo : $val;
@@ -663,9 +701,19 @@ class indice extends clsCadastro
 
           $this->campoTextoInv('hora_final_' . $dias_semana['dia_semana_'], '',
             $dias_semana['hora_final_'], 5, 5, FALSE, FALSE, FALSE, '',
-            "<a href='#' onclick=\"document.getElementById('excluir_dia_semana').value = '{$dias_semana["dia_semana_"]}'; document.getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>",
+            "<a href='#' id=\"event_excluir_dia_semana_{$dias_semana["dia_semana_"]}\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>",
             '', '', 'ds_hora_final_'
           );
+          $scriptExcluir .= "
+                <script type=\"text/javascript\"> 
+                    document.getElementById('event_excluir_dia_semana_{$dias_semana["dia_semana_"]}').onclick = excluirModulo{$dias_semana["dia_semana_"]};
+                    
+                    function excluirModulo{$dias_semana["dia_semana_"]}(){
+                      document.getElementById('excluir_dia_semana').value = '{$dias_semana["dia_semana_"]}'; 
+                      document.getElementById('tipoacao').value = ''; 
+                      {$this->__nome}.submit();
+                    }
+                </script>";   
 
           $aux['dia_semana_']   = $dias_semana['dia_semana_'];
           $aux['hora_inicial_'] = $dias_semana['hora_inicial_'];
@@ -694,7 +742,7 @@ class indice extends clsCadastro
     $this->campoOculto('incluir_dia_semana', '');
 
     $this->campoRotulo('bt_incluir_dia_semana', 'Dia Semana',
-      "<a href='#' onclick=\"document.getElementById('incluir_dia_semana').value = 'S'; document.getElementById('tipoacao').value = ''; acao();\"><img src='imagens/nvp_bot_adiciona.gif' alt='adicionar' title='Incluir' border=0></a>"
+      "<a href='#' id=\"event_incluir_dia_semana\"><img src='imagens/nvp_bot_adiciona.gif' alt='adicionar' title='Incluir' border=0></a>"
     );
 
     $this->campoOculto('padrao_ano_escolar', $this->padrao_ano_escolar);
@@ -703,6 +751,85 @@ class indice extends clsCadastro
     $this->campoTextoInv('scripts', $scriptExcluir);
     
     $this->acao_enviar = 'valida()';
+
+    $resources = array( 0 => Portabilis_String_Utils::toLatin1('Não se aplica'),
+                        1    => 'Classe hospitalar',
+                        2    => Portabilis_String_Utils::toLatin1('Unidade de internação socioeducativa'),
+                        3    => 'Unidade prisional',
+                        4    => 'Atividade complementar',
+                        5    => 'Atendimento educacional especializado (AEE)');
+
+    $options = array('label' => 'Tipo de atendimento', 'resources' => $resources, 'value' => $this->tipo_atendimento, 'required' => false, 'size' => 70,);
+    $this->inputsHelper()->select('tipo_atendimento', $options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Turma participante do Programa Mais Educação/Ensino médio Inovador'), 'value' => $this->turma_mais_educacao);
+    $this->inputsHelper()->checkbox('turma_mais_educacao', $options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Código do tipo de atividade complementar 1'), 'value' => $this->atividade_complementar_1, 'required' => false, 'size' => 5, 'max_length' => 5, 'placeholder' => '');
+    $this->inputsHelper()->integer('atividade_complementar_1', $options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Código do tipo de atividade complementar 2'), 'value' => $this->atividade_complementar_2, 'required' => false, 'size' => 5, 'max_length' => 5, 'placeholder' => '');
+    $this->inputsHelper()->integer('atividade_complementar_2', $options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Código do tipo de atividade complementar 3'), 'value' => $this->atividade_complementar_3, 'required' => false, 'size' => 5, 'max_length' => 5, 'placeholder' => '');
+    $this->inputsHelper()->integer('atividade_complementar_3', $options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Código do tipo de atividade complementar 4'), 'value' => $this->atividade_complementar_4, 'required' => false, 'size' => 5, 'max_length' => 5, 'placeholder' => '');
+    $this->inputsHelper()->integer('atividade_complementar_4', $options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Código do tipo de atividade complementar 5'), 'value' => $this->atividade_complementar_5, 'required' => false, 'size' => 5, 'max_length' => 5, 'placeholder' => '');
+    $this->inputsHelper()->integer('atividade_complementar_5', $options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Código do tipo de atividade complementar 6'), 'value' => $this->atividade_complementar_6, 'required' => false, 'size' => 5, 'max_length' => 5, 'placeholder' => '');
+    $this->inputsHelper()->integer('atividade_complementar_6', $options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Ensino do Sistema Braille'), 'value' => $this->aee_braille);
+    $this->inputsHelper()->checkbox('aee_braille', $options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Ensino de uso de recursos ópticos e não ópticos'), 'value' => $this->aee_recurso_optico);
+    $this->inputsHelper()->checkbox('aee_recurso_optico', $options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Estratégias para o desenvolvimento de processos mentais'), 'value' => $this->aee_estrategia_desenvolvimento);
+    $this->inputsHelper()->checkbox('aee_estrategia_desenvolvimento', $options);    
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Técnica de orientações a mobilidade'), 'value' => $this->aee_tecnica_mobilidade);
+    $this->inputsHelper()->checkbox('aee_tecnica_mobilidade', $options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Ensino da Língua Brasileira de Sinais - LIBRAS'), 'value' => $this->aee_libras);
+    $this->inputsHelper()->checkbox('aee_libras', $options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Ensino de uso da Comunicação Alternativa e Aumentativa - CAA'), 'value' => $this->aee_caa);
+    $this->inputsHelper()->checkbox('aee_caa', $options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Estratégias para enriquecimento curricular'), 'value' => $this->aee_curricular);
+    $this->inputsHelper()->checkbox('aee_curricular', $options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Ensino do uso do Soroban'), 'value' => $this->aee_soroban);
+    $this->inputsHelper()->checkbox('aee_soroban', $options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Ensino da usabilidade e das funcionalidades de informática acessível'), 'value' => $this->aee_informatica);
+    $this->inputsHelper()->checkbox('aee_informatica', $options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Ensino da Língua Portuguesa na modalidade escrita'), 'value' => $this->aee_lingua_escrita);
+    $this->inputsHelper()->checkbox('aee_lingua_escrita', $options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Estratégias para autonomia no ambiente escolar'), 'value' => $this->aee_autonomia);
+    $this->inputsHelper()->checkbox('aee_autonomia', $options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Código curso educação profissional'), 'value' => $this->cod_curso_profissional, 'required' => false, 'size' => 8, 'max_length' => 8, 'placeholder' => '');
+    $this->inputsHelper()->integer('cod_curso_profissional', $options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Turma não tem profissional escolar em sala de aula'), 'value' => $this->turma_sem_professor);
+    $this->inputsHelper()->checkbox('turma_sem_professor', $options);
+
+    $resources = Portabilis_Utils_Database::fetchPreparedQuery('SELECT id,nome FROM modules.etapas_educacenso');
+    $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'id', 'nome'); 
+    $resources = Portabilis_Array_Utils::merge($resources, array('null' => 'Selecione'));
+
+
+    $options = array('label' => 'Etapa de ensino', 'resources' => $resources, 'value' => $this->etapa_id, 'required' => false, 'size' => 70,);
+    $this->inputsHelper()->select('etapa_id', $options);
+
   }
 
   function Novo()
@@ -732,10 +859,11 @@ class indice extends clsCadastro
       $this->visivel = FALSE;
     }
 
+    $this->turma_dia_semana = unserialize(urldecode($this->turma_dia_semana));
+
     // Não segue o padrao do curso
     if ($this->padrao_ano_escolar == 0) {
-      $this->turma_modulo = unserialize(urldecode($this->turma_modulo));
-      $this->turma_dia_semana = unserialize(urldecode($this->turma_dia_semana));
+      $this->turma_modulo = unserialize(urldecode($this->turma_modulo));      
 
       if ($this->turma_modulo) {
         $obj = new clsPmieducarTurma(NULL, NULL, $this->pessoa_logada,
@@ -747,6 +875,28 @@ class indice extends clsCadastro
           $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
           $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
           $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano, $this->data_fechamento);
+        $obj->tipo_atendimento = $this->tipo_atendimento;
+        $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
+        $obj->atividade_complementar_1 = $this->atividade_complementar_1;
+        $obj->atividade_complementar_2 = $this->atividade_complementar_2;
+        $obj->atividade_complementar_3 = $this->atividade_complementar_3;
+        $obj->atividade_complementar_4 = $this->atividade_complementar_4;
+        $obj->atividade_complementar_5 = $this->atividade_complementar_5;
+        $obj->atividade_complementar_6 = $this->atividade_complementar_6;
+        $obj->aee_braille = $this->aee_braille == 'on' ? 1 : 0;
+        $obj->aee_recurso_optico = $this->aee_recurso_optico == 'on' ? 1 : 0;
+        $obj->aee_estrategia_desenvolvimento = $this->aee_estrategia_desenvolvimento == 'on' ? 1 : 0;
+        $obj->aee_tecnica_mobilidade = $this->aee_tecnica_mobilidade == 'on' ? 1 : 0;
+        $obj->aee_libras = $this->aee_libras == 'on' ? 1 : 0;
+        $obj->aee_caa = $this->aee_caa == 'on' ? 1 : 0;
+        $obj->aee_curricular = $this->aee_curricular == 'on' ? 1 : 0;
+        $obj->aee_soroban = $this->aee_soroban == 'on' ? 1 : 0;
+        $obj->aee_informatica = $this->aee_informatica == 'on' ? 1 : 0;
+        $obj->aee_lingua_escrita = $this->aee_lingua_escrita == 'on' ? 1 : 0;
+        $obj->aee_autonomia = $this->aee_autonomia == 'on' ? 1 : 0;
+        $obj->etapa_id = $this->etapa_id;
+        $obj->cod_curso_profissional = $this->cod_curso_profissional;
+        $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;      
 
         $cadastrou = $obj->cadastra();
 
@@ -813,11 +963,48 @@ class indice extends clsCadastro
         $this->ref_cod_instituicao, $this->ref_cod_curso,
         $this->ref_ref_cod_serie_mult, $this->ref_cod_escola, $this->visivel,
         $this->turma_turno_id, $this->tipo_boletim, $this->ano, $this->data_fechamento);
+      $obj->tipo_atendimento = $this->tipo_atendimento;
+      $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
+      $obj->atividade_complementar_1 = $this->atividade_complementar_1;
+      $obj->atividade_complementar_2 = $this->atividade_complementar_2;
+      $obj->atividade_complementar_3 = $this->atividade_complementar_3;
+      $obj->atividade_complementar_4 = $this->atividade_complementar_4;
+      $obj->atividade_complementar_5 = $this->atividade_complementar_5;
+      $obj->atividade_complementar_6 = $this->atividade_complementar_6;
+      $obj->aee_braille = $this->aee_braille == 'on' ? 1 : 0;
+      $obj->aee_recurso_optico = $this->aee_recurso_optico == 'on' ? 1 : 0;
+      $obj->aee_estrategia_desenvolvimento = $this->aee_estrategia_desenvolvimento == 'on' ? 1 : 0;
+      $obj->aee_tecnica_mobilidade = $this->aee_tecnica_mobilidade == 'on' ? 1 : 0;
+      $obj->aee_libras = $this->aee_libras == 'on' ? 1 : 0;
+      $obj->aee_caa = $this->aee_caa == 'on' ? 1 : 0;
+      $obj->aee_curricular = $this->aee_curricular == 'on' ? 1 : 0;
+      $obj->aee_soroban = $this->aee_soroban == 'on' ? 1 : 0;
+      $obj->aee_informatica = $this->aee_informatica == 'on' ? 1 : 0;
+      $obj->aee_lingua_escrita = $this->aee_lingua_escrita == 'on' ? 1 : 0;
+      $obj->aee_autonomia = $this->aee_autonomia == 'on' ? 1 : 0;
+      $obj->etapa_id = $this->etapa_id;
+      $obj->cod_curso_profissional = $this->cod_curso_profissional;
+      $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;      
 
       $cadastrou = $obj->cadastra();
 
 
       if ($cadastrou) {
+
+        // Cadastra dia semana
+        foreach ($this->turma_dia_semana as $campo) {
+          $obj = new clsPmieducarTurmaDiaSemana($campo["dia_semana_"],
+            $cadastrou, $campo["hora_inicial_"], $campo["hora_final_"]);
+
+          $cadastrou2  = $obj->cadastra();
+
+          if (!$cadastrou2) {
+            $this->mensagem = 'Cadastro n&atilde;o realizado.';
+            echo "<!--\nErro ao cadastrar clsPmieducarTurmaDiaSemana\nvalores obrigat&oacute;rios\nis_numeric( $cadastrou ) && is_numeric( {$campo["dia_semana_"]} ) && is_string( {$campo["hora_inicial_"]} ) && is_string( {$campo["hora_final_"]} )\n-->";
+
+            return FALSE;
+          }
+        }        
         $this->mensagem .= 'Cadastro efetuado com sucesso.';
         header('Location: educar_turma_lst.php');
         die();
@@ -858,11 +1045,12 @@ class indice extends clsCadastro
     else {
       $this->visivel = FALSE;
     }
-
+    
+    $this->turma_dia_semana = unserialize(urldecode($this->turma_dia_semana));
+    
     // Não segue o padrão do curso
     if ($this->padrao_ano_escolar == 0) {
       $this->turma_modulo = unserialize(urldecode($this->turma_modulo));
-      $this->turma_dia_semana = unserialize(urldecode($this->turma_dia_semana));
 
       if ($this->turma_modulo) {
         $obj = new clsPmieducarTurma($this->cod_turma, $this->pessoa_logada, NULL,
@@ -877,6 +1065,28 @@ class indice extends clsCadastro
           $this->turma_turno_id,
           $this->tipo_boletim,
           $this->ano, $this->data_fechamento);
+        $obj->tipo_atendimento = $this->tipo_atendimento;
+        $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
+        $obj->atividade_complementar_1 = $this->atividade_complementar_1;
+        $obj->atividade_complementar_2 = $this->atividade_complementar_2;
+        $obj->atividade_complementar_3 = $this->atividade_complementar_3;
+        $obj->atividade_complementar_4 = $this->atividade_complementar_4;
+        $obj->atividade_complementar_5 = $this->atividade_complementar_5;
+        $obj->atividade_complementar_6 = $this->atividade_complementar_6;
+        $obj->aee_braille = $this->aee_braille == 'on' ? 1 : 0;
+        $obj->aee_recurso_optico = $this->aee_recurso_optico == 'on' ? 1 : 0;
+        $obj->aee_estrategia_desenvolvimento = $this->aee_estrategia_desenvolvimento == 'on' ? 1 : 0;
+        $obj->aee_tecnica_mobilidade = $this->aee_tecnica_mobilidade == 'on' ? 1 : 0;
+        $obj->aee_libras = $this->aee_libras == 'on' ? 1 : 0;
+        $obj->aee_caa = $this->aee_caa == 'on' ? 1 : 0;
+        $obj->aee_curricular = $this->aee_curricular == 'on' ? 1 : 0;
+        $obj->aee_soroban = $this->aee_soroban == 'on' ? 1 : 0;
+        $obj->aee_informatica = $this->aee_informatica == 'on' ? 1 : 0;
+        $obj->aee_lingua_escrita = $this->aee_lingua_escrita == 'on' ? 1 : 0;
+        $obj->aee_autonomia = $this->aee_autonomia == 'on' ? 1 : 0;
+        $obj->etapa_id = $this->etapa_id;
+        $obj->cod_curso_profissional = $this->cod_curso_profissional;
+        $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;       
 
         $editou = $obj->edita();
 
@@ -948,6 +1158,28 @@ class indice extends clsCadastro
         $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
         $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
         $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano, $this->data_fechamento);
+      $obj->tipo_atendimento = $this->tipo_atendimento;
+      $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
+      $obj->atividade_complementar_1 = $this->atividade_complementar_1;
+      $obj->atividade_complementar_2 = $this->atividade_complementar_2;
+      $obj->atividade_complementar_3 = $this->atividade_complementar_3;
+      $obj->atividade_complementar_4 = $this->atividade_complementar_4;
+      $obj->atividade_complementar_5 = $this->atividade_complementar_5;
+      $obj->atividade_complementar_6 = $this->atividade_complementar_6;
+      $obj->aee_braille = $this->aee_braille == 'on' ? 1 : 0;
+      $obj->aee_recurso_optico = $this->aee_recurso_optico == 'on' ? 1 : 0;
+      $obj->aee_estrategia_desenvolvimento = $this->aee_estrategia_desenvolvimento == 'on' ? 1 : 0;
+      $obj->aee_tecnica_mobilidade = $this->aee_tecnica_mobilidade == 'on' ? 1 : 0;
+      $obj->aee_libras = $this->aee_libras == 'on' ? 1 : 0;
+      $obj->aee_caa = $this->aee_caa == 'on' ? 1 : 0;
+      $obj->aee_curricular = $this->aee_curricular == 'on' ? 1 : 0;
+      $obj->aee_soroban = $this->aee_soroban == 'on' ? 1 : 0;
+      $obj->aee_informatica = $this->aee_informatica == 'on' ? 1 : 0;
+      $obj->aee_lingua_escrita = $this->aee_lingua_escrita == 'on' ? 1 : 0;
+      $obj->aee_autonomia = $this->aee_autonomia == 'on' ? 1 : 0;
+      $obj->etapa_id = $this->etapa_id;
+      $obj->cod_curso_profissional = $this->cod_curso_profissional;
+      $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;       
 
       $editou = $obj->edita();
     }
@@ -966,6 +1198,26 @@ class indice extends clsCadastro
     
 
     if ($editou) {
+
+      // Edita o dia da semana
+      $obj  = new clsPmieducarTurmaDiaSemana(NULL, $this->cod_turma);
+      $excluiu = $obj->excluirTodos();
+
+      if ($excluiu) {
+        foreach ($this->turma_dia_semana as $campo) {
+          $obj = new clsPmieducarTurmaDiaSemana($campo["dia_semana_"],
+            $this->cod_turma, $campo["hora_inicial_"], $campo["hora_final_"]);
+
+          $cadastrou2  = $obj->cadastra();
+
+          if (!$cadastrou2) {
+            $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.';
+            echo "<!--\nErro ao editar clsPmieducarTurmaDiaSemana\nvalores obrigat&oacute;rios\nis_numeric( $this->cod_turma ) && is_numeric( {$campo["dia_semana_"]} ) \n-->";
+
+            return FALSE;
+          }
+        }
+      }      
       $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.';
       header('Location: educar_turma_lst.php');
       die();
@@ -1244,10 +1496,10 @@ var evtOnLoad = function()
   setVisibility('tr_bt_incluir_modulo',false);
 
   // Inclui dia da semana
-  setVisibility('tr_dia_semana',false);
-  setVisibility('tr_ds_hora_inicial',false);
-  setVisibility('tr_ds_hora_final',false);
-  setVisibility('tr_bt_incluir_dia_semana',false);
+  //setVisibility('tr_dia_semana',false);
+  //setVisibility('tr_ds_hora_inicial',false);
+  //setVisibility('tr_ds_hora_final',false);
+  //setVisibility('tr_bt_incluir_dia_semana',false);
 
   if (!document.getElementById('ref_ref_cod_serie').value) {
     setVisibility('tr_multiseriada',false);
@@ -1552,7 +1804,7 @@ function PadraoAnoEscolar(xml)
     setVisibility(modulos[i].id, false);
   }
 
-  setVisibility('tr_dia_semana', false);
+  /*setVisibility('tr_dia_semana', false);
   setVisibility('tr_ds_hora_inicial', false);
   setVisibility('tr_ds_hora_final', false);
   setVisibility('tr_bt_incluir_dia_semana', false);
@@ -1583,7 +1835,7 @@ function PadraoAnoEscolar(xml)
 
   if (document.getElementById('tr_dia_semana_7')) {
     setVisibility('tr_dia_semana_7', false);
-  }
+  }*/
 
   setVisibility('tr_hora_inicial', true);
   setVisibility('tr_hora_final', true);
@@ -1608,40 +1860,40 @@ function PadraoAnoEscolar(xml)
     for (var i = 0; i < modulos.length; i++) {
       setVisibility(modulos[i].id, true);
     }
-
-    setVisibility('tr_dia_semana', true);
-    setVisibility('tr_ds_hora_inicial', true);
-    setVisibility('tr_ds_hora_final', true);
-    setVisibility('tr_bt_incluir_dia_semana', true);
-
-    if (document.getElementById('tr_dia_semana_1')) {
-      setVisibility('tr_dia_semana_1', true);
-    }
-
-    if (document.getElementById('tr_dia_semana_2')) {
-      setVisibility('tr_dia_semana_2', true);
-    }
-
-    if (document.getElementById('tr_dia_semana_3')) {
-      setVisibility('tr_dia_semana_3', true);
-    }
-
-    if (document.getElementById('tr_dia_semana_4')) {
-      setVisibility('tr_dia_semana_4', true);
-    }
-
-    if (document.getElementById('tr_dia_semana_5')) {
-      setVisibility('tr_dia_semana_5', true);
-    }
-
-    if (document.getElementById('tr_dia_semana_6')) {
-      setVisibility('tr_dia_semana_6', true);
-    }
-
-    if (document.getElementById('tr_dia_semana_7')) {
-      setVisibility('tr_dia_semana_7', true);
-    }
   }
+
+  setVisibility('tr_dia_semana', true);
+  setVisibility('tr_ds_hora_inicial', true);
+  setVisibility('tr_ds_hora_final', true);
+  setVisibility('tr_bt_incluir_dia_semana', true);
+
+  if (document.getElementById('tr_dia_semana_1')) {
+    setVisibility('tr_dia_semana_1', true);
+  }
+
+  if (document.getElementById('tr_dia_semana_2')) {
+    setVisibility('tr_dia_semana_2', true);
+  }
+
+  if (document.getElementById('tr_dia_semana_3')) {
+    setVisibility('tr_dia_semana_3', true);
+  }
+
+  if (document.getElementById('tr_dia_semana_4')) {
+    setVisibility('tr_dia_semana_4', true);
+  }
+
+  if (document.getElementById('tr_dia_semana_5')) {
+    setVisibility('tr_dia_semana_5', true);
+  }
+
+  if (document.getElementById('tr_dia_semana_6')) {
+    setVisibility('tr_dia_semana_6', true);
+  }
+
+  if (document.getElementById('tr_dia_semana_7')) {
+    setVisibility('tr_dia_semana_7', true);
+  }  
 }
 
 function getHoraEscolaSerie()
@@ -1865,6 +2117,14 @@ document.getElementById('event_incluir_modulo').onclick = incluirModulo;
 
 function incluirModulo(){
   document.getElementById('incluir_modulo').value = 'S'; 
+  document.getElementById('tipoacao').value = ''; 
+  acao();
+}
+
+document.getElementById('event_incluir_dia_semana').onclick = incluirDiaSemana;
+
+function incluirDiaSemana(){
+  document.getElementById('incluir_dia_semana').value = 'S'; 
   document.getElementById('tipoacao').value = ''; 
   acao();
 }

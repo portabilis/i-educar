@@ -32,6 +32,7 @@
 require_once 'Core/Controller/Page/EditController.php';
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 require_once 'ComponenteCurricular/Model/TipoBase.php';
+require_once 'ComponenteCurricular/Model/CodigoEducacenso.php';
 
 /**
  * EditController class.
@@ -77,6 +78,11 @@ class EditController extends Core_Controller_Page_EditController
       'help'   => '',
       'entity' => 'area_conhecimento'
     ),
+    'codigo_educacenso' => array(
+      'label'  => 'Disciplina Educacenso',
+      'help'   => '',
+      'entity' => 'codigo_educacenso'
+    ),
   );
 
   /**
@@ -110,5 +116,10 @@ class EditController extends Core_Controller_Page_EditController
     $areas = CoreExt_Entity::entityFilterAttr($areas, 'id', 'nome');
     $this->campoLista('area_conhecimento', $this->_getLabel('area_conhecimento'),
       $areas, $this->getEntity()->get('area_conhecimento'));
+
+    // Código educacenso
+    $codigos = ComponenteCurricular_Model_CodigoEducacenso::getInstance();
+    $this->campoLista('codigo_educacenso', $this->_getLabel('codigo_educacenso'),
+      $codigos->getEnums(), $this->getEntity()->get('codigo_educacenso'));
   }
 }
