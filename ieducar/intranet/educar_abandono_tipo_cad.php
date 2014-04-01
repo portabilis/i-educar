@@ -34,7 +34,7 @@ class clsIndexBase extends clsBase
 	function Formular()
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Abandono" );
-		$this->processoAp = "575";
+		$this->processoAp = "950";
 	}
 }
 
@@ -66,7 +66,7 @@ class indice extends clsCadastro
 		$this->cod_abandono_tipo=$_GET["cod_abandono_tipo"];
 
 		$obj_permissoes = new clsPermissoes();
-		$obj_permissoes->permissao_cadastra( 575, $this->pessoa_logada, 7, "educar_abandono_tipo_lst.php" );
+		$obj_permissoes->permissao_cadastra( 950, $this->pessoa_logada, 7, "educar_abandono_tipo_lst.php" );
 
 		if( is_numeric( $this->cod_abandono_tipo ) )
 		{
@@ -78,7 +78,7 @@ class indice extends clsCadastro
 				foreach( $registro AS $campo => $val )	// passa todos os valores obtidos no registro para atributos do objeto
 					$this->$campo = $val;
 
-				$this->fexcluir = $obj_permissoes->permissao_excluir( 575, $this->pessoa_logada,7 );
+				$this->fexcluir = $obj_permissoes->permissao_excluir( 950, $this->pessoa_logada,7 );
 				$retorno = "Editar";
 			}
 		}
