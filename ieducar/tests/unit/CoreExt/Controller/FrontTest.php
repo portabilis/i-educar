@@ -68,9 +68,9 @@ class CoreExt_Controller_FrontTest extends UnitBaseTest
 
   public function testControllerTemObjetosRequestDispatcherEViewPadroes()
   {
-    $this->assertType('CoreExt_Controller_Request', $this->_frontController->getRequest());
-    $this->assertType('CoreExt_Controller_Dispatcher_Interface', $this->_frontController->getDispatcher());
-    $this->assertType('CoreExt_View', $this->_frontController->getView());
+    $this->assertInternalType('CoreExt_Controller_Request', $this->_frontController->getRequest());
+    $this->assertInternalType('CoreExt_Controller_Dispatcher_Interface', $this->_frontController->getDispatcher());
+    $this->assertInternalType('CoreExt_View', $this->_frontController->getView());
   }
 
   public function testRequestCustomizadoERegistradoEmController()

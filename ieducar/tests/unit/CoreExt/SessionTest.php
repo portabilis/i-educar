@@ -65,22 +65,22 @@ class CoreExt_SessionTest extends UnitBaseTest
 
   public function testInstanciaTemSessionInstanciaStorageDefaultPorPadrao()
   {
-    $this->assertType('CoreExt_Session_Storage_Default', $this->_session->getSessionStorage());
+    $this->assertInternalType('CoreExt_Session_Storage_Default', $this->_session->getSessionStorage());
   }
 
   public function testInstanciaESubclasseDeArrayAccess()
   {
-    $this->assertType('ArrayAccess', $this->_session);
+    $this->assertInternalType('ArrayAccess', $this->_session);
   }
 
   public function testInstanciaESubclasseDeCountable()
   {
-    $this->assertType('Countable', $this->_session);
+    $this->assertInternalType('Countable', $this->_session);
   }
 
   public function testInstanciaESubclasseDeIterator()
   {
-    $this->assertType('Iterator', $this->_session);
+    $this->assertInternalType('Iterator', $this->_session);
   }
 
   /**

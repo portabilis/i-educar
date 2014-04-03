@@ -73,7 +73,7 @@ class CoreExt_Session_Storage_DefaultTest extends UnitBaseTest
 
   public function testInstanciaESubclasseDeCountable()
   {
-    $this->assertType('Countable', $this->_storage);
+    $this->assertInternalType('Countable', $this->_storage);
   }
 
   public function testEscreveDadosNaSession()

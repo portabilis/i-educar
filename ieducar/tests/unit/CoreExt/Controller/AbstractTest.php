@@ -53,11 +53,11 @@ class CoreExt_Controller_AbstractTest extends UnitBaseTest
 
   public function testControllerInstanciaDispatcherStandardPorPadrao()
   {
-    $this->assertType('CoreExt_Controller_Dispatcher_Standard', $this->_controller->getDispatcher());
+    $this->assertInternalType('CoreExt_Controller_Dispatcher_Standard', $this->_controller->getDispatcher());
   }
 
   public function testInstanciaTemCoreExtSessionPorPadrao()
   {
-    $this->assertType('CoreExt_Session', $this->_controller->getSession());
+    $this->assertInternalType('CoreExt_Session', $this->_controller->getSession());
   }
 }

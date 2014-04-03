@@ -146,7 +146,7 @@ class CoreExt_EntityTest extends UnitBaseTest
   {
     $entity = new CoreExt_ChildEntityStub();
     $entity->peso = '12,5';
-    $this->assertType('float', $entity->peso);
+    $this->assertInternalType('float', $entity->peso);
   }
 
   public function testSetaAtributosNaInstanciacao()
@@ -177,7 +177,7 @@ class CoreExt_EntityTest extends UnitBaseTest
   public function testInstanciaRetornaObjetoCoreextLocalePorPadrao()
   {
     $entity = new CoreExt_EntityStub();
-    $this->assertType('CoreExt_Locale', $entity->getLocale());
+    $this->assertInternalType('CoreExt_Locale', $entity->getLocale());
   }
 
   /**
@@ -187,7 +187,7 @@ class CoreExt_EntityTest extends UnitBaseTest
   {
     $entity = new CoreExt_EntityStub();
     $entity->setValidator('estadoCivil', new CoreExt_Validate_String());
-    $this->assertType('CoreExt_Validate_String', $entity->getValidator('estadoCivil'));
+    $this->assertInternalType('CoreExt_Validate_String', $entity->getValidator('estadoCivil'));
   }
 
   /**
@@ -285,7 +285,7 @@ class CoreExt_EntityTest extends UnitBaseTest
     // Valida e verifica pelos valores
     $this->assertTrue($entity->isValid());
     $this->assertEquals('fooBar', $entity->nome);
-    $this->assertType('float', $entity->peso);
+    $this->assertInternalType('float', $entity->peso);
   }
 
   /**
@@ -478,7 +478,7 @@ class CoreExt_EntityTest extends UnitBaseTest
   {
     CoreExt_EntityStub::addClassToStorage('StdClassExtStub',
       NULL, 'CoreExt/_stub/StdClassExt.php');
-    $this->assertType('StdClassExtStub', CoreExt_EntityStub::getClassFromStorage('StdClassExtStub'));
+    $this->assertInternalType('StdClassExtStub', CoreExt_EntityStub::getClassFromStorage('StdClassExtStub'));
   }
 
   public function testInstanciaDeClassNaoEspecificaArmazenaInstanciaEspecifica()
@@ -486,7 +486,7 @@ class CoreExt_EntityTest extends UnitBaseTest
     $obj = new stdClass();
     $oid = spl_object_hash($obj);
     CoreExt_EntityStub::addClassToStorage('stdClass', $obj);
-    $this->assertType('stdClass', CoreExt_EntityStub::getClassFromStorage('stdClass'));
+    $this->assertInternalType('stdClass', CoreExt_EntityStub::getClassFromStorage('stdClass'));
     $this->assertEquals($oid, spl_object_hash(CoreExt_EntityStub::getClassFromStorage('stdClass')));
   }
 
@@ -498,11 +498,11 @@ class CoreExt_EntityTest extends UnitBaseTest
       $obj->i = $i;
       $oid = spl_object_hash($obj);
       CoreExt_EntityStub::addClassToStorage('stdClass', $obj);
-      $this->assertType('stdClass', CoreExt_EntityStub::getClassFromStorage('stdClass'));
+      $this->assertInternalType('stdClass', CoreExt_EntityStub::getClassFromStorage('stdClass'));
       $this->assertEquals($oid, spl_object_hash(CoreExt_EntityStub::getClassFromStorage('stdClass')));
     }
     CoreExt_EntityStub::addClassToStorage('stdClass');
-    $this->assertType('stdClass', CoreExt_EntityStub::getClassFromStorage('stdClass'));
+    $this->assertInternalType('stdClass', CoreExt_EntityStub::getClassFromStorage('stdClass'));
     $this->assertEquals($oid, spl_object_hash(CoreExt_EntityStub::getClassFromStorage('stdClass')));
   }
 
@@ -548,7 +548,7 @@ class CoreExt_EntityTest extends UnitBaseTest
     $parent = new CoreExt_ParentEntityStub($data);
     $parent->setReference('filho', array('value' => 1, 'class' => $filhoMapper));
 
-    $this->assertType('CoreExt_ChildEntityStub', $parent->filho);
+    $this->assertInternalType('CoreExt_ChildEntityStub', $parent->filho);
     $this->assertEquals(1, $parent->filho->id);
   }
 
@@ -595,7 +595,7 @@ class CoreExt_EntityTest extends UnitBaseTest
     $parent = new CoreExt_ParentEntityStub($data);
     $parent->setReference('filho', array('value' => 1, 'class' => $filhoMapper));
 
-    $this->assertType('CoreExt_ChildEntityStub', $parent->filho);
+    $this->assertInternalType('CoreExt_ChildEntityStub', $parent->filho);
     $this->assertEquals(1, $parent->filho->id);
     $this->assertEquals('barFoo', $parent->filho->nome);
 

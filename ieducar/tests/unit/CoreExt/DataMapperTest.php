@@ -69,7 +69,7 @@ class CoreExt_DataMapperTest extends UnitBaseTest
   {
     $mapper = new CoreExt_EntityDataMapperStub($this->_db);
     $instance = $mapper->createNewEntityInstance();
-    $this->assertType('CoreExt_Entity', $instance);
+    $this->assertInternalType('CoreExt_Entity', $instance);
   }
 
   public function testCarregaTodosOsRegistros()
