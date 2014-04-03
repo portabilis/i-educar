@@ -78,10 +78,16 @@ class EditController extends Core_Controller_Page_EditController
       'help'   => '',
       'entity' => 'area_conhecimento'
     ),
+
     'codigo_educacenso' => array(
       'label'  => 'Disciplina Educacenso',
       'help'   => '',
       'entity' => 'codigo_educacenso'
+    ),
+    'ordenamento' => array(
+      'label'  => 'Ordem de apresentação',
+      'help'   => 'Ordem respeitada no lançamento de notas/faltas.',
+      'entity' => 'ordenamento'
     ),
   );
 
@@ -121,5 +127,14 @@ class EditController extends Core_Controller_Page_EditController
     $codigos = ComponenteCurricular_Model_CodigoEducacenso::getInstance();
     $this->campoLista('codigo_educacenso', $this->_getLabel('codigo_educacenso'),
       $codigos->getEnums(), $this->getEntity()->get('codigo_educacenso'));
+  
+    // Ordenamento
+    $this-> campoNumero('ordenamento',
+                        $this->_getLabel('ordenamento'),
+                        $this->getEntity()->ordenamento==99999 ? null : $this->getEntity()->ordenamento,
+                        15,
+                        15,
+                        false,
+                        $this->_getHelp('ordenamento'));
   }
 }

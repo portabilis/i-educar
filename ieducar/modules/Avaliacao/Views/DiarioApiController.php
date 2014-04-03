@@ -576,7 +576,9 @@ class DiarioApiController extends ApiCoreController
         NULL,
         NULL,
         NULL,
-        NULL
+        NULL,
+        NULL,
+        TRUE
       );
 
       if (! is_array($alunos))
@@ -589,13 +591,23 @@ class DiarioApiController extends ApiCoreController
         // seta id da matricula a ser usado pelo metodo serviceBoletim
         $this->setCurrentMatriculaId($matriculaId);
 
-        if(! ($aluno['remanejado'] || $aluno['transferido']))
+        if(! ($aluno['remanejado'] || $aluno['transferido'] || $aluno['abandono'] || $aluno['reclassificado']))
           $matricula['componentes_curriculares'] = $this->loadComponentesCurricularesForMatricula($matriculaId);
           
         $matricula['matricula_id']             = $aluno['ref_cod_matricula'];
         $matricula['aluno_id']                 = $aluno['ref_cod_aluno'];
         $matricula['nome']                     = $this->safeString($aluno['nome_aluno']);
-        $matricula['situacao_deslocamento']    = ($aluno['remanejado'] ? 'Remanejado' : ($aluno['transferido'] ? 'Transferido' : null));
+
+        if ($aluno['remanejado'])
+          $matricula['situacao_deslocamento'] = 'Remanejado';
+        elseif($aluno['transferido'])
+          $matricula['situacao_deslocamento'] = 'Transferido';
+        elseif($aluno['abandono'])
+          $matricula['situacao_deslocamento'] = 'Abandono';
+        elseif($aluno['reclassificado'])
+          $matricula['situacao_deslocamento'] = 'Reclassificado';
+        else  
+          $matricula['situacao_deslocamento'] = null;
 
         $matriculas[] = $matricula;
       }
@@ -768,6 +780,7 @@ class DiarioApiController extends ApiCoreController
       $componente['parecer_atual']         = $this->getParecerAtual($componente['id']);
       $componente['situacao']              = $this->getSituacaoMatricula($componente['id']);
       $componente['nota_necessaria_exame'] = ($componente['situacao'] == 'Em Exame' ? $this->getNotaNecessariaExame($componente['id']) : null );
+      $componente['ordenamento']           = $_componente->get('ordenamento');
 
       if (!empty($componente['nota_necessaria_exame']))
         $this->createOrUpdateNotaExame($matriculaId, $componente['id'], $componente['nota_necessaria_exame']);
@@ -783,13 +796,17 @@ class DiarioApiController extends ApiCoreController
       //criando chave para ordenamento temporário
       //área de conhecimento + componente curricular
       $componente['my_order']              = Portabilis_String_Utils::unaccent(strtoupper($nomeArea)) . Portabilis_String_Utils::unaccent(strtoupper($_componente->get('nome')));      
-
       $componentesCurriculares[]           = $componente;
     }
 
-    //ordenando pela chave temporária criada
-    $componentesCurriculares = Portabilis_Array_Utils::sortByKey('my_order', $componentesCurriculares);
-    
+    $ordenamentoComponentes  = array();
+
+    foreach($componentesCurriculares as $chave=>$componente){
+      $ordenamentoComponentes['ordenamento'][$chave] = $componente['ordenamento'];
+      $ordenamentoComponentes['my_order'][$chave] = $componente['my_order'];
+    }
+    array_multisort($ordenamentoComponentes['ordenamento'], SORT_ASC, SORT_NUMERIC, $ordenamentoComponentes['my_order'], SORT_ASC,$componentesCurriculares);
+
     //removendo chave temporária
     $len = count($componentesCurriculares);
     for ($i = 0; $i < $len; $i++) {

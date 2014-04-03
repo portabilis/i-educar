@@ -157,7 +157,21 @@ class indice extends clsCadastro
 		{
 
 			if( $obj_matricula->cadastraObs($this->observacao, $this->abandono_tipo) )
-			{
+			{		
+				$enturmacoes = new clsPmieducarMatriculaTurma();
+				$enturmacoes = $enturmacoes->lista($this->ref_cod_matricula, null, null, null, null, null, null, null, 1 );
+
+				foreach ($enturmacoes as $enturmacao) {
+				  $enturmacao = new clsPmieducarMatriculaTurma( $this->ref_cod_matricula, $enturmacao['ref_cod_turma'], $this->pessoa_logada, null, null, null, 0, null, $enturmacao['sequencial']);
+
+				  if(! $enturmacao->edita())
+				  {
+				  	$this->mensagem = "N&atilde;o foi poss&iacute;vel desativar as enturma&ccedil;&otilde;es da matr&iacute;cula.";
+					return false;
+				  }else
+				  	$enturmacao->marcaAlunoAbandono();
+				  
+      			}		
 				$this->mensagem .= "Abandono realizado com sucesso.<br>";
 				header( "Location: educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
 				return true;
