@@ -97,10 +97,10 @@ class FormulaTest extends UnitBaseTest
     $this->_entity->addClassToStorage('clsPmieducarInstituicao', $mock);
 
     $validators = $this->_entity->getDefaultValidatorCollection();
-    $this->assertType('CoreExt_Validate_Choice', $validators['instituicao']);
-    $this->assertType('CoreExt_Validate_String', $validators['nome']);
-    $this->assertType('FormulaMedia_Validate_Formula', $validators['formulaMedia']);
-    $this->assertType('CoreExt_Validate_Choice', $validators['tipoFormula']);
+    $this->assertInternalType('CoreExt_Validate_Choice', $validators['instituicao']);
+    $this->assertInternalType('CoreExt_Validate_String', $validators['nome']);
+    $this->assertInternalType('FormulaMedia_Validate_Formula', $validators['formulaMedia']);
+    $this->assertInternalType('CoreExt_Validate_Choice', $validators['tipoFormula']);
 
     // Se o tipo da fórmula for de média final, o validador irá lançar uma
     // exceção com a token Rc (Recuperação)

@@ -2470,7 +2470,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   public function promover($novaSituacaoMatricula = NULL)
   {
-    $tipoProgressao = $this->getRegra()->get('tipoProgressao');
+    $tipoProgressao = $this->getRegra('tipoProgressao');
     $situacaoMatricula = $this->getOption('aprovado');
     $situacaoBoletim = $this->getSituacaoAluno();
     $exceptionMsg = '';

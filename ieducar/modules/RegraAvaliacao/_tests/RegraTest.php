@@ -58,7 +58,7 @@ class RegraTest extends UnitBaseTest
 
   public function testGetterDeDataMapperInstanciaObjetoPorPadraoSeNenhumForConfigurado()
   {
-    $this->assertType('RegraAvaliacao_Model_RegraDataMapper', $this->_entity->getDataMapper());
+    $this->assertInternalType('RegraAvaliacao_Model_RegraDataMapper', $this->_entity->getDataMapper());
   }
 
   public function testEntityValidators()
@@ -109,16 +109,16 @@ class RegraTest extends UnitBaseTest
     $this->_entity->getDataMapper()->setTabelaDataMapper($mockTabela);
 
     $validators = $this->_entity->getDefaultValidatorCollection();
-    $this->assertType('CoreExt_Validate_String',  $validators['nome']);
-    $this->assertType('CoreExt_Validate_Choice',  $validators['instituicao']);
-    $this->assertType('CoreExt_Validate_Choice',  $validators['formulaMedia']);
-    $this->assertType('CoreExt_Validate_Choice',  $validators['formulaRecuperacao']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['media']);
-    $this->assertType('CoreExt_Validate_Choice',  $validators['tabelaArredondamento']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['porcentagemPresenca']);
-    $this->assertType('CoreExt_Validate_Choice',  $validators['tipoNota']);
-    $this->assertType('CoreExt_Validate_Choice',  $validators['tipoProgressao']);
-    $this->assertType('CoreExt_Validate_Choice',  $validators['parecerDescritivo']);
-    $this->assertType('CoreExt_Validate_Choice',  $validators['tipoPresenca']);
+    $this->assertInternalType('CoreExt_Validate_String',  $validators['nome']);
+    $this->assertInternalType('CoreExt_Validate_Choice',  $validators['instituicao']);
+    $this->assertInternalType('CoreExt_Validate_Choice',  $validators['formulaMedia']);
+    $this->assertInternalType('CoreExt_Validate_Choice',  $validators['formulaRecuperacao']);
+    $this->assertInternalType('CoreExt_Validate_Numeric', $validators['media']);
+    $this->assertInternalType('CoreExt_Validate_Choice',  $validators['tabelaArredondamento']);
+    $this->assertInternalType('CoreExt_Validate_Numeric', $validators['porcentagemPresenca']);
+    $this->assertInternalType('CoreExt_Validate_Choice',  $validators['tipoNota']);
+    $this->assertInternalType('CoreExt_Validate_Choice',  $validators['tipoProgressao']);
+    $this->assertInternalType('CoreExt_Validate_Choice',  $validators['parecerDescritivo']);
+    $this->assertInternalType('CoreExt_Validate_Choice',  $validators['tipoPresenca']);
   }
 }

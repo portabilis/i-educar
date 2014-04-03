@@ -56,7 +56,7 @@ class TabelaValorTest extends UnitBaseTest
 
   public function testGetterDeDataMapperInstanciaObjetoPorPadraoSeNenhumForConfigurado()
   {
-    $this->assertType('TabelaArredondamento_Model_TabelaValorDataMapper', $this->_entity->getDataMapper());
+    $this->assertInternalType('TabelaArredondamento_Model_TabelaValorDataMapper', $this->_entity->getDataMapper());
   }
 
   public function testEntityValidators()
@@ -76,17 +76,17 @@ class TabelaValorTest extends UnitBaseTest
 
     // Asserção para nota numérica
     $validators = $this->_entity->getDefaultValidatorCollection();
-    $this->assertType('CoreExt_Validate_Numeric', $validators['nome']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['valorMinimo']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['valorMaximo']);
+    $this->assertInternalType('CoreExt_Validate_Numeric', $validators['nome']);
+    $this->assertInternalType('CoreExt_Validate_Numeric', $validators['valorMinimo']);
+    $this->assertInternalType('CoreExt_Validate_Numeric', $validators['valorMaximo']);
     $this->assertTrue(!isset($validators['descricao']));
 
     // Asserção para nota conceitual
     $this->_entity->tabelaArredondamento = $tabelaConceitual;
     $validators = $this->_entity->getDefaultValidatorCollection();
-    $this->assertType('CoreExt_Validate_String',  $validators['nome']);
-    $this->assertType('CoreExt_Validate_String',  $validators['descricao']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['valorMinimo']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['valorMaximo']);
+    $this->assertInternalType('CoreExt_Validate_String',  $validators['nome']);
+    $this->assertInternalType('CoreExt_Validate_String',  $validators['descricao']);
+    $this->assertInternalType('CoreExt_Validate_Numeric', $validators['valorMinimo']);
+    $this->assertInternalType('CoreExt_Validate_Numeric', $validators['valorMaximo']);
   }
 }

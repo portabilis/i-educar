@@ -106,7 +106,7 @@ class TabelaTest extends UnitBaseTest
 
   public function testGetterDeDataMapperInstanciaObjetoPorPadraoSeNenhumForConfigurado()
   {
-    $this->assertType('TabelaArredondamento_Model_TabelaDataMapper', $this->_entity->getDataMapper());
+    $this->assertInternalType('TabelaArredondamento_Model_TabelaDataMapper', $this->_entity->getDataMapper());
   }
 
   public function testEntityValidators()
@@ -124,9 +124,9 @@ class TabelaTest extends UnitBaseTest
     $this->_entity->addClassToStorage('clsPmieducarInstituicao', $mock);
 
     $validators = $this->_entity->getDefaultValidatorCollection();
-    $this->assertType('CoreExt_Validate_String',  $validators['nome']);
-    $this->assertType('CoreExt_Validate_Choice',  $validators['instituicao']);
-    $this->assertType('CoreExt_Validate_Choice',  $validators['tipoNota']);
+    $this->assertInternalType('CoreExt_Validate_String',  $validators['nome']);
+    $this->assertInternalType('CoreExt_Validate_Choice',  $validators['instituicao']);
+    $this->assertInternalType('CoreExt_Validate_Choice',  $validators['tipoNota']);
   }
 
   public function testArredondamentoDeNota()
