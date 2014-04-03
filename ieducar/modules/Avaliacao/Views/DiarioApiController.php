@@ -780,6 +780,7 @@ class DiarioApiController extends ApiCoreController
       $componente['parecer_atual']         = $this->getParecerAtual($componente['id']);
       $componente['situacao']              = $this->getSituacaoMatricula($componente['id']);
       $componente['nota_necessaria_exame'] = ($componente['situacao'] == 'Em Exame' ? $this->getNotaNecessariaExame($componente['id']) : null );
+      $componente['ordenamento']           = $_componente->get('ordenamento');
 
       if (!empty($componente['nota_necessaria_exame']))
         $this->createOrUpdateNotaExame($matriculaId, $componente['id'], $componente['nota_necessaria_exame']);
@@ -795,13 +796,17 @@ class DiarioApiController extends ApiCoreController
       //criando chave para ordenamento temporário
       //área de conhecimento + componente curricular
       $componente['my_order']              = Portabilis_String_Utils::unaccent(strtoupper($nomeArea)) . Portabilis_String_Utils::unaccent(strtoupper($_componente->get('nome')));      
-
       $componentesCurriculares[]           = $componente;
     }
 
-    //ordenando pela chave temporária criada
-    $componentesCurriculares = Portabilis_Array_Utils::sortByKey('my_order', $componentesCurriculares);
-    
+    $ordenamentoComponentes  = array();
+
+    foreach($componentesCurriculares as $chave=>$componente){
+      $ordenamentoComponentes['ordenamento'][$chave] = $componente['ordenamento'];
+      $ordenamentoComponentes['my_order'][$chave] = $componente['my_order'];
+    }
+    array_multisort($ordenamentoComponentes['ordenamento'], SORT_ASC, SORT_NUMERIC, $ordenamentoComponentes['my_order'], SORT_ASC,$componentesCurriculares);
+
     //removendo chave temporária
     $len = count($componentesCurriculares);
     for ($i = 0; $i < $len; $i++) {
