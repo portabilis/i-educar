@@ -52,7 +52,8 @@ class ComponenteCurricular_Model_Componente extends CoreExt_Entity
     'abreviatura' => NULL,
     'tipo_base' => NULL,
     'area_conhecimento' => NULL,
-    'cargaHoraria' => NULL
+    'cargaHoraria' => NULL,
+    'ordenamento' => 99999
   );
 
   protected $_references = array(

@@ -77,6 +77,11 @@ class EditController extends Core_Controller_Page_EditController
       'help'   => '',
       'entity' => 'area_conhecimento'
     ),
+    'ordenamento' => array(
+      'label'  => 'Ordem de apresentação',
+      'help'   => 'Ordem respeitada no lançamento de notas/faltas.',
+      'entity' => 'ordenamento'
+    ),
   );
 
   /**
@@ -110,5 +115,14 @@ class EditController extends Core_Controller_Page_EditController
     $areas = CoreExt_Entity::entityFilterAttr($areas, 'id', 'nome');
     $this->campoLista('area_conhecimento', $this->_getLabel('area_conhecimento'),
       $areas, $this->getEntity()->get('area_conhecimento'));
+    
+    // Ordenamento
+    $this-> campoNumero('ordenamento',
+                        $this->_getLabel('ordenamento'),
+                        $this->getEntity()->ordenamento==99999 ? null : $this->getEntity()->ordenamento,
+                        15,
+                        15,
+                        false,
+                        $this->_getHelp('ordenamento'));
   }
 }
