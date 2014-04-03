@@ -1,237 +1,93 @@
-// $Id$
 
-CONTEÚDO
---------
-
- * Requisitos
- * Instalação
- * Documentação
- * Suporte técnico
- * Licença
-
-
-REQUISITOS
-----------
-
-O i-Educar requer um servidor web, PHP 5.2, PostgreSQL 8.2 e a biblioteca PDFLib
-(versão Lite ou Commercial). O servidor web Apache 2 é recomendado mas qualquer
-outro com suporte a PHP pode ser utilizado.
-
-A biblioteca PDFLib Lite tem algumas restrições em sua utilização. Consulte a
-licença da biblioteca para ver se o seu uso não cairá na necessidade de adquirir
-uma licença comercial:
-http://www.pdflib.com/products/pdflib-family/pdflib-lite/pdflib-lite-licensing
-
-
-INSTALAÇÃO
-----------
-
-1. DOWNLOAD DO SOFTWARE
-
-   Faça o download dos arquivos do sistema antes de prosseguir. A versão atual
-   pode ser encontrada em:
-   http://www.softwarepublico.gov.br/dotlrn/clubs/ieducar/file-storage/index?folder_id=10855442.
-   Descompacte o pacote de sua preferência no diretório raiz do seu servidor web
-   Apache.
-
-      $ cd /var/www
-      $ mkdir ieducar; cd ieducar
-      $ tar -xzvf /caminho/pacotes/ieducar-X.X.X.tar.gz
-
-
-2. CRIE O BANCO DE DADOS
-
-   Crie o banco de dados ao qual o i-Educar usará para armazenar todos os dados
-   digitados através da interface web. Os passos descritos nessa seção irão
-   criar:
-
-      * Um usuário ieducar no servidor PostgreSQL com a senha de acesso ieducar;
-      * Um banco de dados ieducar.
-
-   Observação: você pode usar o nome de usuário, banco de dados e senha que
-   desejar. Esses são apenas nomes padrões que a aplicação usa para conectar-se
-   ao banco.
-
-   Faça login no servidor de banco de dados PostgreSQL com o cliente psql:
-
-      $ su
-      # su - postgres
-      # psql
-
-   Alternativamente, com o sudo:
-
-      $ sudo -u postgres psql
-
-   Crie o usuário de banco de dados que será utilizado pelo i-Educar:
-
-      postgres=# CREATE ROLE ieducar;
-      postgres=# ALTER ROLE ieducar WITH SUPERUSER INHERIT NOCREATEROLE \
-         CREATEDB LOGIN PASSWORD 'ieducar';
-
-   Crie o banco de dados:
-
-      postgres=# CREATE DATABASE ieducar WITH TEMPLATE = template0 \
-         OWNER = ieducar ENCODING = 'LATIN1';
-      postgres=# \q
-
-   Execute o arquivo ieducar.sql que vem no i-Educar. O diretório em que esse 
-   arquivo reside é o misc/database.
-
-      $ psql -d ieducar -f misc/database/ieducar.sql
-
-   Atenção: em algumas plataformas, o restore do banco pode acabar em um erro
-   FATAL. Se isso acontecer, experimente fazer o restore no mesmo diretório em
-   que se encontra o arquivo ieducar.sql.
-
-   Novamente no psql, execute o seguinte comando para configurar o search_path:
-
-      $ psql ieducar
-      postgres=# ALTER DATABASE ieducar SET search_path TO "$user", public, \
-        portal, cadastro, acesso, alimentos, consistenciacao, historico, \
-        pmiacoes, pmicontrolesis, pmidrh, pmieducar, pmiotopic, urbano;
-      postgres=# \q;
-
-
-3. EDITE O ARQUIVO DE CONFIGURAÇÃO E CONCEDA PERMISSÕES DE ESCRITA
-
-   O i-Educar armazena algumas configurações necessárias para a aplicação em um
-   arquivo chamado ieducar.ini (em configuration/), que possui uma sintaxe bem
-   simples de entender. Caso tenha criado o banco de dados, nome de usuário ou
-   senha com um valor diferente de ieducar, basta editar esse arquivo para que
-   corresponda as suas escolhas:
-
-      [production]
-      ; Configurações de banco de dados
-      app.database.dbname   = ieducar
-      app.database.username = ieducar
-      app.database.hostname = localhost
-      app.database.password = ieducar
-      app.database.port     = 5432
-
-   Exemplo: caso tenha nomeado seu banco de dados com ieducar_db, o usuário com
-   ieducar_user e a senha com ieducar_pass, o ieducar.ini ficaria da seguinte
-   forma:
-
-      [production]
-      ; Configurações de banco de dados
-      app.database.dbname   = ieducar_db
-      app.database.username = ieducar_user
-      app.database.hostname = localhost
-      app.database.password = ieducar_pass
-      app.database.port     = 5432
-
-   Depois, conceda permissões de escrita nos diretórios intranet/tmp e
-   intranet/pdf. Uma forma prática é dar permissão de escrita para o usuário
-   dono do diretório e para usuários de um grupo. Nesse caso, mudaremos o grupo
-   desses diretórios para o grupo do usuário Apache.
-
-      # chmod 775 intranet/tmp intranet/pdf
-      # chgrp www-data intranet/tmp intranet/pdf
-
-   Observação: www-data é o nome do grupo Apache padrão em sistemas Debian.
-   Em outros sistemas, esse nome pode ser httpd, apache ou _www. Substitua de
-   acordo com o usado em seu sistema operacional.
-
-
-4. CONFIGURE O APACHE OU CRIE UM VIRTUAL HOST
-
-   A partir da versão 1.1.X, o i-Educar inclui, por padrão, um arquivo chamado
-   .htaccess no diretório raiz da aplicação. Esse arquivo contém diretivas de
-   configuração do servidor Apache que tornam o i-Educar mais seguro.
-   Além disso, esse arquivo configura o PHP corretamente para as necessidades
-   da aplicação.
-
-   Para que esse arquivo seja executado a cada requisição, é necessário
-   configurar o Apache para que este execute os arquivos .htaccess ou criar um
-   Virtual Host. A primeira opção requer a edição do arquivo
-   /etc/apache2/site-available/default. A única diretiva a ser alterada é
-   AllowOverride (linha 11) para All:
-
-        9         <Directory /var/www/>
-       10                 Options Indexes FollowSymLinks MultiViews
-       11                 AllowOverride All
-       12                 Order allow,deny
-       13                 allow from all
-       14         </Directory>
-
-   Reinicie o servidor Apache:
-
-      $ /etc/init.d/apache2 restart
-
-   A segunda opção requer a criação de um novo arquivo em
-   /etc/apache2/sites-available/. Crie um arquivo chamado ieducar.local com o
-   seguinte conteúdo:
-
-      <VirtualHost *:80>
-        ServerName ieducar.local
-        DocumentRoot /var/www/ieducar
-
-        <Directory /var/www/ieducar>
-          AllowOverride all
-          Order deny,allow
-          Allow from all
-        </Directory>
-      </VirtualHost>
-
-   Edite o arquivo /etc/hosts (no Windows esse arquivo fica em
-   C:\WINDOWS\system32\drivers\etc\hosts) e adicione a seguinte linha:
-
-      127.0.0.1      ieducar.local
-
-   Reinicie o servidor Apache:
-
-      $ /etc/init.d/apache2 restart
-
-   Pronto. Agora, acesse o endereço http://ieducar.local em seu navegador.
-
-   Atenção: configurar o seu servidor Apache (seguindo uma das opções
-   apresentadas) é importante para a segurança da aplicação. Assim, evita-se que
-   arquivos importantes como o configuration/ieducar.ini e os relatórios gerados
-   pela aplicação fiquem publicamente expostos para leitura através da Internet.
-
-
-5. ACESSE A APLICAÇÃO
-
-   Abra o navegador de sua preferência e acesse o endereço
-   http://localhost/ieducar ou http://ieducar.local (caso tenha configurado um
-   Virtual Host). Faça o login na aplicação utilizando o usuário administrador.
-   O login e senha para acesso são admin e admin, respectivamente.
-
-
-6. CONFIGURE O PHP
-
-   Esse passo é opcional caso tenha configurado o Apache (via AllowOverride ou
-   VirtualHost). Edite o arquivo php.ini da seguinte forma:
-
-   * memory_limit: altere para, no mínimo, 32M (devido a geração de relatórios
-   consumir bastante memória, pode ser necessário aumentar para uma quantidade
-   maior em plataformas 64 bits);
-      memory_limit = 32M
-
-   * error_reporting: altere para E_ALL & ~E_NOTICE para evitar que avisos do
-   nível E_NOTICE (comuns na versão atual), apareçam nas telas quebrando o
-   layout do sistema. E_ERROR é o recomendado para ambientes de produção.
-      error_reporting = E_ALL & ~E_NOTICE
-
-   * display_errors: altere para Off em produção:
-      display_errors = Off
-
-   * short_open_tag: altere para On.
-      short_open_tag = On
-
-   Observação: a localização do arquivo php.ini é diferente entre os sistemas
-   operacionais. No Debian/Ubuntu, o padrão é /etc/php5/apache2/php.ini. Para
-   descobrir onde o arquivo fica em seu sistema operacional, acesse o endereço
-   http://localhost/ieducar/info.php e procure por Loaded Configuration File.
-
-   Após qualquer alteração no arquivo php.ini, reinicie seu servidor web:
-
-      # /etc/init.d/apache2 restart
-
-
-7. FONTE
-
-   * https://svn.softwarepublico.gov.br/trac/ieducar/wiki/Documentacao/1.1.X/Instalacao
+Antes de começar
+Todos os passos para instalação abaixo devem ser executados logado com um usuário diferente do root, 
+caso você execute os comandos logado como root o banco de dados não poderá ser iniciado.
+Caso você ainda não tenha criado um usuário, crie um executando: sudo useradd --create-home --groups sudo --shell /bin/bash ieducar
+
+E então defina a senha do usuário (não esqueça esta senha, ela será usada para logar como este usuário):
+sudo passwd ieducar
+
+Após isto conecte-se como o novo usuário:
+sudo su ieducar
+
+Primeiros passos
+Com um usuário diferente do root, execute os comandos abaixo:
+cd ~
+sudo apt-get install curl 
+
+Instalação e configuração do ambiente de desenvolvimento
+Instalação apache, php e pgvm
+
+sudo wget https://gist.github.com/lucasdavila/4711321/raw/1_ambiente_desenvolvimento.sh
+
+Use o vim ou o nano:
+sudo vim 1_ambiente_desenvolvimento.sh 
+ou 
+sudo nano 1_ambiente_desenvolvimento.sh
+Apague as linhas:
+echo -e "\n\n** Instalando pgvm"
+curl -s -L https://raw.github.com/lucasdavila/pgvm/master/bin/pgvm-self-install | bash -s -- --update
+Salve o arquivo e Saia.
+
+execute o comando  para ambiente de desenvolvimento
+bash 1_ambiente_desenvolvimento.sh
+
+Logo após execute o seguinte comando para instalar o pgvm:
+curl -s -L https://raw.github.com/guedes/pgvm/master/bin/pgvm-self-install
+Digite o comando:
+source ~/.bashrc 
+
+Instalação banco de dados postgresql 8.2 via pgvm
+curl -L https://gist.github.com/lucasdavila/4711321/raw/2_db.sh | bash 
+Se aparecer a seguinte tela:
+
+Clone do código fonte
+git clone https://github.com/portabilis/ieducar.git
+Instalação dos pacotes pear (dependências i-Educar)
+bash ~/ieducar/ieducar/scripts/install_pear_packages.sh 
+
+
+Configuração do apache
+curl -L https://gist.github.com/lucasdavila/4711321/raw/be0ca20be5e092dbe05a23cbb5ff6ba01c4b9af9/3_vhost.sh | bash 
+
+Configuração git (optativo)
+git config --global user.name "Seu Nome Completo"
+git config --global user.email seu_email@dominio.com 
+
+Configurações finais do i-Educar
+Após instalar as dependências necessárias, restaurar o banco de dados, clonar código fonte e configurar o apache, é necessário finalizar as configurações do i-Educar, para isto, basta editar o arquivo de configurações:
+nano ~/ieducar/ieducar/configuration/ieducar.ini
+
+Recaptcha
+O recaptcha é exibido na redefinição de senha e após várias tentativas de logins sem sucesso.
+Crie uma conta para o recaptcha em http://google.com/recaptcha/admin/create
+marcando a opção para usar a chave em todos domínios. 
+Após criar a conta, definir no arquivo de configuração as chaves recaptcha (sem aspas)
+app.recaptcha.public_key  = ...
+app.recaptcha.private_key = ...
+
+Login
+Após salvar as configurações, o login pode ser feito na aplicação acessando http://ieducar.local/ com usuário e senha admin.
+Migrações
+Devem ser executados todos sqls dos arquivos de migrações encontrados em ~/ieducar/ieducar/misc/database/deltas/portabilis/ a partir do número 53. Isso pode ser feito através da execução do seguinte script:
+curl -L https://gist.githubusercontent.com/lucassch/9324434/raw/test_migrations_53_54_55_56_57.sh | bash
+
+Inicialização cluster postgresql
+A cada inicialização do sistema operacional, o cluster do postgres precisará ser inicializado executando:
+bash ~/ieducar/ieducar/scripts/db.sh start 
+
+Da mesma maneira, o cluster pode ser parado executando:
+bash ~/ieducar/ieducar/scripts/db.sh stop 
+
+Caso o cluster não seja inicializado, o banco de dados estará offline, impedindo que a aplicação seja acessada.
+Para inicializar o cluster do banco de dados junto com o sistema operacional, basta adicionar um job, ex:
+
+Primeiro abra o crontab:
+crontab -e 
+
+Em seguida adicione ao final do arquivo esta linha:
+@reboot ~/ieducar/ieducar/scripts/db.sh start
+Após salvar o crontab, o cluster do banco de dados deve ser automaticamente iniciado junto com sistema operacional.
 
 
 DOCUMENTAÇÃO
