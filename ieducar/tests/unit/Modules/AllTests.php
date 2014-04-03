@@ -62,7 +62,7 @@ class Modules_AllTests extends TestCollector
       if (!$directory->isDot() && $directory->isDir()) {
         $path = $directory->getPathname() . DS . '_tests';
         if (is_dir($path)) {
-          PHPUnit_Util_Filter::addDirectoryToFilter($path, '.php');
+          PHP_CodeCoverage_Filter::getInstance()->addFileToBlacklist($path, '.php');
         }
       }
     }

@@ -29,7 +29,7 @@
  * @version     $Id$
  */
 
-require_once 'App/Date/Utils.php';
+require_once 'lib/App/Date/Utils.php';
 
 /**
  * App_Date_UtilsTest class.
