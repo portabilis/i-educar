@@ -576,7 +576,9 @@ class DiarioApiController extends ApiCoreController
         NULL,
         NULL,
         NULL,
-        NULL
+        NULL,
+        NULL,
+        TRUE
       );
 
       if (! is_array($alunos))
@@ -589,13 +591,23 @@ class DiarioApiController extends ApiCoreController
         // seta id da matricula a ser usado pelo metodo serviceBoletim
         $this->setCurrentMatriculaId($matriculaId);
 
-        if(! ($aluno['remanejado'] || $aluno['transferido']))
+        if(! ($aluno['remanejado'] || $aluno['transferido'] || $aluno['abandono'] || $aluno['reclassificado']))
           $matricula['componentes_curriculares'] = $this->loadComponentesCurricularesForMatricula($matriculaId);
           
         $matricula['matricula_id']             = $aluno['ref_cod_matricula'];
         $matricula['aluno_id']                 = $aluno['ref_cod_aluno'];
         $matricula['nome']                     = $this->safeString($aluno['nome_aluno']);
-        $matricula['situacao_deslocamento']    = ($aluno['remanejado'] ? 'Remanejado' : ($aluno['transferido'] ? 'Transferido' : null));
+
+        if ($aluno['remanejado'])
+          $matricula['situacao_deslocamento'] = 'Remanejado';
+        elseif($aluno['transferido'])
+          $matricula['situacao_deslocamento'] = 'Transferido';
+        elseif($aluno['abandono'])
+          $matricula['situacao_deslocamento'] = 'Abandono';
+        elseif($aluno['reclassificado'])
+          $matricula['situacao_deslocamento'] = 'Reclassificado';
+        else  
+          $matricula['situacao_deslocamento'] = null;
 
         $matriculas[] = $matricula;
       }
