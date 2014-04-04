@@ -976,6 +976,9 @@ class DiarioApiController extends ApiCoreController
     return $opcoes;
   }
 
+  protected function getNavegacaoTab(){
+     return $this->getRequest()->navegacao_tab;
+  }
 
   protected function canGetRegraAvaliacao() {
     return true;
@@ -1049,8 +1052,10 @@ class DiarioApiController extends ApiCoreController
   }
 
   public function Gerar() {
-    if ($this->isRequestFor('get', 'matriculas'))
+    if ($this->isRequestFor('get', 'matriculas')){
       $this->appendResponse('matriculas', $this->getMatriculas());
+      $this->appendResponse('navegacao_tab', $this->getNavegacaoTab());
+    }
 
     elseif ($this->isRequestFor('post', 'nota') || $this->isRequestFor('post', 'nota_exame'))
       $this->postNota();
