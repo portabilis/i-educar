@@ -932,7 +932,7 @@ function navegacaoTab(sentido){
         $j('tr').each(function() {
             
             $j(this).find('td').each(function(i) {
-                $j(this).find('input').attr('tabindex', i+1);
+                $j(this).find('input, textarea, select').attr('tabindex', i+1);
             });
         });
     }
