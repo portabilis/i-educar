@@ -19,6 +19,11 @@ var onClickSelectAllEvent = false;
 var onClickActionEvent    = false;
 var onClickDeleteEvent    = false;
 
+//irá rodar quando a página estiver pronta
+$(function() {
+    navegacaoTab(dataResponse.navegacao_tab);
+});
+
 //url builders
 
 var deleteResourceUrlBuilder = {
@@ -593,6 +598,7 @@ function handleSearch($resultTable, dataResponse) {
   $parecerFields.on('change', changeParecer);
 
   $resultTable.addClass('styled').find('.tabable:first').focus();
+  navegacaoTab(dataResponse.navegacao_tab);
 }
 
 function _notaField(matriculaId, componenteCurricularId, klass, id, value) {
@@ -917,6 +923,19 @@ function showNextSelectionButton() {
                                 .attr('style', 'text-decoration: underline')
                                 .appendTo($navActions);
   }
+}
+
+function navegacaoTab(sentido){
+    //se for no sentido vertical
+    if(sentido=="2"){
+
+        $j('tr').each(function() {
+            
+            $j(this).find('td').each(function(i) {
+                $j(this).find('input, textarea, select').attr('tabindex', i+1);
+            });
+        });
+    }
 }
 
 (function($) {

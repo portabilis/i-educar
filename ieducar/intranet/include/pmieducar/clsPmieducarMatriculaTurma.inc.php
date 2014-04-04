@@ -117,7 +117,7 @@ class clsPmieducarMatriculaTurma
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}matricula_turma";
 
-    $this->_campos_lista = $this->_todos_campos = "mt.ref_cod_matricula, mt.remanejado, mt.transferido, mt.ref_cod_turma, mt.ref_usuario_exc, mt.ref_usuario_cad, mt.data_cadastro, mt.data_exclusao, mt.ativo, mt.sequencial, mt.data_enturmacao, (SELECT pes.nome FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome, (SELECT to_ascii(pes.nome) FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome_ascii";
+    $this->_campos_lista = $this->_todos_campos = "mt.ref_cod_matricula, mt.abandono, mt.reclassificado, mt.remanejado, mt.transferido, mt.ref_cod_turma, mt.ref_usuario_exc, mt.ref_usuario_cad, mt.data_cadastro, mt.data_exclusao, mt.ativo, mt.sequencial, mt.data_enturmacao, (SELECT pes.nome FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome, (SELECT to_ascii(pes.nome) FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome_ascii";
 
     if (is_numeric($ref_usuario_exc)) {
       if (class_exists("clsPmieducarUsuario")) {
@@ -391,7 +391,7 @@ class clsPmieducarMatriculaTurma
     $bool_matricula_ativo = NULL, $bool_escola_andamento = FALSE,
     $mes_matricula_inicial = FALSE, $get_serie_mult = FALSE,
     $int_ref_cod_serie_mult = NULL, $int_semestre = NULL,
-    $pegar_ano_em_andamento = FALSE, $parar=NULL)
+    $pegar_ano_em_andamento = FALSE, $parar=NULL, $diario = FALSE)
   {
     if ($bool_get_nome_aluno === true) {
       $nome = " ,(SELECT (nome)
@@ -475,7 +475,7 @@ class clsPmieducarMatriculaTurma
         $filtros .= "{$whereAnd} mt.ativo = '1'";
         $whereAnd = " AND ";
       }elseif ($int_ativo == 2) {
-        $filtros .= "{$whereAnd} (mt.ativo = '1' OR mt.transferido OR mt.remanejado)";
+        $filtros .= "{$whereAnd} (mt.ativo = '1' OR mt.transferido OR mt.remanejado OR mt.reclassificado OR mt.abandono)";
         $whereAnd = " AND ";        
       }
       else {
@@ -605,8 +605,10 @@ class clsPmieducarMatriculaTurma
               ";
     }
 
-    $filtros .= "{$whereAnd} m.aprovado <> 6";
-    $whereAnd = " AND ";
+    if ($diario){
+      $filtros .= "{$whereAnd} (m.aprovado <> 6 OR mt.abandono)";
+      $whereAnd = " AND ";
+    }
 
     $db = new clsBanco();
     $countCampos = count(explode(',', $this->_campos_lista));
@@ -1230,6 +1232,23 @@ class clsPmieducarMatriculaTurma
     }
   }   
 
+  function marcaAlunoReclassificado(){
+    
+    if ($this->ref_cod_matricula && !is_null($this->getDataBaseTransferencia())){
+        
+        $db = new clsBanco();
+        $db->CampoUnico("UPDATE pmieducar.matricula_turma SET reclassificado = TRUE WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND ativo = 1");    
+    }
+  }
+
+  function marcaAlunoAbandono(){
+    if ($this->ref_cod_matricula && $this->sequencial && !is_null($this->getDataBaseTransferencia())){
+        
+        $db = new clsBanco();
+        $db->CampoUnico("UPDATE pmieducar.matricula_turma SET abandono = TRUE WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");    
+    }
+  }  
+
   function dadosAlunosNaoEnturmados($ref_cod_escola = NULL, $ref_cod_serie = NULL,
     $ref_cod_curso = NULL, $int_ano = NULL, $verificar_multiseriado = FALSE,
     $semestre = NULL)
@@ -1345,10 +1364,11 @@ class clsPmieducarMatriculaTurma
   function reclassificacao()
   {
     if (is_numeric($this->ref_cod_matricula)) {
+      $this->marcaAlunoReclassificado();
       $db = new clsBanco();
       $consulta = "UPDATE {$this->_tabela} SET ativo = 0 WHERE ref_cod_matricula = '{$this->ref_cod_matricula}'";
       $db->Consulta($consulta);
-
+      
       return TRUE;
     }
 
