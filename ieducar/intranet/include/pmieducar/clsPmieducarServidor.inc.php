@@ -43,7 +43,6 @@ require_once 'include/pmieducar/geral.inc.php';
 class clsPmieducarServidor
 {
   var $cod_servidor;
-  var $ref_cod_deficiencia;
   var $ref_idesco;
   var $carga_horaria;
   var $data_cadastro;
@@ -116,27 +115,8 @@ class clsPmieducarServidor
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'servidor';
 
-    $this->_campos_lista = $this->_todos_campos = "cod_servidor, ref_cod_deficiencia, ref_idesco, carga_horaria, data_cadastro, data_exclusao, ativo, ref_cod_instituicao,ref_cod_subnivel";
-    $this->_campos_lista2 = $this->_todos_campos2 = "s.cod_servidor, s.ref_cod_deficiencia, s.ref_idesco, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.ref_cod_instituicao,s.ref_cod_subnivel";
-
-    if (is_numeric($ref_cod_deficiencia)) {
-      if (class_exists('clsCadastroDeficiencia')) {
-        $tmp_obj = new clsCadastroDeficiencia( $ref_cod_deficiencia);
-        if (method_exists( $tmp_obj, 'existe')) {
-          if ($tmp_obj->existe()) {
-            $this->ref_cod_deficiencia = $ref_cod_deficiencia;
-          }
-        }
-        else if (method_exists($tmp_obj, 'detalhe')) {
-          if ($tmp_obj->detalhe()) {
-            $this->ref_cod_deficiencia = $ref_cod_deficiencia;
-          }
-        }
-      }
-      elseif ($db->CampoUnico("SELECT 1 FROM cadastro.deficiencia WHERE cod_deficiencia = '{$ref_cod_deficiencia}'")) {
-        $this->ref_cod_deficiencia = $ref_cod_deficiencia;
-      }
-    }
+    $this->_campos_lista = $this->_todos_campos = "cod_servidor, ref_idesco, carga_horaria, data_cadastro, data_exclusao, ativo, ref_cod_instituicao,ref_cod_subnivel";
+    $this->_campos_lista2 = $this->_todos_campos2 = "s.cod_servidor, s.ref_idesco, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.ref_cod_instituicao,s.ref_cod_subnivel";    
 
     if (is_numeric( $ref_idesco)) {
       if (class_exists('clsCadastroEscolaridade')) {
@@ -253,18 +233,6 @@ class clsPmieducarServidor
         $gruda = ", ";
       }
 
-      if (is_numeric( $this->ref_cod_deficiencia)) {
-        $campos .= "{$gruda}ref_cod_deficiencia";
-        $valores .= "{$gruda}'{$this->ref_cod_deficiencia}'";
-        $gruda = ", ";
-      }
-
-      if (is_numeric( $this->ref_idesco)) {
-        $campos .= "{$gruda}ref_idesco";
-        $valores .= "{$gruda}'{$this->ref_idesco}'";
-        $gruda = ", ";
-      }
-
       if (is_numeric( $this->carga_horaria)) {
         $campos .= "{$gruda}carga_horaria";
         $valores .= "{$gruda}'{$this->carga_horaria}'";
@@ -307,15 +275,6 @@ class clsPmieducarServidor
     if (is_numeric($this->cod_servidor) && is_numeric($this->ref_cod_instituicao)) {
       $db = new clsBanco();
       $set = "";
-
-      if (is_numeric($this->ref_cod_deficiencia)) {
-        $set .= "{$gruda}ref_cod_deficiencia = '{$this->ref_cod_deficiencia}'";
-        $gruda = ", ";
-      }
-      else {
-        $set .= "{$gruda}ref_cod_deficiencia = NULL";
-        $gruda = ", ";
-      }
 
       if (is_numeric($this->ref_idesco)) {
         $set .= "{$gruda}ref_idesco = '{$this->ref_idesco}'";
@@ -490,11 +449,6 @@ class clsPmieducarServidor
 
     if (is_numeric($int_cod_servidor)) {
       $filtros .= "{$whereAnd} s.cod_servidor = '{$int_cod_servidor}'";
-      $whereAnd = " AND ";
-    }
-
-    if (is_numeric($int_ref_cod_deficiencia)) {
-      $filtros .= "{$whereAnd} s.ref_cod_deficiencia = '{$int_ref_cod_deficiencia}'";
       $whereAnd = " AND ";
     }
 

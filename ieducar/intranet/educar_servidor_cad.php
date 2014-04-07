@@ -32,6 +32,8 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
+require_once 'lib/Portabilis/Utils/Database.php';
 
 require_once 'Educacenso/Model/DocenteDataMapper.php';
 
@@ -70,7 +72,6 @@ class indice extends clsCadastro
 
   var $cod_servidor;
   var $ref_cod_instituicao;
-  var $ref_cod_deficiencia;
   var $ref_idesco;
   var $ref_cod_funcao = array();
   var $carga_horaria;
@@ -80,6 +81,8 @@ class indice extends clsCadastro
   var $ref_cod_instituicao_original;
 
   var $total_horas_alocadas;
+
+  var $cod_docente_inep;
 
   // Determina se o servidor é um docente para buscar código Educacenso/Inep.
   var $docente = FALSE;
@@ -221,26 +224,13 @@ class indice extends clsCadastro
         NULL, NULL, '', FALSE, $parametros->serializaCampos(), TRUE);
     }
 
-    $opcoes = array('' => 'Selecione');
-    if (class_exists('clsCadastroDeficiencia')) {
-      $objTemp = new clsCadastroDeficiencia();
-      $lista = $objTemp->lista();
+    $this->inputsHelper()->integer('cod_docente_inep', array('label' => 'Código INEP', 'required' => 'false'));
 
-      if (is_array($lista) && count($lista)) {
-        foreach ($lista as $registro) {
-          $opcoes[$registro['cod_deficiencia']] = $registro['nm_deficiencia'];
-        }
-      }
-    }
-    else {
-      echo "<!--\nErro\nClasse clsCadastroDeficiencia nao encontrada\n-->";
-      $opcoes = array('' => 'Erro na geracao');
-    }
+    $helperOptions = array('objectName' => 'deficiencias');
+    $options       = array('label' => 'Deficiências', 'size' => 50, 'required' => false,
+                           'options' => array('value' => null));
 
-    $script = "javascript:showExpansivelIframe(350, 100, 'educar_deficiencia_cad_pop.php');";
-    $script = "<img id='img_deficiencia' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
-    $this->campoLista('ref_cod_deficiencia', 'Deficiência', $opcoes,
-      $this->ref_cod_deficiencia, '', FALSE, '', $script, FALSE, FALSE);
+    $this->inputsHelper()->multipleSearchDeficiencias('', $options, $helperOptions);
 
     $opcoes = array('' => 'Selecione');
     if (class_exists('clsCadastroEscolaridade')) {
@@ -368,13 +358,15 @@ class indice extends clsCadastro
     if ($obj->detalhe()) {
       $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
       $obj = new clsPmieducarServidor($this->cod_servidor,
-        $this->ref_cod_deficiencia, $this->ref_idesco, $this->carga_horaria,
+        NULL, $this->ref_idesco, $this->carga_horaria,
         NULL, NULL, 1, $this->ref_cod_instituicao);
 
       $editou = $obj->edita();
 
       if ($editou) {
         $this->cadastraFuncoes();
+        $this->createOrUpdateInep();
+        $this->createOrUpdateDeficiencias();
 
         include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
@@ -386,13 +378,15 @@ class indice extends clsCadastro
     else {
       $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
       $obj_2 = new clsPmieducarServidor($this->cod_servidor,
-        $this->ref_cod_deficiencia, $this->ref_idesco, $this->carga_horaria,
+        NULL, $this->ref_idesco, $this->carga_horaria,
         NULL, NULL, 1, $this->ref_cod_instituicao);
 
       $cadastrou = $obj_2->cadastra();
 
       if ($cadastrou) {
         $this->cadastraFuncoes();
+        $this->createOrUpdateInep();
+        $this->createOrUpdateDeficiencias();
 
         include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
@@ -425,13 +419,15 @@ class indice extends clsCadastro
     if ($this->ref_cod_instituicao == $this->ref_cod_instituicao_original) {
       $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
 
-      $obj = new clsPmieducarServidor($this->cod_servidor, $this->ref_cod_deficiencia,
+      $obj = new clsPmieducarServidor($this->cod_servidor, NULL,
         $this->ref_idesco, $this->carga_horaria, NULL, NULL, 1, $this->ref_cod_instituicao);
 
       $editou = $obj->edita();
 
       if ($editou) {
         $this->cadastraFuncoes();
+        $this->createOrUpdateInep();
+        $this->createOrUpdateDeficiencias();
 
         include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
@@ -462,14 +458,14 @@ class indice extends clsCadastro
           $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
 
           $obj = new clsPmieducarServidor($this->cod_servidor,
-            $this->ref_cod_deficiencia, $this->ref_idesco, $this->carga_horaria,
+            NULL, $this->ref_idesco, $this->carga_horaria,
             NULL, NULL, 0, $this->ref_cod_instituicao_original);
 
           $editou = $obj->edita();
 
           if ($editou) {
             $obj = new clsPmieducarServidor($this->cod_servidor,
-              $this->ref_cod_deficiencia, $this->ref_idesco,
+              NULL, $this->ref_idesco,
               $this->carga_horaria, NULL, NULL, 1, $this->ref_cod_instituicao);
 
             if ($obj->existe()) {
@@ -481,6 +477,8 @@ class indice extends clsCadastro
 
             if ($cadastrou) {
               $this->cadastraFuncoes();
+              $this->createOrUpdateInep();
+              $this->createOrUpdateDeficiencias();
 
               include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
@@ -526,7 +524,7 @@ class indice extends clsCadastro
       }
       else {
         $obj = new clsPmieducarServidor($this->cod_servidor,
-          $this->ref_cod_deficiencia, $this->ref_idesco, $this->carga_horaria,
+          NULL, $this->ref_idesco, $this->carga_horaria,
           NULL, NULL, 0, $this->ref_cod_instituicao_original);
 
         $excluiu = $obj->excluir();
@@ -626,6 +624,31 @@ class indice extends clsCadastro
       $this->ref_cod_instituicao, $this->cod_servidor);
 
     $obj_servidor_curso->excluirTodos();
+  }
+
+  protected function createOrUpdateDeficiencias(){
+    $servidorId = $this->cod_servidor;
+
+    $sql = "delete from cadastro.fisica_deficiencia where ref_idpes = $1";
+    Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($servidorId)), false);
+
+    foreach ($this->getRequest()->deficiencias as $id) {
+      if (! empty($id)) {
+        $deficiencia = new clsCadastroFisicaDeficiencia($servidorId, $id);
+        $deficiencia->cadastra();
+      }
+    }
+
+  }
+
+  protected function createOrUpdateInep(){
+    
+    if ($this->cod_docente_inep){
+      Portabilis_Utils_Database::fetchPreparedQuery("DELETE FROM modules.educacenso_cod_docente WHERE cod_servidor = $1",array('params' => array($this->cod_servidor)), false );
+      $sql = "INSERT INTO modules.educacenso_cod_docente (cod_servidor,cod_docente_inep, fonte, created_at) 
+                                                  VALUES ($1, $2,'U', 'NOW()')";
+      Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($this->cod_servidor, $this->cod_docente_inep)));
+    }
   }
 
 }
@@ -828,4 +851,50 @@ function pesquisa_valores_popless1(caminho, campo)
     showExpansivel(850, 500, '<iframe src="' + caminho + '&campo=' + campo + '&div=' + div + '&popless=1" frameborder="0" height="100%" width="100%" marginheight="0" marginwidth="0" name="temp_win_popless"></iframe>', 'Pesquisa de valores' );
   }
 }
+
+var handleGetInformacoesServidor = function(dataResponse){
+
+  // deficiencias
+  $j('#deficiencias').closest('tr').show();
+  $j('#cod_docente_inep').val(dataResponse.inep).closest('tr').show();
+
+  $deficiencias = $j('#deficiencias');
+
+  console.log(dataResponse);
+
+  $j.each(dataResponse.deficiencias, function(id, nome) {
+    $deficiencias.children("[value=" + id + "]").attr('selected', '');
+  });
+
+  $deficiencias.trigger('liszt:updated');  
+};
+
+function atualizaInformacoesServidor(){
+
+  $j('#deficiencias').closest('tr').hide();
+  $j('#deficiencias option').removeAttr('selected');
+  $j('#deficiencias').trigger('liszt:updated');
+  $j('#cod_docente_inep').closest('tr').hide();
+
+  var servidor_id = $j('#cod_servidor').val();
+
+  if (servidor_id != ''){
+    var data = {
+      servidor_id : servidor_id
+    };
+    var options = {
+      url : getResourceUrlBuilder.buildUrl('/module/Api/pessoa', 'info-servidor', {}),
+        dataType : 'json',
+        data : data,
+        success : handleGetInformacoesServidor
+    };
+    getResources(options);
+  }
+}
+$j(document).ready(function() {
+  
+  atualizaInformacoesServidor();
+  $j('#deficiencias_chzn ul').css('width', '307px');  
+  $j('#cod_servidor').attr('onchange', 'atualizaInformacoesServidor();');
+});
 </script>

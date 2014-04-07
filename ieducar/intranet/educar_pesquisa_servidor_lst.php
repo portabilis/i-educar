@@ -72,7 +72,6 @@ class indice extends clsListagem
   var $offset;
 
   var $cod_servidor;
-  var $ref_cod_deficiencia;
   var $ref_idesco;
   var $ref_cod_funcao;
   var $carga_horaria;
@@ -253,7 +252,7 @@ class indice extends clsListagem
     // selecionando apenas servidores alocados na instituição
     $lista = $obj_servidor->lista(
       NULL,
-      $this->ref_cod_deficiencia,
+      NULL,
       $this->ref_idesco,
       $this->carga_horaria,
       NULL,

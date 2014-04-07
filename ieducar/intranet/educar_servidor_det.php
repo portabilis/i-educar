@@ -73,7 +73,6 @@ class indice extends clsDetalhe
    */
   var
     $cod_servidor        = NULL,
-    $ref_cod_deficiencia = NULL,
     $ref_idesco          = NULL,
     $ref_cod_funcao      = NULL,
     $carga_horaria       = NULL,
@@ -107,12 +106,7 @@ class indice extends clsDetalhe
     if (!$registro) {
       header('Location: educar_servidor_lst.php');
       die();
-    }
-
-    // Deficiência
-    $obj_ref_cod_deficiencia = new clsCadastroDeficiencia($registro['ref_cod_deficiencia']);
-    $det_ref_cod_deficiencia = $obj_ref_cod_deficiencia->detalhe();
-    $registro['ref_cod_deficiencia'] = $det_ref_cod_deficiencia['nm_deficiencia'];
+    }  
 
     // Escolaridade
     $obj_ref_idesco = new clsCadastroEscolaridade($registro['ref_idesco']);
@@ -174,10 +168,6 @@ class indice extends clsDetalhe
 
     if ($registro['ref_cod_instituicao']) {
       $this->addDetalhe( array( "Instituição", $registro['ref_cod_instituicao']));
-    }
-
-    if ($registro['ref_cod_deficiencia']) {
-      $this->addDetalhe(array('Deficiência', $registro['ref_cod_deficiencia']));
     }
 
     if( $registro['ref_idesco']) {

@@ -485,6 +485,19 @@ class PessoaController extends ApiCoreController
 
   }
 
+  protected function getInep($servidorId) {    
+    
+    $sql = "SELECT cod_docente_inep FROM modules.educacenso_cod_docente WHERE cod_servidor = $1";
+    return Portabilis_Utils_Database::selectField($sql, array('params' => array($servidorId)));
+  }
+
+  protected function getInfoServidor(){
+    $servidorId = $this->getRequest()->servidor_id;
+    $_servidor['inep'] = $this->getInep($servidorId);
+    $_servidor['deficiencias'] = $this->loadDeficiencias($servidorId);
+
+    return $_servidor;
+  }
  
   protected function canCreateBairro(){
     return !empty($this->getRequest()->bairro) && !empty($this->getRequest()->zona_localizacao);
@@ -517,6 +530,8 @@ class PessoaController extends ApiCoreController
       $this->appendResponse($this->get());
     elseif ($this->isRequestFor('post', 'pessoa'))
       $this->appendResponse($this->post());    
+    elseif ($this->isRequestFor('get', 'info-servidor'))
+      $this->appendResponse($this->getInfoServidor());   
     elseif ($this->isRequestFor('post', 'pessoa-endereco'))
       $this->appendResponse($this->createOrUpdateEndereco());      
     elseif ($this->isRequestFor('get', 'pessoa-parent'))
