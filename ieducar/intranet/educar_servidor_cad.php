@@ -894,7 +894,11 @@ function atualizaInformacoesServidor(){
 $j(document).ready(function() {
   
   atualizaInformacoesServidor();
+
+  // fixup multipleSearchDeficiencias size:
   $j('#deficiencias_chzn ul').css('width', '307px');  
+  $j('#deficiencias_chzn input').css('height', '25px');
+
   $j('#cod_servidor').attr('onchange', 'atualizaInformacoesServidor();');
 });
 </script>

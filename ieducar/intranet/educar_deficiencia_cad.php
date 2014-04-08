@@ -82,18 +82,6 @@ class indice extends clsCadastro
 				$retorno = "Editar";
 			}
 		}
-		$resources = array   (  null => 'Selecione',
-								1 => "Cegueira",
-								2 => "Baixa visão",
-								3 => "Surdez",
-								4 => "Deficiência auditiva",
-								5 => "Surdocegueira",
-								6 => "Deficiência física",
-								7 => "Deficiência Intelectual",
-								8 => "Deficiência Múltipla");
-
-		$options = array('label' => Portabilis_String_Utils::toLatin1('Deficiência Educacenso'), 'resources' => $resources, 'value' => $this->deficiencia_educacenso);
-	    $this->inputsHelper()->select('deficiencia_educacenso', $options);	 
 
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_deficiencia_det.php?cod_deficiencia={$registro["cod_deficiencia"]}" : "educar_deficiencia_lst.php";
 		$this->nome_url_cancelar = "Cancelar";
@@ -110,7 +98,18 @@ class indice extends clsCadastro
 		// text
 		$this->campoTexto( "nm_deficiencia", "Deficiência", $this->nm_deficiencia, 30, 255, true );
 
-		// data
+		$resources = array   (  null => 'Selecione',
+								1 => "Cegueira",
+								2 => "Baixa visão",
+								3 => "Surdez",
+								4 => "Deficiência auditiva",
+								5 => "Surdocegueira",
+								6 => "Deficiência física",
+								7 => "Deficiência Intelectual",
+								8 => "Deficiência Múltipla");
+
+		$options = array('label' => Portabilis_String_Utils::toLatin1('Deficiência Educacenso'), 'resources' => $resources, 'value' => $this->deficiencia_educacenso);
+	    $this->inputsHelper()->select('deficiencia_educacenso', $options);
 
 	}
 
