@@ -28,6 +28,6 @@ INSERT INTO pmieducar.menu_tipo_usuario VALUES(1, 950, 1, 1, 1);
   DELETE FROM portal.menu_submenu WHERE cod_menu = 950;
   DELETE FROM pmicontrolesis.menu WHERE cod_menu = 21245;
   DELETE FROM portal.menu_funcionario WHERE ref_cod_menu_submenu = 950;
-  INSERT INTO pmieducar.menu_tipo_usuario WHERE ref_cod_menu_submenu = 950;
+  DELETE FROM pmieducar.menu_tipo_usuario WHERE ref_cod_menu_submenu = 950;
 
   -- //
