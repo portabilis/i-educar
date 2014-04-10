@@ -142,8 +142,7 @@ class indice extends clsCadastro
 
 		$this->campoData( "data_aquisicao", "Data Aquisic&atilde;o", $this->data_aquisicao, true );
 
-    $this->campoNumero("tombo", "Tombo", $this->tombo, 10, 10, false);
-
+                //Recebe o número de tombo, e identifica o tombo como um campo invisível no formulário
 		if (!is_numeric($this->cod_exemplar))
 			$this->campoNumero("qtd_livros", "Quantidade de Livros", 1, 5, 5, true);
 	}
