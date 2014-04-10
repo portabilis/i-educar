@@ -267,7 +267,7 @@ class indice extends clsCadastro
         NULL, NULL, '', FALSE, $parametros->serializaCampos(), TRUE);
     }
 
-    $this->inputsHelper()->integer('cod_docente_inep', array('label' => 'Código INEP', 'required' => 'false'));
+    $this->inputsHelper()->integer('cod_docente_inep', array('label' => 'Código INEP', 'required' => false));
 
     $helperOptions = array('objectName' => 'deficiencias');
     $options       = array('label' => 'Deficiências', 'size' => 50, 'required' => false,

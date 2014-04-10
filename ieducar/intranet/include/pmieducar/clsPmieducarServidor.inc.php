@@ -622,10 +622,16 @@ class clsPmieducarServidor
       if (is_numeric($this->ano_inicio_curso_superior_1)) {
         $set .= "{$gruda}ano_inicio_curso_superior_1 = '{$this->ano_inicio_curso_superior_1}'";
         $gruda = ", ";
+      }else{
+        $set .= "{$gruda}ano_inicio_curso_superior_1 = NULL";
+        $gruda = ", ";
       }
 
       if (is_numeric($this->ano_conclusao_curso_superior_1)) {
         $set .= "{$gruda}ano_conclusao_curso_superior_1 = '{$this->ano_conclusao_curso_superior_1}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}ano_conclusao_curso_superior_1 = NULL";
         $gruda = ", ";
       }
 
@@ -657,10 +663,16 @@ class clsPmieducarServidor
       if (is_numeric($this->ano_inicio_curso_superior_2)) {
         $set .= "{$gruda}ano_inicio_curso_superior_2 = '{$this->ano_inicio_curso_superior_2}'";
         $gruda = ", ";
+      }else{
+        $set .= "{$gruda}ano_inicio_curso_superior_2 = NULL";
+        $gruda = ", ";
       }
 
       if (is_numeric($this->ano_conclusao_curso_superior_2)) {
         $set .= "{$gruda}ano_conclusao_curso_superior_2 = '{$this->ano_conclusao_curso_superior_2}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}ano_conclusao_curso_superior_2 = NULL";
         $gruda = ", ";
       }
 
@@ -692,10 +704,16 @@ class clsPmieducarServidor
       if (is_numeric($this->ano_inicio_curso_superior_3)) {
         $set .= "{$gruda}ano_inicio_curso_superior_3 = '{$this->ano_inicio_curso_superior_3}'";
         $gruda = ", ";
+      }else{
+        $set .= "{$gruda}ano_inicio_curso_superior_3 = NULL";
+        $gruda = ", ";
       }
 
       if (is_numeric($this->ano_conclusao_curso_superior_3)) {
         $set .= "{$gruda}ano_conclusao_curso_superior_3 = '{$this->ano_conclusao_curso_superior_3}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}ano_conclusao_curso_superior_3 = NULL";
         $gruda = ", ";
       }
 
