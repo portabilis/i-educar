@@ -392,10 +392,10 @@ class indice extends clsCadastro
                            'hiddenInputOptions' => array('options' => array('value' => $this->codigo_curso_superior_1)));
     $this->inputsHelper()->simpleSearchCursoSuperior(null, $options, $helperOptions);
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Ano de início do curso superior 1'), 'placeholder' => '','value' => $this->ano_inicio_curso_superior_1, 'max_length' => 4, 'size' => 5);
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Ano de início do curso superior 1'), 'placeholder' => '','value' => $this->ano_inicio_curso_superior_1, 'max_length' => 4, 'size' => 5, 'required' => false);
     $this->inputsHelper()->integer('ano_inicio_curso_superior_1', $options);
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Ano de conclusão do curso superior 1'), 'placeholder' => '','value' => $this->ano_conclusao_curso_superior_1, 'max_length' => 4, 'size' => 5);
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Ano de conclusão do curso superior 1'), 'placeholder' => '','value' => $this->ano_conclusao_curso_superior_1, 'max_length' => 4, 'size' => 5, 'required' => false);
     $this->inputsHelper()->integer('ano_conclusao_curso_superior_1', $options);    
 
     $resources = array(0 => 'Selecione',
@@ -427,10 +427,10 @@ class indice extends clsCadastro
                            'hiddenInputOptions' => array('options' => array('value' => $this->codigo_curso_superior_2)));
     $this->inputsHelper()->simpleSearchCursoSuperior(null, $options, $helperOptions);
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Ano de início do curso superior 2'), 'placeholder' => '','value' => $this->ano_inicio_curso_superior_2, 'max_length' => 4, 'size' => 5);
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Ano de início do curso superior 2'), 'placeholder' => '','value' => $this->ano_inicio_curso_superior_2, 'max_length' => 4, 'size' => 5, 'required' => false);
     $this->inputsHelper()->integer('ano_inicio_curso_superior_2', $options);
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Ano de conclusão do curso superior 2'), 'placeholder' => '','value' => $this->ano_conclusao_curso_superior_2, 'max_length' => 4, 'size' => 5);
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Ano de conclusão do curso superior 2'), 'placeholder' => '','value' => $this->ano_conclusao_curso_superior_2, 'max_length' => 4, 'size' => 5, 'required' => false);
     $this->inputsHelper()->integer('ano_conclusao_curso_superior_2', $options);    
 
     $resources = array(0 => 'Selecione',
@@ -462,10 +462,10 @@ class indice extends clsCadastro
                            'hiddenInputOptions' => array('options' => array('value' => $this->codigo_curso_superior_3)));
     $this->inputsHelper()->simpleSearchCursoSuperior(null, $options, $helperOptions);
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Ano de início do curso superior 3'), 'placeholder' => '','value' => $this->ano_inicio_curso_superior_3, 'max_length' => 4, 'size' => 5);
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Ano de início do curso superior 3'), 'placeholder' => '','value' => $this->ano_inicio_curso_superior_3, 'max_length' => 4, 'size' => 5, 'required' => false);
     $this->inputsHelper()->integer('ano_inicio_curso_superior_3', $options);
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Ano de conclusão do curso superior 3'), 'placeholder' => '','value' => $this->ano_conclusao_curso_superior_3, 'max_length' => 4, 'size' => 5);
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Ano de conclusão do curso superior 3'), 'placeholder' => '','value' => $this->ano_conclusao_curso_superior_3, 'max_length' => 4, 'size' => 5, 'required' => false);
     $this->inputsHelper()->integer('ano_conclusao_curso_superior_3', $options);    
 
     $resources = array(0 => 'Selecione',
@@ -490,6 +490,9 @@ class indice extends clsCadastro
 
     $options = array('label' => Portabilis_String_Utils::toLatin1('Pós-Graduação - Doutorado'), 'value' => $this->pos_doutorado);
     $this->inputsHelper()->checkbox('pos_doutorado', $options); 
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Pós-Graduação - Nenhuma'), 'value' => $this->pos_nenhuma);
+    $this->inputsHelper()->checkbox('pos_nenhuma', $options); 
 
     $options = array('label' => Portabilis_String_Utils::toLatin1('Curso de Formação Continuada(min. 80hrs) - Específico para Creche (0 a 3 anos)'), 'value' => $this->curso_creche);
     $this->inputsHelper()->checkbox('curso_creche', $options);
@@ -786,6 +789,7 @@ class indice extends clsCadastro
     $obj->pos_especializacao = $this->pos_especializacao == 'on' ? 1 : 0;
     $obj->pos_mestrado = $this->pos_mestrado == 'on' ? 1 : 0;
     $obj->pos_doutorado = $this->pos_doutorado == 'on' ? 1 : 0;
+    $obj->pos_nenhuma = $this->pos_nenhuma == 'on' ? 1 : 0;
     $obj->curso_creche = $this->curso_creche == 'on' ? 1 : 0;
     $obj->curso_pre_escola = $this->curso_pre_escola == 'on' ? 1 : 0;
     $obj->curso_anos_iniciais = $this->curso_anos_iniciais == 'on' ? 1 : 0;
