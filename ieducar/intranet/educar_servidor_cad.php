@@ -909,9 +909,8 @@ class indice extends clsCadastro
   }
 
   protected function createOrUpdateInep(){
-    
-    if ($this->cod_docente_inep){
-      Portabilis_Utils_Database::fetchPreparedQuery("DELETE FROM modules.educacenso_cod_docente WHERE cod_servidor = $1",array('params' => array($this->cod_servidor)), false );
+    Portabilis_Utils_Database::fetchPreparedQuery("DELETE FROM modules.educacenso_cod_docente WHERE cod_servidor = $1",array('params' => array($this->cod_servidor)), false );
+    if ($this->cod_docente_inep){      
       $sql = "INSERT INTO modules.educacenso_cod_docente (cod_servidor,cod_docente_inep, fonte, created_at) 
                                                   VALUES ($1, $2,'U', 'NOW()')";
       Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($this->cod_servidor, $this->cod_docente_inep)));
