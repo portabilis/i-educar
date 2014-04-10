@@ -213,6 +213,18 @@ class Portabilis_View_Helper_Inputs {
 
   }         
 
+  public function simpleSearchIes($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchIes', $attrName, $inputOptions, $helperOptions);
+
+  }  
+
+  public function simpleSearchCursoSuperior($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchCursoSuperior', $attrName, $inputOptions, $helperOptions);
+
+  }             
+
   // multiple search resource input helper
 
 

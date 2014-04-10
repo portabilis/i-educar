@@ -44,6 +44,7 @@ class clsCadastroEscolaridade
 {
   var $idesco;
   var $descricao;
+  var $escolaridade;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista.
@@ -96,19 +97,22 @@ class clsCadastroEscolaridade
   /**
    * Construtor (PHP 4).
    */
-  function clsCadastroEscolaridade($idesco = NULL, $descricao = NULL)
+  function clsCadastroEscolaridade($idesco = NULL, $descricao = NULL, $escolaridade = NULL)
   {
     $db = new clsBanco();
     $this->_schema = "cadastro.";
     $this->_tabela = "{$this->_schema}escolaridade";
 
-    $this->_campos_lista = $this->_todos_campos = "idesco, descricao";
+    $this->_campos_lista = $this->_todos_campos = "idesco, descricao, escolaridade";
 
     if (is_numeric($idesco)) {
       $this->idesco = $idesco;
     }
     if (is_string($descricao)) {
       $this->descricao = $descricao;
+    }
+    if (is_numeric($escolaridade)) {
+      $this->escolaridade = $escolaridade;
     }
   }
 
@@ -144,6 +148,11 @@ class clsCadastroEscolaridade
         $valores .= "{$gruda}'{$this->descricao}'";
         $gruda = ", ";
       }
+      if (is_numeric($this->escolaridade)) {
+        $campos  .= "{$gruda}escolaridade";
+        $valores .= "{$gruda}'{$this->escolaridade}'";
+        $gruda = ", ";
+      }
 
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
       return $this->idesco;
@@ -164,6 +173,10 @@ class clsCadastroEscolaridade
 
       if (is_string($this->descricao)) {
         $set  .= "{$gruda}descricao = '{$this->descricao}'";
+        $gruda = ", ";
+      }
+      if (is_numeric($this->escolaridade)) {
+        $set  .= "{$gruda}escolaridade = '{$this->escolaridade}'";
         $gruda = ", ";
       }
 

@@ -33,6 +33,7 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/Geral.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'lib/Portabilis/String/Utils.php';
 
 class clsIndexBase extends clsBase
 {
@@ -53,6 +54,7 @@ class indice extends clsCadastro
 
   var $idesco;
   var $descricao;
+  var $escolaridade;
 
   function Inicializar()
   {
@@ -101,6 +103,16 @@ class indice extends clsCadastro
 
     // Outros campos
     $this->campoTexto('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 30, 255, TRUE);
+
+    $resources = array(1 => 'Fundamental incompleto',
+                     2 => 'Fundamental completo',
+                     3 => 'Ensino médio - Normal/Magistério',
+                     4 => 'Ensino médio - Normal/Magistério Indígena',
+                     5 => 'Ensino médio',
+                     6 => 'Superior');
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Escolaridade'), 'resources' => $resources, 'value' => $this->escolaridade);
+    $this->inputsHelper()->select('escolaridade', $options);    
   }
 
   function Novo()
@@ -109,7 +121,7 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $obj = new clsCadastroEscolaridade(NULL, $this->descricao);
+    $obj = new clsCadastroEscolaridade(NULL, $this->descricao, $this->escolaridade);
     $cadastrou = $obj->cadastra();
 
     if ($cadastrou) {
@@ -128,7 +140,7 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $obj = new clsCadastroEscolaridade($this->idesco, $this->descricao);
+    $obj = new clsCadastroEscolaridade($this->idesco, $this->descricao, $this->escolaridade);
     $editou = $obj->edita();
     if ($editou) {
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
