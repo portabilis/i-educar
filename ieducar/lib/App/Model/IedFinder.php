@@ -501,7 +501,7 @@ class App_Model_IedFinder extends CoreExt_Entity
     }
 
     // Atribui dados extra a matrícula
-    $turmas = $turma->lista($codMatricula, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+    $turmas = $turma->lista($codMatricula, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2);
     if (0 < count($turmas)) {
       $turma = array_shift($turmas);
 
