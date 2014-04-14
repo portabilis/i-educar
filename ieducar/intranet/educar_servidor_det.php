@@ -80,7 +80,8 @@ class indice extends clsDetalhe
     $data_exclusao       = NULL,
     $ativo               = NULL,
     $ref_cod_instituicao = NULL,
-    $alocacao_array      = array();
+    $alocacao_array      = array(),
+    $is_professor = FALSE;
 
   /**
    * Implementação do método Gerar()
@@ -268,7 +269,7 @@ class indice extends clsDetalhe
             <td><b>{$det_funcao['nm_funcao']}</b></td>
           </tr>";
 
-        $docente = (bool) $det_funcao['professor'];
+        $this->is_professor = $docente = (bool) $det_funcao['professor'];
 
         $class = $class == "formlttd" ? "formmdtd" : "formlttd" ;
       }
@@ -480,6 +481,11 @@ class indice extends clsDetalhe
       elseif (is_numeric($afastamento)) {
         $this->array_botao[] = 'Retornar Servidor';
         $this->array_botao_url_script[] = "go(\"educar_servidor_afastamento_cad.php?{$get_padrao}&sequencial={$afastamento}\");";
+      }
+
+      if ($this->is_professor){
+        $this->array_botao[] = 'Vincular professor a turmas';
+        $this->array_botao_url_script[] = "go(\"educar_servidor_vinculo_turma_lst.php?{$get_padrao}\");"; 
       }
     }
 

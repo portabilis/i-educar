@@ -182,7 +182,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     $series->setOrderby('ref_cod_curso ASC, cod_serie ASC, etapa_curso ASC');
     $series = $series->lista(NULL, NULL, NULL, $cursoId, NULL, NULL, NULL, NULL, NULL,
-                             NULL, NULL, NULL, NULL, $instituicaoId, NULL, NULL, NULL, $escolaId);
+                             NULL, NULL, NULL, NULL, $instituicaoId, NULL, NULL, $escolaId);
 
     $_series = array();
 

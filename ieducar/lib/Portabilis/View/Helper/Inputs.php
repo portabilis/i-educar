@@ -243,6 +243,10 @@ class Portabilis_View_Helper_Inputs {
   public function multipleSearchEtapacurso($attrName, $inputOptions = array(), $helperOptions = array()) {
     $this->multipleSearchResourceInput('multipleSearchEtapacurso', $attrName, $inputOptions, $helperOptions);
   }
+
+  public function multipleSearchComponenteCurricular($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchComponenteCurricular', $attrName, $inputOptions, $helperOptions);
+  }  
   // resource input helpers
 
   public function religiao($inputOptions = array(), $helperOptions = array()) {
