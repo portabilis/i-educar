@@ -106,7 +106,7 @@ class indice extends clsDetalhe
 
     $resources_tipo = array(  null => 'Selecione',
                               1    => 'Concursado/efetivo/estável',
-                              2    => 'Contrato temporario',
+                              2    => 'Contrato temporário',
                               3    => 'Contrato terceirizado',
                               4    => 'Contrato CLT');    
 
