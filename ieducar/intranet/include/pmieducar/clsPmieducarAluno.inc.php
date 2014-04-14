@@ -56,6 +56,15 @@ class clsPmieducarAluno
   var $nm_pai;
   var $nm_mae;
   var $tipo_responsavel;
+  var $recurso_prova_inep_aux_ledor;
+  var $recurso_prova_inep_aux_transcricao;
+  var $recurso_prova_inep_guia_interprete;
+  var $recurso_prova_inep_interprete_libras;
+  var $recurso_prova_inep_leitura_labial;
+  var $recurso_prova_inep_prova_ampliada_16;
+  var $recurso_prova_inep_prova_ampliada_20;
+  var $recurso_prova_inep_prova_ampliada_24;
+  var $recurso_prova_inep_prova_braille;  
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -120,7 +129,10 @@ class clsPmieducarAluno
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'aluno';
 
-    $this->_campos_lista = $this->_todos_campos = 'cod_aluno, ref_cod_aluno_beneficio, ref_cod_religiao, ref_usuario_exc, ref_usuario_cad, ref_idpes, data_cadastro, data_exclusao, ativo, caminho_foto, analfabeto, nm_pai, nm_mae,tipo_responsavel, aluno_estado_id';
+    $this->_campos_lista = $this->_todos_campos = 'cod_aluno, ref_cod_aluno_beneficio, ref_cod_religiao, ref_usuario_exc, 
+        ref_usuario_cad, ref_idpes, data_cadastro, data_exclusao, ativo, caminho_foto, analfabeto, nm_pai, nm_mae,tipo_responsavel, aluno_estado_id,
+        recurso_prova_inep_aux_ledor, recurso_prova_inep_aux_transcricao, recurso_prova_inep_guia_interprete, recurso_prova_inep_interprete_libras, recurso_prova_inep_leitura_labial,
+        recurso_prova_inep_prova_ampliada_16, recurso_prova_inep_prova_ampliada_20, recurso_prova_inep_prova_ampliada_24, recurso_prova_inep_prova_braille';
 
     if (is_numeric($ref_cod_aluno_beneficio)) {
       if (class_exists('clsPmieducarAlunoBeneficio')) {
@@ -325,6 +337,60 @@ class clsPmieducarAluno
         $gruda = ', ';
       }
 
+      if (is_numeric($this->recurso_prova_inep_aux_ledor)) {
+        $campos  .= "{$gruda}recurso_prova_inep_aux_ledor";
+        $valores .= "{$gruda}'{$this->recurso_prova_inep_aux_ledor}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->recurso_prova_inep_aux_transcricao)) {
+        $campos  .= "{$gruda}recurso_prova_inep_aux_transcricao";
+        $valores .= "{$gruda}'{$this->recurso_prova_inep_aux_transcricao}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->recurso_prova_inep_guia_interprete)) {
+        $campos  .= "{$gruda}recurso_prova_inep_guia_interprete";
+        $valores .= "{$gruda}'{$this->recurso_prova_inep_guia_interprete}'";
+        $gruda = ', ';
+      }                  
+
+      if (is_numeric($this->recurso_prova_inep_interprete_libras)) {
+        $campos  .= "{$gruda}recurso_prova_inep_interprete_libras";
+        $valores .= "{$gruda}'{$this->recurso_prova_inep_interprete_libras}'";
+        $gruda = ', ';
+      }                  
+
+      if (is_numeric($this->recurso_prova_inep_leitura_labial)) {
+        $campos  .= "{$gruda}recurso_prova_inep_leitura_labial";
+        $valores .= "{$gruda}'{$this->recurso_prova_inep_leitura_labial}'";
+        $gruda = ', ';
+      }                  
+
+      if (is_numeric($this->recurso_prova_inep_prova_ampliada_16)) {
+        $campos  .= "{$gruda}recurso_prova_inep_prova_ampliada_16";
+        $valores .= "{$gruda}'{$this->recurso_prova_inep_prova_ampliada_16}'";
+        $gruda = ', ';
+      }                  
+
+      if (is_numeric($this->recurso_prova_inep_prova_ampliada_20)) {
+        $campos  .= "{$gruda}recurso_prova_inep_prova_ampliada_20";
+        $valores .= "{$gruda}'{$this->recurso_prova_inep_prova_ampliada_20}'";
+        $gruda = ', ';
+      }                  
+
+      if (is_numeric($this->recurso_prova_inep_prova_ampliada_24)) {
+        $campos  .= "{$gruda}recurso_prova_inep_prova_ampliada_24";
+        $valores .= "{$gruda}'{$this->recurso_prova_inep_prova_ampliada_24}'";
+        $gruda = ', ';
+      }                  
+
+      if (is_numeric($this->recurso_prova_inep_prova_braille)) {
+        $campos  .= "{$gruda}recurso_prova_inep_prova_braille";
+        $valores .= "{$gruda}'{$this->recurso_prova_inep_prova_braille}'";
+        $gruda = ', ';
+      }   
+
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
       return $db->InsertId("{$this->_tabela}_cod_aluno_seq");
     }
@@ -429,6 +495,51 @@ class clsPmieducarAluno
         $set .= "{$gruda}aluno_estado_id = NULL";
         $gruda = ', ';
       }
+
+      if (is_numeric($this->recurso_prova_inep_aux_ledor)) {
+        $set .= "{$gruda}recurso_prova_inep_aux_ledor = '{$this->recurso_prova_inep_aux_ledor}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->recurso_prova_inep_aux_transcricao)) {
+        $set .= "{$gruda}recurso_prova_inep_aux_transcricao = '{$this->recurso_prova_inep_aux_transcricao}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->recurso_prova_inep_guia_interprete)) {
+        $set .= "{$gruda}recurso_prova_inep_guia_interprete = '{$this->recurso_prova_inep_guia_interprete}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->recurso_prova_inep_interprete_libras)) {
+        $set .= "{$gruda}recurso_prova_inep_interprete_libras = '{$this->recurso_prova_inep_interprete_libras}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->recurso_prova_inep_leitura_labial)) {
+        $set .= "{$gruda}recurso_prova_inep_leitura_labial = '{$this->recurso_prova_inep_leitura_labial}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->recurso_prova_inep_prova_ampliada_16)) {
+        $set .= "{$gruda}recurso_prova_inep_prova_ampliada_16 = '{$this->recurso_prova_inep_prova_ampliada_16}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->recurso_prova_inep_prova_ampliada_20)) {
+        $set .= "{$gruda}recurso_prova_inep_prova_ampliada_20 = '{$this->recurso_prova_inep_prova_ampliada_20}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->recurso_prova_inep_prova_ampliada_24)) {
+        $set .= "{$gruda}recurso_prova_inep_prova_ampliada_24 = '{$this->recurso_prova_inep_prova_ampliada_24}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->recurso_prova_inep_prova_braille)) {
+        $set .= "{$gruda}recurso_prova_inep_prova_braille = '{$this->recurso_prova_inep_prova_braille}'";
+        $gruda = ', ';
+      }                                                        
 
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_aluno = '{$this->cod_aluno}'" );

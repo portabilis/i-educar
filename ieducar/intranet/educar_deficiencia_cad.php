@@ -98,15 +98,20 @@ class indice extends clsCadastro
 		// text
 		$this->campoTexto( "nm_deficiencia", "Deficiência", $this->nm_deficiencia, 30, 255, true );
 
-		$resources = array   (  null => 'Selecione',
-								1 => "Cegueira",
-								2 => "Baixa visão",
-								3 => "Surdez",
-								4 => "Deficiência auditiva",
-								5 => "Surdocegueira",
-								6 => "Deficiência física",
-								7 => "Deficiência Intelectual",
-								8 => "Deficiência Múltipla");
+		$resources = array (  null => 'Selecione',
+								 1 => "Cegueira",
+								 2 => "Baixa visão",
+								 3 => "Surdez",
+								 4 => "Deficiência auditiva",
+								 5 => "Surdocegueira",
+								 6 => "Deficiência física",
+								 7 => "Deficiência Intelectual",
+								 8 => "Deficiência Múltipla",
+								 9 => "Autismo Infantil",
+								10 => "Síndrome de Asperger",
+								11 => "Síndrome de Rett",
+								12 => "Transtorno desintegrativo da infância",
+								13 => "Altas habilidades/Superdotação",);
 
 		$options = array('label' => Portabilis_String_Utils::toLatin1('Deficiência Educacenso'), 'resources' => $resources, 'value' => $this->deficiencia_educacenso);
 	    $this->inputsHelper()->select('deficiencia_educacenso', $options);

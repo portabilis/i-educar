@@ -303,6 +303,28 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
       'lixo' => array('label' => 'Possui lixo?'),
 
+      /************
+        PROVA INEP    
+      ************/   
+
+      'recurso_prova_inep_aux_ledor' => array('label' => 'Necessida de auxílio ledor?'),   
+
+      'recurso_prova_inep_aux_transcricao' => array('label' => 'Necessita de auxílio transcrição?'),   
+
+      'recurso_prova_inep_guia_interprete' => array('label' => 'Necessita de guia-intérprete?'),   
+
+      'recurso_prova_inep_interprete_libras' => array('label' => 'Necessita de intérprete de LIBRAS?'),   
+
+      'recurso_prova_inep_leitura_labial' => array('label' => 'Necessita de leitura labial?'),   
+
+      'recurso_prova_inep_prova_ampliada_16' => array('label' => 'Necessita de prova ampliada? (Fonte 16)'),   
+
+      'recurso_prova_inep_prova_ampliada_20' => array('label' => 'Necessita de prova amplada? (Fonte 20)'),   
+
+      'recurso_prova_inep_prova_ampliada_24' => array('label' => 'Necessita de prova ampliada? (Fonte 24)'),   
+
+      'recurso_prova_inep_prova_braille' => array('label' => 'Necessita de prova em Braille?'),         
+
   );
 
 
@@ -802,7 +824,34 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->checkbox('fossa',$options);   
 
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('lixo') ), 'required' => false, 'placeholder' => '');
-    $this->inputsHelper()->checkbox('lixo',$options);   
+    $this->inputsHelper()->checkbox('lixo',$options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_aux_ledor') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('recurso_prova_inep_aux_ledor',$options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_aux_transcricao') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('recurso_prova_inep_aux_transcricao',$options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_guia_interprete') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('recurso_prova_inep_guia_interprete',$options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_interprete_libras') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('recurso_prova_inep_interprete_libras',$options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_leitura_labial') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('recurso_prova_inep_leitura_labial',$options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_prova_ampliada_16') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('recurso_prova_inep_prova_ampliada_16',$options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_prova_ampliada_20') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('recurso_prova_inep_prova_ampliada_20',$options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_prova_ampliada_24') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('recurso_prova_inep_prova_ampliada_24',$options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_prova_braille') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('recurso_prova_inep_prova_braille',$options);
 
     $this->inputsHelper()->simpleSearchMunicipio('pessoa-aluno', array('required' => false, 'size' => 57), array('objectName' => 'naturalidade_aluno'));
 

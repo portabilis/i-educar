@@ -63,7 +63,7 @@ var $linkToEditPessoaMae = $linkToEditPessoaPai.clone()
 // adiciona id 'stop' na linha separadora
 $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
 // Adiciona abas na página
-$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab"> <span class="tabText">Ficha m\u00e9dica</span></div></li><li><div id="tab3" class="alunoTab"> <span class="tabText">Uniforme escolar</span></div></li><li><div id="tab4" class="alunoTab"> <span class="tabText">Moradia</span></div></li></ul></div>');
+$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab"> <span class="tabText">Ficha m\u00e9dica</span></div></li><li><div id="tab3" class="alunoTab"> <span class="tabText">Uniforme escolar</span></div></li><li><div id="tab4" class="alunoTab"> <span class="tabText">Moradia</span></div></li><li><div id="tab5" class="alunoTab" style="width: 125px;"> <span class="tabText" style="">Recursos prova INEP</span></div></li></ul></div>');
 
 // Adiciona estilo de aba selecionada a primeira aba
 $j('#tab1').addClass('alunoTab-active').removeClass('alunoTab');
@@ -384,6 +384,46 @@ resourceOptions.handleGet = function(dataResponse) {
     $j('#lixo').val('on');   
   }         
 
+  /**************
+  PROVA INEP
+  ***************/
+  if (dataResponse.recurso_prova_inep_aux_ledor == 1){
+    $j('#recurso_prova_inep_aux_ledor').attr('checked',true);  
+    $j('#recurso_prova_inep_aux_ledor').val('on');   
+  }         
+  if (dataResponse.recurso_prova_inep_aux_transcricao == 1){
+    $j('#recurso_prova_inep_aux_transcricao').attr('checked',true);  
+    $j('#recurso_prova_inep_aux_transcricao').val('on');   
+  }         
+  if (dataResponse.recurso_prova_inep_guia_interprete == 1){
+    $j('#recurso_prova_inep_guia_interprete').attr('checked',true);  
+    $j('#recurso_prova_inep_guia_interprete').val('on');   
+  }         
+  if (dataResponse.recurso_prova_inep_interprete_libras == 1){
+    $j('#recurso_prova_inep_interprete_libras').attr('checked',true);  
+    $j('#recurso_prova_inep_interprete_libras').val('on');   
+  }         
+  if (dataResponse.recurso_prova_inep_leitura_labial == 1){
+    $j('#recurso_prova_inep_leitura_labial').attr('checked',true);  
+    $j('#recurso_prova_inep_leitura_labial').val('on');   
+  }         
+  if (dataResponse.recurso_prova_inep_prova_ampliada_16 == 1){
+    $j('#recurso_prova_inep_prova_ampliada_16').attr('checked',true);  
+    $j('#recurso_prova_inep_prova_ampliada_16').val('on');   
+  }         
+  if (dataResponse.recurso_prova_inep_prova_ampliada_20 == 1){
+    $j('#recurso_prova_inep_prova_ampliada_20').attr('checked',true);  
+    $j('#recurso_prova_inep_prova_ampliada_20').val('on');   
+  }         
+  if (dataResponse.recurso_prova_inep_prova_ampliada_24 == 1){
+    $j('#recurso_prova_inep_prova_ampliada_24').attr('checked',true);  
+    $j('#recurso_prova_inep_prova_ampliada_24').val('on');   
+  }         
+  if (dataResponse.recurso_prova_inep_prova_braille == 1){
+    $j('#recurso_prova_inep_prova_braille').attr('checked',true);  
+    $j('#recurso_prova_inep_prova_braille').val('on');   
+  }         
+  console.log(dataResponse);
   $j('#quartos').val(dataResponse.quartos);   
   $j('#sala').val(dataResponse.sala);   
   $j('#copa').val(dataResponse.copa);   
@@ -790,6 +830,7 @@ function canShowParentsFields(){
         });
       
       });    
+    var first_click_uniforme = true;
     // UNIFORME
     $j('#tab3').click( 
       function(){
@@ -798,6 +839,8 @@ function canShowParentsFields(){
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
             if (index>61 && index<84){
+              if (first_click_uniforme)
+                $j('#'+row.id).find('td').toggleClass('formlttd formmdtd');
               row.show();
             }else if (index>0){
               row.hide();
@@ -806,23 +849,48 @@ function canShowParentsFields(){
             return false;
         });
         $j('.uniforme').prop('disabled',!$j('#recebeu_uniforme').prop('checked'));
+        first_click_uniforme = false;
       });     
 
+    var first_click_moradia = true;
     // MORADIA
     $j('#tab4').click( 
       function(){
         $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
         $j('#tab4').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-
-          if (index<84 && index!=0){
-            row.hide();
-          }else if(index<111){
-            row.show();
-          }          
+          if (row.id!='stop'){
+            if (index>83 &&index<111){
+              if (first_click_moradia)
+                $j('#'+row.id).find('td').toggleClass('formlttd formmdtd');
+              row.show();
+            }else if(index!=0){
+              row.hide();
+            }        
+          }else
+            return false;  
         });
         $j('.uniforme').prop('disabled',!$j('#recebeu_uniforme').prop('checked'));
-      });   
+        first_click_moradia = false;
+      });
+
+    // PROVA INEP
+    $j('#tab5').click( 
+      function(){
+        $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
+        $j('#tab5').toggleClass('alunoTab alunoTab-active')
+        $j('.tablecadastro >tbody  > tr').each(function(index, row) {
+          if (row.id!='stop'){
+            if (index>=111 &&index<120){        
+              row.show();
+            }else if(index!=0){
+              row.hide();
+            }
+          }else
+            return false;
+        });
+        $j('.uniforme').prop('disabled',!$j('#recebeu_uniforme').prop('checked'));
+      });       
 
 
     /* A seguinte função habilitam/desabilitam o campo de descrição quando for clicado 
