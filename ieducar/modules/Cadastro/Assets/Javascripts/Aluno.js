@@ -423,7 +423,7 @@ resourceOptions.handleGet = function(dataResponse) {
     $j('#recurso_prova_inep_prova_braille').attr('checked',true);  
     $j('#recurso_prova_inep_prova_braille').val('on');   
   }         
-  console.log(dataResponse);
+
   $j('#quartos').val(dataResponse.quartos);   
   $j('#sala').val(dataResponse.sala);   
   $j('#copa').val(dataResponse.copa);   
