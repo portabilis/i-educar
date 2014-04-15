@@ -276,12 +276,15 @@ class indice extends clsCadastro
 		$this->campoOculto( "biblioteca_feriado", serialize( $this->biblioteca_feriado ) );
 
 
+                $this->CampoOculto("incluir_feriados_nacionais", "");
+                $this->campoRotulo("incluir_feriados_nacionais", "Cadastrar Feriados Nacionais Permanentes", "<input type='button' name='Feriados_Nacionais' value='Cadastre' />") ;
+
 		$this->campoTexto( "nm_feriado", "Feriado", $this->nm_feriado, 30, 255 );
 		$this->campoData( "data_feriado", " Data Feriado", $this->data_feriado );
 
 		$this->campoOculto( "incluir_feriado", "" );
 		$this->campoRotulo( "bt_incluir_feriado", "Feriado", "<a href='#' onclick=\"getElementById('incluir_feriado').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>" );
-
+                
 		$this->campoQuebra();
 	//-----------------------FIM INCLUI FERIADO------------------------//
 	}
