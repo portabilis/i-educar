@@ -40,13 +40,8 @@ class clsIndexBase extends clsBase
 
 class indice extends clsCadastro
 {
-	/**
-	 * Referencia pega da session para o idpes do usuario atual
-	 *
-	 * @var int
-	 */
-	var $pessoa_logada;
 
+	var $pessoa_logada;
 	var $cod_emprestimo;
 	var $ref_usuario_devolucao;
 	var $ref_usuario_cad;
@@ -90,7 +85,7 @@ class indice extends clsCadastro
 
 	function Gerar()
 	{
-		// primary keys
+		
 		$this->campoOculto( "cod_emprestimo", $this->cod_emprestimo );
 
 		$this->data_retirada = dataFromPgToBr($this->data_retirada, "Y-m-d");
@@ -206,9 +201,14 @@ class indice extends clsCadastro
 		@session_start(); 
 			$reload = $_SESSION['reload'];
 		@session_write_close();
-
-		if ($valor_divida && !$reload )
-		{
+                
+                calculoValorMulta();
+	}
+        
+        function calculoValorMulta(){
+            
+            if ($valor_divida && !$reload )
+            {
 			$this->valor_multa = $valor_divida;
 			$this->campoMonetario("valor_divida", "Valor Multa", $valor_divida, 8, 8,false,'','','',true);
 			$this->campoOculto( "valor_multa", $this->valor_multa );
@@ -222,15 +222,15 @@ class indice extends clsCadastro
 				if(!confirm('Atraso na devolução do exemplar ($dias_atraso dias)! \\n Data prevista para a entrega: $data_entrega \\n Valor total da multa: R$$valor_divida \\n Deseja adicionar a multa?'))
 					window.location = 'educar_exemplar_devolucao_cad.php?cod_emprestimo={$this->cod_emprestimo}';
 			</script>";
-		}
-		elseif ($valor_divida && $reload )
-		{
+            }
+            elseif ($valor_divida && $reload )
+            {
 			echo "<script> alert('Valor da multa ignorado!'); </script>";
 			$valor_divida = '0,00';
 			$this->campoMonetario("valor_divida", "Valor Multa", $valor_divida, 8, 8,false,'','','',true);
 			$this->campoOculto( "valor_multa", $this->valor_multa );
-		}
-	}
+            }
+        }
 
 	function Novo()
 	{
