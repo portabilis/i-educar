@@ -111,13 +111,15 @@ class PessoaController extends ApiCoreController
 
     $sql = "select cpf, data_nasc as data_nascimento, idpes_pai as pai_id,
             idpes_mae as mae_id, idpes_responsavel as responsavel_id,
-            ideciv as estadocivil, sexo,
+            ideciv as estadocivil, sexo, nis_pis_pasep,
             coalesce((select nome from cadastro.pessoa where idpes = fisica.idpes_pai),
             (select nm_pai from pmieducar.aluno where cod_aluno = $1)) as nome_pai,
             coalesce((select nome from cadastro.pessoa where idpes = fisica.idpes_mae),
             (select nm_mae from pmieducar.aluno where cod_aluno = $1)) as nome_mae,
             (select nome from cadastro.pessoa where idpes = fisica.idpes_responsavel) as nome_responsavel,
             (select rg from cadastro.documento where documento.idpes = fisica.idpes) as rg,
+            (select num_termo from cadastro.documento where documento.idpes = fisica.idpes) as num_termo,
+            (select certidao_nascimento from cadastro.documento where documento.idpes = fisica.idpes) as certidao_nascimento,
             (SELECT COALESCE((SELECT cep FROM cadastro.endereco_pessoa WHERE idpes = $2),
              (SELECT cep FROM cadastro.endereco_externo WHERE idpes = $2))) as cep,
 
@@ -166,10 +168,14 @@ class PessoaController extends ApiCoreController
 
     $details = $this->fetchPreparedQuery($sql, array($alunoId, $pessoaId), false, 'first-row');
 
+    $details['possui_documento'] = !(is_null($details['rg']) && is_null($details['cpf']) 
+                                      && is_null($details['nis_pis_pasep']) && is_null($details['num_termo']) 
+                                        && is_null($details['certidao_nascimento']) );
+
     $attrs   = array('cpf', 'rg', 'data_nascimento', 'pai_id', 'mae_id', 'responsavel_id', 'nome_pai', 'nome_mae',
                        'nome_responsavel','sexo','estadocivil', 'cep', 'logradouro', 'idtlog', 'bairro', 
                        'zona_localizacao', 'idbai', 'idlog', 'idmun', 'idmun_nascimento', 'complemento',
-                       'apartamento', 'andar', 'bloco', 'numero' , 'letra');
+                       'apartamento', 'andar', 'bloco', 'numero' , 'letra', 'possui_documento');
     $details = Portabilis_Array_Utils::filter($details, $attrs);
 
     $details['aluno_id']         = $alunoId;

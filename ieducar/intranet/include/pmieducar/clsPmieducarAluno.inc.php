@@ -65,6 +65,7 @@ class clsPmieducarAluno
   var $recurso_prova_inep_prova_ampliada_20;
   var $recurso_prova_inep_prova_ampliada_24;
   var $recurso_prova_inep_prova_braille;  
+  var $justificativa_falta_documentacao;  
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -132,7 +133,8 @@ class clsPmieducarAluno
     $this->_campos_lista = $this->_todos_campos = 'cod_aluno, ref_cod_aluno_beneficio, ref_cod_religiao, ref_usuario_exc, 
         ref_usuario_cad, ref_idpes, data_cadastro, data_exclusao, ativo, caminho_foto, analfabeto, nm_pai, nm_mae,tipo_responsavel, aluno_estado_id,
         recurso_prova_inep_aux_ledor, recurso_prova_inep_aux_transcricao, recurso_prova_inep_guia_interprete, recurso_prova_inep_interprete_libras, recurso_prova_inep_leitura_labial,
-        recurso_prova_inep_prova_ampliada_16, recurso_prova_inep_prova_ampliada_20, recurso_prova_inep_prova_ampliada_24, recurso_prova_inep_prova_braille';
+        recurso_prova_inep_prova_ampliada_16, recurso_prova_inep_prova_ampliada_20, recurso_prova_inep_prova_ampliada_24, recurso_prova_inep_prova_braille,
+        justificativa_falta_documentacao';
 
     if (is_numeric($ref_cod_aluno_beneficio)) {
       if (class_exists('clsPmieducarAlunoBeneficio')) {
@@ -390,6 +392,12 @@ class clsPmieducarAluno
         $valores .= "{$gruda}'{$this->recurso_prova_inep_prova_braille}'";
         $gruda = ', ';
       }   
+      
+      if (is_numeric($this->justificativa_falta_documentacao)) {
+        $campos  .= "{$gruda}justificativa_falta_documentacao";
+        $valores .= "{$gruda}'{$this->justificativa_falta_documentacao}'";
+        $gruda = ', ';
+      }   
 
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
       return $db->InsertId("{$this->_tabela}_cod_aluno_seq");
@@ -538,6 +546,11 @@ class clsPmieducarAluno
 
       if (is_numeric($this->recurso_prova_inep_prova_braille)) {
         $set .= "{$gruda}recurso_prova_inep_prova_braille = '{$this->recurso_prova_inep_prova_braille}'";
+        $gruda = ', ';
+      }                                                        
+
+      if (is_numeric($this->justificativa_falta_documentacao)) {
+        $set .= "{$gruda}justificativa_falta_documentacao = '{$this->justificativa_falta_documentacao}'";
         $gruda = ', ';
       }                                                        
 

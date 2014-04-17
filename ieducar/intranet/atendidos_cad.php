@@ -461,10 +461,22 @@ class indice extends clsCadastro
       'required'    => false,
       'label'       => '',
       'placeholder' => 'Data emissão',
-      'value'       => $documentos['data_emissao_cert_civil']
+      'value'       => $documentos['data_emissao_cert_civil'],
+      'inline'   => true
     );
 
     $this->inputsHelper()->date('data_emissao_certidao_civil', $options);
+
+    $options = array(
+      'required'    => false,
+      'label'       => '',
+      'size'        => '18',
+      'max_length'  => '7',
+      'placeholder' => 'Código cartório INEP',
+      'value'       => $documentos['cartorio_cert_civil_inep']
+    );
+
+    $this->inputsHelper()->integer('cartorio_cert_civil_inep', $options);    
 
 
     // cartório emissão certidão civil
@@ -1183,6 +1195,7 @@ class indice extends clsCadastro
 
     $documentos->sigla_uf_cert_civil        = $_REQUEST['uf_emissao_certidao_civil'];
     $documentos->cartorio_cert_civil        = addslashes($_REQUEST['cartorio_emissao_certidao_civil']);
+    $documentos->cartorio_cert_civil_inep   = $_REQUEST['cartorio_cert_civil_inep'];
 
 
     // carteira de trabalho

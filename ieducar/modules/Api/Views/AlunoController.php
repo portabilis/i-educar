@@ -495,15 +495,16 @@ protected function createOrUpdateUniforme($id) {
     $aluno->ref_usuario_exc         = $this->getSession()->id_pessoa;
 
     // INFORAMÇÕES PROVA INEP
-    $aluno->recurso_prova_inep_aux_ledor         = $this->getRequest()->recurso_prova_inep_aux_ledor == 'on' ? 1 : 0;
-    $aluno->recurso_prova_inep_aux_transcricao         = $this->getRequest()->recurso_prova_inep_aux_transcricao == 'on' ? 1 : 0;
-    $aluno->recurso_prova_inep_guia_interprete         = $this->getRequest()->recurso_prova_inep_guia_interprete == 'on' ? 1 : 0;
-    $aluno->recurso_prova_inep_interprete_libras         = $this->getRequest()->recurso_prova_inep_interprete_libras == 'on' ? 1 : 0;
-    $aluno->recurso_prova_inep_leitura_labial         = $this->getRequest()->recurso_prova_inep_leitura_labial == 'on' ? 1 : 0;
-    $aluno->recurso_prova_inep_prova_ampliada_16         = $this->getRequest()->recurso_prova_inep_prova_ampliada_16 == 'on' ? 1 : 0;
-    $aluno->recurso_prova_inep_prova_ampliada_20         = $this->getRequest()->recurso_prova_inep_prova_ampliada_20 == 'on' ? 1 : 0;
-    $aluno->recurso_prova_inep_prova_ampliada_24         = $this->getRequest()->recurso_prova_inep_prova_ampliada_24 == 'on' ? 1 : 0;
+    $aluno->recurso_prova_inep_aux_ledor             = $this->getRequest()->recurso_prova_inep_aux_ledor == 'on' ? 1 : 0;
+    $aluno->recurso_prova_inep_aux_transcricao       = $this->getRequest()->recurso_prova_inep_aux_transcricao == 'on' ? 1 : 0;
+    $aluno->recurso_prova_inep_guia_interprete       = $this->getRequest()->recurso_prova_inep_guia_interprete == 'on' ? 1 : 0;
+    $aluno->recurso_prova_inep_interprete_libras     = $this->getRequest()->recurso_prova_inep_interprete_libras == 'on' ? 1 : 0;
+    $aluno->recurso_prova_inep_leitura_labial        = $this->getRequest()->recurso_prova_inep_leitura_labial == 'on' ? 1 : 0;
+    $aluno->recurso_prova_inep_prova_ampliada_16     = $this->getRequest()->recurso_prova_inep_prova_ampliada_16 == 'on' ? 1 : 0;
+    $aluno->recurso_prova_inep_prova_ampliada_20     = $this->getRequest()->recurso_prova_inep_prova_ampliada_20 == 'on' ? 1 : 0;
+    $aluno->recurso_prova_inep_prova_ampliada_24     = $this->getRequest()->recurso_prova_inep_prova_ampliada_24 == 'on' ? 1 : 0;
     $aluno->recurso_prova_inep_prova_braille         = $this->getRequest()->recurso_prova_inep_prova_braille == 'on' ? 1 : 0;
+    $aluno->justificativa_falta_documentacao         = $this->getRequest()->justificativa_falta_documentacao;
 
     return (is_null($id) ? $aluno->cadastra() : $aluno->edita());
   }
@@ -760,7 +761,8 @@ protected function createOrUpdateUniforme($id) {
         'recurso_prova_inep_prova_ampliada_16',
         'recurso_prova_inep_prova_ampliada_20',
         'recurso_prova_inep_prova_ampliada_24',
-        'recurso_prova_inep_prova_braille'
+        'recurso_prova_inep_prova_braille',
+        'justificativa_falta_documentacao'
       );
 
       $aluno = Portabilis_Array_Utils::filter($aluno, $attrs);

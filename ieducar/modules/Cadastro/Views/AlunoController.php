@@ -55,6 +55,11 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       'help'   => '',
     ),
 
+    'justificativa_falta_documentacao' => array(
+      'label'  => 'Justificativa para a falta de documentação',
+      'help'   => '',
+    ),
+
     'pai' => array(
       'label'  => 'Pai',
       'help'   => '',
@@ -371,6 +376,18 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     // rg
     $options = array('label' => $this->_getLabel('rg'), 'disabled' => true, 'required' => false, 'size' => 25);
     $this->inputsHelper()->integer('rg', $options);
+
+    // justificativa_falta_documentacao
+    $resources = array(null          => 'Selecione',
+                          1          => Portabilis_String_Utils::toLatin1('Aluno não possui documentação'),
+                          2          => Portabilis_String_Utils::toLatin1('Escola não possui informação'));    
+
+    $options = array('label'     => $this->_getLabel('justificativa_falta_documentacao'),
+                     'resources' => $resources,
+                     'required'  => false,
+                     'disabled'  => true);
+
+    $this->inputsHelper()->select('justificativa_falta_documentacao', $options);
 
 
 
