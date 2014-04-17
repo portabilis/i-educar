@@ -1,5 +1,8 @@
 <?php
 
+// error_reporting(E_ALL);
+// ini_set("display_errors", 1);
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -124,5 +127,47 @@ class EditController extends Core_Controller_Page_EditController
                         15,
                         false,
                         $this->_getHelp('ordenamento'));
+  }
+
+  protected function _save(){
+    $data = array();
+
+    foreach ($_POST as $key => $val) {
+      if (array_key_exists($key, $this->_formMap)) {
+        
+        if($key == "ordenamento"){
+          
+          if((trim($val) == "") || (is_null($val))) {
+            $data[$key] = 99999;
+            continue;
+          }
+
+          $data[$key] = $val;
+        }
+      }  
+    }
+
+
+    // Verifica pela existência do field identity
+    if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
+      $entity = $this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
+    }
+
+    if (isset($entity)) {
+      $this->getEntity()->setOptions($data);
+    }
+    else {
+      $this->setEntity($this->getDataMapper()->createNewEntityInstance($data));
+    }
+
+    try {
+      $this->getDataMapper()->save($this->getEntity());
+      return TRUE;
+    }
+    catch (Exception $e) {
+      // TODO: ver @todo do docblock
+      $this->mensagem = 'Erro no preenchimento do formulário. ';
+      return FALSE;
+    }
   }
 }
