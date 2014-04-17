@@ -131,7 +131,7 @@ class indice extends clsCadastro
 	{
 		// primary keys
 		$this->campoOculto( "cod_biblioteca", $this->cod_biblioteca );
-
+                
 		if( $_POST )
 			foreach( $_POST AS $campo => $val )
 				$this->$campo = ( $this->$campo ) ? $this->$campo : $val;
@@ -274,10 +274,13 @@ class indice extends clsCadastro
 			}
 		}
 		$this->campoOculto( "biblioteca_feriado", serialize( $this->biblioteca_feriado ) );
-
-
+                
+                if(!$_POST['incluir_feriados_nacionais'])
+                {
+                    clsPmieducarBibliotecaFeriados::cadastraFeriadosNacionais();
+                }
                 $this->CampoOculto("incluir_feriados_nacionais", "");
-                $this->campoRotulo("incluir_feriados_nacionais", "Cadastrar Feriados Nacionais Permanentes", "<input type='button' name='Feriados_Nacionais' value='Cadastre' onclick=\" clsPmieducarBibliotecaFeriados::cadastraFeriadosNacionais();\"/>") ;
+                $this->campoRotulo("incluir_feriados_nacionais", "Cadastrar Feriados Nacionais Permanentes", "<input type='button' name='Feriados_Nacionais' value='Cadastre' onclick='window.location.reload( true );' />") ;
 
 		$this->campoTexto( "nm_feriado", "Feriado", $this->nm_feriado, 30, 255 );
 		$this->campoData( "data_feriado", " Data Feriado", $this->data_feriado );
