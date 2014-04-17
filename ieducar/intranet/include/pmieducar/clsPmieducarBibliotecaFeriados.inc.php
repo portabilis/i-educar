@@ -235,7 +235,7 @@ class clsPmieducarBibliotecaFeriados
 	*
 	*/
 
-	 cadastraFeriadosNacionais()
+	function cadastraFeriadosNacionais()
 	{
 		
 		$nomeTemporario = "";

@@ -268,7 +268,6 @@ class indice extends clsCadastro
 		}
 		$this->campoOculto( "biblioteca_feriado", serialize( $this->biblioteca_feriado ) );
 
-
 		$this->campoTexto( "nm_feriado", "Feriado", $this->nm_feriado, 30, 255 );
 		$this->campoData( "data_feriado", " Data Feriado", $this->data_feriado );
 

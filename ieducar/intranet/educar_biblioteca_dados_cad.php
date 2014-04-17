@@ -277,7 +277,7 @@ class indice extends clsCadastro
 
 
                 $this->CampoOculto("incluir_feriados_nacionais", "");
-                $this->campoRotulo("incluir_feriados_nacionais", "Cadastrar Feriados Nacionais Permanentes", "<input type='button' name='Feriados_Nacionais' value='Cadastre' />") ;
+                $this->campoRotulo("incluir_feriados_nacionais", "Cadastrar Feriados Nacionais Permanentes", "<input type='button' name='Feriados_Nacionais' value='Cadastre' onclick=\" clsPmieducarBibliotecaFeriados::cadastraFeriadosNacionais();\"/>") ;
 
 		$this->campoTexto( "nm_feriado", "Feriado", $this->nm_feriado, 30, 255 );
 		$this->campoData( "data_feriado", " Data Feriado", $this->data_feriado );
