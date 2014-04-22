@@ -237,6 +237,7 @@ class indice extends clsCadastro
 					$aux["nm_feriado_"]= $campo["nm_feriado"];
 					$aux["data_feriado_"]= dataFromPgToBr($campo["data_feriado"]);
 					$this->biblioteca_feriado[] = $aux;
+                                        $this->CadastraFeriadosNacionais();
 				}
 			}
 		}
@@ -275,9 +276,9 @@ class indice extends clsCadastro
 		}
 		$this->campoOculto( "biblioteca_feriado", serialize( $this->biblioteca_feriado ) );
                 
-                if(!$_POST['incluir_feriados_nacionais'])
+                if($_POST['incluir_feriados_nacionais'])
                 {
-                    clsPmieducarBibliotecaFeriados::cadastraFeriadosNacionais();
+                    $this->CadastraFeriadosNacionais();
                 }
                 $this->CampoOculto("incluir_feriados_nacionais", "");
                 $this->campoRotulo("incluir_feriados_nacionais", "Cadastrar Feriados Nacionais Permanentes", "<input type='button' name='Feriados_Nacionais' value='Cadastre' onclick='window.location.reload( true );' />") ;
@@ -292,6 +293,15 @@ class indice extends clsCadastro
 	//-----------------------FIM INCLUI FERIADO------------------------//
 	}
 
+        function CadastraFeriadosNacionais(){
+            
+				
+	$aux["nm_feriado_"] = "Natal";
+        $aux["data_feriado_"] = "25/12/" . date("Y");
+        $this->biblioteca_feriado[] = $aux;
+        
+        }
+        
 	function Editar()
 	{
 		@session_start();
