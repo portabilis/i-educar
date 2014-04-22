@@ -76,7 +76,7 @@ class ComponenteCurricularController extends ApiCoreController
                 pmieducar.escola_ano_letivo as al where turma.cod_turma = $1 and cct.turma_id = turma.cod_turma and
                 cct.escola_id = turma.ref_ref_cod_escola and cct.componente_curricular_id = cc.id and al.ano = $2                
                 and cct.escola_id = al.ref_cod_escola and cc.area_conhecimento_id = ac.id
-                order by cc.ordenamento, ac.secao, ac.nome, cc.nome";
+                order by ac.secao, ac.nome, cc.ordenamento, cc.nome";
 
         $componentesCurriculares = $this->fetchPreparedQuery($sql, array($turmaId, $ano));
 
@@ -87,7 +87,7 @@ class ComponenteCurricularController extends ApiCoreController
                   t.ref_ref_cod_escola and esd.ref_ref_cod_serie = t.ref_ref_cod_serie and esd.ref_cod_disciplina =
                   cc.id and al.ano = $2 and esd.ref_ref_cod_escola = al.ref_cod_escola and t.ativo = 1 and                  
                   esd.ativo = 1 and al.ativo = 1 and cc.area_conhecimento_id = ac.id
-                  order by cc.ordenamento, ac.secao, ac.nome, cc.nome";
+                  order by ac.secao, ac.nome, cc.ordenamento, cc.nome";
 
           $componentesCurriculares = $this->fetchPreparedQuery($sql, array($turmaId, $ano));
         }
