@@ -138,6 +138,8 @@ class indice extends clsCadastro
   var $etapa_id;
   var $cod_curso_profissional;
   var $turma_sem_professor;  
+  var $turma_unificada;  
+  var $etapa_educacenso;  
 
   var $dias_da_semana = array(
     '' => 'Selecione',
@@ -837,6 +839,78 @@ class indice extends clsCadastro
     $options = array('label' => 'Etapa de ensino', 'resources' => $resources, 'value' => $this->etapa_id, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('etapa_id', $options);
 
+    $resources = array(
+      null => 'Selecione',
+      1    => 'Creche',
+      2    => Portabilis_String_Utils::toLatin1('Pré-escola'),
+    );
+    $options = array('label' => 'Turma unificada', 'resources' => $resources,'label_hint' => 'Selecione somente se a turma for unificada', 'value' => $this->turma_unificada, 'required' => false, 'size' => 70,);
+    $this->inputsHelper()->select('turma_unificada', $options);
+
+    $etapas_educacenso = array(
+      null => 'Selecione',
+      1  => Portabilis_String_Utils::toLatin1('Educação Infantil - Creche (0 a 3 anos)'),
+      2  => Portabilis_String_Utils::toLatin1('Educação Infantil - Pré-escola (4 e 5 anos)'),
+      3  => Portabilis_String_Utils::toLatin1('Educação Infantil - Unificada (0 a 5 anos)'),
+      4  => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 8 anos - 1ª Série'),
+      5  => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 8 anos - 2ª Série'),
+      6  => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 8 anos - 3ª Série'),
+      7  => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 8 anos - 4ª Série'),
+      8  => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 8 anos - 5ª Série'),
+      9  => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 8 anos - 6ª Série'),
+      10 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 8 anos - 7ª Série'),
+      11 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 8 anos - 8ª Série'),
+      12 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 8 anos - Multi'),
+      13 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 8 anos - Correção de Fluxo'),
+      14 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 9 anos - 1º Ano'),
+      15 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 9 anos - 2º Ano'),
+      16 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 9 anos - 3º Ano'),
+      17 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 9 anos - 4º Ano'),
+      18 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 9 anos - 5º Ano'),
+      19 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 9 anos - 6º Ano'),
+      20 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 9 anos - 7º Ano'),
+      21 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 9 anos - 8º Ano'),
+      22 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 9 anos - Multi'),
+      23 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 9 anos - Correção de Fluxo'),
+      24 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 8 e 9 anos - Multi 8 e 9 anos'),
+      25 => Portabilis_String_Utils::toLatin1('Ensino Médio - 1ª Série'),
+      26 => Portabilis_String_Utils::toLatin1('Ensino Médio - 2ª Série'),
+      27 => Portabilis_String_Utils::toLatin1('Ensino Médio - 3ª Série'),
+      28 => Portabilis_String_Utils::toLatin1('Ensino Médio - 4ª Série'),
+      29 => Portabilis_String_Utils::toLatin1('Ensino Médio - Não Seriada'),
+      30 => Portabilis_String_Utils::toLatin1('Ensino Médio - Integrado 1ª Série'),
+      31 => Portabilis_String_Utils::toLatin1('Ensino Médio - Integrado 2ª Série'),
+      32 => Portabilis_String_Utils::toLatin1('Ensino Médio - Integrado 3ª Série'),
+      33 => Portabilis_String_Utils::toLatin1('Ensino Médio - Integrado 4ª Série'),
+      34 => Portabilis_String_Utils::toLatin1('Ensino Médio - Integrado Não Seriada'),
+      35 => Portabilis_String_Utils::toLatin1('Ensino Médio - Normal/Magistério 1ª Série'),
+      36 => Portabilis_String_Utils::toLatin1('Ensino Médio - Normal/Magistério 2ª Série'),
+      37 => Portabilis_String_Utils::toLatin1('Ensino Médio - Normal/Magistério 3ª Série'),
+      38 => Portabilis_String_Utils::toLatin1('Ensino Médio - Normal/Magistério 4ª Série'),
+      39 => Portabilis_String_Utils::toLatin1('Educação Profissional (Concomitante)'),
+      40 => Portabilis_String_Utils::toLatin1('Educação Profissional (Subseqüente)'),
+      41 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 9 anos - 9º Ano'),
+      43 => Portabilis_String_Utils::toLatin1('EJA Presencial - Anos iniciais'),
+      44 => Portabilis_String_Utils::toLatin1('EJA Presencial - Anos finais'),
+      45 => Portabilis_String_Utils::toLatin1('EJA Presencial - Ensino Médio'),
+      46 => Portabilis_String_Utils::toLatin1('EJA Semipresencial - Anos iniciais'),
+      47 => Portabilis_String_Utils::toLatin1('EJA Semipresencial - Anos finais'),
+      48 => Portabilis_String_Utils::toLatin1('EJA Semipresencial - Ensino Médio'),
+      51 => Portabilis_String_Utils::toLatin1('EJA Presencial - Anos iniciais e Anos finais'),
+      56 => Portabilis_String_Utils::toLatin1('Educação Infantil e Ensino Fundamental (8 e 9 anos) Multietapa'),
+      58 => Portabilis_String_Utils::toLatin1('EJA Semipresencial - Anos iniciais e Anos finais'),
+      60 => Portabilis_String_Utils::toLatin1('EJA Presencial - integrado à Educação Profissional de Nível Fundamental - FIC'),
+      61 => Portabilis_String_Utils::toLatin1('EJA Semipresencial - integrado à Educação Profissional de Nível Fundamental - FIC'),
+      62 => Portabilis_String_Utils::toLatin1('EJA Presencial - integrada à Educação Profissional de Nível Médio'),
+      63 => Portabilis_String_Utils::toLatin1('EJA Semipresencial - integrada à Educação Profissional de Nível Médio'),
+      64 => Portabilis_String_Utils::toLatin1('Educação Profissional Mista - Concomitante e Subsequente'),
+      65 => Portabilis_String_Utils::toLatin1('EJA Presencial - Ensino Fundamental - Projovem Urbano'),
+      66 => Portabilis_String_Utils::toLatin1('Segmento Profissional da EJA integrada')
+    ); 
+
+    $options = array('label' => 'Etapa da turma', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => false, 'size' => 70,);
+    $this->inputsHelper()->select('etapa_educacenso', $options);
+
   }
 
   function Novo()
@@ -904,6 +978,8 @@ class indice extends clsCadastro
         $obj->etapa_id = $this->etapa_id;
         $obj->cod_curso_profissional = $this->cod_curso_profissional;
         $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;      
+        $obj->turma_unificada = $this->turma_unificada;
+        $obj->etapa_educacenso = $this->etapa_educacenso;
 
         $this->cod_turma = $cadastrou = $obj->cadastra();
 
@@ -996,6 +1072,8 @@ class indice extends clsCadastro
       $obj->etapa_id = $this->etapa_id;
       $obj->cod_curso_profissional = $this->cod_curso_profissional;
       $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;      
+      $obj->turma_unificada = $this->turma_unificada;
+      $obj->etapa_educacenso = $this->etapa_educacenso;
 
       $this->cod_turma = $cadastrou = $obj->cadastra();
 
@@ -1097,7 +1175,9 @@ class indice extends clsCadastro
         $obj->aee_autonomia = $this->aee_autonomia == 'on' ? 1 : 0;
         $obj->etapa_id = $this->etapa_id;
         $obj->cod_curso_profissional = $this->cod_curso_profissional;
-        $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;       
+        $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
+        $obj->turma_unificada = $this->turma_unificada;
+        $obj->etapa_educacenso = $this->etapa_educacenso;   
 
         $editou = $obj->edita();
 
@@ -1190,7 +1270,9 @@ class indice extends clsCadastro
       $obj->aee_autonomia = $this->aee_autonomia == 'on' ? 1 : 0;
       $obj->etapa_id = $this->etapa_id;
       $obj->cod_curso_profissional = $this->cod_curso_profissional;
-      $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;       
+      $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
+      $obj->turma_unificada = $this->turma_unificada;
+      $obj->etapa_educacenso = $this->etapa_educacenso;
 
       $editou = $obj->edita();
     }
