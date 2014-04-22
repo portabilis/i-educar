@@ -141,9 +141,9 @@ class EditController extends Core_Controller_Page_EditController
             $data[$key] = 99999;
             continue;
           }
-
-          $data[$key] = $val;
         }
+        
+        $data[$key] = $val;
       }  
     }
 
