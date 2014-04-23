@@ -795,7 +795,8 @@ class DiarioApiController extends ApiCoreController
       
       //criando chave para ordenamento temporário
       //área de conhecimento + componente curricular
-      $componente['my_order']              = Portabilis_String_Utils::unaccent(strtoupper($nomeArea)) . Portabilis_String_Utils::unaccent(strtoupper($_componente->get('nome')));      
+      $componente['ordem_nome_area_conhecimento'] = Portabilis_String_Utils::unaccent(strtoupper($nomeArea));      
+      $componente['ordem_componente_curricular']  = Portabilis_String_Utils::unaccent(strtoupper($_componente->get('nome')));
       $componentesCurriculares[]           = $componente;
     }
 
@@ -803,9 +804,13 @@ class DiarioApiController extends ApiCoreController
 
     foreach($componentesCurriculares as $chave=>$componente){
       $ordenamentoComponentes['ordenamento'][$chave] = $componente['ordenamento'];
-      $ordenamentoComponentes['my_order'][$chave] = $componente['my_order'];
+      $ordenamentoComponentes['ordem_nome_area_conhecimento'][$chave] = $componente['ordem_nome_area_conhecimento'];
+      $ordenamentoComponentes['ordem_componente_curricular'][$chave] = $componente['ordem_componente_curricular'];
     }
-    array_multisort($ordenamentoComponentes['ordenamento'], SORT_ASC, SORT_NUMERIC, $ordenamentoComponentes['my_order'], SORT_ASC,$componentesCurriculares);
+    array_multisort($ordenamentoComponentes['ordem_nome_area_conhecimento'], SORT_ASC, 
+                    $ordenamentoComponentes['ordenamento'], SORT_ASC, SORT_NUMERIC,
+                    $ordenamentoComponentes['ordem_componente_curricular'], SORT_ASC,
+                    $componentesCurriculares);
 
     //removendo chave temporária
     $len = count($componentesCurriculares);
