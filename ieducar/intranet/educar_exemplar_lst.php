@@ -92,7 +92,11 @@ class indice extends clsListagem
 	var $ref_cod_acervo_editora;
 
 	var $titulo_livro;
-
+        var $autor;
+        var $motivo_de_baixa;
+        var $assunto;
+        
+        
 	function Gerar()
 	{
 		@session_start();
@@ -206,7 +210,10 @@ class indice extends clsListagem
 
 
 		$this->campoTexto("titulo_livro","T&iacute;tulo da Obra",$this->titulo_livro,25,255,false);
-		$this->campoNumero("cod_exemplar","Tombo",$this->cod_exemplar,10,50,false);
+                $this->campoTexto("Assunto_livro","Assunto",$this->assunto,25,255,false);
+                $this->campoTexto("motivo_de_baixa_livro","Motivo de Baixa",$this->motivo_de_baixa,25,255,false);
+                $this->campoTexto("autor_livro","Autor",$this->autor,25,255,false);
+                $this->campoNumero("cod_exemplar","Tombo",$this->cod_exemplar,10,50,false);
 
 
 		$opcoes = array( "NULL" => "Selecione" );
