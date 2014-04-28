@@ -708,7 +708,11 @@
 
   ALTER TABLE pmieducar.escola ADD COLUMN cargo_gestor INTEGER;
 
-  ALTER TABLE pmieducar.escola ADD COLUMN condicao INTEGER DEFAULT '2';
+  ALTER TABLE pmieducar.escola ADD COLUMN local_funcionamento INTEGER;
+
+  ALTER TABLE pmieducar.escola ADD COLUMN condicao INTEGER DEFAULT '1';
+
+  ALTER TABLE pmieducar.escola ADD COLUMN codigo_inep_escola_compartilhada INTEGER;
 
   ALTER TABLE pmieducar.escola ADD COLUMN decreto_criacao CHARACTER VARYING(50);
 
@@ -864,6 +868,9 @@
 
   ALTER TABLE pmieducar.escola ADD CONSTRAINT escola_codigo_indigena_fk FOREIGN KEY (codigo_lingua_indigena)
   REFERENCES modules.lingua_indigena_educacenso (id) MATCH SIMPLE;
+
+  ALTER TABLE pmieducar.escola ADD CONSTRAINT escola_ref_idpes_gestor_fk FOREIGN KEY (ref_idpes_gestor)
+  REFERENCES cadastro.pessoa (idpes) MATCH SIMPLE;
 
   ALTER TABLE pmieducar.curso ADD COLUMN modalidade_curso INTEGER;
 

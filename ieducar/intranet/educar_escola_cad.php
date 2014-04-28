@@ -109,7 +109,9 @@ class indice extends clsCadastro
 	var $acesso;
 	var $gestor_id;
 	var $cargo_gestor;	
+	var $local_funcionamento;	
 	var $condicao;	
+	var $codigo_inep_escola_compartilhada;	
 	var $decreto_criacao;	
 	var $area_terreno_total;	
 	var $area_construida;	
@@ -1109,14 +1111,34 @@ if(!$this->isEnderecoExterno){
 				$this->campoLista( "ref_cod_curso", "Curso", $opcoes, $this->ref_cod_curso,"",false,"","<a href='#' onclick=\"getElementById('incluir_curso').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
 
 			$this->campoOculto( "incluir_curso", "" );
-			$this->campoQuebra();
+			$this->campoQuebra();			
 
-			$resources = array(0 => 'Alugado',
-			                   1 => Portabilis_String_Utils::toLatin1('Próprio'),
+			$resources = array(0 => Portabilis_String_Utils::toLatin1('Próprio'),
+			                   1 => 'Alugado',
 			                   2 => 'Cedido');
 
 	  		$options = array('label' => Portabilis_String_Utils::toLatin1('Condição'), 'resources' => $resources, 'value' => $this->condicao, 'size' => 70, 'required' => false);
 		    $this->inputsHelper()->select('condicao', $options);
+
+			$resources = array(0  => 'Selecione',
+			                   7  => Portabilis_String_Utils::toLatin1('Prédio escolar'),
+			                   8  => Portabilis_String_Utils::toLatin1('Templo/Igreja'),
+			                   9  => Portabilis_String_Utils::toLatin1('Sala de empresa'),
+			                   10 => Portabilis_String_Utils::toLatin1('Casa do professor'),
+			                   11 => Portabilis_String_Utils::toLatin1('Salas em outra escola'),
+			                   12 => Portabilis_String_Utils::toLatin1('Galpão/ Rancho/ Paiol/ Barracão'),
+			                   13 => Portabilis_String_Utils::toLatin1('Unidade de internação Socioeducativa'),
+			                   14 => Portabilis_String_Utils::toLatin1('Unidade prisional'),
+			                   15 => 'Outros');
+
+	  		$options = array('label' => Portabilis_String_Utils::toLatin1('Local de funcionamento'), 'resources' => $resources, 'value' => $this->local_funcionamento, 'size' => 70, 'required' => false);
+		    $this->inputsHelper()->select('local_funcionamento', $options);		    
+
+		    $options = array('label' => Portabilis_String_Utils::toLatin1('Código de escola que compartilha o prédio'), 
+		    	'label_hint' => Portabilis_String_Utils::toLatin1('Caso compartilhe o prédio escolar com outra escola preencha com o código INEP'), 
+		    	'resources' => $resources, 'value' => $this->codigo_inep_escola_compartilhada, 'required' => false, 
+		    	'size' => 8, 'max_length' => 8, 'placeholder' => '');		    
+		    $this->inputsHelper()->integer('codigo_inep_escola_compartilhada', $options);
 
 			$resources = array( null => 'Selecione',
 			                    1    => Portabilis_String_Utils::toLatin1('Difícil'),
@@ -1450,7 +1472,9 @@ if(!$this->isEnderecoExterno){
 					$obj->acesso = $this->acesso;
 					$obj->ref_idpes_gestor = $this->gestor_id;
 					$obj->cargo_gestor = $this->cargo_gestor;
+					$obj->local_funcionamento = $this->local_funcionamento;
 					$obj->condicao = $this->condicao;
+					$obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
 					$obj->decreto_criacao = $this->decreto_criacao;
 					$obj->area_terreno_total = $this->area_terreno_total;
 					$obj->area_construida = $this->area_construida;
@@ -1628,7 +1652,9 @@ if(!$this->isEnderecoExterno){
 			$obj->acesso = $this->acesso;
 			$obj->ref_idpes_gestor = $this->gestor_id;
 			$obj->cargo_gestor = $this->cargo_gestor;
+			$obj->local_funcionamento = $this->local_funcionamento;
 			$obj->condicao = $this->condicao;
+			$obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
 			$obj->decreto_criacao = $this->decreto_criacao;
 			$obj->area_terreno_total = $this->area_terreno_total;
 			$obj->area_construida = $this->area_construida;
@@ -1777,7 +1803,13 @@ if(!$this->isEnderecoExterno){
 			$obj->acesso = $this->acesso;
 			$obj->ref_idpes_gestor = $this->gestor_id;
 			$obj->cargo_gestor = $this->cargo_gestor;
+			$obj->local_funcionamento = $this->local_funcionamento;
+			$obj->local_funcionamento = $this->local_funcionamento;
+			$obj->local_funcionamento = $this->local_funcionamento;
 			$obj->condicao = $this->condicao;
+			$obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
+			$obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
+			$obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
 			$obj->decreto_criacao = $this->decreto_criacao;
 			$obj->area_terreno_total = $this->area_terreno_total;
 			$obj->area_construida = $this->area_construida;
@@ -1866,7 +1898,9 @@ if(!$this->isEnderecoExterno){
 			$obj->acesso = $this->acesso;
 			$obj->ref_idpes_gestor = $this->gestor_id;
 			$obj->cargo_gestor = $this->cargo_gestor;
+			$obj->local_funcionamento = $this->local_funcionamento;
 			$obj->condicao = $this->condicao;
+			$obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
 			$obj->decreto_criacao = $this->decreto_criacao;
 			$obj->area_terreno_total = $this->area_terreno_total;
 			$obj->area_construida = $this->area_construida;

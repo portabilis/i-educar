@@ -63,7 +63,9 @@ class clsPmieducarEscola
   var $acesso;
   var $ref_idpes_gestor;
   var $cargo_gestor;
+  var $local_funcionamento;
   var $condicao;
+  var $codigo_inep_escola_compartilhada;
   var $decreto_criacao;
   var $area_terreno_total;
   var $area_disponivel;
@@ -220,7 +222,7 @@ class clsPmieducarEscola
           e.dependencia_patio_coberto, e.dependencia_patio_descoberto, e.dependencia_alojamento_aluno, e.dependencia_alojamento_professor, e.dependencia_area_verde, e.dependencia_lavanderia, e.dependencia_unidade_climatizada, 
           e.dependencia_quantidade_ambiente_climatizado, e.dependencia_nenhuma_relacionada, e.dependencia_numero_salas_existente, dependencia_numero_salas_utilizadas, e.porte_quadra_descoberta, e.porte_quadra_coberta, e.tipo_cobertura_patio,
           e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.localizacao_diferenciada, e.didatico_nao_utiliza, e.didatico_quilombola, e.didatico_indigena, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado, 
-          e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica
+          e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada
           ';
 
     if (is_numeric($ref_usuario_cad)) {
@@ -473,11 +475,23 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
+      if (is_numeric($this->local_funcionamento)) {
+        $campos .= "{$gruda}local_funcionamento";
+        $valores .= "{$gruda}'{$this->local_funcionamento}'";
+        $gruda = ", ";
+      }
+
       if (is_numeric($this->condicao)) {
         $campos .= "{$gruda}condicao";
         $valores .= "{$gruda}'{$this->condicao}'";
         $gruda = ", ";
       }
+
+      if (is_numeric($this->codigo_inep_escola_compartilhada)) {
+        $campos .= "{$gruda}codigo_inep_escola_compartilhada";
+        $valores .= "{$gruda}'{$this->codigo_inep_escola_compartilhada}'";
+        $gruda = ", ";
+      }            
 
       if (is_numeric($this->num_pavimentos)) {
         $campos .= "{$gruda}num_pavimentos";
@@ -1058,8 +1072,21 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
+      if (is_numeric($this->local_funcionamento)) {
+        $set .= "{$gruda}local_funcionamento = '{$this->local_funcionamento}'";
+        $gruda = ", ";
+      }
+
       if (is_numeric($this->condicao)) {
         $set .= "{$gruda}condicao = '{$this->condicao}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->codigo_inep_escola_compartilhada)) {
+        $set .= "{$gruda}codigo_inep_escola_compartilhada = '{$this->codigo_inep_escola_compartilhada}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}codigo_inep_escola_compartilhada = NULL ";
         $gruda = ", ";
       }
 
