@@ -42,10 +42,6 @@
   INSERT INTO etapas_educacenso VALUES (9  ,'EJA - Ensino fundamental');
   INSERT INTO etapas_educacenso VALUES (10 ,'EJA - Ensino médio');
   INSERT INTO etapas_educacenso VALUES (11 ,'EJA - Ensino fundamental - Projovem (urbano)');
-  INSERT INTO etapas_educacenso VALUES (12 ,'EJA - Ensino fundamental - Projovem (urbano)');
-  INSERT INTO etapas_educacenso VALUES (13 ,'EJA - Ensino fundamental - Projovem (urbano)');
-  INSERT INTO etapas_educacenso VALUES (14 ,'EJA - Ensino fundamental - Projovem (urbano)');
-  INSERT INTO etapas_educacenso VALUES (15 ,'EJA - Ensino fundamental - Projovem (urbano)');
 
   CREATE TABLE modules.lingua_indigena_educacenso
   (
