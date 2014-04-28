@@ -22,14 +22,15 @@ class AreaConhecimentoController extends ApiCoreController{
   protected function getAreasConhecimento() {
 
      $instituicaoId = $this->getRequest()->instituicao_id;
-    
-     $sql    = 'SELECT ac.id as id, ac.nome as nome
-    			        FROM modules.area_conhecimento ac
-                 WHERE ac.instituicao_id = $1
-                 ORDER BY to_ascii(lower(ac.nome)) ASC';
+     //$turmaId       = $this->getRequest()->turma_id;
+     $sql    = 'SELECT ac.id AS id,
+                       ac.nome AS nome 
+                  FROM modules.area_conhecimento ac
+                 WHERE instituicao_id = $1
+              ORDER BY to_ascii(lower(nome)) ASC';
 
     $areasConhecimento = array();
-    $paramsSql = array('params' => $instituicaoId );
+    $paramsSql = array('params' => $instituicaoId);
     $areasConhecimento = $this->fetchPreparedQuery($sql, $paramsSql);
     $options = array();
 
