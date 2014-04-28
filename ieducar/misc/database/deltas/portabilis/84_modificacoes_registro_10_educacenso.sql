@@ -876,6 +876,12 @@
 
   -- //@UNDO
 
+  ALTER TABLE pmieducar.escola DROP CONSTRAINT escola_ref_idpes_gestor_fk;
+
+  ALTER TABLE pmieducar.escola DROP COLUMN codigo_inep_escola_compartilhada;
+
+  ALTER TABLE pmieducar.escola DROP COLUMN local_funcionamento;
+
   ALTER TABLE pmieducar.escola DROP COLUMN acesso;
 
   ALTER TABLE pmieducar.escola DROP COLUMN ref_idpes_gestor;
