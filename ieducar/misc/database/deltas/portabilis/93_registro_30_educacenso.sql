@@ -36,6 +36,8 @@
   
   ALTER TABLE cadastro.raca ADD COLUMN raca_educacenso SMALLINT;
 
+  ALTER TABLE public.pais ADD COLUMN cod_ibge INTEGER;
+
 
   -- //@UNDO
 
@@ -44,5 +46,7 @@
   ALTER TABLE cadastro.deficiencia DROP COLUMN deficiencia_educacenso;
 
   ALTER TABLE cadastro.raca DROP COLUMN raca_educacenso;
+
+  ALTER TABLE public.pais DROP COLUMN cod_ibge;
 
   -- //

@@ -37,6 +37,7 @@ class clsPublicPais
 	var $idpais;
 	var $nome;
 	var $geom;
+	var $cod_ibge;
 
 	// propriedades padrao
 
@@ -106,13 +107,13 @@ class clsPublicPais
 	 *
 	 * @return object
 	 */
-	function clsPublicPais( $idpais = null, $nome = null, $geom = null )
+	function clsPublicPais( $idpais = null, $nome = null, $geom = null, $cod_ibge = null )
 	{
 		$db = new clsBanco();
 		$this->_schema = "public.";
 		$this->_tabela = "{$this->_schema}pais";
 
-		$this->_campos_lista = $this->_todos_campos = "idpais, nome, geom";
+		$this->_campos_lista = $this->_todos_campos = "idpais, nome, geom, cod_ibge";
 
 
 
@@ -120,6 +121,10 @@ class clsPublicPais
 		{
 			$this->idpais = $idpais;
 		}
+		if( is_numeric( $cod_ibge ) )
+		{
+			$this->cod_ibge = $cod_ibge;
+		}		
 		if( is_string( $nome ) )
 		{
 			$this->nome = $nome;
@@ -158,6 +163,12 @@ class clsPublicPais
 				$valores .= "{$gruda}'{$this->geom}'";
 				$gruda = ", ";
 			}
+			if( is_numeric( $this->cod_ibge ) )
+			{
+				$campos .= "{$gruda}cod_ibge";
+				$valores .= "{$gruda}'{$this->cod_ibge}'";
+				$gruda = ", ";
+			}
 
 			$idpais = $db->campoUnico("SELECT COALESCE( MAX(idpais), 0 ) + 1 FROM {$this->_tabela}" );
 
@@ -188,6 +199,11 @@ class clsPublicPais
 			if( is_string( $this->geom ) )
 			{
 				$set .= "{$gruda}geom = '{$this->geom}'";
+				$gruda = ", ";
+			}
+			if( is_numeric( $this->cod_ibge ) )
+			{
+				$set .= "{$gruda}cod_ibge = '{$this->cod_ibge}'";
 				$gruda = ", ";
 			}
 
