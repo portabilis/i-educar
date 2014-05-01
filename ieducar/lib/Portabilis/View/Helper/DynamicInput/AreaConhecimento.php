@@ -21,10 +21,13 @@ class Portabilis_View_Helper_DynamicInput_AreaConhecimento extends Portabilis_Vi
   }
 
   protected function inputOptions($options) {
+
     $resources     = $options['resources'];
-    $instituicaoId = $this->getInstituicaoId($options['instituicaoId']);
     
-    $resources = App_Model_IedFinder::getAreasConhecimento($instituicaoId);
+    // echo "<pre>";var_dump($resources);echo"</pre>";
+    // $instituicaoId = $this->getInstituicaoId($options['instituicaoId']);
+    
+    // $resources = App_Model_IedFinder::getAreasConhecimento($instituicaoId);
 
     return $this->insertOption(null, "Todas", $resources);
   }
