@@ -46,6 +46,7 @@ class ComponenteCurricular_Model_CodigoEducacenso extends CoreExt_Enum
 {
 
   protected $_data = array(
+    null => 'Selecione',
     1    => 'Química',
     2    => 'Física',
     3    => 'Matemática',

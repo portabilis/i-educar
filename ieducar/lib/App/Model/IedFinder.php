@@ -227,14 +227,16 @@ class App_Model_IedFinder extends CoreExt_Entity
    * @param  int   $serieId
    * @return array (cod_turma => nm_turma)
    */
-  public static function getTurmas($escolaId, $serieId = NULL)
+  public static function getTurmas($escolaId, $serieId = NULL, $ano = NULL)
   {
     $turma = self::addClassToStorage('clsPmieducarTurma', NULL,
       'include/pmieducar/clsPmieducarTurma.inc.php');
 
     // Carrega as turmas da escola
     $turma->setOrderBy('nm_turma ASC');
-    $turmas = $turma->lista(NULL, NULL, NULL, $serieId, $escolaId);
+    $turmas = $turma->lista(NULL, NULL, NULL, $serieId, $escolaId, NULL, NULL, NULL, NULL, NULL,NULL, NULL, 
+                            NULL,NULL, NULL, NULL,NULL, NULL, NULL,NULL, NULL, NULL, NULL, NULL, NULL,NULL, 
+                            NULL, NULL,NULL, NULL, NULL,NULL, NULL, NULL,NULL, NULL, $ano);
 
     $ret = array();
     foreach ($turmas as $turma) {
