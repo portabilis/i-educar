@@ -227,6 +227,14 @@ class Portabilis_View_Helper_Inputs {
   public function multipleSearchAssuntos($attrName, $inputOptions = array(), $helperOptions = array()) {
     $this->multipleSearchResourceInput('multipleSearchAssuntos', $attrName, $inputOptions, $helperOptions);
   }
+
+  public function multipleSearchAreasConhecimento($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchAreasConhecimento', $attrName, $inputOptions, $helperOptions);
+  }
+
+   /*public function multipleSearchAjaxAreasConhecimento($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchAjaxAreasConhecimento', $attrName, $inputOptions, $helperOptions);
+  }*/
   // resource input helpers
 
   public function religiao($inputOptions = array(), $helperOptions = array()) {
