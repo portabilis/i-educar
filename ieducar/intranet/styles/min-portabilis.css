@@ -235,3 +235,8 @@ select, input[type="text"], input[type="password"], textarea {
   cursor: not-allowed;
   background-color: #EEE;
 }
+
+.freshwidget-button {
+  position: fixed !important;
+  right: 280px !important;
+}
