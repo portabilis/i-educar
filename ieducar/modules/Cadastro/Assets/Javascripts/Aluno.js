@@ -794,15 +794,6 @@ function canShowParentsFields(){
     } 
     checkMoradia();
     $j('#moradia').change(checkMoradia); 
-
-
-    var msg = 'Bem vindo ao novo cadastro de alunos,<br />' +
-              'Agora você pode navegar entre as abas! <br />'+
-              '<b>Dúvidas?</b> Entre em contato com o suporte.';
-
-    $j('<p>').addClass('back-to-old-version right-top-notice notice')
-             .html(stringUtils.toUtf8(msg))
-             .appendTo($j('#tab1').closest('td'));
   
 
     /***********************
