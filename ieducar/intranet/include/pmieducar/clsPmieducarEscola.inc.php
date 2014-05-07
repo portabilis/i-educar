@@ -144,6 +144,22 @@ class clsPmieducarEscola
   var $abre_final_semana;
   var $codigo_lingua_indigena;
   var $proposta_pedagogica;
+  var $televisoes;
+  var $videocassetes;
+  var $dvds;
+  var $antenas_parabolicas;
+  var $copiadoras;
+  var $retroprojetores;
+  var $impressoras;
+  var $aparelhos_de_som;
+  var $projetores_digitais;
+  var $faxs;
+  var $maquinas_fotograficas;
+  var $computadores;
+  var $computadores_administrativo;
+  var $computadores_alunos;
+  var $acesso_internet;
+  var $banda_larga;    
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -224,7 +240,8 @@ class clsPmieducarEscola
           e.dependencia_patio_coberto, e.dependencia_patio_descoberto, e.dependencia_alojamento_aluno, e.dependencia_alojamento_professor, e.dependencia_area_verde, e.dependencia_lavanderia, e.dependencia_unidade_climatizada, 
           e.dependencia_quantidade_ambiente_climatizado, e.dependencia_nenhuma_relacionada, e.dependencia_numero_salas_existente, dependencia_numero_salas_utilizadas, e.porte_quadra_descoberta, e.porte_quadra_coberta, e.tipo_cobertura_patio,
           e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.localizacao_diferenciada, e.didatico_nao_utiliza, e.didatico_quilombola, e.didatico_indigena, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado, 
-          e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada
+          e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, 
+          e.retroprojetores, e.impressoras, e.aparelhos_de_som, e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.acesso_internet, e.banda_larga         
           ';
 
     if (is_numeric($ref_usuario_cad)) {
@@ -969,6 +986,102 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
+      if (is_numeric($this->televisoes)) {
+        $campos .= "{$gruda}televisoes";
+        $valores .= "{$gruda}'{$this->televisoes}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->videocassetes)) {
+        $campos .= "{$gruda}videocassetes";
+        $valores .= "{$gruda}'{$this->videocassetes}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dvds)) {
+        $campos .= "{$gruda}dvds";
+        $valores .= "{$gruda}'{$this->dvds}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->antenas_parabolicas)) {
+        $campos .= "{$gruda}antenas_parabolicas";
+        $valores .= "{$gruda}'{$this->antenas_parabolicas}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->copiadoras)) {
+        $campos .= "{$gruda}copiadoras";
+        $valores .= "{$gruda}'{$this->copiadoras}'";
+        $gruda = ", ";
+      }      
+
+      if (is_numeric($this->retroprojetores)) {
+        $campos .= "{$gruda}retroprojetores";
+        $valores .= "{$gruda}'{$this->retroprojetores}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->impressoras)) {
+        $campos .= "{$gruda}impressoras";
+        $valores .= "{$gruda}'{$this->impressoras}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->aparelhos_de_som)) {
+        $campos .= "{$gruda}aparelhos_de_som";
+        $valores .= "{$gruda}'{$this->aparelhos_de_som}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->projetores_digitais)) {
+        $campos .= "{$gruda}projetores_digitais";
+        $valores .= "{$gruda}'{$this->projetores_digitais}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->faxs)) {
+        $campos .= "{$gruda}faxs";
+        $valores .= "{$gruda}'{$this->faxs}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->maquinas_fotograficas)) {
+        $campos .= "{$gruda}maquinas_fotograficas";
+        $valores .= "{$gruda}'{$this->maquinas_fotograficas}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->computadores)) {
+        $campos .= "{$gruda}computadores";
+        $valores .= "{$gruda}'{$this->computadores}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->computadores_administrativo)) {
+        $campos .= "{$gruda}computadores_administrativo";
+        $valores .= "{$gruda}'{$this->computadores_administrativo}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->computadores_alunos)) {
+        $campos .= "{$gruda}computadores_alunos";
+        $valores .= "{$gruda}'{$this->computadores_alunos}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->acesso_internet)) {
+        $campos .= "{$gruda}acesso_internet";
+        $valores .= "{$gruda}'{$this->acesso_internet}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->banda_larga)) {
+        $campos .= "{$gruda}banda_larga";
+        $valores .= "{$gruda}'{$this->banda_larga}'";
+        $gruda = ", ";
+      }                                                                                             
+
       $campos .= "{$gruda}data_cadastro";
       $valores .= "{$gruda}NOW()";
       $gruda = ", ";
@@ -1488,6 +1601,86 @@ class clsPmieducarEscola
         $set .= "{$gruda}proposta_pedagogica = '{$this->proposta_pedagogica}'";
         $gruda = ", ";
       }
+
+      if (is_numeric($this->televisoes)) {
+        $set .= "{$gruda}televisoes = '{$this->televisoes}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->videocassetes)) {
+        $set .= "{$gruda}videocassetes = '{$this->videocassetes}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dvds)) {
+        $set .= "{$gruda}dvds = '{$this->dvds}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->antenas_parabolicas)) {
+        $set .= "{$gruda}antenas_parabolicas = '{$this->antenas_parabolicas}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->copiadoras)) {
+        $set .= "{$gruda}copiadoras = '{$this->copiadoras}'";
+        $gruda = ", ";
+      }      
+
+      if (is_numeric($this->retroprojetores)) {
+        $set .= "{$gruda}retroprojetores = '{$this->retroprojetores}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->impressoras)) {
+        $set .= "{$gruda}impressoras = '{$this->impressoras}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->aparelhos_de_som)) {
+        $set .= "{$gruda}aparelhos_de_som = '{$this->aparelhos_de_som}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->projetores_digitais)) {
+        $set .= "{$gruda}projetores_digitais = '{$this->projetores_digitais}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->faxs)) {
+        $set .= "{$gruda}faxs = '{$this->faxs}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->maquinas_fotograficas)) {
+        $set .= "{$gruda}maquinas_fotograficas = '{$this->maquinas_fotograficas}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->computadores)) {
+        $set .= "{$gruda}computadores = '{$this->computadores}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->computadores_administrativo)) {
+        $set .= "{$gruda}computadores_administrativo = '{$this->computadores_administrativo}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->computadores_alunos)) {
+        $set .= "{$gruda}computadores_alunos = '{$this->computadores_alunos}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->acesso_internet)) {
+        $set .= "{$gruda}acesso_internet = '{$this->acesso_internet}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->banda_larga)) {
+        $set .= "{$gruda}banda_larga = '{$this->banda_larga}'";
+        $gruda = ", ";
+      }      
       
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_escola = '{$this->cod_escola}'");

@@ -870,6 +870,38 @@
 
   ALTER TABLE pmieducar.curso ADD COLUMN modalidade_curso INTEGER;
 
+  ALTER TABLE pmieducar.escola ADD COLUMN televisoes SMALLINT;
+
+  ALTER TABLE pmieducar.escola ADD COLUMN videocassetes SMALLINT;
+
+  ALTER TABLE pmieducar.escola ADD COLUMN dvds SMALLINT;
+
+  ALTER TABLE pmieducar.escola ADD COLUMN antenas_parabolicas SMALLINT;
+
+  ALTER TABLE pmieducar.escola ADD COLUMN copiadoras SMALLINT;
+
+  ALTER TABLE pmieducar.escola ADD COLUMN retroprojetores SMALLINT;
+
+  ALTER TABLE pmieducar.escola ADD COLUMN impressoras SMALLINT;
+
+  ALTER TABLE pmieducar.escola ADD COLUMN aparelhos_de_som SMALLINT;
+
+  ALTER TABLE pmieducar.escola ADD COLUMN projetores_digitais SMALLINT;
+
+  ALTER TABLE pmieducar.escola ADD COLUMN faxs SMALLINT;
+
+  ALTER TABLE pmieducar.escola ADD COLUMN maquinas_fotograficas SMALLINT;
+
+  ALTER TABLE pmieducar.escola ADD COLUMN computadores SMALLINT;
+
+  ALTER TABLE pmieducar.escola ADD COLUMN computadores_administrativo SMALLINT;
+
+  ALTER TABLE pmieducar.escola ADD COLUMN computadores_alunos SMALLINT;
+
+  ALTER TABLE pmieducar.escola ADD COLUMN acesso_internet SMALLINT;
+
+  ALTER TABLE pmieducar.escola ADD COLUMN banda_larga SMALLINT;
+
   -- //@UNDO
 
   ALTER TABLE pmieducar.escola DROP CONSTRAINT escola_ref_idpes_gestor_fk;
@@ -1045,5 +1077,37 @@
   DROP TABLE modules.etapas_educacenso;
 
   ALTER TABLE pmieducar.curso DROP COLUMN modalidade_curso;
+
+  ALTER TABLE pmieducar.escola DROP COLUMN televisoes;
+
+  ALTER TABLE pmieducar.escola DROP COLUMN videocassetes;
+
+  ALTER TABLE pmieducar.escola DROP COLUMN dvds;
+
+  ALTER TABLE pmieducar.escola DROP COLUMN antenas_parabolicas;
+
+  ALTER TABLE pmieducar.escola DROP COLUMN copiadoras;
+
+  ALTER TABLE pmieducar.escola DROP COLUMN retroprojetores;
+
+  ALTER TABLE pmieducar.escola DROP COLUMN impressoras;
+
+  ALTER TABLE pmieducar.escola DROP COLUMN aparelhos_de_som;
+
+  ALTER TABLE pmieducar.escola DROP COLUMN projetores_digitais;
+
+  ALTER TABLE pmieducar.escola DROP COLUMN faxs;
+
+  ALTER TABLE pmieducar.escola DROP COLUMN maquinas_fotograficas;
+
+  ALTER TABLE pmieducar.escola DROP COLUMN computadores;
+
+  ALTER TABLE pmieducar.escola DROP COLUMN computadores_administrativo;
+
+  ALTER TABLE pmieducar.escola DROP COLUMN computadores_alunos;
+
+  ALTER TABLE pmieducar.escola DROP COLUMN acesso_internet;
+
+  ALTER TABLE pmieducar.escola DROP COLUMN banda_larga;  
 
   -- //
