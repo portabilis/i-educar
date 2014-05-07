@@ -14,6 +14,10 @@
 
   ALTER TABLE pmieducar.escola ADD COLUMN regulamentacao INTEGER DEFAULT '1';
 
+  ALTER TABLE pmieducar.escola ADD COLUMN longitude CHARACTER VARYING(20);
+
+  ALTER TABLE pmieducar.escola ADD COLUMN latitude CHARACTER VARYING(20);
+
   CREATE SEQUENCE public.seq_distrito
     INCREMENT 1
     MINVALUE 0
@@ -100,6 +104,10 @@
   ALTER TABLE public.uf DROP COLUMN cod_ibge;
   
   ALTER TABLE pmieducar.escola DROP COLUMN dependencia_administrativa;
+
+  ALTER TABLE pmieducar.escola DROP COLUMN longitude;
+
+  ALTER TABLE pmieducar.escola DROP COLUMN latitude;
   
   ALTER TABLE pmieducar.escola DROP COLUMN regulamentacao;
 

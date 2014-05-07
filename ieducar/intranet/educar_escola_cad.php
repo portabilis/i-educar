@@ -105,6 +105,8 @@ class indice extends clsCadastro
 
 	var $situacao_funcionamento;
 	var $dependencia_administrativa;
+	var $latitude;
+	var $longitude;
 	var $regulamentacao;
 	var $acesso;
 	var $gestor_id;
@@ -139,42 +141,42 @@ class indice extends clsCadastro
 	var $lixo_enterra;	
 	var $lixo_outros;	
 	var $dependencia_sala_diretoria;
-    var $dependencia_sala_professores;
-    var $dependencia_sala_secretaria;
-    var $dependencia_laboratorio_informatica;
-    var $dependencia_laboratorio_ciencias;
-    var $dependencia_sala_aee;
-    var $dependencia_quadra_coberta;
-    var $dependencia_quadra_descoberta;
-    var $dependencia_cozinha;
-    var $dependencia_biblioteca;
-    var $dependencia_sala_leitura;
-    var $dependencia_parque_infantil;
-    var $dependencia_bercario;
-    var $dependencia_banheiro_fora;
-    var $dependencia_banheiro_dentro;
-    var $dependencia_banheiro_infantil;
-    var $dependencia_banheiro_deficiente;
-    var $dependencia_banheiro_chuveiro;
-    var $dependencia_refeitorio;
-    var $dependencia_dispensa;
-    var $dependencia_aumoxarifado;
-    var $dependencia_auditorio;
-    var $dependencia_patio_coberto;
-    var $dependencia_patio_descoberto;
-    var $dependencia_alojamento_aluno;
-    var $dependencia_alojamento_professor;
-    var $dependencia_area_verde;
-    var $dependencia_lavanderia;
-    var $dependencia_unidade_climatizada;
-    var $dependencia_quantidade_ambiente_climatizado;
-    var $dependencia_nenhuma_relacionada;
-    var $dependencia_numero_salas_existente;
-    var $dependencia_numero_salas_utilizadas;
-    var $porte_quadra_descoberta;
-    var $porte_quadra_coberta;
-    var $tipo_cobertura_patio;    
-    var $total_funcionario;    
+  var $dependencia_sala_professores;
+  var $dependencia_sala_secretaria;
+  var $dependencia_laboratorio_informatica;
+  var $dependencia_laboratorio_ciencias;
+  var $dependencia_sala_aee;
+  var $dependencia_quadra_coberta;
+  var $dependencia_quadra_descoberta;
+  var $dependencia_cozinha;
+  var $dependencia_biblioteca;
+  var $dependencia_sala_leitura;
+  var $dependencia_parque_infantil;
+  var $dependencia_bercario;
+  var $dependencia_banheiro_fora;
+  var $dependencia_banheiro_dentro;
+  var $dependencia_banheiro_infantil;
+  var $dependencia_banheiro_deficiente;
+  var $dependencia_banheiro_chuveiro;
+  var $dependencia_refeitorio;
+  var $dependencia_dispensa;
+  var $dependencia_aumoxarifado;
+  var $dependencia_auditorio;
+  var $dependencia_patio_coberto;
+  var $dependencia_patio_descoberto;
+  var $dependencia_alojamento_aluno;
+  var $dependencia_alojamento_professor;
+  var $dependencia_area_verde;
+  var $dependencia_lavanderia;
+  var $dependencia_unidade_climatizada;
+  var $dependencia_quantidade_ambiente_climatizado;
+  var $dependencia_nenhuma_relacionada;
+  var $dependencia_numero_salas_existente;
+  var $dependencia_numero_salas_utilizadas;
+  var $porte_quadra_descoberta;
+  var $porte_quadra_coberta;
+  var $tipo_cobertura_patio;    
+  var $total_funcionario;    
 	var $atendimento_aee;
 	var $atividade_complementar;
 	var $fundamental_ciclo;
@@ -976,6 +978,10 @@ if(!$this->isEnderecoExterno){
 //
 //			}
 
+			$this->inputsHelper()->text('latitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->latitude));
+
+			$this->inputsHelper()->text('longitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude));
+
   		$this->campoCheck("bloquear_lancamento_diario_anos_letivos_encerrados", "Bloquear lançamento no diário para anos letivos encerrados", $this->bloquear_lancamento_diario_anos_letivos_encerrados);
 
 
@@ -1468,6 +1474,8 @@ if(!$this->isEnderecoExterno){
 					$obj = new clsPmieducarEscola( null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, NULL, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
 					$obj->situacao_funcionamento = $this->situacao_funcionamento;
 					$obj->dependencia_administrativa = $this->dependencia_administrativa;
+					$obj->latitude = $this->latitude;
+					$obj->longitude = $this->longitude;
 					$obj->regulamentacao = $this->regulamentacao;
 					$obj->acesso = $this->acesso;
 					$obj->ref_idpes_gestor = $this->gestor_id;
@@ -1647,6 +1655,8 @@ if(!$this->isEnderecoExterno){
 		{
 			$obj = new clsPmieducarEscola( null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, null, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados );
 			$obj->dependencia_administrativa = $this->dependencia_administrativa;
+			$obj->latitude = $this->latitude;
+			$obj->longitude = $this->longitude;			
 			$obj->regulamentacao = $this->regulamentacao;
 			$obj->situacao_funcionamento = $this->situacao_funcionamento;
 			$obj->acesso = $this->acesso;
@@ -1798,6 +1808,8 @@ if(!$this->isEnderecoExterno){
 		{
 			$obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
 			$obj->dependencia_administrativa = $this->dependencia_administrativa;
+			$obj->latitude = $this->latitude;
+			$obj->longitude = $this->longitude;
 			$obj->regulamentacao = $this->regulamentacao;
 			$obj->situacao_funcionamento = $this->situacao_funcionamento;
 			$obj->acesso = $this->acesso;
@@ -1894,6 +1906,8 @@ if(!$this->isEnderecoExterno){
 			$obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
 			$obj->situacao_funcionamento = $this->situacao_funcionamento;
 			$obj->dependencia_administrativa = $this->dependencia_administrativa;
+			$obj->latitude = $this->latitude;
+			$obj->longitude = $this->longitude;			
 			$obj->regulamentacao = $this->regulamentacao;
 			$obj->acesso = $this->acesso;
 			$obj->ref_idpes_gestor = $this->gestor_id;
