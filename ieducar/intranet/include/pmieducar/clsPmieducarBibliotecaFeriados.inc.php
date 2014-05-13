@@ -235,36 +235,6 @@ class clsPmieducarBibliotecaFeriados
 	*
 	*/
 
-	function cadastraFeriadosNacionais()
-	{
-		
-		$nomeTemporario = "";
-	
-		$feriadoPermanente_Natal = new clsPmieducarBibliotecaFeriados();
-
-		$feriadoPermanente_Natal->nm_feriado = "Natal";
-		$feriadoPermanente_Natal->descricao = "Feriado Nacional de 25 de Dezembro";
-		$feriadoPermanente_Natal->data_feriado = date("Y")."-12-25";
-		
-		$feriadoPermanente_Natal->cadastra();
-
-
-
-		$feriadoPermanente_Tiradentes = new clsPmieducarBibliotecaFeriados();
-
-		$feriadoPermanente_Tiradentes->nm_feriado = "Tiradentes";
-		$feriadoPermanente_Tiradentes->descricao = "Feriado Nacional de Tiradentes";
-		$feriadoPermanente_Tiradentes->data_feriado = date("Y")."-04-21";
-		
-		$feriadoPermanente_Tiradentes->cadastra();
-
-
-
-	}
-
-		
-
-
 	/**
 	 * Edita os dados de um registro
 	 *
