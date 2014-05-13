@@ -308,17 +308,44 @@ class indice extends clsCadastro
             $obj = new clsPmieducarBibliotecaFeriados();
             $registros = $obj->lista(null, $this->cod_biblioteca);
 
-            //echo "fillipe é viadão";
-            $aux["nm_feriado_"] = "Natal";
-            $aux["data_feriado_"]= "25/12/" . date("Y");
+            $aux[0]["nm_feriado_"] = "Confraternização Universal";
+            $aux[0]["data_feriado_"]= "01/01/" . date("Y");
             
-            $aux["nm_feriado_"]= "Tiradentes";
-            $aux["data_feriado_"]= "21/04/" . date("Y");
+            $aux[1]["nm_feriado_"]= "Tiradentes";
+            $aux[1]["data_feriado_"]= "21/04/" . date("Y");
             
-            $this->nm_feriado=$aux['nm_feriado_'];
-            $this->data_feriado=$aux['data_feriado_'];
+            $aux[2]["nm_feriado_"]= "Dia do Trabalho";
+            $aux[2]["data_feriado_"]= "01/05/" . date("Y");
+            
+            $aux[3]["nm_feriado_"]= "Independência do Brasil";
+            $aux[3]["data_feriado_"]= "07/09/" . date("Y");
+            
+            $aux[4]["nm_feriado_"]= "Nossa Senhora Aparecida (Padroeira do Brasil)";
+            $aux[4]["data_feriado_"]= "12/10/" . date("Y");
+            
+            $aux[5]["nm_feriado_"]= "Dia de Finados";
+            $aux[5]["data_feriado_"]= "02/11/" . date("Y");
+            
+            $aux[6]["nm_feriado_"]= "Proclamação da República";
+            $aux[6]["data_feriado_"]= "15/11/" . date("Y");
+            
+            $aux[7]["nm_feriado_"] = "Natal";
+            $aux[7]["data_feriado_"]= "25/12/" . date("Y");
             
             
+            
+       for ( $n = 0 ; $n < 8; $n++) {    
+            $this->nm_feriado=$aux[$n]['nm_feriado_'];
+            $this->data_feriado=$aux[$n]['data_feriado_'];
+       ?>
+            <script> {$this->__nome}.submit(); </script>     
+         
+        
+       <?php
+                
+       }
+       
+       
             
     }
 
