@@ -2,12 +2,21 @@
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * 																	     *
+<<<<<<< HEAD
  * 	@author Prefeitura Municipal de Itajaí								 *
  * 	@updated 29/03/2007													 *
  *   Pacote: i-PLB Software Público Livre e Brasileiro					 *
  * 																		 *
  * 	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
  * 						ctima@itajai.sc.gov.br					    	 *
+=======
+ * 	@author Prefeitura Municipal de Itajaí					 *
+ * 	@updated 29/03/2007													 *
+ *   Pacote: i-PLB Software Público Livre e Brasileiro                            *
+ * 																		 *
+ * 	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí		 *
+ * 						ctima@itajai.sc.gov.br		 *
+>>>>>>> c1157220fe7a3faeb76baf5abc1c5f4394f04e6b
  * 																		 *
  * 	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
  * 	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
@@ -83,12 +92,20 @@ class indice extends clsCadastro {
         $obj_permissoes->permissao_cadastra(629, $this->pessoa_logada, 11, "educar_biblioteca_dados_lst.php");
 
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+
         if ($nivel_usuario <= 3)
             $permitido = true;
+
+
+        if ($nivel_usuario <= 3)
+            $permitido = true;
+
+
         else {
             $obj_usuario_bib = new clsPmieducarBibliotecaUsuario();
             $lista_bib = $obj_usuario_bib->lista(null, $this->pessoa_logada);
             $permitido = false;
+
             if ($lista_bib) {
                 foreach ($lista_bib as $biblioteca) {
                     if ($this->cod_biblioteca == $biblioteca['ref_cod_biblioteca'])
@@ -99,12 +116,24 @@ class indice extends clsCadastro {
 
         if (!$permitido)
             header("Location: educar_biblioteca_dados_lst.php");
+
         if (is_numeric($this->cod_biblioteca)) {
 
             $obj = new clsPmieducarBiblioteca($this->cod_biblioteca);
             $registro = $obj->detalhe();
             if ($registro) {
                 foreach ($registro AS $campo => $val) // passa todos os valores obtidos no registro para atributos do objeto
+
+
+        if (is_numeric($this->cod_biblioteca)) {
+
+            $obj = new clsPmieducarBiblioteca($this->cod_biblioteca);
+            $registroCodBilioteca = $obj->detalhe();
+
+            if ($registroCodBilioteca) {
+                // passa todos os valores obtidos no registro para atributos do objeto
+                foreach ($registroCodBilioteca AS $campo => $val)
+
                     $this->$campo = $val;
 
                 if ($obj_permissoes->permissao_excluir(629, $this->pessoa_logada, 11)) {
@@ -113,8 +142,15 @@ class indice extends clsCadastro {
                 $retorno = "Editar";
             }
         }
+
         $this->url_cancelar = ($retorno == "Editar") ? "educar_biblioteca_dados_det.php?cod_biblioteca={$registro["cod_biblioteca"]}" : "educar_biblioteca_dados_lst.php";
         $this->nome_url_cancelar = "Cancelar";
+
+
+        $this->url_cancelar = ($retorno == "Editar") ? "educar_biblioteca_dados_det.php?cod_biblioteca ="
+                . " {$registroCodBilioteca["cod_biblioteca"]}" : "educar_biblioteca_dados_lst.php";
+        $this->nome_url_cancelar = "Cancelar";
+
         return $retorno;
     }
 
@@ -126,8 +162,12 @@ class indice extends clsCadastro {
             foreach ($_POST AS $campo => $val)
                 $this->$campo = ( $this->$campo ) ? $this->$campo : $val;
 
+
         // foreign keys
         // text
+
+        // foreign key
+
         $this->campoTexto("nm_biblioteca", "Biblioteca", $this->nm_biblioteca, 30, 255, true, false, false, "", "", "", "", true);
         $this->campoMonetario("valor_multa", "Valor Multa", $this->valor_multa, 8, 8, true);
         $this->campoNumero("max_emprestimo", "M&aacute;ximo Empr&eacute;stimo", $this->max_emprestimo, 8, 8, true);
@@ -173,12 +213,18 @@ class indice extends clsCadastro {
                             $this->biblioteca_dia_semana[$chave] = null;
                             $this->excluir_dia_semana = null;
                         } else {
+
                             $this->campoTextoInv("dia_{$dias}", "", $this->dias_da_semana[$dias], 8, 8, false, false, false, "", "<a href='#' onclick=\"getElementById('excluir_dia_semana').value = '{$dias}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>");
+
+                            $this->campoTextoInv("dia_{$dias}", "", $this->dias_da_semana[$dias], 8, 8, false, false, false, "", "<a href='#' onclick=\"getElementById('excluir_dia_semana').value = '{$dias}'; getElementById('tipoacao').value = ''; "
+                                    . "{$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>");
+
                             $aux["dia_"][] = $dias;
                         }
                     }
                 }
             }
+
             unset($this->biblioteca_dia_semana);
             $this->biblioteca_dia_semana = $aux;
         }
@@ -210,7 +256,7 @@ class indice extends clsCadastro {
                     $aux["nm_feriado_"] = $campo["nm_feriado"];
                     $aux["data_feriado_"] = dataFromPgToBr($campo["data_feriado"]);
                     $this->biblioteca_feriado[] = $aux;
-                    
+
                 }
             }
         }
@@ -238,6 +284,7 @@ class indice extends clsCadastro {
                     $this->campoTextoInv("data_feriado_{$feriado["nm_feriado_"]}", "", $feriado['data_feriado_'], 10, 10, false, false, false, "", "<a href='#' onclick=\"getElementById('excluir_feriado').value = '{$feriado["nm_feriado_"]}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>");
                     $aux["nm_feriado_"] = $feriado["nm_feriado_"];
                     $aux["data_feriado_"] = $feriado['data_feriado_'];
+
                 }
             }
         }
@@ -346,6 +393,109 @@ class indice extends clsCadastro {
                 }
             }
             //-----------------------FIM EDITA FERIADO------------------------//
+
+                }
+            }
+        }
+        $this->campoOculto("biblioteca_feriado", serialize($this->biblioteca_feriado));
+
+        if (!$_POST['incluir_feriados_nacionais']) {
+            clsPmieducarBibliotecaFeriados::cadastraFeriadosNacionais();
+        }
+        $this->CampoOculto("incluir_feriados_nacionais", "");
+        $this->campoRotulo("incluir_feriados_nacionais", "Cadastrar Feriados Nacionais Permanentes", "<input type='button' name='Feriados_Nacionais' value='Cadastre' onclick='window.location.reload( true );' />");
+
+        $this->campoTexto("nm_feriado", "Feriado", $this->nm_feriado, 30, 255);
+        $this->campoData("data_feriado", " Data Feriado", $this->data_feriado);
+
+        $this->campoOculto("incluir_feriado", "");
+        $this->campoRotulo("bt_incluir_feriado", "Feriado", "<a href='#' onclick=\"getElementById('incluir_feriado').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
+
+        $this->campoQuebra();
+    }
+
+    //-----------------------FIM INCLUI FERIADO------------------------//
+    //-----------------------FERIADOS NACIONAIS------------------------//
+    function CadastraFeriadosNacionais() {
+
+        $this->campoQuebra();
+
+        if ($_POST["biblioteca_feriado"])
+            $this->biblioteca_feriado = unserialize(urldecode($_POST["biblioteca_feriado"]));
+        if (is_numeric($this->cod_biblioteca) && !$_POST) {
+            $obj = new clsPmieducarBibliotecaFeriados();
+            $registros = $obj->lista(null, $this->cod_biblioteca);
+
+
+            $aux["nm_feriado_"] = "Natal";
+            $aux["data_feriado_"] = "25/12/" . date("Y");
+            $this->biblioteca_feriado[] = $aux;
+            
+        }
+
+
+    }
+    //-----------------------FIM FERIADOS NACIONAIS------------------------//
+    
+    function Editar() {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
+
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(629, $this->pessoa_logada, 11, "educar_biblioteca_dados_lst.php");
+
+        $this->valor_multa = str_replace(".", "", $this->valor_multa);
+        $this->valor_multa = str_replace(",", ".", $this->valor_multa);
+        $this->valor_maximo_multa = str_replace(".", "", $this->valor_maximo_multa);
+        $this->valor_maximo_multa = str_replace(",", ".", $this->valor_maximo_multa);
+
+        $this->requisita_senha = is_null($this->requisita_senha) ? 0 : 1;
+
+        $obj = new clsPmieducarBiblioteca($this->cod_biblioteca, null, null, null, $this->valor_multa, $this->max_emprestimo, $this->valor_maximo_multa, null, null, $this->requisita_senha, 1, $this->dias_espera, $this->tombo_automatico);
+        $editou = $obj->edita();
+        if ($editou) {
+            //-----------------------EDITA DISCIPLINA------------------------//
+            $obj = new clsPmieducarBibliotecaDia($this->cod_biblioteca);
+            $excluiu = $obj->excluirTodos();
+            if ($excluiu) {
+                $this->biblioteca_dia_semana = unserialize(urldecode($this->biblioteca_dia_semana));
+                if ($this->biblioteca_dia_semana) {
+                    foreach ($this->biblioteca_dia_semana AS $campo) {
+                        for ($i = 0; $i < sizeof($campo); $i++) {
+                            $obj = new clsPmieducarBibliotecaDia($this->cod_biblioteca, $campo[$i]);
+                            $cadastrou1 = $obj->cadastra();
+                            if (!$cadastrou1) {
+                                $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+                                echo "<!--\nErro ao editar clsPmieducarBibliotecaDia\nvalores obrigat&oacute;rios\nis_numeric( $this->cod_biblioteca ) && is_numeric( {$campo[$i]} ) \n-->";
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            //-----------------------FIM EDITA DISCIPLINA------------------------//
+            //-----------------------EDITA FERIADO------------------------//
+            $obj = new clsPmieducarBibliotecaFeriados();
+            $excluiu = $obj->excluirTodos($this->cod_biblioteca);
+            if ($excluiu) {
+                $this->biblioteca_feriado = unserialize(urldecode($this->biblioteca_feriado));
+                if ($this->biblioteca_feriado) {
+                    foreach ($this->biblioteca_feriado AS $feriado) {
+                        $feriado["data_feriado_"] = dataToBanco($feriado["data_feriado_"]);
+                        $obj = new clsPmieducarBibliotecaFeriados(null, $this->cod_biblioteca, $feriado["nm_feriado_"], null, $feriado["data_feriado_"], null, null, 1);
+                        $cadastrou2 = $obj->cadastra();
+                        if (!$cadastrou2) {
+                            $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+                            echo "<!--\nErro ao cadastrar clsPmieducarBibliotecaFeriados\nvalores obrigat&oacute;rios\nis_numeric( $this->cod_biblioteca ) "
+                            . "&& is_string( {$feriado["nm_feriado_"]} ) && is_string( {$feriado["data_feriado_"]} )\n-->";
+                            return false;
+                        }
+                    }
+                }
+            }
+
+
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
             header("Location: educar_biblioteca_dados_lst.php");
             die();
@@ -371,9 +521,17 @@ class indice extends clsCadastro {
         if ($editou) {
             $obj = new clsPmieducarBibliotecaDia($this->cod_biblioteca);
             $excluiu1 = $obj->excluirTodos();
+
             if ($excluiu1) {
                 $obj = new clsPmieducarBibliotecaFeriados();
                 $excluiu2 = $obj->excluirTodos($this->cod_biblioteca);
+
+
+            if ($excluiu1) {
+                $obj = new clsPmieducarBibliotecaFeriados();
+                $excluiu2 = $obj->excluirTodos($this->cod_biblioteca);
+
+
                 if ($excluiu2) {
                     $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
                     header("Location: educar_biblioteca_dados_lst.php");
@@ -387,9 +545,10 @@ class indice extends clsCadastro {
         echo "<!--\nErro ao excluir clsPmieducarBiblioteca\nvalores obrigatorios\nif( is_numeric( $this->cod_biblioteca ) )\n-->";
         return false;
     }
+    
+ }
 
 }
-
 // cria uma extensao da classe base
 $pagina = new clsIndexBase();
 // cria o conteudo

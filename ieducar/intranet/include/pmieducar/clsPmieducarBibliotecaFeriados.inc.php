@@ -235,8 +235,11 @@ class clsPmieducarBibliotecaFeriados
 	*
 	*/
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> c1157220fe7a3faeb76baf5abc1c5f4394f04e6b
 	/**
 	 * Edita os dados de um registro
 	 *
