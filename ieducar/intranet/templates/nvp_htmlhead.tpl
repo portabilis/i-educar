@@ -26,9 +26,8 @@
   <script type="text/javascript" src="scripts/dom.js?2"></script>
   <script type="text/javascript" src="scripts/menu.js?1"></script>
   <script type="text/javascript" src="scripts/ied/forms.js?1"></script>
-  <script type="text/javascript" src="scripts/ied/phpjs.js?1"></script>
-  <script type="text/javascript" src="http://assets.freshdesk.com/widget/freshwidget.js"></script>
-  <script type="text/javascript" src="scripts/suporte_freshdesk.js?1"></script>
+  <script type="text/javascript" src="scripts/ied/phpjs.js?1"></script>  
+  <!-- #&FRESHDESK&# -->
 
   <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js"></script>
   <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/scriptaculous/1.9.0/scriptaculous.js?load=effects"></script>
