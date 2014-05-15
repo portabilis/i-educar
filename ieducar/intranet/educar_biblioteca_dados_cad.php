@@ -271,37 +271,43 @@ class indice extends clsCadastro {
 
         $obj = new clsPmieducarBibliotecaFeriados();
         $registros = $obj->lista(null, $this->cod_biblioteca);
-        
-        $n=0;
+     
+            
+                       
+        $aux["nm_feriado_"] = "Confraternização Universal";
+        $aux["data_feriado_"] = "01/01/" . date("Y");
 
-        for ($aux[n]; $n<2; $n++){
-            
-            
-            
-        $aux[0]["nm_feriado_"] = "Confraternização Universal";
-        $aux[0]["data_feriado_"] = "01/01/" . date("Y");
-
-        $this->biblioteca_feriado[] = $aux[0];
+        $this->biblioteca_feriado = $aux;
         
-        $this->nm_feriado=$aux[0]['nm_feriado_'];
-        $this->data_feriado=$aux[0]['data_feriado_'];
+        $this->nm_feriado=$aux['nm_feriado_'];
+        $this->data_feriado=$aux['data_feriado_'];
         
+    }
+        /*
         $aux[1]["nm_feriado_"] = "Natal";
         $aux[1]["data_feriado_"] = "25/12/" . date("Y");
 
-        $this->biblioteca_feriado[] = $aux[1];
+        $this->biblioteca_feriado[1] = $aux[1];
         
         $this->nm_feriado=$aux[1]['nm_feriado_'];
         $this->data_feriado=$aux[1]['data_feriado_'];
         
+        $aux[2]["nm_feriado_"] = "Dia do Trabalhador";
+        $aux[2]["data_feriado_"] = "01/05" . date("Y");
+
+        $this->biblioteca_feriado[2] = $aux[2];
+        
+        $this->nm_feriado=$aux[2]['nm_feriado_'];
+        $this->data_feriado=$aux[2]['data_feriado_'];
+        
             
-        }
-
+       
+*/
         
         
 
         
-    }
+    
 
     function Editar() {
         @session_start();
