@@ -427,6 +427,9 @@ class clsModulesVeiculo
     if (is_numeric($this->ref_cod_motorista)) {
         $set .= "{$gruda}ref_cod_motorista = '{$this->ref_cod_motorista}'";
         $gruda = ", ";
+    }else{
+        $set .= "{$gruda}ref_cod_motorista = NULL ";
+        $gruda = ", ";
     }
         
     if (is_string($this->observacao)) {
