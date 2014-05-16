@@ -46,15 +46,16 @@ class EnderecoController extends ApiCoreController
 
     $select = "
       SELECT
-        c.idlog, c.cep, c.idbai, b.nome as nome_bairro, l.nome as nome_logradouro, u.sigla_uf, m.nome, t.idtlog, t.descricao as tipo_logradouro, m.idmun, b.zona_localizacao 
+        c.idlog, c.cep, c.idbai, b.nome as nome_bairro, d.nome as nome_distrito, d.iddis, l.nome as nome_logradouro, u.sigla_uf, m.nome, t.idtlog, t.descricao as tipo_logradouro, m.idmun, b.zona_localizacao 
    
       FROM
-        urbano.cep_logradouro_bairro c, public.bairro b, public.logradouro l,
+        urbano.cep_logradouro_bairro c, public.bairro b, public.logradouro l, public.distrito d,
         public.municipio m, public.uf u, urbano.tipo_logradouro t
       WHERE
         c.idlog = l.idlog AND
         c.idbai = b.idbai AND
-        l.idmun = b.idmun AND
+        d.iddis = b.iddis AND
+        l.idmun = d.idmun AND
         l.idmun = m.idmun AND
         l.idtlog = t.idtlog AND
         m.sigla_uf = u.sigla_uf AND 
