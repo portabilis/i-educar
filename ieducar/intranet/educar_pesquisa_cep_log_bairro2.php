@@ -132,18 +132,17 @@ class miolo1 extends clsListagem
 
     $pre_select = '
       SELECT
-        c.idlog, c.cep, c.idbai, u.sigla_uf, m.nome, t.idtlog, m.idmun, b.zona_localizacao, t.descricao,
-        d.iddis, d.nome as nome_distrito ';
+        c.idlog, c.cep, c.idbai, u.sigla_uf, m.nome, t.idtlog, m.idmun, b.zona_localizacao, t.descricao ';
         
     $select = '    
       FROM
         urbano.cep_logradouro_bairro c, public.bairro b, public.logradouro l,
-        public.distrito d, public.municipio m, public.uf u, urbano.tipo_logradouro t
+        public.municipio m, public.uf u, urbano.tipo_logradouro t
       WHERE
         c.idlog = l.idlog AND
         c.idbai = b.idbai AND
-        d.iddis = b.iddis AND
-        d.idmun = m.idmun AND
+        l.idmun = b.idmun AND
+        l.idmun = m.idmun AND
         l.idtlog = t.idtlog AND
         m.sigla_uf = u.sigla_uf';
 
@@ -179,10 +178,9 @@ class miolo1 extends clsListagem
     
 
     foreach ($result as $record) {
-      list($idlog, $cep, $idbai, $uf, $cidade, $tipoLogradouroId, $id_mun, $zona, $descricao, $iddis, $distrito) = $record;
+      list($idlog, $cep, $idbai, $uf, $cidade, $tipoLogradouroId, $id_mun, $zona, $descricao) = $record;
 
       $cidade     = addslashes($cidade);
-      $distrito     = addslashes($distrito);
 
       $logradouro = new clsLogradouro($idlog);
       $logradouro = $logradouro->detalhe();
@@ -201,7 +199,7 @@ class miolo1 extends clsListagem
         $idbai, $_SESSION['campo3'], $cep,
         $_SESSION['campo4'], $descricao." ".$logradouro,
         $_SESSION['campo5'], $idlog,
-        $_SESSION['campo6'], $iddis, $_SESSION['campo7'], $iddis. ' - '.$distrito,
+        '', '', '', '',
         '', '', '', '',
         $_SESSION['campo10'], $cep2, $_SESSION['campo11'], $id_mun.' - '.$cidade.' ('.$uf.')',
         $_SESSION['campo12'], $_SESSION['campo13'], $id_mun,
@@ -413,7 +411,6 @@ function liberaCamposOuvidoria()
 function liberaCampos(){
   
   parent.document.getElementById('municipio_municipio').disabled = false;
-  parent.document.getElementById('distrito_distrito').disabled = false;
   parent.document.getElementById('bairro_bairro').disabled = false;
   parent.document.getElementById('logradouro_logradouro').disabled = false;
   parent.document.getElementById('logradouro').disabled = false;

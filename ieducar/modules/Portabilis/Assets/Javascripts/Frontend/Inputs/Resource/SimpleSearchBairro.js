@@ -1,15 +1,15 @@
 var simpleSearchBairroOptions = {
 
   params : { 
-    distrito_id : function() {
-      return $j('#distrito_id').val() 
+    municipio_id : function() {
+      return $j('#municipio_id').val() 
     }
   },
 
   canSearch : function() { 
 
-    if (! $j('#distrito_id').val()) {
-      alert('Selecione um distrito.');
+    if (! $j('#municipio_id').val()) {
+      alert('Selecione um munic\u00edpio.');
       return false;
     }
     

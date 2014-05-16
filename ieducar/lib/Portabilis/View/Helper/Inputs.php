@@ -207,12 +207,6 @@ class Portabilis_View_Helper_Inputs {
 
   } 
 
-  public function simpleSearchDistrito($attrName, $inputOptions = array(), $helperOptions = array()) {
-
-    $this->simpleSearchResourceInput('simpleSearchDistrito', $attrName, $inputOptions, $helperOptions);
-
-  } 
-
   public function simpleSearchLogradouro($attrName, $inputOptions = array(), $helperOptions = array()) {
 
     $this->simpleSearchResourceInput('simpleSearchLogradouro', $attrName, $inputOptions, $helperOptions);

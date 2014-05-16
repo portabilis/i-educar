@@ -40,8 +40,6 @@ var handleGetCep = function(dataResponse) {
   if (dataResponse['cep']){
     $j('#municipio_id').val(dataResponse['idmun']);
     $j('#municipio_municipio').val(dataResponse['idmun'] + ' - ' + dataResponse['nome'] + ' (' + dataResponse['sigla_uf'] + ')');
-    $j('#distrito_id').val(dataResponse['iddis']);
-    $j('#distrito_distrito').val(dataResponse['iddis'] + ' - ' + dataResponse['nome_distrito']);    
     $j('#bairro_id').val(dataResponse['idbai']);
     $j('#bairro_bairro').val(dataResponse['nome_bairro']+' / Zona '+(dataResponse['zona_localizacao'] == 1 ? 'Urbana' : 'Rural'));
     $j('#logradouro_id').val(dataResponse['idlog']);
@@ -50,8 +48,6 @@ var handleGetCep = function(dataResponse) {
   }else{
     $j('#municipio_id').val('');
     $j('#municipio_municipio').val('');
-    $j('#distrito_id').val('');
-    $j('#distrito_distrito').val('');    
     $j('#bairro_id').val('');
     $j('#bairro_bairro').val('');
     $j('#logradouro_id').val('');
@@ -59,7 +55,6 @@ var handleGetCep = function(dataResponse) {
   }
 
   $j('#municipio_municipio').removeAttr('disabled');
-  $j('#distrito_distrito').removeAttr('disabled');
   $j('#bairro_bairro').removeAttr('disabled');
   $j('#logradouro_logradouro').removeAttr('disabled');
   $j('#bairro').removeAttr('disabled');
@@ -103,7 +98,6 @@ function clearEnderecoFields(){
   $j('#idtlog').attr('disabled','disabled');
   $j('#logradouro').attr('disabled','disabled');
   $j('#municipio_municipio').attr('disabled','disabled');
-  $j('#distrito_distrito').attr('disabled','disabled');
   $j('#bairro').val('');
   $j('#zona_localizacao').val('');
   $j('#bairro_bairro').val('');
@@ -113,9 +107,7 @@ function clearEnderecoFields(){
   $j('#bairro_id').val('');  
   $j('#logradouro_id').val('');  
   $j('#municipio_municipio').val('');  
-  $j('#distrito_distrito').val('');  
   $j('#municipio_id').val('');  
-  $j('#distrito_id').val('');  
 }
 // Verifica se o formato do cep é válido
 function checkCepFields(cep) {
@@ -141,7 +133,8 @@ function bloqueiaBuscaBairro(){
     $j('#bairro_bairro').closest('tr').hide(); 
     $j('#bairro').closest('tr').show(); 
     $j('#bairro').val($j('#bairro').val() ? $j('#bairro').val() :$j('#bairro_bairro').val());
-    clearBairroFields();
+    $j('#bairro_bairro').val('');
+    $j('#bairro_id').val('');
   }
   else
     preenchaCampoCepPrimeiro();
@@ -174,16 +167,9 @@ $j('#cep_').keyup(searchCep);
 $j('#cep_').change(searchCep);
 
 // Limpa campos logradouro e bairro simpleSearch
-function clearLogradouroAndBairroAndDistritoFields(){
+function clearLogradouroAndBairroFields(){
   $j('#logradouro_logradouro').val('');
   $j('#logradouro_id').val('');
-  $j('#distrito_id').val('');  
-  $j('#distrito_distrito').val('');
-  clearBairroFields();
-}
-
-// Lmpa campos bairro simpleSearch
-function clearBairroFields(){
   $j('#bairro_bairro').val('');
   $j('#bairro_id').val('');  
 }
@@ -262,11 +248,6 @@ $j('#municipio_municipio').keyup( function(){
     $j('#municipio_id').val('').trigger('change');
 });
 
-$j('#distrito_distrito').keyup( function(){
-  if ($j('#distrito_distrito').val() == '')
-    $j('#distrito_id').val('').trigger('change');
-});
-
 $j('#bairro_bairro').focusout( function(){
   if ($j('#bairro_bairro').val() == '')
     $j('#bairro_id').val('');
@@ -277,15 +258,12 @@ $j('#logradouro_logradouro').focusout( function(){
     $j('#logradouro_id').val('');
 });
 
-/* Como os campos SimpleSearchBairro, SimpleSearchLogradouro, SimpleSearchDistrito dependem do valor do municipio_id,
-   quando o mesmo for alterado dispara um evento para apagar esses campos dependentes 
-   O campo SimpleSearchBairro também depende do distrito_id */ 
-$j('#municipio_id').change(clearLogradouroAndBairroAndDistritoFields);
-$j('#distrito_id').change(clearBairroFields);
+/* Como os campos SimpleSearchBairro e SimpleSearchLogradouro dependem do valor do municipio_id,
+   quando o mesmo for alterado dispara um evento para apagar esses campos dependentes */ 
+$j('#municipio_id').change(clearLogradouroAndBairroFields);
 
 function fixUpPlaceholderEndereco(){
   $j('#municipio_municipio').attr('placeholder' , 'Digite o nome de um munic\u00edpio para buscar');
-  $j('#distrito_distrito').attr('placeholder' , 'Digite o nome de um distrito para buscar');
   $j('#bairro_bairro').attr('placeholder' , 'Digite o nome de um bairro para buscar');
   $j('#logradouro_logradouro').attr('placeholder' , 'Digite o nome de um logradouro para buscar');
   $j('#bairro').attr('placeholder' , 'Digite o nome do novo bairro');
@@ -311,14 +289,7 @@ function validateEndereco(){
     $j('#municipio_id').addClass('error');
     messageUtils.error('Selecione um município corretamente.');
     err = true;    
-  }
-
-  if (!$j('#distrito_id').val()){
-    $j('#distrito_distrito').addClass('error');
-    $j('#distrito_id').addClass('error');
-    messageUtils.error('Selecione um distrito corretamente.');
-    err = true;    
-  }    
+  }  
 
   if ($j('#logradouro_logradouro').closest('tr').is(':visible')){
 
