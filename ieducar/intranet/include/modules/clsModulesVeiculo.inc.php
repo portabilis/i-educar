@@ -209,10 +209,9 @@ class clsModulesVeiculo
   {
 
 
-    if (is_string($this->descricao) && is_string($this->placa) && is_string($this->renavam)
-      && is_numeric($this->passageiros) && is_string($this->malha) && is_string($this->adaptado_necessidades_especiais)
-      && is_string($this->exclusivo_transporte_escolar) && is_numeric($this->ref_cod_empresa_transporte_escolar)
-      && is_numeric($this->ref_cod_motorista))
+    if (is_string($this->descricao) && is_string($this->renavam) && is_numeric($this->passageiros) 
+      && is_string($this->malha) && is_string($this->adaptado_necessidades_especiais)
+      && is_string($this->exclusivo_transporte_escolar) && is_numeric($this->ref_cod_empresa_transporte_escolar))
     {
 
       $db = new clsBanco();
