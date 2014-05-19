@@ -897,10 +897,16 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     $this->inputsHelper()->simpleSearchMunicipio('municipio', $options, $helperOptions);
 
+    $options       = array('label' => Portabilis_String_Utils::toLatin1('Distrito'), 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);  
+
+    $helperOptions = array('objectName'         => 'distrito',
+                           'hiddenInputOptions' => array('options' => array('value' => $this->distrito_id)));
+
+    $this->inputsHelper()->simpleSearchDistrito('distrito', $options, $helperOptions);    
+
     $helperOptions = array('hiddenInputOptions' => array('options' => array('value' => $this->bairro_id)));
 
-    $options       = array( 'label' => Portabilis_String_Utils::toLatin1('Bairro / Zona de Localização - <b>Buscar</b>'), 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);  
-
+    $options       = array( 'label' => Portabilis_String_Utils::toLatin1('Bairro / Zona de Localização - <b>Buscar</b>'), 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);      
     
     $this->inputsHelper()->simpleSearchBairro('bairro', $options, $helperOptions);
 

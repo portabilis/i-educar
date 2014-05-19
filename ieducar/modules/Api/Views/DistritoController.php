@@ -33,40 +33,33 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'intranet/include/clsBanco.inc.php';
 
-class BairroController extends ApiCoreController
+class DistritoController extends ApiCoreController
 {
 
   protected function searchOptions() {
-    $distritoId = $this->getRequest()->distrito_id ? $this->getRequest()->distrito_id : 0;
-    return array('sqlParams'    => array($distritoId), 'selectFields' => array('zona_localizacao'));
+    $municipioId = $this->getRequest()->municipio_id ? $this->getRequest()->municipio_id : 0;
+    return array('sqlParams'    => array($municipioId));
     
-  }
-
-  protected function formatResourceValue($resource) {
-    $zona    = $resource['zona_localizacao'] == 1 ? 'Urbana' : 'Rural';
-    $nome    = $this->toUtf8($resource['name'], array('transform' => true));
-
-    return "$nome / Zona $zona ";
   }
 
   protected function sqlsForNumericSearch() {
     
-    $sqls[] = "select idbai as id, nome as name, zona_localizacao from
-                 public.bairro where idbai like $1||'%' and iddis = $2 ";
+    $sqls[] = "select iddis as id, nome as name from
+                 public.distrito where iddis like $1||'%' and idmun = $2 ";
 
     return $sqls;
   }
 
   protected function sqlsForStringSearch() {
 
-    $sqls[] = "select idbai as id, nome as name, zona_localizacao from
-                 public.bairro where lower(to_ascii(nome)) like '%'||lower(to_ascii($1))||'%' and iddis = $2 ";
+    $sqls[] = "select iddis as id, nome as name from
+                 public.distrito where lower(to_ascii(nome)) like '%'||lower(to_ascii($1))||'%' and idmun = $2 ";
 
     return $sqls;
   }
 
   public function Gerar() {
-    if ($this->isRequestFor('get', 'bairro-search'))
+    if ($this->isRequestFor('get', 'distrito-search'))
       $this->appendResponse($this->search());
     else
       $this->notImplementedOperationError();

@@ -953,7 +953,9 @@ function canShowParentsFields(){
     $j('<label>').html('CEP').attr('for', 'cep_').insertBefore($j('#cep_'));
     $j('#cep_').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
     $j('<label>').html('Munic&iacute;pio').attr('for', 'municipio_municipio').insertBefore($j('#municipio_municipio'));
-    $j('#municipio_municipio').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();      
+    $j('#municipio_municipio').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+    $j('<label>').html('Distrito').attr('for', 'distrito_distrito').insertBefore($j('#distrito_distrito'));
+    $j('#distrito_distrito').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();          
     $j('<label>').html('Logradouro').attr('for', 'logradouro_logradouro').insertBefore($j('#logradouro_logradouro'));
     $j('#logradouro_logradouro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
     $j('<label>').html('Tipo de logradouro').attr('for', 'idtlog').insertBefore($j('#idtlog'));
@@ -1132,6 +1134,7 @@ function canShowParentsFields(){
         if ($j('#cep_').val()){
           
           $j('#municipio_municipio').removeAttr('disabled');
+          $j('#distrito_distrito').removeAttr('disabled');
           $j('#bairro_bairro').removeAttr('disabled');
           $j('#logradouro_logradouro').removeAttr('disabled');
           $j('#bairro').removeAttr('disabled');
@@ -1147,8 +1150,10 @@ function canShowParentsFields(){
           $j('#andar').val(person_details.andar);          
 
           $j('#municipio_id').val(person_details.idmun);
+          $j('#distrito_id').val(person_details.iddis);
           
           $j('#municipio_municipio').val(person_details.idmun+' - '+person_details.municipio+' ('+person_details.sigla_uf+')');
+          $j('#distrito_distrito').val(person_details.iddis+' - '+person_details.distrito);
 
           if (person_details.idbai && person_details.idlog){
 
@@ -1369,6 +1374,7 @@ function canShowParentsFields(){
         pessoa_id          : pessoa_id,
         cep                : $j('#cep_').val(),
         municipio_id       : $j('#municipio_id').val(),
+        distrito_id        : $j('#distrito_id').val(),
         bairro             : $j('#bairro').val(),
         bairro_id          : $j('#bairro_id').val(),
         zona_localizacao   : $j('#zona_localizacao').val(),

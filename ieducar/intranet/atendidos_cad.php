@@ -650,12 +650,18 @@ class indice extends clsCadastro
 
 
     // Detalhes do Endereço
-    if ($this->idlog){ 
+    if ($this->idlog && $this->idbai){ 
 
       $objLogradouro = new clsLogradouro($this->idlog);
       $detalheLogradouro = $objLogradouro->detalhe();
       if ($detalheLogradouro)
         $this->municipio_id = $detalheLogradouro['idmun'];
+
+      $sql = "SELECT iddis FROM public.bairro
+            WHERE idbai = '{$this->idbai}'";
+    
+      $options = array('return_only' => 'first-field');
+      $this->distrito_id = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);      
 
 
     // Caso seja um endereço externo, tentamos então recuperar a cidade pelo cep
@@ -682,10 +688,15 @@ class indice extends clsCadastro
 
         $this->bairro_id = $det['idbai'];
         $this->logradouro_id = $det['idlog'];
+        $sql = "SELECT iddis FROM public.bairro
+              WHERE idbai = '{$this->bairro_id}'";
+      
+        $options = array('return_only' => 'first-field');
+        $this->distrito_id = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
       }
     }
 
-    if (!($this->bairro_id && $this->municipio_id && $this->logradouro_id)){
+    if (!($this->bairro_id && $this->municipio_id && $this->logradouro_id && $this->distrito_id)){
       $this->bairro_id = null;
       $this->municipio_id = null;
       $this->logradouro_id = null;
@@ -719,7 +730,7 @@ class indice extends clsCadastro
       $this->cep,
       $enderecamentoObrigatorio,
       '-',
-            "&nbsp;<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel(500, 550, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro2.php?campo1=bairro&campo2=idbai&campo3=cep&campo4=logradouro&campo5=idlog&campo6=ref_sigla_uf&campo7=cidade&campo8=ref_idtlog&campo9=isEnderecoExterno&campo10=cep_&campo11=municipio_municipio&campo12=idtlog&campo13=municipio_id&campo14=zona_localizacao\'></iframe>');\">",
+            "&nbsp;<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel(500, 550, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro2.php?campo1=bairro&campo2=idbai&campo3=cep&campo4=logradouro&campo5=idlog&campo6=distrito_id&campo7=distrito_distrito&campo8=ref_idtlog&campo9=isEnderecoExterno&campo10=cep_&campo11=municipio_municipio&campo12=idtlog&campo13=municipio_id&campo14=zona_localizacao\'></iframe>');\">",
       false
     );
 
@@ -729,6 +740,13 @@ class indice extends clsCadastro
                            'hiddenInputOptions' => array('options' => array('value' => $this->municipio_id)));
 
     $this->inputsHelper()->simpleSearchMunicipio('municipio', $options, $helperOptions);
+
+    $options       = array('label' => Portabilis_String_Utils::toLatin1('Distrito'), 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);  
+
+    $helperOptions = array('objectName'         => 'distrito',
+                           'hiddenInputOptions' => array('options' => array('value' => $this->distrito_id)));
+
+    $this->inputsHelper()->simpleSearchDistrito('distrito', $options, $helperOptions);
 
     $helperOptions = array('hiddenInputOptions' => array('options' => array('value' => $this->bairro_id)));
 
@@ -918,7 +936,7 @@ class indice extends clsCadastro
       $this->cep,
       $enderecamentoObrigatorio,
       '-',
-      "&nbsp;<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel(500, 550, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro2.php?campo1=bairro_bairro&campo2=bairro_id&campo3=cep&campo4=logradouro_logradouro&campo5=logradouro_id&campo6=ref_sigla_uf&campo7=cidade&campo8=ref_idtlog&campo9=isEnderecoExterno&campo10=cep_&campo11=municipio_municipio&campo12=idtlog&campo13=municipio_id&campo14=zona_localizacao\'></iframe>');\">",
+      "&nbsp;<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel(500, 550, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro2.php?campo1=bairro_bairro&campo2=bairro_id&campo3=cep&campo4=logradouro_logradouro&campo5=logradouro_id&campo6=distrito_id&campo7=distrito_distrito&campo8=ref_idtlog&campo9=isEnderecoExterno&campo10=cep_&campo11=municipio_municipio&campo12=idtlog&campo13=municipio_id&campo14=zona_localizacao\'></iframe>');\">",
       false
     );
 
@@ -1301,7 +1319,7 @@ class indice extends clsCadastro
 
     if ($this->cep_ && is_numeric($this->bairro_id) && is_numeric($this->logradouro_id))
       $this->_createOrUpdatePessoaEndereco($pessoaId);
-    else if($this->cep_ && is_numeric($this->municipio_id)){
+    else if($this->cep_ && is_numeric($this->municipio_id) && is_numeric($this->distrito_id)){
       
       if (!is_numeric($this->bairro_id)){
         if ($this->canCreateBairro())
@@ -1347,6 +1365,7 @@ class indice extends clsCadastro
   protected function createBairro(){
     $objBairro = new clsBairro(null,$this->municipio_id,null,addslashes($this->bairro), $this->currentUserId());
     $objBairro->zona_localizacao = $this->zona_localizacao;
+    $objBairro->iddis = $this->distrito_id;
 
     return $objBairro->cadastra();
   } 
