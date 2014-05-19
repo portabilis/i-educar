@@ -111,13 +111,15 @@ class PessoaController extends ApiCoreController
 
     $sql = "select cpf, data_nasc as data_nascimento, idpes_pai as pai_id,
             idpes_mae as mae_id, idpes_responsavel as responsavel_id,
-            ideciv as estadocivil, sexo,
+            ideciv as estadocivil, sexo, nis_pis_pasep,
             coalesce((select nome from cadastro.pessoa where idpes = fisica.idpes_pai),
             (select nm_pai from pmieducar.aluno where cod_aluno = $1)) as nome_pai,
             coalesce((select nome from cadastro.pessoa where idpes = fisica.idpes_mae),
             (select nm_mae from pmieducar.aluno where cod_aluno = $1)) as nome_mae,
             (select nome from cadastro.pessoa where idpes = fisica.idpes_responsavel) as nome_responsavel,
             (select rg from cadastro.documento where documento.idpes = fisica.idpes) as rg,
+            (select num_termo from cadastro.documento where documento.idpes = fisica.idpes) as num_termo,
+            (select certidao_nascimento from cadastro.documento where documento.idpes = fisica.idpes) as certidao_nascimento,
             (SELECT COALESCE((SELECT cep FROM cadastro.endereco_pessoa WHERE idpes = $2),
              (SELECT cep FROM cadastro.endereco_externo WHERE idpes = $2))) as cep,
 
@@ -160,16 +162,30 @@ class PessoaController extends ApiCoreController
     
 
              (SELECT idbai FROM cadastro.endereco_pessoa WHERE idpes = $2) as idbai,
+             
+             (SELECT bairro.iddis FROM cadastro.endereco_pessoa
+                INNER JOIN public.bairro ON (endereco_pessoa.idbai = bairro.idbai)
+                WHERE idpes = $2) as iddis,
+
+             (SELECT distrito.nome FROM cadastro.endereco_pessoa
+                INNER JOIN public.bairro ON (endereco_pessoa.idbai = bairro.idbai)
+                INNER JOIN public.distrito ON (bairro.iddis = distrito.iddis)
+                         WHERE idpes = $2) as distrito,
+
 
              (SELECT idlog FROM cadastro.endereco_pessoa WHERE idpes = $2) as idlog
             from cadastro.fisica where idpes = $2";
 
     $details = $this->fetchPreparedQuery($sql, array($alunoId, $pessoaId), false, 'first-row');
 
+    $details['possui_documento'] = !(is_null($details['rg']) && is_null($details['cpf']) 
+                                      && is_null($details['nis_pis_pasep']) && is_null($details['num_termo']) 
+                                        && is_null($details['certidao_nascimento']) );
+
     $attrs   = array('cpf', 'rg', 'data_nascimento', 'pai_id', 'mae_id', 'responsavel_id', 'nome_pai', 'nome_mae',
                        'nome_responsavel','sexo','estadocivil', 'cep', 'logradouro', 'idtlog', 'bairro', 
                        'zona_localizacao', 'idbai', 'idlog', 'idmun', 'idmun_nascimento', 'complemento',
-                       'apartamento', 'andar', 'bloco', 'numero' , 'letra');
+                       'apartamento', 'andar', 'bloco', 'numero' , 'letra', 'possui_documento', 'iddis', 'distrito');
     $details = Portabilis_Array_Utils::filter($details, $attrs);
 
     $details['aluno_id']         = $alunoId;
@@ -179,6 +195,7 @@ class PessoaController extends ApiCoreController
     $details['cep']              = int2CEP($details['cep']);   
 
     $details['bairro']           = $this->toUtf8($details['bairro']);
+    $details['distrito']           = $this->toUtf8($details['distrito']);
     $details['logradouro']       = $this->toUtf8($details['logradouro']);
     $detaihandleGetPersonls['complemento']      = $this->toUtf8($details['complemento']);
     $details['letra']            = $this->toUtf8($details['letra']);
@@ -460,7 +477,7 @@ class PessoaController extends ApiCoreController
 
     if ($this->getRequest()->cep && is_numeric($this->getRequest()->bairro_id) && is_numeric($this->getRequest()->logradouro_id))
       $this->_createOrUpdatePessoaEndereco($pessoaId);
-    else if($this->getRequest()->cep && is_numeric($this->getRequest()->municipio_id)){
+    else if($this->getRequest()->cep && is_numeric($this->getRequest()->municipio_id) && is_numeric($this->getRequest()->distrito_id)){
       
       if (!is_numeric($this->getRequest()->bairro_id)){
         if ($this->canCreateBairro())
@@ -485,6 +502,19 @@ class PessoaController extends ApiCoreController
 
   }
 
+  protected function getInep($servidorId) {    
+    
+    $sql = "SELECT cod_docente_inep FROM modules.educacenso_cod_docente WHERE cod_servidor = $1";
+    return Portabilis_Utils_Database::selectField($sql, array('params' => array($servidorId)));
+  }
+
+  protected function getInfoServidor(){
+    $servidorId = $this->getRequest()->servidor_id;
+    $_servidor['inep'] = $this->getInep($servidorId);
+    $_servidor['deficiencias'] = $this->loadDeficiencias($servidorId);
+
+    return $_servidor;
+  }
  
   protected function canCreateBairro(){
     return !empty($this->getRequest()->bairro) && !empty($this->getRequest()->zona_localizacao);
@@ -498,6 +528,7 @@ class PessoaController extends ApiCoreController
 
     $objBairro = new clsBairro(null,$this->getRequest()->municipio_id,null,Portabilis_String_Utils::toLatin1($this->getRequest()->bairro), $this->currentUserId());
     $objBairro->zona_localizacao = $this->getRequest()->zona_localizacao;
+    $objBairro->iddis = $this->getRequest()->distrito_id;
 
     return $objBairro->cadastra();
   } 
@@ -517,6 +548,8 @@ class PessoaController extends ApiCoreController
       $this->appendResponse($this->get());
     elseif ($this->isRequestFor('post', 'pessoa'))
       $this->appendResponse($this->post());    
+    elseif ($this->isRequestFor('get', 'info-servidor'))
+      $this->appendResponse($this->getInfoServidor());   
     elseif ($this->isRequestFor('post', 'pessoa-endereco'))
       $this->appendResponse($this->createOrUpdateEndereco());      
     elseif ($this->isRequestFor('get', 'pessoa-parent'))

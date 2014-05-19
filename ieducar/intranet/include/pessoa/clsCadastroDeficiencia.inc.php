@@ -42,6 +42,7 @@ class clsCadastroDeficiencia
 {
   var $cod_deficiencia;
   var $nm_deficiencia;
+  var $deficiencia_educacenso;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -96,13 +97,13 @@ class clsCadastroDeficiencia
   /**
    * Construtor.
    */
-  function __construct($cod_deficiencia = NULL, $nm_deficiencia = NULL)
+  function __construct($cod_deficiencia = NULL, $nm_deficiencia = NULL, $deficiencia_educacenso = NULL)
   {
     $db = new clsBanco();
     $this->_schema = 'cadastro.';
     $this->_tabela = "{$this->_schema}deficiencia";
 
-    $this->_campos_lista = $this->_todos_campos = 'cod_deficiencia, nm_deficiencia';
+    $this->_campos_lista = $this->_todos_campos = 'cod_deficiencia, nm_deficiencia, deficiencia_educacenso';
 
     if (is_numeric($cod_deficiencia)) {
       $this->cod_deficiencia = $cod_deficiencia;
@@ -111,6 +112,10 @@ class clsCadastroDeficiencia
     if (is_string($nm_deficiencia)) {
       $this->nm_deficiencia = $nm_deficiencia;
     }
+
+    if (is_numeric($deficiencia_educacenso)) {
+      $this->deficiencia_educacenso = $deficiencia_educacenso;
+    }    
   }
 
   /**
@@ -138,6 +143,12 @@ class clsCadastroDeficiencia
         $gruda = ", ";
       }
 
+      if (is_numeric($this->deficiencia_educacenso)) {
+        $campos .= "{$gruda}deficiencia_educacenso";
+        $valores .= "{$gruda}'{$this->deficiencia_educacenso}'";
+        $gruda = ", ";
+      }      
+
       $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
       return $db->InsertId( "{$this->_tabela}_cod_deficiencia_seq" );
     }
@@ -158,6 +169,11 @@ class clsCadastroDeficiencia
         $set .= "{$gruda}nm_deficiencia = '{$this->nm_deficiencia}'";
         $gruda = ", ";
       }
+
+      if (is_numeric($this->deficiencia_educacenso)) {
+        $set .= "{$gruda}deficiencia_educacenso = '{$this->deficiencia_educacenso}'";
+        $gruda = ", ";
+      }      
 
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_deficiencia = '{$this->cod_deficiencia}'");
@@ -253,7 +269,6 @@ class clsCadastroDeficiencia
 
   function excluiVinculosDeficiencia($deficienciaId){
     $db = new clsBanco();
-    $db->Consulta("  UPDATE pmieducar.servidor SET ref_cod_deficiencia = NULL where ref_cod_deficiencia = {$deficienciaId};");
     $db->Consulta("  DELETE FROM cadastro.fisica_deficiencia WHERE ref_cod_deficiencia = {$deficienciaId};");
     return TRUE;
   }

@@ -63,14 +63,14 @@ var $linkToEditPessoaMae = $linkToEditPessoaPai.clone()
 // adiciona id 'stop' na linha separadora
 $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
 // Adiciona abas na página
-$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab"> <span class="tabText">Ficha m\u00e9dica</span></div></li><li><div id="tab3" class="alunoTab"> <span class="tabText">Uniforme escolar</span></div></li><li><div id="tab4" class="alunoTab"> <span class="tabText">Moradia</span></div></li></ul></div>');
+$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab"> <span class="tabText">Ficha m\u00e9dica</span></div></li><li><div id="tab3" class="alunoTab"> <span class="tabText">Uniforme escolar</span></div></li><li><div id="tab4" class="alunoTab"> <span class="tabText">Moradia</span></div></li><li><div id="tab5" class="alunoTab" style="width: 125px;"> <span class="tabText" style="">Recursos prova INEP</span></div></li></ul></div>');
 
 // Adiciona estilo de aba selecionada a primeira aba
 $j('#tab1').addClass('alunoTab-active').removeClass('alunoTab');
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
 $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-  if (index>14){
+  if (index>15){
     if (row.id!='stop')
       row.hide();
     else
@@ -384,6 +384,46 @@ resourceOptions.handleGet = function(dataResponse) {
     $j('#lixo').val('on');   
   }         
 
+  /**************
+  PROVA INEP
+  ***************/
+  if (dataResponse.recurso_prova_inep_aux_ledor == 1){
+    $j('#recurso_prova_inep_aux_ledor').attr('checked',true);  
+    $j('#recurso_prova_inep_aux_ledor').val('on');   
+  }         
+  if (dataResponse.recurso_prova_inep_aux_transcricao == 1){
+    $j('#recurso_prova_inep_aux_transcricao').attr('checked',true);  
+    $j('#recurso_prova_inep_aux_transcricao').val('on');   
+  }         
+  if (dataResponse.recurso_prova_inep_guia_interprete == 1){
+    $j('#recurso_prova_inep_guia_interprete').attr('checked',true);  
+    $j('#recurso_prova_inep_guia_interprete').val('on');   
+  }         
+  if (dataResponse.recurso_prova_inep_interprete_libras == 1){
+    $j('#recurso_prova_inep_interprete_libras').attr('checked',true);  
+    $j('#recurso_prova_inep_interprete_libras').val('on');   
+  }         
+  if (dataResponse.recurso_prova_inep_leitura_labial == 1){
+    $j('#recurso_prova_inep_leitura_labial').attr('checked',true);  
+    $j('#recurso_prova_inep_leitura_labial').val('on');   
+  }         
+  if (dataResponse.recurso_prova_inep_prova_ampliada_16 == 1){
+    $j('#recurso_prova_inep_prova_ampliada_16').attr('checked',true);  
+    $j('#recurso_prova_inep_prova_ampliada_16').val('on');   
+  }         
+  if (dataResponse.recurso_prova_inep_prova_ampliada_20 == 1){
+    $j('#recurso_prova_inep_prova_ampliada_20').attr('checked',true);  
+    $j('#recurso_prova_inep_prova_ampliada_20').val('on');   
+  }         
+  if (dataResponse.recurso_prova_inep_prova_ampliada_24 == 1){
+    $j('#recurso_prova_inep_prova_ampliada_24').attr('checked',true);  
+    $j('#recurso_prova_inep_prova_ampliada_24').val('on');   
+  }         
+  if (dataResponse.recurso_prova_inep_prova_braille == 1){
+    $j('#recurso_prova_inep_prova_braille').attr('checked',true);  
+    $j('#recurso_prova_inep_prova_braille').val('on');   
+  }         
+
   $j('#quartos').val(dataResponse.quartos);   
   $j('#sala').val(dataResponse.sala);   
   $j('#copa').val(dataResponse.copa);   
@@ -395,6 +435,7 @@ resourceOptions.handleGet = function(dataResponse) {
   $j('#moradia').val(dataResponse.moradia).change();
   $j('#material').val(dataResponse.material).change(); 
   $j('#moradia_situacao').val(dataResponse.moradia_situacao).change(); 
+  $j('#justificativa_falta_documentacao').val(dataResponse.justificativa_falta_documentacao).change(); 
 
 };
 
@@ -532,11 +573,29 @@ var handleGetPersonDetails = function(dataResponse) {
       $j('#tipo_responsavel').append('<option value="pai" selected >Pai</option>');
       $j('#tipo_responsavel').append('<option value="outra_pessoa" >Outra pessoa</option>');
   }
-  $j('#tipo_responsavel').val(tipo_resp).change();  
+  $j('#tipo_responsavel').val(tipo_resp).change();
+  if (dataResponse.possui_documento)
+    disableJustificativaFields();
+  else
+    enableJustificativaFields();
 
   // # TODO show aluno photo
   //$j('#aluno_foto').val(dataResponse.url_foto);
   canShowParentsFields();
+}
+
+function disableJustificativaFields(){
+  $jField = $j('#justificativa_falta_documentacao'); 
+  $jField.removeClass('obrigatorio');
+  $jField.addClass('geral');
+  $jField.attr('disabled','disabled');
+}
+
+function enableJustificativaFields(){
+  $jField = $j('#justificativa_falta_documentacao'); 
+  $jField.removeClass('geral');
+  $jField.addClass('obrigatorio');
+  $jField.removeAttr('disabled');
 }
 
 var handleGetPersonParentDetails = function(dataResponse, parentType) {
@@ -735,15 +794,6 @@ function canShowParentsFields(){
     } 
     checkMoradia();
     $j('#moradia').change(checkMoradia); 
-
-
-    var msg = 'Bem vindo ao novo cadastro de alunos,<br />' +
-              'Agora você pode navegar entre as abas! <br />'+
-              '<b>Dúvidas?</b> Entre em contato com o suporte.';
-
-    $j('<p>').addClass('back-to-old-version right-top-notice notice')
-             .html(stringUtils.toUtf8(msg))
-             .appendTo($j('#tab1').closest('td'));
   
 
     /***********************
@@ -757,7 +807,7 @@ function canShowParentsFields(){
         $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
         $j('#tab1').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-          if (index>14){
+          if (index>15){
             if (row.id!='stop')
               row.hide();
             else
@@ -768,7 +818,7 @@ function canShowParentsFields(){
         });        
       }
     );  
-
+    var first_click_ficha = true;
     // FICHA MÉDICA
     $j('#tab2').click( 
       function(){
@@ -776,7 +826,9 @@ function canShowParentsFields(){
         $j('#tab2').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index>14 && index<62){
+            if (index>15 && index<63){
+              if (first_click_ficha)
+                $j('#'+row.id).find('td').toggleClass('formlttd formmdtd');
               row.show();
             }else if (index>0){
               row.hide();
@@ -788,8 +840,9 @@ function canShowParentsFields(){
         $j('.temDescricao').each(function(i, obj) {
             $j('#desc_'+obj.id).prop('disabled', !$j('#'+obj.id).prop('checked'));                  
         });
-      
+        first_click_ficha = false;
       });    
+
     // UNIFORME
     $j('#tab3').click( 
       function(){
@@ -797,7 +850,8 @@ function canShowParentsFields(){
         $j('#tab3').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index>61 && index<84){
+            if (index>62 && index<85){
+
               row.show();
             }else if (index>0){
               row.hide();
@@ -807,22 +861,44 @@ function canShowParentsFields(){
         });
         $j('.uniforme').prop('disabled',!$j('#recebeu_uniforme').prop('checked'));
       });     
-
+    
     // MORADIA
     $j('#tab4').click( 
       function(){
         $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
         $j('#tab4').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-
-          if (index<84 && index!=0){
-            row.hide();
-          }else if(index<111){
-            row.show();
-          }          
+          if (row.id!='stop'){
+            if (index>84 &&index<112){                
+              row.show();
+            }else if(index!=0){
+              row.hide();
+            }        
+          }else
+            return false;  
         });
         $j('.uniforme').prop('disabled',!$j('#recebeu_uniforme').prop('checked'));
-      });   
+      });
+    var first_click_inep = true;
+    // PROVA INEP
+    $j('#tab5').click( 
+      function(){
+        $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
+        $j('#tab5').toggleClass('alunoTab alunoTab-active')
+        $j('.tablecadastro >tbody  > tr').each(function(index, row) {
+          if (row.id!='stop'){
+            if (index>=112 &&index<121){     
+              if (first_click_inep)
+                $j('#'+row.id).find('td').toggleClass('formlttd formmdtd');               
+              row.show();
+            }else if(index!=0){
+              row.hide();
+            }
+          }else
+            return false;
+        });
+        first_click_inep = false;
+      });       
 
 
     /* A seguinte função habilitam/desabilitam o campo de descrição quando for clicado 
@@ -877,7 +953,9 @@ function canShowParentsFields(){
     $j('<label>').html('CEP').attr('for', 'cep_').insertBefore($j('#cep_'));
     $j('#cep_').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
     $j('<label>').html('Munic&iacute;pio').attr('for', 'municipio_municipio').insertBefore($j('#municipio_municipio'));
-    $j('#municipio_municipio').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();      
+    $j('#municipio_municipio').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+    $j('<label>').html('Distrito').attr('for', 'distrito_distrito').insertBefore($j('#distrito_distrito'));
+    $j('#distrito_distrito').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();          
     $j('<label>').html('Logradouro').attr('for', 'logradouro_logradouro').insertBefore($j('#logradouro_logradouro'));
     $j('#logradouro_logradouro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
     $j('<label>').html('Tipo de logradouro').attr('for', 'idtlog').insertBefore($j('#idtlog'));
@@ -1056,6 +1134,7 @@ function canShowParentsFields(){
         if ($j('#cep_').val()){
           
           $j('#municipio_municipio').removeAttr('disabled');
+          $j('#distrito_distrito').removeAttr('disabled');
           $j('#bairro_bairro').removeAttr('disabled');
           $j('#logradouro_logradouro').removeAttr('disabled');
           $j('#bairro').removeAttr('disabled');
@@ -1071,8 +1150,10 @@ function canShowParentsFields(){
           $j('#andar').val(person_details.andar);          
 
           $j('#municipio_id').val(person_details.idmun);
+          $j('#distrito_id').val(person_details.iddis);
           
           $j('#municipio_municipio').val(person_details.idmun+' - '+person_details.municipio+' ('+person_details.sigla_uf+')');
+          $j('#distrito_distrito').val(person_details.iddis+' - '+person_details.distrito);
 
           if (person_details.idbai && person_details.idlog){
 
@@ -1293,6 +1374,7 @@ function canShowParentsFields(){
         pessoa_id          : pessoa_id,
         cep                : $j('#cep_').val(),
         municipio_id       : $j('#municipio_id').val(),
+        distrito_id        : $j('#distrito_id').val(),
         bairro             : $j('#bairro').val(),
         bairro_id          : $j('#bairro_id').val(),
         zona_localizacao   : $j('#zona_localizacao').val(),

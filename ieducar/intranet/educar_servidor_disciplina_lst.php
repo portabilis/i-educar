@@ -73,7 +73,6 @@ class indice extends clsCadastro
 
   var $cod_servidor;
   var $ref_cod_instituicao;
-  var $ref_cod_deficiencia;
   var $ref_idesco;
   var $ref_cod_funcao;
   var $carga_horaria;

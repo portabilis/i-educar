@@ -37,8 +37,8 @@ class BairroController extends ApiCoreController
 {
 
   protected function searchOptions() {
-    $municipioId = $this->getRequest()->municipio_id ? $this->getRequest()->municipio_id : 0;
-    return array('sqlParams'    => array($municipioId), 'selectFields' => array('zona_localizacao'));
+    $distritoId = $this->getRequest()->distrito_id ? $this->getRequest()->distrito_id : 0;
+    return array('sqlParams'    => array($distritoId), 'selectFields' => array('zona_localizacao'));
     
   }
 
@@ -52,7 +52,7 @@ class BairroController extends ApiCoreController
   protected function sqlsForNumericSearch() {
     
     $sqls[] = "select idbai as id, nome as name, zona_localizacao from
-                 public.bairro where idbai like $1||'%' and idmun = $2 ";
+                 public.bairro where idbai like $1||'%' and iddis = $2 ";
 
     return $sqls;
   }
@@ -60,7 +60,7 @@ class BairroController extends ApiCoreController
   protected function sqlsForStringSearch() {
 
     $sqls[] = "select idbai as id, nome as name, zona_localizacao from
-                 public.bairro where lower(to_ascii(nome)) like '%'||lower(to_ascii($1))||'%' and idmun = $2 ";
+                 public.bairro where lower(to_ascii(nome)) like '%'||lower(to_ascii($1))||'%' and iddis = $2 ";
 
     return $sqls;
   }

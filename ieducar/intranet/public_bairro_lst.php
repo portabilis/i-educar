@@ -32,6 +32,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
+require_once 'include/public/clsPublicDistrito.inc.php';
 
 require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'CoreExt/View/Helper/UrlHelper.php';
@@ -179,6 +180,31 @@ class indice extends clsListagem
     $this->campoLista('idmun', 'Município', $opcoes, $this->idmun, '', FALSE,
       '', '', FALSE, FALSE);
 
+    if (class_exists('clsPublicDistrito')) {
+      if ($this->idmun) {
+        $objTemp = new clsPublicDistrito();
+        $objTemp->setOrderby(' nome ASC ');
+
+        $lista = $objTemp->lista($this->idmun);
+        
+        if (is_array($lista) && count($lista)) {
+          $opcoesTemp = array('' => 'Selecione');
+          foreach ($lista as $registro) {
+            $opcoesTemp[$registro['iddis']] = $registro['nome'];
+          }
+        }else{
+          $opcoesTemp = array('' => 'Não existem distritos para este município.');
+        }
+      }
+    }
+    else {
+      echo "<!--\nErro\nClasse clsPublicDistrito nao encontrada\n-->";
+      $opcoesTemp = array('' => 'Erro na geração');
+    }
+
+    $this->campoLista('iddis', 'Distrito', $opcoesTemp, $this->iddis, '', FALSE,
+      '', '', FALSE, FALSE);
+
     // Outros filtros
     $this->campoTexto('nome', 'Nome', $this->nome, 30, 255, FALSE);
 
@@ -206,7 +232,10 @@ class indice extends clsListagem
       NULL,
       NULL,
       $this->idpais,
-      $this->sigla_uf
+      $this->sigla_uf,
+      NULL,
+      NULL,
+      $this->iddis
     );
 
     $total = $obj_bairro->_total;
@@ -324,6 +353,43 @@ function getMunicipio(xml_municipio)
   }
   else {
     campoMunicipio.options[0].text = 'O estado não possui nenhum município';
+  }
+}
+
+document.getElementById('idmun').onchange = function()
+{
+  var campoMunicipio = document.getElementById('idmun').value;
+
+  var campoDistrito      = document.getElementById('iddis');
+  campoDistrito.length   = 1;
+  campoDistrito.disabled = true;
+
+  campoDistrito.options[0].text = 'Carregando distritos...';
+
+  var xml_distrito = new ajax(getDistrito);
+  xml_distrito.envia('public_distrito_xml.php?idmun=' + campoMunicipio);
+}
+
+function getDistrito(xml_distrito)
+{
+  var campoDistrito = document.getElementById('iddis');
+  var DOM_array      = xml_distrito.getElementsByTagName( "distrito" );
+  console.log(DOM_array);
+
+  if (DOM_array.length) {
+    campoDistrito.length          = 1;
+    campoDistrito.options[0].text = 'Selecione um distrito';
+    campoDistrito.disabled        = false;
+
+    for (var i = 0; i < DOM_array.length; i++) {
+      campoDistrito.options[campoDistrito.options.length] = new Option(
+        DOM_array[i].firstChild.data, DOM_array[i].getAttribute('iddis'),
+        false, false
+      );
+    }
+  }
+  else {
+    campoDistrito.options[0].text = 'O município não possui nenhum distrito';
   }
 }
 </script>

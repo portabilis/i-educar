@@ -42,6 +42,7 @@ class clsBairro
 	var $idsis_cad;
 	var $idsis_rev;
 	var $zona_localizacao;
+	var $iddi;
 	
 	var $tabela;
 	var $schema = "public";
@@ -85,7 +86,7 @@ class clsBairro
 	{
 		$db = new clsBanco();
 		// verificacoes de campos obrigatorios para insercao
-		if( is_numeric( $this->idmun ) && is_string( $this->nome ) )
+		if( is_numeric( $this->idmun ) && is_numeric( $this->iddis ) && is_string( $this->nome ) )
 		{
 			$campos = "";
 			$values = "";
@@ -119,7 +120,13 @@ class clsBairro
 			{
 				$campos .= ", zona_localizacao";
 				$values .= ", '{$this->zona_localizacao}' ";
-			}			
+			}
+
+			if( is_numeric( $this->iddis) )
+			{
+				$campos .= ", iddis";
+				$values .= ", '{$this->iddis}' ";
+			}		
 			$db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} ( idmun, origem_gravacao, operacao, idsis_cad, nome, data_cad$campos ) VALUES ( '{$this->idmun}', 'U', 'I', '9', '{$this->nome}', NOW()$values )" );
 
 			return $db->InsertId("{$this->schema}.seq_bairro");

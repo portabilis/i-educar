@@ -158,6 +158,10 @@ class indice extends clsDetalhe
 		{
 			$this->addDetalhe( array( "Operac&atilde;o", "{$registro["operacao"]}") );
 		}
+		if( $registro["cod_ibge"] )
+		{
+			$this->addDetalhe( array( "C&oacute;digo INEP", "{$registro["cod_ibge"]}") );
+		}
 /*		if( $registro["idsis_cad"] )
 		{
 			$this->addDetalhe( array( "Idsis Cad", "{$registro["idsis_cad"]}") );

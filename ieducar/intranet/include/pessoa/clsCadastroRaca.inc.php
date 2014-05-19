@@ -41,6 +41,7 @@ class clsCadastroRaca
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
+	var $raca_educacenso;
 
 	// propriedades padrao
 
@@ -120,7 +121,7 @@ class clsCadastroRaca
 		$this->_schema = "cadastro.";
 		$this->_tabela = "{$this->_schema}raca";
 
-		$this->_campos_lista = $this->_todos_campos = "cod_raca, idpes_exc, idpes_cad, nm_raca, data_cadastro, data_exclusao, ativo";
+		$this->_campos_lista = $this->_todos_campos = "cod_raca, idpes_exc, idpes_cad, nm_raca, data_cadastro, data_exclusao, ativo, raca_educacenso";
 
 		if( is_numeric( $idpes_exc ) )
 		{
@@ -230,6 +231,12 @@ class clsCadastroRaca
 				$valores .= "{$gruda}'{$this->idpes_cad}'";
 				$gruda = ", ";
 			}
+			if( is_numeric( $this->raca_educacenso ) )
+			{
+				$campos .= "{$gruda}raca_educacenso";
+				$valores .= "{$gruda}'{$this->raca_educacenso}'";
+				$gruda = ", ";
+			}
 			if( is_string( $this->nm_raca ) )
 			{
 				$campos .= "{$gruda}nm_raca";
@@ -271,6 +278,11 @@ class clsCadastroRaca
 			if( is_numeric( $this->idpes_cad ) )
 			{
 				$set .= "{$gruda}idpes_cad = '{$this->idpes_cad}'";
+				$gruda = ", ";
+			}
+			if( is_numeric( $this->raca_educacenso ) )
+			{
+				$set .= "{$gruda}raca_educacenso = '{$this->raca_educacenso}'";
 				$gruda = ", ";
 			}
 			if( is_string( $this->nm_raca ) )

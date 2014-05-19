@@ -61,6 +61,7 @@ class clsPmieducarCurso
   var $ref_cod_instituicao;
   var $padrao_ano_escolar;
   var $hora_falta;
+  var $modalidade_curso;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -134,7 +135,7 @@ class clsPmieducarCurso
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'curso';
 
-    $this->_campos_lista = $this->_todos_campos = 'cod_curso, ref_usuario_cad, ref_cod_tipo_regime, ref_cod_nivel_ensino, ref_cod_tipo_ensino, nm_curso, sgl_curso, qtd_etapas, carga_horaria, ato_poder_publico, objetivo_curso, publico_alvo, data_cadastro, data_exclusao, ativo, ref_usuario_exc, ref_cod_instituicao, padrao_ano_escolar, hora_falta, multi_seriado';
+    $this->_campos_lista = $this->_todos_campos = 'cod_curso, ref_usuario_cad, ref_cod_tipo_regime, ref_cod_nivel_ensino, ref_cod_tipo_ensino, nm_curso, sgl_curso, qtd_etapas, carga_horaria, ato_poder_publico, objetivo_curso, publico_alvo, data_cadastro, data_exclusao, ativo, ref_usuario_exc, ref_cod_instituicao, padrao_ano_escolar, hora_falta, multi_seriado, modalidade_curso';
 
     if (is_numeric($ref_cod_instituicao)) {
       if (class_exists('clsPmieducarInstituicao')) {
@@ -427,9 +428,15 @@ class clsPmieducarCurso
       }
 
       if (is_numeric($multi_seriado)) {
-				$campos .= "{$gruda}multi_seriado";
-				$valores .= "{$gruda}'{$this->multi_seriado}'";
-				$gruda = ", ";
+        $campos .= "{$gruda}multi_seriado";
+        $valores .= "{$gruda}'{$this->multi_seriado}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($modalidade_curso)) {
+        $campos .= "{$gruda}modalidade_curso";
+        $valores .= "{$gruda}'{$this->modalidade_curso}'";
+        $gruda = ", ";
       }
 
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
@@ -543,10 +550,16 @@ class clsPmieducarCurso
       }
 
 			if( is_numeric( $this->multi_seriado))
-			{
-				$set .= "{$gruda}multi_seriado = '{$this->multi_seriado}'";
-				$gruda = ", ";
-			}
+      {
+        $set .= "{$gruda}multi_seriado = '{$this->multi_seriado}'";
+        $gruda = ", ";
+      }
+
+      if( is_numeric( $this->modalidade_curso))
+      {
+        $set .= "{$gruda}modalidade_curso = '{$this->modalidade_curso}'";
+        $gruda = ", ";
+      }
 
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_curso = '{$this->cod_curso}'");

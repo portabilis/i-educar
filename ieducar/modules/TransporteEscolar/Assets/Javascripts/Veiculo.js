@@ -67,9 +67,11 @@ resourceOptions.handleGet = function(dataResponse) {
     $j('#ativo').val('');   
   }  
   
-  $j('#motorista_motorista').val(dataResponse.motorista+' - '+dataResponse.motoristaNome);  
-  $j('#motorista_id').val(dataResponse.motorista);  
-  
+  if (dataResponse.motorista){
+    $j('#motorista_motorista').val(dataResponse.motorista+' - '+dataResponse.motoristaNome);  
+    $j('#motorista_id').val(dataResponse.motorista);  
+  }
+
   $j('#descricao_ativo').val(dataResponse.descricao_ativo);  
   $j('#empresa_empresa').val(dataResponse.empresa+' - '+dataResponse.empresaNome);  
   $j('#empresa_id').val(dataResponse.empresa);

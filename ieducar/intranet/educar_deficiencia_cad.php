@@ -29,6 +29,7 @@ require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/Geral.inc.php" );
 require_once( "include/pmieducar/geral.inc.php" );
+require_once "lib/Portabilis/String/Utils.php";
 
 class clsIndexBase extends clsBase
 {
@@ -50,6 +51,7 @@ class indice extends clsCadastro
 
 	var $cod_deficiencia;
 	var $nm_deficiencia;
+	var $deficiencia_educacenso;
 
 	function Inicializar()
 	{
@@ -80,6 +82,7 @@ class indice extends clsCadastro
 				$retorno = "Editar";
 			}
 		}
+
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_deficiencia_det.php?cod_deficiencia={$registro["cod_deficiencia"]}" : "educar_deficiencia_lst.php";
 		$this->nome_url_cancelar = "Cancelar";
 		return $retorno;
@@ -95,7 +98,23 @@ class indice extends clsCadastro
 		// text
 		$this->campoTexto( "nm_deficiencia", "Deficiência", $this->nm_deficiencia, 30, 255, true );
 
-		// data
+		$resources = array (  null => 'Selecione',
+								 1 => "Cegueira",
+								 2 => "Baixa visão",
+								 3 => "Surdez",
+								 4 => "Deficiência auditiva",
+								 5 => "Surdocegueira",
+								 6 => "Deficiência física",
+								 7 => "Deficiência Intelectual",
+								 8 => "Deficiência Múltipla",
+								 9 => "Autismo Infantil",
+								10 => "Síndrome de Asperger",
+								11 => "Síndrome de Rett",
+								12 => "Transtorno desintegrativo da infância",
+								13 => "Altas habilidades/Superdotação",);
+
+		$options = array('label' => Portabilis_String_Utils::toLatin1('Deficiência Educacenso'), 'resources' => $resources, 'value' => $this->deficiencia_educacenso);
+	    $this->inputsHelper()->select('deficiencia_educacenso', $options);
 
 	}
 
@@ -107,7 +126,7 @@ class indice extends clsCadastro
 
 
 
-		$obj = new clsCadastroDeficiencia( $this->cod_deficiencia, $this->nm_deficiencia );
+		$obj = new clsCadastroDeficiencia( $this->cod_deficiencia, $this->nm_deficiencia, $this->deficiencia_educacenso );
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
@@ -130,7 +149,7 @@ class indice extends clsCadastro
 
 
 
-		$obj = new clsCadastroDeficiencia($this->cod_deficiencia, $this->nm_deficiencia);
+		$obj = new clsCadastroDeficiencia($this->cod_deficiencia, $this->nm_deficiencia, $this->deficiencia_educacenso);
 		$editou = $obj->edita();
 		if( $editou )
 		{

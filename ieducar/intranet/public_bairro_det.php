@@ -113,6 +113,10 @@ class indice extends clsDetalhe
     $zona = $zona->getValue($registro['zona_localizacao']);
     $this->addDetalhe(array('Zona Localização', $zona));
 
+    if ($registro['nm_distrito']) {
+      $this->addDetalhe(array('Distrito', $registro['nm_distrito']));
+    }
+
     if ($registro['nm_municipio']) {
       $this->addDetalhe(array("Município", $registro['nm_municipio']));
     }

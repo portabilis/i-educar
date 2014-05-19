@@ -154,7 +154,7 @@ class clsModulesMotorista
   function cadastra()
   {
 
-    if (is_string($this->cnh) && is_string($this->tipo_cnh) && is_numeric($this->ref_cod_empresa_transporte_escolar)
+    if (is_numeric($this->ref_cod_empresa_transporte_escolar)
       && is_numeric($this->ref_idpes) )
     {
 

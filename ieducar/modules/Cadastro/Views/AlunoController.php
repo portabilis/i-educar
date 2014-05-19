@@ -55,6 +55,11 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       'help'   => '',
     ),
 
+    'justificativa_falta_documentacao' => array(
+      'label'  => 'Justificativa para a falta de documentação',
+      'help'   => '',
+    ),
+
     'pai' => array(
       'label'  => 'Pai',
       'help'   => '',
@@ -303,6 +308,28 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
       'lixo' => array('label' => 'Possui lixo?'),
 
+      /************
+        PROVA INEP    
+      ************/   
+
+      'recurso_prova_inep_aux_ledor' => array('label' => 'Necessida de auxílio ledor?'),   
+
+      'recurso_prova_inep_aux_transcricao' => array('label' => 'Necessita de auxílio transcrição?'),   
+
+      'recurso_prova_inep_guia_interprete' => array('label' => 'Necessita de guia-intérprete?'),   
+
+      'recurso_prova_inep_interprete_libras' => array('label' => 'Necessita de intérprete de LIBRAS?'),   
+
+      'recurso_prova_inep_leitura_labial' => array('label' => 'Necessita de leitura labial?'),   
+
+      'recurso_prova_inep_prova_ampliada_16' => array('label' => 'Necessita de prova ampliada? (Fonte 16)'),   
+
+      'recurso_prova_inep_prova_ampliada_20' => array('label' => 'Necessita de prova amplada? (Fonte 20)'),   
+
+      'recurso_prova_inep_prova_ampliada_24' => array('label' => 'Necessita de prova ampliada? (Fonte 24)'),   
+
+      'recurso_prova_inep_prova_braille' => array('label' => 'Necessita de prova em Braille?'),         
+
   );
 
 
@@ -349,6 +376,18 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     // rg
     $options = array('label' => $this->_getLabel('rg'), 'disabled' => true, 'required' => false, 'size' => 25);
     $this->inputsHelper()->integer('rg', $options);
+
+    // justificativa_falta_documentacao
+    $resources = array(null          => 'Selecione',
+                          1          => Portabilis_String_Utils::toLatin1('Aluno não possui documentação'),
+                          2          => Portabilis_String_Utils::toLatin1('Escola não possui informação'));    
+
+    $options = array('label'     => $this->_getLabel('justificativa_falta_documentacao'),
+                     'resources' => $resources,
+                     'required'  => false,
+                     'disabled'  => true);
+
+    $this->inputsHelper()->select('justificativa_falta_documentacao', $options);
 
 
 
@@ -802,7 +841,34 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->checkbox('fossa',$options);   
 
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('lixo') ), 'required' => false, 'placeholder' => '');
-    $this->inputsHelper()->checkbox('lixo',$options);   
+    $this->inputsHelper()->checkbox('lixo',$options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_aux_ledor') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('recurso_prova_inep_aux_ledor',$options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_aux_transcricao') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('recurso_prova_inep_aux_transcricao',$options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_guia_interprete') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('recurso_prova_inep_guia_interprete',$options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_interprete_libras') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('recurso_prova_inep_interprete_libras',$options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_leitura_labial') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('recurso_prova_inep_leitura_labial',$options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_prova_ampliada_16') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('recurso_prova_inep_prova_ampliada_16',$options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_prova_ampliada_20') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('recurso_prova_inep_prova_ampliada_20',$options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_prova_ampliada_24') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('recurso_prova_inep_prova_ampliada_24',$options);
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_prova_braille') ), 'required' => false, 'placeholder' => '');
+    $this->inputsHelper()->checkbox('recurso_prova_inep_prova_braille',$options);
 
     $this->inputsHelper()->simpleSearchMunicipio('pessoa-aluno', array('required' => false, 'size' => 57), array('objectName' => 'naturalidade_aluno'));
 
@@ -818,7 +884,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       '',
       $enderecamentoObrigatorio,
       '-',
-            "&nbsp;<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel(500, 550, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'/intranet/educar_pesquisa_cep_log_bairro2.php?campo1=bairro_bairro&campo2=bairro_id&campo3=cep&campo4=logradouro_logradouro&campo5=logradouro_id&campo6=ref_sigla_uf&campo7=cidade&campo8=ref_idtlog&campo9=isEnderecoExterno&campo10=cep_&campo11=municipio_municipio&campo12=idtlog&campo13=municipio_id&campo14=zona_localizacao\'></iframe>');\">",
+            "&nbsp;<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel(500, 550, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'/intranet/educar_pesquisa_cep_log_bairro2.php?campo1=bairro_bairro&campo2=bairro_id&campo3=cep&campo4=logradouro_logradouro&campo5=logradouro_id&campo6=distrito_id&campo7=distrito_distrito&campo8=ref_idtlog&campo9=isEnderecoExterno&campo10=cep_&campo11=municipio_municipio&campo12=idtlog&campo13=municipio_id&campo14=zona_localizacao\'></iframe>');\">",
       false
     );
 
@@ -831,10 +897,16 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     $this->inputsHelper()->simpleSearchMunicipio('municipio', $options, $helperOptions);
 
+    $options       = array('label' => Portabilis_String_Utils::toLatin1('Distrito'), 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);  
+
+    $helperOptions = array('objectName'         => 'distrito',
+                           'hiddenInputOptions' => array('options' => array('value' => $this->distrito_id)));
+
+    $this->inputsHelper()->simpleSearchDistrito('distrito', $options, $helperOptions);    
+
     $helperOptions = array('hiddenInputOptions' => array('options' => array('value' => $this->bairro_id)));
 
-    $options       = array( 'label' => Portabilis_String_Utils::toLatin1('Bairro / Zona de Localização - <b>Buscar</b>'), 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);  
-
+    $options       = array( 'label' => Portabilis_String_Utils::toLatin1('Bairro / Zona de Localização - <b>Buscar</b>'), 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);      
     
     $this->inputsHelper()->simpleSearchBairro('bairro', $options, $helperOptions);
 

@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once "lib/Portabilis/String/Utils.php";
 
 class clsIndexBase extends clsBase
 {
@@ -53,6 +54,7 @@ class indice extends clsCadastro
 	var $nm_raca;
 	var $data_cadastro;
 	var $data_exclusao;
+	var $raca_educacenso;
 	var $ativo;
 
 	function Inicializar()
@@ -95,52 +97,17 @@ class indice extends clsCadastro
 		// primary keys
 		$this->campoOculto( "cod_raca", $this->cod_raca );
 
-		// foreign keys
-		/*$opcoes = array( "" => "Pesquise a pessoa clicando na lupa ao lado" );
-		if( $this->idpes_exc )
-		{
-			$objTemp = new clsPessoaFisica( $this->idpes_exc );
-			$detalhe = $objTemp->detalhe();
-			$opcoes["{$detalhe["idpes"]}"] = $detalhe["nome"];
-		}
-		$parametros = new clsParametrosPesquisas();
-		$parametros->setSubmit( 0 );
-		$parametros->adicionaCampoSelect( "idpes_exc", "idpes", "nome" );
-		$parametros->setPessoa( "F" );
-		$parametros->setPessoaNovo( 'S' );
-		$parametros->setPessoaEditar( 'N' );
-		$parametros->setPessoaTela( "frame" );
-		$parametros->setPessoaCPF('N');
-//		$parametros->setCodSistema(0);
-		$this->campoListaPesq( "idpes_exc", "Idpes Exc", $opcoes, $this->idpes_exc, "pesquisa_pessoa_lst.php", "", false, "", "", null, null, "", false, $parametros->serializaCampos() );
-		$opcoes = array( "" => "Pesquise a pessoa clicando na lupa ao lado" );
-		if( $this->idpes_cad )
-		{
-			$objTemp = new clsPessoaFisica( $this->idpes_cad );
-			$detalhe = $objTemp->detalhe();
-			$opcoes["{$detalhe["idpes"]}"] = $detalhe["nome"];
-		}
-		$parametros = new clsParametrosPesquisas();
-		$parametros->setSubmit( 0 );
-		$parametros->adicionaCampoSelect( "idpes_cad", "idpes", "nome" );
-		$parametros->setPessoa( "F" );
-		$parametros->setPessoaNovo( 'S' );
-		$parametros->setPessoaEditar( 'N' );
-		$parametros->setPessoaTela( "frame" );
-		$parametros->setPessoaCPF('N');
-//		$parametros->setCodSistema(0);
-		$this->campoListaPesq( "idpes_cad", "Idpes Cad", $opcoes, $this->idpes_cad, "pesquisa_pessoa_lst.php", "", false, "", "", null, null, "", false, $parametros->serializaCampos() );
-*/
-		// text
 		$this->campoTexto( "nm_raca", "Ra&ccedil;a", $this->nm_raca, 30, 255, true );
 
-		// data
+		$resources = array   (  0 => 'Não declarada',
+								1 => "Branca",
+								2 => "Preta",
+								3 => "Parda",
+								4 => "Amarela",
+								5 => "Indígena");
 
-		// time
-
-		// bool
-		//$this->campoBoolLista( "ativo", "Ativo", $this->ativo );
-		//$this->campoCheck( "ativo", "Ativo", ( $this->ativo == 't' ) );
+		$options = array('label' => Portabilis_String_Utils::toLatin1('Raça Educacenso'), 'resources' => $resources, 'value' => $this->raca_educacenso);
+	    $this->inputsHelper()->select('raca_educacenso', $options);	 
 
 	}
 
@@ -153,6 +120,7 @@ class indice extends clsCadastro
 
 
 		$obj = new clsCadastroRaca( $this->cod_raca, null, $this->pessoa_logada, $this->nm_raca, $this->data_cadastro, $this->data_exclusao, $this->ativo );
+		$obj->raca_educacenso = $this->raca_educacenso;
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
@@ -174,6 +142,7 @@ class indice extends clsCadastro
 		@session_write_close();
 
 		$obj = new clsCadastroRaca($this->cod_raca, $this->pessoa_logada, null, $this->nm_raca, $this->data_cadastro, $this->data_exclusao, $this->ativo);
+		$obj->raca_educacenso = $this->raca_educacenso;
 		$editou = $obj->edita();
 		if( $editou )
 		{

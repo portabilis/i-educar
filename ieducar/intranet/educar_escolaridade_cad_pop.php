@@ -32,6 +32,7 @@ require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/Geral.inc.php" );
 require_once( "include/pmieducar/geral.inc.php" );
+require_once 'lib/Portabilis/String/Utils.php';
 
 class clsIndexBase extends clsBase
 {
@@ -56,6 +57,7 @@ class indice extends clsCadastro
 
 	var $idesco;
 	var $descricao;
+	var $escolaridade;
 
 	function Inicializar()
 	{
@@ -96,14 +98,21 @@ class indice extends clsCadastro
 	function Gerar()
 	{
 		// primary keys
-		$this->campoOculto( "idesco", $this->idesco );
-
-		// foreign keys
+		$this->campoOculto( "idesco", $this->idesco );	
 
 		// text
 		$this->campoTexto( "descricao", "Descri&ccedil;&atilde;o", $this->descricao, 30, 255, true );
+		
+  		$resources = array(1 => 'Fundamental incompleto',
+		                   2 => 'Fundamental completo',
+		                   3 => 'Ensino médio - Normal/Magistério',
+		                   4 => 'Ensino médio - Normal/Magistério Indígena',
+		                   5 => 'Ensino médio',
+		                   6 => 'Superior');
 
-		// data
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Escolaridade'), 'resources' => $resources, 'value' => $this->escolaridade);
+	    $this->inputsHelper()->select('escolaridade', $options);
+
 
 	}
 
@@ -113,7 +122,7 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-		$obj = new clsCadastroEscolaridade( null, $this->descricao );
+		$obj = new clsCadastroEscolaridade( null, $this->descricao, $this->escolaridade );
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
@@ -122,8 +131,6 @@ class indice extends clsCadastro
 						parent.document.getElementById('ref_idesco').value = '$cadastrou';
 						window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
 			     	</script>";
-//			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-//			header( "Location: educar_escolaridade_lst.php" );
 			die();
 			return true;
 		}
@@ -135,48 +142,10 @@ class indice extends clsCadastro
 
 	function Editar()
 	{
-		/*@session_start();
-		 $this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
-
-
-
-		$obj = new clsCadastroEscolaridade($this->idesco, $this->descricao);
-		$editou = $obj->edita();
-		if( $editou )
-		{
-			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-			header( "Location: educar_escolaridade_lst.php" );
-			die();
-			return true;
-		}
-
-		$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-		echo "<!--\nErro ao editar clsCadastroEscolaridade\nvalores obrigatorios\nif( is_numeric( $this->idesco ) )\n-->";
-		return false;*/
 	}
 
 	function Excluir()
-	{
-		/*@session_start();
-		 $this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
-
-
-
-		$obj = new clsCadastroEscolaridade($this->idesco, $this->descricao);
-		$excluiu = $obj->excluir();
-		if( $excluiu )
-		{
-			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-			header( "Location: educar_escolaridade_lst.php" );
-			die();
-			return true;
-		}
-
-		$this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-		echo "<!--\nErro ao excluir clsCadastroEscolaridade\nvalores obrigatorios\nif( is_numeric( $this->idesco ) )\n-->";
-		return false;*/
+	{		
 	}
 }
 

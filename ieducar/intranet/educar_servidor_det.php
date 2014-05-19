@@ -73,7 +73,6 @@ class indice extends clsDetalhe
    */
   var
     $cod_servidor        = NULL,
-    $ref_cod_deficiencia = NULL,
     $ref_idesco          = NULL,
     $ref_cod_funcao      = NULL,
     $carga_horaria       = NULL,
@@ -81,7 +80,8 @@ class indice extends clsDetalhe
     $data_exclusao       = NULL,
     $ativo               = NULL,
     $ref_cod_instituicao = NULL,
-    $alocacao_array      = array();
+    $alocacao_array      = array(),
+    $is_professor = FALSE;
 
   /**
    * Implementação do método Gerar()
@@ -107,12 +107,7 @@ class indice extends clsDetalhe
     if (!$registro) {
       header('Location: educar_servidor_lst.php');
       die();
-    }
-
-    // Deficiência
-    $obj_ref_cod_deficiencia = new clsCadastroDeficiencia($registro['ref_cod_deficiencia']);
-    $det_ref_cod_deficiencia = $obj_ref_cod_deficiencia->detalhe();
-    $registro['ref_cod_deficiencia'] = $det_ref_cod_deficiencia['nm_deficiencia'];
+    }  
 
     // Escolaridade
     $obj_ref_idesco = new clsCadastroEscolaridade($registro['ref_idesco']);
@@ -174,10 +169,6 @@ class indice extends clsDetalhe
 
     if ($registro['ref_cod_instituicao']) {
       $this->addDetalhe( array( "Instituição", $registro['ref_cod_instituicao']));
-    }
-
-    if ($registro['ref_cod_deficiencia']) {
-      $this->addDetalhe(array('Deficiência', $registro['ref_cod_deficiencia']));
     }
 
     if( $registro['ref_idesco']) {
@@ -278,7 +269,7 @@ class indice extends clsDetalhe
             <td><b>{$det_funcao['nm_funcao']}</b></td>
           </tr>";
 
-        $docente = (bool) $det_funcao['professor'];
+        $this->is_professor = $docente = (bool) $det_funcao['professor'];
 
         $class = $class == "formlttd" ? "formmdtd" : "formlttd" ;
       }
@@ -448,15 +439,18 @@ class indice extends clsDetalhe
 
       $this->array_botao[] = 'Avaliação de Desempenho';
       $this->array_botao_url_script[] = "go(\"educar_avaliacao_desempenho_lst.php?{$get_padrao}\");";
-
+      /***************************************************************************************************************
+       *** Avaliando remoção pois será criado aba nova no próprio cadastro/edit do servidor com informações de cursos
+       *** e escolaridade normalizados pelo censo
+       ***************************************************************************************************************
       $this->array_botao[] = 'Formação';
       $this->array_botao_url_script[] = "go(\"educar_servidor_formacao_lst.php?{$get_padrao}\");";
-
+    
       $this->array_botao[] = 'Cursos superiores/Licenciaturas';
       $this->array_botao_url_script[] = sprintf(
         "go(\"../module/Docente/index?servidor=%d&instituicao=%d\");",
         $registro['cod_servidor'], $this->ref_cod_instituicao
-      );
+      );*/
 
       $this->array_botao[] = 'Faltas/Atrasos';
       $this->array_botao_url_script[] = "go(\"educar_falta_atraso_lst.php?{$get_padrao}\");";
@@ -487,6 +481,11 @@ class indice extends clsDetalhe
       elseif (is_numeric($afastamento)) {
         $this->array_botao[] = 'Retornar Servidor';
         $this->array_botao_url_script[] = "go(\"educar_servidor_afastamento_cad.php?{$get_padrao}&sequencial={$afastamento}\");";
+      }
+
+      if ($this->is_professor){
+        $this->array_botao[] = 'Vincular professor a turmas';
+        $this->array_botao_url_script[] = "go(\"educar_servidor_vinculo_turma_lst.php?{$get_padrao}\");"; 
       }
     }
 
