@@ -223,6 +223,10 @@ class indice extends clsCadastro {
             unset($this->nm_feriado);
             unset($this->data_feriado);
         }
+        
+        if($_POST["incluir_feriados_nacionais"]){
+            $this->CadastraFeriadosNacionais();
+        }
 
         $this->campoOculto("excluir_feriado", "");
         unset($aux);
@@ -246,13 +250,13 @@ class indice extends clsCadastro {
 
 
         $this->CampoOculto("incluir_feriados_nacionais", "");
-        $this->campoRotulo("bt_incluir_feriados_nacionais", "Cadastrar Feriados Nacionais Permanentes", "<a href='#' onclick=\"getElementById('incluir_feriados_nacionais').value = '{$this->CadastraFeriadosNacionais()}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
-
-
+        $this->campoRotulo("bt_incluir_feriados_nacionais", "Cadastrar Feriados Nacionais Permanentes", "<a href='#' onclick=\"getElementById('incluir_feriados_nacionais').value = 'S'; getElementById('tipoacao').value = '';{$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
+        
+       
         $this->campoTexto("nm_feriado", "Feriado", $this->nm_feriado, 30, 255);
         $this->campoData("data_feriado", " Data Feriado", $this->data_feriado);
 
-        $this->campoOculto("incluir_feriado", "hhh");
+        $this->campoOculto("incluir_feriado", "");
         $this->campoRotulo("bt_incluir_feriado", "Feriado", "<a href='#' onclick=\"getElementById('incluir_feriado').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
 
         $this->campoQuebra();
@@ -262,52 +266,35 @@ class indice extends clsCadastro {
     function CadastraFeriadosNacionais() {
 
 
-        $this->campoQuebra();
 
         if ($_POST["biblioteca_feriado"]) {
             $this->biblioteca_feriado = unserialize(urldecode($_POST["biblioteca_feriado"]));
         }
 
 
-        $obj = new clsPmieducarBibliotecaFeriados();
-        $registros = $obj->lista(null, $this->cod_biblioteca);
+        $objBibliotecaFeriados = new clsPmieducarBibliotecaFeriados();
+        $registros = $objBibliotecaFeriados->lista(null, $this->cod_biblioteca);
      
-            
-                       
-        $aux["nm_feriado_"] = "Confraternização Universal";
-        $aux["data_feriado_"] = "01/01/" . date("Y");
-
-        $this->biblioteca_feriado = $aux;
-        
-        $this->nm_feriado=$aux['nm_feriado_'];
-        $this->data_feriado=$aux['data_feriado_'];
-        
-    }
-        /*
+        $aux[0]["nm_feriado_"] = "Confraternização Universal";
+        $aux[0]["data_feriado_"] = "01/01/" . date("Y");
+     
         $aux[1]["nm_feriado_"] = "Natal";
         $aux[1]["data_feriado_"] = "25/12/" . date("Y");
 
-        $this->biblioteca_feriado[1] = $aux[1];
-        
-        $this->nm_feriado=$aux[1]['nm_feriado_'];
-        $this->data_feriado=$aux[1]['data_feriado_'];
-        
         $aux[2]["nm_feriado_"] = "Dia do Trabalhador";
-        $aux[2]["data_feriado_"] = "01/05" . date("Y");
+        $aux[2]["data_feriado_"] = "01/05/" . date("Y");   
+    
+        
+        for($count=0;$count < 3; $count ++){                   
+            
+            $this->biblioteca_feriado[]= $aux[$count];
 
-        $this->biblioteca_feriado[2] = $aux[2];
+        }
         
-        $this->nm_feriado=$aux[2]['nm_feriado_'];
-        $this->data_feriado=$aux[2]['data_feriado_'];
-        
+}  
             
        
-*/
-        
-        
-
-        
-    
+   
 
     function Editar() {
         @session_start();
