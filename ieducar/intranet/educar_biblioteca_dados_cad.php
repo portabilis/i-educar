@@ -272,7 +272,6 @@ class indice extends clsCadastro {
 
 
         $objBibliotecaFeriados = new clsPmieducarBibliotecaFeriados();
-        $registros = $objBibliotecaFeriados->lista(null, $this->cod_biblioteca);
      
         $fernac[0]["nm_feriado_"] = "Confraternizacao Universal";
         $fernac[0]["data_feriado_"] = "01/01/" . date("Y");
@@ -302,7 +301,10 @@ class indice extends clsCadastro {
         
         for($count=0;$count < $qtd_feriados; $count ++){                   
             
-            $this->biblioteca_feriado[]= $fernac[$count];
+            if(!$objBibliotecaFeriados->lista($int_cod_feriado, $this->cod_biblioteca, $fernac[$count]["nm_feriado_"], $str_descricao, $fernac[$count]["data_feriado_"], $fernac[$count]["data_feriado_"], $date_data_cadastro_ini, $date_data_cadastro_fim, $date_data_exclusao_ini)){
+                $this->biblioteca_feriado[]= $fernac[$count];
+            }
+            
             
         }
         
