@@ -231,9 +231,9 @@ class indice extends clsCadastro {
         $this->campoOculto("excluir_feriado", "");
         unset($aux);
 
-        if ($this->biblioteca_feriado) {
+        if ($this->biblioteca_feriado) {            
             foreach ($this->biblioteca_feriado as $key => $feriado) {
-                if ($this->excluir_feriado == $feriado["nm_feriado_"]) {
+                if ($this->excluir_feriado === $feriado["nm_feriado_"]) {
                     unset($this->biblioteca_feriado[$key]);
                     unset($this->excluir_feriado);
                 } else {
@@ -266,7 +266,6 @@ class indice extends clsCadastro {
     function CadastraFeriadosNacionais() {
 
 
-
         if ($_POST["biblioteca_feriado"]) {
             $this->biblioteca_feriado = unserialize(urldecode($_POST["biblioteca_feriado"]));
         }
@@ -275,20 +274,36 @@ class indice extends clsCadastro {
         $objBibliotecaFeriados = new clsPmieducarBibliotecaFeriados();
         $registros = $objBibliotecaFeriados->lista(null, $this->cod_biblioteca);
      
-        $aux[0]["nm_feriado_"] = "Confraternização Universal";
-        $aux[0]["data_feriado_"] = "01/01/" . date("Y");
+        $fernac[0]["nm_feriado_"] = "Confraternizacao Universal";
+        $fernac[0]["data_feriado_"] = "01/01/" . date("Y");
      
-        $aux[1]["nm_feriado_"] = "Natal";
-        $aux[1]["data_feriado_"] = "25/12/" . date("Y");
-
-        $aux[2]["nm_feriado_"] = "Dia do Trabalhador";
-        $aux[2]["data_feriado_"] = "01/05/" . date("Y");   
-    
+        $fernac[1]["nm_feriado_"]= "Tiradentes";
+        $fernac[1]["data_feriado_"]="21/04/" . date("Y");
         
-        for($count=0;$count < 3; $count ++){                   
+        $fernac[2]["nm_feriado_"] = "Dia do Trabalhador";
+        $fernac[2]["data_feriado_"] = "01/05/" . date("Y");   
+    
+        $fernac[3]["nm_feriado_"] = "Independencia do Brasil";
+        $fernac[3]["data_feriado_"]= "07/09/" . date("Y");
+        
+        $fernac[4]["nm_feriado_"] = "Nossa Senhoa Aparecida (Padroeira do Brasil)";
+        $fernac[4]["data_feriado_"]= "12/10/" . date("Y");
+        
+        $fernac[5]["nm_feriado_"] = "Finados";
+        $fernac[5]["data_feriado_"]= "02/11/" . date("Y");
+                
+        $fernac[6]["nm_feriado_"] = "Proclamação da Republica";
+        $fernac[6]["data_feriado_"]= "15/11/" . date("Y");
+        
+        $fernac[7]["nm_feriado_"] = "Natal";
+        $fernac[7]["data_feriado_"] = "25/12/" . date("Y");   
+    
+        $qtd_feriados = count($fernac);
+        
+        for($count=0;$count < $qtd_feriados; $count ++){                   
             
-            $this->biblioteca_feriado[]= $aux[$count];
-
+            $this->biblioteca_feriado[]= $fernac[$count];
+            
         }
         
 }  
