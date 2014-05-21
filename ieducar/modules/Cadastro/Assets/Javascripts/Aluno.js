@@ -25,6 +25,7 @@ var $loadingLaudoMedico =  $j('<img>').attr('src', 'imagens/indicator.gif')
 
 var $linkExcluirLaudo =  $j('<div>').append($j('<span>').html(stringUtils.toUtf8('Excluir laudo médico'))
                                                         .addClass('decorated')
+                                                        .attr('id','link_excluir_laudo_medico')
                                                         .css('margin-left', '1px')
                                                         .css('cursor','pointer')
                                                         .click( function(){
@@ -34,6 +35,11 @@ var $linkExcluirLaudo =  $j('<div>').append($j('<span>').html(stringUtils.toUtf8
                                                           $linkExcluirLaudo.hide();
                                                         })
                                                         )
+                                    .append($j('<a>').html(stringUtils.toUtf8('Laudo médico atual'))
+                                                     .attr('id','link_laudo_medico_atual')
+                                                     .attr('target','_blank')
+                                                     .addClass('decorated')
+                                                     .css('margin-left','10px'))
                                     .hide()
                                     .insertBefore($j('#laudo_medico'));
 
@@ -174,6 +180,7 @@ resourceOptions.handleGet = function(dataResponse) {
   
   if(dataResponse.url_laudo_medico){
     $j('#url_laudo_medico').val(dataResponse.url_laudo_medico);
+    $j('#link_laudo_medico_atual').attr('href',dataResponse.url_laudo_medico);
     $linkExcluirLaudo.show();
   } 
 
@@ -817,6 +824,7 @@ function canShowParentsFields(){
                 messageUtils.success('Laudo médico carregado com sucesso');
                 $j('#laudo_medico').addClass('success');
                 $j('#url_laudo_medico').val(dataResponse.file_url);
+                $j('#link_laudo_medico_atual').attr('href',dataResponse.file_url);
                 $linkExcluirLaudo.show();
               }
 
