@@ -136,6 +136,7 @@ var resourceOptions = {
   }
 };
 
+var submitFormExterno;
 
 // metodos e variaveis não acessiveis por outros modulos
 
@@ -175,6 +176,7 @@ var resourceOptions = {
       }
     };
 
+    submitFormExterno = submitForm;
 
     function handleSuccess(dataResponse) {
       try {

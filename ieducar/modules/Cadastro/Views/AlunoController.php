@@ -105,6 +105,11 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       'help'   => '',
       ),
 
+    'laudo_medico' => array(
+      'label'  => 'Laudo médico',
+      'help'   => '',
+      ),    
+
       /* *******************
          ** Dados médicos **
          ******************* */
@@ -461,6 +466,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     $this->inputsHelper()->multipleSearchDeficiencias('', $options, $helperOptions);
 
+    $this->campoArquivo('laudo_medico',Portabilis_String_Utils::toLatin1($this->_getLabel('laudo_medico')),$this->laudo_medico,40,'<br/> <span style="font-style: italic; font-size= 10px;">* S&atilde;o aceitos arquivos nos formatos jpg, png e gif. Tamanho m&aacute;ximo: 250KB</span>');
+
+    $this->inputsHelper()->hidden('url_laudo_medico');
+
+    if($GLOBALS['coreExt']['Config']->app->alunos->laudo_medico_obrigatorio == 1)
+      $this->inputsHelper()->hidden('url_laudo_medico_obrigatorio');
 
     // alfabetizado
     $options = array('label' => $this->_getLabel('alfabetizado'), 'value' => 'checked');

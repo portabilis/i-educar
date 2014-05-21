@@ -18,6 +18,38 @@ var $resourceNotice = $j('<span>').html('')
 var $pessoaNotice = $resourceNotice.clone()
                                    .appendTo($nomeField.parent());
 
+var $loadingLaudoMedico =  $j('<img>').attr('src', 'imagens/indicator.gif')
+                                      .css('margin-top', '3px')
+                                      .hide()
+                                      .insertAfter($j('#laudo_medico'));
+
+var $linkExcluirLaudo =  $j('<div>').append($j('<span>').html(stringUtils.toUtf8('Excluir laudo médico'))
+                                                        .addClass('decorated')
+                                                        .css('margin-left', '1px')
+                                                        .css('cursor','pointer')
+                                                        .click( function(){
+                                                          $j('#url_laudo_medico').val('');
+                                                          $j('#laudo_medico').val('').removeClass('success');
+                                                          messageUtils.notice('Laudo médico excluído com sucesso!');
+                                                          $linkExcluirLaudo.hide();
+                                                        })
+                                                        )
+                                    .hide()
+                                    .insertBefore($j('#laudo_medico'));
+
+function laudoMedicoObrigatorio(){
+  $j('#laudo_medico').addClass('error');
+  messageUtils.error(stringUtils.toUtf8('Deve ser anexado um laudo médico para alunos com deficiências'));
+}
+
+var newSubmitForm = function(event) {
+  if ($j('#deficiencias').val().length > 1){
+    if ($j('#url_laudo_medico_obrigatorio').length > 0 && $j('#url_laudo_medico').val().length < 1){
+      return laudoMedicoObrigatorio();
+    }
+  }  
+  submitFormExterno();
+}
 
 var $paiNomeField = $j('#pai_nome');
 var $paiIdField   = $j('#pai_id');
@@ -70,7 +102,7 @@ $j('#tab1').addClass('alunoTab-active').removeClass('alunoTab');
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
 $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-  if (index>15){
+  if (index>16){
     if (row.id!='stop')
       row.hide();
     else
@@ -139,6 +171,11 @@ resourceOptions.handleGet = function(dataResponse) {
   $j('#beneficio_id').val(dataResponse.beneficio_id);
   $j('#tipo_transporte').val(dataResponse.tipo_transporte);
   $j('#alfabetizado').attr('checked', dataResponse.alfabetizado);
+  
+  if(dataResponse.url_laudo_medico){
+    $j('#url_laudo_medico').val(dataResponse.url_laudo_medico);
+    $linkExcluirLaudo.show();
+  } 
 
   /***********************************************
       CAMPOS DA FICHA MÉDICA
@@ -737,6 +774,68 @@ function canShowParentsFields(){
 (function($) {
   $(document).ready(function() {    
 
+    // laudo médico
+    $j('#laudo_medico').on('change', prepareUpload);
+
+    $j('#deficiencias').trigger('liszt:updated');
+
+    function prepareUpload(event)
+    {
+      $linkExcluirLaudo.hide();
+      $j('#laudo_medico').removeClass('error');
+      uploadFiles(event.target.files);
+    }
+
+    function uploadFiles(files)
+    {
+      if (files && files.length>0){
+        $j('#laudo_medico').attr('disabled', 'disabled');
+        $j('#btn_enviar').attr('disabled', 'disabled').val('Aguarde...');
+        $loadingLaudoMedico.show();
+        messageUtils.notice('Carregando laudo médico...');
+
+        var data = new FormData();
+        $j.each(files, function(key, value)
+        {
+          data.append(key, value);
+        });
+          
+        $j.ajax({
+            url: '/intranet/upload.php?files',
+            type: 'POST',
+            data: data,
+            cache: false,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            success: function(dataResponse)
+            {
+              if (dataResponse.error){
+                $j('#laudo_medico').val("").addClass('error');
+                messageUtils.error(dataResponse.error);
+              }else{
+                messageUtils.success('Laudo médico carregado com sucesso');
+                $j('#laudo_medico').addClass('success');
+                $j('#url_laudo_medico').val(dataResponse.file_url);
+                $linkExcluirLaudo.show();
+              }
+
+            },
+            error: function()
+            {
+              $j('#laudo_medico').val("").addClass('error');
+              messageUtils.error('Não foi possível enviar o arquivo');
+            },
+            complete: function()
+            {
+              $j('#laudo_medico').removeAttr('disabled');
+              $loadingLaudoMedico.hide();
+              $j('#btn_enviar').removeAttr('disabled').val('Gravar');
+            }
+        });
+      }
+    }
+
     canShowParentsFields();
 
     var $pessoaActionBar  = $j('<span>').html('')
@@ -807,7 +906,7 @@ function canShowParentsFields(){
         $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
         $j('#tab1').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-          if (index>15){
+          if (index>16){
             if (row.id!='stop')
               row.hide();
             else
@@ -818,7 +917,7 @@ function canShowParentsFields(){
         });        
       }
     );  
-    var first_click_ficha = true;
+
     // FICHA MÉDICA
     $j('#tab2').click( 
       function(){
@@ -826,9 +925,7 @@ function canShowParentsFields(){
         $j('#tab2').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index>15 && index<63){
-              if (first_click_ficha)
-                $j('#'+row.id).find('td').toggleClass('formlttd formmdtd');
+            if (index>16 && index<63){
               row.show();
             }else if (index>0){
               row.hide();
@@ -840,7 +937,6 @@ function canShowParentsFields(){
         $j('.temDescricao').each(function(i, obj) {
             $j('#desc_'+obj.id).prop('disabled', !$j('#'+obj.id).prop('checked'));                  
         });
-        first_click_ficha = false;
       });    
 
     // UNIFORME
@@ -1406,5 +1502,6 @@ function canShowParentsFields(){
     
   }
 
-
+  //gambiarra sinistra que funciona
+  window.setTimeout(function() {  $j('#btn_enviar').unbind().click(newSubmitForm)}, 500);
 })(jQuery);
