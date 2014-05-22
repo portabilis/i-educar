@@ -466,7 +466,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     $this->inputsHelper()->multipleSearchDeficiencias('', $options, $helperOptions);
 
-    $this->campoArquivo('laudo_medico',Portabilis_String_Utils::toLatin1($this->_getLabel('laudo_medico')),$this->laudo_medico,40,Portabilis_String_Utils::toLatin1('<br/> <span style="font-style: italic; font-size= 10px;">* São aceitos arquivos nos formatos jpg, png e gif. Tamanho máximo: 250KB <br/> ** Caso deseje substituir o laudo médico apenas selecione um arquivo.</span>'));
+    $this->campoArquivo('laudo_medico',Portabilis_String_Utils::toLatin1($this->_getLabel('laudo_medico')),$this->laudo_medico,40,Portabilis_String_Utils::toLatin1("<br/> <span style='font-style: italic; font-size= 10px;''>* São aceitos arquivos nos formatos jpg, png e gif. Tamanho máximo: 250KB <br/> ** Caso deseje substituir o laudo médico apenas selecione um arquivo.</span>"));
 
     $this->inputsHelper()->hidden('url_laudo_medico');
 
