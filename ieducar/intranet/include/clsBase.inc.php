@@ -126,7 +126,7 @@ class clsBase extends clsConfig
       $saida = str_replace("<!-- #&ESTILO&# -->", $estilos, $saida);
     }
 
-    if ($GLOBALS['coreExt']['Config']->app->widget == 1){
+    if ($GLOBALS['coreExt']['Config']->app->widget == 1 && $this->renderMenu){
       $suporte_freshdesk = '<script type="text/javascript" src="http://assets.freshdesk.com/widget/freshwidget.js"></script>
                             <script type="text/javascript" src="scripts/suporte_freshdesk.js?v=1"></script>';
       $saida = str_replace("<!-- #&FRESHDESK&# -->", $suporte_freshdesk, $saida);
