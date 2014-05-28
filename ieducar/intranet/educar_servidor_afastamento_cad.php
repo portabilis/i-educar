@@ -222,7 +222,7 @@ class indice extends clsCadastro {
             $temp['dia_semana']         = $val['dia_semana'];
             $temp['ref_cod_escola']     = $val['ref_cod_escola'];
             $temp['ref_cod_disciplina'] = $val['ref_cod_disciplina'];
-            $temp['ref_cod_disciplina'] = $val['ref_cod_disciplina'];
+            $temp['ref_cod_substituto'] = $val['ref_servidor_substituto'];
             $objTemp = new ClsPmieducarSerie($val['ref_cod_serie']);
             $detalheTemp = $objTemp->detalhe();
             $temp['ref_cod_curso']      = $detalheTemp['ref_cod_curso'];
