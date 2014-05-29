@@ -223,6 +223,9 @@ class indice extends clsCadastro {
             $temp['ref_cod_escola']     = $val['ref_cod_escola'];
             $temp['ref_cod_disciplina'] = $val['ref_cod_disciplina'];
             $temp['ref_cod_substituto'] = $val['ref_servidor_substituto'];
+            $objTemp = new ClsPmieducarSerie($val['ref_cod_serie']);
+            $detalheTemp = $objTemp->detalhe();
+            $temp['ref_cod_curso']      = $detalheTemp['ref_cod_curso'];
             $this->alocacao_array[]     = $temp;
           }
 
@@ -271,7 +274,7 @@ class indice extends clsCadastro {
 
                 $this->campoTextoInv("ref_cod_servidor_substituto_{$key}_",
                   '', $det_subst['nome'], 30, 255, FALSE, FALSE, FALSE, '',
-                  "<span name=\"ref_cod_servidor_substituto\" id=\"ref_cod_servidor_substituicao_{$key}\"><img border='0'  onclick=\"pesquisa_valores_popless('educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor_substituto[{$key}]&campo2=ref_cod_servidor_substituto_{$key}_&ref_cod_instituicao={$this->ref_cod_instituicao}&dia_semana={$alocacao["dia_semana"]}&hora_inicial={$alocacao["hora_inicial"]}&hora_final={$alocacao["hora_final"]}&ref_cod_servidor={$this->ref_cod_servidor}&professor=1&ref_cod_escola={$alocacao['ref_cod_escola']}&horario=S&ref_cod_disciplina={$alocacao['ref_cod_disciplina']}', 'nome')\" src=\"imagens/lupa.png\" ></span>",
+                  "<span name=\"ref_cod_servidor_substituto\" id=\"ref_cod_servidor_substituicao_{$key}\"><img border='0'  onclick=\"pesquisa_valores_popless('educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor_substituto[{$key}]&campo2=ref_cod_servidor_substituto_{$key}_&ref_cod_instituicao={$this->ref_cod_instituicao}&dia_semana={$alocacao["dia_semana"]}&hora_inicial={$alocacao["hora_inicial"]}&hora_final={$alocacao["hora_final"]}&ref_cod_servidor={$this->ref_cod_servidor}&professor=1&ref_cod_escola={$alocacao['ref_cod_escola']}&horario=S&ref_cod_disciplina={$alocacao['ref_cod_disciplina']}&ref_cod_curso={$alocacao['ref_cod_curso']}', 'nome')\" src=\"imagens/lupa.png\" ></span>",
                   '', '', 'ref_cod_servidor_substituto');
               }
 
@@ -317,6 +320,9 @@ class indice extends clsCadastro {
     session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
+
+    $this->data_retorno = dataToBanco($this->data_retorno);
+    $this->data_saida = dataToBanco($this->data_saida);
 
     $this->ref_cod_servidor = isset($_POST['ref_cod_servidor']) ?
       $_POST['ref_cod_servidor'] : NULL;
