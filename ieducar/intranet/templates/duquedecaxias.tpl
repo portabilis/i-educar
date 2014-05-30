@@ -11,16 +11,12 @@
     <link rel=stylesheet type='text/css' href='styles/portabilis.css?rand=3' />
     <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=3' />
     <link rel=stylesheet type='text/css' href='styles/login.css?rand=6' />
-    <script type="text/javascript" src="http://assets.freshdesk.com/widget/freshwidget.js"></script>
-    <script type="text/javascript" src="scripts/suporte_freshdesk.js?1"></script>    
     <style type='text/css'>#flash-container, #menu, #corpo, #rodape {
 
   /* login-form.widght + 42px */
   
 }
-#login-form{
-  height: 280px;
-}
+
 </style>
   <script type='text/javascript' src='//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>
 
@@ -130,7 +126,7 @@
             <td>
               <p class="forget-password"><a class="light small" href="/module/Usuario/RedefinirSenha">Esqueceu sua senha?</a></p>
 
-              <p><a target="_blank" class="light small" href="http://educacao.portabilis.com.br/">Acesso professores, pais e alunos?</a> <a target="_blank" class="decorated light small" href="http://www.portabilis.com.br/produto/educacao-19#destaques">Saiba mais</a>
+              <!--p><a target="_blank" class="light small" href="http://educacao.portabilis.com.br/">Acesso professores, pais e alunos?</a> <a target="_blank" class="decorated light small" href="http://www.portabilis.com.br/produto/educacao-19#destaques">Saiba mais</a-->
             </p>
             </td>
           </tr>
