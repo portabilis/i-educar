@@ -160,6 +160,7 @@ class clsPmieducarEscola
   var $computadores_alunos;
   var $acesso_internet;
   var $banda_larga;    
+  var $ato_criacao;    
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -241,7 +242,7 @@ class clsPmieducarEscola
           e.dependencia_quantidade_ambiente_climatizado, e.dependencia_nenhuma_relacionada, e.dependencia_numero_salas_existente, dependencia_numero_salas_utilizadas, e.porte_quadra_descoberta, e.porte_quadra_coberta, e.tipo_cobertura_patio,
           e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.localizacao_diferenciada, e.didatico_nao_utiliza, e.didatico_quilombola, e.didatico_indigena, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado, 
           e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, 
-          e.retroprojetores, e.impressoras, e.aparelhos_de_som, e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.acesso_internet, e.banda_larga         
+          e.retroprojetores, e.impressoras, e.aparelhos_de_som, e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.acesso_internet, e.banda_larga, e.ato_criacao         
           ';
 
     if (is_numeric($ref_usuario_cad)) {
@@ -1076,6 +1077,12 @@ class clsPmieducarEscola
         $gruda = ", ";
       }                                                                                             
 
+      if (is_string($this->ato_criacao)) {
+        $campos .= "{$gruda}ato_criacao";
+        $valores .= "{$gruda}'{$this->ato_criacao}'";
+        $gruda = ", ";
+      } 
+
       $campos .= "{$gruda}data_cadastro";
       $valores .= "{$gruda}NOW()";
       $gruda = ", ";
@@ -1674,7 +1681,12 @@ class clsPmieducarEscola
       if (is_numeric($this->banda_larga)) {
         $set .= "{$gruda}banda_larga = '{$this->banda_larga}'";
         $gruda = ", ";
-      }      
+      }
+
+      if (is_string($this->ato_criacao)) {
+        $set .= "{$gruda}ato_criacao = '{$this->ato_criacao}'";
+        $gruda = ", ";
+      }            
       
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_escola = '{$this->cod_escola}'");

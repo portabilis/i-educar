@@ -205,6 +205,7 @@ class indice extends clsCadastro
   var $computadores_alunos;
   var $acesso_internet;
   var $banda_larga; 	
+  var $ato_criacao; 	
 
 	var $incluir_curso;
 	var $excluir_curso;
@@ -1021,7 +1022,10 @@ if(!$this->isEnderecoExterno){
 		                   2 => Portabilis_String_Utils::toLatin1('Em tramitação'));
 
   		$options = array('label' => Portabilis_String_Utils::toLatin1('Regulamentação/ Autorização no conselho ou órgão público de educação'), 'resources' => $resources, 'value' => $this->regulamentacao, 'size' => 70,);
-	    $this->inputsHelper()->select('regulamentacao', $options);  		
+	    $this->inputsHelper()->select('regulamentacao', $options);  	
+
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Ato de criação'), 'value' => $this->ato_criacao, 'size' => 70,);
+	    $this->inputsHelper()->text('ato_criacao', $options);  		
 
 	    $hiddenInputOptions = array('options' => array('value' => $this->gestor_id));
 	    $helperOptions      = array('objectName' => 'gestor', 'hiddenInputOptions' => $hiddenInputOptions);
@@ -1638,6 +1642,7 @@ if(!$this->isEnderecoExterno){
 					$obj->computadores_alunos = $this->computadores_alunos;
 					$obj->acesso_internet = $this->acesso_internet == 'on' ? 1 : 0;
 					$obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
+					$obj->ato_criacao = $this->ato_criacao;
 					$cadastrou1 = $obj->cadastra();
 
 					if( $cadastrou1 )
@@ -1835,7 +1840,8 @@ if(!$this->isEnderecoExterno){
 			$obj->computadores_administrativo = $this->computadores_administrativo;
 			$obj->computadores_alunos = $this->computadores_alunos;
 			$obj->acesso_internet = $this->acesso_internet == 'on' ? 1 : 0;
-			$obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;			
+			$obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
+			$obj->ato_criacao = $this->ato_criacao;			
 			$cadastrou = $obj->cadastra();
 
 
@@ -2008,7 +2014,8 @@ if(!$this->isEnderecoExterno){
 			$obj->computadores_administrativo = $this->computadores_administrativo;
 			$obj->computadores_alunos = $this->computadores_alunos;
 			$obj->acesso_internet = $this->acesso_internet == 'on' ? 1 : 0;
-			$obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;			
+			$obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
+			$obj->ato_criacao = $this->ato_criacao;			
 			$editou = $obj->edita();
 
 		}
@@ -2117,7 +2124,8 @@ if(!$this->isEnderecoExterno){
 			$obj->computadores_administrativo = $this->computadores_administrativo;
 			$obj->computadores_alunos = $this->computadores_alunos;
 			$obj->acesso_internet = $this->acesso_internet == 'on' ? 1 : 0;
-			$obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;			
+			$obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
+			$obj->ato_criacao = $this->ato_criacao;			
 			$editou = $obj->cadastra();
 			$this->cod_escola = $editou;
 

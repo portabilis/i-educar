@@ -95,6 +95,7 @@ class indice extends clsDetalhe
   var $nm_mae;
   var $ref_cod_raca;
   var $sus;
+  var $url_laudo_medico;
 
   function Gerar()
   {
@@ -580,6 +581,9 @@ class indice extends clsDetalhe
 
       $this->addDetalhe(array('Deficiências', $tabela));
     }
+
+    if ($registro['url_laudo_medico'] && $registro['url_laudo_medico'] != '')
+      $this->addDetalhe(array('Laudo médico do aluno', "<a href='{$registro['url_laudo_medico']}' target='_blank' > Visualizar laudo </a>"));
 
     if ($registro['rg']) {
       $this->addDetalhe(array('RG', $registro['rg']));

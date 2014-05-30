@@ -506,6 +506,9 @@ protected function createOrUpdateUniforme($id) {
     $aluno->recurso_prova_inep_prova_braille         = $this->getRequest()->recurso_prova_inep_prova_braille == 'on' ? 1 : 0;
     $aluno->justificativa_falta_documentacao         = $this->getRequest()->justificativa_falta_documentacao;
 
+    //laudo medico
+    $aluno->url_laudo_medico         = Portabilis_String_Utils::toLatin1($this->getRequest()->url_laudo_medico);
+
     return (is_null($id) ? $aluno->cadastra() : $aluno->edita());
   }
 
@@ -762,7 +765,8 @@ protected function createOrUpdateUniforme($id) {
         'recurso_prova_inep_prova_ampliada_20',
         'recurso_prova_inep_prova_ampliada_24',
         'recurso_prova_inep_prova_braille',
-        'justificativa_falta_documentacao'
+        'justificativa_falta_documentacao',
+        'url_laudo_medico'
       );
 
       $aluno = Portabilis_Array_Utils::filter($aluno, $attrs);
