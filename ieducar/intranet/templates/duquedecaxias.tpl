@@ -11,8 +11,6 @@
     <link rel=stylesheet type='text/css' href='styles/portabilis.css?rand=3' />
     <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=3' />
     <link rel=stylesheet type='text/css' href='styles/login.css?rand=6' />
-    <script type="text/javascript" src="http://assets.freshdesk.com/widget/freshwidget.js"></script>
-    <script type="text/javascript" src="scripts/suporte_freshdesk.js?1"></script>    
     <style type='text/css'>#flash-container, #menu, #corpo, #rodape {
 
   /* login-form.widght + 42px */
