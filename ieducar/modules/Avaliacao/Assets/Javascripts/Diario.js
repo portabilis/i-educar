@@ -825,6 +825,7 @@ function updateComponenteCurriculares($targetElement, matriculaId, componentesCu
       }
     });
   });
+  $j('.tr-area-conhecimento').first().trigger('click');
 }
 
 
