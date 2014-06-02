@@ -783,12 +783,6 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
-      if (is_numeric($this->dependencia_banheiro_deficiente)) {
-        $campos .= "{$gruda}dependencia_banheiro_deficiente";
-        $valores .= "{$gruda}'{$this->dependencia_banheiro_deficiente}'";
-        $gruda = ", ";
-      }
-
       if (is_numeric($this->dependencia_banheiro_chuveiro)) {
         $campos .= "{$gruda}dependencia_banheiro_chuveiro";
         $valores .= "{$gruda}'{$this->dependencia_banheiro_chuveiro}'";
