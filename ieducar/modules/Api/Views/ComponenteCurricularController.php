@@ -74,7 +74,7 @@ class ComponenteCurricularController extends ApiCoreController
   public function Gerar() {
     if ($this->isRequestFor('get', 'componente_curricular-search'))
       $this->appendResponse($this->search());
-    if ($this->isRequestFor('get', 'componentecurricular-search'))
+    elseif ($this->isRequestFor('get', 'componentecurricular-search'))
       $this->appendResponse($this->getComponentesCurricularesSearch());    
     else
       $this->notImplementedOperationError();
