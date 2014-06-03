@@ -308,6 +308,17 @@ class indice extends clsCadastro {
             
         }
         
+        
+        if(isset($this->biblioteca_feriado))
+        {
+            return true;
+        }else
+        {
+            return false;
+        }
+        
+        
+        
 }  
             
        
