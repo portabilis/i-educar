@@ -29,17 +29,9 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once  'educar_biblioteca_dados_base.php';
 
-class clsIndexBase extends clsBase {
-
-    function Formular() {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Dados Biblioteca");
-        $this->processoAp = "629";
-    }
-
-}
-
-class indice extends clsCadastro {
+class Indice_Biblioteca_dados extends clsCadastro {
 
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -244,10 +236,7 @@ class indice extends clsCadastro {
                 }
             }
         }
-        $this->campoOculto("biblioteca_feriado", serialize($this->biblioteca_feriado));
-
-
-
+        
 
         $this->CampoOculto("incluir_feriados_nacionais", "");
         $this->campoRotulo("bt_incluir_feriados_nacionais", "Cadastrar Feriados Nacionais Permanentes", "<a href='#' onclick=\"getElementById('incluir_feriados_nacionais').value = 'S'; getElementById('tipoacao').value = '';{$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
@@ -264,12 +253,6 @@ class indice extends clsCadastro {
     }
 
     function CadastraFeriadosNacionais() {
-
-
-        if ($_POST["biblioteca_feriado"]) {
-            $this->biblioteca_feriado = unserialize(urldecode($_POST["biblioteca_feriado"]));
-        }
-
 
         $objBibliotecaFeriados = new clsPmieducarBibliotecaFeriados();
      
@@ -291,7 +274,7 @@ class indice extends clsCadastro {
         $fernac[5]["nm_feriado_"] = "Finados";
         $fernac[5]["data_feriado_"]= "02/11/" . date("Y");
                 
-        $fernac[6]["nm_feriado_"] = "Proclamação da Republica";
+        $fernac[6]["nm_feriado_"] = "Proclamacao da Republica";
         $fernac[6]["data_feriado_"]= "15/11/" . date("Y");
         
         $fernac[7]["nm_feriado_"] = "Natal";
@@ -301,29 +284,19 @@ class indice extends clsCadastro {
         
         for($count=0;$count < $qtd_feriados; $count ++){                   
             
-            if(!$objBibliotecaFeriados->lista($int_cod_feriado, $this->cod_biblioteca, $fernac[$count]["nm_feriado_"], $str_descricao, $fernac[$count]["data_feriado_"], $fernac[$count]["data_feriado_"], $date_data_cadastro_ini, $date_data_cadastro_fim, $date_data_exclusao_ini)){
+            if(!$objBibliotecaFeriados->lista(null, $this->cod_biblioteca, $fernac[$count]["nm_feriado_"], null, $fernac[$count]["data_feriado_"], $fernac[$count]["data_feriado_"], null, null, null)){
                 $this->biblioteca_feriado[]= $fernac[$count];
             }
-            
-            
         }
         
-        
-        if(isset($this->biblioteca_feriado))
-        {
-            return true;
-        }else
-        {
-            return false;
+        if($this->biblioteca_feriado){
+            return 0;
+        }else{
+            return -1;
         }
         
+    }  
         
-        
-}  
-            
-       
-   
-
     function Editar() {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -428,9 +401,9 @@ class indice extends clsCadastro {
 // cria uma extensao da classe base
 $pagina = new clsIndexBase();
 // cria o conteudo
-$miolo = new indice();
+$miolo = new Indice_Biblioteca_dados();
 // adiciona o conteudo na clsBase
 $pagina->addForm($miolo);
 // gera o html
-$pagina->MakeAll();
+//$pagina->MakeAll();
 ?>

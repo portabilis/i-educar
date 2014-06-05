@@ -101,7 +101,7 @@ $coreExt['Locale'] = $locale;
 // Timezone
 date_default_timezone_set($coreExt['Config']->app->locale->timezone);
 
-$tenantEnv = $_SERVER['HTTP_HOST'];
+$tenantEnv = @$_SERVER['HTTP_HOST'];
 
 // tenta carregar as configurações da seção especifica do tenant,
 // ex: ao acessar http://tenant.ieducar.com.br será carregado a seção tenant.ieducar.com.br caso exista
