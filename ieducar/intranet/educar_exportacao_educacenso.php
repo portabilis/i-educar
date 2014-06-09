@@ -34,6 +34,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'lib/Portabilis/Date/Utils.php';
+require_once 'lib/Portabilis/String/Utils.php';
 require_once 'Portabilis/Business/Professor.php';
 require_once 'App/Model/IedFinder.php';
 require_once 'ComponenteCurricular/Model/CodigoEducacenso.php';
@@ -98,6 +99,8 @@ class indice extends clsCadastro
     $this->acao_enviar      = 'document.formcadastro.submit()';
 
     $this->inputsHelper()->input('ano');
+    $this->inputsHelper()->date('data_ini',array( 'label' => Portabilis_String_Utils::toLatin1('Data início')));
+    $this->inputsHelper()->date('data_fim',array( 'label' => 'Data fim'));
     $escolas = Portabilis_Business_Professor::isProfessor($this->ref_cod_instituicao, $this->pessoa_logada) ? 
                   Portabilis_Business_Professor::escolasAlocado($this->ref_cod_instituicao, $this->pessoa_logada) : 
                                                                                   App_Model_IedFinder::getEscolas();
@@ -140,7 +143,10 @@ class indice extends clsCadastro
     $conteudo = '';
 
     foreach ($this->escolas as $key => $escolaId) {  
-      $conteudo .= $this->exportaDadosCensoPorEscola($escolaId, $this->ano);
+      $conteudo .= $this->exportaDadosCensoPorEscola($escolaId, 
+              $this->ano, 
+              Portabilis_Date_Utils::brToPgSQL($this->data_ini), 
+              Portabilis_Date_Utils::brToPgSQL($this->data_fim));
     }
 
     header('Content-type: text/plain');
@@ -150,7 +156,7 @@ class indice extends clsCadastro
     die();
   }
 
-  function exportaDadosCensoPorEscola($escolaId, $ano){
+  function exportaDadosCensoPorEscola($escolaId, $ano, $data_ini, $data_fim){
     $export = $this->exportaDadosRegistro00($escolaId, $ano);
     $export .= $this->exportaDadosRegistro10($escolaId);
     foreach ($this->getTurmas($escolaId, $ano) as $turmaId => $turmaNome) {
@@ -162,9 +168,9 @@ class indice extends clsCadastro
       $export .= $this->exportaDadosRegistro50($servidor['id']);
       $export .= $this->exportaDadosRegistro51($servidor['id']);      
     }
-    $export .= $this->exportaDadosRegistro60($escolaId, $ano);
-    $export .= $this->exportaDadosRegistro70($escolaId, $ano);
-    $export .= $this->exportaDadosRegistro80($escolaId, $ano);
+    $export .= $this->exportaDadosRegistro60($escolaId, $ano, $data_ini, $data_fim);
+    $export .= $this->exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim);
+    $export .= $this->exportaDadosRegistro80($escolaId, $ano, $data_ini, $data_fim);
     return $export;
   }
 
@@ -196,6 +202,8 @@ class indice extends clsCadastro
           WHERE ano_letivo_modulo.ref_ano = $2 AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) as r00s5,
 
         p.nome as r00s6,
+        e.latitude as r00s7,
+        e.longitude as r00s8,
         ep.cep as r00s9,
         l.idtlog || l.nome as r00s10,
         ep.numero as r00s11,
@@ -317,6 +325,23 @@ class indice extends clsCadastro
       e.dependencia_nenhuma_relacionada as r10s72,
       e.dependencia_numero_salas_existente as r10s73,
       e.dependencia_numero_salas_utilizadas as r10s74,
+
+      e.televisoes as r10s75,
+      e.videocassetes as r10s76,
+      e.dvds as r10s77,
+      e.antenas_parabolicas as r10s78,
+      e.copiadoras as r10s79,
+      e.retroprojetores as r10s80,
+      e.impressoras as r10s81,
+      e.aparelhos_de_som as r10s82,
+      e.projetores_digitais  as r10s83,
+      e.faxs as r10s84,
+      e.maquinas_fotograficas as r10s85,
+      e.computadores as r10s86,
+      e.computadores_administrativo as r10s87,
+      e.computadores_alunos as r10s88,
+      e.acesso_internet as r10s89,
+      e.banda_larga as r10s90,
 
       total_funcionario as r10s91,
       1 as r10s92,
@@ -574,9 +599,12 @@ class indice extends clsCadastro
 
       $r10s3 = $this->cpfToCenso($r10s3);
 
-      for ($i=1; $i <= 130 ; $i++)
-        $return .= ${'r10s'.$i}.$d;
-
+      for ($i=1; $i <= 130 ; $i++){
+        if($i>=75 && $i<=88)
+          $return .= (${'r10s'.$i} == 0 ? '' : ${'r10s'.$i}).$d;
+        else
+          $return .= ${'r10s'.$i}.$d;
+      }
       return $return."\n"; 
     }
   }
@@ -1153,7 +1181,7 @@ class indice extends clsCadastro
     return $return;
   }
   
-  function exportaDadosRegistro60($escolaId, $ano){
+  function exportaDadosRegistro60($escolaId, $ano, $data_ini, $data_fim){
 
     $sql = 
      'SELECT
@@ -1196,6 +1224,8 @@ class indice extends clsCadastro
       LEFT JOIN public.uf ON (uf.sigla_uf = mun.sigla_uf)
 
       WHERE e.cod_escola = $1
+      AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
+      AND (m.aprovado = 3 OR DATE(COALESCE(m.data_cancel,m.data_exclusao)) > DATE($4))      
       AND m.ano = $2
     ';
 
@@ -1208,7 +1238,7 @@ class indice extends clsCadastro
                         cadastro.deficiencia where cod_deficiencia = ref_cod_deficiencia and ref_idpes = $1 
                         and deficiencia_educacenso is not null';
 
-    foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano))) as $reg) {
+    foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim))) as $reg) {
       extract($reg);
       
       $r60s7 = Portabilis_Date_Utils::pgSQLToBr($r60s7);
@@ -1259,7 +1289,7 @@ class indice extends clsCadastro
     return $return;
   }  
 
-function exportaDadosRegistro70($escolaId, $ano){
+function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim){
 
     $sql = 
      '  SELECT
@@ -1311,6 +1341,8 @@ function exportaDadosRegistro70($escolaId, $ano){
         INNER JOIN public.logradouro l ON (l.idlog = cl.idlog)
 
         WHERE e.cod_escola = $1
+        AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
+        AND (m.aprovado = 3 OR DATE(COALESCE(m.data_cancel,m.data_exclusao)) > DATE($4))
         AND m.ano = $2     
     ';
 
@@ -1319,7 +1351,7 @@ function exportaDadosRegistro70($escolaId, $ano){
     $return = '';
     $numeroRegistros = 31;
 
-    foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano))) as $reg) {
+    foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim))) as $reg) {
       extract($reg);
 
       $r70s9 = Portabilis_Date_Utils::pgSQLToBr($r70s9);
@@ -1358,7 +1390,7 @@ function exportaDadosRegistro70($escolaId, $ano){
     return $return;
   }
 
-function exportaDadosRegistro80($escolaId, $ano){
+function exportaDadosRegistro80($escolaId, $ano, $data_ini, $data_fim){
 
     $sql = 
      '  SELECT
@@ -1481,6 +1513,8 @@ function exportaDadosRegistro80($escolaId, $ano){
         LEFT JOIN modules.transporte_aluno ta ON (ta.aluno_id = a.cod_aluno)
 
         WHERE e.cod_escola = $1
+        AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
+        AND (m.aprovado = 3 OR DATE(COALESCE(m.data_cancel,m.data_exclusao)) > DATE($4))        
         AND m.ano = $2    
     ';
 
@@ -1489,7 +1523,7 @@ function exportaDadosRegistro80($escolaId, $ano){
     $return = '';
     $numeroRegistros = 23;
 
-    foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano))) as $reg) {
+    foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim))) as $reg) {
       extract($reg);
 
       // validações transporte escolar
