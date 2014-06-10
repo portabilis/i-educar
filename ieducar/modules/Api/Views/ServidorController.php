@@ -55,9 +55,15 @@ class ServidorController extends ApiCoreController
                 INNER JOIN cadastro.fisica f ON (p.idpes = f.idpes)
                 INNER JOIN portal.funcionario fun ON (fun.ref_cod_pessoa_fj = f.idpes)
                 INNER JOIN pmieducar.servidor s ON (s.cod_servidor = fun.ref_cod_pessoa_fj)
-                INNER JOIN pmieducar.servidor_alocacao sa ON (s.cod_servidor = sa.ref_cod_servidor)
+                LEFT JOIN pmieducar.servidor_alocacao sa ON (s.cod_servidor = sa.ref_cod_servidor)
 
-                WHERE p.idpes LIKE '%'||$1||'%' AND sa.ref_cod_escola = $2 LIMIT 15";
+                WHERE p.idpes LIKE '%'||$1||'%' 
+                AND (CASE WHEN $2 = NULL OR $2 = 0 THEN
+                      1 = 1
+                    ELSE
+                      sa.ref_cod_escola = $2 
+                    END)                  
+                LIMIT 15";
 
     return $sqls;
   }
@@ -69,9 +75,15 @@ class ServidorController extends ApiCoreController
                 INNER JOIN cadastro.fisica f ON (p.idpes = f.idpes)
                 INNER JOIN portal.funcionario fun ON (fun.ref_cod_pessoa_fj = f.idpes)
                 INNER JOIN pmieducar.servidor s ON (s.cod_servidor = fun.ref_cod_pessoa_fj)
-                INNER JOIN pmieducar.servidor_alocacao sa ON (s.cod_servidor = sa.ref_cod_servidor)
+                LEFT JOIN pmieducar.servidor_alocacao sa ON (s.cod_servidor = sa.ref_cod_servidor)
 
-                WHERE p.nome LIKE '%'||$1||'%' AND sa.ref_cod_escola = $2 LIMIT 15";
+                WHERE p.nome LIKE '%'||$1||'%' 
+                AND (CASE WHEN $2 = NULL OR $2 = 0 THEN
+                      1 = 1
+                    ELSE
+                      sa.ref_cod_escola = $2 
+                    END)   
+                LIMIT 15";
 
     return $sqls;
   }
