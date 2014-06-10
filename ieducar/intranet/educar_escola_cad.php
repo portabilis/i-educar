@@ -1024,7 +1024,7 @@ if(!$this->isEnderecoExterno){
   		$options = array('label' => Portabilis_String_Utils::toLatin1('Regulamentação/ Autorização no conselho ou órgão público de educação'), 'resources' => $resources, 'value' => $this->regulamentacao, 'size' => 70,);
 	    $this->inputsHelper()->select('regulamentacao', $options);  	
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Ato de criação'), 'value' => $this->ato_criacao, 'size' => 70,);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Ato de criação'), 'value' => $this->ato_criacao, 'size' => 70, 'required' => false);
 	    $this->inputsHelper()->text('ato_criacao', $options);  		
 
 	    $hiddenInputOptions = array('options' => array('value' => $this->gestor_id));
