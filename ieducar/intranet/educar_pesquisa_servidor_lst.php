@@ -333,7 +333,7 @@ class indice extends clsListagem
               $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['nome']}','{$registro['cod_servidor']}'); addVal1('{$_SESSION['campo2']}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
             }
             else {
-              $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['cod_servidor']}', null); addVal1('{$_SESSION['campo2']}','{$registro['nome']}', null); $setAll fecha();\"";
+              $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['cod_servidor']}', '{$registro['nome']}'); addVal1('{$_SESSION['campo2']}','{$registro['nome']}', '{$registro['cod_servidor']}'); $setAll fecha();\"";
             }
           }
           elseif (is_string($_SESSION['campo1'])) {
