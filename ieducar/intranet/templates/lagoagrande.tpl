@@ -10,7 +10,7 @@
     <link rel=stylesheet type='text/css' href='styles/reset.css?rand=3' />
     <link rel=stylesheet type='text/css' href='styles/portabilis.css?rand=3' />
     <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=3' />
-    <link rel=stylesheet type='text/css' href='styles/login.css?rand=5' />
+    <link rel=stylesheet type='text/css' href='styles/login.css?rand=7' />
     <script type="text/javascript" src="http://assets.freshdesk.com/widget/freshwidget.js"></script>
     <script type="text/javascript" src="scripts/suporte_freshdesk.js?1"></script>    
 
@@ -156,6 +156,12 @@
      <!--div id="div-outubro-rosa" style="top: -480px;">
         <a href="https://www.google.com.br/#q=Campanha+Outubro+rosa" target="_blank"><img src="https://s3.amazonaws.com/apps-ieducar-images/outubro-rosa/outubro-rosa.png"/></a>
       </div-->       
+      <div id="div-copa-no-brasil" style="top: -367px;">
+        <img src="https://cloud.githubusercontent.com/assets/1082624/3250687/b08b862c-f1a8-11e3-87f9-a1bfef5949c3.jpg"/>
+        <p><a href="https://www.google.com/maps/views/streetview/brazils-painted-streets?gl=br&hl=pt-BR" target="_blank">
+            <span style="color: #00A859;">Ruas</span> <span style="color: #FFCC29;">coloridas do <span style="color: #3E4095;">Brasil</span>
+          </a></p>
+      </div>      
     </div> <!-- end rodape -->
 
   </body>
