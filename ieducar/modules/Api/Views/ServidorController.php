@@ -77,7 +77,7 @@ class ServidorController extends ApiCoreController
                 INNER JOIN pmieducar.servidor s ON (s.cod_servidor = fun.ref_cod_pessoa_fj)
                 LEFT JOIN pmieducar.servidor_alocacao sa ON (s.cod_servidor = sa.ref_cod_servidor)
 
-                WHERE p.nome LIKE '%'||$1||'%' 
+                WHERE p.nome ILIKE '%'||$1||'%' 
                 AND (CASE WHEN $2 = NULL OR $2 = 0 THEN
                       1 = 1
                     ELSE
