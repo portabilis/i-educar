@@ -34,6 +34,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
+require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
 
 /**
  * clsIndexBase class.
@@ -90,7 +91,6 @@ class indice extends clsCadastro
 
   var $ref_cod_instituicao;
   var $ref_cod_curso;
-  var $intervalo;
 
   var $escola_serie_disciplina;
   var $ref_cod_disciplina;
@@ -465,6 +465,15 @@ class indice extends clsCadastro
             }
           }
         }
+        //Verifica/limpa disciplinas não alteradas quando a escola/série for editada e tiver disciplinas marcadas
+        //não padrão do ano letivo.
+        $obj_ano_letivo = new clsPmieducarEscolaAnoLetivo();
+        $existe_ano_andamento = $obj_ano_letivo->lista($this->ref_cod_escola,null,null,null,1,null,null,null,null,1);
+        foreach ($existe_ano_andamento as $reg) {
+          CleanComponentesCurriculares::destroyOldResources($reg['ano']);  
+        }
+        
+        
       }
 
       $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';

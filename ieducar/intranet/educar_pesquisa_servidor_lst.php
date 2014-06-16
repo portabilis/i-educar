@@ -72,7 +72,6 @@ class indice extends clsListagem
   var $offset;
 
   var $cod_servidor;
-  var $ref_cod_deficiencia;
   var $ref_idesco;
   var $ref_cod_funcao;
   var $carga_horaria;
@@ -253,7 +252,7 @@ class indice extends clsListagem
     // selecionando apenas servidores alocados na instituição
     $lista = $obj_servidor->lista(
       NULL,
-      $this->ref_cod_deficiencia,
+      NULL,
       $this->ref_idesco,
       $this->carga_horaria,
       NULL,
@@ -334,7 +333,7 @@ class indice extends clsListagem
               $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['nome']}','{$registro['cod_servidor']}'); addVal1('{$_SESSION['campo2']}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
             }
             else {
-              $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['cod_servidor']}', null); addVal1('{$_SESSION['campo2']}','{$registro['nome']}', null); $setAll fecha();\"";
+              $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['cod_servidor']}', '{$registro['nome']}'); addVal1('{$_SESSION['campo2']}','{$registro['nome']}', '{$registro['cod_servidor']}'); $setAll fecha();\"";
             }
           }
           elseif (is_string($_SESSION['campo1'])) {

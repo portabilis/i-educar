@@ -8,9 +8,9 @@
   -- @license  @@license@@
   -- @version  $Id$
 
-  CREATE OR REPLACE FUNCTION modules.copia_notas_transf(old_matricula_id integer, new_matricula_id integer) /* Verificar schema e fun*/
-    RETURNS void AS
-  $BODY$
+  CREATE OR REPLACE FUNCTION modules.copia_notas_transf(old_matricula_id integer, new_matricula_id integer)
+  RETURNS void AS
+$BODY$
   DECLARE 
   cur_comp RECORD;
   cur_comp_media RECORD;
@@ -69,8 +69,14 @@
                   where m.cod_matricula = old_matricula_id);
         /* SE A REGRA UTILIZAR NOTA, COPIA AS NOTAS*/
         IF (v_tipo_nota >0) THEN            
-            v_nota_id := (SELECT max(id)+1 as id FROM modules.nota_aluno);
-            INSERT INTO modules.nota_aluno VALUES (v_nota_id, new_matricula_id);
+          
+          v_nota_id := (SELECT max(id)+1 as id FROM modules.nota_aluno);
+
+          IF (v_nota_id is null) THEN
+            v_nota_id := 1;
+          END IF;
+
+          INSERT INTO modules.nota_aluno VALUES (v_nota_id, new_matricula_id);
           v_old_nota_id := (SELECT id FROM modules.nota_aluno WHERE matricula_id = old_matricula_id);
           
           FOR cur_comp IN (SELECT * FROM modules.nota_componente_curricular where nota_aluno_id = v_old_nota_id) LOOP
@@ -86,6 +92,11 @@
 
         IF (v_tipo_falta = 1) THEN
             v_falta_id := (SELECT max(id)+1 AS id FROM modules.falta_aluno);
+
+          IF (v_falta_id is null) THEN
+            v_falta_id := 1;
+          END IF;
+                      
             INSERT INTO modules.falta_aluno VALUES (v_falta_id, new_matricula_id,1);
           v_old_falta_id := (SELECT id FROM modules.falta_aluno WHERE matricula_id = old_matricula_id);
 
@@ -97,6 +108,9 @@
 
         IF (v_tipo_falta = 2) THEN
             v_falta_id := (SELECT max(id)+1 AS id FROM modules.falta_aluno);
+            IF (v_falta_id is null) THEN
+              v_falta_id := 1;
+            END IF;            
             INSERT INTO modules.falta_aluno VALUES (v_falta_id, new_matricula_id,2);
           v_old_falta_id := (SELECT id FROM modules.falta_aluno WHERE matricula_id = old_matricula_id);
 
@@ -108,6 +122,9 @@
 
         IF (v_tipo_parecer = 2) THEN
             v_parecer_id := (SELECT max(id)+1 AS id FROM modules.parecer_aluno);
+            IF (v_parecer_id is null) THEN
+              v_parecer_id := 1;
+            END IF;            
             INSERT INTO modules.parecer_aluno VALUES (v_parecer_id, new_matricula_id,2);
           v_old_parecer_id := (SELECT id FROM modules.parecer_aluno WHERE matricula_id = old_matricula_id);
 
@@ -119,6 +136,9 @@
 
         IF (v_tipo_parecer = 3) THEN
             v_parecer_id := (SELECT max(id)+1 AS id FROM modules.parecer_aluno);
+            IF (v_parecer_id is null) THEN
+              v_parecer_id := 1;
+            END IF;             
             INSERT INTO modules.parecer_aluno VALUES (v_parecer_id, new_matricula_id,3);
           v_old_parecer_id := (SELECT id FROM modules.parecer_aluno WHERE matricula_id = old_matricula_id);
 
@@ -134,7 +154,7 @@
   END IF;
 
   end;$BODY$
-    LANGUAGE 'plpgsql' VOLATILE;
+  LANGUAGE 'plpgsql' VOLATILE;
 
   -- //@UNDO
 

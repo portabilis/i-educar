@@ -61,6 +61,8 @@ class indice extends clsCadastro
 	var $ativo;
 	var $data_transferencia;
 	var $data_cancel;
+	var $ref_cod_instituicao;
+	var $abandono_tipo;
 
 	var $ref_cod_matricula;
 	var $transferencia_tipo;
@@ -116,6 +118,20 @@ class indice extends clsCadastro
 			$this->campoTexto( "nm_aluno", "Aluno", $this->nm_aluno, 30, 255, false,false,false,"","","","",true );
 		}
 
+		$this->ref_cod_instituicao = $det_aluno["ref_cod_abandono_tipo"];
+
+		$tiposAbandono  = new clsPmieducarAbandonoTipo ();
+	    $tiposAbandono  = $tiposAbandono->lista(null,null,null,null,null,null,null,null,1,$ref_cod_instituicao);
+
+	    foreach ($tiposAbandono as $tipoAbandono)
+	      $selectOptions[$tipoAbandono['cod_abandono_tipo']] = $tipoAbandono['nome'];
+
+		$selectOptions = Portabilis_Array_Utils::sortByValue($selectOptions);
+		
+    	$options = array('label' => 'Motivo do abandono', 'resources' => $selectOptions, 'value' => '');
+
+    	$this->inputsHelper()->select('abandono_tipo', $options);
+
 		$this->inputsHelper()->date('data_cancel', array('label' => 'Data do abandono', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')));
 		// text
 		$this->campoMemo( "observacao", "Observa&ccedil;&atilde;o", $this->observacao, 60, 5, false );
@@ -152,8 +168,22 @@ class indice extends clsCadastro
 		if($obj_matricula->edita())
 		{
 
-			if( $obj_matricula->cadastraObs($this->observacao) )
-			{
+			if( $obj_matricula->cadastraObs($this->observacao, $this->abandono_tipo) )
+			{		
+				$enturmacoes = new clsPmieducarMatriculaTurma();
+				$enturmacoes = $enturmacoes->lista($this->ref_cod_matricula, null, null, null, null, null, null, null, 1 );
+
+				foreach ($enturmacoes as $enturmacao) {
+				  $enturmacao = new clsPmieducarMatriculaTurma( $this->ref_cod_matricula, $enturmacao['ref_cod_turma'], $this->pessoa_logada, null, null, null, 0, null, $enturmacao['sequencial']);
+
+				  if(! $enturmacao->edita())
+				  {
+				  	$this->mensagem = "N&atilde;o foi poss&iacute;vel desativar as enturma&ccedil;&otilde;es da matr&iacute;cula.";
+					return false;
+				  }else
+				  	$enturmacao->marcaAlunoAbandono();
+				  
+      			}		
 				$this->mensagem .= "Abandono realizado com sucesso.<br>";
 				header( "Location: educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
 				return true;

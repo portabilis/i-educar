@@ -95,6 +95,21 @@ ul.unstyled, ol.unstyled {
   width: 100px;
 }
 
+#div-copa-no-brasil img{  
+  height: 180px;
+}
+
+#div-copa-no-brasil {
+  position: relative;
+  top: -347px;
+  left: -160px;
+  width: 158px;
+}
+
+#div-copa-no-brasil p{  
+  margin-left: 15px;
+}
+
 #div-outubro-rosa img{  
   height: 180px;
 }

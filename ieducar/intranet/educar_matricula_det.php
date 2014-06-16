@@ -74,6 +74,7 @@ class indice extends clsDetalhe
   var $ref_cod_reserva_vaga;
   var $ref_ref_cod_escola;
   var $ref_ref_cod_serie;
+  var $ref_cod_abandono_tipo;
   var $ref_usuario_exc;
   var $ref_usuario_cad;
   var $ref_cod_aluno;
@@ -217,8 +218,14 @@ class indice extends clsDetalhe
 
       $this->addDetalhe(array('Situação', $aprovado));
     }
-    if ($campoObs)
+    if ($campoObs){
+
+      $tipoAbandono = new clsPmieducarAbandonoTipo($registro['ref_cod_abandono_tipo']);
+      $tipoAbandono = $tipoAbandono->detalhe();
+
+      $this->addDetalhe(array('Motivo do Abandono',$tipoAbandono['nome']));
       $this->addDetalhe(array('Observação',$registro['observacao']));
+    }
 
     $this->addDetalhe(array('Formando', $registro['formando'] == 0 ? 'N&atilde;o' : 'Sim'));
 
@@ -306,9 +313,14 @@ class indice extends clsDetalhe
       if ($registro['aprovado'] == App_Model_MatriculaSituacao::ABANDONO) {
         $this->array_botao[]            = "Desfazer abandono";
         $this->array_botao_url_script[] = "deleteAbandono({$registro['cod_matricula']})";
+      }    
+
+      if ($registro['aprovado'] == App_Model_MatriculaSituacao::RECLASSIFICADO){
+        $this->array_botao[]            = 'Desfazer reclassificação';
+        $this->array_botao_url_script[] = "deleteReclassificacao({$registro['cod_matricula']})";
       }
     }
-
+    
     $this->url_cancelar = 'educar_aluno_det.php?cod_aluno=' . $registro['ref_cod_aluno'];
     $this->largura      = '100%';
 
@@ -331,7 +343,6 @@ class indice extends clsDetalhe
 
     Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
   }
-
 
   function canCancelTransferenciaExterna($matriculaId, $alunoId) {
     $sql = "select 1 from pmieducar.matricula where ativo = 1 and cod_matricula > $matriculaId and ref_cod_aluno = $alunoId limit 1";

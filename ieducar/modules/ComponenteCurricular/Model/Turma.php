@@ -49,11 +49,13 @@ class ComponenteCurricular_Model_Turma extends CoreExt_Entity
     'anoEscolar'           => NULL,
     'escola'               => NULL,
     'turma'                => NULL,
-    'cargaHoraria'         => NULL
+    'cargaHoraria'         => NULL,
+    'docenteVinculado'     => NULL
   );
 
   protected $_dataTypes = array(
-    'cargaHoraria' => 'numeric'
+    'cargaHoraria' => 'numeric',
+    'docenteVinculado' => 'numeric'
   );
 
   protected $_references = array(
@@ -79,7 +81,8 @@ class ComponenteCurricular_Model_Turma extends CoreExt_Entity
   public function getDefaultValidatorCollection()
   {
     return array(
-      'cargaHoraria' => new CoreExt_Validate_Numeric(array('required' => FALSE))
+      'cargaHoraria' => new CoreExt_Validate_Numeric(array('required' => FALSE)),
+      'docenteVinculado' => new CoreExt_Validate_Numeric(array('required' => FALSE))
     );
   }
 }

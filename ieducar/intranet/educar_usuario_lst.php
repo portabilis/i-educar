@@ -122,7 +122,7 @@ class indice extends clsListagem
 		{
 			$objTemp = new clsPmieducarTipoUsuario();
 			$objTemp->setOrderby('nm_tipo ASC');
-			$lista = $objTemp->lista();
+			$lista = $objTemp->lista(null,null,null,null,null,null,null,null,1);
 			if ( is_array( $lista ) && count( $lista ) )
 			{
 				foreach ( $lista as $registro )
@@ -140,9 +140,11 @@ class indice extends clsListagem
 
 
 
-		
+		$obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
+		$detalhe = $obj_usuario->detalhe();
+
 		// filtro de nivel de acesso
-		$obj_tipo_usuario = new clsPmieducarTipoUsuario($this->pessoa_logada);
+		$obj_tipo_usuario = new clsPmieducarTipoUsuario($detalhe['ref_cod_tipo_usuario']);
 		$tipo_usuario = $obj_tipo_usuario->detalhe();
 
 		$obj_super_usuario = new clsMenuFuncionario($this->pessoa_logada,false,false,0);

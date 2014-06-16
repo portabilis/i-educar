@@ -57,6 +57,7 @@ class clsDocumento
 	var $secao_tit_eleitor;
 	var $idorg_exp_rg;
 	var $certidao_nascimento;
+	var $cartorio_cert_civil_inep;
 
 	var $tabela;
 	var $schema = "cadastro";
@@ -132,7 +133,7 @@ class clsDocumento
 			$campos = "";
 			$values = "";
 
-			if( is_numeric( $this->rg ) and (!empty($this->rg)) )
+			if( is_string( $this->rg ) and (!empty($this->rg)) )
 			{
 				$campos .= ", rg";
 				$values .= ", '{$this->rg}'";
@@ -186,6 +187,11 @@ class clsDocumento
 			{
 				$campos .= ", num_cart_trabalho";
 				$values .= ", '{$this->num_cart_trabalho}'";
+			}			
+			if( is_numeric( $this->cartorio_cert_civil_inep ) and (!empty($this->cartorio_cert_civil_inep)))
+			{
+				$campos .= ", cartorio_cert_civil_inep";
+				$values .= ", '{$this->cartorio_cert_civil_inep}'";
 			}
 			if( is_numeric( $this->serie_cart_trabalho ) and (!empty($this->serie_cart_trabalho)))
 			{
@@ -245,7 +251,7 @@ class clsDocumento
 		$set = "";
 		$gruda = "SET ";
 		//die($this->rg."<-");
-		if( is_numeric( $this->rg ) and (!empty($this->rg)))
+		if( is_string( $this->rg ) and (!empty($this->rg)))
 		{	//die("aki");
 			$set = "SET rg = '{$this->rg}'";
 			$gruda = ", ";
@@ -318,6 +324,17 @@ class clsDocumento
 	    else
 	    {
 		    $set .= $gruda."num_folha = NULL";
+		    $gruda = ", ";
+	    } 		
+
+		if( is_numeric( $this->cartorio_cert_civil_inep ) and (!empty($this->cartorio_cert_civil_inep))) 
+		{
+			$set .= $gruda."cartorio_cert_civil_inep = '{$this->cartorio_cert_civil_inep}'";
+			$gruda = ", ";
+		}
+	    else
+	    {
+		    $set .= $gruda."cartorio_cert_civil_inep = NULL";
 		    $gruda = ", ";
 	    } 		
 
@@ -491,7 +508,7 @@ class clsDocumento
 			$whereAnd = " AND ";
 		}
 
-		if( is_numeric( $this->rg ) )
+		if( is_string( $this->rg ) )
 		{
 			$where .= "{$whereAnd}rg = '$int_rg'";
 			$whereAnd = " AND ";
@@ -631,7 +648,7 @@ class clsDocumento
 		if($objPessoa->detalhe())
 		{
 			$db = new clsBanco();
-			$db->Consulta("SELECT rg, data_exp_rg, sigla_uf_exp_rg, tipo_cert_civil, num_termo, num_livro, num_folha, data_emissao_cert_civil, sigla_uf_cert_civil, cartorio_cert_civil, num_cart_trabalho, serie_cart_trabalho, data_emissao_cart_trabalho, sigla_uf_cart_trabalho, num_tit_eleitor, zona_tit_eleitor, secao_tit_eleitor, idorg_exp_rg, certidao_nascimento FROM {$this->schema}.{$this->tabela} WHERE idpes = '{$this->idpes}'");
+			$db->Consulta("SELECT rg, data_exp_rg, sigla_uf_exp_rg, tipo_cert_civil, cartorio_cert_civil_inep, num_termo, num_livro, num_folha, data_emissao_cert_civil, sigla_uf_cert_civil, cartorio_cert_civil, num_cart_trabalho, serie_cart_trabalho, data_emissao_cart_trabalho, sigla_uf_cart_trabalho, num_tit_eleitor, zona_tit_eleitor, secao_tit_eleitor, idorg_exp_rg, certidao_nascimento FROM {$this->schema}.{$this->tabela} WHERE idpes = '{$this->idpes}'");
 			if( $db->ProximoRegistro() )
 			{
 				$tupla = $db->Tupla();
@@ -644,6 +661,7 @@ class clsDocumento
 				$this->num_folha = $tupla["num_folha"];
 				$this->data_emissao_cert_civil = $tupla["data_emissao_cert_civil"];
 				$this->cartorio_cert_civil = $tupla["cartorio_cert_civil"];
+				$this->cartorio_cert_civil_inep = $tupla["cartorio_cert_civil_inep"];
 				$this->num_cart_trabalho = $tupla["num_cart_trabalho"];
 				$this->serie_cart_trabalho = $tupla["serie_cart_trabalho"];
 				$this->data_emissao_cart_trabalho = $tupla["data_emissao_cart_trabalho"];

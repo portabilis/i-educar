@@ -555,7 +555,7 @@ class DiarioApiController extends ApiCoreController
         NULL,
         NULL,
         NULL,
-        1,
+        2,
         $this->getRequest()->serie_id,
         $this->getRequest()->curso_id,
         $this->getRequest()->escola_id,
@@ -576,7 +576,9 @@ class DiarioApiController extends ApiCoreController
         NULL,
         NULL,
         NULL,
-        NULL
+        NULL,
+        NULL,
+        TRUE
       );
 
       if (! is_array($alunos))
@@ -589,10 +591,23 @@ class DiarioApiController extends ApiCoreController
         // seta id da matricula a ser usado pelo metodo serviceBoletim
         $this->setCurrentMatriculaId($matriculaId);
 
-        $matricula['componentes_curriculares'] = $this->loadComponentesCurricularesForMatricula($matriculaId);
+        if(! ($aluno['remanejado'] || $aluno['transferido'] || $aluno['abandono'] || $aluno['reclassificado']))
+          $matricula['componentes_curriculares'] = $this->loadComponentesCurricularesForMatricula($matriculaId);
+          
         $matricula['matricula_id']             = $aluno['ref_cod_matricula'];
         $matricula['aluno_id']                 = $aluno['ref_cod_aluno'];
         $matricula['nome']                     = $this->safeString($aluno['nome_aluno']);
+
+        if ($aluno['remanejado'])
+          $matricula['situacao_deslocamento'] = 'Remanejado';
+        elseif($aluno['transferido'])
+          $matricula['situacao_deslocamento'] = 'Transferido';
+        elseif($aluno['abandono'])
+          $matricula['situacao_deslocamento'] = 'Abandono';
+        elseif($aluno['reclassificado'])
+          $matricula['situacao_deslocamento'] = 'Reclassificado';
+        else  
+          $matricula['situacao_deslocamento'] = null;
 
         $matriculas[] = $matricula;
       }
@@ -758,26 +773,76 @@ class DiarioApiController extends ApiCoreController
       $componente                          = array();
 
       $componente['id']                    = $_componente->get('id');
-      $componente['nome']                  = $this->safeString($_componente->get('nome'));
+      $componente['nome']                  = $this->safeString(mb_strtoupper($_componente->get('nome'), 'iso-8859-1'), false);
       $componente['nota_atual']            = $this->getNotaAtual($etapa = null, $componente['id']);
       $componente['nota_exame']            = $this->getNotaExame($componente['id']);      
       $componente['falta_atual']           = $this->getFaltaAtual($etapa = null, $componente['id']);
       $componente['parecer_atual']         = $this->getParecerAtual($componente['id']);
       $componente['situacao']              = $this->getSituacaoMatricula($componente['id']);
       $componente['nota_necessaria_exame'] = ($componente['situacao'] == 'Em Exame' ? $this->getNotaNecessariaExame($componente['id']) : null );
+      $componente['ordenamento']           = $_componente->get('ordenamento');
 
       if (!empty($componente['nota_necessaria_exame']))
         $this->createOrUpdateNotaExame($matriculaId, $componente['id'], $componente['nota_necessaria_exame']);
       else
         $this->deleteNotaExame($matriculaId, $componente['id']);
 
+      //buscando pela área do conhecimento
+      $area                                = $this->getAreaConhecimento($componente['id']);
+      $nomeArea                            = (($area->secao != '') ? $area->secao . ' - ' : '') . $area->nome;
+      $componente['area_id']               = $area->id;
+      $componente['area_nome']             = $this->safeString(mb_strtoupper($nomeArea,'iso-8859-1'), false);
+      
+      //criando chave para ordenamento temporário
+      //área de conhecimento + componente curricular
+      $componente['ordem_nome_area_conhecimento'] = Portabilis_String_Utils::unaccent(strtoupper($nomeArea));      
+      $componente['ordem_componente_curricular']  = Portabilis_String_Utils::unaccent(strtoupper($_componente->get('nome')));
       $componentesCurriculares[]           = $componente;
     }
 
-    // ordenado por id, da mesma maneira que nos boletins,
-    // obs: poderá ainda ocorrer diferença entre a ordem das areas de conhecimento?
-    return Portabilis_Array_Utils::sortByKey('id', $componentesCurriculares);
+    $ordenamentoComponentes  = array();
+
+    foreach($componentesCurriculares as $chave=>$componente){
+      $ordenamentoComponentes['ordenamento'][$chave] = $componente['ordenamento'];
+      $ordenamentoComponentes['ordem_nome_area_conhecimento'][$chave] = $componente['ordem_nome_area_conhecimento'];
+      $ordenamentoComponentes['ordem_componente_curricular'][$chave] = $componente['ordem_componente_curricular'];
+    }
+    array_multisort($ordenamentoComponentes['ordem_nome_area_conhecimento'], SORT_ASC, 
+                    $ordenamentoComponentes['ordenamento'], SORT_ASC, SORT_NUMERIC,
+                    $ordenamentoComponentes['ordem_componente_curricular'], SORT_ASC,
+                    $componentesCurriculares);
+
+    //removendo chave temporária
+    $len = count($componentesCurriculares);
+    for ($i = 0; $i < $len; $i++) {
+      unset($componentesCurriculares[$i]['my_order']);
+    }
+    return $componentesCurriculares;
   }
+
+
+  protected function getAreaConhecimento($componenteCurricularId = null) {
+    if (is_null($componenteCurricularId))
+      $componenteCurricularId = $this->getRequest()->componente_curricular_id;
+
+    if (! is_numeric($componenteCurricularId)) {
+      throw new Exception('Não foi possível obter a área de conhecimento pois não foi recebido o id do componente curricular.');
+    }
+    
+    require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
+    $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+    
+    $where = array('id' => $componenteCurricularId);
+    
+    $area = $mapper->findAll(array('area_conhecimento'), $where);
+    
+    $areaConhecimento       = new stdClass();
+    $areaConhecimento->id   = $area[0]->area_conhecimento->id;
+    $areaConhecimento->nome = $area[0]->area_conhecimento->nome;
+    $areaConhecimento->secao = $area[0]->area_conhecimento->secao;
+    
+    return $areaConhecimento;
+  }  
 
   protected function createOrUpdateNotaExame($matriculaId, $componenteCurricularId, $notaExame) {
     
@@ -928,6 +993,9 @@ class DiarioApiController extends ApiCoreController
     return $opcoes;
   }
 
+  protected function getNavegacaoTab(){
+     return $this->getRequest()->navegacao_tab;
+  }
 
   protected function canGetRegraAvaliacao() {
     return true;
@@ -1001,8 +1069,10 @@ class DiarioApiController extends ApiCoreController
   }
 
   public function Gerar() {
-    if ($this->isRequestFor('get', 'matriculas'))
+    if ($this->isRequestFor('get', 'matriculas')){
       $this->appendResponse('matriculas', $this->getMatriculas());
+      $this->appendResponse('navegacao_tab', $this->getNavegacaoTab());
+    }
 
     elseif ($this->isRequestFor('post', 'nota') || $this->isRequestFor('post', 'nota_exame'))
       $this->postNota();

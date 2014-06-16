@@ -9,6 +9,9 @@
     var $turmaField = getElementFor('turma');
     var $ano        = getElementFor('ano');
 
+    var naoFiltrarAno        = $j('#nao_filtrar_ano').length > 0 ? 1 : false;
+    var anoEmAndamento       = $j('#ano_em_andamento').length > 0 ? 1 : false;
+
     var handleGetTurmas = function(response) {
       var selectOptions = jsonResourcesToSelectOptions(response['options']);
       updateSelect($turmaField, selectOptions, "Selecione uma turma");
@@ -21,10 +24,12 @@
         $turmaField.children().first().html('Aguarde carregando...');
 
         var urlForGetTurmas = getResourceUrlBuilder.buildUrl('/module/DynamicInput/turma', 'turmas', {
-          instituicao_id : $instituicaoField.val(),
-          escola_id      : $escolaField.val(),
-          serie_id       : $serieField.val(),
-          ano            : $ano.val()
+          instituicao_id   : $instituicaoField.val(),
+          escola_id        : $escolaField.val(),
+          serie_id         : $serieField.val(),
+          ano              : naoFiltrarAno ? null : $ano.val(),
+          nao_filtrar_ano  :  naoFiltrarAno ? 1 : null,
+          ano_em_andamento :  anoEmAndamento ? 1 : null
         });
 
         var options = {

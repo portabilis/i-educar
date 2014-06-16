@@ -175,7 +175,7 @@ class indice extends clsCadastro
     $this->inputsHelper()->dynamic('turma', array('required' => false, 'option value' => 'Selecione uma turma'));
     $this->inputsHelper()->dynamic('anoLetivo', array('label' => 'Ano destino'), $anoLetivoHelperOptions);
     $this->inputsHelper()->date('data_matricula', array('label' => 'Data da matrícula', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y') ));
-
+    $this->inputsHelper()->hidden('ano_em_andamento', array('value' => '1'));
 
     if (is_numeric($this->ref_cod_curso)) {
       $obj_curso = new clsPmieducarCurso($this->ref_cod_curso);
@@ -412,8 +412,7 @@ class indice extends clsCadastro
 
       $cadastrou = $obj->cadastra();
       
-      $cod_matricula = $cadastrou;
-      $this->enturmacaoMatricula($cod_matricula, $this->ref_cod_turma); 
+      $cod_matricula = $cadastrou;      
       
       if ($cadastrou) {
 
@@ -548,7 +547,7 @@ class indice extends clsCadastro
             }
           }
         //}
-
+        $this->enturmacaoMatricula($cod_matricula, $this->ref_cod_turma); 
         #TODO set in $_SESSION['flash'] 'Aluno matriculado com sucesso'
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
         header('Location: educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
@@ -582,6 +581,8 @@ class indice extends clsCadastro
                                                      $enturmacao['sequencial']);
         if ($result && ! $enturmacao->edita())
           $result = false;
+        else
+          $enturmacao->marcaAlunoTransferido($this->data_matricula);
       }
     }
 
@@ -690,12 +691,14 @@ class indice extends clsCadastro
 
 
     foreach ($matriculas as $matricula) {
-      $matricula = new clsPmieducarMatricula($matricula['cod_matricula'], NULL, NULL, NULL,
-                                             $this->pessoa_logada, NULL, $alunoId, NULL, NULL,
-                                             NULL, 1, NULL, 0);
-      if (! $matricula->edita()) {
-        $this->mensagem = 'Erro ao remover flag ultima matricula das matriculas anteriores.';
-        return false;
+      if (!$matricula['aprovado']==3){
+        $matricula = new clsPmieducarMatricula($matricula['cod_matricula'], NULL, NULL, NULL,
+                                               $this->pessoa_logada, NULL, $alunoId, NULL, NULL,
+                                               NULL, 1, NULL, 0);
+        if (! $matricula->edita()) {
+          $this->mensagem = 'Erro ao remover flag ultima matricula das matriculas anteriores.';
+          return false;
+        }
       }
     }
 

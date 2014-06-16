@@ -56,7 +56,6 @@ class indice extends clsDetalhe
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
-	var $ref_cod_escola;
 	var $ref_cod_instituicao;
 
 	function Gerar()
@@ -77,19 +76,7 @@ class indice extends clsDetalhe
 		{
 			header( "location: educar_transferencia_tipo_lst.php" );
 			die();
-		}
-		if( class_exists( "clsPmieducarEscola" ) )
-		{
-			$obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
-			$det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-			$registro["ref_cod_escola"] = $det_ref_cod_escola["nome"];
-			$registro["ref_cod_instituicao"] = $det_ref_cod_escola["ref_cod_instituicao"];
-		}
-		else
-		{
-			$registro["ref_cod_escola"] = "Erro na geracao";
-			echo "<!--\nErro\nClasse nao existente: clsPmieducarEscola\n-->";
-		}
+		}			
 		if (class_exists("clsPmieducarInstituicao"))
 		{
 			$obj_instituicao = new clsPmieducarInstituicao($registro["ref_cod_instituicao"]);
@@ -109,13 +96,6 @@ class indice extends clsDetalhe
 			if( $registro["ref_cod_instituicao"] )
 			{
 				$this->addDetalhe( array( "Institui&ccedil;&atilde;o", "{$registro["ref_cod_instituicao"]}") );
-			}
-		}
-		if ($nivel_usuario == 1 || $nivel_usuario == 2)
-		{
-			if( $registro["ref_cod_escola"] )
-			{
-				$this->addDetalhe( array( "Escola", "{$registro["ref_cod_escola"]}") );
 			}
 		}
 		if( $registro["nm_tipo"] )

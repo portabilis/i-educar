@@ -137,13 +137,16 @@ class indice extends clsDetalhe
 		//$this->addDetalhe( array("E-mail", $det_pessoa["email"]) );
 		$this->addDetalhe( array("E-mail usuário", $det_funcionario["email"]) );
 
+		if (!empty($det_funcionario['matricula_interna']))
+			$this->addDetalhe( array('Matr&iacute;cula interna', $det_funcionario['matricula_interna']));
+
 		$obj_fisica = new clsFisica($cod_pessoa);
 		$det_fisica = $obj_fisica->detalhe();
 
 		$sexo = ($det_fisica["sexo"] == "M") ? "Masculino" : "Feminino";
 		$this->addDetalhe( array("Sexo", $sexo) );
 
-		$this->addDetalhe( array("Matricula", $det_funcionario["matricula"]) );
+		$this->addDetalhe( array("Matrícula", $det_funcionario["matricula"]) );
 		$this->addDetalhe( array("Sequencial", $det_funcionario["sequencial"]) );
 		$ativo_f = ($det_funcionario["ativo"] == '1') ? "Ativo" : "Inativo";
 		$this->addDetalhe( array("Status", $ativo_f) );

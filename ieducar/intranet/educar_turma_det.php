@@ -34,6 +34,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
 require_once 'App/Model/IedFinder.php';
+require_once 'Portabilis/View/Helper/Application.php';
 
 /**
  * clsIndexBase class.
@@ -429,13 +430,26 @@ class indice extends clsDetalhe
     $this->url_cancelar = 'educar_turma_lst.php';
     $this->largura      = '100%';
 
-      $localizacao = new LocalizacaoSistema();
-      $localizacao->entradaCaminhos( array(
-           $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-           "educar_index.php"                  => "M&oacute;dulo Escola",
-           ""                                  => "Detalhe da turma"
-      ));
-      $this->enviaLocalizacao($localizacao->montar());    
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Escola",
+         ""                                  => "Detalhe da turma"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
+
+    $this->array_botao[]            = 'Reclassificar alunos alfabeticamente';
+    $this->array_botao_url_script[] = "if(confirm(\"Deseja realmente reclassificar os alunos alfabeticamente?\\nAo utilizar esta opção para esta turma, a ordenação dos alunos no diário e em relatórios que é controlada por ordem de chegada após a data de fechamento da turma (campo Data de fechamento), passará a ter o controle novamente alfabético, desconsiderando a data de fechamento.\"))reclassifica_matriculas({$registro['cod_turma']})";
+
+    Portabilis_View_Helper_Application::loadJQueryLib($this);
+
+    $scripts = array(
+      '/modules/Portabilis/Assets/Javascripts/Utils.js',
+      '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
+      '/modules/Cadastro/Assets/Javascripts/TurmaDet.js'
+    );
+
+    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
   }
 }
 

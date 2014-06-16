@@ -43,7 +43,6 @@ require_once 'include/pmieducar/geral.inc.php';
 class clsPmieducarServidor
 {
   var $cod_servidor;
-  var $ref_cod_deficiencia;
   var $ref_idesco;
   var $carga_horaria;
   var $data_cadastro;
@@ -51,6 +50,47 @@ class clsPmieducarServidor
   var $ativo;
   var $ref_cod_instituicao;
   var $ref_cod_subnivel;
+  var $situacao_curso_superior_1;
+  var $formacao_complementacao_pedagogica_1;
+  var $codigo_curso_superior_1;
+  var $ano_inicio_curso_superior_1;
+  var $ano_conclusao_curso_superior_1;
+  var $tipo_instituicao_curso_superior_1;
+  var $instituicao_curso_superior_1;
+  var $situacao_curso_superior_2;
+  var $formacao_complementacao_pedagogica_2;
+  var $codigo_curso_superior_2;
+  var $ano_inicio_curso_superior_2;
+  var $ano_conclusao_curso_superior_2;
+  var $tipo_instituicao_curso_superior_2;
+  var $instituicao_curso_superior_2;  
+  var $situacao_curso_superior_3;
+  var $formacao_complementacao_pedagogica_3;
+  var $codigo_curso_superior_3;
+  var $ano_inicio_curso_superior_3;
+  var $ano_conclusao_curso_superior_3;
+  var $tipo_instituicao_curso_superior_3;
+  var $instituicao_curso_superior_3;  
+  var $pos_especializacao;  
+  var $pos_mestrado;  
+  var $pos_doutorado;  
+  var $pos_nenhuma;
+  var $curso_creche;
+  var $curso_pre_escola;
+  var $curso_anos_iniciais;
+  var $curso_anos_finais;
+  var $curso_ensino_medio;
+  var $curso_eja;
+  var $curso_educacao_especial;
+  var $curso_educacao_indigena;
+  var $curso_educacao_campo;
+  var $curso_educacao_ambiental;
+  var $curso_educacao_direitos_humanos;
+  var $curso_genero_diversidade_sexual;
+  var $curso_direito_crianca_adolescente;
+  var $curso_relacoes_etnicorraciais;
+  var $curso_outros;
+  var $curso_nenhum;  
 
     /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -116,27 +156,21 @@ class clsPmieducarServidor
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'servidor';
 
-    $this->_campos_lista = $this->_todos_campos = "cod_servidor, ref_cod_deficiencia, ref_idesco, carga_horaria, data_cadastro, data_exclusao, ativo, ref_cod_instituicao,ref_cod_subnivel";
-    $this->_campos_lista2 = $this->_todos_campos2 = "s.cod_servidor, s.ref_cod_deficiencia, s.ref_idesco, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.ref_cod_instituicao,s.ref_cod_subnivel";
+    $this->_campos_lista = $this->_todos_campos = "cod_servidor, ref_idesco, carga_horaria, data_cadastro, data_exclusao, ativo, ref_cod_instituicao,ref_cod_subnivel,
+    situacao_curso_superior_1, formacao_complementacao_pedagogica_1, codigo_curso_superior_1, ano_inicio_curso_superior_1, ano_conclusao_curso_superior_1, tipo_instituicao_curso_superior_1, instituicao_curso_superior_1,
+    situacao_curso_superior_2, formacao_complementacao_pedagogica_2, codigo_curso_superior_2, ano_inicio_curso_superior_2, ano_conclusao_curso_superior_2, tipo_instituicao_curso_superior_2, instituicao_curso_superior_2,
+    situacao_curso_superior_3, formacao_complementacao_pedagogica_3, codigo_curso_superior_3, ano_inicio_curso_superior_3, ano_conclusao_curso_superior_3, tipo_instituicao_curso_superior_3, instituicao_curso_superior_3,
+    pos_especializacao, pos_mestrado, pos_doutorado, pos_nenhuma, curso_creche, curso_pre_escola, curso_anos_iniciais, curso_anos_finais, curso_ensino_medio, curso_eja, curso_educacao_especial, curso_educacao_indigena, 
+    curso_educacao_campo, curso_educacao_ambiental, curso_educacao_campo, curso_educacao_direitos_humanos, curso_genero_diversidade_sexual, curso_direito_crianca_adolescente, curso_relacoes_etnicorraciais, curso_outros, curso_nenhum
+    ";
 
-    if (is_numeric($ref_cod_deficiencia)) {
-      if (class_exists('clsCadastroDeficiencia')) {
-        $tmp_obj = new clsCadastroDeficiencia( $ref_cod_deficiencia);
-        if (method_exists( $tmp_obj, 'existe')) {
-          if ($tmp_obj->existe()) {
-            $this->ref_cod_deficiencia = $ref_cod_deficiencia;
-          }
-        }
-        else if (method_exists($tmp_obj, 'detalhe')) {
-          if ($tmp_obj->detalhe()) {
-            $this->ref_cod_deficiencia = $ref_cod_deficiencia;
-          }
-        }
-      }
-      elseif ($db->CampoUnico("SELECT 1 FROM cadastro.deficiencia WHERE cod_deficiencia = '{$ref_cod_deficiencia}'")) {
-        $this->ref_cod_deficiencia = $ref_cod_deficiencia;
-      }
-    }
+    $this->_campos_lista2 = $this->_todos_campos2 = "s.cod_servidor, s.ref_idesco, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.ref_cod_instituicao,s.ref_cod_subnivel,
+    s.situacao_curso_superior_1, s.formacao_complementacao_pedagogica_1, s.codigo_curso_superior_1, s.ano_inicio_curso_superior_1, s.ano_conclusao_curso_superior_1, s.tipo_instituicao_curso_superior_1, s.instituicao_curso_superior_1,
+    s.situacao_curso_superior_2, s.formacao_complementacao_pedagogica_2, s.codigo_curso_superior_2, s.ano_inicio_curso_superior_2, s.ano_conclusao_curso_superior_2, s.tipo_instituicao_curso_superior_2, s.instituicao_curso_superior_2,
+    s.situacao_curso_superior_3, s.formacao_complementacao_pedagogica_3, s.codigo_curso_superior_3, s.ano_inicio_curso_superior_3, s.ano_conclusao_curso_superior_3, s.tipo_instituicao_curso_superior_3, s.instituicao_curso_superior_3,
+    s.pos_especializacao, s.pos_mestrado, s.pos_doutorado, s.pos_nenhuma, s.curso_creche, s.curso_pre_escola, s.curso_anos_iniciais, s.curso_anos_finais, s.curso_ensino_medio, s.curso_eja, s.curso_educacao_especial, s.curso_educacao_indigena,
+    s.curso_educacao_campo, s.curso_educacao_ambiental, s.curso_educacao_campo, s.curso_educacao_direitos_humanos, s.curso_genero_diversidade_sexual, s.curso_direito_crianca_adolescente, s.curso_relacoes_etnicorraciais, s.curso_outros, s.curso_nenhum
+    ";    
 
     if (is_numeric( $ref_idesco)) {
       if (class_exists('clsCadastroEscolaridade')) {
@@ -253,18 +287,6 @@ class clsPmieducarServidor
         $gruda = ", ";
       }
 
-      if (is_numeric( $this->ref_cod_deficiencia)) {
-        $campos .= "{$gruda}ref_cod_deficiencia";
-        $valores .= "{$gruda}'{$this->ref_cod_deficiencia}'";
-        $gruda = ", ";
-      }
-
-      if (is_numeric( $this->ref_idesco)) {
-        $campos .= "{$gruda}ref_idesco";
-        $valores .= "{$gruda}'{$this->ref_idesco}'";
-        $gruda = ", ";
-      }
-
       if (is_numeric( $this->carga_horaria)) {
         $campos .= "{$gruda}carga_horaria";
         $valores .= "{$gruda}'{$this->carga_horaria}'";
@@ -291,6 +313,252 @@ class clsPmieducarServidor
         $gruda = ", ";
       }
 
+      if (is_numeric( $this->situacao_curso_superior_1)) {
+        $campos .= "{$gruda}situacao_curso_superior_1";
+        $valores .= "{$gruda}'{$this->situacao_curso_superior_1}'";
+        $gruda = ", ";
+      }      
+
+      if (is_numeric( $this->formacao_complementacao_pedagogica_1)) {
+        $campos .= "{$gruda}formacao_complementacao_pedagogica_1";
+        $valores .= "{$gruda}'{$this->formacao_complementacao_pedagogica_1}'";
+        $gruda = ", ";
+      }      
+
+      if (is_numeric( $this->codigo_curso_superior_1)) {
+        $campos .= "{$gruda}codigo_curso_superior_1";
+        $valores .= "{$gruda}'{$this->codigo_curso_superior_1}'";
+        $gruda = ", ";
+      }      
+
+      if (is_numeric( $this->ano_inicio_curso_superior_1)) {
+        $campos .= "{$gruda}ano_inicio_curso_superior_1";
+        $valores .= "{$gruda}'{$this->ano_inicio_curso_superior_1}'";
+        $gruda = ", ";
+      }      
+
+      if (is_numeric( $this->ano_conclusao_curso_superior_1)) {
+        $campos .= "{$gruda}ano_conclusao_curso_superior_1";
+        $valores .= "{$gruda}'{$this->ano_conclusao_curso_superior_1}'";
+        $gruda = ", ";
+      }      
+
+      if (is_numeric( $this->tipo_instituicao_curso_superior_1)) {
+        $campos .= "{$gruda}tipo_instituicao_curso_superior_1";
+        $valores .= "{$gruda}'{$this->tipo_instituicao_curso_superior_1}'";
+        $gruda = ", ";
+      }  
+
+      if (is_numeric( $this->instituicao_curso_superior_1)) {
+        $campos .= "{$gruda}instituicao_curso_superior_1";
+        $valores .= "{$gruda}'{$this->instituicao_curso_superior_1}'";
+        $gruda = ", ";
+      }      
+
+      if (is_numeric( $this->situacao_curso_superior_2)) {
+        $campos .= "{$gruda}situacao_curso_superior_2";
+        $valores .= "{$gruda}'{$this->situacao_curso_superior_2}'";
+        $gruda = ", ";
+      }      
+
+      if (is_numeric( $this->formacao_complementacao_pedagogica_2)) {
+        $campos .= "{$gruda}formacao_complementacao_pedagogica_2";
+        $valores .= "{$gruda}'{$this->formacao_complementacao_pedagogica_2}'";
+        $gruda = ", ";
+      }      
+
+      if (is_numeric( $this->codigo_curso_superior_2)) {
+        $campos .= "{$gruda}codigo_curso_superior_2";
+        $valores .= "{$gruda}'{$this->codigo_curso_superior_2}'";
+        $gruda = ", ";
+      }      
+
+      if (is_numeric( $this->ano_inicio_curso_superior_2)) {
+        $campos .= "{$gruda}ano_inicio_curso_superior_2";
+        $valores .= "{$gruda}'{$this->ano_inicio_curso_superior_2}'";
+        $gruda = ", ";
+      }      
+
+      if (is_numeric( $this->ano_conclusao_curso_superior_2)) {
+        $campos .= "{$gruda}ano_conclusao_curso_superior_2";
+        $valores .= "{$gruda}'{$this->ano_conclusao_curso_superior_2}'";
+        $gruda = ", ";
+      }      
+
+      if (is_numeric( $this->tipo_instituicao_curso_superior_2)) {
+        $campos .= "{$gruda}tipo_instituicao_curso_superior_2";
+        $valores .= "{$gruda}'{$this->tipo_instituicao_curso_superior_2}'";
+        $gruda = ", ";
+      }  
+
+      if (is_numeric( $this->instituicao_curso_superior_2)) {
+        $campos .= "{$gruda}instituicao_curso_superior_2";
+        $valores .= "{$gruda}'{$this->instituicao_curso_superior_2}'";
+        $gruda = ", ";
+      }       
+
+      if (is_numeric( $this->situacao_curso_superior_3)) {
+        $campos .= "{$gruda}situacao_curso_superior_3";
+        $valores .= "{$gruda}'{$this->situacao_curso_superior_3}'";
+        $gruda = ", ";
+      }      
+
+      if (is_numeric( $this->formacao_complementacao_pedagogica_3)) {
+        $campos .= "{$gruda}formacao_complementacao_pedagogica_3";
+        $valores .= "{$gruda}'{$this->formacao_complementacao_pedagogica_3}'";
+        $gruda = ", ";
+      }      
+
+      if (is_numeric( $this->codigo_curso_superior_3)) {
+        $campos .= "{$gruda}codigo_curso_superior_3";
+        $valores .= "{$gruda}'{$this->codigo_curso_superior_3}'";
+        $gruda = ", ";
+      }      
+
+      if (is_numeric( $this->ano_inicio_curso_superior_3)) {
+        $campos .= "{$gruda}ano_inicio_curso_superior_3";
+        $valores .= "{$gruda}'{$this->ano_inicio_curso_superior_3}'";
+        $gruda = ", ";
+      }      
+
+      if (is_numeric( $this->ano_conclusao_curso_superior_3)) {
+        $campos .= "{$gruda}ano_conclusao_curso_superior_3";
+        $valores .= "{$gruda}'{$this->ano_conclusao_curso_superior_3}'";
+        $gruda = ", ";
+      }      
+
+      if (is_numeric( $this->tipo_instituicao_curso_superior_3)) {
+        $campos .= "{$gruda}tipo_instituicao_curso_superior_3";
+        $valores .= "{$gruda}'{$this->tipo_instituicao_curso_superior_3}'";
+        $gruda = ", ";
+      }  
+
+      if (is_numeric( $this->instituicao_curso_superior_3)) {
+        $campos .= "{$gruda}instituicao_curso_superior_3";
+        $valores .= "{$gruda}'{$this->instituicao_curso_superior_3}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric( $this->pos_especializacao)) {
+        $campos .= "{$gruda}pos_especializacao";
+        $valores .= "{$gruda}'{$this->pos_especializacao}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric( $this->pos_mestrado)) {
+        $campos .= "{$gruda}pos_mestrado";
+        $valores .= "{$gruda}'{$this->pos_mestrado}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric( $this->pos_doutorado)) {
+        $campos .= "{$gruda}pos_doutorado";
+        $valores .= "{$gruda}'{$this->pos_doutorado}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric( $this->pos_nenhuma)) {
+        $campos .= "{$gruda}pos_nenhuma";
+        $valores .= "{$gruda}'{$this->pos_nenhuma}'";
+        $gruda = ", ";
+      }                                  
+
+      if (is_numeric( $this->curso_creche)) {
+        $campos .= "{$gruda}curso_creche";
+        $valores .= "{$gruda}'{$this->curso_creche}'";
+        $gruda = ", ";
+      }                                  
+
+      if (is_numeric( $this->curso_pre_escola)) {
+        $campos .= "{$gruda}curso_pre_escola";
+        $valores .= "{$gruda}'{$this->curso_pre_escola}'";
+        $gruda = ", ";
+      }                                  
+
+      if (is_numeric( $this->curso_anos_iniciais)) {
+        $campos .= "{$gruda}curso_anos_iniciais";
+        $valores .= "{$gruda}'{$this->curso_anos_iniciais}'";
+        $gruda = ", ";
+      }                                  
+
+      if (is_numeric( $this->curso_anos_finais)) {
+        $campos .= "{$gruda}curso_anos_finais";
+        $valores .= "{$gruda}'{$this->curso_anos_finais}'";
+        $gruda = ", ";
+      }                                  
+
+      if (is_numeric( $this->curso_ensino_medio)) {
+        $campos .= "{$gruda}curso_ensino_medio";
+        $valores .= "{$gruda}'{$this->curso_ensino_medio}'";
+        $gruda = ", ";
+      }                                  
+
+      if (is_numeric( $this->curso_eja)) {
+        $campos .= "{$gruda}curso_eja";
+        $valores .= "{$gruda}'{$this->curso_eja}'";
+        $gruda = ", ";
+      }                                  
+
+      if (is_numeric( $this->curso_educacao_especial)) {
+        $campos .= "{$gruda}curso_educacao_especial";
+        $valores .= "{$gruda}'{$this->curso_educacao_especial}'";
+        $gruda = ", ";
+      }                                  
+
+      if (is_numeric( $this->curso_educacao_indigena)) {
+        $campos .= "{$gruda}curso_educacao_indigena";
+        $valores .= "{$gruda}'{$this->curso_educacao_indigena}'";
+        $gruda = ", ";
+      }                                  
+
+      if (is_numeric( $this->curso_educacao_campo)) {
+        $campos .= "{$gruda}curso_educacao_campo";
+        $valores .= "{$gruda}'{$this->curso_educacao_campo}'";
+        $gruda = ", ";
+      }                                  
+
+      if (is_numeric( $this->curso_educacao_ambiental)) {
+        $campos .= "{$gruda}curso_educacao_ambiental";
+        $valores .= "{$gruda}'{$this->curso_educacao_ambiental}'";
+        $gruda = ", ";
+      }                                  
+
+      if (is_numeric( $this->curso_educacao_direitos_humanos)) {
+        $campos .= "{$gruda}curso_educacao_direitos_humanos";
+        $valores .= "{$gruda}'{$this->curso_educacao_direitos_humanos}'";
+        $gruda = ", ";
+      }                                  
+
+      if (is_numeric( $this->curso_genero_diversidade_sexual)) {
+        $campos .= "{$gruda}curso_genero_diversidade_sexual";
+        $valores .= "{$gruda}'{$this->curso_genero_diversidade_sexual}'";
+        $gruda = ", ";
+      }                                  
+
+      if (is_numeric( $this->curso_direito_crianca_adolescente)) {
+        $campos .= "{$gruda}curso_direito_crianca_adolescente";
+        $valores .= "{$gruda}'{$this->curso_direito_crianca_adolescente}'";
+        $gruda = ", ";
+      }                                  
+
+      if (is_numeric( $this->curso_relacoes_etnicorraciais)) {
+        $campos .= "{$gruda}curso_relacoes_etnicorraciais";
+        $valores .= "{$gruda}'{$this->curso_relacoes_etnicorraciais}'";
+        $gruda = ", ";
+      }                                  
+
+      if (is_numeric( $this->curso_outros)) {
+        $campos .= "{$gruda}curso_outros";
+        $valores .= "{$gruda}'{$this->curso_outros}'";
+        $gruda = ", ";
+      }                                  
+
+      if (is_numeric( $this->curso_nenhum)) {
+        $campos .= "{$gruda}curso_nenhum";
+        $valores .= "{$gruda}'{$this->curso_nenhum}'";
+        $gruda = ", ";
+      }                
+
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
       return $this->cod_servidor;
     }
@@ -307,15 +575,6 @@ class clsPmieducarServidor
     if (is_numeric($this->cod_servidor) && is_numeric($this->ref_cod_instituicao)) {
       $db = new clsBanco();
       $set = "";
-
-      if (is_numeric($this->ref_cod_deficiencia)) {
-        $set .= "{$gruda}ref_cod_deficiencia = '{$this->ref_cod_deficiencia}'";
-        $gruda = ", ";
-      }
-      else {
-        $set .= "{$gruda}ref_cod_deficiencia = NULL";
-        $gruda = ", ";
-      }
 
       if (is_numeric($this->ref_idesco)) {
         $set .= "{$gruda}ref_idesco = '{$this->ref_idesco}'";
@@ -344,6 +603,229 @@ class clsPmieducarServidor
         $set .= "{$gruda}ref_cod_subnivel = '{$this->ref_cod_subnivel}'";
         $gruda = ", ";
       }
+
+      if (is_numeric($this->situacao_curso_superior_1)) {
+        $set .= "{$gruda}situacao_curso_superior_1 = '{$this->situacao_curso_superior_1}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->formacao_complementacao_pedagogica_1)) {
+        $set .= "{$gruda}formacao_complementacao_pedagogica_1 = '{$this->formacao_complementacao_pedagogica_1}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->codigo_curso_superior_1)) {
+        $set .= "{$gruda}codigo_curso_superior_1 = '{$this->codigo_curso_superior_1}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->ano_inicio_curso_superior_1)) {
+        $set .= "{$gruda}ano_inicio_curso_superior_1 = '{$this->ano_inicio_curso_superior_1}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}ano_inicio_curso_superior_1 = NULL";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->ano_conclusao_curso_superior_1)) {
+        $set .= "{$gruda}ano_conclusao_curso_superior_1 = '{$this->ano_conclusao_curso_superior_1}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}ano_conclusao_curso_superior_1 = NULL";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->tipo_instituicao_curso_superior_1)) {
+        $set .= "{$gruda}tipo_instituicao_curso_superior_1 = '{$this->tipo_instituicao_curso_superior_1}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->instituicao_curso_superior_1)) {
+        $set .= "{$gruda}instituicao_curso_superior_1 = '{$this->instituicao_curso_superior_1}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->situacao_curso_superior_2)) {
+        $set .= "{$gruda}situacao_curso_superior_2 = '{$this->situacao_curso_superior_2}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->formacao_complementacao_pedagogica_2)) {
+        $set .= "{$gruda}formacao_complementacao_pedagogica_2 = '{$this->formacao_complementacao_pedagogica_2}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->codigo_curso_superior_2)) {
+        $set .= "{$gruda}codigo_curso_superior_2 = '{$this->codigo_curso_superior_2}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->ano_inicio_curso_superior_2)) {
+        $set .= "{$gruda}ano_inicio_curso_superior_2 = '{$this->ano_inicio_curso_superior_2}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}ano_inicio_curso_superior_2 = NULL";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->ano_conclusao_curso_superior_2)) {
+        $set .= "{$gruda}ano_conclusao_curso_superior_2 = '{$this->ano_conclusao_curso_superior_2}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}ano_conclusao_curso_superior_2 = NULL";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->tipo_instituicao_curso_superior_2)) {
+        $set .= "{$gruda}tipo_instituicao_curso_superior_2 = '{$this->tipo_instituicao_curso_superior_2}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->instituicao_curso_superior_2)) {
+        $set .= "{$gruda}instituicao_curso_superior_2 = '{$this->instituicao_curso_superior_2}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->situacao_curso_superior_3)) {
+        $set .= "{$gruda}situacao_curso_superior_3 = '{$this->situacao_curso_superior_3}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->formacao_complementacao_pedagogica_3)) {
+        $set .= "{$gruda}formacao_complementacao_pedagogica_3 = '{$this->formacao_complementacao_pedagogica_3}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->codigo_curso_superior_3)) {
+        $set .= "{$gruda}codigo_curso_superior_3 = '{$this->codigo_curso_superior_3}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->ano_inicio_curso_superior_3)) {
+        $set .= "{$gruda}ano_inicio_curso_superior_3 = '{$this->ano_inicio_curso_superior_3}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}ano_inicio_curso_superior_3 = NULL";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->ano_conclusao_curso_superior_3)) {
+        $set .= "{$gruda}ano_conclusao_curso_superior_3 = '{$this->ano_conclusao_curso_superior_3}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}ano_conclusao_curso_superior_3 = NULL";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->tipo_instituicao_curso_superior_3)) {
+        $set .= "{$gruda}tipo_instituicao_curso_superior_3 = '{$this->tipo_instituicao_curso_superior_3}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->instituicao_curso_superior_3)) {
+        $set .= "{$gruda}instituicao_curso_superior_3 = '{$this->instituicao_curso_superior_3}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->pos_especializacao)) {
+        $set .= "{$gruda}pos_especializacao = '{$this->pos_especializacao}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->pos_mestrado)) {
+        $set .= "{$gruda}pos_mestrado = '{$this->pos_mestrado}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->pos_doutorado)) {
+        $set .= "{$gruda}pos_doutorado = '{$this->pos_doutorado}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->pos_nenhuma)) {
+        $set .= "{$gruda}pos_nenhuma = '{$this->pos_nenhuma}'";
+        $gruda = ", ";
+      }                                                                              
+
+      if (is_numeric($this->curso_creche)) {
+        $set .= "{$gruda}curso_creche = '{$this->curso_creche}'";
+        $gruda = ", ";
+      }                                                                              
+
+      if (is_numeric($this->curso_pre_escola)) {
+        $set .= "{$gruda}curso_pre_escola = '{$this->curso_pre_escola}'";
+        $gruda = ", ";
+      }                                                                              
+
+      if (is_numeric($this->curso_anos_iniciais)) {
+        $set .= "{$gruda}curso_anos_iniciais = '{$this->curso_anos_iniciais}'";
+        $gruda = ", ";
+      }                                                                              
+
+      if (is_numeric($this->curso_anos_finais)) {
+        $set .= "{$gruda}curso_anos_finais = '{$this->curso_anos_finais}'";
+        $gruda = ", ";
+      }                                                                              
+
+      if (is_numeric($this->curso_ensino_medio)) {
+        $set .= "{$gruda}curso_ensino_medio = '{$this->curso_ensino_medio}'";
+        $gruda = ", ";
+      }                                                                              
+
+      if (is_numeric($this->curso_eja)) {
+        $set .= "{$gruda}curso_eja = '{$this->curso_eja}'";
+        $gruda = ", ";
+      }                                                                              
+
+      if (is_numeric($this->curso_educacao_especial)) {
+        $set .= "{$gruda}curso_educacao_especial = '{$this->curso_educacao_especial}'";
+        $gruda = ", ";
+      }                                                                              
+
+      if (is_numeric($this->curso_educacao_indigena)) {
+        $set .= "{$gruda}curso_educacao_indigena = '{$this->curso_educacao_indigena}'";
+        $gruda = ", ";
+      }                                                                              
+
+      if (is_numeric($this->curso_educacao_campo)) {
+        $set .= "{$gruda}curso_educacao_campo = '{$this->curso_educacao_campo}'";
+        $gruda = ", ";
+      }                                                                              
+
+      if (is_numeric($this->curso_educacao_ambiental)) {
+        $set .= "{$gruda}curso_educacao_ambiental = '{$this->curso_educacao_ambiental}'";
+        $gruda = ", ";
+      }                                                                              
+
+      if (is_numeric($this->curso_educacao_direitos_humanos)) {
+        $set .= "{$gruda}curso_educacao_direitos_humanos = '{$this->curso_educacao_direitos_humanos}'";
+        $gruda = ", ";
+      }                                                                              
+
+      if (is_numeric($this->curso_genero_diversidade_sexual)) {
+        $set .= "{$gruda}curso_genero_diversidade_sexual = '{$this->curso_genero_diversidade_sexual}'";
+        $gruda = ", ";
+      }                                                                              
+
+      if (is_numeric($this->curso_direito_crianca_adolescente)) {
+        $set .= "{$gruda}curso_direito_crianca_adolescente = '{$this->curso_direito_crianca_adolescente}'";
+        $gruda = ", ";
+      }                                                                              
+
+      if (is_numeric($this->curso_relacoes_etnicorraciais)) {
+        $set .= "{$gruda}curso_relacoes_etnicorraciais = '{$this->curso_relacoes_etnicorraciais}'";
+        $gruda = ", ";
+      }                                                                              
+
+      if (is_numeric($this->curso_outros)) {
+        $set .= "{$gruda}curso_outros = '{$this->curso_outros}'";
+        $gruda = ", ";
+      }                                                                              
+
+      if (is_numeric($this->curso_nenhum)) {
+        $set .= "{$gruda}curso_nenhum = '{$this->curso_nenhum}'";
+        $gruda = ", ";
+      }                                                                                                                                                       
 
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_servidor = '{$this->cod_servidor}' AND ref_cod_instituicao = '{$this->ref_cod_instituicao}'");
@@ -490,11 +972,6 @@ class clsPmieducarServidor
 
     if (is_numeric($int_cod_servidor)) {
       $filtros .= "{$whereAnd} s.cod_servidor = '{$int_cod_servidor}'";
-      $whereAnd = " AND ";
-    }
-
-    if (is_numeric($int_ref_cod_deficiencia)) {
-      $filtros .= "{$whereAnd} s.ref_cod_deficiencia = '{$int_ref_cod_deficiencia}'";
       $whereAnd = " AND ";
     }
 

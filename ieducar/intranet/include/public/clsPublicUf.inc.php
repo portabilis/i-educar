@@ -38,6 +38,7 @@ class clsPublicUf
 	var $nome;
 	var $geom;
 	var $idpais;
+	var $cod_ibge;
 
 	// propriedades padrao
 
@@ -108,13 +109,13 @@ class clsPublicUf
 	 *
 	 * @return object
 	 */
-	function clsPublicUf( $sigla_uf = null, $nome = null, $geom = null, $idpais = null )
+	function clsPublicUf( $sigla_uf = null, $nome = null, $geom = null, $idpais = null, $cod_ibge = null )
 	{
 		$db = new clsBanco();
 		$this->_schema = "public.";
 		$this->_tabela = "{$this->_schema}uf";
 
-		$this->_campos_lista = $this->_todos_campos = "uf.sigla_uf, uf.nome, uf.geom, uf.idpais";
+		$this->_campos_lista = $this->_todos_campos = "uf.sigla_uf, uf.nome, uf.geom, uf.idpais, uf.cod_ibge ";
 
 		if( is_numeric( $idpais ) )
 		{
@@ -158,6 +159,10 @@ class clsPublicUf
 		{
 			$this->geom = $geom;
 		}
+		if( is_numeric($cod_ibge) )
+		{
+			$this->cod_ibge = $cod_ibge;
+		}
 
 	}
 
@@ -200,6 +205,12 @@ class clsPublicUf
 				$valores .= "{$gruda}'{$this->idpais}'";
 				$gruda = ", ";
 			}
+			if( is_numeric( $this->cod_ibge ) )
+			{
+				$campos .= "{$gruda}cod_ibge";
+				$valores .= "{$gruda}'{$this->cod_ibge}'";
+				$gruda = ", ";
+			}			
 
 
 			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
@@ -234,6 +245,11 @@ class clsPublicUf
 			if( is_numeric( $this->idpais ) )
 			{
 				$set .= "{$gruda}idpais = '{$this->idpais}'";
+				$gruda = ", ";
+			}
+			if( is_numeric( $this->cod_ibge ) )
+			{
+				$set .= "{$gruda}cod_ibge = '{$this->cod_ibge}'";
 				$gruda = ", ";
 			}
 

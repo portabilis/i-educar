@@ -49,6 +49,7 @@ class IndexController extends Core_Controller_Page_ListController
   protected $_titulo     = 'Listagem de áreas de conhecimento';
   protected $_processoAp = 945;
   protected $_tableMap   = array(
-    'Nome' => 'nome'
+    'Nome' => 'nome',
+    'Seção' => 'secao'
   );
 }

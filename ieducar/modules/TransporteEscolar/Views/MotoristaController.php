@@ -116,11 +116,11 @@ class MotoristaController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->simpleSearchPessoa('nome', $options);
 
     //número da CNH
-    $options = array('label' => $this->_getLabel('cnh'), 'max_length' => 15, 'size' => 15, 'placeholder' => Portabilis_String_Utils::toLatin1('Número da CNH'), 'required' => true);
+    $options = array('label' => $this->_getLabel('cnh'), 'max_length' => 15, 'size' => 15, 'placeholder' => Portabilis_String_Utils::toLatin1('Número da CNH'), 'required' => false);
     $this->inputsHelper()->integer('cnh',$options);
 
     //Categoria da CNH
-    $options = array('label' => $this->_getLabel('tipo_cnh'), 'max_length' => 2, 'size' => 1, 'placeholder' => '', 'required' => true);
+    $options = array('label' => $this->_getLabel('tipo_cnh'), 'max_length' => 2, 'size' => 1, 'placeholder' => '', 'required' => false);
     $this->inputsHelper()->text('tipo_cnh',$options);    
 
     // Vencimento

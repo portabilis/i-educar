@@ -1,5 +1,8 @@
 <?php
 
+// error_reporting(E_ALL);
+// ini_set("display_errors", 1);
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -32,6 +35,7 @@
 require_once 'Core/Controller/Page/EditController.php';
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 require_once 'ComponenteCurricular/Model/TipoBase.php';
+require_once 'ComponenteCurricular/Model/CodigoEducacenso.php';
 
 /**
  * EditController class.
@@ -77,6 +81,17 @@ class EditController extends Core_Controller_Page_EditController
       'help'   => '',
       'entity' => 'area_conhecimento'
     ),
+
+    'codigo_educacenso' => array(
+      'label'  => 'Disciplina Educacenso',
+      'help'   => '',
+      'entity' => 'codigo_educacenso'
+    ),
+    'ordenamento' => array(
+      'label'  => 'Ordem de apresentação',
+      'help'   => 'Ordem respeitada no lançamento de notas/faltas.',
+      'entity' => 'ordenamento'
+    ),
   );
 
   /**
@@ -110,5 +125,61 @@ class EditController extends Core_Controller_Page_EditController
     $areas = CoreExt_Entity::entityFilterAttr($areas, 'id', 'nome');
     $this->campoLista('area_conhecimento', $this->_getLabel('area_conhecimento'),
       $areas, $this->getEntity()->get('area_conhecimento'));
+
+    // Código educacenso
+    $codigos = ComponenteCurricular_Model_CodigoEducacenso::getInstance();
+    $this->campoLista('codigo_educacenso', $this->_getLabel('codigo_educacenso'),
+      $codigos->getEnums(), $this->getEntity()->get('codigo_educacenso'));
+  
+    // Ordenamento
+    $this-> campoNumero('ordenamento',
+                        $this->_getLabel('ordenamento'),
+                        $this->getEntity()->ordenamento==99999 ? null : $this->getEntity()->ordenamento,
+                        15,
+                        15,
+                        false,
+                        $this->_getHelp('ordenamento'));
+  }
+
+  protected function _save(){
+    $data = array();
+
+    foreach ($_POST as $key => $val) {
+      if (array_key_exists($key, $this->_formMap)) {
+        
+        if($key == "ordenamento"){
+          
+          if((trim($val) == "") || (is_null($val))) {
+            $data[$key] = 99999;
+            continue;
+          }
+        }
+        
+        $data[$key] = $val;
+      }  
+    }
+
+
+    // Verifica pela existência do field identity
+    if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
+      $entity = $this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
+    }
+
+    if (isset($entity)) {
+      $this->getEntity()->setOptions($data);
+    }
+    else {
+      $this->setEntity($this->getDataMapper()->createNewEntityInstance($data));
+    }
+
+    try {
+      $this->getDataMapper()->save($this->getEntity());
+      return TRUE;
+    }
+    catch (Exception $e) {
+      // TODO: ver @todo do docblock
+      $this->mensagem = 'Erro no preenchimento do formulário. ';
+      return FALSE;
+    }
   }
 }

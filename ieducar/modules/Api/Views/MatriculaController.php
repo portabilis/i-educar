@@ -34,6 +34,7 @@ require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'App/Model/MatriculaSituacao.php';
 require_once 'intranet/include/clsBanco.inc.php';
+require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
 
 class MatriculaController extends ApiCoreController
 {
@@ -202,14 +203,31 @@ class MatriculaController extends ApiCoreController
 
   protected function deleteAbandono() {
     if ($this->canDeleteAbandono()) {
-      $matriculaId       = $this->getRequest()->id;
-      $situacaoAndamento = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+      $matriculaId        = $this->getRequest()->id;
+      $tipoSemAbandono    = null;
+      $situacaoAndamento  = App_Model_MatriculaSituacao::EM_ANDAMENTO;
 
-      $sql = 'update pmieducar.matricula set aprovado = $1 where cod_matricula = $2';
-      $this->fetchPreparedQuery($sql, array($situacaoAndamento, $matriculaId));
+      $sql = 'update pmieducar.matricula set aprovado = $1, ref_cod_abandono_tipo = $2 where cod_matricula = $3';
+      $this->fetchPreparedQuery($sql, array($situacaoAndamento, $tipoSemAbandono, $matriculaId));
 
       $this->messenger->append('Abandono desfeito.', 'success');
     }
+  }
+
+  protected function deleteReclassificacao(){
+    $matriculaId = $this->getRequest()->id;
+    $matricula   = new clsPmieducarMatricula($matriculaId);
+    $matricula   = $matricula->detalhe();
+    $alunoId     = $matricula['ref_cod_aluno'];
+    $situacaoAndamento  = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+  
+    $sql = 'update pmieducar.matricula_turma set ativo = 1 where ref_cod_matricula = $1';
+    $this->fetchPreparedQuery($sql, array($matriculaId));
+    
+    $sql = 'update pmieducar.matricula set matricula_reclassificacao = 0, aprovado = $1 where cod_matricula = $2';
+    $this->fetchPreparedQuery($sql, array($situacaoAndamento, $matriculaId));
+
+    return array('aluno_id' => $alunoId);
   }
 
   public function Gerar() {
@@ -227,6 +245,9 @@ class MatriculaController extends ApiCoreController
 
     elseif ($this->isRequestFor('delete', 'abandono'))
       $this->appendResponse($this->deleteAbandono());
+
+    elseif ($this->isRequestFor('delete', 'reclassificacao'))
+      $this->appendResponse($this->deleteReclassificacao());
 
     else
       $this->notImplementedOperationError();

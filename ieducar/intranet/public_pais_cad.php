@@ -50,6 +50,7 @@ class indice extends clsCadastro
 	var $idpais;
 	var $nome;
 	var $geom;
+	var $cod_ibge;
 
 	function Inicializar()
 	{
@@ -88,6 +89,8 @@ class indice extends clsCadastro
 
 		// text
 		$this->campoTexto( "nome", "Nome", $this->nome, 30, 60, true );
+
+		$this->campoNumero( "cod_ibge", "Código INEP", $this->cod_ibge, 30, 8, true );
 	}
 
 	function Novo()
@@ -96,7 +99,7 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-		$obj = new clsPublicPais( null, $this->nome, $this->geom );
+		$obj = new clsPublicPais( null, $this->nome, $this->geom, $this->cod_ibge );
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
@@ -117,7 +120,7 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-		$obj = new clsPublicPais( $this->idpais, $this->nome, $this->geom );
+		$obj = new clsPublicPais( $this->idpais, $this->nome, $this->geom, $this->cod_ibge );
 		$editou = $obj->edita();
 		if( $editou )
 		{

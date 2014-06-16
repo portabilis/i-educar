@@ -44,11 +44,12 @@ class indice extends clsListagem
 	{
 		$this->titulo = "Usu&aacute;rios";
 		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
-		$this->addCabecalhos( array( "Nome", "Status") );
+		$this->addCabecalhos( array( "Nome","Matrícula", "Matrícula Interna" ,"Status") );
 
 		// Filtros de Busca
 		$this->campoTexto("nm_pessoa", "Nome", "", 50, 255);
-		$this->campoTexto("matricula", "Matricula", "", 10, 15);
+		$this->campoTexto("matricula", "Matr&iacute;cula", "", 10, 15);
+		$this->campoTexto("matricula_interna", "Matr&iacute;cula Interna", "", 30, 30);
 
 		// Paginador
 		$limite = 10;
@@ -57,7 +58,8 @@ class indice extends clsListagem
 		$obj_func = new clsFuncionario();
 		$obj_func->setOrderby("to_ascii(nome) ASC");
 		$obj_func->setLimite($limite, $iniciolimit);
-		$lst_func = $obj_func->lista($_GET["matricula"], $_GET['nm_pessoa']);
+		$lst_func = $obj_func->lista($_GET["matricula"], $_GET['nm_pessoa'],FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,
+			FALSE,FALSE,FALSE,FALSE,NULL,$_GET['matricula_interna']);
 
 		if($lst_func)
 		{
@@ -66,7 +68,11 @@ class indice extends clsListagem
 				$ativo = ($pessoa['ativo'] == '1') ? "Ativo" : "Inativo";
 				$total = $pessoa['_total'];
 				$pessoa['nome']  = minimiza_capitaliza($pessoa['nome']);
-				$this->addLinhas( array("<a href='funcionario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'><img src='imagens/noticia.jpg' border=0>{$pessoa['nome']}</a>", $ativo) );
+				$this->addLinhas( array(
+				"<a href='funcionario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'><img src='imagens/noticia.jpg' border=0>{$pessoa['nome']}</a>",
+				"<a href='funcionario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'>{$pessoa['matricula']}</a>",
+				"<a href='funcionario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'>{$pessoa['matricula_interna']}</a>", 
+				"<a href='funcionario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'>{$ativo}</a>") );
 			}
 		}
 

@@ -246,6 +246,14 @@ class AlunoController extends ApiCoreController
     return $tipo;
   }
 
+  protected function saveSus($pessoaId){
+
+    $sus = Portabilis_String_Utils::toLatin1($this->getRequest()->sus);
+
+    $sql = 'update cadastro.fisica set sus = $1 where idpes = $2';
+    return $this->fetchPreparedQuery($sql, array($sus, $pessoaId));
+  }
+
 
   protected function createOrUpdateTransporte($alunoId) {
     $tiposTransporte = array(
@@ -485,6 +493,21 @@ protected function createOrUpdateUniforme($id) {
     $aluno->analfabeto              = $this->getRequest()->alfabetizado ? 0 : 1;
     $aluno->tipo_responsavel        = $tiposResponsavel[$this->getRequest()->tipo_responsavel];
     $aluno->ref_usuario_exc         = $this->getSession()->id_pessoa;
+
+    // INFORAMÇÕES PROVA INEP
+    $aluno->recurso_prova_inep_aux_ledor             = $this->getRequest()->recurso_prova_inep_aux_ledor == 'on' ? 1 : 0;
+    $aluno->recurso_prova_inep_aux_transcricao       = $this->getRequest()->recurso_prova_inep_aux_transcricao == 'on' ? 1 : 0;
+    $aluno->recurso_prova_inep_guia_interprete       = $this->getRequest()->recurso_prova_inep_guia_interprete == 'on' ? 1 : 0;
+    $aluno->recurso_prova_inep_interprete_libras     = $this->getRequest()->recurso_prova_inep_interprete_libras == 'on' ? 1 : 0;
+    $aluno->recurso_prova_inep_leitura_labial        = $this->getRequest()->recurso_prova_inep_leitura_labial == 'on' ? 1 : 0;
+    $aluno->recurso_prova_inep_prova_ampliada_16     = $this->getRequest()->recurso_prova_inep_prova_ampliada_16 == 'on' ? 1 : 0;
+    $aluno->recurso_prova_inep_prova_ampliada_20     = $this->getRequest()->recurso_prova_inep_prova_ampliada_20 == 'on' ? 1 : 0;
+    $aluno->recurso_prova_inep_prova_ampliada_24     = $this->getRequest()->recurso_prova_inep_prova_ampliada_24 == 'on' ? 1 : 0;
+    $aluno->recurso_prova_inep_prova_braille         = $this->getRequest()->recurso_prova_inep_prova_braille == 'on' ? 1 : 0;
+    $aluno->justificativa_falta_documentacao         = $this->getRequest()->justificativa_falta_documentacao;
+
+    //laudo medico
+    $aluno->url_laudo_medico         = Portabilis_String_Utils::toLatin1($this->getRequest()->url_laudo_medico);
 
     return (is_null($id) ? $aluno->cadastra() : $aluno->edita());
   }
@@ -732,7 +755,18 @@ protected function createOrUpdateUniforme($id) {
         'data_exclusao'           => 'destroyed_at',
         'analfabeto',
         'ativo',
-        'aluno_estado_id'
+        'aluno_estado_id',
+        'recurso_prova_inep_aux_ledor',
+        'recurso_prova_inep_aux_transcricao',
+        'recurso_prova_inep_guia_interprete',
+        'recurso_prova_inep_interprete_libras',
+        'recurso_prova_inep_leitura_labial',
+        'recurso_prova_inep_prova_ampliada_16',
+        'recurso_prova_inep_prova_ampliada_20',
+        'recurso_prova_inep_prova_ampliada_24',
+        'recurso_prova_inep_prova_braille',
+        'justificativa_falta_documentacao',
+        'url_laudo_medico'
       );
 
       $aluno = Portabilis_Array_Utils::filter($aluno, $attrs);
@@ -781,6 +815,9 @@ protected function createOrUpdateUniforme($id) {
         $aluno = Portabilis_Array_Utils::merge($objMoradia,$aluno);
       }
 
+      $sql = "select sus from cadastro.fisica where idpes = $1";
+      $camposFisica = $this->fetchPreparedQuery($sql, $aluno['pessoa_id'], false, 'first-row');
+      $aluno['sus'] = $camposFisica['sus'];
 
       return $aluno;
     }
@@ -847,6 +884,36 @@ protected function createOrUpdateUniforme($id) {
     }
   }
 
+  protected function saveParents(){
+
+    $maeId = $this->getRequest()->mae_id;
+
+    $paiId = $this->getRequest()->pai_id;
+
+    $pessoaId = $this->getRequest()->pessoa_id;
+
+    if($maeId || $paiId){
+    
+      $sql = "UPDATE cadastro.fisica set ";
+
+      $virgulaOuNada = '';
+
+      if ($maeId){
+        $sql .= " idpes_mae = {$maeId} ";
+        $virgulaOuNada = ", ";
+      }
+
+      if ($paiId){
+        $sql .= "{$virgulaOuNada} idpes_pai = {$paiId} ";
+        $virgulaOuNada = ", ";
+      }
+
+      $sql .= " WHERE idpes = {$pessoaId}";      
+    
+      Portabilis_Utils_Database::fetchPreparedQuery($sql);
+    }
+  }
+
   protected function getOcorrenciasDisciplinares() {
     if ($this->canGetOcorrenciasDisciplinares())
       return $this->loadOcorrenciasDisciplinares();
@@ -855,9 +922,13 @@ protected function createOrUpdateUniforme($id) {
   protected function post() {
     if ($this->canPost()) {
       $id = $this->createOrUpdateAluno();
+      $pessoaId = $this->getRequest()->pessoa_id;
+
+      $this->saveParents();
 
       if (is_numeric($id)) {
         $this->updateResponsavel();
+        $this->saveSus($pessoaId);
         $this->createOrUpdateTransporte($id);
         $this->createUpdateOrDestroyEducacensoAluno($id);
         $this->updateDeficiencias();
@@ -876,9 +947,13 @@ protected function createOrUpdateUniforme($id) {
 
   protected function put() {
     $id = $this->getRequest()->id;
+    $pessoaId = $this->getRequest()->pessoa_id;
+
+    $this->saveParents();
 
     if ($this->canPut() && $this->createOrUpdateAluno($id)) {
       $this->updateResponsavel();
+      $this->saveSus($pessoaId);
       $this->createOrUpdateTransporte($id);
       $this->createUpdateOrDestroyEducacensoAluno($id);
       $this->updateDeficiencias();
@@ -916,22 +991,39 @@ protected function createOrUpdateUniforme($id) {
 
   protected function delete() {
     $id = $this->getRequest()->id;
+    $anoUltimaMatricula = $this->possuiMatriculaAtivaEmAndamento($id);
 
-    if ($this->canDelete()) {
-      $aluno                  = new clsPmieducarAluno();
-      $aluno->cod_aluno       = $id;
-      $aluno->ref_usuario_exc = $this->getSession()->id_pessoa;
+    if (!$anoUltimaMatricula){
 
-      if($aluno->excluir())
-        $this->messenger->append('Cadastro removido com sucesso', 'success', false, 'error');
-      else
-        $this->messenger->append('Aparentemente o cadastro não pode ser removido, por favor, verifique.',
-                                 'error', false, 'error');
+      if ($this->canDelete()) {
+        $aluno                  = new clsPmieducarAluno();
+        $aluno->cod_aluno       = $id;
+        $aluno->ref_usuario_exc = $this->getSession()->id_pessoa;
+
+        if($aluno->excluir())
+          $this->messenger->append('Cadastro removido com sucesso', 'success', false, 'error');
+        else
+          $this->messenger->append('Aparentemente o cadastro não pode ser removido, por favor, verifique.',
+                                   'error', false, 'error');
+      }
+    }else{
+      $this->messenger->append('O cadastro não pode ser removido, pois existe uma matrícula no ano de '. $anoUltimaMatricula .' em andamento. '.
+                               'Cancele a matrícula para posteriormente efetuar a exclusão do aluno.',
+                               'error', false, 'error');
     }
-
     return array('id' => $id);
   }
 
+  protected function possuiMatriculaAtivaEmAndamento($alunoId){
+    $sql = "select ano 
+              from pmieducar.matricula 
+             where ref_cod_aluno = $1 
+               and ativo = 1
+               and aprovado = 3
+             order by ano desc 
+             limit 1";
+    return (Portabilis_Utils_Database::selectField($sql, $alunoId));
+  }
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'aluno'))

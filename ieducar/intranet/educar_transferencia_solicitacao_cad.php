@@ -144,7 +144,7 @@ class indice extends clsCadastro
 		}
 		$obj_matricula = new clsPmieducarMatricula($this->ref_cod_matricula);
 		$det_matricula = $obj_matricula->detalhe();
-		$ref_cod_escola = $det_matricula['ref_ref_cod_escola'];
+		$ref_cod_instituicao = $det_matricula['ref_cod_instituicao'];
 
 		$opcoes = array( 1 => "Escola do Sistema",2 => "Escola Externa" );
 		$this->campoRadio( "transferencia_tipo", "Transfer&ecirc;ncia Tipo", $opcoes, $this->transferencia_tipo );
@@ -154,7 +154,7 @@ class indice extends clsCadastro
 		if( class_exists( "clsPmieducarTransferenciaTipo" ) )
 		{
 			$objTemp = new clsPmieducarTransferenciaTipo();
-			$lista = $objTemp->lista(null,null,null,null,null,null,null,null,null,null,$ref_cod_escola);
+			$lista = $objTemp->lista(null,null,null,null,null,null,null,null,null,null,$ref_cod_instituicao);
 			if ( is_array( $lista ) && count( $lista ) )
 			{
 				foreach ( $lista as $registro )
@@ -249,6 +249,8 @@ class indice extends clsCadastro
 					  {
     				  $this->mensagem = "N&atilde;o foi poss&iacute;vel desativar as enturma&ccedil;&otilde;es da matr&iacute;cula.";
 						  return false;
+					  }else{
+					  	$enturmacao->marcaAlunoTransferido($this->data_cancel);
 					  }
           			}
 				}

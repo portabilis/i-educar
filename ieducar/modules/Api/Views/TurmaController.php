@@ -56,6 +56,16 @@ class TurmaController extends ApiCoreController
 
   // api
 
+  protected function ordenaTurmaAlfabetica(){
+
+    $codTurma = $this->getRequest()->id;
+
+    $sql = "UPDATE pmieducar.matricula_turma SET sequencial_fechamento = 0 WHERE ref_cod_turma = $1";
+    $this->fetchPreparedQuery($sql, $codTurma);
+
+    return true;
+  }
+
   protected function getTipoBoletim() {
   	$tipo = App_Model_IedFinder::getTurma($codTurma = $this->getRequest()->id);
   	$tipo = $tipo['tipo_boletim'];
@@ -83,6 +93,8 @@ class TurmaController extends ApiCoreController
   public function Gerar() {
     if ($this->isRequestFor('get', 'tipo-boletim'))
       $this->appendResponse($this->getTipoBoletim());
+    else if($this->isRequestFor('get', 'ordena-turma-alfabetica'))
+      $this->appendResponse($this->ordenaTurmaAlfabetica());
     else
       $this->notImplementedOperationError();
   }

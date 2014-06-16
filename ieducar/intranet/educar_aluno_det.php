@@ -95,6 +95,8 @@ class indice extends clsDetalhe
   var $nm_pai;
   var $nm_mae;
   var $ref_cod_raca;
+  var $sus;
+  var $url_laudo_medico;
 
   function Gerar()
   {
@@ -150,7 +152,7 @@ class indice extends clsDetalhe
       $registro['nome_aluno'] = strtoupper($det_pessoa_fj['nome']);
       $registro['cpf']        = int2IdFederal($det_fisica['cpf']);
       $registro['data_nasc']  = dataToBrasil($det_fisica['data_nasc']);
-      $registro['sexo']       = $det_fisica['sexo'] == 'F' ? 'Feminino' : 'Masculino';
+      $registro['sexo']       = $det_fisica['sexo'] == 'F' ? 'Feminino' : 'Masculino';  
 
       $obj_estado_civil       = new clsEstadoCivil();
       $obj_estado_civil_lista = $obj_estado_civil->lista();
@@ -179,6 +181,8 @@ class indice extends clsDetalhe
 
       $this->idpes_pai = $det_fisica['idpes_pai'];
       $this->idpes_mae = $det_fisica['idpes_mae'];
+
+      $this->sus = $det_fisica['sus'];
 
       $this->nm_pai = $registro['nm_pai'];
       $this->nm_mae = $registro['nm_mae'];
@@ -284,8 +288,8 @@ class indice extends clsDetalhe
 
       if ($obj_endereco_det = $obj_endereco->detalhe()) {
         $registro['id_cep']        = $obj_endereco_det['cep']->cep;
-        $registro['id_bairro']     = $obj_endereco_det['idbai']->idbai;
-        $registro['id_logradouro'] = $obj_endereco_det['idlog']->idlog;
+        $registro['id_bairro']     = $obj_endereco_det['idbai'];
+        $registro['id_logradouro'] = $obj_endereco_det['idlog'];
         $registro['numero']        = $obj_endereco_det['numero'];
         $registro['letra']         = $obj_endereco_det['letra'];
         $registro['complemento']   = $obj_endereco_det['complemento'];
@@ -293,7 +297,7 @@ class indice extends clsDetalhe
         $registro['apartamento']   = $obj_endereco_det['apartamento'];
         $registro['bloco']         = $obj_endereco_det['bloco'];
         $registro['nm_logradouro'] = $obj_endereco_det['logradouro'];
-        $registro['cep_']          = int2CEP($registro['id_cep']);
+        $registro['cep_']          = int2CEP($registro['id_cep']);      
 
         $obj_bairro     = new clsBairro($registro['id_bairro']);
         $obj_bairro_det = $obj_bairro->detalhe();
@@ -349,14 +353,6 @@ class indice extends clsDetalhe
         }
       }
     }
-
-    // Adiciona a informação de zona de localização junto ao bairro do
-    // endereço.
-    $zona = App_Model_ZonaLocalizacao::getInstance();
-    $registro['nm_bairro'] = sprintf(
-      '%s (Zona %s)',
-      $registro['nm_bairro'], $zona->getValue($obj_endereco_det['zona_localizacao'])
-    );
 
     if ($registro['cod_aluno']) {
       $this->addDetalhe(array('Código Aluno', $registro['cod_aluno']));
@@ -587,6 +583,9 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Deficiências', $tabela));
     }
 
+    if ($registro['url_laudo_medico'] && $registro['url_laudo_medico'] != '')
+      $this->addDetalhe(array('Laudo médico do aluno', "<a href='{$registro['url_laudo_medico']}' target='_blank' > Visualizar laudo </a>"));
+
     if ($registro['rg']) {
       $this->addDetalhe(array('RG', $registro['rg']));
     }
@@ -679,12 +678,15 @@ class indice extends clsDetalhe
     $objFichaMedica       = new clsModulesFichaMedicaAluno($this->cod_aluno);
     $reg                  = $objFichaMedica->detalhe();
 
+
+
     if($reg){    
 
       $this->addDetalhe(array('<span id="fmedica"></span>Altura/metro', $reg['altura']));
       if (trim($reg['peso'])!='') $this->addDetalhe(array('Peso/kg', $reg['peso']));    
       if (trim($reg['grupo_sanguineo'])!='') $this->addDetalhe(array('Grupo sanguíneo', $reg['grupo_sanguineo']));    
       if (trim($reg['fator_rh'])!='') $this->addDetalhe(array('Fator RH', $reg['fator_rh']));    
+      if (trim($this->sus)!='') $this->addDetalhe(array('Número do cartão do SUS', $this->sus));    
       $this->addDetalhe(array('Possui alergia a algum medicamento', ($reg['alergia_medicamento'] == 'S' ? 'Sim': 'Não') ));    
       if (trim($reg['desc_alergia_medicamento'])!='') $this->addDetalhe(array('Quais', $reg['desc_alergia_medicamento']));    
       $this->addDetalhe(array('Possui alergia a algum alimento', ($reg['alergia_alimento'] == 'S' ? 'Sim': 'Não') ));      
@@ -718,11 +720,11 @@ class indice extends clsDetalhe
       if (trim($reg['desc_fratura_trauma'])!='') $this->addDetalhe(array('Qual', $reg['desc_fratura_trauma']));                      
       $this->addDetalhe(array('Tem plano de saúde', ($reg['plano_saude'] == 'S' ? 'Sim': 'Não') ));        
       if (trim($reg['desc_plano_saude'])!='') $this->addDetalhe(array('Qual', $reg['desc_plano_saude']));   
-      $this->addDetalhe(array('<span id="tit_dados_hospital">Em caso de emergência, levar para hospital ou clínica</span>'));   
+      $this->addDetalhe(array('<span id="tr_tit_dados_hospital">Em caso de emergência, levar para hospital ou clínica</span>'));   
       $this->addDetalhe(array('Nome', $reg['hospital_clinica'])); 
       $this->addDetalhe(array('Endereço', $reg['hospital_clinica_endereco']));    
       $this->addDetalhe(array('Telefone', $reg['hospital_clinica_telefone']));    
-      $this->addDetalhe(array('<span id="tit_dados_responsavel">Em caso de emergência, se não for possível contatar os responsáveis, comunicar</span>'));         
+      $this->addDetalhe(array('<span id="tr_tit_dados_hospital">Em caso de emergência, se não for possível contatar os responsáveis, comunicar</span>'));         
       $this->addDetalhe(array('Nome', $reg['responsavel_nome']));    
       $this->addDetalhe(array('Parentesco', $reg['responsavel_parentesco']));    
       $this->addDetalhe(array('Telefone', $reg['responsavel_parentesco_telefone']));    

@@ -35,6 +35,7 @@
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
+require_once 'lib/Portabilis/Utils/Database.php';
 
 class ComponenteCurricularController extends ApiCoreController
 {
@@ -55,9 +56,26 @@ class ComponenteCurricularController extends ApiCoreController
     return $this->toUtf8(mb_strtoupper($resource['name']));
   }
 
+  function getComponentesCurricularesSearch(){
+
+    $sql = 'SELECT componente_curricular_id FROM modules.professor_turma_disciplina WHERE professor_turma_id = $1';
+
+    $array = array();
+    
+    $resources = Portabilis_Utils_Database::fetchPreparedQuery($sql, array( 'params' => array($this->getRequest()->id) ));
+
+    foreach ($resources as $reg) {
+      $array[] = $reg['componente_curricular_id'];
+    }    
+    
+    return array('componentecurricular' => $array);    
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'componente_curricular-search'))
       $this->appendResponse($this->search());
+    elseif ($this->isRequestFor('get', 'componentecurricular-search'))
+      $this->appendResponse($this->getComponentesCurricularesSearch());    
     else
       $this->notImplementedOperationError();
   }

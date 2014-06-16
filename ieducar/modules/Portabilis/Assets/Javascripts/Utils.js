@@ -279,5 +279,12 @@ var handleMessages = messageUtils.handleMessages;
     // add div for feedback messages
     $j('<div />').attr('id', 'feedback-messages').appendTo($j('#corpo'));
 
+    // Search on press enter
+    $j('.tablelistagem input:text').keypress(function(e) {
+        if(e.which == 13) {
+            acao();
+        }
+    });
+
   }); // ready
 })(jQuery);

@@ -79,8 +79,6 @@ class indice extends clsCadastro
   var $data_fim;
 
   var $ano_letivo_modulo;
-  var $incluir_modulo;
-  var $excluir_modulo;
 
   function Inicializar()
   {
@@ -153,7 +151,7 @@ class indice extends clsCadastro
     if ($registros) {
 
       $tabela = "<table border=0 style='' cellpadding=2 width='100%'>";
-      $tabela .= "<tr bgcolor=$cor><td colspan='2'><b>Modulos do ano anterior (".($this->ref_ano - 1).")</b></td></tr><tr><td>";
+      $tabela .= "<tr bgcolor=$cor><td colspan='2'><b>M&oacute;dulos do ano anterior (".($this->ref_ano - 1).")</b></td></tr><tr><td>";
       $tabela .= "<table cellpadding=\"2\" cellspacing=\"2\" border=\"0\" align=\"left\" width='300px'>";
       $tabela .= "<tr bgcolor='#A1B3BD'><th width='100px'>Etapa<a name='ano_letivo'/></th><th width='200px'>Período</th></tr>";
       
@@ -180,95 +178,11 @@ class indice extends clsCadastro
     if ($tabela)
       $this->campoRotulo('modulosAnoAnterior', '-', $tabela);
 
-    // Módulos do ano letivo
-    if ($_POST['ano_letivo_modulo']) {
-      $this->ano_letivo_modulo = unserialize(urldecode($_POST['ano_letivo_modulo']));
-    }
+    $this->campoQuebra();
 
-    $qtd_modulo = count($this->ano_letivo_modulo) == 0 ?
-      0 : count($this->ano_letivo_modulo) + 1;
+    // Novo módulos do ano letivo
 
-    if (is_numeric($this->ref_ano) &&
-      is_numeric($this->ref_ref_cod_escola) &&
-      !$_POST
-    ) {
-      $obj = new clsPmieducarAnoLetivoModulo();
-      $obj->setOrderBy('sequencial ASC');
-      $registros = $obj->lista($this->ref_ano, $this->ref_ref_cod_escola);
-      if ($registros) {
-        foreach ($registros as $campo) {
-          $this->ano_letivo_modulo[$campo[$qtd_modulo]]['sequencial_']     = $campo['sequencial'];
-          $this->ano_letivo_modulo[$campo[$qtd_modulo]]['ref_cod_modulo_'] = $campo['ref_cod_modulo'];
-          $this->ano_letivo_modulo[$campo[$qtd_modulo]]['data_inicio_']    = dataFromPgToBr($campo['data_inicio']);
-          $this->ano_letivo_modulo[$campo[$qtd_modulo]]['data_fim_']       = dataFromPgToBr($campo['data_fim']);
-          $qtd_modulo++;
-
-        }
-      }
-    }
-
-    if ($_POST['ref_cod_modulo'] && $_POST['data_inicio'] && $_POST['data_fim']) {
-      $qtd_modulo = ($qtd_modulo==0 ? 1 : $qtd_modulo);
-      $this->ano_letivo_modulo[$qtd_modulo]['sequencial_']     = $qtd_modulo;
-      $this->ano_letivo_modulo[$qtd_modulo]['ref_cod_modulo_'] = $_POST['ref_cod_modulo'];
-      $this->ano_letivo_modulo[$qtd_modulo]['data_inicio_']    = $_POST['data_inicio'];
-      $this->ano_letivo_modulo[$qtd_modulo]['data_fim_']       = $_POST['data_fim'];
-
-      $qtd_modulo++;
-
-      unset($this->ref_cod_modulo);
-      unset($this->data_inicio);
-      unset($this->data_fim);
-    }
-
-    $this->campoOculto('excluir_modulo', '');
-    $qtd_modulo = 1;
-    unset($aux);
-    if ($this->ano_letivo_modulo) {
-      foreach ($this->ano_letivo_modulo as $campo) {
-        if ($this->excluir_modulo == $campo['sequencial_']) {
-          $this->ano_letivo_modulo[$campo['sequencial']] = NULL;
-          $this->excluir_modulo = NULL;
-        }
-        else {
-          $obj_modulo = new clsPmieducarModulo($campo['ref_cod_modulo_']);
-          $det_modulo = $obj_modulo->detalhe();
-          $nm_tipo_modulo = $det_modulo['nm_tipo'];
-
-          $url = sprintf('
-            <a href="#" onclick="getElementById(\'excluir_modulo\').value = \'%s\'; getElementById(\'tipoacao\').value = \'\'; %s.submit();">
-              <img src="imagens/nvp_bola_xis.gif" title="Excluir" border="0" />
-            </a>',
-            $campo['sequencial_'], $this->__nome
-          );
-
-          $this->campoTextoInv('ref_cod_modulo_' . $campo['sequencial_'], '',
-            $nm_tipo_modulo, 30, 255, FALSE, FALSE, TRUE);
-
-          $this->campoTextoInv('data_inicio_' . $campo['sequencial_'], '',
-            $campo['data_inicio_'], 10, 10, FALSE, FALSE, TRUE);
-
-          $this->campoTextoInv('data_fim_' . $campo['sequencial_'], '',
-            $campo['data_fim_'], 10, 10, FALSE, FALSE, FALSE, '', $url
-          );
-
-          $aux[$qtd_modulo]['sequencial_']     = $qtd_modulo;
-          $aux[$qtd_modulo]['ref_cod_modulo_'] = $campo['ref_cod_modulo_'];
-          $aux[$qtd_modulo]['data_inicio_']    = $campo['data_inicio_'];
-          $aux[$qtd_modulo]['data_fim_']       = $campo['data_fim_'];
-
-          $qtd_modulo++;
-        }
-      }
-
-      unset($this->ano_letivo_modulo);
-      $this->ano_letivo_modulo = $aux;
-    }
-
-    $this->campoOculto('ano_letivo_modulo', serialize($this->ano_letivo_modulo));
-
-    // Foreign keys
-    $opcoes = array('' => 'Selecione');
+    $opcoesCampoModulo = array('' => 'Selecione');
     if (class_exists("clsPmieducarModulo")) {
       $objTemp = new clsPmieducarModulo();
       $objTemp->setOrderby('nm_tipo ASC');
@@ -278,35 +192,42 @@ class indice extends clsCadastro
 
       if (is_array($lista) && count($lista)) {
         foreach ($lista as $registro) {
-          $opcoes[$registro['cod_modulo']] = $registro['nm_tipo'];
+          $opcoesCampoModulo[$registro['cod_modulo']] = $registro['nm_tipo'];
         }
       }
     }
     else {
-      $opcoes = array('' => 'Erro na geração');
+      $opcoesCampoModulo = array('' => 'Erro na geração');
+    }  
+
+    if (is_numeric($this->ref_ano) && is_numeric($this->ref_ref_cod_escola) && !$_POST) {
+      
+      $obj = new clsPmieducarAnoLetivoModulo();
+      $obj->setOrderBy('sequencial ASC');
+      $registros = $obj->lista($this->ref_ano, $this->ref_ref_cod_escola);
+
+      $qtd_registros = 0;
+      if( $registros )
+      {
+        foreach ( $registros AS $campo )
+        {
+          $this->ano_letivo_modulo[$qtd_registros][] = $campo["ref_cod_modulo"];
+          $this->ano_letivo_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_inicio']);
+          $this->ano_letivo_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_fim']);
+          $qtd_registros++;
+        }
+      }
+
+      $this->campoTabelaInicio("modulos_ano_letivo","M&oacute;dulos do ano letivo",array("M&oacute;dulo","Data inicial","Data final"),$this->ano_letivo_modulo);
+
+      $this->campoLista('ref_cod_modulo', 'Módulo', $opcoesCampoModulo,
+      $this->ref_cod_modulo, NULL, NULL, NULL, NULL, NULL, TRUE);
+
+      $this->campoData( "data_inicio", "Hora", $this->data_inicio,true);
+      $this->campoData( "data_fim", "Hora", $this->data_fim, true);
+      $this->campoTabelaFim();
     }
 
-    // data
-    if ($qtd_modulo > 1) {
-      $this->campoLista('ref_cod_modulo', 'Módulo', $opcoes,
-        $this->ref_cod_modulo, NULL, NULL, NULL, NULL, NULL, FALSE);
-
-      $this->campoData('data_inicio', 'Data Início', $this->data_inicio);
-
-      $this->campoData('data_fim', 'Data Fim', $this->data_fim);
-    }
-    else {
-      $this->campoLista('ref_cod_modulo', 'Módulo', $opcoes, $this->ref_cod_modulo);
-      $this->campoData('data_inicio', 'Data Início', $this->data_inicio, TRUE);
-      $this->campoData('data_fim', 'Data Fim', $this->data_fim, TRUE);
-    }
-
-    $this->campoOculto('incluir_modulo', '');
-    $this->campoRotulo('bt_incluir_modulo', 'Módulo',
-     '<a href="#" id="add_module"><img src="imagens/nvp_bot_adiciona.gif" title="Incluir" border="0" /></a>'
-    );
-
-    $this->campoQuebra();
   }
 
   function Novo()
@@ -319,9 +240,7 @@ class indice extends clsCadastro
     $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7,
       'educar_escola_lst.php');
 
-    $this->ano_letivo_modulo = unserialize(urldecode($this->ano_letivo_modulo));
-
-    if ($this->ano_letivo_modulo) {
+    if ($this->ref_cod_modulo && $this->data_inicio && $this->data_fim) { 
 
       $this->copiarTurmasUltimoAno($this->ref_ref_cod_escola, $this->ref_ano);
 
@@ -332,18 +251,15 @@ class indice extends clsCadastro
       $cadastrou = $obj->cadastra();
 
       if ($cadastrou) {
-        if (FALSE == $this->_verificaModuloDatas($this->ano_letivo_modulo)) {
-          return FALSE;
-        }
 
-        foreach ($this->ano_letivo_modulo as $campo) {
-          $campo['data_inicio_'] = dataToBanco($campo['data_inicio_']);
-          $campo['data_fim_']    = dataToBanco($campo['data_fim_']);
+        foreach ($this->ref_cod_modulo as $key => $campo) {
+          $this->data_inicio[$key] = dataToBanco($this->data_inicio[$key]);
+          $this->data_fim[$key]    = dataToBanco($this->data_fim[$key]);
 
           $obj = new clsPmieducarAnoLetivoModulo($this->ref_ano,
-            $this->ref_ref_cod_escola, $campo['sequencial_'],
-            $campo['ref_cod_modulo_'], $campo['data_inicio_'],
-            $campo['data_fim_']
+            $this->ref_ref_cod_escola, $key+1,
+            $this->ref_cod_modulo[$key], $this->data_inicio[$key],
+            $this->data_fim[$key]
           );
 
           $cadastrou1 = $obj->cadastra();
@@ -379,30 +295,25 @@ class indice extends clsCadastro
     $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7,
       'educar_escola_lst.php');
 
-    $this->ano_letivo_modulo = unserialize(urldecode($this->ano_letivo_modulo));
-
-    if ($this->ano_letivo_modulo) {
+    if ($this->ref_cod_modulo && $this->data_inicio && $this->data_fim) { 
       $obj  = new clsPmieducarAnoLetivoModulo($this->ref_ano, $this->ref_ref_cod_escola);
       $excluiu = $obj->excluirTodos();
 
       if ($excluiu) {
-        if (FALSE == $this->_verificaModuloDatas($this->ano_letivo_modulo)) {
-          return FALSE;
-        }
 
-        foreach ($this->ano_letivo_modulo as $campo) {
-          $campo['data_inicio_'] = dataToBanco($campo['data_inicio_']);
-          $campo['data_fim_']    = dataToBanco($campo['data_fim_']);
+        foreach ($this->ref_cod_modulo as $key => $campo) {
+          $this->data_inicio[$key] = dataToBanco($this->data_inicio[$key]);
+          $this->data_fim[$key]    = dataToBanco($this->data_fim[$key]);
 
           $obj = new clsPmieducarAnoLetivoModulo($this->ref_ano,
-            $this->ref_ref_cod_escola, $campo['sequencial_'],
-            $campo['ref_cod_modulo_'], $campo['data_inicio_'],
-            $campo['data_fim_']
+            $this->ref_ref_cod_escola, $key+1,
+            $this->ref_cod_modulo[$key], $this->data_inicio[$key],
+            $this->data_fim[$key]
           );
 
-          $cadastrou = $obj->cadastra();
+          $cadastrou1 = $obj->cadastra();
 
-          if (! $cadastrou) {
+          if (! $cadastrou1) {
             $this->mensagem = 'Edição não realizada.<br />';
             return FALSE;
           }
@@ -450,33 +361,6 @@ class indice extends clsCadastro
 
     $this->mensagem = 'Exclusão não realizada.<br />';
     return FALSE;
-  }
-
-  /**
-   * Verifica se ao menos uma das datas as datas de início dos módulos é do
-   * mesmo ano letivo da escola. Em caso de erro, configura a mensagem de
-   * erro que é retornado pelo formulário.
-   *
-   * @access private
-   * @param  array $modulos O array associativo recebido via POST pelo formulário.
-   * @return bool  FALSE caso nenhuma das datas esteja no mesmo ano letivo da escola.
-   */
-  function _verificaModuloDatas(array $modulos)
-  {
-    $dates = array();
-    foreach ($modulos as $modulo) {
-      $dates[] = $modulo['data_inicio_'];
-    }
-
-    try {
-      App_Date_Utils::datesYearAtLeast($dates, $this->ref_ano, 1);
-    }
-    catch (App_Date_Exception $e) {
-      $this->mensagem = $e->getMessage();
-      return FALSE;
-    }
-
-    return TRUE;
   }
 
   function copiarTurmasUltimoAno($escolaId, $anoDestino) {
@@ -609,51 +493,5 @@ $pagina->addForm($miolo);
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
-/**
- * Realiza validação client-side do forComponenteCurricular_Model_TurmaDataMappermulário.
- */
-function incluir()
-{
-  var phpjs     = ied_phpjs.getInstance();
-  var startDate = null;
-  var endDate   = null;
 
-  startDate = document.getElementById('data_inicio').value.split('/');
-  endDate   = document.getElementById('data_fim').value.split('/');
-
-  if ('' === document.getElementById('ref_cod_modulo').value) {
-    alert('É necessário selecionar um "módulo".');
-    return false;
-  }
-
-  if (!phpjs.checkdate(startDate[1], startDate[0], startDate[2])) {
-    document.getElementById('data_inicio').className = 'formdestaque';
-    alert('Preencha o campo "Data Início" corretamente!');
-    document.getElementById('data_inicio').focus();
-    return false;
-  }
-
-  if (!phpjs.checkdate(endDate[1], endDate[0], endDate[2])) {
-    document.getElementById('data_fim').className = 'formdestaque';
-    alert('Preencha o campo "Data Fim" corretamente!');
-    document.getElementById('data_fim').focus();
-    return false;
-  }
-
-  startDate = new Date(parseInt(startDate[2], 10), parseInt(startDate[1], 10) - 1, parseInt(startDate[0], 10));
-  endDate   = new Date(parseInt(endDate[2], 10), parseInt(endDate[1], 10) - 1, parseInt(endDate[0], 10));
-
-  if (endDate < startDate) {
-    alert('"Data Início" não pode ser posterior a "Data Fim".');
-    return false;
-  }
-
-  document.getElementById('incluir_modulo').value = 'S';
-  document.getElementById('tipoacao').value = '';
-  acao();
-}
-
-// Fixup para erro "Refused to execute a JavaScript script. Source code of script found within request."
-// que ocorre no navegador chrome.
-document.getElementById('add_module').onclick = incluir;
 </script>

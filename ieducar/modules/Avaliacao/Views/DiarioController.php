@@ -56,7 +56,18 @@ class DiarioController extends Portabilis_Controller_Page_ListController
   public function Gerar() {
     $this->inputsHelper()->input('ano');
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie', 'turma', 'etapa'));
-    $this->inputsHelper()->dynamic(array('componenteCurricular', 'matricula'), array('required' => false));
+	  $this->inputsHelper()->dynamic(array('componenteCurricular', 'matricula'), array('required' => false));
+
+	  $navegacaoTab = array('1' => 'Horizontal(padr&atilde;o)',
+                          '2' => 'Vertical',);
+                                 
+	  $options      = array('label'     =>'Navega&ccedil;&atilde;o do cursor(tab)',
+		                      'resources' => $navegacaoTab,
+		                      'required'  => false,
+		                      'inline'    => true,
+		                      'value'     => $navegacaoTab[1]);
+
+    $this->inputsHelper()->select('navegacao_tab', $options);
 
     $this->loadResourceAssets($this->getDispatcher());
   }

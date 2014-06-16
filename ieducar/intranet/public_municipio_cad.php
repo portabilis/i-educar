@@ -149,6 +149,8 @@ class indice extends clsCadastro
 
     // text
     $this->campoTexto('nome', 'Nome', $this->nome, 30, 60, TRUE);
+
+    $this->campoNumero('cod_ibge', 'C&oacute;digo INEP', $this->cod_ibge, 6, 6);
   }
 
   function Novo()
@@ -158,7 +160,7 @@ class indice extends clsCadastro
     session_write_close();
 
     $obj = new clsPublicMunicipio(NULL, $this->nome, $this->sigla_uf, NULL, NULL,
-      NULL, NULL, NULL, 'M', NULL, NULL, $this->pessoa_logada, NULL, NULL, 'U',
+      NULL, $this->cod_ibge, NULL, 'M', NULL, NULL, $this->pessoa_logada, NULL, NULL, 'U',
       'I', NULL, 9);
 
     $cadastrou = $obj->cadastra();
@@ -180,7 +182,7 @@ class indice extends clsCadastro
     session_write_close();
 
     $obj = new clsPublicMunicipio($this->idmun, $this->nome, $this->sigla_uf,
-      NULL, NULL, NULL, NULL, NULL, 'M', NULL, $this->pessoa_logada, NULL, NULL,
+      NULL, NULL, NULL, $this->cod_ibge, NULL, 'M', NULL, $this->pessoa_logada, NULL, NULL,
       NULL, 'U', 'I', NULL, 9 );
 
     $editou = $obj->edita();

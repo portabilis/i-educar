@@ -201,6 +201,42 @@ class Portabilis_View_Helper_Inputs {
 
   }      
 
+  public function simpleSearchBairro($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchBairro', $attrName, $inputOptions, $helperOptions);
+
+  } 
+
+  public function simpleSearchDistrito($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchDistrito', $attrName, $inputOptions, $helperOptions);
+
+  } 
+
+  public function simpleSearchLogradouro($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchLogradouro', $attrName, $inputOptions, $helperOptions);
+
+  }         
+
+  public function simpleSearchIes($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchIes', $attrName, $inputOptions, $helperOptions);
+
+  }  
+
+  public function simpleSearchCursoSuperior($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchCursoSuperior', $attrName, $inputOptions, $helperOptions);
+
+  }   
+
+  public function simpleSearchServidor($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchServidor', $attrName, $inputOptions, $helperOptions);
+
+  }               
+
   // multiple search resource input helper
 
 
@@ -215,6 +251,23 @@ class Portabilis_View_Helper_Inputs {
   public function multipleSearchAssuntos($attrName, $inputOptions = array(), $helperOptions = array()) {
     $this->multipleSearchResourceInput('multipleSearchAssuntos', $attrName, $inputOptions, $helperOptions);
   }
+
+  public function multipleSearchEtapacurso($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchEtapacurso', $attrName, $inputOptions, $helperOptions);
+  }
+
+  public function multipleSearchComponenteCurricular($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchComponenteCurricular', $attrName, $inputOptions, $helperOptions);
+  }  
+
+  public function multipleSearchAreasConhecimento($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchAreasConhecimento', $attrName, $inputOptions, $helperOptions);
+  }
+
+   /*public function multipleSearchAjaxAreasConhecimento($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchAjaxAreasConhecimento', $attrName, $inputOptions, $helperOptions);
+  }*/
+
   // resource input helpers
 
   public function religiao($inputOptions = array(), $helperOptions = array()) {

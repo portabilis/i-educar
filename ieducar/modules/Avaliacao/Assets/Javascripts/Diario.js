@@ -19,6 +19,11 @@ var onClickSelectAllEvent = false;
 var onClickActionEvent    = false;
 var onClickDeleteEvent    = false;
 
+//irá rodar quando a página estiver pronta
+$(function() {
+    navegacaoTab(dataResponse.navegacao_tab);
+});
+
 //url builders
 
 var deleteResourceUrlBuilder = {
@@ -454,8 +459,10 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
   //set headers table
   var $linha = $j('<tr />');
 
-  if (componenteCurricularSelected)
+  if (componenteCurricularSelected) {
+    $j('<th />').html('&Aacute;rea de Conhecimento').appendTo($linha);
     $j('<th />').html('Componente curricular').appendTo($linha);
+  }
 
   $j('<th />').html('Etapa').appendTo($linha);
   $j('<th />').html('Turma').appendTo($linha);
@@ -471,8 +478,10 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
 
   var $linha = $j('<tr />').addClass('cellColor');
 
-  if (componenteCurricularSelected)
-    $j('<td />').html(safeToUpperCase($j('#ref_cod_componente_curricular').children("[selected='selected']").html())).appendTo($linha);
+  if (componenteCurricularSelected) {
+    $j('<td />').html(safeToUpperCase($j('#ref_cod_componente_curricular optgroup').children("[selected='selected']").parent().attr('label'))).appendTo($linha);
+    $j('<td />').html(safeToUpperCase($j('#ref_cod_componente_curricular optgroup').children("[selected='selected']").html())).appendTo($linha);
+  }  
 
   $j('<td />').html(safeToUpperCase($j('#etapa').children("[selected='selected']").html())).appendTo($linha);
   $j('<td />').html(safeToUpperCase($j('#ref_cod_turma').children("[selected='selected']").html())).appendTo($linha);
@@ -532,25 +541,48 @@ function handleSearch($resultTable, dataResponse) {
   $j.each(dataResponse.matriculas, function(index, value) {
     var $linha = $j('<tr />').addClass(componenteCurricularSelected ? '' : 'strong');
 
+    
+
     $j('<td />').html(value.matricula_id).addClass('center').appendTo($linha);
     $j('<td />').html(value.aluno_id + ' - ' +safeToUpperCase(value.nome))
                 .attr('colspan', componenteCurricularSelected ? 0 : 4)
                 .appendTo($linha);
 
-    if (componenteCurricularSelected && value.componentes_curriculares.length > 0)
-      updateComponenteCurricular($linha, value.matricula_id, value.componentes_curriculares[0]);
+    if (value.componentes_curriculares){            
+      if (componenteCurricularSelected && value.componentes_curriculares.length > 0)
+        updateComponenteCurricular($linha, value.matricula_id, value.componentes_curriculares[0]);
+    }else{
+      if(value.situacao_deslocamento){
+        var $situacaoTdDeslocamento = $j('<td />').addClass('situacao-matricula-cc')
+                                  .attr('id', 'situacao-matricula-' + value.matricula_id)
+                                  .data('matricula_id', value.matricula_id)
+                                  .addClass('center')  
+                                  .css('color', '#FF6600')                                
+                                  .html(value.situacao_deslocamento)
+                                  .appendTo($linha);
+
+        var colCount = 0;
+        $resultTable.find('tr:nth-child(1) th').each(function () {
+          colCount++;
+        });
+        for (var i = 0; i < colCount - 3; i++) {
+          $j('<td />').html('-').addClass('center').appendTo($linha);
+        };
+      }
+    }
 
     $linha.fadeIn('slow').appendTo($resultTable);
     $linha.appendTo($resultTable);
 
-    if (! componenteCurricularSelected)
+    if (! componenteCurricularSelected && value.componentes_curriculares)
       updateComponenteCurriculares($resultTable, value.matricula_id, value.componentes_curriculares);
+    
   });
 
   // seta colspan [th, td].aluno quando exibe nota exame
   if ($tableSearchDetails.data('details').tipo_nota != 'nenhum' &&
       $tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) {
-    $resultTable.find('[colspan]').attr('colspan', componenteCurricularSelected ? 1 : 5);
+    $resultTable.find('[colspan]:not(.area-conhecimento)').attr('colspan', componenteCurricularSelected ? 1 : 6);
   }
 
   $resultTable.find('tr:even').addClass('even');
@@ -566,6 +598,7 @@ function handleSearch($resultTable, dataResponse) {
   $parecerFields.on('change', changeParecer);
 
   $resultTable.addClass('styled').find('.tabable:first').focus();
+  navegacaoTab(dataResponse.navegacao_tab);
 }
 
 function _notaField(matriculaId, componenteCurricularId, klass, id, value) {
@@ -732,22 +765,67 @@ function updateComponenteCurricularHeaders($targetElement, $tagElement) {
 function updateComponenteCurriculares($targetElement, matriculaId, componentesCurriculares) {
   var useNota                = $tableSearchDetails.data('details').tipo_nota != 'nenhum';
   var useParecer             = $tableSearchDetails.data('details').tipo_parecer_descritivo != 'nenhum';
-
-  var $ccHeader = $j('<tr />').addClass('strong');
-
-  $j('<td />').addClass('center').html('Componente curricular').appendTo($ccHeader);
-  updateComponenteCurricularHeaders($ccHeader, $j('<td />'));
-
-  $ccHeader.appendTo($targetElement);
+  
+  var areas = new Array();
+  
+  var setaDireita = "<img src=\"imagens/mytdt/seta-preta-direita.png\" align=\"top\" class=\"area-conhecimento-seta seta-direita\" />";
+  var setaBaixo   = "<img src=\"imagens/mytdt/seta-branca-baixo.png\" align=\"top\" class=\"area-conhecimento-seta seta-baixo\" />";
 
   $j.each(componentesCurriculares, function(index, cc) {
-    var $ccRow = $j('<tr />');
+
+    if (areas.indexOf(cc.area_id) == -1) {
+      areas.push(cc.area_id);
+
+      //primeiro o header para calcular o colspan
+      var $ccHeader = $j('<tr />').addClass('strong').addClass('tr-componente-curricular').data('areaid', cc.area_id);
+      $j('<td />').addClass('center').html('Componente curricular').appendTo($ccHeader);
+      updateComponenteCurricularHeaders($ccHeader, $j('<td />'));
+       
+      //pegando o colspan
+      var areaColspan = $j('td', $ccHeader).length;
+      
+      var $areaRow = $j('<tr />').addClass('tr-area-conhecimento').data('areaid', cc.area_id);
+      var conteudo = setaDireita + setaBaixo + " " + cc.area_nome;
+      $j('<td />').addClass('area-conhecimento').attr('colspan', areaColspan).html(conteudo).appendTo($areaRow);
+ 
+      //por fim adicionando primeiro a área depois o heade 
+      $areaRow.appendTo($targetElement);
+      $ccHeader.appendTo($targetElement);
+     }
+
+    var $ccRow = $j('<tr />').addClass('tr-componente-curricular').data('areaid', cc.area_id);
 
     $j('<td />').addClass('center').html(cc.nome).appendTo($ccRow);
     updateComponenteCurricular($ccRow, matriculaId, cc);
 
     $ccRow.appendTo($targetElement);
   });
+
+  $j('.tr-area-conhecimento').bind('click', function() {
+    
+    $j('td', this).toggleClass('area-conhecimento-destaque');
+  
+    var fechado = $j('.seta-baixo', this).is(':hidden');
+    if (fechado) {
+      $j('.seta-baixo', this).css('display', 'inline');
+      $j('.seta-direita', this).css('display', 'none');
+    } else {
+      $j('.seta-baixo', this).css('display', 'none');
+      $j('.seta-direita', this).css('display', 'inline');
+    }
+    
+    var id = $j(this).data('areaid');
+    $j('.tr-componente-curricular').each(function() {
+      if ($j(this).data('areaid') == id) {
+        if ($j(this).is(':hidden')) {
+          $j(this).slideRow('down');
+        } else {
+          $j(this).slideRow('up');
+        }
+      }
+    });
+  });
+  $j('.tr-area-conhecimento').first().trigger('click');
 }
 
 
@@ -793,8 +871,22 @@ function canSearch(){
   return true;
 }
 
+function myNextValid($selectElement) {
+  var a = $selectElement.find('option:selected');
+  if (a.next('option').length == 0) {
+    b = a.parent();
+    if (b.prop('tagName').toUpperCase() == 'SELECT') {
+      return null;
+    } else {
+      return b.next().children('option:first');
+    }
+  } else {
+    return a.next('option');
+  }
+}
+
 function selectNextOption($selectElement){
-  var $nextOption = $selectElement.find('option:selected').next('option');
+  var $nextOption = myNextValid($selectElement);
 
   if ($nextOption.val() != undefined) {
     $selectElement.val($nextOption.val());
@@ -833,3 +925,125 @@ function showNextSelectionButton() {
                                 .appendTo($navActions);
   }
 }
+
+function navegacaoTab(sentido){
+    //se for no sentido vertical
+    if(sentido=="2"){
+
+        $j('tr').each(function() {
+            
+            $j(this).find('td').each(function(i) {
+                $j(this).find('input, textarea, select').attr('tabindex', i+1);
+            });
+        });
+    }
+}
+
+(function($) {
+  var sR = {
+      defaults: {
+          slideSpeed: 400,
+          easing: false,
+          callback: false     
+      },
+      thisCallArgs: {
+          slideSpeed: 400,
+          easing: false,
+          callback: false
+      },
+      methods: {
+          up: function (arg1,arg2,arg3) {
+              if(typeof arg1 == 'object') {
+                  for(p in arg1) {
+                      sR.thisCallArgs.eval(p) = arg1[p];
+                  }
+              }else if(typeof arg1 != 'undefined' && (typeof arg1 == 'number' || arg1 == 'slow' || arg1 == 'fast')) {
+                  sR.thisCallArgs.slideSpeed = arg1;
+              }else{
+                  sR.thisCallArgs.slideSpeed = sR.defaults.slideSpeed;
+              }
+
+              if(typeof arg2 == 'string'){
+                  sR.thisCallArgs.easing = arg2;
+              }else if(typeof arg2 == 'function'){
+                  sR.thisCallArgs.callback = arg2;
+              }else if(typeof arg2 == 'undefined') {
+                  sR.thisCallArgs.easing = sR.defaults.easing;    
+              }
+              if(typeof arg3 == 'function') {
+                  sR.thisCallArgs.callback = arg3;
+              }else if(typeof arg3 == 'undefined' && typeof arg2 != 'function'){
+                  sR.thisCallArgs.callback = sR.defaults.callback;    
+              }
+              var $cells = $(this).find('td');
+              $cells.wrapInner('<div class="slideRowUp" />');
+              var currentPadding = $cells.css('padding');
+              $cellContentWrappers = $(this).find('.slideRowUp');
+              $cellContentWrappers.slideUp(sR.thisCallArgs.slideSpeed,sR.thisCallArgs.easing).parent().animate({
+                                                                                                                  paddingTop: '0px',
+                                                                                                                  paddingBottom: '0px'},{
+                                                                                                                  complete: function () {
+                                                                                                                      $(this).children('.slideRowUp').replaceWith($(this).children('.slideRowUp').contents());
+                                                                                                                      $(this).parent().css({'display':'none'});
+                                                                                                                      $(this).css({'padding': currentPadding});
+                                                                                                                  }});
+              var wait = setInterval(function () {
+                  if($cellContentWrappers.is(':animated') === false) {
+                      clearInterval(wait);
+                      if(typeof sR.thisCallArgs.callback == 'function') {
+                          sR.thisCallArgs.callback.call(this);
+                      }
+                  }
+              }, 100);                                                                                                    
+              return $(this);
+          },
+          down: function (arg1,arg2,arg3) {
+              if(typeof arg1 == 'object') {
+                  for(p in arg1) {
+                      sR.thisCallArgs.eval(p) = arg1[p];
+                  }
+              }else if(typeof arg1 != 'undefined' && (typeof arg1 == 'number' || arg1 == 'slow' || arg1 == 'fast')) {
+                  sR.thisCallArgs.slideSpeed = arg1;
+              }else{
+                  sR.thisCallArgs.slideSpeed = sR.defaults.slideSpeed;
+              }
+
+              if(typeof arg2 == 'string'){
+                  sR.thisCallArgs.easing = arg2;
+              }else if(typeof arg2 == 'function'){
+                  sR.thisCallArgs.callback = arg2;
+              }else if(typeof arg2 == 'undefined') {
+                  sR.thisCallArgs.easing = sR.defaults.easing;    
+              }
+              if(typeof arg3 == 'function') {
+                  sR.thisCallArgs.callback = arg3;
+              }else if(typeof arg3 == 'undefined' && typeof arg2 != 'function'){
+                  sR.thisCallArgs.callback = sR.defaults.callback;    
+              }
+              var $cells = $(this).find('td');
+              $cells.wrapInner('<div class="slideRowDown" style="display:none;" />');
+              $cellContentWrappers = $cells.find('.slideRowDown');
+              $(this).show();
+              $cellContentWrappers.slideDown(sR.thisCallArgs.slideSpeed, sR.thisCallArgs.easing, function() { $(this).replaceWith( $(this).contents()); });
+
+              var wait = setInterval(function () {
+                  if($cellContentWrappers.is(':animated') === false) {
+                      clearInterval(wait);
+                      if(typeof sR.thisCallArgs.callback == 'function') {
+                          sR.thisCallArgs.callback.call(this);
+                      }
+                  }
+              }, 100);
+              return $(this);
+          }
+      }
+  };
+
+  $.fn.slideRow = function(method,arg1,arg2,arg3) {
+      if(typeof method != 'undefined') {
+          if(sR.methods[method]) {
+              return sR.methods[method].apply(this, Array.prototype.slice.call(arguments,1));
+          }
+      }
+  };
+})(jQuery);

@@ -32,6 +32,7 @@
 require_once 'CoreExt/Entity.php';
 require_once 'App/Model/IedFinder.php';
 require_once 'ComponenteCurricular/Model/TipoBase.php';
+require_once 'ComponenteCurricular/Model/CodigoEducacenso.php';
 
 /**
  * ComponenteCurricular_Model_Componente class.
@@ -52,7 +53,9 @@ class ComponenteCurricular_Model_Componente extends CoreExt_Entity
     'abreviatura' => NULL,
     'tipo_base' => NULL,
     'area_conhecimento' => NULL,
-    'cargaHoraria' => NULL
+    'cargaHoraria' => NULL,
+    'codigo_educacenso' => NULL,
+    'ordenamento' => 99999
   );
 
   protected $_references = array(
@@ -65,6 +68,11 @@ class ComponenteCurricular_Model_Componente extends CoreExt_Entity
       'value' => NULL,
       'class' => 'ComponenteCurricular_Model_TipoBase',
       'file'  => 'ComponenteCurricular/Model/TipoBase.php'
+    ),
+    'codigo_educacenso' => array(
+      'value' => NULL,
+      'class' => 'ComponenteCurricular_Model_CodigoEducacenso',
+      'file'  => 'ComponenteCurricular/Model/CodigoEducacenso.php'
     )
   );
 
@@ -84,6 +92,9 @@ class ComponenteCurricular_Model_Componente extends CoreExt_Entity
     $tipoBase = ComponenteCurricular_Model_TipoBase::getInstance();
     $tipos = $tipoBase->getKeys();
 
+    $codigoEducacenso = ComponenteCurricular_Model_CodigoEducacenso::getInstance();
+    $codigos = $codigoEducacenso->getKeys();
+
     $areas = $this->getDataMapper()->findAreaConhecimento();
     $areas = CoreExt_Entity::entityFilterAttr($areas, 'id');
 
@@ -93,6 +104,7 @@ class ComponenteCurricular_Model_Componente extends CoreExt_Entity
       'abreviatura' => new CoreExt_Validate_String(array('min' => 2, 'max' => 15)),
       'tipo_base' => new CoreExt_Validate_Choice(array('choices' => $tipos)),
       'area_conhecimento' => new CoreExt_Validate_Choice(array('choices' => $areas)),
+      'codigo_educacenso' => new CoreExt_Validate_Choice(array('choices' => $codigos)),
     );
   }
 

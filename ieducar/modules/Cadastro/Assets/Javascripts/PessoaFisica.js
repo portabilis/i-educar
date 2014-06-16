@@ -1,4 +1,3 @@
-
 // before page is ready
 
 function hrefToCreateParent(parentType) {
@@ -164,6 +163,11 @@ var validatesUniquenessOfCpf = function() {
 
 
 var submitForm = function(event) {
+  if ($j('#cep_').val()){
+    if (!validateEndereco()){
+      return;
+    }
+  }
   if ($cpfField.val()) {
     $j(document).data('submit_form_after_ajax_validation', true);
     validatesUniquenessOfCpf();
@@ -212,6 +216,9 @@ $j(document).ready(function() {
 
   $submitButton.removeAttr('onclick');
   $submitButton.click(submitForm);
+
+  hideEnderecoFields();
+  fixUpPlaceholderEndereco();
 
 }); // ready
 

@@ -119,6 +119,7 @@ class clsFuncionario extends clsPessoaFisica
 		$this->email = $email;
 		$this->_campos_lista = " f.ref_cod_pessoa_fj,
 					     		 f.matricula,
+					     		 f.matricula_interna,
 								 f.senha,
 								 f.ativo,
 								 f.ramal,
@@ -159,7 +160,7 @@ class clsFuncionario extends clsPessoaFisica
 		}
 	}
 
-	function lista($str_matricula=false, $str_nome=false, $int_ativo=false, $int_secretaria=false, $int_departamento=false, $int_setor=false, $int_vinculo=false, $int_inicio_limit=false, $int_qtd_registros=false, $str_ramal = false, $matricula_is_not_null = false, $int_idpes = false, $email = null )
+	function lista($str_matricula=false, $str_nome=false, $int_ativo=false, $int_secretaria=false, $int_departamento=false, $int_setor=false, $int_vinculo=false, $int_inicio_limit=false, $int_qtd_registros=false, $str_ramal = false, $matricula_is_not_null = false, $int_idpes = false, $email = null, $matricula_interna = NULL )
 	{
 		$sql = " SELECT {$this->_campos_lista} FROM {$this->schema_portal}.v_funcionario f";
 		$filtros = "";
@@ -173,6 +174,11 @@ class clsFuncionario extends clsPessoaFisica
 			$filtros .= "{$whereAnd} to_ascii(f.matricula) LIKE to_ascii('%{$str_matricula}%')";
 			$whereAnd = " AND ";
 		}
+		if( is_string( $matricula_interna ) && $matricula_interna != '')
+		{
+			$filtros .= "{$whereAnd} to_ascii(f.matricula_interna) LIKE to_ascii('%{$matricula_interna}%')";
+			$whereAnd = " AND ";
+		}		
 		if( is_string( $str_nome ) )
 		{
 			$filtros .= "{$whereAnd} to_ascii(f.nome) LIKE  to_ascii('%{$str_nome}%%')";
@@ -292,7 +298,7 @@ class clsFuncionario extends clsPessoaFisica
 
 			$tupla = parent::detalhe();
 			$db = new clsBanco();
-			$db->Consulta("SELECT ref_cod_pessoa_fj, matricula, senha, ativo, ref_sec, ramal, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, tempo_expira_conta, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, proibido, ref_cod_setor_new, matricula_permanente, email FROM funcionario WHERE ref_cod_pessoa_fj = '{$this->idpes}'");
+			$db->Consulta("SELECT ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, ramal, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, tempo_expira_conta, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, proibido, ref_cod_setor_new, matricula_permanente, email FROM funcionario WHERE ref_cod_pessoa_fj = '{$this->idpes}'");
 			if($db->ProximoRegistro())
 			{
 				$tupla = $db->Tupla();

@@ -1,5 +1,8 @@
 <?php
 
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -61,6 +64,8 @@ class clsPmieducarCurso
   var $ref_cod_instituicao;
   var $padrao_ano_escolar;
   var $hora_falta;
+  var $modalidade_curso;
+  var $autorizacao;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -128,13 +133,14 @@ class clsPmieducarCurso
     $ato_poder_publico = NULL, $edicao_final = NULL, $objetivo_curso = NULL,
     $publico_alvo = NULL, $data_cadastro = NULL, $data_exclusao = NULL,
     $ativo = NULL, $ref_usuario_exc = NULL, $ref_cod_instituicao = NULL,
-    $padrao_ano_escolar = NULL, $hora_falta = NULL, $avaliacao_globalizada = NULL, $multi_seriado = NULL)
+    $padrao_ano_escolar = NULL, $hora_falta = NULL, $avaliacao_globalizada = NULL, $multi_seriado = NULL,
+    $autorizacao = NULL)
   {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'curso';
 
-    $this->_campos_lista = $this->_todos_campos = 'cod_curso, ref_usuario_cad, ref_cod_tipo_regime, ref_cod_nivel_ensino, ref_cod_tipo_ensino, nm_curso, sgl_curso, qtd_etapas, carga_horaria, ato_poder_publico, objetivo_curso, publico_alvo, data_cadastro, data_exclusao, ativo, ref_usuario_exc, ref_cod_instituicao, padrao_ano_escolar, hora_falta, multi_seriado';
+    $this->_campos_lista = $this->_todos_campos = 'cod_curso, ref_usuario_cad, ref_cod_tipo_regime, ref_cod_nivel_ensino, ref_cod_tipo_ensino, nm_curso, sgl_curso, qtd_etapas, carga_horaria, ato_poder_publico, objetivo_curso, publico_alvo, data_cadastro, data_exclusao, ativo, ref_usuario_exc, ref_cod_instituicao, padrao_ano_escolar, hora_falta, multi_seriado, modalidade_curso, autorizacao';
 
     if (is_numeric($ref_cod_instituicao)) {
       if (class_exists('clsPmieducarInstituicao')) {
@@ -315,6 +321,10 @@ class clsPmieducarCurso
     }
 
     $this->multi_seriado = $multi_seriado;
+
+    if (is_string($autorizacao)){
+      $this->autorizacao = $autorizacao;
+    }
   }
 
   /**
@@ -426,10 +436,22 @@ class clsPmieducarCurso
         $gruda = ", ";
       }
 
-      if (is_numeric($multi_seriado)) {
-				$campos .= "{$gruda}multi_seriado";
-				$valores .= "{$gruda}'{$this->multi_seriado}'";
-				$gruda = ", ";
+      if (is_numeric($this->multi_seriado)) {
+        $campos .= "{$gruda}multi_seriado";
+        $valores .= "{$gruda}'{$this->multi_seriado}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->modalidade_curso)) {
+        $campos .= "{$gruda}modalidade_curso";
+        $valores .= "{$gruda}'{$this->modalidade_curso}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->autorizacao)) {
+        $campos .= "{$gruda}autorizacao";
+        $valores .= "{$gruda}'{$this->autorizacao}'";
+        $gruda = ", ";
       }
 
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
@@ -543,10 +565,20 @@ class clsPmieducarCurso
       }
 
 			if( is_numeric( $this->multi_seriado))
-			{
-				$set .= "{$gruda}multi_seriado = '{$this->multi_seriado}'";
-				$gruda = ", ";
-			}
+      {
+        $set .= "{$gruda}multi_seriado = '{$this->multi_seriado}'";
+        $gruda = ", ";
+      }
+
+      if( is_numeric( $this->modalidade_curso))
+      {
+        $set .= "{$gruda}modalidade_curso = '{$this->modalidade_curso}'";
+        $gruda = ", ";
+      }
+      if (is_string($this->autorizacao)) {
+        $set .= "{$gruda}autorizacao = '{$this->autorizacao}'";
+        $gruda = ", ";
+      }
 
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_curso = '{$this->cod_curso}'");
@@ -577,7 +609,8 @@ class clsPmieducarCurso
     $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL,
     $int_ativo = NULL, $int_ref_usuario_exc = NULL,
     $int_ref_cod_instituicao = NULL, $int_padrao_ano_escolar = NULL,
-    $int_hora_falta = NULL, $bool_avaliacao_globalizada = NULL)
+    $int_hora_falta = NULL, $bool_avaliacao_globalizada = NULL,
+    $autorizacao = NULL)
   {
     $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
     $filtros = '';
@@ -690,6 +723,10 @@ class clsPmieducarCurso
 
     if (is_numeric($int_hora_falta)) {
       $filtros .= "{$whereAnd} hora_falta = '{$int_hora_falta}'";
+      $whereAnd = " AND ";
+    }
+     if (is_string($autorizacao)) {
+      $filtros .= "{$whereAnd} autorizacao LIKE '%{$autorizacao}%'";
       $whereAnd = " AND ";
     }
 

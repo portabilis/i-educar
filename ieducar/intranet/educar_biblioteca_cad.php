@@ -59,7 +59,6 @@ class indice extends clsCadastro
 	var $ref_cod_usuario;
 	var $incluir_usuario;
 	var $excluir_usuario;
-	var $tombo_automatico;
 
 	function Inicializar()
 	{
