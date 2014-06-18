@@ -108,7 +108,7 @@ $j('#tab1').addClass('alunoTab-active').removeClass('alunoTab');
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
 $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-  if (index>16){
+  if (index>17){
     if (row.id!='stop')
       row.hide();
     else
@@ -172,6 +172,7 @@ resourceOptions.handleGet = function(dataResponse) {
 
   $j('#aluno_inep_id').val(dataResponse.aluno_inep_id);
   $j('#aluno_estado_id').val(dataResponse.aluno_estado_id);
+  $j('#codigo_sistema').val(dataResponse.codigo_sistema);
   tipo_resp = dataResponse.tipo_responsavel;  
   $j('#religiao_id').val(dataResponse.religiao_id);
   $j('#beneficio_id').val(dataResponse.beneficio_id);
@@ -914,7 +915,7 @@ function canShowParentsFields(){
         $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
         $j('#tab1').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-          if (index>16){
+          if (index>17){
             if (row.id!='stop')
               row.hide();
             else
@@ -926,6 +927,7 @@ function canShowParentsFields(){
       }
     );  
 
+    var first_click_medica = true;
     // FICHA MÉDICA
     $j('#tab2').click( 
       function(){
@@ -933,7 +935,9 @@ function canShowParentsFields(){
         $j('#tab2').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index>16 && index<63){
+            if (index>17 && index<64){
+              if (first_click_medica)
+                $j('#'+row.id).find('td').toggleClass('formlttd formmdtd');
               row.show();
             }else if (index>0){
               row.hide();
@@ -945,8 +949,10 @@ function canShowParentsFields(){
         $j('.temDescricao').each(function(i, obj) {
             $j('#desc_'+obj.id).prop('disabled', !$j('#'+obj.id).prop('checked'));                  
         });
+        first_click_medica = false;
       });    
 
+    var first_click_uniforme = true;
     // UNIFORME
     $j('#tab3').click( 
       function(){
@@ -954,8 +960,9 @@ function canShowParentsFields(){
         $j('#tab3').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index>62 && index<85){
-
+            if (index>63 && index<86){
+              if (first_click_uniforme)
+                $j('#'+row.id).find('td').toggleClass('formlttd formmdtd');
               row.show();
             }else if (index>0){
               row.hide();
@@ -964,8 +971,9 @@ function canShowParentsFields(){
             return false;
         });
         $j('.uniforme').prop('disabled',!$j('#recebeu_uniforme').prop('checked'));
+        first_click_uniforme = false;
       });     
-    
+    var first_click_moradia = true;
     // MORADIA
     $j('#tab4').click( 
       function(){
@@ -973,7 +981,10 @@ function canShowParentsFields(){
         $j('#tab4').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index>84 &&index<112){                
+            if (index>85 &&index<113){
+              if (first_click_moradia)
+                $j('#'+row.id).find('td').toggleClass('formlttd formmdtd');                 
+
               row.show();
             }else if(index!=0){
               row.hide();
@@ -981,9 +992,9 @@ function canShowParentsFields(){
           }else
             return false;  
         });
-        $j('.uniforme').prop('disabled',!$j('#recebeu_uniforme').prop('checked'));
+        first_click_moradia = false;
       });
-    var first_click_inep = true;
+
     // PROVA INEP
     $j('#tab5').click( 
       function(){
@@ -991,9 +1002,7 @@ function canShowParentsFields(){
         $j('#tab5').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index>=112 &&index<121){     
-              if (first_click_inep)
-                $j('#'+row.id).find('td').toggleClass('formlttd formmdtd');               
+            if (index>=113 &&index<122){     
               row.show();
             }else if(index!=0){
               row.hide();
@@ -1001,7 +1010,6 @@ function canShowParentsFields(){
           }else
             return false;
         });
-        first_click_inep = false;
       });       
 
 
