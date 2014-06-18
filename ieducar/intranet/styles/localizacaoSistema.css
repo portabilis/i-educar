@@ -46,3 +46,6 @@
 .pagina_atual:hover {
   color: #184e7f !important;
 }
+.linkpreto #localizacao a:hover{
+  color: black;
+}

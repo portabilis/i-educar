@@ -39,7 +39,7 @@ require_once ("include/clsBanco.inc.php");
 class PessoatransporteController extends Portabilis_Controller_Page_EditController
 {
   protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
-  protected $_titulo     = 'i-Educar - Usuários de transporte';
+  protected $_titulo     = 'i-Educar - Usu&aacute;rios de transporte';
 
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
   protected $_processoAp        = 21240;
@@ -77,6 +77,14 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
   protected function _preConstruct()
   {
     $this->_options = $this->mergeOptions(array('edit_success' => '/intranet/transporte_pessoa_lst.php','delete_success' => '/intranet/transporte_pessoa_lst.php'), $this->_options);
+    $nomeMenu = $this->getRequest()->id == null ? "Cadastrar" : "Editar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "transporte_index.php"                  => "M&oacute;dulo Transporte Escolar",
+         ""        => "$nomeMenu usu&aacute;rio de transporte"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
   }
 
 

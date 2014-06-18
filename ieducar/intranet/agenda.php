@@ -29,6 +29,7 @@ require_once ("include/clsBanco.inc.php");
 require_once ("include/clsAgenda.inc.php");
 //require_once ("include/juris/jurisGeral.inc.php");
 require_once ("agenda_calendario.php");
+require_once 'include/localizacaoSistema.php';
 
 class clsIndex extends clsBase
 {
@@ -38,6 +39,7 @@ class clsIndex extends clsBase
 		$this->processoAp = "345";
 		$this->addEstilo( "agenda" );
 		$this->addScript( "agenda" );
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -149,6 +151,26 @@ class indice
 			INICIO DA PAGINA
 		*/
 		$conteudo = "";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""                                  => "Agenda"
+    ));
+    $this->locale = $localizacao->montar();    
+
+
+    if ($this->locale){
+
+      $conteudo .=  "
+        <table class='tablelistagem' width='100%' border='0'  cellpadding='0' cellspacing='0'>";
+
+      $conteudo .=  "<tr height='10px'>
+                      <td class='fundoLocalizacao' colspan='5'>{$this->locale}</td>
+                    </tr>";
+
+      $conteudo .= "</table>";
+    }    
+
 		$conteudo .= "
 		<div id=\"DOM_expansivel\" class=\"DOM_expansivel\"></div>
 		<table border=\"0\" cellpadding=\"0\" cellspacing=\"3\" width=\"100%\">";

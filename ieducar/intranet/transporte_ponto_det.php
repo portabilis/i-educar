@@ -53,6 +53,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Pontos');
     $this->processoAp = 21239;
+    $this->addEstilo('localizacaoSistema');
   }
 }
 
@@ -101,6 +102,14 @@ class indice extends clsDetalhe
     $this->url_cancelar = "transporte_ponto_lst.php";
 
     $this->largura = "100%";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Escola",
+         ""                                  => "Detalhe do ponto"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
   }
 }
 

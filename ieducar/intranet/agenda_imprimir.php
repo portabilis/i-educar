@@ -38,6 +38,7 @@ class clsIndex extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} Agenda" );
 		$this->processoAp = "345";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -107,6 +108,13 @@ class indice extends clsCadastro
 		{
 			$this->cod_agenda = $_GET['cod_agenda'];
 		}
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""                                  => "Imprimir agenda"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
 
 		return $retorno;
 	}

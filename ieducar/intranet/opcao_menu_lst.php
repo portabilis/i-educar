@@ -34,6 +34,7 @@ class clsIndex extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} Opção Menu" );
 		$this->processoAp = "475";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -57,6 +58,13 @@ class indice extends clsListagem
 		
 		// Define Largura da Pï¿½gina
 		$this->largura = "100%";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""                                  => "Prefer&ecirc;ncias"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 

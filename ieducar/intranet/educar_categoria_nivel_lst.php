@@ -42,6 +42,7 @@ class clsIndexBase extends clsBase
   public function Formular() {
     $this->SetTitulo($this->_instituicao . 'Listagem Categoria N&iacute;vel');
     $this->processoAp = '829';
+    $this->addEstilo('localizacaoSistema');    
   }
 }
 
@@ -167,6 +168,14 @@ class indice extends clsListagem {
     }
 
     $this->largura = '100%';
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Escola",
+         ""                                  => "Listagem de categorias/n&iacute;veis"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());
   }
 }
 

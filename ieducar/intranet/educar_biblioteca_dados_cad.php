@@ -35,6 +35,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Dados Biblioteca" );
 		$this->processoAp = "629";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -124,6 +125,16 @@ class indice extends clsCadastro
 		}
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_biblioteca_dados_det.php?cod_biblioteca={$registro["cod_biblioteca"]}" : "educar_biblioteca_dados_lst.php";
 		$this->nome_url_cancelar = "Cancelar";
+
+    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Biblioteca",
+         ""        => "{$nomeMenu} dados da biblioteaca"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());
+
 		return $retorno;
 	}
 

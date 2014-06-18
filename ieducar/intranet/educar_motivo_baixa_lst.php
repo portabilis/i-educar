@@ -35,6 +35,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Baixa" );
 		$this->processoAp = "600";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -158,6 +159,14 @@ class indice extends clsListagem
 		}
 
 		$this->largura = "100%";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Biblioteca",
+         ""                                  => "Listagem de motivos de baixa"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 // cria uma extensao da classe base

@@ -37,6 +37,7 @@ class clsIndex extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} Agenda - Preferencias" );
 		$this->processoAp = "345";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -61,6 +62,13 @@ class indice extends clsCadastro
 		$retorno = "Editar";
 		$this->url_cancelar = "agenda.php";
 		$this->nome_url_cancelar = "Voltar";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""                                  => "Editar prefer&ecirc;ncias da agenda"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
 
 		return $retorno;
 	}

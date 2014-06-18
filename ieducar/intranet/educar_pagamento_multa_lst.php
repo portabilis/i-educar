@@ -38,6 +38,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Pagamento Multa" );
 		$this->processoAp = "622";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -211,6 +212,14 @@ class indice extends clsListagem
 //		}
 
 		$this->largura = "100%";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Biblioteca",
+         ""                                  => "Listagem de d&iacute;vidas"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 // cria uma extensao da classe base
