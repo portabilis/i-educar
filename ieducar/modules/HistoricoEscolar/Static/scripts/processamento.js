@@ -643,5 +643,7 @@
     $selectAllButton.click(onClickSelectAllEvent);
     $destroyButton.click(onClickDestroyEvent)
 
+    $('#tableLocalizacao').prependTo($formFilter.parent());
+
   });
 })(jQuery);

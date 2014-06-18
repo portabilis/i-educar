@@ -42,6 +42,7 @@ class clsIndexBase extends clsBase
   public function Formular() {
     $this->SetTitulo($this->_instituicao . 'Nível');
     $this->processoAp = '829';
+    $this->addEstilo('localizacaoSistema');
   }
 }
 
@@ -123,6 +124,15 @@ class indice extends clsCadastro
 
 		$this->url_cancelar = "educar_categoria_nivel_det.php?cod_categoria_nivel={$this->cod_nivel}";
 		$this->nome_url_cancelar = "Cancelar";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Escola",
+         ""        => "Adicionar n&iacute;veis &agrave; categoria"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());
+
 		return $retorno;
 	}
 

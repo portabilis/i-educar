@@ -37,7 +37,11 @@ class clsIndex extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} Agenda" );
 		$this->processoAp = "341";
+<<<<<<< HEAD
                 $this->addEstilo( "localizacaoSistema" );
+=======
+		$this->addEstilo('localizacaoSistema');
+>>>>>>> 7f86007... Adicionando breadcrumbs a todo sistema
 	}
 }
 
@@ -100,6 +104,7 @@ class indice extends clsListagem
 		$this->addPaginador2( "agenda_responsavel.php", $total, $_GET, $this->nome, $limite );
 		
 		$this->largura = "100%";
+<<<<<<< HEAD
                 
                 $localizacao = new LocalizacaoSistema();
                 $localizacao->entradaCaminhos( array(
@@ -107,6 +112,15 @@ class indice extends clsListagem
                     ""                  => "Agendas"
                 ));
                 $this->enviaLocalizacao($localizacao->montar());
+=======
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""                                  => "Agendas"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());				
+>>>>>>> 7f86007... Adicionando breadcrumbs a todo sistema
 	}
 }
 

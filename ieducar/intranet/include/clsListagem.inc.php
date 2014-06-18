@@ -84,6 +84,7 @@ class clsListagem extends clsCampos
   var $funcAcaoNome = '';
   var $rotulo_anterior;
   var $locale = null;
+  var $appendInTop = false;
 
   var $array_botao;
   var $array_botao_url;
@@ -125,10 +126,16 @@ class clsListagem extends clsCampos
 
     $this->bannerClose = $boolFechaBanner;
   }
+<<<<<<< HEAD
 
   function enviaLocalizacao($localizao){
+=======
+  function enviaLocalizacao($localizao, $appendInTop = FALSE){
+>>>>>>> 7f86007... Adicionando breadcrumbs a todo sistema
     if($localizao)
       $this->locale = $localizao;
+
+    $this->appendInTop = $appendInTop;
   }
 
   function addCabecalhos($coluna)
@@ -286,6 +293,18 @@ class clsListagem extends clsCampos
     $retorno .= $this->MakeFormat();
     $retorno .= '</script>';
 
+    if ($this->locale && $this->appendInTop){
+
+      $retorno .=  "
+        <table class='tablelistagem' id='tableLocalizacao'width='100%' border='0'  cellpadding='0' cellspacing='0'>";
+
+      $retorno .=  "<tr height='10px'>
+                      <td class='fundoLocalizacao' colspan='2'>{$this->locale}</td>
+                    </tr>";
+
+      $retorno .= "</table>";
+    }    
+
     if ($this->campos) {
       $width = empty($this->largura) ? '' : "width='$this->largura'";
 
@@ -399,7 +418,7 @@ class clsListagem extends clsCampos
           }
         }
 
-        if ($this->locale){
+        if ($this->locale && !$this->appendInTop){
 
           $retorno .=  "
             <table class='tablelistagem' $width border='0'  cellpadding='0' cellspacing='0'>";
@@ -480,6 +499,18 @@ class clsListagem extends clsCampos
     }
 
     $this->method = 'POST';
+
+    if ($this->locale && !$this->campos && !$this->appendInTop){
+
+      $retorno .=  "
+        <table class='tablelistagem' $width border='0'  cellpadding='0' cellspacing='0'>";
+
+      $retorno .=  "<tr height='10px'>
+                      <td class='fundoLocalizacao linkpreto' style='background-color: white;' colspan='2'>{$this->locale}</td>
+                    </tr>";
+
+      $retorno .= "</table>";
+    }   
 
     $retorno .=  "
         <form name=\"form_resultado\" id=\"form_resultado\" method=\"POST\" action=\"\">

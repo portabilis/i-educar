@@ -51,6 +51,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' Bairro');
     $this->processoAp = 756;
+    $this->addEstilo('localizacaoSistema');
   }
 }
 
@@ -121,6 +122,14 @@ class indice extends clsCadastro
       'public_bairro_lst.php';
 
     $this->nome_url_cancelar = 'Cancelar';
+
+    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""        => "{$nomeMenu} bairro"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
 
     return $retorno;
   }

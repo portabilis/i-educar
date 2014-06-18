@@ -91,7 +91,7 @@ var $tableSearchDetails = $j('<table />').attr('id', 'search-details')
                                         .addClass('horizontal-expand')
                                         .addClass('center')
                                         .hide()
-                                        .prependTo($formFilter.parent());
+                                        .appendTo($formFilter.parent());
 
 var $navActions = $j('<p />').attr('id', 'nav-actions');
 $navActions.insertAfter($tableSearchDetails);
@@ -256,5 +256,7 @@ var $resultTable = $j('#form_resultado .tablelistagem').addClass('horizontal-exp
     onClickSelectAllEvent ? $selectAllButton.click(onClickSelectAllEvent) : $selectAllButton.hide();
     onClickActionEvent    ? $actionButton.click(onClickActionEvent)       : $actionButton.hide();
     onClickDeleteEvent    ? $deleteButton.click(onClickDeleteEvent)       : $deleteButton.hide();
+
+    $('#tableLocalizacao').prependTo($formFilter.parent());
   }); // ready
 })(jQuery);

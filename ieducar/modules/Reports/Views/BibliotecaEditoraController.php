@@ -54,6 +54,22 @@ class BibliotecaEditoraController extends Portabilis_Controller_ReportCoreContro
 
   protected $_titulo = 'Relat&oacute;rio de Editoras';
 
+  protected function _preRender(){
+
+    parent::_preRender();
+
+    Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
+
+    $localizacao = new LocalizacaoSistema();
+
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Biblioteca",
+         ""                                  => "Relat&oacute;rio de editoras"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());     
+  }  
+
 	function form() {
     $this->inputsHelper()->dynamic(array('instituicao', 'escola')); 
   }

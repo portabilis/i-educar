@@ -35,6 +35,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} Uf" );
 		$this->processoAp = "754";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -108,6 +109,13 @@ class indice extends clsDetalhe
 
 		$this->url_cancelar = "public_uf_lst.php";
 		$this->largura = "100%";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""                                  => "Detalhe da UF"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 

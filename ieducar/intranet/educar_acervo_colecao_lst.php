@@ -36,7 +36,11 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Cole&ccedil&atilde;o" );
 		$this->processoAp = "593";
+<<<<<<< HEAD
                 $this->addEstilo( "localizacaoSistema" );
+=======
+		$this->addEstilo('localizacaoSistema');
+>>>>>>> 7f86007... Adicionando breadcrumbs a todo sistema
 	}
 }
 
@@ -160,6 +164,7 @@ class indice extends clsListagem
 		}
 
 		$this->largura = "100%";
+<<<<<<< HEAD
                 
                 $localizacao = new LocalizacaoSistema();
                 $localizacao->entradaCaminhos( array(
@@ -168,6 +173,16 @@ class indice extends clsListagem
                     ""                                  => "Lista de Coleções"
                 ));
                 $this->enviaLocalizacao($localizacao->montar());
+=======
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Biblioteca",
+         ""                                  => "Listagem de cole&ccedil;&otilde;es"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
+>>>>>>> 7f86007... Adicionando breadcrumbs a todo sistema
 	}
 }
 // cria uma extensao da classe base

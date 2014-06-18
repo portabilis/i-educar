@@ -36,6 +36,7 @@ class clsIndex extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} Diaria Valores" );
 		$this->processoAp = "295";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -92,6 +93,13 @@ class indice extends clsDetalhe
 		$this->url_cancelar = "diaria_valores_lst.php";
 
 		$this->largura = "100%";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""                                  => "Detalhe dos valores da di&aacute;ria"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 

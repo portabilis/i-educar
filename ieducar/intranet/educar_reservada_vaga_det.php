@@ -37,6 +37,7 @@ class clsIndexBase extends clsBase {
   public function Formular() {
     $this->SetTitulo($this->_instituicao . 'i-Educar - Vagas Reservadas');
     $this->processoAp = '639';
+    $this->addEstilo("localizacaoSistema");
   }
 }
 
@@ -198,6 +199,14 @@ class indice extends clsDetalhe
     $this->url_cancelar = 'educar_reservada_vaga_lst.php?ref_cod_escola=' .
       $this->ref_cod_escola . '&ref_cod_serie=' . $this->ref_cod_serie;
     $this->largura = '100%';
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Escola",
+         ""                                  => "Detalhe da vaga reservada"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
   }
 
   /**

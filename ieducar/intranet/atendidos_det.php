@@ -53,6 +53,7 @@ class clsIndex extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' Pessoa');
     $this->processoAp = 43;
+    $this->addEstilo('localizacaoSistema');
   }
 }
 
@@ -192,6 +193,13 @@ class indice extends clsDetalhe
     $this->url_cancelar = 'atendidos_lst.php';
 
     $this->largura = '100%';
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""                                  => "Detalhe da pessoa f&iacute;sica"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
   }
 }
 

@@ -41,6 +41,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' Cep Logradouro');
     $this->processoAp = '758';
+    $this->addEstilo('localizacaoSistema');
   }
 }
 
@@ -113,6 +114,14 @@ class indice extends clsCadastro
       'urbano_cep_logradouro_det.php?cep=' . $registro['cep'] . '&idlog=' . $registro['idlog'] :
       'urbano_cep_logradouro_lst.php';
     $this->nome_url_cancelar = 'Cancelar';
+
+    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""        => "{$nomeMenu} CEP"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
 
     return $retorno;
   }

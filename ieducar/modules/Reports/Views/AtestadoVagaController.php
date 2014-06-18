@@ -51,6 +51,22 @@ class AtestadoVagaController extends Portabilis_Controller_ReportCoreController
 
   protected $_titulo = 'Relat&oacute;rio Atestado de Vaga';
 
+  protected function _preRender(){
+
+    parent::_preRender();
+
+    Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
+
+    $localizacao = new LocalizacaoSistema();
+
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Escola",
+         ""                                  => "Emiss&atilde;o de atestado de vaga"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());     
+  }    
+
 	function form() {
     $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola', 'curso', 'serie'));
     $this->campoTexto('aluno','Aluno','',40,255,true);  

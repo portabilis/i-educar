@@ -36,6 +36,7 @@ class clsIndex extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} Usu&aacute;rios" );
 		$this->processoAp = "36";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -190,6 +191,13 @@ class indice extends clsDetalhe
 		$this->url_editar = "funcionario_cad.php?ref_pessoa={$cod_pessoa}";
 		$this->url_cancelar = "funcionario_lst.php";
 		$this->largura = "100%";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""                                  => "Detalhe do funcion&aacute;rio"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 

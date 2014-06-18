@@ -40,6 +40,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Escolaridade');
     $this->processoAp = '632';
+    $this->addEstilo("localizacaoSistema");    
   }
 }
 
@@ -91,6 +92,14 @@ class indice extends clsDetalhe
 
     $this->url_cancelar = 'educar_escolaridade_lst.php';
     $this->largura      = '100%';
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Escola",
+         ""                                  => "Detalhe da escolaridade"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
   }
 }
 

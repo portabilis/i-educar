@@ -55,6 +55,7 @@ require_once 'Portabilis/Utils/User.php';
 require_once 'Portabilis/String/Utils.php';
 
 require_once 'modules/Error/Mailers/NotificationMailer.php';
+require_once 'Portabilis/Assets/Version.php';
 
 /**
  * clsBase class.
@@ -122,7 +123,7 @@ class clsBase extends clsConfig
     if (is_array($this->estilos) && count($this->estilos)) {
       $estilos = '';
       foreach ($this->estilos as $estilo) {
-        $estilos .= "<link rel=stylesheet type='text/css' href='styles/{$estilo}.css' />";
+        $estilos .= "<link rel=stylesheet type='text/css' href='styles/{$estilo}.css?assets_version=" . Portabilis_Assets_Version::VERSION."' />";
       }
       $saida = str_replace("<!-- #&ESTILO&# -->", $estilos, $saida);
     }
@@ -130,7 +131,7 @@ class clsBase extends clsConfig
     if (is_array($this->scripts) && count($this->scripts)) {
       $estilos = '';
       foreach ($this->scripts as $script) {
-        $scripts .= "<script type='text/javascript' src='scripts/{$script}.js'></script>";
+        $scripts .= "<script type='text/javascript' src='scripts/{$script}.js?assets_version=" . Portabilis_Assets_Version::VERSION."' ></script>";
       }
       $saida = str_replace( "<!-- #&SCRIPT&# -->", $scripts, $saida );
     }

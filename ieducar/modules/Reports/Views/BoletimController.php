@@ -51,6 +51,22 @@ class BoletimController extends Portabilis_Controller_ReportCoreController
 
   protected $_titulo = 'Boletim Escolar';
 
+  protected function _preRender(){
+
+    parent::_preRender();
+
+    Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
+
+    $localizacao = new LocalizacaoSistema();
+
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Escola",
+         ""                                  => "Emiss&atilde;o de boletim escolar"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());     
+  }    
+
 	function form() {
     # TODO implementar / usar novo helper "matriculaSimpleSearch"
 

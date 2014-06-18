@@ -43,6 +43,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar');
     $this->processoAp = '561';
+    $this->addEstilo('localizacaoSistema');
   }
 }
 
@@ -57,6 +58,14 @@ class indice extends clsCadastro
     session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Escola",
+         ""        => "Rematr&iacute;cula autom&aacute;tica"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
 
     return $retorno;
   }

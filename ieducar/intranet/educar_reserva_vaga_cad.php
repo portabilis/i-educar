@@ -38,6 +38,7 @@ class clsIndexBase extends clsBase
   function Formular() {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Reserva Vaga');
     $this->processoAp = '639';
+    $this->addEstilo("localizacaoSistema");
   }
 }
 
@@ -77,6 +78,15 @@ class indice extends clsCadastro
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(639, $this->pessoa_logada, 7,
       'educar_reserva_vaga_lst.php');
+
+    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Escola",
+         ""        => "{$nomeMenu} reserva de vaga"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
 
     return $retorno;
   }

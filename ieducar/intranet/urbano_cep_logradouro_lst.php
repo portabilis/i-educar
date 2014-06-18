@@ -36,7 +36,11 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} CEP Logradouro" );
 		$this->processoAp = "758";
+<<<<<<< HEAD
                 $this->addEstilo( "localizacaoSistema" );
+=======
+		$this->addEstilo('localizacaoSistema');
+>>>>>>> 7f86007... Adicionando breadcrumbs a todo sistema
 	}
 }
 
@@ -247,6 +251,7 @@ class indice extends clsListagem
 		$this->nome_acao = "Novo";
 
 		$this->largura = "100%";
+<<<<<<< HEAD
                 
                 $localizacao = new LocalizacaoSistema();
                 $localizacao->entradaCaminhos( array(
@@ -254,6 +259,15 @@ class indice extends clsListagem
                     ""                                  => "CEP"
                 ));
                 $this->enviaLocalizacao($localizacao->montar());
+=======
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""                                  => "Listagem de CEPs"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
+>>>>>>> 7f86007... Adicionando breadcrumbs a todo sistema
 	}
 }
 // cria uma extensao da classe base

@@ -51,4 +51,21 @@ class ViewController extends Core_Controller_Page_ViewController
   protected $_tableMap   = array(
     'Nome' => 'nome'
   );
+
+
+  protected function _preRender(){
+
+    parent::_preRender();
+
+    Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
+
+    $localizacao = new LocalizacaoSistema();
+
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Escola",
+         ""                                  => "Detalhe da &aacute;rea de conhecimento"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());     
+  }  
 }

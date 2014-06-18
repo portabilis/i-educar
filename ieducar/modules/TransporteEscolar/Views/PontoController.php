@@ -58,6 +58,14 @@ class PontoController extends Portabilis_Controller_Page_EditController
   protected function _preConstruct()
   {
     $this->_options = $this->mergeOptions(array('edit_success' => '/intranet/transporte_ponto_lst.php','delete_success' => '/intranet/transporte_ponto_lst.php'), $this->_options);
+    $nomeMenu = $this->getRequest()->id == null ? "Cadastrar" : "Editar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "transporte_index.php"                  => "M&oacute;dulo Transporte Escolar",
+         ""        => "$nomeMenu ponto"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
   }
 
 
