@@ -91,7 +91,7 @@ var $tableSearchDetails = $j('<table />').attr('id', 'search-details')
                                         .addClass('horizontal-expand')
                                         .addClass('center')
                                         .hide()
-                                        .appendTo($formFilter.parent());
+                                        .prependTo($formFilter.parent());
 
 var $navActions = $j('<p />').attr('id', 'nav-actions');
 $navActions.insertAfter($tableSearchDetails);
