@@ -51,6 +51,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Matricula Turma');
     $this->processoAp = 578;
+    $this->addEstilo("localizacaoSistema");
   }
 }
 
@@ -103,6 +104,14 @@ class indice extends clsCadastro
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, 'educar_matricula_lst.php');
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Escola",
+         ""        => "Enturma&ccedil;&atilde;o da matr&iacute;cula"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());
 
     //nova lógica
     if (is_numeric($this->ref_cod_matricula)) {

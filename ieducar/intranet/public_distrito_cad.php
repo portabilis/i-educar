@@ -50,6 +50,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' Distrito');
     $this->processoAp = 759;
+    $this->addEstilo('localizacaoSistema');
   }
 }
 
@@ -120,6 +121,14 @@ class indice extends clsCadastro
       'public_distrito_lst.php';
 
     $this->nome_url_cancelar = 'Cancelar';
+
+    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""        => "{$nomeMenu} distrito"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
 
     return $retorno;
   }

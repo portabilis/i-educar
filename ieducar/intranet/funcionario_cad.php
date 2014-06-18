@@ -34,6 +34,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} Cadastro de Funcion&aacute;rios" );
 		$this->processoAp = "36";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -107,6 +108,14 @@ class indice extends clsCadastro
 		}
 		$this->url_cancelar = ($retorno == "Editar") ? "funcionario_det.php?ref_pessoa={$this->ref_pessoa}" : "funcionario_lst.php";
 		$this->nome_url_cancelar = "Cancelar";
+
+    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""        => "{$nomeMenu} funcion&aacute;rio"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
 
 		return $retorno;
 	}

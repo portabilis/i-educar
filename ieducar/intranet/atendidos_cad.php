@@ -64,6 +64,7 @@ class clsIndex extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' Pessoas Físicas - Cadastro');
     $this->processoAp = 43;
+    $this->addEstilo('localizacaoSistema');
   }
 }
 
@@ -165,6 +166,14 @@ class indice extends clsCadastro
     }
 
     $this->nome_url_cancelar = 'Cancelar';
+
+    $nomeMenu = $this->retorno == "Editar" ? $this->retorno : "Cadastrar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""                                  => "$nomeMenu de pessoa f&iacute;sica"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
 
     return $this->retorno;
   }

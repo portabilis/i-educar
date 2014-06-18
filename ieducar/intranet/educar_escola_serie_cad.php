@@ -52,6 +52,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Escola S&eacute;rie');
     $this->processoAp = 585;
+    $this->addEstilo("localizacaoSistema");
   }
 }
 
@@ -137,6 +138,15 @@ class indice extends clsCadastro
       sprintf('educar_escola_serie_det.php?ref_cod_escola=%d&ref_cod_serie=%d',
         $registro['ref_cod_escola'], $registro['ref_cod_serie']) :
       'educar_escola_serie_lst.php';
+
+    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Escola",
+         ""        => "{$nomeMenu} v&iacute;nculo entre escola e s&eacute;rie"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());
 
     $this->nome_url_cancelar = 'Cancelar';
     return $retorno;

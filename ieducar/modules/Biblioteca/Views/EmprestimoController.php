@@ -41,6 +41,22 @@ class EmprestimoController extends Portabilis_Controller_Page_ListController
   protected $_formMap    = array();
   protected $_processoAp = 610;
 
+  protected function _preRender(){
+
+    parent::_preRender();
+
+    Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
+
+    $localizacao = new LocalizacaoSistema();
+
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Biblioteca",
+         ""                                  => "Empr&eacute;stimo de exemplares"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar(), true);     
+  }  
+
   public function Gerar() {
     // inputs
     $this->inputsHelper()->dynamic('instituicao', array('id' => 'instituicao_id'));

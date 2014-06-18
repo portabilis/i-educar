@@ -1,0 +1,51 @@
+#localizacao{
+  overflow: hidden;
+  width: 100%;
+  margin-left: -7px;
+  margin-bottom: 5px;
+}
+
+#localizacao a{
+  float: left;
+  margin-left: 10px;  
+  list-style: none;
+}
+
+#localizacao a{
+  
+  font-size: 11px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: bold;
+  letter-spacing: 0pt;
+  line-height: normal;
+  float: left;
+  text-decoration: none;
+  position: relative;
+  color: #184e7f;
+}
+
+#localizacao a:hover{
+  color: #FFF;
+}
+
+.fundoLocalizacao {
+   background-color: #E4E9ED; 
+   height: 10px; 
+}
+.flechinha {
+  color: #000 !important;
+}
+.flechinha:hover {
+  color: #000 !important; 
+}
+
+.pagina_atual {
+  border-bottom: 2px solid #546c76;
+}
+.pagina_atual:hover {
+  color: #184e7f !important;
+}
+.linkpreto #localizacao a:hover{
+  color: black;
+}

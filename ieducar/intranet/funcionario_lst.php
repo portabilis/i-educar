@@ -35,6 +35,7 @@ class clsIndex extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} Usu&aacute;rios!" );
 		$this->processoAp = "36";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -81,6 +82,13 @@ class indice extends clsListagem
 		$this->nome_acao = "Novo";
 
 		$this->largura = "100%";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""                                  => "Listagem de funcion&aacute;rios"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 

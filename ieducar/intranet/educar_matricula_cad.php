@@ -50,6 +50,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Matrícula');
     $this->processoAp = 578;
+    $this->addEstilo("localizacaoSistema");
   }
 }
 
@@ -120,6 +121,16 @@ class indice extends clsCadastro
     }
 
     $this->url_cancelar = $url;
+
+    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Escola",
+         ""        => "{$nomeMenu} matr&iacute;cula"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());
+
     $this->nome_url_cancelar = 'Cancelar';
 
     return $retorno;

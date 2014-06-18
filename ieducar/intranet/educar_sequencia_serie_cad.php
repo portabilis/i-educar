@@ -35,6 +35,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Sequ&ecirc;ncia Enturma&ccedil;&atilde;o" );
 		$this->processoAp = "587";
+		$this->addEstilo("localizacaoSistema");
 	}
 }
 
@@ -109,6 +110,16 @@ class indice extends clsCadastro
 			}
 		}
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_sequencia_serie_det.php?ref_serie_origem={$registro["ref_serie_origem"]}&ref_serie_destino={$registro["ref_serie_destino"]}" : "educar_sequencia_serie_lst.php";
+		
+	    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         "educar_index.php"                  => "M&oacute;dulo Escola",
+	         ""        => "{$nomeMenu} sequ&ecirc;ncia de enturma&ccedil;&atilde;o"             
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());
+
 		$this->nome_url_cancelar = "Cancelar";
 		return $retorno;
 	}

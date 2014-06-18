@@ -41,6 +41,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' Munic&iacute;pio');
     $this->processoAp = '755';
+    $this->addEstilo('localizacaoSistema');
   }
 }
 
@@ -102,6 +103,14 @@ class indice extends clsCadastro
       'public_municipio_det.php?idmun=' . $registro['idmun'] :
       'public_municipio_lst.php';
     $this->nome_url_cancelar = 'Cancelar';
+
+    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""        => "{$nomeMenu} munic&iacute;pio"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
 
     return $retorno;
   }

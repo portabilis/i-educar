@@ -35,6 +35,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Infra Predio" );
 		$this->processoAp = "567";
+		$this->addEstilo("localizacaoSistema");
 	}
 }
 
@@ -133,6 +134,14 @@ class indice extends clsDetalhe
 
 		$this->url_cancelar = "educar_infra_predio_lst.php";
 		$this->largura = "100%";
+
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         "educar_index.php"                  => "M&oacute;dulo Escola",
+	         ""        => "Detalhe do pr&eacute;dio"             
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());			
 	}
 }
 
