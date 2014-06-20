@@ -188,7 +188,7 @@ class indice extends clsListagem
 		$lista = $obj_usuario->lista(
 			$this->cod_usuario,
 			$this->ref_cod_escola,
-			$this->ref_cod_instituicao,
+			$super_usuario_det ? NULL : $this->ref_cod_instituicao,
 			null,
 			null,
 			$this->ref_cod_tipo_usuario,
