@@ -91,16 +91,7 @@ class indice extends clsCadastro
           $this->$campo = $val;
         }
 
-        $this->fexcluir = $obj_permissao->permissao_excluir(554,$this->pessoa_logada,1,null,true);
-
-        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "M&oacute;dulo Escola",
-             ""        => "{$nomeMenu} tipo de usu&aacute;rio"             
-        ));
-        $this->enviaLocalizacao($localizacao->montar());        
+        $this->fexcluir = $obj_permissao->permissao_excluir(554,$this->pessoa_logada,1,null,true);        
 
         $retorno = "Editar";
       }
@@ -111,6 +102,15 @@ class indice extends clsCadastro
       'educar_tipo_usuario_lst.php';
 
     $this->nome_url_cancelar = 'Cancelar';
+
+    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Escola",
+         ""        => "{$nomeMenu} tipo de usu&aacute;rio"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
 
     return $retorno;
   }
