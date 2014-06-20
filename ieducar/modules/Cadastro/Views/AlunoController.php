@@ -468,8 +468,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     // religião
     $this->inputsHelper()->religiao(array('required' => false, 'label' => Portabilis_String_Utils::toLatin1('Religião') ));
 
-    // beneficio
-    $this->inputsHelper()->beneficio(array('required' => false, 'label' => Portabilis_String_Utils::toLatin1('Benefício')));
+    // Benefícios
+    $helperOptions = array('objectName' => 'beneficios');
+    $options       = array('label' => Portabilis_String_Utils::toLatin1('Benefícios'), 'size' => 250, 'required' => false,
+                           'options' => array('value' => null));
+
+    $this->inputsHelper()->multipleSearchBeneficios('', $options, $helperOptions);
 
 
     // Deficiências / habilidades especiais
