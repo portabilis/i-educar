@@ -170,12 +170,19 @@ resourceOptions.handleGet = function(dataResponse) {
 
   $idField.val(dataResponse.id);
 
+  $beneficios = $j('#beneficios');
+
+  $j.each(dataResponse.beneficios, function(id, nome) {
+    $beneficios.children("[value=" + id + "]").attr('selected', '');
+  });
+
+  $beneficios.trigger('liszt:updated');  
+
   $j('#aluno_inep_id').val(dataResponse.aluno_inep_id);
   $j('#aluno_estado_id').val(dataResponse.aluno_estado_id);
   $j('#codigo_sistema').val(dataResponse.codigo_sistema);
   tipo_resp = dataResponse.tipo_responsavel;  
-  $j('#religiao_id').val(dataResponse.religiao_id);
-  $j('#beneficio_id').val(dataResponse.beneficio_id);
+  $j('#religiao_id').val(dataResponse.religiao_id);  
   $j('#tipo_transporte').val(dataResponse.tipo_transporte);
   $j('#alfabetizado').attr('checked', dataResponse.alfabetizado);
   
@@ -1517,6 +1524,8 @@ function canShowParentsFields(){
     }
     
   }
+
+  $j('#beneficios_chzn ul').css('width', '307px');
 
   //gambiarra sinistra que funciona
   window.setTimeout(function() {  $j('#btn_enviar').unbind().click(newSubmitForm)}, 500);

@@ -77,6 +77,7 @@ class AlunoController extends ApiCoreController
 
 
     protected function validatesBeneficioId() {
+    // @TODO Alterar pois foi alterado relacionamento para N:N
     $isValid = true;
 
     // beneficio is optional
@@ -198,7 +199,7 @@ class AlunoController extends ApiCoreController
            $this->validatesResponsavel()  &&
            $this->validatesTransporte()   &&
            $this->validatesReligiaoId()   &&
-           $this->validatesBeneficioId()  &&
+           // $this->validatesBeneficioId()  &&
            $this->validatesUniquenessOfAlunoInepId()  &&
            $this->validatesUniquenessOfAlunoEstadoId();
   }
@@ -489,7 +490,6 @@ protected function createOrUpdateUniforme($id) {
     if (is_null($id))
       $aluno->ref_idpes             = $this->getRequest()->pessoa_id;
 
-    $aluno->ref_cod_aluno_beneficio = $this->getRequest()->beneficio_id;
     $aluno->ref_cod_religiao        = $this->getRequest()->religiao_id;
     $aluno->analfabeto              = $this->getRequest()->alfabetizado ? 0 : 1;
     $aluno->tipo_responsavel        = $tiposResponsavel[$this->getRequest()->tipo_responsavel];
@@ -738,6 +738,23 @@ protected function createOrUpdateUniforme($id) {
     return $tipo;
   }
 
+  protected function loadBeneficios($alunoId) {
+    $sql = "select aluno_beneficio_id as id, nm_beneficio as nome from pmieducar.aluno_aluno_beneficio,
+            pmieducar.aluno_beneficio where aluno_beneficio_id = cod_aluno_beneficio and aluno_id = $1";
+
+    $beneficios = $this->fetchPreparedQuery($sql, $alunoId, false);
+
+    // transforma array de arrays em array chave valor
+    $_beneficios = array();
+
+    foreach ($beneficios as $beneficio) {
+      $nome = $this->toUtf8($beneficio['nome'], array('transform' => true));
+      $_beneficios[$beneficio['id']] = $nome;
+    }
+
+    return $_beneficios;
+  }   
+
   protected function get() {
     if ($this->canGet()) {
       $id               = $this->getRequest()->id;
@@ -821,6 +838,8 @@ protected function createOrUpdateUniforme($id) {
       $sql = "select sus from cadastro.fisica where idpes = $1";
       $camposFisica = $this->fetchPreparedQuery($sql, $aluno['pessoa_id'], false, 'first-row');
       $aluno['sus'] = $camposFisica['sus'];
+
+      $aluno['beneficios'] = $this->loadBeneficios($id);
 
       return $aluno;
     }
@@ -922,6 +941,15 @@ protected function createOrUpdateUniforme($id) {
       return $this->loadOcorrenciasDisciplinares();
   }
 
+  function updateBeneficios($id){
+    $obj = new clsPmieducarAlunoBeneficio();
+    $obj->deletaBeneficiosDoAluno($id);
+    foreach ($this->getRequest()->beneficios as $beneficioId) {
+      if (! empty($beneficioId)) 
+        $obj->cadastraBeneficiosDoAluno($id, $beneficioId);
+    }
+  }  
+
   protected function post() {
     if ($this->canPost()) {
       $id = $this->createOrUpdateAluno();
@@ -930,6 +958,7 @@ protected function createOrUpdateUniforme($id) {
       $this->saveParents();
 
       if (is_numeric($id)) {
+        $this->updateBeneficios($id);
         $this->updateResponsavel();
         $this->saveSus($pessoaId);
         $this->createOrUpdateTransporte($id);
@@ -955,6 +984,7 @@ protected function createOrUpdateUniforme($id) {
     $this->saveParents();
 
     if ($this->canPut() && $this->createOrUpdateAluno($id)) {
+      $this->updateBeneficios($id);
       $this->updateResponsavel();
       $this->saveSus($pessoaId);
       $this->createOrUpdateTransporte($id);
