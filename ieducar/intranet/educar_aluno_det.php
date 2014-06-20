@@ -236,6 +236,9 @@ class indice extends clsDetalhe
       $obj_deficiencia_pessoa       = new clsCadastroFisicaDeficiencia();
       $obj_deficiencia_pessoa_lista = $obj_deficiencia_pessoa->lista($this->ref_idpes);
 
+      $obj_beneficios       = new clsPmieducarAlunoBeneficio();
+      $obj_beneficios_lista = $obj_beneficios->lista(NULL,NULL,NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->cod_aluno);
+
       if ($obj_deficiencia_pessoa_lista) {
         $deficiencia_pessoa = array();
 
@@ -549,11 +552,14 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Página Pessoal', $registro['url']));
     }
 
-    if ($registro['ref_cod_aluno_beneficio']) {
-      $obj_beneficio     = new clsPmieducarAlunoBeneficio($registro['ref_cod_aluno_beneficio']);
-      $obj_beneficio_det = $obj_beneficio->detalhe();
-
-      $this->addDetalhe(array('Benefício', $obj_beneficio_det['nm_beneficio']));
+    if ($obj_beneficios_lista) {
+      if (count($obj_beneficios_lista)){
+        foreach ($obj_beneficios_lista as $reg) {
+          $beneficios.= '<span style="background-color: #A1B3BD; padding: 2px;"><b>'.$reg['nm_beneficio'].'</b></span>&nbsp; ';
+        }
+        if(!empty($beneficios))
+          $this->addDetalhe( array( "Benefícios", "{$beneficios}") );
+      }
     }
 
     if ($registro['ref_cod_religiao']) {

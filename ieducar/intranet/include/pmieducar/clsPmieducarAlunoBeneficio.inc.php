@@ -308,9 +308,15 @@ class clsPmieducarAlunoBeneficio
 	 *
 	 * @return array
 	 */
-	function lista( $int_cod_aluno_beneficio = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_beneficio = null, $str_desc_beneficio = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null )
+	function lista( $int_cod_aluno_beneficio = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, 
+									$str_nm_beneficio = null, $str_desc_beneficio = null, $date_data_cadastro_ini = null, 
+									$date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, 
+									$int_ativo = null, $int_codigo_aluno = NULL )
 	{
 		$sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
+		if ($int_codigo_aluno)
+			$sql .= " INNER JOIN pmieducar.aluno_aluno_beneficio ON (aluno_aluno_beneficio.aluno_beneficio_id = aluno_beneficio.cod_aluno_beneficio) ";
+
 		$filtros = "";
 		
 		$whereAnd = " WHERE ";
@@ -370,15 +376,21 @@ class clsPmieducarAlunoBeneficio
 			$filtros .= "{$whereAnd} ativo = '0'";
 			$whereAnd = " AND ";
 		}
-
+		if ($int_codigo_aluno){
+			$filtros .= "{$whereAnd} aluno_id = {$int_codigo_aluno} ";
+			$whereAnd = " AND ";
+		}
 		
 		$db = new clsBanco();
 		$countCampos = count( explode( ",", $this->_campos_lista ) );
 		$resultado = array();
 		
-		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
-		
-		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
+		$sql .= $filtros . $this->getOrderby() . $this->getLimite();			
+
+		if ($int_codigo_aluno)
+			$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} INNER JOIN pmieducar.aluno_aluno_beneficio ON (aluno_aluno_beneficio.aluno_beneficio_id = aluno_beneficio.cod_aluno_beneficio) {$filtros}" );
+		else
+			$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
 		
 		$db->Consulta( $sql );
 		
