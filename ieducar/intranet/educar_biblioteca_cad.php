@@ -28,15 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
-
-class clsIndexBase extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Biblioteca" );
-		$this->processoAp = "591";
-	}
-}
+require_once "educar_biblioteca_base.php";
 
 class indice extends clsCadastro
 {
@@ -62,14 +54,14 @@ class indice extends clsCadastro
 	var $tombo_automatico;
 
 	function Inicializar()
-	{
+	{    
 		$retorno = "Novo";
 		@session_start();
-		$this->pessoa_logada = $_SESSION['id_pessoa'];
-		$this->tipo_biblioteca = $_SESSION['biblioteca']['tipo_biblioteca'];
+		$this->pessoa_logada = 1;
+		$this->tipo_biblioteca = null;
 		@session_write_close();
 
-		$this->cod_biblioteca=$_GET["cod_biblioteca"];
+		$this->cod_biblioteca=1;
 
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 591, $this->pessoa_logada, 3,  "educar_biblioteca_lst.php" );
