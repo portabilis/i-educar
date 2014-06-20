@@ -53,6 +53,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Exporta&ccedil;&atilde;o Educacenso');
     $this->processoAp = 846;
+    $this->addEstilo('localizacaoSistema');
   }
 }
 
@@ -89,6 +90,14 @@ class indice extends clsCadastro
     $obj_permissoes->permissao_cadastra(585, $this->pessoa_logada, 7,
       'educar_index.php');
     $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Escola",
+         ""                                  => "Exporta&ccedil;&atilde;o para o Educacenso"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
     
     return 'Novo';
   }

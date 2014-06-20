@@ -483,6 +483,7 @@ protected function createOrUpdateUniforme($id) {
     $aluno                          = new clsPmieducarAluno();
     $aluno->cod_aluno               = $id;
     $aluno->aluno_estado_id         = Portabilis_String_Utils::toLatin1($this->getRequest()->aluno_estado_id);
+    $aluno->codigo_sistema          = Portabilis_String_Utils::toLatin1($this->getRequest()->codigo_sistema);
 
     // após cadastro não muda mais id pessoa
     if (is_null($id))
@@ -766,7 +767,8 @@ protected function createOrUpdateUniforme($id) {
         'recurso_prova_inep_prova_ampliada_24',
         'recurso_prova_inep_prova_braille',
         'justificativa_falta_documentacao',
-        'url_laudo_medico'
+        'url_laudo_medico',
+        'codigo_sistema'
       );
 
       $aluno = Portabilis_Array_Utils::filter($aluno, $attrs);
@@ -777,6 +779,7 @@ protected function createOrUpdateUniforme($id) {
       $aluno['aluno_inep_id']    = $this->loadAlunoInepId($id);
       $aluno['ativo']            = $aluno['ativo'] == 1;
       $aluno['aluno_estado_id']  = Portabilis_String_Utils::toUtf8($aluno['aluno_estado_id']);
+      $aluno['codigo_sistema']  = Portabilis_String_Utils::toUtf8($aluno['codigo_sistema']);
 
       $aluno['alfabetizado']     = $aluno['analfabeto'] == 0;
       unset($aluno['analfabeto']);

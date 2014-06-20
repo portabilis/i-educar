@@ -41,6 +41,22 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
   protected $_processoAp = 999613;
   protected $_formMap    = array();
 
+  protected function _preRender(){
+
+    parent::_preRender();
+
+    Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
+
+    $localizacao = new LocalizacaoSistema();
+
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Escola",
+         ""                                  => "Processamento de hist&oacute;rico escolar"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar(), true);     
+  }   
+
   // #TODO migrar funcionalidade para novo padrão
   protected $backwardCompatibility = true;
 

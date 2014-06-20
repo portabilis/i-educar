@@ -35,6 +35,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Idioma" );
 		$this->processoAp = "590";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -91,6 +92,16 @@ class indice extends clsCadastro
 		}
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_acervo_idioma_det.php?cod_acervo_idioma={$registro["cod_acervo_idioma"]}" : "educar_acervo_idioma_lst.php";
 		$this->nome_url_cancelar = "Cancelar";
+
+    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Biblioteca",
+         ""        => "{$nomeMenu} idioma"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());
+
 		return $retorno;
 	}
 

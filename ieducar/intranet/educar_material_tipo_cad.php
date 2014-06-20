@@ -35,6 +35,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Material Did&aacute;tico" );
 		$this->processoAp = "563";
+		$this->addEstilo("localizacaoSistema");
 	}
 }
 
@@ -120,6 +121,16 @@ class indice extends clsCadastro
 			}
 		}
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_material_tipo_det.php?cod_material_tipo={$registro["cod_material_tipo"]}" : "educar_material_tipo_lst.php";
+		
+		$nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos( array(
+             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+             "educar_index.php"                  => "M&oacute;dulo Escola",
+             ""        => "{$nomeMenu} tipo de material"             
+        ));
+        $this->enviaLocalizacao($localizacao->montar());		
+
 		$this->nome_url_cancelar = "Cancelar";
 		return $retorno;
 	}

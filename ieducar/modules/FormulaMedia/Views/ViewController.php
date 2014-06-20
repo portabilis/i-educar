@@ -53,4 +53,20 @@ class ViewController extends Core_Controller_Page_ViewController
     'Fórmula de cálculo' => 'formulaMedia',
     'Tipo de fórmula' => 'tipoFormula'
   );
+
+  protected function _preRender(){
+
+    parent::_preRender();
+
+    Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
+
+    $localizacao = new LocalizacaoSistema();
+
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Escola",
+         ""                                  => "Detalhe da f&oacute;rmula de m&eacute;dia"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());     
+  }    
 }

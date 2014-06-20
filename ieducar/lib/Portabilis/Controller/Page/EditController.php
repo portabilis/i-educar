@@ -182,7 +182,8 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
     Portabilis_View_Helper_Application::loadJQueryFormLib($this);
 
     $styles = array('/modules/Portabilis/Assets/Stylesheets/Frontend.css',
-                    '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css');
+                    '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
+                    'styles/localizacaoSistema.css');
     Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
 

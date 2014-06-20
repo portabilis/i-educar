@@ -67,6 +67,7 @@ class clsPmieducarAluno
   var $recurso_prova_inep_prova_braille;  
   var $justificativa_falta_documentacao;  
   var $url_laudo_medico;  
+  var $codigo_sistema;  
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -135,7 +136,7 @@ class clsPmieducarAluno
         ref_usuario_cad, ref_idpes, data_cadastro, data_exclusao, ativo, caminho_foto, analfabeto, nm_pai, nm_mae,tipo_responsavel, aluno_estado_id,
         recurso_prova_inep_aux_ledor, recurso_prova_inep_aux_transcricao, recurso_prova_inep_guia_interprete, recurso_prova_inep_interprete_libras, recurso_prova_inep_leitura_labial,
         recurso_prova_inep_prova_ampliada_16, recurso_prova_inep_prova_ampliada_20, recurso_prova_inep_prova_ampliada_24, recurso_prova_inep_prova_braille,
-        justificativa_falta_documentacao, url_laudo_medico';
+        justificativa_falta_documentacao, url_laudo_medico, codigo_sistema';
 
     if (is_numeric($ref_cod_aluno_beneficio)) {
       if (class_exists('clsPmieducarAlunoBeneficio')) {
@@ -406,6 +407,12 @@ class clsPmieducarAluno
         $gruda = ', ';
       }
 
+      if (is_string($this->codigo_sistema)) {
+        $campos  .= "{$gruda}codigo_sistema";
+        $valores .= "{$gruda}'{$this->codigo_sistema}'";
+        $gruda = ', ';
+      }      
+
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
       return $db->InsertId("{$this->_tabela}_cod_aluno_seq");
     }
@@ -564,7 +571,12 @@ class clsPmieducarAluno
       if (is_string($this->url_laudo_medico)) {
         $set .= "{$gruda}url_laudo_medico = '{$this->url_laudo_medico}'";
         $gruda = ', ';
-      }      
+      }
+
+      if (is_string($this->codigo_sistema)) {
+        $set .= "{$gruda}codigo_sistema = '{$this->codigo_sistema}'";
+        $gruda = ', ';
+      }            
 
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_aluno = '{$this->cod_aluno}'" );

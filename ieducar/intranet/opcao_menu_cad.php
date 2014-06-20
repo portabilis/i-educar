@@ -34,6 +34,7 @@ class clsIndex extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} Opção Menu" );
 		$this->processoAp = "475";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -57,6 +58,14 @@ class indice extends clsCadastro
 		}
 		$this->url_cancelar = "opcao_menu_det.php";
 		$this->nome_url_cancelar = "Cancelar";
+
+    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""        => "{$nomeMenu} prefer&ecirc;ncia"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
 		return $retorno;
 	}
 

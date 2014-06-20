@@ -38,6 +38,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Pagamento Multa" );
 		$this->processoAp = "622";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -114,6 +115,15 @@ class indice extends clsCadastro
 		$this->nome_url_cancelar = "Cancelar";
 		$this->nome_url_sucesso  = "Pagar";
 		$this->acao_enviar       = "validaValor()";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Biblioteca",
+         ""        => "Pagamendo da d&iacute;vida"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());
+
 		return $retorno;
 	}
 

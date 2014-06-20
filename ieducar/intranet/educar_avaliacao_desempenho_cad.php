@@ -35,6 +35,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Avalia&ccedil;&atilde;o Desempenho" );
 		$this->processoAp = "635";
+		$this->addEstilo("localizacaoSistema");
 	}
 }
 
@@ -92,6 +93,15 @@ class indice extends clsCadastro
 		}
 		/*echo*/ $this->url_cancelar = ($retorno == "Editar") ? "educar_avaliacao_desempenho_det.php?sequencial={$this->sequencial}&ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}" : "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}";
 		$this->nome_url_cancelar = "Cancelar";
+
+    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Escola",
+         ""        => "{$nomeMenu} avalia&ccedil;&atilde;o de desempenho"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
 		
 		return $retorno;
 	}

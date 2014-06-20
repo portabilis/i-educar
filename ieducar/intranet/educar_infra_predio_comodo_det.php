@@ -35,6 +35,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - C&ocirc;modo Pr&eacute;dio" );
 		$this->processoAp = "574";
+		$this->addEstilo("localizacaoSistema");
 	}
 }
 
@@ -171,6 +172,14 @@ class indice extends clsDetalhe
 		$this->url_editar = "educar_infra_predio_comodo_cad.php?cod_infra_predio_comodo={$registro["cod_infra_predio_comodo"]}";
 		$this->url_cancelar = "educar_infra_predio_comodo_lst.php";
 		$this->largura = "100%";
+
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         "educar_index.php"                  => "M&oacute;dulo Escola",
+	         ""        => "Detalhe do c&ocirc;modos do pr&eacute;dio"             
+	    ));		
+	    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 
