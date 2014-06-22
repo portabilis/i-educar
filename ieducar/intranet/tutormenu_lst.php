@@ -29,15 +29,6 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/pmicontrolesis/Geral.inc.php");
 
-class clsIndex extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} Tutor Menu" );
-		$this->processoAp = "445";
-	}
-}
-
 class indice extends clsListagem
 {
 	function Gerar()
@@ -80,8 +71,11 @@ class indice extends clsListagem
 	}
 }
 
-$pagina = new clsIndex();
-$miolo = new indice();
+$pagina = new clsBase();
+
+$pagina->SetTitulo( "{$pagina->_instituicao} Tutor Menu" );
+$pagina->processoAp = "445";
+	$miolo = new indice();
 $pagina->addForm( $miolo );
 $pagina->MakeAll();
 

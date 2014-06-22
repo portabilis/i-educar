@@ -35,25 +35,6 @@ require_once 'include/pmieducar/geral.inc.php';
 require_once 'CoreExt/View/Helper/UrlHelper.php';
 
 /**
- * clsIndexBase class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
- * @version   @@package_version@@
- */
-class clsIndexBase extends clsBase
-{
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Faltas/Notas Aluno');
-    $this->processoAp = "642";
-  }
-}
-
-/**
  * indice class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
@@ -274,8 +255,11 @@ class indice extends clsListagem
 }
 
 // Instancia objeto de página
-$pagina = new clsIndexBase();
+$pagina = new clsBase();
 
+    $pagina->SetTitulo($pagina->_instituicao . ' i-Educar - Faltas/Notas Aluno');
+    $pagina->processoAp = "642";
+  
 // Instancia objeto de conteúdo
 $miolo = new indice();
 

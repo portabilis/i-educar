@@ -43,15 +43,6 @@ require_once 'include/imagem/clsPortalImagem.inc.php';
  * @since     Classe disponível desde a versão 1.0.0
  * @version   @@package_version@@
  */
-class clsIndex extends clsBase
-{
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' Banco de Imagens');
-    $this->processoAp = '473';
-  }
-}
-
 /**
  * indice class.
  *
@@ -181,8 +172,11 @@ class indice extends clsCadastro
 }
 
 // Instancia objeto de página
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+    $pagina->SetTitulo($pagina->_instituicao . ' Banco de Imagens');
+    $pagina->processoAp = '473';
+  
 // Instancia objeto de conteúdo
 $miolo = new indice();
 

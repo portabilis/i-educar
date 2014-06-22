@@ -35,17 +35,6 @@ $desvio_diretorio = "";
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ( "include/Geral.inc.php" );
-class clsIndex extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} Pesquisa por Funcion&aacute;rio!" );
-		$this->processoAp         = "0";
-		$this->renderMenu         = false;
-		$this->renderMenuSuspenso = false;
-	}
-}
-
 class indice extends clsListagem
 {
 
@@ -170,8 +159,13 @@ class indice extends clsListagem
 	}
 }
 
-$pagina = new clsIndex();
-$miolo = new indice();
+$pagina = new clsBase();
+
+$pagina->SetTitulo( "{$pagina->_instituicao} Pesquisa por Funcion&aacute;rio!" );
+$pagina->processoAp         = "0";
+$pagina->renderMenu         = false;
+$pagina->renderMenuSuspenso = false;
+	$miolo = new indice();
 $pagina->addForm( $miolo );
 $pagina->MakeAll();
 ?>

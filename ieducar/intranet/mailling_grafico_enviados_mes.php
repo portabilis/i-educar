@@ -29,15 +29,6 @@ require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/clsGrafico.inc.php");
 
-class clsIndex extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} Grafico de Mailling por quantidade" );
-		$this->processoAp = "0";
-	}
-}
-
 class indice extends clsCadastro
 {
 	var $data_inicial,
@@ -145,8 +136,11 @@ class indice extends clsCadastro
 	}
 }
 
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+$pagina->SetTitulo( "{$pagina->_instituicao} Grafico de Mailling por quantidade" );
+$pagina->processoAp = "0";
+	
 $miolo = new indice();
 $pagina->addForm( $miolo );
 

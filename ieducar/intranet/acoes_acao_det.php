@@ -29,16 +29,6 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/pmiacoes/geral.inc.php");
-class clsIndex extends clsBase
-{
-
-	function Formular()
-	{
-		$this->SetTitulo( "Prefeitura de Itaja&iacute;- Sistema de Cadastro de A&ccedil;&oatilde;es do Governo - Detalhe de a&ccedil;&otilde;es do Governo!" );
-		$this->processoAp = "551";
-	}
-}
-
 class indice extends clsDetalhe
 {
 
@@ -338,8 +328,11 @@ class indice extends clsDetalhe
 	//***
 }
 
-$pagina = new clsIndex();
-$miolo = new indice();
+$pagina = new clsBase();
+
+$pagina->SetTitulo( "Prefeitura de Itaja&iacute;- Sistema de Cadastro de A&ccedil;&oatilde;es do Governo - Detalhe de a&ccedil;&otilde;es do Governo!" );
+$pagina->processoAp = "551";
+	$miolo = new indice();
 $pagina->addForm( $miolo );
 $pagina->MakeAll();
 

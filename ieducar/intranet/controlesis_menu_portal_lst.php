@@ -31,15 +31,6 @@ require_once( "include/pmicontrolesis/clsPmicontrolesisMenuPortal.inc.php" );
 require_once( "include/Geral.inc.php" );
 
 
-class clsIndexBase extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} Menu Portal" );
-		$this->processoAp = "612";
-	}
-}
-
 class indice extends clsListagem
 {
 	/**
@@ -138,8 +129,11 @@ class indice extends clsListagem
 	}
 }
 // cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
+$pagina = new clsBase();
+
+$pagina->SetTitulo( "{$pagina->_instituicao} Menu Portal" );
+$pagina->processoAp = "612";
+	// cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
 $pagina->addForm( $miolo );

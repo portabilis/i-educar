@@ -29,16 +29,6 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 
-class clsIndex extends clsBase
-{
-	
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} Diaria Valores" );
-		$this->processoAp = "295";
-	}
-}
-
 class indice extends clsCadastro
 {
 	var $cod_diaria_valores, 
@@ -290,8 +280,11 @@ class indice extends clsCadastro
 }
 
 
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+$pagina->SetTitulo( "{$pagina->_instituicao} Diaria Valores" );
+$pagina->processoAp = "295";
+	
 $miolo = new indice();
 $pagina->addForm( $miolo );
 

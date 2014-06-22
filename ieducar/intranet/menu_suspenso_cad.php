@@ -33,25 +33,6 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/imagem/clsPortalImagem.inc.php';
 
 /**
- * clsIndex class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Menu
- * @since     Classe disponível desde a versão 1.0.0
- * @version   @@package_version@@
- */
-class clsIndex extends clsBase
-{
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' Menu Suspenso');
-    $this->processoAp = "445";
-  }
-}
-
-/**
  * indice class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
@@ -543,8 +524,11 @@ class indice extends clsCadastro
 }
 
 // Instancia objeto de página
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+    $pagina->SetTitulo($pagina->_instituicao . ' Menu Suspenso');
+    $pagina->processoAp = "445";
+  
 // Instancia objeto de conteúdo
 $miolo = new indice();
 

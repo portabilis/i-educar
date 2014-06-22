@@ -31,18 +31,6 @@ $desvio_diretorio = "";
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 
-class clsIndex extends clsBase
-{
-
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} Cadastra Pessoa!" );
-		$this->processoAp         = "0";
-		$this->renderMenu         = false;
-		$this->renderMenuSuspenso = false;
-	}
-}
-
 class indice extends clsCadastro
 {
 	/**
@@ -1152,8 +1140,13 @@ class indice extends clsCadastro
 	}
 }
 
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+$pagina->SetTitulo( "{$pagina->_instituicao} Cadastra Pessoa!" );
+$pagina->processoAp         = "0";
+$pagina->renderMenu         = false;
+$pagina->renderMenuSuspenso = false;
+	
 $miolo = new indice();
 $pagina->addForm( $miolo );
 

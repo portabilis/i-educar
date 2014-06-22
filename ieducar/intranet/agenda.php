@@ -30,17 +30,6 @@ require_once ("include/clsAgenda.inc.php");
 //require_once ("include/juris/jurisGeral.inc.php");
 require_once ("agenda_calendario.php");
 
-class clsIndex extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} Agenda Particular" );
-		$this->processoAp = "345";
-		$this->addEstilo( "agenda" );
-		$this->addScript( "agenda" );
-	}
-}
-
 class indice
 {
 	var $agenda;
@@ -490,8 +479,13 @@ class indice
 		return $conteudo;
 	}
 }
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+$pagina->SetTitulo( "{$pagina->_instituicao} Agenda Particular" );
+$pagina->processoAp = "345";
+$pagina->addEstilo( "agenda" );
+$pagina->addScript( "agenda" );
+	
 $miolo = new indice();
 $pagina->addForm( $miolo );
 

@@ -82,7 +82,17 @@ class IEducarRegressao
      */
     function removerElementosMutaveis(&$html)
     {
+        // Remove principalmente datas
         $html = preg_replace('%.ltimo Acesso: .*?td>%', '', $html);
+        
+        // Timestamps
+        $html = preg_replace('%1\d{9}%', '', $html);
+        
+        // Datas
+        $html = preg_replace('%\d{1,2} de [JFMASOND] de \d{4}%', '', $html);
+        
+        // Outro formato de data
+        $html = preg_replace('%20\d{2}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.\d{6}%', '', $html);
     }
     
     /**
@@ -143,8 +153,8 @@ class IEducarRegressao
     function comparar($regressao1, $regressao2)
     {
         // Extrai os arquivos das regressoes
-        $arquivosR1 = scandir($regressao1);
-        $arquivosR2 = scandir($regressao2);
+        $arquivosR1 = scandir($this->diretorioRegressoes . $regressao1);
+        $arquivosR2 = scandir($this->diretorioRegressoes . $regressao2);
         
         // Antes de mais nada, lista quais arquivos NAO sao comuns
         // as duas regressoes
@@ -157,15 +167,19 @@ class IEducarRegressao
             echo "Esses arquivos existem somente em $regressao2: " . implode(', ', $arquivosSomenteEmR2) . "\n";
         
         // Itera sobre R1 
+        $i = 0;
         foreach($arquivosR1 as $arquivo)
         {
-            // Verifica se existe o mesmo arquivo em R2
-            if(!in_array($arquivo, $arquivosSomenteEmR1))
+            if($i++ < 2)
                 continue;
+
+            // Verifica se existe o mesmo arquivo em R2
+           // if(!in_array($arquivo, $arquivosSomenteEmR2))
+             //   continue;
             
             echo "Arquivos $regressao1/$arquivo e $regressao2/$arquivo sao ";
             
-            $diff = shell_exec("diff $regressao1/$arquivo $regressao2/$arquivo");
+            $diff = shell_exec("diff {$this->diretorioRegressoes}$regressao1/$arquivo {$this->diretorioRegressoes}$regressao2/$arquivo");
             if(strlen($diff) == 0)
                 echo "Iguais\n";
             else

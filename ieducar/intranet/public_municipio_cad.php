@@ -35,15 +35,6 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
 
-class clsIndexBase extends clsBase
-{
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' Munic&iacute;pio');
-    $this->processoAp = '755';
-  }
-}
-
 class indice extends clsCadastro
 {
   /**
@@ -221,8 +212,11 @@ class indice extends clsCadastro
 }
 
 // Instancia objeto de página
-$pagina = new clsIndexBase();
+$pagina = new clsBase();
 
+    $pagina->SetTitulo($pagina->_instituicao . ' Munic&iacute;pio');
+    $pagina->processoAp = '755';
+  
 // Instancia objeto de conteúdo
 $miolo = new indice();
 

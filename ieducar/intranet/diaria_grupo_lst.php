@@ -30,17 +30,6 @@ require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once 'include/localizacaoSistema.php';
 
-class clsIndex extends clsBase
-{
-	
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} Diária Grupo" );
-		$this->processoAp = "297";
-                $this->addEstilo( "localizacaoSistema" );
-	}
-}
-
 class indice extends clsListagem
 {
 	function Gerar()
@@ -92,8 +81,12 @@ class indice extends clsListagem
 }
 
 
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+$pagina->SetTitulo( "{$pagina->_instituicao} Diária Grupo" );
+$pagina->processoAp = "297";
+                $pagina->addEstilo( "localizacaoSistema" );
+	
 $miolo = new indice();
 
 $pagina->addForm( $miolo );

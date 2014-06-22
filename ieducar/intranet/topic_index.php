@@ -28,16 +28,6 @@ $desvio_diretorio = "";
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsBanco.inc.php");
 
-class clsIndex extends clsBase
-{
-	
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-OpeTopicE" );
-		$this->processoAp = "459";
-	}
-}
-
 class indice
 {
 	function RenderHTML()
@@ -51,8 +41,11 @@ class indice
 }
 
 
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+$pagina->SetTitulo( "{$pagina->_instituicao} i-OpeTopicE" );
+$pagina->processoAp = "459";
+	
 $miolo = new indice();
 $pagina->addForm( $miolo );
 

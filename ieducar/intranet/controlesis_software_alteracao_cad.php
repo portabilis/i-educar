@@ -29,15 +29,6 @@ require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmicontrolesis/geral.inc.php" );
 
-class clsIndexBase extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "Prefeitura de Itaja&iacute; - Cadastro de Altera&ccedil;&atilde;o de Software" );
-		$this->processoAp = "794";
-	}
-}
-
 class indice extends clsCadastro
 {
 	/**
@@ -199,8 +190,11 @@ class indice extends clsCadastro
 }
 
 // cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
+$pagina = new clsBase();
+
+$pagina->SetTitulo( "Prefeitura de Itaja&iacute; - Cadastro de Altera&ccedil;&atilde;o de Software" );
+$pagina->processoAp = "794";
+	// cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
 $pagina->addForm( $miolo );

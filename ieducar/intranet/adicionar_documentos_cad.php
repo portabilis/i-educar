@@ -27,18 +27,6 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/Geral.inc.php';
 
 
-class clsIndex extends clsBase
-{
-
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} Adicionar Documentos" );
-		$this->processoAp = "0"; //nao alterar, paginas com ap diferentes chamam essa
-		$this->renderMenu = false;
-
-	}
-}
-
 class indice extends clsCadastro
 {
 	var $idpes,
@@ -237,8 +225,13 @@ class indice extends clsCadastro
 
 }
 
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+$pagina->SetTitulo( "{$pagina->_instituicao} Adicionar Documentos" );
+$pagina->processoAp = "0"; //nao alterar, paginas com ap diferentes chamam essa
+$pagina->renderMenu = false;
+
+	
 $miolo = new indice();
 $pagina->addForm( $miolo );
 

@@ -29,15 +29,6 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 
-class clsIndex extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} Empresas!" );
-		$this->processoAp = array("41", "649");
-	}
-}
-
 class indice extends clsCadastro
 {
 
@@ -462,8 +453,11 @@ class indice extends clsCadastro
 }
 
 
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+$pagina->SetTitulo( "{$pagina->_instituicao} Empresas!" );
+$pagina->processoAp = array("41", "649");
+	
 $miolo = new indice();
 $pagina->addForm( $miolo );
 

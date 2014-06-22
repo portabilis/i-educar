@@ -36,15 +36,6 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
 require_once 'include/urbano/clsUrbanoTipoLogradouro.inc.php';
 
-class clsIndexBase extends clsBase
-{
-  function Formular()
-  {
-    $this->SetTitulo( "{$this->_instituicao} Logradouro" );
-    $this->processoAp = "757";
-  }
-}
-
 class indice extends clsCadastro
 {
   /**
@@ -260,8 +251,11 @@ class indice extends clsCadastro
 }
 
 // Instancia objeto de página
-$pagina = new clsIndexBase();
+$pagina = new clsBase();
 
+    $pagina->SetTitulo( "{$pagina->_instituicao} Logradouro" );
+    $pagina->processoAp = "757";
+  
 // Instancia objeto de conteúdo
 $miolo = new indice();
 

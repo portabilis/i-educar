@@ -28,16 +28,6 @@ $desvio_diretorio = "";
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
-class clsIndex extends clsBase
-{
-	
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Protocolo - Setores" );
-		$this->processoAp = "375";
-	}
-}
-
 class miolo1 extends clsListagem
 {
 	var $nivel0;
@@ -250,8 +240,11 @@ class miolo1 extends clsListagem
 }
 
 
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+$pagina->SetTitulo( "{$pagina->_instituicao} i-Protocolo - Setores" );
+$pagina->processoAp = "375";
+	
 $miolo = new miolo1();
 $pagina->addForm( $miolo );
 

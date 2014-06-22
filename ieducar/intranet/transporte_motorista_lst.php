@@ -34,15 +34,6 @@ require_once( "include/public/geral.inc.php" );
 require_once("include/modules/clsModulesEmpresaTransporteEscolar.inc.php");
 require_once("include/modules/clsModulesMotorista.inc.php");
 
-class clsIndexBase extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Motoristas" );
-		$this->processoAp = "21236";
-	}
-}
-
 class indice extends clsListagem
 {
 	/**
@@ -165,8 +156,11 @@ class indice extends clsListagem
 	}
 }
 // cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
+$pagina = new clsBase();
+
+$pagina->SetTitulo( "{$pagina->_instituicao} i-Educar - Motoristas" );
+$pagina->processoAp = "21236";
+	// cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
 $pagina->addForm( $miolo );

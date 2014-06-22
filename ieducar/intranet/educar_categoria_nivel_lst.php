@@ -37,15 +37,6 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
 
-class clsIndexBase extends clsBase
-{
-  public function Formular() {
-    $this->SetTitulo($this->_instituicao . 'Listagem Categoria N&iacute;vel');
-    $this->processoAp = '829';
-  }
-}
-
-
 class indice extends clsListagem {
   /**
    * Referencia pega da session para o idpes do usuario atual
@@ -173,8 +164,11 @@ class indice extends clsListagem {
 
 
 // Instancia a classe da página
-$pagina = new clsIndexBase();
+$pagina = new clsBase();
 
+    $pagina->SetTitulo($pagina->_instituicao . 'Listagem Categoria N&iacute;vel');
+    $pagina->processoAp = '829';
+  
 // Instancia o conteúdo
 $miolo = new indice();
 
