@@ -1,0 +1,19 @@
+Notas para a refatoracao das classes clsIndex(Base)?
+
+1. Numeros: 175 arquivos usam somente 'clsIndex', 375 usam 'clsIndexBase', ambos tem a mesma funcao
+2. A unica funcao dessa classe, visto ateh agora eh pra setar o titulo da pagina e o numero do preocessoAP
+3. Caso especial para: "educar_material_tipo_lst.php" 
+	class clsIndexBase extends clsBase
+	{
+		function Formular()
+		{
+			if($_GET["ativo"]== "excluido")
+				$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Material Did&aacute;tico Exclu&iacute;dos" );
+			else
+				$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Material Did&aacute;tico" );
+
+			$this->processoAp = "563";
+	                $this->addEstilo( "localizacaoSistema" );
+		}
+	}
+4.

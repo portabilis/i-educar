@@ -1,5 +1,7 @@
 <?php
 
+
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -27,6 +29,7 @@
  * @since     Arquivo disponível desde a versão 1.0.0
  * @version   $Id$
  */
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>

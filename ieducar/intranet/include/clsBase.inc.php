@@ -29,7 +29,7 @@
  */
 
 // Inclui arquivo de bootstrapping
-require_once '/home/ieducar/ieducar/ieducar/includes/bootstrap.php';
+require_once '../includes/bootstrap.php';
 //require_once '../includes/bootstrap.php';
 
 // redireciona requisições, caso configurado
@@ -103,6 +103,11 @@ class clsBase extends clsConfig
   function SetTitulo($titulo)
   {
     $this->titulo = $titulo;
+  }
+
+  function SetProcessoAp($processoAp)
+  {
+    $this->processoAp = $processoAp;
   }
 
   function AddForm($form)
