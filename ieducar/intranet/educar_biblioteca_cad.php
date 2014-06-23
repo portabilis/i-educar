@@ -56,11 +56,11 @@ class indice extends clsCadastro
 	{    
 		$retorno = "Novo";
 		@session_start();
-		$this->pessoa_logada = 1;
-		$this->tipo_biblioteca = null;
+		$this->pessoa_logada = $_SESSION['id_pessoa'];
+		$this->tipo_biblioteca = $_SESSION['tipo_biblioteca'];
 		@session_write_close();
 
-		$this->cod_biblioteca=1;
+		$this->cod_biblioteca=$_GET["cod_biblioteca"];
 
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 591, $this->pessoa_logada, 3,  "educar_biblioteca_lst.php" );
@@ -92,7 +92,6 @@ class indice extends clsCadastro
 	{
 		// primary keys
 		$this->campoOculto( "cod_biblioteca", $this->cod_biblioteca );
-
 		if( $_POST )
 			foreach( $_POST AS $campo => $val )
 				$this->$campo = ( $this->$campo ) ? $this->$campo : $val;
@@ -374,7 +373,7 @@ $miolo = new indice();
 // adiciona o conteudo na clsBase
 $pagina->addForm( $miolo );
 // gera o html
-$pagina->MakeAll();
+//$pagina->MakeAll();
 ?>
 
 <script>
