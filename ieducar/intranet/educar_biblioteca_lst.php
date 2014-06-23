@@ -196,6 +196,7 @@ class indice extends clsListagem
                     ""                                  => "Lista de Biblioteca"
                 ));
                 $this->enviaLocalizacao($localizacao->montar());
+                return $lista;
 	}
         
 }
@@ -209,5 +210,5 @@ $miolo = new indice();
 // adiciona o conteudo na clsBase
 $pagina->addForm( $miolo );
 // gera o html
-$pagina->MakeAll();
+//$pagina->MakeAll();
 ?>
