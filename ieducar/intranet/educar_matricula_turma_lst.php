@@ -109,7 +109,7 @@ class indice extends clsListagem
     $this->ref_cod_escola = $det_matricula['ref_ref_cod_escola'];
     $this->ref_cod_turma = $_GET['ref_cod_turma'];
 
-    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
+    
 
     $this->addCabecalhos(array(
       'Turma',
@@ -255,7 +255,7 @@ WHERE
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "M&oacute;dulo Escola",
+         "educar_index.php"                  => "i-Educar - Escola",
          ""                                  => "Listagem de enturma&ccedil;&otilde;es da matr&iacute;cula"
     ));
     $this->enviaLocalizacao($localizacao->montar());    

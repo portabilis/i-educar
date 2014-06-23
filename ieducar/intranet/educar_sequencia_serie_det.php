@@ -63,7 +63,7 @@ class indice extends clsDetalhe
 		session_write_close();
 
 		$this->titulo = "Sequ&ecirc;ncia Enturma&ccedil;&atilde;o - Detalhe";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->ref_serie_origem = $_GET["ref_serie_origem"];
 		$this->ref_serie_destino = $_GET["ref_serie_destino"];
@@ -175,7 +175,7 @@ class indice extends clsDetalhe
 	    $localizacao = new LocalizacaoSistema();
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         "educar_index.php"                  => "M&oacute;dulo Escola",
+	         "educar_index.php"                  => "i-Educar - Escola",
 	         ""        => "Detalhe da sequ&ecirc;ncia de enturma&ccedil;&atilde;o"             
 	    ));
 	    $this->enviaLocalizacao($localizacao->montar());		

@@ -48,7 +48,7 @@ class indice extends clsDetalhe
 		$this->cod_usuario = $_SESSION['id_pessoa'];
 		session_write_close();
 		$this->titulo = "Detalhe do Vínculo";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$cod_acesso = @$_GET['cod_permissao'];
 		$db = new clsBanco();

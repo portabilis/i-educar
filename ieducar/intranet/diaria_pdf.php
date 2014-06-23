@@ -45,7 +45,7 @@ class indice extends clsDetalhe
 	function Gerar()
 	{
 		$this->titulo = "Diaria - PDF";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$cod_diaria = @$_GET['cod_diaria'];
 

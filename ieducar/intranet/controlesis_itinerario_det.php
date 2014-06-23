@@ -67,7 +67,7 @@ class indice extends clsDetalhe
 		session_write_close();
 
 		$this->titulo = "Itinerario - Detalhe";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->cod_itinerario=$_GET["cod_itinerario"];
 

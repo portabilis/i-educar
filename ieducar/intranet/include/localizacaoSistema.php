@@ -59,11 +59,13 @@ class LocalizacaoSistema {
         $this->html = '<div id="localizacao">';
         foreach( $this->localizacao as $link => $inner ) {
             $href .= ( $i === 1 ) ? $this->protocolo . $link : "/$link";
-            if( $i === $localizacao_count ) {
+            if( $i === $localizacao_count )
                 $this->html .= "<a href=\"$linkVazio\" class='pagina_atual'>$inner</a>";
-            } else {
-                $this->html .= "<a href=\"$href\" title=\"$inner\">$inner</a> <a class='flechinha' href=\"$linkVazio\"> > </a> {$this->separador} ";
-            }
+            elseif($i == 1)
+                $this->html .= "<a href=\"$href\" title=\"Ir para o $inner\"><i class='glyphicon glyphicon-home'> </i><span> $inner</span></a> <a class='flechinha' href=\"$linkVazio\"> / </a> {$this->separador} ";
+            else
+                $this->html .= "<a href=\"$href\" title=\"Ir para o $inner\">$inner</a> <a class='flechinha' href=\"$linkVazio\"> / </a> {$this->separador} ";
+
             $i++;
         }
         $this->html .= '</div>';

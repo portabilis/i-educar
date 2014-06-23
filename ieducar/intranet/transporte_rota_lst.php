@@ -95,7 +95,7 @@ class indice extends clsListagem
 		foreach( $_GET AS $var => $val ) 
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->addCabecalhos( array(
 			"Ano",
@@ -173,7 +173,7 @@ class indice extends clsListagem
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "M&oacute;dulo Escola",
+         "educar_index.php"                  => "i-Educar - Escola",
          ""                                  => "Listagem de rotas"
     ));
     $this->enviaLocalizacao($localizacao->montar());		

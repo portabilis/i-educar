@@ -46,7 +46,7 @@ class indice extends clsDetalhe
 		$db = new clsBanco();
 		$db2 = new clsBanco();
 		$this->titulo = "Detalhe do Edital";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$cod_edital = @$_GET['cod_edital'];
 		

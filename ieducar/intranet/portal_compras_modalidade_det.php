@@ -57,7 +57,7 @@ class indice extends clsDetalhe
 		session_write_close();
 		
 		$this->titulo = "Compras Modalidade - Detalhe";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->cod_compras_modalidade=$_GET["cod_compras_modalidade"];
 

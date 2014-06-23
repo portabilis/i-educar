@@ -59,7 +59,7 @@ class indice extends clsDetalhe
 		session_write_close();
 		
 		$this->titulo = "Pais - Detalhe";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->idpais=$_GET["idpais"];
 

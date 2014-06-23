@@ -46,7 +46,7 @@ class indice extends clsListagem
 	function Gerar()
 	{
 		$this->titulo = "Vínculos";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 		
 		$nome_ = @$_GET['nome_'];
 		

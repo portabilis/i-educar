@@ -45,7 +45,7 @@ class indice extends clsDetalhe
 	function Gerar()
 	{
 		$this->titulo = "Detalhe do Grupo";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$cod_diaria_grupo = @$_GET['cod_diaria_grupo'];
 		
@@ -70,7 +70,7 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "M&oacute;dulo Escola",
+         "educar_index.php"                  => "i-Educar - Escola",
          ""                                  => "Detalhe do grupo de di&aacute;rias"
     ));
     $this->enviaLocalizacao($localizacao->montar());		

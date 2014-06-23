@@ -67,7 +67,7 @@ class indice extends clsDetalhe
 		session_write_close();
 
 		$this->titulo = "Matricula Ocorrencia Disciplinar - Detalhe";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->sequencial=$_GET["sequencial"];
 		$this->ref_cod_matricula=$_GET["ref_cod_matricula"];
@@ -205,7 +205,7 @@ class indice extends clsDetalhe
 	    $localizacao = new LocalizacaoSistema();
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         "educar_index.php"                  => "M&oacute;dulo Escola",
+	         "educar_index.php"                  => "i-Educar - Escola",
 	         ""                                  => "Detalhe da ocorr&ecirc;ncia disciplinar da matr&iacute;cula"
 	    ));
 	    $this->enviaLocalizacao($localizacao->montar());				

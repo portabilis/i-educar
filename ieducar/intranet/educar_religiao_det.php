@@ -63,7 +63,7 @@ class indice extends clsDetalhe
 		session_write_close();
 
 		$this->titulo = "Religiao - Detalhe";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->cod_religiao=$_GET["cod_religiao"];
 
@@ -103,7 +103,7 @@ class indice extends clsDetalhe
 	    $localizacao = new LocalizacaoSistema();
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         "educar_index.php"                  => "M&oacute;dulo Escola",
+	         "educar_index.php"                  => "i-Educar - Escola",
 	         ""                                  => "Detalhe da religi&atilde;o"
 	    ));
 	    $this->enviaLocalizacao($localizacao->montar());				

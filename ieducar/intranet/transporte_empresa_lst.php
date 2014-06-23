@@ -89,7 +89,7 @@ class indice extends clsListagem
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->campoNumero("cod_empresa","C&oacute;digo da empresa",$this->cod_empresa,20,255,false);
 		$this->campoTexto("nome_empresa","Nome fantasia", $this->nome_empresa,50,255,false);
@@ -138,7 +138,7 @@ class indice extends clsListagem
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "M&oacute;dulo Escola",
+         "educar_index.php"                  => "i-Educar - Escola",
          ""                                  => "Listagem de empresas de transporte"
     ));
     $this->enviaLocalizacao($localizacao->montar());		

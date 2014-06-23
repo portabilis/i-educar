@@ -43,7 +43,7 @@ class indice extends clsDetalhe
 	function Gerar()
 	{
 		$this->titulo = "Detalhe do Grupo";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 		$id_grupo = @$_GET['id_grupo'];
 		$db = new clsBanco();
 		$db->Consulta( "SELECT cod_mailling_grupo, nm_grupo FROM mailling_grupo WHERE cod_mailling_grupo={$id_grupo}" );

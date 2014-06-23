@@ -71,7 +71,7 @@ class indice extends clsDetalhe
 			$this->$var = ( $val === "" ) ? null: $val;
 					
 		$this->titulo = "Calendario Anotacao - Detalhe";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->cod_calendario_anotacao=$_GET["cod_calendario_anotacao"];
 

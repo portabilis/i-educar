@@ -43,7 +43,7 @@ class indice extends clsDetalhe
 	function Gerar()
 	{
 		$this->titulo = "Detalhe do Tipo";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 		$id_tipo = @$_GET['id_tipo'];
 		$db = new clsBanco();
 		$db->Consulta( "SELECT cod_not_tipo, nm_tipo FROM not_tipo WHERE cod_not_tipo={$id_tipo}" );

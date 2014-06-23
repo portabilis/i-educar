@@ -102,7 +102,7 @@ class indice extends clsDetalhe
     session_write_close();
 
     $this->titulo = 'Vagas Reservadas - Detalhe';
-    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
+    
 
     $this->cod_reserva_vaga = $_GET['cod_reserva_vaga'];
 
@@ -203,7 +203,7 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "M&oacute;dulo Escola",
+         "educar_index.php"                  => "i-Educar - Escola",
          ""                                  => "Detalhe da vaga reservada"
     ));
     $this->enviaLocalizacao($localizacao->montar());    

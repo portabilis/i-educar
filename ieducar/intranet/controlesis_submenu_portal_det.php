@@ -64,7 +64,7 @@ class indice extends clsDetalhe
 	function Gerar()
 	{
 		$this->titulo = "Submenu Portal - Detalhe";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->cod_submenu_portal=$_GET["cod_submenu_portal"];
 
