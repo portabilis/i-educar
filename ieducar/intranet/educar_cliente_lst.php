@@ -31,16 +31,6 @@ require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
 require_once ("include/localizacaoSistema.php");
 
-class clsIndexBase extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Cliente" );
-		$this->processoAp = "603";
-                $this->addEstilo( "localizacaoSistema" );
-	}
-}
-
 class indice extends clsListagem
 {
 	/**
@@ -229,8 +219,12 @@ class indice extends clsListagem
 	}
 }
 // cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
+$pagina = new clsBase();
+
+$pagina->SetTitulo( "{$pagina->_instituicao} i-Educar - Cliente" );
+$pagina->processoAp = "603";
+                $pagina->addEstilo( "localizacaoSistema" );
+	// cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
 $pagina->addForm( $miolo );

@@ -30,16 +30,6 @@ require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/otopic/otopicGeral.inc.php");
 
-class clsIndex extends clsBase
-{
-
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Atualiza Pessoa!" );
-		$this->processoAp = "294";
-	}
-}
-
 class indice extends clsCadastro
 {
 	var $cod_pessoa_fj, $nm_pessoa, $id_federal, $endereco, $cep, $ref_bairro, $ddd_telefone_1, $telefone_1, $ddd_telefone_2, $telefone_2, $ddd_telefone_mov, $telefone_mov, $ddd_telefone_fax, $telefone_fax, $email, $http, $tipo_pessoa, $sexo, $razao_social, $ins_est, $ins_mun;
@@ -410,8 +400,11 @@ class indice extends clsCadastro
 }
 
 
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+$pagina->SetTitulo( "{$pagina->_instituicao} i-Pauta - Atualiza Pessoa!" );
+$pagina->processoAp = "294";
+	
 $miolo = new indice();
 $pagina->addForm( $miolo );
 

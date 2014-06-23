@@ -35,25 +35,6 @@ require_once 'include/pmieducar/geral.inc.php';
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
 /**
- * clsIndexBase class.
- *
- * @author    Adriano Erik Weiguert Nagasava <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
- * @version   @@package_version@@
- */
-class clsIndexBase extends clsBase
-{
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Quadro de Horário');
-    $this->processoAp = "641";
-  }
-}
-
-/**
  * indice class.
  *
  * @author    Adriano Erik Weiguert Nagasava <ctima@itajai.sc.gov.br>
@@ -236,8 +217,11 @@ class indice extends clsConfig
 }
 
 // Instancia objeto de página
-$pagina = new clsIndexBase();
+$pagina = new clsBase();
 
+    $pagina->SetTitulo($pagina->_instituicao . ' i-Educar - Quadro de Horário');
+    $pagina->processoAp = "641";
+  
 // Instancia objeto de conteúdo
 $miolo = new indice();
 

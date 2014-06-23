@@ -31,16 +31,6 @@ require_once ("include/clsBanco.inc.php");
 require_once ("include/otopic/otopicGeral.inc.php");
 
 
-class clsIndex extends clsBase
-{
-	
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Tempo Real" );
-		$this->processoAp = "294";
-	}
-}
-
 class indice
 {
 
@@ -65,8 +55,11 @@ class indice
 
 
 
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+$pagina->SetTitulo( "{$pagina->_instituicao} i-Pauta - Tempo Real" );
+$pagina->processoAp = "294";
+	
 $miolo = new indice();
 $pagina->addForm( $miolo );
 

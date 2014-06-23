@@ -33,16 +33,6 @@ require_once ("include/otopic/otopicGeral.inc.php");
 require_once ("include/clsListagem.inc.php");
 
 
-class clsIndex extends clsBase
-{
-	
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Reuniões!" );
-		$this->processoAp = "294";
-	}
-}
-
 class indice extends clsCadastro
 {
 	var $codGrupo;
@@ -184,8 +174,11 @@ class indice extends clsCadastro
         header("Location: otopic_meus_grupos_det2.php?cod_grupo=$this->codGrupo");
 	}
 }
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+$pagina->SetTitulo( "{$pagina->_instituicao} i-Pauta - Reuniões!" );
+$pagina->processoAp = "294";
+	
 $miolo = new indice();
 $pagina->addForm( $miolo );
 

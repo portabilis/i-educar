@@ -36,15 +36,6 @@ require_once 'lib/Portabilis/View/Helper/Application.php';
 require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
 require_once 'include/modules/clsModulesItinerarioTransporteEscolar.inc.php';
 
-class clsIndexBase extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Itinerário" );
-		$this->processoAp = "21238";
-	}
-}
-
 class indice extends clsCadastro
 {
 	/**
@@ -225,8 +216,11 @@ class indice extends clsCadastro
 }
 
 // cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
+$pagina = new clsBase();
+
+$pagina->SetTitulo( "{$pagina->_instituicao} i-Educar - Itinerário" );
+$pagina->processoAp = "21238";
+	// cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
 $pagina->addForm( $miolo );

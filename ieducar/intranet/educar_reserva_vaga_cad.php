@@ -33,14 +33,6 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
-class clsIndexBase extends clsBase
-{
-  function Formular() {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Reserva Vaga');
-    $this->processoAp = '639';
-  }
-}
-
 class indice extends clsCadastro
 {
   /**
@@ -158,8 +150,11 @@ class indice extends clsCadastro
 }
 
 // Instancia objeto de página
-$pagina = new clsIndexBase();
+$pagina = new clsBase();
 
+    $pagina->SetTitulo($pagina->_instituicao . ' i-Educar - Reserva Vaga');
+    $pagina->processoAp = '639';
+  
 // Instancia objeto de conteúdo
 $miolo = new indice();
 

@@ -32,27 +32,6 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 
 /**
- * clsIndex class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
- * @version   @@package_version@@
- */
-class clsIndex extends clsBase
-{
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Listagem de Ruas');
-    $this->processoAp         = 0;
-    $this->renderMenu         = FALSE;
-    $this->renderMenuSuspenso = FALSE;
-  }
-}
-
-/**
  * miolo1 class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
@@ -243,8 +222,13 @@ class miolo1 extends clsListagem
 }
 
 // Instancia objeto de página
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+    $pagina->SetTitulo($pagina->_instituicao . ' i-Educar - Listagem de Ruas');
+    $pagina->processoAp         = 0;
+    $pagina->renderMenu         = FALSE;
+    $pagina->renderMenuSuspenso = FALSE;
+  
 // Instancia objeto de conteúdo
 $miolo = new miolo1();
 

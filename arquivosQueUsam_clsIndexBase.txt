@@ -1,0 +1,6981 @@
+Pra gerar esse arquivo, iterei entre todos os arquivos dentro de intranet que tinham a extensao php
+Apliquei o regex: class\s*clsIndex(Base)?\s*extends\s*clsBase\s*\{.*?\}\s*class
+Isso pega todas as declaracoes clsIndex ou clsIndexBase
+Por fim, imprimi o nome do arquivo e a sua classe IndexBase
+Repare que alguns arquivos usam outras coisas alem do titulo e processoAp
+
+
+array(479) {
+  ["acesso_indevido_det.php"]=>
+  array(1) {
+    [0]=>
+    string(162) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Acesso indevido" );
+		$this->processoAp = "244";
+	}
+}
+
+class"
+  }
+  ["acesso_indevido_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(161) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Acesso indevido" );
+		$this->processoAp = "244";
+	}
+}
+class"
+  }
+  ["acoes_acao_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(234) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Sistema de Cadastro de Aï¿½ï¿½es do Governo - Cadastro de a&ccedil;&otilde;es do Governo" );
+		$this->processoAp = "551";
+
+	}
+}
+
+class"
+  }
+  ["acoes_acao_destaque.php"]=>
+  array(1) {
+    [0]=>
+    string(279) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+		$this->SetTitulo( "{$this->_instituicao} Sistema de Cadastro de A&ccedil;&oatilde;es do Governo - Categorias!" );
+		$this->processoAp = "551";
+	}
+}
+
+class"
+  }
+  ["acoes_acao_det.php"]=>
+  array(1) {
+    [0]=>
+    string(252) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "Prefeitura de Itaja&iacute;- Sistema de Cadastro de A&ccedil;&oatilde;es do Governo - Detalhe de a&ccedil;&otilde;es do Governo!" );
+		$this->processoAp = "551";
+	}
+}
+
+class"
+  }
+  ["acoes_acao_incluir_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(285) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+		$this->SetTitulo( "{$this->_instituicao} Sistema de Cadastro de A&ccedil;&oatilde;es do Governo - Inclusão de ação!" );
+		$this->processoAp = "551";
+	}
+}
+
+class"
+  }
+  ["acoes_acao_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(229) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Sistema de Cadastro de Ações do Governo - Listagem de a&ccedil;&otilde;es do Governo" );
+		$this->processoAp = "551";
+	}
+}
+
+class"
+  }
+  ["acoes_arquivo.php"]=>
+  array(1) {
+    [0]=>
+    string(277) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+		$this->SetTitulo( "{$this->_instituicao} Sistema de Cadastro de A&ccedil;&oatilde;es do Governo - Arquivos!" );
+		$this->processoAp = "551";
+	}
+}
+
+class"
+  }
+  ["acoes_categoria.php"]=>
+  array(1) {
+    [0]=>
+    string(279) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+		$this->SetTitulo( "{$this->_instituicao} Sistema de Cadastro de A&ccedil;&oatilde;es do Governo - Categorias!" );
+		$this->processoAp = "551";
+	}
+}
+
+class"
+  }
+  ["acoes_categoria_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(209) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Sistema de Cadastro de Ações do Governo - Cadastro de Categorias" );
+		$this->processoAp = "552";
+	}
+}
+
+class"
+  }
+  ["acoes_categoria_det.php"]=>
+  array(1) {
+    [0]=>
+    string(210) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Sistema de Cadastro de Ações do Governo - Detalhe de Categorias" );
+		$this->processoAp = "552";
+	}
+}
+
+class"
+  }
+  ["acoes_categoria_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(209) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Sistema de Cadastro de Ações do Governo - Listagem de Categorias" );
+		$this->processoAp = "552";
+	}
+}
+
+class"
+  }
+  ["acoes_foto.php"]=>
+  array(1) {
+    [0]=>
+    string(274) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+		$this->SetTitulo( "{$this->_instituicao} Sistema de Cadastro de A&ccedil;&oatilde;es do Governo - Fotos!" );
+		$this->processoAp = "551";
+	}
+}
+
+class"
+  }
+  ["acoes_foto_portal.php"]=>
+  array(1) {
+    [0]=>
+    string(217) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+	
+		$this->SetTitulo( "{$this->_instituicao} Sistema de Cadastro de A&ccedil;&oatilde;es do Governo - Fotos Portal!" );
+		$this->processoAp = "551";
+	}
+}
+
+class"
+  }
+  ["acoes_noticia.php"]=>
+  array(1) {
+    [0]=>
+    string(213) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+	
+		$this->SetTitulo( "{$this->_instituicao} Sistema de Cadastro de A&ccedil;&oatilde;es do Governo - Noticias!" );
+		$this->processoAp = "551";
+	}
+}
+
+class"
+  }
+  ["acoes_pesquisa_noticia.php"]=>
+  array(1) {
+    [0]=>
+    string(235) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Noticias do Portal!" );
+		$this->processoAp = "551";
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+		
+	}
+}
+
+class"
+  }
+  ["acoes_setor.php"]=>
+  array(1) {
+    [0]=>
+    string(274) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+		$this->SetTitulo( "{$this->_instituicao} Sistema de Cadastro de A&ccedil;&oatilde;es do Governo - Setor!" );
+		$this->processoAp = "551";
+	}
+}
+
+class"
+  }
+  ["acoes_setor_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(206) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Sistema de Cadastro de Ações do Governo - Cadastro de setores" );
+		$this->processoAp = "553";
+	}
+}
+
+class"
+  }
+  ["acoes_setor_det.php"]=>
+  array(1) {
+    [0]=>
+    string(207) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Sistema de Cadastro de Ações do Governo - Detalhe de setores" );
+		$this->processoAp = "553";
+	}
+}
+
+class"
+  }
+  ["acoes_setor_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(206) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Sistema de Cadastro de Ações do Governo - Listagem de setores" );
+		$this->processoAp = "553";
+	}
+}
+
+class"
+  }
+  ["add_fotos.php"]=>
+  array(1) {
+    [0]=>
+    string(180) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Fotos!" );
+		$this->processoAp = "0";
+		$this->renderMenu = false;
+	}
+}
+
+class"
+  }
+  ["add_fotos_evento.php"]=>
+  array(1) {
+    [0]=>
+    string(180) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Fotos!" );
+		$this->processoAp = "0";
+		$this->renderMenu = false;
+	}
+}
+
+class"
+  }
+  ["add_noticias.php"]=>
+  array(1) {
+    [0]=>
+    string(181) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Fotos!" );
+		$this->processoAp = "26";
+		$this->renderMenu = false;
+	}
+}
+
+class"
+  }
+  ["adicionar_documentos_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(247) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Adicionar Documentos" );
+		$this->processoAp = "0"; //nao alterar, paginas com ap diferentes chamam essa
+		$this->renderMenu = false;
+
+	}
+}
+
+class"
+  }
+  ["adicionar_documentos_det.php"]=>
+  array(1) {
+    [0]=>
+    string(128) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Documentos" );
+	}
+}
+
+class"
+  }
+  ["administracao_estrutura.php"]=>
+  array(1) {
+    [0]=>
+    string(172) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Estrutura de Secretarias!" );
+		$this->processoAp = "170";
+	}
+}
+
+class"
+  }
+  ["agenda.php"]=>
+  array(1) {
+    [0]=>
+    string(226) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Agenda Particular" );
+		$this->processoAp = "345";
+		$this->addEstilo( "agenda" );
+		$this->addScript( "agenda" );
+	}
+}
+
+class"
+  }
+  ["agenda_admin_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(152) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Agenda" );
+		$this->processoAp = "343";
+	}
+}
+
+class"
+  }
+  ["agenda_admin_det.php"]=>
+  array(1) {
+    [0]=>
+    string(153) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Agenda" );
+		$this->processoAp = "343";
+	}
+}
+
+class"
+  }
+  ["agenda_admin_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(211) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Agenda" );
+		$this->processoAp = "343";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["agenda_imprimir.php"]=>
+  array(1) {
+    [0]=>
+    string(152) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Agenda" );
+		$this->processoAp = "345";
+	}
+}
+
+class"
+  }
+  ["agenda_preferencias.php"]=>
+  array(1) {
+    [0]=>
+    string(168) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Agenda - Preferencias" );
+		$this->processoAp = "345";
+	}
+}
+
+class"
+  }
+  ["agenda_responsavel.php"]=>
+  array(1) {
+    [0]=>
+    string(211) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Agenda" );
+		$this->processoAp = "341";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["atendidos_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(138) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "Pessoas Físicas" );
+		$this->processoAp = "43";
+	}
+}
+
+class"
+  }
+  ["banner_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(153) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Banner!" );
+		$this->processoAp = "89";
+	}
+}
+
+class"
+  }
+  ["banner_det.php"]=>
+  array(1) {
+    [0]=>
+    string(152) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Banner" );
+		$this->processoAp = "89";
+	}
+}
+
+class"
+  }
+  ["banner_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(153) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Banner!" );
+		$this->processoAp = "89";
+	}
+}
+
+class"
+  }
+  ["compras_funcionarios_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(172) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Licita&ccedil;&otilde;es!" );
+		$this->processoAp = "137";
+	}
+}
+
+class"
+  }
+  ["compras_funcionarios_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(169) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Compras - Funcionários" );
+		$this->processoAp = "137";
+	}
+}
+
+class"
+  }
+  ["concursos_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(159) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Publicações!" );
+		$this->processoAp = "209";
+	}
+}
+
+class"
+  }
+  ["concursos_det.php"]=>
+  array(1) {
+    [0]=>
+    string(158) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Publicações!" );
+		$this->processoAp = "209";
+	}
+}
+
+class"
+  }
+  ["concursos_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(158) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Publicações!" );
+		$this->processoAp = "209";
+	}
+}
+
+class"
+  }
+  ["conexoes_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(156) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Conexões!" );
+		$this->processoAp = "157";
+	}
+}
+
+class"
+  }
+  ["conexoes_todos_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(155) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Conexões!" );
+		$this->processoAp = "158";
+	}
+}
+
+class"
+  }
+  ["controlesis_acontecimento_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(162) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Acontecimento" );
+		$this->processoAp = "605";
+	}
+}
+
+class"
+  }
+  ["controlesis_acontecimento_det.php"]=>
+  array(1) {
+    [0]=>
+    string(162) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Acontecimento" );
+		$this->processoAp = "605";
+	}
+}
+
+class"
+  }
+  ["controlesis_acontecimento_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(162) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Acontecimento" );
+		$this->processoAp = "605";
+	}
+}
+
+class"
+  }
+  ["controlesis_artigo_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(161) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "Prefeitura de Itaja&iacute; - Artigo" );
+		$this->processoAp = "0";
+	}
+}
+
+class"
+  }
+  ["controlesis_artigo_det.php"]=>
+  array(1) {
+    [0]=>
+    string(161) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "Prefeitura de Itaja&iacute; - Artigo" );
+		$this->processoAp = "0";
+	}
+}
+
+class"
+  }
+  ["controlesis_artigo_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(161) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "Prefeitura de Itaja&iacute; - Artigo" );
+		$this->processoAp = "0";
+	}
+}
+
+class"
+  }
+  ["controlesis_itinerario_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(159) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Itinerario" );
+		$this->processoAp = "614";
+	}
+}
+
+class"
+  }
+  ["controlesis_itinerario_det.php"]=>
+  array(1) {
+    [0]=>
+    string(159) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Itinerario" );
+		$this->processoAp = "614";
+	}
+}
+
+class"
+  }
+  ["controlesis_itinerario_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(159) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Itinerario" );
+		$this->processoAp = "614";
+	}
+}
+
+class"
+  }
+  ["controlesis_menu_portal_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(160) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Menu Portal" );
+		$this->processoAp = "612";
+	}
+}
+
+class"
+  }
+  ["controlesis_menu_portal_det.php"]=>
+  array(1) {
+    [0]=>
+    string(160) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Menu Portal" );
+		$this->processoAp = "612";
+	}
+}
+
+class"
+  }
+  ["controlesis_menu_portal_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(160) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Menu Portal" );
+		$this->processoAp = "612";
+	}
+}
+
+class"
+  }
+  ["controlesis_portais_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(156) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Portais" );
+		$this->processoAp = "615";
+	}
+}
+
+class"
+  }
+  ["controlesis_portais_det.php"]=>
+  array(1) {
+    [0]=>
+    string(156) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Portais" );
+		$this->processoAp = "615";
+	}
+}
+
+class"
+  }
+  ["controlesis_portais_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(156) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Portais" );
+		$this->processoAp = "615";
+	}
+}
+
+class"
+  }
+  ["controlesis_servicos_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(157) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Serviços" );
+		$this->processoAp = "616";
+	}
+}
+
+class"
+  }
+  ["controlesis_servicos_det.php"]=>
+  array(1) {
+    [0]=>
+    string(157) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Serviços" );
+		$this->processoAp = "616";
+	}
+}
+
+class"
+  }
+  ["controlesis_servicos_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(157) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Serviços" );
+		$this->processoAp = "616";
+	}
+}
+
+class"
+  }
+  ["controlesis_sistema_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(156) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Sistema" );
+		$this->processoAp = "588";
+	}
+}
+
+class"
+  }
+  ["controlesis_sistema_det.php"]=>
+  array(1) {
+    [0]=>
+    string(156) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Sistema" );
+		$this->processoAp = "588";
+	}
+}
+
+class"
+  }
+  ["controlesis_sistema_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(156) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Sistema" );
+		$this->processoAp = "588";
+	}
+}
+
+class"
+  }
+  ["controlesis_software_alteracao_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(204) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "Prefeitura de Itaja&iacute; - Cadastro de Altera&ccedil;&atilde;o de Software" );
+		$this->processoAp = "794";
+	}
+}
+
+class"
+  }
+  ["controlesis_software_alteracao_det.php"]=>
+  array(1) {
+    [0]=>
+    string(200) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "Prefeitura de Itaja&iacute; - Detalhe Altera&ccedil;&atilde;o de Software" );
+		$this->processoAp = "794";
+	}
+}
+
+class"
+  }
+  ["controlesis_software_alteracao_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(204) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "Prefeitura de Itaja&iacute; - Listagem de Altera&ccedil;&atilde;o de Software" );
+		$this->processoAp = "794";
+	}
+}
+
+class"
+  }
+  ["controlesis_software_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(177) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "Prefeitura de Itaja&iacute; - Cadastro de Software" );
+		$this->processoAp = "793";
+	}
+}
+
+class"
+  }
+  ["controlesis_software_det.php"]=>
+  array(1) {
+    [0]=>
+    string(176) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "Prefeitura de Itaja&iacute; - Detalhe de Software" );
+		$this->processoAp = "793";
+	}
+}
+
+class"
+  }
+  ["controlesis_software_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(177) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "Prefeitura de Itaja&iacute; - Listagem de Software" );
+		$this->processoAp = "793";
+	}
+}
+
+class"
+  }
+  ["controlesis_software_patch_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(184) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "Prefeitura de Itaja&iacute; - Cadastro Patch de Software " );
+		$this->processoAp = "795";
+	}
+}
+
+class"
+  }
+  ["controlesis_software_patch_det.php"]=>
+  array(1) {
+    [0]=>
+    string(183) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "Prefeitura de Itaja&iacute; - Detalhe Patch de Software " );
+		$this->processoAp = "795";
+	}
+}
+
+class"
+  }
+  ["controlesis_software_patch_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(183) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "Prefeitura de Itaja&iacute; - Listagem Patch de Software" );
+		$this->processoAp = "795";
+	}
+}
+
+class"
+  }
+  ["controlesis_submenu_portal_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(163) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Submenu Portal" );
+		$this->processoAp = "613";
+	}
+}
+
+class"
+  }
+  ["controlesis_submenu_portal_det.php"]=>
+  array(1) {
+    [0]=>
+    string(163) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Submenu Portal" );
+		$this->processoAp = "613";
+	}
+}
+
+class"
+  }
+  ["controlesis_submenu_portal_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(164) "class clsIndexBase extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Submenu Portal" );
+		$this->processoAp = "613";
+	}
+}
+
+class"
+  }
+  ["controlesis_telefones_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(158) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Telefones" );
+		$this->processoAp = "611";
+	}
+}
+
+class"
+  }
+  ["controlesis_telefones_det.php"]=>
+  array(1) {
+    [0]=>
+    string(158) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Telefones" );
+		$this->processoAp = "611";
+	}
+}
+
+class"
+  }
+  ["controlesis_telefones_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(158) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Telefones" );
+		$this->processoAp = "611";
+	}
+}
+
+class"
+  }
+  ["controlesis_tipo_acontecimento_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(167) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Tipo Acontecimento" );
+		$this->processoAp = "604";
+	}
+}
+
+class"
+  }
+  ["controlesis_tipo_acontecimento_det.php"]=>
+  array(1) {
+    [0]=>
+    string(167) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Tipo Acontecimento" );
+		$this->processoAp = "604";
+	}
+}
+
+class"
+  }
+  ["controlesis_tipo_acontecimento_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(167) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Tipo Acontecimento" );
+		$this->processoAp = "604";
+	}
+}
+
+class"
+  }
+  ["controlesis_topo_portal_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(160) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Topo Portal" );
+		$this->processoAp = "694";
+	}
+}
+
+class"
+  }
+  ["controlesis_topo_portal_det.php"]=>
+  array(1) {
+    [0]=>
+    string(160) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Topo Portal" );
+		$this->processoAp = "694";
+	}
+}
+
+class"
+  }
+  ["controlesis_topo_portal_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(160) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Topo Portal" );
+		$this->processoAp = "694";
+	}
+}
+
+class"
+  }
+  ["diaria_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(152) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Diaria" );
+		$this->processoAp = "293";
+	}
+}
+
+class"
+  }
+  ["diaria_det.php"]=>
+  array(1) {
+    [0]=>
+    string(153) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Diaria" );
+		$this->processoAp = "293";
+	}
+}
+
+class"
+  }
+  ["diaria_grupo_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(159) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Diária Grupo" );
+		$this->processoAp = "297";
+	}
+}
+
+class"
+  }
+  ["diaria_grupo_det.php"]=>
+  array(1) {
+    [0]=>
+    string(159) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Diária Grupo" );
+		$this->processoAp = "297";
+	}
+}
+
+class"
+  }
+  ["diaria_grupo_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(217) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Diária Grupo" );
+		$this->processoAp = "297";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["diaria_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(211) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Diaria" );
+		$this->processoAp = "293";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["diaria_pdf.php"]=>
+  array(1) {
+    [0]=>
+    string(152) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Diaria" );
+		$this->processoAp = "293";
+	}
+}
+
+class"
+  }
+  ["diaria_rel_data.php"]=>
+  array(1) {
+    [0]=>
+    string(165) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Relatório de Diárias" );
+		$this->processoAp = "299";
+	}
+}
+
+class"
+  }
+  ["diaria_rel_data_secretaria.php"]=>
+  array(1) {
+    [0]=>
+    string(165) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Relatório de Diárias" );
+		$this->processoAp = "648";
+	}
+}
+
+class"
+  }
+  ["diaria_rel_funcionario.php"]=>
+  array(1) {
+    [0]=>
+    string(165) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Relatório de Diárias" );
+		$this->processoAp = "332";
+	}
+}
+
+class"
+  }
+  ["diaria_rel_secretaria.php"]=>
+  array(1) {
+    [0]=>
+    string(164) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Relatorio de Diária" );
+		$this->processoAp = "337";
+	}
+}
+
+class"
+  }
+  ["diaria_rel_valor.php"]=>
+  array(1) {
+    [0]=>
+    string(165) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Relatório de Diárias" );
+		$this->processoAp = "333";
+	}
+}
+
+class"
+  }
+  ["diaria_valores_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(161) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Diaria Valores" );
+		$this->processoAp = "295";
+	}
+}
+
+class"
+  }
+  ["diaria_valores_det.php"]=>
+  array(1) {
+    [0]=>
+    string(161) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Diaria Valores" );
+		$this->processoAp = "295";
+	}
+}
+
+class"
+  }
+  ["diaria_valores_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(161) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Diária Valores" );
+		$this->processoAp = "295";
+	}
+}
+
+class"
+  }
+  ["educar_abandono_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(205) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Transfer&ecirc;ncia Solicita&ccedil;&atilde;o" );
+		$this->processoAp = "578";
+	}
+}
+
+class"
+  }
+  ["educar_acervo_assunto_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(174) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Acervo Assunto" );
+		$this->processoAp = "592";
+	}
+}
+
+class"
+  }
+  ["educar_acervo_assunto_det.php"]=>
+  array(1) {
+    [0]=>
+    string(174) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Acervo Assunto" );
+		$this->processoAp = "592";
+	}
+}
+
+class"
+  }
+  ["educar_acervo_assunto_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(232) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Acervo Assunto" );
+		$this->processoAp = "592";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_acervo_autor_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(165) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Autor" );
+		$this->processoAp = "594";
+	}
+}
+
+class"
+  }
+  ["educar_acervo_autor_cad_pop.php"]=>
+  array(1) {
+    [0]=>
+    string(231) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Autor" );
+		$this->processoAp = "594";
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_acervo_autor_det.php"]=>
+  array(1) {
+    [0]=>
+    string(165) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Autor" );
+		$this->processoAp = "594";
+	}
+}
+
+class"
+  }
+  ["educar_acervo_autor_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(223) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Autor" );
+		$this->processoAp = "594";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_acervo_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(165) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Obras" );
+		$this->processoAp = "598";
+	}
+}
+
+class"
+  }
+  ["educar_acervo_colecao_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(181) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Cole&ccedil;&atilde;o" );
+		$this->processoAp = "593";
+	}
+}
+
+class"
+  }
+  ["educar_acervo_colecao_cad_pop.php"]=>
+  array(1) {
+    [0]=>
+    string(247) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Cole&ccedil;&atilde;o" );
+		$this->processoAp = "593";
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_acervo_colecao_det.php"]=>
+  array(1) {
+    [0]=>
+    string(180) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Cole&ccedil&atilde;o" );
+		$this->processoAp = "593";
+	}
+}
+
+class"
+  }
+  ["educar_acervo_colecao_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(238) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Cole&ccedil&atilde;o" );
+		$this->processoAp = "593";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_acervo_det.php"]=>
+  array(1) {
+    [0]=>
+    string(165) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Obras" );
+		$this->processoAp = "598";
+	}
+}
+
+class"
+  }
+  ["educar_acervo_editora_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(167) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Editora" );
+		$this->processoAp = "595";
+	}
+}
+
+class"
+  }
+  ["educar_acervo_editora_cad_pop.php"]=>
+  array(1) {
+    [0]=>
+    string(233) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Editora" );
+		$this->processoAp = "595";
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_acervo_editora_det.php"]=>
+  array(1) {
+    [0]=>
+    string(167) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Editora" );
+		$this->processoAp = "595";
+	}
+}
+
+class"
+  }
+  ["educar_acervo_editora_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(225) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Editora" );
+		$this->processoAp = "595";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_acervo_idioma_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(166) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Idioma" );
+		$this->processoAp = "590";
+	}
+}
+
+class"
+  }
+  ["educar_acervo_idioma_cad_pop.php"]=>
+  array(1) {
+    [0]=>
+    string(232) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Idioma" );
+		$this->processoAp = "590";
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_acervo_idioma_det.php"]=>
+  array(1) {
+    [0]=>
+    string(166) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Idioma" );
+		$this->processoAp = "590";
+	}
+}
+
+class"
+  }
+  ["educar_acervo_idioma_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(241) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Idioma" );
+		$this->processoAp = "590";
+                $this->addEstilo( "localizacaoSistema" );
+                
+	}
+}
+
+class"
+  }
+  ["educar_acervo_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(223) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Obras" );
+		$this->processoAp = "598";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_aluno_beneficio_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(182) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Benef&iacute;cio Aluno" );
+		$this->processoAp = "581";
+	}
+}
+
+class"
+  }
+  ["educar_aluno_beneficio_det.php"]=>
+  array(1) {
+    [0]=>
+    string(182) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Benef&iacute;cio Aluno" );
+		$this->processoAp = "581";
+	}
+}
+
+class"
+  }
+  ["educar_aluno_beneficio_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(182) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Benef&iacute;cio Aluno" );
+		$this->processoAp = "581";
+	}
+}
+
+class"
+  }
+  ["educar_aluno_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(230) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Aluno" );
+		$this->processoAp = "578";
+                $this->addEstilo( "localizacaoSistema" );
+        }
+}
+
+class"
+  }
+  ["educar_alunos_defasados_nominal.php"]=>
+  array(1) {
+    [0]=>
+    string(189) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Movimentação Mensal de Alunos" );
+		$this->processoAp = "944";
+	}
+}
+
+class"
+  }
+  ["educar_avaliacao_desempenho_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(194) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Avalia&ccedil;&atilde;o Desempenho" );
+		$this->processoAp = "635";
+	}
+}
+
+class"
+  }
+  ["educar_avaliacao_desempenho_det.php"]=>
+  array(1) {
+    [0]=>
+    string(194) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Avalia&ccedil;&atilde;o Desempenho" );
+		$this->processoAp = "635";
+	}
+}
+
+class"
+  }
+  ["educar_avaliacao_desempenho_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(194) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Avalia&ccedil;&atilde;o Desempenho" );
+		$this->processoAp = "635";
+	}
+}
+
+class"
+  }
+  ["educar_avancar_mod_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(163) "class clsIndexBase extends clsBase
+{
+  function Formular()
+  {
+    $this->SetTitulo($this->_instituicao . ' i-Educar');
+    $this->processoAp = '561';
+  }
+}
+
+class"
+  }
+  ["educar_biblioteca_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(170) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Biblioteca" );
+		$this->processoAp = "591";
+	}
+}
+
+class"
+  }
+  ["educar_biblioteca_dados_cad_.php"]=>
+  array(1) {
+    [0]=>
+    string(176) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Dados Biblioteca" );
+		$this->processoAp = "629";
+	}
+}
+
+class"
+  }
+  ["educar_biblioteca_dados_det.php"]=>
+  array(1) {
+    [0]=>
+    string(176) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Dados Biblioteca" );
+		$this->processoAp = "629";
+	}
+}
+
+class"
+  }
+  ["educar_biblioteca_dados_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(234) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Dados Biblioteca" );
+		$this->processoAp = "629";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_biblioteca_det.php"]=>
+  array(1) {
+    [0]=>
+    string(170) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Biblioteca" );
+		$this->processoAp = "591";
+	}
+}
+
+class"
+  }
+  ["educar_biblioteca_index.php"]=>
+  array(1) {
+    [0]=>
+    string(154) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar" );
+		$this->processoAp = "625";
+	}
+}
+
+class"
+  }
+  ["educar_biblioteca_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(228) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Biblioteca" );
+		$this->processoAp = "591";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_biblioteca_tipo_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(170) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Biblioteca" );
+		$this->processoAp = "591";
+	}
+}
+
+class"
+  }
+  ["educar_calendario_ano_letivo_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(181) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Calendario Ano Letivo" );
+		$this->processoAp = "620";
+	}
+}
+
+class"
+  }
+  ["educar_calendario_anotacao_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(179) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Calendario Anotacao" );
+		$this->processoAp = "620";
+	}
+}
+
+class"
+  }
+  ["educar_calendario_anotacao_det.php"]=>
+  array(1) {
+    [0]=>
+    string(179) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Calendario Anotacao" );
+		$this->processoAp = "620";
+	}
+}
+
+class"
+  }
+  ["educar_calendario_anotacao_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(179) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Calendario Anotacao" );
+		$this->processoAp = "620";
+	}
+}
+
+class"
+  }
+  ["educar_calendario_dia_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(174) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Calendario Dia" );
+		$this->processoAp = "621";
+	}
+}
+
+class"
+  }
+  ["educar_calendario_dia_motivo_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(188) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Calend&aacute;rio Dia Motivo" );
+		$this->processoAp = "576";
+	}
+}
+
+class"
+  }
+  ["educar_calendario_dia_motivo_det.php"]=>
+  array(1) {
+    [0]=>
+    string(188) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Calend&aacute;rio Dia Motivo" );
+		$this->processoAp = "576";
+	}
+}
+
+class"
+  }
+  ["educar_calendario_dia_motivo_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(188) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Calend&aacute;rio Dia Motivo" );
+		$this->processoAp = "576";
+	}
+}
+
+class"
+  }
+  ["educar_categoria_nivel_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(191) "class clsIndexBase extends clsBase
+{
+  public function Formular() {
+    $this->SetTitulo($this->_instituicao . 'Cadastro Categoria N&iacute;vel');
+    $this->processoAp = '829';
+  }
+}
+
+
+class"
+  }
+  ["educar_categoria_nivel_det.php"]=>
+  array(1) {
+    [0]=>
+    string(190) "class clsIndexBase extends clsBase
+{
+  public function Formular() {
+    $this->SetTitulo($this->_instituicao . 'Detalhe Categoria N&iacute;vel');
+    $this->processoAp = "829";
+  }
+}
+
+
+class"
+  }
+  ["educar_categoria_nivel_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(191) "class clsIndexBase extends clsBase
+{
+  public function Formular() {
+    $this->SetTitulo($this->_instituicao . 'Listagem Categoria N&iacute;vel');
+    $this->processoAp = '829';
+  }
+}
+
+
+class"
+  }
+  ["educar_cliente_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(167) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Cliente" );
+		$this->processoAp = "603";
+	}
+}
+
+class"
+  }
+  ["educar_cliente_det.php"]=>
+  array(1) {
+    [0]=>
+    string(167) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Cliente" );
+		$this->processoAp = "603";
+	}
+}
+
+class"
+  }
+  ["educar_cliente_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(225) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Cliente" );
+		$this->processoAp = "603";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_cliente_tipo_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(172) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Cliente" );
+		$this->processoAp = "596";
+	}
+}
+
+class"
+  }
+  ["educar_cliente_tipo_det.php"]=>
+  array(1) {
+    [0]=>
+    string(173) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Cliente " );
+		$this->processoAp = "596";
+	}
+}
+
+class"
+  }
+  ["educar_cliente_tipo_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(231) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Cliente " );
+		$this->processoAp = "596";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_coffebreak_tipo_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(175) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Coffebreak Tipo" );
+		$this->processoAp = "564";
+	}
+}
+
+class"
+  }
+  ["educar_coffebreak_tipo_det.php"]=>
+  array(1) {
+    [0]=>
+    string(175) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Coffebreak Tipo" );
+		$this->processoAp = "564";
+	}
+}
+
+class"
+  }
+  ["educar_coffebreak_tipo_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(177) "class clsIndexBase extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Coffebreak" );
+		$this->processoAp = "564";
+	}
+}
+
+class"
+  }
+  ["educar_curso_cad_v.php"]=>
+  array(1) {
+    [0]=>
+    string(163) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Curso" );
+		$this->processoAp = "0";
+	}
+}
+
+class"
+  }
+  ["educar_curso_det_v.php"]=>
+  array(1) {
+    [0]=>
+    string(163) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Curso" );
+		$this->processoAp = "0";
+	}
+}
+
+class"
+  }
+  ["educar_curso_lst_v.php"]=>
+  array(1) {
+    [0]=>
+    string(163) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Curso" );
+		$this->processoAp = "0";
+	}
+}
+
+class"
+  }
+  ["educar_deficiencia_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(177) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Defici&ecirc;ncia" );
+		$this->processoAp = "631";
+	}
+}
+
+class"
+  }
+  ["educar_deficiencia_cad_pop.php"]=>
+  array(1) {
+    [0]=>
+    string(274) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Defici&ecirc;ncia" );
+		$this->processoAp = "631";
+		$this->renderBanner = false;
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_deficiencia_det.php"]=>
+  array(1) {
+    [0]=>
+    string(177) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Defici&ecirc;ncia" );
+		$this->processoAp = "631";
+	}
+}
+
+class"
+  }
+  ["educar_deficiencia_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(235) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Defici&ecirc;ncia" );
+		$this->processoAp = "631";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_define_status_cliente_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(167) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Cliente" );
+		$this->processoAp = "603";
+	}
+}
+
+class"
+  }
+  ["educar_definir_cliente_tipo_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(167) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Cliente" );
+		$this->processoAp = "623";
+	}
+}
+
+class"
+  }
+  ["educar_definir_cliente_tipo_det.php"]=>
+  array(1) {
+    [0]=>
+    string(167) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Cliente" );
+		$this->processoAp = "623";
+	}
+}
+
+class"
+  }
+  ["educar_definir_cliente_tipo_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(167) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Cliente" );
+		$this->processoAp = "623";
+	}
+}
+
+class"
+  }
+  ["educar_disciplina_topico_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(184) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Disciplina T&oacute;pico" );
+		$this->processoAp = "565";
+	}
+}
+
+class"
+  }
+  ["educar_disciplina_topico_det.php"]=>
+  array(1) {
+    [0]=>
+    string(184) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Disciplina T&oacute;pico" );
+		$this->processoAp = "565";
+	}
+}
+
+class"
+  }
+  ["educar_disciplina_topico_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(186) "class clsIndexBase extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Disciplina T&oacute;pico" );
+		$this->processoAp = "565";
+	}
+}
+
+class"
+  }
+  ["educar_escola_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(166) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Escola" );
+		$this->processoAp = "561";
+	}
+}
+
+class"
+  }
+  ["educar_escola_cad_.php"]=>
+  array(1) {
+    [0]=>
+    string(166) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Escola" );
+		$this->processoAp = "561";
+	}
+}
+
+class"
+  }
+  ["educar_escola_det.php"]=>
+  array(1) {
+    [0]=>
+    string(166) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Escola" );
+		$this->processoAp = "561";
+	}
+}
+
+class"
+  }
+  ["educar_escola_localizacao_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(192) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Escola Localiza&ccedil;&atilde;o" );
+		$this->processoAp = "562";
+	}
+}
+
+class"
+  }
+  ["educar_escola_localizacao_cad_pop.php"]=>
+  array(1) {
+    [0]=>
+    string(289) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Escola Localiza&ccedil;&atilde;o" );
+		$this->processoAp = "562";
+		$this->renderBanner = false;
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_escola_localizacao_det.php"]=>
+  array(1) {
+    [0]=>
+    string(192) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Escola Localiza&ccedil;&atilde;o" );
+		$this->processoAp = "562";
+	}
+}
+
+class"
+  }
+  ["educar_escola_localizacao_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(192) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Escola Localiza&ccedil;&atilde;o" );
+		$this->processoAp = "562";
+	}
+}
+
+class"
+  }
+  ["educar_escola_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(225) "class clsIndexBase extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Escola" );
+		$this->processoAp = "561";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_escola_rede_ensino_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(178) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Escola Rede Ensino" );
+		$this->processoAp = "647";
+	}
+}
+
+class"
+  }
+  ["educar_escola_rede_ensino_cad_pop.php"]=>
+  array(1) {
+    [0]=>
+    string(275) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Escola Rede Ensino" );
+		$this->processoAp = "647";
+		$this->renderBanner = false;
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_escola_rede_ensino_det.php"]=>
+  array(1) {
+    [0]=>
+    string(178) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Escola Rede Ensino" );
+		$this->processoAp = "647";
+	}
+}
+
+class"
+  }
+  ["educar_escola_rede_ensino_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(178) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Escola Rede Ensino" );
+		$this->processoAp = "647";
+	}
+}
+
+class"
+  }
+  ["educar_escolaridade_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(178) "class clsIndexBase extends clsBase
+{
+  function Formular()
+  {
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Escolaridade');
+    $this->processoAp = '632';
+  }
+}
+
+class"
+  }
+  ["educar_escolaridade_cad_pop.php"]=>
+  array(1) {
+    [0]=>
+    string(269) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Escolaridade" );
+		$this->processoAp = "632";
+		$this->renderBanner = false;
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_escolaridade_det.php"]=>
+  array(1) {
+    [0]=>
+    string(178) "class clsIndexBase extends clsBase
+{
+  function Formular()
+  {
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Escolaridade');
+    $this->processoAp = '632';
+  }
+}
+
+class"
+  }
+  ["educar_escolaridade_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(176) "class clsIndexBase extends clsBase
+{
+  function Formular() {
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Escolaridade');
+    $this->processoAp = '632';
+  }
+}
+
+class"
+  }
+  ["educar_exemplar_baixa.php"]=>
+  array(1) {
+    [0]=>
+    string(168) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Exemplar" );
+		$this->processoAp = "606";
+	}
+}
+
+class"
+  }
+  ["educar_exemplar_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(168) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Exemplar" );
+		$this->processoAp = "606";
+	}
+}
+
+class"
+  }
+  ["educar_exemplar_det.php"]=>
+  array(1) {
+    [0]=>
+    string(168) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Exemplar" );
+		$this->processoAp = "606";
+	}
+}
+
+class"
+  }
+  ["educar_exemplar_devolucao_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(192) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Exemplar Devolu&ccedil;&atilde;o" );
+		$this->processoAp = "628";
+	}
+}
+
+class"
+  }
+  ["educar_exemplar_devolucao_det.php"]=>
+  array(1) {
+    [0]=>
+    string(192) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Exemplar Devolu&ccedil;&atilde;o" );
+		$this->processoAp = "628";
+	}
+}
+
+class"
+  }
+  ["educar_exemplar_devolucao_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(250) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Exemplar Devolu&ccedil;&atilde;o" );
+		$this->processoAp = "628";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_exemplar_emprestimo_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(186) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Exemplar Empr&eacute;stimo" );
+		$this->processoAp = "610";
+	}
+}
+
+class"
+  }
+  ["educar_exemplar_emprestimo_det.php"]=>
+  array(1) {
+    [0]=>
+    string(186) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Exemplar Empr&eacute;stimo" );
+		$this->processoAp = "610";
+	}
+}
+
+class"
+  }
+  ["educar_exemplar_emprestimo_login_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(177) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Empr&eacute;stimo" );
+		$this->processoAp = "610";
+	}
+}
+
+class"
+  }
+  ["educar_exemplar_emprestimo_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(186) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Exemplar Empr&eacute;stimo" );
+		$this->processoAp = "610";
+	}
+}
+
+class"
+  }
+  ["educar_exemplar_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(226) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Exemplar" );
+		$this->processoAp = "606";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_exemplar_tipo_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(173) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Exemplar" );
+		$this->processoAp = "597";
+	}
+}
+
+class"
+  }
+  ["educar_exemplar_tipo_det.php"]=>
+  array(1) {
+    [0]=>
+    string(173) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Exemplar" );
+		$this->processoAp = "597";
+	}
+}
+
+class"
+  }
+  ["educar_exemplar_tipo_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(231) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Exemplar" );
+		$this->processoAp = "597";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_falta_aluno_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(169) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Falta Aluno" );
+		$this->processoAp = "0";
+	}
+}
+
+class"
+  }
+  ["educar_falta_nota_aluno_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(178) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Faltas/Notas Aluno" );
+		$this->processoAp = "642";
+	}
+}
+
+class"
+  }
+  ["educar_falta_nota_aluno_det.php"]=>
+  array(1) {
+    [0]=>
+    string(178) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Faltas/Notas Aluno" );
+		$this->processoAp = "642";
+	}
+}
+
+class"
+  }
+  ["educar_fonte_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(165) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Fonte" );
+		$this->processoAp = "608";
+	}
+}
+
+class"
+  }
+  ["educar_fonte_det.php"]=>
+  array(1) {
+    [0]=>
+    string(165) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Fonte" );
+		$this->processoAp = "608";
+	}
+}
+
+class"
+  }
+  ["educar_fonte_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(223) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Fonte" );
+		$this->processoAp = "608";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_funcao_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(190) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar -  Fun&ccedil;&atilde;o Servidor" );
+		$this->processoAp = "634";
+	}
+}
+
+class"
+  }
+  ["educar_funcao_det.php"]=>
+  array(1) {
+    [0]=>
+    string(190) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar -  Fun&ccedil;&atilde;o Servidor" );
+		$this->processoAp = "634";
+	}
+}
+
+class"
+  }
+  ["educar_funcao_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(189) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Fun&ccedil;&atilde;o Servidor" );
+		$this->processoAp = "634";
+	}
+}
+
+class"
+  }
+  ["educar_habilitacao_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(185) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Habilita&ccedil;&atilde;o" );
+		$this->processoAp = "573";
+	}
+}
+
+class"
+  }
+  ["educar_habilitacao_cad_pop.php"]=>
+  array(1) {
+    [0]=>
+    string(282) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Habilita&ccedil;&atilde;o" );
+		$this->processoAp = "573";
+		$this->renderBanner = false;
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_habilitacao_det.php"]=>
+  array(1) {
+    [0]=>
+    string(185) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Habilita&ccedil;&atilde;o" );
+		$this->processoAp = "573";
+	}
+}
+
+class"
+  }
+  ["educar_habilitacao_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(185) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Habilita&ccedil;&atilde;o" );
+		$this->processoAp = "573";
+	}
+}
+
+class"
+  }
+  ["educar_historico_escolar_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(184) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Hist&oacute;rico Escolar" );
+		$this->processoAp = "578";
+	}
+}
+
+class"
+  }
+  ["educar_historico_escolar_det.php"]=>
+  array(1) {
+    [0]=>
+    string(184) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Hist&oacute;rico Escolar" );
+		$this->processoAp = "578";
+	}
+}
+
+class"
+  }
+  ["educar_historico_escolar_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(184) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Hist&oacute;rico Escolar" );
+		$this->processoAp = "578";
+	}
+}
+
+class"
+  }
+  ["educar_index.php"]=>
+  array(1) {
+    [0]=>
+    string(154) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar" );
+		$this->processoAp = "624";
+	}
+}
+
+class"
+  }
+  ["educar_infra_comodo_funcao_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(194) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Fun&ccedil;&atilde;o C&ocirc;modo " );
+		$this->processoAp = "572";
+	}
+}
+
+class"
+  }
+  ["educar_infra_comodo_funcao_cad_pop.php"]=>
+  array(1) {
+    [0]=>
+    string(291) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Fun&ccedil;&atilde;o C&ocirc;modo " );
+		$this->processoAp = "572";
+		$this->renderBanner = false;
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_infra_comodo_funcao_det.php"]=>
+  array(1) {
+    [0]=>
+    string(193) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Fun&ccedil;&atilde;o C&ocirc;modo" );
+		$this->processoAp = "572";
+	}
+}
+
+class"
+  }
+  ["educar_infra_comodo_funcao_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(251) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Fun&ccedil;&atilde;o C&ocirc;modo" );
+		$this->processoAp = "572";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_infra_predio_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(172) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Infra Predio" );
+		$this->processoAp = "567";
+	}
+}
+
+class"
+  }
+  ["educar_infra_predio_cad_pop.php"]=>
+  array(1) {
+    [0]=>
+    string(269) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Infra Predio" );
+		$this->processoAp = "567";
+		$this->renderBanner = false;
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_infra_predio_comodo_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(186) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - C&ocirc;modo Pr&eacute;dio" );
+		$this->processoAp = "574";
+	}
+}
+
+class"
+  }
+  ["educar_infra_predio_comodo_det.php"]=>
+  array(1) {
+    [0]=>
+    string(186) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - C&ocirc;modo Pr&eacute;dio" );
+		$this->processoAp = "574";
+	}
+}
+
+class"
+  }
+  ["educar_infra_predio_comodo_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(245) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - C&ocirc;modo Pr&eacute;dio " );
+		$this->processoAp = "574";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_infra_predio_det.php"]=>
+  array(1) {
+    [0]=>
+    string(172) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Infra Predio" );
+		$this->processoAp = "567";
+	}
+}
+
+class"
+  }
+  ["educar_infra_predio_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(230) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Infra Predio" );
+		$this->processoAp = "567";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_iniciar_ano_letivo.php"]=>
+  array(1) {
+    [0]=>
+    string(188) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Iniciar/Finalizar Ano Letivo" );
+		$this->processoAp = "561";
+	}
+}
+
+class"
+  }
+  ["educar_instituicao_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(185) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Institui&ccedil;&atilde;o" );
+		$this->processoAp = "559";
+	}
+}
+
+class"
+  }
+  ["educar_instituicao_det.php"]=>
+  array(1) {
+    [0]=>
+    string(185) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Institui&ccedil;&atilde;o" );
+		$this->processoAp = "559";
+	}
+}
+
+class"
+  }
+  ["educar_instituicao_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(230) "class clsIndexBase extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Instituicao" );
+		$this->processoAp = "559";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_material_didatico_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(184) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Material Did&aacute;tico" );
+		$this->processoAp = "569";
+	}
+}
+
+class"
+  }
+  ["educar_material_didatico_det.php"]=>
+  array(1) {
+    [0]=>
+    string(184) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Material Did&aacute;tico" );
+		$this->processoAp = "569";
+	}
+}
+
+class"
+  }
+  ["educar_material_didatico_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(242) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Material Did&aacute;tico" );
+		$this->processoAp = "569";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_material_tipo_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(189) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Material Did&aacute;tico" );
+		$this->processoAp = "563";
+	}
+}
+
+class"
+  }
+  ["educar_material_tipo_cad_pop.php"]=>
+  array(1) {
+    [0]=>
+    string(286) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Material Did&aacute;tico" );
+		$this->processoAp = "563";
+		$this->renderBanner = false;
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_material_tipo_det.php"]=>
+  array(1) {
+    [0]=>
+    string(189) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Material Did&aacute;tico" );
+		$this->processoAp = "563";
+	}
+}
+
+class"
+  }
+  ["educar_material_tipo_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(397) "class clsIndexBase extends clsBase
+{
+
+	function Formular()
+	{
+		if($_GET["ativo"]== "excluido")
+			$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Material Did&aacute;tico Exclu&iacute;dos" );
+		else
+			$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Material Did&aacute;tico" );
+
+		$this->processoAp = "563";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_matricula_abandono_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(178) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Abandono Matrícula" );
+		$this->processoAp = "578";
+	}
+}
+
+class"
+  }
+  ["educar_matricula_formando_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(175) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Matricula Turma" );
+		$this->processoAp = "578";
+	}
+}
+
+class"
+  }
+  ["educar_matricula_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(176) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Matr&iacute;cula" );
+		$this->processoAp = "578";
+	}
+}
+
+class"
+  }
+  ["educar_matricula_ocorrencia_disciplinar_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(188) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Ocorr&ecirc;ncia Disciplinar" );
+		$this->processoAp = "578";
+	}
+}
+
+class"
+  }
+  ["educar_matricula_ocorrencia_disciplinar_det.php"]=>
+  array(1) {
+    [0]=>
+    string(188) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Ocorr&ecirc;ncia Disciplinar" );
+		$this->processoAp = "578";
+	}
+}
+
+class"
+  }
+  ["educar_matricula_ocorrencia_disciplinar_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(188) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Ocorr&ecirc;ncia Disciplinar" );
+		$this->processoAp = "578";
+	}
+}
+
+class"
+  }
+  ["educar_matricula_reclassificar_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(190) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Reclassificar Matr&iacute;cula" );
+		$this->processoAp = "578";
+	}
+}
+
+class"
+  }
+  ["educar_matriculas_turma_det.php"]=>
+  array(1) {
+    [0]=>
+    string(176) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Matriculas Turma" );
+		$this->processoAp = "659";
+	}
+}
+
+class"
+  }
+  ["educar_matriculas_turma_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(184) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Matr&iacute;culas Turmas" );
+		$this->processoAp = "659";
+	}
+}
+
+class"
+  }
+  ["educar_modulo_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(173) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - M&oacute;dulo" );
+		$this->processoAp = "584";
+	}
+}
+
+class"
+  }
+  ["educar_modulo_det.php"]=>
+  array(1) {
+    [0]=>
+    string(173) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - M&oacute;dulo" );
+		$this->processoAp = "584";
+	}
+}
+
+class"
+  }
+  ["educar_modulo_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(231) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - M&oacute;dulo" );
+		$this->processoAp = "584";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_motivo_afastamento_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(178) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Afastamento" );
+		$this->processoAp = "633";
+	}
+}
+
+class"
+  }
+  ["educar_motivo_afastamento_det.php"]=>
+  array(1) {
+    [0]=>
+    string(178) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Afastamento" );
+		$this->processoAp = "633";
+	}
+}
+
+class"
+  }
+  ["educar_motivo_afastamento_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(178) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Afastamento" );
+		$this->processoAp = "633";
+	}
+}
+
+class"
+  }
+  ["educar_motivo_baixa_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(172) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Baixa" );
+		$this->processoAp = "600";
+	}
+}
+
+class"
+  }
+  ["educar_motivo_baixa_det.php"]=>
+  array(1) {
+    [0]=>
+    string(172) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Baixa" );
+		$this->processoAp = "600";
+	}
+}
+
+class"
+  }
+  ["educar_motivo_baixa_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(230) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Baixa" );
+		$this->processoAp = "600";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_motivo_suspensao_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(183) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Suspens&atilde;o" );
+		$this->processoAp = "607";
+	}
+}
+
+class"
+  }
+  ["educar_motivo_suspensao_det.php"]=>
+  array(1) {
+    [0]=>
+    string(183) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Suspens&atilde;o" );
+		$this->processoAp = "607";
+	}
+}
+
+class"
+  }
+  ["educar_motivo_suspensao_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(241) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Suspens&atilde;o" );
+		$this->processoAp = "607";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_nivel_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(165) "class clsIndexBase extends clsBase
+{
+  public function Formular() {
+    $this->SetTitulo($this->_instituicao . 'Nível');
+    $this->processoAp = '829';
+  }
+}
+
+
+class"
+  }
+  ["educar_nivel_ensino_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(179) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - N&iacute;vel Ensino" );
+		$this->processoAp = "571";
+	}
+}
+
+class"
+  }
+  ["educar_nivel_ensino_cad_pop.php"]=>
+  array(1) {
+    [0]=>
+    string(276) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - N&iacute;vel Ensino" );
+		$this->processoAp = "571";
+		$this->renderBanner = false;
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_nivel_ensino_det.php"]=>
+  array(1) {
+    [0]=>
+    string(172) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Nivel Ensino" );
+		$this->processoAp = "571";
+	}
+}
+
+class"
+  }
+  ["educar_nivel_ensino_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(179) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - N&iacute;vel Ensino" );
+		$this->processoAp = "571";
+	}
+}
+
+class"
+  }
+  ["educar_operador_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(168) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Operador" );
+		$this->processoAp = "589";
+	}
+}
+
+class"
+  }
+  ["educar_operador_cad_pop.php"]=>
+  array(1) {
+    [0]=>
+    string(265) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Operador" );
+		$this->processoAp = "589";
+		$this->renderBanner = false;
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_operador_det.php"]=>
+  array(1) {
+    [0]=>
+    string(168) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Operador" );
+		$this->processoAp = "589";
+	}
+}
+
+class"
+  }
+  ["educar_operador_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(168) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Operador" );
+		$this->processoAp = "589";
+	}
+}
+
+class"
+  }
+  ["educar_pagamento_multa_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(175) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Pagamento Multa" );
+		$this->processoAp = "622";
+	}
+}
+
+class"
+  }
+  ["educar_pagamento_multa_det.php"]=>
+  array(1) {
+    [0]=>
+    string(175) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Pagamento Multa" );
+		$this->processoAp = "622";
+	}
+}
+
+class"
+  }
+  ["educar_pagamento_multa_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(233) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Pagamento Multa" );
+		$this->processoAp = "622";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_pesquisa_acervo_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(231) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Obras" );
+		$this->processoAp = "598";
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_pesquisa_aluno.php"]=>
+  array(1) {
+    [0]=>
+    string(225) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Aluno" );
+		$this->processoAp = "0";
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_pesquisa_aluno_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(271) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Pesquisa Aluno" );
+		$this->processoAp = "578";
+		$this->renderBanner = false;
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_pesquisa_aluno_lst2.php"]=>
+  array(1) {
+    [0]=>
+    string(271) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Pesquisa Aluno" );
+		$this->processoAp = "578";
+		$this->renderBanner = false;
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_pesquisa_cliente_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(227) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Cliente" );
+		$this->processoAp = "0";
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_pesquisa_municipio_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(264) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Municipio" );
+		$this->processoAp = "0";
+		$this->renderBanner = false;
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_pesquisa_obra_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(228) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Obra" );
+		$this->processoAp = "0";
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_pre_requisito_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(173) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Pre Requisito" );
+		$this->processoAp = "601";
+	}
+}
+
+class"
+  }
+  ["educar_pre_requisito_cad_pop.php"]=>
+  array(1) {
+    [0]=>
+    string(270) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Pre Requisito" );
+		$this->processoAp = "601";
+		$this->renderBanner = false;
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_pre_requisito_det.php"]=>
+  array(1) {
+    [0]=>
+    string(173) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Pre Requisito" );
+		$this->processoAp = "601";
+	}
+}
+
+class"
+  }
+  ["educar_pre_requisito_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(173) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Pre Requisito" );
+		$this->processoAp = "601";
+	}
+}
+
+class"
+  }
+  ["educar_raca_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(171) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Ra&ccedil;a" );
+		$this->processoAp = "678";
+	}
+}
+
+class"
+  }
+  ["educar_raca_det.php"]=>
+  array(1) {
+    [0]=>
+    string(171) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Ra&ccedil;a" );
+		$this->processoAp = "678";
+	}
+}
+
+class"
+  }
+  ["educar_raca_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(171) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Ra&ccedil;a" );
+		$this->processoAp = "678";
+	}
+}
+
+class"
+  }
+  ["educar_religiao_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(168) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Religiao" );
+		$this->processoAp = "579";
+	}
+}
+
+class"
+  }
+  ["educar_religiao_det.php"]=>
+  array(1) {
+    [0]=>
+    string(168) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Religiao" );
+		$this->processoAp = "579";
+	}
+}
+
+class"
+  }
+  ["educar_religiao_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(168) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Religiao" );
+		$this->processoAp = "579";
+	}
+}
+
+class"
+  }
+  ["educar_reserva_vaga_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(176) "class clsIndexBase extends clsBase
+{
+  function Formular() {
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Reserva Vaga');
+    $this->processoAp = '639';
+  }
+}
+
+class"
+  }
+  ["educar_reserva_vaga_det.php"]=>
+  array(1) {
+    [0]=>
+    string(183) "class clsIndexBase extends clsBase {
+  public function Formular() {
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Reserva Vaga');
+    $this->processoAp = '639';
+  }
+}
+
+class"
+  }
+  ["educar_reserva_vaga_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(183) "class clsIndexBase extends clsBase
+{
+  public function Formular() {
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Reserva Vaga');
+    $this->processoAp = '639';
+  }
+}
+
+class"
+  }
+  ["educar_reservada_vaga_det.php"]=>
+  array(1) {
+    [0]=>
+    string(186) "class clsIndexBase extends clsBase {
+  public function Formular() {
+    $this->SetTitulo($this->_instituicao . 'i-Educar - Vagas Reservadas');
+    $this->processoAp = '639';
+  }
+}
+
+class"
+  }
+  ["educar_reservada_vaga_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(187) "class clsIndexBase extends clsBase {
+  public function Formular() {
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Vagas Reservadas');
+    $this->processoAp = '639';
+  }
+}
+
+class"
+  }
+  ["educar_reservas_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(168) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Reservas" );
+		$this->processoAp = "609";
+	}
+}
+
+class"
+  }
+  ["educar_reservas_det.php"]=>
+  array(1) {
+    [0]=>
+    string(168) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Reservas" );
+		$this->processoAp = "609";
+	}
+}
+
+class"
+  }
+  ["educar_reservas_login_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(168) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Reservas" );
+		$this->processoAp = "609";
+	}
+}
+
+class"
+  }
+  ["educar_reservas_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(226) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Reservas" );
+		$this->processoAp = "609";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_rquadro_professores.php"]=>
+  array(1) {
+    [0]=>
+    string(177) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Quadro Curricular" );
+		$this->processoAp = "696";
+	}
+}
+
+class"
+  }
+  ["educar_sequencia_serie_det.php"]=>
+  array(1) {
+    [0]=>
+    string(200) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Sequ&ecirc;ncia Enturma&ccedil;&atilde;o" );
+		$this->processoAp = "587";
+	}
+}
+
+class"
+  }
+  ["educar_sequencia_serie_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(200) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Sequ&ecirc;ncia Enturma&ccedil;&atilde;o" );
+		$this->processoAp = "587";
+	}
+}
+
+class"
+  }
+  ["educar_serie_cad_pop.php"]=>
+  array(1) {
+    [0]=>
+    string(269) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - S&eacute;rie" );
+		$this->processoAp = "583";
+		$this->renderBanner = false;
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_serie_pre_requisito_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(179) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Serie Pre Requisito" );
+		$this->processoAp = "599";
+	}
+}
+
+class"
+  }
+  ["educar_serie_pre_requisito_det.php"]=>
+  array(1) {
+    [0]=>
+    string(179) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Serie Pre Requisito" );
+		$this->processoAp = "599";
+	}
+}
+
+class"
+  }
+  ["educar_serie_pre_requisito_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(179) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Serie Pre Requisito" );
+		$this->processoAp = "599";
+	}
+}
+
+class"
+  }
+  ["educar_servidor_afastamento_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(193) "class clsIndexBase extends clsBase {
+  public function Formular() {
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Afastamento');
+    $this->processoAp = '635';
+  }
+
+}
+
+
+class"
+  }
+  ["educar_situacao_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(182) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Situa&ccedil;&atilde;o" );
+		$this->processoAp = "602";
+	}
+}
+
+class"
+  }
+  ["educar_situacao_det.php"]=>
+  array(1) {
+    [0]=>
+    string(182) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Situa&ccedil;&atilde;o" );
+		$this->processoAp = "602";
+	}
+}
+
+class"
+  }
+  ["educar_situacao_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(240) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Situa&ccedil;&atilde;o" );
+		$this->processoAp = "602";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_subniveis_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(273) "class clsIndexBase extends clsBase
+{
+  public function Formular()
+  {
+    $this->SetTitulo($this->_instituicao . 'Nivel');
+    $this->processoAp   = '829';
+    $this->renderBanner = FALSE;
+    $this->renderMenu   = FALSE;
+    $this->renderMenuSuspenso = FALSE;
+  }
+}
+
+class"
+  }
+  ["educar_tipo_dispensa_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(173) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Dispensa" );
+		$this->processoAp = "577";
+	}
+}
+
+class"
+  }
+  ["educar_tipo_dispensa_det.php"]=>
+  array(1) {
+    [0]=>
+    string(173) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Dispensa" );
+		$this->processoAp = "577";
+	}
+}
+
+class"
+  }
+  ["educar_tipo_dispensa_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(173) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Dispensa" );
+		$this->processoAp = "577";
+	}
+}
+
+class"
+  }
+  ["educar_tipo_ensino_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(171) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Ensino" );
+		$this->processoAp = "558";
+	}
+}
+
+class"
+  }
+  ["educar_tipo_ensino_cad_pop.php"]=>
+  array(1) {
+    [0]=>
+    string(268) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Ensino" );
+		$this->processoAp = "558";
+		$this->renderBanner = false;
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_tipo_ensino_det.php"]=>
+  array(1) {
+    [0]=>
+    string(171) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Ensino" );
+		$this->processoAp = "558";
+	}
+}
+
+class"
+  }
+  ["educar_tipo_ensino_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(172) "class clsIndexBase extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Ensino" );
+		$this->processoAp = "558";
+	}
+}
+
+class"
+  }
+  ["educar_tipo_ocorrencia_disciplinar_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(193) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Ocorr&ecirc;ncia Disciplinar" );
+		$this->processoAp = "580";
+	}
+}
+
+class"
+  }
+  ["educar_tipo_ocorrencia_disciplinar_det.php"]=>
+  array(1) {
+    [0]=>
+    string(193) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Ocorr&ecirc;ncia Disciplinar" );
+		$this->processoAp = "580";
+	}
+}
+
+class"
+  }
+  ["educar_tipo_ocorrencia_disciplinar_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(251) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Ocorr&ecirc;ncia Disciplinar" );
+		$this->processoAp = "580";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_tipo_regime_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(171) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Regime" );
+		$this->processoAp = "568";
+	}
+}
+
+class"
+  }
+  ["educar_tipo_regime_cad_pop.php"]=>
+  array(1) {
+    [0]=>
+    string(268) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Regime" );
+		$this->processoAp = "568";
+		$this->renderBanner = false;
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_tipo_regime_det.php"]=>
+  array(1) {
+    [0]=>
+    string(171) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Regime" );
+		$this->processoAp = "568";
+	}
+}
+
+class"
+  }
+  ["educar_tipo_regime_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(171) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Regime" );
+		$this->processoAp = "568";
+	}
+}
+
+class"
+  }
+  ["educar_tipo_usuario_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(176) "class clsIndexBase extends clsBase
+{
+  function Formular() {
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Tipo Usuário');
+    $this->processoAp = '554';
+  }
+}
+
+class"
+  }
+  ["educar_tipo_usuario_det.php"]=>
+  array(1) {
+    [0]=>
+    string(178) "class clsIndexBase extends clsBase
+{
+  function Formular()
+  {
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Tipo Usuário');
+    $this->processoAp = '554';
+  }
+}
+
+class"
+  }
+  ["educar_tipo_usuario_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(173) "class clsIndexBase extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Usuario" );
+		$this->processoAp = "554";
+	}
+}
+
+class"
+  }
+  ["educar_transferencia_solicitacao_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(205) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Transfer&ecirc;ncia Solicita&ccedil;&atilde;o" );
+		$this->processoAp = "578";
+	}
+}
+
+class"
+  }
+  ["educar_transferencia_tipo_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(186) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Transfer&ecirc;ncia" );
+		$this->processoAp = "575";
+	}
+}
+
+class"
+  }
+  ["educar_transferencia_tipo_det.php"]=>
+  array(1) {
+    [0]=>
+    string(186) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Transfer&ecirc;ncia" );
+		$this->processoAp = "575";
+	}
+}
+
+class"
+  }
+  ["educar_transferencia_tipo_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(244) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Transfer&ecirc;ncia" );
+		$this->processoAp = "575";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_turma_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(223) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Turma" );
+		$this->processoAp = "586";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["educar_turma_nota_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(179) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Faltas/Notas Turma " );
+		$this->processoAp = "650";
+	}
+}
+
+class"
+  }
+  ["educar_turma_tipo_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(170) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Turma Tipo" );
+		$this->processoAp = "570";
+	}
+}
+
+class"
+  }
+  ["educar_turma_tipo_cad_pop.php"]=>
+  array(1) {
+    [0]=>
+    string(267) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Turma Tipo" );
+		$this->processoAp = "570";
+		$this->renderBanner = false;
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["educar_turma_tipo_det.php"]=>
+  array(1) {
+    [0]=>
+    string(170) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Turma Tipo" );
+		$this->processoAp = "570";
+	}
+}
+
+class"
+  }
+  ["educar_turma_tipo_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(170) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Turma Tipo" );
+		$this->processoAp = "570";
+	}
+}
+
+class"
+  }
+  ["educar_usuario_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(174) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Usu&aacute;rio" );
+		$this->processoAp = "555";
+	}
+}
+
+class"
+  }
+  ["educar_usuario_det.php"]=>
+  array(1) {
+    [0]=>
+    string(174) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Usu&aacute;rio" );
+		$this->processoAp = "555";
+	}
+}
+
+class"
+  }
+  ["educar_usuario_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(175) "class clsIndexBase extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Usu&aacute;rio" );
+		$this->processoAp = "555";
+	}
+}
+
+class"
+  }
+  ["empresas_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(167) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Empresas!" );
+		$this->processoAp = array("41", "649");
+	}
+}
+
+class"
+  }
+  ["empresas_det.php"]=>
+  array(1) {
+    [0]=>
+    string(168) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Empresas" );
+		$this->processoAp = array("41", "649");
+	}
+}
+
+class"
+  }
+  ["empresas_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(169) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Empresas!" );
+		$this->processoAp = array("41", "649");
+	}
+}
+
+class"
+  }
+  ["fotos_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(152) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Fotos!" );
+		$this->processoAp = "27";
+	}
+}
+
+class"
+  }
+  ["fotos_det.php"]=>
+  array(1) {
+    [0]=>
+    string(151) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Fotos" );
+		$this->processoAp = "27";
+	}
+}
+
+class"
+  }
+  ["fotos_galeria_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(153) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Fotos!" );
+		$this->processoAp = "669";
+	}
+}
+
+class"
+  }
+  ["fotos_galeria_det.php"]=>
+  array(1) {
+    [0]=>
+    string(152) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Fotos" );
+		$this->processoAp = "669";
+	}
+}
+
+class"
+  }
+  ["fotos_galeria_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(153) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Fotos!" );
+		$this->processoAp = "669";
+	}
+}
+
+class"
+  }
+  ["fotos_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(152) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Fotos!" );
+		$this->processoAp = "27";
+	}
+}
+
+class"
+  }
+  ["funcionario_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(179) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Cadastro de Funcion&aacute;rios" );
+		$this->processoAp = "36";
+	}
+}
+
+class"
+  }
+  ["funcionario_det.php"]=>
+  array(1) {
+    [0]=>
+    string(160) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Usu&aacute;rios" );
+		$this->processoAp = "36";
+	}
+}
+
+class"
+  }
+  ["funcionario_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(219) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Usu&aacute;rios!" );
+		$this->processoAp = "36";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["funcionario_vinculo_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(168) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Vínculo Funcionários!" );
+		$this->processoAp = "190";
+	}
+}
+
+class"
+  }
+  ["funcionario_vinculo_det.php"]=>
+  array(1) {
+    [0]=>
+    string(167) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Vínculo Funcionários" );
+		$this->processoAp = "190";
+	}
+}
+
+class"
+  }
+  ["funcionario_vinculo_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(226) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Vínculo Funcionários!" );
+		$this->processoAp = "190";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+  ["imagem_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(161) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Banco de Imagens" );
+		$this->processoAp = "473";
+	}
+}
+
+class"
+  }
+  ["jornal_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(152) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Jornal!" );
+		$this->processoAp = "34";
+	}
+}
+
+class"
+  }
+  ["jornal_det.php"]=>
+  array(1) {
+    [0]=>
+    string(152) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Jornal" );
+		$this->processoAp = "34";
+	}
+}
+
+class"
+  }
+  ["jornal_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(153) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Jornal!" );
+		$this->processoAp = "34";
+	}
+}
+
+class"
+  }
+  ["licitacoes_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(170) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Licita&ccedil;&otilde;es!" );
+		$this->processoAp = "29";
+	}
+}
+
+class"
+  }
+  ["licitacoes_det.php"]=>
+  array(1) {
+    [0]=>
+    string(170) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Licita&ccedil;&otilde;es" );
+		$this->processoAp = "29";
+	}
+}
+
+class"
+  }
+  ["licitacoes_edital_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(153) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Editais" );
+		$this->processoAp = "239";
+	}
+}
+
+class"
+  }
+  ["licitacoes_edital_det.php"]=>
+  array(1) {
+    [0]=>
+    string(153) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Edital" );
+		$this->processoAp = "239";
+	}
+}
+
+class"
+  }
+  ["licitacoes_edital_empresa_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(154) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Empresas" );
+		$this->processoAp = "239";
+	}
+}
+
+class"
+  }
+  ["licitacoes_edital_empresa_det.php"]=>
+  array(1) {
+    [0]=>
+    string(153) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Edital" );
+		$this->processoAp = "239";
+	}
+}
+
+class"
+  }
+  ["licitacoes_edital_empresa_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(155) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Empresas" );
+		$this->processoAp = "239";
+	}
+}
+
+class"
+  }
+  ["licitacoes_edital_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(153) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Edital" );
+		$this->processoAp = "239";
+	}
+}
+
+class"
+  }
+  ["licitacoes_finalizadas_det.php"]=>
+  array(1) {
+    [0]=>
+    string(171) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Licita&ccedil;&otilde;es" );
+		$this->processoAp = "159";
+	}
+}
+
+class"
+  }
+  ["licitacoes_finalizadas_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(184) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Licita&ccedil;&otilde;es - finalizar!" );
+		$this->processoAp = "159";
+	}
+}
+
+class"
+  }
+  ["licitacoes_finalizar_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(172) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Licita&ccedil;&otilde;es!" );
+		$this->processoAp = "136";
+	}
+}
+
+class"
+  }
+  ["licitacoes_finalizar_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(184) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Licita&ccedil;&otilde;es - finalizar!" );
+		$this->processoAp = "136";
+	}
+}
+
+class"
+  }
+  ["licitacoes_funcionarios_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(172) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Licita&ccedil;&otilde;es!" );
+		$this->processoAp = "135";
+	}
+}
+
+class"
+  }
+  ["licitacoes_funcionarios_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(181) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Licita&ccedil;&otilde;es - equipe!" );
+		$this->processoAp = "135";
+	}
+}
+
+class"
+  }
+  ["licitacoes_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(171) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Licita&ccedil;&otilde;es!" );
+		$this->processoAp = "29";
+	}
+}
+
+class"
+  }
+  ["licitacoes_statusfinal_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(172) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Licita&ccedil;&otilde;es!" );
+		$this->processoAp = "138";
+	}
+}
+
+class"
+  }
+  ["licitacoes_statusfinal_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(196) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Licita&ccedil;&otilde;es - Status de finalização!" );
+		$this->processoAp = "138";
+	}
+}
+
+class"
+  }
+  ["mailling_email_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(151) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Emails!" );
+		$this->processoAp = "86";
+	}
+}
+
+class"
+  }
+  ["mailling_email_det.php"]=>
+  array(1) {
+    [0]=>
+    string(151) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Emails!" );
+		$this->processoAp = "86";
+	}
+}
+
+class"
+  }
+  ["mailling_email_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(151) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Emails!" );
+		$this->processoAp = "86";
+	}
+}
+
+class"
+  }
+  ["mailling_enviar_convite.php"]=>
+  array(1) {
+    [0]=>
+    string(154) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Convites!" );
+		$this->processoAp = "741";
+	}
+}
+
+class"
+  }
+  ["mailling_enviar_email.php"]=>
+  array(1) {
+    [0]=>
+    string(154) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Contratos!" );
+		$this->processoAp = "87";
+	}
+}
+
+class"
+  }
+  ["mailling_grafico_enviados_dia.php"]=>
+  array(1) {
+    [0]=>
+    string(184) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Grafico de Mailling por quantidade diaria" );
+		$this->processoAp = "0";
+	}
+}
+
+class"
+  }
+  ["mailling_grafico_enviados_mes.php"]=>
+  array(1) {
+    [0]=>
+    string(177) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Grafico de Mailling por quantidade" );
+		$this->processoAp = "0";
+	}
+}
+
+class"
+  }
+  ["mailling_grafico_enviados_semana.php"]=>
+  array(1) {
+    [0]=>
+    string(177) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Grafico de Mailling por quantidade" );
+		$this->processoAp = "0";
+	}
+}
+
+class"
+  }
+  ["mailling_grupos_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(160) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Grupos de Email!" );
+		$this->processoAp = "85";
+	}
+}
+
+class"
+  }
+  ["mailling_grupos_det.php"]=>
+  array(1) {
+    [0]=>
+    string(160) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Grupos de Email!" );
+		$this->processoAp = "85";
+	}
+}
+
+class"
+  }
+  ["mailling_grupos_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(160) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Grupos de Email!" );
+		$this->processoAp = "85";
+	}
+}
+
+class"
+  }
+  ["menu_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(151) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Menu!" );
+		$this->processoAp = "35";
+	}
+}
+
+class"
+  }
+  ["menu_det.php"]=>
+  array(1) {
+    [0]=>
+    string(150) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Menu" );
+		$this->processoAp = "35";
+	}
+}
+
+class"
+  }
+  ["menu_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(151) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Menu!" );
+		$this->processoAp = "35";
+	}
+}
+
+class"
+  }
+  ["menu_menu_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(163) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Cadastro de Menu!" );
+		$this->processoAp = "79";
+	}
+}
+
+class"
+  }
+  ["menu_menu_det.php"]=>
+  array(1) {
+    [0]=>
+    string(150) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Menu" );
+		$this->processoAp = "79";
+	}
+}
+
+class"
+  }
+  ["menu_menu_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(151) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Menu!" );
+		$this->processoAp = "79";
+	}
+}
+
+class"
+  }
+  ["menu_suspenso_det.php"]=>
+  array(1) {
+    [0]=>
+    string(158) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Menu Suspenso" );
+		$this->processoAp = "445";
+	}
+}
+
+class"
+  }
+  ["menu_suspenso_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(158) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Menu Suspenso" );
+		$this->processoAp = "445";
+	}
+}
+
+class"
+  }
+  ["meusdados.php"]=>
+  array(1) {
+    [0]=>
+    string(169) "class clsIndex extends clsBase
+{
+  public function Formular() {
+    $this->SetTitulo($this->_instituicao . 'Usu&aacute;rios');
+    $this->processoAp = '0';
+  }
+}
+
+
+class"
+  }
+  ["not_tipos_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(163) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Tipos de Notícias!" );
+		$this->processoAp = "104";
+	}
+}
+
+class"
+  }
+  ["not_tipos_det.php"]=>
+  array(1) {
+    [0]=>
+    string(163) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Tipos de Notícias!" );
+		$this->processoAp = "104";
+	}
+}
+
+class"
+  }
+  ["not_tipos_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(163) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Tipos de Notícias!" );
+		$this->processoAp = "104";
+	}
+}
+
+class"
+  }
+  ["noticias_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(161) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Not&iacute;cias!" );
+		$this->processoAp = "26";
+	}
+}
+
+class"
+  }
+  ["noticias_det.php"]=>
+  array(1) {
+    [0]=>
+    string(161) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Not&iacute;cias" );
+		$this->processoAp = "26";
+	}
+}
+
+class"
+  }
+  ["noticias_grafico_tipo.php"]=>
+  array(1) {
+    [0]=>
+    string(173) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Grafico de Notícias por Tipo" );
+		$this->processoAp = "109";
+	}
+}
+
+class"
+  }
+  ["noticias_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(161) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Not&iacute;cias!" );
+		$this->processoAp = "26";
+	}
+}
+
+class"
+  }
+  ["opcao_menu_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(155) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Opção Menu" );
+		$this->processoAp = "475";
+	}
+}
+
+class"
+  }
+  ["opcao_menu_det.php"]=>
+  array(1) {
+    [0]=>
+    string(155) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Opção Menu" );
+		$this->processoAp = "475";
+	}
+}
+
+class"
+  }
+  ["opcao_menu_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(155) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Opção Menu" );
+		$this->processoAp = "475";
+	}
+}
+
+class"
+  }
+  ["oprot_setor_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(166) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Cadastro de Setores" );
+		$this->processoAp = "375";
+	}
+}
+
+class"
+  }
+  ["oprot_setor_det.php"]=>
+  array(1) {
+    [0]=>
+    string(152) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Setor" );
+		$this->processoAp = "375";
+	}
+}
+
+class"
+  }
+  ["oprot_setor_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(168) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Protocolo - Setores" );
+		$this->processoAp = "375";
+	}
+}
+
+class"
+  }
+  ["otopic_gerar_pdf_todos.php"]=>
+  array(1) {
+    [0]=>
+    string(165) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Imprimir" );
+		$this->processoAp = "396";
+	}
+}
+
+class"
+  }
+  ["otopic_grupos_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(176) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Cadastro de Grupos!" );
+		$this->processoAp = "296";
+	}
+}
+
+class"
+  }
+  ["otopic_grupos_det.php"]=>
+  array(1) {
+    [0]=>
+    string(173) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Detalhe do Grupo" );
+		$this->processoAp = "296";
+	}
+}
+
+class"
+  }
+  ["otopic_grupos_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(163) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Grupos!" );
+		$this->processoAp = "296";
+	}
+}
+
+class"
+  }
+  ["otopic_membro_det.php"]=>
+  array(1) {
+    [0]=>
+    string(174) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Detalhe de Membro" );
+		$this->processoAp = "294";
+	}
+}
+
+class"
+  }
+  ["otopic_membros_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(172) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Atualiza Pessoa!" );
+		$this->processoAp = "294";
+	}
+}
+
+class"
+  }
+  ["otopic_meus_grupos_det.php"]=>
+  array(1) {
+    [0]=>
+    string(173) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Detalhe do Grupo" );
+		$this->processoAp = "294";
+	}
+}
+
+class"
+  }
+  ["otopic_meus_grupos_det2.php"]=>
+  array(1) {
+    [0]=>
+    string(173) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Detalhe do Grupo" );
+		$this->processoAp = "294";
+	}
+}
+
+class"
+  }
+  ["otopic_meus_grupos_imprime_topicos_aguardando.php"]=>
+  array(1) {
+    [0]=>
+    string(173) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Detalhe do Grupo" );
+		$this->processoAp = "294";
+	}
+}
+
+class"
+  }
+  ["otopic_meus_grupos_imprime_topicos_finalizados.php"]=>
+  array(1) {
+    [0]=>
+    string(173) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Detalhe do Grupo" );
+		$this->processoAp = "294";
+	}
+}
+
+class"
+  }
+  ["otopic_meus_grupos_imprime_topicos_sugeridos.php"]=>
+  array(1) {
+    [0]=>
+    string(173) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Detalhe do Grupo" );
+		$this->processoAp = "294";
+	}
+}
+
+class"
+  }
+  ["otopic_meus_grupos_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(174) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Grupos de Reunião!" );
+		$this->processoAp = "294";
+	}
+}
+
+class"
+  }
+  ["otopic_notas_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(169) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Inserir Nota" );
+		$this->processoAp = "294";
+	}
+}
+
+class"
+  }
+  ["otopic_reuniao_finaliza.php"]=>
+  array(1) {
+    [0]=>
+    string(166) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Finalizar" );
+		$this->processoAp = "294";
+	}
+}
+
+class"
+  }
+  ["otopic_reuniao_tempo_real.php"]=>
+  array(1) {
+    [0]=>
+    string(167) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Tempo Real" );
+		$this->processoAp = "294";
+	}
+}
+
+class"
+  }
+  ["otopic_reunioes_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(176) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Cadastro de Reunião" );
+		$this->processoAp = "294";
+	}
+}
+
+class"
+  }
+  ["otopic_reunioes_det.php"]=>
+  array(1) {
+    [0]=>
+    string(175) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Detalhe da Reunião" );
+		$this->processoAp = "294";
+	}
+}
+
+class"
+  }
+  ["otopic_reunioes_imprime.php"]=>
+  array(1) {
+    [0]=>
+    string(175) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Detalhe da Reunião" );
+		$this->processoAp = "294";
+	}
+}
+
+class"
+  }
+  ["otopic_reunioes_nao_tempo_real_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(166) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Reuniões!" );
+		$this->processoAp = "294";
+	}
+}
+
+class"
+  }
+  ["otopic_su_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(184) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Cadastro de Super Usuários!" );
+		$this->processoAp = "335";
+	}
+}
+
+class"
+  }
+  ["otopic_su_det.php"]=>
+  array(1) {
+    [0]=>
+    string(171) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Super Usuários" );
+		$this->processoAp = "335";
+	}
+}
+
+class"
+  }
+  ["otopic_su_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(172) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Super Usuários!" );
+		$this->processoAp = "335";
+	}
+}
+
+class"
+  }
+  ["otopic_topicos_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(172) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Inserir Tópicos" );
+		$this->processoAp = "294";
+	}
+}
+
+class"
+  }
+  ["pesquisa_cep_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(242) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Pesquisa por CEP!" );
+		$this->processoAp         = "0";
+		$this->renderMenu         = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["pesquisa_funcionario_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(257) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Pesquisa por Funcion&aacute;rio!" );
+		$this->processoAp         = "0";
+		$this->renderMenu         = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["pesquisa_pessoa_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(242) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Cadastra Pessoa!" );
+		$this->processoAp         = "0";
+		$this->renderMenu         = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["pesquisa_pessoa_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(245) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Pesquisa por Pessoa!" );
+		$this->processoAp         = "0";
+		$this->renderMenu         = false;
+		$this->renderMenuSuspenso = false;
+	}
+}
+
+class"
+  }
+  ["pmidrh_holerite_det.php"]=>
+  array(1) {
+    [0]=>
+    string(154) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Holerite" );
+		$this->processoAp = "480";
+	}
+}
+
+class"
+  }
+  ["pmidrh_holerite_habilita.php"]=>
+  array(1) {
+    [0]=>
+    string(155) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Holerite" );
+		$this->processoAp = "480";
+	}
+}
+
+class"
+  }
+  ["pmidrh_holerite_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(155) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Holerites" );
+		$this->processoAp = "480";
+	}
+}
+
+class"
+  }
+  ["portal_acesso_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(155) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Acesso" );
+		$this->processoAp = "666";
+	}
+}
+
+class"
+  }
+  ["portal_acesso_det.php"]=>
+  array(1) {
+    [0]=>
+    string(155) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Acesso" );
+		$this->processoAp = "666";
+	}
+}
+
+class"
+  }
+  ["portal_acesso_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(155) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Acesso" );
+		$this->processoAp = "666";
+	}
+}
+
+class"
+  }
+  ["portal_compras_modalidade_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(167) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Compras Modalidade" );
+		$this->processoAp = "773";
+	}
+}
+
+class"
+  }
+  ["portal_compras_modalidade_det.php"]=>
+  array(1) {
+    [0]=>
+    string(167) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Compras Modalidade" );
+		$this->processoAp = "773";
+	}
+}
+
+class"
+  }
+  ["portal_compras_modalidade_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(167) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Compras Modalidade" );
+		$this->processoAp = "773";
+	}
+}
+
+class"
+  }
+  ["public_logradouro_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(166) "class clsIndexBase extends clsBase
+{
+  function Formular()
+  {
+    $this->SetTitulo( "{$this->_instituicao} Logradouro" );
+    $this->processoAp = "757";
+  }
+}
+
+class"
+  }
+  ["public_logradouro_det.php"]=>
+  array(1) {
+    [0]=>
+    string(159) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Logradouro" );
+		$this->processoAp = "757";
+	}
+}
+
+class"
+  }
+  ["public_logradouro_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(159) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Logradouro" );
+		$this->processoAp = "757";
+	}
+}
+
+class"
+  }
+  ["public_municipio_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(171) "class clsIndexBase extends clsBase
+{
+  function Formular()
+  {
+    $this->SetTitulo($this->_instituicao . ' Munic&iacute;pio');
+    $this->processoAp = '755';
+  }
+}
+
+class"
+  }
+  ["public_municipio_det.php"]=>
+  array(1) {
+    [0]=>
+    string(165) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Munic&iacute;pio" );
+		$this->processoAp = "755";
+	}
+}
+
+class"
+  }
+  ["public_municipio_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(165) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Munic&iacute;pio" );
+		$this->processoAp = "755";
+	}
+}
+
+class"
+  }
+  ["public_pais_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(153) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Pais" );
+		$this->processoAp = "753";
+	}
+}
+
+class"
+  }
+  ["public_pais_det.php"]=>
+  array(1) {
+    [0]=>
+    string(153) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Pais" );
+		$this->processoAp = "753";
+	}
+}
+
+class"
+  }
+  ["public_pais_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(153) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Pais" );
+		$this->processoAp = "753";
+	}
+}
+
+class"
+  }
+  ["public_uf_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(151) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Uf" );
+		$this->processoAp = "754";
+	}
+}
+
+class"
+  }
+  ["public_uf_det.php"]=>
+  array(1) {
+    [0]=>
+    string(151) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Uf" );
+		$this->processoAp = "754";
+	}
+}
+
+class"
+  }
+  ["public_uf_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(151) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Uf" );
+		$this->processoAp = "754";
+	}
+}
+
+class"
+  }
+  ["topic_index.php"]=>
+  array(1) {
+    [0]=>
+    string(158) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-OpeTopicE" );
+		$this->processoAp = "459";
+	}
+}
+
+class"
+  }
+  ["transporte_empresa_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(170) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Empresas" );
+		$this->processoAp = "21235";
+	}
+}
+
+class"
+  }
+  ["transporte_index.php"]=>
+  array(1) {
+    [0]=>
+    string(177) "class clsIndex extends clsBase
+{
+
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Transporte Escolar" );
+		$this->processoAp = "21234";
+	}
+}
+
+class"
+  }
+  ["transporte_itinerario_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(172) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Itinerário" );
+		$this->processoAp = "21238";
+	}
+}
+
+class"
+  }
+  ["transporte_itinerario_del.php"]=>
+  array(1) {
+    [0]=>
+    string(172) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Itinerário" );
+		$this->processoAp = "21238";
+	}
+}
+
+class"
+  }
+  ["transporte_motorista_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(172) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Motoristas" );
+		$this->processoAp = "21236";
+	}
+}
+
+class"
+  }
+  ["transporte_pessoa_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(184) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Usuários de transporte" );
+		$this->processoAp = "21240";
+	}
+}
+
+class"
+  }
+  ["transporte_ponto_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(168) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Pontos" );
+		$this->processoAp = "21239";
+	}
+}
+
+class"
+  }
+  ["transporte_rota_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(167) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Rotas" );
+		$this->processoAp = "21238";
+	}
+}
+
+class"
+  }
+  ["transporte_veiculo_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(170) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Veículos" );
+		$this->processoAp = "21237";
+	}
+}
+
+class"
+  }
+  ["troca_senha_pop.php"]=>
+  array(1) {
+    [0]=>
+    string(270) "class clsIndex extends clsBase
+{
+  function Formular()
+  {
+    $this->SetTitulo($this->_instituicao . 'Usu&aacute;rios');
+    $this->processoAp   = "0";
+    $this->renderBanner = FALSE;
+    $this->renderMenu   = FALSE;
+    $this->renderMenuSuspenso = FALSE;
+  }
+}
+
+class"
+  }
+  ["tutormenu_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(155) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Tutor Menu" );
+		$this->processoAp = "445";
+	}
+}
+
+class"
+  }
+  ["tutormenu_det.php"]=>
+  array(1) {
+    [0]=>
+    string(157) "class clsIndex extends clsBase
+{
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Tutor Menu" );
+		$this->processoAp = "445";
+	}
+}
+
+class"
+  }
+  ["tutormenu_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(155) "class clsIndex extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Tutor Menu" );
+		$this->processoAp = "445";
+	}
+}
+
+class"
+  }
+  ["urbano_cep_logradouro_cad.php"]=>
+  array(1) {
+    [0]=>
+    string(169) "class clsIndexBase extends clsBase
+{
+  function Formular()
+  {
+    $this->SetTitulo($this->_instituicao . ' Cep Logradouro');
+    $this->processoAp = '758';
+  }
+}
+
+class"
+  }
+  ["urbano_cep_logradouro_det.php"]=>
+  array(1) {
+    [0]=>
+    string(163) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Cep Logradouro" );
+		$this->processoAp = "758";
+	}
+}
+
+class"
+  }
+  ["urbano_cep_logradouro_lst.php"]=>
+  array(1) {
+    [0]=>
+    string(221) "class clsIndexBase extends clsBase
+{
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} CEP Logradouro" );
+		$this->processoAp = "758";
+                $this->addEstilo( "localizacaoSistema" );
+	}
+}
+
+class"
+  }
+}

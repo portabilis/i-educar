@@ -39,16 +39,6 @@ while ($db->ProximoRegistro()) {
 }
 die();*/
 
-class clsIndex extends clsBase
-{
-	
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} Holerite" );
-		$this->processoAp = "480";
-	}
-}
-
 class indice extends clsCadastro
 {
 	var $matricula,
@@ -149,8 +139,11 @@ class indice extends clsCadastro
 }
 
 
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+$pagina->SetTitulo( "{$pagina->_instituicao} Holerite" );
+$pagina->processoAp = "480";
+	
 $miolo = new indice();
 $pagina->addForm( $miolo );
 

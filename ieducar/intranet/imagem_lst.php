@@ -29,15 +29,6 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/imagem/clsPortalImagemTipo.inc.php");
 require_once ("include/imagem/clsPortalImagem.inc.php");
-class clsIndex extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} Banco de Imagens" );
-		$this->processoAp = "473";
-	}
-}
-
 class indice extends clsListagem
 {
 	function Gerar()
@@ -88,8 +79,11 @@ class indice extends clsListagem
 	}
 } 
 
-$pagina = new clsIndex();
-$miolo = new indice();
+$pagina = new clsBase();
+
+$pagina->SetTitulo( "{$pagina->_instituicao} Banco de Imagens" );
+$pagina->processoAp = "473";
+	$miolo = new indice();
 $pagina->addForm( $miolo );
 $pagina->MakeAll();
 

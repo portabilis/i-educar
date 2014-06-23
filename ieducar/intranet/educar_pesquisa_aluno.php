@@ -30,17 +30,6 @@ require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
 
 //class clsIndexBase extends clsBase
-class clsIndex extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Aluno" );
-		$this->processoAp = "0";
-		$this->renderMenu = false;
-		$this->renderMenuSuspenso = false;
-	}
-}
-
 class indice extends clsListagem
 {
 	/**
@@ -155,8 +144,13 @@ class indice extends clsListagem
 	}
 }
 // cria uma extensao da classe base
-//$pagina = new clsIndexBase();
-$pagina = new clsIndex();
+//$pagina = new clsBase();
+
+$pagina->SetTitulo( "{$pagina->_instituicao} i-Educar - Aluno" );
+$pagina->processoAp = "0";
+$pagina->renderMenu = false;
+$pagina->renderMenuSuspenso = false;
+	$pagina = new clsBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase

@@ -30,16 +30,6 @@ require_once ("include/clsCadastro.inc.php");
 require_once("include/pmiacoes/geral.inc.php");
 require_once( "include/Geral.inc.php" );
 
-class clsIndex extends clsBase
-{
-	function Formular()
-	{
-	
-		$this->SetTitulo( "{$this->_instituicao} Sistema de Cadastro de A&ccedil;&oatilde;es do Governo - Fotos Portal!" );
-		$this->processoAp = "551";
-	}
-}
-
 class indice extends clsCadastro
 {
 	var $pessoa_logada;
@@ -282,8 +272,12 @@ class indice extends clsCadastro
 	}	
 }
 
-$pagina = new clsIndex();
-$miolo = new indice();
+$pagina = new clsBase();
+
+	
+$pagina->SetTitulo( "{$pagina->_instituicao} Sistema de Cadastro de A&ccedil;&oatilde;es do Governo - Fotos Portal!" );
+$pagina->processoAp = "551";
+	$miolo = new indice();
 $pagina->addForm( $miolo );
 $pagina->MakeAll();
 ?>

@@ -29,15 +29,6 @@ require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
 
-class clsIndexBase extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Sequ&ecirc;ncia Enturma&ccedil;&atilde;o" );
-		$this->processoAp = "587";
-	}
-}
-
 $nivel_usuario_fora = 0;
 
 class indice extends clsCadastro
@@ -346,7 +337,9 @@ class indice extends clsCadastro
 }
 
 // cria uma extensao da classe base
-$pagina = new clsIndexBase();
+$pagina = new clsBase();
+$pagina->SetTitulo( "{$pagina->_instituicao} i-Educar - Sequ&ecirc;ncia Enturma&ccedil;&atilde;o" );
+$pagina->processoAp = "587";
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase

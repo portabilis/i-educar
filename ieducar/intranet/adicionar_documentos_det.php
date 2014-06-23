@@ -31,15 +31,6 @@ require_once ("include/clsCadastro.inc.php");
 require_once ("include/Geral.inc.php");
 require_once ("include/clsBanco.inc.php");
 
-class clsIndex extends clsBase
-{
-	
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} Documentos" );
-	}
-}
-
 class indice extends clsDetalhe
 {
 	function Gerar()
@@ -113,8 +104,10 @@ class indice extends clsDetalhe
 		return true;
 	}
 
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+$pagina->SetTitulo( "{$pagina->_instituicao} Documentos" );
+	
 $miolo = new indice();
 $pagina->addForm($miolo);
 

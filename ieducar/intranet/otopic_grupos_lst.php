@@ -30,16 +30,6 @@ require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/otopic/otopicGeral.inc.php");
 
-class clsIndex extends clsBase
-{
-
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Grupos!" );
-		$this->processoAp = "296";
-	}
-}
-
 class indice extends clsListagem
 {
 	function Gerar()
@@ -94,8 +84,11 @@ class indice extends clsListagem
 }
 
 
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+$pagina->SetTitulo( "{$pagina->_instituicao} i-Pauta - Grupos!" );
+$pagina->processoAp = "296";
+	
 $miolo = new indice();
 $pagina->addForm( $miolo );
 

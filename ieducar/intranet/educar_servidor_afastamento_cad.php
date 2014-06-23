@@ -32,15 +32,6 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
 
-class clsIndexBase extends clsBase {
-  public function Formular() {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Afastamento');
-    $this->processoAp = '635';
-  }
-
-}
-
-
 class indice extends clsCadastro {
 
   /**
@@ -513,8 +504,11 @@ class indice extends clsCadastro {
 }
 
 // Instancia objeto de página
-$pagina = new clsIndexBase();
+$pagina = new clsBase();
 
+    $pagina->SetTitulo($pagina->_instituicao . ' i-Educar - Servidor Afastamento');
+    $pagina->processoAp = '635';
+  
 // Instancia objeto de conteúdo
 $miolo = new indice();
 

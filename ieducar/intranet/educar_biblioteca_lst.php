@@ -30,8 +30,6 @@ require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
 require_once ("include/localizacaoSistema.php");
 
-require_once "educar_biblioteca_base.php";
-
 class indice extends clsListagem
 {
 	/**
@@ -202,7 +200,10 @@ class indice extends clsListagem
         
 }
 // cria uma extensao da classe base
-$pagina = new clsIndexBase();
+$pagina = new clsBase();
+$pagina->SetTitulo( "{$pagina->_instituicao} i-Educar - Biblioteca" );
+$pagina->processoAp = "591";
+$pagina->addEstilo( "localizacaoSistema" );
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase

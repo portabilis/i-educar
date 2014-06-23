@@ -32,16 +32,6 @@ require_once ("include/otopic/otopicGeral.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/relatorio.inc.php");
 
-class clsIndex extends clsBase
-{
-	
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Detalhe do Grupo" );
-		$this->processoAp = "294";
-	}
-}
-
 class Listas2 extends clsListagem
 {
 	function Gerar()
@@ -189,8 +179,11 @@ class Listas2 extends clsListagem
 	}
 }
 
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+$pagina->SetTitulo( "{$pagina->_instituicao} i-Pauta - Detalhe do Grupo" );
+$pagina->processoAp = "294";
+	
 $miolo = new Listas2();
 $pagina->addForm( $miolo );
 

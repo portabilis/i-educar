@@ -31,16 +31,6 @@ require_once ("include/clsCadastro.inc.php");
 require_once ("include/otopic/otopicGeral.inc.php");
 require_once ("include/relatorio.inc.php");
 
-class clsIndex extends clsBase
-{
-	
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Imprimir" );
-		$this->processoAp = "396";
-	}
-}
-
 class indice extends clsCadastro
 {
 	function Inicializar()
@@ -361,8 +351,11 @@ class indice extends clsCadastro
 
 }
 
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+$pagina->SetTitulo( "{$pagina->_instituicao} i-Pauta - Imprimir" );
+$pagina->processoAp = "396";
+	
 $miolo = new indice();
 $pagina->addForm( $miolo );
 
