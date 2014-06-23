@@ -180,5 +180,5 @@ $miolo = new indice();
 // adiciona o conteudo na clsBase
 $pagina->addForm( $miolo );
 // gera o html
-$pagina->MakeAll();
+//$pagina->MakeAll();
 ?>
