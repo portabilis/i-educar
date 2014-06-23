@@ -71,7 +71,7 @@ class DiarioController extends Portabilis_Controller_Page_ListController
 
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "M&oacute;dulo Escola",
+         "educar_index.php"                  => "i-Educar - Escola",
          ""                                  => "Lan&ccedil;amento de notas"             
     ));
     $this->enviaLocalizacao($localizacao->montar(), true);     

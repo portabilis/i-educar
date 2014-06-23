@@ -66,7 +66,7 @@ class indice extends clsDetalhe
 		session_write_close();
 
 		$this->titulo = "Transferencia Tipo - Detalhe";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->cod_transferencia_tipo=$_GET["cod_transferencia_tipo"];
 
@@ -138,7 +138,7 @@ class indice extends clsDetalhe
 		$localizacao = new LocalizacaoSistema();
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         "educar_index.php"                  => "M&oacute;dulo Escola",
+	         "educar_index.php"                  => "i-Educar - Escola",
 	         ""                                  => "Detalhe do tipo de transfer&ecirc;ncia"
 	    ));
 	    $this->enviaLocalizacao($localizacao->montar());

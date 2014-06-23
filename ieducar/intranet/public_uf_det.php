@@ -60,7 +60,7 @@ class indice extends clsDetalhe
 		session_write_close();
 
 		$this->titulo = "Uf - Detalhe";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->sigla_uf=$_GET["sigla_uf"];
 

@@ -47,7 +47,7 @@ class indice extends clsDetalhe
 		@session_write_close();
 
 		$this->titulo = "Tipo de Menu";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$db = new clsBanco();
 		$tipo_menu = $db->UnicoCampo("SELECT tipo_menu FROM funcionario WHERE ref_cod_pessoa_fj = '$idpes'");

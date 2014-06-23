@@ -46,7 +46,7 @@ class indice extends clsListagem
 	function Gerar()
 	{
 		$this->titulo = "Diária Grupo";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 	
 		$this->addCabecalhos( array( "Grupo" ) );
 		
@@ -85,7 +85,7 @@ class indice extends clsListagem
 	    $localizacao = new LocalizacaoSistema();
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         "educar_index.php"                  => "M&oacute;dulo Escola",
+	         "educar_index.php"                  => "i-Educar - Escola",
 	         ""                                  => "Listagem de grupos de di&aacute;rias"
 	    ));
 	    $this->enviaLocalizacao($localizacao->montar());

@@ -67,7 +67,7 @@ class indice extends clsDetalhe
 
 
 		$this->titulo = "Holerite descritivo";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$cod_holerite = @$_GET['cod_holerite'];
 

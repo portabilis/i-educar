@@ -44,7 +44,7 @@ class indice extends clsListagem
 	function Gerar()
 	{
 		$this->titulo = "Licita&ccedil;&otilde;es - finalizar";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 		
 		$this->addCabecalhos( array( "Data", "Objeto", "Editar") );
 		

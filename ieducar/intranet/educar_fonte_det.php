@@ -64,7 +64,7 @@ class indice extends clsDetalhe
 		session_write_close();
 
 		$this->titulo = "Fonte - Detalhe";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->cod_fonte=$_GET["cod_fonte"];
 
@@ -171,7 +171,7 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "M&oacute;dulo Biblioteca",
+         "educar_biblioteca_index.php"                  => "i-Educar - Biblioteca",
          ""                                  => "Detalhe da fonte"
     ));
     $this->enviaLocalizacao($localizacao->montar());		

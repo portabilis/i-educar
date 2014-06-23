@@ -92,7 +92,7 @@ class indice extends clsListagem
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$lista_busca = array(
 			"Fun&ccedil;&atilde;o C&ocirc;modo"
@@ -199,13 +199,13 @@ class indice extends clsListagem
 
 		$this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-            $_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
-            "educar_index.php"                  => "Escola",
-            ""                                  => "Listagem de Função Cômodo"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         "educar_index.php"                  => "i-Educar - Escola",
+	         ""                                  => "Listagem de fun&ccedil;&otilde;es de c&ocirc;modo"
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 // cria uma extensao da classe base

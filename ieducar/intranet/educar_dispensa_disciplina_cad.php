@@ -148,13 +148,14 @@ class indice extends clsCadastro
       'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
 
     $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "M&oacute;dulo Escola",
-         ""        => "{$nomeMenu} dispensa de disciplina"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+
+      $localizacao = new LocalizacaoSistema();
+      $localizacao->entradaCaminhos( array(
+           $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+           "educar_index.php"                  => "i-Educar - Escola",
+           ""        => "{$nomeMenu} dispensa de disciplina"
+      ));
+      $this->enviaLocalizacao($localizacao->montar());
 
     $this->nome_url_cancelar = 'Cancelar';
     return $retorno;

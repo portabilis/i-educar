@@ -49,7 +49,7 @@ class indice extends clsListagem
 	function Gerar()
 	{
 		$this->titulo = "Di&aacute;rias";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );	
+			
 		$this->addCabecalhos( array( "Secretaria", "Funcion&aacute;rio", "Partida", "Chegada", "Valor", "Nº Di&aacute;ria" ) );
 		if($_GET['ref_cod_setor'])	
 			$this->ref_cod_setor = @$_GET['ref_cod_setor'];		
@@ -142,7 +142,7 @@ class indice extends clsListagem
 	    $localizacao = new LocalizacaoSistema();
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         "educar_index.php"                  => "M&oacute;dulo Escola",
+	         "educar_index.php"                  => "i-Educar - Escola",
 	         ""                                  => "Listagem de di&aacute;rias"
 	    ));
 	    $this->enviaLocalizacao($localizacao->montar());

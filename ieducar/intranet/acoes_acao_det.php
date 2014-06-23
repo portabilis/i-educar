@@ -53,7 +53,7 @@ class indice extends clsDetalhe
 		@session_write_close();
 
 		$this->titulo = "Detalhe de a&ccedil;&otilde;es do Governo";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		if(!(int)$cod_acao_governo)
 			header("Location: acoes_acao_lst.php");

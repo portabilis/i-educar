@@ -59,7 +59,7 @@ class indice extends clsCadastro
 				
 		$this->pagina_anterior = $_SERVER["HTTP_REFERER"];
 		
-				$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+				
 		$retorno = "Novo";
 		return $retorno;
 	}

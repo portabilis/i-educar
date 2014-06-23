@@ -43,7 +43,7 @@ class indice extends clsDetalhe
 	function Gerar()
 	{
 		$this->titulo = "Detalhe do Email";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 		$id_email= @$_GET['id_email'];
 		$db = new clsBanco();
 		$db->Consulta( "SELECT cod_mailling_email, nm_pessoa, email FROM mailling_email WHERE cod_mailling_email ={$id_email}" );

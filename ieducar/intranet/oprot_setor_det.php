@@ -47,7 +47,7 @@ class indice extends clsDetalhe
 	function Gerar()
 	{
 		$this->titulo = "Detalhe do Setor";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->cod_setor = @$_GET['cod_setor'];
 		$obj_setor = new clsSetor( $this->cod_setor);

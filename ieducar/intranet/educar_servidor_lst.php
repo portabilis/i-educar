@@ -96,7 +96,7 @@ class indice extends clsListagem
       $this->$var = ($val === '') ? NULL : $val;
     }
 
-    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
+    
 
     $this->addCabecalhos( array(
       'Nome do Servidor',
@@ -225,7 +225,7 @@ class indice extends clsListagem
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "M&oacute;dulo Escola",
+         "educar_index.php"                  => "i-Educar - Escola",
          ""                                  => "Listagem de servidores"
     ));
     $this->enviaLocalizacao($localizacao->montar());    

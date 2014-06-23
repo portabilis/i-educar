@@ -61,7 +61,7 @@ class AtestadoMatriculaController extends Portabilis_Controller_ReportCoreContro
 
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "M&oacute;dulo Escola",
+         "educar_index.php"                  => "i-Educar - Escola",
          ""                                  => "Emiss&atilde;o de atestado de matr&iacute;cula"             
     ));
     $this->enviaLocalizacao($localizacao->montar());     

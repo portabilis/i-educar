@@ -65,7 +65,7 @@ class indice extends clsDetalhe
 		session_write_close();
 
 		$this->titulo = "Pagamento Multa - Detalhe";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 
 		$this->ref_cod_cliente 		= $_GET["cod_cliente"];
@@ -193,7 +193,7 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "M&oacute;dulo Biblioteca",
+         "educar_biblioteca_index.php"                  => "i-Educar - Biblioteca",
          ""                                  => "Detalhe da d&iacute;vida"
     ));
     $this->enviaLocalizacao($localizacao->montar());		

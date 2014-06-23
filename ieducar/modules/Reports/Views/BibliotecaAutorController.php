@@ -63,7 +63,7 @@ class BibliotecaAutorController extends Portabilis_Controller_ReportCoreControll
 
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "M&oacute;dulo Biblioteca",
+         "educar_biblioteca_index.php"                  => "i-Educar - Biblioteca",
          ""                                  => "Relat&oacute;rio de autores"             
     ));
     $this->enviaLocalizacao($localizacao->montar());     

@@ -61,7 +61,7 @@ class HistoricoEscolarController extends Portabilis_Controller_ReportCoreControl
 
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "M&oacute;dulo Escola",
+         "educar_index.php"                  => "i-Educar - Escola",
          ""                                  => "Emiss&atilde;o do hist&oacute;rico escolar"             
     ));
     $this->enviaLocalizacao($localizacao->montar());     

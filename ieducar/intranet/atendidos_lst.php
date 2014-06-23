@@ -20,7 +20,7 @@ class indice extends clsListagem
 	function Gerar()
 	{
 		$this->titulo = "Pessoas Físicas";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->addCabecalhos( array( "Nome", "CPF") );
 		$this->campoTexto( "nm_pessoa", "Nome",  $_GET['nm_pessoa'], "50", "255", true );

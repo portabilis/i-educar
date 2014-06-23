@@ -104,7 +104,7 @@ class indice extends clsListagem
 		}
 		$this->campoOculto("ref_cod_aluno",$this->ref_cod_aluno);
 
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$lista_busca = array(
       "Ano",

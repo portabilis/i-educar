@@ -63,7 +63,7 @@ class ViewController extends Core_Controller_Page_ViewController
 
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "M&oacute;dulo Escola",
+         "educar_index.php"                  => "i-Educar - Escola",
          ""                                  => "Detalhe da &aacute;rea de conhecimento"             
     ));
     $this->enviaLocalizacao($localizacao->montar());     
