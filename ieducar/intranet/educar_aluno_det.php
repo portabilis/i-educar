@@ -552,16 +552,6 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Página Pessoal', $registro['url']));
     }
 
-    if ($obj_beneficios_lista) {
-      if (count($obj_beneficios_lista)){
-        foreach ($obj_beneficios_lista as $reg) {
-          $beneficios.= '<span style="background-color: #A1B3BD; padding: 2px;"><b>'.$reg['nm_beneficio'].'</b></span>&nbsp; ';
-        }
-        if(!empty($beneficios))
-          $this->addDetalhe( array( "Benefícios", "{$beneficios}") );
-      }
-    }
-
     if ($registro['ref_cod_religiao']) {
       $obj_religiao     = new clsPmieducarReligiao($registro['ref_cod_religiao']);
       $obj_religiao_det = $obj_religiao->detalhe();
@@ -572,6 +562,22 @@ class indice extends clsDetalhe
     if ($det_raca['nm_raca']) {
       $this->addDetalhe(array('Raça', $det_raca['nm_raca']));
     }
+
+    if ($obj_beneficios_lista) {
+      $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#A1B3BD" align="center"><td>Benefícios</td></tr>';
+      $cor    = '#D1DADF';
+
+      foreach ($obj_beneficios_lista as $reg) {
+        $cor = $cor == '#D1DADF' ? '#E4E9ED' : '#D1DADF';
+
+        $tabela .= sprintf('<tr bgcolor="%s" align="center"><td>%s</td></tr>',
+          $cor, $reg['nm_beneficio']);
+      }
+
+      $tabela .= '</table>';
+
+      $this->addDetalhe(array('Benefícios', $tabela));
+    }    
 
     if ($deficiencia_pessoa) {
       $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#A1B3BD" align="center"><td>Deficiências</td></tr>';
