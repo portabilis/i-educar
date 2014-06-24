@@ -16,8 +16,12 @@ class indiceTest extends PHPUnit_Framework_TestCase {
     public function testGerar() {
         /*Esta função tem o único propósito de listar as bibliotecas cadastradas
          * e direcionar o usuário no caso de cadastro de uma  biblioteca
+         * Seu retorno deve ser sempre uma lista de bibliotecas cadastradas, e não pode ser nulo 
+         * pois a biblioteca da portablis é pré cadastrada
          */
-        $this->assertNotNull($this->object->Gerar());
+        $this->assertNotEmpty($this->object->Gerar());
+        $this->assertNotNull($this->object->Gerar());  
+   
     }
 
 }
