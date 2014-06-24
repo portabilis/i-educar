@@ -99,10 +99,9 @@ class indice extends clsListagem
 
 		// outros Filtros
 		$this->campoTexto( "nm_biblioteca", "Biblioteca", $this->nm_biblioteca, 30, 255, false );
-
 		// Paginador
 		$this->limite = 20;
-		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+		$this->offset = ( @$_GET["pagina_{$this->nome}"] ) ? @$_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
 		$obj_biblioteca = new clsPmieducarBiblioteca();
 		$obj_biblioteca->setOrderby( "nm_biblioteca ASC" );
@@ -191,7 +190,7 @@ class indice extends clsListagem
                 
                 $localizacao = new LocalizacaoSistema();
                 $localizacao->entradaCaminhos( array(
-                    $_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
+                    @$_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
                     "educar_biblioteca_index.php"       => "Biblioteca",
                     ""                                  => "Lista de Biblioteca"
                 ));

@@ -21,11 +21,12 @@ class indiceTest extends PHPUnit_Framework_TestCase {
          * Sendo assim o teste se baseia na criação da url de direcionamento, se ela existe ou não,
          * o que vai depender da interação do usuário. 
          * Dessa forma nem todos os  testes rodarão devidamente.
+         * Por default, antes da interação com o usuário todas as opções de url são nulas
          */
         $this->assertNull($this->object->url_novo);
         $this->assertNull($this->object->url_editar);
         $this->assertNull($this->object->url_cancelar);
-
+        
     }
 
 }
