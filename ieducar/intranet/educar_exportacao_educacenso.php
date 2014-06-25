@@ -1530,7 +1530,7 @@ function exportaDadosRegistro80($escolaId, $ano, $data_ini, $data_fim){
     // Transforma todos resultados em variáveis
     $d = '|';
     $return = '';
-    $numeroRegistros = 23;
+    $numeroRegistros = 24;
 
     foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim))) as $reg) {
       extract($reg);
