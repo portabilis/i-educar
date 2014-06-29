@@ -19,9 +19,11 @@ class educar_acervo_lstTest extends PHPUnit_Framework_TestCase{
         
    public function testGerar() {
      
-     $this->assertNotNull($this->object->Gerar());
+    
      $this->assertNotEmpty($this->object->Gerar(), $message = "A lista do acervo"
              . " de obras não pode estar vazia");
+     $this->assertNotNull($this->object->Gerar(), $message = "A lista de acervo"
+      . " de obras não pode ser nula, pois uma obra deve ser pré cadastrada.");
 
     
     }
