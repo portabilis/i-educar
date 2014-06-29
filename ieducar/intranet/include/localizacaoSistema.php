@@ -33,7 +33,7 @@ class LocalizacaoSistema {
     }
 
     public function getUrl() {
-        return $_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+        return @$_SERVER['SERVER_NAME'].@$_SERVER['REQUEST_URI'];
     }
 
     public function url( $url ) {

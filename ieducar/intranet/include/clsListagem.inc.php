@@ -205,7 +205,7 @@ class clsListagem extends clsCampos
       $meios = array();
 
       for ($i = 0; $i <= $intPaginasExibidas * 2 && $i + $pagStart <= $totalPaginas; $i++) {
-        $ordenacao = empty($_POST['ordenacao']) ? $_GET['ordenacao'] : $_POST['ordenacao'];
+        @$ordenacao = empty($_POST['ordenacao']) ? $_GET['ordenacao'] : $_POST['ordenacao'];
 
         $imagem     = ($pagStart + $i + $pag_modifier == $intPaginaAtual) ? '2' : '1';
         $compl_url  = ($add_iniciolimit) ? "&iniciolimit=" . ($pagStart + $i + $pag_modifier) : '';
