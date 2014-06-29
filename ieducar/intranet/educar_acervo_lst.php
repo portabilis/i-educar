@@ -270,7 +270,8 @@ class indice extends clsListagem
                     "educar_biblioteca_index.php"                  => "Biblioteca",
                     ""                                  => "Lista de Obras"
                 ));
-                $this->enviaLocalizacao($localizacao->montar());                
+                $this->enviaLocalizacao($localizacao->montar());  
+                return $lista;
 	}
 }
 // cria uma extensao da classe base
@@ -284,7 +285,7 @@ $miolo = new indice();
 // adiciona o conteudo na clsBase
 $pagina->addForm( $miolo );
 // gera o html
-$pagina->MakeAll();
+// $pagina->MakeAll();
 ?>
 <script>
 
