@@ -13,6 +13,6 @@ require_once '../intranet/educar_acervo_det.php';
  *
  * @author ieducar
  */
-class educar_acervo_detTest {
+class educar_acervo_detTest extends PHPUnit_Framework_TestCase{
     //put your code here
 }
