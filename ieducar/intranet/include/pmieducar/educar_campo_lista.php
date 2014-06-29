@@ -89,7 +89,7 @@
 
 		if ($get_escola && @$get_biblioteca)
 		{
-			$this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao,"getDuploEscolaBiblioteca();",null,null,null,$instituicao_desabilitado,$instituicao_obrigatorio);
+			$this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, @$this->ref_cod_instituicao,"getDuploEscolaBiblioteca();",null,null,null,$instituicao_desabilitado,$instituicao_obrigatorio);
 		}
 		else if ($get_escola && @$get_curso && $get_matricula)
 		{
@@ -154,7 +154,7 @@
 	{
 		$opcoes_escola = array( "" => "Selecione uma escola" );
 		// EDITAR
-		if ($this->ref_cod_instituicao)
+		if (@$this->ref_cod_instituicao)
 		{
 			$obj_escola = new clsPmieducarEscola();
 			$obj_escola->setOrderby("nome ASC");
@@ -170,7 +170,7 @@
 
 		if (@$get_biblioteca)
 		{
-			$this->campoLista( "ref_cod_escola", "Escola", $opcoes_escola, $this->ref_cod_escola,"getBiblioteca(2);",null,null,null,$escola_desabilitado,$escola_obrigatorio );
+			$this->campoLista( "ref_cod_escola", "Escola", $opcoes_escola, @$this->ref_cod_escola,"getBiblioteca(2);",null,null,null,$escola_desabilitado,$escola_obrigatorio );
 		}
 		else
 		{
@@ -269,13 +269,13 @@
 
 	if ( @$get_biblioteca )
 	{
-		if ($ref_cod_biblioteca_ == 0 && $nivel_usuario != 1 && $nivel_usuario != 2 )
+		if (@$ref_cod_biblioteca_ == 0 && $nivel_usuario != 1 && $nivel_usuario != 2 )
 		{
 			$this->campoOculto( "ref_cod_biblioteca", $this->ref_cod_biblioteca );
 		}
 		else
 		{
-			$qtd_bibliotecas = count($ref_cod_biblioteca_);
+			$qtd_bibliotecas = count(@$ref_cod_biblioteca_);
 			if ( $qtd_bibliotecas == 1 && ($nivel_usuario == 4 || $nivel_usuario == 8))
 			{
 				$det_unica_biblioteca = array_shift($ref_cod_biblioteca_);
@@ -305,7 +305,7 @@
 			{
 				$opcoes_biblioteca = array( "" => "Selecione" );
 				// EDITAR
-				if ($this->ref_cod_escola || $this->ref_cod_instituicao)
+				if (@$this->ref_cod_escola || @$this->ref_cod_instituicao)
 				{
 					$objTemp = new clsPmieducarBiblioteca();
 					$objTemp->setOrderby("nm_biblioteca ASC");
@@ -320,7 +320,7 @@
 					}
 				}
 			  $getCliente = '';
-        if ($get_cliente_tipo) {
+        if (@$get_cliente_tipo) {
           $getCliente = "getClienteTipo()";
         }
 				$this->campoLista( "ref_cod_biblioteca", "Biblioteca", $opcoes_biblioteca, $this->ref_cod_biblioteca,$getCliente,null,null,null,$biblioteca_desabilitado,$biblioteca_obrigatorio );
