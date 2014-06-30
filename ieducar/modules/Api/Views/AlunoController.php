@@ -649,6 +649,19 @@ protected function createOrUpdateUniforme($id) {
     return array('ocorrencias_disciplinares' => $ocorrenciasAluno);
   }
 
+  protected function getGradeUltimoHistorico(){
+    
+    $sql = 'SELECT historico_grade_curso_id as id
+            FROM historico_escolar 
+            WHERE ref_cod_aluno = $1 
+            ORDER BY sequencial DESC LIMIT 1';
+
+    $params     = array($this->getRequest()->aluno_id);
+    $grade_curso = $this->fetchPreparedQuery($sql, $params,false, 'first-row');
+
+    return array('grade_curso' => $grade_curso['id']);
+  }
+
   // search options
 
   protected function searchOptions() {
@@ -1070,6 +1083,9 @@ protected function createOrUpdateUniforme($id) {
 
     elseif ($this->isRequestFor('get', 'ocorrencias_disciplinares'))
       $this->appendResponse($this->getOcorrenciasDisciplinares());
+
+    elseif ($this->isRequestFor('get', 'grade_ultimo_historico'))
+      $this->appendResponse($this->getGradeUltimoHistorico());    
 
     // create
     elseif ($this->isRequestFor('post', 'aluno'))
