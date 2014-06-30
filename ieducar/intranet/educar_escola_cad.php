@@ -69,7 +69,9 @@ class indice extends clsCadastro
 	var $nm_escola;
 	var $passou;
 	var $escola_curso;
+	var $escola_curso_autorizacao;
 	var $ref_cod_curso;
+	var $autorizacao;
 	var $fantasia;
 
 	var $sigla_uf_;
@@ -1057,6 +1059,8 @@ if(!$this->isEnderecoExterno){
 
 			if ( $_POST["escola_curso"] )
 				$this->escola_curso = unserialize( urldecode( $_POST["escola_curso"] ) );
+			if ( $_POST["escola_curso_autorizacao"] )
+				$this->escola_curso_autorizacao = unserialize( urldecode( $_POST["escola_curso_autorizacao"] ) );
 			if( is_numeric( $this->cod_escola ) && !$_POST )
 			{
 				$obj = new clsPmieducarEscolaCurso( $this->cod_escola );
@@ -1066,13 +1070,17 @@ if(!$this->isEnderecoExterno){
 					foreach ( $registros AS $campo )
 					{
 						$this->escola_curso[$campo["ref_cod_curso"]] = $campo["ref_cod_curso"];
+						$this->escola_curso_autorizacao[$campo["ref_cod_curso"]] = $campo["autorizacao"];
 
 					}
 				}
 			}
 			if ( $_POST["ref_cod_curso"] )
 			{
-				$this->escola_curso[$_POST["ref_cod_curso"]] = $_POST["ref_cod_curso"];
+				$this->escola_curso[$_POST["ref_cod_curso"]] = $_POST["ref_cod_curso"];				
+
+				if($this->autorizacao)
+					$this->escola_curso_autorizacao[$_POST["ref_cod_curso"]] = $this->autorizacao;
 				unset( $this->ref_cod_curso );
 			}
 			$this->campoQuebra();
@@ -1088,6 +1096,7 @@ if(!$this->isEnderecoExterno){
 					if ( $this->excluir_curso == $curso )
 					{
 						unset($this->escola_curso[$curso]);// = null;
+						$this->escola_curso_autorizacao[$curso] = null;
 						$this->excluir_curso = null;
 					}
 					else
@@ -1095,16 +1104,21 @@ if(!$this->isEnderecoExterno){
 						$obj_curso = new clsPmieducarCurso($curso);
 						$obj_curso_det = $obj_curso->detalhe();
 						$nm_curso = $obj_curso_det["nm_curso"];
-						$this->campoTextoInv( "ref_cod_curso_{$curso}", "", $nm_curso, 30, 255, false, false, false, "", "<a href='#' onclick=\"getElementById('excluir_curso').value = '{$curso}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>" );
+						$nm_autorizacao = $this->escola_curso_autorizacao[$curso];
+						$this->campoTextoInv( "ref_cod_curso_{$curso}", "", $nm_curso, 30, 255, false, false, true );
+						$this->campoTextoInv( "autorizacao_{$curso}", "", $nm_autorizacao, 20, 255, false, false, false, "", "<a href='#' onclick=\"getElementById('excluir_curso').value = '{$curso}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>" );
 						$aux[$curso] = $curso;
+						$aux_autorizacao[$curso] = $nm_autorizacao;						
 					}
 
 				}
 				unset($this->escola_curso);
 				$this->escola_curso = $aux;
+				$this->escola_curso_autorizacao = $aux_autorizacao;
 			}
 
 			$this->campoOculto( "escola_curso", serialize( $this->escola_curso ) );
+			$this->campoOculto( "escola_curso_autorizacao", serialize( $this->escola_curso_autorizacao ) );
 
 			$opcoes = array( "" => "Selecione" );
 			if( class_exists( "clsPmieducarCurso" ) )
@@ -1142,11 +1156,13 @@ if(!$this->isEnderecoExterno){
 				echo "<!--\nErro\nClasse clsPmieducarCurso n&atilde;o encontrada\n-->";
 				$opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
 			}
-			if ( $aux )
+			if ( $aux ){
 				$this->campoLista( "ref_cod_curso", "Curso", $opcoes, $this->ref_cod_curso,"",false,"","<a href='#' onclick=\"getElementById('incluir_curso').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>",false,false);
-			else
+				$this->campoTexto( "autorizacao", "Autorização", "", 30, 255, false );
+			}else{
 				$this->campoLista( "ref_cod_curso", "Curso", $opcoes, $this->ref_cod_curso,"",false,"","<a href='#' onclick=\"getElementById('incluir_curso').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
-
+				$this->campoTexto( "autorizacao", "Autorização", "", 30, 255, false );
+			}
 			$this->campoOculto( "incluir_curso", "" );
 			$this->campoQuebra();			
 
@@ -1704,13 +1720,16 @@ if(!$this->isEnderecoExterno){
 						}
 
 						//-----------------------CADASTRA CURSO------------------------//
-						$this->escola_curso = unserialize( urldecode( $this->escola_curso ) );
+						$this->escola_curso = unserialize( urldecode( $this->escola_curso ) );		
+						$this->escola_curso_autorizacao = unserialize( urldecode($this->escola_curso_autorizacao) );			
+
 						if ($this->escola_curso)
 						{
-//							echo "<pre>";print_r($this->escola_curso);die;
+
 							foreach ( $this->escola_curso AS $campo )
 							{
-								$curso_escola = new clsPmieducarEscolaCurso( $cadastrou1, $campo, null, $this->pessoa_logada, null, null, 1 );
+								$curso_escola = new clsPmieducarEscolaCurso( $cadastrou1, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo] );
+
 								$cadastrou_ = $curso_escola->cadastra();
 								if ( !$cadastrou_ )
 								{
@@ -1865,11 +1884,14 @@ if(!$this->isEnderecoExterno){
 				{
 					//-----------------------CADASTRA CURSO------------------------//
 					$this->escola_curso = unserialize( urldecode( $this->escola_curso ) );
+					$this->escola_curso_autorizacao = unserialize( urldecode($this->escola_curso_autorizacao) );
+					
 					if ($this->escola_curso)
 					{
 						foreach ( $this->escola_curso AS $campo )
 						{
-							$curso_escola = new clsPmieducarEscolaCurso( $cadastrou, $campo, null, $this->pessoa_logada, null, null, 1 );
+
+							$curso_escola = new clsPmieducarEscolaCurso( $cadastrou, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo] );
 							$cadastrou_ = $curso_escola->cadastra();
 							if ( !$cadastrou_ )
 							{
@@ -2250,6 +2272,7 @@ if(!$this->isEnderecoExterno){
 						}
 						//-----------------------EDITA CURSO------------------------//
 						$this->escola_curso = unserialize( urldecode( $this->escola_curso ) );
+						$this->escola_curso_autorizacao = unserialize( urldecode( $this->escola_curso_autorizacao ) );
 						$obj  = new clsPmieducarEscolaCurso( $this->cod_escola );
 						$excluiu = $obj->excluirTodos();
 
@@ -2260,7 +2283,7 @@ if(!$this->isEnderecoExterno){
 //								die("com cnpj");
 								foreach ( $this->escola_curso AS $campo )
 								{
-									$obj = new clsPmieducarEscolaCurso( $this->cod_escola, $campo, null, $this->pessoa_logada, null, null, 1 );
+									$obj = new clsPmieducarEscolaCurso( $this->cod_escola, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo] );
 									$cadastrou_  = $obj->cadastra();
 									if ( !$cadastrou_ )
 									{
@@ -2318,6 +2341,7 @@ if(!$this->isEnderecoExterno){
 				{
 					//-----------------------EDITA CURSO------------------------//
 					$this->escola_curso = unserialize( urldecode( $this->escola_curso ) );
+					$this->escola_curso_autorizacao = unserialize( urldecode( $this->escola_curso_autorizacao ) );
 					$obj  = new clsPmieducarEscolaCurso( $this->cod_escola );
 					$excluiu = $obj->excluirTodos();
 
@@ -2328,7 +2352,7 @@ if(!$this->isEnderecoExterno){
 //							die("sem cnpj");
 							foreach ( $this->escola_curso AS $campo )
 							{
-									$obj = new clsPmieducarEscolaCurso( $this->cod_escola, $campo, null, $this->pessoa_logada, null, null, 1 );
+									$obj = new clsPmieducarEscolaCurso( $this->cod_escola, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo] );
 									$cadastrou_  = $obj->cadastra();
 									if ( !$cadastrou_ )
 									{

@@ -100,7 +100,6 @@ class indice extends clsCadastro
 
   var $multi_seriado;
   var $modalidade_curso;
-  var $autorizacao;
 
   function Inicializar()
   {
@@ -381,10 +380,6 @@ class indice extends clsCadastro
     $helperOptions = array('objectName' => 'etapacurso');
     $options       = array('label' => 'Etapas que o curso contêm', 'size' => 50, 'required' => false,
                            'options' => array('value' => null));
-
-    $this->campoTexto('autorizacao', 'Autoriza&ccedil;&atilde;o',
-                      $this->autorizacao, 30, 255, FALSE);
-
  
     $this->inputsHelper()->multipleSearchEtapacurso('', $options, $helperOptions);
   }
@@ -410,7 +405,7 @@ class indice extends clsCadastro
         $this->qtd_etapas, NULL, NULL, NULL, NULL, $this->carga_horaria,
         $this->ato_poder_publico, NULL, $this->objetivo_curso,
         $this->publico_alvo, NULL, NULL, 1, NULL, $this->ref_cod_instituicao,
-        $this->padrao_ano_escolar, $this->hora_falta, NULL, $this->multi_seriado, $this->autorizacao);
+        $this->padrao_ano_escolar, $this->hora_falta, NULL, $this->multi_seriado);
       $obj->modalidade_curso = $this->modalidade_curso;
 
       $cadastrou = $obj->cadastra();
@@ -468,7 +463,7 @@ class indice extends clsCadastro
         NULL, $this->carga_horaria, $this->ato_poder_publico, NULL,
         $this->objetivo_curso, $this->publico_alvo, NULL, NULL, 1,
         $this->pessoa_logada, $this->ref_cod_instituicao,
-        $this->padrao_ano_escolar, $this->hora_falta, NULL, $this->multi_seriado,$this->autorizacao);
+        $this->padrao_ano_escolar, $this->hora_falta, NULL, $this->multi_seriado);
       $obj->modalidade_curso = $this->modalidade_curso;
 
       $editou = $obj->edita();
