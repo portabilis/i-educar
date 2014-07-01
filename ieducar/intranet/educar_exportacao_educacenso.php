@@ -165,29 +165,37 @@ class indice extends clsCadastro
     die();
   }
 
-  function exportaDadosCensoPorEscola($escolaId, $ano, $data_ini, $data_fim){
+  protected function exportaDadosCensoPorEscola($escolaId, $ano, $data_ini, $data_fim){
     $export = $this->exportaDadosRegistro00($escolaId, $ano);
     $export .= $this->exportaDadosRegistro10($escolaId);
     foreach ($this->getTurmas($escolaId, $ano) as $turmaId => $turmaNome) {
       $export .= $this->exportaDadosRegistro20($escolaId, $turmaId);
     }
     foreach ($this->getServidores($escolaId) as $servidor) {
-      $export .= $this->exportaDadosRegistro30($servidor['id']);
-      $export .= $this->exportaDadosRegistro40($servidor['id']);
-      $export .= $this->exportaDadosRegistro50($servidor['id']);
-      $export .= $this->exportaDadosRegistro51($servidor['id']);      
+
+      $registro30 = $this->exportaDadosRegistro30($servidor['id']);
+      $registro40 = $this->exportaDadosRegistro40($servidor['id']);
+      $registro50 = $this->exportaDadosRegistro50($servidor['id']);
+      $registro51 = $this->exportaDadosRegistro51($servidor['id']);
+      if(!empty($registro30) && !empty($registro40) && !empty($registro50))
+        $export .= $registro30 . $registro40 . $registro50 . $registro51;
     }
-    $export .= $this->exportaDadosRegistro60($escolaId, $ano, $data_ini, $data_fim);
-    $export .= $this->exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim);
-    $export .= $this->exportaDadosRegistro80($escolaId, $ano, $data_ini, $data_fim);
+
+    foreach ($this->getAlunos($escolaId, $ano, $data_ini, $data_fim) as $alunoId) {
+      $registro60 = $this->exportaDadosRegistro60($escolaId, $ano, $data_ini, $data_fim, $alunoId['id']);
+      $registro70 = $this->exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim, $alunoId['id']);
+      $registro80 = $this->exportaDadosRegistro80($escolaId, $ano, $data_ini, $data_fim, $alunoId['id']);
+      if(!empty($registro60) && !empty($registro70) && !empty($registro80))
+        $export .= $registro60 . $registro70 . $registro80;
+    }    
     return $export;
   }
 
-  function getTurmas($escolaId, $ano){
+  protected function getTurmas($escolaId, $ano){
     return App_Model_IedFinder::getTurmas($escolaId, NULL, $ano);
   }
 
-  function getServidores($escolaId){
+  protected function getServidores($escolaId){
     $sql = 'SELECT cod_servidor as id
               FROM pmieducar.servidor
               INNER JOIN pmieducar.servidor_alocacao ON (ref_cod_servidor = cod_servidor)
@@ -195,7 +203,27 @@ class indice extends clsCadastro
     return Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId)));
   }
 
-  function exportaDadosRegistro00($escolaId, $ano){
+  protected function getAlunos($escolaId, $ano, $data_ini, $data_fim){
+    $sql = 
+     'SELECT
+      distinct(a.cod_aluno) as id
+
+      FROM  pmieducar.aluno a
+      INNER JOIN cadastro.fisica fis ON (fis.idpes = a.ref_idpes)
+      INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
+      INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno)
+      INNER JOIN pmieducar.escola e ON (m.ref_ref_cod_escola = e.cod_escola)
+      INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
+
+      WHERE e.cod_escola = $1
+      AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
+      AND (m.aprovado = 3 OR DATE(COALESCE(m.data_cancel,m.data_exclusao)) > DATE($4))      
+      AND m.ano = $2
+    ';
+    return Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim)));
+  }  
+
+  protected function exportaDadosRegistro00($escolaId, $ano){
     $sql = 
     	' SELECT 
         \'00\' as r00s1,
@@ -271,7 +299,7 @@ class indice extends clsCadastro
     }
   }
 
-  function exportaDadosRegistro10($escolaId){
+  protected function exportaDadosRegistro10($escolaId){
     $sql = 
     	'SELECT
       \'10\' as r10s1,
@@ -618,7 +646,7 @@ class indice extends clsCadastro
     }
   }
 
-  function exportaDadosRegistro20($escolaId, $turmaId){
+  protected function exportaDadosRegistro20($escolaId, $turmaId){
     $sql = 
     	' SELECT 
         \'20\' as r20s1,
@@ -768,7 +796,7 @@ class indice extends clsCadastro
     }
   }
   
-  function exportaDadosRegistro30($servidorId){
+  protected function exportaDadosRegistro30($servidorId){
     $sql = 
     	' SELECT
         \'30\' as r30s1,
@@ -844,7 +872,7 @@ class indice extends clsCadastro
     }
   }
 
-  function exportaDadosRegistro40($servidorId){
+  protected function exportaDadosRegistro40($servidorId){
     $sql = 
     'SELECT
 
@@ -889,7 +917,7 @@ class indice extends clsCadastro
 
       $d = '|';
       $return = '';
-      $numeroRegistros = 35;
+      $numeroRegistros = 13;
 
       for ($i=1; $i <= $numeroRegistros ; $i++)
         $return .= ${'r40s'.$i}.$d;
@@ -898,7 +926,7 @@ class indice extends clsCadastro
     }
   }
 
-  function exportaDadosRegistro50($servidorId){
+  protected function exportaDadosRegistro50($servidorId){
 
   	$sql = 
   	'SELECT
@@ -980,7 +1008,7 @@ class indice extends clsCadastro
     }
   }
 
-  function exportaDadosRegistro51($servidorId){
+  protected function exportaDadosRegistro51($servidorId){
 
   	$sql = 
   	 'SELECT
@@ -1190,7 +1218,7 @@ class indice extends clsCadastro
     return $return;
   }
   
-  function exportaDadosRegistro60($escolaId, $ano, $data_ini, $data_fim){
+  protected function exportaDadosRegistro60($escolaId, $ano, $data_ini, $data_fim, $alunoId){
 
     $sql = 
      'SELECT
@@ -1236,6 +1264,7 @@ class indice extends clsCadastro
       AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
       AND (m.aprovado = 3 OR DATE(COALESCE(m.data_cancel,m.data_exclusao)) > DATE($4))      
       AND m.ano = $2
+      AND a.cod_aluno = $5
     ';
 
     // Transforma todos resultados em variáveis
@@ -1247,7 +1276,7 @@ class indice extends clsCadastro
                         cadastro.deficiencia where cod_deficiencia = ref_cod_deficiencia and ref_idpes = $1 
                         and deficiencia_educacenso is not null';
 
-    foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim))) as $reg) {
+    foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
       extract($reg);
       
       $r60s7 = Portabilis_Date_Utils::pgSQLToBr($r60s7);
@@ -1298,7 +1327,7 @@ class indice extends clsCadastro
     return $return;
   }  
 
-function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim){
+protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim, $alunoId){
 
     $sql = 
      '  SELECT
@@ -1353,6 +1382,7 @@ function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim){
         AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
         AND (m.aprovado = 3 OR DATE(COALESCE(m.data_cancel,m.data_exclusao)) > DATE($4))
         AND m.ano = $2     
+        AND a.cod_aluno = $5
     ';
 
     // Transforma todos resultados em variáveis
@@ -1360,7 +1390,7 @@ function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim){
     $return = '';
     $numeroRegistros = 31;
 
-    foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim))) as $reg) {
+    foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
       extract($reg);
 
       $r70s9 = Portabilis_Date_Utils::pgSQLToBr($r70s9);
@@ -1399,7 +1429,7 @@ function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim){
     return $return;
   }
 
-function exportaDadosRegistro80($escolaId, $ano, $data_ini, $data_fim){
+  protected function exportaDadosRegistro80($escolaId, $ano, $data_ini, $data_fim, $alunoId){
 
     $sql = 
      '  SELECT
@@ -1525,6 +1555,7 @@ function exportaDadosRegistro80($escolaId, $ano, $data_ini, $data_fim){
         AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
         AND (m.aprovado = 3 OR DATE(COALESCE(m.data_cancel,m.data_exclusao)) > DATE($4))        
         AND m.ano = $2    
+        AND a.cod_aluno = $5
     ';
 
     // Transforma todos resultados em variáveis
@@ -1532,7 +1563,7 @@ function exportaDadosRegistro80($escolaId, $ano, $data_ini, $data_fim){
     $return = '';
     $numeroRegistros = 24;
 
-    foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim))) as $reg) {
+    foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
       extract($reg);
 
       // validações transporte escolar
@@ -1561,7 +1592,7 @@ function exportaDadosRegistro80($escolaId, $ano, $data_ini, $data_fim){
     return $return;
   }  
 
-  function cpfToCenso($cpf){
+  protected function cpfToCenso($cpf){
     $cpf = str_replace(array('.', '-'), '', int2CPF($cpf));
     return $cpf == '00000000000' ? NULL : $cpf;
   }    
