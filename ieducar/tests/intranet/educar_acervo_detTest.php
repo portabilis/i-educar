@@ -2,11 +2,7 @@
 
 require_once "PHPUnit/Framework/TestCase.php";
 require_once '../intranet/educar_acervo_det.php';
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 
 /**
  * Description of educar_acervo_detTest
@@ -14,5 +10,25 @@ require_once '../intranet/educar_acervo_det.php';
  * @author ieducar
  */
 class educar_acervo_detTest extends PHPUnit_Framework_TestCase{
-    //put your code here
+   
+    protected $object;
+    
+
+    protected function setUp() {
+        $this->object = new indice;
+        
+        $_SESSION['id_pessoa'] = 1;
+        $_GET["cod_acervo"] = 1;
+    }
+    
+    public function testGerar() {
+        
+        $this->assertNull($this->object->url_novo, $message = 
+                "A Url deve ser nula por default");
+        $this->assertNull($this->object->url_editar, $message = 
+                "A Url deve ser nula por default");
+        $this->assertNull($this->object->url_cancelar, $message = 
+                "A Url deve ser nula por default");
+        
+    }
 }
