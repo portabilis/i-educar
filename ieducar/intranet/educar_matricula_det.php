@@ -263,7 +263,7 @@ class indice extends clsDetalhe
           $this->array_botao_url_script[] = "go(\"educar_dispensa_disciplina_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
         }
 
-        $this->array_botao[]            = 'Enturmar';
+        $this->array_botao[]            = ( $GLOBALS['coreExt']['Config']->app->database->dbname == 'botucatu' ? 'Troca de sala / Remanejamento' :'Enturmar' );
         $this->array_botao_url_script[] = "go(\"educar_matricula_turma_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
 
         $this->array_botao[]            = 'Abandono';
@@ -282,7 +282,7 @@ class indice extends clsDetalhe
         }
         else {
           if ($registro['ref_ref_cod_serie']) {
-            $this->array_botao[]            = 'Solicitar Transferência';
+            $this->array_botao[]            = ( $GLOBALS['coreExt']['Config']->app->database->dbname == 'botucatu' ? 'Deslocamento / Transferência' : 'Solicitar Transferência' );
             $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
           }
         }
