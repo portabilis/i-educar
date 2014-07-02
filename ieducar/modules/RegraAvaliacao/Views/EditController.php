@@ -205,6 +205,17 @@ var tabela_arredondamento = new function() {
     );
 
     $this->prependOutput($js);
+
+    Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
+
+    $nomeMenu = $this->getRequest()->id == null ? "Cadastrar" : "Editar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "i-Educar - Escola",
+         ""        => "$nomeMenu regra de avalia&ccedil;&atilde;o"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
   }
 
   /**

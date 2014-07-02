@@ -43,7 +43,6 @@ require_once 'include/pmieducar/geral.inc.php';
 class clsPmieducarAluno
 {
   var $cod_aluno;
-  var $ref_cod_aluno_beneficio;
   var $ref_cod_religiao;
   var $ref_usuario_exc;
   var $ref_usuario_cad;
@@ -67,6 +66,7 @@ class clsPmieducarAluno
   var $recurso_prova_inep_prova_braille;  
   var $justificativa_falta_documentacao;  
   var $url_laudo_medico;  
+  var $codigo_sistema;  
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -131,36 +131,11 @@ class clsPmieducarAluno
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'aluno';
 
-    $this->_campos_lista = $this->_todos_campos = 'cod_aluno, ref_cod_aluno_beneficio, ref_cod_religiao, ref_usuario_exc, 
+    $this->_campos_lista = $this->_todos_campos = 'cod_aluno, ref_cod_religiao, ref_usuario_exc, 
         ref_usuario_cad, ref_idpes, data_cadastro, data_exclusao, ativo, caminho_foto, analfabeto, nm_pai, nm_mae,tipo_responsavel, aluno_estado_id,
         recurso_prova_inep_aux_ledor, recurso_prova_inep_aux_transcricao, recurso_prova_inep_guia_interprete, recurso_prova_inep_interprete_libras, recurso_prova_inep_leitura_labial,
         recurso_prova_inep_prova_ampliada_16, recurso_prova_inep_prova_ampliada_20, recurso_prova_inep_prova_ampliada_24, recurso_prova_inep_prova_braille,
-        justificativa_falta_documentacao, url_laudo_medico';
-
-    if (is_numeric($ref_cod_aluno_beneficio)) {
-      if (class_exists('clsPmieducarAlunoBeneficio')) {
-        $tmp_obj = new clsPmieducarAlunoBeneficio($ref_cod_aluno_beneficio);
-
-        if (method_exists($tmp_obj, 'existe')) {
-          if ($tmp_obj->existe()) {
-            $this->ref_cod_aluno_beneficio = $ref_cod_aluno_beneficio;
-          }
-        }
-        elseif (method_exists($tmp_obj, 'detalhe')) {
-          if ($tmp_obj->detalhe()) {
-            $this->ref_cod_aluno_beneficio = $ref_cod_aluno_beneficio;
-          }
-        }
-      }
-      else {
-        if ($db->CampoUnico("SELECT 1 FROM pmieducar.aluno_beneficio WHERE cod_aluno_beneficio = '{$ref_cod_aluno_beneficio}'")) {
-          $this->ref_cod_aluno_beneficio = $ref_cod_aluno_beneficio;
-        }
-      }
-    }
-    elseif ($ref_cod_aluno_beneficio == 'NULL') {
-      $this->ref_cod_aluno_beneficio = $ref_cod_aluno_beneficio;
-    }
+        justificativa_falta_documentacao, url_laudo_medico, codigo_sistema';
 
     if (is_numeric($ref_usuario_exc)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -272,11 +247,6 @@ class clsPmieducarAluno
       $valores = '';
       $gruda   = '';
 
-      if (is_numeric($this->ref_cod_aluno_beneficio)) {
-        $campos  .= "{$gruda}ref_cod_aluno_beneficio";
-        $valores .= "{$gruda}'{$this->ref_cod_aluno_beneficio}'";
-        $gruda = ', ';
-      }
 
       if (is_numeric($this->ref_cod_religiao)) {
         $campos  .= "{$gruda}ref_cod_religiao";
@@ -406,6 +376,12 @@ class clsPmieducarAluno
         $gruda = ', ';
       }
 
+      if (is_string($this->codigo_sistema)) {
+        $campos  .= "{$gruda}codigo_sistema";
+        $valores .= "{$gruda}'{$this->codigo_sistema}'";
+        $gruda = ', ';
+      }      
+
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
       return $db->InsertId("{$this->_tabela}_cod_aluno_seq");
     }
@@ -422,11 +398,6 @@ class clsPmieducarAluno
     if (is_numeric($this->cod_aluno) && is_numeric($this->ref_usuario_exc)) {
       $db  = new clsBanco();
       $set = '';
-
-      if (is_numeric($this->ref_cod_aluno_beneficio) || $this->ref_cod_aluno_beneficio == "NULL") {
-        $set .= "{$gruda}ref_cod_aluno_beneficio = {$this->ref_cod_aluno_beneficio}";
-        $gruda = ', ';
-      }
 
       if (is_numeric($this->ref_cod_religiao) || $this->ref_cod_religiao == "NULL") {
         $set .= "{$gruda}ref_cod_religiao = {$this->ref_cod_religiao}";
@@ -564,7 +535,12 @@ class clsPmieducarAluno
       if (is_string($this->url_laudo_medico)) {
         $set .= "{$gruda}url_laudo_medico = '{$this->url_laudo_medico}'";
         $gruda = ', ';
-      }      
+      }
+
+      if (is_string($this->codigo_sistema)) {
+        $set .= "{$gruda}codigo_sistema = '{$this->codigo_sistema}'";
+        $gruda = ', ';
+      }            
 
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_aluno = '{$this->cod_aluno}'" );
@@ -609,10 +585,6 @@ class clsPmieducarAluno
       $whereAnd = ' AND ';
     }
 
-    if (is_numeric($int_ref_cod_aluno_beneficio)) {
-      $filtros .= "{$whereAnd} ref_cod_aluno_beneficio = '{$int_ref_cod_aluno_beneficio}'";
-      $whereAnd = ' AND ';
-    }
 
     if (is_numeric($int_ref_cod_religiao)) {
       $filtros .= "{$whereAnd} ref_cod_religiao = '{$int_ref_cod_religiao}'";
@@ -831,11 +803,6 @@ class clsPmieducarAluno
 
     if(is_numeric($int_cod_aluno)) {
       $filtros .= "{$whereAnd} cod_aluno = {$int_cod_aluno}";
-      $whereAnd = ' AND ';
-    }
-
-    if(is_numeric($int_ref_cod_aluno_beneficio)) {
-      $filtros .= "{$whereAnd} ref_cod_aluno_beneficio = '{$int_ref_cod_aluno_beneficio}'";
       $whereAnd = ' AND ';
     }
 

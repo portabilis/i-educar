@@ -33,6 +33,7 @@ require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
+require_once 'include/localizacaoSistema.php';
 
 /**
  * clsIndexBase class.
@@ -50,6 +51,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Quadro de Horário');
     $this->processoAp = "641";
+    $this->addEstilo('localizacaoSistema');
   }
 }
 
@@ -107,6 +109,27 @@ class indice extends clsConfig
 
       return $retorno;
     }
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "i-Educar - Escola",
+         ""                                  => "Listagem de quadro de hor&aacute;rios"
+    ));
+    $this->locale = $localizacao->montar();    
+
+
+    if ($this->locale){
+
+      $retorno .=  "
+        <table class='tablelistagem' width='100%' border='0'  cellpadding='0' cellspacing='0'>";
+
+      $retorno .=  "<tr height='10px'>
+                      <td class='fundoLocalizacao' colspan='5'>{$this->locale}</td>
+                    </tr>";
+
+      $retorno .= "</table>";
+    }    
 
     $retorno .= '
       <table width="100%" cellspacing="1" cellpadding="2" border="0" class="tablelistagem">

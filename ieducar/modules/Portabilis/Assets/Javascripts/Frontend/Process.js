@@ -51,8 +51,8 @@ function getFirstCheckboxChecked($targetElement) {
 }
 
 function clearSearchResult() {
-  $navActions.html('');
-  $tableSearchDetails.children().remove();
+  $navActions.html('').hide();
+  $tableSearchDetails.hide().children().remove();
   $resultTable.children().fadeOut('fast').remove();
 
   $j('.disable-on-search').attr('disabled', 'disabled');
@@ -91,9 +91,9 @@ var $tableSearchDetails = $j('<table />').attr('id', 'search-details')
                                         .addClass('horizontal-expand')
                                         .addClass('center')
                                         .hide()
-                                        .prependTo($formFilter.parent());
+                                        .prependTo($formFilter.parent()).hide();
 
-var $navActions = $j('<p />').attr('id', 'nav-actions');
+var $navActions = $j('<p />').attr('id', 'nav-actions').hide();
 $navActions.insertAfter($tableSearchDetails);
 
 var $resultTable = $j('#form_resultado .tablelistagem').addClass('horizontal-expand');
@@ -256,5 +256,7 @@ var $resultTable = $j('#form_resultado .tablelistagem').addClass('horizontal-exp
     onClickSelectAllEvent ? $selectAllButton.click(onClickSelectAllEvent) : $selectAllButton.hide();
     onClickActionEvent    ? $actionButton.click(onClickActionEvent)       : $actionButton.hide();
     onClickDeleteEvent    ? $deleteButton.click(onClickDeleteEvent)       : $deleteButton.hide();
+
+    $('#tableLocalizacao').prependTo($formFilter.parent());
   }); // ready
 })(jQuery);

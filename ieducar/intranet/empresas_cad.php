@@ -35,6 +35,7 @@ class clsIndex extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} Empresas!" );
 		$this->processoAp = array("41", "649");
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -141,6 +142,14 @@ class indice extends clsCadastro
 		}
 
 		$this->nome_url_cancelar = "Cancelar";
+
+    $nomeMenu = $this->retorno == "Editar" ? $this->retorno : "Cadastrar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""                                  => "$nomeMenu pessoa jur&iacute;dica"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    		
 
 		return $this->retorno;
 	}

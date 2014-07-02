@@ -51,6 +51,7 @@ class clsIndexBase extends clsBase {
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor');
     $this->processoAp = 635;
+    $this->addEstilo('localizacaoSistema');
   }
 }
 
@@ -491,6 +492,14 @@ class indice extends clsDetalhe
 
     $this->url_cancelar = 'educar_servidor_lst.php';
     $this->largura = '100%';
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "i-Educar - Escola",
+         ""                                  => "Detalhe do servidor"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
   }
 }
 

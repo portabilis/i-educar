@@ -40,6 +40,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Defici&ecirc;ncia" );
 		$this->processoAp = "631";
+		$this->addEstilo("localizacaoSistema");
 	}
 }
 
@@ -62,7 +63,7 @@ class indice extends clsDetalhe
 		session_write_close();
 
 		$this->titulo = "Defici&ecirc;ncia - Detalhe";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->cod_deficiencia=$_GET["cod_deficiencia"];
 
@@ -87,6 +88,14 @@ class indice extends clsDetalhe
 		}
 		$this->url_cancelar = "educar_deficiencia_lst.php";
 		$this->largura = "100%";
+
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         "educar_index.php"                  => "i-Educar - Escola",
+	         ""                                  => "Detalhe da defici&ecirc;ncia"
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 

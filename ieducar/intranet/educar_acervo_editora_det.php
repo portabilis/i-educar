@@ -35,6 +35,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Editora" );
 		$this->processoAp = "595";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -71,7 +72,7 @@ class indice extends clsDetalhe
 		session_write_close();
 
 		$this->titulo = "Editora - Detalhe";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->cod_acervo_editora=$_GET["cod_acervo_editora"];
 
@@ -159,6 +160,14 @@ class indice extends clsDetalhe
 
 		$this->url_cancelar = "educar_acervo_editora_lst.php";
 		$this->largura = "100%";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_biblioteca_index.php"                  => "i-Educar - Biblioteca",
+         ""                                  => "Detalhe da editora"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 

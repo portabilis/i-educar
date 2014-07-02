@@ -41,6 +41,7 @@ class clsIndexBase extends clsBase
   function Formular() {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Tipo Usuário');
     $this->processoAp = '554';
+    $this->addEstilo('localizacaoSistema');
   }
 }
 
@@ -90,7 +91,7 @@ class indice extends clsCadastro
           $this->$campo = $val;
         }
 
-        $this->fexcluir = $obj_permissao->permissao_excluir(554,$this->pessoa_logada,1,null,true);
+        $this->fexcluir = $obj_permissao->permissao_excluir(554,$this->pessoa_logada,1,null,true);        
 
         $retorno = "Editar";
       }
@@ -101,6 +102,15 @@ class indice extends clsCadastro
       'educar_tipo_usuario_lst.php';
 
     $this->nome_url_cancelar = 'Cancelar';
+
+    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "i-Educar - Escola",
+         ""        => "{$nomeMenu} tipo de usu&aacute;rio"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
 
     return $retorno;
   }

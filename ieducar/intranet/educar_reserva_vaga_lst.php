@@ -38,6 +38,7 @@ class clsIndexBase extends clsBase
   public function Formular() {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Reserva Vaga');
     $this->processoAp = '639';
+    $this->addEstilo("localizacaoSistema");
   }
 }
 
@@ -89,7 +90,7 @@ class indice extends clsListagem
     foreach ($_GET as $var => $val) // passa todos os valores obtidos no GET para atributos do objeto
       $this->$var = ($val === '') ? NULL : $val;
 
-    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
+    
 
     $lista_busca = array(
       "S&eacute;rie",
@@ -206,6 +207,14 @@ class indice extends clsListagem
 
     $this->addPaginador2('educar_reserva_vaga_lst.php', $total, $_GET, $this->nome, $this->limite);
     $this->largura = "100%";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "i-Educar - Escola",
+         ""                                  => "Listagem de reservas de vaga"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
   }
 }
 

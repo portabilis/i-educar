@@ -38,6 +38,8 @@ require_once 'Portabilis/View/Helper/Application.php';
 require_once 'Portabilis/View/Helper/Inputs.php';
 require_once 'Portabilis/Utils/User.php';
 
+require_once 'include/localizacaoSistema.php';
+
 /**
  * clsCadastro class.
  *
@@ -84,6 +86,7 @@ class clsCadastro extends clsCampos
   var $nome_url_alt;
   var $url_alt;
   var $help_images = FALSE;
+  var $locale = null;
 
   var $array_botao;
   var $array_botao_url;
@@ -117,6 +120,11 @@ class clsCadastro extends clsCampos
     parent::__construct();
     $this->tipoacao = @$_POST['tipoacao'];
   }
+
+  function enviaLocalizacao($localizao){
+    if($localizao)
+      $this->locale = $localizao;
+  }  
 
   function PreCadastrar()
   {
@@ -255,6 +263,8 @@ class clsCadastro extends clsCampos
 
     $width = empty($this->largura) ? "width='100%'" : "width='$this->largura'";
 
+
+
     $retorno .=  "\n<!-- cadastro begin -->\n";
     $retorno .=  "<form name='$this->__nome' id='$this->__nome' onsubmit='return $this->onSubmit' action='$this->action'  method='post' target='$this->target' $this->form_enctype>\n";
     $retorno .=  "<input name='tipoacao' id='tipoacao' type='hidden' value='$this->tipoacao'>\n";
@@ -269,6 +279,18 @@ class clsCadastro extends clsCampos
         }
       }
     }
+
+    if ($this->locale){
+
+      $retorno .=  "
+        <table class='tableDetalhe' $width border='0'  cellpadding='0' cellspacing='0'>";
+
+      $retorno .=  "<tr height='10px'>
+                      <td class='fundoLocalizacao' colspan='2'>{$this->locale}</td>
+                    </tr>";
+
+      $retorno .= "</table>";
+    }      
 
     $retorno .= "<center>\n<table class='tablecadastro' $width border='0' cellpadding='2' cellspacing='0'>\n";
     $titulo = $this->titulo ? $this->titulo : "<b>{$this->tipoacao} {$this->titulo_aplication}</b>";

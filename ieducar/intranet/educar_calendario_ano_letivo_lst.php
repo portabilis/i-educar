@@ -36,6 +36,7 @@ require_once 'clsCalendario.inc.php';
 
 require_once 'Calendario/Model/TurmaDataMapper.php';
 require_once 'App/Model/IedFinder.php';
+require_once 'include/localizacaoSistema.php';
 
 /**
  * clsIndexBase class.
@@ -54,6 +55,7 @@ class clsIndexBase extends clsBase
     $this->SetTitulo($this->_instituicao . ' i-Educar - Calendário Ano Letivo');
     $this->addScript('calendario');
     $this->processoAp = 620;
+    $this->addEstilo("localizacaoSistema");
   }
 }
 
@@ -119,6 +121,21 @@ class indice extends clsConfig
     $retorno .= '
       <table width="100%" cellspacing="1" cellpadding="2" border="0" class="tablelistagem">
         <tbody>';
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "i-Educar - Escola",
+         ""                                  => "Calend&aacute;rio do ano letivo"
+    ));
+    $this->locale = $localizacao->montar();
+
+    if ($this->locale){
+
+      $retorno .=  "<tr height='10px'>
+                      <td class='fundoLocalizacao' colspan='5'>{$this->locale}</td>
+                    </tr>";
+    }    
 
     if ($_POST) {
       $this->ref_cod_escola = $_POST['ref_cod_escola'] ?

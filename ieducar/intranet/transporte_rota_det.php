@@ -57,6 +57,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Rotas');
     $this->processoAp = 21238;
+    $this->addEstilo('localizacaoSistema');
   }
 }
 
@@ -86,7 +87,7 @@ class indice extends clsDetalhe
     $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
 
     $this->titulo = 'Rota - Detalhe';
-    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
+    
 
     $cod_rota_transporte_escolar = $_GET['cod_rota'];
 
@@ -175,6 +176,14 @@ class indice extends clsDetalhe
     $this->url_cancelar = "transporte_rota_lst.php";
 
     $this->largura = "100%";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "i-Educar - Escola",
+         ""                                  => "Detalhe da rota"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
   }
 }
 

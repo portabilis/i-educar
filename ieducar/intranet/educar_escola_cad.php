@@ -41,6 +41,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Escola" );
 		$this->processoAp = "561";
+		$this->addEstilo("localizacaoSistema");
 	}
 }
 
@@ -68,7 +69,9 @@ class indice extends clsCadastro
 	var $nm_escola;
 	var $passou;
 	var $escola_curso;
+	var $escola_curso_autorizacao;
 	var $ref_cod_curso;
+	var $autorizacao;
 	var $fantasia;
 
 	var $sigla_uf_;
@@ -158,6 +161,7 @@ class indice extends clsCadastro
   var $dependencia_banheiro_infantil;
   var $dependencia_banheiro_deficiente;
   var $dependencia_banheiro_chuveiro;
+  var $dependencia_vias_deficiente;
   var $dependencia_refeitorio;
   var $dependencia_dispensa;
   var $dependencia_aumoxarifado;
@@ -463,6 +467,16 @@ class indice extends clsCadastro
 		}
 
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_escola_det.php?cod_escola={$registro["cod_escola"]}" : "educar_escola_lst.php";
+		
+	    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         "educar_index.php"                  => "i-Educar - Escola",
+	         ""        => "{$nomeMenu} escola"             
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());		
+
 		$this->nome_url_cancelar = "Cancelar";
 
   	return $retorno;
@@ -1046,6 +1060,8 @@ if(!$this->isEnderecoExterno){
 
 			if ( $_POST["escola_curso"] )
 				$this->escola_curso = unserialize( urldecode( $_POST["escola_curso"] ) );
+			if ( $_POST["escola_curso_autorizacao"] )
+				$this->escola_curso_autorizacao = unserialize( urldecode( $_POST["escola_curso_autorizacao"] ) );
 			if( is_numeric( $this->cod_escola ) && !$_POST )
 			{
 				$obj = new clsPmieducarEscolaCurso( $this->cod_escola );
@@ -1055,13 +1071,17 @@ if(!$this->isEnderecoExterno){
 					foreach ( $registros AS $campo )
 					{
 						$this->escola_curso[$campo["ref_cod_curso"]] = $campo["ref_cod_curso"];
+						$this->escola_curso_autorizacao[$campo["ref_cod_curso"]] = $campo["autorizacao"];
 
 					}
 				}
 			}
 			if ( $_POST["ref_cod_curso"] )
 			{
-				$this->escola_curso[$_POST["ref_cod_curso"]] = $_POST["ref_cod_curso"];
+				$this->escola_curso[$_POST["ref_cod_curso"]] = $_POST["ref_cod_curso"];				
+
+				if($this->autorizacao)
+					$this->escola_curso_autorizacao[$_POST["ref_cod_curso"]] = $this->autorizacao;
 				unset( $this->ref_cod_curso );
 			}
 			$this->campoQuebra();
@@ -1077,6 +1097,7 @@ if(!$this->isEnderecoExterno){
 					if ( $this->excluir_curso == $curso )
 					{
 						unset($this->escola_curso[$curso]);// = null;
+						$this->escola_curso_autorizacao[$curso] = null;
 						$this->excluir_curso = null;
 					}
 					else
@@ -1084,16 +1105,21 @@ if(!$this->isEnderecoExterno){
 						$obj_curso = new clsPmieducarCurso($curso);
 						$obj_curso_det = $obj_curso->detalhe();
 						$nm_curso = $obj_curso_det["nm_curso"];
-						$this->campoTextoInv( "ref_cod_curso_{$curso}", "", $nm_curso, 30, 255, false, false, false, "", "<a href='#' onclick=\"getElementById('excluir_curso').value = '{$curso}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>" );
+						$nm_autorizacao = $this->escola_curso_autorizacao[$curso];
+						$this->campoTextoInv( "ref_cod_curso_{$curso}", "", $nm_curso, 30, 255, false, false, true );
+						$this->campoTextoInv( "autorizacao_{$curso}", "", $nm_autorizacao, 20, 255, false, false, false, "", "<a href='#' onclick=\"getElementById('excluir_curso').value = '{$curso}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>" );
 						$aux[$curso] = $curso;
+						$aux_autorizacao[$curso] = $nm_autorizacao;						
 					}
 
 				}
 				unset($this->escola_curso);
 				$this->escola_curso = $aux;
+				$this->escola_curso_autorizacao = $aux_autorizacao;
 			}
 
 			$this->campoOculto( "escola_curso", serialize( $this->escola_curso ) );
+			$this->campoOculto( "escola_curso_autorizacao", serialize( $this->escola_curso_autorizacao ) );
 
 			$opcoes = array( "" => "Selecione" );
 			if( class_exists( "clsPmieducarCurso" ) )
@@ -1131,17 +1157,19 @@ if(!$this->isEnderecoExterno){
 				echo "<!--\nErro\nClasse clsPmieducarCurso n&atilde;o encontrada\n-->";
 				$opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
 			}
-			if ( $aux )
+			if ( $aux ){
 				$this->campoLista( "ref_cod_curso", "Curso", $opcoes, $this->ref_cod_curso,"",false,"","<a href='#' onclick=\"getElementById('incluir_curso').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>",false,false);
-			else
+				$this->campoTexto( "autorizacao", "Autorização", "", 30, 255, false );
+			}else{
 				$this->campoLista( "ref_cod_curso", "Curso", $opcoes, $this->ref_cod_curso,"",false,"","<a href='#' onclick=\"getElementById('incluir_curso').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
-
+				$this->campoTexto( "autorizacao", "Autorização", "", 30, 255, false );
+			}
 			$this->campoOculto( "incluir_curso", "" );
 			$this->campoQuebra();			
 
-			$resources = array(0 => Portabilis_String_Utils::toLatin1('Próprio'),
-			                   1 => 'Alugado',
-			                   2 => 'Cedido');
+			$resources = array(1 => Portabilis_String_Utils::toLatin1('Próprio'),
+			                   2 => 'Alugado',
+			                   3 => 'Cedido');
 
   		$options = array('label' => Portabilis_String_Utils::toLatin1('Condição'), 'resources' => $resources, 'value' => $this->condicao, 'size' => 70, 'required' => false);
 	    $this->inputsHelper()->select('condicao', $options);
@@ -1339,6 +1367,9 @@ if(!$this->isEnderecoExterno){
 
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Banheiro com chuveiro'), 'value' => $this->dependencia_banheiro_chuveiro);
 	    $this->inputsHelper()->checkbox('dependencia_banheiro_chuveiro', $options);
+
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Dependências e vias adequadas a alunos com deficiência'), 'value' => $this->dependencia_vias_deficiente);
+	    $this->inputsHelper()->checkbox('dependencia_vias_deficiente', $options);
 
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Refeitório'), 'value' => $this->dependencia_refeitorio);
 	    $this->inputsHelper()->checkbox('dependencia_refeitorio', $options);
@@ -1558,7 +1589,7 @@ if(!$this->isEnderecoExterno){
 					$obj->num_pavimentos = $this->num_pavimentos;
 					$obj->tipo_piso = $this->tipo_piso;
 					$obj->medidor_energia = $this->medidor_energia;
-					$obj->agua_consumida = $this->agua_consumida == 'on' ? 1 : 0;
+					$obj->agua_consumida = $this->agua_consumida;
 					$obj->agua_rede_publica = $this->agua_rede_publica == 'on' ? 1 : 0;
 					$obj->agua_poco_artesiano = $this->agua_poco_artesiano == 'on' ? 1 : 0;
 					$obj->agua_cacimba_cisterna_poco = $this->agua_cacimba_cisterna_poco == 'on' ? 1 : 0;
@@ -1595,6 +1626,7 @@ if(!$this->isEnderecoExterno){
 					$obj->dependencia_banheiro_infantil = $this->dependencia_banheiro_infantil == 'on' ? 1 : 0;
 					$obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
 					$obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
+					$obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
 					$obj->dependencia_refeitorio = $this->dependencia_refeitorio == 'on' ? 1 : 0;
 					$obj->dependencia_dispensa = $this->dependencia_dispensa == 'on' ? 1 : 0;
 					$obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
@@ -1693,13 +1725,16 @@ if(!$this->isEnderecoExterno){
 						}
 
 						//-----------------------CADASTRA CURSO------------------------//
-						$this->escola_curso = unserialize( urldecode( $this->escola_curso ) );
+						$this->escola_curso = unserialize( urldecode( $this->escola_curso ) );		
+						$this->escola_curso_autorizacao = unserialize( urldecode($this->escola_curso_autorizacao) );			
+
 						if ($this->escola_curso)
 						{
-//							echo "<pre>";print_r($this->escola_curso);die;
+
 							foreach ( $this->escola_curso AS $campo )
 							{
-								$curso_escola = new clsPmieducarEscolaCurso( $cadastrou1, $campo, null, $this->pessoa_logada, null, null, 1 );
+								$curso_escola = new clsPmieducarEscolaCurso( $cadastrou1, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo] );
+
 								$cadastrou_ = $curso_escola->cadastra();
 								if ( !$cadastrou_ )
 								{
@@ -1756,7 +1791,7 @@ if(!$this->isEnderecoExterno){
 			$obj->num_pavimentos = $this->num_pavimentos;		
 			$obj->tipo_piso = $this->tipo_piso;
 			$obj->medidor_energia = $this->medidor_energia;
-			$obj->agua_consumida = $this->agua_consumida == 'on' ? 1 : 0;
+			$obj->agua_consumida = $this->agua_consumida;
 			$obj->agua_rede_publica = $this->agua_rede_publica == 'on' ? 1 : 0;
 			$obj->agua_poco_artesiano = $this->agua_poco_artesiano == 'on' ? 1 : 0;
 			$obj->agua_cacimba_cisterna_poco = $this->agua_cacimba_cisterna_poco == 'on' ? 1 : 0;
@@ -1793,6 +1828,7 @@ if(!$this->isEnderecoExterno){
 			$obj->dependencia_banheiro_infantil = $this->dependencia_banheiro_infantil == 'on' ? 1 : 0;
 			$obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
 			$obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
+			$obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
 			$obj->dependencia_refeitorio = $this->dependencia_refeitorio == 'on' ? 1 : 0;
 			$obj->dependencia_dispensa = $this->dependencia_dispensa == 'on' ? 1 : 0;
 			$obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
@@ -1854,11 +1890,14 @@ if(!$this->isEnderecoExterno){
 				{
 					//-----------------------CADASTRA CURSO------------------------//
 					$this->escola_curso = unserialize( urldecode( $this->escola_curso ) );
+					$this->escola_curso_autorizacao = unserialize( urldecode($this->escola_curso_autorizacao) );
+					
 					if ($this->escola_curso)
 					{
 						foreach ( $this->escola_curso AS $campo )
 						{
-							$curso_escola = new clsPmieducarEscolaCurso( $cadastrou, $campo, null, $this->pessoa_logada, null, null, 1 );
+
+							$curso_escola = new clsPmieducarEscolaCurso( $cadastrou, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo] );
 							$cadastrou_ = $curso_escola->cadastra();
 							if ( !$cadastrou_ )
 							{
@@ -1930,7 +1969,7 @@ if(!$this->isEnderecoExterno){
 			$obj->num_pavimentos = $this->num_pavimentos;			
 			$obj->tipo_piso = $this->tipo_piso;
 			$obj->medidor_energia = $this->medidor_energia;
-			$obj->agua_consumida = $this->agua_consumida == 'on' ? 1 : 0;
+			$obj->agua_consumida = $this->agua_consumida;
 			$obj->agua_rede_publica = $this->agua_rede_publica == 'on' ? 1 : 0;
 			$obj->agua_poco_artesiano = $this->agua_poco_artesiano == 'on' ? 1 : 0;
 			$obj->agua_cacimba_cisterna_poco = $this->agua_cacimba_cisterna_poco == 'on' ? 1 : 0;
@@ -1967,6 +2006,7 @@ if(!$this->isEnderecoExterno){
 			$obj->dependencia_banheiro_infantil = $this->dependencia_banheiro_infantil == 'on' ? 1 : 0;
 			$obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
 			$obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
+			$obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
 			$obj->dependencia_refeitorio = $this->dependencia_refeitorio == 'on' ? 1 : 0;
 			$obj->dependencia_dispensa = $this->dependencia_dispensa == 'on' ? 1 : 0;
 			$obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
@@ -2040,7 +2080,7 @@ if(!$this->isEnderecoExterno){
 			$obj->num_pavimentos = $this->num_pavimentos;	
 			$obj->tipo_piso = $this->tipo_piso;
 			$obj->medidor_energia = $this->medidor_energia;
-			$obj->agua_consumida = $this->agua_consumida == 'on' ? 1 : 0;
+			$obj->agua_consumida = $this->agua_consumida;
 			$obj->agua_rede_publica = $this->agua_rede_publica == 'on' ? 1 : 0;
 			$obj->agua_poco_artesiano = $this->agua_poco_artesiano == 'on' ? 1 : 0;
 			$obj->agua_cacimba_cisterna_poco = $this->agua_cacimba_cisterna_poco == 'on' ? 1 : 0;
@@ -2077,6 +2117,7 @@ if(!$this->isEnderecoExterno){
 			$obj->dependencia_banheiro_infantil = $this->dependencia_banheiro_infantil == 'on' ? 1 : 0;
 			$obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
 			$obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
+			$obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
 			$obj->dependencia_refeitorio = $this->dependencia_refeitorio == 'on' ? 1 : 0;
 			$obj->dependencia_dispensa = $this->dependencia_dispensa == 'on' ? 1 : 0;
 			$obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
@@ -2239,6 +2280,7 @@ if(!$this->isEnderecoExterno){
 						}
 						//-----------------------EDITA CURSO------------------------//
 						$this->escola_curso = unserialize( urldecode( $this->escola_curso ) );
+						$this->escola_curso_autorizacao = unserialize( urldecode( $this->escola_curso_autorizacao ) );
 						$obj  = new clsPmieducarEscolaCurso( $this->cod_escola );
 						$excluiu = $obj->excluirTodos();
 
@@ -2249,7 +2291,7 @@ if(!$this->isEnderecoExterno){
 //								die("com cnpj");
 								foreach ( $this->escola_curso AS $campo )
 								{
-									$obj = new clsPmieducarEscolaCurso( $this->cod_escola, $campo, null, $this->pessoa_logada, null, null, 1 );
+									$obj = new clsPmieducarEscolaCurso( $this->cod_escola, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo] );
 									$cadastrou_  = $obj->cadastra();
 									if ( !$cadastrou_ )
 									{
@@ -2307,6 +2349,7 @@ if(!$this->isEnderecoExterno){
 				{
 					//-----------------------EDITA CURSO------------------------//
 					$this->escola_curso = unserialize( urldecode( $this->escola_curso ) );
+					$this->escola_curso_autorizacao = unserialize( urldecode( $this->escola_curso_autorizacao ) );
 					$obj  = new clsPmieducarEscolaCurso( $this->cod_escola );
 					$excluiu = $obj->excluirTodos();
 
@@ -2317,7 +2360,7 @@ if(!$this->isEnderecoExterno){
 //							die("sem cnpj");
 							foreach ( $this->escola_curso AS $campo )
 							{
-									$obj = new clsPmieducarEscolaCurso( $this->cod_escola, $campo, null, $this->pessoa_logada, null, null, 1 );
+									$obj = new clsPmieducarEscolaCurso( $this->cod_escola, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo] );
 									$cadastrou_  = $obj->cadastra();
 									if ( !$cadastrou_ )
 									{

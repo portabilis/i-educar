@@ -36,6 +36,7 @@ class clsIndex extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} Vínculo Funcionários!" );
 		$this->processoAp = "190";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -62,6 +63,15 @@ class indice extends clsCadastro
 		}
 		$this->nome_url_cancelar = "Cancelar";
 		$this->url_cancelar = "funcionario_vinculo_lst.php";
+
+    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""        => "{$nomeMenu} v&iacute;nculo"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());
+
 		return $retorno;
 	}
 

@@ -35,6 +35,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} Pais" );
 		$this->processoAp = "753";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -58,7 +59,7 @@ class indice extends clsDetalhe
 		session_write_close();
 		
 		$this->titulo = "Pais - Detalhe";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->idpais=$_GET["idpais"];
 
@@ -86,6 +87,13 @@ class indice extends clsDetalhe
 
 		$this->url_cancelar = "public_pais_lst.php";
 		$this->largura = "100%";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""                                  => "Detalhe do pa&iacute;s"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 

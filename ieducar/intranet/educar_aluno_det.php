@@ -61,6 +61,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Aluno');
     $this->processoAp = 578;
+    $this->addEstilo("localizacaoSistema");
   }
 }
 
@@ -109,7 +110,7 @@ class indice extends clsDetalhe
     $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
 
     $this->titulo = 'Aluno - Detalhe';
-    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
+    
 
     $this->cod_aluno = $_GET['cod_aluno'];
 
@@ -234,6 +235,9 @@ class indice extends clsDetalhe
 
       $obj_deficiencia_pessoa       = new clsCadastroFisicaDeficiencia();
       $obj_deficiencia_pessoa_lista = $obj_deficiencia_pessoa->lista($this->ref_idpes);
+
+      $obj_beneficios       = new clsPmieducarAlunoBeneficio();
+      $obj_beneficios_lista = $obj_beneficios->lista(NULL,NULL,NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->cod_aluno);
 
       if ($obj_deficiencia_pessoa_lista) {
         $deficiencia_pessoa = array();
@@ -548,13 +552,6 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Página Pessoal', $registro['url']));
     }
 
-    if ($registro['ref_cod_aluno_beneficio']) {
-      $obj_beneficio     = new clsPmieducarAlunoBeneficio($registro['ref_cod_aluno_beneficio']);
-      $obj_beneficio_det = $obj_beneficio->detalhe();
-
-      $this->addDetalhe(array('Benefício', $obj_beneficio_det['nm_beneficio']));
-    }
-
     if ($registro['ref_cod_religiao']) {
       $obj_religiao     = new clsPmieducarReligiao($registro['ref_cod_religiao']);
       $obj_religiao_det = $obj_religiao->detalhe();
@@ -565,6 +562,22 @@ class indice extends clsDetalhe
     if ($det_raca['nm_raca']) {
       $this->addDetalhe(array('Raça', $det_raca['nm_raca']));
     }
+
+    if ($obj_beneficios_lista) {
+      $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#A1B3BD" align="center"><td>Benefícios</td></tr>';
+      $cor    = '#D1DADF';
+
+      foreach ($obj_beneficios_lista as $reg) {
+        $cor = $cor == '#D1DADF' ? '#E4E9ED' : '#D1DADF';
+
+        $tabela .= sprintf('<tr bgcolor="%s" align="center"><td>%s</td></tr>',
+          $cor, $reg['nm_beneficio']);
+      }
+
+      $tabela .= '</table>';
+
+      $this->addDetalhe(array('Benefícios', $tabela));
+    }    
 
     if ($deficiencia_pessoa) {
       $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#A1B3BD" align="center"><td>Deficiências</td></tr>';
@@ -841,6 +854,14 @@ class indice extends clsDetalhe
 
     $this->url_cancelar = 'educar_aluno_lst.php';
     $this->largura      = '100%';
+
+      $localizacao = new LocalizacaoSistema();
+      $localizacao->entradaCaminhos( array(
+           $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+           "educar_index.php"                  => "i-Educar - Escola",
+           ""                                  => "Detalhe do aluno"
+      ));
+      $this->enviaLocalizacao($localizacao->montar());      
 
     $this->addDetalhe("<input type='hidden' id='escola_id' name='aluno_id' value='{$registro['ref_cod_escola']}' />");
     $this->addDetalhe("<input type='hidden' id='aluno_id' name='aluno_id' value='{$registro['cod_aluno']}' />");

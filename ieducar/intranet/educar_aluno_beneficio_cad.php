@@ -35,6 +35,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Benef&iacute;cio Aluno" );
 		$this->processoAp = "581";
+		$this->addEstilo("localizacaoSistema");
 	}
 }
 
@@ -87,6 +88,16 @@ class indice extends clsCadastro
 			}
 		}
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_aluno_beneficio_det.php?cod_aluno_beneficio={$registro["cod_aluno_beneficio"]}" : "educar_aluno_beneficio_lst.php";
+		
+		$nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos( array(
+             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+             "educar_index.php"                  => "i-Educar - Escola",
+             ""        => "{$nomeMenu} benef&iacute;cios de alunos"             
+        ));
+        $this->enviaLocalizacao($localizacao->montar());		
+
 		$this->nome_url_cancelar = "Cancelar";
 		return $retorno;
 	}

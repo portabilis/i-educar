@@ -35,6 +35,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Hist&oacute;rico Escolar" );
 		$this->processoAp = "578";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -77,7 +78,7 @@ class indice extends clsDetalhe
 		session_write_close();
 
 		$this->titulo = "Hist&oacute;rico Escolar - Detalhe";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->sequencial=$_GET["sequencial"];
 		$this->ref_cod_aluno=$_GET["ref_cod_aluno"];
@@ -313,6 +314,14 @@ class indice extends clsDetalhe
 
 		$this->url_cancelar = "educar_historico_escolar_lst.php?ref_cod_aluno={$registro["ref_cod_aluno"]}";
 		$this->largura = "100%";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "i-Educar - Escola",
+         ""                                  => "Detalhe do hist&oacute;rico escolar"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());				
 	}
 }
 

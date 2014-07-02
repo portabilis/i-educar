@@ -128,7 +128,7 @@
       $('.clear-on-change-curso').val('');
     });
 
-    var $navActions = $('<p />').attr('id', 'nav-actions');
+    var $navActions = $('<p />').attr('id', 'nav-actions').hide();
     $navActions.prependTo($formFilter.parent());
 
     var $tableSearchDetails = $('<table />')
@@ -137,7 +137,7 @@
                               .addClass('horizontal-expand')
                               .addClass('center')
                               .hide()
-                              .prependTo($formFilter.parent());
+                              .prependTo($formFilter.parent()).hide();
 
     var $feedbackMessages = $('<div />').attr('id', 'feedback-messages').appendTo($formFilter.parent());
 
@@ -302,8 +302,8 @@
 
     //exibe formulário nova consulta
     function showSearchForm(event){
-      $navActions.html('');
-      $tableSearchDetails.children().remove();
+      $navActions.html('').hide();
+      $tableSearchDetails.hide().children().remove();
       $resultTable.children().fadeOut('fast').remove();
       $formFilter.fadeIn('fast', function(){
         $(this).show()
@@ -642,6 +642,8 @@
     $actionButton.click(onClickActionEvent);
     $selectAllButton.click(onClickSelectAllEvent);
     $destroyButton.click(onClickDestroyEvent)
+
+    $('#tableLocalizacao').prependTo($formFilter.parent());
 
   });
 })(jQuery);

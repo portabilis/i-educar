@@ -36,6 +36,7 @@ class clsIndexBase extends clsBase {
   public function Formular() {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Afastamento');
     $this->processoAp = '635';
+    $this->addEstilo('localizacaoSistema');
   }
 
 }
@@ -140,6 +141,14 @@ class indice extends clsCadastro {
       $this->ref_cod_servidor, $this->ref_cod_instituicao);
 
     $this->nome_url_cancelar = "Cancelar";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "i-Educar - Escola",
+         ""        => "Afastar servidor"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
 
     return $retorno;
   }

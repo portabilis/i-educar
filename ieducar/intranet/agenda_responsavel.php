@@ -36,6 +36,7 @@ class clsIndex extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} Agenda" );
 		$this->processoAp = "341";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -52,7 +53,7 @@ class indice extends clsListagem
 		session_write_close();
 
 		$this->titulo = "Agendas que eu posso editar";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 	
 		$this->addCabecalhos( array( "Agenda" ) );
 
@@ -98,6 +99,13 @@ class indice extends clsListagem
 		$this->addPaginador2( "agenda_responsavel.php", $total, $_GET, $this->nome, $limite );
 		
 		$this->largura = "100%";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""                                  => "Agendas"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());				
 	}
 }
 

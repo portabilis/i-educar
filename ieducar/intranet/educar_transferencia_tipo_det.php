@@ -35,6 +35,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Transfer&ecirc;ncia" );
 		$this->processoAp = "575";
+		$this->addEstilo("localizacaoSistema");
 	}
 }
 
@@ -64,7 +65,7 @@ class indice extends clsDetalhe
 		session_write_close();
 
 		$this->titulo = "Transferencia Tipo - Detalhe";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->cod_transferencia_tipo=$_GET["cod_transferencia_tipo"];
 
@@ -113,6 +114,14 @@ class indice extends clsDetalhe
 		}
 		$this->url_cancelar = "educar_transferencia_tipo_lst.php";
 		$this->largura = "100%";
+
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         "educar_index.php"                  => "i-Educar - Escola",
+	         ""                                  => "Detalhe do tipo de transfer&ecirc;ncia"
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 

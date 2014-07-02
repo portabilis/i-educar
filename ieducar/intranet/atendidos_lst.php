@@ -11,6 +11,7 @@ class clsIndex extends clsBase
 	{
 		$this->SetTitulo( "Pessoas Físicas" );
 		$this->processoAp = "43";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -19,7 +20,7 @@ class indice extends clsListagem
 	function Gerar()
 	{
 		$this->titulo = "Pessoas Físicas";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->addCabecalhos( array( "Nome", "CPF") );
 		$this->campoTexto( "nm_pessoa", "Nome",  $_GET['nm_pessoa'], "50", "255", true );
@@ -63,6 +64,13 @@ class indice extends clsListagem
 
 		$this->largura = "100%";
 		$this->addPaginador2( "atendidos_lst.php", $total, $_GET, $this->nome, $limite );
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""                                  => "Listagem de pessoas f&iacute;sicas"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 

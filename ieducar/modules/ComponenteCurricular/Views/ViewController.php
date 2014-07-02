@@ -63,4 +63,20 @@ class ViewController extends Core_Controller_Page_ViewController
     $this->addBotao('Configurar anos escolares', 'ano?cid=' . $_GET['id']);
          //->addBotao('Configurar descritores', 'descritores?cid=' . $_GET['id']);
   }
+
+  protected function _preRender(){
+
+    parent::_preRender();
+
+    Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
+
+    $localizacao = new LocalizacaoSistema();
+
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "i-Educar - Escola",
+         ""                                  => "Detalhe do componente curricular"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());     
+  }    
 }

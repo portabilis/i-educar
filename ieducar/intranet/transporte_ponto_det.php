@@ -53,6 +53,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Pontos');
     $this->processoAp = 21239;
+    $this->addEstilo('localizacaoSistema');
   }
 }
 
@@ -82,7 +83,7 @@ class indice extends clsDetalhe
     $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
 
     $this->titulo = 'Ponto - Detalhe';
-    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
+    
 
     $cod_ponto_transporte_escolar = $_GET['cod_ponto'];
     $tmp_obj = new clsModulesPontoTransporteEscolar($cod_ponto_transporte_escolar);
@@ -101,6 +102,14 @@ class indice extends clsDetalhe
     $this->url_cancelar = "transporte_ponto_lst.php";
 
     $this->largura = "100%";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "i-Educar - Escola",
+         ""                                  => "Detalhe do ponto"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
   }
 }
 

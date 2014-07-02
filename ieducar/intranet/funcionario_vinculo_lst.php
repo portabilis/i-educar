@@ -37,6 +37,7 @@ class clsIndex extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} Vínculo Funcionários!" );
 		$this->processoAp = "190";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -45,7 +46,7 @@ class indice extends clsListagem
 	function Gerar()
 	{
 		$this->titulo = "Vínculos";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 		
 		$nome_ = @$_GET['nome_'];
 		
@@ -87,6 +88,13 @@ class indice extends clsListagem
 		$this->addPaginador2( "funcionario_vinculo_lst.php", $total, $_GET, $this->nome, $limite );
 		$this->acao = "go(\"funcionario_vinculo_cad.php\")";
 		$this->nome_acao = "Novo";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""                                  => "Listagem de v&iacute;nculos"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 

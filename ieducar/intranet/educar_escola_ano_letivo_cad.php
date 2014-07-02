@@ -49,6 +49,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Escola Ano Letivo');
     $this->processoAp = 561;
+    $this->addEstilo("localizacaoSistema");
   }
 }
 
@@ -92,6 +93,16 @@ class indice extends clsCadastro
 
     $this->nome_url_sucesso  = 'Continuar';
     $this->url_cancelar      = 'educar_escola_det.php?cod_escola=' . $this->ref_cod_escola;
+
+    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "i-Educar - Escola",
+         ""        => "{$nomeMenu} ano letivo"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());
+
     $this->nome_url_cancelar = 'Cancelar';
 
     return $retorno;

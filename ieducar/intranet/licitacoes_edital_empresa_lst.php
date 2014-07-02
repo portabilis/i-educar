@@ -46,7 +46,7 @@ class indice extends clsListagem
 		$db = new clsBanco();
 		$db2 = new clsBanco();
 		$this->titulo = "Editais - Empresas";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 		
 		$this->campoTexto( "busca_nome", "Empresa", $_GET["busca_nome"], 50, 255 );
 		$where = "";

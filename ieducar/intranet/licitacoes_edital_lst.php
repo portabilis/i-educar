@@ -46,7 +46,7 @@ class indice extends clsListagem
 		$db = new clsBanco();
 		$db2 = new clsBanco();
 		$this->titulo = "Editais";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 		
 		$this->addCabecalhos( array( "Número da Licitação", "Modalidade", "Versão", "Atualizado em" ) );
 		

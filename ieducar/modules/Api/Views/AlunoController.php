@@ -77,6 +77,7 @@ class AlunoController extends ApiCoreController
 
 
     protected function validatesBeneficioId() {
+    // @TODO Alterar pois foi alterado relacionamento para N:N
     $isValid = true;
 
     // beneficio is optional
@@ -198,7 +199,7 @@ class AlunoController extends ApiCoreController
            $this->validatesResponsavel()  &&
            $this->validatesTransporte()   &&
            $this->validatesReligiaoId()   &&
-           $this->validatesBeneficioId()  &&
+           // $this->validatesBeneficioId()  &&
            $this->validatesUniquenessOfAlunoInepId()  &&
            $this->validatesUniquenessOfAlunoEstadoId();
   }
@@ -483,12 +484,12 @@ protected function createOrUpdateUniforme($id) {
     $aluno                          = new clsPmieducarAluno();
     $aluno->cod_aluno               = $id;
     $aluno->aluno_estado_id         = Portabilis_String_Utils::toLatin1($this->getRequest()->aluno_estado_id);
+    $aluno->codigo_sistema          = Portabilis_String_Utils::toLatin1($this->getRequest()->codigo_sistema);
 
     // após cadastro não muda mais id pessoa
     if (is_null($id))
       $aluno->ref_idpes             = $this->getRequest()->pessoa_id;
 
-    $aluno->ref_cod_aluno_beneficio = $this->getRequest()->beneficio_id;
     $aluno->ref_cod_religiao        = $this->getRequest()->religiao_id;
     $aluno->analfabeto              = $this->getRequest()->alfabetizado ? 0 : 1;
     $aluno->tipo_responsavel        = $tiposResponsavel[$this->getRequest()->tipo_responsavel];
@@ -648,6 +649,19 @@ protected function createOrUpdateUniforme($id) {
     return array('ocorrencias_disciplinares' => $ocorrenciasAluno);
   }
 
+  protected function getGradeUltimoHistorico(){
+    
+    $sql = 'SELECT historico_grade_curso_id as id
+            FROM historico_escolar 
+            WHERE ref_cod_aluno = $1 
+            ORDER BY sequencial DESC LIMIT 1';
+
+    $params     = array($this->getRequest()->aluno_id);
+    $grade_curso = $this->fetchPreparedQuery($sql, $params,false, 'first-row');
+
+    return array('grade_curso' => $grade_curso['id']);
+  }
+
   // search options
 
   protected function searchOptions() {
@@ -737,6 +751,23 @@ protected function createOrUpdateUniforme($id) {
     return $tipo;
   }
 
+  protected function loadBeneficios($alunoId) {
+    $sql = "select aluno_beneficio_id as id, nm_beneficio as nome from pmieducar.aluno_aluno_beneficio,
+            pmieducar.aluno_beneficio where aluno_beneficio_id = cod_aluno_beneficio and aluno_id = $1";
+
+    $beneficios = $this->fetchPreparedQuery($sql, $alunoId, false);
+
+    // transforma array de arrays em array chave valor
+    $_beneficios = array();
+
+    foreach ($beneficios as $beneficio) {
+      $nome = $this->toUtf8($beneficio['nome'], array('transform' => true));
+      $_beneficios[$beneficio['id']] = $nome;
+    }
+
+    return $_beneficios;
+  }   
+
   protected function get() {
     if ($this->canGet()) {
       $id               = $this->getRequest()->id;
@@ -766,7 +797,8 @@ protected function createOrUpdateUniforme($id) {
         'recurso_prova_inep_prova_ampliada_24',
         'recurso_prova_inep_prova_braille',
         'justificativa_falta_documentacao',
-        'url_laudo_medico'
+        'url_laudo_medico',
+        'codigo_sistema'
       );
 
       $aluno = Portabilis_Array_Utils::filter($aluno, $attrs);
@@ -777,6 +809,7 @@ protected function createOrUpdateUniforme($id) {
       $aluno['aluno_inep_id']    = $this->loadAlunoInepId($id);
       $aluno['ativo']            = $aluno['ativo'] == 1;
       $aluno['aluno_estado_id']  = Portabilis_String_Utils::toUtf8($aluno['aluno_estado_id']);
+      $aluno['codigo_sistema']  = Portabilis_String_Utils::toUtf8($aluno['codigo_sistema']);
 
       $aluno['alfabetizado']     = $aluno['analfabeto'] == 0;
       unset($aluno['analfabeto']);
@@ -818,6 +851,8 @@ protected function createOrUpdateUniforme($id) {
       $sql = "select sus from cadastro.fisica where idpes = $1";
       $camposFisica = $this->fetchPreparedQuery($sql, $aluno['pessoa_id'], false, 'first-row');
       $aluno['sus'] = $camposFisica['sus'];
+
+      $aluno['beneficios'] = $this->loadBeneficios($id);
 
       return $aluno;
     }
@@ -919,6 +954,15 @@ protected function createOrUpdateUniforme($id) {
       return $this->loadOcorrenciasDisciplinares();
   }
 
+  function updateBeneficios($id){
+    $obj = new clsPmieducarAlunoBeneficio();
+    $obj->deletaBeneficiosDoAluno($id);
+    foreach ($this->getRequest()->beneficios as $beneficioId) {
+      if (! empty($beneficioId)) 
+        $obj->cadastraBeneficiosDoAluno($id, $beneficioId);
+    }
+  }  
+
   protected function post() {
     if ($this->canPost()) {
       $id = $this->createOrUpdateAluno();
@@ -927,6 +971,7 @@ protected function createOrUpdateUniforme($id) {
       $this->saveParents();
 
       if (is_numeric($id)) {
+        $this->updateBeneficios($id);
         $this->updateResponsavel();
         $this->saveSus($pessoaId);
         $this->createOrUpdateTransporte($id);
@@ -952,6 +997,7 @@ protected function createOrUpdateUniforme($id) {
     $this->saveParents();
 
     if ($this->canPut() && $this->createOrUpdateAluno($id)) {
+      $this->updateBeneficios($id);
       $this->updateResponsavel();
       $this->saveSus($pessoaId);
       $this->createOrUpdateTransporte($id);
@@ -1037,6 +1083,9 @@ protected function createOrUpdateUniforme($id) {
 
     elseif ($this->isRequestFor('get', 'ocorrencias_disciplinares'))
       $this->appendResponse($this->getOcorrenciasDisciplinares());
+
+    elseif ($this->isRequestFor('get', 'grade_ultimo_historico'))
+      $this->appendResponse($this->getGradeUltimoHistorico());    
 
     // create
     elseif ($this->isRequestFor('post', 'aluno'))

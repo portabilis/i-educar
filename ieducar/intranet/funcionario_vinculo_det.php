@@ -37,6 +37,7 @@ class clsIndex extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} Vínculo Funcionários" );
 		$this->processoAp = "190";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -51,7 +52,7 @@ class indice extends clsDetalhe
 		$this->cod_usuario = $_SESSION['id_pessoa'];
 		session_write_close();
 		$this->titulo = "Detalhe do Vínculo";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		// Pega o codigo do chamado
 		$cod_func = @$_GET['cod_func'];
@@ -66,6 +67,13 @@ class indice extends clsDetalhe
 		$this->url_editar = "funcionario_vinculo_cad.php?cod_funcionario_vinculo={$cod_func}";
 		$this->url_cancelar = "funcionario_vinculo_lst.php";
 		$this->largura = "100%";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""                                  => "Detalhe do v&iacute;nculo"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 

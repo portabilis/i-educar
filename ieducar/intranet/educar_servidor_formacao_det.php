@@ -84,7 +84,7 @@ class indice extends clsDetalhe
     session_write_close();
 
     $this->titulo = 'Servidor Formacao - Detalhe';
-    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
+    
 
     $this->cod_formacao = $_GET['cod_formacao'];
 

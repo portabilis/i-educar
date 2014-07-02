@@ -52,4 +52,21 @@ class ViewController extends Core_Controller_Page_ViewController
     'Nome' => 'nome',
     'Seção' => 'secao',
   );
+
+
+  protected function _preRender(){
+
+    parent::_preRender();
+
+    Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
+
+    $localizacao = new LocalizacaoSistema();
+
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "i-Educar - Escola",
+         ""                                  => "Detalhe da &aacute;rea de conhecimento"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());     
+  }  
 }

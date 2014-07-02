@@ -99,6 +99,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       'label'  => 'Código rede estadual',
       'help'   => '',
     ),
+    
 
     'deficiencias' => array(
       'label'  => 'Deficiências / habilidades especiais',
@@ -340,6 +341,14 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
   protected function _preConstruct()
   {
+    $nomeMenu = $this->getRequest()->id == null ? "Cadastrar" : "Editar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "i-Educar - Escola",
+         ""        => "$nomeMenu aluno"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
   }
 
 
@@ -369,6 +378,10 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     // código aluno rede estadual
     $options = array('label' => $this->_getLabel('aluno_estado_id'), 'required' => false, 'size' => 25, 'max_length' => 25);
     $this->inputsHelper()->text('aluno_estado_id', $options);
+
+    // código aluno sistema
+    $options = array('label' => Portabilis_String_Utils::toLatin1($GLOBALS['coreExt']['Config']->app->alunos->codigo_sistema), 'required' => false, 'size' => 25, 'max_length' => 30);
+    $this->inputsHelper()->text('codigo_sistema', $options);
 
     // nome
     $options = array('label' => $this->_getLabel('pessoa'), 'size' => 68);
@@ -455,8 +468,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     // religião
     $this->inputsHelper()->religiao(array('required' => false, 'label' => Portabilis_String_Utils::toLatin1('Religião') ));
 
-    // beneficio
-    $this->inputsHelper()->beneficio(array('required' => false, 'label' => Portabilis_String_Utils::toLatin1('Benefício')));
+    // Benefícios
+    $helperOptions = array('objectName' => 'beneficios');
+    $options       = array('label' => Portabilis_String_Utils::toLatin1('Benefícios'), 'size' => 250, 'required' => false,
+                           'options' => array('value' => null));
+
+    $this->inputsHelper()->multipleSearchBeneficios('', $options, $helperOptions);
 
 
     // Deficiências / habilidades especiais

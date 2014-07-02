@@ -41,6 +41,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Tipo Usuário');
     $this->processoAp = '554';
+    $this->addEstilo('localizacaoSistema');
   }
 }
 
@@ -69,7 +70,7 @@ class indice extends clsDetalhe
     session_write_close();
 
     $this->titulo = 'Tipo Usuário - Detalhe';
-    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
+    
 
     $this->cod_tipo_usuario = $_GET['cod_tipo_usuario'];
 
@@ -157,6 +158,14 @@ class indice extends clsDetalhe
 
     $this->url_cancelar = 'educar_tipo_usuario_lst.php';
     $this->largura = '100%';
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "i-Educar - Escola",
+         ""                                  => "Detalhe do tipo de usu&aacute;rio"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
   }
 
   function lista_menus($opcoes)

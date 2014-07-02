@@ -42,6 +42,7 @@ class clsIndexBase extends clsBase
   public function Formular() {
     $this->SetTitulo($this->_instituicao . 'Detalhe Categoria N&iacute;vel');
     $this->processoAp = "829";
+		$this->addEstilo('localizacaoSistema');    
   }
 }
 
@@ -134,6 +135,14 @@ class indice extends clsDetalhe
 
 		$this->url_cancelar = "educar_categoria_nivel_lst.php";
 		$this->largura = "100%";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "i-Educar - Escola",
+         ""                                  => "Detalhe da categoria/n&iacute;vel"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 

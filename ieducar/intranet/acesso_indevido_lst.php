@@ -44,7 +44,7 @@ class indice extends clsListagem
 	{
 		
 		$this->titulo = "Acessos Indevidos";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );	
+			
 		$this->addCabecalhos( array( "Nome", "IP", "IP interno", "Data" ) );		
 		$where = "";		
 		$db = new clsBanco();

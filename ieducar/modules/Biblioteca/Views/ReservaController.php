@@ -41,6 +41,22 @@ class ReservaController extends Portabilis_Controller_Page_ListController
   protected $_formMap    = array();
   protected $_processoAp = 609;
 
+  protected function _preRender(){
+
+    parent::_preRender();
+
+    Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
+
+    $localizacao = new LocalizacaoSistema();
+
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_biblioteca_index.php"                  => "i-Educar - Biblioteca",
+         ""                                  => "Reserva de exemplares"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar(), true);     
+  }  
+
   public function Gerar() {
     // inputs
     $inputs = array('instituicao', 'escola', 'biblioteca', 'bibliotecaPesquisaCliente', 'bibliotecaPesquisaObra');

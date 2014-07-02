@@ -53,6 +53,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Empresas');
     $this->processoAp = 21235;
+    $this->addEstilo('localizacaoSistema');
   }
 }
 
@@ -82,7 +83,7 @@ class indice extends clsDetalhe
     $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
 
     $this->titulo = 'Empresa transporte escolar - Detalhe';
-    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
+    
 
     $cod_empresa_transporte_escolar = $_GET['cod_empresa'];
 
@@ -124,6 +125,14 @@ class indice extends clsDetalhe
     $this->url_cancelar = "transporte_empresa_lst.php";
 
     $this->largura = "100%";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "i-Educar - Escola",
+         ""                                  => "Detalhe da empresa de transporte"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
   }
 }
 

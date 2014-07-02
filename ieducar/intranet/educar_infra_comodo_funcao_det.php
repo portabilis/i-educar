@@ -35,6 +35,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Fun&ccedil;&atilde;o C&ocirc;modo" );
 		$this->processoAp = "572";
+		$this->addEstilo("localizacaoSistema");
 	}
 }
 
@@ -65,7 +66,7 @@ class indice extends clsDetalhe
 		session_write_close();
 
 		$this->titulo = "Fun&ccedil;&atilde;o C&ocirc;modo  - Detalhe";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->cod_infra_comodo_funcao=$_GET["cod_infra_comodo_funcao"];
 
@@ -144,6 +145,14 @@ class indice extends clsDetalhe
 
 		$this->url_cancelar = "educar_infra_comodo_funcao_lst.php";
 		$this->largura = "100%";
+
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         "educar_index.php"                  => "i-Educar - Escola",
+	         ""                                  => "Detalhe da fun&ccedil;&atilde;o de c&ocirc;modo"
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 

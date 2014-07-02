@@ -104,7 +104,7 @@ class indice extends clsListagem
 			$this->$key = $value;
 		$this->titulo = "Obras - Listagem";
 
-		//$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		//
 
 		$this->addCabecalhos( array(
 			"Obra",

@@ -81,6 +81,19 @@ class EditController extends Core_Controller_Page_EditController
     )
   );
 
+  function _preRender(){
+    Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
+
+    $nomeMenu = $this->getRequest()->id == null ? "Cadastrar" : "Editar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "i-Educar - Escola",
+         ""        => "$nomeMenu f&oacute;rmula de m&eacute;dia"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());   
+  }
+
   /**
    * @see clsCadastro#Gerar()
    */

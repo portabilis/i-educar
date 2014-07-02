@@ -36,6 +36,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Acervo Assunto" );
 		$this->processoAp = "592";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -64,7 +65,7 @@ class indice extends clsDetalhe
 		session_write_close();
 
 		$this->titulo = "Acervo Assunto - Detalhe";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->cod_acervo_assunto=$_GET["cod_acervo_assunto"];
 
@@ -95,6 +96,14 @@ class indice extends clsDetalhe
 
 		$this->url_cancelar = "educar_acervo_assunto_lst.php";
 		$this->largura = "100%";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_biblioteca_index.php"                  => "i-Educar - Biblioteca",
+         ""        => "Listagem de assuntos"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 

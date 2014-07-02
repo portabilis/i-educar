@@ -36,6 +36,7 @@ class clsIndex extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} Diaria Valores" );
 		$this->processoAp = "295";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -70,6 +71,15 @@ class indice extends clsCadastro
 
 		$this->url_cancelar = ( $retorno == "Editar" ) ? "diaria_valores_det.php?cod_diaria_valores={$this->cod_diaria_valores}" : "diaria_valores_lst.php";
 		$this->nome_url_cancelar = "Cancelar";
+
+    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "i-Educar - Escola",
+         ""        => "{$nomeMenu} valores da di&aacute;ria"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
 
 		return $retorno;
 	}

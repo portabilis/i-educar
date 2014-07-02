@@ -36,6 +36,7 @@ class clsIndex extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} Empresas" );
 		$this->processoAp = array("41", "649");
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -44,7 +45,7 @@ class indice extends clsDetalhe
 	function Gerar()
 	{
 		$this->titulo = "Detalhe da empresa";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$cod_empresa = @$_GET['cod_empresa'];
 
@@ -78,6 +79,13 @@ class indice extends clsDetalhe
 		$this->url_cancelar = "empresas_lst.php";
 
 		$this->largura = "100%";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""                                  => "Detalhe da pessoa jur&iacute;dica"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 

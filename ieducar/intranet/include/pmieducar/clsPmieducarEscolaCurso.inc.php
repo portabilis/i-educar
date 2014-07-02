@@ -41,6 +41,7 @@ class clsPmieducarEscolaCurso
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
+	var $autorizacao;
 
 	// propriedades padrao
 
@@ -106,13 +107,13 @@ class clsPmieducarEscolaCurso
 	 *
 	 * @return object
 	 */
-	function clsPmieducarEscolaCurso( $ref_cod_escola = null, $ref_cod_curso = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+	function clsPmieducarEscolaCurso( $ref_cod_escola = null, $ref_cod_curso = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $autorizacao = null )
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}escola_curso";
 
-		$this->_campos_lista = $this->_todos_campos = "ec.ref_cod_escola, ec.ref_cod_curso, ec.ref_usuario_exc, ec.ref_usuario_cad, ec.data_cadastro, ec.data_exclusao, ec.ativo";
+		$this->_campos_lista = $this->_todos_campos = "ec.ref_cod_escola, ec.ref_cod_curso, ec.ref_usuario_exc, ec.ref_usuario_cad, ec.data_cadastro, ec.data_exclusao, ec.ativo, ec.autorizacao";
 
 		if( is_numeric( $ref_usuario_exc ) )
 		{
@@ -240,6 +241,10 @@ class clsPmieducarEscolaCurso
 		{
 			$this->ativo = $ativo;
 		}
+		if( is_string( $autorizacao ) )
+		{
+			$this->autorizacao = $autorizacao;
+		}
 
 	}
 
@@ -276,6 +281,13 @@ class clsPmieducarEscolaCurso
 				$valores .= "{$gruda}'{$this->ref_usuario_cad}'";
 				$gruda = ", ";
 			}
+			if( is_string( $this->autorizacao ) )
+			{
+				$campos.= "{$gruda}autorizacao";
+				$valores .= "{$gruda}'{$this->autorizacao}'";
+				$grupo = ", ";
+			}
+
 			$campos .= "{$gruda}data_cadastro";
 			$valores .= "{$gruda}NOW()";
 			$gruda = ", ";
@@ -325,6 +337,12 @@ class clsPmieducarEscolaCurso
 				$gruda = ", ";
 			}
 
+			if( is_string( $this->autorizacao ) )
+			{
+				$set .= "{$gruda}autorizacao = '{$this->autorizacao}'";
+				$gruda = ", ";
+			}
+
 
 			if( $set )
 			{
@@ -340,7 +358,7 @@ class clsPmieducarEscolaCurso
 	 *
 	 * @return array
 	 */
-	function lista( $int_ref_cod_escola = null, $int_ref_cod_curso = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null,$busca_nome_curso = false, $int_ref_cod_instituicao = null, $bool_curso_ativo = null )
+	function lista( $int_ref_cod_escola = null, $int_ref_cod_curso = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null,$busca_nome_curso = false, $int_ref_cod_instituicao = null, $bool_curso_ativo = null)
 	{
 		$sql = "SELECT {$this->_campos_lista}, c.* FROM {$this->_tabela} ec, {$this->_schema}curso c";
 

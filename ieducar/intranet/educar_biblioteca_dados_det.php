@@ -35,6 +35,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Dados Biblioteca" );
 		$this->processoAp = "629";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -69,7 +70,7 @@ class indice extends clsDetalhe
 		session_write_close();
 
 		$this->titulo = "Dados Biblioteca - Detalhe";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$this->cod_biblioteca=$_GET["cod_biblioteca"];
 
@@ -214,6 +215,14 @@ class indice extends clsDetalhe
 
 		$this->url_cancelar = "educar_biblioteca_dados_lst.php";
 		$this->largura = "100%";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_biblioteca_index.php"                  => "i-Educar - Biblioteca",
+         ""                                  => "Detalhe dos dados da biblioteca"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 

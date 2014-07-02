@@ -39,6 +39,7 @@ class clsIndexBase extends clsBase
   function Formular() {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Escolaridade');
     $this->processoAp = '632';
+    $this->addEstilo("localizacaoSistema");
   }
 }
 
@@ -84,7 +85,7 @@ class indice extends clsListagem
       $this->$var = ($val === '') ? NULL : $val;
     }
 
-    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
+    
 
     $this->addCabecalhos(array(
       'Descri&ccedil;&atilde;o'
@@ -122,6 +123,14 @@ class indice extends clsListagem
       $this->acao = 'go("educar_escolaridade_cad.php")';
       $this->nome_acao = 'Novo';
     }
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "i-Educar - Escola",
+         ""                                  => "Listagem de escolaridades"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());    
 
     $this->largura = '100%';
   }

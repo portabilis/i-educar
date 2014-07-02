@@ -54,4 +54,20 @@ class IndexController extends Core_Controller_Page_ListController
     'Base' => 'tipo_base',
     'Área de conhecimento' => 'area_conhecimento'
   );
+
+  protected function _preRender(){
+
+    parent::_preRender();
+
+    Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
+
+    $localizacao = new LocalizacaoSistema();
+
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "i-Educar - Escola",
+         ""                                  => "Listagem de componentes curriculares"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());     
+  }    
 }

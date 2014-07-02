@@ -36,6 +36,7 @@ class clsIndex extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} Diária Grupo" );
 		$this->processoAp = "297";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -44,7 +45,7 @@ class indice extends clsDetalhe
 	function Gerar()
 	{
 		$this->titulo = "Detalhe do Grupo";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 
 		$cod_diaria_grupo = @$_GET['cod_diaria_grupo'];
 		
@@ -65,6 +66,14 @@ class indice extends clsDetalhe
 		$this->url_cancelar = "diaria_grupo_lst.php";
 
 		$this->largura = "100%";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "i-Educar - Escola",
+         ""                                  => "Detalhe do grupo de di&aacute;rias"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 

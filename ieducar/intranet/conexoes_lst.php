@@ -36,6 +36,7 @@ class clsIndex extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} Conexões!" );
 		$this->processoAp = "157";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -44,7 +45,7 @@ class indice extends clsListagem
 	function Gerar()
 	{
 		$this->titulo = "Conexões";
-		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
+		
 		
 		$this->addCabecalhos( array( "Data Hora", "Local do Acesso") );
 		
@@ -106,6 +107,13 @@ class indice extends clsListagem
 		$this->addPaginador2( "conexoes_lst.php", $total, $_GET, $this->nome, $limite );
 
 		$this->largura = "100%";
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""                                  => "Listagem de conex&otilde;es realizadas"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());		
 
 	}
 }

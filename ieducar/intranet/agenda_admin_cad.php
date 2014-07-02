@@ -36,6 +36,7 @@ class clsIndex extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} Agenda" );
 		$this->processoAp = "343";
+		$this->addEstilo('localizacaoSistema');
 	}
 }
 
@@ -106,6 +107,14 @@ class indice extends clsCadastro
 			$this->url_cancelar = "agenda_admin_lst.php";
 		}
 		$this->nome_url_cancelar = "Cancelar";
+
+		$nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""                                  => "$nomeMenu agenda"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());			
 
 		return $retorno;
 	}

@@ -35,6 +35,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Religiao" );
 		$this->processoAp = "579";
+		$this->addEstilo("localizacaoSistema");
 	}
 }
 
@@ -88,6 +89,16 @@ class indice extends clsCadastro
 			}
 		}
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_religiao_det.php?cod_religiao={$registro["cod_religiao"]}" : "educar_religiao_lst.php";
+		
+		$nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos( array(
+             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+             "educar_index.php"                  => "i-Educar - Escola",
+             ""        => "{$nomeMenu} religi&atilde;o"             
+        ));
+        $this->enviaLocalizacao($localizacao->montar());		
+
 		$this->nome_url_cancelar = "Cancelar";
 		return $retorno;
 	}

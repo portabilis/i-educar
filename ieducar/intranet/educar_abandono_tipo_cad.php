@@ -35,6 +35,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Abandono" );
 		$this->processoAp = "950";
+		$this->addEstilo("localizacaoSistema");
 	}
 }
 
@@ -84,6 +85,16 @@ class indice extends clsCadastro
 		}
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_abandono_tipo_det.php?cod_abandono_tipo={$registro["cod_abandono_tipo"]}" : "educar_abandono_tipo_lst.php";
 		$this->nome_url_cancelar = "Cancelar";
+
+		$nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "i-Educar - Escola",
+         ""        													 => "{$nomeMenu} tipo de abandono"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());
+    		
 		return $retorno;
 	}
 
