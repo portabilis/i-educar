@@ -268,7 +268,8 @@ class indice extends clsCadastro
         (SELECT COALESCE(p.email,(SELECT email FROM pmieducar.escola_complemento where ref_cod_escola = e.cod_escola))) as r00s22,
 
         e.dependencia_administrativa as r00s24,
-        b.zona_localizacao as r00s25
+        b.zona_localizacao as r00s25,
+        e.regulamentacao as r00s35
 
 
         FROM pmieducar.escola e
@@ -291,6 +292,12 @@ class indice extends clsCadastro
     if ($r00s1){
       $d = '|';
       $return = '';
+
+      $r00s4 = Portabilis_Date_Utils::pgSQLToBr($r00s4);
+      $r00s5 = Portabilis_Date_Utils::pgSQLToBr($r00s5);
+
+      $r00s6 = strtoupper($r00s6);
+      $r00s22 = strtoupper($r00s22);
 
       for ($i=1; $i <= 35 ; $i++)
         $return .= ${'r00s'.$i}.$d;
@@ -348,6 +355,7 @@ class indice extends clsCadastro
       e.dependencia_banheiro_dentro as r10s57,
       e.dependencia_banheiro_infantil as r10s58,
       e.dependencia_banheiro_deficiente as r10s59,
+      e.dependencia_vias_deficiente as r10s60,
       e.dependencia_banheiro_chuveiro as r10s61,
       e.dependencia_refeitorio as r10s62,
       e.dependencia_dispensa as r10s63,
@@ -619,22 +627,65 @@ class indice extends clsCadastro
       $d = '|';
       $return = '';
 
-      if ($local_funcionamento)
-        ${'r10s'.$local_funcionamento} = 1;
+      $r10s3 = $this->cpfToCenso($r10s3);
+
+      for($i = 7; $i <=15; $i++){
+        if ($local_funcionamento == $i)
+          ${'r10s'.$i} = 1;
+        else
+          ${'r10s'.$i} = 0;
+      }
+
+      $r10s4 = strtoupper($r10s4);
+      $r10s6 = strtoupper($r10s6);      
 
       if($codigo_inep_escola_compartilhada !=null){
         $r10s17 = 1;
         $r10s18 = $codigo_inep_escola_compartilhada;
+      }else
+        $r10s17 = 0;
+
+
+      if (!$r10s95 == 1){
+        $r10s98 = 0;
+        $r10s99 = 0;
+        $r10s100 = 0;
+        $r10s101 = 0;
+        $r10s102 = 0;
+        $r10s103 = 0;
+        $r10s104 = 0;
+        $r10s105 = 0;
       }
+      if (!$r10s96 == 1){
+        $r10s106 = 0;
+        $r10s107 = 0;
+        $r10s108 = 0;
+        $r10s109 = 0;
+        $r10s110 = 0;
+        $r10s111 = 0;
+        $r10s112 = 0;
+        $r10s113 = 0;
+        $r10s114 = 0;
+        $r10s115 = 0;
+      }
+      if (!$r10s97 == 1){
+        $r10s116 = 0;
+        $r10s117 = 0;
+        $r10s118 = 0;
+      }
+
+      // Esses valores não podem ser nulos, então casos não seja 1 é setado 0
+      for($i = 95; $i <=118; $i++)
+        ${'r10s'.$i} = ${'r10s'.$i} == 1 ? 1 : 0;        
+
+      $r10s119 = $r10s119 == 1 ? 1 : NULL;
 
       if($lingua_ministrada && $r10s124){
         $r10s125 = 1;
         $r10s127 = $lingua_ministrada;
       }elseif ($r10s124) {
         $r10s126 = 1;
-      }
-
-      $r10s3 = $this->cpfToCenso($r10s3);
+      }      
 
       for ($i=1; $i <= 130 ; $i++){
         if($i>=75 && $i<=88)
@@ -735,10 +786,24 @@ class indice extends clsCadastro
     // Transforma todos resultados em variáveis
     extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($turmaId))));
     if ($r20s1){
+
+      $r20s5 = strtoupper($r20s5);
+
+      //Dias da semana  e tipo de atendimento não podem ser nullos, 1 ou 0 
+      for($i = 10; $i <=17; $i++)
+        ${'r20s'.$i} = ${'r20s'.$i} == 1 ? 1 : 0;
+
       // Atribui 0 (Não lecionado) para todas as disciplinas por padrão.
       $r20s39 = $r20s40 = $r20s41 = $r20s42 = $r20s43 = $r20s44 = $r20s45 = $r20s46 = $r20s47 = $r20s48 = $r20s49 = 
       $r20s50 = $r20s51 = $r20s52 = $r20s53 = $r20s54 = $r20s55 = $r20s56 = $r20s57 = $r20s58 = $r20s59 = $r20s60 = 
       $r20s61 = $r20s62 = $r20s63 = $r20s64 = 0;
+
+      // Se a turma não presta atendimento educacional especializado AEE esses campos precisam ser nulos
+      if ($r20s17 != 5)
+        $r20s25 = $r20s26 = $r20s27 = $r20s28 = $r20s29 = $r20s30 = $r20s31 = $r20s32 = $r20s33 = $r20s34 = $r20s35 = NULL;
+
+      if(!((($r20s37 >= 4 && $r20s37 <= 38) || $r20s37 == 41 || $r20s37 == 56 ) && in_array($r20s17, array(0, 2, 3))))
+        $r20s18 = NULL;
 
 
       $coddigoEducacensoToSeq = 
@@ -836,6 +901,7 @@ class indice extends clsCadastro
     if ($r30s1){
       $r30s8 = Portabilis_Date_Utils::pgSQLToBr($r30s8);
       $r30s9 = $r30s9 == 'M' ? 1 : 2;
+      $r30s10 = is_numeric($r30s10) ? $r30s10 : 0;
 
       $sql = 'select distinct(deficiencia_educacenso) as id from cadastro.fisica_deficiencia,
               cadastro.deficiencia where cod_deficiencia = ref_cod_deficiencia and ref_idpes = $1 
@@ -853,11 +919,13 @@ class indice extends clsCadastro
                                  6 => '22',
                                  7 => '23',
                                  8 => '24' );
+      $r30s16 = 0;
 
       foreach ($deficiencias as $deficiencia_educacenso) {
         $deficiencia_educacenso = $deficiencia_educacenso['id'];
         if (array_key_exists($deficiencia_educacenso, $deficienciaToSeq)){
           ${ 'r30s'. $deficienciaToSeq[$deficiencia_educacenso] } = 1;
+          $r30s16 = 1;
         }
       }
       
@@ -1001,7 +1069,10 @@ class indice extends clsCadastro
           					&& is_null($r50s41) && is_null($r50s42) && is_null($r50s43) && is_null($r50s44) && is_null($r50s45);
       $cont= 0;
       for ($i=1; $i <= $numeroRegistros; $i++){
-      	$return .= ${'r50s'.$i}.$d;
+        if($i >= 31)
+        	$return .= (${'r50s'.$i} == 1 ? 1 : 0).$d;
+        else
+          $return .= ${'r50s'.$i}.$d;
       }
 
       return $return."\n";
@@ -1278,16 +1349,20 @@ class indice extends clsCadastro
 
     foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
       extract($reg);
+
+      $r60s5 = strtoupper($r60s5);
       
       $r60s7 = Portabilis_Date_Utils::pgSQLToBr($r60s7);
       $r60s8 = $r60s8 == 'M' ? 1 : 2;
+      $r60s9 = is_numeric($r60s9) ? $r60s9 : 0;
       $r60s10 = (int) !(is_null($r60s11) && is_null($r60s12));
 
       $deficiencias = Portabilis_Utils_Database::fetchPreparedQuery($sqlDeficiencias, array( 'params' => array($idpes)));
       
-      // Reseta deficiências (DEFAULT 0)
-      $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 = 
-                            $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = $r60s30 = 0;
+      // Reseta deficiências (DEFAULT NULL)
+      $r60s17 = 0;
+      $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 = 
+                            $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = $r60s30 = NULL;
       
       // Caso não exista nenhum curso seta seq 40 como 1
       $r60s40 = (int) is_null($r60s31) && is_null($r60s32) && is_null($r60s33) && is_null($r60s34)
@@ -1310,6 +1385,8 @@ class indice extends clsCadastro
       // Se tiver alguma deficiência, a seq 17 deve ser 1
       if (count($deficiencias)>0){
         $r60s17 = 1;
+        $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 = 
+                  $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = $r60s30 = 0;
 
         foreach ($deficiencias as $deficiencia_educacenso) {
           $deficiencia_educacenso = $deficiencia_educacenso['id'];
@@ -1318,6 +1395,9 @@ class indice extends clsCadastro
           }
         }
       }
+      // Se o aluno não tiver deficiências não pode ser informado recursos para provas
+      if ($r60s17)
+        $r60s40 = NULL;
 
       for ($i=1; $i <= $numeroRegistros ; $i++)
         $return .= ${'r60s'.$i}.$d;
@@ -1402,7 +1482,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
       $r70s10 = $r70s11 = NULL;
       if (is_null($tipo_cert_civil) && !empty($r70s19)){
         $r70s10 = 2;
-        $r70s11 = 1;
+        $r70s11 = NULL;
         $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = NULL;
         $r70s19 =  str_replace(' ', '',$r70s19);
       }elseif($tipo_cert_civil == 91){
@@ -1420,6 +1500,15 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
       }else
         $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = $r70s19 = NULL;
       // fim das validações de certidões //
+
+      $nenhumaDocumentacao = TRUE;
+      for ($i=5; $i <= 22; $i++){
+        if (!is_null(${'r70s'.$i}))
+          $nenhumaDocumentacao = FALSE;
+      }
+
+      if ($nenhumaDocumentacao)
+        $r70s23 = is_numeric($r70s23) ? $r70s23 : 2;
 
       for ($i=1; $i <= $numeroRegistros ; $i++)
         $return .= ${'r70s'.$i}.$d;
@@ -1567,7 +1656,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
       extract($reg);
 
       // validações transporte escolar
-      $r80s11 = $r80s12 = 0;
+      $r80s11 = $r80s12 = NULL;
       if ($transporte_escolar){
         $veiculo = false;
         for ($i=13; $i <= 23 ; $i++) { 

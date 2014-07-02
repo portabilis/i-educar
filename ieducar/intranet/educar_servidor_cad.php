@@ -387,7 +387,7 @@ class indice extends clsCadastro
     $this->campoLista('ref_idesco', 'Escolaridade', $opcoes,
       $this->ref_idesco, '', FALSE, '', $script, FALSE, FALSE);    
 
-    $resources = array(0 => 'Selecione',
+    $resources = array(NULL => 'Selecione',
                        1 => Portabilis_String_Utils::toLatin1('Concluído'),
                        2 => 'Em andamento');
 
@@ -408,7 +408,7 @@ class indice extends clsCadastro
     $options = array('label' => Portabilis_String_Utils::toLatin1('Ano de conclusão do curso superior 1'), 'placeholder' => '','value' => $this->ano_conclusao_curso_superior_1, 'max_length' => 4, 'size' => 5, 'required' => false);
     $this->inputsHelper()->integer('ano_conclusao_curso_superior_1', $options);    
 
-    $resources = array(0 => 'Selecione',
+    $resources = array(NULL => 'Selecione',
                        1 => Portabilis_String_Utils::toLatin1('Pública'),
                        2 => 'Privada');
 
@@ -422,7 +422,7 @@ class indice extends clsCadastro
 
     $this->campoQuebra();
 
-    $resources = array(0 => 'Selecione',
+    $resources = array(NULL => 'Selecione',
                        1 => Portabilis_String_Utils::toLatin1('Concluído'),
                        2 => 'Em andamento');
 
@@ -443,7 +443,7 @@ class indice extends clsCadastro
     $options = array('label' => Portabilis_String_Utils::toLatin1('Ano de conclusão do curso superior 2'), 'placeholder' => '','value' => $this->ano_conclusao_curso_superior_2, 'max_length' => 4, 'size' => 5, 'required' => false);
     $this->inputsHelper()->integer('ano_conclusao_curso_superior_2', $options);    
 
-    $resources = array(0 => 'Selecione',
+    $resources = array(NULL => 'Selecione',
                        1 => Portabilis_String_Utils::toLatin1('Pública'),
                        2 => 'Privada');
 
@@ -457,7 +457,7 @@ class indice extends clsCadastro
 
     $this->campoQuebra();
 
-    $resources = array(0 => 'Selecione',
+    $resources = array(NULL => 'Selecione',
                        1 => Portabilis_String_Utils::toLatin1('Concluído'),
                        2 => 'Em andamento');
 
@@ -478,7 +478,7 @@ class indice extends clsCadastro
     $options = array('label' => Portabilis_String_Utils::toLatin1('Ano de conclusão do curso superior 3'), 'placeholder' => '','value' => $this->ano_conclusao_curso_superior_3, 'max_length' => 4, 'size' => 5, 'required' => false);
     $this->inputsHelper()->integer('ano_conclusao_curso_superior_3', $options);    
 
-    $resources = array(0 => 'Selecione',
+    $resources = array(NULL => 'Selecione',
                        1 => Portabilis_String_Utils::toLatin1('Pública'),
                        2 => 'Privada');
 

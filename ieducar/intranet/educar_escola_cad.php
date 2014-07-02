@@ -161,6 +161,7 @@ class indice extends clsCadastro
   var $dependencia_banheiro_infantil;
   var $dependencia_banheiro_deficiente;
   var $dependencia_banheiro_chuveiro;
+  var $dependencia_vias_deficiente;
   var $dependencia_refeitorio;
   var $dependencia_dispensa;
   var $dependencia_aumoxarifado;
@@ -1166,9 +1167,9 @@ if(!$this->isEnderecoExterno){
 			$this->campoOculto( "incluir_curso", "" );
 			$this->campoQuebra();			
 
-			$resources = array(0 => Portabilis_String_Utils::toLatin1('Próprio'),
-			                   1 => 'Alugado',
-			                   2 => 'Cedido');
+			$resources = array(1 => Portabilis_String_Utils::toLatin1('Próprio'),
+			                   2 => 'Alugado',
+			                   3 => 'Cedido');
 
   		$options = array('label' => Portabilis_String_Utils::toLatin1('Condição'), 'resources' => $resources, 'value' => $this->condicao, 'size' => 70, 'required' => false);
 	    $this->inputsHelper()->select('condicao', $options);
@@ -1366,6 +1367,9 @@ if(!$this->isEnderecoExterno){
 
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Banheiro com chuveiro'), 'value' => $this->dependencia_banheiro_chuveiro);
 	    $this->inputsHelper()->checkbox('dependencia_banheiro_chuveiro', $options);
+
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Dependências e vias adequadas a alunos com deficiência'), 'value' => $this->dependencia_vias_deficiente);
+	    $this->inputsHelper()->checkbox('dependencia_vias_deficiente', $options);
 
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Refeitório'), 'value' => $this->dependencia_refeitorio);
 	    $this->inputsHelper()->checkbox('dependencia_refeitorio', $options);
@@ -1585,7 +1589,7 @@ if(!$this->isEnderecoExterno){
 					$obj->num_pavimentos = $this->num_pavimentos;
 					$obj->tipo_piso = $this->tipo_piso;
 					$obj->medidor_energia = $this->medidor_energia;
-					$obj->agua_consumida = $this->agua_consumida == 'on' ? 1 : 0;
+					$obj->agua_consumida = $this->agua_consumida;
 					$obj->agua_rede_publica = $this->agua_rede_publica == 'on' ? 1 : 0;
 					$obj->agua_poco_artesiano = $this->agua_poco_artesiano == 'on' ? 1 : 0;
 					$obj->agua_cacimba_cisterna_poco = $this->agua_cacimba_cisterna_poco == 'on' ? 1 : 0;
@@ -1622,6 +1626,7 @@ if(!$this->isEnderecoExterno){
 					$obj->dependencia_banheiro_infantil = $this->dependencia_banheiro_infantil == 'on' ? 1 : 0;
 					$obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
 					$obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
+					$obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
 					$obj->dependencia_refeitorio = $this->dependencia_refeitorio == 'on' ? 1 : 0;
 					$obj->dependencia_dispensa = $this->dependencia_dispensa == 'on' ? 1 : 0;
 					$obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
@@ -1786,7 +1791,7 @@ if(!$this->isEnderecoExterno){
 			$obj->num_pavimentos = $this->num_pavimentos;		
 			$obj->tipo_piso = $this->tipo_piso;
 			$obj->medidor_energia = $this->medidor_energia;
-			$obj->agua_consumida = $this->agua_consumida == 'on' ? 1 : 0;
+			$obj->agua_consumida = $this->agua_consumida;
 			$obj->agua_rede_publica = $this->agua_rede_publica == 'on' ? 1 : 0;
 			$obj->agua_poco_artesiano = $this->agua_poco_artesiano == 'on' ? 1 : 0;
 			$obj->agua_cacimba_cisterna_poco = $this->agua_cacimba_cisterna_poco == 'on' ? 1 : 0;
@@ -1823,6 +1828,7 @@ if(!$this->isEnderecoExterno){
 			$obj->dependencia_banheiro_infantil = $this->dependencia_banheiro_infantil == 'on' ? 1 : 0;
 			$obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
 			$obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
+			$obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
 			$obj->dependencia_refeitorio = $this->dependencia_refeitorio == 'on' ? 1 : 0;
 			$obj->dependencia_dispensa = $this->dependencia_dispensa == 'on' ? 1 : 0;
 			$obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
@@ -1963,7 +1969,7 @@ if(!$this->isEnderecoExterno){
 			$obj->num_pavimentos = $this->num_pavimentos;			
 			$obj->tipo_piso = $this->tipo_piso;
 			$obj->medidor_energia = $this->medidor_energia;
-			$obj->agua_consumida = $this->agua_consumida == 'on' ? 1 : 0;
+			$obj->agua_consumida = $this->agua_consumida;
 			$obj->agua_rede_publica = $this->agua_rede_publica == 'on' ? 1 : 0;
 			$obj->agua_poco_artesiano = $this->agua_poco_artesiano == 'on' ? 1 : 0;
 			$obj->agua_cacimba_cisterna_poco = $this->agua_cacimba_cisterna_poco == 'on' ? 1 : 0;
@@ -2000,6 +2006,7 @@ if(!$this->isEnderecoExterno){
 			$obj->dependencia_banheiro_infantil = $this->dependencia_banheiro_infantil == 'on' ? 1 : 0;
 			$obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
 			$obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
+			$obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
 			$obj->dependencia_refeitorio = $this->dependencia_refeitorio == 'on' ? 1 : 0;
 			$obj->dependencia_dispensa = $this->dependencia_dispensa == 'on' ? 1 : 0;
 			$obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
@@ -2073,7 +2080,7 @@ if(!$this->isEnderecoExterno){
 			$obj->num_pavimentos = $this->num_pavimentos;	
 			$obj->tipo_piso = $this->tipo_piso;
 			$obj->medidor_energia = $this->medidor_energia;
-			$obj->agua_consumida = $this->agua_consumida == 'on' ? 1 : 0;
+			$obj->agua_consumida = $this->agua_consumida;
 			$obj->agua_rede_publica = $this->agua_rede_publica == 'on' ? 1 : 0;
 			$obj->agua_poco_artesiano = $this->agua_poco_artesiano == 'on' ? 1 : 0;
 			$obj->agua_cacimba_cisterna_poco = $this->agua_cacimba_cisterna_poco == 'on' ? 1 : 0;
@@ -2110,6 +2117,7 @@ if(!$this->isEnderecoExterno){
 			$obj->dependencia_banheiro_infantil = $this->dependencia_banheiro_infantil == 'on' ? 1 : 0;
 			$obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
 			$obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
+			$obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
 			$obj->dependencia_refeitorio = $this->dependencia_refeitorio == 'on' ? 1 : 0;
 			$obj->dependencia_dispensa = $this->dependencia_dispensa == 'on' ? 1 : 0;
 			$obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;

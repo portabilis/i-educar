@@ -112,6 +112,7 @@ class clsPmieducarEscola
   var $dependencia_banheiro_infantil;
   var $dependencia_banheiro_deficiente;
   var $dependencia_banheiro_chuveiro;
+  var $dependencia_vias_deficiente;
   var $dependencia_refeitorio;
   var $dependencia_dispensa;
   var $dependencia_aumoxarifado;
@@ -237,7 +238,7 @@ class clsPmieducarEscola
           e.agua_inexistente, e.energia_rede_publica, e.energia_outros, e.energia_gerador, e.energia_inexistente, e.esgoto_rede_publica, e.esgoto_fossa, e.esgoto_inexistente, e.lixo_coleta_periodica, e.lixo_queima, e.lixo_joga_outra_area, 
           e.lixo_recicla, e.lixo_enterra, e.lixo_outros, e.dependencia_sala_diretoria, e.dependencia_sala_professores, e.dependencia_sala_secretaria, e.dependencia_laboratorio_informatica, e.dependencia_laboratorio_ciencias, e.dependencia_sala_aee,
           e.dependencia_quadra_coberta, e.dependencia_quadra_descoberta, e.dependencia_cozinha, e.dependencia_biblioteca, e.dependencia_sala_leitura, e.dependencia_parque_infantil, e.dependencia_bercario, e.dependencia_banheiro_fora, 
-          e.dependencia_banheiro_dentro, e.dependencia_banheiro_infantil, e.dependencia_banheiro_deficiente, e.dependencia_banheiro_chuveiro, e.dependencia_refeitorio, e.dependencia_dispensa, e.dependencia_aumoxarifado, e.dependencia_auditorio, 
+          e.dependencia_banheiro_dentro, e.dependencia_banheiro_infantil, e.dependencia_banheiro_deficiente, e.dependencia_banheiro_chuveiro, e.dependencia_vias_deficiente, e.dependencia_refeitorio, e.dependencia_dispensa, e.dependencia_aumoxarifado, e.dependencia_auditorio, 
           e.dependencia_patio_coberto, e.dependencia_patio_descoberto, e.dependencia_alojamento_aluno, e.dependencia_alojamento_professor, e.dependencia_area_verde, e.dependencia_lavanderia, e.dependencia_unidade_climatizada, 
           e.dependencia_quantidade_ambiente_climatizado, e.dependencia_nenhuma_relacionada, e.dependencia_numero_salas_existente, dependencia_numero_salas_utilizadas, e.porte_quadra_descoberta, e.porte_quadra_coberta, e.tipo_cobertura_patio,
           e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.localizacao_diferenciada, e.didatico_nao_utiliza, e.didatico_quilombola, e.didatico_indigena, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado, 
@@ -786,6 +787,12 @@ class clsPmieducarEscola
       if (is_numeric($this->dependencia_banheiro_chuveiro)) {
         $campos .= "{$gruda}dependencia_banheiro_chuveiro";
         $valores .= "{$gruda}'{$this->dependencia_banheiro_chuveiro}'";
+        $gruda = ", ";
+      }
+      
+      if (is_numeric($this->dependencia_vias_deficiente)) {
+        $campos .= "{$gruda}dependencia_vias_deficiente";
+        $valores .= "{$gruda}'{$this->dependencia_vias_deficiente}'";
         $gruda = ", ";
       }
 
@@ -1440,6 +1447,11 @@ class clsPmieducarEscola
 
       if (is_numeric($this->dependencia_banheiro_chuveiro)) {
         $set .= "{$gruda}dependencia_banheiro_chuveiro = '{$this->dependencia_banheiro_chuveiro}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->dependencia_vias_deficiente)) {
+        $set .= "{$gruda}dependencia_vias_deficiente = '{$this->dependencia_vias_deficiente}'";
         $gruda = ", ";
       }
 
