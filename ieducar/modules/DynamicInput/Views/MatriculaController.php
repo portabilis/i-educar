@@ -89,7 +89,9 @@ class MatriculaController extends ApiCoreController
                                        NULL,
                                        NULL,
                                        NULL,
-                                       $this->getRequest()->turma_id);
+                                       $this->getRequest()->turma_id,
+                                       NULL,
+                                       TRUE); // Mostra alunos em abandono/transferidos se não existir nenhuma matricula_turma ativa pra outra turma
 
       $options = array();
 

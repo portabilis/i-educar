@@ -604,7 +604,7 @@ class clsPmieducarMatricula
     $int_ref_cod_curso = NULL, $bool_curso_sem_avaliacao = NULL,
     $arr_int_cod_matricula = NULL, $int_mes_defasado = NULL, $boo_data_nasc = NULL,
     $boo_matricula_transferencia = NULL, $int_semestre = NULL, $int_ref_cod_turma = NULL,
-    $int_ref_cod_abandono = NULL)
+    $int_ref_cod_abandono = NULL, $matriculas_turmas_transferidas_abandono = FALSE)
   {
     if ($boo_data_nasc) {
       $this->_campos_lista .= " ,(SELECT data_nasc
@@ -613,7 +613,12 @@ class clsPmieducarMatricula
                     ) as data_nasc";
     }
 
-    $sql = "SELECT {$this->_campos_lista}, c.ref_cod_instituicao, p.nome, a.cod_aluno, a.ref_idpes, c.cod_curso, m.observacao, (SELECT sequencial_fechamento FROM pmieducar.matricula_turma WHERE ref_cod_matricula = cod_matricula AND ativo = 1 LIMIT 1) as sequencial_fechamento FROM {$this->_tabela} m, {$this->_schema}curso c, {$this->_schema}aluno a, cadastro.pessoa p ";
+    if(is_numeric($int_ref_cod_turma))
+      $condicao_sequencial_fechamento = "AND ref_cod_turma = {$int_ref_cod_turma}";
+    else
+      $condicao_sequencial_fechamento = "AND ativo = 1";
+
+    $sql = "SELECT {$this->_campos_lista}, c.ref_cod_instituicao, p.nome, a.cod_aluno, a.ref_idpes, c.cod_curso, m.observacao, (SELECT sequencial_fechamento FROM pmieducar.matricula_turma WHERE ref_cod_matricula = cod_matricula {$condicao_sequencial_fechamento} LIMIT 1) as sequencial_fechamento FROM {$this->_tabela} m, {$this->_schema}curso c, {$this->_schema}aluno a, cadastro.pessoa p ";
 
     $whereAnd = " AND ";
     $filtros = " WHERE m.ref_cod_aluno = a.cod_aluno AND m.ref_cod_curso = c.cod_curso AND p.idpes = a.ref_idpes ";
@@ -760,7 +765,11 @@ class clsPmieducarMatricula
     }
 
     if (is_numeric($int_ref_cod_turma)) {
-      $filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM pmieducar.matricula_turma mt WHERE mt.ativo = 1 AND mt.ref_cod_turma = {$int_ref_cod_turma} AND mt.ref_cod_matricula = m.cod_matricula)";
+      if ($matriculas_turmas_transferidas_abandono)
+        $filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM pmieducar.matricula_turma mt WHERE (mt.ativo = 1 OR NOT EXISTS (SELECT 1 FROM pmieducar.matricula_turma mt WHERE mt.ativo = 1 AND mt.ref_cod_matricula = m.cod_matricula) ) AND mt.ref_cod_turma = {$int_ref_cod_turma} AND mt.ref_cod_matricula = m.cod_matricula)";        
+      else
+        $filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM pmieducar.matricula_turma mt WHERE mt.ativo = 1 AND mt.ref_cod_turma = {$int_ref_cod_turma} AND mt.ref_cod_matricula = m.cod_matricula)";
+
       $whereAnd = " AND ";
     }
 
