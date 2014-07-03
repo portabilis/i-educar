@@ -24,10 +24,8 @@
 	*	02111-1307, USA.													 *
 	*																		 *
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once '../includes/bootstrap.php';
+require_once '../autoload.php';
 
 class indice extends clsDetalhe
 {
@@ -180,5 +178,5 @@ $miolo = new indice();
 // adiciona o conteudo na clsBase
 $pagina->addForm( $miolo );
 // gera o html
-//$pagina->MakeAll();
+$pagina->MakeAll();
 ?>

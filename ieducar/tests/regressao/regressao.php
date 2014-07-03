@@ -16,7 +16,7 @@ ini_set("display_errors", 1);
 require_once('IEducarRegressao.php');
 $regressao = new IEducarRegressao();
 
-//$regressao->listarPaginasParaTestar();
-//$regressao->gerar();
+$regressao->listarPaginasParaTestar();
+$regressao->gerar();
 
-$regressao->comparar('1403402434', '1403404522');
+//$regressao->comparar('1404404723', '1404404948');
