@@ -26,8 +26,10 @@
  * @package   iEd
  * @since     Arquivo disponível desde a versão 1.0.0
  * @version   $Id$
- * @deprecated by clsConfig.inc.php
+ *          
  */
+
+
 
 require_once 'include/constants.inc.php';
 
@@ -139,3 +141,4 @@ class clsConfig
     }
   }
 }
+
