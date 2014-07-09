@@ -51,6 +51,7 @@ class App_Model_MatriculaSituacao extends CoreExt_Enum
   const EM_EXAME            = 7;
   const APROVADO_APOS_EXAME = 8;
   const RETIDO_FALTA        = 9;
+  const APROVADO_SEM_EXAME  = 10;
 
   protected $_data = array(
     self::APROVADO            => 'Aprovado',
