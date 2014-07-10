@@ -252,7 +252,7 @@ class clsPmieducarBibliotecaUsuario
 				list($cod_biblioteca) = $db->Tupla();
 				$retorno[] = $cod_biblioteca;	
 			}
-			return $retorno;
+			return @$retorno;
 		}
 		return false;
 	}

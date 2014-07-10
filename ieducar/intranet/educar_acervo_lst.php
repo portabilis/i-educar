@@ -160,7 +160,7 @@ class indice extends clsListagem
 
 		// Paginador
 		$this->limite = 20;
-		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+		@$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
 		if(!is_numeric($this->ref_cod_biblioteca))
 		{
@@ -266,11 +266,12 @@ class indice extends clsListagem
                 
                 $localizacao = new LocalizacaoSistema();
                 $localizacao->entradaCaminhos( array(
-                    $_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
+                    @$_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
                     "educar_biblioteca_index.php"                  => "Biblioteca",
                     ""                                  => "Lista de Obras"
                 ));
-                $this->enviaLocalizacao($localizacao->montar());                
+                $this->enviaLocalizacao($localizacao->montar());  
+                return $lista;
 	}
 }
 // cria uma extensao da classe base
@@ -284,7 +285,7 @@ $miolo = new indice();
 // adiciona o conteudo na clsBase
 $pagina->addForm( $miolo );
 // gera o html
-$pagina->MakeAll();
+// $pagina->MakeAll();
 ?>
 <script>
 

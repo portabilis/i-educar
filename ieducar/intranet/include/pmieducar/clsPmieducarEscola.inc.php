@@ -500,22 +500,22 @@ class clsPmieducarEscola
       $whereAnd = " AND ";
     }
 
-    if (is_string($date_data_cadastro_ini)) {
+    if (is_string(@$date_data_cadastro_ini)) {
       $filtros .= "{$whereAnd} data_cadastro >= '{$date_data_cadastro_ini}'";
       $whereAnd = " AND ";
     }
 
-    if (is_string($date_data_cadastro_fim)) {
+    if (is_string(@$date_data_cadastro_fim)) {
       $filtros .= "{$whereAnd} data_cadastro <= '{$date_data_cadastro_fim}'";
       $whereAnd = " AND ";
     }
 
-    if (is_string($date_data_exclusao_ini)) {
+    if (is_string(@$date_data_exclusao_ini)) {
       $filtros .= "{$whereAnd} data_exclusao >= '{$date_data_exclusao_ini}'";
       $whereAnd = " AND ";
     }
 
-    if (is_string($date_data_exclusao_fim)) {
+    if (is_string(@$date_data_exclusao_fim)) {
       $filtros .= "{$whereAnd} data_exclusao <= '{$date_data_exclusao_fim}'";
       $whereAnd = " AND ";
     }
