@@ -25,13 +25,9 @@
 	*																		 *
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 $desvio_diretorio = "";
-<<<<<<< HEAD
+
 require_once '../autoload.php';
-=======
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
->>>>>>> 2d39b33ffbca7db873d8353afbeb5b433dc4fa65
+
 
 class indice extends clsCadastro
 {

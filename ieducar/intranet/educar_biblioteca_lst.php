@@ -25,12 +25,10 @@
 	*																		 *
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-<<<<<<< HEAD
+
 require_once '../includes/bootstrap.php';
 require_once '../autoload.php';
 
-=======
->>>>>>> 2d39b33ffbca7db873d8353afbeb5b433dc4fa65
 class indice extends clsListagem
 {
 	/**

@@ -8,12 +8,9 @@ class IEducarBrowser
     private $curl;
     private $enderecoBase;
     private $paginaLogin = 'intranet/index.php';
-    
-<<<<<<< HEAD
+
     function __construct($enderecoBase = "http://ieducar.local/") 
-=======
-    function __construct($enderecoBase = "http://localhost/") 
->>>>>>> 2d39b33ffbca7db873d8353afbeb5b433dc4fa65
+
     {
         $this->enderecoBase = $enderecoBase;
         
