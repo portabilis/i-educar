@@ -29,7 +29,12 @@
  */
 
 // Inclui arquivo de bootstrapping
+<<<<<<< HEAD
 require_once '/home/ieducar/ieducar/ieducar/includes/bootstrap.php';
+=======
+require_once '../includes/bootstrap.php';
+//require_once '../includes/bootstrap.php';
+>>>>>>> 2d39b33ffbca7db873d8353afbeb5b433dc4fa65
 
 // redireciona requisições, caso configurado
 if ($GLOBALS['coreExt']['Config']->app->routes &&
