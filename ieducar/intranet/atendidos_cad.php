@@ -114,6 +114,11 @@ class indice extends clsCadastro
   var $municipio_id;
   var $bairro_id;
   var $logradouro_id;
+  var $ocupacao;
+  var $empresa;
+  var $ddd_telefone_empresa;
+  var $telefone_empresa;
+  var $pessoa_contato;
 
   // Variáveis para controle da foto
   var $objPhoto;
@@ -124,6 +129,7 @@ class indice extends clsCadastro
 
   function Inicializar()
   {
+
     $this->cod_pessoa_fj = @$_GET['cod_pessoa_fj'];
     $this->retorno       = 'Novo';
 
@@ -140,7 +146,7 @@ class indice extends clsCadastro
         $this->idtlog, $this->sigla_uf, $this->complemento, $this->numero,
         $this->bloco, $this->apartamento, $this->andar, $this->zona_localizacao, $this->estado_civil,
         $this->pai_id, $this->mae_id, $this->tipo_nacionalidade, $this->pais_origem, $this->naturalidade,
-        $this->letra, $this->sus, $this->nis_pis_pasep
+        $this->letra, $this->sus, $this->nis_pis_pasep, $this->ocupacao, $this->empresa, $this->ddd_telefone_empresa, $this->telefone_empresa, $this->pessoa_contato
       ) =
 
       $objPessoa->queryRapida(
@@ -149,7 +155,7 @@ class indice extends clsCadastro
         'tipo', 'sexo', 'cidade', 'bairro', 'logradouro', 'cep', 'idlog',
         'idbai', 'idtlog', 'sigla_uf', 'complemento', 'numero', 'bloco', 'apartamento',
         'andar', 'zona_localizacao', 'ideciv', 'idpes_pai', 'idpes_mae', 'nacionalidade',
-        'idpais_estrangeiro', 'idmun_nascimento', 'letra', 'sus', 'nis_pis_pasep'
+        'idpais_estrangeiro', 'idmun_nascimento', 'letra', 'sus', 'nis_pis_pasep', 'ocupacao', 'empresa', 'ddd_telefone_empresa', 'telefone_empresa', 'pessoa_contato'
       );
 
       $this->id_federal      = is_numeric($this->id_federal) ? int2CPF($this->id_federal) : '';
@@ -920,6 +926,13 @@ class indice extends clsCadastro
 
     $this->campoTexto('email', 'E-mail', $this->email, '50', '255', FALSE);
 
+    $this->campoTexto('ocupacao', 'Ocupação', $this->ocupacao, '50', '255', FALSE);
+
+    $this->campoTexto('empresa', 'Empresa', $this->empresa, '50', '255', FALSE);
+
+    $this->inputTelefone('empresa', 'Telefone da Empresa');
+
+    $this->campoTexto('pessoa_contato', 'Pessoa de contato na empresa', $this->pessoa_contato, '50', '255', FALSE);
 
     // after change pessoa pai / mae
 
@@ -1140,20 +1153,25 @@ class indice extends clsCadastro
   }
 
   protected function createOrUpdatePessoaFisica($pessoaId) {
-    $fisica                     = new clsFisica();
-    $fisica->idpes              = $pessoaId;
-    $fisica->data_nasc          = Portabilis_Date_Utils::brToPgSQL($this->data_nasc);
-    $fisica->sexo               = $this->sexo;
-    $fisica->ref_cod_sistema    = 'NULL';
-    $fisica->cpf                = $this->id_federal ? idFederal2int($this->id_federal) : 'NULL';
-    $fisica->ideciv             = $this->estado_civil_id;
-    $fisica->idpes_pai          = $this->pai_id ? $this->pai_id : "NULL";
-    $fisica->idpes_mae          = $this->mae_id ? $this->mae_id : "NULL";
-    $fisica->nacionalidade      = $_REQUEST['tipo_nacionalidade'];
-    $fisica->idpais_estrangeiro = $_REQUEST['pais_origem_id'];
-    $fisica->idmun_nascimento   = $_REQUEST['naturalidade_id'];
-    $fisica->sus                = $this->sus;
-    $fisica->nis_pis_pasep      = $this->nis_pis_pasep;
+    $fisica                       = new clsFisica();
+    $fisica->idpes                = $pessoaId;
+    $fisica->data_nasc            = Portabilis_Date_Utils::brToPgSQL($this->data_nasc);
+    $fisica->sexo                 = $this->sexo;
+    $fisica->ref_cod_sistema      = 'NULL';
+    $fisica->cpf                  = $this->id_federal ? idFederal2int($this->id_federal) : 'NULL';
+    $fisica->ideciv               = $this->estado_civil_id;
+    $fisica->idpes_pai            = $this->pai_id ? $this->pai_id : "NULL";
+    $fisica->idpes_mae            = $this->mae_id ? $this->mae_id : "NULL";
+    $fisica->nacionalidade        = $_REQUEST['tipo_nacionalidade'];
+    $fisica->idpais_estrangeiro   = $_REQUEST['pais_origem_id'];
+    $fisica->idmun_nascimento     = $_REQUEST['naturalidade_id'];
+    $fisica->sus                  = $this->sus;
+    $fisica->nis_pis_pasep        = $this->nis_pis_pasep;
+    $fisica->ocupacao             = $this->ocupacao;
+    $fisica->empresa              = $this->empresa;
+    $fisica->ddd_telefone_empresa = $this->ddd_telefone_empresa;
+    $fisica->telefone_empresa     = $this->telefone_empresa;
+    $fisica->pessoa_contato       = $this->pessoa_contato;
 
     $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
 
