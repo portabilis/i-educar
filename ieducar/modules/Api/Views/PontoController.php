@@ -45,14 +45,39 @@ class PontoController extends ApiCoreController
 {
   protected $_processoAp        = 578; //verificar
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA; // verificar
-   
+
   protected function createOrUpdatePonto($id = null){
-    
+
     $ponto                          = new clsModulesPontoTransporteEscolar();
     $ponto->cod_ponto_transporte_escolar = $id;
 
     // após cadastro não muda mais id pessoa
     $ponto->descricao                     = Portabilis_String_Utils::toLatin1($this->getRequest()->desc);
+
+    $cep = idFederal2Int($this->getRequest()->cep_);
+
+    $objCepLogradouro = new ClsCepLogradouro($cep, $this->getRequest()->logradouro_id);
+
+    // Endereço do ponto //
+    if (! $objCepLogradouro->existe())
+      $objCepLogradouro->cadastra();
+
+    $objCepLogradouroBairro = new ClsCepLogradouroBairro();
+    $objCepLogradouroBairro->cep = $cep;
+    $objCepLogradouroBairro->idbai = $this->getRequest()->bairro_id;
+    $objCepLogradouroBairro->idlog = $this->getRequest()->logradouro_id;
+
+    if (! $objCepLogradouroBairro->existe())
+      $objCepLogradouroBairro->cadastra();
+
+    $ponto->cep                       = $cep;
+    $ponto->idbai                     = $this->getRequest()->bairro_id;
+    $ponto->idlog                     = $this->getRequest()->logradouro_id;
+    $ponto->numero                    = $this->getRequest()->numero;
+
+    $ponto->complemento                     = Portabilis_String_Utils::toLatin1($this->getRequest()->complemento);
+
+    // Fim do ndereço do ponto //
 
     return (is_null($id) ? $ponto->cadastra() : $ponto->edita());
   }
@@ -60,19 +85,70 @@ class PontoController extends ApiCoreController
 
   protected function get() {
 
-      $id                   = $this->getRequest()->id;
-      $ponto                 = new clsModulesPontoTransporteEscolar();
-      $ponto->cod_ponto_transporte_escolar       = $id;
-      $ponto                 = $ponto->detalhe();
+    $id                   = $this->getRequest()->id;
+    $ponto                 = new clsModulesPontoTransporteEscolar();
+    $ponto->cod_ponto_transporte_escolar       = $id;
+    $ponto                 = $ponto->detalhe();
 
-      $attrs  = array(
-        'cod_ponto_transporte_escolar'  => 'id',
-      );
+    $attrs  = array(
+      'cod_ponto_transporte_escolar'  => 'id',
+      'descricao' => 'desc',
+      'cep' => 'cep',
+      'idlog' => 'idlog',
+      'idbai' => 'idbai',
+      'numero' => 'numero',
+      'complemento' => 'complemento',
+    );
 
-      $pt = Portabilis_Array_Utils::filter($ponto, $attrs);
-      $pt['desc'] = Portabilis_String_Utils::toUtf8($ponto['descricao']);
+    $pt = Portabilis_Array_Utils::filter($ponto, $attrs);
+    $pt['desc'] = Portabilis_String_Utils::toUtf8($pt['desc']);
 
-      return $pt;
+    // Dados do endereço
+    if (is_numeric($pt['cep']) && is_numeric($pt['idlog']) && is_numeric($pt['idbai'])){
+
+      $pt['cep']              = int2CEP($pt['cep']);
+
+      $sql = "select
+        (SELECT l.nome FROM public.logradouro l WHERE l.idlog =  $1) as logradouro,
+
+        (SELECT l.idtlog FROM public.logradouro l WHERE l.idlog = $1) as idtlog,
+
+        (SELECT b.nome FROM public.bairro b WHERE b.idbai = $2) as bairro,
+
+        (SELECT b.zona_localizacao FROM public.bairro b WHERE b.idbai = $2) as zona_localizacao,
+
+        (SELECT l.idmun FROM public.logradouro l WHERE l.idlog = $1) as idmun,
+
+        (SELECT bairro.iddis FROM public.bairro
+          WHERE idbai = $2) as iddis,
+
+        (SELECT distrito.nome FROM public.distrito
+          INNER JOIN public.bairro ON (bairro.iddis = distrito.iddis)
+          WHERE idbai = $2) as distrito";
+
+      $details = $this->fetchPreparedQuery($sql, array($pt['idlog'], $pt['idbai']), false, 'first-row');
+
+      $details['bairro']           = $this->toUtf8($details['bairro']);
+      $details['distrito']           = $this->toUtf8($details['distrito']);
+      $details['logradouro']       = $this->toUtf8($details['logradouro']);
+    }
+
+    if($details['idmun']){
+
+      $_sql = " SELECT nome, sigla_uf FROM public.municipio WHERE idmun = $1; ";
+
+      $mun = $this->fetchPreparedQuery($_sql, $details['idmun'], false, 'first-row');
+
+      $details['municipio'] = $this->toUtf8($mun['nome']);
+
+      $details['sigla_uf'] = $mun['sigla_uf'];
+
+    }
+
+    $pt  = Portabilis_Array_Utils::merge($pt, $details);
+
+    return $pt;
+
   }
 
   protected function validateIfPontoIsNotInUse(){
@@ -90,13 +166,16 @@ class PontoController extends ApiCoreController
 
   protected function post() {
 
+    if (!($this->getRequest()->cep_ && is_numeric($this->getRequest()->bairro_id) && is_numeric($this->getRequest()->logradouro_id)))
+      $this->normalizaEndereco();
+
     $id = $this->createOrUpdatePonto();
     if (is_numeric($id)) {
       $this->messenger->append('Cadastro realizado com sucesso', 'success', false, 'error');
     }
     else
       $this->messenger->append('Aparentemente o ponto não pode ser cadastrada, por favor, verifique.');
-   
+
     return array('id' => $id);
  }
 
@@ -119,6 +198,10 @@ class PontoController extends ApiCoreController
 
   protected function put() {
       $id = $this->getRequest()->id;
+
+      if (!($this->getRequest()->cep_ && is_numeric($this->getRequest()->bairro_id) && is_numeric($this->getRequest()->logradouro_id)))
+        $this->normalizaEndereco();
+
       $editou = $this->createOrUpdatePonto($id);
 
       if ($editou) {
@@ -127,7 +210,7 @@ class PontoController extends ApiCoreController
       }
       else
         $this->messenger->append('Aparentemente o ponto não pode ser alterado, por favor, verifique.');
-   
+
 
     return array('id' => $id);
   }
@@ -137,7 +220,7 @@ class PontoController extends ApiCoreController
 
     $pessoas = new clsModulesPessoaTransporte();
     $lista = $pessoas->lista(NULL,NULL,NULL,$id);
-    
+
     foreach($lista as $registro){
       $editaPessoa = new clsModulesPessoaTransporte($registro['cod_pessoa_transporte'],
         $registro['ref_cod_rota_transporte_escolar'],$registro['ref_idpes'],
@@ -147,20 +230,62 @@ class PontoController extends ApiCoreController
 
     $ponto                  = new clsModulesPontoTransporteEscolar();
     $ponto->cod_ponto_transporte_escolar       = $id;
-      
+
     if($ponto->excluir()){
      $this->messenger->append('Cadastro removido com sucesso', 'success', false, 'error');
     }else
       $this->messenger->append('Aparentemente o cadastro não pode ser removido, por favor, verifique.',
                                'error', false, 'error');
-    
+
 
     return array('id' => $id);
   }
 
+  protected function canCreateBairro(){
+    return !empty($this->getRequest()->bairro) && !empty($this->getRequest()->zona_localizacao);
+  }
+
+  protected function canCreateLogradouro(){
+    return !empty($this->getRequest()->logradouro) && !empty($this->getRequest()->idtlog);
+  }
+
+  protected function createBairro(){
+
+    $objBairro = new clsBairro(null,$this->getRequest()->municipio_id,null,Portabilis_String_Utils::toLatin1($this->getRequest()->bairro), $this->currentUserId());
+    $objBairro->zona_localizacao = $this->getRequest()->zona_localizacao;
+    $objBairro->iddis = $this->getRequest()->distrito_id;
+
+    return $objBairro->cadastra();
+  }
+
+  protected function createLogradouro(){
+    $objLogradouro = new clsLogradouro(null,$this->getRequest()->idtlog, Portabilis_String_Utils::toLatin1($this->getRequest()->logradouro), $this->getRequest()->municipio_id,
+                                           null, 'S', $this->currentUserId());
+    return $objLogradouro->cadastra();
+  }
+
+protected function normalizaEndereco() {
+
+    if($this->getRequest()->cep_ && is_numeric($this->getRequest()->municipio_id) && is_numeric($this->getRequest()->distrito_id)){
+
+      if (!is_numeric($this->getRequest()->bairro_id)){
+        if ($this->canCreateBairro())
+          $this->getRequest()->bairro_id = $this->createBairro();
+        else
+          return;
+      }
+
+      if (!is_numeric($this->getRequest()->logradouro_id)){
+        if($this->canCreateLogradouro())
+          $this->getRequest()->logradouro_id = $this->createLogradouro();
+        else
+          return;
+      }
+    }
+  }
 
   public function Gerar() {
-    
+
     if ($this->isRequestFor('get', 'ponto'))
       $this->appendResponse($this->get());
 

@@ -32,7 +32,7 @@ require_once 'include/pmieducar/geral.inc.php';
 
 /**
  * clsModulesPontoTransporteEscolar class.
- * 
+ *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
@@ -44,6 +44,11 @@ class clsModulesPontoTransporteEscolar
 {
   var $cod_ponto_transporte_escolar;
   var $descricao;
+  var $cep;
+  var $idbai;
+  var $idlog;
+  var $complemento;
+  var $numero;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -105,7 +110,7 @@ class clsModulesPontoTransporteEscolar
     $this->_schema = "modules.";
     $this->_tabela = "{$this->_schema}ponto_transporte_escolar";
 
-    $this->_campos_lista = $this->_todos_campos = " cod_ponto_transporte_escolar, descricao"; 
+    $this->_campos_lista = $this->_todos_campos = " cod_ponto_transporte_escolar, descricao, cep, idlog, idbai, complemento, numero";
 
     if (is_numeric($cod_ponto_transporte_escolar)) {
       $this->cod_ponto_transporte_escolar = $cod_ponto_transporte_escolar;
@@ -123,7 +128,7 @@ class clsModulesPontoTransporteEscolar
    */
   function cadastra()
   {
-    
+
     if (is_string($this->descricao))
     {
       $db = new clsBanco();
@@ -135,6 +140,37 @@ class clsModulesPontoTransporteEscolar
     if (is_string($this->descricao)) {
       $campos .= "{$gruda}descricao";
       $valores .= "{$gruda}'{$this->descricao}'";
+      $gruda = ", ";
+    }
+
+    if (is_numeric($this->cep)) {
+      $campos .= "{$gruda}cep";
+      $valores .= "{$gruda} {$this->cep}";
+      $gruda = ", ";
+    }
+
+    if (is_numeric($this->idlog)) {
+      $campos .= "{$gruda}idlog";
+      $valores .= "{$gruda} {$this->idlog}";
+      $gruda = ", ";
+    }
+
+
+    if (is_numeric($this->idbai)) {
+      $campos .= "{$gruda}idbai";
+      $valores .= "{$gruda} {$this->idbai}";
+      $gruda = ", ";
+    }
+
+    if (is_numeric($this->numero)) {
+      $campos .= "{$gruda}numero";
+      $valores .= "{$gruda}'{$this->numero}'";
+      $gruda = ", ";
+    }
+
+    if (is_string($this->complemento)) {
+      $campos .= "{$gruda}complemento";
+      $valores .= "{$gruda}'{$this->complemento}'";
       $gruda = ", ";
     }
 
@@ -159,6 +195,31 @@ class clsModulesPontoTransporteEscolar
 
     if (is_string($this->descricao)) {
         $set .= "{$gruda}descricao = '{$this->descricao}'";
+        $gruda = ", ";
+    }
+
+    if (is_numeric($this->cep)) {
+        $set .= "{$gruda}cep = '{$this->cep}'";
+        $gruda = ", ";
+    }
+
+    if (is_numeric($this->idlog)) {
+        $set .= "{$gruda}idlog = '{$this->idlog}'";
+        $gruda = ", ";
+    }
+
+    if (is_numeric($this->idbai)) {
+        $set .= "{$gruda}idbai = '{$this->idbai}'";
+        $gruda = ", ";
+    }
+
+    if (is_string($this->complemento)) {
+        $set .= "{$gruda}complemento = '{$this->complemento}'";
+        $gruda = ", ";
+    }
+
+    if (is_numeric($this->numero)) {
+        $set .= "{$gruda}numero = '{$this->numero}'";
         $gruda = ", ";
     }
 
