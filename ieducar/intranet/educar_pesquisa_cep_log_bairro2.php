@@ -197,7 +197,7 @@ class miolo1 extends clsListagem
 
       $url = sprintf(
         '<a href="javascript:void(0);" onclick="cv_set_campo(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\');liberaCampos();parent.fixUpPlaceholderEndereco();">%%s</a>',
-        $_SESSION['campo1'], $bairro.' / Zona'.$zona, $_SESSION['campo2'],
+        $_SESSION['campo1'], $bairro.' / Zona '. ($zona ? 'Urbana' : 'Rural'), $_SESSION['campo2'],
         $idbai, $_SESSION['campo3'], $cep,
         $_SESSION['campo4'], $descricao." ".$logradouro,
         $_SESSION['campo5'], $idlog,
