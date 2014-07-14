@@ -12,7 +12,7 @@
     <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=3' />
     <link rel=stylesheet type='text/css' href='styles/login.css?rand=7' />
     <script type="text/javascript" src="http://assets.freshdesk.com/widget/freshwidget.js"></script>
-    <script type="text/javascript" src="scripts/suporte_freshdesk.js?1"></script>    
+    <script type="text/javascript" src="scripts/suporte_freshdesk.js?1"></script>
     <style type='text/css'>#flash-container, #menu, #corpo, #rodape {
 
   /* login-form.widght + 42px */
@@ -136,19 +136,19 @@
       </div> <!-- end login-form -->
 
       <div id="service-info">
-       
+
         <p class="requiriments title">Requisitos</p>
         <p class="explanation">Para melhor uso do sistema, recomendamos:</p>
         <ul class="requiriments unstyled">
           <li>- Navegador <a target="_blank" class="light decorated" href="https://www.google.com/intl/pt-BR/chrome/browser/">Google Chrome</a> ou <a target="_blank" class="light decorated" href="http://br.mozdev.org/download/">Mozilla Firefox</a></li>
           <li>- Leitor relat&oacute;rios PDF <a target="_blank" class="light decorated" href="http://get.adobe.com/br/reader/">Adobe Reader</a> ou <a target="_blank" class="light decorated" href="http://www.foxitsoftware.com/downloads#reader">Foxit</a></li>
         </ul>
-    
+
         <div style=" position: relative; width:100px; height: 30px; left: 150px; top: 67px"><img height="120px" src="https://s3.amazonaws.com/apps-ieducar-images/tutoia/logo.gif"/></div>
 
         <p class="requiriments title" style="margin-top: 50px">Pais e alunos</p>
         <p class="explanation">Ferramenta de consulta de notas, <br/>faltas e ocorr&ecirc;ncias disciplinares.</p>
-        
+
         <button type="button" style="margin-top: 15px;" onclick="window.open('http://educacao.portabilis.com.br/users/login')" class="btn btn-success">Acesse aqui</button>
         <div style="position:relative; left: 120px; top: -16px;"> <a target="_blank" class="light decorated" href="https://docs.google.com/uc?export=download&id=0B-DS-DRSnzFsMzFMWWxKNWFEV0U"> Manual de uso</a></div>
 
@@ -160,18 +160,18 @@
 
     <div id="rodape" class="texto-normal">
       <p>
-        Prefeitura Mun. de Tut&oacute;ia - MA - Fone: (98) 3479-1098 - E-mail: <a href="mailto:nte.semedtutoia@gmail.com" >nte.semedtutoia@gmail.com </a>       
+        Prefeitura Mun. de Tut&oacute;ia - MA - Fone: (98) 3479-1098 - E-mail: <a href="mailto:nte.semedtutoia@gmail.com" >nte.semedtutoia@gmail.com </a>
       </p>
-   
+
       <!--div id="div-outubro-rosa" style="top: -488px">
         <a href="https://www.google.com.br/#q=Campanha+Outubro+rosa" target="_blank"><img src="https://s3.amazonaws.com/apps-ieducar-images/outubro-rosa/outubro-rosa.png"/></a>
-      </div-->       
-      <div id="div-copa-no-brasil">
+      </div-->
+      <!--div id="div-copa-no-brasil">
         <img src="https://cloud.githubusercontent.com/assets/1082624/3250687/b08b862c-f1a8-11e3-87f9-a1bfef5949c3.jpg"/>
         <p><a href="https://www.google.com/maps/views/streetview/brazils-painted-streets?gl=br&hl=pt-BR" target="_blank">
             <span style="color: #00A859;">Ruas</span> <span style="color: #FFCC29;">coloridas do <span style="color: #3E4095;">Brasil</span>
           </a></p>
-      </div>      
+      </div-->
     </div> <!-- end rodape -->
 
   </body>
