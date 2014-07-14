@@ -238,7 +238,31 @@ class clsModulesPontoTransporteEscolar
    */
   function lista($cod_ponto_transporte_escolar = NULL, $descricao = NULL)
   {
-    $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
+    $sql = "SELECT {$this->_campos_lista},
+
+              (SELECT l.nome FROM public.logradouro l WHERE l.idlog = ponto_transporte_escolar.idlog) as logradouro,
+
+              (SELECT l.idtlog FROM public.logradouro l WHERE l.idlog = ponto_transporte_escolar.idlog) as idtlog,
+
+              (SELECT b.nome FROM public.bairro b WHERE b.idbai = ponto_transporte_escolar.idbai) as bairro,
+
+              (SELECT b.zona_localizacao FROM public.bairro b WHERE b.idbai = ponto_transporte_escolar.idbai) as zona_localizacao,
+
+              (SELECT m.nome FROM public.municipio m, public.logradouro l WHERE m.idmun = l.idmun AND l.idlog = ponto_transporte_escolar.idlog) as municipio,
+
+              (SELECT m.sigla_uf FROM public.municipio m, public.logradouro l WHERE m.idmun = l.idmun AND l.idlog = ponto_transporte_escolar.idlog) as sigla_uf,
+
+              (SELECT l.idmun FROM public.logradouro l WHERE l.idlog = ponto_transporte_escolar.idlog) as idmun,
+
+              (SELECT bairro.iddis FROM public.bairro
+                WHERE idbai = ponto_transporte_escolar.idbai) as iddis,
+
+              (SELECT distrito.nome FROM public.distrito
+                INNER JOIN public.bairro ON (bairro.iddis = distrito.iddis)
+                WHERE idbai = ponto_transporte_escolar.idbai) as distrito
+
+            FROM {$this->_tabela}
+    ";
     $filtros = "";
 
     $whereAnd = " WHERE ";
@@ -292,7 +316,30 @@ class clsModulesPontoTransporteEscolar
 
     if (is_numeric($this->cod_ponto_transporte_escolar)) {
       $db = new clsBanco();
-      $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_ponto_transporte_escolar = '{$this->cod_ponto_transporte_escolar}'");
+      $db->Consulta("SELECT {$this->_campos_lista},
+
+              (SELECT l.nome FROM public.logradouro l WHERE l.idlog = ponto_transporte_escolar.idlog) as logradouro,
+
+              (SELECT l.idtlog FROM public.logradouro l WHERE l.idlog = ponto_transporte_escolar.idlog) as idtlog,
+
+              (SELECT b.nome FROM public.bairro b WHERE b.idbai = ponto_transporte_escolar.idbai) as bairro,
+
+              (SELECT b.zona_localizacao FROM public.bairro b WHERE b.idbai = ponto_transporte_escolar.idbai) as zona_localizacao,
+
+              (SELECT m.nome FROM public.municipio m, public.logradouro l WHERE m.idmun = l.idmun AND l.idlog = ponto_transporte_escolar.idlog) as municipio,
+
+              (SELECT m.sigla_uf FROM public.municipio m, public.logradouro l WHERE m.idmun = l.idmun AND l.idlog = ponto_transporte_escolar.idlog) as sigla_uf,
+
+              (SELECT l.idmun FROM public.logradouro l WHERE l.idlog = ponto_transporte_escolar.idlog) as idmun,
+
+              (SELECT bairro.iddis FROM public.bairro
+                WHERE idbai = ponto_transporte_escolar.idbai) as iddis,
+
+              (SELECT distrito.nome FROM public.distrito
+                INNER JOIN public.bairro ON (bairro.iddis = distrito.iddis)
+                WHERE idbai = ponto_transporte_escolar.idbai) as distrito
+
+            FROM {$this->_tabela} WHERE cod_ponto_transporte_escolar = '{$this->cod_ponto_transporte_escolar}'");
       $db->ProximoRegistro();
       return $db->Tupla();
     }

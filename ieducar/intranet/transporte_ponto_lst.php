@@ -44,7 +44,7 @@ class clsIndexBase extends clsBase
 
 class indice extends clsListagem
 {
-	
+
 	/**
 	 * Referencia pega da session para o idpes do usuario atual
 	 *
@@ -88,11 +88,11 @@ class indice extends clsListagem
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		
+
 
 		$this->campoNumero("cod_ponto","C&oacute;digo do ponto",$this->cod_ponto,20,255,false);
 		$this->campoTexto("descricao","Descrição", $this->descricao,50,255,false);
-	
+
 
 		$obj_permissoes = new clsPermissoes();
 
@@ -100,14 +100,18 @@ class indice extends clsListagem
 
 		$this->addCabecalhos( array(
 			"C&oacute;digo do ponto",
-			"Descrição"
+			"Descrição",
+			'CEP',
+			'Munic&iacute;pio',
+			'Bairro',
+			'Logradouro'
 		) );
 
 		// Paginador
 		$this->limite = 20;
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-		
+
 		$obj_ponto = new clsModulesPontoTransporteEscolar();
 		$obj_ponto->setOrderBy(' descricao asc ');
 		$obj_ponto->setLimite($this->limite,$this->offset);
@@ -116,10 +120,18 @@ class indice extends clsListagem
 		$total = $pontos->_total;
 
 		foreach ( $pontos AS $registro ) {
+			$cep = is_numeric($registro['cep']) ? int2CEP($registro["cep"]) : '-';
+			$municipio = is_string($registro['municipio']) ? $registro["municipio"] : '-';
+			$bairro = is_string($registro['bairro']) ? $registro["bairro"] : '-';
+			$logradouro = is_string($registro['logradouro']) ? $registro["logradouro"] : '-';
 
 			$this->addLinhas( array(
 				"<a href=\"transporte_ponto_det.php?cod_ponto={$registro["cod_ponto_transporte_escolar"]}\">{$registro["cod_ponto_transporte_escolar"]}</a>",
-				"<a href=\"transporte_ponto_det.php?cod_ponto={$registro["cod_ponto_transporte_escolar"]}\">{$registro["descricao"]}</a>"
+				"<a href=\"transporte_ponto_det.php?cod_ponto={$registro["cod_ponto_transporte_escolar"]}\">{$registro["descricao"]}</a>",
+				"<a href=\"transporte_ponto_det.php?cod_ponto={$registro["cod_ponto_transporte_escolar"]}\">{$cep}</a>",
+				"<a href=\"transporte_ponto_det.php?cod_ponto={$registro["cod_ponto_transporte_escolar"]}\">{$municipio}</a>",
+				"<a href=\"transporte_ponto_det.php?cod_ponto={$registro["cod_ponto_transporte_escolar"]}\">{$bairro}</a>",
+				"<a href=\"transporte_ponto_det.php?cod_ponto={$registro["cod_ponto_transporte_escolar"]}\">{$logradouro}</a>",
 			) );
 		}
 
@@ -136,7 +148,7 @@ class indice extends clsListagem
          "educar_index.php"                  => "i-Educar - Escola",
          ""                                  => "Listagem de pontos"
     ));
-    $this->enviaLocalizacao($localizacao->montar());		
+    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 // cria uma extensao da classe base

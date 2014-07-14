@@ -98,54 +98,28 @@ class PontoController extends ApiCoreController
       'idbai' => 'idbai',
       'numero' => 'numero',
       'complemento' => 'complemento',
+      'bairro' => 'bairro',
+      'distrito' => 'distrito',
+      'iddis' => 'iddis',
+      'logradouro' => 'logradouro',
+      'idtlog' => 'idtlog',
+      'zona_localizacao' => 'zona_localizacao',
+      'sigla_uf' => 'sigla_uf',
+      'municipio' => 'municipio',
+      'idmun' => 'idmun',
     );
 
     $pt = Portabilis_Array_Utils::filter($ponto, $attrs);
     $pt['desc'] = Portabilis_String_Utils::toUtf8($pt['desc']);
 
-    // Dados do endereço
-    if (is_numeric($pt['cep']) && is_numeric($pt['idlog']) && is_numeric($pt['idbai'])){
+    $pt['bairro']           = $this->toUtf8($pt['bairro']);
+    $pt['distrito']           = $this->toUtf8($pt['distrito']);
+    $pt['logradouro']       = $this->toUtf8($pt['logradouro']);
 
-      $pt['cep']              = int2CEP($pt['cep']);
+    $pt['municipio'] = $this->toUtf8($pt['municipio']);
+    $pt['sigla_uf'] = $this->toUtf8($pt['sigla_uf']);
 
-      $sql = "select
-        (SELECT l.nome FROM public.logradouro l WHERE l.idlog =  $1) as logradouro,
-
-        (SELECT l.idtlog FROM public.logradouro l WHERE l.idlog = $1) as idtlog,
-
-        (SELECT b.nome FROM public.bairro b WHERE b.idbai = $2) as bairro,
-
-        (SELECT b.zona_localizacao FROM public.bairro b WHERE b.idbai = $2) as zona_localizacao,
-
-        (SELECT l.idmun FROM public.logradouro l WHERE l.idlog = $1) as idmun,
-
-        (SELECT bairro.iddis FROM public.bairro
-          WHERE idbai = $2) as iddis,
-
-        (SELECT distrito.nome FROM public.distrito
-          INNER JOIN public.bairro ON (bairro.iddis = distrito.iddis)
-          WHERE idbai = $2) as distrito";
-
-      $details = $this->fetchPreparedQuery($sql, array($pt['idlog'], $pt['idbai']), false, 'first-row');
-
-      $details['bairro']           = $this->toUtf8($details['bairro']);
-      $details['distrito']           = $this->toUtf8($details['distrito']);
-      $details['logradouro']       = $this->toUtf8($details['logradouro']);
-    }
-
-    if($details['idmun']){
-
-      $_sql = " SELECT nome, sigla_uf FROM public.municipio WHERE idmun = $1; ";
-
-      $mun = $this->fetchPreparedQuery($_sql, $details['idmun'], false, 'first-row');
-
-      $details['municipio'] = $this->toUtf8($mun['nome']);
-
-      $details['sigla_uf'] = $mun['sigla_uf'];
-
-    }
-
-    $pt  = Portabilis_Array_Utils::merge($pt, $details);
+    $pt['cep'] = int2CEP($pt['cep']);
 
     return $pt;
 
