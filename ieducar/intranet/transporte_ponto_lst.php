@@ -102,7 +102,7 @@ class indice extends clsListagem
 			"C&oacute;digo do ponto",
 			"Descrição",
 			'CEP',
-			'Munic&iacute;pio',
+			'Munic&iacute;pio - UF',
 			'Bairro',
 			'Logradouro'
 		) );
@@ -121,7 +121,7 @@ class indice extends clsListagem
 
 		foreach ( $pontos AS $registro ) {
 			$cep = is_numeric($registro['cep']) ? int2CEP($registro["cep"]) : '-';
-			$municipio = is_string($registro['municipio']) ? $registro["municipio"] : '-';
+			$municipio = is_string($registro['municipio']) ? $registro["municipio"] . ' - '. $registro['sigla_uf'] : '-';
 			$bairro = is_string($registro['bairro']) ? $registro["bairro"] : '-';
 			$logradouro = is_string($registro['logradouro']) ? $registro["logradouro"] : '-';
 
