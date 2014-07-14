@@ -140,7 +140,7 @@
         <p class="explanation">Ferramenta de consulta de notas, faltas e ocorr&ecirc;ncias disciplinares.</p>
 
         <button type="button" style="margin-top: 15px;" onclick="window.open('http://educacao.portabilis.com.br/prefeitura-municipal-de-duque-de-caxias')" class="btn btn-success">Acesse aqui</button>
-        <div style="position:relative; left: 120px; top: -16px;"> <a class="light decorated" href="https://docs.google.com/uc?export=download&id=0B-DS-DRSnzFsMzFMWWxKNWFEV0U"> Manual de uso</a></div>
+        <div style="position:relative; left: 120px; top: -16px;"> <a class="light decorated" href="https://docs.google.com/uc?export=download&id=0B-DS-DRSnzFsYlNPYTNzd1ZDUm8"> Manual de uso</a></div>
 
         <p style="margin-top: 0px;" class="requiriments title">Requisitos</p>
         <p class="explanation">Para melhor uso do sistema, recomendamos:</p>
