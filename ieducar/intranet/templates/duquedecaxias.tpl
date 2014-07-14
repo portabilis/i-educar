@@ -14,7 +14,7 @@
     <style type='text/css'>#flash-container, #menu, #corpo, #rodape {
 
   /* login-form.widght + 42px */
-  
+
 }
 
 </style>
@@ -138,10 +138,10 @@
       <div id="service-info">
         <p class="requiriments title">Pais e alunos</p>
         <p class="explanation">Ferramenta de consulta de notas, faltas e ocorr&ecirc;ncias disciplinares.</p>
-        
+
         <button type="button" style="margin-top: 15px;" onclick="window.open('http://educacao.portabilis.com.br/prefeitura-municipal-de-duque-de-caxias')" class="btn btn-success">Acesse aqui</button>
         <div style="position:relative; left: 120px; top: -16px;"> <a class="light decorated" href="https://docs.google.com/uc?export=download&id=0B-DS-DRSnzFsMzFMWWxKNWFEV0U"> Manual de uso</a></div>
-        
+
         <p style="margin-top: 0px;" class="requiriments title">Requisitos</p>
         <p class="explanation">Para melhor uso do sistema, recomendamos:</p>
         <ul class="requiriments unstyled">
@@ -151,9 +151,9 @@
 
       </div>
 
-      
 
-      <div style=" position: relative; margin-left: 370px; "><img style="" height="95px" width="220px" src="http://duquedecaxias.rj.gov.br/portal/images/imagens/LOGOS/PMDC_SEC_EDUCACAO_H_COR_SLOGAN.png"/></div>      
+
+      <div style=" position: relative; margin-left: 370px; "><img style="" height="95px" width="220px" src="http://duquedecaxias.rj.gov.br/portal/images/imagens/LOGOS/PMDC_SEC_EDUCACAO_H_COR_SLOGAN.png"/></div>
 
       <div class="clear"></div>
 
@@ -165,17 +165,17 @@
 
         <!--a target="_blank" class="light" href="http://suporte.portabilis.com.br"> Obter Suporte </a-->
       </p>
-      
-       
+
+
       <!--div id="div-outubro-rosa" style="top: -488px">
         <a href="https://www.google.com.br/#q=Campanha+Outubro+rosa" target="_blank"><img src="https://s3.amazonaws.com/apps-ieducar-images/outubro-rosa/outubro-rosa.png"/></a>
-      </div-->       
-      <div id="div-copa-no-brasil" style="top: -405px">
+      </div-->
+      <!--div id="div-copa-no-brasil" style="top: -405px">
         <img src="https://cloud.githubusercontent.com/assets/1082624/3250687/b08b862c-f1a8-11e3-87f9-a1bfef5949c3.jpg"/>
         <p><a href="https://www.google.com/maps/views/streetview/brazils-painted-streets?gl=br&hl=pt-BR" target="_blank">
             <span style="color: #00A859;">Ruas</span> <span style="color: #FFCC29;">coloridas do <span style="color: #3E4095;">Brasil</span>
           </a></p>
-      </div>      
+      </div-->
     </div> <!-- end rodape -->
 
   </body>

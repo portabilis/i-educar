@@ -1,16 +1,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
-	<head>
-		<title>Intranet</title>
+  <head>
+    <title>Intranet</title>
     <meta http-equiv='Content-Type' content='text/html; charset=ISO-8859-1' />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<meta http-equiv="Pragma" content="no-cache" />
-		<meta http-equiv="Expires" content="-1" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="-1" />
 
     <link rel=stylesheet type='text/css' href='styles/reset.css?rand=3' />
     <link rel=stylesheet type='text/css' href='styles/portabilis.css?rand=3' />
     <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=3' />
-    <link rel=stylesheet type='text/css' href='styles/login.css?rand=6' />
+    <link rel=stylesheet type='text/css' href='styles/login.css?rand=7' />
     <script type="text/javascript" src="http://assets.freshdesk.com/widget/freshwidget.js"></script>
     <script type="text/javascript" src="scripts/suporte_freshdesk.js?1"></script>
 
@@ -76,17 +76,17 @@
     }
   </script>
 
-	</head>
-	<body onload="loginpage_onload();" class="hidden fade-in">
+  </head>
+  <body onload="loginpage_onload();" class="hidden fade-in">
     <div id="flash-container">
 
       <!--[if lt IE 7]>
       <p style="min-height: 32px;" class="flash update-browser"><strong>Seu navegador est&aacute desatualizado.</strong> Para melhor navega&ccedil;&atildeo  no sistema, por favor, atualize seu navegador.<a href="http://br.mozdev.org/download/" target="_blank"><img style="margin-top:4px;" src="http://www.mozilla.org/contribute/buttons/110x32bubble_r_pt.png" alt="Firefox" width="110" height="32" style="border-style:none;" title="Mozilla Firefox" /></a></p>
       <![endif]-->
 
-           <!--p style="min-height: 0px;" class="flash exclamation"><strong>Caros clientes,</strong><br/> De 24/12 &agrave; 31/12 nosso atendimento de suporte ter&aacute; hor&aacute;rio de funcionamento especial. Sendo assim, pedimos que todos os contatos sejam feitos atrav&eacute;s do e-mail, pois ser&atilde;o atendidos normalmente. Se o contato for urgente, temos plant&atilde;o nos seguintes n&uacute;meros: (48) 9811-3030 (TIM), (48) 9187-6262 (Vivo) e (48) 8835-3082 (Claro). <strong>Obrigado pela compreens&atilde;o.</strong></p>
+      <!--p style="min-height: 0px;" class="flash exclamation"><strong>Caros clientes,</strong><br/> De 24/12 &agrave; 31/12 nosso atendimento de suporte ter&aacute; hor&aacute;rio de funcionamento especial. Sendo assim, pedimos que todos os contatos sejam feitos atrav&eacute;s do e-mail, pois ser&atilde;o atendidos normalmente. Se o contato for urgente, temos plant&atilde;o nos seguintes n&uacute;meros: (48) 9811-3030 (TIM), (48) 9187-6262 (Vivo) e (48) 8835-3082 (Claro). <strong>Obrigado pela compreens&atilde;o.</strong></p>
       <br/>
-     <!--p style="min-height: 0px;" class="flash error">Desejamos a todos os nossos clientes e amigos um Feliz Natal e boas festas! Obrigado pela oportunidade de trabalharmos juntos neste ano e nos reencontramos em 2014 com muito mais garra ainda para continuar apoiando voc&ecirc;s nos seus trabalhos. :)</p-->
+     <p style="min-height: 0px;" class="flash error">Desejamos a todos os nossos clientes e amigos um Feliz Natal e boas festas! Obrigado pela oportunidade de trabalharmos juntos neste ano e nos reencontramos em 2014 com muito mais garra ainda para continuar apoiando voc&ecirc;s nos seus trabalhos. :)</p-->
 
       <!-- #&ERROLOGIN&# -->
     </div>
@@ -99,13 +99,13 @@
         <form action="" method="post">
         <table>
           <tbody><tr>
-    		    <td>
+            <td>
               <label class="" for="login">Matr&iacute;cula:</label>
               <input type="text" name="login" id="login"></td>
-    	    </tr>
+          </tr>
 
           <tr>
-    		    <td>
+            <td>
               <label class="" for="senha">Senha:</label>
               <input type="password" name="senha" id="senha">
             </td>
@@ -114,7 +114,7 @@
             <td><!-- #&RECAPTCHA&# --></td>
           </tr>
           <tr>
-    		    <td>
+            <td>
               <input type="submit" class="submit" src="imagens/nvp_bot_entra_webmail.jpg" value="Entrar">
             </td>
           </tr>
@@ -122,7 +122,7 @@
             <td>
               <p class="forget-password"><a class="light small" href="/module/Usuario/RedefinirSenha">Esqueceu sua senha?</a></p>
 
-              <p><a target="_blank" class="light small" href="http://educacao.portabilis.com.br/">Acesso professores, pais e alunos.</a> <a target="_blank" class="decorated light small" href="http://www.portabilis.com.br/produto/educacao-19#destaques">Saiba mais</a>
+              <p><a target="_blank" class="light small" href="http://educacao.portabilis.com.br/">Acesso professores, pais e alunos?</a> <a target="_blank" class="decorated light small" href="http://www.portabilis.com.br/produto/educacao-19#destaques">Saiba mais</a>
             </p>
             </td>
           </tr>
@@ -132,12 +132,22 @@
       </div> <!-- end login-form -->
 
       <div id="service-info">
+
         <p class="requiriments title">Requisitos</p>
         <p class="explanation">Para melhor uso do sistema, recomendamos:</p>
         <ul class="requiriments unstyled">
           <li>- Navegador <a target="_blank" class="light decorated" href="https://www.google.com/intl/pt-BR/chrome/browser/">Google Chrome</a> ou <a target="_blank" class="light decorated" href="http://br.mozdev.org/download/">Mozilla Firefox</a></li>
           <li>- Leitor relat&oacute;rios PDF <a target="_blank" class="light decorated" href="http://get.adobe.com/br/reader/">Adobe Reader</a> ou <a target="_blank" class="light decorated" href="http://www.foxitsoftware.com/downloads#reader">Foxit</a></li>
         </ul>
+
+        <div style=" position: relative; width:100px; height: 0px; left: 240px; top: 72px;"><img height="120px" style="" src="https://s3.amazonaws.com/apps-ieducar-images/***REMOVED***/logo-prefeitura"/></div>
+
+        <p class="requiriments title" style="margin-top: 80px">Pais e alunos</p>
+        <p class="explanation">Ferramenta de consulta de notas, <br/>faltas e ocorr&ecirc;ncias disciplinares.</p>
+
+        <button type="button" style="margin-top: 15px;" onclick="window.open('http://educacao.portabilis.com.br/users/login')" class="btn btn-success">Acesse aqui</button>
+        <div style="position:relative; left: 120px; top: -16px;"> <a target="_blank" class="light decorated" href="https://docs.google.com/uc?export=download&id=0B-DS-DRSnzFsMzFMWWxKNWFEV0U"> Manual de uso</a></div>
+
       </div>
 
       <div class="clear"></div>
@@ -146,15 +156,15 @@
 
     <div id="rodape" class="texto-normal">
       <p>
-        Portabilis Tecnologia - suporte@portabilis.com.br -
+        ***REMOVED*** - (33) 3321-6183 -
 
-        <a target="_blank" class="light" href="http://suporte.portabilis.com.br"> Obter Suporte </a>
+        <a target="_blank" class="light" href="http://www.***REMOVED***.com.br"> http://www.***REMOVED***.com.br </a>
       </p>
-        <!--div id="div-outubro-rosa">
+
+      <!--div id="div-outubro-rosa" style="top: -488px">
         <a href="https://www.google.com.br/#q=Campanha+Outubro+rosa" target="_blank"><img src="https://s3.amazonaws.com/apps-ieducar-images/outubro-rosa/outubro-rosa.png"/></a>
       </div-->
-
-      <!--div id="div-copa-no-brasil">
+      <!--div id="div-copa-no-brasil" style="top: -368px;">
         <img src="https://cloud.githubusercontent.com/assets/1082624/3250687/b08b862c-f1a8-11e3-87f9-a1bfef5949c3.jpg"/>
         <p><a href="https://www.google.com/maps/views/streetview/brazils-painted-streets?gl=br&hl=pt-BR" target="_blank">
             <span style="color: #00A859;">Ruas</span> <span style="color: #FFCC29;">coloridas do <span style="color: #3E4095;">Brasil</span>
