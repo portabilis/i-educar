@@ -19,11 +19,10 @@
   -- //@UNDO
 
   ALTER TABLE modules.ponto_transporte_escolar DROP CONSTRAINT fk_ponto_cep_log_bai;
-  ALTER TABLE modules.ponto_transporte_escolar DROP COLUMN cep numeric(8,0);
-  ALTER TABLE modules.ponto_transporte_escolar DROP COLUMN idlog numeric(6,0);
-  ALTER TABLE modules.ponto_transporte_escolar DROP COLUMN idbai numeric(6,0);
-  ALTER TABLE modules.ponto_transporte_escolar DROP COLUMN numero numeric(6,0);
-  ALTER TABLE modules.ponto_transporte_escolar DROP COLUMN complemento character varying(20);
-
+  ALTER TABLE modules.ponto_transporte_escolar DROP COLUMN;
+  ALTER TABLE modules.ponto_transporte_escolar DROP COLUMN;
+  ALTER TABLE modules.ponto_transporte_escolar DROP COLUMN;
+  ALTER TABLE modules.ponto_transporte_escolar DROP COLUMN;
+  ALTER TABLE modules.ponto_transporte_escolar DROP COLUMN;
 
   -- //

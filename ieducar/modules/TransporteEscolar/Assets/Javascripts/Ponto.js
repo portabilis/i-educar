@@ -5,6 +5,14 @@ $deleteButton = $j('<input value=" Excluir " type="button" style="display: inlin
 
 var $idField        = $j('#id');
 
+var submitForm = function(event) {
+  if ($j('#cep_').val()){
+    if (!validateEndereco()){
+      return;
+    }
+  }
+  submitFormExterno();
+}
 // ajax
 
 resourceOptions.handlePost = function(dataResponse) {
@@ -31,6 +39,9 @@ resourceOptions.handleGet = function(dataResponse) {
   $j('#desc').val(dataResponse.desc);
 
   $j('#cep_').val(dataResponse.cep);
+
+  $j('#latitude').val(dataResponse.latitude);
+  $j('#longitude').val(dataResponse.longitude);
 
     if ($j('#cep_').val()){
 
@@ -73,15 +84,38 @@ resourceOptions.handleGet = function(dataResponse) {
 
 };
 
+var singletonMap;
+
+function reloadSingletonMap(){
+   window.setTimeout(function() {
+    singletonMap.reload();
+  }, 1000);
+}
+
 // when page is ready
 $j(document).ready(function() {
 
   hideEnderecoFields();
   fixUpPlaceholderEndereco();
 
+  $j('#latitude').attr('readonly', 'true');
+  $j('#longitude').attr('readonly', 'true');
+  $j('#latitude').css('background-color' , '#DFDFDF')
+  $j('#longitude').css('background-color' , '#DFDFDF')
+
+  $j('<tr>').html('<td colspan=\'2\' ><div id=\'map\' style=\'height: 300px\' align=\'center\' width=\'500px\'></div> </td>').insertBefore($j('.tableDetalheLinhaSeparador').closest('tr'));
+
+  singletonMap = new IeducarSingletonMap();
+
   window.setTimeout(function() {
     $j('#idtlog').css('width', '');
     $j('#zona_localizacao').css('width', '');
+    $submitButton.removeAttr('onclick');
+    $submitButton.unbind('click');
+    $submitButton.click(submitForm);
+    singletonMap.render();
   }, 1000);
+
+  $j('input[type="text"]').on('input', reloadSingletonMap);
 
 }); // ready

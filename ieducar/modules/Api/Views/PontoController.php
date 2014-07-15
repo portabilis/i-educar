@@ -54,6 +54,9 @@ class PontoController extends ApiCoreController
     // após cadastro não muda mais id pessoa
     $ponto->descricao                     = Portabilis_String_Utils::toLatin1($this->getRequest()->desc);
 
+    $ponto->latitude                      = $this->getRequest()->latitude;
+    $ponto->longitude                     = $this->getRequest()->longitude;
+
     $cep = idFederal2Int($this->getRequest()->cep_);
 
     $objCepLogradouro = new ClsCepLogradouro($cep, $this->getRequest()->logradouro_id);
@@ -107,6 +110,8 @@ class PontoController extends ApiCoreController
       'sigla_uf' => 'sigla_uf',
       'municipio' => 'municipio',
       'idmun' => 'idmun',
+      'latitude' => 'latitude',
+      'longitude' => 'longitude',
     );
 
     $pt = Portabilis_Array_Utils::filter($ponto, $attrs);
