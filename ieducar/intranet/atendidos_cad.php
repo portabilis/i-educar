@@ -935,7 +935,7 @@ class indice extends clsCadastro
     // renda
     $this->campoRotulo('renda','<b>Trabalho e renda</b>', '', '', 'Informações de trabalho e renda da pessoa');
     $this->campoTexto('ocupacao', 'Ocupação', $this->ocupacao, '50', '255', FALSE);
-    $this->campoMonetario('renda_mensal', 'Renda mensal (R$)', $this->renda_mensal, '50', '255');
+    $this->campoMonetario('renda_mensal', 'Renda mensal (R$)', $this->renda_mensal, '9', '10');
     $this->campoData('data_admissao', 'Data de admissão', $this->data_admissao);
     $this->campoTexto('empresa', 'Empresa', $this->empresa, '50', '255', FALSE);
     $this->inputTelefone('empresa', 'Telefone da empresa');

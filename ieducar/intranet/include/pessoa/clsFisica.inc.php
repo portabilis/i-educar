@@ -603,6 +603,9 @@ class clsFisica
 			{
 				$set     .= "$gruda renda_mensal = {$this->renda_mensal}";
 				$gruda	  = ", ";
+			}else{
+				$set .= "$gruda renda_mensal = NULL";
+				$gruda = ", ";
 			}
 
 			if($this->data_admissao)
