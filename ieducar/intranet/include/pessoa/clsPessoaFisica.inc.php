@@ -306,6 +306,8 @@ class clsPessoaFisica extends clsPessoaFj
         $this->ddd_telefone_empresa     = $detalhe_fisica['ddd_telefone_empresa'];
         $this->telefone_empresa         = $detalhe_fisica['telefone_empresa'];
         $this->pessoa_contato           = $detalhe_fisica['pessoa_contato'];
+        $this->renda_mensal             = $detalhe_fisica['renda_mensal'];
+        $this->data_admissao            = $detalhe_fisica['data_admissao'];
 
         $tupla['idpes'] = $this->idpes;
         $tupla[]        = & $tupla['idpes'];
@@ -379,18 +381,6 @@ class clsPessoaFisica extends clsPessoaFj
         $tupla['justificativa_provisorio'] = $this->justificativa_provisorio;
         $tupla[]                           = & $tupla['justificativa_provisorio'];
 
-       /* $tupla['ocupacao'] = $this->ocupacao;
-        $tupla[]                           = & $tupla['ocupacao'];
-
-        $tupla['empresa'] = $this->empresa;
-        $tupla[]                           = & $tupla['empresa'];
-
-        $tupla['ddd_telefone_empresa'] = $this->ddd_telefone_empresa;
-        $tupla[]                           = & $tupla['ddd_telefone_empresa'];
-
-        $tupla['telefone_empresa'] = $this->telefone_empresa;
-        $tupla[]                           = & $tupla['telefone_empresa'];*/
-
         return $tupla;
       }
     }
@@ -436,6 +426,8 @@ class clsPessoaFisica extends clsPessoaFj
           $this->empresa                  = $detalhe_fisica['empresa'];
           $this->ddd_telefone_empresa     = $detalhe_fisica['ddd_telefone_empresa'];
           $this->telefone_empresa         = $detalhe_fisica['telefone_empresa'];
+          $this->renda_mensal             = $detalhe_fisica['renda_mensal'];
+          $this->data_admissao            = $detalhe_fisica['data_admissao'];
 
           $tupla['idpes'] = $this->idpes;
           $tupla[]        = & $tupla['idpes'];

@@ -119,6 +119,8 @@ class indice extends clsCadastro
   var $ddd_telefone_empresa;
   var $telefone_empresa;
   var $pessoa_contato;
+  var $renda_mensal;
+  var $data_admissao;
 
   // Variáveis para controle da foto
   var $objPhoto;
@@ -146,7 +148,8 @@ class indice extends clsCadastro
         $this->idtlog, $this->sigla_uf, $this->complemento, $this->numero,
         $this->bloco, $this->apartamento, $this->andar, $this->zona_localizacao, $this->estado_civil,
         $this->pai_id, $this->mae_id, $this->tipo_nacionalidade, $this->pais_origem, $this->naturalidade,
-        $this->letra, $this->sus, $this->nis_pis_pasep, $this->ocupacao, $this->empresa, $this->ddd_telefone_empresa, $this->telefone_empresa, $this->pessoa_contato
+        $this->letra, $this->sus, $this->nis_pis_pasep, $this->ocupacao, $this->empresa, $this->ddd_telefone_empresa, 
+        $this->telefone_empresa, $this->pessoa_contato, $this->renda_mensal, $this->data_admissao, $this->renda_mensal, $this->data_admissao
       ) =
 
       $objPessoa->queryRapida(
@@ -155,12 +158,16 @@ class indice extends clsCadastro
         'tipo', 'sexo', 'cidade', 'bairro', 'logradouro', 'cep', 'idlog',
         'idbai', 'idtlog', 'sigla_uf', 'complemento', 'numero', 'bloco', 'apartamento',
         'andar', 'zona_localizacao', 'ideciv', 'idpes_pai', 'idpes_mae', 'nacionalidade',
-        'idpais_estrangeiro', 'idmun_nascimento', 'letra', 'sus', 'nis_pis_pasep', 'ocupacao', 'empresa', 'ddd_telefone_empresa', 'telefone_empresa', 'pessoa_contato'
+        'idpais_estrangeiro', 'idmun_nascimento', 'letra', 'sus', 'nis_pis_pasep', 'ocupacao', 
+        'empresa', 'ddd_telefone_empresa', 'telefone_empresa', 'pessoa_contato', 'renda_mensal', 'data_admissao'
       );
 
-      $this->id_federal      = is_numeric($this->id_federal) ? int2CPF($this->id_federal) : '';
-      $this->cep             = is_numeric($this->cep)        ? int2Cep($this->cep) : '';
-      $this->data_nasc       = $this->data_nasc              ? dataFromPgToBr($this->data_nasc) : '';
+      $this->id_federal      = is_numeric($this->id_federal)   ? int2CPF($this->id_federal) : '';
+      $this->cep             = is_numeric($this->cep)          ? int2Cep($this->cep) : '';
+      $this->renda_mensal    = number_format($this->renda_mensal, 2, ',', '.');
+      $this->data_nasc       = $this->data_nasc                ? dataFromPgToBr($this->data_nasc) : '';
+      $this->data_admissao   = $this->data_admissao            ? dataFromPgToBr($this->data_admissao) : '';
+
 
       $this->estado_civil_id = $this->estado_civil->ideciv;
       $this->pais_origem_id  = $this->pais_origem->idpais;
@@ -737,7 +744,7 @@ class indice extends clsCadastro
     // Caso o cep já esteja definido, os campos já vem desbloqueados inicialmente
     $desativarCamposDefinidosViaCep = empty($this->cep);
 
-    $this->campoRotulo('','<b> Endereçamento</b>', '', '', 'Digite um CEP ou clique na lupa para<br/> busca avançada para começar');
+    $this->campoRotulo('enderecamento','<b> Endereçamento</b>', '', '', 'Digite um CEP ou clique na lupa para<br/> busca avançada para começar');
 
     $this->campoCep(
       'cep_',
@@ -918,20 +925,20 @@ class indice extends clsCadastro
 
 
     // contato
-
+    $this->campoRotulo('contato','<b>Contato</b>', '', '', 'Informações de contato da pessoa');    
     $this->inputTelefone('1', 'Telefone residencial');
     $this->inputTelefone('mov', 'Celular');
     $this->inputTelefone('2', 'Telefone adicional');
     $this->inputTelefone('fax', 'Fax');
-
     $this->campoTexto('email', 'E-mail', $this->email, '50', '255', FALSE);
 
+    // renda
+    $this->campoRotulo('renda','<b>Trabalho e renda</b>', '', '', 'Informações de trabalho e renda da pessoa');
     $this->campoTexto('ocupacao', 'Ocupação', $this->ocupacao, '50', '255', FALSE);
-
+    $this->campoMonetario('renda_mensal', 'Renda mensal (R$)', $this->renda_mensal, '50', '255');
+    $this->campoData('data_admissao', 'Data de admissão', $this->data_admissao);
     $this->campoTexto('empresa', 'Empresa', $this->empresa, '50', '255', FALSE);
-
-    $this->inputTelefone('empresa', 'Telefone da Empresa');
-
+    $this->inputTelefone('empresa', 'Telefone da empresa');
     $this->campoTexto('pessoa_contato', 'Pessoa de contato na empresa', $this->pessoa_contato, '50', '255', FALSE);
 
     // after change pessoa pai / mae
@@ -1172,6 +1179,10 @@ class indice extends clsCadastro
     $fisica->ddd_telefone_empresa = $this->ddd_telefone_empresa;
     $fisica->telefone_empresa     = $this->telefone_empresa;
     $fisica->pessoa_contato       = $this->pessoa_contato;
+    $this->renda_mensal           = str_replace('.', '', $this->renda_mensal);
+    $this->renda_mensal           = str_replace(',', '.', $this->renda_mensal);
+    $fisica->renda_mensal         = $this->renda_mensal;
+    $fisica->data_admissao        = $this->data_admissao ? Portabilis_Date_Utils::brToPgSQL($this->data_admissao) : null;
 
     $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
 

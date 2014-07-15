@@ -14,15 +14,19 @@
   ALTER TABLE cadastro.fisica ADD ocupacao VARCHAR(255);
   ALTER TABLE cadastro.fisica ADD empresa VARCHAR(255);
   ALTER TABLE cadastro.fisica ADD pessoa_contato VARCHAR(255);
+  ALTER TABLE cadastro.fisica ADD renda_mensal NUMERIC(10,2);
+  ALTER TABLE cadastro.fisica ADD data_admissao DATE;
   ALTER TABLE cadastro.fisica ADD ddd_telefone_empresa NUMERIC(3,0);
   ALTER TABLE cadastro.fisica ADD telefone_empresa NUMERIC(11,0);
 
   -- //@UNDO
     
-  ALTER TABLE cadastro.fisica DROP COLUMN ocupacao VARCHAR(255);
-  ALTER TABLE cadastro.fisica DROP COLUMN empresa VARCHAR(255);
-  ALTER TABLE cadastro.fisica DROP COLUMN pessoa_contato VARCHAR(255);
-  ALTER TABLE cadastro.fisica DROP COLUMN ddd_telefone_empresa NUMERIC(3,0);
-  ALTER TABLE cadastro.fisica DROP COLUMN telefone_empresa NUMERIC(11,0);
+  ALTER TABLE cadastro.fisica DROP COLUMN ocupacao;
+  ALTER TABLE cadastro.fisica DROP COLUMN empresa;
+  ALTER TABLE cadastro.fisica DROP COLUMN pessoa_contato;
+  ALTER TABLE cadastro.fisica DROP COLUMN renda_mensal;
+  ALTER TABLE cadastro.fisica DROP COLUMN data_admissao;
+  ALTER TABLE cadastro.fisica DROP COLUMN ddd_telefone_empresa;
+  ALTER TABLE cadastro.fisica DROP COLUMN telefone_empresa;
     
   -- //
