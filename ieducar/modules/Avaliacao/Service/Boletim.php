@@ -852,7 +852,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $notasComponentes[$nota->get('componenteCurricular')][] = $nota;
     }
 
-    
+
 
     $this->_notasComponentes = $notasComponentes;
 
@@ -1092,8 +1092,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $situacao->retidoFalta = TRUE;
         $situacao->aprovado    = FALSE;
 
-        // Se reprovado por falta, mesmo que falte lançar a nota de exame, considera como reprovado.
-        $situacao->andamento   = FALSE;
+        // Mesmo se reprovado por falta, só da a situação final após o lançamento de todas as notas
+        $situacoesFinais = array(App_Model_MatriculaSituacao::REPROVADO, App_Model_MatriculaSituacao::APROVADO, App_Model_MatriculaSituacao::APROVADO_APOS_EXAME);
+        $situacao->andamento = (in_array($flagSituacaoNota, $situacoesFinais)) ? FALSE : TRUE;
         break;
       case App_Model_MatriculaSituacao::APROVADO:
         $situacao->retidoFalta = FALSE;
