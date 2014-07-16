@@ -49,6 +49,8 @@ class clsModulesPontoTransporteEscolar
   var $idlog;
   var $complemento;
   var $numero;
+  var $latitude;
+  var $longitude;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -110,7 +112,7 @@ class clsModulesPontoTransporteEscolar
     $this->_schema = "modules.";
     $this->_tabela = "{$this->_schema}ponto_transporte_escolar";
 
-    $this->_campos_lista = $this->_todos_campos = " cod_ponto_transporte_escolar, descricao, cep, idlog, idbai, complemento, numero";
+    $this->_campos_lista = $this->_todos_campos = " cod_ponto_transporte_escolar, descricao, cep, idlog, idbai, complemento, numero, latitude, longitude ";
 
     if (is_numeric($cod_ponto_transporte_escolar)) {
       $this->cod_ponto_transporte_escolar = $cod_ponto_transporte_escolar;
@@ -174,6 +176,18 @@ class clsModulesPontoTransporteEscolar
       $gruda = ", ";
     }
 
+    if (is_numeric($this->latitude)) {
+      $campos .= "{$gruda}latitude";
+      $valores .= "{$gruda}'{$this->latitude}'";
+      $gruda = ", ";
+    }
+
+    if (is_numeric($this->longitude)) {
+      $campos .= "{$gruda}longitude";
+      $valores .= "{$gruda}'{$this->longitude}'";
+      $gruda = ", ";
+    }
+
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
       return $db->InsertId("{$this->_tabela}_seq");
     }
@@ -220,6 +234,16 @@ class clsModulesPontoTransporteEscolar
 
     if (is_numeric($this->numero)) {
         $set .= "{$gruda}numero = '{$this->numero}'";
+        $gruda = ", ";
+    }
+
+    if (is_numeric($this->latitude)) {
+        $set .= "{$gruda}latitude = '{$this->latitude}'";
+        $gruda = ", ";
+    }
+
+    if (is_numeric($this->longitude)) {
+        $set .= "{$gruda}longitude = '{$this->longitude}'";
         $gruda = ", ";
     }
 

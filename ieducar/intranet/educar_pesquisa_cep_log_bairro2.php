@@ -134,8 +134,8 @@ class miolo1 extends clsListagem
       SELECT
         c.idlog, c.cep, c.idbai, u.sigla_uf, m.nome, t.idtlog, m.idmun, b.zona_localizacao, t.descricao,
         d.iddis, d.nome as nome_distrito ';
-        
-    $select = '    
+
+    $select = '
       FROM
         urbano.cep_logradouro_bairro c, public.bairro b, public.logradouro l,
         public.distrito d, public.municipio m, public.uf u, urbano.tipo_logradouro t
@@ -176,7 +176,7 @@ class miolo1 extends clsListagem
     $select .= sprintf(' LIMIT %s OFFSET %s', $limite, $iniciolimit);
 
     $result = Portabilis_Utils_Database::fetchPreparedQuery($pre_select.$select, array('params' => array_values($params)));
-    
+
 
     foreach ($result as $record) {
       list($idlog, $cep, $idbai, $uf, $cidade, $tipoLogradouroId, $id_mun, $zona, $descricao, $iddis, $distrito) = $record;
@@ -220,7 +220,7 @@ class miolo1 extends clsListagem
     $this->largura = '100%';
     $this->addPaginador2('educar_pesquisa_cep_log_bairro.php', $total, $_GET,
       $this->nome, $limite);
-    
+
 /*
     if ($_GET['param']) {
       $this->rodape = '
@@ -411,7 +411,7 @@ function liberaCamposOuvidoria()
 }
 
 function liberaCampos(){
-  
+
   parent.document.getElementById('municipio_municipio').disabled = false;
   parent.document.getElementById('distrito_distrito').disabled = false;
   parent.document.getElementById('bairro_bairro').disabled = false;
@@ -423,7 +423,13 @@ function liberaCampos(){
   parent.document.getElementById('logradouro').value = '';
   parent.document.getElementById('bairro').value = '';
   parent.document.getElementById('idtlog').value = '';
-  parent.document.getElementById('zona_localizacao').value = '';  
+  parent.document.getElementById('zona_localizacao').value = '';
+
+  if ( typeof parent.reloadSingletonMap == 'function' ) {
+    parent.reloadSingletonMap();
+    console.log(':)');
+  }else
+    console.log(':(');
 
 }
 </script>

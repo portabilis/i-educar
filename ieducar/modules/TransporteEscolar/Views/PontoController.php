@@ -194,7 +194,19 @@ class PontoController extends Portabilis_Controller_Page_EditController
 
     $this->inputsHelper()->text('logradouro', $options);
 
-        // complemento
+    // numero
+
+    $options = array(
+      'required'    => false,
+      'label'       => 'Número',
+      'placeholder' => Portabilis_String_Utils::toLatin1('Número'),
+      'value'       => '',
+      'max_length'  => 6
+    );
+
+    $this->inputsHelper()->integer('numero', $options);
+
+    // complemento
 
     $options = array(
       'required'    => false,
@@ -204,21 +216,14 @@ class PontoController extends Portabilis_Controller_Page_EditController
 
     $this->inputsHelper()->text('complemento', $options);
 
+    $this->inputsHelper()->text('latitude');
 
-    // numero
+    $this->inputsHelper()->text('longitude');
 
-    $options = array(
-      'required'    => false,
-      'label'       => 'Número',
-      'placeholder' => Portabilis_String_Utils::toLatin1('Número'),
-      'value'       => '',
-      'max_length'  => 6,
-      'inline'      => true
-    );
-
-    $this->inputsHelper()->integer('numero', $options);
-
-    $script = '/modules/Cadastro/Assets/Javascripts/Endereco.js';
+    $script = array('/modules/Cadastro/Assets/Javascripts/Endereco.js',
+                    '/lib/Utils/gmaps.js',
+                    '/modules/Portabilis/Assets/Javascripts/Frontend/ieducar.singleton_gmap.js'
+                    );
 
     Portabilis_View_Helper_Application::loadJavascript($this, $script);
 
