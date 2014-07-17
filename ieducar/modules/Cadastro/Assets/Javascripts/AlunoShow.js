@@ -136,8 +136,10 @@ var possui_uniforme_escolar = $j('#funiforme').length>0;
 
 var possui_moradia = $j('#fmoradia').length>0;
 
+var participa_projetos = $j('#fprojeto').length>0;
+
 // Adiciona abas na página
-$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab2"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab2"> <span class="tabText">Ficha m\u00e9dica</span></div></li><li><div id="tab3" class="alunoTab2"> <span class="tabText">Uniforme escolar</span></div></li><li><div id="tab4" class="alunoTab2"> <span class="tabText">Moradia</span></div></li></ul></div>');
+$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab2"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab2"> <span class="tabText">Ficha m\u00e9dica</span></div></li><li><div id="tab3" class="alunoTab2"> <span class="tabText">Uniforme escolar</span></div></li><li><div id="tab4" class="alunoTab2"> <span class="tabText">Moradia</span></div></li><li><div id="tab5" class="alunoTab2"> <span class="tabText">Projetos</span></div></li></ul></div>');
 $j('td .formdktd b').remove();
 $j('#tab1').addClass('alunoTab-active2').removeClass('alunoTab2');
 var linha_inicial_fmedica = 0;
@@ -147,13 +149,13 @@ if(possui_ficha_medica){
   $j('#fmedica').closest('tr').attr('id','tfmedica');
 
   // Pega o número dessa linha
-  linha_inicial_fmedica = $j('#tfmedica').index();
+  linha_inicial_fmedica = $j('#tfmedica').index() + 1;
 
   // hide nos campos das outras abas (deixando só os campos da primeira aba)
   $j('.tableDetalhe >tbody  > tr').each(function(index, row) {
     if (index>=linha_inicial_fmedica){
       if (row.id!='stop')
-        row.hide();    
+        row.hide();
       else
         return false;
     }
@@ -165,13 +167,13 @@ if(possui_uniforme_escolar){
   $j('#funiforme').closest('tr').attr('id','tfuniforme');
 
   // Pega o número dessa linha
-  linha_inicial_funiforme = $j('#tfuniforme').index();
+  linha_inicial_funiforme = $j('#tfuniforme').index() + 1;
 
   // hide nos campos das outras abas (deixando só os campos da primeira aba)
   $j('.tableDetalhe >tbody  > tr').each(function(index, row) {
     if (index>=linha_inicial_funiforme){
       if (row.id!='stop')
-        row.hide();    
+        row.hide();
       else
         return false;
     }
@@ -183,13 +185,31 @@ if(possui_moradia){
   $j('#fmoradia').closest('tr').attr('id','tfmoradia');
 
   // Pega o número dessa linha
-  linha_inicial_fmoradia = $j('#tfmoradia').index();
+  linha_inicial_fmoradia = $j('#tfmoradia').index() + 1;
 
   // hide nos campos das outras abas (deixando só os campos da primeira aba)
   $j('.tableDetalhe >tbody  > tr').each(function(index, row) {
     if (index>=linha_inicial_fmoradia){
       if (row.id!='stop')
-        row.hide();    
+        row.hide();
+      else
+        return false;
+    }
+  });
+}
+
+if(participa_projetos){
+  // Atribui um id a linha, para identificar até onde/a partir de onde esconder os campos
+  $j('#fprojeto').closest('tr').attr('id','tfprojeto');
+
+  // Pega o número dessa linha
+  linha_inicial_fprojeto = $j('#tfprojeto').index() + 1;
+
+  // hide nos campos das outras abas (deixando só os campos da primeira aba)
+  $j('.tableDetalhe >tbody  > tr').each(function(index, row) {
+    if (index>=linha_inicial_fprojeto){
+      if (row.id!='stop')
+        row.hide();
       else
         return false;
     }
@@ -203,7 +223,7 @@ $j(document).ready(function() {
   // on click das abas
 
   // DADOS PESSOAIS
-    $j('#tab1').click( 
+    $j('#tab1').click(
       function(){
 
         $j('.alunoTab-active2').toggleClass('alunoTab-active2 alunoTab2');
@@ -211,18 +231,18 @@ $j(document).ready(function() {
         $j('.tableDetalhe >tbody  > tr').each(function(index, row) {
           if (index>=linha_inicial_fmedica){
             if (row.id!='stop')
-              row.hide();    
+              row.hide();
             else
               return false;
           }else{
             row.show();
           }
-        });        
+        });
       }
-    );  
+    );
 
     // FICHA MÉDICA
-    $j('#tab2').click( 
+    $j('#tab2').click(
       function(){
         if (possui_ficha_medica){
           $j('.alunoTab-active2').toggleClass('alunoTab-active2 alunoTab2');
@@ -231,7 +251,7 @@ $j(document).ready(function() {
             if (row.id!='stop'){
               if (index>=linha_inicial_fmedica && index<linha_inicial_funiforme){
                 row.show();
-              }else if (index>0){
+              }else if (index>1){
                 row.hide();
               }
             }else
@@ -239,11 +259,11 @@ $j(document).ready(function() {
           });
         }else
           alert('Dados da ficha m\u00e9dica n\u00e3o foram adicionados ainda. \nVoc\u00ea pode adicion\u00e1-los clicando em editar.');
-      
+
       });
 
-      // FICHA MÉDICA
-      $j('#tab3').click( 
+      // Uniforme escolar
+      $j('#tab3').click(
         function(){
           if (possui_uniforme_escolar){
             $j('.alunoTab-active2').toggleClass('alunoTab-active2 alunoTab2');
@@ -252,7 +272,7 @@ $j(document).ready(function() {
               if (row.id!='stop'){
                 if (index>=linha_inicial_funiforme && index<linha_inicial_fmoradia){
                   row.show();
-                }else if (index>0){
+                }else if (index>1){
                   row.hide();
                 }
               }else
@@ -260,10 +280,10 @@ $j(document).ready(function() {
             });
           }else
             alert('Dados do uniforme escolar n\u00e3o foram adicionados ainda. \nVoc\u00ea pode adicion\u00e1-los clicando em editar.');
-        
-        });          
-      // FICHA MÉDICA
-      $j('#tab4').click( 
+
+        });
+      // Moradia
+      $j('#tab4').click(
         function(){
           if (possui_moradia){
             $j('.alunoTab-active2').toggleClass('alunoTab-active2 alunoTab2');
@@ -272,7 +292,7 @@ $j(document).ready(function() {
               if (row.id!='stop'){
                 if (index>=linha_inicial_fmoradia){
                   row.show();
-                }else if (index>0){
+                }else if (index>1){
                   row.hide();
                 }
               }else
@@ -280,8 +300,28 @@ $j(document).ready(function() {
             });
           }else
             alert('Dados da moradia n\u00e3o foram adicionados ainda. \nVoc\u00ea pode adicion\u00e1-los clicando em editar.');
-        
-        });    
+
+        });
+      // Projetos
+      $j('#tab5').click(
+        function(){
+          if (participa_projetos){
+            $j('.alunoTab-active2').toggleClass('alunoTab-active2 alunoTab2');
+            $j('#tab5').toggleClass('alunoTab2 alunoTab-active2')
+            $j('.tableDetalhe >tbody  > tr').each(function(index, row) {
+              if (row.id!='stop'){
+                if (index>=linha_inicial_fprojeto){
+                  row.show();
+                }else if (index>1){
+                  row.hide();
+                }
+              }else
+                return false;
+            });
+          }else
+            alert('Aluno n\u00e3o participa de projetos.');
+
+        });
 
   getMatriculas();
 

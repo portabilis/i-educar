@@ -33,6 +33,7 @@
  */
 
 require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
+require_once 'include/pmieducar/clsPmieducarProjeto.inc.php';
 require_once 'include/modules/clsModulesFichaMedicaAluno.inc.php';
 require_once 'include/modules/clsModulesUniformeAluno.inc.php';
 require_once 'include/modules/clsModulesMoradiaAluno.inc.php';
@@ -224,6 +225,18 @@ class AlunoController extends ApiCoreController
     return $this->toUtf8($nome, array('transform' => true));
   }
 
+  protected function validaTurnoProjeto($alunoId, $turnoId) {
+    $sql  = 'SELECT 1
+              FROM pmieducar.turma t
+              INNER JOIN pmieducar.matricula_turma mt ON (mt.ref_cod_turma = t.cod_turma)
+              INNER JOIN pmieducar.matricula m ON (m.cod_matricula = mt.ref_cod_matricula)
+              WHERE t.turma_turno_id = $2
+              AND mt.ativo = 1
+              AND m.ativo = 1
+              AND m.aprovado = 3
+              AND m.ref_cod_aluno = $1';
+    return !(bool) $this->fetchPreparedQuery($sql, array($alunoId, $turnoId), false, 'first-field');
+  }
 
   protected function loadTransporte($alunoId) {
 
@@ -280,7 +293,7 @@ class AlunoController extends ApiCoreController
   }
 
   protected function createOrUpdateFichaMedica($id) {
-    
+
     $obj                    = new clsModulesFichaMedicaAluno();
 
     $obj->ref_cod_aluno                         = $id;
@@ -291,7 +304,7 @@ class AlunoController extends ApiCoreController
     $obj->alergia_medicamento                   = ($this->getRequest()->alergia_medicamento == 'on' ? 'S' : 'N');
     $obj->desc_alergia_medicamento              = Portabilis_String_Utils::toLatin1($this->getRequest()->desc_alergia_medicamento);
     $obj->alergia_alimento                      = ($this->getRequest()->alergia_alimento == 'on' ? 'S' : 'N');
-    $obj->desc_alergia_alimento                 = Portabilis_String_Utils::toLatin1($this->getRequest()->desc_alergia_alimento);    
+    $obj->desc_alergia_alimento                 = Portabilis_String_Utils::toLatin1($this->getRequest()->desc_alergia_alimento);
     $obj->doenca_congenita                      = ($this->getRequest()->doenca_congenita == 'on' ? 'S' : 'N');
     $obj->desc_doenca_congenita                 = Portabilis_String_Utils::toLatin1($this->getRequest()->desc_doenca_congenita);
     $obj->fumante                               = ($this->getRequest()->fumante == 'on' ? 'S' : 'N');
@@ -332,15 +345,15 @@ class AlunoController extends ApiCoreController
     $obj->responsavel_parentesco_celular        = Portabilis_String_Utils::toLatin1($this->getRequest()->responsavel_parentesco_celular);
 
     return ($obj->existe() ? $obj->edita() : $obj->cadastra());
-  }  
+  }
 
 protected function createOrUpdateUniforme($id) {
-    
+
     $obj                                        = new clsModulesUniformeAluno();
 
     $obj->ref_cod_aluno                         = $id;
     $obj->recebeu_uniforme                      = ($this->getRequest()->recebeu_uniforme == 'on' ? 'S' : 'N');
-    
+
     $obj->quantidade_camiseta                   = $this->getRequest()->quantidade_camiseta;
     $obj->tamanho_camiseta                      = Portabilis_String_Utils::toLatin1($this->getRequest()->tamanho_camiseta);
 
@@ -360,17 +373,17 @@ protected function createOrUpdateUniforme($id) {
     $obj->tamanho_calcado                       = Portabilis_String_Utils::toLatin1($this->getRequest()->tamanho_calcado);
 
     $obj->quantidade_blusa_jaqueta              = $this->getRequest()->quantidade_blusa_jaqueta;
-    $obj->tamanho_blusa_jaqueta                 = Portabilis_String_Utils::toLatin1($this->getRequest()->tamanho_blusa_jaqueta);    
+    $obj->tamanho_blusa_jaqueta                 = Portabilis_String_Utils::toLatin1($this->getRequest()->tamanho_blusa_jaqueta);
 
     return ($obj->existe() ? $obj->edita() : $obj->cadastra());
-  }  
+  }
 
   protected function createOrUpdateMoradia($id) {
-    
+
     $obj                                        = new clsModulesMoradiaAluno();
 
     $obj->ref_cod_aluno                         = $id;
-    
+
     $obj->moradia                               = $this->getRequest()->moradia;
     $obj->material                              = $this->getRequest()->material;
     $obj->casa_outra                            = Portabilis_String_Utils::toLatin1($this->getRequest()->casa_outra);
@@ -402,7 +415,7 @@ protected function createOrUpdateUniforme($id) {
     $obj->lixo                                  = ($this->getRequest()->lixo == 'on' ? 'S' : 'N');
 
     return ($obj->existe() ? $obj->edita() : $obj->cadastra());
-  }    
+  }
 
   protected function loadAlunoInepId($alunoId) {
     $dataMapper = $this->getDataMapperFor('educacenso', 'aluno');
@@ -559,8 +572,8 @@ protected function createOrUpdateUniforme($id) {
   }
 
   protected function loadNomeTurmaOrigem($matriculaId) {
-    $sql = "select nm_turma from pmieducar.matricula_turma mt 
-            left join pmieducar.turma t on (t.cod_turma = mt.ref_cod_turma) 
+    $sql = "select nm_turma from pmieducar.matricula_turma mt
+            left join pmieducar.turma t on (t.cod_turma = mt.ref_cod_turma)
             where ref_cod_matricula = $1 and mt.ativo = 0 and mt.ref_cod_turma <> COALESCE((select ref_cod_turma from pmieducar.matricula_turma
               where ref_cod_matricula = $1 and ativo = 1 limit 1),0) order by mt.data_exclusao desc limit 1";
 
@@ -650,10 +663,10 @@ protected function createOrUpdateUniforme($id) {
   }
 
   protected function getGradeUltimoHistorico(){
-    
+
     $sql = 'SELECT historico_grade_curso_id as id
-            FROM historico_escolar 
-            WHERE ref_cod_aluno = $1 
+            FROM historico_escolar
+            WHERE ref_cod_aluno = $1
             ORDER BY sequencial DESC LIMIT 1';
 
     $params     = array($this->getRequest()->aluno_id);
@@ -766,7 +779,34 @@ protected function createOrUpdateUniforme($id) {
     }
 
     return $_beneficios;
-  }   
+  }
+
+  protected function loadProjetos($alunoId) {
+    $sql = 'SELECT cod_projeto,
+                   nome,
+                   data_inclusao,
+                   data_desligamento,
+                   turno
+              FROM  pmieducar.projeto_aluno,
+                    pmieducar.projeto
+              WHERE ref_cod_projeto = cod_projeto
+              AND ref_cod_aluno = $1';
+
+    $projetos = $this->fetchPreparedQuery($sql, $alunoId, false);
+
+    // transforma array de arrays em array chave valor
+    $_projetos = array();
+
+    foreach ($projetos as $projeto) {
+      $nome = $this->toUtf8($projeto['nome'], array('transform' => true));
+      $_projetos[] = array('projeto_cod_projeto' => $projeto['cod_projeto'] . ' - '.$nome,
+                           'projeto_data_inclusao' => Portabilis_Date_Utils::pgSQLToBr($projeto['data_inclusao']),
+                           'projeto_data_desligamento' => Portabilis_Date_Utils::pgSQLToBr($projeto['data_desligamento']),
+                           'projeto_turno' => $projeto['turno']);
+    }
+
+    return $_projetos;
+  }
 
   protected function get() {
     if ($this->canGet()) {
@@ -854,6 +894,8 @@ protected function createOrUpdateUniforme($id) {
 
       $aluno['beneficios'] = $this->loadBeneficios($id);
 
+      $aluno['projetos'] = $this->loadProjetos($id);
+
       return $aluno;
     }
   }
@@ -928,7 +970,7 @@ protected function createOrUpdateUniforme($id) {
     $pessoaId = $this->getRequest()->pessoa_id;
 
     if($maeId || $paiId){
-    
+
       $sql = "UPDATE cadastro.fisica set ";
 
       $virgulaOuNada = '';
@@ -943,8 +985,8 @@ protected function createOrUpdateUniforme($id) {
         $virgulaOuNada = ", ";
       }
 
-      $sql .= " WHERE idpes = {$pessoaId}";      
-    
+      $sql .= " WHERE idpes = {$pessoaId}";
+
       Portabilis_Utils_Database::fetchPreparedQuery($sql);
     }
   }
@@ -958,10 +1000,37 @@ protected function createOrUpdateUniforme($id) {
     $obj = new clsPmieducarAlunoBeneficio();
     $obj->deletaBeneficiosDoAluno($id);
     foreach ($this->getRequest()->beneficios as $beneficioId) {
-      if (! empty($beneficioId)) 
+      if (! empty($beneficioId))
         $obj->cadastraBeneficiosDoAluno($id, $beneficioId);
     }
-  }  
+  }
+
+  protected function retornaCodigo($palavra){
+
+    return substr($palavra, 0, strpos($palavra, " -"));
+  }
+
+  function saveProjetos($alunoId){
+    $obj = new clsPmieducarProjeto();
+    $obj->deletaProjetosDoAluno($alunoId);
+
+    foreach ($this->getRequest()->projeto_turno as $key => $value) {
+      $projetoId = $this->retornaCodigo($this->getRequest()->projeto_cod_projeto[$key]);
+      if (is_numeric($projetoId)){
+        $dataInclusao = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->projeto_data_inclusao[$key]);
+        $dataDesligamento = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->projeto_data_desligamento[$key]);
+        $turnoId = $value;
+        if (is_numeric($projetoId) && is_numeric($turnoId) && !empty($dataInclusao)){
+          if($this->validaTurnoProjeto($alunoId, $turnoId))
+            $obj->cadastraProjetoDoAluno($alunoId, $projetoId, $dataInclusao, $dataDesligamento, $turnoId);
+          else
+            $this->messenger->append('O aluno não pode ser cadastrado em projetos no mesmo turno em que estuda, por favor, verifique.');
+        }else
+          $this->messenger->append('Para cadastrar o aluno em um projeto é necessário no mínimo informar a data de inclusão e o turno.');
+      }
+
+    }
+  }
 
   protected function post() {
     if ($this->canPost()) {
@@ -980,6 +1049,7 @@ protected function createOrUpdateUniforme($id) {
         $this->createOrUpdateFichaMedica($id);
         $this->createOrUpdateUniforme($id);
         $this->createOrUpdateMoradia($id);
+        $this->saveProjetos($id);
 
         $this->messenger->append('Cadastrado realizado com sucesso', 'success', false, 'error');
       }
@@ -1006,6 +1076,7 @@ protected function createOrUpdateUniforme($id) {
       $this->createOrUpdateFichaMedica($id);
       $this->createOrUpdateUniforme($id);
       $this->createOrUpdateMoradia($id);
+      $this->saveProjetos($id);
 
       $this->messenger->append('Cadastro alterado com sucesso', 'success', false, 'error');
     }
@@ -1061,12 +1132,12 @@ protected function createOrUpdateUniforme($id) {
   }
 
   protected function possuiMatriculaAtivaEmAndamento($alunoId){
-    $sql = "select ano 
-              from pmieducar.matricula 
-             where ref_cod_aluno = $1 
+    $sql = "select ano
+              from pmieducar.matricula
+             where ref_cod_aluno = $1
                and ativo = 1
                and aprovado = 3
-             order by ano desc 
+             order by ano desc
              limit 1";
     return (Portabilis_Utils_Database::selectField($sql, $alunoId));
   }
@@ -1085,7 +1156,7 @@ protected function createOrUpdateUniforme($id) {
       $this->appendResponse($this->getOcorrenciasDisciplinares());
 
     elseif ($this->isRequestFor('get', 'grade_ultimo_historico'))
-      $this->appendResponse($this->getGradeUltimoHistorico());    
+      $this->appendResponse($this->getGradeUltimoHistorico());
 
     // create
     elseif ($this->isRequestFor('post', 'aluno'))

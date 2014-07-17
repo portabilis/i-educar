@@ -378,5 +378,43 @@ class clsPmieducarProjeto
 		}
 		return "";
 	}
+
+	function deletaProjetosDoAluno($alunoId){
+		$db = new clsBanco();
+		$db->Consulta( "DELETE FROM pmieducar.projeto_aluno WHERE ref_cod_aluno = {$alunoId}" );
+		return true;
+	}
+
+	function cadastraProjetoDoAluno($alunoId, $projetoId, $dataInclusao, $dataDesligamento, $turnoId){
+		$dataInclusao = '\'' . $dataInclusao . '\'';
+		$dataDesligamento = !empty($dataDesligamento) ? '\'' . $dataDesligamento . '\'': 'NULL';
+		$db = new clsBanco();
+		$db->Consulta( "INSERT INTO pmieducar.projeto_aluno (ref_cod_aluno, ref_cod_projeto, data_inclusao, data_desligamento, turno) VALUES ({$alunoId},{$projetoId}, $dataInclusao, $dataDesligamento, $turnoId)" );
+		return true;
+	}
+
+	function listaProjetosPorAluno($alunoId){
+		$db = new clsBanco();
+		$db->Consulta( "SELECT nome as projeto,
+				                   data_inclusao,
+				                   data_desligamento,
+				                   turno
+				              FROM  pmieducar.projeto_aluno,
+				                    pmieducar.projeto
+				              WHERE ref_cod_projeto = cod_projeto
+				              AND ref_cod_aluno = {$alunoId} " );
+
+		while ( $db->ProximoRegistro() )
+		{
+			$resultado[] = $db->Tupla();
+		}
+
+		if( count( $resultado ) )
+		{
+			return $resultado;
+		}
+
+		return false;
+	}
 }
 ?>

@@ -110,7 +110,7 @@ class indice extends clsDetalhe
     $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
 
     $this->titulo = 'Aluno - Detalhe';
-    
+
 
     $this->cod_aluno = $_GET['cod_aluno'];
 
@@ -152,7 +152,7 @@ class indice extends clsDetalhe
       $registro['nome_aluno'] = strtoupper($det_pessoa_fj['nome']);
       $registro['cpf']        = int2IdFederal($det_fisica['cpf']);
       $registro['data_nasc']  = dataToBrasil($det_fisica['data_nasc']);
-      $registro['sexo']       = $det_fisica['sexo'] == 'F' ? 'Feminino' : 'Masculino';  
+      $registro['sexo']       = $det_fisica['sexo'] == 'F' ? 'Feminino' : 'Masculino';
 
       $obj_estado_civil       = new clsEstadoCivil();
       $obj_estado_civil_lista = $obj_estado_civil->lista();
@@ -300,7 +300,7 @@ class indice extends clsDetalhe
         $registro['apartamento']   = $obj_endereco_det['apartamento'];
         $registro['bloco']         = $obj_endereco_det['bloco'];
         $registro['nm_logradouro'] = $obj_endereco_det['logradouro'];
-        $registro['cep_']          = int2CEP($registro['id_cep']);      
+        $registro['cep_']          = int2CEP($registro['id_cep']);
 
         $obj_bairro     = new clsBairro($registro['id_bairro']);
         $obj_bairro_det = $obj_bairro->detalhe();
@@ -577,7 +577,7 @@ class indice extends clsDetalhe
       $tabela .= '</table>';
 
       $this->addDetalhe(array('Benefícios', $tabela));
-    }    
+    }
 
     if ($deficiencia_pessoa) {
       $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#A1B3BD" align="center"><td>Deficiências</td></tr>';
@@ -692,91 +692,91 @@ class indice extends clsDetalhe
 
 
 
-    if($reg){    
+    if($reg){
 
       $this->addDetalhe(array('<span id="fmedica"></span>Altura/metro', $reg['altura']));
-      if (trim($reg['peso'])!='') $this->addDetalhe(array('Peso/kg', $reg['peso']));    
-      if (trim($reg['grupo_sanguineo'])!='') $this->addDetalhe(array('Grupo sanguíneo', $reg['grupo_sanguineo']));    
-      if (trim($reg['fator_rh'])!='') $this->addDetalhe(array('Fator RH', $reg['fator_rh']));    
-      if (trim($this->sus)!='') $this->addDetalhe(array('Número do cartão do SUS', $this->sus));    
-      $this->addDetalhe(array('Possui alergia a algum medicamento', ($reg['alergia_medicamento'] == 'S' ? 'Sim': 'Não') ));    
-      if (trim($reg['desc_alergia_medicamento'])!='') $this->addDetalhe(array('Quais', $reg['desc_alergia_medicamento']));    
-      $this->addDetalhe(array('Possui alergia a algum alimento', ($reg['alergia_alimento'] == 'S' ? 'Sim': 'Não') ));      
-      if (trim($reg['desc_alergia_alimento'])!='') $this->addDetalhe(array('Quais', $reg['desc_alergia_alimento']));    
-      $this->addDetalhe(array('Possui alguma doenca congênita', ($reg['doenca_congenita'] == 'S' ? 'Sim': 'Não') ));    
-      if (trim($reg['desc_doenca_congenita'])!='') $this->addDetalhe(array('Quais', $reg['desc_doenca_congenita']));    
-      $this->addDetalhe(array('É fumante', ($reg['fumante'] == 'S' ? 'Sim': 'Não') ));  
-      $this->addDetalhe(array('Já contraiu caxumba', ($reg['doenca_caxumba'] == 'S' ? 'Sim': 'Não') ));  
-      $this->addDetalhe(array('Já contraiu sarampo', ($reg['doenca_sarampo'] == 'S' ? 'Sim': 'Não') ));  
-      $this->addDetalhe(array('Já contraiu rubeola', ($reg['doenca_rubeola'] == 'S' ? 'Sim': 'Não') ));  
-      $this->addDetalhe(array('Já contraiu catapora', ($reg['doenca_catapora'] == 'S' ? 'Sim': 'Não') ));  
-      $this->addDetalhe(array('Já contraiu escarlatina', ($reg['doenca_escarlatina'] == 'S' ? 'Sim': 'Não') ));  
-      $this->addDetalhe(array('Já contraiu coqueluche', ($reg['doenca_coqueluche'] == 'S' ? 'Sim': 'Não') ));  
-      if (trim($reg['doenca_outras'])!='') $this->addDetalhe(array('Outras doenças que o aluno já contraiu', $reg['doenca_outras']));    
-      $this->addDetalhe(array('Epilético', ($reg['epiletico'] == 'S' ? 'Sim': 'Não') ));  
-      $this->addDetalhe(array('Está em tratamento', ($reg['epiletico_tratamento'] == 'S' ? 'Sim': 'Não') ));  
-      $this->addDetalhe(array('Hemofílico', ($reg['hemofilico'] == 'S' ? 'Sim': 'Não') ));  
-      $this->addDetalhe(array('Hipertenso', ($reg['hipertenso'] == 'S' ? 'Sim': 'Não') ));  
-      $this->addDetalhe(array('Asmático', ($reg['asmatico'] == 'S' ? 'Sim': 'Não') ));  
-      $this->addDetalhe(array('Diabético', ($reg['diabetico'] == 'S' ? 'Sim': 'Não') ));  
-      $this->addDetalhe(array('Depende de insulina', ($reg['insulina'] == 'S' ? 'Sim': 'Não') ));  
-      $this->addDetalhe(array('Faz tratamento médico', ($reg['tratamento_medico'] == 'S' ? 'Sim': 'Não') ));        
-      if (trim($reg['desc_tratamento_medico'])!='') $this->addDetalhe(array('Qual', $reg['desc_tratamento_medico']));    
-      $this->addDetalhe(array('Ingere medicação específica', ($reg['medicacao_especifica'] == 'S' ? 'Sim': 'Não') ));        
-      if (trim($reg['desc_medicacao_especifica'])!='') $this->addDetalhe(array('Qual', $reg['desc_medicacao_especifica']));    
-      $this->addDetalhe(array('Acompanhamento médico ou psicológico', ($reg['acomp_medico_psicologico'] == 'S' ? 'Sim': 'Não') ));              
-      if (trim($reg['desc_acomp_medico_psicologico'])!='') $this->addDetalhe(array('Motivo', $reg['desc_acomp_medico_psicologico']));    
-      $this->addDetalhe(array('Restrição para atividades físicas', ($reg['restricao_atividade_fisica'] == 'S' ? 'Sim': 'Não') ));        
-      if (trim($reg['desc_restricao_atividade_fisica'])!='') $this->addDetalhe(array('Qual', $reg['desc_restricao_atividade_fisica']));    
-      $this->addDetalhe(array('Teve alguma fratura ou trauma', ($reg['fratura_trauma'] == 'S' ? 'Sim': 'Não') ));        
-      if (trim($reg['desc_fratura_trauma'])!='') $this->addDetalhe(array('Qual', $reg['desc_fratura_trauma']));                      
-      $this->addDetalhe(array('Tem plano de saúde', ($reg['plano_saude'] == 'S' ? 'Sim': 'Não') ));        
-      if (trim($reg['desc_plano_saude'])!='') $this->addDetalhe(array('Qual', $reg['desc_plano_saude']));   
-      $this->addDetalhe(array('<span id="tr_tit_dados_hospital">Em caso de emergência, levar para hospital ou clínica</span>'));   
-      $this->addDetalhe(array('Nome', $reg['hospital_clinica'])); 
-      $this->addDetalhe(array('Endereço', $reg['hospital_clinica_endereco']));    
-      $this->addDetalhe(array('Telefone', $reg['hospital_clinica_telefone']));    
-      $this->addDetalhe(array('<span id="tr_tit_dados_hospital">Em caso de emergência, se não for possível contatar os responsáveis, comunicar</span>'));         
-      $this->addDetalhe(array('Nome', $reg['responsavel_nome']));    
-      $this->addDetalhe(array('Parentesco', $reg['responsavel_parentesco']));    
-      $this->addDetalhe(array('Telefone', $reg['responsavel_parentesco_telefone']));    
-      $this->addDetalhe(array('Celular', $reg['responsavel_parentesco_celular']));          
+      if (trim($reg['peso'])!='') $this->addDetalhe(array('Peso/kg', $reg['peso']));
+      if (trim($reg['grupo_sanguineo'])!='') $this->addDetalhe(array('Grupo sanguíneo', $reg['grupo_sanguineo']));
+      if (trim($reg['fator_rh'])!='') $this->addDetalhe(array('Fator RH', $reg['fator_rh']));
+      if (trim($this->sus)!='') $this->addDetalhe(array('Número do cartão do SUS', $this->sus));
+      $this->addDetalhe(array('Possui alergia a algum medicamento', ($reg['alergia_medicamento'] == 'S' ? 'Sim': 'Não') ));
+      if (trim($reg['desc_alergia_medicamento'])!='') $this->addDetalhe(array('Quais', $reg['desc_alergia_medicamento']));
+      $this->addDetalhe(array('Possui alergia a algum alimento', ($reg['alergia_alimento'] == 'S' ? 'Sim': 'Não') ));
+      if (trim($reg['desc_alergia_alimento'])!='') $this->addDetalhe(array('Quais', $reg['desc_alergia_alimento']));
+      $this->addDetalhe(array('Possui alguma doenca congênita', ($reg['doenca_congenita'] == 'S' ? 'Sim': 'Não') ));
+      if (trim($reg['desc_doenca_congenita'])!='') $this->addDetalhe(array('Quais', $reg['desc_doenca_congenita']));
+      $this->addDetalhe(array('É fumante', ($reg['fumante'] == 'S' ? 'Sim': 'Não') ));
+      $this->addDetalhe(array('Já contraiu caxumba', ($reg['doenca_caxumba'] == 'S' ? 'Sim': 'Não') ));
+      $this->addDetalhe(array('Já contraiu sarampo', ($reg['doenca_sarampo'] == 'S' ? 'Sim': 'Não') ));
+      $this->addDetalhe(array('Já contraiu rubeola', ($reg['doenca_rubeola'] == 'S' ? 'Sim': 'Não') ));
+      $this->addDetalhe(array('Já contraiu catapora', ($reg['doenca_catapora'] == 'S' ? 'Sim': 'Não') ));
+      $this->addDetalhe(array('Já contraiu escarlatina', ($reg['doenca_escarlatina'] == 'S' ? 'Sim': 'Não') ));
+      $this->addDetalhe(array('Já contraiu coqueluche', ($reg['doenca_coqueluche'] == 'S' ? 'Sim': 'Não') ));
+      if (trim($reg['doenca_outras'])!='') $this->addDetalhe(array('Outras doenças que o aluno já contraiu', $reg['doenca_outras']));
+      $this->addDetalhe(array('Epilético', ($reg['epiletico'] == 'S' ? 'Sim': 'Não') ));
+      $this->addDetalhe(array('Está em tratamento', ($reg['epiletico_tratamento'] == 'S' ? 'Sim': 'Não') ));
+      $this->addDetalhe(array('Hemofílico', ($reg['hemofilico'] == 'S' ? 'Sim': 'Não') ));
+      $this->addDetalhe(array('Hipertenso', ($reg['hipertenso'] == 'S' ? 'Sim': 'Não') ));
+      $this->addDetalhe(array('Asmático', ($reg['asmatico'] == 'S' ? 'Sim': 'Não') ));
+      $this->addDetalhe(array('Diabético', ($reg['diabetico'] == 'S' ? 'Sim': 'Não') ));
+      $this->addDetalhe(array('Depende de insulina', ($reg['insulina'] == 'S' ? 'Sim': 'Não') ));
+      $this->addDetalhe(array('Faz tratamento médico', ($reg['tratamento_medico'] == 'S' ? 'Sim': 'Não') ));
+      if (trim($reg['desc_tratamento_medico'])!='') $this->addDetalhe(array('Qual', $reg['desc_tratamento_medico']));
+      $this->addDetalhe(array('Ingere medicação específica', ($reg['medicacao_especifica'] == 'S' ? 'Sim': 'Não') ));
+      if (trim($reg['desc_medicacao_especifica'])!='') $this->addDetalhe(array('Qual', $reg['desc_medicacao_especifica']));
+      $this->addDetalhe(array('Acompanhamento médico ou psicológico', ($reg['acomp_medico_psicologico'] == 'S' ? 'Sim': 'Não') ));
+      if (trim($reg['desc_acomp_medico_psicologico'])!='') $this->addDetalhe(array('Motivo', $reg['desc_acomp_medico_psicologico']));
+      $this->addDetalhe(array('Restrição para atividades físicas', ($reg['restricao_atividade_fisica'] == 'S' ? 'Sim': 'Não') ));
+      if (trim($reg['desc_restricao_atividade_fisica'])!='') $this->addDetalhe(array('Qual', $reg['desc_restricao_atividade_fisica']));
+      $this->addDetalhe(array('Teve alguma fratura ou trauma', ($reg['fratura_trauma'] == 'S' ? 'Sim': 'Não') ));
+      if (trim($reg['desc_fratura_trauma'])!='') $this->addDetalhe(array('Qual', $reg['desc_fratura_trauma']));
+      $this->addDetalhe(array('Tem plano de saúde', ($reg['plano_saude'] == 'S' ? 'Sim': 'Não') ));
+      if (trim($reg['desc_plano_saude'])!='') $this->addDetalhe(array('Qual', $reg['desc_plano_saude']));
+      $this->addDetalhe(array('<span id="tr_tit_dados_hospital">Em caso de emergência, levar para hospital ou clínica</span>'));
+      $this->addDetalhe(array('Nome', $reg['hospital_clinica']));
+      $this->addDetalhe(array('Endereço', $reg['hospital_clinica_endereco']));
+      $this->addDetalhe(array('Telefone', $reg['hospital_clinica_telefone']));
+      $this->addDetalhe(array('<span id="tr_tit_dados_hospital">Em caso de emergência, se não for possível contatar os responsáveis, comunicar</span>'));
+      $this->addDetalhe(array('Nome', $reg['responsavel_nome']));
+      $this->addDetalhe(array('Parentesco', $reg['responsavel_parentesco']));
+      $this->addDetalhe(array('Telefone', $reg['responsavel_parentesco_telefone']));
+      $this->addDetalhe(array('Celular', $reg['responsavel_parentesco_celular']));
 
     }
 
     $objUniforme       = new clsModulesUniformeAluno($this->cod_aluno);
     $reg               = $objUniforme->detalhe();
 
-    if($reg){    
+    if($reg){
 
-      $this->addDetalhe(array('<span id="funiforme"></span>Recebeu uniforme escolar', ($reg['recebeu_uniforme'] == 'S' ? 'Sim': 'Não') ));       
-      $this->addDetalhe(array('<span class="tit_uniforme">Camiseta</span>'));   
-      $this->addDetalhe(array('Quantidade', $reg['quantidade_camiseta'])); 
-      $this->addDetalhe(array('Tamanho', $reg['tamanho_camiseta']));  
-      $this->addDetalhe(array('<span class="tit_uniforme">Blusa/Jaqueta</span>'));   
-      $this->addDetalhe(array('Quantidade', $reg['quantidade_blusa_jaqueta'])); 
-      $this->addDetalhe(array('Tamanho', $reg['tamanho_blusa_jaqueta']));  
-      $this->addDetalhe(array('<span class="tit_uniforme">Bermuda</span>'));   
-      $this->addDetalhe(array('Quantidade', $reg['quantidade_bermuda'])); 
-      $this->addDetalhe(array('Tamanho', $reg['tamanho_bermuda']));  
-      $this->addDetalhe(array('<span class="tit_uniforme">Calça</span>'));   
-      $this->addDetalhe(array('Quantidade', $reg['quantidade_calca'])); 
-      $this->addDetalhe(array('Tamanho', $reg['tamanho_calca']));  
-      $this->addDetalhe(array('<span class="tit_uniforme">Saia</span>'));   
-      $this->addDetalhe(array('Quantidade', $reg['quantidade_saia'])); 
-      $this->addDetalhe(array('Tamanho', $reg['tamanho_saia']));  
-      $this->addDetalhe(array('<span class="tit_uniforme">Calçado</span>'));   
-      $this->addDetalhe(array('Quantidade', $reg['quantidade_calcado'])); 
-      $this->addDetalhe(array('Tamanho', $reg['tamanho_calcado']));  
-      $this->addDetalhe(array('<span class="tit_uniforme">Meia</span>'));   
-      $this->addDetalhe(array('Quantidade', $reg['quantidade_meia'])); 
-      $this->addDetalhe(array('Tamanho', $reg['tamanho_meia']));                                              
-    }  
+      $this->addDetalhe(array('<span id="funiforme"></span>Recebeu uniforme escolar', ($reg['recebeu_uniforme'] == 'S' ? 'Sim': 'Não') ));
+      $this->addDetalhe(array('<span class="tit_uniforme">Camiseta</span>'));
+      $this->addDetalhe(array('Quantidade', $reg['quantidade_camiseta']));
+      $this->addDetalhe(array('Tamanho', $reg['tamanho_camiseta']));
+      $this->addDetalhe(array('<span class="tit_uniforme">Blusa/Jaqueta</span>'));
+      $this->addDetalhe(array('Quantidade', $reg['quantidade_blusa_jaqueta']));
+      $this->addDetalhe(array('Tamanho', $reg['tamanho_blusa_jaqueta']));
+      $this->addDetalhe(array('<span class="tit_uniforme">Bermuda</span>'));
+      $this->addDetalhe(array('Quantidade', $reg['quantidade_bermuda']));
+      $this->addDetalhe(array('Tamanho', $reg['tamanho_bermuda']));
+      $this->addDetalhe(array('<span class="tit_uniforme">Calça</span>'));
+      $this->addDetalhe(array('Quantidade', $reg['quantidade_calca']));
+      $this->addDetalhe(array('Tamanho', $reg['tamanho_calca']));
+      $this->addDetalhe(array('<span class="tit_uniforme">Saia</span>'));
+      $this->addDetalhe(array('Quantidade', $reg['quantidade_saia']));
+      $this->addDetalhe(array('Tamanho', $reg['tamanho_saia']));
+      $this->addDetalhe(array('<span class="tit_uniforme">Calçado</span>'));
+      $this->addDetalhe(array('Quantidade', $reg['quantidade_calcado']));
+      $this->addDetalhe(array('Tamanho', $reg['tamanho_calcado']));
+      $this->addDetalhe(array('<span class="tit_uniforme">Meia</span>'));
+      $this->addDetalhe(array('Quantidade', $reg['quantidade_meia']));
+      $this->addDetalhe(array('Tamanho', $reg['tamanho_meia']));
+    }
 
     $objMoradia        = new clsModulesMoradiaAluno($this->cod_aluno);
     $reg               = $objMoradia->detalhe();
 
-    if($reg){    
+    if($reg){
 
       $moradia = '';
       switch ($reg['moradia']) {
@@ -794,63 +794,115 @@ class indice extends clsDetalhe
                 break;
               case 'I':
                 $moradia.= ' mista';
-                break;                                
+                break;
             }
           break;
         case 'O':
           $moradia = 'Outra: '.$reg['casa_outra'];
           break;
-        default: 
+        default:
           $moradia = 'Não informado';
       }
 
-      $this->addDetalhe(array('<span id="fmoradia"></span>Moradia', $moradia ));       
+      $this->addDetalhe(array('<span id="fmoradia"></span>Moradia', $moradia ));
       $situacao;
       switch ($reg['moradia_situacao']) {
         case 1:
           $situacao = 'Alugado';
-          break;      
+          break;
         case 2:
           $situacao = 'Próprio';
-          break;      
+          break;
         case 3:
           $situacao = 'Cedido';
-          break;      
+          break;
         case 4:
           $situacao = 'Financiado';
-          break;      
+          break;
         case 5:
           $situacao = 'Outra';
-          break;                                              
+          break;
       }
-      $this->addDetalhe(array('Situação', $situacao)); 
-      $this->addDetalhe(array('Quantidade de quartos', $reg['quartos'])); 
-      $this->addDetalhe(array('Quantidade de salas', $reg['sala']));       
-      $this->addDetalhe(array('Quantidade de copas', $reg['copa']));       
-      $this->addDetalhe(array('Quantidade de banheiros', $reg['banheiro']));       
-      $this->addDetalhe(array('Quantidade de garagens', $reg['garagem']));       
-      $this->addDetalhe(array('Possui empregada doméstica', $reg['empregada_domestica']));       
-      $this->addDetalhe(array('Possui automóvel', $reg['automovel']));       
-      $this->addDetalhe(array('Possui motocicleta', $reg['motocicleta']));       
-      $this->addDetalhe(array('Possui computador', $reg['computador']));       
-      $this->addDetalhe(array('Possui geladeira', $reg['geladeira']));       
-      $this->addDetalhe(array('Possui fogão', $reg['fogao']));       
-      $this->addDetalhe(array('Possui máquina de lavar', $reg['maquina_lavar']));       
-      $this->addDetalhe(array('Possui microondas', $reg['microondas']));       
-      $this->addDetalhe(array('Possui vídeo/dvd', $reg['video_dvd']));       
-      $this->addDetalhe(array('Possui televisão', $reg['televisao']));       
-      $this->addDetalhe(array('Possui celular', $reg['celular']));       
-      $this->addDetalhe(array('Possui telefone', $reg['telefone']));       
-      $this->addDetalhe(array('Quantidade de pessoas', $reg['quant_pessoas']));       
-      $this->addDetalhe(array('Renda familiar', 'R$ '.$reg['renda']));       
-      $this->addDetalhe(array('Possui água encanada', $reg['agua_encanada']));       
-      $this->addDetalhe(array('Possui poço', $reg['poco']));       
-      $this->addDetalhe(array('Possui energia elétrica', $reg['energia']));       
-      $this->addDetalhe(array('Possui tratamento de esgoto', $reg['esgoto']));       
-      $this->addDetalhe(array('Possui fossa', $reg['fossa']));       
-      $this->addDetalhe(array('Possui coleta de lixo', $reg['lixo']));       
+      $this->addDetalhe(array('Situação', $situacao));
+      $this->addDetalhe(array('Quantidade de quartos', $reg['quartos']));
+      $this->addDetalhe(array('Quantidade de salas', $reg['sala']));
+      $this->addDetalhe(array('Quantidade de copas', $reg['copa']));
+      $this->addDetalhe(array('Quantidade de banheiros', $reg['banheiro']));
+      $this->addDetalhe(array('Quantidade de garagens', $reg['garagem']));
+      $this->addDetalhe(array('Possui empregada doméstica', $reg['empregada_domestica']));
+      $this->addDetalhe(array('Possui automóvel', $reg['automovel']));
+      $this->addDetalhe(array('Possui motocicleta', $reg['motocicleta']));
+      $this->addDetalhe(array('Possui computador', $reg['computador']));
+      $this->addDetalhe(array('Possui geladeira', $reg['geladeira']));
+      $this->addDetalhe(array('Possui fogão', $reg['fogao']));
+      $this->addDetalhe(array('Possui máquina de lavar', $reg['maquina_lavar']));
+      $this->addDetalhe(array('Possui microondas', $reg['microondas']));
+      $this->addDetalhe(array('Possui vídeo/dvd', $reg['video_dvd']));
+      $this->addDetalhe(array('Possui televisão', $reg['televisao']));
+      $this->addDetalhe(array('Possui celular', $reg['celular']));
+      $this->addDetalhe(array('Possui telefone', $reg['telefone']));
+      $this->addDetalhe(array('Quantidade de pessoas', $reg['quant_pessoas']));
+      $this->addDetalhe(array('Renda familiar', 'R$ '.$reg['renda']));
+      $this->addDetalhe(array('Possui água encanada', $reg['agua_encanada']));
+      $this->addDetalhe(array('Possui poço', $reg['poco']));
+      $this->addDetalhe(array('Possui energia elétrica', $reg['energia']));
+      $this->addDetalhe(array('Possui tratamento de esgoto', $reg['esgoto']));
+      $this->addDetalhe(array('Possui fossa', $reg['fossa']));
+      $this->addDetalhe(array('Possui coleta de lixo', $reg['lixo']));
 
-    }          
+    }
+
+    $objProjetos        = new clsPmieducarProjeto();
+    $reg                = $objProjetos->listaProjetosPorAluno($this->cod_aluno);;
+
+    if($reg){
+
+      $tabela_projetos = '
+        <table>
+          <tr align="center">
+            <td bgcolor="#A1B3BD"><b>Projeto</b></td>
+            <td bgcolor="#A1B3BD"><b>Data de inclusão</b></td>
+            <td bgcolor="#A1B3BD"><b>Data de desligamento</b></td>
+            <td bgcolor="#A1B3BD"><b>Turno</b></td>
+          </tr>';
+
+      $cont = 0;
+
+      foreach ($reg as $projeto) {
+
+        $color = ($cont++ % 2 == 0) ? ' bgcolor="#E4E9ED" ' : ' bgcolor="#FFFFFF" ';
+
+        $turno = '';
+
+        switch ($projeto['turno']) {
+          case 1:
+            $turno = 'Matutino';
+            break;
+          case 2:
+            $turno = 'Vespertino';
+            break;
+          case 3:
+            $turno = 'Noturno';
+            break;
+        }
+
+        $tabela_projetos .= sprintf('
+          <tr>
+            <td %s align="left">%s</td>
+            <td %s align="center">%s</td>
+            <td %s align="center">%s</td>
+            <td %s align="center">%s</td>
+          </tr>',
+          $color, $projeto['projeto'], $color, dataToBrasil($projeto['data_inclusao']),
+          $color, dataToBrasil($projeto['data_desligamento']), $color, $turno
+        );
+      }
+
+      $tabela_projetos .= '</table>';
+
+      $this->addDetalhe(array('<span id="fprojeto"></span>Projetos', $tabela_projetos ));
+
+    }
 
     $this->url_cancelar = 'educar_aluno_lst.php';
     $this->largura      = '100%';
@@ -861,7 +913,7 @@ class indice extends clsDetalhe
            "educar_index.php"                  => "i-Educar - Escola",
            ""                                  => "Detalhe do aluno"
       ));
-      $this->enviaLocalizacao($localizacao->montar());      
+      $this->enviaLocalizacao($localizacao->montar());
 
     $this->addDetalhe("<input type='hidden' id='escola_id' name='aluno_id' value='{$registro['ref_cod_escola']}' />");
     $this->addDetalhe("<input type='hidden' id='aluno_id' name='aluno_id' value='{$registro['cod_aluno']}' />");
@@ -872,7 +924,7 @@ class indice extends clsDetalhe
 
     $scripts = array(
       '/modules/Portabilis/Assets/Javascripts/Utils.js',
-      '/modules/Portabilis/Assets/Javascripts/ClientApi.js',  
+      '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
       '/modules/Cadastro/Assets/Javascripts/AlunoShow.js?version=3'
       );
 

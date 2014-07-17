@@ -175,67 +175,73 @@ class Portabilis_View_Helper_Inputs {
 
   public function simpleSearchPessoaj($attrName, $inputOptions = array(), $helperOptions = array()) {
     $this->simpleSearchResourceInput('simpleSearchPessoaj', $attrName, $inputOptions, $helperOptions);
-  }  
+  }
 
   public function simpleSearchMotorista($attrName, $inputOptions = array(), $helperOptions = array()) {
 
     $this->simpleSearchResourceInput('simpleSearchMotorista', $attrName, $inputOptions, $helperOptions);
 
-  }  
+  }
 
   public function simpleSearchPonto($attrName, $inputOptions = array(), $helperOptions = array()) {
 
     $this->simpleSearchResourceInput('simpleSearchPonto', $attrName, $inputOptions, $helperOptions);
 
-  }  
+  }
 
   public function simpleSearchRota($attrName, $inputOptions = array(), $helperOptions = array()) {
 
     $this->simpleSearchResourceInput('simpleSearchRota', $attrName, $inputOptions, $helperOptions);
 
-  }    
+  }
 
   public function simpleSearchVeiculo($attrName, $inputOptions = array(), $helperOptions = array()) {
 
     $this->simpleSearchResourceInput('simpleSearchVeiculo', $attrName, $inputOptions, $helperOptions);
 
-  }      
+  }
 
   public function simpleSearchBairro($attrName, $inputOptions = array(), $helperOptions = array()) {
 
     $this->simpleSearchResourceInput('simpleSearchBairro', $attrName, $inputOptions, $helperOptions);
 
-  } 
+  }
 
   public function simpleSearchDistrito($attrName, $inputOptions = array(), $helperOptions = array()) {
 
     $this->simpleSearchResourceInput('simpleSearchDistrito', $attrName, $inputOptions, $helperOptions);
 
-  } 
+  }
 
   public function simpleSearchLogradouro($attrName, $inputOptions = array(), $helperOptions = array()) {
 
     $this->simpleSearchResourceInput('simpleSearchLogradouro', $attrName, $inputOptions, $helperOptions);
 
-  }         
+  }
 
   public function simpleSearchIes($attrName, $inputOptions = array(), $helperOptions = array()) {
 
     $this->simpleSearchResourceInput('simpleSearchIes', $attrName, $inputOptions, $helperOptions);
 
-  }  
+  }
 
   public function simpleSearchCursoSuperior($attrName, $inputOptions = array(), $helperOptions = array()) {
 
     $this->simpleSearchResourceInput('simpleSearchCursoSuperior', $attrName, $inputOptions, $helperOptions);
 
-  }   
+  }
 
   public function simpleSearchServidor($attrName, $inputOptions = array(), $helperOptions = array()) {
 
     $this->simpleSearchResourceInput('simpleSearchServidor', $attrName, $inputOptions, $helperOptions);
 
-  }               
+  }
+
+  public function simpleSearchProjeto($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchProjeto', $attrName, $inputOptions, $helperOptions);
+
+  }
 
   // multiple search resource input helper
 
@@ -258,7 +264,7 @@ class Portabilis_View_Helper_Inputs {
 
   public function multipleSearchComponenteCurricular($attrName, $inputOptions = array(), $helperOptions = array()) {
     $this->multipleSearchResourceInput('multipleSearchComponenteCurricular', $attrName, $inputOptions, $helperOptions);
-  }  
+  }
 
   public function multipleSearchAreasConhecimento($attrName, $inputOptions = array(), $helperOptions = array()) {
     $this->multipleSearchResourceInput('multipleSearchAreasConhecimento', $attrName, $inputOptions, $helperOptions);
@@ -266,7 +272,7 @@ class Portabilis_View_Helper_Inputs {
 
   public function multipleSearchBeneficios($attrName, $inputOptions = array(), $helperOptions = array()) {
     $this->multipleSearchResourceInput('multipleSearchBeneficios', $attrName, $inputOptions, $helperOptions);
-  }  
+  }
 
    /*public function multipleSearchAjaxAreasConhecimento($attrName, $inputOptions = array(), $helperOptions = array()) {
     $this->multipleSearchResourceInput('multipleSearchAjaxAreasConhecimento', $attrName, $inputOptions, $helperOptions);
@@ -319,7 +325,7 @@ class Portabilis_View_Helper_Inputs {
     $helper = new $helperClassName($this->viewInstance, $this);
 
     $helper->$helperName($attrName, $options);
-    
+
 
   }
 
