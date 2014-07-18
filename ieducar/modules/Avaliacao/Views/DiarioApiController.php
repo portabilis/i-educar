@@ -86,6 +86,22 @@ class DiarioApiController extends ApiCoreController
       return false;
     }
 
+    $objBloqueioAnoLetivo = new clsPmieducarBloqueioAnoLetivo($this->getRequest()->instituicao_id, $this->getRequest()->ano);
+    $bloqueioAnoLetivo = $objBloqueioAnoLetivo->detalhe();
+
+    if ($bloqueioAnoLetivo){
+      $dataAtual = strtotime(date("Y-m-d"));
+      $data_inicio = strtotime($bloqueioAnoLetivo['data_inicio']);
+      $data_fim = strtotime($bloqueioAnoLetivo['data_fim']);
+
+      if($dataAtual < $data_inicio || $dataAtual > $data_fim)
+      {
+        $this->messenger->append("O lançamento de notas nessa instituição está bloqueado nesta data.");
+        return false;
+      }
+    }
+
+
     return true;
   }
 
@@ -593,7 +609,7 @@ class DiarioApiController extends ApiCoreController
 
         if(! ($aluno['remanejado'] || $aluno['transferido'] || $aluno['abandono'] || $aluno['reclassificado']))
           $matricula['componentes_curriculares'] = $this->loadComponentesCurricularesForMatricula($matriculaId);
-          
+
         $matricula['matricula_id']             = $aluno['ref_cod_matricula'];
         $matricula['aluno_id']                 = $aluno['ref_cod_aluno'];
         $matricula['nome']                     = $this->safeString($aluno['nome_aluno']);
@@ -606,7 +622,7 @@ class DiarioApiController extends ApiCoreController
           $matricula['situacao_deslocamento'] = 'Abandono';
         elseif($aluno['reclassificado'])
           $matricula['situacao_deslocamento'] = 'Reclassificado';
-        else  
+        else
           $matricula['situacao_deslocamento'] = null;
 
         $matriculas[] = $matricula;
@@ -775,7 +791,7 @@ class DiarioApiController extends ApiCoreController
       $componente['id']                    = $_componente->get('id');
       $componente['nome']                  = $this->safeString(mb_strtoupper($_componente->get('nome'), 'iso-8859-1'), false);
       $componente['nota_atual']            = $this->getNotaAtual($etapa = null, $componente['id']);
-      $componente['nota_exame']            = $this->getNotaExame($componente['id']);      
+      $componente['nota_exame']            = $this->getNotaExame($componente['id']);
       $componente['falta_atual']           = $this->getFaltaAtual($etapa = null, $componente['id']);
       $componente['parecer_atual']         = $this->getParecerAtual($componente['id']);
       $componente['situacao']              = $this->getSituacaoMatricula($componente['id']);
@@ -792,10 +808,10 @@ class DiarioApiController extends ApiCoreController
       $nomeArea                            = (($area->secao != '') ? $area->secao . ' - ' : '') . $area->nome;
       $componente['area_id']               = $area->id;
       $componente['area_nome']             = $this->safeString(mb_strtoupper($nomeArea,'iso-8859-1'), false);
-      
+
       //criando chave para ordenamento temporário
       //área de conhecimento + componente curricular
-      $componente['ordem_nome_area_conhecimento'] = Portabilis_String_Utils::unaccent(strtoupper($nomeArea));      
+      $componente['ordem_nome_area_conhecimento'] = Portabilis_String_Utils::unaccent(strtoupper($nomeArea));
       $componente['ordem_componente_curricular']  = Portabilis_String_Utils::unaccent(strtoupper($_componente->get('nome')));
       $componentesCurriculares[]           = $componente;
     }
@@ -807,7 +823,7 @@ class DiarioApiController extends ApiCoreController
       $ordenamentoComponentes['ordem_nome_area_conhecimento'][$chave] = $componente['ordem_nome_area_conhecimento'];
       $ordenamentoComponentes['ordem_componente_curricular'][$chave] = $componente['ordem_componente_curricular'];
     }
-    array_multisort($ordenamentoComponentes['ordem_nome_area_conhecimento'], SORT_ASC, 
+    array_multisort($ordenamentoComponentes['ordem_nome_area_conhecimento'], SORT_ASC,
                     $ordenamentoComponentes['ordenamento'], SORT_ASC, SORT_NUMERIC,
                     $ordenamentoComponentes['ordem_componente_curricular'], SORT_ASC,
                     $componentesCurriculares);
@@ -828,28 +844,28 @@ class DiarioApiController extends ApiCoreController
     if (! is_numeric($componenteCurricularId)) {
       throw new Exception('Não foi possível obter a área de conhecimento pois não foi recebido o id do componente curricular.');
     }
-    
+
     require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
     $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
-    
+
     $where = array('id' => $componenteCurricularId);
-    
+
     $area = $mapper->findAll(array('area_conhecimento'), $where);
-    
+
     $areaConhecimento       = new stdClass();
     $areaConhecimento->id   = $area[0]->area_conhecimento->id;
     $areaConhecimento->nome = $area[0]->area_conhecimento->nome;
     $areaConhecimento->secao = $area[0]->area_conhecimento->secao;
-    
+
     return $areaConhecimento;
-  }  
+  }
 
   protected function createOrUpdateNotaExame($matriculaId, $componenteCurricularId, $notaExame) {
-    
+
     $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId, $notaExame);
 
     return ($obj->existe() ? $obj->edita() : $obj->cadastra());
-  }     
+  }
 
   protected function deleteNotaExame($matriculaId, $componenteCurricularId){
     $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId);
