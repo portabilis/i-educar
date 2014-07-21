@@ -160,7 +160,7 @@ class indice extends clsDetalhe
 		}
 		if( $registro["area"] )
 		{
-			$this->addDetalhe( array( "&Aacute;rea", "{$registro["area"]}") );
+			$this->addDetalhe( array( "&Aacute;rea m²", "{$registro["area"]}") );
 		}
 		if( $registro["desc_comodo"] )
 		{
