@@ -401,7 +401,7 @@ class indice extends clsCadastro
                 msg += \'N\u00famero total de vagas reservadas: %d\\n\';
                 msg += \'N\u00famero total de vagas: %d\\n\';
                 msg += \'M\u00e1ximo de alunos que a sala comporta: %d\\n\';
-                msg += \'N\u00e3o ser\u00e1 poss\u00edvel efetuar a matr\u00edcula do aluno\';
+                msg += \'N\u00e3o ser\u00e1 poss\u00edvel efetuar a matr\u00edcula do aluno.\';
                 alert(msg);
                 window.location = \'educar_aluno_det.php?cod_aluno=%d\';
               </script>',
