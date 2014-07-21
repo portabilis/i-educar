@@ -33,7 +33,7 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - C&ocirc;modo Pr&eacute;dio" );
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Ambiente" );
 		$this->processoAp = "574";
 		$this->addEstilo("localizacaoSistema");
 	}
@@ -98,15 +98,15 @@ class indice extends clsCadastro
 			}
 		}
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_infra_predio_comodo_det.php?cod_infra_predio_comodo={$registro["cod_infra_predio_comodo"]}" : "educar_infra_predio_comodo_lst.php";
-		
+
 	    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
 	    $localizacao = new LocalizacaoSistema();
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
 	         "educar_index.php"                  => "i-Educar - Escola",
-	         ""        => "{$nomeMenu} c&ocirc;modos do pr&eacute;dio"             
+	         ""        => "{$nomeMenu} ambiente"
 	    ));
-	    $this->enviaLocalizacao($localizacao->montar());		
+	    $this->enviaLocalizacao($localizacao->montar());
 
 		$this->nome_url_cancelar = "Cancelar";
 		return $retorno;
@@ -160,10 +160,10 @@ class indice extends clsCadastro
 		{
 			$script = "<img id='img_colecao' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
 		}
-		else 
+		else
 		{
 			$script = "<img id='img_colecao' style='display: none;' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
-			
+
 		}
 		$this->campoLista( "ref_cod_infra_predio", "Pr&eacute;dio", $opcoes_predio, $this->ref_cod_infra_predio, "", false, "", $script );
 
@@ -202,24 +202,24 @@ class indice extends clsCadastro
 			echo "<!--\nErro\nClasse clsPmieducarInfraComodoFuncao nao encontrada\n-->";
 			$opcoes_funcao = array( "" => "Erro na geracao" );
 		}
-		
+
 		$script = "javascript:showExpansivelIframe(520, 250, 'educar_infra_comodo_funcao_cad_pop.php');";
 		if ($this->ref_cod_escola && $this->ref_cod_instituicao)
 		{
 			$script = "<img id='img_colecao2' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
 		}
-		else 
+		else
 		{
-			$script = "<img id='img_colecao2' style='display: none;' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";		
+			$script = "<img id='img_colecao2' style='display: none;' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
 		}
-		$this->campoLista( "ref_cod_infra_comodo_funcao", "Func&atilde;o C&ocirc;modo", $opcoes_funcao, $this->ref_cod_infra_comodo_funcao,"", false, "", $script );
+		$this->campoLista( "ref_cod_infra_comodo_funcao", "Tipo de ambiente", $opcoes_funcao, $this->ref_cod_infra_comodo_funcao,"", false, "", $script );
 
 
 
 		// text
-		$this->campoTexto( "nm_comodo", "C&ocirc;modo", $this->nm_comodo, 43, 255, true );
+		$this->campoTexto( "nm_comodo", "Ambiente", $this->nm_comodo, 43, 255, true );
 		$this->campoMonetario("area", "&Aacute;rea", $this->area, 10, 255, true );
-		$this->campoMemo( "desc_comodo", "Descrição C&ocirc;modo", $this->desc_comodo, 60, 5, false );
+		$this->campoMemo( "desc_comodo", "Descrição do ambiente", $this->desc_comodo, 60, 5, false );
 	}
 
 	function Novo()
@@ -394,7 +394,7 @@ document.getElementById('ref_cod_escola').onchange = function()
 
 	var xml_infra_comodo_funcao = new ajax( getInfraPredioFuncao );
 	xml_infra_comodo_funcao.envia( "educar_infra_comodo_funcao_xml.php?esc="+campoEscola );
-	
+
 	if ($F('ref_cod_escola') != '')
 	{
 		$('img_colecao').style.display = '';
@@ -405,10 +405,10 @@ document.getElementById('ref_cod_escola').onchange = function()
 		$('img_colecao').style.display = 'none;'
 		$('img_colecao2').style.display = 'none;'
 	}
-	
+
 }
 
-document.getElementById('ref_cod_instituicao').onchange = function() 
+document.getElementById('ref_cod_instituicao').onchange = function()
 {
 	getEscola();
 	$('img_colecao').style.display = 'none;'

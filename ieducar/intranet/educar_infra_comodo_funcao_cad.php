@@ -33,7 +33,7 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Fun&ccedil;&atilde;o C&ocirc;modo " );
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo de ambiente" );
 		$this->processoAp = "572";
 		$this->addEstilo("localizacaoSistema");
 	}
@@ -97,15 +97,15 @@ class indice extends clsCadastro
 			}
 		}
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_infra_comodo_funcao_det.php?cod_infra_comodo_funcao={$registro["cod_infra_comodo_funcao"]}" : "educar_infra_comodo_funcao_lst.php";
-		
+
 		$nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
         $localizacao = new LocalizacaoSistema();
         $localizacao->entradaCaminhos( array(
              $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
              "educar_index.php"                  => "i-Educar - Escola",
-             ""        => "{$nomeMenu} fun&ccedil;&atilde;o de c&ocirc;modo"             
+             ""        => "{$nomeMenu} tipo de ambiente"
         ));
-        $this->enviaLocalizacao($localizacao->montar());			
+        $this->enviaLocalizacao($localizacao->montar());
 
 		$this->nome_url_cancelar = "Cancelar";
 		return $retorno;
@@ -121,8 +121,8 @@ class indice extends clsCadastro
 		include("include/pmieducar/educar_campo_lista.php");
 
 		// text
-		$this->campoTexto( "nm_funcao", "Func&atilde;o", $this->nm_funcao, 30, 255, true );
-		$this->campoMemo( "desc_funcao", "Descri&ccedil;&atilde;o Func&atilde;o", $this->desc_funcao, 60, 5, false );
+		$this->campoTexto( "nm_funcao", "Tipo", $this->nm_funcao, 30, 255, true );
+		$this->campoMemo( "desc_funcao", "Descri&ccedil;&atilde;o do tipo", $this->desc_funcao, 60, 5, false );
 
 		// data
 

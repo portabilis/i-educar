@@ -33,7 +33,7 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - C&ocirc;modo Pr&eacute;dio " );
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Ambientes " );
 		$this->processoAp = "574";
 		$this->addEstilo("localizacaoSistema");
 	}
@@ -90,17 +90,17 @@ class indice extends clsListagem
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
 
-		$this->titulo = "C&ocirc;modo Pr&eacute;dio - Listagem";
+		$this->titulo = "Ambientes - Listagem";
 
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		
+
 
 
 		$lista_busca = array(
-					"C&ocirc;modo",
-					"Func&atilde;o  C&ocirc;modo",
+					"Ambiente",
+					"Tipo de ambiente",
 					"Pr&eacute;dio"
 		);
 
@@ -155,10 +155,10 @@ class indice extends clsListagem
 			echo "<!--\nErro\nClasse clsPmieducarInfraComodoFuncao nao encontrada\n-->";
 			$opcoes = array( "" => "Erro na geracao" );
 		}
-		$this->campoLista( "ref_cod_infra_comodo_funcao", "Func&atilde;o C&ocirc;modo", $opcoes, $this->ref_cod_infra_comodo_funcao,"",false,"","","",false );
+		$this->campoLista( "ref_cod_infra_comodo_funcao", "Tipo de ambiente", $opcoes, $this->ref_cod_infra_comodo_funcao,"",false,"","","",false );
 
 		// outros Filtros
-		$this->campoTexto( "nm_comodo", "C&ocirc;modo", $this->nm_comodo, 30, 255, false );
+		$this->campoTexto( "nm_comodo", "Ambiente", $this->nm_comodo, 30, 255, false );
 
 		// Paginador
 		$this->limite = 20;
@@ -269,9 +269,9 @@ class indice extends clsListagem
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
 	         "educar_index.php"                  => "i-Educar - Escola",
-	         ""        => "Listagem de c&ocirc;modos de pr&eacute;dios"             
+	         ""        => "Listagem de ambientes"
 	    ));
-	    $this->enviaLocalizacao($localizacao->montar());			
+	    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 // cria uma extensao da classe base

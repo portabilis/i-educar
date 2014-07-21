@@ -33,7 +33,7 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Fun&ccedil;&atilde;o C&ocirc;modo" );
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo de ambiente" );
 		$this->processoAp = "572";
 		$this->addEstilo("localizacaoSistema");
 	}
@@ -65,8 +65,8 @@ class indice extends clsDetalhe
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
 
-		$this->titulo = "Fun&ccedil;&atilde;o C&ocirc;modo  - Detalhe";
-		
+		$this->titulo = "Tipo de ambiente  - Detalhe";
+
 
 		$this->cod_infra_comodo_funcao=$_GET["cod_infra_comodo_funcao"];
 
@@ -126,15 +126,15 @@ class indice extends clsDetalhe
 		}
 		if( $registro["cod_infra_comodo_funcao"] )
 		{
-			$this->addDetalhe( array( "Func&atilde;o C&ocirc;modo", "{$registro["cod_infra_comodo_funcao"]}") );
+			$this->addDetalhe( array( "Código tipo de ambiente", "{$registro["cod_infra_comodo_funcao"]}") );
 		}
 		if( $registro["nm_funcao"] )
 		{
-			$this->addDetalhe( array( "Func&atilde;o", "{$registro["nm_funcao"]}") );
+			$this->addDetalhe( array( "Tipo de ambiente", "{$registro["nm_funcao"]}") );
 		}
 		if( $registro["desc_funcao"] )
 		{
-			$this->addDetalhe( array( "Descri&ccedil;&atilde;o Func&atilde;o", "{$registro["desc_funcao"]}") );
+			$this->addDetalhe( array( "Descri&ccedil;&atilde;o do tipo", "{$registro["desc_funcao"]}") );
 		}
 
 		$obj_permissao = new clsPermissoes();
@@ -150,9 +150,9 @@ class indice extends clsDetalhe
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
 	         "educar_index.php"                  => "i-Educar - Escola",
-	         ""                                  => "Detalhe da fun&ccedil;&atilde;o de c&ocirc;modo"
+	         ""                                  => "Detalhe do tipo de ambiente"
 	    ));
-	    $this->enviaLocalizacao($localizacao->montar());		
+	    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 

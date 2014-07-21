@@ -33,7 +33,7 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - C&ocirc;modo Pr&eacute;dio" );
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Ambiente" );
 		$this->processoAp = "574";
 		$this->addEstilo("localizacaoSistema");
 	}
@@ -66,8 +66,8 @@ class indice extends clsDetalhe
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
 
-		$this->titulo = "Infra Predio Comodo - Detalhe";
-		
+		$this->titulo = "Ambiente - Detalhe";
+
 
 		$this->cod_infra_predio_comodo=$_GET["cod_infra_predio_comodo"];
 
@@ -152,11 +152,11 @@ class indice extends clsDetalhe
 		}
 		if( $registro["nm_comodo"] )
 		{
-			$this->addDetalhe( array( "C&ocirc;modo", "{$registro["nm_comodo"]}") );
+			$this->addDetalhe( array( "Ambiente", "{$registro["nm_comodo"]}") );
 		}
 		if( $registro["ref_cod_infra_comodo_funcao"] )
 		{
-			$this->addDetalhe( array( "Func&atilde;o C&ocirc;modo", "{$registro["ref_cod_infra_comodo_funcao"]}") );
+			$this->addDetalhe( array( "Tipo de ambiente", "{$registro["ref_cod_infra_comodo_funcao"]}") );
 		}
 		if( $registro["area"] )
 		{
@@ -164,7 +164,7 @@ class indice extends clsDetalhe
 		}
 		if( $registro["desc_comodo"] )
 		{
-			$this->addDetalhe( array( "Descri&ccedil;&atilde;o C&ocirc;modo", "{$registro["desc_comodo"]}") );
+			$this->addDetalhe( array( "Descri&ccedil;&atilde;o do ambiente", "{$registro["desc_comodo"]}") );
 		}
 
 
@@ -177,8 +177,8 @@ class indice extends clsDetalhe
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
 	         "educar_index.php"                  => "i-Educar - Escola",
-	         ""        => "Detalhe do c&ocirc;modos do pr&eacute;dio"             
-	    ));		
+	         ""        => "Detalhe do ambiente"
+	    ));
 	    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
