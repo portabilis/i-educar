@@ -368,12 +368,11 @@ class indice extends clsCadastro
         echo sprintf('
           <script>
             var msg = \'\';
-            msg += \'Excedido o número de total de vagas para Matricula!\\n\';
-            msg += \'Número total de matriculados: %d\\n\';
-            msg += \'Número total de vagas reservadas: %d\\n\';
-            msg += \'Número total de vagas: %d\\n\';
-            msg += \'Deseja mesmo assim realizar a Matrícula?\';
-
+            msg += \'Excedido o n\u00famero de total de vagas para Matr\u00cdcula!\\n\';
+            msg += \'N\u00famero total de matriculados: %d\\n\';
+            msg += \'N\u00famero total de vagas reservadas: %d\\n\';
+            msg += \'N\u00famero total de vagas: %d\\n\';
+            msg += \'Deseja mesmo assim realizar a Matr\u00cdcula?\';
             if (! confirm(msg)) {
               window.location = \'educar_aluno_det.php?cod_aluno=%d\';
             }
@@ -395,14 +394,14 @@ class indice extends clsCadastro
           
           if($excedeuLimiteMatriculas){
              echo sprintf('
-              <script charset=\"utf-8\">
+              <script>
                 var msg = \'\';
-                msg += \'A sala não comporta mais alunos!\\n\';
-                msg += \'Número total de matriculados: %d\\n\';
-                msg += \'Número total de vagas reservadas: %d\\n\';
-                msg += \'Número total de vagas: %d\\n\';
-                msg += \'Máximo de alunos que a sala comporta: %d\\n\';
-                msg += \'Não será possível efetuar a matrícula do aluno\';
+                msg += \'A sala n\u00e3o comporta mais alunos!\\n\';
+                msg += \'N\u00famero total de matriculados: %d\\n\';
+                msg += \'N\u00famero total de vagas reservadas: %d\\n\';
+                msg += \'N\u00famero total de vagas: %d\\n\';
+                msg += \'M\u00e1ximo de alunos que a sala comporta: %d\\n\';
+                msg += \'N\u00e3o ser\u00e1 poss\u00edvel efetuar a matr\u00edcula do aluno\';
                 alert(msg);
                 window.location = \'educar_aluno_det.php?cod_aluno=%d\';
               </script>',
