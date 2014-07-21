@@ -31,6 +31,7 @@ require_once( "include/pmieducar/geral.inc.php" );
 require_once ("include/Geral.inc.php");
 require_once 'includes/bootstrap.php';
 require_once 'Portabilis/Date/Utils.php';
+require_once 'Portabilis/Currency/Utils.php';
 
 class clsIndexBase extends clsBase
 {
@@ -71,6 +72,9 @@ class indice extends clsCadastro
 	var $nm_instituicao;
 	var $data_base_transferencia;
 	var $data_base_remanejamento;
+	var $controlar_espaco_utilizacao_aluno;
+	var $percentagem_maxima_ocupacao_salas;
+	var $quantidade_alunos_metro_quadrado;
 
 	function Inicializar()
 	{
@@ -182,6 +186,14 @@ class indice extends clsCadastro
       		$this->campoData('data_base_transferencia', 'Data máxima para deslocamento', Portabilis_Date_Utils::pgSQLToBr($this->data_base_transferencia), null, null, false);
       		$this->campoData('data_base_remanejamento', 'Data máxima para troca de sala', Portabilis_Date_Utils::pgSQLToBr($this->data_base_remanejamento), null, null, false);
     	}
+
+    	$this->campoCheck("controlar_espaco_utilizacao_aluno", "Controlar espaço utilizado pelo aluno?", $this->controlar_espaco_utilizacao_aluno );
+		$this->campoMonetario( "percentagem_maxima_ocupacao_salas", "Percentagem máxima de ocupação da sala", 
+															  Portabilis_Currency_Utils::moedaUsToBr($this->percentagem_maxima_ocupacao_salas),
+															  6,
+															  6,
+															  false);
+		$this->campoNumero( "quantidade_alunos_metro_quadrado", "Quantidade máxima de alunos permitidos por metro quadrado", $this->quantidade_alunos_metro_quadrado, 6, 6 );
 	}
 
 	function Novo()
@@ -189,10 +201,11 @@ class indice extends clsCadastro
 		@session_start();
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
-
-		$obj = new clsPmieducarInstituicao( null, $this->ref_usuario_exc, $this->pessoa_logada, $this->ref_idtlog, $this->ref_sigla_uf, str_replace( "-", "", $this->cep ), $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, 1, $this->nm_instituicao );
+		$obj = new clsPmieducarInstituicao( null, $this->ref_usuario_exc, $this->pessoa_logada, $this->ref_idtlog, $this->ref_sigla_uf, str_replace( "-", "", $this->cep ), $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, 1, $this->nm_instituicao, null, null, $this->quantidade_alunos_metro_quadrado);
 		$obj->data_base_remanejamento = Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
 		$obj->data_base_transferencia = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
+		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
+		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
@@ -212,9 +225,12 @@ class indice extends clsCadastro
 		@session_start();
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
-		$obj = new clsPmieducarInstituicao( $this->cod_instituicao, $this->ref_usuario_exc, $this->pessoa_logada, $this->ref_idtlog, $this->ref_sigla_uf, str_replace( "-", "", $this->cep ), $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, 1, $this->nm_instituicao );
+		
+		$obj = new clsPmieducarInstituicao( $this->cod_instituicao, $this->ref_usuario_exc, $this->pessoa_logada, $this->ref_idtlog, $this->ref_sigla_uf, str_replace( "-", "", $this->cep ), $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, 1, $this->nm_instituicao, null, null, $this->quantidade_alunos_metro_quadrado);
 		$obj->data_base_remanejamento = Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
 		$obj->data_base_transferencia = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);		
+		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
+		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
 		$editou = $obj->edita();
 		if( $editou )
 		{
@@ -260,3 +276,25 @@ $pagina->addForm( $miolo );
 // gera o html
 $pagina->MakeAll();
 ?>
+<script type="text/javascript">
+
+	$j('#controlar_espaco_utilizacao_aluno').click(onControlarEspacoUtilizadoClick);
+	
+	if(!$j('#controlar_espaco_utilizacao_aluno').prop('checked')){
+		$j('#percentagem_maxima_ocupacao_salas').closest('tr').hide();
+		$j('#quantidade_alunos_metro_quadrado').closest('tr').hide();
+	}
+
+	function onControlarEspacoUtilizadoClick(){
+		if(!$j('#controlar_espaco_utilizacao_aluno').prop('checked')){
+			$j('#percentagem_maxima_ocupacao_salas').val('');
+			$j('#quantidade_alunos_metro_quadrado').val('');
+			$j('#percentagem_maxima_ocupacao_salas').closest('tr').hide();
+			$j('#quantidade_alunos_metro_quadrado').closest('tr').hide();
+		}else{
+			$j('#percentagem_maxima_ocupacao_salas').closest('tr').show();
+			$j('#quantidade_alunos_metro_quadrado').closest('tr').show();
+		}
+	}
+
+</script>

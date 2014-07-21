@@ -144,6 +144,8 @@ class indice extends clsDetalhe
       die();
     }
 
+
+
     // Tipo da turma
     $obj_ref_cod_turma_tipo = new clsPmieducarTurmaTipo($registro['ref_cod_turma_tipo']);
     $det_ref_cod_turma_tipo = $obj_ref_cod_turma_tipo->detalhe();
@@ -209,11 +211,24 @@ class indice extends clsDetalhe
 
     $this->addDetalhe(array('<b>Turma selecionada</b>' , '<b>' . $registro['nm_turma'] . '</b>'));
 
-    $this->addDetalhe(array('Total de vagas', $registro['max_aluno']));
+    $objTurma = new clsPmiEducarTurma($this->ref_cod_turma);
+
+    $capacidadeMaximaAlunosSala = $objTurma->maximoAlunosSala();
+
+    if($capacidadeMaximaAlunosSala){
+      $totalVagas = $capacidadeMaximaAlunosSala < $registro['max_aluno'] ? $capacidadeMaximaAlunosSala : $registro['max_aluno'];
+    }else{
+      $totalVagas = $registro['max_aluno'];
+    }
+
+    $this->addDetalhe(array('Total de vagas', $totalVagas));
 
     if (is_numeric($total_alunos)) {
       $this->addDetalhe(array('Alunos enturmados', $total_alunos));
-      $this->addDetalhe(array('Vagas disponíveis', $registro['max_aluno'] - $total_alunos));
+      $this->addDetalhe(array('Vagas disponíveis', $totalVagas - $total_alunos));
+    }
+    if(is_numeric($capacidadeMaximaAlunosSala)){
+      $this->addDetalhe(array('Capacidade máxima de alunos na sala', $capacidadeMaximaAlunosSala));
     }
 
     if ($this->possuiEnturmacao) {
@@ -260,7 +275,8 @@ class indice extends clsDetalhe
       ', $this->ref_cod_turma_origem, $this->sequencial)
     ));
 
-    if ($registro['max_aluno'] - $total_alunos <= 0) {
+    // echo "<pre>";var_dump($totalVagas - $total_alunos);die;
+    if ($totalVagas - $total_alunos <= 0) {
 
       $escolaSerie = $this->getEscolaSerie($det_ref_cod_escola['cod_escola'], $det_ser['cod_serie']);
 
@@ -272,9 +288,15 @@ class indice extends clsDetalhe
         $msg = sprintf('Enturmação não pode ser realizada,\n\no limite de vagas da turma já foi atingido e para esta série e escola foi definido bloqueio de enturmação após atingir tal limite.');
         $jsEnturmacao = sprintf('alert("%s"); return false;', $msg);
       }
+
+      if($capacidadeMaximaAlunosSala - $total_alunos <= 0){
+        $msg = sprintf('Atenção! A capacidade da sala foi atingida. Não é possível enturmar mais alunos.');
+        $jsEnturmacao = sprintf('alert("%s"); return false;', $msg);
+      }
     }
     else
-      $jsEnturmacao = 'if (!confirm("Confirma a enturmação?")) return false;';
+
+    $jsEnturmacao = 'if (!confirm("Confirma a enturmação?")) return false;';
 
     $script = sprintf('
       <script type="text/javascript">
