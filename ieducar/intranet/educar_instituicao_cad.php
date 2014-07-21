@@ -85,7 +85,7 @@ class indice extends clsCadastro
 
 		$obj_permissoes = new clsPermissoes();
 
-		$obj_permissoes->permissao_cadastra( 559, $this->pessoa_logada, 1, "educar_instituicao_lst.php" );
+		$obj_permissoes->permissao_cadastra( 559, $this->pessoa_logada, 3, "educar_instituicao_lst.php" );
 
 		$this->cod_instituicao=$_GET["cod_instituicao"];
 
@@ -101,7 +101,7 @@ class indice extends clsCadastro
 				$this->data_cadastro = dataFromPgToBr( $this->data_cadastro );
 				$this->data_exclusao = dataFromPgToBr( $this->data_exclusao );
 
-				$this->fexcluir = $obj_permissoes->permissao_excluir( 559, $this->pessoa_logada, 1 );
+				$this->fexcluir = $obj_permissoes->permissao_excluir( 559, $this->pessoa_logada, 3 );
 				$retorno = "Editar";
 			}
 		}
@@ -113,9 +113,9 @@ class indice extends clsCadastro
         $localizacao->entradaCaminhos( array(
              $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
              "educar_index.php"                  => "i-Educar - Escola",
-             ""        => "{$nomeMenu} institui&ccedil;&atilde;o"             
+             ""        => "{$nomeMenu} institui&ccedil;&atilde;o"
         ));
-        $this->enviaLocalizacao($localizacao->montar());		
+        $this->enviaLocalizacao($localizacao->montar());
 
 		return $retorno;
 	}
@@ -188,7 +188,7 @@ class indice extends clsCadastro
     	}
 
     	$this->campoCheck("controlar_espaco_utilizacao_aluno", "Controlar espaço utilizado pelo aluno?", $this->controlar_espaco_utilizacao_aluno );
-		$this->campoMonetario( "percentagem_maxima_ocupacao_salas", "Percentagem máxima de ocupação da sala", 
+		$this->campoMonetario( "percentagem_maxima_ocupacao_salas", "Percentagem máxima de ocupação da sala",
 															  Portabilis_Currency_Utils::moedaUsToBr($this->percentagem_maxima_ocupacao_salas),
 															  6,
 															  6,
@@ -225,10 +225,10 @@ class indice extends clsCadastro
 		@session_start();
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
-		
+
 		$obj = new clsPmieducarInstituicao( $this->cod_instituicao, $this->ref_usuario_exc, $this->pessoa_logada, $this->ref_idtlog, $this->ref_sigla_uf, str_replace( "-", "", $this->cep ), $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, 1, $this->nm_instituicao, null, null, $this->quantidade_alunos_metro_quadrado);
 		$obj->data_base_remanejamento = Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
-		$obj->data_base_transferencia = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);		
+		$obj->data_base_transferencia = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
 		$editou = $obj->edita();
@@ -279,7 +279,7 @@ $pagina->MakeAll();
 <script type="text/javascript">
 
 	$j('#controlar_espaco_utilizacao_aluno').click(onControlarEspacoUtilizadoClick);
-	
+
 	if(!$j('#controlar_espaco_utilizacao_aluno').prop('checked')){
 		$j('#percentagem_maxima_ocupacao_salas').closest('tr').hide();
 		$j('#quantidade_alunos_metro_quadrado').closest('tr').hide();

@@ -74,7 +74,7 @@ class indice extends clsDetalhe
 		session_write_close();
 
 		$this->titulo = "Institui&ccedil;&atilde;o - Detalhe";
-		
+
 
 		$this->cod_instituicao=$_GET["cod_instituicao"];
 
@@ -109,7 +109,7 @@ class indice extends clsDetalhe
 		$this->addDetalhe( array( "Nome do Responsável", "{$registro["nm_responsavel"]}") );
 
 		$obj_permissoes = new clsPermissoes();
-		if ( $obj_permissoes->permissao_cadastra( 559, $this->pessoa_logada, 1 ) ) {
+		if ( $obj_permissoes->permissao_cadastra( 559, $this->pessoa_logada, 3 ) ) {
 			$this->url_novo = "educar_instituicao_cad.php";
 			$this->url_editar = "educar_instituicao_cad.php?cod_instituicao={$registro["cod_instituicao"]}";
 		}
@@ -120,9 +120,9 @@ class indice extends clsDetalhe
         $localizacao->entradaCaminhos( array(
              $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
              "educar_index.php"                  => "i-Educar - Escola",
-             ""        => "Detalhe da institui&ccedil;&otilde;o"             
+             ""        => "Detalhe da institui&ccedil;&otilde;o"
         ));
-        $this->enviaLocalizacao($localizacao->montar());		
+        $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 

@@ -71,7 +71,7 @@ class clsPermissoes
     $detalhe_usuario = $obj_usuario->detalhe();
 
     // Verifica se é super usuário
-    if ($super_usuario != NULL && $detalhe_usuario['ativo']) {
+    if ($detalhe_usuario['ativo']) {
       $obj_menu_funcionario = new clsMenuFuncionario($int_idpes_usuario, FALSE, FALSE, 0);
       $detalhe_super_usuario = $obj_menu_funcionario->detalhe();
     }
@@ -84,8 +84,11 @@ class clsPermissoes
 
     $nivel = $this->nivel_acesso($int_idpes_usuario);
     $ok = FALSE;
-
-    if (($super_usuario && $detalhe_super_usuario) || $nivel & $int_soma_nivel_acesso) {
+    /*
+      Alterado, pois super_usuário sempre deve ter acesso a tudo
+      Antes era: if (($super_usuario && $detalhe_super_usuario) || $nivel & $int_soma_nivel_acesso) {
+    */
+    if (($detalhe_super_usuario) || $nivel & $int_soma_nivel_acesso) {
       $ok = TRUE;
     }
 
