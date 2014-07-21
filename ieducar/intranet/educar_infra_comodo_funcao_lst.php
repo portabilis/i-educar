@@ -33,7 +33,7 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Fun&ccedil;&atilde;o C&ocirc;modo" );
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo de ambiente" );
 		$this->processoAp = "572";
 		$this->addEstilo("localizacaoSistema");
 	}
@@ -86,15 +86,15 @@ class indice extends clsListagem
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
 
-		$this->titulo = "Fun&ccedil;&atilde;o C&ocirc;modo - Listagem";
+		$this->titulo = "Tipo de ambiente - Listagem";
 
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		
+
 
 		$lista_busca = array(
-			"Fun&ccedil;&atilde;o C&ocirc;modo"
+			"Tipo de ambiente"
 		);
 
 		$obj_permissao = new clsPermissoes();
@@ -114,7 +114,7 @@ class indice extends clsListagem
 		include("include/pmieducar/educar_campo_lista.php");
 
 		// outros Filtros
-		$this->campoTexto( "nm_funcao", "Func&atilde;o", $this->nm_funcao, 30, 255, false );
+		$this->campoTexto( "nm_funcao", "Tipo", $this->nm_funcao, 30, 255, false );
 
 
 		// Paginador
@@ -202,9 +202,9 @@ class indice extends clsListagem
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
 	         "educar_index.php"                  => "i-Educar - Escola",
-	         ""                                  => "Listagem de fun&ccedil;&otilde;es de c&ocirc;modo"
+	         ""                                  => "Listagem de tipos de ambiente"
 	    ));
-	    $this->enviaLocalizacao($localizacao->montar());		
+	    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 // cria uma extensao da classe base

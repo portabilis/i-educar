@@ -33,7 +33,7 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Fun&ccedil;&atilde;o C&ocirc;modo " );
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo de ambiente " );
 		$this->processoAp = "572";
 		$this->renderBanner = false;
 		$this->renderMenu = false;
@@ -114,15 +114,15 @@ class indice extends clsCadastro
 			$get_escola = true;
 			include("include/pmieducar/educar_campo_lista.php");
 		}
-		else 
+		else
 		{
 			$this->campoOculto("ref_cod_instituicao", $this->ref_cod_instituicao);
 			$this->campoOculto("ref_cod_escola", $this->ref_cod_escola);
 		}
 		// text
-		$this->campoTexto( "nm_funcao", "Func&atilde;o", $this->nm_funcao, 30, 255, true );
-		$this->campoMemo( "desc_funcao", "Descri&ccedil;&atilde;o Func&atilde;o", $this->desc_funcao, 60, 5, false );
-		
+		$this->campoTexto( "nm_funcao", "Tipo", $this->nm_funcao, 30, 255, true );
+		$this->campoMemo( "desc_funcao", "Descrição do tipo", $this->desc_funcao, 60, 5, false );
+
 		// data
 
 	}
@@ -132,7 +132,7 @@ class indice extends clsCadastro
 		@session_start();
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
-		
+
 		$obj = new clsPmieducarInfraComodoFuncao( null, null, $this->pessoa_logada, $this->nm_funcao, $this->desc_funcao, null, null, 1, $this->ref_cod_escola );
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
@@ -216,16 +216,16 @@ if (!$_GET['precisa_lista'])
 {
 ?>
 	Event.observe(window, 'load', Init, false);
-	
-	function Init() 
+
+	function Init()
 	{
 		$('ref_cod_instituicao').value = parent.document.getElementById('ref_cod_instituicao').value;
 		$('ref_cod_escola').value = parent.document.getElementById('ref_cod_escola').value;
-		
+
 //		alert($F('ref_cod_instituicao')+'   '+$F('ref_cod_escola'));
-		
+
 	}
-	
+
 <?
 }
 ?>
