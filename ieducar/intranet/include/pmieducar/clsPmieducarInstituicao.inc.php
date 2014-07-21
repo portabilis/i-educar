@@ -62,6 +62,9 @@ class clsPmieducarInstituicao
   var $nm_instituicao;
   var $data_base_remanejamento;
   var $data_base_transferencia;
+  var $controlar_espaco_utilizacao_aluno;
+  var $percentagem_maxima_ocupacao_salas;
+  var $quantidade_alunos_metro_quadrado;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -121,13 +124,14 @@ class clsPmieducarInstituicao
     $cidade = NULL, $bairro = NULL, $logradouro = NULL, $numero = NULL,
     $complemento = NULL, $nm_responsavel = NULL, $ddd_telefone = NULL,
     $telefone = NULL, $data_cadastro = NULL, $data_exclusao = NULL,
-    $ativo = NULL, $nm_instituicao = NULL)
+    $ativo = NULL, $nm_instituicao = NULL, $controlar_espaco_utilizacao_aluno = NULL,
+    $percentagem_maxima_ocupacao_salas = NULL, $quantidade_alunos_metro_quadrado = NULL)
   {
     $db = new clsBanco();
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}instituicao";
 
-    $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao, data_base_transferencia, data_base_remanejamento";
+    $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao, data_base_transferencia, data_base_remanejamento, controlar_espaco_utilizacao_aluno, percentagem_maxima_ocupacao_salas, quantidade_alunos_metro_quadrado";
 
     if (is_numeric($ref_usuario_cad)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -249,6 +253,18 @@ class clsPmieducarInstituicao
 
     if (is_string($nm_instituicao)) {
       $this->nm_instituicao = $nm_instituicao;
+    }
+
+    if (is_numeric($controlar_espaco_utilizacao_aluno)){
+      $this->controlar_espaco_utilizacao_aluno = $controlar_espaco_utilizacao_aluno;
+    }
+
+    if (is_numeric($percentagem_maxima_ocupacao_salas)){
+      $this->percentagem_maxima_ocupacao_salas = $percentagem_maxima_ocupacao_salas;
+    }
+
+    if (is_numeric($quantidade_alunos_metro_quadrado)){
+      $this->quantidade_alunos_metro_quadrado =$quantidade_alunos_metro_quadrado;
     }
   }
 
@@ -374,7 +390,25 @@ class clsPmieducarInstituicao
         $campos .= "{$gruda}data_base_transferencia";
         $valores .= "{$gruda}'{$this->data_base_transferencia}'";
         $gruda = ", ";
-      }      
+      }
+
+      if (is_numeric($this->controlar_espaco_utilizacao_aluno)) {
+        $campos .= "{$gruda}controlar_espaco_utilizacao_aluno";
+        $valores .= "{$gruda}'{$this->controlar_espaco_utilizacao_aluno}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->percentagem_maxima_ocupacao_salas)) {
+        $campos .= "{$gruda}percentagem_maxima_ocupacao_salas";
+        $valores .= "{$gruda}'{$this->percentagem_maxima_ocupacao_salas}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->quantidade_alunos_metro_quadrado)) {
+        $campos .= "{$gruda}quantidade_alunos_metro_quadrado";
+        $valores .= "{$gruda}'{$this->quantidade_alunos_metro_quadrado}'";
+        $gruda = ", ";
+      } 
 
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
       return $db->InsertId("{$this->_tabela}_cod_instituicao_seq");
@@ -490,12 +524,33 @@ class clsPmieducarInstituicao
       }else{
         $set .= "{$gruda}data_base_remanejamento = NULL ";
         $gruda = ", ";        
-      }            
+      }
+
+      if (is_numeric($this->controlar_espaco_utilizacao_aluno)) {
+        $set .= "{$gruda}controlar_espaco_utilizacao_aluno = '{$this->controlar_espaco_utilizacao_aluno}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->percentagem_maxima_ocupacao_salas) AND !empty($this->percentagem_maxima_ocupacao_salas)) {
+        $set .= "{$gruda}percentagem_maxima_ocupacao_salas = '{$this->percentagem_maxima_ocupacao_salas}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}percentagem_maxima_ocupacao_salas = NULL";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->quantidade_alunos_metro_quadrado) AND !empty($this->quantidade_alunos_metro_quadrado)) {
+        $set .= "{$gruda}quantidade_alunos_metro_quadrado = '{$this->quantidade_alunos_metro_quadrado}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}quantidade_alunos_metro_quadrado = NULL";
+        $gruda = ", "; 
+      }
 
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_instituicao = '{$this->cod_instituicao}'");
         return TRUE;
-      }
+      }      
     }
 
     return FALSE;
