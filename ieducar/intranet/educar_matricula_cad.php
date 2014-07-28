@@ -379,7 +379,6 @@ class indice extends clsCadastro
           </script>',
           $matriculados, $reservados, $total_vagas, $this->ref_cod_aluno
         );
-        return false;
       }
 
       $objInstituicao = new clsPmiEducarInstituicao($this->ref_cod_instituicao);
