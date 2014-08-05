@@ -101,7 +101,7 @@ class indice extends clsCadastro
         $localizacao->entradaCaminhos( array(
              $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
              "educar_index.php"                  => "i-Educar - Escola",
-             ""        => "{$nomeMenu} transfer&ecirc;ncia de matr&iacute;cula"             
+             ""        => "{$nomeMenu} transfer&ecirc;ncia de matr&iacute;cula"
         ));
         $this->enviaLocalizacao($localizacao->montar());
 
@@ -109,10 +109,10 @@ class indice extends clsCadastro
 		return $retorno;
 	}
 
-  
+
   function reabrirMatricula($matriculaId) {
     $matricula = new clsPmieducarMatricula($matriculaId, NULL, NULL, NULL, $this->pessoa_logada, NULL, NULL, 3);
-    $matricula->edita();   
+    $matricula->edita();
 
     $sql = "select ref_cod_turma, sequencial from pmieducar.matricula_turma where ref_cod_matricula = $matriculaId and sequencial = (select max(sequencial) from pmieducar.matricula_turma where ref_cod_matricula = $matriculaId) and not exists(select 1 from pmieducar.matricula_turma where ref_cod_matricula = $matriculaId and ativo = 1 limit 1) limit 1";
 
@@ -154,6 +154,7 @@ class indice extends clsCadastro
 		if( class_exists( "clsPmieducarTransferenciaTipo" ) )
 		{
 			$objTemp = new clsPmieducarTransferenciaTipo();
+			$objTemp->setOrderby(' nm_tipo ASC ');
 			$lista = $objTemp->lista(null,null,null,null,null,null,null,null,null,null,$ref_cod_instituicao);
 			if ( is_array( $lista ) && count( $lista ) )
 			{
@@ -190,7 +191,7 @@ class indice extends clsCadastro
 //			$det_matricula = array_shift($lst_matricula);
 //			$this->ref_cod_matricula_saida = $det_matricula["cod_matricula"];
 
-  
+
     // escola externa
 		$this->data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
 		$obj = new clsPmieducarMatricula( $this->ref_cod_matricula, null,null,null,$this->pessoa_logada);
@@ -201,17 +202,17 @@ class indice extends clsCadastro
 			if(substr($det_matricula['data_cadastro'], 0, 10) > $this->data_cancel){
 
 				$this->mensagem = "Data de abandono não pode ser inferior a data da matrícula.<br>";
-				return false;	
-				die();							
-			} 
+				return false;
+				die();
+			}
 		}else{
 			if(substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel){
 				$this->mensagem = "Data de abandono não pode ser inferior a data da matrícula.<br>";
 				return false;
 				die();
 			}
-		}			
-		
+		}
+
 		$editou = $obj->edita();
 
 		$obj->data_cancel = $this->data_cancel;
@@ -226,7 +227,7 @@ class indice extends clsCadastro
 
 			if ($aprovado == 3)
 			{
-				$obj = new clsPmieducarMatricula( $this->ref_cod_matricula, null,null,null,$this->pessoa_logada,null,null,4,null,null,1 );				
+				$obj = new clsPmieducarMatricula( $this->ref_cod_matricula, null,null,null,$this->pessoa_logada,null,null,4,null,null,1 );
 				$obj->data_cancel = $this->data_cancel;
 				$editou = $obj->edita();
 				if( !$editou )
@@ -234,11 +235,11 @@ class indice extends clsCadastro
 					$this->mensagem = "N&atilde;o foi poss&iacute;vel editar a Matr&iacute;cula do Aluno.<br>";
 					return false;
 				}
-			
+
 				$enturmacoes = new clsPmieducarMatriculaTurma();
 				$enturmacoes = $enturmacoes->lista($this->ref_cod_matricula, null, null, null, null, null, null, null, 1 );
 
-				if($enturmacoes) 
+				if($enturmacoes)
 				{
           			// foreach necessário pois metodo edita e exclui da classe clsPmieducarMatriculaTurma, necessitam do
           			// código da turma e do sequencial
