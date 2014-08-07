@@ -49,7 +49,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Falta Atraso');
     $this->processoAp = 635;
-    $this->addEstilo("localizacaoSistema");    
+    $this->addEstilo("localizacaoSistema");
   }
 }
 
@@ -89,7 +89,7 @@ class indice extends clsDetalhe
     session_write_close();
 
     $this->titulo = 'Falta Atraso - Detalhe';
-    
+
 
     $this->ref_cod_servidor        = $_GET['ref_cod_servidor'];
     $this->ref_cod_escola          = $_GET['ref_cod_escola'];
@@ -164,10 +164,13 @@ class indice extends clsDetalhe
 
     if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
       $this->caption_novo = 'Compensar';
-      $this->url_editar   = FALSE;
       $this->url_novo     = sprintf(
         'educar_falta_atraso_compensado_cad.php?ref_cod_servidor=%d&ref_cod_escola=%d&ref_cod_instituicao=%d',
         $this->ref_cod_servidor, $this->ref_cod_escola, $this->ref_ref_cod_instituicao
+      );
+      $this->url_editar   = sprintf(
+        'educar_falta_atraso_cad.php?ref_cod_servidor=%d&ref_cod_escola=%d&ref_cod_instituicao=%d&cod_falta_atraso=%d',
+        $this->ref_cod_servidor, $this->ref_cod_escola, $this->ref_ref_cod_instituicao, $this->cod_falta_atraso
       );
     }
 
@@ -184,7 +187,7 @@ class indice extends clsDetalhe
          "educar_index.php"                  => "i-Educar - Escola",
          ""                                  => "Detalhe da falta/atraso do servidor"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
   }
 }
 
