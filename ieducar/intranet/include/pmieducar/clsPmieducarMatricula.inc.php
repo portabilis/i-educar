@@ -766,7 +766,22 @@ class clsPmieducarMatricula
 
     if (is_numeric($int_ref_cod_turma)) {
       if ($matriculas_turmas_transferidas_abandono)
-        $filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM pmieducar.matricula_turma mt WHERE (mt.ativo = 1 OR NOT EXISTS (SELECT 1 FROM pmieducar.matricula_turma mt WHERE mt.ativo = 1 AND mt.ref_cod_matricula = m.cod_matricula) ) AND mt.ref_cod_turma = {$int_ref_cod_turma} AND mt.ref_cod_matricula = m.cod_matricula)";        
+        $filtros .= "{$whereAnd} EXISTS (SELECT 1 
+                                           FROM pmieducar.matricula_turma mt 
+                                          WHERE ((mt.ativo = 1) OR (NOT EXISTS 
+                                                   (
+                                                     SELECT 1
+                                                     FROM pmieducar.matricula_turma sub_mt 
+                                                      INNER JOIN pmieducar.matricula sub_m ON (sub_m.cod_matricula = sub_mt.ref_cod_matricula) 
+                                                      WHERE sub_mt.ativo = 1
+                                                      AND sub_m.ref_cod_aluno = a.cod_aluno
+                                                      AND (sub_mt.ref_cod_turma = {$int_ref_cod_turma}
+                                                           OR sub_m.ref_ref_cod_serie = m.ref_ref_cod_serie)
+                                                   )
+                                                 )
+                                               ) 
+                                               AND mt.ref_cod_turma = {$int_ref_cod_turma} 
+                                               AND mt.ref_cod_matricula = m.cod_matricula)";
       else
         $filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM pmieducar.matricula_turma mt WHERE mt.ativo = 1 AND mt.ref_cod_turma = {$int_ref_cod_turma} AND mt.ref_cod_matricula = m.cod_matricula)";
 

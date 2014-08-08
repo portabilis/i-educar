@@ -138,9 +138,9 @@ class indice extends clsCadastro
   var $aee_autonomia;
   var $etapa_id;
   var $cod_curso_profissional;
-  var $turma_sem_professor;  
-  var $turma_unificada;  
-  var $etapa_educacenso;  
+  var $turma_sem_professor;
+  var $turma_unificada;
+  var $etapa_educacenso;
 
   var $dias_da_semana = array(
     '' => 'Selecione',
@@ -187,6 +187,12 @@ class indice extends clsCadastro
           $this->$campo = $val;
         }
 
+        $obj_matricula_turma = new clsPmieducarMatriculaTurma();
+        $detalhe_turma = $obj_matricula_turma->lista(NULL, $this->cod_turma);
+
+        if($detalhe_turma)
+          $this->script_excluir = "excluir_turma_com_matriculas();";
+
         $this->fexcluir = $obj_permissoes->permissao_excluir(
           586, $this->pessoa_logada, 7, 'educar_turma_lst.php'
         );
@@ -203,7 +209,7 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "{$nomeMenu} turma"             
+         ""        => "{$nomeMenu} turma"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -262,7 +268,7 @@ class indice extends clsCadastro
 
         if (is_array($lst_matriculas_turma) && count($lst_matriculas_turma)>0) {
             $bloqueia = true;
-            $anoVisivel=false; 
+            $anoVisivel=false;
         }
       }
     }
@@ -273,7 +279,7 @@ class indice extends clsCadastro
 
     $this->ref_cod_escola_ = $this->ref_cod_escola;
     $this->campoOculto('ref_cod_escola_', $this->ref_cod_escola_);
-    
+
     if ($this->ref_cod_escola) {
       $this->ref_ref_cod_escola = $this->ref_cod_escola;
     }
@@ -293,7 +299,7 @@ class indice extends clsCadastro
         }
       }
     }
-    
+
     $script = "javascript:showExpansivelIframe(520, 550, 'educar_serie_cad_pop.php?ref_ref_cod_serie=sim');";
 
     if ($this->ref_cod_instituicao && $this->ref_cod_escola   && $this->ref_cod_curso) {
@@ -306,13 +312,13 @@ class indice extends clsCadastro
     }
 
     $this->campoLista('ref_ref_cod_serie', 'S&eacute;rie', $opcoes_serie, $this->ref_ref_cod_serie,
-      '', FALSE, '', $script, $bloqueia); 
-    
+      '', FALSE, '', $script, $bloqueia);
+
     $this->ref_ref_cod_serie_ = $this->ref_ref_cod_serie;
     $this->campoOculto('ref_ref_cod_serie_',$this->ref_ref_cod_serie_);
 
     if ($anoVisivel)
-      $this->inputsHelper()->dynamic('anoLetivo'); 
+      $this->inputsHelper()->dynamic('anoLetivo');
     else
       $this->campoOculto('ano',$this->ano);
 
@@ -491,7 +497,7 @@ class indice extends clsCadastro
           $cargaComponente = $registro->cargaHoraria;
 
           if (1 == $componentes[$registro->id]->docenteVinculado) {
-            $docenteVinculado = TRUE;            
+            $docenteVinculado = TRUE;
           }
 
           $conteudo .= '<div style="margin-bottom: 10px; float: left">';
@@ -610,16 +616,16 @@ class indice extends clsCadastro
             "<a href='#' id=\"event_excluir_modulo_{$qtd_modulo}\" ><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>",
             '', '', '');
 
-          $scriptExcluir.= "<script type=\"text/javascript\"> 
+          $scriptExcluir.= "<script type=\"text/javascript\">
                     document.getElementById('event_excluir_modulo_{$qtd_modulo}').onclick = excluirModulo{$qtd_modulo};
-                    
+
                     function excluirModulo{$qtd_modulo}(){
-                      document.getElementById('excluir_modulo').value = '{$campo["sequencial_"]}'; 
-                      document.getElementById('tipoacao').value = ''; 
+                      document.getElementById('excluir_modulo').value = '{$campo["sequencial_"]}';
+                      document.getElementById('tipoacao').value = '';
                       {$this->__nome}.submit();
                     }
 
-               </script>";                                          
+               </script>";
 
           $aux[$qtd_modulo]['sequencial_']     = $qtd_modulo;
           $aux[$qtd_modulo]['ref_cod_modulo_'] = $campo['ref_cod_modulo_'];
@@ -725,15 +731,15 @@ class indice extends clsCadastro
             '', '', 'ds_hora_final_'
           );
           $scriptExcluir .= "
-                <script type=\"text/javascript\"> 
+                <script type=\"text/javascript\">
                     document.getElementById('event_excluir_dia_semana_{$dias_semana["dia_semana_"]}').onclick = excluirModulo{$dias_semana["dia_semana_"]};
-                    
+
                     function excluirModulo{$dias_semana["dia_semana_"]}(){
-                      document.getElementById('excluir_dia_semana').value = '{$dias_semana["dia_semana_"]}'; 
-                      document.getElementById('tipoacao').value = ''; 
+                      document.getElementById('excluir_dia_semana').value = '{$dias_semana["dia_semana_"]}';
+                      document.getElementById('tipoacao').value = '';
                       {$this->__nome}.submit();
                     }
-                </script>";   
+                </script>";
 
           $aux['dia_semana_']   = $dias_semana['dia_semana_'];
           $aux['hora_inicial_'] = $dias_semana['hora_inicial_'];
@@ -769,7 +775,7 @@ class indice extends clsCadastro
 
     // Colocado o script com esse campo pois tentando dar um 'print' ou 'echo' o script não funcionava
     $this->campoTextoInv('scripts', $scriptExcluir);
-    
+
     $this->acao_enviar = 'valida()';
 
     $resources = array( 0 => Portabilis_String_Utils::toLatin1('Não se aplica'),
@@ -810,7 +816,7 @@ class indice extends clsCadastro
     $this->inputsHelper()->checkbox('aee_recurso_optico', $options);
 
     $options = array('label' => Portabilis_String_Utils::toLatin1('Estratégias para o desenvolvimento de processos mentais'), 'value' => $this->aee_estrategia_desenvolvimento);
-    $this->inputsHelper()->checkbox('aee_estrategia_desenvolvimento', $options);    
+    $this->inputsHelper()->checkbox('aee_estrategia_desenvolvimento', $options);
 
     $options = array('label' => Portabilis_String_Utils::toLatin1('Técnica de orientações a mobilidade'), 'value' => $this->aee_tecnica_mobilidade);
     $this->inputsHelper()->checkbox('aee_tecnica_mobilidade', $options);
@@ -843,7 +849,7 @@ class indice extends clsCadastro
     $this->inputsHelper()->checkbox('turma_sem_professor', $options);
 
     $resources = Portabilis_Utils_Database::fetchPreparedQuery('SELECT id,nome FROM modules.etapas_educacenso');
-    $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'id', 'nome'); 
+    $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'id', 'nome');
     $resources = Portabilis_Array_Utils::merge($resources, array('null' => 'Selecione'));
 
 
@@ -917,7 +923,7 @@ class indice extends clsCadastro
       64 => Portabilis_String_Utils::toLatin1('Educação Profissional Mista - Concomitante e Subsequente'),
       65 => Portabilis_String_Utils::toLatin1('EJA Presencial - Ensino Fundamental - Projovem Urbano'),
       66 => Portabilis_String_Utils::toLatin1('Segmento Profissional da EJA integrada')
-    ); 
+    );
 
     $options = array('label' => 'Etapa da turma', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('etapa_educacenso', $options);
@@ -955,7 +961,7 @@ class indice extends clsCadastro
 
     // Não segue o padrao do curso
     if ($this->padrao_ano_escolar == 0) {
-      $this->turma_modulo = unserialize(urldecode($this->turma_modulo));      
+      $this->turma_modulo = unserialize(urldecode($this->turma_modulo));
 
       if ($this->turma_modulo) {
         $obj = new clsPmieducarTurma(NULL, NULL, $this->pessoa_logada,
@@ -988,7 +994,7 @@ class indice extends clsCadastro
         $obj->aee_autonomia = $this->aee_autonomia == 'on' ? 1 : 0;
         $obj->etapa_id = $this->etapa_id;
         $obj->cod_curso_profissional = $this->cod_curso_profissional;
-        $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;      
+        $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
         $obj->turma_unificada = $this->turma_unificada;
         $obj->etapa_educacenso = $this->etapa_educacenso;
 
@@ -1030,7 +1036,7 @@ class indice extends clsCadastro
           $this->atualizaComponentesCurriculares(
             $this->ref_ref_cod_serie, $this->ref_cod_escola, $this->cod_turma,
             $this->disciplinas, $this->carga_horaria, $this->usar_componente, $this->docente_vinculado
-          );          
+          );
 
           $this->mensagem .= 'Cadastro efetuado com sucesso.';
           header('Location: educar_turma_lst.php');
@@ -1082,7 +1088,7 @@ class indice extends clsCadastro
       $obj->aee_autonomia = $this->aee_autonomia == 'on' ? 1 : 0;
       $obj->etapa_id = $this->etapa_id;
       $obj->cod_curso_profissional = $this->cod_curso_profissional;
-      $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;      
+      $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
       $obj->turma_unificada = $this->turma_unificada;
       $obj->etapa_educacenso = $this->etapa_educacenso;
 
@@ -1104,7 +1110,7 @@ class indice extends clsCadastro
 
             return FALSE;
           }
-        }        
+        }
         $this->atualizaComponentesCurriculares(
           $this->ref_ref_cod_serie, $this->ref_cod_escola, $this->cod_turma,
           $this->disciplinas, $this->carga_horaria, $this->usar_componente, $this->docente_vinculado
@@ -1145,9 +1151,9 @@ class indice extends clsCadastro
     else {
       $this->visivel = FALSE;
     }
-    
+
     $this->turma_dia_semana = unserialize(urldecode($this->turma_dia_semana));
-    
+
     // Não segue o padrão do curso
     if ($this->padrao_ano_escolar == 0) {
       $this->turma_modulo = unserialize(urldecode($this->turma_modulo));
@@ -1188,7 +1194,7 @@ class indice extends clsCadastro
         $obj->cod_curso_profissional = $this->cod_curso_profissional;
         $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
         $obj->turma_unificada = $this->turma_unificada;
-        $obj->etapa_educacenso = $this->etapa_educacenso;   
+        $obj->etapa_educacenso = $this->etapa_educacenso;
 
         $editou = $obj->edita();
 
@@ -1299,7 +1305,7 @@ class indice extends clsCadastro
       $anoLetivo = $this->ano ? $this->ano : date("Y");
       CleanComponentesCurriculares::destroyOldResources($anoLetivo);
     }
-    
+
 
     if ($editou) {
 
@@ -1321,7 +1327,7 @@ class indice extends clsCadastro
             return FALSE;
           }
         }
-      }      
+      }
       $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.';
       header('Location: educar_turma_lst.php');
       die();
@@ -1346,7 +1352,7 @@ class indice extends clsCadastro
         NULL : $cargaHoraria[$key];
 
       $docente_ = isset($docente[$key]) ?
-        1 : 0;        
+        1 : 0;
 
       $componentesTurma[] = array(
         'id'           => $value,
@@ -2003,7 +2009,7 @@ function PadraoAnoEscolar(xml)
 
   if (document.getElementById('tr_dia_semana_7')) {
     setVisibility('tr_dia_semana_7', true);
-  }  
+  }
 }
 
 function getHoraEscolaSerie()
@@ -2149,6 +2155,16 @@ function valida_xml(xml)
   document.forms[0].submit();
 }
 
+function excluir_turma_com_matriculas(){
+
+  document.formcadastro.reset();
+
+  if (confirm('Existe(m) matr\u00edcula(s) vinculada(s) a essa turma, caso exclu\u00edda n\u00e3o ser\u00e1 poss\u00edvel emitir relat\u00f3rios! \nDeseja realmente excluir essa turma?')) {
+    document.formcadastro.tipoacao.value = 'Excluir';
+    document.formcadastro.submit();
+  }
+}
+
 function validaCampoServidor()
 {
   if (document.getElementById('ref_cod_instituicao').value)
@@ -2226,16 +2242,16 @@ function atualizaLstEscolaCursoSerie(xml)
 document.getElementById('event_incluir_modulo').onclick = incluirModulo;
 
 function incluirModulo(){
-  document.getElementById('incluir_modulo').value = 'S'; 
-  document.getElementById('tipoacao').value = ''; 
+  document.getElementById('incluir_modulo').value = 'S';
+  document.getElementById('tipoacao').value = '';
   acao();
 }
 
 document.getElementById('event_incluir_dia_semana').onclick = incluirDiaSemana;
 
 function incluirDiaSemana(){
-  document.getElementById('incluir_dia_semana').value = 'S'; 
-  document.getElementById('tipoacao').value = ''; 
+  document.getElementById('incluir_dia_semana').value = 'S';
+  document.getElementById('tipoacao').value = '';
   acao();
 }
 
