@@ -903,7 +903,7 @@ protected function createOrUpdateUniforme($id) {
   protected function getMatriculas() {
     if ($this->canGetMatriculas()) {
       $matriculas = new clsPmieducarMatricula();
-      $matriculas->setOrderby('ano DESC, ref_ref_cod_serie DESC, cod_matricula DESC, aprovado');
+      $matriculas->setOrderby('ano DESC, coalesce(m.data_matricula, m.data_cadastro) DESC, ref_ref_cod_serie DESC, cod_matricula DESC, aprovado');
 
       $matriculas = $matriculas->lista(
         null,
