@@ -47,7 +47,7 @@ class indice extends clsDetalhe
 	 * @var int
 	 */
 	var $titulo;
-	
+
 	var $cod_raca;
 	var $idpes_exc;
 	var $idpes_cad;
@@ -56,27 +56,27 @@ class indice extends clsDetalhe
 	var $data_exclusao;
 	var $ativo;
 	var $pessoa_logada;
-	
+
 	function Gerar()
 	{
 		@session_start();
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
-		
+
 		$this->titulo = "Ra&ccedil;a - Detalhe";
-		
+
 
 		$this->cod_raca=$_GET["cod_raca"];
 
 		$tmp_obj = new clsCadastroRaca( $this->cod_raca );
 		$registro = $tmp_obj->detalhe();
-		
+
 		if( ! $registro )
 		{
 			header( "location: educar_raca_lst.php" );
 			die();
 		}
-		
+
 		/*if( class_exists( "clsCadastroFisica" ) )
 		{
 			$obj_idpes_exc = new clsCadastroFisica( $registro["idpes_exc"] );
@@ -120,7 +120,7 @@ class indice extends clsDetalhe
 		}
 
 		$obj_permissao = new clsPermissoes();
-		if( $obj_permissao->permissao_cadastra(678, $this->pessoa_logada, 3) )
+		if( $obj_permissao->permissao_cadastra(678, $this->pessoa_logada, 7) )
 		{
 			$this->url_novo = "educar_raca_cad.php";
 			$this->url_editar = "educar_raca_cad.php?cod_raca={$registro["cod_raca"]}";
@@ -135,7 +135,7 @@ class indice extends clsDetalhe
 	         "educar_index.php"                  => "i-Educar - Escola",
 	         ""                                  => "Detalhe da ra&ccedil;a"
 	    ));
-	    $this->enviaLocalizacao($localizacao->montar());		
+	    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 
