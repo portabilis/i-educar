@@ -1,6 +1,6 @@
   -- //
-  -- Essa migração cria tabela para bloqueio do ano letivo
-  -- @author   Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+  -- Esta migração retira a obrigatoriedade do campo carga horaria no cadastro de históricos escolares
+  -- @author   Gabriel Matos de Souza <gabriel@portabilis.com.br>
   -- @license  @@license@@
   -- @version  $Id$
 
