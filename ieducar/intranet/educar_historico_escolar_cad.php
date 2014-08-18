@@ -231,11 +231,11 @@ class indice extends clsCadastro
 
 		$this->campoTexto( "nm_serie", "S&eacute;rie", $this->nm_serie, 30, 255, true );
 		$this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true );
-		$this->campoMonetario( "carga_horaria", "Carga Hor&aacute;ria", $this->carga_horaria, 8, 8, true );
+		$this->campoMonetario( "carga_horaria", "Carga Hor&aacute;ria", $this->carga_horaria, 8, 8, false);
 		$this->campoCheck( "cb_faltas_globalizadas", "Faltas Globalizadas", is_numeric($this->faltas_globalizadas) ? 'on' : '');
 		$this->campoNumero( "faltas_globalizadas", "Faltas Globalizadas", $this->faltas_globalizadas, 4, 4, false );
-		$this->campoNumero( "dias_letivos", "Dias Letivos", $this->dias_letivos, 3, 3, true );
-		$this->campoMonetario( "frequencia", "Frequência", $this->frequencia, 8, 6, true );
+		$this->campoNumero( "dias_letivos", "Dias Letivos", $this->dias_letivos, 3, 3, false);
+		$this->campoMonetario( "frequencia", "Frequência", $this->frequencia, 8, 6, false );
 		$this->campoCheck( "extra_curricular", "Extra-Curricular", $this->extra_curricular );
 		$this->campoCheck( "aceleracao", "Aceleração", $this->aceleracao );
 		$this->campoMemo( "observacao", "Observa&ccedil;&atilde;o", $this->observacao, 60, 5, false );
@@ -600,16 +600,21 @@ $pagina->MakeAll();
 	setAutoComplete();
 
 	var submitForm = function(event) {
-		var $frequenciaField = $j('#frequencia');
-		var frequencia       = $frequenciaField.val();
+		var $frequenciaField  	  = $j('#frequencia');
+		var frequencia        	  = $frequenciaField.val();
+		var frequenciaObrigatoria = $frequenciaField.hasClass('obrigatorio');
 
-		if (frequencia.indexOf(',') > -1)
-			frequencia = frequencia.replace('.', '').replace(',', '.');
-
-	  if (validatesIfNumericValueIsInRange(frequencia, $frequenciaField, 0, 100))
-	    formUtils.submit();
+	if (frequencia.indexOf(',') > -1){
+		frequencia = frequencia.replace('.', '').replace(',', '.');
 	}
 
+	if((frequencia.trim() == '')&&(!frequenciaObrigatoria)){
+		formUtils.submit();
+	}else{
+		if (validatesIfNumericValueIsInRange(frequencia, $frequenciaField, 0, 100))
+	    	formUtils.submit();
+		}
+	}
 
 	// bind events
 
