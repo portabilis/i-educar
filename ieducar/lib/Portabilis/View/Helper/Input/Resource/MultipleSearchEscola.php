@@ -48,7 +48,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchEscola extends Portabi
   protected function getOptions($resources) {
 
     if (empty($resources)) {
-      $resources = Portabilis_Utils_Database::fetchPreparedQuery('SELECT cod_escola, nome FROM pmieducar.escola INNER JOIN cadastro.pessoa ON (ref_idpes = idpes) ');
+      $resources = Portabilis_Utils_Database::fetchPreparedQuery('SELECT cod_escola, nome FROM pmieducar.escola INNER JOIN cadastro.pessoa ON (ref_idpes = idpes) WHERE escola.ativo = 1');
       $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'cod_escola', 'nome');
     }
 
