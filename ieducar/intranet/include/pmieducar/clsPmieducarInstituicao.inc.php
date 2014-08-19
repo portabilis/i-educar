@@ -62,6 +62,7 @@ class clsPmieducarInstituicao
   var $nm_instituicao;
   var $data_base_remanejamento;
   var $data_base_transferencia;
+  var $exigir_vinculo_turma_professor;
   var $controlar_espaco_utilizacao_aluno;
   var $percentagem_maxima_ocupacao_salas;
   var $quantidade_alunos_metro_quadrado;
@@ -131,7 +132,7 @@ class clsPmieducarInstituicao
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}instituicao";
 
-    $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao, data_base_transferencia, data_base_remanejamento, controlar_espaco_utilizacao_aluno, percentagem_maxima_ocupacao_salas, quantidade_alunos_metro_quadrado";
+    $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao, data_base_transferencia, data_base_remanejamento, controlar_espaco_utilizacao_aluno, percentagem_maxima_ocupacao_salas, quantidade_alunos_metro_quadrado, exigir_vinculo_turma_professor ";
 
     if (is_numeric($ref_usuario_cad)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -392,6 +393,12 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }
 
+      if (is_numeric($this->exigir_vinculo_turma_professor)) {
+        $campos .= "{$gruda}exigir_vinculo_turma_professor";
+        $valores .= "{$gruda}'{$this->exigir_vinculo_turma_professor}'";
+        $gruda = ", ";
+      }
+
       if (is_numeric($this->controlar_espaco_utilizacao_aluno)) {
         $campos .= "{$gruda}controlar_espaco_utilizacao_aluno";
         $valores .= "{$gruda}'{$this->controlar_espaco_utilizacao_aluno}'";
@@ -528,6 +535,11 @@ class clsPmieducarInstituicao
 
       if (is_numeric($this->controlar_espaco_utilizacao_aluno)) {
         $set .= "{$gruda}controlar_espaco_utilizacao_aluno = '{$this->controlar_espaco_utilizacao_aluno}'";
+        $gruda = ", ";
+      }
+      
+      if (is_numeric($this->exigir_vinculo_turma_professor)) {
+        $set .= "{$gruda}exigir_vinculo_turma_professor = '{$this->exigir_vinculo_turma_professor}'";
         $gruda = ", ";
       }
 
