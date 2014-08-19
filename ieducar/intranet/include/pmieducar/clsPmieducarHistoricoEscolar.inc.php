@@ -355,7 +355,7 @@ class clsPmieducarHistoricoEscolar
 	 */
 	function cadastra()
 	{
-		if( is_numeric( $this->ref_cod_aluno ) && is_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_serie ) && is_numeric( $this->ano ) && is_numeric( $this->carga_horaria ) && is_string( $this->escola ) && is_string( $this->escola_cidade ) && is_numeric( $this->aprovado ) && is_numeric( $this->ref_cod_instituicao ) && is_numeric( $this->frequencia))
+		if( is_numeric( $this->ref_cod_aluno ) && is_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_serie ) && is_numeric( $this->ano  )&& is_string( $this->escola ) && is_string( $this->escola_cidade ) && is_numeric( $this->aprovado ) && is_numeric( $this->ref_cod_instituicao ))
 		{
 			$db = new clsBanco();
 
@@ -417,10 +417,10 @@ class clsPmieducarHistoricoEscolar
 				$valores .= "{$gruda}'{$this->carga_horaria}'";
 				$gruda = ", ";
 			}	
-			elseif($this->carga_horaria == 'NULL')
+			elseif(is_null($this->carga_horaria))
 			{
 				$campos .= "{$gruda}carga_horaria";
-				$valores .= "{$gruda}'NULL'";
+				$valores .= "{$gruda}NULL";
 				$gruda = ", ";
 			}
 
@@ -430,10 +430,10 @@ class clsPmieducarHistoricoEscolar
 				$valores .= "{$gruda}'{$this->dias_letivos}'";
 				$gruda = ", ";
 			}
-			elseif($this->dias_letivos == 'NULL')
+			elseif(is_null($this->dias_letivos))
 			{
 				$campos .= "{$gruda}dias_letivos";
-				$valores .= "{$gruda}'NULL'";
+				$valores .= "{$gruda}NULL";
 				$gruda = ", ";
 			}
 			if( is_string( $this->escola ) )
@@ -478,10 +478,10 @@ class clsPmieducarHistoricoEscolar
 				$valores .= "{$gruda}'{$this->frequencia}'";
 				$gruda = ", ";
 			}
-			elseif($this->frequencia == 'NULL')
+			elseif(is_null($this->frequencia))
 			{
 				$campos .= "{$gruda}frequencia";
-				$valores .= "{$gruda}'NULL'";
+				$valores .= "{$gruda}NULL";
 				$gruda = ", ";
 			}
 			if( is_string( $this->registro ))
