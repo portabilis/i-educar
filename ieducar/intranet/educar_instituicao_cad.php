@@ -72,6 +72,7 @@ class indice extends clsCadastro
 	var $nm_instituicao;
 	var $data_base_transferencia;
 	var $data_base_remanejamento;
+	var $exigir_vinculo_turma_professor;
 	var $controlar_espaco_utilizacao_aluno;
 	var $percentagem_maxima_ocupacao_salas;
 	var $quantidade_alunos_metro_quadrado;
@@ -183,11 +184,13 @@ class indice extends clsCadastro
 
 
 		if ($GLOBALS['coreExt']['Config']->app->instituicao->data_base_deslocamento) {
-      		$this->campoData('data_base_transferencia', 'Data máxima para deslocamento', Portabilis_Date_Utils::pgSQLToBr($this->data_base_transferencia), null, null, false);
-      		$this->campoData('data_base_remanejamento', 'Data máxima para troca de sala', Portabilis_Date_Utils::pgSQLToBr($this->data_base_remanejamento), null, null, false);
-    	}
+  		$this->campoData('data_base_transferencia', 'Data máxima para deslocamento', Portabilis_Date_Utils::pgSQLToBr($this->data_base_transferencia), null, null, false);
+  		$this->campoData('data_base_remanejamento', 'Data máxima para troca de sala', Portabilis_Date_Utils::pgSQLToBr($this->data_base_remanejamento), null, null, false);
+  	}
 
-    	$this->campoCheck("controlar_espaco_utilizacao_aluno", "Controlar espaço utilizado pelo aluno?", $this->controlar_espaco_utilizacao_aluno );
+    $this->campoCheck("exigir_vinculo_turma_professor", "Exigir vínculo com turma para lançamento de notas do professor?", $this->exigir_vinculo_turma_professor );
+
+  	$this->campoCheck("controlar_espaco_utilizacao_aluno", "Controlar espaço utilizado pelo aluno?", $this->controlar_espaco_utilizacao_aluno );
 		$this->campoMonetario( "percentagem_maxima_ocupacao_salas", "Percentagem máxima de ocupação da sala",
 															  Portabilis_Currency_Utils::moedaUsToBr($this->percentagem_maxima_ocupacao_salas),
 															  6,
@@ -204,6 +207,7 @@ class indice extends clsCadastro
 		$obj = new clsPmieducarInstituicao( null, $this->ref_usuario_exc, $this->pessoa_logada, $this->ref_idtlog, $this->ref_sigla_uf, str_replace( "-", "", $this->cep ), $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, 1, $this->nm_instituicao, null, null, $this->quantidade_alunos_metro_quadrado);
 		$obj->data_base_remanejamento = Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
 		$obj->data_base_transferencia = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
+		$obj->exigir_vinculo_turma_professor = is_null($this->exigir_vinculo_turma_professor) ? 0 : 1;
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
 		$cadastrou = $obj->cadastra();
@@ -229,6 +233,7 @@ class indice extends clsCadastro
 		$obj = new clsPmieducarInstituicao( $this->cod_instituicao, $this->ref_usuario_exc, $this->pessoa_logada, $this->ref_idtlog, $this->ref_sigla_uf, str_replace( "-", "", $this->cep ), $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, 1, $this->nm_instituicao, null, null, $this->quantidade_alunos_metro_quadrado);
 		$obj->data_base_remanejamento = Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
 		$obj->data_base_transferencia = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
+		$obj->exigir_vinculo_turma_professor = is_null($this->exigir_vinculo_turma_professor) ? 0 : 1;
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
 		$editou = $obj->edita();
