@@ -55,6 +55,7 @@ class clsPublicBairro
   var $idsis_rev;
   var $idsis_cad;
   var $zona_localizacao;
+  var $setor;
   var $iddis;
 
   /**
@@ -127,7 +128,7 @@ class clsPublicBairro
   function clsPublicBairro($idmun = NULL, $geom = NULL, $idbai = NULL,
     $nome = NULL, $idpes_rev = NULL, $data_rev = NULL, $origem_gravacao = NULL,
     $idpes_cad = NULL, $data_cad = NULL, $operacao = NULL, $idsis_rev = NULL,
-    $idsis_cad = NULL, $zona_localizacao = 1, $iddis)
+    $idsis_cad = NULL, $zona_localizacao = 1, $iddis = NULL, $setor = NULL)
   {
     $db = new clsBanco();
     $this->_schema = 'public.';
@@ -135,7 +136,7 @@ class clsPublicBairro
 
     $this->_campos_lista = $this->_todos_campos = 'b.idmun, b.geom, b.idbai, ' .
       'b.nome, b.idpes_rev, b.data_rev, b.origem_gravacao, b.idpes_cad, ' .
-      'b.data_cad, b.operacao, b.idsis_rev, b.idsis_cad, b.zona_localizacao, b.iddis';
+      'b.data_cad, b.operacao, b.idsis_rev, b.idsis_cad, b.zona_localizacao, b.iddis, b.setor ';
 
     if (is_numeric($idsis_rev)) {
       if (class_exists('clsAcessoSistema')) {
@@ -285,6 +286,10 @@ class clsPublicBairro
       $this->operacao = $operacao;
     }
 
+    if (is_string($setor)) {
+      $this->setor = $setor;
+    }
+
     if (is_numeric($zona_localizacao)) {
       $this->zona_localizacao = $zona_localizacao;
     }
@@ -380,6 +385,12 @@ class clsPublicBairro
         $gruda    = ', ';
       }
 
+      if (is_string($this->setor)) {
+        $campos  .= "{$gruda}setor";
+        $valores .= "{$gruda}'{$this->setor}'";
+        $gruda    = ', ';
+      }
+
       if (is_numeric($this->iddis)) {
         $campos  .= "{$gruda}iddis";
         $valores .= "{$gruda}'{$this->iddis}'";
@@ -464,6 +475,11 @@ class clsPublicBairro
 
       if (is_numeric($this->zona_localizacao)) {
         $set  .= "{$gruda}zona_localizacao = '{$this->zona_localizacao}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->setor)) {
+        $set  .= "{$gruda}setor = '{$this->setor}'";
         $gruda = ', ';
       }
 
