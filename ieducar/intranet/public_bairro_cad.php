@@ -87,6 +87,7 @@ class indice extends clsCadastro
   var $idsis_rev;
   var $idsis_cad;
   var $zona_localizacao;
+  var $setor;
   var $iddis;
 
   var $idpais;
@@ -227,6 +228,7 @@ class indice extends clsCadastro
       $this->zona_localizacao);
 
     $this->campoTexto('nome', 'Nome', $this->nome, 30, 255, TRUE);
+    $this->campoTexto('setor', 'Setor', $this->setor, 30, 255, TRUE);
   }
 
   function Novo()
@@ -237,7 +239,7 @@ class indice extends clsCadastro
 
     $obj = new clsPublicBairro($this->idmun, NULL, NULL, $this->nome, NULL,
       NULL, 'U', $this->pessoa_logada, NULL, 'I', NULL, 9,
-      $this->zona_localizacao, $this->iddis);
+      $this->zona_localizacao, $this->iddis, $this->setor);
 
     $cadastrou = $obj->cadastra();
     if ($cadastrou) {
@@ -260,7 +262,7 @@ class indice extends clsCadastro
 
     $obj = new clsPublicBairro($this->idmun, NULL, $this->idbai, $this->nome,
       $this->pessoa_logada, NULL, 'U', NULL, NULL, 'I', NULL, 9,
-      $this->zona_localizacao, $this->iddis);
+      $this->zona_localizacao, $this->iddis, $this->setor);
 
     $editou = $obj->edita();
     if ($editou) {
