@@ -475,7 +475,15 @@ class clsPmieducarMatriculaTurma
         $filtros .= "{$whereAnd} mt.ativo = '1'";
         $whereAnd = " AND ";
       }elseif ($int_ativo == 2) {
-        $filtros .= "{$whereAnd} (mt.ativo = '1' OR mt.transferido OR mt.remanejado OR mt.reclassificado OR mt.abandono)";
+        $filtros .= "{$whereAnd} (mt.ativo = '1' OR (mt.transferido OR 
+                                                     mt.remanejado OR 
+                                                     mt.reclassificado OR 
+                                                     mt.abandono) AND
+                                                     (NOT EXISTS(SELECT 1 
+                                                                   FROM pmieducar.matricula_turma
+                                                                  WHERE matricula_turma.ativo = 1 AND
+                                                                        matricula_turma.ref_cod_matricula = mt.ref_cod_matricula AND
+                                                                        matricula_turma.ref_cod_turma = mt.ref_cod_turma)))";
         $whereAnd = " AND ";        
       }
       else {
