@@ -186,10 +186,16 @@ class indice extends clsCadastro
       $nextCursoId = $this->db2->CampoUnico("SELECT ref_cod_curso FROM pmieducar.serie
                                             WHERE cod_serie = $nextSerieId");
 
-      return $this->matricularAluno($escolaId, $nextCursoId, $nextSerieId, $ano, $alunoId);
+      if ($this->escolaSerieConfigurada($escolaId, $nextSerieId)){
+      	 return $this->matricularAluno($escolaId, $nextCursoId, $nextSerieId, $ano, $alunoId);
+      }
+      else{
+      	$this->mensagem = "A série de destino não está configurada na escola. Favor efetuar o cadastro em Cadastro > Série > Escola-Série";
+      }
     }
-    else
+    else{
       $this->mensagem = "Não foi possível obter a próxima série da sequência de enturmação";
+    }
 
     return false;
   }
@@ -213,6 +219,19 @@ class indice extends clsCadastro
     }
 
     return true;
+  }
+
+  protected function escolaSerieConfigurada($escolaId, $serieId){
+
+  	$escolaSerie = new clsPmieducarEscolaSerie($escolaId, $serieId);
+
+  	$escolaSerie = $escolaSerie->detalhe();
+  	if(count($escolaSerie) > 0){
+  		if($escolaSerie["ativo"] == '1'){
+  			return true;
+  		}
+  	}
+  	return false;
   }
 }
 
