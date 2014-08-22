@@ -14,7 +14,7 @@
 
   CREATE TABLE public.setor_bai
   (
-    idsetorbai numeric(6,0) NOT NULL DEFAULT nextval(('public.seq_setor'::text)::regclass),
+    idsetorbai numeric(6,0) NOT NULL DEFAULT nextval(('public.seq_setor_bai'::text)::regclass),
     nome character varying(80) NOT NULL,
     CONSTRAINT pk_setorbai PRIMARY KEY (idsetorbai)
   )
