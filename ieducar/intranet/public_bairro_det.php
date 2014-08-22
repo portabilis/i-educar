@@ -110,10 +110,6 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Nome', $registro['nome']));
     }
 
-    if ($registro['setor']) {
-      $this->addDetalhe(array('Setor', $registro['setor']));
-    }
-
     $zona = App_Model_ZonaLocalizacao::getInstance();
     $zona = $zona->getValue($registro['zona_localizacao']);
     $this->addDetalhe(array('Zona Localização', $zona));
@@ -133,7 +129,6 @@ class indice extends clsDetalhe
     if ($registro['nm_pais']) {
       $this->addDetalhe(array('Pais', $registro['nm_pais']));
     }
-
 
     $this->url_novo   = 'public_bairro_cad.php';
     $this->url_editar = 'public_bairro_cad.php?idbai=' . $registro['idbai'];
