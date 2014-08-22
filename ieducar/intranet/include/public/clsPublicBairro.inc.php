@@ -46,6 +46,7 @@ class clsPublicBairro
   var $geom;
   var $idbai;
   var $nome;
+  var $idsetorbai;
   var $idpes_rev;
   var $data_rev;
   var $origem_gravacao;
@@ -135,7 +136,7 @@ class clsPublicBairro
 
     $this->_campos_lista = $this->_todos_campos = 'b.idmun, b.geom, b.idbai, ' .
       'b.nome, b.idpes_rev, b.data_rev, b.origem_gravacao, b.idpes_cad, ' .
-      'b.data_cad, b.operacao, b.idsis_rev, b.idsis_cad, b.zona_localizacao, b.iddis';
+      'b.data_cad, b.operacao, b.idsis_rev, b.idsis_cad, b.zona_localizacao, b.iddis, b.idsetorbai ';
 
     if (is_numeric($idsis_rev)) {
       if (class_exists('clsAcessoSistema')) {
@@ -386,6 +387,12 @@ class clsPublicBairro
         $gruda    = ', ';
       }
 
+      if (is_numeric($this->idsetorbai)) {
+        $campos  .= "{$gruda}idsetorbai";
+        $valores .= "{$gruda}'{$this->idsetorbai}'";
+        $gruda    = ', ';
+      }
+
       $db->Consulta(sprintf(
         "INSERT INTO %s (%s) VALUES (%s)",
         $this->_tabela, $campos, $valores
@@ -469,6 +476,14 @@ class clsPublicBairro
 
       if (is_numeric($this->iddis)) {
         $set  .= "{$gruda}iddis = '{$this->iddis}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->idsetorbai)) {
+        $set  .= "{$gruda}idsetorbai = '{$this->idsetorbai}'";
+        $gruda = ', ';
+      }else{
+        $set  .= "{$gruda}idsetorbai = NULL ";
         $gruda = ', ';
       }
 
