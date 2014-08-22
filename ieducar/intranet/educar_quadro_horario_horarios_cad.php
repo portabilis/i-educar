@@ -278,30 +278,7 @@ class indice extends clsCadastro
 
     $this->campoRotulo(
       'bt_incluir_horario', 'Hor&aacute;rio',
-      "<a href='#' onclick=\"" .
-      "if (document.getElementById('ref_cod_disciplina').value == '') {
-         alert('Você deve escolher a disciplina!');
-         return;
-       }
-       else if (document.getElementById('hora_inicial').value == '') {
-         alert('Você deve preencher o campo Hora Inicial!');
-         return;
-       }
-       else if (document.getElementById('hora_final').value == '') {
-         alert('Você deve preencher o campo Hora Final!');
-         return;
-       }
-       else if (document.getElementById('ref_cod_servidor').value == '') {
-         alert('Você deve selecionar um servidor no campo Servidor');
-         return;
-       }
-       else {
-         if (verificaQuadroHorario()) {
-           getElementById('incluir_horario').value = 'S';
-           getElementById('tipoacao').value = '';
-           {$this->__nome}.submit();
-         }
-       }\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
+      "<a href='#' id='btn_incluir_horario' ><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
 
     $this->campoOculto('incluir_horario', '');
 
@@ -915,5 +892,33 @@ function verificaHorario()
 
   acao();
   return true;
+}
+
+$j('#btn_incluir_horario').click(addHorario);
+
+function addHorario(){
+  if (document.getElementById('ref_cod_disciplina').value == '') {
+     alert('Você deve escolher a disciplina!');
+     return;
+   }
+   else if (document.getElementById('hora_inicial').value == '') {
+     alert('Você deve preencher o campo Hora Inicial!');
+     return;
+   }
+   else if (document.getElementById('hora_final').value == '') {
+     alert('Você deve preencher o campo Hora Final!');
+     return;
+   }
+   else if (document.getElementById('ref_cod_servidor').value == '') {
+     alert('Você deve selecionar um servidor no campo Servidor');
+     return;
+   }
+   else {
+     if (verificaQuadroHorario()) {
+       $j('#incluir_horario').val('S');
+       $j('#tipoacao').val('');
+       formcadastro.submit();
+     }
+   }  
 }
 </script>

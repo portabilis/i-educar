@@ -43,11 +43,18 @@ require_once 'include/pmieducar/clsPmieducarServidorAlocacao.inc.php';
 class Portabilis_Business_Professor {
 
   public static function isProfessor($instituicaoId, $userId) {
-    $sql     = "select funcao.professor from pmieducar.servidor_funcao, pmieducar.funcao
-                where funcao.cod_funcao = servidor_funcao.ref_cod_funcao and funcao.professor = 1 and
-                servidor_funcao.ref_ref_cod_instituicao = $1 and servidor_funcao.ref_cod_servidor = $2";
+    if(is_numeric($instituicaoId)){
+      $sql     = "select funcao.professor from pmieducar.servidor_funcao, pmieducar.funcao
+                  where funcao.cod_funcao = servidor_funcao.ref_cod_funcao and funcao.professor = 1 and
+                  servidor_funcao.ref_ref_cod_instituicao = $1 and servidor_funcao.ref_cod_servidor = $2";
+      $options = array('params' => array($instituicaoId, $userId), 'return_only' => 'first-field');
+    }else{
+      $sql = "select funcao.professor from pmieducar.servidor_funcao, pmieducar.funcao
+              where funcao.cod_funcao = servidor_funcao.ref_cod_funcao and funcao.professor = 1 and
+              servidor_funcao.ref_cod_servidor = $1";
+      $options = array('params' => array($userId), 'return_only' => 'first-field');
+    }
 
-    $options = array('params' => array($instituicaoId, $userId), 'return_only' => 'first-field');
     return self::fetchPreparedQuery($sql, $options) == '1';
   }
 
