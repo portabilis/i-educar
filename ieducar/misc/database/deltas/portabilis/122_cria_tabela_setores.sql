@@ -34,8 +34,8 @@
 
   ALTER TABLE public.bairro DROP COLUMN idsetorbai;
 
-  DROP TABLE public.setor;
+  DROP TABLE public.setor_bai;
 
-  DROP SEQUENCE public.seq_setor;
+  DROP SEQUENCE public.seq_setor_bai;
 
   -- //
