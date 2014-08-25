@@ -134,7 +134,7 @@ class clsPublicSetorBai
         $this->_tabela, $campos, $valores
       ));
 
-      return $db->InsertId('seq_setor');
+      return $db->InsertId('seq_setor_bai');
     }
 
     return FALSE;
