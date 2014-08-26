@@ -46,6 +46,7 @@ class clsPublicBairro
   var $geom;
   var $idbai;
   var $nome;
+  var $idsetorbai;
   var $idpes_rev;
   var $data_rev;
   var $origem_gravacao;
@@ -55,7 +56,6 @@ class clsPublicBairro
   var $idsis_rev;
   var $idsis_cad;
   var $zona_localizacao;
-  var $setor;
   var $iddis;
 
   /**
@@ -128,7 +128,7 @@ class clsPublicBairro
   function clsPublicBairro($idmun = NULL, $geom = NULL, $idbai = NULL,
     $nome = NULL, $idpes_rev = NULL, $data_rev = NULL, $origem_gravacao = NULL,
     $idpes_cad = NULL, $data_cad = NULL, $operacao = NULL, $idsis_rev = NULL,
-    $idsis_cad = NULL, $zona_localizacao = 1, $iddis = NULL, $setor = NULL)
+    $idsis_cad = NULL, $zona_localizacao = 1, $iddis)
   {
     $db = new clsBanco();
     $this->_schema = 'public.';
@@ -136,7 +136,7 @@ class clsPublicBairro
 
     $this->_campos_lista = $this->_todos_campos = 'b.idmun, b.geom, b.idbai, ' .
       'b.nome, b.idpes_rev, b.data_rev, b.origem_gravacao, b.idpes_cad, ' .
-      'b.data_cad, b.operacao, b.idsis_rev, b.idsis_cad, b.zona_localizacao, b.iddis, b.setor ';
+      'b.data_cad, b.operacao, b.idsis_rev, b.idsis_cad, b.zona_localizacao, b.iddis, b.idsetorbai ';
 
     if (is_numeric($idsis_rev)) {
       if (class_exists('clsAcessoSistema')) {
@@ -286,10 +286,6 @@ class clsPublicBairro
       $this->operacao = $operacao;
     }
 
-    if (is_string($setor)) {
-      $this->setor = $setor;
-    }
-
     if (is_numeric($zona_localizacao)) {
       $this->zona_localizacao = $zona_localizacao;
     }
@@ -385,15 +381,15 @@ class clsPublicBairro
         $gruda    = ', ';
       }
 
-      if (is_string($this->setor)) {
-        $campos  .= "{$gruda}setor";
-        $valores .= "{$gruda}'{$this->setor}'";
-        $gruda    = ', ';
-      }
-
       if (is_numeric($this->iddis)) {
         $campos  .= "{$gruda}iddis";
         $valores .= "{$gruda}'{$this->iddis}'";
+        $gruda    = ', ';
+      }
+
+      if (is_numeric($this->idsetorbai)) {
+        $campos  .= "{$gruda}idsetorbai";
+        $valores .= "{$gruda}'{$this->idsetorbai}'";
         $gruda    = ', ';
       }
 
@@ -478,13 +474,16 @@ class clsPublicBairro
         $gruda = ', ';
       }
 
-      if (is_string($this->setor)) {
-        $set  .= "{$gruda}setor = '{$this->setor}'";
+      if (is_numeric($this->iddis)) {
+        $set  .= "{$gruda}iddis = '{$this->iddis}'";
         $gruda = ', ';
       }
 
-      if (is_numeric($this->iddis)) {
-        $set  .= "{$gruda}iddis = '{$this->iddis}'";
+      if (is_numeric($this->idsetorbai)) {
+        $set  .= "{$gruda}idsetorbai = '{$this->idsetorbai}'";
+        $gruda = ', ';
+      }else{
+        $set  .= "{$gruda}idsetorbai = NULL ";
         $gruda = ', ';
       }
 

@@ -60,7 +60,7 @@ class Portabilis_View_Helper_DynamicInput_Turma extends Portabilis_View_Helper_D
     $isProfessor   = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
 
     if ($escolaId and $serieId and empty($resources) and $isProfessor)
-      $turmas    = Portabilis_Business_Professor::turmasAlocado($instituicaoId, $escolaId, $serieId, $userId);
+      $resources    = Portabilis_Business_Professor::turmasAlocado($instituicaoId, $escolaId, $serieId, $userId);
     elseif ($escolaId && $serieId && empty($resources))
       $resources = App_Model_IedFinder::getTurmas($escolaId, $serieId);
 

@@ -20,11 +20,11 @@
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
  * @license   http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package   Ied_Public
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     ?
  * @version   $Id$
  */
 
@@ -32,13 +32,12 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
-
-require_once 'App/Model/ZonaLocalizacao.php';
+require_once 'include/public/clsPublicSetorBai.inc.php';
 
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Public
@@ -49,8 +48,8 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' Bairro');
-    $this->processoAp = 756;
+    $this->SetTitulo($this->_instituicao . ' Setor');
+    $this->processoAp = 760;
     $this->addEstilo('localizacaoSistema');
   }
 }
@@ -58,7 +57,7 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Public
@@ -69,18 +68,8 @@ class indice extends clsDetalhe
 {
   var $titulo;
 
-  var $idmun;
-  var $geom;
-  var $idbai;
+  var $idsetorbai;
   var $nome;
-  var $idpes_rev;
-  var $data_rev;
-  var $origem_gravacao;
-  var $idpes_cad;
-  var $data_cad;
-  var $operacao;
-  var $idsis_rev;
-  var $idsis_cad;
 
   function Gerar()
   {
@@ -88,58 +77,35 @@ class indice extends clsDetalhe
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->titulo = 'Bairro - Detalhe';
-    $this->addBanner('imagens/nvp_top_intranet.jpg',
-      'imagens/nvp_vert_intranet.jpg', 'Intranet');
+    $this->titulo = 'Setor - Detalhe';
 
-    $this->idbai = $_GET['idbai'];
+    $this->idsetorbai = $_GET['idsetorbai'];
 
-    $tmp_obj = new clsPublicBairro();
-    $lst_bairro = $tmp_obj->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->idbai);
+    $tmp_obj = new clsPublicSetorBai($this->idsetorbai);
+    $det_setor_bai = $tmp_obj->detalhe();
 
-    if (! $lst_bairro) {
-      header('Location: public_bairro_lst.php');
+    if (! $det_setor_bai) {
+      header('Location: public_setor_lst.php');
       die();
     }
     else {
-      $registro = $lst_bairro[0];
+      $registro = $det_setor_bai;
     }
 
     if ($registro['nome']) {
-      $this->addDetalhe(array('Nome', $registro['nome']));
+      $this->addDetalhe(array('Setor', $registro['nome']));
     }
 
-    $zona = App_Model_ZonaLocalizacao::getInstance();
-    $zona = $zona->getValue($registro['zona_localizacao']);
-    $this->addDetalhe(array('Zona Localização', $zona));
+    $this->url_novo   = 'public_setor_cad.php';
+    $this->url_editar = 'public_setor_cad.php?idsetorbai=' . $registro['idsetorbai'];
 
-    if ($registro['nm_distrito']) {
-      $this->addDetalhe(array('Distrito', $registro['nm_distrito']));
-    }
-
-    if ($registro['nm_municipio']) {
-      $this->addDetalhe(array("Município", $registro['nm_municipio']));
-    }
-
-    if ($registro['nm_estado']) {
-      $this->addDetalhe(array('Estado', $registro['nm_estado']));
-    }
-
-    if ($registro['nm_pais']) {
-      $this->addDetalhe(array('Pais', $registro['nm_pais']));
-    }
-
-    $this->url_novo   = 'public_bairro_cad.php';
-    $this->url_editar = 'public_bairro_cad.php?idbai=' . $registro['idbai'];
-
-    $this->url_cancelar = 'public_bairro_lst.php';
+    $this->url_cancelar = 'public_setor_lst.php';
     $this->largura      = '100%';
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""                                  => "Detalhe do bairro"
+         ""                                  => "Detalhe do setor"
     ));
     $this->enviaLocalizacao($localizacao->montar());    
   }

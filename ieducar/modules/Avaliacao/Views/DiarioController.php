@@ -54,9 +54,14 @@ class DiarioController extends Portabilis_Controller_Page_ListController
   protected $_processoAp = 642;
 
   public function Gerar() {
+
+    $userId        = Portabilis_Utils_User::currentUserId();
+    $componenteRequired = $isProfessor   = Portabilis_Business_Professor::isProfessor(false, $userId);
+
     $this->inputsHelper()->input('ano');
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie', 'turma', 'etapa'));
-	  $this->inputsHelper()->dynamic(array('componenteCurricular', 'matricula'), array('required' => false));
+    $this->inputsHelper()->dynamic(array('componenteCurricular'), array('required' => $componenteRequired));
+	  $this->inputsHelper()->dynamic(array('matricula'), array('required' => FALSE ));
 
 	  $navegacaoTab = array('1' => 'Horizontal(padr&atilde;o)',
                           '2' => 'Vertical',);
