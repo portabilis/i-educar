@@ -237,7 +237,7 @@ class indice extends clsCadastro
     $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7,
       sprintf('educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
         $this->ref_cod_servidor, $this->ref_cod_instituicao));
-
+    $this->data_falta_atraso = Portabilis_Date_Utils::brToPgSQL($this->data_falta_atraso);
     if ($this->tipo == 1) {
       $obj = new clsPmieducarFaltaAtraso($this->cod_falta_atraso, $this->ref_cod_escola,
         $this->ref_cod_instituicao, $this->pessoa_logada, NULL,
@@ -256,7 +256,6 @@ class indice extends clsCadastro
         $this->ref_cod_servidor, $this->tipo, $this->data_falta_atraso, $horas,
         $minutos, $this->justificada, NULL, NULL, 1);
     }
-    $this->data_falta_atraso = Portabilis_Date_Utils::brToPgSQL($this->data_falta_atraso);
     $editou = $obj->edita();
     if ($editou) {
       $this->mensagem .= 'Edição efetuada com sucesso.<br />';
@@ -275,7 +274,7 @@ class indice extends clsCadastro
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
-
+    $this->data_falta_atraso = Portabilis_Date_Utils::brToPgSQL($this->data_falta_atraso);
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7,
       sprintf('educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
@@ -285,7 +284,6 @@ class indice extends clsCadastro
       $this->ref_ref_cod_instituicao, $this->pessoa_logada, $this->pessoa_logada,
       $this->ref_cod_servidor, $this->tipo, $this->data_falta_atraso, $this->qtd_horas,
       $this->qtd_min, $this->justificada, $this->data_cadastro, $this->data_exclusao, 0);
-    $this->data_falta_atraso = Portabilis_Date_Utils::brToPgSQL($this->data_falta_atraso);
     $excluiu = $obj->excluir();
     if ($excluiu) {
       $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
