@@ -1,5 +1,8 @@
 <?php
 
+// error_reporting(E_ERROR);
+// ini_set("display_errors", 1);
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -236,7 +239,7 @@ class indice extends clsCadastro
         $this->ref_cod_servidor, $this->ref_cod_instituicao));
 
     if ($this->tipo == 1) {
-      $obj = new clsPmieducarFaltaAtraso(NULL, $this->ref_cod_escola,
+      $obj = new clsPmieducarFaltaAtraso($this->cod_falta_atraso, $this->ref_cod_escola,
         $this->ref_cod_instituicao, $this->pessoa_logada, NULL,
         $this->ref_cod_servidor, $this->tipo, $this->data_falta_atraso,
         $this->qtd_horas, $this->qtd_min, $this->justificada, NULL, NULL, 1);
@@ -248,12 +251,12 @@ class indice extends clsCadastro
       $det_ser = $obj_ser->detalhe();
       $horas   = floor($det_ser['carga_horaria']);
       $minutos = ($det_ser['carga_horaria'] - $horas) * 60;
-      $obj = new clsPmieducarFaltaAtraso(NULL, $this->ref_cod_escola,
+      $obj = new clsPmieducarFaltaAtraso($this->cod_falta_atraso, $this->ref_cod_escola,
         $this->ref_cod_instituicao, $this->pessoa_logada, NULL,
         $this->ref_cod_servidor, $this->tipo, $this->data_falta_atraso, $horas,
         $minutos, $this->justificada, NULL, NULL, 1);
     }
-
+    $this->data_falta_atraso = Portabilis_Date_Utils::brToPgSQL($this->data_falta_atraso);
     $editou = $obj->edita();
     if ($editou) {
       $this->mensagem .= 'Edição efetuada com sucesso.<br />';
@@ -289,7 +292,7 @@ class indice extends clsCadastro
         $this->ref_cod_servidor, $this->ref_cod_instituicao));
       die();
     }
-
+    $this->data_falta_atraso = Portabilis_Date_Utils::brToPgSQL($this->data_falta_atraso);
     $this->mensagem = "Exclusão não realizada.<br>";
     echo "<!--\nErro ao excluir clsPmieducarFaltaAtraso\nvalores obrigatórios\nif( is_numeric( $this->cod_falta_atraso ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
     return FALSE;
