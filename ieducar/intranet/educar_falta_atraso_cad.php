@@ -285,6 +285,7 @@ class indice extends clsCadastro
       $this->ref_ref_cod_instituicao, $this->pessoa_logada, $this->pessoa_logada,
       $this->ref_cod_servidor, $this->tipo, $this->data_falta_atraso, $this->qtd_horas,
       $this->qtd_min, $this->justificada, $this->data_cadastro, $this->data_exclusao, 0);
+    $this->data_falta_atraso = Portabilis_Date_Utils::brToPgSQL($this->data_falta_atraso);
     $excluiu = $obj->excluir();
     if ($excluiu) {
       $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
@@ -292,7 +293,6 @@ class indice extends clsCadastro
         $this->ref_cod_servidor, $this->ref_cod_instituicao));
       die();
     }
-    $this->data_falta_atraso = Portabilis_Date_Utils::brToPgSQL($this->data_falta_atraso);
     $this->mensagem = "Exclusão não realizada.<br>";
     echo "<!--\nErro ao excluir clsPmieducarFaltaAtraso\nvalores obrigatórios\nif( is_numeric( $this->cod_falta_atraso ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
     return FALSE;
