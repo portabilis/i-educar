@@ -30,7 +30,7 @@
  */
 
 require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
-
+require_once 'Portabilis/Business/Professor.php';
 
 /**
  * Portabilis_View_Helper_DynamicInput_Serie class.
@@ -49,11 +49,18 @@ class Portabilis_View_Helper_DynamicInput_Serie extends Portabilis_View_Helper_D
   }
 
   protected function inputOptions($options) {
-    $resources = $options['resources'];
-    $escolaId  = $this->getEscolaId($options['escolaId']);
-    $cursoId   = $this->getCursoId($options['cursoId']);
+    $resources     = $options['resources'];
+    $instituicaoId = $this->getInstituicaoId($options['instituicaoId']);
+    $escolaId      = $this->getEscolaId($options['escolaId']);
+    $cursoId       = $this->getCursoId($options['cursoId']);
+    $userId        = $this->getCurrentUserId();
+    $isProfessor   = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
 
-    if ($escolaId && $cursoId && empty($resources))
+    if ($isProfessor && Portabilis_Business_Professor::canLoadSeriesAlocado($instituicaoId)){      
+      $series = Portabilis_Business_Professor::seriesAlocado($instituicaoId, $escolaId, $serieId, $userId);
+      //$resources = Portabilis_Array_Utils::setAsIdValue($series, 'id', 'nome');
+    }
+    elseif ($escolaId && $cursoId && empty($resources))
       $resources = App_Model_IedFinder::getSeries($instituicaoId = null, $escolaId, $cursoId);
 
     return $this->insertOption(null, "Selecione uma s&eacute;rie", $resources);

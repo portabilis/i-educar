@@ -68,7 +68,7 @@ class indice extends clsCadastro
 		$this->cod_raca=$_GET["cod_raca"];
 
 		$obj_permissao = new clsPermissoes();
-		$obj_permissao->permissao_cadastra(678, $this->pessoa_logada, 3, "educar_raca_lst.php");
+		$obj_permissao->permissao_cadastra(678, $this->pessoa_logada, 7, "educar_raca_lst.php");
 
 		if( is_numeric( $this->cod_raca ) )
 		{
@@ -83,21 +83,21 @@ class indice extends clsCadastro
 				$this->data_exclusao = dataFromPgToBr( $this->data_exclusao );
 
 
-				$this->fexcluir = $obj_permissao->permissao_cadastra(678, $this->pessoa_logada, 3);
+				$this->fexcluir = $obj_permissao->permissao_cadastra(678, $this->pessoa_logada, 7);
 
 				$retorno = "Editar";
 			}
 		}
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_raca_det.php?cod_raca={$registro["cod_raca"]}" : "educar_raca_lst.php";
-		
+
 		$nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
         $localizacao = new LocalizacaoSistema();
         $localizacao->entradaCaminhos( array(
              $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
              "educar_index.php"                  => "i-Educar - Escola",
-             ""        => "{$nomeMenu} ra&ccedil;a"             
+             ""        => "{$nomeMenu} ra&ccedil;a"
         ));
-        $this->enviaLocalizacao($localizacao->montar());	
+        $this->enviaLocalizacao($localizacao->montar());
 
 		$this->nome_url_cancelar = "Cancelar";
 		return $retorno;
@@ -118,7 +118,7 @@ class indice extends clsCadastro
 								5 => "Indígena");
 
 		$options = array('label' => Portabilis_String_Utils::toLatin1('Raça Educacenso'), 'resources' => $resources, 'value' => $this->raca_educacenso);
-	    $this->inputsHelper()->select('raca_educacenso', $options);	 
+	    $this->inputsHelper()->select('raca_educacenso', $options);
 
 	}
 
