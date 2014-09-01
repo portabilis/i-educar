@@ -2426,7 +2426,7 @@ and  e.cod_escola = t.ref_ref_cod_escola
 		{
 
 			$db = new clsBanco();
-			$db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_turma = '{$this->cod_turma}' AND turma.ano = ( SELECT ano FROM pmieducar.escola_ano_letivo enl WHERE enl.ref_cod_escola = turma.ref_ref_cod_escola AND andamento = 1 ORDER BY ano DESC LIMIT 1)" );
+			$db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_turma = '{$this->cod_turma}' AND turma.ano in( SELECT ano FROM pmieducar.escola_ano_letivo enl WHERE enl.ref_cod_escola = turma.ref_ref_cod_escola AND andamento = 1)" );
 			$db->ProximoRegistro();
 			return $db->Tupla();
 		}
