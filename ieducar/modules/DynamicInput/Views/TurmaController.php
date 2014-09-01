@@ -76,7 +76,7 @@ class TurmaController extends ApiCoreController
       $isProfessor   = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
 
       if ($isProfessor)
-        $turmas = Portabilis_Business_Professor::turmasAlocado($escolaId, $serieId, $userId);
+        $turmas = Portabilis_Business_Professor::turmasAlocado($instituicaoId, $escolaId, $serieId, $userId);
 
       else {
         $sql    = "select cod_turma as id, nm_turma || ' - ' || COALESCE(ano::varchar,'SEM ANO') as nome from pmieducar.turma where ref_ref_cod_escola = $1

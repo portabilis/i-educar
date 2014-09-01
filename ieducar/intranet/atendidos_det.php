@@ -183,9 +183,8 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('E-mail', $detalhe['email']));
     }
 
-    $sexo = $detalhe['sexo'] == 'M' ? 'Masculino' : 'Feminino';
-
-    $this->addDetalhe(array('Sexo', $sexo));
+    if($detalhe['sexo'])
+      $this->addDetalhe(array('Sexo', $detalhe['sexo'] == 'M' ? 'Masculino' : 'Feminino'));
 
     $this->url_novo     = 'atendidos_cad.php';
     $this->url_editar   = 'atendidos_cad.php?cod_pessoa_fj=' . $detalhe['idpes'];
@@ -198,7 +197,7 @@ class indice extends clsDetalhe
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          ""                                  => "Detalhe da pessoa f&iacute;sica"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
   }
 }
 

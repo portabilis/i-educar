@@ -88,7 +88,7 @@ class indice extends clsListagem
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		
+
 
 		$this->addCabecalhos( array(
 			"Ra&ccedil;a" /*,
@@ -204,13 +204,13 @@ class indice extends clsListagem
 					"<a href=\"cadastro_raca_det.php?cod_raca={$registro["cod_raca"]}\">{$registro["idpes_cad"]}</a>",*/
 					"<a href=\"educar_raca_det.php?cod_raca={$registro["cod_raca"]}\">{$registro["nm_raca"]}</a>"
 				) );
-				
+
 			}
 		}
 		$this->addPaginador2( "educar_raca_lst.php", $total, $_GET, $this->nome, $this->__limite );
-	
+
 		$obj_permissao = new clsPermissoes();
-		if( $obj_permissao->permissao_cadastra(678, $this->__pessoa_logada, 3) )
+		if( $obj_permissao->permissao_cadastra(678, $this->__pessoa_logada, 7) )
 		{
 			$this->acao = "go(\"educar_raca_cad.php\")";
 			$this->nome_acao = "Novo";
@@ -223,7 +223,7 @@ class indice extends clsListagem
 	         "educar_index.php"                  => "i-Educar - Escola",
 	         ""                                  => "Listagem de ra&ccedil;as"
 	    ));
-	    $this->enviaLocalizacao($localizacao->montar());		
+	    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 // cria uma extensao da classe base

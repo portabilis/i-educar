@@ -199,7 +199,7 @@ class MatriculaController extends ApiCoreController
     $objBanco = new clsBanco();
     $frequencia = $objBanco->unicoCampo(" SELECT modules.frequencia_da_matricula({$cod_matricula}); ");
     return array('frequencia' => $frequencia);
-  }  
+  }
 
   protected function deleteAbandono() {
     if ($this->canDeleteAbandono()) {
@@ -220,10 +220,10 @@ class MatriculaController extends ApiCoreController
     $matricula   = $matricula->detalhe();
     $alunoId     = $matricula['ref_cod_aluno'];
     $situacaoAndamento  = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-  
-    $sql = 'update pmieducar.matricula_turma set ativo = 1 where ref_cod_matricula = $1';
+
+    $sql = 'update pmieducar.matricula_turma set ativo = 1, reclassificado = NULL where ref_cod_matricula = $1';
     $this->fetchPreparedQuery($sql, array($matriculaId));
-    
+
     $sql = 'update pmieducar.matricula set matricula_reclassificacao = 0, aprovado = $1 where cod_matricula = $2';
     $this->fetchPreparedQuery($sql, array($situacaoAndamento, $matriculaId));
 

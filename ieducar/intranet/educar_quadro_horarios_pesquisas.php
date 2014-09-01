@@ -462,7 +462,7 @@
 				{
 					$obj_turma = new clsPmieducarTurma();
 					$obj_turma->setOrderby("nm_turma ASC");
-					$lst_turma = $obj_turma->lista( null, null, null, $this->ref_cod_serie, $this->ref_cod_escola, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_curso, $this->ref_cod_instituicao );
+					$lst_turma = $obj_turma->lista( null, null, null, $this->ref_cod_serie, $this->ref_cod_escola, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_curso, $this->ref_cod_instituicao, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, TRUE );
 					if ( is_array( $lst_turma ) && count( $lst_turma ) )
 					{
 						foreach ( $lst_turma as $turma )

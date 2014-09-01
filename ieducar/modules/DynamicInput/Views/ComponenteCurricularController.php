@@ -66,7 +66,7 @@ class ComponenteCurricularController extends ApiCoreController
 
       if ($isProfessor) {
         $componentesCurriculares = Portabilis_Business_Professor::componentesCurricularesAlocado(
-          $turmaId, $ano, $userId
+          $instituicaoId, $turmaId, $ano, $userId
         );
       }
 

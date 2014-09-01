@@ -2,36 +2,40 @@
   $(document).ready(function(){
 
     // serie search expect an id for escola
+    var $instituicaoField = getElementFor('instituicao');
+
     var $escolaField = getElementFor('escola');
 
     var $cursoField = getElementFor('curso');
     var $serieField = getElementFor('serie');
 
     var handleGetSeries = function(resources) {
-      var selectOptions = xmlResourcesToSelectOptions(resources, 'query', 'cod_serie');
+      var selectOptions = jsonResourcesToSelectOptions(resources['options']);
       updateSelect($serieField, selectOptions, "Selecione uma s&eacute;rie");
     }
 
     var updateSeries = function(){
       resetSelect($serieField);
 
-      if ($escolaField.val() && $cursoField.val() && $cursoField.is(':enabled')) {
+      if ($instituicaoField.val() && $escolaField.val() && $cursoField.val() && $cursoField.is(':enabled')) {
         $serieField.children().first().html('Aguarde carregando...');
 
-        var urlForGetSeries = getResourceUrlBuilder.buildUrl('educar_escola_curso_serie_xml.php', '', {
-                                                       esc : $escolaField.attr('value'),
-                                                       cur : $cursoField.attr('value') });
+        var urlForGetSeries = getResourceUrlBuilder.buildUrl('/module/DynamicInput/serie', 'series', {
+          instituicao_id   : $instituicaoField.val(),
+          escola_id        : $escolaField.val(),
+          curso_id         : $cursoField.val()
+        });
 
         var options = {
           url : urlForGetSeries,
-          dataType : 'xml',
+          dataType : 'json',
           success  : handleGetSeries
         };
 
         getResources(options);
       }
 
-      $serieField.change();
+      $serieField.change();   
     };
 
     // bind onchange event

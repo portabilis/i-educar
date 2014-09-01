@@ -63,9 +63,9 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "Rematr&iacute;cula autom&aacute;tica"             
+         ""        => "Rematr&iacute;cula autom&aacute;tica"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
 
     return $retorno;
   }
@@ -76,7 +76,7 @@ class indice extends clsCadastro
     $anoLetivoHelperOptions = array('situacoes' => array('em_andamento', 'nao_iniciado'));
 
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie'));
-    $this->inputsHelper()->dynamic('turma', array('label' => 'Selecione a turma do ano anterior'));
+    $this->inputsHelper()->dynamic('turma', array('label' => 'Selecione a turma do ano anterior', 'required' => FALSE));
     $this->inputsHelper()->dynamic('anoLetivo', array('label' => 'Ano destino'), $anoLetivoHelperOptions);
     $this->inputsHelper()->date('data_matricula', array('label' => 'Data da matrícula', 'placeholder' => 'dd/mm/yyyy'));
     $this->inputsHelper()->hidden('nao_filtrar_ano', array('value' => '1'));
@@ -94,7 +94,7 @@ class indice extends clsCadastro
     $this->db  = new clsBanco();
     $this->db2 = new clsBanco();
     $this->data_matricula = Portabilis_Date_Utils::brToPgSQL($this->data_matricula);
-    $result = $this->rematricularALunos($this->ref_cod_escola, $this->ref_cod_curso,
+    $result = $this->rematricularAlunos($this->ref_cod_escola, $this->ref_cod_curso,
                                         $this->ref_cod_serie, $this->ref_cod_turma, $_POST['ano']);
 
     return $result;
@@ -106,7 +106,7 @@ class indice extends clsCadastro
   }
 
 
-  protected function rematricularALunos($escolaId, $cursoId, $serieId, $turmaId, $ano) {
+  protected function rematricularAlunos($escolaId, $cursoId, $serieId, $turmaId, $ano) {
     $result = $this->selectMatriculas($escolaId, $cursoId, $serieId, $turmaId, $ano);
     $count = 0;
     $nomesAlunos;
@@ -138,7 +138,7 @@ class indice extends clsCadastro
         $this->mensagem = $mensagem;
       }else{
         $this->mensagem = "<span class='notice'>Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados não matriculados em ".($ano-1).".</span>";
-      }      
+      }
     }elseif(empty($this->mensagem))
       $this->mensagem = "Ocorreu algum erro inesperado durante as rematrículas, por favor, tente novamente.";
 
@@ -150,23 +150,28 @@ class indice extends clsCadastro
     try {
       $anoAnterior = $ano - 1;
 
-      $this->db->Consulta("SELECT cod_matricula, ref_cod_aluno, aprovado, 
-                                      (SELECT upper(nome) 
-                                            FROM cadastro.pessoa, pmieducar.aluno 
-                                                WHERE pessoa.idpes = aluno.ref_idpes AND 
+      $sql = "SELECT cod_matricula, ref_cod_aluno, aprovado,
+                                      (SELECT upper(nome)
+                                            FROM cadastro.pessoa, pmieducar.aluno
+                                                WHERE pessoa.idpes = aluno.ref_idpes AND
                                                           aluno.cod_aluno = ref_cod_aluno) as nome
                    FROM
                      pmieducar.matricula m, pmieducar.matricula_turma
                    WHERE aprovado in (1, 2) AND m.ativo = 1 AND ref_ref_cod_escola = $escolaId AND
                      ref_ref_cod_serie = $serieId AND ref_cod_curso = $cursoId AND
-                     cod_matricula = ref_cod_matricula AND ref_cod_turma = $turmaId AND
+                     cod_matricula = ref_cod_matricula AND
                      matricula_turma.ativo = 1 AND
                      ano  = $anoAnterior AND
                      NOT EXISTS(select 1 from pmieducar.matricula m2 where
                      m2.ref_cod_aluno = m.ref_cod_aluno AND
                      m2.ano = $ano AND
                      m2.ativo = 1 AND
-                     m2.ref_ref_cod_escola = m.ref_ref_cod_escola)");
+                     m2.ref_ref_cod_escola = m.ref_ref_cod_escola)";
+
+      if ($turmaId)
+        $sql .= "AND ref_cod_turma = $turmaId";
+
+      $this->db->Consulta($sql);
     }
     catch (Exception $e) {
       $this->mensagem = "Erro ao selecionar matrículas ano anterior: $anoAnterior";
@@ -186,10 +191,16 @@ class indice extends clsCadastro
       $nextCursoId = $this->db2->CampoUnico("SELECT ref_cod_curso FROM pmieducar.serie
                                             WHERE cod_serie = $nextSerieId");
 
-      return $this->matricularAluno($escolaId, $nextCursoId, $nextSerieId, $ano, $alunoId);
+      if ($this->escolaSerieConfigurada($escolaId, $nextSerieId)){
+      	 return $this->matricularAluno($escolaId, $nextCursoId, $nextSerieId, $ano, $alunoId);
+      }
+      else{
+      	$this->mensagem = "A série de destino não está configurada na escola. Favor efetuar o cadastro em Cadastro > Série > Escola-Série";
+      }
     }
-    else
+    else{
       $this->mensagem = "Não foi possível obter a próxima série da sequência de enturmação";
+    }
 
     return false;
   }
@@ -213,6 +224,19 @@ class indice extends clsCadastro
     }
 
     return true;
+  }
+
+  protected function escolaSerieConfigurada($escolaId, $serieId){
+
+  	$escolaSerie = new clsPmieducarEscolaSerie($escolaId, $serieId);
+
+  	$escolaSerie = $escolaSerie->detalhe();
+  	if(count($escolaSerie) > 0){
+  		if($escolaSerie["ativo"] == '1'){
+  			return true;
+  		}
+  	}
+  	return false;
   }
 }
 

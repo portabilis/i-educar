@@ -381,8 +381,12 @@ class indice extends clsCadastro
       $opcoes = array('' => 'Erro na geracao');
     }   
 
-    $script = "javascript:showExpansivelIframe(350, 135, 'educar_escolaridade_cad_pop.php');";
-    $script = "<img id='img_deficiencia' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
+    $obj_permissoes = new clsPermissoes();
+    if ($obj_permissoes->permissao_cadastra( 632, $this->pessoa_logada, 4)){
+      $script = "javascript:showExpansivelIframe(350, 135, 'educar_escolaridade_cad_pop.php');";
+      $script = "<img id='img_deficiencia' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";  
+    }else
+      $script = NULL;    
 
     $this->campoLista('ref_idesco', 'Escolaridade', $opcoes,
       $this->ref_idesco, '', FALSE, '', $script, FALSE, FALSE);    
