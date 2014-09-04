@@ -129,13 +129,13 @@ class clsPmieducarAluno
   {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
-    $this->_tabela = $this->_schema . 'aluno';
+    $this->_tabela = $this->_schema . 'aluno a';
 
-    $this->_campos_lista = $this->_todos_campos = 'cod_aluno, ref_cod_religiao, ref_usuario_exc, 
-        ref_usuario_cad, ref_idpes, data_cadastro, data_exclusao, ativo, caminho_foto, analfabeto, nm_pai, nm_mae,tipo_responsavel, aluno_estado_id,
-        recurso_prova_inep_aux_ledor, recurso_prova_inep_aux_transcricao, recurso_prova_inep_guia_interprete, recurso_prova_inep_interprete_libras, recurso_prova_inep_leitura_labial,
-        recurso_prova_inep_prova_ampliada_16, recurso_prova_inep_prova_ampliada_20, recurso_prova_inep_prova_ampliada_24, recurso_prova_inep_prova_braille,
-        justificativa_falta_documentacao, url_laudo_medico, codigo_sistema';
+    $this->_campos_lista = $this->_todos_campos = 'a.cod_aluno, a.ref_cod_religiao, a.ref_usuario_exc, 
+        a.ref_usuario_cad, a.ref_idpes, a.data_cadastro, a.data_exclusao, a.ativo, a.caminho_foto, a.analfabeto, a.nm_pai, a.nm_mae,tipo_responsavel, a.aluno_estado_id,
+        a.recurso_prova_inep_aux_ledor, a.recurso_prova_inep_aux_transcricao, a.recurso_prova_inep_guia_interprete, a.recurso_prova_inep_interprete_libras, a.recurso_prova_inep_leitura_labial,
+        a.recurso_prova_inep_prova_ampliada_16, a.recurso_prova_inep_prova_ampliada_20, a.recurso_prova_inep_prova_ampliada_24, a.recurso_prova_inep_prova_braille,
+        a.justificativa_falta_documentacao, a.url_laudo_medico, a.codigo_sistema';
 
     if (is_numeric($ref_usuario_exc)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -783,8 +783,12 @@ class clsPmieducarAluno
     $str_nome_aluno = NULL, $str_nome_responsavel = NULL, $int_cpf_responsavel = NULL,
     $int_analfabeto = NULL, $str_nm_pai = NULL, $str_nm_mae = NULL,
     $int_ref_cod_escola = NULL, $str_tipo_responsavel = NULL, $data_nascimento = NULL,
-    $str_nm_pai2 = NULL, $str_nm_mae2 = NULL, $str_nm_responsavel2 = NULL, $cod_inep = NULL)
+    $str_nm_pai2 = NULL, $str_nm_mae2 = NULL, $str_nm_responsavel2 = NULL, $cod_inep = NULL,
+    $aluno_estado_id = NULL, $ano = NULL, $ref_cod_instituicao = NULL, $ref_cod_escola = NULL, 
+    $ref_cod_curso = NULL, $ref_cod_serie = NULL, $idsetorbai = NULL)//, $periodo = NULL )
   {
+    $filtra_baseado_matricula = is_numeric($ano) || is_numeric($ref_cod_instituicao) || is_numeric($ref_cod_escola) || is_numeric($ref_cod_curso) || is_numeric($ref_cod_serie);// || is_numeric($periodo);
+
     $filtros = '';
     $this->resetCamposLista();
 
@@ -798,11 +802,27 @@ class clsPmieducarAluno
            idpes = ref_idpes
          ) AS nome_aluno';
 
-    $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
+    if($filtra_baseado_matricula)
+      $sql = "SELECT distinct {$this->_campos_lista} FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
+    else
+      $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
+
+    if($idsetorbai)
+      $sql .= '
+        INNER JOIN cadastro.endereco_pessoa ep ON (a.ref_idpes = ep.idpes)
+        INNER JOIN public.bairro b ON (ep.idbai = b.idbai)
+        INNER JOIN public.setor_bai sb ON (sb.idsetorbai = b.idsetorbai)
+      ';
+
     $whereAnd = ' WHERE ';
 
     if(is_numeric($int_cod_aluno)) {
       $filtros .= "{$whereAnd} cod_aluno = {$int_cod_aluno}";
+      $whereAnd = ' AND ';
+    }
+
+    if(is_numeric($idsetorbai)) {
+      $filtros .= "{$whereAnd} sb.idsetorbai = {$idsetorbai}";
       $whereAnd = ' AND ';
     }
 
@@ -813,6 +833,11 @@ class clsPmieducarAluno
 
     if(is_numeric($int_ref_usuario_exc)) {
       $filtros .= "{$whereAnd} ref_usuario_exc = '{$int_ref_usuario_exc}'";
+      $whereAnd = ' AND ';
+    }
+
+    if(is_numeric($aluno_estado_id)) {
+      $filtros .= "{$whereAnd} a.aluno_estado_id = '{$aluno_estado_id}'";
       $whereAnd = ' AND ';
     }
 
@@ -847,7 +872,7 @@ class clsPmieducarAluno
     }
 
     if ($int_ativo) {
-      $filtros .= "{$whereAnd} ativo = '1'";
+      $filtros .= "{$whereAnd} a.ativo = '1'";
       $whereAnd = ' AND ';
     }
 
@@ -967,6 +992,46 @@ class clsPmieducarAluno
       $whereAnd = ' AND ';
     }
 
+    if($filtra_baseado_matricula){
+      $filtros .= "{$whereAnd} m.aprovado = 3 AND m.ativo = 1 ";
+      $whereAnd = ' AND ';
+    }
+
+    if(is_numeric($ano)){
+      $filtros .= "{$whereAnd} m.ano = {$ano}";
+      $whereAnd = ' AND ';
+    }
+
+    if(is_numeric($ref_cod_escola)){
+      $filtros .= "{$whereAnd} m.ref_ref_cod_escola = {$ref_cod_escola}";
+      $whereAnd = ' AND ';
+    }
+
+    if(is_numeric($ref_cod_serie)){
+      $filtros .= "{$whereAnd} m.ref_ref_cod_serie = {$ref_cod_serie}";
+      $whereAnd = ' AND ';
+    }
+
+    if(is_numeric($ref_cod_curso)){
+      $filtros .= "{$whereAnd} m.ref_cod_curso = {$ref_cod_curso}";
+      $whereAnd = ' AND ';
+    }
+    /*
+    if(is_numeric($periodo)){
+      $filtros .= "{$whereAnd} EXISTS(
+                      select 1
+                
+                FROM pmieducar.matricula_turma mt,
+                     pmieducar.turma 
+                     WHERE mt.ref_cod_matricula = m.cod_matricula and 
+                     mt.ativo = 1 and
+                     turma.cod_turma = mt.ref_cod_turma
+                     AND turma_turno_id = {$periodo}
+                     LIMIT 1) ";
+      $whereAnd = ' AND ';
+
+    }*/
+
     if (!empty($str_nm_pai2) || !empty($str_nm_mae2) || !empty($str_nm_responsavel2)) {
       $complemento_letf_outer = '';
       $complemento_where      = '';
@@ -1016,7 +1081,22 @@ class clsPmieducarAluno
     }
 
     $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-    $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
+
+    if($filtra_baseado_matricula)
+      $sqlCount = "SELECT COUNT(DISTINCT cod_aluno) FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
+    else
+      $sqlCount =  "SELECT COUNT(0) FROM {$this->_tabela} ";
+
+    if($idsetorbai)
+      $sqlCount .= '
+        INNER JOIN cadastro.endereco_pessoa ep ON (a.ref_idpes = ep.idpes)
+        INNER JOIN public.bairro b ON (ep.idbai = b.idbai)
+        INNER JOIN public.setor_bai sb ON (sb.idsetorbai = b.idsetorbai) 
+      ';
+
+    $sqlCount .= $filtros;
+
+    $this->_total = $db->CampoUnico($sqlCount);
 
     $db->Consulta($sql);
 

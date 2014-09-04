@@ -29,6 +29,7 @@ require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'Educacenso/Model/AlunoDataMapper.php';
+require_once 'include/public/clsPublicSetorBai.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -92,6 +93,13 @@ class indice extends clsListagem
 	var $nome_mae;
 	var $data_nascimento;
 
+	var $ano;
+	var $ref_cod_instituicao;
+  var $ref_cod_escola;
+  var $ref_cod_curso;
+  var $ref_cod_serie;
+  var $idsetorbai;
+
 	function Gerar()
 	{
 		@session_start();
@@ -107,11 +115,39 @@ class indice extends clsListagem
 
 		$this->campoNumero("cod_aluno","C&oacute;digo Aluno",$this->cod_aluno,20,9,false);
 		$this->campoNumero("cod_inep","C&oacute;digo INEP",$this->cod_inep,20,255,false);
+		$this->campoNumero("aluno_estado_id",($GLOBALS['coreExt']['Config']->app->database->dbname == 'botucatu' ? "C&oacute;digo estadual do aluno(R.A.)" : "C&oacute;digo estadual do aluno" ), $this->aluno_estado_id,20,255,false);
 		$this->campoTexto("nome_aluno","Nome do aluno", $this->nome_aluno,50,255,false);
 		$this->campoData("data_nascimento", "Data de Nascimento", $this->data_nascimento);
 		$this->campoTexto("nome_pai", "Nome do Pai", $this->nome_pai, 50, 255);
 		$this->campoTexto("nome_mae", "Nome da Mãe", $this->nome_mae, 50, 255);
 		$this->campoTexto("nome_responsavel", "Nome do Responsável", $this->nome_responsavel, 50, 255);
+
+		$opcoes = array('' => 'Selecione');
+    if (class_exists('clsPublicSetorBai')) {
+      $objTemp = new clsPublicSetorBai();
+      $objTemp->setOrderBy(' nome asc ');
+      $lista = $objTemp->lista();
+
+      if (is_array($lista) && count($lista)) {
+        foreach ($lista as $registro) {
+          $opcoes[$registro['idsetorbai']] = $registro['nome'];
+        }
+      }      
+    }
+    else {
+      echo '<!--\nErro\nClasse clsMunicipio nao encontrada\n-->';
+      $opcoes = array("" => "Erro na geracao");
+    }
+
+    $this->campoLista('idsetorbai', 'Setor', $opcoes, $this->idsetorbai, NULL, NULL, NULL, NULL, NULL, FALSE);
+
+
+		$this->campoRotulo('filtros_matricula', '<b>Filtros de matrículas em andamento</b>');
+
+		$this->inputsHelper()->integer('ano', array('required' => false, 'value' => $this->ano, 'max_length' => 4));
+		$this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie'), array('required' =>  false));		
+
+		//$this->inputsHelper()->select('periodo', array('required' => false, 'value' => $this->periodo, 'resources' => array(null => 'Selecione', 1 => 'Matutino', 2 => 'Vespertino', 3 => 'Noturno', 4 => 'Integral' )));
 
 		$obj_permissoes = new clsPermissoes();
 		$cod_escola = $obj_permissoes->getEscola( $this->pessoa_logada );
@@ -171,7 +207,14 @@ class indice extends clsListagem
 			$this->nome_pai,
 			$this->nome_mae,
 			$this->nome_responsavel,
-      $this->cod_inep
+      $this->cod_inep,
+      $this->aluno_estado_id,
+      $this->ano,
+      $this->ref_cod_instituicao,
+      $this->ref_cod_escola,
+      $this->ref_cod_curso,
+      $this->ref_cod_serie,
+      $this->idsetorbai
 		);
 
 		$total = $aluno->_total;
