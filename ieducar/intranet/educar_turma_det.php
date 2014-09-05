@@ -283,7 +283,7 @@ class indice extends clsDetalhe
     }
     elseif ($padrao_ano_escolar == 0) {
       $obj = new clsPmieducarTurmaModulo();
-      $obj->setOrderby('data_inicio ASC');
+      $obj->setOrderby('sequencial ASC');
       $lst = $obj->lista($this->cod_turma);
 
       if ($lst) {
