@@ -87,7 +87,6 @@ class indice extends clsCadastro
   var $ref_cod_escola;
   var $ref_cod_turma;
 
-  var $matricula_transferencia;
   var $semestre;
   var $is_padrao;
 
@@ -159,13 +158,6 @@ class indice extends clsCadastro
     $obj_matricula = new clsPmieducarMatricula();
     $lst_matricula = $obj_matricula->lista(NULL, NULL, NULL, NULL, NULL, NULL,
       $this->ref_cod_aluno);
-
-    // Primeira matrícula do sistema exibe campo check
-    if (! $lst_matricula) {
-      $this->campoCheck('matricula_transferencia',
-        'Matrícula de Transferência', '',
-        'Caso seja transfência externa por favor marque esta opção.');
-    }
 
     // inputs
 
@@ -414,15 +406,6 @@ class indice extends clsCadastro
       $lst_matricula_aluno = $obj_matricula_aluno->lista(NULL, NULL, NULL, NULL,
         NULL, NULL, $this->ref_cod_aluno);
 
-      if (! $lst_matricula_aluno) {
-        // Primeira matrícula do sistema, consistência (?)
-        $this->matricula_transferencia =
-          $this->matricula_transferencia == 'on' ? TRUE : FALSE;
-      }
-      else {
-        $this->matricula_transferencia = FALSE;
-      }
-
       if ($this->is_padrao == 1) {
         $this->semestre =  NULL;
       }
@@ -435,7 +418,7 @@ class indice extends clsCadastro
         $this->ref_cod_escola, $this->ref_cod_serie, NULL,
         $this->pessoa_logada, $this->ref_cod_aluno, 3, NULL, NULL, 1, $this->ano,
         1, NULL, NULL, NULL, NULL, $this->ref_cod_curso,
-        $this->matricula_transferencia, $this->semestre,$this->data_matricula);
+        NULL, $this->semestre,$this->data_matricula);
 
       $cadastrou = $obj->cadastra();
       
