@@ -22,7 +22,7 @@
         };
 
         var urlForGetComponentesCurriculares = getResourceUrlBuilder.buildUrl(
-          '/module/DynamicInput/componenteCurricular', 'componentesCurriculares', data
+          '/module/DynamicInput/componenteCurricular', 'componentesCurricularesForDiario', data
         );
 
         var options = {

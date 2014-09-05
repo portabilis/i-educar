@@ -60,17 +60,17 @@ class DiarioController extends Portabilis_Controller_Page_ListController
 
     $this->inputsHelper()->input('ano');
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie', 'turma', 'etapa'));
-    $this->inputsHelper()->dynamic(array('componenteCurricular'), array('required' => $componenteRequired));
-	  $this->inputsHelper()->dynamic(array('matricula'), array('required' => FALSE ));
+    $this->inputsHelper()->dynamic(array('componenteCurricularForDiario'), array('required' => $componenteRequired));
+	$this->inputsHelper()->dynamic(array('matricula'), array('required' => FALSE ));
 
-	  $navegacaoTab = array('1' => 'Horizontal(padr&atilde;o)',
-                          '2' => 'Vertical',);
-                                 
-	  $options      = array('label'     =>'Navega&ccedil;&atilde;o do cursor(tab)',
-		                      'resources' => $navegacaoTab,
-		                      'required'  => false,
-		                      'inline'    => true,
-		                      'value'     => $navegacaoTab[1]);
+  	$navegacaoTab = array('1' => 'Horizontal(padr&atilde;o)',
+                      	  '2' => 'Vertical',);
+                             
+  	$options      = array('label'     =>'Navega&ccedil;&atilde;o do cursor(tab)',
+	                      'resources' => $navegacaoTab,
+	                      'required'  => false,
+	                      'inline'    => true,
+	                      'value'     => $navegacaoTab[1]);
 
     $this->inputsHelper()->select('navegacao_tab', $options);
 
