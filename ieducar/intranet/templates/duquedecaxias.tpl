@@ -93,6 +93,8 @@
      <p style="min-height: 0px;" class="flash error">Desejamos a todos os nossos clientes e amigos um Feliz Natal e boas festas! Obrigado pela oportunidade de trabalharmos juntos neste ano e nos reencontramos em 2014 com muito mais garra ainda para continuar apoiando voc&ecirc;s nos seus trabalhos. :)</p-->
 
       <!-- #&ERROLOGIN&# -->
+
+      <!-- #&PENDENCIA_ADMINISTRATIVA&# -->
     </div>
 
     <div id="corpo">
