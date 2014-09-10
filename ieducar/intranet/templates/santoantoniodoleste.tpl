@@ -146,7 +146,7 @@
         <p class="explanation">Ferramenta de consulta de notas, <br/>faltas e ocorr&ecirc;ncias disciplinares.</p>
 
         <button type="button" style="margin-top: 15px;" onclick="window.open('http://educacao.portabilis.com.br/users/login')" class="btn btn-success">Acesse aqui</button>
-        <div style="position:relative; left: 120px; top: -16px;"> <a target="_blank" class="light decorated" href="https://docs.google.com/uc?export=download&id=0B-DS-DRSnzFsMzFMWWxKNWFEV0U"> Manual de uso</a></div>
+        <div style="position:relative; left: 120px; top: -16px;"> <a target="_blank" class="light decorated" href="https://docs.google.com/uc?export=download&id=0B-DS-DRSnzFsMXpRYTJ2UUZQTlk"> Manual de uso</a></div>
 
       </div>
 
