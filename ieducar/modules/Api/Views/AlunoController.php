@@ -1,7 +1,7 @@
 <?php
 
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
 
 /**
  * i-Educar - Sistema de gestão escolar
@@ -193,6 +193,10 @@ class AlunoController extends ApiCoreController
 
   protected function canGetMatriculas() {
     return $this->validatesId('aluno');
+  }
+
+  protected function canGetTodosAlunos() {
+    return true;#$this->validatesPresenceOf('instituicao_id');
   }
 
   protected function canChange() {
@@ -910,6 +914,26 @@ protected function createOrUpdateUniforme($id) {
     }
   }
 
+  protected function getTodosAlunos(){
+    if($this->canGetTodosAlunos()){
+
+      $sql = "SELECT cod_aluno AS aluno_id,
+             (SELECT
+                nome
+              FROM
+                cadastro.pessoa
+              WHERE
+                idpes = ref_idpes
+             ) AS nome_aluno
+              FROM pmieducar.aluno 
+              WHERE ativo = 1 
+              ORDER BY nome_aluno ASC";
+    
+      return array('alunos' => $this->fetchPreparedQuery($sql));
+    }
+  }
+
+
   protected function getMatriculas() {
     if ($this->canGetMatriculas()) {
       $matriculas = new clsPmieducarMatricula();
@@ -1161,6 +1185,9 @@ protected function createOrUpdateUniforme($id) {
 
     elseif ($this->isRequestFor('get', 'matriculas'))
       $this->appendResponse($this->getMatriculas());
+
+    elseif ($this->isRequestFor('get', 'todos-alunos'))
+      $this->appendResponse($this->getTodosAlunos());
 
     elseif ($this->isRequestFor('get', 'ocorrencias_disciplinares'))
       $this->appendResponse($this->getOcorrenciasDisciplinares());
