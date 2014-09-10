@@ -11,13 +11,7 @@
     <link rel=stylesheet type='text/css' href='styles/portabilis.css?rand=3' />
     <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=3' />
     <link rel=stylesheet type='text/css' href='styles/login.css?rand=7' />
-    <style type='text/css'>#flash-container, #menu, #corpo, #rodape {
 
-  /* login-form.widght + 42px */
-
-}
-
-</style>
   <script type='text/javascript' src='//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>
 
   <script type="text/javascript">
@@ -128,7 +122,7 @@
             <td>
               <p class="forget-password"><a class="light small" href="/module/Usuario/RedefinirSenha">Esqueceu sua senha?</a></p>
 
-              <!--p><a target="_blank" class="light small" href="http://educacao.portabilis.com.br/">Acesso professores, pais e alunos?</a> <a target="_blank" class="decorated light small" href="http://www.portabilis.com.br/produto/educacao-19#destaques">Saiba mais</a-->
+              <p><a target="_blank" class="light small" href="http://educacao.portabilis.com.br/">Acesso professores, pais e alunos?</a> <a target="_blank" class="decorated light small" href="http://www.portabilis.com.br/produto/educacao-19#destaques">Saiba mais</a>
             </p>
             </td>
           </tr>
@@ -138,24 +132,23 @@
       </div> <!-- end login-form -->
 
       <div id="service-info">
-        <p class="requiriments title">Pais e alunos</p>
-        <p class="explanation">Ferramenta de consulta de notas, faltas e ocorr&ecirc;ncias disciplinares.</p>
 
-        <button type="button" style="margin-top: 15px;" onclick="window.open('http://educacao.portabilis.com.br/prefeitura-municipal-de-duque-de-caxias')" class="btn btn-success">Acesse aqui</button>
-        <div style="position:relative; left: 120px; top: -16px;"> <a class="light decorated" href="https://docs.google.com/uc?export=download&id=0B-DS-DRSnzFsYlNPYTNzd1ZDUm8"> Manual de uso</a></div>
-
-        <p style="margin-top: 0px;" class="requiriments title">Requisitos</p>
+        <p class="requiriments title">Requisitos</p>
         <p class="explanation">Para melhor uso do sistema, recomendamos:</p>
         <ul class="requiriments unstyled">
           <li>- Navegador <a target="_blank" class="light decorated" href="https://www.google.com/intl/pt-BR/chrome/browser/">Google Chrome</a> ou <a target="_blank" class="light decorated" href="http://br.mozdev.org/download/">Mozilla Firefox</a></li>
           <li>- Leitor relat&oacute;rios PDF <a target="_blank" class="light decorated" href="http://get.adobe.com/br/reader/">Adobe Reader</a> ou <a target="_blank" class="light decorated" href="http://www.foxitsoftware.com/downloads#reader">Foxit</a></li>
         </ul>
 
+        <div style=" position: relative; width:100px; height: 0px; left: 240px; top: 72px;"><img height="120px" style="" src="https://s3.amazonaws.com/apps-ieducar-images/santoantoniodoleste/brasao-prefeitura"/></div>
+
+        <p class="requiriments title" style="margin-top: 80px">Pais e alunos</p>
+        <p class="explanation">Ferramenta de consulta de notas, <br/>faltas e ocorr&ecirc;ncias disciplinares.</p>
+
+        <button type="button" style="margin-top: 15px;" onclick="window.open('http://educacao.portabilis.com.br/users/login')" class="btn btn-success">Acesse aqui</button>
+        <div style="position:relative; left: 120px; top: -16px;"> <a target="_blank" class="light decorated" href="https://docs.google.com/uc?export=download&id=0B-DS-DRSnzFsMzFMWWxKNWFEV0U"> Manual de uso</a></div>
+
       </div>
-
-
-
-      <div style=" position: relative; margin-left: 370px; "><img style="" height="95px" width="220px" src="http://duquedecaxias.rj.gov.br/portal/images/imagens/LOGOS/PMDC_SEC_EDUCACAO_H_COR_SLOGAN.png"/></div>
 
       <div class="clear"></div>
 
@@ -163,16 +156,15 @@
 
     <div id="rodape" class="texto-normal">
       <p>
-        <a href="http://www.duquedecaxias.rj.gov.br/portal/" target="_blank">Prefeitura Municipal de Duque de Caxias</a> - Tel: (21) 2653-5735 / 2671-6612 - E-mail: <a href="mailto:sme@sme.duquedecaxias.rj.gov.br" >sme@sme.duquedecaxias.rj.gov.br</a>
-
-        <!--a target="_blank" class="light" href="http://suporte.portabilis.com.br"> Obter Suporte </a-->
+        Seti Tecnologia  - (65) 3359-7580 - 
+        <a target="_blank" class="light" href="www.setitecnologia.com.br"> www.setitecnologia.com.br </a> -
+        <a class="light" href="mailto:suporte@setitecnologia.com.br"> suporte@setitecnologia.com.br </a>
       </p>
-
 
       <!--div id="div-outubro-rosa" style="top: -488px">
         <a href="https://www.google.com.br/#q=Campanha+Outubro+rosa" target="_blank"><img src="https://s3.amazonaws.com/apps-ieducar-images/outubro-rosa/outubro-rosa.png"/></a>
       </div-->
-      <!--div id="div-copa-no-brasil" style="top: -405px">
+      <!--div id="div-copa-no-brasil" style="top: -368px;">
         <img src="https://cloud.githubusercontent.com/assets/1082624/3250687/b08b862c-f1a8-11e3-87f9-a1bfef5949c3.jpg"/>
         <p><a href="https://www.google.com/maps/views/streetview/brazils-painted-streets?gl=br&hl=pt-BR" target="_blank">
             <span style="color: #00A859;">Ruas</span> <span style="color: #FFCC29;">coloridas do <span style="color: #3E4095;">Brasil</span>
