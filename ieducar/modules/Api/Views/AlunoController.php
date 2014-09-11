@@ -196,7 +196,7 @@ class AlunoController extends ApiCoreController
   }
 
   protected function canGetTodosAlunos() {
-    return true;#$this->validatesPresenceOf('instituicao_id');
+    return $this->validatesPresenceOf('instituicao_id');
   }
 
   protected function canChange() {
@@ -927,9 +927,14 @@ protected function createOrUpdateUniforme($id) {
              ) AS nome_aluno
               FROM pmieducar.aluno 
               WHERE ativo = 1 
-              ORDER BY nome_aluno ASC";
-    
-      return array('alunos' => $this->fetchPreparedQuery($sql));
+              ORDER BY nome_aluno ASC limit 100";
+
+      $alunos = $this->fetchPreparedQuery($sql);
+
+      $attrs = array('aluno_id', 'nome_aluno');
+      $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
+
+      return array('alunos' => $alunos);
     }
   }
 
