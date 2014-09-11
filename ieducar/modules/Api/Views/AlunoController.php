@@ -196,7 +196,7 @@ class AlunoController extends ApiCoreController
   }
 
   protected function canGetTodosAlunos() {
-    return true;#$this->validatesPresenceOf('instituicao_id');
+    return $this->validatesPresenceOf('instituicao_id');
   }
 
   protected function canChange() {
