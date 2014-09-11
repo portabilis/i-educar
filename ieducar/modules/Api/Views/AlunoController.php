@@ -1,7 +1,7 @@
 <?php
 
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
 
 /**
  * i-Educar - Sistema de gestão escolar
@@ -195,6 +195,10 @@ class AlunoController extends ApiCoreController
     return $this->validatesId('aluno');
   }
 
+  protected function canGetTodosAlunos() {
+    return true;#$this->validatesPresenceOf('instituicao_id');
+  }
+
   protected function canChange() {
     return $this->validatesPessoaId()     &&
            $this->validatesResponsavel()  &&
@@ -212,8 +216,7 @@ class AlunoController extends ApiCoreController
 
 
   protected function canGetOcorrenciasDisciplinares() {
-    return $this->validatesId('escola') &&
-           $this->validatesId('aluno');
+    return $this->validatesId('aluno');
   }
 
   // load resources
@@ -620,11 +623,22 @@ protected function createOrUpdateUniforme($id) {
   protected function loadOcorrenciasDisciplinares() {
     $ocorrenciasAluno              = array();
 
-    $sql = "select cod_matricula as id from pmieducar.matricula, pmieducar.escola where
+    if(is_numeric($this->getRequest()->escola_id)){
+      $sql = "SELECT cod_matricula as id from pmieducar.matricula, pmieducar.escola where
             cod_escola = ref_ref_cod_escola and ref_cod_aluno = $1 and ref_ref_cod_escola =
             $2 and matricula.ativo = 1 order by ano desc, id";
 
-    $params     = array($this->getRequest()->aluno_id, $this->getRequest()->escola_id);
+      $params     = array($this->getRequest()->aluno_id, $this->getRequest()->escola_id);
+    }else{
+      $sql = "SELECT cod_matricula AS id 
+              FROM pmieducar.matricula 
+              WHERE ref_cod_aluno = $1
+              AND matricula.ativo = 1 
+              ORDER BY ano DESC, id";
+              
+      $params     = array($this->getRequest()->aluno_id);
+    }
+    
     $matriculas = $this->fetchPreparedQuery($sql, $params);
 
     $_ocorrenciasMatricula  = new clsPmieducarMatriculaOcorrenciaDisciplinar();
@@ -900,6 +914,26 @@ protected function createOrUpdateUniforme($id) {
     }
   }
 
+  protected function getTodosAlunos(){
+    if($this->canGetTodosAlunos()){
+
+      $sql = "SELECT cod_aluno AS aluno_id,
+             (SELECT
+                nome
+              FROM
+                cadastro.pessoa
+              WHERE
+                idpes = ref_idpes
+             ) AS nome_aluno
+              FROM pmieducar.aluno 
+              WHERE ativo = 1 
+              ORDER BY nome_aluno ASC";
+    
+      return array('alunos' => $this->fetchPreparedQuery($sql));
+    }
+  }
+
+
   protected function getMatriculas() {
     if ($this->canGetMatriculas()) {
       $matriculas = new clsPmieducarMatricula();
@@ -1151,6 +1185,9 @@ protected function createOrUpdateUniforme($id) {
 
     elseif ($this->isRequestFor('get', 'matriculas'))
       $this->appendResponse($this->getMatriculas());
+
+    elseif ($this->isRequestFor('get', 'todos-alunos'))
+      $this->appendResponse($this->getTodosAlunos());
 
     elseif ($this->isRequestFor('get', 'ocorrencias_disciplinares'))
       $this->appendResponse($this->getOcorrenciasDisciplinares());
