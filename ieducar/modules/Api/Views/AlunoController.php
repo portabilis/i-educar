@@ -1,7 +1,7 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
 
 /**
  * i-Educar - Sistema de gestão escolar
@@ -927,7 +927,7 @@ protected function createOrUpdateUniforme($id) {
              ) AS nome_aluno
               FROM pmieducar.aluno 
               WHERE ativo = 1 
-              ORDER BY nome_aluno ASC limit 100";
+              ORDER BY nome_aluno ASC";
 
       $alunos = $this->fetchPreparedQuery($sql);
 
