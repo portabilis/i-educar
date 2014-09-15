@@ -392,12 +392,12 @@ class indice extends clsCadastro
                   $script);
     }
 
-    $this->campoLista('ref_cod_turma_tipo', 'Tipo de Turma', $opcoes,
+    $this->campoLista('ref_cod_turma_tipo', 'Tipo de turma', $opcoes,
       $this->ref_cod_turma_tipo, '', FALSE, '', $script);
 
     $this->campoTexto('nm_turma', 'Turma', $this->nm_turma, 30, 255, TRUE);
 
-    $this->campoTexto('sgl_turma', 'Sigla', $this->sgl_turma, 15, 15, FALSE);
+    $this->campoTexto('sgl_turma', $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? 'C&oacute;digo da sala Prodesp/GDAE' : 'Sigla', $this->sgl_turma, 15, 15, FALSE);
 
     $this->campoNumero('max_aluno', 'M&aacute;ximo de Alunos', $this->max_aluno, 3, 3, TRUE);
 

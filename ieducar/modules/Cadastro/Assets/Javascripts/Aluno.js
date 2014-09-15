@@ -654,10 +654,13 @@ function disableJustificativaFields(){
 }
 
 function enableJustificativaFields(){
-  $jField = $j('#justificativa_falta_documentacao');
-  $jField.removeClass('geral');
-  $jField.addClass('obrigatorio');
+  $jField = $j('#justificativa_falta_documentacao');  
   $jField.removeAttr('disabled');
+
+  if(!$j('#labels_botucatu').length){    
+    $jField.removeClass('geral');
+    $jField.addClass('obrigatorio');
+  }  
 }
 
 var handleGetPersonParentDetails = function(dataResponse, parentType) {

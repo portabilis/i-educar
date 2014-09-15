@@ -235,7 +235,7 @@ class indice extends clsDetalhe
     }
 
     if ($registro['sgl_turma']) {
-      $this->addDetalhe(array('Sigla', $registro['sgl_turma']));
+      $this->addDetalhe(array($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? 'C&oacute;digo da sala Prodesp/GDAE' : 'Sigla', $registro['sgl_turma']));
     }
 
     if ($registro['max_aluno']) {

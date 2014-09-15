@@ -366,8 +366,13 @@ class AlunoController extends Portabilis_Controller_Page_EditController
   {
     $this->url_cancelar = '/intranet/educar_aluno_lst.php';
 
+    $labels_botucatu = $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu';
+
+    if($labels_botucatu)
+      $this->inputsHelper()->hidden('labels_botucatu');
+
     // código aluno
-    $options = array('label'    => $this->_getLabel('id'), 'disabled' => true,
+    $options = array('label'    => $labels_botucatu ? Portabilis_String_Utils::toLatin1("Código aluno (i-Educar)") : $this->_getLabel('id'), 'disabled' => true,
                      'required' => false, 'size' => 25);
     $this->inputsHelper()->integer('id', $options);
 
@@ -376,7 +381,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->integer('aluno_inep_id', $options);
 
     // código aluno rede estadual
-    $options = array('label' => $this->_getLabel('aluno_estado_id'), 'required' => false, 'size' => 25, 'max_length' => 25);
+    $options = array('label' => $labels_botucatu ? Portabilis_String_Utils::toLatin1("Código rede estadual (RA)") : $this->_getLabel('aluno_estado_id'), 'required' => $labels_botucatu, 'size' => 25, 'max_length' => 25);
     $this->inputsHelper()->integer('aluno_estado_id', $options);
 
     // código aluno sistema
@@ -434,7 +439,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
                               'outra_pessoa' => 'Outra pessoa');*/
     $tiposResponsavel = array(null           => 'Informe uma Pessoa primeiro');
 
-    $options = array('label'     => $this->_getLabel('responsavel'),
+    $options = array('label'     => Portabilis_String_Utils::toLatin1('Responsável'),
                      'resources' => $tiposResponsavel,
                      'required'  => true,
                      'inline'    => true);
