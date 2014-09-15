@@ -383,7 +383,7 @@ class clsPmieducarAluno
       }      
 
       $db->Consulta("INSERT INTO pmieducar.aluno ($campos) VALUES ($valores)");
-      return $db->InsertId("{$this->_tabela}_cod_aluno_seq");
+      return $db->InsertId("pmieducar.aluno_cod_aluno_seq");
     }
 
     return FALSE;
