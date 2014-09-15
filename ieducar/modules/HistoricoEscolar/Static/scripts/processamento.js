@@ -538,7 +538,8 @@
           registro : $('#registro').val(),
           livro : $('#livro').val(),
           folha : $('#folha').val(),
-          disciplinas : disciplinas
+          disciplinas : disciplinas,
+          turma_id : $('#ref_cod_turma').val()
         },
         success : function(dataResponse){
           afterChangeResource($resourceElement, postProcessamento);

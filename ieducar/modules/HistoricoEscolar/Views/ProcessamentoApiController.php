@@ -56,6 +56,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
   protected $_saveOption  = FALSE;
   protected $_deleteOption  = FALSE;
   protected $_titulo   = '';
+  var $DISCIPLINA_DISPENSADA = "Disp";
 
 
   protected function validatesPresenceOf(&$value, $name, $raiseExceptionOnEmpty = false, $msg = '', $addMsgOnEmpty = true){
@@ -612,6 +613,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       $tpNota = $this->getService()->getRegra()->get('tipoNota');
       $situacaoFaltasCc = $this->getService()->getSituacaoFaltas()->componentesCurriculares;
       $mediasCc = $this->getService()->getMediasComponentes();
+      $turmaId = $this->getRequest()->turma_id;
 
       foreach ($this->getService()->getComponentes() as $componenteCurricular)
       {
@@ -620,7 +622,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
         $nota = '';
 
-        if ($this->getRequest()->notas == 'buscar-boletim'){
+        if ($this->verificaDisciplinaDispensada($turmaId, $ccId))
+          $nota = $this->DISCIPLINA_DISPENSADA;
+        elseif ($this->getRequest()->notas == 'buscar-boletim'){
           if ($tpNota == $cnsNota::NUMERICA) {
             $nota = (string)$mediasCc[$ccId][0]->mediaArredondada;
           }
@@ -729,6 +733,15 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     }
 
     return $dadosMatricula;
+  }
+
+  protected function verificaDisciplinaDispensada($turmaId, $componenteId){
+    $sql           = "SELECT ref_cod_disciplina_dispensada as disciplina_dispensada FROM pmieducar.turma WHERE cod_turma = $1";
+
+    $params        = array('params' => $turmaId, 'return_only' => 'first-field');
+    $disciplina_dispensada = Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
+
+    return $disciplina_dispensada == $componenteId;
   }
 
 
