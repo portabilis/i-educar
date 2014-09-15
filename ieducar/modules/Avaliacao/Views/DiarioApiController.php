@@ -46,6 +46,7 @@ require_once 'App/Model/MatriculaSituacao.php';
 require_once 'RegraAvaliacao/Model/TipoPresenca.php';
 require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 
+require_once 'include/pmieducar/clsPmieducarTurma.inc.php';
 require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
 require_once 'include/modules/clsModulesNotaExame.inc.php';
 
@@ -785,10 +786,16 @@ class DiarioApiController extends ApiCoreController
     $componenteCurricularId   = $this->getRequest()->componente_curricular_id;
     $_componentesCurriculares = App_Model_IedFinder::getComponentesPorMatricula($matriculaId, null, null, $componenteCurricularId);
 
+    $turmaId = $this->getRequest()->turma_id;
+
     foreach($_componentesCurriculares as $_componente) {
       $componente                          = array();
+      $componenteId = $_componente->get('id');
 
-      $componente['id']                    = $_componente->get('id');
+      if (clsPmieducarTurma::verificaDisciplinaDispensada($turmaId, $componenteId))
+        continue;
+
+      $componente['id']                    = $componenteId;
       $componente['nome']                  = $this->safeString(mb_strtoupper($_componente->get('nome'), 'iso-8859-1'), false);
       $componente['nota_atual']            = $this->getNotaAtual($etapa = null, $componente['id']);
       $componente['nota_exame']            = $this->getNotaExame($componente['id']);

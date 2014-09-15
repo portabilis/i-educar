@@ -39,6 +39,7 @@ require_once 'App/Model/MatriculaSituacao.php';
 require_once 'RegraAvaliacao/Model/TipoPresenca.php';
 require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 
+require_once 'include/pmieducar/clsPmieducarTurma.inc.php';
 require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
 require_once 'include/pmieducar/clsPmieducarHistoricoEscolar.inc.php';
 require_once 'include/pmieducar/clsPmieducarHistoricoDisciplinas.inc.php';
@@ -622,7 +623,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
         $nota = '';
 
-        if ($this->verificaDisciplinaDispensada($turmaId, $ccId))
+        if (clsPmieducarTurma::verificaDisciplinaDispensada($turmaId, $ccId))
           $nota = $this->DISCIPLINA_DISPENSADA;
         elseif ($this->getRequest()->notas == 'buscar-boletim'){
           if ($tpNota == $cnsNota::NUMERICA) {
@@ -734,16 +735,6 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
     return $dadosMatricula;
   }
-
-  protected function verificaDisciplinaDispensada($turmaId, $componenteId){
-    $sql           = "SELECT ref_cod_disciplina_dispensada as disciplina_dispensada FROM pmieducar.turma WHERE cod_turma = $1";
-
-    $params        = array('params' => $turmaId, 'return_only' => 'first-field');
-    $disciplina_dispensada = Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
-
-    return $disciplina_dispensada == $componenteId;
-  }
-
 
   protected function getAlunoIdByMatriculaId($matriculaId){
     $sql = "select ref_cod_aluno from pmieducar.matricula where cod_matricula = $1";

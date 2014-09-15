@@ -34,6 +34,7 @@ ini_set("display_errors", 1);
 */
 
 require_once( "include/pmieducar/geral.inc.php" );
+require_once 'Portabilis/Utils/Database.php';
 
 class clsPmieducarTurma
 {
@@ -2478,6 +2479,15 @@ and  e.cod_escola = t.ref_ref_cod_escola
       }
       return false;
 	}
+
+	public static function verificaDisciplinaDispensada($turmaId, $componenteId){
+    $sql           = "SELECT ref_cod_disciplina_dispensada as disciplina_dispensada FROM pmieducar.turma WHERE cod_turma = $1";
+
+    $params        = array('params' => $turmaId, 'return_only' => 'first-field');
+    $disciplina_dispensada = Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
+
+    return $disciplina_dispensada == $componenteId;
+  }
 
 }
 ?>
