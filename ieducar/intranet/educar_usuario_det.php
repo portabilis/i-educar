@@ -66,29 +66,114 @@ class indice extends clsDetalhe
 
 		$this->titulo = "Usu&aacute;rio - Detalhe";
 		
+		$cod_pessoa = $this->cod_usuario = $_GET["ref_pessoa"];
 
-		$this->cod_usuario=$_GET["cod_usuario"];
+		$obj_pessoa = new clsPessoa_($cod_pessoa);
+		$det_pessoa = $obj_pessoa->detalhe();
+
+		$this->addDetalhe( array("Nome", $det_pessoa["nome"]) );
+
+		$obj_fisica_cpf = new clsFisica($cod_pessoa);
+		$det_fisica_cpf = $obj_fisica_cpf->detalhe();
+		$this->addDetalhe( array("CPF", int2CPF($det_fisica_cpf["cpf"])) );
+
+		$obj_endereco = new clsEndereco($cod_pessoa);
+		$det_endereco = $obj_endereco->detalhe();
+
+		if($det_endereco["tipo_origem"] == "endereco_pessoa")
+		{
+			$this->addDetalhe( array("CEP", int2CEP($det_endereco["cep"])) );
+
+			$obj_bairro = new clsBairro($det_endereco["idbai"]);
+			$det_bairro = $obj_bairro->detalhe();
+
+			$this->addDetalhe( array("Bairro", $det_bairro["nome"]) );
+
+			//echo "det: {$det_bairro["idmun"]}";
+			$obj_municipio = $det_bairro["idmun"];
+			$det_municipio = $obj_municipio->detalhe();
+
+			$this->addDetalhe( array("Cidade", $det_municipio["nome"]) );
+			for($i = 1; $i <= 4; $i++)
+			{
+				$obj_fone_pessoa = new clsPessoaTelefone($cod_pessoa, $i);
+				$det_fone_pessoa = $obj_fone_pessoa->detalhe();
+
+				if($det_fone_pessoa)
+				{
+					switch($i):
+					case 1:
+						$this->addDetalhe( array("Telefone 1", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}") );
+						break;
+					case 2:
+						$this->addDetalhe( array("Telefone 2", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}") );
+						break;
+					case 3:
+						$this->addDetalhe( array("Celular", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}") );
+						break;
+					case 4:
+						$this->addDetalhe( array("Fax", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}") );
+						break;
+					endswitch;
+				}
+			}
+		}
+		elseif ($det_endereco["tipo_origem"] == "endereco_externo")
+		{
+			$this->addDetalhe( array("CEP", int2CEP($det_endereco["cep"])) );
+			$this->addDetalhe( array("Bairro", $det_endereco["bairro"]) );
+			$this->addDetalhe( array("Cidade", $det_endereco["cidade"]) );
+			for($i = 1; $i <= 4; $i++)
+			{
+				$obj_fone_pessoa = new clsPessoaTelefone($cod_pessoa, $i);
+				$det_fone_pessoa = $obj_fone_pessoa->detalhe();
+
+				if($det_fone_pessoa)
+				{
+					switch($i):
+					case 1:
+						$this->addDetalhe( array("Telefone 1", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}") );
+						break;
+					case 2:
+						$this->addDetalhe( array("Telefone 2", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}") );
+						break;
+					case 3:
+						$this->addDetalhe( array("Celular", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}") );
+						break;
+					case 4:
+						$this->addDetalhe( array("Fax", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}") );
+						break;
+					endswitch;
+				}
+			}
+		}
+
+		$obj_funcionario = new clsFuncionario($cod_pessoa);
+		$det_funcionario = $obj_funcionario->detalhe();
+
+		$this->addDetalhe( array("Ramal", $det_funcionario["ramal"]) );
+
+		$this->addDetalhe( array("Site", $det_pessoa["url"]) );
+		//$this->addDetalhe( array("E-mail", $det_pessoa["email"]) );
+		$this->addDetalhe( array("E-mail usuário", $det_funcionario["email"]) );
+
+		if (!empty($det_funcionario['matricula_interna']))
+			$this->addDetalhe( array('Matr&iacute;cula interna', $det_funcionario['matricula_interna']));
+
+		$obj_fisica = new clsFisica($cod_pessoa);
+		$det_fisica = $obj_fisica->detalhe();
+
+		$sexo = ($det_fisica["sexo"] == "M") ? "Masculino" : "Feminino";
+		$this->addDetalhe( array("Sexo", $sexo) );
+
+		$this->addDetalhe( array("Matrícula", $det_funcionario["matricula"]) );
+		$this->addDetalhe( array("Sequencial", $det_funcionario["sequencial"]) );
+		$ativo_f = ($det_funcionario["ativo"] == '1') ? "Ativo" : "Inativo";
+		$this->addDetalhe( array("Status", $ativo_f) );		
 
 		$tmp_obj = new clsPmieducarUsuario( $this->cod_usuario );
 		$registro = $tmp_obj->detalhe();
 
-		if( ! $registro )
-		{
-			header( "location: educar_usuario_lst.php" );
-			die();
-		}
-
-		if( class_exists( "clsPessoa_" ) )
-		{
-			$obj_cod_usuario = new clsPessoa_($registro["cod_usuario"] );
-			$obj_usuario_det = $obj_cod_usuario->detalhe();
-			$nm_usuario = $obj_usuario_det['nome'];
-		}
-		else
-		{
-			$registro["cod_usuario"] = "Erro na gera&ccedil;&atilde;o";
-			echo "<!--\nErro\nClasse n&atilde;o existente: clsFuncionario\n-->";
-		}
 		if( class_exists( "clsPmieducarTipoUsuario" ) )
 		{
 			$obj_ref_cod_tipo_usuario = new clsPmieducarTipoUsuario( $registro["ref_cod_tipo_usuario"] );
@@ -125,10 +210,6 @@ class indice extends clsDetalhe
 			echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
 		}
 
-		if( $nm_usuario )
-		{
-			$this->addDetalhe( array( "Usu&aacute;rio", "{$nm_usuario}") );
-		}
 		if( $registro["ref_cod_tipo_usuario"] )
 		{
 			$this->addDetalhe( array( "Tipo Usu&aacute;rio", "{$registro["ref_cod_tipo_usuario"]}") );
@@ -146,7 +227,7 @@ class indice extends clsDetalhe
 		if( $objPermissao->permissao_cadastra( 555, $this->pessoa_logada,7,"educar_usuario_lst.php",true ) )
 		{
 			$this->url_novo = "educar_usuario_cad.php";
-			$this->url_editar = "educar_usuario_cad.php?cod_usuario={$registro["cod_usuario"]}";
+			$this->url_editar = "educar_usuario_cad.php?ref_pessoa={$cod_pessoa}";
 		}
 		$this->url_cancelar = "educar_usuario_lst.php";
 		$this->largura = "100%";

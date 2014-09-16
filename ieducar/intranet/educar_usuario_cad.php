@@ -27,13 +27,13 @@
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once ("include/pmieducar/clsPmieducarUsuario.inc.php");
 
 class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Usu&aacute;rio" );
+		$this->SetTitulo( "{$this->_instituicao} Cadastro de usu&aacute;rios" );
 		$this->processoAp = "555";
 		$this->addEstilo('localizacaoSistema');
 	}
@@ -41,27 +41,34 @@ class clsIndexBase extends clsBase
 
 class indice extends clsCadastro
 {
-	/**
-	 * Referencia pega da session para o idpes do usuario atual
-	 *
-	 * @var int
-	 */
+
 	var $pessoa_logada;
 
-	var $cod_usuario;
-	var $ref_cod_escola;
-	var $ref_cod_instituicao;
-	var $ref_funcionario_cad;
-	var $ref_funcionario_exc;
-	var $ref_cod_tipo_usuario;
-	var $data_cadastro;
-	var $data_exclusao;
+	var $ref_pessoa;
+	var $ref_cod_setor_new;
+
+	//dados do funcionario
+	var $nome;
+	var $matricula;
+	var $_senha;
 	var $ativo;
+	var $ref_cod_funcionario_vinculo;
+	var $tempo_expira_conta;
+	var $ramal;
+	var $super;
+	var $proibido;
+	var $matricula_permanente;
+	var $matricula_interna;
 
-	var $nivel_usuario_;
+	//senha carregada do banco (controle de criptografia)
+	var $confere_senha;
 
-	var $ref_cod_instituicao_;
-	var $cod_usuario_;
+	//setor e subsetores
+	var $setor_0;
+	var $setor_1;
+	var $setor_2;
+	var $setor_3;
+	var $setor_4;
 
 	function Inicializar()
 	{
@@ -70,19 +77,37 @@ class indice extends clsCadastro
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-
-		if($_POST)
+		$this->ref_pessoa = $_POST["ref_pessoa"];
+		if( $_GET["ref_pessoa"] )
 		{
-			$this->cod_usuario=$_POST["cod_usuario_"];
-		}
-		else
-		{
-			$this->cod_usuario=$_GET["cod_usuario"];
+			$this->ref_pessoa = $_GET["ref_pessoa"];
 		}
 
-		if( is_numeric( $this->cod_usuario ) )
+
+		if( is_numeric( $this->ref_pessoa ) )
 		{
-			$obj = new clsPmieducarUsuario( $this->cod_usuario);
+
+			$obj_funcionario = new clsPortalFuncionario($this->ref_pessoa);
+			$det_funcionario = $obj_funcionario->detalhe();
+			if( $det_funcionario )
+			{
+				foreach ($det_funcionario as $campo => $valor) {
+					$this->$campo = $valor;
+				}
+				$this->_senha = $this->senha;
+				$this->confere_senha = $this->_senha;
+				$this->fexcluir = true;
+				$retorno = "Editar";
+			}
+
+			$obj_menu_funcionario = new clsPortalMenuFuncionario($this->ref_pessoa, null, null, 0);
+			$det_menu_funcionario = $obj_menu_funcionario->detalhe();
+			if( $det_menu_funcionario )
+			{
+				$this->super = true;
+			}
+
+			$obj = new clsPmieducarUsuario( $this->ref_pessoa);
 			$registro  = $obj->detalhe();
 			if( $registro )
 			{
@@ -94,42 +119,227 @@ class indice extends clsCadastro
 				$retorno = "Editar";
 			}
 		}
-
-		$this->url_cancelar = ($retorno == "Editar") ? "educar_usuario_det.php?cod_usuario={$registro["cod_usuario"]}" : "educar_usuario_lst.php";
+		$this->url_cancelar = ($retorno == "Editar") ? "educar_usuario_det.php?ref_pessoa={$this->ref_pessoa}" : "educar_usuario_lst.php";
 		$this->nome_url_cancelar = "Cancelar";
 
     $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
          ""        => "{$nomeMenu} usu&aacute;rio"             
     ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->enviaLocalizacao($localizacao->montar());		
 
 		return $retorno;
 	}
 
 	function Gerar()
 	{
-		$obj_permissao = new clsPermissoes();
-		$obj_permissao->permissao_cadastra(555,$this->pessoa_logada,7,"educar_usuario_lst.php", true);
 
-		// primary keys
-		$this->campoOculto( "cod_usuario", $this->cod_usuario );
-		// foreign keys
-		$opcoes = array( "" => "Pesquise o funcion&aacute;rio clicando na lupa ao lado" );
-		if( $this->cod_usuario )
+		$obj_permissao = new clsPermissoes();
+
+		$this->campoOculto("ref_pessoa", $this->ref_pessoa);
+
+		if( is_numeric($this->ref_pessoa) )
 		{
-			$objTemp = new clsFuncionario( $this->cod_usuario );
-			$detalhe = $objTemp->detalhe();
-			$detalhe = $detalhe["idpes"]->detalhe();
-			$opcoes["{$detalhe["idpes"]}"] = $detalhe["nome"];
+			$this->campoOculto("confere_senha", $this->confere_senha);
 		}
-		$parametros = new clsParametrosPesquisas();
-		$parametros->setSubmit( 0 );
-		$parametros->adicionaCampoSelect( "cod_usuario_", "ref_cod_pessoa_fj", "nome" );
-		$this->campoListaPesq( "cod_usuario_", "Usu&aacute;rio", $opcoes, $this->cod_usuario, "pesquisa_funcionario_lst.php", "", false, "", "", null, null, "", false, $parametros->serializaCampos() );
+
+		//--------------------------------------------------------------------
+		if( $_POST )
+		{
+			foreach( $_POST AS $campo => $val )
+			{
+				$this->$campo = ( $this->$campo ) ? $this->$campo : $val;
+			}
+		}
+
+		 //--------------------------------------------------------------------
+		$this->ref_cod_setor_new = 0;
+		if( ! $this->ref_cod_setor_new && is_numeric( $this->ref_pessoa ) )
+		{
+			$objFuncionario = new clsPortalFuncionario( $this->ref_pessoa );
+			$detFunc = $objFuncionario->detalhe();
+			$this->ref_cod_setor_new = $detFunc["ref_cod_setor_new"];
+		}
+
+		if( $this->ref_cod_setor_new )
+		{
+			$objSetor = new clsSetor();
+			$parentes = $objSetor->getNiveis( $this->ref_cod_setor_new );
+			for( $i = 0; $i < 5; $i++ )
+			{
+				if( isset( $parentes[$i] ) && $parentes[$i] )
+				{
+					$nmvar = "setor_{$i}";
+					$this->$nmvar = $parentes[$i];
+				}
+			}
+		}
+		 //--------------------------------------------------------------------
+		if( $_GET["ref_pessoa"] )
+		{
+			$obj_funcionario = new clsPessoaFj($this->ref_pessoa);
+			$det_funcionario = $obj_funcionario->detalhe();
+
+			$this->nome = $det_funcionario["nome"];
+
+			$this->campoRotulo("nome", "Nome", $this->nome);
+		}
+		else
+		{
+			$parametros = new clsParametrosPesquisas();
+			$parametros->setSubmit( 1 );
+			$parametros->setPessoa( "F" );
+			$parametros->setPessoaNovo( 'S' );
+			$parametros->setPessoaEditar( 'N' );
+			$parametros->setPessoaTela( "frame" );
+			$parametros->setPessoaCPF('N');
+			$parametros->adicionaCampoTexto("nome", "nome");
+			$parametros->adicionaCampoTexto("nome_busca", "nome");
+			$parametros->adicionaCampoTexto("ref_pessoa", "idpes");
+			$this->campoTextoPesquisa("nome_busca", "Nome", $this->nome, 30, 255, true, "pesquisa_pessoa_lst.php", false, false, "", "", $parametros->serializaCampos()."&busca=S", true );
+			$this->campoOculto("nome", $this->nome);
+			$this->campoOculto("ref_pessoa", $this->ref_pessoa);
+		}
+
+		$this->campoTexto("matricula", "Matr&iacute;cula", $this->matricula, 12, 12, true);
+		$this->campoSenha("_senha", "Senha", $this->_senha, true);
+		$this->campoEmail("email", "E-mail usuário", $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o usúario esqueça<br />Este campo pode ser gravado em branco, neste caso será solicitado um e-mail ao usuário, após entrar no sistema.');
+
+		$this->campoTexto('matricula_interna', 'Matr&iacute;cula interna', $this->matricula_interna, 30, 30, false, false, false , 'Utilizado somente para registro, caso a institui&ccedil;&atilde;o deseje que a matr&iacute;cula interna deste funcion&aacute;rio seja registrada no sistema.');
+
+		$obj_setor = new clsSetor();
+		$lst_setor = $obj_setor->lista(null, null, null, null, null, null, null, null, null, 1, 0);
+
+		$opcoes = array("" => "Selecione");
+
+		if( is_array($lst_setor) && count($lst_setor) )
+		{
+			foreach ($lst_setor as $setor) {
+				$opcoes[$setor["cod_setor"]] = $setor["sgl_setor"];
+			}
+		}
+		$this->campoLista("setor_0", "Setor", $opcoes, $this->setor_0, "oproDocumentoNextLvl( this.value, '1' )", NULL, NULL, NULL, NULL, FALSE);
+
+		$lst_setor = $obj_setor->lista($this->setor_0);
+
+		$opcoes = array("" => "Selecione");
+
+		if( is_array($lst_setor) && count($lst_setor) )
+		{
+			foreach($lst_setor as $setor)
+			{
+				$opcoes[$setor["cod_setor"]] = $setor["sgl_setor"];
+			}
+		}
+		else
+		{
+			$opcoes[""] = "---------";
+		}
+		$this->campoLista("setor_1", "Subsetor 1", $opcoes, $this->setor_1, "oproDocumentoNextLvl(this.value, '2')", false, "", "", $this->setor_0 == "" ? true : false, false);
+
+		$opcoes = array("" => "Selecione");
+
+		$lst_setor = $obj_setor->lista($this->setor_1);
+
+		if( is_array($lst_setor) && count($lst_setor) )
+		{
+			foreach ($lst_setor as $setor)
+			{
+				$opcoes[$setor["cod_setor"]] = $setor["sgl_setor"];
+			}
+		}
+		else
+		{
+			$opcoes[""] = "---------";
+		}
+		$this->campoLista("setor_2", "Subsetor 2", $opcoes, $this->setor_2, "oproDocumentoNextLvl(this.value, '3')", false, "", "", $this->setor_1 == "" ? true : false, false);
+
+		$opcoes = array("" => "Selecione");
+
+		$lst_setor = $obj_setor->lista($this->setor_2);
+
+		if( is_array($lst_setor) && count($lst_setor) )
+		{
+			foreach ($lst_setor as $setor)
+			{
+				$opcoes[$setor["cod_setor"]] = $setor["sgl_setor"];
+			}
+		}
+		else
+		{
+			$opcoes[""] = "---------";
+		}
+		$this->campoLista("setor_3", "Subsetor 3", $opcoes, $this->setor_3, "oproDocumentoNextLvl(this.value, '4')", false, "", "", $this->setor_2 == "" ? true : false, false);
+
+		$opcoes = array("" => "Selecione");
+
+		$lst_setor = $obj_setor->lista($this->setor_3);
+
+		if( is_array($lst_setor) && count($lst_setor) )
+		{
+			foreach ($lst_setor as $setor)
+			{
+				$opcoes[$setor["cod_setor"]] = $setor["sgl_setor"];
+			}
+		}
+		else
+		{
+			$opcoes[""] = "---------";
+		}
+		$this->campoLista("setor_4", "Subsetor 4", $opcoes, $this->setor_4, "oproDocumentoNextLvl(this.value, '5')", false, "", "", $this->setor_3 == "" ? true : false, false);
+
+		$opcoes = array(0 => "Inativo", 1 => "Ativo");
+		$this->campoLista("ativo", "Status", $opcoes, $this->ativo);
+
+		$opcoes = array("" => "Selecione", 5 => "Comissionado", 4 => "Contratado", 3 => "Efetivo", 6 => "Estagi&aacute;rio");
+		$this->campoLista("ref_cod_funcionario_vinculo", "V&iacute;nculo", $opcoes, $this->ref_cod_funcionario_vinculo);
+
+		$opcoes = array("" => "Selecione",
+						 5 => "5",
+						 6 => "6",
+						 7 => "7",
+						 10 => "10",
+						 14 => "14",
+						 20 => "20",
+						 21 => "21",
+						 28 => "28",
+						 30 => "30",
+						 35 => "35",
+						 60 => "60",
+						 90 => "90",
+						120 => "120",
+						150 => "150",
+						180 => "180",
+						210 => "210",
+						240 => "240",
+						270 => "270",
+						300 => "300",
+						365 => "365"
+						);
+
+		$this->campoLista("tempo_expira_conta", "Dias p/ expirar a conta", $opcoes, $this->tempo_expira_conta);
+
+		$tempoExpiraSenha = $GLOBALS['coreExt']['Config']->app->user_accounts->default_password_expiration_period;
+
+		if (is_numeric($tempoExpiraSenha))
+			$this->campoOculto("tempo_expira_senha", $tempoExpiraSenha);
+		else {
+			$opcoes = array('' => 'Selecione', 5 => '5', 30 => '30', 60 => '60', 90 => '90', 120 => '120', 180 => '180');
+			$this->campoLista("tempo_expira_senha", "Dias p/ expirar a senha", $opcoes, $this->tempo_expira_senha);
+		}
+
+		$this->campoTexto("ramal", "Ramal", $this->ramal, 11, 30);
+
+		$opcoes = array(null => "Não", 'S' => "Sim");
+		$this->campoLista("super", "Super usu&aacute;rio", $opcoes, $this->super, '',false,'','',false,false);
+
+		$opcoes = array(null => "Não", 1 => "Sim");
+		$this->campoLista("proibido", "Banido", $opcoes, $this->proibido, '',false,'','',false,false);
+
+		$opcoes = array(null => "Não", 1 => "Sim");
+		$this->campoLista("matricula_permanente", "Matr&iacute;cula permanente", $opcoes, $this->matricula_permanente, '',false,'','',false,false);
 
 		$opcoes = array( "" => "Selecione" );
 		if( class_exists( "clsPmieducarTipoUsuario" ) )
@@ -169,7 +379,7 @@ class indice extends clsCadastro
 
 		$this->campoLista( "ref_cod_tipo_usuario", "Tipo Usu&aacute;rio", $opcoes, $this->ref_cod_tipo_usuario,"",null,null,null,null,true );
 
-		$nivel = $obj_permissao->nivel_acesso($this->cod_usuario);
+		$nivel = $obj_permissao->nivel_acesso($this->ref_pessoa);
 
 		$this->campoOculto("nivel_usuario_",$nivel);
 
@@ -179,7 +389,8 @@ class indice extends clsCadastro
 		$cad_usuario = true;
 		include( "include/pmieducar/educar_campo_lista.php" );
 
-		$this->acao_enviar = "valida()";
+		$this->acao_enviar = "valida()";			
+
 	}
 
 	function Novo()
@@ -188,53 +399,71 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-		// verifica se usuario é escolar
-		if ($this->ref_cod_instituicao && $this->ref_cod_escola)
+		//setor recebe o id do ultimo subsetor selecionado
+		$this->ref_cod_setor_new = 0;
+		for( $i = 0; $i < 5; $i++ )
 		{
-			$obj = new clsPmieducarUsuario( $this->cod_usuario_, $this->ref_cod_escola, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
-		} // verifica se usuario é institucional
-		else if ($this->ref_cod_instituicao && !$this->ref_cod_escola)
-		{
-			$obj = new clsPmieducarUsuario( $this->cod_usuario_, null, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
-		} // verifica se usuario é poli-institucional
-		else if (!$this->ref_cod_instituicao && !$this->ref_cod_escola)
-		{
-			$obj = new clsPmieducarUsuario( $this->cod_usuario_, null, null, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
-		}
-		if($obj->existe())
-			$cadastrou = $obj->edita();
-		else
-			$cadastrou = $obj->cadastra();
-
-		// cadastra os menus que o usuario tem acesso
-		$obj_menu_func = new clsMenuFuncionario($this->cod_usuario_);
-		//$obj_menu_func->exclui_todos(55);
-		//$obj_menu_func->exclui_todos(57);
-		$obj_menu_func->exclui_todos();
-		//echo $this->cod_usuario;
-
-
-		$obj_menu_tipo_usuario = new clsPmieducarMenuTipoUsuario();
-		$obj_menu_tipo_ususario_lst = $obj_menu_tipo_usuario->lista($this->ref_cod_tipo_usuario);
-
-		foreach ( $obj_menu_tipo_ususario_lst as $menu )
-		{
-			$obj_menu_func = new clsMenuFuncionario($this->cod_usuario_,$menu["cadastra"],$menu["exclui"],$menu["ref_cod_menu_submenu"]);
-			$obj_menu_func->cadastra();
+			$nmvar = "setor_{$i}";
+			if( is_numeric( $this->$nmvar ) && $this->$nmvar )
+			{
+				$this->ref_cod_setor_new = $this->$nmvar;
+			}
 		}
 
-		if( $cadastrou )
-		{
-			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-			header( "Location: educar_usuario_lst.php" );
-			die();
-			return true;
-		}
+    if (! $this->validatesUniquenessOfMatricula($this->ref_pessoa, $this->matricula))
+      return false;
 
+    if (! $this->validatesPassword($this->matricula, $this->_senha))
+      return false;
+
+		$obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, md5($this->_senha), $this->ativo, null, $this->ramal, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->tempo_expira_conta, "NOW()", "NOW()", $this->pessoa_logada, empty($this->proibido) ? 0 : 1, $this->ref_cod_setor_new, null, empty($this->matricula_permanente)? 0 : 1, 1, $this->email, $this->matricula_interna);
+		if( $obj_funcionario->cadastra() )
+		{
+
+			if ($this->ref_cod_instituicao && $this->ref_cod_escola)
+			{
+				$obj = new clsPmieducarUsuario( $this->ref_pessoa, $this->ref_cod_escola, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
+			} // verifica se usuario é institucional
+			else if ($this->ref_cod_instituicao && !$this->ref_cod_escola)
+			{
+				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
+			} // verifica se usuario é poli-institucional
+			else if (!$this->ref_cod_instituicao && !$this->ref_cod_escola)
+			{
+				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, null, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
+			}
+			if($obj->existe())
+				$cadastrou = $obj->edita();
+			else
+				$cadastrou = $obj->cadastra();
+
+			// cadastra os menus que o usuario tem acesso
+			$obj_menu_func = new clsMenuFuncionario($this->ref_pessoa);
+
+			$obj_menu_func->exclui_todos();
+
+			$obj_menu_tipo_usuario = new clsPmieducarMenuTipoUsuario();
+			$obj_menu_tipo_ususario_lst = $obj_menu_tipo_usuario->lista($this->ref_cod_tipo_usuario);
+
+			foreach ( $obj_menu_tipo_ususario_lst as $menu )
+			{
+				$obj_menu_func = new clsMenuFuncionario($this->ref_pessoa,$menu["cadastra"],$menu["exclui"],$menu["ref_cod_menu_submenu"]);
+				$obj_menu_func->cadastra();
+			}
+
+			if( $cadastrou )
+			{
+				$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
+				header( "Location: educar_usuario_lst.php" );
+				die();
+				return true;
+			}
+		}
 		$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-		echo "<!--\nErro ao cadastrar clsPmieducarUsuario\nvalores obrigat&oacute;rios\n is_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_tipo_usuario )\n-->";
+		echo "<!--\nErro ao cadastrar -->";
 		return false;
 	}
+
 
 	function Editar()
 	{
@@ -242,83 +471,108 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-		// verifica se usuario é escolar
-		if ($this->ref_cod_instituicao && $this->ref_cod_escola)
+		$this->ref_cod_setor_new = 0;
+		for( $i = 0; $i < 5; $i++ )
 		{
-			$obj = new clsPmieducarUsuario( $this->cod_usuario, $this->ref_cod_escola, $this->ref_cod_instituicao, null, $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
-		} // verifica se usuario é institucional
-		else if ($this->ref_cod_instituicao && !$this->ref_cod_escola)
-		{
-			$obj = new clsPmieducarUsuario( $this->cod_usuario, null, $this->ref_cod_instituicao, null, $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
-		} // verifica se usuario é poli-institucional
-		else if (!$this->ref_cod_instituicao && !$this->ref_cod_escola)
-		{
-			$obj = new clsPmieducarUsuario( $this->cod_usuario, null, null, null, $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
-		}
-		$editou = $obj->edita();
-
-		// cadastra os menus que o usuario tem acesso
-		$obj_menu_func = new clsMenuFuncionario($this->cod_usuario);
-		//$obj_menu_func->exclui_todos(55);
-		//$obj_menu_func->exclui_todos(57);
-		$obj_menu_func->exclui_todos();
-
-		//echo $this->cod_usuario;
-
-
-		$obj_menu_tipo_usuario = new clsPmieducarMenuTipoUsuario();
-		$obj_menu_tipo_ususario_lst = $obj_menu_tipo_usuario->lista($this->ref_cod_tipo_usuario);
-		foreach ( $obj_menu_tipo_ususario_lst as $menu )
-		{
-			$obj_menu_func = new clsMenuFuncionario($this->cod_usuario,$menu["cadastra"],$menu["exclui"],$menu["ref_cod_menu_submenu"]);
-			$obj_menu_func->cadastra();
+			$nmvar = "setor_{$i}";
+			if( is_numeric( $this->$nmvar ) && $this->$nmvar )
+			{
+				$this->ref_cod_setor_new = $this->$nmvar;
+			}
 		}
 
-		if($this->nivel_usuario_ == 8)
+    if (! $this->validatesUniquenessOfMatricula($this->ref_pessoa, $this->matricula))
+      return false;
+
+    if (! $this->validatesPassword($this->matricula, $this->_senha))
+      return false;
+
+		//verifica se a senha ja esta criptografada
+		if($this->_senha != $this->confere_senha)
 		{
-			$obj_tipo = new clsPmieducarTipoUsuario($this->ref_cod_tipo_usuario);
-			$det_tipo = $obj_tipo->detalhe();
-			if($det_tipo['nivel'] != 8){
-				$obj_usuario_bib = new clsPmieducarBibliotecaUsuario();
-				$lista_bibliotecas_usuario = $obj_usuario_bib->lista(null,$this->pessoa_logada);
+			$this->_senha = md5($this->_senha);
+		}
 
-				if ($lista_bibliotecas_usuario) {
+		$obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $this->_senha, $this->ativo, null, $this->ramal, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->tempo_expira_conta, "NOW()", "NOW()", $this->pessoa_logada, empty($this->proibido) ? 0 : 1, $this->ref_cod_setor_new, null, empty($this->matricula_permanente) ? 0 : 1, null, $this->email, $this->matricula_interna);
+		if( $obj_funcionario->edita() )
+		{
 
-					foreach ($lista_bibliotecas_usuario as $usuario)
-					{
-						$obj_usuario_bib = new clsPmieducarBibliotecaUsuario($usuario['ref_cod_biblioteca'],$this->pessoa_logada);
-						if(!$obj_usuario_bib->excluir()){
-							echo "<!--\nErro ao excluir usuarios biblioteca\n-->";
-							return false;
+			if ($this->ref_cod_instituicao && $this->ref_cod_escola)
+			{
+				$obj = new clsPmieducarUsuario( $this->ref_pessoa, $this->ref_cod_escola, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
+			} // verifica se usuario é institucional
+			else if ($this->ref_cod_instituicao && !$this->ref_cod_escola)
+			{
+				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
+			} // verifica se usuario é poli-institucional
+			else if (!$this->ref_cod_instituicao && !$this->ref_cod_escola)
+			{
+				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, null, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
+			}
+			if($obj->existe())
+				$editou = $obj->edita();
+			else
+				$editou = $obj->cadastra();
+
+			// cadastra os menus que o usuario tem acesso
+			$obj_menu_func = new clsMenuFuncionario($this->ref_pessoa);
+
+			$obj_menu_func->exclui_todos();
+
+			$obj_menu_tipo_usuario = new clsPmieducarMenuTipoUsuario();
+			$obj_menu_tipo_ususario_lst = $obj_menu_tipo_usuario->lista($this->ref_cod_tipo_usuario);
+			foreach ( $obj_menu_tipo_ususario_lst as $menu )
+			{
+				$obj_menu_func = new clsMenuFuncionario($this->ref_pessoa,$menu["cadastra"],$menu["exclui"],$menu["ref_cod_menu_submenu"]);
+				$obj_menu_func->cadastra();
+			}
+
+			if($this->nivel_usuario_ == 8)
+			{
+				$obj_tipo = new clsPmieducarTipoUsuario($this->ref_cod_tipo_usuario);
+				$det_tipo = $obj_tipo->detalhe();
+				if($det_tipo['nivel'] != 8){
+					$obj_usuario_bib = new clsPmieducarBibliotecaUsuario();
+					$lista_bibliotecas_usuario = $obj_usuario_bib->lista(null,$this->pessoa_logada);
+
+					if ($lista_bibliotecas_usuario) {
+
+						foreach ($lista_bibliotecas_usuario as $usuario)
+						{
+							$obj_usuario_bib = new clsPmieducarBibliotecaUsuario($usuario['ref_cod_biblioteca'],$this->pessoa_logada);
+							if(!$obj_usuario_bib->excluir()){
+								echo "<!--\nErro ao excluir usuarios biblioteca\n-->";
+								return false;
+							}
 						}
 					}
 				}
 			}
-		}
 
-		if($this->ref_cod_instituicao != $this->ref_cod_instituicao_)
-		{
-			$obj_biblio = new clsPmieducarBiblioteca();
-			$lista_biblio_inst = $obj_biblio->lista(null,$this->ref_cod_instituicao_);
-			if($lista_biblio_inst)
+			if($this->ref_cod_instituicao != $this->ref_cod_instituicao_)
 			{
-				foreach ($lista_biblio_inst as $biblioteca) {
-					$obj_usuario_bib = new clsPmieducarBibliotecaUsuario($biblioteca['cod_biblioteca'],$this->pessoa_logada);
-					$obj_usuario_bib->excluir();
+				$obj_biblio = new clsPmieducarBiblioteca();
+				$lista_biblio_inst = $obj_biblio->lista(null,$this->ref_cod_instituicao_);
+				if($lista_biblio_inst)
+				{
+					foreach ($lista_biblio_inst as $biblioteca) {
+						$obj_usuario_bib = new clsPmieducarBibliotecaUsuario($biblioteca['cod_biblioteca'],$this->pessoa_logada);
+						$obj_usuario_bib->excluir();
+					}
 				}
+			}
+
+			if( $editou )
+			{
+				$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
+				header( "Location: educar_usuario_lst.php" );
+				die();
+				return true;
 			}
 		}
 
-		if( $editou )
-		{
-			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-			header( "Location: educar_usuario_lst.php" );
-			die();
-			return true;
-		}
-
 		$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-		echo "<!--\nErro ao editar clsPmieducarUsuario\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_usuario ) && is_numeric( $this->pessoa_logada ) )\n-->";
+		echo "<!--\nErro ao editar clsPortalFuncionario-->";
 		return false;
 	}
 
@@ -328,42 +582,44 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-		$obj = new clsPmieducarUsuario($this->cod_usuario, null, null, null, $this->pessoa_logada,null,null,null,0);
-		$excluiu = $obj->excluir();
-		if( $excluiu )
+		$obj_funcionario = new clsPortalFuncionario($this->ref_pessoa);
+		if($obj_funcionario->excluir())
 		{
-
-
-			// cadastra os menus que o usuario tem acesso
-			$obj_menu_func = new clsMenuFuncionario($this->cod_usuario);
-			$obj_menu_func->exclui_todos(55);
-			$obj_menu_func->exclui_todos(57);
-
-			$obj_usuario_bib = new clsPmieducarBibliotecaUsuario();
-			$lista_bibliotecas_usuario = $obj_usuario_bib->lista(null,$this->cod_usuario);
-
-			if ($lista_bibliotecas_usuario) {
-
-				foreach ($lista_bibliotecas_usuario as $usuario)
-				{
-					$obj_usuario_bib = new clsPmieducarBibliotecaUsuario($usuario['ref_cod_biblioteca'],$this->pessoa_logada);
-					if(!$obj_usuario_bib->excluir()){
-						echo "<!--\nErro ao excluir usuarios biblioteca\n-->";
-						return false;
-					}
-				}
-			}
-
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_usuario_lst.php" );
-			die();
 			return true;
 		}
-
 		$this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-		echo "<!--\nErro ao excluir clsPmieducarUsuario\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_usuario ) && is_numeric( $this->pessoa_logada ) )\n-->";
+		echo "<!--\nErro ao excluir clsPortalFuncionario\n-->";
 		return false;
 	}
+
+
+  function validatesUniquenessOfMatricula($pessoaId, $matricula) {
+    $sql = "select 1 from portal.funcionario where lower(matricula) = lower('$matricula') and ref_cod_pessoa_fj != $pessoaId";
+    $db = new clsBanco();
+
+		if ($db->CampoUnico($sql) == '1') {
+      $this->mensagem = "A matrícula '$matricula' já foi usada, por favor, informe outra.";
+      return false;
+    }
+    return true;
+  }
+
+  function validatesPassword($matricula, $password) {
+    $msg = '';
+
+		if ($password == $matricula)
+      $msg = 'Informe uma senha diferente da matricula.';
+    elseif (strlen($password) < 8)
+      $msg = 'Por favor informe uma senha segura, com pelo menos 8 caracteres.';
+
+    if ($msg) {
+      $this->mensagem = $msg;
+      return false;
+    }
+    return true;
+  }
 }
 
 // cria uma extensao da classe base
