@@ -110,7 +110,7 @@ class Portabilis_View_Helper_DynamicInput_Escola extends Portabilis_View_Helper_
     $isProfessor = Portabilis_Business_Professor::isProfessor($this->getInstituicaoId($options['instituicaoId']),
                                                               $this->getCurrentUserId());
 
-    if ($this->hasNivelAcesso('POLI_INSTITUCIONAL') || $this->hasNivelAcesso('INSTITUCIONAL') || $isProfessor)
+    if ($this->hasNivelAcesso('POLI_INSTITUCIONAL') || $this->hasNivelAcesso('INSTITUCIONAL') || $isProfessor || $options['options']['show-select'])
       $this->selectInput($options);
 
     elseif($this->hasNivelAcesso('SOMENTE_ESCOLA') || $this->hasNivelAcesso('SOMENTE_BIBLIOTECA'))

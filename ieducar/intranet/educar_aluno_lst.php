@@ -144,8 +144,10 @@ class indice extends clsListagem
 
 		$this->campoRotulo('filtros_matricula', '<b>Filtros de matrículas em andamento</b>');
 
-		$this->inputsHelper()->integer('ano', array('required' => false, 'value' => $this->ano, 'max_length' => 4));
-		$this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie'), array('required' =>  false));		
+		$this->inputsHelper()->integer('ano', array('required' => false, 'value' => $this->ano, 'max_length' => 4));		
+		$this->inputsHelper()->dynamic('instituicao',  array('required' =>  false, 'show-select' => true, 'value' => $this->ref_cod_instituicao));
+		$this->inputsHelper()->dynamic('escola',  array('required' =>  false, 'show-select' => true, 'value' => $this->ref_cod_escola));
+		$this->inputsHelper()->dynamic(array('curso', 'serie'), array('required' =>  false));
 
 		//$this->inputsHelper()->select('periodo', array('required' => false, 'value' => $this->periodo, 'resources' => array(null => 'Selecione', 1 => 'Matutino', 2 => 'Vespertino', 3 => 'Noturno', 4 => 'Integral' )));
 
