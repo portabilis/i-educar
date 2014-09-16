@@ -623,20 +623,28 @@ protected function createOrUpdateUniforme($id) {
   protected function loadOcorrenciasDisciplinares() {
     $ocorrenciasAluno              = array();
 
-    if(is_numeric($this->getRequest()->escola_id)){
-      $sql = "SELECT cod_matricula as id from pmieducar.matricula, pmieducar.escola where
-            cod_escola = ref_ref_cod_escola and ref_cod_aluno = $1 and ref_ref_cod_escola =
-            $2 and matricula.ativo = 1 order by ano desc, id";
+    $alunoId = $this->getRequest()->aluno_id;
 
-      $params     = array($this->getRequest()->aluno_id, $this->getRequest()->escola_id);
+    if(is_array($alunoId))
+      $alunoId = implode(",", $alunoId);
+
+
+
+    if(is_numeric($this->getRequest()->escola_id)){
+      $sql = "SELECT cod_matricula as matricula_id, ref_cod_aluno as aluno_id from pmieducar.matricula, pmieducar.escola where
+            cod_escola = ref_ref_cod_escola and ref_cod_aluno in ({$alunoId}) and ref_ref_cod_escola =
+            $1 and matricula.ativo = 1 order by ano desc, matricula_id";
+
+      $params     = array($this->getRequest()->escola_id);
     }else{
-      $sql = "SELECT cod_matricula AS id 
+      $sql = "SELECT cod_matricula as matricula_id, 
+              ref_cod_aluno as aluno_id
               FROM pmieducar.matricula 
-              WHERE ref_cod_aluno = $1
+              WHERE ref_cod_aluno IN ({$alunoId})
               AND matricula.ativo = 1 
-              ORDER BY ano DESC, id";
+              ORDER BY ano DESC, matricula_id";
               
-      $params     = array($this->getRequest()->aluno_id);
+      $params     = array();
     }
     
     $matriculas = $this->fetchPreparedQuery($sql, $params);
@@ -644,7 +652,7 @@ protected function createOrUpdateUniforme($id) {
     $_ocorrenciasMatricula  = new clsPmieducarMatriculaOcorrenciaDisciplinar();
 
     foreach($matriculas as $matricula) {
-      $ocorrenciasMatricula = $_ocorrenciasMatricula->lista($matricula['id'],
+      $ocorrenciasMatricula = $_ocorrenciasMatricula->lista($matricula['matricula_id'],
                                                             null,
                                                             null,
                                                             null,
@@ -668,6 +676,7 @@ protected function createOrUpdateUniforme($id) {
           $ocorrenciaMatricula['tipo']      = $this->loadTipoOcorrenciaDisciplinar($ocorrenciaMatricula['tipo']);
           $ocorrenciaMatricula['data_hora'] = Portabilis_Date_Utils::pgSQLToBr($ocorrenciaMatricula['data_hora']);
           $ocorrenciaMatricula['descricao'] = $this->toUtf8($ocorrenciaMatricula['descricao']);
+          $ocorrenciaMatricula['aluno_id']  = $matricula['aluno_id'];
           $ocorrenciasAluno[]               = $ocorrenciaMatricula;
         }
       }

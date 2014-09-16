@@ -331,12 +331,24 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     $options        = $this->mergeOptions($options, $defaultOptions);
 
-    return $this->validator->validatesValueIsInBd($options['field_name'],
-                                                  $value,
-                                                  $options['schema_name'],
-                                                  $resourceName,
-                                                  $raiseExceptionOnFail = false,
-                                                  $addMsgOnError        = $options['add_msg_on_error']);
+    if (is_array($value)){
+      $valid = true;
+      foreach ($value as $v) {
+        $valid = $valid && $this->validator->validatesValueIsInBd($options['field_name'],
+                                                    $v,
+                                                    $options['schema_name'],
+                                                    $resourceName,
+                                                    $raiseExceptionOnFail = false,
+                                                    $addMsgOnError        = $options['add_msg_on_error']);  
+      }
+      return $valid;
+    }else
+      return $this->validator->validatesValueIsInBd($options['field_name'],
+                                                    $value,
+                                                    $options['schema_name'],
+                                                    $resourceName,
+                                                    $raiseExceptionOnFail = false,
+                                                    $addMsgOnError        = $options['add_msg_on_error']);
   }
 
   protected function validatesUniquenessOf($resourceName, $value, $options = array()) {
