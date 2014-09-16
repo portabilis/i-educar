@@ -85,7 +85,7 @@ class Portabilis_View_Helper_DynamicInput_Instituicao extends Portabilis_View_He
 
 
   public function instituicao($options = array()) {
-    if ($this->hasNivelAcesso('POLI_INSTITUCIONAL'))
+    if ($this->hasNivelAcesso('POLI_INSTITUCIONAL') || $options['options']['show-select'])
       $this->selectInput($options);
     else
       $this->hiddenInput($options);
