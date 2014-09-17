@@ -366,7 +366,7 @@ class clsPmieducarTipoUsuario
 		}
 		if( is_numeric( $int_nivel_menor ) )
 		{
-			$filtros .= "{$whereAnd} nivel > '{$int_nivel_menor}'";
+			$filtros .= "{$whereAnd} nivel >= '{$int_nivel_menor}'";
 			$whereAnd = " AND ";
 		}
 		if( is_string( $date_data_cadastro_ini ) )

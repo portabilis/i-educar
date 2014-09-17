@@ -164,8 +164,8 @@ class indice extends clsListagem
 			}
 		}
 
-		$this->addPaginador2( "funcionario_lst.php", $total, $_GET, $this->nome, $limite );
-		$this->acao = "go(\"funcionario_cad.php\")";
+		$this->addPaginador2( "educar_usuario_lst.php", $total, $_GET, $this->nome, $limite );
+		$this->acao = "go(\"educar_usuario_cad.php\")";
 		$this->nome_acao = "Novo";
 
 		$this->largura = "100%";
