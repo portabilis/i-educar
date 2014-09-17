@@ -143,20 +143,19 @@ class AlunoController extends ApiCoreController
 
   protected function validatesUniquenessOfAlunoInepId() {
     if ($this->getRequest()->aluno_inep_id) {
-      $where  = array('alunoInep' => '$1');
+      $sql    = "SELECT a.cod_aluno FROM modules.educacenso_cod_aluno eca INNER JOIN pmieducar.aluno a ON (a.cod_aluno = eca.cod_aluno) WHERE eca.cod_aluno_inep = $1 AND a.ativo = 1 ";
       $params = array($this->getRequest()->aluno_inep_id);
 
       if ($this->getRequest()->id) {
-        $where['aluno'] = '!= $2';
-        $params[]       = $this->getRequest()->id;
-      }
+        $sql          .= ' AND a.cod_aluno != $2';
+        $params[]      = $this->getRequest()->id;
+      }      
 
-      $dataMapper = $this->getDataMapperFor('educacenso', 'aluno');
-      $entity     = $dataMapper->findAllUsingPreparedQuery(array('aluno'), $where, $params, array(), false);
+      $alunoId = $this->fetchPreparedQuery($sql, $params, true, 'first-field');
 
-      if (count($entity) && $entity[0]->get('aluno')) {
-        $this->messenger->append("Já existe o aluno {$entity[0]->get('aluno')} cadastrado com código inep ".
-                                 "{$this->getRequest()->aluno_inep_id}.");
+      if ($alunoId) {
+        $this->messenger->append("Já existe o aluno $alunoId cadastrado com código inep ".
+                                 " {$this->getRequest()->aluno_inep_id}.");
 
         return false;
       }
@@ -168,7 +167,7 @@ class AlunoController extends ApiCoreController
 
   protected function validatesUniquenessOfAlunoEstadoId() {
     if ($this->getRequest()->aluno_estado_id) {
-      $sql    = "select cod_aluno from pmieducar.aluno where aluno_estado_id = $1";
+      $sql    = "select cod_aluno from pmieducar.aluno where aluno_estado_id = $1 AND ativo = 1 ";
       $params = array($this->getRequest()->aluno_estado_id);
 
       if($this->getRequest()->id) {
