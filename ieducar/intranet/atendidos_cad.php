@@ -616,7 +616,7 @@ class indice extends clsCadastro
 
     $racas         = new clsCadastroRaca();
     $racas         = $racas->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, TRUE);
-    $selectOptions = array('' => 'Raça');
+    $selectOptions = array();
 
     foreach ($racas as $raca)
       $selectOptions[$raca['cod_raca']] = $raca['nm_raca'];
