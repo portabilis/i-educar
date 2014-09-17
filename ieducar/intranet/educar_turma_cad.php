@@ -1,4 +1,6 @@
 <?php
+// error_reporting(E_ALL);
+// ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -405,15 +407,18 @@ class indice extends clsCadastro
     unset($opcoes);
     $anoEscolar = new ComponenteCurricular_Model_AnoEscolarDataMapper();
     $opcaoPadrao = array(null => 'Selecione');
-    $listaComponentes = $anoEscolar->findComponentePorSerie($this->ref_ref_cod_serie);
-    foreach($listaComponentes as $componente){
-    	$componente->nome = ucwords(strtolower($componente->nome));
-    	$opcoes["{$componente->id}"] = "{$componente->nome}";
+    if (!is_null($this->ref_ref_cod_serie)){
+    	$listaComponentes = $anoEscolar->findComponentePorSerie($this->ref_ref_cod_serie);
+    	foreach($listaComponentes as $componente){
+	    	$componente->nome = ucwords(strtolower($componente->nome));
+	    	$opcoes["{$componente->id}"] = "{$componente->nome}";
+    	}
+    	$opcoes = $opcaoPadrao + $opcoes;
     }
-
-    $opcoes = $opcaoPadrao + $opcoes;
-    
-    $this->campoLista('ref_cod_disciplina_dispensada', 'Disciplina dispensada', $opcoes, $this->ref_cod_disciplina_dispensada, '', FALSE, '', '', FALSE, FALSE);
+   
+    if (!is_null($this->ref_ref_cod_serie)){
+    	$this->campoLista('ref_cod_disciplina_dispensada', 'Disciplina dispensada', $opcoes, $this->ref_cod_disciplina_dispensada, '', FALSE, '', '', FALSE, FALSE);	
+    }
 
     $ativo = isset($this->cod_turma) ? dbBool($this->visivel) : true;
     $this->campoCheck('visivel', 'Ativo', $ativo);
