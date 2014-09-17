@@ -804,9 +804,13 @@ class clsPmieducarTurma
 				$gruda    = ", ";
 			}
 
-			if(is_numeric($this->etapa_educacenso) || is_null($this->ref_cod_disciplina_dispensada)){
+			if(is_numeric($this->etapa_educacenso)){
 				$campos  .= "{$gruda}ref_cod_disciplina_dispensada";
 				$valores .= "{$gruda}'{$this->ref_cod_disciplina_dispensada}'";
+				$gruda    = ", ";
+			}elseif(is_null($this->ref_cod_disciplina_dispensada)){
+				$campos  .= "{$gruda}ref_cod_disciplina_dispensada";
+				$valores .= "{$gruda}NULL";
 				$gruda    = ", ";
 			}							
 
