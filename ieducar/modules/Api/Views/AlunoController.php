@@ -198,6 +198,10 @@ class AlunoController extends ApiCoreController
     return $this->validatesPresenceOf('instituicao_id');
   }
 
+  protected function canGetAlunosByGuardianCpf() {
+    return $this->validatesPresenceOf('aluno_id') && $this->validatesPresenceOf('cpf');
+  }
+
   protected function canChange() {
     return $this->validatesPessoaId()     &&
            $this->validatesResponsavel()  &&
@@ -946,6 +950,49 @@ protected function createOrUpdateUniforme($id) {
     }
   }
 
+  protected function getIdpesFromCpf($cpf){
+
+    $sql    = 'SELECT idpes FROM cadastro.fisica WHERE cpf = $1';
+
+    return $this->fetchPreparedQuery($sql, $cpf, true, 'first-field');
+  }
+
+  protected function checkAlunoIdpesGuardian($idpesGuardian, $alunoId){
+    $sql = 'SELECT 1
+              FROM pmieducar.aluno
+              INNER JOIN cadastro.fisica ON (aluno.ref_idpes = fisica.idpes)
+              WHERE cod_aluno = $2
+              AND (idpes_pai = $1
+              OR idpes_mae = $1
+              OR idpes_responsavel = $1) LIMIT 1';
+
+    return $this->fetchPreparedQuery($sql, array($idpesGuardian, $alunoId), true, 'first-field') == 1;
+  }
+
+  protected function getAlunosByGuardianCpf(){
+    if($this->canGetAlunosByGuardianCpf()){
+
+      $cpf = (int) $this->getRequest()->cpf;
+      $alunoId = $this->getRequest()->aluno_id;
+
+      $idpesGuardian = $this->getIdpesFromCpf($cpf);
+
+      if(is_numeric($idpesGuardian) && $this->checkAlunoIdpesGuardian($idpesGuardian, $alunoId)){
+
+        $sql = 'SELECT cod_aluno as aluno_id, pessoa.nome as nome_aluno
+                  FROM pmieducar.aluno
+                  INNER JOIN cadastro.fisica ON (aluno.ref_idpes = fisica.idpes)
+                  INNER JOIN cadastro.pessoa ON (pessoa.idpes = fisica.idpes)
+                  WHERE idpes_pai = $1
+                  OR idpes_mae = $1
+                  OR idpes_responsavel = $1';        
+
+        return array('alunos' => $this->fetchPreparedQuery($sql, array($idpesGuardian)));
+      }else{
+        $this->messenger->append('Não foi encontrado nenhum vínculos entre esse aluno e cpf.');
+      }      
+    }
+  }
 
   protected function getMatriculas() {
     if ($this->canGetMatriculas()) {
@@ -1207,6 +1254,9 @@ protected function createOrUpdateUniforme($id) {
 
     elseif ($this->isRequestFor('get', 'grade_ultimo_historico'))
       $this->appendResponse($this->getGradeUltimoHistorico());
+
+    elseif ($this->isRequestFor('get', 'alunos_by_guardian_cpf'))
+      $this->appendResponse($this->getAlunosByGuardianCpf());
 
     // create
     elseif ($this->isRequestFor('post', 'aluno'))
