@@ -1123,6 +1123,7 @@ class indice extends clsCadastro
 
     $this->arquivoFoto = $_FILES["file"];
     if (!empty($this->arquivoFoto["name"])){
+      $this->arquivoFoto["name"] = mb_strtolower($this->arquivoFoto["name"], 'UTF-8');
       $this->objPhoto = new PictureController($this->arquivoFoto);
       if ($this->objPhoto->validatePicture()){
         return TRUE;
