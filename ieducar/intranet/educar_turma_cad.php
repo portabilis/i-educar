@@ -405,21 +405,20 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->date('data_fechamento', array('required' => false,'label' => 'Data de fechamento' ,'value' => Portabilis_Date_Utils::pgSQLToBr($this->data_fechamento)));
     unset($opcoes);
-    $anoEscolar = new ComponenteCurricular_Model_AnoEscolarDataMapper();
-    $opcaoPadrao = array(null => 'Selecione');
     if (!is_null($this->ref_ref_cod_serie)){
+    	$anoEscolar = new ComponenteCurricular_Model_AnoEscolarDataMapper();
+    	$opcaoPadrao = array(null => 'Selecione');
     	$listaComponentes = $anoEscolar->findComponentePorSerie($this->ref_ref_cod_serie);
-    	foreach($listaComponentes as $componente){
-	    	$componente->nome = ucwords(strtolower($componente->nome));
-	    	$opcoes["{$componente->id}"] = "{$componente->nome}";
-    	}
+    	if(!empty($listaComponentes)){
+	    	foreach($listaComponentes as $componente){
+		    	$componente->nome = ucwords(strtolower($componente->nome));
+		    	$opcoes["{$componente->id}"] = "{$componente->nome}";
+	    	}
     	$opcoes = $opcaoPadrao + $opcoes;
+    	$this->campoLista('ref_cod_disciplina_dispensada', 'Disciplina dispensada', $opcoes, $this->ref_cod_disciplina_dispensada, '', FALSE, '', '', FALSE, FALSE);	
+    	}
     }
    
-    if (!is_null($this->ref_ref_cod_serie)){
-    	$this->campoLista('ref_cod_disciplina_dispensada', 'Disciplina dispensada', $opcoes, $this->ref_cod_disciplina_dispensada, '', FALSE, '', '', FALSE, FALSE);	
-    }
-
     $ativo = isset($this->cod_turma) ? dbBool($this->visivel) : true;
     $this->campoCheck('visivel', 'Ativo', $ativo);
 
