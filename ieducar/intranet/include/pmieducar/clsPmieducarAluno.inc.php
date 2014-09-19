@@ -988,7 +988,7 @@ class clsPmieducarAluno
     }
 
     if (!empty($cod_inep) && is_numeric($cod_inep)) {
-      $filtros .= "{$whereAnd} cod_aluno = ( SELECT cod_aluno FROM modules.educacenso_cod_aluno WHERE cod_aluno_inep = {$cod_inep})";
+      $filtros .= "{$whereAnd} cod_aluno IN( SELECT cod_aluno FROM modules.educacenso_cod_aluno WHERE cod_aluno_inep = {$cod_inep})";
       $whereAnd = ' AND ';
     }
 
