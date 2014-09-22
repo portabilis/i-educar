@@ -972,7 +972,7 @@ protected function createOrUpdateUniforme($id) {
   protected function getAlunosByGuardianCpf(){
     if($this->canGetAlunosByGuardianCpf()){
 
-      $cpf = (int) $this->getRequest()->cpf;
+      $cpf = $this->getRequest()->cpf;
       $alunoId = $this->getRequest()->aluno_id;
 
       $idpesGuardian = $this->getIdpesFromCpf($cpf);
