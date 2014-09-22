@@ -213,16 +213,12 @@ class clsControlador
     $this->destroyLoginSession();
     require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/bootstrap.php';
 
-    $parceiro = $GLOBALS['coreExt']['Config']->app->template->layout;
-    $pendencia_administrativa = dbBool($GLOBALS['coreExt']['Config']->app->administrative_pending->exist);
+    $parceiro = $GLOBALS['coreExt']['Config']->app->template->layout;    
 
     $templateName = (trim($parceiro)=='' ? 'templates/nvp_htmlloginintranet.tpl' : 'templates/'.trim($parceiro)); 
     $templateFile = fopen($templateName, "r");
     $templateText = fread($templateFile, filesize($templateName));
     $templateText = str_replace( "<!-- #&ERROLOGIN&# -->", $this->messenger->toHtml('p'), $templateText);
-
-    if($pendencia_administrativa)
-      $templateText = str_replace( "<!-- #&PENDENCIA_ADMINISTRATIVA&# -->", $GLOBALS['coreExt']['Config']->app->administrative_pending->msg, $templateText);
 
     $requiresHumanAccessValidation = isset($_SESSION['tentativas_login_falhas']) &&
                                      is_numeric($_SESSION['tentativas_login_falhas']) &&
