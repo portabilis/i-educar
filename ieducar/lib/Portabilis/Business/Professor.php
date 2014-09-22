@@ -150,10 +150,12 @@ class Portabilis_Business_Professor {
                 AND qh.ativo = 1
                 ORDER BY t.nm_turma ASC";
     }else{
+      # Feito gambiarra para que quando professor tenha alocação liste todas turmas do turno integral
       $sql = "SELECT cod_turma as id, nm_turma as nome from pmieducar.turma where ref_ref_cod_escola = $1
               and (ref_ref_cod_serie = $2 or ref_ref_cod_serie_mult = $2) and ativo = 1 and
-              visivel != 'f' and turma_turno_id in ( select periodo from servidor_alocacao where
-              ref_cod_escola = ref_ref_cod_escola and ref_cod_servidor = $3 and ativo = 1)
+              visivel != 'f' and (turma_turno_id in ( select periodo from servidor_alocacao where
+              ref_cod_escola = ref_ref_cod_escola and ref_cod_servidor = $3 and ativo = 1) OR ( turma_turno_id = 4 AND (select 1 from servidor_alocacao where
+                            ref_cod_escola = ref_ref_cod_escola and ref_cod_servidor = $3 and ativo = 1 LIMIT 1) IS NOT NULL ))
               order by nm_turma asc";
     }
 

@@ -972,7 +972,7 @@ protected function createOrUpdateUniforme($id) {
   protected function getAlunosByGuardianCpf(){
     if($this->canGetAlunosByGuardianCpf()){
 
-      $cpf = (int) $this->getRequest()->cpf;
+      $cpf = $this->getRequest()->cpf;
       $alunoId = $this->getRequest()->aluno_id;
 
       $idpesGuardian = $this->getIdpesFromCpf($cpf);
@@ -987,7 +987,16 @@ protected function createOrUpdateUniforme($id) {
                   OR idpes_mae = $1
                   OR idpes_responsavel = $1';        
 
-        return array('alunos' => $this->fetchPreparedQuery($sql, array($idpesGuardian)));
+        $alunos = $this->fetchPreparedQuery($sql, array($idpesGuardian));
+
+        $attrs = array('aluno_id', 'nome_aluno');
+        $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);        
+
+        foreach ($alunos as &$aluno) {
+          $aluno['nome_aluno'] = Portabilis_String_Utils::toUtf8($aluno['nome_aluno']);
+        }
+
+        return array('alunos' => $alunos);
       }else{
         $this->messenger->append('Não foi encontrado nenhum vínculos entre esse aluno e cpf.');
       }      
