@@ -593,7 +593,7 @@ class clsPmieducarMatricula
   function lista($int_cod_matricula = NULL, $int_ref_cod_reserva_vaga = NULL,
     $int_ref_ref_cod_escola = NULL, $int_ref_ref_cod_serie = NULL,
     $int_ref_usuario_exc = NULL, $int_ref_usuario_cad = NULL,
-    $int_ref_cod_aluno = NULL, $int_aprovado = NULL,
+    $ref_cod_aluno = NULL, $int_aprovado = NULL,
     $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL, 
     $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL, 
     $int_ativo = NULL, $int_ano = NULL, $int_ref_cod_curso2 = NULL,
@@ -653,8 +653,12 @@ class clsPmieducarMatricula
       $whereAnd = " AND ";
     }
 
-    if (is_numeric($int_ref_cod_aluno)) {
-      $filtros .= "{$whereAnd} m.ref_cod_aluno = '{$int_ref_cod_aluno}'";
+    if (is_numeric($ref_cod_aluno)) {
+      $filtros .= "{$whereAnd} m.ref_cod_aluno = '{$ref_cod_aluno}'";
+      $whereAnd = " AND ";
+    }elseif (is_array($ref_cod_aluno)) {
+      $ref_cod_aluno = implode(", ", $ref_cod_aluno);
+      $filtros .= "{$whereAnd} m.ref_cod_aluno in ({$ref_cod_aluno}) ";
       $whereAnd = " AND ";
     }
 
