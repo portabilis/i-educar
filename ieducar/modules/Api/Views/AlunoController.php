@@ -533,7 +533,7 @@ protected function createOrUpdateUniforme($id) {
   }
 
   protected function loadTurmaByMatriculaId($matriculaId) {
-    $sql           = 'select ref_cod_turma as id, turma.nm_turma as nome from pmieducar.matricula_turma,
+    $sql           = 'select ref_cod_turma as id, turma.nm_turma as nome, turma.tipo_boletim from pmieducar.matricula_turma,
                       pmieducar.turma where ref_cod_matricula = $1 and matricula_turma.ativo = 1 and
                       turma.cod_turma = ref_cod_turma limit 1';
 
@@ -1008,6 +1008,8 @@ protected function createOrUpdateUniforme($id) {
       $matriculas = new clsPmieducarMatricula();
       $matriculas->setOrderby('ano DESC, coalesce(m.data_matricula, m.data_cadastro) DESC, ref_ref_cod_serie DESC, cod_matricula DESC, aprovado');
 
+      $only_valid_boletim = $this->getRequest()->only_valid_boletim;
+
       $matriculas = $matriculas->lista(
         null,
         null,
@@ -1038,8 +1040,13 @@ protected function createOrUpdateUniforme($id) {
 
       $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
 
-      foreach ($matriculas as $index => $matricula) {
+      foreach ($matriculas as $index => $matricula) {        
         $turma = $this->loadTurmaByMatriculaId($matricula['id']);
+
+        if(dbBool($only_valid_boletim) && (is_null($turma['id']) || is_null($turma['tipo_boletim']))){
+          unset($matriculas[$index]);
+          continue;
+        }
 
         $matriculas[$index]['aluno_nome']          = $this->toUtf8($matricula['aluno_nome'], array('transform' => true));
         $matriculas[$index]['turma_id']            = $turma['id'];
