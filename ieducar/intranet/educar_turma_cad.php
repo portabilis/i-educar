@@ -403,7 +403,8 @@ class indice extends clsCadastro
 
     $this->campoNumero('max_aluno', 'M&aacute;ximo de Alunos', $this->max_aluno, 3, 3, TRUE);
 
-    $this->inputsHelper()->date('data_fechamento', array('required' => false,'label' => 'Data de fechamento' ,'value' => Portabilis_Date_Utils::pgSQLToBr($this->data_fechamento)));
+    $this->campoData('data_fechamento', 'Data de fechamento', Portabilis_Date_Utils::pgSQLToBr($this->data_fechamento), false, '', false, '', false, '', Portabilis_String_Utils::toLatin1('Após essa data alunos enturmados não serão ordenados por ordem alfabética'));
+
     unset($opcoes);
     if (!is_null($this->ref_ref_cod_serie)){
     	$anoEscolar = new ComponenteCurricular_Model_AnoEscolarDataMapper();
