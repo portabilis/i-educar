@@ -604,7 +604,7 @@ class clsPmieducarCliente
     $db = new clsBanco();
     $resultado = array();
 
-    $sql = "
+    $select = "
             SELECT
               c.cod_cliente,
               c.ref_idpes,
@@ -620,7 +620,8 @@ class clsPmieducarCliente
               (SELECT 'S'::text
                 FROM pmieducar.cliente_suspensao cs
                 WHERE cs.ref_cod_cliente = c.cod_cliente
-                AND cs.data_liberacao IS NULL) AS id_suspensao
+                AND cs.data_liberacao IS NULL) AS id_suspensao ";
+	$sql = "
             FROM
               pmieducar.cliente                c,
               pmieducar.cliente_tipo_cliente ctc,
@@ -641,15 +642,14 @@ class clsPmieducarCliente
               AND ctc.ativo             = '{$int_ativo}'
               $filtros";
 
-    $sql .= $this->getOrderby() . $this->getLimite();
-    $db->Consulta($sql);
+	$this->_total = $db->CampoUnico( "SELECT COUNT(0) ".$sql );              
 
-    $this->_total = 0;
+    $sql .= $this->getOrderby() . $this->getLimite();
+    $db->Consulta($select .$sql);    
 
     while ($db->ProximoRegistro()) {
       $tupla = $db->Tupla();
       $resultado[] = $tupla;
-      $this->_total += 1;
     }
 
     if (count($resultado) > 0)
