@@ -140,7 +140,7 @@ class indice extends clsCadastro
     $this->inputsHelper()->dynamic($selectInputs);
 
 		$opcoes = array( "" => "Selecione", "2" => "Sim", "1" => "N&atilde;o" );
-		$this->campoLista( "permite_emprestimo", "Permite emprestimo", $opcoes, $this->permite_emprestimo );
+		$this->campoLista( "permite_emprestimo", "Permite empréstimo", $opcoes, $this->permite_emprestimo );
 
 		$this->preco = is_numeric($this->preco) ? number_format($this->preco, 2, ",", ".") : "";
 		$this->campoMonetario( "preco", "Preco", $this->preco, 10, 20, false );
