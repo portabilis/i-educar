@@ -102,21 +102,7 @@ class indice extends clsListagem
 			"Status"
 		) );
 
-		$opcoes = array( "" => "Pesquise a pessoa clicando na lupa ao lado" );
-		if( $this->ref_idpes )
-		{
-			$objTemp = new clsPessoaFisica( $this->ref_idpes );
-			$detalhe = $objTemp->detalhe();
-			$opcoes["{$detalhe["idpes"]}"] = $detalhe["nome"];
-		}
-		$parametros = new clsParametrosPesquisas();
-		$parametros->setSubmit( 0 );
-		$parametros->adicionaCampoSelect( "ref_idpes", "idpes", "nome" );
-		$parametros->setCodSistema( 1 );
-		$parametros->setPessoa( 'F' );
-		$parametros->setPessoaEditar( 'N' );
-		$parametros->setPessoaNovo( 'N' );
-		$this->campoListaPesq( "ref_idpes", "Cliente", $opcoes, $this->ref_idpes, "pesquisa_pessoa_lst.php", "", false, "", "", null, null, "", false, $parametros->serializaCampos() );
+		$this->inputsHelper()->text('nome_cliente', array('required' => false, 'value' => $this->nome_cliente, 'label' => 'Nome'));
 
 		$this->campoLista( "status", "Status", array( '' => "Selecione", 'R' => "Regular", 'S' => "Suspenso" ), $this->status, "", false, "", "", false, false );
 
@@ -162,7 +148,7 @@ class indice extends clsListagem
 			$lista = $obj_cliente->listaCompleta( null,
 												  null,
 												  null, 
-												  $this->ref_idpes,
+												  null,
 												  null, 
 												  null, 	
 												  null,
@@ -170,7 +156,7 @@ class indice extends clsListagem
 												  null,
 												  null,
 												  1,
-												  null,
+												  $this->nome_cliente,
 												  $this->status,
 												  $this->ref_cod_cliente_tipo,
 												  null, 
