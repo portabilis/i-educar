@@ -836,8 +836,8 @@ class clsPmieducarAluno
       $whereAnd = ' AND ';
     }
 
-    if(is_numeric($aluno_estado_id)) {
-      $filtros .= "{$whereAnd} a.aluno_estado_id = '{$aluno_estado_id}'";
+    if(is_string($aluno_estado_id)) {
+      $filtros .= "{$whereAnd} a.aluno_estado_id LIKE '%{$aluno_estado_id}%'";
       $whereAnd = ' AND ';
     }
 
