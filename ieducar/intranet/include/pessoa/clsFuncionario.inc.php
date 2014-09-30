@@ -264,6 +264,92 @@ class clsFuncionario extends clsPessoaFisica
 		return false;
 	}
 
+	function listaFuncionarioUsuario($str_matricula=false, $str_nome=false, $matricula_interna = NULL, $int_ref_cod_escola = null, $int_ref_cod_instituicao = null, $int_ref_cod_tipo_usuario = null, $int_nivel = null )
+	{
+		$sql = " SELECT f.ref_cod_pessoa_fj, f.nome, f.matricula, f.matricula_interna, f.ativo, tu.nm_tipo, tu.nivel
+							FROM {$this->schema_portal}.v_funcionario f 
+							LEFT JOIN pmieducar.usuario u ON (u.cod_usuario = f.ref_cod_pessoa_fj) 
+							LEFT JOIN pmieducar.tipo_usuario tu ON (u.ref_cod_tipo_usuario = tu.cod_tipo_usuario)  ";
+		$filtros = "";
+		$filtro_pessoa = false;
+
+
+		$whereAnd = " WHERE u.ativo = 1 AND ";
+
+		if( is_string( $str_matricula ) && $str_matricula != '')
+		{
+			$filtros .= "{$whereAnd} to_ascii(f.matricula) LIKE to_ascii('%{$str_matricula}%')";
+			$whereAnd = " AND ";
+		}
+		if( is_string( $matricula_interna ) && $matricula_interna != '')
+		{
+			$filtros .= "{$whereAnd} to_ascii(f.matricula_interna) LIKE to_ascii('%{$matricula_interna}%')";
+			$whereAnd = " AND ";
+		}		
+		if( is_string( $str_nome ) )
+		{
+			$filtros .= "{$whereAnd} to_ascii(f.nome) LIKE  to_ascii('%{$str_nome}%%')";
+			$whereAnd = " AND ";
+			$filtro_pessoa =true;
+		}
+
+		if( is_numeric( $int_ref_cod_escola ) )
+		{
+			$filtros .= "{$whereAnd} u.ref_cod_escola = '{$int_ref_cod_escola}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_ref_cod_instituicao ) )
+		{
+			$filtros .= "{$whereAnd} u.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_ref_cod_tipo_usuario ) )
+		{
+			$filtros .= "{$whereAnd} u.ref_cod_tipo_usuario = '{$int_ref_cod_tipo_usuario}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric($int_nivel))
+		{
+			$filtros .= "{$whereAnd} tu.nivel = '$int_nivel'";
+			$whereAnd = " AND ";
+		}
+
+		$db = new clsBanco();
+		$countCampos = count( explode( ",", $this->_campos_lista ) );
+		$resultado = array();
+
+		$sql .= "{$filtros}".$this->getOrderby().$this->getLimite();
+
+		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->schema_portal}.v_funcionario f 
+																				LEFT JOIN pmieducar.usuario u ON (u.cod_usuario = f.ref_cod_pessoa_fj) 
+																				LEFT JOIN pmieducar.tipo_usuario tu ON (u.ref_cod_tipo_usuario = tu.cod_tipo_usuario) {$filtros}" );
+		
+		$db->Consulta( $sql );
+
+		if( $countCampos > 1 )
+		{
+			while ( $db->ProximoRegistro() )
+			{
+				$tupla = $db->Tupla();
+
+				$tupla["_total"] = $this->_total;
+				$resultado[] = $tupla;
+			}
+		}
+		else
+		{
+			while ( $db->ProximoRegistro() )
+			{
+				$resultado = $db->Tupla();
+			}
+		}
+		if( count( $resultado ) )
+		{
+			return $resultado;
+		}
+		return false;
+	}	
+
 
 	function detalhe()
 	{

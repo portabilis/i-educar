@@ -360,7 +360,7 @@ class clsCampos extends Core_Controller_Page_Abstract
   }
 
   function campoData($nome, $campo, $valor, $obrigatorio = FALSE, $descricao = '',
-    $duplo = FALSE, $acao = '', $disabled = FALSE)
+    $duplo = FALSE, $acao = '', $disabled = FALSE, $teste, $dica = 'dd/mm/aaaa')
   {
     $arr_componente = array(
       $duplo ? 'dataDupla' : 'data',
@@ -369,10 +369,10 @@ class clsCampos extends Core_Controller_Page_Abstract
       $valor,
       9,
       10,
-      'dd/mm/aaaa',
+      $dica,
       $descricao,
       $acao,
-      $disabled
+      $disabled,
     );
 
     if (! $this->__adicionando_tabela) {

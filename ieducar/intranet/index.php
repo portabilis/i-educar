@@ -89,6 +89,37 @@ class indice
         $temp .= "<center><h3>Acesso negado para este usu&aacute;rio.</h3><br>Caso persista nas tentativas sua conta na intranet poder&aacute; ser bloqueada por tempo indeterminado.</center>";
       }
 
+      $pendencia_administrativa = dbBool($GLOBALS['coreExt']['Config']->app->administrative_pending->exist);
+      $texto_pendencia = $GLOBALS['coreExt']['Config']->app->administrative_pending->msg;
+
+      if ($pendencia_administrativa)
+        echo '
+          <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+          <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+          <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+          <div id="dialog" title="Aviso">
+            '.$texto_pendencia.'
+          </div>
+          <script>
+          var $j = jQuery.noConflict();
+          
+          $j(function() {
+            $j( "#dialog" ).dialog({
+              width: 600,
+              position: { my: "center", at: "top", of: window },
+              buttons: [
+                {
+                  text: "Entendi. Prosseguir utilizando o sistema.",
+                  click: function(){
+                    $j(this).dialog("close");
+                  }
+                }
+              ]
+            });
+            
+          });
+         </script>';
+
       $temp .= '<table width="100%" height="400" align="center" border="0" cellspacing="4" cellpadding="0">';
       $temp .= '
         <tr>

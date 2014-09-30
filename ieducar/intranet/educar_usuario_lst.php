@@ -29,12 +29,12 @@ require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
 
-class clsIndexBase extends clsBase
+class clsIndex extends clsBase
 {
 
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Usu&aacute;rio" );
+		$this->SetTitulo( "{$this->_instituicao} Usu&aacute;rios!" );
 		$this->processoAp = "555";
 		$this->addEstilo('localizacaoSistema');
 	}
@@ -42,81 +42,24 @@ class clsIndexBase extends clsBase
 
 class indice extends clsListagem
 {
-	/**
-	 * Referencia pega da session para o idpes do usuario atual
-	 *
-	 * @var int
-	 */
-	var $pessoa_logada;
-
-	/**
-	 * Titulo no topo da pagina
-	 *
-	 * @var int
-	 */
-	var $titulo;
-
-	/**
-	 * Quantidade de registros a ser apresentada em cada pagina
-	 *
-	 * @var int
-	 */
-	var $limite;
-
-	/**
-	 * Inicio dos registros a serem exibidos (limit)
-	 *
-	 * @var int
-	 */
-	var $offset;
-
-	var $cod_usuario;
-	var $ref_cod_escola;
-	var $ref_cod_instituicao;
-	var $ref_funcionario_cad;
-	var $ref_funcionario_exc;
-	var $ref_cod_tipo_usuario;
-	var $data_cadastro;
-	var $data_exclusao;
-	var $ativo;
-	var $ref_cod_biblioteca;
-
-	var $ref_cod_nivel_usuario;
-
 	function Gerar()
 	{
+
 		@session_start();
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
 
-		$this->titulo = "Usu&aacute;rio - Listagem";
+		$this->titulo = "Usu&aacute;rios";
 
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
-
 		
+		$this->addCabecalhos( array( "Nome","Matrícula", "Matrícula Interna" ,"Status", "Tipo usu&aacute;rio", "N&iacute;vel de Acesso") );
 
-		$this->addCabecalhos( array(
-			"Usu&aacute;rio",
-			"Tipo Usu&aacute;rio",
-			"N&iacute;vel de Acesso"
-		) );
-
-		$objPermissao = new clsPermissoes();
-
-		// Filtros de Foreign Keys
-		$opcoes = array( "" => "Pesquise o funcion&aacute;rio clicando na lupa ao lado" );
-		if( $this->cod_usuario )
-		{
-			$objTemp = new clsFuncionario( $this->cod_usuario );
-			$detalhe = $objTemp->detalhe();
-			$detalhe = $detalhe["idpes"]->detalhe();
-			$opcoes["{$detalhe["idpes"]}"] = $detalhe["nome"];
-		}
-		$parametros = new clsParametrosPesquisas();
-		$parametros->setSubmit( 0 );
-		$parametros->adicionaCampoSelect( "cod_usuario", "ref_cod_pessoa_fj", "nome" );
-		$this->campoListaPesq( "cod_usuario", "Usu&aacute;rio", $opcoes, $this->cod_usuario, "pesquisa_funcionario_lst.php", "", false, "", "", null, null, "", false, $parametros->serializaCampos() );
+		// Filtros de Busca
+		$this->campoTexto("nm_pessoa", "Nome", $this->nm_pessoa, 42, 255);
+		$this->campoTexto("matricula", "Matr&iacute;cula", $this->matricula, 20, 15);
+		$this->campoTexto("matricula_interna", "Matr&iacute;cula Interna", $this->matricula_interna, 20, 30);
 
 		$opcoes = array( "" => "Selecione" );
 		if( class_exists( "clsPmieducarTipoUsuario" ) )
@@ -174,113 +117,70 @@ class indice extends clsListagem
 		{
 			$get_escola = true;
 			include("include/pmieducar/educar_campo_lista.php");
-		}
-		
-		
+		}		
+
 		// Paginador
-		$this->limite = 20;
-		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+		$limite = 10;
+		$iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
 
-		$obj_usuario = new clsPmieducarUsuario();
-		$obj_usuario->setOrderby( "nivel ASC" );
-		$obj_usuario->setLimite( $this->limite, $this->offset );
+		$obj_func = new clsFuncionario();
+		$obj_func->setOrderby("to_ascii(nome) ASC");
+		$obj_func->setLimite($limite, $iniciolimit);
+		$lst_func = $obj_func->listaFuncionarioUsuario($_GET["matricula"], $_GET['nm_pessoa'],$_GET['matricula_interna'],
+				$this->ref_cod_escola, $super_usuario_det ? NULL : $this->ref_cod_instituicao, $this->ref_cod_tipo_usuario, $this->ref_cod_nivel_usuario);
 
-		$lista = $obj_usuario->lista(
-			$this->cod_usuario,
-			$this->ref_cod_escola,
-			$super_usuario_det ? NULL : $this->ref_cod_instituicao,
-			null,
-			null,
-			$this->ref_cod_tipo_usuario,
-			null,
-			null,
-			null,
-			null,
-			1,
-			$this->ref_cod_nivel_usuario
-		);
-
-		$total = $obj_usuario->_total;
-
-		if( is_array( $lista ) && count( $lista ) )
+		if($lst_func)
 		{
-			foreach ( $lista AS $registro )
+			foreach ( $lst_func AS $pessoa )
 			{
-				// pega detalhes de foreign_keys
-				if( class_exists( "clsPessoa_" ) )
+				$ativo = ($pessoa['ativo'] == '1') ? "Ativo" : "Inativo";
+				$total = $pessoa['_total'];
+				$pessoa['nome']  = minimiza_capitaliza($pessoa['nome']);
+				if ($pessoa["nivel"] == 1)
 				{
-					$obj_cod_usuario = new clsPessoa_($registro["cod_usuario"] );
-					$obj_usuario_det = $obj_cod_usuario->detalhe();
-					$nome_usuario = $obj_usuario_det['nome'];
+					$nivel = "Poli-Institucional";
 				}
-				else
+				elseif ($pessoa["nivel"] == 2)
 				{
-					$nome_usuario = "Erro na gera&ccedil;&atilde;o";
-					echo "<!--\nErro\nClasse n&atilde;o existente: clsPessoa_\n-->";
+					$nivel = "Institucional";
 				}
-				if( class_exists( "clsPmieducarTipoUsuario" ) )
+				elseif ($pessoa["nivel"] == 4)
 				{
-					$obj_tipo_usuario = new clsPmieducarTipoUsuario( $registro["ref_cod_tipo_usuario"] );
-					$obj_tipo_usuario_det = $obj_tipo_usuario->detalhe();
-					$nm_tipo_usuario = $obj_tipo_usuario_det["nm_tipo"];
-					$registro["ref_cod_nivel_usuario"] = $obj_tipo_usuario_det["nivel"];
-
-					if ($registro["ref_cod_nivel_usuario"] == 1)
-					{
-						$nivel = "Poli-Institucional";
-					}
-					elseif ($registro["ref_cod_nivel_usuario"] == 2)
-					{
-						$nivel = "Institucional";
-					}
-					elseif ($registro["ref_cod_nivel_usuario"] == 4)
-					{
-						$nivel = "Escolar";
-					}
-					elseif ($registro["ref_cod_nivel_usuario"] == 8)
-					{
-						$nivel = "Biblioteca";
-					}
+					$nivel = "Escolar";
 				}
-				else
+				elseif ($pessoa["nivel"] == 8)
 				{
-					$registro["ref_cod_tipo_usuario"] = "Erro na gera&ccedil;&atilde;o";
-					echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarTipoUsuario\n-->";
+					$nivel = "Biblioteca";
+				}else{
+					$nivel = "";
 				}
-
-
 				$this->addLinhas( array(
-					"<a href=\"educar_usuario_det.php?cod_usuario={$registro["cod_usuario"]}\">{$nome_usuario}</a>",
-					"<a href=\"educar_usuario_det.php?cod_usuario={$registro["cod_usuario"]}\">{$nm_tipo_usuario}</a>",
-					"<a href=\"educar_usuario_det.php?cod_usuario={$registro["cod_usuario"]}\">{$nivel}</a>"
-				) );
+				"<a href='educar_usuario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'><img src='imagens/noticia.jpg' border=0>{$pessoa['nome']}</a>",
+				"<a href='educar_usuario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'>{$pessoa['matricula']}</a>",
+				"<a href='educar_usuario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'>{$pessoa['matricula_interna']}</a>", 
+				"<a href='educar_usuario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'>{$ativo}</a>",
+				"<a href='educar_usuario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'>{$pessoa['nm_tipo']}</a>", 
+				"<a href='educar_usuario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'>{$nivel}</a>", ) );
 			}
 		}
-		$this->addPaginador2( "educar_usuario_lst.php", $total, $_GET, $this->nome, $this->limite );
 
-		$objPermissao = new clsPermissoes();
-		if( $objPermissao->permissao_cadastra( 555, $this->pessoa_logada,7,null,true ) )
-		{
-			$this->acao = "go(\"educar_usuario_cad.php\")";
-			$this->nome_acao = "Novo";
-		}
+		$this->addPaginador2( "educar_usuario_lst.php", $total, $_GET, $this->nome, $limite );
+		$this->acao = "go(\"educar_usuario_cad.php\")";
+		$this->nome_acao = "Novo";
+
 		$this->largura = "100%";
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
          ""                                  => "Listagem de usu&aacute;rios"
     ));
     $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
+
+$pagina = new clsIndex();
 $miolo = new indice();
-// adiciona o conteudo na clsBase
 $pagina->addForm( $miolo );
-// gera o html
 $pagina->MakeAll();
 ?>

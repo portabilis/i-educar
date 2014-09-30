@@ -140,7 +140,7 @@ class indice extends clsCadastro
     $this->inputsHelper()->dynamic($selectInputs);
 
 		$opcoes = array( "" => "Selecione", "2" => "Sim", "1" => "N&atilde;o" );
-		$this->campoLista( "permite_emprestimo", "Permite Emprestimo", $opcoes, $this->permite_emprestimo );
+		$this->campoLista( "permite_emprestimo", "Permite empréstimo", $opcoes, $this->permite_emprestimo );
 
 		$this->preco = is_numeric($this->preco) ? number_format($this->preco, 2, ",", ".") : "";
 		$this->campoMonetario( "preco", "Preco", $this->preco, 10, 20, false );
@@ -153,10 +153,10 @@ class indice extends clsCadastro
 
 		$this->campoData( "data_aquisicao", "Data de entrada", $this->data_aquisicao, false );
 
-    $this->campoNumero("tombo", "Tombo", $this->tombo, 10, 10, false);
+    $this->campoNumero("tombo", "Tombo", $this->tombo, 10, 10, false, 'somente números. Deixe em branco para gerar o sequencial automaticamente.');
 
 		if (!is_numeric($this->cod_exemplar))
-			$this->campoNumero("qtd_livros", "Quantidade de Livros", 1, 5, 5, true);
+			$this->campoNumero("qtd_livros", "Quantidade de exemplares", 1, 5, 5, true, 'somente números. Altere esse campo caso deseje cadastrar mais cópias deste exemplar automaticamente.<br/> Os códigos tombos inseridos serão sequenciais.');
 	}
 
 	function Novo()
@@ -170,7 +170,7 @@ class indice extends clsCadastro
 
 		$this->preco = str_replace(".","",$this->preco);
 		$this->preco = str_replace(",",".",$this->preco);
-
+		$this->data_aquisicao = dataToBanco($this->data_aquisicao);
     
 
 		for ($i = 0; $i < $this->qtd_livros; $i++)
@@ -180,8 +180,8 @@ class indice extends clsCadastro
 			if (!$tombo_valido){
 				$this->mensagem = "Esse Tombo já está registrado";
 				return false;
-			}			
-			$this->data_aquisicao = dataToBanco($this->data_aquisicao);
+			}
+
 			$obj = new clsPmieducarExemplar($this->cod_exemplar, $this->ref_cod_fonte, $this->ref_cod_motivo_baixa, $this->ref_cod_acervo, $this->ref_cod_situacao, $this->pessoa_logada, $this->pessoa_logada, $this->permite_emprestimo, $this->preco, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->data_aquisicao, $this->getTombo());
 			$cadastrou = $obj->cadastra();
 			if (!$cadastrou)
@@ -192,9 +192,9 @@ class indice extends clsCadastro
 			}
 		}
 		$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-			header( "Location: educar_exemplar_lst.php" );
-			die();
-			return true;
+		header( "Location: educar_exemplar_lst.php" );
+		die();
+		return true;
 	}
 
 
