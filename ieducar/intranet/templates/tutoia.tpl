@@ -18,7 +18,7 @@
   /* login-form.widght + 42px */
   width: 810px;
 }</style>
-  <script type='text/javascript' src='//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>
+  <script type='text/javascript' src='scripts/jquery/jquery-1.8.3.min.js'></script>
 
   <script type="text/javascript">
 

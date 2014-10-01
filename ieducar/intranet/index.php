@@ -94,9 +94,9 @@ class indice
 
       if ($pendencia_administrativa)
         echo '
-          <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-          <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
-          <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+          <script type="text/javascript" src="scripts/jquery/jquery-1.8.3.min.js"></script>
+          <link rel="stylesheet" href="scripts/jquery/jquery-ui-1.11.1.css">
+          <script src="scripts/jquery/jquery-ui-1.11.1.js"></script>
           <div id="dialog" title="Aviso">
             '.$texto_pendencia.'
           </div>

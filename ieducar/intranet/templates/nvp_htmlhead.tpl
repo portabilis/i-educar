@@ -30,8 +30,8 @@
   <script type="text/javascript" src="scripts/ied/phpjs.js?1"></script>
   <!-- #&FRESHDESK&# -->
 
-  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js"></script>
-  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/scriptaculous/1.9.0/scriptaculous.js?load=effects"></script>
+  <script type="text/javascript" src="scripts/prototype/prototype-1.7.1.0.js"></script>
+  <script type="text/javascript" src="scripts/scriptaculous/effects.js"></script>
 
   <script type="text/javascript">
     var running = false;
