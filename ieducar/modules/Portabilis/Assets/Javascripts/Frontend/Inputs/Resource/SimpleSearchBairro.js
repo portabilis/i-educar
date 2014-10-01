@@ -8,7 +8,7 @@ var simpleSearchBairroOptions = {
 
   canSearch : function() { 
 
-    if (! $j('#distrito_id').val()) {
+    if (! $j('#distrito_id').val() == 0) {
       alert('Selecione um distrito.');
       return false;
     }

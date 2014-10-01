@@ -52,7 +52,7 @@ class BairroController extends ApiCoreController
   protected function sqlsForNumericSearch() {
     
     $sqls[] = "select idbai as id, nome as name, zona_localizacao from
-                 public.bairro where idbai like $1||'%' and iddis = $2 ";
+                 public.bairro where idbai like $1||'%' and (iddis = $2 or $2 = 0 ";
 
     return $sqls;
   }
@@ -60,7 +60,7 @@ class BairroController extends ApiCoreController
   protected function sqlsForStringSearch() {
 
     $sqls[] = "select idbai as id, nome as name, zona_localizacao from
-                 public.bairro where lower(to_ascii(nome)) like '%'||lower(to_ascii($1))||'%' and iddis = $2 ";
+                 public.bairro where lower(to_ascii(nome)) like '%'||lower(to_ascii($1))||'%' and (iddis = $2 or $2 = 0) ";
 
     return $sqls;
   }
