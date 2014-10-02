@@ -181,7 +181,7 @@ class App_Model_IedFinder extends CoreExt_Entity
     $series = self::addClassToStorage('clsPmieducarSerie', NULL,
                                        'include/pmieducar/clsPmieducarSerie.inc.php');
 
-    $series->setOrderby('ref_cod_curso ASC, cod_serie ASC, etapa_curso ASC');
+    $series->setOrderby(' nm_serie ASC, ref_cod_curso ASC, cod_serie ASC, etapa_curso ASC');
     $series = $series->lista(NULL, NULL, NULL, $cursoId, NULL, NULL, NULL, NULL, NULL,
                              NULL, NULL, NULL, NULL, $instituicaoId, NULL, NULL, $escolaId);
 
