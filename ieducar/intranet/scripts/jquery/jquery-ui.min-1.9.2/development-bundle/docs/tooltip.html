@@ -1,0 +1,1126 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>jQuery UI tooltip documentation</title>
+
+	<style>
+	body {
+		font-family: "Trebuchet MS", "Arial", "Helvetica", "Verdana", "sans-serif"
+	}
+	.gutter {
+		display: none;
+	}
+	</style>
+</head>
+<body>
+
+<script>{
+		"title":
+			"Tooltip Widget",
+		"excerpt":
+			"Customizable, themeable tooltips, replacing native tooltips.",
+		"termSlugs": {
+			"category": [
+				"widgets"
+			]
+		}
+	}</script><article id="tooltip1" class="entry widget"><h2 class="section-title">
+<span>Tooltip Widget</span><span class="version-details">version added: 1.9</span>
+</h2>
+<div class="entry-wrapper">
+<p class="desc"><strong>Description: </strong>Customizable, themeable tooltips, replacing native tooltips.</p>
+<section id="quick-nav"><header><h2>QuickNav<a href="#entry-examples">Examples</a>
+</h2></header><div class="quick-nav-section">
+<h3>Options</h3>
+<div><a href="#option-content">content</a></div>
+<div><a href="#option-disabled">disabled</a></div>
+<div><a href="#option-hide">hide</a></div>
+<div><a href="#option-items">items</a></div>
+<div><a href="#option-position">position</a></div>
+<div><a href="#option-show">show</a></div>
+<div><a href="#option-tooltipClass">tooltipClass</a></div>
+<div><a href="#option-track">track</a></div>
+</div>
+<div class="quick-nav-section">
+<h3>Methods</h3>
+<div><a href="#method-close">close</a></div>
+<div><a href="#method-destroy">destroy</a></div>
+<div><a href="#method-disable">disable</a></div>
+<div><a href="#method-enable">enable</a></div>
+<div><a href="#method-open">open</a></div>
+<div><a href="#method-option">option</a></div>
+<div><a href="#method-widget">widget</a></div>
+</div>
+<div class="quick-nav-section">
+<h3>Events</h3>
+<div><a href="#event-close">close</a></div>
+<div><a href="#event-create">create</a></div>
+<div><a href="#event-open">open</a></div>
+</div></section><div class="longdesc" id="entry-longdesc">
+		<p>Tooltip replaces native tooltips, making them themable as well as allowing various customizations:</p>
+
+		<ul>
+			<li>Display other content than just the title, like inline footnotes or extra content retrieved via Ajax.</li>
+			<li>Customize the positioning, e.g., to center the tooltip above elements.</li>
+			<li>Add extra styling to customize the appearance, for warning or error fields.</li>
+		</ul>
+
+		<p>A fade animation is used by default to show and hide the tooltip, making the appearance a bit more organic, compared to just toggling the visiblity. This can be customized with the <a href="#option-show"><code>show</code></a> and <a href="#option-hide"><code>hide</code></a> options.</p>
+
+		<p>The <a href="#option-items"><code>items</code></a> and <a href="#option-content"><code>content</code></a> options need to stay in-sync. If you change one of them, you need to change the other.</p>
+
+		<p>In general, disabled elements do not trigger any DOM events. Therefore, it is not possible to properly control tooltips for disabled elements, since we need to listen to events to determine when to show and hide the tooltip. As a result, jQuery UI does not guarantee any level of support for tooltips attached to disabled elements. Unfortunately, this means that if you require tooltips on disabled elements, you may end up with a mixture of native tooltips and jQuery UI tooltips.</p>
+
+		<h3>Dependencies</h3>
+		<ul>
+			<li><a href="/category/ui-core/">UI Core</a></li>
+			<li><a href="/jQuery.widget/">Widget Factory</a></li>
+			<li><a href="/position/">Position</a></li>
+			<li>
+<a href="/category/effects-core/">Effects Core</a> (optional; for use with the <a href="#option-show"><code>show</code></a> and <a href="#option-hide"><code>hide</code></a> options)</li>
+		</ul>
+	</div>
+<h3>Additional Notes:</h3>
+<div class="longdesc"><ul><li>
+			This widget requires some functional CSS, otherwise it won't work. If you build a custom theme, use the widget's specific CSS file as a starting point.
+		</li></ul></div>
+<section id="options"><header><h2>Options</h2></header><div id="option-content" class="api-item first-item">
+<h3>content<span class="option-type"><strong>Type: </strong><a href="http://api.jquery.com/Types/#Function">Function</a>() or <a href="http://api.jquery.com/Types/#String">String</a></span>
+</h3>
+<div class="default">
+<strong>Default: </strong><code>function returning the title attribute</code>
+</div>
+<div>
+				<p>The content of the tooltip.</p>
+
+				<p><em>When changing this option, you likely need to also change the <a href="#option-items"><code>items</code></a> option.</em></p>
+			</div>
+<strong>Multiple types supported:</strong><ul>
+<li>
+<strong>Function</strong>: A callback which can either return the content directly, or call the first argument, passing in the content, e.g., for Ajax content.</li>
+<li>
+<strong>String</strong>: A string of HTML to use for the tooltip content.</li>
+</ul>
+<strong>Code examples:</strong><p>Initialize the tooltip with the <code>content</code> option specified:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip({ content: <span class="string">"Awesome title!"</span> });</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<p>Get or set the <code>content</code> option, after initialization:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+						<div class="line n2">2</div>
+					
+						<div class="line n3">3</div>
+					
+						<div class="line n4">4</div>
+					
+						<div class="line n5">5</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code><span class="comment">// getter</span></code></div></div><div class="container"><div class="line"><code><span class="keyword">var</span> content = $( <span class="string">".selector"</span> ).tooltip( <span class="string">"option"</span>, <span class="string">"content"</span> );</code></div></div><div class="container"><div class="line"><code> </code></div></div><div class="container"><div class="line"><code><span class="comment">// setter</span></code></div></div><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip( <span class="string">"option"</span>, <span class="string">"content"</span>, <span class="string">"Awesome title!"</span> );</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</div>
+<div id="option-disabled" class="api-item">
+<h3>disabled<span class="option-type"><strong>Type: </strong><a href="http://api.jquery.com/Types/#Boolean">Boolean</a></span>
+</h3>
+<div class="default">
+<strong>Default: </strong><code>false</code>
+</div>
+<div>Disables the tooltip if set to <code>true</code>.</div>
+<strong>Code examples:</strong><p>Initialize the tooltip with the <code>disabled</code> option specified:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip({ disabled: <span class="literal">true</span> });</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<p>Get or set the <code>disabled</code> option, after initialization:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+						<div class="line n2">2</div>
+					
+						<div class="line n3">3</div>
+					
+						<div class="line n4">4</div>
+					
+						<div class="line n5">5</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code><span class="comment">// getter</span></code></div></div><div class="container"><div class="line"><code><span class="keyword">var</span> disabled = $( <span class="string">".selector"</span> ).tooltip( <span class="string">"option"</span>, <span class="string">"disabled"</span> );</code></div></div><div class="container"><div class="line"><code> </code></div></div><div class="container"><div class="line"><code><span class="comment">// setter</span></code></div></div><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip( <span class="string">"option"</span>, <span class="string">"disabled"</span>, <span class="literal">true</span> );</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</div>
+<div id="option-hide" class="api-item">
+<h3>hide<span class="option-type"><strong>Type: </strong><a href="http://api.jquery.com/Types/#Boolean">Boolean</a> or <a href="http://api.jquery.com/Types/#Number">Number</a> or <a href="http://api.jquery.com/Types/#String">String</a> or <a href="http://api.jquery.com/Types/#Object">Object</a></span>
+</h3>
+<div class="default">
+<strong>Default: </strong><code>null</code>
+</div>
+<div>If and how to animate the hiding of the tooltip.</div>
+<strong>Multiple types supported:</strong><ul>
+<li>
+<strong>Boolean</strong>: 
+			When set to <code>false</code>, no animation will be used and the tooltip will be hidden immediately.
+			When set to <code>true</code>, the tooltip will fade out with the default duration and the default easing.
+		</li>
+<li>
+<strong>Number</strong>: 
+			The tooltip will fade out with the specified duration and the default easing.
+		</li>
+<li>
+<strong>String</strong>: 
+			The tooltip will be hidden using the specified effect.
+			The value can either be the name of a built-in jQuery animateion method, such as <code>"slideUp"</code>, or the name of a jQuery UI effect, such as <code>"fold"</code>.
+			In either case the effect will be used with the default duration and the default easing.
+		</li>
+<li>
+<strong>Object</strong>: If the value is an object, then <code>effect</code>, <code>duration</code>, and <code>easing</code> properties may be provided. If the <code>effect</code> property contains the name of a jQuery method, then that method will be used; otherwise it is assumed to be the name of a jQuery UI effect. When using a jQuery UI effect that supports additional settings, you may include those settings in the object and they will be passed to the effect. If <code>duration</code> or <code>easing</code> is omitted, then the default values will be used. If <code>effect</code> is omitted, then <code>"fadeOut"</code> will be used.</li>
+</ul>
+<strong>Code examples:</strong><p>Initialize the tooltip with the <code>hide</code> option specified:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip({ hide: { effect: <span class="string">"explode"</span>, duration: <span class="number">1000</span> } });</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<p>Get or set the <code>hide</code> option, after initialization:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+						<div class="line n2">2</div>
+					
+						<div class="line n3">3</div>
+					
+						<div class="line n4">4</div>
+					
+						<div class="line n5">5</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code><span class="comment">// getter</span></code></div></div><div class="container"><div class="line"><code><span class="keyword">var</span> hide = $( <span class="string">".selector"</span> ).tooltip( <span class="string">"option"</span>, <span class="string">"hide"</span> );</code></div></div><div class="container"><div class="line"><code> </code></div></div><div class="container"><div class="line"><code><span class="comment">// setter</span></code></div></div><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip( <span class="string">"option"</span>, <span class="string">"hide"</span>, { effect: <span class="string">"explode"</span>, duration: <span class="number">1000</span> } );</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</div>
+<div id="option-items" class="api-item">
+<h3>items<span class="option-type"><strong>Type: </strong><a href="http://api.jquery.com/Types/#Selector">Selector</a></span>
+</h3>
+<div class="default">
+<strong>Default: </strong><code>[title]</code>
+</div>
+<div>
+				<p>A selector indicating which items should show tooltips. Customize if you're using something other then the title attribute for the tooltip content, or if you need a different selector for event delegation.</p>
+
+				<p><em>When changing this option, you likely need to also change the <a href="#option-content"><code>content</code></a> option.</em></p>
+			</div>
+<strong>Code examples:</strong><p>Initialize the tooltip with the <code>items</code> option specified:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip({ items: <span class="string">"img[alt]"</span> });</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<p>Get or set the <code>items</code> option, after initialization:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+						<div class="line n2">2</div>
+					
+						<div class="line n3">3</div>
+					
+						<div class="line n4">4</div>
+					
+						<div class="line n5">5</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code><span class="comment">// getter</span></code></div></div><div class="container"><div class="line"><code><span class="keyword">var</span> items = $( <span class="string">".selector"</span> ).tooltip( <span class="string">"option"</span>, <span class="string">"items"</span> );</code></div></div><div class="container"><div class="line"><code> </code></div></div><div class="container"><div class="line"><code><span class="comment">// setter</span></code></div></div><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip( <span class="string">"option"</span>, <span class="string">"items"</span>, <span class="string">"img[alt]"</span> );</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</div>
+<div id="option-position" class="api-item">
+<h3>position<span class="option-type"><strong>Type: </strong><a href="http://api.jquery.com/Types/#Object">Object</a></span>
+</h3>
+<div class="default">
+<strong>Default: </strong><code>{ my: "left top+15", at: "left bottom", collision: "flipfit" }</code>
+</div>
+<div>
+				<p>Configuration for the Position utility. The <code>of</code> property defaults to the target element, but can also be overriden.</p>
+
+				<p><em>Note: In 1.9.0, the default value was <code>{ my: "left+15 center", at: "right center", collision: "flipfit" }</code>, but this was changed to more closely match native tooltip positioning.</em></p>
+			</div>
+<strong>Code examples:</strong><p>Initialize the tooltip with the <code>position</code> option specified:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip({ position: { my: <span class="string">"left+15 center"</span>, at: <span class="string">"right center"</span> } });</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<p>Get or set the <code>position</code> option, after initialization:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+						<div class="line n2">2</div>
+					
+						<div class="line n3">3</div>
+					
+						<div class="line n4">4</div>
+					
+						<div class="line n5">5</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code><span class="comment">// getter</span></code></div></div><div class="container"><div class="line"><code><span class="keyword">var</span> position = $( <span class="string">".selector"</span> ).tooltip( <span class="string">"option"</span>, <span class="string">"position"</span> );</code></div></div><div class="container"><div class="line"><code> </code></div></div><div class="container"><div class="line"><code><span class="comment">// setter</span></code></div></div><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip( <span class="string">"option"</span>, <span class="string">"position"</span>, { my: <span class="string">"left+15 center"</span>, at: <span class="string">"right center"</span> } );</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</div>
+<div id="option-show" class="api-item">
+<h3>show<span class="option-type"><strong>Type: </strong><a href="http://api.jquery.com/Types/#Boolean">Boolean</a> or <a href="http://api.jquery.com/Types/#Number">Number</a> or <a href="http://api.jquery.com/Types/#String">String</a> or <a href="http://api.jquery.com/Types/#Object">Object</a></span>
+</h3>
+<div class="default">
+<strong>Default: </strong><code>null</code>
+</div>
+<div>If and how to animate the showing of the tooltip.</div>
+<strong>Multiple types supported:</strong><ul>
+<li>
+<strong>Boolean</strong>: 
+			When set to <code>false</code>, no animation will be used and the tooltip will be shown immediately.
+			When set to <code>true</code>, the tooltip will fade in with the default duration and the default easing.
+		</li>
+<li>
+<strong>Number</strong>: 
+			The tooltip will fade in with the specified duration and the default easing.
+		</li>
+<li>
+<strong>String</strong>: 
+			The tooltip will be shown using the specified effect.
+			The value can either be the name of a built-in jQuery animateion method, such as <code>"slideDown"</code>, or the name of a jQuery UI effect, such as <code>"fold"</code>.
+			In either case the effect will be used with the default duration and the default easing.
+		</li>
+<li>
+<strong>Object</strong>: If the value is an object, then <code>effect</code>, <code>duration</code>, and <code>easing</code> properties may be provided. If the <code>effect</code> property contains the name of a jQuery method, then that method will be used; otherwise it is assumed to be the name of a jQuery UI effect. When using a jQuery UI effect that supports additional settings, you may include those settings in the object and they will be passed to the effect. If <code>duration</code> or <code>easing</code> is omitted, then the default values will be used. If <code>effect</code> is omitted, then <code>"fadeIn"</code> will be used.</li>
+</ul>
+<strong>Code examples:</strong><p>Initialize the tooltip with the <code>show</code> option specified:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip({ show: { effect: <span class="string">"blind"</span>, duration: <span class="number">800</span> } });</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<p>Get or set the <code>show</code> option, after initialization:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+						<div class="line n2">2</div>
+					
+						<div class="line n3">3</div>
+					
+						<div class="line n4">4</div>
+					
+						<div class="line n5">5</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code><span class="comment">// getter</span></code></div></div><div class="container"><div class="line"><code><span class="keyword">var</span> show = $( <span class="string">".selector"</span> ).tooltip( <span class="string">"option"</span>, <span class="string">"show"</span> );</code></div></div><div class="container"><div class="line"><code> </code></div></div><div class="container"><div class="line"><code><span class="comment">// setter</span></code></div></div><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip( <span class="string">"option"</span>, <span class="string">"show"</span>, { effect: <span class="string">"blind"</span>, duration: <span class="number">800</span> } );</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</div>
+<div id="option-tooltipClass" class="api-item">
+<h3>tooltipClass<span class="option-type"><strong>Type: </strong><a href="http://api.jquery.com/Types/#String">String</a></span>
+</h3>
+<div class="default">
+<strong>Default: </strong><code>null</code>
+</div>
+<div>
+				A class to add to the widget, can be used to display various tooltip types, like warnings or errors.
+				<p>This may get replaced by the <a href="http://bugs.jqueryui.com/ticket/7053">classes option</a>.</p>
+			</div>
+<strong>Code examples:</strong><p>Initialize the tooltip with the <code>tooltipClass</code> option specified:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip({ tooltipClass: <span class="string">"custom-tooltip-styling"</span> });</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<p>Get or set the <code>tooltipClass</code> option, after initialization:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+						<div class="line n2">2</div>
+					
+						<div class="line n3">3</div>
+					
+						<div class="line n4">4</div>
+					
+						<div class="line n5">5</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code><span class="comment">// getter</span></code></div></div><div class="container"><div class="line"><code><span class="keyword">var</span> tooltipClass = $( <span class="string">".selector"</span> ).tooltip( <span class="string">"option"</span>, <span class="string">"tooltipClass"</span> );</code></div></div><div class="container"><div class="line"><code> </code></div></div><div class="container"><div class="line"><code><span class="comment">// setter</span></code></div></div><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip( <span class="string">"option"</span>, <span class="string">"tooltipClass"</span>, <span class="string">"custom-tooltip-styling"</span> );</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</div>
+<div id="option-track" class="api-item">
+<h3>track<span class="option-type"><strong>Type: </strong><a href="http://api.jquery.com/Types/#Boolean">Boolean</a></span>
+</h3>
+<div class="default">
+<strong>Default: </strong><code>false</code>
+</div>
+<div>
+				Whether the tooltip should track (follow) the mouse.
+			</div>
+<strong>Code examples:</strong><p>Initialize the tooltip with the <code>track</code> option specified:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip({ track: <span class="literal">true</span> });</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<p>Get or set the <code>track</code> option, after initialization:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+						<div class="line n2">2</div>
+					
+						<div class="line n3">3</div>
+					
+						<div class="line n4">4</div>
+					
+						<div class="line n5">5</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code><span class="comment">// getter</span></code></div></div><div class="container"><div class="line"><code><span class="keyword">var</span> track = $( <span class="string">".selector"</span> ).tooltip( <span class="string">"option"</span>, <span class="string">"track"</span> );</code></div></div><div class="container"><div class="line"><code> </code></div></div><div class="container"><div class="line"><code><span class="comment">// setter</span></code></div></div><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip( <span class="string">"option"</span>, <span class="string">"track"</span>, <span class="literal">true</span> );</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</div></section><section id="methods"><header><h2>Methods</h2></header><div id="method-close"><div class="api-item first-item">
+<h3>close()<span class="returns">Returns: <a href="http://api.jquery.com/Types/#jQuery">jQuery</a> (<a href="http://learn.jquery.com/jquery-ui/widget-factory/widget-method-invocation/">plugin only</a>)</span>
+</h3>
+<div>
+				Closes a tooltip. This is only intended to be called for non-delegated tooltips.
+			</div>
+<ul><li><div class="null-signature">This method does not accept any arguments.</div></li></ul>
+<div>
+<strong>Code examples:</strong><p>Invoke the close method:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip( <span class="string">"close"</span> );</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</div>
+</div></div>
+<div id="method-destroy"><div class="api-item">
+<h3>destroy()<span class="returns">Returns: <a href="http://api.jquery.com/Types/#jQuery">jQuery</a> (<a href="http://learn.jquery.com/jquery-ui/widget-factory/widget-method-invocation/">plugin only</a>)</span>
+</h3>
+<div>
+		Removes the tooltip functionality completely. This will return the element back to its pre-init state.
+	</div>
+<ul><li><div class="null-signature">This method does not accept any arguments.</div></li></ul>
+<div>
+<strong>Code examples:</strong><p>Invoke the destroy method:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip( <span class="string">"destroy"</span> );</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</div>
+</div></div>
+<div id="method-disable"><div class="api-item">
+<h3>disable()<span class="returns">Returns: <a href="http://api.jquery.com/Types/#jQuery">jQuery</a> (<a href="http://learn.jquery.com/jquery-ui/widget-factory/widget-method-invocation/">plugin only</a>)</span>
+</h3>
+<div>
+		Disables the tooltip.
+	</div>
+<ul><li><div class="null-signature">This method does not accept any arguments.</div></li></ul>
+<div>
+<strong>Code examples:</strong><p>Invoke the disable method:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip( <span class="string">"disable"</span> );</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</div>
+</div></div>
+<div id="method-enable"><div class="api-item">
+<h3>enable()<span class="returns">Returns: <a href="http://api.jquery.com/Types/#jQuery">jQuery</a> (<a href="http://learn.jquery.com/jquery-ui/widget-factory/widget-method-invocation/">plugin only</a>)</span>
+</h3>
+<div>
+		Enables the tooltip.
+	</div>
+<ul><li><div class="null-signature">This method does not accept any arguments.</div></li></ul>
+<div>
+<strong>Code examples:</strong><p>Invoke the enable method:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip( <span class="string">"enable"</span> );</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</div>
+</div></div>
+<div id="method-open"><div class="api-item">
+<h3>open()<span class="returns">Returns: <a href="http://api.jquery.com/Types/#jQuery">jQuery</a> (<a href="http://learn.jquery.com/jquery-ui/widget-factory/widget-method-invocation/">plugin only</a>)</span>
+</h3>
+<div>
+				Programmatically open a tooltip. This is only intended to be called for non-delegated tooltips.
+			</div>
+<ul><li><div class="null-signature">This method does not accept any arguments.</div></li></ul>
+<div>
+<strong>Code examples:</strong><p>Invoke the open method:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip( <span class="string">"open"</span> );</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</div>
+</div></div>
+<div id="method-option">
+<div class="api-item">
+<h3>option( optionName )<span class="returns">Returns: <a href="http://api.jquery.com/Types/#Object">Object</a></span>
+</h3>
+<div>Gets the value currently associated with the specified <code>optionName</code>.</div>
+<ul><li>
+<div><strong>optionName</strong></div>
+<div>Type: <a href="http://api.jquery.com/Types/#String">String</a>
+</div>
+<div>The name of the option to get.</div>
+</li></ul>
+<div>
+<strong>Code examples:</strong><p>Invoke the  method:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code><span class="keyword">var</span> isDisabled = $( <span class="string">".selector"</span> ).tooltip( <span class="string">"option"</span>, <span class="string">"disabled"</span> );</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</div>
+</div>
+<div class="api-item">
+<h3>option()<span class="returns">Returns: <a href="http://api.jquery.com/Types/#PlainObject">PlainObject</a></span>
+</h3>
+<div>Gets an object containing key/value pairs representing the current tooltip options hash.</div>
+<ul><li><div class="null-signature">This signature does not accept any arguments.</div></li></ul>
+<div>
+<strong>Code examples:</strong><p>Invoke the  method:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code><span class="keyword">var</span> options = $( <span class="string">".selector"</span> ).tooltip( <span class="string">"option"</span> );</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</div>
+</div>
+<div class="api-item">
+<h3>option( optionName, value )<span class="returns">Returns: <a href="http://api.jquery.com/Types/#jQuery">jQuery</a> (<a href="http://learn.jquery.com/jquery-ui/widget-factory/widget-method-invocation/">plugin only</a>)</span>
+</h3>
+<div>Sets the value of the tooltip option associated with the specified <code>optionName</code>.</div>
+<ul>
+<li>
+<div><strong>optionName</strong></div>
+<div>Type: <a href="http://api.jquery.com/Types/#String">String</a>
+</div>
+<div>The name of the option to set.</div>
+</li>
+<li>
+<div><strong>value</strong></div>
+<div>Type: <a href="http://api.jquery.com/Types/#Object">Object</a>
+</div>
+<div>A value to set for the option.</div>
+</li>
+</ul>
+<div>
+<strong>Code examples:</strong><p>Invoke the  method:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip( <span class="string">"option"</span>, <span class="string">"disabled"</span>, <span class="literal">true</span> );</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</div>
+</div>
+<div class="api-item">
+<h3>option( options )<span class="returns">Returns: <a href="http://api.jquery.com/Types/#jQuery">jQuery</a> (<a href="http://learn.jquery.com/jquery-ui/widget-factory/widget-method-invocation/">plugin only</a>)</span>
+</h3>
+<div>Sets one or more options for the tooltip.</div>
+<ul><li>
+<div><strong>options</strong></div>
+<div>Type: <a href="http://api.jquery.com/Types/#Object">Object</a>
+</div>
+<div>A map of option-value pairs to set.</div>
+</li></ul>
+<div>
+<strong>Code examples:</strong><p>Invoke the  method:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip( <span class="string">"option"</span>, { disabled: <span class="literal">true</span> } );</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</div>
+</div>
+</div>
+<div id="method-widget"><div class="api-item">
+<h3>widget()<span class="returns">Returns: <a href="http://api.jquery.com/Types/#jQuery">jQuery</a></span>
+</h3>
+<div>
+		Returns a <code>jQuery</code> object containing the original element.
+	</div>
+<ul><li><div class="null-signature">This method does not accept any arguments.</div></li></ul>
+<div>
+<strong>Code examples:</strong><p>Invoke the widget method:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code><span class="keyword">var</span> widget = $( <span class="string">".selector"</span> ).tooltip( <span class="string">"widget"</span> );</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</div>
+</div></div></section><section id="events"><header><h2>Events</h2></header><div id="event-close" class="api-item first-item">
+<h3>close( event, ui )<span class="returns">Type: <code>tooltipclose</code></span>
+</h3>
+<div>
+				Triggered when a tooltip is closed, triggered on <code>focusout</code> or <code>mouseleave</code>.
+			</div>
+<ul>
+<li>
+<div><strong>event</strong></div>
+<div>Type: <a href="http://api.jquery.com/Types/#Event">Event</a>
+</div>
+<div></div>
+</li>
+<li>
+<div><strong>ui</strong></div>
+<div>Type: <a href="http://api.jquery.com/Types/#Object">Object</a>
+</div>
+<div></div>
+<ul><li>
+<div><strong>tooltip</strong></div>
+<div>Type: <a href="http://api.jquery.com/Types/#jQuery">jQuery</a>
+</div>
+<div>The generated tooltip element.</div>
+</li></ul>
+</li>
+</ul>
+<div>
+<strong>Code examples:</strong><p>Initialize the tooltip with the close callback specified:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+						<div class="line n2">2</div>
+					
+						<div class="line n3">3</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip({</code></div></div><div class="container"><div class="line"><code>  close: <span class="keyword">function</span>( event, ui ) {}</code></div></div><div class="container"><div class="line"><code>});</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<p>Bind an event listener to the tooltipclose event:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).on( <span class="string">"tooltipclose"</span>, <span class="keyword">function</span>( event, ui ) {} );</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</div>
+</div>
+<div id="event-create" class="api-item">
+<h3>create( event, ui )<span class="returns">Type: <code>tooltipcreate</code></span>
+</h3>
+<div>
+		Triggered when the tooltip is created.
+	</div>
+<ul>
+<li>
+<div><strong>event</strong></div>
+<div>Type: <a href="http://api.jquery.com/Types/#Event">Event</a>
+</div>
+<div></div>
+</li>
+<li>
+<div><strong>ui</strong></div>
+<div>Type: <a href="http://api.jquery.com/Types/#Object">Object</a>
+</div>
+<div></div>
+</li>
+</ul>
+<p><em>Note: The <code>ui</code> object is empty but included for consistency with other events.</em></p>
+<div>
+<strong>Code examples:</strong><p>Initialize the tooltip with the create callback specified:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+						<div class="line n2">2</div>
+					
+						<div class="line n3">3</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip({</code></div></div><div class="container"><div class="line"><code>  create: <span class="keyword">function</span>( event, ui ) {}</code></div></div><div class="container"><div class="line"><code>});</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<p>Bind an event listener to the tooltipcreate event:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).on( <span class="string">"tooltipcreate"</span>, <span class="keyword">function</span>( event, ui ) {} );</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</div>
+</div>
+<div id="event-open" class="api-item">
+<h3>open( event, ui )<span class="returns">Type: <code>tooltipopen</code></span>
+</h3>
+<div>
+				Triggered when a tooltip is shown, triggered on <code>focusin</code> or <code>mouseover</code>.
+			</div>
+<ul>
+<li>
+<div><strong>event</strong></div>
+<div>Type: <a href="http://api.jquery.com/Types/#Event">Event</a>
+</div>
+<div></div>
+</li>
+<li>
+<div><strong>ui</strong></div>
+<div>Type: <a href="http://api.jquery.com/Types/#Object">Object</a>
+</div>
+<div></div>
+<ul><li>
+<div><strong>tooltip</strong></div>
+<div>Type: <a href="http://api.jquery.com/Types/#jQuery">jQuery</a>
+</div>
+<div>The generated tooltip element.</div>
+</li></ul>
+</li>
+</ul>
+<div>
+<strong>Code examples:</strong><p>Initialize the tooltip with the open callback specified:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+						<div class="line n2">2</div>
+					
+						<div class="line n3">3</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).tooltip({</code></div></div><div class="container"><div class="line"><code>  open: <span class="keyword">function</span>( event, ui ) {}</code></div></div><div class="container"><div class="line"><code>});</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<p>Bind an event listener to the tooltipopen event:</p>
+<div class="syntaxhighlighter javascript nogutter">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code>$( <span class="string">".selector"</span> ).on( <span class="string">"tooltipopen"</span>, <span class="keyword">function</span>( event, ui ) {} );</code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</div>
+</div></section><section class="entry-examples" id="entry-examples"><header><h2>Example:</h2></header><div class="entry-example" id="example-0">
+<h4><span class="desc">Create a tooltip on the document, using event delegation for all elements with a title attribute.</span></h4>
+<div class="syntaxhighlighter xml ">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+						<div class="line n2">2</div>
+					
+						<div class="line n3">3</div>
+					
+						<div class="line n4">4</div>
+					
+						<div class="line n5">5</div>
+					
+						<div class="line n6">6</div>
+					
+						<div class="line n7">7</div>
+					
+						<div class="line n8">8</div>
+					
+						<div class="line n9">9</div>
+					
+						<div class="line n10">10</div>
+					
+						<div class="line n11">11</div>
+					
+						<div class="line n12">12</div>
+					
+						<div class="line n13">13</div>
+					
+						<div class="line n14">14</div>
+					
+						<div class="line n15">15</div>
+					
+						<div class="line n16">16</div>
+					
+						<div class="line n17">17</div>
+					
+						<div class="line n18">18</div>
+					
+						<div class="line n19">19</div>
+					
+						<div class="line n20">20</div>
+					
+						<div class="line n21">21</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code><span class="doctype">&lt;!doctype html&gt;</span></code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;<span class="title">html</span> <span class="attribute">lang</span>=<span class="value">"en"</span>&gt;</span></code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;<span class="title">head</span>&gt;</span></code></div></div><div class="container"><div class="line"><code>  <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">charset</span>=<span class="value">"utf-8"</span>&gt;</span></code></div></div><div class="container"><div class="line"><code>  <span class="tag">&lt;<span class="title">title</span>&gt;</span>tooltip demo<span class="tag">&lt;/<span class="title">title</span>&gt;</span></code></div></div><div class="container"><div class="line"><code>  <span class="tag">&lt;<span class="title">link</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">href</span>=<span class="value">"//code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css"</span>&gt;</span></code></div></div><div class="container"><div class="line"><code>  <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"//code.jquery.com/jquery-1.8.3.js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></code></div></div><div class="container"><div class="line"><code>  <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"//code.jquery.com/ui/1.9.2/jquery-ui.js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;/<span class="title">head</span>&gt;</span></code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;<span class="title">body</span>&gt;</span></code></div></div><div class="container"><div class="line"><code> </code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;<span class="title">p</span>&gt;</span></code></div></div><div class="container"><div class="line"><code>  <span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"#"</span> <span class="attribute">title</span>=<span class="value">"Anchor description"</span>&gt;</span>Anchor text<span class="tag">&lt;/<span class="title">a</span>&gt;</span></code></div></div><div class="container"><div class="line"><code>  <span class="tag">&lt;<span class="title">input</span> <span class="attribute">title</span>=<span class="value">"Input help"</span>&gt;</span></code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;/<span class="title">p</span>&gt;</span></code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;<span class="title">script</span>&gt;</span><span class="javascript"></span></code></div></div><div class="container"><div class="line"><code>  $( document ).tooltip();</code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;/<span class="title">script</span>&gt;</span></code></div></div><div class="container"><div class="line"><code> </code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;/<span class="title">body</span>&gt;</span></code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;/<span class="title">html</span>&gt;</span></code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<h4>Demo:</h4>
+<div class="demo code-demo" data-height="80"></div>
+</div></section>
+</div></article>
+
+</body>
+</html>

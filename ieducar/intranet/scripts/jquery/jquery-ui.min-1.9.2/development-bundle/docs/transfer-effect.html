@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>jQuery UI transfer-effect documentation</title>
+
+	<style>
+	body {
+		font-family: "Trebuchet MS", "Arial", "Helvetica", "Verdana", "sans-serif"
+	}
+	.gutter {
+		display: none;
+	}
+	</style>
+</head>
+<body>
+
+<script>{
+		"title":
+			"Transfer Effect",
+		"excerpt":
+			"Transfers the outline of an element to another element",
+		"termSlugs": {
+			"category": [
+				"effects"
+			]
+		}
+	}</script><article id="transfer1" class="entry effect"><h2 class="section-title"><span>Transfer Effect</span></h2>
+<div class="entry-wrapper">
+<p class="desc"><strong>Description: </strong>Transfers the outline of an element to another element</p>
+<ul class="signatures"><li class="signature">
+<h4 class="name">transfer</h4>
+<ul>
+<li>
+<div><strong>className</strong></div>
+<div>Type: <a href="http://api.jquery.com/Types/#String">String</a>
+</div>
+<div>argumental class name the transfer element will receive.</div>
+</li>
+<li>
+<div><strong>to</strong></div>
+<div>Type: <a href="http://api.jquery.com/Types/#String">String</a>
+</div>
+<div>jQuery selector, the element to transfer to.</div>
+</li>
+</ul>
+</li></ul>
+<div class="longdesc" id="entry-longdesc">
+		<p>Very useful when trying to visualize interaction between two elements.</p>
+		<p>The transfer element iself has the class <code>ui-effects-transfer</code>, and needs to be styled by you, for example by adding a background or border.</p>
+	</div>
+<section class="entry-examples" id="entry-examples"><header><h2>Example:</h2></header><div class="entry-example" id="example-0">
+<h4><span class="desc">Clicking on the green element transfers to the other.</span></h4>
+<div class="syntaxhighlighter xml ">
+	<table>
+		<tbody>
+			<tr>
+				<td class="gutter">
+					
+						<div class="line n1">1</div>
+					
+						<div class="line n2">2</div>
+					
+						<div class="line n3">3</div>
+					
+						<div class="line n4">4</div>
+					
+						<div class="line n5">5</div>
+					
+						<div class="line n6">6</div>
+					
+						<div class="line n7">7</div>
+					
+						<div class="line n8">8</div>
+					
+						<div class="line n9">9</div>
+					
+						<div class="line n10">10</div>
+					
+						<div class="line n11">11</div>
+					
+						<div class="line n12">12</div>
+					
+						<div class="line n13">13</div>
+					
+						<div class="line n14">14</div>
+					
+						<div class="line n15">15</div>
+					
+						<div class="line n16">16</div>
+					
+						<div class="line n17">17</div>
+					
+						<div class="line n18">18</div>
+					
+						<div class="line n19">19</div>
+					
+						<div class="line n20">20</div>
+					
+						<div class="line n21">21</div>
+					
+						<div class="line n22">22</div>
+					
+						<div class="line n23">23</div>
+					
+						<div class="line n24">24</div>
+					
+						<div class="line n25">25</div>
+					
+						<div class="line n26">26</div>
+					
+						<div class="line n27">27</div>
+					
+						<div class="line n28">28</div>
+					
+						<div class="line n29">29</div>
+					
+						<div class="line n30">30</div>
+					
+						<div class="line n31">31</div>
+					
+						<div class="line n32">32</div>
+					
+						<div class="line n33">33</div>
+					
+						<div class="line n34">34</div>
+					
+						<div class="line n35">35</div>
+					
+						<div class="line n36">36</div>
+					
+						<div class="line n37">37</div>
+					
+						<div class="line n38">38</div>
+					
+						<div class="line n39">39</div>
+					
+						<div class="line n40">40</div>
+					
+						<div class="line n41">41</div>
+					
+						<div class="line n42">42</div>
+					
+						<div class="line n43">43</div>
+					
+				</td>
+				<td class="code">
+					<pre><div class="container"><div class="line"><code><span class="doctype">&lt;!doctype html&gt;</span></code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;<span class="title">html</span> <span class="attribute">lang</span>=<span class="value">"en"</span>&gt;</span></code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;<span class="title">head</span>&gt;</span></code></div></div><div class="container"><div class="line"><code>  <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">charset</span>=<span class="value">"utf-8"</span>&gt;</span></code></div></div><div class="container"><div class="line"><code>  <span class="tag">&lt;<span class="title">title</span>&gt;</span>transfer demo<span class="tag">&lt;/<span class="title">title</span>&gt;</span></code></div></div><div class="container"><div class="line"><code>  <span class="tag">&lt;<span class="title">link</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">href</span>=<span class="value">"//code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css"</span>&gt;</span></code></div></div><div class="container"><div class="line"><code>  <span class="tag">&lt;<span class="title">style</span>&gt;</span><span class="css"></span></code></div></div><div class="container"><div class="line"><code>  <span class="tag">div</span><span class="class">.green</span> <span class="rules">{</span></code></div></div><div class="container"><div class="line"><code>    <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">100</span>px;</span></span></code></div></div><div class="container"><div class="line"><code>    <span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">80</span>px;</span></span></code></div></div><div class="container"><div class="line"><code>    <span class="rule"><span class="attribute">background</span>:<span class="value"> green;</span></span></code></div></div><div class="container"><div class="line"><code>    <span class="rule"><span class="attribute">border</span>:<span class="value"> <span class="number">1</span>px solid black;</span></span></code></div></div><div class="container"><div class="line"><code>    <span class="rule"><span class="attribute">position</span>:<span class="value"> relative;</span></span></code></div></div><div class="container"><div class="line"><code>  <span class="rule">}</span></code></div></div><div class="container"><div class="line"><code>  <span class="tag">div</span><span class="class">.red</span> <span class="rules">{</span></code></div></div><div class="container"><div class="line"><code>    <span class="rule"><span class="attribute">margin-top</span>:<span class="value"> <span class="number">10</span>px;</span></span></code></div></div><div class="container"><div class="line"><code>    <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">50</span>px;</span></span></code></div></div><div class="container"><div class="line"><code>    <span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">30</span>px;</span></span></code></div></div><div class="container"><div class="line"><code>    <span class="rule"><span class="attribute">background</span>:<span class="value"> red;</span></span></code></div></div><div class="container"><div class="line"><code>    <span class="rule"><span class="attribute">border</span>:<span class="value"> <span class="number">1</span>px solid black;</span></span></code></div></div><div class="container"><div class="line"><code>    <span class="rule"><span class="attribute">position</span>:<span class="value"> relative;</span></span></code></div></div><div class="container"><div class="line"><code>  <span class="rule">}</span></code></div></div><div class="container"><div class="line"><code>  <span class="class">.ui-effects-transfer</span> <span class="rules">{</span></code></div></div><div class="container"><div class="line"><code>    <span class="rule"><span class="attribute">border</span>:<span class="value"> <span class="number">1</span>px dotted black;</span></span></code></div></div><div class="container"><div class="line"><code>  <span class="rule">}</span></code></div></div><div class="container"><div class="line"><code>  <span class="tag">&lt;/<span class="title">style</span>&gt;</span></code></div></div><div class="container"><div class="line"><code>  <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"//code.jquery.com/jquery-1.8.3.js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></code></div></div><div class="container"><div class="line"><code>  <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"//code.jquery.com/ui/1.9.2/jquery-ui.js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;/<span class="title">head</span>&gt;</span></code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;<span class="title">body</span>&gt;</span></code></div></div><div class="container"><div class="line"><code> </code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"green"</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span></code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"red"</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span></code></div></div><div class="container"><div class="line"><code> </code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;<span class="title">script</span>&gt;</span><span class="javascript"></span></code></div></div><div class="container"><div class="line"><code>$( <span class="string">"div"</span> ).click(<span class="keyword">function</span>() {</code></div></div><div class="container"><div class="line"><code>  <span class="keyword">var</span> i = <span class="number">1</span> - $( <span class="string">"div"</span> ).index( <span class="keyword">this</span> );</code></div></div><div class="container"><div class="line"><code>  $( <span class="keyword">this</span> ).effect( <span class="string">"transfer"</span>, { to: $( <span class="string">"div"</span> ).eq( i ) }, <span class="number">1000</span> );</code></div></div><div class="container"><div class="line"><code>});</code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;/<span class="title">script</span>&gt;</span></code></div></div><div class="container"><div class="line"><code> </code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;/<span class="title">body</span>&gt;</span></code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;/<span class="title">html</span>&gt;</span></code></div></div></pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<h4>Demo:</h4>
+<div class="demo code-demo" data-height="150"></div>
+</div></section>
+</div></article>
+
+</body>
+</html>
