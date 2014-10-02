@@ -175,8 +175,8 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
 
 
   public static function loadJQueryUiLib($viewInstance) {
-    self::loadJavascript($viewInstance, 'scripts/jquery/jquery-ui.min-1.9.2.js', false);
-    self::loadStylesheet($viewInstance, 'scripts/jquery/jquery-ui-1.9.2.css', false);
+    self::loadJavascript($viewInstance, 'scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js', false);
+    self::loadStylesheet($viewInstance, 'scripts/jquery/jquery-ui.min-1.9.2/css/ui-lightness/jquery-ui-1.9.2.custom.min.css', false);
 
     // ui-autocomplete fixup
     self::embedStylesheet($viewInstance, ".ui-autocomplete { font-size: 11px; }");
