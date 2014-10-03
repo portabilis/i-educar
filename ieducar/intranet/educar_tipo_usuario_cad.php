@@ -74,7 +74,7 @@ class indice extends clsCadastro
 
     // Verifica se o usuário tem permissão para realizar o cadastro
     $obj_permissao = new clsPermissoes();
-    $obj_permissao->permissao_cadastra(554, $this->pessoa_logada, 1,
+    $obj_permissao->permissao_cadastra(554, $this->pessoa_logada, 7,
       'educar_tipo_usuario_lst.php', TRUE);
 
     $this->cod_tipo_usuario = $_GET['cod_tipo_usuario'];
@@ -91,7 +91,7 @@ class indice extends clsCadastro
           $this->$campo = $val;
         }
 
-        $this->fexcluir = $obj_permissao->permissao_excluir(554,$this->pessoa_logada,1,null,true);        
+        $this->fexcluir = $obj_permissao->permissao_excluir(554,$this->pessoa_logada,7,null,true);        
 
         $retorno = "Editar";
       }
