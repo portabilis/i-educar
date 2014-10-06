@@ -103,9 +103,18 @@ class Core_Controller_Page_ListController extends clsListagem implements Core_Vi
    * Configura o botão de ação padrão para a criação de novo registro.
    */
   public function setAcao()
-  {
-    $this->acao = 'go("edit")';
-    $this->nome_acao = 'Novo';
+  {   
+    $obj_permissao = new clsPermissoes();
+
+    if($obj_permissao->permissao_cadastra($_processoAp, $this->getPessoaLogada(),7,null,true))
+    {
+      $this->acao = 'go("edit")';
+      $this->nome_acao = 'Novo';
+    }    
+  }
+
+  protected function getPessoaLogada(){
+    return $_SESSION['id_pessoa'];
   }
 
   /**

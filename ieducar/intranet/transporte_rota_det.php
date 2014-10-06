@@ -166,13 +166,20 @@ class indice extends clsDetalhe
 
   
     }
-      if ($tabela) {
-        $this->addDetalhe(array('Itinerário', $tabela));
-      } else{ 
-        $this->addDetalhe(array('Itinerário', '<a style=\' text-decoration: underline; font-size: 12px;\' href=\'/intranet/transporte_itinerario_cad.php?cod_rota='.$cod_rota_transporte_escolar.'\'>Editar itinerário</a>'));
-      }
-    $this->url_novo = "../module/TransporteEscolar/Rota";
-    $this->url_editar = "../module/TransporteEscolar/Rota?id={$cod_rota_transporte_escolar}";
+    if ($tabela) {
+      $this->addDetalhe(array('Itinerário', $tabela));
+    } else{ 
+      $this->addDetalhe(array('Itinerário', '<a style=\' text-decoration: underline; font-size: 12px;\' href=\'/intranet/transporte_itinerario_cad.php?cod_rota='.$cod_rota_transporte_escolar.'\'>Editar itinerário</a>'));
+    }
+
+    $obj_permissao = new clsPermissoes();
+
+    if($obj_permissao->permissao_cadastra(21238, $this->pessoa_logada,7,null,true))
+    {
+      $this->url_novo = "../module/TransporteEscolar/Rota";
+      $this->url_editar = "../module/TransporteEscolar/Rota?id={$cod_rota_transporte_escolar}";
+    }
+    
     $this->url_cancelar = "transporte_rota_lst.php";
 
     $this->largura = "100%";

@@ -186,8 +186,14 @@ class indice extends clsDetalhe
     if($detalhe['sexo'])
       $this->addDetalhe(array('Sexo', $detalhe['sexo'] == 'M' ? 'Masculino' : 'Feminino'));
 
-    $this->url_novo     = 'atendidos_cad.php';
-    $this->url_editar   = 'atendidos_cad.php?cod_pessoa_fj=' . $detalhe['idpes'];
+    $obj_permissao = new clsPermissoes();
+
+    if($obj_permissao->permissao_cadastra(43, $this->pessoa_logada,7,null,true))
+    {
+      $this->url_novo     = 'atendidos_cad.php';
+      $this->url_editar   = 'atendidos_cad.php?cod_pessoa_fj=' . $detalhe['idpes'];
+    }
+
     $this->url_cancelar = 'atendidos_lst.php';
 
     $this->largura = '100%';

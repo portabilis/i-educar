@@ -107,8 +107,14 @@ class indice extends clsDetalhe
       $this->addDetalhe( array("Complemento", $registro['complemento']) );
     }
 
-    $this->url_novo = "../module/TransporteEscolar/Ponto";
-    $this->url_editar = "../module/TransporteEscolar/Ponto?id={$cod_ponto_transporte_escolar}";
+    $obj_permissao = new clsPermissoes();
+
+    if($obj_permissao->permissao_cadastra(21239, $this->pessoa_logada,7,null,true))
+    {
+      $this->url_novo = "../module/TransporteEscolar/Ponto";
+      $this->url_editar = "../module/TransporteEscolar/Ponto?id={$cod_ponto_transporte_escolar}";
+    }
+    
     $this->url_cancelar = "transporte_ponto_lst.php";
 
     $this->largura = "100%";

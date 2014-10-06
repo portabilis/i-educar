@@ -257,19 +257,24 @@ class indice extends clsListagem
 				) );
 			}
 		}
-		$this->addPaginador2( "public_logradouro_lst.php", $total, $_GET, $this->nome, $this->__limite );
-
-		$this->acao = "go(\"public_logradouro_cad.php\")";
-		$this->nome_acao = "Novo";
+		$this->addPaginador2( "public_logradouro_lst.php", $total, $_GET, $this->nome, $this->__limite );		
 
 		$this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""                                  => "Listagem de logradouros"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());		
+		$obj_permissao = new clsPermissoes();
+
+		if($obj_permissao->permissao_cadastra(757, $this->pessoa_logada,7,null,true))
+		{
+			$this->acao = "go(\"public_logradouro_cad.php\")";
+			$this->nome_acao = "Novo";
+		}
+
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         ""                                  => "Listagem de logradouros"
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 // cria uma extensao da classe base

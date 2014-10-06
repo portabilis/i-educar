@@ -223,8 +223,8 @@ class indice extends clsDetalhe
 			$this->addDetalhe( array( "Escola", "$id_pessoa") );
 		}
 
-		$objPermissao = new clsPermissoes();
-		if( $objPermissao->permissao_cadastra( 555, $this->pessoa_logada,7,"educar_usuario_lst.php",true ) )
+		$objPermissao = new clsPermissoes();		 
+		if( $objPermissao->permissao_cadastra( 555, $this->pessoa_logada,7) )
 		{
 			$this->url_novo = "educar_usuario_cad.php";
 			$this->url_editar = "educar_usuario_cad.php?ref_pessoa={$cod_pessoa}";

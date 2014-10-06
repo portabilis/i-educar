@@ -127,11 +127,17 @@ class indice extends clsDetalhe
     $this->addDetalhe( array("Empresa", $registro['nome_empresa']) );
     $this->addDetalhe( array("Motorista responsável", $registro['nome_motorista']) );
     $this->addDetalhe( array("Observa&ccedil;&atilde;o", $registro['observacao']));
-    $this->url_novo = "../module/TransporteEscolar/Veiculo";
-    $this->url_editar = "../module/TransporteEscolar/Veiculo?id={$cod_veiculo}";
     $this->url_cancelar = "transporte_veiculo_lst.php";
 
     $this->largura = "100%";
+
+    $obj_permissao = new clsPermissoes();
+
+    if($obj_permissao->permissao_cadastra(21237, $this->pessoa_logada,7,null,true))
+    {
+      $this->url_novo = "../module/TransporteEscolar/Veiculo";
+      $this->url_editar = "../module/TransporteEscolar/Veiculo?id={$cod_veiculo}";
+    }
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(

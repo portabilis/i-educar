@@ -165,17 +165,21 @@ class indice extends clsListagem
 		}
 
 		$this->addPaginador2( "educar_usuario_lst.php", $total, $_GET, $this->nome, $limite );
-		$this->acao = "go(\"educar_usuario_cad.php\")";
-		$this->nome_acao = "Novo";
+
+		$obj_permissao = new clsPermissoes();
+		if($obj_permissao->permissao_cadastra(555, $this->pessoa_logada,7,null,true)){
+			$this->acao = "go(\"educar_usuario_cad.php\")";
+			$this->nome_acao = "Novo";
+		}
 
 		$this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""                                  => "Listagem de usu&aacute;rios"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());		
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         ""                                  => "Listagem de usu&aacute;rios"
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 

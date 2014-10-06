@@ -165,18 +165,23 @@ class indice extends clsListagem
 		
 		$this->addPaginador2( "transporte_rota_lst.php", $total, $_GET, $this->nome, $this->__limite );
 
-		$this->acao = "go(\"/module/TransporteEscolar/Rota\")";
-		$this->nome_acao = "Novo";
+		$obj_permissao = new clsPermissoes();
+
+		if($obj_permissao->permissao_cadastra(21238, $this->pessoa_logada,7,null,true))
+		{
+			$this->acao = "go(\"/module/TransporteEscolar/Rota\")";
+			$this->nome_acao = "Novo";
+		}
 
 		$this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""                                  => "Listagem de rotas"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());		
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         "educar_index.php"                  => "i-Educar - Escola",
+	         ""                                  => "Listagem de rotas"
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 // cria uma extensao da classe base

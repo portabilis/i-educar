@@ -170,20 +170,25 @@ class indice extends clsListagem
 			}
 		}
 		
-		$this->addPaginador2( "transporte_veiculo_lst.php", $total, $_GET, $this->nome, $this->__limite );
-
-		$this->acao = "go(\"/module/TransporteEscolar/Veiculo\")";
-		$this->nome_acao = "Novo";
+		$this->addPaginador2( "transporte_veiculo_lst.php", $total, $_GET, $this->nome, $this->__limite );		
 
 		$this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""                                  => "Listagem de ve&iacute;culos"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());		
+		$obj_permissao = new clsPermissoes();
+
+	    if($obj_permissao->permissao_cadastra(21237, $this->pessoa_logada,7,null,true))
+	    {
+	        $this->acao = "go(\"/module/TransporteEscolar/Veiculo\")";
+			$this->nome_acao = "Novo";
+	    }	
+
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         "educar_index.php"                  => "i-Educar - Escola",
+	         ""                                  => "Listagem de ve&iacute;culos"
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 // cria uma extensao da classe base

@@ -169,6 +169,8 @@ class indice extends clsListagem
         $objTemp = new clsPmieducarAcervoAssunto();
         $lista = $objTemp->lista();
 
+        $opcoes = array(null => 'Selecione' );
+
         if (is_array($lista) && count($lista)) {
           foreach ($lista as $registro) {
             $opcoes[$registro['cod_acervo_assunto']] = $registro['nm_assunto'];

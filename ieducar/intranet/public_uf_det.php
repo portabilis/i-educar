@@ -107,19 +107,23 @@ class indice extends clsDetalhe
 			$this->addDetalhe( array( "C&oacute;digo INEP", "{$registro["cod_ibge"]}") );
 		}
 
+		$obj_permissao = new clsPermissoes();
 
-		$this->url_novo = "public_uf_cad.php";
-		$this->url_editar = "public_uf_cad.php?sigla_uf={$registro["sigla_uf"]}";
+		if($obj_permissao->permissao_cadastra(754, $this->pessoa_logada,7,null,true))
+	    {
+	        $this->url_novo = "public_uf_cad.php";
+			$this->url_editar = "public_uf_cad.php?sigla_uf={$registro["sigla_uf"]}";
+	    }		
 
 		$this->url_cancelar = "public_uf_lst.php";
 		$this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""                                  => "Detalhe da UF"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());		
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         ""                                  => "Detalhe da UF"
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 

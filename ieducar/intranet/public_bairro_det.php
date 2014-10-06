@@ -130,8 +130,13 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Pais', $registro['nm_pais']));
     }
 
-    $this->url_novo   = 'public_bairro_cad.php';
-    $this->url_editar = 'public_bairro_cad.php?idbai=' . $registro['idbai'];
+    $obj_permissao = new clsPermissoes();
+
+    if($obj_permissao->permissao_cadastra(756, $this->pessoa_logada,7,null,true))
+    {
+      $this->url_novo   = 'public_bairro_cad.php';
+      $this->url_editar = 'public_bairro_cad.php?idbai=' . $registro['idbai'];      
+    }
 
     $this->url_cancelar = 'public_bairro_lst.php';
     $this->largura      = '100%';

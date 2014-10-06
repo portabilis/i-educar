@@ -74,14 +74,20 @@ class indice extends clsDetalhe
 		$this->addDetalhe( array("Inscri&ccedil;&atilde;o Estadual", $ins_est) );
 		$this->addDetalhe( array("Capital Social", $capital_social) );
 
-		$this->url_novo = "empresas_cad.php";
-		$this->url_editar = "empresas_cad.php?idpes={$cod_empresa}";
+		$obj_permissao = new clsPermissoes();
+
+		if($obj_permissao->permissao_cadastra(41, $this->pessoa_logada,7,null,true))
+		{
+			$this->url_novo = "empresas_cad.php";
+			$this->url_editar = "empresas_cad.php?idpes={$cod_empresa}";
+		}
+		
 		$this->url_cancelar = "empresas_lst.php";
 
 		$this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          ""                                  => "Detalhe da pessoa jur&iacute;dica"
     ));

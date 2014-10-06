@@ -119,10 +119,16 @@ class indice extends clsDetalhe
 
     if( ! $ins_est ) $ins_est = "isento";
       $this->addDetalhe( array("Inscri&ccedil;&atilde;o estadual", $ins_est) );
-    $this->addDetalhe( array("Observa&ccedil;&atilde;o", $registro['observacao']));
-    $this->url_novo = "../module/TransporteEscolar/Empresa";
-    $this->url_editar = "../module/TransporteEscolar/Empresa?id={$cod_empresa_transporte_escolar}";
+    $this->addDetalhe( array("Observa&ccedil;&atilde;o", $registro['observacao']));   
     $this->url_cancelar = "transporte_empresa_lst.php";
+
+    $obj_permissao = new clsPermissoes();
+
+    if($obj_permissao->permissao_cadastra(21235, $this->pessoa_logada,7,null,true))
+    {
+      $this->url_novo = "../module/TransporteEscolar/Empresa";
+      $this->url_editar = "../module/TransporteEscolar/Empresa?id={$cod_empresa_transporte_escolar}";
+    }
 
     $this->largura = "100%";
 

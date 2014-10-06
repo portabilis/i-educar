@@ -105,10 +105,16 @@ class indice extends clsDetalhe
     if (trim($registro['vencimento_cnh'])!='')
       $this->addDetalhe( array("Vencimento da habilitação", Portabilis_Date_Utils::pgSQLToBr($registro['vencimento_cnh']) ) );
 
-    $this->addDetalhe( array("Observa&ccedil;&atilde;o", $registro['observacao']));
-    $this->url_novo = "../module/TransporteEscolar/Motorista";
-    $this->url_editar = "../module/TransporteEscolar/motorista?id={$cod_motorista}";
+    $this->addDetalhe( array("Observa&ccedil;&atilde;o", $registro['observacao']));    
     $this->url_cancelar = "transporte_motorista_lst.php";
+
+    $obj_permissao = new clsPermissoes();
+
+    if($obj_permissao->permissao_cadastra(21236, $this->pessoa_logada,7,null,true))
+    {
+      $this->url_novo = "../module/TransporteEscolar/Motorista";
+      $this->url_editar = "../module/TransporteEscolar/motorista?id={$cod_motorista}";
+    }
 
     $this->largura = "100%";
 

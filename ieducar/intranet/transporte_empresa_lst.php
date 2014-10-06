@@ -129,19 +129,24 @@ class indice extends clsListagem
 
 		$this->addPaginador2( "transporte_empresa_lst.php", $total, $_GET, $this->nome, $this->limite );
 
-		$this->acao = "go(\"../module/TransporteEscolar/Empresa\")";
-		$this->nome_acao = "Novo";
-
 		//**
 		$this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""                                  => "Listagem de empresas de transporte"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());		
+		$obj_permissao = new clsPermissoes();
+
+		if($obj_permissao->permissao_cadastra(21235, $this->pessoa_logada,7,null,true))
+		{
+			$this->acao = "go(\"../module/TransporteEscolar/Empresa\")";
+			$this->nome_acao = "Novo";
+		}
+
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         "educar_index.php"                  => "i-Educar - Escola",
+	         ""                                  => "Listagem de empresas de transporte"
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 // cria uma extensao da classe base
