@@ -758,12 +758,13 @@ class DiarioApiController extends ApiCoreController
       
       //buscando pela área do conhecimento
       $area                                = $this->getAreaConhecimento($componente['id']);
+      $nomeArea                            = (($area->secao != '') ? $area->secao . ' - ' : '') . $area->nome;
       $componente['area_id']               = $area->id;
-      $componente['area_nome']             = $this->safeString(strtoupper($area->nome), false);
+      $componente['area_nome']             = $this->safeString(strtoupper($nomeArea), false);
       
       //criando chave para ordenamento temporário
       //área de conhecimento + componente curricular
-      $componente['my_order']              = Portabilis_String_Utils::unaccent(strtoupper($area->nome)) . Portabilis_String_Utils::unaccent(strtoupper($_componente->get('nome')));
+      $componente['my_order']              = Portabilis_String_Utils::unaccent(strtoupper($nomeArea)) . Portabilis_String_Utils::unaccent(strtoupper($_componente->get('nome')));
 
       $componentesCurriculares[]           = $componente;
     }
@@ -794,9 +795,10 @@ class DiarioApiController extends ApiCoreController
     
     $area = $mapper->findAll(array('area_conhecimento'), $where);
     
-    $areaConhecimento       = new stdClass();
-    $areaConhecimento->id   = $area[0]->area_conhecimento->id;
-    $areaConhecimento->nome = $area[0]->area_conhecimento->nome;
+    $areaConhecimento        = new stdClass();
+    $areaConhecimento->id    = $area[0]->area_conhecimento->id;
+    $areaConhecimento->nome  = $area[0]->area_conhecimento->nome;
+    $areaConhecimento->secao = $area[0]->area_conhecimento->secao;
     
     return $areaConhecimento;
   }

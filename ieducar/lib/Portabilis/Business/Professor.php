@@ -102,14 +102,14 @@ class Portabilis_Business_Professor {
 
 
   protected static function componentesCurricularesTurmaAlocado($turmaId, $anoLetivo, $userId) {
-    $sql = "select cc.id, cc.nome, ac.nome as area_conhecimento
+    $sql = "select cc.id, cc.nome, ac.nome as area_conhecimento, ac.secao as secao_area_conhecimento
             from modules.componente_curricular_turma as cct, pmieducar.turma, modules.componente_curricular as cc, modules.area_conhecimento as ac,
             pmieducar.escola_ano_letivo as al, pmieducar.servidor_disciplina as scc
             where turma.cod_turma = $1  and cct.turma_id = turma.cod_turma and cct.escola_id = turma.ref_ref_cod_escola
             and cct.componente_curricular_id = cc.id and al.ano = $2 and cct.escola_id = al.ref_cod_escola and
             scc.ref_ref_cod_instituicao = turma.ref_cod_instituicao and scc.ref_cod_servidor = $3 and
             scc.ref_cod_curso = turma.ref_cod_curso and scc.ref_cod_disciplina = cc.id and cc.area_conhecimento_id = ac.id
-            order by ac.nome, cc.nome";
+            order by ac.secao, ac.nome, cc.nome";
 
     $options = array('params' => array($turmaId, $anoLetivo, $userId));
 
@@ -118,7 +118,7 @@ class Portabilis_Business_Professor {
 
 
   protected static function componentesCurricularesCursoAlocado($turmaId, $anoLetivo, $userId) {
-    $sql = "select cc.id as id, cc.nome as nome, ac.nome as area_conhecimento from pmieducar.serie, pmieducar.escola_serie_disciplina as esd,
+    $sql = "select cc.id as id, cc.nome as nome, ac.nome as area_conhecimento, ac.secao as secao_area_conhecimento from pmieducar.serie, pmieducar.escola_serie_disciplina as esd,
             pmieducar.turma, modules.componente_curricular as cc, modules.area_conhecimento as ac, pmieducar.escola_ano_letivo as al,
             pmieducar.servidor_disciplina as scc where turma.cod_turma = $1 and serie.cod_serie =
             turma.ref_ref_cod_serie and esd.ref_ref_cod_escola = turma.ref_ref_cod_escola and esd.ref_ref_cod_serie =
@@ -126,7 +126,7 @@ class Portabilis_Business_Professor {
             al.ref_cod_escola and serie.ativo = 1 and esd.ativo = 1 and al.ativo = 1 and scc.ref_ref_cod_instituicao =
             turma.ref_cod_instituicao and scc.ref_cod_servidor = $3 and scc.ref_cod_curso = serie.ref_cod_curso and
             scc.ref_cod_disciplina = cc.id and cc.area_conhecimento_id = ac.id
-            order by ac.nome, cc.nome";
+            order by ac.secao, ac.nome, cc.nome";
 
     $options = array('params' => array($turmaId, $anoLetivo, $userId));
 
