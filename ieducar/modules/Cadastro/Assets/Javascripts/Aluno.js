@@ -1196,6 +1196,7 @@ function canShowParentsFields(){
       modal: true,
       resizable: false,
       draggable: false,
+      title: "teste",
       buttons: {
         "Gravar" : function() {
           var bValid = true;
