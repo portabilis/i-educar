@@ -150,17 +150,22 @@ class indice extends clsListagem
 		}
 		$this->addPaginador2( "public_uf_lst.php", $total, $_GET, $this->nome, $this->__limite );
 
-		$this->acao = "go(\"public_uf_cad.php\")";
-		$this->nome_acao = "Novo";
+		$obj_permissao = new clsPermissoes();
+
+		if($obj_permissao->permissao_cadastra(754, $this->pessoa_logada,7,null,true))
+	    {
+	      $this->acao = "go(\"public_uf_cad.php\")";
+			$this->nome_acao = "Novo";
+	    }
 
 		$this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""                                  => "Listagem de UFs"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());		
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         ""                                  => "Listagem de UFs"
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 // cria uma extensao da classe base

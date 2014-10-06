@@ -96,8 +96,13 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Setor', $registro['nome']));
     }
 
-    $this->url_novo   = 'public_setor_cad.php';
-    $this->url_editar = 'public_setor_cad.php?idsetorbai=' . $registro['idsetorbai'];
+    $obj_permissao = new clsPermissoes();
+
+    if($obj_permissao->permissao_cadastra(760, $this->pessoa_logada,7,null,true))
+    {
+      $this->url_novo   = 'public_setor_cad.php';
+      $this->url_editar = 'public_setor_cad.php?idsetorbai=' . $registro['idsetorbai'];
+    }
 
     $this->url_cancelar = 'public_setor_lst.php';
     $this->largura      = '100%';

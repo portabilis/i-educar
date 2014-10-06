@@ -28,6 +28,7 @@ $desvio_diretorio = "";
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
+require_once( "include/pmieducar/geral.inc.php" );
 
 class clsIndex extends clsBase
 {
@@ -44,6 +45,10 @@ class indice extends clsDetalhe
 {
 	function Gerar()
 	{
+		@session_start();
+		$this->pessoa_logada = $_SESSION['id_pessoa'];
+		session_write_close();
+
 		$this->titulo = "Agendas";
 		
 
@@ -103,8 +108,15 @@ class indice extends clsDetalhe
 		{
 			$this->addDetalhe( array( "Erro", "Codigo de agenda inválido" ) );
 		}
-		$this->url_editar = "agenda_admin_cad.php?cod_agenda={$cod_agenda}";
-		$this->url_novo = "agenda_admin_cad.php";
+
+		$obj_permissao = new clsPermissoes();
+
+		if($obj_permissao->permissao_cadastra(554, $this->pessoa_logada,7,null,true))
+		{
+		  $this->url_editar = "agenda_admin_cad.php?cod_agenda={$cod_agenda}";
+		  $this->url_novo = "agenda_admin_cad.php";
+		}
+		
 		$this->url_cancelar = "agenda_admin_lst.php";
 
 		$this->largura = "100%";

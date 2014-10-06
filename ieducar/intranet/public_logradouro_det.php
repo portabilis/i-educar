@@ -136,9 +136,13 @@ class indice extends clsDetalhe
 			$this->addDetalhe( array( "Operac&atilde;o", "{$registro["operacao"]}") );
 		}
 
+		$obj_permissao = new clsPermissoes();
 
-		$this->url_novo = "public_logradouro_cad.php";
-		$this->url_editar = "public_logradouro_cad.php?idlog={$registro["idlog"]}";
+		if($obj_permissao->permissao_cadastra(757, $this->pessoa_logada,7,null,true))
+		{
+			$this->url_novo = "public_logradouro_cad.php";
+			$this->url_editar = "public_logradouro_cad.php?idlog={$registro["idlog"]}";
+		}
 
 		$this->url_cancelar = "public_logradouro_lst.php";
 		$this->largura = "100%";

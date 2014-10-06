@@ -101,9 +101,15 @@ class indice extends clsDetalhe
     $this->addDetalhe( array("Destino", (trim($registro['nome_destino'])=='' ? $registro['nome_destino2'] : $registro['nome_destino'])) );
     $this->addDetalhe( array("Ponto de embarque", $registro['nome_ponto'] ));
     $this->addDetalhe( array("Observa&ccedil;&atilde;o", $registro['observacao']) );
-    
-    $this->url_novo = "../module/TransporteEscolar/Pessoatransporte";
-    $this->url_editar = "../module/TransporteEscolar/Pessoatransporte?id={$cod_pt}";
+
+    $obj_permissao = new clsPermissoes();
+
+    if($obj_permissao->permissao_cadastra(21240, $this->pessoa_logada,7,null,true))
+    {
+      $this->url_novo = "../module/TransporteEscolar/Pessoatransporte";
+      $this->url_editar = "../module/TransporteEscolar/Pessoatransporte?id={$cod_pt}";
+    }
+        
     $this->url_cancelar = "transporte_pessoa_lst.php";
 
     $this->largura = "100%";

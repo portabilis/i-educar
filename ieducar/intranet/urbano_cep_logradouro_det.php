@@ -144,9 +144,13 @@ class indice extends clsDetalhe
 			$this->addDetalhe( array( "Tabela de CEP-Bairro", "{$tab_endereco}") );
 		}
 
+		$obj_permissao = new clsPermissoes();		
 
-		$this->url_novo = "urbano_cep_logradouro_cad.php";
-		$this->url_editar = "urbano_cep_logradouro_cad.php?cep={$registro["cep"]}&idlog={$registro["idlog"]}";
+		if($obj_permissao->permissao_cadastra(758, $this->pessoa_logada,7,null,true))
+	    {
+      		$this->url_novo = "urbano_cep_logradouro_cad.php";
+			$this->url_editar = "urbano_cep_logradouro_cad.php?cep={$registro["cep"]}&idlog={$registro["idlog"]}";
+	    }		
 
 		$this->url_cancelar = "urbano_cep_logradouro_lst.php";
 		$this->largura = "100%";
