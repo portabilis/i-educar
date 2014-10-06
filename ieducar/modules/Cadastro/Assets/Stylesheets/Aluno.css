@@ -172,7 +172,7 @@
 
 .ui-button span{
   
-  color: #495C67 !important;
+  color: #ffffff !important;
   border: 1px solid #495C67 !important;
 
 }
@@ -199,7 +199,7 @@ tr td:first-child legend{
 }
 
 .ui-button-text {
-   font-size: 12px !important;
+   font-size: 13px !important;
 } 
 
 div p a{;
@@ -219,4 +219,7 @@ div p a{;
 
 .ui-dialog-content, .ui-widget-content{
   padding: 0px !important;
+}
+.select { 
+  border: 1px solid #ffffff; background: #ffffff; color: #000000;
 }
