@@ -599,6 +599,15 @@ function handleSearch($resultTable, dataResponse) {
 
   $resultTable.addClass('styled').find('.tabable:first').focus();
   navegacaoTab(dataResponse.navegacao_tab);
+  if(!dataResponse.can_change){
+    $j('#form_resultado input').attr('disabled', 'disabled');
+    $j('#form_resultado select').attr('disabled', 'disabled');
+    $j('#form_resultado textarea').attr('disabled', 'disabled');
+  }else{
+    $j('#form_resultado input').removeAttr('disabled');
+    $j('#form_resultado select').removeAttr('disabled');
+    $j('#form_resultado textarea').removeAttr('disabled');
+  }
 }
 
 function _notaField(matriculaId, componenteCurricularId, klass, id, value) {
