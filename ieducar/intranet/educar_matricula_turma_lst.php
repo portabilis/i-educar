@@ -167,7 +167,7 @@ class indice extends clsListagem
       $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
     $obj_matricula_turma = new clsPmieducarTurma();
-    $obj_matricula_turma->setOrderby('data_cadastro ASC');
+    $obj_matricula_turma->setOrderby(' t.nm_turma ASC');
     $obj_matricula_turma->setLimite($this->limite, $this->offset);
 
     $lista = $obj_matricula_turma->lista3($this->ref_cod_turma, NULL, NULL,
@@ -209,12 +209,8 @@ WHERE
           $lista = $lista_aux;
         }
       }
-
-      $total = count($lista);
     }
-    else {
-      $total = $obj_matricula_turma->_total;
-    }
+    $total = $obj_matricula_turma->_total;
 
     $enturmacoesMatricula = new clsPmieducarMatriculaTurma();
     $enturmacoesMatricula = $enturmacoesMatricula->lista3($this->ref_cod_matricula, NULL, NULL,
