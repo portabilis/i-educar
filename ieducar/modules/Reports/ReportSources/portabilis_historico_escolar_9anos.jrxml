@@ -252,9 +252,7 @@ FROM   pmieducar.aluno,
        fisica.idpes = aluno.ref_idpes AND
        aluno.cod_aluno = $P{aluno}) as data_nasc,
 
-(SELECT public.fcn_upper(COALESCE(aluno.nm_pai,'NAO INFORMADO')) || ' e ' || public.fcn_upper(COALESCE(aluno.nm_mae,'NAO INFORMADO'))
-FROM   pmieducar.aluno
- WHERE aluno.cod_aluno = $P{aluno}) as nome_dos_pais
+(SELECT public.fcn_upper(COALESCE((SELECT pessoa_pai.nome FROM cadastro.fisica AS pessoa_aluno, cadastro.pessoa AS pessoa_pai WHERE pessoa_aluno.idpes = ref_idpes AND pessoa_pai.idpes = pessoa_aluno.idpes_pai), aluno.nm_pai, 'NAO INFORMADO')) || ' e ' || public.fcn_upper(COALESCE((SELECT pessoa_mae.nome FROM cadastro.fisica AS pessoa_aluno, cadastro.pessoa AS pessoa_mae WHERE pessoa_aluno.idpes = ref_idpes AND pessoa_mae.idpes = pessoa_aluno.idpes_mae), aluno.nm_mae, 'NAO INFORMADO') ) FROM pmieducar.aluno WHERE aluno.cod_aluno = $P{aluno}) AS nome_dos_pais
 
 FROM (
 SELECT nm_disciplina,
@@ -1187,15 +1185,15 @@ ORDER BY 1 ASC]]>
 	<field name="obs7" class="java.lang.String"/>
 	<field name="obs8" class="java.lang.String"/>
 	<field name="obs9" class="java.lang.String"/>
-	<field name="freq1" class="java.lang.Double"/>
-	<field name="freq2" class="java.lang.Double"/>
-	<field name="freq3" class="java.lang.Double"/>
-	<field name="freq4" class="java.lang.Double"/>
-	<field name="freq5" class="java.lang.Double"/>
-	<field name="freq6" class="java.lang.Double"/>
-	<field name="freq7" class="java.lang.Double"/>
-	<field name="freq8" class="java.lang.Double"/>
-	<field name="freq9" class="java.lang.Double"/>
+	<field name="freq1" class="java.math.BigDecimal"/>
+	<field name="freq2" class="java.math.BigDecimal"/>
+	<field name="freq3" class="java.math.BigDecimal"/>
+	<field name="freq4" class="java.math.BigDecimal"/>
+	<field name="freq5" class="java.math.BigDecimal"/>
+	<field name="freq6" class="java.math.BigDecimal"/>
+	<field name="freq7" class="java.math.BigDecimal"/>
+	<field name="freq8" class="java.math.BigDecimal"/>
+	<field name="freq9" class="java.math.BigDecimal"/>
 	<field name="status_serie1" class="java.lang.String"/>
 	<field name="status_serie2" class="java.lang.String"/>
 	<field name="status_serie3" class="java.lang.String"/>
