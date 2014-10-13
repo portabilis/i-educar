@@ -47,7 +47,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
     @session_write_close();
 
     $obj_permissao = new clsPermissoes();
-    $obj_permissao->permissao_cadastra(999613, $pessoa_logada, 7, 'educar_index.php');
+    $obj_permissao->permissao_cadastra(999613, $pessoa_logada, 7, '/intranet/educar_index.php');
 
     parent::_preRender();
 

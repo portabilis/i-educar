@@ -47,7 +47,7 @@ class EmprestimoController extends Portabilis_Controller_Page_ListController
     @session_write_close();
 
     $obj_permissao = new clsPermissoes();
-    $obj_permissao->permissao_cadastra(610, $pessoa_logada, 7, 'educar_biblioteca_index.php');
+    $obj_permissao->permissao_cadastra(610, $pessoa_logada, 7, '/intranet/educar_biblioteca_index.php');
 
     parent::_preRender();
 
