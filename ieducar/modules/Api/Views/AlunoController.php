@@ -1066,6 +1066,11 @@ protected function createOrUpdateUniforme($id) {
         $matriculas[$index]['user_can_access']         = Portabilis_Utils_User::canAccessEscola($matricula['escola_id']);
         $matriculas[$index]['transferencia_em_aberto'] = $this->possuiTransferenciaEmAberto($matricula['id']);
       }
+      
+      $attrs = array('id', 'instituicao_id', 'escola_id', 'curso_id', 'serie_id', 'aluno_id', 'aluno_nome', 'situacao', 'ano', 'nome_aluno', 'turma_id', 
+          'turma_nome', 'escola_nome', 'escola_nome', 'curso_nome', 'serie_nome', 'ultima_enturmacao', 'data_entrada', 'data_entrada', 'data_saida', 'user_can_access', 'transferencia_em_aberto');
+
+      $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);      
 
       return array('matriculas' => $matriculas);
     }
