@@ -75,7 +75,7 @@ class clsMenu
         ref_cod_menu_submenu
       FROM
         menu_funcionario
-      WHERE
+      WHERE false and
         ref_ref_cod_pessoa_fj = ' . $id_usuario);
 
     while ($dba->ProximoRegistro()) {

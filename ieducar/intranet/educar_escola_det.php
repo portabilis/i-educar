@@ -525,6 +525,9 @@ class indice extends clsDetalhe
 
 		$tabela = "<table border=0 cellpadding=2 width='100%'>";
 
+		$obj_permissoes = new clsPermissoes();
+		$canEdit = $obj_permissoes->permissao_cadastra( 561, $this->pessoa_logada, 7 );
+
 		if($lista_ano_letivo)
 		{
 			//echo'<pre>';
@@ -544,7 +547,7 @@ class indice extends clsDetalhe
 
 				$incluir = $excluir = "";
 				//se nao existe ano em andamento permite inicializar um ano letivo
-				if(!$existe_ano_andamento && $ano['andamento'] != 2)
+				if(!$existe_ano_andamento && $ano['andamento'] != 2 && $canEdit)
 					$incluir = "<td><a href='#' onclick=\"preencheForm('{$ano['ano']}','{$ano['ref_cod_escola']}','iniciar');\"><img src=\"imagens/i-educar/nvp_bot_iniciar_ano.gif\" border=0 style='padding-left:10px;'></a></td>";
 				else
 					$incluir = "<td width='130'>&nbsp;</td>";
@@ -552,7 +555,7 @@ class indice extends clsDetalhe
 				//verifica se o ano nao possui matricula em andamento para permitir finalizar o ano
 				$obj_matricula_ano = new clsPmieducarMatricula();
 				$matricula_em_andamento = $obj_matricula_ano->lista(null,null,$this->cod_escola,null,null,null,null,3,null,null,null,null,1,$ano['ano'],null,null,1,null,1,null,null,null,null,null,null,false);
-				if(!$matricula_em_andamento && $existe_ano_andamento && $ano['andamento'] == 1)
+				if(!$matricula_em_andamento && $existe_ano_andamento && $ano['andamento'] == 1 && $canEdit)
 					$excluir = "<td><a href='#' onclick=\"preencheForm('{$ano['ano']}','{$ano['ref_cod_escola']}','finalizar');\" ><img src=\"imagens/i-educar/nvp_bot_finalizar_ano.gif\" border=0 style='padding-left:10px;'></a></td>";
 				else
 				{
@@ -564,7 +567,7 @@ class indice extends clsDetalhe
 
 				if($ano['andamento'] == 2)
 					$incluir = "<td colspan='3' align='center'><span class='formlttd'><b>--- Ano Finalizado ---</b></span></td>";
-				else
+				elseif($canEdit)
 					$editar = "<td><a href='#' onclick=\"preencheForm('{$ano['ano']}','{$ano['ref_cod_escola']}','editar');\" ><img src=\"imagens/i-educar/nvp_bot_editar_ano.gif\" alt=\"Editar Ano Letivo\" border=0 style='padding-left:10px;'></a></td>";
 
 				$tabela .= "<tr bgcolor='$cor'><td style='padding-left:20px'><img src=\"imagens/noticia.jpg\" border='0'> {$ano['ano']}</td>{$incluir}{$excluir}{$editar}</tr>";
@@ -574,6 +577,12 @@ class indice extends clsDetalhe
 			$tabela .= "<tr>
 							<td>
 								<span class='formlttd'><b>*Somente &eacute; poss&iacute;vel finalizar um ano letivo ap&oacute;s n&atilde;o existir mais nenhuma matr&iacute;cula em andamento.</b></span>
+							</td>
+						</tr>";
+			if(!$canEdit)						
+				$tabela .= "<tr>
+							<td>
+								<span class='formlttd'><b>**Somente usu&aacute;rios com permiss&atilde;o de edi&ccedil;&atilde;o de escola podem alterar anos letivos.</b></span>
 							</td>
 						</tr>";
 			$tabela .= "<tr>

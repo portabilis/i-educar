@@ -78,7 +78,7 @@ else {
 $configFile = realpath(dirname(__FILE__) . '/../') . '/configuration/' . CORE_EXT_CONFIGURATION_ENV . '.ini';
 
 // caso não exista o ini para o ambiente atual, usa o arquivo padrão ieducar.ini
-if (! file_exists($configFile))
+if ( file_exists($configFile))
   $configFile = realpath(dirname(__FILE__) . '/../') . '/configuration/ieducar.ini';
 
 // Classe de configuração

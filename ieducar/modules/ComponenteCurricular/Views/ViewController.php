@@ -31,6 +31,7 @@
 
 require_once 'Core/Controller/Page/ViewController.php';
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
+require_once 'include/pmieducar/geral.inc.php';
 
 /**
  * ViewController class.
@@ -60,8 +61,12 @@ class ViewController extends Core_Controller_Page_ViewController
    */
   public function __construct()
   {
-    $this->addBotao('Configurar anos escolares', 'ano?cid=' . $_GET['id']);
-         //->addBotao('Configurar descritores', 'descritores?cid=' . $_GET['id']);
+    @session_start();
+    $pessoa_logada = $_SESSION['id_pessoa'];
+    @session_write_close();
+    $obj_permissao = new clsPermissoes();
+    if($obj_permissao->permissao_cadastra(946, $pessoa_logada, 7))
+      $this->addBotao('Configurar anos escolares', 'ano?cid=' . $_GET['id']);
   }
 
   protected function _preRender(){
