@@ -173,9 +173,9 @@
 
     <div id="rodape" class="texto-normal">
       <p>
-        Prefeitura Municipal de Parauapebas - Secretaria Municipal de Educa&ccedil;&atilde;o - SEMED <a href="http://semed.parauapebas.pa.gov.br/" target="_blank" >http://semed.parauapebas.pa.gov.br/</a> - Responsavel Inform&aacute;tica: Plabio Tavares
+        Portabilis Tecnologia - 
 
-        <!--a target="_blank" class="light" href="http://suporte.portabilis.com.br"> Obter Suporte </a-->
+        <a target="_blank" class="light" href="http://suporte.portabilis.com.br"> Obter Suporte </a>
       </p>
 
 
