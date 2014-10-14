@@ -10,5 +10,5 @@ insert into pmicontrolesis.menu values(999603, 999603, 999600, 'Carteira do Prof
 
 -- //@UNDO
 
-delete from portal.menu_submenu where cod_menu_submenu = 999603
-delete from pmicontrolesis.menu where cod_menu = 999603
+delete from pmicontrolesis.menu where cod_menu = 999603;
+delete from portal.menu_submenu where cod_menu_submenu = 999603;
