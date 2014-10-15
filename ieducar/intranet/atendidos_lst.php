@@ -19,6 +19,10 @@ class indice extends clsListagem
 {
 	function Gerar()
 	{
+		@session_start();
+		$this->pessoa_logada = $_SESSION['id_pessoa'];
+		session_write_close();
+				
 		$this->titulo = "Pessoas Físicas";
 		
 
