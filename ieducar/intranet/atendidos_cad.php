@@ -125,6 +125,7 @@ class indice extends clsCadastro
   // Variáveis para controle da foto
   var $objPhoto;
   var $arquivoFoto;
+  var $file_delete;
 
   var $caminho_det;
   var $caminho_lst;
@@ -211,8 +212,9 @@ class indice extends clsCadastro
     } else
       $foto=false;
 
-    if ($foto!=false){
+    if ($foto){
       $this->campoRotulo('fotoAtual_','Foto atual','<img height="117" src="'.$foto.'"/>');
+      $this->inputsHelper()->checkbox('file_delete', array('label' => 'Excluir a foto'));
       $this->campoArquivo('file','Trocar foto',$this->arquivoFoto,40,'<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 150KB</span>');
     }else
       $this->campoArquivo('file','Foto',$this->arquivoFoto,40,'<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 150KB</span>');
@@ -1115,6 +1117,9 @@ class indice extends clsCadastro
         echo '<script>alert(\'Foto não salva.\')</script>';
         return false;
       }
+    }elseif($this->file_delete == 'on'){
+      $obj = new clsCadastroFisicaFoto($id);
+      $obj->excluir();
     }
   }
 

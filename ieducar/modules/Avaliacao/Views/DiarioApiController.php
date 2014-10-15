@@ -344,7 +344,8 @@ class DiarioApiController extends ApiCoreController
 
   protected function canPost() {
     return $this->validatesPresenceOf('etapa') &&
-           $this->validatesPresenceOf('matricula_id');
+           $this->validatesPresenceOf('matricula_id') && 
+           $this->canChange();
   }
 
 
@@ -1091,10 +1092,19 @@ class DiarioApiController extends ApiCoreController
     return $itensRegra;
   }
 
+  public function canChange(){
+    $user = $this->getSession()->id_pessoa;
+    $processoAp = $this->_processoAp;
+    $obj_permissao = new clsPermissoes();
+
+    return $obj_permissao->permissao_cadastra($processoAp, $user, 7);    
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'matriculas')){
       $this->appendResponse('matriculas', $this->getMatriculas());
       $this->appendResponse('navegacao_tab', $this->getNavegacaoTab());
+      $this->appendResponse('can_change', $this->canChange());
     }
 
     elseif ($this->isRequestFor('post', 'nota') || $this->isRequestFor('post', 'nota_exame'))

@@ -259,10 +259,16 @@ class indice extends clsListagem
 			}
 		}
 
+		$obj_permissao = new clsPermissoes();
 
-		$this->addPaginador2( "educar_infra_predio_comodo_lst.php", $total, $_GET, $this->nome, $this->limite );
-		$this->acao = "go(\"educar_infra_predio_comodo_cad.php\")";
-		$this->nome_acao = "Novo";
+		if($obj_permissao->permissao_cadastra(574, $this->pessoa_logada,7,null,true))
+		{
+			$this->acao = "go(\"educar_infra_predio_comodo_cad.php\")";
+			$this->nome_acao = "Novo";
+		}
+
+
+		$this->addPaginador2( "educar_infra_predio_comodo_lst.php", $total, $_GET, $this->nome, $this->limite );		
 		$this->largura = "100%";
 
 	    $localizacao = new LocalizacaoSistema();

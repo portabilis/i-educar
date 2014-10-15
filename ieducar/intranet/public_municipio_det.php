@@ -168,19 +168,23 @@ class indice extends clsDetalhe
 			$this->addDetalhe( array( "Idsis Cad", "{$registro["idsis_cad"]}") );
 		}*/
 
+		$obj_permissao = new clsPermissoes();
 
-		$this->url_novo = "public_municipio_cad.php";
-		$this->url_editar = "public_municipio_cad.php?idmun={$registro["idmun"]}";
+		if($obj_permissao->permissao_cadastra(755, $this->pessoa_logada,7,null,true))
+		{
+			$this->url_novo = "public_municipio_cad.php";
+			$this->url_editar = "public_municipio_cad.php?idmun={$registro["idmun"]}";
+		}
 
 		$this->url_cancelar = "public_municipio_lst.php";
 		$this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""                                  => "Detalhe do munic&iacute;pio"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());		
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         ""                                  => "Detalhe do munic&iacute;pio"
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 

@@ -81,19 +81,23 @@ class indice extends clsDetalhe
 			$this->addDetalhe( array( "Geom", "{$registro["geom"]}") );
 		}
 
+		$obj_permissao = new clsPermissoes();
 
-		$this->url_novo = "public_pais_cad.php";
-		$this->url_editar = "public_pais_cad.php?idpais={$registro["idpais"]}";
+		if($obj_permissao->permissao_cadastra(753, $this->pessoa_logada,7,null,true))
+		{
+			$this->url_novo = "public_pais_cad.php";
+			$this->url_editar = "public_pais_cad.php?idpais={$registro["idpais"]}";
+		}				
 
 		$this->url_cancelar = "public_pais_lst.php";
 		$this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""                                  => "Detalhe do pa&iacute;s"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());		
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         ""                                  => "Detalhe do pa&iacute;s"
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 

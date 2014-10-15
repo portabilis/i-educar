@@ -167,9 +167,14 @@ class indice extends clsDetalhe
 			$this->addDetalhe( array( "Descri&ccedil;&atilde;o do ambiente", "{$registro["desc_comodo"]}") );
 		}
 
+		$obj_permissao = new clsPermissoes();
 
-		$this->url_novo = "educar_infra_predio_comodo_cad.php";
-		$this->url_editar = "educar_infra_predio_comodo_cad.php?cod_infra_predio_comodo={$registro["cod_infra_predio_comodo"]}";
+		if($obj_permissao->permissao_cadastra(574, $this->pessoa_logada,7,null,true))
+		{
+			$this->url_novo = "educar_infra_predio_comodo_cad.php";
+			$this->url_editar = "educar_infra_predio_comodo_cad.php?cod_infra_predio_comodo={$registro["cod_infra_predio_comodo"]}";
+		}
+				
 		$this->url_cancelar = "educar_infra_predio_comodo_lst.php";
 		$this->largura = "100%";
 

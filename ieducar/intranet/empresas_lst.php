@@ -44,6 +44,10 @@ class indice extends clsListagem
 {
 	function Gerar()
 	{
+		@session_start();
+		$this->pessoa_logada = $_SESSION['id_pessoa'];
+		session_write_close();
+				
 		$this->titulo = "Empresas";
 		
 		
@@ -97,8 +101,13 @@ class indice extends clsListagem
 		// Paginador
 		$this->addPaginador2( " empresas_lst.php", $total, $_GET, $this->nome, $limite );
 
-		$this->acao = "go(\"empresas_cad.php\")";
-		$this->nome_acao = "Novo";
+		$obj_permissao = new clsPermissoes();
+
+		if($obj_permissao->permissao_cadastra(41, $this->pessoa_logada,7,null,true))
+		{
+			$this->acao = "go(\"empresas_cad.php\")";
+			$this->nome_acao = "Novo";
+		}
 
 		$this->largura = "100%";
 

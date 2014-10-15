@@ -242,8 +242,13 @@ class indice extends clsListagem
 		}
 		$this->addPaginador2( "urbano_cep_logradouro_lst.php", $total, $_GET, $this->nome, $this->__limite );
 
-		$this->acao = "go(\"urbano_cep_logradouro_cad.php\")";
-		$this->nome_acao = "Novo";
+		$obj_permissao = new clsPermissoes();
+		
+		if($obj_permissao->permissao_cadastra(758, $this->pessoa_logada,7,null,true))
+	    {
+      		$this->acao = "go(\"urbano_cep_logradouro_cad.php\")";
+			$this->nome_acao = "Novo";
+	    }
 
 		$this->largura = "100%";
 

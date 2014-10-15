@@ -266,8 +266,13 @@ class indice extends clsListagem
 
     $this->addPaginador2('public_bairro_lst.php', $total, $_GET, $this->nome, $this->__limite);
 
-    $this->acao      = 'go("public_bairro_cad.php")';
-    $this->nome_acao = 'Novo';
+    $obj_permissao = new clsPermissoes();
+
+    if($obj_permissao->permissao_cadastra(756, $this->pessoa_logada,7,null,true))
+    {
+      $this->acao      = 'go("public_bairro_cad.php")';
+      $this->nome_acao = 'Novo';
+    }    
 
     $this->largura = '100%';
 

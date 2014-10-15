@@ -125,8 +125,13 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('C&oacute;digo INEP', $registro['cod_ibge']));
     }
 
-    $this->url_novo   = 'public_distrito_cad.php';
-    $this->url_editar = 'public_distrito_cad.php?iddis=' . $registro['iddis'];
+    $obj_permissao = new clsPermissoes();   
+
+    if($obj_permissao->permissao_cadastra(759, $this->pessoa_logada,7,null,true))
+    {
+      $this->url_novo   = 'public_distrito_cad.php';
+      $this->url_editar = 'public_distrito_cad.php?iddis=' . $registro['iddis'];
+    }    
 
     $this->url_cancelar = 'public_distrito_lst.php';
     $this->largura      = '100%';

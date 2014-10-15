@@ -164,7 +164,7 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
   // load lib helpers
 
   public static function loadJQueryLib($viewInstance) {
-    self::loadJavascript($viewInstance, '//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js', false);
+    self::loadJavascript($viewInstance, 'scripts/jquery/jquery-1.8.3.min.js', false);
     self::embedJavascript($viewInstance, "if (typeof(\$j) == 'undefined') { var \$j = jQuery.noConflict(); }");
   }
 
@@ -175,8 +175,8 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
 
 
   public static function loadJQueryUiLib($viewInstance) {
-    self::loadJavascript($viewInstance, '//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js', false);
-    self::loadStylesheet($viewInstance, '//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/ui-lightness/jquery-ui.css', false);
+    self::loadJavascript($viewInstance, 'scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js', true);
+    self::loadStylesheet($viewInstance, 'scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css', true);
 
     // ui-autocomplete fixup
     self::embedStylesheet($viewInstance, ".ui-autocomplete { font-size: 11px; }");

@@ -14,7 +14,7 @@
     <script type="text/javascript" src="http://assets.freshdesk.com/widget/freshwidget.js"></script>
     <script type="text/javascript" src="scripts/suporte_freshdesk.js?1"></script>
 
-  <script type='text/javascript' src='//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>
+  <script type='text/javascript' src='scripts/jquery/jquery-1.8.3.min.js'></script>
 
   <script type="text/javascript">
 
@@ -153,8 +153,8 @@
 
         <a target="_blank" class="light" href="http://suporte.portabilis.com.br"> Obter Suporte </a>
       </p>
-       <div style=" position: relative; left: 70px; top: -136px"><img height="100px" src="http://apps-ieducar-images.s3.amazonaws.com/lagoagrande/logo-prefeitura"/></div>
-       <div style=" position: relative; left: 260px; top: -205px"><img height="60px" src="http://apps-ieducar-images.s3.amazonaws.com/lagoagrande/logo-secretaria"/></div>
+       <div style=" position: relative; left: 70px; top: -136px; z-index: -1;"><img height="100px" src="http://apps-ieducar-images.s3.amazonaws.com/lagoagrande/logo-prefeitura"/></div>
+       <div style=" position: relative; left: 260px; top: -205px; z-index: -1;"><img height="60px" src="http://apps-ieducar-images.s3.amazonaws.com/lagoagrande/logo-secretaria"/></div>
       <div id="div-outubro-rosa" style="top: -480px;">
         <a href="http://pt.wikipedia.org/wiki/Outubro_Rosa" target="_blank"><img src="https://s3.amazonaws.com/apps-ieducar-images/outubro-rosa/outubro-rosa.png"/></a>
       </div>

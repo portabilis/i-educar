@@ -151,7 +151,7 @@ class indice extends clsDetalhe
     // Verificação de permissão para cadastro
     $obj_permissao = new clsPermissoes();
 
-    if ($obj_permissao->permissao_cadastra(554, $this->pessoa_logada, 1, NULL, TRUE)) {
+    if ($obj_permissao->permissao_cadastra(554, $this->pessoa_logada, 7, NULL, TRUE)) {
       $this->url_novo   = 'educar_tipo_usuario_cad.php';
       $this->url_editar = 'educar_tipo_usuario_cad.php?cod_tipo_usuario=' . $registro['cod_tipo_usuario'];
     }

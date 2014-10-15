@@ -157,7 +157,7 @@ class indice extends clsListagem
 		//** Verificacao de permissao para cadastro
 		$obj_permissao = new clsPermissoes();
 
-		if($obj_permissao->permissao_cadastra(554, $this->pessoa_logada,1,null,true))
+		if($obj_permissao->permissao_cadastra(554, $this->pessoa_logada,7,null,true))
 		{
 			$this->acao = "go(\"educar_tipo_usuario_cad.php\")";
 			$this->nome_acao = "Novo";
@@ -166,13 +166,13 @@ class indice extends clsListagem
 
 		$this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""                                  => "Listagem de tipo de usu&aacute;rio"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());		
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         "educar_index.php"                  => "i-Educar - Escola",
+	         ""                                  => "Listagem de tipo de usu&aacute;rio"
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
 // cria uma extensao da classe base

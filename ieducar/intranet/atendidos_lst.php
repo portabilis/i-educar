@@ -19,6 +19,10 @@ class indice extends clsListagem
 {
 	function Gerar()
 	{
+		@session_start();
+		$this->pessoa_logada = $_SESSION['id_pessoa'];
+		session_write_close();
+				
 		$this->titulo = "Pessoas Físicas";
 		
 
@@ -59,8 +63,13 @@ class indice extends clsListagem
 			}
 		}
 
-		$this->acao = "go(\"atendidos_cad.php\")";
-		$this->nome_acao = "Novo";
+		$obj_permissao = new clsPermissoes();
+
+		if($obj_permissao->permissao_cadastra(43, $this->pessoa_logada,7,null,true))
+		{
+			$this->acao = "go(\"atendidos_cad.php\")";
+			$this->nome_acao = "Novo";
+		}		
 
 		$this->largura = "100%";
 		$this->addPaginador2( "atendidos_lst.php", $total, $_GET, $this->nome, $limite );
