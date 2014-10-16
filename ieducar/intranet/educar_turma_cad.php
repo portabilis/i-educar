@@ -684,7 +684,7 @@ class indice extends clsCadastro
       $this->turma_modulo = unserialize(urldecode($this->turma_modulo));
       $this->turma_dia_semana = unserialize(urldecode($this->turma_dia_semana));
 
-      if ($this->turma_modulo && $this->turma_dia_semana) {
+      if ($this->turma_modulo) {
         $obj = new clsPmieducarTurma(NULL, NULL, $this->pessoa_logada,
           $this->ref_ref_cod_serie, $this->ref_cod_escola,
           $this->ref_cod_infra_predio_comodo, $this->nm_turma, $this->sgl_turma,
@@ -715,19 +715,20 @@ class indice extends clsCadastro
               return FALSE;
             }
           }
-
-          // Cadastra dia semana
-          foreach ($this->turma_dia_semana as $campo) {
-            $obj = new clsPmieducarTurmaDiaSemana($campo["dia_semana_"],
-              $cadastrou, $campo["hora_inicial_"], $campo["hora_final_"]);
-
-            $cadastrou2  = $obj->cadastra();
-
-            if (!$cadastrou2) {
-              $this->mensagem = 'Cadastro não realizado.';
-              echo "<!--\nErro ao cadastrar clsPmieducarTurmaDiaSemana\nvalores obrigat&oacute;rios\nis_numeric( $cadastrou ) && is_numeric( {$campo["dia_semana_"]} ) && is_string( {$campo["hora_inicial_"]} ) && is_string( {$campo["hora_final_"]} )\n-->";
-
-              return FALSE;
+          if ($this->turma_dia_semana){
+            // Cadastra dia semana
+            foreach ($this->turma_dia_semana as $campo) {
+              $obj = new clsPmieducarTurmaDiaSemana($campo["dia_semana_"],
+                $cadastrou, $campo["hora_inicial_"], $campo["hora_final_"]);
+  
+              $cadastrou2  = $obj->cadastra();
+  
+              if (!$cadastrou2) {
+                $this->mensagem = 'Cadastro não realizado.';
+                echo "<!--\nErro ao cadastrar clsPmieducarTurmaDiaSemana\nvalores obrigat&oacute;rios\nis_numeric( $cadastrou ) && is_numeric( {$campo["dia_semana_"]} ) && is_string( {$campo["hora_inicial_"]} ) && is_string( {$campo["hora_final_"]} )\n-->";
+  
+                return FALSE;
+              }
             }
           }
 
@@ -742,7 +743,7 @@ class indice extends clsCadastro
         return FALSE;
       }
 
-      echo '<script type="text/javascript">alert(stringUtils.toUtf8("É necessário adicionar pelo menos 1 módulo e 1 dia da semana!"))</script>';
+      echo '<script type="text/javascript">alert(stringUtils.toUtf8("É necessário adicionar pelo menos 1 módulo!"))</script>';
       $this->mensagem = Portabilis_String_utils::toLatin1("Cadastro não realizado.");
 
       return FALSE;
@@ -809,7 +810,7 @@ class indice extends clsCadastro
       $this->turma_modulo = unserialize(urldecode($this->turma_modulo));
       $this->turma_dia_semana = unserialize(urldecode($this->turma_dia_semana));
 
-      if ($this->turma_modulo && $this->turma_dia_semana) {
+      if ($this->turma_modulo) {
         $obj = new clsPmieducarTurma($this->cod_turma, $this->pessoa_logada, NULL,
           $this->ref_ref_cod_serie, $this->ref_cod_escola,
           $this->ref_cod_infra_predio_comodo, $this->nm_turma, $this->sgl_turma,
@@ -876,7 +877,7 @@ class indice extends clsCadastro
         }
       }
       else {
-        echo '<script type="text/javascript">alert(stringUtils.toUtf8("É necessário adicionar pelo menos 1 módulo e 1 dia da semana!"))</script>';
+        echo '<script type="text/javascript">alert(stringUtils.toUtf8("É necessário adicionar pelo menos 1 módulo!"))</script>';
         $this->mensagem = Portabilis_String_utils::toLatin1('Edição não realizada.');
 
         return FALSE;
@@ -1692,12 +1693,6 @@ function valida_xml(xml)
     if (qtdModulo == 1) {
       alert(stringUtils.toUtf8("ATENÇÃO!\nÉ necessário incluir um 'Módulo'!"));
       document.getElementById('ref_cod_modulo').focus();
-      return false;
-    }
-
-    if (qtdDiaSemana == 1) {
-      alert(stringUtils.toUtf8("ATENÇÂO! \n É necessário incluir um 'Dia da Semana'!"));
-      document.getElementById('dia_semana').focus();
       return false;
     }
   }
