@@ -191,6 +191,29 @@ class indice extends clsCadastro
     $sem_padrao               = TRUE;
     $get_curso                = TRUE;
 
+    $bloqueia = false;
+    $anoVisivel = false;
+    if (isset($this->ano) || !is_numeric($this->cod_turma)){
+      $anoVisivel=true;
+    }
+    if(! isset($this->cod_turma)){
+      $bloqueia = false;
+    }else{
+      if (is_numeric($this->cod_turma)) {
+        $obj_matriculas_turma = new clsPmieducarMatriculaTurma();
+        $obj_matriculas_turma->setOrderby('nome_aluno');
+        $lst_matriculas_turma = $obj_matriculas_turma->lista(NULL, $this->cod_turma,
+         NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL,
+         array(1, 2, 3), NULL, NULL, NULL, NULL, TRUE, NULL, 1, TRUE);
+
+        if (is_array($lst_matriculas_turma) && count($lst_matriculas_turma)>0) {
+            $bloqueia = true;
+        }
+      }
+    }
+
+    $desabilitado = $bloqueia;
+
     include 'include/pmieducar/educar_campo_lista.php';
 
     if ($this->ref_cod_escola) {
@@ -225,12 +248,14 @@ class indice extends clsCadastro
     }
 
     $this->campoLista('ref_ref_cod_serie', 'Série', $opcoes_serie, $this->ref_ref_cod_serie,
-      '', FALSE, '', $script);
+      '', FALSE, '', $script, $bloqueia);
 
     // o campo ano somente é exibido para turmas novas  ou cadastradas após inclusão deste campo.
-    if (! isset($this->cod_turma) || isset($this->ano))
-      $this->inputsHelper()->dynamic('anoLetivo');
-
+    if ($anoVisivel){
+      $this->inputsHelper()->dynamic('anoLetivo', array('disabled' => $bloqueia));
+      if($bloqueia)
+        $this->inputsHelper()->hidden('ano_hidden', array('value' => $this->ano));
+    }
     // Infra prédio cômodo
     $opcoes = array('' => 'Selecione');
 
@@ -788,6 +813,9 @@ class indice extends clsCadastro
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
+
+    if(is_numeric($this->ano_hidden))
+      $this->ano = $this->ano_hidden;
 
     $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
 
