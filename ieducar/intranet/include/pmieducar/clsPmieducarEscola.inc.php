@@ -523,6 +523,9 @@ class clsPmieducarEscola
     if (is_numeric($int_ativo)) {
       $filtros .= "{$whereAnd} ativo = '{$int_ativo}'";
       $whereAnd = " AND ";
+    }else{
+      $filtros .= "{$whereAnd} ativo = 1 ";
+      $whereAnd = " AND ";
     }
 
     if (is_string( $str_nome)) {
