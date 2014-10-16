@@ -361,14 +361,10 @@ class clsPmieducarMatriculaTurma
     $pegar_ano_em_andamento = FALSE, $parar=NULL)
   {
     if ($bool_get_nome_aluno === true) {
-      $nome = " ,(SELECT (nome)
-                        FROM cadastro.pessoa
-                           WHERE idpes = a.ref_idpes
-                    ) as nome_aluno";
-      $tab_aluno = ", {$this->_schema}aluno a";
-
-      $where_nm_aluno = " AND a.cod_aluno = m.ref_cod_aluno AND a.ativo=1";
+      $nome = " ,pessoa.nome as nome_aluno";            
     }
+    $tab_aluno = ", {$this->_schema}aluno a";
+    $where_nm_aluno = " AND a.cod_aluno = m.ref_cod_aluno AND a.ativo=1";
 
     if ( $bool_escola_andamento) {
       if ($pegar_ano_em_andamento) {
@@ -392,10 +388,10 @@ class clsPmieducarMatriculaTurma
       }
     }
 
-    $sql = "SELECT {$this->_campos_lista}, c.nm_curso, t.nm_turma, i.nm_instituicao, m.ref_ref_cod_serie, m.ref_cod_curso, m.ref_ref_cod_escola, c.ref_cod_instituicao, m.ref_cod_aluno,t.hora_inicial $nome FROM {$this->_tabela} mt, {$this->_schema}matricula m, {$this->_schema}curso c, {$this->_schema}turma t, {$this->_schema}instituicao i{$tab_aluno} {$from}";
+    $sql = "SELECT {$this->_campos_lista}, c.nm_curso, t.nm_turma, i.nm_instituicao, m.ref_ref_cod_serie, m.ref_cod_curso, m.ref_ref_cod_escola, c.ref_cod_instituicao, m.ref_cod_aluno,t.hora_inicial $nome FROM {$this->_tabela} mt, {$this->_schema}matricula m, {$this->_schema}curso c, {$this->_schema}turma t, {$this->_schema}instituicao i{$tab_aluno} {$from}, cadastro.pessoa ";
 
     $whereAnd = " AND ";
-    $filtros = " WHERE mt.ref_cod_matricula = m.cod_matricula AND m.ref_cod_curso = c.cod_curso AND t.cod_turma = mt.ref_cod_turma AND i.cod_instituicao = c.ref_cod_instituicao {$where_nm_aluno} {$where}";
+    $filtros = " WHERE mt.ref_cod_matricula = m.cod_matricula AND idpes = a.ref_idpes AND m.ref_cod_curso = c.cod_curso AND t.cod_turma = mt.ref_cod_turma AND i.cod_instituicao = c.ref_cod_instituicao {$where_nm_aluno} {$where}";
 
     if (is_numeric($int_ref_cod_matricula)) {
       $filtros .= "{$whereAnd} mt.ref_cod_matricula = '{$int_ref_cod_matricula}'";
@@ -578,7 +574,7 @@ class clsPmieducarMatriculaTurma
       die($sql);
     }
 
-    $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} mt, {$this->_schema}matricula m, {$this->_schema}curso c, {$this->_schema}turma t, {$this->_schema}instituicao i{$tab_aluno} {$from} {$filtros} {$where}");
+    $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} mt, cadastro.pessoa, {$this->_schema}matricula m, {$this->_schema}curso c, {$this->_schema}turma t, {$this->_schema}instituicao i{$tab_aluno} {$from} {$filtros} {$where}");
     $db->Consulta($sql);
 
     if ($countCampos > 1) {
