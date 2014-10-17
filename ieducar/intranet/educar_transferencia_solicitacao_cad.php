@@ -256,6 +256,7 @@ class indice extends clsCadastro
           			}
 				}
 			}
+			clsPmieducarHistoricoEscolar::gerarHistoricoTransferencia($this->ref_cod_matricula, $this->pessoa_logada);
 		}
 
 		$obj = new clsPmieducarTransferenciaSolicitacao( null, $this->ref_cod_transferencia_tipo, null, $this->pessoa_logada, null, $this->ref_cod_matricula, $this->observacao, null, null, $this->ativo, $this->data_transferencia );
