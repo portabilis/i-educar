@@ -34,6 +34,7 @@
 require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'lib/Portabilis/Controller/Page/EditController.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
+require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
 
 class AlunoController extends Portabilis_Controller_Page_EditController
 {
@@ -335,6 +336,23 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       'recurso_prova_inep_prova_ampliada_24' => array('label' => 'Necessita de prova ampliada? (Fonte 24)'),
 
       'recurso_prova_inep_prova_braille' => array('label' => 'Necessita de prova em Braille?'),
+      
+      'transporte_rota' => array(
+        'label'  => 'Rota',
+        'help'   => '',
+      ),
+      'transporte_ponto' => array(
+        'label'  => 'Ponto de embarque',
+        'help'   => '',
+      ),    
+      'transporte_destino' => array(
+        'label'  => 'Destino (Caso for diferente da rota)',
+        'help'   => '',
+      ),        
+      'transporte_observacao' => array(
+        'label'  => 'Observações',
+        'help'   => '',
+      )
 
   );
 
@@ -468,6 +486,34 @@ class AlunoController extends Portabilis_Controller_Page_EditController
                      'required'  => true);
 
     $this->inputsHelper()->select('tipo_transporte', $options);
+   
+    if ($this->getClsPermissoes()->permissao_cadastra( 21240, $this->getOption('id_usuario'), 8)){
+      
+      // Cria lista de rotas 
+      $obj_rota = new clsModulesRotaTransporteEscolar();
+      $obj_rota->setOrderBy(' descricao asc ');
+      $lista_rota = $obj_rota->lista();
+      $rota_resources = array("" => "Selecione uma rota" );
+      foreach ($lista_rota as $reg) {
+        $rota_resources["{$reg['cod_rota_transporte_escolar']}"] = "{$reg['descricao']}";
+      }
+      
+      // Transporte Rota
+      $options = array('label' =>Portabilis_String_Utils::toLatin1($this->_getLabel('transporte_rota')), 'required' => false, 'resources' => $rota_resources);
+      $this->inputsHelper()->select('transporte_rota',$options); 
+
+      // Ponto de Embarque
+      $options = array('label' =>Portabilis_String_Utils::toLatin1($this->_getLabel('transporte_ponto')), 'required' => false, 'resources' => array("" => "Selecione uma rota acima"));
+      $this->inputsHelper()->select('transporte_ponto',$options);     
+
+      // Transporte Destino
+      $options = array('label' =>Portabilis_String_Utils::toLatin1($this->_getLabel('transporte_destino')), 'required' => false);
+      $this->inputsHelper()->simpleSearchPessoaj('transporte_destino',$options); 
+
+      // Transporte observacoes
+      $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('transporte_observacao')), 'required' => false, 'size' => 50, 'max_length' => 255);
+      $this->inputsHelper()->textArea('transporte_observacao', $options);
+    }
 
 
     // religião
