@@ -608,6 +608,8 @@ function handleSearch($resultTable, dataResponse) {
     $j('#form_resultado select').removeAttr('disabled');
     $j('#form_resultado textarea').removeAttr('disabled');
   }
+
+  criaBotaoReplicarNotas();
 }
 
 function _notaField(matriculaId, componenteCurricularId, klass, id, value) {
@@ -946,6 +948,22 @@ function navegacaoTab(sentido){
             });
         });
     }
+}
+
+function criaBotaoReplicarNotas(){
+  if($j('.nota-matricula-cc').length > 1){
+    $j('<button/>').html('Replicar a todos')
+                   .attr('type','button')
+                   .attr('id','replicar-todas-notas')
+                   .addClass('submit')
+                   .appendTo($j('<p/>').insertAfter($j('.nota-matricula-cc')
+                                       .first()))
+                   .unbind();
+    $j('#replicar-todas-notas').on('click', function(){
+      $j('.nota-matricula-cc').val($j('.nota-matricula-cc').first().val())
+                                   .trigger('change');
+    });
+  }
 }
 
 (function($) {
