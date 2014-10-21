@@ -108,7 +108,7 @@ $j('#tab1').addClass('alunoTab-active').removeClass('alunoTab');
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
 $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-  if (index>17){
+  if (index> $j('#tr_alfabetizado').index() - 1 ){
     if (row.id!='stop')
       row.hide();
     else
@@ -499,6 +499,20 @@ resourceOptions.handleGet = function(dataResponse) {
   $j('#moradia_situacao').val(dataResponse.moradia_situacao).change();
   $j('#justificativa_falta_documentacao').val(dataResponse.justificativa_falta_documentacao).change();
 
+
+  // Transporte escolar
+
+  if($j('#transporte_rota').length > 0){
+    valPonto = dataResponse.ref_cod_ponto_transporte_escolar;
+    $j('#transporte_rota').val(dataResponse.ref_cod_rota_transporte_escolar);
+    chamaGetPonto();
+
+    $j('#transporte_observacao').val(dataResponse.observacao); 
+    if (dataResponse.ref_idpes_destino){
+      $j('#pessoaj_transporte_destino').val(dataResponse.ref_idpes_destino+' - '+dataResponse.nome_destino);  
+      $j('#pessoaj_id').val(dataResponse.ref_idpes_destino);    
+    }
+  }
 };
 
 
@@ -935,7 +949,7 @@ function canShowParentsFields(){
         $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
         $j('#tab1').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-          if (index>17){
+          if (index> $j('#tr_alfabetizado').index() - 1){
             if (row.id!='stop')
               row.hide();
             else
@@ -944,6 +958,9 @@ function canShowParentsFields(){
             row.show();
           }
         });
+        if (typeof camposTransporte == 'function') { 
+          camposTransporte(); 
+        }
       }
     );
 
@@ -955,7 +972,7 @@ function canShowParentsFields(){
         $j('#tab2').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index>17 && index<64){
+            if (index> $j('#tr_alfabetizado').index() - 1 && index < $j('#tr_responsavel_parentesco_celular').index() - 1){
               if (first_click_medica)
                 $j('#'+row.id).find('td').toggleClass('formlttd formmdtd');
               row.show();
@@ -980,7 +997,7 @@ function canShowParentsFields(){
         $j('#tab3').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index>63 && index<86){
+            if (index> $j('#tr_responsavel_parentesco_celular').index() - 1 && index < $j('#tr_tamanho_blusa_jaqueta').index()){
               if (first_click_uniforme)
                 $j('#'+row.id).find('td').toggleClass('formlttd formmdtd');
               row.show();
@@ -1001,7 +1018,7 @@ function canShowParentsFields(){
         $j('#tab4').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index>85 &&index<113){
+            if (index> $j('#tr_tamanho_blusa_jaqueta').index() - 1 &&index < $j('#tr_lixo').index()){
               if (first_click_moradia)
                 $j('#'+row.id).find('td').toggleClass('formlttd formmdtd');
 
@@ -1022,7 +1039,7 @@ function canShowParentsFields(){
         $j('#tab5').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index>=113 &&index<122){
+            if (index>= $j('#tr_lixo').index() - 1 &&index < $j('#tr_recurso_prova_inep_prova_braille').index()){
               row.show();
             }else if(index!=0){
               row.hide();
@@ -1039,7 +1056,7 @@ function canShowParentsFields(){
         $j('#tab6').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index>=123 &&index<124){
+            if (index>= $j('#tr_recurso_prova_inep_prova_braille').index() && index < $j('#tr_recurso_prova_inep_prova_braille').index() + 1){
               row.show();
             }else if(index!=0){
               row.hide();
@@ -1596,3 +1613,79 @@ var $addProjetoButton = $j('#btn_add_tab_add_1');
 $addProjetoButton.click(function(){
   setAutoComplete();
 });
+
+// TRANSPORTE ESCOLAR
+if($j('#transporte_rota').length > 0){
+
+  $j('#transporte_rota').on('change', function()
+  {
+    chamaGetPonto();
+  });
+
+  var valPonto = 0;
+
+  function chamaGetPonto(){
+
+    var campoRota = $j('#transporte_rota').val();
+    var campoPonto= document.getElementById('transporte_ponto');
+
+    if (campoRota==''){
+      campoPonto.length = 1;
+      campoPonto.options[0].text = 'Selecione uma rota acima';
+
+    }else{
+      
+      campoPonto.length = 1;
+      campoPonto.disabled = true;
+      campoPonto.options[0].text = 'Carregando pontos...';
+      
+      var xml_ponto = new ajax( getPonto );
+      xml_ponto.envia( "ponto_xml.php?rota="+campoRota ); 
+    }
+  }
+
+  function getPonto( xml_ponto )
+  {
+    var campoPonto = document.getElementById('transporte_ponto');
+    var DOM_array = xml_ponto.getElementsByTagName( "ponto" );
+
+    if(DOM_array.length)
+    {
+      campoPonto.length = 1;
+      campoPonto.options[0].text = 'Selecione um ponto';
+      campoPonto.disabled = false;
+
+      for( var i = 0; i < DOM_array.length; i++ )
+      {
+        campoPonto.options[campoPonto.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_ponto"),false,false);
+      }
+      $j('#transporte_ponto').val(valPonto);
+    }
+    else
+      campoPonto.options[0].text = 'Rota sem pontos';
+
+  }
+
+  function camposTransporte(){
+    $tipoTransporte = $j('#tipo_transporte');
+    if ($tipoTransporte.val() == 'municipal' || $tipoTransporte.val() == 'estadual'){
+      $j('#transporte_rota').closest('tr').show();
+      $j('#transporte_ponto').closest('tr').show();
+      $j('#pessoaj_transporte_destino').closest('tr').show();
+      $j('#transporte_observacao').closest('tr').show();
+    }else{
+      $j('#transporte_rota').closest('tr').hide();
+      $j('#transporte_ponto').closest('tr').hide();
+      $j('#pessoaj_transporte_destino').closest('tr').hide();
+      $j('#transporte_observacao').closest('tr').hide();
+    }
+  }
+
+  setTimeout(function(){
+    camposTransporte();
+  }, 1000);
+
+  $j('#tipo_transporte').on('change', function(){
+    camposTransporte();
+  });
+}

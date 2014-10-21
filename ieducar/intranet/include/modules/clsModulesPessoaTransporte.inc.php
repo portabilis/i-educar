@@ -385,10 +385,10 @@ class clsModulesPessoaTransporte
   function detalhe()
   {
 
-    if (is_numeric($this->cod_pessoa_transporte)) {
+    if (is_numeric($this->cod_pessoa_transporte) || is_numeric($this->ref_idpes)) {
 
       $db = new clsBanco();
-      $db->Consulta("SELECT {$this->_todos_campos}, (
+      $sql = "SELECT {$this->_todos_campos}, (
           SELECT
             nome
           FROM
@@ -423,7 +423,14 @@ class clsModulesPessoaTransporte
             cadastro.pessoa p, modules.rota_transporte_escolar rt
           WHERE
             p.idpes = rt.ref_idpes_destino and ref_cod_rota_transporte_escolar = rt.cod_rota_transporte_escolar
-         ) AS nome_destino2 FROM {$this->_tabela} WHERE cod_pessoa_transporte = '{$this->cod_pessoa_transporte}'");
+         ) AS nome_destino2 FROM {$this->_tabela} WHERE ";
+      
+      if(is_numeric($this->cod_pessoa_transporte))
+        $sql .= " cod_pessoa_transporte = '{$this->cod_pessoa_transporte}'";
+      else
+        $sql .= " ref_idpes = '{$this->ref_idpes}' ORDER BY cod_pessoa_transporte DESC LIMIT 1 ";
+
+      $db->Consulta($sql);
       $db->ProximoRegistro();
       return $db->Tupla();
     }
