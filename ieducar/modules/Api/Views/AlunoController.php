@@ -45,6 +45,7 @@ require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/Date/Utils.php';
+require_once 'include/modules/clsModulesPessoaTransporte.inc.php';
 
 require_once 'Transporte/Model/Responsavel.php';
 
@@ -914,6 +915,15 @@ protected function createOrUpdateUniforme($id) {
         $aluno = Portabilis_Array_Utils::merge($objMoradia,$aluno);
       }
 
+      $objPessoaTransporte           = new clsModulesPessoaTransporte(NULL, NULL, $aluno['pessoa_id']);
+      $objPessoaTransporte = $objPessoaTransporte->detalhe();
+      if ($objPessoaTransporte){
+        foreach ($objPessoaTransporte as $chave => $value) {
+          $objPessoaTransporte[$chave]  = Portabilis_String_Utils::toUtf8($value);
+        }
+        $aluno = Portabilis_Array_Utils::merge($objPessoaTransporte,$aluno);
+      }
+
       $sql = "select sus from cadastro.fisica where idpes = $1";
       $camposFisica = $this->fetchPreparedQuery($sql, $aluno['pessoa_id'], false, 'first-row');
       $aluno['sus'] = $camposFisica['sus'];
@@ -1165,6 +1175,7 @@ protected function createOrUpdateUniforme($id) {
         $this->createOrUpdateUniforme($id);
         $this->createOrUpdateMoradia($id);
         $this->saveProjetos($id);
+        $this->createOrUpdatePessoaTransporte($pessoaId);
 
         $this->messenger->append('Cadastrado realizado com sucesso', 'success', false, 'error');
       }
@@ -1192,6 +1203,7 @@ protected function createOrUpdateUniforme($id) {
       $this->createOrUpdateUniforme($id);
       $this->createOrUpdateMoradia($id);
       $this->saveProjetos($id);
+      $this->createOrUpdatePessoaTransporte($pessoaId);
 
       $this->messenger->append('Cadastro alterado com sucesso', 'success', false, 'error');
     }
@@ -1199,6 +1211,24 @@ protected function createOrUpdateUniforme($id) {
       $this->messenger->append('Aparentemente o cadastro não pode ser alterado, por favor, verifique.',
                                'error', false, 'error');
     return array('id' => $id);
+  }
+
+  protected function createOrUpdatePessoaTransporte($ref_idpes){
+    
+    $pt                          = new clsModulesPessoaTransporte(NULL, NULL, $ref_idpes);
+    $det = $pt->detalhe();
+
+    $id = $det['cod_pessoa_transporte'];
+
+    $pt                          = new clsModulesPessoaTransporte($id);
+    // após cadastro não muda mais id pessoa
+    $pt->ref_idpes               = $ref_idpes; 
+    $pt->ref_idpes_destino       = $this->getRequest()->pessoaj_id; 
+    $pt->ref_cod_ponto_transporte_escolar       = $this->getRequest()->transporte_ponto; 
+    $pt->ref_cod_rota_transporte_escolar       = $this->getRequest()->transporte_rota; 
+    $pt->observacao                     = Portabilis_String_Utils::toLatin1($this->getRequest()->transporte_observacao);
+
+    return (is_null($id) ? $pt->cadastra() : $pt->edita());
   }
 
 

@@ -72,8 +72,6 @@ class indice extends clsCadastro
 		@session_write_close();
 
 		$this->ref_cod_matricula = $_GET["ref_cod_matricula"];
-		if(!$this->ref_cod_matricula)
-			header("location: educar_matricula_lst.php");
 
 		$obj_permissoes = new clsPermissoes();
 
@@ -117,32 +115,25 @@ class indice extends clsCadastro
 			}
 		}
 
-			if( class_exists( "clsPmieducarMatricula" ) )
-			{
-				$obj_ref_cod_matricula = new clsPmieducarMatricula();
-				$detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
-			}
-			else
-			{
-				$registro["ref_cod_matricula"] = "Erro na geracao";
-				echo "<!--\nErro\nClasse nao existente: clsPmieducarMatricula\n-->";
-			}
+		if( class_exists( "clsPmieducarMatricula" ) && is_numeric($this->ref_cod_matricula))
+		{
+			$obj_ref_cod_matricula = new clsPmieducarMatricula();
+			$detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
 			$this->ref_cod_escola = $detalhe_aluno['ref_ref_cod_escola'];
-
 			$obj_escola = new clsPmieducarEscola($this->ref_cod_escola);
 			$det_escola = $obj_escola->detalhe();
 			$this->ref_cod_instituicao = $det_escola['ref_cod_instituicao'];
+		}
 
-
-
-		$this->url_cancelar = ($retorno == "Editar") ? "educar_matricula_ocorrencia_disciplinar_det.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_tipo_ocorrencia_disciplinar={$registro["ref_cod_tipo_ocorrencia_disciplinar"]}&sequencial={$registro["sequencial"]}" : "educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}";
+		if (is_numeric($this->ref_cod_matricula))
+			$this->url_cancelar = ($retorno == "Editar") ? "educar_matricula_ocorrencia_disciplinar_det.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_tipo_ocorrencia_disciplinar={$registro["ref_cod_tipo_ocorrencia_disciplinar"]}&sequencial={$registro["sequencial"]}" : "educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}";
 		
 		$nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
         $localizacao = new LocalizacaoSistema();
         $localizacao->entradaCaminhos( array(
              $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
              "educar_index.php"                  => "i-Educar - Escola",
-             ""        => "{$nomeMenu} ocorr&ecirc;ncia disciplinar da matr&iacute;cula"             
+             ""        => "{$nomeMenu} ocorr&ecirc;ncia disciplinar para matr&iacute;cula"             
         ));
         $this->enviaLocalizacao($localizacao->montar());
 
@@ -153,28 +144,22 @@ class indice extends clsCadastro
 	function Gerar()
 	{
 		/**
-		 * Busca nome do aluno
+		 * Busca infos aluno
 		 */
-			if( class_exists( "clsPmieducarMatricula" ) )
-			{
-				$obj_ref_cod_matricula = new clsPmieducarMatricula();
-				$detalhe_aluno = $obj_ref_cod_matricula->lista($this->ref_cod_matricula);
-				if($detalhe_aluno)
-					$detalhe_aluno = array_shift($detalhe_aluno);
-			}
-			else
-			{
-				$registro["ref_cod_matricula"] = "Erro na geracao";
-				echo "<!--\nErro\nClasse nao existente: clsPmieducarMatricula\n-->";
-			}
-
+		if( class_exists( "clsPmieducarMatricula" ) && is_numeric($this->ref_cod_matricula))
+		{
+			$obj_ref_cod_matricula = new clsPmieducarMatricula();
+			$detalhe_aluno = $obj_ref_cod_matricula->lista($this->ref_cod_matricula);
+			if($detalhe_aluno)
+				$detalhe_aluno = array_shift($detalhe_aluno);
 			$obj_aluno = new clsPmieducarAluno();
 			$det_aluno = array_shift($det_aluno = $obj_aluno->lista($detalhe_aluno['ref_cod_aluno'],null,null,null,null,null,null,null,null,null,1));
 
-			$this->campoRotulo("nm_pessoa","Nome do Aluno",$det_aluno['nome_aluno']);
-		/**
-		 *
-		 */
+			$this->campoRotulo("nm_pessoa","Nome do Aluno",$det_aluno['nome_aluno']);				
+		}else{
+			$this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
+			$this->inputsHelper()->simpleSearchMatricula();
+		}
 
 		// primary keys
 		$this->campoOculto( "ref_cod_matricula", $this->ref_cod_matricula );
@@ -256,6 +241,8 @@ class indice extends clsCadastro
 
 		$this->visivel_pais = is_null($this->visivel_pais) ? 0 : 1;
 
+		$this->ref_cod_matricula = is_numeric($this->ref_cod_matricula) ? $this->ref_cod_matricula : $this->getRequest()->matricula_id;
+
 		$obj = new clsPmieducarMatriculaOcorrenciaDisciplinar( $this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, null, $this->pessoa_logada, $this->pessoa_logada, $this->observacao, $this->getDataHoraCadastro(), $this->data_exclusao, $this->ativo, $this->visivel_pais);
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
@@ -281,6 +268,8 @@ class indice extends clsCadastro
 		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_matricula_ocorrencia_disciplinar_lst.php" );
 
 		$this->visivel_pais = is_null($this->visivel_pais) ? 0 : 1;
+
+		$this->ref_cod_matricula = is_numeric($this->ref_cod_matricula) ? $this->ref_cod_matricula : $this->getRequest()->matricula_id;
 
     	$obj = new clsPmieducarMatriculaOcorrenciaDisciplinar($this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, $this->sequencial, $this->pessoa_logada, $this->pessoa_logada, $this->observacao, $this->getDataHoraCadastro(), $this->data_exclusao, $this->ativo, $this->visivel_pais);
 		$editou = $obj->edita();

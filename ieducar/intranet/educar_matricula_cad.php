@@ -486,7 +486,9 @@ class indice extends clsCadastro
               if ($det_matricula['aprovado']=3){
                 $db->Consulta(" SELECT modules.copia_notas_transf({$det_matricula['cod_matricula']},{$cod_matricula})");
               }
-            
+              
+              // Criar histórico de transferencia
+              clsPmieducarHistoricoEscolar::gerarHistoricoTransferencia($det_matricula['cod_matricula'], $this->pessoa_logada);
 
               // Caso a solicitação seja para uma mesma série
               if ($det_matricula['ref_ref_cod_serie'] == $this->ref_cod_serie) {

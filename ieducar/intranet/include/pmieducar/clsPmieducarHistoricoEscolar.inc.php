@@ -1044,5 +1044,94 @@ class clsPmieducarHistoricoEscolar
 		return false;
 	}
 
+	public static function gerarHistoricoTransferencia($ref_cod_matricula, $pessoa_logada){
+
+	
+		$detMatricula = self::dadosMatricula($ref_cod_matricula);
+
+		if(self::deveGerarHistorico($detMatricula['ref_cod_instituicao'])){
+			$dadosEscola = self::dadosEscola($detMatricula['ref_ref_cod_escola'], $detMatricula['ref_cod_instituicao']);
+
+			$grade_curso_id = strpos($detMatricula['nome_curso'],'8') !== false ? 1 : 2;
+
+	        $historicoEscolar =  new clsPmieducarHistoricoEscolar(
+	                              $detMatricula['ref_cod_aluno'],
+	                              $sequencial = NULL,
+	                              $ref_usuario_exc = NULL,
+	                              $ref_usuario_cad = $pessoa_logada,
+	                              $detMatricula['nome_serie'],
+	                              $detMatricula['ano'],
+	                              800,
+	                              NULL,
+	                              mb_strtoupper($dadosEscola['nome']),
+	                              mb_strtoupper($dadosEscola['cidade']),
+	                              $dadosEscola['uf'],
+	                              '',
+	                              4,
+	                              $data_cadastro = date('Y-m-d'),
+	                              $data_exclusao = NULL,
+	                              $ativo = 1,
+	                              NULL,
+	                              $detMatricula['ref_cod_instituicao'],
+	                              $origem = '',
+	                              NULL,
+	                              $ref_cod_matricula,
+	                              '',
+	                              '',
+	                              '',
+	                              '',
+	                              $detMatricula['nome_curso'],
+	                              $grade_curso_id
+	                            );
+
+	        return $historicoEscolar->cadastra();
+	    }
+	    return false;
+	}
+
+	protected static function dadosMatricula($ref_cod_matricula){
+	    $sql = "SELECT m.ref_cod_aluno, nm_serie as nome_serie, m.ano, m.ref_ref_cod_escola, c.ref_cod_instituicao, c.nm_curso as nome_curso
+			FROM pmieducar.matricula m
+			INNER JOIN pmieducar.serie s ON m.ref_ref_cod_serie = s.cod_serie
+			INNER JOIN pmieducar.curso c ON m.ref_cod_curso = c.cod_curso
+			WHERE m.cod_matricula = {$ref_cod_matricula}";
+		$db = new clsBanco();
+		$db->Consulta($sql);
+		$db->ProximoRegistro();
+		return $db->Tupla();
+	}	
+
+	protected static function dadosEscola($cod_escola, $cod_instituicao){
+	    $sql = "select
+
+            (select pes.nome from pmieducar.escola esc, cadastro.pessoa pes
+            where esc.ref_cod_instituicao = {$cod_instituicao} and esc.cod_escola = {$cod_escola}
+            and pes.idpes = esc.ref_idpes) as nome,
+
+            (select coalesce((select coalesce((select municipio.nome from public.municipio,
+            cadastro.endereco_pessoa, cadastro.juridica, public.bairro, pmieducar.escola
+            where endereco_pessoa.idbai = bairro.idbai and bairro.idmun = municipio.idmun and
+            juridica.idpes = endereco_pessoa.idpes and juridica.idpes = escola.ref_idpes and
+            escola.cod_escola = {$cod_escola}),(select endereco_externo.cidade from cadastro.endereco_externo,
+            pmieducar.escola where endereco_externo.idpes = escola.ref_idpes and escola.cod_escola = {$cod_escola}))),
+            (select municipio from pmieducar.escola_complemento where ref_cod_escola = {$cod_escola}))) as cidade,
+
+            (select coalesce((select coalesce((select municipio.sigla_uf from public.municipio,
+            cadastro.endereco_pessoa, cadastro.juridica, public.bairro, pmieducar.escola
+            where endereco_pessoa.idbai = bairro.idbai and bairro.idmun = municipio.idmun and
+            juridica.idpes = endereco_pessoa.idpes and juridica.idpes = escola.ref_idpes and
+            escola.cod_escola = {$cod_escola}),(select endereco_externo.sigla_uf from cadastro.endereco_externo,
+            pmieducar.escola where endereco_externo.idpes = escola.ref_idpes and escola.cod_escola = {$cod_escola}))),
+            (select inst.ref_sigla_uf from pmieducar.instituicao inst where inst.cod_instituicao = {$cod_instituicao}))) as uf";
+		$db = new clsBanco();
+		$db->Consulta($sql);
+		$db->ProximoRegistro();
+		return $db->Tupla();
+	}
+
+	protected static function deveGerarHistorico($cod_instituicao){
+		$db = new clsBanco();
+		return dbBool($db->campoUnico("select gerar_historico_transferencia FROM pmieducar.instituicao WHERE cod_instituicao = {$cod_instituicao};"));
+	}
 }
 ?>
