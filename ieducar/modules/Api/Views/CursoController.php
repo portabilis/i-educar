@@ -52,7 +52,7 @@ class CursoController extends ApiCoreController
         if(is_array($escolaId))
           $escolaId = implode(",", $escolaId);
 
-        $sql = "SELECT c.cod_curso, c.nm_curso
+        $sql = "SELECT DISTINCT c.cod_curso, c.nm_curso
                   FROM pmieducar.curso c
                   INNER JOIN pmieducar.escola_curso ec ON ec.ref_cod_curso = c.cod_curso
                   WHERE c.ativo = 1
