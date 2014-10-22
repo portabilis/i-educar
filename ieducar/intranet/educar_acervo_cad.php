@@ -1,5 +1,6 @@
 <?php
-
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
 	*	@author Prefeitura Municipal de Itajaí								 *
@@ -257,154 +258,22 @@ class indice extends clsCadastro
 
 
 		//-----------------------INCLUI AUTOR------------------------//
-		$this->campoQuebra();
 
-		if ( $_POST["acervo_autor"] )
-			$this->acervo_autor = unserialize( urldecode( $_POST["acervo_autor"] ) );
-		if( is_numeric( $this->cod_acervo ) && !$_POST )
-		{
-			$obj = new clsPmieducarAcervoAcervoAutor();
-			$registros = $obj->lista( null, $this->cod_acervo );
-			if( $registros )
-			{
-				foreach ( $registros AS $campo )
-				{
-					$aux["ref_cod_acervo_autor_"]= $campo["ref_cod_acervo_autor"];
-					$aux["principal_"]= $campo["principal"];
-					$this->acervo_autor[] = $aux;
-				}
-
-				// verifica se ja existe um autor principal
-				if ( is_array($this->acervo_autor) )
-				{
-					foreach ($this->acervo_autor AS $autores)
-					{
-						if ($autores["principal_"] == 1)
-						{
-							$this->checked = 1;
-							$this->campoOculto( "checked", $this->checked );
-						}
-					}
-				}
-			}
-		}
-
-		unset($aux);
-
-		if ( $_POST["ref_cod_acervo_autor"] )
-		{
-			if ( $_POST["principal"] )
-			{
-				$this->checked = 1;
-				$this->campoOculto( "checked", $this->checked );
-			}
-			$aux["ref_cod_acervo_autor_"] = $_POST["ref_cod_acervo_autor"];
-			$aux["principal_"] = $_POST["principal"];
-			$this->acervo_autor[] = $aux;
-
-//			echo "<pre>";print_r($this->acervo_autor);
-
-			// verifica se ja existe um autor principal
-			if ( is_array($this->acervo_autor) )
-			{
-				foreach ($this->acervo_autor AS $autores)
-				{
-					if ($autores["principal_"] == 'on')
-					{
-						$this->checked = 1;
-						$this->campoOculto( "checked", $this->checked );
-					}
-				}
-			}
-			unset( $this->ref_cod_acervo_autor );
-			unset( $this->principal );
-		}
-
-		$this->campoOculto( "excluir_autor", "" );
-		unset($aux);
-
-		if ( $this->acervo_autor )
-		{
-			foreach ( $this->acervo_autor as $key => $autor)
-			{
-				if ( $this->excluir_autor == $autor["ref_cod_acervo_autor_"] )
-				{
-					unset($this->acervo_autor[$key]);
-					unset($this->excluir_autor);
-				}
-				else
-				{
-					$obj_acervo_autor = new clsPmieducarAcervoAutor($autor["ref_cod_acervo_autor_"]);
-					$det_acervo_autor = $obj_acervo_autor->detalhe();
-					$nm_autor = $det_acervo_autor["nm_autor"];
-					$this->campoTextoInv( "ref_cod_exemplar_tipo_{$autor["ref_cod_acervo_autor_"]}", "", $nm_autor, 30, 255, false, false, true );
-					$this->campoCheck( "principal_{$autor["ref_cod_acervo_autor_"]}", "", $autor['principal_'], "<a href='#' onclick=\"getElementById('excluir_autor').value = '{$autor["ref_cod_acervo_autor_"]}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>", false, false, false );
-					$aux["ref_cod_acervo_autor_"] = $autor["ref_cod_acervo_autor_"];
-					$aux["principal_"] = $autor['principal_'];
-				}
-			}
-		}
-		$this->campoOculto( "acervo_autor", serialize( $this->acervo_autor ) );
-
-		if( class_exists( "clsPmieducarAcervoAutor" ) )
-		{
-			$opcoes = array( "" => "Selecione" );
-			$objTemp = new clsPmieducarAcervoAutor();
-			$objTemp->setOrderby("nm_autor ASC");
-			$lista = $objTemp->lista(null,null,null,null,null,null,null,null,null,1);
-			if ( is_array( $lista ) && count( $lista ) )
-			{
-				foreach ( $lista as $registro )
-				{
-					$opcoes["{$registro['cod_acervo_autor']}"] = "{$registro['nm_autor']}";
-				}
-			}
-		}
-		else
-		{
-			echo "<!--\nErro\nClasse clsPmieducarAcervoAutor n&atilde;o encontrada\n-->";
-			$opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
-		}
-		if ( is_array($this->acervo_autor) )
-		{
-			$qtd_autor = count($this->acervo_autor);
-		}
-		// não existe um autor principal nem autor
-		if ( ($this->checked != 1) && ( !$qtd_autor || ($qtd_autor == 0) ) )
-		{
-//			die("1");
-			$this->campoLista( "ref_cod_acervo_autor", "Autor", $opcoes, $this->ref_cod_acervo_autor,null,true,"","",false,true );
-
-		 	$this->campoCheck( "principal", "&nbsp;&nbsp;<img id='img_autor' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(500, 250,'educar_acervo_autor_cad_pop.php',[], 'Autor')\" />", $this->principal,"<a href='#' onclick=\"getElementById('incluir_autor').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>" );
-		}
-		// não existe um autor principal, mas existe um autor
-		else if ( ($this->checked != 1) && ($qtd_autor > 0) )
-		{
-			$this->campoLista( "ref_cod_acervo_autor", "Autor", $opcoes, $this->ref_cod_acervo_autor,null,true,null, null,null,false);
-		 	$this->campoCheck( "principal", "&nbsp;&nbsp;<img src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"pesquisa_valores_popless( 'educar_acervo_autor_cad_pop.php' )\" />", $this->principal,"<a href='#' onclick=\"getElementById('incluir_autor').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>" );
-		}
-		// existe um autor principal
-		else
-		{
-//			die("3");
-			$this->campoLista( "ref_cod_acervo_autor", "Autor", $opcoes, $this->ref_cod_acervo_autor,"",false,"","<img src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"pesquisa_valores_popless( 'educar_acervo_autor_cad_pop.php' )\" />&nbsp;&nbsp;<a href='#' onclick=\"getElementById('incluir_autor').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>",false,false);
-		}
-
-		$this->campoOculto( "incluir_autor", "" );
-
-		$this->campoQuebra();
-		//-----------------------FIM AUTOR------------------------//
+		$helperOptions = array('objectName' => 'autores');
+    	$options       = array('label' => 'Autores', 'size' => 50, 'required' => false,
+                           'options' => array('value' => null));
+		$this->inputsHelper()->multipleSearchAutores('', $options, $helperOptions);
 
 		// text
 		$this->campoTexto( "titulo", "T&iacute;tulo", $this->titulo, 40, 255, true );
 		$this->campoTexto( "sub_titulo", "Subt&iacute;tulo", $this->sub_titulo, 40, 255, false );
 		$this->campoTexto( "estante", "Estante", $this->estante, 20, 15, false );
 
-   		$helperOptions = array('objectName' => 'assuntos');
-    	$options       = array('label' => 'Assuntos', 'size' => 50, 'required' => false,
-                           'options' => array('value' => null));
+ 		$helperOptions = array('objectName' => 'assuntos');
+  	$options       = array('label' => 'Assuntos', 'size' => 50, 'required' => false,
+                            'options' => array('value' => null));
 
-   		$this->inputsHelper()->multipleSearchAssuntos('', $options, $helperOptions);
+ 		$this->inputsHelper()->multipleSearchAssuntos('', $options, $helperOptions);
 
 		$this->campoTexto( "cdd", "CDD", $this->cdd, 20, 15, false );
 		$this->campoTexto( "cdu", "CDU", $this->cdu, 20, 15, false );
@@ -425,43 +294,26 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 598, $this->pessoa_logada, 11,  "educar_acervo_lst.php" );
 
-		$this->acervo_autor = unserialize( urldecode( $this->acervo_autor ) );
-		if ($this->acervo_autor)
-		{
-			$obj = new clsPmieducarAcervo( null, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo, null, $this->pessoa_logada, $this->ref_cod_acervo_colecao, $this->ref_cod_acervo_idioma, $this->ref_cod_acervo_editora, $this->titulo, $this->sub_titulo, $this->cdu, $this->cutter, $this->volume, $this->num_edicao, $this->ano, $this->num_paginas, $this->isbn, null, null, 1, $this->ref_cod_biblioteca, $this->cdd, $this->estante );
-			$cadastrou = $obj->cadastra();
-			if( $cadastrou )
-			{			
-				#cadastra assuntos para a obra
-				$this->gravaAssuntos($cadastrou);
-
-				//-----------------------CADASTRA AUTOR------------------------//
-				foreach ( $this->acervo_autor AS $autor )
-				{
-          			$autorPrincipal = $_POST["principal_{$autor['ref_cod_acervo_autor_']}"];
-         			$autor["principal_"] = is_null($autorPrincipal) ? 0 : 1;
-
-					$obj = new clsPmieducarAcervoAcervoAutor( $autor["ref_cod_acervo_autor_"], $cadastrou, $autor["principal_"] );
-					$cadastrou2  = $obj->cadastra();
-					if ( !$cadastrou2 )
-					{
-						$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-						echo "<!--\nErro ao cadastrar clsPmieducarAcervoAcervoAutor\nvalores obrigat&oacute;rios\nis_numeric( $cadastrou ) && is_numeric( {$autor["ref_cod_acervo_autor_"]} ) && is_numeric( {$autor["principal_"]} )\n-->";
-						return false;
-					}
-				}
-				$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-				header( "Location: educar_acervo_lst.php" );
-				die();
-				return true;
-			//-----------------------FIM CADASTRA AUTOR------------------------//
-			}
-			$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-			echo "<!--\nErro ao cadastrar clsPmieducarAcervo\nvalores obrigatorios\nis_numeric( $this->ref_cod_exemplar_tipo ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_cod_acervo_colecao ) && is_numeric( $this->ref_cod_acervo_idioma ) && is_numeric( $this->ref_cod_acervo_editora ) && is_string( $this->titulo ) && is_numeric( $this->volume ) && is_numeric( $this->num_edicao ) && is_numeric( $this->ano ) && is_numeric( $this->num_paginas ) && is_numeric( $this->isbn )\n-->";
+		if (!is_array($this->getRequest()->autores) || count($this->getRequest()->autores) == 1){
+			$this->mensagem = "&Eacute; necess&aacute;rio informar ao menos um autor.<br>";
 			return false;
 		}
-		echo "<script> alert('É necessário adicionar pelo menos 1 Autor') </script>";
+
+		$obj = new clsPmieducarAcervo( null, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo, null, $this->pessoa_logada, $this->ref_cod_acervo_colecao, $this->ref_cod_acervo_idioma, $this->ref_cod_acervo_editora, $this->titulo, $this->sub_titulo, $this->cdu, $this->cutter, $this->volume, $this->num_edicao, $this->ano, $this->num_paginas, $this->isbn, null, null, 1, $this->ref_cod_biblioteca, $this->cdd, $this->estante );
+		$cadastrou = $obj->cadastra();
+		if( $cadastrou )
+		{			
+			#cadastra assuntos para a obra
+			$this->gravaAssuntos($cadastrou);
+			$this->gravaAutores($cadastrou);
+			
+			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
+			header( "Location: educar_acervo_lst.php" );
+			die();
+			return true;
+		}
 		$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+		echo "<!--\nErro ao cadastrar clsPmieducarAcervo\nvalores obrigatorios\nis_numeric( $this->ref_cod_exemplar_tipo ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_cod_acervo_colecao ) && is_numeric( $this->ref_cod_acervo_idioma ) && is_numeric( $this->ref_cod_acervo_editora ) && is_string( $this->titulo ) && is_numeric( $this->volume ) && is_numeric( $this->num_edicao ) && is_numeric( $this->ano ) && is_numeric( $this->num_paginas ) && is_numeric( $this->isbn )\n-->";
 		return false;
 	}
 
@@ -474,50 +326,27 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 598, $this->pessoa_logada, 11,  "educar_acervo_lst.php" );
 
-		$this->acervo_autor = unserialize( urldecode( $this->acervo_autor ) );
-		if ($this->acervo_autor)
-		{
-			$obj = new clsPmieducarAcervo($this->cod_acervo, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo, $this->pessoa_logada, null, $this->ref_cod_acervo_colecao, $this->ref_cod_acervo_idioma, $this->ref_cod_acervo_editora, $this->titulo, $this->sub_titulo, $this->cdu, $this->cutter, $this->volume, $this->num_edicao, $this->ano, $this->num_paginas, $this->isbn, null, null, 1, $this->ref_cod_biblioteca, $this->cdd, $this->estante);
-			$editou = $obj->edita();
-			if( $editou )
-			{
-
-				#cadastra assuntos para a obra
-				$this->gravaAssuntos($this->cod_acervo);
-
-				//-----------------------EDITA AUTOR------------------------//
-
-				$obj  = new clsPmieducarAcervoAcervoAutor( null, $this->cod_acervo );
-				$excluiu = $obj->excluirTodos();
-				if ( $excluiu )
-				{
-					foreach ( $this->acervo_autor AS $autor )
-					{
-            $autorPrincipal = $_POST["principal_{$autor['ref_cod_acervo_autor_']}"];
-            $autor["principal_"] = is_null($autorPrincipal) ? 0 : 1;
-
-						$obj = new clsPmieducarAcervoAcervoAutor( $autor["ref_cod_acervo_autor_"], $this->cod_acervo, $autor["principal_"] );
-						$cadastrou2  = $obj->cadastra();
-						if ( !$cadastrou2 )
-						{
-							$this->mensagem = "Editar n&atilde;o realizado.<br>";
-							echo "<!--\nErro ao editar clsPmieducarAcervoAcervoAutor\nvalores obrigat&oacute;rios\nis_numeric( $cadastrou ) && is_numeric( {$autor["ref_cod_acervo_autor_"]} ) && is_numeric( {$autor["principal_"]} )\n-->";
-							return false;
-						}
-					}
-					$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-					header( "Location: educar_acervo_lst.php" );
-					die();
-					return true;
-				}
-			//-----------------------FIM EDITA AUTOR------------------------//
-			}
-			$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-			echo "<!--\nErro ao editar clsPmieducarAcervo\nvalores obrigatorios\nif( is_numeric( $this->cod_acervo ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+		if (!is_array($this->getRequest()->autores) || count($this->getRequest()->autores) == 1){
+			$this->mensagem = "&Eacute; necess&aacute;rio informar ao menos um autor.<br>";
 			return false;
 		}
-		echo "<script> alert('É necessário adicionar pelo menos 1 Autor') </script>";
+
+		$obj = new clsPmieducarAcervo($this->cod_acervo, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo, $this->pessoa_logada, null, $this->ref_cod_acervo_colecao, $this->ref_cod_acervo_idioma, $this->ref_cod_acervo_editora, $this->titulo, $this->sub_titulo, $this->cdu, $this->cutter, $this->volume, $this->num_edicao, $this->ano, $this->num_paginas, $this->isbn, null, null, 1, $this->ref_cod_biblioteca, $this->cdd, $this->estante);
+		$editou = $obj->edita();
+		if( $editou )
+		{
+
+			#cadastra assuntos para a obra
+			$this->gravaAssuntos($this->cod_acervo);
+			$this->gravaAutores($this->cod_acervo);
+
+			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
+			header( "Location: educar_acervo_lst.php" );
+			die();
+			return true;
+		}
 		$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+		echo "<!--\nErro ao editar clsPmieducarAcervo\nvalores obrigatorios\nif( is_numeric( $this->cod_acervo ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
 		return false;
 	}
 
@@ -557,6 +386,16 @@ class indice extends clsCadastro
 		}
 	}
 
+	function gravaAutores($cod_acervo){
+		$objAutor = new clsPmieducarAcervoAcervoAutor();
+		$objAutor->deletaAutoresDaObra($cod_acervo);
+		foreach ($this->getRequest()->autores as $autorId) {
+			if (! empty($autorId)) {
+				$objAutor = new clsPmieducarAcervoAcervoAutor();
+				$objAutor->cadastraAutorParaObra($cod_acervo, $autorId);
+			}
+		}
+	}	
 }
 
 // cria uma extensao da classe base
@@ -788,14 +627,20 @@ function fixupAssuntosSize(){
 
 fixupAssuntosSize();
 
-  $assuntos = $j('#assuntos');
+function fixupAutoresSize(){
 
-  $assuntos.trigger('liszt:updated');
-  var testezin;
+	$j('#autores_chzn ul').css('width', '307px');	
+	
+}
+
+fixupAutoresSize();
+
+$assuntos = $j('#assuntos');
+
+$assuntos.trigger('liszt:updated');
 
 var handleGetAssuntos = function(dataResponse) {
-  testezin = dataResponse['assuntos'];
-  
+
   $j.each(dataResponse['assuntos'], function(id, value) {
   	
     $assuntos.children("[value=" + value + "]").attr('selected', '');
@@ -827,4 +672,44 @@ var getAssuntos = function() {
 
 getAssuntos();
 
+$autores = $j('#autores');
+
+$autores.trigger('liszt:updated');
+var testezin;
+
+var handleGetAutores = function(dataResponse) {
+  testezin = dataResponse['autores'];
+  
+  $j.each(dataResponse['autores'], function(id, value) {
+  	
+    $autores.children("[value=" + value + "]").attr('selected', '');
+  });
+
+  $autores.trigger('liszt:updated');
+}
+
+var getAutores = function() {
+	    
+  var $cod_acervo = $j('#cod_acervo').val();
+  
+  if ($j('#cod_acervo').val()!='') {    
+
+    var additionalVars = {
+      id : $j('#cod_acervo').val(),
+    };
+
+    var options = {
+      url      : getResourceUrlBuilder.buildUrl('/module/Api/autor', 'autor', additionalVars),
+      dataType : 'json',
+      data     : {},
+      success  : handleGetAutores,
+    };
+
+    getResource(options);
+  }
+}
+
+getAutores();
+// Para parecer como campo obrigatório, já que o required => true não está funcionando corretamente
+$j('#autores').closest('tr').find('td:first span').append($j('<span>').addClass('campo_obrigatorio').html('*'));
 </script>
