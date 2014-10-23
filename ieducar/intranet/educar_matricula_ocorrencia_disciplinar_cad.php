@@ -159,6 +159,7 @@ class indice extends clsCadastro
 		}else{
 			$this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
 			$this->inputsHelper()->simpleSearchMatricula();
+			$this->inputsHelper()->hidden('somente_andamento');
 		}
 
 		// primary keys
@@ -241,6 +242,8 @@ class indice extends clsCadastro
 
 		$this->visivel_pais = is_null($this->visivel_pais) ? 0 : 1;
 
+		$voltaListagem = is_numeric($this->ref_cod_matricula);
+
 		$this->ref_cod_matricula = is_numeric($this->ref_cod_matricula) ? $this->ref_cod_matricula : $this->getRequest()->matricula_id;
 
 		$obj = new clsPmieducarMatriculaOcorrenciaDisciplinar( $this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, null, $this->pessoa_logada, $this->pessoa_logada, $this->observacao, $this->getDataHoraCadastro(), $this->data_exclusao, $this->ativo, $this->visivel_pais);
@@ -248,7 +251,10 @@ class indice extends clsCadastro
 		if( $cadastrou )
 		{
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-			header( "Location: educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}" );
+			if ($voltaListagem)
+				header( "Location: educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}" );
+			else
+				header( "Location: educar_matricula_ocorrencia_disciplinar_cad.php");
 			die();
 			return true;
 		}
@@ -269,6 +275,8 @@ class indice extends clsCadastro
 
 		$this->visivel_pais = is_null($this->visivel_pais) ? 0 : 1;
 
+		$voltaListagem = is_numeric($this->ref_cod_matricula);
+
 		$this->ref_cod_matricula = is_numeric($this->ref_cod_matricula) ? $this->ref_cod_matricula : $this->getRequest()->matricula_id;
 
     	$obj = new clsPmieducarMatriculaOcorrenciaDisciplinar($this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, $this->sequencial, $this->pessoa_logada, $this->pessoa_logada, $this->observacao, $this->getDataHoraCadastro(), $this->data_exclusao, $this->ativo, $this->visivel_pais);
@@ -276,7 +284,10 @@ class indice extends clsCadastro
 		if( $editou )
 		{
 			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-			header( "Location: educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}" );
+			if ($voltaListagem)
+				header( "Location: educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}" );
+			else
+				header( "Location: educar_matricula_ocorrencia_disciplinar_cad.php");
 			die();
 			return true;
 		}

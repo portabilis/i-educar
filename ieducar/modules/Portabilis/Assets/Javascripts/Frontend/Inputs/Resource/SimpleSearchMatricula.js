@@ -7,6 +7,10 @@ var simpleSearchMatriculaOptions = {
 
     ano : function() {
       return $j('#ano').val() 
+    },
+
+    somente_andamento : function() {
+      return $j('#somente_andamento').length ? true : false
     } 
   },
 

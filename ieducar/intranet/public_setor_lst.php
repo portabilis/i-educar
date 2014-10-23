@@ -67,7 +67,7 @@ class clsIndexBase extends clsBase
  */
 class indice extends clsListagem
 {
-  var $__pessoa_logada;
+  var $pessoa_logada;
   var $__titulo;
   var $__limite;
   var $__offset;
@@ -78,7 +78,7 @@ class indice extends clsListagem
   function Gerar()
   {
     @session_start();
-    $this->__pessoa_logada = $_SESSION['id_pessoa'];
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
     $this->__titulo = 'Setor - Listagem';

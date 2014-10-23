@@ -460,5 +460,35 @@ class clsPmieducarAcervoAcervoAutor
 		return "";
 	}
 
+	function listaAutoresPorObra($acervoId){
+		$db = new clsBanco();
+		$db->Consulta( "SELECT ref_cod_acervo_autor as id
+						 FROM pmieducar.acervo_acervo_autor
+						 WHERE ref_cod_acervo IN ($acervoId) " );
+		
+		while ( $db->ProximoRegistro() ) 
+		{
+			$resultado[] = $db->Tupla();
+		}		
+
+		if( count( $resultado ) )
+		{
+			return $resultado;
+		}
+
+		return false;
+	}
+
+	function cadastraAutorParaObra($acervoId, $autorId){
+		$db = new clsBanco();
+		$db->Consulta( "INSERT INTO pmieducar.acervo_acervo_autor (ref_cod_acervo, ref_cod_acervo_autor) VALUES ({$acervoId},{$autorId})" );
+		return true;
+	}	
+
+	function deletaAutoresDaObra($acervoId){
+		$db = new clsBanco();
+		$db->Consulta( "DELETE FROM pmieducar.acervo_acervo_autor WHERE ref_cod_acervo = {$acervoId}" );
+		return true;
+	}
 }
 ?>

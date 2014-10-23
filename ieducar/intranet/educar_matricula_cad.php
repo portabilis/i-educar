@@ -558,6 +558,27 @@ class indice extends clsCadastro
                 return FALSE;
               }
             }
+          }else{
+            $objMatriculasTrasnferidas = new clsPmieducarMatricula();
+            $matriculasTransferidas = $objMatriculasTrasnferidas->lista($int_cod_matricula = NULL, $int_ref_cod_reserva_vaga = NULL,
+                                                $int_ref_ref_cod_escola = NULL, $int_ref_ref_cod_serie = $this->ref_cod_serie,
+                                                $int_ref_usuario_exc = NULL, $int_ref_usuario_cad = NULL,
+                                                $ref_cod_aluno = $this->ref_cod_aluno, $int_aprovado = 4,
+                                                $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL, 
+                                                $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL, 
+                                                $int_ativo = 1, $int_ano = $this->ano, $int_ref_cod_curso2 = NULL,
+                                                $int_ref_cod_instituicao = NULL, $int_ultima_matricula = NULL,
+                                                $int_modulo = NULL, $int_padrao_ano_escolar = NULL, 
+                                                $int_analfabeto = NULL, $int_formando = NULL, $str_descricao_reclassificacao = NULL,
+                                                $int_matricula_reclassificacao = NULL, $boo_com_deficiencia = NULL, 
+                                                $int_ref_cod_curso = NULL, $bool_curso_sem_avaliacao = NULL,
+                                                $arr_int_cod_matricula = NULL, $int_mes_defasado = NULL, $boo_data_nasc = NULL,
+                                                $boo_matricula_transferencia = NULL, $int_semestre = NULL, $int_ref_cod_turma = NULL,
+                                                $int_ref_cod_abandono = NULL, $matriculas_turmas_transferidas_abandono = FALSE);
+            foreach ($matriculasTransferidas as $matriculaTransferida) {
+              $db = new clsBanco();
+              $db->consulta("SELECT modules.copia_notas_transf({$matriculaTransferida['cod_matricula']},{$cod_matricula})");
+            }
           }
         //}
         $this->enturmacaoMatricula($cod_matricula, $this->ref_cod_turma); 

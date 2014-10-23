@@ -249,7 +249,6 @@ class indice extends clsDetalhe
 			$tabela = "<TABLE>
 					       <TR align=center>
 					           <TD bgcolor=#A1B3BD><B>Nome</B></TD>
-					           <TD bgcolor=#A1B3BD><B>Principal</B></TD>
 					       </TR>";
 			$cont = 0;
 
@@ -263,15 +262,9 @@ class indice extends clsDetalhe
 				$obj = new clsPmieducarAcervoAutor( $valor["ref_cod_acervo_autor"] );
 				$det = $obj->detalhe();
 				$nm_autor = $det["nm_autor"];
-				$principal = $valor["principal"];
-				if ($principal == 1)
-					$principal = "sim";
-				else
-					$principal = "n&atilde;o";
 
 				$tabela .= "<TR>
 							    <TD {$color} align=left>{$nm_autor}</TD>
-							    <TD {$color} align=left>{$principal}</TD>
 							</TR>";
 				$cont++;
 			}

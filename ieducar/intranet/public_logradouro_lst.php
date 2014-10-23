@@ -47,7 +47,7 @@ class indice extends clsListagem
 	 *
 	 * @var int
 	 */
-	var $__pessoa_logada;
+	var $pessoa_logada;
 
 	/**
 	 * Titulo no topo da pagina
@@ -91,7 +91,7 @@ class indice extends clsListagem
 	function Gerar()
 	{
 		@session_start();
-		$this->__pessoa_logada = $_SESSION['id_pessoa'];
+		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
 
 		$this->__titulo = "Logradouro - Listagem";
