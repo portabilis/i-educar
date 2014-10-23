@@ -113,9 +113,9 @@ class indice extends clsListagem
 
 		
 
-		$this->campoNumero("cod_aluno","C&oacute;digo Aluno",$this->cod_aluno,20,9,false);
+		$this->campoNumero("cod_aluno",$GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? "C&oacute;digo Aluno (i-Educar)" : "C&oacute;digo Aluno",$this->cod_aluno,20,9,false);
 		$this->campoNumero("cod_inep","C&oacute;digo INEP",$this->cod_inep,20,255,false);
-		$this->campoNumero("aluno_estado_id",($GLOBALS['coreExt']['Config']->app->database->dbname == 'botucatu' ? "C&oacute;digo estadual do aluno(R.A.)" : "C&oacute;digo estadual do aluno" ), $this->aluno_estado_id,20,255,false);
+		$this->campoNumero("aluno_estado_id",($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? "C&oacute;digo estadual do aluno(R.A.)" : "C&oacute;digo estadual do aluno" ), $this->aluno_estado_id,20,255,false);
 		$this->campoTexto("nome_aluno","Nome do aluno", $this->nome_aluno,50,255,false);
 		$this->campoData("data_nascimento", "Data de Nascimento", $this->data_nascimento);
 		$this->campoTexto("nome_pai", "Nome do Pai", $this->nome_pai, 50, 255);
