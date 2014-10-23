@@ -1,6 +1,6 @@
 <?php
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
+// error_reporting(E_ALL);
+// ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -122,7 +122,8 @@ class indice extends clsCadastro
   var $curso_direito_crianca_adolescente;
   var $curso_relacoes_etnicorraciais;
   var $curso_outros;
-  var $curso_nenhum;  
+  var $curso_nenhum;
+  var $matricula = array();
 
   var $total_horas_alocadas;
 
@@ -199,7 +200,9 @@ class indice extends clsCadastro
             $obj_funcao = new clsPmieducarFuncao($funcao['ref_cod_funcao']);
             $det_funcao = $obj_funcao->detalhe();
 
-            $this->ref_cod_funcao[] = array($funcao['ref_cod_funcao'] . '-' . $det_funcao['professor']);
+            $this->ref_cod_funcao[] = array($funcao['ref_cod_funcao'] . '-' . $det_funcao['professor'] . '-' . ($det_funcao['matricula'] ?: '0'));
+            
+            // $this->ref_cod_funcao[] = array($funcao['ref_cod_funcao'] . '-' . $det_funcao['professor']);
 
             if (FALSE == $this->docente && (bool) $det_funcao['professor']) {
               $this->docente = TRUE;
@@ -296,7 +299,7 @@ class indice extends clsCadastro
 
         if (is_array($lista) && count($lista)) {
           foreach ($lista as $registro) {
-            $opcoes[$registro['cod_funcao'] . '-' . $registro['professor']] = $registro['nm_funcao'];
+            $opcoes[$registro['cod_funcao'] . '-' . $registro['professor'] . '-' . ($det_funcao['matricula'] ?: '0')] = $registro['nm_funcao'];
           }
         }
       }
@@ -307,7 +310,7 @@ class indice extends clsCadastro
     }
 
     $this->campoTabelaInicio('funcao', 'Funções Servidor',
-      array("Função", "Componentes Curriculares", "Cursos"), ($this->ref_cod_funcao));
+      array("Função", "Componentes Curriculares", "Cursos", "Matrícula"), ($this->ref_cod_funcao));
 
     $funcao = 'popless()';
 
@@ -321,6 +324,8 @@ class indice extends clsCadastro
 
     $this->campoRotulo('curso', 'Curso',
       "<img src='imagens/lupa_antiga.png' border='0' style='cursor:pointer;' alt='Buscar Cursos' title='Buscar Cursos' onclick=\"$funcao\">");
+
+    $this->campoTexto('matricula', 'Matricula', $this->matricula);
 
     $this->campoTabelaFim();
 
@@ -831,19 +836,20 @@ class indice extends clsCadastro
     @session_write_close();
 
     $existe_funcao_professor = FALSE;
-
+    // echo "<pre>";var_dump($this->ref_cod_funcao);die;
     if ($this->ref_cod_funcao) {
       $this->excluiFuncoes();
       foreach ($this->ref_cod_funcao as $funcao) {
         $funcao_professor = explode('-', $funcao);
         $funcao = array_shift($funcao_professor);
         $professor = array_shift($funcao_professor);
+        // $matricula = array_shift($funcao_professor);
 
         if ($professor) {
           $existe_funcao_professor = true;
         }
 
-        $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor, $funcao);
+        $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor, $funcao, $this->matricula);
 
         if (! $obj_servidor_funcao->existe()) {
           $obj_servidor_funcao->cadastra();

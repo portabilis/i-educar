@@ -12,6 +12,7 @@ class clsPmieducarServidorFuncao
 	var $ref_ref_cod_instituicao;
 	var $ref_cod_servidor;
 	var $ref_cod_funcao;
+	var $matricula;
 
 	// propriedades padrao
 
@@ -81,13 +82,13 @@ class clsPmieducarServidorFuncao
 	 *
 	 * @return object
 	 */
-	function clsPmieducarServidorFuncao( $ref_ref_cod_instituicao = null, $ref_cod_servidor = null, $ref_cod_funcao = null )
+	function clsPmieducarServidorFuncao( $ref_ref_cod_instituicao = null, $ref_cod_servidor = null, $ref_cod_funcao = null, $matricula = NULL )
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}servidor_funcao";
 
-		$this->_campos_lista = $this->_todos_campos = "ref_ref_cod_instituicao, ref_cod_servidor, ref_cod_funcao";
+		$this->_campos_lista = $this->_todos_campos = "ref_ref_cod_instituicao, ref_cod_servidor, ref_cod_funcao, matricula";
 
 		if( is_numeric( $ref_cod_funcao ) )
 		{
@@ -147,6 +148,11 @@ class clsPmieducarServidorFuncao
 					$this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
 				}
 			}
+
+			if (is_string($matricula))
+			{
+				$this->matricula = $matricula;
+			}
 		}
 
 
@@ -187,6 +193,12 @@ class clsPmieducarServidorFuncao
 				$valores .= "{$gruda}'{$this->ref_cod_funcao}'";
 				$gruda = ", ";
 			}
+			if (is_string($this->matricula))
+			{
+				$campos  .= "{$gruda}matricula";
+				$valores .= "{$gruda}'{$this->matricula}'";
+				$gruda    = ", ";
+			}
 
 
 			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
@@ -208,7 +220,13 @@ class clsPmieducarServidorFuncao
 			$db = new clsBanco();
 			$set = "";
 
-
+			if (is_string($this->matricula)) {
+        		$set  .= "{$gruda}matricula = '{$this->matricula}'";
+        		$gruda = ', ';
+      		}elseif(is_null($this->matricula)){
+      			$set  .= "{$gruda}matricula = 'NULL'";
+      			$gruda = ', ';
+      		}
 
 			if( $set )
 			{
@@ -248,6 +266,11 @@ class clsPmieducarServidorFuncao
 			$whereAnd = " AND ";
 		}
 
+		if( is_string( $matricula ) )
+		{
+			$filtros .= "{$whereAnd} matricula = '{$matricula}'";
+			$whereAnd = " AND ";
+		}
 
 		$db = new clsBanco();
 		$countCampos = count( explode( ",", $this->_campos_lista ) );
