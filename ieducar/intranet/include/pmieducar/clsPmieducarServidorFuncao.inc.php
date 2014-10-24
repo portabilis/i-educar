@@ -475,5 +475,59 @@ class clsPmieducarServidorFuncao
 		return "";
 	}
 
+	function funcoesDoServidor( $int_ref_ref_cod_instituicao, $int_ref_cod_servidor)
+	{
+		$sql = " SELECT f.cod_funcao, f.nm_funcao as funcao, sf.matricula
+							FROM pmieducar.servidor_funcao sf
+							INNER JOIN pmieducar.funcao f ON f.cod_funcao = sf.ref_cod_funcao ";
+		$filtros = "";
+
+		$whereAnd = " WHERE ";
+
+		if( is_numeric( $int_ref_ref_cod_instituicao ) )
+		{
+			$filtros .= "{$whereAnd} sf.ref_ref_cod_instituicao = '{$int_ref_ref_cod_instituicao}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_ref_cod_servidor ) )
+		{
+			$filtros .= "{$whereAnd} sf.ref_cod_servidor = '{$int_ref_cod_servidor}'";
+			$whereAnd = " AND ";
+		}
+
+		$db = new clsBanco();
+		$countCampos = count( explode( ",", $this->_campos_lista ) );
+		$resultado = array();
+
+		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM pmieducar.servidor_funcao sf INNER JOIN pmieducar.funcao f ON f.cod_funcao = sf.ref_cod_funcao {$filtros}" );
+
+		$db->Consulta( $sql );
+
+		if( $countCampos > 1 )
+		{
+			while ( $db->ProximoRegistro() )
+			{
+				$tupla = $db->Tupla();
+
+				$tupla["_total"] = $this->_total;
+				$resultado[] = $tupla;
+			}
+		}
+		else
+		{
+			while ( $db->ProximoRegistro() )
+			{
+				$tupla = $db->Tupla();
+				$resultado[] = $tupla[$this->_campos_lista];
+			}
+		}
+		if( count( $resultado ) )
+		{
+			return $resultado;
+		}
+		return false;
+	}
 }
 ?>
