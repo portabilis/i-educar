@@ -68,7 +68,7 @@ class MatriculaController extends ApiCoreController
             pmieducar.aluno, cadastro.pessoa where aluno.cod_aluno = matricula.ref_cod_aluno and
             pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and
             matricula.ativo = 1 and 
-            case when $4 = 1 then matricula.aprovado = 3 else matricula.aprovado in (1, 2, 3, 4, 7, 8, 9) end and
+            case when $4 = 1 then matricula.aprovado = 3 else matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9) end and
             (matricula.cod_matricula like $1||'%' or matricula.ref_cod_aluno like $1||'%') and
             (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else 1=1 end) and
             (select case when $3 != 0 then matricula.ano = $3 else 1=1 end) group by aluno.cod_aluno, pessoa.nome limit 15";
@@ -82,7 +82,7 @@ class MatriculaController extends ApiCoreController
             pmieducar.aluno, cadastro.pessoa where aluno.cod_aluno = matricula.ref_cod_aluno and
             pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and
             matricula.ativo = 1 and 
-            case when $4 = 1 then matricula.aprovado = 3 else matricula.aprovado in (1, 2, 3, 4, 7, 8, 9) end and
+            case when $4 = 1 then matricula.aprovado = 3 else matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9) end and
             lower(to_ascii(pessoa.nome)) like lower(to_ascii($1))||'%' and
             (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else 1=1 end) and
             (select case when $3 != 0 then matricula.ano = $3 else 1=1 end) group by aluno.cod_aluno, pessoa.nome limit 15";
