@@ -200,7 +200,7 @@ class indice extends clsCadastro
             $obj_funcao = new clsPmieducarFuncao($funcao['ref_cod_funcao']);
             $det_funcao = $obj_funcao->detalhe();
 
-            $this->ref_cod_funcao[] = array($funcao['ref_cod_funcao'] . '-' . $det_funcao['professor'] . '-' . ($det_funcao['matricula'] ?: '0'));
+            $this->ref_cod_funcao[] = array($funcao['ref_cod_funcao'] . '-' . $det_funcao['professor'], null, null, $funcao['matricula']);
             
             // $this->ref_cod_funcao[] = array($funcao['ref_cod_funcao'] . '-' . $det_funcao['professor']);
 
@@ -299,7 +299,7 @@ class indice extends clsCadastro
 
         if (is_array($lista) && count($lista)) {
           foreach ($lista as $registro) {
-            $opcoes[$registro['cod_funcao'] . '-' . $registro['professor'] . '-' . ($det_funcao['matricula'] ?: '0')] = $registro['nm_funcao'];
+            $opcoes[$registro['cod_funcao'] . '-' . $registro['professor']] = $registro['nm_funcao'];
           }
         }
       }
@@ -838,18 +838,19 @@ class indice extends clsCadastro
     $existe_funcao_professor = FALSE;
     // echo "<pre>";var_dump($this->ref_cod_funcao);die;
     if ($this->ref_cod_funcao) {
+      $cont = -1;
       $this->excluiFuncoes();
       foreach ($this->ref_cod_funcao as $funcao) {
+        $cont++;
         $funcao_professor = explode('-', $funcao);
         $funcao = array_shift($funcao_professor);
         $professor = array_shift($funcao_professor);
-        // $matricula = array_shift($funcao_professor);
 
         if ($professor) {
           $existe_funcao_professor = true;
         }
 
-        $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor, $funcao, $this->matricula);
+        $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor, $funcao, $this->matricula[$cont]);
 
         if (! $obj_servidor_funcao->existe()) {
           $obj_servidor_funcao->cadastra();
