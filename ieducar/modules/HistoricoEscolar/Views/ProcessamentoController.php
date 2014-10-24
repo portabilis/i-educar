@@ -58,10 +58,10 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "i-Educar - Escola",
-         ""                                  => "Processamento de hist&oacute;rico escolar"             
+         ""                                  => "Processamento de hist&oacute;rico escolar"
     ));
-    $this->enviaLocalizacao($localizacao->montar(), true);     
-  }   
+    $this->enviaLocalizacao($localizacao->montar(), true);
+  }
 
   // #TODO migrar funcionalidade para novo padrão
   protected $backwardCompatibility = true;
@@ -71,7 +71,12 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
     Portabilis_View_Helper_Application::loadStylesheet($this, '/modules/HistoricoEscolar/Static/styles/processamento.css');
 
     $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
-    $this->inputsHelper()->dynamic(array('curso', 'serie', 'turma', 'matricula'), array('required' => false));
+
+    $this->inputsHelper()->dynamic('curso', array('required' => false, 'label_hint' => $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? 'Ex.: Ensino Fundamental I' : ''));
+
+    $this->inputsHelper()->dynamic('serie', array('required' => false, 'label' => $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? 'Ano/Série' : 'Série'));
+
+    $this->inputsHelper()->dynamic(array('turma', 'matricula'), array('required' => false));
 
     $resourceOptionsTable = "<table id='resource-options' class='styled horizontal-expand hide-on-search disable-on-apply-changes'>
 
