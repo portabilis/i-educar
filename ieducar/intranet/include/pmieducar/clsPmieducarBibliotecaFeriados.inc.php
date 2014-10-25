@@ -230,6 +230,12 @@ class clsPmieducarBibliotecaFeriados
 	}
 
 	/**
+	* Cadastra uma lista pre-determinada de feriado
+	* Obs.: Ref_cod_Biblioteca é setado no construtor na classe.
+	*
+	*/
+
+	/**
 	 * Edita os dados de um registro
 	 *
 	 * @return bool

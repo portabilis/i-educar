@@ -29,15 +29,6 @@ require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/clsGrafico.inc.php");
 
-class clsIndex extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} Grafico de Notícias por Tipo" );
-		$this->processoAp = "109";
-	}
-}
-
 class indice extends clsCadastro
 {
 	var $data_inicial,
@@ -140,8 +131,11 @@ class indice extends clsCadastro
 	}
 }
 
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+$pagina->SetTitulo( "{$pagina->_instituicao} Grafico de Notícias por Tipo" );
+$pagina->processoAp = "109";
+	
 $miolo = new indice();
 $pagina->addForm( $miolo );
 

@@ -70,7 +70,7 @@ class Avaliacao_Service_FaltaGeralTest extends Avaliacao_Service_FaltaCommon
     $this->assertEquals(10, $falta->quantidade);
 
     $validators = $falta->getValidatorCollection();
-    $this->assertType('CoreExt_Validate_Choice', $validators['etapa']);
+    $this->assertInternalType('CoreExt_Validate_Choice', $validators['etapa']);
     $this->assertFalse(isset($validators['componenteCurricular']));
 
     // Opções dos validadores

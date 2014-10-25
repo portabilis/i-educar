@@ -155,7 +155,7 @@ class clsFisica
 		$this->data_uniao          = $data_uniao;
 		$this->data_obito          = $data_obito;
 		$this->nacionalidade       = $nacionalidade;
-		$this->data_chegada_brasil = $data_chegada_brasil;
+		$this->data_chegada_brasil = $data_chagada_brasil;
 		$this->ultima_empresa      = $ultima_empresa;
 		$this->nome_mae            = $nome_mae;
 		$this->nome_pai            = $nome_pai;

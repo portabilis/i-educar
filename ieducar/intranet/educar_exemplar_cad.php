@@ -33,15 +33,6 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
-class clsIndexBase extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Exemplar" );
-		$this->processoAp = "606";
-	}
-}
-
 class indice extends clsCadastro
 {
 	/**
@@ -142,8 +133,7 @@ class indice extends clsCadastro
 
 		$this->campoData( "data_aquisicao", "Data Aquisic&atilde;o", $this->data_aquisicao, true );
 
-    $this->campoNumero("tombo", "Tombo", $this->tombo, 10, 10, false);
-
+                //Recebe o número de tombo, e identifica o tombo como um campo invisível no formulário
 		if (!is_numeric($this->cod_exemplar))
 			$this->campoNumero("qtd_livros", "Quantidade de Livros", 1, 5, 5, true);
 	}
@@ -252,8 +242,11 @@ class indice extends clsCadastro
 }
 
 // cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
+$pagina = new clsBase();
+
+$pagina->SetTitulo( "{$pagina->_instituicao} i-Educar - Exemplar" );
+$pagina->processoAp = "606";
+	// cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
 $pagina->addForm( $miolo );

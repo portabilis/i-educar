@@ -55,7 +55,7 @@ class TabelaDataMapperTest extends UnitBaseTest
 
   public function testGetterDeValorDataMapperInstanciaObjetoPorPadraoSeNenhumForConfigurado()
   {
-    $this->assertType('TabelaArredondamento_Model_TabelaValorDataMapper', $this->_mapper->getTabelaValorDataMapper());
+    $this->assertInternalType('TabelaArredondamento_Model_TabelaValorDataMapper', $this->_mapper->getTabelaValorDataMapper());
   }
 
   public function testFinderTabelaValor()

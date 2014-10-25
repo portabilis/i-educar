@@ -32,7 +32,7 @@
 		$exibe_campo_lista_curso_escola = true;
 	}
 
-	if ($obrigatorio)
+	if (@$obrigatorio)
 	{
 		$instituicao_obrigatorio = $escola_obrigatorio = $curso_obrigatorio = $escola_curso_obrigatorio = $escola_curso_serie_obrigatorio = $serie_obrigatorio = $biblioteca_obrigatorio = $cliente_tipo_obrigatorio = $funcao_obrigatorio = $turma_obrigatorio = true;
 	}
@@ -50,7 +50,7 @@
 		$turma_obrigatorio = 				isset( $turma_obrigatorio ) 			? $turma_obrigatorio 				: false;
 	}
 
-	if ($desabilitado)
+	if (@$desabilitado)
 	{
 		$instituicao_desabilitado = $escola_desabilitado = $curso_desabilitado = $escola_curso_desabilitado = $escola_curso_serie_desabilitado = $serie_desabilitado = $biblioteca_desabilitado = $cliente_tipo_desabilitado = $turma_desabilitado = true;
 	}
@@ -87,15 +87,15 @@
 			}
 		}
 
-		if ($get_escola && $get_biblioteca)
+		if ($get_escola && @$get_biblioteca)
 		{
-			$this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao,"getDuploEscolaBiblioteca();",null,null,null,$instituicao_desabilitado,$instituicao_obrigatorio);
+			$this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, @$this->ref_cod_instituicao,"getDuploEscolaBiblioteca();",null,null,null,$instituicao_desabilitado,$instituicao_obrigatorio);
 		}
-		else if ($get_escola && $get_curso && $get_matricula)
+		else if ($get_escola && @$get_curso && $get_matricula)
 		{
 			$this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao, "getMatricula();", null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio );
 		}
-		else if ($get_escola && $get_curso )
+		else if ($get_escola && @$get_curso )
 		{
 			$this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao, "getDuploEscolaCurso();", null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio );
 		}
@@ -103,11 +103,11 @@
 		{
 			$this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao,"getEscola();",null,null,null,$instituicao_desabilitado,$instituicao_obrigatorio);
 		}
-		else if ($get_curso)
+		else if (@$get_curso)
 		{
 			$this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao,"getCurso();",null,null,null,$instituicao_desabilitado,$instituicao_obrigatorio);
 		}
-		else if ($get_biblioteca)
+		else if (@$get_biblioteca)
 		{
 			$this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao,"getBiblioteca(1);",null,null,null,$instituicao_desabilitado,$instituicao_obrigatorio);
 		}
@@ -154,7 +154,7 @@
 	{
 		$opcoes_escola = array( "" => "Selecione uma escola" );
 		// EDITAR
-		if ($this->ref_cod_instituicao)
+		if (@$this->ref_cod_instituicao)
 		{
 			$obj_escola = new clsPmieducarEscola();
 			$obj_escola->setOrderby("nome ASC");
@@ -168,16 +168,16 @@
 			}
 		}
 
-		if ($get_biblioteca)
+		if (@$get_biblioteca)
 		{
-			$this->campoLista( "ref_cod_escola", "Escola", $opcoes_escola, $this->ref_cod_escola,"getBiblioteca(2);",null,null,null,$escola_desabilitado,$escola_obrigatorio );
+			$this->campoLista( "ref_cod_escola", "Escola", $opcoes_escola, @$this->ref_cod_escola,"getBiblioteca(2);",null,null,null,$escola_desabilitado,$escola_obrigatorio );
 		}
 		else
 		{
 			$this->campoLista( "ref_cod_escola", "Escola", $opcoes_escola, $this->ref_cod_escola,null,null,null,null,$escola_desabilitado,$escola_obrigatorio );
 		}
 	}
-	if ($get_curso)
+	if (@$get_curso)
 	{
 		$opcoes_curso = array( "" => "Selecione" );
 
@@ -225,7 +225,7 @@
 		}
 	}
 
-	if ( $get_escola_curso_serie )
+	if ( @$get_escola_curso_serie )
 	{
 
 		$opcoes_series_curso_escola = array( "" => "Selecione" );
@@ -246,7 +246,7 @@
 		$this->campoLista( "ref_ref_cod_serie", "S&eacute;rie", $opcoes_series_curso_escola, $this->ref_ref_cod_serie, null, null, null, null, $escola_curso_serie_desabilitado, $escola_curso_serie_obrigatorio );
 	}
 
-	if ( $get_serie )
+	if ( @$get_serie )
 	{
 		$opcoes_serie = array( "" => "Selecione" );
 		// EDITAR
@@ -267,15 +267,15 @@
 
 	}
 
-	if ( $get_biblioteca )
+	if ( @$get_biblioteca )
 	{
-		if ($ref_cod_biblioteca_ == 0 && $nivel_usuario != 1 && $nivel_usuario != 2 )
+		if (@$ref_cod_biblioteca_ == 0 && $nivel_usuario != 1 && $nivel_usuario != 2 )
 		{
 			$this->campoOculto( "ref_cod_biblioteca", $this->ref_cod_biblioteca );
 		}
 		else
 		{
-			$qtd_bibliotecas = count($ref_cod_biblioteca_);
+			$qtd_bibliotecas = count(@$ref_cod_biblioteca_);
 			if ( $qtd_bibliotecas == 1 && ($nivel_usuario == 4 || $nivel_usuario == 8))
 			{
 				$det_unica_biblioteca = array_shift($ref_cod_biblioteca_);
@@ -305,7 +305,7 @@
 			{
 				$opcoes_biblioteca = array( "" => "Selecione" );
 				// EDITAR
-				if ($this->ref_cod_escola || $this->ref_cod_instituicao)
+				if (@$this->ref_cod_escola || @$this->ref_cod_instituicao)
 				{
 					$objTemp = new clsPmieducarBiblioteca();
 					$objTemp->setOrderby("nm_biblioteca ASC");
@@ -320,7 +320,7 @@
 					}
 				}
 			  $getCliente = '';
-        if ($get_cliente_tipo) {
+        if (@$get_cliente_tipo) {
           $getCliente = "getClienteTipo()";
         }
 				$this->campoLista( "ref_cod_biblioteca", "Biblioteca", $opcoes_biblioteca, $this->ref_cod_biblioteca,$getCliente,null,null,null,$biblioteca_desabilitado,$biblioteca_obrigatorio );
@@ -329,7 +329,7 @@
 
 	}
 
-	if ( $get_cliente_tipo )
+	if ( @$get_cliente_tipo )
 	{
 		$opcoes_cli_tpo = array( "" => "Selecione" );
 		if ( $this->ref_cod_biblioteca )
@@ -347,7 +347,7 @@
 		}
 		$this->campoLista( "ref_cod_cliente_tipo", "Tipo do Cliente", $opcoes_cli_tpo, $this->ref_cod_cliente_tipo, null, null, null, null, $cliente_tipo_desabilitado, $cliente_tipo_obrigatorio );
 	}
-	if ( $get_funcao )
+	if ( @$get_funcao )
 	{
 		$opcoes_funcao = array( "" => "Selecione" );
 		if ( $this->ref_cod_instituicao )
@@ -365,7 +365,7 @@
 		}
 		$this->campoLista( "ref_cod_funcao", "Função", $opcoes_funcao, $this->ref_cod_funcao, null, null, null, null, $funcao_desabilitado, $funcao_obrigatorio );
 	}
-	if ( $get_turma )
+	if ( @$get_turma )
 	{
 		$opcoes_turma = array( "" => "Selecione" );
 		// EDITAR
@@ -463,7 +463,7 @@ if ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario )
 		}
 	}
 <?
-	if ($get_escola && $get_biblioteca)
+	if ($get_escola && @$get_biblioteca)
 	{
 ?>
 		function getDuploEscolaBiblioteca()
@@ -474,7 +474,7 @@ if ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario )
 <?
 	}
 }
-if ( $get_curso && $sem_padrao && !$get_matricula )
+if ( @$get_curso && $sem_padrao && !$get_matricula )
 {
 ?>
 	function getCurso()
@@ -519,7 +519,7 @@ if ( $get_curso && $sem_padrao && !$get_matricula )
 	}
 <?
 }
-elseif ( $get_curso && !$get_matricula )
+elseif ( @$get_curso && !$get_matricula )
 {
 ?>
 	function getCurso()
@@ -564,7 +564,7 @@ elseif ( $get_curso && !$get_matricula )
 	}
 <?
 }
-if ( $get_escola && $get_curso && $get_matricula)
+if ( $get_escola && @$get_curso && $get_matricula)
 {
 ?>
 	function getMatricula()
@@ -574,7 +574,7 @@ if ( $get_escola && $get_curso && $get_matricula)
 	}
 <?
 }
-if ( $get_escola && $get_curso && !$get_matricula)
+if ( $get_escola && @$get_curso && !$get_matricula)
 {
 ?>
 	function getDuploEscolaCurso()
@@ -585,7 +585,7 @@ if ( $get_escola && $get_curso && !$get_matricula)
 <?
 }
 //if ( $get_escola_curso )
-if ( $get_curso )
+if ( @$get_curso )
 {
 ?>
 	function getEscolaCurso()
@@ -642,7 +642,7 @@ if ( $get_curso )
 	}
 <?
 }
-if ( $get_escola_curso_serie && $get_matricula && $_GET["ref_cod_aluno"] )
+if ( @$get_escola_curso_serie && $get_matricula && $_GET["ref_cod_aluno"] )
 {
 	// tah matriculando o aluno, seleciona as series que ele pode se matricular?
 ?>
@@ -694,7 +694,7 @@ if ( $get_escola_curso_serie && $get_matricula && $_GET["ref_cod_aluno"] )
 	}
 <?
 }
-if ( $get_escola_curso_serie  && !$get_matricula )
+if ( @$get_escola_curso_serie  && !$get_matricula )
 {
 ?>
 	function getEscolaCursoSerie()
@@ -747,7 +747,7 @@ if ( $get_escola_curso_serie  && !$get_matricula )
 	}
 <?
 }
-if ( $get_serie && $get_escola_serie)
+if ( @$get_serie && $get_escola_serie)
 {
 	// lista todas as series que nao estao associadas a essa escola
 ?>
@@ -804,7 +804,7 @@ if ( $get_serie && $get_escola_serie)
 	}
 <?
 }
-if ( $get_serie && !$get_escola_serie  || $exibe_get_serie)
+if ( @$get_serie && !$get_escola_serie  || @$exibe_get_serie)
 {
 ?>
 	function getSerie()
@@ -854,7 +854,7 @@ if ( $get_serie && !$get_escola_serie  || $exibe_get_serie)
 	}
 <?
 }
-if ( $get_biblioteca )
+if ( @$get_biblioteca )
 {
 ?>
 	function getBiblioteca(flag)
@@ -898,7 +898,7 @@ if ( $get_biblioteca )
 	}
 <?
 }
-if ( $get_cliente_tipo )
+if ( @$get_cliente_tipo )
 {
 ?>
 	function getClienteTipo()
@@ -946,7 +946,7 @@ if ( $get_cliente_tipo )
 	}
 <?
 }
-if ( $get_funcao )
+if ( @$get_funcao )
 {
 ?>
 	function getFuncao()
@@ -991,7 +991,7 @@ if ( $get_funcao )
 	}
 <?
 }
-if ( $get_turma )
+if ( @$get_turma )
 {
 ?>
 	function getTurma()
@@ -1096,7 +1096,7 @@ function limpaCampos(nivel)
 }
 
 <?
-if ($get_semestre)
+if (@$get_semestre)
 {?>
 
 	function verifica_curso()

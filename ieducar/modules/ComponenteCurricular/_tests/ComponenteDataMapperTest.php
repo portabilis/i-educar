@@ -53,12 +53,12 @@ class ComponenteDataMapperTest extends UnitBaseTest
 
   public function testGetterDeAreaDataMapperInstanciaObjetoPorPadraoSeNenhumForConfigurado()
   {
-    $this->assertType('AreaConhecimento_Model_AreaDataMapper', $this->_mapper->getAreaDataMapper());
+    $this->assertInternalType('AreaConhecimento_Model_AreaDataMapper', $this->_mapper->getAreaDataMapper());
   }
 
   public function testGetterDeAnoEscolarDataMapperInstanciaObjetoPorPadraoSeNenhumForConfigurado()
   {
-    $this->assertType('ComponenteCurricular_Model_AnoEscolarDataMapper',
+    $this->assertInternalType('ComponenteCurricular_Model_AnoEscolarDataMapper',
       $this->_mapper->getAnoEscolarDataMapper());
   }
 

@@ -24,21 +24,10 @@
 	*	02111-1307, USA.													 *
 	*																		 *
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-require_once ("include/localizacaoSistema.php");
 
-class clsIndexBase extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Biblioteca" );
-		$this->processoAp = "591";
-                $this->addEstilo( "localizacaoSistema" );
-	}
-}
+
+require_once '../includes/bootstrap.php';
+require_once '../autoload.php';
 
 class indice extends clsListagem
 {
@@ -109,10 +98,9 @@ class indice extends clsListagem
 
 		// outros Filtros
 		$this->campoTexto( "nm_biblioteca", "Biblioteca", $this->nm_biblioteca, 30, 255, false );
-
 		// Paginador
 		$this->limite = 20;
-		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+		$this->offset = ( @$_GET["pagina_{$this->nome}"] ) ? @$_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
 		$obj_biblioteca = new clsPmieducarBiblioteca();
 		$obj_biblioteca->setOrderby( "nm_biblioteca ASC" );
@@ -201,16 +189,20 @@ class indice extends clsListagem
                 
                 $localizacao = new LocalizacaoSistema();
                 $localizacao->entradaCaminhos( array(
-                    $_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
+                    @$_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
                     "educar_biblioteca_index.php"       => "Biblioteca",
                     ""                                  => "Lista de Biblioteca"
                 ));
                 $this->enviaLocalizacao($localizacao->montar());
+                return $lista;
 	}
         
 }
 // cria uma extensao da classe base
-$pagina = new clsIndexBase();
+$pagina = new clsBase();
+$pagina->SetTitulo( "{$pagina->_instituicao} i-Educar - Biblioteca" );
+$pagina->processoAp = "591";
+$pagina->addEstilo( "localizacaoSistema" );
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase

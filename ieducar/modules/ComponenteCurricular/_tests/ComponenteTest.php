@@ -56,7 +56,7 @@ class ComponenteTest extends UnitBaseTest
 
   public function testGetterDeDataMapperInstanciaObjetoPorPadraoSeNenhumForConfigurado()
   {
-    $this->assertType('ComponenteCurricular_Model_ComponenteDataMApper', $this->_entity->getDataMapper());
+    $this->assertInternalType('ComponenteCurricular_Model_ComponenteDataMApper', $this->_entity->getDataMapper());
   }
 
   public function testEntityValidators()
@@ -86,10 +86,10 @@ class ComponenteTest extends UnitBaseTest
 
     // Recupera os objetos CoreExt_Validate
     $validators = $this->_entity->getDefaultValidatorCollection();
-    $this->assertType('CoreExt_Validate_Choice', $validators['instituicao']);
-    $this->assertType('CoreExt_Validate_String', $validators['nome']);
-    $this->assertType('CoreExt_Validate_String', $validators['abreviatura']);
-    $this->assertType('CoreExt_Validate_Choice', $validators['tipo_base']);
-    $this->assertType('CoreExt_Validate_Choice', $validators['area_conhecimento']);
+    $this->assertInternalType('CoreExt_Validate_Choice', $validators['instituicao']);
+    $this->assertInternalType('CoreExt_Validate_String', $validators['nome']);
+    $this->assertInternalType('CoreExt_Validate_String', $validators['abreviatura']);
+    $this->assertInternalType('CoreExt_Validate_Choice', $validators['tipo_base']);
+    $this->assertInternalType('CoreExt_Validate_Choice', $validators['area_conhecimento']);
   }
 }

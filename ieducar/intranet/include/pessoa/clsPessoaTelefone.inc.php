@@ -144,7 +144,7 @@ class clsPessoaTelefone
 		return false;
 	}
 
-	function lista($int_idpes = false, $str_ordenacao = false, $int_inicio_limite = false, $int_qtd_registros = false, $int_ddd = false, $int_fone = false )
+	function lista($int_idpes = false, $str_orderBy = false, $int_inicio_limite = false, $int_qtd_registros = false, $int_ddd = false, $int_fone = false )
 	{
 		$whereAnd = "WHERE ";
 		$where = "";
@@ -159,11 +159,11 @@ class clsPessoaTelefone
 			$whereAnd = " AND ";
 		}
 			
-		if( is_string( $str_tipo_pessoa ) )
-		{
-			$where .= "{$whereAnd}tipo = '$str_tipo_pessoa' ";
-			$whereAnd = " AND ";
-		}
+//		if( is_string( $str_tipo_pessoa ) )
+//		{
+//			$where .= "{$whereAnd}tipo = '$str_tipo_pessoa' ";
+//			$whereAnd = " AND ";
+//		}
 		
 		if(is_numeric($int_ddd))
 		{
@@ -197,7 +197,7 @@ class clsPessoaTelefone
 		$db = new clsBanco($this->banco);
 		$db = new clsBanco();
 		
-		$db->Consulta("SELECT idpes, tipo, ddd, fone FROM $this->schema_cadastro.$this->tabela_telefone $where $orderBy $limite");
+		$db->Consulta("SELECT idpes, tipo, ddd, fone FROM $this->schema_cadastro.$this->tabela_telefone $where ");
 		$resultado = array();
 		while ($db->ProximoRegistro()) 
 		{

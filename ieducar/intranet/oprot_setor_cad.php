@@ -29,16 +29,6 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/relatorio.inc.php");
 require_once ("include/clsCadastro.inc.php");
 
-class clsIndex extends clsBase
-{
-	
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} Cadastro de Setores" );
-		$this->processoAp = "375";
-	}
-}
-
 class indice extends clsCadastro
 {
 	var $cod_setor;
@@ -229,8 +219,11 @@ class indice extends clsCadastro
 
 }
 
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+$pagina->SetTitulo( "{$pagina->_instituicao} Cadastro de Setores" );
+$pagina->processoAp = "375";
+	
 $miolo = new indice();
 $pagina->addForm( $miolo );
 

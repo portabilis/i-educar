@@ -28,12 +28,6 @@
  * @version   $Id$
  */
 
-require_once 'include/clsCampos.inc.php';
-
-if (class_exists('clsPmiajudaPagina')) {
-  require_once 'include/pmiajuda/clsPmiajudaPagina.inc.php';
-}
-
 require_once 'Portabilis/View/Helper/Application.php';
 require_once 'Portabilis/View/Helper/Inputs.php';
 require_once 'Portabilis/Utils/User.php';

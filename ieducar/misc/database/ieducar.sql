@@ -42825,6 +42825,24 @@ ALTER TABLE ONLY cep_logradouro
     ADD CONSTRAINT fk_cep_logradouro_sistema_idsis_rev FOREIGN KEY (idsis_rev) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
 
+CREATE TABLE public.feriados_nacionais (id_feriado SERIAL NOT NULL,data_feriado VARCHAR(5),nome_feriado VARCHAR(30));
+
+INSERT INTO feriados_nacionais (data_feriado,nome_feriado) VALUES ('01/01','Confraternização Universal');
+
+INSERT INTO feriados_nacionais (data_feriado,nome_feriado) VALUES ('21/04','Tiradentes');
+
+INSERT INTO feriados_nacionais (data_feriado,nome_feriado) VALUES ('01/05','Dia do Trabalho');
+
+INSERT INTO feriados_nacionais (data_feriado,nome_feriado) VALUES ('07/09','Independência do Brasil');
+
+INSERT INTO feriados_nacionais (data_feriado,nome_feriado) VALUES ('12/10','Nossa Senhora de Aparecida');
+
+INSERT INTO feriados_nacionais (data_feriado,nome_feriado) VALUES ('02/11','Dia de Finados');
+
+INSERT INTO feriados_nacionais (data_feriado,nome_feriado) VALUES ('15/11','Proclamação da República');
+
+INSERT INTO feriados_nacionais (data_feriado,nome_feriado) VALUES ('25/12','Natal');
+
 --
 -- PostgreSQL database dump complete
 --

@@ -61,9 +61,9 @@ class Educacenso_Model_CursoSuperiorTest extends UnitBaseTest
   {
     // Recupera os objetos CoreExt_Validate
     $validators = $this->_entity->getDefaultValidatorCollection();
-    $this->assertType('CoreExt_Validate_String',  $validators['curso']);
-    $this->assertType('CoreExt_Validate_String',  $validators['nome']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['classe']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['user']);
+    $this->assertInternalType('CoreExt_Validate_String',  $validators['curso']);
+    $this->assertInternalType('CoreExt_Validate_String',  $validators['nome']);
+    $this->assertInternalType('CoreExt_Validate_Numeric', $validators['classe']);
+    $this->assertInternalType('CoreExt_Validate_Numeric', $validators['user']);
   }
 }

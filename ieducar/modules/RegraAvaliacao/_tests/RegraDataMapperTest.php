@@ -56,12 +56,12 @@ class RegraDataMapperTest extends UnitBaseTest
 
   public function testGetterDeFormulaDataMapperInstanciaObjetoPorPadraoSeNenhumForConfigurado()
   {
-    $this->assertType('FormulaMedia_Model_FormulaDataMapper', $this->_mapper->getFormulaDataMapper());
+    $this->assertInternalType('FormulaMedia_Model_FormulaDataMapper', $this->_mapper->getFormulaDataMapper());
   }
 
   public function testGetterDeTabelaDataMapperInstanciaObjetoPorPadraoSeNenhumForConfigurado()
   {
-    $this->assertType('TabelaArredondamento_Model_TabelaDataMapper', $this->_mapper->getTabelaDataMapper());
+    $this->assertInternalType('TabelaArredondamento_Model_TabelaDataMapper', $this->_mapper->getTabelaDataMapper());
   }
 
   public function testFindFormulaMediaFinalDataMapper()

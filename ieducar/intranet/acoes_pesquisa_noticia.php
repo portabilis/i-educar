@@ -30,19 +30,6 @@ require_once ("include/clsListagem.inc.php");
 //require_once ("include/clsBanco.inc.php");
 //require_once("include/clsLogradouro.inc.php");
 require_once("include/pmiacoes/geral.inc.php");
-class clsIndex extends clsBase
-{
-	
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} Noticias do Portal!" );
-		$this->processoAp = "551";
-		$this->renderMenu = false;
-		$this->renderMenuSuspenso = false;
-		
-	}
-}
-
 class miolo1 extends clsListagem
 {
 	
@@ -103,8 +90,14 @@ class miolo1 extends clsListagem
 }
 
 
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+$pagina->SetTitulo( "{$pagina->_instituicao} Noticias do Portal!" );
+$pagina->processoAp = "551";
+$pagina->renderMenu = false;
+$pagina->renderMenuSuspenso = false;
+
+	
 $miolo = new miolo1();
 $pagina->addForm( $miolo );
 

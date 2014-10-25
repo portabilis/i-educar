@@ -29,9 +29,9 @@
  * @version     $Id$
  */
 
-require_once 'App/Date/AllTests.php';
-require_once 'App/Model/AllTests.php';
-require_once 'App/Service/AllTests.php';
+require_once 'Date/AllTests.php';
+require_once 'Model/AllTests.php';
+require_once 'Service/AllTests.php';
 
 /**
  * App_AllTests class.

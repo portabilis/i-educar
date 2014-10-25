@@ -33,16 +33,6 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
-/**
- * clsIndexBase class.
- *
- * @author    Adriano Erik Weiguert Nagasava <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
- * @version   @@package_version@@
- */
 class clsIndexBase extends clsBase
 {
   function Formular()
@@ -52,16 +42,6 @@ class clsIndexBase extends clsBase
   }
 }
 
-/**
- * clsIndexBase class.
- *
- * @author    Adriano Erik Weiguert Nagasava <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
- * @version   @@package_version@@
- */
 class indice extends clsCadastro
 {
   var $pessoa_logada;
@@ -241,8 +221,11 @@ class indice extends clsCadastro
 }
 
 // Instancia objeto de página
-$pagina = new clsIndexBase();
+$pagina = new clsBase();
 
+    $pagina->SetTitulo($pagina->_instituicao . ' i-Educar - Falta Atraso Compensado');
+    $pagina->processoAp = 635;
+  
 // Instancia objeto de conteúdo
 $miolo = new indice();
 

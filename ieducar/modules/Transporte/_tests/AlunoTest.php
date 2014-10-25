@@ -56,9 +56,9 @@ class Transporte_Model_AlunoTest extends UnitBaseTest
   {
     // Recupera os objetos CoreExt_Validate
     $validators = $this->_entity->getDefaultValidatorCollection();
-    $this->assertType('CoreExt_Validate_Numeric', $validators['aluno']);
-    $this->assertType('CoreExt_Validate_Choice',  $validators['responsavel']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['user']);
+    $this->assertInternalType('CoreExt_Validate_Numeric', $validators['aluno']);
+    $this->assertInternalType('CoreExt_Validate_Choice',  $validators['responsavel']);
+    $this->assertInternalType('CoreExt_Validate_Numeric', $validators['user']);
 
     // Verifica se a opção 'choices' corresponde aos valores do Enum Responsavel.
     $responsavel = Transporte_Model_Responsavel::getInstance();

@@ -55,11 +55,11 @@ class Educacenso_Model_IesTest extends UnitBaseTest
   {
     // Recupera os objetos CoreExt_Validate
     $validators = $this->_entity->getDefaultValidatorCollection();
-    $this->assertType('CoreExt_Validate_Numeric', $validators['ies']);
-    $this->assertType('CoreExt_Validate_String',  $validators['nome']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['dependenciaAdministrativa']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['tipoInstituicao']);
-    $this->assertType('CoreExt_Validate_String',  $validators['uf']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['user']);
+    $this->assertInternalType('CoreExt_Validate_Numeric', $validators['ies']);
+    $this->assertInternalType('CoreExt_Validate_String',  $validators['nome']);
+    $this->assertInternalType('CoreExt_Validate_Numeric', $validators['dependenciaAdministrativa']);
+    $this->assertInternalType('CoreExt_Validate_Numeric', $validators['tipoInstituicao']);
+    $this->assertInternalType('CoreExt_Validate_String',  $validators['uf']);
+    $this->assertInternalType('CoreExt_Validate_Numeric', $validators['user']);
   }
 }

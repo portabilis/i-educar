@@ -29,8 +29,8 @@
  */
 
 // Inclui arquivo de bootstrapping
-//require_once '/home/rafael/ieducar/ieducar/includes/bootstrap.php';
-require_once '../includes/bootstrap.php';
+require_once '/home/ieducar/ieducar/ieducar/includes/bootstrap.php';
+
 
 // redireciona requisições, caso configurado
 if ($GLOBALS['coreExt']['Config']->app->routes &&
@@ -103,6 +103,11 @@ class clsBase extends clsConfig
   function SetTitulo($titulo)
   {
     $this->titulo = $titulo;
+  }
+
+  function SetProcessoAp($processoAp)
+  {
+    $this->processoAp = $processoAp;
   }
 
   function AddForm($form)

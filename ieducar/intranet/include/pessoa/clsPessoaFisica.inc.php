@@ -285,7 +285,7 @@ class clsPessoaFisica extends clsPessoaFj
         $this->data_obito               = $detalhe_fisica['data_obito'];
         $this->nacionalidade            = $detalhe_fisica['nacionalidade'];
         $this->idpais_estrangeiro       = $detalhe_fisica['idpais_estrangeiro'];
-        $this->data_chagada_brasil      = $detalhe_fisica['data_chagada_brasil'];
+//        $this->data_chagada_brasil      = $detalhe_fisica['data_chagada_brasil'];
         $this->idmun_nascimento         = $detalhe_fisica['idmun_nascimento'];
         $this->ultima_empresa           = $detalhe_fisica['ultima_empresa'];
         $this->idocup                   = $detalhe_fisica['idocup'];

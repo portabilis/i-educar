@@ -30,15 +30,6 @@ require_once ("include/clsBanco.inc.php");
 require_once( "include/urbano/geral.inc.php" );
 require_once( "include/public/clsPublicBairro.inc.php" );
 
-class clsIndexBase extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} Cep Logradouro" );
-		$this->processoAp = "758";
-	}
-}
-
 class indice extends clsDetalhe
 {
 	/**
@@ -153,8 +144,11 @@ class indice extends clsDetalhe
 }
 
 // cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
+$pagina = new clsBase();
+
+$pagina->SetTitulo( "{$pagina->_instituicao} Cep Logradouro" );
+$pagina->processoAp = "758";
+	// cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
 $pagina->addForm( $miolo );

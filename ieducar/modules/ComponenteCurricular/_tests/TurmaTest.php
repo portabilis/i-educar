@@ -54,6 +54,6 @@ class ComponenteCurricular_Model_TurmaTest extends UnitBaseTest
   public function testEntityValidators()
   {
     $validators = $this->_entity->getValidatorCollection();
-    $this->assertType('CoreExt_Validate_Numeric', $validators['cargaHoraria']);
+    $this->assertInternalType('CoreExt_Validate_Numeric', $validators['cargaHoraria']);
   }
 }

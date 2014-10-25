@@ -58,11 +58,11 @@ class AnoEscolarTest extends UnitBaseTest
 
     $this->_entity->anoEscolar = 1;
     $validators = $this->_entity->getValidatorCollection();
-    $this->assertType('CoreExt_Validate_Numeric', $validators['cargaHoraria']);
+    $this->assertInternalType('CoreExt_Validate_Numeric', $validators['cargaHoraria']);
   }
 
   public function testGetterDeDataMapperInstanciaObjetoPorPadraoSeNenhumForConfigurado()
   {
-    $this->assertType('ComponenteCurricular_Model_AnoEscolarDataMApper', $this->_entity->getDataMapper());
+    $this->assertInternalType('ComponenteCurricular_Model_AnoEscolarDataMApper', $this->_entity->getDataMapper());
   }
 }

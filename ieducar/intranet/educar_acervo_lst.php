@@ -30,16 +30,6 @@ require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
 require_once ("include/localizacaoSistema.php");
 
-class clsIndexBase extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Obras" );
-		$this->processoAp = "598";
-                $this->addEstilo( "localizacaoSistema" );
-	}
-}
-
 class indice extends clsListagem
 {
 	/**
@@ -170,7 +160,7 @@ class indice extends clsListagem
 
 		// Paginador
 		$this->limite = 20;
-		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+		@$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
 		if(!is_numeric($this->ref_cod_biblioteca))
 		{
@@ -276,21 +266,26 @@ class indice extends clsListagem
                 
                 $localizacao = new LocalizacaoSistema();
                 $localizacao->entradaCaminhos( array(
-                    $_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
+                    @$_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
                     "educar_biblioteca_index.php"                  => "Biblioteca",
                     ""                                  => "Lista de Obras"
                 ));
-                $this->enviaLocalizacao($localizacao->montar());                
+                $this->enviaLocalizacao($localizacao->montar());  
+                return $lista;
 	}
 }
 // cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
+$pagina = new clsBase();
+
+$pagina->SetTitulo( "{$pagina->_instituicao} i-Educar - Obras" );
+$pagina->processoAp = "598";
+                $pagina->addEstilo( "localizacaoSistema" );
+	// cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
 $pagina->addForm( $miolo );
 // gera o html
-$pagina->MakeAll();
+// $pagina->MakeAll();
 ?>
 <script>
 

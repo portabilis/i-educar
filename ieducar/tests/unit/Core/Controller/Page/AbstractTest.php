@@ -62,16 +62,16 @@ class Core_Controller_Page_AbstractTest extends UnitBaseTest
   public function testClasseDataMapperEGeradaAPartirDaDefinicaoString()
   {
     $this->_pageController->_dataMapper = 'CoreExt_EntityDataMapperStub';
-    $this->assertType('CoreExt_DataMapper', $this->_pageController->getDataMapper(), 'Falhou na asserção a partir da instanciação de "Core_Page_Controller_Abstract".');
+    $this->assertInternalType('CoreExt_DataMapper', $this->_pageController->getDataMapper(), 'Falhou na asserção a partir da instanciação de "Core_Page_Controller_Abstract".');
 
     $this->_pageController->setOptions(array('datamapper' => 'CoreExt_EntityDataMapperStub'));
-    $this->assertType('CoreExt_DataMapper', $this->_pageController->getDataMapper(), 'Falhou na asserção a partir de configuração via "setOptions()".');
+    $this->assertInternalType('CoreExt_DataMapper', $this->_pageController->getDataMapper(), 'Falhou na asserção a partir de configuração via "setOptions()".');
 
     $this->_pageController->setDataMapper('CoreExt_EntityDataMapperStub');
-    $this->assertType('CoreExt_DataMapper', $this->_pageController->getDataMapper(), 'Falhou na asserção a partir de configuração via "setDataMapper()" com nome de classe "CoreExt_DataMapper".');
+    $this->assertInternalType('CoreExt_DataMapper', $this->_pageController->getDataMapper(), 'Falhou na asserção a partir de configuração via "setDataMapper()" com nome de classe "CoreExt_DataMapper".');
 
     $this->_pageController->setDataMapper(new CoreExt_EntityDataMapperStub());
-    $this->assertType('CoreExt_DataMapper', $this->_pageController->getDataMapper(), 'Falhou na asserção a partir de configuração via "setDataMapper()" com objeto "CoreExt_DataMapper".');
+    $this->assertInternalType('CoreExt_DataMapper', $this->_pageController->getDataMapper(), 'Falhou na asserção a partir de configuração via "setDataMapper()" com objeto "CoreExt_DataMapper".');
   }
 
   /**
@@ -101,7 +101,7 @@ class Core_Controller_Page_AbstractTest extends UnitBaseTest
   public function testAtribuicaoDeInstanciaEntity()
   {
     $this->_pageController->setEntity(new CoreExt_EntityStub());
-    $this->assertType('CoreExt_Entity', $this->_pageController->getEntity());
+    $this->assertInternalType('CoreExt_Entity', $this->_pageController->getEntity());
   }
 
   /**
@@ -119,13 +119,13 @@ class Core_Controller_Page_AbstractTest extends UnitBaseTest
   public function testInstanciaUmEntityCasoNenhumaInstanciaTenhaSidoAtribuidaExplicitamente()
   {
     $this->_pageController->setDataMapper('CoreExt_EntityDataMapperStub');
-    $this->assertType('CoreExt_Entity', $this->_pageController->getEntity());
+    $this->assertInternalType('CoreExt_Entity', $this->_pageController->getEntity());
   }
 
   public function testNumeroDoProcessoConfigurado()
   {
     $this->_pageController->_processoAp = 1;
-    $this->assertType('int', $this->_pageController->getBaseProcessoAp(), 'Falhou na asserção por tipo a partir da instanciação de "Core_Page_Controller_Abstract".');
+    $this->assertInternalType('int', $this->_pageController->getBaseProcessoAp(), 'Falhou na asserção por tipo a partir da instanciação de "Core_Page_Controller_Abstract".');
     $this->assertEquals(1, $this->_pageController->getBaseProcessoAp(), 'Falhou na asserção por valor a partir da instanciação de "Core_Page_Controller_Abstract".');
 
     $this->_pageController->setOptions(array('processoAp' => 2));
@@ -146,7 +146,7 @@ class Core_Controller_Page_AbstractTest extends UnitBaseTest
   public function testTituloConfigurado()
   {
     $this->_pageController->_titulo = 'foo';
-    $this->assertType('string', $this->_pageController->getBaseTitulo(), 'Falhou na asserção por tipo a partir da instanciação de "Core_Page_Controller_Abstract".');
+    $this->assertInternalType('string', $this->_pageController->getBaseTitulo(), 'Falhou na asserção por tipo a partir da instanciação de "Core_Page_Controller_Abstract".');
     $this->assertEquals('foo', $this->_pageController->getBaseTitulo(), 'Falhou na asserção por valor a partir da instanciação de "Core_Page_Controller_Abstract".');
 
     $this->_pageController->setOptions(array('titulo' => 'bar'));

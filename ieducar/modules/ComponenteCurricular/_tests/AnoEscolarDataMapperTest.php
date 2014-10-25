@@ -55,7 +55,7 @@ class AnoEscolarDataMapperTest extends UnitBaseTest
 
   public function testGetterDeComponenteCurricularMapperInstanciaObjetoPorPadraoSeNenhumForConfigurado()
   {
-    $this->assertType('ComponenteCurricular_Model_ComponenteDataMapper', $this->_mapper->getComponenteDataMapper());
+    $this->assertInternalType('ComponenteCurricular_Model_ComponenteDataMapper', $this->_mapper->getComponenteDataMapper());
   }
 
   public function testFindComponentePorCurso()

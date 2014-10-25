@@ -28,15 +28,6 @@ $desvio_diretorio = "";
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/pmiacoes/geral.inc.php");
-class clsIndex extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} Sistema de Cadastro de Ações do Governo - Listagem de setores" );
-		$this->processoAp = "553";
-	}
-}
-
 class indice extends clsListagem
 {
 	function Gerar()
@@ -107,8 +98,11 @@ class indice extends clsListagem
 	}
 }
 
-$pagina = new clsIndex();
-$miolo = new indice();
+$pagina = new clsBase();
+
+$pagina->SetTitulo( "{$pagina->_instituicao} Sistema de Cadastro de Ações do Governo - Listagem de setores" );
+$pagina->processoAp = "553";
+	$miolo = new indice();
 $pagina->addForm( $miolo );
 $pagina->MakeAll();
 

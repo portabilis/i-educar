@@ -29,24 +29,10 @@ require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
 
-class clsIndexBase extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Exemplar Devolu&ccedil;&atilde;o" );
-		$this->processoAp = "628";
-	}
-}
-
 class indice extends clsCadastro
 {
-	/**
-	 * Referencia pega da session para o idpes do usuario atual
-	 *
-	 * @var int
-	 */
-	var $pessoa_logada;
 
+	var $pessoa_logada;
 	var $cod_emprestimo;
 	var $ref_usuario_devolucao;
 	var $ref_usuario_cad;
@@ -90,7 +76,7 @@ class indice extends clsCadastro
 
 	function Gerar()
 	{
-		// primary keys
+		
 		$this->campoOculto( "cod_emprestimo", $this->cod_emprestimo );
 
 		$this->data_retirada = dataFromPgToBr($this->data_retirada, "Y-m-d");
@@ -206,9 +192,14 @@ class indice extends clsCadastro
 		@session_start(); 
 			$reload = $_SESSION['reload'];
 		@session_write_close();
-
-		if ($valor_divida && !$reload )
-		{
+                
+                calculoValorMulta();
+	}
+        
+        function calculoValorMulta(){
+            
+            if ($valor_divida && !$reload )
+            {
 			$this->valor_multa = $valor_divida;
 			$this->campoMonetario("valor_divida", "Valor Multa", $valor_divida, 8, 8,false,'','','',true);
 			$this->campoOculto( "valor_multa", $this->valor_multa );
@@ -222,15 +213,15 @@ class indice extends clsCadastro
 				if(!confirm('Atraso na devolução do exemplar ($dias_atraso dias)! \\n Data prevista para a entrega: $data_entrega \\n Valor total da multa: R$$valor_divida \\n Deseja adicionar a multa?'))
 					window.location = 'educar_exemplar_devolucao_cad.php?cod_emprestimo={$this->cod_emprestimo}';
 			</script>";
-		}
-		elseif ($valor_divida && $reload )
-		{
+            }
+            elseif ($valor_divida && $reload )
+            {
 			echo "<script> alert('Valor da multa ignorado!'); </script>";
 			$valor_divida = '0,00';
 			$this->campoMonetario("valor_divida", "Valor Multa", $valor_divida, 8, 8,false,'','','',true);
 			$this->campoOculto( "valor_multa", $this->valor_multa );
-		}
-	}
+            }
+        }
 
 	function Novo()
 	{
@@ -287,8 +278,11 @@ class indice extends clsCadastro
 }
 
 // cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
+$pagina = new clsBase();
+
+$pagina->SetTitulo( "{$pagina->_instituicao} i-Educar - Exemplar Devolu&ccedil;&atilde;o" );
+$pagina->processoAp = "628";
+	// cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
 $pagina->addForm( $miolo );

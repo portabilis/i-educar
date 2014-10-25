@@ -30,15 +30,6 @@ require_once ("include/relatorio.inc.php");
 require_once ("include/Geral.inc.php");
 
 
-class clsIndex extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} Relatório de Diárias" );
-		$this->processoAp = "333";
-	}
-}
-
 class indice extends clsCadastro
 {
 	var $cod_funcionario;
@@ -171,8 +162,11 @@ class indice extends clsCadastro
 	}
 }
 
-$pagina = new clsIndex();
+$pagina = new clsBase();
 
+$pagina->SetTitulo( "{$pagina->_instituicao} Relatório de Diárias" );
+$pagina->processoAp = "333";
+	
 $miolo = new indice();
 $pagina->addForm( $miolo );
 

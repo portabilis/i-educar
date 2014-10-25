@@ -34,28 +34,6 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
 /**
- * clsIndexBase class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
- * @version   @@package_version@@
- */
-class clsIndexBase extends clsBase
-{
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Curso');
-    $this->processoAp         = 0;
-    $this->renderBanner       = FALSE;
-    $this->renderMenu         = FALSE;
-    $this->renderMenuSuspenso = FALSE;
-  }
-}
-
-/**
  * indice class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
@@ -193,8 +171,14 @@ class indice extends clsCadastro
 }
 
 // Instancia objeto de página
-$pagina = new clsIndexBase();
+$pagina = new clsBase();
 
+    $pagina->SetTitulo($pagina->_instituicao . ' i-Educar - Servidor Curso');
+    $pagina->processoAp         = 0;
+    $pagina->renderBanner       = FALSE;
+    $pagina->renderMenu         = FALSE;
+    $pagina->renderMenuSuspenso = FALSE;
+  
 // Instancia objeto de conteúdo
 $miolo = new indice();
 

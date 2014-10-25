@@ -29,15 +29,6 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
 
-class clsIndex extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} Grupos de Email!" );
-		$this->processoAp = "85";
-	}
-}
-
 class indice extends clsDetalhe
 {
 	function Gerar()
@@ -64,8 +55,11 @@ class indice extends clsDetalhe
 		$this->largura = "100%";
 	}
 }
-$pagina = new clsIndex();
-$miolo = new indice();
+$pagina = new clsBase();
+
+$pagina->SetTitulo( "{$pagina->_instituicao} Grupos de Email!" );
+$pagina->processoAp = "85";
+	$miolo = new indice();
 $pagina->addForm( $miolo );
 $pagina->MakeAll();
 ?>

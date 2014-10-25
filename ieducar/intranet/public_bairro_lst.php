@@ -38,26 +38,6 @@ require_once 'CoreExt/View/Helper/UrlHelper.php';
 require_once 'include/localizacaoSistema.php';
 
 /**
- * clsIndexBase class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Public
- * @since     Classe disponível desde a versão 1.0.0
- * @version   @@package_version@@
- */
-class clsIndexBase extends clsBase
-{
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' Bairro');
-    $this->processoAp = 756;
-    $this->addEstilo( "localizacaoSistema" );
-  }
-}
-
-/**
  * indice class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
@@ -253,8 +233,12 @@ class indice extends clsListagem
 }
 
 // Instancia objeto de página
-$pagina = new clsIndexBase();
+$pagina = new clsBase();
 
+    $pagina->SetTitulo($pagina->_instituicao . ' Bairro');
+    $pagina->processoAp = 756;
+    $pagina->addEstilo( "localizacaoSistema" );
+  
 // Instancia objeto de conteúdo
 $miolo = new indice();
 

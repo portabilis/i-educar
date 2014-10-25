@@ -54,10 +54,10 @@ class TurmaTest extends UnitBaseTest
   public function testEntityValidators()
   {
     $validators = $this->_entity->getDefaultValidatorCollection();
-    $this->assertType('CoreExt_Validate_Numeric', $validators['calendarioAnoLetivo']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['ano']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['mes']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['dia']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['turma']);
+    $this->assertInternalType('CoreExt_Validate_Numeric', $validators['calendarioAnoLetivo']);
+    $this->assertInternalType('CoreExt_Validate_Numeric', $validators['ano']);
+    $this->assertInternalType('CoreExt_Validate_Numeric', $validators['mes']);
+    $this->assertInternalType('CoreExt_Validate_Numeric', $validators['dia']);
+    $this->assertInternalType('CoreExt_Validate_Numeric', $validators['turma']);
   }
 }

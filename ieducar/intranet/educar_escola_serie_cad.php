@@ -36,25 +36,6 @@ require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
 /**
- * clsIndexBase class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
- * @version   @@package_version@@
- */
-class clsIndexBase extends clsBase
-{
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Escola S&eacute;rie');
-    $this->processoAp = 585;
-  }
-}
-
-/**
  * indice class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
@@ -498,8 +479,11 @@ class indice extends clsCadastro
 }
 
 // Instancia objeto de página
-$pagina = new clsIndexBase();
+$pagina = new clsBase();
 
+    $pagina->SetTitulo($pagina->_instituicao . ' i-Educar - Escola S&eacute;rie');
+    $pagina->processoAp = 585;
+  
 // Instancia objeto de conteúdo
 $miolo = new indice();
 

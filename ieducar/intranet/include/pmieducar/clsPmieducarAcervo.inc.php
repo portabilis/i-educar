@@ -905,7 +905,7 @@ class clsPmieducarAcervo
 		}
 		if (is_numeric($ativo))
 		{
-			$filtros .= "{$whereAnd} ativo = {$ativo}";
+			@$filtros .= "{$whereAnd} ativo = {$ativo}";
 			$whereAnd = " AND ";
 		}
 		if (is_numeric($int_ref_cod_acervo_colecao))

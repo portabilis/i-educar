@@ -38,25 +38,6 @@ require_once 'Portabilis/View/Helper/Application.php';
 
 
 /**
- * clsIndexBase class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
- * @version   @@package_version@@
- */
-class clsIndexBase extends clsBase
-{
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Pontos');
-    $this->processoAp = 21239;
-  }
-}
-
-/**
  * indice class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.scclsModulesPontoTransporteEscolar.gov.br>
@@ -105,8 +86,11 @@ class indice extends clsDetalhe
 }
 
 // Instancia o objeto da página
-$pagina = new clsIndexBase();
+$pagina = new clsBase();
 
+    $pagina->SetTitulo($pagina->_instituicao . ' i-Educar - Pontos');
+    $pagina->processoAp = 21239;
+  
 // Instancia o objeto de conteúdo
 $miolo = new indice();
 

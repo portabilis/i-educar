@@ -24,19 +24,9 @@
 	*	02111-1307, USA.													 *
 	*																		 *
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
 
-class clsIndexBase extends clsBase
-{
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Biblioteca" );
-		$this->processoAp = "591";
-	}
-}
+require_once '../autoload.php';
+
 
 class indice extends clsCadastro
 {
@@ -62,11 +52,11 @@ class indice extends clsCadastro
 	var $tombo_automatico;
 
 	function Inicializar()
-	{
+	{    
 		$retorno = "Novo";
 		@session_start();
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
-		$this->tipo_biblioteca = $_SESSION['biblioteca']['tipo_biblioteca'];
+		$this->tipo_biblioteca = $_SESSION['tipo_biblioteca'];
 		@session_write_close();
 
 		$this->cod_biblioteca=$_GET["cod_biblioteca"];
@@ -101,7 +91,6 @@ class indice extends clsCadastro
 	{
 		// primary keys
 		$this->campoOculto( "cod_biblioteca", $this->cod_biblioteca );
-
 		if( $_POST )
 			foreach( $_POST AS $campo => $val )
 				$this->$campo = ( $this->$campo ) ? $this->$campo : $val;
@@ -374,8 +363,11 @@ class indice extends clsCadastro
 }
 
 // cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
+$pagina = new clsBase();
+
+$pagina->SetTitulo( "{$pagina->_instituicao} i-Educar - Biblioteca" );
+$pagina->processoAp = "591";
+	// cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
 $pagina->addForm( $miolo );

@@ -48,25 +48,6 @@ require_once 'Portabilis/Date/Utils.php';
 require_once 'image_check.php';
 
 /**
- * clsIndex class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Cadastro
- * @since     Classe disponível desde a versão 1.0.0
- * @version   @@package_version@@
- */
-class clsIndex extends clsBase
-{
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' Pessoas Físicas - Cadastro');
-    $this->processoAp = 43;
-  }
-}
-
-/**
  * indice class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
@@ -1253,8 +1234,10 @@ class indice extends clsCadastro
 }
 
 // Instancia objeto de página
-$pagina = new clsIndex();
-
+$pagina = new clsBase();
+$pagina->SetTitulo($pagina->_instituicao . ' Pessoas Físicas - Cadastro');
+$pagina->processoAp = 43;
+ 
 // Instancia objeto de conteúdo
 $miolo = new indice();
 
