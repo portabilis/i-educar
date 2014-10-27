@@ -1,6 +1,6 @@
 <?php
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
+//error_reporting(E_ALL);
+//ini_set("display_errors", 1);
 
 /**
  * i-Educar - Sistema de gestão escolar
@@ -119,11 +119,6 @@ class indice extends clsCadastro
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
-    return $retorno;
-  }
-
-  function Gerar()
-  {
     if (is_numeric($this->ref_cod_servidor) && is_numeric($this->ref_ref_cod_instituicao)) {
       $obj   = new clsPmieducarServidorAlocacao();
       $lista = $obj->lista(NULL, $this->ref_ref_cod_instituicao, NULL, NULL,
@@ -134,41 +129,40 @@ class indice extends clsCadastro
       {
         foreach ( $lista AS $campo )
         {          
-          
-          $this->alocacao_array[$qtd_registros][] = $campo['periodo'];
+                   
           $this->alocacao_array[$qtd_registros][] = $campo['ref_cod_escola'];
+          $this->alocacao_array[$qtd_registros][] = $campo['periodo'];          
           $this->alocacao_array[$qtd_registros][] = $campo["carga_horaria"];
           $this->alocacao_array[$qtd_registros][] = $campo['ref_cod_funcao'];          
 
           $qtd_registros++;
         }
       }
-
-      $obj_servidor = new clsPmieducarServidor($this->ref_cod_servidor, NULL,
-        NULL, NULL, NULL, NULL, 1, $this->ref_ref_cod_instituicao);
-      $det_servidor = $obj_servidor->detalhe();
-
-      $this->carga_horaria_disponivel = $det_servidor['carga_horaria'];
     }
     else {
       header('Location: educar_servidor_lst.php');
       die();
     }
 
+    return $retorno;
+  }
+
+  function Gerar()
+  {
+
     $obj_inst = new clsPmieducarInstituicao($this->ref_ref_cod_instituicao);
     $inst_det = $obj_inst->detalhe();
 
     $this->campoRotulo('nm_instituicao', 'Instituição', $inst_det['nm_instituicao']);
-    $this->campoOculto('ref_ref_cod_instituicao', $this->ref_ref_cod_instituicao);
+    $this->campoOculto('ref_ref_cod_instituicao', $this->ref_ref_cod_instituicao);    
 
     // Dados do servidor
-    $objTemp = new clsPmieducarServidor($this->ref_cod_servidor);
+    $objTemp = new clsPmieducarServidor($this->ref_cod_servidor, NULL,
+        NULL, NULL, NULL, NULL, 1, $this->ref_ref_cod_instituicao);
     $det = $objTemp->detalhe();
 
     if ($det) {
-      foreach ($det as $key => $registro) {
-        $this->$key = $registro;
-      }
+      $this->carga_horaria_disponivel = $det['carga_horaria'];
     }
 
     if ($this->ref_cod_servidor) {
@@ -240,7 +234,6 @@ class indice extends clsCadastro
       '', FALSE, '', '', FALSE, FALSE);
 
     $this->campoTabelaFim();
-
   }
 
   function Novo()
@@ -251,34 +244,49 @@ class indice extends clsCadastro
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7,
-      'educar_servidor_alocacao_lst.php');
+      'educar_servidor_alocacao_lst.php');  
 
-    $obj_tmp = new clsPmieducarServidorAlocacao();
-    $obj_tmp->excluiAlocacoesServidor($this->ref_cod_servidor);
+    $carga_horaria_disponivel = urldecode($this->carga_horaria_disponivel);
 
-    foreach ($this->ref_cod_escola as $key => $value) {
-      $cargaHoraria = explode(':', $this->carga_horaria_alocada[$key]);
+    if ($this->hhmmToMinutes($carga_horaria_disponivel) >= $this->arrayHhmmToMinutes($this->carga_horaria_alocada)){
 
-      $hora    = isset($cargaHoraria[0]) ? $cargaHoraria[0] : 0;
-      $minuto  = isset($cargaHoraria[1]) ? $cargaHoraria[1] : 0;
-      $segundo = isset($cargaHoraria[2]) ? $cargaHoraria[2] : 0;
+      $obj_tmp = new clsPmieducarServidorAlocacao();
+      $obj_tmp->excluiAlocacoesServidor($this->ref_cod_servidor);
 
-      $cargaHoraria = sprintf("%'02d:%'02d:%'02d", $hora, $minuto, $segundo);
+      foreach ($this->ref_cod_escola as $key => $value) {
+        $cargaHoraria = explode(':', $this->carga_horaria_alocada[$key]);
 
-      $obj = new clsPmieducarServidorAlocacao(NULL, $this->ref_ref_cod_instituicao,
-        NULL, $this->pessoa_logada, $value,
-        $this->ref_cod_servidor, NULL, NULL, $this->ativo,
-        $cargaHoraria, $this->periodo[$key], $this->ref_cod_funcao[$key]);
+        $hora    = isset($cargaHoraria[0]) ? $cargaHoraria[0] : 0;
+        $minuto  = isset($cargaHoraria[1]) ? $cargaHoraria[1] : 0;
+        $segundo = isset($cargaHoraria[2]) ? $cargaHoraria[2] : 0;
 
-      $cadastrou = FALSE;
+        $cargaHoraria = sprintf("%'02d:%'02d:%'02d", $hora, $minuto, $segundo);
 
-      $cadastrou = $obj->cadastra();
+        $obj = new clsPmieducarServidorAlocacao(NULL, $this->ref_ref_cod_instituicao,
+          NULL, $this->pessoa_logada, $value,
+          $this->ref_cod_servidor, NULL, NULL, $this->ativo,
+          $cargaHoraria, $this->periodo[$key], $this->ref_cod_funcao[$key]);
 
-      if (!$cadastrou) {
-        $this->mensagem = 'Cadastro não realizado.<br />';
-        echo "<!--\nErro ao cadastrar clsPmieducarServidorAlocacao\nvalores obrigatorios\nis_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_servidor) && is_numeric($this->periodo) && ($this->carga_horaria_alocada)\n-->";
-        return FALSE;
-      }      
+        $cadastrou = FALSE;
+
+        $cadastrou = $obj->cadastra();
+
+        if (!$cadastrou) {
+          $this->mensagem = 'Cadastro não realizado.<br />';
+          echo "<!--\nErro ao cadastrar clsPmieducarServidorAlocacao\nvalores obrigatorios\nis_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_servidor) && is_numeric($this->periodo) && ($this->carga_horaria_alocada)\n-->";
+          return FALSE;
+        }      
+      }
+    }else{
+      $this->mensagem = 'Não é possível alocar quantidade superior de horas do que o disponível.<br />';
+      $this->alocacao_array = null;
+      foreach ($this->ref_cod_escola as $key => $value) {
+        $this->alocacao_array[$key][] = $value;
+        $this->alocacao_array[$key][] = $this->periodo[$key];
+        $this->alocacao_array[$key][] = $this->carga_horaria_alocada[$key];
+        $this->alocacao_array[$key][] = $this->ref_cod_funcao[$key];  
+      }
+      return false;
     }    
 
     $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
@@ -295,6 +303,21 @@ class indice extends clsCadastro
   function Excluir()
   {
     return FALSE;
+  }
+
+  function hhmmToMinutes($hhmm){
+    if(strlen($hhmm) == 5)
+      return ((int)substr($hhmm, 0, 2)) + ((int) substr($hhmm, 3, 2)) * 60;
+    else
+      return 0;
+  }
+
+  function arrayHhmmToMinutes($array){
+    $total = 0;
+    foreach ($array as $key => $value) {
+      $total += $this->hhmmToMinutes($value);
+    }
+    return $total;
   }
 }
 
