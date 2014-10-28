@@ -107,6 +107,7 @@ class indice extends clsListagem
       'Escola',
       'Instituição',
       'Tipo',
+      'Dia',
       'Horas',
       'Minutos'
     ));
@@ -187,10 +188,13 @@ class indice extends clsListagem
           'ref_cod_instituicao' => $registro['ref_ref_cod_instituicao'],
         ));
 
+        $dt = new DateTime($registro['data_falta_atraso']);
+        $data = $dt->format('d/m/Y');
         $this->addLinhas(array(
           $urlHelper->l($registro['nm_escola'], $url, $options),
           $urlHelper->l($det_ins['nm_instituicao'], $url, $options),
           $urlHelper->l($tipo, $url, $options),
+          $urlHelper->l($data, $url, $options),
           $urlHelper->l($horas_aux, $url, $options),
           $urlHelper->l($minutos_aux, $url, $options)
         ));
@@ -240,4 +244,4 @@ $miolo = new indice();
 $pagina->addForm($miolo);
 
 // Gera o código HTML
-$pagina->MakeAll();
+$pagina->MakeAll();;
