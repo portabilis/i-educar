@@ -396,7 +396,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     // código aluno inep
     $options = array('label' => $this->_getLabel('aluno_inep_id'), 'required' => false, 'size' => 25, 'max_length' => 14);
-    $this->inputsHelper()->integer('aluno_inep_id', $options);
+
+    if($labels_botucatu){
+    	$this->inputsHelper()->hidden('aluno_inep_id', array('value' => null));
+    }else{
+    	$this->inputsHelper()->integer('aluno_inep_id', $options);
+    }
 
     // código aluno rede estadual
     $options = array('label' => $labels_botucatu ? Portabilis_String_Utils::toLatin1("Código rede estadual (RA)") : $this->_getLabel('aluno_estado_id'), 'required' => $labels_botucatu, 'size' => 25, 'max_length' => 25);

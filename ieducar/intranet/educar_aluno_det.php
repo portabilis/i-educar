@@ -367,7 +367,9 @@ class indice extends clsDetalhe
     $alunoInep   = NULL;
     try {
       $alunoInep = $alunoMapper->find(array('aluno' => $this->cod_aluno));
-      $this->addDetalhe(array('Código inep', $alunoInep->alunoInep));
+      if(!$GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu'){
+      	$this->addDetalhe(array('Código inep', $alunoInep->alunoInep));
+      }
     }
     catch(Exception $e) {
     }
@@ -490,7 +492,7 @@ class indice extends clsDetalhe
     $responsavel = $tmp_obj->getResponsavelAluno();
 
     if ($responsavel && is_null($registro['ref_idpes_responsavel'])) {
-      $this->addDetalhe(array('Responsável Aluno', $responsavel['nome_responsavel']));
+      $this->addDetalhe(array('Nome do Responsável', $responsavel['nome_responsavel']));
     }
 
     if ($registro['ref_idpes_responsavel']) {

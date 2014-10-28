@@ -168,14 +168,22 @@ class indice extends clsListagem
 
 		$nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
-		$this->addCabecalhos( array(
-			"C&oacute;digo Aluno",
-      "Código INEP",
-			"Nome do Aluno",
-			"Nome da Mãe",
-			"Nome do Respons&aacute;vel",
-			"CPF Respons&aacute;vel",
-		) );
+		if($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu'){
+			$cabecalhos = array("C&oacute;digo Aluno",
+								"Nome do Aluno",
+								"Nome da Mãe",
+								"Nome do Respons&aacute;vel",
+								"CPF Respons&aacute;vel",);
+		}else{
+			$cabecalhos = array("C&oacute;digo Aluno",
+      							"Código INEP",
+								"Nome do Aluno",
+								"Nome da Mãe",
+								"Nome do Respons&aacute;vel",
+								"CPF Respons&aacute;vel",);
+		}
+
+		$this->addCabecalhos($cabecalhos);
 
 		// Paginador
 		$this->limite = 20;
