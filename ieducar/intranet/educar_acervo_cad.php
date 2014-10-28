@@ -429,7 +429,6 @@ if(document.getElementById('ref_cod_biblioteca').value == "")
 	setVisibility(document.getElementById('img_colecao'), false);
 	setVisibility(document.getElementById('img_editora'), false);
 	setVisibility(document.getElementById('img_idioma'), false);
-	setVisibility(document.getElementById('img_autor'), false);
 	//tempExemplarTipo = null;
 	tempColecao = null;
 	tempIdioma = null;
@@ -545,10 +544,6 @@ function getIdioma( xml_acervo_idioma )
 document.getElementById('ref_cod_biblioteca').onchange = function()
 {
 	ajaxBiblioteca();
-	if(document.getElementById('ref_cod_biblioteca').value != '')
-		setVisibility(document.getElementById('img_autor'), true);
-	else
-		setVisibility(document.getElementById('img_autor'), false);
 };
 
 function ajaxBiblioteca(acao)
