@@ -96,12 +96,12 @@ class indice extends clsListagem
 			$this->$var = ( $val === "" ) ? null: $val;*/
 
 		$this->addCabecalhos( array(
-			"Login",
+			"Código",
 			"Cliente"
 		) );
 
 		$this->campoTexto( "nm_cliente", "Cliente", $this->nm_cliente, 30, 255, false );
-		$this->campoNumero( "login", "Login", $this->login, 9, 9 );
+		$this->campoNumero( "codigo", "Código", $this->codigo, 9, 9 );
 		$this->campoOculto("ref_cod_biblioteca",$this->ref_cod_biblioteca);
 
 		if (isset($_GET["ref_cod_biblioteca"]))
@@ -118,11 +118,11 @@ class indice extends clsListagem
 		if ($this->ref_cod_biblioteca)
 		{
 			$lista = $obj_acervo->listaPesquisaCliente(
+				$this->codigo,
 				null,
 				null,
 				null,
 				null,
-				$this->login,
 				null,
 				null,
 				null,
@@ -136,11 +136,11 @@ class indice extends clsListagem
 		else
 		{
 			$lista = $obj_acervo->lista(
+				$this->codigo,
 				null,
 				null,
 				null,
 				null,
-				$this->login,
 				null,
 				null,
 				null,
@@ -163,7 +163,7 @@ class indice extends clsListagem
 				else if ( is_string( $_SESSION['campo1'] ) )
 					$script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['cod_cliente']}', '{$registro['nome']}'); fecha();\"";
 				$this->addLinhas( array(
-					"<a href=\"javascript:void(0);\" {$script}>{$registro["login"]}</a>",
+					"<a href=\"javascript:void(0);\" {$script}>{$registro["cod_cliente"]}</a>",
 					"<a href=\"javascript:void(0);\" {$script}>{$registro["nome"]}</a>"
 				) );
 			}

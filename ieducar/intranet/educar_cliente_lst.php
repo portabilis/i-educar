@@ -97,12 +97,14 @@ class indice extends clsListagem
 		
 
 		$this->addCabecalhos( array(
+			"Código",
 			"Cliente",
 			"Tipo",
 			"Status"
 		) );
 
 		$this->inputsHelper()->text('nome_cliente', array('required' => false, 'value' => $this->nome_cliente, 'label' => 'Nome'));
+		$this->inputsHelper()->integer('codigo_cliente', array('required' => false, 'value' => $this->codigo_cliente, 'label' => 'Código'));
 
 		$this->campoLista( "status", "Status", array( '' => "Selecione", 'R' => "Regular", 'S' => "Suspenso" ), $this->status, "", false, "", "", false, false );
 
@@ -145,7 +147,7 @@ class indice extends clsListagem
 				}
 			}
 		}	
-			$lista = $obj_cliente->listaCompleta( null,
+			$lista = $obj_cliente->listaCompleta( $this->codigo_cliente,
 												  null,
 												  null, 
 												  null,
@@ -188,6 +190,7 @@ class indice extends clsListagem
 				}
 //				echo "<pre>"; print_r($registro); die();
 				$this->addLinhas( array(
+					"<a href=\"educar_cliente_det.php?cod_cliente={$registro["cod_cliente"]}&ref_cod_biblioteca={$registro["cod_biblioteca"]}\">{$registro["cod_cliente"]}</a>",
 					"<a href=\"educar_cliente_det.php?cod_cliente={$registro["cod_cliente"]}&ref_cod_biblioteca={$registro["cod_biblioteca"]}\">{$registro["nome"]}</a>",
 					"<a href=\"educar_cliente_det.php?cod_cliente={$registro["cod_cliente"]}&ref_cod_biblioteca={$registro["cod_biblioteca"]}\">{$registro["nm_tipo"]}</a>",
 					"<a href=\"educar_cliente_det.php?cod_cliente={$registro["cod_cliente"]}&ref_cod_biblioteca={$registro["cod_biblioteca"]}\">{$registro["status"]}</a>"
