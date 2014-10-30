@@ -492,7 +492,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     $this->inputsHelper()->select('tipo_transporte', $options);
    
-    if ($this->getClsPermissoes()->permissao_cadastra( 21240, $this->getOption('id_usuario'), 8)){
+    if ($this->getClsPermissoes()->permissao_cadastra( 21240, $this->getOption('id_usuario'), 7)){
       
       // Cria lista de rotas 
       $obj_rota = new clsModulesRotaTransporteEscolar();
