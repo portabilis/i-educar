@@ -111,7 +111,7 @@ class indice extends clsListagem
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		
+
 
 		$this->campoNumero("cod_aluno",$GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? "C&oacute;digo Aluno (i-Educar)" : "C&oacute;digo Aluno",$this->cod_aluno,20,9,false);
 		if(!$GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu'){
@@ -134,7 +134,7 @@ class indice extends clsListagem
         foreach ($lista as $registro) {
           $opcoes[$registro['idsetorbai']] = $registro['nome'];
         }
-      }      
+      }
     }
     else {
       echo '<!--\nErro\nClasse clsMunicipio nao encontrada\n-->';
@@ -146,7 +146,7 @@ class indice extends clsListagem
 
 		$this->campoRotulo('filtros_matricula', '<b>Filtros de matrículas em andamento</b>');
 
-		$this->inputsHelper()->integer('ano', array('required' => false, 'value' => $this->ano, 'max_length' => 4));		
+		$this->inputsHelper()->integer('ano', array('required' => false, 'value' => $this->ano, 'max_length' => 4));
 		$this->inputsHelper()->dynamic('instituicao',  array('required' =>  false, 'show-select' => true, 'value' => $this->ref_cod_instituicao));
 		$this->inputsHelper()->dynamic('escola',  array('required' =>  false, 'show-select' => true, 'value' => $this->ref_cod_escola));
 		$this->inputsHelper()->dynamic(array('curso', 'serie'), array('required' =>  false));
@@ -240,15 +240,26 @@ class indice extends clsListagem
 			$aluno->cod_aluno = $registro["cod_aluno"];
 	    $responsavel      = $aluno->getResponsavelAluno();
 	    $nomeResponsavel  = strtoupper($responsavel["nome_responsavel"]);
-
-			$this->addLinhas( array(
+	    if($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu'){
+	    	$linhas = array(
+				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["cod_aluno"]}</a>",
+				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$nomeAluno}</a>",
+				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$nomeMae}</a>",
+				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$nomeResponsavel}</a>",
+				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$responsavel["cpf_responsavel"]}</a>"
+			);
+	    }else{
+	    	$linhas = array(
 				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["cod_aluno"]}</a>",
 				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$alunoInepId}</a>",
 				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$nomeAluno}</a>",
 				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$nomeMae}</a>",
 				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$nomeResponsavel}</a>",
 				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$responsavel["cpf_responsavel"]}</a>"
-			) );
+			);
+	    }
+
+		$this->addLinhas($linhas);
 		}
 
 		$this->addPaginador2( "educar_aluno_lst.php", $total, $_GET, $this->nome, $this->limite );
@@ -272,7 +283,7 @@ class indice extends clsListagem
 	         "educar_index.php"                  => "i-Educar - Escola",
 	         ""                                  => "Listagem de alunos"
 	    ));
-	    $this->enviaLocalizacao($localizacao->montar());		
+	    $this->enviaLocalizacao($localizacao->montar());
 	}
 
 	protected function loadNomeMae($aluno) {
