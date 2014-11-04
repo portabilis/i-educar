@@ -187,6 +187,8 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Função', $registro['ref_cod_funcao']));
     }
 
+    $this->addDetalhe(array('Multi-seriado', dbBool($registro['multi_seriado']) ? 'Sim' : 'Não'));
+
     $obj_funcao = new clsPmieducarServidorFuncao();
     $lst_funcao = $obj_funcao->lista($this->ref_cod_instituicao, $this->cod_servidor);
 
