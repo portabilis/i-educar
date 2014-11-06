@@ -626,7 +626,7 @@ class indice extends clsCadastro
         NULL, $this->ref_idesco, $this->carga_horaria,
         NULL, NULL, 1, $this->ref_cod_instituicao);
       $obj_2 = $this->addCamposCenso($obj_2);
-      $obj->multi_seriado = !is_null($this->multi_seriado);
+      $obj_2->multi_seriado = !is_null($this->multi_seriado);
       $cadastrou = $obj_2->cadastra();
 
       if ($cadastrou) {

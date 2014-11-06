@@ -564,11 +564,11 @@ class clsPmieducarServidor
 
       if (dbBool( $this->multi_seriado)) {
         $campos .= "{$gruda}multi_seriado";
-        $valores .= "{$gruda}' = TRUE ";
+        $valores .= "{$gruda} TRUE ";
         $gruda = ", ";
       }else{
         $campos .= "{$gruda}multi_seriado";
-        $valores .= "{$gruda}' = FALSE ";
+        $valores .= "{$gruda} FALSE ";
         $gruda = ", ";
       }
 
@@ -1240,11 +1240,11 @@ class clsPmieducarServidor
         }
         else {
           $filtros .= "
-      {$whereAnd} (s.carga_horaria >= COALESCE(
-              (SELECT sum(hora_final - hora_inicial) + '" . abs($horas) . ":" . abs($minutos)."'
-                FROM pmieducar.servidor_alocacao sa
-                WHERE sa.ref_cod_servidor = s.cod_servidor
-                AND sa.ref_ref_cod_instituicao ='{$int_ref_cod_instituicao}'),'00:00')) ";
+      {$whereAnd} ((s.carga_horaria >= COALESCE(
+                    (SELECT sum(hora_final - hora_inicial) + '" . abs($horas) . ":" . abs($minutos)."'
+                      FROM pmieducar.servidor_alocacao sa
+                      WHERE sa.ref_cod_servidor = s.cod_servidor
+                      AND sa.ref_ref_cod_instituicao ='{$int_ref_cod_instituicao}'),'00:00')) OR s.multi_seriado)";
         }
       }
     }
@@ -1309,7 +1309,7 @@ class clsPmieducarServidor
 
     if (is_string($str_horario) && $str_horario == "S") {
       $filtros .= "
-    {$whereAnd} s.cod_servidor NOT IN
+    {$whereAnd} (s.cod_servidor NOT IN
       (SELECT DISTINCT qhh.ref_servidor
         FROM pmieducar.quadro_horario_horarios qhh
         WHERE qhh.ref_servidor = s.cod_servidor
@@ -1317,13 +1317,13 @@ class clsPmieducarServidor
         AND qhh.dia_semana = '{$array_horario[0]}'
         AND qhh.hora_inicial >= '{$array_horario[1]}'
         AND qhh.hora_final <= '{$array_horario[2]}'
-        AND qhh.ativo = '1'";
+        AND qhh.ativo = '1' ";
 
       if (is_string($lst_matriculas)) {
         $filtros .= "AND qhh.ref_servidor NOT IN ({$lst_matriculas})";
       }
 
-      $filtros .= " )";
+      $filtros .= " ) OR s.multi_seriado) ";
 
       $whereAnd = " AND ";
     }
