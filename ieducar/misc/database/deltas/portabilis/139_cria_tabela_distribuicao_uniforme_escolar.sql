@@ -13,8 +13,8 @@
 
 	CREATE TABLE pmieducar.distribuicao_uniforme
 	(
-	cod_distribuicao_uniforme BOOLEAN NOT NULL DEFAULT nextval('pmieducar.distribuicao_uniforme_seq'::regclass),
-	ref_cod_aluno BOOLEAN NOT NULL,
+	cod_distribuicao_uniforme INTEGER NOT NULL DEFAULT nextval('pmieducar.distribuicao_uniforme_seq'::regclass),
+	ref_cod_aluno INTEGER NOT NULL,
 	ano BOOLEAN NOT NULL,
 	kit_completo BOOLEAN,
 	agasalho_qtd SMALLINT,
