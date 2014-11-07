@@ -69,8 +69,10 @@ class indice extends clsListagem
 	 */
 	var $offset;
 
+	var $cod_distribuicao_uniforme;
 	var $ref_cod_aluno;
-	var $ano;	
+	var $ano;
+	var $kit_completo;
 
 	function Gerar()
 	{
@@ -78,7 +80,7 @@ class indice extends clsListagem
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
 
-		$this->titulo = "Hist&oacute;rico Escolar - Listagem";
+		$this->titulo = "Distribui&ccedil;&atilde;o de uniforme - Listagem";
 
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = $val;
@@ -91,142 +93,62 @@ class indice extends clsListagem
 			die();
 		}
 
-		
-
-		$lista_busca = array(
-			"Ano",
-			"Extra-curricular"
-		);
+		$this->addCabecalhos( array( "Ano", "Kit completo") );
 
 		$obj_permissao = new clsPermissoes();
 		$nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
-		if ($nivel_usuario == 1)
+
+		$obj_aluno = new clsPmieducarAluno();
+		$lst_aluno = $obj_aluno->lista( $this->ref_cod_aluno, null,null,null,null,null,null,null,null,null,1 );
+		if ( is_array($lst_aluno) )
+
 		{
-			if (!$this->extra_curricular)
-				$lista_busca[] = "Escola";
-
-			$lista_busca[] = "Institui&ccedil;&atilde;o";
+			$det_aluno = array_shift($lst_aluno);
+			$nm_aluno = $det_aluno["nome_aluno"];
 		}
-		else if ($nivel_usuario == 2)
-		{
-			if (!$this->extra_curricular)
-				$lista_busca[] = "Escola";
-		}
-    $lista_busca = array_merge($lista_busca, array('Curso', 'Série', 'Registro', 'Livro', 'Folha'));
 
-		$this->addCabecalhos($lista_busca);
+		if( $nm_aluno )
+			$this->campoRotulo("nm_aluno","Aluno", "{$nm_aluno}");
 
-		$get_escola = true;
-
-		include("include/pmieducar/educar_campo_lista.php");
-
-		// outros Filtros
+		
 		$this->campoNumero( "ano", "Ano", $this->ano, 4, 4, false );
-
-		$opcoes = array( "" => "Selecione", 2 => "N&atilde;o", 1 => "Sim" );
-		$this->campoLista( "extra_curricular", "Extra-curricular", $opcoes, $this->extra_curricular,"",false,"","",false,false );
-
-		if ($this->extra_curricular == 2)
-			$this->extra_curricular = 0;
-
-//		if ($this->ref_cod_escola)
-//		{
-//			$obj_ref_cod_escola = new clsPmieducarEscola( $this->ref_cod_escola );
-//			$det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-//			$this->escola = $det_ref_cod_escola["nome"];
-//		}
-
+		
 		// Paginador
 		$this->limite = 20;
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-		$obj_historico_escolar = new clsPmieducarHistoricoEscolar();
-		$obj_historico_escolar->setOrderby( "ano, sequencial ASC" );
-		$obj_historico_escolar->setLimite( $this->limite, $this->offset );
+		$obj = new clsPmieducarDistribuicaoUniforme();
+		$obj->setOrderby( "ano ASC" );
+		$obj->setLimite( $this->limite, $this->offset );
 
-		$lista = $obj_historico_escolar->lista(
+		$lista = $obj->lista(
 			$this->ref_cod_aluno,
-			null,
-			null,
-			null,
-			null,
-			$this->ano,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			1,
-			null,
-			$this->ref_cod_instituicao,
-			null,
-			$this->extra_curricular,
-			null
+			$this->ano
 		);
 
-		$total = $obj_historico_escolar->_total;
+		$total = $obj->_total;
 
 		// monta a lista
 		if( is_array( $lista ) && count( $lista ) )
 		{
 			foreach ( $lista AS $registro )
 			{
-				if( class_exists( "clsPmieducarInstituicao" ) )
-				{
-					$obj_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
-					$obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
-					$registro["ref_cod_instituicao"] = $obj_cod_instituicao_det["nm_instituicao"];
-				}
-				else
-				{
-					$registro["ref_cod_instituicao"] = "Erro na gera&ccedil;&atilde;o";
-					echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarInstituicao\n-->";
-				}
-
-				if ($registro["extra_curricular"])
-					$registro["extra_curricular"] = "Sim";
-				else
-					$registro["extra_curricular"] = "N&atilde;o";
+				$registro["kit_completo"] = dbBool($registro["kit_completo"]) ? "Sim" : "Não";
 
 				$lista_busca = array(
-					"<a href=\"educar_historico_escolar_det.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}\">{$registro["ano"]}</a>",
+					"<a href=\"educar_distribuicao_uniforme_det.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&cod_distribuicao_uniforme={$registro["cod_distribuicao_uniforme"]}\">{$registro["ano"]}</a>",
 
-					"<a href=\"educar_historico_escolar_det.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}\">{$registro["extra_curricular"]}</a>"
+					"<a href=\"educar_distribuicao_uniforme_det.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&cod_distribuicao_uniforme={$registro["cod_distribuicao_uniforme"]}\">{$registro["kit_completo"]}</a>"
 				);
-
-				if ($nivel_usuario == 1)
-				{
-					if (!$this->extra_curricular)
-						$lista_busca[] = "<a href=\"educar_historico_escolar_det.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}\">{$registro["escola"]}</a>";
-
-					$lista_busca[] = "<a href=\"educar_historico_escolar_det.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}\">{$registro["ref_cod_instituicao"]}</a>";
-				}
-				else if ($nivel_usuario == 2)
-				{
-					if (!$this->extra_curricular)
-						$lista_busca[] = "<a href=\"educar_historico_escolar_det.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}\">{$registro["escola"]}</a>";
-				}
-
-        $lista_busca[] = $registro['nm_curso'];
-        $lista_busca[] = $registro['nm_serie'];
-        $lista_busca[] = $registro['registro'];
-        $lista_busca[] = $registro['livro'];
-        $lista_busca[] = $registro['folha'];
 
 				$this->addLinhas($lista_busca);
 			}
 		}
-		$this->addPaginador2( "educar_historico_escolar_lst.php", $total, $_GET, $this->nome, $this->limite );
+		$this->addPaginador2( "educar_distribuicao_uniforme_lst.php", $total, $_GET, $this->nome, $this->limite );
 		$obj_permissoes = new clsPermissoes();
 		if( $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7 ) )
 		{
-			$this->acao = "go(\"educar_historico_escolar_cad.php?ref_cod_aluno={$this->ref_cod_aluno}\")";
+			$this->acao = "go(\"educar_distribuicao_uniforme_cad.php?ref_cod_aluno={$this->ref_cod_aluno}\")";
 			$this->nome_acao = "Novo";
 		}
 		$this->array_botao[] = 'Voltar';
@@ -238,7 +160,7 @@ class indice extends clsListagem
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "i-Educar - Escola",
-         ""                                  => "Listagem de hist&oacute;ricos escolares"
+         ""                                  => "Listagem de distribu&ccedil;&otilde;es de uniforme escolar"
     ));
     $this->enviaLocalizacao($localizacao->montar());		
 	}
