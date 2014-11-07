@@ -615,6 +615,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       $situacaoFaltasCc = $this->getService()->getSituacaoFaltas()->componentesCurriculares;
       $mediasCc = $this->getService()->getMediasComponentes();
       $turmaId = $this->getRequest()->turma_id;
+      $mediaAreaConhecimento = $this->getRequest()->media_area_conhecimento;
 
       foreach ($this->getService()->getComponentes() as $componenteCurricular)
       {
@@ -639,14 +640,36 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         if(is_numeric($nota))
           $nota = sprintf("%.1f", $nota);
 
-        $this->_createHistoricoDisciplinas(array(
-          "sequencial" => $sequencial,
-          "alunoId" => $alunoId,
-          "historicoSequencial" => $historicoSequencial,
-          "nome" => $nome,
-          "nota" => $nota,
-          "falta" => $this->getFalta($situacaoFaltasCc[$ccId])
-        ));
+        if($mediaAreaConhecimento){
+          $nota = str_replace(',', '.', $nota);
+          $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nome'] = $componenteCurricular->area_conhecimento->nome;
+          $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota'] += $nota;
+          $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['falta'] += $this->getFalta($situacaoFaltasCc[$ccId]);
+          $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['count']++;
+        }else
+          $this->_createHistoricoDisciplinas(array(
+            "sequencial" => $sequencial,
+            "alunoId" => $alunoId,
+            "historicoSequencial" => $historicoSequencial,
+            "nome" => $nome,
+            "nota" => $nota,
+            "falta" => $this->getFalta($situacaoFaltasCc[$ccId])
+          ));
+      }
+      if ($mediaAreaConhecimento){
+        foreach ($arrayAreaConhecimento as $key => $value) {
+
+          $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
+
+          $this->_createHistoricoDisciplinas(array(
+            "sequencial" => $sequencial,
+            "alunoId" => $alunoId,
+            "historicoSequencial" => $historicoSequencial,
+            "nome" => $value['nome'],
+            "nota" => number_format(($value['nota']/$value['count']), 2, ',', ''),
+            "falta" => round($value['falta']/$value['count'])
+          ));
+        }
       }
     }
     else{

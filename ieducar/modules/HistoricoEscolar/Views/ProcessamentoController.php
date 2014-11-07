@@ -202,6 +202,11 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
         <td colspan='2'><input type='checkbox' id='extra-curricular' name='extra-curricular'></input></td>
       </tr>
 
+      <tr>
+        <td><label for='media-area-conhecimento'>Fechar m&eacute;dia por &aacute;rea de conhecimento</label></td>
+        <td colspan='2'><input type='checkbox' id='media-area-conhecimento' name='media-area-conhecimento'></input></td>
+      </tr>
+
     </table>";
 
 
