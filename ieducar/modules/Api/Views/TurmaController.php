@@ -72,25 +72,27 @@ class TurmaController extends ApiCoreController
 
     $tiposBoletim = Portabilis_Model_Report_TipoBoletim;
 
-    $tipos = array(null                                          => 'indefinido',
-                   $tiposBoletim::BIMESTRAL                      => 'portabilis_boletim',
-                   $tiposBoletim::BIMESTRAL_MODELO_FICHA         => 'portabilis_ficha_individual_bimestral_duque',
-                   $tiposBoletim::BIMESTRAL_CONCEITUAL           => 'portabilis_boletim_primeiro_ano_bimestral',
-                   $tiposBoletim::BIMESTRAL_EDUCACAO_INFANTIL    => 'portabilis_boletim_bimestral_infantil_manual',
-                   $tiposBoletim::TRIMESTRAL                     => 'portabilis_boletim_trimestral',
-                   $tiposBoletim::TRIMESTRAL_CONCEITUAL          => 'portabilis_boletim_primeiro_ano_trimestral',
-                   $tiposBoletim::SEMESTRAL                      => 'portabilis_boletim_semestral',
-                   $tiposBoletim::SEMESTRAL_CONCEITUAL           => 'portabilis_boletim_conceitual_semestral',
-                   $tiposBoletim::SEMESTRAL_CONCEITUAL_RETRATO   => 'portabilis_boletim_primeiro_ano_semestral_retrato',
-                   $tiposBoletim::SEMESTRAL_EDUCACAO_INFANTIL    => 'portabilis_boletim_educ_infantil_semestral',
-                   $tiposBoletim::PARECER_SEMESTRAL_MODELO1      => 'portabilis_boletim_parecer_semestral_modelo1',
-                   $tiposBoletim::PARECER_DESCRITIVO_COMPONENTE  => 'portabilis_boletim_parecer',
-                   $tiposBoletim::PARECER_DESCRITIVO_GERAL       => 'portabilis_boletim_parecer_geral',
-                   $tiposBoletim::BIMESTRAL_PACAJA               => 'portabilis_boletim_bimestral_pacaja',
-                   $tiposBoletim::ANUAL                          => 'portabilis_boletim_anual',
-                   $tiposBoletim::BIMESTRAL_SEM_EXAME            => 'portabilis_boletim_bimestral_sem_exame',
-                   $tiposBoletim::EJA_BIMESTRAL_SEMESTRAL        => 'portabilis_boletim_eja_bimestral_semestral',
-                   $tiposBoletim::PARECER_DESCRITIVO_GERAL_DUQUE => 'portabilis_boletim_parecer_geral_duque');
+    $tipos = array(null                                          				=> 'indefinido',
+                   $tiposBoletim::BIMESTRAL                      				=> 'portabilis_boletim',
+                   $tiposBoletim::BIMESTRAL_MODELO_FICHA         				=> 'portabilis_ficha_individual_bimestral_duque',
+                   $tiposBoletim::BIMESTRAL_CONCEITUAL           				=> 'portabilis_boletim_primeiro_ano_bimestral',
+                   $tiposBoletim::BIMESTRAL_EDUCACAO_INFANTIL    				=> 'portabilis_boletim_bimestral_infantil_manual',
+                   $tiposBoletim::TRIMESTRAL                     				=> 'portabilis_boletim_trimestral',
+                   $tiposBoletim::TRIMESTRAL_CONCEITUAL          				=> 'portabilis_boletim_primeiro_ano_trimestral',
+                   $tiposBoletim::SEMESTRAL                      				=> 'portabilis_boletim_semestral',
+                   $tiposBoletim::SEMESTRAL_CONCEITUAL           				=> 'portabilis_boletim_conceitual_semestral',
+                   $tiposBoletim::SEMESTRAL_CONCEITUAL_RETRATO   				=> 'portabilis_boletim_primeiro_ano_semestral_retrato',
+                   $tiposBoletim::SEMESTRAL_EDUCACAO_INFANTIL    				=> 'portabilis_boletim_educ_infantil_semestral',
+                   $tiposBoletim::PARECER_SEMESTRAL_MODELO1      				=> 'portabilis_boletim_parecer_semestral_modelo1',
+                   $tiposBoletim::PARECER_DESCRITIVO_COMPONENTE  				=> 'portabilis_boletim_parecer',
+                   $tiposBoletim::PARECER_DESCRITIVO_GERAL       				=> 'portabilis_boletim_parecer_geral',
+                   $tiposBoletim::BIMESTRAL_PACAJA               				=> 'portabilis_boletim_bimestral_pacaja',
+                   $tiposBoletim::ANUAL                          				=> 'portabilis_boletim_anual',
+                   $tiposBoletim::BIMESTRAL_SEM_EXAME            				=> 'portabilis_boletim_bimestral_sem_exame',
+                   $tiposBoletim::EJA_BIMESTRAL_SEMESTRAL        				=> 'portabilis_boletim_eja_bimestral_semestral',
+                   $tiposBoletim::PARECER_DESCRITIVO_GERAL_DUQUE 				=> 'portabilis_boletim_parecer_geral_duque',
+                   $tiposBoletim::BIMESTRAL_CONCEITUAL_PARAUAPEBAS      		=> 'portabilis_boletim_bimestral_conceitual_parauapebas',
+                   $tiposBoletim::BIMESTRAL_CONCEITUAL_SIMPLIFICADO_PARAUAPEBAS => 'portabilis_boletim_bimestral_conceitual_simplificado_parauapebas');
 
     return array('tipo-boletim' => $tipos[$tipo]);
   }
