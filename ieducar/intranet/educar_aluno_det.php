@@ -624,7 +624,7 @@ class indice extends clsDetalhe
       $lista_tipo_cert_civil[91]  = 'Nascimento';
       $lista_tipo_cert_civil[92]  = 'Casamento';
 
-      $this->addDetalhe(array('Tipo Certificado Civil', $registro['tipo_cert_civil']));
+      $this->addDetalhe(array('Tipo Certificado Civil', $lista_tipo_cert_civil[$registro['tipo_cert_civil']]));
     }
 
     if ($registro['num_termo']) {
