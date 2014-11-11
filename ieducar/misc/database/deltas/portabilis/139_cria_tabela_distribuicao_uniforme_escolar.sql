@@ -15,7 +15,7 @@
 	(
 	cod_distribuicao_uniforme INTEGER NOT NULL DEFAULT nextval('pmieducar.distribuicao_uniforme_seq'::regclass),
 	ref_cod_aluno INTEGER NOT NULL,
-	ano BOOLEAN NOT NULL,
+	ano INTEGER NOT NULL,
 	kit_completo BOOLEAN,
 	agasalho_qtd SMALLINT,
 	camiseta_curta_qtd SMALLINT,
