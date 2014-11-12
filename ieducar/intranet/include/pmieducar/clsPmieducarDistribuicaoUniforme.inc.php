@@ -52,6 +52,7 @@ class clsPmieducarDistribuicaoUniforme
   var $bermudas_tectels_qtd;
   var $bermudas_coton_qtd;
   var $tenis_qtd;
+  var $data;
 
   /**
    * @var int
@@ -109,14 +110,14 @@ class clsPmieducarDistribuicaoUniforme
   function __construct( $cod_distribuicao_uniforme = NULL, $ref_cod_aluno = NULL, $ano = NULL,
         $kit_completo = NULL, $agasalho_qtd = NULL, $camiseta_curta_qtd = NULL,
         $camiseta_longa_qtd = NULL, $meias_qtd = NULL, $bermudas_tectels_qtd = NULL,
-        $bermudas_coton_qtd = NULL, $tenis_qtd = NULL)
+        $bermudas_coton_qtd = NULL, $tenis_qtd = NULL, $data = NULL)
   {
     $db = new clsBanco();
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}distribuicao_uniforme";
 
     $this->_campos_lista = $this->_todos_campos = " cod_distribuicao_uniforme, ref_cod_aluno, ano, kit_completo, agasalho_qtd, camiseta_curta_qtd,
-        camiseta_longa_qtd, meias_qtd, bermudas_tectels_qtd, bermudas_coton_qtd, tenis_qtd "; 
+        camiseta_longa_qtd, meias_qtd, bermudas_tectels_qtd, bermudas_coton_qtd, tenis_qtd, data "; 
 
     if (is_numeric($cod_distribuicao_uniforme)) {
       $this->cod_distribuicao_uniforme = $cod_distribuicao_uniforme;
@@ -158,6 +159,10 @@ class clsPmieducarDistribuicaoUniforme
     
     if (is_numeric($tenis_qtd)) {
       $this->tenis_qtd = $tenis_qtd;
+    }
+
+    if (is_string($data)) {
+      $this->data = $data;
     }
 
   }
@@ -234,6 +239,12 @@ class clsPmieducarDistribuicaoUniforme
         $campos .= "{$gruda}tenis_qtd";
         $valores .= "{$gruda}{$this->tenis_qtd}";
         $gruda = ", ";
+      }
+
+      if(is_string($this->data)){
+        $campos .= "{$gruda}data";
+        $valores .= "{$gruda}'{$this->data}'";
+        $gruda = ", ";
       }      
 
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
@@ -304,7 +315,10 @@ class clsPmieducarDistribuicaoUniforme
         $set .= ",tenis_qtd = '{$this->tenis_qtd}'";
       else{
         $set .= ",tenis_qtd = NULL";
-      }            
+      }    
+
+      if(is_string($this->data))
+        $set .= ",data = '{$this->data}'";
 
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_distribuicao_uniforme = '{$this->cod_distribuicao_uniforme}'");

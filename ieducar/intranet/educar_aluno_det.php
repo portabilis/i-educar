@@ -42,6 +42,7 @@ require_once 'Transporte/Model/AlunoDataMapper.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 
 require_once 'Portabilis/View/Helper/Application.php';
+require_once 'lib/Portabilis/Date/Utils.php';
 
 
 /**
@@ -750,10 +751,12 @@ class indice extends clsDetalhe
     $reg               = $objDistribuicaoUniforme->detalhePorAlunoAno();
 
     if($reg){
-      if( dbBool($reg["kit_completo"]) )
-        $this->addDetalhe( array( "<span id='funiforme'></span><span id='ffuniforme'></span>Recebeu kit completo", "Sim") );
-      else{
+      if( dbBool($reg["kit_completo"]) ){
+              $this->addDetalhe( array( "<span id='funiforme'></span>Recebeu kit completo", "Sim") );
+              $this->addDetalhe( array( "<span id='ffuniforme'></span>" . Portabilis_String_Utils::toLatin1('Data da distribuição'), Portabilis_Date_Utils::pgSQLToBr($reg['data'])) );
+      }else{
         $this->addDetalhe( array( "<span id='funiforme'></span>Recebeu kit completo",  Portabilis_String_Utils::toLatin1("Não")) );
+        $this->addDetalhe( array( Portabilis_String_Utils::toLatin1('Data da distribuição'), Portabilis_Date_Utils::pgSQLToBr($reg['data'])) );
         $this->addDetalhe( array( Portabilis_String_Utils::toLatin1("Quantidade de agasalhos (jaqueta e calça)"), $reg['agasalho_qtd'] ?: '0' ));
         $this->addDetalhe( array( "Quantidade de camisetas (manga curta)", $reg['camiseta_curta_qtd'] ?: '0' ));
         $this->addDetalhe( array( "Quantidade de camisetas (manga longa)", $reg['camiseta_longa_qtd'] ?: '0' ));

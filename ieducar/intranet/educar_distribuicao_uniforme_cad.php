@@ -26,6 +26,7 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/View/Helper/Application.php';
+require_once 'lib/Portabilis/Date/Utils.php';
 
 class clsIndexBase extends clsBase
 {
@@ -56,6 +57,7 @@ class indice extends clsCadastro
   var $bermudas_tectels_qtd;
   var $bermudas_coton_qtd;
   var $tenis_qtd;
+  var $data;
 
 	function Inicializar()
 	{
@@ -78,6 +80,8 @@ class indice extends clsCadastro
 			{
 				foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
 					$this->$campo = $val;
+
+				$this->data = Portabilis_Date_Utils::pgSqlToBr($this->data);
 
 				$this->kit_completo = dbBool($this->kit_completo);
 
@@ -114,6 +118,7 @@ class indice extends clsCadastro
 		$this->campoOculto( "cod_distribuicao_uniforme", $this->cod_distribuicao_uniforme );
 
 		$this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true );
+		$this->inputsHelper()->date('data', array( 'label' => "Data da distribuição", 'value' => $this->data, 'placeholder' => ''));		
 		$this->inputsHelper()->checkbox('kit_completo', array( 'label' => "Kit completo", 'value' => $this->kit_completo));		
 		$this->campoNumero( "agasalho_qtd", "Quantidade de agasalhos (jaqueta e calça)", $this->agasalho_qtd, 2, 2, false );
 		$this->campoNumero( "camiseta_curta_qtd", "Quantidade de camisetas (manga curta)", $this->camiseta_curta_qtd, 2, 2, false);
@@ -131,6 +136,8 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
+		$this->data = Portabilis_Date_Utils::brToPgSQL($this->data);
+
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
 		
@@ -142,7 +149,9 @@ class indice extends clsCadastro
 			return false;
 		}
 
-		$obj = new clsPmieducarDistribuicaoUniforme( null, $this->ref_cod_aluno, $this->ano, !is_null($this->kit_completo), $this->agasalho_qtd, $this->camiseta_curta_qtd, $this->camiseta_longa_qtd, $this->meias_qtd, $this->bermudas_tectels_qtd, $this->bermudas_coton_qtd, $this->tenis_qtd);
+		$obj = new clsPmieducarDistribuicaoUniforme( null, $this->ref_cod_aluno, $this->ano, !is_null($this->kit_completo), $this->agasalho_qtd, 
+																								$this->camiseta_curta_qtd, $this->camiseta_longa_qtd, $this->meias_qtd, $this->bermudas_tectels_qtd, 
+																								$this->bermudas_coton_qtd, $this->tenis_qtd, $this->data);
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
@@ -163,6 +172,8 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
+		$this->data = Portabilis_Date_Utils::brToPgSQL($this->data);
+
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
 		
@@ -178,7 +189,9 @@ class indice extends clsCadastro
 			}
 		}
 
-		$obj = new clsPmieducarDistribuicaoUniforme( $this->cod_distribuicao_uniforme, $this->ref_cod_aluno, $this->ano, !is_null($this->kit_completo), $this->agasalho_qtd, $this->camiseta_curta_qtd, $this->camiseta_longa_qtd, $this->meias_qtd, $this->bermudas_tectels_qtd, $this->bermudas_coton_qtd, $this->tenis_qtd);
+		$obj = new clsPmieducarDistribuicaoUniforme( $this->cod_distribuicao_uniforme, $this->ref_cod_aluno, $this->ano, !is_null($this->kit_completo), 
+																									$this->agasalho_qtd, $this->camiseta_curta_qtd, $this->camiseta_longa_qtd, $this->meias_qtd, 
+																									$this->bermudas_tectels_qtd, $this->bermudas_coton_qtd, $this->tenis_qtd, $this->data);
 		$editou = $obj->edita();
 		if( $editou )
 		{

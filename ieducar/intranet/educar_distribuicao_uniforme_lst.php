@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once( "lib/Portabilis/Date/Utils.php" );
 
 class clsIndexBase extends clsBase
 {
@@ -93,7 +94,7 @@ class indice extends clsListagem
 			die();
 		}
 
-		$this->addCabecalhos( array( "Ano", "Kit completo") );
+		$this->addCabecalhos( array( "Ano", "Kit completo", 'Data da distribu&ccedil;&atilde;o') );
 
 		$obj_permissao = new clsPermissoes();
 		$nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
@@ -134,11 +135,11 @@ class indice extends clsListagem
 			foreach ( $lista AS $registro )
 			{
 				$registro["kit_completo"] = dbBool($registro["kit_completo"]) ? "Sim" : "Não";
-
+				$data = Portabilis_Date_Utils::pgSQLToBr($registro["data"]);
 				$lista_busca = array(
 					"<a href=\"educar_distribuicao_uniforme_det.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&cod_distribuicao_uniforme={$registro["cod_distribuicao_uniforme"]}\">{$registro["ano"]}</a>",
-
-					"<a href=\"educar_distribuicao_uniforme_det.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&cod_distribuicao_uniforme={$registro["cod_distribuicao_uniforme"]}\">{$registro["kit_completo"]}</a>"
+					"<a href=\"educar_distribuicao_uniforme_det.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&cod_distribuicao_uniforme={$registro["cod_distribuicao_uniforme"]}\">{$registro["kit_completo"]}</a>",
+					"<a href=\"educar_distribuicao_uniforme_det.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&cod_distribuicao_uniforme={$registro["cod_distribuicao_uniforme"]}\">{$data}</a>"
 				);
 
 				$this->addLinhas($lista_busca);
