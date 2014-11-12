@@ -65,7 +65,7 @@
 
   -- //@UNDO
 
-  DELETE FROM pmicontrolesis.menu where cod_menu in (21235,21236,21237,21238,21239);
+  DELETE FROM pmicontrolesis.menu where cod_menu in (21235,21236,21237,21238,21239, 21240);
   DELETE FROM portal.menu_submenu where cod_menu_submenu in (21234,21235,21236,21237,21238,21239);
   DELETE FROM pmicontrolesis.menu where cod_menu in (20710,20711,20712);
   DELETE FROM pmicontrolesis.tutormenu where cod_tutormenu in (17);
