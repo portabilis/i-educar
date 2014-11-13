@@ -1,31 +1,31 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
+*	@author Prefeitura Municipal de ItajaÃ­								 *
 *	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 *																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 *						ctima@itajai.sc.gov.br					    	 *
 *																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 *																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 *																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 *	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 *	02111-1307, USA.													 *
 *																		 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /**
-* @author Prefeitura Municipal de Itajaï¿½
+* @author Prefeitura Municipal de ItajaÃ¯Â¿Â½
 *
 * Criado em 17/07/2006 09:18 pelo gerador automatico de classes
 */
@@ -503,6 +503,32 @@ class clsPmieducarExemplar
 		}
 		return false;
 	}
+	/**
+	 * Verifica se o tombo a ser cadastrado jï¿½ nï¿½o foi cadastrado
+	 *
+	 * @return boolean
+	 */
+	function retorna_tombo_valido($bibliotecaId, $exceptExemplarId = null, $tombo=null) {
+    	if (empty($bibliotecaId))
+    		throw new Exception("Deve ser enviado um argumento '\$bibliotecaId' ao mÃ©todo 'retorna_tombo_maximo'");
+		if (empty($tombo))
+			return true;
+		 // Sem essa regra ao editar e salvar com o mesmo tombo retornaria falso
+   		 if (! empty($exceptExemplarId))
+   			   $exceptExemplar = " and exemplar.cod_exemplar !=  $exceptExemplarId";
+   		 else
+     			 $exceptExemplar = '';
+
+		$sql = "SELECT tombo FROM pmieducar.exemplar, pmieducar.acervo WHERE exemplar.ativo = 1 and exemplar.ref_cod_acervo = acervo.cod_acervo and tombo = $tombo and acervo.ref_cod_biblioteca = $bibliotecaId $exceptExemplar";
+
+		$db = new clsBanco();
+		$consulta = $db->CampoUnico($sql);
+		if ($consulta==$tombo){
+			return false;
+		} else {
+			return true;
+		}
+	}
 
 	/**
 	 * Retorna uma lista filtrados de acordo com os parametros
@@ -690,7 +716,7 @@ class clsPmieducarExemplar
 
 	function retorna_tombo_maximo($bibliotecaId, $exceptExemplarId = null) {
     if (empty($bibliotecaId))
-      throw new Exception("Deve ser enviado um argumento '\$bibliotecaId' ao método 'retorna_tombo_maximo'");
+      throw new Exception("Deve ser enviado um argumento '\$bibliotecaId' ao mÃ©todo 'retorna_tombo_maximo'");
 
     // sem esta regra ao editar o ultimo exemplar sem informar o tombo, seria pego o proprio tombo.
     if (! empty($exceptExemplarId))
