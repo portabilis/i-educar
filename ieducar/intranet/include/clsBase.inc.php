@@ -393,8 +393,20 @@ class clsBase extends clsConfig
           elseif (0 === strpos($menu_suspenso['caminho'], 'module')) {
               $menu_suspenso['caminho'] = '../../' . $menu_suspenso['caminho'];
           }
+         switch ($menu_suspenso[tipo_menu]) {
+         	case 1:
+         		$tipo_menu = '(Admin)';
+         		break;
+         	case 2:
+         		$tipo_menu = '(Geral)';
+         		break;
 
-          $saida .= "array_menu[array_menu.length] = new Array(\"{$menu_suspenso['tt_menu']}\",{$menu_suspenso['cod_menu']},'{$menu_suspenso['ref_cod_menu_pai']}','', '$ico_menu', '{$menu_suspenso['caminho']}', '{$alvo}');";
+         	default:
+         		$tipo_menu = '';
+         		break;
+         }
+
+          $saida .= "array_menu[array_menu.length] = new Array(\"{$menu_suspenso['tt_menu']} {$tipo_menu} \",{$menu_suspenso['cod_menu']},'{$menu_suspenso['ref_cod_menu_pai']}','', '$ico_menu', '{$menu_suspenso['caminho']}', '{$alvo}');";
           if (!$menu_suspenso['ref_cod_menu_pai']) {
             $saida .= "array_id[array_id.length] = {$menu_suspenso['cod_menu']};";
           }
