@@ -4,6 +4,7 @@
 ---- Move o menu relatório de conferência de notas e faltas para os relatórios cadastrais;
 ---- Adiciona o campo tipo_menu em pmicontrolesis.menu onde 1 = Administrador / 2 = Geral;
 ---- Ajusta o menu de registro de síntese de comp. e habilidades;
+---- Seta o ordenamento do menu = 0, menos nos menus principais;
 -- @author   Gabriel Matos de Souza <gabriel@portabilis.com.br>
 -- @license  @@license@@
 -- @version  $Id$
@@ -21,3 +22,5 @@ update pmicontrolesis.menu set tipo_menu = 2 where cod_menu in(999809,999217,999
 
 update portal.menu_submenu set nm_submenu = 'Registro síntese de comp. e habilidades' where cod_menu_submenu = 999805;
 update pmicontrolesis.menu set tt_menu = 'Registro síntese de comp. e habilidades' where cod_menu = 999805;
+
+update pmicontrolesis.menu set ord_menu = 0 where ref_cod_menu_pai is not null;

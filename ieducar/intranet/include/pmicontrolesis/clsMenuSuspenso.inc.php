@@ -517,7 +517,7 @@ class clsMenuSuspenso
                 )
             )
             AND ref_cod_tutormenu = '$ref_cod_tutormenu'
-          ORDER BY nivel ASC, tipo_menu ASC, tt_menu ASC";
+          ORDER BY nivel ASC, tipo_menu ASC, ord_menu ASC, tt_menu ASC";
     }
     else {
       $menus = '';
@@ -620,7 +620,7 @@ class clsMenuSuspenso
                 AND ((ref_cod_menu_submenu IS NULL) OR (ref_cod_menu_submenu IN ($menus)))
             )
             AND ((ref_cod_menu_submenu IS NULL) OR (ref_cod_menu_submenu IN ($menus)))
-            ORDER BY nivel ASC, tipo_menu ASC, tt_menu ASC";
+            ORDER BY nivel ASC, tipo_menu ASC, ord_menu ASC, tt_menu ASC";
     }
 
     $db->Consulta($sql);
