@@ -138,6 +138,11 @@ class indice extends clsCadastro
       WHERE
         sub.ref_cod_menu_menu = m.cod_menu_menu
         AND ((m.cod_menu_menu = 55 OR m.ref_cod_menu_pai = 55) OR
+        	 (m.cod_menu_menu = 69 OR m.ref_cod_menu_pai = 69) OR
+             (m.cod_menu_menu = 68 OR m.ref_cod_menu_pai = 68) OR
+             (m.cod_menu_menu = 7 OR m.ref_cod_menu_pai = 7) OR
+             (m.cod_menu_menu = 23 OR m.ref_cod_menu_pai = 23) OR
+             (m.cod_menu_menu = 5 OR m.ref_cod_menu_pai = 5) OR
              (m.cod_menu_menu = 57 OR m.ref_cod_menu_pai = 57))
       ORDER BY
         cod_menu_menu, upper(sub.nm_submenu)
