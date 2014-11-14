@@ -16,7 +16,7 @@ update pmicontrolesis.menu set ref_cod_menu_pai = 999300 where cod_menu = 999809
 
 alter table pmicontrolesis.menu add tipo_menu integer;
 
-update pmicontrolesis.menu set tipo_menu = 1 where cod_menu in(999201,999237,999218,999605,999231,999223,999110,999107,999610,999654,999652,999651,999612);
+update pmicontrolesis.menu set tipo_menu = 1 where cod_menu in(999201,999237,999218,999605,999231,999223,999110,999107,999610,999654,999652,999651,999612,999239);
 update pmicontrolesis.menu set tipo_menu = 2 where cod_menu in(999809,999217,999607,999105,999227,999233,999234,999235,999238,999108,999230,999230,999228,
 							       							   999203,999204,999220,999221,999109,999101,999225,999606,999219,999224,999105,999611);
 
