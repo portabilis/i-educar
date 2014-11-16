@@ -46,7 +46,7 @@ class Portabilis_View_Helper_Input_Numeric extends Portabilis_View_Helper_Input_
 
   protected function fixupValidation($inputOptions) {
     // fixup para remover caracteres não numericos
-    $js = " \$j(#'" . $inputOptions['id'] . "').keyup(function(){
+    $js = " \$j('#" . $inputOptions['id'] . "').keyup(function(){
       var oldValue = this.value;
       this.value = this.value.replace(/[^0-9\.]/g, '');
 
