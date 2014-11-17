@@ -260,11 +260,12 @@ class indice extends clsDetalhe
           strtotime(substr($detalheDocumento['data_exp_rg'], 0, 19)));
       }
 
-      $registro['sigla_uf_exp_rg'] = $detalheDocumento['sigla_uf_exp_rg'];
-      $registro['tipo_cert_civil'] = $detalheDocumento['tipo_cert_civil'];
-      $registro['num_termo']       = $detalheDocumento['num_termo'];
-      $registro['num_livro']       = $detalheDocumento['num_livro'];
-      $registro['num_folha']       = $detalheDocumento['num_folha'];
+      $registro['sigla_uf_exp_rg'] 	   = $detalheDocumento['sigla_uf_exp_rg'];
+      $registro['tipo_cert_civil'] 	   = $detalheDocumento['tipo_cert_civil'];
+      $registro['certidao_nascimento'] = $detalheDocumento['certidao_nascimento'];
+      $registro['num_termo']       	   = $detalheDocumento['num_termo'];
+      $registro['num_livro']       	   = $detalheDocumento['num_livro'];
+      $registro['num_folha']       	   = $detalheDocumento['num_folha'];
 
       if ($detalheDocumento['data_emissao_cert_civil']) {
         $registro['data_emissao_cert_civil'] = date('d/m/Y',
@@ -619,25 +620,28 @@ class indice extends clsDetalhe
     /**
      * @todo CoreExt_Enum?
      */
-    if ($registro['tipo_cert_civil']) {
+    if(!$registro['tipo_cert_civil'] && $registro['certidao_nascimento']){
+    	$this->addDetalhe(array('Tipo Certificado Civil', 'Nascimento (novo formato)'));
+    	$this->addDetalhe(array('Número Certidão Civil', $registro['certidao_nascimento']));
+    }else{
       $lista_tipo_cert_civil       = array();
       $lista_tipo_cert_civil["0"] = 'Selecione';
-      $lista_tipo_cert_civil[91]  = 'Nascimento';
+      $lista_tipo_cert_civil[91]  = 'Nascimento (antigo formato)';
       $lista_tipo_cert_civil[92]  = 'Casamento';
 
       $this->addDetalhe(array('Tipo Certificado Civil', $lista_tipo_cert_civil[$registro['tipo_cert_civil']]));
-    }
 
-    if ($registro['num_termo']) {
-      $this->addDetalhe(array('Termo', $registro['num_termo']));
-    }
+    	if ($registro['num_termo']) {
+    	  $this->addDetalhe(array('Termo', $registro['num_termo']));
+    	}
 
-    if ($registro['num_livro']) {
-      $this->addDetalhe(array('Livro', $registro['num_livro']));
-    }
+	   	if ($registro['num_livro']) {
+	    	$this->addDetalhe(array('Livro', $registro['num_livro']));
+	   	}
 
-    if ($registro['num_folha']) {
-      $this->addDetalhe(array('Folha', $registro['num_folha']));
+	   	if ($registro['num_folha']) {
+	    	$this->addDetalhe(array('Folha', $registro['num_folha']));
+    	}
     }
 
     if ($registro['data_emissao_cert_civil']) {
