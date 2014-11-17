@@ -210,7 +210,7 @@ class indice extends clsCadastro
                                                                      $this->ano,
                                                                      null,
                                                                      null,
-                                                                     2, /*adiciona where 0 ou 1*/
+                                                                     1, /*somente em andamento */
                                                                      null,
                                                                      null,
                                                                      null,
@@ -581,7 +581,7 @@ class indice extends clsCadastro
             }
           }
         //}
-        $this->enturmacaoMatricula($cod_matricula, $this->ref_cod_turma); 
+        $this->enturmacaoMatricula($cod_matricula, $this->ref_cod_turma);
         #TODO set in $_SESSION['flash'] 'Aluno matriculado com sucesso'
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
         header('Location: educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
@@ -593,7 +593,7 @@ class indice extends clsCadastro
       return FALSE;
     }
     else {
-      $this->mensagem = 'O ano (letivo) selecionado não esta em andamento na escola selecionada.<br />';
+      $this->mensagem = Portabilis_String_Utils::toLatin1('O ano (letivo) selecionado não está em andamento na escola selecionada.<br />');
       return FALSE;
     }
   }

@@ -376,19 +376,8 @@ class clsPmieducarEscolaAnoLetivo
 		}
 		elseif( is_numeric( $int_andamento ) )
 		{
-			if ($int_andamento == 2)
-			{
-				$filtros .= "{$whereAnd} ( andamento = 0";
-				$whereAnd = " OR ";
-
-				$filtros .= "{$whereAnd} andamento = 1 )";
-				$whereAnd = " AND ";
-			}
-			else
-			{
-				$filtros .= "{$whereAnd} andamento = '{$int_andamento}'";
-				$whereAnd = " AND ";
-			}
+			$filtros .= "{$whereAnd} andamento = '{$int_andamento}'";
+			$whereAnd = " AND ";
 		}
 		if( is_string( $date_data_cadastro_ini ) )
 		{
