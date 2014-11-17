@@ -530,6 +530,7 @@
           dias_letivos : $('#dias-letivos').val(),
           situacao : $('#situacao').val(),
           extra_curricular : $('#extra-curricular').is(':checked') ? 1 : 0,
+          media_area_conhecimento : $('#media-area-conhecimento').is(':checked') ? 1 : 0,
           grade_curso_id : $('#grade-curso').val(),
           percentual_frequencia : percentualFrequencia,
           notas : notas,

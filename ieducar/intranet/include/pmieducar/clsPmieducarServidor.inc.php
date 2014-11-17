@@ -91,6 +91,7 @@ class clsPmieducarServidor
   var $curso_relacoes_etnicorraciais;
   var $curso_outros;
   var $curso_nenhum;  
+  var $multi_seriado;  
 
     /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -161,7 +162,8 @@ class clsPmieducarServidor
     situacao_curso_superior_2, formacao_complementacao_pedagogica_2, codigo_curso_superior_2, ano_inicio_curso_superior_2, ano_conclusao_curso_superior_2, tipo_instituicao_curso_superior_2, instituicao_curso_superior_2,
     situacao_curso_superior_3, formacao_complementacao_pedagogica_3, codigo_curso_superior_3, ano_inicio_curso_superior_3, ano_conclusao_curso_superior_3, tipo_instituicao_curso_superior_3, instituicao_curso_superior_3,
     pos_especializacao, pos_mestrado, pos_doutorado, pos_nenhuma, curso_creche, curso_pre_escola, curso_anos_iniciais, curso_anos_finais, curso_ensino_medio, curso_eja, curso_educacao_especial, curso_educacao_indigena, 
-    curso_educacao_campo, curso_educacao_ambiental, curso_educacao_campo, curso_educacao_direitos_humanos, curso_genero_diversidade_sexual, curso_direito_crianca_adolescente, curso_relacoes_etnicorraciais, curso_outros, curso_nenhum
+    curso_educacao_campo, curso_educacao_ambiental, curso_educacao_campo, curso_educacao_direitos_humanos, curso_genero_diversidade_sexual, curso_direito_crianca_adolescente, curso_relacoes_etnicorraciais, curso_outros, curso_nenhum,
+    multi_seriado
     ";
 
     $this->_campos_lista2 = $this->_todos_campos2 = "s.cod_servidor, s.ref_idesco, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.ref_cod_instituicao,s.ref_cod_subnivel,
@@ -169,7 +171,8 @@ class clsPmieducarServidor
     s.situacao_curso_superior_2, s.formacao_complementacao_pedagogica_2, s.codigo_curso_superior_2, s.ano_inicio_curso_superior_2, s.ano_conclusao_curso_superior_2, s.tipo_instituicao_curso_superior_2, s.instituicao_curso_superior_2,
     s.situacao_curso_superior_3, s.formacao_complementacao_pedagogica_3, s.codigo_curso_superior_3, s.ano_inicio_curso_superior_3, s.ano_conclusao_curso_superior_3, s.tipo_instituicao_curso_superior_3, s.instituicao_curso_superior_3,
     s.pos_especializacao, s.pos_mestrado, s.pos_doutorado, s.pos_nenhuma, s.curso_creche, s.curso_pre_escola, s.curso_anos_iniciais, s.curso_anos_finais, s.curso_ensino_medio, s.curso_eja, s.curso_educacao_especial, s.curso_educacao_indigena,
-    s.curso_educacao_campo, s.curso_educacao_ambiental, s.curso_educacao_campo, s.curso_educacao_direitos_humanos, s.curso_genero_diversidade_sexual, s.curso_direito_crianca_adolescente, s.curso_relacoes_etnicorraciais, s.curso_outros, s.curso_nenhum
+    s.curso_educacao_campo, s.curso_educacao_ambiental, s.curso_educacao_campo, s.curso_educacao_direitos_humanos, s.curso_genero_diversidade_sexual, s.curso_direito_crianca_adolescente, s.curso_relacoes_etnicorraciais, s.curso_outros, s.curso_nenhum,
+    s.multi_seriado
     ";    
 
     if (is_numeric( $ref_idesco)) {
@@ -557,7 +560,17 @@ class clsPmieducarServidor
         $campos .= "{$gruda}curso_nenhum";
         $valores .= "{$gruda}'{$this->curso_nenhum}'";
         $gruda = ", ";
-      }                
+      }
+
+      if (dbBool( $this->multi_seriado)) {
+        $campos .= "{$gruda}multi_seriado";
+        $valores .= "{$gruda} TRUE ";
+        $gruda = ", ";
+      }else{
+        $campos .= "{$gruda}multi_seriado";
+        $valores .= "{$gruda} FALSE ";
+        $gruda = ", ";
+      }
 
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
       return $this->cod_servidor;
@@ -825,7 +838,15 @@ class clsPmieducarServidor
       if (is_numeric($this->curso_nenhum)) {
         $set .= "{$gruda}curso_nenhum = '{$this->curso_nenhum}'";
         $gruda = ", ";
-      }                                                                                                                                                       
+      }
+
+      if (dbBool($this->multi_seriado)) {
+        $set .= "{$gruda}multi_seriado = TRUE ";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}multi_seriado = FALSE ";
+        $gruda = ", ";
+      }
 
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_servidor = '{$this->cod_servidor}' AND ref_cod_instituicao = '{$this->ref_cod_instituicao}'");
@@ -1105,113 +1126,113 @@ class clsPmieducarServidor
           if (is_string($str_horario) && $str_horario == "S") {
             // A somatória retorna nulo
             $filtros .= "
-    {$whereAnd} s.cod_servidor IN (SELECT a.ref_cod_servidor
-      FROM pmieducar.servidor_alocacao a
-      WHERE $where
-      AND a.periodo = 1
-      AND a.carga_horaria >= COALESCE(
-      (SELECT SUM(qhh.hora_final - qhh.hora_inicial)
-        FROM pmieducar.quadro_horario_horarios qhh
-        WHERE qhh.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
-        AND qhh.ref_cod_escola = '$int_ref_cod_escola'
-        AND hora_inicial >= '06:00'
-        AND hora_inicial <= '12:00'
-        AND qhh.ativo = '1'
-        AND qhh.dia_semana <> '$int_dia_semana'
-        AND qhh.ref_servidor = a.ref_cod_servidor
-        GROUP BY qhh.ref_servidor) ,'00:00')  + '$str_hr_mat' + COALESCE(
-        (SELECT SUM( qhha.hora_final - qhha.hora_inicial )
-          FROM pmieducar.quadro_horario_horarios_aux qhha
-          WHERE qhha.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
-          AND qhha.ref_cod_escola = $int_ref_cod_escola
-          AND hora_inicial >= '06:00'
-          AND hora_inicial <= '12:00'
-          AND qhha.ref_servidor = a.ref_cod_servidor
-          AND identificador = '$int_identificador'
-          GROUP BY qhha.ref_servidor),'00:00'))";
+    {$whereAnd} (s.cod_servidor IN (SELECT a.ref_cod_servidor
+          FROM pmieducar.servidor_alocacao a
+          WHERE $where
+          AND a.periodo = 1
+          AND a.carga_horaria >= COALESCE(
+          (SELECT SUM(qhh.hora_final - qhh.hora_inicial)
+            FROM pmieducar.quadro_horario_horarios qhh
+            WHERE qhh.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
+            AND qhh.ref_cod_escola = '$int_ref_cod_escola'
+            AND hora_inicial >= '06:00'
+            AND hora_inicial <= '12:00'
+            AND qhh.ativo = '1'
+            AND qhh.dia_semana <> '$int_dia_semana'
+            AND qhh.ref_servidor = a.ref_cod_servidor
+            GROUP BY qhh.ref_servidor) ,'00:00')  + '$str_hr_mat' + COALESCE(
+            (SELECT SUM( qhha.hora_final - qhha.hora_inicial )
+              FROM pmieducar.quadro_horario_horarios_aux qhha
+              WHERE qhha.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
+              AND qhha.ref_cod_escola = $int_ref_cod_escola
+              AND hora_inicial >= '06:00'
+              AND hora_inicial <= '12:00'
+              AND qhha.ref_servidor = a.ref_cod_servidor
+              AND identificador = '$int_identificador'
+              GROUP BY qhha.ref_servidor),'00:00')) OR s.multi_seriado )";
           }
           else {
             $filtros .= "
-      {$whereAnd} s.cod_servidor NOT IN (SELECT a.ref_cod_servidor
-        FROM pmieducar.servidor_alocacao a
-        WHERE $where
-        AND a.periodo = 1)";
+      {$whereAnd} (s.cod_servidor NOT IN (SELECT a.ref_cod_servidor
+              FROM pmieducar.servidor_alocacao a
+              WHERE $where
+              AND a.periodo = 1) OR s.multi_seriado )";
           }
         }
 
         if ($vespertino) {
           if (is_string($str_horario) && $str_horario == "S") {
             $filtros .= "
-      {$whereAnd} s.cod_servidor IN
-        (SELECT a.ref_cod_servidor
-          FROM pmieducar.servidor_alocacao a
-          WHERE $where
-          AND a.periodo = 2
-          AND a.carga_horaria >= COALESCE(
-            (SELECT SUM( qhh.hora_final - qhh.hora_inicial )
-            FROM pmieducar.quadro_horario_horarios qhh
-            WHERE qhh.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
-            AND qhh.ref_cod_escola = '$int_ref_cod_escola'
-            AND qhh.ativo = '1'
-            AND hora_inicial >= '12:00'
-            AND hora_inicial <= '18:00'
-            AND qhh.dia_semana <> '$int_dia_semana'
-            AND qhh.ref_servidor = a.ref_cod_servidor
-            GROUP BY qhh.ref_servidor ),'00:00') + '$str_hr_ves' +  COALESCE(
-            (SELECT SUM( qhha.hora_final - qhha.hora_inicial )
-              FROM pmieducar.quadro_horario_horarios_aux qhha
-              WHERE qhha.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
-              AND qhha.ref_cod_escola = '$int_ref_cod_escola'
-              AND qhha.ref_servidor = a.ref_cod_servidor
-              AND hora_inicial >= '12:00'
-              AND hora_inicial <= '18:00'
-              AND identificador = '$int_identificador'
-              GROUP BY qhha.ref_servidor),'00:00') )";
+      {$whereAnd} (s.cod_servidor IN
+              (SELECT a.ref_cod_servidor
+                FROM pmieducar.servidor_alocacao a
+                WHERE $where
+                AND a.periodo = 2
+                AND a.carga_horaria >= COALESCE(
+                  (SELECT SUM( qhh.hora_final - qhh.hora_inicial )
+                  FROM pmieducar.quadro_horario_horarios qhh
+                  WHERE qhh.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
+                  AND qhh.ref_cod_escola = '$int_ref_cod_escola'
+                  AND qhh.ativo = '1'
+                  AND hora_inicial >= '12:00'
+                  AND hora_inicial <= '18:00'
+                  AND qhh.dia_semana <> '$int_dia_semana'
+                  AND qhh.ref_servidor = a.ref_cod_servidor
+                  GROUP BY qhh.ref_servidor ),'00:00') + '$str_hr_ves' +  COALESCE(
+                  (SELECT SUM( qhha.hora_final - qhha.hora_inicial )
+                    FROM pmieducar.quadro_horario_horarios_aux qhha
+                    WHERE qhha.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
+                    AND qhha.ref_cod_escola = '$int_ref_cod_escola'
+                    AND qhha.ref_servidor = a.ref_cod_servidor
+                    AND hora_inicial >= '12:00'
+                    AND hora_inicial <= '18:00'
+                    AND identificador = '$int_identificador'
+                    GROUP BY qhha.ref_servidor),'00:00') ) OR s.multi_seriado ) ";
           }
           else {
             $filtros .= "
-      {$whereAnd} s.cod_servidor NOT IN ( SELECT a.ref_cod_servidor
-        FROM pmieducar.servidor_alocacao a
-        WHERE $where
-        AND a.periodo = 2 )";
+      {$whereAnd} (s.cod_servidor NOT IN ( SELECT a.ref_cod_servidor
+              FROM pmieducar.servidor_alocacao a
+              WHERE $where
+              AND a.periodo = 2 ) OR s.multi_seriado) ";
           }
         }
 
         if ($noturno) {
           if (is_string($str_horario) && $str_horario == "S") {
             $filtros .= "
-      {$whereAnd} s.cod_servidor IN ( SELECT a.ref_cod_servidor
-        FROM pmieducar.servidor_alocacao a
-        WHERE $where
-        AND a.periodo = 3
-        AND a.carga_horaria >= COALESCE(
-        (SELECT SUM(qhh.hora_final - qhh.hora_inicial)
-          FROM pmieducar.quadro_horario_horarios qhh
-          WHERE qhh.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
-          AND qhh.ref_cod_escola = '$int_ref_cod_escola'
-          AND qhh.ativo = '1'
-          AND hora_inicial >= '18:00'
-          AND hora_inicial <= '23:59'
-          AND qhh.dia_semana <> '$int_dia_semana'
-          AND qhh.ref_servidor = a.ref_cod_servidor
-          GROUP BY qhh.ref_servidor ),'00:00')  + '$str_hr_not' +  COALESCE(
-            (SELECT SUM( qhha.hora_final - qhha.hora_inicial )
-            FROM pmieducar.quadro_horario_horarios_aux qhha
-            WHERE qhha.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
-            AND qhha.ref_cod_escola = '$int_ref_cod_escola'
-            AND qhha.ref_servidor = a.ref_cod_servidor
-            AND hora_inicial >= '18:00'
-            AND hora_inicial <= '23:59'
-            AND identificador = '$int_identificador'
-            GROUP BY qhha.ref_servidor),'00:00') )";
+      {$whereAnd} (s.cod_servidor IN ( SELECT a.ref_cod_servidor
+              FROM pmieducar.servidor_alocacao a
+              WHERE $where
+              AND a.periodo = 3
+              AND a.carga_horaria >= COALESCE(
+              (SELECT SUM(qhh.hora_final - qhh.hora_inicial)
+                FROM pmieducar.quadro_horario_horarios qhh
+                WHERE qhh.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
+                AND qhh.ref_cod_escola = '$int_ref_cod_escola'
+                AND qhh.ativo = '1'
+                AND hora_inicial >= '18:00'
+                AND hora_inicial <= '23:59'
+                AND qhh.dia_semana <> '$int_dia_semana'
+                AND qhh.ref_servidor = a.ref_cod_servidor
+                GROUP BY qhh.ref_servidor ),'00:00')  + '$str_hr_not' +  COALESCE(
+                  (SELECT SUM( qhha.hora_final - qhha.hora_inicial )
+                  FROM pmieducar.quadro_horario_horarios_aux qhha
+                  WHERE qhha.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
+                  AND qhha.ref_cod_escola = '$int_ref_cod_escola'
+                  AND qhha.ref_servidor = a.ref_cod_servidor
+                  AND hora_inicial >= '18:00'
+                  AND hora_inicial <= '23:59'
+                  AND identificador = '$int_identificador'
+                  GROUP BY qhha.ref_servidor),'00:00') ) OR s.multi_seriado) ";
           }
           else {
             $filtros .= "
-      {$whereAnd} s.cod_servidor NOT IN (
-      SELECT a.ref_cod_servidor
-        FROM pmieducar.servidor_alocacao a
-        WHERE $where
-        AND a.periodo = 3 )";
+      {$whereAnd} (s.cod_servidor NOT IN (
+            SELECT a.ref_cod_servidor
+              FROM pmieducar.servidor_alocacao a
+              WHERE $where
+              AND a.periodo = 3 ) OR s.multi_seriado) ";
           }
         }
 
@@ -1219,11 +1240,11 @@ class clsPmieducarServidor
         }
         else {
           $filtros .= "
-      {$whereAnd} s.carga_horaria >= COALESCE(
-        (SELECT sum(hora_final - hora_inicial) + '" . abs($horas) . ":" . abs($minutos)."'
-          FROM pmieducar.servidor_alocacao sa
-          WHERE sa.ref_cod_servidor = s.cod_servidor
-          AND sa.ref_ref_cod_instituicao ='{$int_ref_cod_instituicao}'),'00:00') ";
+      {$whereAnd} ((s.carga_horaria >= COALESCE(
+                    (SELECT sum(hora_final - hora_inicial) + '" . abs($horas) . ":" . abs($minutos)."'
+                      FROM pmieducar.servidor_alocacao sa
+                      WHERE sa.ref_cod_servidor = s.cod_servidor
+                      AND sa.ref_ref_cod_instituicao ='{$int_ref_cod_instituicao}'),'00:00')) OR s.multi_seriado)";
         }
       }
     }
@@ -1288,7 +1309,7 @@ class clsPmieducarServidor
 
     if (is_string($str_horario) && $str_horario == "S") {
       $filtros .= "
-    {$whereAnd} s.cod_servidor NOT IN
+    {$whereAnd} (s.cod_servidor NOT IN
       (SELECT DISTINCT qhh.ref_servidor
         FROM pmieducar.quadro_horario_horarios qhh
         WHERE qhh.ref_servidor = s.cod_servidor
@@ -1296,13 +1317,13 @@ class clsPmieducarServidor
         AND qhh.dia_semana = '{$array_horario[0]}'
         AND qhh.hora_inicial >= '{$array_horario[1]}'
         AND qhh.hora_final <= '{$array_horario[2]}'
-        AND qhh.ativo = '1'";
+        AND qhh.ativo = '1' ";
 
       if (is_string($lst_matriculas)) {
         $filtros .= "AND qhh.ref_servidor NOT IN ({$lst_matriculas})";
       }
 
-      $filtros .= " )";
+      $filtros .= " ) OR s.multi_seriado) ";
 
       $whereAnd = " AND ";
     }

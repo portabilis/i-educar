@@ -1,4 +1,6 @@
 <?php
+ // error_reporting(E_ERROR);
+ // ini_set("display_errors", 1);
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *																	     *
 *	@author Prefeitura Municipal de Itajaí								 *
@@ -239,7 +241,7 @@ class clsPmieducarTipoOcorrenciaDisciplinar
 	 */
 	function cadastra()
 	{
-		if( is_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_tipo ) && is_numeric( $this->max_ocorrencias ) && is_numeric( $this->ref_cod_instituicao) )
+		if( is_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_tipo ) && is_numeric( $this->ref_cod_instituicao) )
 		{
 			$db = new clsBanco();
 
@@ -326,6 +328,9 @@ class clsPmieducarTipoOcorrenciaDisciplinar
 			if( is_numeric( $this->max_ocorrencias ) )
 			{
 				$set .= "{$gruda}max_ocorrencias = '{$this->max_ocorrencias}'";
+				$gruda = ", ";
+			}elseif(is_null($this->max_ocorrencias)){
+				$set .= "{$gruda}max_ocorrencias = NULL";
 				$gruda = ", ";
 			}
 			if( is_string( $this->data_cadastro ) )

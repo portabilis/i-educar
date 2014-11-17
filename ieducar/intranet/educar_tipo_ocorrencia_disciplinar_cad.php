@@ -1,4 +1,6 @@
 <?php
+ // error_reporting(E_ERROR);
+ // ini_set("display_errors", 1);
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
 	*	@author Prefeitura Municipal de Itajaí								 *
@@ -111,7 +113,7 @@ class indice extends clsCadastro
 		// text
 		$this->campoTexto( "nm_tipo", "Tipo Ocorr&ecirc;ncia Disciplinar", $this->nm_tipo, 30, 255, true );
 		$this->campoMemo( "descricao", "Descri&ccedil;&atilde;o", $this->descricao, 60, 5, false );
-		$this->campoNumero( "max_ocorrencias", "M&aacute;ximo Ocorr&ecirc;ncias", $this->max_ocorrencias, 4, 4, true );
+		$this->campoNumero( "max_ocorrencias", "M&aacute;ximo Ocorr&ecirc;ncias", $this->max_ocorrencias, 4, 4, false );
 	}
 
 	function Novo()

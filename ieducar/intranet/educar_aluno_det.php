@@ -33,7 +33,6 @@ require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/modules/clsModulesFichaMedicaAluno.inc.php';
-require_once 'include/modules/clsModulesUniformeAluno.inc.php';
 require_once 'include/modules/clsModulesMoradiaAluno.inc.php';
 
 require_once 'App/Model/ZonaLocalizacao.php';
@@ -43,6 +42,7 @@ require_once 'Transporte/Model/AlunoDataMapper.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 
 require_once 'Portabilis/View/Helper/Application.php';
+require_once 'lib/Portabilis/Date/Utils.php';
 
 
 /**
@@ -625,7 +625,7 @@ class indice extends clsDetalhe
       $lista_tipo_cert_civil[91]  = 'Nascimento';
       $lista_tipo_cert_civil[92]  = 'Casamento';
 
-      $this->addDetalhe(array('Tipo Certificado Civil', $registro['tipo_cert_civil']));
+      $this->addDetalhe(array('Tipo Certificado Civil', $lista_tipo_cert_civil[$registro['tipo_cert_civil']]));
     }
 
     if ($registro['num_termo']) {
@@ -682,10 +682,11 @@ class indice extends clsDetalhe
       $this->url_novo   = '/module/Cadastro/aluno';
       $this->url_editar = '/module/Cadastro/aluno?id=' . $registro['cod_aluno'];
 
-      $this->array_botao = array('Nova matrícula', 'Atualizar Histórico');
+      $this->array_botao = array('Nova matrícula', 'Atualizar histórico', 'Distribuição de uniforme');
       $this->array_botao_url_script = array(
         sprintf('go("educar_matricula_cad.php?ref_cod_aluno=%d");', $registro['cod_aluno']),
-        sprintf('go("educar_historico_escolar_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno'])
+        sprintf('go("educar_historico_escolar_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno']),
+        sprintf('go("educar_distribuicao_uniforme_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno'])
       );
     }
 
@@ -746,33 +747,24 @@ class indice extends clsDetalhe
 
     }
 
-    $objUniforme       = new clsModulesUniformeAluno($this->cod_aluno);
-    $reg               = $objUniforme->detalhe();
+    $objDistribuicaoUniforme       = new clsPmieducarDistribuicaoUniforme(null, $this->cod_aluno, date("Y"));
+    $reg               = $objDistribuicaoUniforme->detalhePorAlunoAno();
 
     if($reg){
-
-      $this->addDetalhe(array('<span id="funiforme"></span>Recebeu uniforme escolar', ($reg['recebeu_uniforme'] == 'S' ? 'Sim': 'Não') ));
-      $this->addDetalhe(array('<span class="tit_uniforme">Camiseta</span>'));
-      $this->addDetalhe(array('Quantidade', $reg['quantidade_camiseta']));
-      $this->addDetalhe(array('Tamanho', $reg['tamanho_camiseta']));
-      $this->addDetalhe(array('<span class="tit_uniforme">Blusa/Jaqueta</span>'));
-      $this->addDetalhe(array('Quantidade', $reg['quantidade_blusa_jaqueta']));
-      $this->addDetalhe(array('Tamanho', $reg['tamanho_blusa_jaqueta']));
-      $this->addDetalhe(array('<span class="tit_uniforme">Bermuda</span>'));
-      $this->addDetalhe(array('Quantidade', $reg['quantidade_bermuda']));
-      $this->addDetalhe(array('Tamanho', $reg['tamanho_bermuda']));
-      $this->addDetalhe(array('<span class="tit_uniforme">Calça</span>'));
-      $this->addDetalhe(array('Quantidade', $reg['quantidade_calca']));
-      $this->addDetalhe(array('Tamanho', $reg['tamanho_calca']));
-      $this->addDetalhe(array('<span class="tit_uniforme">Saia</span>'));
-      $this->addDetalhe(array('Quantidade', $reg['quantidade_saia']));
-      $this->addDetalhe(array('Tamanho', $reg['tamanho_saia']));
-      $this->addDetalhe(array('<span class="tit_uniforme">Calçado</span>'));
-      $this->addDetalhe(array('Quantidade', $reg['quantidade_calcado']));
-      $this->addDetalhe(array('Tamanho', $reg['tamanho_calcado']));
-      $this->addDetalhe(array('<span class="tit_uniforme">Meia</span>'));
-      $this->addDetalhe(array('Quantidade', $reg['quantidade_meia']));
-      $this->addDetalhe(array('Tamanho', $reg['tamanho_meia']));
+      if( dbBool($reg["kit_completo"]) ){
+              $this->addDetalhe( array( "<span id='funiforme'></span>Recebeu kit completo", "Sim") );
+              $this->addDetalhe( array( "<span id='ffuniforme'></span>" . Portabilis_String_Utils::toLatin1('Data da distribuição'), Portabilis_Date_Utils::pgSQLToBr($reg['data'])) );
+      }else{
+        $this->addDetalhe( array( "<span id='funiforme'></span>Recebeu kit completo",  Portabilis_String_Utils::toLatin1("Não")) );
+        $this->addDetalhe( array( Portabilis_String_Utils::toLatin1('Data da distribuição'), Portabilis_Date_Utils::pgSQLToBr($reg['data'])) );
+        $this->addDetalhe( array( Portabilis_String_Utils::toLatin1("Quantidade de agasalhos (jaqueta e calça)"), $reg['agasalho_qtd'] ?: '0' ));
+        $this->addDetalhe( array( "Quantidade de camisetas (manga curta)", $reg['camiseta_curta_qtd'] ?: '0' ));
+        $this->addDetalhe( array( "Quantidade de camisetas (manga longa)", $reg['camiseta_longa_qtd'] ?: '0' ));
+        $this->addDetalhe( array( "Quantidade de meias", $reg['meias_qtd'] ?: '0' ));
+        $this->addDetalhe( array( "Bermudas tectels (masculino)", $reg['bermudas_tectels_qtd'] ?: '0' ));
+        $this->addDetalhe( array( "Bermudas coton (feminino)", $reg['bermudas_coton_qtd'] ?: '0' ));
+        $this->addDetalhe( array( "<span id='ffuniforme'></span>".Portabilis_String_Utils::toLatin1("Quantidade de tênis"), $reg['tenis_qtd'] ?: '0' ));
+      }
     }
 
     $objMoradia        = new clsModulesMoradiaAluno($this->cod_aluno);

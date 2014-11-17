@@ -123,6 +123,7 @@ class indice extends clsCadastro
   var $curso_relacoes_etnicorraciais;
   var $curso_outros;
   var $curso_nenhum;
+  var $multi_seriado;
   var $matricula = array();
 
   var $total_horas_alocadas;
@@ -162,6 +163,7 @@ class indice extends clsCadastro
         foreach ($registro as $campo => $val) {
           $this->$campo = $val;
         }
+        $this->multi_seriado = dbBool($this->multi_seriado);
 
         $obj_permissoes = new clsPermissoes();
         if ($obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7)) {
@@ -347,6 +349,8 @@ class indice extends clsCadastro
 
     $this->campoHora('carga_horaria', 'Carga Horária', $hora_formatada, TRUE,
       'Número de horas deve ser maior que horas alocadas','',FALSE);
+
+    $this->inputsHelper()->checkbox('multi_seriado', array( 'label' => 'Multi-seriado', 'value' => $this->multi_seriado));
 
     // Dados do docente no Inep/Educacenso.
     if ($this->docente) {
@@ -601,6 +605,7 @@ class indice extends clsCadastro
         NULL, $this->ref_idesco, $this->carga_horaria,
         NULL, NULL, 1, $this->ref_cod_instituicao);
       $obj = $this->addCamposCenso($obj);
+      $obj->multi_seriado = !is_null($this->multi_seriado);
       $editou = $obj->edita();
 
       if ($editou) {
@@ -621,6 +626,7 @@ class indice extends clsCadastro
         NULL, $this->ref_idesco, $this->carga_horaria,
         NULL, NULL, 1, $this->ref_cod_instituicao);
       $obj_2 = $this->addCamposCenso($obj_2);
+      $obj_2->multi_seriado = !is_null($this->multi_seriado);
       $cadastrou = $obj_2->cadastra();
 
       if ($cadastrou) {
@@ -662,6 +668,7 @@ class indice extends clsCadastro
       $obj = new clsPmieducarServidor($this->cod_servidor, NULL,
         $this->ref_idesco, $this->carga_horaria, NULL, NULL, 1, $this->ref_cod_instituicao);
       $obj = $this->addCamposCenso($obj);
+      $obj->multi_seriado = !is_null($this->multi_seriado);
       $editou = $obj->edita();
 
       if ($editou) {
@@ -701,6 +708,7 @@ class indice extends clsCadastro
             NULL, $this->ref_idesco, $this->carga_horaria,
             NULL, NULL, 0, $this->ref_cod_instituicao_original);
           $obj = $this->addCamposCenso($obj);
+          $obj->multi_seriado = !is_null($this->multi_seriado);
           $editou = $obj->edita();
 
           if ($editou) {

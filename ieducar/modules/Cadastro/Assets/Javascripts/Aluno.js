@@ -101,7 +101,7 @@ var $linkToEditPessoaMae = $linkToEditPessoaPai.clone()
 // adiciona id 'stop' na linha separadora
 $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
 // Adiciona abas na página
-$j('td .formdktd:first').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab"> <span class="tabText">Ficha m\u00e9dica</span></div></li><li><div id="tab3" class="alunoTab"> <span class="tabText">Uniforme escolar</span></div></li><li><div id="tab4" class="alunoTab"> <span class="tabText">Moradia</span></div></li><li><div id="tab5" class="alunoTab" style="width: 125px;"> <span class="tabText" style="">Recursos prova INEP</span></div></li><li><div id="tab6" class="alunoTab"> <span class="tabText" style="">Projetos</span></div></li></ul></div>');
+$j('td .formdktd:first').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab"> <span class="tabText">Ficha m\u00e9dica</span></div></li><li><div id="tab4" class="alunoTab"> <span class="tabText">Moradia</span></div></li><li><div id="tab5" class="alunoTab" style="width: 125px;"> <span class="tabText" style="">Recursos prova INEP</span></div></li><li><div id="tab6" class="alunoTab"> <span class="tabText" style="">Projetos</span></div></li></ul></div>');
 
 // Adiciona estilo de aba selecionada a primeira aba
 $j('#tab1').addClass('alunoTab-active').removeClass('alunoTab');
@@ -118,8 +118,6 @@ $j('.tablecadastro >tbody  > tr').each(function(index, row) {
 
 // Adiciona classe para que os campos de descrição possam ser desativados (checkboxs)
 $j('#restricao_atividade_fisica, #acomp_medico_psicologico, #medicacao_especifica, #tratamento_medico, #doenca_congenita, #alergia_alimento, #alergia_medicamento, #fratura_trauma, #plano_saude').addClass('temDescricao');
-
-$j('#quantidade_camiseta, #tamanho_camiseta, #quantidade_calca, #tamanho_calca, #quantidade_calcado, #tamanho_calcado, #quantidade_bermuda, #tamanho_bermuda, #quantidade_saia, #tamanho_saia, #quantidade_meia, #tamanho_meia, #tamanho_blusa_jaqueta, #quantidade_blusa_jaqueta').addClass('uniforme');
 
 // ajax
 
@@ -344,30 +342,6 @@ resourceOptions.handleGet = function(dataResponse) {
   $j('#responsavel_parentesco').val(dataResponse.responsavel_parentesco);
   $j('#responsavel_parentesco_telefone').val(dataResponse.responsavel_parentesco_telefone);
   $j('#responsavel_parentesco_celular').val(dataResponse.responsavel_parentesco_celular);
-
-    /***********************************************
-      CAMPOS DO UNIFORME ESCOLAR
-    ************************************************/
-
-  if (dataResponse.recebeu_uniforme == 'S'){
-    $j('#recebeu_uniforme').attr('checked',true);
-    $j('#recebeu_uniforme').val('on');
-  }
-  $j('#tamanho_camiseta').val(dataResponse.tamanho_camiseta);
-  $j('#tamanho_calcado').val(dataResponse.tamanho_calcado);
-  $j('#tamanho_saia').val(dataResponse.tamanho_saia);
-  $j('#tamanho_calca').val(dataResponse.tamanho_calca);
-  $j('#tamanho_meia').val(dataResponse.tamanho_meia);
-  $j('#tamanho_bermuda').val(dataResponse.tamanho_bermuda);
-  $j('#tamanho_blusa_jaqueta').val(dataResponse.tamanho_blusa_jaqueta);
-  $j('#quantidade_camiseta').val(dataResponse.quantidade_camiseta);
-  $j('#quantidade_calcado').val(dataResponse.quantidade_calcado);
-  $j('#quantidade_saia').val(dataResponse.quantidade_saia);
-  $j('#quantidade_calca').val(dataResponse.quantidade_calca);
-  $j('#quantidade_calcado').val(dataResponse.quantidade_calcado);
-  $j('#quantidade_bermuda').val(dataResponse.quantidade_bermuda);
-  $j('#quantidade_meia').val(dataResponse.quantidade_meia);
-  $j('#quantidade_blusa_jaqueta').val(dataResponse.quantidade_blusa_jaqueta);
 
     /***********************************************
       CAMPOS DA MORADIA
@@ -988,28 +962,7 @@ function canShowParentsFields(){
         });
         first_click_medica = false;
       });
-
-    var first_click_uniforme = true;
-    // UNIFORME
-    $j('#tab3').click(
-      function(){
-        $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
-        $j('#tab3').toggleClass('alunoTab alunoTab-active')
-        $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-          if (row.id!='stop'){
-            if (index> $j('#tr_responsavel_parentesco_celular').index() - 1 && index < $j('#tr_tamanho_blusa_jaqueta').index()){
-              if (first_click_uniforme)
-                $j('#'+row.id).find('td').toggleClass('formlttd formmdtd');
-              row.show();
-            }else if (index>0){
-              row.hide();
-            }
-          }else
-            return false;
-        });
-        $j('.uniforme').prop('disabled',!$j('#recebeu_uniforme').prop('checked'));
-        first_click_uniforme = false;
-      });
+ 
     var first_click_moradia = true;
     // MORADIA
     $j('#tab4').click(
@@ -1018,10 +971,7 @@ function canShowParentsFields(){
         $j('#tab4').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index> $j('#tr_tamanho_blusa_jaqueta').index() - 1 &&index < $j('#tr_lixo').index()){
-              if (first_click_moradia)
-                $j('#'+row.id).find('td').toggleClass('formlttd formmdtd');
-
+            if (index> $j('#tr_responsavel_parentesco_celular').index() - 1 &&index < $j('#tr_lixo').index()){
               row.show();
             }else if(index!=0){
               row.hide();
@@ -1078,16 +1028,6 @@ function canShowParentsFields(){
           $j('#desc_'+this.id).val('');
         }
     });
-
-    $j('#recebeu_uniforme').click(function(){
-      if ($j('#recebeu_uniforme').prop('checked'))
-        $j('.uniforme').removeAttr('disabled');
-      else{
-        $j('.uniforme').attr('disabled','disabled');
-        $j('.uniforme').val('');
-      }
-    });
-
 
     // MODAL pessoa-aluno
 

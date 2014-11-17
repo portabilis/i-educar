@@ -162,12 +162,13 @@ if(possui_ficha_medica){
   });
 }
 
-if(possui_uniforme_escolar){
+if(possui_uniforme_escolar){  
   // Atribui um id a linha, para identificar até onde/a partir de onde esconder os campos
   $j('#funiforme').closest('tr').attr('id','tfuniforme');
 
   // Pega o número dessa linha
   linha_inicial_funiforme = $j('#tfuniforme').index() + 1;
+  linha_final_funiforme = $j('#ffuniforme').closest('tr').index() + 1;
 
   // hide nos campos das outras abas (deixando só os campos da primeira aba)
   $j('.tableDetalhe >tbody  > tr').each(function(index, row) {
@@ -229,7 +230,7 @@ $j(document).ready(function() {
         $j('.alunoTab-active2').toggleClass('alunoTab-active2 alunoTab2');
         $j('#tab1').toggleClass('alunoTab2 alunoTab-active2')
         $j('.tableDetalhe >tbody  > tr').each(function(index, row) {
-          if (index>=linha_inicial_fmedica){
+          if (index>= (linha_inicial_fmedica || linha_inicial_funiforme)){
             if (row.id!='stop')
               row.hide();
             else
@@ -270,7 +271,7 @@ $j(document).ready(function() {
             $j('#tab3').toggleClass('alunoTab2 alunoTab-active2')
             $j('.tableDetalhe >tbody  > tr').each(function(index, row) {
               if (row.id!='stop'){
-                if (index>=linha_inicial_funiforme && index<linha_inicial_fmoradia){
+                if (index>=linha_inicial_funiforme && index<linha_final_funiforme + 1){
                   row.show();
                 }else if (index>1){
                   row.hide();
@@ -279,7 +280,7 @@ $j(document).ready(function() {
                 return false;
             });
           }else
-            alert('Dados do uniforme escolar n\u00e3o foram adicionados ainda. \nVoc\u00ea pode adicion\u00e1-los clicando em editar.');
+            alert('Dados do uniforme escolar n\u00e3o foram adicionados ainda. \nVoc\u00ea pode adicion\u00e1-los clicando em distribui\u00e7\u00e3o de uniforme.');
 
         });
       // Moradia
