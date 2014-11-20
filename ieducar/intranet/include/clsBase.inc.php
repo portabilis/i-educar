@@ -1,5 +1,6 @@
 <?php
-
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -284,7 +285,8 @@ class clsBase extends clsConfig
   {
     $menu = $this->openTpl("htmlmenu");
     $menuObj = new clsMenu();
-    $saida = $menuObj->MakeMenu($this->openTpl("htmllinhamenu"), $this->openTpl("htmllinhamenusubtitulo"));
+    $saida .= $this->buscaRapida();
+    $saida .= $menuObj->MakeMenu($this->openTpl("htmllinhamenu"), $this->openTpl("htmllinhamenusubtitulo"));
     $saida = str_replace("<!-- #&LINHAS&# -->", $saida, $menu);
     return $saida;
   }
@@ -845,6 +847,40 @@ class clsBase extends clsConfig
     if (is_string($string) && $string) {
       $this->prog_alert = $string;
     }
+  }
+
+
+  function buscaRapida(){
+
+  	$css = "<link rel=stylesheet type='text/css' href='styles/{$estilo}.css?assets_version=" . Portabilis_Assets_Version::VERSION."' />";
+  	$js .= "<script type='text/javascript' src='scripts/buscaMenu.js?assets_version=" . Portabilis_Assets_Version::VERSION."' ></script>";
+
+  	$titulo .= "<div title='Busca rápida'>";
+  	$titulo .= "<table width='168' class='title active-section-title' style='-moz-user-select: none;'>";
+  	$titulo .= "<tbody style='-moz-user-select: none;'>";
+  	$titulo .= "<tr style='-moz-user-select: none;'>";
+  	$titulo .= "<td style='-moz-user-select: none;'>";
+  	$titulo .= "<a style='outline:none;text-decoration:none;'>Busca rápida</a>";
+  	$titulo .= "</td>";
+  	$titulo .= "</tr>";
+  	$titulo .= "</tbody>";
+  	$titulo .= "</table>";
+  	$titulo .= "</div>";
+  	$campoBusca .= "<div>";
+  	$campoBusca .= "<ul class='menu'>";
+  	$campoBusca .= "<li class='nvp_cor_nao'>";
+
+  	//$s = new Portabilis_View_Helper_Input_SimpleSearch();
+
+
+	// $campoBusca .= simpleSearchMenu(null, array('required' => false));
+	// $campoBusca .= "<input class='geral ui-autocomplete-input' type='text' name='menu' id='menu' size=50 maxlength=50 placeholder='Informe o nome do menu' autocomplete=off>";
+
+
+  	$campoBusca .= "</li>";
+  	$campoBusca .= "</ul>";
+  	$campoBusca .= "</div>";
+  	return $titulo . $campoBusca;
   }
 
   protected function checkUserExpirations() {
