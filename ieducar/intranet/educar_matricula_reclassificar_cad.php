@@ -183,7 +183,7 @@ class indice extends clsCadastro
 				if($this->ref_ref_cod_serie == $serie_origem)
 					$seq_correta = true;
 
-				echo "serie: $serie_origem curso_origem: $curso_origem curso_destino: $curso_destino <br/>";
+				//echo "serie: $serie_origem curso_origem: $curso_origem curso_destino: $curso_destino <br/>";
 
 
 				//$todas_sequencias .= "sequencia_serie[sequencia_serie.length] = new Array({$curso_origem},$serie_origem,'$nm_serie_origem');\n";
