@@ -160,7 +160,7 @@ class indice extends clsCadastro
 						 WHERE s.cod_serie = o.ref_serie_origem
 						   AND s.cod_serie = $seq_ini
 				           AND sd.cod_serie = o.ref_serie_destino
-				           WHERE o.ativo = 1
+				           AND o.ativo = 1
 						";
 //						   AND s.ref_cod_curso = $curso
 				$db->Consulta($sql);
