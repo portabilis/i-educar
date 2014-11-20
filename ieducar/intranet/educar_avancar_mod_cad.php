@@ -60,7 +60,7 @@ class indice extends clsCadastro
     session_write_close();
 
     $obj_permissao = new clsPermissoes();
-    $obj_permissao->permissao_cadastra(561, $pessoa_logada, 7, 'educar_index.php');
+    $obj_permissao->permissao_cadastra(561, $this->pessoa_logada, 7, 'educar_index.php');
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
