@@ -227,7 +227,10 @@ class clsBase extends clsConfig
       }
 
       if ($processo_ap != 0) {
-        $this->db()->Consulta("SELECT 1 FROM menu_funcionario WHERE ref_cod_menu_submenu = 0 AND ref_ref_cod_pessoa_fj = {$this->currentUserId()}");
+        $this->db()->Consulta("SELECT 1 FROM pmieducar.menu_tipo_usuario mtu 
+                                INNER JOIN pmieducar.tipo_usuario tu ON mtu.ref_cod_tipo_usuario = tu.cod_tipo_usuario
+                                INNER JOIN pmieducar.usuario u ON tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
+                                WHERE mtu.ref_cod_menu_submenu = 0 AND u.cod_usuario = {$this->currentUserId()}");
         if ($this->db()->ProximoRegistro()) {
           list($aui) = $this->db()->Tupla();
           $sempermissao = FALSE;
@@ -237,7 +240,12 @@ class clsBase extends clsConfig
         //       permissão de acesso ao processo. Já a segunda, não existe
         //       sentido para nivel = 2 já que processoAp pode ser de níveis
         //       maiores que 2.
-        $this->db()->Consulta("SELECT 1 FROM menu_funcionario WHERE (ref_cod_menu_submenu = {$processo_ap} AND ref_ref_cod_pessoa_fj = {$this->currentUserId()}) OR (SELECT true FROM menu_submenu WHERE cod_menu_submenu = {$processo_ap} AND nivel = 2)");
+        $this->db()->Consulta("SELECT 1 FROM pmieducar.menu_tipo_usuario mtu 
+                                INNER JOIN pmieducar.tipo_usuario tu ON mtu.ref_cod_tipo_usuario = tu.cod_tipo_usuario
+                                INNER JOIN pmieducar.usuario u ON tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
+                                WHERE (mtu.ref_cod_menu_submenu = {$processo_ap} AND u.cod_usuario = {$this->currentUserId()})
+                                OR (SELECT true FROM menu_submenu WHERE cod_menu_submenu = {$processo_ap} AND nivel = 2)
+                                LIMIT 1");
         if ($this->db()->ProximoRegistro()) {
           list($aui) = $this->db()->Tupla();
           $sempermissao = FALSE;

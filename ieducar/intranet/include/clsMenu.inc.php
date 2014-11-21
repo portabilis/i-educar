@@ -72,11 +72,12 @@ class clsMenu
     $dba = new clsBanco();
     $dba->Consulta('
       SELECT
-        ref_cod_menu_submenu
+        mtu.ref_cod_menu_submenu
       FROM
-        menu_funcionario
-      WHERE
-        ref_ref_cod_pessoa_fj = ' . $id_usuario);
+      pmieducar.menu_tipo_usuario mtu   
+      INNER JOIN pmieducar.tipo_usuario tu ON mtu.ref_cod_tipo_usuario = tu.cod_tipo_usuario
+      INNER JOIN pmieducar.usuario u ON tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
+      WHERE  u.cod_usuario = ' . $id_usuario);
 
     while ($dba->ProximoRegistro()) {
       list($aut) = $dba->Tupla();
