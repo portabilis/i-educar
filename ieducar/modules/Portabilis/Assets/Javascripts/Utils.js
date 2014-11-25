@@ -1,6 +1,9 @@
 
 // jquery utils
 
+$j = jQuery.noConflict();
+
+
 function buildId(id) {
   return typeof(id) == 'string' && id.length > 0 && id.charAt(0) != '#' ? '#' + id : id;
 }

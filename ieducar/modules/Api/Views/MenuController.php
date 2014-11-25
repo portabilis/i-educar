@@ -55,7 +55,8 @@ class MenuController extends ApiCoreController
     $sqls[] = "select arquivo as id, nm_submenu as name
    				 from portal.menu_submenu
   				where lower(to_ascii(nm_submenu)) like '%'||lower(to_ascii($1))||'%' AND
-  				      arquivo is not null
+  				      arquivo is not null AND
+  				      trim(arquivo) <> ''
   				      limit 15";
 
     return $sqls;

@@ -852,10 +852,16 @@ class clsBase extends clsConfig
 
   function buscaRapida(){
 
-  	$css = "<link rel=stylesheet type='text/css' href='styles/{$estilo}.css?assets_version=" . Portabilis_Assets_Version::VERSION."' />";
-  	$js .= "<script type='text/javascript' src='scripts/buscaMenu.js?assets_version=" . Portabilis_Assets_Version::VERSION."' ></script>";
+  	$css .= "<link rel=stylesheet type='text/css' href='styles/buscaMenu.css?assets_version=" . Portabilis_Assets_Version::VERSION."' />";
+  	$css .= "<link rel=stylesheet type='text/css' href='scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css?assets_version=" . Portabilis_Assets_Version::VERSION."' />";
 
-  	$titulo .= "<div title='Busca rápida'>";
+
+  	$js .= "<script type='text/javascript' src='/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js'></script>";
+  	$js .= "<script type='text/javascript' src='/modules/Portabilis/Assets/Javascripts/Utils.js'></script>";
+  	$js .= "<script type='text/javascript' src='scripts/buscaMenu.js?assets_version= " . Portabilis_Assets_Version::VERSION . "'></script>";
+  	$js .= "<script type='text/javascript' src='scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js?assets_version= " . Portabilis_Assets_Version::VERSION . "'></script>";
+
+  	$titulo .= "<div title='Busca rápida' id='teste'>";
   	$titulo .= "<table width='168' class='title active-section-title' style='-moz-user-select: none;'>";
   	$titulo .= "<tbody style='-moz-user-select: none;'>";
   	$titulo .= "<tr style='-moz-user-select: none;'>";
@@ -868,19 +874,13 @@ class clsBase extends clsConfig
   	$titulo .= "</div>";
   	$campoBusca .= "<div>";
   	$campoBusca .= "<ul class='menu'>";
-  	$campoBusca .= "<li class='nvp_cor_nao'>";
-
-  	//$s = new Portabilis_View_Helper_Input_SimpleSearch();
-
-
-	// $campoBusca .= simpleSearchMenu(null, array('required' => false));
-	// $campoBusca .= "<input class='geral ui-autocomplete-input' type='text' name='menu' id='menu' size=50 maxlength=50 placeholder='Informe o nome do menu' autocomplete=off>";
-
-
+  	$campoBusca .= "<li id='busca-menu' class='nvp_cor_nao'>";
+	$campoBusca .= "<input class='geral ui-autocomplete-input' type='text' name='menu' id='busca-menu-input' size=50 maxlength=50 placeholder='Informe o nome do menu' autocomplete=off>";
   	$campoBusca .= "</li>";
   	$campoBusca .= "</ul>";
   	$campoBusca .= "</div>";
-  	return $titulo . $campoBusca;
+
+  	return $css . $js . $titulo . $campoBusca;
   }
 
   protected function checkUserExpirations() {
