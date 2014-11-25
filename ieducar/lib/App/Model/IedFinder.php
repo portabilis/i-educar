@@ -817,6 +817,21 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     return $resultado;
   }
+
+  /**
+  * Retorna todos os turnos
+  * @return array
+  */
+  public static function getTurnos(){
+   
+    $sql = 'SELECT id, nome
+              FROM pmieducar.turma_turno
+              WHERE ativo = 1
+             ORDER BY to_ascii(lower(nome)) ASC';
+
+
+    return Portabilis_Array_Utils::setAsIdValue(Portabilis_Utils_Database::fetchPreparedQuery($sql), 'id', 'nome');
+  }
   /**
    * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
    */

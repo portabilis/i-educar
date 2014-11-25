@@ -425,11 +425,7 @@ function liberaCampos(){
   parent.document.getElementById('idtlog').value = '';
   parent.document.getElementById('zona_localizacao').value = '';
 
-  if ( typeof parent.reloadSingletonMap == 'function' ) {
+  if ( typeof parent.reloadSingletonMap == 'function' )
     parent.reloadSingletonMap();
-    console.log(':)');
-  }else
-    console.log(':(');
-
 }
 </script>
