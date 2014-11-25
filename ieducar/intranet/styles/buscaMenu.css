@@ -1,0 +1,9 @@
+input#busca-menu-input{
+	width:145px;
+	background-color:white;
+	border: 1px solid #3C505B;
+  margin:0;
+}
+.ui-menu-item{
+  font-size:11px;
+}
