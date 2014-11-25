@@ -191,6 +191,8 @@ class indice extends clsCadastro
       $regras = CoreExt_Entity::entityFilterAttr($regras, 'id', 'nome');
     }
 
+    $regras = array('' => 'Selecione') + $regras;
+
     $this->campoLista('regra_avaliacao_id', 'Regra Avaliação', $regras, $this->regra_avaliacao_id);
 
     $opcoes = array('' => 'Selecione', 1 => 'n&atilde;o', 2 => 'sim');
