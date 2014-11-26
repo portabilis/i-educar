@@ -102,7 +102,7 @@ class indice
           </div>
           <script>
           var $j = jQuery.noConflict();
-          
+
           $j(function() {
             $j( "#dialog" ).dialog({
               width: 600,
@@ -116,17 +116,17 @@ class indice
                 }
               ]
             });
-            
+
           });
          </script>';
 
-      if ($GLOBALS['coreExt']['Config']->app->database->dbname == 'botucatu' || $GLOBALS['coreExt']['Config']->app->database->dbname == 'test')
+      if ($GLOBALS['coreExt']['Config']->app->database->dbname == 'botucatu')
         echo '
           <script type="text/javascript" src="scripts/jquery/jquery-1.8.3.min.js"></script>
           <link rel="stylesheet" href="scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css">
           <script src="scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js"></script>
           <div id="dialog" title="Pesquisa de satisfa&ccedil;&atilde;o">
-            <p>Caro usu&aacute;rio(a), a Secretaria Mun. de Educa&ccedil;&atilde;o e a Portabilis Tecnologia, convidam voc&ecirc; a responder a uma pesquisa de satisfa&ccedil;&atilde;o referente ao projeto de moderniza&ccedil;&atilde;o da gest&atilde;o escolar com o i-Educar em Botucatu.</p> 
+            <p>Caro usu&aacute;rio(a), a Secretaria Mun. de Educa&ccedil;&atilde;o e a Portabilis Tecnologia, convidam voc&ecirc; a responder a uma pesquisa de satisfa&ccedil;&atilde;o referente ao projeto de moderniza&ccedil;&atilde;o da gest&atilde;o escolar com o i-Educar em Botucatu.</p>
             <br/>
             <p><i>Voc&ecirc; precisar&aacute; de apenas 5 minutos para responder a pesquisa. :)</i></p>
             <br/>
@@ -134,12 +134,12 @@ class indice
           </div>
           <script>
           var $j = jQuery.noConflict();
-          
+
           $j(function() {
             $j( "#dialog" ).dialog({
               width: 600,
               position: { my: "center", at: "top", of: window },
-              buttons: [                
+              buttons: [
                 {
                   text: "Participar da pesquisa",
                   click: function(){
@@ -152,10 +152,47 @@ class indice
                   click: function(){
                     $j(this).dialog("close");
                   }
-                }                
+                }
               ]
             });
-            
+
+          });
+         </script>';
+         elseif($GLOBALS['coreExt']['Config']->app->database->dbname == 'rionegrinho' || $GLOBALS['coreExt']['Config']->app->database->dbname == 'test')
+         	echo '<script type="text/javascript" src="scripts/jquery/jquery-1.8.3.min.js"></script>
+          <link rel="stylesheet" href="scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css">
+          <script src="scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js"></script>
+          <div id="dialog" title="Pesquisa de satisfa&ccedil;&atilde;o">
+            <p>Caro usu&aacute;rio(a), a Secretaria Mun. de Educa&ccedil;&atilde;o e a Portabilis Tecnologia, convidam voc&ecirc; a responder a uma pesquisa de satisfa&ccedil;&atilde;o referente ao projeto de moderniza&ccedil;&atilde;o da gest&atilde;o escolar com o i-Educar em Rio Negrinho.</p>
+            <br/>
+            <p><i>Voc&ecirc; precisar&aacute; de apenas 5 minutos para responder a pesquisa. :)</i></p>
+            <br/>
+            <p><b> Contamos com voc&ecirc;! :)</b></p>
+          </div>
+          <script>
+          var $j = jQuery.noConflict();
+
+          $j(function() {
+            $j( "#dialog" ).dialog({
+              width: 600,
+              position: { my: "center", at: "top", of: window },
+              buttons: [
+                {
+                  text: "Participar da pesquisa",
+                  click: function(){
+                    window.open("https://docs.google.com/a/portabilis.com.br/forms/d/14AdnuR-iCdsuPQJEUDvEtFc9rrrkuFPmtZg99jJLUVE/viewform", "_blank");
+                    $j(this).dialog("close");
+                  }
+                },
+                {
+                  text: "N\u00e3o, obrigado",
+                  click: function(){
+                    $j(this).dialog("close");
+                  }
+                }
+              ]
+            });
+
           });
          </script>';
 
