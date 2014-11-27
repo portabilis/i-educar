@@ -47,6 +47,7 @@ class CursoController extends ApiCoreController
     if ($this->canGetCursos()){
       $instituicaoId = $this->getRequest()->instituicao_id;
       $escolaId = $this->getRequest()->escola_id;
+      $getSeries = (bool)$this->getRequest()->get_series;
 
       if($escolaId){
         if(is_array($escolaId))
@@ -71,14 +72,32 @@ class CursoController extends ApiCoreController
 
       $cursos = $this->fetchPreparedQuery($sql, $params);
 
+      $sqlSerie = "SELECT DISTINCT s.cod_serie, s.nm_serie                  
+                    FROM pmieducar.serie s
+                    INNER JOIN pmieducar.escola_serie es ON es.ref_cod_serie = s.cod_serie
+                    WHERE es.ativo = 1
+                    AND s.ativo = 1";
+      if($escolaId)
+        $sqlSerie .= " AND es.ref_cod_escola IN ({$escolaId}) ";
+
       foreach ($cursos as &$curso) {
         $curso['nm_curso'] = Portabilis_String_Utils::toUtf8($curso['nm_curso']);
+        if($getSeries){
+          $series = $this->fetchPreparedQuery($sqlSerie . " AND s.ref_cod_curso = {$curso['cod_curso']} ORDER BY s.nm_serie ASC");
+          foreach ($series as &$serie) {
+            $serie['nm_serie'] = Portabilis_String_Utils::toUtf8($serie['nm_serie']);
+          }
+          $curso['series'] = Portabilis_Array_Utils::filterSet($series, array('cod_serie' => 'id', 'nm_serie' => 'nome'));
+        }
       }
 
       $attrs = array(
         'cod_curso'       => 'id',
         'nm_curso'        => 'nome'
       );
+
+      if ($getSeries)
+        $attrs['series'] = 'series';
 
       $cursos = Portabilis_Array_Utils::filterSet($cursos, $attrs);
 
