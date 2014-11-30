@@ -12,4 +12,4 @@ insert into pmicontrolesis.menu values( 999812, 999812, 999811, 'Declaração de
 -- //@UNDO
 
 delete from pmicontrolesis.menu where cod_menu in(999811, 999812);
-delete from portal.menu_submenu where cod_menusubmenu = 999812;
+delete from portal.menu_submenu where cod_menu_submenu = 999812;
