@@ -159,7 +159,7 @@ class indice
 
           });
          </script>';
-         elseif($GLOBALS['coreExt']['Config']->app->database->dbname == 'rionegrinho' || $GLOBALS['coreExt']['Config']->app->database->dbname == 'test')
+         elseif($GLOBALS['coreExt']['Config']->app->database->dbname == 'rionegrinho')
          	echo '
           <script type="text/javascript" src="scripts/jquery/jquery-1.8.3.min.js"></script>
           <link rel="stylesheet" href="scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css">
