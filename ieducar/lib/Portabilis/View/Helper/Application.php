@@ -131,7 +131,6 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
 
   public static function embedJavascript($viewInstance, $script, $afterReady = false) {
     if ($afterReady) {
-      self::loadJQueryLib($viewInstance);
 
       $script = "(function($){
         $(document).ready(function(){
@@ -149,7 +148,6 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
   }
 
   public static function embedJavascriptToFixupFieldsWidth($viewInstance) {
-    Portabilis_View_Helper_Application::loadJQueryLib($viewInstance);
 
     Portabilis_View_Helper_Application::loadJavascript(
       $viewInstance, '/modules/Portabilis/Assets/Javascripts/Utils.js'

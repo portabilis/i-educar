@@ -94,9 +94,7 @@ class indice
 
       if ($pendencia_administrativa)
         echo '
-          <script type="text/javascript" src="scripts/jquery/jquery-1.8.3.min.js"></script>
-          <link rel="stylesheet" href="scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css">
-          <script src="scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js"></script>
+          
           <div id="dialog" title="Aviso">
             '.$texto_pendencia.'
           </div>
@@ -122,9 +120,7 @@ class indice
 
       if ($GLOBALS['coreExt']['Config']->app->database->dbname == 'botucatu')
         echo '
-          <script type="text/javascript" src="scripts/jquery/jquery-1.8.3.min.js"></script>
-          <link rel="stylesheet" href="scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css">
-          <script src="scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js"></script>
+        
           <div id="dialog" title="Pesquisa de satisfa&ccedil;&atilde;o">
             <p>Caro usu&aacute;rio(a), a Secretaria Mun. de Educa&ccedil;&atilde;o e a Portabilis Tecnologia, convidam voc&ecirc; a responder a uma pesquisa de satisfa&ccedil;&atilde;o referente ao projeto de moderniza&ccedil;&atilde;o da gest&atilde;o escolar com o i-Educar em Botucatu.</p>
             <br/>
@@ -159,9 +155,7 @@ class indice
           });
          </script>';
          elseif($GLOBALS['coreExt']['Config']->app->database->dbname == 'rionegrinho' || $GLOBALS['coreExt']['Config']->app->database->dbname == 'test')
-         	echo '<script type="text/javascript" src="scripts/jquery/jquery-1.8.3.min.js"></script>
-          <link rel="stylesheet" href="scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css">
-          <script src="scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js"></script>
+         	echo '
           <div id="dialog" title="Pesquisa de satisfa&ccedil;&atilde;o">
             <p>Caro usu&aacute;rio(a), a Secretaria Mun. de Educa&ccedil;&atilde;o e a Portabilis Tecnologia, convidam voc&ecirc; a responder a uma pesquisa de satisfa&ccedil;&atilde;o referente ao projeto de moderniza&ccedil;&atilde;o da gest&atilde;o escolar com o i-Educar em Rio Negrinho.</p>
             <br/>

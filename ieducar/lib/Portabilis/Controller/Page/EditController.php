@@ -178,7 +178,6 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
   }
 
   protected function loadAssets(){
-    Portabilis_View_Helper_Application::loadJQueryLib($this);
     Portabilis_View_Helper_Application::loadJQueryFormLib($this);
 
     $styles = array('/modules/Portabilis/Assets/Stylesheets/Frontend.css',

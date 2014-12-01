@@ -486,8 +486,6 @@ class indice extends clsCadastro
 	{
 
 		// js
-		Portabilis_View_Helper_Application::loadJQueryLib($this);
-
 		$scripts = array(
 			'/modules/Portabilis/Assets/Javascripts/Utils.js',
 			'/modules/Portabilis/Assets/Javascripts/ClientApi.js',

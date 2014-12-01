@@ -171,10 +171,6 @@ class indice extends clsCadastro
  	   $style = "/modules/Portabilis/Assets/Stylesheets/Frontend.css";
  	   Portabilis_View_Helper_Application::loadStylesheet($this, $style);
 
-
-		Portabilis_View_Helper_Application::loadJQueryLib($this);
-		Portabilis_View_Helper_Application::loadJQueryUiLib($this);
-
 		Portabilis_View_Helper_Application::loadJavascript(
 			$this,
 			array('/modules/Portabilis/Assets/Javascripts/Utils.js',
