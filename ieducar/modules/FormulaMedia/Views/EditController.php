@@ -66,7 +66,7 @@ class EditController extends Core_Controller_Page_EditController
       'label'  => 'Fórmula de média final',
       'help'   => 'A fórmula de cálculo.<br />
                    Variáveis disponíveis:<br />
-                   &middot; En - Etapa n (de 1 a 10)<br />
+                   &middot; En - Etapa n (de 1 a 20)<br />
                    &middot; Et - Total de etapas<br />
                    &middot; Se - Soma das notas das etapas<br />
                    &middot; Rc - Nota da recuperação<br />
