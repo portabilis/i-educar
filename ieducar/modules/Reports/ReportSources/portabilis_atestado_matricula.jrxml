@@ -47,9 +47,9 @@
 	   matricula.ano as matricula_ano,
        fcn_upper(instituicao.cidade) as cidade,
 
-	(SELECT CASE WHEN fisica.idpes_pai IS NOT NULL THEN (SELECT upper(pessoa.nome) FROM cadastro.pessoa WHERE pessoa.idpes = fisica.idpes_pai LIMIT 1) WHEN fisica.nome_pai IS NOT NULL AND TRIM(fisica.nome_pai) != '' THEN fisica.nome_pai WHEN aluno.nm_pai IS NOT NULL AND aluno.nm_pai != TRIM('')  THEN upper(aluno.nm_pai) ELSE 'Não informado' END) AS nm_pai,
+	(SELECT CASE WHEN fisica.idpes_pai IS NOT NULL THEN (SELECT upper(pessoa.nome) FROM cadastro.pessoa WHERE pessoa.idpes = fisica.idpes_pai LIMIT 1) WHEN fisica.nome_pai IS NOT NULL AND TRIM(fisica.nome_pai) != '' THEN fisica.nome_pai WHEN aluno.nm_pai IS NOT NULL AND TRIM(aluno.nm_pai) != '' THEN upper(aluno.nm_pai) ELSE 'Não informado' END) AS nm_pai,
 
-	(SELECT CASE WHEN fisica.idpes_mae IS NOT NULL THEN (SELECT upper(pessoa.nome) FROM cadastro.pessoa WHERE pessoa.idpes = fisica.idpes_mae LIMIT 1) WHEN fisica.nome_mae IS NOT NULL AND TRIM(fisica.nome_mae) != '' THEN fisica.nome_mae WHEN aluno.nm_mae IS NOT NULL AND aluno.nm_mae != TRIM('')  THEN upper(aluno.nm_mae) ELSE 'Não informado' END) AS nm_mae,
+	(SELECT CASE WHEN fisica.idpes_mae IS NOT NULL THEN (SELECT upper(pessoa.nome) FROM cadastro.pessoa WHERE pessoa.idpes = fisica.idpes_mae LIMIT 1) WHEN fisica.nome_mae IS NOT NULL AND TRIM(fisica.nome_mae) != '' THEN fisica.nome_mae WHEN aluno.nm_mae IS NOT NULL AND TRIM(aluno.nm_mae) != '' THEN upper(aluno.nm_mae) ELSE 'Não informado' END) AS nm_mae,
 
       (SELECT COALESCE((SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))
           FROM cadastro.pessoa ps,
