@@ -226,8 +226,6 @@ class indice extends clsCadastro
   function Gerar()
   {
 
-    Portabilis_View_Helper_Application::loadJQueryLib($this);
-
     $scripts = array(
       '/modules/Cadastro/Assets/Javascripts/Turma.js'
       );

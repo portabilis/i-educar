@@ -105,9 +105,6 @@ class Portabilis_View_Helper_Input_Core {
     Portabilis_View_Helper_Application::loadStylesheet($this->viewInstance, $style);
 
 
-    Portabilis_View_Helper_Application::loadJQueryLib($this->viewInstance);
-    Portabilis_View_Helper_Application::loadJQueryUiLib($this->viewInstance);
-
     $dependencies = array('/modules/Portabilis/Assets/Javascripts/Utils.js',
                           '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
                           '/modules/Portabilis/Assets/Javascripts/Validator.js');

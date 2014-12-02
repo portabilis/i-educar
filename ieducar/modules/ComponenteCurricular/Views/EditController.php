@@ -199,3 +199,10 @@ class EditController extends Core_Controller_Page_EditController
     }
   }
 }
+//seta o radio automaticamente como primeiro valor
+echo '<script type="text/javascript">
+	  document.ready = function(){
+	  element = document.getElementById("tipo_base");
+	  element.checked = true;
+	  };
+	  </script>';

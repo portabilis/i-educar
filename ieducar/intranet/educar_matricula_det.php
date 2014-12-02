@@ -333,8 +333,6 @@ class indice extends clsDetalhe
     $this->enviaLocalizacao($localizacao->montar());
 
     // js
-    Portabilis_View_Helper_Application::loadJQueryLib($this);
-
     $scripts = array(
       '/modules/Portabilis/Assets/Javascripts/Utils.js',
       '/modules/Portabilis/Assets/Javascripts/ClientApi.js',

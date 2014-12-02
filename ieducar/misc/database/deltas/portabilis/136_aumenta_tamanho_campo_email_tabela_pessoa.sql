@@ -15,4 +15,4 @@ CREATE OR REPLACE VIEW cadastro.v_pessoa_fisica AS
   WHERE p.idpes = f.idpes;
 
 ALTER TABLE cadastro.v_pessoa_fisica
-  OWNER TO ieducar;
+  OWNER TO postgres;

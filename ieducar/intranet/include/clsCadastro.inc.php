@@ -422,7 +422,7 @@ class clsCadastro extends clsCampos
           $nomeCampo =$componente_campo[1];
           $validador = $componente_campo[2];
 
-          if(!empty($validador)) {
+          if(!empty($validador) && strlen($validador) > 1) {
             if($componente_campo[0] == 'idFederal') {
               $campo = "document.getElementById(\"{$nomeCampo}[\"+id_campo+\"]\")";
               $validador= explode('+', $validador);

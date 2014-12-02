@@ -76,6 +76,7 @@ class clsPmieducarMenuTipoUsuario
 	 * @var string
 	 */
 	var $_todos_campos;
+	var $_todos_campos2;
 
 	/**
 	 * Valor que define a quantidade de registros a ser retornada pelo metodo lista
@@ -111,6 +112,7 @@ class clsPmieducarMenuTipoUsuario
 		$this->_tabela = "{$this->_schema}menu_tipo_usuario";
 
 		$this->_campos_lista = $this->_todos_campos = "ref_cod_tipo_usuario, ref_cod_menu_submenu, cadastra, visualiza, exclui";
+		$this->_todos_campos2 = " mtu.ref_cod_tipo_usuario, mtu.ref_cod_menu_submenu, mtu.cadastra, mtu.visualiza, mtu.exclui";
 
 		if( is_numeric( $ref_cod_menu_submenu ) )
 		{
@@ -360,6 +362,27 @@ class clsPmieducarMenuTipoUsuario
 
 		$db = new clsBanco();
 		$db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_tipo_usuario = '{$this->ref_cod_tipo_usuario}' AND ref_cod_menu_submenu = '{$this->ref_cod_menu_submenu}'" );
+		$db->ProximoRegistro();
+		return $db->Tupla();
+		}
+		return false;
+	}
+
+	/**
+	 * Retorna um array com os dados de um registro
+	 *
+	 * @return array
+	 */
+	function detalhePorUsuario($cod_usuario, $ref_cod_menu_submenu)
+	{
+		if( is_numeric( $cod_usuario ) && is_numeric( $ref_cod_menu_submenu ) )
+		{
+
+		$db = new clsBanco();
+		$db->Consulta( "SELECT {$this->_todos_campos2} FROM {$this->_tabela} mtu 
+										 INNER JOIN pmieducar.tipo_usuario tu ON mtu.ref_cod_tipo_usuario = tu.cod_tipo_usuario
+										 INNER JOIN pmieducar.usuario u ON tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
+										 WHERE u.cod_usuario = {$cod_usuario} AND ref_cod_menu_submenu = '{$ref_cod_menu_submenu}'" );
 		$db->ProximoRegistro();
 		return $db->Tupla();
 		}

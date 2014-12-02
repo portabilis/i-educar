@@ -44,9 +44,10 @@ class LogradouroController extends ApiCoreController
 
   protected function sqlsForNumericSearch() {
 
-    $sqls[] = "select distinct idlog as id, nome as name, descricao as tipo_logradouro from
+    $sqls[] = "SELECT distinct l.idlog as id, l.nome as name, tl.descricao as tipo_logradouro, m.nome as municipio from
                  public.logradouro l left join urbano.tipo_logradouro tl on (l.idtlog = tl.idtlog) 
-                 where idlog like $1||'%' and idmun = $2 ";
+                 INNER JOIN public.municipio m ON m.idmun = l.idmun
+                 where l.idlog like $1||'%' and (m.idmun = $2 OR $2 = 0)";
 
     return $sqls;
   }
@@ -54,20 +55,23 @@ class LogradouroController extends ApiCoreController
 
   protected function sqlsForStringSearch() {
 
-    $sqls[] = "select distinct idlog as id, nome as name, descricao as tipo_logradouro from
+    $sqls[] = "SELECT distinct l.idlog as id, l.nome as name, tl.descricao as tipo_logradouro, m.nome as municipio FROM
                  public.logradouro l left join urbano.tipo_logradouro tl on (l.idtlog = tl.idtlog) 
-                 where (lower(to_ascii(nome)) like '%'||lower(to_ascii($1))||'%' 
-                 OR lower(to_ascii(descricao))|| ' ' ||lower(to_ascii(nome)) like '%'||lower(to_ascii($1))||'%') 
-                 and idmun = $2 ";
+                 INNER JOIN public.municipio m ON m.idmun = l.idmun
+                 where (lower(to_ascii(l.nome)) like '%'||lower(to_ascii($1))||'%' 
+                 OR lower(to_ascii(tl.descricao))|| ' ' ||lower(to_ascii(l.nome)) like '%'||lower(to_ascii($1))||'%') 
+                 and (m.idmun = $2 OR $2 = 0)";
 
     return $sqls;
   }  
 
   protected function formatResourceValue($resource) {
+    $id = $resource['id'];
     $tipo    = $resource['tipo_logradouro'];
     $nome    = $this->toUtf8($resource['name'], array('transform' => true));
+    $municipio = $this->toUtf8($resource['municipio'], array('transform' => true));
 
-    return "$tipo $nome";
+    return  $this->getRequest()->exibir_municipio ? "$id - $tipo $nome - $municipio": "$tipo $nome";
   }
 
   public function Gerar() {

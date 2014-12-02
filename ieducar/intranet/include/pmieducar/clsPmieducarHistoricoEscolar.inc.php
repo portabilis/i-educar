@@ -1061,7 +1061,7 @@ class clsPmieducarHistoricoEscolar
 	                              $ref_usuario_cad = $pessoa_logada,
 	                              $detMatricula['nome_serie'],
 	                              $detMatricula['ano'],
-	                              800,
+	                              1000,
 	                              NULL,
 	                              mb_strtoupper($dadosEscola['nome']),
 	                              mb_strtoupper($dadosEscola['cidade']),

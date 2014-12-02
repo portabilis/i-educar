@@ -435,21 +435,7 @@ class indice extends clsCadastro
 			if($obj->existe())
 				$cadastrou = $obj->edita();
 			else
-				$cadastrou = $obj->cadastra();
-
-			// cadastra os menus que o usuario tem acesso
-			$obj_menu_func = new clsMenuFuncionario($this->ref_pessoa);
-
-			$obj_menu_func->exclui_todos();
-
-			$obj_menu_tipo_usuario = new clsPmieducarMenuTipoUsuario();
-			$obj_menu_tipo_ususario_lst = $obj_menu_tipo_usuario->lista($this->ref_cod_tipo_usuario);
-
-			foreach ( $obj_menu_tipo_ususario_lst as $menu )
-			{
-				$obj_menu_func = new clsMenuFuncionario($this->ref_pessoa,$menu["cadastra"],$menu["exclui"],$menu["ref_cod_menu_submenu"]);
-				$obj_menu_func->cadastra();
-			}
+				$cadastrou = $obj->cadastra();	
 
 			if( $cadastrou )
 			{
@@ -513,19 +499,6 @@ class indice extends clsCadastro
 				$editou = $obj->edita();
 			else
 				$editou = $obj->cadastra();
-
-			// cadastra os menus que o usuario tem acesso
-			$obj_menu_func = new clsMenuFuncionario($this->ref_pessoa);
-
-			$obj_menu_func->exclui_todos();
-
-			$obj_menu_tipo_usuario = new clsPmieducarMenuTipoUsuario();
-			$obj_menu_tipo_ususario_lst = $obj_menu_tipo_usuario->lista($this->ref_cod_tipo_usuario);
-			foreach ( $obj_menu_tipo_ususario_lst as $menu )
-			{
-				$obj_menu_func = new clsMenuFuncionario($this->ref_pessoa,$menu["cadastra"],$menu["exclui"],$menu["ref_cod_menu_submenu"]);
-				$obj_menu_func->cadastra();
-			}
 
 			if($this->nivel_usuario_ == 8)
 			{

@@ -158,8 +158,6 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->multipleSearchComponenteCurricular(null, array('label' => 'Componentes lecionados', 'required' => false));
 
-    Portabilis_View_Helper_Application::loadJQueryLib($this);
-
     $scripts = array(
       '/modules/Cadastro/Assets/Javascripts/ServidorVinculoTurma.js'
       );

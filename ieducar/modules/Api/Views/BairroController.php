@@ -43,24 +43,30 @@ class BairroController extends ApiCoreController
   }
 
   protected function formatResourceValue($resource) {
+    $id = $resource['id'];
     $zona    = $resource['zona_localizacao'] == 1 ? 'Urbana' : 'Rural';
     $nome    = $this->toUtf8($resource['name'], array('transform' => true));
+    $municipio = $this->toUtf8($resource['municipio'], array('transform' => true));
 
-    return "$nome / Zona $zona ";
+    return  $this->getRequest()->exibir_municipio ? "$id - $nome - $municipio" : "$nome / Zona $zona ";
   }
 
   protected function sqlsForNumericSearch() {
     
-    $sqls[] = "select idbai as id, nome as name, zona_localizacao from
-                 public.bairro where idbai like $1||'%' and (iddis = $2 or $2 = 0 ";
+    $sqls[] = "SELECT b.idbai as id, b.nome as name, zona_localizacao, m.nome as municipio from
+                 public.bairro b
+                 INNER JOIN public.municipio m ON m.idmun = b.idmun 
+                 where idbai like $1||'%' and (iddis = $2 or $2 = 0 )";
 
     return $sqls;
   }
 
   protected function sqlsForStringSearch() {
 
-    $sqls[] = "select idbai as id, nome as name, zona_localizacao from
-                 public.bairro where lower(to_ascii(nome)) like '%'||lower(to_ascii($1))||'%' and (iddis = $2 or $2 = 0) ";
+    $sqls[] = "SELECT b.idbai as id, b.nome as name, zona_localizacao, m.nome as municipio from
+                 public.bairro b
+                 INNER JOIN public.municipio m ON m.idmun = b.idmun
+                 where lower(to_ascii(b.nome)) like '%'||lower(to_ascii($1))||'%' and (b.iddis = $2 or $2 = 0) ";
 
     return $sqls;
   }

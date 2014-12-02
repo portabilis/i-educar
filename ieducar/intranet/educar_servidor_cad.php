@@ -565,8 +565,6 @@ class indice extends clsCadastro
     $options = array('label' => Portabilis_String_Utils::toLatin1('Curso de Formação Continuada(min. 80hrs) - Nenhum'), 'value' => $this->curso_nenhum);
     $this->inputsHelper()->checkbox('curso_nenhum', $options);
 
-    Portabilis_View_Helper_Application::loadJQueryLib($this);
-
     $scripts = array(
       '/modules/Cadastro/Assets/Javascripts/Servidor.js'
       );

@@ -1,5 +1,6 @@
 <?php
-
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -227,7 +228,10 @@ class clsBase extends clsConfig
       }
 
       if ($processo_ap != 0) {
-        $this->db()->Consulta("SELECT 1 FROM menu_funcionario WHERE ref_cod_menu_submenu = 0 AND ref_ref_cod_pessoa_fj = {$this->currentUserId()}");
+        $this->db()->Consulta("SELECT 1 FROM pmieducar.menu_tipo_usuario mtu 
+                                INNER JOIN pmieducar.tipo_usuario tu ON mtu.ref_cod_tipo_usuario = tu.cod_tipo_usuario
+                                INNER JOIN pmieducar.usuario u ON tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
+                                WHERE mtu.ref_cod_menu_submenu = 0 AND u.cod_usuario = {$this->currentUserId()}");
         if ($this->db()->ProximoRegistro()) {
           list($aui) = $this->db()->Tupla();
           $sempermissao = FALSE;
@@ -237,7 +241,12 @@ class clsBase extends clsConfig
         //       permissão de acesso ao processo. Já a segunda, não existe
         //       sentido para nivel = 2 já que processoAp pode ser de níveis
         //       maiores que 2.
-        $this->db()->Consulta("SELECT 1 FROM menu_funcionario WHERE (ref_cod_menu_submenu = {$processo_ap} AND ref_ref_cod_pessoa_fj = {$this->currentUserId()}) OR (SELECT true FROM menu_submenu WHERE cod_menu_submenu = {$processo_ap} AND nivel = 2)");
+        $this->db()->Consulta("SELECT 1 FROM pmieducar.menu_tipo_usuario mtu 
+                                INNER JOIN pmieducar.tipo_usuario tu ON mtu.ref_cod_tipo_usuario = tu.cod_tipo_usuario
+                                INNER JOIN pmieducar.usuario u ON tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
+                                WHERE (mtu.ref_cod_menu_submenu = {$processo_ap} AND u.cod_usuario = {$this->currentUserId()})
+                                OR (SELECT true FROM menu_submenu WHERE cod_menu_submenu = {$processo_ap} AND nivel = 2)
+                                LIMIT 1");
         if ($this->db()->ProximoRegistro()) {
           list($aui) = $this->db()->Tupla();
           $sempermissao = FALSE;
@@ -284,7 +293,8 @@ class clsBase extends clsConfig
   {
     $menu = $this->openTpl("htmlmenu");
     $menuObj = new clsMenu();
-    $saida = $menuObj->MakeMenu($this->openTpl("htmllinhamenu"), $this->openTpl("htmllinhamenusubtitulo"));
+    $saida .= $this->buscaRapida();
+    $saida .= $menuObj->MakeMenu($this->openTpl("htmllinhamenu"), $this->openTpl("htmllinhamenusubtitulo"));
     $saida = str_replace("<!-- #&LINHAS&# -->", $saida, $menu);
     return $saida;
   }
@@ -845,6 +855,39 @@ class clsBase extends clsConfig
     if (is_string($string) && $string) {
       $this->prog_alert = $string;
     }
+  }
+
+
+  function buscaRapida(){
+
+  	$css .= "<link rel=stylesheet type='text/css' href='styles/buscaMenu.css?assets_version=" . Portabilis_Assets_Version::VERSION."' />";
+  	$css .= "<link rel=stylesheet type='text/css' href='scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css?assets_version=" . Portabilis_Assets_Version::VERSION."' />";
+
+  	$js .= "<script type='text/javascript' src='/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js'></script>";
+  	$js .= "<script type='text/javascript' src='/modules/Portabilis/Assets/Javascripts/Utils.js'></script>";
+  	$js .= "<script type='text/javascript' src='scripts/buscaMenu.js?assets_version= " . Portabilis_Assets_Version::VERSION . "'></script>";
+  	$js .= "<script type='text/javascript' src='scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js?assets_version= " . Portabilis_Assets_Version::VERSION . "'></script>";
+
+  	$titulo .= "<div title='Busca rápida'>";
+  	$titulo .= "<table width='168' class='title active-section-title' style='-moz-user-select: none;'>";
+  	$titulo .= "<tbody style='-moz-user-select: none;'>";
+  	$titulo .= "<tr style='-moz-user-select: none;'>";
+  	$titulo .= "<td style='-moz-user-select: none;'>";
+  	$titulo .= "<a style='outline:none;text-decoration:none;'>Busca rápida</a>";
+  	$titulo .= "</td>";
+  	$titulo .= "</tr>";
+  	$titulo .= "</tbody>";
+  	$titulo .= "</table>";
+  	$titulo .= "</div>";
+  	
+  	$campoBusca .= "<ul class='menu'>";
+  	$campoBusca .= "<li id='busca-menu' class='nvp_cor_nao'>";
+	$campoBusca .= "<input class='geral ui-autocomplete-input' type='text' name='menu' id='busca-menu-input' size=50 maxlength=50 placeholder='Informe o nome do menu' autocomplete=off>";
+  	$campoBusca .= "</li>";
+  	$campoBusca .= "</ul>";
+  	
+
+  	return $css . $js . $titulo . $campoBusca;
   }
 
   protected function checkUserExpirations() {

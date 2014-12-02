@@ -3,6 +3,9 @@ var simpleSearchBairroOptions = {
   params : { 
     distrito_id : function() {
       return $j('#distrito_id').val() 
+    },
+    exibir_municipio : function() {
+      return $j('#exibir_municipio').length > 0
     }
   },
 

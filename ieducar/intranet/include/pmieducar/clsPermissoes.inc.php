@@ -77,9 +77,8 @@ class clsPermissoes
     }
 
     if (!$detalhe_super_usuario) {
-      $obj_menu_funcionario = new clsMenuFuncionario($int_idpes_usuario,
-        FALSE, FALSE, $int_processo_ap);
-      $detalhe = $obj_menu_funcionario->detalhe();
+      $obj_menu_tipo_usuario = new clsPmieducarMenuTipoUsuario();
+      $detalhe = $obj_menu_tipo_usuario->detalhePorUsuario($int_idpes_usuario, $int_processo_ap);
     }
 
     $nivel = $this->nivel_acesso($int_idpes_usuario);
@@ -156,9 +155,8 @@ class clsPermissoes
     }
 
     if (!$detalhe_super_usuario) {
-      $obj_menu_funcionario = new clsMenuFuncionario($int_idpes_usuario,
-        FALSE, FALSE, $int_processo_ap);
-      $detalhe = $obj_menu_funcionario->detalhe();
+      $obj_menu_tipo_usuario = new clsPmieducarMenuTipoUsuario();
+      $detalhe = $obj_menu_tipo_usuario->detalhePorUsuario($int_idpes_usuario, $int_processo_ap);
     }
 
     $nivel = $this->nivel_acesso($int_idpes_usuario);

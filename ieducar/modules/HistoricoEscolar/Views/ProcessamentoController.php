@@ -212,7 +212,6 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
 
     $this->appendOutput($resourceOptionsTable);
 
-    Portabilis_View_Helper_Application::loadJQueryUiLib($this);
 
     Portabilis_View_Helper_Application::loadJavascript(
       $this,

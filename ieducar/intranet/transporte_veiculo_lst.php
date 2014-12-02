@@ -51,28 +51,28 @@ class indice extends clsListagem
 	 *
 	 * @var int
 	 */
-	var $__pessoa_logada;
+	var $pessoa_logada;
 
 	/**
 	 * Titulo no topo da pagina
 	 *
 	 * @var int
 	 */
-	var $__titulo;
+	var $titulo;
 
 	/**
 	 * Quantidade de registros a ser apresentada em cada pagina
 	 *
 	 * @var int
 	 */
-	var $__limite;
+	var $limite;
 
 	/**
 	 * Inicio dos registros a serem exibidos (limit)
 	 *
 	 * @var int
 	 */
-	var $__offset;
+	var $offset;
 
 	var $cod_veiculo;
 	var $descricao;
@@ -86,10 +86,10 @@ class indice extends clsListagem
 	function Gerar()
 	{
 		@session_start();
-		$this->__pessoa_logada = $_SESSION['id_pessoa'];
+		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
 
-		$this->__titulo = "Veículos - Listagem";
+		$this->titulo = "Veículos - Listagem";
 
 		foreach( $_GET AS $var => $val ) 
 			$this->$var = ( $val === "" ) ? null: $val;
@@ -133,12 +133,12 @@ class indice extends clsListagem
 
 
 		// Paginador
-		$this->__limite = 20;
-		$this->__offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->__limite-$this->__limite: 0;
+		$this->limite = 20;
+		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
 		$obj = new clsModulesVeiculo();
 		$obj->setOrderby( " descricao ASC" );
-		$obj->setLimite( $this->__limite, $this->__offset );
+		$obj->setLimite( $this->limite, $this->offset );
 
 		$lista = $obj->lista(
 			$this->cod_veiculo,
@@ -170,7 +170,7 @@ class indice extends clsListagem
 			}
 		}
 		
-		$this->addPaginador2( "transporte_veiculo_lst.php", $total, $_GET, $this->nome, $this->__limite );		
+		$this->addPaginador2( "transporte_veiculo_lst.php", $total, $_GET, $this->nome, $this->limite );		
 
 		$this->largura = "100%";
 

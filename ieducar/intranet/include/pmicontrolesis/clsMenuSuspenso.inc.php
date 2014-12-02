@@ -419,7 +419,10 @@ class clsMenuSuspenso
   {
     $db = new clsBanco();
 
-    if ($db->UnicoCampo("SELECT 1 FROM menu_funcionario WHERE ref_ref_cod_pessoa_fj = '$idpes' AND ref_cod_menu_submenu ='0'")) {
+    if ($db->UnicoCampo("SELECT 1 FROM pmieducar.menu_tipo_usuario mtu 
+                                INNER JOIN pmieducar.tipo_usuario tu ON mtu.ref_cod_tipo_usuario = tu.cod_tipo_usuario
+                                INNER JOIN pmieducar.usuario u ON tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
+                                WHERE mtu.ref_cod_menu_submenu = 0 AND u.cod_usuario = {$idpes}")) {
       $menu_pai = "
           , (
             SELECT
@@ -522,7 +525,16 @@ class clsMenuSuspenso
     else {
       $menus = '';
       $juncao = '';
-      $db->Consulta("SELECT ref_cod_menu_submenu FROM menu_funcionario WHERE ref_ref_cod_pessoa_fj = '$idpes' UNION SELECT cod_menu_submenu FROM menu_submenu WHERE nivel ='2' UNION SELECT cod_menu_submenu FROM menu_submenu WHERE nivel ='2'");
+      $db->Consulta("SELECT mtu.ref_cod_menu_submenu FROM pmieducar.menu_tipo_usuario mtu 
+                      INNER JOIN pmieducar.tipo_usuario tu ON mtu.ref_cod_tipo_usuario = tu.cod_tipo_usuario
+                      INNER JOIN pmieducar.usuario u ON tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
+                      WHERE u.cod_usuario = {$idpes} 
+                      UNION 
+                      SELECT cod_menu_submenu 
+                        FROM menu_submenu 
+                        WHERE nivel ='2' 
+                      UNION                       
+                      SELECT cod_menu_submenu FROM menu_submenu WHERE nivel ='2'");
 
       while ($db->ProximoRegistro()) {
         $tupla = $db->Tupla();
