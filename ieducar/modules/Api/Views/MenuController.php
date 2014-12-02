@@ -93,15 +93,3 @@ class MenuController extends ApiCoreController
       $this->notImplementedOperationError();
   }
 }
-"select arquivo as id,
-	    nm_submenu as name
-   from portal.menu_submenu as ms
-  left  join pmicontrolesis.menu as m on(m.ref_cod_menu_submenu = ms.cod_menu_submenu)
-  inner join pmieducar.menu_tipo_usuario as mtu on(ms.cod_menu_submenu = mtu.ref_cod_menu_submenu)
-  inner join pmieducar.usuario as u on (u.ref_cod_tipo_usuario = mtu.ref_cod_tipo_usuario)
-  where ms.cod_menu_submenu AND
-  	  	arquivo is not null AND
-  	  	trim(arquivo) <> '' AND
-  	  	mtu.visualiza = 1 AND
-  	  	u.cod_usuario = '{$usuario}'
-  limit 15";
