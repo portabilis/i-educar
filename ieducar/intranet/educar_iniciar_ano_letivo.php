@@ -156,94 +156,23 @@ class indice extends clsCadastro
 		 */
 
 		$obj_ano_letivo = new clsPmieducarEscolaAnoLetivo($this->ref_cod_escola,$this->ano,$this->pessoa_logada,$this->pessoa_logada,1,null,null,1);
-		if(!$obj_ano_letivo->edita())
-		{
-			echo "<script>
+
+		if(! $obj_ano_letivo->edita()) {
+			die("<script>
 					alert('Erro ao finalizar o ano letivo!');
 					window.location = 'educar_escola_det.php?cod_escola={$this->ref_cod_escola}#ano_letivo';
-				  </script>";
+				  </script>");
 		}
-		else
-		{
-			// lista todos alunos desse Escola que tem a ultima matricula no ano anterior e situacao APROVADO
-			$obj_matricula = new clsPmieducarMatricula();
-			$lst_matricula = $obj_matricula->lista( null,null,$this->ref_cod_escola,null,null,null,null,1,null,null,null,null,1,$this->ano-1,null,null,1 );
 
-			if ( is_array($lst_matricula))
-			{
-				foreach ($lst_matricula AS $key => $matricula)
-				{
-					$obj_sequencia = new clsPmieducarSequenciaSerie();
-					$lst_sequencia = $obj_sequencia->lista( $matricula['ref_ref_cod_serie'],null,null,null,null,null,null,null,1 );
-					// verifica qual eh a serie da sequencia
-					
-					if ( is_array($lst_sequencia) && (count($lst_sequencia) == 1) )
-					{
-//						echo "<pre>"; print_r($lst_sequencia);die;
-						$det_sequencia = array_shift($lst_sequencia);
-						$serie_destino = $det_sequencia["ref_serie_destino"];
-
-						
-						$obj_serie = new clsPmieducarSerie( $serie_destino );
-						$det_serie = $obj_serie->detalhe();
-						
-						//verificar aqui se a escola possui o curso
-//						echo "<pre>"; print_r($matricula); die();
-						$obj_escola_curso = new clsPmieducarEscolaCurso($this->ref_cod_escola, $det_serie["ref_cod_curso"]);
-						if (is_array($obj_escola_curso->detalhe()))
-						{
-							$obj = new clsPmieducarMatricula( $matricula['cod_matricula'],null,null,null,$this->pessoa_logada,null,null,null,null,null,1,null,0 );
-							$editou = $obj->edita();
-							if( $editou )
-							{
-								$obj = new clsPmieducarMatricula( null,null,$this->ref_cod_escola,$serie_destino,null,$this->pessoa_logada,$matricula['ref_cod_aluno'],3,null,null,1,$this->ano,1,null,null,null,null,$det_serie["ref_cod_curso"] );
-								$cadastra = $obj->cadastra();
-								if( !$cadastra )
-								{
-									echo "<script>
-											alert('Erro ao matricular os alunos da Escola!');
-											window.location = 'educar_escola_det.php?cod_escola={$this->ref_cod_escola}#ano_letivo';
-										  </script>";
-								}
-							}
-						}
-					}
-				}
-			}
-
-			// lista todos alunos desse Escola que tem a ultima matricula no ano anterior e situacao REPROVADO
-			$obj_matricula = new clsPmieducarMatricula();
-			$lst_matricula = $obj_matricula->lista( null,null,$this->ref_cod_escola,null,null,null,null,2,null,null,null,null,1,$this->ano-1,null,null,1 );
-			if ( is_array($lst_matricula) )
-			{
-//				echo "<pre>"; print_r($lst_matricula);die;
-				foreach ($lst_matricula AS $key => $matricula)
-				{
-					$obj_serie = new clsPmieducarSerie( $matricula['ref_ref_cod_serie'] );
-					$det_serie = $obj_serie->detalhe();
-
-					$obj = new clsPmieducarMatricula( $matricula['cod_matricula'],null,null,null,$this->pessoa_logada,null,null,null,null,null,1,null,0 );
-					$editou1 = $obj->edita();
-					if( $editou1 )
-					{
-						$obj = new clsPmieducarMatricula( null,null,$this->ref_cod_escola,$matricula['ref_ref_cod_serie'],null,$this->pessoa_logada,$matricula['ref_cod_aluno'],3,null,null,1,$this->ano,1,null,null,null,null,$det_serie["ref_cod_curso"] );
-						$cadastra1 = $obj->cadastra();
-						if( !$cadastra1 )
-						{
-							echo "<script>
-									alert('Erro ao matricular os alunos da Escola!');
-									window.location = 'educar_escola_det.php?cod_escola={$this->ref_cod_escola}#ano_letivo';
-								  </script>";
-						}
-					}
-				}
-			}
-
-			echo "<script>
-					alert('Ano letivo inicializado com sucesso!');
-					window.location = 'educar_escola_det.php?cod_escola={$this->ref_cod_escola}#ano_letivo';
-				  </script>";
+		if (! $GLOBALS['coreExt']['Config']->app->regras_negocio->desativar_rematricula_automatica) {
+			$this->rematricularAlunosAprovados();
+			$this->rematricularAlunosReprovados();
 		}
+
+		die("<script>
+				alert('Ano letivo inicializado com sucesso!');
+				window.location = 'educar_escola_det.php?cod_escola={$this->ref_cod_escola}#ano_letivo';
+			  </script>");
 	}
 
 	function finalizarAnoLetivo()
@@ -298,7 +227,69 @@ class indice extends clsCadastro
 		}
 	}
 
+	function rematricularAlunosAprovados() {
+		$obj_matricula = new clsPmieducarMatricula();
+		$lst_matricula = $obj_matricula->lista( null,null,$this->ref_cod_escola,null,null,null,null,1,null,null,null,null,1,$this->ano-1,null,null,1 );
 
+		if (! is_array($lst_matricula))
+			return;
+
+		foreach ($lst_matricula AS $key => $matricula) {
+			$obj_sequencia = new clsPmieducarSequenciaSerie();
+			$lst_sequencia = $obj_sequencia->lista( $matricula['ref_ref_cod_serie'],null,null,null,null,null,null,null,1 );
+
+			if ( is_array($lst_sequencia) && (count($lst_sequencia) == 1) ) {
+				$det_sequencia = array_shift($lst_sequencia);
+				$serie_destino = $det_sequencia["ref_serie_destino"];
+
+				$obj_serie = new clsPmieducarSerie( $serie_destino );
+				$det_serie = $obj_serie->detalhe();
+
+				$obj_escola_curso = new clsPmieducarEscolaCurso($this->ref_cod_escola, $det_serie["ref_cod_curso"]);
+
+				if (is_array($obj_escola_curso->detalhe())) {
+					$obj = new clsPmieducarMatricula( $matricula['cod_matricula'],null,null,null,$this->pessoa_logada,null,null,null,null,null,1,null,0 );
+					$editou = $obj->edita();
+					if( $editou ) {
+						$obj = new clsPmieducarMatricula( null,null,$this->ref_cod_escola,$serie_destino,null,$this->pessoa_logada,$matricula['ref_cod_aluno'],3,null,null,1,$this->ano,1,null,null,null,null,$det_serie["ref_cod_curso"] );
+						$cadastra = $obj->cadastra();
+						if( !$cadastra ) {
+							echo "<script>
+									alert('Erro ao matricular os alunos da Escola!');
+									window.location = 'educar_escola_det.php?cod_escola={$this->ref_cod_escola}#ano_letivo';
+								  </script>";
+						}
+					}
+				}
+			}
+		}
+	}
+
+	function rematricularAlunosReprovados() {
+		$obj_matricula = new clsPmieducarMatricula();
+		$lst_matricula = $obj_matricula->lista( null,null,$this->ref_cod_escola,null,null,null,null,2,null,null,null,null,1,$this->ano-1,null,null,1 );
+
+		if (! is_array($lst_matricula) )
+			return;
+
+		foreach ($lst_matricula AS $key => $matricula) {
+			$obj_serie = new clsPmieducarSerie( $matricula['ref_ref_cod_serie'] );
+			$det_serie = $obj_serie->detalhe();
+
+			$obj = new clsPmieducarMatricula( $matricula['cod_matricula'],null,null,null,$this->pessoa_logada,null,null,null,null,null,1,null,0 );
+			$editou1 = $obj->edita();
+			if( $editou1 ) {
+				$obj = new clsPmieducarMatricula( null,null,$this->ref_cod_escola,$matricula['ref_ref_cod_serie'],null,$this->pessoa_logada,$matricula['ref_cod_aluno'],3,null,null,1,$this->ano,1,null,null,null,null,$det_serie["ref_cod_curso"] );
+				$cadastra1 = $obj->cadastra();
+				if( !$cadastra1 ) {
+					echo "<script>
+							alert('Erro ao matricular os alunos da Escola!');
+							window.location = 'educar_escola_det.php?cod_escola={$this->ref_cod_escola}#ano_letivo';
+						  </script>";
+				}
+			}
+		}
+	}
 }
 
 // cria uma extensao da classe base
