@@ -1335,7 +1335,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     if ($tipoFaltaGeral) {
       $faltas = $this->_faltasGerais;
-      ksort($faltas);
 
       if (0 == count($faltas)) {
         $total = 0;
@@ -1349,7 +1348,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     elseif ($tipoFaltaPorComponente) {
       $faltas = $this->_faltasComponentes;
-      ksort($faltas);
       $total   = 0;
       $etapasComponentes = array();
       $faltasComponentes = array();
@@ -2573,7 +2571,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     foreach ($this->_notasComponentes as $id => $notasComponentes) {
       // Cria um array onde o índice é a etapa
       $etapasNotas = CoreExt_Entity::entityFilterAttr($notasComponentes, 'etapa', 'nota');
-      ksort($etapasNotas);
       $notas = array('Se' => 0, 'Et' => $this->getOption('etapas'));
 
       // Cria o array formatado para o cálculo da fórmula da média
