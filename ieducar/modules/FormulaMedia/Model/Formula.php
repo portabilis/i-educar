@@ -151,7 +151,7 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
     foreach ($values as $key => $value) {
       if ($this->isNumericToken($key)) {
         // Usa @ como delimitador para evitar problemas com o sinal de divisão
-        $patterns[$key] = '@\b' . $key . '\b@';
+        $patterns[$key] = '@' . $key . '@';
       }
     }
 
