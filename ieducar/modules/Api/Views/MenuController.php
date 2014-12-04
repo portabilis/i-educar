@@ -45,7 +45,7 @@ class MenuController extends ApiCoreController
   	return $this->pessoa_logada;
   }
   protected function sqlsForNumericSearch() {
-
+  	$usuario = $this->getCurrentUser();
     $sqls[] =
     		  "select arquivo as id,
 					  nm_submenu as name
