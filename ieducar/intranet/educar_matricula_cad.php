@@ -91,6 +91,8 @@ class indice extends clsCadastro
   var $semestre;
   var $is_padrao;
 
+  var $ref_cod_candidato_reserva_vaga;
+
   function Inicializar()
   {
     $retorno = 'Novo';
@@ -101,6 +103,7 @@ class indice extends clsCadastro
 
     $this->cod_matricula = $_GET['cod_matricula'];
     $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
+    $this->ref_cod_candidato_reserva_vaga = $_GET['ref_cod_candidato_reserva_vaga'];
 
     $obj_aluno = new clsPmieducarAluno($this->ref_cod_aluno);
 
@@ -141,6 +144,7 @@ class indice extends clsCadastro
     // primary keys
     $this->campoOculto("cod_matricula", $this->cod_matricula);
     $this->campoOculto("ref_cod_aluno", $this->ref_cod_aluno);
+    $this->campoOculto("ref_cod_candidato_reserva_vaga", $this->ref_cod_candidato_reserva_vaga);
 
     $obj_aluno = new clsPmieducarAluno();
     $lst_aluno = $obj_aluno->lista($this->ref_cod_aluno, NULL, NULL, NULL, NULL,
@@ -426,6 +430,12 @@ class indice extends clsCadastro
       $cod_matricula = $cadastrou;      
       
       if ($cadastrou) {
+
+        if (is_numeric($this->ref_cod_candidato_reserva_vaga)){
+          $obj_crv = new clsPmieducarCandidatoReservaVaga($this->ref_cod_candidato_reserva_vaga);
+          $obj_crv->vinculaMatricula($cod_matricula);
+
+        }
 
         $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
 
