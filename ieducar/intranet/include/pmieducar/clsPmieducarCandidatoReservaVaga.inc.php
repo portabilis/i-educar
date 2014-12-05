@@ -51,6 +51,9 @@ class clsPmieducarCandidatoReservaVaga
   var $ref_cod_pessoa_cad;
   var $data_cad;
   var $data_update;
+  var $ref_cod_matricula;
+  var $situacao;
+  var $data_situacao;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -114,7 +117,7 @@ class clsPmieducarCandidatoReservaVaga
     $this->_tabela = $this->_schema . 'candidato_reserva_vaga crv ';
 
     $this->_campos_lista = $this->_todos_campos = ' crv.cod_candidato_reserva_vaga, crv.ano_letivo, crv.data_solicitacao, 
-      crv.ref_cod_aluno, crv.ref_cod_serie, crv.ref_cod_turno, crv.ref_cod_pessoa_cad, crv.data_cad, crv.data_update ';
+      crv.ref_cod_aluno, crv.ref_cod_serie, crv.ref_cod_turno, crv.ref_cod_pessoa_cad, crv.data_cad, crv.data_update, crv.data_situacao, crv.situacao, crv.ref_cod_matricula  ';
 
     if (is_numeric($cod_candidato_reserva_vaga)) {
       $this->cod_candidato_reserva_vaga = $cod_candidato_reserva_vaga;
@@ -448,5 +451,29 @@ class clsPmieducarCandidatoReservaVaga
       return " ORDER BY {$this->_campo_order_by} ";
     }
     return '';
+  }
+
+  function vinculaMatricula($ref_cod_matricula)
+  {
+    if (is_numeric($this->cod_candidato_reserva_vaga) && is_numeric($ref_cod_matricula)) {
+      $db = new clsBanco();
+      $db->Consulta("UPDATE pmieducar.candidato_reserva_vaga SET ref_cod_matricula = '{$ref_cod_matricula}', situacao = 'A', data_situacao = NOW()
+                      WHERE cod_candidato_reserva_vaga = '{$this->cod_candidato_reserva_vaga}'");
+      $db->ProximoRegistro();
+      return $db->Tupla();
+    }
+    return FALSE;
+  }
+
+  function indefereSolicitacao()
+  {
+    if (is_numeric($this->cod_candidato_reserva_vaga)) {
+      $db = new clsBanco();
+      $db->Consulta("UPDATE pmieducar.candidato_reserva_vaga SET situacao = 'N', data_situacao = NOW()
+                      WHERE cod_candidato_reserva_vaga = '{$this->cod_candidato_reserva_vaga}'");
+      $db->ProximoRegistro();
+      return $db->Tupla();
+    }
+    return FALSE;
   }
 }
