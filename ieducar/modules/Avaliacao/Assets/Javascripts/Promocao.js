@@ -32,7 +32,8 @@ var postPromocaoMatricula = function(){
         instituicao_id : $j('#instituicao_id').val(),
         ano_escolar : $j('#ano_escolar').val(),
       },
-      success : handlePostPromocaoMatricula
+      success : handlePostPromocaoMatricula,
+      error : handlePostPromocaoMatricula
     };
 
     postResource(options);
@@ -58,7 +59,10 @@ function handlePostPromocaoMatricula(dataResponse){
   handleMessages(dataResponse.msgs);
 
   var $proximoMatriculaIdField = $j('#proximo-matricula-id');
-  $proximoMatriculaIdField.val(dataResponse.result.proximo_matricula_id);
+
+  var $proximaMatricula = ((dataResponse.any_error_msg) ?  (parseInt($proximoMatriculaIdField.val()) + parseInt(1)) : dataResponse.result.proximo_matricula_id);
+
+  $proximoMatriculaIdField.val($proximaMatricula);
 
   if($j('#continuar-processo').is(':checked') &&
      $j.isNumeric($proximoMatriculaIdField.val()) &&
