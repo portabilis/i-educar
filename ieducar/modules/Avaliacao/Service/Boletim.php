@@ -1412,9 +1412,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
       $componentes = $this->getComponentes();
 
-      if(is_numeric($disciplina_dispensada))
+      if(is_numeric($disciplina_dispensada)){
         unset($componentes[$disciplina_dispensada]);
-
+        unset($faltasComponentes[$disciplina_dispensada]);
+      }
       if (0 == count($faltasComponentes) ||
           count($faltasComponentes) != count($componentes)) {
         $etapa = 1;
