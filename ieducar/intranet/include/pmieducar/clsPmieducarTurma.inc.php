@@ -2493,5 +2493,14 @@ and  e.cod_escola = t.ref_ref_cod_escola
     return $disciplina_dispensada == $componenteId;
   }
 
+  public static function getDisciplinaDispensada($turmaId){
+    $sql           = "SELECT ref_cod_disciplina_dispensada as disciplina_dispensada FROM pmieducar.turma WHERE cod_turma = $1";
+
+    $params        = array('params' => $turmaId, 'return_only' => 'first-field');
+    $disciplina_dispensada = Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
+
+    return $disciplina_dispensada;
+  }
+
 }
 ?>

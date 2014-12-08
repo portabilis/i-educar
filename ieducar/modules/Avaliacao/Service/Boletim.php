@@ -821,6 +821,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $this->setOption('cursoCargaHoraria', $matricula['curso_carga_horaria']);
     $this->setOption('serieCargaHoraria', $matricula['serie_carga_horaria']);
     $this->setOption('serieDiasLetivos',  $matricula['serie_dias_letivos']);
+    $this->setOption('ref_cod_turma',     $matricula['ref_cod_turma']);
     $this->setOption('etapas',            $etapas);
 
     return $this;
@@ -1200,6 +1201,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $situacao->situacao = 0;
     $situacao->componentesCurriculares = array();
 
+    $disciplina_dispensada = clsPmieducarTurma::getDisciplinaDispensada($this->getOption('ref_cod_turma'));
+
     // A situação é "aprovado" por padrão
     $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
 
@@ -1210,11 +1213,18 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     // Carrega as médias pois este método pode ser chamado após a chamada a saveNotas()
     $mediasComponentes = $this->_loadNotaComponenteCurricularMedia()
                               ->getMediasComponentes();
+    
+    $componentes = $this->getComponentes();
+
+    if(is_numeric($disciplina_dispensada)){
+      unset($componentes[$disciplina_dispensada]);
+      unset($mediasComponentes[$disciplina_dispensada]);
+    }
 
     // Se não tiver nenhuma média ou a quantidade for diferente dos componentes
     // curriculares da matrícula, ainda está em andamento
     if (0 == count($mediasComponentes) ||
-      count($mediasComponentes) != count($this->getComponentes())) {
+      count($mediasComponentes) != count($componentes)) {
       $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
     }
 
