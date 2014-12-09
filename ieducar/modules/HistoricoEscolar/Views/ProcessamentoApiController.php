@@ -534,7 +534,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                 );
 
           $historicoEscolar->cadastra();
-          $this->recreateHistoricoDisciplinas($sequencial, $alunoId);
+          $this->recreateHistoricoDisciplinas($sequencial, $alunoId, $dadosMatricula['turma_id']);
 
           $this->appendMsg('Histórico processado com sucesso', 'success');
         }
@@ -573,7 +573,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                 );
 
           $historicoEscolar->edita();
-          $this->recreateHistoricoDisciplinas($dadosHistoricoEscolar['sequencial'], $alunoId);
+          $this->recreateHistoricoDisciplinas($dadosHistoricoEscolar['sequencial'], $alunoId, $dadosMatricula['turma_id']);
           $this->appendMsg('Histórico reprocessado com sucesso', 'success');
         }
 
@@ -604,7 +604,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
   }
 
 
-  protected function recreateHistoricoDisciplinas($historicoSequencial, $alunoId){
+  protected function recreateHistoricoDisciplinas($historicoSequencial, $alunoId, $turmaId = null){
 
     $this->deleteHistoricoDisplinas($alunoId, $historicoSequencial);
 
@@ -614,7 +614,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       $tpNota = $this->getService()->getRegra()->get('tipoNota');
       $situacaoFaltasCc = $this->getService()->getSituacaoFaltas()->componentesCurriculares;
       $mediasCc = $this->getService()->getMediasComponentes();
-      $turmaId = $this->getRequest()->turma_id;
+      $turmaId = $this->getRequest()->turma_id ?: $turmaId;
       $mediaAreaConhecimento = $this->getRequest()->media_area_conhecimento;
 
       foreach ($this->getService()->getComponentes() as $componenteCurricular)
@@ -746,6 +746,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       $dadosMatricula['ano']                = $ano;
       $dadosMatricula['instituicao_id']     = $matriculaTurma['ref_cod_instituicao'];
       $dadosMatricula['escola_id']          = $matriculaTurma['ref_ref_cod_escola'];
+      $dadosMatricula['turma_id']          = $matriculaTurma['ref_cod_turma'];
       $dadosMatricula['nome_serie']         = $this->getNomeSerie($matriculaTurma['ref_ref_cod_serie']);
 
       $dadosMatricula['nome_curso']         = Portabilis_String_Utils::toLatin1(
