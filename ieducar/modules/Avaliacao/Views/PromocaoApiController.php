@@ -244,12 +244,12 @@ class PromocaoApiController extends ApiCoreController
           if(trim($nota) != '' || trim($parecer) != ''){
             $falta = $this->boletimService()->getFalta($etapa, $cc['id'])->quantidade;
 
-            if(is_null($falta)){
-              $this->boletimService()->addFalta(
-              $this->getFaltaComponente($etapa, $cc['id'], $defaultValue));
+            // if(is_null($falta)){
+            //   $this->boletimService()->addFalta(
+            //   $this->boletimService()->getFaltaComponente($etapa, $cc['id'], $defaultValue));
 
-              $this->messenger->append("Lançado falta (valor $defaultValue) para etapa $etapa e componente curricular {$cc['id']} - {$cc['nome']} (matricula $matriculaId)", 'notice');
-            }
+            //   $this->messenger->append("Lançado falta (valor $defaultValue) para etapa $etapa e componente curricular {$cc['id']} - {$cc['nome']} (matricula $matriculaId)", 'notice');
+            // }
           }
         }
       }
