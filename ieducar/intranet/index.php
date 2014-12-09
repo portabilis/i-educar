@@ -120,43 +120,33 @@ class indice
           });
          </script>';
 
-      if($GLOBALS['coreExt']['Config']->app->database->dbname == 'rionegrinho')
-         	echo '
-          <script type="text/javascript" src="scripts/jquery/jquery-1.8.3.min.js"></script>
-          <link rel="stylesheet" href="scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css">
-          <script src="scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js"></script>
-          <div id="dialog" title="Pesquisa de satisfa&ccedil;&atilde;o">
-            <p>Caro usu&aacute;rio(a), a Secretaria Mun. de Educa&ccedil;&atilde;o e a Portabilis Tecnologia, convidam voc&ecirc; a responder a uma pesquisa de satisfa&ccedil;&atilde;o referente ao projeto de moderniza&ccedil;&atilde;o da gest&atilde;o escolar com o i-Educar em Rio Negrinho.</p>
-            <br/>
-            <p><i>Voc&ecirc; precisar&aacute; de apenas 5 minutos para responder a pesquisa. :)</i></p>
-            <br/>
-            <p><b> Contamos com voc&ecirc;! :)</b></p>
-          </div>
-          <script>
-          var $j = jQuery.noConflict();
-
-          $j(function() {
-            $j( "#dialog" ).dialog({
-              width: 600,
-              position: { my: "center", at: "top", of: window },
-              buttons: [
-                {
-                  text: "Participar da pesquisa",
-                  click: function(){
-                    window.open("https://docs.google.com/a/portabilis.com.br/forms/d/14AdnuR-iCdsuPQJEUDvEtFc9rrrkuFPmtZg99jJLUVE/viewform", "_blank");
-                    $j(this).dialog("close");
-                  }
-                },
-                {
-                  text: "N\u00e3o, obrigado",
-                  click: function(){
-                    $j(this).dialog("close");
-                  }
-                }
-              ]
-            });
-          });
-         </script>';
+     if($GLOBALS['coreExt']['Config']->app->database->dbname == 'rionegrinho'){
+     	echo $this->mostraModalPesquisa("Rio Negrinho", "https://docs.google.com/a/portabilis.com.br/forms/d/14AdnuR-iCdsuPQJEUDvEtFc9rrrkuFPmtZg99jJLUVE/viewform");
+     }
+     if($GLOBALS['coreExt']['Config']->app->database->dbname == 'cocaldosul'){
+     	echo $this->mostraModalPesquisa("Cocal do Sul", "https://docs.google.com/a/portabilis.com.br/forms/d/1b2Ir3cbreeOhcY7fwIc4RV4gdLKtRTVPXYMAxVX_7sA/viewform");
+     }
+     if($GLOBALS['coreExt']['Config']->app->database->dbname == 'graopara'){
+     	echo $this->mostraModalPesquisa("Grao Para", "https://docs.google.com/a/portabilis.com.br/forms/d/138TbZzpz57wsRpaYqMGY8TaXW8IVfEtktyjV4oIaaz0/viewform");
+     }
+     if($GLOBALS['coreExt']['Config']->app->database->dbname == 'jaguaruna'){
+     	echo $this->mostraModalPesquisa("Jaguaruna", "https://docs.google.com/a/portabilis.com.br/forms/d/1R3DWtjQy2nDjI2UFm8g0hOgoQWBwtzzgGIfBkLyaTWg/viewform");
+     }
+     if($GLOBALS['coreExt']['Config']->app->database->dbname == 'lebonregis'){
+     	echo $this->mostraModalPesquisa("Lebon Regis", "https://docs.google.com/a/portabilis.com.br/forms/d/1eeS7lZuljsqKuvxCVg636lDwqD-bquRcIUOCDysFUsY/viewform");
+     }
+     if($GLOBALS['coreExt']['Config']->app->database->dbname == 'mafra'){
+     	echo $this->mostraModalPesquisa("Mafra", "https://docs.google.com/a/portabilis.com.br/forms/d/14gbc0sf3Tb4cBmNbtmyNY15jOFTUpEf9xBA7I6I8tyI/viewform");
+     }
+     if($GLOBALS['coreExt']['Config']->app->database->dbname == 'novaveneza'){
+     	echo $this->mostraModalPesquisa("Nova Veneza", "https://docs.google.com/a/portabilis.com.br/forms/d/1o3mBZRO9bH8kRPFIcbEArZl0yv1COd1cuc_yLxI8Fdo/viewform");
+     }
+     if($GLOBALS['coreExt']['Config']->app->database->dbname == 'santarosadosul'){
+     	echo $this->mostraModalPesquisa("Santa Rosa do Sul", "https://docs.google.com/a/portabilis.com.br/forms/d/1nbwr77CaNt30pWoI4vunujGcrQFERPzRc_aLrKf1280/viewform");
+     }
+     if($GLOBALS['coreExt']['Config']->app->database->dbname == 'sombrio'){
+     	echo $this->mostraModalPesquisa("Sombrio", "https://docs.google.com/a/portabilis.com.br/forms/d/1lhPjDbmsddCGoN5I469gyEKwubdqc3kdErhmyyBm7sQ/viewform");
+     }
 
       $temp .= '<table width="100%" height="400" align="center" border="0" cellspacing="4" cellpadding="0">';
       $temp .= '
@@ -449,6 +439,43 @@ class indice
       header('Location: logof.php?login=1');
       die();
     }
+  }
+  function mostraModalPesquisa($municipio, $linkPesquisa){
+  	return '<script type="text/javascript" src="scripts/jquery/jquery-1.8.3.min.js"></script>
+          <link rel="stylesheet" href="scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css">
+          <script src="scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js"></script>
+          <div id="dialog" title="Pesquisa de satisfa&ccedil;&atilde;o">
+            <p>Caro usu&aacute;rio(a), a Secretaria Mun. de Educa&ccedil;&atilde;o e a Portabilis Tecnologia, convidam voc&ecirc; a responder a uma pesquisa de satisfa&ccedil;&atilde;o referente ao projeto de moderniza&ccedil;&atilde;o da gest&atilde;o escolar com o i-Educar em ' . $municipio . '.</p>
+            <br/>
+            <p><i>Voc&ecirc; precisar&aacute; de apenas 5 minutos para responder a pesquisa. :)</i></p>
+            <br/>
+            <p><b> Contamos com voc&ecirc;! :)</b></p>
+          </div>
+          <script>
+          var $j = jQuery.noConflict();
+
+          $j(function() {
+            $j( "#dialog" ).dialog({
+              width: 600,
+              position: { my: "center", at: "top", of: window },
+              buttons: [
+                {
+                  text: "Participar da pesquisa",
+                  click: function(){
+                    window.open(' . '"' . $linkPesquisa . '"' . ' , "_blank");
+                    $j(this).dialog("close");
+                  }
+                },
+                {
+                  text: "N\u00e3o, obrigado",
+                  click: function(){
+                    $j(this).dialog("close");
+                  }
+                }
+              ]
+            });
+          });
+         </script>';
   }
 }
 
