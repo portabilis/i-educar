@@ -41,6 +41,7 @@ require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
+require_once 'include/modules/clsModulesNotaExame.inc.php';
 
 
 class PromocaoApiController extends ApiCoreController
@@ -303,6 +304,7 @@ class PromocaoApiController extends ApiCoreController
 
         $this->lancarFaltasNaoLancadas($this->matriculaId());
         //$this->convertParecerToLatin1($matriculaId);
+        $this->atualizaNotaExame();
 
         $this->trySaveBoletimService();
         $novaSituacao = $this->loadSituacaoArmazenadaMatricula($this->matriculaId());
@@ -332,6 +334,34 @@ class PromocaoApiController extends ApiCoreController
       $this->messenger->append("Removido notas, medias notas e faltas de antigos componentes curriculares, " .
                                "vinculados a turmas / séries.", 'notice');
     }
+  }
+
+  protected function atualizaNotaExame(){
+
+    $matriculaId = $this->matriculaId();
+
+    foreach(App_Model_IedFinder::getComponentesPorMatricula($matriculaId) as $_componente){
+      $componenteId = $_componente->get('id');
+
+      $nota_exame = str_replace(',', '.', $this->boletimService()->preverNotaRecuperacao($componenteId));
+
+      if(!empty($nota_exame))
+        $this->createOrUpdateNotaExame($matriculaId, $componenteId, $nota_exame);
+      else
+        $this->deleteNotaExame($matriculaId, $componenteId);
+    }
+  }
+
+  protected function createOrUpdateNotaExame($matriculaId, $componenteCurricularId, $notaExame) {
+
+    $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId, $notaExame);
+
+    return ($obj->existe() ? $obj->edita() : $obj->cadastra());
+  }
+
+  protected function deleteNotaExame($matriculaId, $componenteCurricularId){
+    $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId);
+    return ($obj->excluir());
   }
 
   public function Gerar() {
