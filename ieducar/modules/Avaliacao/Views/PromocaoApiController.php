@@ -42,6 +42,7 @@ require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
 require_once 'include/modules/clsModulesNotaExame.inc.php';
+require_once 'Portabilis/String/Utils.php';
 
 
 class PromocaoApiController extends ApiCoreController
@@ -245,12 +246,16 @@ class PromocaoApiController extends ApiCoreController
           if(trim($nota) != '' || trim($parecer) != ''){
             $falta = $this->boletimService()->getFalta($etapa, $cc['id'])->quantidade;
 
-            // if(is_null($falta)){
-            //   $this->boletimService()->addFalta(
-            //   $this->boletimService()->getFaltaComponente($etapa, $cc['id'], $defaultValue));
+            if(is_null($falta)){
+              $this->boletimService()->addFalta(
+                  new Avaliacao_Model_FaltaComponente(array(
+                    'componenteCurricular' => $cc['id'],
+                    'quantidade'           => $defaultValue,
+                    'etapa'                => $etapa))
+                );
 
-            //   $this->messenger->append("Lançado falta (valor $defaultValue) para etapa $etapa e componente curricular {$cc['id']} - {$cc['nome']} (matricula $matriculaId)", 'notice');
-            // }
+              $this->messenger->append(Portabilis_String_Utils::toUtf8("Lançado falta (valor $defaultValue) para etapa $etapa e componente curricular {$cc['id']} - {$cc['nome']} (matricula $matriculaId)"), 'notice');
+            }
           }
         }
       }
