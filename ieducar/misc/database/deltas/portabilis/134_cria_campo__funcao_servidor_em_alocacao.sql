@@ -6,8 +6,4 @@
 
   ALTER TABLE pmieducar.servidor_alocacao ADD COLUMN ref_cod_funcao integer;
 
-  -- //@UNDO
-
-  ALTER TABLE pmieducar.servidor_alocacao DROP matricula;
-
   -- //
