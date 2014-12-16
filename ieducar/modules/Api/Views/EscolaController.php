@@ -1,7 +1,5 @@
 <?php
 
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
 
 /**
  * i-Educar - Sistema de gestão escolar
@@ -33,6 +31,7 @@
  */
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
+require_once 'Portabilis/Array/Utils.php';
 
 class EscolaController extends ApiCoreController
 {
@@ -105,12 +104,56 @@ class EscolaController extends ApiCoreController
     return array('id' => $id);
   }
 
+  protected function canGetEscolas(){
+    return $this->validatesPresenceOf('instituicao_id') && $this->validatesPresenceOf('ano')
+             && $this->validatesPresenceOf('curso_id')  && $this->validatesPresenceOf('serie_id') 
+             && $this->validatesPresenceOf('turma_turno_id');
+  }
+
+  protected function getEscolas(){
+    if ($this->canGetEscolas()){
+      $instituicaoId = $this->getRequest()->instituicao_id;
+      $ano = $this->getRequest()->ano;
+      $cursoId = $this->getRequest()->curso_id;
+      $serieId = $this->getRequest()->serie_id;
+      $turmaTurnoId = $this->getRequest()->turma_turno_id;
+
+      $sql = " SELECT DISTINCT cod_escola
+
+                FROM pmieducar.escola e
+                INNER JOIN pmieducar.escola_curso ec ON (e.cod_escola = ec.ref_cod_escola)
+                INNER JOIN pmieducar.curso c ON (c.cod_curso = ec.ref_cod_curso)
+                INNER JOIN pmieducar.escola_serie es ON (es.ref_cod_escola = e.cod_escola)
+                INNER JOIN pmieducar.serie s ON (s.cod_serie = es.ref_cod_serie)
+                INNER JOIN pmieducar.turma t ON (s.cod_serie = t.ref_ref_cod_serie)
+
+                WHERE t.ano = $1
+                AND t.turma_turno_id = $2
+                AND c.cod_curso = $3
+                AND e.ref_cod_instituicao = $4
+                AND s.cod_serie = $5
+                AND ec.ativo = 1
+                AND c.ativo = 1
+                AND e.ativo = 1
+                AND es.ativo = 1
+                AND s.ativo = 1
+                AND t.ativo = 1 ";
+      $escolaIds = $this->fetchPreparedQuery($sql, array($ano, $turmaTurnoId, $cursoId, $instituicaoId, $serieId));
+
+      $attrs = array('cod_escola');
+      return array( 'escolas' => Portabilis_Array_Utils::filterSet($escolaIds, $attrs));
+    }
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'escola'))
       $this->appendResponse($this->get());
 
     elseif ($this->isRequestFor('put', 'escola'))
       $this->appendResponse($this->put());
+
+    elseif ($this->isRequestFor('get', 'escolas'))
+      $this->appendResponse($this->getEscolas());
 
     else
       $this->notImplementedOperationError();
