@@ -9,6 +9,7 @@ require_once( "include/pmieducar/geral.inc.php" );
 
 class clsPmieducarServidorFuncao
 {
+	var $cod_servidor_funcao;
 	var $ref_ref_cod_instituicao;
 	var $ref_cod_servidor;
 	var $ref_cod_funcao;
@@ -82,13 +83,13 @@ class clsPmieducarServidorFuncao
 	 *
 	 * @return object
 	 */
-	function clsPmieducarServidorFuncao( $ref_ref_cod_instituicao = null, $ref_cod_servidor = null, $ref_cod_funcao = null, $matricula = NULL )
+	function clsPmieducarServidorFuncao( $ref_ref_cod_instituicao = null, $ref_cod_servidor = null, $ref_cod_funcao = null, $matricula = NULL, $cod_servidor_funcao = NULL )
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}servidor_funcao";
 
-		$this->_campos_lista = $this->_todos_campos = "ref_ref_cod_instituicao, ref_cod_servidor, ref_cod_funcao, matricula";
+		$this->_campos_lista = $this->_todos_campos = " cod_servidor_funcao, ref_ref_cod_instituicao, ref_cod_servidor, ref_cod_funcao, matricula";
 
 		if( is_numeric( $ref_cod_funcao ) )
 		{
@@ -202,7 +203,7 @@ class clsPmieducarServidorFuncao
 
 
 			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-			return true;
+			return $db->InsertId("pmieducar.servidor_funcao_seq");
 		}
 		return false;
 	}
@@ -314,7 +315,12 @@ class clsPmieducarServidorFuncao
 	 */
 	function detalhe()
 	{
-		if( is_numeric( $this->ref_ref_cod_instituicao ) && is_numeric( $this->ref_cod_servidor ) ) #&& is_numeric( $this->ref_cod_funcao ) )
+		if(is_numeric($this->cod_servidor_funcao)){
+			$sql = sprintf(
+        "SELECT %s FROM %s WHERE cod_servidor_funcao = '%d'",
+        $this->_todos_campos, $this->_tabela, $this->cod_servidor_funcao
+      );
+		}elseif( is_numeric( $this->ref_ref_cod_instituicao ) && is_numeric( $this->ref_cod_servidor ) ) #&& is_numeric( $this->ref_cod_funcao ) )
 		{
       $sql = sprintf(
         "SELECT %s FROM %s WHERE ref_ref_cod_instituicao = '%d' AND ref_cod_servidor = '%d'",
@@ -342,7 +348,12 @@ class clsPmieducarServidorFuncao
 	 */
 	function existe()
 	{
-		if( is_numeric( $this->ref_ref_cod_instituicao ) && is_numeric( $this->ref_cod_servidor ) && is_numeric( $this->ref_cod_funcao ) )
+		if(is_numeric($this->cod_servidor_funcao)){
+			$sql = sprintf(
+        "SELECT 1 FROM %s WHERE cod_servidor_funcao = '%d'",
+        $this->_tabela, $this->cod_servidor_funcao
+      );
+		} elseif( is_numeric( $this->ref_ref_cod_instituicao ) && is_numeric( $this->ref_cod_servidor ) && is_numeric( $this->ref_cod_funcao ) )
 		{
 
 			$db = new clsBanco();

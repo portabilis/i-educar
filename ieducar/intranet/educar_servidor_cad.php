@@ -858,9 +858,7 @@ class indice extends clsCadastro
 
         $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor, $funcao, $this->matricula[$cont]);
 
-        if (! $obj_servidor_funcao->existe()) {
-          $obj_servidor_funcao->cadastra();
-        }
+        $obj_servidor_funcao->cadastra();
       }
     }
 
