@@ -78,6 +78,7 @@
 
 	</head>
 	<body onload="loginpage_onload();" class="hidden fade-in">
+    <img src="templates/imagens/mensagem-natal.png" height="300px" style="position:absolute; left: 40px; top: -2px;" />
     <div id="flash-container">
 
       <!--[if lt IE 7]>
@@ -91,6 +92,9 @@
     <!--  <p style="min-height: 0px;" class="flash update-browser">
         Comunicamos que o nosso servi&ccedil;o de Suporte via telefone apresentar&aacute; instabilidades neste m&ecirc;s de Novembro, em virtude da mudan&ccedil;a de endere&ccedil;o da sede da Portabilis. <br/>Pedimos desculpas pelo transtorno tempor&aacute;rio e informamos que voc&ecirc; ainda poder&aacute; nos contatar pelo e-mail de suporte (<a href='mailto:suporte@portabilis.com.br'>suporte@portabilis.com.br</a>) ou diretamente pela ferramenta de HelpDesk (<a href='http://suporte.portabilis.com.br'>http://suporte.portabilis.com.br'</a>).
      </p> -->
+
+     <p style="min-height: 0px;" class="flash exclamation"><strong>Caros clientes,</strong><br/> De 24/12 &agrave; 31/12 nosso atendimento de suporte ter&aacute; hor&aacute;rio de funcionamento especial. Sendo assim, pedimos que todos os contatos sejam feitos atrav&eacute;s do e-mail <a href='mailto:suporte@portabilis.com.br'>suporte@portabilis.com.br</a>, pois ser&atilde;o atendidos normalmente. Se o contato for urgente, temos plant&atilde;o nos seguintes n&uacute;meros: (48) 9811-3030 (TIM), (48) 9187-6262 (Vivo) e (48) 8835-3082 (Claro). <strong>Agradecemos pela compreens&atilde;o.</strong></p>
+     <br/>
 
       <!-- #&ERROLOGIN&# -->
 
