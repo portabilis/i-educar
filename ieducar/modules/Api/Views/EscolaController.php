@@ -125,7 +125,7 @@ class EscolaController extends ApiCoreController
                 INNER JOIN pmieducar.curso c ON (c.cod_curso = ec.ref_cod_curso)
                 INNER JOIN pmieducar.escola_serie es ON (es.ref_cod_escola = e.cod_escola)
                 INNER JOIN pmieducar.serie s ON (s.cod_serie = es.ref_cod_serie)
-                INNER JOIN pmieducar.turma t ON (s.cod_serie = t.ref_ref_cod_serie)
+                INNER JOIN pmieducar.turma t ON (s.cod_serie = t.ref_ref_cod_serie AND t.ref_ref_cod_escola = e.cod_escola )
 
                 WHERE t.ano = $1
                 AND t.turma_turno_id = $2
