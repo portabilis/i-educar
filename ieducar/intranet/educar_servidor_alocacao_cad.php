@@ -133,7 +133,7 @@ class indice extends clsCadastro
           $this->alocacao_array[$qtd_registros][] = $campo['ref_cod_escola'];
           $this->alocacao_array[$qtd_registros][] = $campo['periodo'];          
           $this->alocacao_array[$qtd_registros][] = $campo["carga_horaria"];
-          $this->alocacao_array[$qtd_registros][] = $campo['ref_cod_funcao'];          
+          $this->alocacao_array[$qtd_registros][] = $campo['ref_cod_servidor_funcao'];          
 
           $qtd_registros++;
         }
@@ -225,12 +225,12 @@ class indice extends clsCadastro
     $opcoes = array('' => 'Selecione');
 
     if ($lista_funcoes) {
-      foreach ($lista_funcoes as $funcao) {
-        $opcoes[$funcao['cod_funcao']] = ( !empty($funcao['matricula']) ? "{$funcao['funcao']} - {$funcao['matricula']}" : $funcao['funcao'] );
+      foreach ($lista_funcoes as $funcao) {        
+        $opcoes[$funcao['cod_servidor_funcao']] = ( !empty($funcao['matricula']) ? "{$funcao['funcao']} - {$funcao['matricula']}" : $funcao['funcao'] );
       }
     }
 
-    $this->campoLista('ref_cod_funcao', 'Função', $opcoes, $this->ref_cod_funcao,
+    $this->campoLista('cod_servidor_funcao', 'Função', $opcoes, $this->cod_servidor_funcao,
       '', FALSE, '', '', FALSE, FALSE);
 
     $this->campoTabelaFim();
@@ -265,7 +265,7 @@ class indice extends clsCadastro
         $obj = new clsPmieducarServidorAlocacao(NULL, $this->ref_ref_cod_instituicao,
           NULL, $this->pessoa_logada, $value,
           $this->ref_cod_servidor, NULL, NULL, $this->ativo,
-          $cargaHoraria, $this->periodo[$key], $this->ref_cod_funcao[$key]);
+          $cargaHoraria, $this->periodo[$key], $this->cod_servidor_funcao[$key]);
 
         $cadastrou = FALSE;
 
@@ -284,7 +284,7 @@ class indice extends clsCadastro
         $this->alocacao_array[$key][] = $value;
         $this->alocacao_array[$key][] = $this->periodo[$key];
         $this->alocacao_array[$key][] = $this->carga_horaria_alocada[$key];
-        $this->alocacao_array[$key][] = $this->ref_cod_funcao[$key];  
+        $this->alocacao_array[$key][] = $this->cod_servidor_funcao[$key];  
       }
       return false;
     }    

@@ -488,7 +488,7 @@ class clsPmieducarServidorFuncao
 
 	function funcoesDoServidor( $int_ref_ref_cod_instituicao, $int_ref_cod_servidor)
 	{
-		$sql = " SELECT f.cod_funcao, f.nm_funcao as funcao, sf.matricula
+		$sql = " SELECT sf.cod_servidor_funcao, f.nm_funcao as funcao, sf.matricula
 							FROM pmieducar.servidor_funcao sf
 							INNER JOIN pmieducar.funcao f ON f.cod_funcao = sf.ref_cod_funcao ";
 		$filtros = "";

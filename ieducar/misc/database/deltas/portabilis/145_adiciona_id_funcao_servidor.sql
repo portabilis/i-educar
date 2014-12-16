@@ -20,4 +20,10 @@
 
   ALTER TABLE pmieducar.servidor_funcao ADD CONSTRAINT cod_servidor_funcao_pkey PRIMARY KEY (cod_servidor_funcao);
 
+  ALTER TABLE pmieducar.servidor_alocacao ADD COLUMN ref_cod_servidor_funcao INTEGER;
+
+  UPDATE pmieducar.servidor_alocacao sa SET ref_cod_servidor_funcao = (SELECT sf.cod_servidor_funcao FROM pmieducar.servidor_funcao sf WHERE sa.ref_ref_cod_instituicao = sf.ref_ref_cod_instituicao AND sa.ref_cod_servidor = sf.ref_cod_servidor LIMIT 1);
+
+  ALTER TABLE pmieducar.servidor_alocacao DROP COLUMN ref_cod_funcao;
+
   -- //
